@@ -1,164 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A462F30;
-	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B806080029
+	for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 11:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713472534; cv=none; b=I0mRYmGB0yWujApE1L5az0gTUTfIQCaGS4SYJBJFFRP4Jpr4be6IuMQwGMjI4Fupkdk5JNYgQz0rxTfGQdjDypNhgFdrU40axf1IwMurzXh943jmWlQFiQ362o8T51RBJoutK0eaRv2Q6Thxtd86MDE9EJVxr/THvbLgFmsBC70=
+	t=1713525030; cv=none; b=qliKAUPtta4Jq5RgQimMl52X/1fGW/nF5fvV/lN27pdCgOVe2JpRUAdJR+hvEm++eNwHbDJJt5/e1YhTzKlRP4vOfRvImwwLAqyj5E5R790BTWJUcpC3vIxsKny/cJ994ne+vFYX+k0KIUWXMYmw1ttQKCrcCdeUpSIXhYNc5QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713472534; c=relaxed/simple;
-	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M+ELGr6ALsN4FQ7hYJnl9iA6nX1WwR0YtBYuvsx2th6DOL/OKRy56gvVV8PABOjhsProXJD74Vcej+TfL/Z9x597G2T2/4JlvVoYaxkAmnPc/oY7pvnmxXZNmtXxQnaHWiNQmdEOUZQdNDd796p3g7YOU03mR8VD9z+7jI/IDAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqMh5SX8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713525030; c=relaxed/simple;
+	bh=4Mfzr1V6BFWHxC7o7yqVo53Mcbn4awlE5eUpGg/8hRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e23nsSpQ6Yujdxrlm3sLiDl782BjwPm7pu9mbQMKskr/Vg9nc16Sl0/FwGvJyQjZnSaWLGydT3pm/0Tvfr7v6sRimhs259jg12TQj69LdIu5I2KY3NBtzTJNvKADILW5C8lw1go+hwmqzk+kuGrCDZjefd6ZuKwqfy2/320mH3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cW/Qsl/S; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqMh5SX8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22406C113CC;
-	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713472533;
-	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lqMh5SX89qQB4n0qiw+izwaIkIAQ9m5dPQcveLPH9gV04HsYTxKOqyV8WjIy8YPDm
-	 BjMiHFMgSW1lLjFpuhr5b/MKyBGNWBuqzUxQDvHB8FONBTMR1Mx9rd/qZtH2C/QJHh
-	 T1WQQnf/Fl3i57nr5m7v09tpEhCH5clUGCA+23zY/B/8P4w5LxBpU6NQPtUA59FhB3
-	 4p8O4tUN8AyPthpZOn5UtZ1MbfKcLlxLGSAnRTQ1B7E3NCabGXoeS32keleyGYfETw
-	 brXTPMqtDcxieiwey+Qu8NTZlP8WR+aLwPLPYKRTrsiSdgRgDS1+v7eTDwHkRrB5/M
-	 HQZsTmxFMiBgQ==
-Date: Thu, 18 Apr 2024 15:35:31 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com,
-	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
-	kch@nvidia.com, hch@lst.de, gloriouseggroll@gmail.com,
-	kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
-Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
-Message-ID: <20240418203531.GA251408@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cW/Qsl/S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713525027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GAl4uBdr7zjiQsXmmQYRw/OPYh/GNIIDVhDzRB8Ef+g=;
+	b=cW/Qsl/S6nt+XGWxZ4TVFWlKDq1MYRsHjktjr6PEuGmicZO1xC/SOjDwEznKkNXP8Nb3uG
+	ANPBD8IZtMIum/NUZinnTIi2mFCH64mxQOKsSPbi92sA6tpm+4XDsy1DHPoJwpu0PBjXn3
+	D/K2LtsgxLJ0fgUkFRBTiJJsqCgvXa8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-DUeJI6ypPuW1duhBzGTpNA-1; Fri,
+ 19 Apr 2024 07:10:24 -0400
+X-MC-Unique: DUeJI6ypPuW1duhBzGTpNA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CDE9C1C2CDE0;
+	Fri, 19 Apr 2024 11:10:23 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.250])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5DF881121313;
+	Fri, 19 Apr 2024 11:10:20 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: jtornosm@redhat.com
+Cc: carnil@debian.org,
+	dave.stevenson@raspberrypi.com,
+	gregkh@linuxfoundation.org,
+	horms@kernel.org,
+	kuba@kernel.org,
+	linux-usb@vger.kernel.org,
+	regressions@lists.linux.dev,
+	roland@debian.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org,
+	weihao.bj@ieisystem.com
+Subject: Re: [Regression] USB ethernet AX88179 broken usb ethernet names    
+Date: Fri, 19 Apr 2024 13:10:16 +0200
+Message-ID: <20240419111019.133748-1-jtornosm@redhat.com>
+In-Reply-To: <20240417071113.7082-1-jtornosm@redhat.com>
+References: <20240417071113.7082-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416043225.1462548-2-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
-> When the power rail gets cut off, the hardware can create some electric
-> noise on the link that triggers AER. If IRQ is shared between AER with
-> PME, such AER noise will cause a spurious wakeup on system suspend.
-> 
-> When the power rail gets back, the firmware of the device resets itself
-> and can create unexpected behavior like sending PTM messages. For this
-> case, the driver will always be too late to toggle off features should
-> be disabled.
-> 
-> As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
-> Management", TLP and DLLP transmission are disabled for a Link in L2/L3
-> Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
-> the power will be turned off during suspend process, disable AER service
-> and re-enable it during the resume process. This should not affect the
-> basic functionality.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Hello Salvatore,
 
-Thanks for reviving this series.  I tried follow the history about
-this, but there are at least two series that were very similar and I
-can't put it all together.
+Fix is there:
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=56f78615bcb1
+And now in linux.
 
-> ---
-> v8:
->  - Add more bug reports.
-> 
-> v7:
->  - Wording
->  - Disable AER completely (again) if power will be turned off
-> 
-> v6:
-> v5:
->  - Wording.
-> 
-> v4:
-> v3:
->  - No change.
-> 
-> v2:
->  - Only disable AER IRQ.
->  - No more check on PME IRQ#.
->  - Use helper.
-> 
->  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ac6293c24976..bea7818c2d1b 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -28,6 +28,7 @@
->  #include <linux/delay.h>
->  #include <linux/kfifo.h>
->  #include <linux/slab.h>
-> +#include <linux/suspend.h>
->  #include <acpi/apei.h>
->  #include <acpi/ghes.h>
->  #include <ras/ras_event.h>
-> @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
->  	return 0;
->  }
->  
-> +static int aer_suspend(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
-> +		aer_disable_rootport(rpc);
+I have successfully tested it with ubuntu, installing the latest linux
+upstream kernel:
 
-Why do we check pci_ancestor_pr3_present(pdev) and
-pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
-to disable AER interrupts on suspend in general.  I think it will be
-better if we do that consistently on all platforms, not special cases
-based on details of how we suspend.
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.4 LTS
+Release:	22.04
+Codename:	jammy
+$ uname -a
+Linux unbuntu-test 6.9.0-rc4+ #8 SMP PREEMPT_DYNAMIC Fri Apr 19 11:59:17 CEST 2024 x86_64 x86_64 x86_64 GNU/Linux
+$ sudo dmesg | grep ax88
+[    3.848935] ax88179_178a 1-9:1.0 eth0: register 'ax88179_178a' at usb-0000:00:14.0-9, ASIX AX88179 USB 3.0 Gigabit Ethernet, aa:20:18:10:09:63
+[    3.848956] usbcore: registered new interface driver ax88179_178a
+[    3.854332] ax88179_178a 1-9:1.0 enxaa2018100963: renamed from eth0
 
-Also, why do we use aer_disable_rootport() instead of just
-aer_disable_irq()?  I think it's the interrupt that causes issues on
-suspend.  I see that there *were* some versions that used
-aer_disable_irq(), but I can't find the reason it changed.
+Best regards
+José Ignacio
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int aer_resume(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
-> +		aer_enable_rootport(rpc);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->   * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
->  	.service	= PCIE_PORT_SERVICE_AER,
->  
->  	.probe		= aer_probe,
-> +	.suspend	= aer_suspend,
-> +	.resume		= aer_resume,
->  	.remove		= aer_remove,
->  };
->  
-> -- 
-> 2.34.1
-> 
