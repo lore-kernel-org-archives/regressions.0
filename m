@@ -1,95 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B806080029
-	for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 11:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F50E82D62
+	for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 14:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713525030; cv=none; b=qliKAUPtta4Jq5RgQimMl52X/1fGW/nF5fvV/lN27pdCgOVe2JpRUAdJR+hvEm++eNwHbDJJt5/e1YhTzKlRP4vOfRvImwwLAqyj5E5R790BTWJUcpC3vIxsKny/cJ994ne+vFYX+k0KIUWXMYmw1ttQKCrcCdeUpSIXhYNc5QE=
+	t=1713536561; cv=none; b=ZHe91+ssTWbbWvmDf7ga3ktM+XMLy7wpJbnldbsDPrFbDXK/HITDa+LcfsMmntI2SNlb8pPmcmnMdcuinlCNhPrwqvn/B1xkpu6kiXTNcZqBf2WJi7tLQ7m1IgzPQr6jh9/OajYw0p/60i3cl+8u/iMGJ2NGLw8YerTOonrDsvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713525030; c=relaxed/simple;
-	bh=4Mfzr1V6BFWHxC7o7yqVo53Mcbn4awlE5eUpGg/8hRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e23nsSpQ6Yujdxrlm3sLiDl782BjwPm7pu9mbQMKskr/Vg9nc16Sl0/FwGvJyQjZnSaWLGydT3pm/0Tvfr7v6sRimhs259jg12TQj69LdIu5I2KY3NBtzTJNvKADILW5C8lw1go+hwmqzk+kuGrCDZjefd6ZuKwqfy2/320mH3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cW/Qsl/S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713536561; c=relaxed/simple;
+	bh=+LiWUh2zMmA3ZvW6BiIH2guXxJ9WZ0K6RkAq9Pn05SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pq9/2XLHi5qubcpfNyMGiqhHM11Pg7wN+JybUEDNLD8lavRjXTHPbRrUxourTfaLum3Ga6emo+oX/xN5CxRqGNpdIoca7OPIRYMcQ4GuAea5dNecouY/6GeNBeosqo407Vybf+j8sHYMFGfGz5txdArcD8ZaMUraF7LPWAH6vnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=LeUuMJyH; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cW/Qsl/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713525027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GAl4uBdr7zjiQsXmmQYRw/OPYh/GNIIDVhDzRB8Ef+g=;
-	b=cW/Qsl/S6nt+XGWxZ4TVFWlKDq1MYRsHjktjr6PEuGmicZO1xC/SOjDwEznKkNXP8Nb3uG
-	ANPBD8IZtMIum/NUZinnTIi2mFCH64mxQOKsSPbi92sA6tpm+4XDsy1DHPoJwpu0PBjXn3
-	D/K2LtsgxLJ0fgUkFRBTiJJsqCgvXa8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-DUeJI6ypPuW1duhBzGTpNA-1; Fri,
- 19 Apr 2024 07:10:24 -0400
-X-MC-Unique: DUeJI6ypPuW1duhBzGTpNA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CDE9C1C2CDE0;
-	Fri, 19 Apr 2024 11:10:23 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.250])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5DF881121313;
-	Fri, 19 Apr 2024 11:10:20 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: jtornosm@redhat.com
-Cc: carnil@debian.org,
-	dave.stevenson@raspberrypi.com,
-	gregkh@linuxfoundation.org,
-	horms@kernel.org,
-	kuba@kernel.org,
-	linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev,
-	roland@debian.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org,
-	weihao.bj@ieisystem.com
-Subject: Re: [Regression] USB ethernet AX88179 broken usb ethernet names    
-Date: Fri, 19 Apr 2024 13:10:16 +0200
-Message-ID: <20240419111019.133748-1-jtornosm@redhat.com>
-In-Reply-To: <20240417071113.7082-1-jtornosm@redhat.com>
-References: <20240417071113.7082-1-jtornosm@redhat.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="LeUuMJyH"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-69b47833dc5so7968026d6.0
+        for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 07:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1713536557; x=1714141357; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LbB4KcsnZXNmzG/MHQb9mgjRPkbbsvmUawk+gcbg5EQ=;
+        b=LeUuMJyHsst8EUj1rhP5QQ+oFhJaFD/2vODw4DkRuUFQ1LIvAJiYQhNQK4GOpJmfBa
+         V76PessJqnWmxqcL/kBKeCy/1c1nSLZ5cHqdS3hQG50ws7ywgEfGtW+wJU5EIZol4okJ
+         umClWK6r8xUb/KDGR6TQoMZIK1WxXJcmoPFZDUanGQXqYcoLhHT3uyQu0glJ0W96GdkT
+         T6qSMsf3I2pTbd2qfRMetXETZuzPej4Bunuam5j1bb14XxC6VgkFxgl/mgqvUnnUyfwd
+         j9y9Fxgyap/lkmKOsl+XxQc9ZDZi3keN97ZfMYNDBHltcRWiZrdfPd3RyJhvnBD78NTq
+         vMZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713536557; x=1714141357;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LbB4KcsnZXNmzG/MHQb9mgjRPkbbsvmUawk+gcbg5EQ=;
+        b=E9Pz/XP/f3Euflptj+EoQTpRO1P2fS1BxW69/wIN8XUPXF64hS3DhHMGx1w1GmPPn0
+         DcPlPmLWuRE1YZIQ2pvKA+/n7YWk8/CLL3HLGez+gBP4nbJIMQSnj8OkRl/twlY73ZHw
+         ObG4pXsOm3IkZu7frmQTBG44H0ONCtEtlsYMuDI6djy3OGrAbdv5q4Lav6TMmhEKpceM
+         JzcNlpb9hqrR1jxQG6P+poDRE2klFnzsCPwsM1+jEvPlPz604cHyTg8qk2XlCTUFYzbN
+         ZnBQMkzjVPYZczwaZMAaJiiLyn/LpVnvl6jKq50Eix7ox35KnUaJxkuay91dnjQZ+QY6
+         QsVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVU0EmP7uPGOY0tYUuWjrbZ3dgr2l3/KttJ87aT1v0SRn5q6R0XDAuXXWrk4z7PBp2RCZchx6W/poilPRfAikaT0mNLt96C6HD5EMw=
+X-Gm-Message-State: AOJu0YyneEYBhTxI395l33ykgxfc8v3AIcFkNm2n/vsXum0kSGX20y/w
+	eBGoCheO/TMxEgchpupKLAQnHShBrNOUCr39zFn+Mjs+2k1z1a3Yx4Y6SHLKdVI=
+X-Google-Smtp-Source: AGHT+IGAI3mZDZDKIm7knl47VQHYokRRNSjt45GZvvX762bmRlykoI881JSyUDU3V8LFn5GMhKzNWA==
+X-Received: by 2002:ad4:5981:0:b0:69b:2897:4fc4 with SMTP id ek1-20020ad45981000000b0069b28974fc4mr2177086qvb.58.1713536557076;
+        Fri, 19 Apr 2024 07:22:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:400::5:fe4f])
+        by smtp.gmail.com with ESMTPSA id i11-20020a0cab4b000000b0069b59897310sm1582606qvb.63.2024.04.19.07.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 07:22:36 -0700 (PDT)
+Date: Fri, 19 Apr 2024 10:22:31 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Christian Heusel <christian@heusel.eu>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>,
+	Dan Streetman <ddstreet@ieee.org>,
+	Vitaly Wool <vitaly.wool@konsulko.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>,
+	"Richard W.M. Jones" <rjones@redhat.com>,
+	Mark W <instruform@gmail.com>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+Message-ID: <20240419142231.GD1055428@cmpxchg.org>
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+ <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+ <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
+ <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev>
+ <20240417143324.GA1055428@cmpxchg.org>
+ <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
+ <20240418124043.GC1055428@cmpxchg.org>
+ <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+In-Reply-To: <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
 
-Hello Salvatore,
+On Thu, Apr 18, 2024 at 01:09:22PM -0700, Yosry Ahmed wrote:
+> On Thu, Apr 18, 2024 at 5:40 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
+> > > On 24/04/17 10:33AM, Johannes Weiner wrote:
+> > > >
+> > > > Christian, can you please test the below patch on top of current
+> > > > upstream?
+> > > >
+> > >
+> > > Hey Johannes,
+> > >
+> > > I have applied your patch on top of 6.9-rc4 and it did solve the crash for
+> > > me, thanks for hacking together a fix so quickly! 🤗
+> > >
+> > > Tested-By: Christian Heusel <christian@heusel.eu>
+> >
+> > Thanks for confirming it, and sorry about the breakage.
+> >
+> > Andrew, can you please use the updated changelog below?
+> >
+> > ---
+> >
+> > From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 2001
+> > From: Johannes Weiner <hannes@cmpxchg.org>
+> > Date: Thu, 18 Apr 2024 08:26:28 -0400
+> > Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disable=memory
+> >
+> > Christian reports a NULL deref in zswap that he bisected down to the
+> > zswap shrinker. The issue also cropped up in the bug trackers of
+> > libguestfs [1] and the Red Hat bugzilla [2].
+> >
+> > The problem is that when memcg is disabled with the boot time flag,
+> > the zswap shrinker might get called with sc->memcg == NULL. This is
+> > okay in many places, like the lruvec operations. But it crashes in
+> > memcg_page_state() - which is only used due to the non-node accounting
+> > of cgroup's the zswap memory to begin with.
+> >
+> > Nhat spotted that the memcg can be NULL in the memcg-disabled case,
+> > and I was then able to reproduce the crash locally as well.
+> >
+> > [1] https://github.com/libguestfs/libguestfs/issues/139
+> > [2] https://bugzilla.redhat.com/show_bug.cgi?id=2275252
+> >
+> > Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> > Cc: stable@vger.kernel.org      [v6.8]
+> > Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
+> > Reported-by: Christian Heusel <christian@heusel.eu>
+> > Debugged-by: Nhat Pham <nphamcs@gmail.com>
+> > Suggested-by: Nhat Pham <nphamcs@gmail.com>
+> > Tested-By: Christian Heusel <christian@heusel.eu>
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> Thanks for fixing this. A couple of comments/questions below, but anyway LGTM:
+> 
+> Acked-by: Yosry Ahmed <yosryahmed@google.com>
+> 
+> > ---
+> >  mm/zswap.c | 25 ++++++++++++++++---------
+> >  1 file changed, 16 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/mm/zswap.c b/mm/zswap.c
+> > index caed028945b0..6f8850c44b61 100644
+> > --- a/mm/zswap.c
+> > +++ b/mm/zswap.c
+> > @@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(struct shrinker *shrinker,
+> >         if (!gfp_has_io_fs(sc->gfp_mask))
+> >                 return 0;
+> >
+> > -#ifdef CONFIG_MEMCG_KMEM
+> > -       mem_cgroup_flush_stats(memcg);
+> > -       nr_backing = memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHIFT;
+> > -       nr_stored = memcg_page_state(memcg, MEMCG_ZSWAPPED);
+> > -#else
+> > -       /* use pool stats instead of memcg stats */
+> > -       nr_backing = zswap_pool_total_size >> PAGE_SHIFT;
+> > -       nr_stored = atomic_read(&zswap_nr_stored);
+> > -#endif
+> > +       /*
+> > +        * For memcg, use the cgroup-wide ZSWAP stats since we don't
+> > +        * have them per-node and thus per-lruvec. Careful if memcg is
+> > +        * runtime-disabled: we can get sc->memcg == NULL, which is ok
+> > +        * for the lruvec, but not for memcg_page_state().
+> > +        *
+> > +        * Without memcg, use the zswap pool-wide metrics.
+> > +        */
+> > +       if (!mem_cgroup_disabled()) {
+> 
+> With the current shrinker code, it seems like we cannot get sc->memcg
+> == NULL unless mem_cgroup_disabled() is true indeed. However, maybe
+> it's better to check if sc->memcg is not NULL directly instead?
+> 
+> This would be more resilient in case the shrinker code changes and
+> passing sc->memcg == NULL becomes possible in other cases (e.g. during
+> global shrinking). It seems like other shrinkers do this, for example
+> see count_shadow_nodes() and deferred_split_count().
 
-Fix is there:
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=56f78615bcb1
-And now in linux.
+Eh, I'm not sure it's better or worse, so it's a bit hard to care. We
+shouldn't get NULL here when memcg is enabled, and if somebody
+introduces that bug it's better to catch it early than run into subtle
+priority inversions when the kernel is deployed to millions of hosts.
 
-I have successfully tested it with ubuntu, installing the latest linux
-upstream kernel:
+> I am also wondering if we should also check !mem_cgroup_is_root()
+> here? We can avoid the expensive global flush and use the global stats
+> directly in this case. I could also send a follow up patch for this if
+> that's preferred.
 
-$ lsb_release -a
-No LSB modules are available.
-Distributor ID:	Ubuntu
-Description:	Ubuntu 22.04.4 LTS
-Release:	22.04
-Codename:	jammy
-$ uname -a
-Linux unbuntu-test 6.9.0-rc4+ #8 SMP PREEMPT_DYNAMIC Fri Apr 19 11:59:17 CEST 2024 x86_64 x86_64 x86_64 GNU/Linux
-$ sudo dmesg | grep ax88
-[    3.848935] ax88179_178a 1-9:1.0 eth0: register 'ax88179_178a' at usb-0000:00:14.0-9, ASIX AX88179 USB 3.0 Gigabit Ethernet, aa:20:18:10:09:63
-[    3.848956] usbcore: registered new interface driver ax88179_178a
-[    3.854332] ax88179_178a 1-9:1.0 enxaa2018100963: renamed from eth0
-
-Best regards
-José Ignacio
-
+I'd rather not proliferate more memcg internals in this code. If this
+is a concern, optimizing it in the flush and stat functions would make
+more sense. Reclaim already flushes the subtree before getting here,
+so odds are good this is a no-op in most cases.
