@@ -1,222 +1,149 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA34F13AD02
-	for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 19:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14E813C91B
+	for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 20:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713553841; cv=none; b=Turo7xrHtqUYL0DmHCMS0A9u62xszIqmM3+KJusKDLngwY7SX5RleDKeUgpA+KdPmzhyolkr3pQpneW61PaJYaaHOTdXI6+89qF3doGeZfWANC0JAH+e+5uqciFQMaaDzeUJLvwPtVHBdUz5fP7ZjaBMzSnFsfz1D4SCtqx26NA=
+	t=1713557537; cv=none; b=A1AT/HBshP0Ug+XpOJl44lK4tZ1K46p1iaU2FTG+3tnv3P/hht6t1DlSk+wEWimOYY76sPxjgihxbp73Nx4GHstnS89IfMd+3R7Yf1HDQk2ztpbfSVmg3A1musN4LiV6hQC8eLPZ14iIBQQSTxreQzrzaE8M5buCM/xUYbKvG0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713553841; c=relaxed/simple;
-	bh=9nJp5X126w3GqvaWjUP/ZvbDKdqWMmW3+cyfWUwopzg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lqPkORCOIsUbl834N3ucpv+m1dSBVqda32rnUP6C/ZBkUKoGNMMj/BZdIWBQ1Hs0E4B4ZtH/xnhvQKnmcsLUz9xvhQ133OGjG/ZaURYM4sXwcM7IaaHi4GOUcU4Nigo/YARUxu23XkiJ/K223/+NEC/Kekd1iM1kOdGcI7CoFBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ghu/RtsL; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713557537; c=relaxed/simple;
+	bh=nPHvh3DkiBgyvr/B9kszo7qSn9jSsyNQbHvayINckmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCtETyIlWeeO/hifDbN5twGdBsiIvTUp7p5BuORSGymmeqd4dxcKHG1KygQ3DMi/G8YLz+crLexstvpm+lQrxbZB1on3qOzEWkrKFgYT3X2PD3l8BnVC0xXocDweupTKO08PgGAmyxyjPXtEpF+ZUVp/8xzM7Ma+vIWIXQvZrUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOjgbSaN; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ghu/RtsL"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a556d22fa93so279412166b.3
-        for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 12:10:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOjgbSaN"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56e6affdd21so1128072a12.3
+        for <regressions@lists.linux.dev>; Fri, 19 Apr 2024 13:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713553838; x=1714158638; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJFtcGdhGKjEBBpWXj+iy28DWazemVM0Sr/i5zcF/Xc=;
-        b=ghu/RtsLmArcy85jq9LfG9TLP5+s01/78ELga8kSf+iW3j75a5kSBi4YdMoc0G5fbg
-         7vakS6wD5h7tXmwaMTUVX2dxTjcy9wFNN4rMvI6dHGpNR79CBC0O81gZJstVfXOcL8bZ
-         fv+W+NIaV5JoIIGxQkY8WTN/fsN337Ky0mOiQ8ChZN2YvOo1sRkrJUGLDLOycxRit1PR
-         h7ERusQrwwQFeMZwDG1Sl0ANz4B53VejhjOkG3qC4X1ktBVgtDSCFFEt/ZY0xiobUF+h
-         +7Pu3U9qITpuX9kB+UzwX3Ni6IsqsQgw/uszlJmw30Dv9aLaucOaw9mocQwgZrur7KaO
-         ++Jw==
+        d=gmail.com; s=20230601; t=1713557534; x=1714162334; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iQR7nTkye4AVZtx+ZZbC5oLR5EmGS6z2i/4lvmSfqDo=;
+        b=XOjgbSaNY2Qxiho5KDC4ThXzL8D5Mo/IBvtQVE91Gsfn8y+pKhDsESlcrP0ufwd5ZM
+         MsBPSK/FfQwLifg98nuXyxov7vSX8Ye+QfDknTIIXheVcNR1pC3uUlWbCFI5CEb0gaJp
+         OG1HQVtBkYGcos3npLSgwH73TNwnrTAxd6azdenT2IPLdNUmOt3AKJXtHLT6ZQOXO09g
+         FWzakCnfxCkDDIdDbq6JriYkg5J0mlvYNUUS8ZBZpM41nMebhCm0IGlC4bTOD0ehVN/U
+         GRjhm64yWyj9j0wFLI3+hTjdRw1XPAV6BER2zSlk0uqEK/DdFF9pC7C8wLacMflIp79O
+         gtTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713553838; x=1714158638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713557534; x=1714162334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uJFtcGdhGKjEBBpWXj+iy28DWazemVM0Sr/i5zcF/Xc=;
-        b=Zf3CsITj8TsvpOOizWThfcFiYs64CWl4XDjaj7VxaRzoXQbDNYxuc1eJfPK+AItAHw
-         1CM+iuiovceOK/dJxf6bvEHVGpcTGn6gXxgvEVDa6aQeYxLwEy4RBFRrRWbhESSGkgMe
-         0A/5MxzIpjj8lxNijUi3G4HSmr3bvFD/hZZTPgX8cHgYGXztzG+LRaVgJgrfrxLmV8eN
-         9l6JK+aZOGSrYR3Yq23vQO2/wcQENs9uNIFN/8E184xRWeZgqj/GIFjJNCet0AYuVEER
-         Z48hltlL5AMoJOtt5UzzDv86I38V2Vm0cvKcM71aXvCdNtQehWh37JvBAA5L4ElQA6ll
-         OTPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXw2HJUkdqCtdbroI4Az93GfBZKqrN0Q99TOvms5Cf3YWeg29QO9VXDWPTK3cW17+Ngn4QuO78V+y55jF4BAfcm65HuAH360Vt5Yk4=
-X-Gm-Message-State: AOJu0Yx0F7nDuZS30dvonnPuQojX46C1EDTYrSuV7EtCQfd9zNMNFAVc
-	i9Bp+ubprV5cnaXkEG4ZRLgl9v2Qy9912cI4Qv90BB0tQnsdRqtF0bXMaMR34+JXAam79I+jUn9
-	ByLGnfhVTk0VjtW5BElQMekC5rFuewJmQ0ThY
-X-Google-Smtp-Source: AGHT+IExSU2QtTRid0+YRFdGQUwOihOm+cSrHE8ZuZNDhhMB/hnR+BAgCzxr8bHrjtAfhnlbAyR5OdrGT+33PVZSQFc=
-X-Received: by 2002:a17:907:2d25:b0:a55:358f:783c with SMTP id
- gs37-20020a1709072d2500b00a55358f783cmr2276033ejc.24.1713553837773; Fri, 19
- Apr 2024 12:10:37 -0700 (PDT)
+        bh=iQR7nTkye4AVZtx+ZZbC5oLR5EmGS6z2i/4lvmSfqDo=;
+        b=LP+FKoVm6H6ms0Cg3elcWuWg+yVZC4HL0ZLYPCZ31OVYdvjYac9v5R2+fao4io+HMO
+         hB/cbCSfTBf+h8xHnOIZeQ+/NAeUiUulD4VH5yhYS9ZgOfNX5DZe01XiWPGMlGY/2dS5
+         p6eiN15HNLOT0wL3ctHJnbz1YXS9nw6WKdU7D5YE3B4yIH89PDtix0QpMF/wnolkyeE1
+         /yXB+6YL7EoCe46lITsQD2hg/i3BZVm2KxkoCJ+WeyOv6kwg+pB/pwgxbqlrALzIHba8
+         otQO9+BqEDhIqg0I5Recff+dzXb3m1yBBCEds8BlGuNNbVb/0l2i0NL/nCFsT4r185pP
+         lp+Q==
+X-Gm-Message-State: AOJu0YyyyzuPmOq9O4HgmIX7WXZtsi621WBdPW1AlBBaswUeel/Fet+s
+	qqfdfEMGlTcNgjgZRg58/wM26fF3i43r7EIBQPHvIQ16jKhwbRsF
+X-Google-Smtp-Source: AGHT+IGOHAF5nkXJuC88UzrlA2WgNUXaH2KnFa4PsZZwcaO1GcXKC2SWKsteBi2XE0Xb0zFDe+LUrw==
+X-Received: by 2002:a50:a451:0:b0:56e:3293:3777 with SMTP id v17-20020a50a451000000b0056e32933777mr2576385edb.17.1713557533455;
+        Fri, 19 Apr 2024 13:12:13 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id c26-20020a056402101a00b0056e66f1fe9bsm2488468edu.23.2024.04.19.13.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 13:12:12 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id A93CABE2EE8; Fri, 19 Apr 2024 22:12:11 +0200 (CEST)
+Date: Fri, 19 Apr 2024 22:12:11 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
+	gregkh@linuxfoundation.org, sashal@kernel.org,
+	stable@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
+ overflow frame end of buf" and invisible files under certain conditions and
+ at least with noserverino mount option
+Message-ID: <ZiLQG4x0m1L70ugu@eldamar.lan>
+References: <ZiBCsoc0yf_I8In8@eldamar.lan>
+ <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+ <ZiCoYjr79HXxiTjr@eldamar.lan>
+ <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
- <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
- <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
- <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
- <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev> <20240417143324.GA1055428@cmpxchg.org>
- <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
- <20240418124043.GC1055428@cmpxchg.org> <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
- <20240419142231.GD1055428@cmpxchg.org>
-In-Reply-To: <20240419142231.GD1055428@cmpxchg.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Fri, 19 Apr 2024 12:10:01 -0700
-Message-ID: <CAJD7tkYOwO-LLrboSfz-wLJC+FD+ctaJ2KuZoUfiL6S3t0y7ow@mail.gmail.com>
-Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Christian Heusel <christian@heusel.eu>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>, 
-	Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
-	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
 
-On Fri, Apr 19, 2024 at 7:22=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Thu, Apr 18, 2024 at 01:09:22PM -0700, Yosry Ahmed wrote:
-> > On Thu, Apr 18, 2024 at 5:40=E2=80=AFAM Johannes Weiner <hannes@cmpxchg=
-.org> wrote:
-> > >
-> > > On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
-> > > > On 24/04/17 10:33AM, Johannes Weiner wrote:
-> > > > >
-> > > > > Christian, can you please test the below patch on top of current
-> > > > > upstream?
-> > > > >
-> > > >
-> > > > Hey Johannes,
-> > > >
-> > > > I have applied your patch on top of 6.9-rc4 and it did solve the cr=
-ash for
-> > > > me, thanks for hacking together a fix so quickly! =F0=9F=A4=97
-> > > >
-> > > > Tested-By: Christian Heusel <christian@heusel.eu>
-> > >
-> > > Thanks for confirming it, and sorry about the breakage.
-> > >
-> > > Andrew, can you please use the updated changelog below?
-> > >
-> > > ---
-> > >
-> > > From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 200=
-1
-> > > From: Johannes Weiner <hannes@cmpxchg.org>
-> > > Date: Thu, 18 Apr 2024 08:26:28 -0400
-> > > Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disab=
-le=3Dmemory
-> > >
-> > > Christian reports a NULL deref in zswap that he bisected down to the
-> > > zswap shrinker. The issue also cropped up in the bug trackers of
-> > > libguestfs [1] and the Red Hat bugzilla [2].
-> > >
-> > > The problem is that when memcg is disabled with the boot time flag,
-> > > the zswap shrinker might get called with sc->memcg =3D=3D NULL. This =
-is
-> > > okay in many places, like the lruvec operations. But it crashes in
-> > > memcg_page_state() - which is only used due to the non-node accountin=
-g
-> > > of cgroup's the zswap memory to begin with.
-> > >
-> > > Nhat spotted that the memcg can be NULL in the memcg-disabled case,
-> > > and I was then able to reproduce the crash locally as well.
-> > >
-> > > [1] https://github.com/libguestfs/libguestfs/issues/139
-> > > [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D2275252
-> > >
-> > > Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressu=
-re")
-> > > Cc: stable@vger.kernel.org      [v6.8]
-> > > Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
-> > > Reported-by: Christian Heusel <christian@heusel.eu>
-> > > Debugged-by: Nhat Pham <nphamcs@gmail.com>
-> > > Suggested-by: Nhat Pham <nphamcs@gmail.com>
-> > > Tested-By: Christian Heusel <christian@heusel.eu>
-> > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Hi Paulo,
+
+On Thu, Apr 18, 2024 at 10:47:01AM -0300, Paulo Alcantara wrote:
+> Salvatore Bonaccorso <carnil@debian.org> writes:
+> 
+> > On Wed, Apr 17, 2024 at 07:58:56PM -0300, Paulo Alcantara wrote:
+> >> Hi Salvatore,
+> >> 
+> >> Salvatore Bonaccorso <carnil@debian.org> writes:
+> >> 
+> >> > In Debian we got two reports of cifs mounts not functioning, hiding
+> >> > certain files. The two reports are:
+> >> >
+> >> > https://bugs.debian.org/1069102
+> >> > https://bugs.debian.org/1069092
+> >> >
+> >> > On those cases kernel logs error
+> >> >
+> >> > [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+> >> 
+> >> I couldn't reproduce it.  Does the following fix your issue:
+> >> 
+> >> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+> >> index 4c1231496a72..3ee35430595e 100644
+> >> --- a/fs/smb/client/smb2pdu.c
+> >> +++ b/fs/smb/client/smb2pdu.c
+> >> @@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
+> >>  		info_buf_size = sizeof(struct smb2_posix_info);
+> >>  		break;
+> >>  	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
+> >> -		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
+> >> +		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
+> >>  		break;
+> >>  	default:
+> >>  		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
+> >> 
+> >> If not, please provide network trace and verbose logs.
 > >
-> > Thanks for fixing this. A couple of comments/questions below, but anywa=
-y LGTM:
-> >
-> > Acked-by: Yosry Ahmed <yosryahmed@google.com>
-> >
-> > > ---
-> > >  mm/zswap.c | 25 ++++++++++++++++---------
-> > >  1 file changed, 16 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/mm/zswap.c b/mm/zswap.c
-> > > index caed028945b0..6f8850c44b61 100644
-> > > --- a/mm/zswap.c
-> > > +++ b/mm/zswap.c
-> > > @@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(str=
-uct shrinker *shrinker,
-> > >         if (!gfp_has_io_fs(sc->gfp_mask))
-> > >                 return 0;
-> > >
-> > > -#ifdef CONFIG_MEMCG_KMEM
-> > > -       mem_cgroup_flush_stats(memcg);
-> > > -       nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE=
-_SHIFT;
-> > > -       nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
-> > > -#else
-> > > -       /* use pool stats instead of memcg stats */
-> > > -       nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
-> > > -       nr_stored =3D atomic_read(&zswap_nr_stored);
-> > > -#endif
-> > > +       /*
-> > > +        * For memcg, use the cgroup-wide ZSWAP stats since we don't
-> > > +        * have them per-node and thus per-lruvec. Careful if memcg i=
-s
-> > > +        * runtime-disabled: we can get sc->memcg =3D=3D NULL, which =
-is ok
-> > > +        * for the lruvec, but not for memcg_page_state().
-> > > +        *
-> > > +        * Without memcg, use the zswap pool-wide metrics.
-> > > +        */
-> > > +       if (!mem_cgroup_disabled()) {
-> >
-> > With the current shrinker code, it seems like we cannot get sc->memcg
-> > =3D=3D NULL unless mem_cgroup_disabled() is true indeed. However, maybe
-> > it's better to check if sc->memcg is not NULL directly instead?
-> >
-> > This would be more resilient in case the shrinker code changes and
-> > passing sc->memcg =3D=3D NULL becomes possible in other cases (e.g. dur=
-ing
-> > global shrinking). It seems like other shrinkers do this, for example
-> > see count_shadow_nodes() and deferred_split_count().
->
-> Eh, I'm not sure it's better or worse, so it's a bit hard to care. We
-> shouldn't get NULL here when memcg is enabled, and if somebody
-> introduces that bug it's better to catch it early than run into subtle
-> priority inversions when the kernel is deployed to millions of hosts.
+> > Yes that appears to fix the issue.
+> 
+> Thanks for quickly testing it.  So the above change indicates that we're
+> missing 35235e19b393 ("cifs: Replace remaining 1-element arrays") in
+> v6.1.y.
+> 
+> Can you test it now with 35235e19b393 backported without the above
+> change?
 
-No strong opinion here, I just thought consistency with other
-shrinkers would be nice.
+Done. From the experiment in the avialable setup this seems to indeed
+fix the issue. The commit can mostly be cherry-picked with one manual
+whitespace caused fixup.
 
->
-> > I am also wondering if we should also check !mem_cgroup_is_root()
-> > here? We can avoid the expensive global flush and use the global stats
-> > directly in this case. I could also send a follow up patch for this if
-> > that's preferred.
->
-> I'd rather not proliferate more memcg internals in this code. If this
-> is a concern, optimizing it in the flush and stat functions would make
-> more sense. Reclaim already flushes the subtree before getting here,
-> so odds are good this is a no-op in most cases.
+> > But as you say you are not able to reproduce the issue, I guess we
+> > need to try to get it clearly reproducible first to see we face no
+> > other fallouts?
+> 
+> I couldn't reproduce it in v6.9-rc4.  Forgot to mention it, sorry.
 
-I agree that with per-memcg thresholding, it is very unlikely that
-this flush does anything.
+Ack understand.
 
-FWIW, if it turns out to be a problem, optimizing it in the flush
-functions would not be as straightforward, because the memcg code is
-not aware that zswap has up-to-date global versions of the stats.
+> Yes, further testing would be great to make sure we're not missing
+> anything else.
 
-Anyway, let's table this until someone actually complains, just seemed
-to me like a low hanging fruit.
+I'm still failing to provide you a recipe with a minimal as possible
+setup, but with the instance I was able to reproduce the issue the
+regression seems gone with cherry-picking 35235e19b393 ("cifs: Replace
+remaining 1-element arrays") .
+
+Regards,
+Salvatore
