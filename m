@@ -1,299 +1,134 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72614F4EB;
-	Sun, 21 Apr 2024 17:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635281E53A
+	for <regressions@lists.linux.dev>; Sun, 21 Apr 2024 21:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713720116; cv=none; b=eag84mY1jJi+4BKSNzVvBlt/lhxGLumoTueGsyKBCtBfZnAq/9FOKQVlu2aEYqutOfm/coEEujxKBVVhSNx1Ma/F0DmKTGkdXlePzqtjaKYJzRYqsYKtg6gwLxb+U7QqEKjJyzCTUgMDzwE5tNEGTdOrOJ4RRG6/kGil/Xd22ZQ=
+	t=1713733267; cv=none; b=ASTjCO7UpULwzvgLj2G6T144Amvf9uHyguwI3E7+Feq9Aa4zfE+jfemnvBtLUDC1DoW5qJGPW/QpLSB2vdgG/Hu3yYFb8b47Ge8K1YFNX4ZbCswj0Int/+YZq5CUe21cXGMx66FZhtHoLCjWVevPKTAVg8j2Eqx4HpTnxcV3LdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713720116; c=relaxed/simple;
-	bh=jnDPYyUGF8KWZI/acH3h5szYqEd3zd2oWm68bhlT2go=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cW7RSWHjy1gUT+ghEudRP/Rm3v+kXnfd1Ye5T2FoEdmCVe1k9CaPZGGNI6f4vb9ZzVX+ksGBmskL8oLdO6xfmwzxylanWBJXyEUGNVGDOokh09cmplwjDRxd6qkbf0PUsamlpFLxx+Bj22rNRcGTUEyz+0dsrCb1eTX6KVBwxuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3kOffwsB; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3kOffwsB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=W19+hMh8iCpe7e1YN/BSiDXrEdxITke4MrSyNpzXPhg=; t=1713720114; x=1714152114;
-	 b=3kOffwsBLW6ShF31378W4UkXAFf/ZrxX4/qXSd+Nt+fPFdR87jQ+uTjigyTj1l1mORR/0MmxqU
-	wlR9Noy97njQNdxt4VrrHh/Bk6BSNWir/aFqE7ovulXCjXJqrA1Nvg5c5QYCUSjXNQ38m03eeLvFU
-	8s9FzP2EjQ7iFdCNEaosWDJuuZ3mMwseHRZPGOc38kayz/HNgv2gusIOG9yMKNFq+kAaLnA9o4Tbq
-	3jM4bOvDPiM4dSC8Y0wx/UNOxEFpPwfmw29tkVeGplHSSyeTlucN5PCGWepsCr/+dr58Tts6fN9bx
-	JjPQkb6998VR9JCJMXZiMaF/idUtqGfg2KRFQ==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1ryasx-0002Q4-UI; Sun, 21 Apr 2024 19:21:52 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-04-21]
-Date: Sun, 21 Apr 2024 17:21:45 +0000
-Message-ID: <171372007343.4173668.6277096045174922087@leemhuis.info>
-X-Mailer: git-send-email 2.44.0
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1713733267; c=relaxed/simple;
+	bh=WEzcw0bsNdbQiVJCh2cyN4ebxDXiBmsodAnyG3QSU0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=beUlB/ZyejDhMe5xmZbIsOszmpJY1jhEdT4/i5IpDk00y6JcYz305qcO7KB3NUYmvHP5a1ocX8h9UtGQBUw+bB/1rXQ53UYXwjNddacGHE8RR5bIIjdBeBShubUvyRfc8HZ5MpYMWbl7mv5p5FvqrtEvO5yyB0r12KhWt7evBeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.6] (ip5f5af37f.dynamic.kabel-deutschland.de [95.90.243.127])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id E0FEB61E5FE05;
+	Sun, 21 Apr 2024 23:00:52 +0200 (CEST)
+Message-ID: <8eeb980a-f04a-4e94-8065-25566cfef4dd@molgen.mpg.de>
+Date: Sun, 21 Apr 2024 23:00:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+To: =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>
+References: <CADRbXaDqx6S+7tzdDPPEpRu9eDLrHQkqoWTTGfKJSRxY=hT5MQ@mail.gmail.com>
+Content-Language: en-US
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CADRbXaDqx6S+7tzdDPPEpRu9eDLrHQkqoWTTGfKJSRxY=hT5MQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713720114;6d23299f;
-X-HE-SMSGID: 1ryasx-0002Q4-UI
 
-Hi Linus, here is the weekly regressions report. Fixes for almost all of
-the tracked regressions are already in next[1] or under review, so there
-is nothing to worry about afaics.
-
-Ciao, Thorsten
-
-[1] on of the for more that two weeks now; will prod the maintainer
-tomorrow to ensure it will make it for -rc6: 6677196fb1932e ("clk: qcom:
-gdsc: treat optional supplies as optional") [next-20240404]
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 13 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.8.. aka v6.9-rc), culprit identified
-======================================================
-
-
-net: Bluetooth: firmware loading problems with older firmware
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
-https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
-
-By Mike Lothian; 20 days ago; 7 activities, latest 0 days ago.
-Introduced in 1cb63d80fff6 (v6.9-rc1)
-
-Fix incoming:
-* Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=263296438807ac3b4f829711f056e796dff5f708
-
-
-[ *NEW* ] CA6390 bluetooth doesn't work after warm boot or disable/reenable
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218726/
-https://bugzilla.kernel.org/show_bug.cgi?id=218726
-
-By Wren Turkal; 6 days ago; 95 activities, latest 0 days ago.
-Introduced in 56d074d26c58 (v6.9-rc1)
-
-Fix incoming:
-* Bluetooth: qca: Fix QCA6390 enable failure after reboot or disable
-  https://lore.kernel.org/regressions/92377e46-5eca-4c0b-b0b6-58394916abc3@leemhuis.info/
-
-
-[ *NEW* ] net: wifi: iwlwifi: Thinkpad 480 no Wifi
---------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/8c3f3a43-ac65-4bd1-9563-cb8d9192b0ce@message-id.googlemail.com/
-https://lore.kernel.org/linux-wireless/8c3f3a43-ac65-4bd1-9563-cb8d9192b0ce@message-id.googlemail.com/
-
-By Stefan Seyfried; 1 days ago; 4 activities, latest 1 days ago.
-Introduced in a8b5d4809b50 (v6.9-rc2)
-
-Fix incoming:
-* wifi: iwlwifi: mvm: fix link ID management
-  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
-
-
-[ *NEW* ] btrfs: snapper fails
-------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/generic/https://github.com/openSUSE/snapper/issues/894/
-https://github.com/openSUSE/snapper/issues/894
-
-By Linux regression tracking (Thorsten Leemhuis); 0 days ago; 1 activities, latest 1 days ago.
-Introduced in 86211eea8ae1 (v6.9-rc1)
-
-Fix incoming:
-* btrfs: qgroup: do not check qgroup inherit if qgroup is disabled
-  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
-
-
-[ *NEW* ] x86/topology: system stopped booting
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
-https://lore.kernel.org/lkml/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
-
-By Lyude Paul; 3 days ago; 7 activities, latest 1 days ago.
-Introduced in f0551af02130 (v6.9-rc1)
-
-Fix incoming:
-* x86/topology: Deal with more broken ACPI tables
-  https://lore.kernel.org/regressions/c2786db1-a8c9-4323-832e-cffd8373bf68@leemhuis.info/
-
-
-[ *NEW* ] ACPI: PM: s2idle: sleep broken on 13th Gen Lenovo laptops
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218750/
-https://bugzilla.kernel.org/show_bug.cgi?id=218750
-
-By Mark Pearson; 1 days ago; 1 activities, latest 1 days ago.
-Introduced in 073237281a50 (v6.9-rc1)
-
-Recent activities from: Mark Pearson (1)
-
-
-workqueue: nohz_full=0 prevents booting
----------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218665/
-https://bugzilla.kernel.org/show_bug.cgi?id=218665
-https://lore.kernel.org/lkml/5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info/
-
-By Friedrich Oslage and Friedrich Oslage; 21 days ago; 29 activities, latest 3 days ago.
-Introduced in 5797b1c18919 (v6.9-rc1)
-
-Recent activities from: Frederic Weisbecker (2), Phil Auld (2)
-
-6 patch postings are associated with this regression, the latest is this:
-* [PATCH] sched/isolation: fix boot crash when maxcpus < first-housekeeping-cpu
-  https://lore.kernel.org/lkml/20240413141746.GA10008@redhat.com/
-  8 days ago, by Oleg Nesterov
-
-Noteworthy links:
-* Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on queue_delayed_work
-  https://lore.kernel.org/lkml/20240402105847.GA24832@redhat.com/
-  21 days ago, by Oleg Nesterov; thread monitored.
-
-
-fs: ntfs: obsolete legacy driver and a bunch of  warnings
----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-https://lore.kernel.org/linux-fsdevel/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
-
-By Johan Hovold and Artem S. Tashkinov; 30 days ago; 24 activities, latest 3 days ago.
-Introduced in 7ffa8f3d3023 (v6.9-rc1)
-
-Fix incoming:
-* ntfs3: serve as alias for the legacy ntfs driver
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=74871791ffa9562d43567c5ff2ae93def3f39f65
-
-
-leds: hangs on boot
--------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-
-By Ben Greear; 19 days ago; 10 activities, latest 5 days ago.
-Introduced in f5c31bcf604d (v6.9-rc1)
-
-Recent activities from: Lee Jones (1), Johannes Berg (1), Ben Greear (1)
-
-
-[ *NEW* ] CA6390 bluetooth doesn't work after warm boot or disable/reenable
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
-https://lore.kernel.org/linux-bluetooth/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
-https://bugzilla.kernel.org/show_bug.cgi?id=218726
-
-By Wren Turkal and Wren Turkal; 16 days ago; 25 activities, latest 6 days ago.
-Introduced in 56d074d26c58 (v6.9-rc1)
-
-Fix incoming:
-* Bluetooth: qca: Fix QCA6390 enable failure after reboot or disable
-  https://lore.kernel.org/regressions/92377e46-5eca-4c0b-b0b6-58394916abc3@leemhuis.info/
-
-
-clk: qcom: gdsc: lockdep splat
-------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
-https://lore.kernel.org/lkml/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
-
-By Johan Hovold; 30 days ago; 14 activities, latest 16 days ago.
-Introduced in 9187ebb954ab (v6.9-rc1)
-
-Fix incoming:
-* clk: qcom: gdsc: treat optional supplies as optional
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6677196fb1932e60b88ad0794a7ae532df178654
-
-
-x86/retpoline: MITIGATION_RETHUNK causes boot problems on x86-32 machines
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
-https://lore.kernel.org/lkml/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
-https://lore.kernel.org/lkml/20240413024956.488d474e@yea/
-
-By Borislav Petkov and Erhard Furtner; 17 days ago; 4 activities, latest 17 days ago.
-Introduced in 4461438a8405 (v6.9-rc1)
-
-Fix incoming:
-* https://lore.kernel.org/regressions/cd12cf1d-f956-4c66-8622-0009d30210b7@leemhuis.info/
-
-
-===================================================
-current cycle (v6.8.. aka v6.9-rc), unknown culprit
-===================================================
-
-
-[ *NEW* ] sched: kernel NULL pointer dereference in pick_next_task_fair
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZhuYyrh3mweP_Kd8@nz.home/
-https://lore.kernel.org/lkml/ZhuYyrh3mweP_Kd8@nz.home/
-https://lore.kernel.org/lkml/CA%2B9S74jmWiSWaGoMU9AZnJJd1Ck2qNBdkBZG1=J3PC8gsqqWxg@mail.gmail.com/
-
-By Sergei Trofimovich and Igor Raits; 7 days ago; 11 activities, latest 1 days ago.
-Introduced in v6.8..v6.9-rc3
-
-Recent activities from: Peter Zijlstra (4), Chen Yu (3), Xuewen Yan (2),
-  Tim Chen (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf() if no eligible entity is found
-  https://lore.kernel.org/lkml/20240419084520.GE12673@noisy.programming.kicks-ass.net/
-  2 days ago, by Peter Zijlstra
-
-Noteworthy links:
-* Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf() if no eligible entity is found [implicit due to Link/Closes tag]
-  https://lore.kernel.org/lkml/ZiEaKOQwiNEglYtS@chenyu5-mobl2/
-  3 days ago, by Chen Yu; thread monitored.
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/171310482077.3453606.17735678473578439767@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+#regzbot introduced: v6.1.82..v6.1.83
+
+
+Dear Jeremy,
+
+
+Am 21.04.24 um 15:54 schrieb Jeremy Lainé:
+
+> After upgrading my kernel to Debian's latest version (6.1.85), I
+> started encountering systematic kernel BUGs at boot, making the
+> bluetooth stack unusable. I initially reported this to Debian's bug
+> tracker:
+> 
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1069301
+> 
+> .. but have since confirmed that this is reproducible with vanilla
+> kernels, including the latest 6.1.y version (6.1.87).
+
+Thank you for reporting this and taking the time to pinpoint the version.
+
+> I tried various kernel versions (straight from kernel.org) to pinpoint
+> when the problem started occurring and the resultats are:
+> 
+> - linux 6.1.80 => OK
+> - linux 6.1.82 => OK
+> - linux 6.1.83 => BUG
+> - linux 6.1.85 => BUG
+> - linux 6.1.87 => BUG
+> 
+> I have included a trace below, and full system details are available
+> in the Debian bug listed above. Can you suggest any other tests I can
+> perform to help diagnose the origin of the problem?
+
+Would you be so kind to go the extra mail, and bisect the commit between 
+6.1.82 and 6.1.83 [1]?
+
+> [   22.660847] list_del corruption, ffff94d9f6302000->prev is LIST_POISON2 (dead000000000122)
+> [   22.660887] ------------[ cut here ]------------
+> [   22.660890] kernel BUG at lib/list_debug.c:56!
+> [   22.660907] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> [   22.660917] CPU: 10 PID: 139 Comm: kworker/u25:0 Not tainted 6.1.0-20-amd64 #1  Debian 6.1.85-1
+> [   22.660929] Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.19.1 03/14/2024
+> [   22.660936] Workqueue: hci0 hci_cmd_sync_work [bluetooth]
+> [   22.661128] RIP: 0010:__list_del_entry_valid.cold+0x4b/0x6f
+> [   22.661147] Code: fe ff 0f 0b 48 89 f2 48 89 fe 48 c7 c7 48 18 7a 9f e8 14 a1 fe ff 0f 0b 48 89 fe 48 89 ca 48 c7 c7 10 18 7a 9f e8 00 a1 fe ff <0f> 0b 48 89 fe 48 c7 c7 d8 17 7a 9f e8 ef a0 fe ff 0f 0b 48 89 fe
+> [   22.661156] RSP: 0000:ffffae0e406efde0 EFLAGS: 00010246
+> [   22.661164] RAX: 000000000000004e RBX: ffff94d9f6302000 RCX: 0000000000000027
+> [   22.661172] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff94dfaf8a03a0
+> [   22.661177] RBP: ffff94d859392000 R08: 0000000000000000 R09: ffffae0e406efc78
+> [   22.661182] R10: 0000000000000003 R11: ffffffff9fed4448 R12: ffff94d859392000
+> [   22.661187] R13: ffff94d859392770 R14: ffff94d858cb9800 R15: dead000000000100
+> [   22.661194] FS:  0000000000000000(0000) GS:ffff94dfaf880000(0000) knlGS:0000000000000000
+> [   22.661202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   22.661208] CR2: 00007f423c024038 CR3: 0000000799c04000 CR4: 0000000000750ee0
+> [   22.661214] PKRU: 55555554
+> [   22.661218] Call Trace:
+> [   22.661225]  <TASK>
+> [   22.661232]  ? __die_body.cold+0x1a/0x1f
+> [   22.661246]  ? die+0x2a/0x50
+> [   22.661257]  ? do_trap+0xc5/0x110
+> [   22.661268]  ? __list_del_entry_valid.cold+0x4b/0x6f
+> [   22.661279]  ? do_error_trap+0x6a/0x90
+> [   22.661289]  ? __list_del_entry_valid.cold+0x4b/0x6f
+> [   22.661298]  ? exc_invalid_op+0x4c/0x60
+> [   22.661307]  ? __list_del_entry_valid.cold+0x4b/0x6f
+> [   22.661316]  ? asm_exc_invalid_op+0x16/0x20
+> [   22.661328]  ? __list_del_entry_valid.cold+0x4b/0x6f
+> [   22.661337]  hci_conn_del+0x136/0x3e0 [bluetooth]
+> [   22.661466]  hci_abort_conn_sync+0xaa/0x230 [bluetooth]
+> [   22.661632]  ? abort_conn_sync+0x3d/0x70 [bluetooth]
+> [   22.661751]  hci_cmd_sync_work+0x9f/0x150 [bluetooth]
+> [   22.661915]  process_one_work+0x1c4/0x380
+> [   22.661929]  worker_thread+0x4d/0x380
+> [   22.661940]  ? rescuer_thread+0x3a0/0x3a0
+> [   22.661950]  kthread+0xd7/0x100
+> [   22.661959]  ? kthread_complete_and_exit+0x20/0x20
+> [   22.661969]  ret_from_fork+0x1f/0x30
+> [   22.661984]  </TASK>
+
+You can pipe the output through `scripts/decodecode` and it should show 
+more information.
+
+[…]
+
+
+Kind regards,
+
+Paul
+
+
+[1]: 
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
