@@ -1,88 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9201B977;
-	Mon, 22 Apr 2024 18:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CB315445B
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 18:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713810708; cv=none; b=uDWNnPrb6mrFnY3d1NAK+84YURFXmLeqrjsDiEKIvZQe2Wxg1lujEN0GASuURNTkzkSjM4kGCz/q9iNLX8rrlTCzUkZGRfCGOrIDBQikeNcLf/pYAgzkQU9tXz8ggNiK4RIC6uLH2phqV4cWg//dOrayL8F8iR2R+YAo7MsZyxs=
+	t=1713811502; cv=none; b=Vul+M85P7HJW4E334YmE4IlXfonYhtqReViijKTag8PfoynHhkat8CVQ2n92Dtp9OzkhaA7cnFwHFllQM1xeCLc3ESg5cLIC38SXKxjmoyZn0vMeyFm+neDeA8O0/Th8C0bhMHWLR+dhtn06MGBq0I9qdIgVU4/Js/QdoMWVde0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713810708; c=relaxed/simple;
-	bh=KuQ5PJtHrCWHxSHKneU9Z0JpuMsrCVLPVVmkGlQ8pO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L9PUZjb8SR5f9dBLOWJpstx0TE8uJ/ZbdnSLFC0wloQAlPnbKAUEGdWlYuzBU2UE02vFvqgsB/qM5w0C7+OfSyjkIXXz23TaMsw7VCzyFq4fVD9EH8/uec4mdancLqR29EGiaXRr8+BDP5rtAmvm1ixDUeFQ41q3owm3uEE9IgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xxv843Tn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713811502; c=relaxed/simple;
+	bh=Zg08VAu8nauRpnIvDrJshr55IRiYbKhYfj6bJE3SDsA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=C7Or84xZWw3+ZE9bbWCFvlqJ8w1ndw6PEPRlQ1HRxios4/lwprNXAz20JoqmXuvV7M1nnkkT5PN6EKrk/X9XweRJ3CV54hYK+RGODzsPA/WkoUmD4pk+HYdTRa4sJrOe7UsojO6sO8Z1Sh6C3F6Kh980Q86pOuBaqtQ7Xra+WbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LuHyid2L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KRu3qVFL; arc=none smtp.client-ip=64.147.123.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xxv843Tn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAEA0C113CC;
-	Mon, 22 Apr 2024 18:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713810707;
-	bh=KuQ5PJtHrCWHxSHKneU9Z0JpuMsrCVLPVVmkGlQ8pO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xxv843TnIPxiwHND70fOBxRQOE21fAc+W1rjgg/pbmewHydF80Ii5jUdr9hyuXjJN
-	 LVjaV2eHo8h5ZyTrPfStdWsMzH6tQW2YRVoKc25L9f95MSv2eoOSFgGKLi4gQhbIAI
-	 A7yhtrdjOb8QkYnzky8hWbj9lfriCl6mR+NedBZ7gCYKqAlev+SOZL8REhE2wvmXc0
-	 aFHEMEeQKWgd59UDawVofUoVh+8FghpNcvi40xGh0hIK80i4NHWkg1EmftD4AEbzJs
-	 BP4G5Tw/S3ELQM1iaICyM5YJ6BLYrqWK3qts288JmtlMl2R4snZU4SUZBfJHqDD0MA
-	 6+q86AGCFNPNA==
-Date: Mon, 22 Apr 2024 13:31:44 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Johan Hovold <johan+linaro@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: qcom: gdsc: treat optional supplies as optional
-Message-ID: <653hocuhibu6xvffxblek4zoot3ryk7ilu6tbqznnliyfi3ma4@uhxfwcpsteny>
-References: <20240325085835.26158-1-johan+linaro@kernel.org>
- <171226578689.615813.4474720130637817355.b4-ty@kernel.org>
- <59372e42-2eab-4efd-b7d8-d0ef6f8c2300@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LuHyid2L";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KRu3qVFL"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id A23E11C00063;
+	Mon, 22 Apr 2024 14:44:59 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 22 Apr 2024 14:45:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1713811499; x=1713897899; bh=mgft6jUidp
+	z5CjRfMsllDHpy7KhXWOBMGIK16U9uPOY=; b=LuHyid2LIkWHT0mCJwc9WYSdxQ
+	YGMmmIKdzCoY3gEmyqI1dNXzrPEftDl4FZWzvXPliN7TmV54MzY6TXw2w1Bsr8ex
+	N2aeKCn60gxIJhlkg6CI8+na9MJ/oF5IMULpGuYjQwTHNaQk1b5OSAGfKXXqljvc
+	ar+5ysi54MtFdGBs6GT11PyXa3m4aLJeIBFocB+Nq8h8UL4AmBWoVFJHqb2DtzBf
+	HrxJOeZWECRhLYJeC06uxMw9vkjpqol1rIQYv07j95PpLPOGj7JiQUIi+LDdFCjk
+	zgMGLORgCYXc41qtUQvIS1euirFr2zUN2EK7Ha0Qa7xvx40SzxtYzRYHf80A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1713811499; x=1713897899; bh=mgft6jUidpz5CjRfMsllDHpy7KhX
+	WOBMGIK16U9uPOY=; b=KRu3qVFLTAuHUE1zOb07/xhMC+3beUldNJrS6HjA/QFM
+	ZXEJzUPlo1Jz1KX6Rw455uE1YnVrOIxm0IXZJSWYzZjJGXRnfzdtsLihuwH8Cvhd
+	HECHwMAtpZ47myEM5YgOE34VMTrG/qf8bksjBuLAL3XX3CuJslEFAys4l8tW9eZr
+	clV6EUPeNYOXBV7DMyQulSRyLk+aMBWdjmUqWAJTs8bf/dmEFKBgcCwuCiXVa+yh
+	GYaU2cVUzRGN5ytm8h3H3L2H7lS3aws3MoQp0b3jCXBFmGXFr5zonkJuV5gbKpu9
+	8vAxqB7MnNR5bm9mOvv9VQJdOOA/hG6mnVwIyuPiMg==
+X-ME-Sender: <xms:KrAmZhHumwRg82-kFREhL7wbr7uJPl1AHuqFICMCDLV2W_ftX_9JDg>
+    <xme:KrAmZmW_6Yv9YxSFtVh5l2Yg1treuyZn4pZdn6uJ4xAtDLubgrJ5QsBSsel0dTLCf
+    Zw1Tm3tVZtZXUimPhE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekledgudeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:KrAmZjKU95KCUJ3ji46TssMCG3ORz-ezjiPJwtA3oqI2rdqRt8fW7w>
+    <xmx:KrAmZnFxikEtwVA4o2Y-cRoIIFUK2mW1UMmdMxurgg0LYnOLwUviJw>
+    <xmx:KrAmZnWXTRhHGGtzoUmjQwetE1XE0BYMDBhQ1_oPl2DeClY_rnZRWQ>
+    <xmx:KrAmZiM336VRIFhL2GExtjrlM5SGfPu0zzW9ln0MsEgNO97VYTimXA>
+    <xmx:K7AmZnTQUp18hxmoDRZbII8zjBzs3J-AXYX5Vb2Gr4jlh1KAMoD5ccxQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 3EAADB6008D; Mon, 22 Apr 2024 14:44:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59372e42-2eab-4efd-b7d8-d0ef6f8c2300@leemhuis.info>
+Message-Id: <24db3769-9b50-4cf9-b5f6-a8cc068f064d@app.fastmail.com>
+In-Reply-To: <ZiacX2iNP_bI884s@FVFF77S0Q05N>
+References: 
+ <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
+ <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+ <cd172d05-15f6-427c-b6e3-d68fc746b940@app.fastmail.com>
+ <ZiYwkKLRVgvrQrnK@FVFF77S0Q05N>
+ <df782e40-95bf-4f8e-96c8-355ff0109e3a@app.fastmail.com>
+ <ZiacX2iNP_bI884s@FVFF77S0Q05N>
+Date: Mon, 22 Apr 2024 20:44:37 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mark Rutland" <mark.rutland@arm.com>
+Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Anders Roxell" <anders.roxell@linaro.org>, "Marc Zyngier" <maz@kernel.org>,
+ joey.gouly@arm.com, "Oliver Upton" <oliver.upton@linux.dev>
+Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension `pauth'
+Content-Type: text/plain
 
-On Mon, Apr 22, 2024 at 12:31:37PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 04.04.24 23:22, Bjorn Andersson wrote:
-> > 
-> > On Mon, 25 Mar 2024 09:58:35 +0100, Johan Hovold wrote:
-> >> Since commit deebc79b28d6 ("clk: qcom: gpucc-sc8280xp: Add external
-> >> supply for GX gdsc") the GDSC supply must be treated as optional to
-> >> avoid warnings like:
-> >>
-> >> 	gpu_cc-sc8280xp 3d90000.clock-controller: supply vdd-gfx not found, using dummy regulator
-> >>
-> >> on SC8280XP.
-> >>
-> >> [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/1] clk: qcom: gdsc: treat optional supplies as optional
-> >       commit: 6677196fb1932e60b88ad0794a7ae532df178654
-> 
-> Bjorn, quick question: this regression fix after more than two and a
-> half weeks is not yet mainlined. Is there a reason? Or am I missing
-> something here?
-> 
+On Mon, Apr 22, 2024, at 19:20, Mark Rutland wrote:
+> On Mon, Apr 22, 2024 at 02:11:05PM +0200, Arnd Bergmann wrote:
+>> On Mon, Apr 22, 2024, at 11:40, Mark Rutland wrote:
+>> > On Mon, Apr 22, 2024 at 11:25:25AM +0200, Arnd Bergmann wrote:
+>> >> On Mon, Apr 22, 2024, at 11:13, Mark Rutland wrote:
 
-I failed to propagate it, until only a few days back. It should show up
-shortly.
+>> > the presence of ARMv8.3-A instructions, and so pauth usage elsewhere is fine.
+>> 
+>> I tested with the old binutils versions I have here and found
+>> that anything that supports v8.3 also understands pacga, but
+>> '.arch_extension pauth' only works in binutils-2.35 and higher,
+>> presumably because it started out as a v8.3+ feature but was
+>> later turned into an optional extension for all versions.
+>> 
+>> Since there is a Kconfig check for armv8.3-a support already, I think
+>> it's safe to just drop the .arch_extension pauth.
+>
+> That'll be safe, but it does mean that we'd need to *not* support pointer auth
+> for nested virt when we have a toolchain for which CONFIG_AS_HAS_ARMV8_3=n,
+> unless our minimum supported AS supports ARMv8.3.
+>
+> If our minimum supported AS *doesn't* support ARMv8.3, then we'd either need a
+> new Kconfig symbol for NV_PAUTH support, or make CONFIG_ARM64_PTR_AUTH depend
+> upon CONFIG_AS_HAS_ARMV8_3.
+>
+> AFAICT our options are:
+>
+> (a) Manually assembly PACGA
+>
+> (b) Change CONFIG_ARM64_PTR_AUTH to depend upon CONFIG_AS_HAS_ARMV8_3=y
+>
+> (c) Add and use new Kconfig symbol for NV PAUTH, dependent upon
+>     CONFIG_AS_HAS_ARMV8_3=y
+>
+> (d) Bump the minimum supported version of AS so that we can depend upon ARMv8.3
+>     support, and just open-code the ".arch armv8.3-a" in the NV pauth code.
+>
+> ... and maybe some variations on that.
 
-Thanks,
-Bjorn
+Right, I misread the current Kconfig logic and assumed that
+we already do b), but it's conly CONFIG_ARM64_PTR_AUTH_KERNEL
+that depends on CONFIG_AS_HAS_ARMV8_3, not the
+more global CONFIG_ARM64_PTR_AUTH.
 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
+I think any of the above would be fine. I see that binutils-2.28
+was the first version to include armv8.3-a support back in 2016.
+The only distros that are old enough to ship something older
+than that (rhel 7, sles 12, debian 8) also ship with a gcc version
+that no longer builds the kernel, so doing b) would be the minimum
+effort fix and still have very little risk of anyone having to
+turn it off.
+
+     Arnd
