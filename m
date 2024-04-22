@@ -1,160 +1,96 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C76F4C630
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 12:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000BA14F13C
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 13:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790780; cv=none; b=eWdWLZlFneP4WvFHh7wqNXoUMp+6WkwTQTgfF3/dysyr/zX8+KOnlAJIMlRe2s1t3v9Q2hUNXBAtgoVd7+EMVQXCY7YbnP4gNwXdLeTbVws6GISrfSOpDza/d0m3Qje1C4xwGY3dOJ15V5NUnJUpjN+Z7GSXyYzUAK1uhoB+OWA=
+	t=1713790972; cv=none; b=Yr1tudnWIfJ+EaSACwhgDoyoDNg0KaDpUKmVh2jLjX2muaAZ9Q7utgyV39yZUUvy1WOntWvPS120haVx5mh8RUQfpv9IKOxjUFvKN+nI0m++nISX5o8eKWuEYCDaK3pQeWiF+4VcSe+LdUQO2E6SJ2ArT2y3YeTOD9LqOj//WGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790780; c=relaxed/simple;
-	bh=JkRtCItjT4NMSrbW/cfwXoeV8pTXaXLRZxT9BbtPJpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O/Kn2zFKvCx8g+zHfToLlXrUj0qEdKHxOO+3wznnLGde3nL0v13SgTLMXu4i7+Uz8jhAgRe51okJ2USjKkDxq/+9k7ddzCeGR1vnSd7INCdmay9C4vDXeKQ9Dj1sDwrBxJUyzO62/Yx3UFPd6rx7eB88yJRcMiXOnggwjRw1GkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jcGJzdEx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713790972; c=relaxed/simple;
+	bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=csLXEk22U3XkhS5AILrDmome0LIDXOGgMyyhI78ixPj3BhTFKQqHU2vi3nPeFtdVVw/aURE4v7B1maXSBUeS1A6JLNgZ4dMXht4ZFzb23AGwbMpjQIt39oOp23nJfSemygZoCcwUAjKBF5WNLZssiAqYia0lQbFke0r8Bnks4N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MOpnruzD; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jcGJzdEx"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M9cRd4006564;
-	Mon, 22 Apr 2024 12:59:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=8wrVt0/VjRkt1zb9z5YMK3jk5u7j2B45htwyCqFXlv0=; b=jc
-	GJzdExp6K+/kfWOay9z8KeXDfOjZktqzknxXzohvbIScMtMuqhvenQw3js40ltF1
-	Ln2idpepDQKEP7kgkoFTDDBpBDbteF4+qW3bSlppomVcPsFW07OYeT0UeWV6RZFy
-	uzts5xGi4hczD5+qEBLvuFGXMyGQgRXEWrdsU80HQM/hLZy05Bz05Tnxl37KUoXh
-	Nxvzmua7KPRXjVNeHSGI7oYoZp/2tV5cYlVlOFjvZaEQGlJLe48METRINfHGtSD6
-	Tkr5uOr6qjM+nWed+XFpkotJbeXiu73G2wpjv31AeNfwAGe267IdWaX8e3W7qW1H
-	K2faaPdQAB5+330Q1Ejw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnne28dyp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 12:59:33 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MCxWfd030679
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 12:59:32 GMT
-Received: from [10.253.37.80] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 05:59:29 -0700
-Message-ID: <9ac11453-b7cf-43f3-8e46-f96e41ef190d@quicinc.com>
-Date: Mon, 22 Apr 2024 20:59:27 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MOpnruzD"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso3413812276.0
+        for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 06:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713790968; x=1714395768; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
+        b=MOpnruzDKcAHVHNm+5jeg4f7jYbng1gp77zkprcrkbQG/3IaqOmH+F69UhOudlAe+q
+         yDRSTkGh+u4jSKqHLkWsd6cls3ZV0SRFZILH89V/+Kwwmz1IFRhKQ8G/LpNvNTiu+c3P
+         jv3hrKFYbeQx4uKCc152q3P0c4xYY7UHs6N8ucrJcLYEyeuI9y7NiyEhmw+iYJj5a/kx
+         z33wICBubJY9yMRQJVeTsuAA4Xvb6UqcHRUqYq5kySNmOGsYxfHzhECzGQJgQQLGKtZL
+         CJ4svzVQXn3K5mjnY8gURZpWrsjXerIC+4LFWDrcGiUS/rdfm6LQJKzCNyF8dsDxXSUp
+         bvOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713790968; x=1714395768;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
+        b=OdToDwuo52paa9ZyIf7x6QvhgTIwp84VhrnfPvNlUPEVQFrc7aFujUABON3UjTV6yP
+         /ZXIYmdHLHa1cZxnHW7C++Pcx+I4wym5mEFNGoN0MDsaMpFUXswf9lelJF3CQ/Cu9WfA
+         lpMW7OognuyslWADVsfUtBkbs7MQRq30GmEM7I7tVHETHIZMUiIgP/W0RM0VpLxMDipk
+         xZZkqSDe0wm/neZNJ253qfgrtSwkS2TiQdXqWjeSY6Kdy09W4Ha8v1O2kkyNDZVGMsbH
+         K/mXthgj13y4MgCp3R/k6VuwJ7vhFG1DRkffEHpy8oMKN5/hE8EdYgcEEyXZUYCpn6qo
+         1Avw==
+X-Forwarded-Encrypted: i=1; AJvYcCVErQzfpiw7kSpKCCJFhjqZqfvn9qvb3A4sWq0ByI0Pga/97B9r+vrHBmluAhRfOoWXqKeHx8cAsqaH7xYncCPlHc1eUPkS0QciIs8=
+X-Gm-Message-State: AOJu0YxVGdLN0aW455w3rnta7aV/3nkuUm1lmgkBx4gH2roPMs3AmRI3
+	lgXX5KYTt4JlGjB5w4pULUXKbUb8lGh/D4ZYZUNIuocjQWDMFMZxxBPI3j8EIZuspiknRVfHaW5
+	lxZyo6g3xTVCX5gvSRnM/7ZTrtEZzgGp8aMT4Dw==
+X-Google-Smtp-Source: AGHT+IHerH6GOkHsD8OHWFPyVWXygrWO3rG6LpK6SV9ja2GjSfh6qAzzo2Cj7TtuGSpU6sBRx/BRBRdxUbdN9pELSjQ=
+X-Received: by 2002:a25:8051:0:b0:dc6:f0ac:6b53 with SMTP id
+ a17-20020a258051000000b00dc6f0ac6b53mr8238555ybn.15.1713790968038; Mon, 22
+ Apr 2024 06:02:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] Bluetooth: qca: Fix BT enable failure for
- QCA_QCA6390 after disable then warm reboot
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
-        <marcel@holtmann.org>
-CC: <linux-bluetooth@vger.kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <wt@penguintechs.org>, <regressions@lists.linux.dev>
-References: <1713650800-29741-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713771497-5733-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713771497-5733-3-git-send-email-quic_zijuhu@quicinc.com>
- <f744a2ba-f842-454a-a04f-76207f0db9bf@linaro.org>
- <930736f3-696c-4076-93fb-d879691bac66@quicinc.com>
- <01b0f63e-55f0-4396-bb8b-521bbe9b060e@linaro.org>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <01b0f63e-55f0-4396-bb8b-521bbe9b060e@linaro.org>
+References: <1713564212-21725-1-git-send-email-quic_zijuhu@quicinc.com>
+ <1713650800-29741-1-git-send-email-quic_zijuhu@quicinc.com>
+ <369512e2-f091-4370-bce5-9ac32178dc4d@penguintechs.org> <a6ae69ad-b602-4cfc-9f76-8932f357d30b@kernel.org>
+ <c0f7036d-c129-400b-85a2-1414ec3d2622@quicinc.com> <dc17aea1-9399-4c2b-8775-fa0a7f602035@penguintechs.org>
+ <CACMJSevocRot6J06uvridRw9MZFftJrkCyYBgXhLnwfapVPnCw@mail.gmail.com> <5da9ecae-35c7-4968-9f16-3f10e04c2b1a@penguintechs.org>
+In-Reply-To: <5da9ecae-35c7-4968-9f16-3f10e04c2b1a@penguintechs.org>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Mon, 22 Apr 2024 15:02:37 +0200
+Message-ID: <CACMJSetZ14Pm=m9e1ka+m9pUbSwCfV2agcaWBd7aWJu2ngWmbA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Fix two regression issues for QCA controllers
+To: Wren Turkal <wt@penguintechs.org>
+Cc: quic_zijuhu <quic_zijuhu@quicinc.com>, Krzysztof Kozlowski <krzk@kernel.org>, luiz.dentz@gmail.com, 
+	luiz.von.dentz@intel.com, marcel@holtmann.org, 
+	linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7P5UiZAPTQtkCccWb4_CJ_zdaVrIdgVV
-X-Proofpoint-ORIG-GUID: 7P5UiZAPTQtkCccWb4_CJ_zdaVrIdgVV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220057
 
-On 4/22/2024 8:22 PM, Krzysztof Kozlowski wrote:
-> On 22/04/2024 13:25, quic_zijuhu wrote:
->> On 4/22/2024 3:42 PM, Krzysztof Kozlowski wrote:
->>> On 22/04/2024 09:38, Zijun Hu wrote:
->>>> From: Zijun Hu <zijuhu@qti.qualcomm.com>
->>>>
->>>> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
->>>> serdev") will cause below regression issue:
->>>>
->>>> BT can't be enabled after below steps:
->>>> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
->>>> if property enable-gpios is not configured within DT|ACPI for QCA_QCA6390.
->>>>
->>>> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
->>>> during reboot, but also introduces this new issue regarding above steps
->>>> since the VSC is not sent to reset controller during warm reboot.
->>>>
->>>> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
->>>> once BT was ever enabled, and the use-after-free issue is also be fixed
->>>> by this change since serdev is still opened when send to serdev.
->>>>
->>>> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
->>>> Reported-by: Wren Turkal <wt@penguintechs.org>
->>>
->>> NAK. This is way too much. Previous discussion is going, I asked there
->>> questions and before any answers happen, you keep sending new version.
->>> This leads to previous discussion gone/missed.
->>>
->>> You ignored several questions and feedbacks.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> i believe my commit message explains WHAT/WHY/HOW about this issue.
->>
->> 1) the qca_serdev_shutdown() was introduced by my below commit
->> Commit 7e7bbddd029b ("Bluetooth: hci_qca: Fix qca6390 enable failure
->> after warm reboot")
->>
->> 2) then Krzysztof's below commit was made to fix use-after-free issue
->> but also causes discussed regression issue.
->> Commit 0b7015132878 ("Bluetooth: btusb: mediatek: add MediaTek
->> devcoredump support")
->>
->> 3) my fix will solve both this issue and the use-after-free issue.
-> 
-> I had to keep reminding you about answering to question multiple times.
-> So one more time:
-> 
->> You did not address original issue of crash during shutdown and did
-> not clarify my questions.
-> 
-let me explain here. original crash your commit fixed should only
-happens with machine for which property enable-gpios is configured,
-which also results in quirk HCI_QUIRK_NON_PERSISTENT_SETUP is set. for
-this case. for this case, serdev has been closed when
-qca_serdev_shutdown() write the VSC to serdev, so cause the crash.
-your commit fix this issue for this cause but cause regression for the
-case my commit message described.
+On Mon, 22 Apr 2024 at 12:42, Wren Turkal <wt@penguintechs.org> wrote:
+>
+> On 4/22/24 1:51 AM, Bartosz Golaszewski wrote:
+> >
+> > This all sounds plausible. However just reverting this patch is a
+> > waste of time as checking IS_ERR_OR_NULL() on the return value of
+> > gpiod_get_optional() and continuing on error is wrong as I explained
+> > several times under Ziju's emails already. I provided a suggestion:
+> > bail out on error returned from gpiod_get_optional() even if the
+> > driver could technically continue in some cases. I don't want to have
+> > to argue this anymore.
+>
+> I'm not trying to argue. I am trying to find a path forward as a
+> concerned user. I am also trying to figure out if there is any way I can
+> help resolve this. I am not a kernel developer, but I would really like
+> to contribute in some way, if possible.
+>
 
->> Anyway, any explanation providing background how you are fixing this
-> issue while keeping *previous problem fixed* is useful but should be
-> provided in commit msg. I asked about this two or three times.
-> 
-i have provided it in this v5 commit.
->> BTW, provide here exact kernel version you tested this patches with.
-> Also the exact hardware.
-> 
-we can provide the kernel version in the bugzilla, as explained above,
-for the same soc_type, different machine have different config.
-different config have different result.
-> Best regards,
-> Krzysztof
-> 
+Can you test the patch[1] I just sent?
 
+Bart
+
+[1] https://lore.kernel.org/linux-bluetooth/20240422130036.31856-1-brgl@bgdev.pl/
