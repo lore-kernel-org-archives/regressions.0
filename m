@@ -1,96 +1,83 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000BA14F13C
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 13:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713790972; cv=none; b=Yr1tudnWIfJ+EaSACwhgDoyoDNg0KaDpUKmVh2jLjX2muaAZ9Q7utgyV39yZUUvy1WOntWvPS120haVx5mh8RUQfpv9IKOxjUFvKN+nI0m++nISX5o8eKWuEYCDaK3pQeWiF+4VcSe+LdUQO2E6SJ2ArT2y3YeTOD9LqOj//WGE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713790972; c=relaxed/simple;
-	bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=csLXEk22U3XkhS5AILrDmome0LIDXOGgMyyhI78ixPj3BhTFKQqHU2vi3nPeFtdVVw/aURE4v7B1maXSBUeS1A6JLNgZ4dMXht4ZFzb23AGwbMpjQIt39oOp23nJfSemygZoCcwUAjKBF5WNLZssiAqYia0lQbFke0r8Bnks4N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MOpnruzD; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEC15025E
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 15:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713798545; cv=pass; b=nEwja2e60jz4sbazR1C16gckStvXRgE1HqXVPY6qPquCb+IW/DpcdRJrIAG/kM8kfkk9LASMXOAdXyEKjbURgucUiEN46B7QQ7y54HJzX7l1qQ51EE08xPZ65osMEEZhM1Xsvdt6QqSZbQRgoJaWrKLObrOuoUNWPc/i/2gYZsc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713798545; c=relaxed/simple;
+	bh=Laelx3WwGmYXAKn58hviI/QXfuGutDv98jUfvYbPftY=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=G99MOCvDwz8aFVxqeWYyQMKJ09DcAgjlt/aRTOHe0axq00N0F/dJ0NWq6Cih3TnfiIAMVEeOgzTp0zvNE0fUMUDoNcznyWjuijhd+l8sGpK16eXuwzjYJ6amZJhbxP40HXa+U8sHihyMh8+b9MSXWv0+3foTrogn4/RVh1BC6Qk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=X59CekS+; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MOpnruzD"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso3413812276.0
-        for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 06:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713790968; x=1714395768; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
-        b=MOpnruzDKcAHVHNm+5jeg4f7jYbng1gp77zkprcrkbQG/3IaqOmH+F69UhOudlAe+q
-         yDRSTkGh+u4jSKqHLkWsd6cls3ZV0SRFZILH89V/+Kwwmz1IFRhKQ8G/LpNvNTiu+c3P
-         jv3hrKFYbeQx4uKCc152q3P0c4xYY7UHs6N8ucrJcLYEyeuI9y7NiyEhmw+iYJj5a/kx
-         z33wICBubJY9yMRQJVeTsuAA4Xvb6UqcHRUqYq5kySNmOGsYxfHzhECzGQJgQQLGKtZL
-         CJ4svzVQXn3K5mjnY8gURZpWrsjXerIC+4LFWDrcGiUS/rdfm6LQJKzCNyF8dsDxXSUp
-         bvOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713790968; x=1714395768;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Cq4aokMbWo87EMNuSZpHsDDMzRKgaUub2cLGzrZNZ8=;
-        b=OdToDwuo52paa9ZyIf7x6QvhgTIwp84VhrnfPvNlUPEVQFrc7aFujUABON3UjTV6yP
-         /ZXIYmdHLHa1cZxnHW7C++Pcx+I4wym5mEFNGoN0MDsaMpFUXswf9lelJF3CQ/Cu9WfA
-         lpMW7OognuyslWADVsfUtBkbs7MQRq30GmEM7I7tVHETHIZMUiIgP/W0RM0VpLxMDipk
-         xZZkqSDe0wm/neZNJ253qfgrtSwkS2TiQdXqWjeSY6Kdy09W4Ha8v1O2kkyNDZVGMsbH
-         K/mXthgj13y4MgCp3R/k6VuwJ7vhFG1DRkffEHpy8oMKN5/hE8EdYgcEEyXZUYCpn6qo
-         1Avw==
-X-Forwarded-Encrypted: i=1; AJvYcCVErQzfpiw7kSpKCCJFhjqZqfvn9qvb3A4sWq0ByI0Pga/97B9r+vrHBmluAhRfOoWXqKeHx8cAsqaH7xYncCPlHc1eUPkS0QciIs8=
-X-Gm-Message-State: AOJu0YxVGdLN0aW455w3rnta7aV/3nkuUm1lmgkBx4gH2roPMs3AmRI3
-	lgXX5KYTt4JlGjB5w4pULUXKbUb8lGh/D4ZYZUNIuocjQWDMFMZxxBPI3j8EIZuspiknRVfHaW5
-	lxZyo6g3xTVCX5gvSRnM/7ZTrtEZzgGp8aMT4Dw==
-X-Google-Smtp-Source: AGHT+IHerH6GOkHsD8OHWFPyVWXygrWO3rG6LpK6SV9ja2GjSfh6qAzzo2Cj7TtuGSpU6sBRx/BRBRdxUbdN9pELSjQ=
-X-Received: by 2002:a25:8051:0:b0:dc6:f0ac:6b53 with SMTP id
- a17-20020a258051000000b00dc6f0ac6b53mr8238555ybn.15.1713790968038; Mon, 22
- Apr 2024 06:02:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="X59CekS+"
+Message-ID: <adfd2a680e289404140ef917cf0bd0ab@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1713798535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NHiQDl3huVUrNs3zqg+ufyzgDB4ufs3iLmI3DcUaM4g=;
+	b=X59CekS+vQyGU4mbbf+XSXxI1Qf14YQydzv+LrL9pId/xgrIM/FP3dIfAHFRqONuzX+fly
+	F6uB0f/V05e7G7D+gwWnvc36Ru6RcUKhXv5TVSiNYcfGY6TGglPULS8v0qyW/wOWvKcD1b
+	IhfEOEmViOeRTIgeqUsn1RWQcBANLA5QFxWltfhVgwsgGeCRhLr/1GCwIP9Di3CwewoYj5
+	0Bb855HwfQeLWUsqRuJlUswD2EUPHq3aj7sloxNW6O7Y4mZnlXINn2aLDW4ftXTbmx/YMQ
+	8S08nCBtrvC88p3mXM+YPkJVj2IZA0O0uTC4ALQcf6rCvrLUNbog5GQh3MEkBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1713798535; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NHiQDl3huVUrNs3zqg+ufyzgDB4ufs3iLmI3DcUaM4g=;
+	b=f7vLiCUmWsRz/5cThcXHeJGzr4+qoFf4Owt0NE+badFXbOQcaS3pp64OGMgwIJ1+atALDi
+	1qDAVVvAt+uKlzmmqw9pghabd/pBRTuW/TIrKOmRuZLrAGa1wdTfFlRpEaZ+zcnoMReUYY
+	SnnHMuSGuKC9RWVgu3NIDImFD+ZNCQG5EFYlJ98tca+CpOEEpqlG2JRxtGM5DUDdq/7KPw
+	F+79xaQcq7g4fQtLuCZ4dOyfIM7tVaficOn088RogntPNGUtnz/YoG0m1T1t5t637czDWs
+	WCW99AXjVm5+TcV4eUyLx6XrFOlcMZsqcL3ta51GNRZiLpbaKhK5LzO6tk7GKw==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1713798535; a=rsa-sha256;
+	cv=none;
+	b=hw1j1lauKgSuJHYQk7fonUtn2dkUrf4CZRJ0yExPcETXQy6TUZkGjbn6wyir/5+Zhom7TY
+	3ymlJTI9VSTJkqej2Crfb8QaK//dNqhdZjSKSaMsswwxHNEWpf6FY4Xw8AQfFrdRF3KkF4
+	hrcSbwqQK0POMgZwtDhG5NYi9PHWWqgl984MECj2OGMYyRdKTRgxp+yRj8eF5s232kbPjc
+	jEs6N8zf4WmWXuPDu6JTNZNHQewwll1dN9R1PRChbKBLiuNHyXNUUit2wvfrZgaW/JfZX2
+	X9Y9C1uqJw/xY2nDjCFYwMkDLZJKKP/FBTEm7+jQ1QqXOkpG55EH0V0Oetipdw==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
+ gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
+ linux-cifs@vger.kernel.org
+Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
+ overflow frame end of buf" and invisible files under certain conditions
+ and at least with noserverino mount option
+In-Reply-To: <ZiLQG4x0m1L70ugu@eldamar.lan>
+References: <ZiBCsoc0yf_I8In8@eldamar.lan>
+ <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+ <ZiCoYjr79HXxiTjr@eldamar.lan>
+ <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
+ <ZiLQG4x0m1L70ugu@eldamar.lan>
+Date: Mon, 22 Apr 2024 12:08:53 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1713564212-21725-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713650800-29741-1-git-send-email-quic_zijuhu@quicinc.com>
- <369512e2-f091-4370-bce5-9ac32178dc4d@penguintechs.org> <a6ae69ad-b602-4cfc-9f76-8932f357d30b@kernel.org>
- <c0f7036d-c129-400b-85a2-1414ec3d2622@quicinc.com> <dc17aea1-9399-4c2b-8775-fa0a7f602035@penguintechs.org>
- <CACMJSevocRot6J06uvridRw9MZFftJrkCyYBgXhLnwfapVPnCw@mail.gmail.com> <5da9ecae-35c7-4968-9f16-3f10e04c2b1a@penguintechs.org>
-In-Reply-To: <5da9ecae-35c7-4968-9f16-3f10e04c2b1a@penguintechs.org>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Mon, 22 Apr 2024 15:02:37 +0200
-Message-ID: <CACMJSetZ14Pm=m9e1ka+m9pUbSwCfV2agcaWBd7aWJu2ngWmbA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] Fix two regression issues for QCA controllers
-To: Wren Turkal <wt@penguintechs.org>
-Cc: quic_zijuhu <quic_zijuhu@quicinc.com>, Krzysztof Kozlowski <krzk@kernel.org>, luiz.dentz@gmail.com, 
-	luiz.von.dentz@intel.com, marcel@holtmann.org, 
-	linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Mon, 22 Apr 2024 at 12:42, Wren Turkal <wt@penguintechs.org> wrote:
->
-> On 4/22/24 1:51 AM, Bartosz Golaszewski wrote:
-> >
-> > This all sounds plausible. However just reverting this patch is a
-> > waste of time as checking IS_ERR_OR_NULL() on the return value of
-> > gpiod_get_optional() and continuing on error is wrong as I explained
-> > several times under Ziju's emails already. I provided a suggestion:
-> > bail out on error returned from gpiod_get_optional() even if the
-> > driver could technically continue in some cases. I don't want to have
-> > to argue this anymore.
->
-> I'm not trying to argue. I am trying to find a path forward as a
-> concerned user. I am also trying to figure out if there is any way I can
-> help resolve this. I am not a kernel developer, but I would really like
-> to contribute in some way, if possible.
->
+Salvatore Bonaccorso <carnil@debian.org> writes:
 
-Can you test the patch[1] I just sent?
+> I'm still failing to provide you a recipe with a minimal as possible
+> setup, but with the instance I was able to reproduce the issue the
+> regression seems gone with cherry-picking 35235e19b393 ("cifs: Replace
+> remaining 1-element arrays") .
 
-Bart
-
-[1] https://lore.kernel.org/linux-bluetooth/20240422130036.31856-1-brgl@bgdev.pl/
+It's OK, no problem.  Could you please provide the backport to stable
+team?
