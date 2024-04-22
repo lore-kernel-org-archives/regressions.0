@@ -1,86 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE8D1CAAE;
-	Mon, 22 Apr 2024 21:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59DC1BED91;
+	Mon, 22 Apr 2024 22:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713820998; cv=none; b=VJF8m9ue1xfc/FjXB7++NSx01C38jDYw+y2iLTS15qZ3jqd0V5mCWasDynb4nxgrE2PlfQgQOjhhQbQBNpIAvld965znJFps3ZMQWGdJpyVfkBlHixvig64KuePDovgNPKs92izFsdE532+LJXXBEkU/eFZKsseLHa1ckI95h/4=
+	t=1713826716; cv=none; b=mdIVyx23hJSi5ZfYqgTgC7Sc/0Sp8D/jTO/hEneQ27++IAyFFJCBi2FdlfbLv0uxPBMNVppIcSUjWGQTm58VvfYrzAzFI9pglZ1kD7Vog49jRUgQ8F43208jHrq5gxyFgwLHFmB4cDiAgHMKwLma+T7YUzPUCDFbTXAYbbzegJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713820998; c=relaxed/simple;
-	bh=tzeHjNaEfBO3NYlDT6yxKwXd370qrhnCwbKZBnOVPz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkQzMDrO6N/T9ZYNPn7XYiUdROMJVYDhV62R6WO3CMNEjdANMVU9HSr9JXzchpSifb4FOkj6iO4+lmb9TBu+AHgzecO+p98l/uK6V8KO0HyY399c24ufoHi7y0IiWaF3revZ77jQ84bQQvF6Dt+2D2tY+/32ef1XyP3cYERY7BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcsoZQxT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713826716; c=relaxed/simple;
+	bh=esn2V8XOCiYcLyvtAXzH1iAi1DKCTXra+1968f985U0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oil+xVEirbRA+ltGZwVZOEPOEw2ad2cdttr3ZvypggaEiSrL1pNtpg/kWjgvwEMjjWmt84iGQZqtUUiMdx5R3A87jRa39gxRiEVGieRUzjvkWLDpmgPg38eESTnu4o8kmwd64t0fOcUKl7WxBp9epFmwlKxWhoyLLJyorBWviAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xhnpmzsb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcsoZQxT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87751C113CC;
-	Mon, 22 Apr 2024 21:23:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xhnpmzsb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522B7C3277B;
+	Mon, 22 Apr 2024 22:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713820997;
-	bh=tzeHjNaEfBO3NYlDT6yxKwXd370qrhnCwbKZBnOVPz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BcsoZQxTNpD3enev7vPNdMAe2JB2Hw85rbfMFUABtUjUYRGPvLjPacvxXGtszleh7
-	 wU1b42feVmMU4MAy24hIsg3trEuYD3F8C1UZMfiV8+oFl2J/SRn7aEKQduxYgCyGq9
-	 ed+oKyLoiQFFrkRNTvfCCX+8wKEtxxcK5KVek8Hh9f6IYV4266vFyPXdxJkdZ6D4Ly
-	 OhxC2WFiOcnhAmRZik5b+bLM803UDg+QFXf+raexu5aoSjf9elJXWv7D9xSmukwMOl
-	 xZn5bTkP4RmlG2FQYYiPRbv0NPL91ykW13DjjEQ7GtBuOBYn3G7rLqk6yZdlWhEXC2
-	 dPY7kcdZtWJ0Q==
-Date: Mon, 22 Apr 2024 16:23:15 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
-Message-ID: <zyu6awsydy5ypb7tn7wzgumxbh4qrw2g5luc3w6trzlnmtu64v@c4knsvtk532w>
-References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
- <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
- <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
- <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
- <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
- <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
- <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
- <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
+	s=k20201202; t=1713826716;
+	bh=esn2V8XOCiYcLyvtAXzH1iAi1DKCTXra+1968f985U0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Xhnpmzsbf9Mri1AICNzleKpdSdPcQM5uzRQQr6iR5Ef1rAs0QixfSV42TtZ8JSz93
+	 2d9+wvFcvU+BcSqYnIvPJT8mpS8NaxX5w+AwVQn45OolfkGaJ8xEiVTaptQY9uSpSJ
+	 aM2YqKzG8KsdDS/FHCrD7Nenfbnyobf7qjaRWU02SgL3g0AW9JVgLMixb0mO+Wk/Ac
+	 Wh0/OHnim4+ajVdvalr1HuwwLmkPYb8KoY1rLQFaHkrBcnFIHa8sEy1jTgKJaabvzm
+	 9UvJfmAjVcOKNQziosCGWJgX2WHCybSDAHdSC8EYpzTcc6h1v/PEdplArJDMwI7FBt
+	 0+ckEQ6kn0mGg==
+Received: from [12.161.88.66] (helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rz2cL-006yKr-Kz;
+	Mon, 22 Apr 2024 23:58:34 +0100
+Date: Mon, 22 Apr 2024 23:58:24 +0100
+Message-ID: <87v849t373.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	joey.gouly@arm.com,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension `pauth'
+In-Reply-To: <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+References: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
+	<ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 12.161.88.66
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkft-triage@lists.linaro.org, regressions@lists.linux.dev, arnd@arndb.de, anders.roxell@linaro.org, joey.gouly@arm.com, oliver.upton@linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Apr 17, 2024 at 04:07:26PM -1000, Tejun Heo wrote:
-> Hello, Thorsten.
+On Mon, 22 Apr 2024 10:13:59 +0100,
+Mark Rutland <mark.rutland@arm.com> wrote:
 > 
-> On Wed, Apr 17, 2024 at 07:48:33AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > Can you elaborate why Bjorn's case is different?
+> On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
+> > The arm64 defconfig build failed with gcc-8 and passed with gcc-13.
 > > 
-> > Well "not booting at all when using 'nohz_full=0'"[as reported two
-> > times] and "I start neovim, send SIGSTOP (i.e. ^Z) to it, start another
-> > neovim instance and upon sending SIGSTOP to that instance all of
-> > userspace locks up - 100% reproducible."[while no 'nohz_full=0' in use]
-> > at least on the first sight to and outsider sound a lot like different
-> > problems to me -- but of course that impression might be wrong and you
-> > know better about these things.
-> 
-> You are right. That is very different.
-> 
-> > > I was assuming it was the
-> > > same problem and that Oleg's fixes would address the issue.
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > > 
-> > Bjorn, could you give it a try?
+> > Build log:
+> > ---
+> > /tmp/ccSUNNZy.s: Assembler messages:
+> > /tmp/ccSUNNZy.s:3159: Error: unknown architectural extension `pauth'
+> > make[5]: *** [scripts/Makefile.build:244: arch/arm64/kvm/pauth.o] Error 1
+> > 
+> > Steps to reproduce:
+> > ---
+> > # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+> > --kconfig defconfig
 > 
-> Yeah, I'm curious whether it's just a different symptom of the same problem.
+> I think the key thing here is GCC 8; the associated assembler won't necessarily
+> have ARMv8.3-A support, since all the relevant bits got added around GCC 9.
 > 
+> Looking at the commits, I think this is broken since its introduction in commit:
+> 
+>   6ccc971ee2c61a1f  ("KVM: arm64: nv: Add emulation for ERETAx instructions")
+> 
+> ... where the pauth.c file only depends on ARM64_PTR_AUTH (which doesn't imply
+> AS_HAS_ARMV8_3), but in the file we do:
+> 
+>   asm volatile(ARM64_ASM_PREAMBLE ".arch_extension pauth\n"
+>                "pacga %0, %1, %2" : "=r" (pac) : "r" (ptr), "r" (mod));
+> 
+> Given the minimum supported toolchain comes with an assembler that doesn't
+> necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
+> support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
+> 
+> I suspect the latter is the better option.
 
-Sorry for the late reply, had to step back to v6.8 on my work machine
-and didn't retry this in a timely manner.
+This is what I've done [1]. It certainly isn't pretty, but this counts
+as an incentive to drop some of the old stuff in the near-ish future.
 
-I've now confirmed that my problem with Neovim was resolved in v6.9-rc3,
-through the introduction of:
-73eaa2b58349 ("io_uring: use private workqueue for exit work")
+I've pushed this out to -next, and hopefully the breakage will be
+solved tomorrow.
 
-Regards,
-Bjorn
+	M.
+
+[1] https://lore.kernel.org/r/20240422224849.2238222-1-maz@kernel.org
+
+-- 
+Without deviation from the norm, progress is not possible.
