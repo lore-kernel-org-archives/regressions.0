@@ -1,132 +1,70 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BC94D13F
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 07:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B43C50279
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 08:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713772310; cv=none; b=VqzakL9rYBeuSDe6F8on+YQLAOU19ER+V92T3/ffU+B1XqneCRuEHATdYCKxsCrO1ppKL1jyktnM/zkQucQjGMiDw2FqiIkIOTh9glsBoktp9+ShL3v3tfexJLPzy38Pzdf8bm9GbWVGfKDtFLSdZUVyeeFwsDa8jcfu8z2fAPI=
+	t=1713774449; cv=none; b=Ah7NQ53i+J3x6s7ZAQZUmGSBWmPLd9zplsLyiqdwwgCxLDCKFQevoKAf8eTUcqYpjFEWNwjv1GPrGXxf4efdo2JBfj5OR7K55tRq+06NjYbtD36OkukrQ1Jb5uCY6qe5d61pxRy192WTHeIApHaqNCPIfe+TvjkaURGfPCERtIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713772310; c=relaxed/simple;
-	bh=V+hmni4mAKTQ8wXjeiMX0dljZgO3ua+RXHTJ7o7gkok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T90OFp1PieWvsm+V5bXzElOsvDhwzyyi+l4uWj5uBMFHItXHyNhxG7fuwC0tYeS7aTfcPZUQJm2TzKwRi2UAdXAiJnE21sZh1MKh0d6x4A8VyqMBQw23Dc43OLyB6OaOklV8RVn3K66ShEPfH9+TE1ris6caaZ3Sowh5ePVdna8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=pcucO8P1; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pcucO8P1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1713772309; x=1745308309;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=V+hmni4mAKTQ8wXjeiMX0dljZgO3ua+RXHTJ7o7gkok=;
-  b=pcucO8P1XhEBArvhEO6TBkbOiEKbc7Bli5l8Wt2Iyb6d9cxagxY5pqkE
-   u9khb4jTE0t1zNfzQDYvO8zby8nCyT3/d3uUW0zHjdN0ZCVN2Cwv6x86J
-   scDgMSly2lY+Rhms4ibRKYayqJDxr905HUcOvu4paJjfe4zkPlH8PbOqz
-   o=;
-X-IronPort-AV: E=Sophos;i="6.07,220,1708387200"; 
-   d="scan'208";a="413631555"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 07:51:41 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:8532]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.190:2525] with esmtp (Farcaster)
- id 98f6d520-ff55-44d0-a03c-306ba359ccb1; Mon, 22 Apr 2024 07:51:40 +0000 (UTC)
-X-Farcaster-Flow-ID: 98f6d520-ff55-44d0-a03c-306ba359ccb1
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 22 Apr 2024 07:51:36 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 22 Apr
- 2024 07:51:33 +0000
-Message-ID: <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
-Date: Mon, 22 Apr 2024 09:51:31 +0200
+	s=arc-20240116; t=1713774449; c=relaxed/simple;
+	bh=aD78rLqskgC914RCm9khoqMnLlDqno7mNTeyWzYamUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MnaAq5huL6N99zXK4tPrGdQbaX0JVBsfyvjAnyOEgk7ZBbry2xda3bKjELcVoa/h6VBydtBTM1K7xJtOXhuuJ6M+5jNGh4t4n26U5zY488hH57eRBi+QDEqvk8VKAAeA4ZF2JBpR4g8tDwzjzrpOvhMAJ5GBn+ITTVn9O3wS/U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=m4x.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=m4x.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de480576c3cso3309865276.2
+        for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 01:27:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713774446; x=1714379246;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aD78rLqskgC914RCm9khoqMnLlDqno7mNTeyWzYamUo=;
+        b=oI8TckYtVErkS82qkD9Pnl0nERVbI4xeACRnP6lMuu9h91u7e7M8gYg4bRoV+bMLWL
+         CIZu4h38qGvq7Fj4xyGBgFdborWGzyDwtzBwmGDaR+/F/VK7WBVq+EWRJnkZ5ZHp4B9B
+         y6wEncYTHn8yVGQLie+zr6V1UId5VIPUTqR3bWoNPCUOK92lXWYvhiItvoyPV66xDhpN
+         woac6zZXU3QKzhUheV+0xU9tZNHdoDgh6cgAWiogpEUKADEJyOFiCdcBXC2BjSavxMKn
+         JDmPCtHnp675gfYhP2NnRFuvqdDWwc4FoI6vGy4YJhIQAPvN71HBdFMzWx2OkXQbTUgW
+         v21A==
+X-Gm-Message-State: AOJu0YwuGAUVGkzCAtIUDHfu3O3BP2+MB5p+UpPhoQGlve+JUTFHQGr9
+	JcsU1pSYwh7bsOlzQqSSEWtR9Q3N/ldzdXXmzjC5nqhK60d1FWkQgSCdnB+8BR00nBwKgO3JD9F
+	ZvrMfz+tTubXAPbkRp/q+3KOpNAsxkQzvl1AxZQ==
+X-Google-Smtp-Source: AGHT+IEXbCZSWU3g4FXj1qrawUvWhPPACO+jlqdCC5sZMwpmG56BhjWMWX1FBTaRWJRoaoBVZzPomrfAdD+x5fnr/C0=
+X-Received: by 2002:a25:4e86:0:b0:dc7:4ad4:c977 with SMTP id
+ c128-20020a254e86000000b00dc74ad4c977mr8441742ybb.25.1713774446122; Mon, 22
+ Apr 2024 01:27:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when VMGENID
- updates"
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, <linux-kernel@vger.kernel.org>
-CC: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Lennart Poettering
-	<mzxreary@0pointer.de>, Babis Chalios <bchalios@amazon.es>, Theodore Ts'o
-	<tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann
-	<arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>, "Christian
- Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
-	<regressions@lists.linux.dev>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20240418114814.24601-1-Jason@zx2c4.com>
-X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+References: <CADRbXaDqx6S+7tzdDPPEpRu9eDLrHQkqoWTTGfKJSRxY=hT5MQ@mail.gmail.com>
+ <8eeb980a-f04a-4e94-8065-25566cfef4dd@molgen.mpg.de> <CADRbXaD5Fsy0dxjrVG2JAn1PA36hpoTe6=23=zbhx8NWNf_9mg@mail.gmail.com>
+ <e723ec51-a1de-4d4d-870f-34c9427fffb9@leemhuis.info>
+In-Reply-To: <e723ec51-a1de-4d4d-870f-34c9427fffb9@leemhuis.info>
+From: =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>
+Date: Mon, 22 Apr 2024 10:27:15 +0200
+Message-ID: <CADRbXaA2yFjMo=_8_ZTubPbrrmWH9yx+aG5pUadnk395koonXg@mail.gmail.com>
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-bluetooth@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-W0FkZGluZyBDQyBsaXN0IG9mIG9yaWdpbmFsIHBhdGNoIHBsdXMgcmVncmVzc2lvbiB0cmFja2Vy
-XQoKSGkgSmFzb24sCgpPbiAxOC4wNC4yNCAxMzo0OCwgSmFzb24gQS4gRG9uZW5mZWxkIHdyb3Rl
-Ogo+IFRoaXMgcmV2ZXJ0cyBjb21taXQgYWQ2YmNkYWQyYjY3MjRlMTEzZjE5MWExMmY4NTlhOWU4
-NDU2YjI2ZC4gSSBoYWQKPiBuYWsnZCBpdCwgYW5kIEdyZWcgc2FpZCBvbiB0aGUgdGhyZWFkIHRo
-YXQgaXQgbGlua3MgdGhhdCBoZSB3YXNuJ3QgZ29pbmcKPiB0byB0YWtlIGl0IGVpdGhlciwgZXNw
-ZWNpYWxseSBzaW5jZSBpdCdzIG5vdCBoaXMgY29kZSBvciBoaXMgdHJlZSwgYnV0Cj4gdGhlbiwg
-c2VlbWluZ2x5IGFjY2lkZW50YWxseSwgaXQgZ290IHB1c2hlZCB1cCBzb21lIG1vbnRocyBsYXRl
-ciwgaW4KPiB3aGF0IGxvb2tzIGxpa2UgYSBtaXN0YWtlLCB3aXRoIG5vIGZ1cnRoZXIgZGlzY3Vz
-c2lvbiBpbiB0aGUgbGlua2VkCj4gdGhyZWFkLiBTbyByZXZlcnQgaXQsIHNpbmNlIGl0J3MgY2xl
-YXJseSBub3QgaW50ZW5kZWQuCgpSZXZlcnRpbmcgdGhpcyBwYXRjaCBjcmVhdGVzIGEgdXNlciBz
-cGFjZSB2aXNpYmxlIHJlZ3Jlc3Npb24gY29tcGFyZWQgdG8gCnY2LjguIFBsZWFzZSB0cmVhdCBp
-dCBhcyBzdWNoLgoKSSdtIHNsaWdodGx5IGNvbmZ1c2VkIHRvIHNlZSB5b3UgcGFzc2lvbmF0ZSBh
-Ym91dCB0aGlzIHBhdGNoIGFmdGVyIHlvdSAKZ2hvc3RlZCB0aGUgY29udmVyc2F0aW9uIHlvdSBy
-ZWZlcmVuY2VkOgoKIApodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzAwZDYxNzJmLWUyOTEt
-NGU5Ni05ZDNlLTYzZWU4ZTYwZDU1NkBhbWF6b24uY29tLwoKVGhlIHB1cnBvc2Ugb2YgdGhpcyB1
-ZXZlbnQgaXMgdG8gbm90aWZ5IHN5c3RlbWRbMV1bMl0gKG9yIHNpbWlsYXIpIHRoYXQgCmEgVk0g
-Y2xvbmUgZXZlbnQgaGFwcGVuZWQsIHNvIGl0IGNhbiBmb3IgZXhhbXBsZSByZWdlbmVyYXRlIE1B
-QyAKYWRkcmVzc2VzIGlmIGl0IGdlbmVyYXRlZCB0aGVtIG9uIGJvb3QsIHJlZ2VuZXJhdGUgaXRz
-IHVuaXF1ZSBtYWNoaW5lIGlkIApvciBzaW1wbHkgZm9yY2UgcmVyZXF1ZXN0IGEgbmV3IERIQ1Ag
-bGVhc2UuCgpJIGRvbid0IHVuZGVyc3RhbmQgaG93IHRoZXJlJ3MgYW55IGNvcnJlbGF0aW9uIG9y
-IGRlcGVuZGVuY3kgdG8gCnZnZXRyYW5kb20oKSBvciBhbnl0aGluZyBSTkcgaW4gdGhpcyBhbmQg
-d2h5IGdldHRpbmcgdmdldHJhbmRvbSgpIG1lcmdlZCAKdXBzdHJlYW0gaXMgZXZlbiBzb21ldGhp
-bmcgdG8gdGFsayBhYm91dCBpbiB0aGUgc2FtZSBsaW5lIGFzIHRoaXMgcGF0Y2ggWzNdLgoKV2Ug
-aGFkIGEgbGVuZ3RoeSwgY29uc3RydWN0aXZlIGNvbnZlcnNhdGlvbiB3aXRoIFRlZCBhdCBMUEMg
-bGFzdCB5ZWFyIAphYm91dCB0aGUgIlBSTkcgYW5kIGNsb25lIiB1c2UgY2FzZSBhbmQgY29uY2x1
-ZGVkIHRoYXQgaXQncyBiZXN0IGZvciAKZXZlcnlvbmUgdG8gc2ltcGx5IGFzc3VtZSB0aGUgc3lz
-dGVtIGNvdWxkIGJlIGNsb25lZCBhdCBhbnkgcG9pbnQsIGhlbmNlIAphbHdheXMgZm9yY2UgaW50
-ZXJtaXggb2YgUkRSQU5EIG9yIGNvbXBhcmFibGUgdG8gYW55IFBSTkcgb3V0cHV0LiBXZSAKc2lu
-Y2Ugbm8gbG9uZ2VyIG5lZWQgYW4gZXZlbnQgZm9yIHRoYXQgY2FzZS4KCgpBbGV4CgpbMV0gaHR0
-cHM6Ly9naXRodWIuY29tL3N5c3RlbWQvc3lzdGVtZC9pc3N1ZXMvMjYzODAKWzJdIGh0dHBzOi8v
-bG9yZS5rZXJuZWwub3JnL2xrbWwvWkpHTlJFTjR0THpRWE9KckBnYXJkZWwtbG9naW4vClszXSAK
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9DQUhtTUU5cHhjLW5PX3hhPTQrMUNudmJudWVm
-YlJUSkh4TTduODE3Y19UUGVveHp1X2dAbWFpbC5nbWFpbC5jb20vCgojcmVnemJvdCBpbnRyb2R1
-Y2VkOiAzYWFkZjEwMGY5M2Q4MDgxCgo+IAo+IEZpeGVzOiBhZDZiY2RhZDJiNjcgKCJ2bWdlbmlk
-OiBlbWl0IHVldmVudCB3aGVuIFZNR0VOSUQgdXBkYXRlcyIpCj4gQ2M6IHN0YWJsZUB2Z2VyLmtl
-cm5lbC5vcmcKPiBDYzogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZz4KPiBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjMwNTMxMDk1MTE5LjEx
-MjAyLTItYmNoYWxpb3NAYW1hem9uLmVzCj4gU2lnbmVkLW9mZi1ieTogSmFzb24gQS4gRG9uZW5m
-ZWxkIDxKYXNvbkB6eDJjNC5jb20+Cj4gLS0tCj4gICBkcml2ZXJzL3ZpcnQvdm1nZW5pZC5jIHwg
-MiAtLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvdmlydC92bWdlbmlkLmMgYi9kcml2ZXJzL3ZpcnQvdm1nZW5pZC5jCj4gaW5kZXgg
-YjY3YTI4ZGE0NzAyLi5hMWM0NjdhMGU5ZjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy92aXJ0L3Zt
-Z2VuaWQuYwo+ICsrKyBiL2RyaXZlcnMvdmlydC92bWdlbmlkLmMKPiBAQCAtNjgsNyArNjgsNiBA
-QCBzdGF0aWMgaW50IHZtZ2VuaWRfYWRkKHN0cnVjdCBhY3BpX2RldmljZSAqZGV2aWNlKQo+ICAg
-c3RhdGljIHZvaWQgdm1nZW5pZF9ub3RpZnkoc3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UsIHUz
-MiBldmVudCkKPiAgIHsKPiAgIAlzdHJ1Y3Qgdm1nZW5pZF9zdGF0ZSAqc3RhdGUgPSBhY3BpX2Ry
-aXZlcl9kYXRhKGRldmljZSk7Cj4gLQljaGFyICplbnZwW10gPSB7ICJORVdfVk1HRU5JRD0xIiwg
-TlVMTCB9Owo+ICAgCXU4IG9sZF9pZFtWTUdFTklEX1NJWkVdOwo+ICAgCj4gICAJbWVtY3B5KG9s
-ZF9pZCwgc3RhdGUtPnRoaXNfaWQsIHNpemVvZihvbGRfaWQpKTsKPiBAQCAtNzYsNyArNzUsNiBA
-QCBzdGF0aWMgdm9pZCB2bWdlbmlkX25vdGlmeShzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldmljZSwg
-dTMyIGV2ZW50KQo+ICAgCWlmICghbWVtY21wKG9sZF9pZCwgc3RhdGUtPnRoaXNfaWQsIHNpemVv
-ZihvbGRfaWQpKSkKPiAgIAkJcmV0dXJuOwo+ICAgCWFkZF92bWZvcmtfcmFuZG9tbmVzcyhzdGF0
-ZS0+dGhpc19pZCwgc2l6ZW9mKHN0YXRlLT50aGlzX2lkKSk7Cj4gLQlrb2JqZWN0X3VldmVudF9l
-bnYoJmRldmljZS0+ZGV2LmtvYmosIEtPQkpfQ0hBTkdFLCBlbnZwKTsKPiAgIH0KPiAgIAo+ICAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCB2bWdlbmlkX2lkc1tdID0gewoKCgoK
-QW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAx
-MTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRo
-YW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIg
-SFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+Hi Thorsten,
 
+On Mon, Apr 22, 2024 at 7:41=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Thx! Did you also test if mainline (e.g. 6.9-rc5) is affected? Without
+> this we won't know if this is something the stable team or the regular
+> bluetooth developers have to handle.
+
+I'm now running 6.9-rc5 and have not been able to reproduce the issue,
+so it does sound like it's an issue for the stable team.
+
+Cheers,
+Jeremy
