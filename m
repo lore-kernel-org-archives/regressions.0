@@ -1,72 +1,182 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51D7146A6A
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 17:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B1151153BE3
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 18:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713807404; cv=none; b=cAUBExnaZ4+Ocurn9hcrSnDbmU5Q/6RDzT4RR6G1FJ7P6dHVOtl+PTo4CNMOGuOr1vj9LNy4w+Fyww7lov+5TOGTdIbHnsbWWF2bMYSyE2fuO8c7AyzcsCBm6mu+wVrfq6nGsSA6MCZ4iT0b8yzblAx2fxjFr0Bx11VCohCPo44=
+	t=1713809035; cv=none; b=cyWw2GgB+xsRPk6AvIBD+h0O6tIAP7WFCaXvvSRbjLRWPd4bRkKJ8O7DwD4p9i40VS+nvOi+abjl1pn/9rPK+5Y16RJEjJBPd3wkak8NWgd2Ww7ivGQlHa81mUdXjuQ1WmZMaJ3/zRp73jbfEo2mKZU42ZqI604U9oCxRDIjmaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713807404; c=relaxed/simple;
-	bh=vEhSIZV8yNs0XvCMtgp081pKU7W6GeN8+b9ZbR0xHzw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=N8IqEtlLwLBnDOmCuX2lKVHyOeEMCBKfW6TQSbWE3J7A8RuoH1KPczG8M+C22dYugqJaJ1ikCQjJgDLQUdFiFblhlzvy+fqWx6S5wnxVI9Pmot3HrghJaeAu1uU3Pk59NPZi+FiNq1Vme0nMBrnkW6ratncRfnSaKCO1jXSqFmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hWbFAGMC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hWbFAGMC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=vEhSIZV8yNs0XvCMtgp081pKU7W6GeN8+b9ZbR0xHzw=; t=1713807403;
-	x=1714239403; b=hWbFAGMC0rjVZQBk1XOZxG7UYLwLjmLHbmjo99zQYgKqClgo5oFLE8+nSaIh4
-	TCDsz2XQFruLOx8VoZY3kO0gr+NSwK2d7foLj2BUNUJoZQQYJJK4vJ2ji3dB9Of+tL00XDSXiVHK/
-	XA87w9sMIlBRmS/rhXgw0xEl3dWxyQJndanpESyn8ASvDFz1hkY8o4Z3zxqVU8LAOjWFKrZjYdg+S
-	IfT1J4F4kZvuf+EdUVcxprETW4/DXT9O6hHv3Hd72eHk9dFIyDJl8WfI3nme2EAXZmukqlKyLRfJ0
-	nKEvzg3afFJTIPz/lYDREd4ARvIAJUG2y4sUfwvsaVfzZfR+IQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ryxar-00009r-2D; Mon, 22 Apr 2024 19:36:41 +0200
-Message-ID: <03489993-9612-422f-b1d9-0ad5f62c0e98@leemhuis.info>
-Date: Mon, 22 Apr 2024 19:36:40 +0200
+	s=arc-20240116; t=1713809035; c=relaxed/simple;
+	bh=JAQ4Si1Orsc8jabUFIx9ss0ZxfJW4cbGRcMA+nL7U+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MDj/tnUG9cO9fMUNYq5EwK5gTiAiooQ2qW/i8x2YoV1vam+HXnCtXJiRJMUDNizyHaQkSBqjz37Wy71K8lRBjSUBozxOeZMe97T0H/RmgRQI0F+/1eWLlRvpf2YU77Ape3akH19qEsvDbNDfuRGcradAiCvX24I5RRUATphj7nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 384479 invoked by uid 1000); 22 Apr 2024 14:03:46 -0400
+Date: Mon, 22 Apr 2024 14:03:46 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Oliver Neukum <oneukum@suse.com>, USB list <linux-usb@vger.kernel.org>,
+  Takashi Iwai <tiwai@suse.de>
+Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in
+ SuperSpeed initialization")
+Message-ID: <673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
+References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
+ <78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
+ <8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713807403;43ee6386;
-X-HE-SMSGID: 1ryxar-00009r-2D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
 
+On Mon, Apr 22, 2024 at 07:33:21PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> Is anyone still working on fixing below regression? From here it looks
+> stalled, but I might have missed something.
 
+I've been waiting to hear back from Oliver or Takashi.  A revised patch 
+taking my comments into account would be welcome; it should be a very 
+small change (just one or two lines of code).
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Alan Stern
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218740
-#regzbot introduced: 6dbdd4de0362
-#regzbot duplicate:
-https://lore.kernel.org/all/dff8729b-3ab6-4b54-a3b0-60fabf031d62@intel.com/
-#regzbot summary: net: e1000e: scheduling while atomic
-#regzbot fix: e1000e: change usleep_range to udelay in PHY mdic access
-#regzbot monitor:
-https://lore.kernel.org/all/20240417190320.3159360-1-vitaly.lifshits@intel.com/
-
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
+> 
+> On 09.04.24 16:56, Alan Stern wrote:
+> > On Tue, Apr 09, 2024 at 03:49:01PM +0200, Oliver Neukum wrote:
+> >> Hi,
+> >>
+> >> with the following device:
+> >>
+> >> Bus 002 Device 002: ID fb5d:0001 BHYVE HID Tablet
+> >> Device Descriptor:
+> >>   bLength                18
+> >>   bDescriptorType         1
+> >>   bcdUSB               3.00
+> >>   bDeviceClass            0
+> >>   bDeviceSubClass         0
+> >>   bDeviceProtocol         0
+> >>   bMaxPacketSize0         8
+> > 
+> > A USB-3 device, running at SuperSpeed with its bMaxPacketSize0 set to 8 
+> > instead of 9?  Presumably this thing never received a USB certification.  
+> > Does the packaging use the USB logo?
+> > 
+> >>   idVendor           0xfb5d
+> >>   idProduct          0x0001
+> >>   bcdDevice            0.00
+> >>   iManufacturer           1 BHYVE
+> >>   iProduct                2 HID Tablet
+> >>   iSerial                 3 01
+> >>   bNumConfigurations      1
+> > 
+> > Why on earth would an HID tablet need to run at SuperSpeed?
+> > 
+> >> Binary Object Store Descriptor:
+> >>   bLength                 5
+> >>   bDescriptorType        15
+> >>   wTotalLength       0x000f
+> >>   bNumDeviceCaps          1
+> >>   SuperSpeed USB Device Capability:
+> >>     bLength                10
+> >>     bDescriptorType        16
+> >>     bDevCapabilityType      3
+> >>     bmAttributes         0x00
+> >>     wSpeedsSupported   0x0008
+> >>       Device can operate at SuperSpeed (5Gbps)
+> >>     bFunctionalitySupport   3
+> >>       Lowest fully-functional device speed is SuperSpeed (5Gbps)
+> >>     bU1DevExitLat          10 micro seconds
+> >>     bU2DevExitLat          32 micro seconds
+> > 
+> > A tablet not capable of running at any speed below 5 Gbps?
+> > 
+> >> we are getting a regression on enumeration. It used to work with the
+> >> code prior to your patch. Takashi is proposing the attached fixed.
+> >> It looks like we are a bit too restrictive and should just try.
+> >>
+> >> 	Regards
+> >> 		Oliver
+> > 
+> >> From: Takashi Iwai <tiwai@suse.de>
+> >> Subject: [PATCH] USB: hub: Workaround for buggy max packet size with super
+> >>  speed
+> >> Patch-mainline: Not yet, testing
+> >> References: bsc#1220569
+> >>
+> >> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> >>
+> >> ---
+> >>  drivers/usb/core/hub.c | 13 ++++++++++---
+> >>  1 file changed, 10 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> >> index e38a4124f610..64193effc456 100644
+> >> --- a/drivers/usb/core/hub.c
+> >> +++ b/drivers/usb/core/hub.c
+> >> @@ -4830,7 +4830,7 @@ hub_port_init(struct usb_hub *hub, struct usb_device *udev, int port1,
+> >>  	const char		*driver_name;
+> >>  	bool			do_new_scheme;
+> >>  	const bool		initial = !dev_descr;
+> >> -	int			maxp0;
+> >> +	int			maxp0, ep0_maxp;
+> >>  	struct usb_device_descriptor	*buf, *descr;
+> >>  
+> >>  	buf = kmalloc(GET_DESCRIPTOR_BUFSIZE, GFP_NOIO);
+> >> @@ -5070,7 +5070,8 @@ hub_port_init(struct usb_hub *hub, struct usb_device *udev, int port1,
+> >>  		else
+> >>  			i = 0;		/* Invalid */
+> >>  	}
+> >> -	if (usb_endpoint_maxp(&udev->ep0.desc) == i) {
+> >> +	ep0_maxp = usb_endpoint_maxp(&udev->ep0.desc);
+> >> +	if (ep0_maxp == i) {
+> > 
+> > This variable looks like it was left over from earlier testing.  It's 
+> > not really needed.
+> > 
+> >>  		;	/* Initial ep0 maxpacket guess is right */
+> >>  	} else if ((udev->speed == USB_SPEED_FULL ||
+> >>  				udev->speed == USB_SPEED_HIGH) &&
+> >> @@ -5082,9 +5083,15 @@ hub_port_init(struct usb_hub *hub, struct usb_device *udev, int port1,
+> >>  			dev_warn(&udev->dev, "Using ep0 maxpacket: %d\n", i);
+> >>  		udev->ep0.desc.wMaxPacketSize = cpu_to_le16(i);
+> >>  		usb_ep0_reinit(udev);
+> >> +	} else if (udev->speed >= USB_SPEED_SUPER && initial) {
+> >> +		/* FIXME: should be more restrictive? */
+> >> +		/* Initial guess is wrong; use the descriptor's value */
+> >> +		dev_warn(&udev->dev, "Using ep0 maxpacket: %d\n", i);
+> >> +		udev->ep0.desc.wMaxPacketSize = cpu_to_le16(i);
+> >> +		usb_ep0_reinit(udev);
+> > 
+> > This could be merged with the previous case fairly easily.
+> > 
+> >>  	} else {
+> >>  		/* Initial guess is wrong and descriptor's value is invalid */
+> >> -		dev_err(&udev->dev, "Invalid ep0 maxpacket: %d\n", maxp0);
+> >> +		dev_err(&udev->dev, "Invalid ep0 maxpacket: %d, expected %d\n", maxp0, ep0_maxp);
+> > 
+> > This also looks like a remnant from earlier testing.
+> > 
+> > Alan Stern
+> > 
+> >>  		retval = -EMSGSIZE;
+> >>  		goto fail;
+> >>  	}
+> >> -- 
+> >> 2.35.3
+> >>
+> > 
+> 
