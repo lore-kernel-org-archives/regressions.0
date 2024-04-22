@@ -1,48 +1,37 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D2813CF9A
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 10:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF132149E0F;
+	Mon, 22 Apr 2024 10:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713780366; cv=none; b=jhNEIEFnHQssHS5rhxyO4jM6E6sZTUtaJYr6LefkHUX2bOwadz2rZFL1L45rlye7MAjrK0Of5j3CAsMa4DsBQqov8boTNbNdpLR3m303Pnbw2i5QS+IWiGDZ/xrRHOQW3sCijwVLi1374tETd2x3vyveTbQBlSBnsLljHvPeVb8=
+	t=1713781902; cv=none; b=PS5yVIPcK8uVf7wAa/TTFZ7jv8ZMH+01TpllDqBgm93AZgoAu1g70j8ubqL73imsJH/bE3Vvyju7kWYT5bTZH+JOZBFUKjcja97TEb3D64VfTlPfRn39iXSSg8tazT+UWlxV7MGz/3nAYPcZnIzPzmVgfKWpmMgpNpE+T/UsHEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713780366; c=relaxed/simple;
-	bh=oR1rWwDyedGxBr1N4vvrYHssvhX6UCgY6XUX0M/nhA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CQSJS2wczO05sHTeTdO9adRtVxK3zM7gSP/qyQrQ/Q1uV3A61/lDO8ym5+XpwA253sfnVNwXgXfSDH1Hk3/+76FjE/cgbZrKBM+plHCXuCqxCoPlDXwXxoK9ppzWh+Cldwk1xlct6rfMz4/79JBrN4hBlSgGWYkRywjVrc7SiZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B1Cr2HvE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713781902; c=relaxed/simple;
+	bh=+j2bNi8k/alLWVzZXt5+/z70HAC4NEQb/EVIcPMzr/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eYR+tPhf5AFNL/kd4FsSI2iwxG4jbr9or/qMklIq6TbpnvlrCvsssn3c3TSkx09nmYma8jYvMv6kbFoL6uX+VgJL+gPNnbz5T6gjGdbb4mlGkPgXopepVcL7dov1nNMEjxG42iW+4gLDgyn4SzMqqW+kcjLott2hd6rFeLDZUSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=d4Aq3BUT; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B1Cr2HvE"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M1XkbJ031424;
-	Mon, 22 Apr 2024 10:05:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=cCGAXm+BLnaLsmVGODVMV9DrQGce84LB+51kR75mb+4=; b=B1
-	Cr2HvEZ5b7rZKcFpvjraQtZxrtHqrMLQPZ0Mb10d/u8yeUEKOIDyu9AycCnTBEvR
-	80Ng2kxUNuOgLz4BF8FtaOvvaUG+ljNWzpvyCWKJvZ+5gBNHXMbfxbDAeTsuo7gs
-	RcIVXmiZHMx66pxYn9MMpalnIb0dlOrzGjfq8sirEbcf9j8iLkVAbYpUPqg4WDiP
-	Xb+yf22wcb9ktSf5qjJgMHFXNtNSW0/E1fGRV19GICk+j+4I7P/0WMj4SqikncJw
-	iCclUbQJ7pzFNXb/3LbGM1DrX+Y1RWHlHPQ54gvxHKNzKDs05NqoDv6i+bKHKXrU
-	S/EfyLYIl9mSYiTQ2kkQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xmxq4t38w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:05:57 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MA5u97011549
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 10:05:56 GMT
-Received: from [10.253.37.80] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 03:05:54 -0700
-Message-ID: <96702ddc-ef5c-499c-abd4-95f89eb3aeba@quicinc.com>
-Date: Mon, 22 Apr 2024 18:05:52 +0800
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="d4Aq3BUT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=s/c3dJrF+9TupMEh+95zrLT8ysApMrEChVLOaNR1tJE=;
+	t=1713781900; x=1714213900; b=d4Aq3BUTX8hDvY1K/1zvbRMEcd+wHaGzKq+7eDBwh345V/o
+	sSd+nHHu7M469tR5oS4ejLE12f6eu5DYDMkPuLryGb92TkzbM17xIto61JbO58QHqINlAYWALAIN5
+	hhWKYeSodu0eLHwfze0DPZ5/KpL5jrGO3ae3eCnXWk8NNPTPTAoOEAAwr08Lk7SldykiYW4Jz8Pc/
+	PrbZNLpPMiNxZ3+MZdYE7NHmeA1skurkKzKbIajMRcFg1R1YDtaIVYmp04JbunfBoSWyL1Tk6TqfK
+	Zu6iBpc6lbYd+/P7bIRxogFTgMiDUYS1gsLDOZwFmGprd/AdNRw9xowv1uQfKqlw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ryqxW-0003dJ-62; Mon, 22 Apr 2024 12:31:38 +0200
+Message-ID: <59372e42-2eab-4efd-b7d8-d0ef6f8c2300@leemhuis.info>
+Date: Mon, 22 Apr 2024 12:31:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,202 +39,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Fix two regression issues for QCA controllers
-To: Krzysztof Kozlowski <krzk@kernel.org>, Wren Turkal <wt@penguintechs.org>,
-        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
-        <marcel@holtmann.org>
-CC: <linux-bluetooth@vger.kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <regressions@lists.linux.dev>
-References: <1713564212-21725-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713650800-29741-1-git-send-email-quic_zijuhu@quicinc.com>
- <369512e2-f091-4370-bce5-9ac32178dc4d@penguintechs.org>
- <a6ae69ad-b602-4cfc-9f76-8932f357d30b@kernel.org>
- <c0f7036d-c129-400b-85a2-1414ec3d2622@quicinc.com>
- <2bd1f1bf-f867-4430-8ce5-c691485665e1@kernel.org>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <2bd1f1bf-f867-4430-8ce5-c691485665e1@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] clk: qcom: gdsc: treat optional supplies as optional
+To: Bjorn Andersson <andersson@kernel.org>,
+ Johan Hovold <johan+linaro@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240325085835.26158-1-johan+linaro@kernel.org>
+ <171226578689.615813.4474720130637817355.b4-ty@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <171226578689.615813.4474720130637817355.b4-ty@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: m--UWKHpdnId69fVVaeytEYny6Qe6JZr
-X-Proofpoint-ORIG-GUID: m--UWKHpdnId69fVVaeytEYny6Qe6JZr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_07,2024-04-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220038
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713781900;2106b9ec;
+X-HE-SMSGID: 1ryqxW-0003dJ-62
 
-On 4/22/2024 1:52 PM, Krzysztof Kozlowski wrote:
-> On 22/04/2024 02:14, quic_zijuhu wrote:
->> On 4/22/2024 2:41 AM, Krzysztof Kozlowski wrote:
->>> On 21/04/2024 09:44, Wren Turkal wrote:
->>>> On 4/20/24 3:06 PM, Zijun Hu wrote:
->>>>> This patch series are to fix below 2 regression issues for QCA controllers
->>>>> 1) BT can't be enabled once BT was ever enabled for QCA_QCA6390
->>>>> 2) BT can't be enabled after disable then warm reboot for QCA_QCA6390
->>>>
->>>> @Zijun @Krzysztof and @Bartosz Would it be helpful for me to test these 
->>>> to ensure they fix the issues I reported?
->>>>
->>>
->>> I look forward to someone testing these on other hardware, not yours. On
->>> the hardware where the original issues were happening leading to this
->>> changes, e.g. RB5.
->>>
->>> Anyway, the problem here is poor explanation of the problem which did
->>> not improve in v3 and v4. Instead I receive explanations like:
->>>
->>> "this is shutdown of serdev and not hdev's shutdown."
->>> Not related...
->>>
->> this is the reply for secondary issue. i believe i have given much
->> explain for my fix for the 2nd issue as shown by below links.
+On 04.04.24 23:22, Bjorn Andersson wrote:
 > 
-> No, you did not.
+> On Mon, 25 Mar 2024 09:58:35 +0100, Johan Hovold wrote:
+>> Since commit deebc79b28d6 ("clk: qcom: gpucc-sc8280xp: Add external
+>> supply for GX gdsc") the GDSC supply must be treated as optional to
+>> avoid warnings like:
+>>
+>> 	gpu_cc-sc8280xp 3d90000.clock-controller: supply vdd-gfx not found, using dummy regulator
+>>
+>> on SC8280XP.
+>>
+>> [...]
 > 
->> let me add a bit more explanation within the ending "For the 2nd issue"
->> section, supposed you known much for generic flag
->> HCI_QUIRK_NON_PERSISTENT_SETUP, otherwise, see header comment for the
->> quirk. also supposed you see commit history to find why
->> qca_serdev_shutdown() was introduced for QCA6390.
->> https://lore.kernel.org/all/fe1a0e3b-3408-4a33-90e9-d4ffcfc7a99b@quicinc.com/
+> Applied, thanks!
 > 
-> You did not answer my questions.
-> 
-> Let's quote:
-> 
-> "i don't explain much since these HCI_QUIRK_NON_PERSISTENT_SETUP and
-> HCI_SETUP is generic flag."
-> 
-> Srsly, what is such answer?
-> 
-> 
-i reviewed my reply. i have explained to you why my change fix both this
-issue and the issue your commit fixed.
+> [1/1] clk: qcom: gdsc: treat optional supplies as optional
+>       commit: 6677196fb1932e60b88ad0794a7ae532df178654
 
-so i don't think it is meaningful to explain why your wrong condition
-are changed by me.
-> 
-> 
-> 
->>> "now. you understood why your merged change as shown link of 4) have
->>> problems and introduced our discussed issue, right?"
->>>
->> this is the reply for the first issue as shown by below link. it almost
->> have the same description as the following "For 1st issue:" section.
->> i believe it have clear illustration why the commit have bugs.
->> https://lore.kernel.org/all/2166fc66-9340-4e8c-8662-17a19a7d8ce6@linaro.org/
->>> No. I did not understand and I feel I am wasting here time.
->>>> Code could be correct, could be wrong. Especially second patch looks
->>> suspicious. But the way Zijun Hu explains it and the way Zijun Hu
->>> responds is not helping at all.
->>>
->>> Sorry, with such replies to review, it is not worth my time.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> Hi luiz,marcel
->>
->> it is time for me to request you give comments for our discussion
->> and for my fixes, Let me explain the 1st issue then 2nd one.
-> 
-> You keep pushing and pushing even though I stated my remarks.
-> 
-> 
->>
->> For 1st issue:
->> 1) the following commit will cause serious regression issue for QCA
->> controllers, and it has been merged with linus's mainline kernel.
->>
->> Commit 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
->> with gpiod_get_optional()").
->>
->> 2) the regression issue is described by [PATCH v4 1/2] commit message
->>   as following:
->>   BT can't be enabled after below steps:
->>   cold boot -> enable BT -> disable BT -> warm reboot -> BT enable
->> failure if property enable-gpios is not configured within DT|ACPI for
->> QCA_QCA6390.
->>   i will verify and confirm if QCA_QCA2066 and QCA_ROME also are impacted.
->>
->> 3) let me explain the bug point for commit mentioned by 1), its
->>    commit message and bug change applet are shown below.
->>
->> The optional variants for the gpiod_get() family of functions return
->> NULL if the GPIO in question is not associated with this device. They
->> return ERR_PTR() on any other error. NULL descriptors are graciously
->> handled by GPIOLIB and can be safely passed to any of the GPIO consumer
->> interfaces as they will return 0 and act as if the function succeeded.
->> If one is using the optional variant, then there's no point in checking
->> for NULL.
->>
->>  		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->>  					       GPIOD_OUT_LOW);
->> -		if (IS_ERR_OR_NULL(qcadev->bt_en)) {
->> +		if (IS_ERR(qcadev->bt_en)) {
->>  			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
->>  			power_ctrl_enabled = false;
->>  		}
->>    3.1) we only need to discuss how to handle case "qcadev->bt_en ==
->> NULL" since this is only difference between the commit and BT original
->> design.
->>    3.2) BT original design are agree with the point of above commit
->> message that case "qcadev->bt_en == NULL" should not be treated as
->> error, so BT original design does not do error return for the case and
->> use dev_warn() instead of dev_err() to give.
->>    3.3) the commit misunderstands BT original design and wrongly think
->> BT original design take "qcadev->bt_en == NULL" as error case,
->> so change the following flag power_ctrl_enabled set logic and cause
->> discussed issue.
->>
->> For the 2nd issue:
->> 1) the following commit will cause below regression issue for QCA_QCA6390.
->> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
->>     serdev")
->>
->> 2) the regression issue is described by [PATCH v4 2/2] commit message
->>   as following:
->>   BT can't be enabled after below steps:
->>   cold boot -> enable BT -> disable BT -> warm reboot -> BT enable
->> failure if property enable-gpios is not configured within DT|ACPI for
->> QCA_QCA6390.
-> 
-> You did not address original issue of crash during shutdown and did not
-> clarify my questions.
-> 
-as i statemented. my fix have fixed both this issue and the original
-crash issue. don't need to talk about others.
->>
->> 3) qca_serdev_shutdown() is serdev's shutdown and not hdev's shutdown()
->> it should not and also never get chance to be invoked even if BT is
->> disabled at above 2) step.  qca_serdev_shutdown() need to send the VSC
->> to reset controller during warm reset phase of above 2) steps.
-> 
-> Anyway, any explanation providing background how you are fixing this
-> issue while keeping *previous problem fixed* is useful but should be
-> provided in commit msg. I asked about this two or three times.
-> 
-> BTW, provide here exact kernel version you tested this patches with.
-> Also the exact hardware.
-> 
-there are almost no commit with tag Tested-by also provide exact kernel
-version. for one type bt controller. different h/w has different config.
-important is that this issue is fixed in reported H/W and don't cause
-issue for other issue.
+Bjorn, quick question: this regression fix after more than two and a
+half weeks is not yet mainlined. Is there a reason? Or am I missing
+something here?
 
-let us stop here and wait for other comments.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-i have given too much explanations for my change of only total 7 lines.
-> 
-> Best regards,
-> Krzysztof
-> 
-
+#regzbot poke
