@@ -1,126 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1CE146595
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 11:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCD4145342
+	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 12:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713785134; cv=none; b=ZZpMPrR+AxnNL8VvC+7qXY1cURZ5JZpPxS01vTTmkNYFiW1tBy3PQyTPJP81MedK7JmcWVlGJck+830jmaVOktRMBoD+Pfn9pS5Z9rZKaIRGft4tsgNDXq7M37zRQ38we4xBwbnLj4793ylwJNgkuoX1Siw5800aHubv/FXnLl0=
+	t=1713787890; cv=none; b=YjQqbzF+o5D+syhQHih43b1nOjbNuvBPbG1qRovRZ1CE3wCyqzdISY4ivJGq6G7fJc6zyMDDqrzL5z4+GWyKVRordtI4P6xVPLoDTQdgqtpnfT5XYpY6mcFXI7yllqMYATRm6JUKCOD8beoHUUQFKz9atgncj62BLmE87/HaCL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713785134; c=relaxed/simple;
-	bh=6Ek475WwciTCayxC7hTVryHZ9ciAMChJIzEQhexou8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PDquvUGnTej8s+YNjVGZaAx7muZtFOafk1jidoIRjozOxItk9dlrM3cw9kwqQi2xBHxLgtb4iYk09i2TgV61+oAPxo7QSSQwPbbu6K6I86bD+2Bn+R2sMTsDc1Nr/rSJz7SDANltLn1ZYVVxcNeQB3S47eVdVBp3iq8q7Unt/NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FQx/1GR6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713787890; c=relaxed/simple;
+	bh=dC5ZHd6Ky5vV2tsL7oXY8FeusJcsi4Qa/hgIGs3LA54=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=YlN1YocqkeLGXSPxiJRevbngw6tzhHg3C4m0pkd7SZ77QY8idyP8R5ko6TzFwaUWa0XMH3IV1Hmb9vZ9DdEp+0M1TSJHbjTO+CxUQDKn0EXYLwyVYupYx8CrCxr/mhMh0pIc6b/tRKkzn3BaCuFYP5Uoc1sLVyaV631GLxpJArc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=iRaGRCnf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NctAszhT; arc=none smtp.client-ip=64.147.123.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FQx/1GR6"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43M25eCM027623;
-	Mon, 22 Apr 2024 11:25:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=NPBMpPfIcMcS6UBtC3uaHZr+ggmmAMSiArb1Bh8gW6M=; b=FQ
-	x/1GR664wERmwMauO2XgV4ZZUmBPQKVCpXPy91Tq3dbnVTqZX/BGHDTz2E9iII0y
-	rU9zavLsS4Tbv7n7JxKF/eVOvPqnCGivYC8mn60aggtjidMdo10o8vnarapleyvR
-	llIxDgLfploACqb+5f/ihWuU03vzp54FBCK3wpqw2GVIW8KBA2iCewj+RoaazdNP
-	7W2Tp9jWjiTNM63J1pOhX0Zxpsl9Twwwn6aBWkk8p8Q5YFPfNbGJVPO66TeUPC4y
-	CFMLlynT+/tB0cleKwyhV89ki0M9XyZe8WMIjEQfgBJHb3OfL1rSRk8H5wG0fNnb
-	4Fn/SAF5JNBOxoXZgCYg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnet794cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 11:25:27 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43MBPQXm030547
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Apr 2024 11:25:26 GMT
-Received: from [10.253.37.80] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Apr
- 2024 04:25:24 -0700
-Message-ID: <930736f3-696c-4076-93fb-d879691bac66@quicinc.com>
-Date: Mon, 22 Apr 2024 19:25:22 +0800
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iRaGRCnf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NctAszhT"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id D477618000F4;
+	Mon, 22 Apr 2024 08:11:26 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 22 Apr 2024 08:11:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1713787886; x=1713874286; bh=KRP2elrmum
+	xH8cocnCA8ROfbtX6U7yx5lVj+wpAn/3U=; b=iRaGRCnfyLCk8nPe1wdbVCJHaJ
+	AfoHsMJGRPizCPI7ebQcmNjfh0Zdm2mAEhc2GsOposVkn9UGMQYCMoLCCjV8JQmi
+	CXH2t70iGdJTslbh/MEdXbbMpygD7vgAYotST7KP1rz/EV0P8kMtT6aiMkC7wGs/
+	igpQyEcoQOVu0XA1X/cN1LRqfezAsoylcxgy1G/p/NxnhaLhzwoLYg4V7ROMmSqB
+	zKwjn0xIa3lFC+CNdfcBydjDSl+yD/i6B34B0KBVRFx5vDv8BghH5JR+5G5imKb7
+	4E3RaNf6GWpH7dPSVa2LnkreSNO8Iv9BZUhYGVBelUQoagQ+4ZpbQ3udtNbg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1713787886; x=1713874286; bh=KRP2elrmumxH8cocnCA8ROfbtX6U
+	7yx5lVj+wpAn/3U=; b=NctAszhT/BSUcWRrsLUXj9jx+ADe4Wveh+7L8/vLnk4u
+	mDzYVuDcBGoZJ37mqcPm5OlOLn5A6+a3W5jZGDKOprWsuMFxUkfpO/bB19/A6AwX
+	vS4gXbYztBEWVyiAS0ojUD1NOx031uvlr8AMHUYrZmX0sdSdaIRLE2GospL3aC/M
+	azdrJQf4bAAQrmu1YnNDezEJOoRRa7MCRw3UyIb9oX6pXekTcfZs/V7Ty0gis4A7
+	uePT1ISot3KAoLKvFfZYZCyvX/fMd5fpx6UlZ8ZPHtOjSYwel48tqugQ/SKqS3xK
+	4NqoXwLUXRIRFP3bqUxs8Zj+t5oVk7sektctWuBp0A==
+X-ME-Sender: <xms:7VMmZpxHI4e3nfaqSzK_VLo7pSuy4vhzpGT1NM8pG8F_Xthrs61O7w>
+    <xme:7VMmZpTBIdCzEvlcnyNChRV0jYYGVjrmEhwyz4oB396MWhX9O4ZAvgEmztuCvCGc4
+    LNyt7L8o_AGJwzZGyI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekledghedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:7lMmZjW8Grb-3NXHtMadwtAI8w8tcRBTUCbov2hOQxG8VuUr_fogxg>
+    <xmx:7lMmZrgsOUpMy8PJywH4FfMtSSCm-SHkwVzhJqP-oFvKmhDIWovKpg>
+    <xmx:7lMmZrAeaf5Q0P2IDwadXuF9pBNghAyBAZTyL3GwX7vVUHlc5kI8jQ>
+    <xmx:7lMmZkLNei8_f1c4vS6AAeI-cUTFSt-IA7tDruhR1ruQCefDPieV9w>
+    <xmx:7lMmZnvrUqvRiqaaeXLdbCyTPxDF5RZSuEePwy8PtDZkvReBrR6Ih4Q_>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id DC779B6008D; Mon, 22 Apr 2024 08:11:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] Bluetooth: qca: Fix BT enable failure for
- QCA_QCA6390 after disable then warm reboot
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
-        <marcel@holtmann.org>
-CC: <linux-bluetooth@vger.kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <wt@penguintechs.org>, <regressions@lists.linux.dev>
-References: <1713650800-29741-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713771497-5733-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713771497-5733-3-git-send-email-quic_zijuhu@quicinc.com>
- <f744a2ba-f842-454a-a04f-76207f0db9bf@linaro.org>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <f744a2ba-f842-454a-a04f-76207f0db9bf@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: iKZPNFHNsp_-b65oXtW_0ZlJJ0fJXEBo
-X-Proofpoint-ORIG-GUID: iKZPNFHNsp_-b65oXtW_0ZlJJ0fJXEBo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-22_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=561 suspectscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404220052
+Message-Id: <df782e40-95bf-4f8e-96c8-355ff0109e3a@app.fastmail.com>
+In-Reply-To: <ZiYwkKLRVgvrQrnK@FVFF77S0Q05N>
+References: 
+ <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
+ <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
+ <cd172d05-15f6-427c-b6e3-d68fc746b940@app.fastmail.com>
+ <ZiYwkKLRVgvrQrnK@FVFF77S0Q05N>
+Date: Mon, 22 Apr 2024 14:11:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mark Rutland" <mark.rutland@arm.com>
+Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Anders Roxell" <anders.roxell@linaro.org>, "Marc Zyngier" <maz@kernel.org>,
+ joey.gouly@arm.com, "Oliver Upton" <oliver.upton@linux.dev>
+Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension `pauth'
+Content-Type: text/plain
 
-On 4/22/2024 3:42 PM, Krzysztof Kozlowski wrote:
-> On 22/04/2024 09:38, Zijun Hu wrote:
->> From: Zijun Hu <zijuhu@qti.qualcomm.com>
->>
->> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
->> serdev") will cause below regression issue:
->>
->> BT can't be enabled after below steps:
->> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
->> if property enable-gpios is not configured within DT|ACPI for QCA_QCA6390.
->>
->> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
->> during reboot, but also introduces this new issue regarding above steps
->> since the VSC is not sent to reset controller during warm reboot.
->>
->> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
->> once BT was ever enabled, and the use-after-free issue is also be fixed
->> by this change since serdev is still opened when send to serdev.
->>
->> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
->> Reported-by: Wren Turkal <wt@penguintechs.org>
-> 
-> NAK. This is way too much. Previous discussion is going, I asked there
-> questions and before any answers happen, you keep sending new version.
-> This leads to previous discussion gone/missed.
-> 
-> You ignored several questions and feedbacks.
-> 
-> Best regards,
-> Krzysztof
-> 
-i believe my commit message explains WHAT/WHY/HOW about this issue.
+On Mon, Apr 22, 2024, at 11:40, Mark Rutland wrote:
+> On Mon, Apr 22, 2024 at 11:25:25AM +0200, Arnd Bergmann wrote:
+>> On Mon, Apr 22, 2024, at 11:13, Mark Rutland wrote:
+>> > On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
+>> > Given the minimum supported toolchain comes with an assembler that doesn't
+>> > necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
+>> > support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
+>> >
+>> > I suspect the latter is the better option.
+>> 
+>> The .config linked from the report shows
+>> 
+>> CONFIG_AS_VERSION=23101
+>> CONFIG_ARM64_PTR_AUTH_KERNEL=y
+>> CONFIG_AS_HAS_ARMV8_3=y
+>> 
+>> So it gets detected as supporting ARMv8.3. Is this the wrong
+>> conditional to check, or does it get misdetected for an unsupported
+>> assembler?
+>
+> I suspect that means the 'pauth' arch extension was added after armv8.3
+> support, and the assembler supports `-march=armv8.3-a` but does not support
+> `.arch_extension pauth`. So for this code, it'd be wrong to check for
+> AS_HAS_ARMV8_3, unless we used `.march armv8.3-a`, but even then that'd still
+> mean configurations where we couldn't support this code.
+>
+> I reckon manually assembing the PACGA is the best thing to do; that sidesteps
+> the need for either `.arch_extension pauth` or `.march armv8.3-a`, and aligns
+> with what we do for CONFIG_ARM64_PTR_AUTH=y generally.
+>
+> Elsewhere in the kernel where we check for CONFIG_AS_HAS_ARMV8_3, we rely on
+> ARM64_ASM_PREAMBLE containing `.arch armv8.3-a` or a later version that implies
+> the presence of ARMv8.3-A instructions, and so pauth usage elsewhere is fine.
 
-1) the qca_serdev_shutdown() was introduced by my below commit
-Commit 7e7bbddd029b ("Bluetooth: hci_qca: Fix qca6390 enable failure
-after warm reboot")
+I tested with the old binutils versions I have here and found
+that anything that supports v8.3 also understands pacga, but
+'.arch_extension pauth' only works in binutils-2.35 and higher,
+presumably because it started out as a v8.3+ feature but was
+later turned into an optional extension for all versions.
 
-2) then Krzysztof's below commit was made to fix use-after-free issue
-but also causes discussed regression issue.
-Commit 0b7015132878 ("Bluetooth: btusb: mediatek: add MediaTek
-devcoredump support")
+Since there is a Kconfig check for armv8.3-a support already, I think
+it's safe to just drop the .arch_extension pauth.
 
-3) my fix will solve both this issue and the use-after-free issue.
+      Arnd
