@@ -1,83 +1,149 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEC15025E
-	for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 15:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713798545; cv=pass; b=nEwja2e60jz4sbazR1C16gckStvXRgE1HqXVPY6qPquCb+IW/DpcdRJrIAG/kM8kfkk9LASMXOAdXyEKjbURgucUiEN46B7QQ7y54HJzX7l1qQ51EE08xPZ65osMEEZhM1Xsvdt6QqSZbQRgoJaWrKLObrOuoUNWPc/i/2gYZsc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713798545; c=relaxed/simple;
-	bh=Laelx3WwGmYXAKn58hviI/QXfuGutDv98jUfvYbPftY=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=G99MOCvDwz8aFVxqeWYyQMKJ09DcAgjlt/aRTOHe0axq00N0F/dJ0NWq6Cih3TnfiIAMVEeOgzTp0zvNE0fUMUDoNcznyWjuijhd+l8sGpK16eXuwzjYJ6amZJhbxP40HXa+U8sHihyMh8+b9MSXWv0+3foTrogn4/RVh1BC6Qk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=X59CekS+; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BDB153BC6;
+	Mon, 22 Apr 2024 17:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713805863; cv=none; b=HOoAzkoF9T8QfDY1nPLxbzfAu8D/0yW48Qd6MzJWADxJ3fFzFWjJ5NfpwSxY9iCNDKpVmMkhgqBKDkqSjmuRa8s7pbSdyFIsLr612rm5gX55wu9ao7inzoZX5/26DSIL42MNUwAuMIgMnPQqtgmlx7FpCM4w5Lj5+oSP4IvvPmY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713805863; c=relaxed/simple;
+	bh=LwjGFpqMPE7/isFyix1F6hQ3BlY9L4xSAYUXU2nXEO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nhTA48qAYsfkx25RUIiPbApVTQQQb6S84/JgEjhVyVsvDvSpQXUuuYhqduWnf4Yebouq8BBOCss98zf/xRJHHyYfwnZODqw7QFWZBI9BNGM5jMinaG1nZHb2W5/3kXBVR7QOOFlxqaQuHnuy5iT9pUBKgXVZVdXr938qZZExZik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ym1zpgnf; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="X59CekS+"
-Message-ID: <adfd2a680e289404140ef917cf0bd0ab@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713798535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NHiQDl3huVUrNs3zqg+ufyzgDB4ufs3iLmI3DcUaM4g=;
-	b=X59CekS+vQyGU4mbbf+XSXxI1Qf14YQydzv+LrL9pId/xgrIM/FP3dIfAHFRqONuzX+fly
-	F6uB0f/V05e7G7D+gwWnvc36Ru6RcUKhXv5TVSiNYcfGY6TGglPULS8v0qyW/wOWvKcD1b
-	IhfEOEmViOeRTIgeqUsn1RWQcBANLA5QFxWltfhVgwsgGeCRhLr/1GCwIP9Di3CwewoYj5
-	0Bb855HwfQeLWUsqRuJlUswD2EUPHq3aj7sloxNW6O7Y4mZnlXINn2aLDW4ftXTbmx/YMQ
-	8S08nCBtrvC88p3mXM+YPkJVj2IZA0O0uTC4ALQcf6rCvrLUNbog5GQh3MEkBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713798535; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NHiQDl3huVUrNs3zqg+ufyzgDB4ufs3iLmI3DcUaM4g=;
-	b=f7vLiCUmWsRz/5cThcXHeJGzr4+qoFf4Owt0NE+badFXbOQcaS3pp64OGMgwIJ1+atALDi
-	1qDAVVvAt+uKlzmmqw9pghabd/pBRTuW/TIrKOmRuZLrAGa1wdTfFlRpEaZ+zcnoMReUYY
-	SnnHMuSGuKC9RWVgu3NIDImFD+ZNCQG5EFYlJ98tca+CpOEEpqlG2JRxtGM5DUDdq/7KPw
-	F+79xaQcq7g4fQtLuCZ4dOyfIM7tVaficOn088RogntPNGUtnz/YoG0m1T1t5t637czDWs
-	WCW99AXjVm5+TcV4eUyLx6XrFOlcMZsqcL3ta51GNRZiLpbaKhK5LzO6tk7GKw==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1713798535; a=rsa-sha256;
-	cv=none;
-	b=hw1j1lauKgSuJHYQk7fonUtn2dkUrf4CZRJ0yExPcETXQy6TUZkGjbn6wyir/5+Zhom7TY
-	3ymlJTI9VSTJkqej2Crfb8QaK//dNqhdZjSKSaMsswwxHNEWpf6FY4Xw8AQfFrdRF3KkF4
-	hrcSbwqQK0POMgZwtDhG5NYi9PHWWqgl984MECj2OGMYyRdKTRgxp+yRj8eF5s232kbPjc
-	jEs6N8zf4WmWXuPDu6JTNZNHQewwll1dN9R1PRChbKBLiuNHyXNUUit2wvfrZgaW/JfZX2
-	X9Y9C1uqJw/xY2nDjCFYwMkDLZJKKP/FBTEm7+jQ1QqXOkpG55EH0V0Oetipdw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
- gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
- linux-cifs@vger.kernel.org
-Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
- overflow frame end of buf" and invisible files under certain conditions
- and at least with noserverino mount option
-In-Reply-To: <ZiLQG4x0m1L70ugu@eldamar.lan>
-References: <ZiBCsoc0yf_I8In8@eldamar.lan>
- <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
- <ZiCoYjr79HXxiTjr@eldamar.lan>
- <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
- <ZiLQG4x0m1L70ugu@eldamar.lan>
-Date: Mon, 22 Apr 2024 12:08:53 -0300
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ym1zpgnf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=o+rHFy1a1QfA8CSXaqess65zqT0THwLSLU62WTJDzAQ=;
+	t=1713805861; x=1714237861; b=ym1zpgnf321E/uM2vmV+7bzcIuRhgRe9JY7WxBwaMD9pG6e
+	my6DZ2Mvhjf3YjyQhXVjDiBZEWW7lH3xPL1tfxpTXFS7RMR1zT7Owzn0qn9A1YtIsHZaAMeeqEtmm
+	90i0h+eBTRlp3uqFY5HPBvVAqP6HSl7p2yQKi4UYOAVrGqHgpYobhRI/va27LqAGAepHmJSDVHJh6
+	Pw6MCccIhaH9JwERmGrRDb9Z9ALGQuPINfcKsXupQjlLrFZ5178hLo+mj+5p9GehSVqkbdz14zsag
+	T7NzuOxoY3saz4tsBKe8vwacvOeU4bJ9lTSb1V1mcmn6VClHI7encPvsBZUGVWCA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ryxBx-0003Vp-JQ; Mon, 22 Apr 2024 19:10:57 +0200
+Message-ID: <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
+Date: Mon, 22 Apr 2024 19:10:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] HID: i2c-hid: Revert to await reset ACK before reading
+ report descriptor
+To: Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Douglas Anderson <dianders@chromium.org>,
+ Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Kenny Levinsen <kl@kl.wtf>
+References: <20240331182440.14477-1-kl@kl.wtf>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20240331182440.14477-1-kl@kl.wtf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713805861;d4d60d74;
+X-HE-SMSGID: 1ryxBx-0003Vp-JQ
 
-Salvatore Bonaccorso <carnil@debian.org> writes:
+On 31.03.24 20:24, Kenny Levinsen wrote:
+> In af93a167eda9, i2c_hid_parse was changed to continue with reading the
+> report descriptor before waiting for reset to be acknowledged.
+> 
+> This has lead to two regressions:
 
-> I'm still failing to provide you a recipe with a minimal as possible
-> setup, but with the instance I was able to reproduce the issue the
-> regression seems gone with cherry-picking 35235e19b393 ("cifs: Replace
-> remaining 1-element arrays") .
+Lo! Jiri, Benjamin, quick question: is there a reason why this fix for a
+6.8-rc1 regression after more than two and half weeks is not yet
+mainlined? Or is there some good reason why we should be should be extra
+cautious?
 
-It's OK, no problem.  Could you please provide the backport to stable
-team?
+Side note: I noticed this due to the tracking today, but I also saw a
+user that recently ran into the problem the quoted fix is supposed to
+resolve: https://social.lol/@major/112294923280815017
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+> 1. We fail to handle reset acknowledgement if it happens while reading
+>    the report descriptor. The transfer sets I2C_HID_READ_PENDING, which
+>    causes the IRQ handler to return without doing anything.
+> 
+>    This affects both a Wacom touchscreen and a Sensel touchpad.
+> 
+> 2. On a Sensel touchpad, reading the report descriptor this quickly
+>    after reset results in all zeroes or partial zeroes.
+> 
+> The issues were observed on the Lenovo Thinkpad Z16 Gen 2.
+> 
+> The change in question was made based on a Microsoft article[0] stating
+> that Windows 8 *may* read the report descriptor in parallel with
+> awaiting reset acknowledgement, intended as a slight reset performance
+> optimization. Perhaps they only do this if reset is not completing
+> quickly enough for their tastes?
+> 
+> As the code is not currently ready to read registers in parallel with a
+> pending reset acknowledgement, and as reading quickly breaks the report
+> descriptor on the Sensel touchpad, revert to waiting for reset
+> acknowledgement before proceeding to read the report descriptor.
+> 
+> [0]: https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/plug-and-play-support-and-power-management
+> 
+> Fixes: af93a167eda9 ("HID: i2c-hid: Move i2c_hid_finish_hwreset() to after reading the report-descriptor")
+> Signed-off-by: Kenny Levinsen <kl@kl.wtf>
+> ---
+>  drivers/hid/i2c-hid/i2c-hid-core.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 2df1ab3c31cc..72d2bccf5621 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -735,9 +735,12 @@ static int i2c_hid_parse(struct hid_device *hid)
+>  	mutex_lock(&ihid->reset_lock);
+>  	do {
+>  		ret = i2c_hid_start_hwreset(ihid);
+> -		if (ret)
+> +		if (ret == 0)
+> +			ret = i2c_hid_finish_hwreset(ihid);
+> +		else
+>  			msleep(1000);
+>  	} while (tries-- > 0 && ret);
+> +	mutex_unlock(&ihid->reset_lock);
+>  
+>  	if (ret)
+>  		goto abort_reset;
+> @@ -767,16 +770,8 @@ static int i2c_hid_parse(struct hid_device *hid)
+>  		}
+>  	}
+>  
+> -	/*
+> -	 * Windows directly reads the report-descriptor after sending reset
+> -	 * and then waits for resets completion afterwards. Some touchpads
+> -	 * actually wait for the report-descriptor to be read before signalling
+> -	 * reset completion.
+> -	 */
+> -	ret = i2c_hid_finish_hwreset(ihid);
+>  abort_reset:
+>  	clear_bit(I2C_HID_RESET_PENDING, &ihid->flags);
+> -	mutex_unlock(&ihid->reset_lock);
+>  	if (ret)
+>  		goto out;
+>  
