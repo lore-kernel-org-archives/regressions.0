@@ -1,116 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59DC1BED91;
-	Mon, 22 Apr 2024 22:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB33010949
+	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 01:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826716; cv=none; b=mdIVyx23hJSi5ZfYqgTgC7Sc/0Sp8D/jTO/hEneQ27++IAyFFJCBi2FdlfbLv0uxPBMNVppIcSUjWGQTm58VvfYrzAzFI9pglZ1kD7Vog49jRUgQ8F43208jHrq5gxyFgwLHFmB4cDiAgHMKwLma+T7YUzPUCDFbTXAYbbzegJc=
+	t=1713835331; cv=none; b=b9yVoy68noG6nXxiGnV3+9dW5UiyVh1QuCzpsKOY6ThcoO+acfs80iDfh0WBM5RZgP1cskK2TJcGcGKIiHdRq7iXwci+lmxIIWque1+60/p3xzW7a3gVgmFDJxVqTLdk7yngG+7mqnI4OJXvblWZTo6jtzm3C9Q7D5SC7oKqvEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713826716; c=relaxed/simple;
-	bh=esn2V8XOCiYcLyvtAXzH1iAi1DKCTXra+1968f985U0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oil+xVEirbRA+ltGZwVZOEPOEw2ad2cdttr3ZvypggaEiSrL1pNtpg/kWjgvwEMjjWmt84iGQZqtUUiMdx5R3A87jRa39gxRiEVGieRUzjvkWLDpmgPg38eESTnu4o8kmwd64t0fOcUKl7WxBp9epFmwlKxWhoyLLJyorBWviAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xhnpmzsb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713835331; c=relaxed/simple;
+	bh=Ih5x3U7p/xtVraTTykRD3OsOwljk9aCuZMTsbHhk8XQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mxHbNtd3xOPe/tZrkAQP1hzQ2ynbmbtk4jw/d2fViXUd+kcWxHhf1UPjL/WLzUfHtOmZU1OYIQjvjkBssOBRmg6kAGCtccecMvpspZrHQewt0itr9tdCr4eCsIu62hI5fTd0nyp61iVcNeHy123lODtEMmj6UpHQkI1nzX1Be2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=Bo7a/SmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xhnpmzsb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522B7C3277B;
-	Mon, 22 Apr 2024 22:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713826716;
-	bh=esn2V8XOCiYcLyvtAXzH1iAi1DKCTXra+1968f985U0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Xhnpmzsbf9Mri1AICNzleKpdSdPcQM5uzRQQr6iR5Ef1rAs0QixfSV42TtZ8JSz93
-	 2d9+wvFcvU+BcSqYnIvPJT8mpS8NaxX5w+AwVQn45OolfkGaJ8xEiVTaptQY9uSpSJ
-	 aM2YqKzG8KsdDS/FHCrD7Nenfbnyobf7qjaRWU02SgL3g0AW9JVgLMixb0mO+Wk/Ac
-	 Wh0/OHnim4+ajVdvalr1HuwwLmkPYb8KoY1rLQFaHkrBcnFIHa8sEy1jTgKJaabvzm
-	 9UvJfmAjVcOKNQziosCGWJgX2WHCybSDAHdSC8EYpzTcc6h1v/PEdplArJDMwI7FBt
-	 0+ckEQ6kn0mGg==
-Received: from [12.161.88.66] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rz2cL-006yKr-Kz;
-	Mon, 22 Apr 2024 23:58:34 +0100
-Date: Mon, 22 Apr 2024 23:58:24 +0100
-Message-ID: <87v849t373.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	joey.gouly@arm.com,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: gcc-8: arm64/kvm/pauth.: Error: unknown architectural extension `pauth'
-In-Reply-To: <ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
-References: <CA+G9fYsCL5j-9JzqNH5X03kikL=O+BaCQQ8Ao3ADQvxDuZvqcg@mail.gmail.com>
-	<ZiYqV-5BWmPwgqbU@FVFF77S0Q05N>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bo7a/SmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1164C32783
+	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 01:22:10 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bo7a/SmO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1713835327;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ABtPQ8N241McwH5nBg097+oC8v9+e969bZpbfxdAxJg=;
+	b=Bo7a/SmOoG+JYtN0U12s/KdN/K9YPwQO2U7Df3gj0Zy0tHf6yaZ6wf0tUpHaTLTCcWR56o
+	2OzydvBrH6TDAOiEJWmz5+SMktEDm21j0O4sXlWNKK9nOENQPpkg7FhCGaulIQ4kTQz6RX
+	ckK8y7h3bZBaw+sVwH8zHvzLGsbsTKg=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 2969f3f5 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <regressions@lists.linux.dev>;
+	Tue, 23 Apr 2024 01:22:06 +0000 (UTC)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so3836956276.1
+        for <regressions@lists.linux.dev>; Mon, 22 Apr 2024 18:22:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKyl7YyGtbstWHE9WXdS/Y8HLWr658N+tnQMcAy2E+Q7I8LfcWXo82ZJaOQ5FiIDInmt1zx5kgdviu28LIKPE4zsKuX9UoEvXdqd0=
+X-Gm-Message-State: AOJu0Yw9sbkMcgvH5pxJllSLpwtTW9JO/7cMlUoEvzPkdcKMcJs2wta+
+	MHVNFDtNHafYyfAK6I6PexhWCd3/hvAgP5Gusv719BiPA80HlThBoRpFln4CK76+mqHERo8xckR
+	RKyMZ/D/8qBSE6NUKePMwin2exNI=
+X-Google-Smtp-Source: AGHT+IHOl/OU0gcvKAzZv+BDUZWeDYaENpYzgHuuBDp9zvpkL5AsnDGHxy57Vi8y+7xvNvjifG8fxHcls0zCXYzjLQs=
+X-Received: by 2002:a25:ac90:0:b0:dc6:d258:c694 with SMTP id
+ x16-20020a25ac90000000b00dc6d258c694mr1437897ybi.19.1713835324219; Mon, 22
+ Apr 2024 18:22:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 12.161.88.66
-X-SA-Exim-Rcpt-To: mark.rutland@arm.com, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkft-triage@lists.linaro.org, regressions@lists.linux.dev, arnd@arndb.de, anders.roxell@linaro.org, joey.gouly@arm.com, oliver.upton@linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240418114814.24601-1-Jason@zx2c4.com> <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+In-Reply-To: <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Tue, 23 Apr 2024 03:21:52 +0200
+X-Gmail-Original-Message-ID: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+Message-ID: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Babis Chalios <bchalios@amazon.es>, "Theodore Ts'o" <tytso@mit.edu>, 
+	"Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann <arnd@arndb.de>, 
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, Christian Brauner <brauner@kernel.org>, linux@leemhuis.info, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 22 Apr 2024 10:13:59 +0100,
-Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> On Mon, Apr 22, 2024 at 02:04:43PM +0530, Naresh Kamboju wrote:
-> > The arm64 defconfig build failed with gcc-8 and passed with gcc-13.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > Build log:
-> > ---
-> > /tmp/ccSUNNZy.s: Assembler messages:
-> > /tmp/ccSUNNZy.s:3159: Error: unknown architectural extension `pauth'
-> > make[5]: *** [scripts/Makefile.build:244: arch/arm64/kvm/pauth.o] Error 1
-> > 
-> > Steps to reproduce:
-> > ---
-> > # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
-> > --kconfig defconfig
-> 
-> I think the key thing here is GCC 8; the associated assembler won't necessarily
-> have ARMv8.3-A support, since all the relevant bits got added around GCC 9.
-> 
-> Looking at the commits, I think this is broken since its introduction in commit:
-> 
->   6ccc971ee2c61a1f  ("KVM: arm64: nv: Add emulation for ERETAx instructions")
-> 
-> ... where the pauth.c file only depends on ARM64_PTR_AUTH (which doesn't imply
-> AS_HAS_ARMV8_3), but in the file we do:
-> 
->   asm volatile(ARM64_ASM_PREAMBLE ".arch_extension pauth\n"
->                "pacga %0, %1, %2" : "=r" (pac) : "r" (ptr), "r" (mod));
-> 
-> Given the minimum supported toolchain comes with an assembler that doesn't
-> necessarily support ARMv8.3, I reckon we'll either have to make NV pauth
-> support depend upon AS_HAS_ARMV8_3, or manually assemble the PACGA instruction.
-> 
-> I suspect the latter is the better option.
+Hi Alexander,
 
-This is what I've done [1]. It certainly isn't pretty, but this counts
-as an incentive to drop some of the old stuff in the near-ish future.
+The process here seems weirdly aggressive and sneaky.
 
-I've pushed this out to -next, and hopefully the breakage will be
-solved tomorrow.
+On 2023-06-19, I wrote that I didn't want to take this route for
+userspace notifications.
 
-	M.
+Then on 2023-06-28, you wrote to Greg asking him to take it instead of
+me. Nine minutes later, Greg said "yea sure." Then he caught up on the
+thread and some hours later wrote:
 
-[1] https://lore.kernel.org/r/20240422224849.2238222-1-maz@kernel.org
+> Wait, no, I'm not the maintainer of this, Jason is.  And he already
+> rejected it (and based on the changelog text, I would too), so why are
+> you asking me a month later to take this?
+>
+> Work with the maintainer please, don't try to route around them, you
+> both know better than this.
 
--- 
-Without deviation from the norm, progress is not possible.
+Then on 2023-11-14 you wrote to me again asking me to take it, despite
+my earlier reservations not changing in the interim. I didn't have a
+chance to reply.
+
+Then on 2023-11-30, Greg weirdly took it anyway, with zero discussion
+or evidence on the mailing list as to what had happened.
+
+When I noticed what had happened (while working on his driver in the
+process of cleaning up/reworking patches that your Amazon employees
+sent me that needed work), suspicious that you tried to "route around"
+the proper way of getting this done and trick Greg again into taking a
+patch that's not his purview, I asked him wtf happened on IRC:
+
+<gregkh> ugh, sorry, I don't remember that.  I think Alexander talked
+to me at plumbers and said, "hey, please take this virt patch"
+<gregkh> but you are right, you NAKed it in that thread, I forgot
+that, sorry.  Yes, revert it if that's needed.
+
+Greg then ACK'd the revert commit which came with a stable@ marking
+and a Fixes: tag (for 6.8, which isn't very old).
+
+So it looks to me like you twice tried to trick Greg into taking this,
+succeeded the second time, got caught, and now are trying to make a
+regression argument as a means of keeping your sneaky commit in there.
+All of this really _really_ rubs me the wrong way, I have to say.
+
+I don't know what holds more weight here -- the predictable regression
+argument, or the fact that you snuck nack'd changes into a very very
+recent kernel that can still be removed while probably only affecting
+you. But I'm obviously not happy about this.
+
+Jason
