@@ -1,89 +1,190 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9928625B
-	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 12:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6D113BAC7
+	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 14:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875026; cv=none; b=kmh5VCAP7ZPe+ImlKVDt/hAPFiktUTGpi08XENI8s5nJ9GJ2QXlwz4CSKQB7K70Z64296NvujBXQw3QEudYKGnk71RBRWRKMSTbzDLosHRRVby29vG+0imgeV8pAzE4Ay5ZsrMyS+yEHYZr/57uoLfsOZZASp/Y/YEZcaJqRS+g=
+	t=1713884380; cv=none; b=YSaBPjy8q32dX/NS5MvA5k3N70K7BFIjbronJFatdFqz3S2gdylZUaKwEDN7+82YyZr+HQJW1lHi0Wi662FupuRJ5Dn0VStkwcI6cvFebv20f7BuUXssGotTEZC96YaSz8AisaO5RmR14fKZrMBye3UljGNBlSH7pl/d0Tei2G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875026; c=relaxed/simple;
-	bh=5DmUvjxy5vtrmeA+aWwOw6GwVTh9Pm0+Jafzv1sTFSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwzDmaozonsKxGpZBSxPNg4LD9pC6r548aljuJQy0wI12dO2oWP1aMLKRoSZ4pYVLQXIZBMo/Wd9Cusg9/WpkObEQWq50+ftsbCPMxsN6rKodeGIOX61XIXIVTOqP7Dk6fXzCFS15uhjP+WLvkyK03U5/cbqhc4ybFsdUnU78UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id 3A406E80104;
-	Tue, 23 Apr 2024 14:23:36 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id A91ED1602F7; Tue, 23 Apr 2024 14:23:35 +0200 (CEST)
-Date: Tue, 23 Apr 2024 14:23:35 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Babis Chalios <bchalios@amazon.es>, Theodore Ts'o <tytso@mit.edu>,
-	"Cali, Marco" <xmarcalx@amazon.co.uk>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	Christian Brauner <brauner@kernel.org>, linux@leemhuis.info,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
- VMGENID updates"
-Message-ID: <ZieoRxn-On0gD-H2@gardel-login>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
- <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
- <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+	s=arc-20240116; t=1713884380; c=relaxed/simple;
+	bh=olfSGTsFnuztaBe/6TGLSCfwwp+edxO3rygKLxl5HZA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=npZAi66g1Vns0rqXx1B0J1PFBYzF4kCDDkuUsLgOg5Cs9DDzVU2tXhYZGWXPHccptxE+of8e1sJdvcooWEIIGOiS58unMI3rchjWv/hO5Ot7VgVJTAGtxlAwNXhCzd9EjtXDnY9+ubbDgvnZvq12BDNv/KmFHwHV84RzVULeF8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EjhCEort; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EjhCEort"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713884377;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ie+FYpj1GJEe+9FkFNy/6w/kFm+u4y5scRjGEyrOJXw=;
+	b=EjhCEort0ZZM5MwwGNV55Z/StMUmW1LeGxD0iCnFiYipVVCAnDPoW9/NPdN8q6BwYoRdYi
+	bngngw+NBWkASCkdB82WeB6hJGwpREQT9eWXgX+/Oi7KK3VDk3wNUkHHf4Gs2/yhgJe1+f
+	akQcrT5+3/bnJyBO1PfrLJ5EEiZ74qs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-HFB46LaKMpOBmyjmX73agg-1; Tue, 23 Apr 2024 10:59:36 -0400
+X-MC-Unique: HFB46LaKMpOBmyjmX73agg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57215111d4dso792920a12.1
+        for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 07:59:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713884373; x=1714489173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ie+FYpj1GJEe+9FkFNy/6w/kFm+u4y5scRjGEyrOJXw=;
+        b=PowBjRkkEVdTI8GjKmbKM6SLZOEQk5DCVtnkQtlUM3k6d3LX7IDkksQJ+ATCg2JX+v
+         nCNC3O6BCBgXg/Ut4D/5gHjNmJYGvpLyoWejTGOiHmMhyMPTim62dbt3NzjTdy0YW5P4
+         M5IIPrlZZABdIeY+YiiDcCG6cf5fbcjOozao7bm4meFpoXjV3+9QeALbYRycWlxZSoKc
+         L4z++BwMnyGgHuu1I8rD7RLgZCNMJd9lyMeymhB4Km1fKONkYu3OEO531VKpeaRVGeTn
+         t9Gfo/xLjw+rz70FZBePKciG1ug1xkUrPoYWFuWF+KFwzVT/yly+paachKkG242D/EYq
+         fKYQ==
+X-Gm-Message-State: AOJu0Yz+R4b48WWK9ea5TaCbH3XFk29+1FqCRs6Ikv+rrkuYFLj55JdR
+	9TRyhSem4hHWQvc06FuRJVk0FrbMdKXfHDuSpCF6pSOoAMrerCK7tnBMdWEmDeEtmHgDefD991v
+	QPv3WHSpBYlTTkBIXjxjqUn1H4rvGKr8XOhyik6hNKfYzMUx7K4ePay9Zs9Y5kEtv7Og+I4I5ad
+	ZiFfH1BTMCQVFJyLCajDPusE8Lp+vZnxN7b7r3Jo896GA=
+X-Received: by 2002:a50:d5cc:0:b0:570:5b72:164 with SMTP id g12-20020a50d5cc000000b005705b720164mr8847181edj.37.1713884373134;
+        Tue, 23 Apr 2024 07:59:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEx+SFJ52iA64fGz8cP56CJid1VLQQ91ZyiKP07BwcaJus+buR5U7snRiTmt/sE1JslZDX0L1Um1xd3XyxBORk=
+X-Received: by 2002:a50:d5cc:0:b0:570:5b72:164 with SMTP id
+ g12-20020a50d5cc000000b005705b720164mr8847165edj.37.1713884372794; Tue, 23
+ Apr 2024 07:59:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+References: <20240331182440.14477-1-kl@kl.wtf> <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
+In-Reply-To: <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Tue, 23 Apr 2024 16:59:20 +0200
+Message-ID: <CAO-hwJJtK2XRHK=HGaNUFb3mQhY5XbNGeCQwuAB0nmG2bjHX-Q@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: i2c-hid: Revert to await reset ACK before reading
+ report descriptor
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Jiri Kosina <jikos@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Kenny Levinsen <kl@kl.wtf>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Di, 23.04.24 03:21, Jason A. Donenfeld (Jason@zx2c4.com) wrote:
+On Mon, Apr 22, 2024 at 7:11=E2=80=AFPM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 31.03.24 20:24, Kenny Levinsen wrote:
+> > In af93a167eda9, i2c_hid_parse was changed to continue with reading the
+> > report descriptor before waiting for reset to be acknowledged.
+> >
+> > This has lead to two regressions:
+>
+> Lo! Jiri, Benjamin, quick question: is there a reason why this fix for a
+> 6.8-rc1 regression after more than two and half weeks is not yet
+> mainlined? Or is there some good reason why we should be should be extra
+> cautious?
 
-Jason!
+No special reasons I guess. Neither Jiri nor I have sent a HID update
+for this rc cycle, so it's still there, waiting to be pushed.
+I've been quite busy with BPF lately and dropped the ball slightly on
+the HID maintainer side, but I'm sure we'll send the PR to Linus this
+week or the next.
 
-Can you please explain to me what the precise problem is with the
-uevent? It doesn't leak any information about the actual vmgenid, it
-just lets userspace know that the machine was cloned,
-basically. What's the problem with that? I'd really like to
-understand?
+Cheers,
+Benjamin
 
-There are many usecases for this in the VM world, for example we'd
-like to hook things up so that various userspace managed concepts,
-such as DHCP leases, MAC addresses are automatically refreshed.
 
-This has no relationship to RNGs or anything like this, it's just an
-event we can handle in userspace to trigger address refreshes like
-this.
+>
+>
+> Side note: I noticed this due to the tracking today, but I also saw a
+> user that recently ran into the problem the quoted fix is supposed to
+> resolve: https://social.lol/@major/112294923280815017
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> > 1. We fail to handle reset acknowledgement if it happens while reading
+> >    the report descriptor. The transfer sets I2C_HID_READ_PENDING, which
+> >    causes the IRQ handler to return without doing anything.
+> >
+> >    This affects both a Wacom touchscreen and a Sensel touchpad.
+> >
+> > 2. On a Sensel touchpad, reading the report descriptor this quickly
+> >    after reset results in all zeroes or partial zeroes.
+> >
+> > The issues were observed on the Lenovo Thinkpad Z16 Gen 2.
+> >
+> > The change in question was made based on a Microsoft article[0] stating
+> > that Windows 8 *may* read the report descriptor in parallel with
+> > awaiting reset acknowledgement, intended as a slight reset performance
+> > optimization. Perhaps they only do this if reset is not completing
+> > quickly enough for their tastes?
+> >
+> > As the code is not currently ready to read registers in parallel with a
+> > pending reset acknowledgement, and as reading quickly breaks the report
+> > descriptor on the Sensel touchpad, revert to waiting for reset
+> > acknowledgement before proceeding to read the report descriptor.
+> >
+> > [0]: https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/plu=
+g-and-play-support-and-power-management
+> >
+> > Fixes: af93a167eda9 ("HID: i2c-hid: Move i2c_hid_finish_hwreset() to af=
+ter reading the report-descriptor")
+> > Signed-off-by: Kenny Levinsen <kl@kl.wtf>
+> > ---
+> >  drivers/hid/i2c-hid/i2c-hid-core.c | 13 ++++---------
+> >  1 file changed, 4 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i=
+2c-hid-core.c
+> > index 2df1ab3c31cc..72d2bccf5621 100644
+> > --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> > +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> > @@ -735,9 +735,12 @@ static int i2c_hid_parse(struct hid_device *hid)
+> >       mutex_lock(&ihid->reset_lock);
+> >       do {
+> >               ret =3D i2c_hid_start_hwreset(ihid);
+> > -             if (ret)
+> > +             if (ret =3D=3D 0)
+> > +                     ret =3D i2c_hid_finish_hwreset(ihid);
+> > +             else
+> >                       msleep(1000);
+> >       } while (tries-- > 0 && ret);
+> > +     mutex_unlock(&ihid->reset_lock);
+> >
+> >       if (ret)
+> >               goto abort_reset;
+> > @@ -767,16 +770,8 @@ static int i2c_hid_parse(struct hid_device *hid)
+> >               }
+> >       }
+> >
+> > -     /*
+> > -      * Windows directly reads the report-descriptor after sending res=
+et
+> > -      * and then waits for resets completion afterwards. Some touchpad=
+s
+> > -      * actually wait for the report-descriptor to be read before sign=
+alling
+> > -      * reset completion.
+> > -      */
+> > -     ret =3D i2c_hid_finish_hwreset(ihid);
+> >  abort_reset:
+> >       clear_bit(I2C_HID_RESET_PENDING, &ihid->flags);
+> > -     mutex_unlock(&ihid->reset_lock);
+> >       if (ret)
+> >               goto out;
+> >
+>
 
-Hence, why is the revert necessary? This was already in a released
-kernel, and we have started work on making use of this in systemd, and
-afaics this does not compromise the kernel RNG in even the remotest of
-ways, hence why is a revert necessary? From my usersace perspective
-it's just very very sad, that this simple, trivial interface we wanted
-to use, that was in a stable kernel is now gone again.
-
-Can you explain what the problem with this single-line trivial
-interface is? I really would like to understand!
-
-Lennart
-
-(BTW: even if the uevent would leak the vmgenid somehow to userspace —
-which it does not —, at least on qemu — i.e. one of the most relevant
-VM platforms — the vmgenid can be read directly from userspace by
-cat'ing /sys/firmware/qemu_fw_cfg/by_name/etc/vmgenid_guid/raw,
-i.e. it's not that well protected anyway).
-
---
-Lennart Poettering, Berlin
