@@ -1,190 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6D113BAC7
-	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 14:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 9E94513E418
+	for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 19:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713884380; cv=none; b=YSaBPjy8q32dX/NS5MvA5k3N70K7BFIjbronJFatdFqz3S2gdylZUaKwEDN7+82YyZr+HQJW1lHi0Wi662FupuRJ5Dn0VStkwcI6cvFebv20f7BuUXssGotTEZC96YaSz8AisaO5RmR14fKZrMBye3UljGNBlSH7pl/d0Tei2G4=
+	t=1713900576; cv=none; b=XEzn/0HFpPCODq8jZ4nDJAa3Tu5bm0N1OoqFxXVdz91H/ofuLOjFzkyd82NDqepCKz9CDcvSSPnWhEHGBkGPqDtp75ic1WfdJXE0fOoa2ey7Mo0belKI6nkv8aIisSvalFWKm39hYJXUU1/h6UV7MSmOxj/n87GIbkh7oOiPxj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713884380; c=relaxed/simple;
-	bh=olfSGTsFnuztaBe/6TGLSCfwwp+edxO3rygKLxl5HZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=npZAi66g1Vns0rqXx1B0J1PFBYzF4kCDDkuUsLgOg5Cs9DDzVU2tXhYZGWXPHccptxE+of8e1sJdvcooWEIIGOiS58unMI3rchjWv/hO5Ot7VgVJTAGtxlAwNXhCzd9EjtXDnY9+ubbDgvnZvq12BDNv/KmFHwHV84RzVULeF8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EjhCEort; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EjhCEort"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713884377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ie+FYpj1GJEe+9FkFNy/6w/kFm+u4y5scRjGEyrOJXw=;
-	b=EjhCEort0ZZM5MwwGNV55Z/StMUmW1LeGxD0iCnFiYipVVCAnDPoW9/NPdN8q6BwYoRdYi
-	bngngw+NBWkASCkdB82WeB6hJGwpREQT9eWXgX+/Oi7KK3VDk3wNUkHHf4Gs2/yhgJe1+f
-	akQcrT5+3/bnJyBO1PfrLJ5EEiZ74qs=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-HFB46LaKMpOBmyjmX73agg-1; Tue, 23 Apr 2024 10:59:36 -0400
-X-MC-Unique: HFB46LaKMpOBmyjmX73agg-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57215111d4dso792920a12.1
-        for <regressions@lists.linux.dev>; Tue, 23 Apr 2024 07:59:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713884373; x=1714489173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ie+FYpj1GJEe+9FkFNy/6w/kFm+u4y5scRjGEyrOJXw=;
-        b=PowBjRkkEVdTI8GjKmbKM6SLZOEQk5DCVtnkQtlUM3k6d3LX7IDkksQJ+ATCg2JX+v
-         nCNC3O6BCBgXg/Ut4D/5gHjNmJYGvpLyoWejTGOiHmMhyMPTim62dbt3NzjTdy0YW5P4
-         M5IIPrlZZABdIeY+YiiDcCG6cf5fbcjOozao7bm4meFpoXjV3+9QeALbYRycWlxZSoKc
-         L4z++BwMnyGgHuu1I8rD7RLgZCNMJd9lyMeymhB4Km1fKONkYu3OEO531VKpeaRVGeTn
-         t9Gfo/xLjw+rz70FZBePKciG1ug1xkUrPoYWFuWF+KFwzVT/yly+paachKkG242D/EYq
-         fKYQ==
-X-Gm-Message-State: AOJu0Yz+R4b48WWK9ea5TaCbH3XFk29+1FqCRs6Ikv+rrkuYFLj55JdR
-	9TRyhSem4hHWQvc06FuRJVk0FrbMdKXfHDuSpCF6pSOoAMrerCK7tnBMdWEmDeEtmHgDefD991v
-	QPv3WHSpBYlTTkBIXjxjqUn1H4rvGKr8XOhyik6hNKfYzMUx7K4ePay9Zs9Y5kEtv7Og+I4I5ad
-	ZiFfH1BTMCQVFJyLCajDPusE8Lp+vZnxN7b7r3Jo896GA=
-X-Received: by 2002:a50:d5cc:0:b0:570:5b72:164 with SMTP id g12-20020a50d5cc000000b005705b720164mr8847181edj.37.1713884373134;
-        Tue, 23 Apr 2024 07:59:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEx+SFJ52iA64fGz8cP56CJid1VLQQ91ZyiKP07BwcaJus+buR5U7snRiTmt/sE1JslZDX0L1Um1xd3XyxBORk=
-X-Received: by 2002:a50:d5cc:0:b0:570:5b72:164 with SMTP id
- g12-20020a50d5cc000000b005705b720164mr8847165edj.37.1713884372794; Tue, 23
- Apr 2024 07:59:32 -0700 (PDT)
+	s=arc-20240116; t=1713900576; c=relaxed/simple;
+	bh=xywC62rVQwx51sBx7jZsCY1csXmIOO5SjEwhksUXS+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L/mwTLkjVifXltOJZ1ex26gl6y/BW3lfXd7MHwn+oYQaISSYHa23DcyubbZ4wLkoyrYVa5qQOAawHyFKKJopnP1e/MW9gOOpaIbNX6nM1MT8Ff/3vedSAX+za5uE+t+0oTHNDNWqdz11MmSnHlpRA/1/f1EFsXZya1Yd+D6PL5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 426141 invoked by uid 1000); 23 Apr 2024 15:29:27 -0400
+Date: Tue, 23 Apr 2024 15:29:27 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+  Oliver Neukum <oneukum@suse.com>, USB list <linux-usb@vger.kernel.org>
+Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in
+ SuperSpeed initialization")
+Message-ID: <ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
+References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
+ <78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
+ <8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
+ <673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
+ <8734rdjj4n.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240331182440.14477-1-kl@kl.wtf> <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
-In-Reply-To: <14d1b38e-0f11-4852-9c52-92b4bedb0a77@leemhuis.info>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Tue, 23 Apr 2024 16:59:20 +0200
-Message-ID: <CAO-hwJJtK2XRHK=HGaNUFb3mQhY5XbNGeCQwuAB0nmG2bjHX-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: i2c-hid: Revert to await reset ACK before reading
- report descriptor
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Jiri Kosina <jikos@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
-	Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Kenny Levinsen <kl@kl.wtf>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8734rdjj4n.wl-tiwai@suse.de>
 
-On Mon, Apr 22, 2024 at 7:11=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 31.03.24 20:24, Kenny Levinsen wrote:
-> > In af93a167eda9, i2c_hid_parse was changed to continue with reading the
-> > report descriptor before waiting for reset to be acknowledged.
-> >
-> > This has lead to two regressions:
->
-> Lo! Jiri, Benjamin, quick question: is there a reason why this fix for a
-> 6.8-rc1 regression after more than two and half weeks is not yet
-> mainlined? Or is there some good reason why we should be should be extra
-> cautious?
+On Mon, Apr 22, 2024 at 09:24:24PM +0200, Takashi Iwai wrote:
+> On Mon, 22 Apr 2024 20:03:46 +0200,
+> Alan Stern wrote:
+> > 
+> > On Mon, Apr 22, 2024 at 07:33:21PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > > for once, to make this easily accessible to everyone.
+> > > 
+> > > Is anyone still working on fixing below regression? From here it looks
+> > > stalled, but I might have missed something.
+> > 
+> > I've been waiting to hear back from Oliver or Takashi.  A revised patch 
+> > taking my comments into account would be welcome; it should be a very 
+> > small change (just one or two lines of code).
+> 
+> As posted in another mail, it's a virtualized environment.
+> Details are found in the original bug report
+>   https://bugzilla.suse.com/show_bug.cgi?id=1220569
 
-No special reasons I guess. Neither Jiri nor I have sent a HID update
-for this rc cycle, so it's still there, waiting to be pushed.
-I've been quite busy with BPF lately and dropped the ball slightly on
-the HID maintainer side, but I'm sure we'll send the PR to Linus this
-week or the next.
+Hmmm.  If this is a virtualized device, isn't the best solution to fix the 
+emulation code for the device so that it presents a valid descriptor?
 
-Cheers,
-Benjamin
+> About the patch change: I appreciate if you cook it rather by
+> yourself since I'm not 100% sure what you suggested.  I can
+> provide the reporter a test kernel with the patch for confirmation, of
+> course.
+
+Here's a condensed version of the patch you wrote.  But I would prefer not 
+to add this to the kernel if the problem can be fixed somewhere else.
+
+Alan Stern
 
 
->
->
-> Side note: I noticed this due to the tracking today, but I also saw a
-> user that recently ran into the problem the quoted fix is supposed to
-> resolve: https://social.lol/@major/112294923280815017
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot poke
->
-> > 1. We fail to handle reset acknowledgement if it happens while reading
-> >    the report descriptor. The transfer sets I2C_HID_READ_PENDING, which
-> >    causes the IRQ handler to return without doing anything.
-> >
-> >    This affects both a Wacom touchscreen and a Sensel touchpad.
-> >
-> > 2. On a Sensel touchpad, reading the report descriptor this quickly
-> >    after reset results in all zeroes or partial zeroes.
-> >
-> > The issues were observed on the Lenovo Thinkpad Z16 Gen 2.
-> >
-> > The change in question was made based on a Microsoft article[0] stating
-> > that Windows 8 *may* read the report descriptor in parallel with
-> > awaiting reset acknowledgement, intended as a slight reset performance
-> > optimization. Perhaps they only do this if reset is not completing
-> > quickly enough for their tastes?
-> >
-> > As the code is not currently ready to read registers in parallel with a
-> > pending reset acknowledgement, and as reading quickly breaks the report
-> > descriptor on the Sensel touchpad, revert to waiting for reset
-> > acknowledgement before proceeding to read the report descriptor.
-> >
-> > [0]: https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/plu=
-g-and-play-support-and-power-management
-> >
-> > Fixes: af93a167eda9 ("HID: i2c-hid: Move i2c_hid_finish_hwreset() to af=
-ter reading the report-descriptor")
-> > Signed-off-by: Kenny Levinsen <kl@kl.wtf>
-> > ---
-> >  drivers/hid/i2c-hid/i2c-hid-core.c | 13 ++++---------
-> >  1 file changed, 4 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i=
-2c-hid-core.c
-> > index 2df1ab3c31cc..72d2bccf5621 100644
-> > --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> > +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> > @@ -735,9 +735,12 @@ static int i2c_hid_parse(struct hid_device *hid)
-> >       mutex_lock(&ihid->reset_lock);
-> >       do {
-> >               ret =3D i2c_hid_start_hwreset(ihid);
-> > -             if (ret)
-> > +             if (ret =3D=3D 0)
-> > +                     ret =3D i2c_hid_finish_hwreset(ihid);
-> > +             else
-> >                       msleep(1000);
-> >       } while (tries-- > 0 && ret);
-> > +     mutex_unlock(&ihid->reset_lock);
-> >
-> >       if (ret)
-> >               goto abort_reset;
-> > @@ -767,16 +770,8 @@ static int i2c_hid_parse(struct hid_device *hid)
-> >               }
-> >       }
-> >
-> > -     /*
-> > -      * Windows directly reads the report-descriptor after sending res=
-et
-> > -      * and then waits for resets completion afterwards. Some touchpad=
-s
-> > -      * actually wait for the report-descriptor to be read before sign=
-alling
-> > -      * reset completion.
-> > -      */
-> > -     ret =3D i2c_hid_finish_hwreset(ihid);
-> >  abort_reset:
-> >       clear_bit(I2C_HID_RESET_PENDING, &ihid->flags);
-> > -     mutex_unlock(&ihid->reset_lock);
-> >       if (ret)
-> >               goto out;
-> >
->
+
+Index: usb-devel/drivers/usb/core/hub.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/hub.c
++++ usb-devel/drivers/usb/core/hub.c
+@@ -5110,9 +5110,10 @@ hub_port_init(struct usb_hub *hub, struc
+ 	}
+ 	if (usb_endpoint_maxp(&udev->ep0.desc) == i) {
+ 		;	/* Initial ep0 maxpacket guess is right */
+-	} else if ((udev->speed == USB_SPEED_FULL ||
++	} else if (((udev->speed == USB_SPEED_FULL ||
+ 				udev->speed == USB_SPEED_HIGH) &&
+-			(i == 8 || i == 16 || i == 32 || i == 64)) {
++			(i == 8 || i == 16 || i == 32 || i == 64)) ||
++			(udev->speed >= USB_SPEED_SUPER && i > 0)) {
+ 		/* Initial guess is wrong; use the descriptor's value */
+ 		if (udev->speed == USB_SPEED_FULL)
+ 			dev_dbg(&udev->dev, "ep0 maxpacket = %d\n", i);
 
