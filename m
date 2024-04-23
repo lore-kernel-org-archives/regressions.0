@@ -1,37 +1,25 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FAF20B33;
-	Tue, 23 Apr 2024 09:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421DC60279;
+	Tue, 23 Apr 2024 11:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713864592; cv=none; b=i0XzmGwDUN4dYaaqlAuL32ahGvSnPTfEkQ6spXgfIjPPCGzSxAl01oAzHxKC/OOBKT7mg9Q9f8hnMOm7R7z1Hp1SNTjtkxOqCP/6ybiHzvxBxlyV6LIwqJUQtEx8XfavoEm3xJtUvx8TIorFsc2e3iwn7YAO+F3ou4LPA1R2lF0=
+	t=1713871615; cv=none; b=JcMGIi1Ppx9/1CzT18QJ+hE+oiITdZR8qsMx2DOFgtIsKiFDeoyf0ry39Y8PRFC3uY+9/ost1LgZzlHDOt+Y52RHAWld/hJ1MuxFDTe1M3vU3hCnj3MquNa2g7snXF84VREdqz64yaSDsSu12jx7D4+fgu8e3zF+MAD8r/KR3Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713864592; c=relaxed/simple;
-	bh=DKrNix9sXqeDeTqS0MKl9OJhP1yFEStDlJovycaWhCI=;
+	s=arc-20240116; t=1713871615; c=relaxed/simple;
+	bh=wJKPniY4/Ci5B83yC2QKM57byNuiwW1P7++ILqKKhzQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=umVJyK8abD4RmBceiZVGNmF79K+add7kbQbuVuSGuM8lG0d3urcMDxdrDaDL6BVr+7OfphAIvUXiKH+crj30cDwQsJW17FS3bPerukJJCMx/dpkMb4h046qP7ViCz/vsvAtSkDWW29eM6WN3NSHN+ThM69MllE66Jv5XJZ/5C6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ED0I1g6x; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ED0I1g6x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=0mkJ60YZ9h04LMO+Q8FAelHEGO/T+BnTHaX56USQTIU=;
-	t=1713864591; x=1714296591; b=ED0I1g6x+z56eIVe6T8eMrh+07e5Mn2ZT41zWgyuVXNneFP
-	jq10zHxvUeIJwFG0G3O5cWmbR2/ZU7yC18eghv7HhFYx6/cBmLVn/IM5Hmm6jzjIeha7MF3AzOP4S
-	5ugN6XoWKG5f7YsI7iC7uBWJnprwz9rW2aQSWvIu1LWqSDk8mJDYrUdWycNw63fC/ct75s8568S+f
-	uZaUuDCKWh7gCQ3AQgP2k+55GfQcHeVQWrrIM4rrZQWQ8G+oA3QQfS4F1SysKWinCCi4Xs5xxKLTt
-	dZNEdy9+AQMmASq8UI1fG6nJVCn8s/tQRqrcS6gLWC2jIguxhC6IVSa6JmV+lHEA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rzCTE-00077K-IW; Tue, 23 Apr 2024 11:29:48 +0200
-Message-ID: <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
-Date: Tue, 23 Apr 2024 11:29:48 +0200
+	 In-Reply-To:Content-Type; b=b4Yho/DxDs5I9T7QbJWcd0LmA6WB+7xgZZtQpUE75R2Pt60SQRHfRypTymm+Fo81KONMzVthnX7C72R6q6gqAGGFAprIXaw1p2Hz41PpuY3MXdF5sJLCDaO0t9FYp/QDq11nZFge4CPyEUXMK7ztog3n07oBGpnKKDoB4eUda4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0ABE339;
+	Tue, 23 Apr 2024 04:27:21 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570B83F7BD;
+	Tue, 23 Apr 2024 04:26:51 -0700 (PDT)
+Message-ID: <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
+Date: Tue, 23 Apr 2024 12:26:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,65 +27,169 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-To: Lee Jones <lee@kernel.org>, Ben Greear <greearb@candelatech.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
- <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <20240411070718.GD6194@google.com>
- <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
- <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
- <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
- <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
+ suravee.suthikulpanit@amd.com, vashegde@amd.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
+ <20240416152943.GU223006@ziepe.ca>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20240416152943.GU223006@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713864591;864d740c;
-X-HE-SMSGID: 1rzCTE-00077K-IW
 
-On 23.04.24 11:06, Johannes Berg wrote:
-> On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->> On 16.04.24 08:17, Johannes Berg wrote:
->>> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
->>>>
->>>> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
->>>> iwl_req_fw_callback()
->>>>
->>>> Is that still best thing to try in your opinion?
->>>
->>> I guess so, I don't have any better ideas so far anyway ...
->>
->> [adding the iwlwifi maintainer; thread starts here:
->> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
->>
->> ]
->>
->> Johannes, Miri, what's the status wrt to this regression? From here
->> things look somewhat stalled -- but maybe there was progress and I just
->> missed it.
+On 16/04/2024 4:29 pm, Jason Gunthorpe wrote:
+> On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
+>> Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
+>> precedence over whatever a driver's def_domain_type may have wanted to
+>> say. This was intentionally handled in core code since 3 years prior,
+>> to avoid drivers poking at the details of what is essentially a policy
+>> between the PCI core and the IOMMU core. Now, though, we go to the
+>> length of evaluating both constraints to check for any conflict, and if
+>> so throw our toys out of the pram and refuse to handle the device at
+>> all. Regardless of any intent, in practice this leaves the device, and
+>> potentially the rest of its group or even the whole IOMMU, in a largely
+>> undetermined state, which at worst may render the whole system
+>> unusable.
 > 
-> What do you want? It got bisected to an LED merge, but you ping _us_?
-> Way to go ...
+> For systems supporting untrusted device security the translation must
+> be BLOCKED at this point.
 
-Sorry, to me it sounded a bit like you had an idea for a fix and were
-going to give it a try -- similar to how the maintainers for a r8169
-driver and the igc driver provided fixes for bugs recent LED changes
-exposed.
+So why is that not enforced then? Simply hoping that calling 
+ops->release_device() or returning an error from iommu_device_register() 
+might do the right thing is no guarantee. Furthermore I'm pretty sure 
+we're still letting an untrusted device be hotplugged into an existing 
+group without any checks at all.
 
-But sure, you are right, in the end some LED change seems to have cause
-this, so the duty to fix it lies in that field. Therefore:
+Meanwhile if we go back to letting untrusted take priority and attach 
+the device to an empty DMA domain, oh hey look it's blocked, and what's 
+more we also retain control of the IOMMU to keep it that way. Problem 
+solved. You intentionally changed the code to be less effective at what 
+you say it should be doing, so once again I'm left a little puzzled as 
+to what point you're trying to argue here.
 
-Lee, what's the status here to get this fixed before the final?
+>> Unfortunately it turns out that this is a realistic situation to run
+>> into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
+>> laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
+>> an identity default domain for PASIDs to be usable, and thus sets a
+>> def_domain_type override based on PASID capability.
+> 
+> The majority of places implementing def_domain_type are using it as a
+> statement of HW capability that should not be ignored by the core code:
+> 
+>   - DART
+>     * system page size is too small, can't map IOPTEs, force identity
 
-Ciao, Thorsten
+Not a hardware limitation at all, it supports paging just fine, and 
+iommu-dma *could* in principle work with larger pages with a bit of 
+effort (some proof-of-concept patches were posted some time ago). This 
+is entirely the driver hacking around the legacy of iommu-dma and core 
+code not expecting the situation and thus not detecting it or handling 
+it gracefully. In fact I should be able to sort that out relatively 
+soon, once my other stuff lands and I'm able to start pulling 
+iommu_dma_init_domain() apart.
 
+>     * iommu does not support IDENTITY at all, force paging
+>   - tegra: Device quirks mean paging and DMA API doesn't work
 
+Hmm, I don't recall any specific device concerns. What I do know is that 
+historically this driver has always wanted to prevent the ARM DMA domain 
+or older versions of iommu-dma (prior to iommu_get_dma_domain()) from 
+getting in the way of what the host1x drivers expect, so if there is any 
+actual hardware policy here, it's very much implicitly hanging on the 
+coat-tails of software policy.
+
+>   - amd: The driver can't support PAGING when in SNP mode
+>   - SMMU: The driver can't support paging when in legacy binding mode and
+>           paging domain allocation fails as well
+
+Quite obviously nothing to do with hardware. That's there solely because 
+using the old binding prevents us from reasonably being able to order 
+binding the IOMMU driver against the client drivers, so we can't risk 
+having iommu-dma come up and change the DMA ops underneath an 
+already-active device.
+
+>   - qcom: Looks like these devices have some iommu bypass bus in their
+>           HW and paging doesn't work
+
+I believe that is true for some of the modem stuff, however again 
+there's also plenty of software policy in there too; some of it the same 
+thing about default domains getting in the way of how the GPU/display 
+drivers want to use dma-direct for cache maintenance underneath their 
+own unmanaged domains, one is completely abusing the domain type in a 
+devious hack which just happens to make some behaviour fall out of the 
+rest of the driver to satisfy an unrelated hardware/firmware constraint 
+(which is still *supposed* to be only a temporary fix pending a proper 
+solution, ha...)
+
+>   - SMMUv3: The comment says HISI devices cannot support paging due to a HW quirk
+> 
+> For these force overriding the driver knowledge will either result in
+> domain allocate/attach failure or a broken DMA environment anyhow.
+> 
+> The AMD PASID thing is actually unique because the driver can still
+> fully support PAGING, despite it wrongly telling the core code that it
+> can't.
+> 
+> This is happening because it is all just a hack to work around the
+> incomplete SW implementation in the AMD driver.
+
+Not really, it's shown up because the core code took an illogical step 
+backwards. Without significant surgery to IOMMU and/or driver core code, 
+the best and most reasonable thing to do at the moment is still the one 
+which happens to work out OK for the current AMD behaviour. Yes, if we 
+*had* done all the work to make the core code super-robust then the 
+issue could have been the GPU driver gracefully failing rather than 
+wedging the whole system, and the remaining blame could then be fairly 
+laid on amd_iommu_def_domain_type(), but that is not the case and cannot 
+be claimed to be.
+
+Per our API expectations, a driver's def_domain_type can go one of three 
+ways; do nothing, request IOMMU_DOMAIN_DMA, or request 
+IOMMU_DOMAIN_IDENTITY. For the first two it's clear that untrusted 
+forcing IOMMU_DOMAIN_DMA without even asking is perfectly fine. In the 
+third case, we still definitely want untrusted to take precedence, since 
+our policy is that the device not having access to things it shouldn't 
+is more important that it having to access things it should. Sure, in 
+the almost-impossible case that we did have an external device which 
+genuinely couldn't handle translation, then the user may allow a driver 
+to bind, which ends up not working and causing IOMMU faults, however 
+that would be equally true of any kind of blocking notion we could 
+implement right now, so there's no appreciable loss of functionality. 
+However, the overwhelming fact is that the few devices genuinely 
+requiring IDENTITY overrides are on-chip integrated things, any of which 
+suddenly turning up on external ports would be highly suspect, so that's 
+actually a big argument in *favour* of not believing def_domain_type 
+either in such cases.
+
+In fact the more I think about it, I could swear I've had this 
+discussion and worked through this reasoning before, possibly back when 
+we first introduced it?
+
+> When the AMD driver is
+> completed its def_domain_type should be removed entirely.
+> 
+> Since actual PASID AMD attach isn't implemented yet we could just
+> remove that check from def_domain_type as an RC fix. Vasant can sort
+> it out properly by disabling pasid support on untrusted devices until
+> the DTE logic is fully completed.
+> 
+>> In general, restoring the old behaviour of forcing translation will not
+>> make that device's operation any more broken than leaving it potentially
+>> blocked or subject to the rest of a group's translations would, nor will
+>> it be any less safe than leaving it potentially bypassed or subject to
+>> the rest of a group's translations would, so do that, and let eGPUs work
+>> again.
+> 
+> Well, this is true, since we can't handle the probe error it doesn't
+> matter what we do.
+
+OK, so after all that you do in fact agree? In that case, why are we 
+still mucking about proposing hacks on top of hacks in the AMD driver 
+rather than just fixing the regression sensibly?
+
+Thanks,
+Robin.
