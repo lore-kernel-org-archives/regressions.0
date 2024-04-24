@@ -1,60 +1,118 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 48DF1158DDD
-	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A3515E5B1;
+	Wed, 24 Apr 2024 14:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713968067; cv=none; b=Zjw66E+Gvmma2xRshRO0zavDiFcIYPR+t60qb6ApyJIjhfdA+OJ1BsKB/iy/wOior+MBCk9JBpp+KMX9hxGvrpjpbGhYBG3hfZ+TOKnwrMF0prlJTnY9PO/JU3EYN4YERiKa3MQz96eVJ6brgfXfC61TwW7SFAugL5rCdzh4Q4M=
+	t=1713968287; cv=none; b=e0mq1bgy3FcH6x39bvdP5hJ1s/y/smvRF99SNjSE5vYVTTIF+uDA9RQTdER7aW9fu9juHISokqZmmKfuFtxJIQfYuvNAJtKmhbg6utfvIeDwA+qy45xeinmKyzKc6xuDlAGRe9CKgdXjwye2Pd4kQNH0T7ZSqpLqcAk2CTb2nvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713968067; c=relaxed/simple;
-	bh=ARsPWOAXI7AWEWUwDIppIN+H+XnETFvup6KpEyBjgQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fv8LDvVGjsvvnz/csyhLKzGmXXBKyIy/fOaoCUoj7W0VVvVqY/i+vHQLSJbbM3ozJBmK6g0cGlog4cy1fzwUzos2Y5zIdfVPDmt7PflfmFmwtL5Www94NgYBp+KotrqObGBVZ0C33Ets6uONBJ/tEIFtOJLlyDdBAWDmRD7pqlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 451839 invoked by uid 1000); 24 Apr 2024 10:14:23 -0400
-Date: Wed, 24 Apr 2024 10:14:23 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-  Oliver Neukum <oneukum@suse.com>, USB list <linux-usb@vger.kernel.org>
-Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in
- SuperSpeed initialization")
-Message-ID: <bb7f94de-d520-4995-bb95-f3188be55f03@rowland.harvard.edu>
-References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
- <78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
- <8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
- <673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
- <8734rdjj4n.wl-tiwai@suse.de>
- <ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
- <87bk5zdtqs.wl-tiwai@suse.de>
+	s=arc-20240116; t=1713968287; c=relaxed/simple;
+	bh=At4UvGSHtC3eAHxqHmHEbLvTz/bxsDbV95dLJBgf9C0=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Syn3ymuFyodsuMZHGJikq+oq5TQFXDgpajqafYiZE9Wit0bmTgzM3cDzRxXUEWWViWANG1zXaH58GsGG9GGRKqOvBGZZ0f7IYNDtl0v3tS16wpmI7/mhNHWzE3DlfsJeTBczpPl072M8Ntky9Dh3AVQeWooS1VAdAAa/vJl9B50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1WR+rL7; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1WR+rL7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713968286; x=1745504286;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=At4UvGSHtC3eAHxqHmHEbLvTz/bxsDbV95dLJBgf9C0=;
+  b=g1WR+rL7JJ6jSvH8lZdDakr1Kk+yINakQGeAjTZYFa1zd2cJS+S22P7P
+   Kga0ghrCqkPxtLd1Hm1dF7Dc8YagkWBlmx0S+04Rz9Pusj29ZTbNi/qUk
+   rSl5pWEWOq7WOtXfentVxpQk3uEmDl8BddlF0KgyBm04Q1bTuTDAWoGo7
+   tgbAAnz8SR7C78egU+IGLha/03AifZP4j6iVUsWHcG7zd79PRIdegL+xW
+   z0tJUhZ+cBrKNC+eIs5Plf4Pq50/reJLyoPIzHIP9dxVZ3HzvX41eHvU3
+   MTZWrbt7f/6QBRPOkCQ0WV/YnEMR8O0Nk7zZZb9dISpVZJ5WGDr3RRiUl
+   Q==;
+X-CSE-ConnectionGUID: 5wW9yW/vSqaGDaiNG6AWFA==
+X-CSE-MsgGUID: 6ZUIjUT7TVqcdKDlHTdX9g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="20217329"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="20217329"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:18:05 -0700
+X-CSE-ConnectionGUID: k2Y9vOx2Rd+ybaax5y0ZUA==
+X-CSE-MsgGUID: 42iMqnkSToGMlw5ObURQlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="25241509"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.86]) ([10.124.237.86])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 07:18:02 -0700
+Message-ID: <77fd2bba-fc59-4997-a91a-2d9235ce5cd6@linux.intel.com>
+Date: Wed, 24 Apr 2024 22:18:00 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bk5zdtqs.wl-tiwai@suse.de>
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
+ ewagner12@gmail.com, suravee.suthikulpanit@amd.com, vashegde@amd.com,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+To: Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
+ <20240416152943.GU223006@ziepe.ca>
+ <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
+ <20240424130457.GF231144@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240424130457.GF231144@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 24, 2024 at 10:56:11AM +0200, Takashi Iwai wrote:
-> On Tue, 23 Apr 2024 21:29:27 +0200,
-> Alan Stern wrote:
-> > 
-> > On Mon, Apr 22, 2024 at 09:24:24PM +0200, Takashi Iwai wrote:
-> > > As posted in another mail, it's a virtualized environment.
-> > > Details are found in the original bug report
-> > >   https://bugzilla.suse.com/show_bug.cgi?id=1220569
-> > 
-> > Hmmm.  If this is a virtualized device, isn't the best solution to fix the 
-> > emulation code for the device so that it presents a valid descriptor?
+On 2024/4/24 21:04, Jason Gunthorpe wrote:
+>> OK, so after all that you do in fact agree? In that case, why are we still
+>> mucking about proposing hacks on top of hacks in the AMD driver rather than
+>> just fixing the regression sensibly?
+> It is because your proposal is regressing the meaning of
+> def_domain_type back to a policy knob when I've spent a bunch of work
+> emptying out def_domain type implementations to get it into a
+> capability report.
 > 
-> Honestly speaking, I don't know, but it smells like a hard way.  After
-> all, we brought some regression of the previously (even casually /
-> unintended) working "device"...
+> def_domain_type is now about*capability*. Does the
+> HW/SW/Driver/system support PAGING/IDENTITY or not.
+> 
+> Meaning if def_domain_type says it is not supported then the core code
+> should not use it. This is how everything was working until AMD
+> changed their driver to lie about what their attach_domain would
+> accept.
+> 
+> I do not want to see def_domain_type regress back to being confused
+> where some drivers are policy advice and some drivers are capability!
+> 
+> AMD should hack their driver for the rc fix and then go and fix it
+> properly to remove the PASID logic entirely from def_domain_type. I
+> will also point again out that in v6.9-rc AMD doesn't even support
+> PASID yet so this abuse of def_domain_type isn't even needed. 🙁
+> 
+> The core code should contiue to treat def_domain_type as capability.
 
-Still, it would be good to report the incorrect descriptor to the package's 
-maintainer.
+I agree with this. Ideally there should be some mechanism to disallow
+any device driver to bind to the device if there's a conflict between
+the core policy and iommu hw capability because iommu-dma functionality
+is already compromised.
 
-Alan Stern
+If we all agree with the statement that "the core should treat
+def_domain_type as capability", the intel iommu driver needs some
+enhancement as well.
+
+For example, the intel iommu driver allows users to opt-in graphic in
+passthrough mode, in that case def_domain_type will return
+IOMMU_DOMAIN_IDENTITY no matter the device is trusted or not.
+
+     if ((iommu_identity_mapping & IDENTMAP_GFX) && IS_GFX_DEVICE(pdev))
+          return IOMMU_DOMAIN_IDENTITY;
+
+this potentially creates same conflict as the amd driver.
+
+Best regards,
+baolu
