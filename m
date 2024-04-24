@@ -1,205 +1,203 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4381C15A488
-	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 11:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238A815B150
+	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 13:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713958547; cv=none; b=drVAkokco6nkXpadOnne1F83jyg+mODBTCCHWAq2vO+rxhIGOdSOmazs2N4QWECxx+IUZc/rbDHM/kVZodD1Z+XP7s7akhcBzIQgxudqww6N+N5K1IkOzbtRbsqOE96lITrAKxh4jFR+jH8naGVECFNLobnP8TdhFUPMWN29yBU=
+	t=1713963902; cv=none; b=TkS1VMNOLoRw9KaiK8zEOJQm9hUpVPGha/FX54bop1JMavgBNUbr6j0qCZdPKGc+Rh33RN4ctac1ZcY7+5PZUPcvoXGW5HAYSdI9IagG2PFjfiKFB5x6iFLdb5ucIp7DWlGTaT9ciLHwLzTKMx48+GHbThU+8lD4NtgAfGft7eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713958547; c=relaxed/simple;
-	bh=+gK4TxkSXaUmMtTtDe5StNiErs05F98U7NRu2zFyj8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u/GSdWSqOyqKhNJliM80LjeO/u3pRsrFM2KqDJHozMGqtOaVLSB/zkiyEk25T9JARox2rHd18JFyy+jZYDSZZZoEULygCntDqjjG0lOl+qIaXatS9kBSpo/iC3BfOqdgVkx8XNag9g71nTiDcPEdVIdDoNbFQIPBZpPSTaD2qAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZIXkfc1Y; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713963902; c=relaxed/simple;
+	bh=FSxpfw5X3JKannFz6aCnhtqS7DvpDujOvyv9amJS5LI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I638wajEIzresleorEpVqVEoyN4YplGoqMhdwq+YlP6PfFJ6FuRlzstif0ZE+Yr5hD3sDlF3QUuxIbJVAfcSwAYn4okeyALGHZqpZWzghS9d5SN153Y8Lc1DQ4kaw3JLzRNdxnMUfdsnu1ocwvMwGAn/y9kNZp4pbidj8hjB5CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=V4XpzOTx; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZIXkfc1Y"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O6fv5p004210;
-	Wed, 24 Apr 2024 11:35:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=M2YAOpEFEL2/iKTS3ww8fmU8Pw+0E7xmN1m4F+voxeM=; b=ZI
-	Xkfc1YXp5BALnrq2C8ULhnMKn+OipqBPNocoxRfFucTpRlgq7xCMHskD+Edl1iD2
-	+ULd6Kl7WJ8B+OAqMQeeY+7rI41dnc2QzQ+1Y5XGWRgCLCzMjJgyAknUbacMLy1q
-	Hh0lCS13i06UPgxgloNJKYh2bUILhj5xCpDRjucStu+SBLNE2b0xAXJCI1opAT9a
-	tb4NE7b4z/Hqqu1ztBdiucydEDG6jQ/UwODwASFOZ9XmF3AKbzb1kIybLJTpk5Bd
-	uMOjJYveFKZeUwLVOsH39KWDF+F6z2+vKgBdlB7s7cgrSTNW9yS8xTghMBDZhdeq
-	mnndkjB5kZsGX08wuZ6A==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9krpbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 11:35:36 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43OBZZaH015038
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 11:35:35 GMT
-Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
- 2024 04:35:29 -0700
-Message-ID: <16556c54-6064-4638-b3de-4e01c97a9714@quicinc.com>
-Date: Wed, 24 Apr 2024 19:35:27 +0800
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V4XpzOTx"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5af3035825eso370467eaf.0
+        for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 06:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1713963900; x=1714568700; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nbc/ZlhMzbLo/3ax7yL4ZIM4VQzRDrjohLJqBNOiRFQ=;
+        b=V4XpzOTxa2McP0bqVXGM8RLgCyCQt5iX1d8Jb8/qsB0n26RA7IeoVlqdlyTZguSreL
+         wSowiOZ2x7MxrmQTCpXkDr02fyidPN0QTwgnJ1H7/s6dr1x4u7FQNIznlvOJnBUOexpS
+         Pm3/RyUKwEuWHZBsYttJXZ0Ib3KJAOo5wYwXpmBcMIFVMmBj6IYI7puHYIrgV9Bytiav
+         VwWp5lVHU5fmEyGC9nDYj4sEl78xzOCig7RLErvQYj02+lIzO7AbwGWrh4NSEzSPlfLT
+         4a0CCuA1EllS+4ZPARdu86vDY1wWqshoytaKZGuo2+c2mJtMJEbUM9yAwNvIDBIGnkVk
+         gnKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713963900; x=1714568700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nbc/ZlhMzbLo/3ax7yL4ZIM4VQzRDrjohLJqBNOiRFQ=;
+        b=J7/CYD4anrXlglx9Jg5te4Gjogm/tDNS648CtEuoqjiAJl7UWEvClUPFQv6jfVIdKR
+         FQFhcDpwD9Vfdg9zii+yMTXF5UjgSowJ6yhseRFsD2Tu3xN/qgUJABESqTiKcsfT2rBu
+         tqKv28Zt6f/IGdXFQb+oofYefZai34RsAFLUgmLWR2ElYeFryqeLPuCWCEuC+/K74u0U
+         CMPzpktY2myghCR23jvQz/UTl4GM0wdWoFyXlBg9X8L+qKSuVesbGh7emEVZ57onR7QC
+         9tCrCxZGSOwTp7dRiYQ5Oh3iqHvvNxO/lxnR8ch8TEJGxK28SxG8Ax1jzJ7ry5lb9+MN
+         swNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWg1vBUC/kE5mm5hPQzCUVhOp9FHv1H0NWjYvFMjCqYiYNDoWD5A6URz0c3jObURrEzAaqngU+p6tAohrqGaXaowXguodbAOo2yFXM=
+X-Gm-Message-State: AOJu0YzpSZ8m7j3Oo+foZ3Ys/RfqpIUVTmgGGNs18l79DDpZVrxxl+aP
+	zrIC2iUvxxkcRW7+YgD3n6jU8D/m3iDgmtjMbTb3eiqx10qXWxYGQPpLWjv011I=
+X-Google-Smtp-Source: AGHT+IEHA0RheIKXaYWq3t0fLCW1LE7ebG1Op9pYKAXc/ZhXqWzTYKFvXAfIMS7+yw3mUPAtrNk4bw==
+X-Received: by 2002:a05:6870:71c9:b0:232:fbb7:c633 with SMTP id p9-20020a05687071c900b00232fbb7c633mr1051735oag.11.1713963899893;
+        Wed, 24 Apr 2024 06:04:59 -0700 (PDT)
+Received: from ziepe.ca ([12.97.180.36])
+        by smtp.gmail.com with ESMTPSA id mk9-20020a0568700d0900b0022f939a3e2dsm2834331oab.55.2024.04.24.06.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:04:58 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rzcIz-007uTp-Kk;
+	Wed, 24 Apr 2024 10:04:57 -0300
+Date: Wed, 24 Apr 2024 10:04:57 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
+	suravee.suthikulpanit@amd.com, vashegde@amd.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+Message-ID: <20240424130457.GF231144@ziepe.ca>
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
+ <20240416152943.GU223006@ziepe.ca>
+ <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] Bluetooth: qca: Fix BT enable failure for QCA6390
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-CC: Wren Turkal <wt@penguintechs.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
-        <marcel@holtmann.org>, <linux-bluetooth@vger.kernel.org>,
-        <regressions@lists.linux.dev>, <kernel@quicinc.com>,
-        <gregkh@linuxfoundation.org>, <stable@vge.kernel.org>
-References: <1713932807-19619-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713932807-19619-2-git-send-email-quic_zijuhu@quicinc.com>
- <a8a7e3df-44c6-4fa6-a576-da384c02e9ac@linaro.org>
- <067db05d-56bc-4ca3-aef1-bc3bae47667c@quicinc.com>
- <c1fc9c28-25df-4d41-9ae6-c5d079ea805d@penguintechs.org>
- <0db77c30-5be2-41b5-adf0-fb4436b9107b@quicinc.com>
- <c9bf22a3-2549-4cf1-898e-8a9adcd2f0f6@penguintechs.org>
- <d77455b2-4fb9-4ffc-acf9-c24b5a0f4a45@quicinc.com>
- <b3d8e1de-3beb-46a2-817d-ee0fdd614b0a@quicinc.com>
- <CACMJSeugN49baZiBhTYhb5rUKNkBwu5sVfzWkiJgs0sv9x9VsA@mail.gmail.com>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <CACMJSeugN49baZiBhTYhb5rUKNkBwu5sVfzWkiJgs0sv9x9VsA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Eri2qTtVf_Hz0J23sWCAbQ5aJvlnXcWf
-X-Proofpoint-GUID: Eri2qTtVf_Hz0J23sWCAbQ5aJvlnXcWf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-24_08,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1015 priorityscore=1501 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240046
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3cf97e3c-c8d9-4282-a8ca-e4c1ea383dbd@arm.com>
 
-On 4/24/2024 6:34 PM, Bartosz Golaszewski wrote:
-> On Wed, 24 Apr 2024 at 11:40, quic_zijuhu <quic_zijuhu@quicinc.com> wrote:
->>
->> On 4/24/2024 2:01 PM, quic_zijuhu wrote:
->>> On 4/24/2024 1:49 PM, Wren Turkal wrote:
->>>> On 4/23/24 10:46 PM, quic_zijuhu wrote:
->>>>> On 4/24/2024 1:37 PM, Wren Turkal wrote:
->>>>>> On 4/23/24 10:02 PM, quic_zijuhu wrote:
->>>>>>> On 4/24/2024 12:30 PM, Krzysztof Kozlowski wrote:
->>>>>>>> On 24/04/2024 06:26, Zijun Hu wrote:
->>>>>>>>> Commit 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
->>>>>>>>> with gpiod_get_optional()") will cause below serious regression
->>>>>>>>> issue:
->>>>>>>>>
->>>>>>>>> BT can't be enabled any more after below steps:
->>>>>>>>> cold boot -> enable BT -> disable BT -> BT enable failure
->>>>>>>>> if property enable-gpios is not configured within DT|ACPI for
->>>>>>>>> QCA6390.
->>>>>>>>>
->>>>>>>>> The commit wrongly changes flag @power_ctrl_enabled set logic for
->>>>>>>>> this
->>>>>>>>> case as shown by its below code applet and causes this serious issue.
->>>>>>>>> qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->>>>>>>>>                                                  GPIOD_OUT_LOW);
->>>>>>>>> - if (IS_ERR_OR_NULL(qcadev->bt_en)) {
->>>>>>>>> + if (IS_ERR(qcadev->bt_en)) {
->>>>>>>>>         dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
->>>>>>>>>      power_ctrl_enabled = false;
->>>>>>>>>     }
->>>>>>>>>
->>>>>>>>> Fixed by reverting the mentioned commit for QCA6390.
->>>>>>>>>
->>>>>>>>> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
->>>>>>>>> with gpiod_get_optional()")
->>>>>>>>> Cc: stable@vge.kernel.org
->>>>>>>>> Reported-by: Wren Turkal <wt@penguintechs.org>
->>>>>>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218726
->>>>>>>>> Link:
->>>>>>>>> https://lore.kernel.org/linux-bluetooth/ea20bb9b-6b60-47fc-ae42-5eed918ad7b4@quicinc.com/T/#m73d6a71d2f454bb03588c66f3ef7912274d37c6f
->>>>>>>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>>>>>>>> Tested-by: Wren Turkal <wt@penguintechs.org>
->>>>>>>>> ---
->>>>>>>>> Changes:
->>>>>>>>> V6 -> V7: Add stable tag
->>>>>>>>
->>>>>>>> Stop sending multiple pathchsets per day. I already asked you to first
->>>>>>>> finish discussion and then send new version. You again start sending
->>>>>>>> something while previous discussion is going.
->>>>>>>> you concern is wrong and i am sure it don't block me sending new patch
->>>>>>> sets to solve other issue. so i send this v7.
->>>>>>>
->>>>>>> i have give reply for Bartosz' patch.
->>>>>>>
->>>>>>> i hop you as DTS expert to notice my concern about DTS in the reply.
->>>>>>
->>>>>> Are you saying here (1) that you identified a problem in the DTs that
->>>>>> you hope Krzysztof notices or (2) that you want Krzysztof to notice how
->>>>>> your description of way that DT declares the gpio as required affects
->>>>>> your proposed change. As a native American English speaker, I am finding
->>>>>> your text hard to follow.
->>>>>>
->>>>> 1) is my purpose. i have given my concern about DTS for Bartosz' patch
->>>>> and hope DTS expert notice the concern.
->>>>>
->>>>> my change don't have any such concern about DTS usage. that is why i
->>>>> changed my fix from original reverting the whole wrong commit to now
->>>>> focusing on QCA6390.
->>>>
->>>> Let me try to parse this. If #1 is the correct interpretation, does that
->>>> mean that the DTs are wrong and need to be changed? Do you expect K to
->>>> do that since he's the "DTS expert"?
->>>>
->>> for your 1) question, NO
->>> for your 2) question, need DTS expert notice or suggest how to handle
->>> case that a DTS property is marked as required but not be configed by user.
->>>
->>>>>> I think you are saying #2.
->>>>>>
->>>>>> I just want to make sure I am following the discussion here.
->>>>>>
->>>>>> wt
->>>>>
->>>>
->>>
->> Hi Krzysztof, bartosz.
->>
->> do you have any concern for this patch serials?
->>
+On Tue, Apr 23, 2024 at 12:26:41PM +0100, Robin Murphy wrote:
+> On 16/04/2024 4:29 pm, Jason Gunthorpe wrote:
+> > On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
+> > > Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
+> > > precedence over whatever a driver's def_domain_type may have wanted to
+> > > say. This was intentionally handled in core code since 3 years prior,
+> > > to avoid drivers poking at the details of what is essentially a policy
+> > > between the PCI core and the IOMMU core. Now, though, we go to the
+> > > length of evaluating both constraints to check for any conflict, and if
+> > > so throw our toys out of the pram and refuse to handle the device at
+> > > all. Regardless of any intent, in practice this leaves the device, and
+> > > potentially the rest of its group or even the whole IOMMU, in a largely
+> > > undetermined state, which at worst may render the whole system
+> > > unusable.
+> > 
+> > For systems supporting untrusted device security the translation must
+> > be BLOCKED at this point.
 > 
-> Yes, we have voiced a number of concerns. Please see the fifty
-> previous emails in several chaotic threads.
+> So why is that not enforced then? 
+
+I'm not sure what you mean? At this point the core code has no idea
+what translation the iommu driver setup when it booted the HW..
+
+I mean if a iommu driver is going to support untrusted then at no
+point can it be doing IDENTITY while the untrusted link is up.
+
+> Simply hoping that calling ops->release_device() or returning an
+> error from iommu_device_register() might do the right thing is no
+> guarantee.
+
+The systems that support untrusted must put things back to BLOCKED in
+their release_device() to be ready for the next hotplug of an
+untrusted device.
+
+> Furthermore I'm pretty sure we're still letting an
+> untrusted device be hotplugged into an existing group without any
+> checks at all.
+
+Yes, combining trusted and untrusted in the same group, regardless of
+domain type, is fundamentally wrong and we don't check it.
+
+> > > Unfortunately it turns out that this is a realistic situation to run
+> > > into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
+> > > laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
+> > > an identity default domain for PASIDs to be usable, and thus sets a
+> > > def_domain_type override based on PASID capability.
+> > 
+> > The majority of places implementing def_domain_type are using it as a
+> > statement of HW capability that should not be ignored by the core code:
+> > 
+> >   - DART
+> >     * system page size is too small, can't map IOPTEs, force identity
 > 
-> I will stop responding to you now, at least for some time. I
-> understand that there's a regression. I will work with Wren to address
-> it. Hopefully we can get it fixed soon. However I feel like I'm
-> wasting my time trying to get to you and I have more things on my
-> plate right now.
+> Not a hardware limitation at all, it supports paging just fine, and
+> iommu-dma *could* in principle work with larger pages with a bit of effort
+> (some proof-of-concept patches were posted some time ago). 
+
+I was not clear, I mean a HW/SW/Driver/system issue. The net result is
+that PAGING or IDENTITY does not work in the Linux kernel for a whole
+bunch of good and bad reasons.
+
+> >     * iommu does not support IDENTITY at all, force paging
+
+Like this one is a good reason. No HW support. It is checked during
+attach domain and fails it.
+
+> >   - tegra: Device quirks mean paging and DMA API doesn't work
 > 
-okay, let us stop here now, i would like to summarize here.
+> Hmm, I don't recall any specific device concerns. 
 
-1) it is me to co-work with reporter and solved his issue and verified
-with PASS results
+Thierry told me once, it is another ugly GPU driver hack IIRC. It is a
+bad reason, some hacky GPU driver issue and is overkill since it
+should of_match like qcom.
 
-2) suppose you don't have any negative comments any more about my patch
-serials.
+> >   - amd: The driver can't support PAGING when in SNP mode
+> >   - SMMU: The driver can't support paging when in legacy binding mode and
+> >           paging domain allocation fails as well
+> 
+> Quite obviously nothing to do with hardware.
 
-3) there are no other working fixes until now when i write this summary
+But attach_domain still fails. From a core perspective PAGING doesn't
+work.
 
-4) i, as a member of BT team of Qualcomm, will give comments about its
-QCA BT driver changes as much as possible if i have time.
+> OK, so after all that you do in fact agree? In that case, why are we still
+> mucking about proposing hacks on top of hacks in the AMD driver rather than
+> just fixing the regression sensibly?
 
-> Thanks,
-> Bartosz
+It is because your proposal is regressing the meaning of
+def_domain_type back to a policy knob when I've spent a bunch of work
+emptying out def_domain type implementations to get it into a
+capability report.
 
+def_domain_type is now about *capability*. Does the
+HW/SW/Driver/system support PAGING/IDENTITY or not.
+
+Meaning if def_domain_type says it is not supported then the core code
+should not use it. This is how everything was working until AMD
+changed their driver to lie about what their attach_domain would
+accept.
+
+I do not want to see def_domain_type regress back to being confused
+where some drivers are policy advice and some drivers are capability!
+
+AMD should hack their driver for the rc fix and then go and fix it
+properly to remove the PASID logic entirely from def_domain_type. I
+will also point again out that in v6.9-rc AMD doesn't even support
+PASID yet so this abuse of def_domain_type isn't even needed. :(
+
+The core code should contiue to treat def_domain_type as capability.
+
+This has obviously become confusing. I think we should rename
+def_domain_type to have a clearer name and clearer purpose. Call it
+supported_domain_types() returning an enum of:
+
+ SUPPORTS_ALL
+ SUPPORTS_IDENTITY
+ SUPPORTS_PAGING
+ SUPPORTS_IDENTITY_PASID
+
+Which is much more clearly about some full system support, not a way
+for drivers to inject arbitrary policy.
+
+Jason
