@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3443D15696D;
-	Wed, 24 Apr 2024 06:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749AB36D;
+	Wed, 24 Apr 2024 08:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713938807; cv=none; b=Ybf7p0s0P0vh7jT/E3Yac9SRT1egQrlkVUODFHH7Tr/3FF3AlomzKt5hoTipnB7pLCYTulXipp30obIbqSrnaWLxE9iDMJsmT5WopsFTeh7gLpB/jZnlhUpyIBjBB+1/DbeOGKCGjAXwtxT8fy0dcDgCydId/S36i/1OXjDbMVM=
+	t=1713946180; cv=none; b=angnFDT+vhtbWCbRGkGEZ8WjcOHs+XR4/rDNVv1DxxVnTAaOWCHxN3Pe+muzThSvDph7/ii30/Pv1oR1rgJOH74pzH8AX3wMQDcN1jMYJgkSz+ZygXWiDBhuYnSqy6B3xeRVM7iliclmGz4z6gtRXtd4staLTXNDfuI6YHU8rT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713938807; c=relaxed/simple;
-	bh=j1+muzAkVHfWGaUVDfWnppU1cbHnW27Ru5LKk7vTw1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=DX5Vaw5gv7X8jRb/RrWcB36g9NHej7FZ489W8XPMDVZYhhhoeDvYNg/AEZZgHpB++PVpifjb6zqfgQNkRw/fZA9rkIZJldPVNJbFKSlzHWDnQ0jq+G/o8x/H2fxj4Djo+770RvNv14Vv0hNWrOLLYbWxPNi54qw7+qeS+SFzkFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ayCZNf++; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1713946180; c=relaxed/simple;
+	bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=idQzWFlyEKhaK9Iec/9LKC8Us8PEpW4ykKkOGqiAJp2xno9dwnUX7bsrAb2ZmazhvEaDFof3wGsKVVd/JkN0Ae8qc/lXvw+TXOPqOnTPDAMz6QFPZdQ5VPx7eYYkP/I5yp031erPnmQwgibpIcEAP9vjibyK9nc8b0QeORi0lYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pVAmmGFp; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ayCZNf++"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pVAmmGFp"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:Reply-To:MIME-Version:Date:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=BjWj3bvgshQkX0ic9F8zq8at9TWgUDpFINVtQ3l7b5c=;
-	t=1713938805; x=1714370805; b=ayCZNf++3DexYoMawSOlruJ1XI9KWtWkFEa1OsAMKFXCap6
-	Is6IJSYfF2OuLPcInqOvVmWM4JQGjKw3QL+nOCp4Bme7Wjy6vCBBAMYyWl7FRTWwSUyQNGUrqMSoe
-	lwhTPmte3J4S6gdGlmRFMlgAfbgX2aglUrA4Hxc/bP64A5hviYFYITdIdKxtqP9rwHebej1aLlWzn
-	dcZhi5QM0qpiW80Z8z1JWtu0O5Yr/olFLbUy4I3k5DUZk0+fBrF0s0D0Du4Lk9jClOAlDKxcF4HKR
-	0OrgV+jSMn1Kx0LJCZMU8/NSaxYgG3Z+cJysgxNOnFSOco2oKG5u5p2hVdxgghUw==;
+	In-Reply-To:References; bh=A9OVYBwzn9mh+suuk7UPlPFT2pggBVcyxifse9t5Nh4=;
+	t=1713946178; x=1714378178; b=pVAmmGFpGTWDOzC3+COv2MCZpsvGXNLElvxY5cJN+hdVrMc
+	/ujogRIuor/zod0mOkCh6u02jr4YdwV96/ppUg6sQ4+PmFTSP5pMs1QJ092oXJKFuscrrjb9rs5l8
+	//CqTvGMGpYdT6mjMvmS9WkMO7WGCDarnc8aVQfZgTwwPcqilQ/Cp9cV7SvWv1ymWdVou26gB2OUA
+	f8mx51QmhiPJswFIKfLYo2+vBhTNPvjHDxLlkXika4TNpe/W3xouhhtOlZgOzG04gCSr7fals1oOi
+	RtyoVymK4zviNmevXqfsp0kp3Omde2Pjm1X3sS6dwiaqEOY1CiSaGJch8Ptj11UQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rzVm7-0006ig-5J; Wed, 24 Apr 2024 08:06:35 +0200
-Message-ID: <3b983390-110e-4c68-a825-6e811de78919@leemhuis.info>
-Date: Wed, 24 Apr 2024 08:06:34 +0200
+	id 1rzXh9-0002qV-QH; Wed, 24 Apr 2024 10:09:35 +0200
+Message-ID: <5ef0ac71-21dd-46d7-a0c1-1b1b391e51a8@leemhuis.info>
+Date: Wed, 24 Apr 2024 10:09:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,47 +39,69 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: BT_RAM_CODE_MT7961_1a_2_hdr.bin is missing in the firmware tree
-To: "Artem S. Tashkinov" <aros@gmx.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- chris.lu@mediatek.com, deren.wu@mediatek.com,
- Peter Tsao <peter.tsao@mediatek.com>
-References: <6574fc0f-8a24-4aff-8a1b-dbf960b6375d@gmx.com>
+Subject: Re: API break, sysfs "capability" file
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Lennart Poettering <mzxreary@0pointer.de>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+ <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
+ <Zh6IpqnSfGHXMjVa@gardel-login>
+ <b74f99e8-5a50-4e93-987f-0bcfc0c27959@kernel.dk>
+ <Zh6KZ7ynHuOd0mgQ@gardel-login>
+ <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-Cc: linux-bluetooth <linux-bluetooth@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-mediatek <linux-mediatek@lists.infradead.org>
-In-Reply-To: <6574fc0f-8a24-4aff-8a1b-dbf960b6375d@gmx.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713938805;e32e74d3;
-X-HE-SMSGID: 1rzVm7-0006ig-5J
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713946178;73e32188;
+X-HE-SMSGID: 1rzXh9-0002qV-QH
 
-On 23.04.24 12:23, Artem S. Tashkinov wrote:
-> 
-> Could you please push this firmware ASAP?
-> 
-> It's been reported to be missing:
-> https://bugzilla.kernel.org/show_bug.cgi?id=218757
+On 16.04.24 16:33, Jens Axboe wrote:
+> On 4/16/24 8:25 AM, Lennart Poettering wrote:
+>> On Di, 16.04.24 08:22, Jens Axboe (axboe@kernel.dk) wrote:
+>>> On 4/16/24 8:18 AM, Lennart Poettering wrote:
+>>>> On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
+>>>>
+>>>>> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
+>>>>>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+>>>>>>> All I am looking for is a very simple test that returns me a boolean:
+>>>>>>> is there kernel-level partition scanning enabled on this device or
+>>>>>>> not.
+>>>>>> And we can add a trivial sysfs attribute for that.
+>>>>>
+>>>>> And I think we should. I don't know what was being smoked adding a sysfs
+>>>>> interface that exposed internal flag values - and honestly what was
+>>>>> being smoked to rely on that, but I think it's fair to say that the
+>>>>> majority of the fuckup here is on the kernel side.
+> [...]
+> Doesn't really change my conclusion from earlier. As mentioned, this is
+> clearly a kernel fuckup, and honestly since it's being presented as ABI,
+> we definitely need to rectify this and provide an alternative. Even
+> though I'm not a huge fan of it, might just be best to re-introduce
+> 'capability' and just have conversions of the flags so we retain the
+> user side of it the same. That can then also go into stable, so we'll
+> end up with something that at least looks cohesive on the user side.
 
-FWIW, that can't be the only solution for that problem, as
-Documentation/driver-api/firmware/firmware-usage-guidelines.rst clearly
-states:
+Jens, quick question: what's the plan forward here and who will realize
+what you outlined?
 
-"""
-Users switching to a newer kernel should *not* have to install newer
-firmware files to keep their hardware working.
-"""
-
-Could anyone from mediatek please confirm that this rule is adhered?
-
-Side note: I wonder if Peter's patch
-https://lore.kernel.org/all/20240415141922.25055-1-peter.tsao@mediatek.com/
-("Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921") is
-relevant for this.
+I'm asking, as afaics nothing happened for a week (hope I didn't miss
+anything!). Sure, it's not a regression from the last cycle or so, so
+it's not that urgent. But hch's "It is not a regression at all" last
+week made me worry that this in the end might not be solved unless
+somebody has it on the todo list. Normally I would have CCed Linus at
+that point anyway to get his stance, but from your statements it sounds
+like this is unnecessary here.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
