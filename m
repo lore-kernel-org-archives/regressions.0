@@ -1,195 +1,174 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75035158A06
-	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 08:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35566158A39
+	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 09:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713948969; cv=none; b=jGuqt+eBRKX9NUpUZKfCK8KyAd0OdJ2rcZUZgxOCEsBUJ/fui2IBYewD1F9pO05rcqIiU1DnxsoZmwwNpthc0Ge8KdBG5yWqjY/T6pA2M9IWgYe4RY1LlHCo9MJSji7mwcLJI7xauPtnD4n/Rk3x0s0puNzfbbEToKeISgaQ5rs=
+	t=1713951604; cv=none; b=K4Hej3RxATUlyixxF4dDCNnfd3Zf7LlpPOZ8owi6geX+iaRrfgk+Ts4XRBoBHnoUJrqo6MPGj/cS0b+hXwT+WnQmi0I1xA2ITJ5HiDrKYQ3muQqMHcEbCVmbIC9kTvod38WStZzLcWZGV2Yv+5VHKh3jodNHAJmNJSxioRdBBvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713948969; c=relaxed/simple;
-	bh=fW9dtU9EvLsvMfBLExE7W5wnUxHbOc4p878m3NHnhaU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KaeTSDwVCJC1WoKryHF9bw+1Iq2oOb3Rdvwnz03ivO/YLnjpNbETTOs4sBPaBK6VJMiyC6CMyAKCZYWLVUHR44V+sutb92aDGXWntAjTzR0b4we/8LPQWMD1zCDCjHhIpupp3/FzrZ3ps5sDUCq7Hgsh5UASsX5AroiViMCuTuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zrYsDkbh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lrm5U1x1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zrYsDkbh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lrm5U1x1; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1713951604; c=relaxed/simple;
+	bh=k02VL5M9Kpdt+vEDex9ip+a6AUaL17FOmiPyP/Z34fs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=VYPEJ6dkYtLPy09LGvqb/VrYlLLSEzy8vMXxtvXIfjZzmV5XRrGnf/HM038fCg5IyLlltTlkdqKm87b0ApZjtFXPaI+omq+hYV02eq/KPBxUNaQ/Jw6XEPI68FEDwSpQOohWmc6TY3PqAzedYc6lp3jjHwYeqSP7S38P5E0O8pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W2uyjn0T; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zrYsDkbh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lrm5U1x1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zrYsDkbh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lrm5U1x1"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0E2AB2207B;
-	Wed, 24 Apr 2024 08:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713948962; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4jhrOjUXMi4L68sOb83OwZw0U9BrZMnPEkBveoFfzM=;
-	b=zrYsDkbhAdVAoSC71s+vwjhLti5Z2SrEelLLT9+FuuM9AXmnqfQPy9OWsOrJ4MFewliBpL
-	DsR4rh2vWyHzOs1FdsFz7+kmmTk+E7ZGLzYjip6U1Ey+INDNCfnJo9p9JRDDgPQVrfrHeI
-	mg1LfHMqSO9IZ95A6XETn215cN+wYbo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713948962;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4jhrOjUXMi4L68sOb83OwZw0U9BrZMnPEkBveoFfzM=;
-	b=lrm5U1x1G252pPOJtSkPrC+PTUlP/fiC+Qdy86sXVqPr10eGOL0FEZ9sceGzaHrHeDq4J+
-	f0riM8kecu/sNwCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zrYsDkbh;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lrm5U1x1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713948962; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4jhrOjUXMi4L68sOb83OwZw0U9BrZMnPEkBveoFfzM=;
-	b=zrYsDkbhAdVAoSC71s+vwjhLti5Z2SrEelLLT9+FuuM9AXmnqfQPy9OWsOrJ4MFewliBpL
-	DsR4rh2vWyHzOs1FdsFz7+kmmTk+E7ZGLzYjip6U1Ey+INDNCfnJo9p9JRDDgPQVrfrHeI
-	mg1LfHMqSO9IZ95A6XETn215cN+wYbo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713948962;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4jhrOjUXMi4L68sOb83OwZw0U9BrZMnPEkBveoFfzM=;
-	b=lrm5U1x1G252pPOJtSkPrC+PTUlP/fiC+Qdy86sXVqPr10eGOL0FEZ9sceGzaHrHeDq4J+
-	f0riM8kecu/sNwCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A811913690;
-	Wed, 24 Apr 2024 08:56:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id el7GJyHJKGaSLwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 24 Apr 2024 08:56:01 +0000
-Date: Wed, 24 Apr 2024 10:56:11 +0200
-Message-ID: <87bk5zdtqs.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Oliver Neukum <oneukum@suse.com>,
-	USB list <linux-usb@vger.kernel.org>
-Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in SuperSpeed initialization")
-In-Reply-To: <ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
-References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
-	<78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
-	<8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
-	<673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
-	<8734rdjj4n.wl-tiwai@suse.de>
-	<ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W2uyjn0T"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O6XoJ5017535;
+	Wed, 24 Apr 2024 09:39:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:from:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=7pjQyNml58Li82tlGgEzCvvWNJctybg3hWRNYHFGEms=; b=W2
+	uyjn0TBAnLPIR5K8OdEpvgttuqMJHP8a/l7LhplPjlZsZTT/T8bMzoOABo8S2WiU
+	V3ogjRAWIqHOMVyyxMHUWaysD4CMilLroVva+i4u15S3+MYe/49SGaR480Up+JPc
+	5mXwVDVp2/P3IfdQnL1oEZUd45BMm6ZdcbAPYc5H4xnMug0wYC7VGRo28jSbg32m
+	rnkXT0yR0oUxUhCQfsrPQcNUQLcLS4X7HuD96AaW6kw471/armqKjT4dgIL/SGgL
+	LPO2p1bcJumtEtvGEmXD65CNKakpTfGscm431bkhGhK5wHWXPaXgUQs0P00/rRIv
+	P8CBoauBNaGnroIXXg4A==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpv9fgf17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 09:39:56 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O9dZ0b005543
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 09:39:35 GMT
+Received: from [10.253.14.221] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Apr
+ 2024 02:39:28 -0700
+Message-ID: <b3d8e1de-3beb-46a2-817d-ee0fdd614b0a@quicinc.com>
+Date: Wed, 24 Apr 2024 17:39:26 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.com:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	TO_DN_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 0E2AB2207B
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -5.51
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] Bluetooth: qca: Fix BT enable failure for QCA6390
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+To: Wren Turkal <wt@penguintechs.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
+        <marcel@holtmann.org>
+CC: <linux-bluetooth@vger.kernel.org>, <bartosz.golaszewski@linaro.org>,
+        <regressions@lists.linux.dev>, <kernel@quicinc.com>,
+        <gregkh@linuxfoundation.org>, <stable@vge.kernel.org>
+References: <1713932807-19619-1-git-send-email-quic_zijuhu@quicinc.com>
+ <1713932807-19619-2-git-send-email-quic_zijuhu@quicinc.com>
+ <a8a7e3df-44c6-4fa6-a576-da384c02e9ac@linaro.org>
+ <067db05d-56bc-4ca3-aef1-bc3bae47667c@quicinc.com>
+ <c1fc9c28-25df-4d41-9ae6-c5d079ea805d@penguintechs.org>
+ <0db77c30-5be2-41b5-adf0-fb4436b9107b@quicinc.com>
+ <c9bf22a3-2549-4cf1-898e-8a9adcd2f0f6@penguintechs.org>
+ <d77455b2-4fb9-4ffc-acf9-c24b5a0f4a45@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <d77455b2-4fb9-4ffc-acf9-c24b5a0f4a45@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: CODFupZpRRNiuRke86eVUqRJiJZGU1tI
+X-Proofpoint-GUID: CODFupZpRRNiuRke86eVUqRJiJZGU1tI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-24_07,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 adultscore=0 phishscore=0
+ mlxlogscore=999 lowpriorityscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404240041
 
-On Tue, 23 Apr 2024 21:29:27 +0200,
-Alan Stern wrote:
+On 4/24/2024 2:01 PM, quic_zijuhu wrote:
+> On 4/24/2024 1:49 PM, Wren Turkal wrote:
+>> On 4/23/24 10:46 PM, quic_zijuhu wrote:
+>>> On 4/24/2024 1:37 PM, Wren Turkal wrote:
+>>>> On 4/23/24 10:02 PM, quic_zijuhu wrote:
+>>>>> On 4/24/2024 12:30 PM, Krzysztof Kozlowski wrote:
+>>>>>> On 24/04/2024 06:26, Zijun Hu wrote:
+>>>>>>> Commit 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
+>>>>>>> with gpiod_get_optional()") will cause below serious regression
+>>>>>>> issue:
+>>>>>>>
+>>>>>>> BT can't be enabled any more after below steps:
+>>>>>>> cold boot -> enable BT -> disable BT -> BT enable failure
+>>>>>>> if property enable-gpios is not configured within DT|ACPI for
+>>>>>>> QCA6390.
+>>>>>>>
+>>>>>>> The commit wrongly changes flag @power_ctrl_enabled set logic for
+>>>>>>> this
+>>>>>>> case as shown by its below code applet and causes this serious issue.
+>>>>>>> qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+>>>>>>>                                                  GPIOD_OUT_LOW);
+>>>>>>> - if (IS_ERR_OR_NULL(qcadev->bt_en)) {
+>>>>>>> + if (IS_ERR(qcadev->bt_en)) {
+>>>>>>>         dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+>>>>>>>      power_ctrl_enabled = false;
+>>>>>>>     }
+>>>>>>>
+>>>>>>> Fixed by reverting the mentioned commit for QCA6390.
+>>>>>>>
+>>>>>>> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
+>>>>>>> with gpiod_get_optional()")
+>>>>>>> Cc: stable@vge.kernel.org
+>>>>>>> Reported-by: Wren Turkal <wt@penguintechs.org>
+>>>>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+>>>>>>> Link:
+>>>>>>> https://lore.kernel.org/linux-bluetooth/ea20bb9b-6b60-47fc-ae42-5eed918ad7b4@quicinc.com/T/#m73d6a71d2f454bb03588c66f3ef7912274d37c6f
+>>>>>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>>>>>>> Tested-by: Wren Turkal <wt@penguintechs.org>
+>>>>>>> ---
+>>>>>>> Changes:
+>>>>>>> V6 -> V7: Add stable tag
+>>>>>>
+>>>>>> Stop sending multiple pathchsets per day. I already asked you to first
+>>>>>> finish discussion and then send new version. You again start sending
+>>>>>> something while previous discussion is going.
+>>>>>> you concern is wrong and i am sure it don't block me sending new patch
+>>>>> sets to solve other issue. so i send this v7.
+>>>>>
+>>>>> i have give reply for Bartosz' patch.
+>>>>>
+>>>>> i hop you as DTS expert to notice my concern about DTS in the reply.
+>>>>
+>>>> Are you saying here (1) that you identified a problem in the DTs that
+>>>> you hope Krzysztof notices or (2) that you want Krzysztof to notice how
+>>>> your description of way that DT declares the gpio as required affects
+>>>> your proposed change. As a native American English speaker, I am finding
+>>>> your text hard to follow.
+>>>>
+>>> 1) is my purpose. i have given my concern about DTS for Bartosz' patch
+>>> and hope DTS expert notice the concern.
+>>>
+>>> my change don't have any such concern about DTS usage. that is why i
+>>> changed my fix from original reverting the whole wrong commit to now
+>>> focusing on QCA6390.
+>>
+>> Let me try to parse this. If #1 is the correct interpretation, does that
+>> mean that the DTs are wrong and need to be changed? Do you expect K to
+>> do that since he's the "DTS expert"?
+>>
+> for your 1) question, NO
+> for your 2) question, need DTS expert notice or suggest how to handle
+> case that a DTS property is marked as required but not be configed by user.
 > 
-> On Mon, Apr 22, 2024 at 09:24:24PM +0200, Takashi Iwai wrote:
-> > On Mon, 22 Apr 2024 20:03:46 +0200,
-> > Alan Stern wrote:
-> > > 
-> > > On Mon, Apr 22, 2024 at 07:33:21PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> > > > for once, to make this easily accessible to everyone.
-> > > > 
-> > > > Is anyone still working on fixing below regression? From here it looks
-> > > > stalled, but I might have missed something.
-> > > 
-> > > I've been waiting to hear back from Oliver or Takashi.  A revised patch 
-> > > taking my comments into account would be welcome; it should be a very 
-> > > small change (just one or two lines of code).
-> > 
-> > As posted in another mail, it's a virtualized environment.
-> > Details are found in the original bug report
-> >   https://bugzilla.suse.com/show_bug.cgi?id=1220569
+>>>> I think you are saying #2.
+>>>>
+>>>> I just want to make sure I am following the discussion here.
+>>>>
+>>>> wt
+>>>
+>>
 > 
-> Hmmm.  If this is a virtualized device, isn't the best solution to fix the 
-> emulation code for the device so that it presents a valid descriptor?
+Hi Krzysztof, bartosz.
 
-Honestly speaking, I don't know, but it smells like a hard way.  After
-all, we brought some regression of the previously (even casually /
-unintended) working "device"...
+do you have any concern for this patch serials?
 
-
-> > About the patch change: I appreciate if you cook it rather by
-> > yourself since I'm not 100% sure what you suggested.  I can
-> > provide the reporter a test kernel with the patch for confirmation, of
-> > course.
-> 
-> Here's a condensed version of the patch you wrote.  But I would prefer not 
-> to add this to the kernel if the problem can be fixed somewhere else.
-
-Thanks, I asked the report for testing the patch now.
-
-
-thanks,
-
-Takashi
-
-> 
-> Alan Stern
-> 
-> 
-> 
-> Index: usb-devel/drivers/usb/core/hub.c
-> ===================================================================
-> --- usb-devel.orig/drivers/usb/core/hub.c
-> +++ usb-devel/drivers/usb/core/hub.c
-> @@ -5110,9 +5110,10 @@ hub_port_init(struct usb_hub *hub, struc
->  	}
->  	if (usb_endpoint_maxp(&udev->ep0.desc) == i) {
->  		;	/* Initial ep0 maxpacket guess is right */
-> -	} else if ((udev->speed == USB_SPEED_FULL ||
-> +	} else if (((udev->speed == USB_SPEED_FULL ||
->  				udev->speed == USB_SPEED_HIGH) &&
-> -			(i == 8 || i == 16 || i == 32 || i == 64)) {
-> +			(i == 8 || i == 16 || i == 32 || i == 64)) ||
-> +			(udev->speed >= USB_SPEED_SUPER && i > 0)) {
->  		/* Initial guess is wrong; use the descriptor's value */
->  		if (udev->speed == USB_SPEED_FULL)
->  			dev_dbg(&udev->dev, "ep0 maxpacket = %d\n", i);
-> 
