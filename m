@@ -1,48 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E9113C82F
-	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 05:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD92155385
+	for <regressions@lists.linux.dev>; Wed, 24 Apr 2024 05:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713935133; cv=none; b=ca8PMgyIF5V+R1A+xSMktVWoX0420vScCFjmMji0e+A6HPTbveQ41mSIVKBU89Y4XlCdmeUwASvL69QlmMWO2U4fUbcKes1cQtBllr1i5/K2DqXGDVC4RzzVkqZXcqV3y4zOmCOXoKm3/0Ccy5QSzyCb0F1ANAxivp7ncE6+/SE=
+	t=1713936850; cv=none; b=VpuyHy+sC1ZSuB8pNsAgIbEQtBv7YQ53cYO34mc1VgrwaUGBEibvETqaG5e/4U6lCGINIlFD9JH574xfga2sRhWx24UaXJXlOF6mu8ww6PtypMlJL7d1gkkJoKEIqVLh5gL3714oytYaG8lsu65r2XRGqK+kxrpjvLuTTmhi/d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713935133; c=relaxed/simple;
-	bh=BbE/ObOUncunUSPx9PyZFUuFa7k/79A7IjqeS6/g5j4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=Es6tA0EkdAys/kXwGtDvRaPa7MkLBU5rPSPh4JA0JcMtotYZe+nJsEQrJsqWJlV3PCrKBafOh042rZneDuiRWRe1A+WUNyTTrsqB8jMGhFT9j4RD0ecKpLoVtH2/xy/ULnc+j+Dp2MhClrNFLUJCU6soiWGpxs5n753ix254vWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YIzG4feu; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1713936850; c=relaxed/simple;
+	bh=1JGZ05ckF4ruyTImAaTedbPEjxq9Rc/eMqeD8tXid88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FHxEcYOliUcy/EoaAXD2d/278UO2UMWG7KveskAJ6pgdEvt0fWuJEydpxNyZVV60oJtdzYMPCjSymJKK6kDpvIKfq2HBlqHyIheasVaCq/5Det+edhb3MiacA9hgNLQUbRTCdj9W3L2ZlV89noPjXfFxFPjhJtWEivqQtH589iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HqvynezJ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YIzG4feu"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O4DN0d025309;
-	Wed, 24 Apr 2024 05:05:26 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HqvynezJ"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O5LifA022124;
+	Wed, 24 Apr 2024 05:33:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
+	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=JqK6/7a4B4OxAtoNpQFpWIgYCtXc7vRpz7k6BGU+sM0=; b=YI
-	zG4feu1mikbAM4B4oWznmmKbUt0lgWXID3Qek2Sqq9tKV8kCmfHTTCi73FRwHLM6
-	7QyxEfvB/ro3BApEV1LMUdOkChQdRM9444lSVHDdSsxS5uG+FiI2o9Q+Oxj/KNMq
-	d5XOzAEfscJeKRnsattdU072Hdp4xeYyLwQFdJde0lpqIOZIi1H5Ge8lGGFGkgY2
-	X4N9RqW4xVR6XcSskjSzG9vn9ukCo4pwT1E32HYTyjZjdwAMhjRHHBbmWtSIkghO
-	AJo49AAc+HV0ywXF+1oxiEtICp2ELhiIY8pTD63UdKYlXOsxk2uFqMA3KqjoAeX5
-	5B8bpxvQzBTrSpQN2+FA==
+	qcppdkim1; bh=HdZVXwtWl5+bl2XxqTgL2DBY0WUc3/vOx/Y3h90eCbU=; b=Hq
+	vynezJnU9qegp6E/r7+bGi3c9z+EM00xBejoZdeQAhV4rG/QD/rxcseN2T/4AQph
+	TlQkuo2YxRgXkxBjYIrQQtBK7DY+Cq3tQsDSVdxw6G34M8cc1Dl+bothdCi4vB0x
+	4dPwk3dz/qL9UGe7lZbbYduK1pfyXjMz5b8qjXuTxgfGgClE1ezHQ9QP2nPIPptl
+	7CeqSXrN3ijk8sfwgaPTC/RNCe2R06A4YtrrVUbFZ7VzZkiIoab7FExj7/tHuJV5
+	N0FUIw9pQX+RTzE80jp2XSbXPQv+h6qIP21y8d2rPa8V/Pc95i8TZzJtHfG/WLYN
+	aXfg2To1XqH4NIpY5Y/w==
 Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xp9c0k4cr-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xpu7gg2st-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 05:05:25 +0000 (GMT)
+	Wed, 24 Apr 2024 05:33:59 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O55PCT007559
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O5XvSr013795
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Apr 2024 05:05:25 GMT
+	Wed, 24 Apr 2024 05:33:57 GMT
 Received: from [10.253.72.119] (10.80.80.8) by nasanex01a.na.qualcomm.com
  (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
- 2024 22:05:20 -0700
-Message-ID: <4c69d951-b402-49b2-9c42-478d2e79311a@quicinc.com>
-Date: Wed, 24 Apr 2024 13:05:16 +0800
+ 2024 22:33:52 -0700
+Message-ID: <053f51ae-1eb7-4ea8-bb04-38bfa1e0b8f5@quicinc.com>
+Date: Wed, 24 Apr 2024 13:33:50 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,54 +50,107 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] Bluetooth: qca: Fix BT enable failure for QCA6390
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Subject: Re: [PATCH v6 1/2] Bluetooth: qca: Fix BT enable failure for QCA6390
+To: Wren Turkal <wt@penguintechs.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
         <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
         <marcel@holtmann.org>
 CC: <linux-bluetooth@vger.kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <wt@penguintechs.org>, <regressions@lists.linux.dev>,
-        <kernel@quicinc.com>, <gregkh@linuxfoundation.org>,
-        <stable@vge.kernel.org>
-References: <1713932807-19619-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713932807-19619-2-git-send-email-quic_zijuhu@quicinc.com>
- <a8a7e3df-44c6-4fa6-a576-da384c02e9ac@linaro.org>
- <067db05d-56bc-4ca3-aef1-bc3bae47667c@quicinc.com>
+        <regressions@lists.linux.dev>, <kernel@quicinc.com>,
+        Greg KH
+	<gregkh@linuxfoundation.org>
+References: <1713919602-5812-1-git-send-email-quic_zijuhu@quicinc.com>
+ <1713919602-5812-2-git-send-email-quic_zijuhu@quicinc.com>
+ <349b27a5-d2d3-46f1-b002-44f81e0cedef@linaro.org>
+ <e8cd122d-e342-45c2-b078-a4ca2d8dcfff@quicinc.com>
+ <dfe18768-f6da-4c60-880d-deeae3c3b04d@linaro.org>
+ <8ae32009-5f5e-49a1-88a1-e330f0614f60@quicinc.com>
+ <5e363318-c6e4-4874-8026-7940b434d583@linaro.org>
+ <2020a858-c3d9-48a7-ad59-3691c6b98fb2@penguintechs.org>
 Content-Language: en-US
-In-Reply-To: <067db05d-56bc-4ca3-aef1-bc3bae47667c@quicinc.com>
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <2020a858-c3d9-48a7-ad59-3691c6b98fb2@penguintechs.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 4upj-raGk_rrRnel2wRIuhpLKF3HK_Di
-X-Proofpoint-ORIG-GUID: 4upj-raGk_rrRnel2wRIuhpLKF3HK_Di
+X-Proofpoint-GUID: 8R6_YlSU5UVsS_iW1DsjSKGWEtbMiH4q
+X-Proofpoint-ORIG-GUID: 8R6_YlSU5UVsS_iW1DsjSKGWEtbMiH4q
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-24_02,2024-04-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- clxscore=1015 phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=680 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404240021
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240023
 
-On 4/24/2024 1:02 PM, quic_zijuhu wrote:
->> you concern is wrong and i am sure it don't block me sending new patch
-> sets to solve other issue. so i send this v7.
+On 4/24/2024 1:04 PM, Wren Turkal wrote:
+> On 4/23/24 9:31 PM, Krzysztof Kozlowski wrote:
+>> On 24/04/2024 06:18, quic_zijuhu wrote:
+>>> On 4/24/2024 12:10 PM, Krzysztof Kozlowski wrote:
+>>>> On 24/04/2024 06:07, quic_zijuhu wrote:
+>>>>> On 4/24/2024 12:06 PM, Krzysztof Kozlowski wrote:
+>>>>>> On 24/04/2024 02:46, Zijun Hu wrote:
+>>>>>>> Commit 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
+>>>>>>> with gpiod_get_optional()") will cause below serious regression
+>>>>>>> issue:
+>>>>>>>
+>>>>>>> BT can't be enabled any more after below steps:
+>>>>>>> cold boot -> enable BT -> disable BT -> BT enable failure
+>>>>>>> if property enable-gpios is not configured within DT|ACPI for
+>>>>>>> QCA6390.
+>>>>>>>
+>>>>>>> The commit wrongly changes flag @power_ctrl_enabled set logic for
+>>>>>>> this
+>>>>>>> case as shown by its below code applet and causes this serious
+>>>>>>> issue.
+>>>>>>> qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+>>>>>>>                                                 GPIOD_OUT_LOW);
+>>>>>>> - if (IS_ERR_OR_NULL(qcadev->bt_en)) {
+>>>>>>> + if (IS_ERR(qcadev->bt_en)) {
+>>>>>>>        dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+>>>>>>>     power_ctrl_enabled = false;
+>>>>>>>    }
+>>>>>>>
+>>>>>>> Fixed by reverting the mentioned commit for QCA6390.
+>>>>>>>
+>>>>>>> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use
+>>>>>>> IS_ERR_OR_NULL() with gpiod_get_optional()")
+>>>>>>> Reported-by: Wren Turkal <wt@penguintechs.org>
+>>>>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+>>>>>>> Link:
+>>>>>>> https://lore.kernel.org/linux-bluetooth/ea20bb9b-6b60-47fc-ae42-5eed918ad7b4@quicinc.com/T/#m73d6a71d2f454bb03588c66f3ef7912274d37c6f
+>>>>>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>>>>>>> Tested-by: Wren Turkal <wt@penguintechs.org>
+>>>>>>
+>>>>>> No, Bartosz' patch should go.
+>>>>>>
+>>>>> what is Bartosz' patch.
+>>>>
+>>>> Srsly? You were Cc'ed on it. How many upstream patches on upstream
+>>>> mailing lists do you receive that you lost track of them?
+>>>>
+>>> Bartosz' patch have basic serious mistook and logic error and have no
+>>> any help for QCA6390, and it is not suitable regarding DTS usage.
+>>
+>> Really? Why you did not respond with comments then? Considering how
+>> imprecise and vague you are in describing real issues, I have doubts in
+>> your judgment here as well.
 > 
-> i have give reply for Bartosz' patch.
+> Please slow down here. Zijun's patch works and Bartosz's patch does not.
+> I don't think Zijun means any ill intent. I am replying to Bartosz's
+> patch right now.
 > 
-> i hop you as DTS expert to notice my concern about DTS in the reply.
-
-sorry to correct a typo error.
-
-Hi Krzysztof.
-you concern is wrong and i am sure it don't block me sending new patch
-sets to solve other issue. so i send this v7.
-
-i have give reply for Bartosz' patch.
-
-i hop you as DTS expert to notice my concern about DTS in the reply.
-
+this is reporter's latest verification results. actually i don't have
+much time for kernel upstream. i really hope my fix is able to merged
+ASAP, it will help us to solve other possible impacted QCA controllers.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
 
