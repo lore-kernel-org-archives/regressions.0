@@ -1,108 +1,76 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D53144D24
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 11:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36CF146A7C;
+	Fri, 26 Apr 2024 12:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714131208; cv=none; b=FW3DiN0pwDSSIU59a3zgKweUmohCytMuxVI4LlRBnwRYTm+lnnAcnK9pQuZw2yit+iOMtvA7aO5qAVsaBpqDknuvbMPHmeR2A5jHU9RwB3TFAaVCtjRXlmPFrXiPVkW2babcVw0rSbvjIgJUfJFEUASz6HIfhDivb1nVEAiBEBw=
+	t=1714135977; cv=none; b=Sss/v4Y5+WOLEmCd7jx7nNC4Xtc2d/TA3XsDjkCDAJjmUkhjBVnbCdqHf0vm+FZxCEdbEOBnHjm2qWuG3SsgKVMEfBNu7WBrE0rOQ7eCZDkS+HDS8PtCbx0+R69heS6wkawGC197OLpmyHwvU9HkuZVJIS2DtSLL7gg5+ATEm6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714131208; c=relaxed/simple;
-	bh=sKbcDZpO43ATbiiPXnkKdb90G7Igiurm3Zwcm7P1scY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OeZmMe5+xNWhz0ep1KvVqKMYw5BIwjcKZp2dJbeDa0YZu6KjzQT/QDC6rbuoHoR1W9u5Sf+tXHFVneJRmUPqwbMUKI5Gav/G1ttiSBA2Ml4cODE+MqlB0Zd6x5h9t2OWdOQBnHPxt3vLbx/NxXwPbOHNsnczoKhf9mwY7LwyZBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=HlTQDeFQ; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1714135977; c=relaxed/simple;
+	bh=RFcyu1BPkbt433ch0McHicnWLmyFM5Oz6/usGFOxUQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bAd11N2XnO2Y22zg+HMb/C4OeCDwX+S5NUVjYNRspiV2g6SxSDVIwR0l2I1fZQ9LxpWdQP+gxprl54JWca08QCAAYiEVCqMTzQR4zIPXee5mR67gViQB0IHbsdLzkRMH1dk6y/oFquJyVVYYyKxAXZNPNgAz4yEhFuFsxniTrL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=XD8Arhp9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HlTQDeFQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1714131207; x=1745667207;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sKbcDZpO43ATbiiPXnkKdb90G7Igiurm3Zwcm7P1scY=;
-  b=HlTQDeFQ2Onym0s7Ld6OJnixFJt8KvyIUX7bZN46U3vwBY4kSiWtUxdq
-   aFYoVUs+LEm987iNTiM8XMZkUcd/8ApyjyWX5lVpHDATfGllF0XEfsIiv
-   7wCs7d4wfaYqqN0mJtjila2MDvjgeXOxWv4CzxyQi5saCSOUHMWao9Kt3
-   g=;
-X-IronPort-AV: E=Sophos;i="6.07,232,1708387200"; 
-   d="scan'208";a="290945146"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 11:33:26 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:51432]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.16.217:2525] with esmtp (Farcaster)
- id e7b84c28-150d-4661-b2a4-d7d05a6498ed; Fri, 26 Apr 2024 11:33:25 +0000 (UTC)
-X-Farcaster-Flow-ID: e7b84c28-150d-4661-b2a4-d7d05a6498ed
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 26 Apr 2024 11:33:25 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 26 Apr
- 2024 11:33:21 +0000
-Message-ID: <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
-Date: Fri, 26 Apr 2024 13:33:19 +0200
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XD8Arhp9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5925C113CD;
+	Fri, 26 Apr 2024 12:52:55 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XD8Arhp9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1714135973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RFcyu1BPkbt433ch0McHicnWLmyFM5Oz6/usGFOxUQ4=;
+	b=XD8Arhp9nYK+s8PviVRQLiSsC5kWvD4WBfq0/0bJXphLDH/u8Wt7AFACX17oaaTlkJkvcM
+	SCEoo1nG+6gpEK2Bee86F9PKXR0LgiB//GHTCZNuKDRofYSQrs3jeJxkEGU4AAUMZk4t8T
+	Vn1dqbpbOwjgQmLUorA3mP+70apRsAY=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 371fa002 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 26 Apr 2024 12:52:53 +0000 (UTC)
+Date: Fri, 26 Apr 2024 14:52:51 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: Lennart Poettering <mzxreary@0pointer.de>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Babis Chalios <bchalios@amazon.es>, Theodore Ts'o <tytso@mit.edu>,
+	"Cali, Marco" <xmarcalx@amazon.co.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	Christian Brauner <brauner@kernel.org>, linux@leemhuis.info,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+Message-ID: <Ziujox51oPzZmwzA@zx2c4.com>
+References: <20240418114814.24601-1-Jason@zx2c4.com>
+ <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+ <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+ <ZieoRxn-On0gD-H2@gardel-login>
+ <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
- VMGENID updates"
-To: Lennart Poettering <mzxreary@0pointer.de>, "Jason A. Donenfeld"
-	<Jason@zx2c4.com>
-CC: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, Babis Chalios <bchalios@amazon.es>,
-	"Theodore Ts'o" <tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd
- Bergmann <arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"Christian Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
-	<regressions@lists.linux.dev>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
- <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
- <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
- <ZieoRxn-On0gD-H2@gardel-login>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <ZieoRxn-On0gD-H2@gardel-login>
-X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
 
-Ck9uIDIzLjA0LjI0IDE0OjIzLCBMZW5uYXJ0IFBvZXR0ZXJpbmcgd3JvdGU6Cj4gT24gRGksIDIz
-LjA0LjI0IDAzOjIxLCBKYXNvbiBBLiBEb25lbmZlbGQgKEphc29uQHp4MmM0LmNvbSkgd3JvdGU6
-Cj4KPiBKYXNvbiEKPgo+IENhbiB5b3UgcGxlYXNlIGV4cGxhaW4gdG8gbWUgd2hhdCB0aGUgcHJl
-Y2lzZSBwcm9ibGVtIGlzIHdpdGggdGhlCj4gdWV2ZW50PyBJdCBkb2Vzbid0IGxlYWsgYW55IGlu
-Zm9ybWF0aW9uIGFib3V0IHRoZSBhY3R1YWwgdm1nZW5pZCwgaXQKPiBqdXN0IGxldHMgdXNlcnNw
-YWNlIGtub3cgdGhhdCB0aGUgbWFjaGluZSB3YXMgY2xvbmVkLAo+IGJhc2ljYWxseS4gV2hhdCdz
-IHRoZSBwcm9ibGVtIHdpdGggdGhhdD8gSSdkIHJlYWxseSBsaWtlIHRvCj4gdW5kZXJzdGFuZD8K
-Pgo+IFRoZXJlIGFyZSBtYW55IHVzZWNhc2VzIGZvciB0aGlzIGluIHRoZSBWTSB3b3JsZCwgZm9y
-IGV4YW1wbGUgd2UnZAo+IGxpa2UgdG8gaG9vayB0aGluZ3MgdXAgc28gdGhhdCB2YXJpb3VzIHVz
-ZXJzcGFjZSBtYW5hZ2VkIGNvbmNlcHRzLAo+IHN1Y2ggYXMgREhDUCBsZWFzZXMsIE1BQyBhZGRy
-ZXNzZXMgYXJlIGF1dG9tYXRpY2FsbHkgcmVmcmVzaGVkLgo+Cj4gVGhpcyBoYXMgbm8gcmVsYXRp
-b25zaGlwIHRvIFJOR3Mgb3IgYW55dGhpbmcgbGlrZSB0aGlzLCBpdCdzIGp1c3QgYW4KPiBldmVu
-dCB3ZSBjYW4gaGFuZGxlIGluIHVzZXJzcGFjZSB0byB0cmlnZ2VyIGFkZHJlc3MgcmVmcmVzaGVz
-IGxpa2UKPiB0aGlzLgo+Cj4gSGVuY2UsIHdoeSBpcyB0aGUgcmV2ZXJ0IG5lY2Vzc2FyeT8gVGhp
-cyB3YXMgYWxyZWFkeSBpbiBhIHJlbGVhc2VkCj4ga2VybmVsLCBhbmQgd2UgaGF2ZSBzdGFydGVk
-IHdvcmsgb24gbWFraW5nIHVzZSBvZiB0aGlzIGluIHN5c3RlbWQsIGFuZAo+IGFmYWljcyB0aGlz
-IGRvZXMgbm90IGNvbXByb21pc2UgdGhlIGtlcm5lbCBSTkcgaW4gZXZlbiB0aGUgcmVtb3Rlc3Qg
-b2YKPiB3YXlzLCBoZW5jZSB3aHkgaXMgYSByZXZlcnQgbmVjZXNzYXJ5PyBGcm9tIG15IHVzZXJz
-YWNlIHBlcnNwZWN0aXZlCj4gaXQncyBqdXN0IHZlcnkgdmVyeSBzYWQsIHRoYXQgdGhpcyBzaW1w
-bGUsIHRyaXZpYWwgaW50ZXJmYWNlIHdlIHdhbnRlZAo+IHRvIHVzZSwgdGhhdCB3YXMgaW4gYSBz
-dGFibGUga2VybmVsIGlzIG5vdyBnb25lIGFnYWluLgo+Cj4gQ2FuIHlvdSBleHBsYWluIHdoYXQg
-dGhlIHByb2JsZW0gd2l0aCB0aGlzIHNpbmdsZS1saW5lIHRyaXZpYWwKPiBpbnRlcmZhY2UgaXM/
-IEkgcmVhbGx5IHdvdWxkIGxpa2UgdG8gdW5kZXJzdGFuZCEKCgpKYXNvbiwgcGluZz8KCklmIEkg
-ZG9uJ3Qgc2VlIHRlY2huaWNhbCByZWFzb25pbmcgZnJvbSB5b3UgaGVyZSwgSSB3aWxsIGFzc3Vt
-ZSB0aGF0IHlvdSAKYWdyZWUgd2l0aCBMZW5uYXJ0IGFuZCBteSBwb2ludHMgb2Ygdmlld3MgYW5k
-IHNlbmQgYSByZXZlcnQgb2YgeW91ciAKcmV2ZXJ0IHNob3J0bHkgdG8gZW5zdXJlIHN5c3RlbWQg
-aGFzIGl0cyB1ZXZlbnQgc3RpbGwgaW4gNi45LgoKCkFsZXgKCgoKCkFtYXpvbiBEZXZlbG9wbWVu
-dCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFl
-ZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJh
-Z2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6
-OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
+I don't think adding UAPI to an individual device driver like this is a
+good approach especially considering that the virtio changes we
+discussed some time ago will likely augment this and create another
+means of a similar notification. And given that this intersects with
+other userspace-oriented work I hope to get back to pretty soon, I think
+introducing some adhoc mechanism like this adds clutter and isn't the
+ideal way forward.
 
+On top of that, your extremely aggressive approach and apparent
+disregard for established processes and general sneakiness doesn't
+really earn you a lot of points here. There wasn't even an iota of
+recognition in your reply that you realize the way you've gone about
+this is not fine. That doesn't really sit too well, you know?
