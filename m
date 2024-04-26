@@ -1,143 +1,125 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B622EF8
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 20:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4F029411
+	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 20:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714161915; cv=none; b=SOTZ8UzpMqXBX/ihy+NJ18uR41Sg2ifFca97Qd+I8N2tx6MKlT1S/1JLUZV9SM+32Fm5sLE4MZCSuLOZIwV8N2DoV7kkRHDOr3HOWYpJ0sHjAs1sEPxvPf4OcUUSaVbb66kiq0DKVWAPrDILczSOEBWrKaDjNSsAm2Uxceu7r7U=
+	t=1714164159; cv=none; b=trOv/3jg/5W/ogMs0sY9OFayKp2nWrBs0xNydpvsMMp30bWeNHsJt8h7SGsqyxlGdw/J5fq069rtr+AnSYBP2LQyY+M7o1H6UsqNT4CjrihPTrhWnX8UcFbDtJAW+3fDNoKEdPEDy22+XArTLNRnaKokxeLL2Iwn99smhHkZZXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714161915; c=relaxed/simple;
-	bh=cLXIZG7H2f76asWB0E2xX4lGy2A4IEnjWRRZg1b1XLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LK9qDWMkhVZ/YHgNcGW0vJek2+FBPubIpGAm7Qcquv7+U3R799bmVURxakLghcsbTvjgR6VgAmVIIfbk0FpMbPtNdtWO59jQ8eitwuvawNkcJ/WIsVFEZriU1sHdQm+yr7rgu/Y+SLqfyA3OIfqg7Zo1vWeyCbHjr+/haotmI6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=T5xq9Y2a; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1714164159; c=relaxed/simple;
+	bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oVkF+5insrTBcvMgX7NYPUf3zuWm02IybYFCQH6Z2QG+Jd1eNPDcFXTQG340dr62eJiDxtH5fGLsx1qYtP21Lzzld1oTPs45THMv66K0POprFyaVCXMZaTh7qjpOSX7vB4nchzBCAsvMq7yLQ0VijSP37mnPxW0V2UdSSYtD2Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=Utfa0yAl; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="T5xq9Y2a"
+	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="Utfa0yAl"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a559928f46so1845179a91.0
+        for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 13:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1714161914; x=1745697914;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cLXIZG7H2f76asWB0E2xX4lGy2A4IEnjWRRZg1b1XLM=;
-  b=T5xq9Y2a0+ipFCem0CuX7BwrAFfd4w77RY5r8nFCLYvtsNZaxagOH9vv
-   LrJcY+3jxi2+p2qZtAXSwOQUWxzUtdf+ojWhMnRyed+VKT6tUuqggImyF
-   Z2YqhPtv0h2m4dNs3l/1GJKfN041THSnUJb41KyAL72f0OLYLWfbBIROE
-   s=;
-X-IronPort-AV: E=Sophos;i="6.07,233,1708387200"; 
-   d="scan'208";a="415003464"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 20:05:09 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:59231]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.37:2525] with esmtp (Farcaster)
- id 2ca18f87-bbe7-4b9b-914d-d8262036949a; Fri, 26 Apr 2024 20:05:08 +0000 (UTC)
-X-Farcaster-Flow-ID: 2ca18f87-bbe7-4b9b-914d-d8262036949a
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 26 Apr 2024 20:05:08 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 26 Apr
- 2024 20:05:04 +0000
-Message-ID: <d2566ff4-4203-4d12-a987-2a1cf94a484f@amazon.com>
-Date: Fri, 26 Apr 2024 22:05:02 +0200
+        d=penguintechs.org; s=google; t=1714164156; x=1714768956; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
+        b=Utfa0yAlIYObqardKkYCqUTkcqrKQ2Me77zx5pyNCHLHolWG+ZefG2pos8ynWh9kX1
+         o5OrGNmM/4cQW52BWUcvkwY568uKDARhkZi3+KJp6unKgADlcbyV3XIRi8DnGQf1d2SX
+         C3kHIn/xe7fdWBE6cbEJC+FlO+q2PBY9dckMw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714164156; x=1714768956;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
+        b=DZKnvTdYwLbEzPm7heMTSvePXOT6uArHbIO2lFqhZTUfnUjL2XCsLeHy2Eo2auSz7c
+         /68qKU8WvvtJX97PPgJ4nC5l5OTE0cB7YAVs4wg9aRna9UnmvhkuvHnLTKYZMutEmfbt
+         P2NamY1oqZAnVgG2DtCJFtoisS7fuCQPoty8AFdYrOP62jvaV9GvNFpwaLAzVZiL/Roy
+         SKN95yFqXV4nYIaVIOhIQYzL22SADa7AUdYral3LLDXNUswmcpdTrHzKLZn9mGfsbGuy
+         CJ4cTjQ6TtQiJpKFyMzYxou6ttvuf4FsxNkQdkBPFRgbJGitRrdvbeTVKBARNbITnFDj
+         C1pA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfaMZB/BW0zimdOn/K1TMpXuyrqmKgTdSaSLZ74tDtpTAats7bYu0aQSv3Fg7vmfkoeqv4ksG6ajwsnG/F1RLAbfSgxXPTkETs++g=
+X-Gm-Message-State: AOJu0YwKtHZEB0U26IhKvcQF4MtC1NhR4UTm35lLd26Jbah6I/XJpD8C
+	S8tFruZmpeqYDOKjMkdSrJrTCMZZel39RCnQz1h44rGu6rmsyB7zoOaXxF5izw==
+X-Google-Smtp-Source: AGHT+IEOscTEwtYTWB//iF95be8T91jBA3iUjB0TKOHlVlba448YymSeSS3FXYQvh1CygPxmaDwhbg==
+X-Received: by 2002:a17:90a:ad86:b0:2a2:5860:dea8 with SMTP id s6-20020a17090aad8600b002a25860dea8mr3784343pjq.7.1714164156414;
+        Fri, 26 Apr 2024 13:42:36 -0700 (PDT)
+Received: from braindead.localdomain ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
+        by smtp.gmail.com with ESMTPSA id 9-20020a17090a0b8900b002a2e4b593cdsm18187936pjr.51.2024.04.26.13.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 13:42:35 -0700 (PDT)
+From: Wren Turkal <wt@penguintechs.org>
+To: Zijun Hu <quic_zijuhu@quicinc.com>, linux-bluetooth@vger.kernel.org
+Cc: luiz.dentz@gmail.com, luiz.von.dentz@intel.com, marcel@holtmann.org,
+ linux-bluetooth@vger.kernel.org, bartosz.golaszewski@linaro.org,
+ krzysztof.kozlowski@linaro.org, regressions@lists.linux.dev,
+ kernel@quicinc.com, stable@vge.kernel.org,
+ Greg KH <gregkh@linuxfoundation.org>
+Subject:
+ Re: [PATCH v7 2/2] Bluetooth: qca: Fix BT enable failure for QCA6390 after
+ disable then warm reboot
+Date: Fri, 26 Apr 2024 13:42:33 -0700
+Message-ID: <5600892.rdbgypaU67@braindead.localdomain>
+In-Reply-To: <2024042330-boat-launch-aaec@gregkh>
+References:
+ <1713932807-19619-1-git-send-email-quic_zijuhu@quicinc.com>
+ <1713932807-19619-3-git-send-email-quic_zijuhu@quicinc.com>
+ <2024042330-boat-launch-aaec@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
- VMGENID updates"
-To: Babis Chalios <bchalios@amazon.es>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Theodore Ts'o
-	<tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann
-	<arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>, "Christian
- Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
-	<regressions@lists.linux.dev>
-References: <20240418114814.24601-1-Jason@zx2c4.com>
- <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
- <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
- <ZieoRxn-On0gD-H2@gardel-login>
- <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
- <Ziujox51oPzZmwzA@zx2c4.com> <1f09319c-56e6-44d7-9175-c6307089447b@amazon.es>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <1f09319c-56e6-44d7-9175-c6307089447b@amazon.es>
-X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Ck9uIDI2LjA0LjI0IDE1OjQzLCBCYWJpcyBDaGFsaW9zIHdyb3RlOgo+IEhpIEphc29uLAo+Cj4g
-T24gNC8yNi8yNCAxNDo1MiwgSmFzb24gQS4gRG9uZW5mZWxkIHdyb3RlOgo+PiBJIGRvbid0IHRo
-aW5rIGFkZGluZyBVQVBJIHRvIGFuIGluZGl2aWR1YWwgZGV2aWNlIGRyaXZlciBsaWtlIHRoaXMg
-aXMgYQo+PiBnb29kIGFwcHJvYWNoIGVzcGVjaWFsbHkgY29uc2lkZXJpbmcgdGhhdCB0aGUgdmly
-dGlvIGNoYW5nZXMgd2UKPj4gZGlzY3Vzc2VkIHNvbWUgdGltZSBhZ28gd2lsbCBsaWtlbHkgYXVn
-bWVudCB0aGlzIGFuZCBjcmVhdGUgYW5vdGhlcgo+PiBtZWFucyBvZiBhIHNpbWlsYXIgbm90aWZp
-Y2F0aW9uLiBBbmQgZ2l2ZW4gdGhhdCB0aGlzIGludGVyc2VjdHMgd2l0aAo+PiBvdGhlciB1c2Vy
-c3BhY2Utb3JpZW50ZWQgd29yayBJIGhvcGUgdG8gZ2V0IGJhY2sgdG8gcHJldHR5IHNvb24sIEkg
-dGhpbmsKPj4gaW50cm9kdWNpbmcgc29tZSBhZGhvYyBtZWNoYW5pc20gbGlrZSB0aGlzIGFkZHMg
-Y2x1dHRlciBhbmQgaXNuJ3QgdGhlCj4+IGlkZWFsIHdheSBmb3J3YXJkLgo+Pgo+Cj4gQ29ycmVj
-dCBtZSBpZiBJJ20gd3JvbmcsIGJ1dCB0aGUgdmlydGlvIGNoYW5nZXMgd2VyZSBtZWFudCB0byBt
-ZWFuIAo+ICJwbGVhc2UKPiByZXNlZWQgeW91ciBQUk5HcyIuIFRoYXQncyB3aHkgd2Ugd2FudGVk
-IHRvIHJvdXRlIHRoZW0gdmlhIHJhbmRvbS5jLiBXZQo+IGRlc2lnbmVkIHRoZW0gc3BlY2lmaWNh
-bGx5IHNvIHRoYXQgdmlydGlvLXJuZyB3b3VsZCBiZSBvbmx5IG9uZSBvZiB0aGUgCj4gcG90ZW50
-aWFsCj4gc3lzdGVtcyB0aGF0IHdvdWxkIGVtaXQgc3VjaCBub3RpZmljYXRpb25zLCB3aGVyZWFz
-IG90aGVyIHN5c3RlbXMgCj4gbWlnaHQgaGF2ZQo+IG5vdGhpbmcgdG8gZG8gd2l0aCBWTSBldmVu
-dHMuCj4KPiBXaXRoIHRoYXQgaW4gbWluZCwgY291bGQgeW91IGRlc2NyaWJlIGhvdyB0aGVzZSBl
-dmVudHMgd291bGQgYmUgdXNlZnVsIAo+IHRvIHRoZQo+IHVzZSBjYXNlIG9mIExlbm5hcnQ/IHN5
-c3RlbWQgZG9lcyBub3QgbmVlZCBhIG5vdGlmaWNhdGlvbiBldmVyeSB0aW1lIAo+IHRoZSBzeXN0
-ZW0KPiBiZWxpZXZlcyBQUk5HcyBuZWVkIHRvIGJlIHJlc2VlZGVkLiBJdCBleHBsaWNpdGx5IG5l
-ZWRzIGEgbm90aWZpY2F0aW9uIAo+IHdoZW4gYSBWTQo+IHdhcyBjbG9uZWQuIFRoaXMgaGFzIG5v
-dGhpbmcgdG8gZG8gd2l0aCBQUk5HcyBhbmQgSSBkb24ndCBiZWxpZXZlIAo+IHJhbmRvbS5jLAo+
-IHZpcnRpby1ybmcsIG9yIHZnZXRyYW5kKCkgc2hvdWxkIGJlIHJlc3BvbnNpYmxlIGZvciBkZWxp
-dmVyaW5nIHRoaXMuCgoKSSBzZWNvbmQgdGhpcy4gQSBWTSBjbG9uZSBldmVudCBtYXkgYmUgb25l
-IG9mIG11bHRpcGxlIGV2ZW50cyB0aGF0IGNhbiAKY2F1c2UgYW4gUk5HIHJlc2VlZCBldmVudC4g
-VGhpcyBpcyB3aGF0IEJhYmlzJyBwYXRjaGVzIHRvIHByb3BhZ2F0ZSBzdWNoIAphbiBldmVudFsx
-XSBpbXBsZW1lbnRlZDogQSBuZXcgdHlwZSBvZiBtdWx0aXBsZXhlZCBldmVudCB0aGF0IGZlZWRz
-IGZyb20gCm11bHRpcGxlIHNvdXJjZXM7IG1vc3Qgbm90YWJseSAqbm90KiBmcm9tIFZNR2VuSUQu
-CgpEdWUgeW91ciByZWx1Y3RhbmNlIHRvIGVuYWJsZSB1c2VyIHNwYWNlIFBSTkdzIHRvIGdldCBh
-bnkgbm90aW9uIG9mIApyZXNlZWQgZXZlbnRzIFsyXSwgd2UgaGF2ZSBzaW5jZSBhYmFuZG9uZWQg
-dGhhdCB3aG9sZSBSTkcgcmVzZWVkIGV2ZW50IAphcHByb2FjaDogR29pbmcgZm9yd2FyZCwgZm9y
-IG91ciBlbnZpcm9ubWVudHMsIHdlJ2xsIHNpbXBseSBtYW5kYXRlIHRoYXQgClBSTkdzIGFsd2F5
-cyBtaXggaW4gcmFuZG9tbmVzcyB0aGF0IGlzIGd1YXJhbnRlZWQgZGlmZmVyZW50IHBvc3QtY2xv
-bmUgCihzdWNoIGFzIFJEUkFORCkuIFlvdSB3YW50IGEgY2xvbmUgc2FmZSBzeXN0ZW0/IFVzZSBv
-bmUgdGhhdCBkb2VzIChmYXN0IAphbmQgbm9uLWJyb2tlbikgUkRSQU5ELgoKSG93ZXZlciwgVk0g
-Y2xvbmUgZXZlbnRzIGFyZSB1c2VmdWwgZm9yIG90aGVyIHNpdHVhdGlvbnMgYXMgYWxsIG9mIHVz
-IApvdXRsaW5lZCBtdWx0aXBsZSB0aW1lcyBpbiB0aGlzIGFuZCBwcmV2aW91cyB0aHJlYWRzLiBX
-aGlsZSB5b3UgY2FuIHVzZSAKVk0gY2xvbmUgZXZlbnRzIGFzIGEgc291cmNlIGZvciBSTkcgcmVz
-ZWVkIGV2ZW50cywgeW91IGNhbiBub3QgdXNlIFJORyAKcmVzZWVkIGV2ZW50cyAob3IgYSBzbmFw
-c2hvdCBzYWZlIFJORyBzb3VyY2UgbGlrZSAvZGV2L3JhbmRvbSkgYXMgCmluZGljYXRvciBmb3Ig
-Vk0gY2xvbmVzLCBiZWNhdXNlIHRoZXkgd2lsbCB0cmlnZ2VyIG1vcmUgb2Z0ZW4gYW5kIGhlbmNl
-IApjYXVzZSB1bmRlc2lyZWQgc2lkZSBlZmZlY3RzLiBZb3UgbWF5IHdhbnQgYSByZXNlZWQgZXZl
-cnkgNjBzLCBidXQgCnN1cmVseSBkb24ndCB3YW50IGEgbmV3IE1BQyBhZGRyZXNzIGV2ZXJ5IDYw
-IHNlY29uZHMsIHJpZ2h0PyA6KQoKTm93LCB0aGVvcmV0aWNhbGx5IEkgY2FuIHNlZSBzb21lIG1l
-cml0IGZvciBhIHNpbmdsZSwgYWJzdHJhY3RlZCBldmVudCAKc291cmNlIGZvciBWTSBjbG9uZXMg
-b3ZlciBhIHBlci1kcml2ZXIgb25lLiBCdXQgcHJhY3RpY2FsbHksIGJldHdlZW4gClZNR2VuSUQg
-b24gQUNQSSBhbmQgRGV2aWNlIFRyZWUgc3lzdGVtcywgdGhlcmUgYXJlIHZlcnkgZm9yIHBsYXRm
-b3JtcyAKdGhhdCBjYXJlIGFib3V0IHNhZmUgVk0gc25hcHNob3RzIGFuZCB3b3VsZG4ndCAianVz
-dCB3b3JrIi4gVGhlIG9ubHkgb25lIApJIGNhbiB0aGluayBvZiBhdG0gaXMgczM5MHguIEkgZG9u
-J3Qga25vdyBpZiBhbiBhYnN0cmFjdGlvbiAtIGxpa2UgCmFub3RoZXIgZHJpdmVyIHRoYXQgc2lt
-cGx5IHByb3hpZXMgbm90aWZpY2F0aW9ucyAtIHdvdWxkIGJlIHdvcnRoIGl0LiBPciAKaWYgaW4g
-dGhhdCBjYXNlIHdlJ2QganVzdCBleHBhbmQgdGhlIHZlcnkgc2FtZSB2bWdlbmlkIGRyaXZlciB0
-byB0aGF0IApvdGhlciBvbmUtb2ZmIHBsYXRmb3JtIHRoYXQgaGFwcGVucyB0byBydW4gd2l0aG91
-dCBEVCBvciBBQ1BJLgoKU28sIG92ZXJhbGwsIEkgc3RpbGwgZG9uJ3Qgc2VlIGFueSBiZXR0ZXIg
-cGF0aCBmb3J3YXJkIHRvIGdldCBhICJWTSAKY2xvbmVkIiBldmVudCBpbnRvIHN5c3RlbWQgdGhh
-biB0aGUgdWV2ZW50LgoKSmFzb24sIGNvdWxkIHlvdSBwbGVhc2Ugb3V0bGluZSBob3cgeW91ciAi
-b3RoZXIgdXNlcnNwYWNlLW9yaWVudGVkIHdvcmsgCnlvdSBob3BlIHRvIGdldCBiYWNrIHRvIHNv
-b24iIHdvdWxkIGhlbHAgd2l0aCB0aGUgc3lzdGVtZCB1c2UgY2FzZT8KCgpBbGV4CgpbMV0gaHR0
-cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDIzMDgyMzA5MDEwNy42NTc0OS0xLWJjaGFsaW9z
-QGFtYXpvbi5lcy8KWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvWlBYc3VoWEpoTjlR
-M2hmSEB6eDJjNC5jb20vCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21i
-SApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3Rp
-YW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBD
-aGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUg
-Mjg5IDIzNyA4NzkKCgo=
+On Tuesday, April 23, 2024 9:34:43=E2=80=AFPM PDT Greg KH wrote:
+> On Wed, Apr 24, 2024 at 12:26:47PM +0800, Zijun Hu wrote:
+> > From: Zijun Hu <zijuhu@qti.qualcomm.com>
+> >=20
+> > Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+> > serdev") will cause below regression issue:
+> >=20
+> > BT can't be enabled after below steps:
+> > cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+> > if property enable-gpios is not configured within DT|ACPI for QCA6390.
+> >=20
+> > The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+> > during reboot, but also introduces this regression issue regarding above
+> > steps since the VSC is not sent to reset controller during warm reboot.
+> >=20
+> > Fixed by sending the VSC to reset controller within qca_serdev_shutdown=
+()
+> > once BT was ever enabled, and the use-after-free issue is also be fixed
+> > by this change since serdev is still opened when send to serdev.
+> >=20
+> > Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+> > serdev") Cc: stable@vge.kernel.org
+>=20
+> That is not a valid email address :(
+
+@ziljun, can you please post this patch in a new patch series by itself? Th=
+e=20
+warm boot problem is fixed by this patch, and I think it would be better to=
+=20
+have a thread dedicated to this fix so that it doesn't get lost.
+
+=46WIW, I think that this may be the correct technical change. I would like=
+ to=20
+try to help get this patch landed, and I think a clean thread for only this=
+=20
+change would help.
+
+Just so everyone is aware, I am a concerned user of the hardware, and not a=
+=20
+kernel dev myself. I have tested this change. This patch on top of Linus'=20
+mainline does allow qca6390 to work after warm reboot on my laptop.
+
+wt
+=2D-=20
+You're more amazing than you think!
+
+
 
