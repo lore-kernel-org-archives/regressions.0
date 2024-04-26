@@ -1,173 +1,110 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAED1879
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 02:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307612F2F
+	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 06:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714099530; cv=none; b=ZOZCRroeQp1BculNTTNdaQT83yO4z/vb/8l3+ytQ+qZMhl7kRHYZM1nkFf7M1MhpnvJolJR4Qcm7+7dFzZKn6FVBrIfhLhaIHYsRX52cRYsx2Ei1m22uvD8Zfed1miSAYuqdYGR1Bsw1kX/314n84FpcEexVogdnI4SkAbxjMF4=
+	t=1714112268; cv=none; b=ONk9axh331q35P2XzLpj40Yczy6AGQO6pDiJekFSz1UI8mBW8U+8RecsBfmfhtDnWiHsiGmQRW58vu3G/a4Y0W6WePr/qg3w9Tx1yS7EqSEEsh7APZF0gwrCmp/2ywD0S+uHJwK53HDLfysh3ZuPnIUcQDsMMkc4WVdpTZGfd0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714099530; c=relaxed/simple;
-	bh=Uh15HOXdVPTXlOc1wcePfZ+aybRFyXt+28ErjxGscc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=er+y0pnHOzXfOKa6ylJ1DNtPk4qHleXW4rCG1rMc6FQsU5hLkCrXACwzEKqrFcbLtAJJXWZKYo2wbzV9DClXmvchP5j3iXCCpdAM+M08pvp6OQ1k9Dhpu/XctVmwloMxZufoOmpdzz2/nM1m4e3veUjT0s5UgZKvaJw/YXKcDJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HZAsBwMR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HZAsBwMR"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q1BdDQ028099;
-	Fri, 26 Apr 2024 02:45:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=DI7GxnJPjKmih5BwPgdk3yn0NGBLhLa/++djMIvNyTU=; b=HZ
-	AsBwMRSHJzLmFBqpCqNW1NhCGLEcN0K74fmJ7kc1J6ouv6NSBdogoDW/f3A7ZJBt
-	wt2CzVhaHaugGaEkImc9ipRRjo4xHrB7tFCYxmnjhZcxHs4s+RUDRTvPNJhMKvmb
-	qpjlf8a42ChB1qpCuTuG5mZhMPGjwqE0hfWwpM1clckLvamkeyGClRy+g+vCFBUZ
-	jFuvEm+00fjJEn29eqTrHGVLcYaLReV4MIhnJlnWaLP1bUWAls1QaggBl/RrhJk+
-	0iP2BOh/00z/b4WybHZNwIPP3jgp4qB35K0I6OVT21+ugZMMp0wgaEiB1c1KiKVb
-	nwWZVcm/ENKNV0P+cRPw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqenh46j7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 02:45:19 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43Q2jIGF006187
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 02:45:18 GMT
-Received: from [10.253.14.224] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
- 2024 19:45:12 -0700
-Message-ID: <3d61680a-79da-4a5b-a5c8-feb6f41bd5a6@quicinc.com>
-Date: Fri, 26 Apr 2024 10:45:09 +0800
+	s=arc-20240116; t=1714112268; c=relaxed/simple;
+	bh=quehoQ6DdK+mQ9RBHc2jh07gWC1RMDRjLQT8IC7XHaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfvB2XYzWWIOuO7FozltuGar47kKAwtNQ5ok9wUBHvYZBhFfYEZdSOmVxH9Br+Nc893eFokJs90voL8skJUBEUXnN0RubmPoNvnFyIHdzY5z2lYQ9RKdHCUceDjjyfqUxvcgkG3+gaRd40UxaL44S21e67mi9fxfhk/N/gOipvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-0001Ls-K8; Fri, 26 Apr 2024 08:17:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-00EOe0-4e; Fri, 26 Apr 2024 08:17:42 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-0097PL-0C;
+	Fri, 26 Apr 2024 08:17:42 +0200
+Date: Fri, 26 Apr 2024 08:17:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: kernel@pengutronix.de, linux-pwm@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] leds: pwm: Disable PWM when going to suspend
+Message-ID: <yitqw57rdkr44ly32sxukxa2m4a6jm74upfxc74dmbklucl6kq@3ni7emsqgzx4>
+References: <20240417144943.GA2399047@google.com>
+ <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] Bluetooth: qca: Fix BT enable failure for QCA6390
-To: Elliot Berman <quic_eberman@quicinc.com>
-CC: Wren Turkal <wt@penguintechs.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>,
-        <marcel@holtmann.org>, <linux-bluetooth@vger.kernel.org>,
-        <bartosz.golaszewski@linaro.org>, <regressions@lists.linux.dev>,
-        <kernel@quicinc.com>, Greg KH
-	<gregkh@linuxfoundation.org>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        "Bjorn
- Andersson" <andersson@kernel.org>
-References: <1713919602-5812-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713919602-5812-2-git-send-email-quic_zijuhu@quicinc.com>
- <349b27a5-d2d3-46f1-b002-44f81e0cedef@linaro.org>
- <e8cd122d-e342-45c2-b078-a4ca2d8dcfff@quicinc.com>
- <dfe18768-f6da-4c60-880d-deeae3c3b04d@linaro.org>
- <8ae32009-5f5e-49a1-88a1-e330f0614f60@quicinc.com>
- <5e363318-c6e4-4874-8026-7940b434d583@linaro.org>
- <2020a858-c3d9-48a7-ad59-3691c6b98fb2@penguintechs.org>
- <053f51ae-1eb7-4ea8-bb04-38bfa1e0b8f5@quicinc.com>
- <20240425103329807-0700.eberman@hu-eberman-lv.qualcomm.com>
-Content-Language: en-US
-From: quic_zijuhu <quic_zijuhu@quicinc.com>
-In-Reply-To: <20240425103329807-0700.eberman@hu-eberman-lv.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uLgcg69HNtqgMPCt2htnuzPCT_DOcMq_
-X-Proofpoint-GUID: uLgcg69HNtqgMPCt2htnuzPCT_DOcMq_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_03,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 bulkscore=0 clxscore=1011 suspectscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404260015
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="difcfriydj6k3jns"
+Content-Disposition: inline
+In-Reply-To: <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On 4/26/2024 1:37 AM, Elliot Berman wrote:
-> Hi Zijun,
-> 
-> On Wed, Apr 24, 2024 at 01:33:50PM +0800, quic_zijuhu wrote:
->> On 4/24/2024 1:04 PM, Wren Turkal wrote:
->>> On 4/23/24 9:31 PM, Krzysztof Kozlowski wrote:
->>>> On 24/04/2024 06:18, quic_zijuhu wrote:
->>>>> On 4/24/2024 12:10 PM, Krzysztof Kozlowski wrote:
->>>>>> On 24/04/2024 06:07, quic_zijuhu wrote:
->>>>>>> On 4/24/2024 12:06 PM, Krzysztof Kozlowski wrote:
->>>>>>>> On 24/04/2024 02:46, Zijun Hu wrote:
->>>>>>>>> Commit 56d074d26c58 ("Bluetooth: hci_qca: don't use IS_ERR_OR_NULL()
->>>>>>>>> with gpiod_get_optional()") will cause below serious regression
->>>>>>>>> issue:
->>>>>>>>>
->>>>>>>>> BT can't be enabled any more after below steps:
->>>>>>>>> cold boot -> enable BT -> disable BT -> BT enable failure
->>>>>>>>> if property enable-gpios is not configured within DT|ACPI for
->>>>>>>>> QCA6390.
->>>>>>>>>
->>>>>>>>> The commit wrongly changes flag @power_ctrl_enabled set logic for
->>>>>>>>> this
->>>>>>>>> case as shown by its below code applet and causes this serious
->>>>>>>>> issue.
->>>>>>>>> qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
->>>>>>>>>                                                 GPIOD_OUT_LOW);
->>>>>>>>> - if (IS_ERR_OR_NULL(qcadev->bt_en)) {
->>>>>>>>> + if (IS_ERR(qcadev->bt_en)) {
->>>>>>>>>        dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
->>>>>>>>>     power_ctrl_enabled = false;
->>>>>>>>>    }
->>>>>>>>>
->>>>>>>>> Fixed by reverting the mentioned commit for QCA6390.
->>>>>>>>>
->>>>>>>>> Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use
->>>>>>>>> IS_ERR_OR_NULL() with gpiod_get_optional()")
->>>>>>>>> Reported-by: Wren Turkal <wt@penguintechs.org>
->>>>>>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218726
->>>>>>>>> Link:
->>>>>>>>> https://lore.kernel.org/linux-bluetooth/ea20bb9b-6b60-47fc-ae42-5eed918ad7b4@quicinc.com/T/#m73d6a71d2f454bb03588c66f3ef7912274d37c6f
->>>>>>>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>>>>>>>> Tested-by: Wren Turkal <wt@penguintechs.org>
->>>>>>>>
->>>>>>>> No, Bartosz' patch should go.
->>>>>>>>
->>>>>>> what is Bartosz' patch.
->>>>>>
->>>>>> Srsly? You were Cc'ed on it. How many upstream patches on upstream
->>>>>> mailing lists do you receive that you lost track of them?
->>>>>>
->>>>> Bartosz' patch have basic serious mistook and logic error and have no
->>>>> any help for QCA6390, and it is not suitable regarding DTS usage.
->>>>
->>>> Really? Why you did not respond with comments then? Considering how
->>>> imprecise and vague you are in describing real issues, I have doubts in
->>>> your judgment here as well.
->>>
->>> Please slow down here. Zijun's patch works and Bartosz's patch does not.
->>> I don't think Zijun means any ill intent. I am replying to Bartosz's
->>> patch right now.
->>>
->> this is reporter's latest verification results. actually i don't have
->> much time for kernel upstream. i really hope my fix is able to merged
->> ASAP, it will help us to solve other possible impacted QCA controllers.
-> 
-> I saw you were planning to slow down for a minute. When you're ready to
-> work on these patches again, let's get them reviewed internally first.
-> Please check go/upstream for some helpful hints.
-> 
-thank you @Elliot for your reminder. i will learn go/upstream again
-before next upstream, and i will request for internal code review before
-do external upstream for further upstream.
-thank you Elliot again.
 
-> Thanks,
-> Elliot
-> 
+--difcfriydj6k3jns
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello Lee,
+
+On Wed, Apr 17, 2024 at 05:38:47PM +0200, Uwe Kleine-K=F6nig wrote:
+> On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> the PWM because an enabled PWM refuses to suspend. So check the
+> LED_SUSPENDED flag and depending on that set the .enabled property.
+>=20
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218559
+> Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED shoul=
+d be off")
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+>=20
+> On Wed, Apr 17, 2024 at 03:49:43PM +0100, Lee Jones wrote:
+> > On Tue, 16 Apr 2024, Uwe Kleine-K=F6nig wrote:
+> > > If you don't consider that suitable, I can create a patch that is eas=
+ier
+> > > to pick up.
+> >=20
+> > Yes, please submit it properly.
+
+Gentle ping. Even given the regression was introduced in v6.7-rc1
+already, I think this should go into v6.9. If you don't agree that's
+fine, but then getting it onto next to queue it for v6.10-rc1 at least
+would be great.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--difcfriydj6k3jns
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYrRwUACgkQj4D7WH0S
+/k5XXQf+Lk6n3RbWMZZNm8vnkZn09tLkBIs9ubRFmALUCL5rA7j63qNrJ3S3aqwr
+B5N01uxZuj5urnyux+OrIhBzYind99dVKfuudU1u7Db6BZuzeh85oMHSdle/f3ie
+y+amKsoRmr+bSMUmNIQnRVBcW2mz9x5IQE3JbMrIETWRTcxg8sL1M7tF4I6KyBGj
+oyqWtNoxIPlck90C2IS3GG1oxuzAtItCTZRr5iORf6TjUc+LPIgoI71CaxDpHUZo
+RQLpEMgBIa4PnTgZhlbAc/D4fLqP+s8Us44/3Xy0FHXCqttr6EGjJog0qFHrdd0U
+iJ2o47qFORbDqEDYHKFOwfXWyuC1UQ==
+=S8es
+-----END PGP SIGNATURE-----
+
+--difcfriydj6k3jns--
