@@ -1,146 +1,143 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893EA14F109
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 15:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B622EF8
+	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 20:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146138; cv=none; b=EzY0VG1zQW7gHKV1Mb9Z3CTE6Y1HtuxbDuJb3mxRZVLGmOGEwCdyWDXQAqG3TdjUhxuJyJOQ9+kJByWDyzjsH6UmYFiEzh1SLNVEydg/TxfwzvAT1zGZIm/armTVowO95Ioq3ByoBOjVOx2TVFOkSTNbUXBWiZhEwhHSN7/VvPY=
+	t=1714161915; cv=none; b=SOTZ8UzpMqXBX/ihy+NJ18uR41Sg2ifFca97Qd+I8N2tx6MKlT1S/1JLUZV9SM+32Fm5sLE4MZCSuLOZIwV8N2DoV7kkRHDOr3HOWYpJ0sHjAs1sEPxvPf4OcUUSaVbb66kiq0DKVWAPrDILczSOEBWrKaDjNSsAm2Uxceu7r7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146138; c=relaxed/simple;
-	bh=5aUkPQKXl0fmcyKi1yp1q6NI4zqtUpvcJOtYnfEulME=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f4wHD/aVbltXUrMcb62o2SUZwysdVJlX8rziDv95p5PG+f1nmvAFkiEBWvg5HP0zJh8EBh/E3pcDr5Oe0PH4uavxUZnBwCas/evVyMQrgkGh1+z/VtYh4Lfu6164GhTGeZfGBvTYqCQ91WAEjHb6eQzo3qp1bvhSA+8gGJfAOUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=s09jxD+i; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1714161915; c=relaxed/simple;
+	bh=cLXIZG7H2f76asWB0E2xX4lGy2A4IEnjWRRZg1b1XLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LK9qDWMkhVZ/YHgNcGW0vJek2+FBPubIpGAm7Qcquv7+U3R799bmVURxakLghcsbTvjgR6VgAmVIIfbk0FpMbPtNdtWO59jQ8eitwuvawNkcJ/WIsVFEZriU1sHdQm+yr7rgu/Y+SLqfyA3OIfqg7Zo1vWeyCbHjr+/haotmI6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=T5xq9Y2a; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="s09jxD+i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1714146134;
-	bh=5aUkPQKXl0fmcyKi1yp1q6NI4zqtUpvcJOtYnfEulME=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s09jxD+i4byT7++j6mCHoGUuuv9IGR81RKhOaNaSljb0RPr5SzRf3yxQ2YLipQVov
-	 slCoBsmaW2sA8t9RVchoBLzd39qWwz2Hv2koD+qL8lO0clBV2GJJ7TpYgGyNY1Kbrk
-	 oe4YFQKnKdzymJ1EZOsHHSzrnFdurGTjRpIqXtv15OR/+u30ll8dOeameUYNogZDW+
-	 c0L54ENVMFRvMqOdoE9Qp5y3fmaIt0bxbELFNi+JBAztvJ8CJ5bZDB+6t3NUb0LWfx
-	 mruXSXDEBI0T7o7RA2nRyh5CB3u7Qn2/FUKI5zvT1NTrB71AbId1JrOfLKDTwSpgr3
-	 KihDhaLbw821w==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 789473782157;
-	Fri, 26 Apr 2024 15:42:14 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [REGRESSION] next boot regression caused by RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
-Date: Fri, 26 Apr 2024 17:42:08 +0200
-Message-Id: <20240426154208.81894-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="T5xq9Y2a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1714161914; x=1745697914;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cLXIZG7H2f76asWB0E2xX4lGy2A4IEnjWRRZg1b1XLM=;
+  b=T5xq9Y2a0+ipFCem0CuX7BwrAFfd4w77RY5r8nFCLYvtsNZaxagOH9vv
+   LrJcY+3jxi2+p2qZtAXSwOQUWxzUtdf+ojWhMnRyed+VKT6tUuqggImyF
+   Z2YqhPtv0h2m4dNs3l/1GJKfN041THSnUJb41KyAL72f0OLYLWfbBIROE
+   s=;
+X-IronPort-AV: E=Sophos;i="6.07,233,1708387200"; 
+   d="scan'208";a="415003464"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 20:05:09 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:59231]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.37:2525] with esmtp (Farcaster)
+ id 2ca18f87-bbe7-4b9b-914d-d8262036949a; Fri, 26 Apr 2024 20:05:08 +0000 (UTC)
+X-Farcaster-Flow-ID: 2ca18f87-bbe7-4b9b-914d-d8262036949a
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 26 Apr 2024 20:05:08 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 26 Apr
+ 2024 20:05:04 +0000
+Message-ID: <d2566ff4-4203-4d12-a987-2a1cf94a484f@amazon.com>
+Date: Fri, 26 Apr 2024 22:05:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+To: Babis Chalios <bchalios@amazon.es>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, Theodore Ts'o
+	<tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann
+	<arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>, "Christian
+ Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
+	<regressions@lists.linux.dev>
+References: <20240418114814.24601-1-Jason@zx2c4.com>
+ <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+ <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+ <ZieoRxn-On0gD-H2@gardel-login>
+ <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
+ <Ziujox51oPzZmwzA@zx2c4.com> <1f09319c-56e6-44d7-9175-c6307089447b@amazon.es>
+Content-Language: en-US
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <1f09319c-56e6-44d7-9175-c6307089447b@amazon.es>
+X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-Hello,
-
-KernelCI has identified a next boot regression on the following
-Chromebooks, between next-20240416 and next-20240418:
-- Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
-  configuration used [1]
-- ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
-  used [2]
-
-The following kernel panic is reported in the logs:
-
-[    5.136433] BUG: kernel NULL pointer dereference, address: 0000000000000218
-[    5.143393] #PF: supervisor read access in kernel mode
-[    5.148529] #PF: error_code(0x0000) - not-present page
-[    5.153664] PGD 0 P4D 0 
-[    5.156203] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-[    5.161080] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc5-next-20240424 #1 a1639945aaee7370a5f0daa79d321d2bc0769584
-[    5.172023] Hardware name: LENOVO Morphius/Morphius, BIOS Google_Morphius.13434.60.0 10/08/2020
-[    5.180714] RIP: 0010:acpi_find_gpio+0x4b/0x103
-[    5.185246] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 38 31 c0 48 89 3c 24 e8 24 9a 04 00 48 8b 3c 24 48 8b 74 24 08 84 c0 74 04 48 8d 5f f0 <48> 8b 93 18 02 00 00 48 8d 83 18 02 00 00 31 c9 48 39 c2 75 10 48
-[    5.203988] RSP: 0018:ffffa5a0c0033b98 EFLAGS: 00010246
-[    5.209212] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa5a0c0033c24
-[    5.216341] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8a90c02a5420
-[    5.223470] RBP: ffffa5a0c0033c24 R08: ffffa5a0c0033c28 R09: fffffffffffcc098
-[    5.230599] R10: ffffffff96054f10 R11: fefefefefefefeff R12: ffff8a90c0ba6410
-[    5.237728] R13: ffffa5a0c0033c28 R14: ffffffff95da5d86 R15: 0000000000000000
-[    5.244857] FS:  0000000000000000(0000) GS:ffff8a90eae00000(0000) knlGS:0000000000000000
-[    5.252940] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.258684] CR2: 0000000000000218 CR3: 00000000b2a2e000 CR4: 00000000003506f0
-[    5.265813] Call Trace:
-[    5.268262]  <TASK>
-[    5.270367]  ? __die_body+0x1b/0x5d
-[    5.273861]  ? page_fault_oops+0x340/0x3dc
-[    5.277957]  ? prb_read_valid+0x14/0x1a
-[    5.281794]  ? srso_return_thunk+0x5/0x5f
-[    5.285806]  ? console_unlock+0x91/0xc0
-[    5.289644]  ? exc_page_fault+0x1e2/0x502
-[    5.293658]  ? asm_exc_page_fault+0x22/0x30
-[    5.297846]  ? acpi_find_gpio+0x4b/0x103
-[    5.301769]  ? acpi_find_gpio+0x3a/0x103
-[    5.305694]  ? kvasprintf+0x77/0xba
-[    5.309186]  gpiod_find_and_request+0xd5/0x395
-[    5.313634]  devm_fwnode_gpiod_get_index+0x76/0xb1
-[    5.318427]  gpio_keys_probe+0x43f/0x933
-[    5.322353]  ? srso_return_thunk+0x5/0x5f
-[    5.326365]  ? acpi_dev_pm_attach+0x96/0xb8
-[    5.330551]  ? __device_attach_driver+0x93/0x93
-[    5.335083]  platform_probe+0x3e/0x83
-[    5.338748]  really_probe+0x111/0x261
-[    5.342411]  __driver_probe_device+0xc5/0xf9
-[    5.346683]  driver_probe_device+0x1e/0x77
-[    5.350778]  __driver_attach+0xce/0xe7
-[    5.354530]  bus_for_each_dev+0x7c/0xc2
-[    5.358366]  ? kmalloc_trace_noprof+0x150/0x163
-[    5.362897]  bus_add_driver+0xf4/0x1e6
-[    5.366650]  driver_register+0xa6/0xe8
-[    5.370401]  ? atkbd_init+0x26/0x26
-[    5.373892]  do_one_initcall+0x80/0x1d9
-[    5.377730]  kernel_init_freeable+0x1be/0x206
-[    5.382088]  ? rest_init+0xbc/0xbc
-[    5.385491]  kernel_init+0x16/0x119
-[    5.388981]  ret_from_fork+0x24/0x38
-[    5.392558]  ? rest_init+0xbc/0xbc
-[    5.395961]  ret_from_fork_asm+0x11/0x20
-[    5.399887]  </TASK>
-[    5.402075] Modules linked in:
-[    5.405133] CR2: 0000000000000218
-[    5.408450] ---[ end trace 0000000000000000 ]---
-[    5.413064] RIP: 0010:acpi_find_gpio+0x4b/0x103
-[    5.417592] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 38 31 c0 48 89 3c 24 e8 24 9a 04 00 48 8b 3c 24 48 8b 74 24 08 84 c0 74 04 48 8d 5f f0 <48> 8b 93 18 02 00 00 48 8d 83 18 02 00 00 31 c9 48 39 c2 75 10 48
-[    5.436334] RSP: 0018:ffffa5a0c0033b98 EFLAGS: 00010246
-[    5.441558] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa5a0c0033c24
-[    5.448687] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8a90c02a5420
-[    5.455816] RBP: ffffa5a0c0033c24 R08: ffffa5a0c0033c28 R09: fffffffffffcc098
-[    5.462945] R10: ffffffff96054f10 R11: fefefefefefefeff R12: ffff8a90c0ba6410
-[    5.470074] R13: ffffa5a0c0033c28 R14: ffffffff95da5d86 R15: 0000000000000000
-[    5.477203] FS:  0000000000000000(0000) GS:ffff8a90eae00000(0000) knlGS:0000000000000000
-[    5.485286] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.491026] CR2: 0000000000000218 CR3: 00000000b2a2e000 CR4: 00000000003506f0
-[    5.498155] Kernel panic - not syncing: Fatal exception
-
-
-The issue is still present on next-20240426.
-
-Sending this report in order to track the regression while a fix is
-identified.
-
-Best,
-
-Laura
-
-[1] https://pastebin.com/raw/C8ZVg4s2 
-[2] https://pastebin.com/raw/iej1hNWw
-
-#regzbot introduced: next-20240416..next-20240418
+Ck9uIDI2LjA0LjI0IDE1OjQzLCBCYWJpcyBDaGFsaW9zIHdyb3RlOgo+IEhpIEphc29uLAo+Cj4g
+T24gNC8yNi8yNCAxNDo1MiwgSmFzb24gQS4gRG9uZW5mZWxkIHdyb3RlOgo+PiBJIGRvbid0IHRo
+aW5rIGFkZGluZyBVQVBJIHRvIGFuIGluZGl2aWR1YWwgZGV2aWNlIGRyaXZlciBsaWtlIHRoaXMg
+aXMgYQo+PiBnb29kIGFwcHJvYWNoIGVzcGVjaWFsbHkgY29uc2lkZXJpbmcgdGhhdCB0aGUgdmly
+dGlvIGNoYW5nZXMgd2UKPj4gZGlzY3Vzc2VkIHNvbWUgdGltZSBhZ28gd2lsbCBsaWtlbHkgYXVn
+bWVudCB0aGlzIGFuZCBjcmVhdGUgYW5vdGhlcgo+PiBtZWFucyBvZiBhIHNpbWlsYXIgbm90aWZp
+Y2F0aW9uLiBBbmQgZ2l2ZW4gdGhhdCB0aGlzIGludGVyc2VjdHMgd2l0aAo+PiBvdGhlciB1c2Vy
+c3BhY2Utb3JpZW50ZWQgd29yayBJIGhvcGUgdG8gZ2V0IGJhY2sgdG8gcHJldHR5IHNvb24sIEkg
+dGhpbmsKPj4gaW50cm9kdWNpbmcgc29tZSBhZGhvYyBtZWNoYW5pc20gbGlrZSB0aGlzIGFkZHMg
+Y2x1dHRlciBhbmQgaXNuJ3QgdGhlCj4+IGlkZWFsIHdheSBmb3J3YXJkLgo+Pgo+Cj4gQ29ycmVj
+dCBtZSBpZiBJJ20gd3JvbmcsIGJ1dCB0aGUgdmlydGlvIGNoYW5nZXMgd2VyZSBtZWFudCB0byBt
+ZWFuIAo+ICJwbGVhc2UKPiByZXNlZWQgeW91ciBQUk5HcyIuIFRoYXQncyB3aHkgd2Ugd2FudGVk
+IHRvIHJvdXRlIHRoZW0gdmlhIHJhbmRvbS5jLiBXZQo+IGRlc2lnbmVkIHRoZW0gc3BlY2lmaWNh
+bGx5IHNvIHRoYXQgdmlydGlvLXJuZyB3b3VsZCBiZSBvbmx5IG9uZSBvZiB0aGUgCj4gcG90ZW50
+aWFsCj4gc3lzdGVtcyB0aGF0IHdvdWxkIGVtaXQgc3VjaCBub3RpZmljYXRpb25zLCB3aGVyZWFz
+IG90aGVyIHN5c3RlbXMgCj4gbWlnaHQgaGF2ZQo+IG5vdGhpbmcgdG8gZG8gd2l0aCBWTSBldmVu
+dHMuCj4KPiBXaXRoIHRoYXQgaW4gbWluZCwgY291bGQgeW91IGRlc2NyaWJlIGhvdyB0aGVzZSBl
+dmVudHMgd291bGQgYmUgdXNlZnVsIAo+IHRvIHRoZQo+IHVzZSBjYXNlIG9mIExlbm5hcnQ/IHN5
+c3RlbWQgZG9lcyBub3QgbmVlZCBhIG5vdGlmaWNhdGlvbiBldmVyeSB0aW1lIAo+IHRoZSBzeXN0
+ZW0KPiBiZWxpZXZlcyBQUk5HcyBuZWVkIHRvIGJlIHJlc2VlZGVkLiBJdCBleHBsaWNpdGx5IG5l
+ZWRzIGEgbm90aWZpY2F0aW9uIAo+IHdoZW4gYSBWTQo+IHdhcyBjbG9uZWQuIFRoaXMgaGFzIG5v
+dGhpbmcgdG8gZG8gd2l0aCBQUk5HcyBhbmQgSSBkb24ndCBiZWxpZXZlIAo+IHJhbmRvbS5jLAo+
+IHZpcnRpby1ybmcsIG9yIHZnZXRyYW5kKCkgc2hvdWxkIGJlIHJlc3BvbnNpYmxlIGZvciBkZWxp
+dmVyaW5nIHRoaXMuCgoKSSBzZWNvbmQgdGhpcy4gQSBWTSBjbG9uZSBldmVudCBtYXkgYmUgb25l
+IG9mIG11bHRpcGxlIGV2ZW50cyB0aGF0IGNhbiAKY2F1c2UgYW4gUk5HIHJlc2VlZCBldmVudC4g
+VGhpcyBpcyB3aGF0IEJhYmlzJyBwYXRjaGVzIHRvIHByb3BhZ2F0ZSBzdWNoIAphbiBldmVudFsx
+XSBpbXBsZW1lbnRlZDogQSBuZXcgdHlwZSBvZiBtdWx0aXBsZXhlZCBldmVudCB0aGF0IGZlZWRz
+IGZyb20gCm11bHRpcGxlIHNvdXJjZXM7IG1vc3Qgbm90YWJseSAqbm90KiBmcm9tIFZNR2VuSUQu
+CgpEdWUgeW91ciByZWx1Y3RhbmNlIHRvIGVuYWJsZSB1c2VyIHNwYWNlIFBSTkdzIHRvIGdldCBh
+bnkgbm90aW9uIG9mIApyZXNlZWQgZXZlbnRzIFsyXSwgd2UgaGF2ZSBzaW5jZSBhYmFuZG9uZWQg
+dGhhdCB3aG9sZSBSTkcgcmVzZWVkIGV2ZW50IAphcHByb2FjaDogR29pbmcgZm9yd2FyZCwgZm9y
+IG91ciBlbnZpcm9ubWVudHMsIHdlJ2xsIHNpbXBseSBtYW5kYXRlIHRoYXQgClBSTkdzIGFsd2F5
+cyBtaXggaW4gcmFuZG9tbmVzcyB0aGF0IGlzIGd1YXJhbnRlZWQgZGlmZmVyZW50IHBvc3QtY2xv
+bmUgCihzdWNoIGFzIFJEUkFORCkuIFlvdSB3YW50IGEgY2xvbmUgc2FmZSBzeXN0ZW0/IFVzZSBv
+bmUgdGhhdCBkb2VzIChmYXN0IAphbmQgbm9uLWJyb2tlbikgUkRSQU5ELgoKSG93ZXZlciwgVk0g
+Y2xvbmUgZXZlbnRzIGFyZSB1c2VmdWwgZm9yIG90aGVyIHNpdHVhdGlvbnMgYXMgYWxsIG9mIHVz
+IApvdXRsaW5lZCBtdWx0aXBsZSB0aW1lcyBpbiB0aGlzIGFuZCBwcmV2aW91cyB0aHJlYWRzLiBX
+aGlsZSB5b3UgY2FuIHVzZSAKVk0gY2xvbmUgZXZlbnRzIGFzIGEgc291cmNlIGZvciBSTkcgcmVz
+ZWVkIGV2ZW50cywgeW91IGNhbiBub3QgdXNlIFJORyAKcmVzZWVkIGV2ZW50cyAob3IgYSBzbmFw
+c2hvdCBzYWZlIFJORyBzb3VyY2UgbGlrZSAvZGV2L3JhbmRvbSkgYXMgCmluZGljYXRvciBmb3Ig
+Vk0gY2xvbmVzLCBiZWNhdXNlIHRoZXkgd2lsbCB0cmlnZ2VyIG1vcmUgb2Z0ZW4gYW5kIGhlbmNl
+IApjYXVzZSB1bmRlc2lyZWQgc2lkZSBlZmZlY3RzLiBZb3UgbWF5IHdhbnQgYSByZXNlZWQgZXZl
+cnkgNjBzLCBidXQgCnN1cmVseSBkb24ndCB3YW50IGEgbmV3IE1BQyBhZGRyZXNzIGV2ZXJ5IDYw
+IHNlY29uZHMsIHJpZ2h0PyA6KQoKTm93LCB0aGVvcmV0aWNhbGx5IEkgY2FuIHNlZSBzb21lIG1l
+cml0IGZvciBhIHNpbmdsZSwgYWJzdHJhY3RlZCBldmVudCAKc291cmNlIGZvciBWTSBjbG9uZXMg
+b3ZlciBhIHBlci1kcml2ZXIgb25lLiBCdXQgcHJhY3RpY2FsbHksIGJldHdlZW4gClZNR2VuSUQg
+b24gQUNQSSBhbmQgRGV2aWNlIFRyZWUgc3lzdGVtcywgdGhlcmUgYXJlIHZlcnkgZm9yIHBsYXRm
+b3JtcyAKdGhhdCBjYXJlIGFib3V0IHNhZmUgVk0gc25hcHNob3RzIGFuZCB3b3VsZG4ndCAianVz
+dCB3b3JrIi4gVGhlIG9ubHkgb25lIApJIGNhbiB0aGluayBvZiBhdG0gaXMgczM5MHguIEkgZG9u
+J3Qga25vdyBpZiBhbiBhYnN0cmFjdGlvbiAtIGxpa2UgCmFub3RoZXIgZHJpdmVyIHRoYXQgc2lt
+cGx5IHByb3hpZXMgbm90aWZpY2F0aW9ucyAtIHdvdWxkIGJlIHdvcnRoIGl0LiBPciAKaWYgaW4g
+dGhhdCBjYXNlIHdlJ2QganVzdCBleHBhbmQgdGhlIHZlcnkgc2FtZSB2bWdlbmlkIGRyaXZlciB0
+byB0aGF0IApvdGhlciBvbmUtb2ZmIHBsYXRmb3JtIHRoYXQgaGFwcGVucyB0byBydW4gd2l0aG91
+dCBEVCBvciBBQ1BJLgoKU28sIG92ZXJhbGwsIEkgc3RpbGwgZG9uJ3Qgc2VlIGFueSBiZXR0ZXIg
+cGF0aCBmb3J3YXJkIHRvIGdldCBhICJWTSAKY2xvbmVkIiBldmVudCBpbnRvIHN5c3RlbWQgdGhh
+biB0aGUgdWV2ZW50LgoKSmFzb24sIGNvdWxkIHlvdSBwbGVhc2Ugb3V0bGluZSBob3cgeW91ciAi
+b3RoZXIgdXNlcnNwYWNlLW9yaWVudGVkIHdvcmsgCnlvdSBob3BlIHRvIGdldCBiYWNrIHRvIHNv
+b24iIHdvdWxkIGhlbHAgd2l0aCB0aGUgc3lzdGVtZCB1c2UgY2FzZT8KCgpBbGV4CgpbMV0gaHR0
+cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDIzMDgyMzA5MDEwNy42NTc0OS0xLWJjaGFsaW9z
+QGFtYXpvbi5lcy8KWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvWlBYc3VoWEpoTjlR
+M2hmSEB6eDJjNC5jb20vCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21i
+SApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3Rp
+YW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBD
+aGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUg
+Mjg5IDIzNyA4NzkKCgo=
 
