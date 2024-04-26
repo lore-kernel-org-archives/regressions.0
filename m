@@ -1,51 +1,37 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE597147C6C
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 13:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7A242A99;
+	Fri, 26 Apr 2024 14:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139048; cv=none; b=YePP86PWhHa/fRiFyH2R0KKFIULr3tc3al3A3luiHWhg4kKHi2GEfvwCKgrtawmXKkNl9wTSFGck3h4lYyyx1C/RPtKVf1Mmi0i4+kNBZJUcr2mSdqVfUkHjVj4IFXuLJZhXqs5ZfZB9DTM2bWEj8BCkohCz7AXMXwH/x4qo8zE=
+	t=1714141254; cv=none; b=YfsbBoTNYtOVUfMaIzNtR1a8yXrWwLs8WI8bcxCUjE5BMOvByg1vJfo9VCya84xWZMQ5ASzZNdAaU4b/gOkajq5jHMSgnznlv9Dn679AGfaofeR1WjyriZGTO0QY4AMmIAzHURyxpbXwE/V5eHABYA/5A8G4n9C4wTpQJyIsCVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139048; c=relaxed/simple;
-	bh=UZi8TXx9a8fjUIlUFGYdMkWm4qzSrLxmXgditYXOGGQ=;
-	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=A9v4OOYb4tLQySPIBATOk3FdQ13NrcolksjmS2QhFNVmLZ9vrEsG0SPt/GPe0ZHZwt8fyZvUkdkh53o1sQbFANexck8DwXSG/PTJofMJTs79u8e263p4eFFowDTiwA4aM1Np1siqetoGfgeAT+uamAZLF2CgWbQJxUVEK8bZKmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b=RJo3fPxA; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1714141254; c=relaxed/simple;
+	bh=8jkgyD/xNuucw7rvhnzLJRKIcu6wFztv0aRmrlnfUZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJR1qmUXRwLH3xkvOXba1JNJjP8YvnCU1RH3doT0HaTNIgcv8pLAFQ9pQrnR1FXc1tzwLseHw2ghx0HfQ5hI8LyPAmk4n0YDJFnYv0RcaF6IT64Z3nAgrAh2UFL8lncmHQuqmJo2ANhBGLoIfK02X/VgqPLhRJn32FAlNIaOuWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zaDX0v68; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b="RJo3fPxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.es; i=@amazon.es; q=dns/txt; s=amazon201209;
-  t=1714139047; x=1745675047;
-  h=message-id:date:mime-version:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=fIo6JiWpcfuJdP9GV9sCAn384Sgayh04jC6d/BFYW58=;
-  b=RJo3fPxAuoSpOUotwAlANuQ9Jil20slZr1KwbtRTMlP/Go4bFPL48k0u
-   66qVAtC4B293edjuD88CsPsz3hwJko983QAWWu14FiQypyliyFf6dK5Gj
-   o6W2CLyk0OWHYrLoOY1OWAo/5OX2VzqYBZnWXGlLI3/S9tx7TEmnmaAHD
-   0=;
-X-IronPort-AV: E=Sophos;i="6.07,232,1708387200"; 
-   d="scan'208";a="290971147"
-Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when VMGENID
- updates"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 13:44:04 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:48160]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.21.244:2525] with esmtp (Farcaster)
- id 3e3dc579-38c9-447a-8e7d-ab1368f1c799; Fri, 26 Apr 2024 13:44:02 +0000 (UTC)
-X-Farcaster-Flow-ID: 3e3dc579-38c9-447a-8e7d-ab1368f1c799
-Received: from EX19D037EUB003.ant.amazon.com (10.252.61.119) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 26 Apr 2024 13:44:01 +0000
-Received: from [192.168.28.148] (10.1.213.14) by EX19D037EUB003.ant.amazon.com
- (10.252.61.119) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 26 Apr
- 2024 13:43:56 +0000
-Message-ID: <1f09319c-56e6-44d7-9175-c6307089447b@amazon.es>
-Date: Fri, 26 Apr 2024 15:43:51 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zaDX0v68"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=9rYvBQe6TsxDQQVkhjWduuSGKAR6ii1CCvqbJyEHClQ=;
+	t=1714141252; x=1714573252; b=zaDX0v684QVpHQf9YAydL3ucIOmg3RGAirYZQYYZ9qAmwy2
+	AmNKIO+BF97Kpwc3suVX4vfw1Frk4utWAf931N8o3FTL6xaQXXJXuj/1etLXMY8mKcUVqC+QSK2Ju
+	uY0RHVIv6lDxnP6zLfLQoKDdeb20m8oD9xyAuGnnrY7RWxkS3B8EJ0+0fDwKtiI+rdmMF/97R/Pxq
+	4ZRxCvwajFkGrHsUwxUT8vXM6iE3rxHCvXDXi4p1n4FLbOAxGtJUd6n0/B24cuT2TqgJvDKT1ScwX
+	HJRJuUtTq5Ypgseba+M5ckRtMASaVERpjaPmapu51Bp5yqGeJ7rtZojvieNb+8DA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s0MRT-0006Bh-4R; Fri, 26 Apr 2024 16:20:47 +0200
+Message-ID: <94db60bf-c3f4-4217-a900-9c3eba29e180@leemhuis.info>
+Date: Fri, 26 Apr 2024 16:20:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,55 +39,132 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, Alexander Graf <graf@amazon.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Theodore Ts'o
-	<tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann
-	<arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>, "Christian
- Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
-	<regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+To: Alexander Graf <graf@amazon.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lennart Poettering <mzxreary@0pointer.de>, Babis Chalios
+ <bchalios@amazon.es>, Theodore Ts'o <tytso@mit.edu>,
+ "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd Bergmann <arnd@arndb.de>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ Christian Brauner <brauner@kernel.org>, regressions@lists.linux.dev,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org
 References: <20240418114814.24601-1-Jason@zx2c4.com>
  <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
- <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
- <ZieoRxn-On0gD-H2@gardel-login>
- <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
- <Ziujox51oPzZmwzA@zx2c4.com>
-Content-Language: en-US
-From: Babis Chalios <bchalios@amazon.es>
-In-Reply-To: <Ziujox51oPzZmwzA@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D036UWC003.ant.amazon.com (10.13.139.214) To
- EX19D037EUB003.ant.amazon.com (10.252.61.119)
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
+In-Reply-To: <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714141252;18255fd5;
+X-HE-SMSGID: 1s0MRT-0006Bh-4R
 
-Hi Jason,
+On 22.04.24 09:51, Alexander Graf wrote:
+> [Adding CC list of original patch plus regression tracker]
+> 
+> On 18.04.24 13:48, Jason A. Donenfeld wrote:
+>> This reverts commit ad6bcdad2b6724e113f191a12f859a9e8456b26d. I had
+>> nak'd it, and Greg said on the thread that it links that he wasn't going
+>> to take it either, especially since it's not his code or his tree, but
+>> then, seemingly accidentally, it got pushed up some months later, in
+>> what looks like a mistake, with no further discussion in the linked
+>> thread. So revert it, since it's clearly not intended.
+> 
+> Reverting this patch creates a user space visible regression compared to
+> v6.8.
 
-On 4/26/24 14:52, Jason A. Donenfeld wrote:
-> I don't think adding UAPI to an individual device driver like this is a
-> good approach especially considering that the virtio changes we
-> discussed some time ago will likely augment this and create another
-> means of a similar notification. And given that this intersects with
-> other userspace-oriented work I hope to get back to pretty soon, I think
-> introducing some adhoc mechanism like this adds clutter and isn't the
-> ideal way forward.
+A theoretical one? Sure! But did any machines actually used in
+production break? From my understanding of Linus approach to the "no
+regression" rule this is what matters most here.
+
+And even if that was the case: It afaics also matters that the commit
+was just in proper releases for a short time frame. Linus thus might
+consider the whole situation along the lines of "we really did screw up
+here and to fix it we are bending the 'no regressions' rule slightly;
+sorry". Things like that iirc have happened in the past, but I might
+misremember here.
+
+Linus, if I got you wrong there, please speak up. But right now I'm
+inclined to not handle this as a regression and drop it from the tracking.
+
+Ciao, Thorsten
+
+> Please treat it as such.
 >
-
-Correct me if I'm wrong, but the virtio changes were meant to mean "please
-reseed your PRNGs". That's why we wanted to route them via random.c. We
-designed them specifically so that virtio-rng would be only one of the 
-potential
-systems that would emit such notifications, whereas other systems might have
-nothing to do with VM events.
-
-With that in mind, could you describe how these events would be useful 
-to the
-use case of Lennart? systemd does not need a notification every time the 
-system
-believes PRNGs need to be reseeded. It explicitly needs a notification 
-when a VM
-was cloned. This has nothing to do with PRNGs and I don't believe random.c,
-virtio-rng, or vgetrand() should be responsible for delivering this.
-
-Cheers,
-Babis
+> I'm slightly confused to see you passionate about this patch after you
+> ghosted the conversation you referenced:
+> 
+> 
+> https://lore.kernel.org/lkml/00d6172f-e291-4e96-9d3e-63ee8e60d556@amazon.com/
+> 
+> The purpose of this uevent is to notify systemd[1][2] (or similar) that
+> a VM clone event happened, so it can for example regenerate MAC
+> addresses if it generated them on boot, regenerate its unique machine id
+> or simply force rerequest a new DHCP lease.
+> 
+> I don't understand how there's any correlation or dependency to
+> vgetrandom() or anything RNG in this and why getting vgetrandom() merged
+> upstream is even something to talk about in the same line as this patch
+> [3].
+> 
+> We had a lengthy, constructive conversation with Ted at LPC last year
+> about the "PRNG and clone" use case and concluded that it's best for
+> everyone to simply assume the system could be cloned at any point, hence
+> always force intermix of RDRAND or comparable to any PRNG output. We
+> since no longer need an event for that case.
+> 
+> 
+> Alex
+> 
+> [1] https://github.com/systemd/systemd/issues/26380
+> [2] https://lore.kernel.org/lkml/ZJGNREN4tLzQXOJr@gardel-login/
+> [3]
+> https://lore.kernel.org/lkml/CAHmME9pxc-nO_xa=4+1CnvbnuefbRTJHxM7n817c_TPeoxzu_g@mail.gmail.com/
+> 
+> #regzbot introduced: 3aadf100f93d8081
+> 
+>>
+>> Fixes: ad6bcdad2b67 ("vmgenid: emit uevent when VMGENID updates")
+>> Cc: stable@vger.kernel.org
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Link: https://lore.kernel.org/r/20230531095119.11202-2-bchalios@amazon.es
+>> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+>> ---
+>>   drivers/virt/vmgenid.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+>> index b67a28da4702..a1c467a0e9f7 100644
+>> --- a/drivers/virt/vmgenid.c
+>> +++ b/drivers/virt/vmgenid.c
+>> @@ -68,7 +68,6 @@ static int vmgenid_add(struct acpi_device *device)
+>>   static void vmgenid_notify(struct acpi_device *device, u32 event)
+>>   {
+>>       struct vmgenid_state *state = acpi_driver_data(device);
+>> -    char *envp[] = { "NEW_VMGENID=1", NULL };
+>>       u8 old_id[VMGENID_SIZE];
+>>         memcpy(old_id, state->this_id, sizeof(old_id));
+>> @@ -76,7 +75,6 @@ static void vmgenid_notify(struct acpi_device
+>> *device, u32 event)
+>>       if (!memcmp(old_id, state->this_id, sizeof(old_id)))
+>>           return;
+>>       add_vmfork_randomness(state->this_id, sizeof(state->this_id));
+>> -    kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
+>>   }
+>>     static const struct acpi_device_id vmgenid_ids[] = {
+> 
+> 
+> 
+> 
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
+> 
+> 
