@@ -1,37 +1,49 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F8213C838
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 09:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D53144D24
+	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 11:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122337; cv=none; b=kyhmOqCzo/uJITXBSLGbaI4WVJaNILudGpKfKAq0tMVrbqGsfrq9PVsXphrIl7TaEwEHejgEOyE5o2WjldP+yXb97QY1SOgogaefkXWcxZ/iPA/LIqD2riz/KqqGU2UdBcGPgeQZ0W9i2uDcbW79YsaeiO+GX49YJ0SsGNsdoIY=
+	t=1714131208; cv=none; b=FW3DiN0pwDSSIU59a3zgKweUmohCytMuxVI4LlRBnwRYTm+lnnAcnK9pQuZw2yit+iOMtvA7aO5qAVsaBpqDknuvbMPHmeR2A5jHU9RwB3TFAaVCtjRXlmPFrXiPVkW2babcVw0rSbvjIgJUfJFEUASz6HIfhDivb1nVEAiBEBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714122337; c=relaxed/simple;
-	bh=7DYHAybeEIQ+KOBzGSPwYKKI54sUB+yPDcf1IzNZdy8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=EkVt91+4XUMI34fo7GbQNga1P5MpCl4tmBPmVvO1kN8jBqhX1alMBrsEX+nZs0oLeu6EAkYdNMgRBvdX9t9QPW6pXcTHcdLulVyjqMAvQCINhwbS7I9jJ8mMDWfFYLmWPGb3aWrz9MIFeBEpdV28ECxIZW+LCfurX+LScGsHrvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=B+EHp/5u; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1714131208; c=relaxed/simple;
+	bh=sKbcDZpO43ATbiiPXnkKdb90G7Igiurm3Zwcm7P1scY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OeZmMe5+xNWhz0ep1KvVqKMYw5BIwjcKZp2dJbeDa0YZu6KjzQT/QDC6rbuoHoR1W9u5Sf+tXHFVneJRmUPqwbMUKI5Gav/G1ttiSBA2Ml4cODE+MqlB0Zd6x5h9t2OWdOQBnHPxt3vLbx/NxXwPbOHNsnczoKhf9mwY7LwyZBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=HlTQDeFQ; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="B+EHp/5u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=7DYHAybeEIQ+KOBzGSPwYKKI54sUB+yPDcf1IzNZdy8=; t=1714122335;
-	x=1714554335; b=B+EHp/5uQTmobqb4S4/zZYfn2o4+s4pGAgsbC6N4DNQCJ3TWrEFKoQW2XJ8f1
-	4yWzSQbjmfOiKHzaWi6Ry3N2LcHhn6vmK116BHm7Gt6Z6MLGsKb4xiUEyMNA1WpKpZpH7z/HWMOQh
-	2OnKd7EhXEx/BjT90Ugwy0GliR8jv0Yf5FSCMd5JQGF1awXFcqEJ749xxtEabMg/GTSy1nGr9mrUI
-	GOKDfG9b+SxER8b7Qll+vdRu1ZMEL3/ImC7K/SJZd2xt41aOUleEOHd0iMnkEUBmw2mTz4lRgghKz
-	JEAST0WDn5W+cywxUw+X/XPTBHhDy/9ThAeqlFjP/FB7DnUBCg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s0HWK-0001tO-DS; Fri, 26 Apr 2024 11:05:28 +0200
-Message-ID: <9bb17713-e3b7-4c8d-ba70-0221a969b154@leemhuis.info>
-Date: Fri, 26 Apr 2024 11:05:28 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HlTQDeFQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1714131207; x=1745667207;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sKbcDZpO43ATbiiPXnkKdb90G7Igiurm3Zwcm7P1scY=;
+  b=HlTQDeFQ2Onym0s7Ld6OJnixFJt8KvyIUX7bZN46U3vwBY4kSiWtUxdq
+   aFYoVUs+LEm987iNTiM8XMZkUcd/8ApyjyWX5lVpHDATfGllF0XEfsIiv
+   7wCs7d4wfaYqqN0mJtjila2MDvjgeXOxWv4CzxyQi5saCSOUHMWao9Kt3
+   g=;
+X-IronPort-AV: E=Sophos;i="6.07,232,1708387200"; 
+   d="scan'208";a="290945146"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 11:33:26 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:51432]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.16.217:2525] with esmtp (Farcaster)
+ id e7b84c28-150d-4661-b2a4-d7d05a6498ed; Fri, 26 Apr 2024 11:33:25 +0000 (UTC)
+X-Farcaster-Flow-ID: e7b84c28-150d-4661-b2a4-d7d05a6498ed
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 26 Apr 2024 11:33:25 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 26 Apr
+ 2024 11:33:21 +0000
+Message-ID: <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
+Date: Fri, 26 Apr 2024 13:33:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,38 +51,58 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714122335;7f1a528e;
-X-HE-SMSGID: 1s0HWK-0001tO-DS
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+To: Lennart Poettering <mzxreary@0pointer.de>, "Jason A. Donenfeld"
+	<Jason@zx2c4.com>
+CC: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Babis Chalios <bchalios@amazon.es>,
+	"Theodore Ts'o" <tytso@mit.edu>, "Cali, Marco" <xmarcalx@amazon.co.uk>, Arnd
+ Bergmann <arnd@arndb.de>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"Christian Brauner" <brauner@kernel.org>, <linux@leemhuis.info>,
+	<regressions@lists.linux.dev>
+References: <20240418114814.24601-1-Jason@zx2c4.com>
+ <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+ <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+ <ZieoRxn-On0gD-H2@gardel-login>
+Content-Language: en-US
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <ZieoRxn-On0gD-H2@gardel-login>
+X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
+Ck9uIDIzLjA0LjI0IDE0OjIzLCBMZW5uYXJ0IFBvZXR0ZXJpbmcgd3JvdGU6Cj4gT24gRGksIDIz
+LjA0LjI0IDAzOjIxLCBKYXNvbiBBLiBEb25lbmZlbGQgKEphc29uQHp4MmM0LmNvbSkgd3JvdGU6
+Cj4KPiBKYXNvbiEKPgo+IENhbiB5b3UgcGxlYXNlIGV4cGxhaW4gdG8gbWUgd2hhdCB0aGUgcHJl
+Y2lzZSBwcm9ibGVtIGlzIHdpdGggdGhlCj4gdWV2ZW50PyBJdCBkb2Vzbid0IGxlYWsgYW55IGlu
+Zm9ybWF0aW9uIGFib3V0IHRoZSBhY3R1YWwgdm1nZW5pZCwgaXQKPiBqdXN0IGxldHMgdXNlcnNw
+YWNlIGtub3cgdGhhdCB0aGUgbWFjaGluZSB3YXMgY2xvbmVkLAo+IGJhc2ljYWxseS4gV2hhdCdz
+IHRoZSBwcm9ibGVtIHdpdGggdGhhdD8gSSdkIHJlYWxseSBsaWtlIHRvCj4gdW5kZXJzdGFuZD8K
+Pgo+IFRoZXJlIGFyZSBtYW55IHVzZWNhc2VzIGZvciB0aGlzIGluIHRoZSBWTSB3b3JsZCwgZm9y
+IGV4YW1wbGUgd2UnZAo+IGxpa2UgdG8gaG9vayB0aGluZ3MgdXAgc28gdGhhdCB2YXJpb3VzIHVz
+ZXJzcGFjZSBtYW5hZ2VkIGNvbmNlcHRzLAo+IHN1Y2ggYXMgREhDUCBsZWFzZXMsIE1BQyBhZGRy
+ZXNzZXMgYXJlIGF1dG9tYXRpY2FsbHkgcmVmcmVzaGVkLgo+Cj4gVGhpcyBoYXMgbm8gcmVsYXRp
+b25zaGlwIHRvIFJOR3Mgb3IgYW55dGhpbmcgbGlrZSB0aGlzLCBpdCdzIGp1c3QgYW4KPiBldmVu
+dCB3ZSBjYW4gaGFuZGxlIGluIHVzZXJzcGFjZSB0byB0cmlnZ2VyIGFkZHJlc3MgcmVmcmVzaGVz
+IGxpa2UKPiB0aGlzLgo+Cj4gSGVuY2UsIHdoeSBpcyB0aGUgcmV2ZXJ0IG5lY2Vzc2FyeT8gVGhp
+cyB3YXMgYWxyZWFkeSBpbiBhIHJlbGVhc2VkCj4ga2VybmVsLCBhbmQgd2UgaGF2ZSBzdGFydGVk
+IHdvcmsgb24gbWFraW5nIHVzZSBvZiB0aGlzIGluIHN5c3RlbWQsIGFuZAo+IGFmYWljcyB0aGlz
+IGRvZXMgbm90IGNvbXByb21pc2UgdGhlIGtlcm5lbCBSTkcgaW4gZXZlbiB0aGUgcmVtb3Rlc3Qg
+b2YKPiB3YXlzLCBoZW5jZSB3aHkgaXMgYSByZXZlcnQgbmVjZXNzYXJ5PyBGcm9tIG15IHVzZXJz
+YWNlIHBlcnNwZWN0aXZlCj4gaXQncyBqdXN0IHZlcnkgdmVyeSBzYWQsIHRoYXQgdGhpcyBzaW1w
+bGUsIHRyaXZpYWwgaW50ZXJmYWNlIHdlIHdhbnRlZAo+IHRvIHVzZSwgdGhhdCB3YXMgaW4gYSBz
+dGFibGUga2VybmVsIGlzIG5vdyBnb25lIGFnYWluLgo+Cj4gQ2FuIHlvdSBleHBsYWluIHdoYXQg
+dGhlIHByb2JsZW0gd2l0aCB0aGlzIHNpbmdsZS1saW5lIHRyaXZpYWwKPiBpbnRlcmZhY2UgaXM/
+IEkgcmVhbGx5IHdvdWxkIGxpa2UgdG8gdW5kZXJzdGFuZCEKCgpKYXNvbiwgcGluZz8KCklmIEkg
+ZG9uJ3Qgc2VlIHRlY2huaWNhbCByZWFzb25pbmcgZnJvbSB5b3UgaGVyZSwgSSB3aWxsIGFzc3Vt
+ZSB0aGF0IHlvdSAKYWdyZWUgd2l0aCBMZW5uYXJ0IGFuZCBteSBwb2ludHMgb2Ygdmlld3MgYW5k
+IHNlbmQgYSByZXZlcnQgb2YgeW91ciAKcmV2ZXJ0IHNob3J0bHkgdG8gZW5zdXJlIHN5c3RlbWQg
+aGFzIGl0cyB1ZXZlbnQgc3RpbGwgaW4gNi45LgoKCkFsZXgKCgoKCkFtYXpvbiBEZXZlbG9wbWVu
+dCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFl
+ZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJh
+Z2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6
+OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
 
-
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218665
-#regzbot fix: b6ad00418eaf376b4f2a6
-
-#regzbot report:
-https://lore.kernel.org/linux-bluetooth/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
-#regzbot fix: Bluetooth: qca: set power_ctrl_enabled on NULL returned by
-gpiod_get_optional()
-
-#regzbot report:
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-#regzbot monitor
-https://lore.kernel.org/all/20240424174748.957641-1-greearb@candelatech.com/
-#regzbot fix: wifi: iwlwifi: Use request_module_nowait
