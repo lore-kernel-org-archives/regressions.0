@@ -1,125 +1,143 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4F029411
-	for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 20:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3882EED0
+	for <regressions@lists.linux.dev>; Sun, 28 Apr 2024 07:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714164159; cv=none; b=trOv/3jg/5W/ogMs0sY9OFayKp2nWrBs0xNydpvsMMp30bWeNHsJt8h7SGsqyxlGdw/J5fq069rtr+AnSYBP2LQyY+M7o1H6UsqNT4CjrihPTrhWnX8UcFbDtJAW+3fDNoKEdPEDy22+XArTLNRnaKokxeLL2Iwn99smhHkZZXI=
+	t=1714291061; cv=none; b=iyNOG0yPQWymnIkQXJZQyjRYy5iJWDw5sNQysMsLiY+ktXLKCwosG3Qsun9LPxdIUkKRJz56qArNok7iZ37zbOYoL3TnA28kvTFgCPjb0VKlFVGgveDsV5NmNf4LrD65YMBH/VVJWTbnRFmiN2Hcaw9T02GJNTJViTLrIwX5kZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714164159; c=relaxed/simple;
-	bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oVkF+5insrTBcvMgX7NYPUf3zuWm02IybYFCQH6Z2QG+Jd1eNPDcFXTQG340dr62eJiDxtH5fGLsx1qYtP21Lzzld1oTPs45THMv66K0POprFyaVCXMZaTh7qjpOSX7vB4nchzBCAsvMq7yLQ0VijSP37mnPxW0V2UdSSYtD2Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=Utfa0yAl; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
+	s=arc-20240116; t=1714291061; c=relaxed/simple;
+	bh=/SZdXvU0/zNh9eDyGFV7bjeIs8jRXFatuixRfW5OSPM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o3QxvTM+v+J9FfDy4xgeJWPm5kUaKU0huAJZh40Um8MeNiecZ53I8bnBDvkpcednlyQNUjFxrT7E4d93Two5CSAe9ZQ7LNp89uJxejM73YJ1opxUv1WCPIbpTiOMzivQyowEXYlNifPol8pu50pgUHrHzVqRG/SqkTzalRSqsEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Tuha+pGt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uLdKuL2J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Tuha+pGt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uLdKuL2J; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="Utfa0yAl"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a559928f46so1845179a91.0
-        for <regressions@lists.linux.dev>; Fri, 26 Apr 2024 13:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=penguintechs.org; s=google; t=1714164156; x=1714768956; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
-        b=Utfa0yAlIYObqardKkYCqUTkcqrKQ2Me77zx5pyNCHLHolWG+ZefG2pos8ynWh9kX1
-         o5OrGNmM/4cQW52BWUcvkwY568uKDARhkZi3+KJp6unKgADlcbyV3XIRi8DnGQf1d2SX
-         C3kHIn/xe7fdWBE6cbEJC+FlO+q2PBY9dckMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714164156; x=1714768956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ut2/7QtHb1M2bAQEQd183O3h2QD+aXNEeV9+hYPipro=;
-        b=DZKnvTdYwLbEzPm7heMTSvePXOT6uArHbIO2lFqhZTUfnUjL2XCsLeHy2Eo2auSz7c
-         /68qKU8WvvtJX97PPgJ4nC5l5OTE0cB7YAVs4wg9aRna9UnmvhkuvHnLTKYZMutEmfbt
-         P2NamY1oqZAnVgG2DtCJFtoisS7fuCQPoty8AFdYrOP62jvaV9GvNFpwaLAzVZiL/Roy
-         SKN95yFqXV4nYIaVIOhIQYzL22SADa7AUdYral3LLDXNUswmcpdTrHzKLZn9mGfsbGuy
-         CJ4cTjQ6TtQiJpKFyMzYxou6ttvuf4FsxNkQdkBPFRgbJGitRrdvbeTVKBARNbITnFDj
-         C1pA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfaMZB/BW0zimdOn/K1TMpXuyrqmKgTdSaSLZ74tDtpTAats7bYu0aQSv3Fg7vmfkoeqv4ksG6ajwsnG/F1RLAbfSgxXPTkETs++g=
-X-Gm-Message-State: AOJu0YwKtHZEB0U26IhKvcQF4MtC1NhR4UTm35lLd26Jbah6I/XJpD8C
-	S8tFruZmpeqYDOKjMkdSrJrTCMZZel39RCnQz1h44rGu6rmsyB7zoOaXxF5izw==
-X-Google-Smtp-Source: AGHT+IEOscTEwtYTWB//iF95be8T91jBA3iUjB0TKOHlVlba448YymSeSS3FXYQvh1CygPxmaDwhbg==
-X-Received: by 2002:a17:90a:ad86:b0:2a2:5860:dea8 with SMTP id s6-20020a17090aad8600b002a25860dea8mr3784343pjq.7.1714164156414;
-        Fri, 26 Apr 2024 13:42:36 -0700 (PDT)
-Received: from braindead.localdomain ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
-        by smtp.gmail.com with ESMTPSA id 9-20020a17090a0b8900b002a2e4b593cdsm18187936pjr.51.2024.04.26.13.42.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 13:42:35 -0700 (PDT)
-From: Wren Turkal <wt@penguintechs.org>
-To: Zijun Hu <quic_zijuhu@quicinc.com>, linux-bluetooth@vger.kernel.org
-Cc: luiz.dentz@gmail.com, luiz.von.dentz@intel.com, marcel@holtmann.org,
- linux-bluetooth@vger.kernel.org, bartosz.golaszewski@linaro.org,
- krzysztof.kozlowski@linaro.org, regressions@lists.linux.dev,
- kernel@quicinc.com, stable@vge.kernel.org,
- Greg KH <gregkh@linuxfoundation.org>
-Subject:
- Re: [PATCH v7 2/2] Bluetooth: qca: Fix BT enable failure for QCA6390 after
- disable then warm reboot
-Date: Fri, 26 Apr 2024 13:42:33 -0700
-Message-ID: <5600892.rdbgypaU67@braindead.localdomain>
-In-Reply-To: <2024042330-boat-launch-aaec@gregkh>
-References:
- <1713932807-19619-1-git-send-email-quic_zijuhu@quicinc.com>
- <1713932807-19619-3-git-send-email-quic_zijuhu@quicinc.com>
- <2024042330-boat-launch-aaec@gregkh>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Tuha+pGt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uLdKuL2J";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Tuha+pGt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uLdKuL2J"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A0EB6383E2;
+	Sun, 28 Apr 2024 07:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714291051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g7HiDJn2jYaKPNKCjP6hACnCuBIIoIfNAijGiXXE0pI=;
+	b=Tuha+pGtWY5VvJpFimhcq4dl2UfXLlzbV7RToWdM48wzW55d8dkEaFrUTtLVM6Ho9EIfYX
+	1AqB2yDVsztGlVV+cRedIFQSwfNfzebLCPIhOvej1ufkiCEq8m4ZgUuAfe2WiRVa4CAMF1
+	T03M6y22QvTrWbwJT8nict4jpd0cCcQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714291051;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g7HiDJn2jYaKPNKCjP6hACnCuBIIoIfNAijGiXXE0pI=;
+	b=uLdKuL2JRL4urMLbYqLlJaSdvkJGTctYN7cCOVdyyXvUatkPd5f/RWwZDspp1PBtqohmYl
+	tvL82VbjVLciksCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714291051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g7HiDJn2jYaKPNKCjP6hACnCuBIIoIfNAijGiXXE0pI=;
+	b=Tuha+pGtWY5VvJpFimhcq4dl2UfXLlzbV7RToWdM48wzW55d8dkEaFrUTtLVM6Ho9EIfYX
+	1AqB2yDVsztGlVV+cRedIFQSwfNfzebLCPIhOvej1ufkiCEq8m4ZgUuAfe2WiRVa4CAMF1
+	T03M6y22QvTrWbwJT8nict4jpd0cCcQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714291051;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g7HiDJn2jYaKPNKCjP6hACnCuBIIoIfNAijGiXXE0pI=;
+	b=uLdKuL2JRL4urMLbYqLlJaSdvkJGTctYN7cCOVdyyXvUatkPd5f/RWwZDspp1PBtqohmYl
+	tvL82VbjVLciksCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 77733138A7;
+	Sun, 28 Apr 2024 07:57:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id npmeG2sBLmbJLAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 28 Apr 2024 07:57:31 +0000
+Date: Sun, 28 Apr 2024 09:57:42 +0200
+Message-ID: <8734r53ond.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Oliver Neukum <oneukum@suse.com>,
+	USB list <linux-usb@vger.kernel.org>
+Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in SuperSpeed initialization")
+In-Reply-To: <87bk5zdtqs.wl-tiwai@suse.de>
+References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
+	<78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
+	<8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
+	<673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
+	<8734rdjj4n.wl-tiwai@suse.de>
+	<ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
+	<87bk5zdtqs.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-On Tuesday, April 23, 2024 9:34:43=E2=80=AFPM PDT Greg KH wrote:
-> On Wed, Apr 24, 2024 at 12:26:47PM +0800, Zijun Hu wrote:
-> > From: Zijun Hu <zijuhu@qti.qualcomm.com>
-> >=20
-> > Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
-> > serdev") will cause below regression issue:
-> >=20
-> > BT can't be enabled after below steps:
-> > cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
-> > if property enable-gpios is not configured within DT|ACPI for QCA6390.
-> >=20
-> > The commit is to fix a use-after-free issue within qca_serdev_shutdown()
-> > during reboot, but also introduces this regression issue regarding above
-> > steps since the VSC is not sent to reset controller during warm reboot.
-> >=20
-> > Fixed by sending the VSC to reset controller within qca_serdev_shutdown=
-()
-> > once BT was ever enabled, and the use-after-free issue is also be fixed
-> > by this change since serdev is still opened when send to serdev.
-> >=20
-> > Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
-> > serdev") Cc: stable@vge.kernel.org
->=20
-> That is not a valid email address :(
+On Wed, 24 Apr 2024 10:56:11 +0200,
+Takashi Iwai wrote:
+> 
+> On Tue, 23 Apr 2024 21:29:27 +0200,
+> Alan Stern wrote:
+> > 
+> > On Mon, Apr 22, 2024 at 09:24:24PM +0200, Takashi Iwai wrote:
+> > > On Mon, 22 Apr 2024 20:03:46 +0200,
+> > > Alan Stern wrote:
+> > > About the patch change: I appreciate if you cook it rather by
+> > > yourself since I'm not 100% sure what you suggested.  I can
+> > > provide the reporter a test kernel with the patch for confirmation, of
+> > > course.
+> > 
+> > Here's a condensed version of the patch you wrote.  But I would prefer not 
+> > to add this to the kernel if the problem can be fixed somewhere else.
+> 
+> Thanks, I asked the report for testing the patch now.
 
-@ziljun, can you please post this patch in a new patch series by itself? Th=
-e=20
-warm boot problem is fixed by this patch, and I think it would be better to=
-=20
-have a thread dedicated to this fix so that it doesn't get lost.
-
-=46WIW, I think that this may be the correct technical change. I would like=
- to=20
-try to help get this patch landed, and I think a clean thread for only this=
-=20
-change would help.
-
-Just so everyone is aware, I am a concerned user of the hardware, and not a=
-=20
-kernel dev myself. I have tested this change. This patch on top of Linus'=20
-mainline does allow qca6390 to work after warm reboot on my laptop.
-
-wt
-=2D-=20
-You're more amazing than you think!
+The reporter confirmed that it's still working.
 
 
+thanks,
 
+Takashi
