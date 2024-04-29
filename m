@@ -1,118 +1,120 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B16128362
-	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 15:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D90745C5;
+	Mon, 29 Apr 2024 15:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714403513; cv=none; b=pdrfacuvKegH/UOBaQ2wWUCQuf3zHQSHepwWoiuW7zg3/ldTu92fkOqQ2NObQnqpU5fCYWlrDbXOlvWWe4BTKePeYBX+wBCz4+MLF0MUqN1Df6mNMebkdgytB6Psb4Aw9EXlzwFQcLGqNVb1MSqhugXZZqoQkzUnodj3KOWlmm0=
+	t=1714404615; cv=none; b=ak1t2Lke0ytoXjY+EpwZ4Cj/YfG2hMbWXGHrUhgk/b4OIwuyhR+zQNOCquLbFymnX4TOwwIBDn0YmisR4dm1DrC9KVzZtSun1gbyrgAnQ8FDw/1cW2D34066ze8LCvZBv76pF9EqlQd4Wm1T3LUfiamrsQCFfeBMIfF7+MsA6aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714403513; c=relaxed/simple;
-	bh=2mOGvwx0F2IpPY4iGZ/syNebrU7aiO2c7zkOquYWlm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QViWvkU70SLbhGk9zg6EthnWjeKFvFtlYmIU+kglTDpmwAu5pyW2gUhzTXbjf3nlQ6cITxq2d07e35X0u8eysbloPszCHep4TQtN4V2Ka6pfnQb+IPr+USgFe8eknvsXq7g4OP02pVBhiPyy3fm0ezuXVgOaKg28fWp1Ck2pMOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMDvNdAO; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714404615; c=relaxed/simple;
+	bh=TqiYQJmqdFV9zXlq9q0pmNJsGn5PO0G4Y2blC9CxpQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iiT5DBc2J+SQFzGWIChqYOpn8eUWpioat46OsIeGKFBYfKTkcFsAEgLnQU3COj4oHZjbu8evQfzDqNJLeEL0ZL6/CO8UJ8dYPtCDrsR2UlmDFIudxKScvvL9jMm46+xShqEyva5AVtjSYR3yA2sNf+1EhAbJwsRKYIcQiBFal6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FtTKzxqI; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMDvNdAO"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5726ccca4c8so2546071a12.3
-        for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 08:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714403510; x=1715008310; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xU/iLoQXl7tXUx6T6JsQIJsicG3iO7GQdCCzHimssM0=;
-        b=iMDvNdAOY8ueQc4QnuGQz8uVXiC9QFCgl26tNr4RrmK+DIB7NJJ7BRGX1txb+gXRm4
-         OCbfiCH29gyae8pLmcjbSbsEb6mMwID2satDohy46M2ogbwAHipR54n21Z+VfTRwp+ce
-         U0BgR/voVUvLNJN7G9tVDADXNt3SQ73DCD9BrBvn2ZJTRQHXueucDAIxlISU7FZfedx8
-         htwqNigjpZ9tNnsXNgojo0ZvcBleDwRfuDBKlwd4zMy0Ep6BLPLmN/E1umtWoSqMZo4A
-         uC6PgFXTi9WntrfjbtL7Hn7jCxBe5XCfZi1Md/lJuPUpZtztai5yV2qc4XT3jsa+5lTC
-         Gphw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714403510; x=1715008310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xU/iLoQXl7tXUx6T6JsQIJsicG3iO7GQdCCzHimssM0=;
-        b=iAWbSrfWBFxBtZfkMuJGh2T5zkYWSUtiritMwZPalbSs3fY98WgexkkSJkI4e5uvt1
-         QVLZCt2N5dPzLNR+kPGg4UZwfnSAEh2kKZ4h73Co4jqkL3MahIxgqvYEmou+nYzcwtQb
-         1+frRfvFCa71zNQuJvRhQaS6vk576guEBGWYTN8CnBd+b0ZD2ecJ/dqvmGuJDwBAnioA
-         5dvqCsFmYMIbbZ23ujcHuhg1n0DJX/6c/1a42rle/8QHeDUJl8qzvfVe5rdmErTQgGE8
-         Isn5yZzpOzovmcCTz+1g2L7TRVstGxI+PCI3UB+/I46rbwqpxdK+yntvjdZQo/ZE/yWh
-         qKzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSl8fw/rKM0QgV9Q6Eo7YOFJj3VHCZTI24dHUdbwj0v/SS1qdQV6EGt025CF9HdOu/HKDV669Xv0MSGgIqWgfcg6VPq8E48lrqtaE=
-X-Gm-Message-State: AOJu0YxFzoV9k1VzWdHwvg87fdbBwod5KxSNQ277Rmckg8EGMZ+S+UQK
-	BfRmqMDCuaJ+1YbwA/IJV8r9oO6xZgy1Bwm3SX4gi9EAt3OCT9eisEqW4gF/
-X-Google-Smtp-Source: AGHT+IEhEdiaiCJzabxzHgv5ya2RGGdycN3jCTy0tJ1kx0ZZPY/5fGE7WGoJhcAGrpmB7uFA67IDWg==
-X-Received: by 2002:a17:906:e2c3:b0:a54:e183:6248 with SMTP id gr3-20020a170906e2c300b00a54e1836248mr7519853ejb.0.1714403510018;
-        Mon, 29 Apr 2024 08:11:50 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id wt8-20020a170906ee8800b00a55ac292b66sm10253316ejb.219.2024.04.29.08.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 08:11:48 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 5F51DBE2EE8; Mon, 29 Apr 2024 17:11:47 +0200 (CEST)
-Date: Mon, 29 Apr 2024 17:11:47 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Paulo Alcantara <pc@manguebit.com>, regressions@lists.linux.dev,
-	Steve French <stfrench@microsoft.com>, sashal@kernel.org,
-	stable@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
- overflow frame end of buf" and invisible files under certain conditions and
- at least with noserverino mount option
-Message-ID: <Zi-4s-7QSFO1OR17@eldamar.lan>
-References: <ZiBCsoc0yf_I8In8@eldamar.lan>
- <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
- <ZiCoYjr79HXxiTjr@eldamar.lan>
- <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
- <ZiLQG4x0m1L70ugu@eldamar.lan>
- <adfd2a680e289404140ef917cf0bd0ab@manguebit.com>
- <Zigg4RWtRfQYW1RR@eldamar.lan>
- <2024042912-unloader-slighting-c756@gregkh>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FtTKzxqI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=/TMieuIYSHO4gvXYmD/QV218MQNhKby9ucs7zLNNfzE=;
+	t=1714404613; x=1714836613; b=FtTKzxqIiZAafQN3OMRBOshhhAPZ0SjJ5Hpnnmrfv0zBHTi
+	l6ITfErsouZkYWpvghQLhGUydygUc15/iWIC+D4EjkYn9bAcLEoptWQ4NLfriA3y+L2JbcAGBzAC2
+	YUxKE2YUQV7xMpbLzHkOEQPB2RTl4VX6qh/85y2/gr3TeUmex+x4JbFDTsSFt7Hu5arWc8D8Jfogu
+	0hYW5VOk59yosBxS6OGsKJu4LKbBR6rCDpImOnkfJtFH250gX4I22o7zQm0bgTwn5BSUBsHnVFnpG
+	iT05a3P6X8AZOeQekvymJf2k2KT4k1d1bygQxKAyFbNmF+wpWiMkigcKSdFLHTsA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s1SxD-00069R-Fy; Mon, 29 Apr 2024 17:30:07 +0200
+Message-ID: <c819df1c-4215-41bb-b24b-563a912d160f@leemhuis.info>
+Date: Mon, 29 Apr 2024 17:30:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024042912-unloader-slighting-c756@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: nouveau: r535.c:1266:3: error: label at end of compound statement
+ default: with gcc-8
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: Timur Tabi <ttabi@nvidia.com>, Danilo Krummrich <dakr@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714404613;50dc93e5;
+X-HE-SMSGID: 1s1SxD-00069R-Fy
 
-Hi,
 
-On Mon, Apr 29, 2024 at 12:50:45PM +0200, Greg KH wrote:
-> On Tue, Apr 23, 2024 at 10:58:09PM +0200, Salvatore Bonaccorso wrote:
-> > Hi Paulo,
-> > 
-> > On Mon, Apr 22, 2024 at 12:08:53PM -0300, Paulo Alcantara wrote:
-> > > Salvatore Bonaccorso <carnil@debian.org> writes:
-> > > 
-> > > > I'm still failing to provide you a recipe with a minimal as possible
-> > > > setup, but with the instance I was able to reproduce the issue the
-> > > > regression seems gone with cherry-picking 35235e19b393 ("cifs: Replace
-> > > > remaining 1-element arrays") .
-> > > 
-> > > It's OK, no problem.  Could you please provide the backport to stable
-> > > team?
-> > 
-> > Sure, here it is. Greg or Sasha is it ok to pick that up for the 6.1.y
-> > queues?
+
+On 29.04.24 17:06, Naresh Kamboju wrote:
+> Following build warnings / errors noticed on Linux next-20240429 tag on the
+> arm64, arm and riscv with gcc-8 and gcc-13 builds pass.
 > 
-> Glad to, for some reason I thought this caused problems, but if it
-> passes your testing, great!  I'll go queue it up now, thanks.
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Commit id:
+>  b58a0bc904ff nouveau: add command-line GSP-RM registry support
+> 
+> Buids:
+> --
+>   gcc-8-arm64-defconfig - Fail
+>   gcc-8-arm-defconfig - Fail
+>   gcc-8-riscv-defconfig - Fail
+> 
+> Build log:
+> ----
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c: In function 'build_registry':
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1266:3: error: label at
+> end of compound statement
+>    default:
+>    ^~~~~~~
+> make[7]: *** [scripts/Makefile.build:244:
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.o] Error 1
 
-Thanks! Unfortunately I'm not having a good test(case/suite) for this
-myself for such cases. All issues recently forwarded as regressions in
-the 6.1.y series were unfortunately only uncovered by Debian users
-once we did release the version :(. Hopefully this will "calm down"
-now.
+TWIMC, there is another report about this in this thread (sadly some of
+its post did not make it to lore):
 
-Thanks to all of you, for your work!
+https://lore.kernel.org/all/162ef3c0-1d7b-4220-a21f-b0008657f8a5@redhat.com/
 
-Regards,
-Salvatore
+Ciao, Thorsten
+
+> metadata:
+>   git_describe: next-20240429
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_short_log: b0a2c79c6f35 ("Add linux-next specific files for 20240429")
+>   arch: arm64, arm, riscv
+>   toolchain: gcc-8
+> 
+> Steps to reproduce:
+> ----
+> # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+> --kconfig defconfig
+> 
+> Links:
+>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2flcoOuqVJfhTvX4AOYsWMd5hqe/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23704376/suite/build/test/gcc-8-defconfig/history/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23705756/suite/build/test/gcc-8-defconfig/details/
+> 
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
+> 
