@@ -1,103 +1,108 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7708C147;
-	Mon, 29 Apr 2024 04:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA912E639
+	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 09:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714366687; cv=none; b=skDkVBjyrn1MhcxrIdMm7a6axGx7s82kaERN9yHVcnOOm665N9BLAqwEuo2Qn5EfsX6fiWaOtexrPmF0YB36kfz9F3hPxTzQphb93NwWh25Cd+hOmkfTo7HNeRAXpUvMtOTeq5w+KrUw3YkrTEm9+qxhgUxTWvNNsvBoe0RJdVw=
+	t=1714381472; cv=none; b=RP8GQ8lRChr6chkTD1xkzoKDcgJMGQpHgpHYiWEK9gc4Us6f6j02FizR6zPKk+mkz4t+qrooG9ojIVNF5Cc/TcaMxCcGlfDD/JQyV6mac5G8MldTfW7VwbCsmtaUiI/rl7aFyocpHehb7y/EjXPaitYZUi01fLcrPkRS/VgPN+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714366687; c=relaxed/simple;
-	bh=qwcuk2Zn9wJiQ5C9erBrZYZVUIhDBacnXUKFMj5UQys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4vC+tjkNLUOGzNVzsrc5dmf8yqIFdNB628OJBKG9oLg2Dz+KnHMCHKEg8jK1OGYM8p7WVGroNgICW7X4r9ftcm44OAf/zIYKXphRNWj0a7/qRmA73x5gzN9e5MPrxKDTxR58aDowVw0gj7NZcCjzVZUDMJOvP3IznpLqA5et2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=l1X1KYAj; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="l1X1KYAj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=aEXLd2DIoVZCU2/LTfjWm3bDpRi/ps0F+k24Tiuwso4=;
-	t=1714366684; x=1714798684; b=l1X1KYAj3nijO4T9Haji3btSbw+4RsP5Kp6alHfkWeZs0qq
-	hVeVjDHenxu5wFmMrtkXU3Zx2smquk/7pbuLBGk5XhxfMGreHl9UHrZ0EcvT4cbFprBhxXlbOxVP7
-	JYJ6UDRDHB2bkUHhVoFIfnWUEU+Hj6n0Yg8NtFvLweDgnE3IftHebMzic7xzFseDD2jPorUb6kjvP
-	KNiMmjvBLGWQtkSPGkQhnJSe3mjd5x60VqrG2JRRvcTuk5DiiwDgNBuJh2+nydDGjaHBMK0Dlmq6w
-	eGxfNCFHH9mqbCzwmiTiJLh/1sSt7rvQV82hyrf98RUzUn+lTWT2kljFy6b3EXag==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s1J5V-0000ES-35; Mon, 29 Apr 2024 06:58:01 +0200
-Message-ID: <56bb312e-5dca-4005-a388-c039646a9fa4@leemhuis.info>
-Date: Mon, 29 Apr 2024 06:58:00 +0200
+	s=arc-20240116; t=1714381472; c=relaxed/simple;
+	bh=H9ZBiwkmJv4MZD4a/1cw2hcXmMAF0/Sg7nByLKv3/h8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=APcwcmyu5FcciVFBSZd6EL1PzS/PtwJsEWQcf4iXDCfGTF1aGluBGJt4WdpkW6u7J0Vz4/wn0TG1HQhoCGYkr1ZV+FnUBBt3nVBbeB0e3KY34T/a7xABGsRbAVChB4WXQZRbL/2O9Qka35C6i0dhW5Qny3jXO9a2LxiB68dS15k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id ECCD1E80F27;
+	Mon, 29 Apr 2024 11:04:21 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 852A81600A1; Mon, 29 Apr 2024 11:04:21 +0200 (CEST)
+Date: Mon, 29 Apr 2024 11:04:21 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Babis Chalios <bchalios@amazon.es>, Theodore Ts'o <tytso@mit.edu>,
+	"Cali, Marco" <xmarcalx@amazon.co.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	Christian Brauner <brauner@kernel.org>, linux@leemhuis.info,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH] Revert "vmgenid: emit uevent when
+ VMGENID updates"
+Message-ID: <Zi9ilaX3254KL3Pp@gardel-login>
+References: <20240418114814.24601-1-Jason@zx2c4.com>
+ <e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com>
+ <CAHmME9qKFraYWmzD9zKCd4oaMg6FyQGP5pL9bzZP4QuqV1O_Qw@mail.gmail.com>
+ <ZieoRxn-On0gD-H2@gardel-login>
+ <b819717c-74ea-4556-8577-ccd90e9199e9@amazon.com>
+ <Ziujox51oPzZmwzA@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
-To: Vinod Koul <vkoul@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- 'karthikeyan' <karthikeyan@linumiz.com>,
- "bumyong.lee" <bumyong.lee@samsung.com>
-References: <000001da6ecc$adb25420$0916fc60$@samsung.com>
- <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
- <000001da7140$6a0f1570$3e2d4050$@samsung.com>
- <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
- <001001da7a60$78603130$69209390$@samsung.com>
- <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
- <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
- <ZgUTbiL86_bg0ZkZ@matsya>
- <2b2a6c9f-4df2-4962-b926-09adccd20715@leemhuis.info>
- <0b5da67a-7482-4f18-9246-9c118f182b8b@leemhuis.info>
- <Zi8mzMWubkfi9UiV@matsya>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zi8mzMWubkfi9UiV@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714366684;5fe217de;
-X-HE-SMSGID: 1s1J5V-0000ES-35
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ziujox51oPzZmwzA@zx2c4.com>
 
-On 29.04.24 06:49, Vinod Koul wrote:
-> On 25-04-24, 12:03, Thorsten Leemhuis wrote:
->> On 28.03.24 16:06, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 28.03.24 07:51, Vinod Koul wrote:
->>>> On 26-03-24, 14:50, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>
->>>>> Vinod Koul, what's your option here? We have two reports about
->>>>> regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
->>>>> waits until WFP state") [v6.8-rc1] now:
->>>>>
->>>>> https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
->>>>>
->>>>> https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
->>>>> [the first link points to the start of this thread]
->>>>>
->>>>> To me it sounds like this is a change that better should be reverted,
->>>>> but you are of course the better judge here.
->>>>
->>>> Sure I have reverted this,
->>>
->>> Thx!
->>
->> That revert afaics has not made it to Linus yet. Is that intentional, or
->> did it just fell through the cracks?
-> 
-> Nope, it was sent to Linus last week and is now in -rc6...
+On Fr, 26.04.24 14:52, Jason A. Donenfeld (Jason@zx2c4.com) wrote:
 
-Yeah, I noticed yesterday, as I otherwise would have mentioned it to
-Linus. But it wasn't merged yet when I wrote the quoted mail. ;-)
+> I don't think adding UAPI to an individual device driver like this
 
-Thx again!
+Does vmgenid really qualify as "an individual device driver"? It's a
+pretty generic software interface, implemented by various different
+VMMs these days. It is also the only interface I am aware of that
+actually exists and would provide the concept right now?
 
-Ciao, Thorsten
+if this was really hyperv specific, then I'd agree it's just an
+"individual device driver". But it's widely implemented, for example a
+trivial command line switch in qemu.
 
+Hence, for something this generic, and widely deployed with multiple
+backend implementations I think we can say it's kinda more of a
+subsystem and less of an individual driver, no?
+
+> is a good approach especially considering that the virtio changes we
+> discussed some time ago will likely augment this and create another
+> means of a similar notification. And given that this intersects with
+> other userspace-oriented work I hope to get back to pretty soon, I
+> think introducing some adhoc mechanism like this adds clutter and
+> isn't the ideal way forward.
+
+If one day a virtio-based equivalent shows up, then I'd be entirely
+fine with supporting this in userspace directly too , because virtio
+too is a generic thing typically implemented by multiple VMM
+backends. From my userspace perspective I see little benefit in the
+kernel abstracting over vmgenid and virtio-genid (if that ever
+materializes), as a systemd person I am not asking for this kind of
+abstraction (in case anyone wonders). A generic ACPI device such as
+vmgenid is entirely enough of "generic" for me.
+
+The way we would process the event in userspace in systemd (from a
+udev rule) is so generic that it's trivial to match against two
+generic interfaces, instead of just one.
+
+And even if there's value in a generic abstraction provided by the
+kernel over both vmgenid and a future virtio-based thing: the kernel
+patch in question was a *single* line, and our hookup in userspace
+could easily be moved over when the day comes, because it's really not
+a rocket science level interface. It's a single parameterless event,
+how much easier could things get?
+
+I understand that how this all happened wasn't to everyones wishes,
+but do we really have to make all of this so complex if it could just
+be so simple? Why delay this further, why go back again given the
+event, the interface itself is such an utter triviality? Do we really
+make such a threatre around a single line change, a single additional
+uevent, just because of politics?
+
+Lennart
+
+--
+Lennart Poettering, Berlin
