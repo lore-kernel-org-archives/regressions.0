@@ -1,87 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4AD13AA20;
-	Mon, 29 Apr 2024 18:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6C413AD2F
+	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 20:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714416367; cv=none; b=qY2KV0gaSgFwGkdo+kSR/1+1Sh5hS3nZBIzpndUV7bph3mi7eJZTuz1Y6YgzfhivtBmB3FQP26QpdXMNjIhp6FzF8H5ECWzve1MV8RsMFwwEBgcRBe2E1xMTY2NQrA8lYxjbMMYA8D7VPWFQNgQmRt04sz+pC3UcWD8wMPVtn3s=
+	t=1714422536; cv=none; b=empi8t9MIIJUC97iekzENq1wgb5Be4XJx0onsaIj9o6Jv6JRkOP/12mN+E3R8digyC6CsFgpiEHFLt/Jr5i8wKMJh23z4qhVS2ULkXdJ1Ih1Zi///q2Q3lAhedYH3RY9ILTsYG6mxkcJ0/65M6Kdi5TuxkhJcwJvSIBWt6r6Rfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714416367; c=relaxed/simple;
-	bh=3LH0ATCDUz78r2Tey+5bXVs+rUczTd3e47hk9qUT2uA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ulpn8ns6Z3JGQXVFDc+0W7pKQiUkOIDS01+1+aW8PsIV5UBQgPH0Rv71hVfTkM+uCc2tIOFW1aC/RNVm6UBG03WtFklDb/PbOJeagAM7aZS67sT3IXIjUrhoFaJOr24llcIvtiS0Lhcqya8HlI6XUdLaCYDb7kwtP7qg1ZXvSKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mMqrnJ+F; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1714422536; c=relaxed/simple;
+	bh=qD9fA+6x5YEjH6N/bnfv4m+coO6ZZOEi8S65u1eBRvM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=egOr4SzCg7LlAwUeTnWsQZtojC8saBuFnhCDsB9GXI0AuUEhmLd6rAgh5Ht7T0TM+iTayvt91529XodY6DDdNpm9CY/oCaZyh/GzP9v5Z6JCDMDzRFezh766uHRhbjdyO3p6fryu9WrAoU1bGMZZUqGkxUEWJWvU+s9T8qFXE7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5g+1/uX; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mMqrnJ+F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=ZkJzNvR/m4pjy1+DgD6tXtFggu8kp9OwAo85IxPakxg=;
-	t=1714416364; x=1714848364; b=mMqrnJ+FhZXdK5FEOih/T4F32qHzR2uAmg+7T27fDijNOlP
-	2HrrSBmYOaMVb9btdat2GHy+fsfJnlUOdi6GKad0ToGfTXwoJMJ3KVE4vy4ajTrW0B7fylikChbg+
-	ehjWazipG4om9YLyitMEIcvf0rRTeTkPKvfD7su/10CioE4Oh8IEKlIp9+G8P3NgLxFcmrkh4Lge9
-	4tr4n0Iz3TOk5JfJ2tHchZj8VV/0QnLSYrqt/eX61J4JoJCpGLTJ7ZD3VlvMNhGUvUSZUBGYZE4DW
-	UpTsOefxSDXaTJ3YEsPdYW6fD2U57Dky2A1+k9VDPYH97hFx/f2q81pESJ66oKIA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s1W0o-0000lq-9l; Mon, 29 Apr 2024 20:46:02 +0200
-Message-ID: <8e8ca7a6-1511-4794-a214-2b75326e5484@leemhuis.info>
-Date: Mon, 29 Apr 2024 20:46:00 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5g+1/uX"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4dac6802e7aso1077420e0c.0
+        for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 13:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714422532; x=1715027332; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lKuZuU03NTynIqlQQqRGb6a67x7v1EBlFYJcjyUFQ04=;
+        b=e5g+1/uXHiui7QCPFXYle1zPcMHLO2X7kLCj6F/6ckMWPi9i7ub1a4L2OZWggVbsTe
+         5UAgcvCsOlQ7qK9fi89Bhigd31CK08XupAagL/xcy5O6Ej9cRxR16RBJviC2w/JNnTiE
+         jHO6c5hFU8jltr9HO2IMt+za9nhQBxZYTQDvKilQ5sMAl4VzmscGDq9ALQIf9DYGbWf3
+         0wvjKb+PM2YONyEJfE4iRS6xfL7+dN7MnP3QNoLK3g8zZUZyazVJYpraKzpCcehukq0Q
+         FI5/d5wTVZt7Y9+x4CSoT/i0v/edzxjNVc6wu7SAG5RJG0ctr0WvffxRppfPOS68yu8S
+         4HKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714422532; x=1715027332;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lKuZuU03NTynIqlQQqRGb6a67x7v1EBlFYJcjyUFQ04=;
+        b=a5sNv0be+DH9GhdX+JJcnoc6ZWAUy4+JmrjnQoUD9TtMx6l4cHsi5S0VJmxyrHLGuC
+         4c08y/ktk35W39R+kGJuuWkMXnuUqDuZNanDznCbukJ1JFi//PB9ME/H4K10W4jWs4vJ
+         fO+AnriKtuEeJwGA6JWWKyeZvzdhD0Pm7kRWbwRdFbSu3BytxgLoxEeBT026bigEiVKo
+         N4rcXBm1hst+wA7Zqkaysc8sFeRJpYxNbU0JJp3t3+Vev7jse7waBFNGJ6q9D9UxhpgT
+         ZZ2X6otw7NsuHr/+HKTHgnTAq5wBYUu1JmqukQ8qHu6kmWE4Zvx/Xu/dczFnZ/0AA+U6
+         Df+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVlER1x9tQdRgC4NFg2btj50pxyVxxV0r37AqA1N4IjP+MX06BwKKc4BPBIpCggLlenr8AbLd2Ib6ZpK9ulIVBhgVX8Xd5PpBtwKgg=
+X-Gm-Message-State: AOJu0YxDRR+iuSxOMQsTIdpBxIYiXAGDxdwQ8qRqE+oSGuGH+uZcCZT4
+	xJFHvjitFjvU0qiEt3XzWhNsU/lsP37OcOXqb7fB9hSnCpN4FFJx0pd+RV/setbu1X9WVfAAFNc
+	RkwVS6/5TH0ELlkWcL4A878TIhydxz642++q2tw==
+X-Google-Smtp-Source: AGHT+IGWE4dZTf8eDRkrviqbjY4zijszcVXO72v7h15YxEvhFegCWLtOLh372/gBc1wZQisnIMhcKj7hvdbxUkY8IEQ=
+X-Received: by 2002:a05:6122:2221:b0:4d4:20fa:eb0c with SMTP id
+ bb33-20020a056122222100b004d420faeb0cmr11396869vkb.5.1714422532382; Mon, 29
+ Apr 2024 13:28:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-To: =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
- Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
-References: <CADRbXaDqx6S+7tzdDPPEpRu9eDLrHQkqoWTTGfKJSRxY=hT5MQ@mail.gmail.com>
- <1de62bb7-93bb-478e-8af4-ba9abf5ae330@leemhuis.info>
- <4bf3497d-0ede-4e05-a432-e88e9cbc10b4@leemhuis.info>
- <CADRbXaBkkGmqnibGvcAF2YH5CjLRJ2bnnix1xKozKdw_Hv3qNg@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CADRbXaBkkGmqnibGvcAF2YH5CjLRJ2bnnix1xKozKdw_Hv3qNg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714416364;7c17985c;
-X-HE-SMSGID: 1s1W0o-0000lq-9l
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 30 Apr 2024 01:58:40 +0530
+Message-ID: <CA+G9fYsXkn3xcdOm7H3+s4Xw_vc0f+uqCbFHHOcQE6OUascTsw@mail.gmail.com>
+Subject: arm64: dts: ti: k3-j784s4: No rule to make target:
+ k3-j784s4-evm-usxgmii-exp1-exp2.dtb', needed by 'arch/arm64/boot/dts/ti/dtbs-list'.
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, Chintan Vankar <c-vankar@ti.com>, danishanwar@ti.com, 
+	krzk+dt@kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 29.04.24 20:28, Jeremy Lainé wrote:
-> 
-> On Mon, Apr 29, 2024 at 12:24 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> So we either need to find the cause (likely a missing backport) through
->> some other way or maybe revert the culprit in the 6.1.y series. Jeremy,
->> did you try if the latter is an option? If not: could you do that
->> please? And could you also try cherry-pikcing c7eaf80bfb0c8c
->> ("Bluetooth: Fix hci_link_tx_to RCU lock usage") [v6.6-rc5] into 6.1.y
->> helps? It's just a wild guess, but it contains a Fixes: tag for the
->> commit in question.
-> 
-> I gave it a try, and sadly I'm still hitting the exact same bug when I
-> cherry-pick the patch you mentioned on top of 6.1.y (at tag v6.1.87).
-> 
-> Thanks for trying, is there any other patch that looks like a good candidate?
+The arm64 gcc-13 allmodconfig builds failed due to following dtb issues,
 
-Well, did you try what I suggested earlier (see above) and check if a
-revert of 6083089ab00631617f9eac678df3ab050a9d837a ontop of latest 6.1.y
-helps?
+Looks like the recent changes on arm64: dts: ti: k3-j784s4: are causing
+build breaks.
 
-Ciao, Thorsten
+arm64:
+  allmodconfig - gcc-13 - fail
+  allmodconfig - clang-18 - fail
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build errors:
+----
+  make[4]: *** No rule to make target
+'arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtb', needed
+by 'arch/arm64/boot/dts/ti/dtbs-list'.
+  make[4]: Target 'arch/arm64/boot/dts/ti/' not remade because of errors.
+
+metadata:
+------
+  git_describe: next-20240429
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_short_log: b0a2c79c6f35 ("Add linux-next specific files for 20240429")
+
+Steps to reproduce:
+----
+ # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig allmodconfig
+
+Links:
+----
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2fmJ3r7MbjcUn6ZjBeDKT6SpKpH/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23715285/suite/build/test/gcc-13-allmodconfig/details/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
