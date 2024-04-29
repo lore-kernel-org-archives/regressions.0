@@ -1,74 +1,85 @@
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676B839B
-	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 01:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375C88BE2;
+	Mon, 29 Apr 2024 04:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714354516; cv=none; b=Js7X3uVJOUyGw/0IRja+SSvU3OziB2YuHQp7tWkLFrSRH6qGF3jEiI247DQjArJOl1k+0fM8gUeT6icuUgbpS3TSEuREveLS6fehvkMAzfXL93nBnqyGcRYrfgb7CRvQf7EhXi8TWhfvXU3RbqaAWd7CUl0LRB/thGb6R351UbI=
+	t=1714366161; cv=none; b=L3IGEKlwunZ2lQMY5tX9YxXX59sO6QDM0+EejkvS3xKdwkP2mIIXR/2YwUT6BDtIYraIFFyDP/xJwQixVGN27GPpNCr9zLuCPKHTf5ILOMnVyEIa+Yxaf1+J8ef4Ilmz95pJG7QoQpIe/d4STIv86dAMs573H5DJBoC5NNkIM68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714354516; c=relaxed/simple;
-	bh=kFOkdfu53r4f0dVziI0m6v4aaLTyulv1fQbdhR8cLUM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=OMLN+5GQK7UsRXhgQ/UgNB2COe3l0djr/2oJmdpSCluMX7opsroIYY0Fl6CzzvZbiN59s4wWtsXF1HyDhMqRybYENNNDVtgKAXsXAwVH1oWB1cIL4y7SNan3Kwp+vruPDcUTDgXQjM9tgRsY0RzSZN/S3lDbibSSimiETsMeNv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=ENP6l33c; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
+	s=arc-20240116; t=1714366161; c=relaxed/simple;
+	bh=Pe63LePjMb2wHzOe1goi1rwylL6odcnrORw6iB84RVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpgLDBi658+GR8sDnVpwXfELj0zwl7627P1pO5ZWDEj+A7NmeRfqEUK8409x/U6bnU8hQKB2a8yCNH5YFwp2yCzcNwIOQfNm+sG4lVQyJgiT7vHY5Omkll2zoZ+fI3IC32benXKVjTJXGb7n+rwKbbpl+YTy8mjbLlpU/wRFOoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQNBQ/OW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="ENP6l33c"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 1A10CE1A02B73;
-	Mon, 29 Apr 2024 04:35:05 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id SQvVafterWTo; Mon, 29 Apr 2024 04:35:04 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id BF0B5E26340F2;
-	Mon, 29 Apr 2024 04:35:04 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru BF0B5E26340F2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1714354504;
-	bh=kFOkdfu53r4f0dVziI0m6v4aaLTyulv1fQbdhR8cLUM=;
-	h=Message-ID:Date:MIME-Version:To:From;
-	b=ENP6l33cBMCOSPSYVhbInDOGxv6PfBEyAzEucWe8PBoymgiv7U2PvCu95BYJWIsoE
-	 OJheMaFNPZCI7AK/iB+hvqCmEROk/1hF7J21u1Wxj3+EttUex3Yw13LyDlv1Hppghz
-	 BawNILMDOE17u+ZN95kOSGl1IayNaLgNlM8oHb7T7tw5XeMglQtKvn+4mmkZc4/Yhh
-	 FwO1A7B24mxkXuZR2QiZKJ18+QDzAUgyrD+FNb+FZZk/MQymjiDjMYwh/gj1kH6NsD
-	 wmg4BhWvdaGWMyirObm5SBzGod7ZP5XkL4HrzsJJaePfRIG0GgefNLnj1lG+WEfGic
-	 pSGkxGqHn6XyA==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id q7fE3t-fWoVA; Mon, 29 Apr 2024 04:35:04 +0300 (MSK)
-Received: from [192.168.1.100] (unknown [89.250.9.26])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id 86943E1A02B73;
-	Mon, 29 Apr 2024 04:35:04 +0300 (MSK)
-Message-ID: <1e5355c9-7444-031d-59bc-52535f773755@rosalinux.ru>
-Date: Mon, 29 Apr 2024 04:35:04 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQNBQ/OW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A37C113CD;
+	Mon, 29 Apr 2024 04:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714366160;
+	bh=Pe63LePjMb2wHzOe1goi1rwylL6odcnrORw6iB84RVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sQNBQ/OW3GPt1m4h0uwIn77iJZIryE1g05yK3qzgx8FPQusPhJkrJ6Fq11e5hPTDD
+	 uhzy8xBayerts43Xz3eN+GJ728C5fVXrjQY3uXaQo2rA/qBZWBOneusS+4jtNPLT1g
+	 1Q5qIRbEt1XR3rhk/HtID9modiLOCs5+J82OM0PsXWYcvmZX1wX6H6bd/GtxyUEtPO
+	 8Sgoau8juqZMv3XN+thgthnHOPEo28XS7j2++BI6HjpriWfTv/t+9ZyQIwhgzQXyZ8
+	 JUXqSm1K/CS7kv0HTPWj7ak3KZAEq8Wp+iLq0/6w1wqdi3xjce8XR5KBCC3BeFfYn3
+	 b9BijfOI+GzHw==
+Date: Mon, 29 Apr 2024 10:19:16 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	parthiban@linumiz.com, saravanan@linumiz.com,
+	'karthikeyan' <karthikeyan@linumiz.com>,
+	"bumyong.lee" <bumyong.lee@samsung.com>
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Message-ID: <Zi8mzMWubkfi9UiV@matsya>
+References: <000001da6ecc$adb25420$0916fc60$@samsung.com>
+ <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+ <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+ <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <001001da7a60$78603130$69209390$@samsung.com>
+ <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
+ <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
+ <ZgUTbiL86_bg0ZkZ@matsya>
+ <2b2a6c9f-4df2-4962-b926-09adccd20715@leemhuis.info>
+ <0b5da67a-7482-4f18-9246-9c118f182b8b@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Content-Language: en-US
-To: regressions@lists.linux.dev, stable@vger.kernel.org
-Cc: =?UTF-8?B?0JHQtdGC0YXQtdGAINCQ0LvQtdC60YHQsNC90LTRgA==?=
- <a.betkher@rosalinux.ru>, i.gaptrakhmanov@rosalinux.ru
-From: Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
-Subject: [REGRESSION] Serious regression on 6.1.x-stable caused by "bounds:
- support non-power-of-two CONFIG_NR_CPUS"
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b5da67a-7482-4f18-9246-9c118f182b8b@leemhuis.info>
 
-Hello, colleagues.
+On 25-04-24, 12:03, Thorsten Leemhuis wrote:
+> On 28.03.24 16:06, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 28.03.24 07:51, Vinod Koul wrote:
+> >> On 26-03-24, 14:50, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>>
+> >>> Vinod Koul, what's your option here? We have two reports about
+> >>> regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
+> >>> waits until WFP state") [v6.8-rc1] now:
+> >>>
+> >>> https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+> >>>
+> >>> https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
+> >>> [the first link points to the start of this thread]
+> >>>
+> >>> To me it sounds like this is a change that better should be reverted,
+> >>> but you are of course the better judge here.
+> >>
+> >> Sure I have reverted this,
+> >
+> > Thx!
+> 
+> That revert afaics has not made it to Linus yet. Is that intentional, or
+> did it just fell through the cracks?
 
-Commit f2d5dcb48f7ba9e3ff249d58fc1fa963d374e66a "bounds: support non-power-of-two CONFIG_NR_CPUS" (https://github.com/torvalds/linux/commit/f2d5dcb48f7ba9e3ff249d58fc1fa963d374e66a) was backported to 6.1.x-stable (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=428ca0000f0abd5c99354c52a36becf2b815ca21), but causes a serious regression on quite a lot of hardware with AMD GPUs, kernel panics.
+Nope, it was sent to Linus last week and is now in -rc6...
 
-It was backported to 6.1.84, 6.1.84 has problems, 6.1.83 does not, the newest 6.1.88 still has this problem.
-
-The problem is described here: https://gitlab.freedesktop.org/drm/amd/-/issues/3347
-
-#regzbot introduced: 428ca0000f0abd5c99354c52a36becf2b815ca21
-
+-- 
+~Vinod
