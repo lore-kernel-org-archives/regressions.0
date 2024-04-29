@@ -1,119 +1,79 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5383CBA
-	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 17:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A821D128807
+	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 18:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714411067; cv=none; b=M440XRZKMcdPF2N/B3Z5pBGS+byQCdK6jw5UwcamQW966nSeX/kZIsxKhphx5CcjcqB9chdWTrQzJ+przaw6oNS40dg9YehUN2Pcun03cFvr0U0GbE2QCcPAsxhbVY6m6qLiDGl8oQQf1X+AHh7g8JyVkSPpt6crkylHf7M6jro=
+	t=1714415309; cv=none; b=pNrDgUzXyDt4AX+AquOX1RXqZG01OInabDLXUFhXTM30cQCktFQ90kJFSUEj+vrGK2X69VPxMJsfKCs+v/qS86cL9EBk77+sv73MO6Yd4NH4y1lU1YDZnEAykHP6BN0EqxSQVx1St+9wOuSAAaGNMzmxw1SGbJd2GlXniYUXq9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714411067; c=relaxed/simple;
-	bh=/AcgWBI1kWNeHnrawu01Ad+zBIAqb/wlbcn9c4qFU90=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=KfzdyFa5vTcg7T/amYyZbJocPmyIS3GHXYiXV2T9JHAfyT13y4pF1BB7D0Uq5AECYR0MQ0mfSHaU+RFKghzKK4dwaulX+ZUJOflh5ACCxw8lgPuilpQZ/sP3rNtxg0YdEW4I2MkXDyIjaP5u4ZPhSqDeTYSPzj+jJt2kOyR0P/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kP4I71W4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=foUbY+h1; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kP4I71W4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="foUbY+h1"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 1F6DB18000AC;
-	Mon, 29 Apr 2024 13:17:44 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 29 Apr 2024 13:17:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714411063; x=1714497463; bh=xekhz3+nyZ
-	m8Ea8jq2BOw2Y9kIUDt9YpLlTFfRvHFOE=; b=kP4I71W4xDoQDx+BkSQ7yea4f4
-	hfvD72bRwVQrY3vX0+/EyVSSPv3PEXNxCceFghMU9Z0jQ87MY04AqgO9emTp6wpD
-	rgHB1lAVNNquGzL+j1n+BaEmoJuVdojvyX088SAGGkOIEvfk65WWwXIRcPcC9tS+
-	hCepCeNjgvePBEhhNeih/bPG1mmtLjpqvHGRFFgqX1oPiZ3FihR/TXT2n/MSxodU
-	rFxYXtvu6VKyORHUd62WDMM2uE8yHNlJBkJYSrvWRg/FMBTx1LONi3/FanWJx7G4
-	nsX0A516+1NExfE3suXN6YN2bamHkng3cZ4FNTot1gFsOt24KvaQTVOgoIyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714411063; x=1714497463; bh=xekhz3+nyZm8Ea8jq2BOw2Y9kIUD
-	t9YpLlTFfRvHFOE=; b=foUbY+h1Kw+2NJhyj+bbbpjLzOVliM2psSbkGJSnPVxZ
-	eDVqOM8bvNui2udA8VZYNCEUhTLX7Ag96mwjAgzc1MkLxsb76D7d31SgR7+FWpeB
-	blC1oHfCwH/xDvszqvU6saKH0dn22GcE/utLcbbr1OpSOyVJYDfmP1hsNvVL4WTi
-	9yTabR3cc7NNezoflDqOta5ncWNSaMRb+Z1xGjKeNxdtb8Aerk9q59if7Yp//AIP
-	2jU/Uiby0dRxSJp4WP9HvdKcLtMYSJYwzLoAGKva0zV5Bv63dwdT62ffb9VHEORp
-	KhAKJwPIuHg+wEXCYppQAww9PXUxl4TRwRik8M/12g==
-X-ME-Sender: <xms:N9YvZuQujlCHRkVFDk_Ko3pQg-gFWocstXL4Q4E_pdmKWyJacD3ThA>
-    <xme:N9YvZjzr0ESm8KCFwN9Ng9l0D7QeErVoqBRUBzVL5U-aEShP6hfodq4XVbNcuprMK
-    IRo9-lMcDiyHEDDLEc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddguddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeu
-    feehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:N9YvZr1o_NrUNjHjlr3JIGPMz4BQRgqQ_ztoQg_WsF7foMfIuyyUGQ>
-    <xmx:N9YvZqDSsbw-4gVUu7s70n6jXlXtCoQrtewarN4HQ0exaM6DD3c0uQ>
-    <xmx:N9YvZngytkJyRGexyKWzG_aXcHP8FB3RCcJTZrpZOpEY9CYiNrrbxA>
-    <xmx:N9YvZmrpcTBv2hLIRMe07DA8k1rBtMoyBoGWzT1KPz42DRZ4FjiXLw>
-    <xmx:N9YvZsZSbss71b3R2D7NJiqPPmnCX5Q1ubWXFQwkNgSJ_9wXXEEbNdqn>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 68916B600A0; Mon, 29 Apr 2024 13:17:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
+	s=arc-20240116; t=1714415309; c=relaxed/simple;
+	bh=8gKah3ghORwSGGK/lLqzKUstmtlsU0Ko8BP6JJhYCX8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DCqTqz+uwBwqPcuohxWEMRerG6tHMv6F5DAs0TflESFo6OJfZLgatlxIF6t/GbXhpC/RTa9EGYAh4JpqvwGhPOxLh7/B2Prh/25lPyN7w957HjEZ1r8jkXGQLP6YiIktgUTB40Uzt+iddT/UvLa7wwcC/8/HGFZoOTQGJhfUQ2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=m4x.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=m4x.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de5e74939fdso1224437276.0
+        for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 11:28:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714415306; x=1715020106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8gKah3ghORwSGGK/lLqzKUstmtlsU0Ko8BP6JJhYCX8=;
+        b=diVp5T9PhZ1BJPXM9Vkk/0VYPYGYCaoOvaI1v+Izr5WLyByn3gbN/VhACZpm3dyid2
+         T+D+HZEaGpqigqyVnPAlW6pUC6xNpMwkhV8oZawe51mtOeU8eI+knDpEQ5pv39Zjcd8c
+         tr1Q8tKMI3mG8t34/dJMpZnKZkVtQn4JQtwHsH460Jw5ipeHEgnFUYo54rLInFVjVFUI
+         I9w63KdidKSy8krPNkaxMVTVJNZj0u3VKlrSBdLjs0ANtGXPXsuIPg6B05qsA6QCsAyp
+         Gj0g6fVHL2Dhb9QojUUKiBtoYVGrDX6NesCBwxra5M7Brh83Q+RnEOZoAva0fGQLsQB+
+         1rDg==
+X-Gm-Message-State: AOJu0YzwLXSdW6dJTQuRpG65WFhQEWmVpJCrJYpYR/dkyJVOlxKiADqx
+	2maN6BSp6P/qhaZ8fbGqmwc5wtkJvOxJjDIUp+1PSU/I9RYNlfjgRXd4u4rP9DddCmVnmgw2QWE
+	mPdIY2CKYShYR8NyibAjLJZmxgDYJH+Ch
+X-Google-Smtp-Source: AGHT+IHOyBFS0F26owaRkYzjeQ6P7JZp13vcQ6OpfgJfXqxeemEwewCnezmmd/d2OHC+eX+zxX0/6o4drbJoo9aPPc8=
+X-Received: by 2002:a05:6902:1b8d:b0:de5:d1cd:b580 with SMTP id
+ ei13-20020a0569021b8d00b00de5d1cdb580mr443367ybb.36.1714415306415; Mon, 29
+ Apr 2024 11:28:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <91dacd68-fdbe-4cb4-92c0-e5d6bc777658@app.fastmail.com>
-In-Reply-To: <8de32257786d3f062c479a8b10dcf17b775d563b.camel@nvidia.com>
-References: 
- <CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com>
- <c819df1c-4215-41bb-b24b-563a912d160f@leemhuis.info>
- <8de32257786d3f062c479a8b10dcf17b775d563b.camel@nvidia.com>
-Date: Mon, 29 Apr 2024 19:17:22 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Timur Tabi" <ttabi@nvidia.com>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
- "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
- "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc: "Anders Roxell" <anders.roxell@linaro.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Danilo Krummrich" <dakr@redhat.com>
-Subject: Re: nouveau: r535.c:1266:3: error: label at end of compound statement default:
- with gcc-8
-Content-Type: text/plain
+References: <CADRbXaDqx6S+7tzdDPPEpRu9eDLrHQkqoWTTGfKJSRxY=hT5MQ@mail.gmail.com>
+ <1de62bb7-93bb-478e-8af4-ba9abf5ae330@leemhuis.info> <4bf3497d-0ede-4e05-a432-e88e9cbc10b4@leemhuis.info>
+In-Reply-To: <4bf3497d-0ede-4e05-a432-e88e9cbc10b4@leemhuis.info>
+From: =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>
+Date: Mon, 29 Apr 2024 20:28:15 +0200
+Message-ID: <CADRbXaBkkGmqnibGvcAF2YH5CjLRJ2bnnix1xKozKdw_Hv3qNg@mail.gmail.com>
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2024, at 19:08, Timur Tabi wrote:
-> On Mon, 2024-04-29 at 17:30 +0200, Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->> TWIMC, there is another report about this in this thread (sadly some of
->> its post did not make it to lore):
->> 
->> https://lore.kernel.org/all/162ef3c0-1d7b-4220-a21f-b0008657f8a5@redhat.com/
->> 
->> Ciao, Thorsten
+Hi Thorsten,
+
+On Mon, Apr 29, 2024 at 12:24=E2=80=AFPM Linux regression tracking (Thorste=
+n
+Leemhuis) <regressions@leemhuis.info> wrote:
 >
-> This doesn't fail on x86-64 when I build it.  I also did a cross-compile to
-> arm64 with the arm64 defconfig, and it doesn't fail there either.
->
-> I'm guessing this is a compiler version thing.  I'm using gcc 11.4.  Is that
-> just too old?
+> So we either need to find the cause (likely a missing backport) through
+> some other way or maybe revert the culprit in the 6.1.y series. Jeremy,
+> did you try if the latter is an option? If not: could you do that
+> please? And could you also try cherry-pikcing c7eaf80bfb0c8c
+> ("Bluetooth: Fix hci_link_tx_to RCU lock usage") [v6.6-rc5] into 6.1.y
+> helps? It's just a wild guess, but it contains a Fixes: tag for the
+> commit in question.
 
-It's too new: this is valid syntax in c23 and accepted by newer compilers
-as an extension to gnu11, but older versions don't like it.
+I gave it a try, and sadly I'm still hitting the exact same bug when I
+cherry-pick the patch you mentioned on top of 6.1.y (at tag v6.1.87).
 
-gcc-11 and clang-16 are fine, while gcc-10 and clang-15 as well as
-earlier versions produce this warning.
+Thanks for trying, is there any other patch that looks like a good candidat=
+e?
 
-      Arnd
+Jeremy
