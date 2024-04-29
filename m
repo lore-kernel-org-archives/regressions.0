@@ -1,113 +1,118 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECD781AD0
-	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 15:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B16128362
+	for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 15:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714403227; cv=none; b=BzfWHxMtuIRsr+L1zNvryI70Tm/6E6XPG4BI7iyB1jLxLLOn6+AJ1K2bUHOObTbuQvO8qNUE1Z1OZMuMqiaq34G2bUWNKQOcJEpZOsqk5oF9px9MnMphDspTTixCGsh2B5EfK1o7JhTwA9EzXC6fHiUgxACH+MmfuCN/dO9ScS4=
+	t=1714403513; cv=none; b=pdrfacuvKegH/UOBaQ2wWUCQuf3zHQSHepwWoiuW7zg3/ldTu92fkOqQ2NObQnqpU5fCYWlrDbXOlvWWe4BTKePeYBX+wBCz4+MLF0MUqN1Df6mNMebkdgytB6Psb4Aw9EXlzwFQcLGqNVb1MSqhugXZZqoQkzUnodj3KOWlmm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714403227; c=relaxed/simple;
-	bh=/3w9Zil+4uYrNOmcYMZkGVooAinr9yG2hncXQUB9lek=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=DQdQmBC5XyhAOMgRvwOiQSWN4gdD/m7Ct9ZaziwyJIpCrOb9laYhkTd+63rSf+J8OvHnFzPXepomFvNiqaL+sRmDdwV3+RerDQUgWRExKoAINRGgy4+r2qVheJ7OL6myAHrcec2bT+5RwBI/bX+k14fM+/niYZillkteXAHhK9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aC5jTA+P; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714403513; c=relaxed/simple;
+	bh=2mOGvwx0F2IpPY4iGZ/syNebrU7aiO2c7zkOquYWlm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QViWvkU70SLbhGk9zg6EthnWjeKFvFtlYmIU+kglTDpmwAu5pyW2gUhzTXbjf3nlQ6cITxq2d07e35X0u8eysbloPszCHep4TQtN4V2Ka6pfnQb+IPr+USgFe8eknvsXq7g4OP02pVBhiPyy3fm0ezuXVgOaKg28fWp1Ck2pMOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMDvNdAO; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aC5jTA+P"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5af2358c7e5so2652550eaf.0
-        for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 08:07:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMDvNdAO"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5726ccca4c8so2546071a12.3
+        for <regressions@lists.linux.dev>; Mon, 29 Apr 2024 08:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714403225; x=1715008025; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Kq/mDhjDx0haJOXMYO5ieP1vWAdfCIwGNjDIS1vV1ns=;
-        b=aC5jTA+PRAcXkLnoJoDIfcjaNEkmyMnLFKQKC4ZkwkEra0gNfpO4g2ovBbBDWELEPd
-         lgH8K3wfpEOspo6xHmZ6WORaJbUwH1bAPBE8bjTsa5bpnR8c2xI/NAEurwaKmXcZu4hB
-         ifjB3cWK/Uejz7AXNqPClZyGL+bG1d+SkKQy7cz1tTDo6dLtQ/j8J7pqs1+r9At4cnOH
-         z1wPNo7JkaBuoBu8n1dFIlv7cUgY+kEYCYOsRvLO8BnZBFbmCPoAGMWtaSx37JCbFUvQ
-         XMK6Q6kl/DzMGoXx0h3vLuHV5E/QCmIQsYZZ71qX6nIPEhvnOEjSoq8bIqAPrPTbFZie
-         2VRQ==
+        d=gmail.com; s=20230601; t=1714403510; x=1715008310; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xU/iLoQXl7tXUx6T6JsQIJsicG3iO7GQdCCzHimssM0=;
+        b=iMDvNdAOY8ueQc4QnuGQz8uVXiC9QFCgl26tNr4RrmK+DIB7NJJ7BRGX1txb+gXRm4
+         OCbfiCH29gyae8pLmcjbSbsEb6mMwID2satDohy46M2ogbwAHipR54n21Z+VfTRwp+ce
+         U0BgR/voVUvLNJN7G9tVDADXNt3SQ73DCD9BrBvn2ZJTRQHXueucDAIxlISU7FZfedx8
+         htwqNigjpZ9tNnsXNgojo0ZvcBleDwRfuDBKlwd4zMy0Ep6BLPLmN/E1umtWoSqMZo4A
+         uC6PgFXTi9WntrfjbtL7Hn7jCxBe5XCfZi1Md/lJuPUpZtztai5yV2qc4XT3jsa+5lTC
+         Gphw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714403225; x=1715008025;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Kq/mDhjDx0haJOXMYO5ieP1vWAdfCIwGNjDIS1vV1ns=;
-        b=UPqf2sHRrVZO4fT75xRwQHPszeCfi9Poh3f3ZqlQiDDMx+6prDfFTVVE20JJ51zcnI
-         VRS4DKVV+J9Nt+gD0S4iXFBJ06Xi3pItO1CV0qHuzDcQ9HldA8ADAJ6th6qtSX1oto79
-         x5zBtddU82Wxi2baBPYIbA88ZtEtGG9s/NSCJnHSDasPsE8rH4epRvB0Uuns+X6rxsKS
-         wnpzvPcGEDEuFQfd5ow7uX84r6Ssi/Tfo2C2Bm5bP2FvfZWzvZd/9uaol/QL6N9mq2ns
-         apM7zVAufzIag63CFRamvtQ4LMtuDinPdef8WEYwpZKgT9ymV6k1YWUFgBj4F39IQmee
-         TR7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtLV0GpnNPp13a/vpdSNpbuo+ZPkA9QGoKH64eeZ5Uh3nZ/WoS6810yaAvvAYrj9A9xsknOJ0+le30qeQtm+wYKfsF028210QDWxw=
-X-Gm-Message-State: AOJu0Yw1Lf+gXnXbqAqX1ZS/fhpMHvqzEtuxdatX3jf4R2WolY18H+En
-	7W9cUSZbaMKA+f7Qdjb/bvBwH4CwZ17i3IksBXxqeegEsWpnF05XRiEpXbRFjaL+IIHAVYWDCmZ
-	Ea8uw2hcFAlBSK2JfxXeEevtCo+JRAafjjjvx3w==
-X-Google-Smtp-Source: AGHT+IGi7klXrfkLGYDk0bH46vsiOhdwy/HLQn/JmrZKyHF7xJC4yozyKeAYx8uVrhCWOCacbYNZwg87iwhAtb2HZSs=
-X-Received: by 2002:a05:6358:5d91:b0:186:3fcb:8da9 with SMTP id
- s17-20020a0563585d9100b001863fcb8da9mr11016997rwm.21.1714403224770; Mon, 29
- Apr 2024 08:07:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714403510; x=1715008310;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xU/iLoQXl7tXUx6T6JsQIJsicG3iO7GQdCCzHimssM0=;
+        b=iAWbSrfWBFxBtZfkMuJGh2T5zkYWSUtiritMwZPalbSs3fY98WgexkkSJkI4e5uvt1
+         QVLZCt2N5dPzLNR+kPGg4UZwfnSAEh2kKZ4h73Co4jqkL3MahIxgqvYEmou+nYzcwtQb
+         1+frRfvFCa71zNQuJvRhQaS6vk576guEBGWYTN8CnBd+b0ZD2ecJ/dqvmGuJDwBAnioA
+         5dvqCsFmYMIbbZ23ujcHuhg1n0DJX/6c/1a42rle/8QHeDUJl8qzvfVe5rdmErTQgGE8
+         Isn5yZzpOzovmcCTz+1g2L7TRVstGxI+PCI3UB+/I46rbwqpxdK+yntvjdZQo/ZE/yWh
+         qKzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSl8fw/rKM0QgV9Q6Eo7YOFJj3VHCZTI24dHUdbwj0v/SS1qdQV6EGt025CF9HdOu/HKDV669Xv0MSGgIqWgfcg6VPq8E48lrqtaE=
+X-Gm-Message-State: AOJu0YxFzoV9k1VzWdHwvg87fdbBwod5KxSNQ277Rmckg8EGMZ+S+UQK
+	BfRmqMDCuaJ+1YbwA/IJV8r9oO6xZgy1Bwm3SX4gi9EAt3OCT9eisEqW4gF/
+X-Google-Smtp-Source: AGHT+IEhEdiaiCJzabxzHgv5ya2RGGdycN3jCTy0tJ1kx0ZZPY/5fGE7WGoJhcAGrpmB7uFA67IDWg==
+X-Received: by 2002:a17:906:e2c3:b0:a54:e183:6248 with SMTP id gr3-20020a170906e2c300b00a54e1836248mr7519853ejb.0.1714403510018;
+        Mon, 29 Apr 2024 08:11:50 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id wt8-20020a170906ee8800b00a55ac292b66sm10253316ejb.219.2024.04.29.08.11.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 08:11:48 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 5F51DBE2EE8; Mon, 29 Apr 2024 17:11:47 +0200 (CEST)
+Date: Mon, 29 Apr 2024 17:11:47 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Paulo Alcantara <pc@manguebit.com>, regressions@lists.linux.dev,
+	Steve French <stfrench@microsoft.com>, sashal@kernel.org,
+	stable@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
+ overflow frame end of buf" and invisible files under certain conditions and
+ at least with noserverino mount option
+Message-ID: <Zi-4s-7QSFO1OR17@eldamar.lan>
+References: <ZiBCsoc0yf_I8In8@eldamar.lan>
+ <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+ <ZiCoYjr79HXxiTjr@eldamar.lan>
+ <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
+ <ZiLQG4x0m1L70ugu@eldamar.lan>
+ <adfd2a680e289404140ef917cf0bd0ab@manguebit.com>
+ <Zigg4RWtRfQYW1RR@eldamar.lan>
+ <2024042912-unloader-slighting-c756@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 29 Apr 2024 20:36:53 +0530
-Message-ID: <CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com>
-Subject: nouveau: r535.c:1266:3: error: label at end of compound statement
- default: with gcc-8
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Cc: Timur Tabi <ttabi@nvidia.com>, Danilo Krummrich <dakr@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024042912-unloader-slighting-c756@gregkh>
 
-Following build warnings / errors noticed on Linux next-20240429 tag on the
-arm64, arm and riscv with gcc-8 and gcc-13 builds pass.
+Hi,
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On Mon, Apr 29, 2024 at 12:50:45PM +0200, Greg KH wrote:
+> On Tue, Apr 23, 2024 at 10:58:09PM +0200, Salvatore Bonaccorso wrote:
+> > Hi Paulo,
+> > 
+> > On Mon, Apr 22, 2024 at 12:08:53PM -0300, Paulo Alcantara wrote:
+> > > Salvatore Bonaccorso <carnil@debian.org> writes:
+> > > 
+> > > > I'm still failing to provide you a recipe with a minimal as possible
+> > > > setup, but with the instance I was able to reproduce the issue the
+> > > > regression seems gone with cherry-picking 35235e19b393 ("cifs: Replace
+> > > > remaining 1-element arrays") .
+> > > 
+> > > It's OK, no problem.  Could you please provide the backport to stable
+> > > team?
+> > 
+> > Sure, here it is. Greg or Sasha is it ok to pick that up for the 6.1.y
+> > queues?
+> 
+> Glad to, for some reason I thought this caused problems, but if it
+> passes your testing, great!  I'll go queue it up now, thanks.
 
-Commit id:
- b58a0bc904ff nouveau: add command-line GSP-RM registry support
+Thanks! Unfortunately I'm not having a good test(case/suite) for this
+myself for such cases. All issues recently forwarded as regressions in
+the 6.1.y series were unfortunately only uncovered by Debian users
+once we did release the version :(. Hopefully this will "calm down"
+now.
 
-Buids:
---
-  gcc-8-arm64-defconfig - Fail
-  gcc-8-arm-defconfig - Fail
-  gcc-8-riscv-defconfig - Fail
+Thanks to all of you, for your work!
 
-Build log:
-----
-drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c: In function 'build_registry':
-drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1266:3: error: label at
-end of compound statement
-   default:
-   ^~~~~~~
-make[7]: *** [scripts/Makefile.build:244:
-drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.o] Error 1
-
-metadata:
-  git_describe: next-20240429
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_short_log: b0a2c79c6f35 ("Add linux-next specific files for 20240429")
-  arch: arm64, arm, riscv
-  toolchain: gcc-8
-
-Steps to reproduce:
-----
-# tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
---kconfig defconfig
-
-Links:
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2flcoOuqVJfhTvX4AOYsWMd5hqe/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23704376/suite/build/test/gcc-8-defconfig/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23705756/suite/build/test/gcc-8-defconfig/details/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Regards,
+Salvatore
