@@ -1,350 +1,278 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BC712D747
-	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 10:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F23F13D247
+	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714474278; cv=none; b=B27s+WTJGIybO3S5yTcnBIk48vBpun2lE+pdJZg2q6ms/ZHF5KWl51frWJV995dAj6EDsNb6BFDKm/MZxMWL461IdizoH02biPQsa0FTFT2gGuhW6irUMEGiojhMifJGNxVayOaOAy/LC3Myw1DmklpIWXuGWP8VEM3GFV5u6V8=
+	t=1714478155; cv=none; b=uEVuN1AHVM3HDr3Na8VuXDqNpOsd1bUGfm92twsY8IXcPuW1IBSP9MKqBt2r6SudCHq3VvDUUfri0C2tdS6XdLnt8y5ha4vEwMaqqWh1I0I4oFY6lBhLYVfXuxMHHgRdg15wERCX0NX9AVsAfZexWqfGyWZOZDOQDQ9D9JGP92A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714474278; c=relaxed/simple;
-	bh=gxuEtUtnBxzs7ySDjovIkokz2mfxgocRRFTONgD65Zs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MTn2XICKiZdA98RnjMdtNeRGhQkckYX6C3Hwe6y3xwZg0T46Z3r2TcXeCSS/OvAeoumqvgDYYHl7Q+rr98sT5A+1Enx4/PGOUss2XxK1YI8/YRLVCmWDGIlWiL5/yLBifPXH+XkasEhlk9mfV5UioQttXCQDtGfIK2PYdFmSK5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OyxDMYUb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714478155; c=relaxed/simple;
+	bh=AjBFrT49pJPHHPOcIJIQ+KvF9fs8I94HZ/RnZlwQuvc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EbcAC2NMzf8xHoqHWNz/XQmV5NKQ1VAd95ypRMIZG17t0vSGVVpSSxb9lGrZG6driNU0guYq9P7iKksjDoxKytSm4e5JyJ3YE0TXN5SdNloVU2iI864j+in1vzAaDJ3XobsMqatY1I9eEKutbj/DF++R+jjPlxfJaAVrgmCP3CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WtbLEAil; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WtbLEAil; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OyxDMYUb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714474274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HG+W/gMm4aICRt7ajzQB3rWb0K/zj+ZoN91lgFYmjzc=;
-	b=OyxDMYUb4LAbtEyfjrTiajUq341+VaI1h0kJWnTijvXuiPOdjj4Ovn3XQ61YUj7YZ2ioRT
-	I0DtCm/k+fD8uWz55RTFPpnw6b8ifWP2wQcQcrTDb707c4bgjiXHwMD1KB9A/CTcs5uvLU
-	w4uzTxgM2nB48I84V0tbjt816WjrWWk=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-451-6stO4OquO8C4TyB-6w48lA-1; Tue, 30 Apr 2024 06:51:13 -0400
-X-MC-Unique: 6stO4OquO8C4TyB-6w48lA-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2a30dc503f3so5314815a91.0
-        for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 03:51:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714474272; x=1715079072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HG+W/gMm4aICRt7ajzQB3rWb0K/zj+ZoN91lgFYmjzc=;
-        b=wsOhkXxGMScZx2WfM7MDexXWmO13N49i3zKY9SqPg60CRzmKMsCDLLmpvuaAFUJR+y
-         pfNw+t8qWErc/IYWN+XMOrjwVekqdUIrA6XctW95kTdyq6UJPbAC7RF5dTFFmWxAm9NI
-         sitAycGEEOfQCqNFIiIIIUXG4in1Ej8FjfESY/6h96Djk0hgkjsjACs5GX0qKAqBffzg
-         mU2tmU52Z59djkqxUfU8WmepbwOKHILDiMgj84QL7pJq4IeglwKBn6VP1pTFxriQ//r0
-         dqNCCnwHlOy/GUo2yuzXyIyGT5HLqAB7ShGVoaZav02cF7zrRUM8LsNdehzg397ynhr6
-         Ytyg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1QIEAdXrssVVzO/M+Lcl5c0okydwSnM6g6TBMoRLe/s1pRzR1IFWge11Wk1au72cE8MVG2rdoljygMS1Bw6U/t1qevPVXT/j5Vgg=
-X-Gm-Message-State: AOJu0YyygIKrYjW5gTKnshIkEB4jpHNRep0mmDWRHzalHhwilH5r4bMZ
-	GVDnwQGKG7Ba9+/Cv8xZTLJCvbX1XP3tjT/ptj5p9tCATLFr5DItMVhV2d4Bl3sGXl5Jaw1M+UN
-	s6T9djI2mTYP4OeG5Rfj5nVgobY9VxT0Drz4KAkZB7mrYz3WIfsG4/5akVW2B+QFEwudhUqsBL6
-	wvZ1aXNyqd8uNd4jNqQ2sb9qzAEG9uLvapFKc=
-X-Received: by 2002:a17:90a:7c0a:b0:2a2:2dc9:7437 with SMTP id v10-20020a17090a7c0a00b002a22dc97437mr11111130pjf.43.1714474271931;
-        Tue, 30 Apr 2024 03:51:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0LHwtw9Pkh6rGOmOUwCNbtB7MpTCqtUALaC7GbTyPJWog6vc9/3Dk9e5tVbnkTWEfKB545N5QKVU8u2xyLrY=
-X-Received: by 2002:a17:90a:7c0a:b0:2a2:2dc9:7437 with SMTP id
- v10-20020a17090a7c0a00b002a22dc97437mr11111101pjf.43.1714474271288; Tue, 30
- Apr 2024 03:51:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WtbLEAil";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WtbLEAil"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 431871F7D2;
+	Tue, 30 Apr 2024 11:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1714478150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AjBFrT49pJPHHPOcIJIQ+KvF9fs8I94HZ/RnZlwQuvc=;
+	b=WtbLEAilMRD1PJCweFaTD7c6VLB/IrAhCBZfaQf0Tqog8eBMrSFaMSK2ABDgVEm90S1Dtj
+	+f8/6nd+UYuulHD3cNyaLmxveYgHqVQnKxrDBBjDa1uWRc+CPJy1DytDI8MlMfA2wRvgsB
+	IqRftqdpcYN+vNeKx0MlQr3+kB3G+5Q=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=WtbLEAil
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1714478150; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AjBFrT49pJPHHPOcIJIQ+KvF9fs8I94HZ/RnZlwQuvc=;
+	b=WtbLEAilMRD1PJCweFaTD7c6VLB/IrAhCBZfaQf0Tqog8eBMrSFaMSK2ABDgVEm90S1Dtj
+	+f8/6nd+UYuulHD3cNyaLmxveYgHqVQnKxrDBBjDa1uWRc+CPJy1DytDI8MlMfA2wRvgsB
+	IqRftqdpcYN+vNeKx0MlQr3+kB3G+5Q=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 006F1133A7;
+	Tue, 30 Apr 2024 11:55:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yLEnOUXcMGbxEgAAD6G6ig
+	(envelope-from <jgross@suse.com>); Tue, 30 Apr 2024 11:55:49 +0000
+Message-ID: <735bf906-7328-4561-923a-0340422c68d4@suse.com>
+Date: Tue, 30 Apr 2024 13:55:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
- <CAKa-r6vJjeYqGZERRr=B4ykLf-efPRY3h=HU3y3QxazwZ_cMAg@mail.gmail.com> <CANn89iJ4go0oXSjRaxkdxsUFPCK8kcb8YPt+0d7isK9ZsFrpww@mail.gmail.com>
-In-Reply-To: <CANn89iJ4go0oXSjRaxkdxsUFPCK8kcb8YPt+0d7isK9ZsFrpww@mail.gmail.com>
-From: Davide Caratti <dcaratti@redhat.com>
-Date: Tue, 30 Apr 2024 12:50:59 +0200
-Message-ID: <CAKa-r6s1JOhwD4XJ=_2uekfNwX-Q0oYnTkYtfUivXwWK=3s+6w@mail.gmail.com>
-Subject: Re: selftests: tc-testing: tdc.sh: WARNING: at kernel/locking/lockdep.c:1226
- lockdep_register_key
-To: Eric Dumazet <edumazet@google.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com, 
-	jiri@resnulli.us, cpaasch@apple.com, pabeni@redhat.com, xmu@redhat.com, 
-	maxim@isovalent.com, anders.roxell@linaro.org, dan.carpenter@linaro.org, 
-	arnd@arndb.de, Linux Kernel Functional Testing <lkft@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86/cpu: fix BSP detection when running as Xen PV
+ guest
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240405123434.24822-1-jgross@suse.com>
+ <20240405123434.24822-2-jgross@suse.com>
+ <6a0b7c20-a250-4542-b170-101c9663b2e5@suse.com>
+Content-Language: en-US
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <6a0b7c20-a250-4542-b170-101c9663b2e5@suse.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------fe864Yik00aC00ImqIfV3xr6"
+X-Spam-Flag: NO
+X-Spam-Score: -6.40
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 431871F7D2
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-6.40 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DKIM_TRACE(0.00)[suse.com:+];
+	HAS_ATTACHMENT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------fe864Yik00aC00ImqIfV3xr6
+Content-Type: multipart/mixed; boundary="------------JBA1E01NbZXjAevh0NH5IVKr";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Message-ID: <735bf906-7328-4561-923a-0340422c68d4@suse.com>
+Subject: Re: [PATCH 1/2] x86/cpu: fix BSP detection when running as Xen PV
+ guest
+References: <20240405123434.24822-1-jgross@suse.com>
+ <20240405123434.24822-2-jgross@suse.com>
+ <6a0b7c20-a250-4542-b170-101c9663b2e5@suse.com>
+In-Reply-To: <6a0b7c20-a250-4542-b170-101c9663b2e5@suse.com>
+
+--------------JBA1E01NbZXjAevh0NH5IVKr
+Content-Type: multipart/mixed; boundary="------------JPXjeEfeyqZo71BCWCN0AMk9"
+
+--------------JPXjeEfeyqZo71BCWCN0AMk9
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+UElORyEhISENCg0KVGhpcyBwYXRjaCBmaXhlcyBhIHJlZ3Jlc3Npb24gaW50cm9kdWNlZCBp
+biA2LjktcmMxLg0KDQpQbGVhc2UgY29uc2lkZXIgdGFraW5nIHRoZSBwYXRjaCBpbiB0aGUg
+Ni45IGN5Y2xlIQ0KDQojcmVnemJvdCBeaW50cm9kdWNlZDogNWM1NjgyYjlmODdhDQoNCg0K
+SnVlcmdlbg0KDQpPbiAxOS4wNC4yNCAxMzo1MiwgSnVlcmdlbiBHcm9zcyB3cm90ZToNCj4g
+UGluZz8NCj4gDQo+IE9uIDA1LjA0LjI0IDE0OjM0LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0K
+Pj4gV2hlbiBib290aW5nIGFzIGEgWGVuIFBWIGd1ZXN0IHRoZSBib290IHByb2Nlc3NvciBp
+c24ndCBkZXRlY3RlZA0KPj4gY29ycmVjdGx5IGFuZCB0aGUgZm9sbG93aW5nIG1lc3NhZ2Ug
+aXMgc2hvd246DQo+Pg0KPj4gwqDCoCBDUFUgdG9wbzogQm9vdCBDUFUgQVBJQyBJRCBub3Qg
+dGhlIGZpcnN0IGVudW1lcmF0ZWQgQVBJQyBJRDogMCA+IDENCj4+DQo+PiBBZGRpdGlvbmFs
+bHkgdGhpcyByZXN1bHRzIGluIG9uZSBDUFUgYmVpbmcgaWdub3JlZC4NCj4+DQo+PiBGaXgg
+dGhhdCBieSBjYWxsaW5nIHRoZSBCU1AgZGV0ZWN0aW9uIGxvZ2ljIHdoZW4gcmVnaXN0ZXJp
+bmcgdGhlIGJvb3QNCj4+IENQVSdzIEFQSUMsIHRvby4NCj4+DQo+PiBGaXhlczogNWM1Njgy
+YjlmODdhICgieDg2L2NwdTogRGV0ZWN0IHJlYWwgQlNQIG9uIGNyYXNoIGtlcm5lbHMiKQ0K
+Pj4gU2lnbmVkLW9mZi1ieTogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPg0KPj4g
+LS0tDQo+PiDCoCBhcmNoL3g4Ni9rZXJuZWwvY3B1L3RvcG9sb2d5LmMgfCAyICstDQo+PiDC
+oCAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+
+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NwdS90b3BvbG9neS5jIGIvYXJjaC94
+ODYva2VybmVsL2NwdS90b3BvbG9neS5jDQo+PiBpbmRleCBhYWNhOGQyMzVkYzIuLjIzYzNk
+YjVlNjM5NiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcHUvdG9wb2xvZ3ku
+Yw0KPj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NwdS90b3BvbG9neS5jDQo+PiBAQCAtMjU1
+LDcgKzI1NSw3IEBAIHZvaWQgX19pbml0IHRvcG9sb2d5X3JlZ2lzdGVyX2Jvb3RfYXBpYyh1
+MzIgYXBpY19pZCkNCj4+IMKgwqDCoMKgwqAgV0FSTl9PTl9PTkNFKHRvcG9faW5mby5ib290
+X2NwdV9hcGljX2lkICE9IEJBRF9BUElDSUQpOw0KPj4gwqDCoMKgwqDCoCB0b3BvX2luZm8u
+Ym9vdF9jcHVfYXBpY19pZCA9IGFwaWNfaWQ7DQo+PiAtwqDCoMKgIHRvcG9fcmVnaXN0ZXJf
+YXBpYyhhcGljX2lkLCBDUFVfQUNQSUlEX0lOVkFMSUQsIHRydWUpOw0KPj4gK8KgwqDCoCB0
+b3BvbG9neV9yZWdpc3Rlcl9hcGljKGFwaWNfaWQsIENQVV9BQ1BJSURfSU5WQUxJRCwgdHJ1
+ZSk7DQo+PiDCoCB9DQo+PiDCoCAvKioNCj4gDQoNCg==
+--------------JPXjeEfeyqZo71BCWCN0AMk9
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-hello Eric,
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-On Tue, Apr 30, 2024 at 12:31=E2=80=AFPM Eric Dumazet <edumazet@google.com>=
- wrote:
->
->
-> I just had  5 or 6 syzbot reports about this issue.
->
-> I tested the following fix.
->
-> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-> index 31dfd6c7405b01e22fe1b8c80944e2bed7d30ddc..d3f6006b563ccd8827b7af362=
-ce9dceaa78f8841
-> 100644
-> --- a/net/sched/sch_generic.c
-> +++ b/net/sched/sch_generic.c
-> @@ -982,6 +982,7 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_qu=
-eue,
->
->         return sch;
->  errout1:
-> +       lockdep_unregister_key(&sch->root_lock_key);
->         kfree(sch);
->  errout:
->         return ERR_PTR(err);
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-hello Eric,
+--------------JPXjeEfeyqZo71BCWCN0AMk9--
 
-On Tue, Apr 30, 2024 at 12:31=E2=80=AFPM Eric Dumazet <edumazet@google.com>=
- wrote:
->
+--------------JBA1E01NbZXjAevh0NH5IVKr--
 
-[...]
+--------------fe864Yik00aC00ImqIfV3xr6
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
->
-> I just had  5 or 6 syzbot reports about this issue.
->
-> I tested the following fix.
->
-> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-> index 31dfd6c7405b01e22fe1b8c80944e2bed7d30ddc..d3f6006b563ccd8827b7af362=
-ce9dceaa78f8841
-> 100644
-> --- a/net/sched/sch_generic.c
-> +++ b/net/sched/sch_generic.c
-> @@ -982,6 +982,7 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_qu=
-eue,
->
->         return sch;
->  errout1:
-> +       lockdep_unregister_key(&sch->root_lock_key);
->         kfree(sch);
->  errout:
->         return ERR_PTR(err);
+-----BEGIN PGP SIGNATURE-----
 
-this is ok, but it's not sufficient: qdisc_free() is called in the
-error path of qdisc_create(), even after successful qdisc_alloc(), and
-I was not unregistering the key also in this case.
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmYw3EUFAwAAAAAACgkQsN6d1ii/Ey9P
+vAf8Cmk4UpBk8TkXnKXmEeL7VJrcCcXZ08qgREjN0jW9qNcelxClBKPzStn6wKP3snTGi2o3dYKO
+y8jGgfBQew1P8XU+lbgzx13SbCxcxtMIfMR+nKS7ptpHyVHB/A/guKk07hqzYJHl6GnqER1s97OZ
+Nn4IF3fxNgiytod83A4gcp55hqkwySErhygCUfBYXIdZ1rmdhEgb9VlxLZtsEhP4EBTxLoYlgj3R
+0H4qj1ffr2BhK86bl/P2JyQNmTs7cENdcykekhGjyhrKcnMxEna1k3M0Ac6GXUEJ2l06kPlZwKxy
+JFD6Ux6biRaJfaYZhaV7slPDebJLzZ6LfpJXgs4YiA==
+=IuPd
+-----END PGP SIGNATURE-----
 
-[  247.171430] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[  247.178663] BUG: KASAN: slab-use-after-free in
-lockdep_register_key+0x5f2/0x700
-[  247.185976] Read of size 8 at addr ffff88811236f2a8 by task ip/7925
-[  247.192244]
-[  247.193754] CPU: 26 PID: 7925 Comm: ip Kdump: loaded Not tainted
-6.9.0-rc2+ #648
-[  247.201164] Hardware name: Supermicro
-SYS-6027R-72RF/X9DRH-7TF/7F/iTF/iF, BIOS 3.0  07/26/2013
-[  247.209775] Call Trace:
-[  247.212227]  <TASK>
-[  247.214332]  dump_stack_lvl+0x7c/0xc0
-[  247.218008]  print_report+0xc9/0x610
-[  247.221587]  ? __virt_addr_valid+0x21a/0x3e0
-[  247.225859]  ? lockdep_register_key+0x5f2/0x700
-[  247.230392]  ? lockdep_register_key+0x5f2/0x700
-[  247.234925]  kasan_report+0x89/0xc0
-[  247.238419]  ? lockdep_register_key+0x5f2/0x700
-[  247.242952]  lockdep_register_key+0x5f2/0x700
-[  247.247310]  ? __pfx_lockdep_register_key+0x10/0x10
-[  247.252188]  ? trace_kmalloc+0x2b/0xc0
-[  247.255941]  ? qdisc_alloc+0xae/0xb60
-[  247.259611]  qdisc_alloc+0x21d/0xb60
-[  247.263198]  qdisc_create_dflt+0x63/0x3c0
-[  247.267217]  attach_one_default_qdisc.constprop.37+0x8e/0x170
-[  247.272964]  dev_activate+0x4bd/0xc30
-[  247.276629]  ? mark_held_locks+0xb7/0x120
-[  247.280640]  ? __pfx_dev_activate+0x10/0x10
-[  247.284839]  ? __local_bh_enable_ip+0xa8/0x120
-[  247.289289]  ? __local_bh_enable_ip+0xa8/0x120
-[  247.293739]  __dev_open+0x275/0x380
-[  247.297238]  ? __pfx___dev_open+0x10/0x10
-[  247.301251]  ? __local_bh_enable_ip+0xa8/0x120
-[  247.305698]  __dev_change_flags+0x3f1/0x570
-[  247.309892]  ? __pfx___dev_change_flags+0x10/0x10
-[  247.314601]  dev_change_flags+0x7c/0x160
-[  247.318532]  ? find_held_lock+0x3a/0x1d0
-[  247.322458]  do_setlink+0x1ea1/0x34b0
-[  247.326125]  ? __pfx_lock_release+0x10/0x10
-[  247.330310]  ? __pfx_lock_acquire+0x10/0x10
-[  247.334504]  ? __pfx_do_setlink+0x10/0x10
-[  247.338529]  ? __pfx_unwind_next_frame+0x10/0x10
-[  247.343157]  ? is_bpf_text_address+0x6a/0xf0
-[  247.347436]  ? kernel_text_address+0xcb/0xd0
-[  247.351709]  ? __kernel_text_address+0xe/0x40
-[  247.356067]  ? unwind_get_return_address+0x63/0xb0
-[  247.360867]  ? __pfx_stack_trace_consume_entry+0x10/0x10
-[  247.366180]  ? arch_stack_walk+0xa1/0xf0
-[  247.370113]  ? stack_depot_save_flags+0x28/0x8b0
-[  247.374738]  ? kasan_save_stack+0x2a/0x40
-[  247.378757]  ? kasan_save_stack+0x1c/0x40
-[  247.382768]  ? kasan_save_track+0x10/0x30
-[  247.386782]  ? __kasan_kmalloc+0x7b/0x90
-[  247.390708]  ? __nla_validate_parse+0x48/0x3f0
-[  247.395153]  ? __rtnl_newlink+0x14f0/0x1510
-[  247.399339]  ? rtnetlink_rcv_msg+0x2f0/0xbc0
-[  247.403613]  ? netlink_rcv_skb+0x120/0x380
-[  247.407710]  ? netlink_unicast+0x420/0x630
-[  247.411830]  __rtnl_newlink+0x8c9/0x1510
-[  247.415758]  ? find_held_lock+0x3a/0x1d0
-[  247.419689]  ? __pfx___rtnl_newlink+0x10/0x10
-[  247.424049]  ? __mutex_lock+0x348/0x2100
-[  247.427978]  ? kasan_save_track+0x10/0x30
-[  247.431996]  ? __kasan_kmalloc+0x20/0x90
-[  247.435923]  ? kmalloc_trace+0x1c8/0x350
-[  247.439863]  rtnl_newlink+0x61/0x90
-[  247.443368]  rtnetlink_rcv_msg+0x2f0/0xbc0
-[  247.447468]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
-[  247.452112]  ? __pfx_lock_release+0x10/0x10
-[  247.456298]  ? find_held_lock+0x3a/0x1d0
-[  247.460226]  netlink_rcv_skb+0x120/0x380
-[  247.464159]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
-[  247.468778]  ? __pfx_netlink_rcv_skb+0x10/0x10
-[  247.473226]  ? netlink_deliver_tap+0x141/0xb60
-[  247.477681]  netlink_unicast+0x420/0x630
-[  247.481614]  ? __pfx_netlink_unicast+0x10/0x10
-[  247.486061]  netlink_sendmsg+0x732/0xbc0
-[  247.489986]  ? __pfx_netlink_sendmsg+0x10/0x10
-[  247.494433]  ? __pfx_netlink_sendmsg+0x10/0x10
-[  247.498883]  __sock_sendmsg+0x1ea/0x280
-[  247.502725]  ____sys_sendmsg+0x5a9/0x990
-[  247.506653]  ? __pfx_____sys_sendmsg+0x10/0x10
-[  247.511105]  ? __pfx_copy_msghdr_from_user+0x10/0x10
-[  247.516072]  ? __lock_acquire+0x19ae/0x3150
-[  247.520259]  ___sys_sendmsg+0xf1/0x180
-[  247.524011]  ? __pfx____sys_sendmsg+0x10/0x10
-[  247.528368]  ? find_held_lock+0x3a/0x1d0
-[  247.532298]  ? __pfx_lock_release+0x10/0x10
-[  247.536489]  ? debug_check_no_obj_freed+0x154/0x5a0
-[  247.541377]  ? __pfx_lock_acquired+0x10/0x10
-[  247.545652]  ? hlock_class+0x4e/0x120
-[  247.549316]  ? __lock_acquire+0x19ae/0x3150
-[  247.553508]  ? __fget_light+0x52/0x1f0
-[  247.557266]  __sys_sendmsg+0xd3/0x180
-[  247.560939]  ? __pfx___sys_sendmsg+0x10/0x10
-[  247.565209]  ? __pfx_lock_release+0x10/0x10
-[  247.569397]  ? __pfx_lock_acquire+0x10/0x10
-[  247.573591]  do_syscall_64+0x96/0x180
-[  247.577259]  ? asm_exc_page_fault+0x22/0x30
-[  247.581453]  entry_SYSCALL_64_after_hwframe+0x71/0x79
-[  247.586505] RIP: 0033:0x7f9503f4fa07
-[  247.590092] Code: 0a 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b9
-0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2e 00 00
-00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 89 54 24 1c 48 89 74
-24 10
-[  247.608844] RSP: 002b:00007fff6c729068 EFLAGS: 00000246 ORIG_RAX:
-000000000000002e
-[  247.616421] RAX: ffffffffffffffda RBX: 000000006630c681 RCX: 00007f9503f=
-4fa07
-[  247.623553] RDX: 0000000000000000 RSI: 00007fff6c7290d0 RDI: 00000000000=
-00003
-[  247.630686] RBP: 0000000000000000 R08: 0000000000000001 R09: 00000000000=
-00078
-[  247.637828] R10: 000000000000009b R11: 0000000000000246 R12: 00000000000=
-00001
-[  247.644960] R13: 00007fff6c729180 R14: 0000000000000000 R15: 000055bf67d=
-d9040
-[  247.652099]  </TASK>
-[  247.654285]
-[  247.655785] Allocated by task 7745:
-[  247.659286]  kasan_save_stack+0x1c/0x40
-[  247.663125]  kasan_save_track+0x10/0x30
-[  247.666964]  __kasan_kmalloc+0x7b/0x90
-[  247.670717]  __kmalloc_node+0x1ff/0x460
-[  247.674558]  qdisc_alloc+0xae/0xb60
-[  247.678050]  qdisc_create+0xdd/0xfb0
-[  247.681628]  tc_modify_qdisc+0x37e/0x1960
-[  247.685641]  rtnetlink_rcv_msg+0x2f0/0xbc0
-[  247.689741]  netlink_rcv_skb+0x120/0x380
-[  247.693666]  netlink_unicast+0x420/0x630
-[  247.697593]  netlink_sendmsg+0x732/0xbc0
-[  247.701519]  __sock_sendmsg+0x1ea/0x280
-[  247.705358]  ____sys_sendmsg+0x5a9/0x990
-[  247.709283]  ___sys_sendmsg+0xf1/0x180
-[  247.713036]  __sys_sendmsg+0xd3/0x180
-[  247.716702]  do_syscall_64+0x96/0x180
-[  247.720367]  entry_SYSCALL_64_after_hwframe+0x71/0x79
-[  247.725422]
-[  247.726919] Freed by task 7745:
-[  247.730066]  kasan_save_stack+0x1c/0x40
-[  247.733906]  kasan_save_track+0x10/0x30
-[  247.737745]  kasan_save_free_info+0x36/0x60
-[  247.741932]  __kasan_slab_free+0xfe/0x180
-[  247.745944]  kfree+0x113/0x380
-[  247.749004]  qdisc_create+0xafb/0xfb0
-[  247.752669]  tc_modify_qdisc+0x37e/0x1960
-[  247.756683]  rtnetlink_rcv_msg+0x2f0/0xbc0
-[  247.760781]  netlink_rcv_skb+0x120/0x380
-[  247.764724]  netlink_unicast+0x420/0x630
-[  247.768651]  netlink_sendmsg+0x732/0xbc0
-[  247.772578]  __sock_sendmsg+0x1ea/0x280
-[  247.776417]  ____sys_sendmsg+0x5a9/0x990
-[  247.780341]  ___sys_sendmsg+0xf1/0x180
-[  247.784093]  __sys_sendmsg+0xd3/0x180
-[  247.787760]  do_syscall_64+0x96/0x180
-[  247.791425]  entry_SYSCALL_64_after_hwframe+0x71/0x79
-[  247.796482]
-[  247.797978] The buggy address belongs to the object at ffff88811236f000
-[  247.797978]  which belongs to the cache kmalloc-2k of size 2048
-[  247.810497] The buggy address is located 680 bytes inside of
-[  247.810497]  freed 2048-byte region [ffff88811236f000, ffff88811236f800)
-[  247.822838]
-[  247.824333] The buggy address belongs to the physical page:
-[  247.829906] page: refcount:1 mapcount:0 mapping:0000000000000000
-index:0x0 pfn:0x112368
-[  247.837906] head: order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[  247.844606] flags:
-0x17ffffe0000840(slab|head|node=3D0|zone=3D2|lastcpupid=3D0x3fffff)
-[  247.851998] page_type: 0xffffffff()
-[  247.855495] raw: 0017ffffe0000840 ffff88810004cf00 ffffea000db5a400
-dead000000000002
-[  247.863239] raw: 0000000000000000 0000000000080008 00000001ffffffff
-0000000000000000
-[  247.870978] head: 0017ffffe0000840 ffff88810004cf00
-ffffea000db5a400 dead000000000002
-[  247.878815] head: 0000000000000000 0000000000080008
-00000001ffffffff 0000000000000000
-[  247.886639] head: 0017ffffe0000003 ffffea000448da01
-ffffea000448da48 00000000ffffffff
-[  247.894465] head: 0000000800000000 0000000000000000
-00000000ffffffff 0000000000000000
-[  247.902307] page dumped because: kasan: bad access detected
-[  247.907881]
-[  247.909380] Memory state around the buggy address:
-[  247.914174]  ffff88811236f180: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[  247.921393]  ffff88811236f200: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[  247.928613] >ffff88811236f280: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[  247.935831]                                   ^
-[  247.940363]  ffff88811236f300: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[  247.947584]  ffff88811236f380: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[  247.954802] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[  247.962030] Disabling lock debugging due to kernel taint
-
-I'm trying to see if there are other points missing.
-thanks,
---=20
-davide
-
+--------------fe864Yik00aC00ImqIfV3xr6--
