@@ -1,113 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BD6129E6A
-	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 10:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B2617727
+	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 10:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714472280; cv=none; b=CVo77Y4LIwtZN6Q4/xSjFEdQSKDu0wbbj8DrDEsnSyOMPpAkn7aRfVX8/cd6jO2XOfCXgHbMb34ojogUORozgumeCwg7xAQoVRzu1fdwW58tvRKgGD7B47XxXqgWA/R0oy0X9kkPRI/POtXWZSZQb02w8L8dQnNt51NSOfC0luc=
+	t=1714473072; cv=none; b=Kt0RsNFZcudIIz6X8vLwkwEvAPTqeOugb52dldnT2TsWkG4TfDVEBwoowFNkwtBfJBZvZcv94oTQiuz8KhPOVj2eZw7uW5Z5w+EBnraMq6DnlZjWXfrbkVwgV6YmXdRUF0pwyBbRElAdSIc1AUA9xo4VRoEI3SubVwn4WSi5tlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714472280; c=relaxed/simple;
-	bh=DxCBfW2ZX60itdmD+i2ZLg8FWHGDeeOaWCry5xKcra0=;
+	s=arc-20240116; t=1714473072; c=relaxed/simple;
+	bh=fq9kl7HC1onkFs25GDO0h+u78xvNx/nppVe2nqgDwLM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QoKa0ivu1cuq0JcKnDA+LagnWep9Ht71s3ubmqwvxPlZiHoRzRQxu8tKfjfr+qSdXEH4+0c++NKcDOLn6iEcP3gop4cEneVW3kmkIOR3BTijTJF9TISsDcS2kW79BzaN6Z7e8ArcRFguOUNptpECVxpmrFRD85GlzLEHJXDgo1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I62ml88T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=na2CXumxcJ6syADosOWJTOwn04+9WcUCAQGlSZKgmh6ivbHFWOUdOKpU5b8bo2DhK6qSYn+cC4YX0UBs6SfJRXI+tDI6prYwq5h2L1o8tTIAIRzysor69hP7o+1mtijzBrSvZbFW/rZXlv2q5ljovF8i8nuBD+MUWhUPD3DfVEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uX4o+AD0; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I62ml88T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714472277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2WgfcDzbL6BdRnbQ/LMHjtoVFL3IiamXBZRn2Dk0E7Y=;
-	b=I62ml88Tv9nAuJi7LeyxvalppdZZT5piDZ92KcykD1ULCoCXNPpml9UHxqxwTPlUP9aQgA
-	BkSoQCHCrI2ZmNLkRmWxq3UuOK8di799Xf5/xMmBuABcnwScQ8aNlnYmXrzBV1yAzz2HoK
-	iDD1c0vYd65vdFnMZQwzAd686GV1AP0=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-55-vNU_fAJhMMGW1pxEV9z5lQ-1; Tue, 30 Apr 2024 06:17:54 -0400
-X-MC-Unique: vNU_fAJhMMGW1pxEV9z5lQ-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2a5e1e7bab9so6799566a91.2
-        for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 03:17:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uX4o+AD0"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5727ce5b804so12391a12.0
+        for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 03:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714473068; x=1715077868; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DwW47iggG3BwAgDVmMpwtAGhvg781bYiNMy8bvB5pCk=;
+        b=uX4o+AD0g/plHC4g65F0RS7Ko2SRrPRrgugejgzhC+c4xQ2XuDiSCT9e71HRe7QP5a
+         Inp9nO51DK71c11x1sDYC7Vtrj11USE/ZqG71FGOwfhVHSIhXejNLLaH5mhUBvVci5Vw
+         MzcZBCFj8A4fAD8PdvxbxJeTLXlJIdFUvKVgx964A2gBsGB45WVglr85T6h55LZcBDiA
+         hJ2Sv5E4LeZoNY+63nS3xucqJUcxugR0eU6RU/REofTz7sZ8A4RQZlJmV9VtLTDhDjpU
+         2QFym9pOWwxIzWXe/ENMFv6eVGg2HMITp9aolWTAfm9dO3wE8k3VceXj/hPBsHa89GP4
+         aCGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714472273; x=1715077073;
+        d=1e100.net; s=20230601; t=1714473068; x=1715077868;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2WgfcDzbL6BdRnbQ/LMHjtoVFL3IiamXBZRn2Dk0E7Y=;
-        b=BmCY8BwAMdNqKUEtY3QUMvNdzU7s3hC1l4u5HvztVpK6c0XJSnD0YMbJlwWCdO7N2Y
-         N+Nz8PaZQS+lrc3zEhNpJ1+XgKpehVZZxDBItjA7Xk7Pr1rElByUZ9CNJvgPW1YqUEWd
-         sX6nqIMVc4LqBUgV3IviAAHC3F3q2VDCSOcpVCVfWOAsxuupz0jd3ZPPUIBNZ5WLOc84
-         NmpoSVbd0vLx0wX3N1eEemA0I5vdi5OH2aGAVqpjScYNy3thDqMygC9oiSHEn/b6tuND
-         HbKnMPaF3AlNStE4Kld4V29W1QfAdLWfu/gNoG0zXWo7DScaevqqlaxBxJXr+s6xGfZp
-         X1gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV01KJ8s545HAc/BgEvAKQZ2hRFHnmExQ8FnqYXfmWslRbg0di9B8/xjaWDtX0f6IWr82jC3nXsQaj1D39djNkOGeXdOYgRWtWVLLo=
-X-Gm-Message-State: AOJu0YxLF8q/Okti6ynLbqXROfqb6szVhB3D6vx4G4uvLAF/VY12/oL8
-	AOPcIeaMo/r63cbHquSIg3dCxsPJO0B/Mj65gO6LiWjiilcIOJnP3PstwZEqXM72TsLPObOv1xk
-	q2esi14e6EZVHMiATzUH4o+EpNuuZEBbp8ev0U5WXgoX62hi0w4kt6DZvPzfp6vm2sDBkLkm3/Y
-	plb11ieVygPuh1t5YtH1l6AYpqHTZOk3KGgmg=
-X-Received: by 2002:a17:90b:3d86:b0:2af:4f4e:79a7 with SMTP id pq6-20020a17090b3d8600b002af4f4e79a7mr12470163pjb.30.1714472272809;
-        Tue, 30 Apr 2024 03:17:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWSpkNXoLaxHPhUhC5NZ72tcHc7cFhFDuXAR7cTPWqMf81MdK6/Q7OPe/FNtSys3J7tuhnJJXuDUF4sBjb72Q=
-X-Received: by 2002:a17:90b:3d86:b0:2af:4f4e:79a7 with SMTP id
- pq6-20020a17090b3d8600b002af4f4e79a7mr12470138pjb.30.1714472272243; Tue, 30
- Apr 2024 03:17:52 -0700 (PDT)
+        bh=DwW47iggG3BwAgDVmMpwtAGhvg781bYiNMy8bvB5pCk=;
+        b=BLJCStRo4GChcizq8QADoKBFEXEDtBmPP2emvJy4itHXZfZMpZA0+m0GFv1cgDxnpp
+         0rrerNY8DiXHC/5MtEQ4Vk4E1Eo+0C0c1XId3ccEYI8Xt3wDApoCN9zAaGUZqIKKqdqt
+         p5ZkP1oBoWFoe0zFN8z1Ykrf+wsga+B/FBKTh2lr1lnLz+gYQBCWtvBtxFPw6Rjntv6w
+         mjLJ2M7LNMxOI2k7l1z38ns/WgH3FbAhMMbvIC0Mj+SAK5IKG0waZrGl9IEA9K8upgDm
+         5a8dpcQI2Kzph15BEWg3LWF+adnH6mRHB2mHgbzf4lsnD0YMGtrPh+4R+qdsIRGZo6ZP
+         bcSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVr2wiCZ0c63xw/hzYoH6Jme7ZiEGZsqFvikM450Jl9uj6l0hELvpu75kC5TY03hAuTgjidJbyLWq1G5P5Lv3xHhlQArJkmxHABEzc=
+X-Gm-Message-State: AOJu0YwqZ8lpywc0cq4ZlSOV4Bh958a4CjiV27wfPqLJoJ1uzfKgZaaO
+	NYP8LoQ62YgJXzpJCgSpiFlD2gAd83x1fFGqUU/IHY0IODc2lMNWp3nj8H53UbYqGUMGFd/vFu4
+	KtvjbbCvblObXNZaX4KbaE5IMty76W/S1wsCL
+X-Google-Smtp-Source: AGHT+IECkVB2ejmKLRzAYSu/bpt95HY9NGBzyzWpXw0MNO2BKj2tO+28C3FXFOwKzHJZrv12YBLZM3JWoyd5mni2jbE=
+X-Received: by 2002:a05:6402:174c:b0:572:7d63:d7ee with SMTP id
+ v12-20020a056402174c00b005727d63d7eemr153109edx.4.1714473067350; Tue, 30 Apr
+ 2024 03:31:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
-In-Reply-To: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
-From: Davide Caratti <dcaratti@redhat.com>
-Date: Tue, 30 Apr 2024 12:17:41 +0200
-Message-ID: <CAKa-r6vJjeYqGZERRr=B4ykLf-efPRY3h=HU3y3QxazwZ_cMAg@mail.gmail.com>
+References: <20240429221706.1492418-1-naresh.kamboju@linaro.org> <CAKa-r6vJjeYqGZERRr=B4ykLf-efPRY3h=HU3y3QxazwZ_cMAg@mail.gmail.com>
+In-Reply-To: <CAKa-r6vJjeYqGZERRr=B4ykLf-efPRY3h=HU3y3QxazwZ_cMAg@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 30 Apr 2024 12:30:56 +0200
+Message-ID: <CANn89iJ4go0oXSjRaxkdxsUFPCK8kcb8YPt+0d7isK9ZsFrpww@mail.gmail.com>
 Subject: Re: selftests: tc-testing: tdc.sh: WARNING: at kernel/locking/lockdep.c:1226
  lockdep_register_key
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com, 
-	xiyou.wangcong@gmail.com, jiri@resnulli.us, cpaasch@apple.com, 
-	pabeni@redhat.com, xmu@redhat.com, maxim@isovalent.com, edumazet@google.com, 
-	anders.roxell@linaro.org, dan.carpenter@linaro.org, arnd@arndb.de, 
-	Linux Kernel Functional Testing <lkft@linaro.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com, 
+	jiri@resnulli.us, cpaasch@apple.com, pabeni@redhat.com, xmu@redhat.com, 
+	maxim@isovalent.com, anders.roxell@linaro.org, dan.carpenter@linaro.org, 
+	arnd@arndb.de, Linux Kernel Functional Testing <lkft@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-hello,
-
-On Tue, Apr 30, 2024 at 12:17=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
+On Tue, Apr 30, 2024 at 12:17=E2=80=AFPM Davide Caratti <dcaratti@redhat.co=
+m> wrote:
 >
-> While running selftests: tc-testing: tdc.sh the following kernel warnings=
-,
-> kernel Bug, kernel oops and kernel panic noticed with Linux next-20240429
-> tag kernel as per the available data.
+> hello,
 >
-> This build config is from kselftest merge config[1].
+> On Tue, Apr 30, 2024 at 12:17=E2=80=AFAM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > While running selftests: tc-testing: tdc.sh the following kernel warnin=
+gs,
+> > kernel Bug, kernel oops and kernel panic noticed with Linux next-202404=
+29
+> > tag kernel as per the available data.
+> >
+> > This build config is from kselftest merge config[1].
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > selftests: tc-testing: tdc.sh log and crash log
 >
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> the problem is created by [1]. I think that at least we need to guard
+> against failures to allocate sch->cpu_bstats and sch->cpu_qstats,
+> otherwise the dynamic key is registered but never unregistered (though
+> the key is freed  in the error path of of qdisc_alloc() ). But there
+> might be also something else; however, I can reproduce some similar
+> splat, will follow-up on the list.
 >
-> selftests: tc-testing: tdc.sh log and crash log
+> sorry for the noise,
+> --
+> davide
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/c=
+ommit/?id=3Daf0cb3fa3f9ed258d14abab0152e28a0f9593084
+>
 
-the problem is created by [1]. I think that at least we need to guard
-against failures to allocate sch->cpu_bstats and sch->cpu_qstats,
-otherwise the dynamic key is registered but never unregistered (though
-the key is freed  in the error path of of qdisc_alloc() ). But there
-might be also something else; however, I can reproduce some similar
-splat, will follow-up on the list.
+I just had  5 or 6 syzbot reports about this issue.
 
-sorry for the noise,
---=20
-davide
+I tested the following fix.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/com=
-mit/?id=3Daf0cb3fa3f9ed258d14abab0152e28a0f9593084
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 31dfd6c7405b01e22fe1b8c80944e2bed7d30ddc..d3f6006b563ccd8827b7af362ce=
+9dceaa78f8841
+100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -982,6 +982,7 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_queu=
+e,
 
+        return sch;
+ errout1:
++       lockdep_unregister_key(&sch->root_lock_key);
+        kfree(sch);
+ errout:
+        return ERR_PTR(err);
