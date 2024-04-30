@@ -1,168 +1,113 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495D03FE51
-	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 08:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BD6129E6A
+	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 10:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714464143; cv=none; b=IUdsuM9Yz2Ees87bUNcb+E/Kcp6ekcrSamNF4bdty39X/eVDndEUTIMn9ChEiwGre5AkWSY/mweqrOjOm53iAA2JoHRH7RU8UI27RB0w1jMjb03NSEN8+2wt3qFsQDdKJx6zCvhrQ7jNDHEQvEQbrWHi/Zs/6gq6xe+IJrcKEHo=
+	t=1714472280; cv=none; b=CVo77Y4LIwtZN6Q4/xSjFEdQSKDu0wbbj8DrDEsnSyOMPpAkn7aRfVX8/cd6jO2XOfCXgHbMb34ojogUORozgumeCwg7xAQoVRzu1fdwW58tvRKgGD7B47XxXqgWA/R0oy0X9kkPRI/POtXWZSZQb02w8L8dQnNt51NSOfC0luc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714464143; c=relaxed/simple;
-	bh=XDrn8xmM812iCP1CNJVNBq78ipMALgghSjaAsznLNAk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NCMOa15Pq9hEgEI6jbNyfDuhM0PLREog403wjpRX2KhSuNbj1AThTcQ71l58i+DrNeXMmG0mjkuJLpsS2rSIhHY4iLbSxlx8J6NeJHpnoG0ux4zNrAe2p7q6ErxCNh06O7i1Cid8YFei66G0FbZC0AILTsuz/Y7foHGOdSRO4xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FuGKRzBE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7YIGc2bw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FuGKRzBE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7YIGc2bw; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1714472280; c=relaxed/simple;
+	bh=DxCBfW2ZX60itdmD+i2ZLg8FWHGDeeOaWCry5xKcra0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QoKa0ivu1cuq0JcKnDA+LagnWep9Ht71s3ubmqwvxPlZiHoRzRQxu8tKfjfr+qSdXEH4+0c++NKcDOLn6iEcP3gop4cEneVW3kmkIOR3BTijTJF9TISsDcS2kW79BzaN6Z7e8ArcRFguOUNptpECVxpmrFRD85GlzLEHJXDgo1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I62ml88T; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FuGKRzBE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7YIGc2bw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FuGKRzBE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7YIGc2bw"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 03AAE33E9A;
-	Tue, 30 Apr 2024 08:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714464133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I62ml88T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714472277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dQwVLLoeZgmqMZ/4tQXUVtWmuRvIh0Kg1dRv++cza+4=;
-	b=FuGKRzBEL8wOCtyjYLNW6gK1VQgrAdlM6d1y5JpJTlzTAZGy9DZ3ULF5i6yINH3EJeRG22
-	av8EvbXMdNC7oxsgByOaY26Ux2X2IMO6KC0uxt9YrIchbxO/17ZJj+h/6VpiSlU48YzlzY
-	2buvnWhJsM4LdXSPEFoUQr6FKSe3DMc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714464133;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dQwVLLoeZgmqMZ/4tQXUVtWmuRvIh0Kg1dRv++cza+4=;
-	b=7YIGc2bwra3oCSYIw3PbXMv+7N7aVxDt56DOaNZ/nFNHvAeVeLmexfitvK+/uEd8vQDed9
-	pLK94360S38ebdDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=FuGKRzBE;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7YIGc2bw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714464133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dQwVLLoeZgmqMZ/4tQXUVtWmuRvIh0Kg1dRv++cza+4=;
-	b=FuGKRzBEL8wOCtyjYLNW6gK1VQgrAdlM6d1y5JpJTlzTAZGy9DZ3ULF5i6yINH3EJeRG22
-	av8EvbXMdNC7oxsgByOaY26Ux2X2IMO6KC0uxt9YrIchbxO/17ZJj+h/6VpiSlU48YzlzY
-	2buvnWhJsM4LdXSPEFoUQr6FKSe3DMc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714464133;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dQwVLLoeZgmqMZ/4tQXUVtWmuRvIh0Kg1dRv++cza+4=;
-	b=7YIGc2bwra3oCSYIw3PbXMv+7N7aVxDt56DOaNZ/nFNHvAeVeLmexfitvK+/uEd8vQDed9
-	pLK94360S38ebdDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D0FFE138A7;
-	Tue, 30 Apr 2024 08:02:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XsLMMYSlMGbbPwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 30 Apr 2024 08:02:12 +0000
-Date: Tue, 30 Apr 2024 10:02:25 +0200
-Message-ID: <878r0vnur2.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Oliver Neukum <oneukum@suse.com>,
-	USB list <linux-usb@vger.kernel.org>
-Subject: Re: Regression due to 59cf44575456 ("USB: core: Fix oversight in SuperSpeed initialization")
-In-Reply-To: <c6989828-975e-430c-9334-06b895d646b7@rowland.harvard.edu>
-References: <9efbd569-7059-4575-983f-0ea30df41871@suse.com>
-	<78eaec78-663a-428b-b80e-68c398a8f5f7@rowland.harvard.edu>
-	<8a4a7f9e-a191-4301-93f8-9694aa14e42f@leemhuis.info>
-	<673939a1-b07a-457e-9fa6-cf6166fdff03@rowland.harvard.edu>
-	<8734rdjj4n.wl-tiwai@suse.de>
-	<ea0b171b-7ee7-4141-b334-28f637fc6b03@rowland.harvard.edu>
-	<87bk5zdtqs.wl-tiwai@suse.de>
-	<8734r53ond.wl-tiwai@suse.de>
-	<c6989828-975e-430c-9334-06b895d646b7@rowland.harvard.edu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=2WgfcDzbL6BdRnbQ/LMHjtoVFL3IiamXBZRn2Dk0E7Y=;
+	b=I62ml88Tv9nAuJi7LeyxvalppdZZT5piDZ92KcykD1ULCoCXNPpml9UHxqxwTPlUP9aQgA
+	BkSoQCHCrI2ZmNLkRmWxq3UuOK8di799Xf5/xMmBuABcnwScQ8aNlnYmXrzBV1yAzz2HoK
+	iDD1c0vYd65vdFnMZQwzAd686GV1AP0=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-55-vNU_fAJhMMGW1pxEV9z5lQ-1; Tue, 30 Apr 2024 06:17:54 -0400
+X-MC-Unique: vNU_fAJhMMGW1pxEV9z5lQ-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2a5e1e7bab9so6799566a91.2
+        for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 03:17:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714472273; x=1715077073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2WgfcDzbL6BdRnbQ/LMHjtoVFL3IiamXBZRn2Dk0E7Y=;
+        b=BmCY8BwAMdNqKUEtY3QUMvNdzU7s3hC1l4u5HvztVpK6c0XJSnD0YMbJlwWCdO7N2Y
+         N+Nz8PaZQS+lrc3zEhNpJ1+XgKpehVZZxDBItjA7Xk7Pr1rElByUZ9CNJvgPW1YqUEWd
+         sX6nqIMVc4LqBUgV3IviAAHC3F3q2VDCSOcpVCVfWOAsxuupz0jd3ZPPUIBNZ5WLOc84
+         NmpoSVbd0vLx0wX3N1eEemA0I5vdi5OH2aGAVqpjScYNy3thDqMygC9oiSHEn/b6tuND
+         HbKnMPaF3AlNStE4Kld4V29W1QfAdLWfu/gNoG0zXWo7DScaevqqlaxBxJXr+s6xGfZp
+         X1gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV01KJ8s545HAc/BgEvAKQZ2hRFHnmExQ8FnqYXfmWslRbg0di9B8/xjaWDtX0f6IWr82jC3nXsQaj1D39djNkOGeXdOYgRWtWVLLo=
+X-Gm-Message-State: AOJu0YxLF8q/Okti6ynLbqXROfqb6szVhB3D6vx4G4uvLAF/VY12/oL8
+	AOPcIeaMo/r63cbHquSIg3dCxsPJO0B/Mj65gO6LiWjiilcIOJnP3PstwZEqXM72TsLPObOv1xk
+	q2esi14e6EZVHMiATzUH4o+EpNuuZEBbp8ev0U5WXgoX62hi0w4kt6DZvPzfp6vm2sDBkLkm3/Y
+	plb11ieVygPuh1t5YtH1l6AYpqHTZOk3KGgmg=
+X-Received: by 2002:a17:90b:3d86:b0:2af:4f4e:79a7 with SMTP id pq6-20020a17090b3d8600b002af4f4e79a7mr12470163pjb.30.1714472272809;
+        Tue, 30 Apr 2024 03:17:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFWSpkNXoLaxHPhUhC5NZ72tcHc7cFhFDuXAR7cTPWqMf81MdK6/Q7OPe/FNtSys3J7tuhnJJXuDUF4sBjb72Q=
+X-Received: by 2002:a17:90b:3d86:b0:2af:4f4e:79a7 with SMTP id
+ pq6-20020a17090b3d8600b002af4f4e79a7mr12470138pjb.30.1714472272243; Tue, 30
+ Apr 2024 03:17:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -5.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 03AAE33E9A
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.com:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+MIME-Version: 1.0
+References: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
+In-Reply-To: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Tue, 30 Apr 2024 12:17:41 +0200
+Message-ID: <CAKa-r6vJjeYqGZERRr=B4ykLf-efPRY3h=HU3y3QxazwZ_cMAg@mail.gmail.com>
+Subject: Re: selftests: tc-testing: tdc.sh: WARNING: at kernel/locking/lockdep.c:1226
+ lockdep_register_key
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com, 
+	xiyou.wangcong@gmail.com, jiri@resnulli.us, cpaasch@apple.com, 
+	pabeni@redhat.com, xmu@redhat.com, maxim@isovalent.com, edumazet@google.com, 
+	anders.roxell@linaro.org, dan.carpenter@linaro.org, arnd@arndb.de, 
+	Linux Kernel Functional Testing <lkft@linaro.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Apr 2024 15:28:59 +0200,
-Alan Stern wrote:
-> 
-> On Sun, Apr 28, 2024 at 09:57:42AM +0200, Takashi Iwai wrote:
-> > On Wed, 24 Apr 2024 10:56:11 +0200,
-> > Takashi Iwai wrote:
-> > > 
-> > > On Tue, 23 Apr 2024 21:29:27 +0200,
-> > > Alan Stern wrote:
-> > > > 
-> > > > On Mon, Apr 22, 2024 at 09:24:24PM +0200, Takashi Iwai wrote:
-> > > > > On Mon, 22 Apr 2024 20:03:46 +0200,
-> > > > > Alan Stern wrote:
-> > > > > About the patch change: I appreciate if you cook it rather by
-> > > > > yourself since I'm not 100% sure what you suggested.  I can
-> > > > > provide the reporter a test kernel with the patch for confirmation, of
-> > > > > course.
-> > > > 
-> > > > Here's a condensed version of the patch you wrote.  But I would prefer not 
-> > > > to add this to the kernel if the problem can be fixed somewhere else.
-> > > 
-> > > Thanks, I asked the report for testing the patch now.
-> > 
-> > The reporter confirmed that it's still working.
-> 
-> Can you get a Reported-and-Tested-by: from the reporter?
+hello,
 
-Yes, I got it from bugzilla entry, please put
+On Tue, Apr 30, 2024 at 12:17=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> While running selftests: tc-testing: tdc.sh the following kernel warnings=
+,
+> kernel Bug, kernel oops and kernel panic noticed with Linux next-20240429
+> tag kernel as per the available data.
+>
+> This build config is from kselftest merge config[1].
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> selftests: tc-testing: tdc.sh log and crash log
 
-  Reported-and-tested-by: Roger Whittaker <roger.whittaker@suse.com>
-  Link: https://bugzilla.suse.com/show_bug.cgi?id=1220569
+the problem is created by [1]. I think that at least we need to guard
+against failures to allocate sch->cpu_bstats and sch->cpu_qstats,
+otherwise the dynamic key is registered but never unregistered (though
+the key is freed  in the error path of of qdisc_alloc() ). But there
+might be also something else; however, I can reproduce some similar
+splat, will follow-up on the list.
 
+sorry for the noise,
+--=20
+davide
 
-Thanks!
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/com=
+mit/?id=3Daf0cb3fa3f9ed258d14abab0152e28a0f9593084
 
-Takashi
