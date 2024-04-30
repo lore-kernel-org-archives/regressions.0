@@ -1,78 +1,193 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1611714A89
-	for <regressions@lists.linux.dev>; Tue, 30 Apr 2024 05:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9829A1BC4B;
+	Tue, 30 Apr 2024 06:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453353; cv=none; b=Y7mM0EGeYGiDxJ3uajNcnv9MdqR9x6C4X559bzP2dO0y+O8v2WCbfhDpjopqWnQhrmniFiYsfhvW90T6yvdkdIgObDVqO3wgS2C+r+zV4vRYF9eWmVUc0AIS6H7UShE/oknDE0Um25O1ASnCTJIZU2gn766NRIsPB+FQouYHiOw=
+	t=1714458711; cv=none; b=DhoYN63W9cBYPuh0NwjS3+fzuWLpw1CHybZT7tCSyBnJ+fWuuO2L3CzGHOK7i+7aYKSEF7Yj6YguJ+xqUXvNYRPY7LbiLs/oyNunZ39LRZj4BndoJHFN7bnceOseChlF7q5RxJ3PjdFRfV3L8InaO+HCXdlIynC4Vv0t/s+2sGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453353; c=relaxed/simple;
-	bh=gaYSPNuzlZ1Xmn4JSJ9sy4iaqCgZlfgp7GktQKZ2pWg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=XtYRCttxEuMAW4T5YoA02cWYjNIQzOtFfi5p8TbBJouEenNElie/jxt0LU6cJ8rbScUJPDJTgWwd5joxzWcAd9QN9e1uSOTI75zpcNPqlfnkOEC9qbbLHnBh6kb5HvjgCEwsnkJSUYG26OT4wLHPILAitsZGZP/dRPnYgcTcPhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SVCYSr99; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1714458711; c=relaxed/simple;
+	bh=ERTc2l5kU1GMYxtzdHJN1SeKinqluPnbKrRIhtd5mSo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OlqvAyl49yP9WyEHV3II/mbaM845ojvbzZYoHAKhissUGqVFP5G14joknOvkhUQ/ZdcqK9sDuZ60LGpONkqvafc95e/AZh+cu87+fryFc2CNPlV8gqNnkGn1PMLuewsI4lOD8JKjqOjlHY3KNv46eJLlhpD/Ka7Tjppqwq+Lwvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Mk/i/Cpo; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SVCYSr99"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=gaYSPNuzlZ1Xmn4JSJ9sy4iaqCgZlfgp7GktQKZ2pWg=; t=1714453351;
-	x=1714885351; b=SVCYSr99XRuqgHFQEeR6OlLw7zBGHBoD8tmfS1AQQKD+gekOeFt0APF1iSP+R
-	GvdXf/gujHnuWN+xB+bs97haTa84RcW6N3EBby8H4hQjY+Gg/T4FIIua7/nlX0hoDEf4Dz53sh3EY
-	LqVcs/VTWhxL1NAstIYwcCaINtKUwsjjUVYHgEgZMGEVLdCLAJ/0crq9WCWdXqiumuqE1dD94nko1
-	5MpkzMeAR6J5Koq05v3oDegdyM2WW8ZS2U+ci2GA2+KQWMZzcWHD/wGL/AhRq4HtSwMxudZX0+aJe
-	s7Y8D7H82W0ks1j8dHAcgpl/vo7UaLxCRLZZ+D7DyTfTZlbymg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s1fdG-0005jk-UP; Tue, 30 Apr 2024 07:02:23 +0200
-Message-ID: <a3bda4cb-9dc0-4c9a-b20a-754b4fd47e9f@leemhuis.info>
-Date: Tue, 30 Apr 2024 07:02:22 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Mk/i/Cpo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OykVS
+	bzCv4+d4dPQLDypPadwOtIhxe1BrterZQ+EVfc=; b=Mk/i/CporQhNjM1Pb4Fxn
+	JzDrNc4n/H6i6Uz/6EZ+8yQgmt26tYyrfSqBhYGHAu/ubD170GE/f2+fQ2XzKy8k
+	+t995s0ICyjIoM/UQJktZ4tYUBOt7rgYAcT5UU020DHxF6e+CgfTL2v5iQ8GwkiH
+	TGxBUVX71rndtgrfXtIBus=
+Received: from localhost.localdomain (unknown [111.35.187.227])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3v3dtjDBmw0B8Cw--.43676S4;
+	Tue, 30 Apr 2024 14:15:18 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: dreaming.about.electric.sheep@gmail.com,
+	airlied@redhat.com,
+	kraxel@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: virtualization@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	David Wang <00107082@163.com>
+Subject: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
+Date: Tue, 30 Apr 2024 14:13:37 +0800
+Message-Id: <20240430061337.764633-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714453351;55e0be32;
-X-HE-SMSGID: 1s1fdG-0005jk-UP
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:_____wD3v3dtjDBmw0B8Cw--.43676S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JrWkWF4kWry3AFWrKw13CFg_yoWxuF1Dpr
+	yYyF109FWrJw1qya1kJr1Fyws2qFsF9FWUZFyfGr10k3W5XF1rJa13Ga43KrWUCr9rJFW7
+	Awnrta4YyFnrAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUUhL8UUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMw7PqmXAk7vy7wABsJ
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Hi,
+I got following kernel WARNING when the my 2-core KVM(6.9.0-rc6) is under h=
+igh cpu load.
 
-#regzbot report: https://lore.kernel.org/all/ZiBCsoc0yf_I8In8@eldamar.lan/
-#regzbot fix: cifs: Replace remaining 1-element arrays
+	[Mon Apr 29 21:36:04 2024] ------------[ cut here ]------------
+	[Mon Apr 29 21:36:04 2024] workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_de=
+lete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
+	[Mon Apr 29 21:36:04 2024] WARNING: CPU: 1 PID: 792 at kernel/workqueue.c:=
+3728 check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024] Modules linked in: xt_conntrack(E) nft_chain_na=
+t(E) xt_MASQUERADE(E) nf_nat(E) nf_conntrack_netlink(E) xfrm_user(E) xfrm_a=
+lgo(E) xt_addrtype(E) nft_compat(E) nf_tables(E) br_netfilter(E) bridge(E) =
+stp(E) llc(E) ip_set(E) nfnetlink(E) ip_vs_sh(E) ip_vs_wrr(E) ip_vs_rr(E) i=
+p_vs(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) intel_rapl_msr(=
+E) intel_rapl_common(E) crct10dif_pclmul(E) ghash_clmulni_intel(E) snd_hda_=
+codec_generic(E) snd_hda_intel(E) snd_intel_dspcfg(E) sha512_ssse3(E) snd_h=
+da_codec(E) sha512_generic(E) sha256_ssse3(E) overlay(E) sha1_ssse3(E) snd_=
+hda_core(E) snd_hwdep(E) aesni_intel(E) snd_pcm(E) crypto_simd(E) pcspkr(E)=
+ cryptd(E) joydev(E) qxl(E) snd_timer(E) drm_ttm_helper(E) ttm(E) evdev(E) =
+snd(E) iTCO_wdt(E) serio_raw(E) sg(E) virtio_balloon(E) virtio_console(E) i=
+TCO_vendor_support(E) soundcore(E) qemu_fw_cfg(E) drm_kms_helper(E) button(=
+E) binfmt_misc(E) fuse(E) drm(E) configfs(E) virtio_rng(E) rng_core(E) ip_t=
+ables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E)
+	[Mon Apr 29 21:36:04 2024]  hid_generic(E) usbhid(E) hid(E) sr_mod(E) cdro=
+m(E) ahci(E) libahci(E) virtio_net(E) net_failover(E) failover(E) virtio_bl=
+k(E) libata(E) xhci_pci(E) crc32_pclmul(E) crc32c_intel(E) scsi_mod(E) scsi=
+_common(E) lpc_ich(E) i2c_i801(E) xhci_hcd(E) psmouse(E) i2c_smbus(E) virti=
+o_pci(E) usbcore(E) virtio_pci_legacy_dev(E) virtio_pci_modern_dev(E) usb_c=
+ommon(E) virtio(E) mfd_core(E) virtio_ring(E)
+	[Mon Apr 29 21:36:04 2024] CPU: 1 PID: 792 Comm: kworker/u13:4 Tainted: G =
+           E      6.9.0-rc6-linan-5 #197
+	[Mon Apr 29 21:36:04 2024] Hardware name: QEMU Standard PC (Q35 + ICH9, 20=
+09), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+	[Mon Apr 29 21:36:04 2024] Workqueue: ttm ttm_bo_delayed_delete [ttm]
+	[Mon Apr 29 21:36:04 2024] RIP: 0010:check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024] Code: 8b 45 18 48 8d b2 c0 00 00 00 49 89 e8 48=
+ 8d 8b c0 00 00 00 48 c7 c7 68 30 a4 a7 c6 05 9b 12 6e 01 01 48 89 c2 e8 53=
+ b9 fd ff <0f> 0b e9 1e ff ff ff 80 3d 86 12 6e 01 00 75 93 e9 4a ff ff ff =
+66
+	[Mon Apr 29 21:36:04 2024] RSP: 0018:ffff9d31805abce8 EFLAGS: 00010086
+	[Mon Apr 29 21:36:04 2024] RAX: 0000000000000000 RBX: ffff8c8c4004ee00 RCX=
+: 0000000000000000
+	[Mon Apr 29 21:36:04 2024] RDX: 0000000000000003 RSI: 0000000000000027 RDI=
+: 00000000ffffffff
+	[Mon Apr 29 21:36:04 2024] RBP: ffffffffc0b53570 R08: 0000000000000000 R09=
+: 0000000000000003
+	[Mon Apr 29 21:36:04 2024] R10: ffff9d31805abb80 R11: ffffffffa7cc1108 R12=
+: ffff8c8c42eb8000
+	[Mon Apr 29 21:36:04 2024] R13: ffff8c8c48077900 R14: ffff8c8cbbd30b80 R15=
+: 0000000000000001
+	[Mon Apr 29 21:36:04 2024] FS:  0000000000000000(0000) GS:ffff8c8cbbd00000=
+(0000) knlGS:0000000000000000
+	[Mon Apr 29 21:36:04 2024] CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+	[Mon Apr 29 21:36:04 2024] CR2: 00007ffd38bb3ff8 CR3: 000000010217a000 CR4=
+: 0000000000350ef0
+	[Mon Apr 29 21:36:04 2024] Call Trace:
+	[Mon Apr 29 21:36:04 2024]  <TASK>
+	[Mon Apr 29 21:36:04 2024]  ? __warn+0x7c/0x120
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  ? report_bug+0x18d/0x1c0
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? handle_bug+0x3c/0x80
+	[Mon Apr 29 21:36:04 2024]  ? exc_invalid_op+0x13/0x60
+	[Mon Apr 29 21:36:04 2024]  ? asm_exc_invalid_op+0x16/0x20
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_qxl_gc_work+0x10/0x10 [qxl]
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  __flush_work.isra.0+0xc0/0x270
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? __queue_work.part.0+0x18b/0x3d0
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  qxl_queue_garbage_collect+0x7f/0x90 [qxl]
+	[Mon Apr 29 21:36:04 2024]  qxl_fence_wait+0x9c/0x180 [qxl]
+	[Mon Apr 29 21:36:04 2024]  dma_fence_wait_timeout+0x61/0x130
+	[Mon Apr 29 21:36:04 2024]  dma_resv_wait_timeout+0x6d/0xd0
+	[Mon Apr 29 21:36:04 2024]  ttm_bo_delayed_delete+0x26/0x80 [ttm]
+	[Mon Apr 29 21:36:04 2024]  process_one_work+0x18c/0x3b0
+	[Mon Apr 29 21:36:04 2024]  worker_thread+0x273/0x390
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_worker_thread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  kthread+0xdd/0x110
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  ret_from_fork+0x30/0x50
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  ret_from_fork_asm+0x1a/0x30
+	[Mon Apr 29 21:36:04 2024]  </TASK>
+	[Mon Apr 29 21:36:04 2024] ---[ end trace 0000000000000000 ]---
 
-#regzbot report:
-https://lore.kernel.org/all/e09ce9fd-14cb-47aa-a22d-d295e466fbb4@amazon.com/
-#regzbot inconclusive: tricky -- but Linus is involved and it is likely
-not a regression:
-https://lore.kernel.org/all/94db60bf-c3f4-4217-a900-9c3eba29e180@leemhuis.info/
+I find that the exact warning message mentioned in
+ https://lore.kernel.org/lkml/20240404181448.1643-1-dreaming.about.electric=
+.sheep@gmail.com/T/#m8c2ecc83ebba8717b1290ec28d4dc15f2fa595d5
+And confirmed that the warning is caused by 07ed11afb68d94eadd4ffc082b97c23=
+31307c5ea and reverting it can fix.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3344
-#regzbot introduced: 5950efe25ee02df49
-#regzbot summary: drm/amd/display: screen flickering with Framework 16
-laptop
 
-#regzbot report:
-https://lore.kernel.org/all/1c978cf1-2934-4e66-e4b3-e81b04cb3571@rosalinux.ru/
-#regzbot fix: 5af385f5f4cddf908f663974847a4083b2ff2c
+It seems that under heavy load, qxl_queue_garbage_collect would be called w=
+ithin
+a WQ_MEM_RECLAIM worker, and flush qxl_gc_work which is a
+!WQ_MEM_RECLAIM worker. This will trigger the kernel WARNING by
+check_flush_dependency.
+
+And I tried following changes, setting flush flag to false.
+The warning is gone, but I am not sure whether there is any other side-effe=
+ct,
+especially the issue mentioned in=20
+https://lore.kernel.org/lkml/20240404181448.1643-2-dreaming.about.electric.=
+sheep@gmail.com/T/#m988ffad2000c794dcfdab7e60b03db93d8726391
+
+Signed-off-by: David Wang <00107082@163.com>
+---
+ drivers/gpu/drm/qxl/qxl_release.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_re=
+lease.c
+index 9febc8b73f09..f372085c5aad 100644
+--- a/drivers/gpu/drm/qxl/qxl_release.c
++++ b/drivers/gpu/drm/qxl/qxl_release.c
+@@ -76,7 +76,7 @@ static long qxl_fence_wait(struct dma_fence *fence, bool =
+intr,
+ 	qxl_io_notify_oom(qdev);
+=20
+ 	for (count =3D 0; count < 11; count++) {
+-		if (!qxl_queue_garbage_collect(qdev, true))
++		if (!qxl_queue_garbage_collect(qdev, false))
+ 			break;
+=20
+ 		if (dma_fence_is_signaled(fence))
+--=20
+2.39.2
+
+
+
+David
+
