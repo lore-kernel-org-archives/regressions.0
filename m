@@ -1,119 +1,120 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274B5168DA;
-	Thu,  2 May 2024 08:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD64C8F3
+	for <regressions@lists.linux.dev>; Thu,  2 May 2024 14:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714638616; cv=none; b=TJCZaNeUrbijlZUf5SPTct2fmPR6pQhE5GCC9C6xpNJ9pU/pqbPZXKtAHtTUO+5mzyBBthP4qA7x0hDbEeZG1H6ntEQyFowd/uJrPYjoNrY6opEAf0BB/2I3duE+LiVxyJMgfCMKGrvlG3Pupl+6ASyYrWMIs0M52POi7O9pi9o=
+	t=1714658804; cv=none; b=nsmFUZta+ZO335CpsXCkzU2LxTNg+5bsDdyFVSWzQcATA3jXjN6GWmzgaZ/mTVaLAkb3QxhrGHl+MEkpdhuI5MjfYbBj7OGVX7qWhd3GAHQS008xYowAs+vi+MS9hhB+yyczJAzhoAUEV19Js0QG9U73iazqtySPikHfEq24w5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714638616; c=relaxed/simple;
-	bh=vOI/nXtB8szATT9cPSG35cgjUhx0wO9nDdrM+dagnXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nWqrC7C+wYQDhagcso5XYHirhHIgZ5wtHkfTexLcQagXyG6IeoNEBaCl1N/j6jCtFNY8VcSlLar5jUFgxANheAlkcIQQfzDa+DUGEW0Eg2kZoqm6DYT3+Kcq7q2+UN9seTP1Tb89Id63A9YBwDBZB3LK9HGzafDDQMrE8m+tNQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zMOd6jbZ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1714658804; c=relaxed/simple;
+	bh=CRwmbthABoB5jtDKEAH75hm5A5BTISlYEbt8gnYV6yU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kzHnlXNK8jpNuHr+Y9qxqJdZZkKTclH7YwOEOnIpltPdT7RBLr/kowOITyxSLQ3dJlcQnM+1YzP6Kt57Amvz5X8wSyMvl6siqyDaXaPwFRhhoJ9lodxDVSXWkkyK0+nLgliQPoBv1SwMXEL7EvDLv7i8sNvEXJrzFEfasNbgUak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aZHP+zhe; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zMOd6jbZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=9m0sQbYRngeahD4E6m4UZ+bEYxjvjKNj0Unh9KoUYJo=;
-	t=1714638614; x=1715070614; b=zMOd6jbZCuPnlwSRUb925IXnmtirdv5FmwabyI1VMqpQzMQ
-	X6QPJ8LiTm0vYOIAowHvN7cGrf8UNn7YIqO1PVgxt1PVgf5UzpMNkQWetiwj5UBvcqk+1p9s/At3Y
-	+U8DrU/2z4/iA8anMQE7EBk1VZqg20pAlwidpIEiTScDXFyn+Wl7RNIkdcteSv30tsT/60y091nPx
-	8Fad77VVv/EPzAT8uH2xCNV6/ZdzcSlhpDJEmG7Dv77JeYYvY4ZbVaTUJ/nBhUcFZZbjll9yXEdP7
-	SJaounw1Od5F+ldzMqvA9vrZN/S8F/CfiDz2Hs0yLemyCdO5P5GrlVd59ZWj6uiQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s2RpS-00006M-NL; Thu, 02 May 2024 10:30:10 +0200
-Message-ID: <935b4630-5100-4be6-ae96-4d043b0d5ae4@leemhuis.info>
-Date: Thu, 2 May 2024 10:30:10 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aZHP+zhe"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 442Cp2q7015115;
+	Thu, 2 May 2024 14:06:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=VUwnpocd+N84WkwYeyoxG5gM6+orRsfk6wD3EbsETyk=; b=aZ
+	HP+zheduFsKvekm4Y/qaEPCOLsQxTgX8Z2ZxbGDp3jfQzJcxoQeHGcaCZ8b0DZlg
+	L4uS5tnJiSC6i/g9+GQQGfLgvaMB+33w4yEG5ptTPQG8CSSyYlxvhXa80F36MvnS
+	buuzT1W3O3y80w/CFx6vHouSZ19Y/3n7zf5JCx8hyglknUgBT0LY4Oneq3Q4fCSN
+	VXSRR//C39PTtCs5QWbkXeXn4Kdr3PJMEtzOmflwecgO58sDD+ZE+OmHk+QDGAna
+	bjZqTr4+0r5utHJ/jZ564jx5zq+GiQVfVSLPYzjfJeIXXIXEXcXCpgxpSDy+PigT
+	TfPtJwiPx/Kodcm5W1Ww==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xueu93dft-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 May 2024 14:06:37 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442E6PrO010306
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 2 May 2024 14:06:25 GMT
+Received: from zijuhu-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 2 May 2024 07:06:23 -0700
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+To: <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>, <marcel@holtmann.org>
+CC: <quic_zijuhu@quicinc.com>, <linux-bluetooth@vger.kernel.org>,
+        <wt@penguintechs.org>, <regressions@lists.linux.dev>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v1] Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
+Date: Thu, 2 May 2024 22:06:01 +0800
+Message-ID: <1714658761-15326-1-git-send-email-quic_zijuhu@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-To: Lee Jones <lee@kernel.org>
-Cc: Ben Greear <greearb@candelatech.com>, LKML
- <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
- <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <20240411070718.GD6194@google.com>
- <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
- <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
- <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
- <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
- <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
- <20240502071908.GB5338@google.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240502071908.GB5338@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714638614;e18d2da4;
-X-HE-SMSGID: 1s2RpS-00006M-NL
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vrB5hJzypWftWDztL0c5YclkApIE-nb4
+X-Proofpoint-ORIG-GUID: vrB5hJzypWftWDztL0c5YclkApIE-nb4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-02_02,2024-05-02_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1011 mlxscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2405020091
 
-On 02.05.24 09:19, Lee Jones wrote:
-> On Tue, 23 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
->> On 23.04.24 11:06, Johannes Berg wrote:
->>> On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking (Thorsten
->>> Leemhuis) wrote:
->>>> On 16.04.24 08:17, Johannes Berg wrote:
->>>>> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
->>>>>>
->>>>>> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
->>>>>> iwl_req_fw_callback()
->>>>>>
->>>>>> Is that still best thing to try in your opinion?
->>>>>
->>>>> I guess so, I don't have any better ideas so far anyway ...
->>>>
->>>> [adding the iwlwifi maintainer; thread starts here:
->>>> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
->>>> ]
->>>>
->>>> Johannes, Miri, what's the status wrt to this regression? From here
->>>> things look somewhat stalled -- but maybe there was progress and I just
->>>> missed it.
->>>
->>> What do you want? It got bisected to an LED merge, but you ping _us_?
->>> Way to go ...
->>
->> Sorry, to me it sounded a bit like you had an idea for a fix and were
->> going to give it a try -- similar to how the maintainers for a r8169
->> driver and the igc driver provided fixes for bugs recent LED changes
->> exposed.
->>
->> But sure, you are right, in the end some LED change seems to have cause
->> this, so the duty to fix it lies in that field. Therefore:
->>
->> Lee, what's the status here to get this fixed before the final?
-> 
-> No idea.  Did you send a fix?
+Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+serdev") will cause below regression issue:
 
-I'm just here to help Linus keeping an eye on regression to ensure they
-are handled like he wants them to be handled.
+BT can't be enabled after below steps:
+cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+if property enable-gpios is not configured within DT|ACPI for QCA6390.
 
-But Ben Greear sent a patch to work around the problem:
+The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+during reboot, but also introduces this regression issue regarding above
+steps since the VSC is not sent to reset controller during warm reboot.
 
-https://lore.kernel.org/all/20240430234212.2132958-1-greearb@candelatech.com/
+Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+once BT was ever enabled, and the use-after-free issue is also be fixed
+by this change since serdev is still opened when send to serdev.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
+Cc: stable@vger.kernel.org
+Reported-by: Wren Turkal <wt@penguintechs.org>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Tested-by: Wren Turkal <wt@penguintechs.org>
+---
+ drivers/bluetooth/hci_qca.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 0c9c9ee56592..8e35c9091486 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2450,13 +2450,12 @@ static void qca_serdev_shutdown(struct device *dev)
+ 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+ 	struct hci_uart *hu = &qcadev->serdev_hu;
+ 	struct hci_dev *hdev = hu->hdev;
+-	struct qca_data *qca = hu->priv;
+ 	const u8 ibs_wake_cmd[] = { 0xFD };
+ 	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+ 
+ 	if (qcadev->btsoc_type == QCA_QCA6390) {
+-		if (test_bit(QCA_BT_OFF, &qca->flags) ||
+-		    !test_bit(HCI_RUNNING, &hdev->flags))
++		if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
++		    hci_dev_test_flag(hdev, HCI_SETUP))
+ 			return;
+ 
+ 		serdev_device_write_flush(serdev);
+-- 
+2.7.4
+
