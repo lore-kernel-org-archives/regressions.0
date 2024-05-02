@@ -1,120 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD64C8F3
-	for <regressions@lists.linux.dev>; Thu,  2 May 2024 14:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E6916F919;
+	Thu,  2 May 2024 17:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714658804; cv=none; b=nsmFUZta+ZO335CpsXCkzU2LxTNg+5bsDdyFVSWzQcATA3jXjN6GWmzgaZ/mTVaLAkb3QxhrGHl+MEkpdhuI5MjfYbBj7OGVX7qWhd3GAHQS008xYowAs+vi+MS9hhB+yyczJAzhoAUEV19Js0QG9U73iazqtySPikHfEq24w5w=
+	t=1714669331; cv=none; b=NWCmnlQG1OACY4N0pA7Fd1nPxVBdpBOPJfn9POgdxwIOIdj4vEEkFdloczUw/1mK94E4lEZcqtZ4RpoUzEochheh2xswEag6Q4uieoUqiWi4TAtbSCjyOLdAww3DoEU6yc4myDiS+ckz+IGbwiOIpas4vuktoMzMT4tv2O5FP0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714658804; c=relaxed/simple;
-	bh=CRwmbthABoB5jtDKEAH75hm5A5BTISlYEbt8gnYV6yU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kzHnlXNK8jpNuHr+Y9qxqJdZZkKTclH7YwOEOnIpltPdT7RBLr/kowOITyxSLQ3dJlcQnM+1YzP6Kt57Amvz5X8wSyMvl6siqyDaXaPwFRhhoJ9lodxDVSXWkkyK0+nLgliQPoBv1SwMXEL7EvDLv7i8sNvEXJrzFEfasNbgUak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aZHP+zhe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714669331; c=relaxed/simple;
+	bh=dzcRh9vvoHLf1Dofq5gdOS3EEFs6BfZ6FAKB4VmdUYA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=r5btzhLMRb0xpyE6FE9MlSJcyoZJl1Seh52XPZBzjUgVl7Dr9xnetT9zuivivd+puLhzKMCFN//t9SoxjpKI/MHLVPKnFu0es9aRqKbl/PUJmh2Th2j2QoBjh0aoRvEfaTni2/FvwIuUlzdXw1JeETEncIi7l/VK3wSr1DItu6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCq+1a3z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aZHP+zhe"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 442Cp2q7015115;
-	Thu, 2 May 2024 14:06:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=VUwnpocd+N84WkwYeyoxG5gM6+orRsfk6wD3EbsETyk=; b=aZ
-	HP+zheduFsKvekm4Y/qaEPCOLsQxTgX8Z2ZxbGDp3jfQzJcxoQeHGcaCZ8b0DZlg
-	L4uS5tnJiSC6i/g9+GQQGfLgvaMB+33w4yEG5ptTPQG8CSSyYlxvhXa80F36MvnS
-	buuzT1W3O3y80w/CFx6vHouSZ19Y/3n7zf5JCx8hyglknUgBT0LY4Oneq3Q4fCSN
-	VXSRR//C39PTtCs5QWbkXeXn4Kdr3PJMEtzOmflwecgO58sDD+ZE+OmHk+QDGAna
-	bjZqTr4+0r5utHJ/jZ564jx5zq+GiQVfVSLPYzjfJeIXXIXEXcXCpgxpSDy+PigT
-	TfPtJwiPx/Kodcm5W1Ww==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xueu93dft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 14:06:37 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442E6PrO010306
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 2 May 2024 14:06:25 GMT
-Received: from zijuhu-gv.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 2 May 2024 07:06:23 -0700
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-To: <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>, <marcel@holtmann.org>
-CC: <quic_zijuhu@quicinc.com>, <linux-bluetooth@vger.kernel.org>,
-        <wt@penguintechs.org>, <regressions@lists.linux.dev>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v1] Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
-Date: Thu, 2 May 2024 22:06:01 +0800
-Message-ID: <1714658761-15326-1-git-send-email-quic_zijuhu@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCq+1a3z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8578EC113CC;
+	Thu,  2 May 2024 17:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714669331;
+	bh=dzcRh9vvoHLf1Dofq5gdOS3EEFs6BfZ6FAKB4VmdUYA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ZCq+1a3zx8lx1nBHOmEWj5jZvQwUMjow8Pk1H4J0n3YPgg9t1X56ddYpLljGT3XFu
+	 3KkAo7Y8/k/HNRYerPeJ8xmRTqWObb45GIKK/GeKmVWxM7YIb5T+m3S977jhOU4nHi
+	 EK9+Js/+lhz6genY3dIt4ElFTvo8aWD15XpjDoeDAsFE+98XmDUelx7XxV+KJi7Chd
+	 Gc9PPgrJBBsg5WtEOmgBpfcnKQ0fD0ejAiDML/K82UNtA5FnQYIVw+nSR3NwLbXUhm
+	 kcRV7EIEXAKf+fuELX7AqrMspHcyBQ+LziyizM2XTcwSUDPJv2bHj5tuo1sIf5tsui
+	 Yq1ucS/yca+mA==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+In-Reply-To: <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+References: <20240417144943.GA2399047@google.com>
+ <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+Subject: Re: (subset) [PATCH] leds: pwm: Disable PWM when going to suspend
+Message-Id: <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
+Date: Thu, 02 May 2024 18:02:09 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vrB5hJzypWftWDztL0c5YclkApIE-nb4
-X-Proofpoint-ORIG-GUID: vrB5hJzypWftWDztL0c5YclkApIE-nb4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-02_02,2024-05-02_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1011 mlxscore=0 impostorscore=0 adultscore=0 bulkscore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405020091
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
-serdev") will cause below regression issue:
+On Wed, 17 Apr 2024 17:38:47 +0200, Uwe Kleine-König wrote:
+> On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> the PWM because an enabled PWM refuses to suspend. So check the
+> LED_SUSPENDED flag and depending on that set the .enabled property.
+> 
+> 
 
-BT can't be enabled after below steps:
-cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
-if property enable-gpios is not configured within DT|ACPI for QCA6390.
+Applied, thanks!
 
-The commit is to fix a use-after-free issue within qca_serdev_shutdown()
-during reboot, but also introduces this regression issue regarding above
-steps since the VSC is not sent to reset controller during warm reboot.
+[1/1] leds: pwm: Disable PWM when going to suspend
+      commit: 974afccd37947a6951a052ef8118c961e57eaf7b
 
-Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
-once BT was ever enabled, and the use-after-free issue is also be fixed
-by this change since serdev is still opened when send to serdev.
-
-Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
-Cc: stable@vger.kernel.org
-Reported-by: Wren Turkal <wt@penguintechs.org>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Tested-by: Wren Turkal <wt@penguintechs.org>
----
- drivers/bluetooth/hci_qca.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 0c9c9ee56592..8e35c9091486 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -2450,13 +2450,12 @@ static void qca_serdev_shutdown(struct device *dev)
- 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
- 	struct hci_uart *hu = &qcadev->serdev_hu;
- 	struct hci_dev *hdev = hu->hdev;
--	struct qca_data *qca = hu->priv;
- 	const u8 ibs_wake_cmd[] = { 0xFD };
- 	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
- 
- 	if (qcadev->btsoc_type == QCA_QCA6390) {
--		if (test_bit(QCA_BT_OFF, &qca->flags) ||
--		    !test_bit(HCI_RUNNING, &hdev->flags))
-+		if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
-+		    hci_dev_test_flag(hdev, HCI_SETUP))
- 			return;
- 
- 		serdev_device_write_flush(serdev);
--- 
-2.7.4
+--
+Lee Jones [李琼斯]
 
