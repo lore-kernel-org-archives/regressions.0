@@ -1,117 +1,78 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA90770F3;
-	Tue, 30 Apr 2024 14:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DAC1F95A
+	for <regressions@lists.linux.dev>; Thu,  2 May 2024 05:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714488059; cv=none; b=D3pbMsumOuZMLQfMsOFhG9pUhZ9sVW0o1DpvW8ACLqXcoEVsxpEfb7EntY7cNHqN48M+mRPP4XKAxjFazsNUrPEq73auRt+oXdwY4xVyZbwEppmNDNY5wbFFMqYMZPw0DLNSiSLLDXv6e2U1nby/yCxbtedLzwYvEWCydY2BBgE=
+	t=1714628297; cv=none; b=e+BOYR8lRp5f3nnsbUxVxv2Eow/Vy2jmMGhhsp5xHNYLoKj+D+7wPRGZFd+rd9Gb6UndRREfwtbbPh7nO/KAKr2X9Tdz9lphhcrAN922lRE3grn2f30V/HdgMvw7Wa4wIPFXiLOPhmBPtBaSQ2s32z9jQqAtZVBtgeTPNPo6Yf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714488059; c=relaxed/simple;
-	bh=mF4D0bjwFYpqf3wf5iTDpehEqt73WSoAjWjD4DyHamk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eLgHDKC0xfmhC++Xg7v34DOta+fsbO5DDBWcHRTq4MyKnWvknRD0qbu43ak75ekPjqeOFmIuP6QaL2RYN2SkC0D8GWqDeBqVKK9VvTXxoQyhWhblulHrSNPhOXDpFvPMRfcWWM6fTBvUSpDU6gU8tIfbDM5siZ+ZQREIxV/oUCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GVfN5bDH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714628297; c=relaxed/simple;
+	bh=/88pIUlaNhTJoN66czVzRgp4RQcKjuOBwH6sqTddkoE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=AGNC0uDQeurOOixe6nsvhgrTrx6CsGPqORsxa/+f7pQSPhE/+C605ZRdrbE8xr4Hfu9d6j0JVfqVgp5J56bbwOOdJTme3LyhZP/QJUUMS/T5aYyuNhekX3EIyH4Zioveaz/zN9zOAQMklBZHgPG6Zw6ldSia1JcE8H7wupMpHBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=xTzNV3Zt; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GVfN5bDH"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UEdMBq005235;
-	Tue, 30 Apr 2024 14:40:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=YwM+R5Y3CMJbTvogva1QfzG8leQfU778k06xwg/Mcwc=;
- b=GVfN5bDHVzxlH7qQ8GoMldAWpUGXDu9QFtzQT37hrJ/s13hreQDUokgjoIaCMqsXYUtk
- MSq8PkQ219gEjPc0cr2GW9qzRlf7oJc4QTzxHXBBjoS55K6k7ohamqhJ3HIiV/ZsvY+t
- K4ZCyITW3v7DoLqeJ5LLuYl+qz+zzMSDI4qcT+Io75bHZnI3+RFelbaMbZB7RVauG8/W
- H67InC2pGe++yoRCdKM1DEKQKCSE1YNanjEpy/LysALASXjWyuZbGwXTvXIG/oSUG4DW
- 7fAfGp1ZNKBRf7EttySjWvQQ09d6RNpmD6JcNhzivBnYyHDJBMrQDl//ouYCqEMDw8ss LA== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu2k9005y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:40:50 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43UDTXSh003210;
-	Tue, 30 Apr 2024 14:40:50 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xscppdghg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:40:50 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43UEekXj11272672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Apr 2024 14:40:48 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 23FF92006E;
-	Tue, 30 Apr 2024 14:40:46 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E212420040;
-	Tue, 30 Apr 2024 14:40:45 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 30 Apr 2024 14:40:45 +0000 (GMT)
-Date: Tue, 30 Apr 2024 16:40:44 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-s390@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org,
-        Linux Regressions <regressions@lists.linux.dev>, imx@lists.linux.dev,
-        Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] clk: imx: imx8mp: Add missing CONFIG_PM ifdefs
-Message-ID: <20240430144044.35561-A-hca@linux.ibm.com>
-References: <CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com>
- <20240430141609.2244416-1-hca@linux.ibm.com>
- <99ef1ba3-155f-47e8-b1a4-e46cb056cbfd@app.fastmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99ef1ba3-155f-47e8-b1a4-e46cb056cbfd@app.fastmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cAhw_NzK7JsV_S9ipQmmkWxam1nOQf_L
-X-Proofpoint-GUID: cAhw_NzK7JsV_S9ipQmmkWxam1nOQf_L
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="xTzNV3Zt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:Reply-To:Subject:From:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=/88pIUlaNhTJoN66czVzRgp4RQcKjuOBwH6sqTddkoE=; t=1714628295;
+	x=1715060295; b=xTzNV3ZthUo/+heRGyH8yR3fgmuwaZ/q8DN3G+n2dI0U0sjBOxwcpbJXujjDu
+	Itjzj5i6q62P6jeaQI4i1LmNNHDjdoIL8ptbB6+ZdlIq4W4zESI4UipJfqa2S5ZUVc/3lnmQi7rqD
+	TrCy+0ko0PmiHXfwg+qTgpK/wengLu91kjjiLiT9kokQ2fH3RWnhafnQB88IFUBvvpERRoLbvxKIQ
+	0w68hCBmg9PqcR44+mqc6BS5aw1PNfvBl85OJ67lft/Y3hj+0aMHdyH77/pp82OxGHjE4kU2GqsFu
+	pmYaqyVEX4n0eF01BsoPh65dn/qnS9aXkLFgj7pQ1RIJMvHLhg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s2P8y-0007C7-0V; Thu, 02 May 2024 07:38:08 +0200
+Message-ID: <3e4bae9e-877b-4ca2-aecf-d89cb6c20a68@leemhuis.info>
+Date: Thu, 2 May 2024 07:38:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-30_08,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 spamscore=0 phishscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404300104
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714628295;a82a4c5b;
+X-HE-SMSGID: 1s2P8y-0007C7-0V
 
-On Tue, Apr 30, 2024 at 04:30:37PM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 30, 2024, at 16:16, Heiko Carstens wrote:
-> > Add missing CONFIG_PM ifdefs to fix this allmodconfig compile error:
-> >
-> > drivers/clk/imx/clk-imx8mp-audiomix.c:356:12: error:
-> > 'clk_imx8mp_audiomix_runtime_suspend' defined but not used
-> > [-Werror=unused-function]
-> >   356 | static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
-> >       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > cc1: all warnings being treated as errors
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Closes: 
-> > https://lore.kernel.org/r/CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com
-> > Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for 
-> > power saving")
-> > Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-> 
-> Thanks for your patch. I see the bug as well, but
-> I think a better fix is to replace the deprecated
-> SET_RUNTIME_PM_OPS() and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
-> with the modern variants, RUNTIME_PM_OPS() and
-> RUNTIME_PM_OPS().
 
-Fine with me, I leave that up to the original author then.
+
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com/
+#regzbot introduced: b58a0bc904ff
+#regzbot summary: nouveau: r535.c:1266:3: error: label at end of
+compound statement default: with gcc-8
+#regzbot duplicate:
+https://lore.kernel.org/all/2775775499487396fbad5c2327dcaf7fb88a524d.camel@nvidia.com/
+
+#regzbot report:
+https://lore.kernel.org/stable/1e5355c9-7444-031d-59bc-52535f773755@rosalinux.ru/
+#regzbot fix: bounds: Use the right number of bits for power-of-two
+CONFIG_NR_CPUS
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218665
+#regzbot fix: 5097cbcb38e6e0
