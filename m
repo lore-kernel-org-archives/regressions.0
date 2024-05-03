@@ -1,69 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C9816FF27;
-	Thu,  2 May 2024 17:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98574848D;
+	Fri,  3 May 2024 06:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714669486; cv=none; b=rRYzvnU2HFq4aMYVF2GoFN6n8TaZTsU4EYDR0NzEuzIMiJJ3+/FfUSaI0ir7c5lA1TY3CxnAaUWFDH+CgSQ9k7pDREqKlEWE0M16nSvWKL7ZOkGAPnPNRSCsZOO+HMcDP7dAsuWhLwpFJKJ8LKP4KmYGeWod7ele+2dV5wwGaIs=
+	t=1714718400; cv=none; b=j8i5LHj5h5Z5U3eLCsIvuEYPqqSKVO4usec9uwdzIJ+/rRe05ajDh4eurKN5BLWsZAs0GEEzVdKLfzI2AsZ9olQLw/BashPdjnp1OlJOiQPFnGLw59UsSCNrB8BUxok+Qaq2gHP8dor2BlqqzRXUlzE0t+RTT3BbtH5zWUcRAmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714669486; c=relaxed/simple;
-	bh=49eyjM/VLdE7NVxycz/BBQaGVKwViQu2psRAqw1p1YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCqNH/EipBST/S2WAKt7i33PWCTOf5x/PSDvLbJIk0wPOAP0Jg/7hBTM21ebi03rBX7PQ5bejizbx554uswApXWT9icsqeCw5xVxbuKtcIyHtVG3WpJ/+pS27V0TuS+cjuxINXxeD2YdH0b7xOreUbi/4ADMSz2ziIifgVs99xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbW6EJTs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714718400; c=relaxed/simple;
+	bh=qo6gNNSP/j6kpY7IcyU/qgjiBE3W7wIKyPUWxhxHQMM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k8y29M12sIE11cd8XFCdSXvJw0Loycr4IJ5nJvb1BdYO8V4qJczh94wZ3Y9TED7XexNIJ257KSzfSNZGgV4dMSMzCoNPysNTmpIaHX7kadGedjaPFlPcYZiIwseYak+jxb3UO04cXCYOqfEHLLvRusF8dp84sr5Uo4BoJb0sjyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NJAnpq4B; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbW6EJTs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A07CC113CC;
-	Thu,  2 May 2024 17:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714669485;
-	bh=49eyjM/VLdE7NVxycz/BBQaGVKwViQu2psRAqw1p1YA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jbW6EJTsLqbwr7myvvL4/KS3XciomH0hvu1aInVGZ2FnkRV3bKQKKDwkDWAwlSIr4
-	 Yd7rS/dN5bhwWHiCweWn67TlpHoIPO/Wgq2It3J4sJHH6LzFwjFRS8LNajO8brJkZG
-	 HeerqdsycyGFxMvbnIszQhMY3iBmQcIoqUVyGovct77CScgfmXJ/xfjGxODqu8v3UV
-	 ghuxQ/3cxEa06ZWWpqXh+iGnhvoaqQRpv3HR69WF0ldoIK5m+lXi6eQ6uczynZje1Y
-	 atzlGnKh8PEey4wihiw3FPMz31tZn42xPqNQMI6xThBOmWFVKRcVh6HfkQ1wSyzB5E
-	 TmRDrqVTxJtCw==
-Date: Thu, 2 May 2024 18:04:41 +0100
-From: Lee Jones <lee@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-Subject: Re: (subset) [PATCH] leds: pwm: Disable PWM when going to suspend
-Message-ID: <20240502170441.GD1200070@google.com>
-References: <20240417144943.GA2399047@google.com>
- <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
- <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NJAnpq4B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=7zeNTz9dZI8LnTBatn2bq2v7BK5j7Weg7XVPNxsiLDY=;
+	t=1714718398; x=1715150398; b=NJAnpq4B1bewI3YJelHuwEV9QLPjvu03d1It33hpGYLBcCP
+	OB1SqFG7MfSffK7ZkFICBKsJtmJlNcIwdUL1o6gO/VcBN223Z3cZmsM7gmYVFYdxTDNMR1bgoFx7c
+	TcZ++0ZAa8aCL4uHg3tPhIJU/Xtw2Fs2VTIp0WRXcBUuEz0wSKuHlmMeKw+sgPpnKihAtrZgQxQ2a
+	p3VYOZl7FXwAFOumB7N7qfOwxjHqzJ+tL+rRBT1BeskWWNi4igfWqCTkgmqAsTSRquesFlu2FYl1w
+	QTF/E7j2XJVeTkpoXTg1xkBOA1IWRwsTSdbKcBUEfXuaHvSZazzpj3Lajk8nDAiA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s2lwZ-0004pK-RV; Fri, 03 May 2024 07:58:51 +0200
+Message-ID: <82fde49f-5dc8-47de-b220-83f9d7555485@leemhuis.info>
+Date: Fri, 3 May 2024 07:58:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] Tri-band AMD RZ608 (MediaTek MT7921K) has 6GHz band
+ disabled in kernel 6.8 despite working in <=6.6
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714718398;42eb24cc;
+X-HE-SMSGID: 1s2lwZ-0004pK-RV
 
-On Thu, 02 May 2024, Lee Jones wrote:
+On 18.04.24 10:48, Linux regression tracking (Thorsten Leemhuis) wrote:
+>
+> mt7921 maintainers, I noticed a report about a regression in
+> bugzilla.kernel.org related to your driver. As many (most?) kernel
+> developers don't keep an eye on bugzilla, I decided to write this mail.
+> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218731 :
 
-> On Wed, 17 Apr 2024 17:38:47 +0200, Uwe Kleine-König wrote:
-> > On stm32mp1xx based machines (and others) a PWM consumer has to disable
-> > the PWM because an enabled PWM refuses to suspend. So check the
-> > LED_SUSPENDED flag and depending on that set the .enabled property.
-> > 
-> > 
+FWIW, the reporter meanwhile confirmed that this happens with 6.9-rc6.
+No bisection so far
+
+Mt7921 maintainers, so you have any idea what might be wrong? Or is this
+a situation along the lines of "uhhps, we screwed up somewhere (hardware
+detection, regulatory stuff, ...) and had to fix this, which leads to this".
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>> On kernel 6.6.27-1-lts, running `iw list` shows that 6GHz channels are supported:>
+>> [...]
+>> Similarly, discovering and connecting to 6GHz APs works fine.
+>>
+>> However, in recent kernel 6.8.5, running `iw list` shows that 6GHz channels are disabled:
+>>
+>> [...]
+>>
+>> And scanning or connecting to 6GHz APs does not work. 
+>>
+>> There's nothing in `dmesg` that differs between boots of the two kernels. On 6.8.5, 6GHz band doesn't work like it did on previous kernels. 
+>>
+>> I can provide more logs or help debug the issue if needed.
 > 
-> Applied, thanks!
+> See the ticket for more details. Note, you have to use bugzilla to reach
+> the reporter, as I sadly[1] can not CCed them in mails like this.
 > 
-> [1/1] leds: pwm: Disable PWM when going to suspend
->       commit: 974afccd37947a6951a052ef8118c961e57eaf7b
-
-If this is important, you may wish to retroactively send it to Stable
-once it's been merged into Mainline.
-
--- 
-Lee Jones [李琼斯]
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
+> 
+> P.S.: let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v6.6..v6.8.5
+> #regzbot title: wifi drivers: mt7921: 6GHz band stopped working
+> #regzbot from: AlexDeLorenzo.dev
+> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218731
+> #regzbot ignore-activity
+> 
+> 
