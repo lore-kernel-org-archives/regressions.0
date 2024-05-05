@@ -1,97 +1,131 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE932A35;
-	Sun,  5 May 2024 04:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A898B1C20
+	for <regressions@lists.linux.dev>; Sun,  5 May 2024 05:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714885202; cv=none; b=lbBSgutRsNNVXr9M18aYe1/TFKqyzm0ZXNTTHiV+DZ70wYJamdsOiho6G0H7kdd7gXBAlpr3u1UMNA1BB0lsZyx73v3QnhgTPZrviVYfLPo6AN+yTWZw82wyEO2EsyeQ0IEK9N2yPVWc+GXh6/NGjRoK+zH1dJDscxbo/iGximo=
+	t=1714888095; cv=none; b=mgbEG06I3Pu7s3JqNdDqTZn4AhZXzHeULMKkHmlnIOtVpbixeIdNA+4B5JfW/XTogLfS+oT6LD6IFxEdKKyTNXlV1c2AGFdscnCHLC6vDg3FKBun3LH1d8QmwLUjLLfQj4wfdn5bMhioGC1AToxIIkKJUDRse/bmBSuflACKPh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714885202; c=relaxed/simple;
-	bh=gZWYN8TIJRhzisv1ghmJGD7uF7Ek/ub2Pify1gP8OTg=;
+	s=arc-20240116; t=1714888095; c=relaxed/simple;
+	bh=Ed8HsUbSumQ8fSGK08zare9btHAsdVUl3Gt9W/0+ruA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cQPj+0zJoBhl4ET/0iJK86FD5W4wT0fYspvWcZvUGTff8QSt4Tf+04OUjgBX4A8B+34Pci5kAPrPFVSkQso+6qlf8RTtLzENsT4Xu3cpiXaF/RZfbK1pJUF3GB0T5IDE9t1Pa+OYL+XMAKVlbY5+p0kGhwbyeKCeLBGd9zUKvxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wacr2QJ5; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=fkhbDrJQiKCKZjM52UcHagym0xoKx5zeLaBmrytdo4UVUphvigF4yxkRuW78r5Ox2CHOdIUn+sDRXPG10dubxqIbM1B553Jip060n066EUEk/ykJK/H+pvpGzQCkNbSLpDqTVjtLJdWWCadvDOtxogTeXwN9kEqdRF/XT2AXlZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=jpj+ZZHf; arc=none smtp.client-ip=67.231.154.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wacr2QJ5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=FqdPLKiJZZINToP0SO0egCn3nMeBdaZBsgYm9Al6woM=;
-	t=1714885200; x=1715317200; b=wacr2QJ5e7ejSawzg3W4/7SoEO9vMizQP5Beqtghws31X5g
-	Q5h0jFhzg+iomDmxjA/b6lBqep2cOUpUs3YMQZizen89BoC7LTzqkAX7biavtx34io/0JiR6i1ZTK
-	cKgKmdkZ73dUg5XhTHHLlvazPipA8UZ1IbReQcN2lrTUYokTHzl9VcLx0GVxYULYrkxSqAF6celIV
-	Y6d6OyjFLZ1/4kYmNUJCMzSlWVjtbEKQHTbUWkGnJxZBV6A7dwLaDi/pg8LamBIbdPcgEIn2QRigC
-	/f6UpBzVKomrPQynBCo2f59tFbKu3eP0AO0GH2HXmlFteuqKtg9Pvx1hCvNz2zIA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s3Tyf-00055A-Fc; Sun, 05 May 2024 06:59:57 +0200
-Message-ID: <3f1f55cb-d8df-4834-b22f-c195d161cab5@leemhuis.info>
-Date: Sun, 5 May 2024 06:59:56 +0200
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="jpj+ZZHf"
+Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
+	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id BE796500FDB
+	for <regressions@lists.linux.dev>; Sun,  5 May 2024 05:48:12 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id DE2F26C0067;
+	Sun,  5 May 2024 05:48:04 +0000 (UTC)
+Received: from [192.168.2.14] (80-61-14-254.fixed.kpn.net [80.61.14.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail3.candelatech.com (Postfix) with ESMTPSA id 4EB6813C2B0;
+	Sat,  4 May 2024 22:48:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 4EB6813C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+	s=default; t=1714888084;
+	bh=Ed8HsUbSumQ8fSGK08zare9btHAsdVUl3Gt9W/0+ruA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jpj+ZZHf3xR+PkEOFdSiCzFanG6MfPIfptoRe0FsNRl/kVouyLaDw5lHtlgmFbkJv
+	 rDKoFAEJ7pPw6FJqe8FWo0JvqUoBdaSLVR45EZF50DXxUM0o/eo+QFjijGP8VAVKdL
+	 Cl5OS3nMCG+gqZaN4szg1GXU4/J1wwWXNH5ouINI=
+Message-ID: <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
+Date: Sat, 4 May 2024 22:48:01 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Thunderbolt Host Reset Change Causes eGPU
- Disconnection from 6.8.7=>6.8.8
-To: Micha Albert <kernel@micha.zone>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <wL3vtEh_zTQSCqS6d5YCJReErDDy_dw-dW5L9TSpp9VFDVHfkSN8lNo8i1ZVUD9NU-eIvF2M84nhfdt2O7spGu2Nv5-oz9FLohYO7SuJzWQ=@micha.zone>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <wL3vtEh_zTQSCqS6d5YCJReErDDy_dw-dW5L9TSpp9VFDVHfkSN8lNo8i1ZVUD9NU-eIvF2M84nhfdt2O7spGu2Nv5-oz9FLohYO7SuJzWQ=@micha.zone>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714885200;7b11026f;
-X-HE-SMSGID: 1s3Tyf-00055A-Fc
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
+Content-Language: en-MW
+To: Lee Jones <lee@kernel.org>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
+ <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
+ <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
+ <20240411070718.GD6194@google.com>
+ <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+ <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+ <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
+ <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
+ <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
+ <20240502071908.GB5338@google.com>
+From: Ben Greear <greearb@candelatech.com>
+Organization: Candela Technologies
+In-Reply-To: <20240502071908.GB5338@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MDID: 1714888086-kOSWpmmwirJ5
+X-MDID-O:
+ us5;at1;1714888086;kOSWpmmwirJ5;<greearb@candelatech.com>;c63a44cdfc35f48c78127675e18807b4
 
-[CCing Mario, who asked for the two suspected commits to be backported]
-
-On 05.05.24 03:12, Micha Albert wrote:
+On 5/2/24 00:19, Lee Jones wrote:
+> On Tue, 23 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
->     I have an AMD Radeon 6600 XT GPU in a cheap Thunderbolt eGPU board.
-> In 6.8.7, this works as expected, and my Plymouth screen (including the
-> LUKS password prompt) shows on my 2 monitors connected to the GPU as
-> well as my main laptop screen. Upon entering the password, I'm put into
-> userspace as expected. However, upon upgrading to 6.8.8, I will be
-> greeted with the regular password prompt, but after entering my password
-> and waiting for it to be accepted, my eGPU will reset and not function.
-> I can tell that it resets since I can hear the click of my ATX power
-> supply turning off and on again, and the status LED of the eGPU board
-> goes from green to blue and back to green, all in less than a second.
+>> On 23.04.24 11:06, Johannes Berg wrote:
+>>> On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking (Thorsten
+>>> Leemhuis) wrote:
+>>>> On 16.04.24 08:17, Johannes Berg wrote:
+>>>>> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
+>>>>>>
+>>>>>> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
+>>>>>> iwl_req_fw_callback()
+>>>>>>
+>>>>>> Is that still best thing to try in your opinion?
+>>>>>
+>>>>> I guess so, I don't have any better ideas so far anyway ...
+>>>>
+>>>> [adding the iwlwifi maintainer; thread starts here:
+>>>> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+>>>>
+>>>> ]
+>>>>
+>>>> Johannes, Miri, what's the status wrt to this regression? From here
+>>>> things look somewhat stalled -- but maybe there was progress and I just
+>>>> missed it.
+>>>
+>>> What do you want? It got bisected to an LED merge, but you ping _us_?
+>>> Way to go ...
+>>
+>> Sorry, to me it sounded a bit like you had an idea for a fix and were
+>> going to give it a try -- similar to how the maintainers for a r8169
+>> driver and the igc driver provided fixes for bugs recent LED changes
+>> exposed.
+>>
+>> But sure, you are right, in the end some LED change seems to have cause
+>> this, so the duty to fix it lies in that field. Therefore:
+>>
+>> Lee, what's the status here to get this fixed before the final?
 > 
->    I talked to a friend, and we found out that the kernel parameter
-> thunderbolt.host_reset=false fixes the issue. He also thinks that
-> commits cc4c94 (59a54c upstream) and 11371c (ec8162 upstream) look
-> suspicious. I've attached the output of dmesg when the error was
-> occurring, since I'm still able to use my laptop normally when this
-> happens, just not with my eGPU and its connected displays.
+> No idea.  Did you send a fix?
 
-Thx for the report. Could you please test if 6.9-rc6 (or a later
-snapshot; or -rc7, which should be out in about ~18 hours) is affected
-as well? That would be really important to know.
+I sent what is probably just a work-around.  I also spent time bisecting and testing.
+The problem appears to have come in with the LED related merge.  I think it is fair
+to ask the LED folks to at least take a look at the lockdep debugging I posted.  It is
+not fair to expect anyone that manages to find or track a bug to also fix it.
 
-It would also be great if you could try reverting the two patches you
-mentioned and see if they are really what's causing this. There iirc are
-two more; maybe you might need to revert some or all of them in the
-order they were applied.
+If someone has a different suggested fix than the hack I posted, I will be happy to
+test.  On my system with lots of radios, it is 100% reproducible.
+Maybe email me directly as I don't keep close watch on LKML.
 
-Ciao, Thorsten
+Thanks,
+Ben
 
-P.s.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
 
-#regzbot ^introduced v6.8.7..v6.8.8
-#regzbot title thunderbolt: eGPU disconnected during boot
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
