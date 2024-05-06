@@ -1,49 +1,48 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D3F13C80B;
-	Mon,  6 May 2024 14:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC0158DBB
+	for <regressions@lists.linux.dev>; Mon,  6 May 2024 18:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715005842; cv=none; b=bCVbz8aF2PGEAwx9fTXk29qcS0LzceAyTHfkZRbY/q3D0dtkn+QBxW1FYoXcliAu7zW1IsiPj+Pw38qSQ/PKP0v9iD0rA/3ITNVegV6ziT9LOUhu1R5AiRg/nxZjQV2QtOQEQrziuNCNFfaC8vbxRE2Ir5oVS01T4DGy/Jxkvd4=
+	t=1715021956; cv=none; b=JSDE8bXtlRttvYWrZOg2mO40foui5wwbCFNN4zAobndooeAAeLL0T3u8UH6k8G2wf0cVgw/NAGABY/cXUBwgVFHLX64EVr+VRLI6PwUW681nHQTzR84DRB7H71+3kJXTaaDkEz2xXkN0MVY0JOOYon5H7K2zrRcB44UX+gYcVTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715005842; c=relaxed/simple;
-	bh=74avidpj6lHrcnz5DWt9tVaHKTbGh3voPFwrs+2HjNg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=keAB9BPqxgyVu/LGNkl5B4a+sy++C3WW11nRjo+smgYwOIHlISBDd8sPIcoxVOk2w/s3oVOx2PctM6WX/VfotU7XsSFErRqx8oIfo0wS5YJUORBSkRYGzhkNXgFwaOz5U5FkZk9RR/u4l60wCNYCYqIqgq0rKb510cO5i/QGUPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EXx4/WGx; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1715021956; c=relaxed/simple;
+	bh=5IIESbR3d7PDTj2PZkx/M3SXR6EBw4Yas+xIOzHKpLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FGTvspH7yphYvYRdJ7l7qeORN/rVrjcKxZVjMbD8QGgnTJIH22pVhelNKWy2Jwf9Q3mZo03bcMOf9OJPnfvwOeRppWx0XioiUNceHwgyWOlPsystxAELod38Ys8FrxQQivfrEpaPppHMaCdGMFIhzef5S6BKCmzdR/y4Ms1WjBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=QROozGPc; arc=none smtp.client-ip=17.58.23.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EXx4/WGx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=74avi
-	dpj6lHrcnz5DWt9tVaHKTbGh3voPFwrs+2HjNg=; b=EXx4/WGxoek2QHnlkBoTc
-	jRTT0OXc0BvIlIVVgO4dT8CHDkcMpwiNeUaEzYExIs9yWALPn7/aDuzvWZ9Y6hRX
-	HDS/r3IY8rE8LFipmebk2F6XSCDnHIVRI1EC0jT7tkmEtYmi8SpI+gNRCAxHLuHh
-	Q9yvqf/kUyr/KaAeMjbyu4=
-Received: from localhost.localdomain (unknown [111.35.187.227])
-	by gzga-smtp-mta-g2-4 (Coremail) with SMTP id _____wDXL_Fr6ThmQiFiBA--.17029S4;
-	Mon, 06 May 2024 22:30:09 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: 00107082@163.com
-Cc: airlied@gmail.com,
-	airlied@redhat.com,
-	daniel@ffwll.ch,
-	dreaming.about.electric.sheep@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	kraxel@redhat.com,
-	linux-kernel@vger.kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	regressions@lists.linux.dev,
-	spice-devel@lists.freedesktop.org,
-	tzimmermann@suse.de,
-	virtualization@lists.linux.dev
-Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
-Date: Mon,  6 May 2024 22:30:03 +0800
-Message-Id: <20240506143003.4855-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240430061337.764633-1-00107082@163.com>
-References: <20240430061337.764633-1-00107082@163.com>
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="QROozGPc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
+	t=1715021953; bh=5IIESbR3d7PDTj2PZkx/M3SXR6EBw4Yas+xIOzHKpLQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=QROozGPcQ1BDbPD4y28JbBRKN8LWKB27xIcPMiaIEh+VN6WaolzSOcdjbnDSIukAL
+	 t6vMVFJukvGFtLxk8qgKXEeAgaTPfGZoGgBi+TcXLL8hJq/SDyCx2N+uLjwbwkSgmT
+	 QnER8wQqp//NHU/DPf//zMscGt/buGwifowkoi5xdc2irEjFK8Lz4PP4Zzgn9aYmRF
+	 ZzQCPbI3zsqY/itae2MjQ9r2LIJDSKEf03n+whJHakELkm4ejMtPRK501D1pqXwhnF
+	 DvCMxnbYiigPoKJnM3GkcG8XFZXpbKHhv0uuvc3mQmXxCMxVLZFjHeZwgw0EI5RMwj
+	 YNKT6MShzmirQ==
+Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPSA id 47DD61349F79;
+	Mon,  6 May 2024 18:59:12 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: dan@danm.net
+Cc: airlied@redhat.com,
+	dakr@redhat.com,
+	kherbst@redhat.com,
+	lyude@redhat.com,
+	nouveau@lists.freedesktop.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] v6.9-rc7: nouveau: init failed, no display output from kernel; successfully bisected
+Date: Mon,  6 May 2024 12:59:10 -0600
+Message-ID: <20240506185910.17917-1-dan@danm.net>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240506182331.8076-1-dan@danm.net>
+References: <20240506182331.8076-1-dan@danm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,15 +50,17 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXL_Fr6ThmQiFiBA--.17029S4
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjfUngAwUUUUU
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEBPWqmVODy8hSgAAsf
+X-Proofpoint-ORIG-GUID: a1gJzvlb2jdxZFrF5r8DGOtd09gwGmcs
+X-Proofpoint-GUID: a1gJzvlb2jdxZFrF5r8DGOtd09gwGmcs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_13,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 adultscore=0 clxscore=1030
+ mlxlogscore=563 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2405060137
 
-The kernel warning still shows up in 6.9.0-rc7.
+CC'ing regressions list and looping in regzbot (both of which I
+accidentally left out in my initial regression report).
 
-(I think 4 high load processes on a 2-Core VM could easily trigger the kernel warning.)
-
-Thanks
-David
-
+#regzbot introduced: 52a6947bf576
