@@ -1,84 +1,65 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778C11DFED;
-	Mon,  6 May 2024 12:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D3F13C80B;
+	Mon,  6 May 2024 14:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715000037; cv=none; b=EKF64fSjGABhHfLZYSM8AxtgSCZNfvmpRvrFhopuaH0haOG6Rt5ZRdvY0M1dHZQIMOP/9eyJ3i+fv6lH1YOUFBBckAucAP/P4xqPGZvAUnHJ1I20h4yIIsmkH1qQXrn369IcpiE6BbST3Q7uF7SsNA2gbIi7Xk310U5I+gylN4g=
+	t=1715005842; cv=none; b=bCVbz8aF2PGEAwx9fTXk29qcS0LzceAyTHfkZRbY/q3D0dtkn+QBxW1FYoXcliAu7zW1IsiPj+Pw38qSQ/PKP0v9iD0rA/3ITNVegV6ziT9LOUhu1R5AiRg/nxZjQV2QtOQEQrziuNCNFfaC8vbxRE2Ir5oVS01T4DGy/Jxkvd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715000037; c=relaxed/simple;
-	bh=h6+1hH9XhB0KBa+l0UP+x9Z2CVunxoz4CdhoOgwxd9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eqKJY78efZvW2+EdbiBxy9hb2G5r1hOnXuE0Mm5P4hcfuPPDIguZjJGEUOl5dBvBneus2voBrXEjn8T8gkXE8UTdkYpIEm0xPgXcShTrNiyok88PrIXg6dmGFJq8/1vuKjYWObjLri9ZgBQtkILGIoGKU/kCeZv5WX+yowXbFvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Jf4OPnNW; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1715005842; c=relaxed/simple;
+	bh=74avidpj6lHrcnz5DWt9tVaHKTbGh3voPFwrs+2HjNg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=keAB9BPqxgyVu/LGNkl5B4a+sy++C3WW11nRjo+smgYwOIHlISBDd8sPIcoxVOk2w/s3oVOx2PctM6WX/VfotU7XsSFErRqx8oIfo0wS5YJUORBSkRYGzhkNXgFwaOz5U5FkZk9RR/u4l60wCNYCYqIqgq0rKb510cO5i/QGUPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EXx4/WGx; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Jf4OPnNW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=L2wtA2YuCrZO8hkF8jTn5doWGyXyq5qsyaLqIFOiMDE=;
-	t=1715000035; x=1715432035; b=Jf4OPnNWpX72o12uPG0V4EK5KjohoYTNftxAJwT5eXzoGZh
-	1kHaKK2hzrUnj5g3d2rjJZRvX3pXVrBlqDsXc3Y2gv7KjUpLyxFNWwKLOd5EP2KY6b1ZVKq7rGRJD
-	3a2+ga1OCDs1peCwE2JX4EO/JjehOy7h4JNJat50i/XXtNIkjGeyPWC3FJhRyBebmsZsQv/IXo41O
-	VMaexExfYe22o3i0Q6nnvlQQP0iS2Xl17eYz+u9T1h95WB+C2OihHK82VbZEPDNIqEc3HucPDVz40
-	ishO4tes+WVGZLMj7wLnftABWCXze/0phK3KuNBfqmfmEocPgNqI5CIPJM1Az5Lw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s3xqr-0007SB-42; Mon, 06 May 2024 14:53:53 +0200
-Message-ID: <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
-Date: Mon, 6 May 2024 14:53:52 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EXx4/WGx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=74avi
+	dpj6lHrcnz5DWt9tVaHKTbGh3voPFwrs+2HjNg=; b=EXx4/WGxoek2QHnlkBoTc
+	jRTT0OXc0BvIlIVVgO4dT8CHDkcMpwiNeUaEzYExIs9yWALPn7/aDuzvWZ9Y6hRX
+	HDS/r3IY8rE8LFipmebk2F6XSCDnHIVRI1EC0jT7tkmEtYmi8SpI+gNRCAxHLuHh
+	Q9yvqf/kUyr/KaAeMjbyu4=
+Received: from localhost.localdomain (unknown [111.35.187.227])
+	by gzga-smtp-mta-g2-4 (Coremail) with SMTP id _____wDXL_Fr6ThmQiFiBA--.17029S4;
+	Mon, 06 May 2024 22:30:09 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: 00107082@163.com
+Cc: airlied@gmail.com,
+	airlied@redhat.com,
+	daniel@ffwll.ch,
+	dreaming.about.electric.sheep@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	kraxel@redhat.com,
+	linux-kernel@vger.kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	regressions@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	tzimmermann@suse.de,
+	virtualization@lists.linux.dev
+Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
+Date: Mon,  6 May 2024 22:30:03 +0800
+Message-Id: <20240506143003.4855-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240430061337.764633-1-00107082@163.com>
+References: <20240430061337.764633-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Thunderbolt Host Reset Change Causes eGPU
- Disconnection from 6.8.7=>6.8.8
-To: Gia <giacomo.gio@gmail.com>
-Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- "stable@vger.kernel.org" <stable@vger.kernel.org>, kernel@micha.zone,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715000035;3ab4d83a;
-X-HE-SMSGID: 1s3xqr-0007SB-42
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXL_Fr6ThmQiFiBA--.17029S4
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjfUngAwUUUUU
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEBPWqmVODy8hSgAAsf
 
-[CCing Mario, who asked for the two suspected commits to be backported]
+The kernel warning still shows up in 6.9.0-rc7.
 
-On 06.05.24 14:24, Gia wrote:
-> Hello, from 6.8.7=>6.8.8 I run into a similar problem with my Caldigit
-> TS3 Plus Thunderbolt 3 dock.
-> 
-> After the update I see this message on boot "xHCI host controller not
-> responding, assume dead" and the dock is not working anymore. Kernel
-> 6.8.7 works great.
+(I think 4 high load processes on a 2-Core VM could easily trigger the kernel warning.)
 
-Thx for the report. Could you make the kernel log (journalctl -k/dmesg)
-accessible somewhere?
+Thanks
+David
 
-And have you looked into the other stuff that Mario suggested in the
-other thread? See the following mail and the reply to it for details:
-
-https://lore.kernel.org/all/1eb96465-0a81-4187-b8e7-607d85617d5f@gmail.com/T/#u
-
-Ciao, Thorsten
-
-P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
-
-#regzbot ^introduced v6.8.7..v6.8.8
-#regzbot title thunderbolt: TB3 dock problems, xHCI host controller not
-responding, assume dead
