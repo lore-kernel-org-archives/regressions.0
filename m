@@ -1,103 +1,234 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E4E156F35
-	for <regressions@lists.linux.dev>; Tue,  7 May 2024 11:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5840713CF9C
+	for <regressions@lists.linux.dev>; Tue,  7 May 2024 13:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082208; cv=none; b=q56RGj6060s9G+jKSidKaktB1nje6X0UnLxudB036BO8kEZCtwYIcS/LSLoBaXJ2kuSUt8kjgyysWowPJyiecn6WcitS+cWHTMrcUuwBt+NqC5Sbmupde605ONPbTtGd9VqQvdYfo829Q1iOp/iOOM11+ZZhI7Y2eMLGh5S0D24=
+	t=1715089738; cv=none; b=oR98UDf6bRDSb8VTzZKlupgmKlItgVfRdL9CB2HleYjAfcchoTNPMZIGsAMKFGrxdeOAYP+d6CzmyCE3vWUgXQTN1dxcqlnabWZBz3DrRRPSo0/U0hohnMh9OxBeyJkKoToFnS3cMBhHQ8qIf1xBmmhGrSiuj1HtOvWKK4vXhiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082208; c=relaxed/simple;
-	bh=YZX31/xdWUMw6K7qdZmLpVzOCZHdmp8lTi6MLLjYx9Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SgPMKJ8wh6aXs059AfynR0FqE7DFGkYX94ZY85W0Nz+yDIdqeqZzirU0MICJr0J3TPGtcyuWkHzQcpzqgBYjYCVbNQjs3O+pYdsQTgzrkh8uBOUKlACUvKTrSjs6VDob2W3d1sDVpGQJJiHJEpOt731iEBgy4WkW/0amwKhS2q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XPWUObtS; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715089738; c=relaxed/simple;
+	bh=4/wITxIkMokFjGEwmrXcgMdiigbqU2NKbPB7zg3pOsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HaofJpVWqq2LPAKG5NpKQfSSMuUGBAtET44AahQp+OSbBRstfoWi+kqGACWX0J8R1JtePfvYuLa9dBQgxs2D+OyCH55ewpp/E5ck4bjAXkcXrQkUMEFQ3gqL5bLnAf+i77Ku0nfiYcwm4qPrOLGBS9Pn2LKyyGlrdVxNrF54IUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BctFR3G1; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPWUObtS"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-47ef5b9956eso2406004137.0
-        for <regressions@lists.linux.dev>; Tue, 07 May 2024 04:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715082205; x=1715687005; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Jezw8zTsKRwlkPt3DmIU972qZVlDPnjvDD93eRca2nI=;
-        b=XPWUObtS+ohyMt6SGIOVek89luA0/5rCqGDgQzdH9jqvS8kqQDh6yY3BEYSW0Rxqcf
-         GkC4Hno2KFtrlHIfWobVzmF+ozS/OKNEoyib1fosYdDAFGiyJHKYW0NJIYas6MJU6xnd
-         btwJzxpPoCWTRddRdx/knnaQ3rgIfEcipIW9gyvwNTPAso0JNZaiu2i4+t6FsLSV9O8J
-         TqOOcF4VtYH8iHxn9bxuS5Vij4z+hXssmji+Yaj2Cp/L8k9jym+VowDi8rii6kIt1TVC
-         v55CG8tgTVpRNGmFXwEQjtqbvpjoJLQ5nZNqGA4GNb+7BuAQattUPuyeZ7tHwEKy/yAM
-         wdMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715082205; x=1715687005;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jezw8zTsKRwlkPt3DmIU972qZVlDPnjvDD93eRca2nI=;
-        b=jV2Q/32DVv7+UxU2KisTg+8kJguc6hNet/t1nDAASoCXth12n5Ehg1mKg9HQaA3e24
-         ti21mcGKuSL4VIxU29YcBaTOv8Bxdn5wYclwY/vPqF6moy4BR25ESNkBTBnshD9KAQjO
-         sFWZYGA0oVBJTmPYckVjYp4TMietWfQNKYbXRSnwSAgwBluiso37/E2GdjpIEmNeEFCD
-         n0kzfzAD8dRWe46MudUnXw51aFg5bFkx1HQyNc0603CoO/JBGbrragDeN1vgP8cbn/Bn
-         +M6AoVDQFI+30TU1SLHSdYGIKn0cO8CJ6VBec8wjKYAxW2jGkTO1Ls+b5/071Pre2Qt7
-         tXLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyjpLTTplOoV2I3D3bZKr1Q8UUBqIMgQFimfjr5KHXIeVPBbEYiwGD8KTCLGiZX3pYQnAsCMZ9B7JmJYCeV4esaiNXtkdFGjSpt1c=
-X-Gm-Message-State: AOJu0YyqWNmSS9Y0qgUHVVBpLEtUM+2qAYYhQNwlYCT+OWd2PGwBp9RK
-	YxvoMQ1sAFUo3ExyRAWN47/OaCRO8ytuPij3GvO7aYOnVqYmriEuiL4gnXYJKWZyEaglzz/b9ZS
-	uutuUF/djPLgTTdZY9IXyNiPcoYtR+yVwojTB0A==
-X-Google-Smtp-Source: AGHT+IEtGQE+pyFkMzL/qa3sUhz3FvaWcp/TP4GRf97r8j8Uo+tD/7DXDc4rKnywy5BIBSVabAYnwOeZ79pm59KoxNs=
-X-Received: by 2002:a05:6102:26c6:b0:47c:296c:5fe3 with SMTP id
- m6-20020a05610226c600b0047c296c5fe3mr2188630vss.9.1715082204799; Tue, 07 May
- 2024 04:43:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BctFR3G1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=y6lPLvzpQ4EVpjvLFGhHJpKRyBRIswtWXAZn3lu7Qgc=;
+	b=BctFR3G1rSS6YU69VTT9xokbfcn4oj/Dk8rTwgiX9lyP4fqd4cV4dYiFABKYBB
+	jigzvG9aENIEUiXFOrp90hcVev8Zr2VGINI7sJ8hEx/FoVGN0NwNlZNWuCTB+eM8
+	+Pmi2UNPaUKjvpc4vseqss2Kaa5IR0A9K0Klr1BL8x5o0=
+Received: from [192.168.1.20] (unknown [183.195.4.43])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDnr90vMTpmjMtKCg--.30278S2;
+	Tue, 07 May 2024 21:48:33 +0800 (CST)
+Message-ID: <d553edef-c1a4-4d52-a892-715549d31ebe@163.com>
+Date: Tue, 7 May 2024 21:48:31 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 7 May 2024 17:13:13 +0530
-Message-ID: <CA+G9fYs1ZN2K=UHOjrwRR2JNE-M0nf9iW_Q-YPzVgmW+9daU4Q@mail.gmail.com>
-Subject: arm64: defconfig: gcc-8: failed: AttributeError: module 'argparse'
- has no attribute 'BooleanOptionalAction'
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] Bluetooth: qca: Fix BT enable failure again for
+ QCA6390 after warm reboot
+To: quic_zijuhu <quic_zijuhu@quicinc.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: luiz.von.dentz@intel.com, marcel@holtmann.org,
+ linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <1714658761-15326-1-git-send-email-quic_zijuhu@quicinc.com>
+ <CABBYNZJc=Pzt02f0L3KOSLqkJ+2SwO=OZibA=0S0T3vKPDwPyw@mail.gmail.com>
+ <c5998fbd-bd63-4f7d-8f51-3dd081913449@quicinc.com>
+ <CABBYNZJOVnBShpgbWEpFBcu_MnHW+TKLndLKnZkkB9C71EfJNA@mail.gmail.com>
+ <b8cc1486-b627-4186-a53c-8331b84e2318@quicinc.com>
+Content-Language: en-US
+From: Lk Sii <lk_sii@163.com>
+In-Reply-To: <b8cc1486-b627-4186-a53c-8331b84e2318@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnr90vMTpmjMtKCg--.30278S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKr43JFy3Ar1kJFyxtrW5KFg_yoW3Xr1rpF
+	WDKF1Ykr4jqry8Gry2vw18ZFyjq3sIvrWUWFyUG3y7Jan0qry5KF4xtrWY9ry5G395Kr40
+	vw17Ja43ua4DGF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jq0PfUUUUU=
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbishbXNWVODEqkFAAAsb
 
-The arm and arm64 with gcc-8 builds failed on Linux next-20240507 tag
-with gcc-8 due to following warnings / errors.
+On 2024/5/4 05:51, quic_zijuhu wrote:
+> On 5/4/2024 5:25 AM, Luiz Augusto von Dentz wrote:
+>> Hi,
+>>
+>> On Fri, May 3, 2024 at 4:18 PM quic_zijuhu <quic_zijuhu@quicinc.com> wrote:
+>>>
+>>> On 5/4/2024 3:22 AM, Luiz Augusto von Dentz wrote:
+>>>> Hi Zijun,
+>>>>
+>>>> On Thu, May 2, 2024 at 10:06 AM Zijun Hu <quic_zijuhu@quicinc.com> wrote:
+>>>>>
+>>>>> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+>>>>> serdev") will cause below regression issue:
+>>>>>
+>>>>> BT can't be enabled after below steps:
+>>>>> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+>>>>> if property enable-gpios is not configured within DT|ACPI for QCA6390.
+>>>>>
+>>>>> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+>>>>> during reboot, but also introduces this regression issue regarding above
+>>>>> steps since the VSC is not sent to reset controller during warm reboot.
+>>>>>
+>>>>> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+>>>>> once BT was ever enabled, and the use-after-free issue is also be fixed
+>>>>> by this change since serdev is still opened when send to serdev.
+>>>>>
+>>>>> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Reported-by: Wren Turkal <wt@penguintechs.org>
+>>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+>>>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>>>>> Tested-by: Wren Turkal <wt@penguintechs.org>
+>>>>> ---
+>>>>>  drivers/bluetooth/hci_qca.c | 5 ++---
+>>>>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>>>>> index 0c9c9ee56592..8e35c9091486 100644
+>>>>> --- a/drivers/bluetooth/hci_qca.c
+>>>>> +++ b/drivers/bluetooth/hci_qca.c
+>>>>> @@ -2450,13 +2450,12 @@ static void qca_serdev_shutdown(struct device *dev)
+>>>>>         struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>>>>>         struct hci_uart *hu = &qcadev->serdev_hu;
+>>>>>         struct hci_dev *hdev = hu->hdev;
+>>>>> -       struct qca_data *qca = hu->priv;
+>>>>>         const u8 ibs_wake_cmd[] = { 0xFD };
+>>>>>         const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+>>>>>
+>>>>>         if (qcadev->btsoc_type == QCA_QCA6390) {
+>>>>> -               if (test_bit(QCA_BT_OFF, &qca->flags) ||
+>>>>> -                   !test_bit(HCI_RUNNING, &hdev->flags))
+>>>>
+>>>> This probably deserves a comment on why you end up with
+>>>> HCI_QUIRK_NON_PERSISTENT_SETUP and HCI_SETUP flags here, also why you
+>>>> are removing the flags above since that was introduce to prevent
+>>>> use-after-free this sort of revert it so I do wonder how serdev can
+>>>> still be open if you haven't tested for QCA_BT_OFF for example?
+>>>>
+>>> okay, let me give comments at next version.
+>>> this design logic is shown below. you maybe review it.
+>>>
+>>> if HCI_QUIRK_NON_PERSISTENT_SETUP is set, it means that hdev->setup()
+>>> is able to be invoked by every open() to initializate SoC without any
+>>> help. so we don't need to send the VSC to reset SoC into initial and
+>>> clean state for the next hdev->setup() call success.
+>>>
+>>> otherwise, namely, HCI_QUIRK_NON_PERSISTENT_SETUP is not set.
+>>>
+>>> if HCI_SETUP is set, it means hdev->setup() was never be invoked, so the
+>>> SOC is already in the initial and clean state, so we also don't need to
+>>> send the VSC to reset SOC.
+>>>
+>>> otherwise, we need to send the VSC to reset Soc into a initial and clean
+>>> state for hdev->setup() call success after "warm reboot -> enable BT"
+>>>
+>>> for the case commit message cares about, the only factor which decide to
+>>> send the VSC is that SoC is a initial and clean state or not after warm
+>>> reboot, any other factors are irrelevant to this decision.
+>>>
+>>> why the serdev is still open after go through
+>>> (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)
+>>> || hci_dev_test_flag(hdev, HCI_SETUP) checking is that
+>>> serdev is not closed by hci_uart_close().
+>>
+>> Sounds like a logical jump to me, in fact hci_uart_close doesn't
+>> really change any of those flags, beside these flags are not really
+>> meant to tell the driver if serdev_device_close has been called or not
+>> which seems to be the intention with HCI_UART_PROTO_READY so how about
+>> we use that instead?
+>>
+> sorry for that i maybe not give good explanation, let me explain again.
+> hci_uart_close() is the only point which maybe close serdev before
+> qca_serdev_shutdown() is called, but for our case that
+> HCI_QUIRK_NON_PERSISTENT_SETUP is NOT set, hci_uart_close() will not
+> close serdev for our case, so serdev must be open state before sending
+> the VSC. so should not need other checking.
+>
+hello, i have paid attention to your discussion for a long time, i would
+like to join this discussion now.
 
-arm64 and arm:
-  defconfig - gcc-8 - failed
+The serdev is still open before sending the VSC for this patch.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+are you agree with above Zijun's point?
 
-Build log:
----------
-arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3:
-Warning (graph_port): /fragment@4/__overlay__: graph port node name
-should be 'port'
-Traceback (most recent call last):
-  File "drivers/gpu/drm/msm/registers/gen_header.py", line 970, in <module>
-    main()
-  File "drivers/gpu/drm/msm/registers/gen_header.py", line 951, in main
-    parser.add_argument('--validate', action=argparse.BooleanOptionalAction)
-AttributeError: module 'argparse' has no attribute 'BooleanOptionalAction'
+>> Another thing that is troubling me is that having traffic on shutdown
+>> is not common, specially if you are going to reboot, etc, and even if
+>> it doesn't get power cycle why don't you reset on probe rather than
+>> shutdown? That way we don't have to depend on what has been done in a
+>> previous boot, which can really become a problem in case of multi-OS
+>> where you have another system that may not be doing what you expect.
+> as you know, BT UART are working at 3M baudrate for normal usage.
+> we can't distinguish if SoC expects 3M or default 11.52K baudarate
+> during probe() after reboot. so we send the VSC within shutdown to make
+> sure SoC enter a initial state with 11.52 baudrate.
+> 
+> for cold boot, SOC expects default 11.52K baudrate for probe().
+> for Enable BT -> warm boot, SOC expects 3M baudrate for probe().
+> we can't tell these two case within probe(). so need to send the VSC
+> within shutdown().
+>
+it seems the traffic within qca_serdev_shutdown() actually does software
+reset for BT SOC.
 
-metadata:
------
-  git_describe: next-20240507
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 93a39e4766083050ca0ecd6a3548093a3b9eb60c
-  git_short_log: 93a39e476608 ("Add linux-next specific files for 20240507")
+From Zijun's points. the reasons why to do software reset within
+shutdown() instead of probe() maybe be shown below
+1) it is impossible to do software reset within probe().
+2) it seems it is easier to do it within shutdown() than probe.
+
+Zijun's simple fix only change the condition and does NOT change the
+location to send the VSC, i think it maybe be other topic about location
+where(probe() or shutdown()) to do software reset.
+
+are you agree with this point?
 
 
-Links:
----
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240507/testrun/23817782/suite/build/tests/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240507/testrun/23818260/suite/build/test/gcc-8-defconfig/details/
+For concern about multi-OS, i would like to show my points.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+the patch is for linux kernel, we maybe only need to care about linux
+OS. it maybe out-of-scope to make assumptions about other OSs vendor
+announced supported such as Windows OS we don't known much about.
+
+are you agree with this point?
+
+>>> see hci_uart_close() within drivers/bluetooth/hci_serdev.c
+>>> static int hci_uart_close(struct hci_dev *hdev)
+>>> {
+>>> ......
+>>>         /* When QUIRK HCI_QUIRK_NON_PERSISTENT_SETUP is set by driver,
+>>>          * BT SOC is completely powered OFF during BT OFF, holding port
+>>>          * open may drain the battery.
+>>>          */
+>>>         if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
+>>>                 clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+>>>                 serdev_device_close(hu->serdev);
+>>>         }
+>>>
+>>>         return 0;
+>>> }
+>>>
+>>>>> +               if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
+>>>>> +                   hci_dev_test_flag(hdev, HCI_SETUP))
+>>>>>                         return;
+>>>>>
+>>>>>                 serdev_device_write_flush(serdev);
+>>>>> --
+>>>>> 2.7.4
+>>>>>
+>>>>
+>>>>
+>>>
+>>
+>>
+> 
+> 
+> 
+
