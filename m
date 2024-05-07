@@ -1,66 +1,96 @@
-Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC0158DBB
-	for <regressions@lists.linux.dev>; Mon,  6 May 2024 18:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A48A42A97
+	for <regressions@lists.linux.dev>; Tue,  7 May 2024 04:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715021956; cv=none; b=JSDE8bXtlRttvYWrZOg2mO40foui5wwbCFNN4zAobndooeAAeLL0T3u8UH6k8G2wf0cVgw/NAGABY/cXUBwgVFHLX64EVr+VRLI6PwUW681nHQTzR84DRB7H71+3kJXTaaDkEz2xXkN0MVY0JOOYon5H7K2zrRcB44UX+gYcVTQ=
+	t=1715055691; cv=none; b=sOhltMx2b7MgtiXpbliOK5Fm2dmkTKSOBsedqbCc04+W3KBM9Nn7d76OC59bd5HxqTqzhdhy19K0cgfbtj1lY03xag11E5uUSdmsRksfQq8DmHVP1GmyLoOuZ+xdOgEHV6JOjpyY/t323rh+pGYVWkICKlUeo91VKYU0lV0hKNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715021956; c=relaxed/simple;
-	bh=5IIESbR3d7PDTj2PZkx/M3SXR6EBw4Yas+xIOzHKpLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FGTvspH7yphYvYRdJ7l7qeORN/rVrjcKxZVjMbD8QGgnTJIH22pVhelNKWy2Jwf9Q3mZo03bcMOf9OJPnfvwOeRppWx0XioiUNceHwgyWOlPsystxAELod38Ys8FrxQQivfrEpaPppHMaCdGMFIhzef5S6BKCmzdR/y4Ms1WjBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=QROozGPc; arc=none smtp.client-ip=17.58.23.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	s=arc-20240116; t=1715055691; c=relaxed/simple;
+	bh=c72GuTr4ExGvonfEeMmEgADVHU9OOr5JbOujrkeH2Bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bd63y+qBanpVPF8TxeKI3ZoUxRMwyWq6nT4TtCkWcG2XyXkdvkgunOU1k7UCmsdmQx5RSitMI9ao7VEEEzHqs/Ji0W77PzyF/edLNawfJ/y1U28Po+rUtOF3UFfeHZOoveLQ6h8+R71pmi71UAvk5ILrg78XhRqQHcxLXI86/Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=HJx+U4Dd; arc=none smtp.client-ip=67.231.154.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="QROozGPc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1715021953; bh=5IIESbR3d7PDTj2PZkx/M3SXR6EBw4Yas+xIOzHKpLQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QROozGPcQ1BDbPD4y28JbBRKN8LWKB27xIcPMiaIEh+VN6WaolzSOcdjbnDSIukAL
-	 t6vMVFJukvGFtLxk8qgKXEeAgaTPfGZoGgBi+TcXLL8hJq/SDyCx2N+uLjwbwkSgmT
-	 QnER8wQqp//NHU/DPf//zMscGt/buGwifowkoi5xdc2irEjFK8Lz4PP4Zzgn9aYmRF
-	 ZzQCPbI3zsqY/itae2MjQ9r2LIJDSKEf03n+whJHakELkm4ejMtPRK501D1pqXwhnF
-	 DvCMxnbYiigPoKJnM3GkcG8XFZXpbKHhv0uuvc3mQmXxCMxVLZFjHeZwgw0EI5RMwj
-	 YNKT6MShzmirQ==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPSA id 47DD61349F79;
-	Mon,  6 May 2024 18:59:12 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: dan@danm.net
-Cc: airlied@redhat.com,
-	dakr@redhat.com,
-	kherbst@redhat.com,
-	lyude@redhat.com,
-	nouveau@lists.freedesktop.org,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] v6.9-rc7: nouveau: init failed, no display output from kernel; successfully bisected
-Date: Mon,  6 May 2024 12:59:10 -0600
-Message-ID: <20240506185910.17917-1-dan@danm.net>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240506182331.8076-1-dan@danm.net>
-References: <20240506182331.8076-1-dan@danm.net>
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="HJx+U4Dd"
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 8D97424006D;
+	Tue,  7 May 2024 04:21:27 +0000 (UTC)
+Received: from [192.168.2.14] (80-61-14-254.fixed.kpn.net [80.61.14.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail3.candelatech.com (Postfix) with ESMTPSA id 086E213C2B0;
+	Mon,  6 May 2024 21:21:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 086E213C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+	s=default; t=1715055686;
+	bh=c72GuTr4ExGvonfEeMmEgADVHU9OOr5JbOujrkeH2Bs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HJx+U4DdhKHIyPOdPTy1pSA8Jq/gSNdAEEC13Pj7JNRjgjlEscPBhK8WMzBerwiGV
+	 YTUYxbw4p1JeXq7TpUd8k9yCy21+hDX1yT/psChGWeBUChc/MZN89xHsrmn7Tu9Vuv
+	 Ak8rnrGoFV1OsXZgBp18ymo0wuKg5/x6PYj+F6t4=
+Message-ID: <738e5de5-0916-c13d-22fb-4c9cb1213036@candelatech.com>
+Date: Mon, 6 May 2024 21:21:23 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
+Content-Language: en-MW
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Lee Jones <lee@kernel.org>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
+ <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
+ <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
+ <20240411070718.GD6194@google.com>
+ <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+ <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+ <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
+ <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
+ <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
+ <20240502071908.GB5338@google.com>
+ <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
+ <dd5d511e-9b02-4481-b22b-28da7b188b29@I-love.SAKURA.ne.jp>
+From: Ben Greear <greearb@candelatech.com>
+Organization: Candela Technologies
+In-Reply-To: <dd5d511e-9b02-4481-b22b-28da7b188b29@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: a1gJzvlb2jdxZFrF5r8DGOtd09gwGmcs
-X-Proofpoint-GUID: a1gJzvlb2jdxZFrF5r8DGOtd09gwGmcs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_13,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 suspectscore=0
- spamscore=0 bulkscore=0 malwarescore=0 adultscore=0 clxscore=1030
- mlxlogscore=563 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2405060137
+X-MDID: 1715055688-TpvrKO0XMact
+X-MDID-O:
+ us5;at1;1715055688;TpvrKO0XMact;<greearb@candelatech.com>;5d67d90982e6d4d760f4a321edc7d576
 
-CC'ing regressions list and looping in regzbot (both of which I
-accidentally left out in my initial regression report).
+On 5/5/24 03:55, Tetsuo Handa wrote:
+> On 2024/05/05 14:48, Ben Greear wrote:
+>> If someone has a different suggested fix than the hack I posted, I will be happy to
+>> test.  On my system with lots of radios, it is 100% reproducible.
+>> Maybe email me directly as I don't keep close watch on LKML.
+> 
+> Please collect stacktraces of all lock holders using
+> https://lkml.kernel.org/r/77e32fdc-3f63-e124-588e-7d60dd66fc9a@I-love.SAKURA.ne.jp .
+> 
+> Depending on the output, I might ask you to decode addresses using ./scripts/faddr2line .
+> 
+> 
 
-#regzbot introduced: 52a6947bf576
+I am travelling for next few weeks, but will work on this when I return.
+
+Thanks,
+Ben
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
