@@ -1,119 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438913C8FE;
-	Tue,  7 May 2024 08:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E4E156F35
+	for <regressions@lists.linux.dev>; Tue,  7 May 2024 11:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715070200; cv=none; b=DMgm0krMtD93CDCJpghr/i/gVDDBzgRlLmDNn6G6KtMY05jpHyBLg6BY4pCm79dotdhf3Dn0PS/qqu5cvkf7n/hrPElea6YLEEIJUMBPQeV/4vkzrgP3XMWaR0Xq/vtox50d7kKyGEgh7FruT6kopQj469X6yCUcdsnHQYvLUpM=
+	t=1715082208; cv=none; b=q56RGj6060s9G+jKSidKaktB1nje6X0UnLxudB036BO8kEZCtwYIcS/LSLoBaXJ2kuSUt8kjgyysWowPJyiecn6WcitS+cWHTMrcUuwBt+NqC5Sbmupde605ONPbTtGd9VqQvdYfo829Q1iOp/iOOM11+ZZhI7Y2eMLGh5S0D24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715070200; c=relaxed/simple;
-	bh=QxX4b7q5XOeUTB4IiEc4dG0x64/1OCYe/75fyaZndHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hXcXsrZmWYgrLRTJE8ftImt9Tbc76/qHlcKrYv3lCxzFX+tey6RfHmDn0B3v5CG9Rjx7MdGQXI84vpbL7BC8KU8bTvLEWPTTOmiONUdEpi5q41JqT+6RAKa3DnfjB2W/Be3j8S0lczv1kqUwVP3lQiEEQhFO5t+H2zPcHhqXb0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euYnEslD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715082208; c=relaxed/simple;
+	bh=YZX31/xdWUMw6K7qdZmLpVzOCZHdmp8lTi6MLLjYx9Y=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SgPMKJ8wh6aXs059AfynR0FqE7DFGkYX94ZY85W0Nz+yDIdqeqZzirU0MICJr0J3TPGtcyuWkHzQcpzqgBYjYCVbNQjs3O+pYdsQTgzrkh8uBOUKlACUvKTrSjs6VDob2W3d1sDVpGQJJiHJEpOt731iEBgy4WkW/0amwKhS2q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XPWUObtS; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euYnEslD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD19C2BBFC;
-	Tue,  7 May 2024 08:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715070199;
-	bh=QxX4b7q5XOeUTB4IiEc4dG0x64/1OCYe/75fyaZndHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=euYnEslDreQIgjsExv5pQhTSYbvEKH0VOQM+I60M3KW8WozW+xl0WPGbFOaTLAoAb
-	 /V/l5Sd0Kip9+SG1+lwlsqE6EzQ2QDTtH1JcQRl9SR+sYfrbTIhujenn2HjtkUmgoB
-	 8JkhC7UDf2kHcQZFtTKw7GLOxtgRwgiFgPl7o+WtMTCHDNQRrbMZerM6Wxlh8+daVy
-	 K5fCxgZyqWPf4Ul8hJ+9+zGkJ2bkKQCaQQTRUbyEKLMBmwK5lc8ioBoqaIRNzVLddE
-	 cJHawYtzqZOSCfMVfGcM9Tfj/khOJBJ+h/1BxdtGbwX7bhlv4bkCTMMgoXWE6ze8R/
-	 PvnCf1OOYTHzw==
-Date: Tue, 7 May 2024 09:23:15 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ben Greear <greearb@candelatech.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-Message-ID: <20240507082315.GS1227636@google.com>
-References: <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <20240411070718.GD6194@google.com>
- <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
- <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
- <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
- <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
- <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
- <20240502071908.GB5338@google.com>
- <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPWUObtS"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-47ef5b9956eso2406004137.0
+        for <regressions@lists.linux.dev>; Tue, 07 May 2024 04:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715082205; x=1715687005; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Jezw8zTsKRwlkPt3DmIU972qZVlDPnjvDD93eRca2nI=;
+        b=XPWUObtS+ohyMt6SGIOVek89luA0/5rCqGDgQzdH9jqvS8kqQDh6yY3BEYSW0Rxqcf
+         GkC4Hno2KFtrlHIfWobVzmF+ozS/OKNEoyib1fosYdDAFGiyJHKYW0NJIYas6MJU6xnd
+         btwJzxpPoCWTRddRdx/knnaQ3rgIfEcipIW9gyvwNTPAso0JNZaiu2i4+t6FsLSV9O8J
+         TqOOcF4VtYH8iHxn9bxuS5Vij4z+hXssmji+Yaj2Cp/L8k9jym+VowDi8rii6kIt1TVC
+         v55CG8tgTVpRNGmFXwEQjtqbvpjoJLQ5nZNqGA4GNb+7BuAQattUPuyeZ7tHwEKy/yAM
+         wdMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715082205; x=1715687005;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jezw8zTsKRwlkPt3DmIU972qZVlDPnjvDD93eRca2nI=;
+        b=jV2Q/32DVv7+UxU2KisTg+8kJguc6hNet/t1nDAASoCXth12n5Ehg1mKg9HQaA3e24
+         ti21mcGKuSL4VIxU29YcBaTOv8Bxdn5wYclwY/vPqF6moy4BR25ESNkBTBnshD9KAQjO
+         sFWZYGA0oVBJTmPYckVjYp4TMietWfQNKYbXRSnwSAgwBluiso37/E2GdjpIEmNeEFCD
+         n0kzfzAD8dRWe46MudUnXw51aFg5bFkx1HQyNc0603CoO/JBGbrragDeN1vgP8cbn/Bn
+         +M6AoVDQFI+30TU1SLHSdYGIKn0cO8CJ6VBec8wjKYAxW2jGkTO1Ls+b5/071Pre2Qt7
+         tXLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyjpLTTplOoV2I3D3bZKr1Q8UUBqIMgQFimfjr5KHXIeVPBbEYiwGD8KTCLGiZX3pYQnAsCMZ9B7JmJYCeV4esaiNXtkdFGjSpt1c=
+X-Gm-Message-State: AOJu0YyqWNmSS9Y0qgUHVVBpLEtUM+2qAYYhQNwlYCT+OWd2PGwBp9RK
+	YxvoMQ1sAFUo3ExyRAWN47/OaCRO8ytuPij3GvO7aYOnVqYmriEuiL4gnXYJKWZyEaglzz/b9ZS
+	uutuUF/djPLgTTdZY9IXyNiPcoYtR+yVwojTB0A==
+X-Google-Smtp-Source: AGHT+IEtGQE+pyFkMzL/qa3sUhz3FvaWcp/TP4GRf97r8j8Uo+tD/7DXDc4rKnywy5BIBSVabAYnwOeZ79pm59KoxNs=
+X-Received: by 2002:a05:6102:26c6:b0:47c:296c:5fe3 with SMTP id
+ m6-20020a05610226c600b0047c296c5fe3mr2188630vss.9.1715082204799; Tue, 07 May
+ 2024 04:43:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 7 May 2024 17:13:13 +0530
+Message-ID: <CA+G9fYs1ZN2K=UHOjrwRR2JNE-M0nf9iW_Q-YPzVgmW+9daU4Q@mail.gmail.com>
+Subject: arm64: defconfig: gcc-8: failed: AttributeError: module 'argparse'
+ has no attribute 'BooleanOptionalAction'
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 04 May 2024, Ben Greear wrote:
+The arm and arm64 with gcc-8 builds failed on Linux next-20240507 tag
+with gcc-8 due to following warnings / errors.
 
-> On 5/2/24 00:19, Lee Jones wrote:
-> > On Tue, 23 Apr 2024, Linux regression tracking (Thorsten Leemhuis)
-> > wrote:
-> > 
-> > > On 23.04.24 11:06, Johannes Berg wrote:
-> > > > On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking
-> > > > (Thorsten Leemhuis) wrote:
-> > > > > On 16.04.24 08:17, Johannes Berg wrote:
-> > > > > > On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
-> > > > > > > 
-> > > > > > > Johannes, you had another suggestion: changing iwlwifi's
-> > > > > > > request_module() to request_module_nowait() in
-> > > > > > > iwl_req_fw_callback()
-> > > > > > > 
-> > > > > > > Is that still best thing to try in your opinion?
-> > > > > > 
-> > > > > > I guess so, I don't have any better ideas so far anyway ...
-> > > > > 
-> > > > > [adding the iwlwifi maintainer; thread starts here:
-> > > > > https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-> > > > > 
-> > > > > ]
-> > > > > 
-> > > > > Johannes, Miri, what's the status wrt to this regression? From
-> > > > > here things look somewhat stalled -- but maybe there was
-> > > > > progress and I just missed it.
-> > > > 
-> > > > What do you want? It got bisected to an LED merge, but you ping
-> > > > _us_? Way to go ...
-> > > 
-> > > Sorry, to me it sounded a bit like you had an idea for a fix and
-> > > were going to give it a try -- similar to how the maintainers for
-> > > a r8169 driver and the igc driver provided fixes for bugs recent
-> > > LED changes exposed.
-> > > 
-> > > But sure, you are right, in the end some LED change seems to have
-> > > cause this, so the duty to fix it lies in that field. Therefore:
-> > > 
-> > > Lee, what's the status here to get this fixed before the final?
-> > 
-> > No idea.  Did you send a fix?
-> 
-> I sent what is probably just a work-around.  I also spent time
-> bisecting and testing. The problem appears to have come in with the
-> LED related merge.  I think it is fair to ask the LED folks to at
-> least take a look at the lockdep debugging I posted.
+arm64 and arm:
+  defconfig - gcc-8 - failed
 
-I can't speak for Pavel, but I personally have no way of debugging or
-reproducing this.  The only usefulness I can provide is to review and
-apply fixes as and when they appear.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> It is not fair to expect anyone that manages to find or track a bug to
-> also fix it.
+Build log:
+---------
+arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-display.dtsi:113.6-121.3:
+Warning (graph_port): /fragment@4/__overlay__: graph port node name
+should be 'port'
+Traceback (most recent call last):
+  File "drivers/gpu/drm/msm/registers/gen_header.py", line 970, in <module>
+    main()
+  File "drivers/gpu/drm/msm/registers/gen_header.py", line 951, in main
+    parser.add_argument('--validate', action=argparse.BooleanOptionalAction)
+AttributeError: module 'argparse' has no attribute 'BooleanOptionalAction'
 
-No such expectation has been felt or communicated.
+metadata:
+-----
+  git_describe: next-20240507
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 93a39e4766083050ca0ecd6a3548093a3b9eb60c
+  git_short_log: 93a39e476608 ("Add linux-next specific files for 20240507")
 
--- 
-Lee Jones [李琼斯]
+
+Links:
+---
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240507/testrun/23817782/suite/build/tests/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240507/testrun/23818260/suite/build/test/gcc-8-defconfig/details/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
