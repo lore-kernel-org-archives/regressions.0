@@ -1,37 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167AC823DD;
-	Wed,  8 May 2024 11:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F832BAED;
+	Wed,  8 May 2024 12:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168222; cv=none; b=qrjvs207sTlcaWaitD3mtPja7HLzQLvv61Cdnz5RHFbOMs/Vxt11+++eAvQxSXGy3+LXwMzXl7XGIwYS1v3cutWsoHKDooyJnH3VJ74I4ArygTLAIIHObGqtxszIMedfdr0P3UUIwElKwU5y0qnzuECtZ4kmVVjVhcqbhGNI/XI=
+	t=1715171714; cv=none; b=jpnzjiV9g0pa8bn8olALrlj5PRO07oyavps4JQAFSoADDBHEHUsHbHm2d46nQNEoKfiisIoQTV6lRbvZRN6gwDwstpf21PTLdKtubJVqlWyHkTvzqhyHOzIuVlcsccMuMSYem5JL+4D145LXLrahexu33v1R5USYGKTffBF4Rto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168222; c=relaxed/simple;
-	bh=z/2a/nrs23WhS9VrtF5qiDn+DU+cNJvGsX0TMquMRxU=;
+	s=arc-20240116; t=1715171714; c=relaxed/simple;
+	bh=i2JLkQ5wqYLV4moBdZnxKtMAd2an5huS7pmMXcoLDiA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q8yO+xm1PrKXS+S6ahVwnvJKMh7R9TyyXfdvRp+4f/8D6VnaeYF8v1MHdcArHKj7mFPA2Bqeb57C2f+kTTRSv9i4sbfpCHUJxF1RAEPZdgfJ1MLQEClGUGjf+C7Nah33aGRvmf9TZdQsNywvm25SVLbWu4w1Fe6BPmYl6xwtulo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vp+oNFN9; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=AAWnm8/J6ySvi06aGXgT1LVwwEOu224c/GPngURsABBt+tw18siCaAjMAUN613WsfWBa0Pep+FTYMj19F738XetdXFXGa00cys+4u+jtPa+bsoiAPEc4Z0mmJGAnrBKL4WspnG4XvwrWe6aWqM/8czbPgyw/C7gjCYMtsVkV8PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3QfxrLw; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vp+oNFN9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=lwuG52TUbyfVkNwqey1JXh7+1gTpfjwoDt9EJB504Lw=;
-	t=1715168221; x=1715600221; b=vp+oNFN9YcexA9sn1rkTwGe+LIyAGFqDIo88U2/k8wGCO2N
-	iFpjjIKKZYng4anMFaoT1phnQpJ0h6Oh0LEyNCazes+Fy/ZHLMKofC5SwiBxeyScIVD9qbWdH6hYS
-	4+YOfGeETq2iXYFxA0HtPxYWo+in/7MugkhC6GquCR5Gfdg6vBgn/oXuJC/yrUiHsLxn6xFeEOKDC
-	CgyQo2Xj2+ZF2KRI2ezAAZXFoOQftCdlLrrqcLSvopKaLEtmkVXtZTCL9vXdWB5Di7GeXK1fBFZ10
-	Fs9oeCkT8wqXMFlBnPVr45J5SnG/3KA/TWVo5EjQrAssR84JJlga5Lk4NAy4sRvw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s4fbX-00055h-2w; Wed, 08 May 2024 13:36:59 +0200
-Message-ID: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
-Date: Wed, 8 May 2024 13:36:58 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3QfxrLw"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5210684cee6so2796496e87.0;
+        Wed, 08 May 2024 05:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715171710; x=1715776510; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AGqJENKGu2VDw1JweApXY7Cnx0SgkltEUbGukf+76pw=;
+        b=R3QfxrLwuO3AIpte9vwWLjT7P61B/oXCFzYwT6YJXbyIM3vuZU1ByTh/+H+QPz2Tw2
+         GJ17h4dM/T6oTOeyFzIlg2PDtkRX21/tasGBibyMjd1BR6+V/Mp8GrcMoo68PS5N1fG8
+         nug6wN3dOZMS2Js6rwCK/FYu/Gtj1ZvTp3KoLSM6V7DTods24/Gx2/Lil5vEilSKiWlB
+         9xzMEGW42DxFHoUMbwLwVA7f/S9BbJJbvPpbx0jPLN972DtmK7FW/Qt2nxfFwfqtxb4P
+         Q6HHmuRCNTsY9yYTgU3CQAg3N5a5ql1eyTUPOR8cxsQU35S1Cc1Fm02cANidfjql4epp
+         vBXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715171710; x=1715776510;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGqJENKGu2VDw1JweApXY7Cnx0SgkltEUbGukf+76pw=;
+        b=Qku8uaJZL3NSq08fOo6Ndujvf4f6CmR5KhdV203TuhFMhDDiAoR+XFCdJcn+TlHUXI
+         nkvRrpxPGo1PwuboR2JE29RU7ATU+bAydP0NISYycvddkTpeujBoLVfzGNOvTugM5sSh
+         F5I7y4aPgl+uvvntd+4ZdPzbADuTY8fMY9tpRAtj6tIz026rYKUKRURE5v5ydjMflymo
+         2iB+P0zFjdVGNQUg0MymTGnrLHKr+d5yG3+4UKQEX1d4MpDR/hagSBXKtUlNZ+KwSQtt
+         RHKOjY/AvV9bA1PYBMSWTScZefw5LqhSqWWCf3uovqMX9QDUT7rLVVEmRKMrG+V0akvo
+         t/qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkm6wTLYYqyGLuyZI2XaLD96E6Nk7MwZsVW+HbzN0mprq+y51ALwesaVvlaSXusA9Z+XqZ1Wir1FOx5MzTrK9ADRwhx8eebYdvbRjqjpM=
+X-Gm-Message-State: AOJu0YybF4qyDtGl80hmlwivJgBKO/VifuRw7dBsT7y6E3+o0seOVExE
+	jA1zB8vCkJginxXkMl4p2QGSwog/A2LvrDDF4AxJcRmld+pgOHekCRAO9c0Z
+X-Google-Smtp-Source: AGHT+IGEhgoz0oL9QWFm1uMJ3wjDKHCYFTJDY7pYc8SqD9sY6qgDMaPrAs6eZsiz9jKDcFCAfaIogw==
+X-Received: by 2002:ac2:4c2b:0:b0:51e:11d5:bcaa with SMTP id 2adb3069b0e04-5217c56e432mr1461968e87.39.1715171709955;
+        Wed, 08 May 2024 05:35:09 -0700 (PDT)
+Received: from [130.235.83.196] (nieman.control.lth.se. [130.235.83.196])
+        by smtp.gmail.com with ESMTPSA id b2-20020a056512060200b0051f0225e0a4sm2492021lfe.227.2024.05.08.05.35.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 05:35:09 -0700 (PDT)
+Message-ID: <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
+Date: Wed, 8 May 2024 14:35:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,48 +61,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] next boot regression caused by
- RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
-To: Laura Nao <laura.nao@collabora.com>, regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20240426154208.81894-1-laura.nao@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240426154208.81894-1-laura.nao@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM
+ ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM
+ events:qxl_gc_work [qxl]
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ David Wang <00107082@163.com>
+Cc: airlied@gmail.com, airlied@redhat.com, daniel@ffwll.ch,
+ dreaming.about.electric.sheep@gmail.com, dri-devel@lists.freedesktop.org,
+ kraxel@redhat.com, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ spice-devel@lists.freedesktop.org, tzimmermann@suse.de,
+ virtualization@lists.linux.dev, stable@vger.kernel.org
+References: <20240430061337.764633-1-00107082@163.com>
+ <20240506143003.4855-1-00107082@163.com>
+ <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
+Content-Language: en-US
+From: Anders Blomdell <anders.blomdell@gmail.com>
+In-Reply-To: <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715168221;b694817c;
-X-HE-SMSGID: 1s4fbX-00055h-2w
 
-On 26.04.24 17:42, Laura Nao wrote:
-> Hello,
+
+
+On 2024-05-07 07:04, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
-> KernelCI has identified a next boot regression on the following
-> Chromebooks, between next-20240416 and next-20240418:
-> - Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
->   configuration used [1]
-> - ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
->   used [2]
->
-> [...]
 > 
-> The issue is still present on next-20240426.
->> #regzbot introduced: next-20240416..next-20240418
+> On 06.05.24 16:30, David Wang wrote:
+>>> On 30.04.24 08:13, David Wang wrote:
+> 
+>>> And confirmed that the warning is caused by
+>>> 07ed11afb68d94eadd4ffc082b97c2331307c5ea and reverting it can fix.
+>>
+>> The kernel warning still shows up in 6.9.0-rc7.
+>> (I think 4 high load processes on a 2-Core VM could easily trigger the kernel warning.)
+> 
+> Thx for the report. Linus just reverted the commit 07ed11afb68 you
+> mentioned in your initial mail (I put that quote in again, see above):
+> 
+> 3628e0383dd349 ("Reapply "drm/qxl: simplify qxl_fence_wait"")
+> https://git.kernel.org/torvalds/c/3628e0383dd349f02f882e612ab6184e4bb3dc10
+> 
+> So this hopefully should be history now.
+> 
+> Ciao, Thorsten
+> 
+Since this affects the 6.8 series (6.8.7 and onwards), I made a CC to stable@vger.kernel.org
 
-Hmmm, I noticed nothing has happened here.
-
-Is this issue still happening? With a link to the particular test in the
-CI I might have been able to answer that myself. ;)
-
-If it's still broken I assume we need a bisection.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
+/Anders
