@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F74B8C1F;
-	Wed,  8 May 2024 08:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDD45467E;
+	Wed,  8 May 2024 08:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715157247; cv=none; b=uXq7/u/PKYxmsrE6dqZfEobT/W1y4Q/ppIlmrreEr+HYYVMi7HnyJLp/Fa3aSJDO4b00u1ojOVAwr4LoXmSg0AFDDdrXP7FQy4/oQZdrxxwl+z61qokSqzJoy3wgWOGr1mGpKZY4AmlZqteMQb/yNQuaVMaXWhJRmHPvBfLf218=
+	t=1715157511; cv=none; b=XgXYqUnOEBUzHUMB1f9Otj69QPaXs1T2PF7oreUPemsHDciCnNTBkT+RxPGDuwrOjtDVy2fxRsyM6MEwzdJ7nSGWvt8Zsu5CVK/DlMO3RoanTNaGlpGdGlKCSvfdEd3qDrtm0L3+F3yHTqbNIGpakAlrytBZ4ehAHIskyxPonOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715157247; c=relaxed/simple;
-	bh=eZo0SbgVlDwK+HUbWvKnFU4s6LwJQVx0tiQVgOF+HlE=;
+	s=arc-20240116; t=1715157511; c=relaxed/simple;
+	bh=X3eE9aXEFnT+IY4udsHePAfcwkQF8cQbEQifjJchhR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1ZSbDeSABFTcJrFBsDQiuliEQi3C62NY9Crdb8b6i0XfbQ3UctDfDo+/rNo94ErRLazjHwMzwUxZH6nfpr837N2Oi+VQiSlHi/4xUoRmXa18SCxJb+49+5vBhVGo3sIjod11Eb/l9Tf/k1GMO20cP2FuSY9573ipL0kwCmFqUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fDO6RXd9; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=UkZT4sflAUyruPtTt/XTcRXVpsBinxu3u0wGVZpRLOpvIr/TmR6CsDiWiZ1pahVelLr2c3OsuT2hVFxvxA3+KMEe7WwzcUGISfvnBA4e1QO74B2HzHmzAOgZ9vVmdzVa0sAgrMoK4cXDx2OhCC4L+uTDf0twsEXF5EagmIsq6xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hizxVp59; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fDO6RXd9"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hizxVp59"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=VYf2x8KePoKCnsFPyEO9iLMDoM/FQ8kORSg9BUE2DME=;
-	t=1715157245; x=1715589245; b=fDO6RXd9Bl1JRryVHuQUyunuXDtieEPoINtNl85v07NTRB5
-	JHZ7DDU2bP8fy0mdh6B9+WlzTSScxFtuCLfuc93qkreQDLbB79LfhYdkdhgPe8d455Cjl9vfIqHbO
-	Ws+NHqyLj/Qde74V4J0KpE8viC8kloEOlZXHDHQjb/p7esysLJ4HyrnDqWZgMxDzXGKbuXudsFIHL
-	qyaSmqytYcZMUIdAlvHtWbvmKaBVR2ENxkhmlJPXj5C4B6vtf9t2lFSTe2Lc6f1OZ7L2A512ip42a
-	IpipJvwxXK7HFUsIAXoRSlJojU2jpDgkoFXQe8SLBPCw68gl6fuEN9+D6iV1HilQ==;
+	In-Reply-To:References; bh=sXwGXR0FJtuVEciSBc5fk9Oc+dnf3GpQ8oJ3KLUfNrk=;
+	t=1715157509; x=1715589509; b=hizxVp5999jSavWVtXStYBIDU2bc9Bw5GXdUTXOPIlz4k2q
+	mFGrMgFP3NV+ILqdmqwVsHZonapTZBKjZagbgNAfmbvs0sfHcmJlpV8ChSKKIj/O1aFlLdvmWJukU
+	K9V0pAZEQ2bh57yJwkWrW4dbi2r3mK5GPGyXXfDvYX6Roa6Fu69Vkz2We/uf2TKdyv3iYmVXR4ab0
+	U4mw3Lk34WkGZYbrINjk6IOlQmt85Bn2x7WPz56OB5cvZGMizt/Nj4nK9FKhBNHqR3O2v7NgZ9leG
+	HSL3OW9I0LBCjnzuCwWMoRHdbyc3YJg79L+6q2Lym99bDAEyNRycTCHScbt3d5ww==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s4ckO-0007C1-9k; Wed, 08 May 2024 10:33:56 +0200
-Message-ID: <0d59ae68-7552-454a-8d01-72c359496901@leemhuis.info>
-Date: Wed, 8 May 2024 10:33:55 +0200
+	id 1s4col-0007xb-8O; Wed, 08 May 2024 10:38:27 +0200
+Message-ID: <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info>
+Date: Wed, 8 May 2024 10:38:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,47 +40,99 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Bluetooth: btusb: Fix the patch for MT7920 the affected
- to MT7921
-To: luiz.dentz@gmail.com
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, sean.wang@mediatek.com,
- deren.Wu@mediatek.com, chris.lu@mediatek.com, aaron.hou@mediatek.com,
- steve.lee@mediatek.com, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
- patchwork-bot+bluetooth@kernel.org, Peter Tsao <peter.tsao@mediatek.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240415141922.25055-1-peter.tsao@mediatek.com>
- <171328023414.16225.12939333659144302573.git-patchwork-notify@kernel.org>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+To: Thomas Gleixner <tglx@linutronix.de>, Lyude Paul <lyude@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>, Borislav Petkov
+ <bp@alien8.de>, Linux kernel regressions list <regressions@lists.linux.dev>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
+ <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <171328023414.16225.12939333659144302573.git-patchwork-notify@kernel.org>
+In-Reply-To: <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715157245;99242499;
-X-HE-SMSGID: 1s4ckO-0007C1-9k
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715157509;180665cf;
+X-HE-SMSGID: 1s4col-0007xb-8O
 
-On 16.04.24 17:10, patchwork-bot+bluetooth@kernel.org wrote:
-> 
-> This patch was applied to bluetooth/bluetooth-next.git (master)
-> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-> 
-> On Mon, 15 Apr 2024 22:19:22 +0800 you wrote:
->> Because both MT7920 and MT7921 use the same chip ID.
->> We use the 8th bit of fw_flavor to distingush MT7920.
->> The original patch made a mistake to check whole fw_flavor,
->> that makes the condition both true (dev_id == 0x7961 && fw_flavor),
->> and makes MT7921 flow wrong.
->>
->> In this patch, we correct the flow to get the 8th bit value for MT7920.
->> And the patch is verified pass with both MT7920 and MT7921.
->>
->> [...]
-> 
-> Here is the summary with links:
->   - Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
->     https://git.kernel.org/bluetooth/bluetooth-next/c/263296438807
+H! Lyude, Thomas, what's the status here? From here it looks like we
+were close to a fix, but then it turned out to be a bad fix -- and
+afterwards nothing much seems to have happened. Did it fall through the
+cracks, or was this already fixed and I just missed that?
 
-Hi! 6.9 is only days close and this is fixing a 6.9 regression, so allow
-me to quickly ask: do you still plan to submit this for mainline merge
-soon? Or did you already and I just missed it? Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+On 02.05.24 12:33, Mario Limonciello wrote:
+> On 4/25/2024 16:42, Thomas Gleixner wrote:
+>> On Thu, Apr 25 2024 at 11:56, Lyude Paul wrote:
+>>> On Thu, 2024-04-25 at 04:11 +0200, Thomas Gleixner wrote:
+>>>>
+>>>> Can you please boot a kernel with the commit in question reverted and
+>>>> add 'possible_cpus=8' to the kernel command line?
+>>>>
+>>>> In theory this should fail too.
+>>>
+>>> Yep - tried booting a kernel with f0551af0213 reverted and
+>>> possible_cpus=8, it definitely looks like that crashes things as well
+>>> in the same way.
+>>
+>> Good. That means it's a problem which existed before but went unnoticed.
+>>
+>>> Also - it scrolled off the screen before I had a chance to write it
+>>> down, but I'm -fairly- sure I saw some sort of complaint about "16 [or
+>>> some double digit number] processors exceeds max number of 8". Which
+>>> is quite interesting, as this is definitely just a quad core ryzen
+>>> processor with hyperthreading - so there should only be 8 threads.
+>>
+>> Right, that's what we saw with the debug patch. The ACPI/MADT table
+>> is clearly bonkers. The effect of it is that it pretends that the system
+>> has 16 possible CPUs:
+>>
+>>      [    0.089381] CPU topo: Allowing 8 present CPUs plus 8 hotplug CPUs
+>>
+>> Which in turn changes the sizing of the per CPU data and affects some
+>> other details which depend on the number of possible CPUs.
+> 
+> At least this aspect of this I suspect is caused by commit
+> fed8d8773b8ea68ad99d9eee8c8343bef9da2c2c.
+> 
+> If you try reverting that I expect the "hotplug CPUs" disappear.
+> 
+>>
+>> But that should not matter at all because the system scaling should be
+>> sufficient with 8 CPUs, but it does not for some completely non-obvious
+>> reasons.
+>>
+>> Can you please try to increase possible_cpus=N on the command line one
+>> by one and check when it actually starts to "work" again.
+>>
+>> One other thing to try is to boot with 'possible_cpus=8' and
+>> 'intremap=off' and see whether that makes a difference.
+>>
+>> I really have no idea where to look and not having the early boot
+>> messages in case of the fail is not helpful as I can't add meaningful
+>> debug to it.
+>>
+>> I just checked: the motherboard has a serial port, so it would be
+>> extremly helpful to hook up a serial cable to this thing and enable
+>> serial console on the kernel command line. That way we might eventually
+>> see information which is emitted before it fails to validate the timer
+>> interrupt.
+>>
+
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
