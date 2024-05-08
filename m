@@ -1,104 +1,99 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED123EA71
-	for <regressions@lists.linux.dev>; Wed,  8 May 2024 12:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0A422071;
+	Wed,  8 May 2024 12:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715171925; cv=none; b=CS8twUdBH/2UACKKHJOFLxFLF2hv2vvv/elbS7rvvUUp17WnCDNqEEue238FaD1mZnDJEPzpPUUgZccdWxDAb3x8qUay+DG57Lnn+A+atFNlaokOyvd+LnZ2OZcjCyoBwU7eHEolHRTkz39+jsdBBwwuNXE67W6KDRF0+2TtkTs=
+	t=1715172678; cv=none; b=PSSsROc2rLG/kmtiFt5FMRaA1L64bNqEGTOgPHrPrALJUhjVKPqnlG5AKZvWKDPbK3SZyfZn9SWyIUzi7SUyT64uMdcsI4IXCvyeMoq3HUTuu5ad7q7ZDhi0d8SGbM1coapZfVeyHN0CcPVSmRYSxLsL9lV3OnvOmxBD5OVeTa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715171925; c=relaxed/simple;
-	bh=0U23O4IifsWoKyzKHhaaAo1uk/eFcgF3SudtcJ9vppw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rBWi1xPST5GRVNzlFyeFiFqT5DGkQTJ39fnIyHiLGf7hdS+GOK2yZjB8y9QhgGt9LX8vSm86r066olU1ADx3RBCCezmRb5Dmi+o/+z1rzAaJEfb6xl4jzwTY4w37czQ2pfYYSlsncf0KCZbC4kulZoOd+P2wO4TLYA6J5NnbcxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zVPGKyKf; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715172678; c=relaxed/simple;
+	bh=zjLlvB+WbJijsa7Xq2sGoO7LgZnL7gRVI2UA3wsYzcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=geN/5VNbdH8GTK1diKdVxyoZZgNg5vvSEWXIsjkTzSpn9n9rtlGjkRCazZmEAgm+mJNNtaoEXKTBFH0anbIvmk6LBlIW8T0RxozZZg6pTnreZ2rBk7dXufm17g7HSGpjbAsDrvrVHlhwdMxhUDWfJKZY9YikbOf2nnz9PDXvnSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BkR85RNs; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zVPGKyKf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715171922;
-	bh=0U23O4IifsWoKyzKHhaaAo1uk/eFcgF3SudtcJ9vppw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=zVPGKyKfbF3n5CnjFI147MV+4XzTAeuTZjHxXRPNjNWTJE2dKJIasxSpUmEEwbv2/
-	 XIyGy9yI6gLpQykNgrcde8wfFtlNl28BY+f5uem5zyZDiDbTgUM6FdDSjLgk2bIf2o
-	 nHAGmN6VkolhyfulWT/FGL8oanXwqqGl65Bu2/RWQKN++ZDFoPb2dCgziwccvh/3x/
-	 whP4KRZOwslJvTCoqkuEhLzRLNh0CcAzpqwKtS9WAAJS3pBrEWJ2Y1dCHJYcrvshgE
-	 zInEtTBq3pMAUGg+qn4LemLHVemv9mfDB4f8sd9Hl91QHxTm/kpghD/AQeRdz2e6O1
-	 Ou63r3AsyqQgQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A31F73782112;
-	Wed,  8 May 2024 12:38:41 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@leemhuis.info
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] next boot regression caused by RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
-Date: Wed,  8 May 2024 14:39:15 +0200
-Message-Id: <20240508123915.534166-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
-References: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BkR85RNs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=zjLlvB+WbJijsa7Xq2sGoO7LgZnL7gRVI2UA3wsYzcY=;
+	t=1715172676; x=1715604676; b=BkR85RNsJiheEHp4jencaeLhwFiknHBpEcEwEG6g/9FugG1
+	DHRX6V5j0wmaijOjWzC2ylJr2jo3MNzJFKHDX4J77455GieigLGDxVDTQGDv3ayDtAQXbHJH7VjbQ
+	jLz8UmQAx8QK0Sh6UazeUdKOhdl8G7Hm66WrbI2w8K72EJtzFvPbSkkY84mYInFQypdnwo0ACDuM6
+	uiQFt6Shmx+Dtfz7bNW+dVbSNMMCPrZUpFNda8xdf/NYPNQJmgdIXzLU8rs3RReKYrCv6Lf96rMxg
+	zyy/9Ls6Ni7lJ0DmC/mXqFHBtsZV3vUD7nJO4S074nOYe3/zw+cCRCWBTMgU1y8w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s4glL-0003Db-Ck; Wed, 08 May 2024 14:51:11 +0200
+Message-ID: <7e3fdac4-e0bc-42f4-9bb3-a6b16f323491@leemhuis.info>
+Date: Wed, 8 May 2024 14:51:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM
+ ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM
+ events:qxl_gc_work [qxl]
+To: stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Cc: airlied@gmail.com, airlied@redhat.com, daniel@ffwll.ch,
+ dreaming.about.electric.sheep@gmail.com, dri-devel@lists.freedesktop.org,
+ kraxel@redhat.com, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ spice-devel@lists.freedesktop.org, tzimmermann@suse.de,
+ virtualization@lists.linux.dev, Anders Blomdell <anders.blomdell@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ David Wang <00107082@163.com>
+References: <20240430061337.764633-1-00107082@163.com>
+ <20240506143003.4855-1-00107082@163.com>
+ <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
+ <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715172676;62cce3d8;
+X-HE-SMSGID: 1s4glL-0003Db-Ck
 
-Hi Thorsten,
-
-On 5/8/24 13:36, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 26.04.24 17:42, Laura Nao wrote:
->> Hello,
+On 08.05.24 14:35, Anders Blomdell wrote:
+> On 2024-05-07 07:04, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 06.05.24 16:30, David Wang wrote:
+>>>> On 30.04.24 08:13, David Wang wrote:
 >>
->> KernelCI has identified a next boot regression on the following
->> Chromebooks, between next-20240416 and next-20240418:
->> - Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
->>    configuration used [1]
->> - ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
->>    used [2]
+>>>> And confirmed that the warning is caused by
+>>>> 07ed11afb68d94eadd4ffc082b97c2331307c5ea and reverting it can fix.
+>>>
+>>> The kernel warning still shows up in 6.9.0-rc7.
+>>> (I think 4 high load processes on a 2-Core VM could easily trigger
+>>> the kernel warning.)
 >>
->> [...]
+>> Thx for the report. Linus just reverted the commit 07ed11afb68 you
+>> mentioned in your initial mail (I put that quote in again, see above):
 >>
->> The issue is still present on next-20240426.
->>> #regzbot introduced: next-20240416..next-20240418
-> 
-> Hmmm, I noticed nothing has happened here.
-> 
-> Is this issue still happening? With a link to the particular test in the
-> CI I might have been able to answer that myself. ;)
-> 
-> If it's still broken I assume we need a bisection.
-> 
+>> 3628e0383dd349 ("Reapply "drm/qxl: simplify qxl_fence_wait"")
+>> https://git.kernel.org/torvalds/c/3628e0383dd349f02f882e612ab6184e4bb3dc10
+>>
+>> So this hopefully should be history now.
+>>
+> Since this affects the 6.8 series (6.8.7 and onwards), I made a CC to
+> stable@vger.kernel.org
 
-The issue was detected by the new KernelCI system - there's no web 
-dashboard for it yet, which is why I did not provide a link earlier.
+Ohh, good idea, I thought Linus had added a stable tag, but that is not
+the case. Adding Greg as well and making things explicit:
 
-I verified this is still happening on next-20240508 and I already 
-started a bisection, I'll report back when I get the results.
+@Greg: you might want to add 3628e0383dd349 ("Reapply "drm/qxl: simplify
+qxl_fence_wait"") to all branches that received 07ed11afb68d94 ("Revert
+"drm/qxl: simplify qxl_fence_wait"") (which afaics went into v6.8.7,
+v6.6.28, v6.1.87, and v5.15.156).
 
-Thanks,
-
-Laura
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-> 
-> _______________________________________________
-> Kernel mailing list -- kernel@mailman.collabora.com
-> To unsubscribe send an email to kernel-leave@mailman.collabora.com
-> This list is managed by https://mailman.collabora.com
-
+Ciao, Thorsten
