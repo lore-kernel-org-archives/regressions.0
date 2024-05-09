@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F120C12DDA4;
-	Thu,  9 May 2024 10:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E66B1361
+	for <regressions@lists.linux.dev>; Thu,  9 May 2024 10:34:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715250697; cv=none; b=sCD2uRPHR82KWPqLGEKZ7hJQGe7WUlt1jQmJtoyn60Yfg93XN3eRMSZNv9d6mBNsG1Wj4Rd6l+kvzJXKvch22C4znVBRC2zSL2yKt+LeoVJogmPuiLXRDLPas7yeId6eCZvQOyLjZaqRd2AFN3ID0S9jpdNZc3EuQbsPMb4hVxw=
+	t=1715250870; cv=none; b=oKd6CrW4gdh4puKkqi4diJ6LwUuzD338zBLQabMa1+3LYz02PegNdzwJc5CKgW7mpLvtm4+p+A/PZ4IveoNo6M0xDkLpwnv8/rnL3XiCFYhqUmMq9EPwTk7CbFYGe6d5Gm05OK1+/m4xuWuqRGQQcw/kQshEnEHZwvANKz59sno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715250697; c=relaxed/simple;
-	bh=KoMm0YU3T88+9AC2ELVkihs99CbEDDgkFpX6P120Ppc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qPBYkj5DR/vAkRpZzyJEgfxNhKNrt+JvTY826k+jB8X20xzpM6YbkHbzNxVRQm/AnHa9afia+gFoM8wRPmyfmIeb39WZ8m2JuGtFygGaqq1FYSRBCfJpDE+K5k0WOAHBmZ73deRna0utN1c3zeOYtGRQ9jLzFQxDoPPntq2lBJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=irByPIf7; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1715250870; c=relaxed/simple;
+	bh=kxcuCYHEmblCbSXOWyBBniw6flgEgQdyphgO+CGmbpk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=FBFqxW4tFk26YH3Js+itvGd729etZC72ofKJ9Busd1Folhcwj2pkQtmo1/z7aAsoueftKalGTKGgPAqImw25bd6jJPMqxktSqvpXPXsGK6GJb2+ciMB+nX43/kpMTQ3t17oA5/mbGmcsU78OclKvoaEL7L7e4KGf0tI/NV36X28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LKEnxWP2; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="irByPIf7"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LKEnxWP2"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:Reply-To:Subject:From:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=/EtjPJ49eLErfTct4IwKUEDvnMD7g5S++qk8eNGdasU=;
-	t=1715250695; x=1715682695; b=irByPIf7KQfKaSvKLNsAO5ws/qH4Tm7aEJZ2uN3wepdh3cg
-	weocolkOnaFeQxTaWgClob8fL0klHKjmKRfuHL9ZYq41TUHfAHxvsbKwmEX8DNGzcVb69121hAU0L
-	yQGghK8Y/5jJI46At+J0+O2e7H9EZJ9gmN5EgUgxh2I5iL+d+G/nIlYVc1w9coTV6lo0J6u1QWTp5
-	FTYo+G9FQA+zQy9U/gF2qPjN6tOjJZpkG0IYTVNKVXS+MyuuTPsl5cVnYZX//yHOdzvTcldXuYlYT
-	BKwlyW2TWqIpASAY8XgsKZ19KHTigUJ0d3Jm8/tQv/uYyDuQBhtQOCfoLVHWveQw==;
+	In-Reply-To:References:To:Reply-To:Subject:From:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=kxcuCYHEmblCbSXOWyBBniw6flgEgQdyphgO+CGmbpk=; t=1715250868;
+	x=1715682868; b=LKEnxWP2MEH44xrFBPj2hO21AT616R4eBNkDCbDifaVYVllD+65YoNh311DY3
+	gZCk109sqN4uRPqy6AHFOc3Z/dbx/cCAVCDdnHF98K8HdT5358lPmTzwLOBPB4pH7VKK2o6sosFg1
+	tI4KLNGqc/xYcWKZOOY2qLfuiCxA7575nagL77H8bITHJa/eMHrsE41+5mgV88ytXFxA9rAHDXtMF
+	hh5Xq1kWVY6HvmWjtUk4lJw4Bc7x6MzinQHHosf4+8up+cMp/WwlNTDnpzLf6wpmDHFuvbCYWCKsW
+	n/SBZIjQEfLnyZnfcN3lzHiQlTXe4P110VsMOpQPrIVUID3pug==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s513e-0006hG-9J; Thu, 09 May 2024 12:31:26 +0200
-Message-ID: <ba0bc464-a06a-4c54-945a-202dca2c4e49@leemhuis.info>
-Date: Thu, 9 May 2024 12:31:25 +0200
+	id 1s516Y-000780-B9; Thu, 09 May 2024 12:34:26 +0200
+Message-ID: <cb7f7054-9540-4540-9850-786737de156b@leemhuis.info>
+Date: Thu, 9 May 2024 12:34:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,61 +41,62 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] v6.9-rc7: nouveau: init failed, no display output
- from kernel; successfully bisected
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: lyude@redhat.com
-Cc: kherbst@redhat.com, dakr@redhat.com, airlied@redhat.com,
- stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Dan Moulding <dan@danm.net>, nouveau@lists.freedesktop.org
-References: <20240506182331.8076-1-dan@danm.net>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <20240506182331.8076-1-dan@danm.net>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715250695;dede88c9;
-X-HE-SMSGID: 1s513e-0006hG-9J
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715250868;0b05e883;
+X-HE-SMSGID: 1s516Y-000780-B9
 
-On 06.05.24 20:23, Dan Moulding wrote:
-> After upgrading to rc7 from rc6 on a system with NVIDIA GP104 using
-> the nouveau driver, I get no display output from the kernel (only the
-> output from GRUB shows on the primary display). Nonetheless, I was
-> able to SSH to the system and get the kernel log from dmesg. I found
-> errors from nouveau in it. Grepping it for nouveau gives me this:
-> 
-> [    0.367379] nouveau 0000:01:00.0: NVIDIA GP104 (134000a1)
-> [    0.474499] nouveau 0000:01:00.0: bios: version 86.04.50.80.13
-> [    0.474620] nouveau 0000:01:00.0: pmu: firmware unavailable
-> [    0.474977] nouveau 0000:01:00.0: fb: 8192 MiB GDDR5
-> [    0.484371] nouveau 0000:01:00.0: sec2(acr): mbox 00000001 00000000
-> [    0.484377] nouveau 0000:01:00.0: sec2(acr):load: boot failed: -5
-> [    0.484379] nouveau 0000:01:00.0: acr: init failed, -5
-> [    0.484466] nouveau 0000:01:00.0: init failed with -5
-> [    0.484468] nouveau: DRM-master:00000000:00000080: init failed with -5
-> [    0.484470] nouveau 0000:01:00.0: DRM-master: Device allocation failed: -5
-> [    0.485078] nouveau 0000:01:00.0: probe with driver nouveau failed with error -50
-> 
-> I bisected between v6.9-rc6 and v6.9-rc7 and that identified commit
-> 52a6947bf576 ("drm/nouveau/firmware: Fix SG_DEBUG error with
-> nvkm_firmware_ctor()") as the first bad commit.
 
-Lyude, that's a commit of yours.
 
-Given that 6.9 is due a quick question: I assume there is no easy fix
-for this in sight? Or is a quick revert something that might be
-appropriate to prevent this from entering 6.9?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/13a313c7-c214-4d49-9029-c79b503c17dd@canonical.com/
+#regzbot introduced: fd27ef6b44be
+#regzbot summary: virtio-pci: suspend/resume
+problems in public cloud
 
-> I then rebuilt
-> v6.9-rc7 with just that commit reverted and the problem does not
-> occur.
-> 
-> Please let me know if there are any additional details I can provide
-> that would be helpful, or if I should reproduce the failure with
-> additional debugging options enabled, etc.
-> 
-> Cheers,
-> 
-> -- Dan
+#regzbot report:
+https://lore.kernel.org/all/20240506182331.8076-1-dan@danm.net/
+#regzbot introduced: 52a6947bf576
+#regzbot summary: nouveau: init failed, no display output
+#regzbot duplicate:
+https://lore.kernel.org/all/20240506185910.17917-1-dan@danm.net/
+
+#regzbot report:
+https://lore.kernel.org/all/hzhomd7d7uc4dcnpvd6ki6v2f6camzm5ufqp2syqudrvzzfxi4@ykcirhonbqql/
+#regzbot introduced: d2689b6a86b9
+#regzbot summary: net: usb: ax88179_178a: unable to send or receive
+packets unless set to promiscuous mode
+
+#regzbot report:
+https://lore.kernel.org/nouveau/2775775499487396fbad5c2327dcaf7fb88a524d.camel@nvidia.com/
+#regzbot resolve: fix applied -- but culprit gone from -next, too
+
+#regzbot report:
+https://lore.kernel.org/all/eec6ebbf-061b-4a7b-96dc-ea748aa4d035@googlemail.com/
+#regzbot introduced: b5fc07a5fb56216a49
+#regzbot summary: scsi: core: system stopped booting
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+#regzbot duplicate:
+https://lore.kernel.org/all/20240508154950.GA1768252@bhelgaas/
+
+#regzbot report:
+https://lore.kernel.org/all/20240508154950.GA1768252@bhelgaas/
+#regzbot from: gloriouseggroll@gmail.com
+
+#regzbot report:
+https://lore.kernel.org/stable/gifkxwcrswqevdig33inrsieahso2lcxbhcawu6d2qprnujoij@eqg53vwjamts/
+#regzbot fix: drm/amdgpu: Fix comparison in amdgpu_res_cpu_visible
