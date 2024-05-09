@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B938B14B088;
-	Thu,  9 May 2024 12:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D8914A90;
+	Thu,  9 May 2024 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715257152; cv=none; b=L1rD1g5Em+3GfNpVBUKZqdT8YgjLYsSndTMJ+g3r33PE6WC4LN71RtcPQJeAUHpJReieHomD5wAj26BXeUIUnQMzae+vCtetZZxB0DF7B8FeMQFIwjUqV8UoYzvMgqAAIcQfsxeFsITlOGE2UcHy2+fiS1+wbv+cyAWNIJ5sc0o=
+	t=1715258112; cv=none; b=QCBKxZFOPiBuf5X231M6/2t0OZfv+jtq6kiFpzUQSYUDQX3iNYTfkEm/4QcYBmSZQPPydXI5g1JBtOsE9vAZtAMLASC6LF3PuHqtLtpymFL44azq7zlDthp7Me+6kKe+3jhDzvhY8hC5Eij2YtP9+MA2Hf2pNjXAhYDXenjOvyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715257152; c=relaxed/simple;
-	bh=liY7xyqJ29EA6WjUap8sIM7syRjEZKuDkchrVqdO63M=;
+	s=arc-20240116; t=1715258112; c=relaxed/simple;
+	bh=I66ut8+KtUA6Bv3Xqx+VAizz2te0CAi50j3/JmvvNpw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r2vNjTrIi9Q4a7gqJ5xdaB5mcvE5hmC5RuCIlNfnmmc5ZiEvbOAL2WXgJkMew9vBwKmDe5WP0EGiOdIPDWiAPei+gBi3dBB4om5J669G4gH7nEB8V2EXWxFA0JeHz4lFTecXrMmxFDGb4UqCV97le7ZsMm+MwzP9ChqFUC9B1ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aH/K5NP/; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=VqiA64STSGCBzbaHOnofLHMtv9AvumsJieV3Mp8bvuy7j1e8xnWHHA7WvEGgEJVYHcEpFbWdvxvPaZlworU/NIKtJPWp9YZqSzXT48jPxPLlm4Cdq8CCX2fa8d4BderAVeWFo+5/0aax3QYVAo4wkozWAMJjc/1CdJNdytsnxHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=2WeLbyJ2; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aH/K5NP/"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="2WeLbyJ2"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=pKxLXBr8aMZgY/cRH4ndqqJPVr8PJOiyb+StxvVtko4=; t=1715257149;
-	x=1715689149; b=aH/K5NP/1iXzHxpQ0Uso+OGtXa0qvqd9rgpeFhCo4PuvMjZuO0BgSN6ir67w7
-	aCLJTjlWgdoPN3ST34O5eZZqC9VLg5VILKYHQkTLpHCu9A5OMXgJTZCiEzazVttFm+GzbpZq0LArc
-	zmVNLJyqdAZjrbRL1b3/ba0Hc4sHEveRhjEpvKeKVX1JargBPcZ+yuZAauey9PI6+2+mqbbWyCiBO
-	YJMJ3H7zlJFwaMWKwtSsQ/JBbubB+v/3yj/ZGowRpK2FfeNTc9NksskZxEgbm1rea/rBGHggB8XLo
-	VmiklgsKx65RVXqYZ58ruSTI0O7XDaiwHhKcW+yFT78bKKy6gA==;
+	References; bh=SmlbI/FlmmuHIPcswkddkrEGDrmDZVS/Ndo9dCDCyeA=; t=1715258110;
+	x=1715690110; b=2WeLbyJ2V1sI3RvSCn0Ay912av3FzAmVCb6XXIeSU0BAy8mSkmlxgMx7IHRix
+	8NYit9qKEDou6zmmCHqJSh2u6VY9zo2x/h2p9gaouBF+79mjluPgVsKT0KH8/G05YBSoVJWdTKgu9
+	ZFGmqbcmo2sYmcix4IDl06T24JO23zpL0aoDPxt1SWmEp8zTozljcLukuft1iMYxf3uO5FKUGioCl
+	YjHpkaQ9Dq4nFrn4duQqgihIpq9qypsClKY0PKFzwAnVBVK3J3vUZoXBSVfXTqHz2oAdI79yokVW3
+	tepbs/8bsQOIv3mJ1X3t7ftsTrpfYc3QHJ+NTzWa/+P2SF2TUA==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s52jp-0002bM-7O; Thu, 09 May 2024 14:19:05 +0200
-Message-ID: <3529c128-15f0-47c2-8c36-34a1afb1de79@leemhuis.info>
-Date: Thu, 9 May 2024 14:19:04 +0200
+	id 1s52zK-0006Xy-8j; Thu, 09 May 2024 14:35:06 +0200
+Message-ID: <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info>
+Date: Thu, 9 May 2024 14:35:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,92 +39,163 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/entry_32: Move CLEAR_CPU_BUFFERS before CR3 switch
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- Robert Gill <rtgill82@gmail.com>, antonio.gomez.iglesias@linux.intel.com,
- daniel.sneddon@linux.intel.com,
+Subject: Re: [PATCH V2] OPP: Fix required_opp_tables for multiple genpds using
+ same table
+To: Viresh Kumar <viresh.kumar@linaro.org>, Viresh Kumar
+ <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
+ Vladimir Lypak <vladimir.lypak@gmail.com>, linux-kernel@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240426-fix-dosemu-vm86-v1-1-88c826a3f378@linux.intel.com>
+References: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <20240426-fix-dosemu-vm86-v1-1-88c826a3f378@linux.intel.com>
+In-Reply-To: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715257149;77bf00c3;
-X-HE-SMSGID: 1s52jp-0002bM-7O
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715258110;d806580a;
+X-HE-SMSGID: 1s52zK-0006Xy-8j
 
-On 27.04.24 01:48, Pawan Gupta wrote:
-> As the mitigation for MDS and RFDS, CLEAR_CPU_BUFFERS macro executes VERW
-> instruction that is used to clear the CPU buffers before returning to user
-> space. Currently, VERW is executed after the user CR3 is restored. This
-> leads to vm86() to fault because VERW takes a memory operand that is not
-> mapped in user page tables when vm86() syscall returns. This is an issue
-> with 32-bit kernels only, as 64-bit kernels do not support vm86().
+
+
+On 12.04.24 08:41, Viresh Kumar wrote:
+> The required_opp_tables parsing is not perfect, as the OPP core does the
+> parsing solely based on the DT node pointers.
 > 
-> Move the VERW before the CR3 switch for 32-bit kernels as a workaround.
-> This is slightly less secure because there is a possibility that the data
-> in the registers may be sensitive, and doesn't get cleared from CPU
-> buffers. As 32-bit kernels haven't received some of the other transient
-> execution mitigations, this is a reasonable trade-off to ensure that
-> vm86() syscall works.
+> The core sets the required_opp_tables entry to the first OPP table in
+> the "opp_tables" list, that matches with the node pointer.
 > 
-> Fixes: a0e2dab44d22 ("x86/entry_32: Add VERW just before userspace transition")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218707
-> Closes: https://lore.kernel.org/all/8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info/
-> Reported-by: Robert Gill <rtgill82@gmail.com>
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> If the target DT OPP table is used by multiple devices and they all
+> create separate instances of 'struct opp_table' from it, then it is
+> possible that the required_opp_tables entry may be set to the incorrect
+> sibling device.
+> 
+> Unfortunately, there is no clear way to initialize the right values
+> during the initial parsing and we need to do this at a later point of
+> time.
+> 
+> Cross check the OPP table again while the genpds are attached and fix
+> them if required.
+> 
+> Also add a new API for the genpd core to fetch the device pointer for
+> the genpd.
+> 
+> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+> Reported-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218682
 
 Did this fall through the cracks? Just wondering, as from here it looks
-like for about two weeks now nothing happened to fix the regression
-linked above. But I might have missed something.
+like for about four weeks now nothing happened to fix the regression
+linked above. But I might have missed something. Or is everybody waiting
+for a test from the reporter?
 
-Cioa, Thorsten
+Ciao, Thorsten
 
+
+> Co-developed-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  arch/x86/entry/entry_32.S | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> V2:
+> - Fix an `if` condition.
+> - s/Bugzilla/Closes/ and change ordering.
 > 
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index d3a814efbff6..1b9c1587f06e 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -837,6 +837,7 @@ SYM_FUNC_START(entry_SYSENTER_32)
->  	jz	.Lsyscall_32_done
->  
->  	STACKLEAK_ERASE
-> +	CLEAR_CPU_BUFFERS
->  
->  	/* Opportunistic SYSEXIT */
->  
-> @@ -881,7 +882,6 @@ SYM_FUNC_START(entry_SYSENTER_32)
->  	BUG_IF_WRONG_CR3 no_user_check=1
->  	popfl
->  	popl	%eax
-> -	CLEAR_CPU_BUFFERS
->  
->  	/*
->  	 * Return back to the vDSO, which will pop ecx and edx.
-> @@ -941,6 +941,7 @@ SYM_FUNC_START(entry_INT80_32)
->  	STACKLEAK_ERASE
->  
->  restore_all_switch_stack:
-> +	CLEAR_CPU_BUFFERS
->  	SWITCH_TO_ENTRY_STACK
->  	CHECK_AND_APPLY_ESPFIX
->  
-> @@ -951,7 +952,6 @@ restore_all_switch_stack:
->  
->  	/* Restore user state */
->  	RESTORE_REGS pop=4			# skip orig_eax/error_code
-> -	CLEAR_CPU_BUFFERS
->  .Lirq_return:
->  	/*
->  	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
+>  drivers/opp/core.c        | 31 ++++++++++++++++++++++++++++++-
+>  drivers/pmdomain/core.c   | 10 ++++++++++
+>  include/linux/pm_domain.h |  6 ++++++
+>  3 files changed, 46 insertions(+), 1 deletion(-)
 > 
-> ---
-> base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
-> change-id: 20240426-fix-dosemu-vm86-dd111a01737e
-> 
-> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index e233734b7220..cb4611fe1b5b 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2394,7 +2394,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>  static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
+>  			const char * const *names, struct device ***virt_devs)
+>  {
+> -	struct device *virt_dev;
+> +	struct device *virt_dev, *gdev;
+> +	struct opp_table *genpd_table;
+>  	int index = 0, ret = -EINVAL;
+>  	const char * const *name = names;
+>  
+> @@ -2427,6 +2428,34 @@ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
+>  			goto err;
+>  		}
+>  
+> +		/*
+> +		 * The required_opp_tables parsing is not perfect, as the OPP
+> +		 * core does the parsing solely based on the DT node pointers.
+> +		 * The core sets the required_opp_tables entry to the first OPP
+> +		 * table in the "opp_tables" list, that matches with the node
+> +		 * pointer.
+> +		 *
+> +		 * If the target DT OPP table is used by multiple devices and
+> +		 * they all create separate instances of 'struct opp_table' from
+> +		 * it, then it is possible that the required_opp_tables entry
+> +		 * may be set to the incorrect sibling device.
+> +		 *
+> +		 * Cross check it again and fix if required.
+> +		 */
+> +		gdev = dev_to_genpd_dev(virt_dev);
+> +		if (IS_ERR(gdev))
+> +			return PTR_ERR(gdev);
+> +
+> +		genpd_table = _find_opp_table(gdev);
+> +		if (!IS_ERR(genpd_table)) {
+> +			if (genpd_table != opp_table->required_opp_tables[index]) {
+> +				dev_pm_opp_put_opp_table(opp_table->required_opp_tables[index]);
+> +				opp_table->required_opp_tables[index] = genpd_table;
+> +			} else {
+> +				dev_pm_opp_put_opp_table(genpd_table);
+> +			}
+> +		}
+> +
+>  		/*
+>  		 * Add the virtual genpd device as a user of the OPP table, so
+>  		 * we can call dev_pm_opp_set_opp() on it directly.
+> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> index 4215ffd9b11c..c40eda92a85a 100644
+> --- a/drivers/pmdomain/core.c
+> +++ b/drivers/pmdomain/core.c
+> @@ -184,6 +184,16 @@ static struct generic_pm_domain *dev_to_genpd(struct device *dev)
+>  	return pd_to_genpd(dev->pm_domain);
+>  }
+>  
+> +struct device *dev_to_genpd_dev(struct device *dev)
+> +{
+> +	struct generic_pm_domain *genpd = dev_to_genpd(dev);
+> +
+> +	if (IS_ERR(genpd))
+> +		return ERR_CAST(genpd);
+> +
+> +	return &genpd->dev;
+> +}
+> +
+>  static int genpd_stop_dev(const struct generic_pm_domain *genpd,
+>  			  struct device *dev)
+>  {
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 772d3280d35f..f24546a3d3db 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -260,6 +260,7 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
+>  int pm_genpd_init(struct generic_pm_domain *genpd,
+>  		  struct dev_power_governor *gov, bool is_off);
+>  int pm_genpd_remove(struct generic_pm_domain *genpd);
+> +struct device *dev_to_genpd_dev(struct device *dev);
+>  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+>  int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
+>  int dev_pm_genpd_remove_notifier(struct device *dev);
+> @@ -307,6 +308,11 @@ static inline int pm_genpd_remove(struct generic_pm_domain *genpd)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static inline struct device *dev_to_genpd_dev(struct device *dev)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+>  static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+>  						     unsigned int state)
+>  {
