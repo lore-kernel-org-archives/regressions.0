@@ -1,138 +1,101 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6417F15ECFA;
-	Fri, 10 May 2024 09:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09392233B;
+	Fri, 10 May 2024 10:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715334904; cv=none; b=orxRNqX8IUVGVgu+T3aUaALwhQZSwbiNX+Z61AXWwdQWyV1X8bP9TR3uf4BHAjtQpRtTRvh7IM9kXcoAnUGfWLQfN8ISJBEHDFScpqMPJSsOLVgc+RiB4DIWNj0N395U2fRUmxBrFyiOV0m68y4kA5QpekpxoEecB4C+zLd5WOQ=
+	t=1715336339; cv=none; b=rVLIOR7DJuJ646ujwHJ5fBMgZ/bva+TLIbzSvbvTxhoH4znrBi4uNS1xZ5Yc6mAnwBkZOLbVjRik84wQxWh5+l7J9q8atj+C9FNf+MzDEDU86qdiusJXUWhLEXCMD3rEXOqQgqZkgrKvp8oMSNVFrJV45prHwFJO6P5AXwuE0Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715334904; c=relaxed/simple;
-	bh=zyYfLt4Ecs8HU/x+zjq4DFkOpZ4wMvlgECzsCL41iqA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=uDITcA4OA9l69hz13SUOhVISLscf/bKiQVAJD8aUWGnxSWJz6xaB3TDgB3XKsldGsmumgjkRQeMngFVnhv73AGY3FcUR56vChWrsmEsHrA7F+3N6PO9ZLXW8JfakU/YLg01RWzRdUSq/SC5DM64BCpWhdaH6UqipyiM8T6mY2KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=lUnbSe3v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M5Xq2BMv; arc=none smtp.client-ip=64.147.123.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1715336339; c=relaxed/simple;
+	bh=Yiu+qkyJjBmS6HAy7q+jESZdM+IpPiaNYPekdHCehtE=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=Mn8bCegXRtSDuhrODReTrh/D5s0tzr7ntW4vrQCIiAz0nclj/XXBeKfMpUNHIpdLVZn2L1DfAn8RDCNMf+cVtLxD5bL4AfeGj+78nYRvGyie8Xy2Kjg3UGcyfflCccqqpA77FRd9o6zN2BIxo5SfsaTCstbGs8GjAp7Bsk++JX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a23nI+g4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="lUnbSe3v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M5Xq2BMv"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.west.internal (Postfix) with ESMTP id 291151C00067;
-	Fri, 10 May 2024 05:55:01 -0400 (EDT)
-Received: from imap47 ([10.202.2.97])
-  by compute1.internal (MEProxy); Fri, 10 May 2024 05:55:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1715334900; x=
-	1715421300; bh=zsAX12i3wiGs8NpHFwK4gaLZUeZbeVFiTubMbmtjtjM=; b=l
-	UnbSe3vvJ65EIfoOs6o22VLB3Xfhx2zUELZHMUBPbSnABGRS9Z2WGUmpI9ij+z5T
-	h/PBo2NgNublSXDhZKgIRqRXWJwZ/5rrmbqmkMuItJZg/JY1lXja4b3tjZayadAj
-	171mwwgYqkrlqYkuj/FWfCSE06AKxfLvKBBX/CbYDX8X0tpOroJo2vbC6tGIu4JX
-	8BOnjtSelvZ60Jc6KOsVnyBE4tr98qC1rup1tETSlNit+nROfklwKQ1/0oPz5pQY
-	Cvb24JHdQ753hjazzM1jHcCOkUnoQQDNCTQwZZKIexn+MixrdNV+RYYYvOteCEvW
-	6tbSN2J6/vSFRu8dyYtOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715334900; x=1715421300; bh=zsAX12i3wiGs8NpHFwK4gaLZUeZb
-	eVFiTubMbmtjtjM=; b=M5Xq2BMvKcAoUAQ9HgnGrL6dzZjs6aT8ryY0VuaT22XN
-	lhZQYs2AwfepeDbtjBVwPmy5vjN6uBmIdN9l9ZpYfUpEj6vhGBqc5GEYv9aDRgeR
-	cwru4/ASI/4jkvB2h0x0AmIEDEtu4TxdDqzU8ajQecwi88JhvcR2dJWkGj3HHrnC
-	+IXzu3TXw0+NKWoYowDRyj4s0KJ8RS3H2rqq2ZptHb8ZxD4AzZllzHxA+OalyitU
-	SSCRGViyGQ2qbJxkxHbEnuWUsW34bNjI4l39GAi15HRKIN5gvs1l3FvqgAP7/Tt0
-	7O2JHQGPekR5OodFnj9K1Tuwu5Bvas0yibAQPNGxmw==
-X-ME-Sender: <xms:9O49Zhk49omYKwRCcqPcWBW-t0AvS2ttraComtyroE9xsW4wgJJF0w>
-    <xme:9O49Zs10PqHeqrOnSA47L8WmgPn4p5gdYxWRdMB9ngg9Az2Q0c3DsPzkPwxG98q2Y
-    qk2KT20PUC7cPfCkhk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefkedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufhv
-    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
-    grthhtvghrnhepleevgfegffehvedtieevhfekheeftedtjeetudevieehveevieelgffh
-    ieevieeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
-X-ME-Proxy: <xmx:9O49ZnpB5C5MtTsDvpbijslCJtSHgFdBvfk4QF4-2QUoVfOB_5866w>
-    <xmx:9O49ZhnpXnfN2lzMKuNXKNeWpQ8hWxeO06ppCsDmwLUddGnDJYhzVw>
-    <xmx:9O49Zv15Jebi5f-5Pr14iQBFcIXDIPIEYMHjrr1SQb7cPAQK4GnyEQ>
-    <xmx:9O49ZgvbsAUld6bWPRnvQ82GZRtXGY9FIZE5Ob2yYehmA_zK_d3-Tg>
-    <xmx:9O49Zv9enmUL1YEnuuXLhlaQdIunvBWR9d-T5bb2NRmchMg-_wrfjEez>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3C359A60079; Fri, 10 May 2024 05:55:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a23nI+g4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573D9C32783;
+	Fri, 10 May 2024 10:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715336338;
+	bh=Yiu+qkyJjBmS6HAy7q+jESZdM+IpPiaNYPekdHCehtE=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=a23nI+g4n1oFGG/z7seERI3vuJEHB65S2SinVvd9/DkwNDlh/i8EvTXTsrED695cr
+	 iXJ0hgWJuJ4uNJiHmk37g+XDhLIe+YqJcIlB6126AQhF88h6lvkA5P2LL3+ByQxziA
+	 SL2ce8BMpstt1K08z/XFk5puZLq0J3EVMdm86fkwQWn/VcbcSBO3a1b1MY8vb6is30
+	 THuGraOiNB5pdZ18cjqwIbfUACx0CXqXlZBPQ1Q1RGIGnyZ8ZaVNY3SbXHeOB63dka
+	 0tmUua8EcJH9j3ljGBfPA30Xgxy8sQdGbT7wBNUoNIv+rWYRht4WrJdrFJyRz/1nIX
+	 HSjrtFysFXnHw==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Luca Weiss" <luca.weiss@fairphone.com>
+Cc: "Carl Huang" <quic_cjhuang@quicinc.com>,  <ath11k@lists.infradead.org>,
+  <linux-wireless@vger.kernel.org>,
+    regressions@lists.linux.dev
+Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
+References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
+	<20230714023801.2621802-2-quic_cjhuang@quicinc.com>
+	<D15TIIDIIESY.D1EKKJLZINMA@fairphone.com>
+Date: Fri, 10 May 2024 13:18:55 +0300
+In-Reply-To: <D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> (Luca Weiss's message
+	of "Fri, 10 May 2024 10:22:50 +0200")
+Message-ID: <87jzk2km0g.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <4e194251-d175-49d0-af03-b2cdd8a30fe0@app.fastmail.com>
-In-Reply-To: <70078624-d766-4db6-8ddb-511251baf0f2@marcan.st>
-References: <20240405204037.3451091-1-luiz.dentz@gmail.com>
- <Zjz0atzRhFykROM9@robin>
- <CABBYNZLMODHp+jBu2oVDC5Pg6fyAKJugQF0N-XgarjWQJJPObg@mail.gmail.com>
- <Zj0tcmseJCjR4hK2@robin>
- <CABBYNZLnYz-vPrMbtsJTsLPsyo62j+cxctSkLjRom3bWEU9N3A@mail.gmail.com>
- <CABBYNZJ-6oyLnBov9H_jym9m-9qiUt1ELxYGuBOdZT29aj9MCA@mail.gmail.com>
- <70078624-d766-4db6-8ddb-511251baf0f2@marcan.st>
-Date: Fri, 10 May 2024 11:54:40 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Hector Martin" <marcan@marcan.st>,
- "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
- "Janne Grunau" <j@jannau.net>
-Cc: linux-bluetooth@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- asahi@lists.linux.dev
-Subject: Re: [PATCH v1] Bluetooth: hci_sync: Use advertised PHYs on
- hci_le_ext_create_conn_sync
 Content-Type: text/plain
 
-Hi,
+"Luca Weiss" <luca.weiss@fairphone.com> writes:
 
-
-On Fri, May 10, 2024, at 05:13, Hector Martin wrote:
-> Hi,
+> On Fri Jul 14, 2023 at 4:38 AM CEST, Carl Huang wrote:
+>> Add hardware parameter support_dual_stations to indicate
+>> whether 2 station interfaces are supported. For chips which
+>> support this feature, limit total number of AP interface and
+>> mesh point to 1. The max interfaces are 3 for such chips.
+>>
+>> The chips affected are:
+>>  QCA6390 hw2.0
+>>  WCN6855 hw2.0
+>>  WCN6855 hw2.1
+>> Other chips are not affected.
+>>
+>> For affected chips, remove radar_detect_widths because now
+>> num_different_channels is set to 2. radar_detect_widths can
+>> be set only when num_different_channels is 1. See mac80211
+>> function wiphy_verify_combinations for details.
+>>
+>> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3
 >
-> On 2024/05/10 7:41, Luiz Augusto von Dentz wrote:
-> <snip>
+> Hi Carl,
 >
->> If I print the actual value then we got:
->> 
->> Primary PHY: Reserved (0x81)
->> 
->> I guess one needs to disregard the reserved range, well until they are
->> no longer reserved then it will no longer work. Perhaps we should talk
->> to broadcom to know what is up with using reserved values and if that
->> is an apple thing then perhaps we could ask them to provide firmware
->> that acts according to the spec.
+> Unfortunately this commit breaks wifi on a QCM6490 smartphone
+> (qcm6490-fairphone-fp5) and makes the board crash.
 >
-> Apple and Broadcom do not support Linux on this platform. The kernel has
-> to work with the existing firmware (which is the firmware macOS uses),
-> we don't get to request changes. If the firmware has quirks the kernel
-> has to deal with it, that's how it goes. It would be great if we had
-> vendor support, but that is not something we can control. This is common
-> (Linux is full of quirks to support noncompliant hardware/firmware).
+> Reverting this commit (plus for conflict resolution 5dc9d1a55e95 ("wifi:
+> ath11k: add support for QCA2066") and 24395ec11707 ("wifi: ath11k:
+> provide address list if chip supports 2 stations")) makes wifi work
+> again.
 
-While I agree with Hector here that they won't even talk to us it's
-sometimes possible to figure out what exactly they were thinking with
-their reserved values. Apple provides "Additional Tools for XCode" which
-include their "PacketLogger" which contains most of their vendor
-specific hacks with a human readable explanation. I wasn't able to generate
-this specific event with my hardware here but I was able to inject a custom
-event into their trace format and then load it and see how it's decoded.
+Thanks for the report. So the broken commit is:
 
-From a very brief look it appears that they AND Primary_PHY/Secondary_PHY with
-0x1f to decode it and then support all values defined in the bluetooth
-spec, i.e. "no packets", "LE 1M", "LE 2M" and "LE coded". No idea what the
-higher bits mean though since they are ignored and don't seem to be decoded.
+f019f4dff2e4 wifi: ath11k: support 2 station interfaces
 
+This went into v6.9-rc1 so I'm guessing that WCN6750 support will be
+fully broken in v6.9? Not good. And most likely Linus will release v6.9
+on Sunday so it's too late to get a fix included in the final release.
 
+Carl, can you fix this ASAP? Or should we just revert the broken
+commits?
 
-Sven
+Adding this to our regression tracking:
 
+#regzbot introduced: f019f4dff2e4 ^
+#regzbot title: ath11k: WCN6750 firmware crashes during initialisation
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
