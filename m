@@ -1,170 +1,124 @@
-Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D7A18044
-	for <regressions@lists.linux.dev>; Fri, 10 May 2024 18:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D144B48CE0
+	for <regressions@lists.linux.dev>; Fri, 10 May 2024 19:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715366430; cv=none; b=ZsiFLGGdYs3OzgHVclqpiczPRcBAljkfA8xvXumDmX7Dqxz/tpquuxJ0MCavrCiMIPsRXB5jQi4FYGw8BlNDVfHYXvAmTQNDJy+YETRhDSREatDuYB1W6W1VxEeEXPeHLIMsv6/Y7rwIXtaeUnxF8CIiXZel98LBsuQGhzO/v5Y=
+	t=1715370579; cv=none; b=FkY5ebzQ/LjDJgDthx2Zp0PvUfkzG8q40anvOpZHZ0P7udouNSjfox+fa5N7oozrnyQgPlPjCuLw2wRHpnLXLwYXd+Qr6Z0bmOzKuXQX1HW3xat0u4XFKLtqDIjLcbcD4gspy8u0d4VcIUhiNzBb+QnkgkyXP28/zNNfs+zMS0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715366430; c=relaxed/simple;
-	bh=Xzgcufd0pJTHG1iaxME/sHPKeVgiA1NchX1LnWT07kM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AMW77tZ+Fzx/ZNFC2eXdId+q30ynZsjjaPdZpd5WA3xD7yGs6nZ0dH+cZIQFh6VA/QgDKWgszA9TNn80V79iDrdE70ySAw+XC5VXIx8KZqitIfn9AfHZ/vjn/q3k0/UHS+DkPRTYfmw3IKcq19ViqxnXwYubzQYb76Pcpp1b/lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=Gt5Q9ctk; arc=none smtp.client-ip=195.113.20.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+	s=arc-20240116; t=1715370579; c=relaxed/simple;
+	bh=JCFFmbNlsOn6FVvGztjgo6+wDYo3/QMxgC04ADQpeJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IJwpix+nKXuV3mowUIqquG6cOLXJPiKbMw39MvNCgpK3pJXyOwlaWAkeOw7iA1a+juZsa0I1bMaxOCfpFHFca6euoEQkr8jHwCtk/eZZtUhQfzSZOkZdRhzvL1/tAWTqn9GfZXIL6ZKGFXsm3ECP6oeVR/cyflNNOuew4E9fvpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=Fmf+7HHO; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="Gt5Q9ctk"
-X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
-	serial F5FD910E8FE2121B897F7E55B84E351D
-	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
-	auth type TLS.CUNI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
-	s=submission; t=1715366412; x=1716666412;
-	bh=HFAYz3DEk0hz8RQyydYwTFdHGtJdepWvGheXpKrS6mA=; h=From;
-	b=Gt5Q9ctk/yCLtnnNCXxMeDNVb/ziwIQjPUg6SwsM2P8x16EHKpNzh5TMyh4i20ah+
-	 2FLGSEWi4IA/hQWekOK4RjccImfHoaHbID6lK5d6aCabstHCgV2zDUSAmy3Mjuj/dp
-	 VDruFWT7NBrolE1WBzuPkywio0xFQiUPEFpz85PyddtnpVCrJt7c0FAxJAETvNhPtm
-	 8ecska5//gV1C2Q3KsmNQwkACiLQu3kb23sLNdAYA9XgVnyWZvU5Hx3aAB4kYJHwQM
-	 RGizFtSFJ7PgM9W93DIwQ6dTT1CkblYIvlZ9Uv4Gi6tOP+JyLCgHb7OdZBsenyDRty
-	 oVAufun+Tb/MQ==
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(authenticated)
-	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 44AIe9si016816
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Fri, 10 May 2024 20:40:10 +0200 (CEST)
-	(envelope-from balejk@matfyz.cz)
-From: Karel Balej <balejk@matfyz.cz>
-To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>,
-        regressions@lists.linux.dev, workflows@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: balejk@matfyz.cz
-Subject: [PATCH docs-next v2] docs: handling-regressions.rst: recommend using "Closes:" tags
-Date: Fri, 10 May 2024 20:34:41 +0200
-Message-ID: <20240510183748.13028-1-balejk@matfyz.cz>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="Fmf+7HHO"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5b21e393debso1451709eaf.2
+        for <regressions@lists.linux.dev>; Fri, 10 May 2024 12:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=penguintechs.org; s=google; t=1715370577; x=1715975377; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yxWyXszhHGNezoVa9cm6qt9auwsbCofn2LFU7/T+05M=;
+        b=Fmf+7HHOMfNcRBpiJegR/4wb3Gd/dJfu3kWIlG9ZA9hSvvWVGca9Y2zZVkAE7GEuFR
+         K1mxXn0fggkeKlNvvSlBIX2aZn0V4yoYcyZpaRVDZXIJ7ST+7N4Xj3Aj3mj1AylyQOUQ
+         IImPBV8nKu7UUJELS3RHoB4lCfGtCS/EDLcZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715370577; x=1715975377;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yxWyXszhHGNezoVa9cm6qt9auwsbCofn2LFU7/T+05M=;
+        b=a6lFRcksTB06HUkSHtQL3cq9tqrg53LvYsw3dtA+AVKNyI+jUaJYQsFNsqDmMlmLCm
+         oZzWmk0POUgXkofCjG2v6k04Muhsen3NKvjMtniNjFrqyr/1CA0DbSAMiGKLgDQQqCxD
+         YfgyQcorh9fFr77+xXcTSVzHLrUx4c+wpvYvx/jPCAaPNRQ8nU5d5oZ+QuPr3Sj7Yswe
+         qFbfBLFaoVlB/x1W5HeE7kg+yezLgWOBmGEN2YEucExWjs4fntyT7kcVqHtFn8lQAmpm
+         DpwoYPLsPudhHoSE/Gi7acEwXnj8xPczl9GRbj28aEXqALygg73TDadD1mk3zEYQdaeh
+         y2MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOxuq0W/gt/ejW5czgHh9GFl6LsXf82LSHq3+uYafRhhJrfA5I3cu3Ak1tLrs+9X2uHsQAZWI65nZmRPrugPOC6mYkGLkjARyUjxU=
+X-Gm-Message-State: AOJu0YwO07Ng4iKk3cqA82HzGFNjWajkGGJCjTsXGDkigIewJXQlZxnb
+	TsEv0Eu4HoSQC0Oy1LURocK3iJJOGiLE7vQz/nzMYWIrcjAI91YjIm+0C7yhfQ==
+X-Google-Smtp-Source: AGHT+IEX+36Sj6GYkUunsowtfhH38q+3cvxoAjNx4PliHhEkHO5WeF7xTXdWc4kLq9JBMqeDbGP8yg==
+X-Received: by 2002:a05:6358:93a3:b0:192:9d35:b025 with SMTP id e5c5f4694b2df-193bb63f056mr351397055d.16.1715370576521;
+        Fri, 10 May 2024 12:49:36 -0700 (PDT)
+Received: from ?IPV6:2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08? ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340c4d4a1csm3462978a12.40.2024.05.10.12.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 May 2024 12:49:36 -0700 (PDT)
+Message-ID: <d9232cf5-b0ca-47f2-841d-45f5880368c8@penguintechs.org>
+Date: Fri, 10 May 2024 12:49:34 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] Bluetooth: qca: Fix BT enable failure again for
+ QCA6390 after warm reboot
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, Zijun Hu
+ <quic_zijuhu@quicinc.com>, luiz.dentz@gmail.com, luiz.von.dentz@intel.com,
+ marcel@holtmann.org
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <1714658761-15326-1-git-send-email-quic_zijuhu@quicinc.com>
+ <5e5e869c-da12-4818-837e-55709f0c4db9@kernel.org>
+From: Wren Turkal <wt@penguintechs.org>
+In-Reply-To: <5e5e869c-da12-4818-837e-55709f0c4db9@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update the handling-regressions guide to recommend using "Closes:" tags
-rather than "Link:" when referencing fixed reports. The latter was used
-originally but now is only recommended when the given patch only fixes
-part of the issue, as described in submitting-patches. Briefly mention
-that and also note that regzbot currently doesn't make a distinction.
+On 5/3/24 3:16 AM, Krzysztof Kozlowski wrote:
+> On 02/05/2024 16:06, Zijun Hu wrote:
+>> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+>> serdev") will cause below regression issue:
+>>
+>> BT can't be enabled after below steps:
+>> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+>> if property enable-gpios is not configured within DT|ACPI for QCA6390.
+>>
+>> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+>> during reboot, but also introduces this regression issue regarding above
+>> steps since the VSC is not sent to reset controller during warm reboot.
+>>
+>> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+>> once BT was ever enabled, and the use-after-free issue is also be fixed
+>> by this change since serdev is still opened when send to serdev.
+>>
+>> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Wren Turkal <wt@penguintechs.org>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> Tested-by: Wren Turkal <wt@penguintechs.org>
+>> ---
+>>   drivers/bluetooth/hci_qca.c | 5 ++---
+> 
+> I don't think this is v1. Version your patches properly and provide
+> changelog.
+> 
+> I asked already *two times*:
+> 1. On which kernel did you test it?
+> 2. On which hardware did you test it?
 
-Also fix a typo.
+I thought I had already chimed in with this information. I am using a 
+Dell XPS 13 9310. It's the only hardware I have access to. I can say 
+that the fix seems to work as advertised in that it fixes the warm boot 
+issue I have been experiencing.
 
-Signed-off-by: Karel Balej <balejk@matfyz.cz>
----
+As a user, I vastly prefer a one time cold boot rather than having to do 
+it every time. As such, I can do the test. However, I do not think that 
+the patch not working in that case should block landing logic that 
+empirically improved my experience with the hardware and minimizes the 
+corner case to a much smaller corner (that of warm booting from an OS 
+that improperly puts the device in a bad state to a Linux kernel with 
+this UX improvement).
 
-Notes:
-    v2:
-    - v1: https://lore.kernel.org/r/20240328194342.11760-1-balejk@matfyz.cz/
-    - Rebase to git://git.lwn.net/linux.git docs-next.
-    - Prefer Closes: tags, mention that regzbot makes no distinction and
-      only mention Link: briefly and explain when it's preferred, in
-      accordance with submitting-patches.
-    - Include a typo fix.
-    - Reword commit message accordingly (and make it less verbose :-).
-
- .../process/handling-regressions.rst          | 32 ++++++++++++-------
- 1 file changed, 20 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
-index 49ba1410cfce..c162748f5ec9 100644
---- a/Documentation/process/handling-regressions.rst
-+++ b/Documentation/process/handling-regressions.rst
-@@ -40,10 +40,13 @@ The important bits (aka "The TL;DR")
-        #regzbot from: Some N. Ice Human <some.human@example.com>
-        #regzbot monitor: http://some.bugtracker.example.com/ticket?id=123456789
- 
--#. When submitting fixes for regressions, add "Link:" tags to the patch
-+#. When submitting fixes for regressions, add "Closes:" tags to the patch
-    description pointing to all places where the issue was reported, as
-    mandated by Documentation/process/submitting-patches.rst and
--   :ref:`Documentation/process/5.Posting.rst <development_posting>`.
-+   :ref:`Documentation/process/5.Posting.rst <development_posting>`. If you are
-+   only fixing part of the issue that caused the regression, you may use
-+   "Link:" tags instead. regzbot currently makes no distinction between the
-+   two.
- 
- #. Try to fix regressions quickly once the culprit has been identified; fixes
-    for most regressions should be merged within two weeks, but some need to be
-@@ -91,10 +94,10 @@ When doing either, consider making the Linux kernel regression tracking bot
-    Note the caret (^) before the "introduced": it tells regzbot to treat the
-    parent mail (the one you reply to) as the initial report for the regression
-    you want to see tracked; that's important, as regzbot will later look out
--   for patches with "Link:" tags pointing to the report in the archives on
-+   for patches with "Closes:" tags pointing to the report in the archives on
-    lore.kernel.org.
- 
-- * When forwarding a regressions reported to a bug tracker, include a paragraph
-+ * When forwarding a regression reported to a bug tracker, include a paragraph
-    with these regzbot commands::
- 
-        #regzbot introduced: 1f2e3d4c5b6a
-@@ -102,7 +105,7 @@ When doing either, consider making the Linux kernel regression tracking bot
-        #regzbot monitor: http://some.bugtracker.example.com/ticket?id=123456789
- 
-    Regzbot will then automatically associate patches with the report that
--   contain "Link:" tags pointing to your mail or the mentioned ticket.
-+   contain "Closes:" tags pointing to your mail or the mentioned ticket.
- 
- What's important when fixing regressions
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@@ -112,10 +115,16 @@ remember to do what Documentation/process/submitting-patches.rst,
- :ref:`Documentation/process/5.Posting.rst <development_posting>`, and
- Documentation/process/stable-kernel-rules.rst already explain in more detail:
- 
-- * Point to all places where the issue was reported using "Link:" tags::
-+ * Point to all places where the issue was reported using "Closes:" tags::
- 
--       Link: https://lore.kernel.org/r/30th.anniversary.repost@klaava.Helsinki.FI/
--       Link: https://bugzilla.kernel.org/show_bug.cgi?id=1234567890
-+       Closes: https://lore.kernel.org/r/30th.anniversary.repost@klaava.Helsinki.FI/
-+       Closes: https://bugzilla.kernel.org/show_bug.cgi?id=1234567890
-+
-+   If you are only fixing part of the issue, you may use "Link:" instead as
-+   described in the first document mentioned above. Some maintainers may even
-+   prefer it over "Closes:" entirely, although the latter is generally
-+   recommended. regzbot currently treats both of these equivalently and
-+   considers the linked reports as resolved.
- 
-  * Add a "Fixes:" tag to specify the commit causing the regression.
- 
-@@ -126,7 +135,7 @@ All this is expected from you and important when it comes to regression, as
- these tags are of great value for everyone (you included) that might be looking
- into the issue weeks, months, or years later. These tags are also crucial for
- tools and scripts used by other kernel developers or Linux distributions; one of
--these tools is regzbot, which heavily relies on the "Link:" tags to associate
-+these tools is regzbot, which heavily relies on the "Closes:" tags to associate
- reports for regression with changes resolving them.
- 
- Expectations and best practices for fixing regressions
-@@ -326,7 +335,7 @@ How does regression tracking work with regzbot?
- 
- The bot watches for replies to reports of tracked regressions. Additionally,
- it's looking out for posted or committed patches referencing such reports
--with "Link:" tags; replies to such patch postings are tracked as well.
-+with "Closes:" tags; replies to such patch postings are tracked as well.
- Combined this data provides good insights into the current state of the fixing
- process.
- 
-@@ -338,8 +347,7 @@ take care of that using ``#regzbot ^introduced``.
- 
- For developers there normally is no extra work involved, they just need to make
- sure to do something that was expected long before regzbot came to light: add
--"Link:" tags to the patch description pointing to all reports about the issue
--fixed.
-+links to the patch description pointing to all reports about the issue fixed.
- 
- Do I have to use regzbot?
- ~~~~~~~~~~~~~~~~~~~~~~~~~
+wt
 -- 
-2.45.0
-
+You're more amazing than you think!
