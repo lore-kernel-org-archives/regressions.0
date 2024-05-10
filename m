@@ -1,272 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E244715FA87
-	for <regressions@lists.linux.dev>; Fri, 10 May 2024 09:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6417F15ECFA;
+	Fri, 10 May 2024 09:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715333062; cv=none; b=qaXSKOdQIBUnoCidEMyoYK+uOQUdDc2YTWB1MzrD9grReEl/fqMhg6f3lZetk2iJjJbBdfl1dWKNiJ8jQ4vsHH8WBLQG/jryH6KYP4H2kgONQrRHg78NdodLYjvmzOur6Tpp1aVGiSoeJ8dUaQwia/p5TwMTIQMMeNVvJYA/e1M=
+	t=1715334904; cv=none; b=orxRNqX8IUVGVgu+T3aUaALwhQZSwbiNX+Z61AXWwdQWyV1X8bP9TR3uf4BHAjtQpRtTRvh7IM9kXcoAnUGfWLQfN8ISJBEHDFScpqMPJSsOLVgc+RiB4DIWNj0N395U2fRUmxBrFyiOV0m68y4kA5QpekpxoEecB4C+zLd5WOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715333062; c=relaxed/simple;
-	bh=8yrxVktGEbdgvFPVqR522nuzwUD0TctYiFLeO1R1ImU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SsHPIpexbtSuj8IAQruCLKm+BqQewnMm2/zt7PMLJv6qmLLwtbeYKwvazQhBRLm/1OUCCZA5OGD7UsE7ON55ZS7SpCjCbqGbP6OUP/YNtFYU4srYCskceldPfgDnC+wpmoufg9Z4VImI/Zff9BmiiarBMrQQ+o+SU89CetpPlCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k9eTypSh; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715334904; c=relaxed/simple;
+	bh=zyYfLt4Ecs8HU/x+zjq4DFkOpZ4wMvlgECzsCL41iqA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=uDITcA4OA9l69hz13SUOhVISLscf/bKiQVAJD8aUWGnxSWJz6xaB3TDgB3XKsldGsmumgjkRQeMngFVnhv73AGY3FcUR56vChWrsmEsHrA7F+3N6PO9ZLXW8JfakU/YLg01RWzRdUSq/SC5DM64BCpWhdaH6UqipyiM8T6mY2KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=lUnbSe3v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M5Xq2BMv; arc=none smtp.client-ip=64.147.123.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k9eTypSh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715333060; x=1746869060;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=8yrxVktGEbdgvFPVqR522nuzwUD0TctYiFLeO1R1ImU=;
-  b=k9eTypShTriaCfPykR+8CwEcnPUzD+LxJUUdAXd7XZziSNml4DbRmeQH
-   GfVVzuWlqvyEfPbY0a5iujbikWTap3gA5UrFiLfr3yMOCI7qJYyyTYg9/
-   OKS7Nwc/mj4bibQpHy9r5IsROZP0xR625NXeLu4yWgkQVPuBwLZ8a+l/4
-   DHNFVDBcIhXI9VnxvJythjy+Bh5ii4mf1Dw63lyCCvM0gKpL20jS1mqy1
-   2xy0cNlK/6wRLEgUyPTh6fc7Q/ErYiLWRGj59Ka4ATMtxIy4dleo3AOf1
-   Bfi00WTd2h2jAMcP9EaknaRpv0Q/hJWCgBBYita1gxT8UWPITjIvAeOMk
-   Q==;
-X-CSE-ConnectionGUID: dJPjOGNhSk2iKZwsYYvZrg==
-X-CSE-MsgGUID: luZKXJRdQXOzFsVk3yoY+g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11469102"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="11469102"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 02:24:19 -0700
-X-CSE-ConnectionGUID: BuCQ6ZZoQJi2Pt3PWUPNZw==
-X-CSE-MsgGUID: jOCnIIIXQW25g55CZF/FqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="29414319"
-Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.180])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 02:24:15 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: "Lin, Wayne" <Wayne.Lin@amd.com>, "Limonciello, Mario"
- <Mario.Limonciello@amd.com>, Linux regressions
- mailing list <regressions@lists.linux.dev>, "Wentland, Harry"
- <Harry.Wentland@amd.com>
-Cc: "lyude@redhat.com" <lyude@redhat.com>, "imre.deak@intel.com"
- <imre.deak@intel.com>, Leon =?utf-8?Q?Wei=C3=9F?=
- <leon.weiss@ruhr-uni-bochum.de>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
-Subject: RE: [PATCH] drm/mst: Fix NULL pointer dereference at
- drm_dp_add_payload_part2
-In-Reply-To: <CO6PR12MB5489FA9307280A4442BAD51DFCE72@CO6PR12MB5489.namprd12.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240307062957.2323620-1-Wayne.Lin@amd.com>
- <0847dc03-c7db-47d7-998b-bda2e82ed442@amd.com>
- <41b87510-7abf-47e8-b28a-9ccc91bbd3c1@leemhuis.info>
- <177cfae4-b2b5-4e2c-9f1e-9ebe262ce48c@amd.com>
- <CO6PR12MB5489FA9307280A4442BAD51DFCE72@CO6PR12MB5489.namprd12.prod.outlook.com>
-Date: Fri, 10 May 2024 12:24:12 +0300
-Message-ID: <87wmo2hver.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="lUnbSe3v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M5Xq2BMv"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id 291151C00067;
+	Fri, 10 May 2024 05:55:01 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute1.internal (MEProxy); Fri, 10 May 2024 05:55:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1715334900; x=
+	1715421300; bh=zsAX12i3wiGs8NpHFwK4gaLZUeZbeVFiTubMbmtjtjM=; b=l
+	UnbSe3vvJ65EIfoOs6o22VLB3Xfhx2zUELZHMUBPbSnABGRS9Z2WGUmpI9ij+z5T
+	h/PBo2NgNublSXDhZKgIRqRXWJwZ/5rrmbqmkMuItJZg/JY1lXja4b3tjZayadAj
+	171mwwgYqkrlqYkuj/FWfCSE06AKxfLvKBBX/CbYDX8X0tpOroJo2vbC6tGIu4JX
+	8BOnjtSelvZ60Jc6KOsVnyBE4tr98qC1rup1tETSlNit+nROfklwKQ1/0oPz5pQY
+	Cvb24JHdQ753hjazzM1jHcCOkUnoQQDNCTQwZZKIexn+MixrdNV+RYYYvOteCEvW
+	6tbSN2J6/vSFRu8dyYtOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1715334900; x=1715421300; bh=zsAX12i3wiGs8NpHFwK4gaLZUeZb
+	eVFiTubMbmtjtjM=; b=M5Xq2BMvKcAoUAQ9HgnGrL6dzZjs6aT8ryY0VuaT22XN
+	lhZQYs2AwfepeDbtjBVwPmy5vjN6uBmIdN9l9ZpYfUpEj6vhGBqc5GEYv9aDRgeR
+	cwru4/ASI/4jkvB2h0x0AmIEDEtu4TxdDqzU8ajQecwi88JhvcR2dJWkGj3HHrnC
+	+IXzu3TXw0+NKWoYowDRyj4s0KJ8RS3H2rqq2ZptHb8ZxD4AzZllzHxA+OalyitU
+	SSCRGViyGQ2qbJxkxHbEnuWUsW34bNjI4l39GAi15HRKIN5gvs1l3FvqgAP7/Tt0
+	7O2JHQGPekR5OodFnj9K1Tuwu5Bvas0yibAQPNGxmw==
+X-ME-Sender: <xms:9O49Zhk49omYKwRCcqPcWBW-t0AvS2ttraComtyroE9xsW4wgJJF0w>
+    <xme:9O49Zs10PqHeqrOnSA47L8WmgPn4p5gdYxWRdMB9ngg9Az2Q0c3DsPzkPwxG98q2Y
+    qk2KT20PUC7cPfCkhk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefkedgvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufhv
+    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
+    grthhtvghrnhepleevgfegffehvedtieevhfekheeftedtjeetudevieehveevieelgffh
+    ieevieeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
+X-ME-Proxy: <xmx:9O49ZnpB5C5MtTsDvpbijslCJtSHgFdBvfk4QF4-2QUoVfOB_5866w>
+    <xmx:9O49ZhnpXnfN2lzMKuNXKNeWpQ8hWxeO06ppCsDmwLUddGnDJYhzVw>
+    <xmx:9O49Zv15Jebi5f-5Pr14iQBFcIXDIPIEYMHjrr1SQb7cPAQK4GnyEQ>
+    <xmx:9O49ZgvbsAUld6bWPRnvQ82GZRtXGY9FIZE5Ob2yYehmA_zK_d3-Tg>
+    <xmx:9O49Zv9enmUL1YEnuuXLhlaQdIunvBWR9d-T5bb2NRmchMg-_wrfjEez>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 3C359A60079; Fri, 10 May 2024 05:55:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <4e194251-d175-49d0-af03-b2cdd8a30fe0@app.fastmail.com>
+In-Reply-To: <70078624-d766-4db6-8ddb-511251baf0f2@marcan.st>
+References: <20240405204037.3451091-1-luiz.dentz@gmail.com>
+ <Zjz0atzRhFykROM9@robin>
+ <CABBYNZLMODHp+jBu2oVDC5Pg6fyAKJugQF0N-XgarjWQJJPObg@mail.gmail.com>
+ <Zj0tcmseJCjR4hK2@robin>
+ <CABBYNZLnYz-vPrMbtsJTsLPsyo62j+cxctSkLjRom3bWEU9N3A@mail.gmail.com>
+ <CABBYNZJ-6oyLnBov9H_jym9m-9qiUt1ELxYGuBOdZT29aj9MCA@mail.gmail.com>
+ <70078624-d766-4db6-8ddb-511251baf0f2@marcan.st>
+Date: Fri, 10 May 2024 11:54:40 +0200
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Hector Martin" <marcan@marcan.st>,
+ "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
+ "Janne Grunau" <j@jannau.net>
+Cc: linux-bluetooth@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ asahi@lists.linux.dev
+Subject: Re: [PATCH v1] Bluetooth: hci_sync: Use advertised PHYs on
+ hci_le_ext_create_conn_sync
+Content-Type: text/plain
 
-On Fri, 10 May 2024, "Lin, Wayne" <Wayne.Lin@amd.com> wrote:
-> [Public]
+Hi,
+
+
+On Fri, May 10, 2024, at 05:13, Hector Martin wrote:
+> Hi,
 >
->> -----Original Message-----
->> From: Limonciello, Mario <Mario.Limonciello@amd.com>
->> Sent: Friday, May 10, 2024 3:18 AM
->> To: Linux regressions mailing list <regressions@lists.linux.dev>; Wentla=
-nd, Harry
->> <Harry.Wentland@amd.com>; Lin, Wayne <Wayne.Lin@amd.com>
->> Cc: lyude@redhat.com; imre.deak@intel.com; Leon Wei=C3=9F <leon.weiss@ru=
-hr-uni-
->> bochum.de>; stable@vger.kernel.org; dri-devel@lists.freedesktop.org; amd-
->> gfx@lists.freedesktop.org; intel-gfx@lists.freedesktop.org
->> Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
->> drm_dp_add_payload_part2
->>
->> On 5/9/2024 07:43, Linux regression tracking (Thorsten Leemhuis) wrote:
->> > On 18.04.24 21:43, Harry Wentland wrote:
->> >> On 2024-03-07 01:29, Wayne Lin wrote:
->> >>> [Why]
->> >>> Commit:
->> >>> - commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
->> >>> allocation/removement") accidently overwrite the commit
->> >>> - commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in
->> >>> drm_dp_add_payload_part2") which cause regression.
->> >>>
->> >>> [How]
->> >>> Recover the original NULL fix and remove the unnecessary input
->> >>> parameter 'state' for drm_dp_add_payload_part2().
->> >>>
->> >>> Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
->> >>> allocation/removement")
->> >>> Reported-by: Leon Wei=C3=9F <leon.weiss@ruhr-uni-bochum.de>
->> >>> Link:
->> >>> https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.c
->> >>> amel@ruhr-uni-bochum.de/
->> >>> Cc: lyude@redhat.com
->> >>> Cc: imre.deak@intel.com
->> >>> Cc: stable@vger.kernel.org
->> >>> Cc: regressions@lists.linux.dev
->> >>> Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
->> >>
->> >> I haven't been deep in MST code in a while but this all looks pretty
->> >> straightforward and good.
->> >>
->> >> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->> >
->> > Hmmm, that was three weeks ago, but it seems since then nothing
->> > happened to fix the linked regression through this or some other
->> > patch. Is there a reason? The build failure report from the CI maybe?
->>
->> It touches files outside of amd but only has an ack from AMD.  I think we
->> /probably/ want an ack from i915 and nouveau to take it through.
+> On 2024/05/10 7:41, Luiz Augusto von Dentz wrote:
+> <snip>
 >
-> Thanks, Mario!
+>> If I print the actual value then we got:
+>> 
+>> Primary PHY: Reserved (0x81)
+>> 
+>> I guess one needs to disregard the reserved range, well until they are
+>> no longer reserved then it will no longer work. Perhaps we should talk
+>> to broadcom to know what is up with using reserved values and if that
+>> is an apple thing then perhaps we could ask them to provide firmware
+>> that acts according to the spec.
 >
-> Hi Thorsten,
-> Yeah, like what Mario said. Would also like to have ack from i915 and nou=
-veau.
+> Apple and Broadcom do not support Linux on this platform. The kernel has
+> to work with the existing firmware (which is the firmware macOS uses),
+> we don't get to request changes. If the firmware has quirks the kernel
+> has to deal with it, that's how it goes. It would be great if we had
+> vendor support, but that is not something we can control. This is common
+> (Linux is full of quirks to support noncompliant hardware/firmware).
 
-It usually works better if you Cc the folks you want an ack from! ;)
+While I agree with Hector here that they won't even talk to us it's
+sometimes possible to figure out what exactly they were thinking with
+their reserved values. Apple provides "Additional Tools for XCode" which
+include their "PacketLogger" which contains most of their vendor
+specific hacks with a human readable explanation. I wasn't able to generate
+this specific event with my hardware here but I was able to inject a custom
+event into their trace format and then load it and see how it's decoded.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+From a very brief look it appears that they AND Primary_PHY/Secondary_PHY with
+0x1f to decode it and then support all values defined in the bluetooth
+spec, i.e. "no packets", "LE 1M", "LE 2M" and "LE coded". No idea what the
+higher bits mean though since they are ignored and don't seem to be decoded.
 
->
->>
->> >
->> > Wayne Lin, do you know what's up?
->> >
->> > Ciao, Thorsten
->> >
->> >>> ---
->> >>>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 +-
->> >>>   drivers/gpu/drm/display/drm_dp_mst_topology.c             | 4 +---
->> >>>   drivers/gpu/drm/i915/display/intel_dp_mst.c               | 2 +-
->> >>>   drivers/gpu/drm/nouveau/dispnv50/disp.c                   | 2 +-
->> >>>   include/drm/display/drm_dp_mst_helper.h                   | 1 -
->> >>>   5 files changed, 4 insertions(+), 7 deletions(-)
->> >>>
->> >>> diff --git
->> >>> a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
->> >>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
->> >>> index c27063305a13..2c36f3d00ca2 100644
->> >>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
->> >>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
->> >>> @@ -363,7 +363,7 @@ void dm_helpers_dp_mst_send_payload_allocation(
->> >>>           mst_state =3D to_drm_dp_mst_topology_state(mst_mgr->base.s=
-tate);
->> >>>           new_payload =3D drm_atomic_get_mst_payload_state(mst_state,
->> >>> aconnector->mst_output_port);
->> >>>
->> >>> - ret =3D drm_dp_add_payload_part2(mst_mgr, mst_state->base.state,
->> new_payload);
->> >>> + ret =3D drm_dp_add_payload_part2(mst_mgr, new_payload);
->> >>>
->> >>>           if (ret) {
->> >>>                   amdgpu_dm_set_mst_status(&aconnector->mst_status,
->> >>> diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c
->> >>> b/drivers/gpu/drm/display/drm_dp_mst_topology.c
->> >>> index 03d528209426..95fd18f24e94 100644
->> >>> --- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
->> >>> +++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
->> >>> @@ -3421,7 +3421,6 @@
->> EXPORT_SYMBOL(drm_dp_remove_payload_part2);
->> >>>   /**
->> >>>    * drm_dp_add_payload_part2() - Execute payload update part 2
->> >>>    * @mgr: Manager to use.
->> >>> - * @state: The global atomic state
->> >>>    * @payload: The payload to update
->> >>>    *
->> >>>    * If @payload was successfully assigned a starting time slot by
->> >>> drm_dp_add_payload_part1(), this @@ -3430,14 +3429,13 @@
->> EXPORT_SYMBOL(drm_dp_remove_payload_part2);
->> >>>    * Returns: 0 on success, negative error code on failure.
->> >>>    */
->> >>>   int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
->> >>> -                      struct drm_atomic_state *state,
->> >>>                                struct drm_dp_mst_atomic_payload *pay=
-load)
->> >>>   {
->> >>>           int ret =3D 0;
->> >>>
->> >>>           /* Skip failed payloads */
->> >>>           if (payload->payload_allocation_status !=3D
->> DRM_DP_MST_PAYLOAD_ALLOCATION_DFP) {
->> >>> -         drm_dbg_kms(state->dev, "Part 1 of payload creation for %s
->> failed, skipping part 2\n",
->> >>> +         drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s
->> failed,
->> >>> +skipping part 2\n",
->> >>>                               payload->port->connector->name);
->> >>>                   return -EIO;
->> >>>           }
->> >>> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c
->> >>> b/drivers/gpu/drm/i915/display/intel_dp_mst.c
->> >>> index 53aec023ce92..2fba66aec038 100644
->> >>> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
->> >>> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
->> >>> @@ -1160,7 +1160,7 @@ static void intel_mst_enable_dp(struct
->> intel_atomic_state *state,
->> >>>           if (first_mst_stream)
->> >>>                   intel_ddi_wait_for_fec_status(encoder, pipe_config=
-, true);
->> >>>
->> >>> - drm_dp_add_payload_part2(&intel_dp->mst_mgr, &state->base,
->> >>> + drm_dp_add_payload_part2(&intel_dp->mst_mgr,
->> >>>
->> drm_atomic_get_mst_payload_state(mst_state,
->> >>> connector->port));
->> >>>
->> >>>           if (DISPLAY_VER(dev_priv) >=3D 12)
->> >>> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> >>> b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> >>> index 0c3d88ad0b0e..88728a0b2c25 100644
->> >>> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> >>> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
->> >>> @@ -915,7 +915,7 @@ nv50_msto_cleanup(struct drm_atomic_state *state,
->> >>>                   msto->disabled =3D false;
->> >>>                   drm_dp_remove_payload_part2(mgr, new_mst_state,
->> old_payload, new_payload);
->> >>>           } else if (msto->enabled) {
->> >>> -         drm_dp_add_payload_part2(mgr, state, new_payload);
->> >>> +         drm_dp_add_payload_part2(mgr, new_payload);
->> >>>                   msto->enabled =3D false;
->> >>>           }
->> >>>   }
->> >>> diff --git a/include/drm/display/drm_dp_mst_helper.h
->> >>> b/include/drm/display/drm_dp_mst_helper.h
->> >>> index 9b19d8bd520a..6c9145abc7e2 100644
->> >>> --- a/include/drm/display/drm_dp_mst_helper.h
->> >>> +++ b/include/drm/display/drm_dp_mst_helper.h
->> >>> @@ -851,7 +851,6 @@ int drm_dp_add_payload_part1(struct
->> drm_dp_mst_topology_mgr *mgr,
->> >>>                                struct drm_dp_mst_topology_state *mst=
-_state,
->> >>>                                struct drm_dp_mst_atomic_payload *pay=
-load);
->> >>>   int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
->> >>> -                      struct drm_atomic_state *state,
->> >>>                                struct drm_dp_mst_atomic_payload *pay=
-load);
->> >>>   void drm_dp_remove_payload_part1(struct drm_dp_mst_topology_mgr
->> *mgr,
->> >>>                                    struct drm_dp_mst_topology_state =
-*mst_state,
->> >>
->> >>
->> >>
->> >
-> ---
-> Regards,
-> Wayne Lin
 
---=20
-Jani Nikula, Intel
+
+Sven
+
