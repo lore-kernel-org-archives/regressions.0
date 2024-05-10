@@ -1,244 +1,191 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC6D5E099;
-	Fri, 10 May 2024 13:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8317E58F
+	for <regressions@lists.linux.dev>; Fri, 10 May 2024 13:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715346261; cv=none; b=eF7LFlgPV2taEp1I/FIhqRXU6XkBn4OBj1QdOJS2ZxDcx0Q+9Kv8LOQDVnI7LPkqq2OY/Xg5+Lbq+6GrvzvPpmo0Cs3z3G1k4+B4tbatLlk4Rabz67EsrnBAlnQjEO6E3WzvWgShRWlW5CDkbn+e/bSDzKWC2BEKdAxQymijccM=
+	t=1715347607; cv=none; b=A80kHbi+Ote+p2E80+GNxyffW45XNPRwAlWDN/J+kAbCqZ7urQoncXpUHT0vOU88IL2Ptk7tSu3epz0BeaGr67XLY57VNuluNGNFPwL30IgmKOT37pGU6eZq/Nb+cW/5qB8+ffilvrIkUs+jYZXjV7evQohc+a6+Q+pMqTmqQC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715346261; c=relaxed/simple;
-	bh=Dw8L8eZBtaQm/RhUW4Qdw6yEwtJ2BgiUeEHmTXbJQT0=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b/e0wppKSqvMzKnQTIrPNhD0MplWSe2LmlPjiW0d6YXm6X3u95oq/uSBSlKOotGpr81WEqbcY2va/mbjky+5d1q/7SsZttv5DzbFqLsYAjzLvspR683a7psPBnYU4n/PUt4LsJJwAlF9W+OCCCOWk2cUNmiG6/js62CCyC1Yw1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Efni5ABK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715347607; c=relaxed/simple;
+	bh=5d4vHDkLSPfLDV5AI9wfw6UEj/DZJ5Yv6/66yBGcwXE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=BMjyYsk6EXHTWic2GagBZh28Xuv8KHJxS642wKMGl122HOFLGZ+smZo/EEdt579o/E9caVvlqL9KJl80tZjQ6NOmNFdcOgwdbhCz0mMhijJuzT245a+Tp+T3NDgFw34JaTajMPjdMTC3Vlu4ym7ECCtUQJBqbLUYt8pbS+RiW4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=XFJU350q; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Efni5ABK"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44A2u9du019772;
-	Fri, 10 May 2024 13:04:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:cc:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=6ciBEr91BthWrBkA1+Q08rrfel/AWetQxbWTdmHHWTk=; b=Ef
-	ni5ABKp7PdzHsOx7YIPB1ULax7dc5nI6ntf9ynv+UywEQjVMGWhY3gfOM7euTCj+
-	pgWnuoYA8sohGRoz1TvKhf+4R0CK5eUk3q0UKaBCM19KNxfEaJh5SrMbuO+scX0N
-	rI1EbBzvPkFLMAGmrkabDXn5V32SfwxWcVcO5D3BZU4mqTcJiqVo418fDxw/WPgl
-	s5LKORj4oTZWEDCicYJJ8Z1vEP5QFW1GQ9W7QEKuqZAqlWpQmzK2Zgti+9Md4VOV
-	Eaz7vhxm1MyxevWjYygZGOL8Wjq/rzaSdCVVs9bc9Xq2DyS9e9p6Xva3HvT0TS0/
-	K9mRKuy8EM00sf79ajMg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y16w1hhju-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 May 2024 13:04:11 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44AD4AUT024270
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 May 2024 13:04:10 GMT
-Received: from [10.231.194.144] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 10 May
- 2024 06:04:09 -0700
-Message-ID: <4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com>
-Date: Fri, 10 May 2024 21:04:06 +0800
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="XFJU350q"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a59a9d66a51so469821166b.2
+        for <regressions@lists.linux.dev>; Fri, 10 May 2024 06:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1715347603; x=1715952403; darn=lists.linux.dev;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0iIlXXeFM7yBqzEBZlBlI1pxa1tOOAauSQu/IN4LvIo=;
+        b=XFJU350qu+k1aRqnAR+93aOkmJU8XzH8T1jvXqpNhPFq5yhQWgkqi2vZ2aPkf0QQt6
+         W5ACYXCK32HCfbpbonMShj/QFKSdAnOqSUctpbhFwDl9BxqbOGvlKV2p9z/o4Oucommf
+         h0SZFlCTF8oX2gBEh0W2gk1dmiNsl3X5zO3WCgdS76zI7xxmN7QiQKjzGIGU4r9kX2gg
+         GWSJTwpnBS3hE36o3hI6Y5UcdRkyH2U/ShmdzBX4maCYzN9Xa3L2vkBvlhRVgfEvHizh
+         gdN5USgp0XJVX7/gThWBMq2QuttAifacphP+AtmXRXk0CvbEnJ7Mzsx9Up/U0pv+vaBB
+         TmvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715347603; x=1715952403;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0iIlXXeFM7yBqzEBZlBlI1pxa1tOOAauSQu/IN4LvIo=;
+        b=PUUrHnZvcHH4H2dgfpBYuqwdUQri8kyLt5R0n7qfczuBtnMrp6ct0Beovywsw6nZce
+         MHR8swOFvIrFGsAJl8HUG5MCFKNjAEMCaEoYeDNa3R1XkVvkhA4Ul6cIxm5YLhy7R0K7
+         y1+fyDgSs0wbex9D3mgPezuC3gXwqoy0H975NKSgsMWo6pTfn04Qm8GItXJ/0Emvt9Jg
+         Q6zx1gw8kE37iAUS0Dppz/3O7gvkaXP3RjwImLbD/OfUj44nRMo7gmK7TqPoqaU4P69W
+         QYS4dR4GV9ZNQym1vLFPztTAPeujvtG5xiwi9TXLjzcDFg9EMWlzvv0OawstfgU0cOH5
+         QUDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMQ7iOHg/+lRvVnK0nhE1Uh7DB73h/pP6/Dl1wjdQXUnapDwtVcIRvyFFDxyFx3xwcDmtaezV9S8S9J1bHsOJa7EfE+nNPM8jOF4c=
+X-Gm-Message-State: AOJu0Yy3C2AH0hWOsufjhG9V8BhIn8b/uLOgd7O9GSETH2iT4hCgPDTY
+	b/vZUasjos/D7awkcf+MwqYCyPBYF2KYPYGa4gPaFA1xwgNTXo51Kdm2/N5Tm9k=
+X-Google-Smtp-Source: AGHT+IGTi4pxk95vdybc0kHmR4dKJTKOp0Y7wf8e3ELehw3lkLTRS1ItaNDJRp+5wnTDxpAHk3wDmg==
+X-Received: by 2002:a17:906:3183:b0:a59:b784:ced4 with SMTP id a640c23a62f3a-a5a2d67873fmr189388166b.75.1715347603450;
+        Fri, 10 May 2024 06:26:43 -0700 (PDT)
+Received: from localhost (2a02-a210-20ba-5a00-9ceb-707b-2d57-26f7.cable.dynamic.v6.ziggo.nl. [2a02:a210:20ba:5a00:9ceb:707b:2d57:26f7])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7d2bsm183791166b.120.2024.05.10.06.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 May 2024 06:26:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <quic_cjhuang@quicinc.com>, <ath11k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <regressions@lists.linux.dev>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 10 May 2024 15:26:42 +0200
+Message-Id: <D15ZZ5V3YU6Z.10FO9XK11WXFB@fairphone.com>
+Cc: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+ <regressions@lists.linux.dev>
 Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
-To: Kalle Valo <kvalo@kernel.org>, Luca Weiss <luca.weiss@fairphone.com>
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Carl Huang" <quic_cjhuang@quicinc.com>, "Kalle Valo" <kvalo@kernel.org>
+X-Mailer: aerc 0.17.0
 References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
  <20230714023801.2621802-2-quic_cjhuang@quicinc.com>
  <D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
  <93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
-Content-Language: en-US
-From: Carl Huang <quic_cjhuang@quicinc.com>
-In-Reply-To: <93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7gLfDyWbJEHC47QhIfqDhFL5OXg6Pt0p
-X-Proofpoint-GUID: 7gLfDyWbJEHC47QhIfqDhFL5OXg6Pt0p
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-10_08,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 impostorscore=0 clxscore=1015 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405100093
+ <4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com>
+In-Reply-To: <4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com>
 
+On Fri May 10, 2024 at 3:04 PM CEST, Carl Huang wrote:
 
+<snip>
 
-On 2024/5/10 20:03, Carl Huang wrote:
-> 
-> 
-> On 2024/5/10 18:18, Kalle Valo wrote:
->> "Luca Weiss" <luca.weiss@fairphone.com> writes:
->>
->>> On Fri Jul 14, 2023 at 4:38 AM CEST, Carl Huang wrote:
->>>> Add hardware parameter support_dual_stations to indicate
->>>> whether 2 station interfaces are supported. For chips which
->>>> support this feature, limit total number of AP interface and
->>>> mesh point to 1. The max interfaces are 3 for such chips.
->>>>
->>>> The chips affected are:
->>>>   QCA6390 hw2.0
->>>>   WCN6855 hw2.0
->>>>   WCN6855 hw2.1
->>>> Other chips are not affected.
->>>>
->>>> For affected chips, remove radar_detect_widths because now
->>>> num_different_channels is set to 2. radar_detect_widths can
->>>> be set only when num_different_channels is 1. See mac80211
->>>> function wiphy_verify_combinations for details.
->>>>
->>>> Tested-on: WCN6855 hw2.0 PCI 
->>>> WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3
->>>
->>> Hi Carl,
->>>
->>> Unfortunately this commit breaks wifi on a QCM6490 smartphone
->>> (qcm6490-fairphone-fp5) and makes the board crash.
->>>
->>> Reverting this commit (plus for conflict resolution 5dc9d1a55e95 ("wifi:
->>> ath11k: add support for QCA2066") and 24395ec11707 ("wifi: ath11k:
->>> provide address list if chip supports 2 stations")) makes wifi work
->>> again.
->>
->> Thanks for the report. So the broken commit is:
->>
->> f019f4dff2e4 wifi: ath11k: support 2 station interfaces
->>
->> This went into v6.9-rc1 so I'm guessing that WCN6750 support will be
->> fully broken in v6.9? Not good. And most likely Linus will release v6.9
->> on Sunday so it's too late to get a fix included in the final release.
->>
->> Carl, can you fix this ASAP? Or should we just revert the broken
->> commits?
->>
->> Adding this to our regression tracking:
->>
->> #regzbot introduced: f019f4dff2e4 ^
->> #regzbot title: ath11k: WCN6750 firmware crashes during initialisation
->>
-> Kalle, looks we're not able to fix it before Sunday as I don't have 
-> WCN6750 setup to verify the fix. The fix could be to define a dedicated 
-> function ath11k_init_wmi_config_wcn6750() for WCN6750. I'll send the 
-> patch out so others like Luca can have a try.
-> 
-Sorry, I have problem to run "git send-email" as it prompts "5.7.60 
-SMTP; Client does not have permissions to send as this sender".
+> > Kalle, looks we're not able to fix it before Sunday as I don't have=20
+> > WCN6750 setup to verify the fix. The fix could be to define a dedicated=
+=20
+> > function ath11k_init_wmi_config_wcn6750() for WCN6750. I'll send the=20
+> > patch out so others like Luca can have a try.
+> >=20
+> Sorry, I have problem to run "git send-email" as it prompts "5.7.60=20
+> SMTP; Client does not have permissions to send as this sender".
+>
+> The patch looks like:
+>
+>  From 19bb7f1377a5e3c5d42ab2bedbaf9e976c1068b4 Mon Sep 17 00:00:00 2001
+> From: Carl Huang <quic_cjhuang@quicinc.com>
+> Date: Fri, 10 May 2024 19:40:37 +0800
+> Subject: [PATCH] wifi:ath11k: fix WCN6750 firmware crash
+>
+> WCN6750 firmware crashed because of vdev_number changed to 3 from 4
+> in commit f019f4dff2e4("wifi: ath11k: support 2 station interfaces").
+>
+> Fix it by defining a separate function ath11k_init_wmi_config_wcn6750()
+> for WCN6750 to initialize its' specific parameters.
+>
+> Fixes: f019f4dff2e4 ("wifi: ath11k: support 2 station interfaces")
+> Tested-on: WCN6855 hw2.0 PCI=20
+> WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3
+>
+> Signed-off-by: Carl Huang <quic_cjhuang@quicinc.com>
 
-The patch looks like:
+This seems to work fine also.
 
- From 19bb7f1377a5e3c5d42ab2bedbaf9e976c1068b4 Mon Sep 17 00:00:00 2001
-From: Carl Huang <quic_cjhuang@quicinc.com>
-Date: Fri, 10 May 2024 19:40:37 +0800
-Subject: [PATCH] wifi:ath11k: fix WCN6750 firmware crash
+Tested-on: wcn6750 hw1.0 AHB WLAN.MSL.1.0.1-01371-QCAMSLSWPLZ-1
 
-WCN6750 firmware crashed because of vdev_number changed to 3 from 4
-in commit f019f4dff2e4("wifi: ath11k: support 2 station interfaces").
+Regards
+Luca
 
-Fix it by defining a separate function ath11k_init_wmi_config_wcn6750()
-for WCN6750 to initialize its' specific parameters.
-
-Fixes: f019f4dff2e4 ("wifi: ath11k: support 2 station interfaces")
-Tested-on: WCN6855 hw2.0 PCI 
-WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3
-
-Signed-off-by: Carl Huang <quic_cjhuang@quicinc.com>
----
-  drivers/net/wireless/ath/ath11k/hw.c | 49 +++++++++++++++++++++++++++-
-  1 file changed, 48 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/hw.c 
-b/drivers/net/wireless/ath/ath11k/hw.c
-index caa6dc12a790..df8822ac3be1 100644
---- a/drivers/net/wireless/ath/ath11k/hw.c
-+++ b/drivers/net/wireless/ath/ath11k/hw.c
-@@ -102,6 +102,53 @@ static void ath11k_init_wmi_config_qca6390(struct 
-ath11k_base *ab,
-  	config->flag1 |= WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64;
-  }
-
-+static void ath11k_init_wmi_config_wcn6750(struct ath11k_base *ab,
-+					   struct target_resource_config *config)
-+{
-+	config->num_vdevs = 4;
-+	config->num_peers = 16;
-+	config->num_tids = 32;
-+
-+	config->num_offload_peers = 3;
-+	config->num_offload_reorder_buffs = 3;
-+	config->num_peer_keys = TARGET_NUM_PEER_KEYS;
-+	config->ast_skid_limit = TARGET_AST_SKID_LIMIT;
-+	config->tx_chain_mask = (1 << ab->target_caps.num_rf_chains) - 1;
-+	config->rx_chain_mask = (1 << ab->target_caps.num_rf_chains) - 1;
-+	config->rx_timeout_pri[0] = TARGET_RX_TIMEOUT_LO_PRI;
-+	config->rx_timeout_pri[1] = TARGET_RX_TIMEOUT_LO_PRI;
-+	config->rx_timeout_pri[2] = TARGET_RX_TIMEOUT_LO_PRI;
-+	config->rx_timeout_pri[3] = TARGET_RX_TIMEOUT_HI_PRI;
-+	config->rx_decap_mode = TARGET_DECAP_MODE_NATIVE_WIFI;
-+	config->scan_max_pending_req = TARGET_SCAN_MAX_PENDING_REQS;
-+	config->bmiss_offload_max_vdev = TARGET_BMISS_OFFLOAD_MAX_VDEV;
-+	config->roam_offload_max_vdev = TARGET_ROAM_OFFLOAD_MAX_VDEV;
-+	config->roam_offload_max_ap_profiles = 
-TARGET_ROAM_OFFLOAD_MAX_AP_PROFILES;
-+	config->num_mcast_groups = 0;
-+	config->num_mcast_table_elems = 0;
-+	config->mcast2ucast_mode = 0;
-+	config->tx_dbg_log_size = TARGET_TX_DBG_LOG_SIZE;
-+	config->num_wds_entries = 0;
-+	config->dma_burst_size = 0;
-+	config->rx_skip_defrag_timeout_dup_detection_check = 0;
-+	config->vow_config = TARGET_VOW_CONFIG;
-+	config->gtk_offload_max_vdev = 2;
-+	config->num_msdu_desc = 0x400;
-+	config->beacon_tx_offload_max_vdev = 2;
-+	config->rx_batchmode = TARGET_RX_BATCHMODE;
-+
-+	config->peer_map_unmap_v2_support = 0;
-+	config->use_pdev_id = 1;
-+	config->max_frag_entries = 0xa;
-+	config->num_tdls_vdevs = 0x1;
-+	config->num_tdls_conn_table_entries = 8;
-+	config->beacon_tx_offload_max_vdev = 0x2;
-+	config->num_multicast_filter_entries = 0x20;
-+	config->num_wow_filters = 0x16;
-+	config->num_keep_alive_pattern = 0;
-+	config->flag1 |= WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64;
-+}
-+
-  static void ath11k_hw_ipq8074_reo_setup(struct ath11k_base *ab)
-  {
-  	u32 reo_base = HAL_SEQ_WCSS_UMAC_REO_REG;
-@@ -1102,7 +1149,7 @@ const struct ath11k_hw_ops wcn6855_ops = {
-
-  const struct ath11k_hw_ops wcn6750_ops = {
-  	.get_hw_mac_from_pdev_id = ath11k_hw_ipq8074_mac_from_pdev_id,
--	.wmi_init_config = ath11k_init_wmi_config_qca6390,
-+	.wmi_init_config = ath11k_init_wmi_config_wcn6750,
-  	.mac_id_to_pdev_id = ath11k_hw_mac_id_to_pdev_id_qca6390,
-  	.mac_id_to_srng_id = ath11k_hw_mac_id_to_srng_id_qca6390,
-  	.tx_mesh_enable = ath11k_hw_qcn9074_tx_mesh_enable,
--- 
-2.34.1
-
-
-Hi Luca, could you help apply this patch and retest?
-
-Hi Kalle, could you help send this patch if Luca verifies it works?
-
-
+> ---
+>   drivers/net/wireless/ath/ath11k/hw.c | 49 +++++++++++++++++++++++++++-
+>   1 file changed, 48 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/wireless/ath/ath11k/hw.c=20
+> b/drivers/net/wireless/ath/ath11k/hw.c
+> index caa6dc12a790..df8822ac3be1 100644
+> --- a/drivers/net/wireless/ath/ath11k/hw.c
+> +++ b/drivers/net/wireless/ath/ath11k/hw.c
+> @@ -102,6 +102,53 @@ static void ath11k_init_wmi_config_qca6390(struct=20
+> ath11k_base *ab,
+>   	config->flag1 |=3D WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64;
+>   }
+>
+> +static void ath11k_init_wmi_config_wcn6750(struct ath11k_base *ab,
+> +					   struct target_resource_config *config)
+> +{
+> +	config->num_vdevs =3D 4;
+> +	config->num_peers =3D 16;
+> +	config->num_tids =3D 32;
+> +
+> +	config->num_offload_peers =3D 3;
+> +	config->num_offload_reorder_buffs =3D 3;
+> +	config->num_peer_keys =3D TARGET_NUM_PEER_KEYS;
+> +	config->ast_skid_limit =3D TARGET_AST_SKID_LIMIT;
+> +	config->tx_chain_mask =3D (1 << ab->target_caps.num_rf_chains) - 1;
+> +	config->rx_chain_mask =3D (1 << ab->target_caps.num_rf_chains) - 1;
+> +	config->rx_timeout_pri[0] =3D TARGET_RX_TIMEOUT_LO_PRI;
+> +	config->rx_timeout_pri[1] =3D TARGET_RX_TIMEOUT_LO_PRI;
+> +	config->rx_timeout_pri[2] =3D TARGET_RX_TIMEOUT_LO_PRI;
+> +	config->rx_timeout_pri[3] =3D TARGET_RX_TIMEOUT_HI_PRI;
+> +	config->rx_decap_mode =3D TARGET_DECAP_MODE_NATIVE_WIFI;
+> +	config->scan_max_pending_req =3D TARGET_SCAN_MAX_PENDING_REQS;
+> +	config->bmiss_offload_max_vdev =3D TARGET_BMISS_OFFLOAD_MAX_VDEV;
+> +	config->roam_offload_max_vdev =3D TARGET_ROAM_OFFLOAD_MAX_VDEV;
+> +	config->roam_offload_max_ap_profiles =3D=20
+> TARGET_ROAM_OFFLOAD_MAX_AP_PROFILES;
+> +	config->num_mcast_groups =3D 0;
+> +	config->num_mcast_table_elems =3D 0;
+> +	config->mcast2ucast_mode =3D 0;
+> +	config->tx_dbg_log_size =3D TARGET_TX_DBG_LOG_SIZE;
+> +	config->num_wds_entries =3D 0;
+> +	config->dma_burst_size =3D 0;
+> +	config->rx_skip_defrag_timeout_dup_detection_check =3D 0;
+> +	config->vow_config =3D TARGET_VOW_CONFIG;
+> +	config->gtk_offload_max_vdev =3D 2;
+> +	config->num_msdu_desc =3D 0x400;
+> +	config->beacon_tx_offload_max_vdev =3D 2;
+> +	config->rx_batchmode =3D TARGET_RX_BATCHMODE;
+> +
+> +	config->peer_map_unmap_v2_support =3D 0;
+> +	config->use_pdev_id =3D 1;
+> +	config->max_frag_entries =3D 0xa;
+> +	config->num_tdls_vdevs =3D 0x1;
+> +	config->num_tdls_conn_table_entries =3D 8;
+> +	config->beacon_tx_offload_max_vdev =3D 0x2;
+> +	config->num_multicast_filter_entries =3D 0x20;
+> +	config->num_wow_filters =3D 0x16;
+> +	config->num_keep_alive_pattern =3D 0;
+> +	config->flag1 |=3D WMI_RSRC_CFG_FLAG1_BSS_CHANNEL_INFO_64;
+> +}
+> +
+>   static void ath11k_hw_ipq8074_reo_setup(struct ath11k_base *ab)
+>   {
+>   	u32 reo_base =3D HAL_SEQ_WCSS_UMAC_REO_REG;
+> @@ -1102,7 +1149,7 @@ const struct ath11k_hw_ops wcn6855_ops =3D {
+>
+>   const struct ath11k_hw_ops wcn6750_ops =3D {
+>   	.get_hw_mac_from_pdev_id =3D ath11k_hw_ipq8074_mac_from_pdev_id,
+> -	.wmi_init_config =3D ath11k_init_wmi_config_qca6390,
+> +	.wmi_init_config =3D ath11k_init_wmi_config_wcn6750,
+>   	.mac_id_to_pdev_id =3D ath11k_hw_mac_id_to_pdev_id_qca6390,
+>   	.mac_id_to_srng_id =3D ath11k_hw_mac_id_to_srng_id_qca6390,
+>   	.tx_mesh_enable =3D ath11k_hw_qcn9074_tx_mesh_enable,
 
