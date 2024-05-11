@@ -1,81 +1,79 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9095F28E8
-	for <regressions@lists.linux.dev>; Sat, 11 May 2024 04:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A192F26;
+	Sat, 11 May 2024 09:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715402028; cv=none; b=k5C3tfCrET4/ucJ63Br2kzn1zhOFKDKb9dv/+ybnlvIlwHugAMANtbkOt6+DBaGK/PCAuhO1sj6rK17I7H6BOWQCWdU6h3Mlgs/p3AAO4+upFsn1AzNjuZtQh53Y3lTS2OGW5/U2Z0clu/Vk9jS9s4nb6KUqjaKV8KVlCp1OU7Y=
+	t=1715421277; cv=none; b=jHGfONtRoaUZsgW9R/UPdWnXzcnoaqIxCpP8XV4lyZfE/EcHUYbKQR9XP4Abrd0kPupjT2aGo5Upqdq+E1+oJvN8AKIjM56Xk6EB3sIJE4YTaU3n1UC5Eg2auBRBe67ucqR2/J2unPM+5rNEyxQ7QPa1oES8f4H14rJ1s0wSr/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715402028; c=relaxed/simple;
-	bh=iR0XyjTDqqc4Wjjno2PBiK6F4GzoKq4vOnOceQyaYl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZaTHWeEbQosLvyeLzYIu1yoE+J8zzWT/ocgT/lNdrO2p9yjWlzyscBSvmiqFC97v7zyQFy1udv0oYDuhLosM6aKN9QU4mPduWHjf8GNpwnuKVElta8qY58N+7tQuSt5iSCjmXdAmIRukgPTTfqiXk2e7aDTwcen6LvPviGBe1LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFWdu5FP; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715421277; c=relaxed/simple;
+	bh=ZQQRlOIbe5G3/XXT9O32i9R08P6Fbwe16RrU6g6dlrA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=eLlI5u1Qq609fi3zuqUwcfMxQr9Q9g8zvSwuwzDEKbHxGfBmH1hzRw+eqresy9ebM+jiDH1VgKE9VeUVS9gFU6j7jon3B2KjiIa0s/xI6Bn6zYxN+bZlJy/FBnojwK/HE6RNmtInf+uaWZYV4fA839QdPCHsszwtfJbUDkH1WBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCWiW1bL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFWdu5FP"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a59cc765c29so593875866b.3
-        for <regressions@lists.linux.dev>; Fri, 10 May 2024 21:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715402025; x=1716006825; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iR0XyjTDqqc4Wjjno2PBiK6F4GzoKq4vOnOceQyaYl8=;
-        b=EFWdu5FPxMFrk84iQhOhxpqO3LxbYcIQUy+jGWC9hhfislPBMthgw9mHvqJ4/SwGS4
-         LQ0EPHzohmJy4ghO7X6RtTN8ZgUWJ5JQ9h2OJs2mmDt/klXr+T0087XwZTJ1pxxVMcRc
-         GHI8EW+xTEW1x+x1djdMrLq8tUjQAV7Eq1v7mbgO2WknwGWOU5PVS62OviE36UExNPNM
-         PSYIj5PJMhplGN2tG+y7Xx5aLSoCEoXKT9RlkizCyvHJOgpSPE513P2S2zXn6SS+MllU
-         zzes9UpQAgN7hPebex+bd2FpX/ehxkiOTW9IUP6kRxKHPkWo5MeTxRYMOAMu6IUxyGff
-         oObQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715402025; x=1716006825;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iR0XyjTDqqc4Wjjno2PBiK6F4GzoKq4vOnOceQyaYl8=;
-        b=LfkXTGZybDuX601aS8ma/SCd6/mzsaK+ljSvnuiAYuFuElP58KedNNY07DgEUaLQ3o
-         B5aESxldJRFuIHp7RoM5k1/LHYqa7QMeotWnpzt+W5Lv4nivDQTyImQb5dxB0hVLb4d6
-         04EZvBkyKLdLWp8xYg174XdqLdOnD+0hPUrIjlRzZMQBXK3jDCOMXviFoWiWYSjq8yrW
-         Z1R8KSI63cxZISmu9wDPw4QJBB1BYds3FmMObwep7Oux5IgjK1PDgJttmzwrpbQogMMr
-         zPFhv+tsjLwg8TRDikgt/A/3da86lNxYquNtGHQCXJo5RIwIehAT3bER9I0Uke10WLGK
-         z4Xw==
-X-Gm-Message-State: AOJu0YyCpRt1deg5D5vaKlSsI5jFbXJ0wm/rfUcHVPkoxLh/fvyChvqv
-	NJtKi7ddSD2SvbrC60BR+Nftcyd0KqZxwZdomvzExHn91K6bazLA7LkkzLDDqyMCDrLcBcQRayK
-	RX6IUAAQ4xmjnroErrB80yDVpN4+y8zjjtQuJNQ==
-X-Google-Smtp-Source: AGHT+IEcfSlcjly2piGh73gfy+/TpqxiTmB3jyv23ofh2Ef+M8gbCZem3TQII8uGWq0wSZKXW4p616cTMjJVi9MfduM=
-X-Received: by 2002:a17:906:dac3:b0:a59:b6a8:4d74 with SMTP id
- a640c23a62f3a-a5a2d3bebeemr350201066b.0.1715402024326; Fri, 10 May 2024
- 21:33:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCWiW1bL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A08C2BBFC;
+	Sat, 11 May 2024 09:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715421277;
+	bh=ZQQRlOIbe5G3/XXT9O32i9R08P6Fbwe16RrU6g6dlrA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=SCWiW1bLFKC0bFGAcGB+g9dUz4zN0VElcdHdlKb+t+nEHHLZCQfzR129GzFjvg9VZ
+	 R00GatA/AfK55ay5Z07rywf0nEmCi20P0arjv8F+wLoE1+1tlr1uPQongkMSxuPxqw
+	 f2mVJhmyPI03e4iQAdC6FwDChg+yFimLjO8j/WthYOA+XY6Nj7ew428xpPJRyS+I92
+	 BZW+rTjO1JsA4OPTmOM3CN47KZtvIUrcFmOh2LlW8Dd3HC3YChE1NIrr6Hrp7CBBXz
+	 E5zK6yVEWrxXbY8QHXkaWfOT9qJgucLkDELvtlmZyvBLbjDLpCvQlXE/jBbiL5kDkG
+	 xmqedPriZsqtw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Baochen Qiang <quic_bqiang@quicinc.com>
+Cc: <ath11k@lists.infradead.org>,  <linux-wireless@vger.kernel.org>,
+    regressions@lists.linux.dev
+Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
+ when connecting to 6 GHz AP
+References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
+Date: Sat, 11 May 2024 12:54:33 +0300
+In-Reply-To: <20240424064019.4847-1-quic_bqiang@quicinc.com> (Baochen Qiang's
+	message of "Wed, 24 Apr 2024 14:40:19 +0800")
+Message-ID: <87wmo0k71i.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
- <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info> <CAPDyKFoHoKK-RZsGwnZhbW9_ZRQtL1MFZBuVVLMx-MxL2cQQbw@mail.gmail.com>
- <7c6df194-fce1-401a-98c5-c903d78627c4@leemhuis.info> <CAPDyKFqKRy6zJdBpK3bNTvkvAjty691-Vi_HV3E5CeqgRAWGmA@mail.gmail.com>
-In-Reply-To: <CAPDyKFqKRy6zJdBpK3bNTvkvAjty691-Vi_HV3E5CeqgRAWGmA@mail.gmail.com>
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Sat, 11 May 2024 10:03:33 +0530
-Message-ID: <CAKohpomKbhdXRgFxxbg-_hG5EFZT0LrvfQcrwjQPon6AZNbGag@mail.gmail.com>
-Subject: Re: [PATCH V2] OPP: Fix required_opp_tables for multiple genpds using
- same table
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Vladimir Lypak <vladimir.lypak@gmail.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Fri, 10 May 2024 at 16:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> I wasn't sure of the level of urgency in this case, as I don't think
-> we have that many DTSes upstream that could hit this case.
+Baochen Qiang <quic_bqiang@quicinc.com> writes:
+
+> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+> ath11k fails to connect to 6 GHz AP.
 >
-> But nevermind, it should be easy to revert/replace the change when we
-> have something better to take over. Viresh, feel pick this up - or let
-> me know if you prefer me to pick it.
+> This is because currently ath11k checks AP's power type in
+> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
+> However with above commit power type is not available until ASSOC stage.
+> As a result power type check fails and therefore connection fails.
+>
+> Fix this by moving power type check to ASSOC stage, also move regulatory
+> rules update there because it depends on power type.
+>
+> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+>
+> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
 
-Please apply, while I enjoy my holidays :)
+Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
+v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
+need to queue this for v6.10 via wireless tree.
+
+Adding the regression also to regzbot:
+
+#regzbot introduced: bc8a0fac8677
+#regzbot title: ath11k: connection to 6 GHz AP fails
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
