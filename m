@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A192F26;
-	Sat, 11 May 2024 09:54:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778051C6B2;
+	Sat, 11 May 2024 18:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715421277; cv=none; b=jHGfONtRoaUZsgW9R/UPdWnXzcnoaqIxCpP8XV4lyZfE/EcHUYbKQR9XP4Abrd0kPupjT2aGo5Upqdq+E1+oJvN8AKIjM56Xk6EB3sIJE4YTaU3n1UC5Eg2auBRBe67ucqR2/J2unPM+5rNEyxQ7QPa1oES8f4H14rJ1s0wSr/4=
+	t=1715451768; cv=none; b=GR/b+zJ7tC+jMXEmYlI3P9i01KSMVdRGQ8pJm1ncPBx3VxrbROBbmNpZHYGfJXhXSgT+QlYhTMUdfl85KY8PzGG6uuAD/nwXKRcRVUK/iLNXAAYMzvAK26K16u/h8uPVtmaVBVSaUXDZ1VZuldGCf/SP/lnyf4qHrJgxHJOLy2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715421277; c=relaxed/simple;
-	bh=ZQQRlOIbe5G3/XXT9O32i9R08P6Fbwe16RrU6g6dlrA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=eLlI5u1Qq609fi3zuqUwcfMxQr9Q9g8zvSwuwzDEKbHxGfBmH1hzRw+eqresy9ebM+jiDH1VgKE9VeUVS9gFU6j7jon3B2KjiIa0s/xI6Bn6zYxN+bZlJy/FBnojwK/HE6RNmtInf+uaWZYV4fA839QdPCHsszwtfJbUDkH1WBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCWiW1bL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715451768; c=relaxed/simple;
+	bh=waBiqpVY4okCKgPx8H2XpUP16xIzo+kJ+6F408ry6sE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m4haQW0jxQCtCN4S8y/7gf9g/OqLZKoVJOtBbvr2wuC1lo1NrzeR6yzijeQs7c9pR1AsL5ZMvxnOntodUgRzqi4btYL/6YxwS0wNW/1y127JIRGIeJHccdgo5OOSQlG+tc7lRf6TTDReK5gvgy+RrhgZziRpECt5+q4jU91IS64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgajwqdw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCWiW1bL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A08C2BBFC;
-	Sat, 11 May 2024 09:54:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgajwqdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0933C2BBFC;
+	Sat, 11 May 2024 18:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715421277;
-	bh=ZQQRlOIbe5G3/XXT9O32i9R08P6Fbwe16RrU6g6dlrA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=SCWiW1bLFKC0bFGAcGB+g9dUz4zN0VElcdHdlKb+t+nEHHLZCQfzR129GzFjvg9VZ
-	 R00GatA/AfK55ay5Z07rywf0nEmCi20P0arjv8F+wLoE1+1tlr1uPQongkMSxuPxqw
-	 f2mVJhmyPI03e4iQAdC6FwDChg+yFimLjO8j/WthYOA+XY6Nj7ew428xpPJRyS+I92
-	 BZW+rTjO1JsA4OPTmOM3CN47KZtvIUrcFmOh2LlW8Dd3HC3YChE1NIrr6Hrp7CBBXz
-	 E5zK6yVEWrxXbY8QHXkaWfOT9qJgucLkDELvtlmZyvBLbjDLpCvQlXE/jBbiL5kDkG
-	 xmqedPriZsqtw==
+	s=k20201202; t=1715451768;
+	bh=waBiqpVY4okCKgPx8H2XpUP16xIzo+kJ+6F408ry6sE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jgajwqdwi1eAbcu6oEbQMP9Mq1f4RrxQn3fEwRiVXmtZKvIoxC0NB+F6rP9LpkzBT
+	 PC0ONMoHPA8QEG1AvwlNoEgR3Q4crw58gYsue/UEljBRpuCGf0hC42e+JVmMYuiSmF
+	 CaGLxMIjoO0ADqdF7gpL8LsnTn/7YqruDJLZXt6ZRbwt1/iFXA39rmmZ+HPf5MCkvO
+	 ZPadjKeg/t2iGY5CFL532ofkPs5DbFiDa2Cly60cd9iZ7/Bnwq3IjIvMIaBB+wI0nC
+	 1Z/SiZRsKn3WAKVBA1pohVq0ROLxx3rqM+oXyP/8Wbp/KnjE+a8BXmdm24aUdhoZmI
+	 ijklolw36X3wg==
 From: Kalle Valo <kvalo@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: <ath11k@lists.infradead.org>,  <linux-wireless@vger.kernel.org>,
-    regressions@lists.linux.dev
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
-Date: Sat, 11 May 2024 12:54:33 +0300
-In-Reply-To: <20240424064019.4847-1-quic_bqiang@quicinc.com> (Baochen Qiang's
-	message of "Wed, 24 Apr 2024 14:40:19 +0800")
-Message-ID: <87wmo0k71i.fsf@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: x86@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+    regressions@lists.linux.dev,
+    Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: [regression] suspend stress test stalls within 30 minutes
+Date: Sat, 11 May 2024 21:22:43 +0300
+Message-ID: <87o79cjjik.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -46,34 +44,93 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Baochen Qiang <quic_bqiang@quicinc.com> writes:
+Hi,
 
-> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
-> ath11k fails to connect to 6 GHz AP.
->
-> This is because currently ath11k checks AP's power type in
-> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
-> However with above commit power type is not available until ASSOC stage.
-> As a result power type check fails and therefore connection fails.
->
-> Fix this by moving power type check to ASSOC stage, also move regulatory
-> rules update there because it depends on power type.
->
-> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
->
-> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
-> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+I have a weird problem with suspend. Somewhere around v6.9-rc4 or so (not sure
+exactly) I started seeing that our ath11k Wi-Fi driver suspend tests to
+randomly fail. I have been investigating this for some time and now it
+looks like it's somehow related to CPU_MITIGATIONS Kconfig option and
+nothing to do with wireless.
 
-Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
-v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
-need to queue this for v6.10 via wireless tree.
+The simplified test case I have is to run suspend and resume in loop
+like this (Wi-Fi modules are not loaded):
 
-Adding the regression also to regzbot:
+for i in {1..400}; do echo "rtcwake test $i" > /dev/kmsg; rtcwake -m mem -s 10; sleep 10; done
 
-#regzbot introduced: bc8a0fac8677
-#regzbot title: ath11k: connection to 6 GHz AP fails
+If CPU_MITIGATIONS is enabled I usually see suspend stalling within 30
+minutes. If I disable CPU_MITIGATIONS using menuconfig I don't see the bug.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+When the bug happens in the kernel.log I see this and suspend stalls:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+[  361.716546] PM: suspend entry (deep)
+[  361.722558] Filesystems sync: 0.005 seconds
+[  624.222721] kworker/dying (2519) used greatest stack depth: 22240 bytes left
+[  633.897857] loop0: detected capacity change from 0 to 8
+
+And if I don't do anything for several minutes nothing happens. What is
+really strange is that once I run 'sudo shutdown -h now' then suspend
+somehow immediately unstalls and continues with suspend, like this:
+
+[  847.631147] Freezing user space processes
+[  847.649590] Freezing user space processes completed (elapsed 0.016 seconds)
+[  847.650710] OOM killer disabled.
+[  847.651799] Freezing remaining freezable tasks
+[  847.654618] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[  847.663757] printk: Suspending console(s) (use no_console_suspend to debug)
+[  847.710060] e1000e: EEE TX LPI TIMER: 00000011
+[  847.852370] ACPI: EC: interrupt blocked
+[  847.899416] ACPI: PM: Preparing to enter system sleep state S3
+[  847.933433] ACPI: EC: event blocked
+[  847.933437] ACPI: EC: EC stopped
+[  847.933441] ACPI: PM: Saving platform NVS memory
+[  847.933817] Disabling non-boot CPUs ...
+
+And now the system goes into suspend state as it should. And if I press
+the power button on the device then the system resumes and after that
+shuts down (as expected because I run the shutdown command). This
+behaviour is consistent, I see it every time the suspend bug happens.
+
+The test setup is a several years old Intel NUC x86 system, more info
+below.
+
+Any recommendations how should I debug this further? I tried to bisect
+this earlier but that failed, most likely because I hadn't yet realised
+that this is related to CPU_MITIGATIONS and might have messed up the
+.config settings during bisect.
+
+Kalle
+
+DMI: Intel(R) Client Systems NUC8i7HVK/NUC8i7HVB, BIOS HNKBLi70.86A.0067.2021.0528.1339 05/28/2021
+
+Ubuntu 20.04.6 LTS (GNU/Linux 6.9.0-rc7+ x86_64)
+
+systemd 245.4-4ubuntu3.23 running in system mode. (+PAM +AUDIT +SELINUX
++IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS
++ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2
+default-hierarchy=hybrid)
+
+I verified that I see this on latest commit from Linus' tree:
+
+cf87f46fd34d Merge tag 'drm-fixes-2024-05-11' of https://gitlab.freedesktop.org/drm/kernel
+
+Here's the diff between broken and working .config:
+
+$ diffconfig broken.config works.config 
+-CALL_PADDING y
+-CALL_THUNKS y
+-CALL_THUNKS_DEBUG n
+-HAVE_CALL_THUNKS y
+-MITIGATION_CALL_DEPTH_TRACKING y
+-MITIGATION_GDS_FORCE y
+-MITIGATION_IBPB_ENTRY y
+-MITIGATION_IBRS_ENTRY y
+-MITIGATION_PAGE_TABLE_ISOLATION y
+-MITIGATION_RETHUNK y
+-MITIGATION_RETPOLINE y
+-MITIGATION_RFDS y
+-MITIGATION_SLS y
+-MITIGATION_SPECTRE_BHI y
+-MITIGATION_SRSO y
+-MITIGATION_UNRET_ENTRY y
+-PREFIX_SYMBOLS y
+ CPU_MITIGATIONS y -> n
