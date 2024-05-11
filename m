@@ -1,282 +1,119 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E82C4F1F2
-	for <regressions@lists.linux.dev>; Fri, 10 May 2024 23:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3991843;
+	Sat, 11 May 2024 02:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715383264; cv=none; b=dThsWLAdhOIYmcdNyt1ZuBXV5vim69w5zxfdHgZQQ2SHkwf0WQ+007Ur9lHwpIu6sCzy8ecqStLOiz+5UvfKIQmajv5VKzOodJa2AFj81i91NCV7zKDHG5anjtPXZ1M/3ubuj+Qzye3xxQsPtT+9vNZ0UWqo0SUOJVafpeqoDKg=
+	t=1715395860; cv=none; b=SuIxyncvQmBll/3tO507Gx9sqyVHepeUVhYjNnt3oMteTUGvdH3WYY1yRyJmdVAkn0DNRZTT7/c5jcLZlxIC9HjlhQyR+Ah3Q6KgHe6lec6Mi4qphe+Qf42vATm7L2dQUJgom5so/JuQ66MFt9gY3ovfMh6JiEzFdVW8gvFBHFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715383264; c=relaxed/simple;
-	bh=Ihx6jHvQBcYBhmKKX0wSUpNH/MHOgk90oKHDPNCexLw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H9sWQl0+1/E3w2hETSFR5N/cPFlbG12JcFgCQytPRsYjwZsoUyVaOBkr9/+pXwcLDjGCDQUbBO4RL0P/I7t+aP4JrCgAE+i/NqhhQkblynbFLUVhzMqu6qEZ4+eAgxwOhkD+K/xue2ERU8lNsbDoG6fsNU2KTVfWcCJMW3jwZXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8SBz9om; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715395860; c=relaxed/simple;
+	bh=l7yFDr9qTYbTJV16yHhPyvkg1eaq22fWqFACR5S7RkU=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CiNa+yxIv3CV6GGfAgj/6hlOIIQJ8h1WdS1gLZC9/Ov1KgyiVE8Q4Si82y6dV00I0G0FMygxCnMyO0OkO/AWP5nQzTNKCICUjSx+DUBpV8IEksvb0o5z1lsErgG3a3QF+HjCrJUV4oSwYRw7N7a0EctZZ/85VRMauJjCu+oB3vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UyRprLxk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8SBz9om"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e4939c5323so31080151fa.2
-        for <regressions@lists.linux.dev>; Fri, 10 May 2024 16:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715383260; x=1715988060; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ihx6jHvQBcYBhmKKX0wSUpNH/MHOgk90oKHDPNCexLw=;
-        b=M8SBz9om8t3MXecIkwePaK4vrw15GJUeHHDw+WOUryFVinL/x8mu1FpIEEnG8wdaFL
-         I0Hq1pXga763fatFpsCPD393fPP80zMUOfta6btQh2RX7HbWt438QmEi8ec9SMD3d16Q
-         3eCCObIkCmWWpdPDSytKpoA1DQQvhpy9d49kur6I9u+vOgg9rkGSZ/C3/pc0hfMIF28N
-         qwP7y9WJr4KBwwDS8NFfj3Z/vd8pMwiEG9KGFm9AXwI7ODCq8MwmCHbGYEJ5u2e+P8kU
-         PTz7FyPHq9aFJMn5tBuc2Ms+1tHjzDlp7TQHq2LWIrVc4lps01U73Iunc3oIDtD9XRZY
-         KXQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715383260; x=1715988060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ihx6jHvQBcYBhmKKX0wSUpNH/MHOgk90oKHDPNCexLw=;
-        b=O0BbcMjPCFxo9ljaJkQuCNPoJCpqyweJo1He71/i44Ew+GYJV+CW1Oe6aAi84Il7P6
-         WhJKaod0ZeAvUGLFzlzv1Xeixdf/t+DaLlVsYd8vK6QLtLRzsafR6Okzk/vqpVFEBTi3
-         ljcAQiYmIAujWYY2o4BPRWQbnsbyhyivFsl1Y3+p0jn2x4Al6wzjRE1UWt0kwEpxtHWW
-         LM91RumpeNd6FzKnquhR+Eiojc2MnEel4rJaNnNoJT4AZ7/Na2c729r+ii2uTtEYMhAB
-         KkSohwVMGVZPGTKebuFIUv6mhardoBa242dmPDAzSwsPVvieE85StywJ1jKQF8B63KDQ
-         asaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfVJlsIe0zEd+jbwXPUAxMx0E71np17HLTLO646J4koJY/FhRzzEv2RM25sSAfR8NubyrpfDJ0NogVzR3+tePaEo0RKYDcV60tDDU=
-X-Gm-Message-State: AOJu0YyyuYuV1vPmhw+gMwIwQAjck4AAM/1JPKzN65WseU2sXZ16BxYF
-	sS/KB84i4Hxbkv2EPrJP/3ozi5YiY88HrA0uGEN0mERWX23wYxbcPxctXX+lWKVbLtrh45a7A/O
-	PhAcCXDm1R5xSypQhRbqAzimWl0U=
-X-Google-Smtp-Source: AGHT+IGRpiVjL2UKxPz4lP5+QO5AC7Gq2l509pq09EggUsEZ8VcVSUl+DJQ9XFoOMLQKJEsgXZtbPNntrtsyyVRxZkI=
-X-Received: by 2002:a2e:8898:0:b0:2e0:3367:81fc with SMTP id
- 38308e7fff4ca-2e5205c80f3mr29792381fa.49.1715383260132; Fri, 10 May 2024
- 16:21:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UyRprLxk"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44B1oCG8011434;
+	Sat, 11 May 2024 02:50:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:cc:subject:to:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=nQKzXWC6ppx+6MllNXSbbJaAbYoPLAQn1w7SipaJxC0=; b=Uy
+	RprLxk+udaFk16txGvMUlTsJJvmTQ+KJj0tJP30L/c6Xk2rUXIErLejfSKH3xMp5
+	bHvBhMqPH80f3OR9ayadbqq0WiY7JufW/FFlNqP7horO+YWerpMGKYAsOfFT24dh
+	rOFiAjc5umvo1oQaKf/n742QRzrHH5fxXM1dfjsqk9rK3bjEHqlSrtxW0shBTJ+4
+	WkmMwPE0zaqY+Qw6muaRmp37Iek3SZjGtdIU7bBCuxPLYPTz0ip9p3FK0BGppRjP
+	cZCBq8SncJOXLRx/89xbA8zjYRhTj2sdzSoLoV9sHVQMhSujwzoWxyTecbYT0kNj
+	/qWWplLUjC42CDp79fZg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y1ybx01yq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 11 May 2024 02:50:49 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44B2olNB004390
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 11 May 2024 02:50:47 GMT
+Received: from [10.253.8.22] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 10 May
+ 2024 19:50:46 -0700
+Message-ID: <88af0514-d618-4a47-94d4-163b0e58b9f2@quicinc.com>
+Date: Sat, 11 May 2024 10:50:43 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3475f0dd-6a0f-4319-9590-379eee33f504@penguintechs.org>
- <CABBYNZ+FBwFtrqg1Hj72Q7_6f8hDSwVTNtkofP0XgEd98DRf9A@mail.gmail.com>
- <560c5c03-563a-4f1c-abc1-1372ca73c421@penguintechs.org> <CABBYNZK+FGe75VJ4YqsxxyGj-Ac+voeMb3CR9qRD+yz7d=d7oQ@mail.gmail.com>
- <44b75302-1349-445d-90ac-8df8a1fb91e2@penguintechs.org> <CABBYNZ+KTV7y-UxWE_6jaHT0wDiMN-xReHW8zLT0WEPHCsyXQQ@mail.gmail.com>
- <089e57db-e2c5-4e42-b52e-c9e052c69efa@molgen.mpg.de>
-In-Reply-To: <089e57db-e2c5-4e42-b52e-c9e052c69efa@molgen.mpg.de>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Fri, 10 May 2024 19:20:47 -0400
-Message-ID: <CABBYNZL6RPPN62TY95w4o7CGsRH=Zy_mgJMstXjZ3pYegk1hpQ@mail.gmail.com>
-Subject: Re: path to landing patch to fix warm boot issue for qca6390
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: linux-bluetooth@vger.kernel.org, Wren Turkal <wt@penguintechs.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Zijun Hu <quic_zijuhu@quicinc.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Paul,
-
-On Fri, May 10, 2024 at 6:57=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de>=
- wrote:
->
-> Dear Luiz,
->
->
-> Am 10.05.24 um 23:25 schrieb Luiz Augusto von Dentz:
->
-> > On Fri, May 10, 2024 at 4:54=E2=80=AFPM Wren Turkal <wt@penguintechs.or=
-g> wrote:
-> >>
-> >> On 5/10/24 12:48 PM, Luiz Augusto von Dentz wrote:
->
-> >>> On Fri, May 10, 2024 at 3:14=E2=80=AFPM Wren Turkal <wt@penguintechs.=
-org> wrote:
-> >>>>
-> >>>> On 5/6/24 12:49 PM, Luiz Augusto von Dentz wrote:
->
-> >>>>> On Mon, May 6, 2024 at 3:24=E2=80=AFPM Wren Turkal <wt@penguintechs=
-.org> wrote:
-> >>>>>>
-> >>>>>> Krzysztof,
-> >>>>>>
-> >>>>>> I am reaching out to you as you had the most important objections =
-to the
-> >>>>>> change to fix qca6390 for the warm boot/module reload bug that I a=
-m
-> >>>>>> experiencing.
-> >>>>>>
-> >>>>>> For context, the problem is that the hci_uart module will send spe=
-cific
-> >>>>>> vendor specfic commands during shutdown of the hardware under most
-> >>>>>> situations. These VSCs put the bluetooth device into a non-working=
- state
-> >>>>>> on my Dell XPS 13 9310 with qca6390 bluetooth hardware.
-> >>>>>>
-> >>>>>> Zijun's proposed fix is to not send these commands when it's not
-> >>>>>> appropriate for the hardware. The vendor commands should be avoide=
-d when
-> >>>>>> the hardware does not have persistent configuration or when the de=
-vice
-> >>>>>> is in setup state (indicating that is has never been setup and sho=
-uld
-> >>>>>> not be sent the VSCs on the shutdown path). This is what Zijun's p=
-atch
-> >>>>>> implements.
-> >>>>>>
-> >>>>>> In addition, Zijun's change removes the influence of both
-> >>>>>> the QCA_BT_OFF qca flag and and HCI_RUNNING hdev flag. Zijun asser=
-ts
-> >>>>>> that those flags should not influence the sending of the VSCs in t=
-he
-> >>>>>> shutdown path. If I understand KK's objections properly, this is w=
-here
-> >>>>>> his objection is stemming from. KK, is this correct?
-> >>>>>>
-> >>>>>> Zijun's proposed fix can be seen here:
-> >>>>>> https://patchwork.kernel.org/project/bluetooth/patch/1713932807-19=
-619-3-git-send-email-quic_zijuhu@quicinc.com/
-> >>>>>>
-> >>>>>> I'm wondering if we can resolve this impasse by splitting the chan=
-ge
-> >>>>>> into two changes, as follows:
-> >>>>>>
-> >>>>>> 1. Change that removes the influence of the QCA_BT_OFF and HCI_RUN=
-NING
-> >>>>>> flags in the shutdown path.
-> >>>>>> 2. Add the quirk from Zijun's patch that fixes my hardward configu=
-ration.
-> >>>>>>
-> >>>>>> I'm hoping that better clearer descriptions for #1 can help get th=
-at
-> >>>>>> landed since the logic current appears to be at odds with how the
-> >>>>>> hardware works.
-> >>>>>>
-> >>>>>> Also, I am happy to split the patches into the two patches, or (ma=
-ybe
-> >>>>>> more ideally) just modify the commit message to better indicate th=
-e
-> >>>>>> reason the change. I just need guidance from maintainers so that
-> >>>>>> whatever work I do leads to something acceptable for y'all.
-> >>>>>>
-> >>>>>> So, please help me get this done. I am just a user with broken har=
-dware
-> >>>>>> and a fondness for Linux. I would love to help do what's needed to=
- get
-> >>>>>> this fix landed.
-> >>>>>
-> >>>>> Ive also objected to that change, in fact the whole shutdown sequen=
-ce
-> >>>>> is sort of bogus in my opinion and the driver shall really have som=
-e
-> >>>>> means to find out what mode it is in when it reboots, regardless if
-> >>>>> cold or warm boot, since otherwise we are in trouble if the user is
-> >>>>> booting from another OS that doesn't do the expected shutdown
-> >>>>> sequence.
-> >>>>
-> >>>> This criticism makes a ton of sense. I'm sorry I missed it before. T=
-here
-> >>>> were a lot of threads moving in parallel. However, I am curious. Giv=
-en
-> >>>> that the patch improves the situation for users (like me). Is there =
-any
-> >>>> way we can separate the redesign of the shutdown sequence and the UX
-> >>>> improvement that comes with this patch?
-> >>>>
-> >>>> Here's my concern. I am happy to do the work to redesign this. Howev=
-er,
-> >>>> I don't think I have the information needed to do this since I don't
-> >>>> have access to the technical docs for the qca6390. I am worried that=
- not
-> >>>> accepting some form of this patch is letting perfect be the enemy of=
- the
-> >>>> good. And I am not sure how I personally can help with that. If you
-> >>>> think it's possible for me to do this without the docs for the hardw=
-are,
-> >>>> I am willing to give it a shot if I can get some guidance. Honestly,=
- I
-> >>>> wish I had the skill to be confident about a change like this, but I=
- don't.
-> >>>>
-> >>>> Any ideas on how to move forward would be greatly appreciated.
-> >>>>
-> >>>> And just to be perfectly clear, I have tested this patch on my lapto=
-p.
-> >>>> It greatly enhances my ability to use my hardware since I can reboot=
- the
-> >>>> machine without having to make sure to power cycle the laptop. This =
-is
-> >>>> not a theoretical improvement.
-> >>>
-> >>> I would really love some explanation why can't the driver know under
-> >>> what mode the controller is when it gets probed, because to me we
-> >>> cannot accept a driver that only works under certain condition after
-> >>> the boot and in case it is really impossible, can't even power cycle
-> >>> it to get it back to cold boot stage???
-> >>
-> >> This is a great technical criticism of the driver, and I think you
-> >> deserve that explanation.
-> >>
-> >> However, with the driver already in the kernel, shouldn't the bias be
-> >> toward mitigating the extremely bad UX and not hold users hostage for
-> >> the bad design which has already been approved and landed in the kerne=
-l?
-> >>
-> >>> Also the criticism here should be directed to the vendor, how long
-> >>> have we been discussing problems in the QCA driver? And the only thin=
-g
-> >>> I see coming our way are work-arounds of the problems, the address no=
-t
-> >>> being unique coming from the firmware itself and when provided via DT
-> >>> the address is in the wrong byteorder and now that the driver must
-> >>> communicate the firmware on shutdown in order to get it working
-> >>> properly on the next boot.
-> >>
-> >> I agree that Qualcomm should get flack for this, however, the UX probl=
-em
-> >> can be mitigated with a logic fix that doesn't make the init/shutdown
-> >> design problem any worse than it currently seems to be. I mean, wouldn=
-'t
-> >> this logic have to exist somewhere even if it weren't the shutdown pat=
-h?
-> >>
-> >> If you are trying to use this as leverage to get Qualcomm to do a bigg=
-er
-> >> thing (redesign the init/shutdown logic), I do think that tactic
-> >> needlessly puts users in the crossfire. I can totally understand why
-> >> you'd do it. I am just suffering the crossfire in the meantime, and it
-> >> doesn't feel great.
-> >
-> > So you prefer to risk getting a kernel crash due to UAF over Bluetooth
-> > not working? Really? Because I haven't seen any configuration that
-> > those changes you tested don't reintroduce the UAF, which is why I
-> > haven't applied that change to begin with, so no I'm not holding back
-> > to pressure Qualcomm to redesign the shutdown logic, it just these
-> > things got entangled because I just realized the shutdown thingy is
-> > really out of place, imo, but I'd be fine if there is a temporary fix
-> > until someone finally decide to spend some time to really fix the
-> > shutdown logic.
->
-> The no-regression policy is clear to not cause regressions for users.
-> Even if we had crash reports from before, fixing one bug and causing
-> another is unwanted to my understanding.
-
-So you are also suggesting that a system crash is less of a problem
-then a regression? I'm not opposed to having a fix to the regression,
-but it needs to come without the reintroduction of a system crash,
-period. The no-regression policy only applies as long as it doesn't
-cause even bigger problems like a system crash or a security problem
-for example, otherwise we need to find a better option, which in my
-opinion is to rework the driver shutdown logic, if I had the hardware
-and could experiment with I would just attempt to detect the hardware
-mode at probe and if that fails force a reset and start over since the
-setup stage exists exactly for the driver to have exclusive access to
-the controller it can in theory power cycle the controller.
-
->
-> Kind regards,
->
-> Paul
+User-Agent: Mozilla Thunderbird
+CC: <quic_cjhuang@quicinc.com>, <ath11k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
+To: Luca Weiss <luca.weiss@fairphone.com>, Kalle Valo <kvalo@kernel.org>
+References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
+ <20230714023801.2621802-2-quic_cjhuang@quicinc.com>
+ <D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
+ <93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
+ <4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com>
+ <D15ZZ5V3YU6Z.10FO9XK11WXFB@fairphone.com>
+Content-Language: en-US
+From: Carl Huang <quic_cjhuang@quicinc.com>
+In-Reply-To: <D15ZZ5V3YU6Z.10FO9XK11WXFB@fairphone.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: fQYglQo8Rf-s60w4UhR-OSnk24GZTlDt
+X-Proofpoint-GUID: fQYglQo8Rf-s60w4UhR-OSnk24GZTlDt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-10_18,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405010000 definitions=main-2405110020
 
 
 
---=20
-Luiz Augusto von Dentz
+On 2024/5/10 21:26, Luca Weiss wrote:
+> On Fri May 10, 2024 at 3:04 PM CEST, Carl Huang wrote:
+> 
+> <snip>
+> 
+>>> Kalle, looks we're not able to fix it before Sunday as I don't have
+>>> WCN6750 setup to verify the fix. The fix could be to define a dedicated
+>>> function ath11k_init_wmi_config_wcn6750() for WCN6750. I'll send the
+>>> patch out so others like Luca can have a try.
+>>>
+>> Sorry, I have problem to run "git send-email" as it prompts "5.7.60
+>> SMTP; Client does not have permissions to send as this sender".
+>>
+>> The patch looks like:
+>>
+>>   From 19bb7f1377a5e3c5d42ab2bedbaf9e976c1068b4 Mon Sep 17 00:00:00 2001
+>> From: Carl Huang <quic_cjhuang@quicinc.com>
+>> Date: Fri, 10 May 2024 19:40:37 +0800
+>> Subject: [PATCH] wifi:ath11k: fix WCN6750 firmware crash
+>>
+>> WCN6750 firmware crashed because of vdev_number changed to 3 from 4
+>> in commit f019f4dff2e4("wifi: ath11k: support 2 station interfaces").
+>>
+>> Fix it by defining a separate function ath11k_init_wmi_config_wcn6750()
+>> for WCN6750 to initialize its' specific parameters.
+>>
+>> Fixes: f019f4dff2e4 ("wifi: ath11k: support 2 station interfaces")
+>> Tested-on: WCN6855 hw2.0 PCI
+>> WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3
+>>
+>> Signed-off-by: Carl Huang <quic_cjhuang@quicinc.com>
+> 
+> This seems to work fine also.
+> 
+Thank you Luca for the test.
