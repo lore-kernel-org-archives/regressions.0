@@ -1,122 +1,261 @@
-Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10A81BC46
-	for <regressions@lists.linux.dev>; Sun, 12 May 2024 08:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53227219ED;
+	Sun, 12 May 2024 14:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715503716; cv=none; b=a4AQYpS8i9Jv4TRyr1AWBL6QnSLHEyPy2LwXxBtjrpLsd/LL0JhI6UtnhEucsWqCRCHDb4pxrirF3AZcPzsw2XBohdvig2lXYgUhiIcCLToJr8ZLuIkZ8l+lxUxU9jw3g0kHrPGnKzfBew7tR+fVubbz90iSOSs8IG+AFR0QFtA=
+	t=1715522584; cv=none; b=V0erL59yX7yqTwWbwy5UkIXBbH0udc3v9KcHuzf4VvbKzVxX1A7a9M1I9eWmMDcoZ21Zo8778lc75CDGfcbp4f15S+ImvZ3Sop5/seBcR9XrQU/YoDvPssqHfWRDRiaWbUJd2yCQcGHy4op9vaWMSDdUBnBw1FYLHXtMgSbStQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715503716; c=relaxed/simple;
-	bh=R8RO8aBLaka55Gq/3lS8uQ8AX1Pmr0nvvosQt44euyo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:To:From:
-	 References:In-Reply-To; b=Pu+DjQ4yylUPSekVgROLz4XBbX4Tig5tyaq5LYGCkOQ9MVBIEA3TjMLCRNQUXBGjgvXF+QO5cpmLEcMlKEKXWELgYQgKmOQDzwYgd5sjnE0cKxDzTKlasj6V2CN3+/gEcupVTOi5/zrz0TqOcz1BhWMCrbMeIxMSBpg2EstDlf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=KY+iSqsX; arc=none smtp.client-ip=195.113.20.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+	s=arc-20240116; t=1715522584; c=relaxed/simple;
+	bh=wbFT9utNSEH/L/vkqC+0ZuxiPd/qFJTXXTam5wlJcIo=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=A+NSdBo4xEnZ5A/RauxzGQcfCoA/lzJBTCfQzpo0YpBug8ZUk+QI8cJxZUUi6TZzkNnQjVujhGk7xJ1B/CfX3j1kws4NxOpE9FgOvBiWnh3eHKOktuZKPVz+4AiCF77ikOF4oRrfkGvWUSU04m6K+4gPbBOFVuYYSeNrRYoEc3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=s4rAuDGV; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="KY+iSqsX"
-X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
-	serial F5FD910E8FE2121B897F7E55B84E351D
-	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
-	auth type TLS.CUNI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
-	s=submission; t=1715503699; x=1716803699;
-	bh=jiUz6rePe05psAKtR82w0cLT+peUJK9N46yQy+W+TYY=; h=From;
-	b=KY+iSqsX6oCx8uwjAzbO76XNdc4+hyMpTpm8XPY6iFSLzKkcW/OE7nwki/kHzfLwh
-	 3imGJMt5f/kOHzchM9F00f4konskdrYgkB+aeQHLm918EW17cQwuNeuluUBxp1DVHw
-	 osycE90vYQDMaQJWgvOckDZH3u9EXUlAXRfWdwTrzUId718b1ym5qvuAOfB7c3W/mh
-	 H1sF2MrC6fuCpyyvZVKuQFxY3m4fVseTctZPQRyS7iUhcsHy+hzpUmgSPbzndYyy1N
-	 eDX9pXsdtR9F+TQzmRCtYQt90rZnupQu6Ym30DEKMQyZPVv4mm8fn+3+lFt1OLZeUm
-	 jBcJ5+tzZEYNA==
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(authenticated)
-	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 44C8mF33076270
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Sun, 12 May 2024 10:48:16 +0200 (CEST)
-	(envelope-from balejk@matfyz.cz)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="s4rAuDGV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=5QJY3R0SXDIVLVdbgpATvoUh32upThfo2I5AV5/927E=; t=1715522582; x=1715954582;
+	 b=s4rAuDGVDm5U1EuW+Y50cY0nbErcrIQcWOdeatiEHw+Z3E0RmuoxOgSQ37UipPZRcbKDAGSC8Y
+	SRyHGxJV05pKsGpRWjolKk7MXB6lpdyAgVpaw/Zd/N+IPb4XzLehJZ7/f+qm67jQGjkhI9xMaA6xF
+	OsHYAXJGqm66v/vJjYYBV1cisPNxrq/1xg264Vc5p1e2T25DNYCXAVV1kOo12mWAYctJXCJD7WXQd
+	2nPpY8/SiPF+Z4V0v9wZflIZoeUVv0WvH+uLaI0xjReuSqoahuEjK4aRyb1oxG1FeMXan2iDc01JD
+	vW5G6lTO1Urnm3iA9ipMXWossG7fW2zNynwQQ==;
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1s69n1-0003vh-8B; Sun, 12 May 2024 16:02:59 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-05-12]
+Date: Sun, 12 May 2024 14:02:58 +0000
+Message-ID: <171552254677.1971316.17732013113090096417@leemhuis.info>
+X-Mailer: git-send-email 2.45.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 12 May 2024 10:48:15 +0200
-Message-Id: <D17JB1SPR5SK.1B6BRVVU2Q6XN@matfyz.cz>
-Subject: Re: [PATCH docs-next v2] docs: handling-regressions.rst: recommend
- using "Closes:" tags
-To: "Thorsten Leemhuis" <linux@leemhuis.info>,
-        "Jonathan Corbet"
- <corbet@lwn.net>, <regressions@lists.linux.dev>,
-        <workflows@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From: "Karel Balej" <balejk@matfyz.cz>
-References: <20240510183748.13028-1-balejk@matfyz.cz>
- <8ebe6545-de7e-4ee4-b36e-e91e90b90b70@leemhuis.info>
-In-Reply-To: <8ebe6545-de7e-4ee4-b36e-e91e90b90b70@leemhuis.info>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715522582;81455b15;
+X-HE-SMSGID: 1s69n1-0003vh-8B
 
-Thorsten Leemhuis, 2024-05-12T09:47:31+02:00:
-> On 10.05.24 20:34, Karel Balej wrote:
-> > Update the handling-regressions guide to recommend using "Closes:" tags
-> > rather than "Link:" when referencing fixed reports. The latter was used
-> > originally but now is only recommended when the given patch only fixes
-> > part of the issue, as described in submitting-patches. Briefly mention
-> > that and also note that regzbot currently doesn't make a distinction.
-> >=20
-> > Also fix a typo.
-> >=20
-> > Signed-off-by: Karel Balej <balejk@matfyz.cz>
->
-> Many thx for this, much appreciated. Looks good!
->
-> Acked-by: Thorsten Leemhuis <linux@leemhuis.info>
+Hi Linus, here is the weekly report for regressions introduced during
+this cycle. The short story: we have quite a few regressions for which
+fixes are available (most of them reviewed or even in -next), but only
+queued for 6.10 (most of them) or not yet fully ready.
 
-Thanks!
+This starts with the three fixes I mentioned in my extra report on
+Thursday[1]. Dave send a revert[2] for the nouveau regression mentioned
+in that report, but he didn't copy you, so I guess this is meant to
+wait, too. Side note: the problem from Lyude I mentioned in that report
+still needs more debugging. 
+[1] https://lore.kernel.org/all/4c7be436-8a5d-469f-b88e-bfe17bafb991@leemhuis.info/
+[2] https://lore.kernel.org/all/20240512121630.23898-1-wangjinchao@xfusion.com/
 
-> One quick note:
->
-> > =20
-> >  What's important when fixing regressions
-> >  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > @@ -112,10 +115,16 @@ remember to do what Documentation/process/submitt=
-ing-patches.rst,
-> >  :ref:`Documentation/process/5.Posting.rst <development_posting>`, and
-> >  Documentation/process/stable-kernel-rules.rst already explain in more =
-detail:
-> > =20
-> > - * Point to all places where the issue was reported using "Link:" tags=
-::
-> > + * Point to all places where the issue was reported using "Closes:" ta=
-gs::
-> > =20
-> > -       Link: https://lore.kernel.org/r/30th.anniversary.repost@klaava.=
-Helsinki.FI/
-> > -       Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D1234567890
-> > +       Closes: https://lore.kernel.org/r/30th.anniversary.repost@klaav=
-a.Helsinki.FI/
-> > +       Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D123456789=
-0
-> > +
-> > +   If you are only fixing part of the issue, you may use "Link:" inste=
-ad as
-> > +   described in the first document mentioned above.
->
-> Not totally sure if...
->
-> > Some maintainers may even
-> > +   prefer it over "Closes:" entirely, although the latter is generally
-> > +   recommended.
->
-> ...this sentence really should be here, but whatever.
+Fixes for a ath11k regression fall through the cracks and will likely be
+merged soon[3]; the fix for another ath11k regression only reported on
+Friday exists, but will only be formally submitted in the next few days[4].
+[3] https://lore.kernel.org/linux-wireless/20240424064019.4847-1-quic_bqiang@quicinc.com/
+[4] https://lore.kernel.org/linux-wireless/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
+and https://lore.kernel.org/linux-wireless/4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com/
 
-I think I can see your point. I added it as it was something you
-mentioned before but looking now at that mail again, I think this is not
-really what you said. So I'm in favour of dropping it.
+For the record: Kalle yesterday reported a suspend regression that made
+stress test stalls within 30 minutes, but that one is not bisected yet[5].
+[5] https://lore.kernel.org/lkml/87o79cjjik.fsf@kernel.org/
 
-If you give me a go-ahead, I will send v3 with this sentence dropped and
-your Ack added right back.
+Ciao, Thorsten
 
-Thanks, kind regards,
-K. B.
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 10 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.8.. aka v6.9-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] ath11k: connection to 6 GHz AP fails
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87wmo0k71i.fsf@kernel.org/
+https://lore.kernel.org/linux-wireless/87wmo0k71i.fsf@kernel.org/
+
+By Kalle Valo; 1 days ago; 1 activities, latest 1 days ago.
+Introduced in bc8a0fac8677 (v6.9-rc1)
+
+Fix incoming:
+* wifi: ath11k: move power type check to ASSOC stage when connecting to 6 GHz AP
+  https://lore.kernel.org/regressions/0834b74a-b360-4404-994b-7f20c89d7257@leemhuis.info/
+
+
+[ *NEW* ] ath11k: WCN6750 firmware crashes during initialisation
+----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
+https://lore.kernel.org/linux-wireless/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
+
+By Luca Weiss; 2 days ago; 10 activities, latest 1 days ago.
+Introduced in f019f4dff2e4 (v6.9-rc1)
+
+Recent activities from: Carl Huang (5), Luca Weiss (3), Kalle Valo (2)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
+  https://lore.kernel.org/linux-wireless/4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com/
+  2 days ago, by Carl Huang
+
+
+[ *NEW* ] nouveau: init failed, no display output
+-------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240506182331.8076-1-dan@danm.net/
+https://lore.kernel.org/stable/20240506182331.8076-1-dan@danm.net/
+https://lore.kernel.org/stable/20240506185910.17917-1-dan@danm.net/
+
+By Dan Moulding and Dan Moulding; 5 days ago; 4 activities, latest 2 days ago.
+Introduced in 52a6947bf576 (v6.9-rc7)
+
+Recent activities from: Dan Moulding (2), David Airlie (1), Linux
+  regression tracking (Thorsten Leemhuis) (1)
+
+
+x86/topology: system stopped booting
+------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
+https://lore.kernel.org/lkml/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
+
+By Lyude Paul; 24 days ago; 19 activities, latest 2 days ago.
+Introduced in f0551af02130 (v6.9-rc1)
+
+Recent activities from: Lyude Paul (3), Thomas Gleixner (2), Mario
+  Limonciello (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: Early boot regression from f0551af0213 ("x86/topology: Ignore non-present APIC IDs in a present package")
+  https://lore.kernel.org/lkml/87le59vw1y.ffs@tglx/
+  22 days ago, by Thomas Gleixner
+
+
+net: Bluetooth: firmware loading problems with older firmware
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
+https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
+
+By Mike Lothian; 40 days ago; 12 activities, latest 3 days ago.
+Introduced in 1cb63d80fff6 (v6.9-rc1)
+
+Fix incoming:
+* Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=5e970bdf73e619935a8977f9f22b581480211164
+
+
+Ryzen 7840HS CPU single core never boosts to max frequency
+----------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218759/
+https://bugzilla.kernel.org/show_bug.cgi?id=218759
+
+By Gaha; 20 days ago; 45 activities, latest 4 days ago.
+Introduced in f3a052391822 (v6.9-rc1)
+
+Fix incoming:
+* cpufreq: amd-pstate: fix the highest frequency issue which limit performance
+  https://lore.kernel.org/regressions/0834b74a-b360-4404-994b-7f20c89d7257@leemhuis.info/
+
+
+leds: hangs on boot
+-------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+
+By Ben Greear; 39 days ago; 29 activities, latest 4 days ago.
+Introduced in f5c31bcf604d (v6.9-rc1)
+
+Fix incoming:
+* wifi: iwlwifi: Use request_module_nowait
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=3d913719df14c28c4d3819e7e6d150760222bda4
+
+
+kbuild: deb-pkg and bindeb-pkg: build failure (and slowness, too)
+-----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZjcRPelwZP34N42s@gmail.com/
+https://lore.kernel.org/lkml/ZjcRPelwZP34N42s@gmail.com/
+
+By Ingo Molnar; 7 days ago; 5 activities, latest 7 days ago.
+Introduced in 1d7bae8f8c85 (v6.9-rc1)
+
+
+===================================================
+current cycle (v6.8.. aka v6.9-rc), unknown culprit
+===================================================
+
+
+[ *NEW* ] x86: mitigations: suspend stress test stalls within 30 minutes
+------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87o79cjjik.fsf@kernel.org/
+https://lore.kernel.org/lkml/87o79cjjik.fsf@kernel.org/
+
+By Kalle Valo; 0 days ago; 4 activities, latest 0 days ago.
+Introduced in v6.9-rc3..v6.9-rc6
+
+Recent activities from: Kalle Valo (2), Borislav Petkov (2)
+
+
+net: Beaglebone Ethernet Probe Failure In 6.8+
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zh/tyozk1n0cFv+l@euler/
+https://lore.kernel.org/netdev/Zh%2Ftyozk1n0cFv%2Bl@euler/
+
+By Colin Foster; 24 days ago; 8 activities, latest 13 days ago.
+Introduced in v6.8..v6.9-rc5
+
+One patch associated with this regression:
+* Re: Beaglebone Ethernet Probe Failure In 6.8+
+  https://lore.kernel.org/netdev/Zicyc0pj3g7%2FMemK@euler/
+  19 days ago, by Colin Foster
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/171491873337.1284823.18146984489788770141@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
