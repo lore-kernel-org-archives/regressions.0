@@ -1,261 +1,233 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53227219ED;
-	Sun, 12 May 2024 14:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715522584; cv=none; b=V0erL59yX7yqTwWbwy5UkIXBbH0udc3v9KcHuzf4VvbKzVxX1A7a9M1I9eWmMDcoZ21Zo8778lc75CDGfcbp4f15S+ImvZ3Sop5/seBcR9XrQU/YoDvPssqHfWRDRiaWbUJd2yCQcGHy4op9vaWMSDdUBnBw1FYLHXtMgSbStQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715522584; c=relaxed/simple;
-	bh=wbFT9utNSEH/L/vkqC+0ZuxiPd/qFJTXXTam5wlJcIo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=A+NSdBo4xEnZ5A/RauxzGQcfCoA/lzJBTCfQzpo0YpBug8ZUk+QI8cJxZUUi6TZzkNnQjVujhGk7xJ1B/CfX3j1kws4NxOpE9FgOvBiWnh3eHKOktuZKPVz+4AiCF77ikOF4oRrfkGvWUSU04m6K+4gPbBOFVuYYSeNrRYoEc3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=s4rAuDGV; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171704C630
+	for <regressions@lists.linux.dev>; Sun, 12 May 2024 16:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715530298; cv=fail; b=hmGTOQOoBMNoIV/LhuaVSxQKcOc5owGfSQ0t1tpzXZBsFRuVytE1pNqkUgZ1bBsGJqWajkMB5Twmxr5LHkdyhlIDOqz8oYrt0bbEQrDCTc4pjVRP3E97Ekd8S357RjrZ3nwZ95d31FVjMgj9TeRrZ63YVLylFn5u7TwbcGyKAEA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715530298; c=relaxed/simple;
+	bh=lZzUHy1j56++uu6ILP+dZt98wsBj2qgiTcYnqbbiDM0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ig+vigrWpMDmQasOMf+Ix+CxnPM29DpYJbTMpmEM+URHFAjAx7OwLLBsVLLV+y3ku8ZrdA1sB7BnUQuu+gHNCxp+Qz/2sLMGlMsOaqQzQwp2Yakm9ZBmULiZ76IFib38oj1gsE/6K6GQ4taFqrptpc3cdr+BjyNDlVQeTgZrug4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lJA8aZ8s; arc=fail smtp.client-ip=40.107.94.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="s4rAuDGV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=5QJY3R0SXDIVLVdbgpATvoUh32upThfo2I5AV5/927E=; t=1715522582; x=1715954582;
-	 b=s4rAuDGVDm5U1EuW+Y50cY0nbErcrIQcWOdeatiEHw+Z3E0RmuoxOgSQ37UipPZRcbKDAGSC8Y
-	SRyHGxJV05pKsGpRWjolKk7MXB6lpdyAgVpaw/Zd/N+IPb4XzLehJZ7/f+qm67jQGjkhI9xMaA6xF
-	OsHYAXJGqm66v/vJjYYBV1cisPNxrq/1xg264Vc5p1e2T25DNYCXAVV1kOo12mWAYctJXCJD7WXQd
-	2nPpY8/SiPF+Z4V0v9wZflIZoeUVv0WvH+uLaI0xjReuSqoahuEjK4aRyb1oxG1FeMXan2iDc01JD
-	vW5G6lTO1Urnm3iA9ipMXWossG7fW2zNynwQQ==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1s69n1-0003vh-8B; Sun, 12 May 2024 16:02:59 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-05-12]
-Date: Sun, 12 May 2024 14:02:58 +0000
-Message-ID: <171552254677.1971316.17732013113090096417@leemhuis.info>
-X-Mailer: git-send-email 2.45.0
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lJA8aZ8s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W1EQnupxzI2PVJOoigMOjhYTRN2v+bvn4vbrkyP2iWVocqCuNktt9b+lqh5R5BuYrZqQaEJxtA3tLeEfbH8s9V+LN3lpmj7DrmHCUAjPBu2BpMj7B9GUebMIV1vQ864N1zqLS4/5/OO5f8eWO19gLG0bJQ8mLuSvtwvPgJLdu5PPR9qufqs+b8lcol6DLPNyVgWEUiwtJeLSFLrsxvtC+NjfmUZpqPnLtu5z2tC8PXkS3rtQ3Mz3wXlrEudZ6Ebf0U1jIEL8rVyEBUCx4NfUrGZvQ0hHPAWvuTWjhJJGseJ1KlZeX0PxuzV/nIBn2pw6xGIiriL+j7tGUlhMiBX32Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XQ4xIbHYp46q3hW31MThHu3/id056cSMGD16uD3oG3E=;
+ b=L0g+vPN6u5qu9ohKpM9QTkjBaZUEdJtefczZkmVJ0NW7Q2TEMUXQ5oIDJXyoGH9+14oRf/lCX4ZmrrChgv874185Vs+dZY69pbjE4zmmFEQ9azeouhLY2b/TZlcbFrs4ybuOkeR/kXEPlL9W5V1LlwvycliD5+Ej7B6/218Obs5+ywdP0Drbvf3MpSTrmUPm2SoYq7kf4STvX3B2P25sTroEtdqBBkJmpMyN2i9NVhXCL2kJxipdjVo2g7wYE9juXPtHfQOFvbA0J1qSCG17jmktx0kJ314s/1r44KBRifYApG9DRKatOkZ7R/PJFMAO5A0fAgSjbS5dlU2LKHIwAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XQ4xIbHYp46q3hW31MThHu3/id056cSMGD16uD3oG3E=;
+ b=lJA8aZ8sg3QU93zLWiOFGjQwV9jA/RSqi5Cbt+UqNk5WbgNk4g91wjhV1LRox1cGqAlyqOWzPPj1mNPMkfWCc+h72LMKe8uOryJSwCqrDjbywE7YeONh13qATuspW2wJ9AobvU9A6Hz6c0beS5VdNh8EzYbll5nepedHg5Ii7tc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM4PR12MB6614.namprd12.prod.outlook.com (2603:10b6:8:bb::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Sun, 12 May
+ 2024 16:11:31 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7544.052; Sun, 12 May 2024
+ 16:11:31 +0000
+Message-ID: <6f66e479-2f5a-477a-9705-dca4a3606760@amd.com>
+Date: Sun, 12 May 2024 11:11:27 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
+ drm_dp_add_payload_part2
+To: Jani Nikula <jani.nikula@linux.intel.com>, "Lin, Wayne"
+ <Wayne.Lin@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Wentland, Harry" <Harry.Wentland@amd.com>
+Cc: "lyude@redhat.com" <lyude@redhat.com>,
+ "imre.deak@intel.com" <imre.deak@intel.com>,
+ =?UTF-8?Q?Leon_Wei=C3=9F?= <leon.weiss@ruhr-uni-bochum.de>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+References: <20240307062957.2323620-1-Wayne.Lin@amd.com>
+ <0847dc03-c7db-47d7-998b-bda2e82ed442@amd.com>
+ <41b87510-7abf-47e8-b28a-9ccc91bbd3c1@leemhuis.info>
+ <177cfae4-b2b5-4e2c-9f1e-9ebe262ce48c@amd.com>
+ <CO6PR12MB5489FA9307280A4442BAD51DFCE72@CO6PR12MB5489.namprd12.prod.outlook.com>
+ <87wmo2hver.fsf@intel.com>
+Content-Language: en-US
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <87wmo2hver.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR13CA0105.namprd13.prod.outlook.com
+ (2603:10b6:806:24::20) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715522582;81455b15;
-X-HE-SMSGID: 1s69n1-0003vh-8B
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB6614:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76e76ab3-10f1-4bf0-1e07-08dc729e2fc5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NnlmdlFFOUZCcFYyQjJjK3VEVDgxUzJFTUIyTldUUklmakRTRlM3eFM0My85?=
+ =?utf-8?B?bGo2Z3BwVnV0cVh1RFJNUHpvc1ErTHQ3Mk5kdUtVYmU5QnVPaU5Nd3Ixb2g3?=
+ =?utf-8?B?UGNVd3NaL25scTJtQjJVOE44Q0RXOEZENUtzOUI4SnVLSHBPcm5EeVRiOE1m?=
+ =?utf-8?B?cE9VSnhhdEFkRE9qTjdGOC8xS0h0dTVsOEFhcXlMSmlYMkNFTUx6V2E0NlZZ?=
+ =?utf-8?B?cmt3UlZScFI1M2d1S0tERXJuWnNjVnl4VksyTWNURWxlREVhSVY3Vkx0ekZR?=
+ =?utf-8?B?QWY4ZHFQR0t2RXAxbmJ0cUpZcXhJWWZvdFpEaGNEdkttOTQzN2NhOTdkRnpk?=
+ =?utf-8?B?czM3WXM4VkdxSzdIVWUyYWxSS3p4SGUzRCtlTnVqUzdDVnhuVUEwTEZncGhC?=
+ =?utf-8?B?VmI2em9Uek94ekxjVmVFRjN0NjJnUVp5eDc3cTg1aFNjMmlHdVFJL2VrQlRL?=
+ =?utf-8?B?K2RrQ1lqNVV2M2dvOFR6bU40dmJodUFEaG9sK0k4ZzhRb3AxcG4xQzdUUnFZ?=
+ =?utf-8?B?cVpyT01vTFRNeFFmUDhFeFZabGplQTBkMzlaTzNtdmRrb1B6WTQyTHhrcWNw?=
+ =?utf-8?B?a1dnaERBaTNzUk5vbnhpNHduMUFabUpFcHQ4MS9iRE8yaWFpVERXZUZrTzFJ?=
+ =?utf-8?B?ZVR1M0JTeHdHdmNHYi9tZjFpQ3lRUWZVNEYxdVIrMnhCeFN4c2pDWllnTUFW?=
+ =?utf-8?B?dkkrc3VYZHh1SkJDZE5KeS8xSkViRlFOTk81Z1o0ak42eGdCblZFbnIwZXpw?=
+ =?utf-8?B?aDN2eUpvdDRQNzlZQXk1V1N0SUl6Sy9pei9IeVY3QVNrQ0l1ZVVCQytvZndS?=
+ =?utf-8?B?bXJCU2o3U2VIdkF2NEtoZjlKSEtOUUFPMjZUampONWEzS0tmQU53UWtlVmZC?=
+ =?utf-8?B?OFpSbDl4MGMyb05sU1pHaFF4M003SDhjZDZtbHd0WWh5cDRLVjcxRDVIT2VW?=
+ =?utf-8?B?ZzdadGFkbUtZbXp6U0gvZ2JTY2ovaDJRdVlURUFiVkVYOXNQNXE0MG5XeFVD?=
+ =?utf-8?B?Uk4va0hJUk5IK3B6dmtRdFg4amVoUE1RQ3RrVzNVMzJJSlpUWHZLT2IxWGV1?=
+ =?utf-8?B?Q3Q4MkxteUhVUGhBWlpaOTkwOUREQ2FKSWlUM1lSQS8wREl5MkhHcXJQYzhO?=
+ =?utf-8?B?bS9wbGZ1aU5mK2xpYno0d0s1YmFQemp5cC9VSWVrYnNSeWVFd2U3dDFOUGtJ?=
+ =?utf-8?B?UmhqSzhPcldUK3Ercjg2Rk1NV1RHZEFyaTB4cFVBd1U0UHprdjVzRm83WFJq?=
+ =?utf-8?B?YzJFcVcwaXF5WWgvZldreXgzMVhuaGxud2FYRVVsejVzYk41WXZDSjRyNkVW?=
+ =?utf-8?B?OTRsV1JPYXJXTmFyK1hmZGtTTUJzQWtTUGduc21jQVhyY1RIYmlmWVBYTlF6?=
+ =?utf-8?B?OVQrTTB4bi9NL1hUMGhKUGorMVR0VzR1WEx1WUtxQk1IWnB0OWVhQkNNeGFz?=
+ =?utf-8?B?T3RaQ3NZUldHanVTKzhGNHhSVFUwMXI1VnVZWlQ2SzBZa2FpZm11NDQ3Y2dx?=
+ =?utf-8?B?elN4ck15UlhwRW5RZU01R0Q5aGw2bXJSTUVCQTFUZnR5L3hmaGowRExlMG14?=
+ =?utf-8?B?RGdIaGJOaFFKbU9IWUI1VnNIUytpai83czA3ZEs4dmQwT1JPMDUzYnVmSzdV?=
+ =?utf-8?Q?sxQte/rHIX4dL40I0PW0t0w/pAjb0qZQ9BJR0GRz1kXk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aEJ4NFNIQkh5TUZRd0dlak4zTnB1U2hkNkYyQmpyc1d3eWJGQkdVNGlPRkVx?=
+ =?utf-8?B?RzV2V25iK0NNOW11ZXF6dEZPa3pkTmRDakdNcEd5MDEya2pMMGhxS2MrdlZF?=
+ =?utf-8?B?TzlyUjJrTU1mNUlnQzBmTjg3N1JXR2o2blArVXJKcEFvcGNOZ1pRUnliZUZ4?=
+ =?utf-8?B?Wm0zV2JTbEZxTnR6QXVnZUkrV2FyZG1XOWNGYmlMYmZnVWpvS0VXS3UvWnNH?=
+ =?utf-8?B?VUZPZ0JxYWtZc1dySy94ZEt4eDNBNUEzdC9WQncwdWRxS0krdVRLZG1NZlJY?=
+ =?utf-8?B?NVlwSm1JZmVOR29FbS83ODIxR3M5aStqSWdGYU1HSER3UmdWa1JNNXNyRUdn?=
+ =?utf-8?B?MHAxWFA3YXpQUXprQ3VCZHErYUpmK1M5Ri90L2g0cmVUcEFnbEpRSE5vbldi?=
+ =?utf-8?B?MkgxSnVyWWhwRi9WdG1wdXJUNnFYdDloOHVCMkRGUVEySjZCaGxRUEY2cFd5?=
+ =?utf-8?B?bzZKYkp1N2hqUGk3aFZzZFc4bUIvS3piN0xrSGNVbERLd1hkWjhpckRDV0xn?=
+ =?utf-8?B?aS9uNnZWdTI3Z0FYOVJoRllBemJhTHg2Q1FEWENVaGtjbmdiS2gvUTJMZmZZ?=
+ =?utf-8?B?YUNpREtTV0wyU3BxZ2xGSXhMb01jNzgxKzBaaWdFaE1OZE5NdXVLdVg3UWQw?=
+ =?utf-8?B?N1lZUTBQUUxJWUNNUlpialJsRDRLQkNQbW10ei9nd0Z3OTRqVWlwTWFCSTBF?=
+ =?utf-8?B?R0NScElvV1JZeTZsTlBldlpxZWx1L2J6a0ZMUjZFbFdUazdBeUk5eURCd3g3?=
+ =?utf-8?B?cHBRV3YzcTBBOW9MN29PUXRBV0tsNlZwNTFJTGhZcmhQY0hndFowbG1BZXJ3?=
+ =?utf-8?B?MGxpUUhya1hJWmM4YTNpNGYvTWxQbS9hMWVUOHR2UTZEcWRrVVdseS9KaUFU?=
+ =?utf-8?B?eGxiaFVEL2wrZW9FYkRhUFQxMUFNdUdFdGtzR01oM1Jia0t1UTJldURWRDRG?=
+ =?utf-8?B?Nnl0Nm1iUjI2Qkpiam5ZSHo2QzhzSVJNOEQyUGd5SzkvdG1DZ1ZPellqK3Jh?=
+ =?utf-8?B?dFRaenNrRkgwZVBOam5pSlF5VkRmOTdSY3VBcjdERGx4SEtLc3AxTkNuM01Q?=
+ =?utf-8?B?WnQ2Q3I4VmNvR2Mzek13L3d2VVAwT25KbHRaNEVEVDVibjhkZU12VzIyZnk4?=
+ =?utf-8?B?SWppNXVCV1BaeHFqbzFIU2tLajdGeUxnYi9yc0V1M1BiY0huT04yYWFlL1lr?=
+ =?utf-8?B?aHFoNmN5aHRqdW1Ra2ZRZGd3ZVhBZ3Q4WVdlMllmUXBwS1U2YVMvWVhpUDBW?=
+ =?utf-8?B?bUtqaXpuUzI4Q2paR0ZXajdpN2Y1RGFqWjZFWGxnNXQzVTgvR2FFNUoraHpy?=
+ =?utf-8?B?YnV4NXh6L05lQk04MXFiMm11c1U0TTBQOUxOTk1zckZKaGUwV2tCYThsTlhU?=
+ =?utf-8?B?cGQ3RGNBS2NrTGtZRysxNWdTQU92L2k3cUxQQmM4VG5SSXFWaGhDVzBzQ25X?=
+ =?utf-8?B?S0V3REtCZ0w5Sko4M0oxeW1qRHFuRFdMMHEyd3AvMGtYRVJHemY3YWthcEhQ?=
+ =?utf-8?B?eW1LaW05bmFTS2ZJK01GeG5pL1hyS2ZYQWVJa0l0ZkVUSEltZHNtcXk3VFdk?=
+ =?utf-8?B?aHZwR0pQMHRsTllreEEvM0pYbTJBaDlvUWg5ck1SMER5YkpTMGh2M2tKMHRy?=
+ =?utf-8?B?em02V3h2V3NoR3BSZ2dERzZYTWRzRWZpZUZOQS9FNTJuR0NsRWg0bkhCbDU3?=
+ =?utf-8?B?ZS9yaUlXRjNudDgwanc3aitXdUhVSUY0VGJ4TE5Hd0xLNXBRYk5XajAwdGw4?=
+ =?utf-8?B?ckNrVmt4RmxuQXM4QU0vOEZZbHZIOVVVbFV2ZjdQVis4ZWJwclFCODhSd0c5?=
+ =?utf-8?B?MFJRNTVNNWxMdnhiRFcxVU1ETGJrK2tMekhWenM2Yk9VeFRTelJWOHJ5eXJK?=
+ =?utf-8?B?MlFMeVhiU2VSdXVUOWtSTS93c0NjRW5WUVpuclpLUWh6dHEwUjJqRXh2RVlR?=
+ =?utf-8?B?dm4xelpQNmlscVN1YzZoMTJwOWFRaTlwM3hQMnJDUjBqdk5rVUt5NlNmbit5?=
+ =?utf-8?B?TzF1WmpjUHQ4Q2xVV3Y2UjlNZmZuRE54MnZUQ015WFNTOXZmV2lQR2ZRREZn?=
+ =?utf-8?B?d242eG4yUFFNdnlpaGMvakFFQnA1b2xUNjg1dnN5aWsrTHJ5NXQ3S0xaS2hu?=
+ =?utf-8?Q?ebd515c9vB9HPO3am+UEPsmZr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76e76ab3-10f1-4bf0-1e07-08dc729e2fc5
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2024 16:11:31.3165
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 76SvKHSexKrImR43QtCHhRjzM/UMSx0r3L6qs9Fjg9f5byWZ0+PdOqQKX/KigcjXaPQkAmcJPNnJReMWyAP40A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6614
+
+
+
+On 5/10/2024 4:24 AM, Jani Nikula wrote:
+> On Fri, 10 May 2024, "Lin, Wayne" <Wayne.Lin@amd.com> wrote:
+>> [Public]
+>>
+>>> -----Original Message-----
+>>> From: Limonciello, Mario <Mario.Limonciello@amd.com>
+>>> Sent: Friday, May 10, 2024 3:18 AM
+>>> To: Linux regressions mailing list <regressions@lists.linux.dev>; Wentland, Harry
+>>> <Harry.Wentland@amd.com>; Lin, Wayne <Wayne.Lin@amd.com>
+>>> Cc: lyude@redhat.com; imre.deak@intel.com; Leon Weiß <leon.weiss@ruhr-uni-
+>>> bochum.de>; stable@vger.kernel.org; dri-devel@lists.freedesktop.org; amd-
+>>> gfx@lists.freedesktop.org; intel-gfx@lists.freedesktop.org
+>>> Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
+>>> drm_dp_add_payload_part2
+>>>
+>>> On 5/9/2024 07:43, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 18.04.24 21:43, Harry Wentland wrote:
+>>>>> On 2024-03-07 01:29, Wayne Lin wrote:
+>>>>>> [Why]
+>>>>>> Commit:
+>>>>>> - commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
+>>>>>> allocation/removement") accidently overwrite the commit
+>>>>>> - commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in
+>>>>>> drm_dp_add_payload_part2") which cause regression.
+>>>>>>
+>>>>>> [How]
+>>>>>> Recover the original NULL fix and remove the unnecessary input
+>>>>>> parameter 'state' for drm_dp_add_payload_part2().
+>>>>>>
+>>>>>> Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
+>>>>>> allocation/removement")
+>>>>>> Reported-by: Leon Weiß <leon.weiss@ruhr-uni-bochum.de>
+>>>>>> Link:
+>>>>>> https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.c
+>>>>>> amel@ruhr-uni-bochum.de/
+>>>>>> Cc: lyude@redhat.com
+>>>>>> Cc: imre.deak@intel.com
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Cc: regressions@lists.linux.dev
+>>>>>> Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+>>>>>
+>>>>> I haven't been deep in MST code in a while but this all looks pretty
+>>>>> straightforward and good.
+>>>>>
+>>>>> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+>>>>
+>>>> Hmmm, that was three weeks ago, but it seems since then nothing
+>>>> happened to fix the linked regression through this or some other
+>>>> patch. Is there a reason? The build failure report from the CI maybe?
+>>>
+>>> It touches files outside of amd but only has an ack from AMD.  I think we
+>>> /probably/ want an ack from i915 and nouveau to take it through.
+>>
+>> Thanks, Mario!
+>>
+>> Hi Thorsten,
+>> Yeah, like what Mario said. Would also like to have ack from i915 and nouveau.
+> 
+> It usually works better if you Cc the folks you want an ack from! ;)
+> 
+> Acked-by: Jani Nikula <jani.nikula@intel.com>
+> 
+
+Thanks! Can someone with commit permissions take this to drm-misc?
 
-Hi Linus, here is the weekly report for regressions introduced during
-this cycle. The short story: we have quite a few regressions for which
-fixes are available (most of them reviewed or even in -next), but only
-queued for 6.10 (most of them) or not yet fully ready.
-
-This starts with the three fixes I mentioned in my extra report on
-Thursday[1]. Dave send a revert[2] for the nouveau regression mentioned
-in that report, but he didn't copy you, so I guess this is meant to
-wait, too. Side note: the problem from Lyude I mentioned in that report
-still needs more debugging. 
-[1] https://lore.kernel.org/all/4c7be436-8a5d-469f-b88e-bfe17bafb991@leemhuis.info/
-[2] https://lore.kernel.org/all/20240512121630.23898-1-wangjinchao@xfusion.com/
-
-Fixes for a ath11k regression fall through the cracks and will likely be
-merged soon[3]; the fix for another ath11k regression only reported on
-Friday exists, but will only be formally submitted in the next few days[4].
-[3] https://lore.kernel.org/linux-wireless/20240424064019.4847-1-quic_bqiang@quicinc.com/
-[4] https://lore.kernel.org/linux-wireless/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
-and https://lore.kernel.org/linux-wireless/4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com/
-
-For the record: Kalle yesterday reported a suspend regression that made
-stress test stalls within 30 minutes, but that one is not bisected yet[5].
-[5] https://lore.kernel.org/lkml/87o79cjjik.fsf@kernel.org/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 10 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.8.. aka v6.9-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] ath11k: connection to 6 GHz AP fails
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87wmo0k71i.fsf@kernel.org/
-https://lore.kernel.org/linux-wireless/87wmo0k71i.fsf@kernel.org/
-
-By Kalle Valo; 1 days ago; 1 activities, latest 1 days ago.
-Introduced in bc8a0fac8677 (v6.9-rc1)
-
-Fix incoming:
-* wifi: ath11k: move power type check to ASSOC stage when connecting to 6 GHz AP
-  https://lore.kernel.org/regressions/0834b74a-b360-4404-994b-7f20c89d7257@leemhuis.info/
-
-
-[ *NEW* ] ath11k: WCN6750 firmware crashes during initialisation
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
-https://lore.kernel.org/linux-wireless/D15TIIDIIESY.D1EKKJLZINMA@fairphone.com/
-
-By Luca Weiss; 2 days ago; 10 activities, latest 1 days ago.
-Introduced in f019f4dff2e4 (v6.9-rc1)
-
-Recent activities from: Carl Huang (5), Luca Weiss (3), Kalle Valo (2)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
-  https://lore.kernel.org/linux-wireless/4d60ccf3-455d-4189-9100-d35488b00236@quicinc.com/
-  2 days ago, by Carl Huang
-
-
-[ *NEW* ] nouveau: init failed, no display output
--------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240506182331.8076-1-dan@danm.net/
-https://lore.kernel.org/stable/20240506182331.8076-1-dan@danm.net/
-https://lore.kernel.org/stable/20240506185910.17917-1-dan@danm.net/
-
-By Dan Moulding and Dan Moulding; 5 days ago; 4 activities, latest 2 days ago.
-Introduced in 52a6947bf576 (v6.9-rc7)
-
-Recent activities from: Dan Moulding (2), David Airlie (1), Linux
-  regression tracking (Thorsten Leemhuis) (1)
-
-
-x86/topology: system stopped booting
-------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
-https://lore.kernel.org/lkml/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
-
-By Lyude Paul; 24 days ago; 19 activities, latest 2 days ago.
-Introduced in f0551af02130 (v6.9-rc1)
-
-Recent activities from: Lyude Paul (3), Thomas Gleixner (2), Mario
-  Limonciello (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: Early boot regression from f0551af0213 ("x86/topology: Ignore non-present APIC IDs in a present package")
-  https://lore.kernel.org/lkml/87le59vw1y.ffs@tglx/
-  22 days ago, by Thomas Gleixner
-
-
-net: Bluetooth: firmware loading problems with older firmware
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
-https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
-
-By Mike Lothian; 40 days ago; 12 activities, latest 3 days ago.
-Introduced in 1cb63d80fff6 (v6.9-rc1)
-
-Fix incoming:
-* Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=5e970bdf73e619935a8977f9f22b581480211164
-
-
-Ryzen 7840HS CPU single core never boosts to max frequency
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218759/
-https://bugzilla.kernel.org/show_bug.cgi?id=218759
-
-By Gaha; 20 days ago; 45 activities, latest 4 days ago.
-Introduced in f3a052391822 (v6.9-rc1)
-
-Fix incoming:
-* cpufreq: amd-pstate: fix the highest frequency issue which limit performance
-  https://lore.kernel.org/regressions/0834b74a-b360-4404-994b-7f20c89d7257@leemhuis.info/
-
-
-leds: hangs on boot
--------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-
-By Ben Greear; 39 days ago; 29 activities, latest 4 days ago.
-Introduced in f5c31bcf604d (v6.9-rc1)
-
-Fix incoming:
-* wifi: iwlwifi: Use request_module_nowait
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=3d913719df14c28c4d3819e7e6d150760222bda4
-
-
-kbuild: deb-pkg and bindeb-pkg: build failure (and slowness, too)
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZjcRPelwZP34N42s@gmail.com/
-https://lore.kernel.org/lkml/ZjcRPelwZP34N42s@gmail.com/
-
-By Ingo Molnar; 7 days ago; 5 activities, latest 7 days ago.
-Introduced in 1d7bae8f8c85 (v6.9-rc1)
-
-
-===================================================
-current cycle (v6.8.. aka v6.9-rc), unknown culprit
-===================================================
-
-
-[ *NEW* ] x86: mitigations: suspend stress test stalls within 30 minutes
-------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87o79cjjik.fsf@kernel.org/
-https://lore.kernel.org/lkml/87o79cjjik.fsf@kernel.org/
-
-By Kalle Valo; 0 days ago; 4 activities, latest 0 days ago.
-Introduced in v6.9-rc3..v6.9-rc6
-
-Recent activities from: Kalle Valo (2), Borislav Petkov (2)
-
-
-net: Beaglebone Ethernet Probe Failure In 6.8+
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zh/tyozk1n0cFv+l@euler/
-https://lore.kernel.org/netdev/Zh%2Ftyozk1n0cFv%2Bl@euler/
-
-By Colin Foster; 24 days ago; 8 activities, latest 13 days ago.
-Introduced in v6.8..v6.9-rc5
-
-One patch associated with this regression:
-* Re: Beaglebone Ethernet Probe Failure In 6.8+
-  https://lore.kernel.org/netdev/Zicyc0pj3g7%2FMemK@euler/
-  19 days ago, by Colin Foster
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/171491873337.1284823.18146984489788770141@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
