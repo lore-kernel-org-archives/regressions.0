@@ -1,82 +1,69 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383E8153826
-	for <regressions@lists.linux.dev>; Mon, 13 May 2024 14:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD7623748;
+	Mon, 13 May 2024 17:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609326; cv=none; b=AVcltC2k5ULPaNLK+y5DsuQAwunJG3Qw8ld8JjwZnSy1ImzdUJDSAYstpEzeRN4fdyJwbgQ0ZeoApMqb66jpazmT7lV2nWb1CSmODPVYwDq95k6vSz5wcdWOlJY8XNLPPISm1xN9/p+1rAptCUJjXmATre84u7nbVn50RajS7fE=
+	t=1715620667; cv=none; b=iQNnw/VwkSpdzyqhqyAS2QQ0UBw1lpwyeMJ3K7uzZbPBxeaWxUvcSQ07CYdJioIreSwnr5OsT7TU/oQH8CvntuAdsJCIA19g5jCX0clNU6p4WEDnXYh0QzH1oN94qGj4vJJgTWg+3l5QS4QR+KIFc+VjQfHOeHcgwE8l69bghxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609326; c=relaxed/simple;
-	bh=UT5j7BgJNNrlLd9K13kM/MkWDznH/+I5nuxgWBNbFDo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DX1wV3KyXA2fuKganz0lZb3S1tgsfF9HQtUiL1QdE0XxRtCRsx41LccqRiasKB8s8IML/onuMruKtgYiY98iM6nFAOcvflVKT8XN0V9eEfBjo9edKpHwHB39Jp+p37zmp3mf2Ie8W6LEchMh1GCzgxf0MZjIc90riJgQ0XPgKNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d47PCMxb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vw0P+P2F; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1715620667; c=relaxed/simple;
+	bh=xXJ2xfsVZr5m0SDYHs8VXPitjHPTAc8dVXhYkI6O4pg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQHQEPK4FmeJho2J8uwUKVWguWEzRU4ftLN8EALpP9gsm/744iDpXufYSlDilWNjpNFXXeSwNFvmzlwPJs24dk1bE6HrM74sRD9Wlqs0lfMNYO3J2gvdaUZUX7tbXgKnVAtD7pEkNP7PlvVQsIHMRqBPIHgwTffiuLRk6ls0qNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=trH6o5dc; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d47PCMxb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vw0P+P2F"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715609323;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IlV+zvrsTzEjXr8XFq27EiNK1xlgS37wfphlRcyXsZs=;
-	b=d47PCMxb+7X00xF0re7aKwR1NF5o93jJuXr0CcBg168+ySKiSATgNERdALWpHlyTg8CRmr
-	JYm42p5ORow7rQxfyEc/vhVkLln68Wgv3f3UqemDUC2n0sJ+GSWMu8ZXjeZZIyRD77cfJb
-	qiz+IfPM0Q/p65YWV3T0vp7QFYfHL2HPoE2WfEB/9RAVwSBg3jyIjSqOg40g5cyrqzIfx5
-	fL7p9TM+x05j0p1kY0+JuPiuBo6KiRpU3ZGmvINBIMlIjkMr2ZJbilFl08EDNLYX/LgCfq
-	wprKnh4mjZDOWbKiGSMOzFmlOHcBC1S+fyR+9gneNriq4MJ18uj8nxoiwdCLzg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715609323;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IlV+zvrsTzEjXr8XFq27EiNK1xlgS37wfphlRcyXsZs=;
-	b=vw0P+P2FxgAyUMs8hP3N9W6LMWgiTzIJ2p0xX4ne7diYGDi6nkvuyqDzUeBKlEpgUh3IkH
-	GLKYrKLgM/STqwBA==
-To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
- <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
- <87plumxz4x.ffs@tglx>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-Date: Mon, 13 May 2024 16:08:42 +0200
-Message-ID: <87jzjxn6s5.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="trH6o5dc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kat9PfXQHTpWcmnzIUnLFRT8Ol171C09OwLL2tg1hrw=; b=trH6o5dcxGkLEy9v84ytt6FOIY
+	kpCeijP2gdbDv0W3Bvhdj1zpaKTrLZ4rgImC8Rz2Ao8HVsxX4k73KQbJ7Hn0a011q7D1L3t44JQXP
+	INwRLsIUmHJUoUQ1Wi+PAND3K4/ySulbQrgDoPErM9Ncy9cFnfpDzru4GoX9S8/Uqys4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s6ZIy-00FKAr-I1; Mon, 13 May 2024 19:17:40 +0200
+Date: Mon, 13 May 2024 19:17:40 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	intel-wired-lan@lists.osuosl.org,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	lukas.probsthain@googlemail.com
+Subject: Re: Regression of e1000e (I219-LM) from 6.1.90 to 6.6.30
+Message-ID: <b2897fda-08e8-40de-b78a-86e92bde41db@lunn.ch>
+References: <ZkHSipExKpQC8bWJ@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkHSipExKpQC8bWJ@archie.me>
 
-On Wed, May 08 2024 at 19:21, Lyude Paul wrote:
-> Regarding the test results - I tried possible_cpus all the way up to 17
-> and nothing got the machine to boot. However, possible_cpus=8
-> intremap=off did get the machine to boot successfully
+On Mon, May 13, 2024 at 03:42:50PM +0700, Bagas Sanjaya wrote:
+> Hi,
+> 
+> <lukas.probsthain@googlemail.com> reported on Bugzilla
+> (https://bugzilla.kernel.org/show_bug.cgi?id=218826) regression on his Thinkpad
+> T480 with Intel I219-LM:
+> 
+> > After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver exhibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Ethernet controller.
 
-Oh. That's interesting.
+Could you try a git bisect between these two kernel versions? You
+might be able to limit it to drivers/net/ethernet/intel/e1000e, which
+only had around 15 patches.
 
-Does v6.9 (released yesterday) boot with just 'intremap=off' too?
-
-Thanks,
-
-        tglx
+     Andrew
