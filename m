@@ -1,91 +1,173 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07CC147C7F
-	for <regressions@lists.linux.dev>; Mon, 13 May 2024 08:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352B1146D4E
+	for <regressions@lists.linux.dev>; Mon, 13 May 2024 08:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715589558; cv=none; b=tuY+LPrsvnxF4aYS+NVMvRfdF8zYqhEaYgdBKWiabZWFQXSeFjiinxOBUImtPmBiEE8TF95Hh2SHbzYbLXCTbK58ulXUVR61NmRrhanzw1yTaRT+CKJNngfIKujILwxwL4/WzYyNfRj1dE4UDPit/qoDdRGb64Paj3giv9R2nRs=
+	t=1715589760; cv=none; b=JVIBQjwHMH/kkRByimczfTDpXKvnrn0JyrEJTLZ9+NXzNFXJbb9z71+mkqNMs3rEQ2+ALBL4KH52aLyxSySggZdrIkkSJtTT3qxsjAjSk8+TIv6x0IB4T33oHoyvybAs7UaLv6Hp3tMGhd3DJB28v6EO8iYWdYLU7z/bxfdkVyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715589558; c=relaxed/simple;
-	bh=5eXSshADMMz2HS4+hYQumTpVGsj8NwwTPlGcAqN449Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=R8ZcWkI7zOE43n/PJemp4ZnV3wkWg2qeq+5wZsNgfk7WxBfzaL5xdXfGmMwMlkoyWWvdNvEthn0BKexRCCK8uV4HTfBlHx8tO5TzMH8iJpCz1KD/HuJaOrQDHpWbgsHHym+JAix2UOIBvyl2kbPX8vr1gFYH+lZB3PgWCaGhK/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctzgYe8g; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715589760; c=relaxed/simple;
+	bh=MmX9FpULig5/5mihxwyU5uTtNaJ+zcs97Xoo8Vr4T8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WJFTk+xdygy+lw2K+IxNW101CECoshT32BgbaortKU8eob+LeUFklUSx++DvLobm2ToAVSSOmXpeC8q6pwOqxIjDjHEgnwzs5FWY0PuQ3bIg8y+Pigvk4joP0ypyJWVY8gMVUeN59geBroB7vTmNhSOM99owSYO1Imx7L+n9z5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=U/jn0vKY; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctzgYe8g"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c99e6b8b1fso1138430b6e.1
-        for <regressions@lists.linux.dev>; Mon, 13 May 2024 01:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715589556; x=1716194356; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ByH4IXOe7meQgCOsgj+8mcZz2ctYq1wZFMn2SyMyJGU=;
-        b=ctzgYe8gg9dyqTiSG1ccUHH/m8vyKklD9vHWLFJ2p0LiZrvpRNERcoTWBJVsDzZeuJ
-         n4dS3l/KeUITdutXl0zlYsJSsEgMB0fS6unhXtpAJEsWwV6vRM/2nXz7l0x9qz6gjhra
-         o8I6/NDfk+1W+MfzpmIP9WbnUR2Edmkrj+s0dhnpe/L8kUSrgUsoVCmXgUMUIJ/6zBwM
-         9TGU5tPMZeAEf1Uhc31Fi0Qizr0eyEOY/eP0U55jrBCHAuYRJd5utYMfOc0YmCtM/L1X
-         whm9+OeJwT0WVolEtNjZ7WDWYzceIAvmbD52Q5bwUwFN3MXjK386tXPO9a4vCDv8TpGQ
-         DOLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715589556; x=1716194356;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ByH4IXOe7meQgCOsgj+8mcZz2ctYq1wZFMn2SyMyJGU=;
-        b=sXTosphv7scvVFZmvOojLwGRz/HIOhbSSVh/ocCSYNgg8pHKMq7HDFdR0sKhJ/i+U9
-         RYD8gsoebUYzNAS5SDFRyBrwCv48hnChVLFPCZGK3ZbAhvcoZQVxX0O8V2divGujsbp7
-         xkQiYQg/pVez7QDOAC76Bcao37UInYPTeb/8JMTzvgmcgrAzIJtaT48ro9M/7ZMozRKT
-         L+SqiQ6GbRp8Q2g4Zj/Zyep+EiC1uw0tZNMxB/4tejMcW8En9lXe/9LU7WRMcjsiViUr
-         oY7osavlJkCDpoWn60lFw+KXXqybi30kDwJPnp+RugcKymHbhvYGyefP42FltdhQ0zAu
-         Ds+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUirEqRdUkYf1pxX4zj3EKENQwZMzVSEy0IlZPZi8HTpzaV943iqYh7MYojS5M37+WEdxfSm2vqlDbmif2WfKw/gmqP9CQU701ydTw=
-X-Gm-Message-State: AOJu0YxkVnEhKSLX3/SU/Js9TqpmWBLSdrskY7Wdb0J6lakz7ULWJr92
-	EYoGwALyafd1xL3Hn48IDAto7NcD6RTb7+mPTs590DmHqjF+rSnf
-X-Google-Smtp-Source: AGHT+IH6PuFjkJnoKBx1FZT+HCTTmOyft0mWTEdDCJWk2yAMPypNDdyTUqOIUPS6yaqMBz/n9DpUFg==
-X-Received: by 2002:a54:4597:0:b0:3c8:665e:1e57 with SMTP id 5614622812f47-3c99706d302mr11862624b6e.25.1715589555774;
-        Mon, 13 May 2024 01:39:15 -0700 (PDT)
-Received: from [192.168.0.107] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ae0da1sm6899069b3a.107.2024.05.13.01.39.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 01:39:15 -0700 (PDT)
-Message-ID: <4e55a37b-f225-482e-ab68-4ab4e839da4d@gmail.com>
-Date: Mon, 13 May 2024 15:39:10 +0700
+	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="U/jn0vKY"
+X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
+	serial F5FD910E8FE2121B897F7E55B84E351D
+	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
+	auth type TLS.CUNI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
+	s=submission; t=1715589745; x=1716889745;
+	bh=8WnIPYmz22YKfjEz50TsMCQIHhCvLUNOX/xgj1FoVV0=; h=From;
+	b=U/jn0vKYicg46UhLvK/VgNQWgQpHZq76odqbibwayciFKcqEGZVYLHAn3YdRuGsat
+	 OZfuX5YbUD/sgYRjM5gLANxh7Gv37czWow8RGsJV4c06YC0mM5/iYxZ4R/GVEh/AnA
+	 CGrSE+/lXhNnet1V+p9/xTJq21VxctgbM7UQx6IueMNUBLdps00UP1gcL5R4xJ/Dn3
+	 1JpRWSu8SQi42lRL8JH9CsIpwhRcEW0cWKlJaDNJOopXPQrBkDwq79bHA8IYhiYXya
+	 Jlf7O41dg3kR3mxsv+b4otnNF395qMo+agJxlJHLKzUICSq27zP4q9wVfmvd8tHnAQ
+	 8bfyYHCqE7gxQ==
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 44D8gL9k022851
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Mon, 13 May 2024 10:42:23 +0200 (CEST)
+	(envelope-from balejk@matfyz.cz)
+From: Karel Balej <balejk@matfyz.cz>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>,
+        regressions@lists.linux.dev, workflows@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: balejk@matfyz.cz
+Subject: [PATCH docs-next v3] docs: handling-regressions.rst: recommend using "Closes:" tags
+Date: Mon, 13 May 2024 10:41:10 +0200
+Message-ID: <20240513084145.2460-1-balejk@matfyz.cz>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: pi
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Networking <netdev@vger.kernel.org>, intel-wired-lan@lists.osuosl.org
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- lukas.probsthain@googlemail.com
-References: <ZkHPRBLlHJpRytIB@archie.me>
-Content-Language: en-US
-In-Reply-To: <ZkHPRBLlHJpRytIB@archie.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/13/24 15:28, Bagas Sanjaya wrote:
-> Hi,
-> 
+Update the handling-regressions guide to recommend using "Closes:" tags
+rather than "Link:" when referencing fixed reports. The latter was used
+originally but now is only recommended when the given patch only fixes
+part of the issue, as described in submitting-patches. Briefly mention
+that and also note that regzbot currently doesn't make a distinction.
 
-Please ignore this thread (subject messed up). I will resend with
-proper subject instead.
+Also fix a typo.
 
-Sorry for inconvenience.
+Acked-by: Thorsten Leemhuis <linux@leemhuis.info>
+Signed-off-by: Karel Balej <balejk@matfyz.cz>
+---
 
+Notes:
+    v3:
+    - Drop sentence about some maintainers preferring "Link:".
+    - Add Thorsten's Ack trailer.
+    - v2: https://lore.kernel.org/r/20240510183748.13028-1-balejk@matfyz.cz/
+    v2:
+    - v1: https://lore.kernel.org/r/20240328194342.11760-1-balejk@matfyz.cz/
+    - Rebase to git://git.lwn.net/linux.git docs-next.
+    - Prefer Closes: tags, mention that regzbot makes no distinction and
+      only mention Link: briefly and explain when it's preferred, in
+      accordance with submitting-patches.
+    - Include a typo fix.
+    - Reword commit message accordingly (and make it less verbose :-).
+
+ .../process/handling-regressions.rst          | 30 +++++++++++--------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+index 49ba1410cfce..1f5ab49c48a4 100644
+--- a/Documentation/process/handling-regressions.rst
++++ b/Documentation/process/handling-regressions.rst
+@@ -40,10 +40,13 @@ The important bits (aka "The TL;DR")
+        #regzbot from: Some N. Ice Human <some.human@example.com>
+        #regzbot monitor: http://some.bugtracker.example.com/ticket?id=123456789
+ 
+-#. When submitting fixes for regressions, add "Link:" tags to the patch
++#. When submitting fixes for regressions, add "Closes:" tags to the patch
+    description pointing to all places where the issue was reported, as
+    mandated by Documentation/process/submitting-patches.rst and
+-   :ref:`Documentation/process/5.Posting.rst <development_posting>`.
++   :ref:`Documentation/process/5.Posting.rst <development_posting>`. If you are
++   only fixing part of the issue that caused the regression, you may use
++   "Link:" tags instead. regzbot currently makes no distinction between the
++   two.
+ 
+ #. Try to fix regressions quickly once the culprit has been identified; fixes
+    for most regressions should be merged within two weeks, but some need to be
+@@ -91,10 +94,10 @@ When doing either, consider making the Linux kernel regression tracking bot
+    Note the caret (^) before the "introduced": it tells regzbot to treat the
+    parent mail (the one you reply to) as the initial report for the regression
+    you want to see tracked; that's important, as regzbot will later look out
+-   for patches with "Link:" tags pointing to the report in the archives on
++   for patches with "Closes:" tags pointing to the report in the archives on
+    lore.kernel.org.
+ 
+- * When forwarding a regressions reported to a bug tracker, include a paragraph
++ * When forwarding a regression reported to a bug tracker, include a paragraph
+    with these regzbot commands::
+ 
+        #regzbot introduced: 1f2e3d4c5b6a
+@@ -102,7 +105,7 @@ When doing either, consider making the Linux kernel regression tracking bot
+        #regzbot monitor: http://some.bugtracker.example.com/ticket?id=123456789
+ 
+    Regzbot will then automatically associate patches with the report that
+-   contain "Link:" tags pointing to your mail or the mentioned ticket.
++   contain "Closes:" tags pointing to your mail or the mentioned ticket.
+ 
+ What's important when fixing regressions
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -112,10 +115,14 @@ remember to do what Documentation/process/submitting-patches.rst,
+ :ref:`Documentation/process/5.Posting.rst <development_posting>`, and
+ Documentation/process/stable-kernel-rules.rst already explain in more detail:
+ 
+- * Point to all places where the issue was reported using "Link:" tags::
++ * Point to all places where the issue was reported using "Closes:" tags::
+ 
+-       Link: https://lore.kernel.org/r/30th.anniversary.repost@klaava.Helsinki.FI/
+-       Link: https://bugzilla.kernel.org/show_bug.cgi?id=1234567890
++       Closes: https://lore.kernel.org/r/30th.anniversary.repost@klaava.Helsinki.FI/
++       Closes: https://bugzilla.kernel.org/show_bug.cgi?id=1234567890
++
++   If you are only fixing part of the issue, you may use "Link:" instead as
++   described in the first document mentioned above. regzbot currently treats
++   both of these equivalently and considers the linked reports as resolved.
+ 
+  * Add a "Fixes:" tag to specify the commit causing the regression.
+ 
+@@ -126,7 +133,7 @@ All this is expected from you and important when it comes to regression, as
+ these tags are of great value for everyone (you included) that might be looking
+ into the issue weeks, months, or years later. These tags are also crucial for
+ tools and scripts used by other kernel developers or Linux distributions; one of
+-these tools is regzbot, which heavily relies on the "Link:" tags to associate
++these tools is regzbot, which heavily relies on the "Closes:" tags to associate
+ reports for regression with changes resolving them.
+ 
+ Expectations and best practices for fixing regressions
+@@ -326,7 +333,7 @@ How does regression tracking work with regzbot?
+ 
+ The bot watches for replies to reports of tracked regressions. Additionally,
+ it's looking out for posted or committed patches referencing such reports
+-with "Link:" tags; replies to such patch postings are tracked as well.
++with "Closes:" tags; replies to such patch postings are tracked as well.
+ Combined this data provides good insights into the current state of the fixing
+ process.
+ 
+@@ -338,8 +345,7 @@ take care of that using ``#regzbot ^introduced``.
+ 
+ For developers there normally is no extra work involved, they just need to make
+ sure to do something that was expected long before regzbot came to light: add
+-"Link:" tags to the patch description pointing to all reports about the issue
+-fixed.
++links to the patch description pointing to all reports about the issue fixed.
+ 
+ Do I have to use regzbot?
+ ~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 
-An old man doll... just what I always wanted! - Clara
+2.45.0
 
