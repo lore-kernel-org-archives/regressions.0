@@ -1,69 +1,93 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD7623748;
-	Mon, 13 May 2024 17:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70493BB30;
+	Mon, 13 May 2024 19:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715620667; cv=none; b=iQNnw/VwkSpdzyqhqyAS2QQ0UBw1lpwyeMJ3K7uzZbPBxeaWxUvcSQ07CYdJioIreSwnr5OsT7TU/oQH8CvntuAdsJCIA19g5jCX0clNU6p4WEDnXYh0QzH1oN94qGj4vJJgTWg+3l5QS4QR+KIFc+VjQfHOeHcgwE8l69bghxE=
+	t=1715630311; cv=none; b=ZmLPFHktVMwHWd7mdOegO1IEyYNry7aUiaFrSp/S8/JBZFgjnfjkqz8dPDZovzg2BD7IbZdFiou0rFehxODdTuuwxpgjsjfQnMJaRXTDZHC1Y/v6KhNbkZBxBKWknhSebM5JPfQfg+Y6a5OcJrX0keWprhFqg6UPPT5wTxZ96/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715620667; c=relaxed/simple;
-	bh=xXJ2xfsVZr5m0SDYHs8VXPitjHPTAc8dVXhYkI6O4pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eQHQEPK4FmeJho2J8uwUKVWguWEzRU4ftLN8EALpP9gsm/744iDpXufYSlDilWNjpNFXXeSwNFvmzlwPJs24dk1bE6HrM74sRD9Wlqs0lfMNYO3J2gvdaUZUX7tbXgKnVAtD7pEkNP7PlvVQsIHMRqBPIHgwTffiuLRk6ls0qNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=trH6o5dc; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1715630311; c=relaxed/simple;
+	bh=xRu8CyhGp/dMQMFRPvRlpYQszBroFlUYx9/roPUrmLQ=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=MhtUQ91il4ncEJ3as8j1UXEa9oFrAvvAtgRnivDGRd7rqatutDPfnNN1N4Z/xbqnPWVyLVVBnMcxwCebTn7BEPckA1Lu1eAVD1KpuAYCs4ubN5d0U31lEcGtyJBY6dJ8Vkf/hERWGVnnVMWcr3ISq0Vl9lWwFjPHQLQsHB1PM3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYvbkEej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="trH6o5dc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kat9PfXQHTpWcmnzIUnLFRT8Ol171C09OwLL2tg1hrw=; b=trH6o5dcxGkLEy9v84ytt6FOIY
-	kpCeijP2gdbDv0W3Bvhdj1zpaKTrLZ4rgImC8Rz2Ao8HVsxX4k73KQbJ7Hn0a011q7D1L3t44JQXP
-	INwRLsIUmHJUoUQ1Wi+PAND3K4/ySulbQrgDoPErM9Ncy9cFnfpDzru4GoX9S8/Uqys4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s6ZIy-00FKAr-I1; Mon, 13 May 2024 19:17:40 +0200
-Date: Mon, 13 May 2024 19:17:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Networking <netdev@vger.kernel.org>,
-	intel-wired-lan@lists.osuosl.org,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	lukas.probsthain@googlemail.com
-Subject: Re: Regression of e1000e (I219-LM) from 6.1.90 to 6.6.30
-Message-ID: <b2897fda-08e8-40de-b78a-86e92bde41db@lunn.ch>
-References: <ZkHSipExKpQC8bWJ@archie.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYvbkEej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1390BC113CC;
+	Mon, 13 May 2024 19:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715630311;
+	bh=xRu8CyhGp/dMQMFRPvRlpYQszBroFlUYx9/roPUrmLQ=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=tYvbkEejMiE6HhVN/wo0Q4dJ/UzS+ZBdRKQiafF0yjO0c+CrUS3wNJusXwg9sQstV
+	 Zw26BkzNRB0XjovtDrDUhb+3U6dSE7NzYLlfhAwKztXDuoZ/TOa1/9DKUYYK/Ed/A7
+	 lakvpF/kBK0r0xVn1ow+r6+k078r/6oxLuPf1WihsPDWk6q2TAaaehy3LrKpYJGbNN
+	 aXSzwkzTgF2KEyrQrMcScKKfyVHOFVLAXndjtI0xd9ykEcjOOM4tDg8PZK6fwoxV3I
+	 +sFPrjtY6XPEft97bVilgdnwMXHYL3cQdPCB1rj9UDMUbn97U7rgwdH27szngUhfq/
+	 bTl8y3IvWi6Ig==
+From: Kalle Valo <kvalo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,
+  Dave Hansen <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  x86@kernel.org,  linux-pm@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+References: <87o79cjjik.fsf@kernel.org>
+	<20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+	<20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+	<87h6f4jdrq.fsf@kernel.org>
+Date: Mon, 13 May 2024 22:58:27 +0300
+In-Reply-To: <87h6f4jdrq.fsf@kernel.org> (Kalle Valo's message of "Sat, 11 May
+	2024 23:26:49 +0300")
+Message-ID: <878r0djxgc.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkHSipExKpQC8bWJ@archie.me>
+Content-Type: text/plain
 
-On Mon, May 13, 2024 at 03:42:50PM +0700, Bagas Sanjaya wrote:
-> Hi,
-> 
-> <lukas.probsthain@googlemail.com> reported on Bugzilla
-> (https://bugzilla.kernel.org/show_bug.cgi?id=218826) regression on his Thinkpad
-> T480 with Intel I219-LM:
-> 
-> > After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver exhibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Ethernet controller.
+Kalle Valo <kvalo@kernel.org> writes:
 
-Could you try a git bisect between these two kernel versions? You
-might be able to limit it to drivers/net/ethernet/intel/e1000e, which
-only had around 15 patches.
+> Borislav Petkov <bp@alien8.de> writes:
+>
+>> On Sat, May 11, 2024 at 08:48:47PM +0200, Borislav Petkov wrote:
+>>> On Sat, May 11, 2024 at 09:22:43PM +0300, Kalle Valo wrote:
+>>> > Here's the diff between broken and working .config:
+>>> > 
+>>> > $ diffconfig broken.config works.config 
+>>> > -CALL_PADDING y
+>>> > -CALL_THUNKS y
+>>> > -CALL_THUNKS_DEBUG n
+>>> > -HAVE_CALL_THUNKS y
+>>> > -MITIGATION_CALL_DEPTH_TRACKING y
+>>> > -MITIGATION_GDS_FORCE y
+>>> > -MITIGATION_IBPB_ENTRY y
+>>> > -MITIGATION_IBRS_ENTRY y
+>>> > -MITIGATION_PAGE_TABLE_ISOLATION y
+>>> > -MITIGATION_RETHUNK y
+>>> > -MITIGATION_RETPOLINE y
+>>> > -MITIGATION_RFDS y
+>>> > -MITIGATION_SLS y
+>>> > -MITIGATION_SPECTRE_BHI y
+>>
+>> ... and if it started with -rc4, I'd try this one first.
+>
+> I'm not sure if this bug started with -rc4, let's say somewhere between
+> -rc3 and -rc6. I'll start with disabling MITIGATION_SPECTRE_BHI and then
+> I'll disable them one by one.
 
-     Andrew
+It is starting to look like that MITIGATION_IBRS_ENTRY is causing my
+problems. If I enable MITIGATION_IBRS_ENTRY I see the suspend stall
+relatively quickly. And then I disable the config I have not been able
+to reproduce the problem so far. But as this issue happens randomly I
+want to do some more tests to be sure.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
