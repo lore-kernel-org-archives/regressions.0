@@ -1,120 +1,138 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFADD14659B;
-	Mon, 13 May 2024 06:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF821474B0
+	for <regressions@lists.linux.dev>; Mon, 13 May 2024 08:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715582977; cv=none; b=pFPXbmOrmoXsaSYTi98s/sZvn75ijtGRtBFpvQxH4U3mYJaV91hnudNml6pGbWllgfpSTBui560h2c9zfCiJ3zZZTIeUyWKbB0CfqNdg7+z1QZiGGetWKIArSnPuEGAmdHJkbMnPX0qyRrcAm0GpVGKoFBEqjGb8PJVvY+qKG98=
+	t=1715588939; cv=none; b=pRKaRx5UQPUdNmE86uavfnTlKMHWlWnY9birpUncJt4O/kzg7TY1dVxrVgVAyOyey2Putj6jDg6sySGGxEmbovwlBt1CnjW/O5npJSGgC2d2uKAf4NXqdzm0UBMyDL3Yv3YqkGlGz+1OwLBsavR5gvAarUf8g+L8KavNtgclq/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715582977; c=relaxed/simple;
-	bh=0cpX5ux617/JwZJUz7k1Bx6q/EGegivOb0Df/prWx3A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KUGfzRBpH59/kj79c20WItPhHu7VECiEbfgX2wsain+4DpCKs51Mdx0HG/MSnPVn2KOzaB98PTReJ3rPe4kKKJpzZeF3wJryo0x9nZpLlxq2VoQOPoMIkREW+qzswcqY1wTV2hTlkmfKSBft4VckMU2YpTkYpLidJ4P+elyeOCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XR4aE1DI; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1715588939; c=relaxed/simple;
+	bh=1l1gBuhAghDzGTpmKFRmMZDa6k+2TjMJBTuOI8PxFZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dtUGb6iGhk+tX5oJZzwotMy6FGi+A5L8VMPEfULLNT6r5iXwmT2KSojNPUlLfpyXQ8Bsd+8frrpUSBp7oxLMtdkLAP30RqnXsU1AgAXXDc2tCiroB9l0x37MNZHnPSXIG3yIO9/Vl9AVLpyWTW0bqtzkHCZuhpzNuhf9dlG2TyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gS7vWV9o; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XR4aE1DI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=8oDndD//KXEszSr002rTHJX5WdheOGmR7fu8PgqgoRk=; t=1715582975;
-	x=1716014975; b=XR4aE1DIfKBEMsLtq7Zq1YaxlisG44STvEYhiylgdQ+PcIWU/cy/WizWQRFBD
-	UhdFmR5+nnKOQyjK5sUDpH9uv4qqtcfrYQWmubVgKnjQ0JW8fO6jLz+XocCC3rGdZffgJvgIj4rOK
-	W83pPquG9n1L5cSOLagueOGnjh8Fp3pJH9Bs8Ccoj3j9yNGWWSP9rzfT77tgoC9K8oIaVJO3jcRQV
-	FIvjyuZQOgTv2YKCN9sAeBaw7+rcUZlrQtSSuz8IuZe8BEwtXLqQyoFdTyMjgOpmjbgW9hXRghbas
-	tYKVuuBI5muwW3JYrS+ElYb6GBTkmCKiMyxILRzGcVRxWBBA4Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s6PV1-00080M-5H; Mon, 13 May 2024 08:49:27 +0200
-Message-ID: <7bc5065a-030d-48ea-9cf5-1aad52a72145@leemhuis.info>
-Date: Mon, 13 May 2024 08:49:26 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS7vWV9o"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ec486198b6so29578185ad.1
+        for <regressions@lists.linux.dev>; Mon, 13 May 2024 01:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715588937; x=1716193737; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1l1gBuhAghDzGTpmKFRmMZDa6k+2TjMJBTuOI8PxFZE=;
+        b=gS7vWV9o5B/f4p34De41/pLli5mwcqELKY3wRneil5eApqtKBYiFtdrVpPYQtQBe3I
+         TzBhc6CWMQApidwSanyQ76chzYZ7ev0eg4O1tOif0f04ZUd7EU/1WpmjkK4/BOHOHHvP
+         rIciOPbMHPil1hI5bALTJZh2fx2RAUAbvxZPOr/o+31xYq/jlgxAeHLIDnwcXJvxe+Ml
+         Kc6wG6b39cWBAiIu5IIxpxmMK5mrjue9qWSBfMsWdy7+eKLVgD+G44Trqa2a3fZ/zNxj
+         FfHX20Uz9hjb6FnemInGU5cbYuLAnc2gDCIKj7gtG+PZI4pFRKkUxuetq9G1Mmt6PPUP
+         sa1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715588937; x=1716193737;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1l1gBuhAghDzGTpmKFRmMZDa6k+2TjMJBTuOI8PxFZE=;
+        b=VI9iquyantJrXHmFlpoSKfn8uAUz9ST9//zw39RXTp11U43+80dududs5UgUPz+WHg
+         BshNJbM8DyhfdRwqe2HvxrCPp6QsheXvGYJiVT4VwqsjTZMJJO21bmOwYbu+HBN6vMYn
+         EeVn0qcSdRILWMjKu4z6f/VuPyvH7OxnWUAA3ljzyODxpaLmudoNrtDWuOWWYEWfPUPB
+         7OtMcEiv6OOOwEazAnqNIhEjKJ23YdscQF0TPvMB4xaVtq/MaunwJkvKQlCgssiPV55Z
+         NvrPXPxRIcydPIv0Tu5s8AzyZNUlspVYf8CPZejHY5Z+hP87iZnmdjUXY7IUBMQi62bY
+         Pf+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJRm/N2aZIVliRc/5LOJ2I1/dLPeNK9N6qg0LPOovE2HWxFs9TSZ1DaaZrhDVC491ezzC239IapxHu39gND0p31n8NLC3cBzGYuwo=
+X-Gm-Message-State: AOJu0Yx5W8KlemxpdNcUbcyp7g0F1d0X0ZpSlocgMAFkBBoz3otdXv/J
+	Laplo3rGk7eXGeasa618/X+2BR/i8DZHkqUEJ0FGppqUc6OOqB21
+X-Google-Smtp-Source: AGHT+IEyFi9OkHesvUDKD8WJBIa2kU2vFMcbgW2nT+sM0xKfUBCZ7S9sE6dvQzu9KaR545YjlGNXYw==
+X-Received: by 2002:a17:902:da8c:b0:1eb:4a72:f468 with SMTP id d9443c01a7336-1ef4416113fmr111274895ad.52.1715588937322;
+        Mon, 13 May 2024 01:28:57 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1807sm73594535ad.59.2024.05.13.01.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 01:28:56 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 26731184762DF; Mon, 13 May 2024 15:28:52 +0700 (WIB)
+Date: Mon, 13 May 2024 15:28:52 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	intel-wired-lan@lists.osuosl.org
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	lukas.probsthain@googlemail.com
+Subject: pi
+Message-ID: <ZkHPRBLlHJpRytIB@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH docs-next v2] docs: handling-regressions.rst: recommend
- using "Closes:" tags
-To: Karel Balej <balejk@matfyz.cz>, Jonathan Corbet <corbet@lwn.net>,
- regressions@lists.linux.dev, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240510183748.13028-1-balejk@matfyz.cz>
- <8ebe6545-de7e-4ee4-b36e-e91e90b90b70@leemhuis.info>
- <D17JB1SPR5SK.1B6BRVVU2Q6XN@matfyz.cz>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <D17JB1SPR5SK.1B6BRVVU2Q6XN@matfyz.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1715582975;9e9058c9;
-X-HE-SMSGID: 1s6PV1-00080M-5H
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MqJ187FVOnOf64oY"
+Content-Disposition: inline
 
-On 12.05.24 10:48, Karel Balej wrote:
-> Thorsten Leemhuis, 2024-05-12T09:47:31+02:00:
->> On 10.05.24 20:34, Karel Balej wrote:
 
->> Not totally sure if...
->>
->>> Some maintainers may even
->>> +   prefer it over "Closes:" entirely, although the latter is generally
->>> +   recommended.
->>
->> ...this sentence really should be here, but whatever.
-> 
-> I think I can see your point. I added it as it was something you
-> mentioned before but looking now at that mail again, I think this is not
-> really what you said. So I'm in favour of dropping it.
-> 
-> If you give me a go-ahead, I will send v3 with this sentence dropped and
-> your Ack added right back.
+--MqJ187FVOnOf64oY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, do that please. Thx again! Ciao, Thorsten
+Hi,
+
+<lukas.probsthain@googlemail.com> reported on Bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=3D218826) regression on his Th=
+inkpad
+T480 with Intel I219-LM:
+
+> After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver ex=
+hibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Etherne=
+t controller. The system experiences a freeze when an Ethernet cable is plu=
+gged in. The issue is not present in the previous kernel version 6.1.90.
+>=20
+> System Information:
+> - Model: Lenovo Thinkpad T480
+> - BIOS Version: N24ET76W (1.51) dated 02/27/2024
+> - Ethernet Controller: Intel Corporation Ethernet Connection (4) I219-LM =
+(rev 21)
+> - Kernel Module in Use: e1000e
+> - Operating System: Manjaro Linux, kernel version 6.6.30-1
+>=20
+> Steps to Reproduce:
+> 1. Boot system with kernel version 6.6.30.
+> 2. Connect the Ethernet cable to the laptop.
+> 3. Observe that the system freezes.
+>=20
+> Expected Behavior:
+> The system should remain stable and maintain network connectivity without=
+ freezing when the Ethernet cable is connected.
+>=20
+> Actual Behavior:
+> The system freezes immediately upon plugging in the Ethernet cable.
+>=20
+> Additional Information:
+> The regression seems to be introduced in one of the updates between kerne=
+l versions 6.1.90 and 6.6.30. The issue does not occur with the older kerne=
+l version 6.1.90.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--MqJ187FVOnOf64oY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkHPOgAKCRD2uYlJVVFO
+o5k0AQCvBu6nHDzpTwo8OJz3jjdqc5D6AsxCg7E3p+QX6zJ72AEA1/QI1liupwSO
+V+b6OxS6Ih+R0okARxUMwGuT3svVQw8=
+=hyi0
+-----END PGP SIGNATURE-----
+
+--MqJ187FVOnOf64oY--
