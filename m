@@ -1,161 +1,95 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9230101CA
-	for <regressions@lists.linux.dev>; Tue, 14 May 2024 07:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCC517BDC
+	for <regressions@lists.linux.dev>; Tue, 14 May 2024 08:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715670481; cv=none; b=qW0M/9A8ZJzznm3+4kwgPb+MQdzR4l/7uv8M+JNsnTJm9vKTEMjmnLvT+qEMi9ST/gvBd2OdNG9e5f/3YH01vUeH2kmCouZmto9U82gyZXBDAHbdiYZGLTdRs6Hh+K4fFnmgj1U4oL+uWsY/Ha0xeu45Z+3ItiSbCuYjAjL/qyo=
+	t=1715675110; cv=none; b=eJp9j468Ud7jnSnKug6xn3BIH79D2mzPdeL1DSsenK1q7cAIKUmTHPLjbezkfZJFb5ssKtQFaDBoUFyAugOZ4+lVIyOIEIAyxm87Kp58ecydq5yF66H1/c1eM6NdXjZvf43672kYsrjoAHup6MO6rY4is4E2IotsooGFbIY8W+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715670481; c=relaxed/simple;
-	bh=X+YkrXgyWzVE1vkaFzWg3Tm00enAzXXtdq+NMhAjH/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MavnWkbP3bCm+CJe63upFhLdgFu0N+QEr1C0jcARyUlGsW8sEQYqlLI0NAuOzcHwhEEjJHNhRwMJKniehp+2N3Ly9BuVHTOzFN5hXCmGfRMVBapjXqvunk3wZSkH5bjBMcAolFxoiJLWFoBRgdXmvEE7xi7GnVtwWd7BVLSScXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Wzzp3xN0; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1715675110; c=relaxed/simple;
+	bh=E1jl8ZjAyUFlpawQFcuvFX7RI2JhugpIXhQkNMW7VGY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pKbJOldKiJqgxmStrufjhfdXfVjz8t7O5GwvPiAiTQBIKIvj5nNklnR1gvwIB44e1N6QD76gh+ueAacT7UlvlQpk8Gvbtspqito94yu4SrKEIZTTLyOiEgsWRa6t1LwBBj2TvlYfT4JoYQ35pkK++e8NE+ZLbNQ+qXCX3AeAan4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZpO5p/Ei; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I/3Db3S8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Wzzp3xN0"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-420180b5922so15346665e9.2
-        for <regressions@lists.linux.dev>; Tue, 14 May 2024 00:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1715670478; x=1716275278; darn=lists.linux.dev;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X+YkrXgyWzVE1vkaFzWg3Tm00enAzXXtdq+NMhAjH/M=;
-        b=Wzzp3xN0JjoN++uDReLIRdOULJiC9D/0qq/ST+uHrVjeZrnetY+Hx9AlojZueqYOzT
-         j+bGLAlhIIzXVSV6/d7qMlsOiQYpCOiDFANbYkZkQqfVjDN+ypC7Jqes9QysUfJsQbqr
-         oTmkpiqIAqg8+fnnShxfH9v2ScHeRqRu3rUHBWcjv8sgq3VfmXaQ6Bcv3R/wBiWoERTD
-         NV/4mQ8hE78Ru8LOcarJt9tK/nNseH+lceXVKZ948EMZzpncFgq73NYI7NGYuoA8VuVe
-         tutH6SXsWcoWa2VDcrIYTPwc09GqQUZKGteL1k4jKjXITeOnMfQpOTYQTj7YWcS++52D
-         lQ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715670478; x=1716275278;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X+YkrXgyWzVE1vkaFzWg3Tm00enAzXXtdq+NMhAjH/M=;
-        b=c/80Zw5KU2phgMM0LEnDFZ2q6dRG4J2nNF90ITpv/L+aAfyls1jaqSG1rx6bxpqXS+
-         Om2tN0D1blaL8IlZZOuFxw75uMmsLCJOXT/6sh6WgwsSJYHy+rJ5pfANBfTr6Ykxff9r
-         fDHgLMNlTPHcSTWEoCpDPdoKzbLHNBZZBqlTepW/tzPB3DUW44NvsPCPMVXvRmE41b1S
-         fuOKyIsH14+Xiz25WwrRPCLIHraEJ0nKayyGg2LmV1Q2uyt0zIkG0dhCO0j9AA03rjHh
-         Jw1c7a7aCwq5l7RqHIUrEMFEL5YBF00VcMvw70JMUExMFFM72Roy6swdnm/9+Qjn6M0L
-         6kDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7Ix3U5i9BUquYXt+6DGqLy7wSRFSZgabr1wRJ9Z7noiEQTyjvHnTKhYjK/kDIxmb41PYcPLEAwT8PSxvlXy1aDESwkkg1mbM4Qg8=
-X-Gm-Message-State: AOJu0Yz13iYU7R5b2dKP94bo6Bo3tLZU9tpSjLNLISrwrryMYCeerarc
-	RGgP0IotV4lSPlE38i0nn4D+ZAZsppfzgXCUAal2J5/2/ydr5qY=
-X-Google-Smtp-Source: AGHT+IEsS63TXT+CNUHhfxEjLBmwVUfEfHU7Zb1RUnpJaRDD56Nb3r+lUE0Fx0YW+PSVfdn2LDRVhA==
-X-Received: by 2002:a05:600c:5252:b0:420:f8:23d6 with SMTP id 5b1f17b1804b1-42000f82681mr109286795e9.36.1715670477628;
-        Tue, 14 May 2024 00:07:57 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b40c2.dip0.t-ipconnect.de. [91.43.64.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42012d9ace5sm79279885e9.2.2024.05.14.00.07.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 00:07:56 -0700 (PDT)
-Message-ID: <c4e8e0b5-fc32-4e26-8c0e-27a996769903@googlemail.com>
-Date: Tue, 14 May 2024 09:07:55 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZpO5p/Ei";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I/3Db3S8"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715675101;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rya9VEOvXpJSVd+MOeMBD/eFCeJ8PzLNGegzNQCqGfg=;
+	b=ZpO5p/EiAzz3rLhJ2lV+LlIt412WOp8MZJC72zUBUsK3PJ/t1M3LlAovqh2X3hBrJtz4BE
+	gnIV/MV5uy0nPm+cdknW0IBEkfq97oy+Uof5x/IB5himmUyaYE5bMftqSYzXwX+LsaftAy
+	Sayq7VixBOX9LbPLFaMmJ6+IdN+I35WPAlZIgkbhCPEC/xXd8i1EAaZI4Dce9avHjroIlJ
+	h5VrhYRvw/mhYmlpe37XGsWNpBTP3JL4SaQ7Z9DK3kilxv+/j3WKG7cl6sHyCjO5r75OtE
+	hj1PM7z8ozE3qN870DQ6yz9KfCNo/ZNu+laqXdA7jOmNmND0CivHDTLaiH1/Og==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715675101;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rya9VEOvXpJSVd+MOeMBD/eFCeJ8PzLNGegzNQCqGfg=;
+	b=I/3Db3S8nfD54rKc6DNf8xY5f6sjY5bu7j8MBrYa+hE3qNoBpEBJ0pxgf87pe1KlAMM2/K
+	GcOvMnWOAB5aWEDg==
+To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+In-Reply-To: <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
+ <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+Date: Tue, 14 May 2024 10:25:01 +0200
+Message-ID: <87bk58n6le.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: Kernel 6.8.4 regression: aacraid controller not initialized any
- more, system boot hangs
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev
-References: <eec6ebbf-061b-4a7b-96dc-ea748aa4d035@googlemail.com>
- <yq1cypvwz5o.fsf@ca-mkp.ca.oracle.com>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-Autocrypt: addr=pschneider1968@googlemail.com; keydata=
- xjMEY58biBYJKwYBBAHaRw8BAQdADPnoGTrfCUCyH7SZVkFtnlzsFpeKANckofR4WVLMtMzN
- L1BldGVyIFNjaG5laWRlciA8cHNjaG5laWRlcjE5NjhAZ29vZ2xlbWFpbC5jb20+wpwEExYK
- AEQCGyMFCQW15qgFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQSjgovXlszhGoyt6IZu
- OpLJLD/yRAUCY58b8AIZAQAKCRBuOpLJLD/yRIeIAQD0+/LMdKHM6AJdPCt+e9Z92BMybfnN
- RtGqkdZWtvdhDQD9FJkGh/3PFtDinimB8UOB7Gi6AGxt9Nu9ne7PvHa0KQXOOARjnxuIEgor
- BgEEAZdVAQUBAQdAw2GRwTf5HJlO6CCigzqH6GUKOjqR1xJ+3nR5EbBze0sDAQgHwn4EGBYK
- ACYWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCY58biAIbDAUJBbXmqAAKCRBuOpLJLD/yRONS
- AQCwB9qiEQoSnxHodu8kRuvUxXKIqN7701W+INXtFGtJygEAyPZH3/vSBJ4A7GUG7BZyQRcr
- ryS0CUq77B7ZkcI1Nwo=
-In-Reply-To: <yq1cypvwz5o.fsf@ca-mkp.ca.oracle.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------3k07hvzCU80C7y4hrWzdZar0"
+Content-Type: text/plain
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------3k07hvzCU80C7y4hrWzdZar0
-Content-Type: multipart/mixed; boundary="------------XgrnrIbEqmkVi01629oNH2n6";
- protected-headers="v1"
-From: Peter Schneider <pschneider1968@googlemail.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev
-Message-ID: <c4e8e0b5-fc32-4e26-8c0e-27a996769903@googlemail.com>
-Subject: Re: Kernel 6.8.4 regression: aacraid controller not initialized any
- more, system boot hangs
-References: <eec6ebbf-061b-4a7b-96dc-ea748aa4d035@googlemail.com>
- <yq1cypvwz5o.fsf@ca-mkp.ca.oracle.com>
-In-Reply-To: <yq1cypvwz5o.fsf@ca-mkp.ca.oracle.com>
+Lyude!
 
---------------XgrnrIbEqmkVi01629oNH2n6
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Mon, May 13 2024 at 19:32, Lyude Paul wrote:
+> Oh! I am not sure what changed, but I realized that you might also want to see
+> the serial output from the debugging patch that you had sent me a while ago.
+> So I just built that against the 6.9 kernel and it actually seems to boot
+> without needing me to pass intremap=off. So it seems like that might actually
+> be a fix!
 
-SGkgTWFydGluLA0KDQptZWFud2hpbGUsIHNvbWUgbW9yZSBwZW9wbGUgd2hvIGZhY2UgdGhl
-IHNhbWUgcHJvYmxlbSBoYXZlIGJlZW4gZ2F0aGVyaW5nIGluIHRoaXMgdGhyZWFkIA0KaW4g
-dGhlIFByb3htb3ggdXNlciBmb3J1bToNCg0KaHR0cHM6Ly9mb3J1bS5wcm94bW94LmNvbS90
-aHJlYWRzL3B2ZS04LTIta2VybmVsLTYtOC00LTItZG9lcy1ub3QtYm9vdC1jYW5ub3QtZmlu
-ZC1yb290LWRldmljZS4xNDU3NjQvDQoNClR3byBvZiB0aGVtIGFsc28gaGF2ZSBhbiBBZGFw
-dGVjIGNvbnRyb2xsZXIsIHdoaWxlIGFub3RoZXIgb25lIGhhcyBhIFBFUkMgSDMxMCBNaW5p
-IChMU0kgDQpiYXNlZCkuDQoNCkRpZCB5b3UgaGF2ZSBhbnkgY2hhbmNlIHRvIGxvb2sgaW50
-byB0aGlzIGluIG1vcmUgZGVwdGg/IERvIHlvdSBuZWVkIG1vcmUgaW5mb3JtYXRpb24gZnJv
-bSANCm1lIHRvIHRhY2tsZSB0aGlzIGlzc3VlPyBJJ20gbm90IGEga2VybmVsIGRldmVsb3Bl
-ciwganVzdCBhIHVzZXIsIGJ1dCBJIGd1ZXNzIHdpdGggcHJvcGVyIA0KaW5zdHJ1Y3Rpb24g
-SSB3b3VsZCBiZSBhYmxlIHRvIGNvbXBpbGUgYW5kIHRlc3QgcGF0Y2hlcy4NCg0KQmVzdGUg
-R3LDvMOfZSwNClBldGVyIFNjaG5laWRlcg0KDQotLSANCkNsaW1iIHRoZSBtb3VudGFpbiBu
-b3QgdG8gcGxhbnQgeW91ciBmbGFnLCBidXQgdG8gZW1icmFjZSB0aGUgY2hhbGxlbmdlLA0K
-ZW5qb3kgdGhlIGFpciBhbmQgYmVob2xkIHRoZSB2aWV3LiBDbGltYiBpdCBzbyB5b3UgY2Fu
-IHNlZSB0aGUgd29ybGQsDQpub3Qgc28gdGhlIHdvcmxkIGNhbiBzZWUgeW91LiAgICAgICAg
-ICAgICAgICAgICAgLS0gRGF2aWQgTWNDdWxsb3VnaCBKci4NCg0KT3BlblBHUDogIDB4QTM4
-MjhCRDc5NkNDRTExQThDQURFODg2NkUzQTkyQzkyQzNGRjI0NA0KRG93bmxvYWQ6IGh0dHBz
-Oi8vd3d3LnBldGVycy1uZXR6cGxhdHouZGUvZG93bmxvYWQvcHNjaG5laWRlcjE5NjhfcHVi
-LmFzYw0KaHR0cHM6Ly9rZXlzLm1haWx2ZWxvcGUuY29tL3Brcy9sb29rdXA/b3A9Z2V0JnNl
-YXJjaD1wc2NobmVpZGVyMTk2OEBnb29nbGVtYWlsLmNvbQ0KaHR0cHM6Ly9rZXlzLm1haWx2
-ZWxvcGUuY29tL3Brcy9sb29rdXA/b3A9Z2V0JnNlYXJjaD1wc2NobmVpZGVyMTk2OEBnbWFp
-bC5jb20NCg0KDQoNCg0KQW0gMDkuMDUuMjAyNCB1bSAwMzozOCBzY2hyaWViIE1hcnRpbiBL
-LiBQZXRlcnNlbjoNCj4gDQo+IEhpIFBldGVyIQ0KPiANCj4gVGhhbmtzIGZvciB0aGUgZGV0
-YWlsZWQgYnVnIHJlcG9ydC4NCj4gDQo+PiA2LjguOCsgICAgICAgICAgV09SS1MgICBSZXZl
-cnQgInNjc2k6IGNvcmU6IENvbnN1bHQgc3VwcG9ydGVkIFZQRCBwYWdlDQo+PiBsaXN0IHBy
-aW9yIHRvIGZldGNoaW5nIHBhZ2UiIC0gVGhpcyByZXZlcnRzIGNvbW1pdA0KPj4gYjVmYzA3
-YTVmYjU2MjE2YTQ5ZTZjMWQwYjE3MmQ1NDY0ZDk5YTg5YiAodGhpcyBpcyB0aGUgZmlyc3Qg
-YmFkIGNvbW1pdA0KPj4gb2YgbXkgYmlzZWN0IHNlc3Npb24sIHNlZSBiZWxvdywgYW5kIGEg
-c2luZ2xlIHBhdGNoIGFzIHBhcnQgb2YgdGhlDQo+PiBhYm92ZSBtZXJnZWQgdGFnICdzY3Np
-LWZpeGVzJykNCj4gDQo+IFRoZSBwdXp6bGluZyB0aGluZyBpcyB0aGF0IHRoZSBwYXRjaCBp
-biBxdWVzdGlvbiByZXN0b3JlcyB0aGUgb3JpZ2luYWwNCj4gYmVoYXZpb3IgaW4gd2hpY2gg
-d2UgZG8gbm90IGF0dGVtcHQgdG8gcXVlcnkgYW55IHBhZ2VzIG5vdCBleHBsaWNpdGx5DQo+
-IHJlcG9ydGVkIGJ5IHRoZSBkZXZpY2UuDQo+IA0KPiBDYW4geW91IHBsZWFzZSBzZW5kIG1l
-IHRoZSBvdXRwdXQgb2Y6DQo+IA0KPiAjIHNnX3ZwZCAtYSAvZGV2L3NkYQ0KPiAjIHNnX3Jl
-YWRjYXAgLWwgL2Rldi9zZGENCj4gDQo+IHdoZXJlIHNkYSBpcyBvbmUgb2YgdGhlIGFhY3Jh
-aWQgdm9sdW1lcy4NCj4gDQo+IFRoYW5rcyENCj4gDQo=
+Which one of the debug patches did you use?
 
---------------XgrnrIbEqmkVi01629oNH2n6--
+>> Yes - it still boots. As well I finally got the serial console adapter in, but
+>> I don't see any additional output:
 
---------------3k07hvzCU80C7y4hrWzdZar0
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+That's fine, but now I can provide you debug patches which dump
+information during early boot.
 
------BEGIN PGP SIGNATURE-----
+Can you please provide the output of 'cpuid -r' ?
 
-wnsEABYIACMWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCZkMNywUDAAAAAAAKCRBuOpLJLD/yRCwp
-AQCQ7e+Eq4H8veOUlyQswf1miAnfnUuv6gJHx8fzCKZitgEA+ZQiQ7a7hoNcNvVQkvkExdTsC207
-mtXOQ/byiSnliAc=
-=WPgk
------END PGP SIGNATURE-----
+Thanks,
 
---------------3k07hvzCU80C7y4hrWzdZar0--
+        tglx
