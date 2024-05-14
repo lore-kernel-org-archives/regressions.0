@@ -1,87 +1,90 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB9D140E5B
-	for <regressions@lists.linux.dev>; Tue, 14 May 2024 13:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECAD13DDDD
+	for <regressions@lists.linux.dev>; Tue, 14 May 2024 13:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715693433; cv=none; b=hwrygxLg3jqBSFeSssu8qGOLW3RHtHfJvRDtTNeg9ufIDtBFzoNvXB+aeHE6WRU5KapWLVeLXB21yYpT5VwzrSrcWHPrYlZ+h6lp5ms8kdpNuTysC5xcvBxAb4PrZZmqqkWurc/iSYvhpbwWC064wbu85blMnK4moY/7I6IxHfA=
+	t=1715693455; cv=none; b=l0zDWYa7JakuDpjpD9k9/hQTzbJBvUxHubWvh6Q0DuZU17LFWwDtMarueXk9irGkm8wrG2gGdeDXinzGWliVoOEFfGWcbW0wynKdHH9ysnzHBZadpd3/RocwNI5lEWm4BlVVpcWoqA2cIyRd1FpVVxuCFiRZM/b+f9rxoLI3g+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715693433; c=relaxed/simple;
-	bh=piBqjtptZG2+6353FTd5m351PoFO/HCOJmoR5OMs/Qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AerMGJf9DiX5obSJRdCdFL2xLHZCulGOCwBJ8W3As3xvYUOwMNeLnV4+4kKAG5MQ3g4a1HWP3K43QE0oXUHV7ofnRZ6pPo53ufDSzjjZD3fGeo3i1N+cuf0hzQwru962Y62hQXBOL+pykEqtupQJLhIkWgkVssZ/t1253e4c1DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cV0EHvlG; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715693455; c=relaxed/simple;
+	bh=nV9cCdyWa6uNoKVhoHvsrtVk11wlmfVkj3k9QaXbYy8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cidFAO7b8erAkPhvhqSTwyBmUTRU/2wsNp+JDsKFWvG3NugceD8PktkL+8pdS3ljPuy8CvTOeUqCtz1BecZUS6UCLh/B3Ec3gjUf+6HbCHHBbWvvKSjReRMcH0kkq9/NyDWZchZSxNthG2l62emEJoAFyZNAGqYC+nTqRBbSRss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fWX2K2SC; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cV0EHvlG"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51fc01b6fe7so5998300e87.0
-        for <regressions@lists.linux.dev>; Tue, 14 May 2024 06:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715693429; x=1716298229; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5LL9tKZII3301100NDiVs7FhVn6xmZqw8CDO8u/ijRQ=;
-        b=cV0EHvlG4X/LkjD9sGKdZ+PkmUpf9UR8pRlrgDJN/ujYQilazF8li8l2EWrPou3zrv
-         /FpaLfKJUzVYIjq6VkEbPeLXLfgGAGMt/FnmZCKHx9GtbPvOhXTCc1xnqCqh9MF95ZyA
-         rW0qYWfXWqqvjANSUwQhqw4pC5cHHmF+m9ggnD70GZceYXCkkgr2lWT9dT0lA68u6LoH
-         5y8D9WcgFJCF+PakNLuLmo8ndSYRKSAUbADv5XPqg8yiSIvBCA8jyQyakRjFPmx6yntV
-         Xi62urSKp0f6WSuoJ91Ux3x3R8m8SE0HwdokUFobMsa0kWmCwRTa4qrsZXOFaMR/DsG2
-         61RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715693429; x=1716298229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5LL9tKZII3301100NDiVs7FhVn6xmZqw8CDO8u/ijRQ=;
-        b=g4gQO1hLRqm6vx8hdvreQuWBBLreMIoq401Lbzp9Qxg0Vg3piBLRr1HeJh4BhvEz8u
-         8KxNKJGxfs8KG0y3us4ygUHa02VhKk7shQX8058pmvBLRGZzy0Tmnie2W4jEbZcQM4Ed
-         WUzYhQhdAYUXl3OzX1scnHO9VmQv75ATDCy1PzoxpJNftNttDb07hiOu5hU610k4b0h2
-         /uh+msNvieSqawd6h6o84KSgeyogvnQ0n6yskCZtxZgT/NO97vM4aJMJcjHZja2ir3vD
-         F87UDLnACjfS3yQRWiNarZrVHKbOOdSxMbSzaNveVOby3+EWdNb8OWcf6j6Voa0WxsD7
-         KNDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE+mVMpLBJlJb1EIhVupbi5ILPh6/oAvkTuMw82AvjtsUrjfd+5SlMbLSzraRncwtFbL+2LYQXyapnHJSh1UTkWd2KHfjjPq4lPqc=
-X-Gm-Message-State: AOJu0YxCDN3clUroGKKw7qAMCadv+Do3MBtQZDX1/5YrihImDWExenQX
-	9XrXJ48rfSWz1Goa74+HY3t/9IXSiD9gO8C8o9mFroBYkAYHbur+KOei0rR9EgiOPVj/TIP8e91
-	fo16MIhPJIjHMUrA2cXKFh/HDlTE=
-X-Google-Smtp-Source: AGHT+IHJsBnracCRDvXoTqylYTPRSeEHgfeoXd4geBcI7/I2MW0Bm8PSb+4hJZMKBHWqVwu6oebI1NAkZW1cfjNirqQ=
-X-Received: by 2002:a2e:9687:0:b0:2dc:bd75:41ba with SMTP id
- 38308e7fff4ca-2e51ff4eab0mr78555501fa.27.1715693428403; Tue, 14 May 2024
- 06:30:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fWX2K2SC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715693453; x=1747229453;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nV9cCdyWa6uNoKVhoHvsrtVk11wlmfVkj3k9QaXbYy8=;
+  b=fWX2K2SCx9RqFByrqCHjCTJYkTSeAecl0RpmidKnVXD1cC50jAL/zdDD
+   E2dojVx/LXrTjyut51butn/xH9+Fr1ukAT29vV/cVkgr8YlFOPPLjZXak
+   N+rDCTG9yEhZGP5c4qbWEFYfkf9z9oEY21GiB+5QeRJgo6jhBXHRDt2Dh
+   cDxhINqz7FCUkd1nyFh+WPKKHdkm/Hk1oTe6sdECaKiE9/O102VT3b9EO
+   Vn69dUsDiXHx/2XONZfhwT+4rnd9mYyOiU8bDvQ5dgI01OcDUyeDcTcIY
+   QzHHAs4UYuK2qrj4318FBojBOUQjLUdPCAYgn8b7H9E5Dwef7n3ANUPtP
+   Q==;
+X-CSE-ConnectionGUID: WKcXeboRR7WlqGfj8LxHRg==
+X-CSE-MsgGUID: cnCzOTSoSWumCsEsUWoAXA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11507728"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="11507728"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 06:30:52 -0700
+X-CSE-ConnectionGUID: E8HEEfvkQ8y2UtObp/BVIQ==
+X-CSE-MsgGUID: hOQLxRn9QuK8XMwaYAWxlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="30701483"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.94])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 06:30:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 14 May 2024 16:30:41 +0300 (EEST)
+To: Vadym Krevs <vkrevs@yahoo.com>
+cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+    Bagas Sanjaya <bagasdotme@gmail.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Regressions <regressions@lists.linux.dev>, 
+    Linux Serial <linux-serial@vger.kernel.org>, 
+    Gilles Buloz <gilles.buloz@kontron.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [regression] [bisected] commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0
+ corrupts data sent via pseudoterminal device
+In-Reply-To: <645803059.1237606.1715692880298@mail.yahoo.com>
+Message-ID: <386fae3e-5286-e13d-4171-3a6e87cb1567@linux.intel.com>
+References: <ZkLv3wn62jqMVpSF@archie.me> <CAHp75VcjeJ5oZy2JjbyrKn+GVvixJKmfh3Yj1p-HxcJHrm0Wzg@mail.gmail.com> <606328522.1205749.1715678929830@mail.yahoo.com> <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com> <6bfafddc-cf5b-4829-e09b-2622aaf83093@linux.intel.com>
+ <645803059.1237606.1715692880298@mail.yahoo.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZkLv3wn62jqMVpSF@archie.me> <CAHp75VcjeJ5oZy2JjbyrKn+GVvixJKmfh3Yj1p-HxcJHrm0Wzg@mail.gmail.com>
- <606328522.1205749.1715678929830@mail.yahoo.com> <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
- <6bfafddc-cf5b-4829-e09b-2622aaf83093@linux.intel.com> <645803059.1237606.1715692880298@mail.yahoo.com>
-In-Reply-To: <645803059.1237606.1715692880298@mail.yahoo.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 14 May 2024 16:29:50 +0300
-Message-ID: <CAHp75Vfsw+k6aSZ_PTduuTWPFwurgZTOt0O0QTkdLtYKSzv7zQ@mail.gmail.com>
-Subject: Re: [regression] [bisected] commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0
- corrupts data sent via pseudoterminal device
-To: Vadym Krevs <vkrevs@yahoo.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux Serial <linux-serial@vger.kernel.org>, 
-	Gilles Buloz <gilles.buloz@kontron.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-191811837-1715693441=:6875"
 
-On Tue, May 14, 2024 at 4:21=E2=80=AFPM Vadym Krevs <vkrevs@yahoo.com> wrot=
-e:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-191811837-1715693441=:6875
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 14 May 2024, Vadym Krevs wrote:
+
 > On Tuesday, 14 May 2024 at 12:03:25 BST, Ilpo J=C3=A4rvinen <ilpo.jarvine=
 n@linux.intel.com> wrote:
+> =C2=A0
 > > On Tue, 14 May 2024, Andy Shevchenko wrote:
+> >=C2=A0
 > > > On Tue, May 14, 2024 at 12:28=E2=80=AFPM Vadym Krevs <vkrevs@yahoo.co=
 m> wrote:
+> > > >
 > > > > It's a standard setup for an out-of-the box default install of open=
 SUSE 15.5 with KDE. All tests done in Konsole with bash as shell.
 > > > >
@@ -104,24 +107,24 @@ ixon ixoff -iuclc -ixany -imaxbel iutf8
 > > > Yeah. SW flow control is enabled, but I don't see which character is
 > > > being used for that. Anyway, let's give Ilpo a chance to look into
 > > > this.
-> >
+> >=C2=A0
 > > Thanks a lot for pinpointing the commit with bisect. It turns out this
 > > is a quite bad corruption bug and I'm quite surprised I didn't see (or
 > > notice) it while testing the patch.
-> >
+> >=C2=A0
 > > Could you please test and confirm the patch below fixes the issue?
 > > --
 > > [PATCH] tty: n_tty: Fix buffer offsets when looked ahead is used
-> >
+> >=C2=A0
 > > When lookahead has "consumed" some characters (la_count > 0),
 > > n_tty_receive_buf_standard() and n_tty_receive_buf_closing() for
 > > characters beyond the la_count are given wrong cp/fp offsets which
 > > leads to duplicating and losing some characters.
-> >
+> >=C2=A0
 > > If la_count > 0, correct buffer pointers and make count consistency too
 > > (the latter is not strictly necessary to fix the issue but seems more
 > > logical to adjust all variables immediately to keep state consistent).
-> >
+> >=C2=A0
 > > Reported-by: Vadym Krevs <vkrevs@yahoo.com>
 > > Fixes: 6bb6fa6908eb ("tty: Implement lookahead to process XON/XOFF time=
 ly")
@@ -131,7 +134,7 @@ ly")
 > > ---
 > > drivers/tty/n_tty.c | 22 ++++++++++++++++------
 > > 1 file changed, 16 insertions(+), 6 deletions(-)
-> >
+> >=C2=A0
 > > diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
 > > index f252d0b5a434..5e9ca4376d68 100644
 > > --- a/drivers/tty/n_tty.c
@@ -141,54 +144,59 @@ y, const u8 *cp, const u8 *fp,
 > > else if (ldata->raw || (L_EXTPROC(tty) && !preops))
 > > n_tty_receive_buf_raw(tty, cp, fp, count);
 > > else if (tty->closing && !L_EXTPROC(tty)) {
-> > -        if (la_count > 0)
-> > +        if (la_count > 0) {
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (la_count > 0)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (la_count > 0) {
 > > n_tty_receive_buf_closing(tty, cp, fp, la_count, true);
-> > -        if (count > la_count)
-> > -            n_tty_receive_buf_closing(tty, cp, fp, count - la_count, f=
-alse);
-> > +            cp +=3D la_count;
-> > +            if (fp)
-> > +                fp +=3D la_count;
-> > +            count -=3D la_count;
-> > +        }
-> > +        if (count > 0)
-> > +            n_tty_receive_buf_closing(tty, cp, fp, count, false);
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (count > la_count)
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 n_tty_receive_buf_closing(tt=
+y, cp, fp, count - la_count, false);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cp +=3D la_count;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (fp)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fp +=3D la_cou=
+nt;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 count -=3D la_count;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (count > 0)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 n_tty_receive_buf_closing(tt=
+y, cp, fp, count, false);
 > > } else {
-> > -        if (la_count > 0)
-> > +        if (la_count > 0) {
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (la_count > 0)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (la_count > 0) {
 > > n_tty_receive_buf_standard(tty, cp, fp, la_count, true);
-> > -        if (count > la_count)
-> > -            n_tty_receive_buf_standard(tty, cp, fp, count - la_count, =
-false);
-> > +            cp +=3D la_count;
-> > +            if (fp)
-> > +                fp +=3D la_count;
-> > +            count -=3D la_count;
-> > +        }
-> > +        if (count > 0)
-> > +            n_tty_receive_buf_standard(tty, cp, fp, count, false);
-> >
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (count > la_count)
+> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 n_tty_receive_buf_standard(t=
+ty, cp, fp, count - la_count, false);
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cp +=3D la_count;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (fp)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fp +=3D la_cou=
+nt;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 count -=3D la_count;
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (count > 0)
+> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 n_tty_receive_buf_standard(t=
+ty, cp, fp, count, false);
+> >=C2=A0
 > > flush_echoes(tty);
 > > if (tty->ops->flush_chars)
 > > --
 > > 2.39.2
->
+>=20
 > Yes, I've tested the patch against the 6.9.0-rc7-local-00012-gdccb07f2914=
-c kernel (last commit 45db3ab70092637967967bfd8e6144017638563c from May 8th=
-) and it works just fine.
->
+c kernel (last commit=C2=A045db3ab70092637967967bfd8e6144017638563c from Ma=
+y 8th)=C2=A0and it works just fine.=C2=A0
+>=20
 > Thank you very much for fixing the problem so quicky.
-
-Can you provide a formal Tested-by: tag? (It's documented here
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#usin=
-g-reported-by-tested-by-reviewed-by-suggested-by-and-fixes,
-basically it's a reply with whatever, but one line should start with
-Tested-by: followed by your name and email and nothing more.
-
+>=20
+> Kind regards,
+> Vadym
+>=20
 > P.S.: Hopefully, Yahoo mail has actually sent this reply as plain text.
 
+Thanks for testing.
+
+Can I put your Tested-by tag into the fix?
 
 --=20
-With Best Regards,
-Andy Shevchenko
+ i.
+
+--8323328-191811837-1715693441=:6875--
