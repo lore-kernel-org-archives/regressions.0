@@ -1,82 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9233151C42
-	for <regressions@lists.linux.dev>; Tue, 14 May 2024 17:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883B81DDEE
+	for <regressions@lists.linux.dev>; Tue, 14 May 2024 22:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715708225; cv=none; b=Tlz4ZLcQZG89BWFfWg5e4dNoeYVrHC31lQLo1JgE5HIibsdw49jjteC202kXUMTxJ0QqChpJF4sahPYtnhbosVFnUzSZdVKlGyWFuCtn0cOTaso72bmAua1fo546de7sZrMIcG4zKGlk/pP7cYwIRYesgJT+TudbSv/BtlOOkx8=
+	t=1715726642; cv=none; b=rOsckaiVLm7uMGkkwiljiex1DTstRzTQoyaH75cNbI3N1zSYBF7l2qELTuxT59cNMDq0pwVTXr96j7WuaNQaQCz0cUBzGvc8EETCvQijnKkJxL5WAfi/xtq/1xp+hNnXtAPeJLja05HvWdJ+5l9N95WbPXZDffn3FKeoI/1MGXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715708225; c=relaxed/simple;
-	bh=wPB6xa73wP34r6zbh4porjOgJAG59GDOLNIbRQDTbQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARCPvhC/6dX3CBmogXq76/KP0bfmdp9Pxug30GTHjGfRsPC88tqw0ngCeut1XGhnrch3lM9LHIu8LuwZYDzzGJhjSIsdpnvCsToKYrcgWwTmTc3t9kEks/8Upd7Q5oV6YTW3jphTqhGwDs2T+YF365ixQH7zrYfr0HIciBmmghs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DM6kvVic; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715726642; c=relaxed/simple;
+	bh=38tNxLFx1OxlRM50Jm+1WZds6yWs3DvO0jLgDD/xZpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RkdeGzt9nObXzWakxTdSPM5D0gyEcXHme3f2YDX3JOVaH8KLR0qpYxOUJrUqRX0UKrBVVQrKOoxCNMpP6nprPLfRnN0vkESZRhWQTSQbyW3r0emH6PsYaOnJ+g4FlvYJVaz4TEIWH/ozbGuFJ7wQaO3q0xCudMXtpnxazw/hhcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=o1i/63AH; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DM6kvVic"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715708224; x=1747244224;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wPB6xa73wP34r6zbh4porjOgJAG59GDOLNIbRQDTbQ0=;
-  b=DM6kvVicbKQ6Dji3MfW72Z18LxFvUFTWrsxdsWd3yxnN51haYVN2jOEm
-   wxkj53MxEpgITLDzBgybFdiiSyssUPcGTHZKdtNOqdjAfz6If5W2GJdHr
-   bX47JeHdXi5kkY82uHr0uA2AesG3/cUGME802l+MY3BcZB6MsmkToesZ+
-   2LqmNi3fnohgzUuM8HBs1jOyZ0EMVNnk5SA1VtLUhSlTFDjU2ewxWkiNR
-   Cny1nt3MiN8L45l2HRwkbkG2kLrFBUPYJGYnvmdaDwr4z72ayYQglrCdF
-   XhANjtDJL4Ov25afn9dVJJ/+ufN2nDtpyAeJGuK0jM3I0/Xm7Mxr9J6i/
-   g==;
-X-CSE-ConnectionGUID: 4Gf0iwxeTZuSqVCffiAV5w==
-X-CSE-MsgGUID: nqC/7eKeQY+MwtM/NhEapQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11567024"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="11567024"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 10:37:04 -0700
-X-CSE-ConnectionGUID: WTAK3KpsRSyOj+59XQqPsQ==
-X-CSE-MsgGUID: 4XFxSp5ASCSeknca0ToY4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="35640473"
-Received: from coreypet-mobl.amr.corp.intel.com (HELO desk) ([10.209.66.221])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 10:37:03 -0700
-Date: Tue, 14 May 2024 10:36:44 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kalle Valo <kvalo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jeff Johnson <quic_jjohnson@quicinc.com>
-Subject: Re: [regression] suspend stress test stalls within 30 minutes
-Message-ID: <20240514173644.ej56ve2bkk22e7r4@desk>
-References: <87o79cjjik.fsf@kernel.org>
- <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
- <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
- <87h6f4jdrq.fsf@kernel.org>
- <878r0djxgc.fsf@kernel.org>
- <874jb0jzx5.fsf@kernel.org>
- <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="o1i/63AH"
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id CA43E6356CD1;
+	Wed, 15 May 2024 00:43:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1715726632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=ymcQ45iu4hDaEHeH8btPmGyWeGOf494Z6bYBFnE1uQs=;
+	b=o1i/63AH2YTXKLymJMF6Q/zPc71meESNMccl5+/RBSrzv0N5TQJpkDPPz9chEh18whhV43
+	rIYJJawBbHrn+/VHzj0XYWPgt2G5OTcZ0AAj4zXhjxMk2io6dbESmQduunJtauVOUmPvYS
+	BeICQKyTriIogps3Gp5RYa0ahRW2DW4=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Peter Chiu <chui-hao.chiu@mediatek.com>,
+ StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [REGRESSION] MT7915E doesn't work any more with v6.9
+Date: Wed, 15 May 2024 00:43:40 +0200
+Message-ID: <6061263.lOV4Wx5bFT@natalenko.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+Content-Type: multipart/signed; boundary="nextPart4936095.31r3eYUQgx";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Tue, May 14, 2024 at 06:05:55PM +0200, Borislav Petkov wrote:
-> + Pawan.
-> 
-> Top-posting so that the whole email is unchanged.
-> 
-> Pawan, do you have a box like that to try to reproduce it on?
+--nextPart4936095.31r3eYUQgx
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Subject: [REGRESSION] MT7915E doesn't work any more with v6.9
+Date: Wed, 15 May 2024 00:43:40 +0200
+Message-ID: <6061263.lOV4Wx5bFT@natalenko.name>
+MIME-Version: 1.0
 
-I just saw this, I am trying to reproduce this on my end.
+Hello Felix, Lorenzo et al.
+
+With v6.9 kernel the following card:
+
+01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI Express Wireless Network Adapter [14c3:7915]
+
+doesn't work any more. Upon mt7915e module insertion the following splat happens:
+
+mt7915e 0000:01:00.0: enabling device (0000 -> 0002)
+WARNING: CPU: 3 PID: 1648 at net/mac80211/main.c:794 ieee80211_alloc_hw_nm+0x9a3/0x9f0 [mac80211]
+Call Trace:
+ <TASK>
+ mt76_alloc_device+0x24/0x290 [mt76 46e2c4f11be089903469a4d6045c71cb7842b4cd]
+ mt7915_mmio_probe+0x33/0x1d0 [mt7915e 9657e1926e619568545a08636674805d5e665c85]
+ mt7915_pci_probe+0xe1/0x3a0 [mt7915e 9657e1926e619568545a08636674805d5e665c85]
+ pci_device_probe+0xf0/0x2d0
+ really_probe+0xde/0x3b0
+ __driver_probe_device+0x78/0x110
+ driver_probe_device+0x1f/0x130
+ __driver_attach+0x91/0x1e0
+ bus_for_each_dev+0x105/0x160
+ bus_add_driver+0x137/0x270
+ driver_register+0x72/0xd0
+ mt7915_init+0x44/0xff0 [mt7915e 9657e1926e619568545a08636674805d5e665c85]
+ do_one_initcall+0x5b/0x310
+ do_init_module+0x60/0x220
+ init_module_from_file+0x89/0xe0
+ idempotent_init_module+0x121/0x2b0
+ __x64_sys_finit_module+0x5e/0xb0
+ do_syscall_64+0x82/0x160
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+mt7915e 0000:01:00.0: probe with driver mt7915e failed with error -12
+
+and the card stays non-functional. Re-inserting the module triggers the same behaviour.
+
+The following condition is triggered:
+
+ 794                 if (WARN_ON(!ops->add_chanctx ||
+ 795                             !ops->remove_chanctx ||
+ 796                             !ops->change_chanctx ||
+ 797                             !ops->assign_vif_chanctx ||
+ 798                             !ops->unassign_vif_chanctx))
+ 799                         return NULL;
+
+This worked with v6.8 and earlier just fine.
+
+Please help.
+
+Thank you.
+
+-- 
+Oleksandr Natalenko (post-factum)
+--nextPart4936095.31r3eYUQgx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZD6RwACgkQil/iNcg8
+M0t51w/8D3g7txAegNSZpXa63mdTbT+c29E+FV+JlJt/8IT9PXn5f5kRQbJ0JAEz
+lbzLs5P7MP9zjlmeuugOjE0fya0bHpZ4RcPrlCG6/55mxFiIDTE4qMa6fxWGZych
+U6uhme7uymB/Gw46VTkH8U+ybMYXj/hHc+lWVLmu8vy0NAuio4pShlq4bLtKR5qb
+NtrbVhviTvSSpKvUMwYVDjHLcfjmRbaw2HWYINI6DUpEFxoR7QPmIxxjs7tW5cyS
+OPGNm/JRltUBn6q+VGj8ksnEclmQK9dzCziCd1yIt2g0n8QCRPuv9heJV7dWC+N6
+QVTRBsHlh+K+ZAnMCZVr6YYT9UhHOjkKs/2S6LkyH+xcTP7yGzspS5A4nxztgeYQ
+n4YvEmZco3gsTsBEH3jzl+jYZ9knLbHUUSiG5FtpJdWaHON5+h+nXUfrAm9rQOcl
+Is8YZuXK4BtpraLkvGW8aiKCTX637Q8q57kDI47ocaqQmRpgKGy67HEHQjcNvz2H
+6BKvPwXObs/Zea8XtN5LgAGE58p1JKQZ+KgYNKQl0lD8QVGu0HpmPOeHG55MLyPN
+MvU1iNzp7NHyMo5CMrXPcFgXp4CeFyv3cFO7L1/LCd5cAgRIlsEp6y9vbzLeUrBW
+htLUVU2YrSv7AzrKg0Z+R73yT1kTNfnQYTxCcKDEKR37qmoS1rk=
+=8/WF
+-----END PGP SIGNATURE-----
+
+--nextPart4936095.31r3eYUQgx--
+
+
+
