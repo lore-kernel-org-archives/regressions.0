@@ -1,98 +1,173 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357A357880;
-	Tue, 14 May 2024 09:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C77484D26
+	for <regressions@lists.linux.dev>; Tue, 14 May 2024 11:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715680119; cv=none; b=mIx0JwavA5+i1SW79t6FML+d0JPRRyOMFdgJT/ER/5/JomLn2ktx6hojqK3HNNqaxHXhqIWB0FURJzfJdu31W83OS44p8F6nx1V6COLE1aNqW6TQy2U+r0Pn0LiwP7cGjop/K43hnbxvaqkM4mDUIJOj7/h+nhVJabxXHGgPNqo=
+	t=1715684599; cv=none; b=R8fe7/AzMTLVT1xV9uKZyxyBMeaLfknDS3EfNAcXyRGTSlRhwgpUBRxhkpBKSgZdXLB6erf0zfsRF+Q/ZodctDOTXwMvvSEI/ypEdG2GZRIpwVJ3upbRYW8sYr0iT+E1mQYP5zhHQO60cal1xwsBlUtkSuKjCJh24o71kqq4d5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715680119; c=relaxed/simple;
-	bh=OftvRN5FYOGb0QnfwZasmhuCm52IoMGg8swzhWcgK/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z5ZxU3CyjklcKyG4KouedCmsJbEkJqZwWJPDkZUzodQ4NuWmd1XB/ZqmThG2TYrON9t1XPRSIPGjI3ODnYf9YwSvW+xQO4jD3xsqD5sLz3gRqoFlmMcy2NHrIKEBciv8Ais7Ff5txxs3b9bEPEKBq5PpPTIuuRdv4yPMfnVjP8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kGzY9Grk; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1715684599; c=relaxed/simple;
+	bh=OywhrLKKbt4A6Kqnheggw+3eARBvAOlcXRI/HHo5cOM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VWHrvyx6dd4wVJZIwH5mf7g+cG19/C8KqyLH8VhvD0N7MhLM2lTzwwmN4mfHDiKxIkCuUNDDu+xOK97gVMjEnzLv7c9AOIhj4GXnS+/E7SckywAjwjcAWWGohj2ge5xK6U8Qhw6jkIb6ChiHvs9EBgB5Q2t+4LoQCc1cj+wwz5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ld2aBmxS; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kGzY9Grk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=OftvRN5FYOGb0QnfwZasmhuCm52IoMGg8swzhWcgK/0=; t=1715680117;
-	x=1716112117; b=kGzY9Grk6KEhop/IWLfdCtviAVSYObF4RDzRK8WGDttEmW0ipHbWLcgsqk5El
-	Ywfj8LnMtDxg0/2AUlnsolzYvJjkq2rATS7tJT0ZDtZSmYyztGfZUMjCo/LDgpRMWkhXQh6kfYKSy
-	n9Wp5RAMbUyXh4eew5gEL3J4Z9Phwbse7EMwMMoxc83mH4C5R+tVYMKfM4pWhUmV6CMLEE0mw8lgf
-	ANXnE2QmRrZcGaya05MLub5kJ1mcHdg2wX7U6ga6b5UfP6jlmUbhmqJc9egkGxoNWcNZZd/lS9nig
-	z8GxBZVWREFkqMmfcoBm4RQqVNP6zqcmHAtQlQ4vElwKDEngCg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s6olk-0001jy-TO; Tue, 14 May 2024 11:48:24 +0200
-Message-ID: <ce8b63da-8bc0-456d-8fff-23e937871246@leemhuis.info>
-Date: Tue, 14 May 2024 11:48:22 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ld2aBmxS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715684596; x=1747220596;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=OywhrLKKbt4A6Kqnheggw+3eARBvAOlcXRI/HHo5cOM=;
+  b=ld2aBmxSs/pcTm8niDhkptd+6JppT1KxxoYqMTVI27VpPKw4msOAiZBp
+   DvwMOYuUEmXDI2K2nlGrvecWd7ZGRpdkxIboC4LTJBIJ6ZLbnhVeVgPKy
+   O9P40PNl2jP+97Hd0BZKilOSo1Hwy5+H0kg87xH3IfRAVAR/cgOPNTPxJ
+   TZWmqbuabdY9Y4EgcQtVMbi3TF7QrhYOq3cJ2xo67oX+7nmSo1DSE3S3d
+   84jxI2pIH+WQqY/X1VsK+NAtCWyYPwGR3bQ2xAu9G1+o7faeRZcmT7MAB
+   z0m/Pk+tks5Id2K0NosJzkFUD6E1TjiaiMGiF7qmQt4G3m6aAbw3g/GFL
+   w==;
+X-CSE-ConnectionGUID: 8lv2quDTSZqlnYSY0M1bKA==
+X-CSE-MsgGUID: XzBjB5OgTxGlCTUBop+ugw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="15480895"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="15480895"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:03:15 -0700
+X-CSE-ConnectionGUID: v8GfHghzRg6zFCFOXcMzdw==
+X-CSE-MsgGUID: WVdmOsTXSlOqgfDU6iUY0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="35407856"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.94])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:03:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 14 May 2024 14:03:05 +0300 (EEST)
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+    Vadym Krevs <vkrevs@yahoo.com>
+cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Regressions <regressions@lists.linux.dev>, 
+    Linux Serial <linux-serial@vger.kernel.org>, 
+    Gilles Buloz <gilles.buloz@kontron.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [regression] [bisected] commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0
+ corrupts data sent via pseudoterminal device
+In-Reply-To: <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
+Message-ID: <6bfafddc-cf5b-4829-e09b-2622aaf83093@linux.intel.com>
+References: <ZkLv3wn62jqMVpSF@archie.me> <CAHp75VcjeJ5oZy2JjbyrKn+GVvixJKmfh3Yj1p-HxcJHrm0Wzg@mail.gmail.com> <606328522.1205749.1715678929830@mail.yahoo.com> <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression of e1000e (I219-LM) from 6.1.90 to 6.6.30
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Networking <netdev@vger.kernel.org>, intel-wired-lan@lists.osuosl.org,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- lukas.probsthain@googlemail.com
-References: <ZkHSipExKpQC8bWJ@archie.me>
- <b2897fda-08e8-40de-b78a-86e92bde41db@lunn.ch>
- <56463a97-eb90-4884-b2f5-c165f6c3516a@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <56463a97-eb90-4884-b2f5-c165f6c3516a@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715680118;2a0210a5;
-X-HE-SMSGID: 1s6olk-0001jy-TO
+Content-Type: multipart/mixed; BOUNDARY="8323328-1185213448-1715683287=:1106"
+Content-ID: <62931513-71c6-d018-32cb-150e9a7156c3@linux.intel.com>
 
-On 14.05.24 06:34, Bagas Sanjaya wrote:
-> On 5/14/24 00:17, Andrew Lunn wrote:
->> On Mon, May 13, 2024 at 03:42:50PM +0700, Bagas Sanjaya wrote:
->>>
->>> <lukas.probsthain@googlemail.com> reported on Bugzilla
->>> (https://bugzilla.kernel.org/show_bug.cgi?id=218826) regression on his Thinkpad
->>> T480 with Intel I219-LM:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Bagas, why did you start forwarding these bugs by mail yourself again
-after we had agreed you forward them to me, so I can handle it from there?
+--8323328-1185213448-1715683287=:1106
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <51f2e973-9ce1-a42f-8b7a-37cd5beb78bd@linux.intel.com>
 
-Yes, you forwarded that particular bug to me a few days ago and I didn't
-do anything. But that was on purpose: I usually wait at least two
-working days before doing so, as some subsystem are active in bugzilla
-and might feel annoyed by starting a separate thread on the mailing list.
+On Tue, 14 May 2024, Andy Shevchenko wrote:
 
-Side note: you also apparently make it not obvious enough that you are
-just forwarding the bug, as both here and in the other bug your
-forwarded today the developer apparently thought it was a bug you face.
+> On Tue, May 14, 2024 at 12:28=E2=80=AFPM Vadym Krevs <vkrevs@yahoo.com> w=
+rote:
+> >
+> > It's a standard setup for an out-of-the box default install of openSUSE=
+ 15.5 with KDE. All tests done in Konsole with bash as shell.
+> >
+> > stty -a -F /dev/pts/1
+> > speed 38400 baud; rows 57; columns 217; line =3D 0;
+> > intr =3D ^C; quit =3D ^\; erase =3D ^?; kill =3D ^U; eof =3D ^D; eol =
+=3D <undef>; eol2 =3D <undef>; swtch =3D <undef>; start =3D ^Q; stop =3D ^S=
+; susp =3D ^Z; rprnt =3D ^R; werase =3D ^W; lnext =3D ^V; discard =3D ^O; m=
+in =3D 1; time =3D 0;
+> > -parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
+> > -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon=
+ ixoff -iuclc -ixany -imaxbel iutf8
+> > opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0=
+ vt0 ff0
+> > isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -ech=
+oprt echoctl echoke -flusho -extproc
+>=20
+> Thank you!
+>=20
+> Yeah. SW flow control is enabled, but I don't see which character is
+> being used for that. Anyway, let's give Ilpo a chance to look into
+> this.
 
-Please lets avoid all of that again and switch back to the model we
-agreed on a few months ago.
+Thanks a lot for pinpointing the commit with bisect. It turns out this=20
+is a quite bad corruption bug and I'm quite surprised I didn't see (or=20
+notice) it while testing the patch.
 
->>>> After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver exhibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Ethernet controller.
->>
->> Could you try a git bisect between these two kernel versions? You
->> might be able to limit it to drivers/net/ethernet/intel/e1000e, which
->> only had around 15 patches.
->
-> The BZ reporter (Cc'ed) says that bisection is in progress. You may
-> want to log in to BZ to reach him.
+Could you please test and confirm the patch below fixes the issue?
 
-Side note: you should not assume every developer has a BZ account (or is
-willing to create one).
+--
+[PATCH] tty: n_tty: Fix buffer offsets when looked ahead is used
 
-Ciao, Thorsten
+When lookahead has "consumed" some characters (la_count > 0),
+n_tty_receive_buf_standard() and n_tty_receive_buf_closing() for
+characters beyond the la_count are given wrong cp/fp offsets which
+leads to duplicating and losing some characters.
+
+If la_count > 0, correct buffer pointers and make count consistency too
+(the latter is not strictly necessary to fix the issue but seems more
+logical to adjust all variables immediately to keep state consistent).
+
+Reported-by: Vadym Krevs <vkrevs@yahoo.com>
+Fixes: 6bb6fa6908eb ("tty: Implement lookahead to process XON/XOFF timely")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218834
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/tty/n_tty.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+index f252d0b5a434..5e9ca4376d68 100644
+--- a/drivers/tty/n_tty.c
++++ b/drivers/tty/n_tty.c
+@@ -1619,15 +1619,25 @@ static void __receive_buf(struct tty_struct *tty, c=
+onst u8 *cp, const u8 *fp,
+ =09else if (ldata->raw || (L_EXTPROC(tty) && !preops))
+ =09=09n_tty_receive_buf_raw(tty, cp, fp, count);
+ =09else if (tty->closing && !L_EXTPROC(tty)) {
+-=09=09if (la_count > 0)
++=09=09if (la_count > 0) {
+ =09=09=09n_tty_receive_buf_closing(tty, cp, fp, la_count, true);
+-=09=09if (count > la_count)
+-=09=09=09n_tty_receive_buf_closing(tty, cp, fp, count - la_count, false);
++=09=09=09cp +=3D la_count;
++=09=09=09if (fp)
++=09=09=09=09fp +=3D la_count;
++=09=09=09count -=3D la_count;
++=09=09}
++=09=09if (count > 0)
++=09=09=09n_tty_receive_buf_closing(tty, cp, fp, count, false);
+ =09} else {
+-=09=09if (la_count > 0)
++=09=09if (la_count > 0) {
+ =09=09=09n_tty_receive_buf_standard(tty, cp, fp, la_count, true);
+-=09=09if (count > la_count)
+-=09=09=09n_tty_receive_buf_standard(tty, cp, fp, count - la_count, false);
++=09=09=09cp +=3D la_count;
++=09=09=09if (fp)
++=09=09=09=09fp +=3D la_count;
++=09=09=09count -=3D la_count;
++=09=09}
++=09=09if (count > 0)
++=09=09=09n_tty_receive_buf_standard(tty, cp, fp, count, false);
+=20
+ =09=09flush_echoes(tty);
+ =09=09if (tty->ops->flush_chars)
+--=20
+2.39.2
+--8323328-1185213448-1715683287=:1106--
