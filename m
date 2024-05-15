@@ -1,107 +1,123 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C096E823D0
-	for <regressions@lists.linux.dev>; Wed, 15 May 2024 14:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D2613F44E;
+	Wed, 15 May 2024 14:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715782752; cv=none; b=lwm7+H8qjLyboAyKG+bxLL6VK43ywTap7ekigOV4mREgzzKrbCTRoXangzi4tP7FYkTwV6FQBia9x1K15E/4JTU+10As9Pxor24322+6860EMjQKlAo2dAcn2dr15u/g7bpn+DAIrhGBHWuuw105nl3KOkRG1MiKc9myWB000Ec=
+	t=1715783797; cv=none; b=dJ9eKRziaVG+0DQU+kTE+jBCpErpx5cC94Op4r4khEJHzHfuZKe+y2UTerPNN6JFRjAjxX1LFyw4Xg0EB9kDvXEEm9s+Ot2FqDm3GpNojWCkgVS/4mmEZEEhqbdpyroPvO7ANrD6T8VGGhffM/tCsut5Sy5Cx+UV4uEIwhlr8io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715782752; c=relaxed/simple;
-	bh=iy7dLAEaL4vVGSeorVmj9DuvDO3ifOspxvrna6sksIs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=M/3i0Zx1oIx+TWJF/lrhbrSHkka9u8utXeEl4ihIstf4lEP3RV64Y8LGaNMWQnMksM2JNd2yAXKUji1Kwex1BmbuwbsdIFs6C+r3k9rGrrc787EaohhIJ6QWGEyf8yBv1iSl+sn3zuapuwbNbC7cRYKeY9IGc7K2NF4/NgjWJbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M4HDsSLk; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715783797; c=relaxed/simple;
+	bh=BK3Q1Eaz2vKy7Ifb0gMrmzfC3vR/99oauzNR4ISwhNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADq8a6bzT1/4ZEmD4X9pk19sVbKsN52WM8CiTffKYQ6tm1mNo78wZrl/cGpKFFv8RPdBqjNJw3LUGHGmnaQCF8xJkYwEFPXQYaTnrVl7WqEsw6R7qGCWNKHVONzihqh3qDqeW2clSedEd3hoFLr+t1FWw5sjQLrbip8ssYanjE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7D7ndLe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4HDsSLk"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9a0042e7dso1934097b6e.0
-        for <regressions@lists.linux.dev>; Wed, 15 May 2024 07:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715782750; x=1716387550; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
-        b=M4HDsSLk2DuwPK5kC7udGR+wloF67oX86Bv/ONhHln17iGuyUUVY2ltkCkj5GKOb/i
-         Z+Kjzla2NwYcZ/Gxpk3JlHuxZrJTPXErz+R41x9ebPB5ViS1U+zPJ3+0OrHsJYbfQm0e
-         EZdp1TttIaNoaPoW2KS881QmzId88wRG7vPmqMarGYBuILhTRO0L96CrzZmFsEGAs2vF
-         HIM07iAJNhjGcTEfSdnkZ+96KMUDLwt3FUQcXq4ENYtSSs8OwZm67sqCIB08tPg/TrRe
-         1snqNGunPqtt0nXG2wpmssohrdiCGAIgsc/w16KuMlXP+et3QDy2xpgCAB1DEkKzrJeY
-         Cd1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715782750; x=1716387550;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
-        b=Htlfntk/4i+HyLwqicFxGqv2usxflBjmkKuaTG6kSZtKA5DNRPRUnUN3PRcbKrI5WE
-         VWhq0BQwXSZkPsyQbR66bOZOLlZt0FAdgru2Kl0BZ6GA5VUzO0bN2vnqL5JnViEhJnqY
-         ySVYdVQ4KqLj/XpoUxOWvbYvyUGQ+5dwCg8ANk62D9bbqZbi/2bEFEoh6WBWwbHU55cx
-         451WnCHKzkeA2+F+ZU3ou25LUKp2RoETduMNVEi4w5v6qm4u6qdYTi+DKK2PAKPBgb7o
-         tbLELaim4/hPQZMp+zGN9ENzWSjFvPuYX433PUPGWIj10QJu5smhXEb0Kq0tntyB6vXB
-         JrwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVT0xKeJ44Oo3poJcZ5GxNnpBqGRb2AtXikfMqEqxb1eXBhYvQPzz63Gyh8S+Qp1b4REbvhIAOAzKxEOE0f60MHa+HZL1wV1Tc3jBs=
-X-Gm-Message-State: AOJu0Yze41GA1A6eBXJbEx/RC6SLzwuxXp06wZpFgOcp4jxTozGFs5c7
-	2KJrBtgjlBVGMtasMmJN/ErMTZqWEZ/vQelJYB3vx3fj5/oA2cJNZrppkjqSJjnsiEcmRJRQ4FC
-	B0vkeoHk1UNbeKZiJE+wZmtSnB8RZ8xZ8aZ21/w==
-X-Google-Smtp-Source: AGHT+IH/7/dqPY9r1lhR5haX5AIQ/98Ll9YuM9T0D4wFA2HFYmBB4m8nfB/jKUjlQdttEXRU3o5RpwBPOQ1s/m/TNvM=
-X-Received: by 2002:a05:6808:2d9:b0:3c8:65ee:6795 with SMTP id
- 5614622812f47-3c99704cfbdmr14936618b6e.22.1715782749719; Wed, 15 May 2024
- 07:19:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7D7ndLe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CCA0C116B1;
+	Wed, 15 May 2024 14:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715783797;
+	bh=BK3Q1Eaz2vKy7Ifb0gMrmzfC3vR/99oauzNR4ISwhNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d7D7ndLe/1tMGWg+zXC6mnAqwqDcUYM0rcjLNDQzfAYwZgpcO2SvG/G6rOcGTLJNV
+	 hGxoDb8GYIpJY65l6aQGhvrGYoxCxyUle6Z/cotew2VxB7Q91EmK2GoQOrTNXDGeeb
+	 HYib5mmxOXV+Ze9RvzY81b4pw7MDBKWsvfDaiaZU9vPoIocYL3t8Tz1IMk6C27wX6B
+	 t8nM6WxV7ov0P4kMxe+D3tLW5usOjynfkmllzzUWr2VyH9y2cVhSFRMaPNYfWeKDJy
+	 DiWkSKGATxJ0Zm3UKvMWMISSCpTJRQrkSRvH/u8hOBlC8wJhrkVBdo9X8YwmFTCTID
+	 HjTywjrdAACYA==
+Date: Wed, 15 May 2024 15:36:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-riscv <linux-riscv@lists.infradead.org>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: riscv: irq-riscv-imsic-early.c:52:9: error: too many arguments
+ to function 'riscv_ipi_set_virq_range'
+Message-ID: <20240515-zen-calculate-289cfb90cd65@spud>
+References: <CA+G9fYtDtgb8zNGfDQPS2u_n_45rDiDgJR6ud3uuxkJBR0rUzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 15 May 2024 16:18:58 +0200
-Message-ID: <CA+G9fYtDtgb8zNGfDQPS2u_n_45rDiDgJR6ud3uuxkJBR0rUzA@mail.gmail.com>
-Subject: riscv: irq-riscv-imsic-early.c:52:9: error: too many arguments to
- function 'riscv_ipi_set_virq_range'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-riscv <linux-riscv@lists.infradead.org>
-Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VaxeQxGCx5+jYQuq"
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtDtgb8zNGfDQPS2u_n_45rDiDgJR6ud3uuxkJBR0rUzA@mail.gmail.com>
 
-The riscv builds failed on Linux next-20240515 tag due to following build
-warnings / errors with gcc-13 and clang toolchain.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+--VaxeQxGCx5+jYQuq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Build Log:
------
-drivers/irqchip/irq-riscv-imsic-early.c: In function 'imsic_ipi_domain_init':
-drivers/irqchip/irq-riscv-imsic-early.c:52:9: error: too many
-arguments to function 'riscv_ipi_set_virq_range'
-   52 |         riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-In file included from include/linux/smp.h:119,
-                 from include/linux/lockdep.h:14,
-                 from include/linux/spinlock.h:63,
-                 from include/linux/sched.h:2142,
-                 from include/linux/ratelimit.h:6,
-                 from include/linux/dev_printk.h:16,
-                 from include/linux/device.h:15,
-                 from include/linux/node.h:18,
-                 from include/linux/cpu.h:17,
-                 from drivers/irqchip/irq-riscv-imsic-early.c:8:
-arch/riscv/include/asm/smp.h:52:6: note: declared here
-   52 | void riscv_ipi_set_virq_range(int virq, int nr);
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~
+Palmer,
+This is the issue I point out to you on the call earlier:
 
-metadata:
-  git_describe: next-20240515
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 82d92a9a1b9ea0ea52aff27cddd05009b4edad49
-  git_short_log: 82d92a9a1b9e ("Add linux-next specific files for 20240515")
+On Wed, May 15, 2024 at 04:18:58PM +0200, Naresh Kamboju wrote:
+> The riscv builds failed on Linux next-20240515 tag due to following build
+> warnings / errors with gcc-13 and clang toolchain.
+>=20
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>=20
+> Build Log:
+> -----
+> drivers/irqchip/irq-riscv-imsic-early.c: In function 'imsic_ipi_domain_in=
+it':
+> drivers/irqchip/irq-riscv-imsic-early.c:52:9: error: too many
+> arguments to function 'riscv_ipi_set_virq_range'
+>    52 |         riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from include/linux/smp.h:119,
+>                  from include/linux/lockdep.h:14,
+>                  from include/linux/spinlock.h:63,
+>                  from include/linux/sched.h:2142,
+>                  from include/linux/ratelimit.h:6,
+>                  from include/linux/dev_printk.h:16,
+>                  from include/linux/device.h:15,
+>                  from include/linux/node.h:18,
+>                  from include/linux/cpu.h:17,
+>                  from drivers/irqchip/irq-riscv-imsic-early.c:8:
+> arch/riscv/include/asm/smp.h:52:6: note: declared here
+>    52 | void riscv_ipi_set_virq_range(int virq, int nr);
+>       |      ^~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> metadata:
+>   git_describe: next-20240515
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_sha: 82d92a9a1b9ea0ea52aff27cddd05009b4edad49
+>   git_short_log: 82d92a9a1b9e ("Add linux-next specific files for 2024051=
+5")
+>=20
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202405=
+15/testrun/23894295/suite/build/test/gcc-13-lkftconfig/details/
+>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2gUiKdxX7qM27ri=
+tMJT5pRyZhyi/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202405=
+15/testrun/23894295/suite/build/test/gcc-13-lkftconfig/history/
+>=20
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+>=20
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/details/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2gUiKdxX7qM27ritMJT5pRyZhyi/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/history/
+--VaxeQxGCx5+jYQuq
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Linaro LKFT
-https://lkft.linaro.org
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkTIcQAKCRB4tDGHoIJi
+0lfWAQDi33YIiyOgOhOs7pvyAObFXef0e9hfqNt1slgzGSvACwD/ZgicDRP+uuJa
+J02ZHXAmHtcBVUat4F+6J8iGuN38gQw=
+=zifD
+-----END PGP SIGNATURE-----
+
+--VaxeQxGCx5+jYQuq--
