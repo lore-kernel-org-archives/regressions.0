@@ -1,101 +1,78 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161E8181CFB
-	for <regressions@lists.linux.dev>; Tue, 14 May 2024 22:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063FB36AF5;
+	Wed, 15 May 2024 05:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715727112; cv=none; b=jSIM83B+TxB9pNOkSgrEpVzoeIOELXs+Ip9RVkGcXST+943ngo9NS6EOhsPOWx5V651JOnE2R+6kP4OLRB46bIcgX5RFLXxnuA1HK+L3uD/3oBcuU/FYXUqKYFs/fvAzGzda/qbWAQ11UhU711/SEEh5hrywYGp/2cwf5kxv2Ss=
+	t=1715750302; cv=none; b=teLw24kChxPOkDUgwHEnlibmH1Amf0IQM+CH3Wog5v/ZqfV5U6FwVzgCCV4u4yku7YZUOeFFVqvAjuZ651wh51lMmfDaNagZLS3yEhjIOyr5BTXoFXJq9oBRF6+al0nAeLLnk96HkZ33lRwY0+yQqqBgFnJLcpMfqmQ8fDf2wL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715727112; c=relaxed/simple;
-	bh=uRxlDnelWdvGg7i9x9hTB/zJNxGNpEoVorUMP1xDlGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bXXN8SZ6BscD8zSy1MOTH/Z/BpbOBdKXt0oIwz9zc+ApiQdk7rQh5brtBdP5G20mHfSmyKGnfTQgxyoU8kWOmoY01D4p0oXDXme/V+U7vgKcWEMejWt9yAqzLhUKIcND6jBFFtn95Vq70D1dllSPTbezv/96HahB6JhCsYwX3D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=VG/cQyQn; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1715750302; c=relaxed/simple;
+	bh=pfGH+jZh96pLnw4AOvxaMZ9eBTglQ+T1HiwE848Yk3E=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=Yb5/kZC1GEYPg3Lv4QNrRc2shmEhk/5IngfoNdjLEowQZhT8m7UArkT6R/IHtHH1Fl5mAOHJdBE6TnEncpwH4fcnO/mj77jmv0pmpR17kVsjrluiwRsTiPqqRz6GWFAV+f8mcaZ69iZtoZAQ7/szYuJpZKGyQwBE9mQMcs57LFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2eiE7ru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="VG/cQyQn"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id 2A87A6356CD1;
-	Wed, 15 May 2024 00:51:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1715727109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M/yx0LBa6BWxJcFbM41dPpkzsmx1uZjRYOaKe6bmwRA=;
-	b=VG/cQyQnDLqz4Fw5M0R4xhc1in07k4Ww03a7FezDAlyes8JWwfW5sBdVy8dvEoTncQ6VeG
-	p+BiQ+Cqvw4BQpgs0wDisTtmgrqbn+eu8S1OBM/qx7xYn3cQMIYZm15hfuCh9buSUMtAtR
-	Bsn2gGRXMVYx/EosG8muwRDltjZR8D0=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Peter Chiu <chui-hao.chiu@mediatek.com>,
- StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Johannes Berg <johannes.berg@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2eiE7ru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FC3C116B1;
+	Wed, 15 May 2024 05:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715750301;
+	bh=pfGH+jZh96pLnw4AOvxaMZ9eBTglQ+T1HiwE848Yk3E=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=V2eiE7ruo0tGAGMwLasu7rmCOrV00BqN3Zt98BuZfOuqBuyWInZt0/vKTst7Ib/ft
+	 QnFFDt3al5+S1xF7UgnabhgchQsko+cMMErRtvGUbYmuKmfx8fCI9uqlMlur3cE0I0
+	 H1nuno4m9bYoM2RUwqhmsGTLhgi6Nsok1S28dnfUKLeIahig+qACKWtuzAB1MVYeQE
+	 px+ASAGpyJ/gCnLu2FNElh4NmdmWlGn85yOIRrVXNgly7Sie+7dIMLwSewx+Lk9ZgJ
+	 92qBxuc6LX/bT1rW0IbrB2REq3c2SZiuLMBpaSavGVJ5E56Nb/pF4K1NnUvai41dUU
+	 A2WWhovzEawbA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: linux-kernel@vger.kernel.org,  linux-wireless@vger.kernel.org,  "Linux
+ regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+  linux-mediatek@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org,  Felix Fietkau <nbd@nbd.name>,
+  Lorenzo Bianconi <lorenzo@kernel.org>,  Ryder Lee
+ <ryder.lee@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  Sean
+ Wang <sean.wang@mediatek.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Peter Chiu <chui-hao.chiu@mediatek.com>,  StanleyYP Wang
+ <StanleyYP.Wang@mediatek.com>,  Linux regressions mailing list
+ <regressions@lists.linux.dev>
 Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-Date: Wed, 15 May 2024 00:51:38 +0200
-Message-ID: <2341660.ElGaqSPkdT@natalenko.name>
-In-Reply-To: <6061263.lOV4Wx5bFT@natalenko.name>
 References: <6061263.lOV4Wx5bFT@natalenko.name>
+Date: Wed, 15 May 2024 08:18:16 +0300
+In-Reply-To: <6061263.lOV4Wx5bFT@natalenko.name> (Oleksandr Natalenko's
+	message of "Wed, 15 May 2024 00:43:40 +0200")
+Message-ID: <87le4birfr.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4908084.GXAFRqVoOG";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain
 
---nextPart4908084.GXAFRqVoOG
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-Date: Wed, 15 May 2024 00:51:38 +0200
-Message-ID: <2341660.ElGaqSPkdT@natalenko.name>
-In-Reply-To: <6061263.lOV4Wx5bFT@natalenko.name>
-References: <6061263.lOV4Wx5bFT@natalenko.name>
-MIME-Version: 1.0
+Oleksandr Natalenko <oleksandr@natalenko.name> writes:
 
-Also /cc Johannes because of this commit:
-
-6092077ad09ce wifi: mac80211: introduce 'channel request'
-
-On st=C5=99eda 15. kv=C4=9Btna 2024 0:43:40, SEL=C4=8C Oleksandr Natalenko =
-wrote:
 > Hello Felix, Lorenzo et al.
->=20
+>
 > With v6.9 kernel the following card:
->=20
-> 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI E=
-xpress Wireless Network Adapter [14c3:7915]
->=20
-> doesn't work any more. Upon mt7915e module insertion the following splat =
-happens:
->=20
+>
+> 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax
+> PCI Express Wireless Network Adapter [14c3:7915]
+>
+> doesn't work any more. Upon mt7915e module insertion the following splat happens:
+>
 > mt7915e 0000:01:00.0: enabling device (0000 -> 0002)
-> WARNING: CPU: 3 PID: 1648 at net/mac80211/main.c:794 ieee80211_alloc_hw_n=
-m+0x9a3/0x9f0 [mac80211]
+> WARNING: CPU: 3 PID: 1648 at net/mac80211/main.c:794
+> ieee80211_alloc_hw_nm+0x9a3/0x9f0 [mac80211]
 > Call Trace:
 >  <TASK>
->  mt76_alloc_device+0x24/0x290 [mt76 46e2c4f11be089903469a4d6045c71cb7842b=
-4cd]
->  mt7915_mmio_probe+0x33/0x1d0 [mt7915e 9657e1926e619568545a08636674805d5e=
-665c85]
->  mt7915_pci_probe+0xe1/0x3a0 [mt7915e 9657e1926e619568545a08636674805d5e6=
-65c85]
+>  mt76_alloc_device+0x24/0x290 [mt76 46e2c4f11be089903469a4d6045c71cb7842b4cd]
+>  mt7915_mmio_probe+0x33/0x1d0 [mt7915e 9657e1926e619568545a08636674805d5e665c85]
+>  mt7915_pci_probe+0xe1/0x3a0 [mt7915e 9657e1926e619568545a08636674805d5e665c85]
 >  pci_device_probe+0xf0/0x2d0
 >  really_probe+0xde/0x3b0
 >  __driver_probe_device+0x78/0x110
@@ -113,53 +90,26 @@ m+0x9a3/0x9f0 [mac80211]
 >  do_syscall_64+0x82/0x160
 >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 > mt7915e 0000:01:00.0: probe with driver mt7915e failed with error -12
->=20
-> and the card stays non-functional. Re-inserting the module triggers the s=
-ame behaviour.
->=20
+>
+> and the card stays non-functional. Re-inserting the module triggers
+> the same behaviour.
+>
 > The following condition is triggered:
->=20
+>
 >  794                 if (WARN_ON(!ops->add_chanctx ||
 >  795                             !ops->remove_chanctx ||
 >  796                             !ops->change_chanctx ||
 >  797                             !ops->assign_vif_chanctx ||
 >  798                             !ops->unassign_vif_chanctx))
 >  799                         return NULL;
->=20
+>
 > This worked with v6.8 and earlier just fine.
->=20
-> Please help.
->=20
-> Thank you.
->=20
->=20
 
+Thanks for the report. I'll add this to regzbot for easier tracking:
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart4908084.GXAFRqVoOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+#regzbot introduced: v6.8..v6.9 ^
 
------BEGIN PGP SIGNATURE-----
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZD6voACgkQil/iNcg8
-M0slkBAA30d+dHMeOTWd6mWGNfJP06Ntug/dXjfFyRQeTnRqIXhfp5uTamhIDg1Q
-1lbgClmG3vBtyw5vyYHemn9c3GjAPGSpVO5FvFAb72vHy/84KTfbrNU2jk9czRsP
-kOVx1OxjWnn1wYgK3nJXgV+dVNft6/kphxSUFEtLFfkOR3KBpTCXwram74Dfx2O5
-iK+X6damnucy+KB++AeimhjEY0tuLhXmRP/5me1m8SE5HojbCbBazBV8E/xPmPIx
-Xy3K+mQIN8DZW3PNtVlgGVxwSwCB2Zeta6yfOrAnyt+ifA8mrIk/JeB+30IKFsUo
-wEFc/yapWR1QXUzWK/Q2mi6bYprbHGYPusrrCHh/O3va2PuDvOksClCwaC8B36Lh
-6k7ydaHrTeIH5fqwnCBTDk7Y/WRHQfOpZhuEtfmASXRGOR6nOaHwZoUxxUVr/kTk
-K4SXM7h3A7kBPokz/EsVjWmV4tWmFmpm2XAIj0zP6S7ll8QCa6gZp31dknlezrHX
-/dYvPnVgCf2yZ5ZH6s33lqB9HBj6uxmXKk/UnGSETtY+cEIfpDih6oat9TazyKS1
-naiLMD51BfE+1SjAOokQqcZpFQOEB8eh8+DHK/5NaUh6u87pB9F03GFRaR2nEZvp
-KWDoYnNLBWaEEoaD4fQzx8pbFOgWO88HcaSavorkESHcsE2EEFs=
-=bD45
------END PGP SIGNATURE-----
-
---nextPart4908084.GXAFRqVoOG--
-
-
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
