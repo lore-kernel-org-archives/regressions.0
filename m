@@ -1,71 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9798539ADD;
-	Wed, 15 May 2024 05:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1242D3BB4D;
+	Wed, 15 May 2024 06:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715750406; cv=none; b=EWnVonGlbOzqio7tTOgP4sNsJMydS1ZfO3ZbIVgwrr68SBPkju6OQn0FgUF5Kw5IoxdYSdqyuA3UClP4zIUA0XC4aJwIEKqOIog4JyGfZEn2691+Uw6QdKoZC89sJXTzBdeIEIqSj1QRcW1LNhit62L1Fpo/3MEcNFcQXobdd34=
+	t=1715754230; cv=none; b=Fibemo+3CuvsroWN0JWejxlU4WjVZi2KhOBM8eHkDTNssQKaW/dy5wKXV+RdUnZzIYwy6mEulDCj/ozeSwQoz03lOySV6/EnTcTgopj25HORxJVAP/g1j6B4FTpcXdtJhD1FLNnh9jz7WumtlLiqbYjebinxRbgt43kik+7dQMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715750406; c=relaxed/simple;
-	bh=rl/7aOeZVPBm0n8NZhPXRYAk/jsWzpU7OGzVDPRqlds=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=tQpUFJfLKkbmU79M/uw//9IzfJS8BGz0DBEUO+t9IEfa9Tc6I5VFY8Dyv8jtbSNezD4E6UOSLrJ+De/oJyRyTtXHSX8J4s9GZUIpV9NO9p54mjfRMhmXJ98mObxN6jgFheDlGIr26BcPphpbrMPIUIYQXmdkjbIYMV0W8rdyWxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ewk9lT/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715754230; c=relaxed/simple;
+	bh=+fR3/NxAITdhdq3Ycr1Czm/xkzyiUXiiJ++SU9SO1o8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X8JSblCXAbAOsaM5m2B1JsAhMn18FkPcc5uNEeE/+UNgWvSFw5NlptJidINmzyzTRCwoQTogFIoPw8uftdGHnaVsH6CcSMWSarlsXED5RXsoMtPd0vJl8H34G5kR0UL8lmRORWbqQ6FsyscLJmBeWmOOQmrxDA6CqvB8LF1yUq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=JJXSQ3uY; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ewk9lT/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D2BC116B1;
-	Wed, 15 May 2024 05:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715750406;
-	bh=rl/7aOeZVPBm0n8NZhPXRYAk/jsWzpU7OGzVDPRqlds=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=Ewk9lT/TEQ59ktaWGHajZTJc+lMOMhAHeTr9S3hJHkLc8jA87kL2H96LWeSAxT+gw
-	 yfwSh8+4our/Z/0suMrVvBpsjfOKgWTr4pSDfrZW50Ockrl8UKgOiq6utY/vNi1epH
-	 BqH4PChiBQF48VzAjFmQZpuMnA6iRJMNZ9WQkpDXH5rZO1E3bFocXWgL0wPuZJk1yD
-	 59HfLaxhxVJ0UqnvZf/VQVq5GJBGPwm4wBizeDfH3yfvLCPl2xkb5Nt/FiA7hyQRsu
-	 vW4TIl1zt43RypfJClw5HrxnIgRiklNy/6AzZaz2ymH5zk7C/96xW57U/Ct9OGuvEW
-	 G9er1t8RjT1TA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: linux-kernel@vger.kernel.org,  linux-wireless@vger.kernel.org,  "Linux
- regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-  linux-mediatek@lists.infradead.org,
-  linux-arm-kernel@lists.infradead.org,  Felix Fietkau <nbd@nbd.name>,
-  Lorenzo Bianconi <lorenzo@kernel.org>,  Ryder Lee
- <ryder.lee@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  Sean
- Wang <sean.wang@mediatek.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
-  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-  Peter Chiu <chui-hao.chiu@mediatek.com>,  StanleyYP Wang
- <StanleyYP.Wang@mediatek.com>,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  Johannes Berg <johannes.berg@intel.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="JJXSQ3uY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=+fR3/NxAITdhdq3Ycr1Czm/xkzyiUXiiJ++SU9SO1o8=;
+	t=1715754228; x=1716963828; b=JJXSQ3uYfIAk/qeCNjRdcpf+S43VPjgZEKY7Tgr0NfXKNET
+	zrEiudhNJJW+qXHSmDRyzFftXTY8K91gXFsSCYQ0kBkbINcm5zQcjnj2pX3SYpr4plS+/DLSN+ebT
+	ap7ac54ZqfMDKPz57rJKlbZboVzW9iOhyQp8SjA1Rd+8+WiT0Jg+6ICj+vRkIJl9+WI3gnFrLkEBP
+	r6sjFd6tiJ7FX1JTFbEGg6nV2SJzwfBqnSTtMWlRm6gBu0ihdqhuTOafusb/mU6l16Klu4w6PL1Eh
+	tuyPH/278vtKmDbwt0i6hPl/qrsNAqjaOy6JSDR+J32LKmEgph9kAVgkiaH0Ml3Q==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1s7837-00000005zBf-1jNr;
+	Wed, 15 May 2024 08:23:37 +0200
+Message-ID: <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
 Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, "Linux
+	regression tracking (Thorsten Leemhuis)"
+	 <regressions@leemhuis.info>
+Cc: linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,  Felix Fietkau <nbd@nbd.name>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+ Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Kalle Valo <kvalo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Peter
+ Chiu <chui-hao.chiu@mediatek.com>, StanleyYP Wang
+ <StanleyYP.Wang@mediatek.com>,  Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Date: Wed, 15 May 2024 08:23:35 +0200
+In-Reply-To: <2341660.ElGaqSPkdT@natalenko.name>
 References: <6061263.lOV4Wx5bFT@natalenko.name>
-	<2341660.ElGaqSPkdT@natalenko.name>
-Date: Wed, 15 May 2024 08:20:00 +0300
-In-Reply-To: <2341660.ElGaqSPkdT@natalenko.name> (Oleksandr Natalenko's
-	message of "Wed, 15 May 2024 00:51:38 +0200")
-Message-ID: <87h6ezircv.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	 <2341660.ElGaqSPkdT@natalenko.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-malware-bazaar: not-scanned
 
-(please don't top post)
-
-Oleksandr Natalenko <oleksandr@natalenko.name> writes:
-
+On Wed, 2024-05-15 at 00:51 +0200, Oleksandr Natalenko wrote:
 > Also /cc Johannes because of this commit:
->
+>=20
 > 6092077ad09ce wifi: mac80211: introduce 'channel request'
+>=20
+> On st=C5=99eda 15. kv=C4=9Btna 2024 0:43:40, SEL=C4=8C Oleksandr Natalenk=
+o wrote:
+> > Hello Felix, Lorenzo et al.
+> >=20
+> > With v6.9 kernel the following card:
+> >=20
+> > 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI=
+ Express Wireless Network Adapter [14c3:7915]
+> >=20
+> > doesn't work any more. Upon mt7915e module insertion the following spla=
+t happens:
+> >=20
 
-Have you tried reverting that commit?
+6.9 didn't get commit 2f7cf3b61d85 ("wifi: mt76: mt7915: add missing
+chanctx ops")? Huh?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+johannes
