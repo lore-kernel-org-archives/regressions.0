@@ -1,82 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6423557CA1;
-	Wed, 15 May 2024 14:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C096E823D0
+	for <regressions@lists.linux.dev>; Wed, 15 May 2024 14:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715782160; cv=none; b=mzG9AsTwGm7DRAG9AOWn3QlNU/DCbyR+g5ktE3yLsMlkBqM5pD4aqwIw8aBM/KQZNVKSa5PIoCca+rTm+De8BYhF1jyOXCRx0lqKiajwZB80p2aX9+HiWooVBYcOALRViP0BWu8wJhSx97mFSr6fxVmYCH2GO9fTPxPsKEDdFwc=
+	t=1715782752; cv=none; b=lwm7+H8qjLyboAyKG+bxLL6VK43ywTap7ekigOV4mREgzzKrbCTRoXangzi4tP7FYkTwV6FQBia9x1K15E/4JTU+10As9Pxor24322+6860EMjQKlAo2dAcn2dr15u/g7bpn+DAIrhGBHWuuw105nl3KOkRG1MiKc9myWB000Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715782160; c=relaxed/simple;
-	bh=m3ubuPGkIWjaq0e2Nny5BGf1VDtiMnclz4YCAR4yDug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=my9fAy+8yiGSxIpZ9syZNyPEHpSfhqLnI+IaQkOE3rlJeDoGYYrr2GhyKmAyycJ2LYxS4tri7e7NQL8N2IbfsI7E+dKSdXpVsi6VdT13B5WJMhrpFyVsxZirWTKFXs4upmW+TFQB9S0IJF5uI4VQlvhturuCxC8edUojxKmBHpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NXUi7vH6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715782752; c=relaxed/simple;
+	bh=iy7dLAEaL4vVGSeorVmj9DuvDO3ifOspxvrna6sksIs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=M/3i0Zx1oIx+TWJF/lrhbrSHkka9u8utXeEl4ihIstf4lEP3RV64Y8LGaNMWQnMksM2JNd2yAXKUji1Kwex1BmbuwbsdIFs6C+r3k9rGrrc787EaohhIJ6QWGEyf8yBv1iSl+sn3zuapuwbNbC7cRYKeY9IGc7K2NF4/NgjWJbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M4HDsSLk; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NXUi7vH6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9387FC116B1;
-	Wed, 15 May 2024 14:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715782160;
-	bh=m3ubuPGkIWjaq0e2Nny5BGf1VDtiMnclz4YCAR4yDug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NXUi7vH6RB+h6Wu+wdMVJrCWs6D6IFkD4Wrs1ZIjA0byVSiHQ0Ru2qEgGmoAAHYZP
-	 Sas+ALcxa7JAXPnSgQK/ezfTrBwTADmp3oEofHqBUt33L+hg4sUJBYVedMj6hnK6No
-	 v/7U3324M+0bnhFRzRT+tUFLDPX/wqZisXcR/MEw=
-Date: Wed, 15 May 2024 16:09:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: three commits you might or might not want to pick up for 6.9.y
-Message-ID: <2024051501-dropkick-landmark-5db0@gregkh>
-References: <9e40badb-c4fa-4828-a4c5-3a170f624215@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4HDsSLk"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9a0042e7dso1934097b6e.0
+        for <regressions@lists.linux.dev>; Wed, 15 May 2024 07:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715782750; x=1716387550; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
+        b=M4HDsSLk2DuwPK5kC7udGR+wloF67oX86Bv/ONhHln17iGuyUUVY2ltkCkj5GKOb/i
+         Z+Kjzla2NwYcZ/Gxpk3JlHuxZrJTPXErz+R41x9ebPB5ViS1U+zPJ3+0OrHsJYbfQm0e
+         EZdp1TttIaNoaPoW2KS881QmzId88wRG7vPmqMarGYBuILhTRO0L96CrzZmFsEGAs2vF
+         HIM07iAJNhjGcTEfSdnkZ+96KMUDLwt3FUQcXq4ENYtSSs8OwZm67sqCIB08tPg/TrRe
+         1snqNGunPqtt0nXG2wpmssohrdiCGAIgsc/w16KuMlXP+et3QDy2xpgCAB1DEkKzrJeY
+         Cd1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715782750; x=1716387550;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
+        b=Htlfntk/4i+HyLwqicFxGqv2usxflBjmkKuaTG6kSZtKA5DNRPRUnUN3PRcbKrI5WE
+         VWhq0BQwXSZkPsyQbR66bOZOLlZt0FAdgru2Kl0BZ6GA5VUzO0bN2vnqL5JnViEhJnqY
+         ySVYdVQ4KqLj/XpoUxOWvbYvyUGQ+5dwCg8ANk62D9bbqZbi/2bEFEoh6WBWwbHU55cx
+         451WnCHKzkeA2+F+ZU3ou25LUKp2RoETduMNVEi4w5v6qm4u6qdYTi+DKK2PAKPBgb7o
+         tbLELaim4/hPQZMp+zGN9ENzWSjFvPuYX433PUPGWIj10QJu5smhXEb0Kq0tntyB6vXB
+         JrwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT0xKeJ44Oo3poJcZ5GxNnpBqGRb2AtXikfMqEqxb1eXBhYvQPzz63Gyh8S+Qp1b4REbvhIAOAzKxEOE0f60MHa+HZL1wV1Tc3jBs=
+X-Gm-Message-State: AOJu0Yze41GA1A6eBXJbEx/RC6SLzwuxXp06wZpFgOcp4jxTozGFs5c7
+	2KJrBtgjlBVGMtasMmJN/ErMTZqWEZ/vQelJYB3vx3fj5/oA2cJNZrppkjqSJjnsiEcmRJRQ4FC
+	B0vkeoHk1UNbeKZiJE+wZmtSnB8RZ8xZ8aZ21/w==
+X-Google-Smtp-Source: AGHT+IH/7/dqPY9r1lhR5haX5AIQ/98Ll9YuM9T0D4wFA2HFYmBB4m8nfB/jKUjlQdttEXRU3o5RpwBPOQ1s/m/TNvM=
+X-Received: by 2002:a05:6808:2d9:b0:3c8:65ee:6795 with SMTP id
+ 5614622812f47-3c99704cfbdmr14936618b6e.22.1715782749719; Wed, 15 May 2024
+ 07:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e40badb-c4fa-4828-a4c5-3a170f624215@leemhuis.info>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 15 May 2024 16:18:58 +0200
+Message-ID: <CA+G9fYtDtgb8zNGfDQPS2u_n_45rDiDgJR6ud3uuxkJBR0rUzA@mail.gmail.com>
+Subject: riscv: irq-riscv-imsic-early.c:52:9: error: too many arguments to
+ function 'riscv_ipi_set_virq_range'
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-riscv <linux-riscv@lists.infradead.org>
+Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 15, 2024 at 03:49:30PM +0200, Thorsten Leemhuis wrote:
-> Hi Greg. Here are three reports for regressions introduced during the
-> 6.9 cycle that were not fixed for 6.9 for one reason or another, but are
-> fixed in mainline now. So they might be good candidates to pick up early
-> for 6.9.y -- or maybe not, not sure. You are the better judge here. I
-> just thought you might wanted to know about them.
-> 
-> 
-> * net: Bluetooth: firmware loading problems with older firmware:
-> https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
-> 
-> Fixed by 958cd6beab693f ("Bluetooth: btusb: Fix the patch for MT7920 the
-> affected to MT7921") – which likely should have gone into 6.9, but did
-> not due to lack of fixes: an stable tags:
-> https://lore.kernel.org/all/CABBYNZK1QWNHpmXUyne1Vmqqvy7csmivL7q7N2Mu=2fmrUV4jg@mail.gmail.com/
-> 
-> 
-> * leds/iwlwifi: hangs on boot:
-> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-> 
-> Fixed by 3d913719df14c2 ("wifi: iwlwifi: Use request_module_nowait") –
-> not sure if that one is worth it, the regression might be an exotic
-> corner case.
-> 
-> 
-> * Ryzen 7840HS CPU single core never boosts to max frequency:
-> https://bugzilla.kernel.org/show_bug.cgi?id=218759
-> 
-> Fixed by bf202e654bfa57 ("cpufreq: amd-pstate: fix the highest frequency
-> issue which limits performance") – which was broken out of a patch-set
-> by the developers to send it in for 6.9, but then was only merged for
-> 6.10 by the maintainer.
+The riscv builds failed on Linux next-20240515 tag due to following build
+warnings / errors with gcc-13 and clang toolchain.
 
-Nice, thanks for these!  I'll look at them after this round of -rcs is
-out.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-greg k-h
+Build Log:
+-----
+drivers/irqchip/irq-riscv-imsic-early.c: In function 'imsic_ipi_domain_init':
+drivers/irqchip/irq-riscv-imsic-early.c:52:9: error: too many
+arguments to function 'riscv_ipi_set_virq_range'
+   52 |         riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from include/linux/smp.h:119,
+                 from include/linux/lockdep.h:14,
+                 from include/linux/spinlock.h:63,
+                 from include/linux/sched.h:2142,
+                 from include/linux/ratelimit.h:6,
+                 from include/linux/dev_printk.h:16,
+                 from include/linux/device.h:15,
+                 from include/linux/node.h:18,
+                 from include/linux/cpu.h:17,
+                 from drivers/irqchip/irq-riscv-imsic-early.c:8:
+arch/riscv/include/asm/smp.h:52:6: note: declared here
+   52 | void riscv_ipi_set_virq_range(int virq, int nr);
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~
+
+metadata:
+  git_describe: next-20240515
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 82d92a9a1b9ea0ea52aff27cddd05009b4edad49
+  git_short_log: 82d92a9a1b9e ("Add linux-next specific files for 20240515")
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2gUiKdxX7qM27ritMJT5pRyZhyi/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/history/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
