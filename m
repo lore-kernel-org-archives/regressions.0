@@ -1,93 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC05374D1;
-	Wed, 15 May 2024 07:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E7C56458;
+	Wed, 15 May 2024 09:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759772; cv=none; b=Dy/jrASdFAfFvmWCoAi8xmDcHZd6LzAoOnuHrxMUR2siFDllk1Sx8X8sFRG2iw2ihE9UnDcLvRTTYuexM9nEjSpp23pkx/4CpxCp5MrHLJrVMfZ/xYC0sd/rwhVEGoWVr/Y1wvVZEDGPsCRL5bPUPsGP8sJMAznHkH3v3j8iFU4=
+	t=1715764376; cv=none; b=i9PEq4IyCdalv4NAO35Zx/BRq+t5JR2lWLdhgvqSaQgcG3TbHj8PQaSG2//pKn8j+50+bHw8PLFPSI8Ll72tfz0NRUnU4bGF8AI6u/fVUMJ6P/zxYa83UQpiGgY7+g4O0ursunY+UrgmyeRzT1K/Laaa2wodxaVRKnSkenwqHk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759772; c=relaxed/simple;
-	bh=uKH9u89PoqokIDK4hendehhmL2WZxBfsMlAPWgg6f+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JvP0oXtq6rGSLtAJEITfEBqbTYDXEVqkJsURPhdZ1h5XBmj1gnq9XUHoYB1Kknw/lYxihS8yu5rA2nCGHQC5OOPCalBPnOfE9T2FjowUWvtFAEiBveD/qegIGhjWf2BnfIziENuX4oT7MbpPrqibAJ8V3rpLyI8LN5BHzqbDxP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wEXcOsbG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715764376; c=relaxed/simple;
+	bh=TTsEtprCxdUfO5ikvCApgameQ9WCVeqzkrls7BtfyBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KSPNzpSiZ1Yp0/u/9lL+2nFGBkBs6QMX1o7KysY46CCxUkueOeBHnZ/r1vC0mtSmAqF/uj6YhvVr7eQoPRd0tt6+TnJyQ/NdklHuxu/Z2oM27UCW08o4zudTZoe0qPP8vZiRccuOwDHDi7JdpP/PqFNqMxw+mm4XqrnV3zgDW2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=auXRJCkc; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wEXcOsbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30B8C116B1;
-	Wed, 15 May 2024 07:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715759772;
-	bh=uKH9u89PoqokIDK4hendehhmL2WZxBfsMlAPWgg6f+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wEXcOsbGtnz+ojx0BNc/2zRSPDwPLyn1XBD2DAkHLe68AEQ/X/y2SnL+dKj7Y46E1
-	 yBIzeaVDOPq7VLDeY1++cb4rNPJPw7Pgicdm7fH8mq2Qf25paw6QzwISKsbqtAbsKV
-	 YRxlekXHo4KLzY7nL39DZ1OAVSczApONOYRmyP1I=
-Date: Wed, 15 May 2024 09:56:09 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Peter Chiu <chui-hao.chiu@mediatek.com>,
-	StanleyYP Wang <StanleyYP.Wang@mediatek.com>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-Message-ID: <2024051552-subatomic-roundup-fccf@gregkh>
-References: <6061263.lOV4Wx5bFT@natalenko.name>
- <2341660.ElGaqSPkdT@natalenko.name>
- <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
- <2200096.irdbgypaU6@natalenko.name>
- <a603a67b-6703-4f63-93ee-98a05c605d02@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="auXRJCkc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=ExKMvvECnZB5Wg1PzyuTiY6o/G3+BSWWytYUhdKnSSY=; t=1715764374;
+	x=1716196374; b=auXRJCkcrBfTu1xRI/Gzp4ayso1IYH3mbqUxzGIaTFiDfa2qD9kWzxMasd3jx
+	hfAtJhKviumwyJQj/F4zbCFZ48vgsRcjzhcQAPH1W+LI0R7zLrhKjEQPPzsq0UXaGLYrAjknESxH2
+	s7AN44ZRNnT1xHZSSwh8ZN6/Fvv21Z2r6OFdIftJlXTYitvv8EDHgLnxHsNeRDhSyJzjk43xgjjCq
+	wiWZdECtTj/gtSt5m7UaJba86woIClBkbHgQ5q8Nxxw85bjwid8sO3R1aiFLt2o9vubI94BhxeMG7
+	KgXyFy3sIl1ZfwIGF29ZR05xcyIictiRHCvNcoTWZy6mjDvnQA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s7Agt-00018z-Mw; Wed, 15 May 2024 11:12:51 +0200
+Message-ID: <e4967bdf-f600-4791-b522-7f308ef9bd99@leemhuis.info>
+Date: Wed, 15 May 2024 11:12:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a603a67b-6703-4f63-93ee-98a05c605d02@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression fix e100e: change usleep_range to udelay in PHY mdic
+To: James Dutton <james.dutton@gmail.com>, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAAMvbhHra1jpjgR69_+91J2zTCayf_mzodD93XKGiLRGHoy2Pw@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAAMvbhHra1jpjgR69_+91J2zTCayf_mzodD93XKGiLRGHoy2Pw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715764374;a400e4a3;
+X-HE-SMSGID: 1s7Agt-00018z-Mw
 
-On Wed, May 15, 2024 at 09:40:40AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 15.05.24 09:15, Oleksandr Natalenko wrote:
-> > On středa 15. května 2024 8:23:35, SELČ Johannes Berg wrote:
-> >> On Wed, 2024-05-15 at 00:51 +0200, Oleksandr Natalenko wrote:
-> >>> Also /cc Johannes because of this commit:
-> >>>
-> >>> 6092077ad09ce wifi: mac80211: introduce 'channel request'
-> >>>
-> >>> On středa 15. května 2024 0:43:40, SELČ Oleksandr Natalenko wrote:
-> >>>> Hello Felix, Lorenzo et al.
-> >>>>
-> >>>> With v6.9 kernel the following card:
-> >>>>
-> >>>> 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI Express Wireless Network Adapter [14c3:7915]
-> >>>> doesn't work any more. Upon mt7915e module insertion the following splat happens:
-> >>
-> >> 6.9 didn't get commit 2f7cf3b61d85 ("wifi: mt76: mt7915: add missing
-> >> chanctx ops")? Huh?
+On 15.05.24 10:36, James Dutton wrote:
 > 
-> FWIW, seems there was and earlier report about this that I missed:
-> https://lore.kernel.org/all/CAAMvbhGHe4PM5M=JJZRQ2m5_aVZ=4DPG76MT+q5qi3HA+7_wzQ@mail.gmail.com/
+> Please can you add this regression fix to kernel 6.9.1.
+> Feel free to add a:
+> Tested-by: James Courtier-Dutton <james.dutton@gmail.com>
 > 
-> > Yes, you are right, this commit is not present in v6.9, and I can find it in the "next" branch only.
-> > 
-> > I can also confirm this commit fixes the regression for me.
+> It has been tested by many others also, as listed in the commit, so
+> don't feel the need to add my name if it delays adding it to kernel 6.9.1.
+> Without this fix, the network card in my HP laptop does not work.
 > 
-> So all we need to resolve this is to ask Greg to pick up the patch for
-> the next 6.9.y. release? Then I'll take care of that in a few hours,
-> unless somebody else does it first or I get some kind of "might be a bad
-> idea for now" signal from anyone.
+> Here is the summary with links:
+>   - [net] e1000e: change usleep_range to udelay in PHY mdic access
+>     https://git.kernel.org/netdev/net/c/387f295cb215
 
-Now picked up for 6.9.y.
+That change is already in 6.9. Did you mix up the versions? In case you
+did: it's scheduled to be included in the next 6.8.y and 6.6.y releases,
+too.
 
-greg k-h
+Or am I missing something/mixed something up?
+
+Ciao, Thorsten
