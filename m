@@ -1,59 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05B3145B04;
-	Thu, 16 May 2024 12:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7629C28680
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 13:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715861229; cv=none; b=TLo9i90j0NZQI4f46ntzXTK3cjlu9fRocKXfr5CHSWzEP1XNeNR112As/t2mzqoEPcZZJJ5XtxVxPDCmSkgb6AmE8w3mQGBjKoJU/Kftom7eDKA+Gd5NFZRGrYwAt3DWAmvjGjdTxc2ksuOq2ByfDfoMvVitBwdiDztClR8s+lQ=
+	t=1715866332; cv=none; b=SdQNLU+KFAcWbdblSjDr1jrf5azNMazhooZIh09kgTDomrcinN8CPNfEHUNo+KsGxgSjjKZYxFTaGZrPIi6BVneCOyAXLqcKmn9k6aZZe+gmIqVrN+l4iV/gBOF2QKZOk8cu6I1E/hVEfZ6GpsFl/pj+bg35JL/IJF0dMj/uhbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715861229; c=relaxed/simple;
-	bh=F/NDg+q4448IaAly3cLE6vkaENzwXj1yZC3S3ugEWtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLwq7z8Vi5Wi3pNbSpR0KFfQxjThfugNVTjcg8gcybk4LMGSHPy5Hj1/a5Ia7NlHS1RrYYo9QRoV/do+G1CVI1mgQs00CqmLDoace9Th1jEQdZQLPF3a9GTXkKXNgwj30iHImSNKd1NLgdIGUT+WqHg12P6JCn28qxSIF6WtmGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=biPzZaMw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715866332; c=relaxed/simple;
+	bh=HsYZoT10qOQGfgRr3VKNQkyb70+BVLLxcy/xSeyokH8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CHjMOYGLyzJLBb23GSLx6GtCDpypU0UUVZ8F9SrxahOZ2+dEQp5mZeVHd7LdhMNe+SI2TeuNxXa32YAeM+R2tD71koAA1f/o7sGVwUFqmHnn4uVKATTAB/HdEq6rWm2RbV5+q6AdgHaDlaANfpWxoEQZ79S/QCrO0jVII5EzYXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hNZDVzdj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="biPzZaMw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107C8C2BD11;
-	Thu, 16 May 2024 12:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715861228;
-	bh=F/NDg+q4448IaAly3cLE6vkaENzwXj1yZC3S3ugEWtc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=biPzZaMwND7ElKFy54bvu5DoeNlSablGCvN90XtEml6nZDBtCtGzjlxWZmGlbvn2J
-	 9E4AemO3akVwWbFkbChte0THUxwvjwgIEuZX72WXmpjhO1566TLIrIPQ7hgIM5d2TJ
-	 rZAyvKU9IpGDTD5dLUsKIpeNTzPjjq9IVCg+74WE=
-Date: Thu, 16 May 2024 14:07:05 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexander Sergeev <alexander.sergeev@onmail.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Rtnetlink GETADDR request for 1 specific interface only (by ID)
-Message-ID: <2024051645-onyx-subtext-2448@gregkh>
-References: <ac768f81f5218be629864b850bb7b959-1715851155@onmail.com>
- <2024051638-chase-viral-0653@gregkh>
- <2c63357c6f3220819739d293c9a25f1f-1715860234@onmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hNZDVzdj"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G9r5fW021369;
+	Thu, 16 May 2024 13:31:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=+/eQ88JSeksu5lIGmXlMS3egFKoWcxF11wAcQsE1AzQ=; b=hN
+	ZDVzdjopn9NFhjhUz6CqKXoqk35xh/QuZXj1Pm02y0SbJ9/5OOrSxVZna7TI96qt
+	L//VeRLocPypGB3J3OwPHMGQTaGVn1Wwnv9NgWsFaVLxQNdduLMw4AgtdaRUEgqg
+	PxhIdLEei2uHwafOAEC+V691gJ5LF0f+jqZvvz0eEFPmL0CPrSgQSZfTSvJkxVbS
+	YUN62Ym+Fxzw2ZkYz8Oi9cSpppCEmjjX1FeCwdvSKA4VMrQt7QxUOTSCzv7aQl7F
+	cmgTRh43NNXxgG0Fypvt9zgv86y20cUnkUiJIwqb/vHMXHWhC6hVUXbzgkdgGwiy
+	88CQ6tgWgTgKqA6hXueg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y45vbdvdr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 13:31:56 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44GDVtLl003759
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 13:31:55 GMT
+Received: from zijuhu-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 16 May 2024 06:31:52 -0700
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+To: <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>, <marcel@holtmann.org>
+CC: <quic_zijuhu@quicinc.com>, <linux-bluetooth@vger.kernel.org>,
+        <wt@penguintechs.org>, <regressions@lists.linux.dev>,
+        <pmenzel@molgen.mpg.de>, <krzysztof.kozlowski@linaro.org>,
+        <lk_sii@163.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
+Date: Thu, 16 May 2024 21:31:34 +0800
+Message-ID: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c63357c6f3220819739d293c9a25f1f-1715860234@onmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OWR5DugCuC7EIQRlLZgLv4luGjYdLDSe
+X-Proofpoint-ORIG-GUID: OWR5DugCuC7EIQRlLZgLv4luGjYdLDSe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405160095
 
-On Thu, May 16, 2024 at 04:50:34AM -0700, Alexander Sergeev wrote:
-> Good afternoon!
-> 
-> Thank you for your advice! Unfortunately, I couldn't find any way or
-> form for reporting issues in netlink, so I decided to use a bug
-> reporting guide for kernel in general. Could you please let me know
-> where could I forward this information? How could I contact netlink
-> development team?
+Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+serdev") will cause below regression issue:
 
-The NETWORKING section of the MAINTAINERS file lists:
-	netdev@vger.kernel.org
-as the proper place to go.
+BT can't be enabled after below steps:
+cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+if property enable-gpios is not configured within DT|ACPI for QCA6390.
 
-greg k-h
+The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+by adding condition to avoid the serdev is flushed or wrote after closed
+but also introduces this regression issue regarding above steps since the
+VSC is not sent to reset controller during warm reboot.
+
+Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+once BT was ever enabled, and the use-after-free issue is also fixed by
+this change since the serdev is still opened before it is flushed or wrote.
+
+Verified by the reported machine Dell XPS 13 9310 laptop over below two
+kernel commits:
+commit e00fc2700a3f ("Bluetooth: btusb: Fix triggering coredump
+implementation for QCA") of bluetooth-next tree.
+commit b23d98d46d28 ("Bluetooth: btusb: Fix triggering coredump
+implementation for QCA") of linus mainline tree.
+
+Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
+Cc: stable@vger.kernel.org
+Reported-by: Wren Turkal <wt@penguintechs.org>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Tested-by: Wren Turkal <wt@penguintechs.org>
+---
+V1 -> V2: Add comments and more commit messages
+
+V1 discussion link:
+https://lore.kernel.org/linux-bluetooth/d553edef-c1a4-4d52-a892-715549d31ebe@163.com/T/#t
+
+ drivers/bluetooth/hci_qca.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 0c9c9ee56592..9a0bc86f9aac 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2450,15 +2450,27 @@ static void qca_serdev_shutdown(struct device *dev)
+ 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+ 	struct hci_uart *hu = &qcadev->serdev_hu;
+ 	struct hci_dev *hdev = hu->hdev;
+-	struct qca_data *qca = hu->priv;
+ 	const u8 ibs_wake_cmd[] = { 0xFD };
+ 	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+ 
+ 	if (qcadev->btsoc_type == QCA_QCA6390) {
+-		if (test_bit(QCA_BT_OFF, &qca->flags) ||
+-		    !test_bit(HCI_RUNNING, &hdev->flags))
++		/* The purpose of sending the VSC is to reset SOC into a initial
++		 * state and the state will ensure next hdev->setup() success.
++		 * if HCI_QUIRK_NON_PERSISTENT_SETUP is set, it means that
++		 * hdev->setup() can do its job regardless of SoC state, so
++		 * don't need to send the VSC.
++		 * if HCI_SETUP is set, it means that hdev->setup() was never
++		 * invoked and the SOC is already in the initial state, so
++		 * don't also need to send the VSC.
++		 */
++		if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
++		    hci_dev_test_flag(hdev, HCI_SETUP))
+ 			return;
+ 
++		/* The serdev must be in open state when conrol logic arrives
++		 * here, so also fix the use-after-free issue caused by that
++		 * the serdev is flushed or wrote after it is closed.
++		 */
+ 		serdev_device_write_flush(serdev);
+ 		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
+ 					      sizeof(ibs_wake_cmd));
+-- 
+2.7.4
+
