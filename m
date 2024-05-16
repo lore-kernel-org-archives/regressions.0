@@ -1,50 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994611DFEF
-	for <regressions@lists.linux.dev>; Thu, 16 May 2024 14:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6043614B970
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 14:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715869982; cv=none; b=rdxvYtL+eKFqkva1mwWafz3SnwR3ZJli9+ZW5zCMvorqsS5sJVodpHbovqjLDQR6btk5WBIFFiJKhOlTOPGGOlueW2bhBmYYpJl6F13PD1YFnmYc00yqyjHGHPweIIg7RZQ5uV0Rf7QQUvV8wsuaXackeoHCkn78l7HhspdVakY=
+	t=1715871374; cv=none; b=W3xuV09HDXAaqnLelFX12jiVKTrOoq0k0I4Hpy4Jjr/2ECKdyZvrbl3q53LKv0SOqpJuWQBvplp5ekJn8/Btof8nNfu7kKcE23jyMi/VLfrhuaohuCJT8wvbPHeWXWeNyJaBsiJu9kaJU1q1pHB+n5UFGrnZAvCeBXu38enYkEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715869982; c=relaxed/simple;
-	bh=YSGxDHo3S40XhBcX0j2/tal+VEhClJzUNvlb3qCnLIc=;
+	s=arc-20240116; t=1715871374; c=relaxed/simple;
+	bh=GDsm3h/IcVDrPZBroUZRxpkn4pFPy1u/7Ui0+oUlALk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IPz35xBW9sZVItf0wOWaLpr86sqYbDSIzeuGScpPnsJDCnRQQeQ4ZfmzPCIWyoO0hiwD327GM5lvPEqSwqDsxDMLgTbUyM33o9mg0DMn4sHt3g0zCx7J3exc/WclmAIHvSnz4Gz1a6iR1pV63S5QSMGn3cF7iWCHIeNVUxwXZDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=apXo/w1e; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=iXQRYb4CaNKX8JT5hOJlCIuf+PbYCdVqFiNJ1AhGrg/utyK785BhwFVuudq+8nUHzl7jMWYxGzvx3pbob+/NZu1q9c3Y864f/4VQ3VzaOvs8iKbJSoudbMnkIQjgVrVZRSceRV7lrOxXVdXZvVbFEF8M2aSzgLBNWFlwkQtDrBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ksaherUH; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="apXo/w1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715869981; x=1747405981;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YSGxDHo3S40XhBcX0j2/tal+VEhClJzUNvlb3qCnLIc=;
-  b=apXo/w1eUkWVaOKEVTa8mFwBufWkQjKb7Cpc4otDanJUVvU6FBwIRCzx
-   AtUZyt1BgBN19kq19SoPTmOU5GKEbRUUbPOfwRqz3aqDGfeR3OTjEgAiZ
-   WiSdE4jMVCm1YDOJeygcvdzZLMpJGovyuSMbjIapgy2VDl8EBs+eRqb87
-   SKHn2l9iLyDEUcXr+jmVopeSjU6AQRkv45aNOpO3H6Qc70wcI4qOg2cNo
-   klhFKzX/p0ieQyaaJIKI8S+eqDE0JuzN3fgdtcFyDphSt2zbZH/RQWZVW
-   LMaVNRxbZvaOrPl1P0kcIVWZYIA4oQnthWJy4JRfSGHTkLjDzIoby7BHo
-   g==;
-X-CSE-ConnectionGUID: V4Utj56DRx2Vbn40VX7Edw==
-X-CSE-MsgGUID: odQ02bhZSRKlPSWNMFJ9LA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="37362555"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="37362555"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 07:32:56 -0700
-X-CSE-ConnectionGUID: qT3LVgguTjagpzKBkxF5LA==
-X-CSE-MsgGUID: eLMovlXtQFGJ1mzLFvc1pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="35879219"
-Received: from angaikwa-mobl1.amr.corp.intel.com (HELO [10.212.163.41]) ([10.212.163.41])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 07:32:55 -0700
-Message-ID: <ab00d8e5-8400-451e-9435-becb0b3fa80c@intel.com>
-Date: Thu, 16 May 2024 07:32:54 -0700
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ksaherUH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=tfyLnpZVWwLnHmF639fNbdaFAOdB0N4LYCqcFVqG7cU=;
+	b=ksaherUHCSAskro6zB/RNWlVjKnvaYMrMn8v65pAu2yb4NOzxxdcYjZEQ6IrBZ
+	X4p4blgZBBbzPeqUqbyPaAgLuHobaCKZKmohp4JtE7n97vG64Ptr55pIPqZbAhEc
+	7cYx+AYiFwrMsx8OJjkH5bXwqqoKQQ0Af/f4gpTu4ay68=
+Received: from [192.168.1.25] (unknown [183.195.4.13])
+	by gzga-smtp-mta-g2-2 (Coremail) with SMTP id _____wD3n59eHkZmdIodEw--.60785S2;
+	Thu, 16 May 2024 22:55:28 +0800 (CST)
+Message-ID: <f343ecae-efee-4bdc-ac38-89b614e081b5@163.com>
+Date: Thu, 16 May 2024 22:55:26 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,90 +32,127 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [regression] suspend stress test stalls within 30 minutes
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Kalle Valo <kvalo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Jeff Johnson <quic_jjohnson@quicinc.com>,
- Daniel Sneddon <daniel.sneddon@linux.intel.com>
-References: <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
- <87h6f4jdrq.fsf@kernel.org> <878r0djxgc.fsf@kernel.org>
- <874jb0jzx5.fsf@kernel.org> <feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
- <20240515072231.z3wlyoblyc34ldmr@desk>
- <529C9374-DA6F-49C8-9B32-91741800F8E4@alien8.de>
- <20240515162747.6shmaoelc4mt7nro@desk> <878r0bhvjq.fsf@kernel.org>
- <20240516070315.swz2golcrfp3uvfd@desk> <20240516142513.qqy7wbmja5frizuj@desk>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for
+ QCA6390 after warm reboot
+To: Zijun Hu <quic_zijuhu@quicinc.com>, luiz.dentz@gmail.com,
+ luiz.von.dentz@intel.com, marcel@holtmann.org
+Cc: linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
+ regressions@lists.linux.dev, pmenzel@molgen.mpg.de,
+ krzysztof.kozlowski@linaro.org, stable@vger.kernel.org
+References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240516142513.qqy7wbmja5frizuj@desk>
+From: Lk Sii <lk_sii@163.com>
+In-Reply-To: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3n59eHkZmdIodEw--.60785S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr1kGr4Dtw4xKF4rZF43Wrg_yoWrtFy5pF
+	WqgFyakrWUJr97CFnrAw4xWFy5Zwnav3y3urW7K345JaySyrZ8GF4xt3y5Aa4UCryUCr4j
+	qFnrX34UKas09F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j4Hq7UUUUU=
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiEwbgNWXAlLRsnwAAs2
 
-On 5/16/24 07:25, Pawan Gupta wrote:
-> On Thu, May 16, 2024 at 12:03:22AM -0700, Pawan Gupta wrote:
->> I am running the suspend test now and will update in the morning if I
->> could reproduce the hang.
-> Completed 500 suspend iterations, but the hang is not reproduced 🙁
-> I have restarted the test.
+
+
+On 2024/5/16 21:31, Zijun Hu wrote:
+> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+> serdev") will cause below regression issue:
 > 
-> BTW, could you please share your /proc/cmdline? Also, was there any
-> workload running with the suspend test? If I could not reproduce it in the
-> next run, I will run stress-ng with the suspend test.
+> BT can't be enabled after below steps:
+> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+> if property enable-gpios is not configured within DT|ACPI for QCA6390.
+> 
+> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+> by adding condition to avoid the serdev is flushed or wrote after closed
+> but also introduces this regression issue regarding above steps since the
+> VSC is not sent to reset controller during warm reboot.
+> 
+> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+> once BT was ever enabled, and the use-after-free issue is also fixed by
+> this change since the serdev is still opened before it is flushed or wrote.
+> 
+> Verified by the reported machine Dell XPS 13 9310 laptop over below two
+> kernel commits:
+> commit e00fc2700a3f ("Bluetooth: btusb: Fix triggering coredump
+> implementation for QCA") of bluetooth-next tree.
+> commit b23d98d46d28 ("Bluetooth: btusb: Fix triggering coredump
+> implementation for QCA") of linus mainline tree.
+> 
+> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
+> Cc: stable@vger.kernel.org
+> Reported-by: Wren Turkal <wt@penguintechs.org>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> Tested-by: Wren Turkal <wt@penguintechs.org>
+> ---
+> V1 -> V2: Add comments and more commit messages
+> 
+> V1 discussion link:
+> https://lore.kernel.org/linux-bluetooth/d553edef-c1a4-4d52-a892-715549d31ebe@163.com/T/#t
+> 
+>  drivers/bluetooth/hci_qca.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 0c9c9ee56592..9a0bc86f9aac 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -2450,15 +2450,27 @@ static void qca_serdev_shutdown(struct device *dev)
+>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>  	struct hci_uart *hu = &qcadev->serdev_hu;
+>  	struct hci_dev *hdev = hu->hdev;
+> -	struct qca_data *qca = hu->priv;
+>  	const u8 ibs_wake_cmd[] = { 0xFD };
+>  	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+>  
+>  	if (qcadev->btsoc_type == QCA_QCA6390) {
+> -		if (test_bit(QCA_BT_OFF, &qca->flags) ||
+> -		    !test_bit(HCI_RUNNING, &hdev->flags))
+> +		/* The purpose of sending the VSC is to reset SOC into a initial
+> +		 * state and the state will ensure next hdev->setup() success.
+> +		 * if HCI_QUIRK_NON_PERSISTENT_SETUP is set, it means that
+> +		 * hdev->setup() can do its job regardless of SoC state, so
+> +		 * don't need to send the VSC.
+> +		 * if HCI_SETUP is set, it means that hdev->setup() was never
+> +		 * invoked and the SOC is already in the initial state, so
+> +		 * don't also need to send the VSC.
+> +		 */
+> +		if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
+> +		    hci_dev_test_flag(hdev, HCI_SETUP))
+>  			return;
+>  
+> +		/* The serdev must be in open state when conrol logic arrives
+> +		 * here, so also fix the use-after-free issue caused by that
+> +		 * the serdev is flushed or wrote after it is closed.
+> +		 */
+>  		serdev_device_write_flush(serdev);
+>  		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
+>  					      sizeof(ibs_wake_cmd));
+i believe Zijun's change is able to fix both below issues and don't
+introduce new issue.
 
-I'd suggest two things:
+regression issue A:  BT enable failure after warm reboot.
+issue B:  use-after-free issue, namely, kernel crash.
 
-  * Run everything in tools/testing/selftests/x86 in a loop during the
-    suspend test.
-  * Run perf or something else to generate some NMIs.
 
-Those will ensure the dark corners of the entry code are being
-sufficiently prodded.
+For issue B, i have more findings related to below commits ordered by time.
 
-I also have sneaking suspicion that microcode updates during resume are
-the aggravating factor.
+Commit A: 7e7bbddd029b ("Bluetooth: hci_qca: Fix qca6390 enable failure
+after warm reboot")
+
+Commit B: de8892df72be ("Bluetooth: hci_serdev: Close UART port if
+NON_PERSISTENT_SETUP is set")
+this commit introduces issue B, it is also not suitable to associate
+protocol state with state of lower level transport type such as serdev
+or uart, in my opinion, protocol state should be independent with
+transport type state, flag HCI_UART_PROTO_READY is for protocol state,
+it means if protocol hu->proto is initialized and if we can invoke its
+interfaces.it is common for various kinds of transport types. perhaps,
+this is the reason why Zijun's change doesn't use flag HCI_UART_PROTO_READY.
+
+Commit C: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on
+closed serdev")
+this commit is to fix issue B which is actually caused by Commit B, but
+it has Fixes tag for Commit A. and it also introduces the regression
+issue A.
+
