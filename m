@@ -1,94 +1,180 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-ue1-f02.onmail.com (mail-ue1-f02.onmail.com [34.228.121.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A865F143885
-	for <regressions@lists.linux.dev>; Thu, 16 May 2024 10:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE56143754
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 10:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.228.121.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715854082; cv=none; b=rYJxvoaD9jWQwGgvpmAj32tt7nMWhuhVBTXTvUY8oWE1Y9vy8selctgD2zaOj69NPoKtBOpU/bf1Vt8enDV15Zn/TxAZzLx1T7+N8/sbJU1kQz7CWT4xEhUxjaqWQdxUu6A53zdyrsQmq+ZiyYIioPsBji0MVlGhLqyQLOASyFs=
+	t=1715854345; cv=none; b=FOJMJ8kpKvkLMKGRoTQKzgCQLl8VanZJ7Bw+py8yvGlqjiZDhCLRREQFOmAVyO+jh52sEAL9y3mI/8kyhwMjGWvucM5s4+9pvhyTBvw9POIYd0LVkrwO1GwV45k8T88R8240CtOY2+jTnGlz4vEd2uvH8a+L6EXxK95VKbo+n8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715854082; c=relaxed/simple;
-	bh=VN+iz4MME0m7e1K23tweQeLzkscaLfxE+QPVGJsb6TQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WePuo52Ms//PlF3bNc/ZqImXyVbdgclhH0jx7+uvBM/CRVS7i33s77GLWa7j8B1/SW27opz3EgKyrIAxj7+kkG2bC+wPE2x0BwLBhFIQuu4/64YeJ2znIXjgi1MFAMGv4boMQMmDygqFQ1CTJwJ39Wj7N5Wu0lYuBQSiZ9fJ6xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASuFJdZA; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715854345; c=relaxed/simple;
+	bh=IuZ9l2raF4lKepfElqAwYqXiYFHk14kFBc/sJRJVIVM=;
+	h=Cc:Content-Type:Date:From:MIME-Version:Message-ID:Subject:To; b=jL0y2Napd2PBYj0vksIxyYZvCLjQUzGUilJdGrTPDTRUD4rHxx894ZyVLKZ/lbyLZdSmG9BSuWHaIDwnyu62dG+jeGF+Ll9MLY5EMeEsMXTTUIW03nDxuiPWRnwJTcsOJr429d6axDE+8Z+V8WLI+HxIdR4z3NfXx8hy48tW5YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=onmail.com; spf=pass smtp.mailfrom=onmail.com; dkim=pass (2048-bit key) header.d=onmail.com header.i=@onmail.com header.b=CFMxSuYs; arc=none smtp.client-ip=34.228.121.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=onmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASuFJdZA"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2454bad9957so166059fac.2
-        for <regressions@lists.linux.dev>; Thu, 16 May 2024 03:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715854079; x=1716458879; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Z7URvtjqC9A8pKrxMzcq/a5L2iC+R+uiDHqz5CgzL1I=;
-        b=ASuFJdZAKG0YrLHOdTHQ0GyMXvDit01E9HBcSwSWGbcoZkdsW1ExnbFM2EXI6y47qZ
-         4EuV6SjiT2p5OTyisbNKVKq9dyIVJHkryqqa5uw/v+jITQwgKKYdz5DTqHsru7mVXOes
-         PfHOtA7U3MgIQPGr/5p80id22uHiHSwvNfoV2WpfIkNANiBmDgX/ht+dBz07fCqu9rIC
-         ygZqxI2il4aOe1ZQuezp2OP89PliKjK4zgKRBNWKZRe1mNVmRW9RDP4H7UMvVSLKUdXF
-         hvxuKzDXzUK8rEf1I7SVjBM+3VLdZZSnun3MX2Pwanjl8OQsSNHxm4vGo2AxXoqSKsgP
-         mq4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715854079; x=1716458879;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7URvtjqC9A8pKrxMzcq/a5L2iC+R+uiDHqz5CgzL1I=;
-        b=mas28A79F3D1fNvyBzqqlKmzRsyj6rD+TrDHEFs4Ci02kgHkS8g3XpYpKS3OeE8+Sr
-         vsBUs8T/aGO7jWte9nJ5ol/LuJQyCYrZK1z9vuRsaTsirssh6TOyRG+GaeCzXg7dMYfh
-         ZfwRKJeelEq4PxbFZ8IcLOZ9L8ZTxrKRSHDVvLEbc9hdPIbEB/+Jp9hrUQZYP8mAvjZF
-         smvHVGNE/Tga06LkiU+lw5nwKjlSSkV6WRYbOBULlByJ96gQI1lbReOh4hWx03TR2l2o
-         EkB1su0/592Odpv5K7Q7ZS7lbcOLVJEzBV22bx/RgQFwF23ywIe9h2q754rKJN+ZIQA+
-         u7KQ==
-X-Gm-Message-State: AOJu0YyzRsaq1LgoKBqaZ7lVuj8F4AclDgn3tPhX0vn+rI3UuyeiFS4I
-	49qc1f6ouDtYziljivF7yM8rtxgso+hjiDR2zP1kc43U4jiIh9+r8VVHOw==
-X-Google-Smtp-Source: AGHT+IGVHR9gt4zMtsMVDnhtuiiMsx1M3r//vih2hsGHF7q4DMvkYh9X/w7Hkh1EN0ngUM1C+zYoow==
-X-Received: by 2002:a05:6870:d1c6:b0:23c:43d5:6025 with SMTP id 586e51a60fabf-24172e2ec4cmr21101569fac.46.1715854079483;
-        Thu, 16 May 2024 03:07:59 -0700 (PDT)
-Received: from [192.168.0.107] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a6653fsm13051665b3a.19.2024.05.16.03.07.58
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 May 2024 03:07:59 -0700 (PDT)
-Message-ID: <453b71cd-7fa4-49ad-a2dd-35f63ea79979@gmail.com>
-Date: Thu, 16 May 2024 17:07:55 +0700
+	dkim=pass (2048-bit key) header.d=onmail.com header.i=@onmail.com header.b="CFMxSuYs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=mail; d=onmail.com; h=mime-version:date:from:subject:to:message-id:
+ cc; bh=RbIaxq8l6cDJnsrGA0fQMu7nUQVogB/mUbc4QwoUWSU=;
+ b=CFMxSuYsdF7WLaJZMWu/IonTLqwZ0Y0tiN5mGcxyX7JKpNoppSsbpBH6QGw3yQRyRzFGe4
+ 4m81LKXPtdu3nqak2NDgE7SjIzWfrtNB37CGKVBV1y23ydp6CZW8VYvdv0iaN/4vj6giI+
+ UosGmCJlYn3JkMMcRyv8yXQUB9XEkc6Flvlu3lKX9JCP05B3CqpyE5cy2JSIgxmiZ7HFu6
+ 9OpThPiVTgKck9vWesTtU9c4i7X7V0JwP5ATzAHg4gOqdEM9q/QGJBqMt4V7N7qoSAzHY9
+ s0a174t/aLliyohTf9O1vDnQ7U1Y8AFRmpHmxek6UOyJkX7mbvCNS4UuaIMY6A==
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary=0000000000000015c9846566491bb9
+Date: Thu, 16 May 2024 02:19:15 -0700
+From: "Alexander Sergeev" <alexander.sergeev@onmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: SATA ACPI SECURITY FREEZE LOCK (regression?)
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <ZkL0EIESAleNhVqr@archie.me>
- <ef803d3c-14c3-47ef-91d7-4ca498519bf0@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <ef803d3c-14c3-47ef-91d7-4ca498519bf0@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <ac768f81f5218be629864b850bb7b959-1715851155@onmail.com>
+Subject: Rtnetlink GETADDR request for 1 specific interface only (by ID)
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+X-Em-Message-ID: GkdgwIatAk1bSN0juz27GYtGV2e3bxCrwd+8MwFMBsQ=
 
-On 5/16/24 16:56, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 14.05.24 07:18, Bagas Sanjaya wrote:
->>
->> doru iorgulescu <doru.iorgulescu1@gmail.com> dumped repeated SATA error
->> messages on Bugzilla (https://bugzilla.kernel.org/show_bug.cgi?id=218832):
-> 
-> Thx. I wonder if this is a problem at all. Acted in bugzilla for now.
-> 
-> BTW: you did not reply to my question yesterday: why did you start for
-> forwarding bugzilla tickets yourself again? I thought we agreed to let
-> me handle that.
-> 
+--0000000000000015c9846566491bb9
+Content-Type: multipart/alternative;
+	boundary=000000000000003fc3b01e13bae54f
 
-I'm just wondering there and see what bugs I can forward to mailing lists
-(of course with relevant maintainers Cc'ed).
+--000000000000003fc3b01e13bae54f
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 
-Thanks.
+Good morning!
 
--- 
-An old man doll... just what I always wanted! - Clara
+Recently, I have found an issue with `rtnetlink` library that seems to be n=
+ot intended and/or documented. I have asked about it several times, includi=
+ng here and it was also reported here. Neither in related RFC document nor =
+in rtnetlink manuals the issue is described or mentioned.
 
+In a few words, the issue is: for some reason, rtnetlink GETADDR request wo=
+rks only with NLM_F_ROOT or NLM_F_DUMP flags. Consequently, for instance, f=
+iltering by ifa_index field, that would *theoretically* according to docs, =
+allow us to receive address info for 1 specific interface only (by ID) , is=
+ not possible. For comparison, similar functionality to GETLINK request (ge=
+tting information about exactly 1 link by index) is indeed very possible. I=
+nstead of the expected output (information about 1 interface only), what is=
+ returned is an error message with errno -95, which, as I suppose, can be r=
+ead as "operation not permitted".
+
+To this email, I attach a small C file illustrating my issue. Feel free to =
+change IFACE_ID define for ID of any network interface present in your syst=
+em. It illustrates the error.
+
+Please, let me know what you think about this issue. Am I missing something=
+ or does it really needs fixing or at least documenting?
+Best regards,
+Aleksandr Sergeev.
+
+P.S. I have been told that this issue probably won't be addressed, because =
+it "can easily be fixed in user space", however I believe in Linux kernel m=
+aintainers team dedication for clear, well-documented and bug-free code; so=
+ if this issue is not hard to fix, I would suggest addressing it at least i=
+n docs. If it can be useful, I would be more than grateful to provide my he=
+lp with it.
+--000000000000003fc3b01e13bae54f
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+
+<div>Good morning!</div>
+<div><br></div>
+<div>Recently, I have found an issue with `rtnetlink` library that seems to=
+ be not intended and/or documented. I have asked about it several times, in=
+cluding <a href=3D"https://www.linuxquestions.org/questions/linux-networkin=
+g-3/how-to-use-rtnetlink-getaddr-query-to-retrieve-a-%2A%2Asingle%2A%2A-add=
+ress-information-4175736659/" target=3D"_blank" rel=3D"noopener noreferrer"=
+>here</a> and it was also reported <a href=3D"https://stackoverflow.com/que=
+stions/71947088/linux-c-rtnetlink-rtm-getaddr-ignores-ifa-index-in-struct-i=
+faddrmsg-and-instead" target=3D"_blank" rel=3D"noopener noreferrer">here</a=
+>. Neither in <a href=3D"https://www.rfc-editor.org/rfc/rfc3549">related RF=
+C document</a> nor in <a href=3D"https://man7.org/linux/man-pages/man7/rtne=
+tlink.7.html">rtnetlink manuals</a> the issue is described or mentioned.</d=
+iv>
+<div><br></div>
+<div>In a few words, the issue is: for some reason, rtnetlink GETADDR reque=
+st works only with NLM_F_ROOT or NLM_F_DUMP flags. Consequently, for instan=
+ce, filtering by ifa_index field, that would *theoretically* according to d=
+ocs, allow us to receive address info for 1 specific interface only (by ID)=
+ , is not possible. For comparison, similar functionality to GETLINK reques=
+t (getting information about exactly 1 link by index) is indeed very possib=
+le. Instead of the expected output (information about 1 interface only), wh=
+at is returned is an error message with errno -95, which, as I suppose, can=
+ be read as "operation not permitted".</div>
+<div><br></div>
+<div>To this email, I attach a small C file illustrating my issue. Feel fre=
+e to change IFACE_ID define for ID of any network interface present in your=
+ system. It illustrates the error.</div>
+<div><br></div>
+<div>Please, let me know what you think about this issue. Am I missing some=
+thing or does it really needs fixing or at least documenting?</div>
+<div class=3D"webmail_signature">
+<div>Best regards,</div>
+<div>Aleksandr Sergeev.</div>
+<div><br></div>
+<div>P.S. I have been told that this issue probably won't be addressed, bec=
+ause it "can easily be fixed in user space", however I believe in Linux ker=
+nel maintainers team dedication for clear, well-documented and bug-free cod=
+e; so if this issue is not hard to fix, I would suggest addressing it at le=
+ast in docs. If it can be useful, I would be more than grateful to provide =
+my help with it.</div>
+</div>
+--000000000000003fc3b01e13bae54f--
+
+--0000000000000015c9846566491bb9
+Content-Disposition: attachment; filename=main.c
+Content-Id: <fbe9b27bac7a4526a498689ffc1f0f5b>
+Content-Transfer-Encoding: base64
+Content-Type: application/octet-stream
+
+I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPGxpbnV4L2lu
+cHV0Lmg+CiNpbmNsdWRlIDxsaW51eC9uZXRsaW5rLmg+CiNpbmNsdWRlIDxsaW51eC9ydG5ldGxp
+bmsuaD4KI2luY2x1ZGUgPGxpbnV4L2lmX2FkZHIuaD4KI2luY2x1ZGUgPHN5cy9zb2NrZXQuaD4K
+I2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlIDxlcnJuby5o
+PgoKI2RlZmluZSBJRkFDRV9JRCAzCiNkZWZpbmUgREFUQV9MRU5HVEggMzI3NjgKCnN0cnVjdCBw
+YWNrZXQgewogICAgc3RydWN0IG5sbXNnaGRyIGhkcjsKICAgIHN0cnVjdCBpZmFkZHJtc2cgbXNn
+Owp9OwoKCnZvaWQgZ2VuZXJhdGVfYWRkcmVzc19yZXF1ZXN0KHN0cnVjdCBwYWNrZXQqIHBhY2ss
+IGludCBpbnRlcmZhY2VfaWQpIHsKICAgIG1lbXNldChwYWNrLCAwLCBzaXplb2Yoc3RydWN0IHBh
+Y2tldCkpOwogICAgcGFjay0+aGRyLm5sbXNnX2xlbiA9IHNpemVvZihzdHJ1Y3QgcGFja2V0KTsK
+ICAgIHBhY2stPmhkci5ubG1zZ190eXBlID0gUlRNX0dFVEFERFI7CiAgICBwYWNrLT5oZHIubmxt
+c2dfZmxhZ3MgPSBOTE1fRl9SRVFVRVNUOwogICAgcGFjay0+bXNnLmlmYV9pbmRleCA9IGludGVy
+ZmFjZV9pZDsgIC8vIFRoaXMgZ2V0cyBpZ25vcmVkLCB3aHk/Cn0KCnZvaWQgcGFyc2VfYWxsX3Bh
+Y2tldHMoY2hhciogbWVzc2FnZXNfYnl0ZXMsIGludCB0b3RhbF9sZW5ndGgpIHsKICAgIGludCBp
+bmRleCA9IDAsIGN1cnNvciA9IDA7CiAgICB3aGlsZSAoY3Vyc29yIDwgdG90YWxfbGVuZ3RoKSB7
+CiAgICAgICAgc3RydWN0IG5sbXNnaGRyKiBoZWFkZXIgPSAoc3RydWN0IG5sbXNnaGRyKikgKG1l
+c3NhZ2VzX2J5dGVzICsgY3Vyc29yKTsKICAgICAgICBpZiAoaGVhZGVyLT5ubG1zZ190eXBlID09
+IE5MTVNHX0VSUk9SKSB7CiAgICAgICAgICAgIGludCogZXJybnVtYmVyID0gKGludCopIChtZXNz
+YWdlc19ieXRlcyArIGN1cnNvciArIHNpemVvZihzdHJ1Y3Qgbmxtc2doZHIpKTsKICAgICAgICAg
+ICAgcHJpbnRmKCJDb3VsZG4ndCBwYXJzZSBtZXNzYWdlICMlZCwgZXJybm86ICVkIVxuIiwgaW5k
+ZXgsICplcnJudW1iZXIpOwogICAgICAgIH0gZWxzZSBpZiAoaGVhZGVyLT5ubG1zZ190eXBlID09
+IE5MTVNHX0RPTkUpIHsKICAgICAgICAgICAgcHJpbnRmKCJNZXNzYWdlICMlZCwgd2FzIHRoZSBs
+YXN0IG9uZSFcbiIsIGluZGV4KTsKICAgICAgICAgICAgY29udGludWU7CiAgICAgICAgfSBlbHNl
+IHsKICAgICAgICAgICAgc3RydWN0IGlmYWRkcm1zZyogbWVzc2FnZSA9IChzdHJ1Y3QgaWZhZGRy
+bXNnKikgKG1lc3NhZ2VzX2J5dGVzICsgY3Vyc29yICsgc2l6ZW9mKHN0cnVjdCBubG1zZ2hkcikp
+OwogICAgICAgICAgICBwcmludGYoIk1lc3NhZ2UgIyVkIGNvbnRhaW5zIGludGVyZmFjZSAjJWQg
+ZGF0YSwgZS5nLiBwcmVmaXhsZW46ICVkIVxuIiwgaW5kZXgsIG1lc3NhZ2UtPmlmYV9pbmRleCwg
+bWVzc2FnZS0+aWZhX3ByZWZpeGxlbik7CiAgICAgICAgfQogICAgICAgIGN1cnNvciArPSBoZWFk
+ZXItPm5sbXNnX2xlbjsKICAgICAgICBpbmRleCsrOwogICAgfQp9CgppbnQgbWFpbigpIHsKICAg
+IHN0cnVjdCBzb2NrYWRkcl9ubCBhZGRyOwogICAgbWVtc2V0KCZhZGRyLCAwLCBzaXplb2Yoc3Ry
+dWN0IHNvY2thZGRyX25sKSk7CiAgICBhZGRyLm5sX2ZhbWlseSA9IEFGX05FVExJTks7CgogICAg
+aW50IHNvY2sgPSBzb2NrZXQoQUZfTkVUTElOSywgU09DS19SQVcsIE5FVExJTktfUk9VVEUpOwog
+ICAgaWYgKHNvY2sgPT0gLTEpIHsKICAgICAgICBwcmludGYoIkNvdWxkbid0IGNyZWF0ZSBuZXRs
+aW5rIHNvY2tldCwgZXJybm86ICVkIVxuIiwgZXJybm8pOwogICAgICAgIGV4aXQoMSk7CiAgICB9
+CgogICAgaW50IGVyciA9IGJpbmQoc29jaywgKHN0cnVjdCBzb2NrYWRkciAqKSAmYWRkciwgc2l6
+ZW9mKHN0cnVjdCBzb2NrYWRkcl9ubCkpOwogICAgaWYgKGVyciAhPSAwKSB7CiAgICAgICAgcHJp
+bnRmKCJDb3VsZG4ndCBiaW5kIG5ldGxpbmsgc29ja2V0LCBlcnJubzogJWQhXG4iLCBlcnJubyk7
+CiAgICAgICAgZXhpdCgxKTsKICAgIH0KCiAgICBzb2NrbGVuX3QgbGVuID0gIHNpemVvZihzdHJ1
+Y3Qgc29ja2FkZHJfbmwpOwogICAgZ2V0c29ja25hbWUoc29jaywgKHN0cnVjdCBzb2NrYWRkciAq
+KSAmYWRkciwgJmxlbik7CgogICAgc3RydWN0IHBhY2tldCBwYWNrOwogICAgZ2VuZXJhdGVfYWRk
+cmVzc19yZXF1ZXN0KCZwYWNrLCBJRkFDRV9JRCk7CiAgICB3cml0ZShzb2NrLCAmcGFjaywgc2l6
+ZW9mKHN0cnVjdCBwYWNrZXQpKTsKCiAgICBjaGFyIGJ1ZltEQVRBX0xFTkdUSF07CiAgICBtZW1z
+ZXQoYnVmLCAwLCBEQVRBX0xFTkdUSCk7CiAgICBpbnQgcmVzcG9uc2VfbGVuID0gcmVhZChzb2Nr
+LCBidWYsIChzb2NrbGVuX3QpIERBVEFfTEVOR1RIKTsKICAgIHBhcnNlX2FsbF9wYWNrZXRzKGJ1
+ZiwgcmVzcG9uc2VfbGVuKTsKfQo=
+
+--0000000000000015c9846566491bb9--
