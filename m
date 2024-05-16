@@ -1,1008 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CA34EB3D
-	for <regressions@lists.linux.dev>; Wed, 15 May 2024 23:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FF23236
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 02:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715814922; cv=none; b=aBsV7OBUIGzFHlyNKkDR1CUMj2Vugauidm6Jf1ioA/ddiGQQDrRCOZ9cnXwuVg8HyEPKBtYxP/iPgEYC5tk7tiaPZbB6UeNmO97+RMDV03IEfNJWJN5P7v/YSjj2o2n4UjfjJtMVTqNExNw7fx/LbEQKHRNQ8UZCrYXSiz1y2B4=
+	t=1715826623; cv=none; b=rLM+h/jYsmclj2pnN/0/gNHjMMEtntqTHH8BiyoBu5gMzyJoEaFheE7q3e++6bYJQBt8D9LkiuvRRofV0xqhxWQaI517q9yXzLul5nCV2j+GLREwDz42MbI45mDUGxJ3P6SenumOGIFEChU4PREJqt6Y10s7/NIB62k0tfgxZ4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715814922; c=relaxed/simple;
-	bh=+utABrpfRmM/vFbNu4B6R+nWMTWcYgSXvQlHgPbsLPQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HYhIwq12Ku6Fm7fgEt3QhbhzjAaEzM2ibe5N4ngzc8y9kJE8BwYbTjM41HzQX/RtU03LBfx4GiydjbL6X5ZDdtoe/CQDgUW35VspfarhxAyzJXau1hPNW2Of+ZThbPNZwVW7rTrXX+L86kLovs4UgWIhOfVY950vDHQVJV4BFOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+NbH/MZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715826623; c=relaxed/simple;
+	bh=luuZCOwHRQzcsKdhemBb69s42Jy1t33jiaLSTq1qmrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Q5bREzB58fOmSZRU8fFgi0syBYbuAJ9FMNpIByPks8B7JfmUczxKpEAG3w3V3KwEym8pM9O4ls3/tefMRVIHfgNP2Fbbu21ik0TcoeG+ZXJ+im/+HPeXztD8lC/gIpztVx9WRKsbtOAEehucQy5HFVht6LlmukebfGaRRWix8lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUpwXVRL; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+NbH/MZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715814918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qALoVdTcwcXpZZj9AwfFqxLPyB3JTk/Cl+tQRczBe4c=;
-	b=f+NbH/MZM5wqH6vTdUKmG/lLtJwN2ISDNmNFpTqz8br9GAOSNfEaAaBKbs7O9o2SAgzpEp
-	bwRLGNzNPnSk+m0C3tmdRO55TlZbP6XjPMIFaYh9L2Fua2twDJ+cY6RDb/Qhum97HjMf4N
-	E9GM/RPx+yTIczEz8IBjzBDXING6jBs=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-537-AT8SkkgqPXiNXbhGyPFj5g-1; Wed, 15 May 2024 19:15:07 -0400
-X-MC-Unique: AT8SkkgqPXiNXbhGyPFj5g-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-792bd1dc658so1362457285a.1
-        for <regressions@lists.linux.dev>; Wed, 15 May 2024 16:15:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUpwXVRL"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6f0fbd2d9ebso2392557a34.2
+        for <regressions@lists.linux.dev>; Wed, 15 May 2024 19:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715826621; x=1716431421; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S3HxxeZ7mdHwDKn/7AQjzq+Cq5PG4lChvk4r41U5858=;
+        b=SUpwXVRLrxFGj2GZbHl2ixrgURyzfoSyPBlXUt0cERtCBU4A2RpKS8VhZOHlQ2IXEC
+         0eVk/4WCLYG2Ct0WDikOhvlUUBJw2aU/ZjQ1feq8YnNBRhy15YYaVm6rSSDZub5wKQqi
+         8wpJdU8WZvuZPqrFisL3nd6le2fs5OJqEAJPTgs4E8hL2xCjhgzSH/tDIxnp7kNy1OIm
+         XojzCRP/7gRnMMCtOGBMSnzOp0Xik+5B7kVuModWfKHng5sU2oAPRIAlZ1ehRAlQJKaH
+         ayczMNfc3i+klF3L1No3lmwxIYVAg6UqsFmH12GIXeZoOTQ99beJEEAfjQvXZzPeLQoG
+         fBVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715814906; x=1716419706;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1715826621; x=1716431421;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qALoVdTcwcXpZZj9AwfFqxLPyB3JTk/Cl+tQRczBe4c=;
-        b=ZrcO4QiKs2YGXzdVvJNy2Z1iOXPdPCfw/o1uULECzireHa1R3+QQgsk9G5muuIo9Zf
-         taf2bmYk0iXRCBhnN6K9UVDZCPZQgxjY40se+KS0Jpe7w6CbtFiWNktXEz8FJuyJHL/8
-         H08nK3cegudjEczIwp8V20GpGNf3CdcyZ//dj1T81ZMy+GqltFnKqG/wA6OFjHdAOUpn
-         GzmQZv2bwOaPIo/bQ9VeLIt8KQk20WJjNcK5a3ExG4tPg0tg1IWEAEmxT5ocdwfxppwo
-         uNJAkd1gBGYsrx+t4+NaFRv4F84eWaPoE/xdNM3Fq5mJiXZCARdyRg8UTw4nCLeB12rg
-         rSUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYqx+7DfU7cgvLQsiYtbTamQRk6p+QvqtiZJbJMNUPBdjesYvNDpl6OXLra0oczFC9RGIkvwI7VT2CXhWuKPi/ZVfF86AtC9LWgFw=
-X-Gm-Message-State: AOJu0YyEsGLhjphFOham37Qyqf6CzzCZ8b+kZdEH395L/GG6DRQahhjS
-	LMPwmaDkuoasz8PSHsvLJbCs6WhuFLbv8AsbWEV8nqg7jc/Z4raxxUQ7jHxduzeNTbOBYkzOJTQ
-	SHFg36jl0TrNYPOCMiFuNWHFQhnjmDR8te9qVHpu70Q/NrZPSgK2vgaMmFZ0x
-X-Received: by 2002:a05:620a:28c3:b0:793:a5:1665 with SMTP id af79cd13be357-79300a51771mr288698185a.38.1715814905877;
-        Wed, 15 May 2024 16:15:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFc4Ibo728aAz/v6tTJmwcGTKsNX8bBkl1lfzrJtmTP3Iao+8YzwsYup3Jqg6UbaaD9A9ullw==
-X-Received: by 2002:a05:620a:28c3:b0:793:a5:1665 with SMTP id af79cd13be357-79300a51771mr288690785a.38.1715814904902;
-        Wed, 15 May 2024 16:15:04 -0700 (PDT)
-Received: from emerald.lyude.net ([2600:4040:5c6c:a300::feb])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2789fdsm728800485a.20.2024.05.15.16.15.03
+        bh=S3HxxeZ7mdHwDKn/7AQjzq+Cq5PG4lChvk4r41U5858=;
+        b=ql5LVUj0opAwdtb8yR5QT3NeBlIQkzLvsKVmeoB+jvoYRYsFaClgA7yV9e4gYcVx2Q
+         r+GYduCsXUYH9ktlZUSGddQ+RFgFp8p7a80/VlOGAm+uuBDtUzEnb+KVwOp9pBswU377
+         r7BzMHf/14Wgn58FDtw7J8IHQybKDqTFSw/fOKwk8gHSOusB++Rnx0hJSVRIxccHiR8Y
+         fUzwUDC5R6cuPcYXOCxAus+HVpLyic9Ep5n7VLZgEqX2SZP9DYcWSFrkj7r/3qoUtwcn
+         Hp959pRcpaXtgPLDIxUIJwlNrugiLdC20d8RpBMQz1A3Talr6Ay8NOKHJf8XlT/X6byz
+         tOvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcJK8LT8mzCbqS0lIUkyV7O7puvLnygmGvVpl/HlbbvF9Z9bqFXNKSC7YJMcQ0Gi+6SO4ydTsHUsXdwRbL+NGIgXblmrZz+uvXsQU=
+X-Gm-Message-State: AOJu0YxJDugpmZ1oU0j1Wr2+x5P13bgyyBOCWy4x/5yhBbscPIk+KRsw
+	K5HRF9f4s7p5J4n2Ql/fQyXJ0DpZmq5Pwtho2P7eQSbWb/5IfZ4+
+X-Google-Smtp-Source: AGHT+IH2iA6yNkrsVaY3XeU7OEvrXCvN9AWyyvM6DuW9wN2hXlgxsVnnbClBjcPlY6k+FYVy0uUNyg==
+X-Received: by 2002:a05:6870:7096:b0:23d:49b4:6788 with SMTP id 586e51a60fabf-24172aa2c2dmr25778539fac.21.1715826620560;
+        Wed, 15 May 2024 19:30:20 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ade2c9sm11827127b3a.125.2024.05.15.19.30.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 16:15:04 -0700 (PDT)
-Message-ID: <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-From: Lyude Paul <lyude@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
-	 <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Date: Wed, 15 May 2024 19:15:03 -0400
-In-Reply-To: <87bk58n6le.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
-	 <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
-	 <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
-	 <87plumxz4x.ffs@tglx>
-	 <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
-	 <87le59vw1y.ffs@tglx>
-	 <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
-	 <87edautcmz.ffs@tglx>
-	 <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
-	 <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
-	 <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
-	 <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
-	 <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-	 <87jzjxn6s5.ffs@tglx>
-	 <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
-	 <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
-	 <87bk58n6le.ffs@tglx>
-Organization: Red Hat Inc.
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40)
+        Wed, 15 May 2024 19:30:19 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id D409E186C082D; Thu, 16 May 2024 09:30:16 +0700 (WIB)
+Date: Thu, 16 May 2024 09:30:16 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+	Petri Kaukasoina <petri.kaukasoina@tuni.fi>
+Subject: Fwd: Kernel panic in 6.9.0 after changes in kernel/power/swap.c
+Message-ID: <ZkVvuKHV-jdOMnB1@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="OHWfg0fovwQn+CBZ"
+Content-Disposition: inline
+
+
+--OHWfg0fovwQn+CBZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-05-14 at 10:25 +0200, Thomas Gleixner wrote:
-> Lyude!
->=20
-> Which one of the debug patches did you use?
+Hi,
 
-The one you sent on 4/18, when you also asked me for the output of
-/sys/kernel/debug/x86/topo/
+Petri Kaukasoina <petri.kaukasoina@tuni.fi> reported on Bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=3D218845) VFS kernel panic
+regression when reading hibernation image. He wrote:
 
-(I thought I remembered that patch not booting on previous kernels but mayb=
-e
-I'm misremembering)
+> 6.9.0 crashes on boot while 6.8.0 is ok.
+>=20
+> Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block=
+(8,1)
+>=20
+> bisect result:
+>=20
+> 4379f91172f39d999919c8e8b2b5e1d665d8972d is the first bad commit
+> commit 4379f91172f39d999919c8e8b2b5e1d665d8972d
+> Author: Christian Brauner <brauner@kernel.org>
+> Date:   Tue Jan 23 14:26:23 2024 +0100
+>=20
+>     power: port block device access to file
+>    =20
+>     Link: https://lore.kernel.org/r/20240123-vfs-bdev-file-v2-6-adbd023e1=
+9cc@kernel.org
+>     Reviewed-by: Christoph Hellwig <hch@lst.de>
+>     Reviewed-by: Jan Kara <jack@suse.cz>
+>     Signed-off-by: Christian Brauner <brauner@kernel.org>
+>=20
+>  kernel/power/swap.c | 28 ++++++++++++++--------------
+>=20
+> 6.9.0 with only this reverted did not compile. This has something to do w=
+ith reading a hibernation image from disk. I use a swap file, not a partiti=
+on. The system was not hibernated, though. After I removed resume=3D and re=
+sume_offset=3D from the kernel command line, even 6.9.0 boots without panic.
+>=20
 
->=20
-> > > Yes - it still boots. As well I finally got the serial console adapte=
-r in, but
-> > > I don't see any additional output:
->=20
-> That's fine, but now I can provide you debug patches which dump
-> information during early boot.
->=20
-> Can you please provide the output of 'cpuid -r' ?
->=20
-
-CPU 0:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x00080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000000 ebx=3D0x00000100 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 1:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x01080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000001 ebx=3D0x00000100 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 2:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x02080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000002 ebx=3D0x00000101 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 3:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x03080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000003 ebx=3D0x00000101 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 4:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x08080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000008 ebx=3D0x00000104 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 5:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x09080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x00000009 ebx=3D0x00000104 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 6:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x0a080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x0000000a ebx=3D0x00000105 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-CPU 7:
-   0x00000000 0x00: eax=3D0x0000000d ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x00000001 0x00: eax=3D0x00800f11 ebx=3D0x0b080800 ecx=3D0x7ed8320b edx=
-=3D0x178bfbff
-   0x00000002 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000003 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000004 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000005 0x00: eax=3D0x00000040 ebx=3D0x00000040 ecx=3D0x00000003 edx=
-=3D0x00000000
-   0x00000006 0x00: eax=3D0x00000004 ebx=3D0x00000000 ecx=3D0x00000001 edx=
-=3D0x00000000
-   0x00000007 0x00: eax=3D0x00000000 ebx=3D0x209c01a9 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000008 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x00000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000a 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x00: eax=3D0x00000007 ebx=3D0x00000340 ecx=3D0x00000340 edx=
-=3D0x00000000
-   0x0000000d 0x01: eax=3D0x0000000f ebx=3D0x00000340 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x0000000d 0x02: eax=3D0x00000100 ebx=3D0x00000240 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x20000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000000 0x00: eax=3D0x8000001f ebx=3D0x68747541 ecx=3D0x444d4163 edx=
-=3D0x69746e65
-   0x80000001 0x00: eax=3D0x00800f11 ebx=3D0x20000000 ecx=3D0x35c233ff edx=
-=3D0x2fd3fbff
-   0x80000002 0x00: eax=3D0x20444d41 ebx=3D0x657a7952 ecx=3D0x2035206e edx=
-=3D0x30303431
-   0x80000003 0x00: eax=3D0x61755120 ebx=3D0x6f432d64 ecx=3D0x50206572 edx=
-=3D0x65636f72
-   0x80000004 0x00: eax=3D0x726f7373 ebx=3D0x20202020 ecx=3D0x20202020 edx=
-=3D0x00202020
-   0x80000005 0x00: eax=3D0xff40ff40 ebx=3D0xff40ff40 ecx=3D0x20080140 edx=
-=3D0x40040140
-   0x80000006 0x00: eax=3D0x26006400 ebx=3D0x66006400 ecx=3D0x02006140 edx=
-=3D0x00408140
-   0x80000007 0x00: eax=3D0x00000000 ebx=3D0x0000001b ecx=3D0x00000000 edx=
-=3D0x00006599
-   0x80000008 0x00: eax=3D0x00003030 ebx=3D0x00001007 ecx=3D0x00004007 edx=
-=3D0x00000000
-   0x80000009 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000a 0x00: eax=3D0x00000001 ebx=3D0x00008000 ecx=3D0x00000000 edx=
-=3D0x0001bcff
-   0x8000000b 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000d 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000e 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000000f 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000010 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000011 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000012 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000013 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000014 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000015 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000016 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000017 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000018 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x80000019 0x00: eax=3D0xf040f040 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001a 0x00: eax=3D0x00000003 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001b 0x00: eax=3D0x000003ff ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001c 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001d 0x00: eax=3D0x00004121 ebx=3D0x01c0003f ecx=3D0x0000003f edx=
-=3D0x00000000
-   0x8000001d 0x01: eax=3D0x00004122 ebx=3D0x00c0003f ecx=3D0x000000ff edx=
-=3D0x00000000
-   0x8000001d 0x02: eax=3D0x00004143 ebx=3D0x01c0003f ecx=3D0x000003ff edx=
-=3D0x00000002
-   0x8000001d 0x03: eax=3D0x0000c163 ebx=3D0x03c0003f ecx=3D0x00000fff edx=
-=3D0x00000001
-   0x8000001e 0x00: eax=3D0x0000000b ebx=3D0x00000105 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0x8000001f 0x00: eax=3D0x00000007 ebx=3D0x0000016f ecx=3D0x0000000f edx=
-=3D0x00000000
-   0x80860000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-   0xc0000000 0x00: eax=3D0x00000000 ebx=3D0x00000000 ecx=3D0x00000000 edx=
-=3D0x00000000
-
-
-> Thanks,
->=20
->         tglx
->=20
+Thanks.
 
 --=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+An old man doll... just what I always wanted! - Clara
 
+--OHWfg0fovwQn+CBZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkVvswAKCRD2uYlJVVFO
+o/SxAP4sikhakMMJf5TMjw7SN2qc2KZ893jwWhW0TXgeTMCRqgD+MpgwZ0zPaRfe
+EbWTwhe0+C4ChDxW8nBIE+Nf24OQNQE=
+=8S11
+-----END PGP SIGNATURE-----
+
+--OHWfg0fovwQn+CBZ--
