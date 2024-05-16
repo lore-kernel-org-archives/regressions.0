@@ -1,94 +1,89 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4C147C6E;
-	Thu, 16 May 2024 14:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37731149C6F
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 14:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715868705; cv=none; b=NP33OFXmlxwnzKr8WnK2MlJrz/XtwWCXAyFks7bJE68XDJZUsDTTV0Dc8LF9hj1tAxcYt4+KShMphLAYwL59SQgvg/kw8Hb5OY3mEE5cu1vP7LTfiZJ3fjxqWG/aMDGwSJpznNexZrGGJJG/oIAH27JoCg0zxbLFRhKgRB/XAnk=
+	t=1715869523; cv=none; b=RDYqEBr9A5YUtKZOQ1gFZfujgY9KfFOt8DK2zrqMuYs2tdE9ckBbXVcgCtOVwGWOJnd+s8B/mtZl4pVyVhyY/1SiXRhTf2hBZyQFnR0OFNAu8MFjMtu6q8gr52Kae9GL7k0KDNU++o0rdBcvJAe1ZM3HUJ6inmRmrbjUt0c5O0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715868705; c=relaxed/simple;
-	bh=KGx3/2R9bI6rAZokzGjcl3x+hQr9GgBS1EfT72qcBWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=D1sZHeudcNLNAp5GTUADItYNRyTVu//CluHl9kltHe1kZTZbDN+IijhHytMxmaH8SPCNrGtimljZbdyKWF9cf75VkWqAFDxUiSb2x+6G0Yp6o/EBdXIHUMXKsVryDV9w+gB4LgoQEsPq8lPW6TssuzQeSQpmMVXJz5fSUuRVv+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a+F85Go7; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715869523; c=relaxed/simple;
+	bh=5fHQsIHYU8+nDkKcXAqHVb/v8aEp4fGKBTbCRFlPQK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skddn+WPDNxgqoBahAzYyq+CCMpwTaw64ywEUkPARtQWLswYsFEwJdhAwcxuizF/o0pYi8+R/Lp2cEhTqmKTc7XsaRs53I5qCyG1DSCfzXHr4HIQkmimP4E/gYoUfTZqkADOUdXOd5izkSzQ2J5vK5fY0DHi3sYp/iMJePL0hYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rt6iIaG2; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a+F85Go7"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G8W20D004133;
-	Thu, 16 May 2024 14:11:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=UZKnD66AxmoU604tuqeyGMWmKSfVPcdT20jTH9y2wuQ=; b=a+
-	F85Go7VZjOnFCn20DUnDOs8/zXvfZBvWdIn3z4tAZr16QKbrjnmyELG+1++C5Zpb
-	qtVSgkvllylinxOq2ovQ0Gi8Sm52jq0unrHX6+rsbMsuT3cNV6BwmeELBT5g7Y4y
-	KcB/N37gSepqgVD9/M+Z2jX2yEFhp/qWXILbfXNOCth/Ast2AkEyNyiNtjE9t6da
-	hmbG2b0MXCZJvHoW4nLwFSLU3bnqCljOiiGRFLBkDmFVBEVQcST8SCS6l5zcSGDT
-	mFTKuS6U37RyWKFiMZaAKHhTle3PTPx8eNdbVZcTPC+/EPPujA5Wm89JU9YgDl6M
-	U718UWfhjh1Igre/9i9w==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125kxtp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 14:11:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44GEBXZH010908
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 14:11:33 GMT
-Received: from [10.110.4.82] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 16 May
- 2024 07:11:32 -0700
-Message-ID: <4d72f74a-b2eb-43d3-92a2-1311081ce72c@quicinc.com>
-Date: Thu, 16 May 2024 07:11:31 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rt6iIaG2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715869522; x=1747405522;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5fHQsIHYU8+nDkKcXAqHVb/v8aEp4fGKBTbCRFlPQK8=;
+  b=Rt6iIaG20ypT4IuiRbtyiPDaq3ub39xMAmhFwwK1LY2DDtwFagoF7yjt
+   FJSZXrpWZHb6Nawe1J+8p737nWO9v/1CHY18rB9Gitxi5/3MSl1LSQUQD
+   7FtGvVzC3tT7fmBmnTmpxcVWBiTHO2PJKdj3eQFzpbVk7GxPG4a2kSiNw
+   jIaH0bZeiV4S/kWjMDdKQ3i9NwD/U5/K6SpOsGFa3Ezbr0UoPq6uiMpQ/
+   6xiF8IBUjMxIWpLP5a22BUWgD+khV4Zu2lDdkSvig/GtGVnCPF70YVGck
+   ZFRCfXJoSmaxZYvFEBfDF+m1MJQGvEJpCaWum6cSJnHTKX+caKnbC1SNb
+   A==;
+X-CSE-ConnectionGUID: FxnzdDoJRSyNxMWgR/HQLw==
+X-CSE-MsgGUID: asBM0A6+Rr+M2umzHUC9VA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11827829"
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="11827829"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 07:25:21 -0700
+X-CSE-ConnectionGUID: w78hxxVoSamUbiU2MxckHA==
+X-CSE-MsgGUID: Kf2qwgYsTLSbCoiVuUt6og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="31547384"
+Received: from josephjo-mobl1.amr.corp.intel.com (HELO desk) ([10.212.146.49])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 07:25:21 -0700
+Date: Thu, 16 May 2024 07:25:13 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+Message-ID: <20240516142513.qqy7wbmja5frizuj@desk>
+References: <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+ <87h6f4jdrq.fsf@kernel.org>
+ <878r0djxgc.fsf@kernel.org>
+ <874jb0jzx5.fsf@kernel.org>
+ <feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
+ <20240515072231.z3wlyoblyc34ldmr@desk>
+ <529C9374-DA6F-49C8-9B32-91741800F8E4@alien8.de>
+ <20240515162747.6shmaoelc4mt7nro@desk>
+ <878r0bhvjq.fsf@kernel.org>
+ <20240516070315.swz2golcrfp3uvfd@desk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-        Carl Huang
-	<quic_cjhuang@quicinc.com>
-CC: Luca Weiss <luca.weiss@fairphone.com>, <ath11k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>
-References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
- <20230714023801.2621802-2-quic_cjhuang@quicinc.com>
- <D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
- <93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
- <871q69lqh5.fsf@kernel.org>
- <4e21e556-527f-4d1e-aa29-cacec14155af@quicinc.com>
- <a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VeI4f2Xr1qfpcC9e30nCfGto7vYTYt0S
-X-Proofpoint-ORIG-GUID: VeI4f2Xr1qfpcC9e30nCfGto7vYTYt0S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=979 clxscore=1011 bulkscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405160099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240516070315.swz2golcrfp3uvfd@desk>
 
-On 5/16/2024 4:45 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 11.05.24 05:12, Carl Huang wrote:
->> I'll send out the formal patch next week.
-> 
-> Hmmm, from here it looks like this did not happen. Did I miss something,
-> is there some reason to reevaluate things again, or did this maybe
-> simply fall through the cracks?
+On Thu, May 16, 2024 at 12:03:22AM -0700, Pawan Gupta wrote:
+> I am running the suspend test now and will update in the morning if I
+> could reproduce the hang.
 
-Formal patch is still under internal review
+Completed 500 suspend iterations, but the hang is not reproduced :(
+I have restarted the test.
+
+BTW, could you please share your /proc/cmdline? Also, was there any
+workload running with the suspend test? If I could not reproduce it in the
+next run, I will run stress-ng with the suspend test.
