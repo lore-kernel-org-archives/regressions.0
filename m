@@ -1,54 +1,70 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7629C28680
-	for <regressions@lists.linux.dev>; Thu, 16 May 2024 13:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B118C143C4C
+	for <regressions@lists.linux.dev>; Thu, 16 May 2024 13:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715866332; cv=none; b=SdQNLU+KFAcWbdblSjDr1jrf5azNMazhooZIh09kgTDomrcinN8CPNfEHUNo+KsGxgSjjKZYxFTaGZrPIi6BVneCOyAXLqcKmn9k6aZZe+gmIqVrN+l4iV/gBOF2QKZOk8cu6I1E/hVEfZ6GpsFl/pj+bg35JL/IJF0dMj/uhbM=
+	t=1715866745; cv=none; b=u105twjSw21h6p1HIe9VkgR1BfxcbM/ixZGq7fS0kBv/S4U193+fMx1H2Tuu0XEB18c2eVcbgyn7FOc3zdgk6mwFpMfznLgkiuTuFjD+f3WRObrslmryETtf7Nfn6GF+OLM6RfLDOii2iOrrNOZ8qfWELp3+racQLRInwf13r+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715866332; c=relaxed/simple;
-	bh=HsYZoT10qOQGfgRr3VKNQkyb70+BVLLxcy/xSeyokH8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CHjMOYGLyzJLBb23GSLx6GtCDpypU0UUVZ8F9SrxahOZ2+dEQp5mZeVHd7LdhMNe+SI2TeuNxXa32YAeM+R2tD71koAA1f/o7sGVwUFqmHnn4uVKATTAB/HdEq6rWm2RbV5+q6AdgHaDlaANfpWxoEQZ79S/QCrO0jVII5EzYXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hNZDVzdj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715866745; c=relaxed/simple;
+	bh=phIMI3YyrdajUvvCNzHuD18n4LYcirgcPkJzPD9WJfM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KIcT5pChxQoOtfDsdV6uKEPPBBxOh6b9DRIHq+Btw6c4JlXZTFTeHXoV/g3vF3d3oRgmlGcT9qLGdeBACdnphgV/4aQuNj+6wixEwb/2U3ORsCTijrGYqbOBZ698s0uJ7JcsC4pWRgBdKhHgcJHwKB4/DYEt62th1VTixRqyv3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3ngIKh6L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FNHbFsy5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hNZDVzdj"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G9r5fW021369;
-	Thu, 16 May 2024 13:31:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=+/eQ88JSeksu5lIGmXlMS3egFKoWcxF11wAcQsE1AzQ=; b=hN
-	ZDVzdjopn9NFhjhUz6CqKXoqk35xh/QuZXj1Pm02y0SbJ9/5OOrSxVZna7TI96qt
-	L//VeRLocPypGB3J3OwPHMGQTaGVn1Wwnv9NgWsFaVLxQNdduLMw4AgtdaRUEgqg
-	PxhIdLEei2uHwafOAEC+V691gJ5LF0f+jqZvvz0eEFPmL0CPrSgQSZfTSvJkxVbS
-	YUN62Ym+Fxzw2ZkYz8Oi9cSpppCEmjjX1FeCwdvSKA4VMrQt7QxUOTSCzv7aQl7F
-	cmgTRh43NNXxgG0Fypvt9zgv86y20cUnkUiJIwqb/vHMXHWhC6hVUXbzgkdgGwiy
-	88CQ6tgWgTgKqA6hXueg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y45vbdvdr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 13:31:56 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44GDVtLl003759
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 13:31:55 GMT
-Received: from zijuhu-gv.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 16 May 2024 06:31:52 -0700
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-To: <luiz.dentz@gmail.com>, <luiz.von.dentz@intel.com>, <marcel@holtmann.org>
-CC: <quic_zijuhu@quicinc.com>, <linux-bluetooth@vger.kernel.org>,
-        <wt@penguintechs.org>, <regressions@lists.linux.dev>,
-        <pmenzel@molgen.mpg.de>, <krzysztof.kozlowski@linaro.org>,
-        <lk_sii@163.com>, <stable@vger.kernel.org>
-Subject: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
-Date: Thu, 16 May 2024 21:31:34 +0800
-Message-ID: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ngIKh6L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FNHbFsy5"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715866739;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgJ4tB9IbQHts8b1nKZFshXdm8OS9cJ15elhzflaJYk=;
+	b=3ngIKh6LUDQYwuYD+JURGqhkm7QGopaBP2FMGezi/s5XHeVtoGc2DabPvfV6e/7zc5ALB6
+	Axb9vwNwBPqfNfGQ9TbmWOCF8xoufhVJUdgcT/5GpB/uoCMYf0K54Xvmr9n9Ffs4oA8emW
+	FkEnpXVkVUkj1KE5hyp4x3t5Aikkg2a4zPaBQM13c8ce35WhN0UjuqLObuDEbaM61ThHxf
+	23QY1hxTGPLzbnzM2NHl8nqYtZ1ziAMrWhYZVtJdPV3hf50hG28BAA/E5HGT5yMJ6YlZ00
+	jkprnd+E8MOwTWDNhr2PBuLjIxFZQHj3Chr4v75I1fe/WzCAiYNfwzTkjbAKqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715866739;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgJ4tB9IbQHts8b1nKZFshXdm8OS9cJ15elhzflaJYk=;
+	b=FNHbFsy54ARhzIhmAJZBE2V94VAYT+qK04NAqOTc05HIIgJCE9QOx2EDqqJANsmfnC5WuW
+	w2HLPWvdH25WEmAw==
+To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+In-Reply-To: <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
+ <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+ <87bk58n6le.ffs@tglx>
+ <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+Date: Thu, 16 May 2024 15:38:59 +0200
+Message-ID: <87wmntkhak.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -56,94 +72,87 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OWR5DugCuC7EIQRlLZgLv4luGjYdLDSe
-X-Proofpoint-ORIG-GUID: OWR5DugCuC7EIQRlLZgLv4luGjYdLDSe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405160095
 
-Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
-serdev") will cause below regression issue:
+Lyude!
 
-BT can't be enabled after below steps:
-cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
-if property enable-gpios is not configured within DT|ACPI for QCA6390.
+On Wed, May 15 2024 at 19:15, Lyude Paul wrote:
+> On Tue, 2024-05-14 at 10:25 +0200, Thomas Gleixner wrote:
+>> 
+>> Which one of the debug patches did you use?
+>
+> The one you sent on 4/18, when you also asked me for the output of
+> /sys/kernel/debug/x86/topo/
+>
+> (I thought I remembered that patch not booting on previous kernels but maybe
+> I'm misremembering)
 
-The commit is to fix a use-after-free issue within qca_serdev_shutdown()
-by adding condition to avoid the serdev is flushed or wrote after closed
-but also introduces this regression issue regarding above steps since the
-VSC is not sent to reset controller during warm reboot.
+It booted with the -rc kernel too. :)
 
-Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
-once BT was ever enabled, and the use-after-free issue is also fixed by
-this change since the serdev is still opened before it is flushed or wrote.
+I found an interesting and probably related difference in the boot logs
+though. Up to 8 possible CPUs the kernel uses logical destination mode
+for the APIC. With more than 8 it uses physical destination mode.
 
-Verified by the reported machine Dell XPS 13 9310 laptop over below two
-kernel commits:
-commit e00fc2700a3f ("Bluetooth: btusb: Fix triggering coredump
-implementation for QCA") of bluetooth-next tree.
-commit b23d98d46d28 ("Bluetooth: btusb: Fix triggering coredump
-implementation for QCA") of linus mainline tree.
+Can you please test the patch below on top of 6.9 and validate that it
+boots w/o any magic command line parameter?
 
-Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev")
-Cc: stable@vger.kernel.org
-Reported-by: Wren Turkal <wt@penguintechs.org>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218726
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Tested-by: Wren Turkal <wt@penguintechs.org>
+Thanks,
+
+        tglx
 ---
-V1 -> V2: Add comments and more commit messages
-
-V1 discussion link:
-https://lore.kernel.org/linux-bluetooth/d553edef-c1a4-4d52-a892-715549d31ebe@163.com/T/#t
-
- drivers/bluetooth/hci_qca.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 0c9c9ee56592..9a0bc86f9aac 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -2450,15 +2450,27 @@ static void qca_serdev_shutdown(struct device *dev)
- 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
- 	struct hci_uart *hu = &qcadev->serdev_hu;
- 	struct hci_dev *hdev = hu->hdev;
--	struct qca_data *qca = hu->priv;
- 	const u8 ibs_wake_cmd[] = { 0xFD };
- 	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 66fd4b2a37a3..db5e93a7c194 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1883,6 +1883,8 @@ static inline void try_to_enable_x2apic(int remap_mode) { }
+ static inline void __x2apic_enable(void) { }
+ #endif /* !CONFIG_X86_X2APIC */
  
- 	if (qcadev->btsoc_type == QCA_QCA6390) {
--		if (test_bit(QCA_BT_OFF, &qca->flags) ||
--		    !test_bit(HCI_RUNNING, &hdev->flags))
-+		/* The purpose of sending the VSC is to reset SOC into a initial
-+		 * state and the state will ensure next hdev->setup() success.
-+		 * if HCI_QUIRK_NON_PERSISTENT_SETUP is set, it means that
-+		 * hdev->setup() can do its job regardless of SoC state, so
-+		 * don't need to send the VSC.
-+		 * if HCI_SETUP is set, it means that hdev->setup() was never
-+		 * invoked and the SOC is already in the initial state, so
-+		 * don't also need to send the VSC.
-+		 */
-+		if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks) ||
-+		    hci_dev_test_flag(hdev, HCI_SETUP))
- 			return;
++int irq_remap_mode = -1;
++
+ void __init enable_IR_x2apic(void)
+ {
+ 	unsigned long flags;
+@@ -1915,6 +1917,8 @@ void __init enable_IR_x2apic(void)
  
-+		/* The serdev must be in open state when conrol logic arrives
-+		 * here, so also fix the use-after-free issue caused by that
-+		 * the serdev is flushed or wrote after it is closed.
-+		 */
- 		serdev_device_write_flush(serdev);
- 		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
- 					      sizeof(ibs_wake_cmd));
--- 
-2.7.4
-
+ 	if (ir_stat < 0)
+ 		restore_ioapic_entries();
++	else
++		irq_remap_mode = ir_stat;
+ 	legacy_pic->restore_mask();
+ 	local_irq_restore(flags);
+ }
+diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+index f37ad3392fec..5cc386db3557 100644
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -12,6 +12,7 @@
+ #include <linux/export.h>
+ #include <linux/acpi.h>
+ 
++#include <asm/irq_remapping.h>
+ #include <asm/jailhouse_para.h>
+ #include <asm/apic.h>
+ 
+@@ -130,7 +131,8 @@ static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ 
+ static int physflat_probe(void)
+ {
+-	return apic == &apic_physflat || num_possible_cpus() > 8 || jailhouse_paravirt();
++	return apic == &apic_physflat || irq_remap_mode == IRQ_REMAP_XAPIC_MODE ||
++		num_possible_cpus() > 8 || jailhouse_paravirt();
+ }
+ 
+ static struct apic apic_physflat __ro_after_init = {
+diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
+index 842fe28496be..f633ab6dfa9f 100644
+--- a/arch/x86/kernel/apic/local.h
++++ b/arch/x86/kernel/apic/local.h
+@@ -22,6 +22,8 @@ void x2apic_send_IPI_allbutself(int vector);
+ void x2apic_send_IPI_self(int vector);
+ extern u32 x2apic_max_apicid;
+ 
++extern int irq_remap_mode;
++
+ /* IPI */
+ 
+ DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
