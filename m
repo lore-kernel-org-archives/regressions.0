@@ -1,158 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B118C143C4C
-	for <regressions@lists.linux.dev>; Thu, 16 May 2024 13:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4C147C6E;
+	Thu, 16 May 2024 14:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715866745; cv=none; b=u105twjSw21h6p1HIe9VkgR1BfxcbM/ixZGq7fS0kBv/S4U193+fMx1H2Tuu0XEB18c2eVcbgyn7FOc3zdgk6mwFpMfznLgkiuTuFjD+f3WRObrslmryETtf7Nfn6GF+OLM6RfLDOii2iOrrNOZ8qfWELp3+racQLRInwf13r+Q=
+	t=1715868705; cv=none; b=NP33OFXmlxwnzKr8WnK2MlJrz/XtwWCXAyFks7bJE68XDJZUsDTTV0Dc8LF9hj1tAxcYt4+KShMphLAYwL59SQgvg/kw8Hb5OY3mEE5cu1vP7LTfiZJ3fjxqWG/aMDGwSJpznNexZrGGJJG/oIAH27JoCg0zxbLFRhKgRB/XAnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715866745; c=relaxed/simple;
-	bh=phIMI3YyrdajUvvCNzHuD18n4LYcirgcPkJzPD9WJfM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KIcT5pChxQoOtfDsdV6uKEPPBBxOh6b9DRIHq+Btw6c4JlXZTFTeHXoV/g3vF3d3oRgmlGcT9qLGdeBACdnphgV/4aQuNj+6wixEwb/2U3ORsCTijrGYqbOBZ698s0uJ7JcsC4pWRgBdKhHgcJHwKB4/DYEt62th1VTixRqyv3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3ngIKh6L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FNHbFsy5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1715868705; c=relaxed/simple;
+	bh=KGx3/2R9bI6rAZokzGjcl3x+hQr9GgBS1EfT72qcBWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=D1sZHeudcNLNAp5GTUADItYNRyTVu//CluHl9kltHe1kZTZbDN+IijhHytMxmaH8SPCNrGtimljZbdyKWF9cf75VkWqAFDxUiSb2x+6G0Yp6o/EBdXIHUMXKsVryDV9w+gB4LgoQEsPq8lPW6TssuzQeSQpmMVXJz5fSUuRVv+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a+F85Go7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ngIKh6L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FNHbFsy5"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715866739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgJ4tB9IbQHts8b1nKZFshXdm8OS9cJ15elhzflaJYk=;
-	b=3ngIKh6LUDQYwuYD+JURGqhkm7QGopaBP2FMGezi/s5XHeVtoGc2DabPvfV6e/7zc5ALB6
-	Axb9vwNwBPqfNfGQ9TbmWOCF8xoufhVJUdgcT/5GpB/uoCMYf0K54Xvmr9n9Ffs4oA8emW
-	FkEnpXVkVUkj1KE5hyp4x3t5Aikkg2a4zPaBQM13c8ce35WhN0UjuqLObuDEbaM61ThHxf
-	23QY1hxTGPLzbnzM2NHl8nqYtZ1ziAMrWhYZVtJdPV3hf50hG28BAA/E5HGT5yMJ6YlZ00
-	jkprnd+E8MOwTWDNhr2PBuLjIxFZQHj3Chr4v75I1fe/WzCAiYNfwzTkjbAKqQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715866739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgJ4tB9IbQHts8b1nKZFshXdm8OS9cJ15elhzflaJYk=;
-	b=FNHbFsy54ARhzIhmAJZBE2V94VAYT+qK04NAqOTc05HIIgJCE9QOx2EDqqJANsmfnC5WuW
-	w2HLPWvdH25WEmAw==
-To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
- <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
- <87plumxz4x.ffs@tglx>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
- <87jzjxn6s5.ffs@tglx>
- <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
- <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
- <87bk58n6le.ffs@tglx>
- <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
-Date: Thu, 16 May 2024 15:38:59 +0200
-Message-ID: <87wmntkhak.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a+F85Go7"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G8W20D004133;
+	Thu, 16 May 2024 14:11:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=UZKnD66AxmoU604tuqeyGMWmKSfVPcdT20jTH9y2wuQ=; b=a+
+	F85Go7VZjOnFCn20DUnDOs8/zXvfZBvWdIn3z4tAZr16QKbrjnmyELG+1++C5Zpb
+	qtVSgkvllylinxOq2ovQ0Gi8Sm52jq0unrHX6+rsbMsuT3cNV6BwmeELBT5g7Y4y
+	KcB/N37gSepqgVD9/M+Z2jX2yEFhp/qWXILbfXNOCth/Ast2AkEyNyiNtjE9t6da
+	hmbG2b0MXCZJvHoW4nLwFSLU3bnqCljOiiGRFLBkDmFVBEVQcST8SCS6l5zcSGDT
+	mFTKuS6U37RyWKFiMZaAKHhTle3PTPx8eNdbVZcTPC+/EPPujA5Wm89JU9YgDl6M
+	U718UWfhjh1Igre/9i9w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125kxtp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 14:11:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44GEBXZH010908
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 14:11:33 GMT
+Received: from [10.110.4.82] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 16 May
+ 2024 07:11:32 -0700
+Message-ID: <4d72f74a-b2eb-43d3-92a2-1311081ce72c@quicinc.com>
+Date: Thu, 16 May 2024 07:11:31 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+        Carl Huang
+	<quic_cjhuang@quicinc.com>
+CC: Luca Weiss <luca.weiss@fairphone.com>, <ath11k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>
+References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
+ <20230714023801.2621802-2-quic_cjhuang@quicinc.com>
+ <D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
+ <93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
+ <871q69lqh5.fsf@kernel.org>
+ <4e21e556-527f-4d1e-aa29-cacec14155af@quicinc.com>
+ <a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VeI4f2Xr1qfpcC9e30nCfGto7vYTYt0S
+X-Proofpoint-ORIG-GUID: VeI4f2Xr1qfpcC9e30nCfGto7vYTYt0S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=979 clxscore=1011 bulkscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405160099
 
-Lyude!
+On 5/16/2024 4:45 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 11.05.24 05:12, Carl Huang wrote:
+>> I'll send out the formal patch next week.
+> 
+> Hmmm, from here it looks like this did not happen. Did I miss something,
+> is there some reason to reevaluate things again, or did this maybe
+> simply fall through the cracks?
 
-On Wed, May 15 2024 at 19:15, Lyude Paul wrote:
-> On Tue, 2024-05-14 at 10:25 +0200, Thomas Gleixner wrote:
->> 
->> Which one of the debug patches did you use?
->
-> The one you sent on 4/18, when you also asked me for the output of
-> /sys/kernel/debug/x86/topo/
->
-> (I thought I remembered that patch not booting on previous kernels but maybe
-> I'm misremembering)
-
-It booted with the -rc kernel too. :)
-
-I found an interesting and probably related difference in the boot logs
-though. Up to 8 possible CPUs the kernel uses logical destination mode
-for the APIC. With more than 8 it uses physical destination mode.
-
-Can you please test the patch below on top of 6.9 and validate that it
-boots w/o any magic command line parameter?
-
-Thanks,
-
-        tglx
----
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 66fd4b2a37a3..db5e93a7c194 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1883,6 +1883,8 @@ static inline void try_to_enable_x2apic(int remap_mode) { }
- static inline void __x2apic_enable(void) { }
- #endif /* !CONFIG_X86_X2APIC */
- 
-+int irq_remap_mode = -1;
-+
- void __init enable_IR_x2apic(void)
- {
- 	unsigned long flags;
-@@ -1915,6 +1917,8 @@ void __init enable_IR_x2apic(void)
- 
- 	if (ir_stat < 0)
- 		restore_ioapic_entries();
-+	else
-+		irq_remap_mode = ir_stat;
- 	legacy_pic->restore_mask();
- 	local_irq_restore(flags);
- }
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-index f37ad3392fec..5cc386db3557 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -12,6 +12,7 @@
- #include <linux/export.h>
- #include <linux/acpi.h>
- 
-+#include <asm/irq_remapping.h>
- #include <asm/jailhouse_para.h>
- #include <asm/apic.h>
- 
-@@ -130,7 +131,8 @@ static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
- 
- static int physflat_probe(void)
- {
--	return apic == &apic_physflat || num_possible_cpus() > 8 || jailhouse_paravirt();
-+	return apic == &apic_physflat || irq_remap_mode == IRQ_REMAP_XAPIC_MODE ||
-+		num_possible_cpus() > 8 || jailhouse_paravirt();
- }
- 
- static struct apic apic_physflat __ro_after_init = {
-diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-index 842fe28496be..f633ab6dfa9f 100644
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -22,6 +22,8 @@ void x2apic_send_IPI_allbutself(int vector);
- void x2apic_send_IPI_self(int vector);
- extern u32 x2apic_max_apicid;
- 
-+extern int irq_remap_mode;
-+
- /* IPI */
- 
- DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
+Formal patch is still under internal review
