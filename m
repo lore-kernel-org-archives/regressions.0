@@ -1,58 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFBF14535E;
-	Thu, 16 May 2024 11:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201F61459FF;
+	Thu, 16 May 2024 11:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715858364; cv=none; b=DyA8MoxYR4X1zyjTZBhIDnRDVvkIzUWjV0AXAyJ6VslLqbDXTwPp55a3fqWokx+lar+y1yYA1TaXZLRFIV3q+5oX8+drG7DXwpjjXXKXAdK4NEWgpLhQW8Vv5M5ZH5h5KONl8VVmvbhO4tFLztOz0c5P8Za8bUpOkAkBQHzBbUg=
+	t=1715859739; cv=none; b=OrE9oUc3CTm65Qk9/waFfMKyoFnogOkHLx7KDtbm5J85gLcoXOfYwDNVH4g3ajcqK4As+nBAeeZJtudS9gUDR+NEQoy/NHdrgKfAZNMuHZnJesiJgaOr5j1oxruqWs1/Dq4D8t7l7Dwo1/RqFTzhovIV0EdczirxzynEKTCRJYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715858364; c=relaxed/simple;
-	bh=/xZgGEjWlvf2pVl8CGoMoJWHwKg+P2Qx8xXvpSNoZm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iCCMbeu0gTnOlqT0TXYoLF3SLbPz/D7KiMvx+CPvbweccuJgepvmeqacCyraLRm8R0Jun15SZXR1nZDB9J0/gxy82jyJzIes+pK1Ok6chGPOEBwGVrqeLZMLAi1hkZ974NCLDch7lPwsJWelm8qvulitopkKXQapZqCjLJtW+Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=h6gbd+L5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715859739; c=relaxed/simple;
+	bh=vJJ9cJ+GBoXy/aj3mrmCyAmNa4s7wvf/RRV9O1BXUXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gluMUIUul0uncMOV1q8P34Ks/lOmu32werSWNOmpP4kLxmGvBlFk3DqTBJHEAFze5dZI8+GNuZy5mnQOEA2PJstqTPY5ur4FIvnM89rms1d7u2zXKfqOHS+bZnyFpgwB4ZDFCc09x12YxtY2v0Dll+Xadd38KAzkyJ3TZgygUPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ItEI2mSf; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="h6gbd+L5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CC7C113CC;
-	Thu, 16 May 2024 11:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715858363;
-	bh=/xZgGEjWlvf2pVl8CGoMoJWHwKg+P2Qx8xXvpSNoZm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h6gbd+L5D1ATDcywzm8Uy0tn29T/3gO0CGVEkbgUf9e5C+0Bfra9XB0ise7YYhhnm
-	 ZB8j3jcn2XMEdn7P8EJqIF2DUE06X8d1afccqOnsIblqRSkDbKaUDYHlV1TrmtA1ZX
-	 CEej+YdAJRYd7xaEv7Y2h518K59SaPFEQdpOKvPE=
-Date: Thu, 16 May 2024 13:19:20 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexander Sergeev <alexander.sergeev@onmail.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Rtnetlink GETADDR request for 1 specific interface only (by ID)
-Message-ID: <2024051638-chase-viral-0653@gregkh>
-References: <ac768f81f5218be629864b850bb7b959-1715851155@onmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ItEI2mSf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=CdaRdgRhRtmPhB95HwGxkR3KixTgzNdL+5gbgKKmgxM=;
+	t=1715859737; x=1716291737; b=ItEI2mSfPL9tKYyeFdZOacs8bcuyb/bIrXixMurGR9dEV4X
+	qSRzzlZ36pUlwc2WPJ/w2bXYD2F99ZTuNkFHNeK5ybVI/Jsc9n4hbga6C3wPDFmtiywbsdUDMWBjY
+	GYw8Tnh44V83Ai8dXEXlSYBwhzb/eF/4nh7xYUoU6ICSEx7sLQzoQRWvkyEPaZTQn+Yh18kWTr3rn
+	StQMcCC1TCbDCMytdnAWIk+SQ4r1lW8pNZvuw//cyOlX4eM27PYIjuknhPlPNg1mxrJaDBswhirfk
+	BLEnUy+DVBU5xpG+cHWCe/gsJ1FjpJ/eSh4o/nyNOdWXcAtXIdCiqMdFZvOgCNcg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s7ZUx-0001I0-JB; Thu, 16 May 2024 13:42:11 +0200
+Message-ID: <51aea1fb-ce72-4c94-a3dd-43e84763834b@leemhuis.info>
+Date: Thu, 16 May 2024 13:42:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac768f81f5218be629864b850bb7b959-1715851155@onmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
+ when connecting to 6 GHz AP
+To: Kalle Valo <kvalo@kernel.org>, Baochen Qiang <quic_bqiang@quicinc.com>
+Cc: ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
+ <87wmo0k71i.fsf@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87wmo0k71i.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715859737;ed14d899;
+X-HE-SMSGID: 1s7ZUx-0001I0-JB
 
-On Thu, May 16, 2024 at 02:19:15AM -0700, Alexander Sergeev wrote:
-> Good morning!
+On 11.05.24 11:54, Kalle Valo wrote:
+> Baochen Qiang <quic_bqiang@quicinc.com> writes:
 > 
-> Recently, I have found an issue with `rtnetlink` library that seems to
-> be not intended and/or documented. I have asked about it several
-> times, including here and it was also reported here. Neither in
-> related RFC document nor in rtnetlink manuals the issue is described
-> or mentioned.
+>> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+>> ath11k fails to connect to 6 GHz AP.
+>>
+>> This is because currently ath11k checks AP's power type in
+>> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
+>> However with above commit power type is not available until ASSOC stage.
+>> As a result power type check fails and therefore connection fails.
+>>
+>> Fix this by moving power type check to ASSOC stage, also move regulatory
+>> rules update there because it depends on power type.
+>>
+>> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+>>
+>> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+>> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+> 
+> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
+> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
+> need to queue this for v6.10 via wireless tree.
 
-Great, then why not notify the developers involved in netlink?  That's
-not the stable and regressions list, sorry, as this is not a regression.
+I might have missed something, but from here it looks like that hasn't
+happened yet. If I missed something or if you are busy with more
+critical stuff, feel free to ignore this mail; if it fell through the
+cracks again, consider this a friendly reminder that this is still
+waiting for processing.
 
-best of luck!
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-greg k-h
+#regzbot poke
