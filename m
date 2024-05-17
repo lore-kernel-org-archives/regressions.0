@@ -1,93 +1,99 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C3313DBA2
-	for <regressions@lists.linux.dev>; Fri, 17 May 2024 17:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8F813FD81;
+	Fri, 17 May 2024 17:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966789; cv=none; b=kHumJj6IVjPL7Y27BfWSQiO7N9kncb/hARu69AsAS9kSeKWY/HrLjmOPJdZtvWAH/7fR1aUIaT/LHPyx2Rehqgo9cvv+HmLUCTHoMxPAKUQ6XiS9lPqaXdaj9iH3YdOf3xCGkqZCOi2j2l5vrX+ECaY7+MEnK6ksuVEYPQTtxh8=
+	t=1715967706; cv=none; b=XZIc0waEB+2EUDAnOpk6stVSCNaB2iiEKusvvPWAWopUWNVQRUxWYDpIh6lQUSeWHHGSxOpLAl1gHuapRaZVLGrBfrImIg1DO8bAnGRfAMxIffkFcgrjlpdIuhd562y/HPzBECM8vQCHQJIwuAXhyB/q6ww01+3R4ozsGuRFALc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966789; c=relaxed/simple;
-	bh=L01yknndEnuYphVPNzv32AM8AKWTkpUwEh/WTz0L6Vg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1+V8xGTxDICnDgu886ShPflWjKCadWkyDk8C+bW7g9GkdAFILvYZ3b1jLbNucnUGZuwnRnD6EfYrG57NVIZjKq8IF9by3rzSIuqtvd6Wxs9asewDD+QO5lm/b1vSSiULPBHF8bL579rVOeBNCcSNY/QXbhMRa091xE52u/VxQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DI2/sOIS; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1715967706; c=relaxed/simple;
+	bh=mC1ywOvsKwJqlrV9KUwm4F1IrjKMz9Sv1nAsgzY9tRA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=BMclU1derU1+PAG6kDHcpPUzy2ISPQP4ARzqiktDrCkA4YL5Ag5TX2P3iajXvMBmhAr1rJKhEAK1vuGwCbhncfuXNkHpT7SZMOIBcw70AKxipgq16JmpSInQpdr10UDTw+8EScP50IsX8lJUju3jHIqVi3VclHzzvfJia5STftE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orQ+RWOD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DI2/sOIS"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6FF8840E01E8;
-	Fri, 17 May 2024 17:26:24 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QUTAxFpwmxTl; Fri, 17 May 2024 17:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715966780; bh=JxAsV7mx2TJYX+9cLdcRXg8LbfpFXpxmKwDrIX6yx2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DI2/sOISPGLdODF0BiGocWEe/0U2MNVG8oNI+5pw4AX0o3DocNcEi2jD28MsRvtly
-	 LLfpEjN2T0Eh6AZE5KUZfA5/t0wiQ/p0pJXeXz5jCCiJOrwMiqrVpFmDpaFBkPfu8n
-	 zNKfbCYRm3x1HiNnw7Vx0kgVZgqiVLEaY2pipCEj+Dj0th9shVMPJhIFcHEHfDXPEK
-	 WdnGLssQYNWw4prkWdEgsVXM407HYRxxxdQv6oJhFl88uqyfsoPsI6my01zVwmFVGK
-	 i4Vvt2Kje2+NfihI7muhCq3ukKA+l+/JQ2RUU9Db/cH1pXBmcs5H+oltqJn+sEwKMs
-	 Tq4raj3xeDDQ9GGwisXKDd0XLB5yhUa30bxtEqJQYZrw1gylg2T7yziWnfnq/FpSYT
-	 y6DjTjIx//ixAdBFj+JYXBEQe/roXr7LToeSf3DXSZRGtlENmqLFTUfJwP2GobgZDV
-	 MXdaW/MZ5i35OCiKryPq6MvUKyaHeIAlO0wDuRA+bI60UsGRA0gaDmOBT1SJY1kO9T
-	 qoIOmIQnRDPs8BURUKBrkkMFhHVHfnP1eeXiPcyggk00pq42mr31bwex7k9hQa8/a+
-	 ijjVw3w6MRUmSqEiEJosV+NfW1CNX1+SSjm6HK7nEklPBRWX6n+jzYw1hf2aUyGIOt
-	 ggrnG3vW0HjE0rbC/dR/iImg=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DEB4440E0244;
-	Fri, 17 May 2024 17:26:08 +0000 (UTC)
-Date: Fri, 17 May 2024 19:26:03 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jeff Johnson <quic_jjohnson@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orQ+RWOD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABE1C2BD10;
+	Fri, 17 May 2024 17:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715967705;
+	bh=mC1ywOvsKwJqlrV9KUwm4F1IrjKMz9Sv1nAsgzY9tRA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=orQ+RWODE9Epe4j41qe3ySukioq+cxqVXRzWIqYZov0AyB4EwE/V9d0twuR7lo5jd
+	 H3hqd7omgHr4yv7IwICfpKBRVZ27zv/F7wxh/pAcgrUbY4Im0BHuPVkrJkFVmgmIUP
+	 Wdrwc+AXM+aBL+ixeT4npKfK9L3tibOIafK3/HpQwRz2Zd52GEdUt8E4tyY+/63GHI
+	 LdEqeXplyMwjCRZNzvCq1NDZiKf6uXWN2tA8K9w8Wi7XKD1krk6JJaRfhAC4ODaBMs
+	 zJkVvlrskTs4N2oxTLlZuEA/0Mc+GxTwpTI/ZZunEmoBHYqacjyIp7Xe/XNzXetfQ/
+	 kK9bQvLQEuMpQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@intel.com>,
+  Thomas Gleixner <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,
+  Dave Hansen <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  x86@kernel.org,  linux-pm@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>,  Daniel Sneddon
+ <daniel.sneddon@linux.intel.com>
 Subject: Re: [regression] suspend stress test stalls within 30 minutes
-Message-ID: <20240517172603.GEZkeTK246tBvGEtgF@fat_crate.local>
-References: <87o79cjjik.fsf@kernel.org>
- <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
- <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
- <87h6f4jdrq.fsf@kernel.org>
- <878r0djxgc.fsf@kernel.org>
- <874jb0jzx5.fsf@kernel.org>
- <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
- <87msoofjg1.fsf@kernel.org>
+References: <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+	<87h6f4jdrq.fsf@kernel.org> <878r0djxgc.fsf@kernel.org>
+	<874jb0jzx5.fsf@kernel.org>
+	<feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
+	<20240515072231.z3wlyoblyc34ldmr@desk>
+	<529C9374-DA6F-49C8-9B32-91741800F8E4@alien8.de>
+	<20240515162747.6shmaoelc4mt7nro@desk> <878r0bhvjq.fsf@kernel.org>
+	<20240516070315.swz2golcrfp3uvfd@desk>
+	<20240516142513.qqy7wbmja5frizuj@desk>
+Date: Fri, 17 May 2024 20:41:41 +0300
+In-Reply-To: <20240516142513.qqy7wbmja5frizuj@desk> (Pawan Gupta's message of
+	"Thu, 16 May 2024 07:25:13 -0700")
+Message-ID: <87a5kofi96.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87msoofjg1.fsf@kernel.org>
+Content-Type: text/plain
 
-On Fri, May 17, 2024 at 08:15:58PM +0300, Kalle Valo wrote:
-> So the weird part is that when the bug happens (ie. suspend stalls) I
-> can access the box normally using ssh and I don't see anything special
-> in dmesg. Below is a full copy of dmesg output after the suspend
-> stalled. Do note that I copied this dmesg before I updated microcode so
-> it will still show the old microcode version.
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com> writes:
 
-Does that mean that you'd still see the stall even with the latest
-microcode revision 0xf8?
+> On Thu, May 16, 2024 at 12:03:22AM -0700, Pawan Gupta wrote:
+>> I am running the suspend test now and will update in the morning if I
+>> could reproduce the hang.
+>
+> Completed 500 suspend iterations, but the hang is not reproduced :(
+> I have restarted the test.
+
+In a way I'm not surprised as nobody else has reported anything similar.
+I guess it's something really specific on my box, so weird.
+
+> BTW, could you please share your /proc/cmdline?
+
+This is the simplified command line with which I can reproduce the bug:
+
+$ cat /proc/cmdline 
+BOOT_IMAGE=/boot/vmlinuz-6.9.0 root=UUID=61a268dc-df96-4e69-9272-928240dcc445 ro net.ifnames=0
+
+> Also, was there any workload running with the suspend test?
+
+There is no special workload when I reproduce the bug. This NUC box is
+one of our test setups which I use to test ath11k and ath12k wireless
+drivers, but when I'm debugging this suspend issue none of the wireless
+drivers are not even loaded. I don't normally have a display connected
+to the box but I do run netconsole, although I just verified that I see
+the bug if I remove netconsole configuration from cmdline.
+
+The distro is Ubuntu 20.04.6 LTS. Oh, but I do have installed a WCN6855
+PCI module to the box so that I can test ath11k. That can of course make
+a difference. And maybe also BIOS settings?
+
+I think is easiest if I try get more info about with my box first, it
+might be quite challenging for you to reproduce it.
 
 -- 
-Regards/Gruss,
-    Boris.
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-https://people.kernel.org/tglx/notes-about-netiquette
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
