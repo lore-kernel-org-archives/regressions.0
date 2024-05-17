@@ -1,112 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CFA2208F;
-	Fri, 17 May 2024 08:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23473364DA
+	for <regressions@lists.linux.dev>; Fri, 17 May 2024 10:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715934398; cv=none; b=H+WdqRjN3id96RBRXr6T0nA8iUtYib3SFAGL+QKmzOqfl7MT6t6M1W4+u/FEf42qMBGnFaz5R/rWOnp9XvPGVxTFdhQgGqInZ0HJb3ocPa/Juo2ppYUXXeMSNsyVerYAynJiulP6CJs4YYuw0EoSce1BOQHtoD6w4fFJDzM+Xhw=
+	t=1715940549; cv=none; b=XdJVbsGfaAyg9ii4SwziWxOKCqBmSkazrJKwGfBYnps7oVgtGOIhops0JTRkhKfEzIneFM3ZQOP/hmFAyBZs4iDVrtYF5SjRzEwHuQpXi9PH+ouCAX///s/CKM4Qv/JYomqEHJGFbTUXIdXGtVaLIyyCp+Po2JE9Xvh/P9xryW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715934398; c=relaxed/simple;
-	bh=b4CzBIuUjatTBApFL7zeTDMeXO1kQQLfnt2eCZBNbLM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=D3YGooqetzZrHWFv8UCk6kmobNFfFIOpKW6d5UqKdE7NgMNZ/ELY4oTLIXPYoqE8MFTnogs1GgNAC4f8i4PH5BKd6n1cJzYwTyZBGsW44LH+wF4HYJNAj0uFAzE+8jqHqRNU+uzCixZhjezVZa5T9RhIpPLE8cSBzjbgu9MR++M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFahYnI8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFahYnI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5A02C2BD10;
-	Fri, 17 May 2024 08:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715934397;
-	bh=b4CzBIuUjatTBApFL7zeTDMeXO1kQQLfnt2eCZBNbLM=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=dFahYnI8viyUXccihZsL3aSFRGse+6uwl/zuok8MimuM94Hh7rpCxmCIAtgHtyXlt
-	 xcG0g3GpN/eFcuJyzYLSh7HkwfGEHyqKTABf5b0nT3Lkncko9a2lrmlWmYRwUWuboM
-	 ZH+IN0cYTYFwHUArujOcrtwlDpUX6CiDIeHldW/eSAL1SAjfx3RtDqhhxG5I7wY+Xf
-	 ImoZq4csqGm5pann9Pq9cO3aDqXxUbeHinaPadqulcF6/6Dzlv7MbM2H4uikRFjdeR
-	 1JeEKcsNoZKteDpD9c+b26YvlSQnVmARIuZrEVLS5iaLjLc1WeeatNgdDXN14MVVpG
-	 EuPK2blWTRzCg==
+	s=arc-20240116; t=1715940549; c=relaxed/simple;
+	bh=4NphUhBDBuO25manPq8CyNtSxsxS+SLiuMtp2GNRMFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O6BxfitLqkhBTqe+acAOi7WWeErchatqLvuSQV2pFDvVKJOp+rHxJ8B1C61ft6VwEkOpvwDWFzeW7nm6cUt0aUedBk9VsFwQRy4/BWjhARSBQqaxW2DiB/HJQWu+WYrxwkOqv8a5aMEs0mNsD+GMqHh4UAOMGAisJIhGkwdwJlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 35CDC61E5FE3D;
+	Fri, 17 May 2024 12:07:37 +0200 (CEST)
+Message-ID: <8bc68316-fef4-47c0-ad08-ad93f6a4fb30@molgen.mpg.de>
+Date: Fri, 17 May 2024 12:07:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 May 2024 11:26:33 +0300
-Message-Id: <D1BRZ60B9O5S.3NAT20QPQE6KH@kernel.org>
-Cc: =?utf-8?b?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <regressions@lists.linux.dev>, <kernel@collabora.com>
-Subject: Re: [PATCH v8 18/22] tpm: add session encryption protection to
- tpm2_get_random()
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ard Biesheuvel" <ardb@kernel.org>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>, "Linux Crypto Mailing List"
- <linux-crypto@vger.kernel.org>, "Herbert Xu" <herbert@gondor.apana.org.au>
-X-Mailer: aerc 0.17.0
-References: <20240429202811.13643-1-James.Bottomley@HansenPartnership.com>
- <20240429202811.13643-19-James.Bottomley@HansenPartnership.com>
- <119dc5ed-f159-41be-9dda-1a056f29888d@notapiano>
- <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
- <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH v2] e1000e: move force SMBUS near the
+ end of enable_ulp function
+To: Hui Wang <hui.wang@canonical.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ kuba@kernel.org, anthony.l.nguyen@intel.com, vitaly.lifshits@intel.com,
+ dima.ruinskiy@intel.com, davem@davemloft.net, pabeni@redhat.com,
+ edumazet@google.com, sasha.neftin@intel.com, naamax.meir@linux.intel.com,
+ Jacob Keller <jacob.e.keller@intel.com>, Oliver Sang
+ <oliver.sang@intel.com>, Zhang Rui <rui.zhang@intel.com>,
+ regressions@lists.linux.dev
+References: <20240508120604.233166-1-hui.wang@canonical.com>
+ <cdab9b76-e935-4b38-9b5c-496ff8fdfb64@molgen.mpg.de>
+ <7b0a36a5-4265-41e7-b66a-2cd1f01aed42@canonical.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <7b0a36a5-4265-41e7-b66a-2cd1f01aed42@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri May 17, 2024 at 10:20 AM EEST, Ard Biesheuvel wrote:
-> On Fri, 17 May 2024 at 03:59, James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> >
-> > On Thu, 2024-05-16 at 20:25 -0400, N=C3=ADcolas F. R. A. Prado wrote:
-> ...
-> > > KernelCI has identified a new warning and I tracked it down to this
-> > > commit. It
-> > > was observed on the following platforms:
-> > > * mt8183-kukui-jacuzzi-juniper-sku16
-> > > * sc7180-trogdor-kingoftown
-> > > (but probably affects all platforms that have a tpm driver with async
-> > > probe)
-> > >
-> > > [    2.175146] Call trace:
-> > > [    2.177587]  __request_module+0x188/0x1f4
-> > > [    2.181596]  crypto_alg_mod_lookup+0x178/0x21c
-> > > [    2.186042]  crypto_alloc_tfm_node+0x58/0x114
-> > > [    2.190396]  crypto_alloc_shash+0x24/0x30
-> > > [    2.194404]  drbg_init_hash_kernel+0x28/0xdc
-> > > [    2.198673]  drbg_kcapi_seed+0x21c/0x420
-> > > [    2.202593]  crypto_rng_reset+0x84/0xb4
-> > > [    2.206425]  crypto_get_default_rng+0xa4/0xd8
-> > > [    2.210779]  ecc_gen_privkey+0x58/0xd0
-> > > [    2.214526]  ecdh_set_secret+0x90/0x198
-> > > [    2.218360]  tpm_buf_append_salt+0x164/0x2dc
-> >
-> > This looks like a misconfiguration.  The kernel is trying to load the
-> > ecdh module, but it should have been selected as built in by this in
-> > drivers/char/tpm/Kconfig:
-> >
-> > config TCG_TPM2_HMAC
-> >         bool "Use HMAC and encrypted transactions on the TPM bus"
-> >         default y
-> >         select CRYPTO_ECDH
-> >         select CRYPTO_LIB_AESCFB
-> >         select CRYPTO_LIB_SHA256
-> >
->
-> The module request is not for ECDH itself but for the DRBG it attempts
-> to use to generate the secret.
->
-> Given that CRYPTO_ECDH does not strictly require a DRBG in principle,
-> but does in this particular case, I think it makes sense to select
-> CRYPTO_DRBG here (or depend on it being builtin), rather than updating
-> the Kconfig rules for CRYPTO_ECDH itself.
+Dear Hui,
 
-I can spin a new PR if James can make a fix.
 
-All previous 4 PR's for 6.10 were applied to Linus' tree so my queue
-is empty. Need to have both fixes and stable-tags to save my bandwidth.
+Thank you for your response.
 
-Maybe for transcript just two first lines denoting that it was
-__request_module() will do. That and adding CONFIG_DRBG will take
-it away should be enough for the full disclosure, right?
 
-BR, Jarkko
+Am 17.05.24 um 11:45 schrieb Hui Wang:
+> 
+> On 5/17/24 13:45, Paul Menzel wrote:
+
+>> Am 08.05.24 um 14:06 schrieb Hui Wang:
+>>> The commit 861e8086029e ("e1000e: move force SMBUS from enable ulp
+>>> function to avoid PHY loss issue") introduces a regression on
+>>> CH_MTP_I219_LM18 (PCIID: 0x8086550A). Without the referred commit, the
+>>
+>> *P*CH
+>>
+>>> ethernet works well after suspend and resume, but after applying the
+>>> commit, the ethernet couldn't work anymore after the resume and the
+>>> dmesg shows that the NIC Link changes to 10Mbps (1000Mbps originally):
+>>
+>> 1.  s/Link/link/
+>> 2.  “couldn’t work” means the reduced bandwidth?
+> 
+> On my side, once the link changes to 10Mbps, I couldn't ping the machine 
+> anymore. And as you said, it probably has sth to do with switch/router 
+> configuration.
+> 
+>> 3. Please add a blank line and maybe indent the past with four spaces.
+>>
+>>> [   43.305084] e1000e 0000:00:1f.6 enp0s31f6: NIC Link is Up 10 Mbps Full Duplex, Flow Control: Rx/Tx
+>>>
+>>> Without the commit, the force SMBUS code will not be executed if
+>>> "return 0" or "goto out" is executed in the enable_ulp(), and in my
+>>> case, the "goto out" is executed since FWSM_FW_VALID is set. But after
+>>> applying the commit, the force SMBUS code will be ran unconditionally.
+>>>
+>>> Here move the force SMBUS code back to enable_ulp() and put it
+>>> immediate ahead of hw->phy.ops.release(hw), this could allow the
+>>
+>> immediate*l*?
+
+Sorry, I meant immediate*ly*.
+
+>>> longest settling time as possible for interface in this function and
+>>> doesn't change the original code logic.
+>>
+>> Re-ordering code to achieve some waiting time sounds like, it’s not 
+>> 100 % sure, that the problem won’t occur again?
+> 
+> Actually this patch not only adds the waiting time, but also restore the 
+> original code logic:
+> 
+>   original: On a machine with the CSME, the SMBUS will not be forced, 
+> accordingly the SMBUS will not be unforced after resume.
+> 
+>   wrong: On a machine with the CSME, the SMBUS is forced, but the SMBUS 
+> is not unforced after resume, there is an unbalance. My patch could fix 
+> this case.
+
+Thank you for elaborating. In my opinion, then two commits would be 
+better. One revert with a description of the problem and documentation 
+of the test systems. Then the second patch with the fix.
+
+>> Could you please document your test system?
+> Lenovo Thinkpad P16Gen2 with ethernet card:
+> 
+> 00:1f.6 Ethernet controller [0200]: Intel Corporation Device [8086:550a] (rev 20)
+> 
+>> Just a side note: Booting Linux 6.9-rc5+ *with kexec* on Supermicro 
+>> Super Server/X13SAE, BIOS 2.0 10/17/2022 with the network device 
+>> below, it also came up only with 10 Mbps and Ethernet did not work, 
+>> for example `ping`. I conjectured though, that the non-working part 
+>> was due to the switch configuration not allowing 10 Mbps.
+>>
+>>     00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (17) I219-LM [8086:1a1c] (rev 11)
+>>
+> My test and result are same as yours.
+> 
+> Thanks.
+
+Thank you for the confirmation.
+
+>> I didn’t find the time to further analyze and report the issue.
+>>
+>> Also could this also be related to the regression reported by the 
+>> kernel test robot [1]?
+>>
+>>     00:19.0 Ethernet controller: Intel Corporation Ethernet Connection (3) I218-V (rev 03)
+>>
+>>> Fixes: 861e8086029e ("e1000e: move force SMBUS from enable ulp 
+>>> function to avoid PHY loss issue")
+>>> Signed-off-by: Hui Wang <hui.wang@canonical.com>
+>>> Acked-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+>>> Tested-by: Naama Meir <naamax.meir@linux.intel.com>
+>>> Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+>>> ---
+>>> In the v2:
+>>>   Change "this commit" to "the referred commit" in the commit header
+>>>   Fix a potential infinite loop if ret_val is not zero
+>>>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 22 +++++++++++++++++++++
+>>>   drivers/net/ethernet/intel/e1000e/netdev.c  | 18 -----------------
+>>>   2 files changed, 22 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c 
+>>> b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>>> index f9e94be36e97..2e98a2a0bead 100644
+>>> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>>> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>>> @@ -1225,6 +1225,28 @@ s32 e1000_enable_ulp_lpt_lp(struct e1000_hw 
+>>> *hw, bool to_sx)
+>>>       }
+>>>     release:
+>>> +    /* Switching PHY interface always returns MDI error
+>>> +     * so disable retry mechanism to avoid wasting time
+>>> +     */
+>>> +    e1000e_disable_phy_retry(hw);
+>>> +
+>>> +    /* Force SMBus mode in PHY */
+>>> +    ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL, &phy_reg);
+>>> +    if (ret_val) {
+>>> +        e1000e_enable_phy_retry(hw);
+>>> +        hw->phy.ops.release(hw);
+>>> +        goto out;
+>>> +    }
+>>> +    phy_reg |= CV_SMB_CTRL_FORCE_SMBUS;
+>>> +    e1000_write_phy_reg_hv_locked(hw, CV_SMB_CTRL, phy_reg);
+>>> +
+>>> +    e1000e_enable_phy_retry(hw);
+>>> +
+>>> +    /* Force SMBus mode in MAC */
+>>> +    mac_reg = er32(CTRL_EXT);
+>>> +    mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
+>>> +    ew32(CTRL_EXT, mac_reg);
+>>> +
+>>>       hw->phy.ops.release(hw);
+>>>   out:
+>>>       if (ret_val)
+>>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c 
+>>> b/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> index 3692fce20195..cc8c531ec3df 100644
+>>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> @@ -6623,7 +6623,6 @@ static int __e1000_shutdown(struct pci_dev 
+>>> *pdev, bool runtime)
+>>>       struct e1000_hw *hw = &adapter->hw;
+>>>       u32 ctrl, ctrl_ext, rctl, status, wufc;
+>>>       int retval = 0;
+>>> -    u16 smb_ctrl;
+>>>         /* Runtime suspend should only enable wakeup for link changes */
+>>>       if (runtime)
+>>> @@ -6697,23 +6696,6 @@ static int __e1000_shutdown(struct pci_dev 
+>>> *pdev, bool runtime)
+>>>               if (retval)
+>>>                   return retval;
+>>>           }
+>>> -
+>>> -        /* Force SMBUS to allow WOL */
+>>> -        /* Switching PHY interface always returns MDI error
+>>> -         * so disable retry mechanism to avoid wasting time
+>>> -         */
+>>> -        e1000e_disable_phy_retry(hw);
+>>> -
+>>> -        e1e_rphy(hw, CV_SMB_CTRL, &smb_ctrl);
+>>> -        smb_ctrl |= CV_SMB_CTRL_FORCE_SMBUS;
+>>> -        e1e_wphy(hw, CV_SMB_CTRL, smb_ctrl);
+>>> -
+>>> -        e1000e_enable_phy_retry(hw);
+>>> -
+>>> -        /* Force SMBus mode in MAC */
+>>> -        ctrl_ext = er32(CTRL_EXT);
+>>> -        ctrl_ext |= E1000_CTRL_EXT_FORCE_SMBUS;
+>>> -        ew32(CTRL_EXT, ctrl_ext);
+>>>       }
+>>>         /* Ensure that the appropriate bits are set in LPI_CTRL
+
+
+Kind regards,
+
+Paul
+
+
+>> [1]: https://lore.kernel.org/intel-wired-lan/202405150942.f9b873b1-oliver.sang@intel.com/
