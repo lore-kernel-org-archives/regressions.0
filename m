@@ -1,116 +1,84 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B85184D;
-	Fri, 17 May 2024 02:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1D910A0B;
+	Fri, 17 May 2024 05:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715912064; cv=none; b=ngjp66nHjGXzhbfDlhnWLMIV44vr8ZY9D4rGgoYZeQtcllhLt/0VZhoPe/UnHpxD/dW434J9f09Pv2qrSfVxV0XWj6uN2EE4bh2swNqTEixdSief79Gj63+dTW30o7dxZerQD13AAbwUGp+DTvVKFur/8ShQy2xGcfpRgFR+hKk=
+	t=1715923507; cv=none; b=Jc4OWxhN4L2VP5BXHxk1xiStQsVXJybyXSBJJxUpkuAnt+FqnYfe0QQyzJD5NOCwRVVgEaBSaQ0q+MlB0WnKdtQ/+6s58Z+U69l1KEKLRMCpwwHqe61iyt5KdpdCZ7GflrjcyRORhCR5QG1rWdTTqxvQ9pw2EmtfvVFCnjVN1I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715912064; c=relaxed/simple;
-	bh=9kc/oJ+LKGvFKghk8rUdhHMgoRAqtU1J9GB6SBn2TUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=skmfJl/eeZ7GqpYd0Ifik05h79TEFxkhwkEmZ87CaMGFeRScs3o9gz+N2gqCKa8ndMiQHttVF57okMY2A9pjUgu/9R3eJ4HtNkW6AvVeOnzwZfBTEeJhnGBRG6s8EmSl190q6CUj8VyI8yJnMEs2+2vhPPcaX+jigJJzXX9M4yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XhdPQRM1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715923507; c=relaxed/simple;
+	bh=JsSl2F7J/c445ieKgv25hBESUFKNpCr7HFqx+pdPKWI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=oLort9fM8wrP1bR7Iu3+TTI1QEmfaz9fVtKrghkShafZCN2owlGGuZhkuSQ172Att1O7bAweONRkcdlrVfm22V51NBmJnqoT/b1AVM4q0ucaVwJlS6UBbpaqnkMbTx8FrK90ljXC2wY4K2NfTjrzsJL8IwwOjIhC400K1920WWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXP8l53j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XhdPQRM1"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GKMdWD008019;
-	Fri, 17 May 2024 02:14:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=AmfpQ67vGkjrHe8EPs4wE3bFehFC+xH1HSH2r5nyTYI=; b=Xh
-	dPQRM1xUekLNsI2gzxxXbP0GzBXOT/43NuZqbPe4OenEszKti6iTpyP+6QkehxjA
-	y/+EAdkvl72UWs6iltWuTgY1krQ59xQxDmZJHJGE1vfD06pPpN+aAk6Q9KQEX54/
-	OEfl/TGJ/UE+OewBVpOyc1BfOR8NQLUGyPGf6+8D8yj8hupyCyW+8AmiIgRZbar0
-	fGxbXgKSNOdbv4dUSCbzawKg0c/JjTlm56aNimV96xswFX2GTZ6sKpNl741e0QUt
-	349qjUv2yVI1KZQj/tJGadpTddP9TWq+mGcgUClG+wIWDrqGvsfFGTlop7HclCpW
-	0i00OwGApDxejwLIxVGw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y45vbf8ja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 02:14:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44H2EB65013676
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 02:14:11 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 16 May
- 2024 19:14:10 -0700
-Message-ID: <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
-Date: Fri, 17 May 2024 10:14:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXP8l53j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE5DC32781;
+	Fri, 17 May 2024 05:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715923506;
+	bh=JsSl2F7J/c445ieKgv25hBESUFKNpCr7HFqx+pdPKWI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=PXP8l53jSj/nOjJPOhRj152DaY6Ap4MFn4SnQubV5Gj8fmZfN44npd+UAEyMUnykr
+	 NN6mDimXQOlJkvcJLA2oE8Pe62n5gPcXnba4X9HzSSKTT0IEj39xd51uQDldooM92N
+	 DRWabe5IybEXYu6plWGaQ1RNSyGVxIqTtPoK7sahIe6DKH7sQWjrBNelkPIC3drHge
+	 dWBN9JyDpIK1UP+5e+mguh22bKfmfbq/7ATs1XKZRnfR7WKM33kKxKjuTXlD68HD8Z
+	 wuYAEDCQZA2EksuyOqMbQVsA5XKOaJeKgzAV7GMtaoAG6HQwN1CX4XS4sO+0PrMWlj
+	 T6uWEhgXSlguw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,  Carl
+ Huang <quic_cjhuang@quicinc.com>,  Luca Weiss <luca.weiss@fairphone.com>,
+  <ath11k@lists.infradead.org>,  <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
+References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
+	<20230714023801.2621802-2-quic_cjhuang@quicinc.com>
+	<D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
+	<93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
+	<871q69lqh5.fsf@kernel.org>
+	<4e21e556-527f-4d1e-aa29-cacec14155af@quicinc.com>
+	<a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
+	<4d72f74a-b2eb-43d3-92a2-1311081ce72c@quicinc.com>
+Date: Fri, 17 May 2024 08:25:03 +0300
+In-Reply-To: <4d72f74a-b2eb-43d3-92a2-1311081ce72c@quicinc.com> (Jeff
+	Johnson's message of "Thu, 16 May 2024 07:11:31 -0700")
+Message-ID: <87fruhggcw.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-To: Kalle Valo <kvalo@kernel.org>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <regressions@lists.linux.dev>
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
- <87wmo0k71i.fsf@kernel.org>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <87wmo0k71i.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: MwXzAFYCYenCKVLn5BKyi-x9OFRtwa7I
-X-Proofpoint-ORIG-GUID: MwXzAFYCYenCKVLn5BKyi-x9OFRtwa7I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405170016
+Content-Type: text/plain
 
+Jeff Johnson <quic_jjohnson@quicinc.com> writes:
 
+> On 5/16/2024 4:45 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 11.05.24 05:12, Carl Huang wrote:
+>>> I'll send out the formal patch next week.
+>> 
+>> Hmmm, from here it looks like this did not happen. Did I miss something,
+>> is there some reason to reevaluate things again, or did this maybe
+>> simply fall through the cracks?
+>
+> Formal patch is still under internal review
 
-On 5/11/2024 5:54 PM, Kalle Valo wrote:
-> Baochen Qiang <quic_bqiang@quicinc.com> writes:
-> 
->> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
->> ath11k fails to connect to 6 GHz AP.
->>
->> This is because currently ath11k checks AP's power type in
->> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
->> However with above commit power type is not available until ASSOC stage.
->> As a result power type check fails and therefore connection fails.
->>
->> Fix this by moving power type check to ASSOC stage, also move regulatory
->> rules update there because it depends on power type.
->>
->> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
->>
->> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
->> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> 
-> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
-> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
-> need to queue this for v6.10 via wireless tree.
-> 
-> Adding the regression also to regzbot:
-> 
-> #regzbot introduced: bc8a0fac8677
-> #regzbot title: ath11k: connection to 6 GHz AP fails
-> 
-Hi Kalle, with an upcoming patch this regression is expected to be fixed:
+BTW I'm also experimenting with regzbot to help me track regressions in
+wireless and to avoid missing important fixes.
 
-https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
+Thorsten, I don't know if you take wishes but it would be nice to have
+in regzbot some kind of filtering per subsystem or label. Maybe
+something like this:
 
-So here the ath11k fix would not be needed any more once above patch got merged.
+https://linux-regtracking.leemhuis.info/regzbot/mainline/?subsystem=wireless
 
-But I don't have time to test this, so suggest keeping it pending. We could drop it once above analysis got verified.
+And then a have command for regzbot setting the subsystem (or a label).
+That way I could easily see only the wireless related regressions, now
+it's harder to find them from the list.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
