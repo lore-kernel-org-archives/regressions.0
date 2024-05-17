@@ -1,109 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F96175AD;
-	Fri, 17 May 2024 07:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CFA2208F;
+	Fri, 17 May 2024 08:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715931559; cv=none; b=GwPQqpvORh1QjR0IynArRQKmqkKxDPPUf6jOiWrds13lCvVsq7SpZEmfZEiq8hrGYx8v0fYc0UbJpFpYdSO6BzeaKSEmjEluvjTDBbclII09Rd4EuhSs+3A8wFxDsLcLvluOqDWytV8RIOqAYM/Me+kWPiXr+7y6Sx/m7elsgMo=
+	t=1715934398; cv=none; b=H+WdqRjN3id96RBRXr6T0nA8iUtYib3SFAGL+QKmzOqfl7MT6t6M1W4+u/FEf42qMBGnFaz5R/rWOnp9XvPGVxTFdhQgGqInZ0HJb3ocPa/Juo2ppYUXXeMSNsyVerYAynJiulP6CJs4YYuw0EoSce1BOQHtoD6w4fFJDzM+Xhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715931559; c=relaxed/simple;
-	bh=tXV0yYKpvKn/RfGN/Y44iVcXp2iZr9dOA16KJTdqPm8=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=nEvGANZD2TjEFI+EIOB50nKgvdtFTvYmaIl1OYhq9bbSZrIVHF5FmJ7RprmrSTXeaUkVe872fuvw84ojq4qK8OTvQRN+PWS1e3FDkGVSLBTiOjTzk8x55hvTlmRJagX7gUXA6HEOD1keleGQGf6OBPZC3u0MVt50sJTdEfjiWLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kh54zjZq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715934398; c=relaxed/simple;
+	bh=b4CzBIuUjatTBApFL7zeTDMeXO1kQQLfnt2eCZBNbLM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=D3YGooqetzZrHWFv8UCk6kmobNFfFIOpKW6d5UqKdE7NgMNZ/ELY4oTLIXPYoqE8MFTnogs1GgNAC4f8i4PH5BKd6n1cJzYwTyZBGsW44LH+wF4HYJNAj0uFAzE+8jqHqRNU+uzCixZhjezVZa5T9RhIpPLE8cSBzjbgu9MR++M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFahYnI8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kh54zjZq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB02DC2BD10;
-	Fri, 17 May 2024 07:39:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFahYnI8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5A02C2BD10;
+	Fri, 17 May 2024 08:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715931559;
-	bh=tXV0yYKpvKn/RfGN/Y44iVcXp2iZr9dOA16KJTdqPm8=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=Kh54zjZqNXQhFKCFgh2n3rWBHho8Gk5KJ9BNVt4kvCLZHXt6ySYnGrIs2c5dEc16Z
-	 QOFUSo0SH7hs1Zcusgyre8dMkVfpj+hJL6B4GJl34nYG1lhqMY6W6PcX1BP7d4E6yE
-	 5itjmvJ0wo9su+l0+dG9cuVhqZGpqR6e0ta+enNMrPcS834lZeW1H/6smBUfBQqwRs
-	 X1sTvOHeB1XvAODlc9AqRU2fCXPrJpAkI2rtYIloqpr2erf92RDHWVp6CCVFK5wAh5
-	 JA1yQjX3A0z0lxmnlI+4qXO2d8CQ1u/QTgj5E+bffipWep4DO2aLnrYIArmYsl+ktZ
-	 f66ujMs4vVBUg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,  Linux regressions mailing
- list <regressions@lists.linux.dev>,  Carl Huang
- <quic_cjhuang@quicinc.com>,  Luca Weiss <luca.weiss@fairphone.com>,
-  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 1/2] wifi: ath11k: supports 2 station interfaces
-References: <20230714023801.2621802-1-quic_cjhuang@quicinc.com>
-	<20230714023801.2621802-2-quic_cjhuang@quicinc.com>
-	<D15TIIDIIESY.D1EKKJLZINMA@fairphone.com> <87jzk2km0g.fsf@kernel.org>
-	<93c15c59-f24c-4472-ae7e-969fd1e3bfec@quicinc.com>
-	<871q69lqh5.fsf@kernel.org>
-	<4e21e556-527f-4d1e-aa29-cacec14155af@quicinc.com>
-	<a53e2188-b982-44b7-9dfe-f5dfd6b802ca@leemhuis.info>
-	<4d72f74a-b2eb-43d3-92a2-1311081ce72c@quicinc.com>
-	<87fruhggcw.fsf@kernel.org>
-	<613ecd58-9f65-4d03-98df-40f3959376d6@leemhuis.info>
-Date: Fri, 17 May 2024 10:39:15 +0300
-In-Reply-To: <613ecd58-9f65-4d03-98df-40f3959376d6@leemhuis.info> (Thorsten
-	Leemhuis's message of "Fri, 17 May 2024 08:04:26 +0200")
-Message-ID: <874jawhopo.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1715934397;
+	bh=b4CzBIuUjatTBApFL7zeTDMeXO1kQQLfnt2eCZBNbLM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=dFahYnI8viyUXccihZsL3aSFRGse+6uwl/zuok8MimuM94Hh7rpCxmCIAtgHtyXlt
+	 xcG0g3GpN/eFcuJyzYLSh7HkwfGEHyqKTABf5b0nT3Lkncko9a2lrmlWmYRwUWuboM
+	 ZH+IN0cYTYFwHUArujOcrtwlDpUX6CiDIeHldW/eSAL1SAjfx3RtDqhhxG5I7wY+Xf
+	 ImoZq4csqGm5pann9Pq9cO3aDqXxUbeHinaPadqulcF6/6Dzlv7MbM2H4uikRFjdeR
+	 1JeEKcsNoZKteDpD9c+b26YvlSQnVmARIuZrEVLS5iaLjLc1WeeatNgdDXN14MVVpG
+	 EuPK2blWTRzCg==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 17 May 2024 11:26:33 +0300
+Message-Id: <D1BRZ60B9O5S.3NAT20QPQE6KH@kernel.org>
+Cc: =?utf-8?b?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
+ <regressions@lists.linux.dev>, <kernel@collabora.com>
+Subject: Re: [PATCH v8 18/22] tpm: add session encryption protection to
+ tpm2_get_random()
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Ard Biesheuvel" <ardb@kernel.org>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>, "Linux Crypto Mailing List"
+ <linux-crypto@vger.kernel.org>, "Herbert Xu" <herbert@gondor.apana.org.au>
+X-Mailer: aerc 0.17.0
+References: <20240429202811.13643-1-James.Bottomley@HansenPartnership.com>
+ <20240429202811.13643-19-James.Bottomley@HansenPartnership.com>
+ <119dc5ed-f159-41be-9dda-1a056f29888d@notapiano>
+ <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
+ <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
-
-> On 17.05.24 07:25, Kalle Valo wrote:
->> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
->> 
->>> On 5/16/2024 4:45 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 11.05.24 05:12, Carl Huang wrote:
->>>>> I'll send out the formal patch next week.
->>>>
->>>> Hmmm, from here it looks like this did not happen. Did I miss something,
->>>> is there some reason to reevaluate things again, or did this maybe
->>>> simply fall through the cracks?
->>>
->>> Formal patch is still under internal review
->> 
->> BTW I'm also experimenting with regzbot to help me track regressions in
->> wireless and to avoid missing important fixes.
+On Fri May 17, 2024 at 10:20 AM EEST, Ard Biesheuvel wrote:
+> On Fri, 17 May 2024 at 03:59, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> >
+> > On Thu, 2024-05-16 at 20:25 -0400, N=C3=ADcolas F. R. A. Prado wrote:
+> ...
+> > > KernelCI has identified a new warning and I tracked it down to this
+> > > commit. It
+> > > was observed on the following platforms:
+> > > * mt8183-kukui-jacuzzi-juniper-sku16
+> > > * sc7180-trogdor-kingoftown
+> > > (but probably affects all platforms that have a tpm driver with async
+> > > probe)
+> > >
+> > > [    2.175146] Call trace:
+> > > [    2.177587]  __request_module+0x188/0x1f4
+> > > [    2.181596]  crypto_alg_mod_lookup+0x178/0x21c
+> > > [    2.186042]  crypto_alloc_tfm_node+0x58/0x114
+> > > [    2.190396]  crypto_alloc_shash+0x24/0x30
+> > > [    2.194404]  drbg_init_hash_kernel+0x28/0xdc
+> > > [    2.198673]  drbg_kcapi_seed+0x21c/0x420
+> > > [    2.202593]  crypto_rng_reset+0x84/0xb4
+> > > [    2.206425]  crypto_get_default_rng+0xa4/0xd8
+> > > [    2.210779]  ecc_gen_privkey+0x58/0xd0
+> > > [    2.214526]  ecdh_set_secret+0x90/0x198
+> > > [    2.218360]  tpm_buf_append_salt+0x164/0x2dc
+> >
+> > This looks like a misconfiguration.  The kernel is trying to load the
+> > ecdh module, but it should have been selected as built in by this in
+> > drivers/char/tpm/Kconfig:
+> >
+> > config TCG_TPM2_HMAC
+> >         bool "Use HMAC and encrypted transactions on the TPM bus"
+> >         default y
+> >         select CRYPTO_ECDH
+> >         select CRYPTO_LIB_AESCFB
+> >         select CRYPTO_LIB_SHA256
+> >
 >
-> Not sure, but I tend to think that's still too early; better wait a few
-> more months.
-
-FWIW I have been pretty happy so far and would prefer to continue using
-it with wireless drivers regressions. But of course if it's better for
-you I'll stop for now.
-
->> Thorsten, I don't know if you take wishes but it would be nice to have
->> in regzbot some kind of filtering per subsystem or label. Maybe
->> something like this:
->> https://linux-regtracking.leemhuis.info/regzbot/mainline/?subsystem=wireless
->> 
->> And then a have command for regzbot setting the subsystem (or a label).
->> That way I could easily see only the wireless related regressions, now
->> it's harder to find them from the list.
+> The module request is not for ECDH itself but for the DRBG it attempts
+> to use to generate the secret.
 >
-> I listen to wishes, but in this case the idea is not new: exactly
-> something like this is pretty high on my todo list. But there are still
-> two other things on top of it and requires some major reworks; and I
-> currently also don't find much time to work on the code. :-/ But sooner
-> or later I'll get there!
+> Given that CRYPTO_ECDH does not strictly require a DRBG in principle,
+> but does in this particular case, I think it makes sense to select
+> CRYPTO_DRBG here (or depend on it being builtin), rather than updating
+> the Kconfig rules for CRYPTO_ECDH itself.
 
-Trust me, I know how it is :) These are just wishlist stuff and low
-priority.
+I can spin a new PR if James can make a fix.
 
-One more to the wishlist: refreshing the HTML page once an hour or so. I
-now keep the regzbot page always open and it would be nice to have it
-up-to-date without pressing CTRL-R. Yes, I'm lazy :)
+All previous 4 PR's for 6.10 were applied to Linus' tree so my queue
+is empty. Need to have both fixes and stable-tags to save my bandwidth.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Maybe for transcript just two first lines denoting that it was
+__request_module() will do. That and adding CONFIG_DRBG will take
+it away should be enough for the full disclosure, right?
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+BR, Jarkko
