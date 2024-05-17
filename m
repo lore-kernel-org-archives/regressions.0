@@ -1,54 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8F813FD81;
-	Fri, 17 May 2024 17:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ED41FC8;
+	Fri, 17 May 2024 18:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715967706; cv=none; b=XZIc0waEB+2EUDAnOpk6stVSCNaB2iiEKusvvPWAWopUWNVQRUxWYDpIh6lQUSeWHHGSxOpLAl1gHuapRaZVLGrBfrImIg1DO8bAnGRfAMxIffkFcgrjlpdIuhd562y/HPzBECM8vQCHQJIwuAXhyB/q6ww01+3R4ozsGuRFALc=
+	t=1715970134; cv=none; b=YEP8JVoBa/tFVaO6JvYZYwETa7ZRY94145YKyNzS6i8KGPFv73NyZHxGvhKrBbH6Y9eRPkQtR/wp1de3wPW8AgPWWmdYFk/0sZVVhfSTvRdvItaV+g2AA+1DGv4K2V9e8IJYi0PiXLoHjxIeGY8HU0rLpfeXzIB7OhwBHqtUdrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715967706; c=relaxed/simple;
-	bh=mC1ywOvsKwJqlrV9KUwm4F1IrjKMz9Sv1nAsgzY9tRA=;
+	s=arc-20240116; t=1715970134; c=relaxed/simple;
+	bh=EwkmU5I4ug4JOYE7xX0QXVZ/KNP0gdUYZGWe5VRcPLI=;
 	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=BMclU1derU1+PAG6kDHcpPUzy2ISPQP4ARzqiktDrCkA4YL5Ag5TX2P3iajXvMBmhAr1rJKhEAK1vuGwCbhncfuXNkHpT7SZMOIBcw70AKxipgq16JmpSInQpdr10UDTw+8EScP50IsX8lJUju3jHIqVi3VclHzzvfJia5STftE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orQ+RWOD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ql+qTSO90hkBbsb35jogh5wcRaQA0oTf7Z/FJA6TOqTvu2uzWN9w07uLPcMMy93Jq3ikD++GMVR+adKv8p+tHFZVDIAKeNcueQnVJjUlaXLfdmB/68QE3F0gXRjNQTnabVjPcZ05yityBCrQrtm5IFNqMq4PlLMuBW2G5+D0x6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAJXcxHI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orQ+RWOD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABE1C2BD10;
-	Fri, 17 May 2024 17:41:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAJXcxHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16C5C2BD10;
+	Fri, 17 May 2024 18:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715967705;
-	bh=mC1ywOvsKwJqlrV9KUwm4F1IrjKMz9Sv1nAsgzY9tRA=;
+	s=k20201202; t=1715970134;
+	bh=EwkmU5I4ug4JOYE7xX0QXVZ/KNP0gdUYZGWe5VRcPLI=;
 	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=orQ+RWODE9Epe4j41qe3ySukioq+cxqVXRzWIqYZov0AyB4EwE/V9d0twuR7lo5jd
-	 H3hqd7omgHr4yv7IwICfpKBRVZ27zv/F7wxh/pAcgrUbY4Im0BHuPVkrJkFVmgmIUP
-	 Wdrwc+AXM+aBL+ixeT4npKfK9L3tibOIafK3/HpQwRz2Zd52GEdUt8E4tyY+/63GHI
-	 LdEqeXplyMwjCRZNzvCq1NDZiKf6uXWN2tA8K9w8Wi7XKD1krk6JJaRfhAC4ODaBMs
-	 zJkVvlrskTs4N2oxTLlZuEA/0Mc+GxTwpTI/ZZunEmoBHYqacjyIp7Xe/XNzXetfQ/
-	 kK9bQvLQEuMpQ==
+	b=CAJXcxHIx8NJrDAea5sluXd0jcn3DnG/W72bOyKcI1cSxur8crcoakSNzVoCMFbL/
+	 mc+INzNvgdbxXuefnmlya83RELKQzzADN+TFJHAFTMmkokP9MwG6sMw6DS6WQfFzF1
+	 0tXMOCvMbiNPE1kHyB6dAqQMvuLL7g+pgC4oevh0uIKazXiiQHy0UaiTH09rE7yaKD
+	 rwN56OpPecWDy+sNZesU1Wit5dzy8qhyLTLIA8f+VgycIaTw7YEQhjohyEBtyBcrZn
+	 hl6CNHmVAHPmM8pRMC6W4kGakVqQsvCZhV4O+h9JkVq+C5Z5CnMjGCu2QgThDIk0dp
+	 RrGItsdQVObYw==
 From: Kalle Valo <kvalo@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Borislav Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@intel.com>,
-  Thomas Gleixner <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,
-  Dave Hansen <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki"
- <rafael@kernel.org>,  x86@kernel.org,  linux-pm@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,  Jeff Johnson
- <quic_jjohnson@quicinc.com>,  Daniel Sneddon
- <daniel.sneddon@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  x86@kernel.org,  linux-pm@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>
 Subject: Re: [regression] suspend stress test stalls within 30 minutes
-References: <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+References: <87o79cjjik.fsf@kernel.org>
+	<20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+	<20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
 	<87h6f4jdrq.fsf@kernel.org> <878r0djxgc.fsf@kernel.org>
 	<874jb0jzx5.fsf@kernel.org>
-	<feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
-	<20240515072231.z3wlyoblyc34ldmr@desk>
-	<529C9374-DA6F-49C8-9B32-91741800F8E4@alien8.de>
-	<20240515162747.6shmaoelc4mt7nro@desk> <878r0bhvjq.fsf@kernel.org>
-	<20240516070315.swz2golcrfp3uvfd@desk>
-	<20240516142513.qqy7wbmja5frizuj@desk>
-Date: Fri, 17 May 2024 20:41:41 +0300
-In-Reply-To: <20240516142513.qqy7wbmja5frizuj@desk> (Pawan Gupta's message of
-	"Thu, 16 May 2024 07:25:13 -0700")
-Message-ID: <87a5kofi96.fsf@kernel.org>
+	<20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+	<87msoofjg1.fsf@kernel.org>
+	<20240517172603.GEZkeTK246tBvGEtgF@fat_crate.local>
+Date: Fri, 17 May 2024 21:22:09 +0300
+In-Reply-To: <20240517172603.GEZkeTK246tBvGEtgF@fat_crate.local> (Borislav
+	Petkov's message of "Fri, 17 May 2024 19:26:03 +0200")
+Message-ID: <875xvcfgdq.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -58,40 +55,19 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com> writes:
+Borislav Petkov <bp@alien8.de> writes:
 
-> On Thu, May 16, 2024 at 12:03:22AM -0700, Pawan Gupta wrote:
->> I am running the suspend test now and will update in the morning if I
->> could reproduce the hang.
+> On Fri, May 17, 2024 at 08:15:58PM +0300, Kalle Valo wrote:
+>> So the weird part is that when the bug happens (ie. suspend stalls) I
+>> can access the box normally using ssh and I don't see anything special
+>> in dmesg. Below is a full copy of dmesg output after the suspend
+>> stalled. Do note that I copied this dmesg before I updated microcode so
+>> it will still show the old microcode version.
 >
-> Completed 500 suspend iterations, but the hang is not reproduced :(
-> I have restarted the test.
+> Does that mean that you'd still see the stall even with the latest
+> microcode revision 0xf8?
 
-In a way I'm not surprised as nobody else has reported anything similar.
-I guess it's something really specific on my box, so weird.
-
-> BTW, could you please share your /proc/cmdline?
-
-This is the simplified command line with which I can reproduce the bug:
-
-$ cat /proc/cmdline 
-BOOT_IMAGE=/boot/vmlinuz-6.9.0 root=UUID=61a268dc-df96-4e69-9272-928240dcc445 ro net.ifnames=0
-
-> Also, was there any workload running with the suspend test?
-
-There is no special workload when I reproduce the bug. This NUC box is
-one of our test setups which I use to test ath11k and ath12k wireless
-drivers, but when I'm debugging this suspend issue none of the wireless
-drivers are not even loaded. I don't normally have a display connected
-to the box but I do run netconsole, although I just verified that I see
-the bug if I remove netconsole configuration from cmdline.
-
-The distro is Ubuntu 20.04.6 LTS. Oh, but I do have installed a WCN6855
-PCI module to the box so that I can test ath11k. That can of course make
-a difference. And maybe also BIOS settings?
-
-I think is easiest if I try get more info about with my box first, it
-might be quite challenging for you to reproduce it.
+Yeah, no luck with that. I have more information in my other email.
 
 -- 
 https://patchwork.kernel.org/project/linux-wireless/list/
