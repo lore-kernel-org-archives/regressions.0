@@ -1,234 +1,86 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23473364DA
-	for <regressions@lists.linux.dev>; Fri, 17 May 2024 10:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94CF2E852;
+	Fri, 17 May 2024 10:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715940549; cv=none; b=XdJVbsGfaAyg9ii4SwziWxOKCqBmSkazrJKwGfBYnps7oVgtGOIhops0JTRkhKfEzIneFM3ZQOP/hmFAyBZs4iDVrtYF5SjRzEwHuQpXi9PH+ouCAX///s/CKM4Qv/JYomqEHJGFbTUXIdXGtVaLIyyCp+Po2JE9Xvh/P9xryW0=
+	t=1715942248; cv=none; b=Dm9FEr+KQIdX3UAhOeSwDKoA8WAzJDmbq4JRb5h1e/qp+ai1m6PgrWtA2XiCDf2lD+nwJuolbGCIKzmFTu1KvdAWUxBbUDR76gAhvsQnFeE37Od174gLkNYN07TZDIwk6vqMFggqrrXaS0DSYt8aR9wGwWFFj/YGevtKm6sRC68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715940549; c=relaxed/simple;
-	bh=4NphUhBDBuO25manPq8CyNtSxsxS+SLiuMtp2GNRMFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O6BxfitLqkhBTqe+acAOi7WWeErchatqLvuSQV2pFDvVKJOp+rHxJ8B1C61ft6VwEkOpvwDWFzeW7nm6cUt0aUedBk9VsFwQRy4/BWjhARSBQqaxW2DiB/HJQWu+WYrxwkOqv8a5aMEs0mNsD+GMqHh4UAOMGAisJIhGkwdwJlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 35CDC61E5FE3D;
-	Fri, 17 May 2024 12:07:37 +0200 (CEST)
-Message-ID: <8bc68316-fef4-47c0-ad08-ad93f6a4fb30@molgen.mpg.de>
-Date: Fri, 17 May 2024 12:07:36 +0200
+	s=arc-20240116; t=1715942248; c=relaxed/simple;
+	bh=d5E76zfP3E0SHs8WUgh0FmgpKxv/WsJK3P6aN0GbnU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bb8rK69uyd+1IX9axTCadzyKq/Q+WW5cpElQwuwOvOOq1jBW1BP7fT+RBhxV3eQgE56wdJ34focDMgGJCRQyouo4acrgEb31Z6Blwmy3YFV5IG4ZF5PWNFOb7MEGs1L4BpjFHLOkCM4NUKJPvugdG6nc06S2yIpOSpoMPQ17Nes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aooNHHqd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aooNHHqd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E41C2BD10;
+	Fri, 17 May 2024 10:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715942248;
+	bh=d5E76zfP3E0SHs8WUgh0FmgpKxv/WsJK3P6aN0GbnU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aooNHHqde0cqMrfTRwq/b2sMdrcXrdYV3JHneEzavO1I9/KMrSG47hYxIjMVqKD9j
+	 NnyElFF3JvKbv8nxRo21hcHy/L0VqTaaXXxWgyTBuClNBoqjsRuH8NujMNcSVrUMNc
+	 b6EfbhSjNI9qvn5i5SK2X+7kmm5Zka/SjgVobgnA=
+Date: Fri, 17 May 2024 12:37:15 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: three commits you might or might not want to pick up for 6.9.y
+Message-ID: <2024051709-pretty-rambling-fc7e@gregkh>
+References: <9e40badb-c4fa-4828-a4c5-3a170f624215@leemhuis.info>
+ <2024051501-dropkick-landmark-5db0@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH v2] e1000e: move force SMBUS near the
- end of enable_ulp function
-To: Hui Wang <hui.wang@canonical.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- kuba@kernel.org, anthony.l.nguyen@intel.com, vitaly.lifshits@intel.com,
- dima.ruinskiy@intel.com, davem@davemloft.net, pabeni@redhat.com,
- edumazet@google.com, sasha.neftin@intel.com, naamax.meir@linux.intel.com,
- Jacob Keller <jacob.e.keller@intel.com>, Oliver Sang
- <oliver.sang@intel.com>, Zhang Rui <rui.zhang@intel.com>,
- regressions@lists.linux.dev
-References: <20240508120604.233166-1-hui.wang@canonical.com>
- <cdab9b76-e935-4b38-9b5c-496ff8fdfb64@molgen.mpg.de>
- <7b0a36a5-4265-41e7-b66a-2cd1f01aed42@canonical.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <7b0a36a5-4265-41e7-b66a-2cd1f01aed42@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024051501-dropkick-landmark-5db0@gregkh>
 
-Dear Hui,
-
-
-Thank you for your response.
-
-
-Am 17.05.24 um 11:45 schrieb Hui Wang:
+On Wed, May 15, 2024 at 04:09:17PM +0200, Greg KH wrote:
+> On Wed, May 15, 2024 at 03:49:30PM +0200, Thorsten Leemhuis wrote:
+> > Hi Greg. Here are three reports for regressions introduced during the
+> > 6.9 cycle that were not fixed for 6.9 for one reason or another, but are
+> > fixed in mainline now. So they might be good candidates to pick up early
+> > for 6.9.y -- or maybe not, not sure. You are the better judge here. I
+> > just thought you might wanted to know about them.
+> > 
+> > 
+> > * net: Bluetooth: firmware loading problems with older firmware:
+> > https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
+> > 
+> > Fixed by 958cd6beab693f ("Bluetooth: btusb: Fix the patch for MT7920 the
+> > affected to MT7921") – which likely should have gone into 6.9, but did
+> > not due to lack of fixes: an stable tags:
+> > https://lore.kernel.org/all/CABBYNZK1QWNHpmXUyne1Vmqqvy7csmivL7q7N2Mu=2fmrUV4jg@mail.gmail.com/
+> > 
+> > 
+> > * leds/iwlwifi: hangs on boot:
+> > https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+> > 
+> > Fixed by 3d913719df14c2 ("wifi: iwlwifi: Use request_module_nowait") –
+> > not sure if that one is worth it, the regression might be an exotic
+> > corner case.
+> > 
+> > 
+> > * Ryzen 7840HS CPU single core never boosts to max frequency:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=218759
+> > 
+> > Fixed by bf202e654bfa57 ("cpufreq: amd-pstate: fix the highest frequency
+> > issue which limits performance") – which was broken out of a patch-set
+> > by the developers to send it in for 6.9, but then was only merged for
+> > 6.10 by the maintainer.
 > 
-> On 5/17/24 13:45, Paul Menzel wrote:
+> Nice, thanks for these!  I'll look at them after this round of -rcs is
+> out.
 
->> Am 08.05.24 um 14:06 schrieb Hui Wang:
->>> The commit 861e8086029e ("e1000e: move force SMBUS from enable ulp
->>> function to avoid PHY loss issue") introduces a regression on
->>> CH_MTP_I219_LM18 (PCIID: 0x8086550A). Without the referred commit, the
->>
->> *P*CH
->>
->>> ethernet works well after suspend and resume, but after applying the
->>> commit, the ethernet couldn't work anymore after the resume and the
->>> dmesg shows that the NIC Link changes to 10Mbps (1000Mbps originally):
->>
->> 1.  s/Link/link/
->> 2.  “couldn’t work” means the reduced bandwidth?
-> 
-> On my side, once the link changes to 10Mbps, I couldn't ping the machine 
-> anymore. And as you said, it probably has sth to do with switch/router 
-> configuration.
-> 
->> 3. Please add a blank line and maybe indent the past with four spaces.
->>
->>> [   43.305084] e1000e 0000:00:1f.6 enp0s31f6: NIC Link is Up 10 Mbps Full Duplex, Flow Control: Rx/Tx
->>>
->>> Without the commit, the force SMBUS code will not be executed if
->>> "return 0" or "goto out" is executed in the enable_ulp(), and in my
->>> case, the "goto out" is executed since FWSM_FW_VALID is set. But after
->>> applying the commit, the force SMBUS code will be ran unconditionally.
->>>
->>> Here move the force SMBUS code back to enable_ulp() and put it
->>> immediate ahead of hw->phy.ops.release(hw), this could allow the
->>
->> immediate*l*?
+All now queued up.
 
-Sorry, I meant immediate*ly*.
-
->>> longest settling time as possible for interface in this function and
->>> doesn't change the original code logic.
->>
->> Re-ordering code to achieve some waiting time sounds like, it’s not 
->> 100 % sure, that the problem won’t occur again?
-> 
-> Actually this patch not only adds the waiting time, but also restore the 
-> original code logic:
-> 
->   original: On a machine with the CSME, the SMBUS will not be forced, 
-> accordingly the SMBUS will not be unforced after resume.
-> 
->   wrong: On a machine with the CSME, the SMBUS is forced, but the SMBUS 
-> is not unforced after resume, there is an unbalance. My patch could fix 
-> this case.
-
-Thank you for elaborating. In my opinion, then two commits would be 
-better. One revert with a description of the problem and documentation 
-of the test systems. Then the second patch with the fix.
-
->> Could you please document your test system?
-> Lenovo Thinkpad P16Gen2 with ethernet card:
-> 
-> 00:1f.6 Ethernet controller [0200]: Intel Corporation Device [8086:550a] (rev 20)
-> 
->> Just a side note: Booting Linux 6.9-rc5+ *with kexec* on Supermicro 
->> Super Server/X13SAE, BIOS 2.0 10/17/2022 with the network device 
->> below, it also came up only with 10 Mbps and Ethernet did not work, 
->> for example `ping`. I conjectured though, that the non-working part 
->> was due to the switch configuration not allowing 10 Mbps.
->>
->>     00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (17) I219-LM [8086:1a1c] (rev 11)
->>
-> My test and result are same as yours.
-> 
-> Thanks.
-
-Thank you for the confirmation.
-
->> I didn’t find the time to further analyze and report the issue.
->>
->> Also could this also be related to the regression reported by the 
->> kernel test robot [1]?
->>
->>     00:19.0 Ethernet controller: Intel Corporation Ethernet Connection (3) I218-V (rev 03)
->>
->>> Fixes: 861e8086029e ("e1000e: move force SMBUS from enable ulp 
->>> function to avoid PHY loss issue")
->>> Signed-off-by: Hui Wang <hui.wang@canonical.com>
->>> Acked-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
->>> Tested-by: Naama Meir <naamax.meir@linux.intel.com>
->>> Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
->>> ---
->>> In the v2:
->>>   Change "this commit" to "the referred commit" in the commit header
->>>   Fix a potential infinite loop if ret_val is not zero
->>>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 22 +++++++++++++++++++++
->>>   drivers/net/ethernet/intel/e1000e/netdev.c  | 18 -----------------
->>>   2 files changed, 22 insertions(+), 18 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c 
->>> b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>> index f9e94be36e97..2e98a2a0bead 100644
->>> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>> @@ -1225,6 +1225,28 @@ s32 e1000_enable_ulp_lpt_lp(struct e1000_hw 
->>> *hw, bool to_sx)
->>>       }
->>>     release:
->>> +    /* Switching PHY interface always returns MDI error
->>> +     * so disable retry mechanism to avoid wasting time
->>> +     */
->>> +    e1000e_disable_phy_retry(hw);
->>> +
->>> +    /* Force SMBus mode in PHY */
->>> +    ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL, &phy_reg);
->>> +    if (ret_val) {
->>> +        e1000e_enable_phy_retry(hw);
->>> +        hw->phy.ops.release(hw);
->>> +        goto out;
->>> +    }
->>> +    phy_reg |= CV_SMB_CTRL_FORCE_SMBUS;
->>> +    e1000_write_phy_reg_hv_locked(hw, CV_SMB_CTRL, phy_reg);
->>> +
->>> +    e1000e_enable_phy_retry(hw);
->>> +
->>> +    /* Force SMBus mode in MAC */
->>> +    mac_reg = er32(CTRL_EXT);
->>> +    mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
->>> +    ew32(CTRL_EXT, mac_reg);
->>> +
->>>       hw->phy.ops.release(hw);
->>>   out:
->>>       if (ret_val)
->>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c 
->>> b/drivers/net/ethernet/intel/e1000e/netdev.c
->>> index 3692fce20195..cc8c531ec3df 100644
->>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
->>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
->>> @@ -6623,7 +6623,6 @@ static int __e1000_shutdown(struct pci_dev 
->>> *pdev, bool runtime)
->>>       struct e1000_hw *hw = &adapter->hw;
->>>       u32 ctrl, ctrl_ext, rctl, status, wufc;
->>>       int retval = 0;
->>> -    u16 smb_ctrl;
->>>         /* Runtime suspend should only enable wakeup for link changes */
->>>       if (runtime)
->>> @@ -6697,23 +6696,6 @@ static int __e1000_shutdown(struct pci_dev 
->>> *pdev, bool runtime)
->>>               if (retval)
->>>                   return retval;
->>>           }
->>> -
->>> -        /* Force SMBUS to allow WOL */
->>> -        /* Switching PHY interface always returns MDI error
->>> -         * so disable retry mechanism to avoid wasting time
->>> -         */
->>> -        e1000e_disable_phy_retry(hw);
->>> -
->>> -        e1e_rphy(hw, CV_SMB_CTRL, &smb_ctrl);
->>> -        smb_ctrl |= CV_SMB_CTRL_FORCE_SMBUS;
->>> -        e1e_wphy(hw, CV_SMB_CTRL, smb_ctrl);
->>> -
->>> -        e1000e_enable_phy_retry(hw);
->>> -
->>> -        /* Force SMBus mode in MAC */
->>> -        ctrl_ext = er32(CTRL_EXT);
->>> -        ctrl_ext |= E1000_CTRL_EXT_FORCE_SMBUS;
->>> -        ew32(CTRL_EXT, ctrl_ext);
->>>       }
->>>         /* Ensure that the appropriate bits are set in LPI_CTRL
-
-
-Kind regards,
-
-Paul
-
-
->> [1]: https://lore.kernel.org/intel-wired-lan/202405150942.f9b873b1-oliver.sang@intel.com/
+greg k-h
