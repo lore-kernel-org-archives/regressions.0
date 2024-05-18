@@ -1,92 +1,115 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C292BCFF
-	for <regressions@lists.linux.dev>; Sat, 18 May 2024 13:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5596717BD8
+	for <regressions@lists.linux.dev>; Sat, 18 May 2024 13:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716037680; cv=none; b=i9LOGWJ0JyXpDhWXfBWZy0ulBeUvFkUrNfD3xRV/5aL7dae5EOFxG6FauLyp4KZ40GvJRKdWDFL4DPqoZGEvLuK6EqTctMTIaKlWo3IPPGSS8cTOkso1XEErj9Zf9kZO0OF2U/Ps3PXNNR/CMIAejAIcTaIShiPQ1hbSw+vBY8E=
+	t=1716039888; cv=none; b=se55Bmirc51LAfXplPqOiKmvhcHyaxykgU0rKAiNpEE3FfiWMvVdEJ759d4fb2HzFsXLtUlPrYfc6hDVhJrTJveF4ocfjSAYL4I7Vd1lZuZ512c9+necWItZjLLreJHzadzY5QQxrEEKjr/hSe9LIanMGKI4q1KITmXS7ccMfwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716037680; c=relaxed/simple;
-	bh=Qf9Qwpx/MU8nA0UDjxSlvV9op3yi9qax6HPjVmnv/6c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=sgFefjTca6xkHak+Puqp2/3aS0rxdyutI3lrBGBliPYvtGS9qiSqK3E0oMPATSJZAaKd6qtWugJn8qLPOCOPp9sZpWBLMU4aGRnhJ4yFm4bP4R4DYjPRI7iVb1y6nPI8lKXqy9VYB/OwHr9UTc2fSxRkYc2DDdcUCfy3sB+mG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=HgykhyYp; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=HgykhyYp; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1716039888; c=relaxed/simple;
+	bh=gp5ecGd/vox+YzD8rCxC/+qOZWzTSc3PVPkyeqd5XUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2thBEGVJ1llytLXyFlQHrrG07lrN3mVNlk/ZdmGjDQyVgyZ2Mzk2E2EvgvCbMebh2RjOO5zOpHjQRSXzS3T6nuxFOOdXW4TwjloZ1nFGZM52IYFSG7G6CnOSX9E6/TCwRI1UTv4hnDbRPCLzNygW2N3HZCarHOM3uvOtcn9gnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jc8XDfJb; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="HgykhyYp";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="HgykhyYp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716037678;
-	bh=Qf9Qwpx/MU8nA0UDjxSlvV9op3yi9qax6HPjVmnv/6c=;
-	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:From;
-	b=HgykhyYpXYkU3vdXxHkNLuDXeK6DldzWZkFjnLdi/Z+joYO19EfbVnY6ErTXDeYNN
-	 VLgd0kokEDk+d9FDfiqQNcbatvqrb96ijTQkTxAyAgJJKFSn3yG0aNQJV2a5VtMxdV
-	 JmloHbEJvUPLmsYWncs2IhGW3r7dws/UY6s2uK5I=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 954AF1287275;
-	Sat, 18 May 2024 09:07:58 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id djlfKy_s9EQE; Sat, 18 May 2024 09:07:58 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716037678;
-	bh=Qf9Qwpx/MU8nA0UDjxSlvV9op3yi9qax6HPjVmnv/6c=;
-	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:From;
-	b=HgykhyYpXYkU3vdXxHkNLuDXeK6DldzWZkFjnLdi/Z+joYO19EfbVnY6ErTXDeYNN
-	 VLgd0kokEDk+d9FDfiqQNcbatvqrb96ijTQkTxAyAgJJKFSn3yG0aNQJV2a5VtMxdV
-	 JmloHbEJvUPLmsYWncs2IhGW3r7dws/UY6s2uK5I=
-Received: from [IPv6:::1] (unknown [IPv6:2607:fb91:1dc2:86d0:8b7e:3b6d:e5db:1254])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 145A11287272;
-	Sat, 18 May 2024 09:07:57 -0400 (EDT)
-Date: Sat, 18 May 2024 06:07:39 -0700
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>
-CC: Eric Biggers <ebiggers@kernel.org>,
- =?ISO-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- Ard Biesheuvel <ardb@kernel.org>,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- regressions@lists.linux.dev, kernel@collabora.com
-Subject: Re: [PATCH] crypto: api - Do not load modules until algapi is ready
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Zkif-BI_OFnFbDhv@gondor.apana.org.au>
-References: <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com> <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com> <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com> <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com> <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com> <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano> <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org> <20240518043115.GA53815@sol.localdomain> <ZkhS1zrobNwAuANI@gondor.apana.org.au> <D1CPYHVR94JS.1DIGZUQ2H3NCI@kernel.org> <Zkif-BI_OFnFbDhv@gondor.apana.org.au>
-Message-ID: <3A150785-8EE3-4B53-9E71-4DE49C6751B0@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jc8XDfJb"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f082d92864so35938725ad.1
+        for <regressions@lists.linux.dev>; Sat, 18 May 2024 06:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716039886; x=1716644686; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iV38s3ZQJx3Kgselwge3nkBx0x14PzQSCscFqdNdozk=;
+        b=Jc8XDfJbadYR8woxDWzRxkBdoHeePVFJZNMplSDANwe5ZCj7p/wFE4BqZjCgw2Ejpf
+         kg902k7ra3DpLPR6BhiytS+Qxv/1NIGG7Nw3NPTITiq1o4RBLm3ti9I2efHeWe2WRo5v
+         OQHJ475V8USyAXDGIGWomLDiACB+IGhNR4G0eQb8oOiftoYkWHVbRhYudtdn8/Bov3U3
+         H3+gJ3CWHNDb41YelRG91j0lf0U4ct8Opa08ARxUaounqtM6RDkiNwVlST7uib1LxBUR
+         mSAg2CbB/BNxw2XT7CrfX8TTbpvwliv9CKuwzlvmSPmGwcaOVcdbOa/PMdyjwrNxy8Cc
+         6C1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716039886; x=1716644686;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iV38s3ZQJx3Kgselwge3nkBx0x14PzQSCscFqdNdozk=;
+        b=bHe7du3IsfI5Sq0egfgJb37iOvH49JEWzlQRg32uDKGNNer9ypFVvRMyTRAfvGo9Yq
+         6sqYmzvPh1i2GnA04t50oRsBzZw3y24IAlkYrGZ3ff+XeMjcLJDgf96HWHkiRTWgXfNo
+         4CQQNuthoKuZvM+npfsbvy0+872MH1pNfVDZAfv/9f/Xn4+JlV/4mJqoY6G5nMn9aAW0
+         Xoa48I4D/4B/slZxj/3J33Olp73WV5LIzPJmMCy0utGeSpCyYf9vtKruiEp1i9nOgAWo
+         rh5WkTLev66NdgG7j3CDEJ+S3hpNSL9MFeB491tSJiIKQrG0lyB+aorVk+H+lUShxJ03
+         Y05A==
+X-Forwarded-Encrypted: i=1; AJvYcCXLvsFTAWmzLkGQKvpBzg6QMELQb+rpxWJSG08RrBFsSVhEfHZJETMA6Qvb2GBqS84o7mt2kZsxaxEfhXzK1M8ao+zGLCH9fWxzuVk=
+X-Gm-Message-State: AOJu0YwjXIEbMlLOXZ9et3Y+mTc5xEXqxzA9oP95ngJV88goOH1rAS3c
+	jjvlOvtRD84Irqj4nGrt7xVUHZK2MjCnWsu6iqX8J7tnFsQOhxFz
+X-Google-Smtp-Source: AGHT+IHcBr2qrfJZ1Mp5jBSDRfEqOGVjO7WJ8kAO3F6084tG6wYfwsoNSkZgikEHWvRdyHQWsHbK8w==
+X-Received: by 2002:a05:6a20:2447:b0:1aa:5ca9:c565 with SMTP id adf61e73a8af0-1afde0a8dc5mr28212863637.8.1716039886438;
+        Sat, 18 May 2024 06:44:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13823asm173999915ad.263.2024.05.18.06.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 May 2024 06:44:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 18 May 2024 06:44:43 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
+	sboyd@kernel.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+ entries
+Message-ID: <2119a681-7e02-4ab4-9ea5-102ba2924771@roeck-us.net>
+References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
+ <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
 
-On May 18, 2024 5:32:56 AM PDT, Herbert Xu <herbert@gondor=2Eapana=2Eorg=2E=
-au> wrote:
->On Sat, May 18, 2024 at 02:04:18PM +0300, Jarkko Sakkinen wrote:
->>
->> Right does this mean for TPM driver that a crypto API invocation not
->> having everthing needed loaded will block until this is not the case?
->
->All this does is disable module loading by the Crypto API (because
->there is no point and it may deadlock) until such a point where
->all/most drivers have finished loading=2E
->
->So if the algorithm is missing (which shouldn't happen because of
->Kconfig selects), then it will simply fail=2E
+On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+> > Report an error when an attempt to register a clkdev entry results in a
+> > truncated string so the problem can be easily spotted.
+> > 
+> > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> 
+> With this patch in the mainline kernel, I get
+> 
+> 10000000.clock-controller:corepll: device ID is greater than 24
+> sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for corepll: -12
+> sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+> sifive-clk-prci 10000000.clock-controller: probe with driver sifive-clk-prci failed with error -12
+> ...
+> platform 10060000.gpio: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> platform 10010000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> platform 10011000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> platform 10040000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> platform 10050000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> platform 10090000.ethernet: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+> 
+> when trying to boot sifive_u in qemu.
+> 
+> Apparently, "10000000.clock-controller" is too long. Any suggestion on
+> how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
+> for clk_hw_register_clkdev() is not or no longer a good idea.
+> What else should be used instead ?
+> 
 
-I have a curiosity question: if Eric is right and it's looking for an opti=
-onal hmac accelerator module, why don't I see this?  The only real config d=
-ifference between what I tested and what Nicholas did is he's arm and I'm x=
-86=2E
+Copying regzbot.
 
-James
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+#regzbot ^introduced 8d532528ff6a
+#regzbot title sifive_u boot failure
+#regzbot ignore-activity
