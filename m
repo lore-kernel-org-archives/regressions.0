@@ -1,119 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540EA12F58C
-	for <regressions@lists.linux.dev>; Fri, 17 May 2024 19:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C7D523A
+	for <regressions@lists.linux.dev>; Sat, 18 May 2024 02:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715972933; cv=none; b=QQ/i0pRgj0D7kWG+RRZYaomOdeGHizHE9aRCxVXU8jVWBwY0+iiSMfOYF2TaxseAIfbJ6LbOKKBy9ZIZgiNaeU6yhf3xDeaR8ABYlp+SlgYIhWRNEON58eTqxuZ5bzpQ0VbYj1KuCmeaqMCe1YNv0l3lLiKgL3UGb8Sy2M56m3k=
+	t=1715999225; cv=none; b=b6ANszOQCr2lRZY/y2GPlisPLw14Li08428/zsT9mR5qsDo9JORd5cy4kCaum0QQaSRYrofYVRWM0cKS98gCzbYNDyqioTWJNOu0/lJqErlgOsSzgaVAe0UXbB5/EG/ts9radBxFeJPfAgRumfTgWbAInoO7ms24aMuU4SisvC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715972933; c=relaxed/simple;
-	bh=uWb+bOSKwQLJn2Jz1qSkQVUr71jyyOc0xxanYUgAxrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KFJA9BwKNdljJgKRbFqQkPAp8A2gWEN8Ot7/7faFXPxRlrhUfGRd/SzfoOhzqYIdeY+wqpCxZp396KbcZLafpMvuTnWu/PBmwLB9iBA0aoz81IxxDj1SGBbe0+FYJSKQDGg9TWXPV4g38gH8uZDuZc8QBnEE5Ixc6SdJnrbzmTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1SYVzmP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715999225; c=relaxed/simple;
+	bh=QZn3hh/vWFRGq9PVcMq3WbkOsCjPcnQpcs8NOTSohQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Hh+hFVJeh2NV4W5z62NCuDtI5aOvTHFcmt42FCAvsHRQdQDHkK0tyrbnVbeNucIOe7SvFe7uD0Mc3EhUNOL7/pmDyLCC0Qlgy4k3r7haxJT/kUpWN4iSSdTEyefMbpu3qcs5BQ96CilRNrifZHtH+omI1eYWDIDHcAvWF/8pD6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=O8+CIgmL; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1SYVzmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A4BC4AF08
-	for <regressions@lists.linux.dev>; Fri, 17 May 2024 19:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715972932;
-	bh=uWb+bOSKwQLJn2Jz1qSkQVUr71jyyOc0xxanYUgAxrI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B1SYVzmPVa95dii8iiNGtWbLnTRYHsNyGY7TVnPycTDXAk3DJBlQppLj44zNGyc+U
-	 GhhVRlWsBkN8LPYPURcukRIiJAahNyMthuUXayDEb4WqQRzn0M04aWAU5ImLEZuq/K
-	 pwmGci4Y122Pc+Vo2PEp72j/FNFr4gAXtGLRV4n2lDjvTvpejpG1jMmtM2OS5IjlYS
-	 7fT4VlfMOBYtTk4i1UdHsRho9A6uz3Zkz/dDt30lXty9sGoz0Sm4qf5BrNy6Vf+A5u
-	 Y9Q+/QffY2SZ6DizYsyRgYveRTXtsmY0xVTm7gdTXty/Y+fo6NIVRZtWIlAnDSc4Iz
-	 2EKG2LaWZVelg==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b27cc76e9aso58246eaf.2
-        for <regressions@lists.linux.dev>; Fri, 17 May 2024 12:08:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV55FwMfB9oEqYLPfnzLVTipppwSjJ8f2rd7gyiTJ+w0dI0nkHlQttAe8hiOaUZzkiZlU5S1H2FemQk8q0Cgko8TxvITig/bVGQ0Zo=
-X-Gm-Message-State: AOJu0YwKwFnBDqadav41K1S+WYWwNHatk+fdOjcSBcgvv3p0mLRQ/imq
-	kjigdoJB2z56ieiCs8wbZ3IZCQ5VBSGfWtF0ZoeiCG/UGjdw1rqN1R8TXqenZHwlUXc1nR+JtV0
-	uUlgSKZfO+boH6WePowN9k9TBPE8=
-X-Google-Smtp-Source: AGHT+IG+4u8KxAGrrysp6nvFWeu9dDnGpa/wsXf20CS/0o0U1GC6cHp5W7yqKNQ3oZ2MRrdPXCbVMkds2yJkFSkH1do=
-X-Received: by 2002:a05:6820:1f16:b0:5b2:7d9f:e708 with SMTP id
- 006d021491bc7-5b28193e476mr24576900eaf.1.1715972931992; Fri, 17 May 2024
- 12:08:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="O8+CIgmL"
+Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44I2QkTg008925
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 22:26:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1715999209; bh=fBNuPesawIQnGyWuvipMnxxc+s1aABzzD9p+pZBeJ/Y=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=O8+CIgmL7yBfXQnXrnpjhdSyeL/lCeyRymgH9AhtYAdfEwXKyNaGtKQ8otOHcrkXN
+	 W3xPCPNce46RGFCSbK71snrXZSDJTon9WqJwJ7egwBx3OGtYvMlKZutRMRGqAdAEUx
+	 arENHKNliBtUU6eeSV6pQT1OJWHD9ElQEX1OFMFm8fd9dqEbGnYgDK7tiX2i9F87h1
+	 fEufGkY/RG7OPgHofHN+5jeaSvE+K+CmEbeTxrMWy+xSNb+9BPpx75SNp52U07NcZS
+	 UjPB/e8T9YAIiM4RuDZfyZSTQAkY9C1bAY5L20JPJfj1DywTozIavY9wlk6LLCcrX1
+	 3729+ZvrQcJMQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 5248015C00DC; Fri, 17 May 2024 22:26:46 -0400 (EDT)
+Date: Fri, 17 May 2024 22:26:46 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
+        linux-ext4@vger.kernel.org, regressions@lists.linux.dev
+Cc: Christoph Hellwig <hch@lst.de>, Mike Snitzer <snitzer@kernel.org>
+Subject: [REGRESSION] dm: use queue_limits_set
+Message-ID: <20240518022646.GA450709@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <87o79cjjik.fsf@kernel.org> <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
- <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local> <87h6f4jdrq.fsf@kernel.org>
- <878r0djxgc.fsf@kernel.org> <874jb0jzx5.fsf@kernel.org> <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
- <87msoofjg1.fsf@kernel.org> <35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com>
- <871q60ffnr.fsf@kernel.org> <7813dff5-b140-48c4-bc15-ed25c7a07591@intel.com> <87eda0cljg.fsf@kernel.org>
-In-Reply-To: <87eda0cljg.fsf@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 17 May 2024 21:08:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hJnXPMq5cjEs=yPrSU1hpJ3H3cMce8fOGQCripYfbeGQ@mail.gmail.com>
-Message-ID: <CAJZ5v0hJnXPMq5cjEs=yPrSU1hpJ3H3cMce8fOGQCripYfbeGQ@mail.gmail.com>
-Subject: Re: [regression] suspend stress test stalls within 30 minutes
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, May 17, 2024 at 8:59=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrote=
-:
->
-> Dave Hansen <dave.hansen@intel.com> writes:
->
-> > On 5/17/24 11:37, Kalle Valo wrote:
-> >> While writing this email I found another way to continue the suspend
-> >> after a stall: terminate rtcwake with CTRL-C in the ssh session runnin=
-g
-> >> the for loop. That explains why 'sudo shutdown -h now' makes the suspe=
-nd
-> >> go forward, it most likely kills the stalled rtcwake process.
-> >
-> > Could we try and figure out what rtcwake is doing during its stall?  A
-> > couple of ideas:
-> >
-> > You could strace it to see if it's hung in the kernel:
-> >
-> >       strace -o strace.log rtcwake ... <args here>
-> >
-> > You could look at its stack in /proc, like this:
-> >
-> > # cat /proc/`pidof sleep`/stack
-> > [<0>] hrtimer_nanosleep+0xb5/0x190
-> > [<0>] common_nsleep+0x44/0x50
-> > [<0>] __x64_sys_clock_nanosleep+0xcb/0x140
-> > [<0>] do_syscall_64+0x65/0x140
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> >
-> > Or you can use sysrq:
-> >
-> >       echo t > /proc/sysrq-trigger
-> >
-> > to get *all* tasks' stacks dumped out to dmesg.
-> >
-> > I'd probably do all three in that order.
-> >
-> > Getting a function-graph trace of rtcwake during the stall would also b=
-e
-> > nice, but that's a lot of data so let's try the easier things first.
->
-> I can do all that but most probably not this week. Luckily it's quite
-> easy to reproduce the bug, one time I even saw it in the first iteration
-> and usually within 15 minutes or so.
->
-> And do let me know if there's anything else I should try.
+#regzbot introduced: 1c0e720228ad
 
-My somewhat educated guess is that pm_notifier_call_chain_robust()
-blocks for you, so you can add debug printk()s around the call to this
-in suspend_prepare().
+While doing final regression testing before sending a pull request for
+the ext4 tree, I found a regression which was triggered by generic/347
+and generic/405 on on multiple fstests configurations, including
+both ext4/4k and xfs/4k.
 
-It is also possible that pm_prepare_console() does something weird and
-your description of the problem indicates that it doesn't get to user
-space freezing.
+It bisects cleanly to commit 1c0e720228ad ("dm: use
+queue_limits_set"), and the resulting WARNING is attached below.  This
+stack trace can be seen for both generic/347 and generic/405.  And if
+I revert this commit on top of linux-next, the failure goes away, so
+it pretty clearly root causes to 1c0e720228ad.
+
+For now, I'll add generic/347 and generic/405 to my global exclude
+file, but maybe we should consider reverting the commit if it can't be
+fixed quickly?
+
+Thanks,
+
+      	  	   	  	   	     - Ted
+
+% git show 1c0e720228ad
+commit 1c0e720228ad1c63bb487cdcead2558353b5a067
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Wed Feb 28 14:56:42 2024 -0800
+
+    dm: use queue_limits_set
+    
+    Use queue_limits_set which validates the limits and takes care of
+    updating the readahead settings instead of directly assigning them to
+    the queue.  For that make sure all limits are actually updated before
+    the assignment.
+    
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+  ...    
+
+% git checkout 1c0e720228ad
+% install-kconfig ; kbuild
+% kvm-xfstests -c xfs/4k generic/347
+
+BEGIN TEST 4k (1 test): XFS 4k block Fri May 17 22:03:06 EDT 2024
+DEVICE: /dev/vdd
+XFS_MKFS_OPTIONS: -bsize=4096
+XFS_MOUNT_OPTIONS: 
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 kvm-xfstests 6.9.0-rc2-xfstests-00006-g1c0e720228ad #335 SMP PREEMPT_DYNAMIC Fri May 17 22:02:37 EDT 2024
+MKFS_OPTIONS  -- -f -bsize=4096 /dev/vdc
+MOUNT_OPTIONS -- /dev/vdc /vdc
+
+[    3.179146] XFS (vdd): EXPERIMENTAL online scrub feature in use. Use at your own risk!
+generic/347 65s ...  [22:03:06][    3.389241] run fstests generic/347 at 2024-05-17 22:03:06
+[    4.032221] ------------[ cut here ]------------
+[    4.033087] WARNING: CPU: 1 PID: 30 at drivers/md/dm-bio-prison-v1.c:128 dm_cell_key_has_valid_range+0x3d/0x50
+[    4.034871] CPU: 1 PID: 30 Comm: kworker/u8:1 Not tainted 6.9.0-rc2-xfstests-00006-g1c0e720228ad #335
+[    4.035440] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[    4.035829] Workqueue: dm-thin do_worker
+[    4.035998] RIP: 0010:dm_cell_key_has_valid_range+0x3d/0x50
+[    4.036236] Code: c1 48 29 d1 48 81 f9 00 04 00 00 77 1d 48 83 e8 01 48 c1 ea 0a b9 01 00 00 00 48 c1 e8 0a 48 39 c2 75 12 89 c8 c3 cc cc cc cc <0f> 0b 31 c9 89 c8 c3 cc cc cc cc 0f 0b 31 c9 eb e8 66 90 90 90 90
+[    4.037024] RSP: 0018:ffffc90000107d18 EFLAGS: 00010206
+[    4.037249] RAX: 0000000000000fff RBX: 0000000000000000 RCX: 0000000000000fff
+[    4.037556] RDX: 0000000000000000 RSI: 0000000000000fff RDI: ffffc90000107d28
+[    4.037923] RBP: ffff888009aa7b40 R08: ffff888009aa7bc0 R09: ffff888003e7b980
+[    4.038247] R10: 0000000000000008 R11: fefefefefefefeff R12: ffff8880097ca5b8
+[    4.038545] R13: 0000000000000fff R14: ffff8880097ca5b8 R15: ffff88800f4fc400
+[    4.038843] FS:  0000000000000000(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
+[    4.039228] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    4.039472] CR2: 0000564ad92d7c00 CR3: 000000000f73e006 CR4: 0000000000770ef0
+[    4.039774] PKRU: 55555554
+[    4.039892] Call Trace:
+[    4.040000]  <TASK>
+`[    4.040094]  ? __warn+0x7b/0x120
+[    4.040235]  ? dm_cell_key_has_valid_range+0x3d/0x50
+[    4.040473]  ? report_bug+0x174/0x1c0
+[    4.040635]  ? handle_bug+0x3a/0x70
+[    4.040789]  ? exc_invalid_op+0x17/0x70
+[    4.040958]  ? asm_exc_invalid_op+0x1a/0x20
+[    4.041163]  ? dm_cell_key_has_valid_range+0x3d/0x50
+[    4.041397]  process_discard_bio+0xba/0x190
+[    4.041597]  process_thin_deferred_bios+0x290/0x3e0
+[    4.041806]  process_deferred_bios+0xba/0x2e0
+[    4.041994]  do_worker+0xf5/0x160
+[    4.042139]  process_one_work+0x18a/0x3d0
+[    4.042311]  worker_thread+0x285/0x3a0
+[    4.042470]  ? __pfx_worker_thread+0x10/0x10
+[    4.042655]  kthread+0xdd/0x110
+[    4.042795]  ? __pfx_kthread+0x10/0x10
+[    4.042979]  ret_from_fork+0x31/0x50
+[    4.043153]  ? __pfx_kthread+0x10/0x10
+[    4.043317]  ret_from_fork_asm+0x1a/0x30
+[    4.043490]  </TASK>
+[    4.043586] ---[ end trace 0000000000000000 ]---
+[    4.043784] device-mapper: thin: Discard doesn't respect bio prison limits
+[    4.044142] device-mapper: thin: Discard doesn't respect bio prison limits
+[    4.044585] device-mapper: thin: Discard doesn't respect bio prison limits
+[    6.410678] device-mapper: thin: 253:2: reached low water mark for data device: sending event.
