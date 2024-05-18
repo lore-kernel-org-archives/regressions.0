@@ -1,100 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B296D8BEA
-	for <regressions@lists.linux.dev>; Sat, 18 May 2024 09:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0158914A9D;
+	Sat, 18 May 2024 10:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716025158; cv=none; b=pRt/z9HASaVzU2pByg4uT+foOZMFCV8VhZI+nOMWGUgOLzr9BRMPE5MCkjYx5vgcuqGDzN+7SlCs27kUkg3kUSS041iMKRLdc67pMWvrXKpJJRbXsKIGQW/ei5Rpw+gwOvgfWT7FO+1D87AGg2jly7+HAMRT366H5w7pBzBHf98=
+	t=1716029809; cv=none; b=gH7LzFPxH7FBDd15PD3xQvb/KCoqn1Oh2nqZ5YU2yb/3TtN3xEEHKENWSJvPSxfVXpZ5liHvhg6J1bFNuV/R0+drnyUrwqMWP7C7rbVP/M75LMODOiYhRHh0oyV6DlApcxjfIU6OMOcKffK2Fltj7ZFElw7H5b+KpLdd02969pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716025158; c=relaxed/simple;
-	bh=txP8iiyjY0UQLYEJz7u5/o5oPCvX/CGsMxWmOf8mBww=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=psn+/teHZ7LEBH9546C/Ot2HkfFSShX6tje6WpTwv92NVRZ5rUaHWOEOTi3uZ55kiC3cyxYStozK/5YtO5rmYNxQh0+WeQzOfJjWGI0x1GKeMAzCyodKjQ8bsozVtWVFFe4w8ltx8NJ+58H34HjwOatGqyqz04GJmhN4a41wxso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fIPb2byq; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716029809; c=relaxed/simple;
+	bh=MqvPdrBURHBn30SfZ0XaRXnTniJYhYM73WWqxybnAJc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=jmBPNw2NbeFqOqxCeT8kVnydyaw/Ool4ghItnsZX83LiBCWnWee98L7axs5fiKqzUjiCIyzqs01B4M63dYPiSDx9P1EubOX/dAxthRoMLLQ27YqOG89ImSIQwgPPlyAXtYl4M3gfNNlibvqUkqEX3Ywt6xuZ0GMuyILb2ipq//s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/IJ2yD5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fIPb2byq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=NdrDlCQVfogWRg8lqbVA72VGRMV69EpCT4VpIOBvpoo=; t=1716025156;
-	x=1716457156; b=fIPb2byqhn3FFfWp1LHXTTtxm1ZuaG3SZpDLfLJ4o/rur3q6haEQY2kXfNEYf
-	JYr0TjM+Q7o/18ptBWReij7N44kWn/GN4KX4/+QQTpkHQ5HOG6zqn8OaBDGo5rNTKYyacOhj1Iu6g
-	v/B/LB37XLkxKk/i19p9WRvTcuXhTNnrsThZcKlLUQsxoUVuXLaaJC0a3i0zIqYkgTcQGgXbBXEfH
-	+aLQwpcuf8Qa2hJ3cl98Z9g/BlLtr1297/ontlQyHPqyf9Kppwgca4e9jP2orTBpXmGQlXRjceC1/
-	23dsQbokW+vxpdgWCaPRsb6zB3PrIZ9UGU+HkV7TglNl+kj7oA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s8GWy-0008NJ-U1; Sat, 18 May 2024 11:39:09 +0200
-Message-ID: <b91b99b2-cdc9-489b-91ad-5213eafcec73@leemhuis.info>
-Date: Sat, 18 May 2024 11:39:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/IJ2yD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753C6C113CC;
+	Sat, 18 May 2024 10:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716029808;
+	bh=MqvPdrBURHBn30SfZ0XaRXnTniJYhYM73WWqxybnAJc=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=U/IJ2yD5ds6OBlnxnL1kzlMaJj5PrR6+iKIOdV5mPVTcEFBlKXV9oGs+iVxCD12Zw
+	 8uh29tawsSMHKtBkqZPT7991GlwPnJtTnlljf857tEOPkZBqMnJ8VZUkJvPiDufhZw
+	 YwfEjqQ4xzQntMHKeoLcy9lj/u7sAvhwKj5UVGbSc9er/Ot6XwjCeUdqBBBYM8udqs
+	 56+z6BpFiaKF0JTfRGazQujXoxawn2yCdNxK7or5XOgXBYlIUt+sF7T2/6CCqTM65i
+	 EH3CiaCvKolS2dVYQ9drQsu52lamBgoqai/alm7iw0PUbG+vUOdFlUoZEFG5itSWuV
+	 FBe7YBD+E65YA==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716025156;32e4bc66;
-X-HE-SMSGID: 1s8GWy-0008NJ-U1
+Date: Sat, 18 May 2024 13:56:44 +0300
+Message-Id: <D1CPSP3UHQPK.1LOE5IQ6IMHYP@kernel.org>
+To: "Eric Biggers" <ebiggers@kernel.org>
+Cc: =?utf-8?b?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>, "Ard Biesheuvel"
+ <ardb@kernel.org>, "Linux Crypto Mailing List"
+ <linux-crypto@vger.kernel.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
+ <regressions@lists.linux.dev>, <kernel@collabora.com>
+Subject: Re: [PATCH v8 18/22] tpm: add session encryption protection to
+ tpm2_get_random()
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240429202811.13643-1-James.Bottomley@HansenPartnership.com>
+ <20240429202811.13643-19-James.Bottomley@HansenPartnership.com>
+ <119dc5ed-f159-41be-9dda-1a056f29888d@notapiano>
+ <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
+ <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+ <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
+ <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
+ <20240518043115.GA53815@sol.localdomain>
+In-Reply-To: <20240518043115.GA53815@sol.localdomain>
 
+On Sat May 18, 2024 at 7:31 AM EEST, Eric Biggers wrote:
+> This is "normal" behavior when the crypto API instantiates a template:
+>
+>     1. drbg.c asks for "hmac(sha512)"
+>
+>     2. The crypto API looks for a direct implementation of "hmac(sha512)"=
+.
+>        This includes requesting a module with alias "crypto-hmac(sha512)"=
+.
+>
+>     3. If none is found, the "hmac" template is instantiated instead.
+>
+> There are two possible fixes for the bug.  Either fix ecc_gen_privkey() t=
+o just
+> use get_random_bytes() instead of the weird crypto API RNG, or make
+> drbg_init_hash_kernel() pass the CRYPTO_NOLOAD flag to crypto_alloc_shash=
+().
+>
+> Or if the TPM driver could be changed to not need to generate an ECC priv=
+ate key
+> at probe time, that would also avoid this problem.
 
+Issues:
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+- IMA extends PCR's. This requires encrypted communications path.
+- HWRNG uses auth session (see tpm2_get_radom()).
+- TPM trusted keys
 
-#regzbot report: https://lore.kernel.org/all/ZkLv3wn62jqMVpSF@archie.me/
-#regzbot introduced: 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2e
-#regzbot summary: tty: n_tty: corrupted data sent via pseudoterminal device
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218834
-#regzbot monitor:
-https://lore.kernel.org/all/20240514140429.12087-1-ilpo.jarvinen@linux.intel.com/
-#regzbot fix:
-https://lore.kernel.org/all/20240514140429.12087-1-ilpo.jarvinen@linux.intel.com/
+Null key is required before any other legit use in initialization.
 
-#regzbot report:
-https://lore.kernel.org/all/20240513135302.1869084-1-dev@kayoway.com/
-#regzbot introduced: b8b8b4e0c052b2c06
-#regzbot summary: ata: ahci: SATA ports to become unusable due to LPM
-#regzbot fix: ata: ahci: Revert "ata: ahci: Add Intel Alder Lake-P AHCI
-controller to  low power chipsets list"
+Even something like=20
 
-#regzbot report:
-https://lore.kernel.org/all/0111018f7508efb1-1206661a-d4b5-4bd1-b54f-ccb8504b8b4a-000000@us-west-1.amazonses.com/
-#regzbot introduced: v6.8..v6.9
-#regzbot summary: i2c-hid: Touchpad Sometimes Fails To Initialize
-Properly On Early Boot
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218836
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -36,6 +36,8 @@ config TCG_TPM2_HMAC
+        bool "Use HMAC and encrypted transactions on the TPM bus"
+        default y
++       select CRYPTO_DRBG
+        select CRYPTO_ECDH
++       select CRYPTO_HMAC
++       select CRYPTO_SHA512
+        select CRYPTO_LIB_AESCFB
+        select CRYPTO_LIB_SHA256
+        help
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218832
-#regzbot introduced: v6.8..v6.9
-#regzbot summary: ide: ACPI cmd f5/00:00:00:00:00:a0(SECURITY FREEZE
-LOCK) filtered out
+would be more decent.
 
-#regzbot report:
-https://lore.kernel.org/stable/20240506182331.8076-1-dan@danm.net/
-#regzbot fix: a222a6470d7eea
+>
+> - Eric
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218845
-#regzbot introduced: 4379f91172f39d999919c8e8b2b5e1d665d89
-#regzbot summary: power/vfs: kernel panic in kernel/power/swap.c
-#regzbot duplicate: https://lore.kernel.org/all/ZkVvuKHV-jdOMnB1@archie.me/
-
+BR, Jarkko
