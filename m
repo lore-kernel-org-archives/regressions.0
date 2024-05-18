@@ -1,147 +1,166 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C7D523A
-	for <regressions@lists.linux.dev>; Sat, 18 May 2024 02:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363B64C8B;
+	Sat, 18 May 2024 04:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715999225; cv=none; b=b6ANszOQCr2lRZY/y2GPlisPLw14Li08428/zsT9mR5qsDo9JORd5cy4kCaum0QQaSRYrofYVRWM0cKS98gCzbYNDyqioTWJNOu0/lJqErlgOsSzgaVAe0UXbB5/EG/ts9radBxFeJPfAgRumfTgWbAInoO7ms24aMuU4SisvC0=
+	t=1716006678; cv=none; b=cWdt4VMc8rHctT/1ySee88JUinZHLtWQ/KqOffx+fk4OQlRo9H+YR13X1dn+soLOX8qiaBVU+rKa3tGXVizSlZo2BFteIHQGuPih/FeNu3I+hCoU7KErXME5YjFNAjtt2RHscDkK7y+iv50UZdpLjjlcJ2dFhopVnRGqONiSSMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715999225; c=relaxed/simple;
-	bh=QZn3hh/vWFRGq9PVcMq3WbkOsCjPcnQpcs8NOTSohQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Hh+hFVJeh2NV4W5z62NCuDtI5aOvTHFcmt42FCAvsHRQdQDHkK0tyrbnVbeNucIOe7SvFe7uD0Mc3EhUNOL7/pmDyLCC0Qlgy4k3r7haxJT/kUpWN4iSSdTEyefMbpu3qcs5BQ96CilRNrifZHtH+omI1eYWDIDHcAvWF/8pD6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=O8+CIgmL; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1716006678; c=relaxed/simple;
+	bh=yHlF0RNK2ZiLjSzvRN9fYJygVVSLmdKT2x521bdwC7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZpo8HEABKhrkp+82dgRsGIJ444nmKBSiaiLztcEtXMWPpwGztFzezEGc1uwYHWSq0suO4EDIYiSUJvfX+XNgbSCJEAkD8qJiMMI70I9Dmt1nLA3pZq8LkfdzMmwEHU7yuwIjJv7/A1jJ+jLTp7b8EGPipx2JaNLkdSeNPC2O4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCTwAgtz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="O8+CIgmL"
-Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44I2QkTg008925
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 22:26:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1715999209; bh=fBNuPesawIQnGyWuvipMnxxc+s1aABzzD9p+pZBeJ/Y=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=O8+CIgmL7yBfXQnXrnpjhdSyeL/lCeyRymgH9AhtYAdfEwXKyNaGtKQ8otOHcrkXN
-	 W3xPCPNce46RGFCSbK71snrXZSDJTon9WqJwJ7egwBx3OGtYvMlKZutRMRGqAdAEUx
-	 arENHKNliBtUU6eeSV6pQT1OJWHD9ElQEX1OFMFm8fd9dqEbGnYgDK7tiX2i9F87h1
-	 fEufGkY/RG7OPgHofHN+5jeaSvE+K+CmEbeTxrMWy+xSNb+9BPpx75SNp52U07NcZS
-	 UjPB/e8T9YAIiM4RuDZfyZSTQAkY9C1bAY5L20JPJfj1DywTozIavY9wlk6LLCcrX1
-	 3729+ZvrQcJMQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 5248015C00DC; Fri, 17 May 2024 22:26:46 -0400 (EDT)
-Date: Fri, 17 May 2024 22:26:46 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
-        linux-ext4@vger.kernel.org, regressions@lists.linux.dev
-Cc: Christoph Hellwig <hch@lst.de>, Mike Snitzer <snitzer@kernel.org>
-Subject: [REGRESSION] dm: use queue_limits_set
-Message-ID: <20240518022646.GA450709@mit.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCTwAgtz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A29CC113CC;
+	Sat, 18 May 2024 04:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716006677;
+	bh=yHlF0RNK2ZiLjSzvRN9fYJygVVSLmdKT2x521bdwC7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TCTwAgtzxxcO1hbNtL5uw9Fdh7H+FT2osw50t6TWju3ccYJ+tvjHbiP+ZhNYy27gK
+	 19wLPSri/cGVdjfWr73MOZfzNN/tvYWtYEnNwYaHE99dmcVHO4hUcwR5MmA40/hlkf
+	 MTxPqFNtOXMu67CnuvD7wAAsX3qXUj0hkcMw/O6Gx38QEqNwlLQObkfezhCD63nIMY
+	 2FpxIO9+rcoXSAqlO761WTECJJukBkWnMEDlTnhBpd/EOjDoAfv/M36XNmYSbDCGAB
+	 selUJIx7EgcCHjFCB7niRXOGa0TkmzLVuiVBlVRsCEOzOiKEMYDeLNkHdlStlcJhsR
+	 5Kmd/5BcbgA+Q==
+Date: Fri, 17 May 2024 21:31:15 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	regressions@lists.linux.dev, kernel@collabora.com
+Subject: Re: [PATCH v8 18/22] tpm: add session encryption protection to
+ tpm2_get_random()
+Message-ID: <20240518043115.GA53815@sol.localdomain>
+References: <20240429202811.13643-1-James.Bottomley@HansenPartnership.com>
+ <20240429202811.13643-19-James.Bottomley@HansenPartnership.com>
+ <119dc5ed-f159-41be-9dda-1a056f29888d@notapiano>
+ <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
+ <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+ <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
+ <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
 
-#regzbot introduced: 1c0e720228ad
+On Fri, May 17, 2024 at 07:48:48PM +0300, Jarkko Sakkinen wrote:
+> On Fri May 17, 2024 at 7:22 PM EEST, Nícolas F. R. A. Prado wrote:
+> > On Fri, May 17, 2024 at 07:25:40AM -0700, James Bottomley wrote:
+> > > On Fri, 2024-05-17 at 15:43 +0200, Ard Biesheuvel wrote:
+> > > > On Fri, 17 May 2024 at 15:35, James Bottomley
+> > > > <James.Bottomley@hansenpartnership.com> wrote:
+> > > [...]
+> > > > > Thanks for the analysis.  If I look at how CRYPTO_ECC does it, that
+> > > > > selects CRYPTO_RNG_DEFAULT which pulls in CRYPTO_DRBG, so the fix
+> > > > > would be the attached.  Does that look right to you Ard?
+> > > > 
+> > > > No it doesn't - it's CRYPTO_RNG_DEFAULT not CRYTPO_RNG_DEFAULT :-)
+> > > > 
+> > > > With that fixed,
+> > > > 
+> > > > Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> > > 
+> > > Erm, oops, sorry about that; so attached is the update.
+> > > 
+> > > James
+> > > 
+> > > ---8>8>8><8<8<8---
+> > > 
+> > > From 2ac337a33e6416ef806e2c692b9239d193e8468f Mon Sep 17 00:00:00 2001
+> > > From: James Bottomley <James.Bottomley@HansenPartnership.com>
+> > > Date: Fri, 17 May 2024 06:29:31 -0700
+> > > Subject: [PATCH] tpm: Fix sessions cryptography requirement for Random Numbers
+> > > MIME-Version: 1.0
+> > > Content-Type: text/plain; charset=UTF-8
+> > > Content-Transfer-Encoding: 8bit
+> > > 
+> > > The ECDH code in tpm2-sessions.c requires an initial random number
+> > > generator to generate the key pair.  If the configuration doesn't have
+> > > CONFIG_RNG_DEFAULT, it will try to pull this in as a module (which is
+> > > impossible for the early kernel boot where the TPM starts).  Fix this
+> > > by selecting the required RNG.
+> > > 
+> > > Reported-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> > > Fixes: 1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_random()")
+> > > Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> > > Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> > > ---
+> > >  drivers/char/tpm/Kconfig | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > > index 4f83ee7021d0..ecdd3db4be2b 100644
+> > > --- a/drivers/char/tpm/Kconfig
+> > > +++ b/drivers/char/tpm/Kconfig
+> > > @@ -31,6 +31,7 @@ config TCG_TPM2_HMAC
+> > >  	bool "Use HMAC and encrypted transactions on the TPM bus"
+> > >  	default y
+> > >  	select CRYPTO_ECDH
+> > > +	select CRYPTO_RNG_DEFAULT
+> > >  	select CRYPTO_LIB_AESCFB
+> > >  	select CRYPTO_LIB_SHA256
+> > >  	help
+> > > -- 
+> > > 2.35.3
+> > > 
+> > > 
+> >
+> > Hi James,
+> >
+> > thanks for the patch. But I actually already had that config enabled builtin. I
+> > also had ECDH and DRBG which have been suggested previously:
+> >
+> > 	CONFIG_CRYPTO_RNG_DEFAULT=y
+> >
+> > 	CONFIG_CRYPTO_DRBG_MENU=y
+> > 	CONFIG_CRYPTO_DRBG_HMAC=y
+> > 	# CONFIG_CRYPTO_DRBG_HASH is not set
+> > 	# CONFIG_CRYPTO_DRBG_CTR is not set
+> > 	CONFIG_CRYPTO_DRBG=y
+> >
+> > 	CONFIG_CRYPTO_ECDH=y
+> >
+> > I've pasted my full config here: http://0x0.st/XPN_.txt
+> >
+> > Adding a debug print I see that the module that the code tries to load is
+> > "crypto-hmac(sha512)". I would have expected to see 
+> >
+> > 	MODULE_ALIAS_CRYPTO("hmac(sha512)");
+> >
+> > in crypto/drbg.c, but I don't see it anywhere in the tree. Maybe it is missing?
+> 
 
-While doing final regression testing before sending a pull request for
-the ext4 tree, I found a regression which was triggered by generic/347
-and generic/405 on on multiple fstests configurations, including
-both ext4/4k and xfs/4k.
+This is "normal" behavior when the crypto API instantiates a template:
 
-It bisects cleanly to commit 1c0e720228ad ("dm: use
-queue_limits_set"), and the resulting WARNING is attached below.  This
-stack trace can be seen for both generic/347 and generic/405.  And if
-I revert this commit on top of linux-next, the failure goes away, so
-it pretty clearly root causes to 1c0e720228ad.
+    1. drbg.c asks for "hmac(sha512)"
 
-For now, I'll add generic/347 and generic/405 to my global exclude
-file, but maybe we should consider reverting the commit if it can't be
-fixed quickly?
+    2. The crypto API looks for a direct implementation of "hmac(sha512)".
+       This includes requesting a module with alias "crypto-hmac(sha512)".
 
-Thanks,
+    3. If none is found, the "hmac" template is instantiated instead.
 
-      	  	   	  	   	     - Ted
+There are two possible fixes for the bug.  Either fix ecc_gen_privkey() to just
+use get_random_bytes() instead of the weird crypto API RNG, or make
+drbg_init_hash_kernel() pass the CRYPTO_NOLOAD flag to crypto_alloc_shash().
 
-% git show 1c0e720228ad
-commit 1c0e720228ad1c63bb487cdcead2558353b5a067
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Wed Feb 28 14:56:42 2024 -0800
+Or if the TPM driver could be changed to not need to generate an ECC private key
+at probe time, that would also avoid this problem.
 
-    dm: use queue_limits_set
-    
-    Use queue_limits_set which validates the limits and takes care of
-    updating the readahead settings instead of directly assigning them to
-    the queue.  For that make sure all limits are actually updated before
-    the assignment.
-    
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-    Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-  ...    
-
-% git checkout 1c0e720228ad
-% install-kconfig ; kbuild
-% kvm-xfstests -c xfs/4k generic/347
-
-BEGIN TEST 4k (1 test): XFS 4k block Fri May 17 22:03:06 EDT 2024
-DEVICE: /dev/vdd
-XFS_MKFS_OPTIONS: -bsize=4096
-XFS_MOUNT_OPTIONS: 
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 kvm-xfstests 6.9.0-rc2-xfstests-00006-g1c0e720228ad #335 SMP PREEMPT_DYNAMIC Fri May 17 22:02:37 EDT 2024
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/vdc
-MOUNT_OPTIONS -- /dev/vdc /vdc
-
-[    3.179146] XFS (vdd): EXPERIMENTAL online scrub feature in use. Use at your own risk!
-generic/347 65s ...  [22:03:06][    3.389241] run fstests generic/347 at 2024-05-17 22:03:06
-[    4.032221] ------------[ cut here ]------------
-[    4.033087] WARNING: CPU: 1 PID: 30 at drivers/md/dm-bio-prison-v1.c:128 dm_cell_key_has_valid_range+0x3d/0x50
-[    4.034871] CPU: 1 PID: 30 Comm: kworker/u8:1 Not tainted 6.9.0-rc2-xfstests-00006-g1c0e720228ad #335
-[    4.035440] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[    4.035829] Workqueue: dm-thin do_worker
-[    4.035998] RIP: 0010:dm_cell_key_has_valid_range+0x3d/0x50
-[    4.036236] Code: c1 48 29 d1 48 81 f9 00 04 00 00 77 1d 48 83 e8 01 48 c1 ea 0a b9 01 00 00 00 48 c1 e8 0a 48 39 c2 75 12 89 c8 c3 cc cc cc cc <0f> 0b 31 c9 89 c8 c3 cc cc cc cc 0f 0b 31 c9 eb e8 66 90 90 90 90
-[    4.037024] RSP: 0018:ffffc90000107d18 EFLAGS: 00010206
-[    4.037249] RAX: 0000000000000fff RBX: 0000000000000000 RCX: 0000000000000fff
-[    4.037556] RDX: 0000000000000000 RSI: 0000000000000fff RDI: ffffc90000107d28
-[    4.037923] RBP: ffff888009aa7b40 R08: ffff888009aa7bc0 R09: ffff888003e7b980
-[    4.038247] R10: 0000000000000008 R11: fefefefefefefeff R12: ffff8880097ca5b8
-[    4.038545] R13: 0000000000000fff R14: ffff8880097ca5b8 R15: ffff88800f4fc400
-[    4.038843] FS:  0000000000000000(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-[    4.039228] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    4.039472] CR2: 0000564ad92d7c00 CR3: 000000000f73e006 CR4: 0000000000770ef0
-[    4.039774] PKRU: 55555554
-[    4.039892] Call Trace:
-[    4.040000]  <TASK>
-`[    4.040094]  ? __warn+0x7b/0x120
-[    4.040235]  ? dm_cell_key_has_valid_range+0x3d/0x50
-[    4.040473]  ? report_bug+0x174/0x1c0
-[    4.040635]  ? handle_bug+0x3a/0x70
-[    4.040789]  ? exc_invalid_op+0x17/0x70
-[    4.040958]  ? asm_exc_invalid_op+0x1a/0x20
-[    4.041163]  ? dm_cell_key_has_valid_range+0x3d/0x50
-[    4.041397]  process_discard_bio+0xba/0x190
-[    4.041597]  process_thin_deferred_bios+0x290/0x3e0
-[    4.041806]  process_deferred_bios+0xba/0x2e0
-[    4.041994]  do_worker+0xf5/0x160
-[    4.042139]  process_one_work+0x18a/0x3d0
-[    4.042311]  worker_thread+0x285/0x3a0
-[    4.042470]  ? __pfx_worker_thread+0x10/0x10
-[    4.042655]  kthread+0xdd/0x110
-[    4.042795]  ? __pfx_kthread+0x10/0x10
-[    4.042979]  ret_from_fork+0x31/0x50
-[    4.043153]  ? __pfx_kthread+0x10/0x10
-[    4.043317]  ret_from_fork_asm+0x1a/0x30
-[    4.043490]  </TASK>
-[    4.043586] ---[ end trace 0000000000000000 ]---
-[    4.043784] device-mapper: thin: Discard doesn't respect bio prison limits
-[    4.044142] device-mapper: thin: Discard doesn't respect bio prison limits
-[    4.044585] device-mapper: thin: Discard doesn't respect bio prison limits
-[    6.410678] device-mapper: thin: 253:2: reached low water mark for data device: sending event.
+- Eric
