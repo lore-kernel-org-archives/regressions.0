@@ -1,70 +1,45 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5596717BD8
-	for <regressions@lists.linux.dev>; Sat, 18 May 2024 13:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4366B7492;
+	Sun, 19 May 2024 04:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716039888; cv=none; b=se55Bmirc51LAfXplPqOiKmvhcHyaxykgU0rKAiNpEE3FfiWMvVdEJ759d4fb2HzFsXLtUlPrYfc6hDVhJrTJveF4ocfjSAYL4I7Vd1lZuZ512c9+necWItZjLLreJHzadzY5QQxrEEKjr/hSe9LIanMGKI4q1KITmXS7ccMfwg=
+	t=1716092408; cv=none; b=slgJstm+pe9XNRN/ErVNZwcVdZMukmkXbHtwuXYDYOejFuPKYI+piPHjesvF15Ci5BjEJBZ/eU4WdAGgdX7TNs1ED9VP+Kzq/uVinaHnbnpKPQR8ZdAfIwkD9htUqKWZaTFhUQJfLPNhQ4XOarx6su6Fm7/4d6VozS934ftWRoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716039888; c=relaxed/simple;
-	bh=gp5ecGd/vox+YzD8rCxC/+qOZWzTSc3PVPkyeqd5XUU=;
+	s=arc-20240116; t=1716092408; c=relaxed/simple;
+	bh=KSFNkUecnxYaZfX2XSP4Ln26Z+CZ5J+ihB7wjteqxRw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2thBEGVJ1llytLXyFlQHrrG07lrN3mVNlk/ZdmGjDQyVgyZ2Mzk2E2EvgvCbMebh2RjOO5zOpHjQRSXzS3T6nuxFOOdXW4TwjloZ1nFGZM52IYFSG7G6CnOSX9E6/TCwRI1UTv4hnDbRPCLzNygW2N3HZCarHOM3uvOtcn9gnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jc8XDfJb; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jc8XDfJb"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f082d92864so35938725ad.1
-        for <regressions@lists.linux.dev>; Sat, 18 May 2024 06:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716039886; x=1716644686; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iV38s3ZQJx3Kgselwge3nkBx0x14PzQSCscFqdNdozk=;
-        b=Jc8XDfJbadYR8woxDWzRxkBdoHeePVFJZNMplSDANwe5ZCj7p/wFE4BqZjCgw2Ejpf
-         kg902k7ra3DpLPR6BhiytS+Qxv/1NIGG7Nw3NPTITiq1o4RBLm3ti9I2efHeWe2WRo5v
-         OQHJ475V8USyAXDGIGWomLDiACB+IGhNR4G0eQb8oOiftoYkWHVbRhYudtdn8/Bov3U3
-         H3+gJ3CWHNDb41YelRG91j0lf0U4ct8Opa08ARxUaounqtM6RDkiNwVlST7uib1LxBUR
-         mSAg2CbB/BNxw2XT7CrfX8TTbpvwliv9CKuwzlvmSPmGwcaOVcdbOa/PMdyjwrNxy8Cc
-         6C1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716039886; x=1716644686;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iV38s3ZQJx3Kgselwge3nkBx0x14PzQSCscFqdNdozk=;
-        b=bHe7du3IsfI5Sq0egfgJb37iOvH49JEWzlQRg32uDKGNNer9ypFVvRMyTRAfvGo9Yq
-         6sqYmzvPh1i2GnA04t50oRsBzZw3y24IAlkYrGZ3ff+XeMjcLJDgf96HWHkiRTWgXfNo
-         4CQQNuthoKuZvM+npfsbvy0+872MH1pNfVDZAfv/9f/Xn4+JlV/4mJqoY6G5nMn9aAW0
-         Xoa48I4D/4B/slZxj/3J33Olp73WV5LIzPJmMCy0utGeSpCyYf9vtKruiEp1i9nOgAWo
-         rh5WkTLev66NdgG7j3CDEJ+S3hpNSL9MFeB491tSJiIKQrG0lyB+aorVk+H+lUShxJ03
-         Y05A==
-X-Forwarded-Encrypted: i=1; AJvYcCXLvsFTAWmzLkGQKvpBzg6QMELQb+rpxWJSG08RrBFsSVhEfHZJETMA6Qvb2GBqS84o7mt2kZsxaxEfhXzK1M8ao+zGLCH9fWxzuVk=
-X-Gm-Message-State: AOJu0YwjXIEbMlLOXZ9et3Y+mTc5xEXqxzA9oP95ngJV88goOH1rAS3c
-	jjvlOvtRD84Irqj4nGrt7xVUHZK2MjCnWsu6iqX8J7tnFsQOhxFz
-X-Google-Smtp-Source: AGHT+IHcBr2qrfJZ1Mp5jBSDRfEqOGVjO7WJ8kAO3F6084tG6wYfwsoNSkZgikEHWvRdyHQWsHbK8w==
-X-Received: by 2002:a05:6a20:2447:b0:1aa:5ca9:c565 with SMTP id adf61e73a8af0-1afde0a8dc5mr28212863637.8.1716039886438;
-        Sat, 18 May 2024 06:44:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13823asm173999915ad.263.2024.05.18.06.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 May 2024 06:44:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 18 May 2024 06:44:43 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
-	sboyd@kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
- entries
-Message-ID: <2119a681-7e02-4ab4-9ea5-102ba2924771@roeck-us.net>
-References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
- <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aaSzDhdguvN4f+YraR95uDiMo9ImddrSGIko9ap+2fEQo2JtBpePq04GxZWbo4Bv8Upq7AXwr7SSYsJOektk6DASYPNbdLNGn0/oO0Ocxqlyl3+5DOytv8Ax+WugtQkDEUFUdH/7U074xUXbN+6A24QrgasnIgVbISyRx9cibLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1s8Y1b-00HFcI-19;
+	Sun, 19 May 2024 12:19:56 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 19 May 2024 12:19:56 +0800
+Date: Sun, 19 May 2024 12:19:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	regressions@lists.linux.dev, kernel@collabora.com
+Subject: Re: [PATCH] crypto: api - Do not load modules until algapi is ready
+Message-ID: <Zkl97G-y7ZvTK5Pf@gondor.apana.org.au>
+References: <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
+ <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
+ <20240518043115.GA53815@sol.localdomain>
+ <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+ <D1CPYHVR94JS.1DIGZUQ2H3NCI@kernel.org>
+ <Zkif-BI_OFnFbDhv@gondor.apana.org.au>
+ <3A150785-8EE3-4B53-9E71-4DE49C6751B0@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -73,43 +48,23 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
+In-Reply-To: <3A150785-8EE3-4B53-9E71-4DE49C6751B0@HansenPartnership.com>
 
-On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
-> > Report an error when an attempt to register a clkdev entry results in a
-> > truncated string so the problem can be easily spotted.
-> > 
-> > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> 
-> With this patch in the mainline kernel, I get
-> 
-> 10000000.clock-controller:corepll: device ID is greater than 24
-> sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for corepll: -12
-> sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
-> sifive-clk-prci 10000000.clock-controller: probe with driver sifive-clk-prci failed with error -12
-> ...
-> platform 10060000.gpio: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> platform 10010000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> platform 10011000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> platform 10040000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> platform 10050000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> platform 10090000.ethernet: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> 
-> when trying to boot sifive_u in qemu.
-> 
-> Apparently, "10000000.clock-controller" is too long. Any suggestion on
-> how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
-> for clk_hw_register_clkdev() is not or no longer a good idea.
-> What else should be used instead ?
-> 
+On Sat, May 18, 2024 at 06:07:39AM -0700, James Bottomley wrote:
+>
+> I have a curiosity question: if Eric is right and it's looking for an optional hmac accelerator module, why don't I see this?  The only real config difference between what I tested and what Nicholas did is he's arm and I'm x86.
 
-Copying regzbot.
+It depends on your kernel config.  Perhaps you didn't build the
+TPM driver into the kernel?
 
-#regzbot ^introduced 8d532528ff6a
-#regzbot title sifive_u boot failure
-#regzbot ignore-activity
+It's not an issue with an optional algorithm that's not included.
+
+It's the fact the Crypto API tries to load a module for any
+algorithm that requires instantiation (anything with "()" in its
+name).
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
