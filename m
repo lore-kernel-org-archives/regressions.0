@@ -1,45 +1,52 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4366B7492;
-	Sun, 19 May 2024 04:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9B03D60
+	for <regressions@lists.linux.dev>; Sun, 19 May 2024 05:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716092408; cv=none; b=slgJstm+pe9XNRN/ErVNZwcVdZMukmkXbHtwuXYDYOejFuPKYI+piPHjesvF15Ci5BjEJBZ/eU4WdAGgdX7TNs1ED9VP+Kzq/uVinaHnbnpKPQR8ZdAfIwkD9htUqKWZaTFhUQJfLPNhQ4XOarx6su6Fm7/4d6VozS934ftWRoM=
+	t=1716095144; cv=none; b=lWpbB7beHa6SEw2zk3/MicADzFhor1kXTqjClAdvPBhIRXVBPN29d8YbPAoY6Lc04aMxJnEQXKd4x8Su8m6UamBTRKo9QrLHNFSTaQuDj+xOUN3E88iOcrlBFfsXu71MpfxDZ9d0ttOHwBvVN6d/J3lPZu8O9RhkcgCLX7oIkDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716092408; c=relaxed/simple;
-	bh=KSFNkUecnxYaZfX2XSP4Ln26Z+CZ5J+ihB7wjteqxRw=;
+	s=arc-20240116; t=1716095144; c=relaxed/simple;
+	bh=luobphtaggRTIHX34O6jyVWEXnFxOjMsxGKaQRu+p7w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaSzDhdguvN4f+YraR95uDiMo9ImddrSGIko9ap+2fEQo2JtBpePq04GxZWbo4Bv8Upq7AXwr7SSYsJOektk6DASYPNbdLNGn0/oO0Ocxqlyl3+5DOytv8Ax+WugtQkDEUFUdH/7U074xUXbN+6A24QrgasnIgVbISyRx9cibLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1s8Y1b-00HFcI-19;
-	Sun, 19 May 2024 12:19:56 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 19 May 2024 12:19:56 +0800
-Date: Sun, 19 May 2024 12:19:56 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
-	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	regressions@lists.linux.dev, kernel@collabora.com
-Subject: Re: [PATCH] crypto: api - Do not load modules until algapi is ready
-Message-ID: <Zkl97G-y7ZvTK5Pf@gondor.apana.org.au>
-References: <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
- <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
- <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
- <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
- <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
- <20240518043115.GA53815@sol.localdomain>
- <ZkhS1zrobNwAuANI@gondor.apana.org.au>
- <D1CPYHVR94JS.1DIGZUQ2H3NCI@kernel.org>
- <Zkif-BI_OFnFbDhv@gondor.apana.org.au>
- <3A150785-8EE3-4B53-9E71-4DE49C6751B0@HansenPartnership.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWHedUEOML9j1UiDFCtUTcOT1yN7PR3WVYrN5fteim9RXokFuLV/BbIIbXw6JqDzmiWJO56/cGDvumeb0Ic25GOS4h/pPerFZOr2UmmC5IKnofkCxVWayX74plVZesgdq2h2NPQMAcDcZZZQrdtIE4WzDxj5biZRo1iyoNnSR50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43df3b00becso7453621cf.2
+        for <regressions@lists.linux.dev>; Sat, 18 May 2024 22:05:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716095142; x=1716699942;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P0vRva3h81x8N2Kbd4V8azo7Ww7WsqKpR54YqM9Pj9o=;
+        b=YA33Mf8zEEBBmuWM/xw8gLBC2cLdZwXi+8j2qNUNIx643kzPCa+JPgFraIFsr/3MhX
+         jQoMqdtYhjdnlvdu2ZXufo/YfH3VW4VgQfuLWWpThf8UyjtlgdXbBQ5nzLohnlYL4Q1J
+         x4P0eXMOBI/jO8Ht0d/WlrOw2pB03E8RfXH3C7ImaLJPQD5fB0lZgOA+H3xUqzXyld5l
+         HTJNyWSCbtReY5s0lrcX3QUjxkZ6iPvQDB1JQyaGBFAItZU4P0pO3jEZ/7wAD9UL6ptI
+         rlKlwoPYAjKW6SXSHUZ+yEqLRimr/6PBeCBwQvylJn9vZhxTKdWkHvJU72BMi2+mns3m
+         Mz7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUSMORPn0rYfPeI58oVnC+yFgtBFe3jwbGjc2F618d4pHQ1tO0Br2lJxWBqsCitcN8UOy7wIQjMck9U87fI3knbtKzP9M7pzke+Mjg=
+X-Gm-Message-State: AOJu0YzmyqAIwiSNbsfhPuqdY/8YR4/zBPeIZDuKsLNYatSVwMye4CLd
+	XRW86FlVMLDU3droioH8QrrJr99YP98I5HKEfRb7BrqdSqh+e1r1a02QBkA59E4=
+X-Google-Smtp-Source: AGHT+IH4+X4dYat+1w6SQ8pKv9TOYZD2hGahJqFKm/DkjBIlpUwIF256nHrcgELwcfTSVg9kuxO9dQ==
+X-Received: by 2002:ac8:5954:0:b0:43a:c483:9fc3 with SMTP id d75a77b69052e-43dfdb299c0mr303159331cf.26.1716095142237;
+        Sat, 18 May 2024 22:05:42 -0700 (PDT)
+Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e217a6fd9sm80501131cf.42.2024.05.18.22.05.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 May 2024 22:05:41 -0700 (PDT)
+Date: Sun, 19 May 2024 01:05:40 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
+	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org
+Subject: Re: dm: use queue_limits_set
+Message-ID: <ZkmIpCRaZE0237OH@kernel.org>
+References: <20240518022646.GA450709@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,23 +55,73 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3A150785-8EE3-4B53-9E71-4DE49C6751B0@HansenPartnership.com>
+In-Reply-To: <20240518022646.GA450709@mit.edu>
 
-On Sat, May 18, 2024 at 06:07:39AM -0700, James Bottomley wrote:
->
-> I have a curiosity question: if Eric is right and it's looking for an optional hmac accelerator module, why don't I see this?  The only real config difference between what I tested and what Nicholas did is he's arm and I'm x86.
+Hi Ted,
 
-It depends on your kernel config.  Perhaps you didn't build the
-TPM driver into the kernel?
+On Fri, May 17, 2024 at 10:26:46PM -0400, Theodore Ts'o wrote:
+> #regzbot introduced: 1c0e720228ad
+> 
+> While doing final regression testing before sending a pull request for
+> the ext4 tree, I found a regression which was triggered by generic/347
+> and generic/405 on on multiple fstests configurations, including
+> both ext4/4k and xfs/4k.
+> 
+> It bisects cleanly to commit 1c0e720228ad ("dm: use
+> queue_limits_set"), and the resulting WARNING is attached below.  This
+> stack trace can be seen for both generic/347 and generic/405.  And if
+> I revert this commit on top of linux-next, the failure goes away, so
+> it pretty clearly root causes to 1c0e720228ad.
+> 
+> For now, I'll add generic/347 and generic/405 to my global exclude
+> file, but maybe we should consider reverting the commit if it can't be
+> fixed quickly?
 
-It's not an issue with an optional algorithm that's not included.
+Commit 1c0e720228ad is a red herring, it switches DM over to using
+queue_limits_set() which I now see is clearly disregarding DM's desire
+to disable discards (in blk_validate_limits).
 
-It's the fact the Crypto API tries to load a module for any
-algorithm that requires instantiation (anything with "()" in its
-name).
+It looks like the combo of commit d690cb8ae14bd ("block: add an API to
+atomically update queue limits") and 4f563a64732da ("block: add a
+max_user_discard_sectors queue limit") needs fixing.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This being one potential fix from code inspection I've done to this
+point, please see if it resolves your fstests failures (but I haven't
+actually looked at those fstests yet _and_ I still need to review
+commits d690cb8ae14bd and 4f563a64732da further -- will do on Monday,
+sorry for the trouble):
+
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index cdbaef159c4b..c442f7ec3a6b 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -165,11 +165,13 @@ static int blk_validate_limits(struct queue_limits *lim)
+ 	lim->max_discard_sectors =
+ 		min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors);
+ 
+-	if (!lim->max_discard_segments)
+-		lim->max_discard_segments = 1;
++	if (lim->max_discard_sectors) {
++		if (!lim->max_discard_segments)
++			lim->max_discard_segments = 1;
+ 
+-	if (lim->discard_granularity < lim->physical_block_size)
+-		lim->discard_granularity = lim->physical_block_size;
++		if (lim->discard_granularity < lim->physical_block_size)
++			lim->discard_granularity = lim->physical_block_size;
++	}
+ 
+ 	/*
+ 	 * By default there is no limit on the segment boundary alignment,
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 88114719fe18..e647e1bcd50c 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1969,6 +1969,7 @@ int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 		blk_queue_flag_clear(QUEUE_FLAG_NOWAIT, q);
+ 
+ 	if (!dm_table_supports_discards(t)) {
++		limits->max_user_discard_sectors = 0;
+ 		limits->max_hw_discard_sectors = 0;
+ 		limits->discard_granularity = 0;
+ 		limits->discard_alignment = 0;
