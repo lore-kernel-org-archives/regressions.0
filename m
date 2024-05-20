@@ -1,116 +1,212 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4FA219FD
-	for <regressions@lists.linux.dev>; Mon, 20 May 2024 09:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196788; cv=none; b=li2xbdkPxyoO84upa6/kjTLB8hJ9sQqRuWd11pLwkhKpsTjGC4sk+njKQr+CyZatcwU3cSdC5Frp1pxx6Y/WkvDTRAkEVR003Bjrn2iVMJdsYwzs1zts7I+9qARKeBJF8unQl6B1Lo6FaYyhhlhhio2tV/t8oPuulou1nN7fyTQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196788; c=relaxed/simple;
-	bh=WNf6P72bcYi1f7Q/YxEur95rQekBz1J8C+FdIR6DQV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C4eT+NO3IG0TE5S3bp70Q0vFk3coo275igz+z7GFmMYRbywtOZlUDbQNfKuF6068n+aOr9C0Pp5eykQ4sGjgLXx2yLuAR8jZZNPvXnPg0DsNrBJMQQfpBUuZ0z10cnUmKNmWo39RCNWwrjKCiLwTNbqk3CxTvJIGPZXwW1i8ftw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GxEAcEap; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4990245026
+	for <regressions@lists.linux.dev>; Mon, 20 May 2024 13:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716212612; cv=fail; b=bsAlEG6sCyXCYuiygUsQ3SRs1B/ATZENy3UOj5gGGdXA3noUY7wf5RnZbI8hCA9dXxFYaEOZ2Eb3kc1Bw9NWdGsmhGRbHDj/APY5Cv/KbR+HKWuhqBaCR6HjlqWlkdF+uIO47veJiMRrQyKYM1JOTNk9ZnOsnZWC9kgvs4F6hRk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716212612; c=relaxed/simple;
+	bh=nZEKZAIDOmZF8tb7ad5LCN8x8WO0Z6Mm9iqQZ0V2Spk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oe7bu8uPJpjxzWybppPFqO+CV6UuywgSqpHBvq0XE0+OIqYcruBoYbpm3soq2pkJLRU2zBOMSkSTuddvaGDFyDP2p4UXz4OnWj097ksoHD+y1PJ+rz4Ov2lSg85nFKzJKRfhU4W0k99MgluNFZRHkEsiLazUpGhrtEPQTxUugP0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Z12bAm7K; arc=fail smtp.client-ip=40.107.223.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxEAcEap"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f05b669b6cso65822075ad.3
-        for <regressions@lists.linux.dev>; Mon, 20 May 2024 02:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716196786; x=1716801586; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WNf6P72bcYi1f7Q/YxEur95rQekBz1J8C+FdIR6DQV4=;
-        b=GxEAcEapz0/UZSQFlNSSX5WRaQTo1kCoTdf6q+LBDGi9zehIOv5Qga4EtuAvODT9it
-         uVD3wUagXOA3rFOsJJoz2J8QbAiZEMB6dq7nRXfUu22tpMjWwMPnkNNDpmhQ5rYhk3Ol
-         buXFU9FMHL64928ZSK8pXJDaOTef707bxIl0YT3Wn3j1wNnWIYFIf3SrQr8IlU0e42eG
-         juzZ+jk07wZrBaS3fpCpqgiVws+4+wdFqLvst8J2mLn6hVrrOexMp5NvVr5JE5dBuzx3
-         kJi4LGinsslbpXQV2Ekm+BpZ+HdxhhpK617Ipcn3xGoGoaYr/7+XBrUa0yJXWNzCJC5R
-         F71Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716196786; x=1716801586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WNf6P72bcYi1f7Q/YxEur95rQekBz1J8C+FdIR6DQV4=;
-        b=w3JsvCEPVP6XS9aAkjAbgeQT7caRPjK/rOFc+/T/BYIuZkyW/5ZId+trQN9LXEBa5u
-         INuGF/kkTnC8JvsGSiJ+q0xLhEz1VjaCbjm/YjO1i+Qbm780YNoDhobwL+5V82PM/m73
-         e+9fEIEW0aGfPdHLnxXGUSZfWA/TELvsqcAim4F/5DIY+4zPhtIdwtEaZuTAMmw4SgQj
-         pR+GFHbGwLoOBirhtu9MB6V3Uap+T9eEeIDlBlPOOCFu9BI5maNXAdCIhWY/WAbwjGU6
-         fpBT7wj1NvCnEkGBZ7KisyCjPrvgbY0FV4IWEPAA2cmqZeKNjjWUKEqx1mNAWENUQQvg
-         H6jg==
-X-Gm-Message-State: AOJu0Yy8DsJa085WP/doGTB5z5upab3WaFXiW3LVWgU0f8BvUyOLlFXr
-	0rQmoOiWNj/c6ku9gS0e+nF5SO8lEoYf7aVAKmktaGGO2dUKnQqlEoxdEveP4Ylu0xSPeJXvvMI
-	9B3Jh2T1eP5eHD1bx3Eha+qRS+iNgfrOOWj4=
-X-Google-Smtp-Source: AGHT+IHA5ALO4rDjGdGMuE0iLP0CBzKlLf/Vl3GUmnak99XjEEyqobY19GgnDDHEooirsYv6X0jKdzTSMgl0uYQLXNY=
-X-Received: by 2002:a17:90a:a083:b0:2b6:24cf:5c32 with SMTP id
- 98e67ed59e1d1-2b6cd0e7f04mr21993872a91.49.1716196785903; Mon, 20 May 2024
- 02:19:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Z12bAm7K"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LNRTsCxmuxuyVC2I3J1o7VUQR2xy5tO7m3ol6nTK1uXGtm4MzM9QfMuGJaXHUI573xj1nbffFEM/hyCmjXMKPSdW4Sj9wT3bVZ0LnSMNnzvarwzrvnV855ihiCHfdk/JbidNh7IWoSQ33Xzz01G2sg8pGw1uuHoYRGPlPjBXADcQE/gQoZcmT2Y/2272Av2tZ5SMEg7tCsgP7GcuZmzohf7z9RnjfdkxDUQIakawuZ/vbZWvY+5M3Gwlz+WfRQ/lNzrVtOwzOKLLhyEqMJ5fEjag693sPpSbY0UW7r6HtVCa0JdIfcb2AD4vFEu+GkwYclrNz8WheT7yEJr5OiNE3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KExpjFiX8x5OAFGEEJh2XmCH7fsYlMVuow9qzAUZjIw=;
+ b=jjJ5LNcDg9Mnn1fD9POI1j7sRxlndZgUf0LBMJ2g5LaXfhkNHf9z7Zq51mm+YS9/RM8gCveug1byqD6Tu3oLIXmht0leo7MKuj4mzd/yopCm67VCuAq7VlbvVmCfNwhMyuiPk+tY3RuoF88XDx4ZaKRJVGCrOPAw/D6sj15Q2c48dO8Y1hDuAv4rTaZgu/dqSBVeX2FiVGUsSHoV8hVv/n3pKu3ZsbnyUVjQA6BuR3CjpRKyyek0WgOANfOb8Gq8cEqpPkimJtWLGZ2cOdCzbcEUJXjz2Sc8sN5JGejt2Q/S55KplGoN5qxg0N+oG/fPNMy/70ybvHqt23fFGbc1hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KExpjFiX8x5OAFGEEJh2XmCH7fsYlMVuow9qzAUZjIw=;
+ b=Z12bAm7KJIDIuHMZ+ibE1SfXvP1fc3DDUzfeMkWMMLilWA9A+hpl38ELQANkQFfLoE/5bBU1y9HsTCsZWOJrGdvcDKVFhwMFY39NLEJWyD+Il8Ap0b0TIBAVnIWazLblJCzvDI/76Wl/IJyKyRMYaPCvoRIygIoNUq/dyzJG5EM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CY5PR12MB6621.namprd12.prod.outlook.com (2603:10b6:930:43::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.34; Mon, 20 May
+ 2024 13:43:28 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7587.030; Mon, 20 May 2024
+ 13:43:28 +0000
+Message-ID: <9659dd5d-af8d-4100-8fc1-ceca42223827@amd.com>
+Date: Mon, 20 May 2024 08:43:25 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Thunderbolt Host Reset Change Causes eGPU
+ Disconnection from 6.8.7=>6.8.8
+To: Gia <giacomo.gio@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>, kernel@micha.zone
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
+ <CAHe5sWYnbJAjGp66Q4H0W_yk9uYTcERmW=sPvJSWTsqbFZFCVg@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CAHe5sWYnbJAjGp66Q4H0W_yk9uYTcERmW=sPvJSWTsqbFZFCVg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1P222CA0117.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c5::23) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
- <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
-In-Reply-To: <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
-From: Gia <giacomo.gio@gmail.com>
-Date: Mon, 20 May 2024 11:19:34 +0200
-Message-ID: <CAHe5sWYnbJAjGp66Q4H0W_yk9uYTcERmW=sPvJSWTsqbFZFCVg@mail.gmail.com>
-Subject: Re: [REGRESSION] Thunderbolt Host Reset Change Causes eGPU
- Disconnection from 6.8.7=>6.8.8
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, kernel@micha.zone, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CY5PR12MB6621:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a52ad10-1efe-4584-d549-08dc78d2d42e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MVN6MjREMDFlYkQ2M2NxVWV6R0Fna2wvdEFOb3o1OHc1T0t1Zys1ajJIcnFZ?=
+ =?utf-8?B?ZllvTXducjRCa2dTSGFtN0JkWGJuK0hrbWFPT3RrRUJRSlVQaHNRVEhJcUxt?=
+ =?utf-8?B?bnJieFAzc0Vzc2JvRVpFc1grNWFXY0RuM2hHU21VVXVZK3ozUElYUHJISGdE?=
+ =?utf-8?B?WkNPUms1QlFBNU9JbTlmY3JoMHFXczlCTmNmR2hwa0VBZDlZRVZRU2ZBRVNi?=
+ =?utf-8?B?MU9LWUFuQnljYjVRYitURDRsUGJmZkdxdThHMFdnV3NoQmswRlB1b000a2pF?=
+ =?utf-8?B?djJha3pEcEpRa1pyY0VvOENqMjcyLzVEcmpFUXJKTXBCUXFKWXl0alV6ZTds?=
+ =?utf-8?B?NmcwUWpSenhwTThUM1lnZFpUNFhvSGhJSVZXSG01dHBqZHBXZVRsNXAyaWZ4?=
+ =?utf-8?B?YjE4anRHY29SZXFEcm5DVlZDWitNTUJNWkVkRlRpMmY0VjF2ajFjbTBKTDlx?=
+ =?utf-8?B?VlJNTTdhc1JnRUpLcmloWU83WGRmam00OVY5M1FOTXUvWXBCTVJ5cFk5Rk1o?=
+ =?utf-8?B?Q1o4d0M4b0UrNzc2TFVyaUt5ZUZrd0d1OGw0S0hNVzZvTHFJbjJXSUp1c1VC?=
+ =?utf-8?B?M0xYcWxSdnBSVmpQakF5cGRZWC82MVkzR05PZnRCOVNrdDFKQXlISjhSMlNk?=
+ =?utf-8?B?S2ltaTJqWUVENjU5S2c3NFN1T3JkQ2FmOGYyMjBZckRpUkRpSllYQllUVGZ1?=
+ =?utf-8?B?NWpsakc4WmZqeS9oVkpqVk56VkZwY21EalhIU2hlcmdMcE56bFhDRTFnTkR0?=
+ =?utf-8?B?VmlrRnpuYzA0YnFyZWZQUitQcUUxdWRiRGpvMlRMeGpqdTJTS0RkeUpEWmRG?=
+ =?utf-8?B?eFVEcXdoQ1c0Nm9rQUV5L3NiWmVmb2FPV1RadmRqbko0MmhRbmo0TWJGMXdL?=
+ =?utf-8?B?elZVR04zMXBvTDJqQW8rejRrb1FkazNNQW9HZXBGQm1ZRnlhWWh3VzFzR2ZB?=
+ =?utf-8?B?aUtJUk0yWlA0TFJ2ZDlKTno5RUo1T2ZkcEFKUjVTUDhHaHdDSmxXU2tOTWkw?=
+ =?utf-8?B?NkJ0Qnc3dVh1eXdWTU1KNlo1UnBoSEpBWTFKcVh6NEhmNFVEYUJkZG0rV3NQ?=
+ =?utf-8?B?S2E2RXRhZDdTN3BQRTFRMnh6K1ViVFdWZEZqeTFzamhRKytTN0FzS21oeTg3?=
+ =?utf-8?B?NVdxTFo5U1FySUF2MHlQbHJEVXcrTmxDZTlKZktDaEFGL2JFU3lrNlZOR0F3?=
+ =?utf-8?B?NFZCSjl2TktYK0NFV0RWdU1pdXVtVmtIdVdqcWFkWnZTeGkycEgxNEprREEz?=
+ =?utf-8?B?MGVHbkptMGV0dGd5N1gzOGw5VFdISVRZNzZSZnFYUU8ybUFmK25hOWpVZDg0?=
+ =?utf-8?B?SWsxdVMwTmhGZ2hldGJtM21INURHdVNpY3lHMmUxNEtmMDFmdWMvZTNnRFJx?=
+ =?utf-8?B?azMxbEZlcGNiaSt5RGFZL3l2WVdMSnhnM09FMExldDlIQ05FMjlRQ3VJeVIr?=
+ =?utf-8?B?RUxlMHJxMFdoU1lnTEZBdnU5K0NGUzFtVDFVU3V6czZlVHhvZlRNbzkvMWJK?=
+ =?utf-8?B?MFEzem5veDRPa2xBdW5Jblhxay9iOUtWUFZyb2QrT2ZmVmZtcUF6M0RYRFJr?=
+ =?utf-8?B?ckgvaWlOY0JIWW1udEcrYnltZ3FRbmc0S0w1RnJNc3UvMjgxUHdta1BXc3VT?=
+ =?utf-8?Q?OCKlr4vMWl4djoWOYpCWD68qeKy+kUmWWHoWMoSrOe6A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?K3paaEE1TWRIY1ErK0x6UEZubi82TzkzbEhGMFVEdW9CeHI5VHdHZldnZzUy?=
+ =?utf-8?B?cmF3OGMyT1VSbjJGZ2Myb1llR2ZsMk9lanpkY1dMUzJhNU5DSXhrOHBHU1J1?=
+ =?utf-8?B?OHNaeXVUSjFRR3E1Wkg4OEprdUM5bVU0NTdqVEFKdS80emNyblUzUFA4ODNz?=
+ =?utf-8?B?OHArRmZZamFHcmNpd0U4WkcrdWN3MytBWDFQSnpJZ3h4TVIvYnpxMFRVZ0d4?=
+ =?utf-8?B?SFdrMWpGblg1aHBVcWlXNlkwVnh2WWQ3NGFjbGM2YzU1alU2WUp3TElaTUNK?=
+ =?utf-8?B?UXRORVZKdnYrZ29WcmhWd1NPZVB6eGRlS0cxNC9zQ3Y3UlA4OFg5dHZzWktU?=
+ =?utf-8?B?Nkx2UlpPWU4veFIwbUN4MER6VDg4Tm5SRksxN01PaS9MU0lQMlNiMUJOR3Jp?=
+ =?utf-8?B?YW1sZXBmdFZpOUlObjR6WmEzVHg0QkZ3R0Jhc00rNnNZeFA1MU9QR0wvZkw2?=
+ =?utf-8?B?bEtnNjVrekFRNGUzZjBzaytzeXhEb0pZTVZiZFFjVmg0dm4wbUxqbWVEUGsv?=
+ =?utf-8?B?YU5UR3E5S3U3RjhRejFQQ1VCMkRNQ0U0SHRYU3dvN3M2YUx4RGRiampoTDJS?=
+ =?utf-8?B?cHgvUG1EL2IvQ2QzR0MyZm10MlBsUkg5d2Qxa0VQemczaXlHS083Vk56dzJB?=
+ =?utf-8?B?TVRmQm9Db0w0UkU3YTlwVE5aRGVkSTdKcWhubmluOXByOCtMQTVOeFR1dUtF?=
+ =?utf-8?B?emdxQ0ViSXBiOFYyMS9keGFNRXVFY3F3RzdDQTFqdDVjOWRxY3FsVDhaM1Br?=
+ =?utf-8?B?SXZPR044RWNiSDFPOTNvdFNXanR3YlVqRjhKb25qUTE0Nlo4ZEJObVkra0dE?=
+ =?utf-8?B?eGlFbjllNFNVSCtTZlZlM1FORlRMZW1yMTdReEt3OGh1RFMxTEZ1VWxvbXFV?=
+ =?utf-8?B?c3BJZUI2UGwrK2dhQnJPUlc2akY0akk1ak5Rc0Z2TmNobGtNRGlZbmJXMWhO?=
+ =?utf-8?B?U2g3TWxkcExIdXFFcW8rQVkxSVRxbGZGS1k0RHdIVlJBQWJOb1JGcElwVGo5?=
+ =?utf-8?B?NnVHZSt6cFY3K0t4SGZTaG1pVWJaV2tmblZlT1VtU3FETjlWRG5hZXh5WVVF?=
+ =?utf-8?B?YU5kSTlsdzI5KzVjVUsvL04zZmIrRWQ5bExBSncrQnNrWmxXMCtEVk1Oa2h5?=
+ =?utf-8?B?N2g4RWcrRFV2MWdhQkJndHpGTU5wMkJrMVJKMW9MT0hkdk9oWHBUYURsUE9R?=
+ =?utf-8?B?b3QzVCtnWGRUMUl1cUV3L3E1YXhjaU1WNEgwWTBLQjdEWHBoMnVzRExmTUlU?=
+ =?utf-8?B?UXIxeTBQamVYSkxOT05lbjBxbERpZWlKdGd2dXRCcXlhWnF5aHNQNjV3Y2Mw?=
+ =?utf-8?B?bFBLMFB6Tno1SFpWMzIycTJ3ZFpBMzZoUGlQZHBoOVc5NEwvb0dwVHc4MDdo?=
+ =?utf-8?B?ZmQrWXZKdmwraUwzWWR1WStBL0VkLzh6SCtXUVlZUUlKbmlqSmg3Rk9LQ0Ex?=
+ =?utf-8?B?N0dLVkdCK1M3U2xKaytsNE8vR1F5RzNNU2FNKyszTUlkRllpV20wV2NiU0Mz?=
+ =?utf-8?B?cE5VTXVReXljUW1pSWlWcHRLUmpoVFlVLzNOcG5WZ2JheWYzYzR5eDNpWFFr?=
+ =?utf-8?B?VGh6YkVUdTNTYjAwVHRDVGdOQytWZ25McFo4bHRBMENlOUhxWk5oT2x0VUYw?=
+ =?utf-8?B?M1pYQ3pXTGxuencrUU5xTXhhcnlXN0JnZDdLUEkrYzZyYmFsN0w3UytqQW4z?=
+ =?utf-8?B?NE9PYkdrd2c1Y25CblNUTDNPYWpZdFpscnBoZ1k3dFl3a1R5bENGa1JjNURy?=
+ =?utf-8?B?REQvNVBQd056aXJpb2NaQS9RMVAvcmtoRFFtS2I5ckw5K0psVi9OMHJndnJD?=
+ =?utf-8?B?VmFMcHJrOFF6VG5obWZIcUJvLzNJcGtMNVA4SmdSS0tZVmZHRm5RSFRWY2NU?=
+ =?utf-8?B?WkUycXA4ZDgrUWtDNjJJbzZOaXl5aUl6WFlaYXFkWTU2QlJMd0ljbUMvQlA3?=
+ =?utf-8?B?ZU9TWlU4ek5ncVNZWld0R3VNS3diNmRSMlRqYmcxSkp5OXo3TEJrVDVvOHBy?=
+ =?utf-8?B?OVBqaUd5R0hpT0FTKzdQRnBDT2phVUpBKzF3a05XY0w5aEY1YjA4MkQ0TjZX?=
+ =?utf-8?B?OGxWNXFHK1h6aFN6dE93ZTh2RmhtVGpWYTEzWnFPako0T2pZQjJVczd0VlhK?=
+ =?utf-8?Q?DWo1Y+q2dA0P/+TESJeqZrWhD?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a52ad10-1efe-4584-d549-08dc78d2d42e
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 13:43:28.1537
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D/ZJHstFwCN9xBB3kPscHY/qwu9L91fJc+g9Epyn00mkqdnJKPEDSFU5QxnSvSpRjfoqMVklpygJUiYVoRLLeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6621
 
-Hi Thorsten,
+Can we please get some kernel logs for these two cases on the command line?
 
-I'll try to provide a kernel log ASAP, it's not that easy because when
-I run into this issue my keyboard isn't working. The kernel parameter
-that Mario suggested, thunderbolt.host_reset=3Dfalse, fixes the issue!
+thunderbolt.dyndbg=+p
+thunderbolt.dyndbg=+p thunderbolt.host_reset=false
 
-I can add that without the suggested kernel parameter the issue
-persists with the latest Archlinux kernel 6.9.1.
+Also what is the value for:
 
-I also found another report of the issue on Archlinux forum:
-https://bbs.archlinux.org/viewtopic.php?id=3D295824
+$ cat /sys/bus/thunderbolt/devices/domain0/iommu_dma_protection
 
+That won't change in the two cases, but it will be really helpful to 
+understand this issue.
 
-On Mon, May 6, 2024 at 2:53=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> [CCing Mario, who asked for the two suspected commits to be backported]
->
-> On 06.05.24 14:24, Gia wrote:
-> > Hello, from 6.8.7=3D>6.8.8 I run into a similar problem with my Caldigi=
-t
-> > TS3 Plus Thunderbolt 3 dock.
-> >
-> > After the update I see this message on boot "xHCI host controller not
-> > responding, assume dead" and the dock is not working anymore. Kernel
-> > 6.8.7 works great.
->
-> Thx for the report. Could you make the kernel log (journalctl -k/dmesg)
-> accessible somewhere?
->
-> And have you looked into the other stuff that Mario suggested in the
-> other thread? See the following mail and the reply to it for details:
->
-> https://lore.kernel.org/all/1eb96465-0a81-4187-b8e7-607d85617d5f@gmail.co=
-m/T/#u
->
-> Ciao, Thorsten
->
-> P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-> I'm adding it to regzbot, the Linux kernel regression tracking bot:
->
-> #regzbot ^introduced v6.8.7..v6.8.8
-> #regzbot title thunderbolt: TB3 dock problems, xHCI host controller not
-> responding, assume dead
+On 5/20/2024 04:19, Gia wrote:
+> Hi Thorsten,
+> 
+> I'll try to provide a kernel log ASAP, it's not that easy because when
+> I run into this issue my keyboard isn't working. The kernel parameter
+> that Mario suggested, thunderbolt.host_reset=false, fixes the issue!
+> 
+> I can add that without the suggested kernel parameter the issue
+> persists with the latest Archlinux kernel 6.9.1.
+> 
+> I also found another report of the issue on Archlinux forum:
+> https://bbs.archlinux.org/viewtopic.php?id=295824
+> 
+> 
+> On Mon, May 6, 2024 at 2:53 PM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> [CCing Mario, who asked for the two suspected commits to be backported]
+>>
+>> On 06.05.24 14:24, Gia wrote:
+>>> Hello, from 6.8.7=>6.8.8 I run into a similar problem with my Caldigit
+>>> TS3 Plus Thunderbolt 3 dock.
+>>>
+>>> After the update I see this message on boot "xHCI host controller not
+>>> responding, assume dead" and the dock is not working anymore. Kernel
+>>> 6.8.7 works great.
+>>
+>> Thx for the report. Could you make the kernel log (journalctl -k/dmesg)
+>> accessible somewhere?
+>>
+>> And have you looked into the other stuff that Mario suggested in the
+>> other thread? See the following mail and the reply to it for details:
+>>
+>> https://lore.kernel.org/all/1eb96465-0a81-4187-b8e7-607d85617d5f@gmail.com/T/#u
+>>
+>> Ciao, Thorsten
+>>
+>> P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
+>> I'm adding it to regzbot, the Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced v6.8.7..v6.8.8
+>> #regzbot title thunderbolt: TB3 dock problems, xHCI host controller not
+>> responding, assume dead
+
