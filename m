@@ -1,207 +1,47 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E85137742
-	for <regressions@lists.linux.dev>; Mon, 20 May 2024 15:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDF3524D4;
+	Mon, 20 May 2024 15:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220203; cv=none; b=XKds9TsvIShaUlMk8JYQPscnXkuUnOwCFHWWmfvhoVO1FyN1bhANDSVnwugaODdGvobZ2Ktj66MfIH2FZJyKEpJka147B+3U9pxe8VBuml/x0RvBkIYBTX7Uarh1/sJF2soZ9NS4cMgLMEEXkbhupwXC6ESEFn3FymebY6MKHYc=
+	t=1716220256; cv=none; b=n3FPH7WyVjxI6qFxund3Sc20KZAUn7hIwK/WELf2v5PPkI0Qvv2IGYhTAXjh+hdfw9rplnobFlfX4cALXukGLGX5bYauEhFl+fxq0HYk1uQRqdo3aXQ6ifYrzyLqpC2+DDneLVYzoBdLEgD+7Bb8vhZ8MVs2pDxzEwXVyfq1AsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716220203; c=relaxed/simple;
-	bh=FRmcBDetcinYBDoqkppxu1Lcf/uZRV6S1eCCD+tFbNY=;
+	s=arc-20240116; t=1716220256; c=relaxed/simple;
+	bh=jeid1BQlbkhG+oGn7mKvZgcQUeECcB1Yee8xBttrOY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nv2JjXoJQqlgY/I73e28IldErYypPg/zC7jAudJHHRjCjkWQUwkIKsiiTO0OaVb5h3nEKkswvpwhn+W8Tdo9A8IkTkOTLm1GGsKzdFYGfMXyA1bo08/T5qiCaur9GFr5jZIRlqjpU9t3s35Af7pmmFJz/Yb5IHmE8Y1p5M5GLTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yCvpzJLt; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yCvpzJLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716220200;
-	bh=FRmcBDetcinYBDoqkppxu1Lcf/uZRV6S1eCCD+tFbNY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yCvpzJLt0zpEkXm6wVoKCvYFI2o3Y0P4nbRSv2SamYk1TmKPDAM9hBDzbsML/6H6y
-	 ItaY5bpDEvB5rI2bi6GcNB7FSU8q9PgoymholDAXXHLSv1dFxa+ddOBFGzsxd3atM9
-	 Vh1BHnpmKWuZaQ3BPJEAoEOtAf04Hnay9DlnHcUzfJsQwSoqP6TrIYucbDd0wqeiHn
-	 2ew2j81rRwVkTR8LinNQGevca6uwKojC8QsKSjM3kTE6jvp2JwtUpNcZVNd6h037z+
-	 K7FsCuCdoTY0xnTRFB4IZn6ZFWl9JkPWD9ZeGppmDLuPKuvwnwehQXmxQ0sFB4hPU+
-	 ZuXz5XzzXXqOQ==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7F49E37810C3;
-	Mon, 20 May 2024 15:49:58 +0000 (UTC)
-Date: Mon, 20 May 2024 11:49:56 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Eric Biggers <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	regressions@lists.linux.dev, kernel@collabora.com
-Subject: Re: [PATCH] crypto: api - Do not load modules until algapi is ready
-Message-ID: <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
-References: <119dc5ed-f159-41be-9dda-1a056f29888d@notapiano>
- <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
- <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
- <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
- <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
- <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
- <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
- <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
- <20240518043115.GA53815@sol.localdomain>
- <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RaR+NUq8w+mOKO3e9j7VfrEl1SwqkynoWfJWDFS8WjPDrxKtVhd6AEIYHSK3WsyQ1GWi5eVdC2wqc1u2JTtxImgYeoo3t5z1YuQhBHm2zGa9v3KpYLtai7RkqVxBauBJeqPDDGja+f8ZWZ8a1KGrWNeE3wQE/qg07GP/Rcj0+DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 0EA1068AFE; Mon, 20 May 2024 17:50:52 +0200 (CEST)
+Date: Mon, 20 May 2024 17:50:51 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>,
+	dm-devel@lists.linux.dev, fstests@vger.kernel.org,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
+	linux-block@vger.kernel.org
+Subject: Re: dm: use queue_limits_set
+Message-ID: <20240520155051.GB1327@lst.de>
+References: <20240518022646.GA450709@mit.edu> <ZkmIpCRaZE0237OH@kernel.org> <ZkmRKPfPeX3c138f@kernel.org> <20240520150653.GA32461@lst.de> <ZktuojMrQWH9MQJO@kernel.org> <Zktwqu-N0E1miesx@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+In-Reply-To: <Zktwqu-N0E1miesx@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Sat, May 18, 2024 at 03:03:51PM +0800, Herbert Xu wrote:
-> On Fri, May 17, 2024 at 09:31:15PM -0700, Eric Biggers wrote:
-> >
-> > This is "normal" behavior when the crypto API instantiates a template:
-> > 
-> >     1. drbg.c asks for "hmac(sha512)"
-> > 
-> >     2. The crypto API looks for a direct implementation of "hmac(sha512)".
-> >        This includes requesting a module with alias "crypto-hmac(sha512)".
-> > 
-> >     3. If none is found, the "hmac" template is instantiated instead.
-> > 
-> > There are two possible fixes for the bug.  Either fix ecc_gen_privkey() to just
-> > use get_random_bytes() instead of the weird crypto API RNG, or make
-> > drbg_init_hash_kernel() pass the CRYPTO_NOLOAD flag to crypto_alloc_shash().
-> > 
-> > Or if the TPM driver could be changed to not need to generate an ECC private key
-> > at probe time, that would also avoid this problem.
-> 
-> Thanks for diagnosing the problem.  This is easy to fix though,
-> we could simply reuse the static branch that was created for
-> boot-time self-testing:
-> 
-> ---8<---
-> When the Crypto API is built into the kernel, it may be invoked
-> during system initialisation before modules can be loaded.  Ensure
-> that it doesn't load modules if this is the case by checking
-> crypto_boot_test_finished().
-> 
-> Add a call to wait_for_device_probe so that the drivers that may
-> call into the Crypto API have finished probing.
-> 
-> Reported-by: Nícolas F. R. A. Prado" <nfraprado@collabora.com>
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/crypto/algapi.c b/crypto/algapi.c
-> index 85bc279b4233..c018bcbd1f46 100644
-> --- a/crypto/algapi.c
-> +++ b/crypto/algapi.c
-> @@ -7,6 +7,7 @@
->  
->  #include <crypto/algapi.h>
->  #include <crypto/internal/simd.h>
-> +#include <linux/device/driver.h>
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/fips.h>
-> @@ -1056,9 +1057,12 @@ EXPORT_SYMBOL_GPL(crypto_type_has_alg);
->  
->  static void __init crypto_start_tests(void)
->  {
-> -	if (IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS))
-> +	if (!IS_BUILTIN(CONFIG_CRYPTO_ALGAPI))
->  		return;
->  
-> +	if (IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS))
-> +		goto test_done;
-> +
->  	for (;;) {
->  		struct crypto_larval *larval = NULL;
->  		struct crypto_alg *q;
-> @@ -1092,6 +1096,8 @@ static void __init crypto_start_tests(void)
->  		crypto_wait_for_test(larval);
->  	}
->  
-> +test_done:
-> +	wait_for_device_probe();
->  	set_crypto_boot_test_finished();
->  }
->  
-> diff --git a/crypto/api.c b/crypto/api.c
-> index 6aa5a3b4ed5e..5c970af04ba9 100644
-> --- a/crypto/api.c
-> +++ b/crypto/api.c
-> @@ -31,9 +31,8 @@ EXPORT_SYMBOL_GPL(crypto_alg_sem);
->  BLOCKING_NOTIFIER_HEAD(crypto_chain);
->  EXPORT_SYMBOL_GPL(crypto_chain);
->  
-> -#ifndef CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
-> +#if IS_BUILTIN(CONFIG_CRYPTO_ALGAPI)
->  DEFINE_STATIC_KEY_FALSE(__crypto_boot_test_finished);
-> -EXPORT_SYMBOL_GPL(__crypto_boot_test_finished);
->  #endif
->  
->  static struct crypto_alg *crypto_larval_wait(struct crypto_alg *alg);
-> @@ -280,7 +279,7 @@ static struct crypto_alg *crypto_larval_lookup(const char *name, u32 type,
->  	mask &= ~(CRYPTO_ALG_LARVAL | CRYPTO_ALG_DEAD);
->  
->  	alg = crypto_alg_lookup(name, type, mask);
-> -	if (!alg && !(mask & CRYPTO_NOLOAD)) {
-> +	if (crypto_boot_test_finished() && !alg && !(mask & CRYPTO_NOLOAD)) {
->  		request_module("crypto-%s", name);
->  
->  		if (!((type ^ CRYPTO_ALG_NEED_FALLBACK) & mask &
-> diff --git a/crypto/internal.h b/crypto/internal.h
-> index 63e59240d5fb..d27166a92eca 100644
-> --- a/crypto/internal.h
-> +++ b/crypto/internal.h
-> @@ -66,7 +66,7 @@ extern struct blocking_notifier_head crypto_chain;
->  
->  int alg_test(const char *driver, const char *alg, u32 type, u32 mask);
->  
-> -#ifdef CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
-> +#if !IS_BUILTIN(CONFIG_CRYPTO_ALGAPI)
->  static inline bool crypto_boot_test_finished(void)
->  {
->  	return true;
-> @@ -84,7 +84,7 @@ static inline void set_crypto_boot_test_finished(void)
->  {
->  	static_branch_enable(&__crypto_boot_test_finished);
->  }
-> -#endif /* !CONFIG_CRYPTO_MANAGER_DISABLE_TESTS */
-> +#endif /* !IS_BUILTIN(CONFIG_CRYPTO_ALGAPI) */
->  
->  #ifdef CONFIG_PROC_FS
->  void __init crypto_init_proc(void);
-> -- 
+On Mon, May 20, 2024 at 11:47:54AM -0400, Mike Snitzer wrote:
+> Maybe update blk_validate_limits() to ensure max_discard_sectors is a
+> factor of discard_granularity?
 
-Hi Herbert,
+That's probably a good idea.  I'm travelling currently so I'll probably
+need a day to two to get to this, feel free to do it yourself if you
+are faster.
 
-Unfortunately this patch didn't work either. The warning is still there
-unchanged.
-
-The warning is triggered by a driver that probes asynchronously registering a
-TPM device, which ends up requesting a module to be loaded synchronously. So I
-don't think waiting would even help here. I believe one possible solution would
-be to request the module asynchronously and defer probe. Not ideal but I think
-would work.
-
-Alternatively, could the initialization code that loads this module
-(hmac(sha512)) be run synchronously before the TPM device is registered? Or is
-it device specific?
-
-PS: the wait_for_device_probe() call in the patch didn't actually wait for
-anything in this case since when the crypto tests code ran there weren't any
-probes in progress
-
-Thanks,
-Nícolas
