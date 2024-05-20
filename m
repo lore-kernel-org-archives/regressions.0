@@ -1,96 +1,96 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B9933EE
-	for <regressions@lists.linux.dev>; Mon, 20 May 2024 06:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7E11B27D
+	for <regressions@lists.linux.dev>; Mon, 20 May 2024 07:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716187001; cv=none; b=QylxrKbws4+lZHTO04P/dcc/uPwW463dDMVC73TVmPecU+YT+dnMCx3KcUq6KFVPEvjeBlcDMyhA9gcvUA6MDX8CVMGQRW6LKa5RwOKVdW2DGja6KA9E5+gXyqLNxr5XrB/uxfv4aHcHmdLVI+lhXwJUPRXYRkfUKNu9qj9a3Sk=
+	t=1716190526; cv=none; b=Tb2HgMOOmGoTIuSRNNN+H97pOOrpvhcxPd911YdtTYeKmfwxbMNTMz8l/CSpDepcdSfy+RcMP6igDvvCqsbBq5AOopQbOD+wAjXIg9DYy7HePTWa4PiYGyUBTlQNfcMgoAS6EXX8TtPTdarD6PtyiSkwTqJheYwM0yiTGgGPjQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716187001; c=relaxed/simple;
-	bh=8hIuiD7qtV4Mnxbl3HvUAw2mP8pGbgWxph/2BxM44Zk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=G24i9R4VhlLN2ryR7dEAMSEuT217WV+sbx2nLbXX2m01I2Jjn0KTYZ0hGQw7F4Ia6jlBIZeXwMiUBLopGUSlOqDD60lUAgYLW8QYWb7itYbAgsZgmH4HK38l+XIqIVKaRs+Os18CqgdXZ9jZx370G78kyQIBqTo5Sr4Tc1tUbU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.3] (ip5f5af1d0.dynamic.kabel-deutschland.de [95.90.241.208])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4B06861E5FE01;
-	Mon, 20 May 2024 08:36:19 +0200 (CEST)
-Message-ID: <259f7a87-2692-480e-9073-1c1c35b52f67@molgen.mpg.de>
-Date: Mon, 20 May 2024 08:36:18 +0200
+	s=arc-20240116; t=1716190526; c=relaxed/simple;
+	bh=CreGSXMBFRDdh+HIhlg2OcR+mWGxYmJCDZEvadFcUiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tH07j8fFEhxW2OaLe6vEf/5Wme2cLVZq2+kbb8tr3kB5E62f4je0OqLbwjXGiw7Tw1+dyVgWmfT1UYjsPBE0IhZ+uoXXHV8kWSx1Ktw7SWdqCI1S3sR6KRX+Jz82Z6B5jeV872TFXSQhoWS/5kRemKuSV8VWNe9UmGsUAc0b01M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B4rffi1G; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4rffi1G"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ec41d82b8bso75573705ad.2
+        for <regressions@lists.linux.dev>; Mon, 20 May 2024 00:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716190525; x=1716795325; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TdeskcQGCOqUgsMYL0wvQIQkx8Opxo9clxqEYF92eYc=;
+        b=B4rffi1GhUdGf6G4pCGY0K3XD3JfmjfBaOwLzmpT5s0fP3jPVoJLJOKqu2Y2/70Vuh
+         kKjoG6jUtr28VRlifwxeH9wNY/cwIscztZbUYYUHQfLWH9SuOuXDu+SlgABd1myx0PuW
+         oVXuSt/dvAtxqZUOTYYYShgvEpZr3g3StmNcXmKtfzcwggo8IMXmyen6emsCc3vXP7/1
+         JWF/QSpwfpr9mkpvL7tqCxwnzLkuMYxdX2VonitdDGUze3qOa9knwRd4vniBwrFnLxbU
+         bF5XjIIAJKUk+OttZTMWyhhY5ClMp3BadNeOvmfVqp6rlIzk2C4UtHIi12W6HCrmCnlE
+         n8HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716190525; x=1716795325;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TdeskcQGCOqUgsMYL0wvQIQkx8Opxo9clxqEYF92eYc=;
+        b=iZ9SfdZ6SaqGgYsmRIgxph0jGFa/IE2MROR/W7bgmQv1YzSGa9cyA62FUuIu6+/r3E
+         RnFgmcbcCLXlP0ReqfDBjKPAYSeqMV2yC4T6xPyu98NxztBNr1lX+VXaVTJCLcbMDVoC
+         EZvoejH+/sbP+uoCww1+bZS8Bb2YOYWt/x8JgsWG6JclR3LsK6T6NFT5MzxlZsKmKTqi
+         kchCJ4rzo2g5rKrVEk0gxYgIKPpNGf0gtGNQu+cfXVSuvVd54hfo4NmsxKwjKzqOeWWm
+         12hSn0hnxchwT2FjMk9IUikjFCm/V8PIr4ock+yWdwumA4ZyJVACMQyFkaC0d2euINPl
+         27Mw==
+X-Gm-Message-State: AOJu0YxgnD2aUgVjRQsO2ikjfoLeKiK+nBUmkXYqEGnzOjZC1lmB6E/o
+	W4j6V5a14nvmm+tpLAlLpb/DkNDzP+1Hvy3o7ewrcT0H6ipZKomBL/aUEzGqmtc=
+X-Google-Smtp-Source: AGHT+IHPnUMf1hHaC0TYUlsq97fbQdCCRP95VeDkuaFDGW9CA2YAIYyeywDjHu54+bcWgGQVcpgq7w==
+X-Received: by 2002:a05:6a20:c78c:b0:1af:cb89:15d7 with SMTP id adf61e73a8af0-1afde1035a8mr32774233637.27.1716190524677;
+        Mon, 20 May 2024 00:35:24 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bd7f6c90f0sm1214435a91.2.2024.05.20.00.35.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 00:35:24 -0700 (PDT)
+Date: Mon, 20 May 2024 13:05:22 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Vladimir Lypak <vladimir.lypak@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] OPP: Fix required_opp_tables for multiple genpds
+ using same table
+Message-ID: <20240520073522.3nhy4x6fnrqxay6x@vireshk-i7>
+References: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
+ <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info>
+ <CAPDyKFoHoKK-RZsGwnZhbW9_ZRQtL1MFZBuVVLMx-MxL2cQQbw@mail.gmail.com>
+ <7c6df194-fce1-401a-98c5-c903d78627c4@leemhuis.info>
+ <CAPDyKFqKRy6zJdBpK3bNTvkvAjty691-Vi_HV3E5CeqgRAWGmA@mail.gmail.com>
+ <CAKohpomKbhdXRgFxxbg-_hG5EFZT0LrvfQcrwjQPon6AZNbGag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier
- <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, regressions@lists.linux.dev
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: lib/build_OID_registry: Bareword found where operator expected at
- ./lib/build_OID_registry line 41, near "s#^\Q$abs_srctree/\E##r"
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKohpomKbhdXRgFxxbg-_hG5EFZT0LrvfQcrwjQPon6AZNbGag@mail.gmail.com>
 
-Dear Uwe,
+On 11-05-24, 10:03, Viresh Kumar wrote:
+> On Fri, 10 May 2024 at 16:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > I wasn't sure of the level of urgency in this case, as I don't think
+> > we have that many DTSes upstream that could hit this case.
+> >
+> > But nevermind, it should be easy to revert/replace the change when we
+> > have something better to take over. Viresh, feel pick this up - or let
+> > me know if you prefer me to pick it.
+> 
+> Please apply, while I enjoy my holidays :)
 
+Merged to Rafael's tree already now.
 
-Your commit 5ef6dc08cfde (lib/build_OID_registry: don't mention the full 
-path of the script in output), causes the build error below:
-
-     Bareword found where operator expected at ./lib/build_OID_registry 
-line 41, near "s#^\Q$abs_srctree/\E##r"
-     syntax error at ./lib/build_OID_registry line 41, near 
-"s#^\Q$abs_srctree/\E##r"
-     Execution of ./lib/build_OID_registry aborted due to compilation 
-errors.
-     make[3]: *** [lib/Makefile:352: lib/oid_registry_data.c] Error 255
-
-gcc (GCC) 12.3.0 is used.
-
-
-Kind regards,
-
-Paul
-
-
-PS: This is found with `git bisect`, but reverting the commit on top of 
-master also fixes the build problem.
-
-5ef6dc08cfde240b8c748733759185646e654570 is the first bad commit
-commit 5ef6dc08cfde240b8c748733759185646e654570
-Author: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Date:   Wed Mar 13 22:19:56 2024 +0100
-
-     lib/build_OID_registry: don't mention the full path of the script 
-in output
-
-     This change strips the full path of the script generating
-     lib/oid_registry_data.c to just lib/build_OID_registry.  The motivation
-     for this change is Yocto emitting a build warning
-
-             File 
-/usr/src/debug/linux-lxatac/6.7-r0/lib/oid_registry_data.c in package 
-linux-lxatac-src contains reference to TMPDIR [buildpaths]
-
-     So this change brings us one step closer to make the build result
-     reproducible independent of the build path.
-
-     Link: 
-https://lkml.kernel.org/r/20240313211957.884561-2-u.kleine-koenig@pengutronix.de
-     Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-     Cc: Masahiro Yamada <masahiroy@kernel.org>
-     Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
-     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-
-  lib/build_OID_registry | 5 ++++-
-  1 file changed, 4 insertions(+), 1 deletion(-)
-bisect found first bad commit
+-- 
+viresh
