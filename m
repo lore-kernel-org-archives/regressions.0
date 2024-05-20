@@ -1,119 +1,166 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA08136E3E
-	for <regressions@lists.linux.dev>; Mon, 20 May 2024 15:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52096137747
+	for <regressions@lists.linux.dev>; Mon, 20 May 2024 15:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220497; cv=none; b=aH9bsaCoj5pA8NF1MMx1Trqh0/WZ81hJBhvXlwa6DogT4EvrsY0EnRHz6uwYdXWHVvMydxD8JKjU6EFs2m2EWMCMBCQG1fqnwOKyXGHX043xPquRmVdheuvJC76ZMh1AtF+3EAHKWZNQ/aHp1zbJaYhgp/7C8xyfZO4JCLBmVyE=
+	t=1716220675; cv=none; b=U/FUjogH8JwsaRuWYVasZ09FY153G7Mn0oVW4tBo5U8htm+E6jap52xQVqCIW8q0G+yJC5q4SfKQwkzFISD6SYM+nu6mb/JDFxOO/SXtdgSeKP4toSWTx9Q9/nmRDUFYhfgH22QMmvWFYV6JZk4l8nPoA6fyW54IUu0VSS62pl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716220497; c=relaxed/simple;
-	bh=Homzp/63aiX0b0frqJlJfO8Q6OA7Jf4akX4P+wX3COw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INS8rNcqxcjS8a9verFMSn54qyZzi3K7xVEk/krPWPrIh/CgEOOCw0NQZujaJBfa3kWiAcgEVrerNZPXx/m6148p295YiSGkjDKmugD1XQJwx2pG7dDAQdfxwwoyH3z5RLrMrSriBar3QkTlDpGUH2WF73n0sIwN040Hm9qGF9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43df7f42ac9so15237741cf.2
-        for <regressions@lists.linux.dev>; Mon, 20 May 2024 08:54:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716220494; x=1716825294;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1716220675; c=relaxed/simple;
+	bh=Ubvg7/bUDji76tdgAn5Z+55CXMf3HjF4vhBaLuUlYEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rIus1MQ/aY3zMjU43ZaY7mt4bW+247OKirbSdu+ei8xhYH2pwOh9RclFnSKiS5GdIsWL9pNyivuua+e9kjkfRUxr46SB/9cqPYevOQuzVTqIUyREmFux/JUSKaeVAaqzkJSGxBsDyF0iXKtEHXM75zR/+E4Qh5klAsWurobnZ/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/+xSUfU; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/+xSUfU"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ee954e0aa6so47924885ad.3
+        for <regressions@lists.linux.dev>; Mon, 20 May 2024 08:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716220673; x=1716825473; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IaIyNEamC/GOVmXOOEefzqW6FyJnCYusfseZnVHqXxo=;
-        b=MW3RrtpTm7xv8bf+fwpjO9XD67t24RkP/NJvU2s3uvC5LLs66E6bt/myRVa1iiDllX
-         M/iLnNX12ybOLl3omen3H8hQVDE/j2plptLqGXRe09x/19zESiblkKlav/wS7ro0CYAG
-         pfPXXR3Urs6HiPBwPu9TB2DBPL6APX4cCRnCFTrdclheWBYxFQjnDdCkTwVIqRo/bU7C
-         +Vx0572zYapFI/mqgfTFYhDszJ2F20gRBEqYlsyzghTZ+S3BcWkwqYsW1kQPG7vTfsuX
-         wiNQp0MkRm0jABWQKoqI3enJ/U/YPeV2rK9xQTXDRDFg9Es2tUphIVlLwM9SRq3bw+vk
-         WEow==
-X-Forwarded-Encrypted: i=1; AJvYcCWhYHedS3tO96Pwf2jqZ2W9ZHUie0CByrg1SAHETl0yUyVwsgMqcLGzf0hVavSr2ryWUTU27EEskr0hV1n21EkFU4NkajXU7k+zGZE=
-X-Gm-Message-State: AOJu0YwwR9dzWEZnOUXjvwJaiza8ezxhkLWpEDuGXGU4AR7mUIOVJ9KT
-	Dkq9LW5yTOU5HZTI1i4J0lrkaW7+zv4+ujQGX1h+h4Pmy+UvqRmWQl+QV3ZEnRo=
-X-Google-Smtp-Source: AGHT+IFEI2WIsnG6E5eeNjkDC8pyDKtauCuIbSxAV0M2We8mLigkzXUeIcnUOFltjNKjK00xd2PSYQ==
-X-Received: by 2002:ac8:5d49:0:b0:43a:a82d:4fa with SMTP id d75a77b69052e-43dfdaa9ab4mr263199961cf.15.1716220494481;
-        Mon, 20 May 2024 08:54:54 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43dfa0fc2e1sm142427401cf.56.2024.05.20.08.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 08:54:54 -0700 (PDT)
-Date: Mon, 20 May 2024 11:54:53 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Theodore Ts'o <tytso@mit.edu>, dm-devel@lists.linux.dev,
-	fstests@vger.kernel.org, linux-ext4@vger.kernel.org,
-	regressions@lists.linux.dev, linux-block@vger.kernel.org
-Subject: Re: dm: use queue_limits_set
-Message-ID: <ZktyTYKySaauFcQT@kernel.org>
-References: <20240518022646.GA450709@mit.edu>
- <ZkmIpCRaZE0237OH@kernel.org>
- <ZkmRKPfPeX3c138f@kernel.org>
- <20240520150653.GA32461@lst.de>
- <ZktuojMrQWH9MQJO@kernel.org>
- <20240520154425.GB1104@lst.de>
+        bh=fjH8e+R60esnA42ensqqUdM+fwtzfN5aPs3zsl9Chx8=;
+        b=T/+xSUfUBMv8OXOa4Dyvi1PF7usKOW/lzj7TZnHyEdsMYELucrrbt+wxQxb6nstWeB
+         dJtz+MSWdFgZX7rko/zpXpCr6nPHTKaQxUwl6TojlDe8a9ztFx2edyZMInwNCnwW6QcY
+         aGwUifMfOj3TkGAQjdMfHzb9ADE3QP/yt6EkDr+qergbIykzM4zhgdjZec8gQn7k+JSs
+         LgGoeY77SMSEHkxXbsyMHbVchVaM7mhf/BwGt0tfpZ9zUeCjv2VoEU1XuBS8h5WvpNtv
+         uTv/0jv6rwmarky2oAZVmJjXRrk1GwUTvyX4D6RJ/kdxGRNpjRAyE/0gOiCXBe2ab0+Y
+         RVEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716220673; x=1716825473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fjH8e+R60esnA42ensqqUdM+fwtzfN5aPs3zsl9Chx8=;
+        b=uHgP7eWuweIECoBNJa87zuzLRc3FtgDU2mNAhcFD42RD8Tz2c817sAiLDGJaFrVVnp
+         6n/CW+sthmrFEtSOn0asXVQgz+yLaZFtFsFJZ5ThkO9fppyjd6kO58b03717+VXaEImg
+         d21PD9IxMszQOFKm98cUDp0bI80f3HS+4c/CcCS9ml6sXXXt1YXkmzx4OadrK3zaDGHy
+         qBuzEY/699y6O6m53jKuiNmCaZDD5TJlxd5mMt5pgkifD8eyJea2gW0zGdXM3YxgyiBR
+         +kjSe/M/jfo289/nU0+eGLc5NH2WwhZq9Xso+M/l4hYoMg6FC0F82QrjBBm35IbQwhaN
+         OnSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpfWbWjk6hX84r/UhvPGiOH3Axx8HKX41NUIEhALP5GePkTtxtxiuKSDVO6I86ARIAqRtwAaSrwGyQz/BzvTdcVpT7Y59/9t/+E1c=
+X-Gm-Message-State: AOJu0YztxqJ6DVhiYftkwqmp1NgAXFC4VCOLk6G/v4eoCUsEaB9nrYD+
+	4HR2AVuIh8Z1QOQVeBMaadsFENyfwOfHDKI+aSd9N7WVYIFd+sWKV/OkCdLmOaNjD+DcorC29u7
+	viZXuStmR3Mgws7eFZAnt6NXdhxo=
+X-Google-Smtp-Source: AGHT+IGR0QJwNONgLrUrdS9bK1zR2hDGXfZLtrDr3dOnQQbOEKaLAKicvLTb2C4p5DrkQw4YSMQ8x0x/um9d2gfsaZs=
+X-Received: by 2002:a17:90a:ab02:b0:2b4:39cd:2e0e with SMTP id
+ 98e67ed59e1d1-2b6cc76bdd5mr26911326a91.21.1716220673365; Mon, 20 May 2024
+ 08:57:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520154425.GB1104@lst.de>
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info> <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
+ <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
+In-Reply-To: <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
+From: Gia <giacomo.gio@gmail.com>
+Date: Mon, 20 May 2024 17:57:42 +0200
+Message-ID: <CAHe5sWY_YJsyiuwf2TsfRTS9AoGoYh4+UxkkZZ0G9z2pXfbnzg@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Christian Heusel <christian@heusel.eu>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, "kernel@micha.zone" <kernel@micha.zone>, 
+	Andreas Noever <andreas.noever@gmail.com>, Michael Jamet <michael.jamet@intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Yehezkel Bernat <YehezkelShB@gmail.com>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, =?UTF-8?Q?Benjamin_B=C3=B6hmke?= <benjamin@boehmke.net>, 
+	"S, Sanath" <Sanath.S@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 20, 2024 at 05:44:25PM +0200, Christoph Hellwig wrote:
-> On Mon, May 20, 2024 at 11:39:14AM -0400, Mike Snitzer wrote:
-> > That's fair.  My criticism was more about having to fix up DM targets
-> > to cope with the new normal of max_discard_sectors being set as a
-> > function of max_hw_discard_sectors and max_user_discard_sectors.
-> > 
-> > With stacked devices in particular it is _very_ hard for the user to
-> > know their exerting control over a max discard limit is correct.
-> 
-> The user forcing a limit is always very sketchy, which is why I'm
-> not a fan of it.
-> 
-> > Yeah, but my concern is that if a user sets a value that is too low
-> > it'll break targets like DM thinp (which Ted reported).  So forcibly
-> > setting both to indirectly set the required max_discard_sectors seems
-> > necessary.
-> 
-> Dm-think requiring a minimum discard size is a rather odd requirement.
-> Is this just a debug asswert, or is there a real technical reason
-> for it?  If so we can introduce a now to force a minimum size or
-> disable user setting the value entirely. 
+Hi Mario,
 
-thinp's discard implementation is constrained by the dm-bio-prison's
-constraints.  One of the requirements of dm-bio-prison is that a
-discard not exceed BIO_PRISON_MAX_RANGE.
+In my case in both cases the value for:
 
-My previous reply is a reasonible way to ensure best effort to respect
-a users request but that takes into account the driver provided
-discard_granularity.  It'll force suboptimal (too small) discards be
-issued but at least they'll cover a full thinp block.
- 
-> > diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-> > index 4793ad2aa1f7..c196f39579af 100644
-> > --- a/drivers/md/dm-thin.c
-> > +++ b/drivers/md/dm-thin.c
-> > @@ -4497,7 +4499,8 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
-> >  
-> >  	if (pool->pf.discard_enabled) {
-> >  		limits->discard_granularity = pool->sectors_per_block << SECTOR_SHIFT;
-> > -		limits->max_discard_sectors = pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
-> > +		limits->max_hw_discard_sectors = limits->max_user_discard_sectors =
-> > +			pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
-> >  	}
-> 
-> Drivers really have no business setting max_user_discard_sector,
-> the whole point of the field is to separate device/driver capabilities
-> from user policy.  So if dm-think really has no way of handling
-> smaller discards, we need to ensure they can't be set.
+$ cat /sys/bus/thunderbolt/devices/domain0/iommu_dma_protection
 
-It can handle smaller so long as they respect discard_granularity.
+is 0.
 
-> I'm also kinda curious what actually sets a user limit in Ted's case
-> as that feels weird.
+Output of sudo journalctl -k with kernel option thunderbolt.dyndbg=3D+p:
+https://codeshare.io/qAXLoj
 
-I agree, not sure... maybe the fstests is using the knob?
+Output of sudo dmesg with kernel option thunderbolt.dyndbg=3D+p:
+https://codeshare.io/zlPgRb
+
+Output of sudo journalctl -k with kernel options thunderbolt.dyndbg=3D+p
+thunderbolt.host_reset=3Dfalse:
+https://codeshare.io/Lj3rPV
+
+Output of sudo dmesg with kernel option thunderbolt.dyndbg=3D+p
+thunderbolt.host_reset=3Dfalse:
+https://codeshare.io/beQw36
+
+Best
+
+Giacomo
+
+On Mon, May 20, 2024 at 4:41=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 5/20/2024 09:39, Christian Heusel wrote:
+> > On 24/05/06 02:53PM, Linux regression tracking (Thorsten Leemhuis) wrot=
+e:
+> >> [CCing Mario, who asked for the two suspected commits to be backported=
+]
+> >>
+> >> On 06.05.24 14:24, Gia wrote:
+> >>> Hello, from 6.8.7=3D>6.8.8 I run into a similar problem with my Caldi=
+git
+> >>> TS3 Plus Thunderbolt 3 dock.
+> >>>
+> >>> After the update I see this message on boot "xHCI host controller not
+> >>> responding, assume dead" and the dock is not working anymore. Kernel
+> >>> 6.8.7 works great.
+> >
+> > We now have some further information on the matter as somebody was kind
+> > enough to bisect the issue in the [Arch Linux Forums][0]:
+> >
+> >      cc4c94a5f6c4 ("thunderbolt: Reset topology created by the boot fir=
+mware")
+> >
+> > This is a stable commit id, the relevant mainline commit is:
+> >
+> >      59a54c5f3dbd ("thunderbolt: Reset topology created by the boot fir=
+mware")
+> >
+> > The other reporter created [a issue][1] in our bugtracker, which I'll
+> > leave here just for completeness sake.
+> >
+> > Reported-by: Benjamin B=C3=B6hmke <benjamin@boehmke.net>
+> > Reported-by: Gia <giacomo.gio@gmail.com>
+> > Bisected-by: Benjamin B=C3=B6hmke <benjamin@boehmke.net>
+> >
+> > The person doing the bisection also offered to chime in here if further
+> > debugging is needed!
+> >
+> > Also CC'ing the Commitauthors & Subsystem Maintainers for this report.
+> >
+> > Cheers,
+> > Christian
+> >
+> > [0]: https://bbs.archlinux.org/viewtopic.php?pid=3D2172526
+> > [1]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/=
+issues/48
+> >
+> > #regzbot introduced: 59a54c5f3dbd
+> > #regzbot link: https://gitlab.archlinux.org/archlinux/packaging/package=
+s/linux/-/issues/48
+>
+> As I mentioned in my other email I would like to collate logs onto a
+> kernel Bugzilla.  With these two cases:
+>
+> thunderbolt.dyndbg=3D+p
+> thunderbolt.dyndbg=3D+p thunderbolt.host_reset=3Dfalse
+>
+> Also what is the value for:
+>
+> $ cat /sys/bus/thunderbolt/devices/domain0/iommu_dma_protection
