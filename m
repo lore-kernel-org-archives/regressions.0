@@ -1,283 +1,137 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D44F33FD
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 00:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25602DDD7;
+	Tue, 21 May 2024 01:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716252333; cv=none; b=K5d0MQp3Uxx2gkLMSoVWssACbIM7NpVR0G3J4f58etN5csd2WKWoS4QxCaMcgGLS5oIAOhAkkrT1FAF1ScAQQCm4V372Np2r3HKI8iDqlTCLRp70z0GBujZWhvsoHRD3MU//RF11yu/bxenMACDegEl8yJyyYPwmeQ3lxp9pPnU=
+	t=1716256339; cv=none; b=GBKP2oWZgW+xumMnt938kK+icvusgPzk/e20jzkh7q/InalcGRvAkx+F3iRw5qNKm1LMMRhG2uMf5p9XUSwTnoAuHMss6m3i9nV5rlItUWlw/hhfZ9im9Tu9rDBfSon3ASk7azN4s7RIuek6QWpZS7qU2n9sTwWGtuPHJz+uYzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716252333; c=relaxed/simple;
-	bh=M3IGua52fbiYvVXmDO9/O5jfEFfSwxKvM3kbq6LZ/ME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjpdFr1LI6YhouswxTHZAPKGtkQTnGq1mV+0eH361U5hX6f9rmDmIv75RNdSU81tSJa1cCFj0/Hh5/300xHTLkk+ech70GQJKDKqHplkjYmauDCwltzn5oNipmoTVCeE1hYSxfgUThUCqQ8akWpQ3pycZQx2O6U0POz+zd+qJhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c9cc681e4fso1582074b6e.0
-        for <regressions@lists.linux.dev>; Mon, 20 May 2024 17:45:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716252330; x=1716857130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WAQ7EZw2gT8mUoiA62o4QOdC/XHNNwGQwfkkzt04Rds=;
-        b=TIuFpxuhQRlnWKBusxhYEpEnGDHCSV9gTg9U8WW9UJoo5kGWZSzSGBcsFUR757mhJm
-         HrBdqbeKsyyp55uVCPnOrRVSM153OEzis8HLrk3kHHjhKs4SIf8XE6TGRQe9evCtXA+Z
-         xFXIbfWWyc7IcYQQKKT6DDX70FXwR781GVMHEIblpgkWuwdIEza6ZJCtzLMASDs0DaGV
-         iK4WHkPFOeU58PhHr07t29e+mvwD9TDW7QqJT+nMJJuQVNnBiOTpqbmnch46YIKoEvZq
-         KfxKYuav1O/YMqM0LQaMjQpj8HuFJ8lO48ThlyRNmAPnnG1hXvtV9ogJBTAeC0bsldyc
-         Wu+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVEx5l9Jgej9tQlT7EWY/X/teiIMgcB3A3ylJ8HcosDCtPxrJpywcyQpdRAcMdIdeoIB0XrcWcqBrIgWDpVXSpkwkyZCyOkTjWHoDM=
-X-Gm-Message-State: AOJu0YwLYkO5LGFk4tZaXjG5k24GWt/dwju7+EarNLJEj2tIR56swlnd
-	o691VlPS6nQSquh2uGOiBxq4UykLPMI1IZNpSRERe/+p3dqfc13WUEpylp/LgxE=
-X-Google-Smtp-Source: AGHT+IGMn6xjydCtb38kyKvLjZDgFdGue2uUOR537cPk5ZgFt4ChObkqOmoaYUFS+4P+IGBFARHGTQ==
-X-Received: by 2002:a05:6808:18a8:b0:3c9:c3ad:53b9 with SMTP id 5614622812f47-3c9c3ad58ddmr21150431b6e.26.1716252330121;
-        Mon, 20 May 2024 17:45:30 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2757b5sm1237989085a.17.2024.05.20.17.45.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 17:45:29 -0700 (PDT)
-Date: Mon, 20 May 2024 20:45:28 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>
-Cc: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
-	linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
-	linux-block@vger.kernel.org
-Subject: Re: dm: use queue_limits_set
-Message-ID: <ZkvuqNXaNOMe6Gfj@kernel.org>
-References: <20240518022646.GA450709@mit.edu>
- <ZkmIpCRaZE0237OH@kernel.org>
- <ZkmRKPfPeX3c138f@kernel.org>
- <20240520150653.GA32461@lst.de>
- <ZktuojMrQWH9MQJO@kernel.org>
- <20240520154425.GB1104@lst.de>
- <ZktyTYKySaauFcQT@kernel.org>
- <ZkuFuqo3dNw8bOA2@kernel.org>
- <20240520201237.GA6235@lst.de>
- <ZkvIn73jAqz94LjI@kernel.org>
+	s=arc-20240116; t=1716256339; c=relaxed/simple;
+	bh=9W8zhc+dgfcfb0rBog1zP1w/IruObcuWpyooKFQuGsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Z6JUGF35NOXlOb70Oq6C/97djivI4JuxD3qZIYjUeBSq6wWPU0Iowvd17cscR4dYM3Dp9x8sZr0zhGuR2+FoJBBzHlMKEEgldF0FsLaYs7ue8ShTcVh7p6glmsH5TCJ8uwQNQRqphGvOayD/5Ea4VcIkVlNnQ5wHe/UI1JP6ov8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ioAkHrhE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ioAkHrhE"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KDT005002246;
+	Tue, 21 May 2024 01:52:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=TWjzaiPWRuE3Vzeje4HCkWx7RJMXwE1DcD52t2iq+IE=; b=io
+	AkHrhEq+H0QhA5ginnabSrRj7x1+AQ2gwBp4xUE/LuQImKwxfpUuwdvVkw8a42jj
+	G5t5fjRxcfV9mrq3D+FcDf7QP64/no3lj4OgvMFIzU+k8sxzicgAimnFfD/yzeOr
+	RUYYIc8Kblet5VT1k6jJhK/W0SwujE6mjsxP8PIeM7+ohoUXhJCSUCJ1FrH68T/w
+	HzU7Tt2XxTEbWp8Bsso7PmQjFp6gQqbdqOhfgf/X3tYz25a0qSzqI5dimEfWvhPd
+	eWCJcolq9dvBv+AjeYQsRl6hy1CaK1QfxYTl+pncXUTtOHL/o3fjxtdQx3Cglu1v
+	pSiTYD/UosJmc1BsMX8w==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4gcphc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 01:52:11 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44L1q9AZ019088
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 01:52:10 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 20 May
+ 2024 18:52:08 -0700
+Message-ID: <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
+Date: Tue, 21 May 2024 09:52:06 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkvIn73jAqz94LjI@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
+ when connecting to 6 GHz AP
+To: Kalle Valo <kvalo@kernel.org>
+CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <regressions@lists.linux.dev>
+References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
+ <87wmo0k71i.fsf@kernel.org>
+ <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
+ <87h6esebu8.fsf@kernel.org>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <87h6esebu8.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2hWElVs2tP-fpMHWuJBzUgjqxBzoLjQO
+X-Proofpoint-ORIG-GUID: 2hWElVs2tP-fpMHWuJBzUgjqxBzoLjQO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-20_13,2024-05-17_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405210014
 
-On Mon, May 20, 2024 at 06:03:11PM -0400, Mike Snitzer wrote:
-> On Mon, May 20, 2024 at 10:12:37PM +0200, Christoph Hellwig wrote:
-> > On Mon, May 20, 2024 at 01:17:46PM -0400, Mike Snitzer wrote:
-> > > Doubt there was anything in fstests setting max discard user limit
-> > > (max_user_discard_sectors) in Ted's case. blk_set_stacking_limits()
-> > > sets max_user_discard_sectors to UINT_MAX, so given the use of
-> > > min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors) I
-> > > suspect blk_stack_limits() stacks up max_discard_sectors to match the
-> > > underlying storage's max_hw_discard_sectors.
-> > > 
-> > > And max_hw_discard_sectors exceeds BIO_PRISON_MAX_RANGE, resulting in
-> > > dm_cell_key_has_valid_range() triggering on:
-> > > WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
-> > 
-> > Oh, that makes more sense.
-> > 
-> > I think you just want to set the max_hw_discard_sectors limit before
-> > stacking in the lower device limits so that they can only lower it.
-> > 
-> > (and in the long run we should just stop stacking the limits except
-> > for request based dm which really needs it)
+
+
+On 5/20/2024 11:34 PM, Kalle Valo wrote:
+> Baochen Qiang <quic_bqiang@quicinc.com> writes:
 > 
-> This is what I staged, I cannot send a patch out right now.. 
+>> On 5/11/2024 5:54 PM, Kalle Valo wrote:
+>>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
+>>>
+>>>> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+>>>> ath11k fails to connect to 6 GHz AP.
+>>>>
+>>>> This is because currently ath11k checks AP's power type in
+>>>> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
+>>>> However with above commit power type is not available until ASSOC stage.
+>>>> As a result power type check fails and therefore connection fails.
+>>>>
+>>>> Fix this by moving power type check to ASSOC stage, also move regulatory
+>>>> rules update there because it depends on power type.
+>>>>
+>>>> Tested-on: WCN6855 hw2.0 PCI
+>>>> WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+>>>>
+>>>> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
+>>>> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+>>>
+>>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
+>>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
+>>> need to queue this for v6.10 via wireless tree.
+>>>
+>>> Adding the regression also to regzbot:
+>>>
+>>> #regzbot introduced: bc8a0fac8677
+>>> #regzbot title: ath11k: connection to 6 GHz AP fails
+>>>
+>> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
+>>
+>> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
+>>
+>> So here the ath11k fix would not be needed any more once above patch got merged.
 > 
-> Ted if you need the patch in email (rather than from linux-dm.git) I
-> can send it later tonight.  Please see:
+> What happens if we apply both patch 'wifi: ath11k: move power type check
+> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
+> mac80211: build TPE handling'? In other words, do they conflict from
+> functionality point of view?
+No functional conflict, 6 GHz AP connection would also succeed with both of them applied.
+
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-6.10&id=825d8bbd2f32cb229c3b6653bd454832c3c20acb
-
-From: Mike Snitzer <snitzer@kernel.org>
-Date: Mon, 20 May 2024 13:34:06 -0400
-Subject: [PATCH] dm: always manage discard support in terms of max_hw_discard_sectors
-
-Commit 4f563a64732d ("block: add a max_user_discard_sectors queue
-limit") changed block core to set max_discard_sectors to:
- min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors)
-
-Since commit 1c0e720228ad ("dm: use queue_limits_set") it was reported
-dm-thinp was failing in a few fstests (generic/347 and generic/405)
-with the first WARN_ON_ONCE in dm_cell_key_has_valid_range() being
-reported, e.g.:
-WARNING: CPU: 1 PID: 30 at drivers/md/dm-bio-prison-v1.c:128 dm_cell_key_has_valid_range+0x3d/0x50
-
-blk_set_stacking_limits() sets max_user_discard_sectors to UINT_MAX,
-so given how block core now sets max_discard_sectors (detailed above)
-it follows that blk_stack_limits() stacks up the underlying device's
-max_hw_discard_sectors and max_discard_sectors is set to match it. If
-max_hw_discard_sectors exceeds dm's BIO_PRISON_MAX_RANGE, then
-dm_cell_key_has_valid_range() will trigger the warning with:
-WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
-
-Aside from this warning, the discard will fail.  Fix this and other DM
-issues by governing discard support in terms of max_hw_discard_sectors
-instead of max_discard_sectors.
-
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Fixes: 1c0e720228ad ("dm: use queue_limits_set")
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- drivers/md/dm-cache-target.c | 5 ++---
- drivers/md/dm-clone-target.c | 4 ++--
- drivers/md/dm-log-writes.c   | 2 +-
- drivers/md/dm-snap.c         | 2 +-
- drivers/md/dm-target.c       | 1 -
- drivers/md/dm-thin.c         | 4 ++--
- drivers/md/dm-zero.c         | 1 -
- drivers/md/dm-zoned-target.c | 1 -
- drivers/md/dm.c              | 2 +-
- 9 files changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
-index 911f73f7ebba..1f0bc1173230 100644
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -3394,8 +3394,8 @@ static void set_discard_limits(struct cache *cache, struct queue_limits *limits)
- 
- 	if (!cache->features.discard_passdown) {
- 		/* No passdown is done so setting own virtual limits */
--		limits->max_discard_sectors = min_t(sector_t, cache->discard_block_size * 1024,
--						    cache->origin_sectors);
-+		limits->max_hw_discard_sectors = min_t(sector_t, cache->discard_block_size * 1024,
-+						       cache->origin_sectors);
- 		limits->discard_granularity = cache->discard_block_size << SECTOR_SHIFT;
- 		return;
- 	}
-@@ -3404,7 +3404,6 @@ static void set_discard_limits(struct cache *cache, struct queue_limits *limits)
- 	 * cache_iterate_devices() is stacking both origin and fast device limits
- 	 * but discards aren't passed to fast device, so inherit origin's limits.
- 	 */
--	limits->max_discard_sectors = origin_limits->max_discard_sectors;
- 	limits->max_hw_discard_sectors = origin_limits->max_hw_discard_sectors;
- 	limits->discard_granularity = origin_limits->discard_granularity;
- 	limits->discard_alignment = origin_limits->discard_alignment;
-diff --git a/drivers/md/dm-clone-target.c b/drivers/md/dm-clone-target.c
-index 94b2fc33f64b..2332d9798141 100644
---- a/drivers/md/dm-clone-target.c
-+++ b/drivers/md/dm-clone-target.c
-@@ -2050,7 +2050,8 @@ static void set_discard_limits(struct clone *clone, struct queue_limits *limits)
- 	if (!test_bit(DM_CLONE_DISCARD_PASSDOWN, &clone->flags)) {
- 		/* No passdown is done so we set our own virtual limits */
- 		limits->discard_granularity = clone->region_size << SECTOR_SHIFT;
--		limits->max_discard_sectors = round_down(UINT_MAX >> SECTOR_SHIFT, clone->region_size);
-+		limits->max_hw_discard_sectors = round_down(UINT_MAX >> SECTOR_SHIFT,
-+							    clone->region_size);
- 		return;
- 	}
- 
-@@ -2059,7 +2060,6 @@ static void set_discard_limits(struct clone *clone, struct queue_limits *limits)
- 	 * device limits but discards aren't passed to the source device, so
- 	 * inherit destination's limits.
- 	 */
--	limits->max_discard_sectors = dest_limits->max_discard_sectors;
- 	limits->max_hw_discard_sectors = dest_limits->max_hw_discard_sectors;
- 	limits->discard_granularity = dest_limits->discard_granularity;
- 	limits->discard_alignment = dest_limits->discard_alignment;
-diff --git a/drivers/md/dm-log-writes.c b/drivers/md/dm-log-writes.c
-index f17a6cf2284e..8d7df8303d0a 100644
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -871,7 +871,7 @@ static void log_writes_io_hints(struct dm_target *ti, struct queue_limits *limit
- 	if (!bdev_max_discard_sectors(lc->dev->bdev)) {
- 		lc->device_supports_discard = false;
- 		limits->discard_granularity = lc->sectorsize;
--		limits->max_discard_sectors = (UINT_MAX >> SECTOR_SHIFT);
-+		limits->max_hw_discard_sectors = (UINT_MAX >> SECTOR_SHIFT);
- 	}
- 	limits->logical_block_size = bdev_logical_block_size(lc->dev->bdev);
- 	limits->physical_block_size = bdev_physical_block_size(lc->dev->bdev);
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 0ace06d1bee3..f40c18da4000 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -2410,7 +2410,7 @@ static void snapshot_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 
- 		/* All discards are split on chunk_size boundary */
- 		limits->discard_granularity = snap->store->chunk_size;
--		limits->max_discard_sectors = snap->store->chunk_size;
-+		limits->max_hw_discard_sectors = snap->store->chunk_size;
- 
- 		up_read(&_origins_lock);
- 	}
-diff --git a/drivers/md/dm-target.c b/drivers/md/dm-target.c
-index 0c4efb0bef8a..652627aea11b 100644
---- a/drivers/md/dm-target.c
-+++ b/drivers/md/dm-target.c
-@@ -249,7 +249,6 @@ static int io_err_iterate_devices(struct dm_target *ti,
- 
- static void io_err_io_hints(struct dm_target *ti, struct queue_limits *limits)
- {
--	limits->max_discard_sectors = UINT_MAX;
- 	limits->max_hw_discard_sectors = UINT_MAX;
- 	limits->discard_granularity = 512;
- }
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 4793ad2aa1f7..e0528a4f809c 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -4100,7 +4100,7 @@ static void pool_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 	if (pt->adjusted_pf.discard_enabled) {
- 		disable_discard_passdown_if_not_supported(pt);
- 		if (!pt->adjusted_pf.discard_passdown)
--			limits->max_discard_sectors = 0;
-+			limits->max_hw_discard_sectors = 0;
- 		/*
- 		 * The pool uses the same discard limits as the underlying data
- 		 * device.  DM core has already set this up.
-@@ -4497,7 +4497,7 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 
- 	if (pool->pf.discard_enabled) {
- 		limits->discard_granularity = pool->sectors_per_block << SECTOR_SHIFT;
--		limits->max_discard_sectors = pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
-+		limits->max_hw_discard_sectors = pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
- 	}
- }
- 
-diff --git a/drivers/md/dm-zero.c b/drivers/md/dm-zero.c
-index 3b13e6eb1aa4..9a0bb623e823 100644
---- a/drivers/md/dm-zero.c
-+++ b/drivers/md/dm-zero.c
-@@ -61,7 +61,6 @@ static int zero_map(struct dm_target *ti, struct bio *bio)
- 
- static void zero_io_hints(struct dm_target *ti, struct queue_limits *limits)
- {
--	limits->max_discard_sectors = UINT_MAX;
- 	limits->max_hw_discard_sectors = UINT_MAX;
- 	limits->discard_granularity = 512;
- }
-diff --git a/drivers/md/dm-zoned-target.c b/drivers/md/dm-zoned-target.c
-index 621794a9edd6..12236e6f46f3 100644
---- a/drivers/md/dm-zoned-target.c
-+++ b/drivers/md/dm-zoned-target.c
-@@ -1001,7 +1001,6 @@ static void dmz_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 
- 	limits->discard_alignment = 0;
- 	limits->discard_granularity = DMZ_BLOCK_SIZE;
--	limits->max_discard_sectors = chunk_sectors;
- 	limits->max_hw_discard_sectors = chunk_sectors;
- 	limits->max_write_zeroes_sectors = chunk_sectors;
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 7d0746b37c8e..3adfc6b83c01 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1086,7 +1086,7 @@ void disable_discard(struct mapped_device *md)
- 	struct queue_limits *limits = dm_get_queue_limits(md);
- 
- 	/* device doesn't really support DISCARD, disable it */
--	limits->max_discard_sectors = 0;
-+	limits->max_hw_discard_sectors = 0;
- }
- 
- void disable_write_zeroes(struct mapped_device *md)
--- 
-2.44.0
-
+> I ask because I suspect Johannes is planning to take patchset 'wifi:
+> mac80211: build TPE handling' to v6.11 but we should fix the ath11k bug
+> in v6.10.
+> 
+>> But I don't have time to test this, so suggest keeping it pending. We
+>> could drop it once above analysis got verified.
+> 
+> BTW for some this patch wasn't in the pending branch but it's there now.
+> 
