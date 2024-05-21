@@ -1,90 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9049B433DF;
-	Tue, 21 May 2024 05:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E39256A
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 05:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716268328; cv=none; b=mylmSt0jlH0hsjrlT3NdWbfJ8RoF68u831qTYp3wC0y2/n2KAUjQIrQxYbCHgatVSJi3Y4hweDS89nv1azvY7Dda/6kXphgdjpGXqCWCNJdRZ7dW5G6dyK+Dwfy7pj2BvhGar0a+w9vVxFZFiuczWp7+2NDca3AYGyLLVi5JqJA=
+	t=1716268531; cv=none; b=GgqHmarQ9mCgmK9UyhTzIZi+Av7czaEuBvg4Fm20sdC2Pm8qh+tQabnYFFvlzP6cCOuPQIFDWMaz9BeCVFfS1ezjXZfS73TcOCcVBXfXhiOel3A5ZuCPxLyjflgopPnpYV5MeDLWKR1SKZsupcroYVCJqKT/vUlkRw2YE0aAjKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716268328; c=relaxed/simple;
-	bh=Q2qSgSFB8UjUWqO4soRX61IynMlBYuFv6ez7nS2cXUw=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=irSiuzehwD6KuPO7x8/4Crs5q2a1fPyQhinXQOtQTtjbFIJ5NBxYsiuYLRNco7GMWUrkKUXUahvj/mtgQD4o+JuSqJ/+rxM8i+NtkiXKi4+EdKwla+x+btqux9+3HdPQ3W/1+S+CegrOnE/duiX4Jl4NPnUMe3IpK0vUAyUokuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzZjeT0q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716268531; c=relaxed/simple;
+	bh=vFv6DJQbTNFYud7DjAOJ9Oiu/jUCZI9/sQAgG3QA0sc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJ5k5YZKh6z9SC67zM6QcvJnACqeGv8vQuNMWCVmgOXqlZiYTc3uLdlZWYd4eThNwXDaLAVc5uKHpVJ+bx3M/i3c7mmripomaJlrKWjfSXp45Kwtk71daHHfREz75ocpygLilzsbQnB/3ndfopOl+zVIKvtJikoclpsZ/KGO0pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GixRccST; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzZjeT0q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DBF2C2BD11;
-	Tue, 21 May 2024 05:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716268328;
-	bh=Q2qSgSFB8UjUWqO4soRX61IynMlBYuFv6ez7nS2cXUw=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=IzZjeT0qfaxJDdzUz5sSmQwN5xPZ91I5zjgDLcvYICifOQ+Aju783jPmAR0k4SZ1x
-	 5dQuYG3nwCpVVEFF6QpNlKEszDGjnG7Dm62e7R5ymJJE5UU5TCtOP7ZwWlH07LgOfc
-	 4WwBZR3G2jg3m0qM8EnN5umrigbN8ysDEKAh7IdRvqyQ1Ljpp27VxabUuyHc5+UGYw
-	 KSVRRRQJTKdingDYhc3SekvVHDdSux7uB/cvlrc758Uq6cj+GMhJXytok6gNCLqQGS
-	 UApivuFPPdX8dAjOPBONp6wko7LLCArfcKvMODpMETPIbfidi8eDPSf2CWC8RLWFxE
-	 Z04AokbZ32/fQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: <ath11k@lists.infradead.org>,  <linux-wireless@vger.kernel.org>,
-  <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
-	<87wmo0k71i.fsf@kernel.org>
-	<3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
-	<87h6esebu8.fsf@kernel.org>
-	<b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
-Date: Tue, 21 May 2024 08:12:05 +0300
-In-Reply-To: <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com> (Baochen
-	Qiang's message of "Tue, 21 May 2024 09:52:06 +0800")
-Message-ID: <878r03eoka.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GixRccST"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716268530; x=1747804530;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vFv6DJQbTNFYud7DjAOJ9Oiu/jUCZI9/sQAgG3QA0sc=;
+  b=GixRccSTRJ849cWdwDqMBA7Uyv2+Au5L/m/F65/yMe7oP3gDPrfuMuny
+   Tjlkt7bOn+I1YcEhIdQ+UPQidbAi/yltS/e3n0fE+vtwY7hF54HeQWbpE
+   qNlYBO1SKbfaghRnBZ2lnjijGkVHX7d4mdAjAXc5cN/ugPV4/SzVFiZ2t
+   cbkYxNbqKaReyo1B8H1I/c3CUCce5hgopv0BUoRArk1Cp3+KWtwljlPC7
+   Dor2dWZ1dNjrwcRE31eHKKpj4osnsSod7W/KKmUEt7wg6jvA8EjBLH7yn
+   FdoznIQucVbFTA1L8YsRvg97hzinTYRShU3f5wdVPdduAOjfG/zFb5vJe
+   g==;
+X-CSE-ConnectionGUID: WUii30S0Q7SdePeYpKqacQ==
+X-CSE-MsgGUID: TGjxmDrmQYOxnquXGHlbLg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="29958979"
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="29958979"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 22:15:30 -0700
+X-CSE-ConnectionGUID: wYlcXpOhRMagvsD64nYFdQ==
+X-CSE-MsgGUID: 6GmCX/kFRM6fGEXleLbasQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="37313660"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 20 May 2024 22:15:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 8F675179; Tue, 21 May 2024 08:15:25 +0300 (EEST)
+Date: Tue, 21 May 2024 08:15:25 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Gia <giacomo.gio@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Christian Heusel <christian@heusel.eu>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"kernel@micha.zone" <kernel@micha.zone>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	Benjamin =?utf-8?Q?B=C3=B6hmke?= <benjamin@boehmke.net>,
+	"S, Sanath" <Sanath.S@amd.com>
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+Message-ID: <20240521051525.GL1421138@black.fi.intel.com>
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
+ <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
+ <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
+ <CAHe5sWY_YJsyiuwf2TsfRTS9AoGoYh4+UxkkZZ0G9z2pXfbnzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHe5sWY_YJsyiuwf2TsfRTS9AoGoYh4+UxkkZZ0G9z2pXfbnzg@mail.gmail.com>
 
-Baochen Qiang <quic_bqiang@quicinc.com> writes:
+Hi,
 
-> On 5/20/2024 11:34 PM, Kalle Valo wrote:
->> Baochen Qiang <quic_bqiang@quicinc.com> writes:
->>> On 5/11/2024 5:54 PM, Kalle Valo wrote:
->>>
->>>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
->>>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
->>>> need to queue this for v6.10 via wireless tree.
->>>>
->>>> Adding the regression also to regzbot:
->>>>
->>>> #regzbot introduced: bc8a0fac8677
->>>> #regzbot title: ath11k: connection to 6 GHz AP fails
->>>>
->>> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
->>>
->>> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
->>>
->>> So here the ath11k fix would not be needed any more once above patch got merged.
->> 
->> What happens if we apply both patch 'wifi: ath11k: move power type check
->> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
->> mac80211: build TPE handling'? In other words, do they conflict from
->> functionality point of view?
->
-> No functional conflict, 6 GHz AP connection would also succeed with
-> both of them applied.
+On Mon, May 20, 2024 at 05:57:42PM +0200, Gia wrote:
+> Hi Mario,
+> 
+> In my case in both cases the value for:
+> 
+> $ cat /sys/bus/thunderbolt/devices/domain0/iommu_dma_protection
+> 
+> is 0.
+> 
+> Output of sudo journalctl -k with kernel option thunderbolt.dyndbg=+p:
+> https://codeshare.io/qAXLoj
+> 
+> Output of sudo dmesg with kernel option thunderbolt.dyndbg=+p:
+> https://codeshare.io/zlPgRb
 
-Ok, thanks. In that case I would like take patch 'wifi: ath11k: move
-power type check to ASSOC stage when connecting to 6 GHz AP' to
-ath-current branch from which it will go to v6.10. Is that ok for
-everyone?
+I see you have "pcie_aspm=off" in the kernel command line. That kind of
+affects things. Can you drop that and see if it changes anything? And
+also provide a new full dmesg with "thunderbolt.dyndbg=+p" in the
+command line (dropping pcie_aspm_off)?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Also is there any particular reason you have it there?
