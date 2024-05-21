@@ -1,60 +1,57 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2211B299
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E3E18054
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716307219; cv=none; b=UIAmZosrVO5oYAwSuDcAdd8VGIJvKfXaAr5l+nFmp7ObMrGK402lr6hgGQwvr44LiVCtPPdlQ7i1gUHOjhAD981rht2iwjFUkySmAjS1OEAD9Z3CcRZMx9FiAGweNblmtuME71jJmV6Nlk2TVriFYMf51bydfNXyU+i3PseKgKI=
+	t=1716307351; cv=none; b=K70asULfAVne0mvrhl58wW5wv6RHfQmRnDFYY55uyYQlv3pXX+6xAnDamqmaYa4jypQe5OIbQZtAtwTrLb/HCjzsnV7BwCc8dueUXFntpbsv0QeEggGQPm1fjudNuZ6nI7VIR9D+aaFFpIAqX3rdTquRcHMSw3FhZua4fFbkOmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716307219; c=relaxed/simple;
-	bh=vVAEAyfrohFgwQUdSFubvGXi+5gPA2p8YiWJ6hKb29M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lU7KoR2hMBD1InZOF7E7st/Sfcayj9wHOyRfB8dESy+4zk6W8dHW8Q3aBxXTIhjgixGZpQ1bHHbhUm8WDtmiKUnuQzIBlFMUpav/gt/5KQTQZGASmnY8NbkghnIWnYCVk/66Zp/jpEtHUtKW3LuxKFE0u55WKmzHegRTlm2WMp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gK5G5fI3; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716307351; c=relaxed/simple;
+	bh=USFH02LdogHwlFaWdJnvdq4tX7l/sqkZXQ30J/Gv/sQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=IJYE3fA8Lkf5dIjVoP/2FvgMbBtyCqQ+/Dt34qhxfFvne8DyVnzOOMHk1H0vxxhP4Znqhz+S2w57u+zk2G6r7Y8c5BjHrdhCfOXPgPporT8QCvHeKLEJb/QVmNQqBHD0fqyXjdFAT9Pal2lU5FLlBVIKmeTjyrZJbjnGDpP0VJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K81OqJ3d; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gK5G5fI3"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-351d4909711so2122583f8f.1
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:00:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K81OqJ3d"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-47f2f9f2ac8so1093586137.2
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716307215; x=1716912015; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8P8f3Xe3WKGb6+A4BlKH0j6nQd7Typm/M8fTWRmWe/8=;
-        b=gK5G5fI39s0fMejU7b1zxt0WrB2XNTo0Wp8oQ51whB/I59qn+I/Bvxq8ae5fk/y3we
-         tRknDdetslf60KR8PtVB9zJgDIUjIMCJFiYP5tb8FMCo4IPkOW/u40kZyYWjJML6iMcZ
-         kQWXZwukdCpCbLdZyJhKEkxOVR6HG3n887uQpQB6sic4UWYh+W/XmEuAhrytebg0NZA5
-         QEegwNnP9kBAEjwgjonBaErt/2L6KIp+r3yMpDMr/FWAKlYA8OpaVgJuZy2mckNZFp5y
-         LCZwjkV1f8JDbjnhJ7i/iTLGzfYWPti1jdaM35TZgyt+LOogPtKIyrsLA80TA12cTH7z
-         WiFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716307215; x=1716912015;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1716307348; x=1716912148; darn=lists.linux.dev;
+        h=cc:autocrypt:content-language:to:subject:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8P8f3Xe3WKGb6+A4BlKH0j6nQd7Typm/M8fTWRmWe/8=;
-        b=e4+fdFC2X1NuLt7I/K5qZCQXv/nGm7xk7i7+v03YOYzQxMhsbPsNof+mnNRCRZCwIC
-         H1KW+vxxgrXUEwBudxkvl4PdHWeluzEgWD9dT/EfyMnI8c2sX5vJzzHT5NrZ3X2TM8WK
-         EE6F6Wh74xdyhi5LpzbD/EpPnFAseLbCejHqrqzNyWTZRq9Udlx3x1m3/r3AVTxJX6xE
-         yuP52c4/JofHDw4/q2vZZr8HgRPGbW2/3+Egh4Co9mG2NYuX6z/x6ASvABEt72MA3one
-         mteUN9S00Wm6eo9jlMwkZUU6AZlj+hrgy+9xOdwtfulUqtQoZkfB/Z0csnwNV0LzB4rq
-         EtEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUp7Ea8A5zmgVPPU2QNgFGiYuQbUuyeu9/y/nsjVMGSts2sSx4/Xnx7VDlzgvNL2IUWu/H3tNEHJj2l0+pCJEvOpdS6DW3GztKGGmE=
-X-Gm-Message-State: AOJu0YwyPKZifS37SgNQqcDPYEhj1j6WV+V8ttG8HEo0dD+srtDNfCTw
-	AGkJNMVhYzOUAegSAvDz30PvUZHDY8baSFjeQqqih88VGTeug2ZAOMKn4PL2eYM=
-X-Google-Smtp-Source: AGHT+IGsBK0SGmhtIHLM1fIBm3F0YiryCUR9LulcVEo0MSe6Wkw4Nnpo7JzMUoA92SZizwcd5PkxAw==
-X-Received: by 2002:adf:a18c:0:b0:34c:cae0:c989 with SMTP id ffacd0b85a97d-354b8e38ec8mr8449631f8f.33.1716307215517;
-        Tue, 21 May 2024 09:00:15 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354cece0054sm2411078f8f.102.2024.05.21.09.00.14
+        bh=USFH02LdogHwlFaWdJnvdq4tX7l/sqkZXQ30J/Gv/sQ=;
+        b=K81OqJ3dnJsaMIYuD3xGOcWBDvl8KcZoQJZZwOg4pQMw4C4j5CN/LFEz6xwshPlXc8
+         U2CxKcZ+WQGEZhNpNyS6ShHVSVxgya4pCdnr5T1d8Pmt/Jc81AcaxaSlrcVDISNXIksz
+         yK3VTyfmwVcVxFK0RhBhZe34qVHf0trvpFjLoNrCXM5gVrFD1kdCcBp0EHDMFQBYt+Hp
+         Sud5Z5Cp35nSxbOK16OIA8MPRJoVj8N27QtPd1LrY9maEnVhe5uBuywRpfYW+zri8KKx
+         EP+WQlbfPM6SXxMBQWhibrf2T9Afmu3m7q+03oGoa0JGIW53Jc7JVqIDCdr2up5Bwjj2
+         I2mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716307348; x=1716912148;
+        h=cc:autocrypt:content-language:to:subject:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=USFH02LdogHwlFaWdJnvdq4tX7l/sqkZXQ30J/Gv/sQ=;
+        b=V3tcIbDuOfz7SrFYu08tkHpeWu4di/Qai60EJGkKuKEI1INiu+azEo8FOpxBQfJdfT
+         2kBbccgYfpN8gk1nbxg+bXLF1tQrMLBFHElnz0+mDz5lUPQQUeMppn25IfFXVyLJ1udo
+         fSkW9sAvVvgTYfn895wImuZN8BCM0YRrIzlhHkaDiF1mO96KCoTRP1enXmb8oJoSvw6i
+         RU+hs21vpwLjOJ3UR9mL+HCKE+rGmovLFtNJjmcnpTWMAp1DDU8FSLs040T4rWKbuAGX
+         QS2ss2NQgIWfcUxD4E1NMur7Chd0R9ARVeVZsXFLRXkF3dbnAWVGbGQQ4xGK0WK+edvv
+         +lhQ==
+X-Gm-Message-State: AOJu0YztjKH3aUbKmNB/sN2wDJcySTejZxkSabxOJJiNSKGdvLj82XTa
+	Zp9J0XpkdkZWaDMcz38V1AxXjva/Lu4giXL4Li1LL3Dy20RF1ixdAGO0Api/
+X-Google-Smtp-Source: AGHT+IHPsKkBLQIhUi0AbjRALzFUp5Rw1YHqU3reXONPRrborMHknrwYE3p/tFbV/OOW2xKTDpDhog==
+X-Received: by 2002:a05:6122:17a0:b0:4d4:eff:454 with SMTP id 71dfb90a1353d-4df8829ce08mr31341376e0c.1.1716307346753;
+        Tue, 21 May 2024 09:02:26 -0700 (PDT)
+Received: from [192.168.1.213] (syn-142-197-127-150.res.spectrum.com. [142.197.127.150])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-4df7c050c57sm3391139e0c.36.2024.05.21.09.02.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 09:00:14 -0700 (PDT)
-Message-ID: <4ed8d1fc-40b9-4254-90a1-9d621adc71a4@linaro.org>
-Date: Tue, 21 May 2024 18:00:12 +0200
+        Tue, 21 May 2024 09:02:25 -0700 (PDT)
+Message-ID: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
+Date: Tue, 21 May 2024 12:02:25 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,101 +59,121 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for
- QCA6390 after warm reboot
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Lk Sii <lk_sii@163.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, luiz.von.dentz@intel.com,
- marcel@holtmann.org, linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
- regressions@lists.linux.dev, pmenzel@molgen.mpg.de, stable@vger.kernel.org
-References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
- <f343ecae-efee-4bdc-ac38-89b614e081b5@163.com>
- <CABBYNZ+nLgozYxL=znsXrg0qoz-ENgSBwcPzY-KrBnVJJut8Kw@mail.gmail.com>
- <34a8e7c3-8843-4f07-9eef-72fb1f8e9378@163.com>
- <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Andrew Udvare <audvare@gmail.com>
+Subject: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
+To: regressions@lists.linux.dev
+Content-Language: en-GB
+Autocrypt: addr=audvare@gmail.com; keydata=
+ xsFNBFOdSyUBEAChmGHO21xk44a8sZTjAMK2G6NZpson6ekB6sGriYgFApDAEQGvnd5btdRH
+ aObx8whfPb+NB2QshEKyBsRTtpwSfePuMzcNEYFVJGiuOH2EGx73zRmydpZxetBJaba3oWMY
+ ivZ7MhoNsBO1bEYvyrmtXJBrotnMfMAH4HDIkRwEES4KtGXpNK6rVCXFiRNtwqaqeOmGPzEG
+ soESrmi3hAFm4QUB0KAsvdQ49siFbZFZFNbVGAv1wqQa6xrTaNK3sw3rsRmj45wsMY/agWZC
+ M6Jh9X9R2OMFV2ypqLCOOMF31Jiv/wV7i739EE8F9u2rCITa/ATC+0+9Lr22rcKudrkkY4Wg
+ CMaKkmm619Edd5arDPo8GCCTqKNQjArvcl5jQHyxMsmiSFKG1MlhoFSeVCC/c0ScvEeziErn
+ AuEvs9vjiNWwHN8+mXJMULi999Pqu85itjDc7OgyUSXY2ZvuDBimxOEN07Tfy4aoVov7Ulls
+ l23XvRoHSD1h2SfJTqEJTu88s5P6TVgpszcaFpxuC8KS6guwW6s7SMkG4ujAdlowx0+MKs2Q
+ /wiNYT4XcNmF8XBTrEgiIfVewxKgfthAWUCHNEJFrZpvruJxt31YuGPPp8CkhxxHTYMsyRpO
+ 7RcRYGGNsgzXxLMX5zqbjqdUtns4p+6DKd4lhmYMcybOxb+ypwARAQABzSFBbmRyZXcgVWR2
+ YXJlIDxhdWR2YXJlQGdtYWlsLmNvbT7CwZMEEwEKAD0CGwMHCwkIBwMCAQYVCAIJCgsEFgID
+ AQIeAQIXgAIZARYhBGCvdPOI709JMcCOOBr9mvwSDCbdBQJbJxjGAAoJEBr9mvwSDCbdH3wP
+ +wcFbqwkmbusNdIpjjWEKlPj1spnU3oGr9ikByJUg5qKHDSwlCIaZAVqbIh0SD1DZvAami1P
+ LUh0684MTf6HKs/+EPiy/7GqWpXihXw1wSawnPqmCqC91Vtd1+peXyMZCi7dx8PH/SSpnLmm
+ jxtbMmn/qesxpTms+qEc+gksfu5F9mQ2RS1sazTCIf7eBgdNgq/beykXa8lZU9Ek9NjbG1pk
+ Sq9hXgA/AUlaAFAXX80dvNkCYvVrgq8ucdfcbvESudBDr8Nt6eXeWOcwTYvJ2h7jetavqpZz
+ rCu7SbL2tmVnj0uBgpkmdmOudU5OMw3M5f/y4PhnXGuwu4su43NRP7gyOVmItc36HEXSXwM8
+ tMbiHV/Rv1FdNxqf7OfKOimlYp8Psu7Ntd62byxuvyLSie4EUNBj0StxaNHUQ1FCiG7si4jE
+ 2szWoRRUQDpPLe0PYfJQsCF7YXoEfrjUVRqqTGpDWovZ5SLlFx6TZpGSyYQBgJxfWXor/mcM
+ i+nSfTUKFCFVNJObadpppgHVrT1HUGLy20dq3CLNwG8mAvYRMAUS51Q7ssIn/Rrd/ManSNa8
+ eDzfxSWD5L3gdYfluJeaaT9gCz/v7Q2wt80+Bpz1shDzqC524YAGtXhLJ680z9z8wpJwfr8p
+ KD+3AA7Z5P9Z/e3jzdAXm7j3AXiLDJLgoRFRzsFNBFOdSyUBEADHokxkZ4FwDIqyf1ZULG/b
+ vwEvK4UWqP0QmUTSHBdd+bgPWFT4YvUurFftgZaYay1GJaOPjYTy6+oeYFwIrb8RqKhcAR9l
+ 4+U4MSlZniuxc1l8xVDUdX0zw6rP/L9wsDdW2lmnlNuOD7ZybwekeBp5N4on317r4TuetdFV
+ IEDT+LrtJFl5FYU76Ru9l6g3M3HkLWFYocwsgyyAS7dZHXS4KXDZ96H9a9IVtxTh/XAJl/7x
+ 395A0Nvjp8+cYvYm+pravw8ByF1UJ4PfqIMkwV8YwvCt185kvQXrBBgooozk4ryuSFzGlTkA
+ jtrhJxnIZfzIaahyCd1ju/zbxmIwY5nfZVnCX4+dM9t7ei5iUZ1Qxhkf6Tl8gRwoKrKjjEay
+ x7S5ob5Du3tOeyFInuOEjxtIRYcplCSy1Qb3jcGDF5osXugVxaxfwOJi1hRu1ntFHy7J3ibX
+ cfYuBaruzT8OP9DVLWCyS/D8JQJ7PiRkMiNiITDilzK0hZo2i6oA0R7WNnqypeaZq+avQpAt
+ rVwkK1wZApfxwjmBSngM6VTGCzOefvE8PNCd55UmT9tkByZq5iknCWF7rbie1wD6s9x5bwLX
+ uK0Es5UV4lBOa4aSyW5hhFe0OFwflrVpKYC56yopHyUFVhx4BA31MsVNNmb0JUfZJ+blDhsP
+ +ll+P8BzqF13tQARAQABwsF2BBgBAgAgAhsMFiEEYK9084jvT0kxwI44Gv2a/BIMJt0FAlsi
+ aocACgkQGv2a/BIMJt3rcw/+Ku0d1/IAz4l+3wy6inDz/0bNBO7V7tXPydVgZOe1LwbCwMuk
+ SN+rq9qhgCAM+A/5lwdRcmIlfbGTy9AyFc19p8yiIgksR0t0i8gqbu4Xs+RrQcFmZurBXoFc
+ s28gOZI2/t5Tj455dET2amLZ2aiTDaYBbqxZa9vfS5alfWsnvd4fjW4Kr1rEstTFdfubCX/N
+ BYsSiXSzfGkLgOjuiLDBA3TYtaTTNPC3mx8wC9wq80aF2xiZoGeUW2ecrBohmksgdgkcqqGk
+ iG0cRDZX5O+h1RJ2gZu90MXIThxJmi0ne1c+oGpZfRkNSteDK/mFeK7RJTb9XrBiZuWOIjf7
+ dpMoQfGN4yjEqOvedFZeg6jE6wZiEzdCIwOJkf/uOtr2Ohd18hek4evdMzGzUVv4JzA/l8pg
+ 9tIHf7d/7Am0aAbSMXv+TECKxLHDoOI7KQL/flgTy1Vdw4q/WJB8yirhoSng5XgrB1A3W8Fo
+ 8m/G/Il9R5VGTPTMn4xe+UbMCBbLqoNfr5p3KWqSgqLQkP0YSt4G/Rcw5mJnbgGyw9UAM5wT
+ PDT/BYzFQzmsk6467hsTjMBK3ka0VjKAJQ/AMfUgY9cLp4M/agkxDb0cKagvy0mf8argIgM0
+ 005cauU1nTb0v+L9S9sDcVvHOjRVDBR9mRzRpoxbGiAcBObVqtMByta0tuA=
+Cc: stable@vger.kernel.org, axboe@kernel.dk
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------lzTjzw3fjyxCla2u8cwxx07T"
 
-On 21/05/2024 17:48, Luiz Augusto von Dentz wrote:
->> driver->remove() even is not triggered during above steps.
->>>> Commit C: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on
->>>> closed serdev")
->>>> this commit is to fix issue B which is actually caused by Commit B, but
->>>> it has Fixes tag for Commit A. and it also introduces the regression
->>>> issue A.
->>>>
->>>
->>>
-> 
-> Reading again the commit message for the UAF fix it sounds like a
-> different problem:
-> 
->     The driver shutdown callback (which sends EDL_SOC_RESET to the device
->     over serdev) should not be invoked when HCI device is not open (e.g. if
->     hci_dev_open_sync() failed), because the serdev and its TTY are not open
->     either.  Also skip this step if device is powered off
->     (qca_power_shutdown()).
-> 
-> So if hci_dev_open_sync has failed it says serdev and its TTY will not
-> be open either, so I guess that's why HCI_SETUP was added as a
-> condition to bail out? So it seems correct to do that although I'd
-> change the comments.
-> 
-> @Krzysztof Kozlowski do you still have a test setup for 272970be3dab
-> ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev"), can you
-> try with these changes?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------lzTjzw3fjyxCla2u8cwxx07T
+Content-Type: multipart/mixed; boundary="------------3abi3fBPQRMsFYpysPAZhB5h";
+ protected-headers="v1"
+From: Andrew Udvare <audvare@gmail.com>
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, axboe@kernel.dk
+Message-ID: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
+Subject: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
 
-Unfortunately not at the moment, because mainline never had a proper
-support for a variant of this Bluetooth/WiFi on our boards, so it was
-working with few out of tree patches. I think Bartosz is working on
-fixing it via power sequence, but that's not in the mainline yet.
+--------------3abi3fBPQRMsFYpysPAZhB5h
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Best regards,
-Krzysztof
+I3JlZ3pib3QgaW50cm9kdWNlZDogdjYuOC4udjYuOS1yYzENCg0KaHR0cHM6Ly9naXQua2Vy
+bmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3RhYmxlL2xpbnV4LmdpdC9jb21t
+aXQvP2lkPWFmNWQ2OGY4ODkyZjhlZThmMTM3NjQ4Yjc5Y2ViMmFiYzE1M2ExOWINCg0KU2lu
+Y2UgdGhlIGFib3ZlIGNvbW1pdCBwcmVzZW50IGluIDYuOSssIE5vZGUgcnVubmluZyBhIFlh
+cm4gaW5zdGFsbGF0aW9uIA0KdGhhdCBleGVjdXRlcyBhIHN1YnByb2Nlc3MgYWx3YXlzIHNo
+b3dzIHRoZSBmb2xsb3dpbmc6DQoNCi90ZXN0ICMgeWFybiAtLW9mZmxpbmUgaW5zdGFsbA0K
+eWFybiBpbnN0YWxsIHYxLjIyLjIyDQp3YXJuaW5nIHBhY2thZ2UuanNvbjogInRlc3QiIGlz
+IGFsc28gdGhlIG5hbWUgb2YgYSBub2RlIGNvcmUgbW9kdWxlDQp3YXJuaW5nIHRlc3RAMS4w
+LjA6ICJ0ZXN0IiBpcyBhbHNvIHRoZSBuYW1lIG9mIGEgbm9kZSBjb3JlIG1vZHVsZQ0KWzEv
+NF0gUmVzb2x2aW5nIHBhY2thZ2VzLi4uDQpbMi80XSBGZXRjaGluZyBwYWNrYWdlcy4uLg0K
+WzMvNF0gTGlua2luZyBkZXBlbmRlbmNpZXMuLi4NCls0LzRdIEJ1aWxkaW5nIGZyZXNoIHBh
+Y2thZ2VzLi4uDQplcnJvciAvdGVzdC9ub2RlX21vZHVsZXMvc255azogQ29tbWFuZCBmYWls
+ZWQuDQpFeGl0IGNvZGU6IDEyNg0KQ29tbWFuZDogbm9kZSB3cmFwcGVyX2Rpc3QvYm9vdHN0
+cmFwLmpzIGV4ZWMNCkFyZ3VtZW50czoNCkRpcmVjdG9yeTogL3Rlc3Qvbm9kZV9tb2R1bGVz
+L3NueWsNCk91dHB1dDoNCi9iaW4vc2g6IG5vZGU6IFRleHQgZmlsZSBidXN5DQoNClRoZSBj
+b21taXQgd2FzIGZvdW5kIGJ5IGJpc2VjdGlvbiB3aXRoIGEgc2ltcGxlIGluaXRyYW1mcyB0
+aGF0IGp1c3QgcnVucyANCid5YXJuIC0tb2ZmbGluZSBpbnN0YWxsJyB3aXRoIGEgdGVzdCBw
+cm9qZWN0IGFuZCBjYWNoZWQgWWFybiBwYWNrYWdlcy4NCg0KVG8gcmVwcm9kdWNlOg0KDQpu
+cG0gaW5zdGFsbCAtZyB5YXJuDQpta2RpciB0ZXN0DQpjZCB0ZXN0DQpjYXQgPiBwYWNrYWdl
+Lmpzb24gPDxFT0YNCnsNCiAgICAibmFtZSI6ICJ0ZXN0IiwNCiAgICAidmVyc2lvbiI6ICIx
+LjAuMCIsDQogICAgIm1haW4iOiAiaW5kZXguanMiLA0KICAgICJsaWNlbnNlIjogIk1JVCIs
+DQogICAgImRlcGVuZGVuY2llcyI6IHsNCiAgICAgICJzbnlrIjogIl4xLjEyOTEuMCINCiAg
+ICB9DQp9DQpFT0YNCnlhcm4gaW5zdGFsbA0KDQpNb2Rlcm4gWWFybiB3aWxsIGdpdmUgdGhl
+IHNhbWUgcmVzdWx0IGJ1dCB3aXRoIHNsaWdodGx5IGRpZmZlcmVudCBvdXRwdXQuDQoNClRo
+aXMgYWxzbyBhcHBlYXJzIHRvIGFmZmVjdCBub2RlLWd5cDogDQpodHRwczovL2dpdGh1Yi5j
+b20vbm9kZWpzL25vZGUvaXNzdWVzLzUzMDUxDQoNClNlZSBhbHNvOiBodHRwczovL2J1Z3Mu
+Z2VudG9vLm9yZy85MzE5NDINCg0KLS0NCkFuZHJldw0K
 
+--------------3abi3fBPQRMsFYpysPAZhB5h--
+
+--------------lzTjzw3fjyxCla2u8cwxx07T
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEYK9084jvT0kxwI44Gv2a/BIMJt0FAmZMxZEFAwAAAAAACgkQGv2a/BIMJt0z
+mw/+NVqRDtQz+Fqh3nmkdGJEU5EQGVzZ7TAj/XiL3wgs2x3KOJQoBA+czZXX/STIlzvvcPP9Nx7c
+z1paJFazfKhrAdNBfS9dpQqslCigohHslZHEYOEZk+7pBc71R5fk8kf3EamIgoz+qq45lpi+nIIQ
++1+xxYrTv2I1a21MeypgxHZwHypsSJdq8k8vb12cb4Nb6I65m8z1+iQdEQGklCI+rPYJqyj9Ad6c
+hhtgS9EJmvADStSFPsMoXpEv+0hYOPWFLo3dBRNo36bkVF4XykpaiUuVaitKjQgY37JOk/RuNNsE
+NB2Y6kbZ5y4zYhKBQMRo542u3IRUP8CxPzlO6sEHcWiRkRfSC6fq2QHVcACDzkYJdHrhOV0zMbWE
+8N/RNyXzBRSWJlb1nL3dZqRS37YGoQZVvtR9mzCr5W9dz+2anPGJthoRjidLYOE5n4XXRnSmHmvK
+eB6RMzFqfMaES/pwkZ/L4ODafakQ+LTibpfggrw3U1z3HCga3slsG17/Nm6oFgXJIa89eD2XeEmK
+Da1JQvv13dQLGWydKKVgfbaKfsWviUslRNgC6gXptlm6IqTbcbfKSR7CB4r3VQkRN7vf61wrHuGT
+m+JfRkinUe1UuqIiZiqUIogDlbg+H5H2etHUaXJTN/AT4RKxuRQv3Vc2UcpUdVbpsPEnkqIhszMt
+EhI=
+=ipZq
+-----END PGP SIGNATURE-----
+
+--------------lzTjzw3fjyxCla2u8cwxx07T--
