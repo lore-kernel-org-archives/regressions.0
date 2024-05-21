@@ -1,97 +1,139 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706D01DFE8
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 19:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E072B6FDC
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 19:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716320189; cv=none; b=YoYvkZSa05WFG9f5+lalJSXGB+UMlyIxyz5RNQGL2WwrUgS1x5Mshic+IeFSyeC6JpaQFabMgkU9/5BhFXHTBMfxOaHvhMLopnTmlWqb2tRkho8AhTzAM4KcA/VR5S7R/xjO010TaRRpgJUokE+JkEbUCUEhi3NwA23PSTsluzc=
+	t=1716320245; cv=none; b=ioKlIqWdpZeT0efNIbrYanUotGVRN8sPaqNO0eE7+Zk3B1DGcJqC80HoAcGH56PZeGsHyxYtZDBNs7XN5Rgu/vVf28kbqzb/VjLD+Sx4ONAyPR6KHgG5q9rCO0tCD8/8o3CyVtOLvvLcpNqYBK0GZoXj/kiNqzc3Ro8+mBAZnXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716320189; c=relaxed/simple;
-	bh=ikxbxZ8FjqMDhrrkk2D5nLqfIfAn0RqHaPpraJv+K/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MLg48UFVY6bbVNoZpu+hGnerxziEZ7/RNnlMA12egohAurA+mK4l7fo3sNSKctCDmyV0N8ocXoMV306GCfFKZSno9HfDcdeOdtk3n8sqrdM9WZ6hSvMHB9QYanNYslnbXnbBUL5Ts8NUnMKHx0CkIYy7RBRoRP1OOtYJl4/ypsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=fBJuZW46; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1716320245; c=relaxed/simple;
+	bh=wXDcMa9BCYSyaXMMmTl9LN4ze2E6leCzM04dQwdFaRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObeN41Gc7xQyiaXkdT/Cp2UC5V48yl32HWeMY0R72cgxy1hSL7gX7M7rnn5Fqjc0qu/1G6WukNk+h0fFLPX/bF1PMWX5yMdzB9vw5toqtc/dUTgafi8Rf3lGl+RwtxX36dEu+mW8pZJvqvK8Ky8J36XOpR9TLLiVRnV9fpsqZHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5X8nQJ+M; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="fBJuZW46"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7e22af6fed5so20697739f.2
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 12:36:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716320187; x=1716924987; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xePqQlr9Hwg/NyUW4bJAe88xQcUe0YJyjg2xMqe02j4=;
-        b=fBJuZW46/D30kebb2oA6zyDvs1nIgADDfBfmnN8aQoSe0RTX3GVFhK7ANxUtSDArrf
-         G5OG0PcxnsdCue7EFMJWAJDju0Wh7AzOahnjQH9UezxRZSMGbzIhLVvK6twJM4E3QcNV
-         alKS5k0omLAKzfAaIV0U+8mMtFUksC47WWufBDjPElvRuMDuIpwUj59bITdXby3bQSYm
-         TagFpFgCRZ7PYz6mOBfKpyj/lz2APgChaf2uviJyBRIMDWHP7tnPztEYC/E9a2v+1jUk
-         pUtxwFYe7lgDqOJlSUzhkTivZzY8/NgiA34VVAz6sK8JsK41pVL8bX4dKURgm1p3123n
-         7C8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716320187; x=1716924987;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xePqQlr9Hwg/NyUW4bJAe88xQcUe0YJyjg2xMqe02j4=;
-        b=dj2egiVc+wuLV7N7GtdJJmIEBWlnhvl93+4BdYL6YiWLiYBLbDxBKOgbG58+eskR2V
-         WvT3C/Ex8KmwRySooMYRB8m32UMco6xrJZzj/9pjoSaOqmutkCA3RO/UHBU68nHgi52i
-         r3f6qw3XX0oV7irqNlwXNhRgslvUKKyjCta7bxaU0ae/bTZCYadmY60Vl3DRN7LmMI0e
-         Mrn6cH4QRkZ9CBpn5bSP0ewoCXItxhhqNkdBKB0y+yHW4AySIjf8ct0NrJwy8Kvk/RdI
-         T48/Jbs/GtDYVI1JObgd2vQkIN1ll7vtHKyNTRAABofKukLb7dXJVlsnGg0orxOopve9
-         FhsQ==
-X-Gm-Message-State: AOJu0YwdZzyygF6yzdpS2N6tcCKIWYA/2Z8jmK7+YP8k+svkqjBA+DWz
-	AFY7dFlyuLNesN0+baWf7Vhs5U8NQO/S4VIxImpQHd7yIJH6+RpXwbITm4GzprQHIRUJ6sDWi3c
-	P
-X-Google-Smtp-Source: AGHT+IFk2v5N71VRLaKar/Gv9UHdlrX6c0Pv9qkJ50PzawnksP2Zx+uvBLPpPUIbBIU6Bk0lWQT3lg==
-X-Received: by 2002:a5d:9496:0:b0:7e1:8bc8:8228 with SMTP id ca18e2360f4ac-7e34f7ff29fmr2400939f.0.1716320187504;
-        Tue, 21 May 2024 12:36:27 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-48b9b4d71eesm3522227173.143.2024.05.21.12.36.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 12:36:26 -0700 (PDT)
-Message-ID: <be0bb7ea-8e82-4bf1-b592-918080216db6@kernel.dk>
-Date: Tue, 21 May 2024 13:36:23 -0600
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5X8nQJ+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716320241;
+	bh=wXDcMa9BCYSyaXMMmTl9LN4ze2E6leCzM04dQwdFaRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=5X8nQJ+MU7gpqCnK/j2pEAXml/E84t8yPhv1xQpdLoc8LPYVDKPFa5+M6n38NzU80
+	 Z+j1/At6hOVYn8VmZls82EutWaY7Ehg2OYpdMykTy2cV7JvEzs8SqHBT2UpPRVDfNr
+	 5iFDu/JCq3KkmiDCMBioXP3XC4g4bvuLjbusOcohr88wASA9NJZ30Tep5/AIOq2M8h
+	 YTJZ0SWhHE+FDm5yZvE+Em2ioQ7ePT9r175ZagbbP6JMAxf0AnxGu0Jyb781LbEytZ
+	 GVvqgRbFNw8QaxI19BZXaYArrw9Eatwxu+YreHu91wPwTVdwtzjrvUXKdBLJ9Ln3Ix
+	 RKXLDTV7ZZCNQ==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 245963782183;
+	Tue, 21 May 2024 19:37:18 +0000 (UTC)
+Date: Tue, 21 May 2024 15:37:16 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Eric Biggers <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	regressions@lists.linux.dev, kernel@collabora.com,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 PATCH] crypto: api - Do not load modules if called by async
+ probing
+Message-ID: <07512097-8198-4a84-b166-ef9809c2913b@notapiano>
+References: <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+ <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
+ <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
+ <20240518043115.GA53815@sol.localdomain>
+ <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+ <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
+ <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
-To: Andrew Udvare <audvare@gmail.com>, Christian Heusel <christian@heusel.eu>
-Cc: regressions@lists.linux.dev, io-uring <io-uring@vger.kernel.org>
-References: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
- <8979ae0b-c443-4b45-8210-6394471dddd1@kernel.dk>
- <8de221f7-fe5a-4da9-899e-de2a856a4ddc@kernel.dk>
- <yywbp7fjnwgqxvc66zimea4hgdc2eysjx5nezky3vndr7xw25l@jv76rdseqm3e>
- <b8018270-6e9a-4888-87fd-69620d62c4e5@kernel.dk>
- <0ec1d936-ee3f-4df2-84df-51c15830091b@kernel.dk>
- <bcf1e758-66de-47fd-8cfe-ce77c545a8bc@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <bcf1e758-66de-47fd-8cfe-ce77c545a8bc@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
 
-On 5/21/24 1:33 PM, Andrew Udvare wrote:
-> On 21/05/2024 14:29, Jens Axboe wrote:
->> On 5/21/24 12:25 PM, Jens Axboe wrote:
->>> Outside of that, only other thing I can think of is that the final
->>> close would be punted to task_work by fput(), which means there's also
->>> a dependency on the task having run its kernel task_work before it's
->>> fully closed.
->>
->> Yep I think that's it, the below should fix it.
+On Tue, May 21, 2024 at 10:53:18AM +0800, Herbert Xu wrote:
+> On Mon, May 20, 2024 at 11:49:56AM -0400, Nícolas F. R. A. Prado wrote:
+> >
+> > Unfortunately this patch didn't work either. The warning is still there
+> > unchanged.
 > 
-> Tested-by: Andrew Udvare <audvare@gmail.com>
+> OK perhaps we can do it by calling current_is_async ourselves.
+> But this is really a nasty hack because it basically defeats
+> the whole point of loading optional algorithm by module.
+> 
+> Linus/Tejun, is it time perhaps to remove the warning introduced
+> by commit 0fdff3ec6d87856cdcc99e69cf42143fdd6c56b4 since it's
+> been ten years since the warning caused a real problem?
+> 
+> For the Crypto API, if it is called by some random driver via the
+> async context, this warning stops us from loading any modules
+> without printing a nasty warning that isn't relevant as the Crypto
+> API never calls async_synchronize_full.
+> 
+> ---8<---
+> Do not call request_module if this is the case or a warning will
+> be printed.
+> 
+> Reported-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> ---
+>  crypto/api.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/crypto/api.c b/crypto/api.c
+> index 22556907b3bc..7c4b9f86c1ad 100644
+> --- a/crypto/api.c
+> +++ b/crypto/api.c
+> @@ -10,6 +10,7 @@
+>   * and Nettle, by Niels Möller.
+>   */
+>  
+> +#include <linux/async.h>
+>  #include <linux/err.h>
+>  #include <linux/errno.h>
+>  #include <linux/jump_label.h>
+> @@ -280,7 +281,8 @@ static struct crypto_alg *crypto_larval_lookup(const char *name, u32 type,
+>  	mask &= ~(CRYPTO_ALG_LARVAL | CRYPTO_ALG_DEAD);
+>  
+>  	alg = crypto_alg_lookup(name, type, mask);
+> -	if (!alg && !(mask & CRYPTO_NOLOAD)) {
+> +	if (!alg && !(mask & CRYPTO_NOLOAD) &&
+> +	    (!IS_BUILTIN(CONFIG_CRYPTO) || !current_is_async())) {
+>  		request_module("crypto-%s", name);
+>  
+>  		if (!((type ^ CRYPTO_ALG_NEED_FALLBACK) & mask &
+> -- 
+> 2.39.2
 
-Added, thanks.
+FWIW this patch fixes the warning. So feel free to add
 
--- 
-Jens Axboe
+Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
+if you choose to apply this patch (I'm happy to help test other patches too). In
+any case, please also add the following trailers so the regression gets closed
+automatically in regzbot:
 
+Fixes: 1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_random()")
+Link: https://lore.kernel.org/r/119dc5ed-f159-41be-9dda-1a056f29888d@notapiano/
+
+Thanks,
+Nícolas
