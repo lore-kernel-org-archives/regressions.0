@@ -1,182 +1,143 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C31A1C697
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2331517997
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716307970; cv=none; b=kRETw3YE7TssGaPNeoxdTv3Ao5JS9mlag26k/l2pOSnPQ5Kq7X6JDKr7nZnZwATHav8AvOCSaS/VqMrm7nqcMGbDPCwgQ7cgiN8WzArAgbHR2Be6XQaaiwF260E3vUo0lfZI71G1JjXB/Q5OiYbzs3eGkAWgQFFAWkvhNlwvvNI=
+	t=1716308193; cv=none; b=sqg5PRw3AQc8IIay/8h1najxCgmDCdelP71aB91Y94dtz5x/KvVg9AUwrOpaeog+9TfonHE2m4M8ePXG6rYMGiq2duzQtSV9LiJXQMMFaD3/FLvhSVdonyIjLySEwpUUtDNUsuk1EK+B0B5Mn1PedmcwwgU8NEZIgRIqq0NJmYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716307970; c=relaxed/simple;
-	bh=16LUPK2BDH83+ZeUEibqD0CSXfCzHgidoB/WLnqChcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K5ZHhCYrz084wbwViNSgOb0zd71XexXuo3N0pY/xkArcsm83ci61Sgt/TPly/6jBeiPehqxYlU/aUti1XfMWouaarfKWKdC4nLR4HVoZWyaYGzD+G4nyc7QiRwPLiJxXrV84YX341rsITxo6Eb0GKd+7eQN5DYrk35Gou9Xa4vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZrhfdtA; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716308193; c=relaxed/simple;
+	bh=qjBVA8ggLNmGa0E2b6IVKynsyFNB2lzDbYb/vF/UBE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JWFmmVuLwUAhaSVg8NiCJmbJsczl+gkHkJdyTEhnKkI8v6erp+ITdkW0wkDiyMWIDFo96tJeJYbz8miR9RMK9wnhhUV5vzwWkwul2qunL8QKDQl2jg873hId5u/G3gd2kvAIH1QTo4Jp+eMjd0bii7fIhFKR+x+zPTyZKjkb8E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ooKlNTXy; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZrhfdtA"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2b3646494a8so1358475a91.2
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:12:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ooKlNTXy"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7e195fd1d8eso19408239f.0
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:16:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716307968; x=1716912768; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CCvtAT9yL4bsyunfEMr4mUSenqzklzI9+JXqeALbOyQ=;
-        b=cZrhfdtAYZ0B13FMT8rtQuUSCOkxcBfRgqxKwyMkuUr0AhiT+S6A2VxASUHpxWiXGh
-         3vteDYN3Q5Bm+qFnGcnkVeS5MZW6726BGgezV03Y0N5iPIUhfQZZakPUpQptBlmDQ4q+
-         8neNzPCDAknQ4LeY0bYTVJNbb7FiHnlJN446pLnM0Hp8lAEfYb+leKTzMdr/q1pKwhrX
-         mWfsyc+JzRaZyMu1FPHsk35wa29ClmhqabD+NRIdKTOqi0WdqUPV8EQmEnNW/NvYvkzX
-         OeIszOtAepVdjOBlDCtGrliUAQ3odh0OhsWGBtsoE67SsRm8QJ+5WdIEQuuJgzgsGMS/
-         yplA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716308188; x=1716912988; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VPlnRVU+taSPs3KUAXhcI2PpqAt76JjV3d+nQlsudCE=;
+        b=ooKlNTXy3oRHJ9HoaFyjoRYwa4kEQmcA5vGhXwvWjUn0FDTpv/h6xwwoM4tXNmoB5B
+         +rlTkScrELuurZ5S0oOPt6EaZkOce+z3yI0Z1DrdiO0vMqn2lTNqOZ7puO1u4JslNJ53
+         jaL8zqGSW24v4+DK/5FYOYso4Gm8pElnQ45OmTzH0HrHWc6ekpw2zKA9jionlG4sKC+I
+         LYyVP/sLG0exjKVjInUS2o94I/z4EXWVK6L6C5MbcUCFTgfp7/KfB+0BrmSdSMB5Kwke
+         gwrhKL+U7xY0PbCQFCn48AMnzYLCosnKzH1BHAhbiXSiDVwVH5xwnA+vH7sYzP3fxod4
+         H4lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716307968; x=1716912768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CCvtAT9yL4bsyunfEMr4mUSenqzklzI9+JXqeALbOyQ=;
-        b=MShzpPRemHNc/z2y9JH82SaeRMERklZExaGBnoSMtjqqI6xcb2osEGD7F7j+BdM6hg
-         z/iXpW5IjfvSrzIKNExE4PS7/pWLhj2KhTxn5UYL3OVQzC+m7WFxzeLr0rlCytthZm/X
-         cAimjcjjiC+9aITZ4GgJW9du9x3R5Se0aHPVSg5Rd/lKESBEmfEaXw6L+Ssom3RF5WVh
-         pCplj4nuWN4tXX+51rUkLf6x1UBYs/ApfHz3Hb6a4uR6fgsnQ8NeFRMTwTupNyR7y0BE
-         gJ7Ejax6NF6lWDIIZ5KS++toj2ijqhUBTJ5rzaLk9F6xm8xfRIVsLJJw7ZWuung2WmwS
-         Qybw==
-X-Gm-Message-State: AOJu0YwzDSdtGXlbgzCzmFV5ZObMchuoZPn7mYIoeTpvc3kESAyTSb0B
-	i72vIIIc6+5DAO+c+Q1lJ8WvF+1nxMWYgWjtfi5AnggGDhmggNdCOCk/dbPDux0SzBQDgteoO5T
-	rBM4zcpF+1G0WkM3gYVu1wEtLn9p3ZrvD
-X-Google-Smtp-Source: AGHT+IHAP3KDnJJS0O7SkGfKIP7uk1EKp+f8X1mluB24KubBN9tLU3rOHMtfN8y0ky6xkTXQo2yflL/anOYUpzKLWLA=
-X-Received: by 2002:a17:90a:eb07:b0:2a3:10d3:239d with SMTP id
- 98e67ed59e1d1-2b6ccd6bbbdmr28841420a91.32.1716307967824; Tue, 21 May 2024
- 09:12:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716308188; x=1716912988;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VPlnRVU+taSPs3KUAXhcI2PpqAt76JjV3d+nQlsudCE=;
+        b=sC4Oxd3u6FYyxHTWduGaPaPOqeCSQFekeYigJjqFIfF54Howhh+sqqtfN6WH829DTB
+         642i6qJjXBBL7ApU4NhWZRiiNjYdX8fCDqQWlpJqEFadoY5cJYsOODYVw2zlsupkqchC
+         1WrGGFV2UWfgoe8blkgD/+FeUtZ1RSzo2TphCDigQdZ2I8x+KXABiDPassRQRigN+/2K
+         mCy5JJYTq9qWY+mm3DiC+rtvFWnkP8/vZAlXaFQhOrlHIJ3M+/DMy6w7bWl5u5Y7WB7S
+         pdAJbenCu88PivlzE+qfgQqC8PEJE0Kl4b/kxVrRdtDaVBk3zytwypLSXV85JS2PYoyQ
+         TftQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWI2zeTCYlyhluxXYZbLZlbheErYnckggKIeFJbEVNXy05LU5bbMw9QzTAaUAafZs57aUl+EC0FN9Jl4qWZ9xD/q3BZkh7SC7pCcZs=
+X-Gm-Message-State: AOJu0YyTx9lmreD+qc7FzInuKzyjch7prwX8W13dWZJI1HIUNqeO34v9
+	v5/aCl9gw6Cu/WCYuqdhf9Xha/dumq72Ai7QkpSRkOKCTyDuhI8x31h1RBU8T8Q=
+X-Google-Smtp-Source: AGHT+IE3hXU7Nbrl5o9NXAKpyjo2WFIT5cKrhXoGADD9AqeueOOV2X7KdFSsHAqSHS2D9/aObYkyPg==
+X-Received: by 2002:a92:d40a:0:b0:36c:c4eb:fef7 with SMTP id e9e14a558f8ab-36cc4ebff44mr293860395ab.2.1716308188166;
+        Tue, 21 May 2024 09:16:28 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-37073b59f96sm5620305ab.53.2024.05.21.09.16.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 09:16:27 -0700 (PDT)
+Message-ID: <8979ae0b-c443-4b45-8210-6394471dddd1@kernel.dk>
+Date: Tue, 21 May 2024 10:16:25 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240307062957.2323620-1-Wayne.Lin@amd.com> <0847dc03-c7db-47d7-998b-bda2e82ed442@amd.com>
- <41b87510-7abf-47e8-b28a-9ccc91bbd3c1@leemhuis.info> <177cfae4-b2b5-4e2c-9f1e-9ebe262ce48c@amd.com>
- <CO6PR12MB5489FA9307280A4442BAD51DFCE72@CO6PR12MB5489.namprd12.prod.outlook.com>
- <87wmo2hver.fsf@intel.com> <6f66e479-2f5a-477a-9705-dca4a3606760@amd.com> <83df4e94-e1ec-42f6-8a15-6439ef4a25b7@leemhuis.info>
-In-Reply-To: <83df4e94-e1ec-42f6-8a15-6439ef4a25b7@leemhuis.info>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 21 May 2024 12:12:36 -0400
-Message-ID: <CADnq5_P+WsL8B6B2vK5ENe8VWdvheoHyxoUfgF3Oex8Gvp7Lbg@mail.gmail.com>
-Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at drm_dp_add_payload_part2
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "Limonciello, Mario" <mario.limonciello@amd.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	"Lin, Wayne" <Wayne.Lin@amd.com>, "Wentland, Harry" <Harry.Wentland@amd.com>, 
-	"lyude@redhat.com" <lyude@redhat.com>, "imre.deak@intel.com" <imre.deak@intel.com>, 
-	=?UTF-8?Q?Leon_Wei=C3=9F?= <leon.weiss@ruhr-uni-bochum.de>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
+To: Andrew Udvare <audvare@gmail.com>, regressions@lists.linux.dev
+Cc: io-uring <io-uring@vger.kernel.org>
+References: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-I've got it teed up.  Is drm-misc-fixes the right branch since we are
-in the merge window?
+(removing stable as this isn't a stable regression, and the commit
+itself isn't marked for stable to begin with).
 
-Alex
+On 5/21/24 10:02 AM, Andrew Udvare wrote:
+> #regzbot introduced: v6.8..v6.9-rc1
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=af5d68f8892f8ee8f137648b79ceb2abc153a19b
+> 
+> Since the above commit present in 6.9+, Node running a Yarn installation that executes a subprocess always shows the following:
+> 
+> /test # yarn --offline install
+> yarn install v1.22.22
+> warning package.json: "test" is also the name of a node core module
+> warning test@1.0.0: "test" is also the name of a node core module
+> [1/4] Resolving packages...
+> [2/4] Fetching packages...
+> [3/4] Linking dependencies...
+> [4/4] Building fresh packages...
+> error /test/node_modules/snyk: Command failed.
+> Exit code: 126
+> Command: node wrapper_dist/bootstrap.js exec
+> Arguments:
+> Directory: /test/node_modules/snyk
+> Output:
+> /bin/sh: node: Text file busy
+> 
+> The commit was found by bisection with a simple initramfs that just runs 'yarn --offline install' with a test project and cached Yarn packages.
+> 
+> To reproduce:
+> 
+> npm install -g yarn
+> mkdir test
+> cd test
+> cat > package.json <<EOF
+> {
+>    "name": "test",
+>    "version": "1.0.0",
+>    "main": "index.js",
+>    "license": "MIT",
+>    "dependencies": {
+>      "snyk": "^1.1291.0"
+>    }
+> }
+> EOF
+> yarn install
+> 
+> Modern Yarn will give the same result but with slightly different output.
+> 
+> This also appears to affect node-gyp: https://github.com/nodejs/node/issues/53051
+> 
+> See also: https://bugs.gentoo.org/931942
 
-On Tue, May 21, 2024 at 7:20=E2=80=AFAM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
->
-> Hmm, from here it looks like the patch now that it was reviewed more
-> that a week ago is still not even in -next. Is there a reason?
->
-> I know, we are in the merge window. But at the same time this is a fix
-> (that already lingered on the lists for way too long before it was
-> reviewed) for a regression in a somewhat recent kernel, so it in Linus
-> own words should be "expedited"[1].
->
-> Or are we again just missing a right person for the job in the CC?
-> Adding Dave and Sima just in case.
->
-> Ciao, Thorsten
->
-> [1]
-> https://lore.kernel.org/all/CAHk-=3Dwis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6=
-SRUwQUBQ@mail.gmail.com/
->
-> On 12.05.24 18:11, Limonciello, Mario wrote:
-> > On 5/10/2024 4:24 AM, Jani Nikula wrote:
-> >> On Fri, 10 May 2024, "Lin, Wayne" <Wayne.Lin@amd.com> wrote:
-> >>>> -----Original Message-----
-> >>>> From: Limonciello, Mario <Mario.Limonciello@amd.com>
-> >>>> Sent: Friday, May 10, 2024 3:18 AM
-> >>>> To: Linux regressions mailing list <regressions@lists.linux.dev>;
-> >>>> Wentland, Harry
-> >>>> <Harry.Wentland@amd.com>; Lin, Wayne <Wayne.Lin@amd.com>
-> >>>> Cc: lyude@redhat.com; imre.deak@intel.com; Leon Wei=C3=9F
-> >>>> <leon.weiss@ruhr-uni-
-> >>>> bochum.de>; stable@vger.kernel.org; dri-devel@lists.freedesktop.org;
-> >>>> amd-
-> >>>> gfx@lists.freedesktop.org; intel-gfx@lists.freedesktop.org
-> >>>> Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
-> >>>> drm_dp_add_payload_part2
-> >>>>
-> >>>> On 5/9/2024 07:43, Linux regression tracking (Thorsten Leemhuis) wro=
-te:
-> >>>>> On 18.04.24 21:43, Harry Wentland wrote:
-> >>>>>> On 2024-03-07 01:29, Wayne Lin wrote:
-> >>>>>>> [Why]
-> >>>>>>> Commit:
-> >>>>>>> - commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
-> >>>>>>> allocation/removement") accidently overwrite the commit
-> >>>>>>> - commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in
-> >>>>>>> drm_dp_add_payload_part2") which cause regression.
-> >>>>>>>
-> >>>>>>> [How]
-> >>>>>>> Recover the original NULL fix and remove the unnecessary input
-> >>>>>>> parameter 'state' for drm_dp_add_payload_part2().
-> >>>>>>>
-> >>>>>>> Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload
-> >>>>>>> allocation/removement")
-> >>>>>>> Reported-by: Leon Wei=C3=9F <leon.weiss@ruhr-uni-bochum.de>
-> >>>>>>> Link:
-> >>>>>>> https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc=
-8.c
-> >>>>>>> amel@ruhr-uni-bochum.de/
-> >>>>>>> Cc: lyude@redhat.com
-> >>>>>>> Cc: imre.deak@intel.com
-> >>>>>>> Cc: stable@vger.kernel.org
-> >>>>>>> Cc: regressions@lists.linux.dev
-> >>>>>>> Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-> >>>>>>
-> >>>>>> I haven't been deep in MST code in a while but this all looks pret=
-ty
-> >>>>>> straightforward and good.
-> >>>>>>
-> >>>>>> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-> >>>>>
-> >>>>> Hmmm, that was three weeks ago, but it seems since then nothing
-> >>>>> happened to fix the linked regression through this or some other
-> >>>>> patch. Is there a reason? The build failure report from the CI mayb=
-e?
-> >>>>
-> >>>> It touches files outside of amd but only has an ack from AMD.  I
-> >>>> think we
-> >>>> /probably/ want an ack from i915 and nouveau to take it through.
-> >>>
-> >>> Thanks, Mario!
-> >>>
-> >>> Hi Thorsten,
-> >>> Yeah, like what Mario said. Would also like to have ack from i915 and
-> >>> nouveau.
-> >>
-> >> It usually works better if you Cc the folks you want an ack from! ;)
-> >>
-> >> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> >>
-> >
-> > Thanks! Can someone with commit permissions take this to drm-misc?
-> >
-> >
-> >
+This looks like a timing alteration due to task_work being done
+differently, from a quick look and guess. For some reason SQPOLL is
+being used. I tried running it here, but it doesn't reproduce for me.
+Tried both current -git and 6.9 as released. I'll try on x86 as well to
+see if I can hit it.
+
+Maybe someone can describe what is happening here? I'm assuming that
+something is racing with an io_uring operation done by SQPOLL, which is
+keeping the file open until done.
+
+This may or may not be a kernel issue, depending on what assumptions are
+being made on when operations are begun and completed. Maybe those
+assumptions are correct and there is indeed a kernel regression here, or
+maybe the user side is just buggy in its assumptions.
+
+-- 
+Jens Axboe
+
