@@ -1,125 +1,130 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272CF4C66;
-	Tue, 21 May 2024 16:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F531FBB
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716308859; cv=none; b=QChoIN1YfJGKT9QyKR6c2TYgbCFQ2c40gBiBbWESnspGAzkilw0ltgVbicBAG1yNifT5wYXfc21sl10o4A81gzTJb9tbH5lZBdyyM7a5G36aI71lufWd6Kxn6FlOw6MjSfKT3MR2VQB4ivrje1W6hNRR+ByjpLgEoLrkPCLIiTk=
+	t=1716310111; cv=none; b=GafBFsztwtQm+8tmQKv5JtNeVD8ET/j0TzapReKvpvc3dxl/K75tYd/42IWOtIXWxw1K3Dn4rmJj3ZvDOUNJhzyxasqg0BYjH8a5ZIZtjKqS14QQtI0NnL9TLyzTT+Gxfwgn0Vf9kTK2HlQtCbasmlRuuc/B+P6x1sYywTb+40I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716308859; c=relaxed/simple;
-	bh=qGvYWy8UJJh6MLm0owdO37JBYzdn9AR+NhAl3DKfkvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Gx1JUV2sbNW4XB29VVL7NcMAtK/OX7o03D4Q2CbdQ7EyBwkISdHxWYlMWYFsqHOLlxE+7ALXD+hH2X0DjeagMC5uKG4cLerNyUuRt6Db+Fjp6qYiljzEkZb17yyZm3acn2278TsqBVY9YE4C7m32ztrSbGn6nw358BR8tvGayk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P9YAZMZh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716310111; c=relaxed/simple;
+	bh=20VOATDLRsn0OJDx4Nlip92L/g8dIv+dozEDBnBbXLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=stg0WLylIW3QzBNidMJX9O1jO9/LGlR2ugZ6gH34qyFQsWBfqV0exHXxHJAuCNFB8hmGkGYbRM/ve2SGI4mQJvIbSjHCcS6Ky9JwVXE+vKWDZ4+o6uFQwFA9lKfSjlaH/IVMjXqR8F6YZcv8UT7OWxaBDyuYL7HuAhQ6YtGJzbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jcb0d1Ca; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P9YAZMZh"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44LAa2UL030497;
-	Tue, 21 May 2024 16:27:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ub76Tj8brlsc2ZB/ZUH1s+GZ5ZLyF3LbgMsiIZBZWaA=; b=P9
-	YAZMZhGn2rewr+tCO2zCjhX3nTrV7jTMAyh+aayo1UfojBZfnAdf0M1VJqXvw6nX
-	lKIpO566oacCJjjg2ksimxbXaqbLLiJ2TvD87e7ylSdkfcFNN7XT4Bw4OyRQSn14
-	q98xpxfPySiO+hPf5E1ERuJFEiqLsUZI93Ck4u9LdPkt0fx/p3ZbEGQbiUhcZaQk
-	gRXH3KLvcwxbQNunvOVotBHUOG+j4BcCeUJIYj9x9w32PJgEHHAXLUDoelqis3Mg
-	OVzsmTVooxfZiCQh6iW71FM8cxOsg1VLsmY9KbfFfIvWMtqUdqtW7nun3pCaL/J/
-	xWwRS7l0s+xChRQdt9Ag==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pq5eda5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 16:27:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44LGRU5j018432
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 16:27:30 GMT
-Received: from [10.110.17.44] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 21 May
- 2024 09:27:29 -0700
-Message-ID: <0c8dc45d-8869-4455-b6be-1395d2937933@quicinc.com>
-Date: Tue, 21 May 2024 09:27:29 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jcb0d1Ca"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716310108; x=1747846108;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=20VOATDLRsn0OJDx4Nlip92L/g8dIv+dozEDBnBbXLE=;
+  b=Jcb0d1CaM9rOnI4aQL+gqCLLGJDnxwM1iGWWI22Ihzqjk247xjivX40I
+   A1bRchgC8U/cf9qc7H03HeOwuSO1iR9I2klDqoySTtP6Zp22qOsXiyOVc
+   cs5rj42vv93Tdzhje/MFNtqeghwQvSYYyvn1HhVXYBU/uOJhIKxUsxrLu
+   +KPSgrHcQs9yMIjZhR1zj0Ca1e9RWS14cmmSZ4NEh+51IMVK7CgS3iEo+
+   vPmTGAIgQUNNLOjeenzABLkJeO6UsvAJpZ7SlI6KVnCMPgWsKwYHTnhNb
+   RNZis84lv7jtPXbJngJWDuSEqjTdtVXHX2t4S9CXVb3XU6hgEo5yfel8k
+   Q==;
+X-CSE-ConnectionGUID: 1ALpUukMSj2/6691k2KW7Q==
+X-CSE-MsgGUID: f8ZjP15OTFuv1L/EGd1/Zw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="30044657"
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="30044657"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 09:48:27 -0700
+X-CSE-ConnectionGUID: ePv+3SjSQLSTU8YFMTh8Sw==
+X-CSE-MsgGUID: dboaXVzoSF2M5mJ7wehPrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="37812646"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 21 May 2024 09:48:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8DBC43D1; Tue, 21 May 2024 19:48:24 +0300 (EEST)
+Date: Tue, 21 May 2024 19:48:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux GPIO <linux-gpio@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 6.10-2
+Message-ID: <ZkzQWCBqagIVsGeB@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-Content-Language: en-US
-To: Baochen Qiang <quic_bqiang@quicinc.com>, Kalle Valo <kvalo@kernel.org>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <regressions@lists.linux.dev>
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
- <87wmo0k71i.fsf@kernel.org>
- <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
- <87h6esebu8.fsf@kernel.org>
- <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
- <878r03eoka.fsf@kernel.org>
- <e235c2f1-4d52-4a89-9d1b-9d63d0ff4c6f@quicinc.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <e235c2f1-4d52-4a89-9d1b-9d63d0ff4c6f@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tQECF9tgjRHs3L06Ew7CM0MRQZmk6C9V
-X-Proofpoint-ORIG-GUID: tQECF9tgjRHs3L06Ew7CM0MRQZmk6C9V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_10,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405210124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 5/20/2024 10:27 PM, Baochen Qiang wrote:
-> 
-> 
-> On 5/21/2024 1:12 PM, Kalle Valo wrote:
->> Baochen Qiang <quic_bqiang@quicinc.com> writes:
->>
->>> On 5/20/2024 11:34 PM, Kalle Valo wrote:
->>>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
->>>>> On 5/11/2024 5:54 PM, Kalle Valo wrote:
->>>>>
->>>>>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
->>>>>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
->>>>>> need to queue this for v6.10 via wireless tree.
->>>>>>
->>>>>> Adding the regression also to regzbot:
->>>>>>
->>>>>> #regzbot introduced: bc8a0fac8677
->>>>>> #regzbot title: ath11k: connection to 6 GHz AP fails
->>>>>>
->>>>> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
->>>>>
->>>>> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
->>>>>
->>>>> So here the ath11k fix would not be needed any more once above patch got merged.
->>>>
->>>> What happens if we apply both patch 'wifi: ath11k: move power type check
->>>> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
->>>> mac80211: build TPE handling'? In other words, do they conflict from
->>>> functionality point of view?
->>>
->>> No functional conflict, 6 GHz AP connection would also succeed with
->>> both of them applied.
->>
->> Ok, thanks. In that case I would like take patch 'wifi: ath11k: move
->> power type check to ASSOC stage when connecting to 6 GHz AP' to
->> ath-current branch from which it will go to v6.10. Is that ok for
->> everyone?
-> Good to me.
+Hi Linux GPIO maintainers and Linus,
 
-Good to me, too
+Here is a couple of kinda good to have before v6.10-rc1 is out fixes as one of
+the regressions was introduced just in the PR of previous GPIO ACPI work that
+landed recently (via GPIO subsystem PR).
+
+Thorsten insisted [1] that it's a good to have flawless v6.10-rc1 than waiting
+for a normal process to be taken. Hence I created a tag against the latest
+(as of today) snapshot of Linus' tree with two pending fixes. I can't weight
+myself the criticalness of the changes, but NULL pointer dereference is kinda
+one that better to go via fast track. Hence this PR is sent to GPIO maintainers
+and to Linus Torvalds directly.
+
+Note, due to a couple of other regressions (not done by me) [2][3] I wasn't
+able to test this PR earlier anyway. But now it's not only compile, but also
+HW tested.
+
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+Link: https://lore.kernel.org/r/c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info [1]
+Link: https://lore.kernel.org/r/20240517200534.8EC5F33E@davehans-spike.ostc.intel.com [2]
+Link: https://lore.kernel.org/r/20240514190730.2787071-1-andriy.shevchenko@linux.intel.com [3]
+
+The following changes since commit 8f6a15f095a63a83b096d9b29aaff4f0fbe6f6e6:
+
+  Merge tag 'cocci-for-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux (2024-05-20 16:00:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.10-2
+
+for you to fetch changes up to adbc49a5a8c6fcf7be154c2e30213bbf472940da:
+
+  gpiolib: acpi: Fix failed in acpi_gpiochip_find() by adding parent node match (2024-05-21 18:46:45 +0300)
+
+----------------------------------------------------------------
+intel-gpio for v6.10-2
+
+* NULL pointer dereference fix in GPIO APCI library
+* Restore ACPI handle matching for GPIO devices represented in banks
+
+The following is an automated git shortlog grouped by driver:
+
+gpiolib:
+ -  acpi: Fix failed in acpi_gpiochip_find() by adding parent node match
+ -  acpi: Move ACPI device NULL check to acpi_can_fallback_to_crs()
+
+----------------------------------------------------------------
+Devyn Liu (1):
+      gpiolib: acpi: Fix failed in acpi_gpiochip_find() by adding parent node match
+
+Laura Nao (1):
+      gpiolib: acpi: Move ACPI device NULL check to acpi_can_fallback_to_crs()
+
+ drivers/gpio/gpiolib-acpi.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
