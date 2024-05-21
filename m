@@ -1,59 +1,59 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672A014900E
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 19:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307202AE6C
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 19:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716318314; cv=none; b=FTBWRagVnjjhh1dAlgWwfRfnm0qr8YG2iZOQ/YDyIHfEu53jK0BQAakD5iQy/w82XR/AUJCC5rxXILC0p7R9Olgy2HvmA7stFf/aGAA0elSkXXuMRt8wx/ap4sAeY33c52G6OYX6WAzz/7n2tfjouvkJOOf924fotmYLN8i33WU=
+	t=1716318714; cv=none; b=hmn6G9d9mRrkbv0/bUvXb8tpbAg3U7U7E+OJsU3OQi22Rj82iqCg/k3/LSI7Gx7LJG0J0xtkibzRkpw3LvLG5sC3qbnhTtaBy4Y9V+d3D7G1ZW1UX+kTmhk8YXN6is3akIXfl0m19l5U6ecS44XKPgBLfBdjw0wTqhMXI5tbq2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716318314; c=relaxed/simple;
-	bh=9ig+Kyi/baZpS+645Jg/adbwo2c9nTOBE6Yno5YS9f0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BtB6xBuZ9z1eJM6ZD4w4hubvo+UotvyBDlq7GSKvMnm+Y1IWhtcRa3+uvbkvk3cw70s5Blg+CP1tqK2tSdSyrYDOU5hsVSq1taf3uSuKhsIWL1XYGNhP3xHsinl604gVpZVzc2PUqkmebHIZyQJv3Hf3tjzE+W1plVIR+g4h+/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ZPFor8xr; arc=none smtp.client-ip=209.85.166.176
+	s=arc-20240116; t=1716318714; c=relaxed/simple;
+	bh=W4KBY+3wFgc33kZ7ocw1X4OcJKutAsZN9ixLcTINEEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CaM7yzK/qFfdri/HxY9/pYVKEgDwpMIpHu+GjXdbZMcob3OynlmeCx3pSw3JcXFyt34qlE3WJeERepGLai71mZwkwnKGNjkEUqTbbmeCEQ0PHefzw7R4cz8JushLscNyb4rVJ2TTIgZitJT9Bz6qAxKHeamqYnRulKadBtWm5mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=fnia1Jfp; arc=none smtp.client-ip=209.85.166.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ZPFor8xr"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36c84c95c23so1595925ab.2
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 12:05:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="fnia1Jfp"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7e195fd1d8eso21030239f.0
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 12:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716318311; x=1716923111; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nRu+e+4ihYIHhqnVRJg1n8yw7RtfPjEVL53AovtGebw=;
-        b=ZPFor8xrEvmRoRt8EGiqAxQbRn3ttafKf4yqNGOl8gCozqKz/pfNKJMUfdOj671tJS
-         EmTAN4X0RsCY1dD3A4fZSfwZrc3oVHjFbKlDK7IBaGQuLyVkb3e63GkdV0x+1DG24PNd
-         Em6VPwqB0hAv4pzfo+ghfMKPPmjYY/ZCofLtn82EIj/caKFS/KgUz6Rse4r1y4Wg1LSq
-         reLLs0Fif9ogJjQDykSh+Ec7l8d4pvl+YakRJ3G9BKiQ8renjZMcIwV3qVW1nvtzcmyH
-         YU8mgvJVmRYHek85bGeFUqI6JM+U4k389CGprU8bQapKHhXLqqFSlCtChXAzZbTkS4L3
-         iHrw==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716318712; x=1716923512; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2R1lZ7cvE4ys+41YejloGdUV0GMIOF3sFj6PoCbWqgw=;
+        b=fnia1Jfp6vIA4mgzcAG8/zbL4P+Jj9Dep+KMtGG7SOJ/ixgHIYFz4u2MVTxt7RKKsW
+         qoKvh2hlatp3qT954PjlNX/bTyz9eR4ghEYU2+kTpAEkMr6+5zy3Y8cT+xEGky3kNplY
+         gk/eBEWaFnYReJCyIzxBXE70ygnZJFn+fWz/BOotES7eZLSUmyseBJoHRsZCJXgIg2h0
+         tggfayCkN4ogehMKODxZWYmbNR8sxWou94DYJ9LmHaeVwNIVGzQrdTkn4ge7QnICsBHs
+         7zM8CeWQtTqlAICSyGvMSzoMpuKWn5ZUkVU3Dr1kCIfs2xbcS9CIIxtPCYtMZHfYaITZ
+         ewbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716318311; x=1716923111;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1716318712; x=1716923512;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nRu+e+4ihYIHhqnVRJg1n8yw7RtfPjEVL53AovtGebw=;
-        b=JUqVsIG64MAOZ85P+vi6t8Ahy05Lv2KML+LS2qhI0AVT0WaljXWkfkflY/6MMDPApO
-         DzZVeNPhfK9tCdME7niwF2TEWpVs/GQbjWrrfZwvnwGjv/zRmMBaYEwrhzWOfj3F6i84
-         GnATHQw/PFg5rWuFa7yMaNYbPoNJv5fNKw6jeGZZ8lJc/4LBX+6XKYlfyNIWVZStM4+m
-         Nd+jcWznUaIIz5wW1hn1f9n5ze4DToxCb3T94Ulyh1ROAV9P4HmXs3l2LOL5ymYafYCj
-         UIsy5q7eQ+evamNuRSfBM6Do432pRO+nKYGV8b0TXESH7MGvfZl1A1IIzVUtyN/ro8R5
-         MEyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ5wmrcNAI1SS0mo1rLz/xfBl57WqCTfrPxxY8u97f79W3WxUw7rsH44p8i4sZrW3EGKRlRAsXLSmR98m+6upop5SqbXiCrPcRpSQ=
-X-Gm-Message-State: AOJu0YxTmu03T4ipKGNKrbECO/3xt1vBezaKWJyMkKvT9s1VoEyCCPDA
-	zjtf9bqVkzTlSdjpsI66x53otaJGFWd8LdQ+dfWnyTX3fYgb7nciiFDxcheF24k=
-X-Google-Smtp-Source: AGHT+IE85FfzZm1BhB04tBLgcH/K0Mtaq5JAegY01Fm5dtbDRyiqHop3XkES1ZT1sB5tYMocE/6/og==
-X-Received: by 2002:a92:c988:0:b0:36c:c86b:9181 with SMTP id e9e14a558f8ab-36cc86b9470mr310516235ab.0.1716318311506;
-        Tue, 21 May 2024 12:05:11 -0700 (PDT)
+        bh=2R1lZ7cvE4ys+41YejloGdUV0GMIOF3sFj6PoCbWqgw=;
+        b=cT5PxnM3Us7YsEzHnm9Xrx9vX+wkxAFFOHF4MFM7v7raSiqCdXrVYlrqZ8Q4y/raa8
+         V5bDRbsjYAUSY+3JqUH7kNfuh3nmGKU/SX9WZQsal+kvu2AHkJssx/ksSZe2fmzwdmh2
+         BbcY39dpOKIOjhi3sqZUtRtjg1CfCqoCcsWeiqtSdfHo0mFzk66mXhU1Hjucl0GJmu45
+         P/Ctlv4k+/TM1ghX+a8r/3iLFdugMgl7zTHF141t6RMUbh8Ewel40xPfEBBGBtBPfi7m
+         b2AU0HnOJSNQTP4sJadr6wT2DBYSTsF51TC8w0HyDDivgEktEMVQp+h3ZS+RCYH/DeBn
+         p19w==
+X-Forwarded-Encrypted: i=1; AJvYcCVfKPVcPoEvfVd869KCvBmHzyZL91EebNX4Ua8gInpHmCwhK80YiNjZnEJUSkSgU3J/lmbqwCgugBnzriCWDuKwjhHPFb2mc0+H2l0=
+X-Gm-Message-State: AOJu0Yx7BwlpuT0EHg9pH161IBBYhJ2tww/THFwwVD+S1oRZ9oaTfIhc
+	2xxHePO8S6MZEAup/UhS7e+2hPB9bzGVnPbzxFu60U3V1piq3nsuQulXdfkzDu4=
+X-Google-Smtp-Source: AGHT+IHMEI/NQlnj7qN5dyCM8kuLceJZQOhDuwzGeMbyVpzUYD2D5aem2PyaYHQ9VB3USbFeb4ppbg==
+X-Received: by 2002:a05:6e02:1aa1:b0:36d:cdc1:d76c with SMTP id e9e14a558f8ab-36dcdc1d784mr139275585ab.0.1716318712300;
+        Tue, 21 May 2024 12:11:52 -0700 (PDT)
 Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-36db97b8f1bsm37349525ab.73.2024.05.21.12.05.10
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-36cceab150bsm56029305ab.10.2024.05.21.12.11.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 12:05:10 -0700 (PDT)
-Message-ID: <d4cadead-369d-4d94-ac85-58034d75c6c7@kernel.dk>
-Date: Tue, 21 May 2024 13:05:08 -0600
+        Tue, 21 May 2024 12:11:51 -0700 (PDT)
+Message-ID: <c7b07540-e204-4863-8b90-a96dfb4129e5@kernel.dk>
+Date: Tue, 21 May 2024 13:11:49 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,7 +62,6 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
-From: Jens Axboe <axboe@kernel.dk>
 To: Christian Heusel <christian@heusel.eu>
 Cc: Andrew Udvare <audvare@gmail.com>, regressions@lists.linux.dev,
  io-uring <io-uring@vger.kernel.org>
@@ -72,30 +71,29 @@ References: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
  <yywbp7fjnwgqxvc66zimea4hgdc2eysjx5nezky3vndr7xw25l@jv76rdseqm3e>
  <b8018270-6e9a-4888-87fd-69620d62c4e5@kernel.dk>
  <0ec1d936-ee3f-4df2-84df-51c15830091b@kernel.dk>
+ <ocpimtl6f32k46tpcytix4kse4fhaivp7qvs4ohqmcx7ybtign@3yujd4llvah6>
 Content-Language: en-US
-In-Reply-To: <0ec1d936-ee3f-4df2-84df-51c15830091b@kernel.dk>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ocpimtl6f32k46tpcytix4kse4fhaivp7qvs4ohqmcx7ybtign@3yujd4llvah6>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/21/24 12:29 PM, Jens Axboe wrote:
-> On 5/21/24 12:25 PM, Jens Axboe wrote:
->> Outside of that, only other thing I can think of is that the final
->> close would be punted to task_work by fput(), which means there's also
->> a dependency on the task having run its kernel task_work before it's
->> fully closed.
+On 5/21/24 1:07 PM, Christian Heusel wrote:
+> On 24/05/21 12:29PM, Jens Axboe wrote:
+>> On 5/21/24 12:25 PM, Jens Axboe wrote:
+>>> Outside of that, only other thing I can think of is that the final
+>>> close would be punted to task_work by fput(), which means there's also
+>>> a dependency on the task having run its kernel task_work before it's
+>>> fully closed.
+>>
+>> Yep I think that's it, the below should fix it.
 > 
-> Yep I think that's it, the below should fix it.
+> It indeed does! I applied the patch on top of Linus tree and the issue
+> is now gone!
+> 
+> Tested-by: Christian Heusel <christian@heusel.eu>
 
-Sent it out and also wrote a test case to catch this:
-
-https://git.kernel.dk/cgit/liburing/commit/?id=06c22ef6637284ab1f31ee64f1ee48a829958816
-
-just in case we ever regress in that manner again.
-
-This will go into the 6.10-rc1 release, will ship it to Linus in a day or
-two. And then it'll land in the next stable release of 6.9 as well.
-
-Thanks for the report!
+Thanks for testing! I'll add your tag.
 
 -- 
 Jens Axboe
