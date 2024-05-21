@@ -1,106 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD4D74402
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 11:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F97C7D06E
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 13:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716290961; cv=none; b=XbQOZhnbES+IEYY5KgZDQ57rDGVS3ikFALzXbScp3Gk/qq2YaMPbd6FE+rBHNEe0oEO4RyDEBBxO0LJJI9bbDPqqdpc9WOhZn12XbcwJo5ik+/U8Rsc6Hg3pKeGZ5fTfn0zUR5ycxiscYjiyvHnqhICZZ0yjkFiB2j4xK1CuSpM=
+	t=1716298022; cv=none; b=fo1L44CMpO4trmyOmDYYmGKfiikinwEOyKn3iLIcwRkXVyPJz0FADulka1CiRayUSzTKO/MryPIyrDMVZlebVpEb+tsKWkRtbUR6Vrr2hv0HlDyziO5eM/mnKgSIrLjk3SxyfW900yx171zZRnqWrJ0eJF6PIKDJz83/ndO+QFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716290961; c=relaxed/simple;
-	bh=9UyG8NR2nB4nFh3V+pbEi6yVtB+rOBjbai89rumi9dU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJhHh4BtdGgLI+kHTyNxeo9vkMi6jDJN9x1q0V918tCrS0x7IYcmsrwrrx0WNAERsDBbkpP6Ca2KoyAC82wftxvsUsqXN2piG9Lp19FEN0eGK2//bhV13gqV7km6nzeblQPLghBd42Ohc2+kCK9j/2c/T4Pv38v0+v4chT9HKkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DFDQ/6M4; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716298022; c=relaxed/simple;
+	bh=+NBl0TSqZ6OFS20pLb65CEPX+x7mVjqHsu9EWAwtGaU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=G+M8Smu2O8SGs1OIQW5BgJH1aIsgaY6QoI7/IUBeOguznOsui2DxFQuw/QItOD8uRu6cuVTl18fZSM1+4wszsVFjZc5wqZBxNoMSzZHhC3N96IBmQW8LpiptLkTKMXNQQKrT3AGVFOp1hXsC0za+lvxIGD4FQ7BOKi91fJTuIJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oGfX0Pzb; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFDQ/6M4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716290960; x=1747826960;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9UyG8NR2nB4nFh3V+pbEi6yVtB+rOBjbai89rumi9dU=;
-  b=DFDQ/6M4ei/FLuIYgrdaGiu4KFWHbYsTSKi9K7BRAW7JqzB8IuXT4DDS
-   H0AFJZJhBhJ9Wez4qfqIxwEPW1dZCIZvAI+drH1fTIFpHVnH5rzQKvjur
-   TEif52BvIcYJH8bYNTvIqORDWqJg9ymqV5QsefJ9vYo5rfK3qHVYl8wPy
-   7Tomw6TdL7oJfrz6HqRM9AVGXiSTxK3rzJu4VLFuWkoawHhvCfwk5IiY+
-   IzdHpzbWqFI6CUVuq8p8Q5zbAFAsro/8rnj38MjAUpOhXy+EykRgX5A1E
-   /OOkdDG94k3Kejjzl9Gmx12vAIlOfQogfEwo9iZqXtL9NDJN622cUnRbZ
-   g==;
-X-CSE-ConnectionGUID: AdE8UvqaSqO2eVtY3VQ52g==
-X-CSE-MsgGUID: GvUfAYeVRE6x4hrhCUgkPw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="23145738"
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="23145738"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 04:29:19 -0700
-X-CSE-ConnectionGUID: p/A6XjsLRyiWx1rx3gursw==
-X-CSE-MsgGUID: RQLoNqTiQfabFqgjd56z0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="37275244"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 21 May 2024 04:29:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 4AF2917F; Tue, 21 May 2024 14:29:15 +0300 (EEST)
-Date: Tue, 21 May 2024 14:29:15 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Gia <giacomo.gio@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Christian Heusel <christian@heusel.eu>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"kernel@micha.zone" <kernel@micha.zone>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	Benjamin =?utf-8?Q?B=C3=B6hmke?= <benjamin@boehmke.net>,
-	"S, Sanath" <Sanath.S@amd.com>
-Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
- assume dead" on stable kernel > 6.8.7
-Message-ID: <20240521112915.GQ1421138@black.fi.intel.com>
-References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
- <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
- <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
- <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
- <CAHe5sWY_YJsyiuwf2TsfRTS9AoGoYh4+UxkkZZ0G9z2pXfbnzg@mail.gmail.com>
- <20240521051525.GL1421138@black.fi.intel.com>
- <CAHe5sWY3P7AopLqwaeXSO7n-SFwEZom+MfWpLKGmbuA7L=VdmA@mail.gmail.com>
- <20240521085501.GN1421138@black.fi.intel.com>
- <CAHe5sWaABJi0Xo4ygFK4Oa3LdNUiQJSLidGPdAE=gwmy=b+ycw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oGfX0Pzb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=+NBl0TSqZ6OFS20pLb65CEPX+x7mVjqHsu9EWAwtGaU=; t=1716298020;
+	x=1716730020; b=oGfX0Pzbt0vQYwMDwMNLVlb4XB//DNQNIDTfkAoqO1IBnITrWg3PJxS20krEE
+	QW+s5IJ0Bgz2sxlrrlTy0IbpsuIrI5f6x9LN+zOa8bbbYc0uN8PPqIrJzVsrDgIbZ2EjJoqX47vr+
+	Jg7NOkw2aAGO7f4GCkOFq5Feqzt4Xh64dngRWUQuyd/Bp5evXHsruS4VOe3e1t8V/WYbfdzhPjYar
+	1leG2WqRB9F3xBQOfwjF8kRecaTtDxWowecMmfjS3Up12eUBFNdz3UqtTfva3dzamsMfbjuHjOtwO
+	C/ZWSTQb0QltipyBOfEc/Md1pMNZJx939Jgcv8tbyY0J1fYuoQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9PW4-0001gl-Uc; Tue, 21 May 2024 15:26:57 +0200
+Message-ID: <925166c0-d062-41e0-9388-e45ad0dc457a@leemhuis.info>
+Date: Tue, 21 May 2024 15:26:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHe5sWaABJi0Xo4ygFK4Oa3LdNUiQJSLidGPdAE=gwmy=b+ycw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716298020;56187f7d;
+X-HE-SMSGID: 1s9PW4-0001gl-Uc
 
-On Tue, May 21, 2024 at 11:24:56AM +0200, Gia wrote:
-> Thank you for your suggestion Mika, as a general rule I totally agree
-> with you and I do not mess with kernel default parameters, but I
-> remember "pcie_aspm=off" was necessary at the time I set up the
-> system. Probably a kernel or a BIOS update makes it unnecessary today.
 
-Okay, thanks.
 
-> I see it removes these messages from my logs but I trust you when you
-> say they have not an impact on functionality:
-> 
-> May 21 11:01:36 um773arch kernel: pcieport 0000:05:04.0: Unable to
-> change power state from D3hot to D0, device inaccessible
-> May 21 11:01:36 um773arch kernel: igb 0000:09:00.0 eth0: PCIe link lost
-> May 21 11:01:36 um773arch kernel: xhci_hcd 0000:08:00.0: xHCI host
-> controller not responding, assume dead
-> May 21 11:01:36 um773arch kernel: xhci_hcd 0000:07:00.0: xHCI host
-> controller not responding, assume dead
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Correct these are side-effect of the USB4 topology reset we do. As
-explained earlier the tunnels get re-established and the devices will
-come back soon after this.
+#regzbot report: https://lore.kernel.org/all/ZkxZT0J-z0GYvfy8@gardel-login/
+#regzbot introduced: a1912f712188291
+#regzbot summary: btrfs: removal of "norecovery" (userspace breakage)
+broke systemd
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=217978
+#regzbot resolve: seems like it does not happen anymore
+(https://bugzilla.kernel.org/show_bug.cgi?id=217978#c3 )
+
+#regzbot report:
+https://lore.kernel.org/linux-pm/CAJZ5v0iik=M0DFoLER%2Bae3PoWb6Mt5rGEK-92i3nCV93Jbkm-A@mail.gmail.com/
+#regzbot resolve: reporter MIA after a workaround was found
+
+#regzbot report:
+https://lore.kernel.org/all/77b71bd9-42be-40e8-8b96-196e214c8afb@schmorgal.com/
+#regzbot introduced: 7bfb915a597a30
+#regzbot summary: serial: core: transmissions get hung up before they
+finish.
+#regzbot duplicate:
+https://lore.kernel.org/all/207771fc-294a-4810-a3a2-52ea0e27360f@kernel.org/
+
+#regzbot report:
+https://lore.kernel.org/lkml/hzhomd7d7uc4dcnpvd6ki6v2f6camzm5ufqp2syqudrvzzfxi4@ykcirhonbqql/
+#regzbot introduced: 56f78615bcb1
+#regzbot fix: ecf848eb934b
