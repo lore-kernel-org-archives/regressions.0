@@ -1,363 +1,162 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2AD7F48D
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 15:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2211B299
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716306541; cv=none; b=CuBy3iMW29wIfp58uPchbtLwHi0D4MVUdtDxv/xNnIgHlGqWa8AwcY9dQbsHeYX4fcXxGKy+jn0Y88YnaXhebdN2B5gRVCMQ0s5tVa0a4zoAL59bvebZKK1+HnYqD//7OHhDcmSQnWWyCwTuPkFqlHFh0d1QvxFqmUy2n77c+jA=
+	t=1716307219; cv=none; b=UIAmZosrVO5oYAwSuDcAdd8VGIJvKfXaAr5l+nFmp7ObMrGK402lr6hgGQwvr44LiVCtPPdlQ7i1gUHOjhAD981rht2iwjFUkySmAjS1OEAD9Z3CcRZMx9FiAGweNblmtuME71jJmV6Nlk2TVriFYMf51bydfNXyU+i3PseKgKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716306541; c=relaxed/simple;
-	bh=ywjvfDtNNmWcxM2SgnrIWU53H3dwpGEQR5LFNZxFMKQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lIsOCLwSg7Uw1Lsd7WlE4n4OQH8tWA211w9kX7Z2kvWul/5t0W+1jPHlwujVLz2mnZL3kNZf66+Hvi8eVM75NHQny5+ytGjLBAlivzvICXknGkjhhfmyXGOzgxsuYBkcPcVXPqtLYt/6raz1O2El0cFTThQFGwFTsFDrDUwJrTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kekLQzf5; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716307219; c=relaxed/simple;
+	bh=vVAEAyfrohFgwQUdSFubvGXi+5gPA2p8YiWJ6hKb29M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lU7KoR2hMBD1InZOF7E7st/Sfcayj9wHOyRfB8dESy+4zk6W8dHW8Q3aBxXTIhjgixGZpQ1bHHbhUm8WDtmiKUnuQzIBlFMUpav/gt/5KQTQZGASmnY8NbkghnIWnYCVk/66Zp/jpEtHUtKW3LuxKFE0u55WKmzHegRTlm2WMp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gK5G5fI3; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kekLQzf5"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e1fa1f1d9bso71987341fa.0
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 08:48:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gK5G5fI3"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-351d4909711so2122583f8f.1
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716306537; x=1716911337; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Ck3ktJkAwKndtnUF4Yf1ES/s8fb2Iwk2z1iMsniLOM=;
-        b=kekLQzf5y/HyFbF6+MF6Lg5mMKjvnGS9VOonMKwvI9uUXlF00Ig5qKrUToiigrlx0q
-         se8Y8AWDf56ACt2uDY3ukHS5QE9Av9ZdsGDcsZ5DJpylS6c4L5crFcd0eC2DLCI+Bt/G
-         pgq0TFYTKOSQ3Pcv3ezLkAkzxZrivnt97jl9yBL4aLvD0m4BxgazZd7lN2AdES2q1PlK
-         oNh4nMEFqbv6mwmMP7AP8G8nPp9G7vdrbNbuFgQ0J3NHaOdWz3b3JA/jzZHE/q0o5fiw
-         Ff76K+YOR69mRBoBV0DaWDKSCfGmyK+a8KXiANWsDPNL8kkHu6OdgvNgH5W4JN2VWWWb
-         +frA==
+        d=linaro.org; s=google; t=1716307215; x=1716912015; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=8P8f3Xe3WKGb6+A4BlKH0j6nQd7Typm/M8fTWRmWe/8=;
+        b=gK5G5fI39s0fMejU7b1zxt0WrB2XNTo0Wp8oQ51whB/I59qn+I/Bvxq8ae5fk/y3we
+         tRknDdetslf60KR8PtVB9zJgDIUjIMCJFiYP5tb8FMCo4IPkOW/u40kZyYWjJML6iMcZ
+         kQWXZwukdCpCbLdZyJhKEkxOVR6HG3n887uQpQB6sic4UWYh+W/XmEuAhrytebg0NZA5
+         QEegwNnP9kBAEjwgjonBaErt/2L6KIp+r3yMpDMr/FWAKlYA8OpaVgJuZy2mckNZFp5y
+         LCZwjkV1f8JDbjnhJ7i/iTLGzfYWPti1jdaM35TZgyt+LOogPtKIyrsLA80TA12cTH7z
+         WiFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716306537; x=1716911337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Ck3ktJkAwKndtnUF4Yf1ES/s8fb2Iwk2z1iMsniLOM=;
-        b=r5kq4NhxnFxjzxJ78KzghbgRNtkGGNvKc57wnaUfUepFe/7HHrJpiBZ0D/ciC6EBzs
-         aLSmMqidw6hc43gv66K/QO7JMIAqQq6zvuUP34cZudu2Yfbk2wsCSMrzYTNrQ3zBvVfg
-         6KUJNh39T+sjkOOVQhpKSFsYlqGsdVNE5MWY6a3J3BVBn/rNb2Dqf5SlF1MKR62YA/dO
-         80P+MbEsPatCmUnkse72vKuaRM87ZwowZ00FFoaE9aOsSRoeHoHnGcWRQR8iUUhzDpTO
-         tkyNiI+MQtlpUWhwmMTHyjT11rkkyvfTTOhrepmCVIGJVyqTQb1TePJn8w5kLdMqDVF1
-         +FwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjypOHYXRNOrE08KXJ6IwfUe/oJcWKMB+iQWH/biKc4DHMBLptpaEf0Or/w/wWfmeh2MP0/FRCb/tNuM9DKAKy8qkjAjUOTX3tRSA=
-X-Gm-Message-State: AOJu0YxZHB9prrYCodKiKbMvj/w56GiAljMkDWwLO+w4Ntxeo4LOQ9wM
-	K8yyiW/yWp19IgNla00kWk00x+oXSjzai59bbKO4WbuOH4pHIkdAZn70cAH7gWBzBKMnz/OQnaO
-	69bcgOmDdIXR9NOVmCuv+y3dt8eQ=
-X-Google-Smtp-Source: AGHT+IGIY/VILANL2Kk4YZnz1o+5Ov3gkGlL5cSUD803Ucb9KPO+v3nzqmQSPYheDtklX8kKAgb2ATHhuT5nbV0mv/8=
-X-Received: by 2002:a2e:750:0:b0:2e5:4e76:42df with SMTP id
- 38308e7fff4ca-2e54e7644cemr214940181fa.33.1716306536718; Tue, 21 May 2024
- 08:48:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716307215; x=1716912015;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8P8f3Xe3WKGb6+A4BlKH0j6nQd7Typm/M8fTWRmWe/8=;
+        b=e4+fdFC2X1NuLt7I/K5qZCQXv/nGm7xk7i7+v03YOYzQxMhsbPsNof+mnNRCRZCwIC
+         H1KW+vxxgrXUEwBudxkvl4PdHWeluzEgWD9dT/EfyMnI8c2sX5vJzzHT5NrZ3X2TM8WK
+         EE6F6Wh74xdyhi5LpzbD/EpPnFAseLbCejHqrqzNyWTZRq9Udlx3x1m3/r3AVTxJX6xE
+         yuP52c4/JofHDw4/q2vZZr8HgRPGbW2/3+Egh4Co9mG2NYuX6z/x6ASvABEt72MA3one
+         mteUN9S00Wm6eo9jlMwkZUU6AZlj+hrgy+9xOdwtfulUqtQoZkfB/Z0csnwNV0LzB4rq
+         EtEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUp7Ea8A5zmgVPPU2QNgFGiYuQbUuyeu9/y/nsjVMGSts2sSx4/Xnx7VDlzgvNL2IUWu/H3tNEHJj2l0+pCJEvOpdS6DW3GztKGGmE=
+X-Gm-Message-State: AOJu0YwyPKZifS37SgNQqcDPYEhj1j6WV+V8ttG8HEo0dD+srtDNfCTw
+	AGkJNMVhYzOUAegSAvDz30PvUZHDY8baSFjeQqqih88VGTeug2ZAOMKn4PL2eYM=
+X-Google-Smtp-Source: AGHT+IGsBK0SGmhtIHLM1fIBm3F0YiryCUR9LulcVEo0MSe6Wkw4Nnpo7JzMUoA92SZizwcd5PkxAw==
+X-Received: by 2002:adf:a18c:0:b0:34c:cae0:c989 with SMTP id ffacd0b85a97d-354b8e38ec8mr8449631f8f.33.1716307215517;
+        Tue, 21 May 2024 09:00:15 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354cece0054sm2411078f8f.102.2024.05.21.09.00.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 09:00:14 -0700 (PDT)
+Message-ID: <4ed8d1fc-40b9-4254-90a1-9d621adc71a4@linaro.org>
+Date: Tue, 21 May 2024 18:00:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
- <f343ecae-efee-4bdc-ac38-89b614e081b5@163.com> <CABBYNZ+nLgozYxL=znsXrg0qoz-ENgSBwcPzY-KrBnVJJut8Kw@mail.gmail.com>
- <34a8e7c3-8843-4f07-9eef-72fb1f8e9378@163.com>
-In-Reply-To: <34a8e7c3-8843-4f07-9eef-72fb1f8e9378@163.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 21 May 2024 11:48:43 -0400
-Message-ID: <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for
  QCA6390 after warm reboot
-To: Lk Sii <lk_sii@163.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, luiz.von.dentz@intel.com, marcel@holtmann.org, 
-	linux-bluetooth@vger.kernel.org, wt@penguintechs.org, 
-	regressions@lists.linux.dev, pmenzel@molgen.mpg.de, 
-	krzysztof.kozlowski@linaro.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Lk Sii <lk_sii@163.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, luiz.von.dentz@intel.com,
+ marcel@holtmann.org, linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
+ regressions@lists.linux.dev, pmenzel@molgen.mpg.de, stable@vger.kernel.org
+References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
+ <f343ecae-efee-4bdc-ac38-89b614e081b5@163.com>
+ <CABBYNZ+nLgozYxL=znsXrg0qoz-ENgSBwcPzY-KrBnVJJut8Kw@mail.gmail.com>
+ <34a8e7c3-8843-4f07-9eef-72fb1f8e9378@163.com>
+ <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 21/05/2024 17:48, Luiz Augusto von Dentz wrote:
+>> driver->remove() even is not triggered during above steps.
+>>>> Commit C: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on
+>>>> closed serdev")
+>>>> this commit is to fix issue B which is actually caused by Commit B, but
+>>>> it has Fixes tag for Commit A. and it also introduces the regression
+>>>> issue A.
+>>>>
+>>>
+>>>
+> 
+> Reading again the commit message for the UAF fix it sounds like a
+> different problem:
+> 
+>     The driver shutdown callback (which sends EDL_SOC_RESET to the device
+>     over serdev) should not be invoked when HCI device is not open (e.g. if
+>     hci_dev_open_sync() failed), because the serdev and its TTY are not open
+>     either.  Also skip this step if device is powered off
+>     (qca_power_shutdown()).
+> 
+> So if hci_dev_open_sync has failed it says serdev and its TTY will not
+> be open either, so I guess that's why HCI_SETUP was added as a
+> condition to bail out? So it seems correct to do that although I'd
+> change the comments.
+> 
+> @Krzysztof Kozlowski do you still have a test setup for 272970be3dab
+> ("Bluetooth: hci_qca: Fix driver shutdown on closed serdev"), can you
+> try with these changes?
 
-On Tue, May 21, 2024 at 10:52=E2=80=AFAM Lk Sii <lk_sii@163.com> wrote:
->
->
->
-> On 2024/5/16 23:55, Luiz Augusto von Dentz wrote:
-> > Hi,
-> >
-> > On Thu, May 16, 2024 at 10:57=E2=80=AFAM Lk Sii <lk_sii@163.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024/5/16 21:31, Zijun Hu wrote:
-> >>> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on clos=
-ed
-> >>> serdev") will cause below regression issue:
-> >>>
-> >>> BT can't be enabled after below steps:
-> >>> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable fail=
-ure
-> >>> if property enable-gpios is not configured within DT|ACPI for QCA6390=
-.
-> >>>
-> >>> The commit is to fix a use-after-free issue within qca_serdev_shutdow=
-n()
-> >>> by adding condition to avoid the serdev is flushed or wrote after clo=
-sed
-> >>> but also introduces this regression issue regarding above steps since=
- the
-> >>> VSC is not sent to reset controller during warm reboot.
-> >>>
-> >>> Fixed by sending the VSC to reset controller within qca_serdev_shutdo=
-wn()
-> >>> once BT was ever enabled, and the use-after-free issue is also fixed =
-by
-> >>> this change since the serdev is still opened before it is flushed or =
-wrote.
-> >>>
-> >>> Verified by the reported machine Dell XPS 13 9310 laptop over below t=
-wo
-> >>> kernel commits:
-> >>> commit e00fc2700a3f ("Bluetooth: btusb: Fix triggering coredump
-> >>> implementation for QCA") of bluetooth-next tree.
-> >>> commit b23d98d46d28 ("Bluetooth: btusb: Fix triggering coredump
-> >>> implementation for QCA") of linus mainline tree.
-> >>>
-> >>> Fixes: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on clos=
-ed serdev")
-> >>> Cc: stable@vger.kernel.org
-> >>> Reported-by: Wren Turkal <wt@penguintechs.org>
-> >>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218726
-> >>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> >>> Tested-by: Wren Turkal <wt@penguintechs.org>
-> >>> ---
-> >>> V1 -> V2: Add comments and more commit messages
-> >>>
-> >>> V1 discussion link:
-> >>> https://lore.kernel.org/linux-bluetooth/d553edef-c1a4-4d52-a892-71554=
-9d31ebe@163.com/T/#t
-> >>>
-> >>>  drivers/bluetooth/hci_qca.c | 18 +++++++++++++++---
-> >>>  1 file changed, 15 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.=
-c
-> >>> index 0c9c9ee56592..9a0bc86f9aac 100644
-> >>> --- a/drivers/bluetooth/hci_qca.c
-> >>> +++ b/drivers/bluetooth/hci_qca.c
-> >>> @@ -2450,15 +2450,27 @@ static void qca_serdev_shutdown(struct device=
- *dev)
-> >>>       struct qca_serdev *qcadev =3D serdev_device_get_drvdata(serdev)=
-;
-> >>>       struct hci_uart *hu =3D &qcadev->serdev_hu;
-> >>>       struct hci_dev *hdev =3D hu->hdev;
-> >>> -     struct qca_data *qca =3D hu->priv;
-> >>>       const u8 ibs_wake_cmd[] =3D { 0xFD };
-> >>>       const u8 edl_reset_soc_cmd[] =3D { 0x01, 0x00, 0xFC, 0x01, 0x05=
- };
-> >>>
-> >>>       if (qcadev->btsoc_type =3D=3D QCA_QCA6390) {
-> >>> -             if (test_bit(QCA_BT_OFF, &qca->flags) ||
-> >>> -                 !test_bit(HCI_RUNNING, &hdev->flags))
-> >>> +             /* The purpose of sending the VSC is to reset SOC into =
-a initial
-> >>> +              * state and the state will ensure next hdev->setup() s=
-uccess.
-> >>> +              * if HCI_QUIRK_NON_PERSISTENT_SETUP is set, it means t=
-hat
-> >>> +              * hdev->setup() can do its job regardless of SoC state=
-, so
-> >>> +              * don't need to send the VSC.
-> >>> +              * if HCI_SETUP is set, it means that hdev->setup() was=
- never
-> >>> +              * invoked and the SOC is already in the initial state,=
- so
-> >>> +              * don't also need to send the VSC.
-> >>> +              */
-> >>> +             if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->qui=
-rks) ||
-> >>> +                 hci_dev_test_flag(hdev, HCI_SETUP))
-> >>>                       return;
-> The main purpose of above checking is NOT to make sure the serdev within
-> open state as its comments explained.
-> >>>
-> >>> +             /* The serdev must be in open state when conrol logic a=
-rrives
-> >>> +              * here, so also fix the use-after-free issue caused by=
- that
-> >>> +              * the serdev is flushed or wrote after it is closed.
-> >>> +              */
-> >>>               serdev_device_write_flush(serdev);
-> >>>               ret =3D serdev_device_write_buf(serdev, ibs_wake_cmd,
-> >>>                                             sizeof(ibs_wake_cmd));
-> >> i believe Zijun's change is able to fix both below issues and don't
-> >> introduce new issue.
-> >>
-> >> regression issue A:  BT enable failure after warm reboot.
-> >> issue B:  use-after-free issue, namely, kernel crash.
-> >>
-> >>
-> >> For issue B, i have more findings related to below commits ordered by =
-time.
-> >>
-> >> Commit A: 7e7bbddd029b ("Bluetooth: hci_qca: Fix qca6390 enable failur=
-e
-> >> after warm reboot")
-> >>
-> >> Commit B: de8892df72be ("Bluetooth: hci_serdev: Close UART port if
-> >> NON_PERSISTENT_SETUP is set")
-> >> this commit introduces issue B, it is also not suitable to associate
-> >> protocol state with state of lower level transport type such as serdev
-> >> or uart, in my opinion, protocol state should be independent with
-> >> transport type state, flag HCI_UART_PROTO_READY is for protocol state,
-> >> it means if protocol hu->proto is initialized and if we can invoke its
-> >> interfaces.it is common for various kinds of transport types. perhaps,
-> >> this is the reason why Zijun's change doesn't use flag HCI_UART_PROTO_=
-READY.
-> >
-> > Don't really follow you here, if HCI_UART_PROTO_READY indicates the
-> > protocol state they is even _more_ important to use before invoking
-> > serdev APIs, so checking for the quirk sound like a problem because:
-> >
-> > [1] hci_uart_close
-> >      /* When QUIRK HCI_QUIRK_NON_PERSISTENT_SETUP is set by driver,
-> >      * BT SOC is completely powered OFF during BT OFF, holding port
-> >      * open may drain the battery.
-> >      */
-> >     if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
-> >         clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-> >         serdev_device_close(hu->serdev);
-> >     }
-> >
-> > [2] hci_uart_unregister_device
-> >     if (test_bit(HCI_UART_PROTO_READY, &hu->flags)) {
-> >         clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-> >         serdev_device_close(hu->serdev);
-> >     }
-> >both case 1 and case 2 were introduced by Commit B in question which
-> uses protocol state flag HCI_UART_PROTO_READY to track lower level
-> transport type state, i don't think it is perfect.
->
-> for common files hci_serdev.c and hci_ldisc.c, as you saw, the purpose
-> of checking HCI_UART_PROTO_READY is to call protocol relevant
-> interfaces, moreover, these protocol relevant interfaces do not deal
-> with lower transport state. you maybe even notice below present function
-> within which lower level serdev is flushed before HCI_UART_PROTO_READY
-> is checked:
->
-> static int hci_uart_flush(struct hci_dev *hdev)
-> {
-> ......
->         /* Flush any pending characters in the driver and discipline. */
->         serdev_device_write_flush(hu->serdev);
->
->         if (test_bit(HCI_UART_PROTO_READY, &hu->flags))
->                 hu->proto->flush(hu);
->
->         return 0;
-> }
->
-> in my opinion, that is why qca_serdev_shutdown() does not check
-> HCI_UART_PROTO_READY for later lower level serdev operations.
-> > So only in case 1 checking the quirk is equivalent to
-> > HCI_UART_PROTO_READY on case 2 it does actually check the quirk and
-> > will proceed to call serdev_device_close, now perhaps the code is
-> > assuming that shutdown won't be called after that, but it looks it
-> > does since:
-> >
-> qca_serdev_shutdown() will never be called after case 2 as explained
-> in the end.
-> > static void serdev_drv_remove(struct device *dev)
-> > {
-> >     const struct serdev_device_driver *sdrv =3D
-> > to_serdev_device_driver(dev->driver);
-> >     if (sdrv->remove)
-> >         sdrv->remove(to_serdev_device(dev));
-> >
-> >     dev_pm_domain_detach(dev, true);
-> > }
-> >
-> > dev_pm_domain_detach says it will power off so I assume that means
-> > that shutdown will be called _after_ remove, so not I'm not really
-> > convinced that we can avoid using HCI_UART_PROTO_READY, in fact the
-> > following sequence might always be triggering:
-> >
-> dev_pm_domain_detach() should be irrelevant with qca_serdev_shutdown(),
-> should not trigger call of qca_serdev_shutdown() as explained in the end
-> > serdev_drv_remove -> qca_serdev_remove -> hci_uart_unregister_device
-> > -> serdev_device_close -> qca_close -> kfree(qca)
-> > dev_pm_domain_detach -> ??? -> qca_serdev_shutdown
-> >
-> > If this sequence is correct then qca_serdev_shutdown accessing
-> > qca_data will always result in a UAF problem.
-> >
-> above sequence should not correct as explained below.
->
-> serdev and its driver should also follow below generic device and driver
-> design.
->
-> 1)
-> driver->shutdown() will be called during shut-down time at this time
-> driver->remove() should not have been called.
->
-> 2)
-> driver->shutdown() is impossible to be called once driver->remove()
-> was called.
->
-> 3) for serdev, driver->remove() does not trigger call of
-> driver->shutdown() since PM relevant poweroff is irrelevant with
-> driver->shutdown() and i also don't find any PM relevant interfaces will
-> call driver->shutdown().
->
-> i would like to explain issue B based on comments Zijun posted by public
-> as below:
->
-> issue B actually happens during reboot and let me look at these steps
-> boot -> enable BT -> disable BT -> reboot.
->
-> 1) step boot will call driver->probe() to register hdev and the serdev
-> is opened after boot.
->
-> 2) step enable will call hdev->open() and the serdev will still in open
-> state
->
-> 3) step disable will call hdev->close() and the serdev will be closed
-> after hdev->close() for machine with config which results in
-> HCI_QUIRK_NON_PERSISTENT_SETUP is set.
->
-> 4) step reboot will call qca_serdev_shutdown() which will flush and
-> write the serdev which are closed by above step disable, so cause the
-> UAF issue, namely, kernel crash issue.
->
-> so this issue is caused by commit B which close the serdev during
-> hdev->close().
->
-> driver->remove() even is not triggered during above steps.
-> >> Commit C: 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on
-> >> closed serdev")
-> >> this commit is to fix issue B which is actually caused by Commit B, bu=
-t
-> >> it has Fixes tag for Commit A. and it also introduces the regression
-> >> issue A.
-> >>
-> >
-> >
+Unfortunately not at the moment, because mainline never had a proper
+support for a variant of this Bluetooth/WiFi on our boards, so it was
+working with few out of tree patches. I think Bartosz is working on
+fixing it via power sequence, but that's not in the mainline yet.
 
-Reading again the commit message for the UAF fix it sounds like a
-different problem:
+Best regards,
+Krzysztof
 
-    The driver shutdown callback (which sends EDL_SOC_RESET to the device
-    over serdev) should not be invoked when HCI device is not open (e.g. if
-    hci_dev_open_sync() failed), because the serdev and its TTY are not ope=
-n
-    either.  Also skip this step if device is powered off
-    (qca_power_shutdown()).
-
-So if hci_dev_open_sync has failed it says serdev and its TTY will not
-be open either, so I guess that's why HCI_SETUP was added as a
-condition to bail out? So it seems correct to do that although I'd
-change the comments.
-
-@Krzysztof Kozlowski do you still have a test setup for 272970be3dab
-("Bluetooth: hci_qca: Fix driver shutdown on closed serdev"), can you
-try with these changes?
-
---=20
-Luiz Augusto von Dentz
