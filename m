@@ -1,121 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FF5376E0;
-	Tue, 21 May 2024 05:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36A05337D
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 08:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716269248; cv=none; b=YMuY89tJXIKLmAarvDvMN6FGQ3gMdUaQHfLZxnRL0PxRnQN6qxZn4KvUk33tDR23T/09Ka7YfQGVGgBhjFWS3fWVeHTSc6Gj93kVPLFe7ZX0aAif8JAeG91yPLYLv8EUB/CjkkN+VRJWLCA98fhWCJyyHtCM+nH02h/LXX4SJDA=
+	t=1716278857; cv=none; b=btKKDVswk4FzpgC3nBV1Ggw+dF53A9CvLIKhoOH3MzCJO7fGYJbNAKUt1YTUeHU9isjG37Ou1l5big9HMyAesZR7zbTfhnpFjBmOgtVYUTXkviIlBzgz6Ai99bHRuRwNHV3/zQZFJJQDC8cq5LKwwwWdQMNhuKluOgKgVudMp1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716269248; c=relaxed/simple;
-	bh=hMg1zfXWLmGmMw3i9U3OSYp7Ju8y/hu6FFILPNZWYPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rQXTfRSBfDwuPf39H6vWfup8/ExzZVgZ8oxRok+FjdinBssWRLaZL09+HFFXxvXk/MR3aRdP20S87vySlXeaM+HcOxc7X9uyn7SZOAJL6nWWrE65ozhZNSVoG+Y1SPqyrXoh2/ghM+jfCAr2u5hdJxum/VsbkTxX5qgEz1/ba/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eG4X2s67; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716278857; c=relaxed/simple;
+	bh=hBUirWutusPtAd5yaIQhJwK+OZj1KlZPuozs+O8z/cw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vEK6ezKTTy0B0CW/LafV5oTKylFvUrMujQfaNshkAyGlkbZpHunuUswzKi838n9UBBAchiW2Mbqw2LfeWAS44XIaZZ9+IFvOgA18Uaeu6UWA+CELX1ulVotuyefNQSfM5AJGn8/LN8IrwCF4P3nqaQf2Wf5p5CGW2/6fVUbzGu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUtj0op2; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eG4X2s67"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KDT0EA002246;
-	Tue, 21 May 2024 05:27:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=JREW06SdLY3MILYWLRTbIYz79fFIBlYyZXtTtmnCKag=; b=eG
-	4X2s67vb5ojA3Ishu9CXWuBWLX6r8PqOX6S+3rsvZ8aAYQjUhu59QrdxLt9CKpbj
-	KgJZfYgdDhSH0hDpTw+nVD0YEmmPf7Dtv702f7h2/S/mu05flk0eYktiPxzcDozX
-	2sSdxpnr4MwYYEJ2mobdFpGPxKw3OHgzjb+eT26xvWxot81IUM/PLp8hX8avsXdG
-	r7gCzcoS2o2JL/KWA/rZ4A5e6oK3nk1oj1gOi6bjNb/mmD4bmmXnoOYlpHi4AqCo
-	j6QcNVGXsg/LTDi0aPX9pnGI53WLBD3jxuFgwoVdoY1ji5NdUpFNfflAsKfYVAmK
-	QyFoalYf19SJzvLjrkcQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4gd09y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 05:27:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44L5R4DS001997
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 05:27:04 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 20 May
- 2024 22:27:02 -0700
-Message-ID: <e235c2f1-4d52-4a89-9d1b-9d63d0ff4c6f@quicinc.com>
-Date: Tue, 21 May 2024 13:27:00 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUtj0op2"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-60585faa69fso2838485a12.1
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 01:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716278855; x=1716883655; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hBUirWutusPtAd5yaIQhJwK+OZj1KlZPuozs+O8z/cw=;
+        b=hUtj0op2/+aToK9hP7ljVajnpc1G1ZAdHXh0/lXKK+Q6MqVtO2XuZcLvew+yXOZm+e
+         uMBhMjWQXrzO2WfR6ZLwCZdeLerXD9HVmP6WkbX1E2PwFvBXP6pol3PcvKKUAZBEgsBc
+         6+OxlCxQpxjefLTnGJY+gqxLpwVjN7b7l0V4ukULNjj8HXJimKUbg3ImM4l8M3TKRyg3
+         EVj15AzAaMRKoxwpBgQo0hENvMYLFVBaarzw8gbmInj5pNFSsw4/scEJJWp4RXkyFrmT
+         tTQUlVpVTgIVUk/218diGyECXK6aMBG2tzfvaqw1qgRakKhkMepfWk3/7eQJUgWibO9S
+         IbLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716278855; x=1716883655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hBUirWutusPtAd5yaIQhJwK+OZj1KlZPuozs+O8z/cw=;
+        b=g8eMRu7tMvTfvE5V494X5JGjPq0A1CdBxdrcJUN+Y/1p1EOqTEMm9u2nzmq8UQRPf0
+         /SoFFGdkt8uRWClZYDw21wSYS9QqcZykf6arAZyJv8dgykA2ysA50toTwaBU9Bv4BT7e
+         /cKag99LjphjyoQ7NZlYpAL6rPuYAAcXS+XCbPMcZKKI1X/ifJbKS5NsWYYKwEj75rUO
+         zuO8yqejFoAKxQIFgP/L/Qg2ejdRquKgJpiBEkP+aOi9T7rH4aAhZoiBD/VIHGCVM4zG
+         2CZut6b52Z5R90L9dQniSl+GC3NCTyIeumLxTnyJKD+/SoYCFXIHGnVsqiyK7VhdnOm4
+         3zog==
+X-Forwarded-Encrypted: i=1; AJvYcCX3vbPATyKFoS6LId2DNskQO2OL5hEG230mD7EWCWr0YEfKqh1KXjTE6zI/Tg5GmtzsIQAzhkd/03rvyHEJC8bZhLKB5JQ4DnWKWL8=
+X-Gm-Message-State: AOJu0Yz3JVykRwXv8N2ghHciOU9N6Bq2aT/oNJmZHDYaEQ6Y4/vzIbE5
+	BgEnbjSYxlIoJCFqQJ1OL7Gqe3PChXiDCJbPfKbgD9/DB6zZYGX96L2LuLGJNC6SpXujWWu80KC
+	984EuD3JVWSrUFTmhr06o+Xe6hj0=
+X-Google-Smtp-Source: AGHT+IGmfAeYbPUIkVmO8kZCcRcccTLZauVNvcfzcB7SNd4lIdVN8vxwNDRATuv964jxZEOekKjrWFp08NKB5cRA558=
+X-Received: by 2002:a17:90a:4a88:b0:2b2:195a:d7bd with SMTP id
+ 98e67ed59e1d1-2bd60352ae4mr10916962a91.2.1716278855107; Tue, 21 May 2024
+ 01:07:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-To: Kalle Valo <kvalo@kernel.org>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <regressions@lists.linux.dev>
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
- <87wmo0k71i.fsf@kernel.org>
- <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
- <87h6esebu8.fsf@kernel.org>
- <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
- <878r03eoka.fsf@kernel.org>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <878r03eoka.fsf@kernel.org>
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info> <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
+ <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com> <CAHe5sWY_YJsyiuwf2TsfRTS9AoGoYh4+UxkkZZ0G9z2pXfbnzg@mail.gmail.com>
+ <20240521051525.GL1421138@black.fi.intel.com>
+In-Reply-To: <20240521051525.GL1421138@black.fi.intel.com>
+From: Gia <giacomo.gio@gmail.com>
+Date: Tue, 21 May 2024 10:07:23 +0200
+Message-ID: <CAHe5sWY3P7AopLqwaeXSO7n-SFwEZom+MfWpLKGmbuA7L=VdmA@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Christian Heusel <christian@heusel.eu>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, "kernel@micha.zone" <kernel@micha.zone>, 
+	Andreas Noever <andreas.noever@gmail.com>, Michael Jamet <michael.jamet@intel.com>, 
+	Yehezkel Bernat <YehezkelShB@gmail.com>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, =?UTF-8?Q?Benjamin_B=C3=B6hmke?= <benjamin@boehmke.net>, 
+	"S, Sanath" <Sanath.S@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: flibLBs4Wi3LKPuW5C7mk-tPWh3R-3F7
-X-Proofpoint-ORIG-GUID: flibLBs4Wi3LKPuW5C7mk-tPWh3R-3F7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_03,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=942
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405210041
+Content-Transfer-Encoding: quoted-printable
+
+Thank you Mika,
+
+Here you have the output of sudo journalctl -k without enabling the
+kernel option "pcie_aspm=3Doff": https://codeshare.io/7JPgpE. Without
+"pcie_aspm=3Doff", "thunderbolt.host_reset=3Dfalse" is not needed, my
+thunderbolt dock does work. I also connected a 4k monitor to the
+thunderbolt dock thinking it could provide more data.
+
+I'm almost sure I used this option when I set up this system because
+it solved some issues with system suspending, but it happened many
+months ago.
 
 
 
-On 5/21/2024 1:12 PM, Kalle Valo wrote:
-> Baochen Qiang <quic_bqiang@quicinc.com> writes:
-> 
->> On 5/20/2024 11:34 PM, Kalle Valo wrote:
->>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
->>>> On 5/11/2024 5:54 PM, Kalle Valo wrote:
->>>>
->>>>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
->>>>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
->>>>> need to queue this for v6.10 via wireless tree.
->>>>>
->>>>> Adding the regression also to regzbot:
->>>>>
->>>>> #regzbot introduced: bc8a0fac8677
->>>>> #regzbot title: ath11k: connection to 6 GHz AP fails
->>>>>
->>>> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
->>>>
->>>> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
->>>>
->>>> So here the ath11k fix would not be needed any more once above patch got merged.
->>>
->>> What happens if we apply both patch 'wifi: ath11k: move power type check
->>> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
->>> mac80211: build TPE handling'? In other words, do they conflict from
->>> functionality point of view?
->>
->> No functional conflict, 6 GHz AP connection would also succeed with
->> both of them applied.
-> 
-> Ok, thanks. In that case I would like take patch 'wifi: ath11k: move
-> power type check to ASSOC stage when connecting to 6 GHz AP' to
-> ath-current branch from which it will go to v6.10. Is that ok for
-> everyone?
-Good to me.
-> 
+On Tue, May 21, 2024 at 7:15=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Hi,
+>
+> On Mon, May 20, 2024 at 05:57:42PM +0200, Gia wrote:
+> > Hi Mario,
+> >
+> > In my case in both cases the value for:
+> >
+> > $ cat /sys/bus/thunderbolt/devices/domain0/iommu_dma_protection
+> >
+> > is 0.
+> >
+> > Output of sudo journalctl -k with kernel option thunderbolt.dyndbg=3D+p=
+:
+> > https://codeshare.io/qAXLoj
+> >
+> > Output of sudo dmesg with kernel option thunderbolt.dyndbg=3D+p:
+> > https://codeshare.io/zlPgRb
+>
+> I see you have "pcie_aspm=3Doff" in the kernel command line. That kind of
+> affects things. Can you drop that and see if it changes anything? And
+> also provide a new full dmesg with "thunderbolt.dyndbg=3D+p" in the
+> command line (dropping pcie_aspm_off)?
+>
+> Also is there any particular reason you have it there?
