@@ -1,28 +1,37 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CB96BB20
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18AE6A8AD;
+	Tue, 21 May 2024 10:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716285361; cv=none; b=XE0PKMzqLOn/2b33a7R7NTG7IJBAfjwa6QMx4ZHMeJCHR8DOdVGBU2/u2uks2tWWqg3uZ1Mbnk4AZX6+U4hxZkV6pHZVfeOJg3moT3sB0fzFenBr1CElBIHgMb9WnuNosSg2iYg6Yix3YS2RaraV1A22IF7V/r7CmQhI8PVTA6I=
+	t=1716285689; cv=none; b=jqBtiGstXpFuK2jm8o7qHxFSyME1vpfeGzu8hJzcOf32dCEm6NKPvBS8UU+k1qlkg0GuEuE6ksP3JfnzXxY7c50AKZLnh0Ak7rUS6C6rtudhhpUTQaX5qoUpMLMCMpvgmwTSge8WQTmMiIXdyCu6Swu5iT4rjRoq9g43eRk1py8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716285361; c=relaxed/simple;
-	bh=9jYYJdwBIuzSRXYa6nEqZlNQpMtFqpFi+iSpT3gqCAM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Y9zJB5G6leRu7VzKu2q+ZcILV0cJA1oRVWkNkoWpskr+VI54f7D1z1L00Z2n/XmfxMr90qRYU/UaYrFm/N2r+5d7D/qQuzXwcYBCs7mHmU3/9/tXSjeAnpfAQSARrr4PUnAo90zJiSNv7GU/C6IomMWqg/Bu4+KzewbC4nbr0OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0DD9961E5FE06;
-	Tue, 21 May 2024 11:55:35 +0200 (CEST)
-Message-ID: <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
-Date: Tue, 21 May 2024 11:55:34 +0200
+	s=arc-20240116; t=1716285689; c=relaxed/simple;
+	bh=n8+o3NVnL57asI8p4M/36TOmWj7QNAqCHYBIEm6XABA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CjikhbNzy6UEX5nrM0WPSJueA3MRy2U+dEmDp31eo7iaoOPxY8HMW692nvIoGWwKsmEQ/lwfLAx0oUuH3t1Ye33pIVcg2UEsPflKmWiDoOzX33deqQPZPmcvI2TjOqid4fcijVk9cgq01okws1POFyDMLRUGrzpNI0LjMmvllIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vc7D2ADM; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vc7D2ADM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=j75BGBZI1XcWKMkzeEf52Hy2BMGSWC5SHXSgriK1ehQ=;
+	t=1716285688; x=1716717688; b=vc7D2ADMAp/nMoHfrkYJjjr00DE67wlW7XHbaK4S8r6U5yH
+	dfK8Cdna3KtqnWE5l7Fw+LJ2wfb5LJhehJ8vaWQpbZvoCaSrnCM4282CxGesNrlmVy89gb6mHoSZp
+	3wsMC6deVsKvs5kY+ut+3s85J0oa6V7TRSd2iKNHwCVfloijByOmH9Al8SKiLI5apoX9aK7X6PPdY
+	zwbF/4pna8g9ZKoABiQXvlM/PfG7f1ttHehgjmUw8N2EwCpJNq35+VHMSP93Sk9e6w5535gk3Rh8T
+	g0Yn9NQte1OmaS78fjNMxqec0arpAcDVpJBgpToxlOgEtlts4fc8Kl1bbeercsrA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9MJ3-0000k3-Uj; Tue, 21 May 2024 12:01:18 +0200
+Message-ID: <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+Date: Tue, 21 May 2024 12:01:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,70 +39,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, regressions@lists.linux.dev,
- it+linux-nfs@molgen.mpg.de
-References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Laura Nao <laura.nao@collabora.com>
+Cc: mika.westerberg@linux.intel.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+ kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "kernelci.org bot" <bot@kernelci.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716285688;572a1b2c;
+X-HE-SMSGID: 1s9MJ3-0000k3-Uj
 
-#regzbot ^introduced: 74fd48739d04
-
-Dear Jeff,
 
 
-Am 19.04.24 um 18:50 schrieb Paul Menzel:
-
-> Since at least Linux 6.8-rc6, Linux logs the warning below:
+On 13.05.24 12:02, Andy Shevchenko wrote:
+> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+>> Following the relocation of the function call outside of
+>> __acpi_find_gpio(), move the ACPI device NULL check to
+>> acpi_can_fallback_to_crs().
 > 
->      NFSD: Unable to initialize client recovery tracking! (-110)
-> 
-> I haven’t had time to bisect yet, so if you have an idea, that’d be great.
+> Thank you, I'll add this to my tree as we have already the release happened.
+> I will be available after v6.10-rc1 is out.
 
-74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
-commit 74fd48739d0488e39ae18b0168720f449a06690c
-Author: Jeff Layton <jlayton@kernel.org>
-Date:   Fri Oct 13 09:03:53 2023 -0400
+Hmm, what exactly do you mean with that? It sounds as you only want to
+add this to the tree once -rc1 is out -- which seems likely at this
+point, as that patch is not yet in -next. If that's the case allow me to
+ask: why? I'd say it should be fixes rather sooner than later, as other
+people might run into this as well and then have to deal with bisecing,
+reporting, ...
 
-     nfsd: new Kconfig option for legacy client tracking
+Ciao, Thorsten
 
-     We've had a number of attempts at different NFSv4 client tracking
-     methods over the years, but now nfsdcld has emerged as the clear winner
-     since the others (recoverydir and the usermodehelper upcall) are
-     problematic.
-
-     As a case in point, the recoverydir backend uses MD5 hashes to encode
-     long form clientid strings, which means that nfsd repeatedly gets 
-dinged
-     on FIPS audits, since MD5 isn't considered secure. Its use of MD5 
-is not
-     cryptographically significant, so there is no danger there, but 
-allowing
-     us to compile that out allows us to sidestep the issue entirely.
-
-     As a prelude to eventually removing support for these client tracking
-     methods, add a new Kconfig option that enables them. Mark it deprecated
-     and make it default to N.
-
-     Acked-by: NeilBrown <neilb@suse.de>
-     Signed-off-by: Jeff Layton <jlayton@kernel.org>
-     Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-
-  fs/nfsd/Kconfig       | 16 +++++++++
-  fs/nfsd/nfs4recover.c | 97 
-+++++++++++++++++++++++++++++++++------------------
-  fs/nfsd/nfsctl.c      |  6 ++++
-  3 files changed, 85 insertions(+), 34 deletions(-)
-
-`NFSD_LEGACY_CLIENT_TRACKING` is not set:
-
-     # CONFIG_NFSD_LEGACY_CLIENT_TRACKING is not set
-
-
-Kind regards,
-
-Paul
