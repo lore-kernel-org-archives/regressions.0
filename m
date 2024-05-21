@@ -1,137 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25602DDD7;
-	Tue, 21 May 2024 01:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BADF1FDD;
+	Tue, 21 May 2024 02:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716256339; cv=none; b=GBKP2oWZgW+xumMnt938kK+icvusgPzk/e20jzkh7q/InalcGRvAkx+F3iRw5qNKm1LMMRhG2uMf5p9XUSwTnoAuHMss6m3i9nV5rlItUWlw/hhfZ9im9Tu9rDBfSon3ASk7azN4s7RIuek6QWpZS7qU2n9sTwWGtuPHJz+uYzI=
+	t=1716260005; cv=none; b=ohO2A1L80irpgISCTY1WEfLTcxUis7HFaSWPbj6qzqCsOj0NhG6NJJ1FYULGpg6so2PrixlI9ithIbvQGiC1uwLTdLqDYNoLXoyLdqCBQf+ufxqTZ8zlhgDNBK5t1qLlf3rSSwzvuJS28qeM7kH8St/I0ZMLg68hrAm4j+kv++I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716256339; c=relaxed/simple;
-	bh=9W8zhc+dgfcfb0rBog1zP1w/IruObcuWpyooKFQuGsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Z6JUGF35NOXlOb70Oq6C/97djivI4JuxD3qZIYjUeBSq6wWPU0Iowvd17cscR4dYM3Dp9x8sZr0zhGuR2+FoJBBzHlMKEEgldF0FsLaYs7ue8ShTcVh7p6glmsH5TCJ8uwQNQRqphGvOayD/5Ea4VcIkVlNnQ5wHe/UI1JP6ov8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ioAkHrhE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ioAkHrhE"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KDT005002246;
-	Tue, 21 May 2024 01:52:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=TWjzaiPWRuE3Vzeje4HCkWx7RJMXwE1DcD52t2iq+IE=; b=io
-	AkHrhEq+H0QhA5ginnabSrRj7x1+AQ2gwBp4xUE/LuQImKwxfpUuwdvVkw8a42jj
-	G5t5fjRxcfV9mrq3D+FcDf7QP64/no3lj4OgvMFIzU+k8sxzicgAimnFfD/yzeOr
-	RUYYIc8Kblet5VT1k6jJhK/W0SwujE6mjsxP8PIeM7+ohoUXhJCSUCJ1FrH68T/w
-	HzU7Tt2XxTEbWp8Bsso7PmQjFp6gQqbdqOhfgf/X3tYz25a0qSzqI5dimEfWvhPd
-	eWCJcolq9dvBv+AjeYQsRl6hy1CaK1QfxYTl+pncXUTtOHL/o3fjxtdQx3Cglu1v
-	pSiTYD/UosJmc1BsMX8w==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4gcphc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 01:52:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44L1q9AZ019088
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 01:52:10 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 20 May
- 2024 18:52:08 -0700
-Message-ID: <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
-Date: Tue, 21 May 2024 09:52:06 +0800
+	s=arc-20240116; t=1716260005; c=relaxed/simple;
+	bh=Z4jGxdA4J1toKgzTasm0GDN9Ngv8FeSm+rD8paoawxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KINmUwce3Kq6AeDgAhc/1f9vIC6OEm6ROX0WomA849GZgc7zRyNlsPl6GMeEBMSbxhhC7sG4/h4QAyAp/6SDH5cjMwB5vRzYTqVZVDYr6ss51gTPg/vkEWF/mM53qNSVFgpuLRprB4EUNpPiZDZFh1uUcru7AF5wJ5tyNW2SzMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1s9Fcq-000M2J-2k;
+	Tue, 21 May 2024 10:53:17 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 21 May 2024 10:53:18 +0800
+Date: Tue, 21 May 2024 10:53:18 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	regressions@lists.linux.dev, kernel@collabora.com,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [v2 PATCH] crypto: api - Do not load modules if called by async
+ probing
+Message-ID: <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
+References: <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
+ <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
+ <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
+ <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
+ <20240518043115.GA53815@sol.localdomain>
+ <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+ <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
- when connecting to 6 GHz AP
-To: Kalle Valo <kvalo@kernel.org>
-CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <regressions@lists.linux.dev>
-References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
- <87wmo0k71i.fsf@kernel.org>
- <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
- <87h6esebu8.fsf@kernel.org>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <87h6esebu8.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 2hWElVs2tP-fpMHWuJBzUgjqxBzoLjQO
-X-Proofpoint-ORIG-GUID: 2hWElVs2tP-fpMHWuJBzUgjqxBzoLjQO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-20_13,2024-05-17_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405210014
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
 
+On Mon, May 20, 2024 at 11:49:56AM -0400, Nícolas F. R. A. Prado wrote:
+>
+> Unfortunately this patch didn't work either. The warning is still there
+> unchanged.
 
+OK perhaps we can do it by calling current_is_async ourselves.
+But this is really a nasty hack because it basically defeats
+the whole point of loading optional algorithm by module.
 
-On 5/20/2024 11:34 PM, Kalle Valo wrote:
-> Baochen Qiang <quic_bqiang@quicinc.com> writes:
-> 
->> On 5/11/2024 5:54 PM, Kalle Valo wrote:
->>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
->>>
->>>> With commit bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
->>>> ath11k fails to connect to 6 GHz AP.
->>>>
->>>> This is because currently ath11k checks AP's power type in
->>>> ath11k_mac_op_assign_vif_chanctx() which would be called in AUTH stage.
->>>> However with above commit power type is not available until ASSOC stage.
->>>> As a result power type check fails and therefore connection fails.
->>>>
->>>> Fix this by moving power type check to ASSOC stage, also move regulatory
->>>> rules update there because it depends on power type.
->>>>
->>>> Tested-on: WCN6855 hw2.0 PCI
->>>> WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
->>>>
->>>> Fixes: bc8a0fac8677 ("wifi: mac80211: don't set bss_conf in parsing")
->>>> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
->>>
->>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
->>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
->>> need to queue this for v6.10 via wireless tree.
->>>
->>> Adding the regression also to regzbot:
->>>
->>> #regzbot introduced: bc8a0fac8677
->>> #regzbot title: ath11k: connection to 6 GHz AP fails
->>>
->> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
->>
->> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
->>
->> So here the ath11k fix would not be needed any more once above patch got merged.
-> 
-> What happens if we apply both patch 'wifi: ath11k: move power type check
-> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
-> mac80211: build TPE handling'? In other words, do they conflict from
-> functionality point of view?
-No functional conflict, 6 GHz AP connection would also succeed with both of them applied.
+Linus/Tejun, is it time perhaps to remove the warning introduced
+by commit 0fdff3ec6d87856cdcc99e69cf42143fdd6c56b4 since it's
+been ten years since the warning caused a real problem?
 
-> 
-> I ask because I suspect Johannes is planning to take patchset 'wifi:
-> mac80211: build TPE handling' to v6.11 but we should fix the ath11k bug
-> in v6.10.
-> 
->> But I don't have time to test this, so suggest keeping it pending. We
->> could drop it once above analysis got verified.
-> 
-> BTW for some this patch wasn't in the pending branch but it's there now.
-> 
+For the Crypto API, if it is called by some random driver via the
+async context, this warning stops us from loading any modules
+without printing a nasty warning that isn't relevant as the Crypto
+API never calls async_synchronize_full.
+
+---8<---
+Do not call request_module if this is the case or a warning will
+be printed.
+
+Reported-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ crypto/api.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/crypto/api.c b/crypto/api.c
+index 22556907b3bc..7c4b9f86c1ad 100644
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -10,6 +10,7 @@
+  * and Nettle, by Niels Möller.
+  */
+ 
++#include <linux/async.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/jump_label.h>
+@@ -280,7 +281,8 @@ static struct crypto_alg *crypto_larval_lookup(const char *name, u32 type,
+ 	mask &= ~(CRYPTO_ALG_LARVAL | CRYPTO_ALG_DEAD);
+ 
+ 	alg = crypto_alg_lookup(name, type, mask);
+-	if (!alg && !(mask & CRYPTO_NOLOAD)) {
++	if (!alg && !(mask & CRYPTO_NOLOAD) &&
++	    (!IS_BUILTIN(CONFIG_CRYPTO) || !current_is_async())) {
+ 		request_module("crypto-%s", name);
+ 
+ 		if (!((type ^ CRYPTO_ALG_NEED_FALLBACK) & mask &
+-- 
+2.39.2
+
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
