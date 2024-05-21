@@ -1,72 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7511482ED
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF0F77F2F
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 15:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305271; cv=none; b=rwv7GHz0FtFV8+/PfDz+NXBg8a6lQU4yT/N3S+K31qB1ZGPQXzZzPBEvk82ILWO+Y+GGa52wUvuAuftv52LdbZ6/fjPpUaBRKKCDh4gLYyiiI+Z/WxhKISK92S/n5T052XithXXQIjmEwFpGi8AJ5NIyEECdcoU4BrknPS9BZ1c=
+	t=1716305389; cv=none; b=i87g0UV74lwxT4npvt3CiA2QJL9SGnotK5FKKgArMlE0P5MudlwfSJcY2JoRn51VPgIrLcIyiht1Ce6+4HYhg/ZivdI+a4ZrHyLy3kw9Djm9KeEHvF/CaPs6PHYFTSVxgH/9B3na1Aw8hJG6hlqrrP62jymESZvW8EN7gtVKbx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305271; c=relaxed/simple;
-	bh=IC9nTsYHcZ8MNeWk3KQE+CAXDWKcffMouhowkGoKjfY=;
+	s=arc-20240116; t=1716305389; c=relaxed/simple;
+	bh=UvH4ktnL1tc7jDTG/u5fqTldApC2eZfE4ZdoJUo2544=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qc2QoSPTITJAGUbhVt9TLaZdHDcQRT3uXIK7qjrwj2tBIjjIxvIKsAFNOIDHE1P2hJnbcKREGLKncrta+VVG5CdChnuOHsmYKgcuOi0P3HahJP3Fh2rZsYMhqfJP9wIuWAsCsAaeNfudEtizCn7+G8CD0H1xW4dhZHMIMjMI1nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExH+Jxwo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExH+Jxwo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716305269; x=1747841269;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IC9nTsYHcZ8MNeWk3KQE+CAXDWKcffMouhowkGoKjfY=;
-  b=ExH+JxwoqKaGWZPi/bxi/vfBuh8arDxpglcatAtSU1yt2BdXa7Ka3v5j
-   8AZipy4KPjsfQpbTViwaZnsmkeDiGBXBEVgUfAVjBw+SxRKjK/ImUTpjm
-   iWQJm5s5i072hg2o7miBNCfqwBDryQ5/DdHtyCqQECsNxAsj2wbol/1Sa
-   h5ZNAPnDAetE9UHHDQtdItuzafVx8Uz38uDG2g06ch2SJsiq1YNjAY+jG
-   zEaPAe8E27+UOmi4dh6rgME11AR2o6Fa7UVkfJSAeKqIFePVKXHPV/Jx1
-   4M3ZxIqMAd07pAKQgtwsvDSwkLx7YB30DzCCSWQpKh/0P/P94nWU35F/l
-   A==;
-X-CSE-ConnectionGUID: U9iM8mkbTmqExtnoWPaH7A==
-X-CSE-MsgGUID: zO2FOXc6Tv6O/4XJtw9Nrw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="23178843"
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="23178843"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:27:49 -0700
-X-CSE-ConnectionGUID: aNk5wQgXSyu7uP8s7KJKRA==
-X-CSE-MsgGUID: tpA2RpQhQh6tfqJ//cnHvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="70372293"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:27:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s9ROw-00000009hE4-3F9b;
-	Tue, 21 May 2024 18:27:42 +0300
-Date: Tue, 21 May 2024 18:27:42 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Laura Nao <laura.nao@collabora.com>,
-	mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-	brgl@bgdev.pl, kernel@collabora.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"kernelci.org bot" <bot@kernelci.org>
-Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
- acpi_can_fallback_to_crs()
-Message-ID: <Zky9bovo_99LwDfY@smile.fi.intel.com>
-References: <20240513095610.216668-1-laura.nao@collabora.com>
- <ZkHlLLLoagsYlll7@smile.fi.intel.com>
- <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
- <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
- <c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info>
- <Zky1UgJSf_ybRMOI@smile.fi.intel.com>
- <4f1bcc8b-1795-4e3c-90a6-742cd8443396@leemhuis.info>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gK8NwhZ9L45j9ANRFL5M6eNBfWljr0QagtyBCZWLY/SVO4W4BBxEh8wzbbN13aklEbbupuxZTPscHITRl8XnX1xEAvSli/rH73ZzwU/9gwuv6w0S3x2ThDXMLxhmNjuY3udzYo87c+7x6gOJvLc5aLpjJ3yiz6OOqfx/CInp/KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=snitzer.net; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=snitzer.net
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-792b8ebc4eeso312506085a.1
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 08:29:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716305385; x=1716910185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3+XPV7zuv4ms1R7vIYpXPZzY3GXErYi4LFqsxLAG47I=;
+        b=q3JxzggK1D0ZyuZ+L8kuIJjJQSFtUc5qLqvfM+ncXf8lI/26253OQeDvCvdsV7TCrn
+         cm1joMyBOWNNQTBwmwFsxn3h0ml34NmtIOtXMesD52PjxSPM3alaxOVh0wBHTWG7LNPE
+         EU5tNEfnFXyVepqr6fbuJ9pri3A7JAS0trcxmM8PWyw/y37PLV6rVziY+fk0ZfJJkwp5
+         avTyE31ubla0l+6p560KxWZT5liFZf8kwG8icXm5Tpc8MlFPk/Eo6PgRWX9hk0xqj0La
+         7PTF5y7zsfDJVAAZq5Q3+xhgch3oUGof6OSBPHONvxxYXf9zjL6AHJyCCbX9K08UJ5f3
+         4lqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW23+6DGAJBeqUohJZyoK1S6qYhj4E/x4/j47QlSesuSI7d5OQi7QuQjoAaWbIyorhRKqjM/A7oEkw2raGNXWOG2VBZhU/lpQGvsac=
+X-Gm-Message-State: AOJu0YyJdmVuawWcPsKg54sa5LtlNIB0IAC35eEvFTMe+tHH7soS8smb
+	61f52Suda6wwQIJFe2n3Wr99NHplNPWHvsvIYCSDkYbkba1L9X62nw2ZQRoOQzc=
+X-Google-Smtp-Source: AGHT+IF8uzIllLEK1FILZCyeg/sSMiPh8GED2VV5AYcL1qdc3iolbJlLULo4eghby1CQfxaYqUkGog==
+X-Received: by 2002:a05:620a:244a:b0:790:797d:2c4a with SMTP id af79cd13be357-792c75763e2mr3967911485a.14.1716305385299;
+        Tue, 21 May 2024 08:29:45 -0700 (PDT)
+Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2fc789sm1291554285a.93.2024.05.21.08.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 08:29:44 -0700 (PDT)
+Date: Tue, 21 May 2024 11:29:43 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>
+Cc: dm-devel@lists.linux.dev, fstests@vger.kernel.org,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
+	linux-block@vger.kernel.org
+Subject: Re: dm: use queue_limits_set
+Message-ID: <Zky951XVqcqI48P3@kernel.org>
+References: <ZkmIpCRaZE0237OH@kernel.org>
+ <ZkmRKPfPeX3c138f@kernel.org>
+ <20240520150653.GA32461@lst.de>
+ <ZktuojMrQWH9MQJO@kernel.org>
+ <20240520154425.GB1104@lst.de>
+ <ZktyTYKySaauFcQT@kernel.org>
+ <ZkuFuqo3dNw8bOA2@kernel.org>
+ <20240520201237.GA6235@lst.de>
+ <ZkvIn73jAqz94LjI@kernel.org>
+ <ZkvuqNXaNOMe6Gfj@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -75,123 +64,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4f1bcc8b-1795-4e3c-90a6-742cd8443396@leemhuis.info>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZkvuqNXaNOMe6Gfj@kernel.org>
 
-On Tue, May 21, 2024 at 05:14:07PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 21.05.24 16:53, Andy Shevchenko wrote:
-> > On Tue, May 21, 2024 at 04:26:32PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 21.05.24 16:00, Andy Shevchenko wrote:
-> >>> On Tue, May 21, 2024 at 12:01:17PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >>>> On 13.05.24 12:02, Andy Shevchenko wrote:
-> >>>>> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
-
-...
-
-> >>>>> Thank you, I'll add this to my tree as we have already the release happened.
-> >>>>> I will be available after v6.10-rc1 is out.
-> >>>>
-> >>>> Hmm, what exactly do you mean with that? It sounds as you only want to
-> >>>> add this to the tree once -rc1 is out -- which seems likely at this
-> >>>> point, as that patch is not yet in -next. If that's the case allow me to
-> >>>> ask: why?
-> >>>
-> >>> Because:
-> >>>
-> >>> - that's the policy of Linux Next (do not include what's not supposed to be
-> >>>   merged during merge window), Cc'ed to Stephen to clarify, it might be that
-> >>>   I'm mistaken
-> >>>
-> >>> - the process of how we maintain the branches is to have them based on top of
-> >>>   rc1 (rarely on other rcX and never on an arbitrary commit from vanilla
+On Mon, May 20, 2024 at 08:45:28PM -0400, Mike Snitzer wrote:
+> On Mon, May 20, 2024 at 06:03:11PM -0400, Mike Snitzer wrote:
+> > On Mon, May 20, 2024 at 10:12:37PM +0200, Christoph Hellwig wrote:
+> > > On Mon, May 20, 2024 at 01:17:46PM -0400, Mike Snitzer wrote:
+> > > > Doubt there was anything in fstests setting max discard user limit
+> > > > (max_user_discard_sectors) in Ted's case. blk_set_stacking_limits()
+> > > > sets max_user_discard_sectors to UINT_MAX, so given the use of
+> > > > min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors) I
+> > > > suspect blk_stack_limits() stacks up max_discard_sectors to match the
+> > > > underlying storage's max_hw_discard_sectors.
+> > > > 
+> > > > And max_hw_discard_sectors exceeds BIO_PRISON_MAX_RANGE, resulting in
+> > > > dm_cell_key_has_valid_range() triggering on:
+> > > > WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
+> > > 
+> > > Oh, that makes more sense.
+> > > 
+> > > I think you just want to set the max_hw_discard_sectors limit before
+> > > stacking in the lower device limits so that they can only lower it.
+> > > 
+> > > (and in the long run we should just stop stacking the limits except
+> > > for request based dm which really needs it)
 > > 
-> > Note, besides above reasons the one is (was in this case as you noticed)
-> > to wait until dependencies laid down in the upstream.
-> 
-> Well, that can be a reason, sure. But I still wonder if Linus would have
-> preferred to get 49c02f6e901c and this fix for it in the same pull.
-> Sure, adding this fix would have been a late addition, but when it is a
-> fix and mentioned in the PR that from what I can see is no problem at
-> all for him.
-
-
-> >> Something like that is what I feared. And yes, some of that is true. But
-> >> the patch in this thread contains a Fixes: tag for commit 49c02f6e901c
-> >> which was merged during this merge window -- and that patch thus ideally
-> >> should (ideally after some testing in -next) be merge during the merge
-> >> window as well, to ensure the problem does not even hit -rc1.
+> > This is what I staged, I cannot send a patch out right now.. 
 > > 
-> >> That's something a lot of subsystem master all the time. The scheduler
-> >> for example:
-> >>
-> >> https://git.kernel.org/torvalds/c/6e5a0c30b616bfff6926ecca5d88e3d06e6bf79a
-> >> https://git.kernel.org/torvalds/c/8dde191aabba42e9c16c8d9c853a72a062db27ee
-> >>
-> >> Other subsystems (perf, x86, net) do this, too. Not sure how they
-> >> exactly do that with git; I think some (most?) have a dedicated -fixes
-> >> branch (based on master and fast-forwarded after Linus merged from it)
-> >> for that is also included in next in parallel to their "for-next"
-> >> branch.  Stephen will know for sure.
+> > Ted if you need the patch in email (rather than from linux-dm.git) I
+> > can send it later tonight.  Please see:
 > > 
-> > This part of the kernel is not so critical as scheduler, but in general I agree
-> > that sooner we get this in is better.
+> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-6.10&id=825d8bbd2f32cb229c3b6653bd454832c3c20acb
 > 
-> Side note: with all those CIs that "sooner" became more important I'd
-> say, as I frequently see multiple CI systems running into and bisecting
-> problems -- which humans then look into and report, which is a waste of
-> time.
-
-Oh, yes, our processes are completely non-ideal. Once I tried to micro-optimize
-the way of Cc'ing people for the patches to avoid waste of resources and you
-know what? This is a dead end. I gave up, so I don't care anymore and don't
-buy this argument anymore. If people are serious about this, they should be
-serious consistently.
-
-For your reference:
-20240423132024.2368662-1-andriy.shevchenko@linux.intel.com
-
-> > The other thing, that we have 3 regressions
-> > now for very this code. And some of them are still under discussions.
-> > 
-> > Wouldn't be better to gather all fixes and send a bunch via proper process
-> > after rc1? 
+> From: Mike Snitzer <snitzer@kernel.org>
+> Date: Mon, 20 May 2024 13:34:06 -0400
+> Subject: [PATCH] dm: always manage discard support in terms of max_hw_discard_sectors
 > 
-> Depends on the situation. As a general approach I'd say no, but there
-> definitely can be situations where that is wise.
+> Commit 4f563a64732d ("block: add a max_user_discard_sectors queue
+> limit") changed block core to set max_discard_sectors to:
+>  min(lim->max_hw_discard_sectors, lim->max_user_discard_sectors)
 > 
-> > This will ensure that everything we know about is covered properly
-> > and processed accordingly,
-> > 
-> > In broader way, the process should be amended if you want a fast track for
-> > the patches like this. I'm on the second level here, Bart is the maintainer
-> > who sends PRs directly to Linus. Do we have anything like this?
+> Since commit 1c0e720228ad ("dm: use queue_limits_set") it was reported
+> dm-thinp was failing in a few fstests (generic/347 and generic/405)
+> with the first WARN_ON_ONCE in dm_cell_key_has_valid_range() being
+> reported, e.g.:
+> WARNING: CPU: 1 PID: 30 at drivers/md/dm-bio-prison-v1.c:128 dm_cell_key_has_valid_range+0x3d/0x50
 > 
-> Pretty sure Linus wants maintains to just fast-track things when needed
-> by sending an additional PR; he multiple times said that this is not a
-> problem.
+> blk_set_stacking_limits() sets max_user_discard_sectors to UINT_MAX,
+> so given how block core now sets max_discard_sectors (detailed above)
+> it follows that blk_stack_limits() stacks up the underlying device's
+> max_hw_discard_sectors and max_discard_sectors is set to match it. If
+> max_hw_discard_sectors exceeds dm's BIO_PRISON_MAX_RANGE, then
+> dm_cell_key_has_valid_range() will trigger the warning with:
+> WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE)
 > 
-> But there is a way to fast track things: just ask Linus to pull a patch
-> from the list (e.g. in a reply to the patch while CCIng tim). He
-> multiple times said this is no problem for him, unless it becomes the
-> norm. This is documented in
-> Documentation/process/handling-regressions.rst /
-> https://docs.kernel.org/process/handling-regressions.html
+> Aside from this warning, the discard will fail.  Fix this and other DM
+> issues by governing discard support in terms of max_hw_discard_sectors
+> instead of max_discard_sectors.
+> 
+> Reported-by: Theodore Ts'o <tytso@mit.edu>
+> Fixes: 1c0e720228ad ("dm: use queue_limits_set")
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 
-"For urgent regressions, consider asking Linus to pick up the fix straight from
-the mailing list: he is totally fine with that for uncontroversial fixes.
-Ideally though such requests should happen in accordance with the subsystem
-maintainers or come directly from them."
-
-The first thing I'm not so comfortable with is that Bart as a subsystem
-maintainer will be by-passed. The second one, is the metrics of urgency.
-I can assume that something from a TIP tree is really urgent and they
-even have established fast track for ages. But why do you think this fix
-is of the same level of urgency? I haven't found in the documentation
-the checklist which I can count numbers, compare with a table and have
-a clear answer "yes, I have do it".
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+With this patch applied, I verified xfstests generic/347 and
+generic/405 no longer trigger the dm_cell_key_has_valid_range
+WARN_ON_ONCE.  I'm sending the fix to Linus now.
