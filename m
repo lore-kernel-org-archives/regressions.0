@@ -1,59 +1,37 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521C236B0D
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 18:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A1514B945;
+	Tue, 21 May 2024 18:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716316187; cv=none; b=Mj85+wJz+X/was36mG7yZHF49Rhet6NFX0gmPSIveXlyLxddlyOx0oI9ocLTei+iFpmFD3fPaaZ4hhrTYXGdzh+yGSuvbz+8+/gc5O4xrH/h5XoVJJBXujmZdB4MuRC1A8g987RCpuW41+J2JPSQ37o+EXkq5er+n7fQJ+QMF40=
+	t=1716316870; cv=none; b=jOc6RClly3CnoLn7HS5ohxDe7QcGv+0t5q2ac6Ei33wl1pNOkUIPyQevD1hMyNjYeMo2JS6Y8+rDsqKDWLfmfyR6PwBePQSYYNcsL5W8SvUMO8pvhdaXvfrBGLbHMLMvBnAX38rzY9FccqxaSBKQ6Rqo4zQf7CnWLosByuJKKRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716316187; c=relaxed/simple;
-	bh=dgdXpkIhU+y9iHEBqZOvE4CDrXAha91+KB/GLyOImZA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=edJ2ZZ5BDstY13GRtEGFoWFVBwAArF67TvFgM8Jg3o9FZ4hFzSTWxj4M5KwL9yV0yw8drJ1+1uZqjjmHiFCzpU2eTBbRSrokQSijALKh3NKYuVlUXQaYPC9iuHK1LwDa0fiyhOJvsFTFtWyLOyw2ILuV3uEpaXO3IJ4EBzZ7ywE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gixNwn/n; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1716316870; c=relaxed/simple;
+	bh=6XpijqtccTHGXA+AoieILf4pViR2pTCtkLRfit3mgFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IhDuhWecnOZVtpD+cdK5hmUkzgtmV/r19pIu0SqzQ5PQxFEUE5wsnXzWs87/JSZpYIvNLJohrcWl6pempzyp6D580kERXE4J5nI/RDgCsz0ty7eZ74b0pNoiXA9j5Z0mL7GdbWgO9LmhC/5RKHSKWzx1j6V++5UKIc8p5LdBSjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hiqxO9EB; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gixNwn/n"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7e24bcce578so14234639f.0
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 11:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716316184; x=1716920984; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QiL8jPCVLJm4ChkHzmJn8WCo6IbWuNrnx20w9l78O+c=;
-        b=gixNwn/nnuL2aTbHAv/8x5ArV/HIdKJ3DHPnIWh+YB6qGxqaBKWsTfq7f5iM6SW6PM
-         N30xPydhOvHamWqha93/pd6HTiVUad0eM/sbPz0AbUx3sJIMWVPFKmPVqsSf7Uo4iK2Q
-         DJoFeDleuu/yicZFnr8lKvAMSgjGH+4z2wmh58+DodkKH/j/2zm9UH1qQTlwXOEh3KJy
-         bOQ4TgH8U+/F8tmAR4Tgmvn/Xti8cBPOK97ovaiSHXNF4tIo1XkB8NhFDcQZmsWPxRg0
-         GoWiSPx+MjMWzAy+wyLhaQ6F8uqNV3XRwVAYloEMNnl7FZicErBDT1D7sLbtthBGdhUj
-         WEbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716316184; x=1716920984;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiL8jPCVLJm4ChkHzmJn8WCo6IbWuNrnx20w9l78O+c=;
-        b=DzepCDF2eH9XjSXFW7I+jXz/AnC88FavdXwETR1oYvvRguT9DpDp3b6uItDXn+6g01
-         QxDYi6MaogCQA7brtmtzfgSMwdTUqi4Gmf1Sss9zRRqQ89sKBFlJ+QNJTpjyjwMGeFEl
-         kR1n7x3GEfvFh0bbzAupoMoVeo8xwcMSwrVVgvXc+TL7UnNuKdK26k119LlD5aapRSxQ
-         tCI6Cy2YGJSdB9VDNB+ecXivkA5ZwXyoRPxNZxXNi2bpGyCKZI/Grt6mgzAe+K9E4rmJ
-         4qK5oOKqy22yEHUQzuzlR7CHmKMe63AM2ynglO7TRKSDdhcANPle3gMTxSw6Ag86+rNc
-         cNGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg+VhVsUycnvrYn/jIxMyG2cYj1krkcExBDZ4gwV5m4VrKtqoVUPuVh+zqKWgUsgGHrbanWSjrDfDoDWqIzdHj983gQvSGn7r61lA=
-X-Gm-Message-State: AOJu0YxGbv8xy/jyB1CbZuXca47TfVnEG9NdC5Ti2kA6gtKpsoNLzdaG
-	6IJJyExJlAP98nefYfAk3bx1wMavmUn9HzvQHZ8aS0jRZ/i/plX1ss32W3gILj4=
-X-Google-Smtp-Source: AGHT+IFRYPG2Ng3/qufyEbP7kiQVtzyIgSegpCO0NthddraXsbj7qpouf4hoXqCV1QNRdJw05Qyr+A==
-X-Received: by 2002:a6b:d203:0:b0:7de:e04b:42c3 with SMTP id ca18e2360f4ac-7e1b5022577mr3343650839f.0.1716316184314;
-        Tue, 21 May 2024 11:29:44 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4af93f3555bsm213969173.98.2024.05.21.11.29.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 11:29:43 -0700 (PDT)
-Message-ID: <0ec1d936-ee3f-4df2-84df-51c15830091b@kernel.dk>
-Date: Tue, 21 May 2024 12:29:41 -0600
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hiqxO9EB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=s0vsdZ7jPEzrw+PhFnU9mrUZ+GaBCox5t4ZNvaUAMzQ=;
+	t=1716316868; x=1716748868; b=hiqxO9EBHgPHF86mKMWpl8g5AYL39tV1kK+YjnfqmddZQj3
+	o8OSLRgj+MS9x2OqvcApOtVqAtCOx1zgCEo4rn9ekcAFYFv7lRL4UinmGU1ZEAxj+dLc/+iggUG16
+	7ucYdPX5eox+lrj1ZkvDXIeFMayUJvG/X74E3IcSFOY08TPQzyDXl/4uA3B0JeaRZtX6tOvTiOjNK
+	qsvWZp0VnGQCvfqk2Sej/a4o8wW4L+BqV8r45qVduq4Z/tzMaXULEc8gS8eowjhz5Ww4zSVY02yiB
+	mmkBHlOLEJlZs0NlX8BRuhCPBPreBq+05FthCgNS11ZnK2ZKWlwoGMwfNnCbx6Rg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9UQ3-0000WH-Df; Tue, 21 May 2024 20:41:03 +0200
+Message-ID: <5252311c-1b40-48ac-96f6-0fd94a095dc2@leemhuis.info>
+Date: Tue, 21 May 2024 20:41:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,44 +39,95 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
-From: Jens Axboe <axboe@kernel.dk>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Andrew Udvare <audvare@gmail.com>, regressions@lists.linux.dev,
- io-uring <io-uring@vger.kernel.org>
-References: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
- <8979ae0b-c443-4b45-8210-6394471dddd1@kernel.dk>
- <8de221f7-fe5a-4da9-899e-de2a856a4ddc@kernel.dk>
- <yywbp7fjnwgqxvc66zimea4hgdc2eysjx5nezky3vndr7xw25l@jv76rdseqm3e>
- <b8018270-6e9a-4888-87fd-69620d62c4e5@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <b8018270-6e9a-4888-87fd-69620d62c4e5@kernel.dk>
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Laura Nao <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "kernelci.org bot" <bot@kernelci.org>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+ <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+ <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+ <c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info>
+ <Zky1UgJSf_ybRMOI@smile.fi.intel.com>
+ <4f1bcc8b-1795-4e3c-90a6-742cd8443396@leemhuis.info>
+ <Zky9bovo_99LwDfY@smile.fi.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Zky9bovo_99LwDfY@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716316868;77975787;
+X-HE-SMSGID: 1s9UQ3-0000WH-Df
 
-On 5/21/24 12:25 PM, Jens Axboe wrote:
-> Outside of that, only other thing I can think of is that the final
-> close would be punted to task_work by fput(), which means there's also
-> a dependency on the task having run its kernel task_work before it's
-> fully closed.
+On 21.05.24 17:27, Andy Shevchenko wrote:
+> On Tue, May 21, 2024 at 05:14:07PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 21.05.24 16:53, Andy Shevchenko wrote:
+>>> On Tue, May 21, 2024 at 04:26:32PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 21.05.24 16:00, Andy Shevchenko wrote:
+>>>>> On Tue, May 21, 2024 at 12:01:17PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>> On 13.05.24 12:02, Andy Shevchenko wrote:
+>>>>>>> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+> [...]
+>>> The other thing, that we have 3 regressions
+>>> now for very this code. And some of them are still under discussions.
+>>>
+>>> Wouldn't be better to gather all fixes and send a bunch via proper process
+>>> after rc1? 
+>>
+>> Depends on the situation. As a general approach I'd say no, but there
+>> definitely can be situations where that is wise.
+>>
+>>> This will ensure that everything we know about is covered properly
+>>> and processed accordingly,
+>>>
+>>> In broader way, the process should be amended if you want a fast track for
+>>> the patches like this. I'm on the second level here, Bart is the maintainer
+>>> who sends PRs directly to Linus. Do we have anything like this?
+>>
+>> Pretty sure Linus wants maintains to just fast-track things when needed
+>> by sending an additional PR; he multiple times said that this is not a
+>> problem.
+>>
+>> But there is a way to fast track things: just ask Linus to pull a patch
+>> from the list (e.g. in a reply to the patch while CCIng tim). He
+>> multiple times said this is no problem for him, unless it becomes the
+>> norm. This is documented in
+>> Documentation/process/handling-regressions.rst /
+>> https://docs.kernel.org/process/handling-regressions.html
+> 
+> "For urgent regressions, consider asking Linus to pick up the fix straight from
+> the mailing list: he is totally fine with that for uncontroversial fixes.
+> Ideally though such requests should happen in accordance with the subsystem
+> maintainers or come directly from them."
+> 
+> The first thing I'm not so comfortable with is that Bart as a subsystem
+> maintainer will be by-passed.
 
-Yep I think that's it, the below should fix it.
+Well, that's why the last sentence you quoted is there; but yeah, the
+"sub-subsystem" case it only kinda indirectly covered there. I can add
+something about it if people feel that this is needed. But in the end
+I'd say in this case Bart should be involved or the one that feeds this
+to Linus. We'll see soon how both react to your PR. Thx for that BTW!
 
+> The second one, is the metrics of urgency.
+> I can assume that something from a TIP tree is really urgent and they
+> even have established fast track for ages. But why do you think this fix
+> is of the same level of urgency? 
 
-diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
-index 554c7212aa46..68a3e3290411 100644
---- a/io_uring/sqpoll.c
-+++ b/io_uring/sqpoll.c
-@@ -241,6 +241,8 @@ static unsigned int io_sq_tw(struct llist_node **retry_list, int max_entries)
- 			return count;
- 		max_entries -= count;
- 	}
-+	if (task_work_pending(current))
-+		task_work_run();
- 
- 	*retry_list = tctx_task_work_run(tctx, max_entries, &count);
- 	return count;
+We get into "best to ask Linus directly" territory here. I suspect
+things for him boil down to "a fix is a fix; if it was reviewed and
+ideally in next for ~2 days, let's just merge it to get rid of the
+regression, unless there are strong reasons to wait a bit more (for
+example if the fix is dangerous and better should be in -next somewhat
+longer)".
 
--- 
-Jens Axboe
-
+Ciao, Thorsten
