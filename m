@@ -1,60 +1,48 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922CD4C66
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 16:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272CF4C66;
+	Tue, 21 May 2024 16:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716308543; cv=none; b=KwIz9R90xQvnQgvWpxHQfnzA74D1tnSlxka6Th9zuEOtRfcYfkCyOyK/BIDv+XDSyvwoE0VkxrgPWwxe4UOjEFgUBX3ZTU3PTwfk5P4qoZhLeV5aCZZHuuKoqZip3rGWUKPckaYx0IM4d1JKGv4+icihZRFSMbhYbnsBWuPBabk=
+	t=1716308859; cv=none; b=QChoIN1YfJGKT9QyKR6c2TYgbCFQ2c40gBiBbWESnspGAzkilw0ltgVbicBAG1yNifT5wYXfc21sl10o4A81gzTJb9tbH5lZBdyyM7a5G36aI71lufWd6Kxn6FlOw6MjSfKT3MR2VQB4ivrje1W6hNRR+ByjpLgEoLrkPCLIiTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716308543; c=relaxed/simple;
-	bh=DHud8az1epbudvpz/IpiVm1Y+K8PiNZSPN7pMLHdqnY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IcYZo7VDj4xm5tE3fzftXmNccEoTgJg36jOl23LuwwqYqo7b9rYMRlDYtJw/1/bNodMpn51J2gnTnmlkcmGw/u3XfI3LX3y2FquJ601A1T17EEU8RBKOdbu8WlWgHzpynwhlXazNwY88womAPBL4wxAKemBCwVr0oFbuUp3wvo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MjgQ5ih0; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1716308859; c=relaxed/simple;
+	bh=qGvYWy8UJJh6MLm0owdO37JBYzdn9AR+NhAl3DKfkvY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Gx1JUV2sbNW4XB29VVL7NcMAtK/OX7o03D4Q2CbdQ7EyBwkISdHxWYlMWYFsqHOLlxE+7ALXD+hH2X0DjeagMC5uKG4cLerNyUuRt6Db+Fjp6qYiljzEkZb17yyZm3acn2278TsqBVY9YE4C7m32ztrSbGn6nw358BR8tvGayk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P9YAZMZh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MjgQ5ih0"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36dbdb1caf3so1291445ab.2
-        for <regressions@lists.linux.dev>; Tue, 21 May 2024 09:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716308541; x=1716913341; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZCGK78hZJKrOpf50PdGUurGLVSJhISvQM6TW9kyuGrg=;
-        b=MjgQ5ih0yGix/YIU6Yh+v99B0ob9Uu6WXWv0aUzl09P0WfSrs3PQ/4BeZsHI8FCAtB
-         K6SdlXfK4aid0WhUxz//I+ridWpJMO8XN3JTaupmZYe+gDjC5u1EFjc8ZqqKabHXrgSE
-         hp3yJbazDMKvjInlSSdcR18S9+lEapFCWjOOGU21AxRzj3VQcSBjvhCXYb+ydKsPJjND
-         T0jyNzPRxviHLGBwpjrFtK7rVVKV4Yv2NztWe0PNMnFEiW2Q1TGtFuo1p+IA3w0fvm/t
-         6o57BLfVmcLm+qxSpdWVF+uzmnwGICBci7cXozu10C8FqRNbfIwHs/x2BqfaxN1CR8cG
-         YvOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716308541; x=1716913341;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCGK78hZJKrOpf50PdGUurGLVSJhISvQM6TW9kyuGrg=;
-        b=W2kt6MHOP3G3JJ8jtLe8cZog6t0l5mReyFSS91QSn5KAvXN8atL9s6BmKWj9KkNlv6
-         S7J4dT9wFoBWgh8wq5aruS6LBJecuRjD8F8ca7yTWm099hdzIBkbtA8JNAmgzFCXSE89
-         i7kX3v6J6EHvl9m4MwKi0BvXLQrsQYUcVoN8m7UyQdvl2tUe7eBczYpq1k30iD1m8x+z
-         NFUsNFL+4R4QS8S2Zs9dHLvfyMN9UAiFf8rMCgP3vmogORy0KvovPPrDDjjAQeAu+jP5
-         QTHgy9ngh60MJShozjoCm9a5VNfAV4TGzCZgPRT3OsKoCUotjugy53Ek6PIsEferuLQO
-         yE5w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8aO62KpaZdce8ZpOYXNsGPxKQ1Yz769UjuI2WkgPXC3poycEFBNXZRXBs8v0ODrOTlDKf8luSetbaZhjXOFPab4IpB2/80zHeAYA=
-X-Gm-Message-State: AOJu0YyQ5j2ZWs97DlfU/p7YpAM+qYCyb2suk2L6Zv0/d7ZbVtkRdxkK
-	aGqAVf6Ie7z64ruc0IcNtuSyIypX44w3nnsUwzLXXuhRER/IMgDLlCp/3OoakFWCdiduz76Higc
-	p
-X-Google-Smtp-Source: AGHT+IF6rDcptWTIfwJXxZWtRWKvJkGKnOFcU8ZqBb8gePkCL6jzK9HKZ2ttbWlwp+K7TIMG5rp49w==
-X-Received: by 2002:a92:d40a:0:b0:36c:c4eb:fef7 with SMTP id e9e14a558f8ab-36cc4ebff44mr294020845ab.2.1716308533665;
-        Tue, 21 May 2024 09:22:13 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-36cb9e142c6sm65054805ab.72.2024.05.21.09.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 09:22:12 -0700 (PDT)
-Message-ID: <8de221f7-fe5a-4da9-899e-de2a856a4ddc@kernel.dk>
-Date: Tue, 21 May 2024 10:22:11 -0600
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P9YAZMZh"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44LAa2UL030497;
+	Tue, 21 May 2024 16:27:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=ub76Tj8brlsc2ZB/ZUH1s+GZ5ZLyF3LbgMsiIZBZWaA=; b=P9
+	YAZMZhGn2rewr+tCO2zCjhX3nTrV7jTMAyh+aayo1UfojBZfnAdf0M1VJqXvw6nX
+	lKIpO566oacCJjjg2ksimxbXaqbLLiJ2TvD87e7ylSdkfcFNN7XT4Bw4OyRQSn14
+	q98xpxfPySiO+hPf5E1ERuJFEiqLsUZI93Ck4u9LdPkt0fx/p3ZbEGQbiUhcZaQk
+	gRXH3KLvcwxbQNunvOVotBHUOG+j4BcCeUJIYj9x9w32PJgEHHAXLUDoelqis3Mg
+	OVzsmTVooxfZiCQh6iW71FM8cxOsg1VLsmY9KbfFfIvWMtqUdqtW7nun3pCaL/J/
+	xWwRS7l0s+xChRQdt9Ag==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pq5eda5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 16:27:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44LGRU5j018432
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 16:27:30 GMT
+Received: from [10.110.17.44] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 21 May
+ 2024 09:27:29 -0700
+Message-ID: <0c8dc45d-8869-4455-b6be-1395d2937933@quicinc.com>
+Date: Tue, 21 May 2024 09:27:29 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,97 +50,76 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ETXTBSY when running Yarn (Node) since af5d68f
-From: Jens Axboe <axboe@kernel.dk>
-To: Andrew Udvare <audvare@gmail.com>, regressions@lists.linux.dev
-Cc: io-uring <io-uring@vger.kernel.org>
-References: <313824bc-799d-414f-96b7-e6de57c7e21d@gmail.com>
- <8979ae0b-c443-4b45-8210-6394471dddd1@kernel.dk>
+Subject: Re: [PATCH v2] wifi: ath11k: move power type check to ASSOC stage
+ when connecting to 6 GHz AP
 Content-Language: en-US
-In-Reply-To: <8979ae0b-c443-4b45-8210-6394471dddd1@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
+To: Baochen Qiang <quic_bqiang@quicinc.com>, Kalle Valo <kvalo@kernel.org>
+CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <regressions@lists.linux.dev>
+References: <20240424064019.4847-1-quic_bqiang@quicinc.com>
+ <87wmo0k71i.fsf@kernel.org>
+ <3dc28f34-45cc-4e14-b9ea-1f7b78a6a591@quicinc.com>
+ <87h6esebu8.fsf@kernel.org>
+ <b6b23a29-78ef-4e4f-8042-e13833fcb1ec@quicinc.com>
+ <878r03eoka.fsf@kernel.org>
+ <e235c2f1-4d52-4a89-9d1b-9d63d0ff4c6f@quicinc.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <e235c2f1-4d52-4a89-9d1b-9d63d0ff4c6f@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: tQECF9tgjRHs3L06Ew7CM0MRQZmk6C9V
+X-Proofpoint-ORIG-GUID: tQECF9tgjRHs3L06Ew7CM0MRQZmk6C9V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-21_10,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405210124
 
-On 5/21/24 10:16 AM, Jens Axboe wrote:
-> (removing stable as this isn't a stable regression, and the commit
-> itself isn't marked for stable to begin with).
+On 5/20/2024 10:27 PM, Baochen Qiang wrote:
 > 
-> On 5/21/24 10:02 AM, Andrew Udvare wrote:
->> #regzbot introduced: v6.8..v6.9-rc1
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=af5d68f8892f8ee8f137648b79ceb2abc153a19b
->>
->> Since the above commit present in 6.9+, Node running a Yarn installation that executes a subprocess always shows the following:
->>
->> /test # yarn --offline install
->> yarn install v1.22.22
->> warning package.json: "test" is also the name of a node core module
->> warning test@1.0.0: "test" is also the name of a node core module
->> [1/4] Resolving packages...
->> [2/4] Fetching packages...
->> [3/4] Linking dependencies...
->> [4/4] Building fresh packages...
->> error /test/node_modules/snyk: Command failed.
->> Exit code: 126
->> Command: node wrapper_dist/bootstrap.js exec
->> Arguments:
->> Directory: /test/node_modules/snyk
->> Output:
->> /bin/sh: node: Text file busy
->>
->> The commit was found by bisection with a simple initramfs that just runs 'yarn --offline install' with a test project and cached Yarn packages.
->>
->> To reproduce:
->>
->> npm install -g yarn
->> mkdir test
->> cd test
->> cat > package.json <<EOF
->> {
->>    "name": "test",
->>    "version": "1.0.0",
->>    "main": "index.js",
->>    "license": "MIT",
->>    "dependencies": {
->>      "snyk": "^1.1291.0"
->>    }
->> }
->> EOF
->> yarn install
->>
->> Modern Yarn will give the same result but with slightly different output.
->>
->> This also appears to affect node-gyp: https://github.com/nodejs/node/issues/53051
->>
->> See also: https://bugs.gentoo.org/931942
 > 
-> This looks like a timing alteration due to task_work being done
-> differently, from a quick look and guess. For some reason SQPOLL is
-> being used. I tried running it here, but it doesn't reproduce for me.
-> Tried both current -git and 6.9 as released. I'll try on x86 as well to
-> see if I can hit it.
+> On 5/21/2024 1:12 PM, Kalle Valo wrote:
+>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
+>>
+>>> On 5/20/2024 11:34 PM, Kalle Valo wrote:
+>>>> Baochen Qiang <quic_bqiang@quicinc.com> writes:
+>>>>> On 5/11/2024 5:54 PM, Kalle Valo wrote:
+>>>>>
+>>>>>> Oh, this fell through the cracks. Commit bc8a0fac8677 was introduced in
+>>>>>> v6.9-rc1 so I should have sent this to v6.9 but it's too late now. I'll
+>>>>>> need to queue this for v6.10 via wireless tree.
+>>>>>>
+>>>>>> Adding the regression also to regzbot:
+>>>>>>
+>>>>>> #regzbot introduced: bc8a0fac8677
+>>>>>> #regzbot title: ath11k: connection to 6 GHz AP fails
+>>>>>>
+>>>>> Hi Kalle, with an upcoming patch this regression is expected to be fixed:
+>>>>>
+>>>>> https://lore.kernel.org/all/20240506214536.310434f55f76.I6aca291ee06265e3f63e0f9024ba19a850b53a33@changeid/#t
+>>>>>
+>>>>> So here the ath11k fix would not be needed any more once above patch got merged.
+>>>>
+>>>> What happens if we apply both patch 'wifi: ath11k: move power type check
+>>>> to ASSOC stage when connecting to 6 GHz AP' and patchset 'wifi:
+>>>> mac80211: build TPE handling'? In other words, do they conflict from
+>>>> functionality point of view?
+>>>
+>>> No functional conflict, 6 GHz AP connection would also succeed with
+>>> both of them applied.
+>>
+>> Ok, thanks. In that case I would like take patch 'wifi: ath11k: move
+>> power type check to ASSOC stage when connecting to 6 GHz AP' to
+>> ath-current branch from which it will go to v6.10. Is that ok for
+>> everyone?
+> Good to me.
 
-Reproduces on an x86-64 vm:
-
-[root@archlinux test]# yarn install 
-yarn install v1.22.22
-warning package.json: "test" is also the name of a node core module
-info No lockfile found.
-warning test@1.0.0: "test" is also the name of a node core module
-[1/4] Resolving packages...
-[2/4] Fetching packages...
-[3/4] Linking dependencies...
-[4/4] Building fresh packages...
-error /root/test/node_modules/snyk: Command failed.
-Exit code: 126
-Command: node wrapper_dist/bootstrap.js exec
-Arguments: 
-Directory: /root/test/node_modules/snyk
-Output:
-/bin/sh: /tmp/yarn--1716308447842-0.8496252120161716/node: /bin/sh: bad interpreter: Text file busy
-
-I'll poke a bit.
-
--- 
-Jens Axboe
+Good to me, too
 
