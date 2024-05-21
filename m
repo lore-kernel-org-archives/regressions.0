@@ -1,115 +1,140 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BADF1FDD;
-	Tue, 21 May 2024 02:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8226125
+	for <regressions@lists.linux.dev>; Tue, 21 May 2024 04:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716260005; cv=none; b=ohO2A1L80irpgISCTY1WEfLTcxUis7HFaSWPbj6qzqCsOj0NhG6NJJ1FYULGpg6so2PrixlI9ithIbvQGiC1uwLTdLqDYNoLXoyLdqCBQf+ufxqTZ8zlhgDNBK5t1qLlf3rSSwzvuJS28qeM7kH8St/I0ZMLg68hrAm4j+kv++I=
+	t=1716267586; cv=none; b=e/GJiv4fGp8OCDa37CqwV5xEjGovMow1wHO8xMLCizlZWDwr0SiEgOnFJAILL3FJ+KxnQNfi61CxcvA723ktlBOZZMCTSpkwO0EsHkLKaQRK47fWTPHfrcsHiiTKZ/VQSV+7nic0bwoYD2FMoGNsdSqjIc/5G8Kf7CprIHgcI1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716260005; c=relaxed/simple;
-	bh=Z4jGxdA4J1toKgzTasm0GDN9Ngv8FeSm+rD8paoawxo=;
+	s=arc-20240116; t=1716267586; c=relaxed/simple;
+	bh=VPid/XdZiKogI7hU4m4Xc7/+ltEiS5oOPGuIP8CkX7c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KINmUwce3Kq6AeDgAhc/1f9vIC6OEm6ROX0WomA849GZgc7zRyNlsPl6GMeEBMSbxhhC7sG4/h4QAyAp/6SDH5cjMwB5vRzYTqVZVDYr6ss51gTPg/vkEWF/mM53qNSVFgpuLRprB4EUNpPiZDZFh1uUcru7AF5wJ5tyNW2SzMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1s9Fcq-000M2J-2k;
-	Tue, 21 May 2024 10:53:17 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 21 May 2024 10:53:18 +0800
-Date: Tue, 21 May 2024 10:53:18 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
-Cc: Eric Biggers <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	regressions@lists.linux.dev, kernel@collabora.com,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [v2 PATCH] crypto: api - Do not load modules if called by async
- probing
-Message-ID: <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
-References: <0f68c283ff4bbb89b8a019d47891f798c6fff287.camel@HansenPartnership.com>
- <CAMj1kXHi4r8KY9GvX573kwqvLpMfX-J=K2hWiGAKkf5bnicwYQ@mail.gmail.com>
- <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
- <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
- <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
- <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
- <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
- <20240518043115.GA53815@sol.localdomain>
- <ZkhS1zrobNwAuANI@gondor.apana.org.au>
- <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dM3ILqil40PHtD8CzqnktBO1quVkv/WUoen1i9Xq22P8aCu+FVPKKh7VCBasu9ocAmvtzqCGyrErAgr6ltXmRl2/epJoi9HjexvzOKO58He37vMFHjA39d6MzhRLNgg/4bNXRhZaEt6cbPVB7qnAH9rU4nIxegnqX1et79AJuv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iwvkhjGB; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iwvkhjGB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716267584; x=1747803584;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VPid/XdZiKogI7hU4m4Xc7/+ltEiS5oOPGuIP8CkX7c=;
+  b=iwvkhjGB+4DJvGIjtsdaeS3hGtkl2tRAbJY04H2pWiJnN9kyvYEt05PM
+   LjUQ8F3+a9RULURT62QHifQr/B23Wp2nrKqrGEjH2yEoIuHkwk6+zOS1f
+   ORhL2B/2IxSmonG+s2ANe6XU9eANPPlhK3ZZaq4nYcldy6rg6OKWnJr/a
+   K7xZn/TG59XZWWMORn+LynWibx3K7YncmDaTwN8VX9F9I9bNTfga1Gx/r
+   ScP4wUOZig4lAbHLrIRznsXmbbvgR0sO6JzqfAGd4WSxkjDRqf//PsapV
+   eTKh9p9IWvc1lnBlEBTBKm11rYZIZ8Vb0E8oh2CkGraX4VjJwnVsozRDB
+   w==;
+X-CSE-ConnectionGUID: 0ZdzuGiVRmysxohs2gthuw==
+X-CSE-MsgGUID: cfBLkj1mQRS/mY2AUjn7EQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="15380569"
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="15380569"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 21:59:44 -0700
+X-CSE-ConnectionGUID: DqMLqRLNQta2q0LxllhmeA==
+X-CSE-MsgGUID: qakD+Ow7S063xRnPYT0EYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="32678289"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 20 May 2024 21:59:41 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 2110F179; Tue, 21 May 2024 07:59:40 +0300 (EEST)
+Date: Tue, 21 May 2024 07:59:40 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Benjamin =?utf-8?Q?B=C3=B6hmke?= <benjamin@boehmke.net>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Christian Heusel <christian@heusel.eu>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Gia <giacomo.gio@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"kernel@micha.zone" <kernel@micha.zone>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"S, Sanath" <Sanath.S@amd.com>
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+Message-ID: <20240521045940.GJ1421138@black.fi.intel.com>
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
+ <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
+ <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
+ <61-664b6880-3-6826fc80@79948770>
+ <20240520162100.GI1421138@black.fi.intel.com>
+ <5d-664b8000-d-70f82e80@161590144>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
+In-Reply-To: <5d-664b8000-d-70f82e80@161590144>
 
-On Mon, May 20, 2024 at 11:49:56AM -0400, Nícolas F. R. A. Prado wrote:
->
-> Unfortunately this patch didn't work either. The warning is still there
-> unchanged.
+Hi,
 
-OK perhaps we can do it by calling current_is_async ourselves.
-But this is really a nasty hack because it basically defeats
-the whole point of loading optional algorithm by module.
+On Mon, May 20, 2024 at 06:53:18PM +0200, Benjamin BÃ¶hmke wrote:
+> > All the USB devices seem to work fine (assuming I read this right).
+> 
+> To keep the log small I unplugged all USB devices from the dock.
+> But even if connected I don't have issues with them.
 
-Linus/Tejun, is it time perhaps to remove the warning introduced
-by commit 0fdff3ec6d87856cdcc99e69cf42143fdd6c56b4 since it's
-been ten years since the warning caused a real problem?
+Okay that's good to know.
 
-For the Crypto API, if it is called by some random driver via the
-async context, this warning stops us from loading any modules
-without printing a nasty warning that isn't relevant as the Crypto
-API never calls async_synchronize_full.
+Yeah, in the dmesg it might seem odd that the xHCI is "gone" for a while
+as we do USB4 topology reset but it comes back after the tunnels get
+re-created.
 
----8<---
-Do not call request_module if this is the case or a warning will
-be printed.
+> > There is the DP tunneling limitation but other than that how the dock
+> > does not work? At least reading this log everything else seems to be
+> > fine except the second monitor?
+> 
+> Exactly only the second monitor is/was not working.
 
-Reported-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
----
- crypto/api.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Got it.
 
-diff --git a/crypto/api.c b/crypto/api.c
-index 22556907b3bc..7c4b9f86c1ad 100644
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -10,6 +10,7 @@
-  * and Nettle, by Niels Möller.
-  */
- 
-+#include <linux/async.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/jump_label.h>
-@@ -280,7 +281,8 @@ static struct crypto_alg *crypto_larval_lookup(const char *name, u32 type,
- 	mask &= ~(CRYPTO_ALG_LARVAL | CRYPTO_ALG_DEAD);
- 
- 	alg = crypto_alg_lookup(name, type, mask);
--	if (!alg && !(mask & CRYPTO_NOLOAD)) {
-+	if (!alg && !(mask & CRYPTO_NOLOAD) &&
-+	    (!IS_BUILTIN(CONFIG_CRYPTO) || !current_is_async())) {
- 		request_module("crypto-%s", name);
- 
- 		if (!((type ^ CRYPTO_ALG_NEED_FALLBACK) & mask &
--- 
-2.39.2
+> > Now it is interesting why the link is only 20G and not 40G. I do have
+> > this same device and it gets the link up as 40G just fine:
+> > 
+> > [   17.867868] thunderbolt 0000:00:0d.2: 1: current link speed 20.0 Gb/s
+> > [   17.867869] thunderbolt 0000:00:0d.2: 1: current link width symmetric, single lane
+> > [   17.868437] thunderbolt 0000:00:0d.2: 0:1: total credits changed 120 -> 60
+> > [   17.868625] thunderbolt 0000:00:0d.2: 0:2: total credits changed 0 -> 60
+> > [   17.872472] thunderbolt 0000:00:0d.2: 1: TMU: current mode: bi-directional, HiFi
+> > [   17.872608] thunderbolt 0-1: new device found, vendor=0x3d device=0x11
+> > [   17.879102] thunderbolt 0-1: CalDigit, Inc. TS3 Plus
+> > 
+> 
+> My dock is a little different model (see https://www.caldigit.com/usb-c-pro-dock/)
+> I don't have a CalDigit TS3 Plus.
 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Indeed, my mistake.
+
+> > Do you use a Thunderbolt cable or some regular type-C one? There is the
+> > lightning symbol on the connector when it is Thunderbolt one.
+> 
+> The dock was connected with a Thunderbolt cable, that I used for a
+> couple of years without any issues. Based on the hint I replaced the
+> cable and the issue is now gone for me.
+> 
+> I still don't understand why this happened as it was working great for
+> years and is still working with kernels 6.8.7 or older. But
+> nevertheless sorry if I wasted time of anyone because of broken
+> hardware.
+
+I think the BIOS CM creates the "first" tunnel using reduced
+capabilities already so this makes the "second" tunnel fit there in the
+18G link. Now that we do the reset the "first" tunnel is re-created with
+max capabilities and that makes the "second" not to fit there anymore.
+
+But now you get the full 40G link :)
