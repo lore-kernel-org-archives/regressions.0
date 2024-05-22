@@ -1,206 +1,344 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45B455C3E
-	for <regressions@lists.linux.dev>; Wed, 22 May 2024 19:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168F9F4E7
+	for <regressions@lists.linux.dev>; Wed, 22 May 2024 21:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716406539; cv=none; b=owN4fKs7DTNfyY77ZUtXnIN3iWuGYOOtqP1NPWJJyMdMjl2yWrdRYNfIyWKpBFw1JRMFr/+9Ljg93uhlvnscnAEsS+EKETxN1NM5IEC6lhX+uXC443UbXqP7fxkrYi9TtUTbPtiTYnwtqFRDH+b8uKfemSpsddJ8nik+StjqAEg=
+	t=1716412718; cv=none; b=fUvWYEUqq7H7jaJQ4FdFENT3g0hrYh7CplhqfBhn6ctwDLhDHt31QNLrXEtptgLDw0MtEWKVyQDedpvO6mPWJnQlisg1Jy97S52nmrnqaP3j2/UHHo/Qewy1mkiHyQQNxGve3y7kSBkvMIYW59pw7qdN3RpH29JU7Ipv8W//wb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716406539; c=relaxed/simple;
-	bh=YrFd0Bzm8fQgHp/yoJrRTQkoNzjREerf+PNcZDF7MG4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cMPNZuRSFYT2ZUb6xVaJCBkpIDPOlpHZxv1Wgf6RZMGm5P4mwqBIwbMp0ZkIG9sfvbNGTgVUey1jG2SsMJWOkvoR2IXuY6Jla7FFrnj1QtcCeLmr0zt9OShE6Hy3XuAtbyy8+1p/V+fCyaHO9Sf9kU/WaUvLcdJtZWjMy1xeZ0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KxNxVUyL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716412718; c=relaxed/simple;
+	bh=h1du3Ar30jmBXtd+6JExR7IE+3FzKfDKF8z+kfLk3wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToT387FFBFMMiTx6nuiWKBUI4TsUIxcOcyqj9K7UKaOkT8dcMPXpcX80VZPqq9zAZ3SncqY6xdr54T5yQxcnFUuDJhK6fnUcLAUEVbM6kqFMaSikb3ceRTB4IfuxIEWfKjqVGPfKKTEefRqX7uO0GIEJOvQ8Z/afu+1fFrOsfj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kX5hVWtO; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxNxVUyL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716406536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UxARM696Ruhc6XSa/3hNwXMhYhmoleEP5HmM++LiPQM=;
-	b=KxNxVUyLjoVe6gV7tq3xIbGLej2SAfcsMy1poFdoFIWLymTazW7oVCFeLvNomXeQmjqAcS
-	P7YwCDAX1MR68yzZIKVfLQIbxGhWuioLLhQD3Wy9F3+BNVlxJ7aDvKGENCvn14PyC19wpq
-	yG9Lkxv5Krw90Y3a5/ii3/eyMKkym5s=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-318-UH4sk4yUOo60uHkSpU0zzw-1; Wed, 22 May 2024 15:35:35 -0400
-X-MC-Unique: UH4sk4yUOo60uHkSpU0zzw-1
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-627f644882eso2469817b3.0
-        for <regressions@lists.linux.dev>; Wed, 22 May 2024 12:35:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kX5hVWtO"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354e22bc14bso961728f8f.1
+        for <regressions@lists.linux.dev>; Wed, 22 May 2024 14:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716412714; x=1717017514; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LPFBmLMrXmmvr6J+GTuOCF+VbCYwsLvpCyRM6XYnE9o=;
+        b=kX5hVWtOn1HswbwvTm2tBHrV+cSpb+jbD4VCls+OdHf2p/I/DRfU5HxbHhHn3HMqeZ
+         uiSRt+kXZtqoPuA8omFYBvjFFAn6bQ2gmRI4PHQi3jW9h7Xm7wraEaq2NSvFLaPpduaX
+         laD/MacLttVPYv4533zP4DKIcKJ41nIKEhhAk6xpUQT0Igh2yt3EuDW1GlXOs00VMP2/
+         l1WV4/mnNemESbotMlfhUSxdmDbV7xz8eg7NGYKwgJd0SlfqPSzCUkrx82RB10O41wQt
+         oeaVseHj+jqDGB9HW9PHXl8s4b8QHJI7QL+e3sNglNfkPOGByWUTJjK1Qal/gWVbgKbz
+         BTcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716406535; x=1717011335;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I1+GUtmZEMisQFH3yNqOkGsNRPJHqCdk4whL2W9DFJs=;
-        b=Y30UeFMCu4k8Kn2VIjIz2KnONaY/gRZqXgvyPO9dbgrn7MkBjugb3RxJoFMxbURyuR
-         pp2AMsxB3nx/3ce/oPE1+0l3QjP7XLuXENSctkjcnmieXuiNoBKRaJRg1c5y49x0i248
-         E+iZK2kz1TttI5YCAxfviGIL8/UR91hhst62vyE8+fQXsvS0WMaSWGPDjJN4oN4I7AaN
-         1V7JNMKT5cTUUWuYZTFjH3G+5bK4qxSo++dJJawqzILSXBmwWjTxGcW8sPeE2Dq+wa6I
-         chpoZMXvzWMdtU36BvHw3rikHatBJsdcsWuRDaZeG8FkytHFBTdP9UYxdEHf0oBqIWDj
-         6FVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfYLgBd3mn5PpzyIZxnRoEmtORok3w0rmUNn0yV1VDxRG1sqlvHQTF9xEVKf1eYeAS0QNOCk5HxadKyk7hsQAg3HnhwwATC5MArDI=
-X-Gm-Message-State: AOJu0YzFtGop9adgTRpi7eFQPHDJe78OfjImjbP4W7OCiTOYQI9A0BMi
-	wRRIGQbjxXCQIN713hlu1Yf9npC5KtzWPwo6x0Ms7oeF4Fb82ey+sB1oXHDMqrDIm9Em8pLdngY
-	P9PdwJ4XXbJxvZ+hFn+HlzgXCXg26ae6IJpyCuFH7zHWGXcWxZsuV9zFn4lXZ
-X-Received: by 2002:a05:690c:ec8:b0:622:d6af:2555 with SMTP id 00721157ae682-627e46c99dfmr37663507b3.2.1716406534815;
-        Wed, 22 May 2024 12:35:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkeKHMpWK8NcbIqif3cn71ot7RxQSe8rSsBapJOvWCPrePt7YrMQWmfal+XiT4DcmQGYyAUw==
-X-Received: by 2002:a05:690c:ec8:b0:622:d6af:2555 with SMTP id 00721157ae682-627e46c99dfmr37663307b3.2.1716406534434;
-        Wed, 22 May 2024 12:35:34 -0700 (PDT)
-Received: from ?IPv6:2600:4040:5c6c:a300:d6d6:453d:2844:4388? ([2600:4040:5c6c:a300:d6d6:453d:2844:4388])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a62014446fsm53408446d6.31.2024.05.22.12.35.33
+        d=1e100.net; s=20230601; t=1716412714; x=1717017514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LPFBmLMrXmmvr6J+GTuOCF+VbCYwsLvpCyRM6XYnE9o=;
+        b=hTPtxPCpO2KB45IiTcgMnDJ1RkdJYRRKUGd97VgxXzvPUT2LaJKbKPec87mxL9VTR9
+         P8hgP1OwQzEarvuOkEk4JDOSjVyEb2GLfyKSfLGYdVNt1xNFiLlsAEJs6z8oRt2yazYL
+         L7xhHz3bfwi1q9oIEnJP+v3+MHLiEdD/Fng7myBjJ7SC/r9SI1zZnyuX1DCRIKSh0HWv
+         f1RugqJ7h2VSO+ynfRgF4AQMCXUE+xBTatIlplU33YI7Sotv4bl4EfPICrO0DuS1JTVm
+         s8MmuWuU8qNDkbOuc0KKGFhsCSd8fqeXr0qu585K06/4yeyvXRMVfWo9rN+VqqjoeI24
+         jK3A==
+X-Gm-Message-State: AOJu0YzsRrHLhonDVX6Oe1X36xTa9lQQfWchFlK2jeB3ixAgIGF4EUcV
+	dbCGhOdeRX8lAh70bKchvOaau/EcxVLSl0NB/Vz5FocZpVPxqPh/
+X-Google-Smtp-Source: AGHT+IG0LdNWuJZ1ltYpuD0k+A5ABTbklxoeAIOSGNw9XhOK2ynbOESExj8haYzXA6n8ue9WeSxYLQ==
+X-Received: by 2002:a5d:638d:0:b0:349:eb59:c188 with SMTP id ffacd0b85a97d-354d8c7428fmr2719584f8f.5.1716412713944;
+        Wed, 22 May 2024 14:18:33 -0700 (PDT)
+Received: from debian.local (host-92-13-19-4.as13285.net. [92.13.19.4])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a25f0d2a9sm1804494266b.60.2024.05.22.14.18.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 12:35:33 -0700 (PDT)
-Message-ID: <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-From: Lyude Paul <lyude@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
-	 <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Date: Wed, 22 May 2024 15:35:21 -0400
-In-Reply-To: <87wmntkhak.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
-	 <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
-	 <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
-	 <87plumxz4x.ffs@tglx>
-	 <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
-	 <87le59vw1y.ffs@tglx>
-	 <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
-	 <87edautcmz.ffs@tglx>
-	 <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
-	 <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
-	 <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
-	 <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
-	 <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-	 <87jzjxn6s5.ffs@tglx>
-	 <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
-	 <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
-	 <87bk58n6le.ffs@tglx>
-	 <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
-	 <87wmntkhak.ffs@tglx>
-Organization: Red Hat Inc.
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40)
+        Wed, 22 May 2024 14:18:33 -0700 (PDT)
+Date: Wed, 22 May 2024 22:18:30 +0100
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: regressions@lists.linux.dev, vasant.hegde@amd.com,
+	suravee.suthikulpanit@amd.com, jgg@nvidia.com, jroedel@suse.de,
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
+	amd-gfx list <amd-gfx@lists.freedesktop.org>,
+	dri-devel <dri-devel@lists.freedesktop.org>,
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: 6.10/regression/bisected commit c4cb23111103 causes sleeping
+ function called from invalid context at kernel/locking/mutex.c:585
+Message-ID: <Zk5hJrY_lGmuW1G9@debian.local>
+References: <CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com>
 
-Awesome! This patch does seem to make the system boot, thank you for your h=
-elp
-<3
+On Tue, May 21, 2024 at 02:39:06PM +0500, Mikhail Gavrilov wrote:
+> Hi,
+> Yesterday on the fresh kernel snapshot
+> I spotted a new bug message with follow stacktrace:
+> [    4.307097] BUG: sleeping function called from invalid context at
+> kernel/locking/mutex.c:585
+> [    4.307135] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
+> 1, name: swapper/0
+> [    4.307150] preempt_count: 3, expected: 0
+> [    4.307159] RCU nest depth: 0, expected: 0
+> [    4.307168] 4 locks held by swapper/0/1:
+> [    4.307176]  #0: ffff8881080ba920 (&group->mutex){+.+.}-{3:3}, at:
+> bus_iommu_probe+0xf6/0x4c0
+> [    4.307203]  #1: ffff88811654c1b8 (&domain->lock){....}-{2:2}, at:
+> amd_iommu_attach_device+0x1ad/0x1e80
+> [    4.307227]  #2: ffff888113518c18 (&dev_data->lock){....}-{2:2},
+> at: amd_iommu_attach_device+0x213/0x1e80
+> [    4.307243]  #3: ffff888108393030 (&iommu->lock){....}-{2:2}, at:
+> amd_iommu_iopf_add_device+0x69/0x140
+> [    4.307243] irq event stamp: 1021718
+> [    4.307243] hardirqs last  enabled at (1021717):
+> [<ffffffff9cc35f2e>] kasan_quarantine_put+0x12e/0x250
+> [    4.307243] hardirqs last disabled at (1021718):
+> [<ffffffff9f46895c>] _raw_spin_lock_irqsave+0x7c/0xa0
+> [    4.307243] softirqs last  enabled at (1020154):
+> [<ffffffff9c2721fb>] __irq_exit_rcu+0xbb/0x1c0
+> [    4.307243] softirqs last disabled at (1020147):
+> [<ffffffff9c2721fb>] __irq_exit_rcu+0xbb/0x1c0
+> [    4.307243] Preemption disabled at:
+> [    4.307243] [<0000000000000000>] 0x0
+> [    4.307243] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug #1
+> [    4.307243] Hardware name: ASUS System Product Name/ROG STRIX
+> B650E-I GAMING WIFI, BIOS 2611 04/07/2024
+> [    4.307243] Call Trace:
+> [    4.307243]  <TASK>
+> [    4.307243]  dump_stack_lvl+0x84/0xd0
+> [    4.307243]  __might_resched.cold+0x1f7/0x23d
+> [    4.307243]  ? __pfx___might_resched+0x10/0x10
+> [    4.307243]  __mutex_lock+0xf3/0x13f0
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  ? __pfx___mutex_lock+0x10/0x10
+> [    4.307243]  ? find_held_lock+0x34/0x120
+> [    4.307243]  ? __pfx_lock_acquired+0x10/0x10
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  amd_iommu_iopf_add_device+0xcd/0x140
+> [    4.307243]  amd_iommu_attach_device+0xdc8/0x1e80
+> [    4.307243]  ? iommu_create_device_direct_mappings+0x571/0x7d0
+> [    4.307243]  __iommu_attach_device+0x64/0x250
+> [    4.307243]  __iommu_device_set_domain+0x122/0x1c0
+> [    4.307243]  __iommu_group_set_domain_internal+0xfa/0x2d0
+> [    4.307243]  iommu_setup_default_domain+0x918/0xcd0
+> [    4.307243]  bus_iommu_probe+0x1ad/0x4c0
+> [    4.307243]  ? __pfx_bus_iommu_probe+0x10/0x10
+> [    4.307243]  iommu_device_register+0x184/0x230
+> [    4.307243]  ? amd_iommu_iopf_init+0xfd/0x170
+> [    4.307243]  iommu_go_to_state+0xf87/0x3890
+> [    4.307243]  ? __pfx_iommu_go_to_state+0x10/0x10
+> [    4.307243]  ? lockdep_hardirqs_on+0x7c/0x100
+> [    4.307243]  ? _raw_spin_unlock_irqrestore+0x4f/0x80
+> [    4.307243]  ? add_device_randomness+0xb8/0xf0
+> [    4.307243]  ? __pfx_add_device_randomness+0x10/0x10
+> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
+> [    4.307243]  amd_iommu_init+0x21/0x60
+> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
+> [    4.307243]  pci_iommu_init+0x38/0x60
+> [    4.307243]  do_one_initcall+0xd6/0x460
+> [    4.307243]  ? __pfx_do_one_initcall+0x10/0x10
+> [    4.307243]  ? kernel_init_freeable+0x4cb/0x750
+> [    4.307243]  ? kasan_unpoison+0x44/0x70
+> [    4.307243]  kernel_init_freeable+0x6b4/0x750
+> [    4.307243]  ? __pfx_kernel_init_freeable+0x10/0x10
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  kernel_init+0x1c/0x150
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ret_from_fork+0x31/0x70
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ret_from_fork_asm+0x1a/0x30
+> [    4.307243]  </TASK>
+> 
+> [    4.307243] =============================
+> [    4.307243] [ BUG: Invalid wait context ]
+> [    4.307243] 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug
+> #1 Tainted: G        W         -------  ---
+> [    4.307243] -----------------------------
+> [    4.307243] swapper/0/1 is trying to lock:
+> [    4.307243] ffff88810de2fa88 (&queue->lock){....}-{3:3}, at:
+> iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243] other info that might help us debug this:
+> [    4.307243] context-{4:4}
+> [    4.307243] 4 locks held by swapper/0/1:
+> [    4.307243]  #0: ffff8881080ba920 (&group->mutex){+.+.}-{3:3}, at:
+> bus_iommu_probe+0xf6/0x4c0
+> [    4.307243]  #1: ffff88811654c1b8 (&domain->lock){....}-{2:2}, at:
+> amd_iommu_attach_device+0x1ad/0x1e80
+> [    4.307243]  #2: ffff888113518c18 (&dev_data->lock){....}-{2:2},
+> at: amd_iommu_attach_device+0x213/0x1e80
+> [    4.307243]  #3: ffff888108393030 (&iommu->lock){....}-{2:2}, at:
+> amd_iommu_iopf_add_device+0x69/0x140
+> [    4.307243] stack backtrace:
+> [    4.307243] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W
+>   -------  ---
+> 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug #1
+> [    4.307243] Hardware name: ASUS System Product Name/ROG STRIX
+> B650E-I GAMING WIFI, BIOS 2611 04/07/2024
+> [    4.307243] Call Trace:
+> [    4.307243]  <TASK>
+> [    4.307243]  dump_stack_lvl+0x84/0xd0
+> [    4.307243]  __lock_acquire.cold+0x1fe/0x2a0
+> [    4.307243]  ? __pfx___lock_acquire+0x10/0x10
+> [    4.307243]  ? ret_from_fork_asm+0x1a/0x30
+> [    4.307243]  lock_acquire+0x1ae/0x540
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  ? __pfx_lock_acquire+0x10/0x10
+> [    4.307243]  ? __printk_cpu_sync_put+0x35/0x60
+> [    4.307243]  ? add_taint+0x2a/0x70
+> [    4.307243]  ? __might_resched.cold+0x203/0x23d
+> [    4.307243]  ? __pfx___might_resched+0x10/0x10
+> [    4.307243]  __mutex_lock+0x189/0x13f0
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  ? __pfx___mutex_lock+0x10/0x10
+> [    4.307243]  ? find_held_lock+0x34/0x120
+> [    4.307243]  ? __pfx_lock_acquired+0x10/0x10
+> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  iopf_queue_add_device+0xd2/0x5d0
+> [    4.307243]  amd_iommu_iopf_add_device+0xcd/0x140
+> [    4.307243]  amd_iommu_attach_device+0xdc8/0x1e80
+> [    4.307243]  ? iommu_create_device_direct_mappings+0x571/0x7d0
+> [    4.307243]  __iommu_attach_device+0x64/0x250
+> [    4.307243]  __iommu_device_set_domain+0x122/0x1c0
+> [    4.307243]  __iommu_group_set_domain_internal+0xfa/0x2d0
+> [    4.307243]  iommu_setup_default_domain+0x918/0xcd0
+> [    4.307243]  bus_iommu_probe+0x1ad/0x4c0
+> [    4.307243]  ? __pfx_bus_iommu_probe+0x10/0x10
+> [    4.307243]  iommu_device_register+0x184/0x230
+> [    4.307243]  ? amd_iommu_iopf_init+0xfd/0x170
+> [    4.307243]  iommu_go_to_state+0xf87/0x3890
+> [    4.307243]  ? __pfx_iommu_go_to_state+0x10/0x10
+> [    4.307243]  ? lockdep_hardirqs_on+0x7c/0x100
+> [    4.307243]  ? _raw_spin_unlock_irqrestore+0x4f/0x80
+> [    4.307243]  ? add_device_randomness+0xb8/0xf0
+> [    4.307243]  ? __pfx_add_device_randomness+0x10/0x10
+> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
+> [    4.307243]  amd_iommu_init+0x21/0x60
+> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
+> [    4.307243]  pci_iommu_init+0x38/0x60
+> [    4.307243]  do_one_initcall+0xd6/0x460
+> [    4.307243]  ? __pfx_do_one_initcall+0x10/0x10
+> [    4.307243]  ? kernel_init_freeable+0x4cb/0x750
+> [    4.307243]  ? kasan_unpoison+0x44/0x70
+> [    4.307243]  kernel_init_freeable+0x6b4/0x750
+> [    4.307243]  ? __pfx_kernel_init_freeable+0x10/0x10
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  kernel_init+0x1c/0x150
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ret_from_fork+0x31/0x70
+> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
+> [    4.307243]  ret_from_fork_asm+0x1a/0x30
+> [    4.307243]  </TASK>
+> [    4.311628] AMD-Vi: Extended features (0x246577efa2254afa, 0x0):
+> PPR NX GT [5] IA GA PC GA_vAPIC
+> [    4.311639] AMD-Vi: Interrupt remapping enabled
+> [    4.366191] AMD-Vi: Virtual APIC enabled
+> 
+> Bisect pointed to commit:
+> commit c4cb23111103a841c2df30058597398443bcad5f (HEAD)
+> Author: Vasant Hegde <vasant.hegde@amd.com>
+> Date:   Thu Apr 18 10:33:57 2024 +0000
+> 
+>     iommu/amd: Add support for enable/disable IOPF
+> 
+>     Return success from enable_feature(IOPF) path as this interface is going
+>     away. Instead we will enable/disable IOPF support in attach/detach device
+>     path.
+> 
+>     In attach device path, if device is capable of PRI, then we will add it to
+>     per IOMMU IOPF queue and enable PPR support in IOMMU. Also it will
+>     attach device to domain even if it fails to enable PRI or add device to
+>     IOPF queue as device can continue to work without PRI support.
+> 
+>     In detach device patch it follows following sequence:
+>       - Flush the queue for the given device
+>       - Disable PPR support in DTE[devid]
+>       - Remove device from IOPF queue
+>       - Disable device PRI
+> 
+>     Also add IOMMU_IOPF as dependency to AMD_IOMMU driver.
+> 
+>     Co-developed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>     Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>     Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
+>     Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>     Link: https://lore.kernel.org/r/20240418103400.6229-13-vasant.hegde@amd.com
+>     Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> 
+>  drivers/iommu/amd/Kconfig     |  1 +
+>  drivers/iommu/amd/amd_iommu.h |  4 ++++
+>  drivers/iommu/amd/iommu.c     | 39 +++++++++++++++++++++++++++++++--------
+>  drivers/iommu/amd/ppr.c       | 41 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 77 insertions(+), 8 deletions(-)
+> 
+> 
+> Unfortunately I can't check revert c4cb23111103 due to conflicts:
+> > git revert -n c4cb23111103a841c2df30058597398443bcad5f
+> Auto-merging drivers/iommu/amd/Kconfig
+> CONFLICT (content): Merge conflict in drivers/iommu/amd/Kconfig
+> Auto-merging drivers/iommu/amd/amd_iommu.h
+> Auto-merging drivers/iommu/amd/iommu.c
+> CONFLICT (content): Merge conflict in drivers/iommu/amd/iommu.c
+> Auto-merging drivers/iommu/amd/ppr.c
+> error: could not revert c4cb23111103... iommu/amd: Add support for
+> enable/disable IOPF
+> 
+> 
+> I also attach below a full kernel log and build config.
+> 
+> My hardware specs: https://linux-hardware.org/?probe=ca80d0a307
+> 
+> Vasant or anyone else from the AMD team can you look please.
+> 
+> -- 
+> Best Regards,
+> Mike Gavrilov.
 
-Tested-by: Lyude Paul <lyude@redhat.com>
+I am also getting this error on every boot. Decoded stacktrace:
 
-On Thu, 2024-05-16 at 15:38 +0200, Thomas Gleixner wrote:
-> Lyude!
->=20
-> On Wed, May 15 2024 at 19:15, Lyude Paul wrote:
-> > On Tue, 2024-05-14 at 10:25 +0200, Thomas Gleixner wrote:
-> > >=20
-> > > Which one of the debug patches did you use?
-> >=20
-> > The one you sent on 4/18, when you also asked me for the output of
-> > /sys/kernel/debug/x86/topo/
-> >=20
-> > (I thought I remembered that patch not booting on previous kernels but =
-maybe
-> > I'm misremembering)
->=20
-> It booted with the -rc kernel too. :)
->=20
-> I found an interesting and probably related difference in the boot logs
-> though. Up to 8 possible CPUs the kernel uses logical destination mode
-> for the APIC. With more than 8 it uses physical destination mode.
->=20
-> Can you please test the patch below on top of 6.9 and validate that it
-> boots w/o any magic command line parameter?
->=20
-> Thanks,
->=20
->         tglx
-> ---
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index 66fd4b2a37a3..db5e93a7c194 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -1883,6 +1883,8 @@ static inline void try_to_enable_x2apic(int remap_m=
-ode) { }
->  static inline void __x2apic_enable(void) { }
->  #endif /* !CONFIG_X86_X2APIC */
-> =20
-> +int irq_remap_mode =3D -1;
-> +
->  void __init enable_IR_x2apic(void)
->  {
->  =09unsigned long flags;
-> @@ -1915,6 +1917,8 @@ void __init enable_IR_x2apic(void)
-> =20
->  =09if (ir_stat < 0)
->  =09=09restore_ioapic_entries();
-> +=09else
-> +=09=09irq_remap_mode =3D ir_stat;
->  =09legacy_pic->restore_mask();
->  =09local_irq_restore(flags);
->  }
-> diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/a=
-pic_flat_64.c
-> index f37ad3392fec..5cc386db3557 100644
-> --- a/arch/x86/kernel/apic/apic_flat_64.c
-> +++ b/arch/x86/kernel/apic/apic_flat_64.c
-> @@ -12,6 +12,7 @@
->  #include <linux/export.h>
->  #include <linux/acpi.h>
-> =20
-> +#include <asm/irq_remapping.h>
->  #include <asm/jailhouse_para.h>
->  #include <asm/apic.h>
-> =20
-> @@ -130,7 +131,8 @@ static int physflat_acpi_madt_oem_check(char *oem_id,=
- char *oem_table_id)
-> =20
->  static int physflat_probe(void)
->  {
-> -=09return apic =3D=3D &apic_physflat || num_possible_cpus() > 8 || jailh=
-ouse_paravirt();
-> +=09return apic =3D=3D &apic_physflat || irq_remap_mode =3D=3D IRQ_REMAP_=
-XAPIC_MODE ||
-> +=09=09num_possible_cpus() > 8 || jailhouse_paravirt();
->  }
-> =20
->  static struct apic apic_physflat __ro_after_init =3D {
-> diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-> index 842fe28496be..f633ab6dfa9f 100644
-> --- a/arch/x86/kernel/apic/local.h
-> +++ b/arch/x86/kernel/apic/local.h
-> @@ -22,6 +22,8 @@ void x2apic_send_IPI_allbutself(int vector);
->  void x2apic_send_IPI_self(int vector);
->  extern u32 x2apic_max_apicid;
-> =20
-> +extern int irq_remap_mode;
-> +
->  /* IPI */
-> =20
->  DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
->=20
+[    0.395553] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:283
+[    0.395560] fbcon: Taking over console
+[    0.395564] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 1, name: swapper/0
+[    0.395569] preempt_count: 3, expected: 0
+[    0.395573] RCU nest depth: 0, expected: 0
+[    0.395578] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-11198-gf3033eb79136 #897
+[    0.395581] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BIOS F.12 04/11/2023
+[    0.395582] Call Trace:
+[    0.395584]  <TASK>
+[    0.395587] dump_stack_lvl (lib/dump_stack.c:117 (discriminator 1))
+[    0.395595] dump_stack (lib/dump_stack.c:124)
+[    0.395597] __might_resched (kernel/sched/core.c:10197)
+[    0.395602] __might_sleep (kernel/sched/core.c:10126 (discriminator 17))
+[    0.395605] mutex_lock (./include/linux/kernel.h:73 kernel/locking/mutex.c:283)
+[    0.395610] iopf_queue_add_device (drivers/iommu/io-pgfault.c:341)
+[    0.395616] amd_iommu_iopf_add_device (drivers/iommu/amd/ppr.c:265)
+[    0.395621] amd_iommu_attach_device (drivers/iommu/amd/iommu.c:2064 drivers/iommu/amd/iommu.c:2123 drivers/iommu/amd/iommu.c:2509)
+[    0.395626] __iommu_attach_device (drivers/iommu/iommu.c:2069)
+[    0.395630] __iommu_device_set_domain (drivers/iommu/iommu.c:2257)
+[    0.395633] __iommu_group_set_domain_internal (drivers/iommu/iommu.c:2313)
+[    0.395637] iommu_setup_default_domain (drivers/iommu/iommu.c:2976)
+[    0.395640] bus_iommu_probe (drivers/iommu/iommu.c:1828)
+[    0.395644] iommu_device_register (drivers/iommu/iommu.c:267 (discriminator 3))
+[    0.395646] ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:182)
+[    0.395650] state_next (drivers/iommu/amd/init.c:2121 drivers/iommu/amd/init.c:2167 drivers/iommu/amd/init.c:3258)
+[    0.395655] amd_iommu_init (drivers/iommu/amd/init.c:3305 drivers/iommu/amd/init.c:3373)
+[    0.395657] ? __pfx_pci_iommu_init (arch/x86/kernel/pci-dma.c:177)
+[    0.395661] pci_iommu_init (arch/x86/kernel/pci-dma.c:182)
+[    0.395663] ? __pfx_pci_iommu_init (arch/x86/kernel/pci-dma.c:177)
+[    0.395665] do_one_initcall (init/main.c:1267)
+[    0.395671] kernel_init_freeable (init/main.c:1328 init/main.c:1345 init/main.c:1364 init/main.c:1578)
+[    0.395675] ? __pfx_kernel_init (init/main.c:1459)
+[    0.395679] kernel_init (init/main.c:1469)
+[    0.395681] ret_from_fork (arch/x86/kernel/process.c:153)
+[    0.395684] ? __pfx_kernel_init (init/main.c:1459)
+[    0.395686] ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
+[    0.395691]  </TASK>
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
-
+#regzbot ^introduced c4cb23111103a841c2df30058597398443bcad5f
