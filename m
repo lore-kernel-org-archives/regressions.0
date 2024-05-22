@@ -1,28 +1,37 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD134C62
-	for <regressions@lists.linux.dev>; Wed, 22 May 2024 06:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD7F74E3D;
+	Wed, 22 May 2024 06:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716360477; cv=none; b=n7MPvfRpFEE763k87qx4+yWslE4tqodingHZkF1gAKXTqmYUdb3RRKKer3fV/TrKUpx4vf6J5WI0/0BxyI5WMInrKOkavaelojlfKJ1hzmJ9EeCiS3s4rxSEBYurKe2AP0f1Z4+YgD9qqlKeVAYVUFUg/8NSj2DGb8JcxWPlxoA=
+	t=1716360813; cv=none; b=sYhT41268BMXTp6JJ+XP8/0BzFSjENb8DhhojMq/50BcZxlI7sPqxcZ3rBW7fSnxEIpKMvaT/qryyb+k1BPotgNwdR6ZJ3zyREB5NbhhAcw3MjR0AsIIxUmahFePlxspnp4C4Ld5k1tm6GPg4TAk9vXg+VpfmQk5+T1CzmIU0lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716360477; c=relaxed/simple;
-	bh=C98dNNvOMZu7p9SqjIFXmC0yFx9hKllBGWNNkLbY1cg=;
+	s=arc-20240116; t=1716360813; c=relaxed/simple;
+	bh=0mAkOOhMcbnebMfj3VoT6zoaOWdTvUepTjv2NCjvS8w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MLJPObh+CQdIaIiJVb1s69DONjlMXxAbb/4obGokhC1LQ/LCmbP0uteVmQ8ct6wpfkPwziuIPBBUwnDa2qA1+iFzfbTa+81FE5Uzde63MgOz72fDZnnnVTetAIfb3Jysi/GcsdMsbW6e2z/exC/0hEjB6Rmvr+raqEhc13f2SkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.3] (unknown [95.90.241.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id BDD5861E5FE05;
-	Wed, 22 May 2024 08:47:25 +0200 (CEST)
-Message-ID: <5906e1b4-8c9f-41b8-967f-df838dcec89c@molgen.mpg.de>
-Date: Wed, 22 May 2024 08:47:25 +0200
+	 In-Reply-To:Content-Type; b=e+12mBVH6hbR+/Vtnf+o97DLfkM4sjC38cWkiEdhsRxvRANLqc09aaOihb/rvYVxRLC8kHFiRTTkfcPpEGl4qbXZ4K9KVL0XchMv54K53Yf/gv+HGQf983VVoQ4N9ghjppDxMnJK9rjC1pbJK3Cif2n6XtgiQO280i4tGiXs2/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=07PPa+uj; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="07PPa+uj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=wCsD+31ajuIXtxvWN+GeqHb82CwWDjQT/JUQKKBx8cc=;
+	t=1716360811; x=1716792811; b=07PPa+ujrpvD6UaYCylsz8vC/xdLUMQjLuVopZkB5hEqOgn
+	XHiDqMzUz+nlVJcuNaSGP1NAPBPJc8HfrVPcrO6ZLEWNi8JGK8Lx97/4f6rEXoWzbAgF91Y6+Ssiq
+	Gyt3t2EKaNWiowdWYkq68X75eAbX0CZQunn3npGv4MjC5EmmojfFdbh79NuwYnudqbFUwOduUwFV2
+	k5qzSbCN4es2XM/X/KpmxOSsq1l3dc4SYeo1gyzOm8DM4vl+1WhWuHhQelM84dnp4lQXeL9pPwuVU
+	+/DOfhgjywGD6tT1Mda5Yl+c1oA188CuLcIX3uSnuG39rOt6lom9O6PuYjJnH/CA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9fqh-0008O2-FW; Wed, 22 May 2024 08:53:19 +0200
+Message-ID: <44151fe7-1822-4b95-8981-9a1f1884d662@leemhuis.info>
+Date: Wed, 22 May 2024 08:53:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,58 +39,116 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: lib/build_OID_registry: Bareword found where operator expected at
- ./lib/build_OID_registry line 41, near "s#^\Q$abs_srctree/\E##r"
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier
- <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, regressions@lists.linux.dev,
- kernel@pengutronix.de
-References: <259f7a87-2692-480e-9073-1c1c35b52f67@molgen.mpg.de>
- <dgj2ghmghasb5drrjof45ji7jus52yonnvskcmhrvbfenphs37@lknclpncrwmb>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <dgj2ghmghasb5drrjof45ji7jus52yonnvskcmhrvbfenphs37@lknclpncrwmb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+ entries
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Guenter Roeck <linux@roeck-us.net>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
+ sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
+ <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
+ <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
+ <4ea9cc83-c7ca-47b8-8d43-dab16193108f@roeck-us.net>
+ <ZkfqKMqkUc/Sr7U2@shell.armlinux.org.uk>
+ <646bd149-f29a-4c91-ab00-4f6d2fce23fd@roeck-us.net>
+ <ZkhSOvkaAwsTe7Dm@shell.armlinux.org.uk>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <ZkhSOvkaAwsTe7Dm@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716360811;6e228e67;
+X-HE-SMSGID: 1s9fqh-0008O2-FW
 
-Dear Uwe,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-
-Thank you for your reply.
-
-Am 22.05.24 um 08:28 schrieb Uwe Kleine-König:
-
-> On Mon, May 20, 2024 at 08:36:18AM +0200, Paul Menzel wrote:
->> Your commit 5ef6dc08cfde (lib/build_OID_registry: don't mention the full
->> path of the script in output), causes the build error below:
+On 18.05.24 09:01, Russell King (Oracle) wrote:
+> On Fri, May 17, 2024 at 08:24:19PM -0700, Guenter Roeck wrote:
+>> On 5/17/24 16:37, Russell King (Oracle) wrote:
+>>> On Fri, May 17, 2024 at 04:34:06PM -0700, Guenter Roeck wrote:
+>>>> On 5/17/24 15:22, Russell King (Oracle) wrote:
+>>>>> On Fri, May 17, 2024 at 03:09:12PM -0700, Guenter Roeck wrote:
+>>>>>> On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+>>>>>>> Report an error when an attempt to register a clkdev entry results in a
+>>>>>>> truncated string so the problem can be easily spotted.
+>>>>>>>
+>>>>>>> Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+>>>>>>> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+>>>>>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>>>>>>
+>>>>>> With this patch in the mainline kernel, I get
+>>>>>>
+>>>>>> 10000000.clock-controller:corepll: device ID is greater than 24
+>>>>>> sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for corepll: -12
+>>>>>> sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+>>>>>> sifive-clk-prci 10000000.clock-controller: probe with driver sifive-clk-prci failed with error -12
+>>>>>> ...
+>>>>>> platform 10060000.gpio: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>> platform 10010000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>> platform 10011000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>> platform 10040000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>> platform 10050000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>> platform 10090000.ethernet: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>>>>>
+>>>>>> when trying to boot sifive_u in qemu.
+>>>>>>
+>>>>>> Apparently, "10000000.clock-controller" is too long. Any suggestion on
+>>>>>> how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
+>>>>>> for clk_hw_register_clkdev() is not or no longer a good idea.
+>>>>>> What else should be used instead ?
+>>>>>
+>>>>> It was *never* a good idea. clkdev uses a fixed buffer size of 20
+>>>>> characters including the NUL character, and "10000000.clock-controller"
+>>>>> would have been silently truncated to "10000000.clock-cont", and thus
+>>>>>
+>>>>>                           if (!dev_id || strcmp(p->dev_id, dev_id))
+>>>>>
+>>>>> would never have matched.
+>>>>>
+>>>>> We need to think about (a) whether your use of clk_hw_register_clkdev()
+>>>>> is still appropriate, and (b) whether we need to increase the size of
+>>>>> the strings.
+>>>>
+>>>> It isn't _my_ use, really. I only run a variety of boot tests with qemu.
+>>>> I expect we'll see reports from others trying to boot the mainline kernel
+>>>> on real sifive_u hardware or other hardware using the same driver or other
+>>>> drivers using dev_name() as dev_id parameter. Coccinelle finds the
+>>>> following callers:
+>>>
+>>> Using dev_name() is not an issue. It's when dev_name() exceeds 19
+>>> characters that it becomes an issue (and always has been an issue
+>>> due to the truncation.) clk_get(dev, ...) uses dev_name(dev) to match
+>>> against its entry in the table.
+>>>
+>>> As I say, dev_name() itself is not an issue. The length used for the
+>>> name is.
+>>>
 >>
->>      Bareword found where operator expected at ./lib/build_OID_registry line 41, near "s#^\Q$abs_srctree/\E##r"
->>      syntax error at ./lib/build_OID_registry line 41, near "s#^\Q$abs_srctree/\E##r"
->>      Execution of ./lib/build_OID_registry aborted due to compilation errors.
->>      make[3]: *** [lib/Makefile:352: lib/oid_registry_data.c] Error 255
+>> Maybe, but the existence of best_dev_name() suggests that this has been seen
+>> before and that, as you mentioned, it is not a good idea. Anyway, the patch
+>> below fixes the problem for me. I don't know if it is acceptable / correct,
+>> so it might serve as guidance for others when fixing the problem for real.
 > 
-> I cannot reproduce that and wonder about the build bots not reporting
-> this issue. The patch you report as broken is in next since >3 weeks.
-> 
->> gcc (GCC) 12.3.0 is used.
-> 
-> Given that the error is in a Perl script, the version of your Perl
-> interpreter would be more enlightening.
+> I get the impression that there's a communication problem here, so I'm
+> not going to continue replying. Thanks.
 
-Good point.
+Hmmm. Communication problem aside, this in the end seems to be a
+regression that is caused by a change of yours. Maybe not a major one
+that is making a fuzz about, but still one that would be good to get
+fixed. So who will take care of that? Alternatively:
 
-     $ perl --version
+Guenter, I assume we could simply fix this by reverting the culprit if
+Linus wanted to?
 
-     This is perl 5, version 12, subversion 1 (v5.12.1) built for 
-x86_64-linux-thread-multi
-     […]
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-And that seems to be it. Using Perl v5.34.0, the build succeeds.
-
-> Also I'm not fluent in Perl, so if someone with more Perl foo could
-> assist, that would be great.
-
-Kind regards,
-
-Paul
+#regzbot poke
