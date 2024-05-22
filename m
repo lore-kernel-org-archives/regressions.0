@@ -1,344 +1,194 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168F9F4E7
-	for <regressions@lists.linux.dev>; Wed, 22 May 2024 21:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF09442F
+	for <regressions@lists.linux.dev>; Wed, 22 May 2024 21:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716412718; cv=none; b=fUvWYEUqq7H7jaJQ4FdFENT3g0hrYh7CplhqfBhn6ctwDLhDHt31QNLrXEtptgLDw0MtEWKVyQDedpvO6mPWJnQlisg1Jy97S52nmrnqaP3j2/UHHo/Qewy1mkiHyQQNxGve3y7kSBkvMIYW59pw7qdN3RpH29JU7Ipv8W//wb4=
+	t=1716413582; cv=none; b=t7soHq0p1F/jud9e/e8dKBZGx8NtCsQQ+3pO0WKZ+RJu9Vpil5IljxypFyhe4x2A+y33Td93eyg2yhtW6hyWbxi5nIWCbG8g4JQABohXNPKyZFIwab7viFdvxyYpiKbkhyYfGe3SS+hPk34cxPmAjAZQjxGEnb76SGJJJjcL24s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716412718; c=relaxed/simple;
-	bh=h1du3Ar30jmBXtd+6JExR7IE+3FzKfDKF8z+kfLk3wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ToT387FFBFMMiTx6nuiWKBUI4TsUIxcOcyqj9K7UKaOkT8dcMPXpcX80VZPqq9zAZ3SncqY6xdr54T5yQxcnFUuDJhK6fnUcLAUEVbM6kqFMaSikb3ceRTB4IfuxIEWfKjqVGPfKKTEefRqX7uO0GIEJOvQ8Z/afu+1fFrOsfj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kX5hVWtO; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1716413582; c=relaxed/simple;
+	bh=xkrR6IPW5zCI76KHl1RFejY7rkHho3bM710x/IuE2FU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cFsR8I1NCFWT6ZxrbywgzCvgUj3yjgUrbp6GDu1ab0znSmAJWhoI2H1a9XQDQ4bBx2raGSnjsle5df0NKcIfMKGovV2owY5V2hONiLdQ7WfFtvPf2LLqy9OJXWPxHjb1zBnoEQULqzc7b54+vh7y+Vwyf5vNc86Rhwq5yXkHL00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWoXmOf3; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kX5hVWtO"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354e22bc14bso961728f8f.1
-        for <regressions@lists.linux.dev>; Wed, 22 May 2024 14:18:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWoXmOf3"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f3310a21d8so6191215ad.1
+        for <regressions@lists.linux.dev>; Wed, 22 May 2024 14:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716412714; x=1717017514; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LPFBmLMrXmmvr6J+GTuOCF+VbCYwsLvpCyRM6XYnE9o=;
-        b=kX5hVWtOn1HswbwvTm2tBHrV+cSpb+jbD4VCls+OdHf2p/I/DRfU5HxbHhHn3HMqeZ
-         uiSRt+kXZtqoPuA8omFYBvjFFAn6bQ2gmRI4PHQi3jW9h7Xm7wraEaq2NSvFLaPpduaX
-         laD/MacLttVPYv4533zP4DKIcKJ41nIKEhhAk6xpUQT0Igh2yt3EuDW1GlXOs00VMP2/
-         l1WV4/mnNemESbotMlfhUSxdmDbV7xz8eg7NGYKwgJd0SlfqPSzCUkrx82RB10O41wQt
-         oeaVseHj+jqDGB9HW9PHXl8s4b8QHJI7QL+e3sNglNfkPOGByWUTJjK1Qal/gWVbgKbz
-         BTcQ==
+        d=gmail.com; s=20230601; t=1716413580; x=1717018380; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=oJk6+xKIyz5mK5nJJg/0/99657topvzZt0Q0FzyFr2U=;
+        b=dWoXmOf3wVVSQI1npeXTx4j7xFXD5KgRdH550GHxf0WRSFzQd/TzmL/ixydu2ggRZg
+         KGPRylxtNaz29ZAx77KKus3pYCuaUUWZqoBZ66c7EGCST9FsM/S8kWCW71+lxmNbDLsd
+         K9/YuJO87LTygju1kP7WS7m8PWe/chPYhe9JSePvdzksxlut0le9xyFYXxfH6xRHhnWW
+         3qdlU3wrhuDzBvSAcEfxPEszRf+i19g88pk1SNGuNkE5VosbDrQijvpR+Rs5Exx1n8cD
+         CMTwdy588phRVWEcHJ+qK+ujNZ/N3+hEl0KAtsn1U6xNkJSayKQkLETT+LcXw5n8eTaZ
+         a2zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716412714; x=1717017514;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1716413580; x=1717018380;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LPFBmLMrXmmvr6J+GTuOCF+VbCYwsLvpCyRM6XYnE9o=;
-        b=hTPtxPCpO2KB45IiTcgMnDJ1RkdJYRRKUGd97VgxXzvPUT2LaJKbKPec87mxL9VTR9
-         P8hgP1OwQzEarvuOkEk4JDOSjVyEb2GLfyKSfLGYdVNt1xNFiLlsAEJs6z8oRt2yazYL
-         L7xhHz3bfwi1q9oIEnJP+v3+MHLiEdD/Fng7myBjJ7SC/r9SI1zZnyuX1DCRIKSh0HWv
-         f1RugqJ7h2VSO+ynfRgF4AQMCXUE+xBTatIlplU33YI7Sotv4bl4EfPICrO0DuS1JTVm
-         s8MmuWuU8qNDkbOuc0KKGFhsCSd8fqeXr0qu585K06/4yeyvXRMVfWo9rN+VqqjoeI24
-         jK3A==
-X-Gm-Message-State: AOJu0YzsRrHLhonDVX6Oe1X36xTa9lQQfWchFlK2jeB3ixAgIGF4EUcV
-	dbCGhOdeRX8lAh70bKchvOaau/EcxVLSl0NB/Vz5FocZpVPxqPh/
-X-Google-Smtp-Source: AGHT+IG0LdNWuJZ1ltYpuD0k+A5ABTbklxoeAIOSGNw9XhOK2ynbOESExj8haYzXA6n8ue9WeSxYLQ==
-X-Received: by 2002:a5d:638d:0:b0:349:eb59:c188 with SMTP id ffacd0b85a97d-354d8c7428fmr2719584f8f.5.1716412713944;
-        Wed, 22 May 2024 14:18:33 -0700 (PDT)
-Received: from debian.local (host-92-13-19-4.as13285.net. [92.13.19.4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a25f0d2a9sm1804494266b.60.2024.05.22.14.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 14:18:33 -0700 (PDT)
-Date: Wed, 22 May 2024 22:18:30 +0100
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: regressions@lists.linux.dev, vasant.hegde@amd.com,
-	suravee.suthikulpanit@amd.com, jgg@nvidia.com, jroedel@suse.de,
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
-	amd-gfx list <amd-gfx@lists.freedesktop.org>,
-	dri-devel <dri-devel@lists.freedesktop.org>,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: 6.10/regression/bisected commit c4cb23111103 causes sleeping
- function called from invalid context at kernel/locking/mutex.c:585
-Message-ID: <Zk5hJrY_lGmuW1G9@debian.local>
-References: <CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com>
+        bh=oJk6+xKIyz5mK5nJJg/0/99657topvzZt0Q0FzyFr2U=;
+        b=GmHqmTR1D8c+PU2AdQjHfJRJx96Tz9GTHkLB6de3vhuz8ENbhfEA3QWPtkQlCtE8+a
+         mWXXQh+WvDnqio4AS3mb88B69IT62b+VSrdbApHRmxAl98NOfPMjpXyGNewJv1tdMwhl
+         CBIlMIJIlT6CXS7skrWTf/6Mf7DuQ0Ixcd2RTSjHDYyp4I+kKqkAHIaJh/TtGxk3g2RT
+         j/08MRHnesLqfMNQozEsmEQZEHDYzF7OV8SyWedC4IbuHd98/EIFUUewr/p8ABFR2Kf0
+         F1RR9CBLGfBbOwM5LBwPBmPY9YCwhRsIOvb0zYvHV4FcqTIt1wx6Vir7nPF/NJjhUzU8
+         x3Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeqwpmagaNX4rCIRlcStd4NnxFPUFzHVlZVBzWOXjryw2rUsdPDocMXa8LgVlayB/p9tUctCZUXydlHzyXR+EauMZ2d5MSwU8ChqY=
+X-Gm-Message-State: AOJu0YzPla0+fGaygOVLrMVsksnQU5I6BP0Hj8S8i9ci1F1iSSaBsO0y
+	B3gENyuM4wA3gyfXPxKHjK3qzpLfJqrAUEA0AcSXHhpL26cLe824
+X-Google-Smtp-Source: AGHT+IFJ9dXFDNVwoVRlfF68BKFVlcFQsJATscamH7UbEPJSYYRBXkXrmyGxq4rxXFOKnWuYDgm/+w==
+X-Received: by 2002:a17:902:d58b:b0:1f2:f481:418a with SMTP id d9443c01a7336-1f31c976f14mr35597445ad.13.1716413580338;
+        Wed, 22 May 2024 14:33:00 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d484fsm242798845ad.39.2024.05.22.14.32.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 14:32:59 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <0a5631f4-597f-4672-b6f1-dce9858f38f6@roeck-us.net>
+Date: Wed, 22 May 2024 14:32:58 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+ entries
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
+ sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
+ <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
+ <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
+ <4ea9cc83-c7ca-47b8-8d43-dab16193108f@roeck-us.net>
+ <ZkfqKMqkUc/Sr7U2@shell.armlinux.org.uk>
+ <646bd149-f29a-4c91-ab00-4f6d2fce23fd@roeck-us.net>
+ <ZkhSOvkaAwsTe7Dm@shell.armlinux.org.uk>
+ <44151fe7-1822-4b95-8981-9a1f1884d662@leemhuis.info>
+ <Zk28HtN30TJvnZan@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <Zk28HtN30TJvnZan@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 21, 2024 at 02:39:06PM +0500, Mikhail Gavrilov wrote:
-> Hi,
-> Yesterday on the fresh kernel snapshot
-> I spotted a new bug message with follow stacktrace:
-> [    4.307097] BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:585
-> [    4.307135] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
-> 1, name: swapper/0
-> [    4.307150] preempt_count: 3, expected: 0
-> [    4.307159] RCU nest depth: 0, expected: 0
-> [    4.307168] 4 locks held by swapper/0/1:
-> [    4.307176]  #0: ffff8881080ba920 (&group->mutex){+.+.}-{3:3}, at:
-> bus_iommu_probe+0xf6/0x4c0
-> [    4.307203]  #1: ffff88811654c1b8 (&domain->lock){....}-{2:2}, at:
-> amd_iommu_attach_device+0x1ad/0x1e80
-> [    4.307227]  #2: ffff888113518c18 (&dev_data->lock){....}-{2:2},
-> at: amd_iommu_attach_device+0x213/0x1e80
-> [    4.307243]  #3: ffff888108393030 (&iommu->lock){....}-{2:2}, at:
-> amd_iommu_iopf_add_device+0x69/0x140
-> [    4.307243] irq event stamp: 1021718
-> [    4.307243] hardirqs last  enabled at (1021717):
-> [<ffffffff9cc35f2e>] kasan_quarantine_put+0x12e/0x250
-> [    4.307243] hardirqs last disabled at (1021718):
-> [<ffffffff9f46895c>] _raw_spin_lock_irqsave+0x7c/0xa0
-> [    4.307243] softirqs last  enabled at (1020154):
-> [<ffffffff9c2721fb>] __irq_exit_rcu+0xbb/0x1c0
-> [    4.307243] softirqs last disabled at (1020147):
-> [<ffffffff9c2721fb>] __irq_exit_rcu+0xbb/0x1c0
-> [    4.307243] Preemption disabled at:
-> [    4.307243] [<0000000000000000>] 0x0
-> [    4.307243] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug #1
-> [    4.307243] Hardware name: ASUS System Product Name/ROG STRIX
-> B650E-I GAMING WIFI, BIOS 2611 04/07/2024
-> [    4.307243] Call Trace:
-> [    4.307243]  <TASK>
-> [    4.307243]  dump_stack_lvl+0x84/0xd0
-> [    4.307243]  __might_resched.cold+0x1f7/0x23d
-> [    4.307243]  ? __pfx___might_resched+0x10/0x10
-> [    4.307243]  __mutex_lock+0xf3/0x13f0
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  ? __pfx___mutex_lock+0x10/0x10
-> [    4.307243]  ? find_held_lock+0x34/0x120
-> [    4.307243]  ? __pfx_lock_acquired+0x10/0x10
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  amd_iommu_iopf_add_device+0xcd/0x140
-> [    4.307243]  amd_iommu_attach_device+0xdc8/0x1e80
-> [    4.307243]  ? iommu_create_device_direct_mappings+0x571/0x7d0
-> [    4.307243]  __iommu_attach_device+0x64/0x250
-> [    4.307243]  __iommu_device_set_domain+0x122/0x1c0
-> [    4.307243]  __iommu_group_set_domain_internal+0xfa/0x2d0
-> [    4.307243]  iommu_setup_default_domain+0x918/0xcd0
-> [    4.307243]  bus_iommu_probe+0x1ad/0x4c0
-> [    4.307243]  ? __pfx_bus_iommu_probe+0x10/0x10
-> [    4.307243]  iommu_device_register+0x184/0x230
-> [    4.307243]  ? amd_iommu_iopf_init+0xfd/0x170
-> [    4.307243]  iommu_go_to_state+0xf87/0x3890
-> [    4.307243]  ? __pfx_iommu_go_to_state+0x10/0x10
-> [    4.307243]  ? lockdep_hardirqs_on+0x7c/0x100
-> [    4.307243]  ? _raw_spin_unlock_irqrestore+0x4f/0x80
-> [    4.307243]  ? add_device_randomness+0xb8/0xf0
-> [    4.307243]  ? __pfx_add_device_randomness+0x10/0x10
-> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
-> [    4.307243]  amd_iommu_init+0x21/0x60
-> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
-> [    4.307243]  pci_iommu_init+0x38/0x60
-> [    4.307243]  do_one_initcall+0xd6/0x460
-> [    4.307243]  ? __pfx_do_one_initcall+0x10/0x10
-> [    4.307243]  ? kernel_init_freeable+0x4cb/0x750
-> [    4.307243]  ? kasan_unpoison+0x44/0x70
-> [    4.307243]  kernel_init_freeable+0x6b4/0x750
-> [    4.307243]  ? __pfx_kernel_init_freeable+0x10/0x10
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  kernel_init+0x1c/0x150
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ret_from_fork+0x31/0x70
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ret_from_fork_asm+0x1a/0x30
-> [    4.307243]  </TASK>
+On 5/22/24 02:34, Russell King (Oracle) wrote:
+> On Wed, May 22, 2024 at 08:53:18AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hmmm. Communication problem aside, this in the end seems to be a
+>> regression that is caused by a change of yours. Maybe not a major one
+>> that is making a fuzz about, but still one that would be good to get
+>> fixed. So who will take care of that?
 > 
-> [    4.307243] =============================
-> [    4.307243] [ BUG: Invalid wait context ]
-> [    4.307243] 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug
-> #1 Tainted: G        W         -------  ---
-> [    4.307243] -----------------------------
-> [    4.307243] swapper/0/1 is trying to lock:
-> [    4.307243] ffff88810de2fa88 (&queue->lock){....}-{3:3}, at:
-> iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243] other info that might help us debug this:
-> [    4.307243] context-{4:4}
-> [    4.307243] 4 locks held by swapper/0/1:
-> [    4.307243]  #0: ffff8881080ba920 (&group->mutex){+.+.}-{3:3}, at:
-> bus_iommu_probe+0xf6/0x4c0
-> [    4.307243]  #1: ffff88811654c1b8 (&domain->lock){....}-{2:2}, at:
-> amd_iommu_attach_device+0x1ad/0x1e80
-> [    4.307243]  #2: ffff888113518c18 (&dev_data->lock){....}-{2:2},
-> at: amd_iommu_attach_device+0x213/0x1e80
-> [    4.307243]  #3: ffff888108393030 (&iommu->lock){....}-{2:2}, at:
-> amd_iommu_iopf_add_device+0x69/0x140
-> [    4.307243] stack backtrace:
-> [    4.307243] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W
->   -------  ---
-> 6.10.0-0.rc0.20240520giteb6a9339efeb.9.fc41.x86_64+debug #1
-> [    4.307243] Hardware name: ASUS System Product Name/ROG STRIX
-> B650E-I GAMING WIFI, BIOS 2611 04/07/2024
-> [    4.307243] Call Trace:
-> [    4.307243]  <TASK>
-> [    4.307243]  dump_stack_lvl+0x84/0xd0
-> [    4.307243]  __lock_acquire.cold+0x1fe/0x2a0
-> [    4.307243]  ? __pfx___lock_acquire+0x10/0x10
-> [    4.307243]  ? ret_from_fork_asm+0x1a/0x30
-> [    4.307243]  lock_acquire+0x1ae/0x540
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  ? __pfx_lock_acquire+0x10/0x10
-> [    4.307243]  ? __printk_cpu_sync_put+0x35/0x60
-> [    4.307243]  ? add_taint+0x2a/0x70
-> [    4.307243]  ? __might_resched.cold+0x203/0x23d
-> [    4.307243]  ? __pfx___might_resched+0x10/0x10
-> [    4.307243]  __mutex_lock+0x189/0x13f0
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  ? __pfx___mutex_lock+0x10/0x10
-> [    4.307243]  ? find_held_lock+0x34/0x120
-> [    4.307243]  ? __pfx_lock_acquired+0x10/0x10
-> [    4.307243]  ? iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  iopf_queue_add_device+0xd2/0x5d0
-> [    4.307243]  amd_iommu_iopf_add_device+0xcd/0x140
-> [    4.307243]  amd_iommu_attach_device+0xdc8/0x1e80
-> [    4.307243]  ? iommu_create_device_direct_mappings+0x571/0x7d0
-> [    4.307243]  __iommu_attach_device+0x64/0x250
-> [    4.307243]  __iommu_device_set_domain+0x122/0x1c0
-> [    4.307243]  __iommu_group_set_domain_internal+0xfa/0x2d0
-> [    4.307243]  iommu_setup_default_domain+0x918/0xcd0
-> [    4.307243]  bus_iommu_probe+0x1ad/0x4c0
-> [    4.307243]  ? __pfx_bus_iommu_probe+0x10/0x10
-> [    4.307243]  iommu_device_register+0x184/0x230
-> [    4.307243]  ? amd_iommu_iopf_init+0xfd/0x170
-> [    4.307243]  iommu_go_to_state+0xf87/0x3890
-> [    4.307243]  ? __pfx_iommu_go_to_state+0x10/0x10
-> [    4.307243]  ? lockdep_hardirqs_on+0x7c/0x100
-> [    4.307243]  ? _raw_spin_unlock_irqrestore+0x4f/0x80
-> [    4.307243]  ? add_device_randomness+0xb8/0xf0
-> [    4.307243]  ? __pfx_add_device_randomness+0x10/0x10
-> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
-> [    4.307243]  amd_iommu_init+0x21/0x60
-> [    4.307243]  ? __pfx_pci_iommu_init+0x10/0x10
-> [    4.307243]  pci_iommu_init+0x38/0x60
-> [    4.307243]  do_one_initcall+0xd6/0x460
-> [    4.307243]  ? __pfx_do_one_initcall+0x10/0x10
-> [    4.307243]  ? kernel_init_freeable+0x4cb/0x750
-> [    4.307243]  ? kasan_unpoison+0x44/0x70
-> [    4.307243]  kernel_init_freeable+0x6b4/0x750
-> [    4.307243]  ? __pfx_kernel_init_freeable+0x10/0x10
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  kernel_init+0x1c/0x150
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ret_from_fork+0x31/0x70
-> [    4.307243]  ? __pfx_kernel_init+0x10/0x10
-> [    4.307243]  ret_from_fork_asm+0x1a/0x30
-> [    4.307243]  </TASK>
-> [    4.311628] AMD-Vi: Extended features (0x246577efa2254afa, 0x0):
-> PPR NX GT [5] IA GA PC GA_vAPIC
-> [    4.311639] AMD-Vi: Interrupt remapping enabled
-> [    4.366191] AMD-Vi: Virtual APIC enabled
+> I have suggested several approaches to fixing it, and each time I'm
+> being ignored by Guenter, who seems to have some other agenda -
+> because he seems to believe that using dev_name() when registering
+> the clk with clkdev is wrong... despite the fact that clkdev uses
+> dev_name().
 > 
-> Bisect pointed to commit:
-> commit c4cb23111103a841c2df30058597398443bcad5f (HEAD)
-> Author: Vasant Hegde <vasant.hegde@amd.com>
-> Date:   Thu Apr 18 10:33:57 2024 +0000
-> 
->     iommu/amd: Add support for enable/disable IOPF
-> 
->     Return success from enable_feature(IOPF) path as this interface is going
->     away. Instead we will enable/disable IOPF support in attach/detach device
->     path.
-> 
->     In attach device path, if device is capable of PRI, then we will add it to
->     per IOMMU IOPF queue and enable PPR support in IOMMU. Also it will
->     attach device to domain even if it fails to enable PRI or add device to
->     IOPF queue as device can continue to work without PRI support.
-> 
->     In detach device patch it follows following sequence:
->       - Flush the queue for the given device
->       - Disable PPR support in DTE[devid]
->       - Remove device from IOPF queue
->       - Disable device PRI
-> 
->     Also add IOMMU_IOPF as dependency to AMD_IOMMU driver.
-> 
->     Co-developed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->     Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->     Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
->     Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
->     Link: https://lore.kernel.org/r/20240418103400.6229-13-vasant.hegde@amd.com
->     Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> 
->  drivers/iommu/amd/Kconfig     |  1 +
->  drivers/iommu/amd/amd_iommu.h |  4 ++++
->  drivers/iommu/amd/iommu.c     | 39 +++++++++++++++++++++++++++++++--------
->  drivers/iommu/amd/ppr.c       | 41 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 77 insertions(+), 8 deletions(-)
-> 
-> 
-> Unfortunately I can't check revert c4cb23111103 due to conflicts:
-> > git revert -n c4cb23111103a841c2df30058597398443bcad5f
-> Auto-merging drivers/iommu/amd/Kconfig
-> CONFLICT (content): Merge conflict in drivers/iommu/amd/Kconfig
-> Auto-merging drivers/iommu/amd/amd_iommu.h
-> Auto-merging drivers/iommu/amd/iommu.c
-> CONFLICT (content): Merge conflict in drivers/iommu/amd/iommu.c
-> Auto-merging drivers/iommu/amd/ppr.c
-> error: could not revert c4cb23111103... iommu/amd: Add support for
-> enable/disable IOPF
-> 
-> 
-> I also attach below a full kernel log and build config.
-> 
-> My hardware specs: https://linux-hardware.org/?probe=ca80d0a307
-> 
-> Vasant or anyone else from the AMD team can you look please.
-> 
-> -- 
-> Best Regards,
-> Mike Gavrilov.
 
-I am also getting this error on every boot. Decoded stacktrace:
+I don't have an agenda. I did not intentionally ignore anyone.
+Misunderstand, maybe, but not ignore. I don't care how this is fixed.
+All I intended to do was to report it. My apologies to anyone who
+I managed to offend.
 
-[    0.395553] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:283
-[    0.395560] fbcon: Taking over console
-[    0.395564] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 1, name: swapper/0
-[    0.395569] preempt_count: 3, expected: 0
-[    0.395573] RCU nest depth: 0, expected: 0
-[    0.395578] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-11198-gf3033eb79136 #897
-[    0.395581] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BIOS F.12 04/11/2023
-[    0.395582] Call Trace:
-[    0.395584]  <TASK>
-[    0.395587] dump_stack_lvl (lib/dump_stack.c:117 (discriminator 1))
-[    0.395595] dump_stack (lib/dump_stack.c:124)
-[    0.395597] __might_resched (kernel/sched/core.c:10197)
-[    0.395602] __might_sleep (kernel/sched/core.c:10126 (discriminator 17))
-[    0.395605] mutex_lock (./include/linux/kernel.h:73 kernel/locking/mutex.c:283)
-[    0.395610] iopf_queue_add_device (drivers/iommu/io-pgfault.c:341)
-[    0.395616] amd_iommu_iopf_add_device (drivers/iommu/amd/ppr.c:265)
-[    0.395621] amd_iommu_attach_device (drivers/iommu/amd/iommu.c:2064 drivers/iommu/amd/iommu.c:2123 drivers/iommu/amd/iommu.c:2509)
-[    0.395626] __iommu_attach_device (drivers/iommu/iommu.c:2069)
-[    0.395630] __iommu_device_set_domain (drivers/iommu/iommu.c:2257)
-[    0.395633] __iommu_group_set_domain_internal (drivers/iommu/iommu.c:2313)
-[    0.395637] iommu_setup_default_domain (drivers/iommu/iommu.c:2976)
-[    0.395640] bus_iommu_probe (drivers/iommu/iommu.c:1828)
-[    0.395644] iommu_device_register (drivers/iommu/iommu.c:267 (discriminator 3))
-[    0.395646] ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:182)
-[    0.395650] state_next (drivers/iommu/amd/init.c:2121 drivers/iommu/amd/init.c:2167 drivers/iommu/amd/init.c:3258)
-[    0.395655] amd_iommu_init (drivers/iommu/amd/init.c:3305 drivers/iommu/amd/init.c:3373)
-[    0.395657] ? __pfx_pci_iommu_init (arch/x86/kernel/pci-dma.c:177)
-[    0.395661] pci_iommu_init (arch/x86/kernel/pci-dma.c:182)
-[    0.395663] ? __pfx_pci_iommu_init (arch/x86/kernel/pci-dma.c:177)
-[    0.395665] do_one_initcall (init/main.c:1267)
-[    0.395671] kernel_init_freeable (init/main.c:1328 init/main.c:1345 init/main.c:1364 init/main.c:1578)
-[    0.395675] ? __pfx_kernel_init (init/main.c:1459)
-[    0.395679] kernel_init (init/main.c:1469)
-[    0.395681] ret_from_fork (arch/x86/kernel/process.c:153)
-[    0.395684] ? __pfx_kernel_init (init/main.c:1459)
-[    0.395686] ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
-[    0.395691]  </TASK>
+> What I am uncertain about is:
+> 1) whether clkdev is even necessary here, or whether it is pure noise.
+>     I think it's pure noise.  Why? The dev_name() that is being used#
+>     to register the clk seems to be the _source_ device of the clock,
+>     whereas the name given should be the _consumer_ of the clock (when
+>     clk_get(dev, con_id) is called, dev is the _consumer_ device, and
+>     this is the device that dev_name() is used internally with.) Thus,
+>     if _that_ device is not the same as the struct device that is being
+>     passed to dev_name() when registering the clk, the entry in clkdev
+>     is utterly useless.
+> 
+> 2) why someone would think that using best_dev_name() to work around
+>     this would be a good idea. One might as well pass the string
+>     "hahaha" when registering the clk - because if the device name is
+>     truncated, clk_get() is not going to find it. So, by registering
+>     it with clkdev, we're just eating memory for no reason.
+> 
+> Therefore, this change is finding bugs elsewhere. Should it cause a
+> boot failure? No, and I'm happy to make clkdev just warn about it.
+> However, reverting the change means we're not going to find these
+> issues.
+> 
+> Why was the change originally proposed (by Duanqiang Wen) ? The reason
+> was because of this truncation causing clk_get() to fail unexpectedly.
+> 
+> I am all for a _sensible_ discussion over this - not one that seems to
+> have an agenda about "should dev_name() be used when registering a
+> clk" that seems to be Guenter's approach because _that_ is not the root
+> cause of the issue and I've already explained that _that_ is not the
+> issue here. Yet, Guenter insists on that.
+> 
 
-#regzbot ^introduced c4cb23111103a841c2df30058597398443bcad5f
+I don't know if using dev_name() is wrong or not. I don't know much
+if anything about the clock subsystem. Someone else said that using
+dev_name() would be a "bad idea", or at least that was my understanding.
+That is all. Again, my apologies for any misunderstanding and for
+getting involved beyond the initial report.
+
+Either case, I really don't want to be involved further, and
+_please_ don't make any assumptions or decisions based on anything
+I may have said out of ignorance.
+
+Thanks,
+Guenter
+
