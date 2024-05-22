@@ -1,292 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D9B80617
-	for <regressions@lists.linux.dev>; Wed, 22 May 2024 22:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B09C148823
+	for <regressions@lists.linux.dev>; Wed, 22 May 2024 22:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716415972; cv=none; b=moHv8JPNKp+d9MzMdTT2hgK+gVLlyVi0RIHzRM2KNVTlR3N6VxC84DgXENK2k3jgdQ437ZvURsIdwC+vd0xzbxor904FBZ83tF6NVJnLRMi11uUJ/oUMteIRzzFaYP/22SHDRG9+hWFKsIS32BH64T0EVY6WWrOXy6iqbVurhf0=
+	t=1716418424; cv=none; b=aXwL2AflvebTCulxIhu91DggdEmqWszPPoDZxs/98Hyt9pckVa8Z5HMgo+u3ubcjbSivL+Hei52ZtrvaoE+tN8exV+9bUGOnAGj58YuAephzZiwjszQtT5xJb1w+SAPke6v6wk+QMLjN6RAorHZfGKiiDQf1Bb4C0hVF5MLs0CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716415972; c=relaxed/simple;
-	bh=noX44XBYEvX4GMdI/hKOMAQfeMnaIys1OJvIUNWhBMI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mYM0kXaTSRpVsOPacy52DFRjtjPZjZUQTlKuUC6zK+oouz96/R2vqMm9x5MCnrR6TYHwLMgre/tVAdTbmUvSB1QAv+jaUqTqCK6O0kuuqkMGFRtESEZ9rG78wzrNz6qIrwc1rT1vIurDUZEomkvhHX4qOJe1j3QDW3g3ctWdqcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L2iztdgy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLvsKOZJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716418424; c=relaxed/simple;
+	bh=s+AFZiWYdfo9LHxXiFDhhaTaz5In1NnrT6e/kTcTOec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A793TuUOnylTDdutjFmLJVf6sGxCnbhXZh/azWnfxcf+e+NJ81HWWBSBiTvOlzsnVY5Tg038kFyUmQjbeDmgevIdXDV3EVUGLp0ET7bSM16AK7h3qSCcOJ1U6+/tTUcyBReg+JPcqBygWB633g1ERH2eqsW5IXYV80D6/dL8gIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DcCYxjeq; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L2iztdgy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLvsKOZJ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716415968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+uYNjBSstA2FYxrH4vlDNEEByHlM5YkexbOQbr0VrM=;
-	b=L2iztdgymNVBacdWXs+KN/RKo5Ox8oRtGXlFoQomH9bYFElFfI90PgLlmMO2APar/h7Sqe
-	LkC5S4efnd3uY2h/P3S+arxi+WwJgUG4yPeSXvrOhOl5UMOa0WrAcRQk12bu8sjZrKGeVC
-	gtsz3LmavebMPU7zUhwfs7i9+ZnNfsbSiYi1u/ezX3Y9Qhb5ScXignZyh0cbrtxQ4FBNM8
-	e/sfHHk+chEvN/cb69aIAIa7w8JqnaQuWPJck3FuA9X4ZgvCXAbDO7/VOiMk5r1JOreK9Z
-	PF37OM3/C76ilqOLxVkzg8jPAmU9/jb0vF4uKUkpgC3lkAWJAw2wA4uZDGnvAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716415968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+uYNjBSstA2FYxrH4vlDNEEByHlM5YkexbOQbr0VrM=;
-	b=sLvsKOZJIaUn24FOn9G+EFsk/CRt0EIKNzJUbcmtYAPCfFsclmKmW1ORhA1M5u29/j2V20
-	9wHF0dqvG0Y56uBw==
-To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
- <87plumxz4x.ffs@tglx>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
- <87jzjxn6s5.ffs@tglx>
- <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
- <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
- <87bk58n6le.ffs@tglx>
- <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
- <87wmntkhak.ffs@tglx>
- <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
-Date: Thu, 23 May 2024 00:12:47 +0200
-Message-ID: <874japh4ww.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DcCYxjeq"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a5a5cb0e6b7so1081362766b.1
+        for <regressions@lists.linux.dev>; Wed, 22 May 2024 15:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1716418421; x=1717023221; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pQI3o2sJHQ9VDDihE2wM0f+XoWWITjrXXHCRcKXU50=;
+        b=DcCYxjeqZbOxorEN1PqNdDN1P6p8ZKdR2Od7AWCrj7GMhC35R7H1ErvvfPN3Jz8+MY
+         X3EtGr0CEnk5FgTzvLr5gMfdcnW1Y0UxYZa6sCezphDBP2r/9PMSk7mjw4hFKJT3K3sw
+         ZBsHamA7IxfEpfSUVmAme1C16Elly3fTTk+9o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716418421; x=1717023221;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5pQI3o2sJHQ9VDDihE2wM0f+XoWWITjrXXHCRcKXU50=;
+        b=Ey0+YhnX0Tp0hLuF2rGdQ/RJdXkcvqCx1BtbjYnAJ3i2aW+DFj+KCj1KIbrHxqv8pU
+         iShy8WnrPHNo/axkxahSQc2TiQZDjxKvMPjuVZGiDKdLx2SiLsOKhEn/QKCgh0ys/Qcy
+         2FBRoGBsz+INacsmKb62EFObsNJZYqBk2+cHTeztF2FJd5JGxeQRKN7DhHsOnwwSnYNZ
+         PoxwdUjLdp4AyiUHKoXsQdlO+lcILN7IXy4BEC6LxZemBN4/r5dr1+G7uLBXk2uBXzuk
+         dZjfhUl8hJsVMK/OCCM0tqQehvQANoPky+OJN7Gje/+zbNy/Qk+ilNf68XpjN06gtEqp
+         VRIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtwPeEucWR94/HH+MbahLTftj3Kzsre6wTHMosQIIqR9C0U9Efz0TfkUtsDmnBk7VbFrvKYMFZl5EBgemhblCyqsrugVvB15NVG5c=
+X-Gm-Message-State: AOJu0Yz6EdRCuhy54/VEXgjk7Gb83HTQVkvTbFgStfQTdkFv4ljmFNE1
+	za6rvk8OBRs9g7VOwuUcIMY+h9y7kYNJpiHYH2rPpN5ziusqoEb1zGMqiHhqjOXQxoO21wiPVkT
+	uCqHXNA==
+X-Google-Smtp-Source: AGHT+IGT2zpmiFb7RsC5Fn7Eg7AapVKAAMfgmrNrIfWs7QKjBzXO+Pl1MeJJthwjoc0An21KX5eSTQ==
+X-Received: by 2002:a17:907:9148:b0:a59:a5c3:819e with SMTP id a640c23a62f3a-a622805e75cmr171555366b.11.1716418420936;
+        Wed, 22 May 2024 15:53:40 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17894da1sm1844221066b.89.2024.05.22.15.53.39
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 15:53:39 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5a5c930cf6so1067333366b.0
+        for <regressions@lists.linux.dev>; Wed, 22 May 2024 15:53:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXZjBohepvG+4WRyRX6X2zubBdF9CG2Gxho03HB7Lv34g3TVZmwhvFn7gII9IOgOT0NWbLP+ZifnngZO0ttb2foX+CdTzt/bPs40pg=
+X-Received: by 2002:a17:906:6945:b0:a5c:df23:c9c6 with SMTP id
+ a640c23a62f3a-a62281673cemr222082266b.47.1716418419345; Wed, 22 May 2024
+ 15:53:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <0d260c2f7a9f67ec8bd2305919636678d06000d1.camel@HansenPartnership.com>
+ <CAMj1kXFE_R_x10BVkU+8vrMz0RHiX0+rz-ZL+w08FH2CLQHZXA@mail.gmail.com>
+ <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
+ <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano> <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
+ <20240518043115.GA53815@sol.localdomain> <ZkhS1zrobNwAuANI@gondor.apana.org.au>
+ <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano> <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
+ <07512097-8198-4a84-b166-ef9809c2913b@notapiano> <Zk2Eso--FVsZ5AF3@gondor.apana.org.au>
+In-Reply-To: <Zk2Eso--FVsZ5AF3@gondor.apana.org.au>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 22 May 2024 15:53:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi7vwgzD4hdBzMrt1u3L2JyoctB91B7NLq-kVHrYXoTGA@mail.gmail.com>
+Message-ID: <CAHk-=wi7vwgzD4hdBzMrt1u3L2JyoctB91B7NLq-kVHrYXoTGA@mail.gmail.com>
+Subject: Re: [v3 PATCH] hwrng: core - Remove add_early_randomness
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Eric Biggers <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, linux-integrity@vger.kernel.org, 
+	keyrings@vger.kernel.org, regressions@lists.linux.dev, kernel@collabora.com, 
+	Tejun Heo <tj@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Lyude!
+On Tue, 21 May 2024 at 22:38, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> In this particular configuration, the deadlock doesn't exist because
+> the warning triggered at a point before modules were even available.
+> However, the deadlock can be real because any module loaded would
+> invoke async_synchronize_full.
 
-On Wed, May 22 2024 at 15:35, Lyude Paul wrote:
+I think this crapectomy is good regardless of any deadlock - the
+"register this driver" should not just blindly call back into the
+driver.
 
-Thank for testing!
+That said, looking at the code in question, there are other oddities
+going on. Even the "we found a favorite new rng" case looks rather
+strange. The thread we use - nice and asynchronous - seems to sleep
+only if the randomness source is emptied.
 
-> Awesome! This patch does seem to make the system boot, thank you for
-> your help
+What if you have a really good source of hw randomness? That looks
+like a busy loop to me, but hopefully I'm missing something obvious.
 
-The only thing what's awesome here is that it confirms my analysis of
-the underlying problem. I offered Borislav a bet on that, but he
-politely declined :(
+So I think this hw_random code has other serious issues, and I get the
+feeling there might be more code that needs looking at..
 
-The not so awesome part is the question what to do with that insight.
-
-The first issue is that we don't know whether that's only a problem on
-your particular system or if there is an underlying systematic problem
-on that particular CPU variant (model/stepping).
-
-Unless the AMD folks can give an authoritative answer we have three options:
-
-  1) Targeted via quirk
-
-     As you are so far the only one complaining about this, it might be
-     sufficient to enforce the physical flat mode for your particular
-     machine via a DMI quirk or on the actual CPU model/stepping.
-
-  2) Tie it to interrupt remapping
-
-     That's the patch I provided you for testing
-
-  3) Remove the default logical destination mode on 64bit completely
-
-     My favourite
-
-#1 is stupid IMO because it's likely that other systems are affected by
-   this nonsense and I don't want to end up adding quirks over and over
-
-#2 is silly because it effectively enforces physical destination mode on
-   any system which has interrupt remapping available in hardware.
-
-   That's pretty much everything halfways modern.
-
-#3 makes a lot of sense because:
-
-   - it reduces the amount of code
-
-     Given the trend of the last decade this actually removes code which
-     will be used less frequently as the number of logical CPUs keeps
-     increasing.
-
-   - the only benefit of logical destination mode over physical
-     destination mode is the ability to send IPIs to multiple CPUs in
-     one operation.
-
-     The question is whether this still matters.
-
-     IMO it does not matter because anything which is IPI sensitive is
-     running on machines which have more than 8 CPUs today. The time
-     where 8 CPU (threads) workstations and servers were state of the
-     art are long gone.
-
-   - physical destination mode is guaranteed to work because it's the
-     only way to get a CPU up and running via the INIT/INIT/STARTUP
-     sequence, while obvioulsy logical destination mode has its issues
-     not only on the system at hand (see physflat_acpi_madt_oem_check()).
-
-   Patch for this below.
-
-Thanks,
-
-        tglx
----
- arch/x86/kernel/apic/apic_flat_64.c |  116 ------------------------------------
- 1 file changed, 3 insertions(+), 113 deletions(-)
-
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -18,126 +18,19 @@
- #include "local.h"
- 
- static struct apic apic_physflat;
--static struct apic apic_flat;
- 
--struct apic *apic __ro_after_init = &apic_flat;
-+struct apic *apic __ro_after_init = &apic_phys_flat;
- EXPORT_SYMBOL_GPL(apic);
- 
--static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
--{
--	return 1;
--}
--
--static void _flat_send_IPI_mask(unsigned long mask, int vector)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	__default_send_IPI_dest_field(mask, vector, APIC_DEST_LOGICAL);
--	local_irq_restore(flags);
--}
--
--static void flat_send_IPI_mask(const struct cpumask *cpumask, int vector)
--{
--	unsigned long mask = cpumask_bits(cpumask)[0];
--
--	_flat_send_IPI_mask(mask, vector);
--}
--
--static void
--flat_send_IPI_mask_allbutself(const struct cpumask *cpumask, int vector)
--{
--	unsigned long mask = cpumask_bits(cpumask)[0];
--	int cpu = smp_processor_id();
--
--	if (cpu < BITS_PER_LONG)
--		__clear_bit(cpu, &mask);
--
--	_flat_send_IPI_mask(mask, vector);
--}
--
--static u32 flat_get_apic_id(u32 x)
--{
--	return (x >> 24) & 0xFF;
--}
--
--static int flat_probe(void)
--{
--	return 1;
--}
--
--static struct apic apic_flat __ro_after_init = {
--	.name				= "flat",
--	.probe				= flat_probe,
--	.acpi_madt_oem_check		= flat_acpi_madt_oem_check,
--
--	.dest_mode_logical		= true,
--
--	.disable_esr			= 0,
--
--	.init_apic_ldr			= default_init_apic_ldr,
--	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
--
--	.max_apic_id			= 0xFE,
--	.get_apic_id			= flat_get_apic_id,
--
--	.calc_dest_apicid		= apic_flat_calc_apicid,
--
--	.send_IPI			= default_send_IPI_single,
--	.send_IPI_mask			= flat_send_IPI_mask,
--	.send_IPI_mask_allbutself	= flat_send_IPI_mask_allbutself,
--	.send_IPI_allbutself		= default_send_IPI_allbutself,
--	.send_IPI_all			= default_send_IPI_all,
--	.send_IPI_self			= default_send_IPI_self,
--	.nmi_to_offline_cpu		= true,
--
--	.read				= native_apic_mem_read,
--	.write				= native_apic_mem_write,
--	.eoi				= native_apic_mem_eoi,
--	.icr_read			= native_apic_icr_read,
--	.icr_write			= native_apic_icr_write,
--	.wait_icr_idle			= apic_mem_wait_icr_idle,
--	.safe_wait_icr_idle		= apic_mem_wait_icr_idle_timeout,
--};
--
--/*
-- * Physflat mode is used when there are more than 8 CPUs on a system.
-- * We cannot use logical delivery in this case because the mask
-- * overflows, so use physical mode.
-- */
--static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
--{
--#ifdef CONFIG_ACPI
--	/*
--	 * Quirk: some x86_64 machines can only use physical APIC mode
--	 * regardless of how many processors are present (x86_64 ES7000
--	 * is an example).
--	 */
--	if (acpi_gbl_FADT.header.revision >= FADT2_REVISION_ID &&
--		(acpi_gbl_FADT.flags & ACPI_FADT_APIC_PHYSICAL)) {
--		printk(KERN_DEBUG "system APIC only can use physical flat");
--		return 1;
--	}
--
--	if (!strncmp(oem_id, "IBM", 3) && !strncmp(oem_table_id, "EXA", 3)) {
--		printk(KERN_DEBUG "IBM Summit detected, will use apic physical");
--		return 1;
--	}
--#endif
--
--	return 0;
--}
--
- static int physflat_probe(void)
- {
--	return apic == &apic_physflat || num_possible_cpus() > 8 || jailhouse_paravirt();
-+	return 1;
- }
- 
- static struct apic apic_physflat __ro_after_init = {
- 
- 	.name				= "physical flat",
- 	.probe				= physflat_probe,
--	.acpi_madt_oem_check		= physflat_acpi_madt_oem_check,
- 
- 	.dest_mode_logical		= false,
- 
-@@ -167,7 +60,4 @@ static struct apic apic_physflat __ro_af
- 	.safe_wait_icr_idle		= apic_mem_wait_icr_idle_timeout,
- };
- 
--/*
-- * We need to check for physflat first, so this order is important.
-- */
--apic_drivers(apic_physflat, apic_flat);
-+apic_drivers(apic_physflat);
+              Linus
