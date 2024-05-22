@@ -1,194 +1,292 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF09442F
-	for <regressions@lists.linux.dev>; Wed, 22 May 2024 21:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D9B80617
+	for <regressions@lists.linux.dev>; Wed, 22 May 2024 22:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716413582; cv=none; b=t7soHq0p1F/jud9e/e8dKBZGx8NtCsQQ+3pO0WKZ+RJu9Vpil5IljxypFyhe4x2A+y33Td93eyg2yhtW6hyWbxi5nIWCbG8g4JQABohXNPKyZFIwab7viFdvxyYpiKbkhyYfGe3SS+hPk34cxPmAjAZQjxGEnb76SGJJJjcL24s=
+	t=1716415972; cv=none; b=moHv8JPNKp+d9MzMdTT2hgK+gVLlyVi0RIHzRM2KNVTlR3N6VxC84DgXENK2k3jgdQ437ZvURsIdwC+vd0xzbxor904FBZ83tF6NVJnLRMi11uUJ/oUMteIRzzFaYP/22SHDRG9+hWFKsIS32BH64T0EVY6WWrOXy6iqbVurhf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716413582; c=relaxed/simple;
-	bh=xkrR6IPW5zCI76KHl1RFejY7rkHho3bM710x/IuE2FU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cFsR8I1NCFWT6ZxrbywgzCvgUj3yjgUrbp6GDu1ab0znSmAJWhoI2H1a9XQDQ4bBx2raGSnjsle5df0NKcIfMKGovV2owY5V2hONiLdQ7WfFtvPf2LLqy9OJXWPxHjb1zBnoEQULqzc7b54+vh7y+Vwyf5vNc86Rhwq5yXkHL00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWoXmOf3; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716415972; c=relaxed/simple;
+	bh=noX44XBYEvX4GMdI/hKOMAQfeMnaIys1OJvIUNWhBMI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mYM0kXaTSRpVsOPacy52DFRjtjPZjZUQTlKuUC6zK+oouz96/R2vqMm9x5MCnrR6TYHwLMgre/tVAdTbmUvSB1QAv+jaUqTqCK6O0kuuqkMGFRtESEZ9rG78wzrNz6qIrwc1rT1vIurDUZEomkvhHX4qOJe1j3QDW3g3ctWdqcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L2iztdgy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLvsKOZJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWoXmOf3"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f3310a21d8so6191215ad.1
-        for <regressions@lists.linux.dev>; Wed, 22 May 2024 14:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716413580; x=1717018380; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJk6+xKIyz5mK5nJJg/0/99657topvzZt0Q0FzyFr2U=;
-        b=dWoXmOf3wVVSQI1npeXTx4j7xFXD5KgRdH550GHxf0WRSFzQd/TzmL/ixydu2ggRZg
-         KGPRylxtNaz29ZAx77KKus3pYCuaUUWZqoBZ66c7EGCST9FsM/S8kWCW71+lxmNbDLsd
-         K9/YuJO87LTygju1kP7WS7m8PWe/chPYhe9JSePvdzksxlut0le9xyFYXxfH6xRHhnWW
-         3qdlU3wrhuDzBvSAcEfxPEszRf+i19g88pk1SNGuNkE5VosbDrQijvpR+Rs5Exx1n8cD
-         CMTwdy588phRVWEcHJ+qK+ujNZ/N3+hEl0KAtsn1U6xNkJSayKQkLETT+LcXw5n8eTaZ
-         a2zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716413580; x=1717018380;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oJk6+xKIyz5mK5nJJg/0/99657topvzZt0Q0FzyFr2U=;
-        b=GmHqmTR1D8c+PU2AdQjHfJRJx96Tz9GTHkLB6de3vhuz8ENbhfEA3QWPtkQlCtE8+a
-         mWXXQh+WvDnqio4AS3mb88B69IT62b+VSrdbApHRmxAl98NOfPMjpXyGNewJv1tdMwhl
-         CBIlMIJIlT6CXS7skrWTf/6Mf7DuQ0Ixcd2RTSjHDYyp4I+kKqkAHIaJh/TtGxk3g2RT
-         j/08MRHnesLqfMNQozEsmEQZEHDYzF7OV8SyWedC4IbuHd98/EIFUUewr/p8ABFR2Kf0
-         F1RR9CBLGfBbOwM5LBwPBmPY9YCwhRsIOvb0zYvHV4FcqTIt1wx6Vir7nPF/NJjhUzU8
-         x3Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeqwpmagaNX4rCIRlcStd4NnxFPUFzHVlZVBzWOXjryw2rUsdPDocMXa8LgVlayB/p9tUctCZUXydlHzyXR+EauMZ2d5MSwU8ChqY=
-X-Gm-Message-State: AOJu0YzPla0+fGaygOVLrMVsksnQU5I6BP0Hj8S8i9ci1F1iSSaBsO0y
-	B3gENyuM4wA3gyfXPxKHjK3qzpLfJqrAUEA0AcSXHhpL26cLe824
-X-Google-Smtp-Source: AGHT+IFJ9dXFDNVwoVRlfF68BKFVlcFQsJATscamH7UbEPJSYYRBXkXrmyGxq4rxXFOKnWuYDgm/+w==
-X-Received: by 2002:a17:902:d58b:b0:1f2:f481:418a with SMTP id d9443c01a7336-1f31c976f14mr35597445ad.13.1716413580338;
-        Wed, 22 May 2024 14:33:00 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d484fsm242798845ad.39.2024.05.22.14.32.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 14:32:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <0a5631f4-597f-4672-b6f1-dce9858f38f6@roeck-us.net>
-Date: Wed, 22 May 2024 14:32:58 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L2iztdgy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLvsKOZJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716415968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U+uYNjBSstA2FYxrH4vlDNEEByHlM5YkexbOQbr0VrM=;
+	b=L2iztdgymNVBacdWXs+KN/RKo5Ox8oRtGXlFoQomH9bYFElFfI90PgLlmMO2APar/h7Sqe
+	LkC5S4efnd3uY2h/P3S+arxi+WwJgUG4yPeSXvrOhOl5UMOa0WrAcRQk12bu8sjZrKGeVC
+	gtsz3LmavebMPU7zUhwfs7i9+ZnNfsbSiYi1u/ezX3Y9Qhb5ScXignZyh0cbrtxQ4FBNM8
+	e/sfHHk+chEvN/cb69aIAIa7w8JqnaQuWPJck3FuA9X4ZgvCXAbDO7/VOiMk5r1JOreK9Z
+	PF37OM3/C76ilqOLxVkzg8jPAmU9/jb0vF4uKUkpgC3lkAWJAw2wA4uZDGnvAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716415968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U+uYNjBSstA2FYxrH4vlDNEEByHlM5YkexbOQbr0VrM=;
+	b=sLvsKOZJIaUn24FOn9G+EFsk/CRt0EIKNzJUbcmtYAPCfFsclmKmW1ORhA1M5u29/j2V20
+	9wHF0dqvG0Y56uBw==
+To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+In-Reply-To: <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+ <87bk58n6le.ffs@tglx>
+ <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+ <87wmntkhak.ffs@tglx>
+ <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+Date: Thu, 23 May 2024 00:12:47 +0200
+Message-ID: <874japh4ww.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
- entries
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org,
- Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
- sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
- <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
- <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
- <4ea9cc83-c7ca-47b8-8d43-dab16193108f@roeck-us.net>
- <ZkfqKMqkUc/Sr7U2@shell.armlinux.org.uk>
- <646bd149-f29a-4c91-ab00-4f6d2fce23fd@roeck-us.net>
- <ZkhSOvkaAwsTe7Dm@shell.armlinux.org.uk>
- <44151fe7-1822-4b95-8981-9a1f1884d662@leemhuis.info>
- <Zk28HtN30TJvnZan@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <Zk28HtN30TJvnZan@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/22/24 02:34, Russell King (Oracle) wrote:
-> On Wed, May 22, 2024 at 08:53:18AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hmmm. Communication problem aside, this in the end seems to be a
->> regression that is caused by a change of yours. Maybe not a major one
->> that is making a fuzz about, but still one that would be good to get
->> fixed. So who will take care of that?
-> 
-> I have suggested several approaches to fixing it, and each time I'm
-> being ignored by Guenter, who seems to have some other agenda -
-> because he seems to believe that using dev_name() when registering
-> the clk with clkdev is wrong... despite the fact that clkdev uses
-> dev_name().
-> 
+Lyude!
 
-I don't have an agenda. I did not intentionally ignore anyone.
-Misunderstand, maybe, but not ignore. I don't care how this is fixed.
-All I intended to do was to report it. My apologies to anyone who
-I managed to offend.
+On Wed, May 22 2024 at 15:35, Lyude Paul wrote:
 
-> What I am uncertain about is:
-> 1) whether clkdev is even necessary here, or whether it is pure noise.
->     I think it's pure noise.  Why? The dev_name() that is being used#
->     to register the clk seems to be the _source_ device of the clock,
->     whereas the name given should be the _consumer_ of the clock (when
->     clk_get(dev, con_id) is called, dev is the _consumer_ device, and
->     this is the device that dev_name() is used internally with.) Thus,
->     if _that_ device is not the same as the struct device that is being
->     passed to dev_name() when registering the clk, the entry in clkdev
->     is utterly useless.
-> 
-> 2) why someone would think that using best_dev_name() to work around
->     this would be a good idea. One might as well pass the string
->     "hahaha" when registering the clk - because if the device name is
->     truncated, clk_get() is not going to find it. So, by registering
->     it with clkdev, we're just eating memory for no reason.
-> 
-> Therefore, this change is finding bugs elsewhere. Should it cause a
-> boot failure? No, and I'm happy to make clkdev just warn about it.
-> However, reverting the change means we're not going to find these
-> issues.
-> 
-> Why was the change originally proposed (by Duanqiang Wen) ? The reason
-> was because of this truncation causing clk_get() to fail unexpectedly.
-> 
-> I am all for a _sensible_ discussion over this - not one that seems to
-> have an agenda about "should dev_name() be used when registering a
-> clk" that seems to be Guenter's approach because _that_ is not the root
-> cause of the issue and I've already explained that _that_ is not the
-> issue here. Yet, Guenter insists on that.
-> 
+Thank for testing!
 
-I don't know if using dev_name() is wrong or not. I don't know much
-if anything about the clock subsystem. Someone else said that using
-dev_name() would be a "bad idea", or at least that was my understanding.
-That is all. Again, my apologies for any misunderstanding and for
-getting involved beyond the initial report.
+> Awesome! This patch does seem to make the system boot, thank you for
+> your help
 
-Either case, I really don't want to be involved further, and
-_please_ don't make any assumptions or decisions based on anything
-I may have said out of ignorance.
+The only thing what's awesome here is that it confirms my analysis of
+the underlying problem. I offered Borislav a bet on that, but he
+politely declined :(
+
+The not so awesome part is the question what to do with that insight.
+
+The first issue is that we don't know whether that's only a problem on
+your particular system or if there is an underlying systematic problem
+on that particular CPU variant (model/stepping).
+
+Unless the AMD folks can give an authoritative answer we have three options:
+
+  1) Targeted via quirk
+
+     As you are so far the only one complaining about this, it might be
+     sufficient to enforce the physical flat mode for your particular
+     machine via a DMI quirk or on the actual CPU model/stepping.
+
+  2) Tie it to interrupt remapping
+
+     That's the patch I provided you for testing
+
+  3) Remove the default logical destination mode on 64bit completely
+
+     My favourite
+
+#1 is stupid IMO because it's likely that other systems are affected by
+   this nonsense and I don't want to end up adding quirks over and over
+
+#2 is silly because it effectively enforces physical destination mode on
+   any system which has interrupt remapping available in hardware.
+
+   That's pretty much everything halfways modern.
+
+#3 makes a lot of sense because:
+
+   - it reduces the amount of code
+
+     Given the trend of the last decade this actually removes code which
+     will be used less frequently as the number of logical CPUs keeps
+     increasing.
+
+   - the only benefit of logical destination mode over physical
+     destination mode is the ability to send IPIs to multiple CPUs in
+     one operation.
+
+     The question is whether this still matters.
+
+     IMO it does not matter because anything which is IPI sensitive is
+     running on machines which have more than 8 CPUs today. The time
+     where 8 CPU (threads) workstations and servers were state of the
+     art are long gone.
+
+   - physical destination mode is guaranteed to work because it's the
+     only way to get a CPU up and running via the INIT/INIT/STARTUP
+     sequence, while obvioulsy logical destination mode has its issues
+     not only on the system at hand (see physflat_acpi_madt_oem_check()).
+
+   Patch for this below.
 
 Thanks,
-Guenter
 
+        tglx
+---
+ arch/x86/kernel/apic/apic_flat_64.c |  116 ------------------------------------
+ 1 file changed, 3 insertions(+), 113 deletions(-)
+
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -18,126 +18,19 @@
+ #include "local.h"
+ 
+ static struct apic apic_physflat;
+-static struct apic apic_flat;
+ 
+-struct apic *apic __ro_after_init = &apic_flat;
++struct apic *apic __ro_after_init = &apic_phys_flat;
+ EXPORT_SYMBOL_GPL(apic);
+ 
+-static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+-{
+-	return 1;
+-}
+-
+-static void _flat_send_IPI_mask(unsigned long mask, int vector)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	__default_send_IPI_dest_field(mask, vector, APIC_DEST_LOGICAL);
+-	local_irq_restore(flags);
+-}
+-
+-static void flat_send_IPI_mask(const struct cpumask *cpumask, int vector)
+-{
+-	unsigned long mask = cpumask_bits(cpumask)[0];
+-
+-	_flat_send_IPI_mask(mask, vector);
+-}
+-
+-static void
+-flat_send_IPI_mask_allbutself(const struct cpumask *cpumask, int vector)
+-{
+-	unsigned long mask = cpumask_bits(cpumask)[0];
+-	int cpu = smp_processor_id();
+-
+-	if (cpu < BITS_PER_LONG)
+-		__clear_bit(cpu, &mask);
+-
+-	_flat_send_IPI_mask(mask, vector);
+-}
+-
+-static u32 flat_get_apic_id(u32 x)
+-{
+-	return (x >> 24) & 0xFF;
+-}
+-
+-static int flat_probe(void)
+-{
+-	return 1;
+-}
+-
+-static struct apic apic_flat __ro_after_init = {
+-	.name				= "flat",
+-	.probe				= flat_probe,
+-	.acpi_madt_oem_check		= flat_acpi_madt_oem_check,
+-
+-	.dest_mode_logical		= true,
+-
+-	.disable_esr			= 0,
+-
+-	.init_apic_ldr			= default_init_apic_ldr,
+-	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
+-
+-	.max_apic_id			= 0xFE,
+-	.get_apic_id			= flat_get_apic_id,
+-
+-	.calc_dest_apicid		= apic_flat_calc_apicid,
+-
+-	.send_IPI			= default_send_IPI_single,
+-	.send_IPI_mask			= flat_send_IPI_mask,
+-	.send_IPI_mask_allbutself	= flat_send_IPI_mask_allbutself,
+-	.send_IPI_allbutself		= default_send_IPI_allbutself,
+-	.send_IPI_all			= default_send_IPI_all,
+-	.send_IPI_self			= default_send_IPI_self,
+-	.nmi_to_offline_cpu		= true,
+-
+-	.read				= native_apic_mem_read,
+-	.write				= native_apic_mem_write,
+-	.eoi				= native_apic_mem_eoi,
+-	.icr_read			= native_apic_icr_read,
+-	.icr_write			= native_apic_icr_write,
+-	.wait_icr_idle			= apic_mem_wait_icr_idle,
+-	.safe_wait_icr_idle		= apic_mem_wait_icr_idle_timeout,
+-};
+-
+-/*
+- * Physflat mode is used when there are more than 8 CPUs on a system.
+- * We cannot use logical delivery in this case because the mask
+- * overflows, so use physical mode.
+- */
+-static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+-{
+-#ifdef CONFIG_ACPI
+-	/*
+-	 * Quirk: some x86_64 machines can only use physical APIC mode
+-	 * regardless of how many processors are present (x86_64 ES7000
+-	 * is an example).
+-	 */
+-	if (acpi_gbl_FADT.header.revision >= FADT2_REVISION_ID &&
+-		(acpi_gbl_FADT.flags & ACPI_FADT_APIC_PHYSICAL)) {
+-		printk(KERN_DEBUG "system APIC only can use physical flat");
+-		return 1;
+-	}
+-
+-	if (!strncmp(oem_id, "IBM", 3) && !strncmp(oem_table_id, "EXA", 3)) {
+-		printk(KERN_DEBUG "IBM Summit detected, will use apic physical");
+-		return 1;
+-	}
+-#endif
+-
+-	return 0;
+-}
+-
+ static int physflat_probe(void)
+ {
+-	return apic == &apic_physflat || num_possible_cpus() > 8 || jailhouse_paravirt();
++	return 1;
+ }
+ 
+ static struct apic apic_physflat __ro_after_init = {
+ 
+ 	.name				= "physical flat",
+ 	.probe				= physflat_probe,
+-	.acpi_madt_oem_check		= physflat_acpi_madt_oem_check,
+ 
+ 	.dest_mode_logical		= false,
+ 
+@@ -167,7 +60,4 @@ static struct apic apic_physflat __ro_af
+ 	.safe_wait_icr_idle		= apic_mem_wait_icr_idle_timeout,
+ };
+ 
+-/*
+- * We need to check for physflat first, so this order is important.
+- */
+-apic_drivers(apic_physflat, apic_flat);
++apic_drivers(apic_physflat);
