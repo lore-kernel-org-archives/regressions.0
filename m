@@ -1,108 +1,87 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9640B148FF1
-	for <regressions@lists.linux.dev>; Tue, 21 May 2024 22:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951414C89
+	for <regressions@lists.linux.dev>; Wed, 22 May 2024 01:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716332333; cv=none; b=EYnE0zfSshQaOeuk/qHEoFhpVkRVM/McKUfLa/KCnfgwk3mm0N+EiVvbg/O/aToYa/0KVC04IjV6s2NaC/BiYaGR8AD4k8E9hGKVEY1l/i7w9RI3KTbtqcertIQKZH27BGASZw+5HYoq4/TGPrgtCih8els34uRduvn4UtC5LKc=
+	t=1716342792; cv=none; b=R7vGjPMXy57uM0Gnf/4i3qZj4l0CwxMP9MJsJi5S9raMYDJpGyDp0DdJiXHakISRmOSydAuxG4033IO1ryqKROPS7jpu7i+31PjKxAMlHJ9EWXox70U1lhv7wki8kseVXa2W89+T3FsAh1kvvLbO8vISVWIUXlqOdoWsrWWLlec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716332333; c=relaxed/simple;
-	bh=/B63K473/HxOhEaoZ5QSdxb9axvdA6PXOTlKChP8wTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZmBjWE4NKkMDFgzoso9MEhcIJstJRhx/u0bZrbnJKxLhwPM2/5phMK8v4MawwjbS9x/LFNo7ME3VE38QEj6Fp5m+P2MUzZwIjR0dSTmXYyrjFgkneJl6UodEJgWOxBUVQPhC+DIUkvUBVboWGORFQ1eBb+R7rZrxoBlhKbDt4KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=vBGwbRRu; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vBGwbRRu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1716332328;
-	bh=m5I1hOOLWDM4EKnSwZVCL6AUhsSRzC0ZdbYcp6s33oY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vBGwbRRuKRF0BQiFf/r+f85cMaXx1vDJoO0/C/n/9sqfHuTJy6wLzuKQE8oDglY+z
-	 ePqh4kdTxZbFsRemBV1RoNVIQumRJdGbE98CHUDLHiiowMHfqpqN4uH8inbOE0mO03
-	 X0z6pUdTDGWBUfntSnY9RWI4TYgludTdNReIYWbLCqwGwqJqhAOymGg4x3R9kHY8Lw
-	 bcv/f79IMzYbEV0Z+Zy4XZch+ugi3rmWpbAOEnIBVK5riT0msEBH8JkEzYvhuPuTEz
-	 TkgNB2uU1rlLQ9vjxkAgZGpkW/m7rYPCxcSXuWCEgHmpTUIGQBocjO1y0BowFbMO8r
-	 ZW9mtHgvaUJjQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VkVGt0NJ5z4wx5;
-	Wed, 22 May 2024 08:58:45 +1000 (AEST)
-Date: Wed, 22 May 2024 08:58:44 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Laura Nao
- <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, "kernelci.org bot"
- <bot@kernelci.org>
-Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
- acpi_can_fallback_to_crs()
-Message-ID: <20240522085844.16cba3f4@canb.auug.org.au>
-In-Reply-To: <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
-References: <20240513095610.216668-1-laura.nao@collabora.com>
-	<ZkHlLLLoagsYlll7@smile.fi.intel.com>
-	<b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
-	<Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+	s=arc-20240116; t=1716342792; c=relaxed/simple;
+	bh=QzOuKU9c0vwtW/Ze84nja4TaK9d5djDTqJ5gKBV6pYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TNzzLhgHDOHYQc59KX2/gPpygusgNw9khmIcesN/KPe840YrBxwlAyZaQJt8wrr2D9HdKuGllVJ3YTc5/ouH0qANLhrtM/eaE8wxAcxt+z+TEV4qhPhYNXcJNYOoBuYqd29Mbyq4TBfs1MzdxoWa5SFjemN0GfI7BjjrGHnKluU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-240cb6ed477so3004904fac.1
+        for <regressions@lists.linux.dev>; Tue, 21 May 2024 18:53:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716342791; x=1716947591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bt27wWUkwaxGWYZV4sI8tjk/fi7z2Y6g09AK4Fz8+fE=;
+        b=Gck6M2LTlayzBs5787FIaOnYjchc9+yeu26un8ZZvOOtMirn1DEUjFNvw4LH1yGqXD
+         cmpChnvyuwqUbfB3rqXvH2u0La3CpEYOiPsbc5heHz0jKe7D+lHlwQAbBZm91QA9CGsh
+         UrQRuAT9uBrOL5pJg4zjFVp9kAGOrPbiwRc1v2GuOODnasGyjDJUiElmBGwRRkPWvsgF
+         lWMNU5ZNF6q2FiwVxXyWzqcEtwHAv/JuMPNAsF1WdLJWaxXUqItbVOjANGf6U1cLXO6m
+         GE54C+vykeIYWcTvF3rZCp6iNX5zem+iS7KMZ3kR/V4R+Xb4JTUsVA5nPuslgmm3L6Dj
+         EL2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXAwVk9AxF1zcZVfcf1O5DLthhAMl9AN0mwVIcI6I/3DFWwVk/JPjK0jMOktI/7LGujoMEpd+gR39oBnkLflOfhRuARJscNz3wyXI0=
+X-Gm-Message-State: AOJu0Yw/tx5EuOB0Iov4DsSkYZvugnBY/KBaUgAFDKBse53XvlDOJGFU
+	mQ8BfPbFNh6hN6Y0y8+bSINwGu27J4gAuceQ5bJ0591uHALJDqAG6F/s2++GjmYeAj0iNSkXDtN
+	C/iXFCexTG5PppT5f+ueweTCb7as=
+X-Google-Smtp-Source: AGHT+IFLPPilD8pOX77mCzYXmqAPEniDSoE51Dy0+JK+Jl8X4dJbi8em/Dj4jvKF/wF/djjnPMRM9wEBWBapzTKsvEw=
+X-Received: by 2002:a05:6870:1605:b0:22e:9e53:3fd2 with SMTP id
+ 586e51a60fabf-24c68ba6e36mr870443fac.28.1716342790655; Tue, 21 May 2024
+ 18:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f4YoUvWlnSG1U.tc=fqyysd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/f4YoUvWlnSG1U.tc=fqyysd
-Content-Type: text/plain; charset=US-ASCII
+References: <87o79cjjik.fsf@kernel.org> <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+ <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local> <87h6f4jdrq.fsf@kernel.org>
+ <878r0djxgc.fsf@kernel.org> <874jb0jzx5.fsf@kernel.org> <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+ <87msoofjg1.fsf@kernel.org> <35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com>
+ <871q60ffnr.fsf@kernel.org> <CAJZ5v0iHoU7dHxzL5ryehZT7unZiapoiBzPo1d=wsffNGqcS7Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iHoU7dHxzL5ryehZT7unZiapoiBzPo1d=wsffNGqcS7Q@mail.gmail.com>
+From: Len Brown <lenb@kernel.org>
+Date: Tue, 21 May 2024 21:52:59 -0400
+Message-ID: <CAJvTdKkR2HarKaU6rnS281=HYNuOpsyBFBdUSNNLzKpWDZ7Lyg@mail.gmail.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, Dave Hansen <dave.hansen@intel.com>, 
+	Borislav Petkov <bp@alien8.de>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
-
-On Tue, 21 May 2024 17:00:08 +0300 Andy Shevchenko <andriy.shevchenko@linux=
-.intel.com> wrote:
+On Fri, May 17, 2024 at 3:00=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+> > [  449.061525] rtcwake test 31
+> > [  449.176854] PM: suspend entry (deep)
+> > [  449.179072] Filesystems sync: 0.002 seconds
 >
-> Because:
->=20
-> - that's the policy of Linux Next (do not include what's not supposed to =
-be
->   merged during merge window), Cc'ed to Stephen to clarify, it might be t=
-hat
->   I'm mistaken
+> This means that ksys_sync_helper() has run, so it blocks somewhere in
+> enter_state() around suspend_prepare().
+>
+> Can please echo 1 (as root) to /sys/power/pm_debug_messages and retest?
+>
+> This should allow us to see more in the log.
 
-My current daily reports say "Do not add any work intended for v6.11 to
-your linux-next included branches until after v6.10-rc1 has been
-released".  i.e. we don't want new development work added to linux-next
-during the merge window as that may just cause unnecessary conflicts or
-build failures while we are trying to just get the merge window done.
+also, it would be interesting if you can reproduce with "rtcwake -m
+freeze" rather than "-m mem".
 
-I have always said (maybe not recently) that bug fixes are always
-welcome.  Also, more urgent bug fixes often just bypass linux-next.
+For we have a NUC8 like this in our lab, and we gave up on running
+ACPI S3 on it a few years ago
+because the BIOS just was never that good at ACPI S3.  However, it has
+been running freeze/s2idle
+like a champ, thousands of cycles per week, for years.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/f4YoUvWlnSG1U.tc=fqyysd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZNJyQACgkQAVBC80lX
-0Gw8nwf/YZtacic07OrQgrRr+3kjNmlsFymQdM0iKgZwpQVnU+njjrMSqsaPkR6+
-XCbbMBVuWXUCgZA8/uZNikakUqd0A6/By+Mb1AdZNbBL53sD9L9q1rtyTFzbWCuG
-1toNLpyk9GiYbUjLcsguHF8iRPpyFFO24CpokgZNkq5QoJ6WZbhN8H0WhInCtVGe
-ml3K1WvqMS1oShOGl6A6xeciD9J1v83mnYgCLQ4wWW0eESP8VDL47zH6WwUkuahQ
-qOESWjMX/Ug6xP9xwF9y6WXjCL0MLxE9IULLb+MHyanbVIVwPDbF7JtTy0Tq8gb9
-C5jmjOH/PBE+mC4QH9aQPBWp0vO36A==
-=YofX
------END PGP SIGNATURE-----
-
---Sig_/f4YoUvWlnSG1U.tc=fqyysd--
+Len Brown, Intel
