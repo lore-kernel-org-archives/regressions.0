@@ -1,102 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCF31C36;
-	Thu, 23 May 2024 05:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40DB13CFA3;
+	Thu, 23 May 2024 09:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716441628; cv=none; b=PlDf3U2uUaRsGnSoqj0CHQWa5TVn1ui+DaS+atPPOgcNf3FUTcq6yetYAwFSCZAWaly+39QhDa0yCImgarPhq76VSYikPvzedokAdPFjQqF50jO7IaAAl4Yq5G3RcFDfXyc8ZGw7WynlbNriDKXe2xbVcaAhwq1L/z9fq0sYhwc=
+	t=1716457991; cv=none; b=UZVhxjpKLYHjX2osFgCMxTYTLf1xAKApE8ZypOp+fCNk37akBASRA2rJ85Rbl5/7+vi+WvP2+VJJceJtrVElf55j7kOqDHUvoHd+EIOZWC/f4WZqgbaIQBMykd2vuyjrsd5iji+2cdkKnS9eW2xGFw1PpL6e0xnSdNfi473a8JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716441628; c=relaxed/simple;
-	bh=PeC5iXfkIeU7spJ0VmixJQ2YQzDdAfaxUA9JmeGKvcI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i/s5ZxpAY/skwL09SXkdewetpksSBPgEsA7XiHGJYUtVPEW+C80uBKFZdRBeCcSUSy1Ygo7fBl//1pDmLXGgm2oGdFFtJkcY9ylSOIRYy//fYuMClb/aM2UlWi+FBd85U9kQ1iWLsj+aMn7HU3Mqpu030SS9tOkwGZoQNeKctog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NCJ70/PC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716457991; c=relaxed/simple;
+	bh=Z+LJ9o02AKGYyJoKzdsD0Mhmkl4h3nuqGk+uSvDjGlk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=rVBpl4FAJeOYN6oYL05NnUuxtOoxswX4+A8n53QEZd3lS2l1q3I/httBtAQukd+u48erl1wAll4+BUVv6+A6wDfiVPei55nvVBumPKCsrEk/teQU4fnizTJIzyBwsEQrgBF7K0nxjFlcvkU9JPsbDPoq7eVw9ZEYz7hGt0KGPdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/7IpU9F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NCJ70/PC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=fUzokhKC9+TC+7P2/H37759pRNlpzZPwjqYlpOyCjhY=;
-	t=1716441626; x=1716873626; b=NCJ70/PCqhMvsPcvPOYo9Yl58CK1VG8pMBrXynDTGFn3S43
-	3mql3nVSc4Zmi2s+hScCzATf12RtHHaCfV3bIpb1sEcBrLmhvUKSIEax1hwYXE+TwgwhSGkYo9CO6
-	SzeFS33LQ9G/QdRYrLZ9Li6qcs12HRIOKyeDuchDlQ7EN1KVB8X2mEJaSUi/rXMJWEUAo+go7bEYi
-	ESMBY54Vv4p/inGgxW3Ms/1VsydzoDOptbEqjuJ5aaOIelw0+1jHd6GDh4WRGxuaRKfBDzZ1Rl05z
-	4tS9J5gl3O4BiCP+XFNPQRzAjKOIZSSTDT2Ai/x08TfYrNuNyG7PBqWAsbRtjhsQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sA0sJ-0000YB-5m; Thu, 23 May 2024 07:20:23 +0200
-Message-ID: <b0c932ce-1a63-44ee-bd0e-e93e6e164d20@leemhuis.info>
-Date: Thu, 23 May 2024 07:20:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/7IpU9F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACC8C2BD10;
+	Thu, 23 May 2024 09:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716457990;
+	bh=Z+LJ9o02AKGYyJoKzdsD0Mhmkl4h3nuqGk+uSvDjGlk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=F/7IpU9FUZAvpfEh0/t33PXl93JMwcJoeQ2AOMEWlwTURqgD5s5bE3ddLqt61tRFD
+	 55A0EWMe86CTIkwwDgMd3s6pX9f3Lahh65Z1XyTNtHkoRM1v8yzOftjrp3/vkcZ01t
+	 FVvX6NIP/+def5o2ISG4QbnYYy3+azOnfJzI7Gc5nMwGjd2dY0xjfGCtyNv1EdQjeI
+	 vmY3X9TG06PKNJL8VJDTYu3dHd6gSZOK1ezA9ifCiTBRA6hIB+zjApAbJZPH9f6Fn6
+	 /TgWTUlwBBvcifgx8kUQ2lRqfG73fQ8aGiDj7F8F72D6eZo+E8TEiQYaqjmkorNPwu
+	 tDh7gMHJEz3UQ==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-To: Thomas Gleixner <tglx@linutronix.de>, Lyude Paul <lyude@redhat.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Mario Limonciello <mario.limonciello@amd.com>, Borislav Petkov
- <bp@alien8.de>, Linux kernel regressions list <regressions@lists.linux.dev>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
- <87plumxz4x.ffs@tglx>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
- <87jzjxn6s5.ffs@tglx>
- <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
- <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
- <87bk58n6le.ffs@tglx>
- <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
- <87wmntkhak.ffs@tglx>
- <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
- <874japh4ww.ffs@tglx>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <874japh4ww.ffs@tglx>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716441626;970a6ef0;
-X-HE-SMSGID: 1sA0sJ-0000YB-5m
+Date: Thu, 23 May 2024 12:53:04 +0300
+Message-Id: <D1GXKODMD4S8.1J12D4GOEQWPL@kernel.org>
+Cc: =?utf-8?b?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ "Eric Biggers" <ebiggers@kernel.org>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>, "Ard Biesheuvel"
+ <ardb@kernel.org>, "Linux Crypto Mailing List"
+ <linux-crypto@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <regressions@lists.linux.dev>,
+ <kernel@collabora.com>, "Tejun Heo" <tj@kernel.org>, "Linux Kernel Mailing
+ List" <linux-kernel@vger.kernel.org>, "Kees Cook" <keescook@chromium.org>,
+ "Torsten Duwe" <duwe@lst.de>, "H. Peter Anvin" <hpa@zytor.com>, "Theodore
+ Ts'o" <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [v3 PATCH] hwrng: core - Remove add_early_randomness
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Herbert Xu" <herbert@gondor.apana.org.au>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>
+X-Mailer: aerc 0.17.0
+References: <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com> <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano> <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org> <20240518043115.GA53815@sol.localdomain> <ZkhS1zrobNwAuANI@gondor.apana.org.au> <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano> <ZkwMnrTR_CbXcjWe@gondor.apana.org.au> <07512097-8198-4a84-b166-ef9809c2913b@notapiano> <Zk2Eso--FVsZ5AF3@gondor.apana.org.au> <CAHk-=wi7vwgzD4hdBzMrt1u3L2JyoctB91B7NLq-kVHrYXoTGA@mail.gmail.com> <Zk7K7hw-XIHmPs26@gondor.apana.org.au>
+In-Reply-To: <Zk7K7hw-XIHmPs26@gondor.apana.org.au>
 
-On 23.05.24 00:12, Thomas Gleixner wrote:
-> On Wed, May 22 2024 at 15:35, Lyude Paul wrote:
+On Thu May 23, 2024 at 7:49 AM EEST, Herbert Xu wrote:
+> On Wed, May 22, 2024 at 03:53:23PM -0700, Linus Torvalds wrote:
+> >=20
+> > That said, looking at the code in question, there are other oddities
+> > going on. Even the "we found a favorite new rng" case looks rather
+> > strange. The thread we use - nice and asynchronous - seems to sleep
+> > only if the randomness source is emptied.
+> >=20
+> > What if you have a really good source of hw randomness? That looks
+> > like a busy loop to me, but hopefully I'm missing something obvious.
 >
->> Awesome! This patch does seem to make the system boot, thank you for
->> your help
+> Yes that does look strange.  So I dug up the original patch at
+>
+> 	https://lore.kernel.org/all/20140317165012.GC1763@lst.de/
+>
+> and therein lies the answer.  It's relying on random.c to push back
+> when the amount of new entropy exceeds what it needs.  IOW we will
+> sleep via add_hwgenerator_randomness when random.c decides that
+> enough is enough.  In fact the rate is much less now compared to
+> when the patch was first applied.
 
-+1
+Just throwing something because came to mind, not a serious suggestion.
 
-> The only thing what's awesome here is that it confirms my analysis of
-> the underlying problem. I offered Borislav a bet on that, but he
-> politely declined :(
-> 
-> The not so awesome part is the question what to do with that insight.
-> 
-> The first issue is that we don't know whether that's only a problem on
-> your particular system or if there is an underlying systematic problem
-> on that particular CPU variant (model/stepping).
+In crypto_larval_lookup I see statements like this:
 
-FWIW, Arch Linux and openSUSE Tumbleweed switched to 6.9.1 in the past
-few days (Fedora will likely follow in ~two weeks) and I have not yet
-seen any reports about problems like this, which is a first small
-indicator that this might be a system specific problem; if any such
-reports come up I'll mention it here.
+	request_module("crypto-%s", name);
 
-Ciao, Thorsten
+You could potentially bake up a section/table to vmlinux which would
+have entries like:
+
+	"module name", 1/0
+
+'1' would mean built-in. Then for early randomness use only stuff
+that is built-in.
+
+Came to mind from arch/x86/realmode for which I baked in a table
+for relocation (this was a collaborative work with H. Peter Anvin
+in 2012 to make trampoline code relocatable but is still a legit
+example to do such shenanigans in a subystem).
+
+BR, Jarkko
