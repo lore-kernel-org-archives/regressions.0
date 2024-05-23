@@ -1,89 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EFF13D296
-	for <regressions@lists.linux.dev>; Thu, 23 May 2024 10:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FE73307B
+	for <regressions@lists.linux.dev>; Thu, 23 May 2024 11:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716461251; cv=none; b=hYECoyc0tMStXoonkfWsf5bPfWpwgv8aJSoNckDZhwyK0XlHIq/IGZ/djUXnRKgaFAJ1IlaXxpiOWiaYqxuWXSWyszViw/vRjWz5ZZQmtmWSKwYypcZw2pgyeW5SfyaydemPehUcDxCnDH4OS6QeYbnD9XDNjC5SHQyPdN2rKYk=
+	t=1716464949; cv=none; b=OwZcaXU83P1wmOqBvO6iQSUZXA5KTEn56aYdHQ6YLSu8B+sdEs05BduYXMLo8bIqfX5kPjKa0/a3dnFe3yZ8M9bVB1OZZWwv5WcR/wg7eS1GA5Kij50qFHY25JIEqSrSvZrkkcRQUvkenrGmZXiQRdcYeQ5uJ1IqOty7pteBY94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716461251; c=relaxed/simple;
-	bh=6xic3m2Z/b8JssY+G+yC8GMAsB3STPNjvhrSe+2GBMo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bbPu31JiDmq9ugpibvrb9mN/GnEuJvEwbt2G/0yTE6PHPWLCRgQZaLfNKrviNWij/eaNB0O5CQuDIBb7Djt8VXZ72aTnmW/e7pni8BKB66LyDPDyNrpRIjD/uTQtkw+1Tvo+9gj9qhLRkrjwuvLHMmvNimYlu1s+20gmcQOXMXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j+w7MO7E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6uZdPj1e; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716464949; c=relaxed/simple;
+	bh=1MDIqHiuEpSxwpRG9Z4UhK2FyAQCSAh23QIOI5rpSdk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=HyLx5unrJ9L+rd34aH+uF9UIIzMwks+0mfIuIdNrdzT+tgXb1LHEVoAukgLvIQ54nX5IqD9uoaD6VcBaDFRgE4Z+qcK2cqdyR6vu5rmT+rYjLkKYy5iuZQhQJywnDeY5QyoKNMZXl8FmiC1aottwXnDO+2h7T6uPxV6bhN07lmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=en4eaiTl; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j+w7MO7E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6uZdPj1e"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716461245;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sTwoj5FwMGiUZwdUDR3dax8zYvyhGmcof54ev8Ziq+g=;
-	b=j+w7MO7EQlshksBt9zvxu4/RxLkQjYkkl3h0TS6e23Le1akHEJ2eGfAfHid11oQr/3k6PR
-	Q53S7NA6ABFJyhEK+ADVmyJjWXP03czQU8ZaudrGxrIpDAYvIKweXsRV11QsxOAiUnjmgu
-	GFaIrd7knkTn5uEiO7h8vqUBbHKHqHuPey95ibBswilEE7GtHML3CXFZWKxczY4ja8eRFE
-	x7gI+AFwAFyWctyGYubZ75tvSgUZNB1YfkI0Pie6YBHSU+K4Mfh8ItYfUaiEQteM7luTDn
-	bgQR4pBFbawj/xgz7L/dT3aH5/Pjnbnya9bhfj+cWOZWR9/c67BDQmfsdWqqXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716461245;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sTwoj5FwMGiUZwdUDR3dax8zYvyhGmcof54ev8Ziq+g=;
-	b=6uZdPj1eNrEX5s105ZK1m8W7edXARJxa2F/dv8YLmrCbJaF5n6CTEJn6Uj5U8xKY5iXJsx
-	juNbm9BGR4H0xmAg==
-To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <874japh4ww.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <87plumxz4x.ffs@tglx>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
- <87jzjxn6s5.ffs@tglx>
- <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
- <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
- <87bk58n6le.ffs@tglx>
- <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
- <87wmntkhak.ffs@tglx>
- <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
- <874japh4ww.ffs@tglx>
-Date: Thu, 23 May 2024 12:47:25 +0200
-Message-ID: <87sey8g5z6.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="en4eaiTl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=1MDIqHiuEpSxwpRG9Z4UhK2FyAQCSAh23QIOI5rpSdk=; t=1716464947;
+	x=1716896947; b=en4eaiTlpkyP81kAPIBzC+ezXi0m5BUXxSPX4SpEoMPNI5JbJErBWJfa1fIYf
+	Py2RSnfROHyvMflwLRclKy4c5tPtj3SUKgiOD+1HOKnumthdx3yZA/OU3L/ugd+g1fhnAWRcIcP0y
+	XcE7g8d33A3JVEU0fn1n2L2yhGq+EYQWDYixiWUrzbqYpM8BnmZ6VQxsy6FSOmvXQJ1ZFv0d0TCvD
+	lVb6hztPTLqopIu/0nbqx4cDJ2D6O6BrJEt1X67jzObteNbpONjC2+QkBwsHEeobmZmhJRUffJ9pu
+	eA+BJBstzMNfD+8V0NWXkrfkJFs90A6BtdtIAe2RyVeL/uP6Ow==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sA6wS-0002Wx-TO; Thu, 23 May 2024 13:49:04 +0200
+Message-ID: <4981f387-8d87-4020-b181-368945e576e3@leemhuis.info>
+Date: Thu, 23 May 2024 13:49:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716464947;36d58878;
+X-HE-SMSGID: 1sA6wS-0002Wx-TO
 
-Lyude!
 
-On Thu, May 23 2024 at 00:12, Thomas Gleixner wrote:
-> The first issue is that we don't know whether that's only a problem on
-> your particular system or if there is an underlying systematic problem
-> on that particular CPU variant (model/stepping).
 
-Something I wanted to ask before. Is the BIOS of that machine up to
-date?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks,
+#regzbot report:
+https://lore.kernel.org/linux-arm-kernel/D1B7GPIR9K1E.5JFV37G0YTIF@shadowice.org/
+#regzbot introduced: aefbab8e77eb
+#regzbot fix: e92bee9f861b466c67
 
-        tglx
+#regzbot report:
+https://lore.kernel.org/linux-ext4/20240518022646.GA450709@mit.edu/
+#regzbot fix: 825d8bbd2f32cb229c
+
+#regzbot report:
+https://lore.kernel.org/linux-input/0111018f7508efb1-1206661a-d4b5-4bd1-b54f-ccb8504b8b4a-000000@us-west-1.amazonses.com/
+#regzbot resolve: invalid: apparently not a regression after all
+
+#regzbot report: https://lore.kernel.org/all/yw1xo78z8ez0.fsf@mansr.com/
+#regzbot introduced: b914ec33b391ec
+#regzbot summary: clk: sunxi-ng: common: HDMI output on an A20 based
+device broken
