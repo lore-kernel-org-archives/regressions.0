@@ -1,113 +1,89 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F9F142E67;
-	Thu, 23 May 2024 10:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EFF13D296
+	for <regressions@lists.linux.dev>; Thu, 23 May 2024 10:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716461069; cv=none; b=Xs3Q4JLNUzgFw4dghPBMKY+KzhppOYOUvzJGJpAxuTwmrqgSE+hFZTVwx5TBT+CK+ujddxwF//5FRBnLF5SV+BLtQ/TtzONbFYhPAyih3KpXGe5g7g59hyh/9N3TpCPjVpLmlXurHKfDvOMNSaa2zCrOOlYsQnM5OhaEu9OZ/38=
+	t=1716461251; cv=none; b=hYECoyc0tMStXoonkfWsf5bPfWpwgv8aJSoNckDZhwyK0XlHIq/IGZ/djUXnRKgaFAJ1IlaXxpiOWiaYqxuWXSWyszViw/vRjWz5ZZQmtmWSKwYypcZw2pgyeW5SfyaydemPehUcDxCnDH4OS6QeYbnD9XDNjC5SHQyPdN2rKYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716461069; c=relaxed/simple;
-	bh=EZXFT71T2+Ibou+M+wWG08vBeRU6I7wQ7CjzDa+dPVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uKPq0LKGlCbvV4NLZvrsFUB+5TPlnArFnHB+E828QIznF9OXxiGo1ijGZj7Wb7RoyyE1eBG/YSLXUevjOgzmThtJdDsgB53M7sx8eLUPNseHxhA2nrFLneypS2DTbw5Jdug/uga10MaEHMElsUgwz15Ncgxl/MYAhyTgEssa61I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pNS7gjd8; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716461251; c=relaxed/simple;
+	bh=6xic3m2Z/b8JssY+G+yC8GMAsB3STPNjvhrSe+2GBMo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bbPu31JiDmq9ugpibvrb9mN/GnEuJvEwbt2G/0yTE6PHPWLCRgQZaLfNKrviNWij/eaNB0O5CQuDIBb7Djt8VXZ72aTnmW/e7pni8BKB66LyDPDyNrpRIjD/uTQtkw+1Tvo+9gj9qhLRkrjwuvLHMmvNimYlu1s+20gmcQOXMXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j+w7MO7E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6uZdPj1e; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pNS7gjd8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=vi5TPBBd99tv8Xmgnv/pBsNDXNH3b9oonqkMaft58mA=;
-	t=1716461067; x=1716893067; b=pNS7gjd8nWXYq8+qmp8glq/uIhGjFUJzdCESU7xXRbXkD/a
-	R0++GGUNYI0qS36zbyRn5LY7+h9EA05byPx4k0X7JFyoUXSFMyhUwtHVWH3WPXOtQQ3tDLszy/kOV
-	iSu0A8ojMlREJUk+adRMFR8Hf5bP8tG7iSn0FW2W/2bXJDMjRO2A+jUWuaMLYB6HPFgOeevY3bb5n
-	wdx0jh49HTq5Wrgg/lt4GpKBnoD4NwIxVIClbYJ32XV2WBvtwjnaFgbR637laWjaTqGBtoCYQ2wjj
-	K+3JjRpG3YS1caukZt7lUBVvRjdovyDFd/LHoaMCRcwICks0ub8DWuwRjjs0Fm8A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sA5vo-0006Ps-SY; Thu, 23 May 2024 12:44:20 +0200
-Message-ID: <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
-Date: Thu, 23 May 2024 12:44:19 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j+w7MO7E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6uZdPj1e"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716461245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sTwoj5FwMGiUZwdUDR3dax8zYvyhGmcof54ev8Ziq+g=;
+	b=j+w7MO7EQlshksBt9zvxu4/RxLkQjYkkl3h0TS6e23Le1akHEJ2eGfAfHid11oQr/3k6PR
+	Q53S7NA6ABFJyhEK+ADVmyJjWXP03czQU8ZaudrGxrIpDAYvIKweXsRV11QsxOAiUnjmgu
+	GFaIrd7knkTn5uEiO7h8vqUBbHKHqHuPey95ibBswilEE7GtHML3CXFZWKxczY4ja8eRFE
+	x7gI+AFwAFyWctyGYubZ75tvSgUZNB1YfkI0Pie6YBHSU+K4Mfh8ItYfUaiEQteM7luTDn
+	bgQR4pBFbawj/xgz7L/dT3aH5/Pjnbnya9bhfj+cWOZWR9/c67BDQmfsdWqqXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716461245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sTwoj5FwMGiUZwdUDR3dax8zYvyhGmcof54ev8Ziq+g=;
+	b=6uZdPj1eNrEX5s105ZK1m8W7edXARJxa2F/dv8YLmrCbJaF5n6CTEJn6Uj5U8xKY5iXJsx
+	juNbm9BGR4H0xmAg==
+To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+In-Reply-To: <874japh4ww.ffs@tglx>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+ <87bk58n6le.ffs@tglx>
+ <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+ <87wmntkhak.ffs@tglx>
+ <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+ <874japh4ww.ffs@tglx>
+Date: Thu, 23 May 2024 12:47:25 +0200
+Message-ID: <87sey8g5z6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: frank-w@public-files.de, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>, Frank Wunderlich <linux@fw-web.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716461067;8f44dea9;
-X-HE-SMSGID: 1sA5vo-0006Ps-SY
+Content-Type: text/plain
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Lyude!
 
-On 17.05.24 08:27, Frank Wunderlich wrote:
-> Am 17. Mai 2024 04:17:47 MESZ schrieb "Arınç ÜNAL" <arinc.unal@arinc9.com>:
->> On 16/05/2024 23:48, Frank Wunderlich wrote:
->>> From: Frank Wunderlich <frank-w@public-files.de>
->>>
->>> After commit 868ff5f4944a
->>> ("net: dsa: mt7530-mdio: read PHY address of switch from device tree")
->>> the mt7531 switch on Bananapi-R64 was not detected.
->>>
->>> mt7530-mdio mdio-bus:00: reset timeout
->>> mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -110
->>>
->>> Fix this by adding phy address in devicetree.
->>>
->>> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->>
->> I don't like the mention of the Linux kernel driver on the patch log. What
->> you're fixing is the incorrect description of the switch's PHY address on
->> the DTS file. Whether or not any driver from any project is actually
->> reading it from the DTS file is irrelevant to this patch. That said, I
->> already have a patch series I've been meaning to send the next version of
->> that already addresses this. Please wait for that.
+On Thu, May 23 2024 at 00:12, Thomas Gleixner wrote:
+> The first issue is that we don't know whether that's only a problem on
+> your particular system or if there is an underlying systematic problem
+> on that particular CPU variant (model/stepping).
 
-Did you sent this? Because from what I see with my limited experience in
-this subsystem...
+Something I wanted to ask before. Is the BIOS of that machine up to
+date?
 
-> From my PoV it is a regression in next/6.10
+Thanks,
 
-...I have to agree with Frank here. So it would be good to get this
-fixed before -rc1 is out to prevent more people from running into this.
-
-> because the driver change was merged (without "broadcast" fallback) and the dts patch [1] is not.
-> 
-> I agree that my patch can be dropped because there was already one.
-> 
-> regards Frank
-> 
-> [1] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240314-for-mediatek-mt7531-phy-address-v1-1-52f58db01acd@arinc9.com/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
+        tglx
