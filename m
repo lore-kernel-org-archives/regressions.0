@@ -1,96 +1,113 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200B913CF98
-	for <regressions@lists.linux.dev>; Thu, 23 May 2024 10:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F9F142E67;
+	Thu, 23 May 2024 10:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716460862; cv=none; b=JvBwxAcMB9ciyvfmemoLD1rB9ebX5uD2Tt8M19gV0imeD1zW46FKbUzIef1hF8FnTZuHsulaX12EgiYrVyx9w9gccb9GXgk7VJT8PKQP/59L6kF4D0QgkGhrb5ToPNoMtFKkoVkAdIVDg607naJmdk7EqH9tC8ulfvdzDKBK/eo=
+	t=1716461069; cv=none; b=Xs3Q4JLNUzgFw4dghPBMKY+KzhppOYOUvzJGJpAxuTwmrqgSE+hFZTVwx5TBT+CK+ujddxwF//5FRBnLF5SV+BLtQ/TtzONbFYhPAyih3KpXGe5g7g59hyh/9N3TpCPjVpLmlXurHKfDvOMNSaa2zCrOOlYsQnM5OhaEu9OZ/38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716460862; c=relaxed/simple;
-	bh=eXRSHwUvy8ISV/ZF5NEQa0Kx5OLcz4a9q9ZU1a3C/gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ly/QUq62YsaWYT+APwTG67o8xQqYAtBgakJlTPNITxtXn2tmtMsQcjLNOzusMsWbUHN8KHYKobXZbDZ/9Ap3T3fDCiabvDCzq9M0THp4g9xe935bc3MVtUdfNO5aK3FbXhryxUntDK/BylAIhTPSe1KvWWvLxUy4lDcTpzn80qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 107)
-	id 3F54D68D08; Thu, 23 May 2024 12:40:56 +0200 (CEST)
-X-Spam-Level: 
-Received: from blackhole.lan (p5b33fb10.dip0.t-ipconnect.de [91.51.251.16])
-	by verein.lst.de (Postfix) with ESMTPSA id 5E39267373;
-	Thu, 23 May 2024 12:40:36 +0200 (CEST)
-Date: Thu, 23 May 2024 12:40:32 +0200
-From: Torsten Duwe <duwe@lst.de>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "=?UTF-8?B?TsOtY29s?=
- =?UTF-8?B?YXM=?= F. R. A. Prado" <nfraprado@collabora.com>, Eric Biggers
- <ebiggers@kernel.org>, Jarkko Sakkinen <jarkko@kernel.org>, James Bottomley
- <James.Bottomley@hansenpartnership.com>, Ard Biesheuvel <ardb@kernel.org>,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- regressions@lists.linux.dev, kernel@collabora.com, Tejun Heo
- <tj@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Kees Cook <keescook@chromium.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: Re: [v3 PATCH] hwrng: core - Remove add_early_randomness
-Message-ID: <20240523123954.5e42bd93@blackhole.lan>
-In-Reply-To: <Zk7K7hw-XIHmPs26@gondor.apana.org.au>
-References: <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
-	<dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
-	<D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
-	<20240518043115.GA53815@sol.localdomain>
-	<ZkhS1zrobNwAuANI@gondor.apana.org.au>
-	<00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
-	<ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
-	<07512097-8198-4a84-b166-ef9809c2913b@notapiano>
-	<Zk2Eso--FVsZ5AF3@gondor.apana.org.au>
-	<CAHk-=wi7vwgzD4hdBzMrt1u3L2JyoctB91B7NLq-kVHrYXoTGA@mail.gmail.com>
-	<Zk7K7hw-XIHmPs26@gondor.apana.org.au>
-Organization: LST e.V.
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	s=arc-20240116; t=1716461069; c=relaxed/simple;
+	bh=EZXFT71T2+Ibou+M+wWG08vBeRU6I7wQ7CjzDa+dPVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uKPq0LKGlCbvV4NLZvrsFUB+5TPlnArFnHB+E828QIznF9OXxiGo1ijGZj7Wb7RoyyE1eBG/YSLXUevjOgzmThtJdDsgB53M7sx8eLUPNseHxhA2nrFLneypS2DTbw5Jdug/uga10MaEHMElsUgwz15Ncgxl/MYAhyTgEssa61I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pNS7gjd8; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pNS7gjd8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=vi5TPBBd99tv8Xmgnv/pBsNDXNH3b9oonqkMaft58mA=;
+	t=1716461067; x=1716893067; b=pNS7gjd8nWXYq8+qmp8glq/uIhGjFUJzdCESU7xXRbXkD/a
+	R0++GGUNYI0qS36zbyRn5LY7+h9EA05byPx4k0X7JFyoUXSFMyhUwtHVWH3WPXOtQQ3tDLszy/kOV
+	iSu0A8ojMlREJUk+adRMFR8Hf5bP8tG7iSn0FW2W/2bXJDMjRO2A+jUWuaMLYB6HPFgOeevY3bb5n
+	wdx0jh49HTq5Wrgg/lt4GpKBnoD4NwIxVIClbYJ32XV2WBvtwjnaFgbR637laWjaTqGBtoCYQ2wjj
+	K+3JjRpG3YS1caukZt7lUBVvRjdovyDFd/LHoaMCRcwICks0ub8DWuwRjjs0Fm8A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sA5vo-0006Ps-SY; Thu, 23 May 2024 12:44:20 +0200
+Message-ID: <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+Date: Thu, 23 May 2024 12:44:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: frank-w@public-files.de, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
+ <arinc.unal@arinc9.com>, Frank Wunderlich <linux@fw-web.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716461067;8f44dea9;
+X-HE-SMSGID: 1sA5vo-0006Ps-SY
 
-On Thu, 23 May 2024 12:49:50 +0800
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-> On Wed, May 22, 2024 at 03:53:23PM -0700, Linus Torvalds wrote:
-> > 
-> > That said, looking at the code in question, there are other oddities
-> > going on. Even the "we found a favorite new rng" case looks rather
-> > strange. The thread we use - nice and asynchronous - seems to sleep
-> > only if the randomness source is emptied.
-> > 
-> > What if you have a really good source of hw randomness? That looks
-> > like a busy loop to me, but hopefully I'm missing something obvious.
+On 17.05.24 08:27, Frank Wunderlich wrote:
+> Am 17. Mai 2024 04:17:47 MESZ schrieb "Arınç ÜNAL" <arinc.unal@arinc9.com>:
+>> On 16/05/2024 23:48, Frank Wunderlich wrote:
+>>> From: Frank Wunderlich <frank-w@public-files.de>
+>>>
+>>> After commit 868ff5f4944a
+>>> ("net: dsa: mt7530-mdio: read PHY address of switch from device tree")
+>>> the mt7531 switch on Bananapi-R64 was not detected.
+>>>
+>>> mt7530-mdio mdio-bus:00: reset timeout
+>>> mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -110
+>>>
+>>> Fix this by adding phy address in devicetree.
+>>>
+>>> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+>>
+>> I don't like the mention of the Linux kernel driver on the patch log. What
+>> you're fixing is the incorrect description of the switch's PHY address on
+>> the DTS file. Whether or not any driver from any project is actually
+>> reading it from the DTS file is irrelevant to this patch. That said, I
+>> already have a patch series I've been meaning to send the next version of
+>> that already addresses this. Please wait for that.
+
+Did you sent this? Because from what I see with my limited experience in
+this subsystem...
+
+> From my PoV it is a regression in next/6.10
+
+...I have to agree with Frank here. So it would be good to get this
+fixed before -rc1 is out to prevent more people from running into this.
+
+> because the driver change was merged (without "broadcast" fallback) and the dts patch [1] is not.
 > 
-> Yes that does look strange.  So I dug up the original patch at
+> I agree that my patch can be dropped because there was already one.
 > 
-> 	https://lore.kernel.org/all/20140317165012.GC1763@lst.de/
+> regards Frank
 > 
-> and therein lies the answer.  It's relying on random.c to push back
-> when the amount of new entropy exceeds what it needs.  IOW we will
-> sleep via add_hwgenerator_randomness when random.c decides that
-> enough is enough.
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240314-for-mediatek-mt7531-phy-address-v1-1-52f58db01acd@arinc9.com/
 
-Yes, I thought that this was the obvious choice, the lesser evil. If it
-just discarded the excess and returned immediately I had expected some
-kernel threads to spin constantly.
-
->  In fact the rate is much less now compared to
-> when the patch was first applied.
-
-You mean the rate of required entropy? Doesn't that make things worse?
-Maybe redesign the API to use a pull scheme? RNGs register at the
-randomness facility with a callback that can be used when there is a
-need for fresh entropy?
-
-	Torsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
