@@ -1,68 +1,102 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13F431A67;
-	Thu, 23 May 2024 04:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCF31C36;
+	Thu, 23 May 2024 05:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716439826; cv=none; b=EEz2UeaBeFy+9gO/u6A9itkkiaPnRcuO2Lp9nXP7OpcMSJ+YyDsksVn/wg0V8CajxyaDtsZoczj8b+2Z6T15RyKD15jOAPM+HM49jAjzlBTLFjtlF9Url0o0h4CX629cVTvqVo3+ftkqq1ZTVKoRnSqq3QGsua/C7KVPR/BylNM=
+	t=1716441628; cv=none; b=PlDf3U2uUaRsGnSoqj0CHQWa5TVn1ui+DaS+atPPOgcNf3FUTcq6yetYAwFSCZAWaly+39QhDa0yCImgarPhq76VSYikPvzedokAdPFjQqF50jO7IaAAl4Yq5G3RcFDfXyc8ZGw7WynlbNriDKXe2xbVcaAhwq1L/z9fq0sYhwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716439826; c=relaxed/simple;
-	bh=uwSV27Ev4Jrn4+pHukkex0Ljo9ox+YtMBacU/RZjrM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDHgXZNGV8b7FQ5WDllok6V0njr3K1Yn9msAdg+JZBNDHvlpfQHQ9bDhqkAfiFJSjQ5/AL9sbCck6Mm5jweUucHA5wsz7jRD2UrgQjJupjCYtmTmwVA4fgglRtGiQGA1sCUEnRVmCqoMuSn4sXifXFtAjgxlQHm30w8ovtHLoTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sA0PD-001ETo-0q;
-	Thu, 23 May 2024 12:50:20 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 May 2024 12:50:20 +0800
-Date: Thu, 23 May 2024 12:50:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	regressions@lists.linux.dev, kernel@collabora.com,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [v3 PATCH] hwrng: core - Remove add_early_randomness
-Message-ID: <Zk7LDPcDeunCwglt@gondor.apana.org.au>
-References: <66ec985f3ee229135bf748f1b0874d5367a74d7f.camel@HansenPartnership.com>
- <dfb0d930-7cbe-46c5-be19-d132b4906ecf@notapiano>
- <D1C2NPOBHAHK.20O4IME8OK1FH@kernel.org>
- <20240518043115.GA53815@sol.localdomain>
- <ZkhS1zrobNwAuANI@gondor.apana.org.au>
- <00bcfa65-384d-46ae-ab8b-30f12487928b@notapiano>
- <ZkwMnrTR_CbXcjWe@gondor.apana.org.au>
- <07512097-8198-4a84-b166-ef9809c2913b@notapiano>
- <Zk2Eso--FVsZ5AF3@gondor.apana.org.au>
- <D1G5GVUYCRZK.1G5UZ39NM96QJ@kernel.org>
+	s=arc-20240116; t=1716441628; c=relaxed/simple;
+	bh=PeC5iXfkIeU7spJ0VmixJQ2YQzDdAfaxUA9JmeGKvcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i/s5ZxpAY/skwL09SXkdewetpksSBPgEsA7XiHGJYUtVPEW+C80uBKFZdRBeCcSUSy1Ygo7fBl//1pDmLXGgm2oGdFFtJkcY9ylSOIRYy//fYuMClb/aM2UlWi+FBd85U9kQ1iWLsj+aMn7HU3Mqpu030SS9tOkwGZoQNeKctog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NCJ70/PC; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NCJ70/PC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=fUzokhKC9+TC+7P2/H37759pRNlpzZPwjqYlpOyCjhY=;
+	t=1716441626; x=1716873626; b=NCJ70/PCqhMvsPcvPOYo9Yl58CK1VG8pMBrXynDTGFn3S43
+	3mql3nVSc4Zmi2s+hScCzATf12RtHHaCfV3bIpb1sEcBrLmhvUKSIEax1hwYXE+TwgwhSGkYo9CO6
+	SzeFS33LQ9G/QdRYrLZ9Li6qcs12HRIOKyeDuchDlQ7EN1KVB8X2mEJaSUi/rXMJWEUAo+go7bEYi
+	ESMBY54Vv4p/inGgxW3Ms/1VsydzoDOptbEqjuJ5aaOIelw0+1jHd6GDh4WRGxuaRKfBDzZ1Rl05z
+	4tS9J5gl3O4BiCP+XFNPQRzAjKOIZSSTDT2Ai/x08TfYrNuNyG7PBqWAsbRtjhsQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sA0sJ-0000YB-5m; Thu, 23 May 2024 07:20:23 +0200
+Message-ID: <b0c932ce-1a63-44ee-bd0e-e93e6e164d20@leemhuis.info>
+Date: Thu, 23 May 2024 07:20:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D1G5GVUYCRZK.1G5UZ39NM96QJ@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+To: Thomas Gleixner <tglx@linutronix.de>, Lyude Paul <lyude@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>, Borislav Petkov
+ <bp@alien8.de>, Linux kernel regressions list <regressions@lists.linux.dev>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
+ <87plumxz4x.ffs@tglx>
+ <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+ <87le59vw1y.ffs@tglx>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+ <87bk58n6le.ffs@tglx>
+ <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+ <87wmntkhak.ffs@tglx>
+ <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+ <874japh4ww.ffs@tglx>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <874japh4ww.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716441626;970a6ef0;
+X-HE-SMSGID: 1sA0sJ-0000YB-5m
 
-On Wed, May 22, 2024 at 02:51:36PM +0300, Jarkko Sakkinen wrote:
+On 23.05.24 00:12, Thomas Gleixner wrote:
+> On Wed, May 22 2024 at 15:35, Lyude Paul wrote:
 >
-> What is the kthread doing this currently?
+>> Awesome! This patch does seem to make the system boot, thank you for
+>> your help
 
-It's hwrng_fillfn.
++1
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> The only thing what's awesome here is that it confirms my analysis of
+> the underlying problem. I offered Borislav a bet on that, but he
+> politely declined :(
+> 
+> The not so awesome part is the question what to do with that insight.
+> 
+> The first issue is that we don't know whether that's only a problem on
+> your particular system or if there is an underlying systematic problem
+> on that particular CPU variant (model/stepping).
+
+FWIW, Arch Linux and openSUSE Tumbleweed switched to 6.9.1 in the past
+few days (Fedora will likely follow in ~two weeks) and I have not yet
+seen any reports about problems like this, which is a first small
+indicator that this might be a system specific problem; if any such
+reports come up I'll mention it here.
+
+Ciao, Thorsten
