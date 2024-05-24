@@ -1,121 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA4285926;
-	Fri, 24 May 2024 12:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3785959
+	for <regressions@lists.linux.dev>; Fri, 24 May 2024 13:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716554783; cv=none; b=vAK2gR2/i5kn/3H5jADo4vzghwUSyCwsTivu7Kor3IJt8LpTCSdQmopDYN0EkylvSCfRN7or27bPilPKgSK3Abt5fQAg5jUDuV9gJH3HyS/IKPAv3/t7W7MQVVN4BiB7NUylNGmVvB+I9KF+Csyzt3D8xu4m3OMFd2LAxBnEnQQ=
+	t=1716556587; cv=none; b=n7LfuOGHJxvUd/VC3UL9S9ox2h/A5SMdTKXbyr2UisDx9Vn25UMX5NHuLC7B0mGlVwohlxuPnz78avHMXopsLuP0asvUpi/ElC3nS5h8IcfN4Rkj9Aq+k3B6yPih05P3jH/v6OHZd3Dm5mVXjagM7wbOFXAYb6NAjXLRE+/E3bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716554783; c=relaxed/simple;
-	bh=1gi4lnGudCrcFgXh4eaVIF00UhXj/d1XqVRN9JQ/gws=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eYZp3ufTEa8iM+Np85LFb9OVfHgyFp79drBgH3cqom9UYIAoBzzEVeFj1KyNnEHpVYIA5apC7GIFXOZHeD+7NPqoCA8MSQMxu0zIJCJtRJdMCtMQ97rMjlEjaqpMIMbKHtSDDj3Pie30+XuG0nbeinsBtjhCi63/adjg4+6IEeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epqUt9Fz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716556587; c=relaxed/simple;
+	bh=zjsZfNDN+Bbvk26xKubGbWGNj1ogVMwo42+99s7xhng=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=i/yxyfQkdOlhQo+fFUilDYWX9o06M6mAAsNyGBdsH4qdwfFtNDsi4dxpl1yExew3mhD460g68ILNHnP8EHvLkSXjItEKDZAM70P+8Ilc8q6qs09pl9gDC0KuxvhxKa/tQmQuYkEfBhTmfSCB6RVqlJvLlmZeiziJl60COxAS4wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QhSNjr+n; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epqUt9Fz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9F3C2BBFC;
-	Fri, 24 May 2024 12:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716554783;
-	bh=1gi4lnGudCrcFgXh4eaVIF00UhXj/d1XqVRN9JQ/gws=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=epqUt9FzPEsQ6w0RGC46GVHMLweQ0YHC0EbugGtcCIMAlc4yzrPLgyg/9iB0/jubg
-	 05//wI0FOqkLr61X10fe6Nxr5bx4P8KGDD3JZuIrmaaOeqKUHo8KN/JqyMuBUcIT0g
-	 dW4DiAAH/a8/TxgecFWdgzQVqG/rxz6p2au6MyZl9yQ6hysKSKxFNZMbiSdjqz1Mqk
-	 uOtLcelMGPFzbj5NhscF+Md5oMIYAx1+PJUrsR4yRoKvlSkw7ngXmFzpiiC7z/QBKa
-	 qGMQfIpXJ2YxpZtOqFfrPrhMjo8j9JnChaAE3tTOWUtb8akdiDV+WMvTakxD5d4lt8
-	 kxSFKqzI7UcQg==
-Message-ID: <8b52b6aa4376397cb2d71520e1c686318bcdecf9.camel@kernel.org>
-Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
-From: Jeff Layton <jlayton@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Paul
- Menzel <pmenzel@molgen.mpg.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, it+linux-nfs@molgen.mpg.de, Linus Torvalds
-	 <torvalds@linux-foundation.org>
-Date: Fri, 24 May 2024 08:46:21 -0400
-In-Reply-To: <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
-References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
-	 <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
-	 <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
-	 <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QhSNjr+n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=zjsZfNDN+Bbvk26xKubGbWGNj1ogVMwo42+99s7xhng=; t=1716556584;
+	x=1716988584; b=QhSNjr+n+WT4pzzLrxiYdPE2kx2sgZaAZVRorB3Oab+VGQ54FRtbXS5TXe0wI
+	1UjCpUT4AnAsDFGnDjq2h5A2H0gZxP/qRJ+owZgxlqcDYdqnqpdNStOGqnca1ja57Tv1/Ya5bMpOR
+	ykFtH5mU+rNYePOB8pIWNSqGhUWWZvWe6y7SRx0Zfkqkb8AJbt03w+Wl22wAQ7ZhHU69pKfehEkLt
+	Imt3KvI32QOb+b/iVhmEoEyD0MQww+5mTx5S3rQLzZNyjB0kfK+EcxpAutoxmhS2eXfDY6Vl5NVKz
+	y551d7ewcULHJLiAyy9vBPv7n2NgPz0LKO8QkC+Bh61Z1RXz3g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sAUmU-0001Wx-Mv; Fri, 24 May 2024 15:16:22 +0200
+Message-ID: <e3b3b766-fab6-483d-8493-adc206d4c8c9@leemhuis.info>
+Date: Fri, 24 May 2024 15:16:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716556584;670e2fde;
+X-HE-SMSGID: 1sAUmU-0001Wx-Mv
 
-On Fri, 2024-05-24 at 13:16 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> On 21.05.24 12:01, Jeff Layton wrote:
-> > On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
-> > > Am 19.04.24 um 18:50 schrieb Paul Menzel:
-> > >=20
-> > > > Since at least Linux 6.8-rc6, Linux logs the warning below:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0 NFSD: Unable to initialize client recovery=
- tracking! (-
-> > > > 110)
-> > > >=20
-> > > > I haven=E2=80=99t had time to bisect yet, so if you have an idea,
-> > > > that=E2=80=99d be great.
-> > >=20
-> > > 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
-> > > commit 74fd48739d0488e39ae18b0168720f449a06690c
-> > > Author: Jeff Layton <jlayton@kernel.org>
-> > > Date:=C2=A0=C2=A0 Fri Oct 13 09:03:53 2023 -0400
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 nfsd: new Kconfig option for legacy client t=
-racking
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 We've had a number of attempts at different =
-NFSv4 client
-> > > tracking
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 methods over the years, but now nfsdcld has =
-emerged as the
-> > > clear winner
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 since the others (recoverydir and the usermo=
-dehelper upcall)
-> > > are
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 problematic.
-> > [...]
-> > It sounds like you need to enable nfsdcld in your environment. The
-> > old
-> > recovery tracking methods are deprecated. The only surviving one
-> > requires the nfsdcld daemon to be running when recovery tracking is
-> > started. Alternately, you can enable this option in your kernels if
-> > you
-> > want to keep using the deprecated methods in the interim.
->=20
-> Hmm. Then why didn't this new config option default to "Y" for a
-> while
-> (say a year or two) before changing the default to off? That would
-> have
-> prevented people like Paul from running into the problem when running
-> "olddefconfig". I think that is what Linus would have wanted in a
-> case
-> like this, but might be totally wrong there (I CCed him, in case he
-> wants to share his opinion, but maybe he does not care much).
->=20
-> But I guess that's too late now, unless we want to meddle with config
-> option names. But I guess that might not be worth it after half a
-> year
-> for something that only causes a warning (aiui).
->=20
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
-> hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
 
-We simply changed the default in the Kconfig. That does not constitute
-a regression, IMO. Why on earth would we continue to default enable an
-option that we intend to deprecate in the near future?
---=20
-Jeff Layton <jlayton@kernel.org>
+
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20240516204847.171029-1-linux@fw-web.de/
+#regzbot introduced: 868ff5f4944a
+#regzbot summary: net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64
+not detected
+
+#regzbot report:
+https://lore.kernel.org/all/CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com/
+#regzbot introduced: 8430557fc584
+#regzbot summary: mm: cause warning at mm/page_table_check.c:198
+__page_table_check_ptes_set+0x306
+#regzbot fix: mm/debug_vm_pgtable: Drop RANDOM_ORVALUE trick
+#regzbot monitor:
+https://lore.kernel.org/all/20240523132139.289719-1-peterx@redhat.com/
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218861
+#regzbot introduced: v6.9..0450d2083be6bdcd18c9535ac5
+#regzbot summary: mm: WARNING: CPU: 13 PID: 7032 at lib/xarray.c:1024
+xas_split_alloc+0xbd/0x110
+
+#regzbot report:
+https://lore.kernel.org/all/6584ea16-06f7-4a95-bd83-870f30fc4b5d@roeck-us.net/
+#regzbot introduced: a61ddb4393ad
+#regzbot summary: drm/nouveau/nvif: build error on parisc:allmodconfig
+with gcc 12.x or later
+#regzbot fix: drm/nouveau/nvif: Avoid build error due to potential
+integer overflows
+#regzbot monitor:
+https://lore.kernel.org/all/20240518182923.1217111-1-linux@roeck-us.net/
