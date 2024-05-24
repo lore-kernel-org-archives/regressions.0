@@ -1,94 +1,121 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CDC53E31;
-	Fri, 24 May 2024 11:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA4285926;
+	Fri, 24 May 2024 12:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716550096; cv=none; b=my8fCUewBSiy8poEPeWHhyK2Gt6ZUMT+J0n8bcowPK8cLrGhls698QmrNfK7xqk6WMpOcnTKuSU2AXGNeJKHgroqdzO+dWrVrE34DOWtJJQd7X9uGgzGMkzbP81LOqCfbXj67Lb2Y3txJQ5wd0amlOcNNE9O/O7gKNWVRU6Gtw8=
+	t=1716554783; cv=none; b=vAK2gR2/i5kn/3H5jADo4vzghwUSyCwsTivu7Kor3IJt8LpTCSdQmopDYN0EkylvSCfRN7or27bPilPKgSK3Abt5fQAg5jUDuV9gJH3HyS/IKPAv3/t7W7MQVVN4BiB7NUylNGmVvB+I9KF+Csyzt3D8xu4m3OMFd2LAxBnEnQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716550096; c=relaxed/simple;
-	bh=oHA9gc+CrTyin+zUK+uAT3gY9fGy7KJDCFi88foFCBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r+lULIRYGxhPdEPkSzPFfdtKKj/V2Xt+Mg3XFs6BRR7O0P/Da8J0EnB8HX20PXVPFKNVqswywrh03kHXdjL6lGCU8OmGpsvp92dzXqo13rN2EoeF+FKedE8MnOzTqVKCzPy7X0dXKE4zqkjey9w/Mts8k0hUnjJiAbBSud7nSKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=auxo9UDh; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716554783; c=relaxed/simple;
+	bh=1gi4lnGudCrcFgXh4eaVIF00UhXj/d1XqVRN9JQ/gws=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eYZp3ufTEa8iM+Np85LFb9OVfHgyFp79drBgH3cqom9UYIAoBzzEVeFj1KyNnEHpVYIA5apC7GIFXOZHeD+7NPqoCA8MSQMxu0zIJCJtRJdMCtMQ97rMjlEjaqpMIMbKHtSDDj3Pie30+XuG0nbeinsBtjhCi63/adjg4+6IEeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epqUt9Fz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="auxo9UDh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=hcK9uKDg9sC6XHkeLqCJBgcdOFQUEGulh79bnSWYMao=;
-	t=1716550095; x=1716982095; b=auxo9UDhDQ1HOC77g1uMdbpyjeOPhq663wLpwEwXn+xdlpc
-	BlCqAdD6T9cUU/I8lOLSbKwv5TjsTFLZrSl0pDrKWuI9kKEwf3LLClR14UIjVGY/XWIZ0dhs7aHT6
-	OfUqVyvbIXfhp2Cglu9Icq9DYcDXvN0RnmutDhOCwXKsOiqUAdsdnOxCRxQrt0+Xb0SZEw+jMwMcn
-	Yb8GoVB1XVQqJvr2x9/M4Rfp1c5BQD3RRRbLVEUEJDLZm9Wp2ZxgYulNWMQe3zbyevh3dub0Qfv8x
-	OPJ0xxjFgXN5uO+ptdQL/yaJGYWZ/MrUG9a7iV+hZRJPhCCc70IdRhlnq/r+lHJQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sAT5o-0008IF-Oe; Fri, 24 May 2024 13:28:12 +0200
-Message-ID: <06f50224-9d9e-4118-adf4-ac89b0a06086@leemhuis.info>
-Date: Fri, 24 May 2024 13:28:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epqUt9Fz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9F3C2BBFC;
+	Fri, 24 May 2024 12:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716554783;
+	bh=1gi4lnGudCrcFgXh4eaVIF00UhXj/d1XqVRN9JQ/gws=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=epqUt9FzPEsQ6w0RGC46GVHMLweQ0YHC0EbugGtcCIMAlc4yzrPLgyg/9iB0/jubg
+	 05//wI0FOqkLr61X10fe6Nxr5bx4P8KGDD3JZuIrmaaOeqKUHo8KN/JqyMuBUcIT0g
+	 dW4DiAAH/a8/TxgecFWdgzQVqG/rxz6p2au6MyZl9yQ6hysKSKxFNZMbiSdjqz1Mqk
+	 uOtLcelMGPFzbj5NhscF+Md5oMIYAx1+PJUrsR4yRoKvlSkw7ngXmFzpiiC7z/QBKa
+	 qGMQfIpXJ2YxpZtOqFfrPrhMjo8j9JnChaAE3tTOWUtb8akdiDV+WMvTakxD5d4lt8
+	 kxSFKqzI7UcQg==
+Message-ID: <8b52b6aa4376397cb2d71520e1c686318bcdecf9.camel@kernel.org>
+Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
+From: Jeff Layton <jlayton@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Paul
+ Menzel <pmenzel@molgen.mpg.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, it+linux-nfs@molgen.mpg.de, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Date: Fri, 24 May 2024 08:46:21 -0400
+In-Reply-To: <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
+References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
+	 <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
+	 <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
+	 <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [BUG] Linux 6.8.10 NPE
-To: Greg KH <gregkh@linuxfoundation.org>,
- Paul Grandperrin <paul.grandperrin@gmail.com>
-Cc: rankincj@gmail.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <A8DQDS.ZXN0FMYZ3DIM1@gmail.com>
- <2024052249-cryptic-anthem-5bd2@gregkh>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <2024052249-cryptic-anthem-5bd2@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716550095;b262171c;
-X-HE-SMSGID: 1sAT5o-0008IF-Oe
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On Fri, 2024-05-24 at 13:16 +0200, Linux regression tracking (Thorsten
+Leemhuis) wrote:
+> On 21.05.24 12:01, Jeff Layton wrote:
+> > On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
+> > > Am 19.04.24 um 18:50 schrieb Paul Menzel:
+> > >=20
+> > > > Since at least Linux 6.8-rc6, Linux logs the warning below:
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 NFSD: Unable to initialize client recovery=
+ tracking! (-
+> > > > 110)
+> > > >=20
+> > > > I haven=E2=80=99t had time to bisect yet, so if you have an idea,
+> > > > that=E2=80=99d be great.
+> > >=20
+> > > 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
+> > > commit 74fd48739d0488e39ae18b0168720f449a06690c
+> > > Author: Jeff Layton <jlayton@kernel.org>
+> > > Date:=C2=A0=C2=A0 Fri Oct 13 09:03:53 2023 -0400
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 nfsd: new Kconfig option for legacy client t=
+racking
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 We've had a number of attempts at different =
+NFSv4 client
+> > > tracking
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 methods over the years, but now nfsdcld has =
+emerged as the
+> > > clear winner
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 since the others (recoverydir and the usermo=
+dehelper upcall)
+> > > are
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 problematic.
+> > [...]
+> > It sounds like you need to enable nfsdcld in your environment. The
+> > old
+> > recovery tracking methods are deprecated. The only surviving one
+> > requires the nfsdcld daemon to be running when recovery tracking is
+> > started. Alternately, you can enable this option in your kernels if
+> > you
+> > want to keep using the deprecated methods in the interim.
+>=20
+> Hmm. Then why didn't this new config option default to "Y" for a
+> while
+> (say a year or two) before changing the default to off? That would
+> have
+> prevented people like Paul from running into the problem when running
+> "olddefconfig". I think that is what Linus would have wanted in a
+> case
+> like this, but might be totally wrong there (I CCed him, in case he
+> wants to share his opinion, but maybe he does not care much).
+>=20
+> But I guess that's too late now, unless we want to meddle with config
+> option names. But I guess that might not be worth it after half a
+> year
+> for something that only causes a warning (aiui).
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+> hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
 
-On 22.05.24 17:12, Greg KH wrote:
-> On Sun, May 19, 2024 at 01:28:58PM +0200, Paul Grandperrin wrote:
->>> I am using vanilla Linux 6.8.10, and I've just noticed this BUG in my
->> dmesg log. I have no idea what triggered it, and especially since I
->> have not even mounted any NFS filesystems?!
->>
->> Hi all,
->> I have the exact same bug. I'm using the NixOS kernel but as soon as it was
->> updated to 6.8.10 my server has gone in a crash-reboot-loop.
->>
->> The server is hosting an NFS deamon and it crashes about 10 seconds after
->> the tty login prompt is displayed.
->>
->> Dowgrading to 6.8.9 fixes the issue.
-> 
-> Any chance you all can use 'git bisect' to track down the offending
-> commit?
-
-Paul, any progress on this?
-
-BTW, there is also a report about a NFS related general protection
-fault, see this thread:
-
-https://lore.kernel.org/all/CAK8fFZ7rbh5o9XG1D5KAPSRyES-8W8AphxsLJXOWUFZK49i8fA@mail.gmail.com/
-
-It was bisected to 4b14885411f74b ("nfsd: make all of the nfsd stats
-per-network namespace") [v6.9-rc1, v6.8.10 (abf5fb593c90d3)]
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+We simply changed the default in the Kconfig. That does not constitute
+a regression, IMO. Why on earth would we continue to default enable an
+option that we intend to deprecate in the near future?
+--=20
+Jeff Layton <jlayton@kernel.org>
