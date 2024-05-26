@@ -1,105 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E7B65C;
-	Sat, 25 May 2024 06:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAF11A2C32
+	for <regressions@lists.linux.dev>; Sun, 26 May 2024 10:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716618944; cv=none; b=qQ4uNkffeDwG2wwWJQac/7fkZQE3pQnBukjmYwWnPW3x0lhFo+DPmFkz/cKq3j2Lfo/OxKQthFih2ALagrb3ktw9M1wRyYcTmGcwqZy10sBOdF0EN4f5ujw3wAFkDhZc8DAQ9Dm+AgyT2jsmJSvRIaHOl3mDe/hKa0b0Rrv11LQ=
+	t=1716718579; cv=none; b=NyShDvj5B3ksZkQjk7FAPlF013cq7DysJUNwmturS8R8HQ6Sbxtp5ftIaWi/xrsEO4JoM4HdlHnI0YIU5b35baSnVcbS4/IRYepmKQp1thBoxuGTaC5SRpAO6Vdy6aIO5Mwdd7FdnNuzCtKc2MQ23QciRienCYDKMAydcYEoYpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716618944; c=relaxed/simple;
-	bh=RkSOasl4Cv6gTpeIPkA439lTvWAtTE6MvjOB6/84eGE=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=K6VLmUwtJph/ReOPEjHkgWUT0kPRlaGQXaZncmomfSGA7Ucz8HhVfm8s2RpyqLqPkr5G73l4+UiXj2U8ABNoodFk5/vxESp12cPqh1tTzI6bABDVXhaRCehIEQyTmWQUs5yHquFDeY6R/70K+hVqNi90SjD0ivAJOOolE0ei6mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BG560QP0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716718579; c=relaxed/simple;
+	bh=f22fsPLoPokTgiL9IjwzaHFlfJamKupwXAVTE0D7mdo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=omPyiAKiUtktVkgr3bHj6BFiuVu9hOo8mwHBL0MSxF9abRFlSveUFG1VuAZkm6szomny8A/oqBSZydepnSJSCMeFOa8fbq6SXPHzuNqxlvMXR2MXsZnbfV0oq9hHv5AyZqgwalFA4x+/JZ9vhX3t5X9CON3OLf11qxHOib8kVEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MAXkWsuV; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BG560QP0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C4AC3277B;
-	Sat, 25 May 2024 06:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716618944;
-	bh=RkSOasl4Cv6gTpeIPkA439lTvWAtTE6MvjOB6/84eGE=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=BG560QP0UQxEWQoWfBDB4EzUDAgarM8NaD1brHxJIl4va5VvnTnDLhgU9RmF3VwJO
-	 lIqke26BqnMsQrX+hQBExNl2u1ydwWB2R6+dPbvW8CBk7MitPiiz1WmfztYHnd4FvJ
-	 eJzYblpUGpZBapkJQ2FUt/zPadAqBvENABxBuWzVSmArPVKFNECKFirLPRp2Gdqto+
-	 fcAO9XwQAl87KnDbQdhlDHG6KIr3q5zGNAVkV0Um2iW1cJASuh5gu9QK1VaOUioKeU
-	 OWMsayQgurS8WIWtxO1DK4VdJgedMmWpB8afQpHzc5MzAx7cGfF4ej0TjPYAF+nfU1
-	 DYZLZH3iDNIAQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>,
-  linux-kernel@vger.kernel.org,  linux-wireless@vger.kernel.org,  "Linux
- regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-  linux-mediatek@lists.infradead.org,
-  linux-arm-kernel@lists.infradead.org,  Felix Fietkau <nbd@nbd.name>,
-  Lorenzo Bianconi <lorenzo@kernel.org>,  Ryder Lee
- <ryder.lee@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  Sean
- Wang <sean.wang@mediatek.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
-  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-  Peter Chiu <chui-hao.chiu@mediatek.com>,  StanleyYP Wang
- <StanleyYP.Wang@mediatek.com>,  Linux regressions mailing list
- <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-References: <6061263.lOV4Wx5bFT@natalenko.name>
-	<2341660.ElGaqSPkdT@natalenko.name>
-	<60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
-	<878qzy9zly.fsf@kernel.org>
-Date: Sat, 25 May 2024 09:35:38 +0300
-In-Reply-To: <878qzy9zly.fsf@kernel.org> (Kalle Valo's message of "Sat, 25 May
-	2024 09:26:01 +0300")
-Message-ID: <874jam9z5x.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MAXkWsuV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=f22fsPLoPokTgiL9IjwzaHFlfJamKupwXAVTE0D7mdo=; t=1716718577;
+	x=1717150577; b=MAXkWsuVemeHap92121i38dAqUt/RCxGARxHwnT8oDjUWjy8Lq4t1kV1g2rYj
+	9DB71BwLddZYU+O3T91nONhqMk/J2vJVPG/EI/g/vJTUJojtL7gi0meA6G/bMQQf/Q0i2vDNg2EAM
+	rCXHOMS/j8lu/NU6hDo7JGDQUv0OVnosKTSO4gy8MeajFHGdB/hOA5+KxRZ7ObFoZHpWRdpgQdonQ
+	tHeqDuRMry90lU8RzWr32BJLigGs3YsYCuy7GYTQL8XWWbk6i/HSS/0fAXvIu1xjAtA/snK9UKDCR
+	9yT1QmsjxuQOVclF1LgTM0oimjQSTzO8vYMUL4E77syqG3cUHw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sBAvB-0000lE-AQ; Sun, 26 May 2024 12:16:09 +0200
+Message-ID: <0d15becc-4721-4cd4-af81-8de08fc70e92@leemhuis.info>
+Date: Sun, 26 May 2024 12:16:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716718577;567d7ca2;
+X-HE-SMSGID: 1sBAvB-0000lE-AQ
 
-Kalle Valo <kvalo@kernel.org> writes:
 
-> Johannes Berg <johannes@sipsolutions.net> writes:
->
->> On Wed, 2024-05-15 at 00:51 +0200, Oleksandr Natalenko wrote:
->>> Also /cc Johannes because of this commit:
->>>=20
->>> 6092077ad09ce wifi: mac80211: introduce 'channel request'
->>>=20
->>> On st=C5=99eda 15. kv=C4=9Btna 2024 0:43:40, SEL=C4=8C Oleksandr Natale=
-nko wrote:
->>> > Hello Felix, Lorenzo et al.
->>> >=20
->>> > With v6.9 kernel the following card:
->>> >=20
->>> > 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E
->>> > 802.11ax PCI Express Wireless Network Adapter [14c3:7915]
->>> >=20
->>> > doesn't work any more. Upon mt7915e module insertion the following sp=
-lat happens:
->>> >=20
->>
->> 6.9 didn't get commit 2f7cf3b61d85 ("wifi: mt76: mt7915: add missing
->> chanctx ops")? Huh?
->
-> Yeah, commit 2f7cf3b61d85 should have been taken to wireless tree but it
-> fell through the cracks. I didn't realise that it's an important bugfix
-> and the commit message didn't give any indication of that either.
->
-> But commit 2f7cf3b61d85 is now in Linus' tree so it would be good if
-> someone could submit it to stable releases.
 
-Johannes pointed out to me that the commit is already in stable:
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dlinux-6.9.y&id=3Dddb02739a2be54ed922bce3cb57d5f901590ee70
-
-So all should be good now.
-
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+#regzbot report:
+https://lore.kernel.org/all/CAHk-%3DwiWvtFyedDNpoV7a8Fq_FpbB%2BF5KmWK2xPY3QoYseOf_A@mail.gmail.com/
+#regzbot introduced: 617824a7f0f73e4de325cf
+#regzbot summary: perf parse-events: perf broken on arm64
