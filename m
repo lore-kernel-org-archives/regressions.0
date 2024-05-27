@@ -1,77 +1,153 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028E813AA4D
-	for <regressions@lists.linux.dev>; Mon, 27 May 2024 10:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6AB130497
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 10:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804390; cv=none; b=pnSh0j4oLPiy7oO0mUolwia9qxknHTfRnh3hnzfs5DX4PY7imyTcMgUP9mSPtHam0cSNS9H1o0rlR5Y7JEJRA8livrjLBXku1CGuEQw0/2Q30dbzYVJGxPZB3+QF+BXT/KJ3sWg1bW/QqP+5DUSh2N27EWoVqDleTgpijypXk2U=
+	t=1716806728; cv=none; b=YlRUxNsuk5bErXbJP4iP0u0ojX8Kg/ywk53EBNogRhuEO84xvagq17G5pVSazHZJM4rMcxUZ89Y+rnhqqLTXYPFtzC9eiPX+XOhz/VT7uScyqmP+QrBFRDxUjlbDmNcQkPpYfV9H8vhDfVqnR+NWNFtVvc9bPDps08KGAcJwcwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804390; c=relaxed/simple;
-	bh=s81Hp7fR7mtMdUe/8mJY+IkuwsfZvR041uPaXPXdv3A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XapbGLn0+Oa6oaKitEurOiXFyTg1NUjBvs6Wf+efkKrLlpXD5D7j9W12MYYtA6RCeSPqpRH4znafocNyxdpElKlDwCjGECHJUSml/HiG2LiwhO1EsMgtfwOxWIKhc8kiepDujjqItj97E7Z0Nl3Hr7QoHcivQmKN1/8pkdaiDEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gLndVvIH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XdH+e1ow; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716806728; c=relaxed/simple;
+	bh=rKvMLo7joCjKiFuHZ58luWYMNXJKJf8/fNkgpcBwjf8=;
+	h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=OgPTw5ya85p5qPYaW1vqMV5T+3kynDZyGTEQ9zavCbjxfvadGRn8iRewUk7FN5lK55vT+3L2QP/DnKks097iRjMRaLAGq9YnYpUPr61UJu5eiwj8Vo9arioo/Ucg0sTSNrYRb7C4qFeKrXAT/nrQQwdRsmBCuyTwO5pSyaBTQnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=AW08ziET; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLndVvIH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XdH+e1ow"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716804387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J06T3Dt3jm5Q9jl5C+QpzgdSZJHlI8MN+rNBRUfEuas=;
-	b=gLndVvIHQM1EXJc3/cD70rLZBZ9Se+CPfEABxksxNSMEnjyi0U8GHH6N9vbUFzkN0fjLTV
-	s4CwGeOtsKaC4lcjsLUBGQuI4xBJPNwntr7SQB/eo0L6xukdYZyf9yI85OCuqPaiBiL8R5
-	ZKN9dSVZZGZkAPXdPO0/W5YF4jyLPGRj+Ldn7q6lcNOIOcFOqhYhN7Ousd2JvpocdMqrHq
-	3Mzeu9STH+m30VADWkxw9M6FL7Wn2kaomWeLNC11ZUkF/0fAZYr4BHAybnAlhtVLJISu0B
-	Fp+sa6RbJUNIOehEZp2KOw0FnbQ4KxKDyH22T5Ic4SiISrk5dzX18EDpdeRvpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716804387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J06T3Dt3jm5Q9jl5C+QpzgdSZJHlI8MN+rNBRUfEuas=;
-	b=XdH+e1owfPR96WdgAZjXUWvW1d+qnBDjhOFtoAYS19UZ6sU8eAp8GDEH8qcVoNp8dlaLiF
-	FCVCzOwfu7QYxnCg==
-To: Christian Heusel <christian@heusel.eu>
-Cc: regressions@lists.linux.dev, Tim Teichmann <teichmanntim@outlook.de>,
- x86@kernel.org, stable@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Scheduling errors with the AMD FX 8300 CPU
-In-Reply-To: <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
-References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
- <87r0dqdf0r.ffs@tglx>
- <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
-Date: Mon, 27 May 2024 12:06:26 +0200
-Message-ID: <87h6ejd0wt.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="AW08ziET"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by cmsmtp with ESMTPS
+	id BV4lsSlEijfBABXqws7vlL; Mon, 27 May 2024 10:45:18 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id BXqvs9jCmzh2iBXqvsbv0k; Mon, 27 May 2024 10:45:17 +0000
+X-Authority-Analysis: v=2.4 cv=EdjOQumC c=1 sm=1 tr=0 ts=6654643d
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=-Ou01B_BuAIA:10 a=thD_vAUaAAAA:8
+ a=PHq6YzTAAAAA:8 a=VwQbUJbxAAAA:8 a=q2727y1HDB8PbVJpZgoA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=Kl19cmx7V54we018lLRm:22 a=ZKzU8r6zoKMcqsNulkmm:22
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=aUdqAH9GyHh2gGt9rAEDpDY6ZVQgxj4JgC7F5xnaUIY=; b=AW08ziETFpPq9nt3K5E4rg9qIb
+	TB8iJt/978hcyy9ZJMDZOLzFEdiWeCN0A1pFVYpc+WFqsx3ZAWz11DdCxkbws8zHXx6of35e0m0Ba
+	x8xa53VRegGuwEs7i/7rzZJjktPia6dFyec59HPHoDtvf3OQwUcAN7+CeJMUZk7/Ga123viY73W3c
+	BlGhixembTig/EKu5yBGKjcyaCsLt+UwD+qNkvUtz91DKI9CFLNBQaHDFOVtY+PVWpzBGhy0sZ2MJ
+	HMX/bvLLqcO8chkjzWzoJTCoqAWDCbw8rsmdld9AFRnW7qbWq+WDjr3rvvE6QTWqAAKY+nc/mY/om
+	SzXiD6pg==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:40150 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1sBXqu-001gJc-2a;
+	Mon, 27 May 2024 04:45:16 -0600
+To: Guenter Roeck <linux@roeck-us.net>,
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+ regressions@lists.linux.dev, linux-clk@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-riscv <linux-riscv@lists.infradead.org>
+From: Ron Economos <re@w6rz.net>
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+Message-ID: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
+Date: Mon, 27 May 2024 03:45:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1sBXqu-001gJc-2a
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:40150
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 3
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLW34ndBW8zUgbbNPNT9Cl9ltEcHEdssZ4cgxOULX6B91yesLmcCH9M5C4gO1BpB89VPP0wn82UeGPxAlItqrgvFxnLhxmHMKwcvpflsfMGs57iZz0YN
+ 9hOE1Bw8UmeWxBJBvvyLuVE+XiwtPOdqBnauvDRpk+oA7yFHyGDAjIEQK6N+blsj9qwrT99GiUlhQY8xmnHKYhzNRhmOwgJ2fr8=
 
-Christian!
+On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
+ > Hi,
+ >
+ > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+ > > Report an error when an attempt to register a clkdev entry results in a
+ > > truncated string so the problem can be easily spotted.
+ > >
+ > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+ > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+ > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+ >
+ > With this patch in the mainline kernel, I get
+ >
+ > 10000000.clock-controller:corepll: device ID is greater than 24
+ > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev 
+for corepll: -12
+ > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+ > sifive-clk-prci 10000000.clock-controller: probe with driver 
+sifive-clk-prci failed with error -12
+ > ...
+ > platform 10060000.gpio: deferred probe pending: platform: supplier 
+10000000.clock-controller not ready
+ > platform 10010000.serial: deferred probe pending: platform: supplier 
+10000000.clock-controller not ready
+ > platform 10011000.serial: deferred probe pending: platform: supplier 
+10000000.clock-controller not ready
+ > platform 10040000.spi: deferred probe pending: platform: supplier 
+10000000.clock-controller not ready
+ > platform 10050000.spi: deferred probe pending: platform: supplier 
+10000000.clock-controller not ready
+ > platform 10090000.ethernet: deferred probe pending: platform: 
+supplier 10000000.clock-controller not ready
+ >
+ > when trying to boot sifive_u in qemu.
+ >
+ > Apparently, "10000000.clock-controller" is too long. Any suggestion on
+ > how to solve the problem ? I guess using dev_name(dev) as dev_id 
+parameter
+ > for clk_hw_register_clkdev() is not or no longer a good idea.
+ > What else should be used instead ?
 
-On Sat, May 25 2024 at 02:12, Christian Heusel wrote:
-> On 24/05/25 12:24AM, Thomas Gleixner wrote:
->> Can you please provide the full boot log as the information which leads
->> up to the symptom is obviously more interesting than the symptom itself.
->
-> I have attached the full dmesg of an example of a bad boot (from doing
-> the bisection), sorry that I missed that when putting together the
-> initial report!
+This issue causes a complete boot failure on real hardware (SiFive 
+Unmatched). The boot only gets as far as "Starting kernel ..." with no 
+other indication of what's going on.
 
-Thanks for the data. Can you please provide the output of
+Guenter's suggested patch solves the issue.
 
-# cat /proc/cpuinfo
+diff --git a/drivers/clk/sifive/sifive-prci.c 
+b/drivers/clk/sifive/sifive-prci.c
+index 25b8e1a80ddc..20cc8f42d9eb 100644
+--- a/drivers/clk/sifive/sifive-prci.c
++++ b/drivers/clk/sifive/sifive-prci.c
+@@ -537,7 +537,7 @@ static int __prci_register_clocks(struct device 
+*dev, struct __prci_data *pd,
+                          return r;
+                  }
 
-from a working kernel?
+-               r = clk_hw_register_clkdev(&pic->hw, pic->name, 
+dev_name(dev));
++               r = clk_hw_register_clkdev(&pic->hw, pic->name, "prci");
+                  if (r) {
+                          dev_warn(dev, "Failed to register clkdev for 
+%s: %d\n",
+                                   init.name, r);
 
-Thanks,
-
-        tglx
