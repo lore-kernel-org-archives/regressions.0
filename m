@@ -1,156 +1,85 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF2F15EFC6
-	for <regressions@lists.linux.dev>; Mon, 27 May 2024 13:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993EC161B58
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 15:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816606; cv=none; b=msusiZobjGqRTjEYXGtXH1LeHWOsgXN37sIfLIusDM2SW3j6DWCFMAq1px3RYL35CCaUbBEoxuKXRIuVU8SuZ1zs+fq4UGEYcGYGuhaHkqaXWmoPJYu9oWhB4ddfCK8dpzHfBGxk9zQWhYandGFGlYELinzMy0Vj7MeFcU+kJyQ=
+	t=1716822068; cv=none; b=B9lTT9AybnVpUxzaK+0/Tgq4PTultCaskdT5bPKme72TjJ3Pd/sP6QbeILVLF4odH8wmIOSUpZetWPHTJhfEytjDBzBcv2NLDSYPXWmYyWDiRBUQNPQj7tIqqooiNrp+caATYlfXEPKTg+wNpo78omvtBsEnoY54xbDYBazr/6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816606; c=relaxed/simple;
-	bh=YmojrlRDzHa9eeRvE+hFdRHXFKUIo3HD3FBR9dlhGEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=COOWyW95zbN+swsAUJSExkFsv/QzgkVDpmMdxVGcKJGijaDhlrR+Ir0fwNJqBmFeJ2gVoihzAsT0mVLgEasmv1hEHBTJHfLysE2jLMxM77p2SVwCK0+YM8Uyx3cbDvPsvnsfGQ/ac5qU9EZVzkr5W6bNpuPZxStfutH2nQc8jiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cirjdWAI; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716822068; c=relaxed/simple;
+	bh=EVhJcjl6XAhszzrgGYGIKJav7WyG+0MSoyHN3ppak2c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DJdBW7rts6kpYoSWZyYAwOsuv36CBXLiS2t6pemsqGhhQrKAepx/0Bb5rl0FPVS92yEyxgkYA7JbPZCL3m3HD2WTmLxWkrs619A7wnFWDwPsc819Q6ZAWbaiYv/6fIuv/tlYXoAnhqS+lSW84H40u3+Jl1AxerZSVuoU+rzMr/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZqUrYaCR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XhigBucf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cirjdWAI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gaotFr9Z3qhj+JKsAg1inJzMtusA7qZ6jQmUAEHIia4=; b=cirjdWAIYaq+0jwGFEqDYqDnfy
-	QAK1s0Vqmyf4wwn38WG/QltTYuX6Bse9wkkpj2GLCEhfD+QV7VYyE5KjJSJSKpxtSHv+uJlt6+EmR
-	QK5UvYTClcMBaEmf/Js1VzcmKXIuUHP73aNRsOiQszbikKKLL92AJZCao8abKZl76o9qxj0oqNqL+
-	tbySwWOQnbA66/XtuEuWxRH7atcz1nzKjwm5YUKMIw/6YVOtG9Yze9577aiOxRGyhKeU+FD8GRQp5
-	PRaP6UvLFY81CKdtGTr7uNfhdUttJOea54yLzuO4pyVed0WXDNsjiWPP01dsfAQwtmMZE74wLWE11
-	ysTlNN6Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33938)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBaQI-0003Zm-18;
-	Mon, 27 May 2024 14:29:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBaQK-0002ME-KF; Mon, 27 May 2024 14:30:00 +0100
-Date: Mon, 27 May 2024 14:30:00 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Ron Economos <re@w6rz.net>
-Cc: Guenter Roeck <linux@roeck-us.net>, regressions@lists.linux.dev,
-	linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
-Message-ID: <ZlSK2CcbLaWFRpnR@shell.armlinux.org.uk>
-References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
- <ZlSIH1/etwPQe+bQ@shell.armlinux.org.uk>
- <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZqUrYaCR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XhigBucf"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716822064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q6HJNxD8+WmFeUBZh0tEce3JmTfcscnrPTvYzZD7Xyw=;
+	b=ZqUrYaCRFIlJLZLHXcpIvwu/iB4Hi0uJ+OzCAx60qZp5VxSjiWqrWNvUqw6hCvJKUL0NRl
+	/zR29lREaoans2H2HRbr8l9Cqkcmv2/a+/QybD2pF3EX9pRIMJduRa8BQ/j2x+VEAKnHn9
+	51PfRmU9p+XjOVL1t2KpiPV8e4UgcV7kfFSUjvxanqqT0cxBtSKSq3D4fgBTpgCJeCTF8+
+	INo2xztxdZ2ts5SDzGde6IjkjragLUHbxxP/xwno/X6uKF2X9kWDpJA12FvJw4si2bGUYx
+	artD50+4TKa+kSp7rXmHTIg4B8zG5PYyR8ugAmKN0dLlB1pLEZ/o6XgDz6jQog==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716822064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q6HJNxD8+WmFeUBZh0tEce3JmTfcscnrPTvYzZD7Xyw=;
+	b=XhigBucfPdhUpvxdfsy92Tk4uMTfZ8+prclZhlZNMplVHT+2ErQeIm3pQCMmeB9/XZrz+z
+	96XWwLZunaTrhVAw==
+To: Tim Teichmann <teichmanntim@outlook.de>, Christian Heusel
+ <christian@heusel.eu>
+Cc: regressions@lists.linux.dev, x86@kernel.org, stable@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Scheduling errors with the AMD FX 8300 CPU
+In-Reply-To: <PR3PR02MB6012CB03006F1EEE8E8B5D69B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
+ <87r0dqdf0r.ffs@tglx>
+ <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
+ <87h6ejd0wt.ffs@tglx>
+ <PR3PR02MB6012CB03006F1EEE8E8B5D69B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+Date: Mon, 27 May 2024 17:01:04 +0200
+Message-ID: <874jajcn9r.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZlSJkCtx6eYPCQwG@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain
 
-On Mon, May 27, 2024 at 02:24:32PM +0100, Russell King (Oracle) wrote:
-> On Mon, May 27, 2024 at 02:18:23PM +0100, Russell King (Oracle) wrote:
-> > On Mon, May 27, 2024 at 03:45:15AM -0700, Ron Economos wrote:
-> > > On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
-> > > > Hi,
-> > > >
-> > > > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
-> > > > > Report an error when an attempt to register a clkdev entry results in a
-> > > > > truncated string so the problem can be easily spotted.
-> > > > >
-> > > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > >
-> > > > With this patch in the mainline kernel, I get
-> > > >
-> > > > 10000000.clock-controller:corepll: device ID is greater than 24
-> > > > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for
-> > > corepll: -12
-> > > > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
-> > > > sifive-clk-prci 10000000.clock-controller: probe with driver
-> > > sifive-clk-prci failed with error -12
-> > > > ...
-> > > > platform 10060000.gpio: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10010000.serial: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10011000.serial: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10040000.spi: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10050000.spi: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > > platform 10090000.ethernet: deferred probe pending: platform: supplier
-> > > 10000000.clock-controller not ready
-> > > >
-> > > > when trying to boot sifive_u in qemu.
-> > > >
-> > > > Apparently, "10000000.clock-controller" is too long. Any suggestion on
-> > > > how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
-> > > > for clk_hw_register_clkdev() is not or no longer a good idea.
-> > > > What else should be used instead ?
-> > > 
-> > > This issue causes a complete boot failure on real hardware (SiFive
-> > > Unmatched). The boot only gets as far as "Starting kernel ..." with no other
-> > > indication of what's going on.
-> > > 
-> > > Guenter's suggested patch solves the issue.
-> > > 
-> > > diff --git a/drivers/clk/sifive/sifive-prci.c
-> > > b/drivers/clk/sifive/sifive-prci.c
-> > > index 25b8e1a80ddc..20cc8f42d9eb 100644
-> > > --- a/drivers/clk/sifive/sifive-prci.c
-> > > +++ b/drivers/clk/sifive/sifive-prci.c
-> > > @@ -537,7 +537,7 @@ static int __prci_register_clocks(struct device *dev,
-> > > struct __prci_data *pd,
-> > >                          return r;
-> > >                  }
-> > > 
-> > > -               r = clk_hw_register_clkdev(&pic->hw, pic->name,
-> > > dev_name(dev));
-> > > +               r = clk_hw_register_clkdev(&pic->hw, pic->name, "prci");
-> > 
-> > How about just changing this to:
-> > 
-> > 		r = clk_hw_register(dev, &pic->hw);
-> > 
-> > ?
-> > 
-> > Since, if the device name is over-sized and thus truncated in the clk
-> > lookup array that clkdev maintains, *nothing* will be able to match
-> > the entry. Hence, I suspect all those clkdev registrations are
-> > completely redundant for this driver (and do nothing other than
-> > waste memory!)
-> 
-> Note that I mentioned *exactly* this point in my first reply to the
-> report of the regression in:
-> 
-> https://lore.kernel.org/r/ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk
-> 
-> "We need to think about (a) whether your use of clk_hw_register_clkdev()
-> is still appropriate, and (b) whether we need to increase the size of
-> the strings."
+Tim!
 
-Note this will be my last reply on this today - it's Bank Holiday Monday
-in the UK and I have the right to take this time off from working on the
-kernel.
+On Mon, May 27 2024 at 14:35, Tim Teichmann wrote:
+> On 27/05/2024 12:06, Thomas Gleixner wrote:
+>> Christian! On Sat, May 25 2024 at 02:12, Christian Heusel wrote:
+>>> On 24/05/25 12:24AM, Thomas Gleixner wrote:
+>>>> Can you please provide the full boot log as the information which 
+>>>> leads up to the symptom is obviously more interesting than the 
+>>>> symptom itself. 
+>>> I have attached the full dmesg of an example of a bad boot (from 
+>>> doing the bisection), sorry that I missed that when putting together 
+>>> the initial report! 
+>> Thanks for the data. Can you please provide the output of # cat 
+>> /proc/cpuinfo from a working kernel? Thanks, tglx 
+>
+> Right here is the output of
 
-Thanks.
+Thanks for this. Can you also provide the output of:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+# cpuid -r
+
+please?
+
+Thanks,
+
+        tglx
