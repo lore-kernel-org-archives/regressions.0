@@ -1,82 +1,114 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB8915FA80;
-	Mon, 27 May 2024 18:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E511DA58
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 20:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716834641; cv=none; b=KbAoCuu6c6R0nkABdJu8FPhBRi6dRaYabuwCh1q21mdfI8o/EvHUXWtQR8tCYLfOhQt8W2tmusDeU8pfo13kOdm9tMgH+mJs3rp72MtepS1gipTgw9mK4HKRWxZKvKd5RLiuKgb0zsUhLY/AOXDohFDEPMUj/jirHMd5tHP/rlM=
+	t=1716842979; cv=none; b=SKuMjZnj3uUWtPIgRzRo6KPUazTThoAIgzOZn03nbZLd8uEC8zIk17G61cqONvFAI24Dvkqk2FTcQ08tIiyFfqoXsi7zcY2fCY12c+Ys/ecn1MIKmYnK4x8FJ/CWRKfOLSRGn4O8Tl8xjVqIHAer+BwCVU4PEJSv1M+QQPFYbqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716834641; c=relaxed/simple;
-	bh=VNwqDkuFgKjhVHJW0w5JUYp4JYk3Ki4mNKDdPxV9apI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L/7Q0JlGodyeBsjydn6nD33+zXK9Ma3g+uZ6I0bfivavmp1hj+DQ1emSsMdcuEdyiSjRRGvLUdGW8REIABlAzfzNRP8eRgHapQZcz6ckXW77TIx0OUjdcwHZ2UtsYrwv4Ure9hhAPJ7co7xXil+RY33BjLvKg1fG1rKfqbwMK5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=qq294NiM; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1716842979; c=relaxed/simple;
+	bh=1TtjTvNzEXUXPyQiA9CkznwxyYdBavkdx3z+BpYnphk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=akcu/r0GFW8hYwHEHwBD9JxVGeUx0jWr6OM1p0UeX6hvIz2kivtBFGtDz4I9RgYJ9DALVAVcjAmexRnW+cZV1gGw2INMDZPrXqQeo8BVphcE+UtBqjzU5qfPyzVX3J4bGnRRfe2kGmuS5LGybeDyQmrY3A0w5tiqP1cK0AcDfl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k1hpGlmK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e8UZkJAo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="qq294NiM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=VNwqDkuFgKjhVHJW0w5JUYp4JYk3Ki4mNKDdPxV9apI=;
-	t=1716834638; x=1718044238; b=qq294NiMW+Umd//R+Iek7poOaRGs2K1N+kxAfA++JAMN4WX
-	AH5YRPm6GZchkqKp4X5SINGVpOC9zRJxk7f3mDYzRPNVQw497X0JsNNIA/67Jgv7GrlnPjvp3oScr
-	R0KC1q0I8yMlBhw4NW17tNI5NMF5W2kf8tzmlYUWLNOJqH2g3AiGzZK9mYVgW7qdE52AK9/CJjeiX
-	wQLap1ly8oRafHyClUxs/Jb/WXhaGwPv940xDmPVHzBGMEIxt/QYiptlezfMKCwyuZCn2HbQrMzqT
-	53613LhEH/eVR2HRldiXAG4n/c72aegBxp41AglEceokZfoHH7KfxEfZMbB2EFZA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sBf7B-0000000D2t4-0Xcd;
-	Mon, 27 May 2024 20:30:33 +0200
-Message-ID: <98871a58e675aef7ad7f2e5bd3bb2ee526d29d5f.camel@sipsolutions.net>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Greg KH <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@kernel.org>
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>, 
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, "Linux
- regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- linux-mediatek@lists.infradead.org,  linux-arm-kernel@lists.infradead.org,
- Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder
- Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>, Sean
- Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Peter
- Chiu <chui-hao.chiu@mediatek.com>, StanleyYP Wang
- <StanleyYP.Wang@mediatek.com>,  Linux regressions mailing list
- <regressions@lists.linux.dev>
-Date: Mon, 27 May 2024 20:30:31 +0200
-In-Reply-To: <2024052750-rippling-catty-1cb5@gregkh>
-References: <6061263.lOV4Wx5bFT@natalenko.name>
-	 <2341660.ElGaqSPkdT@natalenko.name>
-	 <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
-	 <878qzy9zly.fsf@kernel.org> <2024052750-rippling-catty-1cb5@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k1hpGlmK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e8UZkJAo"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716842976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d55mR4mLG4ZKoYbFrQEL2qAY0vQyIJjzMV7kq4W9+pk=;
+	b=k1hpGlmKHicTsuKs9CRBMBCPmwXtEw2+TBhEYTsjHophh4cpDYx66q8raClDrQTDc/JybU
+	vE2fYr3nkCvuJMWOxuo5ldisV4rbUSBlSLUfY6jNJelXW7Wmx/52pxoPte5RN1uw52LpZ1
+	ZkRUJK90Gg0TKv6X7GeQG6nI3h4IqyvttZs7ERbgJVolPMJtTrKlOMQQ6is+vkfJS7ocjd
+	+uw63dHv53fGej4ZwvrsL9APk+jfIeS6lE7nec0E5CjmgNcUSIOtyXlW8MQmdwJmy+VcRn
+	z47K8VhWLvCCAm325sayi48nXIIVgmC2omCORcAjPiqXoXSOF7FTKCCdd8F+ng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716842976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d55mR4mLG4ZKoYbFrQEL2qAY0vQyIJjzMV7kq4W9+pk=;
+	b=e8UZkJAoOXa81pKWl4+SgcO6Q+tpFAkUGJatzGo92GnGsqOhHBlswxHHMw8xi8+7wr7+xd
+	a4uwhkujyOF65SCA==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <877cffcs7h.ffs@tglx>
+References: <877cffcs7h.ffs@tglx>
+Date: Mon, 27 May 2024 22:49:35 +0200
+Message-ID: <87jzjfaskg.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain
 
-On Mon, 2024-05-27 at 20:29 +0200, Greg KH wrote:
-> >=20
-> > Yeah, commit 2f7cf3b61d85 should have been taken to wireless tree but i=
-t
-> > fell through the cracks. I didn't realise that it's an important bugfix
-> > and the commit message didn't give any indication of that either.
-> >=20
-> > But commit 2f7cf3b61d85 is now in Linus' tree so it would be good if
-> > someone could submit it to stable releases.
->=20
-> It's already in 6.9.1, does it need to go anywhere else?
->=20
+On Mon, May 27 2024 at 15:14, Thomas Gleixner wrote:
+> On Mon, May 27 2024 at 09:29, Peter Schneider wrote:
+>> This is coming from an older server machine: 2-socket Ivy Bridge Xeon E5-2697 v2 (24C/48T) 
+>> in an Asus Z9PE-D16/2L motherboard (Intel C-602A chipset); BIOS patched to the latest 
+>> available from Asus. All memory slots occupied, so 256 GB RAM in total.
+>>
+>>  From a "good boot", e.g. kernel 6.8.11, dmesg output looks like this:
+>>
+>> [    1.823797] smpboot: x86: Booting SMP configuration:
+>> [    1.823799] .... node  #0, CPUs:        #1  #2  #3  #4  #5  #6  #7  #8  #9 #10 #11
+>> [    1.827514] .... node  #1, CPUs:   #12 #13 #14 #15 #16 #17 #18 #19 #20 #21 #22 #23
+>> [    0.011462] smpboot: CPU 12 Converting physical 0 to logical die 1
+>>
+>> [    1.875532] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
+>> [    1.882453] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
+>> [    1.887532] MDS CPU bug present and SMT on, data leak possible. See 
+>> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
+>> [    1.933640] smp: Brought up 2 nodes, 48 CPUs
+>> [    1.933640] smpboot: Max logical packages: 2
+>> [    1.933640] smpboot: Total of 48 processors activated (259199.61 BogoMIPS)
+>>
+>>
+>>  From a "bad" boot, e.g. kernel 6.9.2, dmesg output has these messages in it:
+>>
+>> [    1.785937] smpboot: x86: Booting SMP configuration:
+>> [    1.785939] .... node  #0, CPUs:        #4
+>> [    1.786215] .... node  #1, CPUs:   #12 #16
+>
+> Yuck. That does not make any sense.
+>
+>> [    1.797547] .... node  #0, CPUs:    #1  #2  #3  #5  #6  #7  #8  #9 #10 #11
+>> [    1.801858] .... node  #1, CPUs:   #13 #14 #15 #17 #18 #19 #20 #21 #22 #23
+>> [    1.804687] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
+>> [    1.810728] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
+>
+>> However the machine boots, and except from these strange messages, I cannot detect any 
+>> other abnormal behaviour. It is running ~15 QEMU/KVM virtual machines just fine. Because 
+>> these messages look unusual and a bit scary though, I have bisected the issue, to be able 
+>> to report it here. The first bad commit I found is this one:
+>
+> Ok. So as the machine is booting, can you please provide the output of:
+>
+>  cat /sys/kernel/debug/x86/topo/cpus/*
+>
+> on the 6.9 kernel and 
+>
+>  cat /proc/cpuinfo
+>
+> for both 6.8 and 6.9?
 
-No, but apparently we need a similar commit for mt7915e or something? I
-have no idea why I missed those. I'll take a look tomorrow.
+And once the output of:
 
-johannes
+  cpuid -r
+
+no matter on which kernel please?
+
+Thanks,
+
+        tglx
