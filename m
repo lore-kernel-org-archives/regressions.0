@@ -1,100 +1,104 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F36015EFCC
-	for <regressions@lists.linux.dev>; Mon, 27 May 2024 12:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B4813A89E
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 13:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716814674; cv=none; b=rWaRaG+tjgAwy/i6+KiZjIRmjXhaN0jALERTZeyLwPHyVAcLgoWlsDDfn9yZ5nX+8fNtgp9jTkgDUJyC8eHsG+soyHOa1q1s8zpVqf6C8KmRmgCddFaHF/zUVGNnsvuA0mWj7qLWI/9IF8Pl/IbPEEqKtK1/pBAfEuubfhImTXY=
+	t=1716815670; cv=none; b=oeeYnr/dK/ovKG2DRaZH6FxWBuyuP8gL9nYv0q1VQpC03jo9tRowbTU1DnUQd3hCMJlSpilGm3miviGB1wfJy0BL63rjG6/DN+BlTibovXOsyM71ivLh6jP73LprugU2G9uPQq1Qsz6VIrCX+E8ldLl1mYzQImulOzCVEwsmlU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716814674; c=relaxed/simple;
-	bh=8GCzunIMdlubOTXf0pyUHn8KPY2JZDD1cESnN8SAnis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pm/0LMlwdAh/OdBk+3RO1iXBxe7Hzgd/3IuANWq3gsn0OHL9ytGz9BqKfYdBi41GpqE24kE0Nql99y5PMb1v11AWOLXHbbS/cfDLc8U8IbHLB3xOW0cZqmXY6bztNJK3cTJkt97vdXM7jnOycIGaWDyrJSsUC3jTXvB2f6OTVIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=BYiyBB3X; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716815670; c=relaxed/simple;
+	bh=WBeKzcT7QA+/fnXDXCYwSNn0meQBV2vn6l/XT5ZZpA0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=I3D5BREaN2ZR9UfpEtbGoFfcuBTtJXI0Y6jST5HmWywtmbKC+7KIaeQHP+JDevmSLB3n5TFLSdeDvPDPFbeFk+9cvB3BNlO3nsev9buDuocryw2EWyL4Pq6KQtZdEb6CoiiACPZEGM+bRG3yYr7VeZ0jvzE4czib9PPezW6fTC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V80RB05h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jtOYQRC/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BYiyBB3X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rMFfpqCc+bc4O8mDHjvAEFD1eHUpLSCJjFslGtJ4svo=; b=BYiyBB3X8G1QiZKbh5RNNixyhN
-	/txB0NYAWfPSURQCARY+CvzFQfrT9NuzVsc6O7U0HqVcm7UzH5eeQa7BX0hQknfK1GBb//KsRn9Fl
-	I9q7M2N2KzZq/dv9EwvUhztgslecsFMmh69szcGzBA6ttSYVdu/OUF+hj/uHYrH5cvWhwKs7TYLke
-	3ztvLiZZVLuW8GeZfFpX7xYGM0faF2NtfNL/6U4Pr3Ncib88OQC7uA86dF8Om4ZBHGvhFcUxtqMRL
-	lWMyKoi5fgnxHG4p2Mf6qtHUsw1ksvbHxm1CrbiFAxIpsnEMzU0AmZCPEU/SVtk7kAiK70l0PPZkb
-	w66XC4Bw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37854)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBZuz-0003Wh-1b;
-	Mon, 27 May 2024 13:57:37 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBZv0-0002Kk-8F; Mon, 27 May 2024 13:57:38 +0100
-Date: Mon, 27 May 2024 13:57:38 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: Ron Economos <re@w6rz.net>, Guenter Roeck <linux@roeck-us.net>,
-	regressions@lists.linux.dev, linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
-Message-ID: <ZlSDQssA9I4LRjwM@shell.armlinux.org.uk>
-References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
- <d7f0c16a-0d83-4060-8d95-95b293d95dfd@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V80RB05h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jtOYQRC/"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716815667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=xxElKbcPssOZBHxdC0FuLluzRnaZ3UGv1xVFtotYrBE=;
+	b=V80RB05hjUNqEEzn6JhW7xc7+8gSWxKv9i9A9HJU9ZySeQri124ZZBoGVaL5RmBogjaQpX
+	65WjB7+UJaK/dr75fpkQcuONFVZ2+nI3NvJ+2WAk392GLt5zHVJxxkHijMtSSO5otac4bZ
+	AMME10WCzK0NxoBR5B+JYQjbkGgGkGQTvuWGQg8JcB1BFAavHvpi4oDHjQTdvLRPLeR7HE
+	Z4SJMgpdew+DUwSXA0zKdrEkAedqv1t769Eyn1qpbtnjdD/AIuZeUSN9w5kGtSCntDZhU2
+	RXDMuzu0POfT9+BnKv/rZbr40fCcJe+bxW4iMkefgKwrFfKarT+x712+pkPb7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716815667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=xxElKbcPssOZBHxdC0FuLluzRnaZ3UGv1xVFtotYrBE=;
+	b=jtOYQRC/13Ol3nCO2Koaj9xvH+YrhVuRSyKPNHuyHVm4SwMHpTsChefXpEqQwH70mSw6GH
+	WKEOhzVOOfMh33DA==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com>
+Date: Mon, 27 May 2024 15:14:26 +0200
+Message-ID: <877cffcs7h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7f0c16a-0d83-4060-8d95-95b293d95dfd@leemhuis.info>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain
 
-On Mon, May 27, 2024 at 01:16:06PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.05.24 12:45, Ron Economos wrote:
-> > On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
-> >>
-> >> On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
-> >> > Report an error when an attempt to register a clkdev entry results in a
-> >> > truncated string so the problem can be easily spotted.
-> >> >
-> >> > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> >> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> >> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> >>
-> >> With this patch in the mainline kernel, I get
-> >> [...]
-> >> when trying to boot sifive_u in qemu.
-> >>
-> >> Apparently, "10000000.clock-controller" is too long. Any suggestion on
-> >> how to solve the problem ? I guess using dev_name(dev) as dev_id
-> > parameter
-> >> for clk_hw_register_clkdev() is not or no longer a good idea.
-> >> What else should be used instead ?
-> > 
-> > This issue causes a complete boot failure on real hardware (SiFive
-> > Unmatched).
-> 
-> Hmmm. That and because nobody afaics has time/motivation to fix this
-> anytime soon (or am I mistaken there?) makes me wonder if we should
-> revert this change for now (and remerge it later once the problem this
-> change exposed was fixed). Or is another solution in sight somewhere?
+On Mon, May 27 2024 at 09:29, Peter Schneider wrote:
+> This is coming from an older server machine: 2-socket Ivy Bridge Xeon E5-2697 v2 (24C/48T) 
+> in an Asus Z9PE-D16/2L motherboard (Intel C-602A chipset); BIOS patched to the latest 
+> available from Asus. All memory slots occupied, so 256 GB RAM in total.
+>
+>  From a "good boot", e.g. kernel 6.8.11, dmesg output looks like this:
+>
+> [    1.823797] smpboot: x86: Booting SMP configuration:
+> [    1.823799] .... node  #0, CPUs:        #1  #2  #3  #4  #5  #6  #7  #8  #9 #10 #11
+> [    1.827514] .... node  #1, CPUs:   #12 #13 #14 #15 #16 #17 #18 #19 #20 #21 #22 #23
+> [    0.011462] smpboot: CPU 12 Converting physical 0 to logical die 1
+>
+> [    1.875532] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
+> [    1.882453] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
+> [    1.887532] MDS CPU bug present and SMT on, data leak possible. See 
+> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
+> [    1.933640] smp: Brought up 2 nodes, 48 CPUs
+> [    1.933640] smpboot: Max logical packages: 2
+> [    1.933640] smpboot: Total of 48 processors activated (259199.61 BogoMIPS)
+>
+>
+>  From a "bad" boot, e.g. kernel 6.9.2, dmesg output has these messages in it:
+>
+> [    1.785937] smpboot: x86: Booting SMP configuration:
+> [    1.785939] .... node  #0, CPUs:        #4
+> [    1.786215] .... node  #1, CPUs:   #12 #16
 
-I'm sorry, but clearly I should tell my employer that I can't do work
-for them because there's been a mainline kernel regression, and of
-course I should be working on this bank holiday Monday...
+Yuck. That does not make any sense.
 
-No, please wait a bit longer.
+> [    1.797547] .... node  #0, CPUs:    #1  #2  #3  #5  #6  #7  #8  #9 #10 #11
+> [    1.801858] .... node  #1, CPUs:   #13 #14 #15 #17 #18 #19 #20 #21 #22 #23
+> [    1.804687] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
+> [    1.810728] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> However the machine boots, and except from these strange messages, I cannot detect any 
+> other abnormal behaviour. It is running ~15 QEMU/KVM virtual machines just fine. Because 
+> these messages look unusual and a bit scary though, I have bisected the issue, to be able 
+> to report it here. The first bad commit I found is this one:
+
+Ok. So as the machine is booting, can you please provide the output of:
+
+ cat /sys/kernel/debug/x86/topo/cpus/*
+
+on the 6.9 kernel and 
+
+ cat /proc/cpuinfo
+
+for both 6.8 and 6.9?
+
+Thanks,
+
+        tglx
