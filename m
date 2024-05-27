@@ -1,69 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F69C1DDC9;
-	Mon, 27 May 2024 18:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0BD518;
+	Mon, 27 May 2024 18:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716833679; cv=none; b=d1S8jWV4imsbsxYa0OSK/n9hF64Et5yMIQRb1tU3t21GWTOISj5xZpFT4cisdzI+f2wpUrdrLkfuqtMtsT5w6YSUEU4ufVuvelUCQoslF4cdvD7MI4JBMXxFylmfmv+xrGPQE9KQCfPJEHz9dEl1MNH8lUZh2qMwai1fb2CDIz4=
+	t=1716834543; cv=none; b=c1k1oRLOpbeOD2892sPS9ZEoBWlmgua4fQDh9R8+YQ6BObu13+i45cB++wPhE0yy5EIWWp4NZ5+xzZTFIMtimjLlMXK1nLtDzy6StOgDXifBliCQeMzDoEDybipdQ+Fh3Z8ziCu+Pdp+V6yd9CImFs0OFUwbQmhmuvJxskVfScY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716833679; c=relaxed/simple;
-	bh=hVr28pGJ4hsBrlJfUQDMbhDwUl512kWSkB4J26U1kuk=;
+	s=arc-20240116; t=1716834543; c=relaxed/simple;
+	bh=WCEO9fUe+0GQf8DDEogefQXVqjO2ehsYlYrxbZijXSo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TorC9xkr8cfNAZ60k5gxOsG9kEmaD4rFOgXAk97TF9SZiiQi9jntm4WcnZnu4F0bkEgmHRwUKGx5QYRz0KtQP1N7ba9gXAncmngRuzyc/a3Si9cxW6sDK7BLBYfIHVYrit7ejdkf9qsJI2rZ+D/O9WfTcLjM1t2vW9D2ttSdrhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Vpqs5F3R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/Q4/5mHLg+dKR0pU0bWk9XPtdAyHlK7q1w0SRpWJN/JPr1JAVjxb0EijIsbCqjn1i8CrZrP2XDQE8wU6T7OtiDRE3TL2NJr9KYyvpX/JXDLerGx85C1EUByAvaDmQYkDSX5BKIRCZyyxadULhWOhoBbq2gZp5EX24SY/hG11w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ts958yWY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Vpqs5F3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE8BC2BBFC;
-	Mon, 27 May 2024 18:14:38 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ts958yWY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06725C2BBFC;
+	Mon, 27 May 2024 18:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716833678;
-	bh=hVr28pGJ4hsBrlJfUQDMbhDwUl512kWSkB4J26U1kuk=;
+	s=korg; t=1716834543;
+	bh=WCEO9fUe+0GQf8DDEogefQXVqjO2ehsYlYrxbZijXSo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vpqs5F3RAXKRlnRDWM4zYkqo444yYZeyNkXAU7/CqQgQzsx6Sj4s2WxBFMgWTtk+L
-	 k2yYMRiJHJfyqi5L4DGWvq0Wlw6no772rgT7fuRaLL9LawTl9Ntvnu6teVeKgYMKxG
-	 emtC7sddTH3FtcE2+IorMgtm6LfAHxFStCH34upY=
-Date: Mon, 27 May 2024 20:14:42 +0200
+	b=Ts958yWY3Uvgact64hd/8yz4QyfDipMqtBbY/9pVuFx+VF1ewGl8LXX5oEJyebBNf
+	 j+b3dC4Dbh0v1012gogIXFfxbjJCf/QDEnnSW4dVov7qH0Mp1bcckdjelsWFugx+s0
+	 4MRV+cu3sey7bBVubpney7vFb8erx5y5Uch8dW4o=
+Date: Mon, 27 May 2024 20:29:07 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Ilkka =?iso-8859-1?Q?Naulap=E4=E4?= <digirigawa@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <2024052710-marsupial-debug-febd@gregkh>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
- <20240524132008.6b6f69f6@gandalf.local.home>
- <CAE4VaRF80OhnaiqeP9STfLa5pORB31YSorgoJ92fQ8tsRovxqQ@mail.gmail.com>
- <CAE4VaRGaNJSdo474joOtKEkxkfmyJ-zsrr8asb7ojP2JexFt-A@mail.gmail.com>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Oleksandr Natalenko <oleksandr@natalenko.name>,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Peter Chiu <chui-hao.chiu@mediatek.com>,
+	StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
+Message-ID: <2024052750-rippling-catty-1cb5@gregkh>
+References: <6061263.lOV4Wx5bFT@natalenko.name>
+ <2341660.ElGaqSPkdT@natalenko.name>
+ <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
+ <878qzy9zly.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE4VaRGaNJSdo474joOtKEkxkfmyJ-zsrr8asb7ojP2JexFt-A@mail.gmail.com>
+In-Reply-To: <878qzy9zly.fsf@kernel.org>
 
-On Mon, May 27, 2024 at 07:40:21PM +0300, Ilkka Naulapää wrote:
-> Hi Steven,
+On Sat, May 25, 2024 at 09:26:01AM +0300, Kalle Valo wrote:
+> Johannes Berg <johannes@sipsolutions.net> writes:
 > 
-> I took some time and bisected the 6.8.9 - 6.8.10 and git gave the
-> panic inducing commit:
+> > On Wed, 2024-05-15 at 00:51 +0200, Oleksandr Natalenko wrote:
+> >> Also /cc Johannes because of this commit:
+> >> 
+> >> 6092077ad09ce wifi: mac80211: introduce 'channel request'
+> >> 
+> >> On stÅ™eda 15. kvÄ›tna 2024 0:43:40, SELÄŒ Oleksandr Natalenko wrote:
+> >> > Hello Felix, Lorenzo et al.
+> >> > 
+> >> > With v6.9 kernel the following card:
+> >> > 
+> >> > 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E
+> >> > 802.11ax PCI Express Wireless Network Adapter [14c3:7915]
+> >> > 
+> >> > doesn't work any more. Upon mt7915e module insertion the following splat happens:
+> >> > 
+> >
+> > 6.9 didn't get commit 2f7cf3b61d85 ("wifi: mt76: mt7915: add missing
+> > chanctx ops")? Huh?
 > 
-> 414fb08628143 (tracefs: Reset permissions on remount if permissions are options)
+> Yeah, commit 2f7cf3b61d85 should have been taken to wireless tree but it
+> fell through the cracks. I didn't realise that it's an important bugfix
+> and the commit message didn't give any indication of that either.
 > 
-> I reverted that commit to 6.9.2 and now it only serves the trace but
-> the panic is gone. But I can live with it.
+> But commit 2f7cf3b61d85 is now in Linus' tree so it would be good if
+> someone could submit it to stable releases.
 
-Steven, should we revert that?
-
-Or is there some other change that we should take to resolve this?
+It's already in 6.9.1, does it need to go anywhere else?
 
 thanks,
 
