@@ -1,104 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B4813A89E
-	for <regressions@lists.linux.dev>; Mon, 27 May 2024 13:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821B515E5BF
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 13:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716815670; cv=none; b=oeeYnr/dK/ovKG2DRaZH6FxWBuyuP8gL9nYv0q1VQpC03jo9tRowbTU1DnUQd3hCMJlSpilGm3miviGB1wfJy0BL63rjG6/DN+BlTibovXOsyM71ivLh6jP73LprugU2G9uPQq1Qsz6VIrCX+E8ldLl1mYzQImulOzCVEwsmlU4=
+	t=1716815909; cv=none; b=mgA8IoHmNwM+CAs/3zm+JXNP3CpwYR5yR3X6nQAHesNWv2FuTlu+cW7mEuJJRmc0w+Iqg/v7DQN7WDx7wB/RaSDuBq+4BOru0VzL7t3xfaoUb5aJGT5tN2WHSvFdtvpVE2vQgsbzZMArqv/neaZaS9/yP8SXiYMGLNehU3nsPJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716815670; c=relaxed/simple;
-	bh=WBeKzcT7QA+/fnXDXCYwSNn0meQBV2vn6l/XT5ZZpA0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=I3D5BREaN2ZR9UfpEtbGoFfcuBTtJXI0Y6jST5HmWywtmbKC+7KIaeQHP+JDevmSLB3n5TFLSdeDvPDPFbeFk+9cvB3BNlO3nsev9buDuocryw2EWyL4Pq6KQtZdEb6CoiiACPZEGM+bRG3yYr7VeZ0jvzE4czib9PPezW6fTC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V80RB05h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jtOYQRC/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716815909; c=relaxed/simple;
+	bh=vUZt2pGjbC5IUomB5cGvwvlW828f5yDbSKPZoklG+Nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U1oDR0ZdF2TLJ4OS+9mbOxyjDSmtHoV4kptZQiEkKaLSlZsfCtsi1bymdowfqdwzG67WntSVQ0oVUh/mqdl+MjYCfCPsViDmW3CMKqK2joqoCm0Wvd3dh6FnaCpqzldoIp7wRAogdXUhAHP1Y8nUOxR8DSgoukmJrtKmBbTGYt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IyYzKcd3; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V80RB05h";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jtOYQRC/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716815667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=xxElKbcPssOZBHxdC0FuLluzRnaZ3UGv1xVFtotYrBE=;
-	b=V80RB05hjUNqEEzn6JhW7xc7+8gSWxKv9i9A9HJU9ZySeQri124ZZBoGVaL5RmBogjaQpX
-	65WjB7+UJaK/dr75fpkQcuONFVZ2+nI3NvJ+2WAk392GLt5zHVJxxkHijMtSSO5otac4bZ
-	AMME10WCzK0NxoBR5B+JYQjbkGgGkGQTvuWGQg8JcB1BFAavHvpi4oDHjQTdvLRPLeR7HE
-	Z4SJMgpdew+DUwSXA0zKdrEkAedqv1t769Eyn1qpbtnjdD/AIuZeUSN9w5kGtSCntDZhU2
-	RXDMuzu0POfT9+BnKv/rZbr40fCcJe+bxW4iMkefgKwrFfKarT+x712+pkPb7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716815667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=xxElKbcPssOZBHxdC0FuLluzRnaZ3UGv1xVFtotYrBE=;
-	b=jtOYQRC/13Ol3nCO2Koaj9xvH+YrhVuRSyKPNHuyHVm4SwMHpTsChefXpEqQwH70mSw6GH
-	WKEOhzVOOfMh33DA==
-To: Peter Schneider <pschneider1968@googlemail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
-In-Reply-To: <fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com>
-Date: Mon, 27 May 2024 15:14:26 +0200
-Message-ID: <877cffcs7h.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IyYzKcd3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=noCvl7iZaiJJWOq4Lf6jhwKTiTVNLLZfuz+6oNNv/sQ=; b=IyYzKcd3Au6t2asqS8w2aUpEse
+	Gy/GZIRqxajxzRCNdRTepzYEGV3Dze8Xu5fNJQQZ1rHL/71TKzyi7W8t/0ZstXfWqeHfQiC8xoi6o
+	tGszKffg85qvnUh/d9jFVSQpWnvkqM/UopYeMGJeB6MNXIl1Tex17vzHzWGtTwVXTg2t9FN1D7c2v
+	aFn1CSkCdQVOtrMH3Q0DWi3mBw5KNQiVR2sdnd+PCOwipiH2FMg/orMlhBy7XgOlzFc6lG3uPcP6a
+	JtyWfL45AATySMI+v838EkOhJzBmzJm0zkpexVVhmPq5PJI1gEdyI8J+i/q/H+Vjejc2I5rPsODTt
+	LYBGYI+w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45962)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sBaF3-0003Yz-1X;
+	Mon, 27 May 2024 14:18:21 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sBaF5-0002Lp-Hm; Mon, 27 May 2024 14:18:23 +0100
+Date: Mon, 27 May 2024 14:18:23 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Ron Economos <re@w6rz.net>
+Cc: Guenter Roeck <linux@roeck-us.net>, regressions@lists.linux.dev,
+	linux-clk@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+Message-ID: <ZlSIH1/etwPQe+bQ@shell.armlinux.org.uk>
+References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, May 27 2024 at 09:29, Peter Schneider wrote:
-> This is coming from an older server machine: 2-socket Ivy Bridge Xeon E5-2697 v2 (24C/48T) 
-> in an Asus Z9PE-D16/2L motherboard (Intel C-602A chipset); BIOS patched to the latest 
-> available from Asus. All memory slots occupied, so 256 GB RAM in total.
->
->  From a "good boot", e.g. kernel 6.8.11, dmesg output looks like this:
->
-> [    1.823797] smpboot: x86: Booting SMP configuration:
-> [    1.823799] .... node  #0, CPUs:        #1  #2  #3  #4  #5  #6  #7  #8  #9 #10 #11
-> [    1.827514] .... node  #1, CPUs:   #12 #13 #14 #15 #16 #17 #18 #19 #20 #21 #22 #23
-> [    0.011462] smpboot: CPU 12 Converting physical 0 to logical die 1
->
-> [    1.875532] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
-> [    1.882453] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
-> [    1.887532] MDS CPU bug present and SMT on, data leak possible. See 
-> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
-> [    1.933640] smp: Brought up 2 nodes, 48 CPUs
-> [    1.933640] smpboot: Max logical packages: 2
-> [    1.933640] smpboot: Total of 48 processors activated (259199.61 BogoMIPS)
->
->
->  From a "bad" boot, e.g. kernel 6.9.2, dmesg output has these messages in it:
->
-> [    1.785937] smpboot: x86: Booting SMP configuration:
-> [    1.785939] .... node  #0, CPUs:        #4
-> [    1.786215] .... node  #1, CPUs:   #12 #16
+On Mon, May 27, 2024 at 03:45:15AM -0700, Ron Economos wrote:
+> On Fri, May 17, 2024 at 03:09:14PM -0700, Guenter Roeck wrote:
+> > Hi,
+> >
+> > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+> > > Report an error when an attempt to register a clkdev entry results in a
+> > > truncated string so the problem can be easily spotted.
+> > >
+> > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> >
+> > With this patch in the mainline kernel, I get
+> >
+> > 10000000.clock-controller:corepll: device ID is greater than 24
+> > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for
+> corepll: -12
+> > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+> > sifive-clk-prci 10000000.clock-controller: probe with driver
+> sifive-clk-prci failed with error -12
+> > ...
+> > platform 10060000.gpio: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> > platform 10010000.serial: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> > platform 10011000.serial: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> > platform 10040000.spi: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> > platform 10050000.spi: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> > platform 10090000.ethernet: deferred probe pending: platform: supplier
+> 10000000.clock-controller not ready
+> >
+> > when trying to boot sifive_u in qemu.
+> >
+> > Apparently, "10000000.clock-controller" is too long. Any suggestion on
+> > how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
+> > for clk_hw_register_clkdev() is not or no longer a good idea.
+> > What else should be used instead ?
+> 
+> This issue causes a complete boot failure on real hardware (SiFive
+> Unmatched). The boot only gets as far as "Starting kernel ..." with no other
+> indication of what's going on.
+> 
+> Guenter's suggested patch solves the issue.
+> 
+> diff --git a/drivers/clk/sifive/sifive-prci.c
+> b/drivers/clk/sifive/sifive-prci.c
+> index 25b8e1a80ddc..20cc8f42d9eb 100644
+> --- a/drivers/clk/sifive/sifive-prci.c
+> +++ b/drivers/clk/sifive/sifive-prci.c
+> @@ -537,7 +537,7 @@ static int __prci_register_clocks(struct device *dev,
+> struct __prci_data *pd,
+>                          return r;
+>                  }
+> 
+> -               r = clk_hw_register_clkdev(&pic->hw, pic->name,
+> dev_name(dev));
+> +               r = clk_hw_register_clkdev(&pic->hw, pic->name, "prci");
 
-Yuck. That does not make any sense.
+How about just changing this to:
 
-> [    1.797547] .... node  #0, CPUs:    #1  #2  #3  #5  #6  #7  #8  #9 #10 #11
-> [    1.801858] .... node  #1, CPUs:   #13 #14 #15 #17 #18 #19 #20 #21 #22 #23
-> [    1.804687] .... node  #0, CPUs:   #24 #25 #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
-> [    1.810728] .... node  #1, CPUs:   #36 #37 #38 #39 #40 #41 #42 #43 #44 #45 #46 #47
+		r = clk_hw_register(dev, &pic->hw);
 
-> However the machine boots, and except from these strange messages, I cannot detect any 
-> other abnormal behaviour. It is running ~15 QEMU/KVM virtual machines just fine. Because 
-> these messages look unusual and a bit scary though, I have bisected the issue, to be able 
-> to report it here. The first bad commit I found is this one:
+?
 
-Ok. So as the machine is booting, can you please provide the output of:
+Since, if the device name is over-sized and thus truncated in the clk
+lookup array that clkdev maintains, *nothing* will be able to match
+the entry. Hence, I suspect all those clkdev registrations are
+completely redundant for this driver (and do nothing other than
+waste memory!)
 
- cat /sys/kernel/debug/x86/topo/cpus/*
-
-on the 6.9 kernel and 
-
- cat /proc/cpuinfo
-
-for both 6.8 and 6.9?
-
-Thanks,
-
-        tglx
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
