@@ -1,71 +1,77 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7064D13AA2F
-	for <regressions@lists.linux.dev>; Mon, 27 May 2024 08:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028E813AA4D
+	for <regressions@lists.linux.dev>; Mon, 27 May 2024 10:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716799357; cv=none; b=f/efrtA1dPdiLwXDWVtdeuw/cNzzZB2WhK1BkbrWYyQeHtyRKbv7riL9BKWw8pcNwJqLZX7wB+MTLNczTxaujmElsk8KcxmVQBfYpIgmFn/d+7L1O77toPcEbl2zm9SLmrOQcDdg/85jW1w9lCbRrSa1xK3Qj6fEO8aP86oHduc=
+	t=1716804390; cv=none; b=pnSh0j4oLPiy7oO0mUolwia9qxknHTfRnh3hnzfs5DX4PY7imyTcMgUP9mSPtHam0cSNS9H1o0rlR5Y7JEJRA8livrjLBXku1CGuEQw0/2Q30dbzYVJGxPZB3+QF+BXT/KJ3sWg1bW/QqP+5DUSh2N27EWoVqDleTgpijypXk2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716799357; c=relaxed/simple;
-	bh=pfObE/1AKnAm2q2LBoa61z+4miC7XWjuskNc1/coonU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=L4hb4FDAUSTA2MSFJrqz7KhANjVA5+GSCd/II+RNsrabVkRlKh0bRLG6BNZ3+Uw1ZD/7s8L/q+Vs4YPfNDrQO2X4obKAGUZPBVcrhhJZD6ni3TDUWSdl2A8V85ALLyunGQ9SFKrKvmieFLHPDZ0kJs8DnMFnjcdkA0CHBKrgcwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SnE2FtSh; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716804390; c=relaxed/simple;
+	bh=s81Hp7fR7mtMdUe/8mJY+IkuwsfZvR041uPaXPXdv3A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XapbGLn0+Oa6oaKitEurOiXFyTg1NUjBvs6Wf+efkKrLlpXD5D7j9W12MYYtA6RCeSPqpRH4znafocNyxdpElKlDwCjGECHJUSml/HiG2LiwhO1EsMgtfwOxWIKhc8kiepDujjqItj97E7Z0Nl3Hr7QoHcivQmKN1/8pkdaiDEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gLndVvIH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XdH+e1ow; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SnE2FtSh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=pfObE/1AKnAm2q2LBoa61z+4miC7XWjuskNc1/coonU=;
-	t=1716799355; x=1717231355; b=SnE2FtShEbaz1zM6nrAXRiddjGaSm6cxYMQe78MEwZruWze
-	cT/n+030mkhgwibX8uiJEPsHOkfZkQuNck+6L2Izgpw2gdesc/7+rTAh5aTt8OA2/U1SkP87ymPA7
-	OAeOT1D36pmEJcQ5jFaZwQ9j8mnrSBbKouUczC6DGvf0hAT/FRRGv5CwaedvH05Q1Bw91ys20/DPB
-	qjAe4oqYFU4bqHlzyv/4pxEDfmHbenzRdqQhaeUDeHD4bI7ZBCs8PBfkndz7ftN5gJbcXffWzc1gS
-	wkUTt6z8L+IKXUOhRf3DbBVQUN/f5LEy1pLAryr8B7hYoyMYIL3fbitt8w2V7fYA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sBVw3-000311-JY; Mon, 27 May 2024 10:42:27 +0200
-Message-ID: <029b5b36-471a-4fc9-a226-5272a39dc42d@leemhuis.info>
-Date: Mon, 27 May 2024 10:42:26 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLndVvIH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XdH+e1ow"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716804387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J06T3Dt3jm5Q9jl5C+QpzgdSZJHlI8MN+rNBRUfEuas=;
+	b=gLndVvIHQM1EXJc3/cD70rLZBZ9Se+CPfEABxksxNSMEnjyi0U8GHH6N9vbUFzkN0fjLTV
+	s4CwGeOtsKaC4lcjsLUBGQuI4xBJPNwntr7SQB/eo0L6xukdYZyf9yI85OCuqPaiBiL8R5
+	ZKN9dSVZZGZkAPXdPO0/W5YF4jyLPGRj+Ldn7q6lcNOIOcFOqhYhN7Ousd2JvpocdMqrHq
+	3Mzeu9STH+m30VADWkxw9M6FL7Wn2kaomWeLNC11ZUkF/0fAZYr4BHAybnAlhtVLJISu0B
+	Fp+sa6RbJUNIOehEZp2KOw0FnbQ4KxKDyH22T5Ic4SiISrk5dzX18EDpdeRvpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716804387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J06T3Dt3jm5Q9jl5C+QpzgdSZJHlI8MN+rNBRUfEuas=;
+	b=XdH+e1owfPR96WdgAZjXUWvW1d+qnBDjhOFtoAYS19UZ6sU8eAp8GDEH8qcVoNp8dlaLiF
+	FCVCzOwfu7QYxnCg==
+To: Christian Heusel <christian@heusel.eu>
+Cc: regressions@lists.linux.dev, Tim Teichmann <teichmanntim@outlook.de>,
+ x86@kernel.org, stable@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Scheduling errors with the AMD FX 8300 CPU
+In-Reply-To: <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
+References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
+ <87r0dqdf0r.ffs@tglx>
+ <gtgsklvltu5pzeiqn7fwaktdsywk2re75unapgbcarlmqkya5a@mt7pi4j2f7b3>
+Date: Mon, 27 May 2024 12:06:26 +0200
+Message-ID: <87h6ejd0wt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: FUNCTION_GRAPH_TRACER + UNWINDER_FRAME_POINTER broken on arm
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>,
- kernel@pengutronix.de, Steven Rostedt <rostedt@goodmis.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <alp44tukzo6mvcwl4ke4ehhmojrqnv6xfcdeuliybxfjfvgd3e@gpjvwj33cc76>
- <760b454b-e1ae-4266-95bf-fa51ca901ad4@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <760b454b-e1ae-4266-95bf-fa51ca901ad4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716799355;2be037ff;
-X-HE-SMSGID: 1sBVw3-000311-JY
+Content-Type: text/plain
 
-On 27.05.24 10:39, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 25.05.24 09:59, Uwe Kleine-König wrote:
+Christian!
+
+On Sat, May 25 2024 at 02:12, Christian Heusel wrote:
+> On 24/05/25 12:24AM, Thomas Gleixner wrote:
+>> Can you please provide the full boot log as the information which leads
+>> up to the symptom is obviously more interesting than the symptom itself.
 >
-> https://lore.kernel.org/all/d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com/
->
-> He plans to look into this and report back.
+> I have attached the full dmesg of an example of a bad boot (from doing
+> the bisection), sorry that I missed that when putting together the
+> initial report!
 
-Ohh, I see, another Thorsten just reported back in that thread after
-talking with Uwe (sorry, saw that right after sending the previous msg):
-https://lore.kernel.org/all/ZlQ8oDh%2FKgkm1+WE@shell.armlinux.org.uk/
+Thanks for the data. Can you please provide the output of
 
-Ciao, Thorsten
+# cat /proc/cpuinfo
+
+from a working kernel?
+
+Thanks,
+
+        tglx
