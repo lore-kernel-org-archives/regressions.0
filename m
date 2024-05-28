@@ -1,85 +1,117 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8553E1BDD3;
-	Tue, 28 May 2024 06:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0045813BC30
+	for <regressions@lists.linux.dev>; Tue, 28 May 2024 08:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716878797; cv=none; b=C1y1YRxIszN6UFyprVH72NJB+8omaU6V53ADXBw//4A4o1z8oO4E4omySXPod3tIHx9GwONzZoVW9OUUvlkuq02R+AcVaKP0YxHZSCfFUTErN/ElHaj8SELdgnOpNe0AbAzLpzqOHfHVUY0dycnriduou514P4SefhXXd5+knlc=
+	t=1716884174; cv=none; b=Gik0kyhV80n2EejfQH7ZRDJSbxoSrEwR071rDr/tepEEMQ/ctlxJw/2XdgsKinx7/26zWpXkEI6RAgdnk2jraVMLE/89NJnBHzNsUC8idmZI3mwK9EZ3LOEKMpKhN9Jj41ZZvJvnIjAewXkHkAWk8xOan8MJ5moO3nSsHHeQM/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716878797; c=relaxed/simple;
-	bh=YzpjJPP0ULvrVx15xyLfh6oMxnTDM3239lcJvqG4GZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nMlBLbpih62hjQUq3CmJ6g6+My8MK9r6Vg7iLSHKz/EpTz8CTL62Mnu7y26u5pFPiYGBis0oezyUXkVfLkdX/xdRu5df+BnaEmsBq/AqXnTN7FvcjLa9NqdOldzEmhSMuwpZEMACgQi815JlUxFHk2H0EFIkJ0kohjs+PCFaOJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SNerNKpz; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716884174; c=relaxed/simple;
+	bh=4V0unZZMxFYExMEXevIB43oB1N7X4q7IE6LTHwkEOtY=;
+	h=In-Reply-To:References:From:To:Cc:Subject:MIME-Version:
+	 Content-Disposition:Content-Type:Message-Id:Date; b=rQuDV8vgnfixooywdvStPeZ0zSUIZMIKuGBXaZgylOZ1jPUvsjUiOyB3+mjbBsWmIgN5S4ko2EYTjxAq5MG+y6+j7OdeDCVekXSNbIn68LcZn7gHVt+1x4WJ1Ap8qlAf0QYF6EwcagxkNYMf8ng+k4Y8ynkOLyrx4yEY+TUEXCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=10dnc6xa; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SNerNKpz"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="10dnc6xa"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Om+3DdDNz34eTk9PGG2WbSavGEIpa9Fm2b7xW+H1qWQ=;
-	t=1716878795; x=1717310795; b=SNerNKpzgzhW167byRKb3qIOxohQSXsC4as9txGrallQAiZ
-	UajY7PLKyBA/fd0PjfedZbJelP7cbe0FEtwvbksZk2TYpMsVzBkNtMAhjcqiOi6PKTKJYhq74NQjg
-	ghkSygGx93ytyqOWiK1UgZOapwWVtVlsPcXFUEhf+7usXk0dYrRje2lTHb/NlrWsnDMmh3Q80WMGa
-	/PEAn6k3uqGZdmRj500U5CFWVoGuFLKsLeyeGFlTn7TdLMttLE9YuVraPqH8OGoNcZV1YXkU1fa94
-	bhWbUw56khNTSKk8PMQmn0rlQr8tt39UzK/OoceyaKXJ7muUM9e7GaTqAWNOzceQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sBqbP-0007a4-SQ; Tue, 28 May 2024 08:46:31 +0200
-Message-ID: <de703fe7-1cf8-4f51-a282-bdca4a3c6634@leemhuis.info>
-Date: Tue, 28 May 2024 08:46:31 +0200
+	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
+	In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MfEWqiPiowp1nxWFVOqmObG5hSUllA+ZfcuPMLVDwsA=; b=10dnc6xahQf1TxfTvr7uj+8znz
+	iy9kqoqnE0J1LuGy2fJwm8DiGSlcCZ/dKz3EyZVBxLQYZuJvL8mgYXwPV7TRpBMR8m+Rd5rHZGPZT
+	YLG61wnlbrzHBWPG6LrxwSZF7sLqm6kU3NqVlb8tfY+ies3laLoLT4zfjhpKtyp6zseQfbhzGkGYw
+	cavflUIu4T3bDZkxSOlJC+5aeJGGk+0Mo5O0i5fyDXySARhVvRJVTQ65MbTkyTCrSnMMqOTl/jLc6
+	EwSF8Jowza/7huTK5gKR4P/37p/XQ1/4TEmyXEgyuSlD18/7ZHdGscWhObb2F1mX+MIZq7YtE+nWl
+	A0JAgQWQ==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:44848 helo=rmk-PC.armlinux.org.uk)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <rmk@armlinux.org.uk>)
+	id 1sBrzl-0004R8-10;
+	Tue, 28 May 2024 09:15:45 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
+	id 1sBrzn-00E8GK-Ue; Tue, 28 May 2024 09:15:47 +0100
+In-Reply-To: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
+References: <28114882-f8d7-21bf-4536-a186e8d7a22a@w6rz.net>
+From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+To: linux-clk@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	 Ron Economos <re@w6rz.net>,
+	 Samuel Holland <samuel.holland@sifive.com>,
+	 Guenter Roeck <linux@roeck-us.net>,
+	 AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	 Dinh Nguyen <dinguyen@kernel.org>,
+	 Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	 Michael Turquette <mturquette@baylibre.com>,
+	 Paul Walmsley <paul.walmsley@sifive.com>,
+	 Rob Herring <robh@kernel.org>,
+	 Yang Li <yang.lee@linux.alibaba.com>,
+	 linux-kernel@vger.kernel.org,
+	 linux-riscv@lists.infradead.org,
+	 linux-arm-kernel@lists.infradead.org,
+	 regressions@lists.linux.dev
+Subject: [PATCH] clk: clkdev: don't fail clkdev_alloc() if over-sized
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.10/regression/bisected commit c4cb23111103 causes sleeping
- function called from invalid context at kernel/locking/mutex.c:585
-To: Chris Bainbridge <chris.bainbridge@gmail.com>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: regressions@lists.linux.dev, vasant.hegde@amd.com,
- suravee.suthikulpanit@amd.com, jgg@nvidia.com, jroedel@suse.de,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>
-References: <CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com>
- <Zk5hJrY_lGmuW1G9@debian.local>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zk5hJrY_lGmuW1G9@debian.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716878795;de243872;
-X-HE-SMSGID: 1sBqbP-0007a4-SQ
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1sBrzn-00E8GK-Ue@rmk-PC.armlinux.org.uk>
+Sender: Russell King <rmk@armlinux.org.uk>
+Date: Tue, 28 May 2024 09:15:47 +0100
 
-On 22.05.24 23:18, Chris Bainbridge wrote:
-> On Tue, May 21, 2024 at 02:39:06PM +0500, Mikhail Gavrilov wrote:
->> Yesterday on the fresh kernel snapshot
->> I spotted a new bug message with follow stacktrace:
->> [    4.307097] BUG: sleeping function called from invalid context at
->> kernel/locking/mutex.c:585
-> I am also getting this error on every boot. Decoded stacktrace:
+Don't fail clkdev_alloc() if the strings are over-sized. In this case,
+the entry will not match during lookup, so its useless. However, since
+code fails if we return NULL leading to boot failure, return a dummy
+entry with the connection and device IDs set to "bad".
 
-TWIMC & for the record: Boris also reported this; Vasant Hegde replied
-and said a fix is in the works:
+Leave the warning so these problems can be found, and the useless
+wasteful clkdev registrations removed.
 
-https://lore.kernel.org/all/898d356d-ec7d-41de-82d8-3ed4dc5598b3@amd.com/
+Fixes: 8d532528ff6a ("clkdev: report over-sized strings when creating clkdev entries")
+Closes: https://lore.kernel.org/linux-clk/7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net.
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Please try this patch, which should allow the platform to boot, bit will
+intentionally issue lots of warnings. There is a separate patch posted
+recently that removes the useless registration with clkdev.
 
-#regzbot dup:
-https://lore.kernel.org/all/CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com/
+ drivers/clk/clkdev.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index 6a77d7e201a9..2f83fb97c6fb 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -204,8 +204,15 @@ vclkdev_alloc(struct clk_hw *hw, const char *con_id, const char *dev_fmt,
+ 	pr_err("%pV:%s: %s ID is greater than %zu\n",
+ 	       &vaf, con_id, failure, max_size);
+ 	va_end(ap_copy);
+-	kfree(cla);
+-	return NULL;
++
++	/*
++	 * Don't fail in this case, but as the entry won't ever match just
++	 * fill it with something that also won't match.
++	 */
++	strscpy(cla->con_id, "bad", sizeof(cla->con_id));
++	strscpy(cla->dev_id, "bad", sizeof(cla->dev_id));
++
++	return &cla->cl;
+ }
+ 
+ static struct clk_lookup *
+-- 
+2.30.2
+
