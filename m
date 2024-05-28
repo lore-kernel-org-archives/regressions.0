@@ -1,109 +1,165 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F3645
-	for <regressions@lists.linux.dev>; Tue, 28 May 2024 04:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34994AEDF;
+	Tue, 28 May 2024 05:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716871930; cv=none; b=qqXJWlt3tHAmbgqG976SKwoPf5kb+lL008NJ5wwOSD4797LyPFwxmobb1EUVfIEk1wzHBxSME7/KMyi3XLE06iVx+Q8quq2+jJ0QXsUvT1yFquskve3xKf+RoRs8hC/lX5pbMvI2N7pBG4McHiRS4VIIY3mvcnBU8xdgm7QzKj0=
+	t=1716873757; cv=none; b=JndqCVbtOW2nv+8cZZCCxCqjiS9GFLSPV6szJUgIxZ5zVLsqt0RGbZpEIxy1IN3W+DNffaWKErkgxqqonFriAgBOP0MulVMeDo4bPDiXL30PX/+8EXn7Ugp65RDFj11FAZe01cOdw0GeJdW9/RN2jJOa8Au2Ay/t/Q9MD7nTePc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716871930; c=relaxed/simple;
-	bh=g7yMPL+lshsT2TyhdNE17+VKbTpRnVLb1qhQEeVrl8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kAXuQOZ5jLcto+Q8HLSXuvPmgmbJfXJYXFxto+RJRQ3JpPg9ytSK4ogX26USrAPTSnPRVMCsk7fZK4ZShdj9X07aLOaDguJBcOpRPDfQj3KoS8qv2wtn/dxm+N29aG5WsCjnc4wMA9DCMgm0u0j85yLpMww7Rhm1I9gC3DI1dEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXaQNRV9; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716873757; c=relaxed/simple;
+	bh=7ERKas/OkCdasWCLOQ9A0s9OZOng3YFWI1DUXAB5Hwc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l8BIXB76jLN+YonrhqWRVDXEKcargclZb5RWYOBMIGqFeV60rIaX3DVc3fZj3KdUC610c2qxYgDC8OypNGfNJ4ZUy1UlaXyz78+Gzep1fuBBhmsWN7xvzi5T9pSUs3vQV/db+qy+xV2Y1zg8XWw62oAY7uwCzAj2Bo3alakhjm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=II3O24pd; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXaQNRV9"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e716e302bdso4521021fa.1
-        for <regressions@lists.linux.dev>; Mon, 27 May 2024 21:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716871926; x=1717476726; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OtlJErHFMtX/7aNJSWoJWAzYMBeqsDWDnwMet809dVw=;
-        b=EXaQNRV9AQJ82jpCT8T6Q+sLCXWCmggdONwLn9ZKXA9IIQXM/FjhABqaAjll9WHHVR
-         keXJthEh3WlWxXwzD7G/lyiKIAjjPHV5SXkB+DXtsb7o9lImsRi6RI5JyQ1KmACEqkPL
-         lUhC29inRvg9g57CUd2pq/97gkzRwHAyQLcaW70kyV0F5nJjq63xtG6awDCrZ3xEmjXy
-         EzZ757EfbtRzVqxNnU3ibVjN2wnl4rzIlVyDiuYklyP/ZqXKTXjzrioTKwdGDVc6DF3U
-         DusokIMcRGT3xotbV7DQSAffXcXoT2HoHqPM4tiZnnhR0bWD5FXF1koIoIhtcNjt+/7U
-         Lh5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716871926; x=1717476726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OtlJErHFMtX/7aNJSWoJWAzYMBeqsDWDnwMet809dVw=;
-        b=L7TDvv6IOoA5QfRWP1gs25v0+3xMbll93adlK/jPg59a+quHRZsD3zsxG9hybt8Wam
-         7/D8C009ATySP1/wQDsbLgF0riXd4y1S1voET8uWycDfX0BWCo0Uosg88Ef4qIQ6njrN
-         5uRSaDaSQQss42n0wehbO30RHqXm/+voBNqWUAvMq5H3m2G5YepPSJc9u0NYHsPD0DMk
-         PGB4ocERFuGrEKGerv76AsKlrC2hNZMCnsnedTfYSYIBiJ5UUPuN+KqHZYTLaI8CDB+e
-         E7LbxcAoBMJQdQRwV2w0jucQBuV+FCuXtF2VcYcqg+JSmI7bWW0sDThPxCI8xUdJXdPy
-         vTtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUHva0nhmn2gf2WmdGV5uvjeIuH7+yByaRRsxjBeWBA0TY2NTe5BZHPBjcOXveCLq39xrxQuDf7lG5UDmDx6rQQJOWhVx7IDX29cw=
-X-Gm-Message-State: AOJu0YxX9ca6N+N/CwxLIRxFHZDqwXcNEzFQvfoQ2jTmOcMd15GVRJVg
-	hjnTcZAeuKUYVBTOy5dCh4O3ioRT3eXUScQHN3vKa0StojMBpoURYw7EvdLAkjKVWf+brWcHFvV
-	OiLKDhIjdc3R+CR4RG8hGwAWYW/iDHC2t
-X-Google-Smtp-Source: AGHT+IGkmdptDYW6j8rM+09xEDEuBMSvKo6CuZyQBAj/62lzzpgALrY5Khj8WVJm0wW7WJcoP8TrcByyuXfvEsxSCc4=
-X-Received: by 2002:a2e:a78d:0:b0:2e9:87bb:1ce8 with SMTP id
- 38308e7fff4ca-2e987bb1d9amr3617351fa.35.1716871926371; Mon, 27 May 2024
- 21:52:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="II3O24pd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=h2WKMvgwAaogvoHjA4LWCMWXhYlg8Zv23ou9ksyPtbo=;
+	t=1716873755; x=1717305755; b=II3O24pdoi42K512Ax6StNNB6pZGKvZIbv7GmjYvOljd2RZ
+	xbW6KqFv9nnVQDauERtJei5qNpX+X5fw1PncMtmu0vfmdoLbmIg0AgjEYyx8cvxNmjTtiAnAs89dk
+	O6P5vApgA21pcmLyTmi0IJPJE7pCp82Bi5PxI5xjXrWcxOHcrgf2moKKf9L3O7iWWUnVqnRQuQPaw
+	TwVakVnmKmuLHEh9T6wpkT/mSKcFJkkiQe+Deo/RjAivjGeQj8Y3s8lfDzGGOqDwu2nI+xARF9gjj
+	5+h7PqwDLnOHPWD7E9/XGtO6JVzr3qIZjIBBVCdDWWSkXiHqfpWNB8FOxjP56fZQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sBpI7-00087e-MZ; Tue, 28 May 2024 07:22:31 +0200
+Message-ID: <b3d8a378-346d-4dd8-9af8-1529a4484184@leemhuis.info>
+Date: Tue, 28 May 2024 07:22:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240527183139.42b6123c@rorschach.local.home>
-In-Reply-To: <20240527183139.42b6123c@rorschach.local.home>
-From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Date: Tue, 28 May 2024 07:51:30 +0300
-Message-ID: <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
+To: Christian Heusel <christian@heusel.eu>,
+ Johannes Berg <johannes.berg@intel.com>, regressions@lists.linux.dev
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+ Savyasaachi Vanga <savyasaachiv@gmail.com>
+References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716873755;2b659210;
+X-HE-SMSGID: 1sBpI7-00087e-MZ
 
-yeah, the cache_from_obj tracing bug (without panic) has been
-displayed quite some time now - maybe even since 6.7.x or so. I could
-try checking a few versions back for this and try bisecting it if I
-can find when this started.
+On 28.05.24 00:01, Christian Heusel wrote:
+> 
+> Savyasaachi reports that scanning for other stations in monitor mode
+> does not work anymore with his RTL8821CE wireless network card for linux
+> kernels after 6.8.9.
 
---Ilkka
+Thx for the report. A few remarks:
 
-On Tue, May 28, 2024 at 1:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Fri, 24 May 2024 12:50:08 +0200
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.inf=
-o> wrote:
->
-> > > - Affected Versions: Before kernel version 6.8.10, the bug caused a
-> > > quick display of a kernel trace dump before the shutdown/reboot
-> > > completed. Starting from version 6.8.10 and continuing into version
-> > > 6.9.0 and 6.9.1, this issue has escalated to a kernel panic,
-> > > preventing the shutdown or reboot from completing and leaving the
-> > > machine stuck.
->
-> You state "Before kernel version 6.8.10, the bug caused ...". Does that
-> mean that a bug was happening before v6.8.10? But did not cause a panic?
->
-> I just noticed your second screen shot from your report, and it has:
->
->  "cache_from_obj: Wrong slab cache, tracefs_inode_cache but object is fro=
-m inode_cache"
->
-> So somehow an tracefs_inode was allocated from the inode_cache and is
-> now being freed by the tracefs_inode logic? Did this happen before
-> 6.8.10? If so, this code could just be triggering an issue from an
-> unrelated bug.
->
-> Thanks,
->
-> -- Steve
+Please be more specific in cases like this, as "kernels after 6.8.9" can
+mean "6.8.10+", "6.10-rc", or "6.9.y" (apparently it is the latter).
+Yes, this is nitpicking, which is why I normally would not have said
+anything -- but because you frequently report bugs it's likely in
+everybody's interest to bring this up.
+
+In a case like this it would also be good if the reporter could give
+latest mainline a try, as (1) a fix might already be in there and (2)
+some developers do not care at all about bugs in stable kernels (and
+they are free to do so!). See
+https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+for details.
+
+And sorry, there is something else: from the dmesg it looks a lot like
+this report is from a patched vendor kernel that among others seems to
+enable features like "forced interrupt request threading"
+(https://github.com/zen-kernel/zen-kernel/wiki/Detailed-Feature-List ).
+Such changes even if small and done carefully can lead to bugs like this
+(yes, that particular feature I mentioned can be enabled through a
+kernel parameter as well, but some developers would consider this to be
+an unsupported configuration). The absolut minimum you should have done
+is to mention that; but normally you never want to use such kernels for
+reporting bugs upstream, as the problem might not be present in the
+upstream code.
+
+Ciao, Thorsten
+
+> His workflow was putting the adapter in monitor mode by running
+> "airmon-ng start wlan0" and then capture the surrounding stations with
+> "airodump-ng wlan0".
+> 
+> We have bisected the issue together in the issue in the Arch Linux
+> bugtracker[0] down to the following commit:
+> 
+>     0a44dfc070749 ("wifi: mac80211: simplify non-chanctx drivers")
+> 
+> Savyasaachi (in CC) offered to be available for questions and further
+> debugging in this thread and some general debugging outputs are
+> attached/below.
+> 
+> Reported-by: Savyasaachi Vanga <savyasaachiv@gmail.com>
+> Bisected-by: Christian Heusel <christian@heusel.eu>
+> 
+> Cheers,
+> Chris
+> 
+> [0]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/54
+> 
+> ---
+> 
+> #regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/54
+> #regzbot introduced: 0a44dfc070749
+> #regzbot title: wifi: RTL8821CE does not work in monitor mode
+> 
+> ---
+> 
+> lsusb:
+> 
+> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> Bus 003 Device 002: ID 0bda:c829 Realtek Semiconductor Corp. Bluetooth Radio
+> Bus 003 Device 003: ID 0c45:6739 Microdia Integrated_Webcam_FHD
+> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> 
+> lspci:
+> 
+> 00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne Root Complex
+> 00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne IOMMU
+> 00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Renoir PCIe Dummy Host Bridge
+> 00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne PCIe GPP Bridge
+> 00:01.3 PCI bridge: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne PCIe GPP Bridge
+> 00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Renoir PCIe Dummy Host Bridge
+> 00:02.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne PCIe GPP Bridge
+> 00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Renoir PCIe Dummy Host Bridge
+> 00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Renoir Internal PCIe GPP Bridge to Bus
+> 00:08.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Renoir Internal PCIe GPP Bridge to Bus
+> 00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller (rev 51)
+> 00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge (rev 51)
+> 00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 0
+> 00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 1
+> 00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 2
+> 00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 3
+> 00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 4
+> 00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 5
+> 00:18.6 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 6
+> 00:18.7 Host bridge: Advanced Micro Devices, Inc. [AMD] Cezanne Data Fabric; Function 7
+> 01:00.0 Non-Volatile memory controller: Micron Technology Inc 2210 NVMe SSD [Cobain] (rev 03)
+> 02:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
+> 03:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8821CE 802.11ac PCIe Wireless Network Adapter
+> 04:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Barcelo (rev c2)
+> 04:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Renoir Radeon High Definition Audio Controller
+> 04:00.2 Encryption controller: Advanced Micro Devices, Inc. [AMD] Family 17h (Models 10h-1fh) Platform Security Processor
+> 04:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne USB 3.1
+> 04:00.4 USB controller: Advanced Micro Devices, Inc. [AMD] Renoir/Cezanne USB 3.1
+> 04:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD] ACP/ACP3X/ACP6x Audio Coprocessor (rev 01)
+> 04:00.6 Audio device: Advanced Micro Devices, Inc. [AMD] Family 17h/19h HD Audio Controller
+> 05:00.0 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] (rev 81)
+> 05:00.1 SATA controller: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] (rev 81)
