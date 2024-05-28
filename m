@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6821D131E38
-	for <regressions@lists.linux.dev>; Tue, 28 May 2024 20:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835A278C96
+	for <regressions@lists.linux.dev>; Tue, 28 May 2024 20:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716927570; cv=none; b=BFB9nxwP4VciHDjqVLXZgaPNhoX1YN1ZNVUa6BOJfH1O5mUJwy1q7za/NTB9umjbQPkVpdQujSlFSKRAsv1uTiAPq/rcyNX255mp04ew6ozGkWvqO3trMuRQu5ZclVPzIJmZEqOSfl23p4eHT8YWi4fQuaP5CHlVRaZUj73dzcs=
+	t=1716927694; cv=none; b=tjtuk5uKBm5igYbqBTwDK/ldQR3hlmOZqJWfw+smJzdy1m+WBsqGxyjaWQyK8Kcz76Oh6DEgOViFNQbuXStNFR9EKubB40saHSZ4XynOd1+04yJxxEKqjwGJCZJn3Sq4qV0ew1Yx6GmxlQRND63MEWXJ/6E5fRvmzH0Ech/KDg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716927570; c=relaxed/simple;
-	bh=bCnyNkYcT7CnMYxVqury3Go1NVn1uoE60pzIYieV7zQ=;
+	s=arc-20240116; t=1716927694; c=relaxed/simple;
+	bh=4FCBurm5/GQckynXeIquujhqJWTZpUak7MuyxMQJ6j0=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KABD+ZaRKB2dLCOap7e4pLD4oDpLSJqEk5REPwf1/0AuBkN+Tlqi9MYiaVNvJgjwH+ZTVLo41oRrkQQ6g0jvSLimcySP9qbGBvHg62M1OzmfdW2pA7+42mABe6Oo82mZ72lvQikuiT/NXry9TQYZwSKVlKhEReDCGbVatdHkBcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XQoApnAF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pl8HrQYL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=HGZZv+GmASvXL/opatLU/7k8SBlTHG/EEfoeoWoHJxTDQAxr9k3TmcKL1G4uQyflprsuEb+BsGJ6JNV0eoNHraeb5MqFgI3flkvn2v1DrdbPOhkwypwr1KvHJ7UC6hKbkJ3m+vadwm954d6Df/xaBO1zya6pHacAokRpH9z9Tzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1KK6qtsy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=onkV9rr1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XQoApnAF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pl8HrQYL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1KK6qtsy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="onkV9rr1"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716927565;
+	s=2020; t=1716927692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2JUnm0PsqDt3KpgMKu7BKosD7NeQC2DNtUPv6HiUxz4=;
-	b=XQoApnAF1xJa6zYl5llzAnhWR95vlKVO07m37m2lBquSG5mgI075B+EAo9N3idnGVRlK8b
-	vuKnLG/HtK2xqo3Rj/rfuDEFWQRspdXwz8gkct7unkZy9WcdZHEcn1EHddeDGogAebNovg
-	z+pgWy0fRS8zUIyikb4wVGDe+zpdSCdW8HboS1c+6YM5s42yvPr1T3mb/Qlg2sRLp1n0FR
-	H0aunRHYhH5LgaeVhdgXHhAlgv9go0cMaTpxdyJZmQ7jTpOXemseq4YUd1FLhrDq+jOJEk
-	lVoTA1shIXgvDy2mSSKIWH9ykRSLP4Rnd6P+HRVEffz4z8IXWpWBtUivoy6qrg==
+	bh=mPuiTTglKo245MRT1O0rauosEqwWPFYkeow/Wj3djDI=;
+	b=1KK6qtsycWyZWGYpIomFB0szOY8nGoEB5Ho2mCbA55fKgFaSs7RGX7qObRS4Vr34H2NNL4
+	dTwHaRTjwRAbT0K+qmfcYYSQZpB+bqLPieRrry5oZF/ioD/3tCkzpqeJ5bdd8LKSNmQYcJ
+	lVUTg785uzh3QYihRvdMb4wCcU1ZRclkHfXho+rO7iTqZhoygmvPpQwfSzAI4ge6eQtbB3
+	6ijCTEommEj3xsH0wYBjzH6OBeQA/IY314vhiUTDsTdEkoE0cY3XdFPrr9XWMmjtqHRCSM
+	KYrcPKFN0IN/79Gc1nT/L6YiSu818F1V7SGe8bdc6jNyGjNwUd0R8YhHMtbyqQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716927565;
+	s=2020e; t=1716927692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2JUnm0PsqDt3KpgMKu7BKosD7NeQC2DNtUPv6HiUxz4=;
-	b=pl8HrQYLydZspU9SDiVAbgCsy5FdVqn2vJcd8nXU6zRMHiZG76TaJxeIQAJGyxLnTNcdnc
-	Jhovwcs5pXr5qBBA==
+	bh=mPuiTTglKo245MRT1O0rauosEqwWPFYkeow/Wj3djDI=;
+	b=onkV9rr1RYQxxpwZ1a6f5K/ty3kcZzvXUY/KzPXc+FfHSSIyW8BLZEm05H8keZCjPhNA5Z
+	RSv5pSbMZXKyOYBg==
 To: Tim Teichmann <teichmanntim@outlook.de>
 Cc: Christian Heusel <christian@heusel.eu>, regressions@lists.linux.dev,
- x86@kernel.org, stable@vger.kernel.org
-Subject: [PATCH] x86/topology/amd: Evaluate SMT in CPUID leaf 0x8000001e
+ x86@kernel.org, stable@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: [PATCH Resend] x86/topology/amd: Evaluate SMT in CPUID leaf 0x8000001e
  only on family 0x17 and greater
 In-Reply-To: <87bk4pbve8.ffs@tglx>
 References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
@@ -53,8 +54,8 @@ References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
  <87msobb2dp.ffs@tglx>
  <PR3PR02MB6012D4B2D513F6FA9D29BE5EB3F12@PR3PR02MB6012.eurprd02.prod.outlook.com>
  <87bk4pbve8.ffs@tglx>
-Date: Tue, 28 May 2024 22:19:23 +0200
-Message-ID: <874jahbsfo.ffs@tglx>
+Date: Tue, 28 May 2024 22:21:31 +0200
+Message-ID: <8734q1bsc4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -84,6 +85,8 @@ Tested-by: Tim Teichmann <teichmanntim@outlook.de>
 Cc: regressions@lists.linux.dev
 Cc: stable@vger.kernel.org
 Closes: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/56
+---
+Resend with LKML in Cc. Sorry for the noise.
 ---
  arch/x86/kernel/cpu/topology_amd.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
