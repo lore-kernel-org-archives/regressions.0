@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C471DA22;
-	Tue, 28 May 2024 08:21:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AC813CFAF
+	for <regressions@lists.linux.dev>; Tue, 28 May 2024 09:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716884473; cv=none; b=CX7FdvODHw18KiKNiM5BcrxmeE7sLNdDnKnCAfM4skXQxe0JV/wtx27Bhy7yrfHnEZ33PzM/qOooQUHEdkk+UQFdQNo5/u9zcTVp13msj0ATU71+s+TrmIrqv49lhCS+ppbogGoMDIRcQDDcV1184BVul91iP/fA/g0ZX52EODI=
+	t=1716887594; cv=none; b=tXMa8sWf9y79X2A5YIUFxhsNQDeuEYx7B1RagmqyB1MQWv9LiCaAWwRinpOPHQb4/CoIaM11mV4iEz3klX/b6s306p7z1x/cOn1v/s3x5VPIv+sJF0uxBqHuP3hlWS0RcOTMb5Z1b6d84KToGOYuD2h3XMmL9Mg3h9oeHLaciY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716884473; c=relaxed/simple;
-	bh=Iie6j6GHWhlLxfJ6VsQC39NyU0UrznXxjzkwnIv1Krs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwQnPSo7ytyL4feV43hfQt0++8YhENs2IeC9Fy/EPhLclGq6UWcyR2D5Iix3QlgGi0wxzoblSON9IN5+D3ZTAZ0+/jxWGttHn+1l1LIblgjsKILlAGvtQYC5zpt2+/kuJvqD8w5aTjlfp6UDW7uFVtNgAJPctxVVgigx+Wm+Abk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lA/9sAlR; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1716887594; c=relaxed/simple;
+	bh=/U9wXayJxHlUad1DeJRA+jYPwPiiSDvvtHJtPwLyqvc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ur7qP9znr2v3cfgd0T9iYrnly7fDSwvJgX6hgtRpwD51K1NpxgysQgs6AkMN2INA2jAzvne5z64JmZlOo5/SIIn0OI0pFzSswOZFIDvoJ7b/JaHpRAbgJN4IdjZCu9HZ7xjVLcp9cuNEK14DLult92GnqWX+jYE9zobi3sKtOSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JNjx3UeE; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lA/9sAlR"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JNjx3UeE"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Ast9z8epAyjbn/LztXgoRrxHexr964mFVCYjeYD0PFQ=;
-	t=1716884470; x=1717316470; b=lA/9sAlRJJNSPqL3VLp056Bk/h5yM8xFRpj5l01BQCPz0xj
-	NDudT5CwR4bPpJG4AuE5474ztwXZ8Lo4YDYJGQ7rs2uWVKzm824UXiFgJt32bE2CEQGPybPPb78vG
-	UBCEgvMDpv4smvT3XzdFTr42ojJmSBGSw6Kiv/oCFv0Fc0v8gAmVQ3YoPh11bStDftbHqibv8N3KO
-	ak4M99+zjojNlebmTiwHrdguchBswSM3Iuf5xjTcq1N8rAStIGjEj5bm1QN3H+5Z/IXS4rOcFEtS3
-	SvNslxV7m9z9+98jXdBMTWu/HqjvcR0FCqgufH3RQtgHoEdbtWT6som8jgAJ0ulA==;
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=/U9wXayJxHlUad1DeJRA+jYPwPiiSDvvtHJtPwLyqvc=; t=1716887592;
+	x=1717319592; b=JNjx3UeEWczZe0iLO2OgiQEXlI3OX9XBGgzwDPDXUXTe4IMxfnaqKvRI6OtA7
+	qBrgwP/rGgJ6k8BWYvT7MU2R9Rgm79lryQxDECQzZczg/ts058pk8XBPUOVrKeNS8iWH1dwJe71N9
+	bSMMjoqZm5tM1ihVrPVDxLU52WB+Fb0hXNkdu0dYiv/ngU5o62RhCjD7faU1dKHce8FDQCCn4EbVJ
+	YcwZxeBpxf4/IT6yLtpBkGg9tcpLu1+fpCOpB5unaAXic2HAF/xeunaBFH/m6UWsb0ewtnXX9Kd+M
+	BLCkaxYegZ1k0UALax9O7HJHC4G44P2ssFmjbNvSMNtIr+Lzhw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sBs4x-0005Pr-1M; Tue, 28 May 2024 10:21:07 +0200
-Message-ID: <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
-Date: Tue, 28 May 2024 10:21:06 +0200
+	id 1sBstK-00068H-Jt; Tue, 28 May 2024 11:13:10 +0200
+Message-ID: <e204840e-06ca-49a5-86f8-5b3b54301cd1@leemhuis.info>
+Date: Tue, 28 May 2024 11:13:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,88 +39,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
- mode
-To: Johannes Berg <johannes.berg@intel.com>, regressions@lists.linux.dev
-Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
- Savyasaachi Vanga <savyasaachiv@gmail.com>,
- Christian Heusel <christian@heusel.eu>
-References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716884471;72153b97;
-X-HE-SMSGID: 1sBs4x-0005Pr-1M
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716887592;c8e1bb58;
+X-HE-SMSGID: 1sBstK-00068H-Jt
 
-On 28.05.24 00:01, Christian Heusel wrote:
-> 
-> Savyasaachi reports that scanning for other stations in monitor mode
-> does not work anymore with his RTL8821CE wireless network card for linux
-> kernels after 6.8.9.
-> [...]
 
-So back to the real problem:
 
-@wifi developers: Is there some bigger problem in 6.9.y related to
-monitoring mode that is affecting a lot of drivers/users?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I'm asking because I noticed another report that sounded related. To
-quote: https://bugzilla.kernel.org/show_bug.cgi?id=218884
+#regzbot report:
+https://lore.kernel.org/all/fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com/
+#regzbot introduced: 22d63660c35eb751c63a709bf901a64c172659
+#regzbot summary: x86: Bogus messages from topology detection
 
-"""
->  Michael 2024-05-24 17:04:51 UTC
-> 
-> Some features are broken since kernel 6.9.1 when running monitor mode.
-> 
-> First bug:
-> Switching a channel via "NL80211_ATTR_WIPHY_FREQ" does not switch the channel/frequency.
-> 
-> That is not a device driver problem, because all device drivers (Mediatek, Ralink, Realtek, ...) are affected.
-> 
-> To reproduce:
-> set monitor mode (by iw)
-> change channel (by iw)
-> check if channel has been changed (by iw)
-> record traffic and check radiotap header (Channel frequency)
-> 
-> More information is here:
-> https://github.com/ZerBea/hcxdumptool/discussions/454
-> https://github.com/morrownr/8821au-20210708/issues/133#issuecomment-2125425552
-> confirmed by other users:
-> https://github.com/morrownr/8821au-20210708/issues/133#issuecomment-2125392151
-> 
-> 
-> Second bug:
-> frame injection is broken
-> 
-> To reproduce:
-> Try to send a 80211 frame via raw socket (PF_PACKET). It is not transmitted over the air
-> https://github.com/ZerBea/hcxdumptool/discussions/454
-> 
-> 
-> In monitor mode, none of the WiFI tools (iw, Wireshark, airodump-ng, aireplay-ng, hcxdumptool, hcxlabtool is able to switshc the channel or to transmit 80211 frames since kernel 6.9
-> 
-> [tag] [reply] [−]
-> Private
-> Comment 1 Michael 2024-05-26 09:00:58 UTC
-> 
-> BTW:
-> Testing monitor mode mode these days is no easy task, because most of the device drivers are not working as expected:
-> https://bugzilla.kernel.org/show_bug.cgi?id=218528
-> https://bugzilla.kernel.org/show_bug.cgi?id=217465
-> https://bugzilla.kernel.org/show_bug.cgi?id=218528
-> https://github.com/openwrt/mt76/issues/839
-> 
-> And now, since kernel 6.9.1, the mac stack is broken, too.
-> 
-"""
+#regzbot report:
+https://lore.kernel.org/all/c41c5bf8-9ed8-49c8-a9f4-431d523fffbf@tasossah.com/
+#regzbot resolve: user apparently satisfied after adjustment in the BIOS
+Setup
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+#regzbot report:
+https://lore.kernel.org/all/CAE4VaREzY%2Ba2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com/
+#regzbot introduced: baa23a8d4360d9
+#regzbot summary: tracefs: Panic During Shutdown/Reboot, likely due to a
+older bug now exposed
+
+#regzbot report:
+https://lore.kernel.org/all/alp44tukzo6mvcwl4ke4ehhmojrqnv6xfcdeuliybxfjfvgd3e@gpjvwj33cc76/
+#regzbot duplicate:
+https://lore.kernel.org/all/z42qu35nuybho36bwjdoatqp3skwm7w2l4apd75ubzaezyvxef@f6yrdlgltlaf/
+
+#regzbot report:
+https://lore.kernel.org/linux-wireless/87wmo0k71i.fsf@kernel.org/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=218888
+
+#regzbot report:
+https://lore.kernel.org/all/14b89dfb-505c-49f7-aebb-01c54451db40@proxmox.com/
+#regzbot introduced: 81ada09cc25e
+#regzbot summary: blk-flush: crashes with NULL pointer dereferences in
+blk_flush_complete_seq
