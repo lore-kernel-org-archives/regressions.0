@@ -1,37 +1,28 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8072610A03
-	for <regressions@lists.linux.dev>; Wed, 29 May 2024 13:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F8411185
+	for <regressions@lists.linux.dev>; Wed, 29 May 2024 13:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716989139; cv=none; b=Mvk4wXbGRG9n+29lFx/nqKuba9PrNdGr9yVRGlPJpSmcFURM7q6apxIxfbBup2FaZAOi0nWUeD06FUWJUhH7QfNzoMuXRLPdOmUdYhPn0bHR5tFIdAOQEW/UkNZyqzvR7++v7L4jjtbeCOqVSc6GD4NDCUftKXHZgdAf0I4GHrE=
+	t=1716989255; cv=none; b=BwZKLCa0rSDiBEm3R/tIUWRXAZRGsNTXu3WVF272qSfPgD8ZCe2JJVe/5G0LPQdijOR3yYbomTgBFv0EIa2k9QnThieDUbD6FztUgTkDxvQ9PH9LpBYDRykXadB+mri+aBafah1gMDQYAT1tYz6RqlPTDTAl0n9tzV9eKOpwymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716989139; c=relaxed/simple;
-	bh=fA+DsbESFknueERyfGbRq2g2TMIE7UteAWy8sFmzHBs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=RiqpQFNvuofqFc9/y2BXVa5xnSADi/9t6R80KMiNDRmKDAk7xCP34Nz9mQjMIrkSMJIBs50BXwDMfBf/HEzctKgytSJzpVCCgwmQvZ/YctiJK8eKKGQW7GfN+5OolkixPccK9A2f9P724tYr6OI/K9PE/RTMNhKV2u1jHuqgbqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Idmz0yGL; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Idmz0yGL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=fA+DsbESFknueERyfGbRq2g2TMIE7UteAWy8sFmzHBs=; t=1716989137;
-	x=1717421137; b=Idmz0yGLt1DJZw2Ef7HJxOpNXuDrV4stmg7cykShygFiWBZK4aJNJZZM1h9yD
-	bf6LLnzNDLFq0Xd55BV24OiBWBSHK9jov2JLjGvabRPHPVP3418UlpJuZ9gxqiXjVB4nkSZfPgkOM
-	fp5qgR4TDYu74Qt05hyIKOPAKDG+3SFVBk4IsCKJGSqO4QLdHVDFjt04e1t1flqWJaa1usi3HDiCR
-	xRsbfqDCl8Q1vmH8clLrVjb8x4dRGo33lYOI1BnWsJTbHEhOrau/92YwnQ6ilS9o+F5AY+KZP3HOW
-	kzStxCyVYhQfQDeKuAOxHwNCQy72JsoVa5VPyxlW6Bt1A1JJFQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCJJ9-0006BR-Pq; Wed, 29 May 2024 15:25:35 +0200
-Message-ID: <3f7f2173-2d75-4677-a7b1-1ca5afbae983@leemhuis.info>
-Date: Wed, 29 May 2024 15:25:35 +0200
+	s=arc-20240116; t=1716989255; c=relaxed/simple;
+	bh=bwtTE9NSFG/4aYBnRtO/O9C2cPX57zcCPDlp6mv3sS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NzS0ESnDBzxGmLWWNJ9GER+tWABNNQjJPn/cjhQ1VyBBrK7PlZ1BA9fwbqPizurfAKL3K/Go7DamZXn3Gvg48AKXd8LGXD4rRSrLdT4XIEI2tmJCOU7BRPELQm4z+tgPdHMcvPRP/KTR7haY/04NqEsntEsM+svMFKwA7n+7AS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 71B9961E5FE01;
+	Wed, 29 May 2024 15:27:07 +0200 (CEST)
+Message-ID: <d2ab4ee7-ba0f-44ac-b921-90c8fa5a04d2@molgen.mpg.de>
+Date: Wed, 29 May 2024 15:27:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,49 +30,111 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716989137;b6e0f00e;
-X-HE-SMSGID: 1sCJJ9-0006BR-Pq
+Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
+To: Jeff Layton <jlayton@kernel.org>, Chuck Lever III <chuck.lever@oracle.com>
+Cc: regressions@lists.linux.dev, linux-nfs@vger.kernel.org,
+ it+linux-nfs@molgen.mpg.de, Linus Torvalds <torvalds@linux-foundation.org>
+References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
+ <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
+ <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
+ <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
+ <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+ <fcec2a033773a2129e0271c870d1116681feccfb.camel@kernel.org>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <fcec2a033773a2129e0271c870d1116681feccfb.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Dear Jeff, dear Chuck, dear Thorsten,
 
 
+Thank you for your responses, and sorry for not replying earlier.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Am 29.05.24 um 15:13 schrieb Jeff Layton:
+> On Fri, 2024-05-24 at 16:09 +0000, Chuck Lever III wrote:
 
-#regzbot report:
-https://lore.kernel.org/all/CAHj4cs9KZJc6Wsp9t0fDc4fDBJB1TmwGT7-8peCGLiqW3J_Fqw@mail.gmail.com/
-#regzbot introduced: d74169ceb0d2e32438946a2f1f9fc8c803304bd6
-#regzbot summary: iommu/vt-d: blktests block/008 lead kerne panic
+>>> On May 24, 2024, at 7:16 AM, Linux regression tracking (Thorsten
+>>> Leemhuis) wrote:
+>>>
+>>> On 21.05.24 12:01, Jeff Layton wrote:
+>>>> On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
+>>>>> Am 19.04.24 um 18:50 schrieb Paul Menzel:
+>>>>>
+>>>>>> Since at least Linux 6.8-rc6, Linux logs the warning below:
+>>>>>>
+>>>>>>      NFSD: Unable to initialize client recovery tracking! (-110)
+>>>>>>
+>>>>>> I haven’t had time to bisect yet, so if you have an idea,
+>>>>>> that’d be great.
+>>>>>
+>>>>> 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
+>>>>> commit 74fd48739d0488e39ae18b0168720f449a06690c
+>>>>> Author: Jeff Layton <jlayton@kernel.org>
+>>>>> Date:   Fri Oct 13 09:03:53 2023 -0400
+>>>>>
+>>>>>      nfsd: new Kconfig option for legacy client tracking
+>>>>>
+>>>>>      We've had a number of attempts at different NFSv4 client tracking
+>>>>>      methods over the years, but now nfsdcld has emerged as the clear winner
+>>>>>      since the others (recoverydir and the usermodehelper upcall) are
+>>>>>      problematic.
+>>>> [...]
+>>>> It sounds like you need to enable nfsdcld in your environment. The old
+>>>> recovery tracking methods are deprecated. The only surviving one
+>>>> requires the nfsdcld daemon to be running when recovery tracking is
+>>>> started. Alternately, you can enable this option in your kernels if you
+>>>> want to keep using the deprecated methods in the interim.
+>>>
+>>> Hmm. Then why didn't this new config option default to "Y" for a while
+>>> (say a year or two) before changing the default to off? That would have
+>>> prevented people like Paul from running into the problem when running
+>>> "olddefconfig". I think that is what Linus would have wanted in a case
+>>> like this, but might be totally wrong there (I CCed him, in case he
+>>> wants to share his opinion, but maybe he does not care much).
+>>
+>> That's fair. I recall we believed at the time that very few people
+>> if anyone currently use a legacy recovery tracking mechanism, and
+>> the workaround, if they do, is easy.
+>>
+>>> But I guess that's too late now, unless we want to meddle with config
+>>> option names. But I guess that might not be worth it after half a year
+>>> for something that only causes a warning (aiui).
+>>
+>> In Paul's case, the default behavior might prevent proper NFSv4
+>> state recovery, which is a little more hazardous than a mere
+>> warning, IIUC.
+>>
+>> To my surprise, it often takes quite some time for changes like
+>> this to matriculate into mainstream usage, so half a year isn't
+>> that long. We might want to change to a more traditional
+>> deprecation path (default Y with warning, wait, default N, wait,
+>> redact the old code).
+> 
+> I've no objection if you want to do that.
+> 
+> I'm more concerned about Paul's setup though. Paul, what distro are you
+> running that starts nfsd (and presumably, mountd, etc.), but doesn't
+> bother starting nfsdcld?
+> 
+> Reenabling this for now is an OK workaround, but we need to understand
+> where these setups are coming from, and probably do some sort of
+> outreach to get them working properly.
 
-#regzbot report:
-https://lore.kernel.org/all/CABXGCsOkiGxAfA9tPKjYX7wqjBZQxqK2PzTcW-RgLfgo8G74EQ@mail.gmail.com/
-#regzbot introduced: 86167183a17e03ec77198897975e9fdfbd53cb0b
-#regzbot summary:
+Thank you for the explanation. Due to historical reasons we maintain our 
+own distribution MarIuX64 [1] and currently run Linux 5.15.x and 6.6.x. 
+Installing nfsdcld is no problem, but it would have been nice to make 
+this clearer in the error message, so people without being NFSD experts 
+getting this message, knew what to do right away. Maybe:
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218895
-#regzbot introduced: 0a44dfc07074
-#regzbot summary: wifi: mt76: MT7615E doesn't work any more with v6.9
-#regzbot relate:
-https://lore.kernel.org/all/20240528142308.3f7db1821e68.I531135d7ad76331a50244d6d5288e14aa9668390@changeid/
+NFSD: Unable to initialize client recovery tracking! (-110) Is nfsdcld 
+running? Otherwise enable NFSD_LEGACY_CLIENT_TRACKING.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218890
-#regzbot introduced: 321da3dc1f3c92
-#regzbot summary: scsi: sd: usb_storage: uas: device only accessible
-after about 1 minute
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218896
-#regzbot introduced: b8b8b4e0c052b
-#regzbot summary: ata: ahci: SATA devices on Alder-Lake S not recognized
+Kind regards,
+
+Paul
+
+
+[1]: https://github.molgen.mpg.de/mariux64/bee-files/
+[2]: https://github.molgen.mpg.de/mariux64/bee-files/pull/3111
