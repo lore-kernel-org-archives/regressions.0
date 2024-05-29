@@ -1,37 +1,66 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F0715920F;
-	Wed, 29 May 2024 14:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD40F15B97D
+	for <regressions@lists.linux.dev>; Wed, 29 May 2024 15:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993427; cv=none; b=VGnLlTNt6wLweVPpdamdVs2caNs3YpcjJwVDxWLCJSw19p5lyYmqXG9ytYSjYVkBZvQnGx6ZXVvCIuDhg6745N+5EC0u2gWIvnseYSyEY3n3u0E3m1KlrTGVNDII5cNqDjErjaSZ4blHGbH0SVCZnucGdtJWd3RvYa8iGxgfTzU=
+	t=1716995398; cv=none; b=ZU3dMSuVMFRvr+Tjxbu/e50bAFhqyX31/coG/7S0wvfPqAr+PcyfcNiW6Gmq7go8OMUmotyvIvDvgaWzBm18mq9+9WrTXV/rBDfOhxcfQyTQr9kSX48Hrjye3nZW5chvv1fNvOXy0/VISDuKo1ieviukoOvy7RxOuTYftgSjtM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993427; c=relaxed/simple;
-	bh=pYrTtkOBQOYeyXCIy27DWA6GTTCSA3OpaXyqB8Pa86U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSO45P+nKBPEIblN4wWRroYLI09EQQ4AnaCyv0bqDVnzdqPoy5YpuVlCrfXhQkC7WuXOpn5/pLCriYDiaN0jmkJcRN/jhQ5Y9WGgUYpXzmTkjmPp+P3Ufi8op1T3GLv9J2JKH0dCKasiH3N9Y0xEA4B8Bvgg+MQkzdKEYhLq94E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZveWQ6Dr; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1716995398; c=relaxed/simple;
+	bh=mlvdMnXQm5x1qWpfm4xuhnDcqdkOQN7ibjz/WVpV/KU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=E7KCYVAheYs/2vdT2CtjJTjS9xBLsLAw76WA1aO9LC7YX1Oz7GPNxsom+7WaXLlaq53opWslQ9879xrDYLAa2PhYxS0l/DTbMwfwpq0oEEyDXN9N5TSE1xsr/zXyLABXIfR8sGDYZijlzZIpveZhxVLinm4EJ/lz7VL1gxOnI5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KGERC7O0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZveWQ6Dr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=B7XB8qUIcTmB1ehnipB+Kf3z1BPRYE36ZBSUE8NS1go=;
-	t=1716993425; x=1717425425; b=ZveWQ6Dr3LUYuVdUNOPo0tAZkO5ChVyME/VbLMP1uqSiRaE
-	yzbEOROreEYOY8mROeCiqHYK/bj/Zrtbeb66pNlA15L0rCy5o1xhVFuTkEzifskJhrzOhg3Aat1/x
-	JHFkgSCVLfdWVLAVgq1eMHiE4tki9j15sZGcGfe9pckoXaURMBFNnODVdNP29WAH8L8BFf4S2BfvE
-	3+pGS1l0eqgUsTjU6ga2iIPLjOIZfYgKFkHogihuqkeuYcHkUKhHc9r51fRhRWU9whiw4WMxtmzQa
-	NgIISdJBWUeB/D5ALf/lnvaEEbuMKfGQyk7lQaVoN8XbMg3ZcerYk2RxItMp2Pig==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCKQF-0003Dv-Nj; Wed, 29 May 2024 16:36:59 +0200
-Message-ID: <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
-Date: Wed, 29 May 2024 16:36:58 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGERC7O0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716995395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n/xbZFT1XaokgTezQUZXctPQ0AEMSGFvQXtxdfPhl30=;
+	b=KGERC7O0fuP2Ds5C782FhtI5sNeHHDOmn91LkEkA7INivhOaAn4trj3xwyBkDE/tFe/OOA
+	0GPaLoWnblG/YUxX6z2F2vEfN9krqqUJu62Ouv+h22qPwjSIBPN1OZNHXB3o2J0QYCjKcJ
+	6slu1kgvCZkx5EbsWcxCnq1PXY3Id78=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-576-IDgU0jhcNXCnn3HhBh3lTg-1; Wed, 29 May 2024 11:09:53 -0400
+X-MC-Unique: IDgU0jhcNXCnn3HhBh3lTg-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1f44b594754so22673965ad.2
+        for <regressions@lists.linux.dev>; Wed, 29 May 2024 08:09:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716995393; x=1717600193;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n/xbZFT1XaokgTezQUZXctPQ0AEMSGFvQXtxdfPhl30=;
+        b=mtkDAgXx2b8A1KEZpAqjNahLGsnlkUWi+X+nI+iQTml1O0erphLMSsqAbXHZ8ZujV/
+         ZUOKC/dN5zdMJEFjilW7QmkEjOc4Qzs+W502pEz8MsboQLAIbhv409ru+XtqUaQq9LIf
+         amXAMJHYsiApLs0snu5DnZ6fPFfMGtP/E4BznceZpDxXpcGDMgngDM17AwouiV0gM859
+         p3MJpBMJNnIp/E7lKnO9u3Fl55lYrtALOFKB0waBHHXrU5wrfgrZl5Y/casjGfYTiyRQ
+         slYFIcH5EEGH6mI4xJxscG34y5nrdjoWAYBZYbqCWCUXbwhBHovsvDoJVQEadsPbo2PO
+         A6QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZolDhG0vituLfsqGIw2M94OR4WBrO2YLVAvoICbUmbf3nZvsM0kZkZjCtpr7fmWSE14W8y0xq97f1qoQKEb1mMP3jeIM8b+2CICA=
+X-Gm-Message-State: AOJu0Yw2/2Y8iz3RdvofyYgiGthpqZqAZvE5GZ2/4CFFxSUK3W0kUypy
+	VbFLkUZjgjfNjrdziEKZ9ykdnWKi2ZXOlf2I5QxCRVA00sJCU0FiH0h3Cz+KHrSZtCB1hoUHcwW
+	Ti93BXofgKyTI+P0bjxSwZEjsgjUYRPvpA4U9ws8/17tf8YYYDijsloB36+Q=
+X-Received: by 2002:a17:902:f68e:b0:1f4:b316:57f2 with SMTP id d9443c01a7336-1f4b3165bb5mr84420315ad.40.1716995392764;
+        Wed, 29 May 2024 08:09:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IESJIuVqyrSreBzNsGwEIgmcHckygCCtU9UJsKuVwk6bMzlNtWIgx30hhAYQu4JLnVO41POnA==
+X-Received: by 2002:a17:902:f68e:b0:1f4:b316:57f2 with SMTP id d9443c01a7336-1f4b3165bb5mr84419975ad.40.1716995392226;
+        Wed, 29 May 2024 08:09:52 -0700 (PDT)
+Received: from ?IPV6:2001:569:7cd6:cc00:99d0:471c:5800:8739? ([2001:569:7cd6:cc00:99d0:471c:5800:8739])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9683a8sm99923335ad.132.2024.05.29.08.09.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 08:09:51 -0700 (PDT)
+Message-ID: <8c460997-f8ff-4985-9e8a-09697a647a28@redhat.com>
+Date: Wed, 29 May 2024 08:09:50 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,71 +68,53 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
- allocating the queue
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
- linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
- Christoph Hellwig <hch@lst.de>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240520151536.GA32532@lst.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <20240520151536.GA32532@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716993425;08490132;
-X-HE-SMSGID: 1sCKQF-0003Dv-Nj
+From: Adam Williamson <awilliam@redhat.com>
+Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI VMs
+ since kernel 6.9
+To: Genes Lists <lists@sapience.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-kernel@vger.kernel.org
+Cc: jforbes@redhat.com, rstrode@redhat.com
+References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
+ <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
+ <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
+ <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
+Organization: Red Hat
+In-Reply-To: <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-CA
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-On 20.05.24 17:15, Christoph Hellwig wrote:
-> Adding ben and the linuxppc list.
-
-Hmm, no reply and no other progress to get this resolved afaics. So lets
-bring Michael into the mix, he might be able to help out.
-
-BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
-recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
-
-Ciao, Thorsten
-
-> Context: pata_macio initialization now fails as we enforce that the
-> segment size is set properly.
+On 2024-05-29 06:35, Genes Lists wrote:
+> On Wed, 2024-05-29 at 15:01 +0200, Linux regression tracking (Thorsten
+> Leemhuis) wrote:
+>>>
+>>>      cpu i9-12900K  / Raptor Lake-P [Iris Xe Graphics]
 > 
-> On Wed, May 15, 2024 at 04:52:29PM -0700, Guenter Roeck wrote:
->> pata_macio_common_init() Calling ata_host_activate() with limit 65280
->> ...
->> max_segment_size is 65280; PAGE_SIZE is 65536; BLK_MAX_SEGMENT_SIZE is 65536
->> WARNING: CPU: 0 PID: 12 at block/blk-settings.c:202 blk_validate_limits+0x2d4/0x364
->> ...
+>    Sorry, this should be:  13th Gen Intel(R) Core(TM) i7-1360P
+> 
+> 
+>>>
 >>
->> This is with PPC_BOOK3S_64 which selects a default page size of 64k.
+>> Does this happen every boot or only sometimes? Could you maybe upload
+>> the full dmesg from a boot where things worked and one where only the
 > 
-> Yeah.  Did you actually manage to use pata macio previously?  Or is
-> it just used because it's part of the pmac default config?
-> 
->> Looking at the old code, I think it did what you suggested above,
-> 
->> but assuming that the driver requested a lower limit on purpose that
->> may not be the best solution.
-> 
->> Never mind, though - I updated my test configuration to explicitly
->> configure the page size to 4k to work around the problem. With that,
->> please consider this report a note in case someone hits the problem
->> on a real system (and sorry for the noise).
-> 
-> Yes, the idea behind this change was to catch such errors.  So far
-> most errors have been drivers setting lower limits than what the
-> hardware can actually handle, but I'd love to track this down.
-> 
-> If the hardware can't actually handle the lower limit we should
-> probably just fail the probe gracefully with a well comment if
-> statement instead.
+> For me it is every boot - the first few key strokes are accepted but no
+> asterisks are displayed - and it works fine even though fewer asterisks
+> are displayed than characters typed.
+
+That sounds different from my case. In openQA (and the one time I saw it 
+live), the keystrokes do not appear to have any effect - no dots are 
+echoed at all, and hitting enter does not submit the passphrase.
+
+I have no idea where to send emails reporting kernel bugs. It's a very 
+difficult world to penetrate if you're not already in it. A proper bug 
+tracker would make things much easier.
+-- 
+Adam Williamson (he/him/his)
+Fedora QA
+Fedora Chat: @adamwill:fedora.im | Mastodon: @adamw@fosstodon.org
+https://www.happyassassin.net
+
