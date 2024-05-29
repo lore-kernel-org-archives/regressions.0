@@ -1,125 +1,120 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDA1DDA1
-	for <regressions@lists.linux.dev>; Wed, 29 May 2024 18:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717006647; cv=fail; b=TNEFkxhz8nZQno07TJyA6ty4U1FeEeqgEr9ZQ6/pZFmWgdysRpesZip8CUqxKQXzActVdeJTsjqCxKgALl/f1aN/Y2CsLRPZsE+GjQ3qsB/S/4IbdhkJoELWDaTjTCYv/r0ucjp4iWooVOQmWU2tY8vcIYuyUv7QQB9oVAqyKlc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717006647; c=relaxed/simple;
-	bh=EyhckvVm2a5/R7Gd4g1kKgdM67y/GY/cspQ3Gw8Ro2A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jRin4estXdSnBW9TEn6ZDvVGri1CYS4BaqjcVOcz7mYj09G/G4Bn+Km8VTyMkWKrpXbI06GtZjjJqIQ/xMKJ6MdnmU2NpCZXlW6uI3TQ9lVUG+6A1UVgKBQVxbLj+hwV3STV1/eVEMSSwOqf/swVdlYKFQWD2NYNABU8yG/0E1s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=D658ylIp; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=IzmzNyB6; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C0015B990;
+	Wed, 29 May 2024 18:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717007590; cv=none; b=kuDLMLsN8RAJkrnIYAQBRGH3G7W9E9jjL8iGjCzWwpPyTct3pB+yz/9BMeFAel952QHUrr3gGpj+M1hob796VEWePt/ivvxaSZeFtEeyzGjR4+wAMEn91Iz/WV/B7Gcce4YuF6czSw2D6itz7LLEUofZiU17wGibCrG1cwnhKAc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717007590; c=relaxed/simple;
+	bh=xSGo4qhJT8Vc7QZwuMSfPbFgntWQs7o0u+3tkSo/IjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgMbOqbblx3rJBiVybtY1a+f1saTqdCX6Eo+nT5xT6Xp2Oy0DXJYXzh+aZ45RmJdy2/t6u9o0nqaUdPlMCQWfNi/s2gOItEHvurJMXxMKJZ+9Ra8yoGwEi3xeNkZDzliFd+3dmQ+zXJa8+t/twsQSgtrvIaXplliXsPafJ/qP9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xsct1ZJ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="D658ylIp";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="IzmzNyB6"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 8428B48099C;
-	Wed, 29 May 2024 14:17:23 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717006643;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=XUebccGL4OfbGpTIxAPqulwEmf7Yl5LLhgv/rXDB/y4=;
- b=D658ylIpT1ZPvH0l4T1Fyz6QAm3Xd4zNodOywYgISBjFmlvzktnkujpbIvr5xx65/q5RQ
- ji6Tu+c857cVexVCQ==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717006643;
-	cv=none; b=nXFGmq0RayC9mAnhmJkzWPSNmrih1406n+ZquhR+PA0GqChVN3BhtvVf1Qpyj6nG+ifCnckIEwHePLSyPjrFrm6aiDm/qkoQHLQaYLjj+7GRpPs0llMTD4tdAEZL/hEoqBo336jp5urUyg7QXV/OYLt3j30jlsFuR8XgbGcd7GPMepm/MhQJAMldJMP7zCm/Y6HdeNGeTYHqUohfGg6GQj1ELWA2WzGHQz3FBSK7ZgsL8YtaNFXR1XpFVTAr78ZWxvnMn6yUvolh2IZbZSHBRLLEKcgjsnNWsJz9GKIRk9WgfW8t/KrK3WNwcWhUJl9TkYBfJmmE1MuiTfV2la9ZEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1717006643; c=relaxed/simple;
-	bh=EyhckvVm2a5/R7Gd4g1kKgdM67y/GY/cspQ3Gw8Ro2A=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=JRh7O8DLePTmne25sJFwYVfRF9cpx55V+M0w7dlMheyTztCjUBuvOv9Pmbq5qcj/ScybJi8MglIap3o3Y8M+EcalSlq45bugC+vNZ6OlfG2VPHrbNL7X+YsAhIUtm7sr3WGInd8dGSQ5+w9ZujLvwOF6hcfhpzIYHT+RxlTtOOhfSQ2yTcPzg5vuU5P0LJ1x647kJO6qaRJIF1DzDzQPf0xNAiP/MQmcN/JnEUw5WI+88mPki1e4bbhvNXACz6MixPDq5qmkTemY8UfgyqvvX89TSwBYHjS3e2b2SGDOZzEdPzYrcSDXtIJXD2B0+Lsc6R91ffFXwKsvJ6dtEeEvKA==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717006643;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=XUebccGL4OfbGpTIxAPqulwEmf7Yl5LLhgv/rXDB/y4=;
- b=IzmzNyB6P4ze6qHg2invxjTaX2UCR3zY4u3Oztznzi96Z/uHT2rAKU11XFX83L5kgDyYz
- NOi5G+wEQDaD53Coi+4J4M3LFom7smMYGMR8qnvBeYatJOOBW3qxeBvGm7ap5abmFit6KxY
- mEz2LE0GvLy2dki6UQ3n3N4WE/ccF1BBQ2GxbJADcUXwSwParszsiTdNSjOE/n0P0tSLWgi
- pRgzodQTVXOoC1PBVSSNZKSnHaDfDokiR7oVTMkuhaDWB5Q65wa/XihmZW8Qyt+HLNWWSE3
- QUJAtqUd8vSoNPrmYNxlCuxxhCR/tQdHLOkVy2MMXU4aF7k++gnfsPL2P2rg==
-Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id 5A374280042;
-	Wed, 29 May 2024 14:17:23 -0400 (EDT)
-Message-ID: <49bc946ed3f29b819e3b1b2f91f0c42f07b47769.camel@sapience.com>
-Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI
- VMs since kernel 6.9
-From: Genes Lists <lists@sapience.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Adam
- Williamson <awilliam@redhat.com>, linux-kernel@vger.kernel.org
-Cc: jforbes@redhat.com, rstrode@redhat.com
-Date: Wed, 29 May 2024 14:17:23 -0400
-In-Reply-To: <937e6c6b-7d98-4c9f-b3f7-47e1d6562963@leemhuis.info>
-References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
-	 <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
-	 <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
-	 <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
-	 <937e6c6b-7d98-4c9f-b3f7-47e1d6562963@leemhuis.info>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-hf2nUVxltrbbuXaIrmJK"
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xsct1ZJ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E277C113CC;
+	Wed, 29 May 2024 18:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717007590;
+	bh=xSGo4qhJT8Vc7QZwuMSfPbFgntWQs7o0u+3tkSo/IjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xsct1ZJ296mVzd5Bx2cjuJH+KC5VHKNKvXSF1wEc4SNTk55CVKQxfbhbKI8WobVEL
+	 Jp5dgoDnZjuzokdATQJfHv9efrAFrrct21tOPDb4iVHehHfa1M1vC8VxlxwibZAFTe
+	 aU2A0YE/3DyrJxncovGEgDxzeHTkFOSTO/5BRTsFiowbhauPwVWUUaYoEqiIubVgPb
+	 XWFgVaNgCliYHmIcGnqO66qrSBmpX1Z30SIOxlC8xpbNoi7Cqyv4Aih3aP2gqAvZg8
+	 pjNwwI7/SfUzxHTfXquHl7HkpSYjbK9+mYuhKr2tpYlinkyXz8gDxSVSrlE056CHzm
+	 cTM3Sf2SFWozA==
+Date: Wed, 29 May 2024 20:33:00 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Tim Teichmann <teichmanntim@outlook.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Christian Heusel <christian@heusel.eu>, regressions@lists.linux.dev,
+	x86@kernel.org, stable@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [REGRESSION][BISECTED] Scheduling errors with the AMD FX 8300 CPU
+Message-ID: <Zld03FTNQ5q5uQyN@ryzen.lan>
+References: <87h6ejd0wt.ffs@tglx>
+ <PR3PR02MB6012CB03006F1EEE8E8B5D69B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <874jajcn9r.ffs@tglx>
+ <PR3PR02MB6012EDF7EBA8045FBB03C434B3F02@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <87msobb2dp.ffs@tglx>
+ <PR3PR02MB6012D4B2D513F6FA9D29BE5EB3F12@PR3PR02MB6012.eurprd02.prod.outlook.com>
+ <87bk4pbve8.ffs@tglx>
+ <f3b909f3-de1d-4781-aa7a-1967abe24125@kernel.dk>
+ <ZlY8SbGVMHho-dLz@ryzen.lan>
+ <PR3PR02MB60127B753B3B4BA69A737BBDB3F22@PR3PR02MB6012.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PR3PR02MB60127B753B3B4BA69A737BBDB3F22@PR3PR02MB6012.eurprd02.prod.outlook.com>
+
+On Wed, May 29, 2024 at 03:02:45PM +0200, Tim Teichmann wrote:
+> Hello Niklas,
+> 
+> > ata3 (TOSHIBA HDWD110) appears to work correctly.
+> > 
+> > ata2 (Apacer AS340 120GB) results in command timeouts and
+> > "a change in device presence has been detected" being set in PxSERR.DIAG.X.
+> > 
+> > > >> [    2.964262] ata2.00: exception Emask 0x10 SAct 0x80 SErr 0x40d0002 action 0xe frozen
+> > > >> [    2.964274] ata2.00: irq_stat 0x00000040, connection status changed
+> > > >> [    2.964279] ata2: SError: { RecovComm PHYRdyChg CommWake 10B8B DevExch }
+> > > >> [    2.964288] ata2.00: failed command: READ FPDMA QUEUED
+> > > >> [    2.964291] ata2.00: cmd 60/08:38:80:ff:f1/00:00:0d:00:00/40 tag 7 ncq dma 4096 in
+> > > >>                         res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x10 (ATA bus error)
+> > > >> [    2.964307] ata2.00: status: { DRDY }
+> > > >> [    2.964318] ata2: hard resetting link
+> > 
+> > 
+> > Could you please try the following patch (quirk):
+> > 
+> > diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+> > index c449d60d9bb9..24ebcad65b65 100644
+> > --- a/drivers/ata/libata-core.c
+> > +++ b/drivers/ata/libata-core.c
+> > @@ -4199,6 +4199,9 @@ static const struct ata_blacklist_entry ata_device_blacklist [] = {
+> >                                                 ATA_HORKAGE_ZERO_AFTER_TRIM |
+> >                                                 ATA_HORKAGE_NOLPM },
+> >  
+> > +       /* Apacer models with LPM issues */
+> > +       { "Apacer AS340*",              NULL,   ATA_HORKAGE_NOLPM },
+> > +
+> >         /* These specific Samsung models/firmware-revs do not handle LPM well */
+> >         { "SAMSUNG MZMPC128HBFU-000MV", "CXM14M1Q", ATA_HORKAGE_NOLPM },
+> >         { "SAMSUNG SSD PM830 mSATA *",  "CXM13D1Q", ATA_HORKAGE_NOLPM },
+> > 
+> > 
+> > 
+> > Kind regards,
+> > Niklas
+> 
+> I've just tested the patch you've provided [0] and it works without
+> throwing ATA exceptions.
+> 
+> The full dmesg output is attached below.
+> 
+
+Thank you Tim.
 
 
---=-hf2nUVxltrbbuXaIrmJK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I intend to send out a real patch for this,
+but before I do could you please run:
 
-On Wed, 2024-05-29 at 16:04 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
->=20
-> np; but without a bisecting or at least locating the subsystem that
->=20
+$ hdparm -I /dev/sdX
 
-Yep. I will set up luks + plymouth on a (different) machine first
-instead of my primary laptop.  If that reproduces the issue, then
-bisect should be quite doable. Will take a little time but will work on
-it soon.
+against both your SATA drives and paste the output.
+
+(I just want to make sure that the device actually advertizes
+some kind of power management support.)
 
 
---=20
-Gene
-
-
---=-hf2nUVxltrbbuXaIrmJK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZldxMwAKCRA5BdB0L6Ze
-20IoAQC54YgzwhSy7BjW5KMbvvraiUrj6e5IxAJUt6nGw8ITeQD/SRy7vlrvL6n+
-ur+trD86Kzit4ylH+Ddwk9Dc8nvdOgc=
-=7IHX
------END PGP SIGNATURE-----
-
---=-hf2nUVxltrbbuXaIrmJK--
+Kind regards,
+Niklas
