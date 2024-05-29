@@ -1,87 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CC713E043
-	for <regressions@lists.linux.dev>; Tue, 28 May 2024 22:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C38171AA
+	for <regressions@lists.linux.dev>; Wed, 29 May 2024 04:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716936204; cv=none; b=IvQIYnXn/DG2A+nSDsNlag9tyQ36KFTSRa9AL+4YOXiqlCBbMyMjuSx2gtYELsWHuv9LOck9Zs4EQM+eUuoAZye6YIyrEMgYMDZoHD139l5n98DqeqFgRfgLjzz/7YB93hhVnfAWNSNtufA6xltDfq2m4xGkwRUMySju8qJw/JQ=
+	t=1716957960; cv=none; b=eW9z+SA9LmR5JptE90O2+Wk/O4/K6yBz0T1JEGlhia8hdjHyBG9JRulkuHmO2jY3O2mJ7v1nfEk+jIgxtC8h0Ux0T3fxborRbi5TiWy3JYwm+6cWjpaUtBrtk56gOn5tOMPlym0eNqxcJicZSYMPoAcgltdK6qPLAtitRWrSceY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716936204; c=relaxed/simple;
-	bh=SZtRXLfUZMgxZ+kR7YKIls4jCTi0FjBz6dHQ+mD/f0Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ul415rDpkphnO7Pw6Ffx1PAzVXZ89g8Tbzxf2qSi+n757u64Ud7mXh0CSh71XnG+9I3M/ArjnDZ4YtLp2mFHedp/ZqPtrRQ84yLl1P818vCgU2/isTCZ/C9xnklrzCQUh0EjSRaZUnWJeEJ5UgaTapkJWXgSZd/u6kgmZkGuElY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JlgLHLne; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AkTsNY9f; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716957960; c=relaxed/simple;
+	bh=IhGPpAFwr9pA9nbZF5l0LlG/5ijkIfQOA+hf2vYOh5I=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=lwF70Npq2A3AxyIk6v1Ic76+UAhbjcyzM/I6J5wBMItM14I1fy5WB2yQDceVtxnbaLBz3PGx2a/xZtcDISQQcHJLfwCXAgvMHyp/OsIc7maIalCtgCa4aXnsc7LtpRk9m5RJTGlieBhrjkm+maNGtkYTRFCfd4Rj6wGHlRW7XNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=D7Sqmi3T; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JlgLHLne";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AkTsNY9f"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716936201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XjMYvHUHg0f90M6ZTnQ/td2tfuCaObJV7OzFaplCbxs=;
-	b=JlgLHLnecygVwuf8ZyTAhKZDY3zlgRQOJKZkMUIaYNGTtEahRqZ2+hIoS5FNkaFpk9GRxR
-	gXc1gBwig43hQLMUiJB4ofkS9NSJy6uwSmNoWtNnT2TS6w1yTtXFum+Yh+B6f5Niy36sEv
-	tQ89k6DlBRCzuOYuCf5lRnOMLVhkbz9ekAM00jk+JH/7TzWzpCuLj9iLPJpGI1lL9WTStI
-	TQKsKhwiNEzY0/crCl6QmF46tTqrLPcg6b5F1KVD8buu1oAsN3EZBcm27wG96pFsaxtx7F
-	Grl1TG8S+LZSUSwKAW9MAin80rg4IgHO5SIgX7tyARtNC1+s4d2Kt/huwCOGmw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716936201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XjMYvHUHg0f90M6ZTnQ/td2tfuCaObJV7OzFaplCbxs=;
-	b=AkTsNY9fKH3f3p+sgtRx7mwi9PtnEiUO+dkF/U8gRd01EzRPKVK4DfBpP+FVEByOxZHT10
-	m4vl8JyGAmAFBuDw==
-To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <87sey8g5z6.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
- <87le59vw1y.ffs@tglx>
- <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
- <87edautcmz.ffs@tglx>
- <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
- <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
- <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
- <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
- <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
- <87jzjxn6s5.ffs@tglx>
- <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
- <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
- <87bk58n6le.ffs@tglx>
- <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
- <87wmntkhak.ffs@tglx>
- <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
- <874japh4ww.ffs@tglx> <87sey8g5z6.ffs@tglx>
-Date: Wed, 29 May 2024 00:43:20 +0200
-Message-ID: <87ttiha77b.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="D7Sqmi3T"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-43fdb114e07so6535901cf.2
+        for <regressions@lists.linux.dev>; Tue, 28 May 2024 21:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1716957958; x=1717562758; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zmpWYn0uCMbm3fxqDNBcySeG4f+66JRUG6mgZL8L6is=;
+        b=D7Sqmi3TOf1UWqgX/H/ILSHv4nN6QpV5mB6VnbYlSfuvY52szawFmDLqYoafuDm7Gv
+         xlb5iWQTGrbX9Gc8sZnTHXMMs5JmoEd7YQF3HQZassf52dNoYc8/TQ/hUvTIHeaSg3R+
+         EVrg5EQovVBaOui1bWo2dulIbJyNOWlghh/OBuBVYUbycZmFkKw9Gu50ZU3uq8f84oIE
+         NTrLLLNOKt25ithor2DEwofbhEVTdF6IoFA9CoDDmzXu2LMCNybdyIkvn2hZnpiRlBQU
+         bRKsTt1OUK/QV1irnMk3oHZSfN901PDZbJtlSAeuh4LJarprqSDZs0tv55rVrBpSpeSW
+         jFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716957958; x=1717562758;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zmpWYn0uCMbm3fxqDNBcySeG4f+66JRUG6mgZL8L6is=;
+        b=M2eHjn0m7Ulujm9q4LFW+CQ6I9PywKbZWpa9IYfFVHT280DYtEJ0r3G8jc7aht/6gx
+         ATlnVIVpEsc1cvQ95+VUdOkBPk9HOv8PgaMZVcH/RrzSOu9UiFrotBl+rk9qoNZFfVQO
+         c7gNBoAnDw1i4AsU+qJHTqyFQBXMVgHSp2bOkugUMYv9NQ+stH/I7xQfSUrA8sipNQj/
+         LkncZz8VbmvXPUnxINUZWz/n+mRTfwVlS+sFnPvNunWfdZ5iJdcAS/Buqu2+czuLKG65
+         ZmcBax+EOunzJ4g0ZbAjIJb9JRgHfdXH6GYHPopUvpP9oE9nYz/7jeG80HPWf4ZZlNXy
+         cV2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXFqHohCK6h2KKnabET/EDArIJAyKQdN+LKH4U1Z5aGURX+FV7PV4Wt5fwFu2Zu+A512ClPp9GnnA591qU8YegtaSk2sCaerQmFei8=
+X-Gm-Message-State: AOJu0Yzt5bneBMbLuci/tGDDHKnjGbQXXZvoTnrCnoZccvGW4V+fHpbr
+	3064R1JaYkTn6wD+2SCsWUaGj5NjTRU44XgiyCgSqkSERCTLo2dZaZPiWj4fCCXJ5r6ssgEPyx/
+	p
+X-Google-Smtp-Source: AGHT+IEEf4vTlM5wsCU/rnICErZFc3oLKNreJcyTI3aQmp7FVT3q5CR5E3rKudVnwFa/8XLsFiyulQ==
+X-Received: by 2002:a05:622a:48e:b0:43d:9d93:f5e0 with SMTP id d75a77b69052e-43fb0dbfd06mr144358131cf.4.1716957957873;
+        Tue, 28 May 2024 21:45:57 -0700 (PDT)
+Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43fb16b6a79sm50044001cf.13.2024.05.28.21.45.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 21:45:57 -0700 (PDT)
+Message-ID: <ad4e561c-1d49-4f25-882c-7a36c6b1b5c0@draconx.ca>
+Date: Wed, 29 May 2024 00:45:56 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Alexey Gladkov <legion@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Nick Bowler <nbowler@draconx.ca>
+Subject: PROBLEM: kbd busted in linux 6.10-rc1 (regression)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Lyude!
+Hi,
 
-On Thu, May 23 2024 at 12:47, Thomas Gleixner wrote:
-> Something I wanted to ask before. Is the BIOS of that machine up to
-> date?
+It seems kbd utilities are all broken on linux 6.10-rc1.  For example:
 
-Any update on this? I really don't want to add magic workarounds if
-there is a BIOS update which fixes it.
+   # loadkeys en-latin9
+   Couldn't get a file descriptor referring to the console.
+   [and it did not change the console keymap]
+
+This is a regression from linux 6.9.  If I run strace on a working
+kernel, at the point of the first difference we see:
+
+   openat(AT_FDCWD, "/dev/tty0", O_RDWR)   = 3
+   ioctl(3, TCGETS, {c_iflag=BRKINT|ICRNL|IXON|IMAXBEL|IUTF8, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD|HUPCL, c_lflag=, ...}) = 0
+   ioctl(3, KDGKBTYPE, [KB_101])           = 0
+   ...
+
+On a busted kernel, we get:
+
+   openat(AT_FDCWD, "/dev/tty0", O_RDWR)   = 3
+   ioctl(3, TCGETS, {c_iflag=IUTF8, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD|HUPCL, c_lflag=, ...}) = 0
+   ioctl(3, KDGKBTYPE, 0xffceaebb)         = -1 ENOTTY (Inappropriate ioctl for device)
+   close(3)                                = 0
+   ...
+
+A very similar problem occurs with kbd_mode, chvt, etc.
+
+Bisection implicates the following:
+
+   8c467f3300591a206fa8dcc6988d768910799872 is the first bad commit
+   commit 8c467f3300591a206fa8dcc6988d768910799872
+   Author: Alexey Gladkov <legion@kernel.org>
+   Date:   Wed Apr 17 19:37:35 2024 +0200
+   
+       VT: Use macros to define ioctls
+   
+       All other headers use _IOC() macros to describe ioctls for a long time
+       now. This header is stuck in the last century.
+   
+       Simply use the _IO() macro. No other changes.
+   
+       Signed-off-by: Alexey Gladkov <legion@kernel.org>
+       Link: https://lore.kernel.org/r/e4229fe2933a003341e338b558ab1ea8b63a51f6.1713375378.git.legion@kernel.org
+       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Reverting this commit corrects the issue.
+
+This testing was done on my sparc system in case it matters.
+
+Let me know if you need any more info!
 
 Thanks,
-
-        tglx
+  Nick
