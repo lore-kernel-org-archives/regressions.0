@@ -1,28 +1,37 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD6179658
-	for <regressions@lists.linux.dev>; Wed, 29 May 2024 10:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0EE23DE;
+	Wed, 29 May 2024 12:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716977174; cv=none; b=f+p8Wnl+nB+UUep0DC4EI5aVHZTGRafJvXM17RfdO7WHjpqwtXFO18gyWALV6Zw+AtanOPDidAQU2gF2XJ7o81etUx6QsC2iPSVKOCFsxsK3pwwZlThb1WCKBgtcRW/CiBRAI98X8+jS1SeJuwf5WyaozYgCvIg1C9v8FM3Ha8g=
+	t=1716987072; cv=none; b=cCCTNIqqLoKg70ky6Si1q7W0GO7kxItdGxVTvoS0ybzQJBOYCTm16bTdS6uYbr7d0x7O5rbHnsSlsgLBB0udt94ZlNgcF6jZZc4xlLgxXEP7BezuYugFO/dztBPzsRqxK4eNwPBigMAsYovy07lYVPj5c2I8+3wCo/q3vqqVYvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716977174; c=relaxed/simple;
-	bh=G1Rk+7kEkFD09wELNnRj53zJwtqDGrgnZU8T7fnfjek=;
+	s=arc-20240116; t=1716987072; c=relaxed/simple;
+	bh=nzeduYzqyrc4dtRTbpFp0fKRRmiHy1rwvKZ+9Q8IAwA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QMFtg7WrLTdOx4XVZlaLqVF+Rk3jV/WQITfcgQNhG52VTCgdzDaIRWgLk6J8/JdIitBH8ThTpXHSEm7l9VXXPIGUXxLfZFsIZ0EkKM2uvnM+vpNY76rRLWYwAo4xiDRf9TIVK5qADM3DE/H+M0SMyF/3K1YLOanFJdiUrnJo+84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.3] (ip5f5af7f7.dynamic.kabel-deutschland.de [95.90.247.247])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id ABB5461E5FE01;
-	Wed, 29 May 2024 12:05:43 +0200 (CEST)
-Message-ID: <52ccf0c1-e5dd-412b-9e47-7829ca0f6ffc@molgen.mpg.de>
-Date: Wed, 29 May 2024 12:05:42 +0200
+	 In-Reply-To:Content-Type; b=ImpWufHb1lNFEvoksjxmAMCyX82NOaQsXD7jYAgnWTskQDovtt/+Ay30WQRztY8RtR9eQqhKSRM07IIBRQAcjom91gTf6z/o3HvCxIJ0SBEq7pcrBb8aW7U5bOIXvme7OMGcdctJ9DHV/XJFNt6BcS/+RNnejBjmnVhrn0Kjf9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aIMjeblZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aIMjeblZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=CWj9EbBpza8KDASnIQoPoNPdtY21F25m+kK5YEbF3AU=;
+	t=1716987070; x=1717419070; b=aIMjeblZzY15D/qHPVuh4QFjyCcKwNXWbPnQaDBZPs2JX5a
+	OFrN1qGA1PBstYUxRaUKbbWIblyhF5CbYWXhOdtD2OpyP0PHbJ8gMKGW2FqTQY0EOgrK/aM+aygA7
+	S/c3xKxg/Bit8fSgGZi7u0kCV8ZdcSc8wPQvPwoBrshDjTYHJHX2NuG1UTqNPGS3j9eNyLI53L7Ue
+	b7gX0vP95crbW7PiNQD8KfcxzXkfsiuqmgdx3khsR8EGiEka5VLdtcLlhOgGoqqaWxQLMtC2yZ3b9
+	TzZXL/fcfXTs6oQ49KnEYPYwwE6VAJEP6PbS61wjSrB8dz+6GCMltZCpViSizllQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCIln-0006nE-IH; Wed, 29 May 2024 14:51:07 +0200
+Message-ID: <5fb1d05f-1736-42dc-86dc-fdc1bddcaa0c@leemhuis.info>
+Date: Wed, 29 May 2024 14:51:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,109 +39,92 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] Bluetooth: btnxpuart: Update firmware names
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, amitkumar.karwar@nxp.com, rohit.fule@nxp.com,
- sherry.sun@nxp.com, ziniu.wang_1@nxp.com, haibo.chen@nxp.com,
- LnxRevLi@nxp.com, regressions@lists.linux.dev
-References: <20240529095347.22186-1-neeraj.sanjaykale@nxp.com>
- <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
+To: Chuck Lever III <chuck.lever@oracle.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Jeff Layton <jlayton@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
+ <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
+ <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
+ <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
+ <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716987070;c5569a1f;
+X-HE-SMSGID: 1sCIln-0006nE-IH
 
-[Cc: regressions@]
-
-Dear Neeraj,
-
-
-Am 29.05.24 um 11:53 schrieb Neeraj Sanjay Kale:
-> This updates the firmware names of 3 chipsets: w8987, w8997, w9098.
-> These changes are been done to standardize chip specific firmware
-> file names.
-
-Can you please describe the new naming schema in the commit message?
-
-> To allow user to use older firmware file names, a new device tree
-> property has been introduced called firmware-name, which will override
-> the hardcoded firmware names in the driver.
-
-So users updating the Linux kernel but not updating the devicetree with 
-the new property are going to see a regression, right? I think this 
-violates Linux’ no regression policy. If so, please implement a way to 
-support old and new names.
-
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> ---
-> v2: Remove "nxp/" from all firmware name definitions to be inline with
-> firware file name read from device tree file. (Krzysztof)
-
-fir*m*ware
-
-> ---
->   drivers/bluetooth/btnxpuart.c | 28 +++++++++++++++++-----------
->   1 file changed, 17 insertions(+), 11 deletions(-)
+On 24.05.24 18:09, Chuck Lever III wrote:
+>> On May 24, 2024, at 7:16 AM, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>> On 21.05.24 12:01, Jeff Layton wrote:
+>>> On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
+>>>> Am 19.04.24 um 18:50 schrieb Paul Menzel:
+>>>>
+>>>>> Since at least Linux 6.8-rc6, Linux logs the warning below:
+>>>>>
+>>>>>     NFSD: Unable to initialize client recovery tracking! (-110)
+>>>>>
+>>>>> I haven’t had time to bisect yet, so if you have an idea, that’d be great.
+>>>>
+>>>> 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
+>>>> commit 74fd48739d0488e39ae18b0168720f449a06690c
+>>>> Author: Jeff Layton <jlayton@kernel.org>
+>>>> Date:   Fri Oct 13 09:03:53 2023 -0400
+>>>>
+>>>>     nfsd: new Kconfig option for legacy client tracking
+>>>>
+>>>>     We've had a number of attempts at different NFSv4 client tracking
+>>>>     methods over the years, but now nfsdcld has emerged as the clear winner
+>>>>     since the others (recoverydir and the usermodehelper upcall) are
+>>>>     problematic.
+>>> [...]
+>>> It sounds like you need to enable nfsdcld in your environment. The old
+>>> recovery tracking methods are deprecated. The only surviving one
+>>> requires the nfsdcld daemon to be running when recovery tracking is
+>>> started. Alternately, you can enable this option in your kernels if you
+>>> want to keep using the deprecated methods in the interim.
+>>
+>> Hmm. Then why didn't this new config option default to "Y" for a while
+>> (say a year or two) before changing the default to off? That would have
+>> prevented people like Paul from running into the problem when running
+>> "olddefconfig". I think that is what Linus would have wanted in a case
+>> like this, but might be totally wrong there (I CCed him, in case he
+>> wants to share his opinion, but maybe he does not care much).
 > 
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-> index 0b93c2ff29e4..4442d911eba8 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -33,16 +33,16 @@
->   /* NXP HW err codes */
->   #define BTNXPUART_IR_HW_ERR		0xb0
->   
-> -#define FIRMWARE_W8987		"nxp/uartuart8987_bt.bin"
-> -#define FIRMWARE_W8997		"nxp/uartuart8997_bt_v4.bin"
-> -#define FIRMWARE_W9098		"nxp/uartuart9098_bt_v1.bin"
-> -#define FIRMWARE_IW416		"nxp/uartiw416_bt_v0.bin"
-> -#define FIRMWARE_IW612		"nxp/uartspi_n61x_v1.bin.se"
-> -#define FIRMWARE_IW624		"nxp/uartiw624_bt.bin"
-> -#define FIRMWARE_SECURE_IW624	"nxp/uartiw624_bt.bin.se"
-> -#define FIRMWARE_AW693		"nxp/uartaw693_bt.bin"
-> -#define FIRMWARE_SECURE_AW693	"nxp/uartaw693_bt.bin.se"
-> -#define FIRMWARE_HELPER		"nxp/helper_uart_3000000.bin"
-> +#define FIRMWARE_W8987		"uart8987_bt_v0.bin"
-> +#define FIRMWARE_W8997		"uart8997_bt_v4.bin"
-> +#define FIRMWARE_W9098		"uart9098_bt_v1.bin"
-> +#define FIRMWARE_IW416		"uartiw416_bt_v0.bin"
-> +#define FIRMWARE_IW612		"uartspi_n61x_v1.bin.se"
-> +#define FIRMWARE_IW624		"uartiw624_bt.bin"
-> +#define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
-> +#define FIRMWARE_AW693		"uartaw693_bt.bin"
-> +#define FIRMWARE_SECURE_AW693	"uartaw693_bt.bin.se"
-> +#define FIRMWARE_HELPER		"helper_uart_3000000.bin"
->   
->   #define CHIP_ID_W9098		0x5c03
->   #define CHIP_ID_IW416		0x7201
-> @@ -685,13 +685,19 @@ static bool process_boot_signature(struct btnxpuart_dev *nxpdev)
->   static int nxp_request_firmware(struct hci_dev *hdev, const char *fw_name)
->   {
->   	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-> +	const char *fw_name_dt;
->   	int err = 0;
->   
->   	if (!fw_name)
->   		return -ENOENT;
->   
->   	if (!strlen(nxpdev->fw_name)) {
-> -		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "%s", fw_name);
-> +		if (strcmp(fw_name, FIRMWARE_HELPER) &&
-> +		    !device_property_read_string(&nxpdev->serdev->dev,
-> +						 "firmware-name",
-> +						 &fw_name_dt))
-> +			fw_name = fw_name_dt;
-> +		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "nxp/%s", fw_name);
->   
->   		bt_dev_dbg(hdev, "Request Firmware: %s", nxpdev->fw_name);
->   		err = request_firmware(&nxpdev->fw, nxpdev->fw_name, &hdev->dev);
+> That's fair. I recall we believed at the time that very few people
+> if anyone currently use a legacy recovery tracking mechanism, and
+> the workaround, if they do, is easy.
+> 
+>> But I guess that's too late now, unless we want to meddle with config
+>> option names. But I guess that might not be worth it after half a year
+>> for something that only causes a warning (aiui).
+> 
+> In Paul's case, the default behavior might prevent proper NFSv4
+> state recovery, which is a little more hazardous than a mere
+> warning, IIUC.
+> 
+> To my surprise, it often takes quite some time for changes like
+> this to matriculate into mainstream usage, so half a year isn't
+> that long. We might want to change to a more traditional
+> deprecation path (default Y with warning, wait, default N, wait,
+> redact the old code).
 
+Well, that would help anybody that already ran "make olddefconfig" with
+a kernel that has 74fd48739d04, as they now have
+NFSD_LEGACY_CLIENT_TRACKING unset in their .config -- at least unless we
+rename that option and make it default to Y; but it would help everybody
+that updates from the latest longterm kernel to a future kernel that
+would contain a change like you outlined.
 
-Kind regards,
-
-Paul
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
