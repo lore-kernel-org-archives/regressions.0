@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F721BF3B;
-	Wed, 29 May 2024 14:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F0715920F;
+	Wed, 29 May 2024 14:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716991472; cv=none; b=OvMaH24aVqLkSX1Ly4iYGG9aXl0TATr07VRrO4kwB+79nxy8czsiPaKVzQELatN+Y8mhPZsdCIOxwiZCxfRIrx9+DFNs1njpatsVKRfemXuevUHoIxV66piyVQ0fms7r+Tl5HxCZBsSo5JcsRqJHoqQziY7n8YMkS5zYQ3Blt50=
+	t=1716993427; cv=none; b=VGnLlTNt6wLweVPpdamdVs2caNs3YpcjJwVDxWLCJSw19p5lyYmqXG9ytYSjYVkBZvQnGx6ZXVvCIuDhg6745N+5EC0u2gWIvnseYSyEY3n3u0E3m1KlrTGVNDII5cNqDjErjaSZ4blHGbH0SVCZnucGdtJWd3RvYa8iGxgfTzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716991472; c=relaxed/simple;
-	bh=DdMCRc5EsV5UiaFx4HmAOXxcZCqa946sIQrcpkQtXpQ=;
+	s=arc-20240116; t=1716993427; c=relaxed/simple;
+	bh=pYrTtkOBQOYeyXCIy27DWA6GTTCSA3OpaXyqB8Pa86U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mD9q1wBRHICTdHrm6jkLomCgEG1yA4EsT4wDYA+Vjq0s98T+54uq/9fgMlnxRPcVUt4Te5hG9SjEEI536yfsGmsElbRNQQN5M8W5N6PeKFqmQ6x9LQdUjl2AyCxl0vrD+OHbea6hu78eho+E/w1YFNYAeJ82q8axO4BYfa4wiS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ekgZviop; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=fSO45P+nKBPEIblN4wWRroYLI09EQQ4AnaCyv0bqDVnzdqPoy5YpuVlCrfXhQkC7WuXOpn5/pLCriYDiaN0jmkJcRN/jhQ5Y9WGgUYpXzmTkjmPp+P3Ufi8op1T3GLv9J2JKH0dCKasiH3N9Y0xEA4B8Bvgg+MQkzdKEYhLq94E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZveWQ6Dr; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ekgZviop"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZveWQ6Dr"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=jnTyBxsS5RtHgV77jQhikXeIzn8AQh5mj+B33JmR4+s=;
-	t=1716991470; x=1717423470; b=ekgZviopk162nGrOsq+OK3xgTVve/fMXcIsXl96SUlhHWKz
-	qIjkNmQvOHIa9EuXD+cHvwdxUV4kC8iQQ8mCDSJqeoAdWXWP1XN1mr/cY8pO+P72+Q/eweHQn3rIl
-	O51itnlPqcLm2RBtFC/Lo+AnHel8kkAVFn3Fql2iv6sIjUFHtDOeIoRNyPcPPHPyWtX1W2OPqWXS3
-	HUT6FHJMPYrTAGVZHfoNhRZnBxdZSiIX6bRzphyQ8dhlQY/+ATbYH1GYtaDeivis/dr+np3fftU92
-	UfavS9fhNXZuFSFMUWx3ETkB/Fom6h92MJxUQOjzhWWOXPrgmZZsXfDZaZWty0Yw==;
+	In-Reply-To:References; bh=B7XB8qUIcTmB1ehnipB+Kf3z1BPRYE36ZBSUE8NS1go=;
+	t=1716993425; x=1717425425; b=ZveWQ6Dr3LUYuVdUNOPo0tAZkO5ChVyME/VbLMP1uqSiRaE
+	yzbEOROreEYOY8mROeCiqHYK/bj/Zrtbeb66pNlA15L0rCy5o1xhVFuTkEzifskJhrzOhg3Aat1/x
+	JHFkgSCVLfdWVLAVgq1eMHiE4tki9j15sZGcGfe9pckoXaURMBFNnODVdNP29WAH8L8BFf4S2BfvE
+	3+pGS1l0eqgUsTjU6ga2iIPLjOIZfYgKFkHogihuqkeuYcHkUKhHc9r51fRhRWU9whiw4WMxtmzQa
+	NgIISdJBWUeB/D5ALf/lnvaEEbuMKfGQyk7lQaVoN8XbMg3ZcerYk2RxItMp2Pig==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCJuk-0005C2-5J; Wed, 29 May 2024 16:04:26 +0200
-Message-ID: <937e6c6b-7d98-4c9f-b3f7-47e1d6562963@leemhuis.info>
-Date: Wed, 29 May 2024 16:04:25 +0200
+	id 1sCKQF-0003Dv-Nj; Wed, 29 May 2024 16:36:59 +0200
+Message-ID: <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
+Date: Wed, 29 May 2024 16:36:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,67 +39,71 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI VMs
- since kernel 6.9
-To: Genes Lists <lists@sapience.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Adam Williamson <awilliam@redhat.com>, linux-kernel@vger.kernel.org
-Cc: jforbes@redhat.com, rstrode@redhat.com
-References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
- <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
- <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
- <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
+ allocating the queue
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
+ linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
+ Christoph Hellwig <hch@lst.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240520151536.GA32532@lst.de>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
+In-Reply-To: <20240520151536.GA32532@lst.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716991470;0fe3b531;
-X-HE-SMSGID: 1sCJuk-0005C2-5J
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716993425;08490132;
+X-HE-SMSGID: 1sCKQF-0003Dv-Nj
 
-On 29.05.24 15:35, Genes Lists wrote:
-> On Wed, 2024-05-29 at 15:01 +0200, Linux regression tracking (Thorsten
-> Leemhuis) wrote:
->>>
->>>     cpu i9-12900K  / Raptor Lake-P [Iris Xe Graphics]
->   Sorry, this should be:  13th Gen Intel(R) Core(TM) i7-1360P
->>>
->>
->> Does this happen every boot or only sometimes? Could you maybe upload
->> the full dmesg from a boot where things worked and one where only the
-> For me it is every boot
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Ahh, good to know. Would you be able to bisect the problem? That would
-help tremendously!
+On 20.05.24 17:15, Christoph Hellwig wrote:
+> Adding ben and the linuxppc list.
 
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+Hmm, no reply and no other progress to get this resolved afaics. So lets
+bring Michael into the mix, he might be able to help out.
 
-> - the first few key strokes are accepted but no
-> asterisks are displayed - and it works fine even though fewer asterisks
-> are displayed than characters typed.
-
-Strange.
-
-> full dmesg attached.
-
-Do you by chance also have a dmesg at hand for a boot where everything
-worked normally?
-
-Adam, do you maybe have dmesg output for the affected cases somewhere?
-
->> P.S.: let me add this to the regression tracking
->>
->> #regzbot report: /
->> #regzbot introduced: v6.8..v6.9
->> #regzbot summary: Intermittent inability to type in graphical
->> Plymouth
->> on UEFI VMs since kernel 6.9
-> 
-> Thank you.
-
-np; but without a bisecting or at least locating the subsystem that is
-causing this we might not get any further. :-/
+BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
+recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
 
 Ciao, Thorsten
+
+> Context: pata_macio initialization now fails as we enforce that the
+> segment size is set properly.
+> 
+> On Wed, May 15, 2024 at 04:52:29PM -0700, Guenter Roeck wrote:
+>> pata_macio_common_init() Calling ata_host_activate() with limit 65280
+>> ...
+>> max_segment_size is 65280; PAGE_SIZE is 65536; BLK_MAX_SEGMENT_SIZE is 65536
+>> WARNING: CPU: 0 PID: 12 at block/blk-settings.c:202 blk_validate_limits+0x2d4/0x364
+>> ...
+>>
+>> This is with PPC_BOOK3S_64 which selects a default page size of 64k.
+> 
+> Yeah.  Did you actually manage to use pata macio previously?  Or is
+> it just used because it's part of the pmac default config?
+> 
+>> Looking at the old code, I think it did what you suggested above,
+> 
+>> but assuming that the driver requested a lower limit on purpose that
+>> may not be the best solution.
+> 
+>> Never mind, though - I updated my test configuration to explicitly
+>> configure the page size to 4k to work around the problem. With that,
+>> please consider this report a note in case someone hits the problem
+>> on a real system (and sorry for the noise).
+> 
+> Yes, the idea behind this change was to catch such errors.  So far
+> most errors have been drivers setting lower limits than what the
+> hardware can actually handle, but I'd love to track this down.
+> 
+> If the hardware can't actually handle the lower limit we should
+> probably just fail the probe gracefully with a well comment if
+> statement instead.
