@@ -1,66 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2A01C8FB0
-	for <regressions@lists.linux.dev>; Wed, 29 May 2024 20:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDC815CD42
+	for <regressions@lists.linux.dev>; Wed, 29 May 2024 20:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717015358; cv=none; b=il9dK0Y26D7G9cTFoa6aPaccdCaBizum2Tow73B2Q/suj0jaAV4XMLvOnbulUc8IMdYMsYKZpIkBPRXVOwDwAp1cWCM/CiTdTeGMbEIHREBBmqm/mdp6YnwVUxL8I0njmz/xhF50wCXIDpPsx0wbVcP7q1qeicEQVjq6ZC/7seI=
+	t=1717015862; cv=none; b=gk1TY2/nxPYGZXNxyJiqdqbf30r9QvHaLpyQtMibG145Y9qu4n2egCzVk6CfJLu0dvb2+vBRFeUgVFlHN1KycTWi/fIvg8bxKExaEDzCW7pyFpH53Cw34teiArR58WdfyqI+acaa9dxBrPJpGW+mr9UoGDbRH9YktzPceruVpiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717015358; c=relaxed/simple;
-	bh=kRnV8TdpAAzmsRqoJw0zXYQjlaCP2Cs+nOeOuqf0XiI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qOp8nkdKZip+vO9YsvGTwyAF0dMKD12s3anjzShec1xwwP1ChK06dk6rFPC0GRJON3yP4k4W4SRY+gLvGYMRxMSJ8O/Jzq5W39e7AMzKkxquc6cWTC1J9wnY5qVrOBA49ws1z/eqXnbFE6EQU9QMgUlpqoMK/d2Z6zQqUZTCngI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Iytk2nRH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717015862; c=relaxed/simple;
+	bh=539hEqnmBZN3LZxEQOXsccZpq0tgKaxCwS/17v/SP1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ec8/HkIxpZjNQt5++CFEYJhKnWHrv1UtRnozpeo/WeezxMo24Xke9+5NcLuge25h+KzZ3m5WoW7qB3r9bkstCjBI/pJDdW2UlNJ1xO0rfHVZHp8/2bLMx8e2iNzstqWktbGjZVZLnEVB3yTdeoLmpe+rdTKeCENcq/bWLLlTcko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=mCT26shB; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iytk2nRH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717015356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OUVJ3fbNLwOwh+kwklXiSY2q2oGK1D3qkvu9GcJ3p7o=;
-	b=Iytk2nRHmBx2yukuy0VmWn+syQpW7izerXooQa1HcXAH6tUFzePi4NQXxel6tHm8igx0Kf
-	hN6brXxsZKGPEBAHhlCYk6qIRzHLr7/wbxROZOCy96rUe4Uc3bawTpeGnTLcoH7AJz5gba
-	HfPmmRR3s708BWCDGb153zkHcMBB3c4=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-QYUUM4-YNLiOp0BgFBXCnw-1; Wed, 29 May 2024 16:42:34 -0400
-X-MC-Unique: QYUUM4-YNLiOp0BgFBXCnw-1
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1f44b4ed24aso1745655ad.1
-        for <regressions@lists.linux.dev>; Wed, 29 May 2024 13:42:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717015352; x=1717620152;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OUVJ3fbNLwOwh+kwklXiSY2q2oGK1D3qkvu9GcJ3p7o=;
-        b=QgPElkXxqQliiboI8Z3rQoayUC3wtE7eDgm92brTAcqCTXxQQlGevfQj5yA9Kwp2Qz
-         4OrCgiSGiCKjOJQF2ih8TSmOP2DfEeyOIp4OqBT4Wa3L877CdFzVTItOKZHXeiatkv4S
-         pbvg5lATUQXNmqdI3wwxvhmRr9TD2DrlfyGIK0CtXZi0eeesDdR307+Y5kfYNYf4RlYC
-         ZshFau4Mz3kiWBp7/CpGr0n2CkRM+jhJ+XTyaz8NEUlakkWcBHJ16bsxzhvmTx9ZGOnB
-         FUSRQy1eZ9wXgBs72DXhhdTOeUokJhOOMU/x8BVfZDjlRlgoxKEzHrDxKaE8dbg3d2Za
-         THZQ==
-X-Gm-Message-State: AOJu0Yyhr62urTnYJeHZ7S8TiEkky0ncB2nDoD6VOPDR/cxo1Sso3FG9
-	VoCYqijo1RR2jhiZiq4xXtnNSpkSqzmHFs5CzQr71GJ00aizmQ0fCSOilloz0FZWMgEi0TftNEM
-	tvAthsFWD/rVj35dUTFuvGqqo+lFs6/L5SxfnAiH6kA9FEmt61hD5nexAbA8cFBLDLH5YdrYl5d
-	DmiBLtHflCGfDXs2Ui1VV8XVz8T/fQSoJhB84V9IbmV4s=
-X-Received: by 2002:a17:902:d487:b0:1f3:964:bb7c with SMTP id d9443c01a7336-1f619b2ca1dmr1365525ad.57.1717015352530;
-        Wed, 29 May 2024 13:42:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG6sdrN8Jvq/Qmloiy0EOHk78bp4D0qaaCWvMgN7KEA8n+4SbRL6d5bFRuikU9OGpXDn5nNvA==
-X-Received: by 2002:a17:902:d487:b0:1f3:964:bb7c with SMTP id d9443c01a7336-1f619b2ca1dmr1365195ad.57.1717015351952;
-        Wed, 29 May 2024 13:42:31 -0700 (PDT)
-Received: from ?IPV6:2001:569:7cd6:cc00:99d0:471c:5800:8739? ([2001:569:7cd6:cc00:99d0:471c:5800:8739])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6176325e3sm1571965ad.165.2024.05.29.13.42.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 13:42:31 -0700 (PDT)
-Message-ID: <21c943fc-f82a-4dd2-ab86-3e31ed8ab1ef@redhat.com>
-Date: Wed, 29 May 2024 13:42:30 -0700
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="mCT26shB"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VqM3m02nyz6Cnk97;
+	Wed, 29 May 2024 20:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1717015854; x=1719607855; bh=hLx1LCgtNmuK685ryrFVnw4O
+	xj5zeXTZWjF0+kR0oY0=; b=mCT26shBIUJTgOKvxvFdQ1lptKqlai92XnBBql8z
+	ZO/C4hKDjDwpGAXVD1atgpKls5Td/Jom+kQIO7H6cw1WkxxhJ2M4VexMejZrqdzb
+	CFYvNXX/Z23DZC9Sc+ujLIi0v52wPy+cXZvzkrZNTWPt8AvqubshJe6cyOCaYPza
+	qK7y4NaE9gEN9coMj7FktGlSeK1Ee+p5TWl4zxuDzDG23Am2hIiza+C61RecS2UH
+	WJhXhagCnRZyF85P8/BEq+Zq8/p4QejtbICmoZL8pUXpGdkd3ZWKI8rZ1SxROcVU
+	oRYxn7AGm8KENBetcCVLlkz9fMDeQiGOF86y979n7B7KYg==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id PKOP457acvJ0; Wed, 29 May 2024 20:50:54 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VqM3f3Y3nz6Cnk95;
+	Wed, 29 May 2024 20:50:54 +0000 (UTC)
+Message-ID: <493e6372-cb4d-4f1f-9803-17d37a0fcbc4@acm.org>
+Date: Wed, 29 May 2024 13:50:53 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -68,54 +50,204 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Adam Williamson <awilliam@redhat.com>
-Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI VMs
- since kernel 6.9
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org
-Cc: jforbes@redhat.com, rstrode@redhat.com
-References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
- <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
- <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
- <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
- <8c460997-f8ff-4985-9e8a-09697a647a28@redhat.com>
- <1e38a2b9-ca88-4497-b2b3-2157dd83e479@leemhuis.info>
-Organization: Red Hat
-In-Reply-To: <1e38a2b9-ca88-4497-b2b3-2157dd83e479@leemhuis.info>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-CA
+Subject: Re: [REGRESSION] USB flash drive unusable with constant resets, since
+ commit 4f53138fff
+To: Joao Machado <jocrismachado@gmail.com>
+Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <CACLx9VdpUanftfPo2jVAqXdcWe8Y43MsDeZmMPooTzVaVJAh2w@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CACLx9VdpUanftfPo2jVAqXdcWe8Y43MsDeZmMPooTzVaVJAh2w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-05-29 10:12, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 29.05.24 17:09, Adam Williamson wrote:
->> On 2024-05-29 06:35, Genes Lists wrote:
->>> On Wed, 2024-05-29 at 15:01 +0200, Linux regression tracking (Thorsten
->>> Leemhuis) wrote:
->>>>>
->>>>>       cpu i9-12900K  / Raptor Lake-P [Iris Xe Graphics]
->>>
->>>     Sorry, this should be:  13th Gen Intel(R) Core(TM) i7-1360P
->>>>
->>>> Does this happen every boot or only sometimes? Could you maybe upload
->>>> the full dmesg from a boot where things worked and one where only the
->>>
->>> For me it is every boot - the first few key strokes are accepted but no
->>> asterisks are displayed - and it works fine even though fewer asterisks
->>> are displayed than characters typed.
->>
->> That sounds different from my case.
-> 
-> Hmm, bummer. That might have made things a lot easier...
+On 5/26/24 07:53, Joao Machado wrote:
+> Linux Distribution: Archlinux
+> Kernel version: 6.9.1
+>=20
+> Noticed my "Kingston DataTraveler G2" is unusable on kernel 6.9.x, cons=
+tantly resetting in a loop:
+>=20
+> May 21 21:42:46 oldell kernel: usb 1-1.3: new high-speed USB device num=
+ber 4 using ehci-pci
+> May 21 21:42:46 oldell kernel: usb 1-1.3: New USB device found, idVendo=
+r=3D0951, idProduct=3D1624, bcdDevice=3D 1.00
+> May 21 21:42:46 oldell kernel: usb 1-1.3: New USB device strings: Mfr=3D=
+1, Product=3D2, SerialNumber=3D3
+> May 21 21:42:46 oldell kernel: usb 1-1.3: Product: DataTraveler G2
+> May 21 21:42:46 oldell kernel: usb 1-1.3: Manufacturer: Kingston
+> May 21 21:42:46 oldell kernel: usb 1-1.3: SerialNumber: 0014780F9955F97=
+1A5EC08D7
+> May 21 21:42:47 oldell kernel: usb-storage 1-1.3:1.0: USB Mass Storage =
+device detected
+> May 21 21:42:47 oldell kernel: scsi host6: usb-storage 1-1.3:1.0
+> May 21 21:42:47 oldell kernel: usbcore: registered new interface driver=
+ usb-storage
+> May 21 21:42:47 oldell kernel: usbcore: registered new interface driver=
+ uas
+> May 21 21:42:48 oldell kernel: scsi 6:0:0:0: Direct-Access =C2=A0 =C2=A0=
+ Kingston DataTraveler G2 =C2=A01.00 PQ: 0 ANSI: 2
+> May 21 21:42:48 oldell kernel: sd 6:0:0:0: [sdb] 15654848 512-byte logi=
+cal blocks: (8.02 GB/7.46 GiB)
+> May 21 21:42:48 oldell kernel: sd 6:0:0:0: [sdb] Write Protect is off
+> May 21 21:42:48 oldell kernel: sd 6:0:0:0: [sdb] Mode Sense: 16 24 09 5=
+1
+> May 21 21:42:48 oldell kernel: sd 6:0:0:0: [sdb] Incomplete mode parame=
+ter data
+> May 21 21:42:48 oldell kernel: sd 6:0:0:0: [sdb] Assuming drive cache: =
+write through
+> May 21 21:42:48 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:48 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:48 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:48 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:48 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:49 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:50 oldell kernel: usb 1-1.3: reset high-speed USB device n=
+umber 4 using ehci-pci
+> May 21 21:42:50 oldell kernel: sd 6:0:0:0: [sdb] tag#0 FAILED Result: h=
+ostbyte=3DDID_OK driverbyte=3DDRIVER_OK cmd_age=3D0s
+> May 21 21:42:50 oldell kernel: sd 6:0:0:0: [sdb] tag#0 Sense Key : Unit=
+ Attention [current]
+> May 21 21:42:50 oldell kernel: sd 6:0:0:0: [sdb] tag#0 Add. Sense: Not =
+ready to ready change, medium may have changed
+> May 21 21:42:50 oldell kernel: sd 6:0:0:0: [sdb] tag#0 CDB: Read(10) 28=
+ 00 00 00 00 00 00 00 08 00
+>=20
+> This is not affecting all USB flash drive models. For instance, this de=
+vice works fine:
+>=20
+> |May 23 20:15:37 oldell kernel: usb 2-1.2: new high-speed USB device nu=
+mber 9 using ehci-pci May 23 20:15:37 oldell kernel: usb 2-1.2: New USB d=
+evice found, idVendor=3D6557, idProduct=3D2031, bcdDevice=3D 1.10 May 23 =
+20:15:37 oldell kernel: usb 2-1.2: New USB device strings:=20
+> Mfr=3D1, Product=3D2, SerialNumber=3D3 May 23 20:15:37 oldell kernel: u=
+sb 2-1.2: Product: USB DISK 3.0 May 23 20:15:37 oldell kernel: usb 2-1.2:=
+ Manufacturer: May 23 20:15:37 oldell kernel: usb 2-1.2: SerialNumber: 07=
+0D393C83CB5024 May 23 20:15:37 oldell kernel: usb-storage=20
+> 2-1.2:1.0: USB Mass Storage device detected May 23 20:15:37 oldell kern=
+el: scsi host6: usb-storage 2-1.2:1.0 May 23 20:15:37 oldell mtp-probe[23=
+00]: checking bus 2, device 9: "/sys/devices/pci0000:00/0000:00:1d.0/usb2=
+/2-1/2-1.2" May 23 20:15:37 oldell mtp-probe[2300]:=20
+> bus: 2, device: 9 was not an MTP device May 23 20:15:37 oldell mtp-prob=
+e[2301]: checking bus 2, device 9: "/sys/devices/pci0000:00/0000:00:1d.0/=
+usb2/2-1/2-1.2" May 23 20:15:37 oldell mtp-probe[2301]: bus: 2, device: 9=
+ was not an MTP device May 23 20:15:38 oldell kernel:=20
+> scsi 6:0:0:0: Direct-Access USB DISK 3.0 PMAP PQ: 0 ANSI: 6 May 23 20:1=
+5:39 oldell kernel: sd 6:0:0:0: [sdb] 121145344 512-byte logical blocks: =
+(62.0 GB/57.8 GiB) May 23 20:15:39 oldell kernel: sd 6:0:0:0: [sdb] Write=
+ Protect is off May 23 20:15:39 oldell kernel: sd=20
+> 6:0:0:0: [sdb] Mode Sense: 45 00 00 00 May 23 20:15:39 oldell kernel: s=
+d 6:0:0:0: [sdb] Write cache: disabled, read cache: enabled, doesn't supp=
+ort DPO or FUA May 23 20:15:39 oldell kernel: sdb: sdb1 sdb2 May 23 20:15=
+:39 oldell kernel: sd 6:0:0:0: [sdb] Attached SCSI=20
+> removable disk|
+>=20
+> Proceeded to bisect the kernel, which points to commit 4f53138fffc2b183=
+96859aa4ff3e7ef2b0839c2b <https://git.kernel.org/pub/scm/linux/kernel/git=
+/torvalds/linux.git/commit/?id=3D4f53138fffc2b18396859aa4ff3e7ef2b0839c2b=
+> causing the issue to surface.
+> Changing USB port made no difference. Tried the same device on a differ=
+ent computer using kernel 6.9.2 - issue replicates.
+>=20
+> Attached bisection log, systemd journal kernel logs.
 
-Well, it turns out I can reproduce this fairly easily in a VM on my 
-regular laptop, which helps a bit. I've attached some logs to the 
-downstream bug at https://bugzilla.redhat.com/show_bug.cgi?id=2274770 , 
-and Ray is taking a look at it ATM. More eyes appreciated.
--- 
-Adam Williamson (he/him/his)
-Fedora QA
-Fedora Chat: @adamwill:fedora.im | Mastodon: @adamw@fosstodon.org
-https://www.happyassassin.net
+Thank you for the detailed report and also for having bisected this issue=
+.
+Does the patch below help (compile-tested only)?
+
+Thanks,
+
+Bart.
+
+
+---
+  drivers/scsi/scsi_devinfo.c | 1 +
+  drivers/scsi/scsi_scan.c    | 2 ++
+  drivers/scsi/sd.c           | 4 ++++
+  include/scsi/scsi_devinfo.h | 4 +++-
+  4 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index a7071e71389e..85111e14c53b 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -197,6 +197,7 @@ static struct {
+  	{"INSITE", "I325VM", NULL, BLIST_KEY},
+  	{"Intel", "Multi-Flex", NULL, BLIST_NO_RSOC},
+  	{"iRiver", "iFP Mass Driver", NULL, BLIST_NOT_LOCKABLE | BLIST_INQUIRY=
+_36},
++	{"Kingston", "DataTraveler G2", NULL, BLIST_SKIP_IO_HINTS},
+  	{"LASOUND", "CDX7405", "3.10", BLIST_MAX5LUN | BLIST_SINGLELUN},
+  	{"Marvell", "Console", NULL, BLIST_SKIP_VPD_PAGES},
+  	{"Marvell", "91xx Config", "1.01", BLIST_SKIP_VPD_PAGES},
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 8300fc28cb10..ca7d14ee4575 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -745,6 +745,8 @@ static int scsi_probe_lun(struct scsi_device *sdev, u=
+nsigned char *inq_result,
+  		*bflags =3D scsi_get_device_flags(sdev, &inq_result[8],
+  				&inq_result[16]);
+
++		sdev_printk(KERN_INFO, sdev, "bflags =3D %#llx\n", *bflags);
++
+  		/* When the first pass succeeds we gain information about
+  		 * what larger transfer lengths might work. */
+  		if (pass =3D=3D 1) {
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 3a43e2209751..fcf3d7730466 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -63,6 +63,7 @@
+  #include <scsi/scsi_cmnd.h>
+  #include <scsi/scsi_dbg.h>
+  #include <scsi/scsi_device.h>
++#include <scsi/scsi_devinfo.h>
+  #include <scsi/scsi_driver.h>
+  #include <scsi/scsi_eh.h>
+  #include <scsi/scsi_host.h>
+@@ -3117,6 +3118,9 @@ static void sd_read_io_hints(struct scsi_disk *sdkp=
+, unsigned char *buffer)
+  	struct scsi_mode_data data;
+  	int res;
+
++	if (sdp->sdev_bflags & BLIST_SKIP_IO_HINTS)
++		return;
++
+  	res =3D scsi_mode_sense(sdp, /*dbd=3D*/0x8, /*modepage=3D*/0x0a,
+  			      /*subpage=3D*/0x05, buffer, SD_BUF_SIZE, SD_TIMEOUT,
+  			      sdkp->max_retries, &data, &sshdr);
+diff --git a/include/scsi/scsi_devinfo.h b/include/scsi/scsi_devinfo.h
+index 6b548dc2c496..fa8721e49dec 100644
+--- a/include/scsi/scsi_devinfo.h
++++ b/include/scsi/scsi_devinfo.h
+@@ -69,8 +69,10 @@
+  #define BLIST_RETRY_ITF		((__force blist_flags_t)(1ULL << 32))
+  /* Always retry ABORTED_COMMAND with ASC 0xc1 */
+  #define BLIST_RETRY_ASC_C1	((__force blist_flags_t)(1ULL << 33))
++/* Do not read the I/O hints mode page */
++#define BLIST_SKIP_IO_HINTS	((__force blist_flags_t)(1ULL << 34))
+
+-#define __BLIST_LAST_USED BLIST_RETRY_ASC_C1
++#define __BLIST_LAST_USED BLIST_SKIP_IO_HINTS
+
+  #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
+  			       (__force blist_flags_t) \
 
