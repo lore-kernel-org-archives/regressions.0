@@ -1,37 +1,28 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049761E888;
-	Wed, 29 May 2024 09:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD6179658
+	for <regressions@lists.linux.dev>; Wed, 29 May 2024 10:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716973623; cv=none; b=fJdIQK0y3fAwGCUey0OZ4t4Qnsz7NjBPNIuISTT0zSUMgZxHB2RP5lMqhh8rsLFVri1/faCewV7UljKOw7zsxSlejFHhF0hNsqgTitkk0fO2LEnJ4Ex0fekWbvPRYc/53EQl8rRdeAFSAMbt79p7vVfeexzzVdY9brQvNSKHAB8=
+	t=1716977174; cv=none; b=f+p8Wnl+nB+UUep0DC4EI5aVHZTGRafJvXM17RfdO7WHjpqwtXFO18gyWALV6Zw+AtanOPDidAQU2gF2XJ7o81etUx6QsC2iPSVKOCFsxsK3pwwZlThb1WCKBgtcRW/CiBRAI98X8+jS1SeJuwf5WyaozYgCvIg1C9v8FM3Ha8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716973623; c=relaxed/simple;
-	bh=8a+y4xebRj73GpHCVAWuMNXwnLAcUllC70MgJC5/I3U=;
+	s=arc-20240116; t=1716977174; c=relaxed/simple;
+	bh=G1Rk+7kEkFD09wELNnRj53zJwtqDGrgnZU8T7fnfjek=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=srVdmour4zM29w5KayZ8Xq7yJM4ZRA9DtZEVMdaYg1fdPZEXpk147wICCvGhsnyeY3DNIiGNPYu9qdpzvyN1Infkbefjn+orIU9CntmhFVdMXbGb0F/R1Oo2lVbujev7Y/NXEMfx6P5I8nuPt9vUn9BGqOxTf/K9IyytG0Xmr2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=o3ixHpwm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="o3ixHpwm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=8a+y4xebRj73GpHCVAWuMNXwnLAcUllC70MgJC5/I3U=; t=1716973621;
-	x=1717405621; b=o3ixHpwmnNyZxqPYM3+EEPY1+/8VMyGKMzkha4/IbfKQUHqZH7Bwy96IpmsJ3
-	RMTlJ93BuWn1FZX0PRMCropLHn/8AAHQ0l+mnQN36CtABtnstLd7OR2yN1BYCG4d5vV+Sp9i0O/Xa
-	ykh1Xb2KkxUCG38DAtt1vDRdN/1ZLFeQWAMmZkKND7oTObKbm3Q1HYCVVZOfNTt06k9IAmAOvEtu2
-	a8nmG+UKOzElKHMDFXU2rC3+qsvf71LCP/lKHMzwkcTLYBNoJXyG/hW0gbXcI1xp7Ms5gVLujZOh3
-	TcumqFQq1Fwxsgz7TCvCvdE5kjn8n2LbRrxyNzcRmVSmO7tE1A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCFGm-0005Uo-Dr; Wed, 29 May 2024 11:06:52 +0200
-Message-ID: <ecee3a54-1a09-40fa-afdb-057ca02cb574@leemhuis.info>
-Date: Wed, 29 May 2024 11:06:51 +0200
+	 In-Reply-To:Content-Type; b=QMFtg7WrLTdOx4XVZlaLqVF+Rk3jV/WQITfcgQNhG52VTCgdzDaIRWgLk6J8/JdIitBH8ThTpXHSEm7l9VXXPIGUXxLfZFsIZ0EkKM2uvnM+vpNY76rRLWYwAo4xiDRf9TIVK5qADM3DE/H+M0SMyF/3K1YLOanFJdiUrnJo+84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.3] (ip5f5af7f7.dynamic.kabel-deutschland.de [95.90.247.247])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id ABB5461E5FE01;
+	Wed, 29 May 2024 12:05:43 +0200 (CEST)
+Message-ID: <52ccf0c1-e5dd-412b-9e47-7829ca0f6ffc@molgen.mpg.de>
+Date: Wed, 29 May 2024 12:05:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,68 +30,109 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-To: Mike <user.service2016@gmail.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
- Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
- =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <c947e600-e126-43ea-9530-0389206bef5e@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <c947e600-e126-43ea-9530-0389206bef5e@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 2/2] Bluetooth: btnxpuart: Update firmware names
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amitkumar.karwar@nxp.com, rohit.fule@nxp.com,
+ sherry.sun@nxp.com, ziniu.wang_1@nxp.com, haibo.chen@nxp.com,
+ LnxRevLi@nxp.com, regressions@lists.linux.dev
+References: <20240529095347.22186-1-neeraj.sanjaykale@nxp.com>
+ <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240529095347.22186-3-neeraj.sanjaykale@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716973621;f632811f;
-X-HE-SMSGID: 1sCFGm-0005Uo-Dr
 
-On 28.05.24 22:54, Mike wrote:
-> On 29.04.24 20:46, Linux regression tracking (Thorsten Leemhuis) wrote:>
->> Well, did you try what I suggested earlier (see above) and check if a
->> revert of 6083089ab00631617f9eac678df3ab050a9d837a ontop of latest 6.1.y
->> helps?
->
-> I hope you don't mind if I jump into the conversation trying to help.
+[Cc: regressions@]
 
-On the contrary, thx for providing the needed information!
+Dear Neeraj,
 
-> I tried reverting 6083089ab00631617f9eac678df3ab050a9d837a
-> on top of6.1.91 and it looks much better: it's been 10 days, and the BT
-> and the system are stable.
-> Previously, I encountered the mentioned "kernel BUG" at each boot,
 
-Might be a good idea to share it, the developers might want to confirm
-it's really the same bug.
+Am 29.05.24 um 11:53 schrieb Neeraj Sanjay Kale:
+> This updates the firmware names of 3 chipsets: w8987, w8997, w9098.
+> These changes are been done to standardize chip specific firmware
+> file names.
 
-> and I was unable to stop/kill the bluetoothd process.
-> Let me know if/how I can help further.
+Can you please describe the new naming schema in the commit message?
 
-Jeremy Lainé already confirmed that 6.9-rc5[1] worked fine and that
-another fix for the culprit did not help[2]. Therefore we just have
-three options left:
+> To allow user to use older firmware file names, a new device tree
+> property has been introduced called firmware-name, which will override
+> the hardcoded firmware names in the driver.
 
-1. test another fix for the culprit I found on lore -- but note, this is
-just a shot in the dark
-https://lore.kernel.org/all/20240411151929.403263-1-kovalev@altlinux.org/
+So users updating the Linux kernel but not updating the devicetree with 
+the new property are going to see a regression, right? I think this 
+violates Linux’ no regression policy. If so, please implement a way to 
+support old and new names.
 
-2. revert 6083089ab00631617f9eac678df3ab050a9d837a in 6.1.y if that is
-still possible, does not create a even bigger regression, or leads to
-some security vulnerability
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> ---
+> v2: Remove "nxp/" from all firmware name definitions to be inline with
+> firware file name read from device tree file. (Krzysztof)
 
-3. motivate the BT developers to look into this (some other patch the
-culprit depends on might be missing), even if this strictly speaking is
-a problem they are free to ignore.
+fir*m*ware
 
-Maybe give "1." a try; then we'll ask Greg for "2.", unless this
-discussion or something else leads to "3."
+> ---
+>   drivers/bluetooth/btnxpuart.c | 28 +++++++++++++++++-----------
+>   1 file changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+> index 0b93c2ff29e4..4442d911eba8 100644
+> --- a/drivers/bluetooth/btnxpuart.c
+> +++ b/drivers/bluetooth/btnxpuart.c
+> @@ -33,16 +33,16 @@
+>   /* NXP HW err codes */
+>   #define BTNXPUART_IR_HW_ERR		0xb0
+>   
+> -#define FIRMWARE_W8987		"nxp/uartuart8987_bt.bin"
+> -#define FIRMWARE_W8997		"nxp/uartuart8997_bt_v4.bin"
+> -#define FIRMWARE_W9098		"nxp/uartuart9098_bt_v1.bin"
+> -#define FIRMWARE_IW416		"nxp/uartiw416_bt_v0.bin"
+> -#define FIRMWARE_IW612		"nxp/uartspi_n61x_v1.bin.se"
+> -#define FIRMWARE_IW624		"nxp/uartiw624_bt.bin"
+> -#define FIRMWARE_SECURE_IW624	"nxp/uartiw624_bt.bin.se"
+> -#define FIRMWARE_AW693		"nxp/uartaw693_bt.bin"
+> -#define FIRMWARE_SECURE_AW693	"nxp/uartaw693_bt.bin.se"
+> -#define FIRMWARE_HELPER		"nxp/helper_uart_3000000.bin"
+> +#define FIRMWARE_W8987		"uart8987_bt_v0.bin"
+> +#define FIRMWARE_W8997		"uart8997_bt_v4.bin"
+> +#define FIRMWARE_W9098		"uart9098_bt_v1.bin"
+> +#define FIRMWARE_IW416		"uartiw416_bt_v0.bin"
+> +#define FIRMWARE_IW612		"uartspi_n61x_v1.bin.se"
+> +#define FIRMWARE_IW624		"uartiw624_bt.bin"
+> +#define FIRMWARE_SECURE_IW624	"uartiw624_bt.bin.se"
+> +#define FIRMWARE_AW693		"uartaw693_bt.bin"
+> +#define FIRMWARE_SECURE_AW693	"uartaw693_bt.bin.se"
+> +#define FIRMWARE_HELPER		"helper_uart_3000000.bin"
+>   
+>   #define CHIP_ID_W9098		0x5c03
+>   #define CHIP_ID_IW416		0x7201
+> @@ -685,13 +685,19 @@ static bool process_boot_signature(struct btnxpuart_dev *nxpdev)
+>   static int nxp_request_firmware(struct hci_dev *hdev, const char *fw_name)
+>   {
+>   	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
+> +	const char *fw_name_dt;
+>   	int err = 0;
+>   
+>   	if (!fw_name)
+>   		return -ENOENT;
+>   
+>   	if (!strlen(nxpdev->fw_name)) {
+> -		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "%s", fw_name);
+> +		if (strcmp(fw_name, FIRMWARE_HELPER) &&
+> +		    !device_property_read_string(&nxpdev->serdev->dev,
+> +						 "firmware-name",
+> +						 &fw_name_dt))
+> +			fw_name = fw_name_dt;
+> +		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "nxp/%s", fw_name);
+>   
+>   		bt_dev_dbg(hdev, "Request Firmware: %s", nxpdev->fw_name);
+>   		err = request_firmware(&nxpdev->fw, nxpdev->fw_name, &hdev->dev);
 
-Ciao, Thorsten
 
-[1]
-https://lore.kernel.org/all/CADRbXaA2yFjMo=_8_ZTubPbrrmWH9yx+aG5pUadnk395koonXg@mail.gmail.com/
-[2]
-https://lore.kernel.org/all/CADRbXaBkkGmqnibGvcAF2YH5CjLRJ2bnnix1xKozKdw_Hv3qNg@mail.gmail.com/
+Kind regards,
+
+Paul
