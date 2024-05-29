@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0EE23DE;
-	Wed, 29 May 2024 12:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74903748D;
+	Wed, 29 May 2024 13:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716987072; cv=none; b=cCCTNIqqLoKg70ky6Si1q7W0GO7kxItdGxVTvoS0ybzQJBOYCTm16bTdS6uYbr7d0x7O5rbHnsSlsgLBB0udt94ZlNgcF6jZZc4xlLgxXEP7BezuYugFO/dztBPzsRqxK4eNwPBigMAsYovy07lYVPj5c2I8+3wCo/q3vqqVYvQ=
+	t=1716987675; cv=none; b=sDg10EB8iIJglmKEeAzsmiL+ll7jfDmZlLe9s7ys79hPi3V7Zi1D4MhX8AdxSOIeG3GP5aYzlrnHB2tplDDX3js4Vvi+3gx8+UZHn2uNvOggqa09o85CUlUMtHc2URCxjebYzcRWV4Q9ehHAXDKCZdUM7b/y2nk7dXGtYoCshoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716987072; c=relaxed/simple;
-	bh=nzeduYzqyrc4dtRTbpFp0fKRRmiHy1rwvKZ+9Q8IAwA=;
+	s=arc-20240116; t=1716987675; c=relaxed/simple;
+	bh=5ci8D0ELZpBeOFG3Fs2KkfNrgLQAA2tui9D3C9nTdaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ImpWufHb1lNFEvoksjxmAMCyX82NOaQsXD7jYAgnWTskQDovtt/+Ay30WQRztY8RtR9eQqhKSRM07IIBRQAcjom91gTf6z/o3HvCxIJ0SBEq7pcrBb8aW7U5bOIXvme7OMGcdctJ9DHV/XJFNt6BcS/+RNnejBjmnVhrn0Kjf9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aIMjeblZ; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=S8hJ9cLfac5fmuqP/FXir6IsZSGBZYbYTGx3ADYEix9iywpD8ZyJSS1UG1NXpo4t9uHHrNsVL2tubOHiBRlgfwuHp1nAuoQTOzINRVDvg60PSDCazaU+orL+n3zad9dMI3HDdFtmpye012ZsROuN6VPnfBsnZNW+j/ZdXWwT+sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wTJizbAx; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aIMjeblZ"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wTJizbAx"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=CWj9EbBpza8KDASnIQoPoNPdtY21F25m+kK5YEbF3AU=;
-	t=1716987070; x=1717419070; b=aIMjeblZzY15D/qHPVuh4QFjyCcKwNXWbPnQaDBZPs2JX5a
-	OFrN1qGA1PBstYUxRaUKbbWIblyhF5CbYWXhOdtD2OpyP0PHbJ8gMKGW2FqTQY0EOgrK/aM+aygA7
-	S/c3xKxg/Bit8fSgGZi7u0kCV8ZdcSc8wPQvPwoBrshDjTYHJHX2NuG1UTqNPGS3j9eNyLI53L7Ue
-	b7gX0vP95crbW7PiNQD8KfcxzXkfsiuqmgdx3khsR8EGiEka5VLdtcLlhOgGoqqaWxQLMtC2yZ3b9
-	TzZXL/fcfXTs6oQ49KnEYPYwwE6VAJEP6PbS61wjSrB8dz+6GCMltZCpViSizllQ==;
+	In-Reply-To:References; bh=NSB6YE+it0l2b05RFg46sN7An5czysdG9ZAFAMnJWow=;
+	t=1716987673; x=1717419673; b=wTJizbAxNjyhwHGlcxY4qc1F/Iz66e767YtbGjPLklT4D45
+	uGB3XTGiOEUwjEFz3/CM8EIq2jRnqbcJGpzrCM8Yk2TE3A/FItb2DedElHjQyRgiudzWSIpKKpGwK
+	71MLiK8nwuiaVsaVA+dn5l4QoubPK/END6qURohHODlgzQovs3dd6QOY+zouIxe8mun8k7m5hHnWe
+	bbnqxgsPmewJkgtOVr0/704SGO4Yweb81bshX1VHFLUbDkFPzW/XPLuDuGlFyD54hEwKA1P3ILo03
+	oC4xP7Ug7Ca10nhkdNVmCsqDCOqJJh6FZjbY8MEVhin1i+pEOxTOJLqDSndaM0aw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCIln-0006nE-IH; Wed, 29 May 2024 14:51:07 +0200
-Message-ID: <5fb1d05f-1736-42dc-86dc-fdc1bddcaa0c@leemhuis.info>
-Date: Wed, 29 May 2024 14:51:07 +0200
+	id 1sCIvU-0000C2-PR; Wed, 29 May 2024 15:01:08 +0200
+Message-ID: <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
+Date: Wed, 29 May 2024 15:01:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,92 +39,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: NFSD: Unable to initialize client recovery tracking! (-110)
-To: Chuck Lever III <chuck.lever@oracle.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Jeff Layton <jlayton@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de>
- <e8ab863e-18a5-4c16-b0c8-a3ab6440a9f6@molgen.mpg.de>
- <5096230634b5bab2e5094c0d52780ffe2fa75bb9.camel@kernel.org>
- <90700421-4567-4e28-ae71-8541086b46e2@leemhuis.info>
- <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI VMs
+ since kernel 6.9
+To: Genes Lists <lists@sapience.com>, Adam Williamson <awilliam@redhat.com>,
+ linux-kernel@vger.kernel.org
+Cc: jforbes@redhat.com, rstrode@redhat.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
+ <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5360A648-8236-466C-A9D8-82F2BBE6F059@oracle.com>
+In-Reply-To: <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716987070;c5569a1f;
-X-HE-SMSGID: 1sCIln-0006nE-IH
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716987673;11a43648;
+X-HE-SMSGID: 1sCIvU-0000C2-PR
 
-On 24.05.24 18:09, Chuck Lever III wrote:
->> On May 24, 2024, at 7:16 AM, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->> On 21.05.24 12:01, Jeff Layton wrote:
->>> On Tue, 2024-05-21 at 11:55 +0200, Paul Menzel wrote:
->>>> Am 19.04.24 um 18:50 schrieb Paul Menzel:
->>>>
->>>>> Since at least Linux 6.8-rc6, Linux logs the warning below:
->>>>>
->>>>>     NFSD: Unable to initialize client recovery tracking! (-110)
->>>>>
->>>>> I haven’t had time to bisect yet, so if you have an idea, that’d be great.
->>>>
->>>> 74fd48739d0488e39ae18b0168720f449a06690c is the first bad commit
->>>> commit 74fd48739d0488e39ae18b0168720f449a06690c
->>>> Author: Jeff Layton <jlayton@kernel.org>
->>>> Date:   Fri Oct 13 09:03:53 2023 -0400
->>>>
->>>>     nfsd: new Kconfig option for legacy client tracking
->>>>
->>>>     We've had a number of attempts at different NFSv4 client tracking
->>>>     methods over the years, but now nfsdcld has emerged as the clear winner
->>>>     since the others (recoverydir and the usermodehelper upcall) are
->>>>     problematic.
->>> [...]
->>> It sounds like you need to enable nfsdcld in your environment. The old
->>> recovery tracking methods are deprecated. The only surviving one
->>> requires the nfsdcld daemon to be running when recovery tracking is
->>> started. Alternately, you can enable this option in your kernels if you
->>> want to keep using the deprecated methods in the interim.
->>
->> Hmm. Then why didn't this new config option default to "Y" for a while
->> (say a year or two) before changing the default to off? That would have
->> prevented people like Paul from running into the problem when running
->> "olddefconfig". I think that is what Linus would have wanted in a case
->> like this, but might be totally wrong there (I CCed him, in case he
->> wants to share his opinion, but maybe he does not care much).
-> 
-> That's fair. I recall we believed at the time that very few people
-> if anyone currently use a legacy recovery tracking mechanism, and
-> the workaround, if they do, is easy.
-> 
->> But I guess that's too late now, unless we want to meddle with config
->> option names. But I guess that might not be worth it after half a year
->> for something that only causes a warning (aiui).
-> 
-> In Paul's case, the default behavior might prevent proper NFSv4
-> state recovery, which is a little more hazardous than a mere
-> warning, IIUC.
-> 
-> To my surprise, it often takes quite some time for changes like
-> this to matriculate into mainstream usage, so half a year isn't
-> that long. We might want to change to a more traditional
-> deprecation path (default Y with warning, wait, default N, wait,
-> redact the old code).
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Well, that would help anybody that already ran "make olddefconfig" with
-a kernel that has 74fd48739d04, as they now have
-NFSD_LEGACY_CLIENT_TRACKING unset in their .config -- at least unless we
-rename that option and make it default to Y; but it would help everybody
-that updates from the latest longterm kernel to a future kernel that
-would contain a change like you outlined.
+Side note: a bug report just to the LKML (e.g. w/o any subsystem lists
+or maintainers) is unlikely to gain traction; I considered adding the
+DRM folks, but lets try one thing first:
+
+On 27.05.24 17:18, Genes Lists wrote:
+> On Fri, 2024-05-24 at 09:08 -0700, Adam Williamson wrote:
+>> Hi, folks. Please CC me on replies, I'm not subscribed to the list.
+>> The 
+>> downstream bug report for this is 
+>> https://bugzilla.redhat.com/show_bug.cgi?id=2274770 .
+> 
+> 1) FYI : I see same thing booting dell xps 13 9320 laptop (no VM) on
+> mainline 6.10-rc1 (started sometime early 6.9 as far as I recall)
+> 
+>     bios 2.11.0
+> 
+>     cpu i9-12900K  / Raptor Lake-P [Iris Xe Graphics]
+>     Boot using systemd-boot
+> 
+> dmesg (trimmed) attached. 
+
+Does this happen every boot or only sometimes? Could you maybe upload
+the full dmesg from a boot where things worked and one where only the
+text UI came up? It's just a shot in the dark, but maybe that will tell
+us where the root of the problem might be.
+
+> 2) Note there is a crash later in boot (in mei_csi_probe). Assume this
+> crash is a separate issue.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me add this to the regression tracking
+
+#regzbot report: /
+#regzbot introduced: v6.8..v6.9
+#regzbot summary: Intermittent inability to type in graphical Plymouth
+on UEFI VMs since kernel 6.9
