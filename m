@@ -1,146 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0D181CF7;
-	Wed, 29 May 2024 15:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1CD1B810;
+	Wed, 29 May 2024 17:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998320; cv=none; b=WsQ/FwUJWRKfLkle5hI4hCuX73+MTNeA2CajvJc7QG2KUIrkfZRunlUTHsYT4QV28NKQ4f9dpM7cznV3svUZ8qR7SVSKnx2PDRMpHDkF8CvgtP8ZtFxhxm1rsSsEZ2m8/9+o74Pc5A2mSVUTHCGzt+Yte42qSBwFpJsM6z0K5zA=
+	t=1717002783; cv=none; b=qvNo215WKatesE8tk2q1lRja1RaMweJC41/UXx6BDC6lvqdzNegdItd1bRs88HoTP4KJf+VYS0zrB7P/O2qLOzyvL/I0hkDsfn52wwt9qTzeSEzhSqryubJfodzQftf5cyXWlYJqXfVbbJkQjJB4EnCQUhsM1uDNQ8uKQ3evrkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998320; c=relaxed/simple;
-	bh=ufyQbqT93SwSt4s4JqmoiAB/zHJa/FMuOgckZ/BR4TU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=MhjhyaykSajl2weD08GXzNLCxiOdA8RKpPQp+u8ovxDM41x2IUGxk95raVEsjVqF+Ya9mxi+ThT3+4gq4ykOfT0yBtSSlVeOl0VcKbhnlF4GIgXdXl8CtdR8kqBWTsZJZUJQgVcfwCB+DwRz9PD3bt2BC75933uwlDVNbni/kF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fypTA+JW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717002783; c=relaxed/simple;
+	bh=aduZMEOEFptOCP3o/CYOAC5kBuOtb+6bYHp4jNqngO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aUP2Hyr0GNZzy2hETFB10M1qkuiOXZ8zE5LLoRg6nDhVnYoysmWdUH0xDvgIXnV0snRGmacmZHsWA2F65qXreSqtzblxpKhy0e2yiNtvLOQou9g0BGu1oogQOfDGTVYMhjt9izEu1PMDMZ2MkRTLZsIUw2D9BKIrNlNBThz4nzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=US4aXRDi; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fypTA+JW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491BCC113CC;
-	Wed, 29 May 2024 15:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716998319;
-	bh=ufyQbqT93SwSt4s4JqmoiAB/zHJa/FMuOgckZ/BR4TU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=fypTA+JW2IV7pVP1qSfV1ol4Ja9TfGeBVVJx8MRhuBAJGIEN1e8OFOne5tbK7RN2a
-	 D0LvLXsB5H5+Gy+2++biOK246LPXm1vkQzR9dwUErgCpKivRZRfiAf8HPNiTGKX9pU
-	 oWErLgw+ObFGOiZhKOKrIKTl3UdfBp0zLwwvyhBPfMijoZcJ4GqJGbGRVpxLiXLuK3
-	 rlD365rHM/V9afV0i+oKhcXyHY2VXEmAZKWOS9YOv4s3qcmAjzDtAySsurpBtSy2FR
-	 KYwVbp/sbn1MbK0yr5b9F++Zx1/dfnPzTxAlo4T5Gd8s0DbfhjRb+ud079yR5zNYSX
-	 CxazeMz/4IGdw==
-From: Kalle Valo <kvalo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
-  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org>
-Date: Wed, 29 May 2024 18:58:36 +0300
-In-Reply-To: <87v82y6wvi.fsf@kernel.org> (Kalle Valo's message of "Tue, 28 May
-	2024 13:42:25 +0300")
-Message-ID: <87wmncwqxf.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="US4aXRDi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=7vnzBxHBsBBBhQu6kHV5glDMHyesyS9//BXjyDIRLlE=;
+	t=1717002781; x=1717434781; b=US4aXRDiAYPSNZbiNLJF/ZzeMqs910Y1mKR8M3GmcfIjgO0
+	1q+xQUAxpWZjbuY3ourzaO66i/QZLpSmXplUln+Y9nVXLvcZ3C1OQeCH9xmWH7htgUMtePYe971x7
+	KWvd2DkUmOC8WlelILn9VWiYDNv5oSCrwKFweZN36lOKkjUnp8zqT/LpjtpmoTd6q/c8PgcN9tWOv
+	KdACbsOBdGfoJubD+9IHc9xkxTZiPng1IRaG9urE2f9p86oRhFccg4DP0tMexgfmjdF1BjAL85g6P
+	WTYTiuEwjqAGtfkR/N7eC2Z5+DJw8NSRWNlVKZXIFMoyZqQtwAIJYHn9JLcbVepg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCMrB-0003cT-Vz; Wed, 29 May 2024 19:12:58 +0200
+Message-ID: <1e38a2b9-ca88-4497-b2b3-2157dd83e479@leemhuis.info>
+Date: Wed, 29 May 2024 19:12:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Intermittent inability to type in graphical Plymouth on UEFI VMs
+ since kernel 6.9
+To: Adam Williamson <awilliam@redhat.com>, Genes Lists <lists@sapience.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-kernel@vger.kernel.org
+Cc: jforbes@redhat.com, rstrode@redhat.com
+References: <75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com>
+ <8fee69cc8fdd67fd265790c0fa287cb9566c2349.camel@sapience.com>
+ <165f7cfd-41bc-4c37-b859-a418a3ccece7@leemhuis.info>
+ <c5b3d3ec7701b51dd7b163261c84fb54c778b9bb.camel@sapience.com>
+ <8c460997-f8ff-4985-9e8a-09697a647a28@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <8c460997-f8ff-4985-9e8a-09697a647a28@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717002781;d8aef374;
+X-HE-SMSGID: 1sCMrB-0003cT-Vz
 
-Kalle Valo <kvalo@kernel.org> writes:
+On 29.05.24 17:09, Adam Williamson wrote:
+> On 2024-05-29 06:35, Genes Lists wrote:
+>> On Wed, 2024-05-29 at 15:01 +0200, Linux regression tracking (Thorsten
+>> Leemhuis) wrote:
+>>>>
+>>>>      cpu i9-12900K  / Raptor Lake-P [Iris Xe Graphics]
+>>
+>>    Sorry, this should be:  13th Gen Intel(R) Core(TM) i7-1360P
+>>>
+>>> Does this happen every boot or only sometimes? Could you maybe upload
+>>> the full dmesg from a boot where things worked and one where only the
+>>
+>> For me it is every boot - the first few key strokes are accepted but no
+>> asterisks are displayed - and it works fine even though fewer asterisks
+>> are displayed than characters typed.
+> 
+> That sounds different from my case.
 
-> Yesterday I run our ath11k regression tests with v6.10-rc1 and our
-> simple ath11k module reload stress started failing reliably with various
-> KASAN errors. The test removes and inserts ath11k and other wireless
-> modules in a loop. Usually I run it at least 100 times, some times even
-> more, and no issues until yesterday.
->
-> I have verified that the last wireless-next pull request (tag
-> wireless-next-2024-05-08) works without issues and v6.10-rc1 fails
-> always, usually within 50 module reload loops. From this I'm _guessing_
-> that we have a regression outside wireless, most probably introduced
-> between v6.9 and v6.10-rc1. But of course I cannot be sure of anything
-> yet.
->
-> I see different KASAN warnings and lockdep seems to be always visible in
-> the stack traces. I think I can reproduce the issue within 15 minutes or
-> so. Before I start bisecting has anyone else seen anything similar? Or
-> any suggestions how to debug this further?
->
-> I have included some crash logs below, they are retrieved using
-> netconsole. Here's a summary of the errors:
->
-> [ 159.970765] KASAN: maybe wild-memory-access in range
-> [0xbbbbbbbbbbbbbbb8-0xbbbbbbbbbbbbbbbf]
-> [  700.017632] BUG: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
-> [  224.695821] BUG: KASAN: slab-out-of-bounds in lockdep_register_key+0x755/0x8f0
-> [  259.666542] BUG: KASAN: slab-use-after-free in lockdep_register_key+0x755/0x8f0
+Hmm, bummer. That might have made things a lot easier...
 
-I did a bisect and got this:
+> In openQA (and the one time I saw it
+> live), the keystrokes do not appear to have any effect - no dots are
+> echoed at all, and hitting enter does not submit the passphrase.
 
-cf29111d3e4a9ebe1cbe2b431274718506d69f10 is the first bad commit
-commit cf29111d3e4a9ebe1cbe2b431274718506d69f10
-Merge: ed11a28cb709 e6f7d27df5d2
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Thu May 16 18:14:11 2024 -0500
+And no dmesg for working and non-working I suppose? Argh. :-/
 
-    Merge branch 'pci/of'
-    
-    - Check for kcalloc() failure and handle it gracefully (Duoming Zhou)
-    
-    * pci/of:
-      PCI: of_property: Return error for int_map allocation failure
+> I have no idea where to send emails reporting kernel bugs. It's a very
+> difficult world to penetrate
 
- drivers/pci/of_property.c | 2 ++
- 1 file changed, 2 insertions(+)
+I totally agree so far.
 
-But that doesn't make any sense to me, I don't even have
-CONFIG_PCI_DYNAMIC_OF_NODES enabled in my .config. I guess I did a
-mistake during bisect, I'm now testing the parents (e6f7d27df5d2 and
-ed11a28cb709) and trying to pinpoint where I did it wrong.
+> if you're not already in it.
 
-Adding Bjorn in case he has any ideas. This might be something PCI
-related based on my bisect log (but just guessing at this point):
+Up to a point that's what I'm here for. But right now I'm a bit
+uncertain who to involve. The input folks? The drm maintainers? But
+without a bit more data I doubt any of them will take a closer look at
+the problem.
 
-git bisect start
-# status: waiting for both good and bad commits
-# good: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
-git bisect good a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-# status: waiting for bad commit, 1 good commit known
-# good: [1d60eabb82694e58543e2b6366dae3e7465892a5] wifi: mwl8k: initialize cmd->addr[] properly
-git bisect good 1d60eabb82694e58543e2b6366dae3e7465892a5
-# status: waiting for bad commit, 2 good commits known
-# bad: [1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0] Linux 6.10-rc1
-git bisect bad 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-# good: [d34672777da3ea919e8adb0670ab91ddadf7dea0] Merge tag 'fbdev-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
-git bisect good d34672777da3ea919e8adb0670ab91ddadf7dea0
-# good: [a90f1cd105c6c5c246f07ca371d873d35b78c7d9] Merge tag 'turbostat-for-Linux-6.10-merge-window' of git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux
-git bisect good a90f1cd105c6c5c246f07ca371d873d35b78c7d9
-# bad: [29c73fc794c83505066ee6db893b2a83ac5fac63] Merge tag 'perf-tools-for-v6.10-1-2024-05-21' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
-git bisect bad 29c73fc794c83505066ee6db893b2a83ac5fac63
-# good: [30aec6e1bb617e1349d7fa5498898d7d4351d71e] Merge tag 'vfio-v6.10-rc1' of https://github.com/awilliam/linux-vfio
-git bisect good 30aec6e1bb617e1349d7fa5498898d7d4351d71e
-# bad: [8053d2ffc4502bbb50a78c805d964e65a6de1803] Merge tag 'phy-for-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy
-git bisect bad 8053d2ffc4502bbb50a78c805d964e65a6de1803
-# bad: [f0bae243b2bcf2b160ae547463bf542762beef8f] Merge tag 'pci-v6.10-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
-git bisect bad f0bae243b2bcf2b160ae547463bf542762beef8f
-# good: [38da32ee70b876f5b8bea7c4135eff46339c18f2] Merge tag 'pull-bd_inode-1' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
-git bisect good 38da32ee70b876f5b8bea7c4135eff46339c18f2
-# good: [ed11a28cb709a9ab69c4cd4e0669079a455f9a8d] Merge branch 'pci/msi'
-git bisect good ed11a28cb709a9ab69c4cd4e0669079a455f9a8d
-# bad: [102c69699b5b5d4aebfe8d15d5f91bde68dababd] Merge branch 'pci/controller/mt7621'
-git bisect bad 102c69699b5b5d4aebfe8d15d5f91bde68dababd
-# bad: [14680b252788675e2007fffde371e76a3a7a9b21] Merge branch 'pci/dt-bindings'
-git bisect bad 14680b252788675e2007fffde371e76a3a7a9b21
-# bad: [12ff1ef539c23cb7563bc3d894de9edd9469ea98] Merge branch 'pci/pm'
-git bisect bad 12ff1ef539c23cb7563bc3d894de9edd9469ea98
-# bad: [cf29111d3e4a9ebe1cbe2b431274718506d69f10] Merge branch 'pci/of'
-git bisect bad cf29111d3e4a9ebe1cbe2b431274718506d69f10
-# good: [e6f7d27df5d208b50cae817a91d128fb434bb12c] PCI: of_property: Return error for int_map allocation failure
-git bisect good e6f7d27df5d208b50cae817a91d128fb434bb12c
-# first bad commit: [cf29111d3e4a9ebe1cbe2b431274718506d69f10] Merge branch 'pci/of'
+> A proper bug tracker would make things much easier.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Not really I'd say, as the problem is the same here: someone needs to
+triage bugs and assign them to developers that are willing to look into
+them.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Ciao, Thorsten
