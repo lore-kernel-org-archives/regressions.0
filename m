@@ -1,129 +1,107 @@
-Received: from sonic301-21.consmr.mail.ir2.yahoo.com (sonic301-21.consmr.mail.ir2.yahoo.com [77.238.176.98])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B584183A65
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 11:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.176.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D581C8FA7
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 12:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717068021; cv=none; b=LJI8ZcwZxHVnWu2+AXT0LQmc/mNTJL+5dYErQlxGEvXQfTYbr+7nNXtyO7psuKI7rrPV1iv4io8KlUFs+jTqOvZ1U0RqsZQBfmdS0UmsiJB5sF9BDvaPKNHoU/YoSzYiUQ2rtueTH+oa/ZG9usJ+qeEpEJGgUubp1mHOrKoucpU=
+	t=1717071668; cv=none; b=W2WCfdUaw+JBLeKQNWD2UhdQs0C+LIilEVaT9lgQdFNV83+XnUAhW1n4FZmaPSW8Exy/M5VIQc1CvhqhxssbQXHiqYJ1RmMnmwJ6IFyEd4u/Ehr6X4FBUtarc7EdPP3i1sSMH+Hk+vtyh8ubIwATlo23TTBA88Q4lnQV/LcAemg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717068021; c=relaxed/simple;
-	bh=7aybtSefWX7qOkDAv6IB5StKPRuL/tJxPJ6SrdpSMbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1JxWy9fph2PaCZtalti5cEc7fq9GobxnRSnYnfIOJnx/G2AFe6Xw/rvezfCwheA8XwaEU/SINLeI14UiUI2Qf4Zqiv0zXFSq1Z0A3sV+AcXckSl+qFTAMDOKR4FkpWvAy1u8rBnjmSp92IakLZMLujPBf7sV7jpIBHPNALqLk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de; spf=pass smtp.mailfrom=yahoo.de; dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b=N6Bw332U; arc=none smtp.client-ip=77.238.176.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.de
+	s=arc-20240116; t=1717071668; c=relaxed/simple;
+	bh=8HQgs2bIZJeSzUXXR37T/KQj003N1PicGc6R84rQ6b4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j80bqxHNSHjUKfMzwnt/cvWB3yLk0Yr49sQZam8ixdY6q2DS/sSV7aQu0L8RIvGfnnwMnkGRliAuhJJjhxrEJ8rZYg6OXogdJ2X7H2BCiXsOCuwXdF6zFdmlKuws7iLIlstCENwxzVT9fxEDHYNaUqamVC6ocjJGRY31qzvYEnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pC6pQr1C; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b="N6Bw332U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.de; s=s2048; t=1717068017; bh=iETrNB+qFsCwf3l9yJ7zi5gWG9hU7iH9KF33EbrTrnc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=N6Bw332U7LWlAjZ9uyyccQkaqLuPxFec8BDyhZ8UAKB54RYgl0NzMcDdn3pMoTfOXkzubivemYVZ2BXBd6Squq9dDRFK7qxGZR6XFFzVq3+FJE9ACoFuwYKNCMu1SJ9Fe5An/5zSXjj5dYqicEki4ZBGsfSco+KoMqWHbd4Oqy5PEzySsVL5hWxIvOrDC9aLtQ2K4RRcjlHs/N2ISOIXpgidfRB6zO1DHo2UGAQtinJHsVBQupZ4QWGkURg7vIVUhwQFx07ADMxs3AuzVO9Mc1z03YLus8lYqPMe1a8phe/il4ttrFpu5pwM+AaWSrco52A0IoWTzKtu+EyihSVpNw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1717068017; bh=EJfPbVMzolG/tuoVaLTmLTFAhdsVNz7TDRnr46pUStC=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=NR0fAx4apGHYBcJhM9tyzgzQQuL9onX2ZQRNmiORMNd2W6h7/JZ6JDBZNJrM+DG2edUBzCOK/CGTn10XBg8GpYKVX0JFrOrB/w1TStnAqhGiN2A+HndY4IsjQPz1+ihqrlpKJBxMNQjQBtGnU8sh6i9TSVh6KHlQ0mRHx6ojQUXK8CcpYJlFTk4IegSuH/HLodVNBq9V6UheejZzZS4l3aWLqclKJVZq3icrEWFHRFwupmFZE+acjs7DTVGGXMPdyT+GhzmAmfwnS+kkfzohiM3gnI+WJp7NcGe2YxOBvl9YhjQ0mwwIkiViKGJrxz3Kj7JRpXmown+qwfn5EJFWgQ==
-X-YMail-OSG: jPnIlbUVM1kGJcHFvgbED0RbmTTs1gsxA9pBsgR.7GO5JuGivNQxYdwwJcvB7EM
- 0nOzIplJ5Xg96BJLjK9gvt8IGk2v3XB77CicaN1FzkMxKWY6FnVskGKH8wBg4t8nfUrg7FmnxURA
- .LS0iEIgVOD84GvWZwGBVhBH2DZRUe7Xp9Wh.44gCG8PuTuwHU_bs8N1b1VszVnexIS_bXUZFBfu
- _.XjLZHG8DLl6fhFUDCYyxF0lR4EoNmu53bObpy.I4kUBFYyHRHqUfO8gQCFQ1tENUfzZ4RYJN5d
- Yb.pM1FfmF8UJPJjETtMS5LekawUVKHy2galJ20meJ_9E5G5C4ShQep3mgnhCpALSop5kn5sWKdW
- zM.IF2FOyxmd8m0cZZczVTmPwcg809CJF8vTHcj9uxCx8HkEt4S541__u9X15SNNogCz9zykJY2b
- dzOMxrMUSd9OG2aWyKNXUPtIh_8wtaSuCww.hm91YdnW.69aIqjEocNIFt7XZ.NLcYNQG4w.c7Ov
- _qE9_N1c0GeEjcVchfrJQHFUCCcvbIv7UMvh2hKaE4MPnvWI8ZrH1E7xcSiZJ1yyoDuklQUvDlf7
- uMkwVdNok0jJFzREALmgMd6oKf1fBxlEtPtjSjvPXPeQFtDQrnOCdlSJIhqvXGStzFOOMYF0gTBe
- yDIFwQZmdgraoQJDwRw3nFB856ziOPWHDHQiGmnVQFhcA6xZ95XJ6Y3a12xrWb2nqsijzaARZeC7
- .wGwI8W646x9VQgPDtO0wIC5jRKExiKq3iVsbsC6IcYfPahJzzNXbj4ubIA.HHSq8fJ5xFsRQd6v
- FKoUsj3WdqlUXF44ys9Ao_G9j3UL41y_8VH99KIT8QO23W84rHkDWhQ_Hs_wXFy4VxgSFQRza8.x
- Re9cA0vm_bxPyix9lqIGNqdcGuiPAMjNGyegC6U.w.ukiqPM.HybvPmpuApQXTrOdiFvdt.lPNQO
- X71Q32m3_GPh5e9.JqRcRKhT60ZAJG_MAXmuJoZfKuvc_ZYjB9gPhjfR05vYMIBVR3Ca9N3xapB3
- ZkZhWPZH4t40zSbUUIUsL0Tu0LtyKP50BgIz_2dXmWjVzc_MCOaqytkGnEUygn9ZUW8ruKD63e.I
- JjMusee0NV1ZHZ9Op_KVZpS3.wzf0aq9_zPlH7oq6D9W76og.GyKek59abR3E0os7UAy1Kscr0Nb
- Rh1MWnMrxiytEc.ZxbFxZra4gK5x.O8PbPNZwkKh5b33kNokdN7Ci67qkkjtcwaLzieGHGjcuTp1
- OMfNRIm2P1rbzbJ7wjiSytQHfgqZtoNnFP39reDUWpIawhGY3PUM2Q1KTiHkjKokb5efGHjbSzm1
- r1bh4A6S7di6VwkEH8kgn6PWZI2RR1.2GsEgjn6ISsNhR2kws8mVTjLnySGKXtMlfLEqrT6c1u1J
- j2K_nripyC6wcZxueWuTqD3HTuE5LVyA6MnlESR4kDg0Kg9fzKdNAd9RygZi_SAGArbIVsnwIvNs
- ac6bDYuv9RTS_Un7IqRpHoR9xWf0FisbUHhFvtEoMnSwPv3AS45d..QNplndD68xkCuyLPzREvB.
- 7AQbzBwAYoNyb02CexkvTr9.5MJQZ0jwwOkosLtdfdhfBGw4ZqicRLcES.loP5gJcL1HwttNMJsk
- _uhPPSD8xgM4QBaNbCuWa4tIfyjootj2.lI0Z1WvNF8.xUFg2ckFXE7khrnA1f8OwhsCKlKUUj0A
- LavwfR8.KD2Juclegt0.33OPjw086LZUSkJerbo64uTFo0092Ke2Hh2ysAKVGDSmfw6oUemiUjsg
- yRUNRkdWGCeBE9E8Abq4KxHugijQyNr_Gz4EPgcHQDfU2byos8xuSHE9XuBuZvC9VfuDk.oMGPCe
- olGnNvKl1BgYnJhIkXljLxokGeLYqb7AAoTA8IXsAbHaGb..Baw4tXmuZrhgzeodmD.jH7Hpcg4Z
- VH78LRQCX1rkqh7E6eG4oA82PXsePZRR98F6NXX5LZEan7D7tIzYrtjcvpWOkStmNWE4xqmIA7zW
- SXNrSfFe0sMSpDlNSoMUk7n7d4DDDkzF9xauV6Dd5_E7BUxioxXlnBkQmFuD2_y62BWhH08xKOhY
- 6eoAa9nxA4zYRaMhBxpE434DOyRW2anJs76kZShlFwtsSE_Ky55fnPoQJo1VDtgNXX139pclpSMi
- 4uQhki2uoJA1Lgl_lwPMQWP8YIKZXdsMuiGwpx4vRMLKaxgi1WpJSEFPmKEU0cQKfJYHGOrdj8Oa
- .L5Xn_eGK91xqa0W46mApHG67EyvW1iEet_esvZR0MOolmwd8CcUgOao7wRCT
-X-Sonic-MF: <fhortner@yahoo.de>
-X-Sonic-ID: a515d68d-f75a-4e76-824e-73db09aabddf
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ir2.yahoo.com with HTTP; Thu, 30 May 2024 11:20:17 +0000
-Received: by hermes--production-ir2-7b99fc9bb6-hcsdk (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID d50324578d537739bc53c7e42086909d;
-          Thu, 30 May 2024 10:49:53 +0000 (UTC)
-Message-ID: <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
-Date: Thu, 30 May 2024 12:49:52 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pC6pQr1C"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4eacd4c1c93so280629e0c.0
+        for <regressions@lists.linux.dev>; Thu, 30 May 2024 05:21:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717071664; x=1717676464; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v1Y4EC+Vl3y/mxPDgl8+ARcytlJRa8bN9srCkIlilYA=;
+        b=pC6pQr1Cw7QN++Rt/20Bm32WSOl04Sv44sD7om1jNxuIjw0bQgjlmJh+wufAGih/mO
+         GozCJ+ukf/f4/2tUXcnfKHjUU2pExzfSBj2o4ikf5pTM9LZ0IRSQ4x9ybK8BJd6xwzhv
+         fBE+efFP9PLWA7sMGKnHsMbWif9O0RmzU9cLlfoa3DHsCC+OQR6Tp6WHC8z9d1y+2jj3
+         lD0JnfqaeFGm04utcmL4NJDlREX/9dOfvw8oYQTgOnfYAiHvzdQpn8+CT3OJp5b9G655
+         P2jV+cf43Dv/ZJPU1LvD/y4If3zqaUGVsSuPHxGZmEWXky1ahJMXqmK4TyaYPquLFyAm
+         J/iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717071664; x=1717676464;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v1Y4EC+Vl3y/mxPDgl8+ARcytlJRa8bN9srCkIlilYA=;
+        b=WYB1JKLaBdSKRLWEs5zJsz6UnN2LRyHzMfLuo0ig5/2oDJF3XnjVU522vFCvsEs8wr
+         5XNd1F7xjxq4nxiYbmQUYoz5xg6MzMrr1qoUIUgKaX7bLxQ93nvjlSMWRBz3kCdm0dVY
+         +OrcBUjx2pKfkIVujCOjYdpcd02Fht9U4a0TGG/u8sIlD2Vvz0fDkJ5nkki6EmI+XV/0
+         sKyvJFMrFMncAYU9Be89m5SyroFbmQaA39De5D1bEbd5P9TzA64tk2f0EOCgHivRr0rh
+         XqG0JotqR0tnUzWJWfgEaFux/fbfSM3q7XwhBvdVHhseh5bayevoqrv3cfi1M43TZaSJ
+         HNcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvpvb6ON+05bZtduqYkvPDth7ItnsAeDSoEyGG9VPB3Ndv9YvWpqVg/rtI68jzMgm7TmswJquRwdWFnTYum6zox+6OpwkXDA583Mk=
+X-Gm-Message-State: AOJu0YxpapDnIBfn9JB/teBWTESlWByS3u7iWX2STNXV9BzsJymbQy3E
+	TJOK08h7pTvc30igESRZE+0Kbsd6wxQ0/MeYxyJS6SSrhDwC3/qouI/ZUEiAMeNuyaB8tUQRJmp
+	a4k0t91SeaCuTeIQCoFNh5OifT1D8nQ6XiM+img==
+X-Google-Smtp-Source: AGHT+IF8N1bqnuXOjZNpSTjG4359awFqoPkPrI5tsAypoZsac9kT1nKvP1mjv7Cjntk3JR1XaZe3bUmc9hbvrM4pRhE=
+X-Received: by 2002:a05:6122:319c:b0:4e4:ecd0:fcba with SMTP id
+ 71dfb90a1353d-4eaf21a9480mr2299111e0c.7.1717071663960; Thu, 30 May 2024
+ 05:21:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de>
- <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
-Content-Language: de-CH
-From: "fhortner@yahoo.de" <fhortner@yahoo.de>
-In-Reply-To: <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.22356 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 30 May 2024 17:50:52 +0530
+Message-ID: <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
+Subject: arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4):
+ more undefined references to `__bad_cmpxchg' follow
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, rcu <rcu@vger.kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, eeraj.upadhyay@kernel.org, 
+	John Ogness <john.ogness@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks Thorsten for the side note.
+The arm builds failed on Linux next with gcc-13 and clang-18.
 
-I have compiled kernel 6.8.11 with reverted commit 
-5a5efdaffda5d23717d9117cf36cda9eafcf2fae.
+Config: arm imx_v6_v7_defconfig - failed
 
-Battery Status works fine now with reverted commit after S3 Sleep and 
-Wake cycles.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Best, Reinhard
+Build log:
+-----
+arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+`rcu_trc_cmpxchg_need_qs':
+update.c:(.text+0x348): undefined reference to `__bad_cmpxchg'
+arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+`rcu_read_unlock_trace_special':
+update.c:(.text+0x41c): undefined reference to `__bad_cmpxchg'
+arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+`trc_read_check_handler':
+update.c:(.text+0x4b0): undefined reference to `__bad_cmpxchg'
+arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function `trc_inspect_reader':
+update.c:(.text+0x1518): undefined reference to `__bad_cmpxchg'
+arm-linux-gnueabihf-ld: update.c:(.text+0x1548): undefined reference
+to `__bad_cmpxchg'
+arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4):
+more undefined references to `__bad_cmpxchg' follow
+make[3]: *** [/builds/linux/scripts/Makefile.vmlinux:34: vmlinux] Error 1
+
+metadata:
+  git_describe: next-20240529
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_short_log: 9d99040b1bc8 ("Add linux-next specific files for 20240529")
+  job_url: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/2h944W0LTbtfMPlDNiOq17hXpQ8
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24129266/suite/build/test/gcc-13-imx_v6_v7_defconfig/history/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24129266/suite/build/test/gcc-13-imx_v6_v7_defconfig/log
 
 
-Am 30.05.24 um 12:21 schrieb Linux regression tracking (Thorsten Leemhuis):
-> [adding the culprits author, LKML, and the regression mailing list to
-> the list of recipients; changing subject, too]
->
-> On 29.05.24 21:52, fhortner@yahoo.de wrote:
->> After bisection I have reported a bug according to thermal_core.c:
->> After "Resume thermal zones asynchronously" commit: Wrong Battery
->> Reading after Wake from S3 Sleep - Lenovo Thinkpad P1 Gen2
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=218881
->> Could you please have a look at it
->>
->> I have performed a bisection and the culprit is this commit: Resume
->> thermal zones asynchronously
->> git bisect bad 5a5efdaffda5d23717d9117cf36cda9eafcf2fae
->> # first bad commit: [5a5efdaffda5d23717d9117cf36cda9eafcf2fae] thermal:
->> core: Resume thermal zones asynchronously
->>
->> I have also verified it by compiling a kernel
-> Side note: not critical at all, but would have been good if you had
-> specified which kernel version you build.
->
->> without this commit.
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
->
-> #regzbot ^introduced 5a5efdaffda5d23717d9117cf36cda9eafcf2
-> #regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=218881
-> #regzbot title
-> #regzbot ignore-activity
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
-
+--
+Linaro LKFT
+https://lkft.linaro.org
