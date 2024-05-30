@@ -1,202 +1,227 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4826A171E65
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 13:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD2F171B6
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 13:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717076166; cv=none; b=ETEx4w/H7E2e/0/NfVuT9AQiFZEkYoN59V/ZPUimW+XP84FdwURkZ2EdeP6V7z5NiU+7Tcp9LgEX+XchKE6LyR7Xc7zDFUXU4qW6WAfVaq698/F9cSZvZIn+FQII5pMXHmOyWjrzVHLAfZuSNkop4ArmoYUjdSRH2sV4FBGCSZU=
+	t=1717077388; cv=none; b=SDPDtXa82UNUgq8bQnU0PLGp2prMahWG42U4u5o15pbLDw7Dvu/Sh8S26nMY/12h3dUSwArHXA3gD1191/P+Lcltib8UzwUE++MMN2ciNeRsegI1G1RY6wHq05mRGG/gIUREppZlyKKfrbhhvahCbOOUi2KR8rZinTMIY/pbydQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717076166; c=relaxed/simple;
-	bh=HTcEgZPhvNIqb5QSFsqU4J//bVvYGx934btYPhodD+c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H9u3MlFMSks+I4HcpHuDuPuFhENWGt9d3EMXO5kMe4apY9xl2LDXYNumbegOx1IQii0Phstxhlsotd6L8/Wz5n4xacnXxARYad51wgZ55421Au5P+6Us9sSvdIsZLwdTszX+hJiPcZq5fpzEG/2B+W9nyVfS97llf8OZWSMF5ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mXRaK+dv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AKSEw11s; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717077388; c=relaxed/simple;
+	bh=FGBSQOuAb0NlB6ZQthzXYAirwmMW8u3SD2gpZJepyxc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=clViiQAXOf3UTmzOuoarv/RGJHVBONGhN8IjMKK7BXyrR8RrdqdKm8IfA+WFO+ON41JEvE/c56GId/mcy9vcouOnkghxg8l21veD7PkiuwFrpa2cjKlVXYrtqPS+5DYjU8mo6BY6LTa3uqo6TciPtqVXrxgiKK3e82tMkWK6QyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oa9uvQmw; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mXRaK+dv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AKSEw11s"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717076157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UKb7c3hZZ1sIQ6Jxj+rYmCRbrY2s6dn/gQHDJs1x228=;
-	b=mXRaK+dvM0pd+6847+YJ2bz6M7XvyjYbBWAiMhE/x3zeStW2CtVORfRkhiabrKeoVBbVk7
-	94eQB/gcL0mlrd7jp4aOdo6e7KuZQ17YJcNXjarAOzXUfzdymzK/zkU/4ho/9e8Vgreve9
-	/+LyRoRYg4BFRProroyS85/VTwuQfkRtk0zMinXT1ksDLFO3G0P4UC5eBLCHS9tae5X2bm
-	z0ZjPY96JiciZbVv+pFiD5fNjyWvqCVMCCmjckTH0AW0af/A7ZieysMWr7O4dNAlESop1N
-	5YbRu2d+Z7FSe7SPUFkyz5a3Iq9laWk+JRlj9S3/uRD1v3Sio/spr3OrFifdkQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717076157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UKb7c3hZZ1sIQ6Jxj+rYmCRbrY2s6dn/gQHDJs1x228=;
-	b=AKSEw11srme/Q7fBd1EHmHjfHHOeDEnQwOkN40pAnYODx2auL9TKjHTN6XrLd8lz26a4Bh
-	zw3AQrK9lhlRpyCQ==
-To: Peter Schneider <pschneider1968@googlemail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
-In-Reply-To: <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
-References: <877cffcs7h.ffs@tglx>
- <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
- <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
- <87zfs78zxq.ffs@tglx>
- <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
-Date: Thu, 30 May 2024 15:35:55 +0200
-Message-ID: <87r0dj8ls4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oa9uvQmw"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4e18a9a6658so326669e0c.1
+        for <regressions@lists.linux.dev>; Thu, 30 May 2024 06:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717077384; x=1717682184; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EXUCNy99zkbik9zLqKW1CEH6iQfLDGzfWLNIvH5uY+0=;
+        b=Oa9uvQmwTCyto+tWVJTzLTBL6EeHLXij56DffgIkX09/LedZH5tHPQggdxHS7QBOM2
+         MIOuhupD1NX6JXB6ZT7BWQ/EyzKG9PtJS6uZgRZV/OSMCBorbTOj1PzATfpNsEtML2TC
+         vkjrpVzQJRDrjinYMIFBc4TIncT0v7YSQu7ObrlxsDXEGiQLSFUrxQFfbItFjnHoBWe/
+         /rkN6oH+mf91KfACjDE0hmRTZOawZWruLsI+5klXKn7Bhv/FM93PZFSc+6rgva74lAlD
+         eAVEg95Hw8PZFWaN30jNktk2QVas0jzM4p3sEgaFdnhgSmXYm82Nxbrf+FleN8/R/bj6
+         gZ4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717077384; x=1717682184;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EXUCNy99zkbik9zLqKW1CEH6iQfLDGzfWLNIvH5uY+0=;
+        b=MR5kFeYcIOeVYc8e4RW1OqDAtXFIg7qGBBHLvO3+pa1iq9B7+Q2ZsIVJ7FVZxv417S
+         vM+bHFWFwZpVGA1g4YG7M70F2jHAdv3WrwA+8RMyCpmwZleuTzK1bWHUBLzMKZ3P9hYN
+         iKsp9L3Q2GDJZvd2ytdxWtd1rKgH6xDkQdCM8UfgG5C8haZiU8SxB9XA4Qk3gwbwq/JV
+         rJSh69UGMZ70NyV3856S1N+C2tCbQTz/dIauJxjy9YgzjdmNP5f2MRUTj/5kWaNEbFZi
+         qAFol9QC01uhl1tzXy5gKQ95Cn+B98lF5x2WPkCIjA/rpZlz1I6dQgcDYSRuQGqB1MLQ
+         1iZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXM7+L+2i8fqsE2MptTzR6E0c4dTlIiMPXyOY4uocGJPwwvJYjP4Tibeyvay09xsgcYX68OwGbgpEkQKPaRQ4m2JxfudJRGuSwQmU0=
+X-Gm-Message-State: AOJu0YyqmmPHD8zB0MWAdWUkg3C5PWPvmMsKO+b70QlimCLuKHZm4qeY
+	v96q+7iyh6vHz8SNfhFmEo1CpqwqfXQlGEO+K07b3rd0QbxqryJK18de6htSk8kBwgvBjZS8aEW
+	IuOmP+eu5M5k/m71HSP4sJXuvplDZaXKXSur41g==
+X-Google-Smtp-Source: AGHT+IHtMCQyGfRZVl+J4B/Ueb8+BlAQuJC8en+4dH/bryuo8aki4OV0HUSb9FEfVVIkSlPkZD7ersSE7iRVsS8Zn9A=
+X-Received: by 2002:a05:6122:319c:b0:4d4:1ec7:76e5 with SMTP id
+ 71dfb90a1353d-4eaf248dd21mr2295414e0c.16.1717077384478; Thu, 30 May 2024
+ 06:56:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 30 May 2024 19:26:12 +0530
+Message-ID: <CA+G9fYvJjAqf1pxMZpsm6rO_UVqhKOpB=0SUpBec8UhQBOXSrA@mail.gmail.com>
+Subject: BUG: kernel NULL pointer dereference, address: 000000000000002c -
+ RIP: 0010:alloc_extent_buffer
+To: open list <linux-kernel@vger.kernel.org>, Linux btrfs <linux-btrfs@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
+	Josef Bacik <josef@toxicpanda.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Peter!
+The following kernel BUG: and kernel crash noticed while running xfstests btfs
+filesystem testing on qemu-x86_64 with loop back.
 
-On Thu, May 30 2024 at 12:06, Peter Schneider wrote:
-> Am 30.05.24 um 10:30 schrieb Thomas Gleixner:
->
->> Can you please apply the debug patch below ad provide the full dmesg
->> after boot?
->
-> Here you go... The patch applied cleanly against 6.9.3, which I saw
-> was just released by Greg, so I used that. If you want, I can repeat
-> the test against 6.9.2, too.
+Steps to reproduce link provided.
 
-.3 is fine
+Test details:
+----
+  Tests:  xfstests-btrfs  btrfs/232
+  SKIP_INSTALL='true'
+  TEST_DEV='/dev/loop0'
+  SCRATCH_DEV='/dev/loop1'
+  TEST_DIR='/mnt/test'
+  SCRATCH_DIR='/mnt/scratch'
+  FILESYSTEM='btrfs'
+  T_SIZE='5G'
+  S_SIZE='8G'
 
-> Please note: to be able to boot any kernel >= 6.8.4 on my machine, I also had to apply 
-> this patch by Martin Petersen, fixing another (unrelated SCSI) regression I reported some 
-> time ago, see here:
->
-> https://lore.kernel.org/all/20240521023040.2703884-1-martin.petersen@oracle.com/
->
-> But I think these two issues are not connected in any way. It was during testing the above 
-> patch by Martin that I noticed this new issue in 6.9 BTW.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Right. It's a seperate problem.
+Test log:
+-------
+ <12>[ 6457.571628] run fstests btrfs/232 at 2024-05-29 16:31:29
 
-> I have attached resulting file dmesg_6.9.3-dirty_Bad_wDebugInfo.txt,
-> and I hope you can make some sense of it.
+<6>[ 6464.685165] BTRFS: device fsid
+50147eec-0761-4d75-8e77-df9c50ac385e devid 1 transid 6 /dev/loop1
+(7:1) scanned by mount (152729)
+<6>[ 6464.715051] BTRFS info (device loop1): first mount of filesystem
+50147eec-0761-4d75-8e77-df9c50ac385e
+<6>[ 6464.719266] BTRFS info (device loop1): using crc32c
+(crc32c-generic) checksum algorithm
+<6>[ 6464.724996] BTRFS info (device loop1): using free-space-tree
+<6>[ 6464.789867] BTRFS info (device loop1): checking UUID tree
+<6>[ 6499.694309] BTRFS info (device loop1): qgroup scan completed
+(inconsistency flag cleared)
+<6>[ 6499.766172] BTRFS info (device loop1): qgroup scan completed
+(inconsistency flag cleared)
+<1>[ 6572.421678] BUG: kernel NULL pointer dereference, address:
+000000000000002c
+<1>[ 6572.423036] #PF: supervisor read access in kernel mode
+<1>[ 6572.423070] #PF: error_code(0x0000) - not-present page
+<6>[ 6572.423143] PGD 0 P4D 0
+<4>[ 6572.424555] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+<4>[ 6572.424814] CPU: 0 PID: 152772 Comm: fsstress Not tainted
+6.10.0-rc1-next-20240529 #1
+<4>[ 6572.424946] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+<4>[ 6572.425062] RIP: 0010:alloc_extent_buffer+0x253/0x820
+<4>[ 6572.427387] Code: 00 49 8b 7d 08 4c 89 e9 40 f6 c7 01 0f 85 dc
+03 00 00 0f 1f 44 00 00 4c 89 ef 48 8b 07 f6 c4 40 0f 84 f7 00 00 00
+48 8b 57 28 <8b> 42 2c 85 c0 0f 84 ac 00 00 00 8d 70 01 f0 0f b1 72 2c
+75 ee 48
+<4>[ 6572.427577] RSP: 0018:ffffae9403eaf700 EFLAGS: 00000202
+<4>[ 6572.427613] RAX: 010000000000412d RBX: ffff9eb00d8c5000 RCX:
+ffffec4001110700
+<4>[ 6572.427663] RDX: 0000000000000000 RSI: ffff9eaf3ad5b918 RDI:
+ffffec4001110700
+<4>[ 6572.427705] RBP: 000000000000dec8 R08: ffff9eaf3ad5b918 R09:
+0000000000000001
+<4>[ 6572.427730] R10: 0000000000000001 R11: 0000000000000001 R12:
+ffff9eaf0c92b318
+<4>[ 6572.427752] R13: ffffec4001110700 R14: 0000000000000000 R15:
+ffff9eb00f1f82e8
+<4>[ 6572.428675] FS:  00007f6ad5d8f740(0000)
+GS:ffff9eb07bc00000(0000) knlGS:0000000000000000
+<4>[ 6572.428756] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[ 6572.428772] CR2: 000000000000002c CR3: 00000001013ba000 CR4:
+00000000000006f0
+<4>[ 6572.428905] Call Trace:
+<4>[ 6572.430288]  <TASK>
+<4>[ 6572.430561]  ? __die+0x1e/0x60
+<4>[ 6572.433138]  ? page_fault_oops+0x17b/0x4b0
+<4>[ 6572.433156]  ? search_extable+0x26/0x30
+<4>[ 6572.434025]  ? alloc_extent_buffer+0x253/0x820
+<4>[ 6572.434035]  ? search_module_extables+0x14/0x50
+<4>[ 6572.435608]  ? exc_page_fault+0x6b/0x150
+<4>[ 6572.436133]  ? asm_exc_page_fault+0x26/0x30
+<4>[ 6572.436889]  ? alloc_extent_buffer+0x253/0x820
+<4>[ 6572.436917]  read_tree_block+0x1a/0x80
+<4>[ 6572.438475]  read_block_for_search+0x211/0x320
+<4>[ 6572.439418]  btrfs_search_slot+0x2db/0xe20
+<4>[ 6572.439905]  ? kmem_cache_alloc_noprof+0x1cb/0x240
+<4>[ 6572.439928]  find_parent_nodes+0xee/0x1f20
+<4>[ 6572.441382]  btrfs_find_all_roots_safe+0x97/0x170
+<4>[ 6572.441397]  btrfs_qgroup_trace_extent_post+0x70/0xf0
+<4>[ 6572.441881]  add_delayed_ref+0x514/0x750
+<4>[ 6572.442757]  btrfs_free_tree_block+0xcd/0x290
+<4>[ 6572.442783]  btrfs_force_cow_block+0x329/0x7e0
+<4>[ 6572.442800]  btrfs_cow_block+0xd7/0x280
+<4>[ 6572.442814]  btrfs_search_slot+0x523/0xe20
+<4>[ 6572.442832]  btrfs_insert_empty_items+0x35/0x70
+<4>[ 6572.442845]  btrfs_insert_orphan_item+0x7a/0xb0
+<4>[ 6572.443343]  btrfs_orphan_add+0x18/0xa0
+<4>[ 6572.443863]  btrfs_unlink+0x166/0x180
+<4>[ 6572.443887]  vfs_unlink+0x10d/0x2a0
+<4>[ 6572.444369]  do_unlinkat+0x28c/0x310
+<4>[ 6572.444390]  __x64_sys_unlink+0x3c/0x70
+<4>[ 6572.444433]  do_syscall_64+0x9e/0x1a0
+<4>[ 6572.444924]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+<4>[ 6572.447843] RIP: 0033:0x7f6ad5e8ba07
+<4>[ 6572.448529] Code: f0 ff ff 73 01 c3 48 8b 0d f6 83 0d 00 f7 d8
+64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 57 00
+00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c9 83 0d 00 f7 d8 64
+89 01 48
+<4>[ 6572.448541] RSP: 002b:00007ffd8a455818 EFLAGS: 00000202
+ORIG_RAX: 0000000000000057
+<4>[ 6572.448693] RAX: ffffffffffffffda RBX: 00000000000003ae RCX:
+00007f6ad5e8ba07
+<4>[ 6572.448723] RDX: 0000000000353166 RSI: 0000000000000000 RDI:
+0000558cb0972bf0
+<4>[ 6572.448735] RBP: 00007ffd8a455970 R08: 00007f6ad5f64c60 R09:
+00007ffd8a45595c
+<4>[ 6572.448744] R10: 00007ffd8a455586 R11: 0000000000000202 R12:
+0000558c873925c0
+<4>[ 6572.448750] R13: 028f5c28f5c28f5c R14: 8f5c28f5c28f5c29 R15:
+0000558c87388cc0
+<4>[ 6572.448797]  </TASK>
+<4>[ 6572.448863] Modules linked in:
+<4>[ 6572.449908] CR2: 000000000000002c
+<4>[ 6572.450833] ---[ end trace 0000000000000000 ]---
+<4>[ 6572.485615] RIP: 0010:alloc_extent_buffer+0x253/0x820
+<4>[ 6572.488121] Code: 00 49 8b 7d 08 4c 89 e9 40 f6 c7 01 0f 85 dc
+03 00 00 0f 1f 44 00 00 4c 89 ef 48 8b 7 f6 c4 40 0f 84 f7 00 00 00 48
+8b 57 28 <8b> 42 2c 85 c0 0f 84 ac 00 00 00 8d 70 01 f0 0f b1 72 2c 75
+ee 48
+<4>[ 6572.489657] RSP: 0018:ffffae9403eaf700 EFLAGS: 00000202
+<4>[ 6572.490176] RAX: 010000000000412d RBX: ffff9eb00d8c5000 RCX:
+ffffec4001110700
+<4>[ 6572.490823] RDX: 0000000000000000 RSI: ffff9eaf3ad5b918 RDI:
+ffffec4001110700
+<4>[ 6572.491363] RBP: 000000000000dec8 R08: ffff9eaf3ad5b918 R09:
+0000000000000001
+<4>[ 6572.491951] R10: 0000000000000001 R11: 0000000000000001 R12:
+ffff9eaf0c92b318
+<4>[ 6572.492404] R13: ffffec4001110700 R14: 0000000000000000 R15:
+ffff9eb00f1f82e8
+<4>[ 6572.493249] FS:  00007f6ad5d8f740(0000)
+GS:ffff9eb07bc00000(0000) knlGS:0000000000000000
+<4>[ 6572.493710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[ 6572.494410] CR2: 000000000000002c CR3: 00000001013ba000 CR4:
+00000000000006f0
 
-It's exactly what I expected but it does not make any sense at all.
+metadata:
+----
+  git_describe: next-20240529
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_short_log: 9d99040b1bc8 ("Add linux-next specific files for 20240529")
 
->     [    0.000000] Legacy: 2 5 5
+Steps to reproduce:
+-------
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2h94944uxKleGblX7rjXwtV0PBv/reproducer
 
-So that means that during early boot where the topology parameters are
-decoded from CPUID the CPUID evaluation code sees that the maximum
-supported CPUID leaf is 0x02 and it therefore reads complete non-sense.
+Links:
+-----
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131454/suite/log-parser-test/test/check-kernel-bug/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131454/suite/log-parser-test/tests/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2h945RbifdV6peYDNNBeBffjQtu/
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2h94944uxKleGblX7rjXwtV0PBv
 
-Later on when the full CPUID evaluation happens it sees the full space
-and uses leaf 0xb.
-
->     [    1.687649] L:b 0 0 S:1 N:2 T:1
->     [    1.687652] D: 0
->     [    1.687653] L:b 1 1 S:5 N:24 T:2
->     [    1.687655] D: 1
->     [    1.687656] L:b 2 2 S:0 N:0 T:0
->     [    1.687658] [Firmware Bug]: CPU0: Topology domain 0 shift 1 != 5
-
-And this obviously sees the proper numbers and complains about the
-inconsistency.
-
-So something on this CPU is broken. The same problem exists on all APs:
-
->     [    1.790035] .... node  #0, CPUs:        #4
->     [    1.790312] .... node  #1, CPUs:   #12 #16
->     [    0.011992] Legacy: 2 5 5
->     [    0.011992] Legacy: 2 5 5
->     [    0.011992] Legacy: 2 5 5
->     [    0.011992] Legacy: 2 5 5
-      .....
-
-Now the million-dollar question is what unlocks CPUID to read the proper
-value of EAX of leaf 0. All I could come up with is to sprinkle a dozen
-of printks into that code. Updated debug patch below.
-
-Thanks,
-
-        tglx
----
---- a/arch/x86/kernel/cpu/topology_common.c
-+++ b/arch/x86/kernel/cpu/topology_common.c
-@@ -65,6 +65,7 @@ static void parse_legacy(struct topo_sca
- 		cores <<= smt_shift;
- 	}
- 
-+	pr_info("Legacy: %u %u %u\n", c->cpuid_level, smt_shift, core_shift);
- 	topology_set_dom(tscan, TOPO_SMT_DOMAIN, smt_shift, 1U << smt_shift);
- 	topology_set_dom(tscan, TOPO_CORE_DOMAIN, core_shift, cores);
- }
---- a/arch/x86/kernel/cpu/topology_ext.c
-+++ b/arch/x86/kernel/cpu/topology_ext.c
-@@ -72,6 +72,9 @@ static inline bool topo_subleaf(struct t
- 
- 	cpuid_subleaf(leaf, subleaf, &sl);
- 
-+	pr_info("L:%0x %0x %0x S:%u N:%u T:%u\n", leaf, subleaf, sl.level, sl.x2apic_shift,
-+		sl.num_processors, sl.type);
-+
- 	if (!sl.num_processors || sl.type == INVALID_TYPE)
- 		return false;
- 
-@@ -97,6 +100,7 @@ static inline bool topo_subleaf(struct t
- 			     leaf, subleaf, tscan->c->topo.initial_apicid, sl.x2apic_id);
- 	}
- 
-+	pr_info("D: %u\n", dom);
- 	topology_set_dom(tscan, dom, sl.x2apic_shift, sl.num_processors);
- 	return true;
- }
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1584,22 +1584,30 @@ static void __init early_identify_cpu(st
- 	/* cyrix could have cpuid enabled via c_identify()*/
- 	if (have_cpuid_p()) {
- 		cpu_detect(c);
-+		pr_info("MAXL1: %x\n", cpuid_eax(0));
- 		get_cpu_vendor(c);
-+		pr_info("MAXL2: %x\n", cpuid_eax(0));
- 		get_cpu_cap(c);
-+		pr_info("MAXL3: %x\n", cpuid_eax(0));
- 		setup_force_cpu_cap(X86_FEATURE_CPUID);
- 		get_cpu_address_sizes(c);
-+		pr_info("MAXL4: %x\n", cpuid_eax(0));
- 		cpu_parse_early_param();
-+		pr_info("MAXL5: %x\n", cpuid_eax(0));
- 
- 		cpu_init_topology(c);
-+		pr_info("MAXL6: %x\n", cpuid_eax(0));
- 
- 		if (this_cpu->c_early_init)
- 			this_cpu->c_early_init(c);
-+		pr_info("MAXL7: %x\n", cpuid_eax(0));
- 
- 		c->cpu_index = 0;
- 		filter_cpuid_features(c, false);
- 
- 		if (this_cpu->c_bsp_init)
- 			this_cpu->c_bsp_init(c);
-+		pr_info("MAXL8: %x\n", cpuid_eax(0));
- 	} else {
- 		setup_clear_cpu_cap(X86_FEATURE_CPUID);
- 		get_cpu_address_sizes(c);
-@@ -1797,9 +1805,12 @@ static void identify_cpu(struct cpuinfo_
- #ifdef CONFIG_X86_VMX_FEATURE_NAMES
- 	memset(&c->vmx_capability, 0, sizeof(c->vmx_capability));
- #endif
-+	pr_info("MAXLG1: %x\n", cpuid_eax(0));
- 
- 	generic_identify(c);
- 
-+	pr_info("MAXLG2: %x\n", cpuid_eax(0));
-+
- 	cpu_parse_topology(c);
- 
- 	if (this_cpu->c_identify)
+--
+Linaro LKFT
+https://lkft.linaro.org
