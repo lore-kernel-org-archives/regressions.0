@@ -1,114 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EF645BE7;
-	Thu, 30 May 2024 18:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD8A51C5A
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 19:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717093302; cv=none; b=n7eQ2LYT1SXR1tXQ6lw69TDCZLBzJqkBLnE6tD1QZCPuqb+S010NU8iwFHEsMaZC003LRFed1FRRbJCpbceBvaXoN1XTzh8npC195kj58d1BzKzYeCYz7e5WtsAryi5Xuk7pqBjNBZtvpARZuxPY05h1v8PJy4OTjIhckd9Z6oE=
+	t=1717099068; cv=none; b=ldLdndRLQogV0ROdFdbf4oC+u+pkqlzp4MI8deNiSKO7hKV7JRp7wXsQnXLfJaRN0DrPRTEgGqVUo7jguSzvCIaZebZ1sjL5y7QZPwkFnjEZir/AewS0G2xv0y95bkLXsGfyKoCRcDGh/BDnzdbL35EtmxhzOfFu49SEKxfJAG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717093302; c=relaxed/simple;
-	bh=6dQOO04MinyW9E4u0n2nsSoky25+ryVk4N7a+/FDhrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSnyWMGxtWo+Q+w0ykxKyMUQVgSrd/nzkDliBlvFi2i348+kUF2GouEE+3KQR5P++qZouPqBNtSc1yiwdyX6fg5tAefH8dpHYHCDRP7D04NmUjnWYeuEntwN0QRuB/AK5KRjrv9WAdc1YKDaO1Q3BD16F4V7+S+g//0oWbL1lJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHO0V89L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717099068; c=relaxed/simple;
+	bh=70Z6Hwch5cDX1Yag0UqBCh6oP6TsMaD/hqajVrV9aAI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Fb3Q/KpvmsWvfCmeADCdGoD19fXLZttuquukpmeOQOTbIdgLgxBZJzlJ2FPpQ4HKGFjTOP2LDaY/79nRjJcBtFC78q/rbL909nfJ0toxc1RPV/sXK9EKMXC7zqFDLVrf0ea9zWyuhs8kXUT4pOdlOJzPK5UE81BU5HpLU+0cykE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=NINj71SQ; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHO0V89L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A4E2C2BBFC;
-	Thu, 30 May 2024 18:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717093301;
-	bh=6dQOO04MinyW9E4u0n2nsSoky25+ryVk4N7a+/FDhrA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=CHO0V89LGzH5wFW93SZ9frknnlgZbTYyC0kuz5CuCNsartYushh+EUK85l3CaPFCL
-	 dAFds4FTeTS8nUelvZkafpGbWA81+jL+KgGNItHPgnMrVPWzUzIhm56CCTxsklCzjW
-	 IxooqP2t2iyr40g0K9VT5/H5NuDG1iIpjFB39QQZ89mnq1muVPnny3At9/7QBdZi/3
-	 fOhBtN+aDuKiKZquVdjPScywGHppo3dkMLVcxFB0bpNa2MD8akLR00eGGZzaBbk4f2
-	 uZ56gVc6LPAv6y9t2B6D9KpJ11jpwSRoxATs7txqITSvQ3mV9mF888ki5fpeFWfcai
-	 Bsr5BdcOeYR7w==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D583ACE075F; Thu, 30 May 2024 11:21:40 -0700 (PDT)
-Date: Thu, 30 May 2024 11:21:40 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	rcu <rcu@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
-	Joel Fernandes <joel@joelfernandes.org>, eeraj.upadhyay@kernel.org,
-	John Ogness <john.ogness@linutronix.de>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: arm-linux-gnueabihf-ld:
- kernel/rcu/update.o:update.c:(.text+0x1cc4): more undefined references to
- `__bad_cmpxchg' follow
-Message-ID: <2e2038d2-00b5-4f54-884f-d04d7165bbf5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
- <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
- <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
- <5426b25f-9c25-4938-99e8-5cdea75e4d3b@paulmck-laptop>
- <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
- <38442e3d-1e43-4894-b126-b4258d331a32@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="NINj71SQ"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8FA1A47C39
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1717099065; bh=70Z6Hwch5cDX1Yag0UqBCh6oP6TsMaD/hqajVrV9aAI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NINj71SQ5RKm42gjS56ALOFe5BwtgBRPzAFWF7Sp8OLpdSxFbuhOPHp6rezJ6qIYx
+	 7zIQTrLkA/SAVPpfCTsdkkANt/rTREKwRWdSfc8Ep2GnShsFVOMn6lwnogaEtbfoos
+	 Hwm9Kx3qYgZaNpPyFQzYpVVp1agJF0A5MaNVaJIQSNmkdKuzkLcJrrpXwX8ZxVyI57
+	 1iYXELLAdUzpEFYbIZUI93Jsps27HR8PQ6bj9FYkW4nCe6h+XyBxZwqdCs7HujaqYa
+	 S3yZw9ZlFThOfJDyYxXBC0birY9a4cGgvfUTjXjuUVgq2GTQJt8ozj4/jgSiTDRJv4
+	 UJwu82eIUJ2hA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 8FA1A47C39;
+	Thu, 30 May 2024 19:57:45 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Karel Balej <balejk@matfyz.cz>, Thorsten Leemhuis <linux@leemhuis.info>,
+ regressions@lists.linux.dev, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: balejk@matfyz.cz
+Subject: Re: [PATCH docs-next v3] docs: handling-regressions.rst: recommend
+ using "Closes:" tags
+In-Reply-To: <20240513084145.2460-1-balejk@matfyz.cz>
+References: <20240513084145.2460-1-balejk@matfyz.cz>
+Date: Thu, 30 May 2024 13:57:44 -0600
+Message-ID: <871q5jcbt3.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38442e3d-1e43-4894-b126-b4258d331a32@app.fastmail.com>
+Content-Type: text/plain
 
-On Thu, May 30, 2024 at 08:05:50PM +0200, Arnd Bergmann wrote:
-> On Thu, May 30, 2024, at 19:24, Paul E. McKenney wrote:
-> > On Thu, May 30, 2024 at 09:37:21AM -0700, Paul E. McKenney wrote:
-> >> On Thu, May 30, 2024 at 03:27:58PM +0200, Arnd Bergmann wrote:
-> 
-> > And for an untested first attempt at a fix.
-> >
-> > What did I mess up this time?  ;-)
-> >
-> 
-> I think only the comment:
-> 
-> > 
-> >  	switch (size) {
-> > -#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
-> > +#ifdef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
-> > +	case 1:
-> > +		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> > +		break;
-> > +#else
-> 
-> "min ARCH >= ARMv6K" now applies to the #else side, while the
-> #if side is the early ARMv6 (pre-v6K).
+Karel Balej <balejk@matfyz.cz> writes:
 
-Good catch!
+> Update the handling-regressions guide to recommend using "Closes:" tags
+> rather than "Link:" when referencing fixed reports. The latter was used
+> originally but now is only recommended when the given patch only fixes
+> part of the issue, as described in submitting-patches. Briefly mention
+> that and also note that regzbot currently doesn't make a distinction.
+>
+> Also fix a typo.
+>
+> Acked-by: Thorsten Leemhuis <linux@leemhuis.info>
+> Signed-off-by: Karel Balej <balejk@matfyz.cz>
+> ---
 
-I plan to fold the following into the original with attribution.
+Applied, thanks.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
-index fd9b99f4dca46..34674a4118755 100644
---- a/arch/arm/include/asm/cmpxchg.h
-+++ b/arch/arm/include/asm/cmpxchg.h
-@@ -162,11 +162,11 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
- 	prefetchw((const void *)ptr);
- 
- 	switch (size) {
--#ifdef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
-+#ifdef CONFIG_CPU_V6	/* min ARCH < ARMv6K */
- 	case 1:
- 		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
- 		break;
--#else
-+#else /* min ARCH >= ARMv6K */
- 	case 1:
- 		do {
- 			asm volatile("@ __cmpxchg1\n"
+jon
