@@ -1,151 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FED186E32;
-	Thu, 30 May 2024 14:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C06D6F306
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 14:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717077628; cv=none; b=Y4arpDiQU0cVrmzoetzNkiD6tIG/W6jgWDbR1xKm6Ww5qtR8YNW1yfgLM4DFYfzNwzrZlO+qI/A6RcaS+BqteMldky8J5rSfrJHUInC9s/+e3UAf/Inw3t8/mhSnD+BbI+MledYIYCbVr/dMmZfmMf4PJc5ZX7KTylp3qtQL9FA=
+	t=1717079307; cv=none; b=ZoVrDsBl0gcFYlXCZOp09nUCA8edR2krUCg4cZwiQhTKIyqv65xIRLAtTDkhvyKHem7nqDGXh0ciVUq8S1z0kH8OoYwEkJ68FwSfPaGcKTI8WWOU5TwRNJxpPau3JU4NXe0I1g4S3XDdgOFTG6Irhd7DpclAJjtXLYpM2X3cVnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717077628; c=relaxed/simple;
-	bh=wCx8iiEp261jvrvjM1hzx6frOs/knK+xtBsnK/gZCnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LJ/8hzh4ZpQ+8TMDwx3V5jeqP6wa0vdSfPu/h3gS6oadKhTBctABQbHIzhy0uuFDfIfzkgcqmXg0eBQ0y5k0SFB1XWQpiBnjE43GRVx/k/SjvDXnz9Tf/eyw1hX9gFmnyq38tYHe8ibE099jJAGjYIJuYZc7ClYHj0Blxp3mUJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F32C3277B;
-	Thu, 30 May 2024 14:00:25 +0000 (UTC)
-Date: Thu, 30 May 2024 09:59:53 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux regressions mailing list
- <regressions@lists.linux.dev>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240530095953.0020dff9@rorschach.local.home>
-In-Reply-To: <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-	<20240527183139.42b6123c@rorschach.local.home>
-	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-	<20240528144743.149e351b@rorschach.local.home>
-	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
-	<20240529144757.79d09eeb@rorschach.local.home>
-	<20240529154824.2db8133a@rorschach.local.home>
-	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717079307; c=relaxed/simple;
+	bh=TepJdMu5Kgqt4hFWQ/knF8KsMyDM2pCe5l3NAhbAlr0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rcJRKpULeaPItAlhIfJQzkbMadeOVDNIXP32MeJ2FKNZYCeYPHobWpaG/+BM7cSp4CgLdV77TUOI4OQ+wTwZ/K14mGPUkaxFIaIkZtcgOpMrf1Qhgje4twQkeYAJ+XEQDqLPF265mqqoykvv9JSgy4g8JK+2rYaSLXJO0Mz2nyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Gq9AAZ2u; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Gq9AAZ2u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1717079303;
+	bh=TepJdMu5Kgqt4hFWQ/knF8KsMyDM2pCe5l3NAhbAlr0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Gq9AAZ2u93VW1D0x6Na4RcZUHk90fmGkZEWk8KeWCfGT4bL493v8+w0tcTJ9hsRkM
+	 4XDO0HcsykkcEpCJdlsHn8IcqCapHKhg3S8aluPMzfsmu2wtre70g04ccbHxsqlKfx
+	 C4cqvFpr/umZfy9AnM6SmI/NdUQ+q8oLGNvbALKhHqY83jJI6xkA2LwnPuh21keJ22
+	 LlU1LoJ0GcAzcYfDUhR1TB49I6xrk3V6xFU+rqyCAF4HK6bTrCm3nUrys+1upui+ze
+	 mXbO3gkQecvwBuSOjmSecncOMEgipu1oC1HgQkrjIy0dSNoyFcs2Z4Z6PLRsNJOq6u
+	 x12ptIkbo4bhw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VqpWp35Nwz4wcC;
+	Fri, 31 May 2024 00:28:22 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
+ linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
+ Christoph Hellwig <hch@lst.de>, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
+ allocating the queue
+In-Reply-To: <8734pz4gdh.fsf@mail.lhotse>
+References: <20240520151536.GA32532@lst.de>
+ <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
+ <8734pz4gdh.fsf@mail.lhotse>
+Date: Fri, 31 May 2024 00:28:21 +1000
+Message-ID: <87wmnb2x2y.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, 30 May 2024 16:02:37 +0300
-Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+Michael Ellerman <mpe@ellerman.id.au> writes:
+> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> writes:
+>> [CCing the regression list, as it should be in the loop for regressions:
+>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>>
+>> On 20.05.24 17:15, Christoph Hellwig wrote:
+>>> Adding ben and the linuxppc list.
+>>
+>> Hmm, no reply and no other progress to get this resolved afaics. So lets
+>> bring Michael into the mix, he might be able to help out.
+>
+> Sorry I didn't see the original forward for some reason.
+>
+> I haven't seen this on my G5, but it's hard drive is on SATA. I think
+> the CDROM is pata_macio, but there isn't a disk in the drive to test
+> with.
+>
+>> BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
+>> recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
+>
+> AFAICS that report is from a 4K page size kernel (Page orders: ...
+> virtual = 12), so there must be something else going on?
 
-> applied your patch and here's the output.
->=20
+No that's wrong. The actual hardware page size is 4K, but
+CONFIG_PAGE_SIZE and PAGE_SHIFT etc. is 64K.
 
-Unfortunately, it doesn't give me any new information. I added one more
-BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
+So at least for this user the driver used to work with 64K pages, and
+now doesn't.
 
--- Steve
-
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index de5b72216b1a..a090495e78c9 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_b=
-lock *sb)
- 		return NULL;
-=20
- 	ti->flags =3D 0;
-+	ti->magic =3D 20240823;
-=20
- 	return &ti->vfs_inode;
- }
-=20
- static void tracefs_free_inode(struct inode *inode)
- {
--	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
-+	struct tracefs_inode *ti =3D get_tracefs(inode);
-+
-+	BUG_ON(ti->magic !=3D 20240823);
-+	kmem_cache_free(tracefs_inode_cachep, ti);
- }
-=20
- static ssize_t default_read_file(struct file *file, char __user *buf,
-@@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode=
-_operations =3D {
- 	.rmdir		=3D tracefs_syscall_rmdir,
- };
-=20
--struct inode *tracefs_get_inode(struct super_block *sb)
--{
--	struct inode *inode =3D new_inode(sb);
--	if (inode) {
--		inode->i_ino =3D get_next_ino();
--		inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_current(inode);
--	}
--	return inode;
--}
--
- struct tracefs_mount_opts {
- 	kuid_t uid;
- 	kgid_t gid;
-@@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, =
-struct inode *inode)
- 		return;
-=20
- 	ti =3D get_tracefs(inode);
-+	BUG_ON(ti->magic !=3D 20240823);
- 	if (ti && ti->flags & TRACEFS_EVENT_INODE)
- 		eventfs_set_ef_status_free(dentry);
- 	iput(inode);
-@@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *den=
-try)
- 	return dentry;
- }
-=20
-+struct inode *tracefs_get_inode(struct super_block *sb)
-+{
-+	struct inode *inode =3D new_inode(sb);
-+
-+	BUG_ON(sb->s_op !=3D &tracefs_super_operations);
-+	if (inode) {
-+		inode->i_ino =3D get_next_ino();
-+		inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_current(inode);
-+	}
-+	return inode;
-+}
-+
- /**
-  * tracefs_create_file - create a file in the tracefs filesystem
-  * @name: a pointer to a string containing the name of the file to create.
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 69c2b1d87c46..9059b8b11bb6 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -9,12 +9,15 @@ enum {
- struct tracefs_inode {
- 	unsigned long           flags;
- 	void                    *private;
-+	unsigned long		magic;
- 	struct inode            vfs_inode;
- };
-=20
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
- {
--	return container_of(inode, struct tracefs_inode, vfs_inode);
-+	struct tracefs_inode *ti =3D container_of(inode, struct tracefs_inode, vf=
-s_inode);
-+	BUG_ON(ti->magic !=3D 20240823);
-+	return ti;
- }
-=20
- struct dentry *tracefs_start_creating(const char *name, struct dentry *par=
-ent);
+cheers
