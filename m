@@ -1,163 +1,140 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B96183069
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 13:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9F4D8DC
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 13:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717075461; cv=none; b=S3OmmoMXyaB7SfxpGkS0NOrbMp9gH1sKXSF1PuSimIoug1u25wrquMaMojw6MW9ALLfjVao3bs3wqkc3mpRH+iuCBzvKjzotay1OBDMrq+JiG5Gcu+/JgyKymkLCdYKF+bjnObwbIlLv0PU1OX1t6z14CG2J4WQpPgZMSKOymYk=
+	t=1717075702; cv=none; b=qBduUiynnJ/WyjDg5mF7lxDiEOxLgst9iCKj3gSiNuwGZX5DbStV89ZvPACBxQMa0VC75kYwOlT5G9Pl32Xs+MNvqzOeWvwOfOyjcRJA6twj7wntjnRou7olm1+r7Z89KU1FH2Rn6Xi8dzqLDMQPcuugXe0CkZZb/GlsPtGlvgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717075461; c=relaxed/simple;
-	bh=voq/P7MD5XEk9VZEE0aFQJuFPPTRpMyL6TD4WBoaDyQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=geYQI9HqRus/2PIEdXJPYII9ZnTj7G4EvAWmaL8si8sjjeHpjp8yNv2LshIsxjXUbozzdAz+e7GXFKo6PhRk6X+wI8DshufMxBycVPcEr7YWaMY5FsaqMI50fj72FGyws3bpvhVuhQAoxv+CF/lzSPu9rpTpo3i9kyv9NfD0jnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ibCwcuSl; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717075702; c=relaxed/simple;
+	bh=O3BgrCQplvhzyHxO9g26AKv4H545ShPXLbjYP3FXx3E=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=MgrYKgHKr6V1K9U/vEM2vcL6ZI53uLxAicCdZ/PMEC6B8YF8oeauGys9x3/305k9X8D8zsdZGARQ7OSh9ZGVpCaKCX6BgEvQ9ESGqEeWXUS3UItI7CWjjJH/RcrCX6v0AeFJeQ0u2uoC7PhaX5HSy3RWR9wNT2Q58VIV8ZsRf7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aSVCkjnJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Plt2uIiL; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ibCwcuSl"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-80ad976d6a2so35658241.1
-        for <regressions@lists.linux.dev>; Thu, 30 May 2024 06:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717075457; x=1717680257; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z1wf86rhc//hrXTmx06EkBUykqafTMVQ7bFCGB2R5oc=;
-        b=ibCwcuSldTMQKd+ExT8q/cysHcH/1FxfDerI/AbGhz91/kLUOK7iztWdqAWyFl56Y8
-         8lIYm1wCGIGfiqD8gQ3Bvvu+MLYXiNzfBvpamXyRL/jhJbHQghLL7BFnmS5NCXjHhHvP
-         aI0HCddaNjVeOn5HcgrsAzJjyA/p+A7eBnXygvpTE7mq06QfMwlqQhpLZKN2jv0ADIo7
-         kGsOteiYq7GgltjrRdlRGW/AlTWjWAjOqNVtGrDx2s+ZCCJl5lhwXhZmqbWrGA+hpGsw
-         aizpJ99UNkRwoseTNZ/DJAwjea3fFcfQAk4wXbGxGYOWkaKkrOp0zZ/LG2UZOTjQYs8Z
-         ml4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717075457; x=1717680257;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z1wf86rhc//hrXTmx06EkBUykqafTMVQ7bFCGB2R5oc=;
-        b=mzqhIYsxohdhFYQ8W3yl+a1gtqpYeydcg3/7kW6Isro6erF+VUWa+clVHowk/SJiin
-         9BaDXzmbvZkw5FXvfU9WavlVrO8D8DrQ48j4QubjJ7sozlMQQ9D9WLZD6INv/CIzNyG8
-         6FGTPybCHFLJC0Y/7hKIHcQbeHRLKoGMMp/xuuVwBGUUSBJ9lDy2sT6O9vvzYtuH7Q0a
-         OSdmcyUo4tSb5ocZXOOnHlK3XtvP+MRjUm9tW5D9FM5m1rsJrPoyyMaFCXSZFXCaHrOl
-         rwHcl+3T0ulfv2K4OD7cfNOMbY7144ob1fDvgid6WSrUz0dv25UpP779vDNegu5rctEm
-         NcqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjaRSJnXcshXaL4Az4MSaueNzWMWbRy2qdmaPWUUUL1gQ3Fzod/MsNEMzt51WV8nPYLqjnsN+w8CRemdaK8LNQFBjoO8DPHnpzn54=
-X-Gm-Message-State: AOJu0YyPCzXu8aNnpjR8NVOWaCqG9CL8X45alJ3hZQXpTd2Yr4Q95FRo
-	fu+Y8HNyGTPiWOJjbXQPmn5wCBUeE6opro9FnPBTYBw0avHJB4XwrEsnKpcZt7mVlLG6rOiJChp
-	xJm03tRC0sCJvlmyw9eHSkxmlnp8ijCtQkKwDGg==
-X-Google-Smtp-Source: AGHT+IGkpezCmFIsSNHIXWWg711MfwaflaRlyGo0iVwc0c38BOJYKlEcuRFsht2/xa2Si8cst7kM/ZupsnWV43DFYAM=
-X-Received: by 2002:a05:6122:d0d:b0:4da:a82e:95f5 with SMTP id
- 71dfb90a1353d-4eaf21af5b3mr2676650e0c.5.1717075456991; Thu, 30 May 2024
- 06:24:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aSVCkjnJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Plt2uIiL"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id BD19F13800F1;
+	Thu, 30 May 2024 09:28:19 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 30 May 2024 09:28:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1717075699; x=1717162099; bh=+jLxTCnWUt
+	1Hir5+sNhTu9b2ULSOzRhP7WDq2X303Q0=; b=aSVCkjnJmR+ugbr/EoBmBDWeVl
+	G7coT7DjI6MH4KQohhe5nGSeL4kl3L82kYzRaHaK72z206pDnhx7W9FOsvMlP3h3
+	Xzd2uNubWbVlGqsj1/XugNwp8iI9UPsPs7AqrOInfR7KZlY3g8LiEciPgBV14OeZ
+	2hnvZMEFqvzUSXqebeokk2m7HgRXUKVApSkLFOMYa/blLZLwm3oouhzIhawHbTH5
+	Oqvez7tBhpGH+NzU3t0M5UVh61vzbl11RF+GiAjb1cTxSTIlQ1S4NVWpEWDgi94n
+	rt1YCyudsqMrzaQwMk36sO9KnmRHlvW/zzKIijzIr62mmCqzyTw0ZbYUZKew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1717075699; x=1717162099; bh=+jLxTCnWUt1Hir5+sNhTu9b2ULSO
+	zRhP7WDq2X303Q0=; b=Plt2uIiL7fKwDpzwEDVi4jQdDTnh2hOsqmssQEoyn5wd
+	z3nNHZvdzW7cBVPM1ZO7Macpsbq1D1DjEsolEMwZdAXdSfZb00z/5r/mxM2MHI3D
+	GPXOQOc68IndPWs40T/eDEMUwg1iiXAf6hcBbnhcpfAnt442KM6vjh2ztORgDsMX
+	GyV+qI9ZevBRiis445z6Chs60V7f54v5f4nmZMbTqoPbbEILN5DYwcvDIFi+SzUl
+	vCKyfVp0Zf5VNWhsoCW8n1+tVqu/kF9ZvdGgbjIgILhvf5DRd/zH7LcffeqOXjt9
+	IluzhtQ13Pbx/h1dw5snQ9PUisvAgi8BSzZ4CsKmgA==
+X-ME-Sender: <xms:835YZkoRamkLJm4sI8N6D-97S_2rtVeZsrpMQ3lJaelIqpowz4Ejtw>
+    <xme:835YZqr035GYHk2NwTljBucIu4Vky1z4NNk73-PdM3V8z_1K6PO5hdOHBQPFuWknC
+    HB4qVYd4vHuVQy4Qy4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgedgiedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:835YZpNAREJEA7fBndi1XwF1QFzdkF-vhLn9II1mc05Ha7KoQRAIhw>
+    <xmx:835YZr78es8Zn8L8du-gfSH5O-IIr16mgNR37QuXs_teo4FRaJMmTw>
+    <xmx:835YZj4V3NX563qFeStarBvQnFDJ9_AJrgwBT37E3JxpA_oA26xmQA>
+    <xmx:835YZrhb2aNHXtoiTwPi5mFJNG3LYNIJeaHCFlfvnxBER2uFRgFXvA>
+    <xmx:835YZnjM3RpmsO8y_v9ip1_f280I5IUQZ5HlPMf0fISe_2cpSm69XTZo>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 3A9A8B6008D; Thu, 30 May 2024 09:28:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 30 May 2024 18:54:05 +0530
-Message-ID: <CA+G9fYuzd9Cz2Ndwc7HFOimJPRZL7w376N=2R2cV-d0mjzT+nw@mail.gmail.com>
-Subject: WARNING: at fs/nfs/nfs3xdr.c:188 encode_filename3 on rk3399
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-nfs@vger.kernel.org
-Cc: NeilBrown <neilb@suse.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, kasong@tencent.com, 
-	LTP List <ltp@lists.linux.it>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
+In-Reply-To: <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
+References: 
+ <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
+ <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
+Date: Thu, 30 May 2024 15:27:58 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Russell King" <linux@armlinux.org.uk>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>
+Cc: "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>, rcu <rcu@vger.kernel.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Joel Fernandes" <joel@joelfernandes.org>, eeraj.upadhyay@kernel.org,
+ "John Ogness" <john.ogness@linutronix.de>
+Subject: Re: arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4): more
+ undefined references to `__bad_cmpxchg' follow
+Content-Type: text/plain
 
-The following kernel warning has been noticed while running LTP statvfs01
-testcase on arm64 device rk3399-rock-pi-4b with NFS mounted test setup and
-started from Linux next-20240522 tag and till next-20240529.
+On Thu, May 30, 2024, at 14:26, Russell King (Oracle) wrote:
+> On Thu, May 30, 2024 at 05:50:52PM +0530, Naresh Kamboju wrote:
+>> The arm builds failed on Linux next with gcc-13 and clang-18.
+>> 
+>> Config: arm imx_v6_v7_defconfig - failed
+>> 
+>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>> 
+>> Build log:
+>> -----
+>> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+>> `rcu_trc_cmpxchg_need_qs':
+>> update.c:(.text+0x348): undefined reference to `__bad_cmpxchg'
+>> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+>> `rcu_read_unlock_trace_special':
+>> update.c:(.text+0x41c): undefined reference to `__bad_cmpxchg'
+>> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
+>> `trc_read_check_handler':
+>> update.c:(.text+0x4b0): undefined reference to `__bad_cmpxchg'
+>> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function `trc_inspect_reader':
+>> update.c:(.text+0x1518): undefined reference to `__bad_cmpxchg'
+>> arm-linux-gnueabihf-ld: update.c:(.text+0x1548): undefined reference
+>> to `__bad_cmpxchg'
+>> arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4):
+>> more undefined references to `__bad_cmpxchg' follow
+>> make[3]: *** [/builds/linux/scripts/Makefile.vmlinux:34: vmlinux] Error 1
+>
+> You get a reference to __bad_cmpxchg() when someone uses cmpxchg() on
+> a datatype that there are no CPU instructions to perform the atomic
+> compare-and-exchange.
+>
+> As we support 8-bit, 16-bit and 32-bit, I would expect that we're now
+> seeing cmpxchg() being used on 64-bit values, which are unsupportable
+> on 32-bit Arm.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+A 64-bit cmpxchg() would fail on most 32-bit architectures,
+other than armv6k+ and i686+. Since this one fails on
+an armv6 (non-6k) build, it's probably the added 8-bit
+cmpxchg() that Paul talked about using for RCU, though I
+don't see that in linux-next here.
 
-Test log:
------
-mke2fs 1.47.0 (5-Feb-2023)
-tst_test.c:1131: TINFO: Mounting /dev/loop0 to /scratch/ltp-9gvw[
-5211.161721] EXT4-fs (loop0): mounting ext2 file system using the ext4
-subsystem
-F2L8n6/LTP_stadLH0F7/mntpoint fstyp=ext2 flags=0
-[ 5211.169391] EXT4-fs (loop0): mounted filesystem
-af9dfac2-88f6-453d-9d02-c14cc888a51d r/w without journal. Quota mode:
-none.
-statvfs01.c:32: TPASS: statvfs(TEST_PATH, &buf) passed
-[ 5211.175518] ------------[ cut here ]------------
-statvfs01.c:44: TPASS: creat(valid_fname, 0444) returned fd 3
-[ 5211.175938] WARNING: CPU: 5 PID: 786885 at fs/nfs/nfs3xdr.c:188
-encode_filename3+0x4c/0x60
-[ 5211.175962] Modules linked in: tun overlay btrfs blake2b_generic
-libcrc32c xor xor_neon raid6_pq zstd_compress hantro_vpu
-snd_soc_hdmi_codec brcmfmac panfrost v4l2_vp9 snd_soc_simple_card
-dw_hdmi_i2s_audio dw_hdmi_cec crct10dif_ce snd_soc_audio_graph_card
-snd_soc_spdif_tx brcmutil drm_shmem_helper v4l2_h264
-snd_soc_simple_card_utils gpu_sched rockchipdrm hci_uart analogix_dp
-btqca v4l2_mem2mem dw_mipi_dsi btbcm videobuf2_dma_contig dw_hdmi cec
-phy_rockchip_pcie cfg80211 rtc_rk808 bluetooth videobuf2_memops
-snd_soc_rockchip_i2s drm_display_helper drm_dma_helper videobuf2_v4l2
-rfkill rockchip_saradc videobuf2_common drm_kms_helper snd_soc_es8316
-industrialio_triggered_buffer rockchip_thermal kfifo_buf
-coresight_cpu_debug pcie_rockchip_host fuse drm backlight dm_mod
-ip_tables x_tables
-[ 5211.176075] CPU: 5 PID: 786885 Comm: statvfs01 Not tainted
-6.10.0-rc1-next-20240529 #1
-[ 5211.176083] Hardware name: Radxa ROCK Pi 4B (DT)
-[ 5211.176086] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 5211.176092] pc : encode_filename3+0x4c/0x60
-[ 5211.176100] lr : nfs3_xdr_enc_create3args+0x4c/0x108
-[ 5211.176109] sp : ffff80008b1ab7a0
-[ 5211.176111] x29: ffff80008b1ab7a0 x28: ffff80008b1abc40 x27: 0000000000000001
-[ 5211.176120] x26: 0000000000440040 x25: 0000000000000000 x24: ffff800081492c70
-[ 5211.176128] x23: 0000000000000100 x22: ffff00000a274010 x21: ffff00002d1b9800
-[ 5211.176136] x20: ffff00000a274010 x19: 0000000000000100 x18: 0000000000000000
-[ 5211.176143] x17: 0000000000000000 x16: 0000000000000000 x15: 6262626262626262
-[ 5211.176150] x14: 6262626262626262 x13: 90d1d5e100000000 x12: 40a645896bf3b486
-[ 5211.176158] x11: a16c80bf234c2437 x10: 5702b6d600000000 x9 : ffff80008059040c
-[ 5211.176165] x8 : a16c80bf234c2437 x7 : 5702b6d600000000 x6 : 600aa44181070001
-[ 5211.176173] x5 : ffff00003109d080 x4 : ffff0000661a4232 x3 : ffff8000805903c0
-[ 5211.176180] x2 : 0000000000000100 x1 : ffff00000a274010 x0 : ffff80008b1ab828
-[ 5211.176187] Call trace:
-[ 5211.176190]  encode_filename3+0x4c/0x60
-[ 5211.176198]  nfs3_xdr_enc_create3args+0x4c/0x108
-[ 5211.176206]  rpcauth_wrap_req_encode+0x24/0x40
-[ 5211.176216]  rpcauth_wrap_req+0x28/0x40
-[ 5211.176223]  call_encode+0x130/0x358
-[ 5211.176231]  __rpc_execute+0xb4/0x638
-[ 5211.176238]  rpc_execute+0x168/0x1e8
-[ 5211.176244]  rpc_run_task+0x12c/0x1d8
-[ 5211.176251]  rpc_call_sync+0x70/0xe0
-[ 5211.176257]  nfs3_rpc_wrapper+0x48/0x98
-[ 5211.176264]  nfs3_proc_create+0xb8/0x2d0
-[ 5211.176272]  nfs_do_create+0x9c/0x1f0
-[ 5211.176280]  nfs_atomic_open_v23+0x98/0xd8
-[ 5211.176288]  path_openat+0x6d4/0xf50
-[ 5211.176296]  do_filp_open+0xa4/0x160
-[ 5211.176301]  do_sys_openat2+0xcc/0x108
-[ 5211.176310]  __arm64_sys_openat+0x6c/0xc0
-[ 5211.176317]  invoke_syscall+0x50/0x128
-[ 5211.176327]  el0_svc_common.constprop.0+0x48/0xf0
-[ 5211.176335]  do_el0_svc+0x24/0x38
-[ 5211.176342]  el0_svc+0x3c/0x108
-[ 5211.176351]  el0t_64_sync_handler+0x120/0x130
-[ 5211.176355]  el0t_64_sync+0x190/0x198
-[ 5211.176361] ---[ end trace 0000000000000000 ]---
-statvfs01.c:48: TFAIL: creat(toolong_fname, 0444) expected ENAMETOOLONG: EIO (5)
-[ 5211.432692] EXT4-fs (loop0): unmounting filesystem
-af9dfac2-88f6-453d-9d02-c14cc888a51d.
+I htink we need to use the emulated cmpxchg8() in
+__cmpxchg() for this case, just like we do on other
+architectures that only have word size atomics.
 
-metadata:
-----
-  git_describe: next-20240522 and next-20240529
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  arch: arm64
-  test: LTP syscalls statvfs01
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131502/suite/log-parser-test/test/check-kernel-exception/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131502/suite/log-parser-test/test/check-kernel-warning-4a4050f2ba224c26acd76ee5aebc8fa78eb1cf8c315c763fd7b55e6a1d6e38b7/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131502/suite/log-parser-test/tests/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+      Arnd
