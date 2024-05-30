@@ -1,90 +1,95 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C06D6F306
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 14:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A46182D3F
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 15:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717079307; cv=none; b=ZoVrDsBl0gcFYlXCZOp09nUCA8edR2krUCg4cZwiQhTKIyqv65xIRLAtTDkhvyKHem7nqDGXh0ciVUq8S1z0kH8OoYwEkJ68FwSfPaGcKTI8WWOU5TwRNJxpPau3JU4NXe0I1g4S3XDdgOFTG6Irhd7DpclAJjtXLYpM2X3cVnc=
+	t=1717083422; cv=none; b=WkKmwFFSQhbtjyPesB5CMbgIT0t8mNwbn4rS55x1It9iJRRZlypyNI34ibFH/nyAaPgts5KCCC0ANkIVveY+VYUErFMRSnRMGwAm9ICgG45Fxq3+84nWp4dnWNja1trttyq1DWcj9TGxYDT/JUB0hFVPLEI7lhoTCuqSYypbws0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717079307; c=relaxed/simple;
-	bh=TepJdMu5Kgqt4hFWQ/knF8KsMyDM2pCe5l3NAhbAlr0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rcJRKpULeaPItAlhIfJQzkbMadeOVDNIXP32MeJ2FKNZYCeYPHobWpaG/+BM7cSp4CgLdV77TUOI4OQ+wTwZ/K14mGPUkaxFIaIkZtcgOpMrf1Qhgje4twQkeYAJ+XEQDqLPF265mqqoykvv9JSgy4g8JK+2rYaSLXJO0Mz2nyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Gq9AAZ2u; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1717083422; c=relaxed/simple;
+	bh=qYXmXSvbAlekhnuFdmhAUfv0lEDD1lyfWRJPeN4+j3I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KexeECn0MLG8RTJFtT1RzAEfIhAFEBjOR4NFyPHZFsiHKDeQalFBT91kkRyBKcMmftuC+yIg+pi+r0xr4eziXi19EwdsutMMkUFMmbr81fW2Vh0CwAAg2Qo3aynvV90bi2/gwFlsvU2YFCoIr04l4g0EJAB2zmUqzTrSAR+yneE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jCFzdPmN; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Gq9AAZ2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1717079303;
-	bh=TepJdMu5Kgqt4hFWQ/knF8KsMyDM2pCe5l3NAhbAlr0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Gq9AAZ2u93VW1D0x6Na4RcZUHk90fmGkZEWk8KeWCfGT4bL493v8+w0tcTJ9hsRkM
-	 4XDO0HcsykkcEpCJdlsHn8IcqCapHKhg3S8aluPMzfsmu2wtre70g04ccbHxsqlKfx
-	 C4cqvFpr/umZfy9AnM6SmI/NdUQ+q8oLGNvbALKhHqY83jJI6xkA2LwnPuh21keJ22
-	 LlU1LoJ0GcAzcYfDUhR1TB49I6xrk3V6xFU+rqyCAF4HK6bTrCm3nUrys+1upui+ze
-	 mXbO3gkQecvwBuSOjmSecncOMEgipu1oC1HgQkrjIy0dSNoyFcs2Z4Z6PLRsNJOq6u
-	 x12ptIkbo4bhw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jCFzdPmN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717083419;
+	bh=qYXmXSvbAlekhnuFdmhAUfv0lEDD1lyfWRJPeN4+j3I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jCFzdPmNksdQ6ixasNR8Ax/vf1J5L0nS0DN8hqQ1od/kxeAWAQhHvoirWn5ZVWzSA
+	 A4SxCSz9AkS5vFPP53Fi49ALkuJ2Mi6vOiUGvKOJYRQ0A/MRp9FKfZfwjm2ZpLq/bI
+	 wET07lZV5jWnz1xtsbRG6QelVCm1HLOX1dPAtd4vOfHfvODduh5yMZGgIzo2uAnGo+
+	 OD3viB4EAtyqh0cM82dLt+l8dOLx58aTk67CSU/3TRVx5OAOl4U3Z486Bf/Rq4NLX7
+	 bq8WRUolSB68sUaYp/KP9dAd49pPvPB5M+sCHYobdOURLGbn37faAvllWDQ1GSjIem
+	 zsxukvpuZ3yMA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VqpWp35Nwz4wcC;
-	Fri, 31 May 2024 00:28:22 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
- linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
- Christoph Hellwig <hch@lst.de>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
- allocating the queue
-In-Reply-To: <8734pz4gdh.fsf@mail.lhotse>
-References: <20240520151536.GA32532@lst.de>
- <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
- <8734pz4gdh.fsf@mail.lhotse>
-Date: Fri, 31 May 2024 00:28:21 +1000
-Message-ID: <87wmnb2x2y.fsf@mail.lhotse>
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 90FF73781104;
+	Thu, 30 May 2024 15:36:58 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@lists.linux.dev
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: [REGRESSION] probe with driver acpi-fan failed with error -22
+Date: Thu, 30 May 2024 17:37:27 +0200
+Message-Id: <20240530153727.843378-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> writes:
->> [CCing the regression list, as it should be in the loop for regressions:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>
->> On 20.05.24 17:15, Christoph Hellwig wrote:
->>> Adding ben and the linuxppc list.
->>
->> Hmm, no reply and no other progress to get this resolved afaics. So lets
->> bring Michael into the mix, he might be able to help out.
->
-> Sorry I didn't see the original forward for some reason.
->
-> I haven't seen this on my G5, but it's hard drive is on SATA. I think
-> the CDROM is pata_macio, but there isn't a disk in the drive to test
-> with.
->
->> BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
->> recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
->
-> AFAICS that report is from a 4K page size kernel (Page orders: ...
-> virtual = 12), so there must be something else going on?
+Hello,
+                                                                         
+We have identified a regression in the acpi-fan driver probe between 
+v6.9-rc7 and v6.10-rc1 on some Intel Chromebooks in the Collabora LAVA 
+lab.
 
-No that's wrong. The actual hardware page size is 4K, but
-CONFIG_PAGE_SIZE and PAGE_SHIFT etc. is 64K.
+For the Acer Chromebook Spin 514 (CP514-2H), the following error is 
+reported in the logs:
 
-So at least for this user the driver used to work with 64K pages, and
-now doesn't.
+[    0.651202] acpi-fan INTC1044:00: probe with driver acpi-fan failed with error -22
 
-cheers
+Similar errors are reported on other devices with fans compatible with 
+the same driver.
+
+On Acer Chromebox CXI4, ASUS Chromebook Flip C436FA and 
+HP Chromebook x360 14 G1:
+
+[    0.488001] acpi-fan INT3404:00: probe with driver acpi-fan failed with error -22
+
+On ASUS Chromebook Vero 514 CBV514-1H:
+
+[    1.168905] acpi-fan INTC1048:00: probe with driver acpi-fan failed with error -22
+
+The issue is still present on next-20240529.
+
+I'm sending this report to track the regression while a fix is 
+identified. I'll investigate the issue/run a bisection and report back 
+with the results.
+                                     
+This regression was discovered during some preliminary tests with the 
+ACPI probe kselftest [1] in KernelCI. The config used was the upstream
+x86_64 defconfig with a fragment applied on top [2].
+
+Best,
+
+Laura
+
+[1] https://lore.kernel.org/all/20240308144933.337107-1-laura.nao@collabora.com/
+[2] https://pastebin.com/raw/0tFM0Zyg
+
+#regzbot introduced: v6.9-rc7..v6.10-rc1
+
