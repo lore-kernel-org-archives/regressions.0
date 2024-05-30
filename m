@@ -1,49 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB914A615;
-	Thu, 30 May 2024 08:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FB7171B6
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 08:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717057096; cv=none; b=S2PZgwuRRbbnWirqlW1l26BSdrVTk/tkjs/CjpKuM8WXMMzMuQxuc6fNpMXLu90Y53mhOkzyrgrV8AjZx0dN0qD403GGbYJfRLItlexTxkLaXrsyG/gnyf3PcuwulT64TOMr/s/nzSNWQRmsQDOSfN4o2BdUUVosi36bUBldoD8=
+	t=1717057816; cv=none; b=CeuH72WoFEVEPHJeQJtDLn5MxmXEOLlDeDgjY4b9AIoR0fCPCnWDu1ewA+yOlQq+rP5Snqd4Tkik2TNawWTOCHLMDSGJj3nGWYIluDeTCFtVugOEzfTtvzbWgQR9aJsm1E21lDrL/qRAPA6qd6cbHbDH3zzBCBJv53YyQVF/oDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717057096; c=relaxed/simple;
-	bh=LLoCHtazLklqSTo51kZD1rOstdZdBmD8nkBBghMcTi4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=CJU5yYlQjHoDGEQxR8gl2py1CD9d3aVI95StekMcd84uE73nL0wbcb5csfN7iLrjUQbCUAjLDHLAWdxqKshh5t1ZB8yBnXv2J00Pz4E7D/h5eVXJpgpDX/TihdNx5vZSBeHgAgUUcAkdVJ6vT9Erh9ra2FuoyrUHLR2cnTpVEBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfU1jynA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717057816; c=relaxed/simple;
+	bh=MvdkkCKPSepl91Y7804RHqMcNOXEkytlMBE1ugKuISI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XfKsJsDpPMIPP/6dARaksxf6RTYujcO3ChQ3yI1T6idORU5IV0p8NVsngDE7LZRQ76GkLuKrIAFUftmMNmkQpGAU//MRhgYBrVBFNHAj3rJJ52tPgCwn8u5jRqjpOS2gl21bJ2OGwWiH7P72TcK3Ykis4n2xg7Gr868AVLFbqI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KLiXbJ5k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9gO2GsiN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfU1jynA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1FEC2BBFC;
-	Thu, 30 May 2024 08:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717057096;
-	bh=LLoCHtazLklqSTo51kZD1rOstdZdBmD8nkBBghMcTi4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=BfU1jynABdejcfPhHA29dQ+oPfGqOdMCRhwsYiCuOTSAI57JG6/7ULl25M79r3U2I
-	 E8P7k8piRx5OYN2BMivUHzX80VgYR4fASP2JFI7GYBPbZkmQnXA/OFrCtS4lZpfCTa
-	 oGV/SOVfbmyZe6Rgdm/ZfhW78oSeWxEEvUSEB9KadvOEMMsTH9xrt82Nu4MZl+/aEQ
-	 VLJCqrdKRyx+ZZGP7oLhuIBGlQVAj4jINQ/ghGJwTgwD7y9KNL48MMANpHyV6pOpom
-	 BfjikRWj9tXRbCykmUSeEQMIyhsAAsFeOEzozOdzgB8d3qPxCvStsIxt0TmdWaqihx
-	 60pJTNBqYkwlw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
-  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-	<87sexzx02f.fsf@kernel.org>
-	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87jzjbwxin.fsf@kernel.org>
-Date: Thu, 30 May 2024 11:18:12 +0300
-In-Reply-To: <87jzjbwxin.fsf@kernel.org> (Kalle Valo's message of "Thu, 30 May
-	2024 10:48:32 +0300")
-Message-ID: <87frtzww57.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KLiXbJ5k";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9gO2GsiN"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717057812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wPLYtheb57Rblm9GDh2pb6WDY4geRPaBbhxs9rtzT8Y=;
+	b=KLiXbJ5kVOu3neydHnHQVL+J8kVUVKtyY8TxS1nD9omXKtTUWM0JyIb0h9gB8lULE3IvGn
+	UjAzYScGJS08NL0WEoUgZfF42H5kD+3qSASisrsIyufFWT9qdkYvLLlbhsWcx8XeJ5txUs
+	IzfSHyPS6wZtkfZuqoKn6oUQpomf9GCU8mTiAdW8K6b1FDXEz3KxJDygooUV1k8FpsC3Kj
+	DEzEAQmvzOEzw5hWFosu2o3r/QaVG+626sQc4dlfH+tceb5tHcUas4Hh+gvLmR64txHmWa
+	5VxU/rYiw41OEClVVK4MCwwjkdQmld4Y4Ddrfd0+LcNwcbA8koKnpN3xu6FfaQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717057812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wPLYtheb57Rblm9GDh2pb6WDY4geRPaBbhxs9rtzT8Y=;
+	b=9gO2GsiNU0j80SYgjCU5ZMvX9PLfCkhd8juQRmDqn3rfO80GTDojdfoxa2KY0+53FX4Jd/
+	FYTbnDYWwPwxf2Cg==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+References: <877cffcs7h.ffs@tglx>
+ <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
+ <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+Date: Thu, 30 May 2024 10:30:09 +0200
+Message-ID: <87zfs78zxq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,59 +55,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Kalle Valo <kvalo@kernel.org> writes:
+Peter!
 
-> Dan Williams <dan.j.williams@intel.com> writes:
+On Mon, May 27 2024 at 23:15, Peter Schneider wrote:
+
+Thanks for providing all the information!
+
+> I want to add one thing: there is a log entry in the dmesg output of a "bad" kernel, which 
+> I initially overlooked, because it is way up, and I noticed this just now. I guess this 
+> might be relevant:
 >
->> Kalle Valo wrote:
->>
->>> Kalle Valo <kvalo@kernel.org> writes:
->>> 
->>> > Kalle Valo <kvalo@kernel.org> writes:
->>> >
->>> >> Yesterday I run our ath11k regression tests with v6.10-rc1 and our
->>> >> simple ath11k module reload stress started failing reliably with various
->>> >> KASAN errors. The test removes and inserts ath11k and other wireless
->>> >> modules in a loop. Usually I run it at least 100 times, some times even
->>> >> more, and no issues until yesterday.
->>> >>
->>> >> I have verified that the last wireless-next pull request (tag
->>> >> wireless-next-2024-05-08) works without issues and v6.10-rc1 fails
->>> >> always, usually within 50 module reload loops. From this I'm _guessing_
->>> >> that we have a regression outside wireless, most probably introduced
->>> >> between v6.9 and v6.10-rc1. But of course I cannot be sure of anything
->>> >> yet.
->>> >>
->>> >> I see different KASAN warnings and lockdep seems to be always visible in
->>> >> the stack traces. I think I can reproduce the issue within 15 minutes or
->>> >> so. Before I start bisecting has anyone else seen anything similar? Or
->>> >> any suggestions how to debug this further?
->>> >>
->>> >> I have included some crash logs below, they are retrieved using
->>> >> netconsole. Here's a summary of the errors:
->>> >>
->>> >> [ 159.970765] KASAN: maybe wild-memory-access in range
->>> >> [0xbbbbbbbbbbbbbbb8-0xbbbbbbbbbbbbbbbf]
->>> >> [  700.017632] BUG: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
->>> >> [ 224.695821] BUG: KASAN: slab-out-of-bounds in
->>> >> lockdep_register_key+0x755/0x8f0
->>> >> [ 259.666542] BUG: KASAN: slab-use-after-free in
->>> >> lockdep_register_key+0x755/0x8f0
->>
->> The proposed fix for that is here:
->>
->> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->
-> I get "Not Found" from that link, is there a typo?
+> [    1.683564] [Firmware Bug]: CPU0: Topology domain 0 shift 1 != 5
 
-I found this fix from for-linus branch:
+Yes. That's absolutely related. I can see what goes wrong, but I have
+absolutely no idea how that happens.
 
-# PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
+Can you please apply the debug patch below ad provide the full dmesg
+after boot?
 
-But at least that doesn't fix my crash.
+Thanks,
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+        tglx
+---
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -65,6 +65,7 @@ static void parse_legacy(struct topo_sca
+ 		cores <<= smt_shift;
+ 	}
+ 
++	pr_info("Legacy: %u %u %u\n", c->cpuid_level, smt_shift, core_shift);
+ 	topology_set_dom(tscan, TOPO_SMT_DOMAIN, smt_shift, 1U << smt_shift);
+ 	topology_set_dom(tscan, TOPO_CORE_DOMAIN, core_shift, cores);
+ }
+--- a/arch/x86/kernel/cpu/topology_ext.c
++++ b/arch/x86/kernel/cpu/topology_ext.c
+@@ -72,6 +72,9 @@ static inline bool topo_subleaf(struct t
+ 
+ 	cpuid_subleaf(leaf, subleaf, &sl);
+ 
++	pr_info("L:%0x %0x %0x S:%u N:%u T:%u\n", leaf, subleaf, sl.level, sl.x2apic_shift,
++		sl.num_processors, sl.type);
++
+ 	if (!sl.num_processors || sl.type == INVALID_TYPE)
+ 		return false;
+ 
+@@ -97,6 +100,7 @@ static inline bool topo_subleaf(struct t
+ 			     leaf, subleaf, tscan->c->topo.initial_apicid, sl.x2apic_id);
+ 	}
+ 
++	pr_info("D: %u\n", dom);
+ 	topology_set_dom(tscan, dom, sl.x2apic_shift, sl.num_processors);
+ 	return true;
+ }
