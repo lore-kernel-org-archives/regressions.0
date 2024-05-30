@@ -1,37 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E262B9A0;
-	Thu, 30 May 2024 06:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4177F1CB318
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 06:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717050322; cv=none; b=nsE/54J9vJdtS8Rt3LD8OTcKfo6dkhkpyK0XYA67urUvfaynpUQY0oSLx5lWrhcGdPb+zvuMb7KRIlwF2kdrzH3oYA/gKEI6PlC59BzA1rkWDzDp3STdrUkAPvfN66gKf27AvSo5ElnrzPM829JJAwKR3uIIT47p2qn3lYoDiMo=
+	t=1717051120; cv=none; b=NhG6jRnga7aaZn3m7LKvKAztWQVWYudeQxBmXnqoTxEMWYFfHsrPTyA6T/+3sUpyDqd5QJg0KgtCuXP/IArBApiXwhyIVKy5w/zTuz32Etlr4Ct5l7LQAZl4mpHTTk7NZSTUAXaCf2dIwSJu9EKoBOFEqnWUlTbSZCXENeWVxMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717050322; c=relaxed/simple;
-	bh=9IThHmHVyLJ5hdbfWH8g62CjCB03Osd1MetLGQEJOvg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bkdalPF1NFILxsSLg/JVz2chcZthZPgETcCMfxDbO39bxsjLwi7KPIaiac2PTUFUT9264TSBH8qNT690jnTSygJQa464jlUSjdgu6wO9qRVKTQjWi2eN9dU2jFJrC+1NIQPnqtrXA4VAs+xn+2x/NfKiuyyxO+ATpyaffpwPSlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JhrDJXY6; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717051120; c=relaxed/simple;
+	bh=3iSSVFjIwnSFCrdOdDZd6ny8U3SfjsDDOMMrtMc+HQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkzBtnweWfE9J2yPnERz6XI9OV4LG4tbQeZdHnmjJzOcpO/DOslT/ktenjBig3gBvLjgBn3G7RTFpsw8AyUuUeecYVm/FIw6x3fBjAEn859OIqOJgZC4RBJztkiwNoVGITfIHcvBoBnhdr6Fua4N7r3FSS+EAwZgdS0C7vOmtjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=me.ssier.org; spf=pass smtp.mailfrom=me.ssier.org; dkim=pass (2048-bit key) header.d=me-ssier-org.20230601.gappssmtp.com header.i=@me-ssier-org.20230601.gappssmtp.com header.b=AqDAg+YZ; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=me.ssier.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.ssier.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JhrDJXY6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=yQt4cMQXQ51kt8CWUHvAJmRopwcLuvZdstpsxz59W6I=;
-	t=1717050319; x=1717482319; b=JhrDJXY6AG5kB/8FY1TUBzK7xbismlEWnj2widVQFATUKcQ
-	JMzka+BKt187pdtXoZkWl252OZfZ3nqa0+nl8VLWji+zYK2oDTR/9KAwgRdOavEiTunyKZqlLIGtk
-	8KtK982EeHxIOrgl2bFh3aZ6zoptk1bpXQx5uVqmy4ODLLie/d55B6eYv2D/EfksDyCIHLE+Efz5v
-	z9nLNX1DVH6KoizwPudxk1UAE6ALunUYqjNQt6FjwwjVxMKemaSFUKtp9KBVJobx0p3FgO9ag8RBb
-	GMiQJmfAxs1UPwOT/MNZAsYqh++G75IY724gLQlPslMmPBtWhuT2MU+TGvsQvVHA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCZDs-00064g-Tr; Thu, 30 May 2024 08:25:12 +0200
-Message-ID: <f96bd990-20d4-4c41-99f4-401b3ab46652@leemhuis.info>
-Date: Thu, 30 May 2024 08:25:12 +0200
+	dkim=pass (2048-bit key) header.d=me-ssier-org.20230601.gappssmtp.com header.i=@me-ssier-org.20230601.gappssmtp.com header.b="AqDAg+YZ"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dfa584ea2ffso406871276.1
+        for <regressions@lists.linux.dev>; Wed, 29 May 2024 23:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=me-ssier-org.20230601.gappssmtp.com; s=20230601; t=1717051117; x=1717655917; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6I6bUq5MtPsSJCD04nOMib7SEtzLq2qYb33NbiPQPqo=;
+        b=AqDAg+YZVUHA7SxcpzkjcY5s4qdHMQNHWUoyw/K0C/p5037F/hzUPXsSf7nJ3ppKcW
+         0R7p5Pev7X9c0X4nfqXTYeYYAqWHia5aAcDQMi5WGkO+J8vRwj4cf1VuKLpBZj1FjLKk
+         ZpHI7UkWTYbJGAusCK5wLxKrSfXt05ak/Jp3Yw4kArCWgDiWxV2Zf6DZOGLk1plabJrm
+         eOhFQEIOy3OTrvvxmo507RyGnj0VVGmF6RuNr2H653JXYnrXdbZPRRCMDMCIhS7d4xeK
+         iM0PNLFSMooHKmufn4Fo25HRCTkPsPTductQLFhpK8WrdpA2llHziiGRSJeRnIz/EvwJ
+         mWJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717051117; x=1717655917;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6I6bUq5MtPsSJCD04nOMib7SEtzLq2qYb33NbiPQPqo=;
+        b=SNZqHNvBNErKsRkOa3OPQ9EOwfBbri6NZFEfC3HHplSkQDcwzXiyc5G0MOY/l7S2ey
+         XMXttD/dBFONcLXinMd9GVHPVV4pUuljECp9iq8SfqzWYHP2ZiPRFJc3hcYfh/TE2P7W
+         IY31mfPgAiYRhCjnX5roZ0ysQ2e7nLU8/TMpzBMujWuzLpobBcOATd96kueQ2ban53Fa
+         0E6UZYya36YPLcDEDeMqnAX/M+c/maDiAd+qhvWFjhcUVpaA4tV3w11ceqxo0MwXRqLC
+         TObU1oroPkb7hWVeyHz/l62wQUPI2cTwEHF+0bt791a4lzsvDxDO3zeZKVbNoal6896Q
+         6/Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCV55iu5OW+eAe/Qn6n3IRK8O11+jUzsrrcO8gU1G4N73FPAljOY86u5aEe7945D78FwUPtEzV/QUv8sGkmbVw7vzdQpvZvOyhROeao=
+X-Gm-Message-State: AOJu0YyHyYWdj2qfM3h0ri56/4MGHLitSRkCAY5d/IOJiHQEP3JY++qt
+	ZJ704sbIn05DN5wv3U1xeX5TtboJZrmZ9cmK04OTRlWEz9WNQcov7D9pNphBOzI=
+X-Google-Smtp-Source: AGHT+IF7XKqWolRteq20RdszdOCxHfIqaWsAlefedQXQH0si50DrOE1KOgzxBdM/g6qKNQxWSjjdWw==
+X-Received: by 2002:a25:a2cb:0:b0:dfa:584d:5e3b with SMTP id 3f1490d57ef6-dfa5a5b7f75mr1425987276.6.1717051117021;
+        Wed, 29 May 2024 23:38:37 -0700 (PDT)
+Received: from [192.168.2.14] ([74.14.126.218])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ac162ef87fsm60876626d6.80.2024.05.29.23.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 23:38:36 -0700 (PDT)
+Message-ID: <87546d93-3fe7-4459-b44a-47cbcab9da74@me.ssier.org>
+Date: Thu, 30 May 2024 02:38:25 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,75 +61,115 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
- allocating the queue
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Michael Ellerman <mpe@ellerman.id.au>, Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, benh@kernel.crashing.org,
- linuxppc-dev@lists.ozlabs.org, Guenter Roeck <linux@roeck-us.net>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240520151536.GA32532@lst.de>
- <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
+Subject: Re: [PATCH] usb: chipidea: move ci_ulpi_init after the phy
+ initialization
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Michael Grzeschik <m.grzeschik@pengutronix.de>,
+ Peter Chen <peter.chen@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, wouter@franken-peeters.be
+References: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
+ <CGME20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84@eucas1p2.samsung.com>
+ <21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com>
+Content-Language: en-US
+From: Alexandre Messier <alex@me.ssier.org>
+In-Reply-To: <21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717050319;22bc69e5;
-X-HE-SMSGID: 1sCZDs-00064g-Tr
 
-On 29.05.24 16:36, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [CCing the regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 2024-04-25 15:40, Marek Szyprowski wrote:
+> Dear All,
 > 
-> On 20.05.24 17:15, Christoph Hellwig wrote:
->> Adding ben and the linuxppc list.
+> On 02.04.2024 08:23, Michael Grzeschik wrote:
+>> The function ci_usb_phy_init is already handling the
+>> hw_phymode_configure path which is also only possible after we have
+>> a valid phy. So we move the ci_ulpi_init after the phy initialization
+>> to be really sure to be able to communicate with the ulpi phy.
+>>
+>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 > 
-> Hmm, no reply and no other progress to get this resolved afaics. So lets
-> bring Michael into the mix, he might be able to help out.
+> This patch landed in linux-next some time ago as commit 22ffd399e6e7 
+> ("usb: chipidea: move ci_ulpi_init after the phy initialization"). 
+> Unfortunately it breaks host USB operation on DragonBoard410c 
+> (arch/arm64/boot/dts/qcom/apq8016-sbc.dts). There is no error nor 
+> warning in the kernel log besides the information about deferred probe 
+> on the chipidea controller:
 > 
-> BTW TWIMC: a PowerMac G5 user user reported similar symptoms here
-> recently: https://bugzilla.kernel.org/show_bug.cgi?id=218858
+> platform ci_hdrc.0: deferred probe pending: (reason unknown)
+> 
+> Tomorrow I will try to investigate which operation during driver probe 
+> triggers it. If there is anything else to check that might help fixing 
+> this issue, let me know.
 
-And yet another report with similar symptoms, this time with a
-"PowerMac7,2 PPC970 0x390202 PowerMac":
-https://bugzilla.kernel.org/show_bug.cgi?id=218905
+I am also seeing this issue on a msm8974-based device.
 
-Ciao, Thorsten
+There is also a report and analysis by Wouter Franken here:
+https://lore.kernel.org/all/ecb8d3e8-d525-4a2d-a868-803202c16296@franken-peeters.be/
 
->> Context: pata_macio initialization now fails as we enforce that the
->> segment size is set properly.
+Reverting the commit does fix the issue for me.
+
+Adding to regzbot for tracking:
+
+#regzbot introduced: 22ffd399e6e7 ^
+
+Thanks,
+Alexandre
+
+> 
+>> ---
+>>   drivers/usb/chipidea/core.c | 8 ++++----
+>>   drivers/usb/chipidea/ulpi.c | 5 -----
+>>   2 files changed, 4 insertions(+), 9 deletions(-)
 >>
->> On Wed, May 15, 2024 at 04:52:29PM -0700, Guenter Roeck wrote:
->>> pata_macio_common_init() Calling ata_host_activate() with limit 65280
->>> ...
->>> max_segment_size is 65280; PAGE_SIZE is 65536; BLK_MAX_SEGMENT_SIZE is 65536
->>> WARNING: CPU: 0 PID: 12 at block/blk-settings.c:202 blk_validate_limits+0x2d4/0x364
->>> ...
->>>
->>> This is with PPC_BOOK3S_64 which selects a default page size of 64k.
+>> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+>> index 835bf2428dc6e..bada13f704b62 100644
+>> --- a/drivers/usb/chipidea/core.c
+>> +++ b/drivers/usb/chipidea/core.c
+>> @@ -1084,10 +1084,6 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>>   		return -ENODEV;
+>>   	}
+>>   
+>> -	ret = ci_ulpi_init(ci);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>>   	if (ci->platdata->phy) {
+>>   		ci->phy = ci->platdata->phy;
+>>   	} else if (ci->platdata->usb_phy) {
+>> @@ -1142,6 +1138,10 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>>   		goto ulpi_exit;
+>>   	}
+>>   
+>> +	ret = ci_ulpi_init(ci);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>>   	ci->hw_bank.phys = res->start;
+>>   
+>>   	ci->irq = platform_get_irq(pdev, 0);
+>> diff --git a/drivers/usb/chipidea/ulpi.c b/drivers/usb/chipidea/ulpi.c
+>> index dfec07e8ae1d2..89fb51e2c3ded 100644
+>> --- a/drivers/usb/chipidea/ulpi.c
+>> +++ b/drivers/usb/chipidea/ulpi.c
+>> @@ -68,11 +68,6 @@ int ci_ulpi_init(struct ci_hdrc *ci)
+>>   	if (ci->platdata->phy_mode != USBPHY_INTERFACE_MODE_ULPI)
+>>   		return 0;
+>>   
+>> -	/*
+>> -	 * Set PORTSC correctly so we can read/write ULPI registers for
+>> -	 * identification purposes
+>> -	 */
+>> -	hw_phymode_configure(ci);
+>>   
+>>   	ci->ulpi_ops.read = ci_ulpi_read;
+>>   	ci->ulpi_ops.write = ci_ulpi_write;
 >>
->> Yeah.  Did you actually manage to use pata macio previously?  Or is
->> it just used because it's part of the pmac default config?
+>> ---
+>> base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
+>> change-id: 20240328-chipidea-phy-misc-b3f2bc814784
 >>
->>> Looking at the old code, I think it did what you suggested above,
->>
->>> but assuming that the driver requested a lower limit on purpose that
->>> may not be the best solution.
->>
->>> Never mind, though - I updated my test configuration to explicitly
->>> configure the page size to 4k to work around the problem. With that,
->>> please consider this report a note in case someone hits the problem
->>> on a real system (and sorry for the noise).
->>
->> Yes, the idea behind this change was to catch such errors.  So far
->> most errors have been drivers setting lower limits than what the
->> hardware can actually handle, but I'd love to track this down.
->>
->> If the hardware can't actually handle the lower limit we should
->> probably just fail the probe gracefully with a well comment if
->> statement instead.
+>> Best regards,
+> 
+> Best regards
+
