@@ -1,39 +1,37 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B7A3207;
-	Thu, 30 May 2024 06:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D28A7F;
+	Thu, 30 May 2024 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717052309; cv=none; b=JbxVhRa3NE8R05skAAuIX8yvo2CQGNzy3cQUFjmvm1opxlxdcmt2YzwbgeRRCB5GcZL9x/XkEsUAYkUOTaj5cY9y81+DQvljsCFvxfRkUEQ6tPAfTypuunFdglLk+4QdIlQJK6sfMPXZ0uKMOEqred7BdkkyRZ1fL/v1Wpi/IB0=
+	t=1717053527; cv=none; b=pTIqEvD5VQCHgdcPaAUnhIvjqllE+LlTxe0DSjDNDtWIJX7tJBSdW6zbG1MrZrMGGl12ehaaoHU6epcu8kuh2xp/RESTue+k1531hMWT6GTzjUJFCRgiu0HVcTM29pt4tELfgGkytgWXt2onWFyQHV0xz6uxVLg7cY0r0/qtLfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717052309; c=relaxed/simple;
-	bh=Q24j6yIH7s08CTSE4qObX2dFfjNPZkJG7EUnZrGtF0U=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=hU+iq/QN3Yj/ugpStFGlVDPVwpYQoLmEo/tLJrB5g2Rnl24Z9/PNfDCstiNHWIwKAUeduVXQ8QbURZQZM9c8LJa5gBky85KhiMJLEeVZxbw7kcNsxNxrAVEmaYoz9PIKPNRCBr9nyGYfF3oooQzA2bLr5o90wvxT82RxXbk/rUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de; spf=pass smtp.mailfrom=heusipp.de; dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b=pts2MKZz; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusipp.de
+	s=arc-20240116; t=1717053527; c=relaxed/simple;
+	bh=Jlffi05sG7E24hiKq4xvGXSdBs5C7tsCEr5WRiQxi/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npx5pHMXTyClEULZSvS8uMXPOZv083Za4+tRQlHltGFHZ0Zdb55CHZAFiIOaLgshYgxkmu0oTEnlA3vTubxlBkCxcxNBtIn99qJCp36Vq1C3P5bpIJgYxd7vtdshf0Zv4DNIhrTKPwGYvIMZJgUw+fQxPXvFBt6c55hclPZ7qXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ubpzFVbU; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b="pts2MKZz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusipp.de;
-	s=s1-ionos; t=1717052242; x=1717657042; i=osmanx@heusipp.de;
-	bh=Fo4BgflZWecJohsoS79xT7lDDfQyodBVtxTcq1PAzfA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=pts2MKZz7kgcjx/+PpTkwVyEyaENacX88nmTaPrTl0svtDcftQIy3U46LZLGcW1i
-	 4KGv2H79iKqVxO9sfEOfsoAd6ZXOv7OdJT9y59slx05lfPWoONy1M+JCUd3gzV2F3
-	 EO1L+G4fdq/hFZjCPNreZbx32jnADVGsboGua96exMPfkWJatRToVOLTQQR/vdiec
-	 ri3iK9RdNSvRJ/qb0u6YGDhOL2rROOx7LKGXne4xTbJQAkiC7blU8lUr9cdaYHK6Y
-	 aUfxz2BxP/Wl/EfEFdrkyfHklhP7iKD7n6j33QZr5amhDd6weAj2Hj352h8Hunn1a
-	 2isTqJjQRJuya5E5MQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.178.90] ([91.62.108.110]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N8VkX-1sZ2MV0MRF-014XdX; Thu, 30 May 2024 08:57:22 +0200
-Message-ID: <ebb0791c-60a5-4fe3-bc85-4921ad026605@heusipp.de>
-Date: Thu, 30 May 2024 08:55:24 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ubpzFVbU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Jlffi05sG7E24hiKq4xvGXSdBs5C7tsCEr5WRiQxi/c=;
+	t=1717053526; x=1717485526; b=ubpzFVbU9shmwG4mtL1MyPqZX2tS8pemsxo7n9sESOb2wXL
+	GkBH1iOPiH+LMKktyJHNdOO8pR0sq4FluNepXJYRyWrKF9k9FXIbKBnr3SfxCLBrADYorgG0rdgO3
+	nFmMgEwurW4ji+hFcEa/CNkcXiy1l7I6VEQb2hGgi2j4LCo+JAP5gYijpKEolKv+J4PSWUGbD4/Ex
+	WBy7igAKKyI8Jm6EsajMGX8+OyKIkUDMWWjdENtcA0dz1LUDbqTUY8+77cARjz7QZCGv+le5PdkvZ
+	55x4BGV0PeTqeY5BuSsOEwoeyTJJFLfV5GH918o/dWjEHnS/1RKQ2JJIVUXldXxA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCa3Y-0007Lh-V1; Thu, 30 May 2024 09:18:37 +0200
+Message-ID: <93e4a06b-731d-4fe8-8ceb-e3b56d5ba2bd@leemhuis.info>
+Date: Thu, 30 May 2024 09:18:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,144 +39,39 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, x86@kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Adam Dunlap <acdunlap@google.com>, 1071378@bugs.debian.org
-From: =?UTF-8?Q?J=C3=B6rn_Heusipp?= <osmanx@heusipp.de>
-Subject: [REGRESSION] commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6 (Linux
- 6.7+) crashes during boot
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HffBv4SMVjsPC+qpltN+HG0UCXLrEFrT9hOmGHmZckVal2wYApV
- pk1CkSDYgc0pEZayWbhZtJHFANw3ey+7NozjuMzWScgZYOWVmSPXdFhnEE+p8SOTtB7HIkS
- Puqg4Vmap1LuSa/zKxkFFCy3egvI1N7a35fLLb+9WbG9MXEZRs+jsmw5kWfaYw9CZpAl9OR
- j2x8kVoNazCCoIV2J5bvQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Dfsbd70IDLU=;bJEONB2t5aj0mJ3rRr+FJ/BPcrI
- +xO+kz2X4aYkMFJFH1cI7jzpUVi3b47moV6reiWuta4e3UW8Cw0eyVDRjVUWmxCTT9N5fRTPD
- VYup0w7HcKrTS9biM4JtRNegD9ZlqW5h7CYTx286YzOAVBqGwLQCQlLf9iXbe3tgpNl5vNfVK
- A1l3eF8xiKy1S9A2EzvULZpEaZtW6sv+e3h8UfKzCYlUVt3ycdpmgRUJ95aY9ai6TXgfbMyFW
- AQT2wdvuGitXK/XjYWsz6ALAj4DwB/i7+31tzvsBHG8A+mweGPCLSQ/k0LPz7OMKzrARFDZBB
- j/GOSP04jOwjDGsfIeKMRVzQJqjGfqV9Ui5fQNlqTNXgdQGeA+ZnzB/y35Vt+xh50K1gessPU
- AaVYiufpWmXzOHzT6C/BjIPzeJDszYM/2VtwFZ5umvs+MUaGUcWQ/LtEtmWzzLcvnMuKW9EaZ
- cgHzf37oMq01MFEuKSpI2H0BF9tu87UMx0LHUwc9lpfDDeXzd2wj7dPwNtnNGmX6BvB5Tc0fA
- KB+U0eLaBuLn4Fm3rZLLGiNrcZIGBBYsj3P3k15sFg9XhDtp6jP/w8QwrG+EpQtEDnS1OwESD
- KvKa8q2se5LA2jdkN8OFv6HXMro7NjLmTi+F+IMmBDNrbKirdcq4CNPGnhGMdyugC/SzXsdlw
- D0YFKmvpxjoqAluO2fgV/HtSRMgm/Ffycw8cDuQis2Z/Bty+WyWHb8rvfOO50xu3bkhRmyr07
- 0OU9Mfdx2cemZbgatzbk1BZCwvdnEfPGjOA98pfYDvglxW1AB8cR+g=
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+To: Kalle Valo <kvalo@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ regressions@lists.linux.dev, Jeff Johnson <quic_jjohnson@quicinc.com>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
+ <87sexzx02f.fsf@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87sexzx02f.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717053526;689211b9;
+X-HE-SMSGID: 1sCa3Y-0007Lh-V1
 
+On 30.05.24 08:53, Kalle Valo wrote:
+> Kalle Valo <kvalo@kernel.org> writes:
+>> Kalle Valo <kvalo@kernel.org> writes:
 
-Hello x86 maintainers!
+> I found my mistake and was able to finish the bisect. This seems to be
+> the commit causing my problems:
+> # first bad commit: [7e89efc6e9e402839643cb297bab14055c547f07] PCI: Lock upstream bridge for pci_reset_function()
 
+FWIW in case you missed that: there are a few other discussions related
+to that commit already:
+https://lore.kernel.org/all/?q=7e89efc6e*
 
-commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6 ("x86/sev-es: Set
-x86_virt_bits to the correct value straight away, instead of a two-phase
-approach") crashes during boot for me on this 32bit x86 system.
+And a patch with a Fixes: tag for that commit, too:
+https://lore.kernel.org/all/171659995361.845588.6664390911348526329.stgit@dwillia2-xfh.jf.intel.com/
 
-Updating a Debian testing system resulted in a hang during boot before
-printing anything, with any 6.7 or later kernel. With 'earlyprintk=3Dvga',
-I managed to capture the crash on video and stitched it together as an
-image [1].
-Trimmed transcription (might contain typos) of the crash from Debian
-kernel 6.7.12-1:
-=3D=3D=3D
-BUG: kernel NULL pointer dereference, address: 00000010
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-Oops: 0002 [#1] PREEMPT SMP NOPTI
-[...]
-EIP: __ring_buffer_alloc+0x32/0x194
-[...]
-show_regs
-__die
-page_fault_oops
-kernelmode_fixup_or_oops.constprop
-__bad_area_nosemaphore.constprop
-bad_area_nosemaphore
-do_user_addr_fault
-prb_read_valid
-exc_page_fault
-pvclock_clocksource_read_nowd
-handle_exception
-pvclock_clocksource_read_nowd
-__ring_buffer_alloc
-pvclock_clocksource_read_nowd
-__ring_buffer_alloc
-early_trace_init
-start_kernel
-i386_start_kernel
-startup_32_smp
-[...]
-=3D=3D=3D
-I could transcribe all of it or capture it again from latest git and
-decode the symbols, if truely really needed, but I figured the type of
-crash and the trace itself could maybe be sufficient. It looks identical
-to me for all later crashing kernel versions.
-
-I bisected this down to commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6.
-
-The kernel config [2] I used is 'make olddefconfig' based on Debian's
-config-6.8.11-686-pae [3].
-
-I also tested 6.9.2 and 6.10-rc1, both also still crash in the same way.
-
-cpuinfo:
-=3D=3D=3D
-manx@caesar:~$ cat /proc/cpuinfo
-processor       : 0
-vendor_id       : AuthenticAMD
-cpu family      : 6
-model           : 8
-model name      : AMD Duron(tm)
-stepping        : 1
-cpu MHz         : 1798.331
-cache size      : 64 KB
-physical id     : 0
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 0
-initial apicid  : 0
-fdiv_bug        : no
-f00f_bug        : no
-coma_bug        : no
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 1
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge
-mca cmov pat pse36 mmx fxsr sse syscall mmxext 3dnowext 3dnow cpuid
-3dnowprefetch vmmcall
-bugs            : fxsave_leak sysret_ss_attrs spectre_v1 spectre_v2
-spec_store_bypass
-bogomips        : 3596.66
-clflush size    : 32
-cache_alignment : 32
-address sizes   : 34 bits physical, 32 bits virtual
-power management: ts
-=3D=3D=3D
-
-dmesg from a successful boot (Debian kernel 6.6.15-2) is here [4].
-
-This particular system has been running all Debian testing kernels since
-at least the 2.6.32 days and is currently running 6.6.15-2 completely
-fine, thus this is an obvious regression.
-
-The original Debian bug is #1071378 [5].
-
-
-#regzbot introduced: fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6
-
-[1] https://manx.datengang.de/temp/linux-6.7-crash/6.7.12-1-crash.png
-[2] https://manx.datengang.de/temp/linux-6.7-crash/config
-[3] https://manx.datengang.de/temp/linux-6.7-crash/config-6.8.11-686-pae
-[4] https://manx.datengang.de/temp/linux-6.7-crash/dmesg-6.6.15-2.txt
-[5] https://bugs.debian.org/1071378
-
-
-Best regards,
-J=C3=B6rn
+Ciao, Thorsten
