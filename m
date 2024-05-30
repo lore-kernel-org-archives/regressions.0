@@ -1,95 +1,74 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A46182D3F
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 15:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C8B200C7
+	for <regressions@lists.linux.dev>; Thu, 30 May 2024 15:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717083422; cv=none; b=WkKmwFFSQhbtjyPesB5CMbgIT0t8mNwbn4rS55x1It9iJRRZlypyNI34ibFH/nyAaPgts5KCCC0ANkIVveY+VYUErFMRSnRMGwAm9ICgG45Fxq3+84nWp4dnWNja1trttyq1DWcj9TGxYDT/JUB0hFVPLEI7lhoTCuqSYypbws0=
+	t=1717084442; cv=none; b=D7nbYX7TIhA9HNJ5+oRr0QfoefrULYtzfyXFC6fWJ5kdPp8hF/IJ6VQP+ahblZWYTjoZPYuUStT6hCb8M1DGaagGgDMvugPJjzgEb+BRaurA9IPwlLDiBgWUC1VZnsEE6ssVA8a95iXe8qOrJFULyH1vf8hfWbB98erCEn6c8OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717083422; c=relaxed/simple;
-	bh=qYXmXSvbAlekhnuFdmhAUfv0lEDD1lyfWRJPeN4+j3I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KexeECn0MLG8RTJFtT1RzAEfIhAFEBjOR4NFyPHZFsiHKDeQalFBT91kkRyBKcMmftuC+yIg+pi+r0xr4eziXi19EwdsutMMkUFMmbr81fW2Vh0CwAAg2Qo3aynvV90bi2/gwFlsvU2YFCoIr04l4g0EJAB2zmUqzTrSAR+yneE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jCFzdPmN; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717084442; c=relaxed/simple;
+	bh=U7VSdvkRppI4+5gQVYR0PivyY7OcaLt0GbifZweu8Po=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tuVUJ/+zJW9xXGMzJiv2JoUX/wcRHYnoa7jAO0EotZD+pdIDhdYcP15GR2BvZGb8pg1Y/8m8NSH0mWxhNoyYZF1Z27N2ErBsbjcRw8we1gE38E34WoGXOrnbO3v8ENgOyezKgpHEzP0kKzbpicdIALTS0x0BeiGeYRsWMcLdFqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NLV/EBIK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zmEMXyMy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jCFzdPmN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717083419;
-	bh=qYXmXSvbAlekhnuFdmhAUfv0lEDD1lyfWRJPeN4+j3I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jCFzdPmNksdQ6ixasNR8Ax/vf1J5L0nS0DN8hqQ1od/kxeAWAQhHvoirWn5ZVWzSA
-	 A4SxCSz9AkS5vFPP53Fi49ALkuJ2Mi6vOiUGvKOJYRQ0A/MRp9FKfZfwjm2ZpLq/bI
-	 wET07lZV5jWnz1xtsbRG6QelVCm1HLOX1dPAtd4vOfHfvODduh5yMZGgIzo2uAnGo+
-	 OD3viB4EAtyqh0cM82dLt+l8dOLx58aTk67CSU/3TRVx5OAOl4U3Z486Bf/Rq4NLX7
-	 bq8WRUolSB68sUaYp/KP9dAd49pPvPB5M+sCHYobdOURLGbn37faAvllWDQ1GSjIem
-	 zsxukvpuZ3yMA==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 90FF73781104;
-	Thu, 30 May 2024 15:36:58 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [REGRESSION] probe with driver acpi-fan failed with error -22
-Date: Thu, 30 May 2024 17:37:27 +0200
-Message-Id: <20240530153727.843378-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NLV/EBIK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zmEMXyMy"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717084439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ox6TcwsfqOasr2+SZmfSYOAcvDO9ex7bbe4NVHqmo8=;
+	b=NLV/EBIKCGXQYzIMmA01GDSfafV6osmQbm8rD15QiOg0goVbFWny2wdyVfLQqwaR4otTFV
+	rfBgUY4ji7zNVOnPZkm82FrK0SuoF7DnpaVyGSfzwRnDhzeLft914L8JCQHr16I2ClyZ/e
+	fEkrGzBuAR+O5Qod3S5fTO4U8WgV+LgYc2zSwwOC6hvMbYEcOAezsdFKnL8hywdR0Wl4mL
+	yTfkeMhcoRvx/Uz2hzRqutRaJQXV75RWUAJ5sj7ZpY5IuT7/zbqYUAxdpm0iV01OLHgzAH
+	gmxQSN9oqfAGl5zmmzshmWpY0VcKx3AW2w0pMRpogoNFmGscsL5xJGRkEkY7GA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717084439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ox6TcwsfqOasr2+SZmfSYOAcvDO9ex7bbe4NVHqmo8=;
+	b=zmEMXyMyHlCHGOGxsvilmvTf0fyJS4CjpCAaLVxI8KtCHx4yiqeUffVLiG/jMvGx7/5fJQ
+	suJqIfVMosgQ6qCg==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <87r0dj8ls4.ffs@tglx>
+References: <877cffcs7h.ffs@tglx>
+ <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
+ <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+ <87zfs78zxq.ffs@tglx>
+ <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
+ <87r0dj8ls4.ffs@tglx>
+Date: Thu, 30 May 2024 17:53:57 +0200
+Message-ID: <87o78n8fe2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hello,
-                                                                         
-We have identified a regression in the acpi-fan driver probe between 
-v6.9-rc7 and v6.10-rc1 on some Intel Chromebooks in the Collabora LAVA 
-lab.
+On Thu, May 30 2024 at 15:35, Thomas Gleixner wrote:
+> On Thu, May 30 2024 at 12:06, Peter Schneider wrote:
+> Now the million-dollar question is what unlocks CPUID to read the proper
+> value of EAX of leaf 0. All I could come up with is to sprinkle a dozen
+> of printks into that code. Updated debug patch below.
 
-For the Acer Chromebook Spin 514 (CP514-2H), the following error is 
-reported in the logs:
+Don't bother. Dave pointed out to me that this is unlocked in
+early_init_intel() via MSR_IA32_MISC_ENABLE_LIMIT_CPUID...
 
-[    0.651202] acpi-fan INTC1044:00: probe with driver acpi-fan failed with error -22
+Let me figure out how to fix that sanely.
 
-Similar errors are reported on other devices with fans compatible with 
-the same driver.
+Thanks,
 
-On Acer Chromebox CXI4, ASUS Chromebook Flip C436FA and 
-HP Chromebook x360 14 G1:
-
-[    0.488001] acpi-fan INT3404:00: probe with driver acpi-fan failed with error -22
-
-On ASUS Chromebook Vero 514 CBV514-1H:
-
-[    1.168905] acpi-fan INTC1048:00: probe with driver acpi-fan failed with error -22
-
-The issue is still present on next-20240529.
-
-I'm sending this report to track the regression while a fix is 
-identified. I'll investigate the issue/run a bisection and report back 
-with the results.
-                                     
-This regression was discovered during some preliminary tests with the 
-ACPI probe kselftest [1] in KernelCI. The config used was the upstream
-x86_64 defconfig with a fragment applied on top [2].
-
-Best,
-
-Laura
-
-[1] https://lore.kernel.org/all/20240308144933.337107-1-laura.nao@collabora.com/
-[2] https://pastebin.com/raw/0tFM0Zyg
-
-#regzbot introduced: v6.9-rc7..v6.10-rc1
-
+        tglx
