@@ -1,41 +1,37 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBED1761BF;
-	Thu, 30 May 2024 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F366183970;
+	Thu, 30 May 2024 09:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059246; cv=none; b=ba54QbpdLjiTXxkT8nTXN08kJbaCcMVcG+VARf82kXlX8QzbEoQ7F03JhknqpDFDkbSWdmh5jeO+SOZAVYukSZDv7ftXebdnJ1XHGzoFQ5Uej4IDZP6JOHgHP/mx4he3agZX9ZXQ4HZ9AgJdrNxv4IleVUMS+im1rV5si/YtDbI=
+	t=1717060447; cv=none; b=t/8gvcR6SzXsLyOnLM0pMq8z2MBoPBt4jWAsCQ40mMC6AAI3mdu6Uvruzq95phI8esllYJb2kfo0bKt7Ni/NBarkgfJ9MUl1+rceXWJqvT08pRD+HUOYWLMW17B0Nt03xbL6+1ZFM53gvhaa4gtTYtj6I7aG5fMYd04s6H15zMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059246; c=relaxed/simple;
-	bh=OiPXOYqVDdLsZkYedWaVvRrpJe0cx5AuAOz/naYPWjE=;
+	s=arc-20240116; t=1717060447; c=relaxed/simple;
+	bh=A2aV9xGJ6LW10FiPRaoqQ0PipJ2/sH52upDc+kyhscs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEco8bC3gwu9+qPLJGy84/gYQrOPJKF2Gk2HrsDNlPRPcOkl7fxzkK0IPzaPnusUu/cn0I3p3Q5dzZoQejoY9Ah5zkUf4dka0vMacKnlnfJToWGmkpI+hcSFObVxiW8P9tm5PemVSjCjtGN1L/nwtrW56fNkTykz1MGdzoOjns8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de; spf=pass smtp.mailfrom=heusipp.de; dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b=Npr4RdNt; arc=none smtp.client-ip=212.227.126.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusipp.de
+	 In-Reply-To:Content-Type; b=ttDWjqiMQdbfBbZ6IcHmRk6KbbZBNBCnpBQcQhe0WpYnm/WT1B4aOdtljzebxfzAsxb/kHn/g60CRqsOBKuUvjsSxcfvUlFMyoPaW5MruteCpmGiBR0QPpoV1tamh+k+l+Vege/Y/sShUGL9u/xyY4yobQEtmoqNw5gRuvGQiRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dEKR10ft; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b="Npr4RdNt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusipp.de;
-	s=s1-ionos; t=1717059224; x=1717664024; i=osmanx@heusipp.de;
-	bh=OiPXOYqVDdLsZkYedWaVvRrpJe0cx5AuAOz/naYPWjE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Npr4RdNtY55Jk8MtA7iGYZlMk+fOCmMPnjKgmsFZTiMI4H7B1OKcZpDt3VnplkXs
-	 SM9oRq20+Flf2YAiRYE+xsJKJaAxAJZz+qt8QY0x83ctV6g7bNkSqz8mcqcjIKkjF
-	 o9Z9+117NY/hZI5Fvkjk4Fj27ljDlIEkcs0vEDBQKC7J7GpA/5r0NGlh2XVrRWq3U
-	 c8x++Z8yyhlXqn29d9zFzs/OclcTyO3xj8/7cOil2VueuBi9UC/rRrECuI8EILkWU
-	 aY3ouvj0Wr8F4GF0bPAhi0+Z44jkWKc84vAwg9K9/eSccWO1becWMNM2QxM2lN47I
-	 x0fWBBUHpzOkaVKE3w==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.178.90] ([91.62.108.110]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N8VkX-1sZ1yo1lkP-014Xap; Thu, 30 May 2024 10:47:19 +0200
-Message-ID: <5e31cad3-ad4d-493e-ab07-724cfbfaba44@heusipp.de>
-Date: Thu, 30 May 2024 10:45:24 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dEKR10ft"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Rjfa4YBlzCW8NkUtWIU6YqmFfTRFUqSA1THCpC8EBoQ=;
+	t=1717060445; x=1717492445; b=dEKR10ftxql9j4qa56ExvhL2yr8BwUkp1gmD8PXoRLhVhMm
+	WBNFFG0mZTPmrSdFauIKQdB5wF/tmS14EoAGb0visXXWWKpuqJNL7j/uzH6ox+qWlUcU1BlNgiwEG
+	Ge3H+eKoKfBmThNQf0kt3AqK+ycsMRAVdrydqcHiHNihdcZn0KCQfkqNW5DUzfoGy4uVd4yfCLRvb
+	Zy4zQxutUL37c1dq2G3GlXaNxRSbBuOjLy41lyR9ZR6n74qzq60r3xT5+87+JClsIqkSBHGD0mbK5
+	gmNFdYS2KjEqk96EVrZO4shv8D8mN9qqa9DaDcZrjCA6NkmSMGWSjO9vcq+mZwcQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCbrA-0003Ur-0w; Thu, 30 May 2024 11:13:56 +0200
+Message-ID: <4532ae8d-b72e-4d76-894f-144910370f97@leemhuis.info>
+Date: Thu, 30 May 2024 11:13:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,7 +41,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6
  (Linux 6.7+) crashes during boot
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+To: =?UTF-8?Q?J=C3=B6rn_Heusipp?= <osmanx@heusipp.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
  linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
  Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -54,47 +51,48 @@ Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
  1071378@bugs.debian.org
 References: <ebb0791c-60a5-4fe3-bc85-4921ad026605@heusipp.de>
  <4611b3c8-0ef6-4951-8b34-10a1c7262355@leemhuis.info>
-Content-Language: en-US
-From: =?UTF-8?Q?J=C3=B6rn_Heusipp?= <osmanx@heusipp.de>
-In-Reply-To: <4611b3c8-0ef6-4951-8b34-10a1c7262355@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TH5Rj8IDETzGF7pUOEsDoQfRqaiaWyTdAXIj2gLCYvG4cs93TLH
- qirAWYb3jzHboshA3g7QUf3yAiqeiM0WDKF8nQby/DCGGOmpQXZ4Sycy2Tu5m4VySg/aNzE
- FdhXHwAjqXQT5pdrIzsHbmOQ21ac45SZXhEuj9KJiLcRHog8ZdT/Mq5nTOE6KMtGAsEwshl
- npzs5T36VcPVgWDYJH5+Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MBSDXgNKHTU=;z2YdmhNWzRwp5qolDSwAdFk1mtL
- 6uLeuYZHJMqAK5G4juvCo3YTKEEMPQgYVJpZYZ8wALCJQlr9SFCIxnD99kk/F/bFkQehOLbl/
- mr7e0pY2mVf9rfThdA224xPjFGxM4ryUy/B8W7u9GdfP2BjvOaGCDdduAgpGRpys5RKMZL+jA
- 9xKJnVLAIQC1pq9MHxYvuQQJLp1WyfzAEInXn3qHsqE4fGTh2ROHRN8dZcvzA8M/elONIrgSo
- CSSy+Ifskp2mLZIBiADeUFuuX9W11sVtQT+5cnvTJNk/LHuxagXv7UJLnj6gyc3KFsQtU5N4E
- DbXtknFJzRMbwYJ2SvR+f1CUy1JYMwCmoxRMI3Nv5RPJ5MlRjz0VuPchDveHh+XiJ+9LPMRbA
- rQF/+XsZqa1Zbhr50hc+OtyP5kMBz1e57Z2XPlo825t1pZksCsqPSyFUL4ECk612P+hGUONRl
- GFZy7mLAkTo0m3Rh306ye9AAsMfILQgIW9H+PweES33WFo4YUkgHhw+VZnzoCjWOqWp3qDkdV
- uD1ogN3cFx7Bo9vv0ZA3HzIILfpHwOq9628zO/JOCECE/it9YtIg6UJiaMNF6LpscTV2ukKLa
- e50B5PbbA/8xUVfFakUmcw2XLThblqaLMOdwsmDgVBnbICzliuJ6QsR3reG2UmHUB3+YBRcw1
- CstgOv7eTUozuoClvl8cgdbDN/827PKDweBP1vxg8kNl4anU0TxvtXnilROHloVL3gtbkdvSB
- 7KXaWJzvdazLGgcKN3imGia7KDwI2LWHsF/HcM8ZZNVl9MWrHyoagU=
+ <5e31cad3-ad4d-493e-ab07-724cfbfaba44@heusipp.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5e31cad3-ad4d-493e-ab07-724cfbfaba44@heusipp.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717060445;41eaa14e;
+X-HE-SMSGID: 1sCbrA-0003Ur-0w
 
+On 30.05.24 10:45, Jörn Heusipp wrote:
+> 
+> On 30/05/2024 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 30.05.24 08:55, Jörn Heusipp wrote:
+>>> commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6 ("x86/sev-es: Set
+>>> x86_virt_bits to the correct value straight away, instead of a two-phase
+>>> approach") crashes during boot for me on this 32bit x86 system.
+>>
+>> FWIW, not my area of expertise, but there is a patch from Dave with a
+>> Fixes: tag for your culprit up for review:
+>> https://lore.kernel.org/all/20240517200534.8EC5F33E@davehans-spike.ostc.intel.com/
+> 
+> That did not apply cleanly to 6.10-rc1,
 
-Hello!
+Maybe something changed since then.
 
-On 30/05/2024 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 30.05.24 08:55, J=C3=B6rn Heusipp wrote:
+> but I figured it out manually. I
+> can confirm that it fixes the issue.
 
->> commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6 ("x86/sev-es: Set
->> x86_virt_bits to the correct value straight away, instead of a two-phas=
-e
->> approach") crashes during boot for me on this 32bit x86 system.
->
-> FWIW, not my area of expertise, but there is a patch from Dave with a
-> Fixes: tag for your culprit up for review:
-> https://lore.kernel.org/all/20240517200534.8EC5F33E@davehans-spike.ostc.=
-intel.com/
+Cool. Guess Dave in that case might be happy about a "Tested-by" tag
+from you:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
-That did not apply cleanly to 6.10-rc1, but I figured it out manually. I
-can confirm that it fixes the issue.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Best regards,
-J=C3=B6rn
+#regzbot dup:
+https://lore.kernel.org/all/20240516173928.3960193-1-andriy.shevchenko@linux.intel.com/
+#regzbot fix: x86/cpu: Provide default cache line size if not enumerated
+#regzbot related:
+https://lore.kernel.org/all/20240517200534.8EC5F33E@davehans-spike.ostc.intel.com/
