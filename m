@@ -1,227 +1,151 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD2F171B6
-	for <regressions@lists.linux.dev>; Thu, 30 May 2024 13:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FED186E32;
+	Thu, 30 May 2024 14:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717077388; cv=none; b=SDPDtXa82UNUgq8bQnU0PLGp2prMahWG42U4u5o15pbLDw7Dvu/Sh8S26nMY/12h3dUSwArHXA3gD1191/P+Lcltib8UzwUE++MMN2ciNeRsegI1G1RY6wHq05mRGG/gIUREppZlyKKfrbhhvahCbOOUi2KR8rZinTMIY/pbydQ=
+	t=1717077628; cv=none; b=Y4arpDiQU0cVrmzoetzNkiD6tIG/W6jgWDbR1xKm6Ww5qtR8YNW1yfgLM4DFYfzNwzrZlO+qI/A6RcaS+BqteMldky8J5rSfrJHUInC9s/+e3UAf/Inw3t8/mhSnD+BbI+MledYIYCbVr/dMmZfmMf4PJc5ZX7KTylp3qtQL9FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717077388; c=relaxed/simple;
-	bh=FGBSQOuAb0NlB6ZQthzXYAirwmMW8u3SD2gpZJepyxc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=clViiQAXOf3UTmzOuoarv/RGJHVBONGhN8IjMKK7BXyrR8RrdqdKm8IfA+WFO+ON41JEvE/c56GId/mcy9vcouOnkghxg8l21veD7PkiuwFrpa2cjKlVXYrtqPS+5DYjU8mo6BY6LTa3uqo6TciPtqVXrxgiKK3e82tMkWK6QyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oa9uvQmw; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oa9uvQmw"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4e18a9a6658so326669e0c.1
-        for <regressions@lists.linux.dev>; Thu, 30 May 2024 06:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717077384; x=1717682184; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EXUCNy99zkbik9zLqKW1CEH6iQfLDGzfWLNIvH5uY+0=;
-        b=Oa9uvQmwTCyto+tWVJTzLTBL6EeHLXij56DffgIkX09/LedZH5tHPQggdxHS7QBOM2
-         MIOuhupD1NX6JXB6ZT7BWQ/EyzKG9PtJS6uZgRZV/OSMCBorbTOj1PzATfpNsEtML2TC
-         vkjrpVzQJRDrjinYMIFBc4TIncT0v7YSQu7ObrlxsDXEGiQLSFUrxQFfbItFjnHoBWe/
-         /rkN6oH+mf91KfACjDE0hmRTZOawZWruLsI+5klXKn7Bhv/FM93PZFSc+6rgva74lAlD
-         eAVEg95Hw8PZFWaN30jNktk2QVas0jzM4p3sEgaFdnhgSmXYm82Nxbrf+FleN8/R/bj6
-         gZ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717077384; x=1717682184;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EXUCNy99zkbik9zLqKW1CEH6iQfLDGzfWLNIvH5uY+0=;
-        b=MR5kFeYcIOeVYc8e4RW1OqDAtXFIg7qGBBHLvO3+pa1iq9B7+Q2ZsIVJ7FVZxv417S
-         vM+bHFWFwZpVGA1g4YG7M70F2jHAdv3WrwA+8RMyCpmwZleuTzK1bWHUBLzMKZ3P9hYN
-         iKsp9L3Q2GDJZvd2ytdxWtd1rKgH6xDkQdCM8UfgG5C8haZiU8SxB9XA4Qk3gwbwq/JV
-         rJSh69UGMZ70NyV3856S1N+C2tCbQTz/dIauJxjy9YgzjdmNP5f2MRUTj/5kWaNEbFZi
-         qAFol9QC01uhl1tzXy5gKQ95Cn+B98lF5x2WPkCIjA/rpZlz1I6dQgcDYSRuQGqB1MLQ
-         1iZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXM7+L+2i8fqsE2MptTzR6E0c4dTlIiMPXyOY4uocGJPwwvJYjP4Tibeyvay09xsgcYX68OwGbgpEkQKPaRQ4m2JxfudJRGuSwQmU0=
-X-Gm-Message-State: AOJu0YyqmmPHD8zB0MWAdWUkg3C5PWPvmMsKO+b70QlimCLuKHZm4qeY
-	v96q+7iyh6vHz8SNfhFmEo1CpqwqfXQlGEO+K07b3rd0QbxqryJK18de6htSk8kBwgvBjZS8aEW
-	IuOmP+eu5M5k/m71HSP4sJXuvplDZaXKXSur41g==
-X-Google-Smtp-Source: AGHT+IHtMCQyGfRZVl+J4B/Ueb8+BlAQuJC8en+4dH/bryuo8aki4OV0HUSb9FEfVVIkSlPkZD7ersSE7iRVsS8Zn9A=
-X-Received: by 2002:a05:6122:319c:b0:4d4:1ec7:76e5 with SMTP id
- 71dfb90a1353d-4eaf248dd21mr2295414e0c.16.1717077384478; Thu, 30 May 2024
- 06:56:24 -0700 (PDT)
+	s=arc-20240116; t=1717077628; c=relaxed/simple;
+	bh=wCx8iiEp261jvrvjM1hzx6frOs/knK+xtBsnK/gZCnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LJ/8hzh4ZpQ+8TMDwx3V5jeqP6wa0vdSfPu/h3gS6oadKhTBctABQbHIzhy0uuFDfIfzkgcqmXg0eBQ0y5k0SFB1XWQpiBnjE43GRVx/k/SjvDXnz9Tf/eyw1hX9gFmnyq38tYHe8ibE099jJAGjYIJuYZc7ClYHj0Blxp3mUJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F32C3277B;
+	Thu, 30 May 2024 14:00:25 +0000 (UTC)
+Date: Thu, 30 May 2024 09:59:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240530095953.0020dff9@rorschach.local.home>
+In-Reply-To: <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+	<20240527183139.42b6123c@rorschach.local.home>
+	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+	<20240528144743.149e351b@rorschach.local.home>
+	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+	<20240529144757.79d09eeb@rorschach.local.home>
+	<20240529154824.2db8133a@rorschach.local.home>
+	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 30 May 2024 19:26:12 +0530
-Message-ID: <CA+G9fYvJjAqf1pxMZpsm6rO_UVqhKOpB=0SUpBec8UhQBOXSrA@mail.gmail.com>
-Subject: BUG: kernel NULL pointer dereference, address: 000000000000002c -
- RIP: 0010:alloc_extent_buffer
-To: open list <linux-kernel@vger.kernel.org>, Linux btrfs <linux-btrfs@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
-	Josef Bacik <josef@toxicpanda.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The following kernel BUG: and kernel crash noticed while running xfstests btfs
-filesystem testing on qemu-x86_64 with loop back.
+On Thu, 30 May 2024 16:02:37 +0300
+Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
 
-Steps to reproduce link provided.
+> applied your patch and here's the output.
+>=20
 
-Test details:
-----
-  Tests:  xfstests-btrfs  btrfs/232
-  SKIP_INSTALL='true'
-  TEST_DEV='/dev/loop0'
-  SCRATCH_DEV='/dev/loop1'
-  TEST_DIR='/mnt/test'
-  SCRATCH_DIR='/mnt/scratch'
-  FILESYSTEM='btrfs'
-  T_SIZE='5G'
-  S_SIZE='8G'
+Unfortunately, it doesn't give me any new information. I added one more
+BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+-- Steve
 
-Test log:
--------
- <12>[ 6457.571628] run fstests btrfs/232 at 2024-05-29 16:31:29
-
-<6>[ 6464.685165] BTRFS: device fsid
-50147eec-0761-4d75-8e77-df9c50ac385e devid 1 transid 6 /dev/loop1
-(7:1) scanned by mount (152729)
-<6>[ 6464.715051] BTRFS info (device loop1): first mount of filesystem
-50147eec-0761-4d75-8e77-df9c50ac385e
-<6>[ 6464.719266] BTRFS info (device loop1): using crc32c
-(crc32c-generic) checksum algorithm
-<6>[ 6464.724996] BTRFS info (device loop1): using free-space-tree
-<6>[ 6464.789867] BTRFS info (device loop1): checking UUID tree
-<6>[ 6499.694309] BTRFS info (device loop1): qgroup scan completed
-(inconsistency flag cleared)
-<6>[ 6499.766172] BTRFS info (device loop1): qgroup scan completed
-(inconsistency flag cleared)
-<1>[ 6572.421678] BUG: kernel NULL pointer dereference, address:
-000000000000002c
-<1>[ 6572.423036] #PF: supervisor read access in kernel mode
-<1>[ 6572.423070] #PF: error_code(0x0000) - not-present page
-<6>[ 6572.423143] PGD 0 P4D 0
-<4>[ 6572.424555] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-<4>[ 6572.424814] CPU: 0 PID: 152772 Comm: fsstress Not tainted
-6.10.0-rc1-next-20240529 #1
-<4>[ 6572.424946] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-<4>[ 6572.425062] RIP: 0010:alloc_extent_buffer+0x253/0x820
-<4>[ 6572.427387] Code: 00 49 8b 7d 08 4c 89 e9 40 f6 c7 01 0f 85 dc
-03 00 00 0f 1f 44 00 00 4c 89 ef 48 8b 07 f6 c4 40 0f 84 f7 00 00 00
-48 8b 57 28 <8b> 42 2c 85 c0 0f 84 ac 00 00 00 8d 70 01 f0 0f b1 72 2c
-75 ee 48
-<4>[ 6572.427577] RSP: 0018:ffffae9403eaf700 EFLAGS: 00000202
-<4>[ 6572.427613] RAX: 010000000000412d RBX: ffff9eb00d8c5000 RCX:
-ffffec4001110700
-<4>[ 6572.427663] RDX: 0000000000000000 RSI: ffff9eaf3ad5b918 RDI:
-ffffec4001110700
-<4>[ 6572.427705] RBP: 000000000000dec8 R08: ffff9eaf3ad5b918 R09:
-0000000000000001
-<4>[ 6572.427730] R10: 0000000000000001 R11: 0000000000000001 R12:
-ffff9eaf0c92b318
-<4>[ 6572.427752] R13: ffffec4001110700 R14: 0000000000000000 R15:
-ffff9eb00f1f82e8
-<4>[ 6572.428675] FS:  00007f6ad5d8f740(0000)
-GS:ffff9eb07bc00000(0000) knlGS:0000000000000000
-<4>[ 6572.428756] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[ 6572.428772] CR2: 000000000000002c CR3: 00000001013ba000 CR4:
-00000000000006f0
-<4>[ 6572.428905] Call Trace:
-<4>[ 6572.430288]  <TASK>
-<4>[ 6572.430561]  ? __die+0x1e/0x60
-<4>[ 6572.433138]  ? page_fault_oops+0x17b/0x4b0
-<4>[ 6572.433156]  ? search_extable+0x26/0x30
-<4>[ 6572.434025]  ? alloc_extent_buffer+0x253/0x820
-<4>[ 6572.434035]  ? search_module_extables+0x14/0x50
-<4>[ 6572.435608]  ? exc_page_fault+0x6b/0x150
-<4>[ 6572.436133]  ? asm_exc_page_fault+0x26/0x30
-<4>[ 6572.436889]  ? alloc_extent_buffer+0x253/0x820
-<4>[ 6572.436917]  read_tree_block+0x1a/0x80
-<4>[ 6572.438475]  read_block_for_search+0x211/0x320
-<4>[ 6572.439418]  btrfs_search_slot+0x2db/0xe20
-<4>[ 6572.439905]  ? kmem_cache_alloc_noprof+0x1cb/0x240
-<4>[ 6572.439928]  find_parent_nodes+0xee/0x1f20
-<4>[ 6572.441382]  btrfs_find_all_roots_safe+0x97/0x170
-<4>[ 6572.441397]  btrfs_qgroup_trace_extent_post+0x70/0xf0
-<4>[ 6572.441881]  add_delayed_ref+0x514/0x750
-<4>[ 6572.442757]  btrfs_free_tree_block+0xcd/0x290
-<4>[ 6572.442783]  btrfs_force_cow_block+0x329/0x7e0
-<4>[ 6572.442800]  btrfs_cow_block+0xd7/0x280
-<4>[ 6572.442814]  btrfs_search_slot+0x523/0xe20
-<4>[ 6572.442832]  btrfs_insert_empty_items+0x35/0x70
-<4>[ 6572.442845]  btrfs_insert_orphan_item+0x7a/0xb0
-<4>[ 6572.443343]  btrfs_orphan_add+0x18/0xa0
-<4>[ 6572.443863]  btrfs_unlink+0x166/0x180
-<4>[ 6572.443887]  vfs_unlink+0x10d/0x2a0
-<4>[ 6572.444369]  do_unlinkat+0x28c/0x310
-<4>[ 6572.444390]  __x64_sys_unlink+0x3c/0x70
-<4>[ 6572.444433]  do_syscall_64+0x9e/0x1a0
-<4>[ 6572.444924]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-<4>[ 6572.447843] RIP: 0033:0x7f6ad5e8ba07
-<4>[ 6572.448529] Code: f0 ff ff 73 01 c3 48 8b 0d f6 83 0d 00 f7 d8
-64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 57 00
-00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c9 83 0d 00 f7 d8 64
-89 01 48
-<4>[ 6572.448541] RSP: 002b:00007ffd8a455818 EFLAGS: 00000202
-ORIG_RAX: 0000000000000057
-<4>[ 6572.448693] RAX: ffffffffffffffda RBX: 00000000000003ae RCX:
-00007f6ad5e8ba07
-<4>[ 6572.448723] RDX: 0000000000353166 RSI: 0000000000000000 RDI:
-0000558cb0972bf0
-<4>[ 6572.448735] RBP: 00007ffd8a455970 R08: 00007f6ad5f64c60 R09:
-00007ffd8a45595c
-<4>[ 6572.448744] R10: 00007ffd8a455586 R11: 0000000000000202 R12:
-0000558c873925c0
-<4>[ 6572.448750] R13: 028f5c28f5c28f5c R14: 8f5c28f5c28f5c29 R15:
-0000558c87388cc0
-<4>[ 6572.448797]  </TASK>
-<4>[ 6572.448863] Modules linked in:
-<4>[ 6572.449908] CR2: 000000000000002c
-<4>[ 6572.450833] ---[ end trace 0000000000000000 ]---
-<4>[ 6572.485615] RIP: 0010:alloc_extent_buffer+0x253/0x820
-<4>[ 6572.488121] Code: 00 49 8b 7d 08 4c 89 e9 40 f6 c7 01 0f 85 dc
-03 00 00 0f 1f 44 00 00 4c 89 ef 48 8b 7 f6 c4 40 0f 84 f7 00 00 00 48
-8b 57 28 <8b> 42 2c 85 c0 0f 84 ac 00 00 00 8d 70 01 f0 0f b1 72 2c 75
-ee 48
-<4>[ 6572.489657] RSP: 0018:ffffae9403eaf700 EFLAGS: 00000202
-<4>[ 6572.490176] RAX: 010000000000412d RBX: ffff9eb00d8c5000 RCX:
-ffffec4001110700
-<4>[ 6572.490823] RDX: 0000000000000000 RSI: ffff9eaf3ad5b918 RDI:
-ffffec4001110700
-<4>[ 6572.491363] RBP: 000000000000dec8 R08: ffff9eaf3ad5b918 R09:
-0000000000000001
-<4>[ 6572.491951] R10: 0000000000000001 R11: 0000000000000001 R12:
-ffff9eaf0c92b318
-<4>[ 6572.492404] R13: ffffec4001110700 R14: 0000000000000000 R15:
-ffff9eb00f1f82e8
-<4>[ 6572.493249] FS:  00007f6ad5d8f740(0000)
-GS:ffff9eb07bc00000(0000) knlGS:0000000000000000
-<4>[ 6572.493710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[ 6572.494410] CR2: 000000000000002c CR3: 00000001013ba000 CR4:
-00000000000006f0
-
-metadata:
-----
-  git_describe: next-20240529
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_short_log: 9d99040b1bc8 ("Add linux-next specific files for 20240529")
-
-Steps to reproduce:
--------
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2h94944uxKleGblX7rjXwtV0PBv/reproducer
-
-Links:
------
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131454/suite/log-parser-test/test/check-kernel-bug/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240529/testrun/24131454/suite/log-parser-test/tests/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2h945RbifdV6peYDNNBeBffjQtu/
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2h94944uxKleGblX7rjXwtV0PBv
-
---
-Linaro LKFT
-https://lkft.linaro.org
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index de5b72216b1a..a090495e78c9 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_b=
+lock *sb)
+ 		return NULL;
+=20
+ 	ti->flags =3D 0;
++	ti->magic =3D 20240823;
+=20
+ 	return &ti->vfs_inode;
+ }
+=20
+ static void tracefs_free_inode(struct inode *inode)
+ {
+-	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
++	struct tracefs_inode *ti =3D get_tracefs(inode);
++
++	BUG_ON(ti->magic !=3D 20240823);
++	kmem_cache_free(tracefs_inode_cachep, ti);
+ }
+=20
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+@@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode=
+_operations =3D {
+ 	.rmdir		=3D tracefs_syscall_rmdir,
+ };
+=20
+-struct inode *tracefs_get_inode(struct super_block *sb)
+-{
+-	struct inode *inode =3D new_inode(sb);
+-	if (inode) {
+-		inode->i_ino =3D get_next_ino();
+-		inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_current(inode);
+-	}
+-	return inode;
+-}
+-
+ struct tracefs_mount_opts {
+ 	kuid_t uid;
+ 	kgid_t gid;
+@@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, =
+struct inode *inode)
+ 		return;
+=20
+ 	ti =3D get_tracefs(inode);
++	BUG_ON(ti->magic !=3D 20240823);
+ 	if (ti && ti->flags & TRACEFS_EVENT_INODE)
+ 		eventfs_set_ef_status_free(dentry);
+ 	iput(inode);
+@@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *den=
+try)
+ 	return dentry;
+ }
+=20
++struct inode *tracefs_get_inode(struct super_block *sb)
++{
++	struct inode *inode =3D new_inode(sb);
++
++	BUG_ON(sb->s_op !=3D &tracefs_super_operations);
++	if (inode) {
++		inode->i_ino =3D get_next_ino();
++		inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_current(inode);
++	}
++	return inode;
++}
++
+ /**
+  * tracefs_create_file - create a file in the tracefs filesystem
+  * @name: a pointer to a string containing the name of the file to create.
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 69c2b1d87c46..9059b8b11bb6 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -9,12 +9,15 @@ enum {
+ struct tracefs_inode {
+ 	unsigned long           flags;
+ 	void                    *private;
++	unsigned long		magic;
+ 	struct inode            vfs_inode;
+ };
+=20
+ static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+ {
+-	return container_of(inode, struct tracefs_inode, vfs_inode);
++	struct tracefs_inode *ti =3D container_of(inode, struct tracefs_inode, vf=
+s_inode);
++	BUG_ON(ti->magic !=3D 20240823);
++	return ti;
+ }
+=20
+ struct dentry *tracefs_start_creating(const char *name, struct dentry *par=
+ent);
