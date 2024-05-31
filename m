@@ -1,90 +1,128 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EA3153BC1
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 11:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DE4157470
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 11:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717153635; cv=none; b=GECmuWadJGgAdwIg47L+bVI2m7vRe3DzaP8xQ6T/JrYr+vFxyaVDEnrVcP7V4ok+ZToCAaBfiT0hwRgDub8XHSPDzKV8nBI7YTbTaFJCZCRua+LGMHoLXg6V9VFeJEwqEbDHzQw70Ati14Qz/NTn7NBmItk0owrFq5r7+Trmbe8=
+	t=1717155304; cv=none; b=bbxjHNXpoa7BOWZ1/7YqMXhDkE6AKOlKfzQJOklgOnbhfAncTS4HbOEkAc72njVNiTLgDf2WUMoiBPwKfLNhiGy4JF3f9TPE4+XFGAczqeOU+k/U+JphWUeKkhN7SDIW+FiKS5ExZkW9+/H8ZZx0p6+V6iBYn9+SPVlDhx5tecs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717153635; c=relaxed/simple;
-	bh=6BdJBfJi3/hKy025d+ICYZ25W57C7s5dGvKI2oY6Bi4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=t0UAbSXZ69BIsr3zkEg09BRzK9t/YU4RF+219Xax6uTBKBm5Q4bZjqfarjSWDzLxNZb2jZHQ0BO3sF1iQh6FednJu/E12alyiacz9CrDVAvifltCiT6TWAVpyKbi4fS0x/4xlL1POFpNztYcjGuCr8ytnoYJW8l3sTWuiwyzS8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W/XEjAfR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hKsOzkUr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717155304; c=relaxed/simple;
+	bh=BCulwwdYr/KSnyKqgtvuTyOnil71EDFeqJBJWRTrdjs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=niLW06y0FJsMbpM5zvLhhvvCjTN/PfkceFbS1ZtCGvEx5gMm0WcCSxD18jc8Hh9aIZKusg2RxLAFsRAB4SlQObsl2UqVUJJhgeHudTzZjfB+vnJ1z6gdCy5Q4xIKd09g1DcFkTv+oZNl2PjVPtO+7g04e7c1HzPIabU/YWOasl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=stdfbrAg; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W/XEjAfR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hKsOzkUr"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717153632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FD0fGIRiutsDCzqA9Wo0A4UkGRJFH8vm9F7UrtzuEDQ=;
-	b=W/XEjAfRDrDL/9o3/dStC9ktRMG1+Zp1J8nqufGvrnn/3GqqM3DbSwxSmW7b9KAqi+ihxY
-	jiji14vA0nYwaeGOZR642YylvcczGxzuxSiQFXfeDD4leatfvkh6i+o4JqRBri/rnBoNNC
-	TnaI4Llv0bMFLGHvC54PPcQoC140j7VE/7i/jzRTBhrOD4K3tFnunPQMWhWxMBmfsh8Zcd
-	qRC26tb6/1YwN5PDSSaXherqT6PW1c9INK1dJw0byW7Z+D1Pm1ylqIDqqP19c3262OKV7o
-	kpE6htXDLuC5/kSUEVVqUWdtUYcEEnN6WIq/9eRc/bbTXIbFXELZM22Q7mTfcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717153632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FD0fGIRiutsDCzqA9Wo0A4UkGRJFH8vm9F7UrtzuEDQ=;
-	b=hKsOzkUrC3wOQHxuCr3fJAcwdxVwHVXS/T3VKo0fb6TpheOdVxRdQayDghPW/v2e6SGZgV
-	ohGPgsx3X9ktiKCQ==
-To: Christian Heusel <christian@heusel.eu>
-Cc: Peter Schneider <pschneider1968@googlemail.com>, LKML
- <linux-kernel@vger.kernel.org>, x86@kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
-In-Reply-To: <20ec1c1a-b804-408f-b279-853579bffc24@heusel.eu>
-References: <877cffcs7h.ffs@tglx>
- <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
- <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
- <87zfs78zxq.ffs@tglx>
- <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
- <87r0dj8ls4.ffs@tglx> <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
- <4171899b-78cb-4fe2-a0b6-e06844554ed5@heusel.eu>
- <20ec1c1a-b804-408f-b279-853579bffc24@heusel.eu>
-Date: Fri, 31 May 2024 13:06:50 +0200
-Message-ID: <87wmna6y0l.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="stdfbrAg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717155300;
+	bh=BCulwwdYr/KSnyKqgtvuTyOnil71EDFeqJBJWRTrdjs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=stdfbrAgFa6eirwM9A9FExFkiI+T9UTFZiG8pJBuCO//NzYE0TGsZVHs841M0zehE
+	 ZRafkHT4gXAgkDjLDnpTa1vnOXmiD08fG01WCvVB0QzercN1barPPixmmiek1CRYCR
+	 SXdhXYdgeYZNMH3NegrZdwPswFK4lDFtTX0JN2Of4jH+9KJG4ut2osedriGmFu1gjt
+	 eEZff7DzrmWUBls/foADLuGXUI7wcFFFnKv9R1jY273L4XUfFC3krTKgruzfShzRtg
+	 oK/BgbRLNGKa0Wm/ubpj+88PigmwYJ/k5vpX6IUftf87/kaNL3POMjrSE7xnqzGCY9
+	 peZl+0XZ0Oiow==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C30403781FA4;
+	Fri, 31 May 2024 11:34:59 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: laura.nao@collabora.com
+Cc: kernel@collabora.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rafael@kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] probe with driver acpi-fan failed with error -22
+Date: Fri, 31 May 2024 13:35:34 +0200
+Message-Id: <20240531113534.577055-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240530153727.843378-1-laura.nao@collabora.com>
+References: <20240530153727.843378-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31 2024 at 10:16, Christian Heusel wrote:
-> On 24/05/31 10:13AM, Christian Heusel wrote:
-> [    0.046127] TSC deadline timer available
-> [    0.046129] CPU topo: Max. logical packages:   1
-> [    0.046129] CPU topo: Max. logical dies:       1
-> [    0.046129] CPU topo: Max. dies per package:   1
-> [    0.046131] CPU topo: Max. threads per core:   2
-> [    0.046132] CPU topo: Num. cores per package:    10
-> [    0.046132] CPU topo: Num. threads per package:  12
-> [    0.046132] CPU topo: Allowing 12 present CPUs plus 0 hotplug CPUs
+Hello,
 
-This looks correct.
+On 5/30/24 17:37, Laura Nao wrote:
+> Hello,
+>                                                                           
+> We have identified a regression in the acpi-fan driver probe between
+> v6.9-rc7 and v6.10-rc1 on some Intel Chromebooks in the Collabora LAVA
+> lab.
+> 
+> For the Acer Chromebook Spin 514 (CP514-2H), the following error is
+> reported in the logs:
+> 
+> [    0.651202] acpi-fan INTC1044:00: probe with driver acpi-fan failed with error -22
+> 
+> Similar errors are reported on other devices with fans compatible with
+> the same driver.
+> 
+> On Acer Chromebox CXI4, ASUS Chromebook Flip C436FA and
+> HP Chromebook x360 14 G1:
+> 
+> [    0.488001] acpi-fan INT3404:00: probe with driver acpi-fan failed with error -22
+> 
+> On ASUS Chromebook Vero 514 CBV514-1H:
+> 
+> [    1.168905] acpi-fan INTC1048:00: probe with driver acpi-fan failed with error -22
+> 
+> The issue is still present on next-20240529.
+> 
+> I'm sending this report to track the regression while a fix is
+> identified. I'll investigate the issue/run a bisection and report back
+> with the results.
+>                                       
+> This regression was discovered during some preliminary tests with the
+> ACPI probe kselftest [1] in KernelCI. The config used was the upstream
+> x86_64 defconfig with a fragment applied on top [2].
+> 
+> Best,
+> 
+> Laura
+> 
+> [1] https://lore.kernel.org/all/20240308144933.337107-1-laura.nao@collabora.com/
+> [2] https://pastebin.com/raw/0tFM0Zyg
+> 
+> #regzbot introduced: v6.9-rc7..v6.10-rc1
 
-> [    0.117308] smpboot: x86: Booting SMP configuration:
-> [    0.117308] .... node  #0, CPUs:        #2  #4  #5  #6  #7  #8  #9 #10 #11
-> [    0.009676] [Firmware Bug]: CPU4: Topology domain 1 shift 7 != 6
+The issue started happening after: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/thermal/thermal_core.c?h=v6.10-rc1&id=31a0fa0019b022024cc082ae292951a596b06f8c
 
-So this means that the E-Cores have a different topology information for
-the CORE shift value than the P-Cores which is definitely wrong.
+Before this commit, get_cur_state() was not called by 
+__thermal_cooling_device_register, so the error was not triggered.
 
-Let's see what cpuid -r reports.
+After enabling debugging for the acpi-fan driver, I noticed these errors
+in the logs:
 
-Thanks,
+[    0.682224] acpi INTC1044:00: Invalid control value returned
+[    0.682635] acpi INTC1044:00: Invalid control value returned
 
-        tglx
+The value stored in fst.control is 255, which is indeed not a valid 
+value.
 
+I suspect this might be a firmware issue that is now manifesting due to
+the addition of the extra get_cur_state() call.
+
+I'll dig a bit more and report back.
+
+Best,
+
+Laura
+
+#regzbot introduced: 31a0fa0019
 
