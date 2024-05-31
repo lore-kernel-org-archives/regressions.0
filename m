@@ -1,192 +1,133 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AEF157A68
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 11:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805B439FF3
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 12:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.160
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717156528; cv=fail; b=UlNqtztWtQCokVGm17pG4fBbDPCyC/h6/o6lCQvIse7HgCo8DGQ9m+e6LTLqrhIrzwDWjstn+3MsYqPuAGazVpEzHRAwnvKtPhPo4M0icVl7TM9G28Ej8aWTng5lCJNWrp5stYAE4wLTiiAJZi1zmGudBvbI19rfko95GaldgCQ=
+	t=1717158589; cv=pass; b=e6PoATHt4oIfRDE2aICyhjBgXfahpnPz8RgVrDZe9JV56TBPni/V5ecRVL31ZUUslq+dSXJgDFRXmwxNgmjXOLr/p/dmWdkg0RT4IhlvVeCTqVtrKl93DyfbsrmeYv+yt7rop9L6LOC84V8OtKJXcjKy1zat+vIOpTCZLKyEWqs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717156528; c=relaxed/simple;
-	bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mWRU5mLtfTdpmDaebTwZhg6gu1XiK7Xi4xtrctPrmnr4H0E9teCS/BvRnt21iy1ordXvhTketm0NgrnCRsl5uThaPu64D4+Wg8EY2+Rd1LOsf12aQaOLMlSZtUh6LyXZH5QT5Iw4/heEKUl9ZH+CiqTpWLUGndcJYW46aOcUujQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=eNSQVIMw; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=oQXCzoNL; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	s=arc-20240116; t=1717158589; c=relaxed/simple;
+	bh=csQvlmnmzzldAH1zGUruJ99f35VLka6Fn7mo6b6y/4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cDP3zfJAb0Q9glj5E9yEXLWUkudlfeDmBoihlCoqDlUKRUWj4W2A9yzR0Vvo1xBAMqNG148zi2uv4ZVhuwq15QEOqZwupsFkLjKo6rqf5YD3BrASFrAnGzNXcdqTf2sRX4WTvsXJ/NC6pXyiWUFcq5bTdY/DIRM7pERukYFYio0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=EWPonKkM; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=lhCMJLco; arc=pass smtp.client-ip=81.169.146.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="eNSQVIMw";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="oQXCzoNL"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 07690480A2E;
-	Fri, 31 May 2024 07:55:25 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717156525;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
- b=eNSQVIMwKba7IepHL2th/FwZ/XAvK4Mu2K78TT8lDkCvIFwzw8G4ziIpHBJoQ06JZynSD
- mYGz6Beg5VWZlUtCQ==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717156525;
-	cv=none; b=DQRufJH8RG0EtfdpGLg3OscZNCvXlRob9CHXc58/zcFeIqlGOpDzAUHSrhKzgsQmsVDK87Hux0UqZ07EdKjihtZiDGoaRTlQFlO8gg3bwRG0vVZcxS7oDd9Y489xspb4VXwMNxOH55KyZ4Y1qRx0m+ErY5w3aJWoROmZYagD8KI4Rj6BHqDM3yVw1hGKowvE32CCkOZlGR2gDR5nDU8cefH8T3wVfkRVNI8Pv+UAwc6l78HYJv1gdUDAVU59CLC3ME4B32hf0ReI3+VvoS7pHxHtiisnfCrpnzBIGo9h6VjHPmSuJRCtDSEuZ3cvYnPb67+hXMWYeg4lRhYehbV2mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1717156525; c=relaxed/simple;
-	bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=Ur5FWX81IzOOX/7AMkWfZBbo2GA0zlTYHf2yG8vwwXWGmZSuqO0gYTCs8Bh6Nozz/2fmc7HsUnBvo2KzCo46io7xQ0HGWYSyXPoM55QEj4SnEa9UFMM8FOZDiEQfkHPJfIiT771Zc9ocfG9UvANIGpnWLd9ieLIcfMh2VeUy5nyzn2sE5MgWUr4GD3X38XNMjeygv++lCW/0FfmB7Ad+eY2BK1ZndT8o8L5yzsShmWtLhi3yGzQRm3Di7bOC/MYxCjbWZtHFdEORWoCuns4yBHj3sY7Ulf/kr21ULSgp41Ocpm+9OZY+EYEheTVkiIMIqlPS6dJZxMe+HxG91RAA5Q==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717156525;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
- b=oQXCzoNLpXEAKjmy4+GQ2r0RA7pkqKeTmXo0aLajKdOo1GGUQWVHGDlU5yRsTcSEhOM4L
- t21GgvxgsZ1MqO+V0D56TlmdvrjkHu+mOXDNJMcWhm/oAySHzBXRHUpqRnajW91DCBJrHn6
- j6cNAeuLQdwwNr7RUsTVpuWMUYavCpKBCxehQNjBS4aKwN79bN2etnnE1GXYKkBlGJyeI3Q
- lOzQcck1qtJChwy0pSOCz/2HWSVq7zBPNs6FX3By/s9NKLp2K7FgBjaLZnSTRJrzLQQvCM9
- o/Zyr1KLCDallirjgJzDCLLML1LsKGAiOQXnaOHv/Iwy3dqylbn3w+1/CWvw==
-Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id B69D4280016;
-	Fri, 31 May 2024 07:55:25 -0400 (EDT)
-Message-ID: <69d0c5f0b237990fd2c7cd88768aa2a70a5ee83a.camel@sapience.com>
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
-From: Genes Lists <lists@sapience.com>
-To: Hans de Goede <hdegoede@redhat.com>, Linux regressions mailing list
-	 <regressions@lists.linux.dev>, Pavel Machek <pavel@ucw.cz>, Lee Jones
-	 <lee@kernel.org>, Linux LEDs <linux-leds@vger.kernel.org>, Heiner Kallweit
-	 <hkallweit1@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch, 
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com,  johanneswueller@gmail.com, "Russell King (Oracle)"
- <linux@armlinux.org.uk>
-Date: Fri, 31 May 2024 07:55:25 -0400
-In-Reply-To: <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
-	 <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
-	 <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
-	 <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
-	 <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-Y2OqDd5dYDgI7spdeu7K"
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="EWPonKkM";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="lhCMJLco"
+ARC-Seal: i=1; a=rsa-sha256; t=1717158399; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=bs6HxUeetj+EWaGyVxMKlJRXaAGTzs48IihGwjFViZWeV3ZeqL9yJAi5mK+Wxpw3oj
+    4EHAfpDN7m9pUYMdkDWOERI72s7aWF2Ywl4cDBnzxrx4gi+LYlBiW8grsDH445EgnsS8
+    wubqq0kh68a4+89H8U0Os35axlKirPDBaEzv1cs66xvyjy9h2Rv5Eidfpgp888kOhGLR
+    01FRjL0ap6Pp2KhIqBJ0Dzi/hR5f1Dzp2c6M19wcl7k8BrNl/amMxnkckDdQ0CZiSfQx
+    DNu6ciIGAGwu8aZ30oumH0PpwP7moRGf5wdn2bin7BHOQIrWxXeG2Og+lTpx2mt0FUq/
+    Dh6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1717158399;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:To:Subject:Date:Message-ID:Cc:Date:From:
+    Subject:Sender;
+    bh=4fffa7HnfxrKlSrFwaE1xgg4P7hM9NiByDYj45gR3ec=;
+    b=pg1Hnn1qIavy4PgRnzJ5CISH6PvLsSH8Rqef7z8hA5zQ+TwE7MDkPakzJePPTK+HsJ
+    Kyc+h+oY9SKvh4Cj9uGhbQ9EZyT8tUuvj3+jFSAoNg6qkihBnlnC1CnJ+nI3p+xH7XvG
+    P+humqPDG8UfWKA7F8vQaAg4foS6abbPC1ipTn6b1Bjv0GNhYWlbwN/SXe/GlKx2U405
+    cLUNSVQ8S/d4ZV/23eFcxqdG9bYam6ZwSCR3efc21ZpTb5w7pkMmDuxl4lmY4tJpOULn
+    ItRKBuhpfoiI461CcbJwpkmtj1d2xP46NIQwRrzOz+ySMpWT1DGzb4KclLBHUuPNCGYj
+    XZGg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1717158399;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:From:References:To:Subject:Date:Message-ID:Cc:Date:From:
+    Subject:Sender;
+    bh=4fffa7HnfxrKlSrFwaE1xgg4P7hM9NiByDYj45gR3ec=;
+    b=EWPonKkMLWNGf1kND6YFKBRuv2xiuGIdL5/TgPqvYGmDzc2uX8ghg33Ac+V2wcUo7K
+    KtphvyS5Q8hU8fceX14T9yc8jW9iSh7fseNsZZqNVWRxuNP2rYrmUivMw7ZwKQRaOOZk
+    HIYM1+dqoh9EDLFbi+/OCWorK7XLR//+IxTnZTy5YmYLh7pDP3PDASJvjnwzrsuCF6Tb
+    pd3OXGOu86fE277rM1TUMiJVqm/ncNaFybPzxziqfELfclRqUc8Xre+HXz6Q/UhO2FJp
+    qzunQNvVdY4pcIOzSJd0DBOo+QTYIvzfmwwTJaVkZpZJwb/onyQQbMoUz2KWX7iVwZZ3
+    m8kA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1717158399;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:From:References:To:Subject:Date:Message-ID:Cc:Date:From:
+    Subject:Sender;
+    bh=4fffa7HnfxrKlSrFwaE1xgg4P7hM9NiByDYj45gR3ec=;
+    b=lhCMJLcojxrVP/ivV1ajKdqSc1h4bvGa8z5uE9T1FBgCzI/5EtBLgIjf+/lfsSphn9
+    Gb/gh/NdW5FdRjrJa+AQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHvJzedR43J0lbSiPOfaY0XT9zGWI312LPn8wNt1+3JXo6M8="
+Received: from [IPV6:2a01:599:814:b9bb:b156:e740:f15d:79cf]
+    by smtp.strato.de (RZmta 50.5.0 AUTH)
+    with ESMTPSA id e092ae04VCQbzmr
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 31 May 2024 14:26:37 +0200 (CEST)
+Message-ID: <b307ad01-023e-4c78-b9d3-92bcb8403a0b@xenosoft.de>
+Date: Fri, 31 May 2024 14:27:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Xorg doesn't start and some other issues with the RC1 of kernel
+ 6.10
+To: Michael Ellerman <mpe@ellerman.id.au>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Christian Zigotzky <info@xenosoft.de>
+References: <34d848f4-670b-4493-bf21-130ef862521b@xenosoft.de>
+ <93f42bc8-f0ae-4f7f-8f25-a4e9faf8664b@xenosoft.de>
+ <87zfs731jn.fsf@mail.lhotse>
+Content-Language: en-US
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+In-Reply-To: <87zfs731jn.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 30.05.24 14:51, Michael Ellerman wrote:
+> Christian Zigotzky <chzigotzky@xenosoft.de> writes:
+>> On 28.05.24 22:00, Christian Zigotzky wrote:
+>>> Hi All,
+>>>
+>>> Xorg doesn't start anymore since the RC1 of kernel 6.10. We tested it
+>>> with the VirtIO GPU and with some Radeon cards.
+>>>
+>>> Another error message: Failed to start Setup Virtual Console.
+>>>
+>>> Maybe this is the issue: + CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
+>>>
+>>> Tested with FSL P5040, FSL P5020, and PASEMI boards.
+>>>
+>>> Could you please test Xorg on your PowerPC machines?
+>>>
+>>> Thanks,
+>>> Christian
+>> I tested the RC1 in a virtual e5500 QEMU PowerPC machine with Bochs VGA
+>> (-device VGA,vgamem_mb=256) and Xorg doesn't start either.
+>>
+>> Error message: xf86OpenConsole: KDSETMODE KD_GRAPHICS failed
+>> Inappropriate ioctl for device.
+> That is presumably because of this:
+>    https://lore.kernel.org/all/0da9785e-ba44-4718-9d08-4e96c1ba7ab2@kernel.org/
+>
+> cheers
+Hello Michael,
 
---=-Y2OqDd5dYDgI7spdeu7K
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Many thanks for the hint! :-)
 
-On Fri, 2024-05-31 at 11:50 +0200, Hans de Goede wrote:
-> Hi,
->=20
-> ...
+I was able to revert this commit and Xorg works again. We tested it with 
+a Radeon and a VirtIO-GPU.
 
-> I actually have been looking at a ledtrig-netdev lockdep warning
-> yesterday
-> which I believe is the same thing. I'll include the lockdep trace
-> below.
->=20
-> According to lockdep there indeed is a ABBA (ish) cyclic deadlock
-> with
-> the rtnl mutex vs led-triggers related locks. I believe that this
-> problem
-> may be a pre-existing problem but this now actually gets hit in
-> kernels >=3D
-> 6.9 because of commit 66601a29bb23 ("leds: class: If no default
-> trigger is
-> given, make hw_control trigger the default trigger"). Before that
-> commit
-> the "netdev" trigger would not be bound / set as phy LEDs trigger by
-> default.
->=20
-> +Cc Heiner Kallweit who authored that commit.
->=20
-> The netdev trigger typically is not needed because the PHY LEDs are
-> typically
-> under hw-control and the netdev trigger even tries to leave things
-> that way
-> so setting it as the active trigger for the LED class device is
-> basically
-> a no-op. I guess the goal of that commit is correctly have the
-> triggers
-> file content reflect that the LED is controlled by a netdev and to
-> allow
-> changing the hw-control mode without the user first needing to set
-> netdev
-> as trigger before being able to change the mode.
->=20
-> But there is a price to this, besides the locking problem this also
-> causes the ledtrig-netdev module to load on pretty much everyones
-> systems (when build as a module) even though 99.999% of our users
-> likely does not need this at all...
->=20
-> Given this price and the troubles this is causing I think it might be
-> best
-> to revert 66601a29bb23. There might still be a locking issue when
-> setting
-> the trigger to netdev manually (I'll check and follow up) but this
-> should
-> fix the regression users are hitting since typically users do not set
-> the trigger manually.
->=20
-> Gene, as the original reporter of this can you do "modinfo
-> ledtrig_netdev"
-> and if this shows that ledtrig_netdev is a module for you try
-> blacklisting
-> ledtrig_netdev ?=C2=A0 And if it is not a module can you try building a
-> 6.9
-> kernel with commit 66601a29bb23 reverted and see if that helps ?
+@Skateman
+I reduced the uImage. Please test it. Link: 
+https://github.com/chzigotzky/kernels/releases/tag/v6.10.0-rc1-4
 
-Thank you - I've blacklisted ledtrig_netdev and will report back if
-anything interesting happens.
+Have a nice weekend,
 
-best
-
-gene
-
->=20
->=20
-> Regards,
->=20
-> Hans
-
---=20
-Gene
-
-
---=-Y2OqDd5dYDgI7spdeu7K
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZlm6rQAKCRA5BdB0L6Ze
-2ztQAP9qMQRR3zWotstYwUJgtGTnC8aBJ+98ER37vLWOQ8tUfwD/YXQxaCPd9Swg
-ncFhq3xPmLoOpSikgJb3evYfVsGEzQU=
-=tg5T
------END PGP SIGNATURE-----
-
---=-Y2OqDd5dYDgI7spdeu7K--
+Christian
