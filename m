@@ -1,139 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8A1158DA3
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 13:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA42158D95
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 13:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717162611; cv=none; b=a8xXvVKWyoKes4jagYz7kwgaEPsJNxmuY1qGNVCzhnYlhA1jW6yDsBO6ubCOX4tq5SFxjb/6DYUWw/gBBFqkqL1ru/an5Gcp9Lf1Hl1tvj/omblI08XmlqcnJsslQ0snWIDbybHkJyR9MaVH4BqEJ9nkBFkCkCIu/DjVVCgbEvs=
+	t=1717162958; cv=none; b=fDHxZg0Y9cLjy490hENRU8Xl03oRKFvfC7Ib5FQOh2CUWXJa3krYdYXfH0EqXyuKUX4l9lo5g1dlpZ8vQO3Wai1K1RE0PdE4T0j9xOKn4U8XzUcYI1V8eBH17if6L7BRjLnXGjPpfCIH6u8/s/3jGOdhUYBd6pnrolc1v/nU7hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717162611; c=relaxed/simple;
-	bh=fHZWsCZgLehsBmHUlJSI0XG6+oxgaHq5c/G9th2fkKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p0ys/slujG58H7+/J2oLkaf2kzAP8tGg0wEQRxNrRR8FriHaRKBvj5cq2JneiqyqBEgGzokUHEhMG1olc4YwhlWTWZujcbOxjC9R6Z4AN8akdxt5zSTRcQSMK4r3/JQOdzkFwpf2Vna7tLjpXrbeiARARy4Y+Sdc2KfolNxMdww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hAvRLJD4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717162958; c=relaxed/simple;
+	bh=eY2qkBo8TuMtICupkOTJ+jXO0M+B2a1HCHXG4Y9V598=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mqikTMnkgyyq36YdKhPSrweYKiyCCpYLE63cI1aVnOUEM8H+RNL6VflxDhlvra1pP59PXFMuLkzR39zIEM+WOuey2jKdPK+eXg1NxuP7rLaZhR5AJYyAsgp1jN7Fusaw/KL6wk4raiZyYAS6uPNtXL4GoyVBdYwAY56hP5RuShs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PEDp8uNJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hZlGhLIf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hAvRLJD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717162608;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PEDp8uNJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hZlGhLIf"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717162949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xiMkkJB35GmuPxh7rMmIJANRZ/YYuyNN0vLhNarAFs4=;
-	b=hAvRLJD4Z8aUAMYU/o9YSpblpLjWo1sT4/TAQIrkZHwKoFhFwDD2AhL7g/57JRark6QEcR
-	pWPD9taMYnXGyO4S+sV0ZEIN8R66JqjGkxDkwKodmX7Mc85wB1Ue1cVvkrIbsh3VlXC9fz
-	wFzNhfoHxKJAXzwIOBdPxxnA/xiG5s0=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-h9HOKZuOPN6kzNnwcOOPyQ-1; Fri, 31 May 2024 09:36:47 -0400
-X-MC-Unique: h9HOKZuOPN6kzNnwcOOPyQ-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52b8b680f16so494866e87.1
-        for <regressions@lists.linux.dev>; Fri, 31 May 2024 06:36:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717162606; x=1717767406;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xiMkkJB35GmuPxh7rMmIJANRZ/YYuyNN0vLhNarAFs4=;
-        b=A+9gdwXUzaQIDWlz27mDVxgCmrXd0iK+4NPyFglUigSggYfLtbuDT6+NGvdnKQhxjk
-         +AIw9aac5a53xeRsM7AAZiJLBk7qkf7QGr1CFqS02rlzeJ4TCX89KmqvomXOxbNu2BMK
-         OGyTxM46EMnneDZOE/XKOQ6V46c0ftE1fo49+JRbhV0himzGE162newMcqQmDuTM61ri
-         UMEDRbprhgIv9K2WtIMesZ5woVyjuA7ZvuF+T3i/i+lTm3bneL/nNrUplu61JAnCW4/K
-         2bD1rNydhKnCujYsMto225pWei5YV0iBIT2eEpygMv0ivlua4S0WFW9wD+xT0zpUv1Oq
-         rKnA==
-X-Gm-Message-State: AOJu0Yzzb6QQzygr6WgIFpF8zcc9zUS1uQAEzw8msxzdZqwbEGdfas1I
-	yW8AUnY8DTTL3N4T6z0rnjXekApOrGQX2QvJpBSjiIxp9judm3z2000FuAJTkF1FoQa3xnseN58
-	6l/S8sZylpHrpGJJltPox7T6qoBfciecazGPH1XYMzzN4gDCFBnT+4XJnlNjH
-X-Received: by 2002:a05:6512:4ce:b0:52b:7a5f:817f with SMTP id 2adb3069b0e04-52b8956b5bemr1133057e87.19.1717162605718;
-        Fri, 31 May 2024 06:36:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEro17MUNy0FfJuJni5QfWCgWFnnZ+g2Nai9cZuxNwB9y0ZSsPWHEN4eW5raMCs3pl5xLc2dg==
-X-Received: by 2002:a05:6512:4ce:b0:52b:7a5f:817f with SMTP id 2adb3069b0e04-52b8956b5bemr1133036e87.19.1717162605234;
-        Fri, 31 May 2024 06:36:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31c6d4b6sm1005484a12.74.2024.05.31.06.36.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 06:36:44 -0700 (PDT)
-Message-ID: <d8341ffe-c0d9-4a37-869a-956cc1425f74@redhat.com>
-Date: Fri, 31 May 2024 15:36:43 +0200
+	bh=Vnvx/b3YBPJGdrGkvIGOzq//fKgTkTsLUSK9I8zckqM=;
+	b=PEDp8uNJNYaj3NgyjQbG9GhoP2raHs3KNUeUNthy8WjQ6bJq3ogRxiu0V+vdKgIxt1E7Ab
+	nj3LACMTyTj7AJ/LEZ1n0da4T5mqV6N0sRcDwxcHL5PJcjgWb5z5inQj7ouQ2nGljrN8s1
+	VRbM5XRj8OGNsxWDKnrd2sW6rzMP0L2uLykiOsEOz0o/p1sl9+o4wXEmlEsCmNG52RiRKC
+	Nhg7UDVl9yzW7vJQAMwqF3KD7ydfpSyftTmdKULog0RciygSa0x7UE64KFrpBo6NLrhPWZ
+	0cvhkPfaSRApwNFpVePymtjetVLQinl0Ti1qG5qcjvYcXbR+GDcV34mAUPJxmg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717162949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vnvx/b3YBPJGdrGkvIGOzq//fKgTkTsLUSK9I8zckqM=;
+	b=hZlGhLIfpFoIcILmDCyged3NbGZSVUrewqV1qVXiggb+rPnVMLjeJqbb4XEGJmFGEDmtVC
+	1QjuloI/vJYNzCCA==
+To: Christian Heusel <christian@heusel.eu>
+Cc: Peter Schneider <pschneider1968@googlemail.com>, LKML
+ <linux-kernel@vger.kernel.org>, x86@kernel.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <b42363ac-31ef-4b1a-9164-67c0e0af3768@heusel.eu>
+References: <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+ <87zfs78zxq.ffs@tglx>
+ <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
+ <87r0dj8ls4.ffs@tglx> <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
+ <4171899b-78cb-4fe2-a0b6-e06844554ed5@heusel.eu>
+ <20ec1c1a-b804-408f-b279-853579bffc24@heusel.eu> <87cyp28j0b.ffs@tglx>
+ <875xuu8hx0.ffs@tglx> <b42363ac-31ef-4b1a-9164-67c0e0af3768@heusel.eu>
+Date: Fri, 31 May 2024 15:42:26 +0200
+Message-ID: <87sexy6qt9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Linux LEDs <linux-leds@vger.kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Genes Lists <lists@sapience.com>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
- <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
- <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
- <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
- <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
- <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
- <2a6045e2-031a-46b6-9943-eaae21d85e37@redhat.com>
- <e6800715-6bc0-49a0-bd00-5a75b852ea9d@lunn.ch>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <e6800715-6bc0-49a0-bd00-5a75b852ea9d@lunn.ch>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi,
+On Fri, May 31 2024 at 15:08, Christian Heusel wrote:
+> On 24/05/31 11:11AM, Thomas Gleixner wrote:
+>> On Fri, May 31 2024 at 10:48, Thomas Gleixner wrote:
+>> 
+>> It seems there are two different issues here. The dmesg you provided is
+>> from a i7-1255U, which is a hybrid CPU. The i7-7700k has 4 cores (8
+>> threads) and there is not necessarily the same root cause.
+>
+> It seems like I was also below my needed caffeine levels :p The person
+> reporting (in the same thread) with the i7-7700k reports the problem
+> fixed[1] as well, so this is in line with Peters observerations!
 
-On 5/31/24 3:29 PM, Andrew Lunn wrote:
->>> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
->>> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
->>> drivers/net/ethernet/intel/igc/igc_leds.c:	led_cdev->hw_control_trigger = "netdev";
->>> drivers/net/dsa/qca/qca8k-leds.c:		port_led->cdev.hw_control_trigger = "netdev";
->>> drivers/net/phy/phy_device.c:		cdev->hw_control_trigger = "netdev";
->>
->> Well those drivers combined, esp. with the generic phy_device in there
->> does mean that the ledtrig-netdev module now gets loaded on a whole lot
->> of x86 machines where before it would not.
-> 
-> phy_device will only do something if there is the needed Device Tree
-> properties. Given that very few systems use DT on x86, that should not
-> be an issue.
+Cool!
 
-That is good to know.
+> The other person with the i7-1255U in the meantime got back to me with
+> the needed outputs:
+>> - output of cpuid -r
 
-> So only x86 systems with r8169 and igc should have the
-> trigger module loaded because of this.
+> 0x0000000b: subleafs:
+>   0: EAX=0x00000001, EBX=0x00000001, ECX=0x00000100, EDX=0x00000012
+>   1: EAX=0x00000006, EBX=0x0000000c, ECX=0x00000201, EDX=0x00000012
 
-Those are very popular NICs though, so that is still a lot of
-systems.
+> 0x0000001f: subleafs:
+>   0: EAX=0x00000001, EBX=0x00000001, ECX=0x00000100, EDX=0x00000012
+>   1: EAX=0x00000007, EBX=0x0000000c, ECX=0x00000201, EDX=0x00000012
 
-> It would be good to understand
-> why other systems have the trigger loaded.
+So this is inconsistent already. Both leafs should describe the same
+topology. See the differing EAX values (6/7) in subleaf 1, which are
+exactly the values the kernel complains about :)
 
-Actually my system has a RTL8168 ethernet NIC so the netdev trigger
-getting loaded there is expected.
+But that should not be an issue because the kernel preferres 0x1f over
+0xb and will never evaluate both, but this is just from one randomly
+picked CPU.
 
-> However, as you say, this
-> will not fix the underlying deadlock, it will just limit it to systems with r8169
-> and igc...
+I wonder which variant of the cpuid tool that is. cpuid -r gives you
+usually just the plain values and collects them for all CPUs.
 
-Right, given on the above discussion I believe that it likely already
-is limited to systems with Realtek r8169 or Intel i225 / i226 NICs.
+I really need to have the values for all CPUs to see whether there are
+differences at the relevant places. The above is probably from one of
+the E-Cores.
 
-Regards,
+Thanks,
 
-Hans
-
-
-
+        tglx
