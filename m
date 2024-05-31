@@ -1,151 +1,168 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1BE187567;
-	Fri, 31 May 2024 08:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07537153BDB
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 08:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717144797; cv=none; b=Rth7HvCmWPjzsen2LzghF6NyVq4t7aYWCBbRCRkUqEySNXBcI5t+wUVHTN2C7W2FPgDKReGqXDrDV3iWyC1TfCWyT+J15N8wtMN075hcEwJJfOtIoAim8ACniFDlinGptlIIngxKCjGEqPmO8YUiFN9N43Z9YOT8S3h8/gPPRv0=
+	t=1717144952; cv=none; b=Ekwl3qOlaZKpySZyRSEkFg0Qb+JJzqXl9pTA5CovQy9mJ5067CA9YlSDPmKJBbLTJUdc4CRyvX9IZLo6VgBo5DCL3ed5LMZMj+/xKrZ1uiNfVUya2nlftL58nL+dVFi/LhD5auU7mHVhnTHDCR6e2e4Yz6ibN3LzoF87dIsV18Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717144797; c=relaxed/simple;
-	bh=HZYCsKjMSc/EqPpUCUY+p9VaVxhaFBNBTLb4Frz7Asg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HI/8j+ocU7TbzwxplMrvnshw5Dxc3lNeEpedaEE4Tv533UG14yfWXw/HMpk2rQWZuMA774ZexElLYU00bJo/beDoekSSamxNjlOOzkMApSf3TSOnhNmcUAfnqFPMbNWbx5zuvbDZrhrFZJ5whqEg3vr8c7Wjgkqt9MPCWKDK7+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QIC+VDbT; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717144952; c=relaxed/simple;
+	bh=obwRrHdSQhE14E+BPljTdaZz9fKGC+Z7OnPMryGR2y8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LchFgEcUamRWlfK8LVa+q+ybJv+ic93ljUa3GE/1gJKqLT2K7BFFXi+xKvYmMphLYhNdjQOqnkl7S5onjJVJWHd8IyAGeTIvbcgwq5Kcbejvgr/R5A2gwLjW6GBpv0hLsfHmYx8EJB2D+qetf5Yh5ueafiV6if/mvwDwV90yAY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZyDRhXPg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zj0DMVpE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QIC+VDbT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=hfDzAvU8xDKFTc19pK9dW0rwA+QcQVLK4v1h8Qtw0Fs=;
-	t=1717144795; x=1717576795; b=QIC+VDbT23zvgu93nYy1Aw9r2kfqwfOAxweuCVs4Om3Fhyu
-	668zxbnpElfmXiZyxeEtQYvUgr3mdMzVNffOSOJkQHg/nDGELXr3Bz7dFz+0bTap9PX/4F9k27CRh
-	2wi2CR4IvUZnV7p2co+MEdPbOxztW+AjeIksy2ldpr8KM11sTsoE3iz+jyMiFoDI3f0zrb6DHZFaJ
-	H8T7AyPKlvKCcoGWxMz4MTaBaT9EXlN0ocSs6IKyDkiTtarL+/4I4Y9kPOJkTkcOH59QZtXBG1GGE
-	VCqHxvwgPTsuCBX0YX+gBdfxj42xt6MaloWrxhS5W1OBpxiR3rtxt6btXzneokeg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCxnj-0005SD-1R; Fri, 31 May 2024 10:39:51 +0200
-Message-ID: <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
-Date: Fri, 31 May 2024 10:39:40 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZyDRhXPg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zj0DMVpE"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717144949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UTI2c/7A6hRiAbpj/yTEs+WThsy6r51M1QAj2Eqyrrg=;
+	b=ZyDRhXPgyl2XW/yooSOsdQ55MOqnXLyLFf2E/VAy4KSp1SqXxaVecb7H/YTa84VYTApx2K
+	xUx4Hfyi5t6R/hIwKPbi01d/Nf5Gwwb3M2XuvpwQtkyYRTw501NzadvNy3UAmmC7DPzqnQ
+	1zC2+CIjm1MfL/DwvpixyYyI/aLhNJNGwDV0y1ANM5z4GY4r3OOfmiKCaNmF3+JV6KCQkE
+	iCQ8mlWHs5C+gUV5d2kZwQemcVkKJo+HREfTXt/GGSoPqHiFAQOlebPw152TlrBBELbKwz
+	FeFuJJSPlH6SgNS7azztVK5yxNF5uSQgC+X2F0rPtc7aO+3NibanFlrIEHkltg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717144949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UTI2c/7A6hRiAbpj/yTEs+WThsy6r51M1QAj2Eqyrrg=;
+	b=zj0DMVpEcS1FhmVzjIGd6qojtWrfTT+MCPhya0GJh0aB1AhB2VInHBvzy8phpzBkbP4pqH
+	2noxYHUMGO0A+xDg==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <87ikyu8jp4.ffs@tglx>
+References: <877cffcs7h.ffs@tglx>
+ <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
+ <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+ <87zfs78zxq.ffs@tglx>
+ <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
+ <87r0dj8ls4.ffs@tglx> <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
+ <bd7ff2f3-bf2c-4431-9848-8eb41e7422c6@googlemail.com>
+ <87ikyu8jp4.ffs@tglx>
+Date: Fri, 31 May 2024 10:42:26 +0200
+Message-ID: <87frty8j9p.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Hung tasks due to a AB-BA deadlock between the leds_list_lock rwsem
- and the rtnl mutex (was: 6.9.3 Hung tasks)
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Linux LEDs <linux-leds@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
- hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Genes Lists <lists@sapience.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
- <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
- <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717144795;124009fb;
-X-HE-SMSGID: 1sCxnj-0005SD-1R
+Content-Type: text/plain
 
-[adding the LED folks and the regressions list to the list of recipients]
+On Fri, May 31 2024 at 10:33, Thomas Gleixner wrote:
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Clearly coffee did not set in yet.
 
-Lee, Pavel, could you look into below regression report please? Thread
-starts here:
-https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
+Thanks,
 
-Another report with somewhat similar symptom can be found here:
-https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
+         tglx
+---
+Subject: x86/topology/intel: Unlock CPUID before evaluating anything
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Thu, 30 May 2024 17:29:18 +0200
 
-See also Russell's analysis of that report below (many many thx for
-that, much appreciated Russel!).
+Intel CPUs have a MSR bit to limit CPUID enumeration to leaf two. If this
+bit is set by the BIOS then CPUID evaluation including topology enumeration
+does not work correctly as the evaluation code does not try to analyze any
+leaf greater than two.
 
-To my untrained eyes all of this sounds a lot like we still have a 6.9
-regression related to the LED code somewhere. Reminder, we had earlier
-trouble, but that was avoided through other measures:
+This went unnoticed before because the original topology code just repeated
+evaluation several times and managed to overwrite the initial limited
+information with the correct one later. The new evaluation code does it
+once and therefore ends up with the limited and wrong information.
 
-* 3d913719df14c2 ("wifi: iwlwifi: Use request_module_nowait") /
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+Cure this by unlocking CPUID right before evaluating anything which depends
+on the maximum CPUID leaf being greater than two instead of rereading stuff
+after unlock.
 
-* c04d1b9ecce565 ("igc: Fix LED-related deadlock on driver unbind") /
-https://lore.kernel.org/all/ZhRD3cOtz5i-61PB@mail-itl/
+Fixes: 22d63660c35e ("x86/cpu: Use common topology code for Intel")
+Reported-by: Peter Schneider <pschneider1968@googlemail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/cpu/common.c |    3 ++-
+ arch/x86/kernel/cpu/cpu.h    |    2 ++
+ arch/x86/kernel/cpu/intel.c  |   25 ++++++++++++++++---------
+ 3 files changed, 20 insertions(+), 10 deletions(-)
 
-* 19fa4f2a85d777 ("r8169: fix LED-related deadlock on module removal")
-
-That iwlwifi commit even calls it self "work around". The developer that
-submitted it bisected the problem to a LED merge, but sadly that was the
-end of it. :-/
-
-Ciao, Thorsten
-
-On 30.05.24 16:04, Russell King (Oracle) wrote:
-> On Thu, May 30, 2024 at 09:36:45AM -0400, Genes Lists wrote:
->> On Thu, 2024-05-30 at 08:53 -0400, Genes Lists wrote:
->> This report for 6.9.1 could well be the same issue:
->> https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
-> 
-> The reg_check_chans_work() thing in pid 285 is likely stuck on the
-> rtnl lock. The same is true of pid 287.
-> 
-> That will be because of the thread (pid 663) that's stuck in
-> __dev_open()...led_trigger_register(), where the rtnl lock will have
-> been taken in that path. It looks to me like led_trigger_register()
-> is stuck waiting for read access with the leds_list_lock rwsem.
-> 
-> There are only two places that take that rwsem in write mode, which
-> are led_classdev_register_ext() and led_classdev_unregister(). None
-> of these paths are blocking in v6.9.
-> 
-> Pid 641 doesn't look significant (its probably waiting for either
-> pid 285 or 287 to complete its work.)
-> 
-> Pid 666 looks like it is blocked waiting for exclusive write-access
-> on the leds_list_lock - but it isn't holding that lock. This means
-> there must already be some other reader or writer holding this lock.
-> 
-> Pid 722 doesn't look sigificant (same as pid 641).
-> 
-> Pid 760 is also waiting for the rtnl lock.
-> 
-> Pid 854, 855 also doesn't look sigificant (as pid 641).
-> 
-> And then we get to pid 858. This is in set_device_name(), which
-> was called from led_trigger_set() and led_trigger_register().
-> We know from pid 663 that led_trigger_register() can take a read
-> on leds_list_lock, and indeed it does and then calls
-> led_match_default_trigger(), which then goes on to call
-> led_trigger_set(). Bingo, this is why pid 666 is blocked, which
-> then blocks pid 663. pid 663 takes the rtnl lock, which blocks
-> everything else _and_ also blocks pid 858 in set_device_name().
-> 
-> Lockdep would've found this... this is a classic AB-BA deadlock
-> between the leds_list_lock rwsem and the rtnl mutex.
-> 
-> I haven't checked to see how that deadlock got introduced, that's
-> for someone else to do.
-
-P.S.:
-
-#regzbot report: /
-#regzbot introduced: f5c31bcf604d
-#regzbot duplicate:
-https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
-#regzbot summary: leds: Hung tasks due to a AB-BA deadlock between the
-leds_list_lock rwsem and the rtnl mutex
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1585,6 +1585,7 @@ static void __init early_identify_cpu(st
+ 	if (have_cpuid_p()) {
+ 		cpu_detect(c);
+ 		get_cpu_vendor(c);
++		intel_unlock_cpuid_leafs(c);
+ 		get_cpu_cap(c);
+ 		setup_force_cpu_cap(X86_FEATURE_CPUID);
+ 		get_cpu_address_sizes(c);
+@@ -1744,7 +1745,7 @@ static void generic_identify(struct cpui
+ 	cpu_detect(c);
+ 
+ 	get_cpu_vendor(c);
+-
++	intel_unlock_cpuid_leafs(c);
+ 	get_cpu_cap(c);
+ 
+ 	get_cpu_address_sizes(c);
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -61,9 +61,11 @@ extern __ro_after_init enum tsx_ctrl_sta
+ 
+ extern void __init tsx_init(void);
+ void tsx_ap_init(void);
++void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c);
+ #else
+ static inline void tsx_init(void) { }
+ static inline void tsx_ap_init(void) { }
++static inline void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c) { }
+ #endif /* CONFIG_CPU_SUP_INTEL */
+ 
+ extern void init_spectral_chicken(struct cpuinfo_x86 *c);
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -269,19 +269,26 @@ static void detect_tme_early(struct cpui
+ 	c->x86_phys_bits -= keyid_bits;
+ }
+ 
++void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c)
++{
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++		return;
++
++	if (c->x86 < 6 || (c->x86 == 6 && c->x86_model < 0xd))
++		return;
++
++	/*
++	 * The BIOS can have limited CPUID to leaf 2, which breaks feature
++	 * enumeration. Unlock it and update the maximum leaf info.
++	 */
++	if (msr_clear_bit(MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0)
++		c->cpuid_level = cpuid_eax(0);
++}
++
+ static void early_init_intel(struct cpuinfo_x86 *c)
+ {
+ 	u64 misc_enable;
+ 
+-	/* Unmask CPUID levels if masked: */
+-	if (c->x86 > 6 || (c->x86 == 6 && c->x86_model >= 0xd)) {
+-		if (msr_clear_bit(MSR_IA32_MISC_ENABLE,
+-				  MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0) {
+-			c->cpuid_level = cpuid_eax(0);
+-			get_cpu_cap(c);
+-		}
+-	}
+-
+ 	if ((c->x86 == 0xf && c->x86_model >= 0x03) ||
+ 		(c->x86 == 0x6 && c->x86_model >= 0x0e))
+ 		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
