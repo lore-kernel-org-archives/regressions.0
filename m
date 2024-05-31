@@ -1,108 +1,82 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13AF74050
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 07:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7E976408
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 08:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717141148; cv=none; b=Qchd8WoH3OrACv+A0vAi1v+9/sNLftvTEmfqE3Rgwr+kSNbT+1X1rptMfvOLFY5O5e3kswukmeY5CXz4wXSv8ojZP6Q4URDR1e4o1TqwTksXcLC5LsHyyW5eXWehn6z4mYBjAbalRvHbVIavLV5Ac+4HRxMA4LVRDZzE98cmABI=
+	t=1717142794; cv=none; b=ENwcTK9QBAjziuRzLYVEZLFGhPib5rRWrzpO6dGB0yNk17nTC5Vy1B+hNx3/cKvYFi+LEV+5rMKtWN2LpPt6fhCdbz0GHneaT0P1GXAmZdTmLNTSOrxdIMFT+BbTqx6y7MpaJE9+E1e1mhRCPhtyxDXPPafqbEK5jS1oWXyE4jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717141148; c=relaxed/simple;
-	bh=UASv3SveAZm8Gka6pqaR1UV3bTzZva87d51sF3d3LV8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=GBiSm1gWGLc1NnzQeflAzcPzMObLE0hYQpzo7pokfJaffvYdB3kPgkUWmV6dzSmhLZfy08TjX+YRN1AousNpXx/4HEZtVHcyf3Xxnjpt0exqKdxjU/n1WmlK0Px8P73RCW/kVW6J892ljHf8+zOBWZY0j+CZdxZL0dQagL3OMuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mnx/AJKj; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717142794; c=relaxed/simple;
+	bh=VPUioJ9IncgAwqbCt6ppxEi5MBR+Hh4+6TY5inBUiPA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fCOyrglM3Y7r8r9rPapAunm12ukWDMWNeDgUbyT/ys0Y4LuQ+a8NnWGGeK2VSvIwCyyB7V1wtnmgQWwSkihfw/1eZXEvUGmga0y9EGgjJZwnVXbjqZZA+WP1yVkOC3a1QU3lxndpM5FD1GUZXvqSPT9GbKxJt5FpxKUtAgXDXrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=D4JcyVTt; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mnx/AJKj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=UASv3SveAZm8Gka6pqaR1UV3bTzZva87d51sF3d3LV8=; t=1717141146;
-	x=1717573146; b=mnx/AJKjjb7k3N/wlrxN66b0gxzUnn8THC7bEIRmoBcJWS/NvAD00LyLLaCXD
-	P2rOPQSu/cpb5TaR1cpBaoCEVptJzawJTX3Bo+Hoo/B1EIYi/6GxmHqd0RPW4WdXleBcoLloTBuLZ
-	bdO/NJxeskQgVeBnwi6eV0TffDJ2eITvqpCbXYokXxpu3vFeF/enWURrJJwTk9YuAgrH+Icaoqf1S
-	6frl9FKjBoXNtq2WOJhJARxt9m1JW7uiC+BOObVgGxxUY4B8Rytni+i/P7e34tMmQh0fTVnArERiM
-	TUma13wRLOCoRzbE0AdoaEpQCI8+ZuLG8KI4ZkdQgLVgNwOGfw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCwqu-0000bt-J0; Fri, 31 May 2024 09:39:04 +0200
-Message-ID: <144eb23f-ae27-46ff-83e7-9a764e58587e@leemhuis.info>
-Date: Fri, 31 May 2024 09:39:04 +0200
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="D4JcyVTt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1717142790;
+	bh=FYUiRJCdcnCVjMOkEnGgfbId1LsBcdzYwyyPQhPx3DE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=D4JcyVTtiYxOq8Zi6clWE/K+RQvgcOoOcksTd+TGoBTn6QqgfD0G3Y+8vnqGe53w5
+	 ihbPLxd2u8e1mibwi3NIqIbhPqqH+5s43bD7wz3LReLwcgZxdGl/JUlV44vrqwc9us
+	 tadf7bLnJyxZusxHqjaS9V5h87dZB0ysq5dThakJ0dbh6+HVn2fQJg6etSDzwhlT19
+	 kbdE60JlKyhWoSRR/ebuxz6/JcIrH8Tt2llmKTeQg6LjxV1ssegJgz5/OMkPDFIms/
+	 haKV7w1yx+taUZDjOve+jaQn7guhicMOMaffYrEgPZNWXL1+dS/z3ykXnLWmpJfKSY
+	 B3Qa5khAO1AvQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VrG0h2Df2z4wqM;
+	Fri, 31 May 2024 18:06:28 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, John Garry <john.g.garry@oracle.com>, Jens
+ Axboe <axboe@kernel.dk>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Damien Le Moal <dlemoal@kernel.org>, Niklas
+ Cassel <cassel@kernel.org>, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+ benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, Guenter Roeck
+ <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
+ allocating the queue
+In-Reply-To: <20240531060827.GA17723@lst.de>
+References: <20240520151536.GA32532@lst.de>
+ <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info>
+ <8734pz4gdh.fsf@mail.lhotse> <87wmnb2x2y.fsf@mail.lhotse>
+ <20240531060827.GA17723@lst.de>
+Date: Fri, 31 May 2024 18:06:25 +1000
+Message-ID: <87sexy2yny.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717141146;5e5cc072;
-X-HE-SMSGID: 1sCwqu-0000bt-J0
+Content-Type: text/plain
 
+Christoph Hellwig <hch@lst.de> writes:
+> On Fri, May 31, 2024 at 12:28:21AM +1000, Michael Ellerman wrote:
+>> No that's wrong. The actual hardware page size is 4K, but
+>> CONFIG_PAGE_SIZE and PAGE_SHIFT etc. is 64K.
+>> 
+>> So at least for this user the driver used to work with 64K pages, and
+>> now doesn't.
+>
+> Which suggested that the communicated max_hw_sectors is wrong, and
+> previously we were saved by the block layer increasing it to
+> PAGE_SIZE after a warning.  Should we just increment it to 64k?
 
+It looks like that user actually only has the CDROM hanging off
+pata_macio, so it's possible it has been broken previously and they
+didn't notice. I'll see if they can confirm the CDROM has been working
+up until now.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I can test the CDROM on my G5 next week.
 
-#regzbot report: https://lore.kernel.org/all/Zj0ErxVBE3DYT2Ea@gpd/
-#regzbot introduced: 80105ed2fd2715fb
-#regzbot summary: 9p: autopkgtest qemu jobs broken
-#regzbot duplicate:
-https://bugs.launchpad.net/ubuntu/+source/autopkgtest/+bug/2056461
-#regzbot duplicate:
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1072004
-#regzbot relate:
-https://lore.kernel.org/all/1567252.1715290417@warthog.procyon.org.uk/
-#regzbot relate:
-https://lore.kernel.org/all/531994.1716450257@warthog.procyon.org.uk/
-
-#regzbot report:
-https://lore.kernel.org/lkml/6d0da90d-f405-4b5d-b7f9-238cc9405ebe@notapiano/
-#regzbot dup:
-https://lore.kernel.org/all/8ae675b5-fcf9-4c9b-b06a-4462f70e1322@linaro.org/
-#regzbot dup:
-https://lore.kernel.org/all/4748499f-789c-45a8-b50a-2dd09f4bac8c@notapiano/
-#regzbot fix: spi: Assign dummy scatterlist to unidirectional transfers
-#regzbot monitor:
-https://lore.kernel.org/all/20240529-dma-oops-dummy-v1-1-bb43aacfb11b@collabora.com/
-
-#regzbot report:
-https://lore.kernel.org/all/ebb3b35e631169041e70eb0a7efd6cecef609833.camel@sjtu.edu.cn/
-#regzbot introduced: v6.9..v6.10-rc1
-#regzbot summary: drm/amdgpu: crash on playing videos
-
-#regzbot report:
-https://lore.kernel.org/all/CAK8fFZ7MKoFSEzMBDAOjoUt+vTZRRQgLDNXEOfdCCXSoXXKE0g@mail.gmail.com/
-#regzbot introduced: 3e41af90767d
-#regzbot summary: rtnetlink: Dell's OMSA Systems Management Data Engine
-stuck
-
-#regzbot report: https://lore.kernel.org/all/87v82y6wvi.fsf@kernel.org/
-#regzbot introduced: 7e89efc6e9e4
-#regzbot summary: PCI: KASAN: use-after-free in
-lockdep_register_key+0x755/0x8f0
-#regzbot fix: PCI: Revert the cfg_access_lock lockdep mechanism
-#regzbot monitor:
-https://lore.kernel.org/all/171711746402.1628941.14575335981264103013.stgit@dwillia2-xfh.jf.intel.com/
-
-#regzbot report:
-https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
-#regzbot introduced: v6.8..v6.9
-#regzbot summary:
+cheers
