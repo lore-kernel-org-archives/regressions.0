@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE04208B0;
-	Fri, 31 May 2024 05:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E69C7C082;
+	Fri, 31 May 2024 05:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717134068; cv=none; b=hv+q0uVuZUK+2AYoz20cQYFWdtkYE1JjneWX2yjF159P7itEgNut2N62Kpa2F5GvY7NxIlWtEsoPRfDGoYOwvNPQQlTtMmnTrcfwxfRn+q/xcyMmJ6dddOI0gANFifEIvnUtqWNm5Kk/Z7pI4EnUyUeLK5SdvolmCWq6AzyitDo=
+	t=1717135092; cv=none; b=l4qUVEqyfrirDrlKh7blQg3xK+hx52HzlaB2TPW/ntxYMf03/4r3og7OHPy/4INQs/uIpODXTlwR6ah5P/laGtfxMH3+Nhq8uUGKfgiCjoS4d2L3nflCzj1zPMrXEImXp+yQ9shgnuA3jVwoCslg6SLU65hVoHSc02cHNsumuQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717134068; c=relaxed/simple;
-	bh=dMsidw6clAn8vGm5sxSj3ijTF5lMXrs10lmxk44JCf0=;
+	s=arc-20240116; t=1717135092; c=relaxed/simple;
+	bh=S9hU1h5dTbeOG44Fotcg31KZXSTZ6NX4uuM7MQ8+ac8=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZqSFnVkfehdzmDVfODSGk9kYxKpKHp4Il2r7W1BvulRK1T3+Uqw2/R78+p9sCaPmt/5u3eEZIUdmCziJ+0cgFnIjKAIVTBMsDBK8mcjwR1J0ChAFyRaSNXeP2yuvviOpcOypghROowT2VnkLtzxbC87lAHNpKObgVEWnnTVDTJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SwNdzfte; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=eA9iQRkW59+z04Am1nT+Ly5IDhkOK9HFPug8MnMre9C0z9t6r9O0FbNzeWfc4i+ChJBayFXv6c10nh29RmHERlrFa2GUy4f7IRj4RPzTqTjdRm0ra48mfO5liFsLO/l/ueFGNjZs/KUg8ZGE/9d9fI8CaDVBEmCtrOYNEzsx4x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vcWgK1qH; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SwNdzfte"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vcWgK1qH"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=q7kb86slOnjl1TVZjvP8hxkOyssEP3QytYVnpBoDrB8=;
-	t=1717134066; x=1717566066; b=SwNdzfte2+7uy1YCUIbks/Im+xGf4gCLBwG1ilx2NuGLfn2
-	0pAMWj1/uuc1kv5NHk8i0mxLju3gULRGnyZt8d8SzElKHYYBawiD1ZLQiVc1ZVRszB9OzhQOI+h4U
-	Fq94IWuyTlC+mEFOnfy7BQxfnFIPso0L9g2+hxv5abcYy+CdPzRKgK7sIPMfSBcZ5lvIiGV3ZsdtO
-	YgMAotYoCHMnEkm3jU5+TAn7b2XSydX9iejcea/kxG6adPyyqS6DGLT2lzbiTZEdkouZbaJaehDH4
-	3lEeERnCS6ZZZsBePuRvpYY4RGuG73GJ6ZiD+/1UR5TwnhP9e/EvIdqh0wcn4SEQ==;
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=wZQpO6nF9YmmuEdpYgQY+jOsHRmogML3JDOiCshrVUQ=; t=1717135090;
+	x=1717567090; b=vcWgK1qHGRBw2puqtN9pcnWb61214k1z7BZKzcprYRm0Y0bFH/0owAWDZ11Hc
+	ISjUonbYdfqiMYH+2ODnswLRxcEySV48PaZ71AqtEv+hxCgqOT/BlLzuj2g4efjNvWm/f0hRMLicf
+	cnBLLen+RtdOSdAOMP9DrdYsZNTI9WkTJ5LPxgJkI8iQHdkmR5UUqbm1h60/0jU/wdNTBErybEDqo
+	h5cPXUfAwth8ccfr9FwMA54lZLn63yhTijbTaNa9XsrSLejSruvAUR6gFistxA0AUXtaW08riYDJu
+	jbGYpdGcMInKjaWv/NNi8ZhrMBNR5RMcdPIY7HR7VRqgYfQHvw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCv0b-0003Vc-RI; Fri, 31 May 2024 07:40:57 +0200
-Message-ID: <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
-Date: Fri, 31 May 2024 07:40:50 +0200
+	id 1sCvHE-0006Em-0i; Fri, 31 May 2024 07:58:08 +0200
+Message-ID: <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
+Date: Fri, 31 May 2024 07:58:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,90 +39,100 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
- Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- frank-w@public-files.de, Rob Herring <robh@kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
- <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+To: Savyasaachi Vanga <savyasaachiv@gmail.com>,
+ Christian Heusel <christian@heusel.eu>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+ Johannes Berg <johannes.berg@intel.com>, regressions@lists.linux.dev
+References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+ <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+In-Reply-To: <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717134066;06036c9c;
-X-HE-SMSGID: 1sCv0b-0003Vc-RI
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717135090;603c1533;
+X-HE-SMSGID: 1sCvHE-0006Em-0i
 
-[adding Paolo, who committed the culprit]
-
-On 23.05.24 12:44, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 17.05.24 08:27, Frank Wunderlich wrote:
->> Am 17. Mai 2024 04:17:47 MESZ schrieb "Arınç ÜNAL" <arinc.unal@arinc9.com>:
->>> On 16/05/2024 23:48, Frank Wunderlich wrote:
->>>> From: Frank Wunderlich <frank-w@public-files.de>
->>>>
->>>> After commit 868ff5f4944a
->>>> ("net: dsa: mt7530-mdio: read PHY address of switch from device tree")
->>>> the mt7531 switch on Bananapi-R64 was not detected.
->>>>
->>>> mt7530-mdio mdio-bus:00: reset timeout
->>>> mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -110
->>>>
->>>> Fix this by adding phy address in devicetree.
->>>>
-
-Frank, am I right assuming the regression is still present in mainline?
-As from here it looks like for two weeks now there was no progress at
-all to fix this (or I missed it, which is quite possible).
-
-Makes me wonder if the maintainers should revert the culprit or if the
-arm64 dts folks should accept your fix despite Arınç ÜNAL's (who from a
-quick look on lore hasn't posted anything for two weeks now) comment.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->>> I don't like the mention of the Linux kernel driver on the patch log. What
->>> you're fixing is the incorrect description of the switch's PHY address on
->>> the DTS file. Whether or not any driver from any project is actually
->>> reading it from the DTS file is irrelevant to this patch. That said, I
->>> already have a patch series I've been meaning to send the next version of
->>> that already addresses this. Please wait for that.
-> 
-> Did you sent this? Because from what I see with my limited experience in
-> this subsystem...
-> 
->> From my PoV it is a regression in next/6.10
-> 
-> ...I have to agree with Frank here. So it would be good to get this
-> fixed before -rc1 is out to prevent more people from running into this.
-> 
->> because the driver change was merged (without "broadcast" fallback) and the dts patch [1] is not.
+On 28.05.24 10:21, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 28.05.24 00:01, Christian Heusel wrote:
 >>
->> I agree that my patch can be dropped because there was already one.
+>> Savyasaachi reports that scanning for other stations in monitor mode
+>> does not work anymore with his RTL8821CE wireless network card for linux
+>> kernels after 6.8.9.
+>> [...]
+
+Hmm, the wifi developers did not reply to the inquiry quoted below. :-/
+Guess I'll have to take a closer look a the linked bugzilla report then.
+
+Anyway: Christian, Savyasaachi, I noticed a submission of a patch
+referencing the culprit with a Fixes: tag; it talks about package loss,
+but it still made me wonder if that might be related somehow:
+https://lore.kernel.org/all/1fabb8e4-adf3-47ae-8462-8aea963bc2a5@gmail.com/
+
+Ciao, Thorsten
+
+> So back to the real problem:
+> 
+> @wifi developers: Is there some bigger problem in 6.9.y related to
+> monitoring mode that is affecting a lot of drivers/users?
+> 
+> I'm asking because I noticed another report that sounded related. To
+> quote: https://bugzilla.kernel.org/show_bug.cgi?id=218884
+> 
+> """
+>>  Michael 2024-05-24 17:04:51 UTC
 >>
->> regards Frank
+>> Some features are broken since kernel 6.9.1 when running monitor mode.
 >>
->> [1] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240314-for-mediatek-mt7531-phy-address-v1-1-52f58db01acd@arinc9.com/
+>> First bug:
+>> Switching a channel via "NL80211_ATTR_WIPHY_FREQ" does not switch the channel/frequency.
+>>
+>> That is not a device driver problem, because all device drivers (Mediatek, Ralink, Realtek, ...) are affected.
+>>
+>> To reproduce:
+>> set monitor mode (by iw)
+>> change channel (by iw)
+>> check if channel has been changed (by iw)
+>> record traffic and check radiotap header (Channel frequency)
+>>
+>> More information is here:
+>> https://github.com/ZerBea/hcxdumptool/discussions/454
+>> https://github.com/morrownr/8821au-20210708/issues/133#issuecomment-2125425552
+>> confirmed by other users:
+>> https://github.com/morrownr/8821au-20210708/issues/133#issuecomment-2125392151
+>>
+>>
+>> Second bug:
+>> frame injection is broken
+>>
+>> To reproduce:
+>> Try to send a 80211 frame via raw socket (PF_PACKET). It is not transmitted over the air
+>> https://github.com/ZerBea/hcxdumptool/discussions/454
+>>
+>>
+>> In monitor mode, none of the WiFI tools (iw, Wireshark, airodump-ng, aireplay-ng, hcxdumptool, hcxlabtool is able to switshc the channel or to transmit 80211 frames since kernel 6.9
+>>
+>> [tag] [reply] [−]
+>> Private
+>> Comment 1 Michael 2024-05-26 09:00:58 UTC
+>>
+>> BTW:
+>> Testing monitor mode mode these days is no easy task, because most of the device drivers are not working as expected:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218528
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217465
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218528
+>> https://github.com/openwrt/mt76/issues/839
+>>
+>> And now, since kernel 6.9.1, the mac stack is broken, too.
+>>
+> """
 > 
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
 > Everything you wanna know about Linux kernel regression tracking:
 > https://linux-regtracking.leemhuis.info/about/#tldr
 > If I did something stupid, please tell me, as explained on that page.
+> 
 > 
