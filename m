@@ -1,171 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8187E788;
-	Fri, 31 May 2024 19:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDBCEAE7
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 20:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717184547; cv=none; b=BPa6L/qwMkf6Vkebs3C83oCVHjl3QBnPYgOsJgvXGQajwC1Hl1J6qlzoGeCI6JlaueaDxqBQ1/p2S4Lu1qEHbt/c4bBmFXiLkmKBQw9HBElpqkIawFHY2p2I13JpN6AvAQWkcTNstbhQUF05bd2HDzTpNz4wJj9AeqB8BkxvYC4=
+	t=1717185822; cv=none; b=s5HHnJgzRrC3ENSaXw2jkQR/BTZpOsUJdEqpwmOnFRXXC5Wbd0DEcYsiur+QioaocVez1hjULtwD6HbUDfqpLk+ngR2aKXOts9pCa2cKQYAI7Wv0pR+/UD2rpJr6Vw3gMnhPXkG+6gVxwoHuKeuKUvaARqRrY0tUIr96JzvRmTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717184547; c=relaxed/simple;
-	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTHEFPv5Cs+6tRaYiTQM4PteQ4YU8O42FtqIMzYPPQtcP+uQIZShpnLZiMBmMIzw8pHWP6BTequ0wfs2JdUIYRGAx4uccVOnP+CaHF0mApiGA5rUV0umCfncDmljZyiKPh0zpJ6UI6Z+CWVJW2MAVyv+VMCKsOAN/vtebUAttug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpsfUyDE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717185822; c=relaxed/simple;
+	bh=Exus06tqr0/Kq8YEqgDuuIugLyOcKaxMKoL2Ct6QxgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S0dCr6RHde4lv+K+FAbHpXLBcoF+5mIxy/s9OsYRhhJj/uFVeuqFTSwDTf3YhAcwqKh1f5gLUT0EK6aezkwFg6GBQ40tyNkV7+Nc8kK/derblkDF6nP3JEt+Z3WJEVdaTXnG3Fql39liuiIBZQvoulzCCL3qE67P/pwJGLBiPjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtuT4Sdt; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpsfUyDE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B2DCC116B1;
-	Fri, 31 May 2024 19:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717184546;
-	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=EpsfUyDEfoc4GlQNr5/qC/rYJf8CRPzzKGQUfTc7IU9IUTZNp1q98+3dTDuKCbEnn
-	 YhDUZX2XNqj92hNk46/RoBzz9kFPMjVDY+EcvUwnMP4zR89qq3CE6XunMvcQrA+i08
-	 mV/cg9CuzC/VYHdMpIROINmHesTgSjKTeswUg2sqTR6wOXFQqte+LFmMIz15BWKnOv
-	 pCJpZVwn3dCxyNUVq+I/tdZGueAKlR9dS1WNaRwjnNELnVyagDeH4pzKrVKZweDhI2
-	 tBNmnY7jP9EdESxwaMjqdzXV977X1qU04SbJEoc2oReu1WJP4nRa/rH8LKJe56WUFV
-	 ceQL5p5ID2uFA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 42BADCE3ED6; Fri, 31 May 2024 12:42:26 -0700 (PDT)
-Date: Fri, 31 May 2024 12:42:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	rcu <rcu@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
-	Joel Fernandes <joel@joelfernandes.org>, neeraj.upadhyay@kernel.org,
-	John Ogness <john.ogness@linutronix.de>, broonie@kernel.org
-Subject: Re: arm-linux-gnueabihf-ld:
- kernel/rcu/update.o:update.c:(.text+0x1cc4): more undefined references to
- `__bad_cmpxchg' follow
-Message-ID: <fb84bb7f-a621-406a-8d1a-51be17caa712@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
- <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
- <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
- <5426b25f-9c25-4938-99e8-5cdea75e4d3b@paulmck-laptop>
- <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
- <20240530215153.GA466604@thelio-3990X>
- <583e2476-50c5-4f9c-85af-f4489a53083b@paulmck-laptop>
- <20240530233053.GA1601862@thelio-3990X>
- <3ce74da3-0b21-439b-af72-e80bfe0e9f02@paulmck-laptop>
- <20240531162722.GA1457604@thelio-3990X>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtuT4Sdt"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-24c9f2b7b19so1280635fac.0
+        for <regressions@lists.linux.dev>; Fri, 31 May 2024 13:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717185820; x=1717790620; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mSNcqX4IVvMIFvAxJ9VFtgkrXNlZP1MdCzc75UTTvr4=;
+        b=PtuT4SdtFK/BRYurng+VlmBDqkEdRqQ68OmGN7Z6nnYfdZqdup6V5vw1esOF2Q8eLB
+         tPF/ZT1+wp8uyqZx3dMXSdJALWqkuQ+sbSUU5bshGYwAg6d4EilKkIYvxsehKXIdsi6R
+         gQkcolsHmWpVswY9jPvW4mxNwD6gqiHqnBckFNDFmYnS/BFUFCgD89NF99i8O7hK+5Th
+         pHM69zHw9UUSulA+/NyU5qkxtrK6v1PXjAAn0D99OjxBEb7WyzZo9Qa7xuIz1fbeZnOz
+         rWnoHOI423er71YjO6wyPAtSAYvQ9+oWhMowd1+oGyAL7WTkBUsPlsi5RWBz1H4t3+KF
+         r7Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717185820; x=1717790620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mSNcqX4IVvMIFvAxJ9VFtgkrXNlZP1MdCzc75UTTvr4=;
+        b=FbCcEhC2YJTwtBXBfegp/LR7f7mFHJW+i8ocqQi0svUqPNAUilc8NLkp+W3/iahIKQ
+         8MpSaO6yQHPHKvPc8UfrnPdaa3IP0LMqPh0SFnfJ76llys7roBbDtbgLaUiZGJg7LzIF
+         nFgqocNfd9vUmojLFIk6aY7nde+psOJHrogjB33K9fe8NXIkqo6Ga2JoXLFPZ9Bv62JW
+         yR2FRXYhpNG7gr/jf6obW4Ri66z1DCbk1XDc2Ow00BOgWUos4Xue1BPuglTIsscn6Xs9
+         oYt+IPlLS6R5zvWWuEkuLl/gPG17AwAk0zZYKaK+Kv2Hgia9uJWgG+j02C55A6edC0Mc
+         aa1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXnWke87Rkh58+tU3DZyeERc4GBhz4Akoq2dN3jYvVbcZI49faptlZzF8cqYkTPZV73dfNkzbe7PXz0t1PGzVQlvHKLkSWcw35qr+4=
+X-Gm-Message-State: AOJu0YyBWn6g5RFRik+FrcwJZHsJUnTsnqcOarx3eVP6PRqmVo7TMC4S
+	DedxJgAXoUTJhGMDmy3svEGqsefPpwFy5nr/VV+XtyeA3LjxSkPH4roieFc7iNdUxZud2Pf5PrQ
+	dSAfW+EgsEsyVONBx7ioBoOcXOrE=
+X-Google-Smtp-Source: AGHT+IF+jb3kCuJMgporFnQo8vsVJEdyY8bSLcDZ8hFCE0qfR8UmsbtBNiJyGrQVoa0NlxiNwAyy6Y3Z1FRRY0UZCRQ=
+X-Received: by 2002:a05:6870:d6a9:b0:250:191e:aeb2 with SMTP id
+ 586e51a60fabf-2508c04a931mr2873792fac.56.1717185820157; Fri, 31 May 2024
+ 13:03:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531162722.GA1457604@thelio-3990X>
+References: <CACLx9VdpUanftfPo2jVAqXdcWe8Y43MsDeZmMPooTzVaVJAh2w@mail.gmail.com>
+ <493e6372-cb4d-4f1f-9803-17d37a0fcbc4@acm.org> <CACLx9VdOeY6ZXEwGp-FOQY5VKJzgN6jJZQMhOdY9WnQjm07KSA@mail.gmail.com>
+ <effa6f38-50a0-4760-bcf6-71bdfac24ea6@acm.org>
+In-Reply-To: <effa6f38-50a0-4760-bcf6-71bdfac24ea6@acm.org>
+From: Joao Machado <jocrismachado@gmail.com>
+Date: Fri, 31 May 2024 21:03:28 +0100
+Message-ID: <CACLx9Vcv8o28n3_jmuJmP0gRb6zU+L_Ut0cP3KEy9b+p-t9bkQ@mail.gmail.com>
+Subject: Re: [REGRESSION] USB flash drive unusable with constant resets, since
+ commit 4f53138fff
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 31, 2024 at 09:27:22AM -0700, Nathan Chancellor wrote:
-> On Thu, May 30, 2024 at 05:35:44PM -0700, Paul E. McKenney wrote:
-> > On Thu, May 30, 2024 at 04:30:53PM -0700, Nathan Chancellor wrote:
-> > > On Thu, May 30, 2024 at 03:05:21PM -0700, Paul E. McKenney wrote:
-> > > > On Thu, May 30, 2024 at 02:52:48PM -0700, Nathan Chancellor wrote:
-> > > > > On Thu, May 30, 2024 at 10:24:05AM -0700, Paul E. McKenney wrote:
-> > > > > > And for an untested first attempt at a fix.
-> > > > > > 
-> > > > > > What did I mess up this time?  ;-)
-> > > > > 
-> > > > > An include for cmpxchg-emu.h ;)
-> > > > > 
-> > > > >   In file included from arch/arm/include/asm/atomic.h:16,
-> > > > >                    from include/linux/atomic.h:7,
-> > > > >                    from include/asm-generic/bitops/lock.h:5,
-> > > > >                    from arch/arm/include/asm/bitops.h:245,
-> > > > >                    from include/linux/bitops.h:63,
-> > > > >                    from include/linux/log2.h:12,
-> > > > >                    from kernel/bounds.c:13:
-> > > > >   arch/arm/include/asm/cmpxchg.h: In function '__cmpxchg':
-> > > > >   arch/arm/include/asm/cmpxchg.h:167:26: error: implicit declaration of function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-> > > > >     167 |                 oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> > > > >         |                          ^~~~~~~~~~~~~~
-> > > > >   cc1: some warnings being treated as errors
-> > > > 
-> > > > Good catch, and thank you for testing this!  Does the updated version
-> > > > shown below do better?
-> > > 
-> > > Yes, that matches what I tested locally before I replied initially.
-> > 
-> > Very good!  May I please add your Tested-by?
-> 
-> Sure thing.
-> 
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+Patch works when applied over commit 4f53138fff ! (bflags change and
+it avoids the issue)
 
-Thank you!  I will apply this on my next rebase.
+----working on patched 4f53138fff----
+May 31 17:15:58 oldell kernel: usb 1-1.3: new high-speed USB device
+number 5 using ehci-pci
+May 31 17:15:58 oldell kernel: usb 1-1.3: New USB device found,
+idVendor=3D0951, idProduct=3D1624, bcdDevice=3D 1.00
+May 31 17:15:58 oldell kernel: usb 1-1.3: New USB device strings:
+Mfr=3D1, Product=3D2, SerialNumber=3D3
+May 31 17:15:58 oldell kernel: usb 1-1.3: Product: DataTraveler G2
+May 31 17:15:58 oldell kernel: usb 1-1.3: Manufacturer: Kingston
+May 31 17:15:58 oldell kernel: usb 1-1.3: SerialNumber: 0014780F9955F971A5E=
+C08D7
+May 31 17:15:58 oldell kernel: usb-storage 1-1.3:1.0: USB Mass Storage
+device detected
+May 31 17:15:58 oldell kernel: scsi host6: usb-storage 1-1.3:1.0
+May 31 17:15:58 oldell kernel: usbcore: registered new interface
+driver usb-storage
+May 31 17:15:58 oldell kernel: usbcore: registered new interface driver uas
+May 31 17:15:59 oldell kernel: scsi 6:0:0:0: bflags =3D 0x400000000
+May 31 17:15:59 oldell kernel: scsi 6:0:0:0: Direct-Access
+Kingston DataTraveler G2  1.00 PQ: 0 ANSI: 2
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] 15654848 512-byte
+logical blocks: (8.02 GB/7.46 GiB)
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] Write Protect is off
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] Mode Sense: 16 24 09 51
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] Incomplete mode parameter =
+data
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] Assuming drive cache:
+write through
+May 31 17:15:59 oldell kernel:  sdb: sdb1 sdb2
+May 31 17:15:59 oldell kernel: sd 6:0:0:0: [sdb] Attached SCSI removable di=
+sk
+May 31 17:17:34 oldell kernel: wlp2s0: deauthenticating from
+f0:f2:49:98:2c:b8 by local choice (Reason: 3=3DDEAUTH_LEAVING)
+------
 
-							Thanx, Paul
+Maybe code changes on recent commits are interfering with the patch.
+Same behavioral differences are replicated on QEMU using USB pass
+through for this device: tested both 4f53138fff patched (OK) &
+1613e604df0 patched (Not OK).
 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > commit 74e3470afacaa9d2f37db4773a5fef887ac4ef56
-> > > > Author: Paul E. McKenney <paulmck@kernel.org>
-> > > > Date:   Thu May 30 10:11:31 2024 -0700
-> > > > 
-> > > >     ARM: Emulate one-byte cmpxchg
-> > > >     
-> > > >     Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on ARM systems
-> > > >     with ARCH < ARMv6K.
-> > > >     
-> > > >     [ paulmck: Apply Arnd Bergmann and Nathan Chancellor feedback. ]
-> > > >     
-> > > >     Reported-by: Mark Brown <broonie@kernel.org>
-> > > >     Closes: https://lore.kernel.org/all/54798f68-48f7-4c65-9cba-47c0bf175143@sirena.org.uk/
-> > > >     Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > > >     Closes: https://lore.kernel.org/all/CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com/
-> > > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > >     Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> > > >     Cc: Arnd Bergmann <arnd@arndb.de>
-> > > >     Cc: Andrew Davis <afd@ti.com>
-> > > >     Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > >     Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > >     Cc: Eric DeVolder <eric.devolder@oracle.com>
-> > > >     Cc: Rob Herring <robh@kernel.org>
-> > > >     Cc: <linux-arm-kernel@lists.infradead.org>
-> > > > 
-> > > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > > index ee5115252aac4..a867a7d967aa5 100644
-> > > > --- a/arch/arm/Kconfig
-> > > > +++ b/arch/arm/Kconfig
-> > > > @@ -34,6 +34,7 @@ config ARM
-> > > >  	select ARCH_MIGHT_HAVE_PC_PARPORT
-> > > >  	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
-> > > >  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
-> > > > +	select ARCH_NEED_CMPXCHG_1_EMU if CPU_V6
-> > > >  	select ARCH_SUPPORTS_ATOMIC_RMW
-> > > >  	select ARCH_SUPPORTS_CFI_CLANG
-> > > >  	select ARCH_SUPPORTS_HUGETLBFS if ARM_LPAE
-> > > > diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
-> > > > index 44667bdb4707a..a428e06fe94ee 100644
-> > > > --- a/arch/arm/include/asm/cmpxchg.h
-> > > > +++ b/arch/arm/include/asm/cmpxchg.h
-> > > > @@ -5,6 +5,7 @@
-> > > >  #include <linux/irqflags.h>
-> > > >  #include <linux/prefetch.h>
-> > > >  #include <asm/barrier.h>
-> > > > +#include <linux/cmpxchg-emu.h>
-> > > >  
-> > > >  #if defined(CONFIG_CPU_SA1100) || defined(CONFIG_CPU_SA110)
-> > > >  /*
-> > > > @@ -162,7 +163,11 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
-> > > >  	prefetchw((const void *)ptr);
-> > > >  
-> > > >  	switch (size) {
-> > > > -#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
-> > > > +#ifdef CONFIG_CPU_V6	/* min ARCH < ARMv6K */
-> > > > +	case 1:
-> > > > +		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> > > > +		break;
-> > > > +#else /* min ARCH >= ARMv6K */
-> > > >  	case 1:
-> > > >  		do {
-> > > >  			asm volatile("@ __cmpxchg1\n"
+Thanks Bart.
+
+
+On Thu, May 30, 2024 at 5:38=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
+> wrote:
+>
+> On 5/30/24 02:46, Joao Machado wrote:
+> > Tried the patch over commit 1613e604df0. Issue persists.
+> > Attached git and journal logs - notice here usb is using xhci_hcd
+> > instead of ehci-pci, but this is because it's a different
+> > computer/environment than the one originally reported.
+>
+> Thank you for having shared the systemd journal. In that journal I found
+> the following:
+>
+> May 30 10:23:56 archlinux kernel: scsi 6:0:0:0: bflags =3D 0x0
+> May 30 10:23:56 archlinux kernel: scsi 6:0:0:0: Direct-Access
+> Kingston DataTraveler G2  1.00 PQ: 0 ANSI: 2
+>
+> This is unexpected. It seems like the new entry in
+> scsi_static_device_list is being ignored?
+>
+> +       {"Kingston", "DataTraveler G2", NULL, BLIST_SKIP_IO_HINTS},
+>
+> Thanks,
+>
+> Bart.
