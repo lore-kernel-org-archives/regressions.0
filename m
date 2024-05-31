@@ -1,88 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40E4158204;
-	Fri, 31 May 2024 16:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8187E788;
+	Fri, 31 May 2024 19:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717174057; cv=none; b=ne1wMzS226Zx4oqivCo3Di86pqM5yOr6auee0skVWgPGrFHeyw5kZA3gCzcl0bNW/plQ5K0ryd6Sl6cdLOnOXEit4wgzLHIMLd+QkunceafTBXFNdCCdvmmgjvjUaqBE+aJ4/y4BlAQCzrCqf6b3I+yFiU3FnqESDfUd2QzvAtM=
+	t=1717184547; cv=none; b=BPa6L/qwMkf6Vkebs3C83oCVHjl3QBnPYgOsJgvXGQajwC1Hl1J6qlzoGeCI6JlaueaDxqBQ1/p2S4Lu1qEHbt/c4bBmFXiLkmKBQw9HBElpqkIawFHY2p2I13JpN6AvAQWkcTNstbhQUF05bd2HDzTpNz4wJj9AeqB8BkxvYC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717174057; c=relaxed/simple;
-	bh=oqcC5FJvmRrpt+Q4bwnChJ2q35ucR7vYxjPB38IK/vk=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=FrpcuavoZwwWJWwMen1sJQbxuk959IkiUMHXT6UGeaY9OJ9s/uxBuPZtww/gGgZthITMwzgJVe3nz1FruXjF4y88rwALiZT5HpiBDDomsUliH84/bBDCZuS78uYqYFxq/HQ8GczE/OKvCizCYpD5inYQltDwXf1tGYiO9VUHVow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMZmCS90; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717184547; c=relaxed/simple;
+	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTHEFPv5Cs+6tRaYiTQM4PteQ4YU8O42FtqIMzYPPQtcP+uQIZShpnLZiMBmMIzw8pHWP6BTequ0wfs2JdUIYRGAx4uccVOnP+CaHF0mApiGA5rUV0umCfncDmljZyiKPh0zpJ6UI6Z+CWVJW2MAVyv+VMCKsOAN/vtebUAttug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpsfUyDE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMZmCS90"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BF6C116B1;
-	Fri, 31 May 2024 16:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpsfUyDE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B2DCC116B1;
+	Fri, 31 May 2024 19:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717174056;
-	bh=oqcC5FJvmRrpt+Q4bwnChJ2q35ucR7vYxjPB38IK/vk=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=RMZmCS90hvuAyg69z06WDbLwF228fxxOaWP0skxxUNsRpSZB9dwE7y4Dudwk9FYwk
-	 gJyqQUGxNWCRvl9VIOoeGQDfALTKGloW3V94GTEtPUitX3Npki6BuZ0WF8xH8eN0zJ
-	 9lX9AQbxRApKCdkRneS9NjCrGstD679r3O8b/5ygm2qPM6WOsTe6KjkPO93BtFhTu2
-	 Bd6+BI/6RVeoMdCCN9nGCJ0MDDHSuZnhmwoldG0u+3iQvWsSYVLX7G7zKBQWfw9uaJ
-	 h1qU9jOBj5zlPOdKnFoWc09uooaj4qj+285mcZ+yhLL42LIs4OKqllYoBiMzEkkpEU
-	 +fp30/koV94Uw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
-  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-	<87sexzx02f.fsf@kernel.org>
-	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87jzjbwxin.fsf@kernel.org> <87frtzww57.fsf@kernel.org>
-	<6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Date: Fri, 31 May 2024 19:47:32 +0300
-In-Reply-To: <6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	(Dan Williams's message of "Fri, 31 May 2024 08:36:43 -0700")
-Message-ID: <87y17qudwb.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1717184546;
+	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=EpsfUyDEfoc4GlQNr5/qC/rYJf8CRPzzKGQUfTc7IU9IUTZNp1q98+3dTDuKCbEnn
+	 YhDUZX2XNqj92hNk46/RoBzz9kFPMjVDY+EcvUwnMP4zR89qq3CE6XunMvcQrA+i08
+	 mV/cg9CuzC/VYHdMpIROINmHesTgSjKTeswUg2sqTR6wOXFQqte+LFmMIz15BWKnOv
+	 pCJpZVwn3dCxyNUVq+I/tdZGueAKlR9dS1WNaRwjnNELnVyagDeH4pzKrVKZweDhI2
+	 tBNmnY7jP9EdESxwaMjqdzXV977X1qU04SbJEoc2oReu1WJP4nRa/rH8LKJe56WUFV
+	 ceQL5p5ID2uFA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 42BADCE3ED6; Fri, 31 May 2024 12:42:26 -0700 (PDT)
+Date: Fri, 31 May 2024 12:42:26 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	rcu <rcu@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+	Joel Fernandes <joel@joelfernandes.org>, neeraj.upadhyay@kernel.org,
+	John Ogness <john.ogness@linutronix.de>, broonie@kernel.org
+Subject: Re: arm-linux-gnueabihf-ld:
+ kernel/rcu/update.o:update.c:(.text+0x1cc4): more undefined references to
+ `__bad_cmpxchg' follow
+Message-ID: <fb84bb7f-a621-406a-8d1a-51be17caa712@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
+ <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
+ <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
+ <5426b25f-9c25-4938-99e8-5cdea75e4d3b@paulmck-laptop>
+ <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
+ <20240530215153.GA466604@thelio-3990X>
+ <583e2476-50c5-4f9c-85af-f4489a53083b@paulmck-laptop>
+ <20240530233053.GA1601862@thelio-3990X>
+ <3ce74da3-0b21-439b-af72-e80bfe0e9f02@paulmck-laptop>
+ <20240531162722.GA1457604@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531162722.GA1457604@thelio-3990X>
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Fri, May 31, 2024 at 09:27:22AM -0700, Nathan Chancellor wrote:
+> On Thu, May 30, 2024 at 05:35:44PM -0700, Paul E. McKenney wrote:
+> > On Thu, May 30, 2024 at 04:30:53PM -0700, Nathan Chancellor wrote:
+> > > On Thu, May 30, 2024 at 03:05:21PM -0700, Paul E. McKenney wrote:
+> > > > On Thu, May 30, 2024 at 02:52:48PM -0700, Nathan Chancellor wrote:
+> > > > > On Thu, May 30, 2024 at 10:24:05AM -0700, Paul E. McKenney wrote:
+> > > > > > And for an untested first attempt at a fix.
+> > > > > > 
+> > > > > > What did I mess up this time?  ;-)
+> > > > > 
+> > > > > An include for cmpxchg-emu.h ;)
+> > > > > 
+> > > > >   In file included from arch/arm/include/asm/atomic.h:16,
+> > > > >                    from include/linux/atomic.h:7,
+> > > > >                    from include/asm-generic/bitops/lock.h:5,
+> > > > >                    from arch/arm/include/asm/bitops.h:245,
+> > > > >                    from include/linux/bitops.h:63,
+> > > > >                    from include/linux/log2.h:12,
+> > > > >                    from kernel/bounds.c:13:
+> > > > >   arch/arm/include/asm/cmpxchg.h: In function '__cmpxchg':
+> > > > >   arch/arm/include/asm/cmpxchg.h:167:26: error: implicit declaration of function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
+> > > > >     167 |                 oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
+> > > > >         |                          ^~~~~~~~~~~~~~
+> > > > >   cc1: some warnings being treated as errors
+> > > > 
+> > > > Good catch, and thank you for testing this!  Does the updated version
+> > > > shown below do better?
+> > > 
+> > > Yes, that matches what I tested locally before I replied initially.
+> > 
+> > Very good!  May I please add your Tested-by?
+> 
+> Sure thing.
+> 
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-> Kalle Valo wrote:
-> [..]
->> >> The proposed fix for that is here:
->> >>
->> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->> >
->> > I get "Not Found" from that link, is there a typo?
->> 
->> I found this fix from for-linus branch:
->> 
->> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
->> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
->> 
->> But at least that doesn't fix my crash.
->
-> Sorry for the broken link I mistakenly used a message-id from an
-> internal thread with the intel.com reporter. However, it is moot now
-> because the new direction is to revert the lockdep infrastructure:
->
-> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
->
-> (that link works...)
+Thank you!  I will apply this on my next rebase.
 
-Thanks, that links works :) I did a quick test with the three patches
-and I didn't see any crashes anymore. But to be confident I need to run
-overnight tests, I'll provide my Tested-by after that.
+							Thanx, Paul
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> > > > ------------------------------------------------------------------------
+> > > > 
+> > > > commit 74e3470afacaa9d2f37db4773a5fef887ac4ef56
+> > > > Author: Paul E. McKenney <paulmck@kernel.org>
+> > > > Date:   Thu May 30 10:11:31 2024 -0700
+> > > > 
+> > > >     ARM: Emulate one-byte cmpxchg
+> > > >     
+> > > >     Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on ARM systems
+> > > >     with ARCH < ARMv6K.
+> > > >     
+> > > >     [ paulmck: Apply Arnd Bergmann and Nathan Chancellor feedback. ]
+> > > >     
+> > > >     Reported-by: Mark Brown <broonie@kernel.org>
+> > > >     Closes: https://lore.kernel.org/all/54798f68-48f7-4c65-9cba-47c0bf175143@sirena.org.uk/
+> > > >     Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > > >     Closes: https://lore.kernel.org/all/CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com/
+> > > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > >     Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> > > >     Cc: Arnd Bergmann <arnd@arndb.de>
+> > > >     Cc: Andrew Davis <afd@ti.com>
+> > > >     Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > >     Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > >     Cc: Eric DeVolder <eric.devolder@oracle.com>
+> > > >     Cc: Rob Herring <robh@kernel.org>
+> > > >     Cc: <linux-arm-kernel@lists.infradead.org>
+> > > > 
+> > > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> > > > index ee5115252aac4..a867a7d967aa5 100644
+> > > > --- a/arch/arm/Kconfig
+> > > > +++ b/arch/arm/Kconfig
+> > > > @@ -34,6 +34,7 @@ config ARM
+> > > >  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> > > >  	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+> > > >  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
+> > > > +	select ARCH_NEED_CMPXCHG_1_EMU if CPU_V6
+> > > >  	select ARCH_SUPPORTS_ATOMIC_RMW
+> > > >  	select ARCH_SUPPORTS_CFI_CLANG
+> > > >  	select ARCH_SUPPORTS_HUGETLBFS if ARM_LPAE
+> > > > diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
+> > > > index 44667bdb4707a..a428e06fe94ee 100644
+> > > > --- a/arch/arm/include/asm/cmpxchg.h
+> > > > +++ b/arch/arm/include/asm/cmpxchg.h
+> > > > @@ -5,6 +5,7 @@
+> > > >  #include <linux/irqflags.h>
+> > > >  #include <linux/prefetch.h>
+> > > >  #include <asm/barrier.h>
+> > > > +#include <linux/cmpxchg-emu.h>
+> > > >  
+> > > >  #if defined(CONFIG_CPU_SA1100) || defined(CONFIG_CPU_SA110)
+> > > >  /*
+> > > > @@ -162,7 +163,11 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+> > > >  	prefetchw((const void *)ptr);
+> > > >  
+> > > >  	switch (size) {
+> > > > -#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
+> > > > +#ifdef CONFIG_CPU_V6	/* min ARCH < ARMv6K */
+> > > > +	case 1:
+> > > > +		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
+> > > > +		break;
+> > > > +#else /* min ARCH >= ARMv6K */
+> > > >  	case 1:
+> > > >  		do {
+> > > >  			asm volatile("@ __cmpxchg1\n"
