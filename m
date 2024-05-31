@@ -1,56 +1,107 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811FB7BB15
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 06:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D093F8FB
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 06:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717135714; cv=none; b=rbpscpQaHuq/mUc9Romo6V94ysCqgJ/FDFcU+d83dV8t5ICRKQ0nhF8RbvnXJK1DZtW01apAnFMe42Le2xZDERnJpb0huUH0H4BvLE5u9AHsFHT3gbysbmTt4ZKfLdtA/9t10WlshtZqIQShqSkqKpguaTEtdxqqHRFS/DDdwTA=
+	t=1717135847; cv=none; b=r9DdjcpG0rmgKVo/Kq665LRs2kxSNeO8lWuHOsELzbyoNvYY5778Mr9zhz0Y+BqiRtkXJ3cj77TFNw3Jiw9Dq483CegtPEzb7QW2QeLJ5jOIfRxg+pexESj+7NKqXNwiobD1FjOI4wJQ39tSzAwlSUoH9ndFpNYdKFytrOTkW90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717135714; c=relaxed/simple;
-	bh=9Lq7tTCG32vvV5D4xtot6/ifQLTN+b3T5AJN9EhOLao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oET9iPB3KNMVTwvKIc/nzdwVEUumbyPxoOFZXWLAozADyDJ1BPyZdJH4INmV41o1/zEMw6J6nhQlzrNNug6axqurHLYrm7AClG30uRYSOVdt/TY7R+wO3bTrROJX0Oo1bZCsEKnW1MSn/DHJqzRGmH6890TAOqFq5RGio2MTxAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id CE58A68BEB; Fri, 31 May 2024 08:08:27 +0200 (CEST)
-Date: Fri, 31 May 2024 08:08:27 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	John Garry <john.g.garry@oracle.com>, Jens Axboe <axboe@kernel.dk>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, linux-block@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
-	benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org,
-	Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before
- allocating the queue
-Message-ID: <20240531060827.GA17723@lst.de>
-References: <20240520151536.GA32532@lst.de> <fc6a2243-6982-45e9-a640-9d98c29a8f53@leemhuis.info> <8734pz4gdh.fsf@mail.lhotse> <87wmnb2x2y.fsf@mail.lhotse>
+	s=arc-20240116; t=1717135847; c=relaxed/simple;
+	bh=qB0ppgM4QBM9DfYzNLcE/5J/iC0iPummqPWvs/1rtSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B7T/6hVRgVMTYoKiV4zhzzKoqKa4BF7EnPnn2TJAgeucB0KiMWc0ORw3j05xosZqDL6TXw8By+Q2C4+hGcCDsLTpfQoE90vK9IX0DrSNP9Pc5A60IrjcSOmXBL/NO5zI1t7lB/yZYgc4JbM3M9ABakAZ4WOsdXpC1d0D+r5Iffc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=P+sqDvaz; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="P+sqDvaz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 79D5340006;
+	Fri, 31 May 2024 06:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1717135843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRRofHQN+sZ3zin7XoMAEcDEOOv/eiLPcfVn0mruNPM=;
+	b=P+sqDvazmpYhlGevEVypSVw8Pj094VUJ2WN0YqIf19IvIOFP3PX+uciDmOd8nSBrklIM7l
+	+QM/YROYMmNiXG6JXSmCXDu060ENb3Px7vAUzyjVHfaNhxCb/A5Mn+c7yWnrZI7KfBgqzn
+	f9KeYKpjgA4nMVvxCGrZjW3kIVgExJlJP3V3i0m19tD03rVukVBO6A6m8Y3m9RQsXLTx3C
+	G56yQl/I/0oua7UVUfQzVcDytm5sTVb6Sxj/PhzAxKgzeZ9W/t8ZOFMM8TtKi25LydePc+
+	IT6pqusy5gI14Tzgz5A56iLmcwdDtKRxYtOq786wEEcPT/zHTr381qbLqEqHAQ==
+Message-ID: <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+Date: Fri, 31 May 2024 09:10:38 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wmnb2x2y.fsf@mail.lhotse>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ frank-w@public-files.de, Rob Herring <robh@kernel.org>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Fri, May 31, 2024 at 12:28:21AM +1000, Michael Ellerman wrote:
-> No that's wrong. The actual hardware page size is 4K, but
-> CONFIG_PAGE_SIZE and PAGE_SHIFT etc. is 64K.
+On 31/05/2024 08.40, Thorsten Leemhuis wrote:
+> [adding Paolo, who committed the culprit]
 > 
-> So at least for this user the driver used to work with 64K pages, and
-> now doesn't.
+> On 23.05.24 12:44, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 17.05.24 08:27, Frank Wunderlich wrote:
+>>> Am 17. Mai 2024 04:17:47 MESZ schrieb "Arınç ÜNAL" <arinc.unal@arinc9.com>:
+>>>> On 16/05/2024 23:48, Frank Wunderlich wrote:
+>>>>> From: Frank Wunderlich <frank-w@public-files.de>
+>>>>>
+>>>>> After commit 868ff5f4944a
+>>>>> ("net: dsa: mt7530-mdio: read PHY address of switch from device tree")
+>>>>> the mt7531 switch on Bananapi-R64 was not detected.
+>>>>>
+>>>>> mt7530-mdio mdio-bus:00: reset timeout
+>>>>> mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -110
+>>>>>
+>>>>> Fix this by adding phy address in devicetree.
+>>>>>
+> 
+> Frank, am I right assuming the regression is still present in mainline?
+> As from here it looks like for two weeks now there was no progress at
+> all to fix this (or I missed it, which is quite possible).
+> 
+> Makes me wonder if the maintainers should revert the culprit or if the
+> arm64 dts folks should accept your fix despite Arınç ÜNAL's (who from a
+> quick look on lore hasn't posted anything for two weeks now) comment.
 
-Which suggested that the communicated max_hw_sectors is wrong, and
-previously we were saved by the block layer increasing it to
-PAGE_SIZE after a warning.  Should we just increment it to 64k?
+I'm not against the patch. I'm against the logic it entails on the patch
+log. I had already submitted a patch series that would've prevented this
+issue back in 14 March 2024 [1]. I've asked numerous times for the patch
+series to be applied [2][3][4][5].
 
+Eventually Daniel asked for some changes [6]. But I won't have time to do
+that anytime soon and I think the patch series is good enough to be applied
+as is.
+
+[1] https://lore.kernel.org/all/20240314-for-mediatek-mt7531-phy-address-v1-0-52f58db01acd@arinc9.com/
+[2] https://lore.kernel.org/all/ff196055-ecd8-4563-bc01-ff2533a07109@arinc9.com/
+[3] https://lore.kernel.org/all/a60fc16d-4236-427c-b4a8-ec6fdf62d9f0@arinc9.com/
+[4] https://lore.kernel.org/all/facb8204-c2b3-4084-a2e3-4fbf3a3fdc9d@arinc9.com/
+[5] https://lore.kernel.org/all/44e366ea-964a-4515-9027-2a2edfe12512@arinc9.com/
+[6] https://lore.kernel.org/all/ZixU287DdhvRyZBe@makrotopia.org/
+
+Arınç
