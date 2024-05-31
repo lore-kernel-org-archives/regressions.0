@@ -1,92 +1,103 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D47581D
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 09:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C87C768EA
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 09:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146704; cv=none; b=Zvn/DR1EHSlH178FxzyVQLYk5w8yUL8Z1qFErS7JvwD4U+qQkYK+u2wM4/iRl7jwbhFPWdLNKQgvBO3Icmw8HG5+Ah5GoxweZfl2ORudif7QNsfuY+pdKOUbDEBI0JY+CyctCM2QTR4wpMV9fbvPvmZi1FigNBslGwWbvEtZQ8k=
+	t=1717147186; cv=none; b=TksczvwrR13ZXTfcuoydmabeXQ+LuCTLTcJelOlTKzXqYxvk868UBSg/RRMLX2P9bzcChSUzG4QtVaxVO7Df3n3HSqg6F2uuMu/JyfsncGZVus8eCW+/VICUOWatChtKYyj0NUjTvv3ZPE5LwOkDk39/gya1QolHsnMcnXE8j84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146704; c=relaxed/simple;
-	bh=3MKARfDmtI2u29OtqOPhdYMoaiEH48p6RYJTh3QxfXc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uDCHrQROEow+R5fdfwcIJZYwMfU5YEnM40TJuHtnwpkI3DMs5eP8LiRqhxgUsyI2bh4IlXAIXEuJmWcDPn3cDrKaoo7rc3n6AvUPFobvb1io9svhCTVx770qHibngxfCTFVNFjNxE3ptuIHjaKHWQO97upMpNdWyZWDBB89HdRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W5Nd9uOs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4iODCH1i; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717147186; c=relaxed/simple;
+	bh=L+BEFA9Zg3+OPZzRKUfoAmL3pZB95OR5zqfa8cgy5L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gEQoIAAQCJSBWukntOOjFWZOZHlz44aEY85LPU3iFxpl6/Jjf3WAd/BOTCnyeYE+DTpPTjHNz2RMjCcAiXvRdmv8gyGsDGNgZCNdYSB+WQxzc/FvVQbKgRiyrQxT8A++eVqZKI5KkLsAZwhs9mQSanBoAUOdJ1kMKONL9c2vD2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=n1C4uUEL; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W5Nd9uOs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4iODCH1i"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717146701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y4tAbLrn87lubgmSwcqSrkzH+jbS/RnpUcK1nCwo9UI=;
-	b=W5Nd9uOsBusdsFPOogLbTJSbJQfL3TzPTLvlLUTClpQVzdia94h/2qSgn37XGEiEBxAD5R
-	gAtoVlflxBMDwbTv0DMONZccCkhN0I20HAVIzJYLOek3rzr7Ns3vkYz8T69C4bQaYkM6zv
-	A3wuDUd2/LQycqHm3TVRCDX2D4krBi7XennaZ1T7ghjRGVyAU1U5+MBlJiRLwGTcKgthl6
-	VzcqJQwxOyfhQlc+uKJoqeuyAtuYYw+yyOJsSNO6XlrELy6jE8qDauP1Vu/gHCHQHSpD60
-	q0ik3toGn99nwOppkPXdSgZNtQSYoa38xCTM9hiaaScIgDGexAN3KoRZBuvu1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717146701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y4tAbLrn87lubgmSwcqSrkzH+jbS/RnpUcK1nCwo9UI=;
-	b=4iODCH1id724KVSLj6r8kirf0aErz4+hzh35lExxWE65tokMy9UQCoCDol01d7GZkTDjDh
-	rfshM0bR9NPopBCw==
-To: Christian Heusel <christian@heusel.eu>
-Cc: Peter Schneider <pschneider1968@googlemail.com>, LKML
- <linux-kernel@vger.kernel.org>, x86@kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
-In-Reply-To: <87cyp28j0b.ffs@tglx>
-References: <877cffcs7h.ffs@tglx>
- <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
- <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
- <87zfs78zxq.ffs@tglx>
- <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
- <87r0dj8ls4.ffs@tglx> <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
- <4171899b-78cb-4fe2-a0b6-e06844554ed5@heusel.eu>
- <20ec1c1a-b804-408f-b279-853579bffc24@heusel.eu> <87cyp28j0b.ffs@tglx>
-Date: Fri, 31 May 2024 11:11:39 +0200
-Message-ID: <875xuu8hx0.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="n1C4uUEL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=XCfUSwwG38LbsorFibZSI1D3cUGb8T2kMLpzHOPARB4=; t=1717147185;
+	x=1717579185; b=n1C4uUELN5r3EdR62UlbtN6djIl/5pxMmHI+1u1t8BNGjDbT9AbggZ8I1DzYj
+	nCWUyX+A3AZ9LsNTSQ49/ncA7nbHLymBZiC4Vy4iuJTt7Q8449eIafhIuE5vZWSASLYVwk7uxtIh4
+	P53kdly/1YbWglbrFTFXqrJ2a7SJa91u+3TUXptJJtSO3ZLAf8uQ674hbkZAhjY7M0NkJNJipevgR
+	A2hmOI/hVG+tKI618HvoTdVjkWRpGnJ9W9EefkSZ3EYJ3QXQAFMnXijyKnyUUPK4t0jNfDxYxcWdW
+	HWNRJOLVJw1Xtwg3ZYKKDztjpNWMmItHUSzYX55n7o3XMTpAYw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCyQB-0003ML-EJ; Fri, 31 May 2024 11:19:35 +0200
+Message-ID: <f4559641-2a64-4a1d-a00c-0f5ed85f3354@leemhuis.info>
+Date: Fri, 31 May 2024 11:19:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Xorg doesn't start and some other issues with the RC1 of kernel
+ 6.10
+To: Michael Ellerman <mpe@ellerman.id.au>,
+ Christian Zigotzky <chzigotzky@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <34d848f4-670b-4493-bf21-130ef862521b@xenosoft.de>
+ <93f42bc8-f0ae-4f7f-8f25-a4e9faf8664b@xenosoft.de>
+ <87zfs731jn.fsf@mail.lhotse> <87plt22w1k.fsf@mail.lhotse>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <87plt22w1k.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717147185;ce6318f2;
+X-HE-SMSGID: 1sCyQB-0003ML-EJ
 
-On Fri, May 31 2024 at 10:48, Thomas Gleixner wrote:
+On 31.05.24 11:03, Michael Ellerman wrote:
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> Christian Zigotzky <chzigotzky@xenosoft.de> writes:
+>>> On 28.05.24 22:00, Christian Zigotzky wrote:
+>>>> Hi All,
+>>>>
+>>>> Xorg doesn't start anymore since the RC1 of kernel 6.10. We tested it 
+>>>> with the VirtIO GPU and with some Radeon cards.
+>>>>
+>>>> Another error message: Failed to start Setup Virtual Console.
+>>>>
+>>>> Maybe this is the issue: + CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
+>>>>
+>>>> Tested with FSL P5040, FSL P5020, and PASEMI boards.
+>>>>
+>>>> Could you please test Xorg on your PowerPC machines?
+>>>>
+>>>> Thanks,
+>>>> Christian
+>>> I tested the RC1 in a virtual e5500 QEMU PowerPC machine with Bochs VGA 
+>>> (-device VGA,vgamem_mb=256) and Xorg doesn't start either.
+>>>
+>>> Error message: xf86OpenConsole: KDSETMODE KD_GRAPHICS failed 
+>>> Inappropriate ioctl for device.
+>>
+>> That is presumably because of this:
+>>   https://lore.kernel.org/all/0da9785e-ba44-4718-9d08-4e96c1ba7ab2@kernel.org/
+> 
+> Attempting to regzbot this.
+> 
+> #regzbot introduced: 8c467f330059
+> #regzbot monitor: https://lore.kernel.org/all/0da9785e-ba44-4718-9d08-4e96c1ba7ab2@kernel.org/
 
-> Christian!
->
-> On Fri, May 31 2024 at 10:16, Christian Heusel wrote:
->>> One of the reporters in the Arch Bugtracker with an Intel Core i7-7700k
->>> has tested a modified version of this fix[0] with the static change
->>> reversed on top of the 6.9.2 stable kernel and reports that the patch
->>> does not fix the issue for them. I have attached their output for the
->>> patched (dmesg6.9.2-1.5.log) and nonpatched (dmesg6.9.2-1.log) kernel.
->>> 
->>> Should we also get them to test the mainline version or do you need any
->>> other debug output?
->
-> Can I get:
->
->     - dmesg from 6.8.y kernel
->     - output of cpuid -r
->     - content of /sys/kernel/debug/x86/topo/cpus/* (on 6.9.y)
->
-> please?
+Thx, I already had an eye on this, but thought tracking would not be
+needed, as Greg (now CCed) wanted to revert 8c467f3300591a ("VT: Use
+macros to define ioctls") two days ago:
+https://lore.kernel.org/all/2024052901-police-trash-e9f9@gregkh/
 
-It seems there are two different issues here. The dmesg you provided is
-from a i7-1255U, which is a hybrid CPU. The i7-7700k has 4 cores (8
-threads) and there is not necessarily the same root cause.
+But that commit is not yet in -next afaics. :-/
 
-Thanks,
+/me meanwhile wonders if it would be wise to fix this before -rc2
 
-        tglx
+Ciao, Thorsten
