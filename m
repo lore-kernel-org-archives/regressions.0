@@ -1,128 +1,192 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DE4157470
-	for <regressions@lists.linux.dev>; Fri, 31 May 2024 11:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717155304; cv=none; b=bbxjHNXpoa7BOWZ1/7YqMXhDkE6AKOlKfzQJOklgOnbhfAncTS4HbOEkAc72njVNiTLgDf2WUMoiBPwKfLNhiGy4JF3f9TPE4+XFGAczqeOU+k/U+JphWUeKkhN7SDIW+FiKS5ExZkW9+/H8ZZx0p6+V6iBYn9+SPVlDhx5tecs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717155304; c=relaxed/simple;
-	bh=BCulwwdYr/KSnyKqgtvuTyOnil71EDFeqJBJWRTrdjs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=niLW06y0FJsMbpM5zvLhhvvCjTN/PfkceFbS1ZtCGvEx5gMm0WcCSxD18jc8Hh9aIZKusg2RxLAFsRAB4SlQObsl2UqVUJJhgeHudTzZjfB+vnJ1z6gdCy5Q4xIKd09g1DcFkTv+oZNl2PjVPtO+7g04e7c1HzPIabU/YWOasl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=stdfbrAg; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AEF157A68
+	for <regressions@lists.linux.dev>; Fri, 31 May 2024 11:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717156528; cv=fail; b=UlNqtztWtQCokVGm17pG4fBbDPCyC/h6/o6lCQvIse7HgCo8DGQ9m+e6LTLqrhIrzwDWjstn+3MsYqPuAGazVpEzHRAwnvKtPhPo4M0icVl7TM9G28Ej8aWTng5lCJNWrp5stYAE4wLTiiAJZi1zmGudBvbI19rfko95GaldgCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717156528; c=relaxed/simple;
+	bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mWRU5mLtfTdpmDaebTwZhg6gu1XiK7Xi4xtrctPrmnr4H0E9teCS/BvRnt21iy1ordXvhTketm0NgrnCRsl5uThaPu64D4+Wg8EY2+Rd1LOsf12aQaOLMlSZtUh6LyXZH5QT5Iw4/heEKUl9ZH+CiqTpWLUGndcJYW46aOcUujQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=eNSQVIMw; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=oQXCzoNL; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="stdfbrAg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717155300;
-	bh=BCulwwdYr/KSnyKqgtvuTyOnil71EDFeqJBJWRTrdjs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=stdfbrAgFa6eirwM9A9FExFkiI+T9UTFZiG8pJBuCO//NzYE0TGsZVHs841M0zehE
-	 ZRafkHT4gXAgkDjLDnpTa1vnOXmiD08fG01WCvVB0QzercN1barPPixmmiek1CRYCR
-	 SXdhXYdgeYZNMH3NegrZdwPswFK4lDFtTX0JN2Of4jH+9KJG4ut2osedriGmFu1gjt
-	 eEZff7DzrmWUBls/foADLuGXUI7wcFFFnKv9R1jY273L4XUfFC3krTKgruzfShzRtg
-	 oK/BgbRLNGKa0Wm/ubpj+88PigmwYJ/k5vpX6IUftf87/kaNL3POMjrSE7xnqzGCY9
-	 peZl+0XZ0Oiow==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="eNSQVIMw";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="oQXCzoNL"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C30403781FA4;
-	Fri, 31 May 2024 11:34:59 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: laura.nao@collabora.com
-Cc: kernel@collabora.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] probe with driver acpi-fan failed with error -22
-Date: Fri, 31 May 2024 13:35:34 +0200
-Message-Id: <20240531113534.577055-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240530153727.843378-1-laura.nao@collabora.com>
-References: <20240530153727.843378-1-laura.nao@collabora.com>
+	by s1.sapience.com (Postfix) with ESMTPS id 07690480A2E;
+	Fri, 31 May 2024 07:55:25 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717156525;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
+ b=eNSQVIMwKba7IepHL2th/FwZ/XAvK4Mu2K78TT8lDkCvIFwzw8G4ziIpHBJoQ06JZynSD
+ mYGz6Beg5VWZlUtCQ==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717156525;
+	cv=none; b=DQRufJH8RG0EtfdpGLg3OscZNCvXlRob9CHXc58/zcFeIqlGOpDzAUHSrhKzgsQmsVDK87Hux0UqZ07EdKjihtZiDGoaRTlQFlO8gg3bwRG0vVZcxS7oDd9Y489xspb4VXwMNxOH55KyZ4Y1qRx0m+ErY5w3aJWoROmZYagD8KI4Rj6BHqDM3yVw1hGKowvE32CCkOZlGR2gDR5nDU8cefH8T3wVfkRVNI8Pv+UAwc6l78HYJv1gdUDAVU59CLC3ME4B32hf0ReI3+VvoS7pHxHtiisnfCrpnzBIGo9h6VjHPmSuJRCtDSEuZ3cvYnPb67+hXMWYeg4lRhYehbV2mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1717156525; c=relaxed/simple;
+	bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=Ur5FWX81IzOOX/7AMkWfZBbo2GA0zlTYHf2yG8vwwXWGmZSuqO0gYTCs8Bh6Nozz/2fmc7HsUnBvo2KzCo46io7xQ0HGWYSyXPoM55QEj4SnEa9UFMM8FOZDiEQfkHPJfIiT771Zc9ocfG9UvANIGpnWLd9ieLIcfMh2VeUy5nyzn2sE5MgWUr4GD3X38XNMjeygv++lCW/0FfmB7Ad+eY2BK1ZndT8o8L5yzsShmWtLhi3yGzQRm3Di7bOC/MYxCjbWZtHFdEORWoCuns4yBHj3sY7Ulf/kr21ULSgp41Ocpm+9OZY+EYEheTVkiIMIqlPS6dJZxMe+HxG91RAA5Q==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717156525;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=Bd3KZ+yFQSeCtmXYqYm3VH6yU8fRiWgc3mbKerK/UhU=;
+ b=oQXCzoNLpXEAKjmy4+GQ2r0RA7pkqKeTmXo0aLajKdOo1GGUQWVHGDlU5yRsTcSEhOM4L
+ t21GgvxgsZ1MqO+V0D56TlmdvrjkHu+mOXDNJMcWhm/oAySHzBXRHUpqRnajW91DCBJrHn6
+ j6cNAeuLQdwwNr7RUsTVpuWMUYavCpKBCxehQNjBS4aKwN79bN2etnnE1GXYKkBlGJyeI3Q
+ lOzQcck1qtJChwy0pSOCz/2HWSVq7zBPNs6FX3By/s9NKLp2K7FgBjaLZnSTRJrzLQQvCM9
+ o/Zyr1KLCDallirjgJzDCLLML1LsKGAiOQXnaOHv/Iwy3dqylbn3w+1/CWvw==
+Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by srv8.sapience.com (Postfix) with ESMTPS id B69D4280016;
+	Fri, 31 May 2024 07:55:25 -0400 (EDT)
+Message-ID: <69d0c5f0b237990fd2c7cd88768aa2a70a5ee83a.camel@sapience.com>
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+From: Genes Lists <lists@sapience.com>
+To: Hans de Goede <hdegoede@redhat.com>, Linux regressions mailing list
+	 <regressions@lists.linux.dev>, Pavel Machek <pavel@ucw.cz>, Lee Jones
+	 <lee@kernel.org>, Linux LEDs <linux-leds@vger.kernel.org>, Heiner Kallweit
+	 <hkallweit1@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch, 
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com,  johanneswueller@gmail.com, "Russell King (Oracle)"
+ <linux@armlinux.org.uk>
+Date: Fri, 31 May 2024 07:55:25 -0400
+In-Reply-To: <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+	 <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+	 <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+	 <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+	 <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-Y2OqDd5dYDgI7spdeu7K"
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hello,
 
-On 5/30/24 17:37, Laura Nao wrote:
-> Hello,
->                                                                           
-> We have identified a regression in the acpi-fan driver probe between
-> v6.9-rc7 and v6.10-rc1 on some Intel Chromebooks in the Collabora LAVA
-> lab.
-> 
-> For the Acer Chromebook Spin 514 (CP514-2H), the following error is
-> reported in the logs:
-> 
-> [    0.651202] acpi-fan INTC1044:00: probe with driver acpi-fan failed with error -22
-> 
-> Similar errors are reported on other devices with fans compatible with
-> the same driver.
-> 
-> On Acer Chromebox CXI4, ASUS Chromebook Flip C436FA and
-> HP Chromebook x360 14 G1:
-> 
-> [    0.488001] acpi-fan INT3404:00: probe with driver acpi-fan failed with error -22
-> 
-> On ASUS Chromebook Vero 514 CBV514-1H:
-> 
-> [    1.168905] acpi-fan INTC1048:00: probe with driver acpi-fan failed with error -22
-> 
-> The issue is still present on next-20240529.
-> 
-> I'm sending this report to track the regression while a fix is
-> identified. I'll investigate the issue/run a bisection and report back
-> with the results.
->                                       
-> This regression was discovered during some preliminary tests with the
-> ACPI probe kselftest [1] in KernelCI. The config used was the upstream
-> x86_64 defconfig with a fragment applied on top [2].
-> 
-> Best,
-> 
-> Laura
-> 
-> [1] https://lore.kernel.org/all/20240308144933.337107-1-laura.nao@collabora.com/
-> [2] https://pastebin.com/raw/0tFM0Zyg
-> 
-> #regzbot introduced: v6.9-rc7..v6.10-rc1
+--=-Y2OqDd5dYDgI7spdeu7K
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The issue started happening after: 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/thermal/thermal_core.c?h=v6.10-rc1&id=31a0fa0019b022024cc082ae292951a596b06f8c
+On Fri, 2024-05-31 at 11:50 +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> ...
 
-Before this commit, get_cur_state() was not called by 
-__thermal_cooling_device_register, so the error was not triggered.
+> I actually have been looking at a ledtrig-netdev lockdep warning
+> yesterday
+> which I believe is the same thing. I'll include the lockdep trace
+> below.
+>=20
+> According to lockdep there indeed is a ABBA (ish) cyclic deadlock
+> with
+> the rtnl mutex vs led-triggers related locks. I believe that this
+> problem
+> may be a pre-existing problem but this now actually gets hit in
+> kernels >=3D
+> 6.9 because of commit 66601a29bb23 ("leds: class: If no default
+> trigger is
+> given, make hw_control trigger the default trigger"). Before that
+> commit
+> the "netdev" trigger would not be bound / set as phy LEDs trigger by
+> default.
+>=20
+> +Cc Heiner Kallweit who authored that commit.
+>=20
+> The netdev trigger typically is not needed because the PHY LEDs are
+> typically
+> under hw-control and the netdev trigger even tries to leave things
+> that way
+> so setting it as the active trigger for the LED class device is
+> basically
+> a no-op. I guess the goal of that commit is correctly have the
+> triggers
+> file content reflect that the LED is controlled by a netdev and to
+> allow
+> changing the hw-control mode without the user first needing to set
+> netdev
+> as trigger before being able to change the mode.
+>=20
+> But there is a price to this, besides the locking problem this also
+> causes the ledtrig-netdev module to load on pretty much everyones
+> systems (when build as a module) even though 99.999% of our users
+> likely does not need this at all...
+>=20
+> Given this price and the troubles this is causing I think it might be
+> best
+> to revert 66601a29bb23. There might still be a locking issue when
+> setting
+> the trigger to netdev manually (I'll check and follow up) but this
+> should
+> fix the regression users are hitting since typically users do not set
+> the trigger manually.
+>=20
+> Gene, as the original reporter of this can you do "modinfo
+> ledtrig_netdev"
+> and if this shows that ledtrig_netdev is a module for you try
+> blacklisting
+> ledtrig_netdev ?=C2=A0 And if it is not a module can you try building a
+> 6.9
+> kernel with commit 66601a29bb23 reverted and see if that helps ?
 
-After enabling debugging for the acpi-fan driver, I noticed these errors
-in the logs:
+Thank you - I've blacklisted ledtrig_netdev and will report back if
+anything interesting happens.
 
-[    0.682224] acpi INTC1044:00: Invalid control value returned
-[    0.682635] acpi INTC1044:00: Invalid control value returned
+best
 
-The value stored in fst.control is 255, which is indeed not a valid 
-value.
+gene
 
-I suspect this might be a firmware issue that is now manifesting due to
-the addition of the extra get_cur_state() call.
+>=20
+>=20
+> Regards,
+>=20
+> Hans
 
-I'll dig a bit more and report back.
+--=20
+Gene
 
-Best,
 
-Laura
+--=-Y2OqDd5dYDgI7spdeu7K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-#regzbot introduced: 31a0fa0019
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZlm6rQAKCRA5BdB0L6Ze
+2ztQAP9qMQRR3zWotstYwUJgtGTnC8aBJ+98ER37vLWOQ8tUfwD/YXQxaCPd9Swg
+ncFhq3xPmLoOpSikgJb3evYfVsGEzQU=
+=tg5T
+-----END PGP SIGNATURE-----
+
+--=-Y2OqDd5dYDgI7spdeu7K--
