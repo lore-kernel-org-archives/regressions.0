@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD2D125A9
-	for <regressions@lists.linux.dev>; Sat,  1 Jun 2024 06:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB59C15EA6;
+	Sat,  1 Jun 2024 07:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717224345; cv=none; b=QFSqSkdTUaGvfdyB65265y/axtZ03o08zdJWbYEiXvsS86/13fI6zex/UC3uF8heoMbYDwVPzWWfd28GIIzV+gT/0OSF5woFXT9H19TWaxgmjyq995EVfimpp8nOo0ahlUvqeihGTP84Z4Ng2OZRb9J1PcwRsXgfnm+x6T3+QKU=
+	t=1717225615; cv=none; b=UhW3+YWlkTLi0n1h/cw5tTpnWSKJBoglsF2qJlwg1TZ+UZzCLFZTfOYFGnhpvkuXEDYmXsicfD5QbSK/Ksbsj5qzvyRiXjLEhliD+EA4XHyUxERwJdySC3kST/u0mXcirtMmw2ZynmNGOwmsgtCACc7U3GBWX//oYdLXovWYAMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717224345; c=relaxed/simple;
-	bh=fvSvhRvqxYljJlsaxjZeM/jG5GCdXMxpQ2wuG1QYp3k=;
+	s=arc-20240116; t=1717225615; c=relaxed/simple;
+	bh=uTAufFMWS2LmELT62loIWwoupgYR0tVWRf2AqpE0Xhk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=et7rcRCHFhIue5fE9kQPcJVvbkS1zTSWcxmvXpaVXCyD0eEyx7+1i4v1qq9mzrASpaHTXN05eEUB4cUkOxa+AeISOUa1/ASxKvuaqnqwgKPctp+Q4ip+OblEYuGydrpZ89fcQOi+KnG+zMoNnz2SHtjkVNGeKInnr7u96ROM7pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LsXH02RX; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=jf7NyezRLzgIfkIlbwdiN3B67qPowfiUKlMe9mvNm26xqDdaX2UK1pzHVAeiPIy/B3Z6Gns3Grbe9GYOeYXgA88yH4bO7OFoxQskp+SFFiZC1frSil1Gy7bw47cGGSFNx0+Q+YRZZwextF2QWZXE0wZeJAtw8GR1hV/GvohsQl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K/76qgSJ; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LsXH02RX"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K/76qgSJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=M3VbKv/Z7RsHsd6+54TQ3z6DsAp7eyx6ax81hSXAgsU=;
-	t=1717224343; x=1717656343; b=LsXH02RXNo+EcAjgKkXxpzX3QuUHnQgc4/PvCWSOMpdLoyo
-	brY6UWz/vzIIBik8vuWR/82hVkfPVORg2e/039VxE4q49XUYq/qAynmoHeUD1KRyVm55DxLdPXj/P
-	M4f6vNB/Xcz9dCnIhg2IV0rYSjziuCKSUaEo9ovd3BEr9oGQtoe9JzgsppNBLTRTOMMwpUnHtbx5g
-	fGKJY0a70kLeSU2m/rdK3zP/ydbx1QNwTDFTw8dsSuh660s/73h9t9jPJXmlgqn9Sq+hjVGLqUIi2
-	NVckEcTVO3r81pymyCo0AtAsiKIhKXnNdB7QNFEtQFk7YbqHE0FyDYBiKff5n5Ng==;
+	In-Reply-To:References; bh=MlVEIL/1oKU52uTbfUT3WvGbRTEXEM31zuD3P0n3zHY=;
+	t=1717225613; x=1717657613; b=K/76qgSJ7MKpl6dc8x9CYlAxw8IwnmxO414vtqcM/DLoHyW
+	Uwb5Sqvu967h9f4Dtocs7MZjxemAvMVUUMY4cOqFC12yK5N41TJVuKibl7Tr0bUrNeRVpDtrY2j0m
+	5yvu4T3XsdKSXs+znWcLl8VI7CLPCdXIQaz3GyGjodcgwIgg3MNBmYdcpPirhLZVSIw2VmymEwEBT
+	RvBfiSLGnWduCY8eeSFyZ+2VGW+dy2+Ey9tmA/Evz9F8zu0X3Z12JOs1UWIBZFe9ZomS4O3x3YiHJ
+	lSGI24euD/KBa44eD4DCaSEr8dMgfN+eeW92DS+FkduMLeQc+QTpQXuGYRLX+BRw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sDIUm-0000AT-9X; Sat, 01 Jun 2024 08:45:40 +0200
-Message-ID: <e98cd7fa-0845-4de9-998c-96a0cf884f6c@leemhuis.info>
-Date: Sat, 1 Jun 2024 08:45:39 +0200
+	id 1sDIpH-0005n7-KE; Sat, 01 Jun 2024 09:06:51 +0200
+Message-ID: <1e26effd-a142-44f5-9a72-90a823666d7c@leemhuis.info>
+Date: Sat, 1 Jun 2024 09:06:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,60 +39,53 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Xorg doesn't start and some other issues with the RC1 of kernel
- 6.10
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
- Christian Zigotzky <chzigotzky@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <34d848f4-670b-4493-bf21-130ef862521b@xenosoft.de>
- <93f42bc8-f0ae-4f7f-8f25-a4e9faf8664b@xenosoft.de>
- <87zfs731jn.fsf@mail.lhotse> <87plt22w1k.fsf@mail.lhotse>
- <f4559641-2a64-4a1d-a00c-0f5ed85f3354@leemhuis.info>
- <2024053128-pueblo-skid-585e@gregkh> <2024053145-tapered-kleenex-d647@gregkh>
- <2024060155-chemicals-carrot-ea58@gregkh>
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology
+ detection
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+References: <877cffcs7h.ffs@tglx>
+ <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
+ <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com> <87zfs78zxq.ffs@tglx>
+ <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com> <87r0dj8ls4.ffs@tglx>
+ <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
+ <bd7ff2f3-bf2c-4431-9848-8eb41e7422c6@googlemail.com> <87ikyu8jp4.ffs@tglx>
+ <87frty8j9p.ffs@tglx>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2024060155-chemicals-carrot-ea58@gregkh>
+In-Reply-To: <87frty8j9p.ffs@tglx>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717224343;98ed7e1d;
-X-HE-SMSGID: 1sDIUm-0000AT-9X
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717225613;ad815138;
+X-HE-SMSGID: 1sDIpH-0005n7-KE
 
-On 01.06.24 08:34, Greg KH wrote:
-> On Fri, May 31, 2024 at 12:16:50PM +0200, Greg KH wrote:
->> On Fri, May 31, 2024 at 12:02:15PM +0200, Greg KH wrote:
->>> On Fri, May 31, 2024 at 11:19:34AM +0200, Thorsten Leemhuis wrote:
->>>> Thx, I already had an eye on this, but thought tracking would not be
->>>> needed, as Greg (now CCed) wanted to revert 8c467f3300591a ("VT: Use
->>>> macros to define ioctls") two days ago:
->>>> https://lore.kernel.org/all/2024052901-police-trash-e9f9@gregkh/
->>>>
->>>> But that commit is not yet in -next afaics. :-/
->>>>
->>>> /me meanwhile wonders if it would be wise to fix this before -rc2
->>>
->>> I do, sorry, been traveling this week with geen vrije tijd.  Will get to
->>> it tomorrow.
->>
->> Ugh, sorry for the dutch, I have "no free time" because I am studying
->> the language this week.  It is bleeding over here into my emails now...
+On 31.05.24 10:42, Thomas Gleixner wrote:
+> On Fri, May 31 2024 at 10:33, Thomas Gleixner wrote:
 
-:-D
+> ---
+> Subject: x86/topology/intel: Unlock CPUID before evaluating anything
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Date: Thu, 30 May 2024 17:29:18 +0200
+> 
+> Intel CPUs have a MSR bit to limit CPUID enumeration to leaf two. If this
+> bit is set by the BIOS then CPUID evaluation including topology enumeration
+> does not work correctly as the evaluation code does not try to analyze any
+> leaf greater than two.
+> [...]
 
-> Pull request now sent:
-> 	https://lore.kernel.org/r/Zlq8yMiUBTOisuWp@kroah.com
+TWIMC, I noticed a bug report with a "12 × 12th Gen Intel® Core™
+i7-1255U" where the reporter also noticed a lot of messages like these:
 
-Dank u wel![1, 2] And good luck with your studies! Ciao, Thorsten
+archlinux kernel: [Firmware Bug]: CPU4: Topology domain 1 shift 7 != 6
+archlinux kernel: [Firmware Bug]: CPU4: Topology domain 2 shift 7 != 6
+archlinux kernel: [Firmware Bug]: CPU4: Topology domain 3 shift 7 != 6
 
-[1] "Many thx!"
+Asked the reporter to test this patch. For details see:
+https://bugzilla.kernel.org/show_bug.cgi?id=218879
 
-[2] I understand some dutch (more than enough for "geen vrije tijd"),
-but do not really speak it; but it was enough to get that simple phrase
-right on the first attempt.
+Ciao, Thorsten
 
-#regzbot fix: 7bc4244c882a7d7d
+#regzbot fix: x86/topology/intel: Unlock CPUID before evaluating anything
