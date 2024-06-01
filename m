@@ -1,78 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95A81C683;
-	Sat,  1 Jun 2024 06:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB7E179AD
+	for <regressions@lists.linux.dev>; Sat,  1 Jun 2024 06:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717222635; cv=none; b=ti0E8sdT4ENZCyyg6H+PQVKoM53w7SPTy7+QIF1TEh1UAHYLjOIea/QOgnar/NideRclHltuoXzyrA0FoksPeyKIIHJSgkHKJHlJr5eb1lFfvE5DiPmvCB+n1I83z7ro10HvlmpvHQhskcxYzLi5LLC6mJIiqrbFXQwOtfL4YoA=
+	t=1717223653; cv=none; b=k7UIZxC6KEOf3EhMFDfeLZ6K7KT8IakRfK+lTbsZ+opos7bU4+mHl19HSLVxUZ+YTbSyHNWM/c4Spk8aO3fvpSsoN7ZvkHMZx9aSYTwXciHw1I4uzQpCDBaK+0rN6nk0XV5onlTD1P/6N6SDmWI99TIWE3tBKcLddiV0oQKflas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717222635; c=relaxed/simple;
-	bh=Gz7bmF9TUjc/OX2Bwz5if/Zl49asSXtO5AF+/IhGghI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XzVTmfEzLqNcj2OdePwr4nnz3ImH/awsI0Pz3FcafsyW8MJCo/kMOQ89fwnVMDzJf/8+hhaVYhZXGQNusDjxqodCXaVCShqKc/2wj4t+qL2o8XFvDBWUZUy06JYXVNUfLgzAdNk5kUb2IvRxEvc/TiJVIpOV1tdZxQuI7nYVtaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bV5vfO7s; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717223653; c=relaxed/simple;
+	bh=EEzU5dGaHU9UQkrHXJaNA4lg0FFzlwxUvS1ydOAxB50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MBAvuutUbieKSQlEzrkyajskSOT55svru90R8VxzWjYaa72wbVdun9BNEG/gOnQtHA0SsWc7AknXykey3epl6yhNHHa2x9/JveAIJBU8eM+0JlUQARbs3smvtiy6Z+6dY9n+zuOGPOkND9V9BPKPDYJ9n0TSBIcTlrFOr8STMP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=05bGu4sw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bV5vfO7s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Gz7bmF9TUjc/OX2Bwz5if/Zl49asSXtO5AF+/IhGghI=;
-	t=1717222633; x=1717654633; b=bV5vfO7sxu4CK+c2E1vKHFEbglE3nejA2LtLfnALd7I99l2
-	/Y/LcKrWlfp5+7wYMP632GVCB9Ui/DosRhAyZTt0MXnW7FC+mK1hW78maRbZfUjkE+hvL37GDC9lb
-	uM+ovc75j5VdEUQfFRTrCB8aeydjqgHcFq+31UDKAPVV/a0fGH58UhH0Yx2SULGWN8tvf0K6ak0QA
-	R74xPIBu5DvgvwQoCQp54RTmeILE/7yCX76jg5o5+pZ6fPjJOrXkXiqRlQJaaN3SXMr0YXiPQMIlg
-	QtHcCvOnKHmh5d0Y+winF7FpJOS1uaELRor9Qi7L3qS1SxDc0pTsct6alkA31gUw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sDI30-0004Ep-UR; Sat, 01 Jun 2024 08:16:59 +0200
-Message-ID: <3abae158-adb3-4f76-abf7-6415740bdfd5@leemhuis.info>
-Date: Sat, 1 Jun 2024 08:16:58 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="05bGu4sw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C48C116B1;
+	Sat,  1 Jun 2024 06:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717223652;
+	bh=EEzU5dGaHU9UQkrHXJaNA4lg0FFzlwxUvS1ydOAxB50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=05bGu4swaVZhwATYytBEYpGFYHkJRtGe4LQYqn2XcOZ5zgJzeOlt5p9wq+tD24YCH
+	 AA9kfPDTxr86r36CueyR9lUGEeEyDspaGaqO97MTkr7af6XqkMrrFSxSqrpdillLXC
+	 7g1wdYjYb/MPr9Slpwgkw8f1CumSmsqD6mEBemNo=
+Date: Sat, 1 Jun 2024 08:34:09 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Christian Zigotzky <chzigotzky@xenosoft.de>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Xorg doesn't start and some other issues with the RC1 of kernel
+ 6.10
+Message-ID: <2024060155-chemicals-carrot-ea58@gregkh>
+References: <34d848f4-670b-4493-bf21-130ef862521b@xenosoft.de>
+ <93f42bc8-f0ae-4f7f-8f25-a4e9faf8664b@xenosoft.de>
+ <87zfs731jn.fsf@mail.lhotse>
+ <87plt22w1k.fsf@mail.lhotse>
+ <f4559641-2a64-4a1d-a00c-0f5ed85f3354@leemhuis.info>
+ <2024053128-pueblo-skid-585e@gregkh>
+ <2024053145-tapered-kleenex-d647@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Revert "igc: fix a log entry using uninitialized
- netdev"
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Corinna Vinschen <vinschen@redhat.com>,
- Hariprasad Kelam <hkelam@marvell.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Naama Meir <naamax.meir@linux.intel.com>, netdev@vger.kernel.org,
- Sasha Neftin <sasha.neftin@intel.com>,
- intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240601050601.1782063-1-mika.westerberg@linux.intel.com>
- <20240601050601.1782063-2-mika.westerberg@linux.intel.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240601050601.1782063-2-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717222633;711b0827;
-X-HE-SMSGID: 1sDI30-0004Ep-UR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024053145-tapered-kleenex-d647@gregkh>
 
-On 01.06.24 07:06, Mika Westerberg wrote:
-> This reverts commit 86167183a17e03ec77198897975e9fdfbd53cb0b.
+On Fri, May 31, 2024 at 12:16:50PM +0200, Greg KH wrote:
+> On Fri, May 31, 2024 at 12:02:15PM +0200, Greg KH wrote:
+> > On Fri, May 31, 2024 at 11:19:34AM +0200, Thorsten Leemhuis wrote:
+> > > On 31.05.24 11:03, Michael Ellerman wrote:
+> > > > Michael Ellerman <mpe@ellerman.id.au> writes:
+> > > >> Christian Zigotzky <chzigotzky@xenosoft.de> writes:
+> > > >>> On 28.05.24 22:00, Christian Zigotzky wrote:
+> > > >>>> Hi All,
+> > > >>>>
+> > > >>>> Xorg doesn't start anymore since the RC1 of kernel 6.10. We tested it 
+> > > >>>> with the VirtIO GPU and with some Radeon cards.
+> > > >>>>
+> > > >>>> Another error message: Failed to start Setup Virtual Console.
+> > > >>>>
+> > > >>>> Maybe this is the issue: + CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
+> > > >>>>
+> > > >>>> Tested with FSL P5040, FSL P5020, and PASEMI boards.
+> > > >>>>
+> > > >>>> Could you please test Xorg on your PowerPC machines?
+> > > >>>>
+> > > >>>> Thanks,
+> > > >>>> Christian
+> > > >>> I tested the RC1 in a virtual e5500 QEMU PowerPC machine with Bochs VGA 
+> > > >>> (-device VGA,vgamem_mb=256) and Xorg doesn't start either.
+> > > >>>
+> > > >>> Error message: xf86OpenConsole: KDSETMODE KD_GRAPHICS failed 
+> > > >>> Inappropriate ioctl for device.
+> > > >>
+> > > >> That is presumably because of this:
+> > > >>   https://lore.kernel.org/all/0da9785e-ba44-4718-9d08-4e96c1ba7ab2@kernel.org/
+> > > > 
+> > > > Attempting to regzbot this.
+> > > > 
+> > > > #regzbot introduced: 8c467f330059
+> > > > #regzbot monitor: https://lore.kernel.org/all/0da9785e-ba44-4718-9d08-4e96c1ba7ab2@kernel.org/
+> > > 
+> > > Thx, I already had an eye on this, but thought tracking would not be
+> > > needed, as Greg (now CCed) wanted to revert 8c467f3300591a ("VT: Use
+> > > macros to define ioctls") two days ago:
+> > > https://lore.kernel.org/all/2024052901-police-trash-e9f9@gregkh/
+> > > 
+> > > But that commit is not yet in -next afaics. :-/
+> > > 
+> > > /me meanwhile wonders if it would be wise to fix this before -rc2
+> > 
+> > I do, sorry, been traveling this week with geen vrije tijd.  Will get to
+> > it tomorrow.
+> 
+> Ugh, sorry for the dutch, I have "no free time" because I am studying
+> the language this week.  It is bleeding over here into my emails now...
 
-TWIMC, Sasha Neftin already submitted a revert for that commit on Wednesday:
-https://lore.kernel.org/all/20240529051307.3094901-1-sasha.neftin@intel.com/
-
-Regression reports for this problem I'm tracking:
-https://lore.kernel.org/lkml/CABXGCsOkiGxAfA9tPKjYX7wqjBZQxqK2PzTcW-RgLfgo8G74EQ@mail.gmail.com/
-https://lore.kernel.org/intel-gfx/87o78rmkhu.fsf@intel.com/
-
-Ciao, Thorsten
+Pull request now sent:
+	https://lore.kernel.org/r/Zlq8yMiUBTOisuWp@kroah.com
