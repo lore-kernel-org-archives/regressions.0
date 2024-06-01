@@ -1,79 +1,95 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8688617BD9
-	for <regressions@lists.linux.dev>; Sat,  1 Jun 2024 07:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A3A111AD;
+	Sat,  1 Jun 2024 08:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717227775; cv=none; b=AxnluBdJjZk7dfjLf8Fczq3lqqcaUqVC0o5sFYY/x9cyhNC/UazVEjJ6ouxSOgea3OXjy32I1ujnalxmQI0Rd9r1mn+mXqxbsagiOpVdYS+UeBt0473tL4vwTZKgqgndvshhWoiqDL1PWis+xbj/zIyoURfD4tbadMByya3tm8M=
+	t=1717231148; cv=none; b=cQY6NzaupyTE6Q/UjB/DmXe4Sxv38WCU/DmjJPHDzzwMCtX53JNKjyshkgrq6erx8IIkv5eCSHUsWZecIAEFE5Zh0q7ZwXHBHvvu8ZkPIt9o6WJJRsOA1EY4E4TXVLjgI/fODzZLK9NJqNPIkYzg9KIdcKna4rVOpxXSItvg0pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717227775; c=relaxed/simple;
-	bh=Vud/X53szsZZkO0rp3QCuMhLKcZp57lz0e57qV5TgI0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=t03wjRbpFmL0TuR10hRflbMbTTfU5eUBWuhIitEKCYWabzr/dgjWa0E31aDj3Ruoufcuc+6a0tq86xhY6XIb+nc1nOIFQz84tcGP4QMYn4oWCiUTt1PXV4cJXYmpjkexyx961B2kmjjluXjsJnAtC2AQvUDzi81FNzK+uipnJWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=M0tiebke; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717231148; c=relaxed/simple;
+	bh=O/cdpqT7qQihzPF3SYw3ffdjHn+vpQtcKKcbKkl2pXA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=kPMjfVF7AfmyANxGiWWWBMdLV9cjXmhgIoK0JUwEqx214EJHFhvY80nbhsQPd+NaaEGzN2fR9Mc5VNHqq06p3KYwjGa9+w3dCF1H/OULDoKLqux4rFSPhpipuCC3K9Aw+NVq4QA7Gu9VEIWVCF0qL3upoRA/6BzqlqQxD4UjSBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmu1TjfA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="M0tiebke"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=Vud/X53szsZZkO0rp3QCuMhLKcZp57lz0e57qV5TgI0=; t=1717227773;
-	x=1717659773; b=M0tiebkeHwhu9VNr8Km1MVQOClDiFWOV+RHQbzLAU8anTS06aylZKS2VyCIVo
-	dV5EDnikCSbFgyZlOePqHTzG3Of7/r1gR1v312P0pnFs33yGQrYXjKnSCMlxL4mXJvjJjuV9ptB40
-	tsW2aqpZWVO186pBoGBXWIIu/jR/eI9mDq5+vhRyi43H7id3dZIsCJ376J6p7n8aLV3O0keDnBt7q
-	T/pBf5HddSnsN1XwCMns7SWTC8BtdasIiA1uDj+F7utolxX23a6hGbIIHkN01gU7/HSWF4Ymx5l7V
-	wJI8Rsxmi7beCTeiJSPaXrQyqDhEts0nBjDoAmP7DoJOosEWtQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sDJO7-0007pH-K2; Sat, 01 Jun 2024 09:42:51 +0200
-Message-ID: <9631daef-8cb9-4632-ba8d-3ff9a6669e2b@leemhuis.info>
-Date: Sat, 1 Jun 2024 09:42:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmu1TjfA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288E7C116B1;
+	Sat,  1 Jun 2024 08:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717231147;
+	bh=O/cdpqT7qQihzPF3SYw3ffdjHn+vpQtcKKcbKkl2pXA=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=lmu1TjfAQQoBYhj/5tR7GS0uOuhgynxe5b8eTTxihKbYlFz9EB9BuMaGLeDxzIuQa
+	 mPL1IUU24/j5KmRP7KUBe0uI7vvIS6NVX7i9Q3YerbU/Z3NPTj8MbRbneAyrTD41Ns
+	 +xyUGP2pdDwyiS94iYPHYOSWOYwFHr7xM9UMtWUFO20gz1EReopk8uHvol1NzPcobS
+	 lXYgd7nVOP7X8rb7cioKPkC2YQf1lIqdQPk4zPN5OLa/2Lr1c36cwTmNHFEp2BQ09M
+	 Y6twVXL/tNg4qPu0VP9NjAWJCRtariHmDydaylbZd8zwK+h2jqVm/2nG+pUQt5shpx
+	 JDfaxnwZkCo2g==
+From: Kalle Valo <kvalo@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
+  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
+  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
+  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
+  <linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
+	<87sexzx02f.fsf@kernel.org>
+	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<87jzjbwxin.fsf@kernel.org> <87frtzww57.fsf@kernel.org>
+	<6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<87y17qudwb.fsf@kernel.org>
+Date: Sat, 01 Jun 2024 11:39:03 +0300
+In-Reply-To: <87y17qudwb.fsf@kernel.org> (Kalle Valo's message of "Fri, 31 May
+	2024 19:47:32 +0300")
+Message-ID: <87a5k5ukew.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717227773;f67746f6;
-X-HE-SMSGID: 1sDJO7-0007pH-K2
+Content-Type: text/plain
 
+Kalle Valo <kvalo@kernel.org> writes:
 
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+>> Kalle Valo wrote:
+>> [..]
+>>> >> The proposed fix for that is here:
+>>> >>
+>>> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
+>>> >
+>>> > I get "Not Found" from that link, is there a typo?
+>>> 
+>>> I found this fix from for-linus branch:
+>>> 
+>>> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
+>>> 
+>>> But at least that doesn't fix my crash.
+>>
+>> Sorry for the broken link I mistakenly used a message-id from an
+>> internal thread with the intel.com reporter. However, it is moot now
+>> because the new direction is to revert the lockdep infrastructure:
+>>
+>> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
+>>
+>> (that link works...)
+>
+> Thanks, that links works :) I did a quick test with the three patches
+> and I didn't see any crashes anymore. But to be confident I need to run
+> overnight tests, I'll provide my Tested-by after that.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Ok, I'm now quite confident that the issues I saw are solved so:
 
-#regzbot report:
-https://lore.kernel.org/all/20240530074416.13697-1-johan%2Blinaro@kernel.org/
-#regzbot introduced: 3092bde731ca
-#regzbot summary: iio: IIO channel read outs and thereby thermal
-mitigation on the Lenovo ThinkPad X13s broken
-#regzbot fix: iio: inkern: fix channel read regression
+Tested-by: Kalle Valo <kvalo@kernel.org>
 
-#regzbot report:
-https://lore.kernel.org/linux-block/CAHj4cs9KZJc6Wsp9t0fDc4fDBJB1TmwGT7-8peCGLiqW3J_Fqw@mail.gmail.com/
-#regzbot dup:
-https://lore.kernel.org/all/20240530120110.22141-1-00107082@163.com/
-#regzbot fix: iommu/amd: Fix panic accessing amd_iommu_enable_faulting
-#regzbot relate: https://lore.kernel.org/all/ZljHE%2FR4KLzGU6vx@hpe.com/
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-#regzbot report:
-https://lore.kernel.org/all/3f71747b-f852-4ee0-b384-cf46b2aefa3f@gmx.com/
-#regzbot introduced: 950210887670cbb7d2eb9af6fb743b70f1a1eb
-#regzbot summary: thermal: core: maximum frequency lower after sleep
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
