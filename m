@@ -1,36 +1,65 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1EA2D61B;
-	Sat,  1 Jun 2024 09:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642511527A0
+	for <regressions@lists.linux.dev>; Sat,  1 Jun 2024 20:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717234622; cv=none; b=C4SDc0JRGZRdCuSo/S/logQiPLmWXKjuA2B81wCvkXdjJYUFqIwv+L/Va1+q68Wj3g5yETH6czTeFRK+38jZDrwC8TmUggO6wDyfTWsmHJw7JNEGsqHV3vYm7F9CPIWQbONs105mS8g/C9MoizySvRmhpHnTNas2xKuQILCv4pk=
+	t=1717272363; cv=none; b=FlRIxeZP48CuDOQXsHfA2oF8+DdQu8SS+qwbHPTE+lQtENURVpNUYXGLyEBI+qzlmtMUEwh90MnX3WYPG5OPT1sJqzs1I6kaUVq8gpqTy+8i+ynnauAC2lecpjHhMrbXoT9cWQKmhyCvgfFnPpCn9kI96fH/m+rt4gA77/VUIW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717234622; c=relaxed/simple;
-	bh=RZPCMPwVvgMPAOGxMHuPGSEMEvDQytJjVw+8CCV5LJI=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=Gt0BWf/3uPVbqjJOiLA5MUekK1aef8sDnHcttksTNFEjS4vxqY1cF0qIf7D+abdCRo38/+Th1tfsKgdmz0ae5hEZz5oI058XeWaA4bD3kPsUm0WVVPE/qpYEovZDpeMEM9Gr25Uph9O10iELnk5mfrZlArjmHxzIDesFhDxmFUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oPntwHxm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717272363; c=relaxed/simple;
+	bh=bb1Eh6sYxp0wiXwMLIgdauY1kNYKOWwZ0sTYj+x+3i4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=DFLvHNB8k85W+1TETeF6bcwQ8s92FF+gh4zCFftx3XIYnKL/OjjKErvabw7/CGwUMKVInkZOngx6dSh99Ygf1A3hbPrkE2aITX4TxMjorRNU/PdFnoZTfEs20Plvkpo6sEbzN3QmQd5//eHIoDvIJomSUIaogaD3kXOELSHbQT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HAn9nG5G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oPntwHxm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=qTjigSZF4PwUn7XB/XLZ+k6MTHXmxb0W01t65wGS6Nw=; t=1717234620;
-	x=1717666620; b=oPntwHxmTxD0YabuhE/E0ZPAo+lBXogC623ASG0o8qxDoPTRnl5xw+Lmzvo0y
-	rU8oxLi4VVzmwdkuJdv1ba2RdcchvMTsHsgPjCC2Ycu8xWykOq0QoFdPNlGPzEhbFGID850kfa8ms
-	brqVErJg0/jlyJ27YiKf1FWgSgqSqu42FpuGPuEoQMX+QhzFa4jy88DyBazvJnXYKstK3C7DNYeEV
-	SXFvG68O3ynaKmiivfbogZg7qaZBKlsVa1XOB6fZC/Kfvzke2V/Q05NYUieX0bOk8Q+8o0XqNtxxQ
-	2rLEWcZsdi7XUAUDe1sxVcM/ncW0XZWrrTpMuM+vDza71BJ2nw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sDLAS-0000a6-8T; Sat, 01 Jun 2024 11:36:52 +0200
-Message-ID: <6e98d7b2-1068-4f05-a780-bad96ed5be27@leemhuis.info>
-Date: Sat, 1 Jun 2024 11:36:51 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HAn9nG5G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717272360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dzxohq/lDop4X+G5bOl0wtRNygcADEx/hc58/q+dn7c=;
+	b=HAn9nG5GpH0Sr3CNB6equ/aC/Z/5wvlUdhPQTGDq8wMDPXlxd7hw+3UFs4qV+Tkz1DlVg4
+	N0jW5RP4sUl4dvyM1m3HcbtoelJ0ViJ5j/Z18uJ7KJGHP4lOS8GGXSy451MG4FhdTrb1oI
+	gJrY59dkmoSvUoxLPmSyU/pOEyNkfmo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-cgfysXGrM3-kCSprTVhnJA-1; Sat, 01 Jun 2024 16:05:57 -0400
+X-MC-Unique: cgfysXGrM3-kCSprTVhnJA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a68c70ab413so35075066b.1
+        for <regressions@lists.linux.dev>; Sat, 01 Jun 2024 13:05:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717272356; x=1717877156;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dzxohq/lDop4X+G5bOl0wtRNygcADEx/hc58/q+dn7c=;
+        b=iyc2eP3yblXEUgRbF6Hom/XRkZMqBoqbEvOjp6cpwlzcSgEoafCHfKDUqLHoY1emLl
+         bW4ZV2QPDb16rVFM0bsXoQaSulwrz31Lcv4yXDJOXQxnn94N9YCUtARR0Toj2xzc+uNS
+         8wVQdm2aSn0LpfCngYu4Kl6U0l6ZXiYAHtoWihJ0m2kgIHfT1whi7Hhd39Q31MBXxUh0
+         48cFmTF9o7EFu/eIgL4YJHOJbrrcuRRKhYA2a9ypz6Q6654v4tLkyVk75PRPVyzdXHKq
+         HPGwnyZS2pVBIfpNbVGkdtsLV5IG4R22ZO5jkXFkDRkaJiEnZp4CTFx8XlNgk0+JfIU9
+         QatA==
+X-Gm-Message-State: AOJu0Yy0YbbPXg8LrCeryWaH8ExRFas+1mu+zXam6hlDdgKj4ss9UDdo
+	oeYHyumilX0AqjTsHdsaHj32yfGEwhyOk1Dzx5HbvFM798umW+tOZJz+2VHfL5xkw5K2ljWa+Cx
+	0voubbYs1KHqBYNM9omwtnZpLR6x2WPgqPFZqGSqDfwJVKGSaUJe7ShDGKAQpv5u/W7XFH3ij/4
+	cWW06aVdMvb3Fe+Zq9Xwnyd+OgBy64zz4J+7YotHSd2p62ac0=
+X-Received: by 2002:a17:906:5a8c:b0:a68:e834:e9bb with SMTP id a640c23a62f3a-a68e834ff24mr25612466b.35.1717272355910;
+        Sat, 01 Jun 2024 13:05:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKBjI4khq4cOxujM+nFtg2T6bx0NqxvdpUtcJC72aKWj08HWBrV5C0F9kUUcWZtUreaiC0mQ==
+X-Received: by 2002:a17:906:5a8c:b0:a68:e834:e9bb with SMTP id a640c23a62f3a-a68e834ff24mr25609766b.35.1717272355320;
+        Sat, 01 Jun 2024 13:05:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6848423bc9sm210815066b.147.2024.06.01.13.05.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Jun 2024 13:05:54 -0700 (PDT)
+Message-ID: <d7c555cc-d07c-4f22-9636-9ebb44165e1d@redhat.com>
+Date: Sat, 1 Jun 2024 22:05:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,113 +67,137 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Steve French <sfrench@samba.org>
-Cc: "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [regression] Bug 218902 - Kernel crash/reboot on cifs copy
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+From: Hans de Goede <hdegoede@redhat.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Linux LEDs <linux-leds@vger.kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, johanneswueller@gmail.com,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Genes Lists <lists@sapience.com>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+ <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+ <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+ <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+ <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+ <d8f8b1b2-1ffd-435a-8bed-b1a05d16a270@redhat.com>
+In-Reply-To: <d8f8b1b2-1ffd-435a-8bed-b1a05d16a270@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717234620;1995c9d9;
-X-HE-SMSGID: 1sDLAS-0000a6-8T
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+Hi All,
 
-Steve, I noticed a report about a CIFS regression in bugzilla.kernel.org
-you might be interested in.
-
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=218902 :
-
-> Computer crashs when copying files from a local drive to a cifs mounted files system.
+On 5/31/24 12:22 PM, Hans de Goede wrote:
+> Hi,
 > 
-> This bug exists since kernel 6.8.4 and is always present in last kernel 6.9.
+> On 5/31/24 11:50 AM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 5/31/24 10:39 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> [adding the LED folks and the regressions list to the list of recipients]
+>>>
+>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>>> for once, to make this easily accessible to everyone.
+>>>
+>>> Lee, Pavel, could you look into below regression report please? Thread
+>>> starts here:
+>>> https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
+>>>
+>>> Another report with somewhat similar symptom can be found here:
+>>> https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
+>>>
+>>> See also Russell's analysis of that report below (many many thx for
+>>> that, much appreciated Russel!).
+>>>
+>>> To my untrained eyes all of this sounds a lot like we still have a 6.9
+>>> regression related to the LED code somewhere. Reminder, we had earlier
+>>> trouble, but that was avoided through other measures:
+>>>
+>>> * 3d913719df14c2 ("wifi: iwlwifi: Use request_module_nowait") /
+>>> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+>>>
+>>> * c04d1b9ecce565 ("igc: Fix LED-related deadlock on driver unbind") /
+>>> https://lore.kernel.org/all/ZhRD3cOtz5i-61PB@mail-itl/
+>>>
+>>> * 19fa4f2a85d777 ("r8169: fix LED-related deadlock on module removal")
+>>>
+>>> That iwlwifi commit even calls it self "work around". The developer that
+>>> submitted it bisected the problem to a LED merge, but sadly that was the
+>>> end of it. :-/
+>>
+>> I actually have been looking at a ledtrig-netdev lockdep warning yesterday
+>> which I believe is the same thing. I'll include the lockdep trace below.
+>>
+>> According to lockdep there indeed is a ABBA (ish) cyclic deadlock with
+>> the rtnl mutex vs led-triggers related locks. I believe that this problem
+>> may be a pre-existing problem but this now actually gets hit in kernels >=
+>> 6.9 because of commit 66601a29bb23 ("leds: class: If no default trigger is
+>> given, make hw_control trigger the default trigger"). Before that commit
+>> the "netdev" trigger would not be bound / set as phy LEDs trigger by default.
+>>
+>> +Cc Heiner Kallweit who authored that commit.
+>>
+>> The netdev trigger typically is not needed because the PHY LEDs are typically
+>> under hw-control and the netdev trigger even tries to leave things that way
+>> so setting it as the active trigger for the LED class device is basically
+>> a no-op. I guess the goal of that commit is correctly have the triggers
+>> file content reflect that the LED is controlled by a netdev and to allow
+>> changing the hw-control mode without the user first needing to set netdev
+>> as trigger before being able to change the mode.
+>>
+>> But there is a price to this, besides the locking problem this also
+>> causes the ledtrig-netdev module to load on pretty much everyones
+>> systems (when build as a module) even though 99.999% of our users
+>> likely does not need this at all...
+>>
+>> Given this price and the troubles this is causing I think it might be best
+>> to revert 66601a29bb23. There might still be a locking issue when setting
+>> the trigger to netdev manually (I'll check and follow up) but this should
+>> fix the regression users are hitting since typically users do not set
+>> the trigger manually.
 > 
-> Step to reproduce: on AlmaLinux 9
+> Ok, I can confirm that the lockdep warning is gone for me with 66601a29bb23
+> reverted. Unfortunately it does still happen after a "modprobe ledtrig_netdev"
+> (to add it to the list of available triggers) and then setting the trigger
+> for /sys/class/leds/enp42s0-0::lan to netdev manually.
 > 
-> Boot with kernel 6.9.1-2 or 6.8.4
-> 
-> Open a terminal and copy some files on the cifs mounted directory. (Copy can be performed either by cp * ~/COMMUN or using Thunar)
-> 
-> --> The computer freezes and reboots producing an /boot/initram.....kdump.img file
-> 
-> 
-> The bug is not present in kernel 5.14.0-427 nor in 6.7.9
-> The bug does not affect read operations from the cifs mounted directory
-> 
-> Mount options:
-> //192.168.1.112/commun /home/olivier/COMMUN cifs noauto,x-systemd.automount,user,nosuid,gid=100,uid=1026,credentials=/home/olivier/passwd 0 0
-> -----------------------------------------------------------
-> 
-> The /var/log/messages contains the following:
-> May 19 09:41:12 deyme18 kernel: watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [cifsd:1959]
-> [...]
-> May 19 09:41:12 deyme18 kernel: CPU: 2 PID: 1959 Comm: cifsd Kdump: loaded Tainted: G E 6.8.4-1.el9.elrepo.x86_64 #1
-> May 19 09:41:12 deyme18 kernel: Hardware name: PC Specialist LTD N2x0WU /N2x0WU , BIOS 1.07.18 02/15/2019
-> May 19 09:41:12 deyme18 kernel: RIP: 0010:native_queued_spin_lock_slowpath+0x72/0x2d0
-> May 19 09:41:12 deyme18 kernel: Code: 08 0f 92 c2 8b 45 00 0f b6 d2 c1 e2 08 30 e4 09 d0 a9 00 01 ff ff 0f 85 f2 01 00 00 85 c0 74 12 0f b6 45 00 84 c0 74 0a f3 90 <0f> b6 45 00 84 c0 75 f6 b8 01 00 00 00 66 89 45 00 5b 5d 41 5c 41
-> May 19 09:41:12 deyme18 kernel: RSP: 0018:ffffad7d40d3bd60 EFLAGS: 00000202
-> May 19 09:41:12 deyme18 kernel: RAX: 0000000000000001 RBX: ffffffffc1ede988 RCX: 0000000000000000
-> May 19 09:41:12 deyme18 kernel: RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffc1ede988
-> May 19 09:41:12 deyme18 kernel: RBP: ffffffffc1ede988 R08: 0000000000000000 R09: ffff9f5a4b100b40
-> May 19 09:41:12 deyme18 kernel: R10: ffff9f5a259eb1c8 R11: 01d9e3d51959a6a5 R12: ffff9f5a03db0038
-> May 19 09:41:12 deyme18 kernel: R13: ffff9f5a516f4ec0 R14: ffff9f5a259eb000 R15: 0000000000000000
-> May 19 09:41:12 deyme18 kernel: FS: 0000000000000000(0000) GS:ffff9f5d5ec80000(0000) knlGS:0000000000000000
-> May 19 09:41:12 deyme18 kernel: CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> May 19 09:41:12 deyme18 kernel: CR2: 000055fa37ada5c0 CR3: 00000002d7a1e001 CR4: 00000000003706f0
-> May 19 09:41:12 deyme18 kernel: Call Trace:
-> May 19 09:41:12 deyme18 kernel: <IRQ>
-> May 19 09:41:12 deyme18 kernel: ? watchdog_timer_fn+0x261/0x2f0
-> May 19 09:41:12 deyme18 kernel: ? __pfx_watchdog_timer_fn+0x10/0x10
-> May 19 09:41:12 deyme18 kernel: ? __hrtimer_run_queues+0x10f/0x2b0
-> May 19 09:41:12 deyme18 kernel: ? hrtimer_interrupt+0x106/0x240
-> May 19 09:41:12 deyme18 kernel: ? __sysvec_apic_timer_interrupt+0x6b/0x180
-> May 19 09:41:12 deyme18 kernel: ? sysvec_apic_timer_interrupt+0x9d/0xd0
-> May 19 09:41:12 deyme18 kernel: </IRQ>
-> May 19 09:41:12 deyme18 kernel: <TASK>
-> May 19 09:41:12 deyme18 kernel: ? asm_sysvec_apic_timer_interrupt+0x16/0x20
-> May 19 09:41:12 deyme18 kernel: ? native_queued_spin_lock_slowpath+0x72/0x2d0
-> May 19 09:41:12 deyme18 kernel: _raw_spin_lock+0x30/0x40
-> May 19 09:41:12 deyme18 kernel: __cifs_put_smb_ses+0x53/0x440 [cifs]
-> May 19 09:41:12 deyme18 kernel: smb2_find_smb_tcon+0x61/0xd0 [cifs]
-> May 19 09:41:12 deyme18 kernel: smb2_handle_cancelled_mid+0x42/0x90 [cifs]
-> May 19 09:41:12 deyme18 kernel: __release_mid+0x8a/0xb0 [cifs]
-> May 19 09:41:12 deyme18 kernel: cifs_demultiplex_thread+0x2fc/0x790 [cifs]
-> May 19 09:41:12 deyme18 kernel: ? __pfx_cifs_demultiplex_thread+0x10/0x10 [cifs]
-> May 19 09:41:12 deyme18 kernel: kthread+0xee/0x120
-> May 19 09:41:12 deyme18 kernel: ? __pfx_kthread+0x10/0x10
-> May 19 09:41:12 deyme18 kernel: ret_from_fork+0x2d/0x50
-> May 19 09:41:12 deyme18 kernel: ? __pfx_kthread+0x10/0x10
-> May 19 09:41:12 deyme18 kernel: ret_from_fork_asm+0x1b/0x30
-> May 19 09:41:12 deyme18 kernel: </TASK>
-> May 19 09:41:23 deyme18 systemd-logind[719]: The system will reboot now!
-> May 19 09:41:23 deyme18 systemd-logind[719]: System is rebooting.
+> Still reverting 66601a29bb23 should avoid the problem getting triggered
+> and this would seem like a safe fix especially for the 6.9 series and
+> then the necessary time can be taken to fix the actual underlying locking
+> issue which 66601a29bb23 exposes.
 
-6.7.y worked fine; I asked for a bisection; a second reporter ran into
-the same problem; apparently they all use something RHEL9-like.
+I recently wrote a new input-events LED trigger:
+https://lore.kernel.org/linux-leds/20240531135910.168965-2-hdegoede@redhat.com/
 
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
+and I just found out this has a very similar deadlock problem. It seems
+there it a generic problem with LEDs or LED triggers getting registered
+by subsystems while holding a global lock from that subsystem vs
+the activate / deactivate method of the trigger calling functions of that
+same subsystem which require that same global lock.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+I came up with a fix but that just fixed the activate() path leaving
+a similar deadlock in place in the deactivate path:
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+https://lore.kernel.org/linux-leds/20240601195528.48308-1-hdegoede@redhat.com/
+https://lore.kernel.org/linux-leds/20240601195528.48308-3-hdegoede@redhat.com/
 
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+So this seems to be a non trivial problem to solve. For the new input-events
+trigger I plan to solve this by switching to a single input_handler which will
+be registered at module_init() time instead of having a handler per LED and
+registering that handler at activate() time.
 
-#regzbot introduced: v6.7..v6.8
-#regzbot title: smb: client:
-#regzbot from: Dufgrinder
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218902
-#regzbot ignore-activity
+But I have no idea how to solve this for the netdev trigger I just wanted
+to share my experience with the input-events trigger in case it is useful.
+
+Regards,
+
+Hans
+
+
