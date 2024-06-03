@@ -1,151 +1,126 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F4A12DDBA
-	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 14:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF0135A6C
+	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 16:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717423791; cv=none; b=HRufmdK6AZs5k6MmVK4ltyhJhOUOwxUSpHUyH5JBBwLdXTpwXwYAPbh+UrVCw7sloq9XWP3inwwSDyEkyk1EInM6LSWlM/md0/+Wvb+gYuXCbvUOqMxfx+v5tH552v1uIUbKpELPjMjy5KwnbGrHtuHkBGNqxoojjRqUizG3imY=
+	t=1717431772; cv=none; b=jTTX2gsTloR8o28zpJ6P+1UaOy/SFF2Yd3dC7+aYgKLzFqYYMkj5rJp6Dppgat8FHqde2bW5En9SXIaotF+FWXPdavwgprtGecmdplIml1Co/k3UzVoJgd3k2ED2MHxIvvjF8/BBJB+I2ably7SnwAvDujnyMNLqUHCMogqAVFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717423791; c=relaxed/simple;
-	bh=YyRPCKbfkwQ1wrNaEwDVnzUmUDH6XRribciN2yI0W8I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QzOGSPoC8J0DjoRP9dhTf9wb4jj8VpKWlCEcsrh+rt/qbfjwSudx/tXHarpFSELPQms2+Osr1NIKEIt4hoGL6CmHlVZIHKP/C6yRXcrTsRNJcHjJT7OWJUnPNBpNW3yPRqvIgNYoPkIkYbUSL4IcX8lL4dW95bQrBQZgj6kgkBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q0HpmeSI; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717431772; c=relaxed/simple;
+	bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QP91f9XiePwR/uWC8WuaDrMvXwH7M4eFZ6LM5jbtcAZCmKFvyK2/PzInVKwtiRWupnexg8DsBX4uuJVRQBF0Qp9a8lnfb9aAP3rf1ywKxg1r9aHoep78+tFT9RbHCp0ATPCQMLFl3Bcb12gDBtEwoksYPjI0SIsZfp0I48/dFts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IL9pjSB4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q0HpmeSI"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a4ce82f30so2134443a12.0
-        for <regressions@lists.linux.dev>; Mon, 03 Jun 2024 07:09:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717423788; x=1718028588; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cMBySiVcTX3BrHRQ0ZZ8x1UxOKdXwr5BWpTZuLbvO8Q=;
-        b=q0HpmeSIXF3nrHb+CWEULva6w1vPqsc+LWqFLLVzsSh66yu2VGxEKMWfPTBGTrup9V
-         mYDUnXLjGQom6GHttiJVp86Nql1W0hq4CQNlzr9Go6dnUwMocnyFI1DdMWAEyGhzvBXX
-         LY+N7+8YEznTpbzUtmBmSCkpN3aLpl330MGhM3Gu7JsYqEVsKZAPZQSFwf2ci5aYGU/h
-         dDfKQyp2HqJivnAuxoOTlRAh7+GPIzFHvrD5kMTTZZQLbGBiCWLWbxDHiQJXKG5xf0Cr
-         DEDL608Fex68vQiwKOxI8gzawC0wT83hl8xr0UncPpaAOuL3FxpC/F11fh1udKO70RNm
-         0LHw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IL9pjSB4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717431769;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
+	b=IL9pjSB4wpALKRZsTWaDqTqgu8FpPXT/BC2duO4O9S1qaz3y34YqRbWYuhbMi9K1x0R+ma
+	9jTq2+2RvH8ZR3Wh5qEPWQCJCLLvja+D0M98y2CVN7/6iuFWzm6ZuX5M59DMdJ5DCF0HKB
+	23eYuAL3mgmoQZ5jgM8+DrrYRaA40uA=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-124-snrUf7oDNoSz9mxLD9VS0Q-1; Mon, 03 Jun 2024 12:22:48 -0400
+X-MC-Unique: snrUf7oDNoSz9mxLD9VS0Q-1
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3d1c6f66e13so4239023b6e.2
+        for <regressions@lists.linux.dev>; Mon, 03 Jun 2024 09:22:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717423788; x=1718028588;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cMBySiVcTX3BrHRQ0ZZ8x1UxOKdXwr5BWpTZuLbvO8Q=;
-        b=UPGOOTTX3hX0ippNTrX7vxTrpnRTeOqmIB8vuzrHycdznMtC7IWuTjGRlHkX0IpFmo
-         sMMcNsUAR+zV8rSEUWMBNiEHiq5Wp8ePw+oFE4mxdN3FPgkmbnzC+slGp3N1AfvvGRkv
-         XLhDZIM4PO2x+NgKRAIdx1m8n2v3TQcjgkm7XPM5fhPDVkBWWQJp+KblRE33q0C8clUj
-         quIGhbFTK5Z53m5DuFOM/+4pORRPUOGBjMSo0ouLRTZPdho0TASSfa6JVY5ZPDMi1Wf7
-         HXQpVdeqpyGK/3mY6mlDAtb0k4pJ5wxyJL+Q4kRCqGyw68L8Pfnw9I7q+I5nDEEdAMQ0
-         I+6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWs/AeYxfWfvHHQrkHUiAjUXp7KuXBXGN+fRTD9/Rhmth/wOJYClvKo+Az4scTDHyaZGEogGCUb9dfmvaPDBKBB+ZEMqpHEUJIUoLE=
-X-Gm-Message-State: AOJu0YxStrtW2awbVf35o1wHpXxLghimvK8RS8QvAl6mg/rJIS3MCXDz
-	Pb13v5kDxJFOx+WdbMfajqj25LDgmtaHCZcRjV/BfAvIrIwBpPwvH+PJ1o49qKQrAWwWyUcQNrm
-	IVNYrA1YafvFUnC9FDFsMxXNlVHstoqPVJe1qRAchjwSXw1hMunDXOw==
-X-Google-Smtp-Source: AGHT+IEVz9Q9THonmg55KCp1sWeRzvHp+0nI4wBgSoPvuH6SA7/QZc+rrtiLGD4Lofvv3X7rXOoQpL7AB0+gVX88cg8=
-X-Received: by 2002:a50:9e05:0:b0:57a:2400:3a56 with SMTP id
- 4fb4d7f45d1cf-57a3651f208mr6341450a12.23.1717423787864; Mon, 03 Jun 2024
- 07:09:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717431767; x=1718036567;
+        h=mime-version:user-agent:content-transfer-encoding:organization
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
+        b=Bv9gYhqnvkU8m8oujjXSQ/5MqTRwENLf1VZcczoKmrrZsscw13CaSZShO77rAErhTP
+         wOlgsZbvYg1zypYYUiEkgLTjOsHn6WNkMJWJsOHSQtldD0EUXU3IRpZd7Ezm48aU8+8z
+         YBedlyT4Y0mMizrr/mWnqtq1D3uWSsxKa8LKcGRIf+59eo5BdqzP3/9EQyLmVvbgiMVF
+         EsOZaG2poc9MGVRFfLEBMpHNC1z6iXfE5JT2JMWgfp+WE3w+0fS96NBy3LQQcb8L1DZF
+         iVctybUoHny3nEYOyBkOdIf3laD/Myad7l44Q7ph/fDFq4o790YyX3FMUJgwjgeQvn6f
+         UTLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNsfPYG9v2+MgGbbEEjtb3HX9PIWtvDYyDLgfz179XthC52bcv8T/3BV0eDL6NckMuAHkVgfXCqEWWMvoBbpVe8qSdTuNfvFH43Z0=
+X-Gm-Message-State: AOJu0YxLIcud5jnwO03aLPJKZ9kf018plAM7nj+adsXwIq4TI0gnyt94
+	mqksoPQGsftbG893gp8217Tc88pv7WYyF8eZpmY1SpQwqY6MQPQ3t5n6JgSEKHecQwQng3a2mty
+	QXHpTMuXeX4Vr5BJQI75MOg41cATV4PRmsBHpX77zXpx4U7kqFJuAVIOLDc9y
+X-Received: by 2002:aca:2403:0:b0:3ca:babd:76b3 with SMTP id 5614622812f47-3d1e3480ad6mr8825713b6e.12.1717431767327;
+        Mon, 03 Jun 2024 09:22:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkujB40JEGLJSPMS+fMp8vyiKXzC2SKC+YUf1vVWP9Xydkf1K8gO5okq9R6izLX6WhDGmLmw==
+X-Received: by 2002:aca:2403:0:b0:3ca:babd:76b3 with SMTP id 5614622812f47-3d1e3480ad6mr8825619b6e.12.1717431765478;
+        Mon, 03 Jun 2024 09:22:45 -0700 (PDT)
+Received: from ?IPv6:2600:4040:5c4c:a000:270f:2a70:881d:60b9? ([2600:4040:5c4c:a000:270f:2a70:881d:60b9])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4a750441sm32138096d6.71.2024.06.03.09.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 09:22:44 -0700 (PDT)
+Message-ID: <0533e9a6d05b10a00c760142cf268cfd5db0d52f.camel@redhat.com>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+From: Lyude Paul <lyude@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+	 <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Date: Mon, 03 Jun 2024 12:22:25 -0400
+In-Reply-To: <87ttiha77b.ffs@tglx>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+	 <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
+	 <87le59vw1y.ffs@tglx>
+	 <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+	 <87edautcmz.ffs@tglx>
+	 <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+	 <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+	 <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+	 <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+	 <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+	 <87jzjxn6s5.ffs@tglx>
+	 <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+	 <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+	 <87bk58n6le.ffs@tglx>
+	 <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+	 <87wmntkhak.ffs@tglx>
+	 <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+	 <874japh4ww.ffs@tglx> <87sey8g5z6.ffs@tglx> <87ttiha77b.ffs@tglx>
+Organization: Red Hat Inc.
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 3 Jun 2024 19:39:24 +0530
-Message-ID: <CA+G9fYuJtUV_Z4x74qYZDDOkbHP3SJbGvHskFNnsOCxOmPvr=Q@mail.gmail.com>
-Subject: kunit_test: KASAN: null-ptr-deref in range - kunit_generic_run_threadfn_adapter
- on qemu_arm64
-To: open list <linux-kernel@vger.kernel.org>, kunit-dev@googlegroups.com, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: smayhew@redhat.com, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Ivan Orlov <ivan.orlov0322@gmail.com>, npache@redhat.com, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following kernel null pointer dereference is noticed on qemu-arm64
-while running
-kunit tests with the Linux next-20240603 tag kernel.
+Ah whoops! Sorry I totally missed this question, thank you for poking
+again
+I'm not sure it is but I will double check tomorrow and let you know.
 
-This is always reproducible and the system is stable after this.
+On Wed, 2024-05-29 at 00:43 +0200, Thomas Gleixner wrote:
+> Lyude!
+>=20
+> On Thu, May 23 2024 at 12:47, Thomas Gleixner wrote:
+> > Something I wanted to ask before. Is the BIOS of that machine up to
+> > date?
+>=20
+> Any update on this? I really don't want to add magic workarounds if
+> there is a BIOS update which fixes it.
+>=20
+> Thanks,
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
+>=20
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+--=20
+Cheers,
+ Lyude Paul (she/her)
+ Software Engineer at Red Hat
 
-Boot log:
------------
-<6>[  114.143436]     # Subtest: kunit_fault
-<6>[  114.143983]     # module: kunit_test
-<6>[  114.144252]     1..1
-<1>[  114.150801] Unable to handle kernel paging request at virtual
-address dfff800000000000
-<1>[  114.151837] KASAN: null-ptr-deref in range
-[0x0000000000000000-0x0000000000000007]
-<1>[  114.153897] Mem abort info:
-<1>[  114.154370]   ESR = 0x0000000096000005
-<1>[  114.155537]   EC = 0x25: DABT (current EL), IL = 32 bits
-<1>[  114.156222]   SET = 0, FnV = 0
-<1>[  114.157238]   EA = 0, S1PTW = 0
-<1>[  114.157971]   FSC = 0x05: level 1 translation fault
-<1>[  114.158886] Data abort info:
-<1>[  114.159543]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-<1>[  114.161296]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-<1>[  114.161892]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-<1>[  114.162950] [dfff800000000000] address between user and kernel
-address ranges
-<0>[  114.164434] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-<4>[  114.164730] Modules linked in:
-<4>[  114.164974] CPU: 0 PID: 601 Comm: kunit_try_catch Tainted: G
-B            N 6.10.0-rc1-next-20240603 #1
-<4>[  114.165058] Tainted: [B]=BAD_PAGE, [N]=TEST
-<4>[  114.165088] Hardware name: linux,dummy-virt (DT)
-<4>[  114.165198] pstate: 12400009 (nzcV daif +PAN -UAO +TCO -DIT
--SSBS BTYPE=--)
-<4>[  114.165290] pc : kunit_test_null_dereference+0x70/0x170
-<4>[  114.165390] lr : kunit_generic_run_threadfn_adapter+0x88/0x100
-<4>[  114.165446] sp : ffff800082d97dc0
-<4>[  114.165513] x29: ffff800082d97e20 x28: 0000000000000000 x27:
-0000000000000000
-<4>[  114.165678] x26: 0000000000000000 x25: 0000000000000000 x24:
-fff00000c1dec280
-<4>[  114.165763] x23: ffff9bc22413e7c0 x22: ffff9bc2241469f8 x21:
-fff00000c1dec288
-<4>[  114.165846] x20: 1ffff000105b2fb8 x19: ffff8000800879f0 x18:
-0000000000000068
-<4>[  114.165929] x17: ffff9bc2231cf524 x16: ffff9bc2231cf29c x15:
-ffff9bc2240feb9c
-<4>[  114.166014] x14: ffff9bc22384b8d0 x13: 6461657268745f68 x12:
-fffd8000195d88b2
-<4>[  114.166098] x11: 1ffe0000195d88b1 x10: fffd8000195d88b1 x9 :
-ffff9bc22413e848
-<4>[  114.166219] x8 : ffff800082d97cb8 x7 : 0000000000000000 x6 :
-0000000041b58ab3
-<4>[  114.166302] x5 : ffff7000105b2fb8 x4 : 00000000f1f1f1f1 x3 :
-0000000000000003
-<4>[  114.166383] x2 : dfff800000000000 x1 : fff00000caec3cc0 x0 :
-ffff8000800879f0
-<4>[  114.166494] Call trace:
-<4>[  114.166526]  kunit_test_null_dereference+0x70/0x170
-<4>[  114.166585]  kunit_generic_run_threadfn_adapter+0x88/0x100
-<4>[  114.166638]  kthread+0x24c/0x2d0
-<4>[  114.166687]  ret_from_fork+0x10/0x20
-<0>[  114.167025] Code: b90004a3 d5384101 52800063 aa0003f3 (39c00042)
-<4>[  114.167311] ---[ end trace 0000000000000000 ]---
-<3>[  114.184100]     # kunit_test_fault_null_dereference: try
-faulted: last line seen lib/kunit/kunit-test.c:95
-<6>[  114.189639]     ok 1 kunit_test_fault_null_dereference
-
-metadata:
- git_ref: master
- git_describe: next-20240603
- git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240603/testrun/24170958/suite/log-parser-boot/tests/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2hM1PsJeaL7kuebSowrouZKyCLa/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2hM1PsJeaL7kuebSowrouZKyCLa/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
