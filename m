@@ -1,136 +1,185 @@
-Received: from sonic313-21.consmr.mail.ir2.yahoo.com (sonic313-21.consmr.mail.ir2.yahoo.com [77.238.179.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5827613B78A
-	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 19:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.179.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441825; cv=none; b=fGfqEm4wBfr8rSXulLrRZN/H6rEWVyhvJpi2QntH+RSmuFmwa8Y2BXPk9uKDh6fKBs3KZui4fj2ezEBe5wK93n5aCnbvVC1M1wD69GooeLDuXaEl88w7+/lVwoNCC9VgVwx8Ulfvp8XrccFQZl0hZ+gUIQGIeYkekstmOs0EyMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717441825; c=relaxed/simple;
-	bh=KPYkAqhmju7XsyzBTxmcRoWn5S92tOqYTNT7Zf42wUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NLIdMqIoqS0+zCCZcynXvAsl+ATLAQ6OisBtG7oT005Ifq7TGyw1CkuA50+9/CA4UhyIiDYPt/mzA3VGD0wlo+jt0wkMCSigRyq3XRNq7iU+510x4ZEVmWUs9xZvo666r6XezhHq/RIRRixTogcJqk5anZcMlPy6rK3/A+kyKEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de; spf=pass smtp.mailfrom=yahoo.de; dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b=J1JsREm1; arc=none smtp.client-ip=77.238.179.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83C12E414
+	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 19:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717442108; cv=fail; b=AGnoXWwRvKB8ITI1yRe5M+AmzUHSIYwe9pbFtYSPyP5cVozak7tpkCRxB6tS1+WM/0111ZB8tTy08RxBJS+y79TeezBACYoFMX6jrFzZVhDU3xApbxxwWwlAYGlWTKGYOvY+9f6zbgC/rDCbxbmUmD0b4OZlOg6SnmAS4nTj87o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717442108; c=relaxed/simple;
+	bh=KDF8NPFhBYh4v1qTxVX0qBG4dWY+XeqUGFU5g8fstCo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=q26R939QKR7Wdjw42pzJOEZtEuUdT7rRdMQ6hRw7zmtGY8kQ35Lan+jMyRZ5gjC1kdUt5Aft4zmoHBRc/uQeFUWut4HibP4FofTGGPTBqVB8YgeU7iNZGXTMMympLz/OMYSaOpMi4eHCN1bQfxTpt1qX53+cysDcXmW3BlQkW5s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Co25s4KJ; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b="J1JsREm1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.de; s=s2048; t=1717441816; bh=edWCNicz5SLkhidXgXtdvBzRygTru67Exq0izoAmB5E=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=J1JsREm1GMQyjSBjtQPGnapUvJYCq2JZfCXRXdfBJ1dJRQaxMgDD9ZQreCpnZFN8KjYxupZOFgY8b6ju/GnctuTNW+Ke5xKhIzSlFUvd6kQRWBuF55ZoGAzkbdx1/5S4loUdNlrjauTZRYieE0ugbYbqJpa+gqNGFY0n9zhFSknDGI36IFKNsRwrjUrX5nu7VpDbtoel3DgDhR7xsBZXyYsTI/gl9G78oX9H1tZtGT08sYg+yWjXaMtCW1jEFficU7ke7FEf7IJX+mU85ZqtV43xuy3wgxLP2QqValdES2VShCuYT+02DYQIbrPS4KYiFx5W/d1EBdOHBL0ruhSczw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1717441816; bh=GFe+B0+5qXUYVyJFKYpvZT3Oua6lFCshgVCjm6Jw7QV=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=QB7QPkx/6y+QGd7RlYJ0ioo2G5n7qwoCyZv79QLJmk1FoNZkHVzbh8xrKa9IPKnrThbdqftmyt5ToZWpF037460O3aj3Q0kJAGQ3hgL1LN8EpSRn+hMLy2HCsHYvBJgxF6twOpkVcGgDLd6llexDCxFPGGkYaahnH+fZeVQEDcy/b32ACrvx2yBvxJKvOuCRJIggCbp9jE/21opOgCEyC01hrnK7apvKLN92Zepv9g4YOeQSwlMWUoUx1g9+veiMPpfADNKqqMRH5C/NRsidI9RnxzKgWigqdKQMisUug3N0bTdjNR1jWnZp3/LtaST6RoRmXnoi/CzEQByb+KTVlA==
-X-YMail-OSG: RRRAq.cVM1n6crMbCT.spnjMTieSo.tt0qvtB4AOa0lp934HpKZRmcMBUd.S_Fs
- pqKphfUtzKyDdzA0YyYE_2_O5wds9gfEJHib7hAywVMfMKFSIYpdBpb9khpv0e0n.0UEnoPCdBhv
- O3wF1k7a7OzlcFMzX84f_cAo56wUB92GVfIeXQSWK9KSewfWkTE2Fadgap0U93tlS_ONLoqOldOa
- QNkeTZDtXt2cMCoZJP.be62Hm4fjUlCbxIpvkuo6FPXlbv7PyIZAbklVazvfFTW9JPAku1Nllhdh
- OaBDpvdiqdgZM7NjZeiWKNFOWDah2Xcurs2qLEbGPAK8.jD8wfSIkjPOHj00c8yepEQowSgPi_MW
- vBUlcUBLj5Oa5DCYwNg7KZb.6uyTBh1mDz14pv.gb9sp9OaYbLHMKGcikhLextuU0sfe9rvLP0Si
- _6SFGmQ7UwNqTK2YdjOJR62CQF3W5TnqYpJdKc0eyoHdGKwkFCrxpMiZTJ7hAbBvw2iETrABl8hr
- tvADER.UGLaUsf47f70aclGO7w1cAz7sngtu5tq.THxK2fyX8_PrXb2fKVHogj4JnXCuzokj8bI7
- 7RJ56L82la.HeIumagtCCEf06xQ1HTyY1HmWivB_UWqDcSH9twW4awJim9pDZpbE2F.itilM3wr9
- e6HMUjnEcglfYUrKgQcdnUTw.cuwAztFaBu5c9HrpI3YJNQ3sySn4YvUMR7cbZKkm_JbVz9gz0kG
- FCTOT47xmaSw7y_HWcbgQqg0H94d5gTh0eAd5TeR6RVqHJm6fBvz7Yh3dt0e9bMwxR3ly_ambSPk
- 7vnJHa9Ycg79VMdy2yGRKtBY2b9YQ3KgAMD0zn5VaR7xpD5ct3dN0_tYiv_Xgj6_TmZ41JU88ept
- 3O3_R8MzeohgmAQ6jiBh_4LsuQVRCly5ZQzLLUkiUxNpNWbXhy0uhGde01.IsrRKL498bIUWTotK
- hlazkSrXHiISCeeDIC73LnFLwfWtHU.GHSsz30_Yp0dBoSqIxjKu32Y.jfQ.f2BNNPZmizE86FQf
- E..nYeW__tvIDYDiPv474VlxieQvJ260emljUo2DqB3Ehh13kUbBFnH7S4Zar5N10CUiY2QWl6jx
- fRRtKL6MjBopYdy46jpc43pOHvyuHFZv06J_e2Dbz4gGJ3sQSXywrcPBzcM_BDQeocn7rGUxpJnA
- B763QKOGlvPgTaYQmZiQWMxJB6QCNKG1k71265Unc33l.RYiu50HoFVlycBlID1rALmHvjKeLht5
- mMvvcV6pGOzDgHihvoUHiGR.wESEDOYKEzOzJt39H3i41vcR0zXxDY3dQ9Sgqia_6p8eON4ZA9eG
- Y.xx9baR.EFAS3HxTPaPq.0RFkxvGNHh5ZNv1r4GA6QeadYTdwTZr8SngRzw6P3r8a8MaLjcMNDi
- uVoCDx0BpKfk7CEFCupCJK8X2VjhNDTmpAdBE_zUMNdZ46QawukiKtVfATKS0vkVwADWcylZSdt_
- BxkLBol9tx3RWMuGNo7RNG7l9HPou49C3TbuIPNvrVgpZs4qn6_Hgbabmr.nOuJbqqzY5kbvMM2z
- DzkJ0HaQlz.wWfVfiU781crKod9984S8_eFAdaJKfrbBVpsbT02LInBFo3CaqQRYDwanjuVQrLJd
- f05E3qei4DnL.gKzlDsOdnh6WYH7kcXDAZB2nWd6Ty2nwK32ZKUD_keGuayhfvYFp72NSGNi_oki
- SD3npZa3yqP_1Lu8gKP_JajAa7F5zxjNvRnaaqY8T51weOQCTmUWNjI17FbCw.8js1DDbbkmuZeB
- SBWIfhzCESrYtg0Dl7zsW2hAH.SULdOxKK5Y55LlC7Va8qN1SNlWgOX44We9bxI3POXeJMu4M03j
- WeVYwgz3QKr5AGFHW.CKI19r.40xMIVC.Tv6fVWsdbThv6.kBB585UxEg4adCdTqO2WCAaeGRwPF
- tVcCtT6J.iZLb2OPLkA9tzg4e1XBa1h2jjInP_fTMUtC3ib5hhjnA8P2Chk9GQztEjJKAab6JlIv
- sixBpNiOvdzL3nxgrJ8as0Wzhc5WGHSRtzeGuF2OqizEUjqtbnL989FBQ8ealhkUvLgmrKoEv8zQ
- qC7ktR51sFka5I7Bmqohewtn51_zL5u4q57FahRZGq6yj54y6Mqu0yVWpWa_0v4pjIDAqPu9c5LC
- HfQ6wPD2pV7geth9K5w5.pfbloEKJzoPdxBqjxruAwMGAlVeVBUdIABkQDeyDMsQL18zmdRk7gLA
- QMb7xc0jYZBMBF2L3sAgZALgqeBuxzBr47wEvxPa_Z1_SHiO9LXUzluhM3AHm
-X-Sonic-MF: <fhortner@yahoo.de>
-X-Sonic-ID: 83e29caa-1270-46e0-bf41-7b4f52bbe70c
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ir2.yahoo.com with HTTP; Mon, 3 Jun 2024 19:10:16 +0000
-Received: by hermes--production-ir2-7b99fc9bb6-z99rq (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID abd44bd1c36a5049a30287d79d773928;
-          Mon, 03 Jun 2024 18:49:57 +0000 (UTC)
-Message-ID: <829c478d-f547-4e12-9976-ed465dd8d4ed@yahoo.de>
-Date: Mon, 3 Jun 2024 20:49:55 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Co25s4KJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717442106; x=1748978106;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KDF8NPFhBYh4v1qTxVX0qBG4dWY+XeqUGFU5g8fstCo=;
+  b=Co25s4KJRcMA6ZAo1aPxZ0qMCc0gas2dHGhOSl4lTbERAsqwemdfXtmO
+   /DeLulrrmak6YoPvK5GurOl9OaE0fvE1V1FFl0AZV0GDmC1PJaQ4JeyF8
+   sa6vJTOXifXE1JRq3xGmjTtFa4pBQkXJ1uBB7EzZQUWmO+2y2Fo8Bd/VE
+   2zOTln53gIKm3zNc7fVslVCGXY4PMtT/YeKaVN2yADccXAwUW/uXuJCT0
+   4lKWnmB1kjvuDpP+GEXn/QoUvS+MM5M+FA1/GM/EhwPvGrH5pM6GVD0zG
+   V5NqwBJUApHyY27QXMgDztL+aOv9uv1cNFfVnwCq7b5fJhSuByEriP6BB
+   g==;
+X-CSE-ConnectionGUID: HfuQm8JgQqquGh6lXJDr/Q==
+X-CSE-MsgGUID: cS/D/5/zSYm+++33hRrg+w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13703505"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="13703505"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 12:15:06 -0700
+X-CSE-ConnectionGUID: ET9/LhSySs2tQhU+FgcxLg==
+X-CSE-MsgGUID: Rw5P3g2UT0elnqAWcNzEzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="41901994"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jun 2024 12:15:06 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 3 Jun 2024 12:14:59 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 3 Jun 2024 12:14:59 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 3 Jun 2024 12:14:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lV5Sz28uQj5ZpPoOyB5t+F72itf4+csq43zIv7OS3Fqa386xXAm027JJ27ct8Gmat+HqOHDJ3ltTPXeDZA64Os+ShHk9kDSvYFWhvwesaxBZP2b/Nu/Ej4Zsnji7ELWbn47QhwDRQdFrjMYmXwpS2NEjG2bQFgWnAvr8Agv8/gJwnhG8V4J5TP727OQK6L85PaGppSCSGv0ub+H8/GFgh5bjSidsX9FbfUIa63n9yxabGJAvNMhDDdLO+ac4ORbSoG93cyY8/Z1i7RkyY9e7cvMVtiBatDptI+7arTmk2u1ku71jMX7e9OU8YGBh5qj7ZG2sdrLf+nHtyF3RZVRa/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IgoVXb02gh8WWv4P8QXjX42mmRDIlLJlsAy0k+VioXs=;
+ b=j48JqgsrAXGdgfHwTDuJ4RXyMPLP31yJQdTgB/ClgCslwO58wzGoBgs7u1AvvDsOsM1BoBRFv7mUeh9i4xY03AqExyfIiQJlN7evZYyti5iYG1leh4D85G7+QZbgdowJSZNzUYvNpMq2wM98DfJIyIa//758iI1P6UOJdt2tbuEBLbmO5Wvk33sEPo5+dorXTVHy9X/Zp8onDRIa0kRzTK3+89K4xRNXjAz/BnLnUoBWxcQZMshFaEfrFPsr2o5PrFCN2Fdpc21WXRkKN0bOuzzB9uHRpWt8A+jd2wjqgvkSsA/+SMZLPk2ivYNu4K5FEFshrD4ZaxXrmXJoDLBoZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA1PR11MB6219.namprd11.prod.outlook.com (2603:10b6:208:3e9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Mon, 3 Jun
+ 2024 19:14:57 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7611.025; Mon, 3 Jun 2024
+ 19:14:57 +0000
+Date: Mon, 3 Jun 2024 12:14:54 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Kalle Valo <kvalo@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+	<regressions@lists.linux.dev>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+Message-ID: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240603165342.GA685076@bhelgaas>
+ <87wmn5ubfo.fsf@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87wmn5ubfo.fsf@kernel.org>
+X-ClientProxiedBy: MW4PR02CA0014.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de>
- <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
- <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
- <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
-From: "fhortner@yahoo.de" <fhortner@yahoo.de>
-Content-Language: en-US
-In-Reply-To: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22407 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6219:EE_
+X-MS-Office365-Filtering-Correlation-Id: e90c5c52-3f94-4b56-68f5-08dc8401750c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?q1KPP6OfOMrz3BENRG4lJ/l9vrqq/1Oo62kLrivPnfOwE3ZrkqP8G7bDpSV2?=
+ =?us-ascii?Q?Z8icRzQOPR4IRY9elewOYUEMVnasxew7WvMMs7OjdNnF0YuxpvohqFiNQ4Da?=
+ =?us-ascii?Q?WzaeGWJB0SzGm/i2nqAnN6FFv/C/oLu6BcKij9MU3xZKIJYKZTMxCuA9e+vA?=
+ =?us-ascii?Q?SnPkSPvh223/jWLZ4oRO7tBI6b4WfLngYeAZdr7ehk+hzjPOoYy5QXBbiXQ1?=
+ =?us-ascii?Q?dHmxXwhDXe54m3VlUvZIbSLty7LiRdb3RzsR0DDu+9rLVR9yQHv+h35QKHlb?=
+ =?us-ascii?Q?jZsVbC6K9MGnrafk3/wD7M0pXdyRMPXdomLLOAqQNE3rdJp667CzUYMXtXXs?=
+ =?us-ascii?Q?ngmFM983+2G88oYErYSD4zNgRTi2fcpBzQE0TEKT11P+xB/0A2gVxRbBV7MS?=
+ =?us-ascii?Q?7CcQD6rGb84yQvDCT5mG5p17YHVO2eKf1oPFqNXdEr2LuPM+kzfGKIUiGX67?=
+ =?us-ascii?Q?vS8yHCzSo/pSmG9CueDzQb/z65vyd/PsS6vOC2FP0qaWPEgwlinJdzgBwh9s?=
+ =?us-ascii?Q?Disygzh0p8LH3JiDEc/NZjSNNcwIULQNV4TWdO+MHLnyFIzoKfpfKVir+6TJ?=
+ =?us-ascii?Q?qqgkH1tME8IsiiO17kWvMZXD/lNgPVW7/0/ty1CnfpaigQ4L4KoMkiMbUeJe?=
+ =?us-ascii?Q?U9EMYrxZ3jzDzbvJwK4ZAacmQxus+QAk61+VgchdrpqJEw8p7SskSvxudwCX?=
+ =?us-ascii?Q?+gGepm1pGTeBRgWZouXsj2H5/FhDRFIHwdA9WJJdFruLkiE/DPvcWf21m1+Y?=
+ =?us-ascii?Q?YPJUx1UcxvZdcSYlVq91xqFJ16tQpvu3q7VLKbSN7eGELT0pffM4RyCPLGXN?=
+ =?us-ascii?Q?87m7osccUNqvNjGFpuNYz/DJuUPyJIlpaz8w3w8Z7/marJTkmirftOc9oXyF?=
+ =?us-ascii?Q?PWk2S0S7TuNC/LjBKHzqKVe0WogGxpH5O5mLsJQ/rD7vtOkqH+WsKHznvqYp?=
+ =?us-ascii?Q?FgtY5qRw54N8tp+3Ddf9FYOqnDFgmMtXTDVs5F/X7F1P2zVKtfhuCs63+Y8b?=
+ =?us-ascii?Q?vDrfHoxNEQns5ImINp+/2eJAjyheoCMZNiA/5ZwNVioNdAwT/9Sv/2nePDpv?=
+ =?us-ascii?Q?0pIrw8gWXsVw/6L9aDNBsPJJD5a9xz6A9/hsvMyFknWHXI2hNDd25ZD8GFb4?=
+ =?us-ascii?Q?h7elZLGxpGbqSOqbMOaoxgN6YIl2LiTU+3j4GUQNwjJz6LMZhlR+8iUh7TpN?=
+ =?us-ascii?Q?GSFbMIShPArMqipLKiw4GqscQXEZXC+SnSqPmf4s+aiIcir+6xU8TUhnEv/y?=
+ =?us-ascii?Q?tjgoTJM3brmcea5gVJNskkdOmTQfuhfr8xE9O559uQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IImEXUR+TluzgLIQ7/55bP0LEFtJ1URok6sXyyXrYsP/Hm3QHA9FBFXUaRlF?=
+ =?us-ascii?Q?lCOa8DJ7K+myK/dm3/xZs+WMJ5ayTjP4+06/Yns2RbTKShQfJEaFkUWfHUba?=
+ =?us-ascii?Q?qWgIgYKibAnd+E/zqINcZptrMHba8KYXcPV8TMlYGEmxZCqVj9BU4urJZLSi?=
+ =?us-ascii?Q?3UnW5OKEbxlN0FBUP9fNy8/7pZdrQrz4MtFTGSiG5oyzyiCZ6pMI/YrLhwHN?=
+ =?us-ascii?Q?jTaYKjiH9skjSp+4YzKT7f80fDhNL/LoMMlEESOIpSNXxzLNfdGNeKvH12mO?=
+ =?us-ascii?Q?A9g1/eiXM0j/53hh7JBkd4Ee1I7+L9jAbo1VpXDKBLgtYQb0wkNnvtoDubtS?=
+ =?us-ascii?Q?O0x5QIcG6X1Rg4wZAgwWx6dyk3peH+rCTIqlC4e8c7rbwytnwo2FMGMgNiHM?=
+ =?us-ascii?Q?XnJGgqXa4LV2K0LmDzFgUVCcjygMnS/9oYntjijZkpb1wdQCwqQwAFAYCYcv?=
+ =?us-ascii?Q?1XHuWIszlB0qPXeoye2cibaqSLjmGwBsNTEcXN65sOhfudhjD3uCuWyBgS+t?=
+ =?us-ascii?Q?K4jBHTs0tSjcRnsNRm6Kw5qM95tBdMrBmQ2YP4f7IgNAU8jnJIxTOcu92rF/?=
+ =?us-ascii?Q?keNR8OZZzFsNExjNYlmvLbnhFe1NQ8CXH75/tu0W4sRxNEVoQ3N+LeLj82kr?=
+ =?us-ascii?Q?ECg+DF1YYEi+8wvUREAxtjA+KIU2H2kWLvMoK60iryadvPuBPIAEwnGUrU0k?=
+ =?us-ascii?Q?ovxgLDdwGr4/Vbb8K+HNUpov2DTDVZop0VQwHo/nkDZbxf1DpQ+TnjTBl2Ud?=
+ =?us-ascii?Q?kbKbRKM59mCgB/1Ex8tEcNLHR90LvDJjBH4NadgAVvi9/wsEDnOwQk+MW1iv?=
+ =?us-ascii?Q?njxM2y2OzBOfnAH4prz1JwL3lTb0+Vm/AZIOpQI/1ZPmCCBBxfsfVoa6YrMn?=
+ =?us-ascii?Q?dAFhUBFZguXz0ZTZqt+6INw62iWfUycg6RfgTs5DP1vdw6nuzQp131OSsF1j?=
+ =?us-ascii?Q?HsIWNcijODUSNN3e4JTkcfalVZMelHnqc1iuw+1dxe4nleBN9R8g/uO6lkkp?=
+ =?us-ascii?Q?74IYs2EcygM+riiH1e469PZzenIPBTeDBaOKVCCuc6q9fDkMKINistNdaHx1?=
+ =?us-ascii?Q?/v2F+SPqEwOCn2p5U/OxfDZzD6/0LvW8zQ8z5Q3kaFx9YRhqxJpGMQTKKc/c?=
+ =?us-ascii?Q?ZiEB8D+Pa/CvRozcMIgq97/HkEC/DUIb8gKDr8/zj6I62Tb6W2iOVAmMhtuB?=
+ =?us-ascii?Q?8yM3VELhuKUvzr6/nKID0ClGAI4LHB306D9tYVbTB+mDdGwc7iFft2YKNofr?=
+ =?us-ascii?Q?ZTMw9HQ2h9E/EBg8x37B/MXg7OlBgSG+D7E5ampE6RkOdo1KX9rq+FYLJ9MQ?=
+ =?us-ascii?Q?4LAS2wdH/yZjoDF7VqGgkmNY27bidoP6OskEJUohce+nYON+vp+NE+06KR39?=
+ =?us-ascii?Q?G6sewZxrlLFmvmYvPvkTiiDTnLHKO/LtOZCPCNAfqx3YhcvusWhYDWw7vrP8?=
+ =?us-ascii?Q?D6uZO8DDvOJ1oRSK/497+4emenG9YCiFvozHY2Wxs8N8HYHpIiVx0g9mhqFA?=
+ =?us-ascii?Q?fvS9Ir4AdiBULndUjbtRbRZfMVCzDT3INKxzcdd1TxZ08eViegl4p2wl81Ir?=
+ =?us-ascii?Q?PX/MNk/8IS/LQIvL8mFwRp2kdBzsC8bMiHMv0rQaiRb2QY8cm6DlNkkgvRfY?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e90c5c52-3f94-4b56-68f5-08dc8401750c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 19:14:57.4479
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5O7I7j2geDc3oXzypZnr7qfM1xygkDfxyZzWa6WolWcoIAiscfRD8vMlWjMjUEJ5+pkhLcZ5BihZrxjqapA+4QekTYQAWzoZRRBFg3cvuC4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6219
+X-OriginatorOrg: intel.com
 
-I Totally agree, this was also my first thought, what has the battery 
-state to do with thermals.
-But at least, so far, we have in total three repros confirmed in the bug 
-report. All of the same machine.
-Thinkpad X1 Xtreme Gen2 = Thinkpad P1 Gen2. The only difference is the 
-graphics Nvidia Geforce vs Nvidia Quadro
+Kalle Valo wrote:
+[..]
+> > Thanks for reporting the issue and testing the fix!  Can you please
+> > respond with your Tested-by to the actual patch(es) you tested?
+> 
+> Not easily as I'm not subscribed to linux-pci list and I haven't
+> researched how to import mbox files to my mailer :) So feel free to
+> ignore my Tested-by tag in this case.
 
-these are the types of thermal zones:
-
-cat /sys/class/thermal/thermal_zone*/type
-acpitz
-SEN6
-SEN7
-SEN8
-SEN9
-SENA
-SENB
-SENC
-SEND
-x86_pkg_temp
-iwlwifi_1
-INT3400 Thermal
-SEN1
-SEN2
-pch_cannonlake
-SEN3
-SEN0
-B0D4
-SEN4
-SEN5
-
-
-Am 03.06.24 um 20:38 schrieb Rafael J. Wysocki:
-> On Thu, May 30, 2024 at 1:10 PM fhortner@yahoo.de <fhortner@yahoo.de> wrote:
->> Thanks Thorsten for the side note.
->>
->> I have compiled kernel 6.8.11 with reverted commit
->> 5a5efdaffda5d23717d9117cf36cda9eafcf2fae.
->>
->> Battery Status works fine now with reverted commit after S3 Sleep and
->> Wake cycles.
-> Well, the connection between the battery status and the resume of
-> thermal zones is somewhat unclear to me at the moment.
->
-> Most likely, the commit in question changes the timing of system
-> resume which affects the battery behavior and it seems to be related
-> to the EC somehow.
->
-> Let's first see what thermal zones there are on your system, so please
-> send the output of
->
-> $ cat /sys/class/thermal/thermal_zone*/type
-
+I have had success with "b4 mbox" and importing that into Evolution, but
+your mileage may vary with your mailer setup.
