@@ -1,102 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DF6132804;
-	Mon,  3 Jun 2024 18:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0AC137939
+	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 18:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717439393; cv=none; b=gzwqarSgrj82kLq0M690jWVR8HoZdsJOazPJwPkbRfpqk477ReXQi0KcENemIvmnVwwz2Dhd7qRMmuGi3IDHMBN46XDySpbXD5wGvSnFdM3xVphvtUMjOu2lFKjKDFduMobZ6v6T+7qMf7jqEvc8eVDJHbskntfk1n9bwSDjl7I=
+	t=1717439931; cv=none; b=mKl3BBh1VdY2WGkBkr7R4ctg1SrN8ToKZf2uE6hXH/OBqJ5uKMFLQeNO2bEPsNkyjYqCmaP8klUxX+Z6LF/FhxBJmGw+kFJeKaMKNb9oG4LqDNvCK6JzunhSnXIVWWr8edi1IhGcbyu9tejd7YTJrS5boyUPo0EVCZQqqYUr52o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717439393; c=relaxed/simple;
-	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=reWDAwotov+xkrZ0wdw74Qk7bMJBlCg8vmnqM7p7YDPxO4z62vJqlGiLOtHTDjIN438CNIbTBLnm8C7n3PEBqssnYBwlQ5Pqil7K/3/YfsSIa9EZHU3FIGzAkVHeH93TjW++S8HPpMsdvKuVi1/bJMgbxnpQzVQubP4iK0ldZ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkZuV1eV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717439931; c=relaxed/simple;
+	bh=4yr4QQIdurPtFUFFeSUfFHi9As9eyEuhMm4OE8L2If8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tziZvhpQdVHBJ47vZfJK1lgxBUusL/ZyTCg2d/aDRKUFl1me0kzcHgPoNkKV+iz2Khf1ohey51w3/0QyjUCpDkud8AZTmQWXytDYqMz7Swvfze7Eab6uAJKCCwpheAigQHLdfDZXuSbAmOegzuCjtKf4MAXgydyICQX5XcdwODg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9qUq3RU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkZuV1eV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECD0C2BD10;
-	Mon,  3 Jun 2024 18:29:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9qUq3RU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41141C4AF07
+	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 18:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717439392;
-	bh=mNhvVNlm7lR5BWW0xTcHRwGUWRDr+XPiKpnaTJtSDTI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=OkZuV1eVes1bmZwBJfIiWe1TuYU2eCulaWhDYbIQ6vzMFyaOAD8QPRxLbAyVHL9wa
-	 aOkkSIhSzuJEqQBog1tDRdXeLpG0m/VC1G9Om4eLmdkgUqTbgYBXSXgzzzezGrrF0L
-	 c2htHuvtT5if3G7uXQRjvkAhGsd9+9OwRi6wvWjUhRMoTbUvhi610iohydI++HjNHe
-	 LpcZh2FSschBweqG/H5aKQNvQCEM8ZB9Ic02r9Fb67jykDi82yuxpgetbw8D0rIp/V
-	 GTNZSGBtL1yRhYXTQypgCTgnc+OoLITtnoyQnItFbQw6FK/mcgi80sDmAmWTx7rS0H
-	 9ignmGxUFxgZQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
-  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,
-  linux-pci@vger.kernel.org
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <20240603165342.GA685076@bhelgaas>
-Date: Mon, 03 Jun 2024 21:29:47 +0300
-In-Reply-To: <20240603165342.GA685076@bhelgaas> (Bjorn Helgaas's message of
-	"Mon, 3 Jun 2024 11:53:42 -0500")
-Message-ID: <87wmn5ubfo.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1717439931;
+	bh=4yr4QQIdurPtFUFFeSUfFHi9As9eyEuhMm4OE8L2If8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=k9qUq3RUnXeNwmd39li0X8sX8iIaEBGMYnwLDY+/SUQjYkJwi2TLwFlbH/YNw1IRn
+	 veSJEVOedXqtdx4Hahp8+rIxs17SqeGAYJg6dXZG4CJ10HPLQ4OQcNwZpKyKKMgOf2
+	 xuE3ZvWsqMSgjnODErzkQP0JFolRtCd6Mt3n3aedkTQLKK8OmxzPGdq7NupmlfaJ+x
+	 FYuc8jDOBRgl6BvEC8JGJ0z0QH7s0Nyp5qEAXPVkguGWpMcopCPO8lu2Ba0vA+Ya2T
+	 KX0e4lIckQ8QUvKWCC0pyoT1F0b/M2L4LXfpI9H50S2DpLy5uIkn4qv2Hjac3oZGlv
+	 PDck93zTcpAHg==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-250ff991197so3267fac.1
+        for <regressions@lists.linux.dev>; Mon, 03 Jun 2024 11:38:51 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yzey7bsjQnsyI93UJKQlaOMRxiT30PwxWRaYd8w2UDb+kIO9prZ
+	jQT+t8CPsdfqaNsdt47HbMeCH+Sn1NlmD76dQD13a6xhsctnO021govDgIQUW69NcUK8Vxl+vF6
+	vW+Wj8DSaGY+6OeJfdObn//asuyQ=
+X-Google-Smtp-Source: AGHT+IFXo2Sxmq6NGsIJL4TZKFcFTzyZ2geDQBH/dxhK1Kdg6g6/89vdmXluYReeqUcBM5Oj9uRcXgI7Y1ZlwKtwiFY=
+X-Received: by 2002:a05:6870:f145:b0:24f:bd2f:28d0 with SMTP id
+ 586e51a60fabf-2510281e316mr182471fac.0.1717439930125; Mon, 03 Jun 2024
+ 11:38:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
+ <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de> <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
+ <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+In-Reply-To: <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Jun 2024 20:38:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+Message-ID: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+Subject: Re: Regression, thermal: core: battery reading wrong after wake from
+ S3 [Was: Bug Report according to thermal_core.c]
+To: "fhortner@yahoo.de" <fhortner@yahoo.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
-
-> On Sat, Jun 01, 2024 at 11:39:03AM +0300, Kalle Valo wrote:
+On Thu, May 30, 2024 at 1:10=E2=80=AFPM fhortner@yahoo.de <fhortner@yahoo.d=
+e> wrote:
 >
->> Kalle Valo <kvalo@kernel.org> writes:
->> 
->> > Dan Williams <dan.j.williams@intel.com> writes:
->> >
->> >> Kalle Valo wrote:
->> >> [..]
->> >>> >> The proposed fix for that is here:
->> >>> >>
->> >>> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->> >>> >
->> >>> > I get "Not Found" from that link, is there a typo?
->> >>> 
->> >>> I found this fix from for-linus branch:
->> >>> 
->> >>> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
->> >>> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
->> >>> 
->> >>> But at least that doesn't fix my crash.
->> >>
->> >> Sorry for the broken link I mistakenly used a message-id from an
->> >> internal thread with the intel.com reporter. However, it is moot now
->> >> because the new direction is to revert the lockdep infrastructure:
->> >>
->> >> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
->> >>
->> >> (that link works...)
->> >
->> > Thanks, that links works :) I did a quick test with the three patches
->> > and I didn't see any crashes anymore. But to be confident I need to run
->> > overnight tests, I'll provide my Tested-by after that.
->> 
->> Ok, I'm now quite confident that the issues I saw are solved so:
->> 
->> Tested-by: Kalle Valo <kvalo@kernel.org>
+> Thanks Thorsten for the side note.
 >
-> Thanks for reporting the issue and testing the fix!  Can you please
-> respond with your Tested-by to the actual patch(es) you tested?
+> I have compiled kernel 6.8.11 with reverted commit
+> 5a5efdaffda5d23717d9117cf36cda9eafcf2fae.
+>
+> Battery Status works fine now with reverted commit after S3 Sleep and
+> Wake cycles.
 
-Not easily as I'm not subscribed to linux-pci list and I haven't
-researched how to import mbox files to my mailer :) So feel free to
-ignore my Tested-by tag in this case.
+Well, the connection between the battery status and the resume of
+thermal zones is somewhat unclear to me at the moment.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Most likely, the commit in question changes the timing of system
+resume which affects the battery behavior and it seems to be related
+to the EC somehow.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Let's first see what thermal zones there are on your system, so please
+send the output of
+
+$ cat /sys/class/thermal/thermal_zone*/type
