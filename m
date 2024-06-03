@@ -1,204 +1,151 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4917B642
-	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 02:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717381796; cv=fail; b=c55id0by0m4DkcCgJHvG0qhh0lTmpWSCi+lpOE4sLst7anrBoy+7GpTSChDty9QA+z8beVy2Qb2T+kzIiGDCQQzY5v5cBNbMtiU8kfJ3m6h0uyFCY3RAQYTiV2bD8JZhCc6qZRzvQKc+ZQpP7Mt9hf39bmd8FoVOmDtwk/0fACU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717381796; c=relaxed/simple;
-	bh=yMbltnmtoiJM2fzald5SyO0aCCSP3nNn3UdU/hlgb2M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uAkfBCF8WW715VCQhtzh6VHXcWbeML0KTW4nZ5/KiZCRTA3WlxA6zZvDwJLSiZFypfc8hrxWQSb/ybOVvG1Rlf9sl5RsdGVxV0CY7RHDTI4kvQWWynJZc7Mj2e1eT8Lte0MTyZAwJrEFo0R3PrlqHV8AbnCMTIABqxiAf9DwRYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2BW1yVSw; arc=fail smtp.client-ip=40.107.92.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F4A12DDBA
+	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 14:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717423791; cv=none; b=HRufmdK6AZs5k6MmVK4ltyhJhOUOwxUSpHUyH5JBBwLdXTpwXwYAPbh+UrVCw7sloq9XWP3inwwSDyEkyk1EInM6LSWlM/md0/+Wvb+gYuXCbvUOqMxfx+v5tH552v1uIUbKpELPjMjy5KwnbGrHtuHkBGNqxoojjRqUizG3imY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717423791; c=relaxed/simple;
+	bh=YyRPCKbfkwQ1wrNaEwDVnzUmUDH6XRribciN2yI0W8I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QzOGSPoC8J0DjoRP9dhTf9wb4jj8VpKWlCEcsrh+rt/qbfjwSudx/tXHarpFSELPQms2+Osr1NIKEIt4hoGL6CmHlVZIHKP/C6yRXcrTsRNJcHjJT7OWJUnPNBpNW3yPRqvIgNYoPkIkYbUSL4IcX8lL4dW95bQrBQZgj6kgkBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q0HpmeSI; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2BW1yVSw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FQ95nkP8rg06feiKJOXlGDbh4aWYg0hs0yko67hSFEa0HSgCMcUSVe8pUm2JbfN/HR0W90P8j+QLFJ5JJOfUwRzUl9+NRyjZnbW3vP7mGrqD49R8l8gZNtMt3N1U1FtSKN+d+29/xVvHmjgWzTelZ6haehh0q5ctAUWDqlyPNxod1altEr8e71jzHEKaAhItkOa+n5s4sHuK/yb1Bmwb01D4s0D3Sms/btEetpNOrz6SmSLtELVDrxbq/iXN0d/smkj0HETcl6cLgTbgALSWNgKBONYP5z9SEYEToviPWU3umUlzmIjX8++Z1GLC8oAOEH6WKKpizgZeHNa8CiYlxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g8MFWGu2ucwdm60RCo46EIvPtFoq/FYk+lrdfEmGLNQ=;
- b=Nq0LRtXbTKRH/onQYRCgYK4zt2M88/3HKSFAzXmFnE/95qzFJHEXsOudF6YS99/kdMVTSbEacjUm17NszigGCN4ZKZozlD+WJvRr8BMgBoJaC345sF4Zft5YiFL5kXqCM0ulCM0ihzlwOvrHujNy67KDtMc+9Hg/tHnPptsvrqFDCRX46UX1xoSiFlSGjAnAuOiKEFJ4NEOB80SHNa0MQOacP2cvYe86PPvfjhOgFrKOyNOwPl9+CYc1t5t5cW5VRRDCnfbotG67vTVWMWEuUJIW4oVf0NFcIcAMxBh+WfIZtoJggZZKZbLqVkDPkgYZ3eUg9rzAchEElI921dnUNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g8MFWGu2ucwdm60RCo46EIvPtFoq/FYk+lrdfEmGLNQ=;
- b=2BW1yVSwEY9nNkdhX9XWQsE3FQ0aw8QRIH6EnqghT3ZaRuJu46z6OoTsqvt2ZWw5yofuGS4hb/8WKNp6935k+ybR4Zn8Jk8Uw56AIUBxV88lzbN2DP8QZPhBGoB9BwqBsKOi5mrrAOU/VYCBhwDykJTB1z7ZLy6VA0Dw0OmVL3I=
-Received: from DS7PR12MB5766.namprd12.prod.outlook.com (2603:10b6:8:75::12) by
- SJ0PR12MB6830.namprd12.prod.outlook.com (2603:10b6:a03:47c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
- 2024 02:29:51 +0000
-Received: from DS7PR12MB5766.namprd12.prod.outlook.com
- ([fe80::7546:1785:7a42:1d49]) by DS7PR12MB5766.namprd12.prod.outlook.com
- ([fe80::7546:1785:7a42:1d49%4]) with mapi id 15.20.7611.030; Mon, 3 Jun 2024
- 02:29:50 +0000
-From: "Kaplan, David" <David.Kaplan@amd.com>
-To: "tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>, "Koenig,
- Christian" <Christian.Koenig@amd.com>, "zack.rusin@broadcom.com"
-	<zack.rusin@broadcom.com>
-CC: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: [REGRESSION] QXL display malfunction
-Thread-Topic: [REGRESSION] QXL display malfunction
-Thread-Index: Adq1XQDtRohTTtWlSaWZK1r1HvW2gQAALRPw
-Date: Mon, 3 Jun 2024 02:29:50 +0000
-Message-ID:
- <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-References:
- <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-In-Reply-To:
- <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=c4052fed-571a-452a-9f30-0c734057c083;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2024-06-03T02:03:47Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR12MB5766:EE_|SJ0PR12MB6830:EE_
-x-ms-office365-filtering-correlation-id: ff2720d6-4542-4b9f-d4d3-08dc83750b97
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|366007|376005|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CvfzpErC7K6D6kH8dUJJtv969ZqwQZExG53Bzv5pUWi+19Mo73OlxVLNSmQr?=
- =?us-ascii?Q?woPhMWuEmiCZ0BD+cYEjhpO033wAEJxm+Um2ypbowQSPW90DjT28F8+P4oaz?=
- =?us-ascii?Q?lGuEzseyWzCQkj7HEX9+ysP5PjktmP+uRmLWAy4MfNHANsMnfFoeFSYujSGJ?=
- =?us-ascii?Q?DkzGZFPVTG+bA1TE/6SjkAVGwRB32Slt+CnGp5onvZpSkNSsvc+CpjkOWSmk?=
- =?us-ascii?Q?X0/r8OoL7PncToDPg9DFp3hh2sM8yeKlnPwcvMISKkPM6QyrmngtZ2MAvLCP?=
- =?us-ascii?Q?zqFqK//lPH54t5o6X3GZEAupsA1U9r6cpvtyRxtLByBtVuq/zgDs9qeM+2mk?=
- =?us-ascii?Q?vlr3DA3KQ70+Xa0jt1pSSi8MzLZPjaIgG0l0pEk91lv1d3wa+IQ5cPnBkhGb?=
- =?us-ascii?Q?M5QK+AIr1gMMEmYXJ7z1GNNBLaUFBByLMqMdFybDXJpCqoDvZmWC1HSCdp5N?=
- =?us-ascii?Q?yOIUho/4No7uygZJfychM9zYKTJncUMuhBNSkBT/UOketxGW5Rst9EljyYMW?=
- =?us-ascii?Q?m50H+uO8YeDXytg88QvlJMjmkBfU5MOGCBykOfP/zg2dXcyPOC8AlBA/5Gf2?=
- =?us-ascii?Q?uy7oA/czA8ll8xKqinddhq0Bx/jY/ALhrc9P4tbQDlS9hkUbxtOvgDajEO+L?=
- =?us-ascii?Q?ETkyLyJ/p1SEhl+7HFHEjotywu5Sij1R5ADHC61+SdGfvLTeslQtiWCRjwfW?=
- =?us-ascii?Q?0ATJK1sIGirPn+RuyIbT2ErzQUWNfApUngBA97NWUHlkdsKx9PxRbk2u5Wdb?=
- =?us-ascii?Q?vCG8s2gHvydFgE3NTqRerYcrw33/YzdC1Rt1KZ3J4wx4e9w1/Zsb2H9AyBBY?=
- =?us-ascii?Q?QrqPgeDPkIqCA/FxiLasshqu7iw5RyD8KmoNAxbLW5haCd+b8Wl/v+1+FAnh?=
- =?us-ascii?Q?l047r4L45ClU/XAd0YpbOWySL1xfazKCrfRrHtMVQ3WpkL063vAZVT9EE1Pa?=
- =?us-ascii?Q?N0IwifyIx2hm8ysWKAMWAc17d0NOy1aqTKvfMzfNJ3ME4zTbMq07Cjbiv2/e?=
- =?us-ascii?Q?7j7nUNd2/JmdDfYfx64HENT0xEyfbqhhBc5iMhB2J/ov3SHkCXpIq/M2Vu78?=
- =?us-ascii?Q?Q2e64cdLZ0yW8Yd6eSTgbDEoOmbGHTegkvENqwxCK9+YN/aTBHM+CLb4ZOnt?=
- =?us-ascii?Q?KfaOT869lYQbkpyqF1mOOHTlAk4uezdoMwCDiXIc+V3VDifEIs2BtdnuqKKy?=
- =?us-ascii?Q?GvXwyavv7e1RhW4h6hzicy385u2zg3CIwrHkfUOT9VSrrliqTWeTm+jmSide?=
- =?us-ascii?Q?Lv14NMoBlu/C/uOOnhLfXo5nR/fY7dtvoXEQz9tbJLvItat9xiLQF1l5q5GP?=
- =?us-ascii?Q?cYFTbmL129xQbgEOB9y4oIf2dSHc9ylyFQnmv5Cq2f7eTQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?KcKgR1fghzXYAM7yOnktr/YiG4AUEfF2O+MqapRhbeva1fwVtE2TNDZEM/vL?=
- =?us-ascii?Q?jZBSMBoCigI2m2okOolg+3tu2sq4knyUfO20NuQKbgBZnZ1BAwdSVHU14egu?=
- =?us-ascii?Q?6fZAwjfBrpY2R8Ydhr2QspCdHJGT4cvSMlWgIGSVLgWiRuQX6sdytqV01OVd?=
- =?us-ascii?Q?/4dDlFchE7PNgxk4+maPrBnzsDwLweBpB9WHRG6Ji8IcWqSyueY3P7vpksRE?=
- =?us-ascii?Q?V+Jj2DaXSrO/gFLOD0igQ1QC5Ry7ryJdTQeXppSYrCjYrWXKod5FVFxACAmb?=
- =?us-ascii?Q?KoGQYopN/sLGhQHhjL84/vlkG4gfc/aUil+ALyDUy6iLjxDrGcuKS2DJfqWS?=
- =?us-ascii?Q?iYrGIfteeAZrVN9gpWdAZiG9fkriV5NAJ9wOYBPaGSAkNqunk2nAL/J8XyCB?=
- =?us-ascii?Q?v1f4+wBqXBB6RwgRX5AXGZ1wX5YBv4Kdpb5Ha3cMIkhod7/dNm0zzBeDLNkv?=
- =?us-ascii?Q?n/zyY3XIG/4zoR+H0FkdwB55+EWjKbWQtSW8LP7fnAfJNaFnUXMQ2S5yNyDr?=
- =?us-ascii?Q?uG9R2xfIxwzH3QBNzZSm/0z5WJE6JrC++y1AqNpw532GC2eas6aSE/hGG6n2?=
- =?us-ascii?Q?/+29REjnb6/5NQ3J9O5SdGtvYpnkd8UwKpozd2vLZzj1DQ60HMkfc2iLAESJ?=
- =?us-ascii?Q?shyYXwdxD1yAJb+4DCwpxi3KIivOfLe/8GW29VVb5EbucYjC5yZICr0DPmLv?=
- =?us-ascii?Q?XwRJo4hwlgDDvDg2QD5Hi8UKRqy/cGf4/2jExTrUM07vcq3Nr3ASkX21rSJl?=
- =?us-ascii?Q?df83CSCdNOtRCRVXV2TwYKS2IrDdNShsSra22Yz7V3J47dpkMUJsh4qxA61B?=
- =?us-ascii?Q?ttRfZoXFNOOBFb2lvk79KA5K5ycvV9NHbb4MR+O/BhU4H9b26BfVf60NBeTd?=
- =?us-ascii?Q?lqZJhZc3BtsCBbad1qWHDFEIj28+lhgIT47flqRmBRWISAd1YxP+iXxCfVus?=
- =?us-ascii?Q?yiMJ300zGqD5z2faP5MQgAKG1aLhlzEOA7Yn5Gop5S3Sb9l+pyz0/3bU3Dhl?=
- =?us-ascii?Q?48p+W+6IIXIIt43GnZUGxJ6SBdzsNfVYq0u57EmDdEciu4wTWqeKx36txWDs?=
- =?us-ascii?Q?CTLdHfngTDNcA1vPsrao9Ym3tnTg5PrVGsnRNcg6zFULUq8RJj5W0RZ8njAi?=
- =?us-ascii?Q?ORfVW2IV+rzmt5jJtcWchuBu0sVI3VvyHtyUZpjkiCj5zn7xeDb3rOvOIi/C?=
- =?us-ascii?Q?dmtaZIZJNY2i4ZDT5L1NNsBKtRhqGa6mXYInGDzAwDaO8rKyv4JJgKSiBIRS?=
- =?us-ascii?Q?Z9ur5M5D/u/u1tPx66MpvokcJOqvKNgrRb45tsURzjzoUFFPt+bhuu0YnZny?=
- =?us-ascii?Q?mNc9Ukbhj3ktECh1yLQuvpKr/sjjNf3LBCPJkfiukvoAWTCikX0Uynwbivlt?=
- =?us-ascii?Q?YKrRyEd8cAi3c0VFiq+9t0KQ2EF66GMHNpSTleSckbq/8NHvqQ9xMILHts4M?=
- =?us-ascii?Q?G5U5p/Kh5qz1MwBS+JlCSA7vQ4DwsGCZebhk/iGtcmNc6vhLkolCZ1ivy1H8?=
- =?us-ascii?Q?25uqBPcSE0jOQVFTCBuGp2A0n7GkPYUzvd1rMTS5RXYvGNiebG27cKTo7VRy?=
- =?us-ascii?Q?AtafKjfTwUj88u18DJU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q0HpmeSI"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a4ce82f30so2134443a12.0
+        for <regressions@lists.linux.dev>; Mon, 03 Jun 2024 07:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717423788; x=1718028588; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cMBySiVcTX3BrHRQ0ZZ8x1UxOKdXwr5BWpTZuLbvO8Q=;
+        b=q0HpmeSIXF3nrHb+CWEULva6w1vPqsc+LWqFLLVzsSh66yu2VGxEKMWfPTBGTrup9V
+         mYDUnXLjGQom6GHttiJVp86Nql1W0hq4CQNlzr9Go6dnUwMocnyFI1DdMWAEyGhzvBXX
+         LY+N7+8YEznTpbzUtmBmSCkpN3aLpl330MGhM3Gu7JsYqEVsKZAPZQSFwf2ci5aYGU/h
+         dDfKQyp2HqJivnAuxoOTlRAh7+GPIzFHvrD5kMTTZZQLbGBiCWLWbxDHiQJXKG5xf0Cr
+         DEDL608Fex68vQiwKOxI8gzawC0wT83hl8xr0UncPpaAOuL3FxpC/F11fh1udKO70RNm
+         0LHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717423788; x=1718028588;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cMBySiVcTX3BrHRQ0ZZ8x1UxOKdXwr5BWpTZuLbvO8Q=;
+        b=UPGOOTTX3hX0ippNTrX7vxTrpnRTeOqmIB8vuzrHycdznMtC7IWuTjGRlHkX0IpFmo
+         sMMcNsUAR+zV8rSEUWMBNiEHiq5Wp8ePw+oFE4mxdN3FPgkmbnzC+slGp3N1AfvvGRkv
+         XLhDZIM4PO2x+NgKRAIdx1m8n2v3TQcjgkm7XPM5fhPDVkBWWQJp+KblRE33q0C8clUj
+         quIGhbFTK5Z53m5DuFOM/+4pORRPUOGBjMSo0ouLRTZPdho0TASSfa6JVY5ZPDMi1Wf7
+         HXQpVdeqpyGK/3mY6mlDAtb0k4pJ5wxyJL+Q4kRCqGyw68L8Pfnw9I7q+I5nDEEdAMQ0
+         I+6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWs/AeYxfWfvHHQrkHUiAjUXp7KuXBXGN+fRTD9/Rhmth/wOJYClvKo+Az4scTDHyaZGEogGCUb9dfmvaPDBKBB+ZEMqpHEUJIUoLE=
+X-Gm-Message-State: AOJu0YxStrtW2awbVf35o1wHpXxLghimvK8RS8QvAl6mg/rJIS3MCXDz
+	Pb13v5kDxJFOx+WdbMfajqj25LDgmtaHCZcRjV/BfAvIrIwBpPwvH+PJ1o49qKQrAWwWyUcQNrm
+	IVNYrA1YafvFUnC9FDFsMxXNlVHstoqPVJe1qRAchjwSXw1hMunDXOw==
+X-Google-Smtp-Source: AGHT+IEVz9Q9THonmg55KCp1sWeRzvHp+0nI4wBgSoPvuH6SA7/QZc+rrtiLGD4Lofvv3X7rXOoQpL7AB0+gVX88cg8=
+X-Received: by 2002:a50:9e05:0:b0:57a:2400:3a56 with SMTP id
+ 4fb4d7f45d1cf-57a3651f208mr6341450a12.23.1717423787864; Mon, 03 Jun 2024
+ 07:09:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5766.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff2720d6-4542-4b9f-d4d3-08dc83750b97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2024 02:29:50.8066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qiTGGUqyy+D/rpaVZML11vWgQ8OkujguwFtSM3C4N7rk41jLglQNwzQFKgVpsUzV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6830
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 3 Jun 2024 19:39:24 +0530
+Message-ID: <CA+G9fYuJtUV_Z4x74qYZDDOkbHP3SJbGvHskFNnsOCxOmPvr=Q@mail.gmail.com>
+Subject: kunit_test: KASAN: null-ptr-deref in range - kunit_generic_run_threadfn_adapter
+ on qemu_arm64
+To: open list <linux-kernel@vger.kernel.org>, kunit-dev@googlegroups.com, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: smayhew@redhat.com, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Ivan Orlov <ivan.orlov0322@gmail.com>, npache@redhat.com, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-[AMD Official Use Only - AMD Internal Distribution Only]
+The following kernel null pointer dereference is noticed on qemu-arm64
+while running
+kunit tests with the Linux next-20240603 tag kernel.
 
-> -----Original Message-----
-> From: Kaplan, David
-> Sent: Sunday, June 2, 2024 9:25 PM
-> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
-> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
-> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.de=
-v
-> Subject: [REGRESSION] QXL display malfunction
->
-> Hi,
->
-> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I'v=
-e
-> observed the VM graphics often malfunction after boot, sometimes failing =
-to
-> load the Ubuntu desktop or even immediately shutting the guest down.
-> When it does load, the guest dmesg log often contains errors like
->
-> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
-> wrong: 65376256x16777216+0+0
-> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
-> wrong: 65376256x16777216+0+0
-> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
-> wrong: 65335296x16777216+0+0
-> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id=
- in
-> release_idr
->
-> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap=
-"
-> (b33651a5c98dbd5a919219d8c129d0674ef74299).
->
-> The full guest .config and guest XML can be provided if desired.  The gue=
-st
-> kernel has QXL support compiled in and the VM has
->
-> <video>
->   <model type=3D"qxl" ram=3D"65536" vram=3D"65536" vgamem=3D"16384"
-> heads=3D"1" primary=3D"yes"/>
->   <address type=3D"pci" domain=3D"0x0000" bus=3D"0x00" slot=3D"0x01"
-> function=3D"0x0"/> </video>
->
-> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is r=
-un
-> under virt-manager 4.1.0.  If other information would be helpful, just le=
-t me
-> know.
->
-> Thanks --David Kaplan
+This is always reproducible and the system is stable after this.
 
-Fixing emails...sorry
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
---David Kaplan
+Boot log:
+-----------
+<6>[  114.143436]     # Subtest: kunit_fault
+<6>[  114.143983]     # module: kunit_test
+<6>[  114.144252]     1..1
+<1>[  114.150801] Unable to handle kernel paging request at virtual
+address dfff800000000000
+<1>[  114.151837] KASAN: null-ptr-deref in range
+[0x0000000000000000-0x0000000000000007]
+<1>[  114.153897] Mem abort info:
+<1>[  114.154370]   ESR = 0x0000000096000005
+<1>[  114.155537]   EC = 0x25: DABT (current EL), IL = 32 bits
+<1>[  114.156222]   SET = 0, FnV = 0
+<1>[  114.157238]   EA = 0, S1PTW = 0
+<1>[  114.157971]   FSC = 0x05: level 1 translation fault
+<1>[  114.158886] Data abort info:
+<1>[  114.159543]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+<1>[  114.161296]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+<1>[  114.161892]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+<1>[  114.162950] [dfff800000000000] address between user and kernel
+address ranges
+<0>[  114.164434] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+<4>[  114.164730] Modules linked in:
+<4>[  114.164974] CPU: 0 PID: 601 Comm: kunit_try_catch Tainted: G
+B            N 6.10.0-rc1-next-20240603 #1
+<4>[  114.165058] Tainted: [B]=BAD_PAGE, [N]=TEST
+<4>[  114.165088] Hardware name: linux,dummy-virt (DT)
+<4>[  114.165198] pstate: 12400009 (nzcV daif +PAN -UAO +TCO -DIT
+-SSBS BTYPE=--)
+<4>[  114.165290] pc : kunit_test_null_dereference+0x70/0x170
+<4>[  114.165390] lr : kunit_generic_run_threadfn_adapter+0x88/0x100
+<4>[  114.165446] sp : ffff800082d97dc0
+<4>[  114.165513] x29: ffff800082d97e20 x28: 0000000000000000 x27:
+0000000000000000
+<4>[  114.165678] x26: 0000000000000000 x25: 0000000000000000 x24:
+fff00000c1dec280
+<4>[  114.165763] x23: ffff9bc22413e7c0 x22: ffff9bc2241469f8 x21:
+fff00000c1dec288
+<4>[  114.165846] x20: 1ffff000105b2fb8 x19: ffff8000800879f0 x18:
+0000000000000068
+<4>[  114.165929] x17: ffff9bc2231cf524 x16: ffff9bc2231cf29c x15:
+ffff9bc2240feb9c
+<4>[  114.166014] x14: ffff9bc22384b8d0 x13: 6461657268745f68 x12:
+fffd8000195d88b2
+<4>[  114.166098] x11: 1ffe0000195d88b1 x10: fffd8000195d88b1 x9 :
+ffff9bc22413e848
+<4>[  114.166219] x8 : ffff800082d97cb8 x7 : 0000000000000000 x6 :
+0000000041b58ab3
+<4>[  114.166302] x5 : ffff7000105b2fb8 x4 : 00000000f1f1f1f1 x3 :
+0000000000000003
+<4>[  114.166383] x2 : dfff800000000000 x1 : fff00000caec3cc0 x0 :
+ffff8000800879f0
+<4>[  114.166494] Call trace:
+<4>[  114.166526]  kunit_test_null_dereference+0x70/0x170
+<4>[  114.166585]  kunit_generic_run_threadfn_adapter+0x88/0x100
+<4>[  114.166638]  kthread+0x24c/0x2d0
+<4>[  114.166687]  ret_from_fork+0x10/0x20
+<0>[  114.167025] Code: b90004a3 d5384101 52800063 aa0003f3 (39c00042)
+<4>[  114.167311] ---[ end trace 0000000000000000 ]---
+<3>[  114.184100]     # kunit_test_fault_null_dereference: try
+faulted: last line seen lib/kunit/kunit-test.c:95
+<6>[  114.189639]     ok 1 kunit_test_fault_null_dereference
+
+metadata:
+ git_ref: master
+ git_describe: next-20240603
+ git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240603/testrun/24170958/suite/log-parser-boot/tests/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2hM1PsJeaL7kuebSowrouZKyCLa/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2hM1PsJeaL7kuebSowrouZKyCLa/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
