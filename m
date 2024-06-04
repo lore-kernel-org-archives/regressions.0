@@ -1,258 +1,76 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95C1136E17
-	for <regressions@lists.linux.dev>; Mon,  3 Jun 2024 20:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24EA446CF;
+	Tue,  4 Jun 2024 08:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717445049; cv=none; b=lse7wsnGvGKcB1XDZ1OyqwIKGE/O1fel2/UBnI78fhinoL5iXhbR0hwg87FMY0ubllyyKpfjhduICIjL7vbo1aKBShO1PfqJ1pHKlmR3wk59Z79VPH/9PIUEdwd301j1pEj/e5VxBLAkbVMdLWBPYS0X5yGabD6eKp8OOV4n1Ck=
+	t=1717488571; cv=none; b=u90VSFXbC2w8XD4K5+zCaEm1tRw1txKl8Hko9r4xJit5luxFwjJNZVtbxPxSheid9waEYOV3LVQD7dvtmJUqEh1wzI23IjyvpvIi3t3gIhaDRtobKEqGIkyiGvYMSnp9jIMw1u1u7nSa6Ecdk9rge2hENdsBT8hR6kVTBMHrgY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717445049; c=relaxed/simple;
-	bh=dTQ590u9BBN6P6kAXKu5AEsLRHNC3Kd1FYejz8HRMnI=;
-	h=Message-ID:Date:MIME-Version:In-Reply-To:To:Cc:From:Subject:
-	 Content-Type; b=jqi0XZM9G60+RYoNUszP5BqFRH4C1/gwlDODiSFTvWJpfAeskHvsRbwR7o9xjS7GgFqpkmDzUJaZ7yh6NT25G2BVRyDCR6L7GSNWURS/ULTYDBO1vyEJWoy/YBuGVhVclZvSxhwnrkRlZaQUI9c6tuMbH6jpuz3bvmqhsXlKCLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V4CjLTPY; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717488571; c=relaxed/simple;
+	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=qlddUFXb1BHDdZpwva5vcDXzVGaAeFDJovvGTWBoYeS1E1m9ptc8zZbplWspTF4FIopAntocAtfMDUMHA1sEwA31qwJPeKsoWDNWEDL1FUcjoZWFl3WzjuzTlJuGKgCE8olQA08iu4waJTuwjrO0IWEN4a/XTlhnTX7rs4SKJpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MRxCEM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4CjLTPY"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42120fc8cbfso35942325e9.2
-        for <regressions@lists.linux.dev>; Mon, 03 Jun 2024 13:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717445046; x=1718049846; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:in-reply-to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1lTlhY4ec0xXsC9o2CYMmIQINQsTrf8ZieKsdV0hMx4=;
-        b=V4CjLTPYa9hQvSN3irUleS1gQ5cJlT7RnBNQ7Gzl3RstaihtUbJsRexWQGLqtV8iCC
-         AwPikWQOf7y042QighCzF0W8+AXvwIENymHzoaBTeJVgdQBwZUz15OTBwYgMBLqjiprB
-         0LYTMNc7Osug3i86p0d3aXGdmZAp3sFWSsSAmHG4lpwqC3i+9ajRlyzA+II3c0j93CMK
-         ROhKMbtzxfkbf3FN6E92qdjGfa3pi0S9/HGbBTBJ334xHR5lpaajYv63u9VeF2poupaK
-         LXsVC3rP1/+hJys35bbDeETsbTUXeJYzOBcv76lEKqcbhRBWj7JpxaszUzoUteTDnovf
-         o20A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717445046; x=1718049846;
-        h=content-transfer-encoding:subject:from:cc:to:in-reply-to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1lTlhY4ec0xXsC9o2CYMmIQINQsTrf8ZieKsdV0hMx4=;
-        b=lyVSejvIEoYIm41/hJIlp7wvjmPWHZqwYmicdTsVF7podqkWLnSW6Ixq4YDc0m3BjM
-         glsp/6NWOxMnr/NvHFKt4Uis2+nKAcb6MSyBfwMgnXAwCp5gqZdhYXqjiQkHA2X8W4PR
-         XT3i21dxKIhv+La+m4Ia3zh23BKYzK8/0TR9JS7rXGx58BznbzRWSRvpujYwxsNhK/So
-         HaiE4gozWnZKWvqnlgGDXz/6e7ZLK00sDUCVTv+cZXQ/krkPisjnZ7Ri/hzoVSoOyKeT
-         tE0i3qcB77jhwGlPM6arygImHbYyPVsCWDJixcrP55iYqBn7gCF5gVANsfQwLK5m5iqq
-         q1PA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfLURMR8lVfDZFlg0gJzcjo3DUyS9M7mAgTKTWMAoXF2G6q5tnlwBi1CUfv8gQnBs5DXFr89A8OOdOOsPCwGiZ2WI/+8kDHiO6W0A=
-X-Gm-Message-State: AOJu0YxY7uHB0H185lYcvcEHspdjnNw3e/+y1BY/zBegdJScYAoUPMTU
-	yf6RVTdmnyvXsmljm5GT4R13m5BPXnmjlZbevfcPRWSRAQF5uLB/
-X-Google-Smtp-Source: AGHT+IEb6RifbNvpo4713uNSc5ohEhi0ZIe9kaqJLJe3o8ydvq9MVupPRidiypk/7LhcQyHgRJ66pg==
-X-Received: by 2002:a05:600c:35c5:b0:41a:a4b1:c098 with SMTP id 5b1f17b1804b1-4212e076530mr87778505e9.19.1717445046042;
-        Mon, 03 Jun 2024 13:04:06 -0700 (PDT)
-Received: from [100.64.100.6] ([179.61.241.51])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b85c61dsm130189965e9.28.2024.06.03.13.04.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 13:04:05 -0700 (PDT)
-Message-ID: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
-Date: Mon, 3 Jun 2024 22:03:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MRxCEM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6ECC2BBFC;
+	Tue,  4 Jun 2024 08:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717488570;
+	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=o1MRxCEMsm/rvMeAAJBPCYWpYQyAFd8BIGgeQvMSn7f/STx63dNix0p3AdGHdZgHO
+	 VpJz0TOInXj39V5PtD1yEF+NaPIlHvxQyN6RxRjF55oj3yFnPSF6kAdy6xZoSDHHF8
+	 uFmfQLaIUcNUKv1NYmxjir4bIWQYSbjQb2VcekRvPSTuUmUGpobXBYYjpH/pVzZSO8
+	 5mj4vvnZes5pcoFC9qdoLII1gSie8vbQ6FVHKFbBDT3w6IZIgxBPY/CwY/WAR1Th7W
+	 PGtpqFlZXM5ZneNCb8ZcE0Ar/w4EbNdRtAHV6nqSQqZJm6gZrHzagtxpP5PSB2kX/I
+	 mykRDonmv/rmQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,  Dave Jiang <dave.jiang@intel.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,  <linux-wireless@vger.kernel.org>,
+  <ath11k@lists.infradead.org>,  <regressions@lists.linux.dev>,  Jeff
+ Johnson <quic_jjohnson@quicinc.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-cxl@vger.kernel.org>,  <linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+References: <20240603165342.GA685076@bhelgaas> <87wmn5ubfo.fsf@kernel.org>
+	<665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Tue, 04 Jun 2024 11:09:26 +0300
+In-Reply-To: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch> (Dan
+	Williams's message of "Mon, 3 Jun 2024 12:14:54 -0700")
+Message-ID: <87cyoxt9hl.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-In-Reply-To: <ecee3a54-1a09-40fa-afdb-057ca02cb574@leemhuis.info>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
- Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
- =?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-From: Mike <user.service2016@gmail.com>
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 29.05.24 11:06, Thorsten Leemhuis wrote:
- > Might be a good idea to share it, the developers might want to confirm
- > it's really the same bug.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-I'm attaching the stacktrace [1] and decodecode [2] at the end, generated
-on 6.1.92 vanilla+patch (1.).
+> Kalle Valo wrote:
+> [..]
+>> > Thanks for reporting the issue and testing the fix!  Can you please
+>> > respond with your Tested-by to the actual patch(es) you tested?
+>> 
+>> Not easily as I'm not subscribed to linux-pci list and I haven't
+>> researched how to import mbox files to my mailer :) So feel free to
+>> ignore my Tested-by tag in this case.
+>
+> I have had success with "b4 mbox" and importing that into Evolution, but
+> your mileage may vary with your mailer setup.
 
- > 1. test another fix for the culprit I found on lore -- but note, this is
- > just a shot in the dark
- > https://lore.kernel.org/all/20240411151929.403263-1-kovalev@altlinux.org/
+Heh, I'm old school and don't use anything modern like Evolution :) But
+it was actually really easy with Gnus ('G f') and looks like I managed
+to do it succesfully now:
 
-Looks like it was a miss :(
-I tested the recent release version 6.1.92, and the bug is still 
-reproducible.
-Interestingly, I encountered fewer occurrences with this release..
-I then applied the patch mentioned (1.), but the bug is still 
-(immediately) reproducible.
-The stack traces are the same for version 6.1.92, both with and without 
-the patch.
+https://lore.kernel.org/all/87h6e9t9qt.fsf@kernel.org/
 
-I understand that 6.9-rc5[1] worked fine, but I guess it will take some 
-time to be
-included in Debian stable, so having a patch for 6.1.x will be much 
-appreciated.
-I do not have the time to follow the vanilla (latest) release as is 
-likely the case for
-many other Linux users.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Let me know if there's anything else useful I can do for you.
-Thank you,
-Mike
-
-[1]
-2024-06-03T21:04:49.730983+02:00 mike kernel: [   24.110172] kernel BUG 
-at lib/list_debug.c:56!
-2024-06-03T21:04:49.730984+02:00 mike kernel: [   24.110181] invalid 
-opcode: 0000 [#1] PREEMPT SMP NOPTI
-2024-06-03T21:04:49.730985+02:00 mike kernel: [   24.110184] CPU: 2 PID: 
-868 Comm: kworker/u65:2 Not tainted 6.1.92 #2
-2024-06-03T21:04:49.730985+02:00 mike kernel: [   24.110187] Hardware 
-name: Micro-Star International Co., Ltd. MS-7B93/MPG X570 GAMING PRO 
-CARBON WIFI (MS-7B93), BIOS 1.M0 04/02/2024
-2024-06-03T21:04:49.730986+02:00 mike kernel: [   24.110191] Workqueue: 
-hci0 hci_cmd_sync_work [bluetooth]
-2024-06-03T21:04:49.730986+02:00 mike kernel: [   24.110234] RIP: 
-0010:__list_del_entry_valid.cold+0x4b/0x6f
-2024-06-03T21:04:49.730987+02:00 mike kernel: [   24.110240] Code: fe ff 
-0f 0b 48 89 f2 48 89 fe 48 c7 c7 c0 2d fa a6 e8 07 a1 fe ff 0f 0b 48 89 
-fe 48 89 ca 48 c7 c7 88 2d fa a6 e8 f3 a0 fe ff <0f> 0b 48 89 fe 48 c7 
-c7 50 2d fa a6 e8 e2 a0 fe ff 0f 0b 48 89 fe
-2024-06-03T21:04:49.730987+02:00 mike kernel: [   24.110243] RSP: 
-0018:ffffb5fe04863de0 EFLAGS: 00010246
-2024-06-03T21:04:49.730988+02:00 mike kernel: [   24.110247] RAX: 
-000000000000004e RBX: ffff9bff53430800 RCX: 0000000000000027
-2024-06-03T21:04:49.730988+02:00 mike kernel: [   24.110249] RDX: 
-0000000000000000 RSI: 0000000000000001 RDI: ffff9c064eaa03a0
-2024-06-03T21:04:49.730988+02:00 mike kernel: [   24.110252] RBP: 
-ffff9bff4d2ce000 R08: 0000000000000000 R09: ffffb5fe04863c78
-2024-06-03T21:04:49.730989+02:00 mike kernel: [   24.110254] R10: 
-0000000000000003 R11: ffff9c066f2fc3e8 R12: ffff9bff4d2ce000
-2024-06-03T21:04:49.730997+02:00 mike kernel: [   24.110256] R13: 
-ffff9bff4d2ce770 R14: ffff9bff62e919c0 R15: dead000000000100
-2024-06-03T21:04:49.730997+02:00 mike kernel: [   24.110259] FS: 
-0000000000000000(0000) GS:ffff9c064ea80000(0000) knlGS:0000000000000000
-2024-06-03T21:04:49.730997+02:00 mike kernel: [   24.110262] CS: 0010 
-DS: 0000 ES: 0000 CR0: 0000000080050033
-2024-06-03T21:04:49.730998+02:00 mike kernel: [   24.110265] CR2: 
-000055ff08f14638 CR3: 0000000169804000 CR4: 0000000000350ee0
-2024-06-03T21:04:49.730998+02:00 mike kernel: [   24.110268] Call Trace:
-2024-06-03T21:04:49.730999+02:00 mike kernel: [   24.110270] <TASK>
-2024-06-03T21:04:49.730999+02:00 mike kernel: [   24.110273]  ? 
-__die_body.cold+0x1a/0x1f
-2024-06-03T21:04:49.730999+02:00 mike kernel: [   24.110278]  ? 
-die+0x2a/0x50
-2024-06-03T21:04:49.731000+02:00 mike kernel: [   24.110283]  ? 
-do_trap+0xc5/0x110
-2024-06-03T21:04:49.731000+02:00 mike kernel: [   24.110287]  ? 
-__list_del_entry_valid.cold+0x4b/0x6f
-2024-06-03T21:04:49.731000+02:00 mike kernel: [   24.110293]  ? 
-do_error_trap+0x6a/0x90
-2024-06-03T21:04:49.731001+02:00 mike kernel: [   24.110296]  ? 
-__list_del_entry_valid.cold+0x4b/0x6f
-2024-06-03T21:04:49.731002+02:00 mike kernel: [   24.110301]  ? 
-exc_invalid_op+0x4c/0x60
-2024-06-03T21:04:49.731002+02:00 mike kernel: [   24.110305]  ? 
-__list_del_entry_valid.cold+0x4b/0x6f
-2024-06-03T21:04:49.731002+02:00 mike kernel: [   24.110309]  ? 
-asm_exc_invalid_op+0x16/0x20
-2024-06-03T21:04:49.731003+02:00 mike kernel: [   24.110316]  ? 
-__list_del_entry_valid.cold+0x4b/0x6f
-2024-06-03T21:04:49.731003+02:00 mike kernel: [   24.110321] 
-hci_conn_del+0x136/0x3e0 [bluetooth]
-2024-06-03T21:04:49.731003+02:00 mike kernel: [   24.110357] 
-hci_abort_conn_sync+0xaa/0x230 [bluetooth]
-2024-06-03T21:04:49.731004+02:00 mike kernel: [   24.110395]  ? 
-srso_return_thunk+0x5/0x10
-2024-06-03T21:04:49.731004+02:00 mike kernel: [   24.110399]  ? 
-abort_conn_sync+0x3d/0x70 [bluetooth]
-2024-06-03T21:04:49.731004+02:00 mike kernel: [   24.110435] 
-hci_cmd_sync_work+0xa2/0x150 [bluetooth]
-2024-06-03T21:04:49.731005+02:00 mike kernel: [   24.110471] 
-process_one_work+0x1c7/0x380
-2024-06-03T21:04:49.731005+02:00 mike kernel: [   24.110477] 
-worker_thread+0x4d/0x380
-2024-06-03T21:04:49.731005+02:00 mike kernel: [   24.110482]  ? 
-rescuer_thread+0x3a0/0x3a0
-2024-06-03T21:04:49.731006+02:00 mike kernel: [   24.110486] 
-kthread+0xda/0x100
-2024-06-03T21:04:49.731006+02:00 mike kernel: [   24.110490]  ? 
-kthread_complete_and_exit+0x20/0x20
-2024-06-03T21:04:49.731006+02:00 mike kernel: [   24.110494] 
-ret_from_fork+0x22/0x30
-2024-06-03T21:04:49.731007+02:00 mike kernel: [   24.110503] </TASK>
-2024-06-03T21:04:49.731007+02:00 mike kernel: [   24.110505] Modules 
-linked in: rfcomm snd_seq_dummy snd_hrtimer snd_seq snd_seq_device 
-xt_CHECKSUM tun uhid bridge stp llc qrtr cpufreq_powersave 
-cpufreq_userspace cpufreq_conservative cpufreq_ondemand cmac algif_hash 
-algif_skcipher af_alg bnep uinput nft_chain_nat xt_MASQUERADE nf_nat 
-xt_LOG nf_log_syslog xt_mac ipt_REJECT nf_reject_ipv4 xt_conntrack 
-nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_tcpudp xt_pkttype 
-nft_compat sunrpc binfmt_misc nf_tables nfnetlink pktcdvd nls_ascii 
-nls_cp437 vfat fat snd_hda_codec_realtek snd_hda_codec_generic 
-ledtrig_audio snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common 
-edac_mce_amd btusb snd_hda_intel btrtl snd_intel_dspcfg btbcm 
-snd_intel_sdw_acpi btintel kvm_amd iwlmvm btmtk snd_hda_codec ccp 
-bluetooth mac80211 snd_hda_core libarc4 snd_hwdep jitterentropy_rng 
-snd_pcm kvm snd_timer irqbypass iwlwifi drbg snd sp5100_tco rapl 
-wmi_bmof soundcore ansi_cprng k10temp watchdog cfg80211 ecdh_generic ecc 
-rfkill joydev evdev button acpi_cpufreq sg msr
-2024-06-03T21:04:49.731007+02:00 mike kernel: [   24.110606] dm_crypt 
-loop fuse efi_pstore configfs ip_tables x_tables autofs4 ext4 crc16 
-mbcache jbd2 btrfs blake2b_generic xor raid6_pq zstd_compress libcrc32c 
-crc32c_generic efivarfs linear dm_mirror dm_region_hash dm_log 
-hid_logitech_hidpp hid_logitech_dj hid_generic dm_mod raid1 usbhid hid 
-md_mod amdgpu drm_ttm_helper ttm video crc32_pclmul gpu_sched uas 
-crc32c_intel usb_storage sr_mod drm_buddy sd_mod ghash_clmulni_intel 
-cdrom sha512_ssse3 drm_display_helper sha512_generic drm_kms_helper 
-sha256_ssse3 nvme ahci sha1_ssse3 xhci_pci nvme_core libahci drm 
-xhci_hcd t10_pi aesni_intel libata crypto_simd cec cryptd 
-crc64_rocksoft_generic usbcore igb rc_core i2c_piix4 crc64_rocksoft 
-scsi_mod crc_t10dif crct10dif_generic usb_common dca crct10dif_pclmul 
-scsi_common i2c_algo_bit crc64 crct10dif_common wmi
-2024-06-03T21:04:49.731008+02:00 mike kernel: [   24.110695] ---[ end 
-trace 0000000000000000 ]---
-
-[2]
-2024-06-03T21:04:49.731009+02:00 mike kernel: [ 24.243204] Code: fe ff 
-0f 0b 48 89 f2 48 89 fe 48 c7 c7 c0 2d fa a6 e8 07 a1 fe ff 0f 0b 48 89 
-fe 48 89 ca 48 c7 c7 88 2d fa a6 e8 f3 a0 fe ff <0f> 0b 48 89 fe 48 c7 
-c7 50 2d fa a6 e8 e2 a0 fe ff 0f 0b 48 89 fe
-All code
-========
-    0:   fe                      (bad)
-    1:   ff 0f                   decl   (%rdi)
-    3:   0b 48 89                or     -0x77(%rax),%ecx
-    6:   f2 48 89 fe             repnz mov %rdi,%rsi
-    a:   48 c7 c7 c0 2d fa a6    mov    $0xffffffffa6fa2dc0,%rdi
-   11:   e8 07 a1 fe ff          call   0xfffffffffffea11d
-   16:   0f 0b                   ud2
-   18:   48 89 fe                mov    %rdi,%rsi
-   1b:   48 89 ca                mov    %rcx,%rdx
-   1e:   48 c7 c7 88 2d fa a6    mov    $0xffffffffa6fa2d88,%rdi
-   25:   e8 f3 a0 fe ff          call   0xfffffffffffea11d
-   2a:*  0f 0b                   ud2             <-- trapping instruction
-   2c:   48 89 fe                mov    %rdi,%rsi
-   2f:   48 c7 c7 50 2d fa a6    mov    $0xffffffffa6fa2d50,%rdi
-   36:   e8 e2 a0 fe ff          call   0xfffffffffffea11d
-   3b:   0f 0b                   ud2
-   3d:   48 89 fe                mov    %rdi,%rsi
-
-Code starting with the faulting instruction
-===========================================
-    0:   0f 0b                   ud2
-    2:   48 89 fe                mov    %rdi,%rsi
-    5:   48 c7 c7 50 2d fa a6    mov    $0xffffffffa6fa2d50,%rdi
-    c:   e8 e2 a0 fe ff          call   0xfffffffffffea0f3
-   11:   0f 0b                   ud2
-   13:   48 89 fe                mov    %rdi,%rsi
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
