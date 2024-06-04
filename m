@@ -1,168 +1,77 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62F11474D4
-	for <regressions@lists.linux.dev>; Tue,  4 Jun 2024 12:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2B9143755
+	for <regressions@lists.linux.dev>; Tue,  4 Jun 2024 13:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505695; cv=none; b=j5q0gizE/OLn+Zb49Jr0OCCSQVJhRXWFE6fUHKax5YSmbIbKjB+jCdN2Yo0/eGjfCnLSOJ+0mwSxq8RazRDfctjQXRi4eQnUbQqef9LzBqlHEEwiyVwwFzxQZlJyBgu3j45QshYmH2vXczSRVzZTyd4mdcMOedskezoCP0BXFE0=
+	t=1717507451; cv=none; b=GwsEfSHecTw1TdNp0/bfR3EYfx/tDl1uQ4/np1VjeYeVlbjby+89mhNz7J4+eEOniUypo3XeZQQ9+OXpRl8Xv0XIL9OPQuCY5aD4sFbr2/q4z7fuj+pdTnAmbabyfAQWMtr5qIPQIo47t2KdGSRrq9um2MlJIKWrzeaqP2N7ues=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505695; c=relaxed/simple;
-	bh=6r0nPGrlvbLTowPbiR+YL8Z4O8Ed6VNmvaDIlB0sKBM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BGVLSmVb7cROA96Xc3fcX1LvNEof1mHQ7KsaMz8OLCVFyqk8UjzMGP7yD1TqR6+mDq1FI9uXjIqI+mawMaNNPGh+iyxSJi70IeieN7/tT0UYcpQS2aCacErs2y+GoEOi3bqmBBmSrcxeA4ljHBnEEPWldJyJhg8ELHoIOIHbxCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=so8G+/r2; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717507451; c=relaxed/simple;
+	bh=cupXqcFF9fa59A9+cgbWg+iQop5ZvtZxHIDzCVlCOgA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uJszX0MNlzz7Jl25rhlic1xQmu4vbLs6q4WNLoLpBHE+GM1Zo0t+rXECpECUCe5484TYPTpONlAjq77OdK2/Oi1BLsVNh7uQ/QV6+I6tnOdhXazuorlzSSKSm+lB2ctBpc2KNrzhsFW7uCCct73sadDQuQNSI0axJb7L2IJo4qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S/Lj+JzM; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="so8G+/r2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717505692;
-	bh=6r0nPGrlvbLTowPbiR+YL8Z4O8Ed6VNmvaDIlB0sKBM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=so8G+/r2yS3Zspfmcg9MYYNewDV9qpcRNV9MvT2PnyEP9RM347CUdAJxF+RjZ6G83
-	 mWbzWit58s0SPgRI6uV6hh6Rlh0qNF9FgzSs8qXVk12ssqudyZBnh7EJZAzpeDRojv
-	 uDfmRVOXTWBUUqGdS/P5xhxy7JzF2Ts0te8ml0fMKCrhYJHD/c/X6r+MEmhKmXS4v2
-	 Zu2daHxwdsdm5YDEt/ZuachZiaRmOz6aes9HhCWJVGzoj/R3onNCapuEgoBx6KUBjo
-	 fqdmcT30WAU3AccMEVQ5C37xqXjdXgAOq2hffSPyK4GS5tzpl7KF8uye3BrTBO5rMI
-	 0WtSYrcdtL6Cg==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B82893782173;
-	Tue,  4 Jun 2024 12:54:51 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: rafael@kernel.org
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] probe with driver acpi-fan failed with error -22
-Date: Tue,  4 Jun 2024 14:55:09 +0200
-Message-Id: <20240604125509.553786-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CAJZ5v0jP4TKojEMcMutptYFC=o0zJLyHfCBVOdcwp4tzSNK_4A@mail.gmail.com>
-References: <CAJZ5v0jP4TKojEMcMutptYFC=o0zJLyHfCBVOdcwp4tzSNK_4A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S/Lj+JzM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:From:Subject:
+	Content-Type; bh=t+6uf2ZT2trzXSMZhwTL2CGLO411ioJ/4VBZBE+VM2w=;
+	b=S/Lj+JzMfHO2B96kre5fWy+jA8lN2dNCKjWdqrgjZYYZJ8LCCsshDbmtnecPTE
+	dOY24mCAwjbsbC1NSWbYOooxaJ30/kC6UyoExdy5ZuwxfveCLCmrIsPYjUAo5B1d
+	OTt3cFGNz824lODk6cx14SCaGTLLl3jgRaOTjmf5unKps=
+Received: from [192.168.1.26] (unknown [183.195.6.89])
+	by gzga-smtp-mta-g2-4 (Coremail) with SMTP id _____wDHHyZjFV9muQnjBw--.50874S2;
+	Tue, 04 Jun 2024 21:23:48 +0800 (CST)
+Message-ID: <00c2798f-61d7-437e-8c12-e2872f4c2bc4@163.com>
+Date: Tue, 4 Jun 2024 21:23:46 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Lk Sii <lk_sii@163.com>
+Subject: Re: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for
+ QCA6390 after warm reboot
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, luiz.von.dentz@intel.com,
+ marcel@holtmann.org, linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
+ regressions@lists.linux.dev, pmenzel@molgen.mpg.de,
+ krzysztof.kozlowski@linaro.org, stable@vger.kernel.org
+References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
+ <f343ecae-efee-4bdc-ac38-89b614e081b5@163.com>
+ <CABBYNZ+nLgozYxL=znsXrg0qoz-ENgSBwcPzY-KrBnVJJut8Kw@mail.gmail.com>
+ <34a8e7c3-8843-4f07-9eef-72fb1f8e9378@163.com>
+ <CABBYNZLzTcnXP3bKdQB3wdBCMgCJrqu=jXQ91ws6+c1mioYt9A@mail.gmail.com>
+ <f7a408b4-ccef-4a4c-a919-df501cf3e878@163.com>
+ <ca7adc9d-9df3-4050-8943-3c489097b995@163.com>
+ <CABBYNZJwPr_1u+NYnAVaPOd+Wkrb9Jz40hjWF_8v6p6tTaZjtg@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CABBYNZJwPr_1u+NYnAVaPOd+Wkrb9Jz40hjWF_8v6p6tTaZjtg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHHyZjFV9muQnjBw--.50874S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUa5ETUUUUU
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiEwjzNWXAldQ0eQAAs0
 
-Hi Rafael,
 
-On 6/4/24 14:07, Rafael J. Wysocki wrote:
-> On Mon, Jun 3, 2024 at 8:20 PM Rafael J. Wysocki <rafael@kernel.org>
-> wrote:
->>
->> Hi,
->>
->> On Fri, May 31, 2024 at 1:35 PM Laura Nao <laura.nao@collabora.com>
->> wrote:
->>>
->>> Hello,
->>>
->>> On 5/30/24 17:37, Laura Nao wrote:
->>>> Hello,
->>>>
->>>> We have identified a regression in the acpi-fan driver probe
->>>> between
->>>> v6.9-rc7 and v6.10-rc1 on some Intel Chromebooks in the Collabora
->>>> LAVA
->>>> lab.
->>>>
->>>> For the Acer Chromebook Spin 514 (CP514-2H), the following error is
->>>> reported in the logs:
->>>>
->>>> [    0.651202] acpi-fan INTC1044:00: probe with driver acpi-fan
->>>> failed with error -22
->>>>
->>>> Similar errors are reported on other devices with fans compatible
->>>> with
->>>> the same driver.
->>>>
->>>> On Acer Chromebox CXI4, ASUS Chromebook Flip C436FA and
->>>> HP Chromebook x360 14 G1:
->>>>
->>>> [    0.488001] acpi-fan INT3404:00: probe with driver acpi-fan
->>>> failed with error -22
->>>>
->>>> On ASUS Chromebook Vero 514 CBV514-1H:
->>>>
->>>> [    1.168905] acpi-fan INTC1048:00: probe with driver acpi-fan
->>>> failed with error -22
->>>>
->>>> The issue is still present on next-20240529.
->>>>
->>>> I'm sending this report to track the regression while a fix is
->>>> identified. I'll investigate the issue/run a bisection and report
->>>> back
->>>> with the results.
->>>>
->>>> This regression was discovered during some preliminary tests with
->>>> the
->>>> ACPI probe kselftest [1] in KernelCI. The config used was the
->>>> upstream
->>>> x86_64 defconfig with a fragment applied on top [2].
->>>>
->>>> Best,
->>>>
->>>> Laura
->>>>
->>>> [1]
->>>> https://lore.kernel.org/all/20240308144933.337107-1-laura.nao@collabora.com/
->>>> [2] https://pastebin.com/raw/0tFM0Zyg
->>>>
->>>> #regzbot introduced: v6.9-rc7..v6.10-rc1
->>>
->>> The issue started happening after:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/thermal/thermal_core.c?h=v6.10-rc1&id=31a0fa0019b022024cc082ae292951a596b06f8c
->>>
->>> Before this commit, get_cur_state() was not called by
->>> __thermal_cooling_device_register, so the error was not triggered.
->>>
->>> After enabling debugging for the acpi-fan driver, I noticed these
->>> errors
->>> in the logs:
->>>
->>> [    0.682224] acpi INTC1044:00: Invalid control value returned
->>> [    0.682635] acpi INTC1044:00: Invalid control value returned
->>>
->>> The value stored in fst.control is 255, which is indeed not a valid
->>> value.
->>>
->>> I suspect this might be a firmware issue that is now manifesting due
->>> to
->>> the addition of the extra get_cur_state() call.
->>>
->>> I'll dig a bit more and report back.
->>
->> It looks like _FST returns all ones if it is evaluated before _FSL on
->> the affected platforms.
->>
 
-Right, I'll look into that.
-
->> It shouldn't do that, but then it is not particularly useful to fail
->> cdev registration for this reason.
->>
->> The attached patch should work around this issue, please try it and
->> report back.
+On 2024/6/4 03:27, Luiz Augusto von Dentz wrote:
+> Hi,
 > 
-> A !ret check is missing in that patch, so please try the attached new
-> version of it instead.
->
-> Thanks!
+> On Thu, May 30, 2024 at 9:34 AM Lk Sii <lk_sii@163.com> wrote:
+>> @Luiz:
+>> do you have any other concerns?
+>> how to move forward ?
+> 
+> Well I was expecting some answer to Krzysztof comments:
+> 
+> No, test it on the mainline and answer finally, after *five* tries, which
+> kernel and which hardware did you use for testing this.
+> 
+That is wonderful, let us solve Krzysztof's concerns containing above
+one mentioned.
 
-I confirm the patch works as expected and fixes the probe issue.
-
-Thank you!
-
-Laura
