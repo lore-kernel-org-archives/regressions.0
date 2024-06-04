@@ -1,76 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24EA446CF;
-	Tue,  4 Jun 2024 08:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1151420DA
+	for <regressions@lists.linux.dev>; Tue,  4 Jun 2024 08:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717488571; cv=none; b=u90VSFXbC2w8XD4K5+zCaEm1tRw1txKl8Hko9r4xJit5luxFwjJNZVtbxPxSheid9waEYOV3LVQD7dvtmJUqEh1wzI23IjyvpvIi3t3gIhaDRtobKEqGIkyiGvYMSnp9jIMw1u1u7nSa6Ecdk9rge2hENdsBT8hR6kVTBMHrgY4=
+	t=1717489302; cv=none; b=rs6lhgNS13VN6n1Vf6sHH8z6y9HWJJpMyTGULoGKkTe1hTSzrrQyKs1qIFO0mP7F3Ny5pxvQwj+8ABocnkNi06ZtVh5wZB4YnZqoE4a2IQHRZAV523f/xw1ENMxwlo+IQkJZUph4q62SOcXMOUl6PX0WbP6bb4vRnwF47hOuKnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717488571; c=relaxed/simple;
-	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=qlddUFXb1BHDdZpwva5vcDXzVGaAeFDJovvGTWBoYeS1E1m9ptc8zZbplWspTF4FIopAntocAtfMDUMHA1sEwA31qwJPeKsoWDNWEDL1FUcjoZWFl3WzjuzTlJuGKgCE8olQA08iu4waJTuwjrO0IWEN4a/XTlhnTX7rs4SKJpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MRxCEM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717489302; c=relaxed/simple;
+	bh=xEmTz73vHv54ArGvlNCXi6ctPWx/IZMfFfBcTS0dumI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HX32ugNbD2yf5oM3Q0oxhkjzMh6pkpm631ruRR7Z55duL/kLEvmhGWYShNTc0n7SseZfShKCMQL8ScGZgC1Kaw7M5uaMh2C+n5puqMhnKjs7P4xphpsWoAgotudNZPBaVmmQve6zgpFhVvCfLQwWlR850qd6poGQWddfHXftYLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lZblehYd; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MRxCEM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6ECC2BBFC;
-	Tue,  4 Jun 2024 08:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717488570;
-	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=o1MRxCEMsm/rvMeAAJBPCYWpYQyAFd8BIGgeQvMSn7f/STx63dNix0p3AdGHdZgHO
-	 VpJz0TOInXj39V5PtD1yEF+NaPIlHvxQyN6RxRjF55oj3yFnPSF6kAdy6xZoSDHHF8
-	 uFmfQLaIUcNUKv1NYmxjir4bIWQYSbjQb2VcekRvPSTuUmUGpobXBYYjpH/pVzZSO8
-	 5mj4vvnZes5pcoFC9qdoLII1gSie8vbQ6FVHKFbBDT3w6IZIgxBPY/CwY/WAR1Th7W
-	 PGtpqFlZXM5ZneNCb8ZcE0Ar/w4EbNdRtAHV6nqSQqZJm6gZrHzagtxpP5PSB2kX/I
-	 mykRDonmv/rmQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,  Dave Jiang <dave.jiang@intel.com>,
-  Bjorn Helgaas <bhelgaas@google.com>,  <linux-wireless@vger.kernel.org>,
-  <ath11k@lists.infradead.org>,  <regressions@lists.linux.dev>,  Jeff
- Johnson <quic_jjohnson@quicinc.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-cxl@vger.kernel.org>,  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <20240603165342.GA685076@bhelgaas> <87wmn5ubfo.fsf@kernel.org>
-	<665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
-Date: Tue, 04 Jun 2024 11:09:26 +0300
-In-Reply-To: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch> (Dan
-	Williams's message of "Mon, 3 Jun 2024 12:14:54 -0700")
-Message-ID: <87cyoxt9hl.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZblehYd"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a20c600a7so5857199a12.3
+        for <regressions@lists.linux.dev>; Tue, 04 Jun 2024 01:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717489298; x=1718094098; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TANhGRUXVf1tnEOVOMay5ZJ84risT5rFmO6tGy0VoLg=;
+        b=lZblehYdG0tqz4qZ9XG9EXuoS2eODpQCT0OQN22TfbPIw0H/HLZn3xu6FSIZW/0WsN
+         sUEXz9EV1rSUkYDcPsljDJ+bjQg6ccLq4CbkC41GrWoqbvF1vWnv3AilHLmelpYtKj/k
+         5ItNYdXPujkKudY5SNubLhOQUv7e+JfmeL/Ho2X5jx+xBAfgjfSsv4+4hH4Zs+avIY0d
+         SyyLBKfes/8dhtU73hohF7DtXX9ev5x2ji1Lt+VQrkClVjeOJjQ8VtE9+UKgfQLE+PZU
+         zZbLDEcX54QtYZgLRHAOpwB+HRNHsZv27U6Ht0LjWmwAjiBOZAx9EPU/wFS8yuNPkRvh
+         Wh5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717489298; x=1718094098;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TANhGRUXVf1tnEOVOMay5ZJ84risT5rFmO6tGy0VoLg=;
+        b=DZaWcrho9RvlGz7G3yz4+sAHvi1v3FW1XThTD2iT3pSrAesSlW8rZBIsIzxqz6pphr
+         JJx0hchNBa7D915U83rJTqJZBjSMgwONYU2XO8HF7xQ7cd59KmDUpT+fKIMTWzxwd1dW
+         YmpdMS2+Xulg8Y4/NO66+h1P/hrb2JFhtH3qjpCJGXs506YY4Ai2+eDbYsKf/uEInDDq
+         fSN/CPgJErNwXtaNDnh5mflsU7fnkVi/0VccJRaXZI2R3ng8g8tyPA4hJyXZPwlsmP/R
+         FJPcSLRe9hgJQNCgvr8M/JDpd/04MyfIDCnvh87Xzm3ePi9HoJhfCeXcJ3oXeIbttJSM
+         /p2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWdk4LWdOdaHVZpuWrI00MmHV6ScZ2XZVedMZV7dPGwhiYeUWKhfYOyU0a5iTWCE5HO1c9gBe3ueOWdkopBifKWFxpZEs+/DF9Ma7A=
+X-Gm-Message-State: AOJu0YxNVlj1X4l5B87wgdmZl3VD/vBd3pGkBMyv6vFO75vja8A+fISb
+	bu3SjfTKby9/4/BgTJywjrAemYnUKiJBWpBb1I9h1WKaZFvVvREsBEmZjdwG9mA=
+X-Google-Smtp-Source: AGHT+IEIawn+2ZBZBWVKRH2CiF9Dk3da2NmeyKuGb3+2mSkPfDnBLQSa+jBRzf/qk2aszlGoRqTNhA==
+X-Received: by 2002:a50:9356:0:b0:578:2148:61f5 with SMTP id 4fb4d7f45d1cf-57a36448b60mr6977708a12.30.1717489298219;
+        Tue, 04 Jun 2024 01:21:38 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a5ad20b97sm4240233a12.44.2024.06.04.01.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 01:21:37 -0700 (PDT)
+Date: Tue, 4 Jun 2024 11:21:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, kunit-dev@googlegroups.com,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>, smayhew@redhat.com,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>, npache@redhat.com,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: kunit_test: KASAN: null-ptr-deref in range -
+ kunit_generic_run_threadfn_adapter on qemu_arm64
+Message-ID: <81d3f794-a19b-4b62-8c21-7c6ef9acb552@moroto.mountain>
+References: <CA+G9fYuJtUV_Z4x74qYZDDOkbHP3SJbGvHskFNnsOCxOmPvr=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYuJtUV_Z4x74qYZDDOkbHP3SJbGvHskFNnsOCxOmPvr=Q@mail.gmail.com>
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Mon, Jun 03, 2024 at 07:39:24PM +0530, Naresh Kamboju wrote:
+> The following kernel null pointer dereference is noticed on qemu-arm64
+> while running
+> kunit tests with the Linux next-20240603 tag kernel.
+> 
+> This is always reproducible and the system is stable after this.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> Kalle Valo wrote:
-> [..]
->> > Thanks for reporting the issue and testing the fix!  Can you please
->> > respond with your Tested-by to the actual patch(es) you tested?
->> 
->> Not easily as I'm not subscribed to linux-pci list and I haven't
->> researched how to import mbox files to my mailer :) So feel free to
->> ignore my Tested-by tag in this case.
->
-> I have had success with "b4 mbox" and importing that into Evolution, but
-> your mileage may vary with your mailer setup.
+These are intentional...  The function name just changed so it's showing
+up as a new bug.  I tried to add a big printk before this NULL
+dereference but the printk message never showed up in dmesg...
 
-Heh, I'm old school and don't use anything modern like Evolution :) But
-it was actually really easy with Gnus ('G f') and looks like I managed
-to do it succesfully now:
++       kunit_info(test, "Testing that a NULL dereference causes a test failure\n");
++       kunit_info(test, "*** This will lead to an intentional stack trace ***\n");
 
-https://lore.kernel.org/all/87h6e9t9qt.fsf@kernel.org/
+regards,
+dan carpenter
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
