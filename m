@@ -1,22 +1,22 @@
 Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9F6196DA4
-	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 14:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5FB19753B
+	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 15:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717683960; cv=fail; b=U6oV3x38fnr4ThP37cJ756B9FY3zLCrU4bpG2IN9pilBJao+05mlbF1Gu0cWwvy0bzqRz7f7amh0BAWDM46pSCEKoyAU0Rxb79BFb5VlC2YzRkCRK4IEaln3pCCGNt1vZG7jnzM0BuaWEmk1J+hiakqZYaxvmjJoplnyBIJdkMc=
+	t=1717688379; cv=fail; b=M/VYLRuIw+TdqGxeDZH0UKkrsJn3YW0Y1WI0FgXuS5N4lH/WZEvPNQk7iTFsFznsYOUnCGpEXJywXFYFfE95kigiWie3UP14dMQ6lTWF2y+A8HCwxHJFl2PkjN7zMErKbaW/+ALh26+cNsk49WLxHkkRR/KBOnwsDWi9ZsALui4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717683960; c=relaxed/simple;
-	bh=mC5zzZnXp2icJU9R1Ck47Zcb5SXm4+9y/G4oy4zw/4o=;
+	s=arc-20240116; t=1717688379; c=relaxed/simple;
+	bh=q90MOgC3ZwUfcgGCNnOYc7vZxPdGJZVWSHcbXB8BBYk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iOfnxiUahlx7EltkrT9zVud5JykEyYY+pPaJQzSa2xRX4/r3EofizAPPdNXliHYe74YoAVjous4THUbbbz0/arepYSBBAqNEPyrLK5vURSPrYoU4yufKc7QB/QHhss/Srup6Ln5uPrQh89E3ISbWdzPqzA9+B6Rkm9aawoUrv4s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=gBXE4GSm; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=PXeQp2Zc; arc=fail smtp.client-ip=72.84.236.66
+	 Content-Type:MIME-Version; b=km9X1+yhk4TqhnixReqeeKsl+9g+Q2yrDum8EaC6AREIEd70QgIPFlM+ADuCwC03LN0b15V8Zk7Z/F8D4TU8a4siBH7dBGW3k5SOucCXY4zBr5AbDChseq3q7cj/HdwjHwh83A4L+MtmG0Blf9j3GtzseDmQwvsaWnYibPg7xKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=jcOHJJiJ; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=asht6AzM; arc=fail smtp.client-ip=72.84.236.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="gBXE4GSm";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="PXeQp2Zc"
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="jcOHJJiJ";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="asht6AzM"
 Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
    signature) header.d=sapience.com header.i=@sapience.com 
    header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
@@ -25,63 +25,53 @@ Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id B5F954809ED;
-	Thu, 06 Jun 2024 10:25:50 -0400 (EDT)
+	by s1.sapience.com (Postfix) with ESMTPS id 004C94809FC;
+	Thu, 06 Jun 2024 11:39:36 -0400 (EDT)
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717683950;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717688376;
  h=message-id : subject : from : to : cc : date : in-reply-to :
  references : content-type : mime-version : from;
- bh=rVcMiogOXnpri50rMG2S8WWLl7pdPRC8qsfAqNvpxeI=;
- b=gBXE4GSmtTnOlS1wQResZR16bqNMNofUVdIKy0cA015CUEl7vykJxVY9zZ/vBcwDLf1SK
- JlJZ5+LvlfYFDFRDA==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717683950;
-	cv=none; b=jax5C4gXTO68gBl3s40G8JD+wDJ8CzyTh3YnFkYB0Ll3PGH7FuSydEK6h9x5S1cr/YFlkNjg6PT9B5xnOd58ey8US0SPtO8QyVBGoyd1jQDcVNdwtwpq1avp6IvqarTPRkFBJWsOZJvik4fwVJajqJp3y0rcaltNbTjRQs9ESkyxRx/rtsZ1JcCQS7G8NE0D0Gb7ImOAYkg9x/Z2TONTv17aMU34AQwDCuBD8iAc3JXqr2x5TLolm7pDtC0QUBZN51JbkUwDN5IZm/c3cM8CNHTlRb0od1iVktm9LWA6PHe6l3bwn+2IKo8wv7GN7y/mrSz7vVv2194Yq73fnXpp6w==
+ bh=en9XJh0Afrw9YgdF3uo0asjudsUJS3VfsQdgW0yEr5g=;
+ b=jcOHJJiJHSoDzigiLuvDg0jLsukaKzBDxHcv/wnSzaJUhK6VpyP05GpEa087dYhfIwNog
+ iCUtYb6mtckdVSqBw==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717688376;
+	cv=none; b=RPG6+ah8dfRp2u9xVD1qJ+9bhFYQ1O2ImAuuxVuIDM79t1YG5TiiolnZUXNHF1y/YV0V02yd9M1eLZum6PfCKKDqL/Pzi3kAAeXaaVg6vyMJGoWMVvP8+2ST7+DR7Dcp3OJoTf0yGfCbvWp0IQHWuYWGYMjZKPux4uwHb+1nQHIKyxaCqEJqW/OzB/zg/j2zwAlp0v0OOgSKqlREmO0HPQ4A7C+iHBnPN92X1GCIvi0t1UEemfHidEdA+69DCR2IU1IENKzIi5E4I9dSH+Y298VAXSOxRJIjNvQcsrvg22rilFGcgZVcmqRePnQLEQ/bHUa4mq+k6RcRYjYtW+0tCA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1717683950; c=relaxed/simple;
-	bh=mC5zzZnXp2icJU9R1Ck47Zcb5SXm4+9y/G4oy4zw/4o=;
+	t=1717688376; c=relaxed/simple;
+	bh=q90MOgC3ZwUfcgGCNnOYc7vZxPdGJZVWSHcbXB8BBYk=;
 	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
 	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=JGvqGmU9asc8J8lwdIzlh9/zMm0yAnEpf8ctF/tqNcTcoYbdWOJczGJ1fHytycmDIask/pyBtXJOFSdoZrU8Un+bYFwuP1OaHggwBEYTZIOtM9aXHqJMwyksO53vLPMBM9bJ8w8wqVutoSYAkwtgUfisFZPLKBaxIpgj4LcfJlM6T/oJmwXFzgoHFiuxh/HFMZOXF1tnf4J9PwrE0OewGrTxtGpzEATSPAAl+lcsK2UrjJCojaJfUPjb+h9lyfn36ZggzjZZHDhY6b3S0oebXohmtUgApMlXd2G6e8k0wZ9OcIElah7ZfUIdF/qiFbO/WZgkd9gQuUhFkMQAC4M82A==
+	 MIME-Version; b=KeWc6p1t3zldTlmWMchDyw2QIg9YU5Q6Sh6sHeb9j/K5uMT5j6cN+7K0rQVgNA2Z5xV6VPL2kmICWLsdbHJFDavo935yHYjvRCtP1lQSN+M33072jx056o/QPV097nyQRGiIWD41rg2N7bV0xVCrka9HrgiHnKgZ2ef8Xh1r9RwJSVVTk2G2mVJsKINdQrIbSyDUdf36KkvUC6466LpGPfF+QMDgrh9oExMOyUjBM84XgFokcnAAFWnxGhugzyz09BWInNXUoCQPhbB5vc75NyETzSWXBMPIqN3F9wHfMovXpdKuXwQYVKh9RHhrY9XPCb0Iwl4jFiuIw+rUPA3cfg==
 ARC-Authentication-Results: i=1; arc-srv8.sapience.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717683950;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717688376;
  h=message-id : subject : from : to : cc : date : in-reply-to :
  references : content-type : mime-version : from;
- bh=rVcMiogOXnpri50rMG2S8WWLl7pdPRC8qsfAqNvpxeI=;
- b=PXeQp2ZcP6zC6Lmhh7bHKNRDdASx4o0610zv96A9sXId+Z0wqg8mt6uRp3351jLNZ4Myr
- Apz1NRg6KjIFOfiJxiWUpgUgDmDxpMQEbtcRmenSEhbWGNqko4+F9v00c6yEGfNTdcSqxdh
- uoU/IhGCnm2vYWN9Jw3v6LxCUEY+iO+MKQoHdvROhVlDIpaNULEeBkjW6L5Ma9COR+NRFg0
- KIUvqxK+IzETZrKidd811TYV8a0sGvdIhzFJxiMb9AYiuRNDuu3Vnm1dq/OdqPR+C144kTK
- 0yoWjat66uXlMUGZy/v2M3GlCFLcUgD90pvd17UOEAUQJAx9bAMaiMdRsSLw==
+ bh=en9XJh0Afrw9YgdF3uo0asjudsUJS3VfsQdgW0yEr5g=;
+ b=asht6AzMWxjrSOs5BwZ243DyOItVGv+T4CS18ewN/4N/JQ67OzLs4LznyFO/ze5FuQUfI
+ yYfjrlX792oZO4IqNfsfh4wXfEkvdDoh17UxqgY2qyZkoa2CrAOzXOhj0jvSZuNwrIjWHYA
+ j5KSL9aBBkwIeAIqLymginxmmG82r3H5MaLVYOxKRS2abs3wVZ6g3QiEfuhwTZoYwyRW4na
+ CB3H4Zi/xuPLGICAsB8/3ztW5bVg7Pp0pWEoZ+UpCcFK0rBbf3KiYS7qXjHRr0HEONpr3xS
+ Xo83iA3DxRPrp04RtcqF0gdjsbZUds8LkcO0yY3LJnJUOcfYJmFEPwh9+Lxw==
 Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id 8C747280074;
-	Thu, 06 Jun 2024 10:25:50 -0400 (EDT)
-Message-ID: <d47dcc8b4e429c676db7ad6daf8024a97f725582.camel@sapience.com>
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
+	by srv8.sapience.com (Postfix) with ESMTPS id C9530280074;
+	Thu, 06 Jun 2024 11:39:36 -0400 (EDT)
+Message-ID: <eb10620deecc8feeae1e308c22de199be7c48ca6.camel@sapience.com>
+Subject: Re: 6.10-rc1 : crash in mei_csi_probe
 From: Genes Lists <lists@sapience.com>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Hans de
- Goede <hdegoede@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pavel
- Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, Linux LEDs
- <linux-leds@vger.kernel.org>,  Heiner Kallweit <hkallweit1@gmail.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, 
- edumazet@google.com, pabeni@redhat.com, johanneswueller@gmail.com, "Russell
- King (Oracle)" <linux@armlinux.org.uk>
-Date: Thu, 06 Jun 2024 10:25:49 -0400
-In-Reply-To: <20240606063902.776794d4@kernel.org>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
-	 <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
-	 <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
-	 <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
-	 <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
-	 <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
-	 <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
-	 <c912d1f7-7039-4f55-91ac-028a906c1387@lunn.ch>
-	 <20240606063902.776794d4@kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, mchehab@kernel.org,
+ hverkuil-cisco@xs4all.nl,  laurent.pinchart@ideasonboard.com,
+ wentong.wu@intel.com,  linux-media@vger.kernel.org, Linux regressions
+ mailing list <regressions@lists.linux.dev>
+Date: Thu, 06 Jun 2024 11:39:35 -0400
+In-Reply-To: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+References: <8afe9391b96ff3e1c60e624c1b8a3b2bd5039560.camel@sapience.com>
+	 <ZlTllJeZBiGapHwZ@kekkonen.localdomain>
+	 <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
 Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
  keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
  7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
@@ -89,7 +79,7 @@ Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
  vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
  BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
 Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-dCYAK6fKUZBbP2EluySH"
+	protocol="application/pgp-signature"; boundary="=-3iaXZ9E4DkMvi3CQXNrj"
 User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -99,43 +89,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
 
---=-dCYAK6fKUZBbP2EluySH
-Content-Type: multipart/alternative; boundary="=-4jp6JUlsMS0E8HXI4hn3"
+--=-3iaXZ9E4DkMvi3CQXNrj
+Content-Type: multipart/alternative; boundary="=-PrDfqDW0NuzkgkEY0JLQ"
 
---=-4jp6JUlsMS0E8HXI4hn3
+--=-PrDfqDW0NuzkgkEY0JLQ
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-06-06 at 06:39 -0700, Jakub Kicinski wrote:
-> On Thu, 6 Jun 2024 15:12:54 +0200 Andrew Lunn wrote:
-> > > So it has been almost a week and no reply from Heiner. Since this
-> > > is
-> > > causing real issues for users out there I think a revert of
-> > > 66601a29bb23
-> > > should be submitted to Linus and then backported to the stable
-> > > kernels.
-> > > to fix the immediate issue at hand.=C2=A0=20
+On Mon, 2024-05-27 at 16:58 -0400, Genes Lists wrote:
+> On Mon, 2024-05-27 at 19:57 +0000, Sakari Ailus wrote:
+> > Hi,
 > >=20
-> > Agreed.
+> > Thanks for reporting this.
+> >=20
+> > On Mon, May 27, 2024 at 12:34:41PM -0400, Genes Lists wrote:
+> > >=20
+> > > First happened in 6.10-rc1 (6.9.2 stable is fine) =C2=A0
+> >=20
+> > Do you happen to have .config available? A full dmesg would also be
+> > helpful.
+> >=20
+> > Does the system crash after the warning or not?
+> >=20
 >=20
-> Please submit..
+> System stays up and remains quite usable.
+>=20
+> config and dmesg attached.
+>=20
+>=20
 
-I assume this deadlock is unrelated to the filesystem stalls reported
-here:
+Hi Sakari - just to let you know this is still happening in 6.10-rc2.
 
-=C2=A0
-=C2=A0https://lore.kernel.org/lkml/da8710eddca32677cf3c195000416121045eb811=
-.camel@sapience.com/
+Best
 
-but thought it best to ask.
-
-thank you.
 
 --=20
 Gene
 
 
---=-4jp6JUlsMS0E8HXI4hn3
+--=-PrDfqDW0NuzkgkEY0JLQ
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -154,39 +146,54 @@ blockquote {
   margin-top: 0em;
   margin-bottom: 0em;
 }
-</style></head><body><div>On Thu, 2024-06-06 at 06:39 -0700, Jakub Kicinski=
- wrote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-l=
-eft:2px #729fcf solid;padding-left:1ex"><div>On Thu, 6 Jun 2024 15:12:54 +0=
-200 Andrew Lunn wrote:<br></div><blockquote type=3D"cite" style=3D"margin:0=
- 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><blockquote type=
-=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf solid;padding=
--left:1ex"><div>So it has been almost a week and no reply from Heiner. Sinc=
-e this is<br></div><div>causing real issues for users out there I think a r=
-evert of 66601a29bb23<br></div><div>should be submitted to Linus and then b=
-ackported to the stable kernels.<br></div><div>to fix the immediate issue a=
-t hand.&nbsp; <br></div></blockquote><div><br></div><div>Agreed.<br></div><=
-/blockquote><div><br></div><div>Please submit..<br></div></blockquote><div>=
-<br></div><div>I assume this deadlock is unrelated to the filesystem stalls=
- reported here:</div><div><br></div><div>&nbsp; &nbsp;<a href=3D"https://lo=
-re.kernel.org/lkml/da8710eddca32677cf3c195000416121045eb811.camel@sapience.=
-com/">https://lore.kernel.org/lkml/da8710eddca32677cf3c195000416121045eb811=
-.camel@sapience.com/</a></div><div><br></div><div>but thought it best to as=
-k.</div><div><br></div><div>thank you.</div><div><br></div><div><span><pre>=
--- <br></pre><div><span style=3D"background-color: inherit;">Gene</span></d=
-iv><div><br></div></span></div></body></html>
+</style><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head><body><div>On Mon, 2024-05-27 at 16:58 -0400, Genes Lists wr=
+ote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left=
+:2px #729fcf solid;padding-left:1ex"><div>On Mon, 2024-05-27 at 19:57 +0000=
+, Sakari Ailus wrote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 =
+.8ex; border-left:2px #729fcf solid;padding-left:1ex"><div>Hi,<br></div><di=
+v><br></div><div>Thanks for reporting this.<br></div><div><br></div><div>On=
+ Mon, May 27, 2024 at 12:34:41PM -0400, Genes Lists wrote:<br></div><blockq=
+uote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fcf soli=
+d;padding-left:1ex"><div><br></div><div>First happened in 6.10-rc1 (6.9.2 s=
+table is fine) &nbsp;<br></div></blockquote><div><br></div><div>Do you happ=
+en to have .config available? A full dmesg would also be<br></div><div>help=
+ful.<br></div><div><br></div><div>Does the system crash after the warning o=
+r not?<br></div><div><br></div></blockquote><div><br></div><div>System stay=
+s up and remains quite usable.</div><div><br></div><div>config and dmesg at=
+tached.</div><div><br></div><div><br></div><div><span><pre></pre></span></d=
+iv></blockquote><div><br></div><div>Hi Sakari - just to let you know this i=
+s still happening in 6.10-rc2.</div><div><br></div><div>Best</div><div><br>=
+</div><div><br></div><div><span><pre>-- <br></pre><div><span style=3D"backg=
+round-color: inherit;">Gene</span></div><div><br></div></span></div></body>=
+</html>
 
---=-4jp6JUlsMS0E8HXI4hn3--
+--=-PrDfqDW0NuzkgkEY0JLQ--
 
---=-dCYAK6fKUZBbP2EluySH
+--=-3iaXZ9E4DkMvi3CQXNrj
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZmHG7QAKCRA5BdB0L6Ze
-25htAP0UvLjW80ObvibjGLL4OKpLvqrtJkkWUoyEsPV7K9YkCQD9FsS4R5lHcbRQ
-YKutNthSR6D0eGBP41WSQeY4zXTntQs=
-=y8qy
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZmHYOAAKCRA5BdB0L6Ze
+24j2AQChBIEva8vdHfa2desP8x1GwNDMKU29rImqdLQh8uYWHAD9Fs1jDRlcv1ii
+F/oIod3IoSkHEG7Kuo1XmJ/N0Hip9Ao=
+=eGuq
 -----END PGP SIGNATURE-----
 
---=-dCYAK6fKUZBbP2EluySH--
+--=-3iaXZ9E4DkMvi3CQXNrj--
