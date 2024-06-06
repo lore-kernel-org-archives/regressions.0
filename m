@@ -1,67 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB21195F10;
-	Thu,  6 Jun 2024 13:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049322BAF1;
+	Thu,  6 Jun 2024 14:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717681144; cv=none; b=Wu4HSIaGsH66CSXksDEbXv85+srBwr+baxvftE3F0EsHFwUlnnOwRPo09DI8AGMX2VT8hRh/Sg2k+P9p9aGXVHIraDr18VFpyDJcFPiSptIeKg2orcP8zJMEASz2wO3ij8gymaenSxOcfextMguMPx44kkI0UI4NmUmEmlBp/x0=
+	t=1717682635; cv=none; b=SbhL3xbCjSYHraUYCWnPQpYxG6Wj5qDNsaAfNFv3S8M6dRUqcKMW46kRMRYgk/Oq1tVRLroVqOcYE3c6fAWjr0f2tazllIxC+omDBjR3MsVNe76+Wbpjv6PGPh47GPN5fWsKKEzmOGElpSU62J9FExKFkBHMst7YcR+SZWiwPGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717681144; c=relaxed/simple;
-	bh=LJhHXwTof2ke/pYNJdYJXiWvVv487KuphHbWVEYAKLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qE0qGPIAXsulob+p4xsLukkZffdwbGbb6xbNNI9sa03lhllKyVVssMbqymowbK6LwuKjuKtQN6O0sgfxH9x5ddAgcJdcaF6vIDCkM430bdb2APE/ZsLiw/0mJaBHOiXxTycwrsWGOxjyK7krnMj/DeEJLbd9f1qmcWVUiFJ4E4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Id1O2Qkw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717682635; c=relaxed/simple;
+	bh=eDx4LH2JaI56Oq69k1D2PUzOsVKOAQd9jJf6JpRrviw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z5+/jRLrfVWeYMwERAuwGsX2qnyfGkoymdnl626aXEiSKq4YvMH0ZyaCNWkb/x7czaoIPPYSxQG+Ee9aEEYpa45kiibKgwoMsfO4n1WGfmBkSeV7TOm5RJ8Scsa4lgHYEzj35DYhwO0+nxDVhQ2LJfY0tn4Y5dpcu1A1XnrLyfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Z+AFN3KH; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id1O2Qkw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3DBC2BD10;
-	Thu,  6 Jun 2024 13:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717681144;
-	bh=LJhHXwTof2ke/pYNJdYJXiWvVv487KuphHbWVEYAKLU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Id1O2QkwmmLjokKffra2g3lVZqwo7wNsk0ZGfRDUMi+AOn1QwgWbq4u8TqlsO0D6/
-	 LvU6eKHd5dIftwQKWaqiaqIQmN61Is9rXL/PaM9iNPBUEBqaQ8JIKi5124xDgdy/IN
-	 Ml5mWx8MCmXEhC4RCfj9iQ57ZTi5n61xhvVZEbiTj8ey814muHzi/uq2xwHp2pZYGN
-	 vybkA8tKQeK4nYuic46rQjyJBFdHbENdWP+APegPEbDT8aexZd0MB1V1mw/CZy3AXF
-	 c+q4QdpdzHgvI4VgmiBg3BkCXawV4i4iOZEMIICqiyoU05wPX4t0iBu6ItGGuLFmoj
-	 PJzROU1Qy2v1g==
-Date: Thu, 6 Jun 2024 06:39:02 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>, Hans de Goede <hdegoede@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Pavel
- Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, Linux LEDs
- <linux-leds@vger.kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, johanneswueller@gmail.com, "Russell
- King (Oracle)" <linux@armlinux.org.uk>, Genes Lists <lists@sapience.com>
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
-Message-ID: <20240606063902.776794d4@kernel.org>
-In-Reply-To: <c912d1f7-7039-4f55-91ac-028a906c1387@lunn.ch>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
-	<15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
-	<ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
-	<42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
-	<618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
-	<01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
-	<9d821cea-507f-4674-809c-a4640119c435@redhat.com>
-	<c912d1f7-7039-4f55-91ac-028a906c1387@lunn.ch>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Z+AFN3KH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ZiaiXQCWQ0/RfkMmzlIJgP09K1a+3++7CIazeg7YTlw=;
+	t=1717682634; x=1718114634; b=Z+AFN3KH0WaOVCED8ZZ8LkBz5baNqc08PICa6uwjrdefX81
+	ZR4TXHKn8l0Y6iMz9McfPrJvTW1UJGFLHDSiYf4j7iequFIjVio3bFkiSoTaXY0jApxX738q1YRe0
+	PjmcHbGcFcE1zjEUStC7k7PzCsJ7NwOZq92O9Hl1mReNkv2fA79XgdppBDdRkPTmNA8UUQpYs/pz0
+	/yiuOfJqdlMKS9wI6tEyke6VY7enNMlaYqaafEjo6BZaW04kUrIvLKjyWZjfssj/D4h2WZs1Q2goB
+	BKpbRr+Q7T2nhpQKcF8kj+OH+fofRH6dN5dNOqBvV19qtaaq1i7Aa2sF9akF/ZmQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sFDiY-0006Jk-3i; Thu, 06 Jun 2024 16:03:50 +0200
+Message-ID: <b0dceea1-3cf1-433d-954b-879f6390c5a4@leemhuis.info>
+Date: Thu, 6 Jun 2024 16:03:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: chipidea: move ci_ulpi_init after the phy
+ initialization
+To: Alexandre Messier <alex@me.ssier.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Michael Grzeschik <m.grzeschik@pengutronix.de>,
+ Peter Chen <peter.chen@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, wouter@franken-peeters.be
+References: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
+ <CGME20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84@eucas1p2.samsung.com>
+ <21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com>
+ <87546d93-3fe7-4459-b44a-47cbcab9da74@me.ssier.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
+In-Reply-To: <87546d93-3fe7-4459-b44a-47cbcab9da74@me.ssier.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717682634;3c2d6c6c;
+X-HE-SMSGID: 1sFDiY-0006Jk-3i
 
-On Thu, 6 Jun 2024 15:12:54 +0200 Andrew Lunn wrote:
-> > So it has been almost a week and no reply from Heiner. Since this is
-> > causing real issues for users out there I think a revert of 66601a29bb23
-> > should be submitted to Linus and then backported to the stable kernels.
-> > to fix the immediate issue at hand.  
+On 30.05.24 08:38, Alexandre Messier wrote:
+> On 2024-04-25 15:40, Marek Szyprowski wrote:
+>> On 02.04.2024 08:23, Michael Grzeschik wrote:
+>>> The function ci_usb_phy_init is already handling the
+>>> hw_phymode_configure path which is also only possible after we have
+>>> a valid phy. So we move the ci_ulpi_init after the phy initialization
+>>> to be really sure to be able to communicate with the ulpi phy.
+>>>
+>>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+>>
+>> This patch landed in linux-next some time ago as commit 22ffd399e6e7 
+>> ("usb: chipidea: move ci_ulpi_init after the phy initialization"). 
+>> Unfortunately it breaks host USB operation on DragonBoard410c 
+>> (arch/arm64/boot/dts/qcom/apq8016-sbc.dts). There is no error nor 
+>> warning in the kernel log besides the information about deferred probe 
+>> on the chipidea controller:
 > 
-> Agreed.
+> I am also seeing this issue on a msm8974-based device.
+> 
+> There is also a report and analysis by Wouter Franken here:
+> https://lore.kernel.org/all/ecb8d3e8-d525-4a2d-a868-803202c16296@franken-peeters.be/
 
-Please submit..
+TWIMC, as this is easy to miss (I was extremely close to writing a
+status inquiry instead of writing what I'm typing now): Greg applied
+that revert two days ago and I assume he'll soon send it to Linus.
+
+Ciao, Thorsten
+
+#regzbot fix: 718d4a63c0a62d16af1d0425d515d7e76f35681e
+#regzbot ignore-activity
+
