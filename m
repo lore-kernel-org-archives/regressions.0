@@ -1,78 +1,132 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3832B17E8EA
-	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 10:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765FB1957E3
+	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 11:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717671478; cv=none; b=JNZPMCxg3gHAAXe+3ngDCAj47dQZdmSo6+YN5IifteDJzCXSppu+EWgvW0K5GOe2WXauLw0bd8SUAMP5ZPtlW7sXa+40+H90QIphxKBW/Xid4gEVKiJNoO+gx1AtLV5u6PwiSt7AdQDr59SVVHsCVJd+MqJtraa9KivI9edDOUE=
+	t=1717672505; cv=none; b=AO7sJ2fAhCjkvg6RgMH/VaqopSfKX07wDiqd44rapuUcXAmHYykjVf8g+1ur0niHcstSSiDu73lyhlBtHwTkQJ1PfgUC1qkL2vOkEptAu9yGov9wEF4EAn/ydYQ3NPy+gwyMzlTLTq6cPZ9H8/tWxI14GD7ZXlPFKC+vHUL4xi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717671478; c=relaxed/simple;
-	bh=lcXvnagJ8bN97tmuQ0FhMexyqz12GNzktEQbVhn6diE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=se6tX7vs415ZFn7rTDgB71toayumWD5tfF8XRDx6q2oN3in3hZbPsSYBTAqh/EZdI8krfoQwn+9l01Tugkl0zV6QAASvpCyjEQHHk13aCqWyvID+p7HGg2SntrWg5x1CYENalz/TDyRQ7HYDtVZ51qRr2AP0szWu1okhmtuDkZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DTCFEXnc; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717672505; c=relaxed/simple;
+	bh=P8r1tAkblITJ7kuGQyJFOBAGEE7nFQZlWfQQ9+/eIbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kMBSXaP3+HAAusg3KYYJObShm+fQ/lWIGFGJU5ueDgbPSVdbI+ZqKV8rBE0OO0nQDQBrCIVe5mPVSth3UNggw9LNSNC1EOrotHDvF5D/Sg5V1pS69LUgVCwYSKK5/CVKlLKC+HWadOUAekRypfd+9Fy87wX51TT5RV1By2eZUkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=nXEUUmHi; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DTCFEXnc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=lcXvnagJ8bN97tmuQ0FhMexyqz12GNzktEQbVhn6diE=; t=1717671476;
-	x=1718103476; b=DTCFEXncCXVj6wh6ETPooOY5Du2vSy7uZZ76VoUvQxms2305wW0nwbPcMRod0
-	4w3J964SIRTwx/FBhtPZu2veSJbeMId5pp0nrqZrTNLFZ05ATIPYSPSSKijnygWZmXExn9JGTuqfm
-	iVNTq0IHyEgBDgMjSyH7fUXbiYCQMAMC1vz1DQVgCo8G4ItgxZxLI9zxGGkMMI0TMrq4h+KUI5yjx
-	8/8hx/s9k3wNq+QfoJdyL1QzD6c+cJSv4upcV7GM+ssBvJdjIsnWjj6LHm4FppeIb0wO3NoUanQI/
-	SbUdWjAQzlYsqSj6ZG36adMqT4m9NM56UeDaNW/F6rMkATI/vw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sFAoc-0003qr-4B; Thu, 06 Jun 2024 12:57:54 +0200
-Message-ID: <1a76766d-61f8-4a29-93ad-40fdf1e83a61@leemhuis.info>
-Date: Thu, 6 Jun 2024 12:57:53 +0200
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nXEUUmHi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1717672496;
+	bh=JkMBHpq5K4ie+dfHpGJjCUD7zTfjKpLevGsS4Gkp3Mo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nXEUUmHiHHZhMfTLqAfWPU4HerXeYWMJtunn0PvlF4di3y67hn37mGLFF9awnrkD5
+	 qrk328KUcQi/8DamBIXcYuQd6sgdPo4ymjWbEFwQ7jZxB4FUU/pYmDGCpefnb3/b6g
+	 6RA9fwnz+RYxkkAgont6xbe5h1sdAz1jb26tUuYY7TNJjq12YSpSbhDRg3WcbZkwEw
+	 Jxkqg+sPV9K9klXKYv2gvf3mJCQwniM/M3LmM3qEjb/zEnwvpEHQmZP+ziCzT9RurX
+	 1hrepvtq0dkhjBwWMt6cfpVQDD2nrcqQ60qkK1391r8vAfoh9SUYwWXA2XIJ5Hikso
+	 tR9/WQv+MKAPA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Vw1vM4l74z4wc5;
+	Thu,  6 Jun 2024 21:14:55 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: martin.petersen@oracle.com,
+	dlemoal@kernel.org,
+	cassel@kernel.org
+Cc: hch@lst.de,
+	john.g.garry@oracle.com,
+	linux-ide@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	<linuxppc-dev@lists.ozlabs.org>,
+	regressions@lists.linux.dev,
+	doru.iorgulescu1@gmail.com
+Subject: [PATCH] ata: pata_macio: Fix max_segment_size with PAGE_SIZE == 64K
+Date: Thu,  6 Jun 2024 21:14:45 +1000
+Message-ID: <20240606111445.400001-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717671476;de4dc8a7;
-X-HE-SMSGID: 1sFAoc-0003qr-4B
+Content-Transfer-Encoding: 8bit
 
+The pata_macio driver advertises a max_segment_size of 0xff00, because
+the hardware doesn't cope with requests >= 64K.
 
+However the SCSI core requires max_segment_size to be at least
+PAGE_SIZE, which is a problem for pata_macio when the kernel is built
+with 64K pages.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+In older kernels the SCSI core would just increase the segment size to
+be equal to PAGE_SIZE, however since the commit tagged below it causes a
+warning and the device fails to probe:
 
-#regzbot report:
-https://lore.kernel.org/lkml/75c17881-68e9-40e7-821c-5655d49d7c0f@redhat.com/
-#regzbot resolve: apparently plymouth bug maybe triggered by some timing
-changes on the kernel-side
+  WARNING: CPU: 0 PID: 26 at block/blk-settings.c:202 .blk_validate_limits+0x2f8/0x35c
+  CPU: 0 PID: 26 Comm: kworker/u4:1 Not tainted 6.10.0-rc1 #1
+  Hardware name: PowerMac7,2 PPC970 0x390202 PowerMac
+  ...
+  NIP .blk_validate_limits+0x2f8/0x35c
+  LR  .blk_alloc_queue+0xc0/0x2f8
+  Call Trace:
+    .blk_alloc_queue+0xc0/0x2f8
+    .blk_mq_alloc_queue+0x60/0xf8
+    .scsi_alloc_sdev+0x208/0x3c0
+    .scsi_probe_and_add_lun+0x314/0x52c
+    .__scsi_add_device+0x170/0x1a4
+    .ata_scsi_scan_host+0x2bc/0x3e4
+    .async_port_probe+0x6c/0xa0
+    .async_run_entry_fn+0x60/0x1bc
+    .process_one_work+0x228/0x510
+    .worker_thread+0x360/0x530
+    .kthread+0x134/0x13c
+    .start_kernel_thread+0x10/0x14
+  ...
+  scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-#regzbot report: https://lore.kernel.org/all/Zj0ErxVBE3DYT2Ea@gpd/
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218916
+Although the hardware can't cope with a 64K segment, the driver
+already deals with that internally by splitting large requests in
+pata_macio_qc_prep(). That is how the driver has managed to function
+until now on 64K kernels.
 
-#regzbot report:
-https://lore.kernel.org/all/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-#regzbot introduced: b33651a5c98dbd
-#regzbot summary: drm/qxl: VM graphics often malfunction after boot and
-sometimes shutdowns occur
+So fix the driver to advertise a max_segment_size of 64K, which avoids
+the warning and keeps the SCSI core happy.
 
-#regzbot report:
-https://lore.kernel.org/all/3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com/
-#regzbot resolve: a BIOS update resolved this
+Fixes: afd53a3d8528 ("scsi: core: Initialize scsi midlayer limits before allocating the queue")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/all/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
+Reported-by: Doru Iorgulescu <doru.iorgulescu1@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218858
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/ata/pata_macio.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/ata/pata_macio.c b/drivers/ata/pata_macio.c
+index 817838e2f70e..3cb455a32d92 100644
+--- a/drivers/ata/pata_macio.c
++++ b/drivers/ata/pata_macio.c
+@@ -915,10 +915,13 @@ static const struct scsi_host_template pata_macio_sht = {
+ 	.sg_tablesize		= MAX_DCMDS,
+ 	/* We may not need that strict one */
+ 	.dma_boundary		= ATA_DMA_BOUNDARY,
+-	/* Not sure what the real max is but we know it's less than 64K, let's
+-	 * use 64K minus 256
++	/*
++	 * The SCSI core requires the segment size to cover at least a page, so
++	 * for 64K page size kernels this must be at least 64K. However the
++	 * hardware can't handle 64K, so pata_macio_qc_prep() will split large
++	 * requests.
+ 	 */
+-	.max_segment_size	= MAX_DBDMA_SEG,
++	.max_segment_size	= SZ_64K,
+ 	.device_configure	= pata_macio_device_configure,
+ 	.sdev_groups		= ata_common_sdev_groups,
+ 	.can_queue		= ATA_DEF_QUEUE,
+-- 
+2.45.1
+
