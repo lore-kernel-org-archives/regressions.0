@@ -1,42 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284FF195FC1;
-	Thu,  6 Jun 2024 13:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C07113E048;
+	Thu,  6 Jun 2024 13:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679187; cv=none; b=Op0LUSVprGAnpTQpk3szsZsqV5oD+TsUH8o+RVQs90VjImOGg40hSJGT0miq3NQFSeQg4iH5GJiLoCOU5v6Z33p594VJ0ld9M2kJF9p311Pm2x7zJ36V5l7FhRsqFLLu+1TuiZiQkQVanOGYlCT3rIx8TN4c1ZwAfEFSdEeC6lQ=
+	t=1717679578; cv=none; b=so/mbFYHlp9Yk+ZtfAE0Gkyrbsqipm9Ad73iz+/ILPNJpIkCOr+ByDa6pBcNO4Tq0tTgHmKQrfBgEzoisvmh2Jrq5g4u05nZVZZVFaYqkWNJbAUoCxhyGSjK0dfK6Da/+0eGEm5gq/B+kdqxD12GHGzg8VZcSHMtTnzK1Rjmmgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679187; c=relaxed/simple;
-	bh=h+h1nqg2scQsYW0Dp9n4OAUo9gkgkZTsAysItHWVj3M=;
+	s=arc-20240116; t=1717679578; c=relaxed/simple;
+	bh=/lZ2BYcrM4C1FTva85h800BNm7AqRYMNH48jl1SeFGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bh1UpmvwpIsW44s+kGQjHeklhzlRTBvkjCNRyzDZS5xLuKDRvXi8LxkYVCaHDZLgx6Gk11xTgoUFYpqd2t6J8KhhjO+njj2X31yE3AqTgaaYWaF5Fx9rU0AIQRirtgxpYg33R2TQtmJKmy3pgFiCtBkgeDZt3xES9k81HqDIjCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWJKTsQi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNkYQgLs9FI5I8FqUJKAwWDEYMEP+pvunKAoBv8aISikf3z/sp9XGaVBoJtQOPS9qBx498FVqsBu44cmO9Sef+HxGR0d3BmDrXF9tzAxXeR8UAIH/BKhayQidiyK9UE9tmUH/K/9SqJDWKuJ5HTFNJiy4Dyxek6JS1n+Mo1Ntz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=psNM1Sxe; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWJKTsQi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C5FC2BD10;
-	Thu,  6 Jun 2024 13:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717679186;
-	bh=h+h1nqg2scQsYW0Dp9n4OAUo9gkgkZTsAysItHWVj3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nWJKTsQi9mSDAthMW+UbM2XFjG8ppjVqDq3otIAhHuRP9atfO4Mv3zzOTbHyBQ3wo
-	 j3q6fWRY357H2Q9ZPljLCZu7weo1SfgVbkSohW8umlrXzPm9KIF5ZkMpLFOUAm4dJO
-	 zNsk5B/bytaXdbRoII4MfM/H8VK1QVhl8wpeEgMcaX6/aRCB2fs5+ctD+hWm0oGzlZ
-	 eASJfLtnny5XEzNhjBNaUpzkUoHDObHGd+cAOxHexT/4yIMGxmi+V1kQkUTgUbsB7T
-	 I9aYNCKn7kG6xmzA/NcDUh9cqA6+WoSb9XzauPIZLL11hYsFSC8IlF+JISlt3xwMCQ
-	 Ky45/rXUV/dmg==
-Date: Thu, 6 Jun 2024 15:06:21 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: martin.petersen@oracle.com, dlemoal@kernel.org, hch@lst.de,
-	john.g.garry@oracle.com, linux-ide@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	regressions@lists.linux.dev, doru.iorgulescu1@gmail.com
-Subject: Re: [PATCH] ata: pata_macio: Fix max_segment_size with PAGE_SIZE ==
- 64K
-Message-ID: <ZmG0TUiw0Nagwroj@ryzen.lan>
-References: <20240606111445.400001-1-mpe@ellerman.id.au>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="psNM1Sxe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=AabFQf2K5U/YXOtE0/+9Nd1MxGeeSYhbeG/HuHMqqT8=; b=psNM1SxeheomvzkqAADibR9/Qr
+	U7QOw/EBxs0n9Z/yKwryqpgkoUz93ilwBZI3e48S/GVNhSHF3ilJe0q8DMIGA1z+zB/gRXv2LMLC8
+	EsmHINuKmeWo7XXt4AVRRJ6VOH/6UtEYZftDXUxWBcjFve7Pk2Y8MxMYNteMjolvpIkY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sFCvG-00H1AS-Ff; Thu, 06 Jun 2024 15:12:54 +0200
+Date: Thu, 6 Jun 2024 15:12:54 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+	Linux LEDs <linux-leds@vger.kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, johanneswueller@gmail.com,
+	"Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Genes Lists <lists@sapience.com>
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+Message-ID: <c912d1f7-7039-4f55-91ac-028a906c1387@lunn.ch>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+ <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+ <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+ <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+ <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+ <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+ <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,65 +57,13 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240606111445.400001-1-mpe@ellerman.id.au>
+In-Reply-To: <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
 
-On Thu, Jun 06, 2024 at 09:14:45PM +1000, Michael Ellerman wrote:
-> The pata_macio driver advertises a max_segment_size of 0xff00, because
-> the hardware doesn't cope with requests >= 64K.
-> 
-> However the SCSI core requires max_segment_size to be at least
-> PAGE_SIZE, which is a problem for pata_macio when the kernel is built
-> with 64K pages.
-> 
-> In older kernels the SCSI core would just increase the segment size to
-> be equal to PAGE_SIZE, however since the commit tagged below it causes a
-> warning and the device fails to probe:
-> 
->   WARNING: CPU: 0 PID: 26 at block/blk-settings.c:202 .blk_validate_limits+0x2f8/0x35c
->   CPU: 0 PID: 26 Comm: kworker/u4:1 Not tainted 6.10.0-rc1 #1
->   Hardware name: PowerMac7,2 PPC970 0x390202 PowerMac
->   ...
->   NIP .blk_validate_limits+0x2f8/0x35c
->   LR  .blk_alloc_queue+0xc0/0x2f8
->   Call Trace:
->     .blk_alloc_queue+0xc0/0x2f8
->     .blk_mq_alloc_queue+0x60/0xf8
->     .scsi_alloc_sdev+0x208/0x3c0
->     .scsi_probe_and_add_lun+0x314/0x52c
->     .__scsi_add_device+0x170/0x1a4
->     .ata_scsi_scan_host+0x2bc/0x3e4
->     .async_port_probe+0x6c/0xa0
->     .async_run_entry_fn+0x60/0x1bc
->     .process_one_work+0x228/0x510
->     .worker_thread+0x360/0x530
->     .kthread+0x134/0x13c
->     .start_kernel_thread+0x10/0x14
->   ...
->   scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-> 
-> Although the hardware can't cope with a 64K segment, the driver
-> already deals with that internally by splitting large requests in
-> pata_macio_qc_prep(). That is how the driver has managed to function
-> until now on 64K kernels.
-> 
-> So fix the driver to advertise a max_segment_size of 64K, which avoids
-> the warning and keeps the SCSI core happy.
-> 
-> Fixes: afd53a3d8528 ("scsi: core: Initialize scsi midlayer limits before allocating the queue")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Closes: https://lore.kernel.org/all/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
-> Reported-by: Doru Iorgulescu <doru.iorgulescu1@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218858
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
+> So it has been almost a week and no reply from Heiner. Since this is
+> causing real issues for users out there I think a revert of 66601a29bb23
+> should be submitted to Linus and then backported to the stable kernels.
+> to fix the immediate issue at hand.
 
-Applied to libata/for-6.10-fixes:
-https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-6.10-fixes
+Agreed.
 
-With John's Reviewed-by from the other thread:
-https://lore.kernel.org/linux-ide/171362345502.571343.9746199181827642774.b4-ty@oracle.com/T/#t
-
-
-Kind regards,
-Niklas
+	Andrew
