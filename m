@@ -1,69 +1,104 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C07113E048;
-	Thu,  6 Jun 2024 13:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47361195FDA;
+	Thu,  6 Jun 2024 13:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679578; cv=none; b=so/mbFYHlp9Yk+ZtfAE0Gkyrbsqipm9Ad73iz+/ILPNJpIkCOr+ByDa6pBcNO4Tq0tTgHmKQrfBgEzoisvmh2Jrq5g4u05nZVZZVFaYqkWNJbAUoCxhyGSjK0dfK6Da/+0eGEm5gq/B+kdqxD12GHGzg8VZcSHMtTnzK1Rjmmgg=
+	t=1717680978; cv=none; b=DPJbcWvoYomC8JB0n1gtKegxwXfJyasoxcRkYcMei47lVnFBJsnHYuY9MMBy1GCV/+v8XDOasM4CKsbksuVKNKiN8FSLeU+rBPhibzP21uh9hRRRdEf+vdfF+Epccpv34B8vF+JsIxGvdUIMUivPayr2GzexMml/HnGTdgBLlac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679578; c=relaxed/simple;
-	bh=/lZ2BYcrM4C1FTva85h800BNm7AqRYMNH48jl1SeFGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pNkYQgLs9FI5I8FqUJKAwWDEYMEP+pvunKAoBv8aISikf3z/sp9XGaVBoJtQOPS9qBx498FVqsBu44cmO9Sef+HxGR0d3BmDrXF9tzAxXeR8UAIH/BKhayQidiyK9UE9tmUH/K/9SqJDWKuJ5HTFNJiy4Dyxek6JS1n+Mo1Ntz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=psNM1Sxe; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1717680978; c=relaxed/simple;
+	bh=eQrKryJ+nnnD7E4StXoFl+JEF6d+daZeQoFmwO26xU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NfRPk7k405IqcpyZo8jeoTrJnCmoXsiT/XnfCABPT+9xjnAa93ynWTYsC0RVAGhLTHgU+Ogvsl9Bt2qHy3SPOERgWnPybiR4WhlPYaUg6jKry3ioPTLPEK6/ytc/kM6Fu4/YaulwRNMO7NS40bjwe0UH6K5JQxFSfyoDQoeBe3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fQmuQ4TD; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="psNM1Sxe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=AabFQf2K5U/YXOtE0/+9Nd1MxGeeSYhbeG/HuHMqqT8=; b=psNM1SxeheomvzkqAADibR9/Qr
-	U7QOw/EBxs0n9Z/yKwryqpgkoUz93ilwBZI3e48S/GVNhSHF3ilJe0q8DMIGA1z+zB/gRXv2LMLC8
-	EsmHINuKmeWo7XXt4AVRRJ6VOH/6UtEYZftDXUxWBcjFve7Pk2Y8MxMYNteMjolvpIkY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sFCvG-00H1AS-Ff; Thu, 06 Jun 2024 15:12:54 +0200
-Date: Thu, 6 Jun 2024 15:12:54 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Linux LEDs <linux-leds@vger.kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, johanneswueller@gmail.com,
-	"Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Genes Lists <lists@sapience.com>
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
-Message-ID: <c912d1f7-7039-4f55-91ac-028a906c1387@lunn.ch>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
- <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
- <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
- <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
- <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
- <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
- <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fQmuQ4TD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=G+eMXZKA/CtMn1bPSHdZq3HzsanZxjFKvDXY3mierxE=; t=1717680976;
+	x=1718112976; b=fQmuQ4TD/8bphVq7Eq4hXadEd7tVQDvFjNUxCoPpJL70GKodHocvZ2Xnvz9y9
+	fJXtFQ9aannx8gP93oD+PQyW82EnuTvKUJ7EFw8A0HrGFaRbyw9S9kSyIGuQ9j3Lt9MX7VGKRE9T9
+	N0hTR77Xk/15aho00vc/VgmPLZalYUamVObjur3o1YaGBkm4i7bLvT9KSxUMHiNZ78kYRKnnFN+ce
+	MVo15Ifbn75i4PirLWG3MkWZwknzGpBITBY84J8DAykI8pptOQ1C3+9vxGQxuMP4PfrNO571Wo0xZ
+	Jr8lvG2/MJ8w/jIuKzrEAGG+sSXe8wg6iAbLA99kvESCwpZKyg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sFDHo-0003T2-Bu; Thu, 06 Jun 2024 15:36:12 +0200
+Message-ID: <ab97d661-9054-4053-88ec-1b3a8db698dd@leemhuis.info>
+Date: Thu, 6 Jun 2024 15:36:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
+To: Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, Savyasaachi Vanga
+ <savyasaachiv@gmail.com>, Christian Heusel <christian@heusel.eu>,
+ regressions@lists.linux.dev, Ping-Ke Shih <pkshih@realtek.com>,
+ netdev <netdev@vger.kernel.org>
+References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717680976;44119e72;
+X-HE-SMSGID: 1sFDHo-0003T2-Bu
 
-> So it has been almost a week and no reply from Heiner. Since this is
-> causing real issues for users out there I think a revert of 66601a29bb23
-> should be submitted to Linus and then backported to the stable kernels.
-> to fix the immediate issue at hand.
+On 28.05.24 00:01, Christian Heusel wrote:
+> 
+> Savyasaachi reports that scanning for other stations in monitor mode
+> does not work anymore with his RTL8821CE wireless network card for linux
+> kernels after 6.8.9.
+> 
+> His workflow was putting the adapter in monitor mode by running
+> "airmon-ng start wlan0" and then capture the surrounding stations with
+> "airodump-ng wlan0".
+> 
+> We have bisected the issue together in the issue in the Arch Linux
+> bugtracker[0] down to the following commit:
+> 
+>     0a44dfc070749 ("wifi: mac80211: simplify non-chanctx drivers")
 
-Agreed.
+Johannes, Kalle, if you have a minute, what's the overall situation
+regarding that commit and related regression fixes for drivers that are
+affected by it?
 
-	Andrew
+Afaics it is like this:
+
+One regression caused by that commit was already fixed with
+2f7cf3b61d8522 ("wifi: mt76: mt7915: add missing chanctx ops"); two more
+will soon be fixed once 2f7cf3b61d8522 ("wifi: mt76: mt7915: add missing
+chanctx ops") and 819bda58e77bb6 ("wifi: rtlwifi: Ignore
+IEEE80211_CONF_CHANGE_RETRY_LIMITS") are mainlined.
+
+But there was no reply to the regression report this thread is about.
+And Ping-Ke from Realtek even wrote "We have a draft fix of rtw88 driver
+for RTL8821CE, but as mentioned some drivers are affected, so I don't
+plan to send out the patch." So apparently Ping-Ke is waiting for some
+statement from you how to proceed.
+https://lore.kernel.org/all/0e65ca6b471b4186a370b9a57de11abe@realtek.com/
+
+There there is another report about problems caused by this patch where
+the user has a mt7601u -- but also broadly (and thus likely incorrectly)
+claims that all drivers are affected:
+https://bugzilla.kernel.org/show_bug.cgi?id=218884 (I mentioned that
+report a few days ago in this thread already without any reaction so far
+afaics).
+
+That all looks a bit concerning (and makes me wonder if temporary
+reverting 0a44dfc070749 might be wise). :-/ But I might be missing
+something here, that's why it would be good if you could provide a quick
+evaluation of the situation.
+
+Ciao, Thorsten
