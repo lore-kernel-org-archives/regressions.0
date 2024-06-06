@@ -1,119 +1,93 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EF619D8B5;
-	Thu,  6 Jun 2024 09:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7298317967F
+	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 09:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666495; cv=none; b=jrbU4rzlb3CyaAheAPOm1umMZSUSN7kFOTvQ7iFQ3/ZtSoYZ4vnGXV1XvccDoUG5L+ITb6xvW6YyEZowpQ0xj6QN90LuWLEPXt0cNUedVXYc8HjWz1Z19Dx2xl4YIoBO67sK7ehK7i0fyDJsT0iKlNQcotp6GHSpbey7XaXFLYs=
+	t=1717667434; cv=none; b=tJd9zF3zGXxTGCtX7QWq3JPomkwPC9zZUPSPxAUMcfkx8qbJNQ6ET/T1NpMhFBLaveRI88HnQleIJSirV5AV0K8ic0fyexVVrS3L8/mM0IpLHECwt2409nM+9wSbTtM+fMAbyPRPp4k12Ay18MNkzINzNQwiPlD7WTH1nAkSbvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666495; c=relaxed/simple;
-	bh=O6QxW/6BMIUtD8lYbUc2Pu0nN4KzJrdPqakO9O5geSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qO82bkKWVHdyrM709N6cKY0Axmaq4NjIqdz7G5zo0dRh37YAudlpqzAYDY/Iq9JkeAP9ZG0CKbl/gNyv6siD52QiFknKATBJ8ABbTEbHv5UaxYxd+zM/MbBbk61SEbDHxys71NE6/zcjbr1HaV+DBTak/oKNDUQ++4ASiMjtHB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ErXUHyxM; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717667434; c=relaxed/simple;
+	bh=lm+tZvLpwOpjennQ5G3mOnuxYiEGPtNMeoQC/xtfm/Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B9y+Zb/gHS3TjgB5ajABbfyi/gJpdbdtVzYm95e3R6J7E0l2ItLc3D4oA6mKQlYszAVoiWyVdSElyr9rN1bqNCsSXUZxMHE6+s9HSiIdXoK/R4FIHNyz2rSun3bX6UsBNpfCpZ6FEo5EG/muxIxqXWGTjQfsUUdd3frBzcG+9YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bm614vT2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=St3G3ObY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ErXUHyxM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=kmeK62SoIdnIVPwJAA1ZxGyQbY0oIueNKztx6sdjWRM=; t=1717666493;
-	x=1718098493; b=ErXUHyxMmVjARkDr/9YwQ/s6qYvBhon3JXt6cr7AB6nnXZyvt1uJgQZphXfF6
-	mNTNhvLniodCtNFkA+slnwcYBOfZ+oRR7YM9+fNQEqmsXMcjzz0w/kVT/LLlcCpFvclhxcUHeHsLN
-	Uet5d4zgzfDZv6lNjyc+aA1lMEjQ3zbQtbiotrt5X984PDE/Vtg98LfnpNX0B7yN59zvRAqL4lcGk
-	54pRgkmnDxrlKDcYLDQGzxxLSHJn2k3OG86rZs6kJGR9XjMbEyF3Nas3+IAxhr1catQUmWnmOa+1a
-	imp4cGrDQGGeF8tlWnQUo/RtGxwcj5sgpUYvYHBgsjNpSYlAIw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sF9W3-0004z8-HD; Thu, 06 Jun 2024 11:34:39 +0200
-Message-ID: <cee5e4ee-3d67-4eba-a790-c0c016cee937@leemhuis.info>
-Date: Thu, 6 Jun 2024 11:34:38 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bm614vT2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="St3G3ObY"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717667431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0anSg5HnrHQ7YhX2xXgy9E1PuGLrtp/Whwg+6ZdKAEE=;
+	b=Bm614vT2gZX+sIeVYXayBByGzx1qEftbZThOOCvuLy+qR3zkgfweswPO1jjDT9HGc72rox
+	ws5zLwLJZ+A1gSVBY7paDsRtmAcx/NTIgjzLQFCwARYJq8n4t0UyCoeEwQm90WEx+XVrnG
+	dCXZCIEtK4A1QKqm2qJICM1go8GlNeWIVEC00f2IbGyxMkCgvxFQ+Cu/PIae2NIhxd8OC3
+	SJk7ekRwY85iydka7WLtaUgPEX/tmbeCsQNLYG8mPMEhfCboh0n068pOYJgSVTaKR5V1LI
+	tKuUmZ7Uw+89DHRKEyKtAQTvBR9uNIxTzXZ7QI+G+OrLdK2+gnqs8y2gFEXR9Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717667431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0anSg5HnrHQ7YhX2xXgy9E1PuGLrtp/Whwg+6ZdKAEE=;
+	b=St3G3ObYzx0fFFpvGuIjyT55hQnSJtRw4spoGTAgqbtvCLYmb5Zh0CKifQu4tD6opqI2JH
+	oqQn3f4D08i5hHAA==
+To: Lyude Paul <lyude@redhat.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
+ non-present APIC IDs in a present package")
+In-Reply-To: <c735dcc6f6e4d4074bc834fba7204e22779e9ab9.camel@redhat.com>
+References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
+ <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
+ <87edautcmz.ffs@tglx>
+ <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
+ <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
+ <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
+ <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
+ <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
+ <87jzjxn6s5.ffs@tglx>
+ <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
+ <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
+ <87bk58n6le.ffs@tglx>
+ <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
+ <87wmntkhak.ffs@tglx>
+ <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
+ <874japh4ww.ffs@tglx> <87sey8g5z6.ffs@tglx> <87ttiha77b.ffs@tglx>
+ <c735dcc6f6e4d4074bc834fba7204e22779e9ab9.camel@redhat.com>
+Date: Thu, 06 Jun 2024 11:50:31 +0200
+Message-ID: <87h6e62ye0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
- Paolo Abeni <pabeni@redhat.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- frank-w@public-files.de, Rob Herring <robh@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Frank Wunderlich <linux@fw-web.de>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
- <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
- <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
- <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
- <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
- <0ae387c1-31b2-4e87-aa7d-f98e3c90e985@arinc9.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <0ae387c1-31b2-4e87-aa7d-f98e3c90e985@arinc9.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717666493;3a8ac617;
-X-HE-SMSGID: 1sF9W3-0004z8-HD
+Content-Type: text/plain
 
-On 06.06.24 11:01, Arınç ÜNAL wrote:
-> On 06/06/2024 11.26, Thorsten Leemhuis wrote:
->> On 31.05.24 08:10, Arınç ÜNAL wrote:
->>> I had already submitted a patch series that would've prevented this
->>> issue back in 14 March 2024 [1]. I've asked numerous times for the patch
->>> series to be applied [2][3][4][5].
->>>> Eventually Daniel asked for some changes [6]. But I won't have time
->>>> to do
->>> that anytime soon and I think the patch series is good enough to be
->>> applied
->>> as is.
->>
->> Then I guess we need some other way to resolve this in mainline to unfix
-> 
-> I don't believe we need another way to resolve it. I've already told that
-> the patch series is good enough to be applied as is and I don't see any
-> responses with reasons against this here.
-> 
->> Frank's device. The two obvious options are afaics:
->>
->> * revert the culprit (868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY
->> address of switch from device tree")) and reapply it in a later cycle
-> 
-> Sorry, no. There's nothing wrong with that patch. The actual cause of this
-> issue is the patch that introduced this device tree source file with the
-> wrong PHY address.
+On Wed, Jun 05 2024 at 19:15, Lyude Paul wrote:
+> On Wed, 2024-05-29 at 00:43 +0200, Thomas Gleixner wrote:
+>> Lyude!
+>> 
+>> On Thu, May 23 2024 at 12:47, Thomas Gleixner wrote:
+>> > Something I wanted to ask before. Is the BIOS of that machine up to
+>> > date?
+>> 
+>> Any update on this? I really don't want to add magic workarounds if
+>> there is a BIOS update which fixes it.
+>
+> OK - just booted a normal kernel up after updating the BIOS and you're
+> right - that does appear to solve the problem :). Thank you!
 
-Was that also merged for 6.10? Because if not, then what matters here
-afaics is what patch exposed the problem. Of course ideally we wound fix
-that problem -- but if nobody takes care of that any time soon it might
-come down to a revert of the patch that exposed the problem. At least
-that how Linus handles these things afaics.
+Perfect!
 
->> * apply Frank's patch (or an improved one) in this thread (and if needed
->> revert it when some better changes emerge.
->>
->> Arınç ÜNAL, could you please comment on that and ideally handle the
->> necessary tasks, as it's your patch that causes the regression.
-> 
-> I don't see any necessary tasks for me to handle. AngeloGioacchino Del
-> Regno whom is the only person I know that maintains these device tree
-> source files can simply apply the patch series that I have already
-> submitted and we can all move on. I haven't heard from them whilst the
-> patch had been waiting since March. So I'm not sure who's going to apply
-> this patch, and to which tree.
+Thanks
 
-AngeloGioacchino Del Regno, if you have a minute, could you please
-comment if merging those changes for 6.10 is an option?
-
-Ciao, Thorsten
+        Thomas
