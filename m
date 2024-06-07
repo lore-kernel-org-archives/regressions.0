@@ -1,113 +1,116 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C107C13D280
-	for <regressions@lists.linux.dev>; Thu,  6 Jun 2024 21:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0148D14269
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 03:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717709007; cv=none; b=hSECoU2jvxqSI+Bf69QP6CJIy6OII2Samo9gkqAP5A7A5IK+GMkJs1JYCR6oyqprsapsGfYIzTVTQaRCYKZe571aR8IJDBCkWzLEJ3BfZ+nu3+VXnEMJA9giPEEVgMf9jAvrlPhLy9dAW144UC6IN8Z5b+QXg3G0VRFGurKQGYM=
+	t=1717729836; cv=none; b=deQaz53y08mk77EHj/KCgJguhTE9ko0d+G4fKNbgOcrnpHKdB38Ee0CUvkgzFmpIb74IiIMVH3edDzEOgDhR1T5wdL0xFxT2XmfmDIanMUverhgR9TnbqW+RvvDtlnl80kpTfQOAshf9LHQJvqDNfXiW13FMzHICTZkVpY7vHSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717709007; c=relaxed/simple;
-	bh=18ErmTQ+WGncl+Pa0OIgOMyrs4urCsczi4HxtdcrsRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=flK/rvvjm7iWotP/Yhhlb2ALXpH7WrukyNb63g38L92h44h9VagqX6B92qk0KVATXkLQ6np5PoXiDwdG+UpgKgsDGAliOezUXK9h+rRQWgBNHTp9zN8D2jZSzbsQhln+FIVCg8+r0/LSYx/GK9MyRIz99onSap+LsIBY0LLOLdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkysB5jn; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717729836; c=relaxed/simple;
+	bh=KBYXw1WdE0b2j8hw4gwU5u0YhldC95Lt4Kb/R5RmV4w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rxBIFzz1lgqs95PXaJ/eN/gTiwWoJDYEDfcQAR1dBuxwjmDqQiyPwM+r51gjcSnKjNycg9opi6XIE2PKNv0YIoTQLDxQfWxe+1JqBJxbqd0efD8ullAkJRhPj6dgwDOzCeu0kyIxmn+pd0M5TWK23SiOwzEvjCFmE0ozQIFPFko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=a+lPQnr+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkysB5jn"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eaa5cd9f0bso24481081fa.1
-        for <regressions@lists.linux.dev>; Thu, 06 Jun 2024 14:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717709004; x=1718313804; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=18ErmTQ+WGncl+Pa0OIgOMyrs4urCsczi4HxtdcrsRU=;
-        b=hkysB5jnskYlAerq2HiRqpZEjw0O6Y+G8vL/2iDW5CISdGWjp5ZYy+l9t/swU2XUTU
-         WclNm/GOu9+YxH1is3LTYT/BqIpkbDCo2xngqmma6Lcy7Jtq9pLQm4Ntju1+U5PmYD4w
-         JiszstCbLHq3zDolWYmEreYPbUQz/ESVulwpF8KT6OiRaaBCk1557DFV69axAiyuGxUx
-         rbfmT4W1/zz3LKdwWAmI/uvtOJlJ7rWnva1SNL8ntOuJchxIOAqRxWX+vmxzR+EQg1Vx
-         3soaW00bEOKFjiEtxn78WoH9cXrm9Ql4gpk64dGverQAGbOpehLSbQyZiNwi9LkxjzwR
-         UiyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717709004; x=1718313804;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=18ErmTQ+WGncl+Pa0OIgOMyrs4urCsczi4HxtdcrsRU=;
-        b=Wy9xXXFeRt5IV/h9URW+4JlfFWgDyJvMdXmrUMWtSWBSmU93np9fcbgUr7IAoMXnEo
-         JjIxjHz0dyvZOpb1EFb0m8yQxO3syAFjOMorctnSSM1ZzvNOZ6yuxtNW6HvAymrQh8xD
-         7rhwuGHu/rI2MUMlnkXJhf1BY8vNK7PpIqnctbBEboUbEDl56oU9Q3kl5QTOSogO5YPD
-         t5WoFrZGk9cFdxkuXzgZz45mkfDKepZcDOeXLzoARIXudO1TL4iT3E/oCHP31rSNHlMU
-         lhtvNZ5drkBbwwcN8AiCuU8eYpPRnty+Kdb/K5krA/qR55LdBc5qpg3SkvSBFofXJgM3
-         Kwzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKI3yO/JdzHivBQxWWCGKVvU/EyH/rBaKn9krRhIMwUsGW0vuSDyJd6iMf6hDfNLGk/QbOBj1Spx3dSdGEuxOei5P3JxkDlpkoUGo=
-X-Gm-Message-State: AOJu0YxUlgVOD0aWuxgSaqZ+sDne9A0lSAOaWqzmZXOD6dndjPchRhLn
-	/Zbnpwz2cQ+8LtxRl30UKvW/NBrGV1+kBhKQRFko5Fpy6fpPHwllldtU5j+3cJziDOYQh2nmh0k
-	As2O16gvmSIVgRnpoF5ojEtRz5h0=
-X-Google-Smtp-Source: AGHT+IG2uNcusRrlYiy5pSN/MoSZfc+1gv2u2voDfSUD2LA4yyPyxkGk9q2e9tLZT7lM4NLeRsHMKiBiDHCj2x0EHXw=
-X-Received: by 2002:a2e:9e4a:0:b0:2e3:331e:e33d with SMTP id
- 38308e7fff4ca-2ead00b8920mr10688881fa.11.1717709003796; Thu, 06 Jun 2024
- 14:23:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="a+lPQnr+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1717729830;
+	bh=9lFwEx/JP+T+tWQXbEOOpWSpvQQLktCyT0QZNUBEBwk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=a+lPQnr+Hnyw9k4PYjdItxkPOKkzpbq1xDGrmf9objw3RJOsGfDNkk6kSXDnqMZAa
+	 JnknCa8WBXOCOPeF6PLMjiqipv2f8aEyttcN+W/h4CKUL6DmOfx/m+uaUzFkhIxrr/
+	 Q/2ZJZeD3PTtuw48WIFqfGAv7imifCi9XSNcA1Xaphf3B/szumvFTpkUjZoAeasVju
+	 Np++rhcJmzGs6m/QnGKZs9p7yuarwU8jTd2NmBsa0MARAmElxFYUmx0feSgupgFiO7
+	 8ArAOcVNEMjnJMXXKdD1ryHmh3JFwOp+KSgzF5E+b0md7so63XmiCVjvXKBFhCqYsE
+	 gS6Efuir3IqzA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VwR5w0Q8qz4wc8;
+	Fri,  7 Jun 2024 13:10:28 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: martin.petersen@oracle.com, dlemoal@kernel.org, hch@lst.de,
+ john.g.garry@oracle.com, linux-ide@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ regressions@lists.linux.dev, doru.iorgulescu1@gmail.com
+Subject: Re: [PATCH] ata: pata_macio: Fix max_segment_size with PAGE_SIZE ==
+ 64K
+In-Reply-To: <ZmG0TUiw0Nagwroj@ryzen.lan>
+References: <20240606111445.400001-1-mpe@ellerman.id.au>
+ <ZmG0TUiw0Nagwroj@ryzen.lan>
+Date: Fri, 07 Jun 2024 13:10:25 +1000
+Message-ID: <87ikylphwe.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
-In-Reply-To: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 6 Jun 2024 17:23:11 -0400
-Message-ID: <CABBYNZLE9uYiRM-baoBt=RQktq__TguMETgmVWGzfeorARfm4w@mail.gmail.com>
-Subject: Re: Bluetooth Kernel Bug: After connecting either HFP/HSP or A2DP is
- not available (Regression in 6.9.3, 6.8.12)
-To: =?UTF-8?Q?Timo_Schr=C3=B6der?= <der.timosch@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-bluetooth@vger.kernel.org, luiz.von.dentz@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Timo,
-
-On Thu, Jun 6, 2024 at 4:46=E2=80=AFPM Timo Schr=C3=B6der <der.timosch@gmai=
-l.com> wrote:
+Niklas Cassel <cassel@kernel.org> writes:
+> On Thu, Jun 06, 2024 at 09:14:45PM +1000, Michael Ellerman wrote:
+>> The pata_macio driver advertises a max_segment_size of 0xff00, because
+>> the hardware doesn't cope with requests >= 64K.
+>> 
+>> However the SCSI core requires max_segment_size to be at least
+>> PAGE_SIZE, which is a problem for pata_macio when the kernel is built
+>> with 64K pages.
+>> 
+>> In older kernels the SCSI core would just increase the segment size to
+>> be equal to PAGE_SIZE, however since the commit tagged below it causes a
+>> warning and the device fails to probe:
+>> 
+>>   WARNING: CPU: 0 PID: 26 at block/blk-settings.c:202 .blk_validate_limits+0x2f8/0x35c
+>>   CPU: 0 PID: 26 Comm: kworker/u4:1 Not tainted 6.10.0-rc1 #1
+>>   Hardware name: PowerMac7,2 PPC970 0x390202 PowerMac
+>>   ...
+>>   NIP .blk_validate_limits+0x2f8/0x35c
+>>   LR  .blk_alloc_queue+0xc0/0x2f8
+>>   Call Trace:
+>>     .blk_alloc_queue+0xc0/0x2f8
+>>     .blk_mq_alloc_queue+0x60/0xf8
+>>     .scsi_alloc_sdev+0x208/0x3c0
+>>     .scsi_probe_and_add_lun+0x314/0x52c
+>>     .__scsi_add_device+0x170/0x1a4
+>>     .ata_scsi_scan_host+0x2bc/0x3e4
+>>     .async_port_probe+0x6c/0xa0
+>>     .async_run_entry_fn+0x60/0x1bc
+>>     .process_one_work+0x228/0x510
+>>     .worker_thread+0x360/0x530
+>>     .kthread+0x134/0x13c
+>>     .start_kernel_thread+0x10/0x14
+>>   ...
+>>   scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+>> 
+>> Although the hardware can't cope with a 64K segment, the driver
+>> already deals with that internally by splitting large requests in
+>> pata_macio_qc_prep(). That is how the driver has managed to function
+>> until now on 64K kernels.
+>> 
+>> So fix the driver to advertise a max_segment_size of 64K, which avoids
+>> the warning and keeps the SCSI core happy.
+>> 
+>> Fixes: afd53a3d8528 ("scsi: core: Initialize scsi midlayer limits before allocating the queue")
+>> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>> Closes: https://lore.kernel.org/all/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
+>> Reported-by: Doru Iorgulescu <doru.iorgulescu1@gmail.com>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218858
+>> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>> ---
 >
-> Hallo,
-> on my two notebooks, one with Ubuntu (Mainline Kernel 6.9.3, bluez
-> 5.7.2) and the other one with Manjaro (6.9.3, bluez 5.7.6) I'm having
-> problems with my Sony WH-1000XM3 and Shure BT1. Either A2DP or HFP/HSP
-> is not available after the connection has been established after a
-> reboot or a reconnection. It's reproducible that with the WH-1000XM3
-> the A2DP profiles are missing and with the Shure BT1 HFP/HSP profiles
-> are missing. It also takes longer than usual to connect and I have a
-> log message in the journal:
+> Applied to libata/for-6.10-fixes:
+> https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-6.10-fixes
 >
-> Jun 06 16:28:10 liebig bluetoothd[854]:
-> profiles/audio/avdtp.c:cancel_request() Discover: Connection timed out
-> (110)
->
-> When I disable and re-enable bluetooth (while the Headsets are still
-> on) and trigger a reconnect from the notebooks, A2DP and HFP/HSP
-> Profiles are available again.
->
-> I also tested it with 6.8.12 and it's the same problem. 6.8.11 and
-> 6.9.2 don't have the problem.
-> So I did a bisection. After reverting commit
-> af1d425b6dc67cd67809f835dd7afb6be4d43e03 "Bluetooth: HCI: Remove
-> HCI_AMP support" for 6.9.3 it's working again without problems.
->
-> Let me know if you need anything from me.
+> With John's Reviewed-by from the other thread:
+> https://lore.kernel.org/linux-ide/171362345502.571343.9746199181827642774.b4-ty@oracle.com/T/#t
 
-Wait what, that patch has nothing to do with any of these profiles not
-really sure how that would cause a regression really, are you sure you
-don't have actual connection timeout happening at the link layer and
-that by some chance didn't happen when running with HCI_AMP reverted?
+Thanks.
 
-I'd be surprised that HCI_AMP has any effect in most controllers
-anyway, only virtual controllers was using that afaik.
-
-
---=20
-Luiz Augusto von Dentz
+cheers
