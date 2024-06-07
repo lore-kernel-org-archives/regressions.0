@@ -1,146 +1,141 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C466818FC63
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 15:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB99D54660
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 15:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773247; cv=none; b=PEGiNsenkckNZuWGo79tYrP3i8NpHsY+wXZJ1RqKZSHPbMokRnMkt1LfAt9SQw818vL337QeYFQkzouc/KEInOxX2JDYd8hcb7ODW9pSEefGgxgAbKhBZoRTZTFYSQlJ8X6qnuhJFjdv543yMh+2Ft6QkxXQnVUZmgkGZRLAXSA=
+	t=1717774016; cv=none; b=KaCnSnhL51Lp9u1GfYrAjUY7ZskTyItUbk2El5OVnW5FPBXMv8b5DHBv5Cxu8bhdF+5HiQVTEtkxOaqyNDoN5EeW3d/swBckFzgqo6/TdrRH+dNYS0nY7p0ksHwHTG6aLRJZNKdW9NvqIkNIR9r0VDoW1EASivuXyl+vdIH6944=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773247; c=relaxed/simple;
-	bh=//LBZavakYY0qucFQkDYfrsRRLRkXvEtWcbRyxLWPN0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fFWEYXOfJypxZF5DXzX6hEt7eYMyLEswLhpzdDhsZCFG3+cyMFeJS3/3TTNbSuHEPB2RzfRpPFKXOxdILTveGknPLvmJCKXiiNeSoTrHUHk1IZ9HAS7My2pXmukv+WnbFCI7U7sH2tL3+6Uq8ggIAb7g3GVatuWD4T0zWcRbycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1aIPLqrK; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717774016; c=relaxed/simple;
+	bh=rOfg24Dcz8QAnnEvfYvkHk1NUSiHhQLDhQ0iBZ8jknA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VixyA3X6qTjxgdR1/u3fRksReRnihzjGAHpYBeTdY0lD2lXJPDV6OXFxmyeU5mxZ4Y3fIClziWD77sZ5vn5k3bzUEY3gBRMwBhOTTOHLSfJFmzDbE6M/A1hL9BZNGAX/nmjDnfEfFDHkxR7CMPdqnwIuBb98ivB2lmYjsrV0Xa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YCRwHKr+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1aIPLqrK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717773244;
-	bh=//LBZavakYY0qucFQkDYfrsRRLRkXvEtWcbRyxLWPN0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=1aIPLqrKOWTLTwWB6QD3Rcerx88XWgGwctZSWdS35fz8wTPq+KveNgBcWsBcOroBL
-	 VBup6pOOIqcI8Pa8IH0jfL5TGQ/5pV1IWUzppH0VtKU/y5xgFmqkYNFlxS9kL65ouB
-	 6D9dlz5giN6ZRg+y5hshrzZ5TqJF9LdlENicScZCV1wOLvsCTNhERORjUDkcKDMzIh
-	 kaoaYIHvAVR4BdQ4YrHkPFb2lJiv4ZP7S9kwv4b6sx606iWaLDQkzZlzIuMj1muJ6U
-	 ss0OBlGbt689ike9625EkUAwuPRqbMtezICd9+mYwI8D3BZR1qPj/unbk15lnio0rq
-	 TJEEUQH8f9quA==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EA02337821B0;
-	Fri,  7 Jun 2024 15:14:03 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [REGRESSION] next boot regression caused by RIP: 0010:usercopy_abort+0x74/0x76 kernel panic
-Date: Fri,  7 Jun 2024 17:14:39 +0200
-Message-Id: <20240607151439.175035-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YCRwHKr+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717774013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9D/A+3bwK+p1bXr6ecFnn0y362Acz3/hUX82Z0aoQCc=;
+	b=YCRwHKr+KpwEZEayUa8fxs8eJcUkuYitWKE10wC+x1inhzucKNXtSzu4hAIJBLB8oajPxB
+	gl++dAMCbLvd/qI4OgZ5FnrDcJ8PmlcqNrYbPEwITaw3v65HWw/d6iltH7Icg/M1J59LbZ
+	rRSFjgFCVWDEsKDEvKvZBx1ItjXd3xY=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-sqSDC20aOFWjh6nxvmK3Hg-1; Fri, 07 Jun 2024 11:26:52 -0400
+X-MC-Unique: sqSDC20aOFWjh6nxvmK3Hg-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-57a5af3e160so1169657a12.2
+        for <regressions@lists.linux.dev>; Fri, 07 Jun 2024 08:26:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717774011; x=1718378811;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9D/A+3bwK+p1bXr6ecFnn0y362Acz3/hUX82Z0aoQCc=;
+        b=pmhOYUqk6Dz2tI1jF+g1BK6j+Zx3FE5oRy3UeWojLiy//GzEKtWE3sEv8MY+QbNrks
+         KXkxtBmdEAMLstZ5SsTytsW6jpVjejDRFNxxaLh62OfTNKiNPfaNUfjFkw6CQBmw+Dy6
+         346Bwgbqmj06JVNmn/5vtcFyI1Hqe3wL5uNhv9sxXkc7BZmd0UfoNew9iSXTCf0T3O0E
+         Qtl5KEPwZb4cl4aOFoqRMrUYoFzoUtI95l4420oTjPVNoWDP1WmZsGPEoZpYHWvph0MQ
+         689jer8nMqpRLp05CSGQj/m90PU4GOWlYb3VjwAJyPfeFdiuib98zHd0XGbztOi/HakV
+         DXyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSPwrroXsfkpGCZkOKMrlVFZsjWdQ02QUtlWvwGRrNVDWzlADqOegmAJg7uvT6BirBX4GvuOPZNt9cZSY5bnuo22AmnCcYUvjmXVk=
+X-Gm-Message-State: AOJu0Yz6ylYUFJH/RyccSnFvrGqku0QYDPNfAwu3b2AqXY4gEIYO8HOa
+	6+4a3QbUjDP27owvArPVgFGjQ2Iz0mKSkMSuDdOj0d4QyfQVq6H8s6OWTGlga00gxejkDL0Mc8m
+	hRdBfZNPD4z6yR4wMRocsGgsLFzLQY9kmkrkhgvsAnjGZMIgr3CJXH1PCxS/7
+X-Received: by 2002:a50:d69b:0:b0:57c:6234:e95b with SMTP id 4fb4d7f45d1cf-57c6234e9acmr471790a12.5.1717774011355;
+        Fri, 07 Jun 2024 08:26:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE0/6f7Ed+Q3P9FkVIMtn8/uS5MhDHOHU8/MO14CZu0SSWzQQpCvt+kzKfAK1hlK24ChuIRgQ==
+X-Received: by 2002:a50:d69b:0:b0:57c:6234:e95b with SMTP id 4fb4d7f45d1cf-57c6234e9acmr471784a12.5.1717774010889;
+        Fri, 07 Jun 2024 08:26:50 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aadfa3c47sm2925666a12.16.2024.06.07.08.26.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 08:26:50 -0700 (PDT)
+Message-ID: <7a73693e-87b4-4161-a058-4e36f50e1376@redhat.com>
+Date: Fri, 7 Jun 2024 17:26:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] leds: class: Revert: "If no default trigger is given,
+ make hw_control trigger the default trigger"
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ regressions@lists.linux.dev, linux-leds@vger.kernel.org,
+ Genes Lists <lists@sapience.com>, =?UTF-8?Q?Johannes_W=C3=BCller?=
+ <johanneswueller@gmail.com>, stable@vger.kernel.org
+References: <20240607101847.23037-1-hdegoede@redhat.com>
+ <6ebdcaca-c95a-48bc-b1ca-51cc1d7a86a5@lunn.ch>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <6ebdcaca-c95a-48bc-b1ca-51cc1d7a86a5@lunn.ch>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Andrew,
 
-KernelCI has detected a boot regression affecting all AMD and Intel
-Chromebooks in the Collabora LAVA lab, occurring between next-20240605
-and next-20240606.
+On 6/7/24 2:03 PM, Andrew Lunn wrote:
+> On Fri, Jun 07, 2024 at 12:18:47PM +0200, Hans de Goede wrote:
+>> Commit 66601a29bb23 ("leds: class: If no default trigger is given, make
+>> hw_control trigger the default trigger") causes ledtrig-netdev to get
+>> set as default trigger on various network LEDs.
+>>
+>> This causes users to hit a pre-existing AB-BA deadlock issue in
+>> ledtrig-netdev between the LED-trigger locks and the rtnl mutex,
+>> resulting in hung tasks in kernels >= 6.9.
+>>
+>> Solving the deadlock is non trivial, so for now revert the change to
+>> set the hw_control trigger as default trigger, so that ledtrig-netdev
+>> no longer gets activated automatically for various network LEDs.
+>>
+>> The netdev trigger is not needed because the network LEDs are usually under
+>> hw-control and the netdev trigger tries to leave things that way so setting
+>> it as the active trigger for the LED class device is a no-op.
+>>
+>> Fixes: 66601a29bb23 ("leds: class: If no default trigger is given, make hw_control trigger the default trigger")
+>> Reported-by: Genes Lists <lists@sapience.com>
+>> Closes: https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
+>> Reported-by: "Johannes Wüller" <johanneswueller@gmail.com>
+>> Closes: https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> I'm not sure i agree with the Closes: All this does is make it less
+> likely to deadlock. The deadlock is still there.
 
-The following kernel panic has been reported in the logs. The trace
-provided below is from an Acer Chromebook 317, with similar traces
-observed on other devices:
+I agree that the deadlock which is the root-cause is still there. But
+with this revert ledtrig-netdev will no longer get activated by default.
 
-[    5.944268] RIP: 0010:usercopy_abort+0x74/0x76
-[    5.944276] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
-[    5.944278] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
-[    5.944280] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
-[    5.944281] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-[    5.944282] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
-[    5.944284] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
-[    5.944285] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
-[    5.944286] FS:  0000000000000000(0003) GS:ffff8e7bc0100000(0063) knlGS:00000000eca4d440
-[    5.944288] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[    5.944289] CR2: 00000000080e61d0 CR3: 0000000107002000 CR4: 0000000000350ef0
-[    5.944290] Call Trace:
-[    5.944293]  <TASK>
-[    5.944295]  ? __die_body+0x1b/0x5d
-[    5.944300]  ? die+0x31/0x4b
-[    5.944303]  ? do_trap+0x7c/0xfe
-[    5.944306]  ? usercopy_abort+0x74/0x76
-[    5.944309]  ? usercopy_abort+0x74/0x76
-[    5.944312]  ? do_error_trap+0x6f/0x99
-[    5.944315]  ? usercopy_abort+0x74/0x76
-[    5.944318]  ? exc_invalid_op+0x4e/0x65
-[    5.944321]  ? usercopy_abort+0x74/0x76
-[    5.944324]  ? asm_exc_invalid_op+0x16/0x20
-[    5.944327]  ? usercopy_abort+0x74/0x76
-[    5.944330]  __check_heap_object+0xcb/0x110
-[    5.944334]  __check_object_size+0x181/0x26d
-[    5.944336]  copy_from_buffer+0x43/0x66
-[    5.944340]  copy_uabi_to_xstate+0x113/0x194
-[    5.944343]  __fpu_restore_sig+0x3a3/0x4be
-[    5.944347]  fpu__restore_sig+0x6c/0x83
-[    5.944350]  ia32_restore_sigcontext+0x14e/0x16d
-[    5.944354]  __do_compat_sys_sigreturn+0x7b/0xbc
-[    5.944357]  do_int80_emulation+0xad/0xd3
-[    5.944360]  ? handle_mm_fault+0x10e/0x199
-[    5.944363]  ? exc_page_fault+0x27b/0x42f
-[    5.944365]  ? fpregs_assert_state_consistent+0x22/0x47
-[    5.944368]  ? clear_bhb_loop+0x45/0xa0
-[    5.944370]  ? clear_bhb_loop+0x45/0xa0
-[    5.944372]  ? clear_bhb_loop+0x45/0xa0
-[    5.944374]  ? clear_bhb_loop+0x45/0xa0
-[    5.944375]  ? clear_bhb_loop+0x45/0xa0
-[    5.944377]  ? clear_bhb_loop+0xe/0xa0
-[    5.944379]  asm_int80_emulation+0x16/0x20
-[    5.944382] RIP: 0023:0xeca52579
-[    5.944384] Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-[    5.944386] RSP: 002b:00000000ff879cbc EFLAGS: 00000246
-[    5.944387] RAX: 0000000000000060 RBX: 00000000ffffffff RCX: 00000000ff879d08
-[    5.944389] RDX: 0000000000000000 RSI: 0000000009b111a0 RDI: 00000000ff879d08
-[    5.944390] RBP: 00000000080d1801 R08: 0000000000000000 R09: 0000000000000000
-[    5.944391] R10: 0000000000000000 R11: 0000000000000282 R12: 0000000000000000
-[    5.944392] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    5.944393]  </TASK>
-[    5.944394] Modules linked in:
-[    5.944433] ---[ end trace 0000000000000000 ]---
-[    6.287986] RIP: 0010:usercopy_abort+0x74/0x76
-[    6.293033] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
-[    6.313975] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
-[    6.319810] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
-[    6.327780] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-[    6.335744] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
-[    6.343710] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
-[    6.351678] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
-[    6.359646] FS:  0000000000000000(0003) GS:ffff8e7bc0000000(0063) knlGS:00000000eca4d440
-[    6.368680] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[    6.375098] CR2: 00000000f322e480 CR3: 0000000107002000 CR4: 0000000000350ef0
-[    6.383065] Kernel panic - not syncing: Fatal exception
-[    6.388907] Kernel Offset: 0x1ba00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+So now the only way to actually get the code-paths which may deadlock
+to run is by the user or some script explicitly activating the netdev
+trigger by writing "netdev" to the trigger sysfs file for a LED classdev.
+So most users will now no longer hit this, including the reporters of
+these bugs.
 
-The full kernel log is available on [1]. The config used was the
-upstream x86_64 defconfig with a fragment applied on top [2].
+The auto-activating of the netdev trigger is what is causing these
+reports when users are running kernels >= 6.9 .
 
-The issue is still present on next-20240607.
+> But:
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I'm sending this report to track the regression while a fix is 
-identified. I'll investigate the issue/run a bisection and report back 
-with the results.
+Thank you.
 
-Best,
+Regards,
 
-Laura
+Hans
 
-[1] https://pastebin.com/raw/1yDEDXSF
-[2] https://pastebin.com/raw/vPSw6cfB
-
-#regzbot introduced: next-20240605..next-20240606
 
