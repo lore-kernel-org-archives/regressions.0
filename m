@@ -1,99 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D51A155328
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 07:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACC344C97
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 09:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717747039; cv=none; b=KPm3AOatRX0OwqR8zK0B3ELdlyAzXdpa3QxynpU3rXOWDYSxiVgWSKNIX3U4jGhF4BfN4muKhPg+9gsfYb5nVDdCQ4R2C36CowyfBuDEUJbZWodgPUChPQLS8NU8nbqkjZIG3hQjCQoQ7KdV2eItBSMNLy2M673eWyD3CEke6Io=
+	t=1717752284; cv=none; b=WGeUCt5QFb4CkN1yxrGd8tKQykKtKG2eSx+IInXfUUil73cTTpLtiMJVyPvjM7YqTNL4AQDBM4FEamKoMD/vOHd5l1JIn7/i0DNyNL1TjoiHt/V5gO0P/eKwcu+uI+WjOUDDob9boOSV/1d6oEJ/pqJ8gWkQGIZy4dWmsHi6gbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717747039; c=relaxed/simple;
-	bh=g6Va+Z0ohKfz7eXfxYO9xCRun7LJHKXk2sadRvB2F0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WoAsMutxxZgHYdUcZ46qlxqMB7jNLJCqSH+WlK2EzJmZLD44eYPAY4v1AALjdO1hqCmS/etZaLmo/aLbrVa6RbPlGkvzmJrtl4o6OOlgn9Z5IRokP2IMavxjviPBvwawm5Lx0EyW9B0of+TEChj5NL5C/iSaA+WlcWSIC2KhL3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJs4S3fw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717752284; c=relaxed/simple;
+	bh=/91veDI2nMtqBub59WBSpwzgigLamN1h/2wkE6HNjH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dbeErd9VeR945T03cF25eDBe2AZKkkIJuZeSNhOEKZx7F9mC4q3MbsHeuPjb2SKS0i28UWNyvMW6ZKKcWYsnSFiYNMp69VFaWtkbQEURqOQE3bvDcFBcTGhoKj9DE53Qt3zOZ1dg5XuD5Iy878dMdP2AObReSe0FAbV6tVh7BXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dyY7035T; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJs4S3fw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33704C4AF0A
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 07:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717747039;
-	bh=g6Va+Z0ohKfz7eXfxYO9xCRun7LJHKXk2sadRvB2F0U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PJs4S3fw1EGitDf0NXmloONiujMf8NmNpf7PDpsUBeWeqQIob0QfXd4deu66xgFx7
-	 p0XXWgJ40BjT7+c3iE+JZiFenHZBkUCBKxTLA6GZ0L8O7pAB7I0l7EpGka82MoSf2Z
-	 CX/+PuLVG5w1YyHJTTwj8uCefGQGbY+MlHcy6Is5Q+O74LppLnJWblfdrbbVQv8To2
-	 k08ckos4WJw4QJna8S56xFnn4Ar3RypHUsYtcf8u5x4C5IMkWYM7425MlYVTLktHcS
-	 6A1SSlLCdsXIdfthvdWBRDhnsrHcVIe4G3Nkpfqe3Ly0ZCH7kLbstI2nMvpHis0vGQ
-	 5v1R/SptOV2hA==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5ba68c30395so210789eaf.1
-        for <regressions@lists.linux.dev>; Fri, 07 Jun 2024 00:57:19 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yw0t1hK3DcJLE37tyHdJiT/XY724muMyxLQCL5sfGU/EAZDe1oj
-	fHg55X2bWJq53K8vOYqWh/Q7es9gr6m8XHMh3pMLllLpB+WFTWSqMQTSszLmhV9U7+3k1OZOr5X
-	NlhOI1yk/mpvMcpETfBcSseC2rDU=
-X-Google-Smtp-Source: AGHT+IGwbuLlETCCLw3LCaMkCnEI4XyLlbw9QF1Bs42Bhc6zhHL+C2mbuQ2AnEtralKPc1ICNO5qpkJjGvOD5+/JJ1Y=
-X-Received: by 2002:a4a:ac08:0:b0:5aa:3e4f:f01e with SMTP id
- 006d021491bc7-5baae73b688mr1654053eaf.1.1717747038386; Fri, 07 Jun 2024
- 00:57:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dyY7035T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717752284; x=1749288284;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/91veDI2nMtqBub59WBSpwzgigLamN1h/2wkE6HNjH8=;
+  b=dyY7035TH9RukSu+QNssgAqe28NDZbwf2EHzlaGy1kV8/UrYor2OHukr
+   K99Pc/L599CTGWwIDU0seXvtIlC93Dy2cuSUp7+TS0TBoC9r4psa1tdHt
+   TMRE1epkukyO6j/yqbb+q3xwHrcyWPEDcQzRPuMwa3tBIu+XpHij3FhcX
+   HaAnITt87fX+39C2jxuLGqq4HhZ2YeSG/DpqZ3yBH9Ut1rqOdup2ddpQZ
+   ASObWm8UuRK8u8mCY09ZbD+xm3c/8AWuSYyq2RFoKyN6dyMBhclhSQZiq
+   j/vkcIDnC1ET21zBYKgyUObM9t4T8yCa4rPVXPDPdUbCV4eyuPJkxC2aI
+   A==;
+X-CSE-ConnectionGUID: d0+BVlbTQH2O0o4AyohuiA==
+X-CSE-MsgGUID: Ql9gt/KRQ4mG4cgUqX80UQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25038861"
+X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
+   d="scan'208";a="25038861"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 02:24:43 -0700
+X-CSE-ConnectionGUID: d2+XNwo6QAWxHv4YWX/UKQ==
+X-CSE-MsgGUID: XqwGMeuFTPeiu12b9mjWeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
+   d="scan'208";a="38190513"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 02:24:40 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 875AF12027E;
+	Fri,  7 Jun 2024 12:24:37 +0300 (EEST)
+Date: Fri, 7 Jun 2024 09:24:37 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <ZmLR1XX8ctUladp-@kekkonen.localdomain>
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <8afe9391b96ff3e1c60e624c1b8a3b2bd5039560.camel@sapience.com>
- <ZlTllJeZBiGapHwZ@kekkonen.localdomain> <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <eb10620deecc8feeae1e308c22de199be7c48ca6.camel@sapience.com>
- <ZmHasj3hfwwKimZF@kekkonen.localdomain> <7fb5f0d6-f105-4219-839b-908c96c42972@leemhuis.info>
-In-Reply-To: <7fb5f0d6-f105-4219-839b-908c96c42972@leemhuis.info>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Jun 2024 09:57:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hnELQtpRsC1JdsExr48yjdjB9B_u8hj+_CmpEQSUeRSQ@mail.gmail.com>
-Message-ID: <CAJZ5v0hnELQtpRsC1JdsExr48yjdjB9B_u8hj+_CmpEQSUeRSQ@mail.gmail.com>
-Subject: Re: 6.10-rc1 : crash in mei_csi_probe
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Genes Lists <lists@sapience.com>, 
-	linux-kernel@vger.kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl, 
-	laurent.pinchart@ideasonboard.com, wentong.wu@intel.com, 
-	linux-media@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
 
-On Thu, Jun 6, 2024 at 7:07=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 06.06.24 17:50, Sakari Ailus wrote:
-> > On Thu, Jun 06, 2024 at 11:39:35AM -0400, Genes Lists wrote:
-> >> On Mon, 2024-05-27 at 16:58 -0400, Genes Lists wrote:
-> >>> On Mon, 2024-05-27 at 19:57 +0000, Sakari Ailus wrote:
-> >>>>
-> >>>> Thanks for reporting this.
-> >>>>
-> >>>> On Mon, May 27, 2024 at 12:34:41PM -0400, Genes Lists wrote:
-> >>>>>
-> >>>>> First happened in 6.10-rc1 (6.9.2 stable is fine)
-> >>>>
-> >>>> Do you happen to have .config available? A full dmesg would also be
-> >>>> helpful.
-> >>>>
-> >>>> Does the system crash after the warning or not?
-> >>>
-> >>> System stays up and remains quite usable.
-> >>>
-> >>> config and dmesg attached.
-> >>
-> >> Hi Sakari - just to let you know this is still happening in 6.10-rc2.
+Hi Rafael,
+
+On Fri, Jun 07, 2024 at 09:55:44AM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 6, 2024 at 8:12 PM Hans de Goede <hdegoede@redhat.com> wrote:
 > >
-> > It'll disappear once this patch is in:
-> > <URL:https://lore.kernel.org/linux-acpi/MW5PR11MB5787C81ABF0C9FFF5A17E4=
-888DF32@MW5PR11MB5787.namprd11.prod.outlook.com/T/#t>.
->
-> Do you plan to submit this again while fixing the typo Wentong Wu
-> pointed out? Or should Rafael (now CCed here) fix this while picking it
-> up? He might not have seen it as he's not in the list of recipients; he
-> furthermore is likely not aware that this is a regression fix, as it
-> lacks Fixes, Reported-by and Closes tags.
+> > Hi,
+> >
+> > +To: Rafael since this was Cc-ed to linux-acpi but never send
+> > to Rafael directly.
+> >
+> > Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
+> > to make the cameras work on the Dell XPS 13 plus 9320 .
+> >
+> > On 5/28/24 7:09 PM, Hans de Goede wrote:
+> > > Hi Sakari,
+> > >
+> > > On 5/28/24 10:44 AM, Sakari Ailus wrote:
+> > >> Ignore camera related graph port nodes on Dell XPS 9320. They data in BIOS
+> > >> is buggy, just like it is for Dell XPS 9315. The corresponding software
+> > >> nodes are created by the ipu-bridge.
+> > >>
+> > >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > >> ---
+> > >> Hi,
+> > >>
+> > >> Could you test this and see whether it fixes the warning?
+> > >>
+> > >> The camera might work with this change, too.
+> > >
+> > > Thank you I just received a Dell XPS 13 plus 9320 myself to use
+> > > for VSC testing and I can confirm that with this patch 6.10.0-rc1
+> > > works, including giving a picture with the libcamera software ISP +
+> > > 3 small libcamera patches.
+> >
+> > I forgot to add:
+> >
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Applied as 6.10-rc material.
 
-Please see my reply to the patch:
-https://lore.kernel.org/linux-acpi/CAJZ5v0i1NxGHMKskP7W+hAusjt=3D5jYYWTF2vg=
-JPR0gnrNTgFaw@mail.gmail.com/
+Thanks!
+
+> 
+> I've also added Reported-by and Closes tags to this, but I'm not sure
+> which commit exactly is fixed by it, so the Fixes tag is missing.
+
+That's fine. We don't know which systems have faulty camera graph in DSDT
+so these are added as they're found.
+
+-- 
+Regards,
+
+Sakari Ailus
