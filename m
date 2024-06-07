@@ -1,107 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19E8152168;
-	Fri,  7 Jun 2024 06:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C001156C6C
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 07:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717740614; cv=none; b=gyiIqbleI1xCxKpfvrFHqJRROGMFGbKWMPRZEJ5xL2s7JmPOXzb2XOhh0EqTpGO7tVo7dhUdaC+x45cAKsgeIqisZb3p1fK7Ya2GEHiV9kmPU/u9HQqsiStqhln8/NzZygyT1Tg2bjHNm5Q/yTyOO8k73OOlGzsvo3LtkB3XfXY=
+	t=1717746957; cv=none; b=lrOS2oZcBT7AsnmUAlyTJA09Ey0PzQWGs4FyUIIJQYzKwKLP1Do/FCLWNUpxBL61NMumGOF4ojQroWfYPzTAIssgwK3FqU02lvRgCQHJSBVVutmW4LOFBgBF2L5uy8SSmv2NYZ1RQgCccfayl3nY/ykjEZkDic+VvgET2auBnhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717740614; c=relaxed/simple;
-	bh=ckioJl9vajbY1NY8xPgM0DgSe4tTZ088rXm8lefAKNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KUi7K5SMmwqyeYAZnsJvR3EkBRiHcl116JX3T/JEJEIRRUPNWb8knjhtp8+2HetGEG/RxYO0XrjYWRmYPDM1DI6z/bG+UPqoYSfCXaBSG0DXz6jNH4p3wUanXKwJobokmXhApPgY5v36SbC2cJynYX9L6oxexxhMumu4sWGJcVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JmvfL000; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717746957; c=relaxed/simple;
+	bh=uI/QJseRNnSAiLO/gbeFRBPFZN8DhNI0NiQg672psP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JcSxi4yqmCCW1WT7aHCsJrdj0nawY1NwNGETdzie621t9DmUQzEaEkAUhYYwwbPbRZtLwkxMuLnvB9m1rAMaGgE0UffdV5kHkOqbizpFi+Zp5qcRcLj+ligZKTY07JsxDKD6B2gATJMWsZ8OmSSHTbC4KSUcQ1bcG48XB96ijn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uncxKJp9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JmvfL000"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=UKY9mfcsSIWUumL/x92ZX9UOfQJ5ndiPQuj7lVX4LJA=;
-	t=1717740612; x=1718172612; b=JmvfL000RzKOWtFyD9IcNLFCOOjp5luVRjMa7DIcyPsLDF9
-	WdCgDmQYiEl1AnQxruZvSlcXFyL4YLb8M5v/cTGanqey4kFpWTdApXVmwtQjypoc37DPDOcRfMqFX
-	E86moI2SP/DraN2xC/xaBuQW2JiWIK+VrJm03nprwo0r9u6lZvN4A/V+sUcK+lvcB5u7aXioCXdFc
-	x3HWYm3Ib51UyUi3Tw17kti4iMAzQtOllpx0tC+fWZV4RTTlfO2xG2eEWTHgAtfySTq8iRwsibHFA
-	RWMmuYdD1ktTrgyCht7+jCRHp180M/7407TwRMuA7nZRm8nyj60ctfK6L1d0Kr3Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sFSnh-0006r7-Rs; Fri, 07 Jun 2024 08:10:09 +0200
-Message-ID: <212fca4c-fc1f-4da4-b48e-c6a4b64a2b35@leemhuis.info>
-Date: Fri, 7 Jun 2024 08:10:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uncxKJp9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C869BC32786
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 07:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717746956;
+	bh=uI/QJseRNnSAiLO/gbeFRBPFZN8DhNI0NiQg672psP0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uncxKJp9Rd6wTGoqDlc/MCcyU8XrR9RGllBMkd0LJsAhFV/T6kUq/3nWX55U6gm8F
+	 nORczrlFqrWBg/P9lhbiQiu+OJQeKg/gB1cWtIaAAL/rhhyYiQhmfmxSMOBIluREl5
+	 prAXdz/yG9ZgHt8hmQKALl0mZsRaizaqo6z4VokIJ7xbMdLUFuMRWgB3XdUXxQsGuy
+	 AnyAul5lIV/QICjfB0pjwB/31gEtHf4LuFxgnZADXI+tzt3SxZSDqEr2qeIbQdfm7k
+	 /jdqXS9Sn03ashKjdTLpBjV8cJ7r/tjlYeH4lzSH2TGF0BsLu9Y8faCLC0014X7mdK
+	 jv1vAJJZcKHoQ==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5b3364995b4so270798eaf.0
+        for <regressions@lists.linux.dev>; Fri, 07 Jun 2024 00:55:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXd8CCb0dRmWI9Qnt6IioLDJYIIhmGEBfsYFSanVIf1vJAJAVD4UImzJ9DAMLr0mngNgPeQQXlpI+nWAzXxObDA4ERx2oEELIqvaC4=
+X-Gm-Message-State: AOJu0YysTnTT/KxQQjsnt0qQbkPcK7ALKI8rm90GMlrfz75vSYzYSAq1
+	9qMNVNegeUOM+EVVUBvx7p4YCUmGooPvZWhKdd4KMabAavva5KDhthOr67w6p4qOUYrecEpN5r+
+	bFOkBJUUGbcpAW6VF4cmgYAGPL6g=
+X-Google-Smtp-Source: AGHT+IEvrjNzx6O5y/0sU9VeobXh56cdEvsv6pP4P2j7KZIrqGPsUL26GPjlnKSeIbjU+Z3fWr4/U5NUyIxtbRJC+gs=
+X-Received: by 2002:a05:6870:58c:b0:24f:ddd5:a21d with SMTP id
+ 586e51a60fabf-254649a6f97mr1862748fac.5.1717746956049; Fri, 07 Jun 2024
+ 00:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth Kernel Bug: After connecting either HFP/HSP or A2DP is
- not available (Regression in 6.9.3, 6.8.12)
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- =?UTF-8?Q?Timo_Schr=C3=B6der?= <der.timosch@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-bluetooth@vger.kernel.org, luiz.von.dentz@intel.com
-References: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
- <CABBYNZLE9uYiRM-baoBt=RQktq__TguMETgmVWGzfeorARfm4w@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CABBYNZLE9uYiRM-baoBt=RQktq__TguMETgmVWGzfeorARfm4w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717740612;e4727336;
-X-HE-SMSGID: 1sFSnh-0006r7-Rs
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com> <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+In-Reply-To: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Jun 2024 09:55:44 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
+Message-ID: <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Hans de Goede <hdegoede@redhat.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Genes Lists <lists@sapience.com>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	mchehab@kernel.org, hverkuil-cisco@xs4all.nl, 
+	laurent.pinchart@ideasonboard.com, wentong.wu@intel.com, 
+	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06.06.24 23:23, Luiz Augusto von Dentz wrote:
-> On Thu, Jun 6, 2024 at 4:46 PM Timo Schröder <der.timosch@gmail.com> wrote:
->> on my two notebooks, one with Ubuntu (Mainline Kernel 6.9.3, bluez
->> 5.7.2) and the other one with Manjaro (6.9.3, bluez 5.7.6) I'm having
->> problems with my Sony WH-1000XM3 and Shure BT1. Either A2DP or HFP/HSP
->> is not available after the connection has been established after a
->> reboot or a reconnection. It's reproducible that with the WH-1000XM3
->> the A2DP profiles are missing and with the Shure BT1 HFP/HSP profiles
->> are missing. It also takes longer than usual to connect and I have a
->> log message in the journal:
->>
->> Jun 06 16:28:10 liebig bluetoothd[854]:
->> profiles/audio/avdtp.c:cancel_request() Discover: Connection timed out
->> (110)
->>
->> When I disable and re-enable bluetooth (while the Headsets are still
->> on) and trigger a reconnect from the notebooks, A2DP and HFP/HSP
->> Profiles are available again.
->>
->> I also tested it with 6.8.12 and it's the same problem. 6.8.11 and
->> 6.9.2 don't have the problem.
->> So I did a bisection. After reverting commit
->> af1d425b6dc67cd67809f835dd7afb6be4d43e03 "Bluetooth: HCI: Remove
->> HCI_AMP support" for 6.9.3 it's working again without problems.
->>
->> Let me know if you need anything from me.
-> 
-> Wait what, that patch has nothing to do with any of these profiles not
-> really sure how that would cause a regression really, are you sure you
-> don't have actual connection timeout happening at the link layer and
-> that by some chance didn't happen when running with HCI_AMP reverted?
-> 
-> I'd be surprised that HCI_AMP has any effect in most controllers
-> anyway, only virtual controllers was using that afaik.
+On Thu, Jun 6, 2024 at 8:12=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Hi,
+>
+> +To: Rafael since this was Cc-ed to linux-acpi but never send
+> to Rafael directly.
+>
+> Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
+> to make the cameras work on the Dell XPS 13 plus 9320 .
+>
+> On 5/28/24 7:09 PM, Hans de Goede wrote:
+> > Hi Sakari,
+> >
+> > On 5/28/24 10:44 AM, Sakari Ailus wrote:
+> >> Ignore camera related graph port nodes on Dell XPS 9320. They data in =
+BIOS
+> >> is buggy, just like it is for Dell XPS 9315. The corresponding softwar=
+e
+> >> nodes are created by the ipu-bridge.
+> >>
+> >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >> ---
+> >> Hi,
+> >>
+> >> Could you test this and see whether it fixes the warning?
+> >>
+> >> The camera might work with this change, too.
+> >
+> > Thank you I just received a Dell XPS 13 plus 9320 myself to use
+> > for VSC testing and I can confirm that with this patch 6.10.0-rc1
+> > works, including giving a picture with the libcamera software ISP +
+> > 3 small libcamera patches.
+>
+> I forgot to add:
+>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Stupid question from a bystander without knowledge in the field (so feel
-free to ignore this): is that patch maybe causing trouble because it has
-some hidden dependency on a earlier change that was not backported to
-6.9.y?
+Applied as 6.10-rc material.
 
-Timo, to rule that out (and it's good to know in general, too) it would
-be good to known if current mainline (e.g. 6.10-rc) is affected as well.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+I've also added Reported-by and Closes tags to this, but I'm not sure
+which commit exactly is fixed by it, so the Fixes tag is missing.
