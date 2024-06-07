@@ -1,130 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACC344C97
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 09:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0405315AAD7
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 10:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717752284; cv=none; b=WGeUCt5QFb4CkN1yxrGd8tKQykKtKG2eSx+IInXfUUil73cTTpLtiMJVyPvjM7YqTNL4AQDBM4FEamKoMD/vOHd5l1JIn7/i0DNyNL1TjoiHt/V5gO0P/eKwcu+uI+WjOUDDob9boOSV/1d6oEJ/pqJ8gWkQGIZy4dWmsHi6gbQ=
+	t=1717755541; cv=none; b=mfVWz5UeTWoSaqKQB3mQZHN3Iqx0hg+vGJjEUZeuEKsJZmXfTQE6fyxSUSB5m+nzO07UgbrYm78lM44Q2nGUqxNnLSP7HN0885zzzwMJYj7BdObKkS3htU43pvxTosaEsrEYIZS1uaYXffHpE8ip6UYL1Qf+5N/9vjwYeGz+X+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717752284; c=relaxed/simple;
-	bh=/91veDI2nMtqBub59WBSpwzgigLamN1h/2wkE6HNjH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dbeErd9VeR945T03cF25eDBe2AZKkkIJuZeSNhOEKZx7F9mC4q3MbsHeuPjb2SKS0i28UWNyvMW6ZKKcWYsnSFiYNMp69VFaWtkbQEURqOQE3bvDcFBcTGhoKj9DE53Qt3zOZ1dg5XuD5Iy878dMdP2AObReSe0FAbV6tVh7BXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dyY7035T; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717755541; c=relaxed/simple;
+	bh=UQyLrKvwXFeJTbVMp3JrLlULiFQYm1z4rjeGlpJMP3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YskLIFVCDfuElkuqGUv6L38xtz7mIROjjRi1+KTiRHam6uQNC8GlInFZVLk0BVyANhjRNMrSahzCpbI4NgUKdNr+fUl6jV+CgyIxaXIjeYUOYMdNZJHG1mBqZMyj4ywZOXEExDgrm9Ckv3+scmgpYlamqlrmOUMBENQHUQXfy9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y7wcsKBo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dyY7035T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717752284; x=1749288284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/91veDI2nMtqBub59WBSpwzgigLamN1h/2wkE6HNjH8=;
-  b=dyY7035TH9RukSu+QNssgAqe28NDZbwf2EHzlaGy1kV8/UrYor2OHukr
-   K99Pc/L599CTGWwIDU0seXvtIlC93Dy2cuSUp7+TS0TBoC9r4psa1tdHt
-   TMRE1epkukyO6j/yqbb+q3xwHrcyWPEDcQzRPuMwa3tBIu+XpHij3FhcX
-   HaAnITt87fX+39C2jxuLGqq4HhZ2YeSG/DpqZ3yBH9Ut1rqOdup2ddpQZ
-   ASObWm8UuRK8u8mCY09ZbD+xm3c/8AWuSYyq2RFoKyN6dyMBhclhSQZiq
-   j/vkcIDnC1ET21zBYKgyUObM9t4T8yCa4rPVXPDPdUbCV4eyuPJkxC2aI
-   A==;
-X-CSE-ConnectionGUID: d0+BVlbTQH2O0o4AyohuiA==
-X-CSE-MsgGUID: Ql9gt/KRQ4mG4cgUqX80UQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25038861"
-X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
-   d="scan'208";a="25038861"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 02:24:43 -0700
-X-CSE-ConnectionGUID: d2+XNwo6QAWxHv4YWX/UKQ==
-X-CSE-MsgGUID: XqwGMeuFTPeiu12b9mjWeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
-   d="scan'208";a="38190513"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 02:24:40 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 875AF12027E;
-	Fri,  7 Jun 2024 12:24:37 +0300 (EEST)
-Date: Fri, 7 Jun 2024 09:24:37 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
-	linux-kernel@vger.kernel.org, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-	wentong.wu@intel.com, linux-media@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
- nodes
-Message-ID: <ZmLR1XX8ctUladp-@kekkonen.localdomain>
-References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
- <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
- <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7wcsKBo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717755539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=N/DX36CyXJrx0AdFl/DLUTt1b1E77C/gLDrVW9G/1mc=;
+	b=Y7wcsKBoJd/wSYZNRGc42JRN8vG5N3hT2+r0AjcXSHxbTlzkLuTaEZ3koaoAIhNAv9wTC5
+	EhdS82bYrQPWqnDa9llx9Rkn+cB8YH21ygezhPLQBJg6is4mMdlWRvotqp6tyCEhnmxWCx
+	7m/7qeSsJltpGuVAPFleJpr7DsiTmco=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-Q4Iz4AoYO_a5rPfhensX-g-1; Fri,
+ 07 Jun 2024 06:18:55 -0400
+X-MC-Unique: Q4Iz4AoYO_a5rPfhensX-g-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C9101956055;
+	Fri,  7 Jun 2024 10:18:53 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.5])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 500E030000C4;
+	Fri,  7 Jun 2024 10:18:48 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	regressions@lists.linux.dev,
+	linux-leds@vger.kernel.org,
+	Genes Lists <lists@sapience.com>,
+	=?UTF-8?q?Johannes=20W=C3=BCller?= <johanneswueller@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] leds: class: Revert: "If no default trigger is given, make hw_control trigger the default trigger"
+Date: Fri,  7 Jun 2024 12:18:47 +0200
+Message-ID: <20240607101847.23037-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0i1NxGHMKskP7W+hAusjt=5jYYWTF2vgJPR0gnrNTgFaw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi Rafael,
+Commit 66601a29bb23 ("leds: class: If no default trigger is given, make
+hw_control trigger the default trigger") causes ledtrig-netdev to get
+set as default trigger on various network LEDs.
 
-On Fri, Jun 07, 2024 at 09:55:44AM +0200, Rafael J. Wysocki wrote:
-> On Thu, Jun 6, 2024 at 8:12 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > +To: Rafael since this was Cc-ed to linux-acpi but never send
-> > to Rafael directly.
-> >
-> > Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
-> > to make the cameras work on the Dell XPS 13 plus 9320 .
-> >
-> > On 5/28/24 7:09 PM, Hans de Goede wrote:
-> > > Hi Sakari,
-> > >
-> > > On 5/28/24 10:44 AM, Sakari Ailus wrote:
-> > >> Ignore camera related graph port nodes on Dell XPS 9320. They data in BIOS
-> > >> is buggy, just like it is for Dell XPS 9315. The corresponding software
-> > >> nodes are created by the ipu-bridge.
-> > >>
-> > >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > >> ---
-> > >> Hi,
-> > >>
-> > >> Could you test this and see whether it fixes the warning?
-> > >>
-> > >> The camera might work with this change, too.
-> > >
-> > > Thank you I just received a Dell XPS 13 plus 9320 myself to use
-> > > for VSC testing and I can confirm that with this patch 6.10.0-rc1
-> > > works, including giving a picture with the libcamera software ISP +
-> > > 3 small libcamera patches.
-> >
-> > I forgot to add:
-> >
-> > Tested-by: Hans de Goede <hdegoede@redhat.com>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Applied as 6.10-rc material.
+This causes users to hit a pre-existing AB-BA deadlock issue in
+ledtrig-netdev between the LED-trigger locks and the rtnl mutex,
+resulting in hung tasks in kernels >= 6.9.
 
-Thanks!
+Solving the deadlock is non trivial, so for now revert the change to
+set the hw_control trigger as default trigger, so that ledtrig-netdev
+no longer gets activated automatically for various network LEDs.
 
-> 
-> I've also added Reported-by and Closes tags to this, but I'm not sure
-> which commit exactly is fixed by it, so the Fixes tag is missing.
+The netdev trigger is not needed because the network LEDs are usually under
+hw-control and the netdev trigger tries to leave things that way so setting
+it as the active trigger for the LED class device is a no-op.
 
-That's fine. We don't know which systems have faulty camera graph in DSDT
-so these are added as they're found.
+Fixes: 66601a29bb23 ("leds: class: If no default trigger is given, make hw_control trigger the default trigger")
+Reported-by: Genes Lists <lists@sapience.com>
+Closes: https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
+Reported-by: "Johannes Wüller" <johanneswueller@gmail.com>
+Closes: https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/leds/led-class.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 24fcff682b24..ba1be15cfd8e 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -552,12 +552,6 @@ int led_classdev_register_ext(struct device *parent,
+ 	led_init_core(led_cdev);
+ 
+ #ifdef CONFIG_LEDS_TRIGGERS
+-	/*
+-	 * If no default trigger was given and hw_control_trigger is set,
+-	 * make it the default trigger.
+-	 */
+-	if (!led_cdev->default_trigger && led_cdev->hw_control_trigger)
+-		led_cdev->default_trigger = led_cdev->hw_control_trigger;
+ 	led_trigger_set_default(led_cdev);
+ #endif
+ 
 -- 
-Regards,
+2.45.1
 
-Sakari Ailus
