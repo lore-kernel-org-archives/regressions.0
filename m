@@ -1,141 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB99D54660
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 15:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08CA155341
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 21:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717774016; cv=none; b=KaCnSnhL51Lp9u1GfYrAjUY7ZskTyItUbk2El5OVnW5FPBXMv8b5DHBv5Cxu8bhdF+5HiQVTEtkxOaqyNDoN5EeW3d/swBckFzgqo6/TdrRH+dNYS0nY7p0ksHwHTG6aLRJZNKdW9NvqIkNIR9r0VDoW1EASivuXyl+vdIH6944=
+	t=1717796609; cv=none; b=BDldXPVe2d9MUA7LivPFM3m5djE8tZ7tbGwsBzmGZVHuDMW/xOEIGbugXQN4UU0FPVPImOLd7qPRCexVwqXzoKhSjxeXyEG0bdGxddMFNp8AiPFrr+SENK/ypaHxilxKg7dBaqs3i7f3ZkPVsuT6i8QFgVh7tgU5JeeYjbhYHXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717774016; c=relaxed/simple;
-	bh=rOfg24Dcz8QAnnEvfYvkHk1NUSiHhQLDhQ0iBZ8jknA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VixyA3X6qTjxgdR1/u3fRksReRnihzjGAHpYBeTdY0lD2lXJPDV6OXFxmyeU5mxZ4Y3fIClziWD77sZ5vn5k3bzUEY3gBRMwBhOTTOHLSfJFmzDbE6M/A1hL9BZNGAX/nmjDnfEfFDHkxR7CMPdqnwIuBb98ivB2lmYjsrV0Xa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YCRwHKr+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717796609; c=relaxed/simple;
+	bh=9PglZxqkRIHCjk0zIOcsNkMGKkbymWR/1kclCnT22JI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jolpE4PtqCBjYrXeH0vUGlG/24O4PQ84L65N2rHknqaiH5xwV70I5ElGqkxQueYNnyZl4JdUgdf3ZYR9S98VyhzKf098yfaCmwGNYW6I5sxc7HMxJ6JmwHS8+lFD05KVU9on89jq9GXER/ODQlQL2/MxkDCCIyGk52Z9tyHcj40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6f5+oxj; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YCRwHKr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717774013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9D/A+3bwK+p1bXr6ecFnn0y362Acz3/hUX82Z0aoQCc=;
-	b=YCRwHKr+KpwEZEayUa8fxs8eJcUkuYitWKE10wC+x1inhzucKNXtSzu4hAIJBLB8oajPxB
-	gl++dAMCbLvd/qI4OgZ5FnrDcJ8PmlcqNrYbPEwITaw3v65HWw/d6iltH7Icg/M1J59LbZ
-	rRSFjgFCVWDEsKDEvKvZBx1ItjXd3xY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-607-sqSDC20aOFWjh6nxvmK3Hg-1; Fri, 07 Jun 2024 11:26:52 -0400
-X-MC-Unique: sqSDC20aOFWjh6nxvmK3Hg-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-57a5af3e160so1169657a12.2
-        for <regressions@lists.linux.dev>; Fri, 07 Jun 2024 08:26:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6f5+oxj"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-80b494dc88dso49280241.1
+        for <regressions@lists.linux.dev>; Fri, 07 Jun 2024 14:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717796606; x=1718401406; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9PglZxqkRIHCjk0zIOcsNkMGKkbymWR/1kclCnT22JI=;
+        b=k6f5+oxjCXXMJ8YYn4TYu0+FglXntc5wnrBiRlEIWRpZj8WAE7l5hx9YyZhQ8bN7xR
+         OLXP8a2+fwufwmbYXONE4N3MBf1nS6nfNKgiZHnWTbuvUew/Ayo8RdTvXJknI+n1Tm/d
+         KSwjImv94E5hSkfz+6nDdPnp3t+WrqNTwEUDJWBk4QeIk1+hShKB0/sqxQfj7Gk6PnUs
+         I3AiVkA+/SngbiK8sBxkHcilxF1I8jlewGLea9/nw3pNKhFYECgyNaDNohl2rsSiF+FR
+         mkzNnS8YI5mGHe0DQI2VZtB3IvEZASCOb9tO4/j5znXzJ6r3gLEGLdZlZZN5at2jkuoX
+         RL4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717774011; x=1718378811;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9D/A+3bwK+p1bXr6ecFnn0y362Acz3/hUX82Z0aoQCc=;
-        b=pmhOYUqk6Dz2tI1jF+g1BK6j+Zx3FE5oRy3UeWojLiy//GzEKtWE3sEv8MY+QbNrks
-         KXkxtBmdEAMLstZ5SsTytsW6jpVjejDRFNxxaLh62OfTNKiNPfaNUfjFkw6CQBmw+Dy6
-         346Bwgbqmj06JVNmn/5vtcFyI1Hqe3wL5uNhv9sxXkc7BZmd0UfoNew9iSXTCf0T3O0E
-         Qtl5KEPwZb4cl4aOFoqRMrUYoFzoUtI95l4420oTjPVNoWDP1WmZsGPEoZpYHWvph0MQ
-         689jer8nMqpRLp05CSGQj/m90PU4GOWlYb3VjwAJyPfeFdiuib98zHd0XGbztOi/HakV
-         DXyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSPwrroXsfkpGCZkOKMrlVFZsjWdQ02QUtlWvwGRrNVDWzlADqOegmAJg7uvT6BirBX4GvuOPZNt9cZSY5bnuo22AmnCcYUvjmXVk=
-X-Gm-Message-State: AOJu0Yz6ylYUFJH/RyccSnFvrGqku0QYDPNfAwu3b2AqXY4gEIYO8HOa
-	6+4a3QbUjDP27owvArPVgFGjQ2Iz0mKSkMSuDdOj0d4QyfQVq6H8s6OWTGlga00gxejkDL0Mc8m
-	hRdBfZNPD4z6yR4wMRocsGgsLFzLQY9kmkrkhgvsAnjGZMIgr3CJXH1PCxS/7
-X-Received: by 2002:a50:d69b:0:b0:57c:6234:e95b with SMTP id 4fb4d7f45d1cf-57c6234e9acmr471790a12.5.1717774011355;
-        Fri, 07 Jun 2024 08:26:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0/6f7Ed+Q3P9FkVIMtn8/uS5MhDHOHU8/MO14CZu0SSWzQQpCvt+kzKfAK1hlK24ChuIRgQ==
-X-Received: by 2002:a50:d69b:0:b0:57c:6234:e95b with SMTP id 4fb4d7f45d1cf-57c6234e9acmr471784a12.5.1717774010889;
-        Fri, 07 Jun 2024 08:26:50 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aadfa3c47sm2925666a12.16.2024.06.07.08.26.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 08:26:50 -0700 (PDT)
-Message-ID: <7a73693e-87b4-4161-a058-4e36f50e1376@redhat.com>
-Date: Fri, 7 Jun 2024 17:26:49 +0200
+        d=1e100.net; s=20230601; t=1717796606; x=1718401406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9PglZxqkRIHCjk0zIOcsNkMGKkbymWR/1kclCnT22JI=;
+        b=tDJkQ37cQYVn0tATTLLsaro9vc0v0qU+Sdr9gyG9VNGuC00qYEEAS0M3wK1cbd0Af5
+         ne8uJdPZTl7YUz2K2gHqivoxMo90IR9XtkYm4z5j2ZDzN41k/TnvsZ0sUj7qtfsHSvOi
+         nRfBsc8MIWZtV8jTSmGpavtX5HdHUakim+sp6WXKlXRhMe0im93+QcmGfMKtbMvbcW7j
+         akS6Vyp3JAxeLGG6Xg/DMSYQiH9dQzzryG7O3gnZQwKjcqWzfSF6sNqwMgeQpmfAMjXk
+         79hXjNXWWIHwr1vickoDkI8lR4p6Xpxu5TDPrwDIIrotuHlX7Uzq+bMP9NzsarRz9YnV
+         mKTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFtNFklA3d5CYjca+ND97kFKyuDv/dmr1foGCgBz/lgcvtDjepwUrezRV5yd25Lf35yWnwGwxkQDir4xw1tPijmmKIAAw38bsE2sE=
+X-Gm-Message-State: AOJu0YyFvpIwpr/QD7ddIRGNB747DMnhYfutTiGRqfzjngky5qLIje37
+	YC4+as5XNWuiximaixszx6uE/gtUbZeuFGHXCHScTcMjdoETmEXnxYpNBN2DufKj56kfT5hZnQC
+	NlF7DwZWp//W43pcJjiOyMoNABpk=
+X-Google-Smtp-Source: AGHT+IF0lN+gA3iIUmW24VXTla1mFm8stjXUgUAlgn3FwEZdgaJTRsZvJ51HmozBuIfGFcwouZrXfcAkmQuKKcdoxbE=
+X-Received: by 2002:a67:f2d4:0:b0:48c:2cf7:8312 with SMTP id
+ ada2fe7eead31-48c2cf78874mr2639315137.3.1717796606414; Fri, 07 Jun 2024
+ 14:43:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] leds: class: Revert: "If no default trigger is given,
- make hw_control trigger the default trigger"
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
- regressions@lists.linux.dev, linux-leds@vger.kernel.org,
- Genes Lists <lists@sapience.com>, =?UTF-8?Q?Johannes_W=C3=BCller?=
- <johanneswueller@gmail.com>, stable@vger.kernel.org
-References: <20240607101847.23037-1-hdegoede@redhat.com>
- <6ebdcaca-c95a-48bc-b1ca-51cc1d7a86a5@lunn.ch>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <6ebdcaca-c95a-48bc-b1ca-51cc1d7a86a5@lunn.ch>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
+ <CABBYNZLE9uYiRM-baoBt=RQktq__TguMETgmVWGzfeorARfm4w@mail.gmail.com> <212fca4c-fc1f-4da4-b48e-c6a4b64a2b35@leemhuis.info>
+In-Reply-To: <212fca4c-fc1f-4da4-b48e-c6a4b64a2b35@leemhuis.info>
+From: =?UTF-8?Q?Timo_Schr=C3=B6der?= <der.timosch@gmail.com>
+Date: Fri, 7 Jun 2024 23:43:14 +0200
+Message-ID: <CAGew7BseJ18yjTu5AFWr=B3c41gXe4T=B0JqFWvXjQYvcDPfTA@mail.gmail.com>
+Subject: Re: Bluetooth Kernel Bug: After connecting either HFP/HSP or A2DP is
+ not available (Regression in 6.9.3, 6.8.12)
+To: regressions@leemhuis.info
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-bluetooth@vger.kernel.org, 
+	luiz.von.dentz@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+Am Fr., 7. Juni 2024 um 08:10 Uhr schrieb Linux regression tracking
+(Thorsten Leemhuis) <regressions@leemhuis.info>:
+>
+> On 06.06.24 23:23, Luiz Augusto von Dentz wrote:
+> > On Thu, Jun 6, 2024 at 4:46=E2=80=AFPM Timo Schr=C3=B6der <der.timosch@=
+gmail.com> wrote:
+> >> on my two notebooks, one with Ubuntu (Mainline Kernel 6.9.3, bluez
+> >> 5.7.2) and the other one with Manjaro (6.9.3, bluez 5.7.6) I'm having
+> >> problems with my Sony WH-1000XM3 and Shure BT1. Either A2DP or HFP/HSP
+> >> is not available after the connection has been established after a
+> >> reboot or a reconnection. It's reproducible that with the WH-1000XM3
+> >> the A2DP profiles are missing and with the Shure BT1 HFP/HSP profiles
+> >> are missing. It also takes longer than usual to connect and I have a
+> >> log message in the journal:
+> >>
+> >> Jun 06 16:28:10 liebig bluetoothd[854]:
+> >> profiles/audio/avdtp.c:cancel_request() Discover: Connection timed out
+> >> (110)
+> >>
+> >> When I disable and re-enable bluetooth (while the Headsets are still
+> >> on) and trigger a reconnect from the notebooks, A2DP and HFP/HSP
+> >> Profiles are available again.
+> >>
+> >> I also tested it with 6.8.12 and it's the same problem. 6.8.11 and
+> >> 6.9.2 don't have the problem.
+> >> So I did a bisection. After reverting commit
+> >> af1d425b6dc67cd67809f835dd7afb6be4d43e03 "Bluetooth: HCI: Remove
+> >> HCI_AMP support" for 6.9.3 it's working again without problems.
+> >>
+> >> Let me know if you need anything from me.
+> >
+> > Wait what, that patch has nothing to do with any of these profiles not
+> > really sure how that would cause a regression really, are you sure you
+> > don't have actual connection timeout happening at the link layer and
+> > that by some chance didn't happen when running with HCI_AMP reverted?
+> >
+> > I'd be surprised that HCI_AMP has any effect in most controllers
+> > anyway, only virtual controllers was using that afaik.
+>
+> Stupid question from a bystander without knowledge in the field (so feel
+> free to ignore this): is that patch maybe causing trouble because it has
+> some hidden dependency on a earlier change that was not backported to
+> 6.9.y?
+>
+> Timo, to rule that out (and it's good to know in general, too) it would
+> be good to known if current mainline (e.g. 6.10-rc) is affected as well.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 
-On 6/7/24 2:03 PM, Andrew Lunn wrote:
-> On Fri, Jun 07, 2024 at 12:18:47PM +0200, Hans de Goede wrote:
->> Commit 66601a29bb23 ("leds: class: If no default trigger is given, make
->> hw_control trigger the default trigger") causes ledtrig-netdev to get
->> set as default trigger on various network LEDs.
->>
->> This causes users to hit a pre-existing AB-BA deadlock issue in
->> ledtrig-netdev between the LED-trigger locks and the rtnl mutex,
->> resulting in hung tasks in kernels >= 6.9.
->>
->> Solving the deadlock is non trivial, so for now revert the change to
->> set the hw_control trigger as default trigger, so that ledtrig-netdev
->> no longer gets activated automatically for various network LEDs.
->>
->> The netdev trigger is not needed because the network LEDs are usually under
->> hw-control and the netdev trigger tries to leave things that way so setting
->> it as the active trigger for the LED class device is a no-op.
->>
->> Fixes: 66601a29bb23 ("leds: class: If no default trigger is given, make hw_control trigger the default trigger")
->> Reported-by: Genes Lists <lists@sapience.com>
->> Closes: https://lore.kernel.org/all/9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com/
->> Reported-by: "Johannes Wüller" <johanneswueller@gmail.com>
->> Closes: https://lore.kernel.org/lkml/e441605c-eaf2-4c2d-872b-d8e541f4cf60@gmail.com/
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> I'm not sure i agree with the Closes: All this does is make it less
-> likely to deadlock. The deadlock is still there.
-
-I agree that the deadlock which is the root-cause is still there. But
-with this revert ledtrig-netdev will no longer get activated by default.
-
-So now the only way to actually get the code-paths which may deadlock
-to run is by the user or some script explicitly activating the netdev
-trigger by writing "netdev" to the trigger sysfs file for a LED classdev.
-So most users will now no longer hit this, including the reporters of
-these bugs.
-
-The auto-activating of the netdev trigger is what is causing these
-reports when users are running kernels >= 6.9 .
-
-> But:
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Thank you.
-
-Regards,
-
-Hans
-
-
+Hallo Thorsten, I tried with 6.10-rc2 and it's the same problem on my syste=
+ms.
