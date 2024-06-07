@@ -1,116 +1,85 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0148D14269
-	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 03:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A39FC1D
+	for <regressions@lists.linux.dev>; Fri,  7 Jun 2024 03:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717729836; cv=none; b=deQaz53y08mk77EHj/KCgJguhTE9ko0d+G4fKNbgOcrnpHKdB38Ee0CUvkgzFmpIb74IiIMVH3edDzEOgDhR1T5wdL0xFxT2XmfmDIanMUverhgR9TnbqW+RvvDtlnl80kpTfQOAshf9LHQJvqDNfXiW13FMzHICTZkVpY7vHSk=
+	t=1717732556; cv=none; b=kZCnLXNRxHVfhVfz1tmgkVW4KWw4+Pu9I6uAaUos2fL7G/QXD27aL4i05kMUeu+qEsAWSfP+W7cpIBTW7773dEdJvVG9BS2KxfXcfXMl3BhRRjmSkNddDbntOPRcA5I2KyKybYv39lb9K3gaJh3zJNtHLSBM/EL4xfhEPIIJuXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717729836; c=relaxed/simple;
-	bh=KBYXw1WdE0b2j8hw4gwU5u0YhldC95Lt4Kb/R5RmV4w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rxBIFzz1lgqs95PXaJ/eN/gTiwWoJDYEDfcQAR1dBuxwjmDqQiyPwM+r51gjcSnKjNycg9opi6XIE2PKNv0YIoTQLDxQfWxe+1JqBJxbqd0efD8ullAkJRhPj6dgwDOzCeu0kyIxmn+pd0M5TWK23SiOwzEvjCFmE0ozQIFPFko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=a+lPQnr+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="a+lPQnr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1717729830;
-	bh=9lFwEx/JP+T+tWQXbEOOpWSpvQQLktCyT0QZNUBEBwk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=a+lPQnr+Hnyw9k4PYjdItxkPOKkzpbq1xDGrmf9objw3RJOsGfDNkk6kSXDnqMZAa
-	 JnknCa8WBXOCOPeF6PLMjiqipv2f8aEyttcN+W/h4CKUL6DmOfx/m+uaUzFkhIxrr/
-	 Q/2ZJZeD3PTtuw48WIFqfGAv7imifCi9XSNcA1Xaphf3B/szumvFTpkUjZoAeasVju
-	 Np++rhcJmzGs6m/QnGKZs9p7yuarwU8jTd2NmBsa0MARAmElxFYUmx0feSgupgFiO7
-	 8ArAOcVNEMjnJMXXKdD1ryHmh3JFwOp+KSgzF5E+b0md7so63XmiCVjvXKBFhCqYsE
-	 gS6Efuir3IqzA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1717732556; c=relaxed/simple;
+	bh=/vSZv0xz0fYaeyMGOavT8gPXtL9VXswBqH5VNvM0oaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eli6yuM55uLrlBQC8TKDT9WOo76Mxbqq1JytwsdVdh4F7PKKLqJHGSnimjwdq0swHOfwae8wRIBkqj+GoO35Qh9HfuslSos8xCLEjiTPrZdh6GYoKf3vC93JT+iGIWlmO1/1HZ2j4uTMxZZr30gSbU8odBP+yTwndUh6I//olNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.224] (ip5f5aee92.dynamic.kabel-deutschland.de [95.90.238.146])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VwR5w0Q8qz4wc8;
-	Fri,  7 Jun 2024 13:10:28 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: martin.petersen@oracle.com, dlemoal@kernel.org, hch@lst.de,
- john.g.garry@oracle.com, linux-ide@vger.kernel.org,
- linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- regressions@lists.linux.dev, doru.iorgulescu1@gmail.com
-Subject: Re: [PATCH] ata: pata_macio: Fix max_segment_size with PAGE_SIZE ==
- 64K
-In-Reply-To: <ZmG0TUiw0Nagwroj@ryzen.lan>
-References: <20240606111445.400001-1-mpe@ellerman.id.au>
- <ZmG0TUiw0Nagwroj@ryzen.lan>
-Date: Fri, 07 Jun 2024 13:10:25 +1000
-Message-ID: <87ikylphwe.fsf@mail.lhotse>
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B015B61E646E4;
+	Fri,  7 Jun 2024 05:55:28 +0200 (CEST)
+Message-ID: <250a5988-271a-4a64-8fee-5aa48592c6ef@molgen.mpg.de>
+Date: Fri, 7 Jun 2024 05:55:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bluetooth Kernel Bug: After connecting either HFP/HSP or A2DP is
+ not available (Regression in 6.9.3, 6.8.12)
+To: =?UTF-8?Q?Timo_Schr=C3=B6der?= <der.timosch@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ linux-bluetooth@vger.kernel.org, luiz.von.dentz@intel.com
+References: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAGew7BttU+g40uRnSCN5XmbXs1KX1ZBbz+xyXC_nw5p4dR2dGA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Niklas Cassel <cassel@kernel.org> writes:
-> On Thu, Jun 06, 2024 at 09:14:45PM +1000, Michael Ellerman wrote:
->> The pata_macio driver advertises a max_segment_size of 0xff00, because
->> the hardware doesn't cope with requests >= 64K.
->> 
->> However the SCSI core requires max_segment_size to be at least
->> PAGE_SIZE, which is a problem for pata_macio when the kernel is built
->> with 64K pages.
->> 
->> In older kernels the SCSI core would just increase the segment size to
->> be equal to PAGE_SIZE, however since the commit tagged below it causes a
->> warning and the device fails to probe:
->> 
->>   WARNING: CPU: 0 PID: 26 at block/blk-settings.c:202 .blk_validate_limits+0x2f8/0x35c
->>   CPU: 0 PID: 26 Comm: kworker/u4:1 Not tainted 6.10.0-rc1 #1
->>   Hardware name: PowerMac7,2 PPC970 0x390202 PowerMac
->>   ...
->>   NIP .blk_validate_limits+0x2f8/0x35c
->>   LR  .blk_alloc_queue+0xc0/0x2f8
->>   Call Trace:
->>     .blk_alloc_queue+0xc0/0x2f8
->>     .blk_mq_alloc_queue+0x60/0xf8
->>     .scsi_alloc_sdev+0x208/0x3c0
->>     .scsi_probe_and_add_lun+0x314/0x52c
->>     .__scsi_add_device+0x170/0x1a4
->>     .ata_scsi_scan_host+0x2bc/0x3e4
->>     .async_port_probe+0x6c/0xa0
->>     .async_run_entry_fn+0x60/0x1bc
->>     .process_one_work+0x228/0x510
->>     .worker_thread+0x360/0x530
->>     .kthread+0x134/0x13c
->>     .start_kernel_thread+0x10/0x14
->>   ...
->>   scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
->> 
->> Although the hardware can't cope with a 64K segment, the driver
->> already deals with that internally by splitting large requests in
->> pata_macio_qc_prep(). That is how the driver has managed to function
->> until now on 64K kernels.
->> 
->> So fix the driver to advertise a max_segment_size of 64K, which avoids
->> the warning and keeps the SCSI core happy.
->> 
->> Fixes: afd53a3d8528 ("scsi: core: Initialize scsi midlayer limits before allocating the queue")
->> Reported-by: Guenter Roeck <linux@roeck-us.net>
->> Closes: https://lore.kernel.org/all/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
->> Reported-by: Doru Iorgulescu <doru.iorgulescu1@gmail.com>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218858
->> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> ---
->
-> Applied to libata/for-6.10-fixes:
-> https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-6.10-fixes
->
-> With John's Reviewed-by from the other thread:
-> https://lore.kernel.org/linux-ide/171362345502.571343.9746199181827642774.b4-ty@oracle.com/T/#t
+#regzbot ^introduced: af1d425b6dc6
 
-Thanks.
 
-cheers
+Dear Timo,
+
+
+Am 06.06.24 um 22:46 schrieb Timo Schröder:
+
+> on my two notebooks, one with Ubuntu (Mainline Kernel 6.9.3, bluez
+> 5.7.2) and the other one with Manjaro (6.9.3, bluez 5.7.6) I'm having
+> problems with my Sony WH-1000XM3 and Shure BT1. Either A2DP or HFP/HSP
+> is not available after the connection has been established after a
+> reboot or a reconnection. It's reproducible that with the WH-1000XM3
+> the A2DP profiles are missing and with the Shure BT1 HFP/HSP profiles
+> are missing. It also takes longer than usual to connect and I have a
+> log message in the journal:
+> 
+> Jun 06 16:28:10 liebig bluetoothd[854]: profiles/audio/avdtp.c:cancel_request() Discover: Connection timed out (110)
+> 
+> When I disable and re-enable bluetooth (while the Headsets are still
+> on) and trigger a reconnect from the notebooks, A2DP and HFP/HSP
+> Profiles are available again.
+> 
+> I also tested it with 6.8.12 and it's the same problem. 6.8.11 and
+> 6.9.2 don't have the problem.
+> So I did a bisection. After reverting commit
+> af1d425b6dc67cd67809f835dd7afb6be4d43e03 "Bluetooth: HCI: Remove
+> HCI_AMP support" for 6.9.3 it's working again without problems.
+
+Thank you for bisecting the issue.
+
+> Let me know if you need anything from me.
+
+If you could test the master branch or bluetooth-next, and, if 
+reproducible, also with the upstream commit 
+84a4bb6548a29326564f0e659fb8064503ecc1c7 reverted, that’d be great.
+
+
+Kind regards,
+
+Paul
