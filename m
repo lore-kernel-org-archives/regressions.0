@@ -1,83 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7812D17997;
-	Sun,  9 Jun 2024 07:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2A5A3F;
+	Sun,  9 Jun 2024 08:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717919602; cv=none; b=UGYJSVlxuTM8S5MG17PQK6+q+UE3zEhBJXU0EYfLOxMUTp5o6dxE2ttPQS+ldOSX0xSIKvQQhGzMTYTqg7nLLtZ+csZPHEvpZdyiNQre4PVJtovs0/S345HhEh/zjpGccEdreo+fd1cgtJdE1NXrOWh/V5cgGU2SmInthFwySWA=
+	t=1717920674; cv=none; b=MCBzhfTPDd1sjjnVA6YZdwuC6wCRxXb060RYmZrZZhYRdxO7Tuk8R1oDXTnJFomacd8uW/u7kIkDw+LQ202sC7l1e/Cokjz8JXP+kz1BcrFCpZNU60uRDQWvqbCrp30M6xbWywt6NkNfWlN0qkvhy3LiirMURYC2X+AZTx2475A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717919602; c=relaxed/simple;
-	bh=WKtvi7NoYsj3nIwgBQA3DkE/NuftdY0qLGUWPUJfuwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hQNzhIie5+GK69qEWRjB7veBoKA1Dj3gtZhMToiqmy1jj2/3ZcX5QDbYVq+qvxruwuHP1AQKINQzG53T/L07nsJkaO+jSG1F/WSW4AVzw/a5WsZ5E2z6hT/5ILltu1BgJdEwRhsvdXNsvqoeSnsMA5gKMU22/sRIiHB3WGnlhCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKWR0226; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717920674; c=relaxed/simple;
+	bh=5zbXRU1k+pJeZ0BVwq8DCQkKWnsqWbzOX8ocz4wTois=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNK5fL0g4dfbhhcD2ljRUBhfKArU+Hxe2pXSZ8X8gASK2KnY09cXbeB7TtYKTFGidqZkQPelh6Pc6Pfv5jMzcoHckGdZ+3MAuP6aWAjLL3tpG/g6VQPTTOLBpKQy9Xs2bnex99H2wcFMfhotVqqgKyfi0xXGsG0viDYmUGZJZT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pnvg5s3O; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKWR0226"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A67C2BD10;
-	Sun,  9 Jun 2024 07:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717919602;
-	bh=WKtvi7NoYsj3nIwgBQA3DkE/NuftdY0qLGUWPUJfuwc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=kKWR0226WA/BuBYJ8MZCA/Zhj1LRGVFzuerR8ZyV+/NWCdrJ6xIiEs4rLH38I3etf
-	 aCJRqSKoQ3SxBnubpDUC9TgjRLoP5CLA+jJM9BX5u001nzXtTBj8ZwTLNLzP/kNMKs
-	 Vudykrl8SoCo2tnY7s2WR0h8Yk98uedOcFzG3r3qaYphFxeLa52bDmPPDur6FSlXb2
-	 d8dHjMBghQV6LbsFagYrJYMGLKN2sYfz5j8YlO3zX6yRlnRjD6RkEKlJJEhAooXzop
-	 /mYrf4MqNti7O3tyAN3FT2Z9Xrnia/2MHIzJB7P6uQYhK3PljnuoODalMFNUHpaVqW
-	 U1157BgYYhpPQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sGDMf-0000000081I-0194;
-	Sun, 09 Jun 2024 09:53:21 +0200
-Date: Sun, 9 Jun 2024 09:53:20 +0200
-From: Johan Hovold <johan@kernel.org>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: cpufreq/thermal regression in 6.10
-Message-ID: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pnvg5s3O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=un0v7NRiuJ73SMR3ZhPeyJlOxaz9WHZsIQkF12rLpnY=;
+	t=1717920671; x=1718352671; b=pnvg5s3OGzyyNMZ2NQi/7qCIqHJGeDv8lLawx3DipUn29zW
+	fwU7gShJGJVFAbjyt+tH9GVJgTQmEY6ovpTbCagbp/LKYe4iyhcI00pBUgnZmEvQk/hrjdYmhm70D
+	VZQrU3c9brOz70SbTTPwZU0afU+fIGeViV7Mz/kzHKwH09A7tuhBWQaewqD4g9SssmbIWAnhuOOgh
+	zkykhGvBxbFa9kXaV6n0+fkm7z2vYgRHfwGoZ5L52z/SADjzNDvMSGNIGeAcTIFqiG+C+JeWiN9Pb
+	O5Cq/m0qU8pYEsBo7aRbSf5286zsrWhn13RJ3EOhrtOhVxOrOANPoXFPRkZOv/YQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sGDdm-0000XV-OS; Sun, 09 Jun 2024 10:11:02 +0200
+Message-ID: <ebf5c056-3035-4e76-9472-d76be6427669@leemhuis.info>
+Date: Sun, 9 Jun 2024 10:11:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux 6.10-rc2 - massive performance regression
+To: David Laight <David.Laight@aculab.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAHk-=wisJ8bS3qe6iBPwL9x=PqJA5oE7tum-E9oZfyPgd2mmrw@mail.gmail.com>
+ <46cb50d65e414bfd9bef5549d68ae4ea@AcuMS.aculab.com>
+ <CAHk-=wh170Lme6HHSGa5eM6YNcd01vdkOoPenZ0m7P+Yv6_zxg@mail.gmail.com>
+ <adbbd899aabf4e6898bbbb04f90b3ede@AcuMS.aculab.com>
+ <CAHk-=wjwFGQZcDinK=BkEaA8FSyVg5NaUe0BobxowxeZ5PvetA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAHk-=wjwFGQZcDinK=BkEaA8FSyVg5NaUe0BobxowxeZ5PvetA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717920671;017a12b9;
+X-HE-SMSGID: 1sGDdm-0000XV-OS
 
-Hi,
+On 09.06.24 00:00, Linus Torvalds wrote:
+> On Sat, 8 Jun 2024 at 14:36, David Laight <David.Laight@aculab.com> wrote:
+> [...]
+>> I've done some tests.
+>> I'm seeing a three-fold slow down on:
+>> $ i=0; while [ $i -lt 1000000 ]; do i=$((i + 1)); done
+>> which goes from 1 second to 3.
+>>
+>> I can run that with ftrace monitoring scheduler events (and a few
+>> other things) and can't spot anywhere the process isn't running
+>> for a significant time.
+> 
+> Sounds like cpu frequency. Almost certainly hw-specific. I went
+> through that on my Threadripper in the 6.9 timeframe, but I'm not
+> seeing any issues in this current release.
 
-Steev reported to me off-list that the CPU frequency of the big cores on
-the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
-frequency with 6.10-rc2.
+David, what kind of hardware do you use? Johan Hovold as
+man-in-the-middle just reported "CPU frequency of the big cores on the
+Lenovo ThinkPad X13s sometimes appears to get stuck at a low frequency
+with 6.10-rc2" and confirmed "that once the cores are fully throttled
+(using the stepwise thermal governor) due to the skin temperature
+reaching the
+first trip point, scaling_max_freq gets stuck at the next OPP".
 
-I just confirmed that once the cores are fully throttled (using the
-stepwise thermal governor) due to the skin temperature reaching the
-first trip point, scaling_max_freq gets stuck at the next OPP:
+For more details, see:
+https://lore.kernel.org/all/ZmVfcEOxmjUHZTSX@hovoldconsulting.com/
 
-	cpu4/cpufreq/scaling_max_freq:940800
-	cpu5/cpufreq/scaling_max_freq:940800
-	cpu6/cpufreq/scaling_max_freq:940800
-	cpu7/cpufreq/scaling_max_freq:940800
+> If you bisect it, we have somebody to blame and point fingers at...
 
-when the temperature drops again.
+Sadly that one is not bisected yet either. :-/
 
-This obviously leads to a massive performance drop and could possibly
-also be related to reports like this one:
-
-	https://lore.kernel.org/all/CAHk-=wjwFGQZcDinK=BkEaA8FSyVg5NaUe0BobxowxeZ5PvetA@mail.gmail.com/
-
-I assume the regression may have been introduced by all the thermal work
-that went into 6.10-rc1, but I don't have time to try to track this down
-myself right now (and will be away from keyboard most of next week).
-
-I've confirmed that 6.9 works as expected.
-
-Johan
-
-
-#regzbot introduced: v6.9..v6.10-rc2
+Ciao, Thorsten
