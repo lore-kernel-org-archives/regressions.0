@@ -1,102 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496F1B80F
-	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 11:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B694501B
+	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 13:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718018242; cv=none; b=LMQDXVdksqAxGwcP6asE6gRhPDtwC0WJcxvofwKpD9WBXbm1u/dTgcaJNyzhyrxbH0WQMLsyx54TT8XMjMl0gAjlRgM2QOpjqZooTYP6MiV50BIXKDGCWg8jt0oUMNuh+MMWqGeQi8cOnGRk2rPvHF4DN6feP3o8vQFo3d8IVH4=
+	t=1718025477; cv=none; b=DM9Ba6wGl74bhvKjw/Ca5y67KMBk3WDGiBo1raZiMd/zTXmZRIJcHgnc+3aRuH7IvUgTjxOoGl0uHDiI7x+6nAe+7609KJ0zemtI1eHOSpdGB8YHQSHK8rycVHcej8B1nXgb8oCwMfNLebkIDAFtrPfbRZz9gGPkzuwJpcXWKWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718018242; c=relaxed/simple;
-	bh=13XDtHa++hblwzo5voNHyIdjeLfCecpFY2EvEAXlaUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hiNruA/Fm3S1jvbTydeW1PsIlX7xC1zVgcQiWludMhu6+1P65kfCMhFLD8NqYAdbt9EvJkaWyrJ3x7uIltBIbGVzRGZ0UfWvAV1E/lGvMCeCnWEYiuORSRJN9uZ5WYhXUQNC6l3FUs0aKaE8KbAsWicOEqvFX0eUNNZWPlh33/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdO3U8Gg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718025477; c=relaxed/simple;
+	bh=9jIKbtpuTldIb1KNuS2YUa/uTjVOcsW6Ey2tzNwRWYU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=l5vyUv1gjWXnYQzeD2RMqPEkdF1g1VxRYPl4iCH11jxIWHRiycVl9J3VvYfFTm2HL+xJ/dvWOjsxp6wgcFubAyakewZTR1yc4tciGhefzfzMTHfNlMR3rGBrjWpDaS91Z/fSEm4/o7jhjHcO//bMl5iKCRI1lEkScVaiAI1D5mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UlasUtKv; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdO3U8Gg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E792C4AF1C
-	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 11:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718018241;
-	bh=13XDtHa++hblwzo5voNHyIdjeLfCecpFY2EvEAXlaUU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mdO3U8GgcMVnEmenD0E2KE5VIuf7i5JEwdlVbPv/Ksu3YvJi5FQ9k7c00Syi4pgdB
-	 r0MO9CmZCKrxlq84+ScTH7CMgQsrTMSd+xVni2sB2WkBP13GIv6ciXhox7z+YBRudR
-	 6U806fEvLxVfsMcUsPoL/GaquSvmFDcn73b6O6va/xG523ytgunzwo2SZOGjxoLK4Z
-	 L3dNPFz3t9DQ6t3TisHXD2gKzTTRKtdYM4DC//alfF/RwBgz2I/dWwj72oDTMB2fVd
-	 yQrWeZH/3tJ+li41Zx48VhBxA5EyE/veaNK6yBEcs0EAy2j5V/38Arsysx1RVUXe+G
-	 Ci/EC/stdakrg==
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d1b8bacf67so541489b6e.2
-        for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 04:17:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUU6j4Whw8oyPy2RyhMyk82vmcbfm5CrHWxlvtDFQS3vE3rhVSrGYP3ZCzUJe3kumdR25vGIht95q8ZrVg2PrlraME9lG4SrOoi8O4=
-X-Gm-Message-State: AOJu0Yw950kVhdMLx15DZK6j1zDrVIDZbRZKysOcaH7Zb1ZxqKEHrXKC
-	cZBx6L2vsHhs5wLhRO50rEweFASfe6xI4sYGUXv+RozQUAv91zSQQTiQ1uwVdrQIDVrJdbIePlb
-	ETmocOnBpvNI1pV7tYIGar7p9+II=
-X-Google-Smtp-Source: AGHT+IGKTwIlArAccS9HgIz/8nmcoXpGpdoSZs+F7qWC1cGHjBg63X0hu0TYfvhL91x9MfV4eUmkHghgY9+oDM12Kkw=
-X-Received: by 2002:a4a:d0c6:0:b0:5ba:ead2:c742 with SMTP id
- 006d021491bc7-5baead2eb7emr4437542eaf.0.1718018240856; Mon, 10 Jun 2024
- 04:17:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UlasUtKv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=/xi9sq9viF3AhnFJOXABtAS7QK7RPNhmxpE7hgLtAOQ=;
+	b=UlasUtKvb3Ri0b7eR6EMN5LE7e/iJgQlkpTCCT88sFwK+xQ6OMSr25TJNS9wbz
+	PfJ7jdPZEW8su3rlrJYkFO66zh9rWWFgbAblGmf2eMNPTINirDkITsnRu+jrEQJD
+	XAeFit9BI9lY4jxnPsrJsCubMB+CtH/N0oRKu7kNJOuSE=
+Received: from [192.168.1.26] (unknown [183.195.6.47])
+	by gzga-smtp-mta-g3-4 (Coremail) with SMTP id _____wDn1xjW_GZmV+MMDQ--.32004S2;
+	Mon, 10 Jun 2024 21:17:11 +0800 (CST)
+Message-ID: <caa701f8-0d2d-4052-9e55-2b755b172c56@163.com>
+Date: Mon, 10 Jun 2024 21:17:10 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
-In-Reply-To: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 10 Jun 2024 13:17:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
-Message-ID: <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
-Subject: Re: cpufreq/thermal regression in 6.10
-To: Johan Hovold <johan@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Bluetooth: qca: Fix BT enable failure again for
+ QCA6390 after warm reboot
+From: Lk Sii <lk_sii@163.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Zijun Hu <quic_zijuhu@quicinc.com>, luiz.dentz@gmail.com,
+ luiz.von.dentz@intel.com, marcel@holtmann.org
+Cc: linux-bluetooth@vger.kernel.org, wt@penguintechs.org,
+ regressions@lists.linux.dev, pmenzel@molgen.mpg.de, stable@vger.kernel.org
+References: <1715866294-1549-1-git-send-email-quic_zijuhu@quicinc.com>
+ <7927abbe-3395-4a53-9eed-7b4204d57df5@linaro.org>
+ <29333872-4ff2-4f4e-8166-4c847c7605c1@163.com>
+ <5df56d58-309a-4ff1-9a41-818a3f114bbb@linaro.org>
+ <0618805b-2f7a-473d-b9fb-aea39a1ef659@163.com>
+ <3d27add1-782c-4c19-9d84-d0074113c7a2@linaro.org>
+ <fc035bd7-c9e3-458f-b419-f4ac50322d02@163.com>
+Content-Language: en-US
+In-Reply-To: <fc035bd7-c9e3-458f-b419-f4ac50322d02@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDn1xjW_GZmV+MMDQ--.32004S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw1rWr1UJw4DXrW5ZF4UXFb_yoW3JFWrpF
+	WUJF1Dtr4UJryFyr10yr1xKFyjywnrtr18Wrn8GrWUJa90vF1rJr4Iqr45uF98urWxWF1j
+	vw4DXasFvr1DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5nY7UUUUU=
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbishv5NWVODlqgtAAAsO
 
-Hi,
 
-Thanks for the report.
 
-On Sun, Jun 9, 2024 at 9:53=E2=80=AFAM Johan Hovold <johan@kernel.org> wrot=
-e:
->
-> Hi,
->
-> Steev reported to me off-list that the CPU frequency of the big cores on
-> the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
-> frequency with 6.10-rc2.
->
-> I just confirmed that once the cores are fully throttled (using the
-> stepwise thermal governor) due to the skin temperature reaching the
-> first trip point, scaling_max_freq gets stuck at the next OPP:
->
->         cpu4/cpufreq/scaling_max_freq:940800
->         cpu5/cpufreq/scaling_max_freq:940800
->         cpu6/cpufreq/scaling_max_freq:940800
->         cpu7/cpufreq/scaling_max_freq:940800
->
-> when the temperature drops again.
+On 2024/6/6 20:54, Lk Sii wrote:
+> 
+> 
+> On 2024/6/5 15:14, Krzysztof Kozlowski wrote:
+>> On 05/06/2024 03:49, Lk Sii wrote:
+>>>
+>>>
+>>> On 2024/6/4 23:18, Krzysztof Kozlowski wrote:
+>>>> On 04/06/2024 16:25, Lk Sii wrote:
+>>>>>
+>>>>>
+>>>>> On 2024/5/22 00:02, Krzysztof Kozlowski wrote:
+>>>>>> On 16/05/2024 15:31, Zijun Hu wrote:
+>>>>>>> Commit 272970be3dab ("Bluetooth: hci_qca: Fix driver shutdown on closed
+>>>>>>> serdev") will cause below regression issue:
+>>>>>>>
+>>>>>>> BT can't be enabled after below steps:
+>>>>>>> cold boot -> enable BT -> disable BT -> warm reboot -> BT enable failure
+>>>>>>> if property enable-gpios is not configured within DT|ACPI for QCA6390.
+>>>>>>>
+>>>>>>> The commit is to fix a use-after-free issue within qca_serdev_shutdown()
+>>>>>>> by adding condition to avoid the serdev is flushed or wrote after closed
+>>>>>>> but also introduces this regression issue regarding above steps since the
+>>>>>>> VSC is not sent to reset controller during warm reboot.
+>>>>>>>
+>>>>>>> Fixed by sending the VSC to reset controller within qca_serdev_shutdown()
+>>>>>>> once BT was ever enabled, and the use-after-free issue is also fixed by
+>>>>>>> this change since the serdev is still opened before it is flushed or wrote.
+>>>>>>>
+>>>>>>> Verified by the reported machine Dell XPS 13 9310 laptop over below two
+>>>>>>> kernel commits:
+>>>>>>
+>>>>>> I don't understand how does it solve my question. I asked you: on which
+>>>>>> hardware did you, not the reporter, test?
+>>>>>> It seems Zijun did NOT perform any tests obviously.
+>>>>> All these tests were performed by reporter Wren with her machine
+>>>>> "Dell XPS 13 9310 laptop".
+>>>>
+>>>> Wren != Zijun.
+>>>>
+>>>>>
+>>>>> From previous discussion, it seems she have tested this change
+>>>>> several times with positive results over different trees with her
+>>>>> machine. i noticed she given you reply for your questions within
+>>>>> below v1 discussion link as following:
+>>>>>
+>>>>> Here are v1 discussion link.
+>>>>> https://lore.kernel.org/linux-bluetooth/d553edef-c1a4-4d52-a892-715549d31ebe@163.com/T/#m7371df555fd58ba215d0da63055134126a43c460
+>>>>>
+>>>>> Here are Krzysztof's questions.
+>>>>> "I asked already *two times*:
+>>>>> 1. On which kernel did you test it?
+>>>>> 2. On which hardware did you test it?"
+>>>>>
+>>>>> Here are Wren's reply for Krzysztof's questions
+>>>>> "I thought I had already chimed in with this information. I am using a
+>>>>> Dell XPS 13 9310. It's the only hardware I have access to. I can say
+>>>>> that the fix seems to work as advertised in that it fixes the warm boot
+>>>>> issue I have been experiencing."
+>>>>
+>>>> I asked Zijun, not Wren. I believe all this is tested or done by
+>>>> Qualcomm on some other kernel, so that's my question.
+>>>>
+>>> Zijun is the only guy from Qualcomm who ever joined our discussion,
+>>> he ever said he belongs to Bluetooth team, so let us suppose the term
+>>> "Qualcomm" you mentioned above is Zijun.
+>>>
+>>> from discussion history. in fact, ALL these tests were performed by
+>>> reporter Wren instead of Zijun, and there are also NOT Zijun's Tested-by
+>>> tag, so what you believe above is wrong in my opinion.
+>>
+>> Patch author is supposed to test the code. Are you implying that
+>> Qualcomm Bluetooth team cannot test the patch on any of Qualcomm
+>> Bluetooth devices?
+>>
+> i guess Zijun did not test the patch on himself based on below reasons:
+> 1) the patch has been tested by reporter with report's machine.
+> 2) perhaps, Zijun is confident about his patch based on his experience.
+> 3) perhaps, it is difficult for Zijun to find a suitable machine to
+> perform tests, and test machines must have QCA6390 *embedded* and use
+> Bluez solution.
+> 
+>>>
+>>> Only Zijun and reporter were involved during those early debugging days,
+>>> Zijun shared changes for reporter to verify with reporter's machine,
+>>> then Zijun posted his fixes after debugging and verification were done.
+>>>
+>>>> That's important because Wren did not test particular scenarios, like
+>>>> PREEMPT_RT or RB5 hardware, but Zijun is claiming problems are solved.
+>>>> Maybe indeed solved, but if takes one month and still not answer which
+>>>> kernel you are using, then I am sure: this was nowhere tested by Zijun
+>>>> on the hardware and on the kernel the Qualcomm wants it to be.
+>>>>
+>>>>>
+>>>>>>> commit e00fc2700a3f ("Bluetooth: btusb: Fix triggering coredump
+>>>>>>> implementation for QCA") of bluetooth-next tree.
+>>>>>>> commit b23d98d46d28 ("Bluetooth: btusb: Fix triggering coredump
+>>>>>>> implementation for QCA") of linus mainline tree.
+>>>>>>
+>>>>>> ? Same commit with different hashes? No, it looks like you are working
+>>>>>> on some downstream tree with cherry picks.
+>>>>>>
+>>>>> From Zijun's commit message, for the same commit, it seems
+>>>>> bluetooth-next tree has different hashes as linus tree.
+>>>>> not sure if this scenario is normal during some time window.
+>>>>>> No, test it on mainline and answer finally, after *five* tries, which
+>>>>>> kernel and which hardware did you use for testing this.
+>>>>>>
+>>>>>>
+>>>>> it seems there are two issues mentioned with Zijun's commit message.
+>>>>> regression issue A:  BT enable failure after warm reboot.
+>>>>> issue B:  use-after-free issue, namely, kernel crash.
+>>>>>
+>>>>> @Krzysztof
+>>>>> which issue to test based on your concerns with mainline tree?
+>>>>
+>>>> No one tested this on non-laptop platform. Wren did not, which is fine.
+>>>> Qualcomm should, but since they avoid any talks about it for so long
+>>>> (plus pushy comments during review, re-spinning v1 suggesting entire
+>>>> discussion is gone), I do not trust their statements at all.
+>>>>
+>>>
+>>> For issue A:
+>>> reporter's tests are enough in my opinion.
+>>> Zijun ever said that "he known the root cause and this fix logic was
+>>> introduced from the very beginning when he saw reporter's issue
+>>> description" by below link:
+>>> https://lore.kernel.org/lkml/1d0878e0-d138-4de2-86b8-326ab9ebde3f@quicinc.com/
+>>>
+>>>> So really, did anything test it on any Qualcomm embedded platform?
+>>>> Anyone tested the actual race visible with PREEMPT_RT?
+>>>> For issue B, it was originally fixed and verified by you,
+>>> it is obvious for the root cause and current fix solution after
+>>> our discussion.
+>>>
+>>> luzi also ever tried to ask you if you have a chance to verify issue B
+>>> with your machine for this change.
+>>
+>> I tried, but my setup is incomplete since ~half a year and will remain
+>> probably for another short time, depending on ongoing work on power
+>> sequencing. Therefore I cannot test whether anything improves or
+>> deteriorates regarding this patch.
+>>
+>>>
+>>>> Why Zijun cannot provide answer on which kernel was it tested? Why the
+>>>> hardware cannot be mentioned?
+>>>>
+>>> i believe zijun never perform any tests for these two issues as
+>>> explained above.
+>>
+>> yeah, and that was worrying me.
+>>
+> Only RB5 has QCA6390 *embedded* among DTS of mainline kernel, but we
+> can't have a RB5 to test.
+> 
+> Don't worry about due to below points:
+> 1) Reporter have tested it with her machine
+> 2) issue B and relevant fix is obvious after discussion.
+> 
+I believe we have had too much discussion for this simple change.
+@Krzysztof
+do you have any other concerns?
+thanks
+>> Best regards,
+>> Krzysztof
+> 
 
-So apparently something fails to update its frequency QoS request.
-
-Would it be possible to provoke this with thermal debug enabled
-(CONFIG_THERMAL_DEBUGFS set) and see what's there in
-/sys/kernel/debug/thermal/?
-
-> This obviously leads to a massive performance drop and could possibly
-> also be related to reports like this one:
->
->         https://lore.kernel.org/all/CAHk-=3DwjwFGQZcDinK=3DBkEaA8FSyVg5Na=
-Ue0BobxowxeZ5PvetA@mail.gmail.com/
->
-> I assume the regression may have been introduced by all the thermal work
-> that went into 6.10-rc1, but I don't have time to try to track this down
-> myself right now (and will be away from keyboard most of next week).
->
-> I've confirmed that 6.9 works as expected.
-
-Well, I'd need to ask someone else affected by this, then.
