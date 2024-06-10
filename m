@@ -1,165 +1,102 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B26312E48
-	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 06:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496F1B80F
+	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 11:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718001429; cv=none; b=ritTUP9AXSJN3PQpDeR+lS/Mx3ZJy4zVniBU9/ZVhoZEKPxhkFMwO8NkdzEmXP/C2GpSBL2QeZMDSM6TJBq46rwOwTtLB6bA3381kR8/i8LCqvaaDxNtDdQBuWwR2AZ9C+pr+MlT/62w09oG0imbdpeV7gK/EaOwyPFyrTqTKwU=
+	t=1718018242; cv=none; b=LMQDXVdksqAxGwcP6asE6gRhPDtwC0WJcxvofwKpD9WBXbm1u/dTgcaJNyzhyrxbH0WQMLsyx54TT8XMjMl0gAjlRgM2QOpjqZooTYP6MiV50BIXKDGCWg8jt0oUMNuh+MMWqGeQi8cOnGRk2rPvHF4DN6feP3o8vQFo3d8IVH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718001429; c=relaxed/simple;
-	bh=b6SJUrHE287S2H528OrXBtViER8v/17sB2tsGOwjTkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QVpPaSgyT+vfNAKhaIfGLDeMyIHhKpDdOGcSGOMTeZQHuJSJqaSliAQmptw7cA+3jh2KSJZt8u8neVUA8iwdTGcF/JKnJXvmwaZPfmjiWhPKBOqnsR53sxBeFmOE/1vhE9jSi1O7iRy4MEHmZvsmgC9SCzA5OeJlJIW/+DtB8as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af503.dynamic.kabel-deutschland.de [95.90.245.3])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1F6F661E5FE01;
-	Mon, 10 Jun 2024 08:36:01 +0200 (CEST)
-Message-ID: <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
-Date: Mon, 10 Jun 2024 08:36:00 +0200
+	s=arc-20240116; t=1718018242; c=relaxed/simple;
+	bh=13XDtHa++hblwzo5voNHyIdjeLfCecpFY2EvEAXlaUU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hiNruA/Fm3S1jvbTydeW1PsIlX7xC1zVgcQiWludMhu6+1P65kfCMhFLD8NqYAdbt9EvJkaWyrJ3x7uIltBIbGVzRGZ0UfWvAV1E/lGvMCeCnWEYiuORSRJN9uZ5WYhXUQNC6l3FUs0aKaE8KbAsWicOEqvFX0eUNNZWPlh33/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdO3U8Gg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdO3U8Gg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E792C4AF1C
+	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 11:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718018241;
+	bh=13XDtHa++hblwzo5voNHyIdjeLfCecpFY2EvEAXlaUU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mdO3U8GgcMVnEmenD0E2KE5VIuf7i5JEwdlVbPv/Ksu3YvJi5FQ9k7c00Syi4pgdB
+	 r0MO9CmZCKrxlq84+ScTH7CMgQsrTMSd+xVni2sB2WkBP13GIv6ciXhox7z+YBRudR
+	 6U806fEvLxVfsMcUsPoL/GaquSvmFDcn73b6O6va/xG523ytgunzwo2SZOGjxoLK4Z
+	 L3dNPFz3t9DQ6t3TisHXD2gKzTTRKtdYM4DC//alfF/RwBgz2I/dWwj72oDTMB2fVd
+	 yQrWeZH/3tJ+li41Zx48VhBxA5EyE/veaNK6yBEcs0EAy2j5V/38Arsysx1RVUXe+G
+	 Ci/EC/stdakrg==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d1b8bacf67so541489b6e.2
+        for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 04:17:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUU6j4Whw8oyPy2RyhMyk82vmcbfm5CrHWxlvtDFQS3vE3rhVSrGYP3ZCzUJe3kumdR25vGIht95q8ZrVg2PrlraME9lG4SrOoi8O4=
+X-Gm-Message-State: AOJu0Yw950kVhdMLx15DZK6j1zDrVIDZbRZKysOcaH7Zb1ZxqKEHrXKC
+	cZBx6L2vsHhs5wLhRO50rEweFASfe6xI4sYGUXv+RozQUAv91zSQQTiQ1uwVdrQIDVrJdbIePlb
+	ETmocOnBpvNI1pV7tYIGar7p9+II=
+X-Google-Smtp-Source: AGHT+IGKTwIlArAccS9HgIz/8nmcoXpGpdoSZs+F7qWC1cGHjBg63X0hu0TYfvhL91x9MfV4eUmkHghgY9+oDM12Kkw=
+X-Received: by 2002:a4a:d0c6:0:b0:5ba:ead2:c742 with SMTP id
+ 006d021491bc7-5baead2eb7emr4437542eaf.0.1718018240856; Mon, 10 Jun 2024
+ 04:17:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [iwl-net][PATCH] Revert "e1000e: move force SMBUS near the end of
- enable_ulp function"
-To: Hui Wang <hui.wang@canonical.com>, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, kuba@kernel.org, anthony.l.nguyen@intel.com,
- vitaly.lifshits@intel.com, dima.ruinskiy@intel.com, davem@davemloft.net,
- pabeni@redhat.com, edumazet@google.com, sasha.neftin@intel.com,
- naamax.meir@linux.intel.com
-Cc: todd.e.brandt@intel.com, dmummenschanz@web.de, rui.zhang@intel.com,
- jacob.e.keller@intel.com, horms@kernel.org, regressions@lists.linux.dev,
- Naama Meir <naamax.meir@linux.intel.com>
-References: <20240610013222.12082-1-hui.wang@canonical.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240610013222.12082-1-hui.wang@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
+In-Reply-To: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 10 Jun 2024 13:17:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
+Message-ID: <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
+Subject: Re: cpufreq/thermal regression in 6.10
+To: Johan Hovold <johan@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Hui,
+Hi,
 
+Thanks for the report.
 
-Thank you for your patch.
+On Sun, Jun 9, 2024 at 9:53=E2=80=AFAM Johan Hovold <johan@kernel.org> wrot=
+e:
+>
+> Hi,
+>
+> Steev reported to me off-list that the CPU frequency of the big cores on
+> the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
+> frequency with 6.10-rc2.
+>
+> I just confirmed that once the cores are fully throttled (using the
+> stepwise thermal governor) due to the skin temperature reaching the
+> first trip point, scaling_max_freq gets stuck at the next OPP:
+>
+>         cpu4/cpufreq/scaling_max_freq:940800
+>         cpu5/cpufreq/scaling_max_freq:940800
+>         cpu6/cpufreq/scaling_max_freq:940800
+>         cpu7/cpufreq/scaling_max_freq:940800
+>
+> when the temperature drops again.
 
+So apparently something fails to update its frequency QoS request.
 
-Am 10.06.24 um 03:32 schrieb Hui Wang:
-> This reverts commit bfd546a552e140b0a4c8a21527c39d6d21addb28
-> 
-> Commit bfd546a552e1 ("e1000e: move force SMBUS near the end of
-> enable_ulp function") introduces system suspend failure on some
-> ethernet cards, at the moment, the pciid of the affected ethernet
-> cards include [8086:15b8] and [8086:15bc].
-> 
-> About the regression the commit bfd546a552e1 ("e1000e: move force
+Would it be possible to provoke this with thermal debug enabled
+(CONFIG_THERMAL_DEBUGFS set) and see what's there in
+/sys/kernel/debug/thermal/?
 
-… regression introduced by commit …
+> This obviously leads to a massive performance drop and could possibly
+> also be related to reports like this one:
+>
+>         https://lore.kernel.org/all/CAHk-=3DwjwFGQZcDinK=3DBkEaA8FSyVg5Na=
+Ue0BobxowxeZ5PvetA@mail.gmail.com/
+>
+> I assume the regression may have been introduced by all the thermal work
+> that went into 6.10-rc1, but I don't have time to try to track this down
+> myself right now (and will be away from keyboard most of next week).
+>
+> I've confirmed that 6.9 works as expected.
 
-> SMBUS near the end of enable_ulp function") tried to fix, looks like
-> it is not trivial to fix, we need to find a better way to resolve it.
-
-Please send a revert for commit 861e8086029e (e1000e: move force SMBUS 
-from enable ulp function to avoid PHY loss issue), present since Linux 
-v6.9-rc3 and not containing enough information in the commit messsage, 
-so we have a proper baseline. (That’s also why I originally suggested to 
-split it into two commits (revert + your change).)
-
-> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218940
-> Reported-by: Dieter Mummenschanz <dmummenschanz@web.de>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218936
-> Signed-off-by: Hui Wang <hui.wang@canonical.com>
-> ---
->   drivers/net/ethernet/intel/e1000e/ich8lan.c | 22 ---------------------
->   drivers/net/ethernet/intel/e1000e/netdev.c  | 18 +++++++++++++++++
->   2 files changed, 18 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> index 2e98a2a0bead..f9e94be36e97 100644
-> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> @@ -1225,28 +1225,6 @@ s32 e1000_enable_ulp_lpt_lp(struct e1000_hw *hw, bool to_sx)
->   	}
->   
->   release:
-> -	/* Switching PHY interface always returns MDI error
-> -	 * so disable retry mechanism to avoid wasting time
-> -	 */
-> -	e1000e_disable_phy_retry(hw);
-> -
-> -	/* Force SMBus mode in PHY */
-> -	ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL, &phy_reg);
-> -	if (ret_val) {
-> -		e1000e_enable_phy_retry(hw);
-> -		hw->phy.ops.release(hw);
-> -		goto out;
-> -	}
-> -	phy_reg |= CV_SMB_CTRL_FORCE_SMBUS;
-> -	e1000_write_phy_reg_hv_locked(hw, CV_SMB_CTRL, phy_reg);
-> -
-> -	e1000e_enable_phy_retry(hw);
-> -
-> -	/* Force SMBus mode in MAC */
-> -	mac_reg = er32(CTRL_EXT);
-> -	mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
-> -	ew32(CTRL_EXT, mac_reg);
-> -
->   	hw->phy.ops.release(hw);
->   out:
->   	if (ret_val)
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index da5c59daf8ba..220d62fca55d 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -6623,6 +6623,7 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
->   	struct e1000_hw *hw = &adapter->hw;
->   	u32 ctrl, ctrl_ext, rctl, status, wufc;
->   	int retval = 0;
-> +	u16 smb_ctrl;
->   
->   	/* Runtime suspend should only enable wakeup for link changes */
->   	if (runtime)
-> @@ -6696,6 +6697,23 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
->   			if (retval)
->   				return retval;
->   		}
-> +
-> +		/* Force SMBUS to allow WOL */
-> +		/* Switching PHY interface always returns MDI error
-> +		 * so disable retry mechanism to avoid wasting time
-> +		 */
-> +		e1000e_disable_phy_retry(hw);
-> +
-> +		e1e_rphy(hw, CV_SMB_CTRL, &smb_ctrl);
-> +		smb_ctrl |= CV_SMB_CTRL_FORCE_SMBUS;
-> +		e1e_wphy(hw, CV_SMB_CTRL, smb_ctrl);
-> +
-> +		e1000e_enable_phy_retry(hw);
-> +
-> +		/* Force SMBus mode in MAC */
-> +		ctrl_ext = er32(CTRL_EXT);
-> +		ctrl_ext |= E1000_CTRL_EXT_FORCE_SMBUS;
-> +		ew32(CTRL_EXT, ctrl_ext);
->   	}
->   
->   	/* Ensure that the appropriate bits are set in LPI_CTRL
-
-Naama also added Tested-by lines two both commits in question. Could 
-Intel’s test coverage please extended to the problem at hand?
-
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
+Well, I'd need to ask someone else affected by this, then.
