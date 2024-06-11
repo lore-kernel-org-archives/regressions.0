@@ -1,100 +1,126 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD1516F8F0
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 05:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2617839A
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 08:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718084746; cv=none; b=ksHxH7MYrw0WIBDDashj2DBIJBKHofMXf/rQxzca75t8bpMouDqylUtSKYZSDm+eCPRt2cUTuWzSnN8QeyAg3fJLWqSNKpMAQEDzGQxFXBuVntxW2jQcpJcIU5D6UrhZ5+wzf+Tmomw0SAJetfEGsnmWwamd/llRwTfZAWPB5qA=
+	t=1718095986; cv=none; b=HAT47QwtTkhoUAoWe9+mUrYKDTb8aHxoUidZ8FDUe5c58rkuz3xWWzrgmJVBVhk5sK0ZHuvQsmGknZ+R9TPvOjDNIThplQSayQyHVOGoKWDCsA1qf35dtxet3Ha/QQ/jKJ/RAfXZxNhxiUl3zeixaxIVGZltfM2G8D6vvVRUjk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718084746; c=relaxed/simple;
-	bh=qNZ+/nRgL1qOziLTAxYNczXHVP0BwbIrCE3nKu4qc4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYLAZEyoGA5PY84NEo6Wfz1SXQt1wDOOX4LNSM+K2vnUGS9KWQDkdFJtza0Cwf6iPErkxxnA0qp3VTFjbmGfeSBNbmt1uhIADTpwEgg8ZjqUZ7zWn4e527x8twk6GUzA20p5pdB8WfxKUv8mlMxO5ed1/gmOoXlxdvGufjBA4rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=iULaIfvR; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1718095986; c=relaxed/simple;
+	bh=4my5g26YzEO0BtFAjOMhZ6Mg3AOp8tEE7NPVC/IGSNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i9CEG0WTQXYRzzWBGjwa4tjCWabE7qpM9iy1B1MbVDoBaIV4D5t1+w0UMxZ+tdfFIMpuLIOKYP2YfF1qNsxGxD403Geq7nvw6TBdZnx7CuMO19rEVixMbg6v6ckMuvOaH00630dEGIMSHpewI0wAFwSpHaokkMoerx54roxFlAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1+hfy8h; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="iULaIfvR"
-Received: from [10.1.1.110] (unknown [103.229.218.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5352A3F1C6;
-	Tue, 11 Jun 2024 05:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1718084741;
-	bh=1uQHXhtS+FSETeH2hqizhIc/c/smCB4G/AydYNkP0wA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=iULaIfvRVc3jFrI3242MAXXKclEeiHSfcQruSnS5M0Izuor8FRo/kkS6N0HrTVDj2
-	 LPjqfE0cuNz1ZpBa8alBxIEUIMT249UC+YNmyW5rBzz2DPNaGbTfUns/1i9VHFvVV6
-	 x1gof4Y0XOw6aXQbY0lP2VfFx+C15jP/9qKtaO5Y5czJS9q6B6oKi7SNGR8914m5vH
-	 2p91G6RknJz8PkAh/eM30E4WxOYv5svrLJpZtVbbi2LPkTag6HMtmUGZtPB6InHZ6D
-	 E8G0hMuOBViC5fSCFVATHHQHG+KVVyDr7wQCb5kg3IU8NZECb5gmbvCf9CHx3KrRDq
-	 95L8n3MziKSPA==
-Message-ID: <ccca7897-ac53-4056-8617-a3ace57bf7b6@canonical.com>
-Date: Tue, 11 Jun 2024 13:45:28 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1+hfy8h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718095985; x=1749631985;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4my5g26YzEO0BtFAjOMhZ6Mg3AOp8tEE7NPVC/IGSNc=;
+  b=Y1+hfy8h3W9GC5MxQCd2cITYk4NEgA4tcOg2X8/hXudPHG/pq+MSP5jX
+   IYYzUgXm9P8hTuq8hX+F2fq6xfGy8Q3ULdSVSNo25hKwWpuGjh/633673
+   2wONxoXCHRZIJtFFfP5lQT2wYf55LRXsGlM4DO3NPWlf+XtUNOW1ozEL+
+   SVjzx7gyrYeTZxA1ImQFIIQBVqcgrhaV+7/tpLZKm92mUMMlQlKQLD9S8
+   hKpn8kWQQrCO2bc7L9loGwU5lBIL4ZYsM1QEBcjH9Hmx9Y5TJ5PGH/Rae
+   4SWb9cYnwcba8njfdOUS54A+RjpkLGt7cw38b64mNy0wB5HFcYD9HTZEM
+   Q==;
+X-CSE-ConnectionGUID: gXdk8e+5RjmL23uHZMS4uw==
+X-CSE-MsgGUID: 6ujH+dTfSomS0mBj8bkrQA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25912775"
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="25912775"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:53:05 -0700
+X-CSE-ConnectionGUID: zRWiGUaFQkOOOJUfuTGK/Q==
+X-CSE-MsgGUID: /l8WWPB+SJ6/Vt9q3nIxJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="43800303"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmviesa005.fm.intel.com with SMTP; 11 Jun 2024 01:53:00 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 Jun 2024 11:52:59 +0300
+Date: Tue, 11 Jun 2024 11:52:59 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	regressions@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+Message-ID: <ZmgQayq6RvJEQVgu@kuha.fi.intel.com>
+References: <20240608114529.23060-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [iwl-net][PATCH] Revert "e1000e: move force SMBUS near the end of
- enable_ulp function"
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "naamax.meir@linux.intel.com" <naamax.meir@linux.intel.com>,
- "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
- "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
- "kuba@kernel.org" <kuba@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
- "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
- "Neftin, Sasha" <sasha.neftin@intel.com>,
- "edumazet@google.com" <edumazet@google.com>,
- "pabeni@redhat.com" <pabeni@redhat.com>
-Cc: "Keller, Jacob E" <jacob.e.keller@intel.com>,
- "horms@kernel.org" <horms@kernel.org>,
- "Brandt, Todd E" <todd.e.brandt@intel.com>,
- "dmummenschanz@web.de" <dmummenschanz@web.de>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20240610013222.12082-1-hui.wang@canonical.com>
- <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
- <98ccb75d7ef48c182425f130e0b2ececeec630ec.camel@intel.com>
-Content-Language: en-US
-From: Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <98ccb75d7ef48c182425f130e0b2ececeec630ec.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240608114529.23060-1-johan+linaro@kernel.org>
 
+On Sat, Jun 08, 2024 at 01:45:29PM +0200, Johan Hovold wrote:
+> Disconnecting an external display triggers a hypervisor reset on the
+> Lenovo ThinkPad X13s since 6.10-rc1 which enabled UCSI. Disable it again
+> until the regression has been fixed properly.
+> 
+> Fixes: 3f91a0bf4a0b ("soc: qcom: pmic_glink: reenable UCSI on sc8280xp")
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-On 6/10/24 22:14, Zhang, Rui wrote:
-> On Mon, 2024-06-10 at 08:36 +0200, Paul Menzel wrote:
->> Dear Hui,
->>
->>
->>
->> Naama also added Tested-by lines two both commits in question. Could
->> Intel’s test coverage please extended to the problem at hand?
->>
->> Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Plus that,
-> 1. Todd and I can test with upstream + this patch to confirm that
->     a. the regression for Todd is gone.
->     b. the s2idle failure for me is back
-> 2. I can test with upstream + this patch + revert of commit
-> 861e8086029e (e1000e: move force SMBUS from enable ulp function to
-> avoid PHY loss issue) to confirm s2idle is working again.
->
-> thanks,
-> rui
-Thanks.
->
->>
->> Kind regards,
->>
->> Paul
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+>  drivers/soc/qcom/pmic_glink.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> 
+> Dmitry reported off-list that his X13s was crashing when he disconnected
+> an external display and I tracked it down to the enablement of UCSI in
+> 6.10-rc1.
+> 
+> I have not had time to debug this further, but I'm flagging this as a
+> regression and sending an effective so that we have a fall back in case
+> this is not fixed in timely manner.
+> 
+> Note that this likely affects other Qualcomm SoCs as well.
+> 
+> Johan
+> 
+> 
+> #regzbot introduced: 3f91a0bf4a0b
+> 
+> 
+> 
+> diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
+> index 40fb09d69014..65279243072c 100644
+> --- a/drivers/soc/qcom/pmic_glink.c
+> +++ b/drivers/soc/qcom/pmic_glink.c
+> @@ -348,11 +348,15 @@ static void pmic_glink_remove(struct platform_device *pdev)
+>  	mutex_unlock(&__pmic_glink_lock);
+>  }
+>  
+> +static const unsigned long pmic_glink_sc8280xp_client_mask = BIT(PMIC_GLINK_CLIENT_BATT) |
+> +							     BIT(PMIC_GLINK_CLIENT_ALTMODE);
+> +
+>  static const unsigned long pmic_glink_sm8450_client_mask = BIT(PMIC_GLINK_CLIENT_BATT) |
+>  							   BIT(PMIC_GLINK_CLIENT_ALTMODE) |
+>  							   BIT(PMIC_GLINK_CLIENT_UCSI);
+>  
+>  static const struct of_device_id pmic_glink_of_match[] = {
+> +	{ .compatible = "qcom,sc8280xp-pmic-glink", .data = &pmic_glink_sc8280xp_client_mask },
+>  	{ .compatible = "qcom,pmic-glink", .data = &pmic_glink_sm8450_client_mask },
+>  	{}
+>  };
+> -- 
+> 2.44.1
+
+-- 
+heikki
