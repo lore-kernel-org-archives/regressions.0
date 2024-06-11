@@ -1,120 +1,146 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBAC101E2
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 21:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3FE1527A2;
+	Tue, 11 Jun 2024 21:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718140777; cv=none; b=fwLN98crG+WyT8ZjraYbfTd5ombfFVEBtBRqfgjSfojwJ7VGqCrqAT1e8L91SlwkLA2qJAPUyOInIbIemf7dHw0qgnjCfAZisM4kD8jZq9Q9o0D8d5hwBiyAzNwQJshEBE8rIXWI4TuEQcET0RDLdq/k3z1xev+II/DC8J+PK+4=
+	t=1718140942; cv=none; b=RLLPW1l9WzkWG6xoSR5i7l3Yksb+26jLZNUGdqZKpbry48ZeYyCqXPwGYek55Czs0C8Qe6vjWolYMxgfX5WDqoiMzAEsWvBPOT0BtR+8V8+ye+dN/0sumaxIQJMFshDuCqEJsPDc3b5vSlbV2tk0LKw1oDc1VRa1Wy4uzkBQ3hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718140777; c=relaxed/simple;
-	bh=ELCydqjpdFo4e5YLr2TqZB1sj47Z8XFwUvs0m0bOxMk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JPhAWSoUZQ039rm/zbKTp0a80Fli4xda2B7abcsDUj2qMPT7NoW314BFD27f9zf/EGkBAy2M141FqlEksX68nebM6MedUiX1ruzu75WmxTCGXFEgkZ3IHxItebIUw+bwPJPUoLZScjiW1k5TOieRJDHF1Ctr8LHM8RbKGt54nWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=H4kiQxAF; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
+	s=arc-20240116; t=1718140942; c=relaxed/simple;
+	bh=yjMBvWB5+B7dFt47iCo5AaFzQSISODEVKaHGFZRRL14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuyFmFJ0dhFKtAHu8AqANUGveWUmKEug+EXC6VI7N+1vUKZZ5PouJ2Z5zVnNbZlG5/Eznq/7rj7aWgbPLRE9i6qk+0pvodrKFYXV9q/GZFC7L+4Zp3dOVSOtqkinv3aLfmcpjFym47FL5qLnAjtpATLPSgam0Et406iPoXbu0W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=tUCJtIwU; arc=none smtp.client-ip=212.227.126.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="H4kiQxAF"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-254aec5a084so1588200fac.3
-        for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 14:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google; t=1718140775; x=1718745575; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kIrp8qzhxU8e7FrceQyxypKcph7vNSgb2Uumfdyvzas=;
-        b=H4kiQxAFZZMzv+qXUa5B6WNY2gWL8SBhzAX7p8ThvEnKX5jdiwqonFKB20K8FCK23z
-         6mYvC0FXiAnce75kDJ3K7dmz+MsMTb1mGT3NcrNpZNFmR3bjjW9TmxBQ3Qxbz6mugfk9
-         Ux1BHmQTDl6rEXteQcZqwoWqrDcv1uas6rO6Hl+cDkYTlaaZRlbKKpNvTbBWSj2Uddv5
-         CglyMS8Q3FvnFj5TMZbzUzYCmhQOQK0W8/eVtpzcTjrk2mQ7vKzmfIP5I7MXF6/6R7+S
-         NFNq+izIYVEcymuWiI+13fbu+jmPZkwOxENh3o110b4rTUiP7NTmSCrDoW4tJ10FU9/G
-         rETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718140775; x=1718745575;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kIrp8qzhxU8e7FrceQyxypKcph7vNSgb2Uumfdyvzas=;
-        b=gm0MG29Qxmu/cMloNzv7JoJt+c/8QJymhG233glHuweM1hX7NeOSWvBGl8TC3gXZ+Q
-         aPh2TdNTznN1vJ0yg98xLIqHcsQKhIwblBQivWLv3jZ9eT82ndybTPPQY8V0ct1Wi+OS
-         lTt61N6GiWGxshlFJ0Se/VDw1+8+ciVXREU3LtCwNbLyEquf8IEwhp0vuJgRAkyOlOnC
-         E17LyJNeN3WX5Q0vfKv88KtNyKm46xo+X08ztcfrIYeYb3K1bbgK1IaWDF1TYzKZB/6z
-         LjQZAI7Oh4HTm7WUuFB/xuuvbS5MtH4bKDE2Xbec8gCSQMi0uPWU8TX+qB+ocRnBmp/z
-         q1Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcALgC701yqBonci/D5eFopGM0r+QlYTSH/M8SLC15nbkaLprrE9W4gzI7NjZaP55qR2hsrAaAOpEZvAmVcl0zBOqg8IbuXMHG1Ks=
-X-Gm-Message-State: AOJu0YzXIVkdTKerbyTvsmi9CLKT+3V4X++BoGbOCeD1SsCJ5gymKLsX
-	ahr0hQRJQb4KH6GCSjbm+2tORP4ftP+oKAqFmGqSw6Bk0dvPcu/6GFr2m+RLCBY=
-X-Google-Smtp-Source: AGHT+IEspAynUq6bEDt0FQbYW3uXgAn4JXj6JpZ/+Vmr9hn7HqhaGFU2dhDx1yYp9Pq3vY+Wts3Rlw==
-X-Received: by 2002:a05:6870:f113:b0:24f:c7cf:17fb with SMTP id 586e51a60fabf-25514c037f9mr50908fac.22.1718140775044;
-        Tue, 11 Jun 2024 14:19:35 -0700 (PDT)
-Received: from [192.168.1.98] (104-48-214-220.lightspeed.snantx.sbcglobal.net. [104.48.214.220])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f9d9a98e74sm616426a34.72.2024.06.11.14.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 14:19:34 -0700 (PDT)
-Message-ID: <f288cbb9-af88-4c4e-94d4-60b0829bd0dc@kali.org>
-Date: Tue, 11 Jun 2024 16:19:32 -0500
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="tUCJtIwU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1718140907; x=1718745707; i=christian@heusel.eu;
+	bh=yjMBvWB5+B7dFt47iCo5AaFzQSISODEVKaHGFZRRL14=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tUCJtIwUF7ZiqD2pwXcvForQaAd3wVXt5vBH9nYUVr/xme5Zd7BhMZK9RvySI2yR
+	 2EGBCHAruy0SobHSbdlWs4D7o0AGSXkQ28GroRXihc314MPYqTd1wLyhoaZoUu9mb
+	 pLXFhlWCmiWUTN6SAWii3fb8LgBoh/DuIZCRtzhJZW7JP5Ses6KZC1J5x6lW0LTnH
+	 Yiajw9Lv91pqdO7GaWpgiCSuOyD03mPTbKvTAg/hx26LsXC34qwwsQq+gkedWkUhq
+	 GaLuJAiEMIPvme+UnfrH0t3Xjdq8TcCX39qX2Kd+3fUU990L+AkCutf6jHn2rty94
+	 SUgKjYmq9Rn7TakP1g==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue010
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1MV5nC-1rsQF23SbO-00KKSj; Tue, 11
+ Jun 2024 23:21:47 +0200
+Date: Tue, 11 Jun 2024 23:21:35 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Bart Van Assche <bvanassche@acm.org>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Daejun Park <daejun7.park@samsung.com>, Kanchan Joshi <joshi.k@samsung.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v9 11/19] scsi: sd: Translate data lifetime information
+Message-ID: <678af54a-2f5d-451d-8a4d-9af4d88bfcbb@heusel.eu>
+References: <20240130214911.1863909-1-bvanassche@acm.org>
+ <20240130214911.1863909-12-bvanassche@acm.org>
+ <Zmi6QDymvLY5wMgD@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: cpufreq/thermal regression in 6.10
-To: Johan Hovold <johan@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
- <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
- <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
- <Zmg8x6JXQW1dqOr4@hovoldconsulting.com>
-Content-Language: en-US
-From: Steev Klimaszewski <steev@kali.org>
-In-Reply-To: <Zmg8x6JXQW1dqOr4@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4sl6cuacyuhoilmf"
+Content-Disposition: inline
+In-Reply-To: <Zmi6QDymvLY5wMgD@surfacebook.localdomain>
+X-Provags-ID: V03:K1:foLHCmu243axhoMmi+81hYCdUWji/QUP2esFrCkTAjpwsLB54oR
+ zGmiPvbsQF7NvPcIsjPCL3ZHOyI5OiMJ3lFKrW7ViasszasL824LGW4uFIMnbtk8rVg2A5I
+ sZmfOH40DRJg+K4aue7Bq9NfN+Ufc7q/Vuy5XLPJ5ywNyLbM9Cq5DSw6Kv9L/s8Cdl8nFxv
+ XYL/rNAsC4PGBYZygZCLA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TufAOKclaEA=;UF5vsxXuoz8AKA5HiT/d/zDZq6F
+ Tv/BiLgj9Cc++RvKVrXpPeHdng+V8sRUU76zV9DtySdKo1LHFrB3EqCSelgcXrRFn6JeHQGAz
+ ZjMZnkE8Tm/utZ9BORO2vuPcASMo2DAqGJTQFnAVR7KwouZWmhCZTjYmwwR1t1h2bbXIRSBxX
+ zskfQbXXuZfK0sMlJfTSy8wIyzjpID9cg+IWTJTTK1R/K1cTq45Y+MO1oVnqlogtC8jdBmWsQ
+ cQe36eDWYja3ETnhzl+p8kQIf0/A9YlPEb4J92CyZl2ZSOrEEtpL+bdQwHpgbiE2323r2tiyo
+ LfFBuraPgM6FhXqDyM3hZllvcv5n8OoDu6e5k5rZByq0jl2VBbuX1KCZh5obY7JpyKdtUsFLy
+ Z0Y/XhhUbboszUH0InXQHVEOFKvEl9qElkUBa6VFHwaSAawhLcVe00nGYg2N8hYSLI9jFlPcg
+ Iisvi8snmYEhuPnXaXlIFVzWlH/LtOF3TzE209o1hQEk/p31pHlt+FyXjhvhzJqi77IZwA/Ko
+ kSPLkFOKDdF6C/7aUNCIMLFVcvOLG1wr88ZUsEZOEdLq37+r/a3z/MDhu9Sa6C4wzCNgWGtjx
+ jBDO8I6xrq5q8hhXviZ27myjLy3ZtRZFoa+T4c4n9BmRsUllXS9CzG27z/valoIFiIGXsBFw6
+ 3x+VhYPHcAL2nYfMGMYMSGlqMmFdLYrkn6MpOdKPozhkt+liWMXTpXLSS+l04EmRjjx2eruA+
+ YU8IJIxou7syATcev1oodgXfLDxMbPwXf5G36lA5FHp7+AG6SpN0yinFY/oO7vby7E/t1UGNs
+ qhUcd1Bn8gLqWQF91pb3X+qA==
 
 
-On 6/11/24 7:02 AM, Johan Hovold wrote:
-> On Tue, Jun 11, 2024 at 12:54:25PM +0200, Rafael J. Wysocki wrote:
->> On Mon, Jun 10, 2024 at 1:17 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>> On Sun, Jun 9, 2024 at 9:53 AM Johan Hovold <johan@kernel.org> wrote:
->>>> Steev reported to me off-list that the CPU frequency of the big cores on
->>>> the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
->>>> frequency with 6.10-rc2.
->>>>
->>>> I just confirmed that once the cores are fully throttled (using the
->>>> stepwise thermal governor) due to the skin temperature reaching the
->>>> first trip point, scaling_max_freq gets stuck at the next OPP:
->>>>
->>>>          cpu4/cpufreq/scaling_max_freq:940800
->>>>          cpu5/cpufreq/scaling_max_freq:940800
->>>>          cpu6/cpufreq/scaling_max_freq:940800
->>>>          cpu7/cpufreq/scaling_max_freq:940800
->>>>
->>>> when the temperature drops again.
->> If this is the step-wise governor, the problem might have been
->> introduced by commit
->>
->> 042a3d80f118 thermal: core: Move passive polling management to the core
->>
->> which removed passive polling count updates from that governor, so if
->> the thermal zone in question has passive polling only and no regular
->> polling, temperature updates may stop coming before the governor drops
->> the cooling device states to the "no target" level.
->>
->> So please test the attached partial revert of the above commit when you can.
-> Thanks for the quick fix. The partial revert seems to do the trick:
->
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
->
-> Johan
+--4sl6cuacyuhoilmf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can also confirm that it's working here!
+On 24/06/11 11:57PM, Andy Shevchenko wrote:
+> Tue, Jan 30, 2024 at 01:48:37PM -0800, Bart Van Assche kirjoitti:
+> > Recently T10 standardized SBC constrained streams. This mechanism allows
+> > to pass data lifetime information to SCSI devices in the group number
+> > field. Add support for translating write hint information into a
+> > permanent stream number in the sd driver. Use WRITE(10) instead of
+> > WRITE(6) if data lifetime information is present because the WRITE(6)
+> > command does not have a GROUP NUMBER field.
+>=20
+> This patch broke very badly my connected Garmin FR35 sport watch. The boo=
+t time
+> increased by 1 minute along with broken access to USB mass storage.
+>=20
+> On the reboot it takes ages as well.
+>=20
+> Revert of this and one little dependency (unrelated by functional means) =
+helps.
 
-Tested-by: Steev Klimaszewski <steev@kali.org>
+We have tested that the revert fixes the issue on top of v6.10-rc3.
 
+Also adding the regressions list in CC and making regzbot aware of this
+issue.
+
+> Details are here: https://gitlab.archlinux.org/archlinux/packaging/packag=
+es/linux/-/issues/60
+>=20
+> P.S. Big thanks to Arch Linux team to help with bisection!
+
+If this is fixed adding in a "Reported-by" or "Bisected-by" (depending
+on what this subsystem uses) for me would be appreciated :)
+
+Cheers,
+Christian
+
+---
+
+#regzbot title: scsi/sd: Timeout/broken USB storage with Garmin FR35
+#regzbot introduced: 4f53138fffc2 ^
+#regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/li=
+nux/-/issues/60
+
+--4sl6cuacyuhoilmf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmZov98ACgkQwEfU8yi1
+JYWeyg/+JkWZBJNBC6sa1CMPAwFdLEuAJWQ1J2bAWgWMLrAL0ZlfnHSS0kUIbtml
+CccJeyyl4O5ets5b/dHRE9QAUGKVwQbp0LsVN0x5MQLtsrurNiOsT/gJFuNm+PPr
+mLAXPdclmL85+UpKNy4awNO+e35pTerreUcFzsJ+8Z9pJL7DdW0F+oYrOjo7uT09
+69gg2ZJw7miEVq4NtSsP/AabMp/vdbbNkXQS5wPHLsLzzIZ9vqbJM51hsk43kXXR
+tkBLkr1rLF5oKqBWjKVDtX4B1OsFX/Xmr+L09V7bmaclmKo/vh5baOznwH5aC0w3
+hv+U6jpVDlhroQTnfM2XHCbtX0mog9nl/pOh2WuxAg1RRaK8xLLJNA94oFnzCJU6
+sUXNDhEVNIny0/h0w8HRwhswLSg62p/1OprcC1hOf8t18/cv/apVGegiKVsfEOGH
+ZaeHxqWEu2sPuYIsDq3fojETdONPvaNpO4rYn9CZgUU9ydcuHDt1j+9x7kfFXa+b
+CLbP7fBmsdWoBgONIjni0a7RD1EqtWeOKf+frDwM9KZUV10hDVFqzX/uub5OVGif
+2sL8Xrg0NnRnFnR7Ig/u1X6Seun7k/BDKul/pgfdK/zk6JzsANUbyAGmSySD3JWn
+HBP2ylPjwixrlVKf6twDkC1QZ7UrV0urOKzXPTkLHsJsgHq1ywY=
+=avSc
+-----END PGP SIGNATURE-----
+
+--4sl6cuacyuhoilmf--
