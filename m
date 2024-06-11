@@ -1,150 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic311-30.consmr.mail.ir2.yahoo.com (sonic311-30.consmr.mail.ir2.yahoo.com [77.238.176.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0408A178385
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 10:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C34172BCC
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 11:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.176.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718103279; cv=none; b=J1YxqRWaHdjn6YDZOjxLflHHZ1rbzPDaeWZh1W8gyVRqTJ1jvj9Rmu4FoJlCV1iny4KeHEvoNoJH5pLXlgntCYK1W+tu0CfjPEHuDeReILZff0O/EMefEkmj3LuyuwNXFagU3oRIw3iTvyvroc5/rfpfImLUPGdt8y5TRxUUoDk=
+	t=1718103961; cv=none; b=bdutP1aOb0FWJHLFW4PY5OgxuUOLjXEPlO3LWlXsn8PHWzJR/0EmLmhN6Q9pABIpKaoHUGF8PrD0iWrx6DA+bsaG2FD9J95/27f8dc6FudxcBd8iLC1cmqwZleze1tLSYmL3Aydca974ABm2wrr9/AJEw/oWtThYyuyui/s9kgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718103279; c=relaxed/simple;
-	bh=PAYGrjPv9JUHWmXhYOj5cK6zsnCJK22hJuq/sV/ZXRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XAFxfVME1kbqpkOxHrbqWlwumWB4RrcivMafW+Igjrqfit/Ny3G4QkkYAHLhgqYui8E2OrqUwgzqHvXLI4RFilpdbFDmjH7M7qWG9zLcQ6oNZReryCv7w40U/K0tuIFpIxsbTL6hrh9G7edZdrZcWVFQOy9m00/bP2EWELLvzNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOAygGw0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718103961; c=relaxed/simple;
+	bh=1NA9dzz8vModzUUzJwmum583xk1rUpj2Io8NVU7QGBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UQ008GpZnKxK1MyCff2IGMZfU2tuTgMgZ+MjdxyC1BI36lFsHST4yHuqu7O5Z4CzoLNtdNUj5L8niL4HwXbArIKFpc5QoWB7ETwbw/Btlgz5dMiEd94tXHJd49U0K+3+ErA7Ds1izF7HoAr48eflGXqUEorrOs820K+Ly+DBd4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it; spf=pass smtp.mailfrom=yahoo.it; dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b=jsTF1bkN; arc=none smtp.client-ip=77.238.176.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOAygGw0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A7BC4AF48
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 10:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718103278;
-	bh=PAYGrjPv9JUHWmXhYOj5cK6zsnCJK22hJuq/sV/ZXRQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eOAygGw0J6QuNRcyS5QRfDqWfmYUZ0/QnPp70fjpIrxk+HLMbdYB3mkNgUEExz9nr
-	 ltERDyMLfJlr9CRKiYVXoKalf/BVvlHBYZc4qkaoJmaNGXCaqg2s8XYjScoCp4ttJH
-	 1ZuDocBL2aK1Xio7X7sCTVn59XWc7z4TY4R461rTa3O7WWJQ1MHUY+FkdVROJ0PASi
-	 ZNx48iSVL0n4raFGOpTJyHDzfTsGNtT3wBy5pw2TQUfx/k2rRietUkuucRPrfd5Ltm
-	 z8C5qKubc6CcY1e1u02QCMtNAGGVKNv6tebVLpzQ5M5fCV89ziBoax0SeDNqBGTH9B
-	 P97CDfMHAdkKQ==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5b335681e82so754354eaf.2
-        for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 03:54:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV+J9q19METJUKFY6TEJRoUA5tC4E8Q+P4N9vsVTL5QCQkQg3d0Oy+I/6eUWBYrvzlhBEZ+fDI/Q+U3x/mvYCUJkvyihRmhOWZB/hA=
-X-Gm-Message-State: AOJu0Yw4Hzfg9mdp0fkHOyUI7tYTvLdul67FR6th9n/8lPh/+JnhYlwj
-	i/Rjfn68BzvrLdlie13BBU0aQe4rm2s4g4rHsStRDnBMH2svQt+ZGJQ8iAWYm8jxvS/rOv2a98Z
-	lEP8+8S63VJQ++AbcTK9rPVNxvQg=
-X-Google-Smtp-Source: AGHT+IEvLU9vFM/yZqdIexWRcV9B6Dlv5GthnVTgnzxcy/oRi4DXidDCDamIF23U0+rv4RC56WRKknyLhYhbv12T8x0=
-X-Received: by 2002:a4a:a283:0:b0:5ba:c4ed:ee98 with SMTP id
- 006d021491bc7-5bac4edef89mr10794590eaf.0.1718103277894; Tue, 11 Jun 2024
- 03:54:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b="jsTF1bkN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.it; s=s2048; t=1718103958; bh=p8JQgWGBCmtY8OiiUiT7+jtSYPgsSwI6b+DA+z+dfd0=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=jsTF1bkN20qwceUn5q3oOBtSxx15IJWLPjJ7KNCpVax8RoBvCmjPRDmIg8V1cfwF2q5QSXROY7OgbGJzf3hqMXdzyq9UhDHZBRlb85RN0uaghLk85y9jRGZgAHxDkP3tOMGgV7dOq5Ur/M2POoUlzGs4XM7zihDB0ca1krfHLn2LqR38ryU4vZ8TVmU1y1+icQXWXGCJ9VPeWGSPxrA7I68c6a0TbqENvZDncHhUIGNpVHWUju+BH881Tb52f/WqjiOXnM9emNBReaAKtR5JDKnpD0ex7yrUiqOdsknDA6rVcbc9U+Wl2nOjZq0cv20dmhCg1370IKSXeCux2Ni5qw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1718103958; bh=TcZuNnW1w73B18Vzji64p2vcr/Mn95fE0xrmI05xurC=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=mx67idYNGXlWzyN9FC2NzvW8ksm/bL7JoA7mf70hSM7Ipv2IwUei+dSR+C+PZYvfD67azedg/ZeCkLbVDU+EkfCUNg8HT2Tavg/dyscALpYfyw7PQOW3O8EgvyOGTFXLBmDIuAM2dcHC0WFG7D57cPxP3ueqhW44+Cehq3LyWZrQ1uqgZ0DSLrGwPrpA0FoQqu14tXCE6Go1zyasknkQF0NWDckrdnyx3d7t/wbuLh+rO8rjfqrrb/e4DbhzlcSqlW4VXj+/+UvDeot3/VwtUOPlSSq407JvGfFTZdWVkHBdpu24F8uYp62OBizJRKBjdpwLpTZNvEgFIQQAWq5TFA==
+X-YMail-OSG: PDgjmSkVM1kSaqfCasnFWFQexruKTxhWu_A9ZdZaIegzQhAgU6NdYuVq_E3BbOs
+ jL47mJyxTO.Qbo6oqJ0dh9A3erg4Yas.eh7FbsUBAiRCRdNzW.w5BC5l4VHmwMSFy61aUmY8K0fS
+ oy7ESXRWaGQKDdkSkrBoSETprLcBHE7OZAJOLZyQBIFTR0UHsTH5CKrWuTfzEPK6hvl3DWqYAzpz
+ O2JLwOhz9wDuuiKE__bAH4H56XkLf7qJVUR5tzKhbB7z.tiPDPOwQfWhBsuQQGqnGjKZ.QkUXs97
+ dfLe96GhPdL6SqF9dobHJS9wXqWt4S2yKFZhgOXA84qVX2ZN77AJ30O19nLUfmNPpb9HmkXvBdAS
+ zbLs5fWC5TySj82Ady9yedyRgHUq7Lj.w__emdYGaB4QpPLpwWLDwvfO3nisq7g7tLm9ziN8NzeQ
+ agNj15M4Ofz08OI7ipq1h84cC09oRmeKuwCK9L1VjFn2FUE332zCtlkUW_uh61UutVTztxNjf7fe
+ kITdYNTVmScHKe4Mfd0ucneiewTZi_NMmDneCafxqX_E1zngNQkRw8zPpFNqhR56GjYNGn0dwDuk
+ SY4E9cfoI7l557JF8ChatlyfA44KvkX1BMPJ98IT963UEauaq2HPJs58bC_kKO5ts24qQDxpjFsF
+ 4uufGOKxeI2KwYZR_N1ERaQVIlS66aea7ItQeggr32DWStwN_U_DYWlIz6t8fXTLXZ6xVtQa_S39
+ 8tN0pSaV1ZmJdexcT06nWbpD1yrJMOGr.JGaBA0_VhRfma7lFOMKtmLiJ1H5qmw_iX_oAOEBanff
+ 4GNV0HLuwr5C7u.Pyk1VxeIAwZJCbH6XxDLln4OjYQHYRqQg2AeP7VDG5RK1gh9xtsUCzeYbfc0M
+ YCSypbIOlFLEh_6Q5jFyC.0jeuarNL1SmGRkCneQCdGLgEdG5x1jzMhBYMxmoHPZNPw2b68FyNJ5
+ up_K2F_hJrnwkDmn3oIholbSeHj.nATwLQr_.V1ItgROnSHWhEQVLpPmaydMttKWaY86e4Pr58PF
+ BjDsc6Q1zpxhp9g_cVqCyYFMAqM6KjkF0aIAxV1DaPUQPLKsh8P9FjgMTF05K45w5jObHH177.kh
+ ZdVTtIZvVDbi23inB_W_ShIRrw2hgUAfkVsLjOikqaE851.bTPT5Eay824KnEFP.Nt_KVXyI7_wv
+ RM1FRRIsC9jk7AZJ9UDT3HPbC1dJkjXDMhYz0hzecgOSS3kINqitbeKqoY0g3gA362x4EJ.0LHYB
+ mmCkKBa9AQZb7gwGIOpI0dtqPDKZnxQgJUMR3.YPR41OPlSE2xtttTX3rVbJQgG5cmCaD5QF6U6w
+ Ztg3Yc64HOmMoGIrAbFh4hdynOVhgdhF9zOQWDfm.L0lpqYhLacoQ0WPdlCoZnwytaP5K8CDZWwD
+ HiTpVG6D2071AwD1qJrEGH3_wztVVDhhgUY4xDusKqdx0S1AP1FCVs8iA.Wj3HFjcxk3L0DmR0Lj
+ IaPjbvLpQkCiacJoCrYwXHiox5QEnCWM.l23Dkz0fP7HwpB1QOjG5GVc_J4T3P_Kpqmq3zNA0u2p
+ R9aLiqFt5JPDN0JlCsWdo304QblkHeCFCR7VruUc7ajYDLaWyzEEQTQOq.76G3WgX6PHm_m5Emsw
+ EBSyhQJ0CVug97hVnnbxV9UtCk4KRrH9tyyQJ7Y7QApVOcLM6lmHODL0K2WK1mafMRH8MImTyepZ
+ gNEhRDLgsfxnL.T3WnrtKj90x8EUuksnis0WfHK_BVX_7AfriTlsvc2twNVV99PkqZdwaMc86KPV
+ nRrLFniOvCwv5cEdp8exrmzvpmRT2AejJVOaHzZ5BdcCW7TtYRXZeJD8vEZlZ75lymXJnemtqyAU
+ 1GlvKIA5wParSWHAB.TVOPsyVhhc9PSk7undmIPczucgdp5y6TNcszdkb6OWxIWQahSdbvfJzpES
+ DNAeCeatU8VuZ65r8ZY8vbnqLI3BnAWa8Rg2CvU8YjNvF079.PTKsF_3mgk9AM6BH5ID23kHC0PM
+ FBZmspX1Xp6jdoCE0iBDbUUUnUclrNV.FhDyx8_kO95HvkQpPPzvXe9fyAsHHDGcgxUySwxcmD9O
+ CFS7lmFlRux_UVAhBZvLer2SihSx8sBuM8u0aNjqCClSANUPcSEpEyiyWgsfA3E1DPqswMe1nlPJ
+ 7DYB3D.JXu.fkxhtccnAJnKF8V0NZg7gw.uQu0BsoNT.Vkx6nfP5Lx0jeEKcSBVFWq7wJ.BiIWoH
+ IGN9AX3itopmAxVTGuWfuWaKnZXV7gEl0BDsvqksarO7je.znvk.OKpTs35mowuZds9s-
+X-Sonic-MF: <giovannisantini93@yahoo.it>
+X-Sonic-ID: a6298b29-922e-48d7-8f78-4ba4019e25c8
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ir2.yahoo.com with HTTP; Tue, 11 Jun 2024 11:05:58 +0000
+Received: by hermes--production-ir2-7b99fc9bb6-wsvcw (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9323fb76226d7e80b4f18f94c07a8a98;
+          Tue, 11 Jun 2024 10:55:48 +0000 (UTC)
+Message-ID: <bed7da51-cf89-422d-84f7-cb3d89ffbe40@yahoo.it>
+Date: Tue, 11 Jun 2024 12:55:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com> <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 11 Jun 2024 12:54:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
-Message-ID: <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
-Subject: Re: cpufreq/thermal regression in 6.10
-To: Johan Hovold <johan@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="00000000000091410b061a9b1798"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Segfault running a binary in a compressed folder
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+Cc: ntfs3@lists.linux.dev, almaz.alexandrovich@paragon-software.com,
+ LKML <linux-kernel@vger.kernel.org>
+References: <08d7de3c-d695-4b0c-aa5d-5b5c355007f8.ref@yahoo.it>
+ <08d7de3c-d695-4b0c-aa5d-5b5c355007f8@yahoo.it>
+ <0936a091-7a3a-40d7-8b87-837aed43966b@leemhuis.info>
+Content-Language: en-US
+From: Giovanni Santini <giovannisantini93@yahoo.it>
+Autocrypt: addr=giovannisantini93@yahoo.it; keydata=
+ xsBNBFWGlaoBCACcYYy4p5OpFH/zYyJ+DYGfr8m712ai0GpJ3hrY4ncmt+cHVYw0pHeR01j9
+ t+dtJTwP3Br84E5z/0/mpg5J+LLEHDbAa5Gtal+ykIwtmfZ9N/GEEQvYAU691sCkk+hLSbDw
+ vIKOZSMMCV2Ee5R1gY/cM+UBJVFy/DJi75crugb/Fs9OL19YPBR9YqOb1eoE99/5WTbJ8EFm
+ Nq+oqSnp3O/7Uln96be3A3ri0a+njr6j1OXneE9NBLQbQx0VJnrTK0pv1oHJFT6fqs3Ar8BT
+ tgvaTQ50Q7rBYeZE6o2m+A6tBeC2JGZYCIXXQBirHVktrsmIqy9pnfHxN7hyPuRM6qy7ABEB
+ AAHNLUdpb3Zhbm5pIFNhbnRpbmkgPGdpb3Zhbm5pc2FudGluaTkzQHlhaG9vLml0PsLAfAQT
+ AQgAJgIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheABQJYLYzQAhkBAAoJEE20cJYvrev1
+ D2sH/R4girMykZt+hh6TdYl2RQCZnGd3+aFiL5bKWQH61uMPp2J/DU5ZarxVPBQVGW7vTRZB
+ cgceYoC8lnzkWUzlLG9I0pU8VaY87CvwSauRg98L+6eiX42Hz+3xLKbzVT6azewmR47d4WcH
+ CF59lin52O3MhMBSY7VoBEPI7w5tJAF80hzXACqi8cnt/yPI/jRE+NFiD+dUiDj0rRecKr5Q
+ 9z9+aEjfNiFNI8gkrjGwGerlDso7iOjmGlENY3hv0sP+9/Rq58J1Y+Wg4ACTj6s/vjpgcTQ1
+ oJxkyoJbEtUVa+B6R6yc2BHECl+JdkDNohxfRMIN3IzJpIQzGaKNATVbaDLOwE0EWDdW/QEI
+ AMvkCk1fA/6fXBRuNscDnDYRLSPoMx7tnjOv1Uub9iyFxr2v8B7DKrQq4R0WS4b2vITnsPZA
+ WTWJQ4SE0Sx54QGPVjdMzJTMN2cw7y35lS5anYJlY31O89eMpCPDwp88jtq7LKE0Knq5pu/+
+ pWFvfysSJkjrFOAKEGn2GEuT8G9BOplafmjyLXv6bwFViUGmNpaTrztlhBaunMDsluoVGg2F
+ LPdCdBJpE/vzAOzxg8WkyV+LzPMrz178WTlM0YSCJ/9Ad7QlX0r0rpG3n+HGlhB2Y2hFQM2C
+ SlyEstTvMuHQ0Oe5rjnSHxo3FjESknl0csmQmGkPed/DsKigVTeWiC0AEQEAAcLAXwQYAQgA
+ CQUCWDdW/QIbDAAKCRBNtHCWL63r9aSjB/wNUBdHtV2j9UQgCpXVcHHA0VSVYSRfvDs0rVOk
+ 1whAHlg62TKQv2uTFlvn8/lml/Wp7gyW2RKTC9ZIpn3vbgjbW7DuwvjSqCvEt83czRime2jM
+ h8URlFRrSFwfNifGxSXsERaH0b7/ae2zfIKRLGhep+/wikTYrItwmW+xXumBVRpkoaKDPy4d
+ lhdUxx3EulaWJJgfywYWoieN1jMRcvBWsuexdMFODMPt872NDZhkqrOo+A3fneaELitZdjKq
+ NpmY6C9etaRkDnjm70l2cP+RjWY1ahxFuwaOB3ZmNRe3VGyvPTUvdkwZdxaycLgVjEWUJEyq
+ H3BYrE7EWk47q50Q
+In-Reply-To: <0936a091-7a3a-40d7-8b87-837aed43966b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.22407 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
---00000000000091410b061a9b1798
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Thorsten, nice to chat again!
+I am sorry for the lack of information, this is my second bug report to 
+the kernel; the first one was via Bugzilla and I filled more information.
 
-On Mon, Jun 10, 2024 at 1:17=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
+Now, the missing information is:
+
+OS: ArchLinux
+
+Tested kernels: both latest Linux stable (6.9.3) and mainline (6.10rc3)
+
+Regression: no, I believe that this issue has been present forever.
+I realized it may have been compression-related only recently.
+I do remember testing ntfs3 long ago and having the same issues with a 
+Ruby vendoring folder.
+
+Please let me know if you need more information!
+
+Bests,
+
+Giovanni
+
+On 2024-06-11 12:04, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 11.06.24 11:19, Giovanni Santini wrote:
+>> I am writing to report the issue mentioned in the subject.
+>>
+>> Essentially, when running an executable from a compressed folder in an
+>> NTFS partition mounted via ntfs3 I get a segfault.
+>>
+>> The error line I get in dmesg is:
+>>
+>> ntfs3: nvme0n1p5: ino=c3754, "hello" mmap(write) compressed not supported
+>>
+>> I've attached a terminal script where I show my source, Makefile and how
+>> the error appears.
+> You CCed the regression and the stable list, but that looks odd, as you
+> don't even mention which kernel version you used (or which worked).
+> Could you clarify? And ideally state if mainline (e.g. 6.10-rc3) is
+> affected as well, as the answer to the question "who is obliged to look
+> into this" depends on it.
 >
-> Hi,
->
-> Thanks for the report.
->
-> On Sun, Jun 9, 2024 at 9:53=E2=80=AFAM Johan Hovold <johan@kernel.org> wr=
-ote:
-> >
-> > Hi,
-> >
-> > Steev reported to me off-list that the CPU frequency of the big cores o=
-n
-> > the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
-> > frequency with 6.10-rc2.
-> >
-> > I just confirmed that once the cores are fully throttled (using the
-> > stepwise thermal governor) due to the skin temperature reaching the
-> > first trip point, scaling_max_freq gets stuck at the next OPP:
-> >
-> >         cpu4/cpufreq/scaling_max_freq:940800
-> >         cpu5/cpufreq/scaling_max_freq:940800
-> >         cpu6/cpufreq/scaling_max_freq:940800
-> >         cpu7/cpufreq/scaling_max_freq:940800
-> >
-> > when the temperature drops again.
->
-> So apparently something fails to update its frequency QoS request.
->
-> Would it be possible to provoke this with thermal debug enabled
-> (CONFIG_THERMAL_DEBUGFS set) and see what's there in
-> /sys/kernel/debug/thermal/?
->
-> > This obviously leads to a massive performance drop and could possibly
-> > also be related to reports like this one:
-> >
-> >         https://lore.kernel.org/all/CAHk-=3DwjwFGQZcDinK=3DBkEaA8FSyVg5=
-NaUe0BobxowxeZ5PvetA@mail.gmail.com/
-> >
-> > I assume the regression may have been introduced by all the thermal wor=
-k
-> > that went into 6.10-rc1, but I don't have time to try to track this dow=
-n
-> > myself right now (and will be away from keyboard most of next week).
-> >
-> > I've confirmed that 6.9 works as expected.
->
-> Well, I'd need to ask someone else affected by this, then.
+> Ciao, Thorsten
 
-If this is the step-wise governor, the problem might have been
-introduced by commit
+-- 
+Giovanni Santini
 
-042a3d80f118 thermal: core: Move passive polling management to the core
-
-which removed passive polling count updates from that governor, so if
-the thermal zone in question has passive polling only and no regular
-polling, temperature updates may stop coming before the governor drops
-the cooling device states to the "no target" level.
-
-So please test the attached partial revert of the above commit when you can=
-.
-
---00000000000091410b061a9b1798
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="thermal-gov_step_wise--revert-passive.patch"
-Content-Disposition: attachment; 
-	filename="thermal-gov_step_wise--revert-passive.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lxaa98980>
-X-Attachment-Id: f_lxaa98980
-
-LS0tCiBkcml2ZXJzL3RoZXJtYWwvZ292X3N0ZXBfd2lzZS5jIHwgICAxMCArKysrKysrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQoKSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMv
-dGhlcm1hbC9nb3Zfc3RlcF93aXNlLmMKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQotLS0gbGludXgtcG0ub3JpZy9kcml2
-ZXJzL3RoZXJtYWwvZ292X3N0ZXBfd2lzZS5jCisrKyBsaW51eC1wbS9kcml2ZXJzL3RoZXJtYWwv
-Z292X3N0ZXBfd2lzZS5jCkBAIC05Myw2ICs5MywxNiBAQCBzdGF0aWMgdm9pZCB0aGVybWFsX3pv
-bmVfdHJpcF91cGRhdGUoc3RyCiAJCWlmIChpbnN0YW5jZS0+aW5pdGlhbGl6ZWQgJiYgb2xkX3Rh
-cmdldCA9PSBpbnN0YW5jZS0+dGFyZ2V0KQogCQkJY29udGludWU7CiAKKwkJaWYgKHRyaXAtPnR5
-cGUgPT0gVEhFUk1BTF9UUklQX1BBU1NJVkUpIHsKKwkJCS8qIElmIG5lZWRlZCwgdXBkYXRlIHRo
-ZSBzdGF0dXMgb2YgcGFzc2l2ZSBwb2xsaW5nLiAqLworCQkJaWYgKG9sZF90YXJnZXQgPT0gVEhF
-Uk1BTF9OT19UQVJHRVQgJiYKKwkJCSAgICBpbnN0YW5jZS0+dGFyZ2V0ICE9IFRIRVJNQUxfTk9f
-VEFSR0VUKQorCQkJCXR6LT5wYXNzaXZlKys7CisJCQllbHNlIGlmIChvbGRfdGFyZ2V0ICE9IFRI
-RVJNQUxfTk9fVEFSR0VUICYmCisJCQkJIGluc3RhbmNlLT50YXJnZXQgPT0gVEhFUk1BTF9OT19U
-QVJHRVQpCisJCQkJdHotPnBhc3NpdmUtLTsKKwkJfQorCiAJCWluc3RhbmNlLT5pbml0aWFsaXpl
-ZCA9IHRydWU7CiAKIAkJbXV0ZXhfbG9jaygmaW5zdGFuY2UtPmNkZXYtPmxvY2spOwo=
---00000000000091410b061a9b1798--
