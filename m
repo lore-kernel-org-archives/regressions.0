@@ -1,40 +1,40 @@
 Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D76170857
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 05:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD1516F8F0
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 05:45:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718084650; cv=none; b=e3z2vt3MNon2fF7Ie4coQt4YKCmY6+uaWwVvVcbURgwFjQq6ZDSc8EjtAFkODiIgJDLfwCmVYgtROQDhc6zbKA/cQPf7kT6RS+8cIb7pnL+OYRaWZSvGBNUJOnqX7zKAJn9DwGD5gjKCtM0rmvksDG0jWhkMJbNq0yvOEVZDfl4=
+	t=1718084746; cv=none; b=ksHxH7MYrw0WIBDDashj2DBIJBKHofMXf/rQxzca75t8bpMouDqylUtSKYZSDm+eCPRt2cUTuWzSnN8QeyAg3fJLWqSNKpMAQEDzGQxFXBuVntxW2jQcpJcIU5D6UrhZ5+wzf+Tmomw0SAJetfEGsnmWwamd/llRwTfZAWPB5qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718084650; c=relaxed/simple;
-	bh=RKWdFEkwtdBWG/4PLlln8Q8+w5FSArPcDPDYAln1RuU=;
+	s=arc-20240116; t=1718084746; c=relaxed/simple;
+	bh=qNZ+/nRgL1qOziLTAxYNczXHVP0BwbIrCE3nKu4qc4I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=haneXVMRlTRrnq5BLsKo7X6+iChPymq60Zo0de6yJX5lDKRzQZLpbafmL7P1UXl2TX2o/b24mzHxXLO0ppca0Jna6emoCOFjAJb6Q+pj2Dv8hKYnw1DIxecsqC9V01EuiqNiAdSlhoYaHO3LLoo+gMi7CwVOiT/M64WJo+0HwyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=eCnFnn+q; arc=none smtp.client-ip=185.125.188.121
+	 In-Reply-To:Content-Type; b=mYLAZEyoGA5PY84NEo6Wfz1SXQt1wDOOX4LNSM+K2vnUGS9KWQDkdFJtza0Cwf6iPErkxxnA0qp3VTFjbmGfeSBNbmt1uhIADTpwEgg8ZjqUZ7zWn4e527x8twk6GUzA20p5pdB8WfxKUv8mlMxO5ed1/gmOoXlxdvGufjBA4rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=iULaIfvR; arc=none smtp.client-ip=185.125.188.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eCnFnn+q"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="iULaIfvR"
 Received: from [10.1.1.110] (unknown [103.229.218.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 17DCA3F1C6;
-	Tue, 11 Jun 2024 05:43:52 +0000 (UTC)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5352A3F1C6;
+	Tue, 11 Jun 2024 05:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1718084640;
-	bh=Ni5EiqfE19GgJAagzEeA/URDCb51teDUC50fLcGZEHg=;
+	s=20210705; t=1718084741;
+	bh=1uQHXhtS+FSETeH2hqizhIc/c/smCB4G/AydYNkP0wA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
 	 In-Reply-To:Content-Type;
-	b=eCnFnn+qcyykwuC15o5VHAyS1VoCHpwuBJJEcxxGFxiyeqmKaijkTszUIbfG5Lt5+
-	 3owboPlzBnRiVDSYGQ4hazu2gMvtO19zDYcd0ckXIfRu9/UTnmf3BYH+y1V+J8j+Lc
-	 FXw3A2n/LjUbRG0UZULbnPaNB15TrNDo5L3Zf7NlBtaaRiNTMbzqb4bmEQv8/NcYYP
-	 RT5b6Vwnfmg8YX8oWtWydG85m2OYQAmbjxuhZzsnOt5zd+BMyOLORz8Ncmq8cOKl99
-	 pMOag0iyeVbeIXS2jTt1zqiMDXHsIZWhcWAeJiqaHmBbtdqX8GOq4mZTep0qOEwxaZ
-	 wPyWlV1vMXWlw==
-Message-ID: <3359c6cb-cd2a-4738-8907-5018fa3e9606@canonical.com>
-Date: Tue, 11 Jun 2024 13:43:49 +0800
+	b=iULaIfvRVc3jFrI3242MAXXKclEeiHSfcQruSnS5M0Izuor8FRo/kkS6N0HrTVDj2
+	 LPjqfE0cuNz1ZpBa8alBxIEUIMT249UC+YNmyW5rBzz2DPNaGbTfUns/1i9VHFvVV6
+	 x1gof4Y0XOw6aXQbY0lP2VfFx+C15jP/9qKtaO5Y5czJS9q6B6oKi7SNGR8914m5vH
+	 2p91G6RknJz8PkAh/eM30E4WxOYv5svrLJpZtVbbi2LPkTag6HMtmUGZtPB6InHZ6D
+	 E8G0hMuOBViC5fSCFVATHHQHG+KVVyDr7wQCb5kg3IU8NZECb5gmbvCf9CHx3KrRDq
+	 95L8n3MziKSPA==
+Message-ID: <ccca7897-ac53-4056-8617-a3ace57bf7b6@canonical.com>
+Date: Tue, 11 Jun 2024 13:45:28 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,55 +44,57 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [iwl-net][PATCH] Revert "e1000e: move force SMBUS near the end of
  enable_ulp function"
-To: Paul Menzel <pmenzel@molgen.mpg.de>, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, kuba@kernel.org, anthony.l.nguyen@intel.com,
- vitaly.lifshits@intel.com, dima.ruinskiy@intel.com, davem@davemloft.net,
- pabeni@redhat.com, edumazet@google.com, sasha.neftin@intel.com,
- naamax.meir@linux.intel.com
-Cc: todd.e.brandt@intel.com, dmummenschanz@web.de, rui.zhang@intel.com,
- jacob.e.keller@intel.com, horms@kernel.org, regressions@lists.linux.dev
+To: "Zhang, Rui" <rui.zhang@intel.com>,
+ "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "naamax.meir@linux.intel.com" <naamax.meir@linux.intel.com>,
+ "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+ "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+ "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
+ "Neftin, Sasha" <sasha.neftin@intel.com>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "pabeni@redhat.com" <pabeni@redhat.com>
+Cc: "Keller, Jacob E" <jacob.e.keller@intel.com>,
+ "horms@kernel.org" <horms@kernel.org>,
+ "Brandt, Todd E" <todd.e.brandt@intel.com>,
+ "dmummenschanz@web.de" <dmummenschanz@web.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <20240610013222.12082-1-hui.wang@canonical.com>
  <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
+ <98ccb75d7ef48c182425f130e0b2ececeec630ec.camel@intel.com>
 Content-Language: en-US
 From: Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
+In-Reply-To: <98ccb75d7ef48c182425f130e0b2ececeec630ec.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-On 6/10/24 14:36, Paul Menzel wrote:
-> Dear Hui,
->
->
-> Thank you for your patch.
->
->
-> Am 10.06.24 um 03:32 schrieb Hui Wang:
->> This reverts commit bfd546a552e140b0a4c8a21527c39d6d21addb28
+On 6/10/24 22:14, Zhang, Rui wrote:
+> On Mon, 2024-06-10 at 08:36 +0200, Paul Menzel wrote:
+>> Dear Hui,
 >>
->> Commit bfd546a552e1 ("e1000e: move force SMBUS near the end of
->> enable_ulp function") introduces system suspend failure on some
->> ethernet cards, at the moment, the pciid of the affected ethernet
->> cards include [8086:15b8] and [8086:15bc].
 >>
->> About the regression the commit bfd546a552e1 ("e1000e: move force
+>>
+>> Naama also added Tested-by lines two both commits in question. Could
+>> Intel’s test coverage please extended to the problem at hand?
+>>
+>> Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Plus that,
+> 1. Todd and I can test with upstream + this patch to confirm that
+>     a. the regression for Todd is gone.
+>     b. the s2idle failure for me is back
+> 2. I can test with upstream + this patch + revert of commit
+> 861e8086029e (e1000e: move force SMBUS from enable ulp function to
+> avoid PHY loss issue) to confirm s2idle is working again.
 >
-> … regression introduced by commit …
-Got it.
->
->> SMBUS near the end of enable_ulp function") tried to fix, looks like
->> it is not trivial to fix, we need to find a better way to resolve it.
->
-> Please send a revert for commit 861e8086029e (e1000e: move force SMBUS 
-> from enable ulp function to avoid PHY loss issue), present since Linux 
-> v6.9-rc3 and not containing enough information in the commit messsage, 
-> so we have a proper baseline. (That’s also why I originally suggested 
-> to split it into two commits (revert + your change).)
-
-In regards to reverting the commit 861e8086029e (e1000e: move force 
-SMBUS from enable ulp function to avoid PHY loss issue), the author is 
-Vitaly, let him evaluate how to act.
-
+> thanks,
+> rui
 Thanks.
-
 >
+>>
+>> Kind regards,
+>>
+>> Paul
