@@ -1,66 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B99A17623D
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 12:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8108917B419
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 12:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718107791; cv=none; b=npkutuguQ7qWnqBsG1PpvP3f4MfA/X6T2ii+8VZMIxgAwZYG4JjWLpge0SYgoqfJK4bs6d0yKQjzJM+FNFlpoXuxLzbTkDTcLhva7ZivQxaD2OI4dae247Xkp44hKKfLI3/rtxkQ0fIn7zj/krxdakmo2ESYZxomiydR2SpAqe8=
+	t=1718108889; cv=none; b=Xw0eXn7yWcXuSGZ1xvstS460WVH4sCXt6cKK+uKWeiL6yQnURY0Luntz9FonX8FLqausmXMULw6mzM2fCVNHIclNqMF+05MkZktYRi2s3/HsezIuz0tBjCvolibSNSsR3jw+tgzyGA6ythZm6/ZjjVT5JONz6P2I4gMkfG3VCSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718107791; c=relaxed/simple;
-	bh=Fmj/YOWTSMFHwU7j24IKGucONI4pINEytIPbR8Ec6+Q=;
+	s=arc-20240116; t=1718108889; c=relaxed/simple;
+	bh=MVhJd/IENmXCGf1wjGGZDAf+X3LDJ+2yYb11vSE6vbk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DJUtKXCGeImDfm8vZfeKzVm0TWcjxAjkAJMlFNZhMn6cm58TMrH1UJnfvqDZ/GFY+ZMPIpgxVtxkoRqwdZMWSZxwyB9lt2Xx2H7r+T9pIwaq/8IIgH0VoovbR+UFOXzP8qj2g9dGwTkDTnbUA1nuOIF8gVjdpk/dJ41bzCPHn0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=daVGzh2X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=koYxcjj/V8rRI1l3JFhelcQR1QPNgFKXBkn3ItXVDlbjl6iXWsN/GXd4zlTYR0w5ubTvd3zfWk7RasF2edSWMSpO4ruN3zWvAHIX/mEvloWJfFGN1X9+5Y5CORNKWG+tiAr+QRJdZrGMbX67uH94qlj2pZi6UbaT+dy5Xj5mN3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3mv2TCWf; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daVGzh2X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718107788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Vu6fB9nQxA+WK1S3cTisMgEgS5rTartqGvhGL5jyBiU=;
-	b=daVGzh2XiPgdL+Vya83twpnKazaLJ3zANQWb/4YhJg2H3eVrrhZCTWEHw6w6DogkN5y7sh
-	nTv0ByYNhQv8F9+8o3ieckP4fzHR5HfsMDvd8VhLhjY3FW4etm9TzhyqKPuNRkGLgZGQOW
-	DJkp8ytHbRAPkvqo7TVEk15nDQW0exg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-593-e_uVypfrMr-6NTbis8clCg-1; Tue, 11 Jun 2024 08:09:46 -0400
-X-MC-Unique: e_uVypfrMr-6NTbis8clCg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a6f0ed4c213so44214666b.3
-        for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 05:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718107785; x=1718712585;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Vu6fB9nQxA+WK1S3cTisMgEgS5rTartqGvhGL5jyBiU=;
-        b=L8AQtPGjdHtVnnpt7sd4eyZtTgJ2FhFcbLdxf+EvjRXNFW/fasGnONzDcEnnHm2aS0
-         UQ7D1XJRN7pC2/5kPjgDhZNK9u2rVIDw69+tywrKBygAQRQPj6SFohfFdLVHqJrlhfPL
-         PbOH5MrluvEdTkT526NomrrNlnATDL5lJRSZFBgibZQutdHOHpe5h8xHGoHrkRVlFRJj
-         1BKgWsvjFBYlE1IpynKr3N6suzvhMkcXq1+EhMckr75ba8dyIfJOgDJkRVimExGZS/gl
-         1StB+ZLBkvnsVr+3Tu7bYp1C+VwqhUEB0z+TWKJjw/KzsT09/VZlUdXRfyy3qNVBuWBq
-         AytA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKVknwjRQf4qlpV6KB09WGeil6nZeuYhcTi7oB1YsDZWFR3Z6vidiCcNbCOCJ4ui0+WBO7/JzGEBpysNbTUFmffK85ZDxus5mygeY=
-X-Gm-Message-State: AOJu0Yx6KC01srs5FmGGWF/WvlPOkBVfhVNSP91v9Ztwu+JOZGyUmChe
-	zmIj9BUq1pUtwz1VGVokBhfC4F+Cv8FTQstuiKs0Jdi9Wvzja2tfaaSFvcn256FkU3DbEJK04d4
-	6tv9FssH69j0GIPsJFIN/cuG36a8jssgftyS7ZOuyemWE9AVMTN+Un0kkPcCc
-X-Received: by 2002:a17:906:6553:b0:a68:ccbd:bcf0 with SMTP id a640c23a62f3a-a6cd637e1cfmr880823966b.28.1718107785651;
-        Tue, 11 Jun 2024 05:09:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEiwWYnrEQez7Mtk5n8dax5YTOgHEdu609qCHFIE5G0+ddnXj8V2UhqfAb+NpGdXl4fTThcvw==
-X-Received: by 2002:a17:906:6553:b0:a68:ccbd:bcf0 with SMTP id a640c23a62f3a-a6cd637e1cfmr880821966b.28.1718107785120;
-        Tue, 11 Jun 2024 05:09:45 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f1bcbc31bsm8021967f8f.44.2024.06.11.05.09.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 05:09:44 -0700 (PDT)
-Message-ID: <3ce90ee2-f51b-49fc-b010-f97e61e617f4@redhat.com>
-Date: Tue, 11 Jun 2024 14:09:43 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3mv2TCWf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718108885;
+	bh=MVhJd/IENmXCGf1wjGGZDAf+X3LDJ+2yYb11vSE6vbk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=3mv2TCWfFFFoA4aVNFbile1CCpI/1foRu2oCEMK8nxCxS1XSykZshhVjCZixM1K9z
+	 PS51So12AEX7IXftLZZqK1rarIS7pEjdqJ+FCOvxTJmS8JyQIQpC2f74YfCgjtHJlz
+	 8Gt5aNPjFE0XGuQWtQ7b8m9/d9JH8iXMPfVgMiFbaz4xXbkfyHufTiknNP+IjFiG8X
+	 wKBoL8ltCh4Q96I0JIhn2AB/0nh0VQcSfCKmTDI9MgAbT5HtroqXZtQMqRCDpMP3y6
+	 IrywMyLiOunRMybtHNZUM1fxvfCWFC9pNFa/s83W0FYET+P115JCLlPpUmUflFDo7y
+	 rnlQKD6xJWzpQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 98D593780EC6;
+	Tue, 11 Jun 2024 12:28:04 +0000 (UTC)
+Message-ID: <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+Date: Tue, 11 Jun 2024 14:28:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -68,197 +42,93 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline
- 6.10.rc3
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <baohua@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com>
- <e8c10a52-61f9-4b46-bc50-e2c267b1aa56@redhat.com>
- <80a05784-21dd-4f20-b441-1e2a2be0e0ff@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <80a05784-21dd-4f20-b441-1e2a2be0e0ff@linux.alibaba.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, Rob Herring
+ <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
+In-Reply-To: <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11.06.24 13:39, Baolin Wang wrote:
+Il 11/06/24 13:38, Arınç ÜNAL ha scritto:
+> On 11/06/2024 14:30, Thorsten Leemhuis wrote:
+>> On 07.06.24 16:15, Thorsten Leemhuis wrote:
+>>> On 07.06.24 16:03, Paolo Abeni wrote:
+>>>> On Thu, 2024-06-06 at 10:26 +0200, Thorsten Leemhuis wrote:
+>>>>> On 31.05.24 08:10, Arınç ÜNAL wrote:
+>>>>>> On 31/05/2024 08.40, Thorsten Leemhuis wrote:
+>>>>>>> [adding Paolo, who committed the culprit]
+>>>>>
+>>>>> /me slowly wonders if the culprit should be reverted for now (see below)
+>>>>> and should be reapplied later together with the matching changes from
+>>>>> Arınç ÜNAL.
+>>>>
+>>>> FWIS I think a revert should be avoided, given that a fix is available
+>>>> and nicely small.
+>>>
+>>> Yeah, on one hand I agree; but on the other it seems that the
+>>> maintainers that would have to take care of the dt changes to fix this
+>>> until now remained silent in this thread, apart from Rob who sent the
+>>> mail regarding the warnings.
+>>>
+>>> I put those maintainers in the To: field of this mail, maybe that might
+>>> lead to some reaction.
+>>
+>> Still no reply from the DRS folks or any other progress I noticed. Guess
+>> that means I will soon have no other choice than to get Linus involved,
+>> as this looks stuck. :-( #sigh
 > 
+> Does it have to be Linus that needs to apply "[PATCH 0/2] Set PHY address
+> of MT7531 switch to 0x1f on MediaTek arm64 boards"? Aren't there any other
+> ARM maintainers that can apply the fix to their tree?
 > 
-> On 2024/6/11 18:32, David Hildenbrand wrote:
->> On 11.06.24 12:14, Naresh Kamboju wrote:
->>> The kernel panic was noticed while running LTP syscalls fork13 (long
->>> running) on
->>> the mainline master 6.10.rc3 kernel on arm64 rk3399-rock-pi-4 device.
->>>
->>> Please find detailed logs in the links,
->>>
->>> As you know fork13 is a stress test case trying to generate a maximum
->>> number
->>> of PID's in a 100,000 loop.
->>>
->>> This device is running via NFS mounted filesystem.
->>>
->>> I have tried to reproduce this problem in a loop but failed to
->>> reproduce the
->>> crash.
->>>
->>>
->>> Crash flow:
->>> ------
->>> fork13 run started
->>> BUG: Bad page map in process fork13
->>> BUG: Bad rss-counter state mm:
->>> Unable to handle kernel paging request at virtual address
->>> Internal error: Oops: 0000000096000046
->>> run for 800 secs ( 13 minutes) and more.
->>> fork14 run started and completed
->>>
->>> fpathconf01 run started and completed
->>> sugov:
->>>
->>> Unable to handle kernel NULL pointer dereference at virtual address
->>>
->>> Insufficient stack space to handle exception!
->>> end Kernel panic - not syncing: kernel stack overflow
->>>
->>> I have tried to decode stack dump by not being useful [1].
->>> [1] https://people.linaro.org/~naresh.kamboju/output-rk3399.txt
->>>
->>> Test log :
->>> --------
->>> tst_test.c:1733: TINFO: LTP version: 20240524
->>> tst_test.c:1617: TINFO: Timeout per run is 0h 15m 00s
->>> [  904.280569] BUG: Bad page map in process fork13  pte:2000000019ffc3
->>> pmd:80000000df55003
->>> [  904.281397] page: refcount:1 mapcount:-1 mapping:0000000000000000
->>> index:0x0 pfn:0x19f
->>
->> Mapcount underflow on a small folio (head: not printed).
->>
->> [...]
->>
->>> [  904.294564] BUG: Bad page map in process fork13  pte:200000002e4fc3
->>> pmd:80000000df55003
->>> [  904.295275] page: refcount:2 mapcount:-1 mapping:000000007885152f
->>> index:0x6 pfn:0x2e4
->>
->> Another mapcount underflow on a small folio (head: not printed).
->>
->>
->>> [  904.309309] BUG: Bad page map in process fork13  pte:20000000cc6fc3
->>> pmd:80000000df55003
->>> [  904.310031] page: refcount:1 mapcount:-1 mapping:0000000000000000
->>> index:0x6 pfn:0xcc6
->>> [  904.310728] head: order:3 mapcount:-1 entire_mapcount:0
->>> nr_pages_mapped:8388607 pincount:0
->>
->> Mapcount underflow on a large folio.
->>
->> ...
->>
->>> [  904.326666] BUG: Bad page map in process fork13  pte:20000000268fc3
->>> pmd:80000000df55003
->>> [  904.327390] page: refcount:1 mapcount:-1 mapping:00000000f0624181
->>> index:0x1b pfn:0x268
->>
->> Another mapcount underflow on a small folio (head: not printed).
->>
->>> [  904.328094] memcg:ffff0000016b4000
->>> [  904.328401] aops:nfs_file_aops ino:8526e6 dentry
->>> name:"libgpg-error.so.0.36.0"
->>> [  904.329051] flags:
->>> 0x3fffe000000002c(referenced|uptodate|lru|node=0|zone=0|lastcpupid=0x1ffff)
->>> [  904.329878] raw: 03fffe000000002c fffffdffc0009a48 fffffdffc022f3c8
->>> ffff00000688bd60
->>> [  904.330561] raw: 000000000000001b 0000000000000000 00000001fffffffe
->>> ffff0000016b4000
->>> [  904.331240] page dumped because: bad pte
->>> [  904.331590] addr:0000aaaad9afe000 vm_flags:00000075
->>> anon_vma:0000000000000000 mapping:ffff0000300d4188 index:2e
->>> [  904.332476] file:fork13 fault:filemap_fault mmap:nfs_file_mmap
->>> read_folio:nfs_read_folio
->>> [  904.333245] CPU: 5 PID: 22685 Comm: fork13 Tainted: G    B
->>
->>
->> Are these maybe side-effects due to
->>
->> https://lkml.kernel.org/r/20240607103241.1298388-1-wangkefeng.wang@huawei.com
-> 
-> IIUC, the rk3399-rock-pi-4b device has no NUMA nodes (6 arm64 cores), so
-> I don't think the numa balancing will cause this issue.
-> 
-> Anyway, I will run fork13 test case on my arm64 server to try.
+> Arınç
 
-I have the faint recollection that we can (or at least could in the 
-past) end up in do_numa_page() also without NUMA hinting.
+You have feedback from two people on the series that you mentioned, and noone
+is going to apply something that needs to be fixed.
 
-I documented in 51d3d5eb74ff53b92dcff48b30ae2ed8edd85a32:
+I'm giving you the possibility of addressing the comments in your patch, but
+I don't want to see any mention of the driver previously ignoring this or that
+as this is irrelevant for a hardware description. Devicetree only describes HW.
 
-"
-Note that do_numa_page() / do_huge_pmd_numa_page() can be reached even
-without NUMA hinting (which currently doesn't seem to be applicable to
-shmem), for example, by using uffd-wp with a PROT_WRITE shmem VMA.
-"
+Adding up, in commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of 
+switch from device tree"),
+you have created a regression.
 
-But I don't remember all of the details, though.
+Regressions should be fixed - as in - if the driver did work before with the old
+devicetrees, it shall still work. You can't break ABI. Any changes that you do
+to your driver must not break functionality with old devicetrees.
 
--- 
-Cheers,
+So...
 
-David / dhildenb
+------> Fix the driver that you broke <------
 
+After you've fixed it - and I repeat - only after, *and* after someone (Frank?)
+validates that the old devicetrees do work with the fixed driver, I will take
+the device tree fixes for that MDIO address (as those are, again, fixing a
+description of the hardware on those boards, so I agree that those must be fixed
+AS WELL).
+
+
+Regards,
+Angelo
