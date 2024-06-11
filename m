@@ -1,126 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic312-25.consmr.mail.ir2.yahoo.com (sonic312-25.consmr.mail.ir2.yahoo.com [77.238.178.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2617839A
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 08:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D53E57E
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 09:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.178.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718095986; cv=none; b=HAT47QwtTkhoUAoWe9+mUrYKDTb8aHxoUidZ8FDUe5c58rkuz3xWWzrgmJVBVhk5sK0ZHuvQsmGknZ+R9TPvOjDNIThplQSayQyHVOGoKWDCsA1qf35dtxet3Ha/QQ/jKJ/RAfXZxNhxiUl3zeixaxIVGZltfM2G8D6vvVRUjk0=
+	t=1718099416; cv=none; b=aZerSvTKEb3U7e4aVeDowQLUCV7Qp7noB9qo4C+IHAUktuDan25VUPAgfUVHJ3rbYMU/iySuJoVtuitD66GMF5XglKxNrtZBGrHhl2K4vUgR/GaNuGSQwyPZxLZwOxTGLB3fNWB0DrOsgPGaQR8nIH4YIXEHFkBwc5JNJI4FN04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718095986; c=relaxed/simple;
-	bh=4my5g26YzEO0BtFAjOMhZ6Mg3AOp8tEE7NPVC/IGSNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i9CEG0WTQXYRzzWBGjwa4tjCWabE7qpM9iy1B1MbVDoBaIV4D5t1+w0UMxZ+tdfFIMpuLIOKYP2YfF1qNsxGxD403Geq7nvw6TBdZnx7CuMO19rEVixMbg6v6ckMuvOaH00630dEGIMSHpewI0wAFwSpHaokkMoerx54roxFlAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1+hfy8h; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718099416; c=relaxed/simple;
+	bh=mZNMOioIDiEf7bsaVqvWSXERgN0n3TN5uKDduhXBarQ=;
+	h=Content-Type:Message-ID:Date:MIME-Version:To:Cc:From:Subject:
+	 References; b=CFkED/g4oHuDYRgP4If5ICPtluJN2vREK41InHc3IDfHic5WP8PBQhw727gR8Vf5+S0SkkLS+9jb/cm026stB/rbnTIYkLT1iofA162sJtUPXkwyHBBc1BbxpbQJC06dtNKPsFWLFHUlhmS7ld2yRu4/P+WNDKIaVCNWlSLFi+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it; spf=pass smtp.mailfrom=yahoo.it; dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b=pceyyD8u; arc=none smtp.client-ip=77.238.178.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1+hfy8h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718095985; x=1749631985;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4my5g26YzEO0BtFAjOMhZ6Mg3AOp8tEE7NPVC/IGSNc=;
-  b=Y1+hfy8h3W9GC5MxQCd2cITYk4NEgA4tcOg2X8/hXudPHG/pq+MSP5jX
-   IYYzUgXm9P8hTuq8hX+F2fq6xfGy8Q3ULdSVSNo25hKwWpuGjh/633673
-   2wONxoXCHRZIJtFFfP5lQT2wYf55LRXsGlM4DO3NPWlf+XtUNOW1ozEL+
-   SVjzx7gyrYeTZxA1ImQFIIQBVqcgrhaV+7/tpLZKm92mUMMlQlKQLD9S8
-   hKpn8kWQQrCO2bc7L9loGwU5lBIL4ZYsM1QEBcjH9Hmx9Y5TJ5PGH/Rae
-   4SWb9cYnwcba8njfdOUS54A+RjpkLGt7cw38b64mNy0wB5HFcYD9HTZEM
-   Q==;
-X-CSE-ConnectionGUID: gXdk8e+5RjmL23uHZMS4uw==
-X-CSE-MsgGUID: 6ujH+dTfSomS0mBj8bkrQA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25912775"
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="25912775"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:53:05 -0700
-X-CSE-ConnectionGUID: zRWiGUaFQkOOOJUfuTGK/Q==
-X-CSE-MsgGUID: /l8WWPB+SJ6/Vt9q3nIxJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="43800303"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmviesa005.fm.intel.com with SMTP; 11 Jun 2024 01:53:00 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 Jun 2024 11:52:59 +0300
-Date: Tue, 11 Jun 2024 11:52:59 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	regressions@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
-Message-ID: <ZmgQayq6RvJEQVgu@kuha.fi.intel.com>
-References: <20240608114529.23060-1-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b="pceyyD8u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.it; s=s2048; t=1718099412; bh=7N5/ierBHGHcEJmLkudsmdnhXIlVGJBrC2HfFS0UvLE=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=pceyyD8uQ9WZb9qQ3DSEKITUtpvclnBGTZ2TUFBZORY0CIH1hsJsG6HUK/gC4qTs1OuCxA1ZckKLgerOFlqrZ6nrc/qCUlYBHBIuK2d7MiMtZjGvLswIadGkDlxTqwT1cc6v9pT9zaXSJL3CQc6OuKc1Y+DAI1fTSX0ywZ/T75cag5UtuP1mD2ejTUZFZ6v7yEOfOt9RFkyLnajFLYLT9Ibkv/9KV1V1xgLSA0mp31jeNE/KZsGNY9jbM75DBiaRnXpZe6F9ynO83j47vDIotRABTW4ogC8AzrnHa24n9T66gfqU7urls/ks8EFPMxdO1h0YhZiwryeP6IJUterWHQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1718099412; bh=aiqNDPdL0LqBnHswG3oX6mkAUiQT18TBytGow9dwe3U=; h=X-Sonic-MF:Date:To:From:Subject:From:Subject; b=FcM/kyeWWx5y5ZikTNh3dwGtLGniCC98l9+jnswzEBilG+lScoq/ZLbX44puTKsi9EsRbhrOqR46ytt4rRQY0S39ilPQZp4CV5N2y0gQJ8vzwTK1py/0uOTgGUaKw2wPE91pGSxDTZQnlFUH4B88PFQTNAk0IaJ0AtCx8uTSbmrUGHkU8Du0Fnc6O6f5j2S6jjJxTzy09Noo6d2Kah7OGUkzpmWnDUGBtPi0iurXOvaJGpbMj/QsMzxmIywIa8CsgZN00nsYfr2m6nWubPoE8Ocn+kQpvMBvyBuBHPK9HRYLSD8vLXvF5a7n8tcVWNq89BX/mMZ07eWv3XwSdOIQCg==
+X-YMail-OSG: KShuXesVM1ntyee.zz85.mf0wyw9Kj33DnjdG39LsAjLYG1rcaSTC_m1Ga9sEnG
+ KS5XZYaS1OUFim7QLe6Mrls_5FFmzLsegOR0xjpSW6192t0hmGrj.zpsaNftaxrKr4iHYp.220wv
+ GvPBEPIQMX5a.5SkMGF0GJPMEp8nNbNcRFWhUxti1ZnccJlTQmAu1SwF2P7L.actoe.4kGe5N.SZ
+ ith7B4Un.JHzxgwdSaJzw9.Fj.lrBEPAztnp3mllsOHI0c0Mgz6cmEQQTAcFlAEy0F8nWN_.LAsO
+ GVLg8f6Y4lY2zU3c8Y14tNzSN96oA2xQ_0brHElm7KJzhUSZ4kQc1R0swZFdcJ8v_3gItmov.FOx
+ t8roRYyWj7DnAKlRC3AjpEEe6N9doXKxFC8m.GadceduCZRqc1BSqvzlFUsenZvRClqeHdiWB3SI
+ hso96Z2JRafnjIeC7azHOVp3CHFjodQUgRzUrHmbEpKWpoRbc40SRS2BGnJcRkTtU.uhU95n5MHg
+ XFlsOdSj0e97_tYv3ehKefdlwzUgNUdlGkN8G6Lqb1OGHUFI2RaYNYaHFs3nvkiZZ4W5tkBgT2bV
+ XmgkfUZCzxhdpqUu5HRUOKWVN2QPF84l6zPPdOCJGvW1pOLlZCYSf7jCIIW.k2kbM6VVFs6tM_SZ
+ qpUDUp2I2lAC.i5Sz3qKy1DwgPWkvnHMpMCK1P.DdnGaIMuJmaa02YosXyLAMe5cgajd8EeNSd8R
+ cN30Zr85_m9EdvXrRjVZ4JUzpVtiX8ywNvWE5N3rkxIpTrvC0DAbTjku3O2v1ElfEmbLvhVl28CQ
+ RMpgoHFjLPnuvDniC23iHKrwUsXF97LhtEp3jdnytoed3ejJJ9ZEow5vv4Cb.HAlKGZGdz6PWdpn
+ FdWRRY9t8lMaxTjbC1CDET3xYYOyLmTeF7pzsZMA0ZUzRKYWUpQcC3O_V0ZlyBvE0jXzgPLBBTRB
+ 3P18yGyoFF11HzqHcB.xZyivRgbEognCJYZO4WIJxQG99IFbbU4DFY3b_ZiWA5is.2wG_iIZfLSm
+ Msc9ClrDe_SqvrWQ1ek1aCi8f755n47Adre2R1ReY5AZ0.U0B7JF.WmdIqMpTQApqLxWhnnKmf2t
+ cgkF52Otfei8RHKFprBFjf8NHTZWtynTXzNSZTLNtsUwUFncAqeIF3bFEqDYSSpJpAOaMVOXSSuQ
+ f6Sqhd_KL9CqPB7B.B2ALcgiBImtWirLLpNDWt8oyROgU.LJVVP6U56qkM69vHiSngvMQStBZ_Wf
+ f8MmP146OOomJ.tvAYaJMsX73tPhfpWRTRJFFzZcZREzGqeiCsE_H8A3eN0k0WGCzeYu7YBo1tn5
+ xFTlSUDu80d8rslAY4S2pj6yxOy9OSRWGxBxRw80oO.U9O9Ko24nraMfK23IMeJ.8em9ebRqyA6X
+ whno2Vo6VH0H1eJg4XIEautRZRIDSYKTn_7nDXNSgeX4lys5kojgLsckhEWNOWn9N9qS.tQbJtvh
+ 3L5k5LV9.UpmbSEg.FFesnpo.5h.u8jZxWfsdG.QPftIn0UZnhbX2jEvs76TgeqXfDMYy53Yt9cW
+ 697vZMk1AQgPJjbgkIyuzV8Bt3YpQO7zKlQG_dTP7cFf7SL2mf7HJ.ihNzM3LlASPveeN0US5Bxt
+ z9Rg1FPLkv3CpflnJ3KC.08RpWCzTThrLx6zg4hYPo5tJ.6tQXexKv.lfR5ju96kDyNWBNC7YWwZ
+ z.sLh9EtddmiGijFbhs2lKlhlHEti1A6ASXKsmaxboriwJ5potXc.PIko6fej0vSds2uDa0AKmcm
+ pYW.pEmJ4CoeGsyfgmfOI_7rLV0_Mu4B3AeVA2qcwZIvuZYQddh8lJqrI85PKUogcGZJ6uesZ_CH
+ ZyFtj2gvNyBQiSijG_i5kyIeXI0dFoP.nNlENCJiZzzNKKagwjcGhGKvRbZX5.S_xx1kA3IFrbdy
+ ESYEISZyCtgE17TymLLU3ziKKaq9J_zXozuGC3qB.94GNUU34lpXKe9W1QDxbfzdCICIru43OwKe
+ feUL39zAuKeaiZSRx_pkKDQ.s0A.Pa4K_J4YCNcpgYxrjaBjd5MRLs.XSxvvSsGv.e60YNTm9yOa
+ C60ueuqSd6ZhHvdcqzNm79Vfqyyw8E5e51FWnX5lZ4YIqoiR52vk.jHRK1EDuYXk5zuC8jY.c_0R
+ fv26bpe11h8AJmSSbe6WYj2qvhc.wZm9MuK3BvwNLa.KGzHeungWDBE1O5mHQdNvKKx2GnVn1ifC
+ DSq883ANRXCLs7mzUMLk2yC3dyZCGDO.t6uYUf1Hn1VI3DUIkLn2IzQ--
+X-Sonic-MF: <giovannisantini93@yahoo.it>
+X-Sonic-ID: 8d14d5cb-b550-469b-b750-bda065e73545
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ir2.yahoo.com with HTTP; Tue, 11 Jun 2024 09:50:12 +0000
+Received: by hermes--production-ir2-7b99fc9bb6-5sfwj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 1744cdaabbfffc021eba0802c51522d2;
+          Tue, 11 Jun 2024 09:19:49 +0000 (UTC)
+Content-Type: multipart/mixed; boundary="------------yNiK9thftz3z70BFbIUggGcD"
+Message-ID: <08d7de3c-d695-4b0c-aa5d-5b5c355007f8@yahoo.it>
+Date: Tue, 11 Jun 2024 11:19:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240608114529.23060-1-johan+linaro@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: stable@vger.kernel.org
+Content-Language: en-US
+Cc: regressions@lists.linux.dev, ntfs3@lists.linux.dev,
+ almaz.alexandrovich@paragon-software.com
+From: Giovanni Santini <giovannisantini93@yahoo.it>
+Subject: Segfault running a binary in a compressed folder
+Autocrypt: addr=giovannisantini93@yahoo.it; keydata=
+ xsBNBFWGlaoBCACcYYy4p5OpFH/zYyJ+DYGfr8m712ai0GpJ3hrY4ncmt+cHVYw0pHeR01j9
+ t+dtJTwP3Br84E5z/0/mpg5J+LLEHDbAa5Gtal+ykIwtmfZ9N/GEEQvYAU691sCkk+hLSbDw
+ vIKOZSMMCV2Ee5R1gY/cM+UBJVFy/DJi75crugb/Fs9OL19YPBR9YqOb1eoE99/5WTbJ8EFm
+ Nq+oqSnp3O/7Uln96be3A3ri0a+njr6j1OXneE9NBLQbQx0VJnrTK0pv1oHJFT6fqs3Ar8BT
+ tgvaTQ50Q7rBYeZE6o2m+A6tBeC2JGZYCIXXQBirHVktrsmIqy9pnfHxN7hyPuRM6qy7ABEB
+ AAHNLUdpb3Zhbm5pIFNhbnRpbmkgPGdpb3Zhbm5pc2FudGluaTkzQHlhaG9vLml0PsLAfAQT
+ AQgAJgIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheABQJYLYzQAhkBAAoJEE20cJYvrev1
+ D2sH/R4girMykZt+hh6TdYl2RQCZnGd3+aFiL5bKWQH61uMPp2J/DU5ZarxVPBQVGW7vTRZB
+ cgceYoC8lnzkWUzlLG9I0pU8VaY87CvwSauRg98L+6eiX42Hz+3xLKbzVT6azewmR47d4WcH
+ CF59lin52O3MhMBSY7VoBEPI7w5tJAF80hzXACqi8cnt/yPI/jRE+NFiD+dUiDj0rRecKr5Q
+ 9z9+aEjfNiFNI8gkrjGwGerlDso7iOjmGlENY3hv0sP+9/Rq58J1Y+Wg4ACTj6s/vjpgcTQ1
+ oJxkyoJbEtUVa+B6R6yc2BHECl+JdkDNohxfRMIN3IzJpIQzGaKNATVbaDLOwE0EWDdW/QEI
+ AMvkCk1fA/6fXBRuNscDnDYRLSPoMx7tnjOv1Uub9iyFxr2v8B7DKrQq4R0WS4b2vITnsPZA
+ WTWJQ4SE0Sx54QGPVjdMzJTMN2cw7y35lS5anYJlY31O89eMpCPDwp88jtq7LKE0Knq5pu/+
+ pWFvfysSJkjrFOAKEGn2GEuT8G9BOplafmjyLXv6bwFViUGmNpaTrztlhBaunMDsluoVGg2F
+ LPdCdBJpE/vzAOzxg8WkyV+LzPMrz178WTlM0YSCJ/9Ad7QlX0r0rpG3n+HGlhB2Y2hFQM2C
+ SlyEstTvMuHQ0Oe5rjnSHxo3FjESknl0csmQmGkPed/DsKigVTeWiC0AEQEAAcLAXwQYAQgA
+ CQUCWDdW/QIbDAAKCRBNtHCWL63r9aSjB/wNUBdHtV2j9UQgCpXVcHHA0VSVYSRfvDs0rVOk
+ 1whAHlg62TKQv2uTFlvn8/lml/Wp7gyW2RKTC9ZIpn3vbgjbW7DuwvjSqCvEt83czRime2jM
+ h8URlFRrSFwfNifGxSXsERaH0b7/ae2zfIKRLGhep+/wikTYrItwmW+xXumBVRpkoaKDPy4d
+ lhdUxx3EulaWJJgfywYWoieN1jMRcvBWsuexdMFODMPt872NDZhkqrOo+A3fneaELitZdjKq
+ NpmY6C9etaRkDnjm70l2cP+RjWY1ahxFuwaOB3ZmNRe3VGyvPTUvdkwZdxaycLgVjEWUJEyq
+ H3BYrE7EWk47q50Q
+References: <08d7de3c-d695-4b0c-aa5d-5b5c355007f8.ref@yahoo.it>
+X-Mailer: WebService/1.1.22407 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Sat, Jun 08, 2024 at 01:45:29PM +0200, Johan Hovold wrote:
-> Disconnecting an external display triggers a hypervisor reset on the
-> Lenovo ThinkPad X13s since 6.10-rc1 which enabled UCSI. Disable it again
-> until the regression has been fixed properly.
-> 
-> Fixes: 3f91a0bf4a0b ("soc: qcom: pmic_glink: reenable UCSI on sc8280xp")
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+This is a multi-part message in MIME format.
+--------------yNiK9thftz3z70BFbIUggGcD
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Hi everyone,
 
-> ---
->  drivers/soc/qcom/pmic_glink.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> 
-> Dmitry reported off-list that his X13s was crashing when he disconnected
-> an external display and I tracked it down to the enablement of UCSI in
-> 6.10-rc1.
-> 
-> I have not had time to debug this further, but I'm flagging this as a
-> regression and sending an effective so that we have a fall back in case
-> this is not fixed in timely manner.
-> 
-> Note that this likely affects other Qualcomm SoCs as well.
-> 
-> Johan
-> 
-> 
-> #regzbot introduced: 3f91a0bf4a0b
-> 
-> 
-> 
-> diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
-> index 40fb09d69014..65279243072c 100644
-> --- a/drivers/soc/qcom/pmic_glink.c
-> +++ b/drivers/soc/qcom/pmic_glink.c
-> @@ -348,11 +348,15 @@ static void pmic_glink_remove(struct platform_device *pdev)
->  	mutex_unlock(&__pmic_glink_lock);
->  }
->  
-> +static const unsigned long pmic_glink_sc8280xp_client_mask = BIT(PMIC_GLINK_CLIENT_BATT) |
-> +							     BIT(PMIC_GLINK_CLIENT_ALTMODE);
-> +
->  static const unsigned long pmic_glink_sm8450_client_mask = BIT(PMIC_GLINK_CLIENT_BATT) |
->  							   BIT(PMIC_GLINK_CLIENT_ALTMODE) |
->  							   BIT(PMIC_GLINK_CLIENT_UCSI);
->  
->  static const struct of_device_id pmic_glink_of_match[] = {
-> +	{ .compatible = "qcom,sc8280xp-pmic-glink", .data = &pmic_glink_sc8280xp_client_mask },
->  	{ .compatible = "qcom,pmic-glink", .data = &pmic_glink_sm8450_client_mask },
->  	{}
->  };
-> -- 
-> 2.44.1
+I am writing to report the issue mentioned in the subject.
+
+Essentially, when running an executable from a compressed folder in an 
+NTFS partition mounted via ntfs3 I get a segfault.
+
+The error line I get in dmesg is:
+
+ntfs3: nvme0n1p5: ino=c3754, "hello" mmap(write) compressed not supported
+
+I've attached a terminal script where I show my source, Makefile and how 
+the error appears.
+
+Bests,
 
 -- 
-heikki
+Giovanni Santini
+
+--------------yNiK9thftz3z70BFbIUggGcD
+Content-Type: application/octet-stream; name="ntfs3_exec_debug.script"
+Content-Disposition: attachment; filename="ntfs3_exec_debug.script"
+Content-Transfer-Encoding: base64
+
+U2NyaXB0IHN0YXJ0ZWQgb24gMjAyNC0wNi0xMSAxMTowMDozOCswMjowMCBbVEVSTT0ieHRl
+cm0tMjU2Y29sb3IiIFRUWT0iL2Rldi9wdHMvMSIgQ09MVU1OUz0iMjgxIiBMSU5FUz0iNzAi
+XQobXTA7Z2lvdmFubmlAYXJjaGxpbnV4LXR1ZzovbW50L2RhdGEvUHJvamVjdHMvTlRGUzNf
+QW5hbHlzaXMHG1s/MjAwNGgoMTE6MDApIGdpb3Zhbm5pIEAgL21udC9kYXRhL1Byb2plY3Rz
+L05URlMzX0FuYWx5c2lzICQgY2F0IGhlbGxvX3NvdXJjZS5jIA0KG1s/MjAwNGwNI2luY2x1
+ZGUgPHN0ZGlvLmg+DQoNCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAg
+ICBwcmludGYoIkhlbGxvIHdvcmxkIVxuIik7DQp9DQobXTA7Z2lvdmFubmlAYXJjaGxpbnV4
+LXR1ZzovbW50L2RhdGEvUHJvamVjdHMvTlRGUzNfQW5hbHlzaXMHG1s/MjAwNGgoMTE6MDAp
+IGdpb3Zhbm5pIEAgL21udC9kYXRhL1Byb2plY3RzL05URlMzX0FuYWx5c2lzICQgbWFrZQgb
+W0sIG1tLCBtbSwgbW0tjYXQgTWFrZWZpbGUgDQobWz8yMDA0bA0jIFJ1bGVzIGZvciBlYXNp
+bHkgYnVpbGRpbmcgYWxsIHN0dWZmDQphbGw6IENvbXByZXNzZWQvaGVsbG8gVW5jb21wcmVz
+c2VkL2hlbGxvDQoNCmNsZWFuOg0KCXJtIC1mIENvbXByZXNzZWQvaGVsbG8NCglybSAtZiBV
+bmNvbXByZXNzZWQvaGVsbG8NCglybSAtZiBoZWxsb19zb3VyY2Uubw0KDQpydW46IGFsbA0K
+CS0gLi9Db21wcmVzc2VkL2hlbGxvDQoJLSAuL1VuY29tcHJlc3NlZC9oZWxsbw0KDQojIEl0
+IHNlZW1zIG15IG1ha2UgZG9lcyBub3QgZGV0ZWN0IHRoZSBmYWN0IEkgd2FudCB0d28gYmlu
+YXJpZXMuDQojIEp1c3QgY29weSB0aGUgYnVpbHQtaW4gcnVsZSBoZXJlDQpDb21wcmVzc2Vk
+L2hlbGxvIFVuY29tcHJlc3NlZC9oZWxsbzogaGVsbG9fc291cmNlLm8NCgkkKExJTksubykg
+JF4gJChMT0FETElCRVMpICQoTERMSUJTKSAtbyAkQA0KDQouUEhPTlk6IGFsbCBjbGVhbiBy
+dW4NChtdMDtnaW92YW5uaUBhcmNobGludXgtdHVnOi9tbnQvZGF0YS9Qcm9qZWN0cy9OVEZT
+M19BbmFseXNpcwcbWz8yMDA0aCgxMTowMCkgZ2lvdmFubmkgQCAvbW50L2RhdGEvUHJvamVj
+dHMvTlRGUzNfQW5hbHlzaXMgJCBtYWtlIGNsZW4IG1tLYW4NChtbPzIwMDRsDXJtIC1mIENv
+bXByZXNzZWQvaGVsbG8NCnJtIC1mIFVuY29tcHJlc3NlZC9oZWxsbw0Kcm0gLWYgaGVsbG9f
+c291cmNlLm8NChtdMDtnaW92YW5uaUBhcmNobGludXgtdHVnOi9tbnQvZGF0YS9Qcm9qZWN0
+cy9OVEZTM19BbmFseXNpcwcbWz8yMDA0aCgxMTowMCkgZ2lvdmFubmkgQCAvbW50L2RhdGEv
+UHJvamVjdHMvTlRGUzNfQW5hbHlzaXMgJCBtYWtlIGFsbA0KG1s/MjAwNGwNY2MgICAgLWMg
+LW8gaGVsbG9fc291cmNlLm8gaGVsbG9fc291cmNlLmMNCmNjICAgaGVsbG9fc291cmNlLm8g
+ICAtbyBDb21wcmVzc2VkL2hlbGxvDQpjYyAgIGhlbGxvX3NvdXJjZS5vICAgLW8gVW5jb21w
+cmVzc2VkL2hlbGxvDQobXTA7Z2lvdmFubmlAYXJjaGxpbnV4LXR1ZzovbW50L2RhdGEvUHJv
+amVjdHMvTlRGUzNfQW5hbHlzaXMHG1s/MjAwNGgoMTE6MDEpIGdpb3Zhbm5pIEAgL21udC9k
+YXRhL1Byb2plY3RzL05URlMzX0FuYWx5c2lzICQgbWFrciAIG1tLCBtbS2UgcnVuDQobWz8y
+MDA0bA0uL0NvbXByZXNzZWQvaGVsbG8NCm1ha2U6IFtNYWtlZmlsZToxMDogcnVuXSBTZWdt
+ZW50YXRpb24gZmF1bHQgKGlnbm9yZWQpDQouL1VuY29tcHJlc3NlZC9oZWxsbw0KSGVsbG8g
+d29ybGQhDQobXTA7Z2lvdmFubmlAYXJjaGxpbnV4LXR1ZzovbW50L2RhdGEvUHJvamVjdHMv
+TlRGUzNfQW5hbHlzaXMHG1s/MjAwNGgoMTE6MDEpIGdpb3Zhbm5pIEAgL21udC9kYXRhL1By
+b2plY3RzL05URlMzX0FuYWx5c2lzICQgG1s/MjAwNGwNDQpleGl0DQoKU2NyaXB0IGRvbmUg
+b24gMjAyNC0wNi0xMSAxMTowMTowNyswMjowMCBbQ09NTUFORF9FWElUX0NPREU9IjAiXQo=
+
+
+--------------yNiK9thftz3z70BFbIUggGcD--
