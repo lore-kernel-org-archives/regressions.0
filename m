@@ -1,92 +1,98 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F06A39FD9
-	for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 22:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D76170857
+	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 05:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718057117; cv=none; b=T08/VEkBdJSQiVAthCRXuzXMY6ZKEzM+GEGDlRZxinmUAPl1T2VE26ev/wCxvHkBefA27ALFLpBiqQQfl22uHTFOY7q+ubMEUKAd7FADAtKwdXWk2pIzdiDq6FCCcFtZZQi2gENnoj1Mh3wwas+Rpq9JOiWg82ZDrODWls6RqaI=
+	t=1718084650; cv=none; b=e3z2vt3MNon2fF7Ie4coQt4YKCmY6+uaWwVvVcbURgwFjQq6ZDSc8EjtAFkODiIgJDLfwCmVYgtROQDhc6zbKA/cQPf7kT6RS+8cIb7pnL+OYRaWZSvGBNUJOnqX7zKAJn9DwGD5gjKCtM0rmvksDG0jWhkMJbNq0yvOEVZDfl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718057117; c=relaxed/simple;
-	bh=rP+ricIK5YBlNx+/fEIyVLa5KkTZrxTMhtE1WPEqf4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gYNDISl07tdBeK1QnibeokAr+ZB9g0zxcFPri8qvBGkYaX/c6vyNUO1x4+fU3rxLgNu6DDnLFD1iXTBUjTFeraXDS8ItRHGobmLQiOpt7luFtoZXoF2+OT6udtlTJrqr1G1UCxsTW1N0i1BLzZBlvDOh/AUpjltP9PD2DqNKz3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A+hmGIgg; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718084650; c=relaxed/simple;
+	bh=RKWdFEkwtdBWG/4PLlln8Q8+w5FSArPcDPDYAln1RuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=haneXVMRlTRrnq5BLsKo7X6+iChPymq60Zo0de6yJX5lDKRzQZLpbafmL7P1UXl2TX2o/b24mzHxXLO0ppca0Jna6emoCOFjAJb6Q+pj2Dv8hKYnw1DIxecsqC9V01EuiqNiAdSlhoYaHO3LLoo+gMi7CwVOiT/M64WJo+0HwyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=eCnFnn+q; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+hmGIgg"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6b089f3d201so499896d6.1
-        for <regressions@lists.linux.dev>; Mon, 10 Jun 2024 15:05:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718057114; x=1718661914; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rP+ricIK5YBlNx+/fEIyVLa5KkTZrxTMhtE1WPEqf4M=;
-        b=A+hmGIggYLsh14L+5DePF9PIxMwQgsQzmwmP48q/A56C2NL4n6dj2WnOcpGkreyfM0
-         6VPqOYsz9ohYUSNCU2Z2mu6Yiw/WQHcA1FeAYZFwpEMyCBco5OLKBB3Wvw8aEbmkFRmk
-         iNx9Wb8byzo4TsjoXBe8rDxhmmTSwVQVDe3hjY1/MgI+wq1Baw1wJwMBsmmVJhZ7KGRx
-         XVHwmtq3zAkBXDQ/IDfFHqyZjVwmkaWBCqRyhbll/zylRUKNFKFuhQMzs5Xd00glgLB4
-         5DHmlaRgO1Bmrw6jBDAoFpG2z7X+IHoOkahJL/PIeLW31g4ypyeq1+SYI7KE5P0O6Gaw
-         STrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718057114; x=1718661914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rP+ricIK5YBlNx+/fEIyVLa5KkTZrxTMhtE1WPEqf4M=;
-        b=jCkQ196i9gHaIdenGOyfxpblNKO42QKLezvv70TuN19KOX0YwHk4HQB+l/10k6nW6V
-         TwsInm85Cg8+fP+9htovHZjz3b8qd09LOx2rxDOGu+wUdHOa6ViOqEX5k9VlDNuNruKq
-         YvsWPukEeBQqWpiN9h5PiPt+BRfO4h4MvcbwBCbm9m65HNGXahIPs5mQdSNHDUdSp/cy
-         2hVwbisIeQtInCOPIzyRM9Jolpx9YCkCv/YF6nGc9q6L87UBXFIn9b8mBQAJDw20qiJ4
-         hyHAi/Ru6U/g2qQW4+ncR6dpg7GBarwkbjbO+xAVBdbnlknX5oz8YOCk4zovrFDyBiwM
-         ZZdg==
-X-Gm-Message-State: AOJu0Yyv1TgSj70ox0Iw+NZ+EDsvrotgyLJCIP9RZkSkGfzdvD2AN3Fz
-	WirziiP/Um5Ptvlt/p65+TWqsl7X6cklEKRmqsLvuRXbmK2VYdCywyxe+29a0vEO0/YhMnMgaAA
-	6wIrzVkLwj9HQ9AkNMrOu5Uj0pKN/rqXG+bbeFCAUR4A=
-X-Google-Smtp-Source: AGHT+IGQ20EsaNML79UmilV2KhIHb9TaWTviOWcBxEXXPuuWWdBV50/ZYy5/0HVkaRbg9Sl0MYe/UbHQP7ro8jTYxgU=
-X-Received: by 2002:ad4:4b30:0:b0:6b0:6370:28d4 with SMTP id
- 6a1803df08f44-6b063702b48mr99825636d6.6.1718057114072; Mon, 10 Jun 2024
- 15:05:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eCnFnn+q"
+Received: from [10.1.1.110] (unknown [103.229.218.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 17DCA3F1C6;
+	Tue, 11 Jun 2024 05:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718084640;
+	bh=Ni5EiqfE19GgJAagzEeA/URDCb51teDUC50fLcGZEHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=eCnFnn+qcyykwuC15o5VHAyS1VoCHpwuBJJEcxxGFxiyeqmKaijkTszUIbfG5Lt5+
+	 3owboPlzBnRiVDSYGQ4hazu2gMvtO19zDYcd0ckXIfRu9/UTnmf3BYH+y1V+J8j+Lc
+	 FXw3A2n/LjUbRG0UZULbnPaNB15TrNDo5L3Zf7NlBtaaRiNTMbzqb4bmEQv8/NcYYP
+	 RT5b6Vwnfmg8YX8oWtWydG85m2OYQAmbjxuhZzsnOt5zd+BMyOLORz8Ncmq8cOKl99
+	 pMOag0iyeVbeIXS2jTt1zqiMDXHsIZWhcWAeJiqaHmBbtdqX8GOq4mZTep0qOEwxaZ
+	 wPyWlV1vMXWlw==
+Message-ID: <3359c6cb-cd2a-4738-8907-5018fa3e9606@canonical.com>
+Date: Tue, 11 Jun 2024 13:43:49 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CABXGCsN=9UFvGgKztzkkAM1c8cVN-h=TKLLxWhKgTm11h+H-eg@mail.gmail.com> <907df295-61b2-4cb4-9bcc-608d1ff2cf18@leemhuis.info>
-In-Reply-To: <907df295-61b2-4cb4-9bcc-608d1ff2cf18@leemhuis.info>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 11 Jun 2024 03:05:02 +0500
-Message-ID: <CABXGCsMRb3Lx=twRyi75MqgTEfMwxsEwTQg-MR0GNconhDt0pA@mail.gmail.com>
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "Deucher, Alexander" <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>, Rodrigo.Siqueira@amd.com, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [iwl-net][PATCH] Revert "e1000e: move force SMBUS near the end of
+ enable_ulp function"
+To: Paul Menzel <pmenzel@molgen.mpg.de>, intel-wired-lan@lists.osuosl.org,
+ netdev@vger.kernel.org, kuba@kernel.org, anthony.l.nguyen@intel.com,
+ vitaly.lifshits@intel.com, dima.ruinskiy@intel.com, davem@davemloft.net,
+ pabeni@redhat.com, edumazet@google.com, sasha.neftin@intel.com,
+ naamax.meir@linux.intel.com
+Cc: todd.e.brandt@intel.com, dmummenschanz@web.de, rui.zhang@intel.com,
+ jacob.e.keller@intel.com, horms@kernel.org, regressions@lists.linux.dev
+References: <20240610013222.12082-1-hui.wang@canonical.com>
+ <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
+Content-Language: en-US
+From: Hui Wang <hui.wang@canonical.com>
+In-Reply-To: <6ec4337f-7bf4-442d-8eca-128e528fde2a@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 7, 2024 at 5:29=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
+
+On 6/10/24 14:36, Paul Menzel wrote:
+> Dear Hui,
 >
-> [CCing the other amd drm maintainers]
 >
-> Mikhail: are those details in any way relevant? Then in the future best
-> leave them out (or make things easier to follow), they make the bug
-> report confusing and sounds like this is just a bug, when it fact from
-> your bisection is sounds like this is a regression.
+> Thank you for your patch.
+>
+>
+> Am 10.06.24 um 03:32 schrieb Hui Wang:
+>> This reverts commit bfd546a552e140b0a4c8a21527c39d6d21addb28
+>>
+>> Commit bfd546a552e1 ("e1000e: move force SMBUS near the end of
+>> enable_ulp function") introduces system suspend failure on some
+>> ethernet cards, at the moment, the pciid of the affected ethernet
+>> cards include [8086:15b8] and [8086:15bc].
+>>
+>> About the regression the commit bfd546a552e1 ("e1000e: move force
+>
+> … regression introduced by commit …
+Got it.
+>
+>> SMBUS near the end of enable_ulp function") tried to fix, looks like
+>> it is not trivial to fix, we need to find a better way to resolve it.
+>
+> Please send a revert for commit 861e8086029e (e1000e: move force SMBUS 
+> from enable ulp function to avoid PHY loss issue), present since Linux 
+> v6.9-rc3 and not containing enough information in the commit messsage, 
+> so we have a proper baseline. (That’s also why I originally suggested 
+> to split it into two commits (revert + your change).)
 
-Apologies if my pre-story is confused. I just wanna say I completely
-moved to the 7900XTX more than a year ago and I was surprised to see
-this regression on the old 6900XT. An accident helped me find this
-issue because I didn't plan to use old hardware.
+In regards to reverting the commit 861e8086029e (e1000e: move force 
+SMBUS from enable ulp function to avoid PHY loss issue), the author is 
+Vitaly, let him evaluate how to act.
 
---=20
-Best Regards,
-Mike Gavrilov.
+Thanks.
+
+>
