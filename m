@@ -1,32 +1,36 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41CD17C21F
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 11:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F240C176237;
+	Tue, 11 Jun 2024 11:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105989; cv=none; b=hTNchsjc4KPE/0eWMEPJwL3IhrHqjrkxYsHVHYP7pWVRYFjgIU6r0wMS3CnYUbxHLTGTXF1cvOTjNTdCMot1nx9wQhKK4PXeNshZcbC06iwJIgxwaap92KYgdvWY48yOElFzx7QGR/p0+8PkbfDmjW8OtEu3CyaAF6fQ9xjbrhY=
+	t=1718106159; cv=none; b=hn+ZkKW+l23yHA8O3K3pRi7HXFWqN6dhuHVhApLTiHYn6nTW86TA/kWzUGLPkxhMwr1RxSfnpgz19P27WhyCzaLhT0uTIjRz+brnFy2fsCb/t7AFgY6TmtezwY2MBgJzdghzajVb6Bqj+aWi59+AbyU3SIVVKJgjGIkyFerMs9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105989; c=relaxed/simple;
-	bh=KqONxeNIMsezUH/vByN9ckLxEs1MQv3fWFXbHJsEV9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UMleM80oFdWh9elrPIbwgScfzjNW0eMEWztRE5ukHM3oXW802zyU8Ej5vwvZAOH8/6YWatG8jyR1Vp3as2tZb3s8b7Wue82FpZ98PFi+/VbF6B+Ka8M2ZwQKK7UARSgxYvRcL8cjsVsgNqmO99hF71jXYEypDISwVVecroY/ecQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=F585devi; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1718106159; c=relaxed/simple;
+	bh=ZYt9Ce6a5vvrReHnVDTq0y2clVGZm/xWSkAGdTqH350=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QeENseVbLIJPAhrMzAPJSNvGQIQyqOb1pbwzzzvsgjCv8mfybqO08J6lvvkD5+lgbIuasAC85nbn99aAPw4Ivn/ZLog462HAWtxPZW4cDFviP8EBxbgbh3CN24yvqDsIxGWRm8Dbxzm50wVmoQ/UksCEcLxJtcpgH2oKyThXh2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w/WNpD8j; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="F585devi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718105980; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=OVUFDlMITzMq7x7Jd4SoAFKf9m70eZxH5vbvcK8ja40=;
-	b=F585devi7FVEzp3LiNVPfTmfHgjbtciynQ6JNBshzvDj97w0iFEGbY9T7+NgY6IS6HwJfzq1Kg8o7hYRASS6rIqYRhHl5ohApWVRuu7Z2uwQc3mMNJ9EPRPNsal9CJVdy/Mn4WVXZop5Oeqrb9PXMnKhPoBvw6u10txcjzfB7KE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W8GL.6F_1718105977;
-Received: from 30.97.56.68(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8GL.6F_1718105977)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Jun 2024 19:39:38 +0800
-Message-ID: <80a05784-21dd-4f20-b441-1e2a2be0e0ff@linux.alibaba.com>
-Date: Tue, 11 Jun 2024 19:39:37 +0800
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w/WNpD8j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=M4yhGTk/Aq3f5EgmMM+txoxBQjY0Pv36q1oxhk38U80=; t=1718106157;
+	x=1718538157; b=w/WNpD8jL8xuU49Ewtl+leZ3LJFMb4uEfLU6FXz9eOlEDWu0VWgASB2ayoInF
+	q827Rum9MK68CZm3jBq/fa2pGloNt0COkaPRmq8koZXMzlB+G1gHGaShx2asx+tgn0qOoWlIQliQi
+	6JupgdBYpzBXTWoEwVwhEzwcH6h223VjmKPX8Jo6Qda2/prRyOLDg4ddhlwQhm2IkBL5vYWJ5em4+
+	enBWTsAh2+TZXnKApjuTuCerbeD+97T4S2xyRjdifFMQCpsrfj3e8p5j2GyEZcJ7WrywJwtSYws8o
+	JNBt9CUxiUUt1r+N95YhYbhCT7s4GjuZBl63QfxLXyVgsYG1BQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sGzta-0004kl-N7; Tue, 11 Jun 2024 13:42:34 +0200
+Message-ID: <af575951-d884-4148-977f-a3450ceaee82@leemhuis.info>
+Date: Tue, 11 Jun 2024 13:42:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,128 +38,114 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline
- 6.10.rc3
-To: David Hildenbrand <david@redhat.com>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <baohua@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com>
- <e8c10a52-61f9-4b46-bc50-e2c267b1aa56@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <e8c10a52-61f9-4b46-bc50-e2c267b1aa56@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] ac and battery readings for asus laptops (gu605) broken
+ since "ACPI: EC: Install address space handler at the namespace root"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718106157;900dab38;
+X-HE-SMSGID: 1sGzta-0004kl-N7
 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
+Rafael, I noticed a report about a regression in bugzilla.kernel.org
+that (if I understood things correctly, which in this case I'm not
+entirely sure of) appears to be caused by a change of yours:
+60fa6ae6e6d09e ("ACPI: EC: Install address space handler at the
+namespace root")
 
-On 2024/6/11 18:32, David Hildenbrand wrote:
-> On 11.06.24 12:14, Naresh Kamboju wrote:
->> The kernel panic was noticed while running LTP syscalls fork13 (long 
->> running) on
->> the mainline master 6.10.rc3 kernel on arm64 rk3399-rock-pi-4 device.
->>
->> Please find detailed logs in the links,
->>
->> As you know fork13 is a stress test case trying to generate a maximum 
->> number
->> of PID's in a 100,000 loop.
->>
->> This device is running via NFS mounted filesystem.
->>
->> I have tried to reproduce this problem in a loop but failed to 
->> reproduce the
->> crash.
->>
->>
->> Crash flow:
->> ------
->> fork13 run started
->> BUG: Bad page map in process fork13
->> BUG: Bad rss-counter state mm:
->> Unable to handle kernel paging request at virtual address
->> Internal error: Oops: 0000000096000046
->> run for 800 secs ( 13 minutes) and more.
->> fork14 run started and completed
->>
->> fpathconf01 run started and completed
->> sugov:
->>
->> Unable to handle kernel NULL pointer dereference at virtual address
->>
->> Insufficient stack space to handle exception!
->> end Kernel panic - not syncing: kernel stack overflow
->>
->> I have tried to decode stack dump by not being useful [1].
->> [1] https://people.linaro.org/~naresh.kamboju/output-rk3399.txt
->>
->> Test log :
->> --------
->> tst_test.c:1733: TINFO: LTP version: 20240524
->> tst_test.c:1617: TINFO: Timeout per run is 0h 15m 00s
->> [  904.280569] BUG: Bad page map in process fork13  pte:2000000019ffc3
->> pmd:80000000df55003
->> [  904.281397] page: refcount:1 mapcount:-1 mapping:0000000000000000
->> index:0x0 pfn:0x19f
-> 
-> Mapcount underflow on a small folio (head: not printed).
-> 
-> [...]
-> 
->> [  904.294564] BUG: Bad page map in process fork13  pte:200000002e4fc3
->> pmd:80000000df55003
->> [  904.295275] page: refcount:2 mapcount:-1 mapping:000000007885152f
->> index:0x6 pfn:0x2e4
-> 
-> Another mapcount underflow on a small folio (head: not printed).
-> 
-> 
->> [  904.309309] BUG: Bad page map in process fork13  pte:20000000cc6fc3
->> pmd:80000000df55003
->> [  904.310031] page: refcount:1 mapcount:-1 mapping:0000000000000000
->> index:0x6 pfn:0xcc6
->> [  904.310728] head: order:3 mapcount:-1 entire_mapcount:0
->> nr_pages_mapped:8388607 pincount:0
-> 
-> Mapcount underflow on a large folio.
-> 
-> ...
-> 
->> [  904.326666] BUG: Bad page map in process fork13  pte:20000000268fc3
->> pmd:80000000df55003
->> [  904.327390] page: refcount:1 mapcount:-1 mapping:00000000f0624181
->> index:0x1b pfn:0x268
-> 
-> Another mapcount underflow on a small folio (head: not printed).
-> 
->> [  904.328094] memcg:ffff0000016b4000
->> [  904.328401] aops:nfs_file_aops ino:8526e6 dentry
->> name:"libgpg-error.so.0.36.0"
->> [  904.329051] flags:
->> 0x3fffe000000002c(referenced|uptodate|lru|node=0|zone=0|lastcpupid=0x1ffff)
->> [  904.329878] raw: 03fffe000000002c fffffdffc0009a48 fffffdffc022f3c8
->> ffff00000688bd60
->> [  904.330561] raw: 000000000000001b 0000000000000000 00000001fffffffe
->> ffff0000016b4000
->> [  904.331240] page dumped because: bad pte
->> [  904.331590] addr:0000aaaad9afe000 vm_flags:00000075
->> anon_vma:0000000000000000 mapping:ffff0000300d4188 index:2e
->> [  904.332476] file:fork13 fault:filemap_fault mmap:nfs_file_mmap
->> read_folio:nfs_read_folio
->> [  904.333245] CPU: 5 PID: 22685 Comm: fork13 Tainted: G    B
-> 
-> 
-> Are these maybe side-effects due to
-> 
-> https://lkml.kernel.org/r/20240607103241.1298388-1-wangkefeng.wang@huawei.com
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=218945 :
 
-IIUC, the rk3399-rock-pi-4b device has no NUMA nodes (6 arm64 cores), so 
-I don't think the numa balancing will cause this issue.
+>  VitaliiT 2024-06-07 12:43:14 UTC
+> 
+> Created attachment 306438 [details]
+> Workaround for asus gu605
+> 
+> Creating this ticket to highlight a regression introduced with a fix
+> proposed in https://bugzilla.kernel.org/show_bug.cgi?id=218789
+>
+> Actually that patch breaks ac and battery modules.
+> Sysfs readings for gu605 reported:
+> - that AC is always online independently if power source connected
+> - battery readings are wrong: capacity always 100, voltage is always
+> 5000, current is always 1000000; charge_full and charge_full_design is
+> always 5000. All values are not correct.
+> 
+> I've updated defect 218789 with a workaround patch that makes ac and
+> battery modules working again with 6.10 source tree.
+> 
+> Unfortunately, I can not provide correct solution since I am not acpi
+> expert, but I feel that Lenovo laptop might need quirks or separate
+> logic for EC initialization flow.
+> 
+> Additionally, not sure if it is correct to use ACPI_ROOT_OBJECT as
+> acpi_handle when actual acpi_ec requested for initialization. An ACPI
+> expert might need to look into this.
+> 
+> Here are some results of investigation:
+> 
+> In 218789 due to reported error proposed to use ACPI_ROOT_OBJECT which
+> supposed to initalize EC's, but on asus laptops this change breaks
+> backward compatibility.
+> 
+> So ec_install_handlers is called from acpi_ec_setup and first_ec will be
+> set to ec in the beginning, so in ec_install_handlers() ACPI_ROOT_OBJECT
+> will be used as handler.
+>  static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device
+> *device,
+>                                bool call_reg)
+>  {
+>        acpi_handle scope_handle = ec == first_ec ? ACPI_ROOT_OBJECT :
+> ec->handle;
+> 
+> And this method is called from acpi_ec_setup where first_ec will be set
+> to ec:
+> 
+> static int acpi_ec_setup(struct acpi_ec *ec, struct acpi_device *device,
+> bool call_reg)
+> {
+> 	int ret;
+> 
+> 	/* First EC capable of handling transactions */
+> 	if (!first_ec)
+> 		first_ec = ec;
+> 
+> I understand th> VitaliiT 2024-06-07 12:43:14 UTC
+at original defect should be fixed, but preserving things
+> which used to work should be also priority.
+> 
+> Please let me know if additional information is needed.
+> 
+> The fix which just works (probably it is not "proper" fix, but that
+> patch makes asus battery and ac modules working as supposed to).
 
-Anyway, I will run fork13 test case on my arm64 server to try.
+See the ticket for more details. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 60fa6ae6e6d09e
+#regzbot title: ACPI: EC: ac and battery readings for asus laptops
+(gu605) broken
+#regzbot from: VitaliiT
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218945
+#regzbot ignore-activity
