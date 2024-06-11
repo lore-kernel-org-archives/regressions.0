@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397F514F10E;
-	Tue, 11 Jun 2024 11:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0675C17545;
+	Tue, 11 Jun 2024 11:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718104554; cv=none; b=WQ1U8sQfBxbdsNUyWnYM20mD/Se+SBNLCn2WU37HHiKv8wTXpz8r5SX8wbtQIIeSlRhenZLAuvRx6A6F5Ms4Bc+YnXt8EKcEjHgXkBJDIjv+hVoKatBMK2BMFOQj9v6aeci4UFhCUgL92tTujaILOIN2TP7yzX6bqrGj2QCShJ0=
+	t=1718105440; cv=none; b=MRbGXyWnTXfjJQ4ifsuNX3MKcdnwYblxiZK2wb0rzgR2OX+rUUy9fvI7sYYt88AKfdrB4g7x/vzz8PzdrhsXJWCkBrYRiWVfvk4HvpyVzGksN0D46R+j+QN21rs1Vc5fZrM6WFbXuzkvSRPagDPBEVf3kSXpvXp0pW86LwA2/Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718104554; c=relaxed/simple;
-	bh=OpvF5mDtyVeU0KVHlm5XhPG3Vkdab3qKja2YZtr/KzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TACKE3oThwIOfOBUm7KhlBXQkA3MofBm6tID5F7cSCQxbL2PsqLGosnUsV55Q1wZy0uqpYXMuCIvy+RxKp5NCaIeMoRe/nXbtEkExBH0b01SU/NVFfDaKjk4YqVQxdpHKHx/3kKY+wpPKo3w7wwejWWZS9MNfzqnsOofYvZKjAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hOecMzlo; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1718105440; c=relaxed/simple;
+	bh=aE9Gg2Ds1cNqbknEdagliEq9UJsv9bvc1ITWc773ZVM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qe2xJUCRc7mA+EjqfEwg/zYI92gnLa5BjFfHYNJboCc7D0BEG/AzcLOhPn0qbFfvHLuNd/MDI0CEUBkW9s1cPtLsTpcPiGUGd1yzaQHJcgMpiprTqGC2R1cOQ2VkrhXIQKO3heJ6hyqGYeHgiMVqoIl1GQgKQEOxRx8tBrFDgpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mM7YpBD1; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hOecMzlo"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mM7YpBD1"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=tNr1TyDJ+j471eZd1sbbSlyQNA26yaRuPvfuZVUEL6o=;
-	t=1718104552; x=1718536552; b=hOecMzlo6PnhSQAbQw5huWIf1qJkVC62wcaSphSFKYOByCe
-	5CyF3geFfTGRdSkANDPUiY5x7cpY6fipBk9N2SVXKNQBxBTdFEK3z6TPNpJvwMZ47xRIK9FF5pQBL
-	7oaD2JA1dbQoGq0BMe3zj4UpdYKeZKb44GiT7I1QMjPd7BrXm6XIXMJAIoWTTPNCq1tBOmXZI3ogu
-	eCf57FTwLlSzlByEo3E08IczYB+X8BSyeZ2GF8CaN9PnaA7s4Qsp/kdWQNxKJZNcIz307PNQVzzrY
-	AbsMHRXSnia3kAgLeejH07XrOj3TbkPdff4BEn4wohgdZQTQ60sxqADekTYFAcsQ==;
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=GvDhOl1G2Z707RGHPlxQe1Kar9gOS7R/lxC7nBW4SMc=; t=1718105438;
+	x=1718537438; b=mM7YpBD1dKP76BADGPSC+P50w0D/5CrrIG6GRH1P4X9WDiRamQjKHv5s7hshk
+	7vQVxt8Lef/CfZDXsh/txO7ewo8FfcZaAh1lQd5YsJLvdeQeCWx6pxl7K7yCq3hXEIcOzjwdfz6IC
+	qcaOMvM7ipeKbxk27vCnPIpnhI8OWRM/u6+bfTLmOLQLd8gckvDOlknL5m0Sk+3fK3RXXzH5h51PG
+	zjP+lZ5+Do1NlADNQ+fCkgnYMmtFCFnHno/GRYoKxf0WU8p82wqUmQrFwDibnqNFFxFnu9P53wESN
+	RHuzcJMKXvsxHYlAmlTD4XQdyKRFULheS7ZGnrjYNlWvH2sDeg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sGzTh-0007XY-QA; Tue, 11 Jun 2024 13:15:49 +0200
-Message-ID: <0c871021-321b-4a44-b270-508a64be1cdd@leemhuis.info>
-Date: Tue, 11 Jun 2024 13:15:49 +0200
+	id 1sGzhu-0002Et-5s; Tue, 11 Jun 2024 13:30:30 +0200
+Message-ID: <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+Date: Tue, 11 Jun 2024 13:30:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,81 +39,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Segfault running a binary in a compressed folder
-To: Giovanni Santini <giovannisantini93@yahoo.it>,
- almaz.alexandrovich@paragon-software.com
-Cc: ntfs3@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
  Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-References: <08d7de3c-d695-4b0c-aa5d-5b5c355007f8.ref@yahoo.it>
- <08d7de3c-d695-4b0c-aa5d-5b5c355007f8@yahoo.it>
- <0936a091-7a3a-40d7-8b87-837aed43966b@leemhuis.info>
- <bed7da51-cf89-422d-84f7-cb3d89ffbe40@yahoo.it>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+ Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
 Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <bed7da51-cf89-422d-84f7-cb3d89ffbe40@yahoo.it>
+In-Reply-To: <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718104552;eb435cb8;
-X-HE-SMSGID: 1sGzTh-0007XY-QA
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718105438;d59cc20a;
+X-HE-SMSGID: 1sGzhu-0002Et-5s
 
-On 11.06.24 12:55, Giovanni Santini wrote:
-> Hi Thorsten, nice to chat again!
-
-:-D
-
-> I am sorry for the lack of information,
-
-Happens.
-
-> this is my second bug report to
-> the kernel; the first one was via Bugzilla and I filled more information.
-> 
-> Now, the missing information is:
-> 
-> OS: ArchLinux
-> 
-> Tested kernels: both latest Linux stable (6.9.3) and mainline (6.10rc3)
-> 
-> Regression: no, I believe that this issue has been present forever.
-
-Thx. Okay, in that case anyone that replies in this thread consider
-dropping the stable and the regression lists to avoid confusion and
-spare the subscribes of those lists a few cycles.
-
-> I realized it may have been compression-related only recently.
-> I do remember testing ntfs3 long ago and having the same issues with a
-> Ruby vendoring folder.
-> 
-> Please let me know if you need more information!
-
-That's up to Konstantin (or others on the ntfs3 list), who is known to
-sometimes reply quickly, while other times only replies after quite a
-while. We'll see what it will be here. :-D
-
-Ciao, Thorsten
-
-> On 2024-06-11 12:04, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 11.06.24 11:19, Giovanni Santini wrote:
->>> I am writing to report the issue mentioned in the subject.
+On 07.06.24 16:15, Thorsten Leemhuis wrote:
+> On 07.06.24 16:03, Paolo Abeni wrote:
+>> On Thu, 2024-06-06 at 10:26 +0200, Thorsten Leemhuis wrote:
+>>> On 31.05.24 08:10, Arınç ÜNAL wrote:
+>>>> On 31/05/2024 08.40, Thorsten Leemhuis wrote:
+>>>>> [adding Paolo, who committed the culprit]
 >>>
->>> Essentially, when running an executable from a compressed folder in an
->>> NTFS partition mounted via ntfs3 I get a segfault.
->>>
->>> The error line I get in dmesg is:
->>>
->>> ntfs3: nvme0n1p5: ino=c3754, "hello" mmap(write) compressed not
->>> supported
->>>
->>> I've attached a terminal script where I show my source, Makefile and how
->>> the error appears.
->> You CCed the regression and the stable list, but that looks odd, as you
->> don't even mention which kernel version you used (or which worked).
->> Could you clarify? And ideally state if mainline (e.g. 6.10-rc3) is
->> affected as well, as the answer to the question "who is obliged to look
->> into this" depends on it.
+>>> /me slowly wonders if the culprit should be reverted for now (see below)
+>>> and should be reapplied later together with the matching changes from
+>>> Arınç ÜNAL.
 >>
->> Ciao, Thorsten
+>> FWIS I think a revert should be avoided, given that a fix is available
+>> and nicely small.
 > 
+> Yeah, on one hand I agree; but on the other it seems that the
+> maintainers that would have to take care of the dt changes to fix this
+> until now remained silent in this thread, apart from Rob who sent the
+> mail regarding the warnings.
+> 
+> I put those maintainers in the To: field of this mail, maybe that might
+> lead to some reaction.
+
+Still no reply from the DRS folks or any other progress I noticed. Guess
+that means I will soon have no other choice than to get Linus involved,
+as this looks stuck. :-( #sigh
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
