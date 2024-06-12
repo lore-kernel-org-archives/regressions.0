@@ -1,118 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C041233FE
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2ED1534EA
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 11:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718187968; cv=none; b=aWI6yjfXHRttAGH/khQhJgn+lDt8Hlrdf9RteFIy9/XWxM+RmJNJzuneVuLnjuLgfFlAVya0H/PCyhMe2XZP/qiMNH63n2Whmz09nry0KovcvAOwe7N15I4+e/sYsYhXMrqoYX4alvlm3a/3ZYoASDBcX9CqV0Zfg6sobEC+T1w=
+	t=1718191340; cv=none; b=dz6qtKXtR6dXcBNYGqpmG1aFiUrnMVCyrrz6eQjIrr+qYJBMpWrDJuiiOK7xTrol3/8VB20q8L54I08q3kfj/42e9jwDqY0cF0b3MX9/EQoZtGql1T9zOabF19acHInBxp1bAUTXiWXpK3tMnuBEl3yM8Kys7WpqCaQba37cTgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718187968; c=relaxed/simple;
-	bh=Hy009I4Y0Qv6ns/yhERDJ2MDP1boihPeApgieoNPYl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CYVNsWUVrzy6DnJALpiJ3JQEM8dX0hPvJ/QUdWqzDSKzqeVgpbIdzF5TvFmKzo1XsZNA9Ew0ARIU52gO1fE6HkJbLeiFMI71jKSAT4dlRiVIjYEXhdVanMrIAUI+PJ2MeiBYEoyHj7mD5Cnbkp1i0VCClBafRsc6ojN1HSz9mrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJwAf12h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718191340; c=relaxed/simple;
+	bh=S4ToOD7sLlIxL+6jhns7OyjKM8K4sMQHz0KiwTmb2Rk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mlyjMrl+zHWwL7fmQ/+PITEiWwj5xUYSj5cDi+ww3thzKLB+JY4VfjKwjnqRBItNrvW1uki/lB6h3hXiMHWdCpRFLoa2Kdr52mEAZgmRs2hEHmKJs/MahWbHfN4ywgPlCc/ZCshYUOmG5kvGQUqOJrAyd9d4FWnFuK1Cu++83/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BL8pTzSw; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJwAf12h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EEFC4AF49
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718187968;
-	bh=Hy009I4Y0Qv6ns/yhERDJ2MDP1boihPeApgieoNPYl8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jJwAf12hDyb8KkzUlwPaUpF7c/GBZv98SWRj4Lf7Q2TMs+Q7tb62d+3GheBOkS15W
-	 xEmMKdXRGR07q4E6e6O74S6NCtdLoEfSXxxwCJUrRvlBux5vAYNphgNW3GI/q1Kr9Q
-	 Ro0jgAAEzgD8sv7AFfAA1IoyTJMRM8i9wgI8jST5/pkVHYodWEtyPJ2rOohUXwzqJZ
-	 jZtuKEmQNSSV2kG4rl5awH4k4PeoAiPU9AIsyqkxD4epaYkNKR4toQkFf2iyHmgWZQ
-	 qOb4nkxbQ231vnHuorFvhl6zvOr7j/bGl6Rm+Hjfb+MtS2CUEdU0ictQb8sLW2hZ7u
-	 Ecq1omUKx1+CA==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5bb33237b60so36045eaf.0
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 03:26:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZlL8twki13k9tKsSS/trsRgp2HgSR6X2Rs9qTNJEMS0+yuH5cjXrJKxsWZ8kDChcizIhYYWxfEFWr9IUFYmWOEsz2SGTo2mhcPQI=
-X-Gm-Message-State: AOJu0YzkyX3TtRQ4EkR3NHSpF6CIGI3vZF/M2CWW90rpqvQhnCaLNV5J
-	C1xHaCN1Zg7ItgMmhWkmpUEAahdtqQIYk8SwO5wow1bxOYIotIloVdHnzMjY4lPuDhc/nwufJp2
-	OrTD66SfYNfARO5j5wCfVgZihyuI=
-X-Google-Smtp-Source: AGHT+IEhytvAjKaqXjVi4XDP6ekYnjP36qmWXpwgUUaoF04z3nVKwdXo5pIyTnVxdO7jVFV/WIeaQcFKeLMLVefzXso=
-X-Received: by 2002:a4a:3101:0:b0:5ba:ca8a:6598 with SMTP id
- 006d021491bc7-5bb3b7b972bmr1488238eaf.0.1718187967599; Wed, 12 Jun 2024
- 03:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BL8pTzSw"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4eaf67ad82dso2347288e0c.1
+        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 04:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718191337; x=1718796137; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/IAp1HeQ73IM50UTkojUWwtLb+9FPd+0r53y+ZVFfs8=;
+        b=BL8pTzSw8exeoAzNvrSKLrX0d8a91+9h9sdU6wHbAPqDBQVVCryIEXZI1Xjn5V/mvO
+         L9D8400k4v6NZQd6nCf+9wLqlwFvDyS/RElVFRYXRy/ERihyoBWU1PGuQA12umh+R4dT
+         d/fIzHDl2ZFO8L6IMw95xmv+B0sczWxULuYYBC8kSLMoBSvuRTSNDjP0IB+7YdRN0Slc
+         vZQ5l3po+BwD2tT0m2HFtMeETei12G5oLznTpLQsSVAPRPHosVt6wm2hF2gn66/g5xw2
+         rBQD4v+BY6tN8XreRcbZDNcmGXOBdSzk6Svn/f7PsAQGE3eajmN71IPIV+9A4TgmqPnH
+         eq5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718191337; x=1718796137;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/IAp1HeQ73IM50UTkojUWwtLb+9FPd+0r53y+ZVFfs8=;
+        b=xDhgvC5XPAYP05KCQ22dsEYXmoED8n5ePqL27bVYFG9l2Vgixjt1YbaDoaR2oPQtg2
+         TejXPDsisnPLBYfhYFzcv/flH3uTt/apiw0ZxBNVabrrLL5nqSES5LU93Ix4rSdxOJdH
+         O2Cs5f0b8O7uGmaKn/VEkXyX4fZJ1PHxtLx5mU3Na7WqcUMIcYDhMc6g28BFRmMMsziH
+         vzwP7cKCGU76yJGJqvfOELnKg3RWxMJmtJG4SA3K/Hj/gm6kEhw/bz53frYvd/5MqD9L
+         q6muVKUpkg+l4ibZV12kbV9RGSHsAjhEE5n71R5YLhTIilma1PzArn1pX1SvfI35ZLC0
+         ENYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUn4PV3qMpMvfcsiiBi4+X+hQmmWy98ZZBUe+2YfytkNRUeIdBzG550gAt2JTVshli8wO/v6hAG3fGwXP3QEPVbd2BQDfUz64Sw6+k=
+X-Gm-Message-State: AOJu0YxIhvu3Guuut/6Jf1l7U5ROg84iKawVZhBwLqLxxksDtiYPjBsw
+	2GDnC4x1NmdgQPE4gSVkTcMT9eNyRNdRA3h05V1Ge6WTzZnHDyXX6j4aGHxzuM1HctGqbHeUGkl
+	mVbTLB/fkURUSsfAljhOS/BfYeUuXkV5oCXWK5A==
+X-Google-Smtp-Source: AGHT+IFuXyhrRXVZeSDEz6144SsmDCO/JhJUFVRlEEpkHGrZTOPtzH+GwmA4geqUJLZxUhHP6q0/vu5O0222H9ECWBI=
+X-Received: by 2002:a67:f715:0:b0:48c:377b:11d with SMTP id
+ ada2fe7eead31-48d91e41468mr1887485137.22.1718191337202; Wed, 12 Jun 2024
+ 04:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <20240528084413.2624435-1-sakari.ailus@linux.intel.com> <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
-In-Reply-To: <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 12:25:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0itb45-hWS-JV5Nx8CQ7=CiS-dhJG8xJbrPNkY2=jN4jg@mail.gmail.com>
-Message-ID: <CAJZ5v0itb45-hWS-JV5Nx8CQ7=CiS-dhJG8xJbrPNkY2=jN4jg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Genes Lists <lists@sapience.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 12 Jun 2024 16:52:05 +0530
+Message-ID: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
+Subject: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc : ftrace_ops_test
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 12:08=E2=80=AFPM Hans de Goede <hdegoede@redhat.com=
-> wrote:
->
-> Hi,
->
-> On 6/6/24 8:12 PM, Hans de Goede wrote:
-> > Hi,
-> >
-> > +To: Rafael since this was Cc-ed to linux-acpi but never send
-> > to Rafael directly.
-> >
-> > Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
-> > to make the cameras work on the Dell XPS 13 plus 9320 .
-> >
-> > On 5/28/24 7:09 PM, Hans de Goede wrote:
-> >> Hi Sakari,
-> >>
-> >> On 5/28/24 10:44 AM, Sakari Ailus wrote:
-> >>> Ignore camera related graph port nodes on Dell XPS 9320. They data in=
- BIOS
-> >>> is buggy, just like it is for Dell XPS 9315. The corresponding softwa=
-re
-> >>> nodes are created by the ipu-bridge.
-> >>>
-> >>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >>> ---
-> >>> Hi,
-> >>>
-> >>> Could you test this and see whether it fixes the warning?
-> >>>
-> >>> The camera might work with this change, too.
-> >>
-> >> Thank you I just received a Dell XPS 13 plus 9320 myself to use
-> >> for VSC testing and I can confirm that with this patch 6.10.0-rc1
-> >> works, including giving a picture with the libcamera software ISP +
-> >> 3 small libcamera patches.
-> >
-> > I forgot to add:
-> >
-> > Tested-by: Hans de Goede <hdegoede@redhat.com>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
-> I just hit the same problem on another Dell laptop. It seems that
-> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-> and Raptor Lake generations suffer from this problem.
->
-> So instead of playing whack a mole with DMI matches we should
-> simply disable ACPI MIPI DISCO support on all Dell laptops
-> with those CPUs. I'm preparing a fix for this to replace
-> the DMI matching now.
->
-> Rafael, please drop this patch, my more generic fix will replace it
-> and backporting will be easier without having the intermediate fix
-> in the middle.
+The following kernel oops and kernel panic noticed while running LTP tracing
+test cases on arm64 rk3399-rock-pi-4 device running Linux next-20240612 tag.
 
-Dropping, thanks!
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Boot and test log:
+--------------
+[    0.000000] Linux version 6.10.0-rc3-next-20240612 (tuxmake@tuxmake)
+ (Debian clang version 18.1.6
+ (++20240518023133+1118c2e05e67-1~exp1~20240518143227.130),
+ Debian LLD 18.1.6) #1 SMP PREEMPT @1718178628
+...
+trap: SIGUSR1: bad trap
+ftrace-stress-test 1 TINFO: Start pid16=595
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_tracing_cpumask.sh
+ftrace-stress-test 1 TINFO: Start pid17=598
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_filter.sh
+[   55.770077] Scheduler tracepoints stat_sleep, stat_iowait,
+stat_blocked and stat_runtime require the kernel parameter
+schedstats=enable or kernel.sched_schedstats=1
+[   55.790580] Scheduler tracepoints stat_sleep, stat_iowait,
+stat_blocked and stat_runtime require the kernel parameter
+schedstats=enable or kernel.sched_schedstats=1
+trap: SIGTERM: bad trap
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
+[  100.599846] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000008
+[  100.599846] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000008
+[  100.599846] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000008
+[  100.599846] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000008
+[  100.599856] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000008
+[  100.599866] Mem abort info:
+[  100.599867] Mem abort info:
+[  100.599867] Mem abort info:
+[  100.599874]   ESR = 0x0000000096000004
+[  100.599875]   ESR = 0x0000000096000004
+[  100.599875]   ESR = 0x0000000096000004
+[  100.599883]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  100.599892]   SET = 0, FnV = 0
+[  100.599896]   SET = 0, FnV = 0
+[  100.599896]   SET = 0, FnV = 0
+[  100.599899]   EA = 0, S1PTW = 0
+[  100.599906]   EA = 0, S1PTW = 0
+[  100.599906]   EA = 0, S1PTW = 0
+[  100.599906]   FSC = 0x04: level 0 translation fault
+[  100.599914] Data abort info:
+[  100.599915]   FSC = 0x04: level 0 translation fault
+[  100.599915]   FSC = 0x04: level 0 translation fault
+[  100.599920]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[  100.599925] Data abort info:
+[  100.599926] Data abort info:
+[  100.599928]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[  100.599936]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[  100.599944]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[  100.599946]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[  100.599945] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000014fc7000
+[  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[  100.599956] [0000000000000008] pgd=0000000000000000
+[  100.599964] , p4d=0000000000000000
+[  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000006ce0000
+[  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000079ec000
+[  100.599975]
+[  100.599976] [0000000000000008] pgd=0000000000000000
+[  100.599977] [0000000000000008] pgd=0000000000000000
+[  100.599985] , p4d=0000000000000000
+[  100.599986] , p4d=0000000000000000
+[  100.599985] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[  100.599992]
+[  100.599994]
+[  100.599997] Modules linked in: brcmfmac snd_soc_hdmi_codec
+dw_hdmi_cec dw_hdmi_i2s_audio brcmutil crct10dif_ce rockchipdrm
+hci_uart snd_soc_spdif_tx hantro_vpu panfrost snd_soc_simple_card
+snd_soc_audio_graph_card btqca dw_mipi_dsi gpu_sched
+snd_soc_simple_card_utils btbcm v4l2_h264 analogix_dp cfg80211
+drm_shmem_helper dw_hdmi v4l2_vp9 phy_rockchip_pcie bluetooth
+v4l2_mem2mem cec snd_soc_rockchip_i2s videobuf2_v4l2
+drm_display_helper videobuf2_dma_contig drm_dma_helper
+videobuf2_memops rtc_rk808 rfkill snd_soc_es8316 videobuf2_common
+drm_kms_helper rockchip_saradc industrialio_triggered_buffer
+pcie_rockchip_host rockchip_thermal kfifo_buf coresight_cpu_debug drm
+fuse backlight dm_mod ip_tables x_tables
+[  100.600212] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
+6.10.0-rc3-next-20240612 #1
+[  100.600222] Hardware name: Radxa ROCK Pi 4B (DT)
+[  100.600229] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  100.600239] pc : ftrace_ops_test+0x34/0x138
+[  100.600258] lr : function_graph_enter+0x144/0x208
+[  100.600271] sp : ffff800082fd3730
+[  100.600276] x29: ffff800082fd3770 x28: 0000000000000038 x27: ffff80008271a790
+[  100.600293] x26: ffff800082d24b08 x25: ffffffffffffffff x24: ffff800082d24000
+[  100.600310] x23: 0000000000000001 x22: 0000000000000001 x21: ffff000000cbdf00
+[  100.600326] x20: ffff80008271a3f0 x19: ffff800080163078 x18: 000000000000123d
+[  100.600343] x17: 0000000000000000 x16: 00500072b5503510 x15: 0000000000000000
+[  100.600359] x14: 0000000000000009 x13: 0000000000000037 x12: 0000000000000006
+[  100.600375] x11: 00000000fffffffe x10: ffff800082fd3740 x9 : ffff800082fd3738
+[  100.600391] x8 : 0000000000000000 x7 : 00000072b5503510 x6 : 0000000000300000
+[  100.600407] x5 : 0000000000000000 x4 : ffff8000801ffc20 x3 : ffff800082fd3900
+[  100.600423] x2 : 0000000000000000 x1 : ffff800080163078 x0 : ffff80008271a400
+[  100.600440] Call trace:
+[  100.600445]  ftrace_ops_test+0x34/0x138
+[  100.600455]  function_graph_enter+0x144/0x208
+[  100.600465]  ftrace_graph_func+0x34/0x58
+[  100.600477]  arch_ftrace_ops_list_func+0xd0/0x180
+[  100.600489]  ftrace_caller+0x6c/0x9c
+[  100.600498]  __traceiter_rcu_dyntick+0xc/0x88
+[  100.600511]  trace_rcu_dyntick+0x7c/0xa0
+[  100.600523]  ct_nmi_enter+0x90/0xc0
+[  100.600537]  ct_irq_enter+0x10/0x20
+[  100.600548]  enter_from_kernel_mode+0x30/0x58
+[  100.600560]  el1_abort+0x24/0x60
+[  100.600570]  el1h_64_sync_handler+0x80/0xd0
+[  100.600580]  el1h_64_sync+0x64/0x68
+[  100.600590]  ftrace_ops_test+0x34/0x138
+[  100.600600]  function_graph_enter+0x144/0x208
+[  100.600610]  ftrace_graph_func+0x34/0x58
+[  100.600620]  arch_ftrace_ops_list_func+0xd0/0x180
+[  100.600633] Mem abort info:
+[  100.600630]  ftrace_caller+0x6c/0x9c
+[  100.600639]   ESR = 0x0000000096000004
+[  100.600641]  arch_timer_set_next_event_phys+0xc/0x50
+[  100.600656]  clockevents_program_event+0xa0/0x1e0
+[  100.600669]  tick_program_event+0x5c/0xb0
+[  100.600679]  hrtimer_start_range_ns+0x15c/0x350
+[  100.600691]  tick_nohz_restart_sched_tick+0x90/0xb0
+[  100.600702]  tick_nohz_idle_exit+0xf0/0x168
+[  100.600712]  do_idle+0x238/0x290
+[  100.600721]  cpu_startup_entry+0x40/0x50
+[  100.600730]  secondary_start_kernel+0x13c/0x168
+[  100.600743]  __secondary_switched+0xb8/0xc0
+[  100.600761] Code: f9402c08 a902ffff a901ffff a900ffff (f9400508)
+[  100.600769] ---[ end trace 0000000000000000 ]---
+[  100.600782] Kernel panic - not syncing: Attempted to kill the idle task!
+[  100.600789] SMP: stopping secondary CPUs
+[  101.767463] SMP: failed to stop secondary CPUs 0-1,3-5
+[  101.767476] Kernel Offset: disabled
+[  101.767481] CPU features: 0x04,00001041,60100000,4200421b
+[  101.767489] Memory Limit: none
+[  101.814070] ---[ end Kernel panic - not syncing: Attempted to kill
+the idle task! ]---
+
+metadata:
+-------
+  git_describe: next-20240612
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 03d44168cbd7fc57d5de56a3730427db758fc7f6
+  kernel-config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/config
+  build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/
+  kernel_version: 6.10.0-rc3
+  toolchain: clang-18
+
+Links:
+----
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240612/testrun/24277665/suite/log-parser-test/tests/
+ - https://lkft.validation.linaro.org/scheduler/job/7658998#L1508
+
+ --
+Linaro LKFT
+https://lkft.linaro.org
