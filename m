@@ -1,193 +1,149 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C2A1EF1A;
-	Wed, 12 Jun 2024 13:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D6C178398;
+	Wed, 12 Jun 2024 13:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199387; cv=none; b=lDob8xtllIv0BHRJa4UatSko/OqMv9SmAhcEirafC56QfC6aCAkPS/oq+XPUlFPbL1aMO3SiO7XYocN3X9+pFTtGyaZrhrLAZuHKjNez2PbjbVhQ0mQsO+uc47ktYW89juef1Uhdv10dX46n/s+a5M7yFOW7w3n0AzIMQKyT5oI=
+	t=1718199479; cv=none; b=eWnw0n612KOuMQegVlPG3wjiCWIpCv+unZMdEPgFy24m0aHFSa5TLYtxCta5qniUWkc5oGuUKFJwFLn1lATHUGG7g+xlyyngU4Mfxjoq05/ejWGKYvcoqDgdKcTmvSViJtp9g1hHX25p3U9BvBciLh0ZYveq2M71GaPwqXV/Tu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199387; c=relaxed/simple;
-	bh=G+/YbTPUzPFhAhef2S5fdJZcq7ly7ZnYe5drKnp8NJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QGYvJ4MU+CaITs/ykEfTj8fW/bydKhPiNBU8dMF3aLpy4I30/bVsogPZEBe/TvfeeYC3p/UORpNGCiMEneD31Nm9tjRF7xeNPwk3+bSQgirVeyRwGJFcipuQ5vXRBUliQlKYklB5OslpPcPUCvcQOnqO+FC3CV2muxAD3fO246Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=geAkIrEP; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718199479; c=relaxed/simple;
+	bh=tsZU/m7OocLp2Lkbaeswpovpc5i3uD+mhKLpdF0PJC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lV1YsDpPdoM5E+s4LLBb6cNXAw8pBPmAVSUBEYeNrg4LKd0rJIT4WjV+IpSgaOSJ8VKS/sPfR7B4wlKtW5owarXllpHqTvptOMaZawFCKLFuqWCttWh5A9unbjBr293/87DuEN7C1SPsvaIq0hivOW7EPHL8NEFKcOcnKVPm9sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=nzGo1tqe; arc=none smtp.client-ip=212.227.17.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="geAkIrEP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=1FGAP7qOnb/lT4NAs00dzeuWltKxm4nGQ3NRIx3zrWo=;
-	t=1718199385; x=1718631385; b=geAkIrEPeG9uihICxa23FsHbytc3aJFsaI0xfdpUn0dB+9K
-	ZwI9FqWUERtckF9bkkaCDInGl3p53eaSFAvPa2+poyx50fu25MVDB7r1MkqmVj0WlD0uCpUKfO9Sb
-	gxAnvpYwqqDSPJAqIJaRrPHtYxTdy75dP6m+oFexXDG5aswTdhHMQcVTYF9K7OMhTG1KyWESAxAsx
-	muCQ0DOA76ltuBYsatzai1fCIr/zVQ69EksahJTJz9ZnIQBjpDyp1OsrXBiSD61bnL3bLtej2XPGC
-	6JLYP0jF7znx6yjBzRESeAKlSRkx0CrR4QnHKTY2BAkaBinenqGKcq6rx2HnaziA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHO9G-0000rc-MQ; Wed, 12 Jun 2024 15:36:22 +0200
-Message-ID: <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
-Date: Wed, 12 Jun 2024 15:36:22 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="nzGo1tqe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1718199459; x=1718804259; i=christian@heusel.eu;
+	bh=tsZU/m7OocLp2Lkbaeswpovpc5i3uD+mhKLpdF0PJC8=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=nzGo1tqe/cdg/Np7sj6B3nMS5GnrzSw3yS7ZqjG3Mb6yc5JJl0gHgtjvjd5I7hXi
+	 dhtrJpD2rAUtZWG7dKwpPCkCom1wgaY2p2Yp6fRkkdJ4aX9N/tG7JEqO3QObqiSTu
+	 Bd1djEslXQFnerrtuHeSY10vdPOyWbncf2ehj3w5Yje0/mKQQsVFFPaun7anQPnZE
+	 05EgYtDmdKNyI3eqssEoJRTLenzAAyW3W75WJ3RN64K7y/5gRHaHOiAeBNokMNgP3
+	 meS6iWIC3RX4FaQEB9pHetkGEykpjxryGx91fqIcRDhfkSLSdJ5c9sXnWAlnZ/Ycm
+	 N5UThFYkJ8U7Pu57MA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1MyKYE-1scFPu2Fe0-015hkR; Wed, 12
+ Jun 2024 15:31:58 +0200
+Date: Wed, 12 Jun 2024 15:31:56 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Ping-Ke Shih <pkshih@realtek.com>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, Savyasaachi Vanga <savyasaachiv@gmail.com>, 
+	Kalle Valo <kvalo@kernel.org>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
+Message-ID: <3a6b3ea1-986f-4066-8408-cdb56e095d41@heusel.eu>
+References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+ <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
+ <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
+ <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
+ <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
+ <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
+ <6a88e0d3e47ebbd1f0f383094e4804a627c41870.camel@sipsolutions.net>
+ <7869b9b29b6796c95fd5af649e4bd6696e56dcaf.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-To: =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?= <digirigawa@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
- <20240527183139.42b6123c@rorschach.local.home>
- <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
- <20240528144743.149e351b@rorschach.local.home>
- <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
- <20240529144757.79d09eeb@rorschach.local.home>
- <20240529154824.2db8133a@rorschach.local.home>
- <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
- <20240530095953.0020dff9@rorschach.local.home>
- <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718199385;0b49ec19;
-X-HE-SMSGID: 1sHO9G-0000rc-MQ
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2e2w45cfz5ro3syf"
+Content-Disposition: inline
+In-Reply-To: <7869b9b29b6796c95fd5af649e4bd6696e56dcaf.camel@sipsolutions.net>
+X-Provags-ID: V03:K1:PVCZg4NTCK9VJJlSCI0O8ZqJgGt3sMCY3kufv3Iq/7gvLAwXApY
+ f0I11ciyiDQRguivz95omRpZ4ns7Pk1wZ+DieEy7KlsWzVbVleNtt8YwasBDm+1lmtK6Ax9
+ KDm3i2NJK24XatI0bMitrpd1mag8C5tYj2dF3fPO7wks/urE6RsnbU8EGV4iDJ4TcAdejnf
+ GAgXnOKJJdLe+Xe72ZpNQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CyJIKlqnMh8=;5fUCl+DeNHJnKEsBPEdqjAi9g9B
+ +7XosA2TnxJpvl4GK9bmEnuF9bZMl0GoD5wiKRHBsId2Klgdn61iTFHwSsTQaKq3JM4TIPD0/
+ sUC+azNgeKNtFdLJJVjDIWvjBNjY3Dx2xRxE5/pX58QcoRUtBd7r84O0nNhTes78Q7MLtZpry
+ sNEhN8Gj9LiC6qRICLzGB3bH3f0vgRrNeHpJJD0QYp35dufbzAD3A7dseVGSpn5ilOuRSClMC
+ cS64KHtCbFUEg0w0dFKxUk5Xh0/29QIUqyR4q8fOOjhLKsQW4YIn++Sm4xNAC/vXBgz58iOWP
+ MQsUNtTPG9LIX9sjJe/HN6hG4RnQseVznKPecveBozC8xjrvQ41fxRBzzbB9xGzazwqI8+p9J
+ ImJFWAVAnw5cj8cIyXn8sl249G5MpptvdePFrRwnZLXVVr9HQp12qxbrIkCD0yzZn07XYAJmU
+ dfIirG6hehFHAau+XsOk6eurZ9REzwhllJq63IuQDc8iHrqJeHzL5ozpiuJgpwzZ6EG/Qpqkj
+ AaWX1iz6Dc4cFZ87kWm+NpbXAZXmXkG96NFLiCZQMvoaojV8yjQ9bXeMVNCbukNo4AWEzZQUx
+ V/oVfTvBRvONdMvz6TPG2iYmIUKOanQwFKrbuVlAOiUTjy0b9WNnrTrmehyr3SoC84U9+STHD
+ C6tUo52KSTN0A8AX+LOGdkhDrud4RzxtSlLGTF6be0P7aIwEb1RQQCwmpO+TgCaScA2Xwd7lW
+ HST1x4MFXQC6k1ZyInKHhp+KhnSNGCNWH1aBgu2EkG9nF1snU1U4MY=
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
 
-Ilkka or Steven, what happened to this? This thread looks stalled. I
-also was unsuccessful when looking for other threads related to this
-report or the culprit. Did it fall through the cracks or am I missing
-something here?
+--2e2w45cfz5ro3syf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+On 24/06/12 09:58AM, Johannes Berg wrote:
+> On Wed, 2024-06-12 at 09:07 +0200, Johannes Berg wrote:
+> > On Wed, 2024-06-12 at 00:56 +0000, Ping-Ke Shih wrote:
+> >=20
+> >=20
+> > > > Just got pinged (sp?) about this, can you share the driver fix so I=
+ can
+> > > > take a look what the issue is about?
+> > > >=20
+> > >=20
+> > > Please reference patch below. I copy this idea from rtw89 [1], which =
+the main
+> > > stuff is to add WANT_MONITOR_VIF and case NL80211_IFTYPE_MONITOR in a=
+dd_interface().=20
+> >=20
+> > Ah, OK, but that gives me a hint. Yes, I see the issue now.
+> >=20
+> > OK it's not trivial and it might leave ath12k still not working (though
+> > not sure it ever did before? or maybe I'm missing something...), but I
+> > think I can fix this. Let's see.
+> >=20
+>=20
+> I don't have any of the affected hardware, could someone test this?
+>=20
+> https://p.sipsolutions.net/619a4ce4a197b2b4.txt
+>=20
 
-#regzbot poke
+This also [fixes][2] the issue for the initial reporter on our
+bugtracker:
 
-On 02.06.24 09:32, Ilkka Naulapää wrote:
-> sorry longer delay, been a bit busy but here is the result from that
-> new patch. Only applied this patch so if the previous one is needed
-> also, let me know and I'll rerun it.
-> 
-> --Ilkka
-> 
-> On Thu, May 30, 2024 at 5:00 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->> On Thu, 30 May 2024 16:02:37 +0300
->> Ilkka Naulapää <digirigawa@gmail.com> wrote:
->>
->>> applied your patch and here's the output.
->>>
->>
->> Unfortunately, it doesn't give me any new information. I added one more
->> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
->>
->> -- Steve
->>
->> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
->> index de5b72216b1a..a090495e78c9 100644
->> --- a/fs/tracefs/inode.c
->> +++ b/fs/tracefs/inode.c
->> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
->>                 return NULL;
->>
->>         ti->flags = 0;
->> +       ti->magic = 20240823;
->>
->>         return &ti->vfs_inode;
->>  }
->>
->>  static void tracefs_free_inode(struct inode *inode)
->>  {
->> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
->> +       struct tracefs_inode *ti = get_tracefs(inode);
->> +
->> +       BUG_ON(ti->magic != 20240823);
->> +       kmem_cache_free(tracefs_inode_cachep, ti);
->>  }
->>
->>  static ssize_t default_read_file(struct file *file, char __user *buf,
->> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
->>         .rmdir          = tracefs_syscall_rmdir,
->>  };
->>
->> -struct inode *tracefs_get_inode(struct super_block *sb)
->> -{
->> -       struct inode *inode = new_inode(sb);
->> -       if (inode) {
->> -               inode->i_ino = get_next_ino();
->> -               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
->> -       }
->> -       return inode;
->> -}
->> -
->>  struct tracefs_mount_opts {
->>         kuid_t uid;
->>         kgid_t gid;
->> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
->>                 return;
->>
->>         ti = get_tracefs(inode);
->> +       BUG_ON(ti->magic != 20240823);
->>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
->>                 eventfs_set_ef_status_free(dentry);
->>         iput(inode);
->> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
->>         return dentry;
->>  }
->>
->> +struct inode *tracefs_get_inode(struct super_block *sb)
->> +{
->> +       struct inode *inode = new_inode(sb);
->> +
->> +       BUG_ON(sb->s_op != &tracefs_super_operations);
->> +       if (inode) {
->> +               inode->i_ino = get_next_ino();
->> +               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
->> +       }
->> +       return inode;
->> +}
->> +
->>  /**
->>   * tracefs_create_file - create a file in the tracefs filesystem
->>   * @name: a pointer to a string containing the name of the file to create.
->> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
->> index 69c2b1d87c46..9059b8b11bb6 100644
->> --- a/fs/tracefs/internal.h
->> +++ b/fs/tracefs/internal.h
->> @@ -9,12 +9,15 @@ enum {
->>  struct tracefs_inode {
->>         unsigned long           flags;
->>         void                    *private;
->> +       unsigned long           magic;
->>         struct inode            vfs_inode;
->>  };
->>
->>  static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
->>  {
->> -       return container_of(inode, struct tracefs_inode, vfs_inode);
->> +       struct tracefs_inode *ti = container_of(inode, struct tracefs_inode, vfs_inode);
->> +       BUG_ON(ti->magic != 20240823);
->> +       return ti;
->>  }
->>
->>  struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+Tested-by: Savyasaachi Vanga <savyasaachiv@gmail.com>
+
+The test was done using 6.10-rc3 as base + the proposed patch from the
+previous email.
+
+Cheers,
+chris
+
+[2]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issu=
+es/54#note_191037
+
+--2e2w45cfz5ro3syf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmZpo0wACgkQwEfU8yi1
+JYX5IQ//RU63RMmDQkSoJE8Gdx2X6OvhNwE4VhP9HtMfwm0KuVbiqZEYaDNPiaMv
+THAJBPeXCoccjHe5a5anejye1ofgOOn9KdOMF2iin/s1045xGLSELzY1RMVtb9Dx
+JT1Et0zY+LdwODfjF4FWB9wc36DeDCr+2uxDRh2mp+8PBFFD8S5ND+kA/F5ysh1L
+OBeOCQK1kLE4xrzqQ4NsP/9D9vnb/Ufs1XeBFy9/XXiVCuCtQMeLg4+GilF6xpp+
+zkgO3n8iXVKW2XwZJkNtghv9+ak8ZJN4BbYrKlxnuV29dE4uTm4zQwVYzDDepdd7
+Fe6K7Wx6/jiOTuY6MX+tHTECDhNF9+dqN6MyTMQTzE+QU8yEO5+xsr9yxJlkCgbe
+WXF7JcqNidoDmrtBnUMdJxadWqlNLwdLd3jyT7lGis8X/FwvWmHY9c4m23n82v6T
+XWagElaR1uxLEYM+fGembET6Pd9i3qIbCbD3fEcJ4IH+c7DZHWEgzVEaOOdcyNxa
+XHgRpRshk81QhVBG/qKLKOpr0cZbbPodWygm71HcrUA22i9Ga8rmKH6ufzi3osON
+jB4Qpd8MOHJ4UjjM+7UFVnb8X9ei+pxCKC23Sdj/UnZXIBmpgzu2DKXGotmma3rC
+TzK5q1VpY2LX0/UGawmbtRCwA2Yj4eZsUxZH+++nEM1emquWQ0U=
+=iVDo
+-----END PGP SIGNATURE-----
+
+--2e2w45cfz5ro3syf--
