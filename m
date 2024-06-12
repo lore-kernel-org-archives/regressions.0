@@ -1,52 +1,52 @@
 Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2ED1534EA
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 11:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC1516F271
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 11:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718191340; cv=none; b=dz6qtKXtR6dXcBNYGqpmG1aFiUrnMVCyrrz6eQjIrr+qYJBMpWrDJuiiOK7xTrol3/8VB20q8L54I08q3kfj/42e9jwDqY0cF0b3MX9/EQoZtGql1T9zOabF19acHInBxp1bAUTXiWXpK3tMnuBEl3yM8Kys7WpqCaQba37cTgs=
+	t=1718193383; cv=none; b=uYgcm1LNpNBk+YKwuwJ6BO1gxsNzmtKgNEaiXEJswLWlMOuCrSG1ZB7TV5wPN5wK1rMmVhiWwZOXvd2jY9xMau0qgg/x+XVIY3+IUKaq80GFhWWUe42KE3EEO8sco25q4IL7mYPLBccJSo30cNquZmKizLciElb5uzALbrwVJ8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718191340; c=relaxed/simple;
-	bh=S4ToOD7sLlIxL+6jhns7OyjKM8K4sMQHz0KiwTmb2Rk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mlyjMrl+zHWwL7fmQ/+PITEiWwj5xUYSj5cDi+ww3thzKLB+JY4VfjKwjnqRBItNrvW1uki/lB6h3hXiMHWdCpRFLoa2Kdr52mEAZgmRs2hEHmKJs/MahWbHfN4ywgPlCc/ZCshYUOmG5kvGQUqOJrAyd9d4FWnFuK1Cu++83/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BL8pTzSw; arc=none smtp.client-ip=209.85.221.179
+	s=arc-20240116; t=1718193383; c=relaxed/simple;
+	bh=ih5AJrCqPTCJQZA/5rtiMzGoQtgEs24xcX/phtL61j4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uBcDXi6Zkk0YYW31jxYns67s0KoTXIZKR+Eio0dD3NztsIEbOz+cBQdMK6yzizXUb5lGDoHpK6tYBgiSVpw/hdktV2CLnV0ZslAliJua5NgOUg7J6xq4j+rX9t7sCjbCwss1IfpNYGDRcNaDcxc3g8exQTYofuxYyvXB1SqFJxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ShL3Tdys; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BL8pTzSw"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4eaf67ad82dso2347288e0c.1
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 04:22:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ShL3Tdys"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4ed0b3c6a76so129061e0c.1
+        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 04:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718191337; x=1718796137; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1718193380; x=1718798180; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=/IAp1HeQ73IM50UTkojUWwtLb+9FPd+0r53y+ZVFfs8=;
-        b=BL8pTzSw8exeoAzNvrSKLrX0d8a91+9h9sdU6wHbAPqDBQVVCryIEXZI1Xjn5V/mvO
-         L9D8400k4v6NZQd6nCf+9wLqlwFvDyS/RElVFRYXRy/ERihyoBWU1PGuQA12umh+R4dT
-         d/fIzHDl2ZFO8L6IMw95xmv+B0sczWxULuYYBC8kSLMoBSvuRTSNDjP0IB+7YdRN0Slc
-         vZQ5l3po+BwD2tT0m2HFtMeETei12G5oLznTpLQsSVAPRPHosVt6wm2hF2gn66/g5xw2
-         rBQD4v+BY6tN8XreRcbZDNcmGXOBdSzk6Svn/f7PsAQGE3eajmN71IPIV+9A4TgmqPnH
-         eq5A==
+        bh=lKqMNmjLehqXl9hKngHIvENc+offRMdAWIWztPSPA1k=;
+        b=ShL3Tdysl2XhEIpKNlSKfNd7qFoEC92ZQVyrS741CDziYnrC3rZkHdftbBiIatp242
+         JxDN5hIp5oUi2uvEb8VdLDOqWE3+zYBHoO882tP0zNPQN3GA1uFNUsgbNvXMB9C/zQX+
+         qvgRX0SM6+dKR0XttDi+SL0k3ANQi5QKP0HR9ZBocIzpaqI/puVs/MXABRy4XXjdOmbp
+         OSwtcSSl6+RrblwxM0qdm2EpMgtUsPdPa9FqgGPqKk9IYCR9H+E/VFy4faWkFz4xLUgU
+         cty0z2cgrUDf3irWpdUlBJUVWl2T8ZGHD5Dk7ro26xmhP+bM9XRxxA88N29TWDMIOgxG
+         91sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718191337; x=1718796137;
+        d=1e100.net; s=20230601; t=1718193380; x=1718798180;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/IAp1HeQ73IM50UTkojUWwtLb+9FPd+0r53y+ZVFfs8=;
-        b=xDhgvC5XPAYP05KCQ22dsEYXmoED8n5ePqL27bVYFG9l2Vgixjt1YbaDoaR2oPQtg2
-         TejXPDsisnPLBYfhYFzcv/flH3uTt/apiw0ZxBNVabrrLL5nqSES5LU93Ix4rSdxOJdH
-         O2Cs5f0b8O7uGmaKn/VEkXyX4fZJ1PHxtLx5mU3Na7WqcUMIcYDhMc6g28BFRmMMsziH
-         vzwP7cKCGU76yJGJqvfOELnKg3RWxMJmtJG4SA3K/Hj/gm6kEhw/bz53frYvd/5MqD9L
-         q6muVKUpkg+l4ibZV12kbV9RGSHsAjhEE5n71R5YLhTIilma1PzArn1pX1SvfI35ZLC0
-         ENYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUn4PV3qMpMvfcsiiBi4+X+hQmmWy98ZZBUe+2YfytkNRUeIdBzG550gAt2JTVshli8wO/v6hAG3fGwXP3QEPVbd2BQDfUz64Sw6+k=
-X-Gm-Message-State: AOJu0YxIhvu3Guuut/6Jf1l7U5ROg84iKawVZhBwLqLxxksDtiYPjBsw
-	2GDnC4x1NmdgQPE4gSVkTcMT9eNyRNdRA3h05V1Ge6WTzZnHDyXX6j4aGHxzuM1HctGqbHeUGkl
-	mVbTLB/fkURUSsfAljhOS/BfYeUuXkV5oCXWK5A==
-X-Google-Smtp-Source: AGHT+IFuXyhrRXVZeSDEz6144SsmDCO/JhJUFVRlEEpkHGrZTOPtzH+GwmA4geqUJLZxUhHP6q0/vu5O0222H9ECWBI=
-X-Received: by 2002:a67:f715:0:b0:48c:377b:11d with SMTP id
- ada2fe7eead31-48d91e41468mr1887485137.22.1718191337202; Wed, 12 Jun 2024
- 04:22:17 -0700 (PDT)
+        bh=lKqMNmjLehqXl9hKngHIvENc+offRMdAWIWztPSPA1k=;
+        b=c9QsIDw9/lP+2WC/V/XmEOeYkTmSwbrPI/h0wQWQhwXf9ElsIRQw9Eih57DExBLrUv
+         LiTMjggawyBdB9MFF8tQCwHhTiNjVhEZh+vBx2Ks3TFtobYJIULw/SV8RzO2PG80uLai
+         ziJdJth3v9jBRspAUuY8ImpePJUZwxx05MTMoclxWVxYgI7HuQuGMh/mKkU6nKr9yWt1
+         989wuX+0mePf8caPGp4/e04E/GO43Qy/H07AD5UhTCsmrpUYAnVKM/sor1qjxwDtUW0H
+         HVx0eDH+8F5Jdz7+yNgSAswV/lLOKF+dP7tGcddVgHRRuSMkhcCkRvA7Foc91jk0feEX
+         bXfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxggFDQvhc11bihEnxbot4BXaJ7tAZWux/64W4LyavYFLLl1K6GNOCVWbmZl73iLTV6kF6uj/vGjZHhO4mYYH2vkPYT5vfCsH9dqA=
+X-Gm-Message-State: AOJu0YxFTzVPBXR41Ld5Gy1FPI27zqrBu1OD1cJyNwFZ+9oNRA+yV4op
+	iLG6PfVJzGUHIHc+NI+IjBH4SBzk9eL5qoHJctswDtMyOsxXw3ZXn5ispP4kAufXEE1wk0z9KMV
+	591sAjO429zIrucBhW//QJ4O2XLmx/jj4l7Sdyw==
+X-Google-Smtp-Source: AGHT+IFVaHxb2i2+ZEBimsyMtxvlQ7W9AsaBSe0Ua67yYEKTDDgUcRjfZ83FJLzhA8nEctdnwReUFjpNh9jFHNa0TQo=
+X-Received: by 2002:a05:6122:3087:b0:4eb:5fb9:166f with SMTP id
+ 71dfb90a1353d-4ed07b09883mr1852690e0c.7.1718193379725; Wed, 12 Jun 2024
+ 04:56:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,194 +54,299 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 12 Jun 2024 16:52:05 +0530
-Message-ID: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
-Subject: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc : ftrace_ops_test
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Date: Wed, 12 Jun 2024 17:26:08 +0530
+Message-ID: <CA+G9fYv57AhE8CX+T_-OP_yi8tzNXpzS_OGZvjyKKgMDKUN4UA@mail.gmail.com>
+Subject: Bad FPU state detected at restore_fpregs_from_fpstate, reinitializing
+ FPU registers. WARNING: at arch/x86/mm/extable.c:127 fixup_exception
+To: X86 ML <x86@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-The following kernel oops and kernel panic noticed while running LTP tracing
-test cases on arm64 rk3399-rock-pi-4 device running Linux next-20240612 tag.
+The following kernel warnings are noticed on i386 running Linux next-20240612
+tag while booting the ftrace enabled kernel.
+This is always reproducible kernel warning with i386.
+ ( when running the i386 kernel on an x86 machine I always do this)
+
+Extra Kconfig:
+ CONFIG_FTRACE_SYSCALLS=y
+
+Bad FPU state detected at restore_fpregs_from_fpstate+0x3d/0x74,
+reinitializing FPU registers.
+WARNING: CPU: 0 PID: 1 at arch/x86/mm/extable.c:127 fixup_exception+0x41e/0x45c
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Boot and test log:
---------------
-[    0.000000] Linux version 6.10.0-rc3-next-20240612 (tuxmake@tuxmake)
- (Debian clang version 18.1.6
- (++20240518023133+1118c2e05e67-1~exp1~20240518143227.130),
- Debian LLD 18.1.6) #1 SMP PREEMPT @1718178628
+The detailed test log and build log links provided in the bottom of this email.
+
+Boot:
+-------
+Linux version 6.10.0-rc3-next-20240612 (tuxmake@tuxmake)
+(i686-linux-gnu-gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils
+for Debian) 2.42) #1 SMP PREEMPT_DYNAMIC @1718178142
 ...
-trap: SIGUSR1: bad trap
-ftrace-stress-test 1 TINFO: Start pid16=595
-/opt/ltp/testcases/bin/ftrace_stress/ftrace_tracing_cpumask.sh
-ftrace-stress-test 1 TINFO: Start pid17=598
-/opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_filter.sh
-[   55.770077] Scheduler tracepoints stat_sleep, stat_iowait,
-stat_blocked and stat_runtime require the kernel parameter
-schedstats=enable or kernel.sched_schedstats=1
-[   55.790580] Scheduler tracepoints stat_sleep, stat_iowait,
-stat_blocked and stat_runtime require the kernel parameter
-schedstats=enable or kernel.sched_schedstats=1
-trap: SIGTERM: bad trap
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-[  100.599846] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  100.599846] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  100.599846] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  100.599846] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  100.599856] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  100.599866] Mem abort info:
-[  100.599867] Mem abort info:
-[  100.599867] Mem abort info:
-[  100.599874]   ESR = 0x0000000096000004
-[  100.599875]   ESR = 0x0000000096000004
-[  100.599875]   ESR = 0x0000000096000004
-[  100.599883]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  100.599892]   SET = 0, FnV = 0
-[  100.599896]   SET = 0, FnV = 0
-[  100.599896]   SET = 0, FnV = 0
-[  100.599899]   EA = 0, S1PTW = 0
-[  100.599906]   EA = 0, S1PTW = 0
-[  100.599906]   EA = 0, S1PTW = 0
-[  100.599906]   FSC = 0x04: level 0 translation fault
-[  100.599914] Data abort info:
-[  100.599915]   FSC = 0x04: level 0 translation fault
-[  100.599915]   FSC = 0x04: level 0 translation fault
-[  100.599920]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  100.599925] Data abort info:
-[  100.599926] Data abort info:
-[  100.599928]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  100.599936]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  100.599944]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  100.599946]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  100.599945] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000014fc7000
-[  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  100.599956] [0000000000000008] pgd=0000000000000000
-[  100.599964] , p4d=0000000000000000
-[  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000006ce0000
-[  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000079ec000
-[  100.599975]
-[  100.599976] [0000000000000008] pgd=0000000000000000
-[  100.599977] [0000000000000008] pgd=0000000000000000
-[  100.599985] , p4d=0000000000000000
-[  100.599986] , p4d=0000000000000000
-[  100.599985] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-[  100.599992]
-[  100.599994]
-[  100.599997] Modules linked in: brcmfmac snd_soc_hdmi_codec
-dw_hdmi_cec dw_hdmi_i2s_audio brcmutil crct10dif_ce rockchipdrm
-hci_uart snd_soc_spdif_tx hantro_vpu panfrost snd_soc_simple_card
-snd_soc_audio_graph_card btqca dw_mipi_dsi gpu_sched
-snd_soc_simple_card_utils btbcm v4l2_h264 analogix_dp cfg80211
-drm_shmem_helper dw_hdmi v4l2_vp9 phy_rockchip_pcie bluetooth
-v4l2_mem2mem cec snd_soc_rockchip_i2s videobuf2_v4l2
-drm_display_helper videobuf2_dma_contig drm_dma_helper
-videobuf2_memops rtc_rk808 rfkill snd_soc_es8316 videobuf2_common
-drm_kms_helper rockchip_saradc industrialio_triggered_buffer
-pcie_rockchip_host rockchip_thermal kfifo_buf coresight_cpu_debug drm
-fuse backlight dm_mod ip_tables x_tables
-[  100.600212] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
+[   15.714445] Run /sbin/init as init process
+[   15.728653] ------------[ cut here ]------------
+[   15.733278] Bad FPU state detected at
+restore_fpregs_from_fpstate+0x3d/0x74, reinitializing FPU registers.
+[   15.733285] WARNING: CPU: 1 PID: 1 at arch/x86/mm/extable.c:127
+fixup_exception (arch/x86/mm/extable.c:127 (discriminator 2)
+arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733289] Modules linked in:
+[   15.733291] CPU: 1 PID: 1 Comm: init Not tainted 6.10.0-rc3-next-20240612 #1
+[   15.733293] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.7 12/07/2021
+[   15.733294] EIP: fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[ 15.733296] Code: e8 03 ed 00 00 0f 0b eb cb 0f 0b ba 4c 59 53 d2 eb
+b6 b2 01 88 15 c0 d3 38 d2 89 44 24 04 c7 04 24 d8 17 fd d1 e8 de ec
+00 00 <0f> 0b e9 ee fd ff ff 8d b4 26 00 00 00 00 0f 0b ba 4c 59 53 d2
+e9
+All code
+========
+   0: e8 03 ed 00 00        callq  0xed08
+   5: 0f 0b                ud2
+   7: eb cb                jmp    0xffffffffffffffd4
+   9: 0f 0b                ud2
+   b: ba 4c 59 53 d2        mov    $0xd253594c,%edx
+  10: eb b6                jmp    0xffffffffffffffc8
+  12: b2 01                mov    $0x1,%dl
+  14: 88 15 c0 d3 38 d2    mov    %dl,-0x2dc72c40(%rip)        #
+0xffffffffd238d3da
+  1a: 89 44 24 04          mov    %eax,0x4(%rsp)
+  1e: c7 04 24 d8 17 fd d1 movl   $0xd1fd17d8,(%rsp)
+  25: e8 de ec 00 00        callq  0xed08
+  2a:* 0f 0b                ud2    <-- trapping instruction
+  2c: e9 ee fd ff ff        jmpq   0xfffffffffffffe1f
+  31: 8d b4 26 00 00 00 00 lea    0x0(%rsi,%riz,1),%esi
+  38: 0f 0b                ud2
+  3a: ba 4c 59 53 d2        mov    $0xd253594c,%edx
+  3f: e9                    .byte 0xe9
+
+Code starting with the faulting instruction
+===========================================
+   0: 0f 0b                ud2
+   2: e9 ee fd ff ff        jmpq   0xfffffffffffffdf5
+   7: 8d b4 26 00 00 00 00 lea    0x0(%rsi,%riz,1),%esi
+   e: 0f 0b                ud2
+  10: ba 4c 59 53 d2        mov    $0xd253594c,%edx
+  15: e9                    .byte 0xe9
+[   15.733298] EAX: 0000005e EBX: d2159678 ECX: 00000000 EDX: 00000002
+[   15.733299] ESI: c11efee8 EDI: 0000000d EBP: c11efe50 ESP: c11efdd0
+[   15.733300] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010086
+[   15.733302] CR0: 80050033 CR2: bfec4aab CR3: 02abc000 CR4: 003506d0
+[   15.733303] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[   15.733304] DR6: fffe0ff0 DR7: 00000400
+[   15.733304] Call Trace:
+[   15.733306] ? show_regs (arch/x86/kernel/dumpstack.c:479)
+[   15.733308] ? fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733310] ? __warn (kernel/panic.c:742)
+[   15.733313] ? fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733314] ? fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733316] ? report_bug (lib/bug.c:180 lib/bug.c:219)
+[   15.733320] ? exc_overflow (arch/x86/kernel/traps.c:252)
+[   15.733321] ? handle_bug (arch/x86/kernel/traps.c:218)
+[   15.733323] ? exc_invalid_op (arch/x86/kernel/traps.c:260 (discriminator 1))
+[   15.733324] ? console_unlock (kernel/printk/printk.c:3137 (discriminator 1))
+[   15.733326] ? handle_exception (arch/x86/entry/entry_32.S:1054)
+[   15.733329] ? software_resume (kernel/power/hibernate.c:1024)
+[   15.733332] ? set_pages_rw (arch/x86/mm/pat/set_memory.c:2356)
+[   15.733334] ? exc_overflow (arch/x86/kernel/traps.c:252)
+[   15.733336] ? fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733337] ? set_pages_rw (arch/x86/mm/pat/set_memory.c:2356)
+[   15.733340] ? exc_overflow (arch/x86/kernel/traps.c:252)
+[   15.733341] ? fixup_exception (arch/x86/mm/extable.c:127
+(discriminator 2) arch/x86/mm/extable.c:340 (discriminator 2))
+[   15.733342] ? restore_fpregs_from_fpstate (arch/x86/kernel/fpu/core.c:198)
+[   15.733344] ? mt_find (lib/maple_tree.c:6956)
+[   15.733347] ? get_random_u32 (arch/x86/include/asm/irqflags.h:42
+arch/x86/include/asm/irqflags.h:77 arch/x86/include/asm/irqflags.h:135
+drivers/char/random.c:532)
+[   15.733349] ? _raw_spin_unlock
+(include/linux/spinlock_api_smp.h:143 (discriminator 3)
+kernel/locking/spinlock.c:186 (discriminator 3))
+[   15.733350] ? finalize_exec (fs/exec.c:1497)
+[   15.733352] ? trace_preempt_on (kernel/trace/trace_preemptirq.c:105)
+[   15.733354] ? finalize_exec (fs/exec.c:1497)
+[   15.733355] ? exc_bounds (arch/x86/kernel/traps.c:644)
+[   15.733356] exc_general_protection (arch/x86/kernel/traps.c:618
+(discriminator 1) arch/x86/kernel/traps.c:678 (discriminator 1)
+arch/x86/kernel/traps.c:644 (discriminator 1))
+[   15.733357] ? finalize_exec (fs/exec.c:1497)
+[   15.733359] ? exc_bounds (arch/x86/kernel/traps.c:644)
+[   15.733361] handle_exception (arch/x86/entry/entry_32.S:1054)
+[   15.733363] EIP: restore_fpregs_from_fpstate (arch/x86/kernel/fpu/core.c:198)
+[ 15.733364] Code: 7d fc 89 ca eb 09 cc cc cc db e2 0f 77 db 03 3e 8d
+74 26 00 8b 3d ac 82 0b d2 8b 0d a8 82 0b d2 21 fa 8d 7b 40 21 c8 0f
+c7 1f <8b> 5d f8 8b 7d fc 89 ec 5d c3 2e 8d 74 26 00 3e 8d 74 26 00 0f
+ae
+All code
+========
+   0: 7d fc                jge    0xfffffffffffffffe
+   2: 89 ca                mov    %ecx,%edx
+   4: eb 09                jmp    0xf
+   6: cc                    int3
+   7: cc                    int3
+   8: cc                    int3
+   9: db e2                fnclex
+   b: 0f 77                emms
+   d: db 03                fildl  (%rbx)
+   f: 3e 8d 74 26 00        lea    %ds:0x0(%rsi,%riz,1),%esi
+  14: 8b 3d ac 82 0b d2    mov    -0x2df47d54(%rip),%edi        #
+0xffffffffd20b82c6
+  1a: 8b 0d a8 82 0b d2    mov    -0x2df47d58(%rip),%ecx        #
+0xffffffffd20b82c8
+  20: 21 fa                and    %edi,%edx
+  22: 8d 7b 40              lea    0x40(%rbx),%edi
+  25: 21 c8                and    %ecx,%eax
+  27: 0f c7 1f              xrstors (%rdi)
+  2a:* 8b 5d f8              mov    -0x8(%rbp),%ebx <-- trapping instruction
+  2d: 8b 7d fc              mov    -0x4(%rbp),%edi
+  30: 89 ec                mov    %ebp,%esp
+  32: 5d                    pop    %rbp
+  33: c3                    retq
+  34: 2e 8d 74 26 00        lea    %cs:0x0(%rsi,%riz,1),%esi
+  39: 3e 8d 74 26 00        lea    %ds:0x0(%rsi,%riz,1),%esi
+  3e: 0f                    .byte 0xf
+  3f: ae                    scas   %es:(%rdi),%al
+
+Code starting with the faulting instruction
+===========================================
+   0: 8b 5d f8              mov    -0x8(%rbp),%ebx
+   3: 8b 7d fc              mov    -0x4(%rbp),%edi
+   6: 89 ec                mov    %ebp,%esp
+   8: 5d                    pop    %rbp
+   9: c3                    retq
+   a: 2e 8d 74 26 00        lea    %cs:0x0(%rsi,%riz,1),%esi
+   f: 3e 8d 74 26 00        lea    %ds:0x0(%rsi,%riz,1),%esi
+  14: 0f                    .byte 0xf
+  15: ae                    scas   %es:(%rdi),%al
+[   15.733366] EAX: 0000001f EBX: c12288e0 ECX: 0000001f EDX: 00000000
+[   15.733367] ESI: c1228000 EDI: c1228920 EBP: c11eff4c ESP: c11eff44
+[   15.733368] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010002
+[   15.733369] ? __do_sys_newstat (fs/stat.c:439)
+[   15.733372] ? exc_bounds (arch/x86/kernel/traps.c:644)
+[   15.733373] ? exc_bounds (arch/x86/kernel/traps.c:644)
+[   15.733374] ? restore_fpregs_from_fpstate
+(arch/x86/kernel/fpu/xstate.h:209 arch/x86/kernel/fpu/core.c:191)
+[   15.733376] fpregs_restore_userregs
+(arch/x86/kernel/fpu/context.h:49 (discriminator 4)
+arch/x86/kernel/fpu/context.h:76 (discriminator 4))
+[   15.733378] switch_fpu_return (arch/x86/kernel/fpu/core.c:802)
+[   15.733380] syscall_exit_to_user_mode
+(arch/x86/include/asm/entry-common.h:58
+include/linux/entry-common.h:330 kernel/entry/common.c:207
+kernel/entry/common.c:218)
+[   15.733382] ? rest_init (init/main.c:1459)
+[   15.733383] ? kernel_init (init/main.c:1397 init/main.c:1523)
+[   15.733385] ? rest_init (init/main.c:1459)
+[   15.733387] ret_from_fork (arch/x86/kernel/process.c:154)
+[   15.733388] ? rest_init (init/main.c:1459)
+[   15.733390] ret_from_fork_asm (arch/x86/entry/entry_32.S:737)
+[   15.733391] entry_INT80_32 (arch/x86/entry/entry_32.S:944)
+[   15.733393] EIP: 0xb7f175b0
+[ 15.733396] Code: Unable to access opcode bytes at 0xb7f17586.
+
+Code starting with the faulting instruction
+===========================================
+[   15.733396] EAX: 00000000 EBX: 00000000 ECX: 00000000 EDX: 00000000
+[   15.733397] ESI: 00000000 EDI: 00000000 EBP: 00000000 ESP: bfec49b0
+[   15.733398] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 007b EFLAGS: 00000200
+[   15.733400] ---[ end trace 0000000000000000 ]---
+[   16.074973] ------------[ cut here ]------------
+[   16.079626] WARNING: CPU: 1 PID: 1 at
+arch/x86/kernel/fpu/xstate.h:195 save_fpregs_to_fpstate
+(arch/x86/kernel/fpu/xstate.h:195 (discriminator 1)
+arch/x86/kernel/fpu/core.c:128 (discriminator 1))
+[   16.079629] Modules linked in:
+[   16.079630] CPU: 1 PID: 1 Comm: init Tainted: G        W
 6.10.0-rc3-next-20240612 #1
-[  100.600222] Hardware name: Radxa ROCK Pi 4B (DT)
-[  100.600229] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  100.600239] pc : ftrace_ops_test+0x34/0x138
-[  100.600258] lr : function_graph_enter+0x144/0x208
-[  100.600271] sp : ffff800082fd3730
-[  100.600276] x29: ffff800082fd3770 x28: 0000000000000038 x27: ffff80008271a790
-[  100.600293] x26: ffff800082d24b08 x25: ffffffffffffffff x24: ffff800082d24000
-[  100.600310] x23: 0000000000000001 x22: 0000000000000001 x21: ffff000000cbdf00
-[  100.600326] x20: ffff80008271a3f0 x19: ffff800080163078 x18: 000000000000123d
-[  100.600343] x17: 0000000000000000 x16: 00500072b5503510 x15: 0000000000000000
-[  100.600359] x14: 0000000000000009 x13: 0000000000000037 x12: 0000000000000006
-[  100.600375] x11: 00000000fffffffe x10: ffff800082fd3740 x9 : ffff800082fd3738
-[  100.600391] x8 : 0000000000000000 x7 : 00000072b5503510 x6 : 0000000000300000
-[  100.600407] x5 : 0000000000000000 x4 : ffff8000801ffc20 x3 : ffff800082fd3900
-[  100.600423] x2 : 0000000000000000 x1 : ffff800080163078 x0 : ffff80008271a400
-[  100.600440] Call trace:
-[  100.600445]  ftrace_ops_test+0x34/0x138
-[  100.600455]  function_graph_enter+0x144/0x208
-[  100.600465]  ftrace_graph_func+0x34/0x58
-[  100.600477]  arch_ftrace_ops_list_func+0xd0/0x180
-[  100.600489]  ftrace_caller+0x6c/0x9c
-[  100.600498]  __traceiter_rcu_dyntick+0xc/0x88
-[  100.600511]  trace_rcu_dyntick+0x7c/0xa0
-[  100.600523]  ct_nmi_enter+0x90/0xc0
-[  100.600537]  ct_irq_enter+0x10/0x20
-[  100.600548]  enter_from_kernel_mode+0x30/0x58
-[  100.600560]  el1_abort+0x24/0x60
-[  100.600570]  el1h_64_sync_handler+0x80/0xd0
-[  100.600580]  el1h_64_sync+0x64/0x68
-[  100.600590]  ftrace_ops_test+0x34/0x138
-[  100.600600]  function_graph_enter+0x144/0x208
-[  100.600610]  ftrace_graph_func+0x34/0x58
-[  100.600620]  arch_ftrace_ops_list_func+0xd0/0x180
-[  100.600633] Mem abort info:
-[  100.600630]  ftrace_caller+0x6c/0x9c
-[  100.600639]   ESR = 0x0000000096000004
-[  100.600641]  arch_timer_set_next_event_phys+0xc/0x50
-[  100.600656]  clockevents_program_event+0xa0/0x1e0
-[  100.600669]  tick_program_event+0x5c/0xb0
-[  100.600679]  hrtimer_start_range_ns+0x15c/0x350
-[  100.600691]  tick_nohz_restart_sched_tick+0x90/0xb0
-[  100.600702]  tick_nohz_idle_exit+0xf0/0x168
-[  100.600712]  do_idle+0x238/0x290
-[  100.600721]  cpu_startup_entry+0x40/0x50
-[  100.600730]  secondary_start_kernel+0x13c/0x168
-[  100.600743]  __secondary_switched+0xb8/0xc0
-[  100.600761] Code: f9402c08 a902ffff a901ffff a900ffff (f9400508)
-[  100.600769] ---[ end trace 0000000000000000 ]---
-[  100.600782] Kernel panic - not syncing: Attempted to kill the idle task!
-[  100.600789] SMP: stopping secondary CPUs
-[  101.767463] SMP: failed to stop secondary CPUs 0-1,3-5
-[  101.767476] Kernel Offset: disabled
-[  101.767481] CPU features: 0x04,00001041,60100000,4200421b
-[  101.767489] Memory Limit: none
-[  101.814070] ---[ end Kernel panic - not syncing: Attempted to kill
-the idle task! ]---
+[   16.079632] Tainted: [W]=WARN
+[   16.079632] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.7 12/07/2021
+[   16.079633] EIP: save_fpregs_to_fpstate
+(arch/x86/kernel/fpu/xstate.h:195 (discriminator 1)
+arch/x86/kernel/fpu/core.c:128 (discriminator 1))
+[ 16.079634] Code: f8 8b 7d fc 89 ec 5d c3 66 90 8b 40 08 dd 70 40 9b
+8b 43 08 dd 60 40 8b 5d f8 8b 7d fc 89 ec 5d c3 2e 8d b4 26 00 00 00
+00 90 <0f> 0b eb 9b 8d 74 26 00 0f 0b eb 87 3e 8d 74 26 00 55 89 e5 83
+ec
+All code
+========
+   0: f8                    clc
+   1: 8b 7d fc              mov    -0x4(%rbp),%edi
+   4: 89 ec                mov    %ebp,%esp
+   6: 5d                    pop    %rbp
+   7: c3                    retq
+   8: 66 90                xchg   %ax,%ax
+   a: 8b 40 08              mov    0x8(%rax),%eax
+   d: dd 70 40              fnsave 0x40(%rax)
+  10: 9b                    fwait
+  11: 8b 43 08              mov    0x8(%rbx),%eax
+  14: dd 60 40              frstor 0x40(%rax)
+  17: 8b 5d f8              mov    -0x8(%rbp),%ebx
+  1a: 8b 7d fc              mov    -0x4(%rbp),%edi
+  1d: 89 ec                mov    %ebp,%esp
+  1f: 5d                    pop    %rbp
+  20: c3                    retq
+  21: 2e 8d b4 26 00 00 00 lea    %cs:0x0(%rsi,%riz,1),%esi
+  28: 00
+  29: 90                    nop
+  2a:* 0f 0b                ud2    <-- trapping instruction
+  2c: eb 9b                jmp    0xffffffffffffffc9
+  2e: 8d 74 26 00          lea    0x0(%rsi,%riz,1),%esi
+  32: 0f 0b                ud2
+  34: eb 87                jmp    0xffffffffffffffbd
+  36: 3e 8d 74 26 00        lea    %ds:0x0(%rsi,%riz,1),%esi
+  3b: 55                    push   %rbp
+  3c: 89 e5                mov    %esp,%ebp
+  3e: 83                    .byte 0x83
+  3f: ec                    in     (%dx),%al
+
+Code starting with the faulting instruction
+===========================================
+   0: 0f 0b                ud2
+   2: eb 9b                jmp    0xffffffffffffff9f
+   4: 8d 74 26 00          lea    0x0(%rsi,%riz,1),%esi
+   8: 0f 0b                ud2
+   a: eb 87                jmp    0xffffffffffffff93
+   c: 3e 8d 74 26 00        lea    %ds:0x0(%rsi,%riz,1),%esi
+  11: 55                    push   %rbp
+  12: 89 e5                mov    %esp,%ebp
+  14: 83                    .byte 0x83
+  15: ec                    in     (%dx),%al
+[   16.079636] EAX: 0000001f EBX: c12288a0 ECX: c12288e0 EDX: 00000000
+[   16.079637] ESI: c1228000 EDI: fffffff2 EBP: c1221ed0 ESP: c1221ec8
+[   16.079637] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010082
+[   16.079639] CR0: 80050033 CR2: b7f17586 CR3: 02abc000 CR4: 003506d0
+[   16.079640] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[   16.079640] DR6: fffe0ff0 DR7: 00000400
+[   16.079641] Call Trace:
+[   16.079641] ---[ end trace 0000000000000000 ]---
 
 metadata:
--------
-  git_describe: next-20240612
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 03d44168cbd7fc57d5de56a3730427db758fc7f6
-  kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/config
-  build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/
-  kernel_version: 6.10.0-rc3
-  toolchain: clang-18
+---
+git_describe: next-20240612
+git_ref: master
+git_rep: ohttps://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+git_sha: 03d44168cbd7fc57d5de56a3730427db758fc7f6
+arch: i386
+toolchain: gcc-13
 
 Links:
 ----
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240612/testrun/24277665/suite/log-parser-test/tests/
- - https://lkft.validation.linaro.org/scheduler/job/7658998#L1508
+- https://lkft.validation.linaro.org/scheduler/job/7658521#L1067
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240612/testrun/24277698/suite/log-parser-boot/test/check-kernel-warning-ff46c8024e8b2af96107ccfc90c52489f57275260d87c4955245aefd26dd9d60/details/
+- https://storage.tuxsuite.com/public/linaro/lkft/builds/2hlo6h03yVTVuYB6mf8ZHEdZISJ/
 
- --
+
+--
 Linaro LKFT
 https://lkft.linaro.org
