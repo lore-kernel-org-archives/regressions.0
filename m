@@ -1,70 +1,82 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7A239AF9;
-	Wed, 12 Jun 2024 05:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20F5167DB8;
+	Wed, 12 Jun 2024 07:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718171472; cv=none; b=DmUDjHrRzsbwJFGa+fypBmoaUqlEeZeALMTnAboKzRWRgJNGdpLyUd7p/eA4+V67OvLZufdKPWvRxO3TCnt9xvgLz3BWHE4E16Bnl7M1Y6FkIJXnaFjaw8ln4SIxgN/W0gEWRTfXoR+Q2kXdKzf3P8+Z3pIXmR7mPxcn/Pdi2cY=
+	t=1718176028; cv=none; b=u8pmIlMea8Jn9Ztdss1VoB7O9VaAL+Ky74XitvYxg/VyCzROunied4GBRbGqcEqY1UbPPesM5L50HaEv40EWhtfNKqRgg3e12lqhPVk/SwbaGPPqdwaStj/TskEM4KkN/Ej1DpfPIllB/iJCMp8OXsy6J0oyTYFlnw8ruriEkAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718171472; c=relaxed/simple;
-	bh=tcIe6lAwAoUmTJhobYIwK/ldOlcBBXDJTOmm8Z2AyKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aYYdXxV3t6yD5GtEmynJgbMZKtnU3ntuFlkX2Qih24MMg0O6e6RrU08aJuIchXQX1KNULWNdQz/8SfD53wtDN4vpsEJCJV3Qgmkcy8psrtwqhGTE1dUbBgMQmNcU6gZ+Mkg88cZOEz9KPaB7trFQ2KJuv1/Qw03OrikF7SUEvrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QdgDiqZO; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718176028; c=relaxed/simple;
+	bh=rYs16LMDXSBKD16sAOH3Kuiy41oWYZJcg08wjQC6+CU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hT8o7I2wijMXJVe1h3NrWju9cJZjHnxNbkEu6bRRJ5oJpgtFB4WhNwhlwhu2C8fJuPwFjnZnTdrTil61Ro22Bnbv75Hq72hLrUB7viEuLE1qr9EHlv+k02tqOUr3TbFhzy3DyhFofB149KpN6ERs3jekfFd/x2y8w/8qGDPfNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=QUIud+EN; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QdgDiqZO"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="QUIud+EN"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Cuiizet8ko146AQpF7HtdLDcA9QnFdSYLTJpg+Pci3Q=;
-	t=1718171470; x=1718603470; b=QdgDiqZObqW4L1X5wykhaoT69DNodcsoO+rnxGZoU4dhF0E
-	Rs+mJYO9SYEfTlX0dVnRAFLCDQawWtaw2nK/R/2IlhRMriUK8seZ5J1bPnZr9UoBCJ3POQ9s6vouq
-	a5sU9vl8UNqjkkQxH4roE7PvrTxEF5JV9o33gpqM/fBMWG6c1PmLHkuEbKfIWs8pkyvv6S/VB4UE4
-	c/FLGlsEK5AdFGOa/4i1+0wmV30GAfEbEdId73wwsUFmM/ae4aYv2Kgjnus1HEoVnG/ROVJYlWZAf
-	Mgg70e9+VFhZiF3MA4BjL3IOmUxc7Q9lrCyMxSCYJXnVCNKTcGdyItQ0kZ9/ctmQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHGt2-0004qm-4S; Wed, 12 Jun 2024 07:51:08 +0200
-Message-ID: <08a9551a-e368-4eaf-91b3-f5f716e1fda3@leemhuis.info>
-Date: Wed, 12 Jun 2024 07:51:07 +0200
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=rYs16LMDXSBKD16sAOH3Kuiy41oWYZJcg08wjQC6+CU=;
+	t=1718176026; x=1719385626; b=QUIud+ENh1B48hQH1hi4ATBi01siQW0cZzXXArwOziPPBxz
+	9PyWzZV9h7lP4N+v/HqRD1rNQNoLmTFhZnrMX9v6beJMJhBKo0OuvVdIRO4C+DYSLimv9Giu4KADI
+	rX8ynrcbuPUsy4W/2OYR7eGD0BHeAk8t/ZqhAiod3RuG93mT+MciJsnyBG5yig9BjwZmfJmEc9q4T
+	JcFoDqQDhsSFnB/PThru3neZwAnEo9oa3Z5u++X8igdFcvQXCDcn3M/XgCKQ7F/n08YTK3wqebGZn
+	5kU3nNIWbb/DMxkisvW3R3J/ABVDPGGdegTxb2D65hpWQNfpvmxLBchozaRr0IbA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sHI4T-00000009z6w-0LTv;
+	Wed, 12 Jun 2024 09:07:01 +0200
+Message-ID: <6a88e0d3e47ebbd1f0f383094e4804a627c41870.camel@sipsolutions.net>
+Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Ping-Ke Shih <pkshih@realtek.com>, Thorsten Leemhuis
+	 <regressions@leemhuis.info>, Savyasaachi Vanga <savyasaachiv@gmail.com>, 
+ Christian Heusel <christian@heusel.eu>
+Cc: Kalle Valo <kvalo@kernel.org>, "linux-wireless@vger.kernel.org"
+	 <linux-wireless@vger.kernel.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>
+Date: Wed, 12 Jun 2024 09:07:00 +0200
+In-Reply-To: <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
+References: 
+	<chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+	 <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
+	 <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
+	 <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
+	 <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
+	 <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Potential regression on Kernel 5.15.0-112.122
-To: Xavier Boudet <xboudet@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <CAJ_Ywo+kJcgkPxgncrc33Rqy7Sn04j3g=euvCtYS8oFhH_wXEQ@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAJ_Ywo+kJcgkPxgncrc33Rqy7Sn04j3g=euvCtYS8oFhH_wXEQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718171470;94350ba8;
-X-HE-SMSGID: 1sHGt2-0004qm-4S
+X-malware-bazaar: not-scanned
 
-On 12.06.24 07:19, Xavier Boudet wrote:
-> 
-> I'm using Ubuntu Ubuntu 22.04.4 LTS.
-> I upgraded my kernel last week and obviously there is something
-> wrong with it.
-> When I come back on 5.15.0-107.117, everything is fine.
+On Wed, 2024-06-12 at 00:56 +0000, Ping-Ke Shih wrote:
 
-Thx for trying to report it upstream, but sorry, you came to the wrong
-place. That is a modified vendor kernel, so you have to report any
-problems with it to said vendor.
 
-See also the first few point in:
-https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+> > Just got pinged (sp?) about this, can you share the driver fix so I can
+> > take a look what the issue is about?
+> >=20
+>=20
+> Please reference patch below. I copy this idea from rtw89 [1], which the =
+main
+> stuff is to add WANT_MONITOR_VIF and case NL80211_IFTYPE_MONITOR in add_i=
+nterface().=20
 
-Ciao, Thorsten
+Ah, OK, but that gives me a hint. Yes, I see the issue now.
+
+OK it's not trivial and it might leave ath12k still not working (though
+not sure it ever did before? or maybe I'm missing something...), but I
+think I can fix this. Let's see.
+
+johannes
