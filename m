@@ -1,249 +1,434 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F252C181B9F;
-	Wed, 12 Jun 2024 16:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34878181B87
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 17:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718211093; cv=none; b=e9p/FhEpSTRhwcsKLo16zM5iPixT9PeS2Rb+MoWkWWJcbnRz02LqeODk+2kkOj9ybLfRaTEV6FZQ+cjZlne3G1M1Sz/134oYmuTVk5SyS5G47rNsG/hPVBWLPznagKySdFNr9WGVY15B80Qf8oHGtxl2MIIaA9tw1OIx2UFZiZ0=
+	t=1718211679; cv=none; b=doHMupj6uBonFjFsK0XYjKd6oOISU38hMMHB8qi1duO8U+gp4qSrmhNx6wJXmPnZgoVQ2KZ5jM4sUhe2fiABjsuGMi3F3fuA8p2XiE926+DWBXnj/akdfn3Mhe+4KS2WBk0MdB2QEQkPptR6oYbXS9eb2gmJtCvchiEZso7weW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718211093; c=relaxed/simple;
-	bh=YrYUtmBscwe/BKDCAeV2DJYBsIYZzcIwLEPbABFZbaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HU7l2ksr2BVLEmd7JHlhNMwBfcG6LzYYepyNWJ/89IBqbmkyMqBYUGzFuLmG/c44Q99Vv45gkTn1K6DL7p82FysclDEoFktBJsPpQNvNSJW8pzIglt53XtHkovty72tdidDG8XaLgXBSG8WpPQSg0LKeAed8XNdB30d6fZemwNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AAE0C116B1;
-	Wed, 12 Jun 2024 16:51:31 +0000 (UTC)
-Date: Wed, 12 Jun 2024 12:51:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter
- <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc :
- ftrace_ops_test
-Message-ID: <20240612125130.2c1d6d2d@rorschach.local.home>
-In-Reply-To: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
-References: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718211679; c=relaxed/simple;
+	bh=Nstmz9rtt8OLXGPYlhx8od7aibn/CD1o05enNke08EE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dSiCrR/lvYFf8LkqyzzuQ8DjhQ/Ta3dgUsgSEzAKluihH0Wn2peuVkKUNgFkUrvn+Ru+3qcWDXboH9UvfIMrIsoUK5L5Fii0Rx9NEtC6B61l2XbhW6CuyTFoT7H98pUfzKHtZm4/ADqbOMJlcZAxy49LX+xaM/NO94uXeJLagnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id C768B1008BEA1;
+	Thu, 13 Jun 2024 00:55:50 +0800 (CST)
+Received: from [192.168.1.120] (unknown [59.78.30.29])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 4320437C91F;
+	Thu, 13 Jun 2024 00:55:43 +0800 (CST)
+Message-ID: <44dc1df5f5a1b740b76d1efbf607c49f9d50dda0.camel@sjtu.edu.cn>
+Subject: Re: [bug report] drm/amdgpu: amdgpu crash on playing videos, linux
+ 6.10-rc
+From: Wang Yunchen <mac-wang@sjtu.edu.cn>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Winston Ma
+	 <winstonhyypia@gmail.com>
+Cc: Felix.Kuehling@amd.com, Xinhui.Pan@amd.com, alexander.deucher@amd.com, 
+	amd-gfx@lists.freedesktop.org, christian.koenig@amd.com, LKML
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 13 Jun 2024 00:55:41 +0800
+In-Reply-To: <4ce90767-7d85-47b0-9187-4eb8d257e7e0@leemhuis.info>
+References: 
+	<CAMOvFfkQscju1spNKHmEC_Rut+2=qfhKGZSvGhCk_nd5VhuDkg@mail.gmail.com>
+	 <4ce90767-7d85-47b0-9187-4eb8d257e7e0@leemhuis.info>
+Organization: Shanghai Jiao Tong University
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 12 Jun 2024 16:52:05 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Wed, 2024-06-12 at 15:14 +0200, Linux regression tracking (Thorsten Leem=
+huis) wrote:
+> On 06.06.24 05:06, Winston Ma wrote:
+> > Hi I got the same problem on Linux Kernel 6.10-rc2. I got the problem b=
+y
+> > following the procedure below:
+> >=20
+> > =C2=A01. Boot Linux Kernel 6.10-rc2
+> > =C2=A02. Open Firefox (Any browser should work)
+> > =C2=A03. Open a Youtube Video
+> > =C2=A04. On the playing video, toggle fullscreen quickly Then after 10-=
+20
+> > =C2=A0=C2=A0=C2=A0 times of fullscreen toggling, the screen would enter=
+ freeze mode.
+> > =C2=A0=C2=A0=C2=A0 This is the log that I captured using the above meth=
+od.
+>=20
+> Hmm, seems nothing happened here for a while. Could you maybe try to
+> bisect this
+> (https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.h=
+tml
+> )?
+>=20
+> @amd-gfx devs: Or is this unneeded, as the cause found or maybe even
+> fixed meanwhile?
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+> > This is the kernel log
+> >=20
+> > 2024-06-06T10:26:40.747576+08:00 kernel: gmc_v10_0_process_interrupt: 6=
+ callbacks suppressed
+> > 2024-06-06T10:26:40.747618+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: [=
+mmhub] page fault (src_id:0 ring:8 vmid:2
+> > pasid:32789)
+> > 2024-06-06T10:26:40.747623+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0 in process RDD Process pid 39524 thread
+> > firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:26:40.747625+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0=C2=A0 in page starting at address
+> > 0x0000800106ffe000 from client 0x12 (VMC)
+> > 2024-06-06T10:26:40.747628+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+MVM_L2_PROTECTION_FAULT_STATUS:0x00203811
+> > 2024-06-06T10:26:40.747629+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 Faulty UTCL2 client ID: VCN (0x1c)
+> > 2024-06-06T10:26:40.747631+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MORE_FAULTS: 0x1
+> > 2024-06-06T10:26:40.747651+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 WALKER_ERROR: 0x0
+> > 2024-06-06T10:26:40.747653+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 PERMISSION_FAULTS: 0x1
+> > 2024-06-06T10:26:40.747655+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MAPPING_ERROR: 0x0
+> > 2024-06-06T10:26:40.747656+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 RW: 0x0
+> > 2024-06-06T10:26:40.747658+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: [=
+mmhub] page fault (src_id:0 ring:8 vmid:2
+> > pasid:32789)
+> > 2024-06-06T10:26:40.747660+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0 in process RDD Process pid 39524 thread
+> > firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:26:40.747662+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0=C2=A0 in page starting at address
+> > 0x0000800106e00000 from client 0x12 (VMC)
+> > 2024-06-06T10:26:40.747663+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+MVM_L2_PROTECTION_FAULT_STATUS:0x00000000
+> > 2024-06-06T10:26:40.747664+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 Faulty UTCL2 client ID: MP0 (0x0)
+> > 2024-06-06T10:26:40.747666+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MORE_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747667+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 WALKER_ERROR: 0x0
+> > 2024-06-06T10:26:40.747668+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 PERMISSION_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747670+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MAPPING_ERROR: 0x0
+> > 2024-06-06T10:26:40.747671+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 RW: 0x0
+> > 2024-06-06T10:26:40.747674+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: [=
+mmhub] page fault (src_id:0 ring:8 vmid:2
+> > pasid:32789)
+> > 2024-06-06T10:26:40.747677+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0 in process RDD Process pid 39524 thread
+> > firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:26:40.747680+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0=C2=A0 in page starting at address
+> > 0x0000800106e07000 from client 0x12 (VMC)
+> > 2024-06-06T10:26:40.747683+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+MVM_L2_PROTECTION_FAULT_STATUS:0x00000000
+> > 2024-06-06T10:26:40.747686+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 Faulty UTCL2 client ID: MP0 (0x0)
+> > 2024-06-06T10:26:40.747688+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MORE_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747691+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 WALKER_ERROR: 0x0
+> > 2024-06-06T10:26:40.747693+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 PERMISSION_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747696+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MAPPING_ERROR: 0x0
+> > 2024-06-06T10:26:40.747698+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 RW: 0x0
+> > 2024-06-06T10:26:40.747700+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: [=
+mmhub] page fault (src_id:0 ring:8 vmid:2
+> > pasid:32789)
+> > 2024-06-06T10:26:40.747703+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0 in process RDD Process pid 39524 thread
+> > firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:26:40.747705+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0=C2=A0 in page starting at address
+> > 0x0000800107001000 from client 0x12 (VMC)
+> > 2024-06-06T10:26:40.747707+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+MVM_L2_PROTECTION_FAULT_STATUS:0x00000000
+> > 2024-06-06T10:26:40.747710+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 Faulty UTCL2 client ID: MP0 (0x0)
+> > 2024-06-06T10:26:40.747713+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MORE_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747716+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 WALKER_ERROR: 0x0
+> > 2024-06-06T10:26:40.747718+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 PERMISSION_FAULTS: 0x0
+> > 2024-06-06T10:26:40.747721+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 MAPPING_ERROR: 0x0
+> > 2024-06-06T10:26:40.747723+08:00 kernel: amdgpu 0000:03:00.0: amdgpu:=
+=C2=A0	 RW: 0x0
+> > 2024-06-06T10:26:51.094991+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* ring vcn_dec_0 timeout,
+> > signaled seq=3D24897, emitted seq=3D24898
+> > 2024-06-06T10:26:51.095023+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* Process information: process
+> > RDD Process pid 39524 thread firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:26:51.095025+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset begin!
+> > 2024-06-06T10:26:52.305509+08:00 kernel: [drm] Register(0) [mmUVD_POWER=
+_STATUS] failed to reach value 0x00000001
+> > !=3D 0x00000002n
+> > 2024-06-06T10:26:52.586019+08:00 kernel: [drm] Register(0) [mmUVD_RBC_R=
+B_RPTR] failed to reach value 0x000003c0 !=3D
+> > 0x00000360n
+> > 2024-06-06T10:26:52.639506+08:00 kernel: [drm] Register(0) [mmUVD_POWER=
+_STATUS] failed to reach value 0x00000001
+> > !=3D 0x00000002n
+> > 2024-06-06T10:26:52.639521+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+ODE2 reset
+> > 2024-06-06T10:26:52.650614+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset succeeded, trying to resume
+> > 2024-06-06T10:26:52.650633+08:00 kernel: [drm] PCIE GART of 1024M enabl=
+ed (table at 0x000000F41FC00000).
+> > 2024-06-06T10:26:52.650637+08:00 kernel: [drm] VRAM is lost due to GPU =
+reset!
+> > 2024-06-06T10:26:52.650641+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: P=
+SP is resuming...
+> > 2024-06-06T10:26:52.673474+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: r=
+eserve 0xa00000 from 0xf41e000000 for PSP
+> > TMR
+> > 2024-06-06T10:26:53.001513+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: R=
+AS: optional ras ta ucode is not available
+> > 2024-06-06T10:26:53.013802+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: R=
+AP: optional rap ta ucode is not available
+> > 2024-06-06T10:26:53.013816+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+ECUREDISPLAY: securedisplay ta ucode is not
+> > available
+> > 2024-06-06T10:26:53.013819+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+MU is resuming...
+> > 2024-06-06T10:26:53.016519+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+MU is resumed successfully!
+> > 2024-06-06T10:26:53.017502+08:00 kernel: [drm] DMUB hardware initialize=
+d: version=3D0x04000044
+> > 2024-06-06T10:26:53.677511+08:00 kernel: [drm] kiq ring mec 2 pipe 1 q =
+0
+> > 2024-06-06T10:26:53.958512+08:00 kernel: amdgpu 0000:03:00.0: [drm:amdg=
+pu_ring_test_helper [amdgpu]] *ERROR* ring
+> > vcn_dec_0 test failed (-110)
+> > 2024-06-06T10:26:53.958536+08:00 kernel: [drm:amdgpu_device_ip_resume_p=
+hase2 [amdgpu]] *ERROR* resume of IP block
+> > <vcn_v3_0> failed -110
+> > 2024-06-06T10:26:53.958539+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset(1) failed
+> > 2024-06-06T10:26:53.958541+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset end with ret =3D -110
+> > 2024-06-06T10:26:53.959180+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* GPU Recovery Failed: -110
+> > 2024-06-06T10:26:55.261509+08:00 kernel: [drm] Register(0) [mmUVD_POWER=
+_STATUS] failed to reach value 0x00000001
+> > !=3D 0x00000002n
+> > 2024-06-06T10:26:55.540507+08:00 kernel: [drm] Register(0) [mmUVD_RBC_R=
+B_RPTR] failed to reach value 0x00000010 !=3D
+> > 0x00000000n
+> > 2024-06-06T10:27:04.407149+08:00 kernel: [drm] Register(0) [mmUVD_POWER=
+_STATUS] failed to reach value 0x00000001
+> > !=3D 0x00000002n
+> > 2024-06-06T10:27:04.407252+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* ring vcn_dec_0 timeout,
+> > signaled seq=3D24898, emitted seq=3D24898
+> > 2024-06-06T10:27:04.407257+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* Process information: process
+> > RDD Process pid 39524 thread firefox-bi:cs0 pid 40342
+> > 2024-06-06T10:27:04.407259+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset begin!
+> > 2024-06-06T10:27:05.033745+08:00 kernel: ------------[ cut here ]------=
+------
+> > 2024-06-06T10:27:05.033773+08:00 kernel: WARNING: CPU: 8 PID: 47039 at =
+drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:630
+> > amdgpu_irq_put+0x9c/0xb0 [amdgpu]
+> > 2024-06-06T10:27:05.033777+08:00 kernel: Modules linked in: nft_reject_=
+inet nf_reject_ipv4 nf_reject_ipv6
+> > nft_reject xt_conntrack nft_chain_nat xt_MASQUERADE nf_nat nf_conntrack=
+_netlink nf_conntrack nf_defrag_ipv6
+> > nf_defrag_ipv4 xt_addrtype nft_compat nf_tables libcrc32c br_netfilter =
+bridge stp llc hid_logitech_hidpp usbhid
+> > xfrm_interface xfrm6_tunnel tunnel4 tunnel6 xfrm_user xfrm_algo uhid rf=
+comm snd_seq_dummy snd_hrtimer cmac
+> > algif_hash algif_skcipher af_alg overlay qrtr bnep binfmt_misc uvcvideo=
+ videobuf2_vmalloc uvc videobuf2_memops
+> > videobuf2_v4l2 btusb btrtl videodev btintel btbcm snd_acp6x_pdm_dma snd=
+_soc_dmic snd_soc_acp6x_mach amd_atl
+> > intel_rapl_msr btmtk videobuf2_common bluetooth mc intel_rapl_common sn=
+d_sof_amd_acp63 snd_sof_amd_vangogh
+> > snd_sof_amd_rembrandt iwlmvm snd_sof_amd_renoir snd_sof_amd_acp snd_sof=
+_pci snd_sof_xtensa_dsp amdgpu snd_sof
+> > edac_mce_amd mac80211 snd_sof_utils snd_pci_ps snd_hda_codec_realtek sn=
+d_amd_sdw_acpi kvm_amd soundwire_amd
+> > snd_hda_codec_generic soundwire_generic_allocation soundwire_bus
+> > 2024-06-06T10:27:05.033782+08:00 kernel:=C2=A0 snd_hda_scodec_cs35l41_s=
+pi nls_iso8859_1 snd_hda_codec_hdmi
+> > snd_hda_scodec_component libarc4 kvm snd_soc_core snd_hda_intel snd_ctl=
+_led snd_intel_dspcfg snd_compress
+> > snd_intel_sdw_acpi amdxcp snd_seq_midi ac97_bus crct10dif_pclmul drm_ex=
+ec snd_hda_codec polyval_clmulni
+> > snd_pcm_dmaengine snd_seq_midi_event gpu_sched polyval_generic iwlwifi =
+ghash_clmulni_intel snd_rpl_pci_acp6x
+> > drm_buddy sha256_ssse3 snd_hda_core snd_rawmidi snd_acp_pci drm_suballo=
+c_helper snd_hda_scodec_cs35l41_i2c
+> > sha1_ssse3 drm_ttm_helper snd_acp_legacy_common snd_hwdep snd_hda_scode=
+c_cs35l41 aesni_intel snd_pci_acp6x amd_pmf
+> > snd_hda_cs_dsp_ctls ttm crypto_simd snd_pci_acp5x snd_soc_cs_amp_lib as=
+us_nb_wmi cs_dsp cryptd amdtee snd_seq
+> > snd_rn_pci_acp3x drm_display_helper snd_pcm asus_wmi snd_acp_config rap=
+l wmi_bmof sparse_keymap snd_seq_device
+> > cfg80211 snd_soc_cs35l41_lib cec snd_soc_acpi ccp rc_core snd_timer i2c=
+_algo_bit i2c_piix4 snd_pci_acp3x k10temp
+> > amd_sfh tee snd platform_profile soundcore serial_multi_instantiate amd=
+_pmc acpi_tad
+> > 2024-06-06T10:27:05.033784+08:00 kernel:=C2=A0 joydev input_leds mac_hi=
+d serio_raw parport_pc ppdev lp parport
+> > efi_pstore nfnetlink dmi_sysfs ip_tables x_tables autofs4 hid_multitouc=
+h nvme video ucsi_acpi hid_generic
+> > crc32_pclmul nvme_core typec_ucsi xhci_pci i2c_hid_acpi xhci_pci_renesa=
+s nvme_auth typec i2c_hid wmi hid 8250_dw
+> > 2024-06-06T10:27:05.033785+08:00 kernel: CPU: 8 PID: 47039 Comm: kworke=
+r/u64:0 Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > 6.10.0-061000rc2-generic #202406022333
+> > 2024-06-06T10:27:05.033787+08:00 kernel: Hardware name: ASUSTeK COMPUTE=
+R INC. Zenbook UM5302TA_UM5302TA/UM5302TA,
+> > BIOS UM5302TA.311 01/17/2023
+> > 2024-06-06T10:27:05.033788+08:00 kernel: Workqueue: amdgpu-reset-dev dr=
+m_sched_job_timedout [gpu_sched]
+> > 2024-06-06T10:27:05.033789+08:00 kernel: RIP: 0010:amdgpu_irq_put+0x9c/=
+0xb0 [amdgpu]
+> > 2024-06-06T10:27:05.033790+08:00 kernel: Code: 31 f6 31 ff e9 c0 05 2f =
+e6 44 89 e2 48 89 de 4c 89 f7 e8 97 fc ff
+> > ff 5b 41 5c 41 5d 41 5e 5d 31 d2 31 f6 31 ff e9 9f 05 2f e6 <0f> 0b b8 =
+ea ff ff ff eb c3 b8 fe ff ff ff eb bc 0f
+> > 1f 40 00 90 90
+> > 2024-06-06T10:27:05.033791+08:00 kernel: RSP: 0018:ffffb65847227c18 EFL=
+AGS: 00010246
+> > 2024-06-06T10:27:05.033793+08:00 kernel: RAX: 0000000000000000 RBX: fff=
+f9ac0a0280c60 RCX: 0000000000000000
+> > 2024-06-06T10:27:05.033794+08:00 kernel: RDX: 0000000000000000 RSI: 000=
+0000000000000 RDI: 0000000000000000
+> > 2024-06-06T10:27:05.033796+08:00 kernel: RBP: ffffb65847227c38 R08: 000=
+0000000000000 R09: 0000000000000000
+> > 2024-06-06T10:27:05.033797+08:00 kernel: R10: 0000000000000000 R11: 000=
+0000000000000 R12: 0000000000000000
+> > 2024-06-06T10:27:05.033798+08:00 kernel: R13: 0000000000000001 R14: fff=
+f9ac0a0280000 R15: ffff9ac0a0280000
+> > 2024-06-06T10:27:05.033799+08:00 kernel: FS:=C2=A0 0000000000000000(000=
+0) GS:ffff9ac38e600000(0000)
+> > knlGS:0000000000000000
+> > 2024-06-06T10:27:05.033800+08:00 kernel: CS:=C2=A0 0010 DS: 0000 ES: 00=
+00 CR0: 0000000080050033
+> > 2024-06-06T10:27:05.033802+08:00 kernel: CR2: 00007d1a5edfe000 CR3: 000=
+000001863c000 CR4: 0000000000f50ef0
+> > 2024-06-06T10:27:05.033803+08:00 kernel: PKRU: 55555554
+> > 2024-06-06T10:27:05.033805+08:00 kernel: Call Trace:
+> > 2024-06-06T10:27:05.033806+08:00 kernel:=C2=A0 <TASK>
+> > 2024-06-06T10:27:05.033807+08:00 kernel:=C2=A0 ? show_regs+0x6c/0x80
+> > 2024-06-06T10:27:05.033845+08:00 kernel:=C2=A0 ? __warn+0x88/0x140
+> > 2024-06-06T10:27:05.034598+08:00 kernel:=C2=A0 ? amdgpu_irq_put+0x9c/0x=
+b0 [amdgpu]
+> > 2024-06-06T10:27:05.034615+08:00 kernel:=C2=A0 ? report_bug+0x182/0x1b0
+> > 2024-06-06T10:27:05.034618+08:00 kernel:=C2=A0 ? handle_bug+0x51/0xa0
+> > 2024-06-06T10:27:05.034619+08:00 kernel:=C2=A0 ? exc_invalid_op+0x18/0x=
+80
+> > 2024-06-06T10:27:05.034620+08:00 kernel:=C2=A0 ? asm_exc_invalid_op+0x1=
+b/0x20
+> > 2024-06-06T10:27:05.034621+08:00 kernel:=C2=A0 ? amdgpu_irq_put+0x9c/0x=
+b0 [amdgpu]
+> > 2024-06-06T10:27:05.034623+08:00 kernel:=C2=A0 ? amdgpu_irq_put+0x55/0x=
+b0 [amdgpu]
+> > 2024-06-06T10:27:05.035573+08:00 kernel:=C2=A0 gmc_v10_0_hw_fini+0x67/0=
+xe0 [amdgpu]
+> > 2024-06-06T10:27:05.035580+08:00 kernel:=C2=A0 gmc_v10_0_suspend+0xe/0x=
+20 [amdgpu]
+> > 2024-06-06T10:27:05.035581+08:00 kernel:=C2=A0 amdgpu_device_ip_suspend=
+_phase2+0x251/0x480 [amdgpu]
+> > 2024-06-06T10:27:05.035582+08:00 kernel:=C2=A0 amdgpu_device_ip_suspend=
++0x49/0x80 [amdgpu]
+> > 2024-06-06T10:27:05.036529+08:00 kernel:=C2=A0 amdgpu_device_pre_asic_r=
+eset+0xd1/0x490 [amdgpu]
+> > 2024-06-06T10:27:05.036546+08:00 kernel:=C2=A0 amdgpu_device_gpu_recove=
+r+0x406/0xa30 [amdgpu]
+> > 2024-06-06T10:27:05.036548+08:00 kernel:=C2=A0 amdgpu_job_timedout+0x14=
+1/0x200 [amdgpu]
+> > 2024-06-06T10:27:05.036550+08:00 kernel:=C2=A0 drm_sched_job_timedout+0=
+x70/0x110 [gpu_sched]
+> > 2024-06-06T10:27:05.036551+08:00 kernel:=C2=A0 process_one_work+0x186/0=
+x3e0
+> > 2024-06-06T10:27:05.036552+08:00 kernel:=C2=A0 worker_thread+0x304/0x44=
+0
+> > 2024-06-06T10:27:05.036554+08:00 kernel:=C2=A0 ? srso_alias_return_thun=
+k+0x5/0xfbef5
+> > 2024-06-06T10:27:05.036555+08:00 kernel:=C2=A0 ? _raw_spin_lock_irqsave=
++0xe/0x20
+> > 2024-06-06T10:27:05.036556+08:00 kernel:=C2=A0 ? __pfx_worker_thread+0x=
+10/0x10
+> > 2024-06-06T10:27:05.036557+08:00 kernel:=C2=A0 kthread+0xe4/0x110
+> > 2024-06-06T10:27:05.036558+08:00 kernel:=C2=A0 ? __pfx_kthread+0x10/0x1=
+0
+> > 2024-06-06T10:27:05.036559+08:00 kernel:=C2=A0 ret_from_fork+0x47/0x70
+> > 2024-06-06T10:27:05.036561+08:00 kernel:=C2=A0 ? __pfx_kthread+0x10/0x1=
+0
+> > 2024-06-06T10:27:05.036562+08:00 kernel:=C2=A0 ret_from_fork_asm+0x1a/0=
+x30
+> > 2024-06-06T10:27:05.036563+08:00 kernel:=C2=A0 </TASK>
+> > 2024-06-06T10:27:05.036564+08:00 kernel: ---[ end trace 000000000000000=
+0 ]---
+> > 2024-06-06T10:27:05.036565+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: M=
+ODE2 reset
+> > 2024-06-06T10:27:05.046502+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset succeeded, trying to resume
+> > 2024-06-06T10:27:05.047516+08:00 kernel: [drm] PCIE GART of 1024M enabl=
+ed (table at 0x000000F41FC00000).
+> > 2024-06-06T10:27:05.047533+08:00 kernel: [drm] VRAM is lost due to GPU =
+reset!
+> > 2024-06-06T10:27:05.047538+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: P=
+SP is resuming...
+> > 2024-06-06T10:27:05.070481+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: r=
+eserve 0xa00000 from 0xf41e000000 for PSP
+> > TMR
+> > 2024-06-06T10:27:05.397519+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: R=
+AS: optional ras ta ucode is not available
+> > 2024-06-06T10:27:05.409509+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: R=
+AP: optional rap ta ucode is not available
+> > 2024-06-06T10:27:05.409517+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+ECUREDISPLAY: securedisplay ta ucode is not
+> > available
+> > 2024-06-06T10:27:05.409518+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+MU is resuming...
+> > 2024-06-06T10:27:05.411482+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: S=
+MU is resumed successfully!
+> > 2024-06-06T10:27:05.413504+08:00 kernel: [drm] DMUB hardware initialize=
+d: version=3D0x04000044
+> > 2024-06-06T10:27:06.055474+08:00 kernel: [drm] kiq ring mec 2 pipe 1 q =
+0
+> > 2024-06-06T10:27:06.335476+08:00 kernel: amdgpu 0000:03:00.0: [drm:amdg=
+pu_ring_test_helper [amdgpu]] *ERROR* ring
+> > vcn_dec_0 test failed (-110)
+> > 2024-06-06T10:27:06.335495+08:00 kernel: [drm:amdgpu_device_ip_resume_p=
+hase2 [amdgpu]] *ERROR* resume of IP block
+> > <vcn_v3_0> failed -110
+> > 2024-06-06T10:27:06.335498+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset(2) failed
+> > 2024-06-06T10:27:06.335499+08:00 kernel: amdgpu 0000:03:00.0: amdgpu: G=
+PU reset end with ret =3D -110
+> > 2024-06-06T10:27:06.335631+08:00 kernel: [drm:amdgpu_job_timedout [amdg=
+pu]] *ERROR* GPU Recovery Failed: -110
+> >=20
+Hi Thorsten,
 
-> The following kernel oops and kernel panic noticed while running LTP tracing
-> test cases on arm64 rk3399-rock-pi-4 device running Linux next-20240612 tag.
-
-How reproducible is this?  Do you only see it on arm64?
-
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Boot and test log:
-> --------------
-> [    0.000000] Linux version 6.10.0-rc3-next-20240612 (tuxmake@tuxmake)
->  (Debian clang version 18.1.6
->  (++20240518023133+1118c2e05e67-1~exp1~20240518143227.130),
->  Debian LLD 18.1.6) #1 SMP PREEMPT @1718178628
-> ...
-> trap: SIGUSR1: bad trap
-> ftrace-stress-test 1 TINFO: Start pid16=595
-
-ug, I guess I need to try to get LTP working again.
-
-
-> /opt/ltp/testcases/bin/ftrace_stress/ftrace_tracing_cpumask.sh
-> ftrace-stress-test 1 TINFO: Start pid17=598
-> /opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_filter.sh
-> [   55.770077] Scheduler tracepoints stat_sleep, stat_iowait,
-> stat_blocked and stat_runtime require the kernel parameter
-> schedstats=enable or kernel.sched_schedstats=1
-> [   55.790580] Scheduler tracepoints stat_sleep, stat_iowait,
-> stat_blocked and stat_runtime require the kernel parameter
-> schedstats=enable or kernel.sched_schedstats=1
-> trap: SIGTERM: bad trap
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> ftrace_buffer_size_kb.sh: 33: echo: echo: I/O error
-> [  100.599846] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [  100.599846] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [  100.599846] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [  100.599846] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [  100.599856] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [  100.599866] Mem abort info:
-> [  100.599867] Mem abort info:
-> [  100.599867] Mem abort info:
-> [  100.599874]   ESR = 0x0000000096000004
-> [  100.599875]   ESR = 0x0000000096000004
-> [  100.599875]   ESR = 0x0000000096000004
-> [  100.599883]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  100.599885]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  100.599892]   SET = 0, FnV = 0
-> [  100.599896]   SET = 0, FnV = 0
-> [  100.599896]   SET = 0, FnV = 0
-> [  100.599899]   EA = 0, S1PTW = 0
-> [  100.599906]   EA = 0, S1PTW = 0
-> [  100.599906]   EA = 0, S1PTW = 0
-> [  100.599906]   FSC = 0x04: level 0 translation fault
-> [  100.599914] Data abort info:
-> [  100.599915]   FSC = 0x04: level 0 translation fault
-> [  100.599915]   FSC = 0x04: level 0 translation fault
-> [  100.599920]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> [  100.599925] Data abort info:
-> [  100.599926] Data abort info:
-> [  100.599928]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> [  100.599935]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> [  100.599936]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [  100.599944]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [  100.599946]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [  100.599945] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000014fc7000
-> [  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [  100.599955]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [  100.599956] [0000000000000008] pgd=0000000000000000
-> [  100.599964] , p4d=0000000000000000
-> [  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000006ce0000
-> [  100.599966] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000079ec000
-> [  100.599975]
-> [  100.599976] [0000000000000008] pgd=0000000000000000
-> [  100.599977] [0000000000000008] pgd=0000000000000000
-> [  100.599985] , p4d=0000000000000000
-> [  100.599986] , p4d=0000000000000000
-> [  100.599985] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> [  100.599992]
-> [  100.599994]
-> [  100.599997] Modules linked in: brcmfmac snd_soc_hdmi_codec
-> dw_hdmi_cec dw_hdmi_i2s_audio brcmutil crct10dif_ce rockchipdrm
-> hci_uart snd_soc_spdif_tx hantro_vpu panfrost snd_soc_simple_card
-> snd_soc_audio_graph_card btqca dw_mipi_dsi gpu_sched
-> snd_soc_simple_card_utils btbcm v4l2_h264 analogix_dp cfg80211
-> drm_shmem_helper dw_hdmi v4l2_vp9 phy_rockchip_pcie bluetooth
-> v4l2_mem2mem cec snd_soc_rockchip_i2s videobuf2_v4l2
-> drm_display_helper videobuf2_dma_contig drm_dma_helper
-> videobuf2_memops rtc_rk808 rfkill snd_soc_es8316 videobuf2_common
-> drm_kms_helper rockchip_saradc industrialio_triggered_buffer
-> pcie_rockchip_host rockchip_thermal kfifo_buf coresight_cpu_debug drm
-> fuse backlight dm_mod ip_tables x_tables
-> [  100.600212] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
-> 6.10.0-rc3-next-20240612 #1
-> [  100.600222] Hardware name: Radxa ROCK Pi 4B (DT)
-> [  100.600229] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [  100.600239] pc : ftrace_ops_test+0x34/0x138
-
-Hmm, could you show the exact line of the above code? Specifically we have:
-
-	rcu_assign_pointer(hash.filter_hash, ops->func_hash->filter_hash);
-	rcu_assign_pointer(hash.notrace_hash, ops->func_hash->notrace_hash);
-
-Hmm, it's a NULL pointer dereference at 0x8, so ops is likely not NULL,
-as func_hash is much farther down. But if func_hash is NULL,
-filter_hash is at the 0x8 offset.
-
-So now the question is, how did func_hash become NULL. It should always
-be pointing at something. May have to do with the subops. Will investigate.
-
-Thanks,
-
--- Steve
-
-
-> [  100.600258] lr : function_graph_enter+0x144/0x208
-> [  100.600271] sp : ffff800082fd3730
-> [  100.600276] x29: ffff800082fd3770 x28: 0000000000000038 x27: ffff80008271a790
-> [  100.600293] x26: ffff800082d24b08 x25: ffffffffffffffff x24: ffff800082d24000
-> [  100.600310] x23: 0000000000000001 x22: 0000000000000001 x21: ffff000000cbdf00
-> [  100.600326] x20: ffff80008271a3f0 x19: ffff800080163078 x18: 000000000000123d
-> [  100.600343] x17: 0000000000000000 x16: 00500072b5503510 x15: 0000000000000000
-> [  100.600359] x14: 0000000000000009 x13: 0000000000000037 x12: 0000000000000006
-> [  100.600375] x11: 00000000fffffffe x10: ffff800082fd3740 x9 : ffff800082fd3738
-> [  100.600391] x8 : 0000000000000000 x7 : 00000072b5503510 x6 : 0000000000300000
-> [  100.600407] x5 : 0000000000000000 x4 : ffff8000801ffc20 x3 : ffff800082fd3900
-> [  100.600423] x2 : 0000000000000000 x1 : ffff800080163078 x0 : ffff80008271a400
-> [  100.600440] Call trace:
-> [  100.600445]  ftrace_ops_test+0x34/0x138
-> [  100.600455]  function_graph_enter+0x144/0x208
-> [  100.600465]  ftrace_graph_func+0x34/0x58
-> [  100.600477]  arch_ftrace_ops_list_func+0xd0/0x180
-> [  100.600489]  ftrace_caller+0x6c/0x9c
-> [  100.600498]  __traceiter_rcu_dyntick+0xc/0x88
-> [  100.600511]  trace_rcu_dyntick+0x7c/0xa0
-> [  100.600523]  ct_nmi_enter+0x90/0xc0
-> [  100.600537]  ct_irq_enter+0x10/0x20
-> [  100.600548]  enter_from_kernel_mode+0x30/0x58
-> [  100.600560]  el1_abort+0x24/0x60
-> [  100.600570]  el1h_64_sync_handler+0x80/0xd0
-> [  100.600580]  el1h_64_sync+0x64/0x68
-> [  100.600590]  ftrace_ops_test+0x34/0x138
-> [  100.600600]  function_graph_enter+0x144/0x208
-> [  100.600610]  ftrace_graph_func+0x34/0x58
-> [  100.600620]  arch_ftrace_ops_list_func+0xd0/0x180
-> [  100.600633] Mem abort info:
-> [  100.600630]  ftrace_caller+0x6c/0x9c
-> [  100.600639]   ESR = 0x0000000096000004
-> [  100.600641]  arch_timer_set_next_event_phys+0xc/0x50
-> [  100.600656]  clockevents_program_event+0xa0/0x1e0
-> [  100.600669]  tick_program_event+0x5c/0xb0
-> [  100.600679]  hrtimer_start_range_ns+0x15c/0x350
-> [  100.600691]  tick_nohz_restart_sched_tick+0x90/0xb0
-> [  100.600702]  tick_nohz_idle_exit+0xf0/0x168
-> [  100.600712]  do_idle+0x238/0x290
-> [  100.600721]  cpu_startup_entry+0x40/0x50
-> [  100.600730]  secondary_start_kernel+0x13c/0x168
-> [  100.600743]  __secondary_switched+0xb8/0xc0
-> [  100.600761] Code: f9402c08 a902ffff a901ffff a900ffff (f9400508)
-> [  100.600769] ---[ end trace 0000000000000000 ]---
-> [  100.600782] Kernel panic - not syncing: Attempted to kill the idle task!
-> [  100.600789] SMP: stopping secondary CPUs
-> [  101.767463] SMP: failed to stop secondary CPUs 0-1,3-5
-> [  101.767476] Kernel Offset: disabled
-> [  101.767481] CPU features: 0x04,00001041,60100000,4200421b
-> [  101.767489] Memory Limit: none
-> [  101.814070] ---[ end Kernel panic - not syncing: Attempted to kill
-> the idle task! ]---
-> 
-> metadata:
-> -------
->   git_describe: next-20240612
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   git_sha: 03d44168cbd7fc57d5de56a3730427db758fc7f6
->   kernel-config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/config
->   build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2hloyVmgiND3p4zFZFj3KksAgm8/
->   kernel_version: 6.10.0-rc3
->   toolchain: clang-18
-> 
-> Links:
-> ----
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240612/testrun/24277665/suite/log-parser-test/tests/
->  - https://lkft.validation.linaro.org/scheduler/job/7658998#L1508
-> 
->  --
-> Linaro LKFT
-> https://lkft.linaro.org
-
+It seems that the issue persists on 6.10 rc3.
