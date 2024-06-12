@@ -1,100 +1,70 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE9436AF8
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 05:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7A239AF9;
+	Wed, 12 Jun 2024 05:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718170986; cv=none; b=HsDXJy9ClGZRb8uogr3M8tjpLCFivYrYUZvT2X4m+iub5tDV9UjWZzK4ZD24gqZ1J2b82SOI0tdnU+Hb2e0ky4HdVKvbnyAAsZzz4gTyOYS5ZTeyMr6YihpcR4HtMHVUuQhwzhODmatD56F/dT0oJo88gDaN0CUo4bUDKoax5SI=
+	t=1718171472; cv=none; b=DmUDjHrRzsbwJFGa+fypBmoaUqlEeZeALMTnAboKzRWRgJNGdpLyUd7p/eA4+V67OvLZufdKPWvRxO3TCnt9xvgLz3BWHE4E16Bnl7M1Y6FkIJXnaFjaw8ln4SIxgN/W0gEWRTfXoR+Q2kXdKzf3P8+Z3pIXmR7mPxcn/Pdi2cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718170986; c=relaxed/simple;
-	bh=63I+1dEzVeXn42wBYio/c7Yuzom9/7n5V8ZUh47gjH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRNMzyTLB1eHfPYrx8gK6ZeYbXEjDBjmrvLT8cAOBoZL4DdUWqv7148vfPdmjs1b/G0GZq7ibzTW6ZcpomG1x0f4gQwmAzcyfAunLMuEEw95V8bwgygtlTJIqSpTcNEp/qjQsHOqm+5aA70X07T0gd+84+44CDTZXebwyWxYkmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+Mcmpjv; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718171472; c=relaxed/simple;
+	bh=tcIe6lAwAoUmTJhobYIwK/ldOlcBBXDJTOmm8Z2AyKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aYYdXxV3t6yD5GtEmynJgbMZKtnU3ntuFlkX2Qih24MMg0O6e6RrU08aJuIchXQX1KNULWNdQz/8SfD53wtDN4vpsEJCJV3Qgmkcy8psrtwqhGTE1dUbBgMQmNcU6gZ+Mkg88cZOEz9KPaB7trFQ2KJuv1/Qw03OrikF7SUEvrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QdgDiqZO; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+Mcmpjv"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f0dc80ab9so244796566b.2
-        for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 22:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718170983; x=1718775783; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63I+1dEzVeXn42wBYio/c7Yuzom9/7n5V8ZUh47gjH4=;
-        b=E+McmpjvnpeSFa/9E4Z9CHftasI/X7D3w+Hq93hvLaC7WAR1f9yDH+NO5n6fE5sx9I
-         VpeJ8Qn8BAiDWkKbtaDKwJac32n/QfyiVSdYJWmjFJh/nO6QLgGxj4MtekeBNVZsSI3o
-         l70n9Xm0PyKcfYhIvlU+Cn0A4p5Cus2iuOnHn/5Mksjkj+apcADBT50wf9Fl9WGbzJA0
-         Jah1WkO9SevX5ewntMveFstHht23wlehr8hA2KG7vIkOra+qlsrgv+x9stGOf/hyaYDy
-         4kUqiq+VjcBpnFVyr5qQIxh/movV9qObsuJnaBMt5aJ7lCAe7x+CItZNLFPxvzhD8A6F
-         zoVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718170983; x=1718775783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=63I+1dEzVeXn42wBYio/c7Yuzom9/7n5V8ZUh47gjH4=;
-        b=caTtggK4cCAtoZWuBhXaWDBnsz02MDVJt05+7sJ/vrveYspGz2wTb5o3ayfkjDA3jA
-         Uo+hwUSKf0syWhUlMyPdUDAJSSXePIcG8taGc4pQs4OtTlZBaFWReehMNRz21gy358/0
-         tEJzX0ZtzErkf51i8DtcffITpHvtAC05uHhUHLGrvsPr46Ls/qFn7W+kkFVMV53JsDDv
-         KrV+A73SQzjVM0iWU/L+EpYIIFacVCBAhIM8NIopVcqATUEutfAIZlSjnPT3F+lOqcsC
-         UObuQMGip+Hd//gpFwVBnEc/UB/dQsrBrzAbSc8SnPx/9lf01xZrmraMsNXPZiPsG1Cu
-         MmwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOY/12Vl8X+NgDA0OrQIUi0n7CgZiHjkab8f38Awg3Wnba89balvNko7kEwAAhqOmhAUvAanbhewKeWq6x8ggXPqvM0tRIvRvzrcQ=
-X-Gm-Message-State: AOJu0YziZv/tCotxu2Cn2/SMKdHFLC5cCRhBY8rt+CPkaClzb7f06+Zr
-	pUC7AX00TmG9BZlvi+W4pRTsAq05X+u1n1egX61SCB7qwp/RIKIYghFC99PZ0CWmi94CyxEJete
-	WeYmGh84kD3BoAISikAOMB/aBNgQ=
-X-Google-Smtp-Source: AGHT+IHGu/snvNpAD1Yi6gjHr6w3KtlYXskhYkbq4+1i981NUmF9usvoUiSCiFzsd+OnZAP06utH1HgoD4gnq5XsNuQ=
-X-Received: by 2002:a17:906:7251:b0:a6e:57ff:7700 with SMTP id
- a640c23a62f3a-a6f47cc20fcmr35560966b.42.1718170983090; Tue, 11 Jun 2024
- 22:43:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QdgDiqZO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Cuiizet8ko146AQpF7HtdLDcA9QnFdSYLTJpg+Pci3Q=;
+	t=1718171470; x=1718603470; b=QdgDiqZObqW4L1X5wykhaoT69DNodcsoO+rnxGZoU4dhF0E
+	Rs+mJYO9SYEfTlX0dVnRAFLCDQawWtaw2nK/R/2IlhRMriUK8seZ5J1bPnZr9UoBCJ3POQ9s6vouq
+	a5sU9vl8UNqjkkQxH4roE7PvrTxEF5JV9o33gpqM/fBMWG6c1PmLHkuEbKfIWs8pkyvv6S/VB4UE4
+	c/FLGlsEK5AdFGOa/4i1+0wmV30GAfEbEdId73wwsUFmM/ae4aYv2Kgjnus1HEoVnG/ROVJYlWZAf
+	Mgg70e9+VFhZiF3MA4BjL3IOmUxc7Q9lrCyMxSCYJXnVCNKTcGdyItQ0kZ9/ctmQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHGt2-0004qm-4S; Wed, 12 Jun 2024 07:51:08 +0200
+Message-ID: <08a9551a-e368-4eaf-91b3-f5f716e1fda3@leemhuis.info>
+Date: Wed, 12 Jun 2024 07:51:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240130214911.1863909-1-bvanassche@acm.org> <20240130214911.1863909-12-bvanassche@acm.org>
- <Zmi6QDymvLY5wMgD@surfacebook.localdomain> <678af54a-2f5d-451d-8a4d-9af4d88bfcbb@heusel.eu>
- <9dae2056-792a-4bd0-ab1d-6c545ec781b9@acm.org> <CAHp75Vd02o_z2swHQ8Tajyvdi25do3ys7+GMES7RAg0NffgAUA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd02o_z2swHQ8Tajyvdi25do3ys7+GMES7RAg0NffgAUA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 12 Jun 2024 08:42:27 +0300
-Message-ID: <CAHp75VePhicGBK3bP3eDmpdH6JLOBh0m7S_oTGxBOtgfhCtU6A@mail.gmail.com>
-Subject: Re: [PATCH v9 11/19] scsi: sd: Translate data lifetime information
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Christian Heusel <christian@heusel.eu>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
-	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
-	Christoph Hellwig <hch@lst.de>, Daejun Park <daejun7.park@samsung.com>, 
-	Kanchan Joshi <joshi.k@samsung.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Potential regression on Kernel 5.15.0-112.122
+To: Xavier Boudet <xboudet@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+References: <CAJ_Ywo+kJcgkPxgncrc33Rqy7Sn04j3g=euvCtYS8oFhH_wXEQ@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAJ_Ywo+kJcgkPxgncrc33Rqy7Sn04j3g=euvCtYS8oFhH_wXEQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718171470;94350ba8;
+X-HE-SMSGID: 1sHGt2-0004qm-4S
 
-On Wed, Jun 12, 2024 at 8:35=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jun 12, 2024 at 2:08=E2=80=AFAM Bart Van Assche <bvanassche@acm.o=
-rg> wrote:
-> > On 6/11/24 2:21 PM, Christian Heusel wrote:
-> > > On 24/06/11 11:57PM, Andy Shevchenko wrote:
-...
+On 12.06.24 07:19, Xavier Boudet wrote:
+> 
+> I'm using Ubuntu Ubuntu 22.04.4 LTS.
+> I upgraded my kernel last week and obviously there is something
+> wrong with it.
+> When I come back on 5.15.0-107.117, everything is fine.
 
-> > >> This patch broke very badly my connected Garmin FR35 sport watch. Th=
-e boot time
-> > >> increased by 1 minute along with broken access to USB mass storage.
+Thx for trying to report it upstream, but sorry, you came to the wrong
+place. That is a modified vendor kernel, so you have to report any
+problems with it to said vendor.
 
-...
+See also the first few point in:
+https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
 
-> > Is the Garmin FR35 Flash device perhaps connected to a USB bus? If so,
->
-> Yes. It is written above in my report here.
-
-Hmm... Rereading myself and it seems it was not obvious that it's a
-USB mass storage device. Sorry for the confusion.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Ciao, Thorsten
