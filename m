@@ -1,133 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26B016F29C;
-	Wed, 12 Jun 2024 12:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AF616D4F6
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 12:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196071; cv=none; b=YvoLWru2vy0oPxgPa3TdkMlQAJUHOO+1x4O6wbpSdmcHIqNmlhwdDUAsLO3iozXH7Rzpqmvy0MIjEumv2WlTuShjcUwwqSeoDDQDBklBorBDi9Pq3rNGD9gVZgsdmCmpBBGxhXKyBp3juwV+ikkNSER8A1fhUOCryYQ9zQMvMl8=
+	t=1718196454; cv=none; b=cBL+NY6SeRQ2g8Hffw4dhscJOi6VMExiHPrKvzxf2u4kCKstUwI67PSdGJZq0kaL5N2SChE4IIGHDlonfEBqWZBkQg+gt7T8baAIN1+0H067VxTTikq717PzEjEKP1YZD+0uenCipB21iY493s1d3rfx1Vqjl4+7/1ErBk/4ffg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196071; c=relaxed/simple;
-	bh=8t9V+RAuQ307UNgRL1t8CxJDFzSaO2i9p55Z97H1iSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dLjno9OkAsKqgsVQeGxN19+oldqAUW4S1iR7sra3Iwl3/TWNyvHJhQzGS6Ii+rMP5gnnDEIS0rSaAq832M7pH+1kCPaBkb+chF15XAomXkHgN59sbMjOSQ72gxCjAS2zIMuzC5cdh2GuaNgMv9dQC44cG6QMYe4mCk5Ch/xtc+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A/5sGVd3; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718196454; c=relaxed/simple;
+	bh=RCpcnDSuYyhSuOfsyj0v8b20wpxftEkl0uwbleRYRug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhaqKecolN3kGMniU3ZLeYBucw5p6zbhTlhtghwjh4lE4bLuuV+Zz6Z9MG38qjEybqBIdz7ryvoQ7sXQaohSc23lCrYWevBYhM6iX9Lo5VT1OV7klImQiU1gmjRlUM9jlhBNXLsL7d1+FowZ5KGcyxhYatyaMdoOmKMdp9l1Urw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3L0As8D; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A/5sGVd3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=pRy0sJWQM10IgB/bhi5G6l1DK7UQGSd130PPr57Mh4Y=;
-	t=1718196069; x=1718628069; b=A/5sGVd3QQbrZi9TzZmWda2DCsSu4WcQCFj9QwkkG6b0xmx
-	Zv3onSkETgPd341pc2KfX7lUmKJOw3p1YWkO+SJrtnSxxBv9aNrMpImVaDS40wCJF8HyQMa3kweNQ
-	6TJk4mvRAE6xBDFUn8jhYMakbx1eX8dtlwDfQ4AHxVMLHWpGA/HPlyEABjCtxxX9i6NAOvfnhyuSV
-	w/pbYPj3m7aoz95SvGFbI4RV/DtYW1Lx0dMvEweP0ydlujKa5dFB0BDiG9G/KL44QVOzAKfZrxiOM
-	9rPyPWEPEwVpb7Orssb1D5Adv0aeRzvfKpQE/NzzzzKI+DFObWz1TYrAYOpsbd2w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHNHl-0004yB-H5; Wed, 12 Jun 2024 14:41:05 +0200
-Message-ID: <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
-Date: Wed, 12 Jun 2024 14:41:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3L0As8D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718196453; x=1749732453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RCpcnDSuYyhSuOfsyj0v8b20wpxftEkl0uwbleRYRug=;
+  b=X3L0As8DQxoCXKfOZ7eYjxQXcIVcUMsAZ7olcRgnxsQy1drf/2m8RcDp
+   5j9wdcJxZ6DHIR1o8LxYLt+dUfeH2GcDZZsXYb30JgUoSVG7S/+QHj4q/
+   VeERjB7tZ3ZenEbpdOUmppxfMyLANS5IAwX/C9znoLFWc+0UfkWnnjCz6
+   SKpSkgUt9xf8U/vVjWqq4neSI801/fasr4aEe3lVlsrXWx9l4D1AZCk/e
+   hAfoUoNQRfq38djY1gOpsVg+wUC3Q0v9UcEESauKOCxXNis4QvDNGMVnr
+   r5y72/QGuXakl1Yama+LqzajE1/YmzBFRe/wvKDteDj9GLyuvZH7Huvse
+   g==;
+X-CSE-ConnectionGUID: SRRqKFaHRgeQvvAUbxNycg==
+X-CSE-MsgGUID: SySPb0KzSC2M1EZv5Bqt9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14829371"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="14829371"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:47:32 -0700
+X-CSE-ConnectionGUID: vX5eai9VRA6LWem5iWRhDg==
+X-CSE-MsgGUID: kW6Vl90bSTyr+WYelJmpYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="40477364"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:47:29 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5D34811FA94;
+	Wed, 12 Jun 2024 15:47:26 +0300 (EEST)
+Date: Wed, 12 Jun 2024 12:47:26 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
+ <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
+ <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] QXL display malfunction
-To: "tzimmermann@suse.de" <tzimmermann@suse.de>
-Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
- "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
- "Kaplan, David" <David.Kaplan@amd.com>,
- "Koenig, Christian" <Christian.Koenig@amd.com>,
- Dave Airlie <airlied@redhat.com>, Dave Airlie <airlied@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev
-References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
- <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718196069;3e301e0f;
-X-HE-SMSGID: 1sHNHl-0004yB-H5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
 
-[CCing a few more people and lists that get_maintainers pointed out for qxl]
+Hi Rafael,
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
-
-Thomas, from here it looks like this report that apparently is caused by
-a change of yours that went into 6.10-rc1 (b33651a5c98dbd ("drm/qxl: Do
-not pin buffer objects for vmap")) fell through the cracks. Or was
-progress made to resolve this and I just missed this?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
-
-On 03.06.24 04:29, Kaplan, David wrote:
->> -----Original Message-----
->> From: Kaplan, David
->> Sent: Sunday, June 2, 2024 9:25 PM
->> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
->> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
->> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.dev
->> Subject: [REGRESSION] QXL display malfunction
->>
->> Hi,
->>
->> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I've
->> observed the VM graphics often malfunction after boot, sometimes failing to
->> load the Ubuntu desktop or even immediately shutting the guest down.
->> When it does load, the guest dmesg log often contains errors like
->>
->> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65376256x16777216+0+0
->> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65376256x16777216+0+0
->> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65335296x16777216+0+0
->> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id in
->> release_idr
->>
->> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap"
->> (b33651a5c98dbd5a919219d8c129d0674ef74299).
->>
->> The full guest .config and guest XML can be provided if desired.  The guest
->> kernel has QXL support compiled in and the VM has
->>
->> <video>
->>   <model type="qxl" ram="65536" vram="65536" vgamem="16384"
->> heads="1" primary="yes"/>
->>   <address type="pci" domain="0x0000" bus="0x00" slot="0x01"
->> function="0x0"/> </video>
->>
->> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is run
->> under virt-manager 4.1.0.  If other information would be helpful, just let me
->> know.
->>
->> Thanks --David Kaplan
+On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
+> > > > > I just hit the same problem on another Dell laptop. It seems that
+> > > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> > > > > and Raptor Lake generations suffer from this problem.
+> > > > >
+> > > > > So instead of playing whack a mole with DMI matches we should
+> > > > > simply disable ACPI MIPI DISCO support on all Dell laptops
+> > > > > with those CPUs. I'm preparing a fix for this to replace
+> > > > > the DMI matching now.
+> > > >
+> > > > DisCo for Imaging support shouldn't be dropped on these systems, and this
+> > > > isn't what your patch does either. Instead the ACPI graph port nodes (as
+> > > > per Linux specific definitions) are simply dropped, i.e. this isn't related
+> > > > to DisCo for Imaging at all.
+> > >
+> > > So it looks like the changelog of that patch could be improved, right?
+> >
+> > Well, yes. The reason the function is in the file is that nearly all camera
+> > related parsing is located there, not that it would be related to DisCo for
+> > Imaging as such.
 > 
-> Fixing emails...sorry
+> So IIUC the camera graph port nodes are created by default with the
+> help of the firmware-supplied information, but if that is defective a
+> quirk can be added to skip the creation of those ports in which case
+> they will be created elsewhere.
 > 
-> --David Kaplan
-> 
-> 
+> Is this correct?
+
+Yes.
+
+-- 
+Sakari Ailus
