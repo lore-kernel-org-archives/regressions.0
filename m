@@ -1,164 +1,127 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02641553B5
-	for <regressions@lists.linux.dev>; Tue, 11 Jun 2024 23:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015B610FA;
+	Wed, 12 Jun 2024 00:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718147339; cv=none; b=BUUd1Xjx6dNv8kBB2P+iDJfUhcOZ4D4+ofVzlDK1xjP52eluXw8xqjEebXMlnyfpSeE2rkS1vIPZADVIIou2PnG6YsmndagH9G83NMdNkABvg3A2qUj+1rzJKfrUVOafpuVTI0HAdS6orDScnZvS2oKNcPvUDGeRYCHOOkxFrw0=
+	t=1718153812; cv=none; b=Un5SeJ4QOV7rpjJDhE8HzI7bkdPWNeMDrNT6OKLgilr61XQys9yz3g1329hHJISkPkEUGkYyS7ebMlKPRkMLxv448Cwuup8muJhgnNxcDYXbVDO0ZDW+vZP6/TlZnRYnZ9R4OSJ+ZY3onFYsALwPXJTmktFrNcf7G1fxTbp6qQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718147339; c=relaxed/simple;
-	bh=SMsMnl/E19q1EZECqP3FDag1lE3b7Ahyh8DT0mGtfvE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LKKogutCBRO81I5AAmbserHCZPGs0W8gbVpKLnmMomV61jdz7o1xgFHaYoFRkmEpSA20jlo3YwsLH7fSTpy3dKzURIr+2aySiwqRUdQxfNUoPxfb6oygCB++NVZw35XSrqv9Zs6pYPeVmyd+3LthGjVKK3K4cZUrAY2g2EjO+uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=39nJIEgh; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="39nJIEgh"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VzPVw0Xr1z6CmSMs;
-	Tue, 11 Jun 2024 23:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:content-language:references:subject:subject:from:from
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1718147327; x=1720739328; bh=6DyzKM+DtIuobPzwKOhzgzP6
-	zkpd17hL1Aod6VJ/k68=; b=39nJIEghuNGK8K73AWmToVISBeoYV97i8RVEhARB
-	IRWhsd6ZL2QdIjPJ7QnzwRbKfRaZ87lsD7S5g5Z++gK4qzFWDrFiAET0BiuRs06o
-	USgIpJxgOyp7ofPPz/5l117TJMTR/6Zf+EKUZk13h1SdkDqopqVaDfyd4P3zj9kE
-	qvy4qDb7cImQyKSzUoJmxrIlDJSFBDKDpyIOX7rwQpPB9cLLQXnR3jw5FP7hUoQn
-	BlUUg8xfHQCTKMLpOXW0KJvGuuR/ziY/2UC7wMh/uIzdSA1HjNMFWU1GZ/zdAXeM
-	xWb6FFfP3xrcVN868iwkDsldcRYcDPDhMx3Sz435/+Cc/w==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id dk6etEF2j3HT; Tue, 11 Jun 2024 23:08:47 +0000 (UTC)
-Received: from [192.168.3.219] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VzPVk0Gv6z6Cnk8s;
-	Tue, 11 Jun 2024 23:08:45 +0000 (UTC)
-Message-ID: <9dae2056-792a-4bd0-ab1d-6c545ec781b9@acm.org>
-Date: Tue, 11 Jun 2024 16:08:44 -0700
+	s=arc-20240116; t=1718153812; c=relaxed/simple;
+	bh=WQEDdfIS01MttyVRpOjGsxOxeNT975E9YgMc/ccKkCo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Klf2UsqOYQ5kZ5tx2W29NHAHNzIH7wNQ6sJKyzMWXc4pyywx2v84o0T1Ts5zDKh213eidRRKyyFJ5zWlTi8dbg89jJRLpBJ5Gu2ju4tNCVNyaQlB4e/lmumt4dMQPOia8SJH3BMej0XbtMSJxxGbhNBlfectdNhRroP5jM8yIJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45C0uKsI5643612, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45C0uKsI5643612
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Jun 2024 08:56:20 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 12 Jun 2024 08:56:21 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 12 Jun 2024 08:56:20 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
+ 15.01.2507.035; Wed, 12 Jun 2024 08:56:20 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Thorsten Leemhuis
+	<regressions@leemhuis.info>,
+        Savyasaachi Vanga <savyasaachiv@gmail.com>,
+        Christian Heusel <christian@heusel.eu>
+CC: Kalle Valo <kvalo@kernel.org>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: RE: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor mode
+Thread-Topic: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
+ mode
+Thread-Index: AQHasIGBiI2kIPT9xk+a42EavL0uE7GryNkAgASPDICABOUZsIANAvMAgAEhOEA=
+Date: Wed, 12 Jun 2024 00:56:20 +0000
+Message-ID: <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
+References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
+	 <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
+	 <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
+	 <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
+ <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
+In-Reply-To: <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v9 11/19] scsi: sd: Translate data lifetime information
-To: Christian Heusel <christian@heusel.eu>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Daejun Park <daejun7.park@samsung.com>,
- Kanchan Joshi <joshi.k@samsung.com>, Damien Le Moal <dlemoal@kernel.org>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>, regressions@lists.linux.dev
-References: <20240130214911.1863909-1-bvanassche@acm.org>
- <20240130214911.1863909-12-bvanassche@acm.org>
- <Zmi6QDymvLY5wMgD@surfacebook.localdomain>
- <678af54a-2f5d-451d-8a4d-9af4d88bfcbb@heusel.eu>
-Content-Language: en-US
-In-Reply-To: <678af54a-2f5d-451d-8a4d-9af4d88bfcbb@heusel.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 6/11/24 2:21 PM, Christian Heusel wrote:
-> On 24/06/11 11:57PM, Andy Shevchenko wrote:
->> Tue, Jan 30, 2024 at 01:48:37PM -0800, Bart Van Assche kirjoitti:
->>> Recently T10 standardized SBC constrained streams. This mechanism allows
->>> to pass data lifetime information to SCSI devices in the group number
->>> field. Add support for translating write hint information into a
->>> permanent stream number in the sd driver. Use WRITE(10) instead of
->>> WRITE(6) if data lifetime information is present because the WRITE(6)
->>> command does not have a GROUP NUMBER field.
->>
->> This patch broke very badly my connected Garmin FR35 sport watch. The boot time
->> increased by 1 minute along with broken access to USB mass storage.
->>
->> On the reboot it takes ages as well.
->>
->> Revert of this and one little dependency (unrelated by functional means) helps.
-> 
-> We have tested that the revert fixes the issue on top of v6.10-rc3.
-> 
-> Also adding the regressions list in CC and making regzbot aware of this
-> issue.
-> 
->> Details are here: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/60
->>
->> P.S. Big thanks to Arch Linux team to help with bisection!
-> 
-> If this is fixed adding in a "Reported-by" or "Bisected-by" (depending
-> on what this subsystem uses) for me would be appreciated :)
-
-Thank you Christian for having gone through the painful process of
-bisecting this issue.
-
-Is the Garmin FR35 Flash device perhaps connected to a USB bus? If so,
-this is the second report of a USB storage device that resets if it
-receives a query for the IO Advice Hints Grouping mode page. Does the
-patch below help?
-
-Thanks,
-
-Bart.
-
-
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 3a43e2209751..fcf3d7730466 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -63,6 +63,7 @@
-  #include <scsi/scsi_cmnd.h>
-  #include <scsi/scsi_dbg.h>
-  #include <scsi/scsi_device.h>
-+#include <scsi/scsi_devinfo.h>
-  #include <scsi/scsi_driver.h>
-  #include <scsi/scsi_eh.h>
-  #include <scsi/scsi_host.h>
-@@ -3117,6 +3118,9 @@ static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
-  	struct scsi_mode_data data;
-  	int res;
-
-+	if (sdp->sdev_bflags & BLIST_SKIP_IO_HINTS)
-+		return;
-+
-  	res = scsi_mode_sense(sdp, /*dbd=*/0x8, /*modepage=*/0x0a,
-  			      /*subpage=*/0x05, buffer, SD_BUF_SIZE, SD_TIMEOUT,
-  			      sdkp->max_retries, &data, &sshdr);
-diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
-index b31464740f6c..9a7185c68872 100644
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -79,6 +79,8 @@ static int slave_alloc (struct scsi_device *sdev)
-  	if (us->protocol == USB_PR_BULK && us->max_lun > 0)
-  		sdev->sdev_bflags |= BLIST_FORCELUN;
-
-+	sdev->sdev_bflags |= BLIST_SKIP_IO_HINTS;
-+
-  	return 0;
-  }
-
-diff --git a/include/scsi/scsi_devinfo.h b/include/scsi/scsi_devinfo.h
-index 6b548dc2c496..fa8721e49dec 100644
---- a/include/scsi/scsi_devinfo.h
-+++ b/include/scsi/scsi_devinfo.h
-@@ -69,8 +69,10 @@
-  #define BLIST_RETRY_ITF		((__force blist_flags_t)(1ULL << 32))
-  /* Always retry ABORTED_COMMAND with ASC 0xc1 */
-  #define BLIST_RETRY_ASC_C1	((__force blist_flags_t)(1ULL << 33))
-+/* Do not read the I/O hints mode page */
-+#define BLIST_SKIP_IO_HINTS	((__force blist_flags_t)(1ULL << 34))
-
--#define __BLIST_LAST_USED BLIST_RETRY_ASC_C1
-+#define __BLIST_LAST_USED BLIST_SKIP_IO_HINTS
-
-  #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
-  			       (__force blist_flags_t) \
+Sm9oYW5uZXMgQmVyZyA8am9oYW5uZXNAc2lwc29sdXRpb25zLm5ldD4gd3JvdGU6DQo+IA0KPiBP
+biBNb24sIDIwMjQtMDYtMDMgYXQgMDA6NDcgKzAwMDAsIFBpbmctS2UgU2hpaCB3cm90ZToNCj4g
+Pg0KPiA+DQo+ID4gV2UgaGF2ZSBhIGRyYWZ0IGZpeCBvZiBydHc4OCBkcml2ZXIgZm9yIFJUTDg4
+MjFDRSwgYnV0IGFzIG1lbnRpb25lZCBzb21lIGRyaXZlcnMNCj4gPiBhcmUgYWZmZWN0ZWQsIHNv
+IEkgZG9uJ3QgcGxhbiB0byBzZW5kIG91dCB0aGUgcGF0Y2guIEluc3RlYWQgd2UgYXJlIGxvb2tp
+bmcgZm9yDQo+ID4gdGhlIGZpeCBvZiBjZmc4MDIxMS9tYWM4MDIxMS4NCj4gPg0KPiANCj4gR3Vl
+c3MgeW91IGRpZG4ndCBmaW5kIGl0IDopDQoNCllvdSBhcmUgcmlnaHQuIFRoYXQgaXMgbm90IGVh
+c3kgdG8gbWUuIDopDQoNCj4gDQo+IEp1c3QgZ290IHBpbmdlZCAoc3A/KSBhYm91dCB0aGlzLCBj
+YW4geW91IHNoYXJlIHRoZSBkcml2ZXIgZml4IHNvIEkgY2FuDQo+IHRha2UgYSBsb29rIHdoYXQg
+dGhlIGlzc3VlIGlzIGFib3V0Pw0KPiANCg0KUGxlYXNlIHJlZmVyZW5jZSBwYXRjaCBiZWxvdy4g
+SSBjb3B5IHRoaXMgaWRlYSBmcm9tIHJ0dzg5IFsxXSwgd2hpY2ggdGhlIG1haW4NCnN0dWZmIGlz
+IHRvIGFkZCBXQU5UX01PTklUT1JfVklGIGFuZCBjYXNlIE5MODAyMTFfSUZUWVBFX01PTklUT1Ig
+aW4gYWRkX2ludGVyZmFjZSgpLiANCkFkZGl0aW9uYWxseSBjaGVjayB3aGV0aGVyIGJzc2lkIGlz
+IE5VTEwuDQoNCk1hbnkgb3RoZXIgZHJpdmVycyBsaWtlIHJ0bHdpZmksIHJ0bDh4eHh1ZSAuLi4g
+ZG9uJ3QgZGVjbGFyZSBXQU5UX01PTklUT1JfVklGLCBzbw0KSSB0aGluayBpdCB3b3VsZCBiZSBi
+ZXR0ZXIgdG8gZml4IHRoaXMgYnkgbWFjODAyMTEgaW5zdGVhZCBvZiBmaXhpbmcgdGhlc2UgZHJp
+dmVycw0Kb25lIGJ5IG9uZS4gDQoNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNz
+L3JlYWx0ZWsvcnR3ODgvbWFjODAyMTEuYyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsv
+cnR3ODgvbWFjODAyMTEuYw0KaW5kZXggMGFjZWJiZmExM2M0Li5iOTBkMDI2NTE5ZTIgMTAwNjQ0
+DQotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L21hYzgwMjExLmMNCisr
+KyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFjODAyMTEuYw0KQEAgLTE5
+MSw2ICsxOTEsNyBAQCBzdGF0aWMgaW50IHJ0d19vcHNfYWRkX2ludGVyZmFjZShzdHJ1Y3QgaWVl
+ZTgwMjExX2h3ICpodywNCiAgICAgICAgICAgICAgICBiY25fY3RybCA9IEJJVF9FTl9CQ05fRlVO
+Q1RJT04gfCBCSVRfRElTX1RTRl9VRFQ7DQogICAgICAgICAgICAgICAgYnJlYWs7DQogICAgICAg
+IGNhc2UgTkw4MDIxMV9JRlRZUEVfU1RBVElPTjoNCisgICAgICAgY2FzZSBOTDgwMjExX0lGVFlQ
+RV9NT05JVE9SOg0KICAgICAgICAgICAgICAgIHJ0d19hZGRfcnN2ZF9wYWdlX3N0YShydHdkZXYs
+IHJ0d3ZpZik7DQogICAgICAgICAgICAgICAgbmV0X3R5cGUgPSBSVFdfTkVUX05PX0xJTks7DQog
+ICAgICAgICAgICAgICAgYmNuX2N0cmwgPSBCSVRfRU5fQkNOX0ZVTkNUSU9OOw0KZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFpbi5jIGIvZHJpdmVycy9u
+ZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9tYWluLmMNCmluZGV4IDdhYjdhOTg4YjEyMy4uZDUx
+YzdjYWQ3OWRhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4
+OC9tYWluLmMNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFpbi5j
+DQpAQCAtMjIzMSw2ICsyMjMxLDcgQEAgaW50IHJ0d19yZWdpc3Rlcl9odyhzdHJ1Y3QgcnR3X2Rl
+diAqcnR3ZGV2LCBzdHJ1Y3QgaWVlZTgwMjExX2h3ICpodykNCiAgICAgICAgaWVlZTgwMjExX2h3
+X3NldChodywgSEFTX1JBVEVfQ09OVFJPTCk7DQogICAgICAgIGllZWU4MDIxMV9od19zZXQoaHcs
+IFRYX0FNU0RVKTsNCiAgICAgICAgaWVlZTgwMjExX2h3X3NldChodywgU0lOR0xFX1NDQU5fT05f
+QUxMX0JBTkRTKTsNCisgICAgICAgaWVlZTgwMjExX2h3X3NldChodywgV0FOVF9NT05JVE9SX1ZJ
+Rik7DQoNCiAgICAgICAgaWYgKHN0YV9tb2RlX29ubHkpDQogICAgICAgICAgICAgICAgaHctPndp
+cGh5LT5pbnRlcmZhY2VfbW9kZXMgPSBCSVQoTkw4MDIxMV9JRlRZUEVfU1RBVElPTik7DQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9waHkuYyBiL2RyaXZl
+cnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvcGh5LmMNCmluZGV4IDM3ZWY4MGM5MDkxZC4u
+YjFiNzg5MjI2NmYwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9y
+dHc4OC9waHkuYw0KKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9waHku
+Yw0KQEAgLTYyNyw2ICs2MjcsOSBAQCBzdGF0aWMgdm9pZCBydHdfcGh5X3BhcnNpbmdfY2ZvX2l0
+ZXIodm9pZCAqZGF0YSwgdTggKm1hYywNCiAgICAgICAgdTggKmJzc2lkID0gaXRlcl9kYXRhLT5i
+c3NpZDsNCiAgICAgICAgdTggaTsNCg0KKyAgICAgICBpZiAoIXZpZi0+YnNzX2NvbmYuYnNzaWQp
+DQorICAgICAgICAgICAgICAgcmV0dXJuOw0KKw0KICAgICAgICBpZiAoIWV0aGVyX2FkZHJfZXF1
+YWwodmlmLT5ic3NfY29uZi5ic3NpZCwgYnNzaWQpKQ0KICAgICAgICAgICAgICAgIHJldHVybjsN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4LmMgYi9k
+cml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4LmMNCmluZGV4IDg0YWVkYWJkZjI4
+NS4uNDNhYTVkZDZmMmNjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRl
+ay9ydHc4OC9yeC5jDQorKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4
+LmMNCkBAIC0xMDQsNiArMTA0LDkgQEAgc3RhdGljIHZvaWQgcnR3X3J4X2FkZHJfbWF0Y2hfaXRl
+cih2b2lkICpkYXRhLCB1OCAqbWFjLA0KICAgICAgICBzdHJ1Y3QgcnR3X3J4X3BrdF9zdGF0ICpw
+a3Rfc3RhdCA9IGl0ZXJfZGF0YS0+cGt0X3N0YXQ7DQogICAgICAgIHU4ICpic3NpZCA9IGl0ZXJf
+ZGF0YS0+YnNzaWQ7DQoNCisgICAgICAgaWYgKCF2aWYtPmJzc19jb25mLmJzc2lkKQ0KKyAgICAg
+ICAgICAgICAgIHJldHVybjsNCisNCiAgICAgICAgaWYgKCFldGhlcl9hZGRyX2VxdWFsKHZpZi0+
+YnNzX2NvbmYuYnNzaWQsIGJzc2lkKSkNCiAgICAgICAgICAgICAgICByZXR1cm47DQoNCg0KWzFd
+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3dpcmVsZXNz
+L3dpcmVsZXNzLW5leHQuZ2l0L2NvbW1pdC9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0
+dzg5P2lkPWNkOWI2YjNiYWY1Mjc4YzczYzkxZTI0MmQ0MTM4NzY4NGZjN2Y4ZDgNCg0KDQoNCg==
