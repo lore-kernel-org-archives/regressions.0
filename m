@@ -1,175 +1,96 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA3482FA
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 20:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DF0210FF;
+	Wed, 12 Jun 2024 21:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718224897; cv=none; b=FD+jRkfWN9312zPND5YrFbXo3u+ZCIJ3kQn+EzzhoYLROcV85xxkMWikv1QMDPmi9gHH9a6opesIzQ9IjekrS2TKhXkgbwB+bDue6NJsCU1Fl6ZUHVaDL0e2AlZHfGss5DLv+E6GyGSD6PAs6xB+/By8DKC7y3EZfAXhNsK5Yws=
+	t=1718227071; cv=none; b=gDH9i/Hcn1rXYJ+elW71V0U7VY/wo1e6uYF9cPvp8G3vj0VvGruzuydZNfGWCFE30HvkXV0DGxp8Cf1kWcnMUN9XglMk78GsdQ34WJtQUE6wyclg1X5P8nWUK+3dOMAOF697VgXUOwM9s4k4MOw9KFg08SUt0nfS8pObK/GnKtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718224897; c=relaxed/simple;
-	bh=iksz8x0J+16o1rcdeXT1mVm0qNREjzh30WqMubfeTgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRBhXGv/Ni7ESboRFcq42ha4mZnBmqN3mxd+oxCdbNRhwzhHA7xbanAI0d5tlqPC3ynm11fmuV84mY5PIWgyGmTAUotlKZbqwV+opIgShe/c6KEkaNAjCViTV0qZL20ruCIqKn4BHTpYygIpR7Tt8VyZcB27Fqs+HbmsFQGRBsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JtnpjQOV; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JtnpjQOV"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DB78A12E4;
-	Wed, 12 Jun 2024 22:41:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1718224881;
-	bh=iksz8x0J+16o1rcdeXT1mVm0qNREjzh30WqMubfeTgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JtnpjQOVy2sLoaifEsK4xCzR24o0w82Tw4QpdFx7X5Z6WDWPm5piRH8BitafAQyoK
-	 YeQ0NrkbMmSoltft8qcVxQzpKXUNLvv5Mbturel1XhUKux1YacEWxMJPTQEd1CnXmC
-	 qDREB10+CTLfSv+fEt+Vxu9kZbg67c/g0fpCeVgY=
-Date: Wed, 12 Jun 2024 23:41:14 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org,
-	mchehab@kernel.org, hverkuil-cisco@xs4all.nl, wentong.wu@intel.com,
-	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
- nodes
-Message-ID: <20240612204114.GV28989@pendragon.ideasonboard.com>
-References: <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
- <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
- <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain>
- <CAJZ5v0gtK9yusimCOVV2dGkQWDwQ6=r=vfbgC-eE60Cg-5wk_Q@mail.gmail.com>
- <ZmnrtIEla9R24egi@kekkonen.localdomain>
- <CAJZ5v0hXU62QiXxWfkbiovciNNEk0h49kRdScmz5qONTMDA+4A@mail.gmail.com>
- <20240612200012.GP28989@pendragon.ideasonboard.com>
- <CAJZ5v0hF+6_RCyP-Rr+ajNNEKe0YenFR8x6wX3dG1Pq+vguTwg@mail.gmail.com>
+	s=arc-20240116; t=1718227071; c=relaxed/simple;
+	bh=vEtzTEM2k7xLovHgE/1wAEzwHMADwkncLdx8SgC6E34=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f/P9cNbJmmWcMzvwcBpd4KbXixQlqP7Q2ED311qnCCsUWQYubrXFFP9tRMNy+72YErGve73HLIa14MbaSNnhsW7Xx1f+R+KszXSkeX1XH3owjiGX0A2lAFBs4Qsv8Huacs6bniSh/rH5PTF6PnAKAZplGeljPqViTi+Bu+lFBhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ABFBC116B1;
+	Wed, 12 Jun 2024 21:17:50 +0000 (UTC)
+Date: Wed, 12 Jun 2024 17:17:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc :
+ ftrace_ops_test
+Message-ID: <20240612171748.0bc6d9cb@rorschach.local.home>
+In-Reply-To: <20240612125130.2c1d6d2d@rorschach.local.home>
+References: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
+	<20240612125130.2c1d6d2d@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hF+6_RCyP-Rr+ajNNEKe0YenFR8x6wX3dG1Pq+vguTwg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 12, 2024 at 10:31:06PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jun 12, 2024 at 10:00 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > On Wed, Jun 12, 2024 at 08:50:57PM +0200, Rafael J. Wysocki wrote:
-> > > On Wed, Jun 12, 2024 at 8:41 PM Sakari Ailus wrote:
-> > > > On Wed, Jun 12, 2024 at 08:29:21PM +0200, Rafael J. Wysocki wrote:
-> > > > > On Wed, Jun 12, 2024 at 8:21 PM Sakari Ailus wrote:
-> > > > > > On Wed, Jun 12, 2024 at 03:06:53PM +0200, Rafael J. Wysocki wrote:
-> > > > > > > On Wed, Jun 12, 2024 at 2:47 PM Sakari Ailus wrote:
-> > > > > > > > On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
-> > > > > > > > > > > > > I just hit the same problem on another Dell laptop. It seems that
-> > > > > > > > > > > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-> > > > > > > > > > > > > and Raptor Lake generations suffer from this problem.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > So instead of playing whack a mole with DMI matches we should
-> > > > > > > > > > > > > simply disable ACPI MIPI DISCO support on all Dell laptops
-> > > > > > > > > > > > > with those CPUs. I'm preparing a fix for this to replace
-> > > > > > > > > > > > > the DMI matching now.
-> > > > > > > > > > > >
-> > > > > > > > > > > > DisCo for Imaging support shouldn't be dropped on these systems, and this
-> > > > > > > > > > > > isn't what your patch does either. Instead the ACPI graph port nodes (as
-> > > > > > > > > > > > per Linux specific definitions) are simply dropped, i.e. this isn't related
-> > > > > > > > > > > > to DisCo for Imaging at all.
-> > > > > > > > > > >
-> > > > > > > > > > > So it looks like the changelog of that patch could be improved, right?
-> > > > > > > > > >
-> > > > > > > > > > Well, yes. The reason the function is in the file is that nearly all camera
-> > > > > > > > > > related parsing is located there, not that it would be related to DisCo for
-> > > > > > > > > > Imaging as such.
-> > > > > > > > >
-> > > > > > > > > So IIUC the camera graph port nodes are created by default with the
-> > > > > > > > > help of the firmware-supplied information, but if that is defective a
-> > > > > > > > > quirk can be added to skip the creation of those ports in which case
-> > > > > > > > > they will be created elsewhere.
-> > > > > > > > >
-> > > > > > > > > Is this correct?
-> > > > > > > >
-> > > > > > > > Yes.
-> > > > > > >
-> > > > > > > So it would be good to add a comment to this effect to
-> > > > > > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
-> > > > > > > called.
-> > > > > > >
-> > > > > > > And there is a somewhat tangential question that occurred to me: If
-> > > > > > > the nodes are created elsewhere when acpi_graph_ignore_port() is true,
-> > > > > > > why is it necessary to consult the platform firmware for the
-> > > > > > > information on them at all?  Wouldn't it be better to simply always
-> > > > > > > create them elsewhere?
-> > > > > >
-> > > > > > Simple answer: for the same reason why in general system specific
-> > > > > > information comes from ACPI and not from platform data compiled into the
-> > > > > > kernel.
-> > > > > >
-> > > > > > Of course this is technically possible but it does not scale.
-> > > > >
-> > > > > While I agree in general, in this particular case the platform data
-> > > > > compiled into the kernel needs to be present anyway, at least
-> > > > > apparently, in case the data coming from the platform firmware is
-> > > > > invalid.
-> > > > >
-> > > > > So we need to do 3 things: compile in the platform data into the
-> > > > > kernel and expect the platform firmware to provide the necessary
-> > > > > information, and add quirks for the systems where it is known invalid.
-> > > > >
-> > > > > Isn't this a bit too much?
-> > > >
-> > > > Isn't this pretty much how ACPI works currently?
-> > >
-> > > No, we don't need to put platform data into the kernel for every bit
-> > > of information that can be retrieved from the platform firmware via
-> > > ACPI.
-> > >
-> > > The vast majority of information in the ACPI tables is actually
-> > > correct and if quirks are needed, they usually are limited in scope.
-> > >
-> > > Where it breaks is when the ACPI tables are not sufficiently validated
-> > > by OEMs which mostly happens when the data in question are not needed
-> > > to pass some sort of certification or admission tests.
-> >
-> > We have to be careful here. Part of the job of the ACPI methods for
-> > camera objects is to control the camera sensor PMIC and set up the right
-> > voltages (many PMICs have programmable output levels). In many cases
-> > we've seen with the IPU3, broken ACPI support means the methods will try
-> > to do something completely bogus, like accessing a PMIC at an incorrect
-> > I2C address. That's mostly fine, it will result in the camera not being
-> > detected. We could however have broken ACPI implementation that would
-> > program the PMIC to output voltages that would damage the sensor. Users
-> > won't be happy.
+On Wed, 12 Jun 2024 12:51:30 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> > [  100.600222] Hardware name: Radxa ROCK Pi 4B (DT)
+> > [  100.600229] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [  100.600239] pc : ftrace_ops_test+0x34/0x138  
 > 
-> My point is basically that if that data were also used by Windows,
-> then chances are that breakage of this sort would be caught during
-> Windows validation before shipping the machines and so it wouldn't
-> affect Linux as well.
+> Hmm, could you show the exact line of the above code? Specifically we have:
 > 
-> However, if OEMs have no vehicle to validate their systems against,
-> bad things can happen indeed.
+> 	rcu_assign_pointer(hash.filter_hash, ops->func_hash->filter_hash);
+> 	rcu_assign_pointer(hash.notrace_hash, ops->func_hash->notrace_hash);
 > 
-> Also, if an OEM has no incentive to carry out the requisite checks,
-> the result is likely to be invalid data in the platform firmware.
+> Hmm, it's a NULL pointer dereference at 0x8, so ops is likely not NULL,
+> as func_hash is much farther down. But if func_hash is NULL,
+> filter_hash is at the 0x8 offset.
+> 
+> So now the question is, how did func_hash become NULL. It should always
+> be pointing at something. May have to do with the subops. Will investigate.
+> 
 
-We're exactly on the same page. The only solution [*] I can see for this
-problem is to get the Windows drivers to use the same ACPI data as the
-Linux drivers.
+> 
+> 
+> > [  100.600258] lr : function_graph_enter+0x144/0x208
 
-* Another solution would be for OEMs to stop caring about Windows and
-testing their machines with Linux only, essentially reversing the
-current situation. Chances of this happening however seem even tinier
-:-)
+I wonder if we need the following patch:
 
--- 
-Regards,
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 8317d1a7f43a..fc205ad167a9 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -641,7 +641,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+ 	{
+ 		for_each_set_bit(i, &fgraph_array_bitmask,
+ 					 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
+-			struct fgraph_ops *gops = fgraph_array[i];
++			struct fgraph_ops *gops = READ_ONCE(fgraph_array[i]);
+ 			int save_curr_ret_stack;
+ 
+ 			if (gops == &fgraph_stub)
 
-Laurent Pinchart
+
+Because if the compiler decides to re-read gops from fgraph_array[i] after the
+above check for the following line that does:
+
+			save_curr_ret_stack = current->curr_ret_stack;
+			if (ftrace_ops_test(&gops->ops, func, NULL) &&
+			    gops->entryfunc(&trace, gops))
+				bitmap |= BIT(i);
+
+
+and gops now points to fgraph_stub, it will trigger this bug.
+
+Can you apply the above change and see if the bug goes away?
+
+Thanks,
+
+-- Steve
