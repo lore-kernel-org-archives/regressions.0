@@ -1,117 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E1816D4E3
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 09:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD5916E874
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718183591; cv=none; b=mdgPEBF8KEulSgWtfTxnsTpCqv8CM3ncYyg06puAScMyc0W/jH5oN7IlkFhv+Zn3JvHB/bxXEyBa3zxYloAyRwm51hH5faoGGOtLmWhB6+0Z7V4kyI+QHOwMTG1r/YM8DQORhYEPxy9sOJ5kJDiivbZjVrpHfyiS7zfF3a5fWS4=
+	t=1718186936; cv=none; b=E/guvRDDFRDjq5mPGd7XwGcLSM2f8HfRyZWZ4J3kDklB1zGs1DpsOb9bO5SoRxuVpC57lri3UFBYDWmNvzZZOYHwUAvf8CtsjWk/Da9yAJuFt7gpk2aVAk8YAPOSlgJhZ9/JnmjhzbZidCbFsrjfIywPOa/I1F5xIIbylsrXbi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718183591; c=relaxed/simple;
-	bh=XrwOQ/gyBVdelGpOqpGJ+oKgljajkKFUTiJVw7kLKxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gGS+0xNA8S68Q6NOQ06fJppishbxw+1DSsdSpuWXeD132S8T1g/XBl/hdEYNBQzGyBZL61mhMNLujrXTDPAF6rEhcNoEU4GvA06rYczeq4oZnFVTGOnNO0fkKiW5MNZ9xh1Teud1xIK+wzhrEEls0rHE36q9M9eGyw0ftViKp5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Jt9ko12J; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718186936; c=relaxed/simple;
+	bh=pw7HgWQK4sD0qp5qxOO2K9LVDQueOS/Y695OIEk7J9I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MPyv0hVq/6J1rNgh13aOzQZ2+/geLnvI2QJo/THCndo6B1FKqTQeOrzlBmDq8rAj5fBhYsJi+7vraUrVsypj6XPpINyUKWYxzTd5lSNtX3R3DPZxkT6Sod3sz41j2pe2pjtm+e8kXVOdTQe/yara/JeyrDHSqUqgYBe3kIgh9ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q+WKDUgC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Jt9ko12J"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C2Vklv008629;
-	Wed, 12 Jun 2024 09:12:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Yk63//nEM+nr3n79J4vWVyQ84P+GeX0qcVy1yICizkA=; b=Jt9ko12JJNO8MOQO
-	qFnMnUCOUoUwH9WRLMu+vHOwe3w9BWKhHqDUX+plDSBxGSsL3Fc0RuTS0SReaqcW
-	PW3wSRJckTU4sly+Oomey6GlAWQiMY3K+T/abk9yIDlgKGM5yuLrbepzcZcR8mpc
-	Kbg1dDZ8bDDFVig9IdbeYKxcyaDyicc6uyzmCvohW8TORB8T0siJ6wZdXfD1XMaA
-	ayayxeZF82r2WFjA+J1WxxUV1l0PSu2c7H16HM9sWlNK3x+I20ZGviiPmS+01TvU
-	mf+VpRslFUEsyMKIvEDaxtQ2mjSUbdD2jFpZmsn0B9rInnlRf7zLWhFJHNAKX6Dr
-	hdkEsQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ype913raa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 09:12:59 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C9CwV2018738
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 09:12:58 GMT
-Received: from [10.216.60.112] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 02:12:55 -0700
-Message-ID: <ba4be7bf-012b-9e4f-c33d-01cc0d039377@quicinc.com>
-Date: Wed, 12 Jun 2024 14:42:51 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q+WKDUgC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718186933;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LLOfKzS9Is4M6RNWbUE4sMUvQ49ghZMG/yPmnPnTpYY=;
+	b=Q+WKDUgCEpp/RquVuRoyz0/6JOUDYAWAzL5wLxB+KfLtbz/nwT4nCC6j0jGG910JIXe8Un
+	eowQ89H0gDLzLyatVXBeC0WhQmVGPv4X4xp3ZXlxeCHXRPBHqFneLMlqxlN1NpiSppC4Nf
+	AG9MyVb7zyycuVPi3Bs+nQhGsDW71cc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-nVa8owwEOrmHtLPdvqmgcg-1; Wed, 12 Jun 2024 06:08:52 -0400
+X-MC-Unique: nVa8owwEOrmHtLPdvqmgcg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6def6e9ef2so55534666b.0
+        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 03:08:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718186931; x=1718791731;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LLOfKzS9Is4M6RNWbUE4sMUvQ49ghZMG/yPmnPnTpYY=;
+        b=wizhPBsc5wif8Eptpy+xLGirpG9dN+x1BajZm+HYgSAOTl17IcAMCt0SyZK9Q2MBAF
+         eVCsJQb3qEAlMztGkFUf/nnj9VfcXI5xXvruiGWUeBFWuxcA9/I0XfoyOL5y5F55N3a3
+         yVeCAQ0jheqyQU68wqHHNG3Nhvoq2I0ul9vMhTk/ObsQj88700EhLw3xIcGwFIs2jCKz
+         d5P5Sns2+2dXCy3YElbxjwh9otkCCa/ze85oJ2hW/2iSHeMZo5aDOnGLze32jGqjYjXs
+         O6BVYiyhYa++6uVAN1kAKzSak5D8Pz2Ppa+XThUADHH0FiPU2dQekhGhuH7mUzTirA9j
+         t7jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYPH5Rq0jx3dDxcb8R9VcXfQ6E1MhKDEEXX7W18VkV8JfOwTVZOtMtQfyfmU2UV6tqlSmajcDsSrI7wApNs2X2GFRxB5AcuOEDK4I=
+X-Gm-Message-State: AOJu0YyGh7HIemcMgprx9PiffI1xVbow/4BZQdZAZeS3SGQbed7VMcqZ
+	+DyTJ8T9Xxg935AfVT3DTYwD9Z+rRq9/pYZ1FZG8pGkQfcsGELmf8OAgUJJxHfD9weS5ThuYbZ9
+	taD7hyZYP6XnsqwfRRfomYWVuFhgxDJa7ooIOFM4/eEG0zlvT6qzYBUK/I7SC
+X-Received: by 2002:a17:906:64d:b0:a6e:4e0:8a56 with SMTP id a640c23a62f3a-a6f34dddf97mr345487566b.32.1718186931120;
+        Wed, 12 Jun 2024 03:08:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDhKNb1woactSSXmyEjuzW+ovpxvmll3Rtvi6rex9IVe/7mfN7yKK6wLzv4CqXyzqlxcF2eg==
+X-Received: by 2002:a17:906:64d:b0:a6e:4e0:8a56 with SMTP id a640c23a62f3a-a6f34dddf97mr345485466b.32.1718186930674;
+        Wed, 12 Jun 2024 03:08:50 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0369399csm568681366b.3.2024.06.12.03.08.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 03:08:50 -0700 (PDT)
+Message-ID: <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+Date: Wed, 12 Jun 2024 12:08:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
- mode
-Content-Language: en-US
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Ping-Ke Shih
-	<pkshih@realtek.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Savyasaachi Vanga <savyasaachiv@gmail.com>,
-        Christian Heusel
-	<christian@heusel.eu>
-CC: Kalle Valo <kvalo@kernel.org>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>
-References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
- <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
- <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
- <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
- <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
- <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
- <6a88e0d3e47ebbd1f0f383094e4804a627c41870.camel@sipsolutions.net>
-From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
-In-Reply-To: <6a88e0d3e47ebbd1f0f383094e4804a627c41870.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+From: Hans de Goede <hdegoede@redhat.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Genes Lists <lists@sapience.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-kernel@vger.kernel.org, mchehab@kernel.org,
+ hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+ wentong.wu@intel.com, linux-media@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+In-Reply-To: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -7EOd7-WpFJv3MhVVXx-aV3y2-dEkD6m
-X-Proofpoint-ORIG-GUID: -7EOd7-WpFJv3MhVVXx-aV3y2-dEkD6m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_05,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 phishscore=0 bulkscore=0
- clxscore=1011 mlxlogscore=741 impostorscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406120066
 
+Hi,
 
-
-On 6/12/2024 12:37 PM, Johannes Berg wrote:
-> On Wed, 2024-06-12 at 00:56 +0000, Ping-Ke Shih wrote:
+On 6/6/24 8:12 PM, Hans de Goede wrote:
+> Hi,
 > 
+> +To: Rafael since this was Cc-ed to linux-acpi but never send
+> to Rafael directly.
 > 
->>> Just got pinged (sp?) about this, can you share the driver fix so I can
->>> take a look what the issue is about?
->>>
+> Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
+> to make the cameras work on the Dell XPS 13 plus 9320 .
+> 
+> On 5/28/24 7:09 PM, Hans de Goede wrote:
+>> Hi Sakari,
 >>
->> Please reference patch below. I copy this idea from rtw89 [1], which the main
->> stuff is to add WANT_MONITOR_VIF and case NL80211_IFTYPE_MONITOR in add_interface().
+>> On 5/28/24 10:44 AM, Sakari Ailus wrote:
+>>> Ignore camera related graph port nodes on Dell XPS 9320. They data in BIOS
+>>> is buggy, just like it is for Dell XPS 9315. The corresponding software
+>>> nodes are created by the ipu-bridge.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> ---
+>>> Hi,
+>>>
+>>> Could you test this and see whether it fixes the warning?
+>>>
+>>> The camera might work with this change, too.
+>>
+>> Thank you I just received a Dell XPS 13 plus 9320 myself to use
+>> for VSC testing and I can confirm that with this patch 6.10.0-rc1
+>> works, including giving a picture with the libcamera software ISP +
+>> 3 small libcamera patches.
 > 
-> Ah, OK, but that gives me a hint. Yes, I see the issue now.
+> I forgot to add:
 > 
-> OK it's not trivial and it might leave ath12k still not working (though
-> not sure it ever did before? or maybe I'm missing something...), but I
-> think I can fix this. Let's see.
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I just hit the same problem on another Dell laptop. It seems that
+all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+and Raptor Lake generations suffer from this problem.
+
+So instead of playing whack a mole with DMI matches we should
+simply disable ACPI MIPI DISCO support on all Dell laptops
+with those CPUs. I'm preparing a fix for this to replace
+the DMI matching now.
+
+Rafael, please drop this patch, my more generic fix will replace it
+and backporting will be easier without having the intermediate fix
+in the middle.
+
+Regards,
+
+Hans
+
+
+
+
+>>>  drivers/acpi/mipi-disco-img.c | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/acpi/mipi-disco-img.c b/drivers/acpi/mipi-disco-img.c
+>>> index d05413a0672a..bf9a5cee32ac 100644
+>>> --- a/drivers/acpi/mipi-disco-img.c
+>>> +++ b/drivers/acpi/mipi-disco-img.c
+>>> @@ -732,6 +732,12 @@ static const struct dmi_system_id dmi_ignore_port_nodes[] = {
+>>>  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 9315"),
+>>>  		},
+>>>  	},
+>>> +	{
+>>> +		.matches = {
+>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 9320"),
+>>> +		},
+>>> +	},
+>>>  	{ }
+>>>  };
+>>>  
 > 
 
-Monitor mode is not yet supported in ath12k, this feature is work in progress.
-
-Vasanth
