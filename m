@@ -1,153 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCB416E881
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 12:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26B016F29C;
+	Wed, 12 Jun 2024 12:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718195559; cv=none; b=DtB+qqgYf0R0JSIiOaT4VuRTo+XWPbP+zClEz1/UvaQLNq0nBl0aPMiMyjRRjM530eZ/pWDnlyBsxBOseHTck4X9W0+iTJpgNPeZf8lTbvEB9a/vzbpL3AuFjHk05sQI69EOr/EpUAOVj4rEbMzg8u0OfFUcgHq+Ya9WrrCnF5g=
+	t=1718196071; cv=none; b=YvoLWru2vy0oPxgPa3TdkMlQAJUHOO+1x4O6wbpSdmcHIqNmlhwdDUAsLO3iozXH7Rzpqmvy0MIjEumv2WlTuShjcUwwqSeoDDQDBklBorBDi9Pq3rNGD9gVZgsdmCmpBBGxhXKyBp3juwV+ikkNSER8A1fhUOCryYQ9zQMvMl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718195559; c=relaxed/simple;
-	bh=aWxvhXYl7WmnMjLN+jrZVKd1UIrUjxzDb4m7CnLQOOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CoFl1fbBNuawuBrcHzZpgsCE0kYlabkZcomqMICe1Nz1y80dZ1vi8fre4+ZCa1uvWpMKiMVpe4bUQ9qvRFWZmaB0adx0uyVpORkEcRYh+83LohMa6O782I3+2hyIZUHwNeYiHknlzQC04RY3CGElYoq0s3vbCYBp6ELZImXsEcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxyzOfpm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718196071; c=relaxed/simple;
+	bh=8t9V+RAuQ307UNgRL1t8CxJDFzSaO2i9p55Z97H1iSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dLjno9OkAsKqgsVQeGxN19+oldqAUW4S1iR7sra3Iwl3/TWNyvHJhQzGS6Ii+rMP5gnnDEIS0rSaAq832M7pH+1kCPaBkb+chF15XAomXkHgN59sbMjOSQ72gxCjAS2zIMuzC5cdh2GuaNgMv9dQC44cG6QMYe4mCk5Ch/xtc+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A/5sGVd3; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxyzOfpm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B1BC32789
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 12:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718195558;
-	bh=aWxvhXYl7WmnMjLN+jrZVKd1UIrUjxzDb4m7CnLQOOU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JxyzOfpmIw/cCnjS8kjKvcHJVPssD2VuB0iwGfruv5mnLGlh/BM7HiNvMyea4/Z4n
-	 pztPPvQINHei1tglxa+pknBk3S6s6b9nCZAsoc/tibIdCmewB4yu+9pUK3PzS+qEj3
-	 2V8xA6pVeiWS3g0UvGm+yLvk4rToTXh7tc8/bPj/wtQ0iER0cGFVDmxVkOFsZe6Uqb
-	 YgRsd/WgtUdj1pvIpm4N3kyT+qYx0NksqmkSURWwANgI+LtGvkE578rABK43SZjRDO
-	 hjqS4Y2NyJwGgGv0hpfsS1ZGw898AS/8Wy55xwQnYptPmj+lFGFQTLwUcoeMxEh3ay
-	 9KuHcjDI9sqmQ==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b3356fd4f3so735603eaf.1
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 05:32:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVsmVy1DItBW5Fn+FGNE4jpA+uStjeTnym427O9b4GF8q6v2Kh8z3l2J9Rg8VATPVctl0wPm/mdRJF9BQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx7Cuj7ZoDVaHq0/0r4m/vzgsBn2fiWdj3Zc/DCdC9yUgpYxUkS
-	EWRUpTS1RBpozoOZ55BsWAQ0t0ulbKAnEMHOxLANd1zeVkTsFsgA/nt9OcoxEfEhsTJdaDSr46h
-	n1JeNzFuokcP/7nByxBE8YVzT6sA=
-X-Google-Smtp-Source: AGHT+IFR8h0kytuWOp+ktZ19InJGNg+BPq/zkCFx41afNMr9L2B+GaQBgE3iUq8bHh3fiOtf9oFxvOGgoDjfdriaCOY=
-X-Received: by 2002:a05:6870:658d:b0:24f:cabc:4fa3 with SMTP id
- 586e51a60fabf-255147c7724mr1817288fac.0.1718195558086; Wed, 12 Jun 2024
- 05:32:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A/5sGVd3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=pRy0sJWQM10IgB/bhi5G6l1DK7UQGSd130PPr57Mh4Y=;
+	t=1718196069; x=1718628069; b=A/5sGVd3QQbrZi9TzZmWda2DCsSu4WcQCFj9QwkkG6b0xmx
+	Zv3onSkETgPd341pc2KfX7lUmKJOw3p1YWkO+SJrtnSxxBv9aNrMpImVaDS40wCJF8HyQMa3kweNQ
+	6TJk4mvRAE6xBDFUn8jhYMakbx1eX8dtlwDfQ4AHxVMLHWpGA/HPlyEABjCtxxX9i6NAOvfnhyuSV
+	w/pbYPj3m7aoz95SvGFbI4RV/DtYW1Lx0dMvEweP0ydlujKa5dFB0BDiG9G/KL44QVOzAKfZrxiOM
+	9rPyPWEPEwVpb7Orssb1D5Adv0aeRzvfKpQE/NzzzzKI+DFObWz1TYrAYOpsbd2w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHNHl-0004yB-H5; Wed, 12 Jun 2024 14:41:05 +0200
+Message-ID: <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
+Date: Wed, 12 Jun 2024 14:41:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <20240528084413.2624435-1-sakari.ailus@linux.intel.com> <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
- <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
-In-Reply-To: <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 14:32:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
-Message-ID: <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] QXL display malfunction
+To: "tzimmermann@suse.de" <tzimmermann@suse.de>
+Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
+ "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+ "Kaplan, David" <David.Kaplan@amd.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Dave Airlie <airlied@redhat.com>, Dave Airlie <airlied@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718196069;3e301e0f;
+X-HE-SMSGID: 1sHNHl-0004yB-H5
 
-Hi Sakari,
+[CCing a few more people and lists that get_maintainers pointed out for qxl]
 
-On Wed, Jun 12, 2024 at 2:26=E2=80=AFPM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> On Wed, Jun 12, 2024 at 02:21:51PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Jun 12, 2024 at 2:10=E2=80=AFPM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Hi Hans,
-> > >
-> > > Just read this discussion, too...
-> > >
-> > > On Wed, Jun 12, 2024 at 12:08:49PM +0200, Hans de Goede wrote:
-> > > > Hi,
-> > > >
-> > > > On 6/6/24 8:12 PM, Hans de Goede wrote:
-> > > > > Hi,
-> > > > >
-> > > > > +To: Rafael since this was Cc-ed to linux-acpi but never send
-> > > > > to Rafael directly.
-> > > > >
-> > > > > Rafael this fixes a crash in 6.10-rc1 for some users and is neces=
-sary
-> > > > > to make the cameras work on the Dell XPS 13 plus 9320 .
-> > > > >
-> > > > > On 5/28/24 7:09 PM, Hans de Goede wrote:
-> > > > >> Hi Sakari,
-> > > > >>
-> > > > >> On 5/28/24 10:44 AM, Sakari Ailus wrote:
-> > > > >>> Ignore camera related graph port nodes on Dell XPS 9320. They d=
-ata in BIOS
-> > > > >>> is buggy, just like it is for Dell XPS 9315. The corresponding =
-software
-> > > > >>> nodes are created by the ipu-bridge.
-> > > > >>>
-> > > > >>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > >>> ---
-> > > > >>> Hi,
-> > > > >>>
-> > > > >>> Could you test this and see whether it fixes the warning?
-> > > > >>>
-> > > > >>> The camera might work with this change, too.
-> > > > >>
-> > > > >> Thank you I just received a Dell XPS 13 plus 9320 myself to use
-> > > > >> for VSC testing and I can confirm that with this patch 6.10.0-rc=
-1
-> > > > >> works, including giving a picture with the libcamera software IS=
-P +
-> > > > >> 3 small libcamera patches.
-> > > > >
-> > > > > I forgot to add:
-> > > > >
-> > > > > Tested-by: Hans de Goede <hdegoede@redhat.com>
-> > > > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > > >
-> > > > I just hit the same problem on another Dell laptop. It seems that
-> > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-> > > > and Raptor Lake generations suffer from this problem.
-> > > >
-> > > > So instead of playing whack a mole with DMI matches we should
-> > > > simply disable ACPI MIPI DISCO support on all Dell laptops
-> > > > with those CPUs. I'm preparing a fix for this to replace
-> > > > the DMI matching now.
-> > >
-> > > DisCo for Imaging support shouldn't be dropped on these systems, and =
-this
-> > > isn't what your patch does either. Instead the ACPI graph port nodes =
-(as
-> > > per Linux specific definitions) are simply dropped, i.e. this isn't r=
-elated
-> > > to DisCo for Imaging at all.
-> >
-> > So it looks like the changelog of that patch could be improved, right?
->
-> Well, yes. The reason the function is in the file is that nearly all came=
-ra
-> related parsing is located there, not that it would be related to DisCo f=
-or
-> Imaging as such.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-So IIUC the camera graph port nodes are created by default with the
-help of the firmware-supplied information, but if that is defective a
-quirk can be added to skip the creation of those ports in which case
-they will be created elsewhere.
+Thomas, from here it looks like this report that apparently is caused by
+a change of yours that went into 6.10-rc1 (b33651a5c98dbd ("drm/qxl: Do
+not pin buffer objects for vmap")) fell through the cracks. Or was
+progress made to resolve this and I just missed this?
 
-Is this correct?
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+
+On 03.06.24 04:29, Kaplan, David wrote:
+>> -----Original Message-----
+>> From: Kaplan, David
+>> Sent: Sunday, June 2, 2024 9:25 PM
+>> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
+>> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
+>> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.dev
+>> Subject: [REGRESSION] QXL display malfunction
+>>
+>> Hi,
+>>
+>> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I've
+>> observed the VM graphics often malfunction after boot, sometimes failing to
+>> load the Ubuntu desktop or even immediately shutting the guest down.
+>> When it does load, the guest dmesg log often contains errors like
+>>
+>> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65376256x16777216+0+0
+>> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65376256x16777216+0+0
+>> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>> wrong: 65335296x16777216+0+0
+>> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id in
+>> release_idr
+>>
+>> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap"
+>> (b33651a5c98dbd5a919219d8c129d0674ef74299).
+>>
+>> The full guest .config and guest XML can be provided if desired.  The guest
+>> kernel has QXL support compiled in and the VM has
+>>
+>> <video>
+>>   <model type="qxl" ram="65536" vram="65536" vgamem="16384"
+>> heads="1" primary="yes"/>
+>>   <address type="pci" domain="0x0000" bus="0x00" slot="0x01"
+>> function="0x0"/> </video>
+>>
+>> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is run
+>> under virt-manager 4.1.0.  If other information would be helpful, just let me
+>> know.
+>>
+>> Thanks --David Kaplan
+> 
+> Fixing emails...sorry
+> 
+> --David Kaplan
+> 
+> 
