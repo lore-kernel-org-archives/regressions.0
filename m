@@ -1,149 +1,264 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D6C178398;
-	Wed, 12 Jun 2024 13:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A2912B89;
+	Wed, 12 Jun 2024 14:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199479; cv=none; b=eWnw0n612KOuMQegVlPG3wjiCWIpCv+unZMdEPgFy24m0aHFSa5TLYtxCta5qniUWkc5oGuUKFJwFLn1lATHUGG7g+xlyyngU4Mfxjoq05/ejWGKYvcoqDgdKcTmvSViJtp9g1hHX25p3U9BvBciLh0ZYveq2M71GaPwqXV/Tu8=
+	t=1718202369; cv=none; b=sZrDGDLJTo+7+u/DF+D66Ao2O0OB+aTP0LU6Key07FoWSr7tihvgRnGAzWYZkoMpyWtd3JK8GY86pW4g44zyzHwuYHMmY+QsG8x0plZOoVJbKmYWMKGcEL1+irxtaZKFM4o/yDKKNa69nylVAGb1eJPqoX4KfD4iRr/Sggqrmkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199479; c=relaxed/simple;
-	bh=tsZU/m7OocLp2Lkbaeswpovpc5i3uD+mhKLpdF0PJC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lV1YsDpPdoM5E+s4LLBb6cNXAw8pBPmAVSUBEYeNrg4LKd0rJIT4WjV+IpSgaOSJ8VKS/sPfR7B4wlKtW5owarXllpHqTvptOMaZawFCKLFuqWCttWh5A9unbjBr293/87DuEN7C1SPsvaIq0hivOW7EPHL8NEFKcOcnKVPm9sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=nzGo1tqe; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1718202369; c=relaxed/simple;
+	bh=pw1A5wkiTzuSY5HpM02v6KXSwvo8NyunhiN+vuzsav0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OceNrRxQRG3JUBYUp6e/kqYKx9ZbkudQThuUFgZ0JeEAtgNd2KLpMfcwk1V7yTC7wVrLLVswc+h6GW0hVaar8xKr1754mdslVLEcYjj/LWaP6fmCAeINGpOCexJLoc8sRBkw2kUaCaw49/Zvj6xuXxHO2qsG7MgZAhC7H4XWFPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SYCxTwiV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rroVoUAH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SYCxTwiV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rroVoUAH; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="nzGo1tqe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1718199459; x=1718804259; i=christian@heusel.eu;
-	bh=tsZU/m7OocLp2Lkbaeswpovpc5i3uD+mhKLpdF0PJC8=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=nzGo1tqe/cdg/Np7sj6B3nMS5GnrzSw3yS7ZqjG3Mb6yc5JJl0gHgtjvjd5I7hXi
-	 dhtrJpD2rAUtZWG7dKwpPCkCom1wgaY2p2Yp6fRkkdJ4aX9N/tG7JEqO3QObqiSTu
-	 Bd1djEslXQFnerrtuHeSY10vdPOyWbncf2ehj3w5Yje0/mKQQsVFFPaun7anQPnZE
-	 05EgYtDmdKNyI3eqssEoJRTLenzAAyW3W75WJ3RN64K7y/5gRHaHOiAeBNokMNgP3
-	 meS6iWIC3RX4FaQEB9pHetkGEykpjxryGx91fqIcRDhfkSLSdJ5c9sXnWAlnZ/Ycm
-	 N5UThFYkJ8U7Pu57MA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MyKYE-1scFPu2Fe0-015hkR; Wed, 12
- Jun 2024 15:31:58 +0200
-Date: Wed, 12 Jun 2024 15:31:56 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Ping-Ke Shih <pkshih@realtek.com>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Savyasaachi Vanga <savyasaachiv@gmail.com>, 
-	Kalle Valo <kvalo@kernel.org>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
- mode
-Message-ID: <3a6b3ea1-986f-4066-8408-cdb56e095d41@heusel.eu>
-References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
- <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
- <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
- <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
- <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
- <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
- <6a88e0d3e47ebbd1f0f383094e4804a627c41870.camel@sipsolutions.net>
- <7869b9b29b6796c95fd5af649e4bd6696e56dcaf.camel@sipsolutions.net>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SYCxTwiV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rroVoUAH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SYCxTwiV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rroVoUAH"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B961B5C2AC;
+	Wed, 12 Jun 2024 14:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718202365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ln3W6dWdM04//jcdUh9d9JP1hjKm1HAAmhW01d0y49c=;
+	b=SYCxTwiVjKmmUpMOta6zCBd3EKFvjXJW1H0wRTPWg/bxrKn5e3z7cRU3stQtcP4nZRyhkB
+	T4DvykAlq+PtrxCnQ3pMMUT+AdnxFS2OR612BUcEuCt+R3bw36eF8IvSt5Yt5tvSM47Jcd
+	c4UUei0+MUKBoy52iuMDuoyf6obbtFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718202365;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ln3W6dWdM04//jcdUh9d9JP1hjKm1HAAmhW01d0y49c=;
+	b=rroVoUAHy9yoIL7UprmQSkOM+dh8jzd+OY3FJ3tOFOlA9YncyEFc3LimVUe1za9C1UOp2I
+	IAPNj61W1LWFeCDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SYCxTwiV;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rroVoUAH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718202365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ln3W6dWdM04//jcdUh9d9JP1hjKm1HAAmhW01d0y49c=;
+	b=SYCxTwiVjKmmUpMOta6zCBd3EKFvjXJW1H0wRTPWg/bxrKn5e3z7cRU3stQtcP4nZRyhkB
+	T4DvykAlq+PtrxCnQ3pMMUT+AdnxFS2OR612BUcEuCt+R3bw36eF8IvSt5Yt5tvSM47Jcd
+	c4UUei0+MUKBoy52iuMDuoyf6obbtFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718202365;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ln3W6dWdM04//jcdUh9d9JP1hjKm1HAAmhW01d0y49c=;
+	b=rroVoUAHy9yoIL7UprmQSkOM+dh8jzd+OY3FJ3tOFOlA9YncyEFc3LimVUe1za9C1UOp2I
+	IAPNj61W1LWFeCDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3558D1372E;
+	Wed, 12 Jun 2024 14:26:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id w92GC/2vaWb+SgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 12 Jun 2024 14:26:05 +0000
+Message-ID: <ab0fb17d-0f96-4ee6-8b21-65d02bb02655@suse.de>
+Date: Wed, 12 Jun 2024 16:26:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2e2w45cfz5ro3syf"
-Content-Disposition: inline
-In-Reply-To: <7869b9b29b6796c95fd5af649e4bd6696e56dcaf.camel@sipsolutions.net>
-X-Provags-ID: V03:K1:PVCZg4NTCK9VJJlSCI0O8ZqJgGt3sMCY3kufv3Iq/7gvLAwXApY
- f0I11ciyiDQRguivz95omRpZ4ns7Pk1wZ+DieEy7KlsWzVbVleNtt8YwasBDm+1lmtK6Ax9
- KDm3i2NJK24XatI0bMitrpd1mag8C5tYj2dF3fPO7wks/urE6RsnbU8EGV4iDJ4TcAdejnf
- GAgXnOKJJdLe+Xe72ZpNQ==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] QXL display malfunction
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
+ "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
+ "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+ "Kaplan, David" <David.Kaplan@amd.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Dave Airlie <airlied@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B961B5C2AC
+X-Spam-Score: -6.50
+X-Spam-Level: 
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CyJIKlqnMh8=;5fUCl+DeNHJnKEsBPEdqjAi9g9B
- +7XosA2TnxJpvl4GK9bmEnuF9bZMl0GoD5wiKRHBsId2Klgdn61iTFHwSsTQaKq3JM4TIPD0/
- sUC+azNgeKNtFdLJJVjDIWvjBNjY3Dx2xRxE5/pX58QcoRUtBd7r84O0nNhTes78Q7MLtZpry
- sNEhN8Gj9LiC6qRICLzGB3bH3f0vgRrNeHpJJD0QYp35dufbzAD3A7dseVGSpn5ilOuRSClMC
- cS64KHtCbFUEg0w0dFKxUk5Xh0/29QIUqyR4q8fOOjhLKsQW4YIn++Sm4xNAC/vXBgz58iOWP
- MQsUNtTPG9LIX9sjJe/HN6hG4RnQseVznKPecveBozC8xjrvQ41fxRBzzbB9xGzazwqI8+p9J
- ImJFWAVAnw5cj8cIyXn8sl249G5MpptvdePFrRwnZLXVVr9HQp12qxbrIkCD0yzZn07XYAJmU
- dfIirG6hehFHAau+XsOk6eurZ9REzwhllJq63IuQDc8iHrqJeHzL5ozpiuJgpwzZ6EG/Qpqkj
- AaWX1iz6Dc4cFZ87kWm+NpbXAZXmXkG96NFLiCZQMvoaojV8yjQ9bXeMVNCbukNo4AWEzZQUx
- V/oVfTvBRvONdMvz6TPG2iYmIUKOanQwFKrbuVlAOiUTjy0b9WNnrTrmehyr3SoC84U9+STHD
- C6tUo52KSTN0A8AX+LOGdkhDrud4RzxtSlLGTF6be0P7aIwEb1RQQCwmpO+TgCaScA2Xwd7lW
- HST1x4MFXQC6k1ZyInKHhp+KhnSNGCNWH1aBgu2EkG9nF1snU1U4MY=
+X-Spamd-Result: default: False [-6.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,linux.dev:email]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+
+Hi
+
+Am 12.06.24 um 14:41 schrieb Linux regression tracking (Thorsten Leemhuis):
+> [CCing a few more people and lists that get_maintainers pointed out for qxl]
+>
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Thomas, from here it looks like this report that apparently is caused by
+> a change of yours that went into 6.10-rc1 (b33651a5c98dbd ("drm/qxl: Do
+> not pin buffer objects for vmap")) fell through the cracks. Or was
+> progress made to resolve this and I just missed this?
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+>
+> On 03.06.24 04:29, Kaplan, David wrote:
+>>> -----Original Message-----
+>>> From: Kaplan, David
+>>> Sent: Sunday, June 2, 2024 9:25 PM
+>>> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
+>>> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
+>>> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.dev
+>>> Subject: [REGRESSION] QXL display malfunction
+>>>
+>>> Hi,
+>>>
+>>> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I've
+>>> observed the VM graphics often malfunction after boot, sometimes failing to
+>>> load the Ubuntu desktop or even immediately shutting the guest down.
+>>> When it does load, the guest dmesg log often contains errors like
+>>>
+>>> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>>> wrong: 65376256x16777216+0+0
+>>> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>>> wrong: 65376256x16777216+0+0
+>>> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
+>>> wrong: 65335296x16777216+0+0
+
+I don't see how these messages are related. Did they already appear 
+before the broken commit was there?
+
+>>> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id in
+>>> release_idr
+
+Is there only one such message in the log? Or multiple/frequent ones.
+
+Could you provide a stack trace of what happens before?
+
+We sometimes draw into the buffer object from the CPU. For accessing the 
+buffer object's pages from the CPU, only a vmap operation should be 
+necessary. It appears as if qxl also requires a pin. My guess is that 
+the pin inserts the buffer-object's host-side pages and the code around 
+qxl_release_from_id_locked() appears to be garbage-collecting them. 
+Hence without the pin, the GC complains about inconsistent state.
+>>>
+>>> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap"
+>>> (b33651a5c98dbd5a919219d8c129d0674ef74299).
+
+Thanks for bisecting. Does it work if you revert that commit?
+
+Best regards
+Thomas
 
 
---2e2w45cfz5ro3syf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>
+>>> The full guest .config and guest XML can be provided if desired.  The guest
+>>> kernel has QXL support compiled in and the VM has
+>>>
+>>> <video>
+>>>    <model type="qxl" ram="65536" vram="65536" vgamem="16384"
+>>> heads="1" primary="yes"/>
+>>>    <address type="pci" domain="0x0000" bus="0x00" slot="0x01"
+>>> function="0x0"/> </video>
+>>>
+>>> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is run
+>>> under virt-manager 4.1.0.  If other information would be helpful, just let me
+>>> know.
+>>>
+>>> Thanks --David Kaplan
+>> Fixing emails...sorry
+>>
+>> --David Kaplan
+>>
+>>
 
-On 24/06/12 09:58AM, Johannes Berg wrote:
-> On Wed, 2024-06-12 at 09:07 +0200, Johannes Berg wrote:
-> > On Wed, 2024-06-12 at 00:56 +0000, Ping-Ke Shih wrote:
-> >=20
-> >=20
-> > > > Just got pinged (sp?) about this, can you share the driver fix so I=
- can
-> > > > take a look what the issue is about?
-> > > >=20
-> > >=20
-> > > Please reference patch below. I copy this idea from rtw89 [1], which =
-the main
-> > > stuff is to add WANT_MONITOR_VIF and case NL80211_IFTYPE_MONITOR in a=
-dd_interface().=20
-> >=20
-> > Ah, OK, but that gives me a hint. Yes, I see the issue now.
-> >=20
-> > OK it's not trivial and it might leave ath12k still not working (though
-> > not sure it ever did before? or maybe I'm missing something...), but I
-> > think I can fix this. Let's see.
-> >=20
->=20
-> I don't have any of the affected hardware, could someone test this?
->=20
-> https://p.sipsolutions.net/619a4ce4a197b2b4.txt
->=20
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-This also [fixes][2] the issue for the initial reporter on our
-bugtracker:
-
-Tested-by: Savyasaachi Vanga <savyasaachiv@gmail.com>
-
-The test was done using 6.10-rc3 as base + the proposed patch from the
-previous email.
-
-Cheers,
-chris
-
-[2]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issu=
-es/54#note_191037
-
---2e2w45cfz5ro3syf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmZpo0wACgkQwEfU8yi1
-JYX5IQ//RU63RMmDQkSoJE8Gdx2X6OvhNwE4VhP9HtMfwm0KuVbiqZEYaDNPiaMv
-THAJBPeXCoccjHe5a5anejye1ofgOOn9KdOMF2iin/s1045xGLSELzY1RMVtb9Dx
-JT1Et0zY+LdwODfjF4FWB9wc36DeDCr+2uxDRh2mp+8PBFFD8S5ND+kA/F5ysh1L
-OBeOCQK1kLE4xrzqQ4NsP/9D9vnb/Ufs1XeBFy9/XXiVCuCtQMeLg4+GilF6xpp+
-zkgO3n8iXVKW2XwZJkNtghv9+ak8ZJN4BbYrKlxnuV29dE4uTm4zQwVYzDDepdd7
-Fe6K7Wx6/jiOTuY6MX+tHTECDhNF9+dqN6MyTMQTzE+QU8yEO5+xsr9yxJlkCgbe
-WXF7JcqNidoDmrtBnUMdJxadWqlNLwdLd3jyT7lGis8X/FwvWmHY9c4m23n82v6T
-XWagElaR1uxLEYM+fGembET6Pd9i3qIbCbD3fEcJ4IH+c7DZHWEgzVEaOOdcyNxa
-XHgRpRshk81QhVBG/qKLKOpr0cZbbPodWygm71HcrUA22i9Ga8rmKH6ufzi3osON
-jB4Qpd8MOHJ4UjjM+7UFVnb8X9ei+pxCKC23Sdj/UnZXIBmpgzu2DKXGotmma3rC
-TzK5q1VpY2LX0/UGawmbtRCwA2Yj4eZsUxZH+++nEM1emquWQ0U=
-=iVDo
------END PGP SIGNATURE-----
-
---2e2w45cfz5ro3syf--
