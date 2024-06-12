@@ -1,170 +1,204 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6883517E442
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 15:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48104180A77;
+	Wed, 12 Jun 2024 15:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718206019; cv=none; b=PfFyu5TxTvkOaN/KRk2rEn7q0hLA2Ra4ysFkox/jY4XU/tzNYWKCIgXbniQOxEZ6KjyVJ27OEpEws3F3sIFwPjx6VVfJwcd+y8e/qkqIgkrB1lS5CB17+vXWx/FHxvD8WKsgf0V31s6hpTKaiHNA0FxalCW23vVGbYm5JyyOoCo=
+	t=1718207775; cv=none; b=VuUS9wcx3J8w96OcLUzfcGIY70dJjhXPyiJTbzGR8wxEyqxWb2/z34gSSkQjB6Qc7vftjB0mhTTmoHocuhb7yIt6tzz7MgkPvv295R8I0ZZ0sPV/jdfeuoNuSIrLdZ4IkVkPKIGD8BkRfYSXUz4allQCNTenqmeLhYKUya47le8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718206019; c=relaxed/simple;
-	bh=i0tIWVrxpXVNiH8UaLFBap5+2XPdFzrsjMX6/kJT1ns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y5gOdah5SD+NUAQj/9gLE0Rp8r/tI4cw/Y6nwfHiZg+dhndEk8OQB9ZL4IBGX6Yl0wm0vY+np40z9VmwFtqyKH+dUWMdsdHWO9XIc9YtSct682owyCIcEYQsStK3kuxdtl8Lv5awYXQYpeMFjtEugyriry2TYB8Jjfxi9T1niXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AP3e0CNc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AP3e0CNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF91C4AF48
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 15:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718206019;
-	bh=i0tIWVrxpXVNiH8UaLFBap5+2XPdFzrsjMX6/kJT1ns=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AP3e0CNcf3s2NZtQ+jo2N0jCN7wOgdw/6YBMtvS38euYp3lQqnkUM+6aXRzIvA5NW
-	 60vT8OcHim2lBiPy8S8Yswa9Ckrc452Ovq658cI9B3rmBvoZEIJ8h8f/Qvmc2noaAu
-	 ebigdw2mmdtI9HEgq0dOoAqlbVbQQ+NeKT/laGQmrtzVzkJw1dEyEANXFJRaryXPIl
-	 ht3qBcW/PnAJbNy4pJ9y4MBHTWwT7qcutAqAdZ7vYq/BQzbV5DiGxN4wr6qhuY3fdU
-	 7kXHcHosxAPbt16JBuoVPvWSsW7kKeuDP1ppKSXshX3iVly72/248Akc3AMH78JiZ+
-	 zByKcmBXZ8/5w==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-254f646b625so55247fac.0
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 08:26:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX1+0GDneQRhRQhmRZiIEXlfiexEzJc6ohXbzcjC9yYrllb5Vq6PtwJzLIEU0lnWSP8oS4xn2wyxLgj+RulAGUwyEvZyvmB7qoNh9o=
-X-Gm-Message-State: AOJu0YyYQzOGS6hjH96HzofR3UMvOArOse7DS3Jk5aPTwkL270JNxdI5
-	CF2nhvsNy2RqJtBzBf7xSAp80rIxAa4p9oKj4zH6t67yLctP9IXDAN1Xp8DpqyzwZWuTeU8w4lx
-	JXbHj6VtCuTijtMK/fQTrGA/Z9/M=
-X-Google-Smtp-Source: AGHT+IEmGKsa7zPe9kt73Q8m7u/t5Z55oHv8QPOlgNJhzyXFN2PzZ1dBxzIRNYGfQ9TOgOaE06d3xxBR9OIkbG+g9tg=
-X-Received: by 2002:a05:6871:5813:b0:254:d417:34ff with SMTP id
- 586e51a60fabf-255151dd450mr2398277fac.4.1718206018125; Wed, 12 Jun 2024
- 08:26:58 -0700 (PDT)
+	s=arc-20240116; t=1718207775; c=relaxed/simple;
+	bh=hEp61NZconNU+jnxkwQl1pyt2D631XSmXBr+s2MhVg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eZa3QCsJC5D8ZF1RkofJzHqU+VFGmt2WW9IEvny2sIsMJFI4k3eKTtq2hzB9lI/HsKtoySVRroVjl+XXQ3KP2OgUk1S+XbLmhI2yBeMD6H4VBzpgFwFJBIuRK52x4CGK523OM9G2ZFkXLTOd0SON/MD1W1ExLY34VqGRjp6Dg3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DF2C116B1;
+	Wed, 12 Jun 2024 15:56:13 +0000 (UTC)
+Date: Wed, 12 Jun 2024 11:56:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Ilkka
+ =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240612115612.2e5f4b34@rorschach.local.home>
+In-Reply-To: <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+	<20240527183139.42b6123c@rorschach.local.home>
+	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+	<20240528144743.149e351b@rorschach.local.home>
+	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+	<20240529144757.79d09eeb@rorschach.local.home>
+	<20240529154824.2db8133a@rorschach.local.home>
+	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+	<20240530095953.0020dff9@rorschach.local.home>
+	<CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+	<ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <20240528084413.2624435-1-sakari.ailus@linux.intel.com> <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
- <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com>
-In-Reply-To: <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 17:26:46 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
-Message-ID: <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Jun 12, 2024 at 4:30=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+On Wed, 12 Jun 2024 15:36:22 +0200
+"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
  wrote:
->
-> Hi,
->
-> On 6/12/24 3:06 PM, Rafael J. Wysocki wrote:
-> > Hi Sakari,
-> >
-> > On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> >>
-> >> Hi Rafael,
-> >>
-> >> On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
-> >>>>>>> I just hit the same problem on another Dell laptop. It seems that
-> >>>>>>> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-> >>>>>>> and Raptor Lake generations suffer from this problem.
-> >>>>>>>
-> >>>>>>> So instead of playing whack a mole with DMI matches we should
-> >>>>>>> simply disable ACPI MIPI DISCO support on all Dell laptops
-> >>>>>>> with those CPUs. I'm preparing a fix for this to replace
-> >>>>>>> the DMI matching now.
-> >>>>>>
-> >>>>>> DisCo for Imaging support shouldn't be dropped on these systems, a=
-nd this
-> >>>>>> isn't what your patch does either. Instead the ACPI graph port nod=
-es (as
-> >>>>>> per Linux specific definitions) are simply dropped, i.e. this isn'=
-t related
-> >>>>>> to DisCo for Imaging at all.
-> >>>>>
-> >>>>> So it looks like the changelog of that patch could be improved, rig=
-ht?
-> >>>>
-> >>>> Well, yes. The reason the function is in the file is that nearly all=
- camera
-> >>>> related parsing is located there, not that it would be related to Di=
-sCo for
-> >>>> Imaging as such.
-> >>>
-> >>> So IIUC the camera graph port nodes are created by default with the
-> >>> help of the firmware-supplied information, but if that is defective a
-> >>> quirk can be added to skip the creation of those ports in which case
-> >>> they will be created elsewhere.
-> >>>
-> >>> Is this correct?
-> >>
-> >> Yes.
-> >
-> > So it would be good to add a comment to this effect to
-> > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
-> > called.
-> >
-> > And there is a somewhat tangential question that occurred to me: If
-> > the nodes are created elsewhere when acpi_graph_ignore_port() is true,
-> > why is it necessary to consult the platform firmware for the
-> > information on them at all?  Wouldn't it be better to simply always
-> > create them elsewhere?
->
-> That is a good question. The ACPI MIPI DISCO specification is an
-> attempt standardize how MIPI cameras and their sensors are described
-> in ACPI.
->
-> But this is not actually being used by any Windows drivers atm. The windo=
-ws
-> drivers rely on their own custom ACPI data which gets translated into
-> standard Linux device-properties by: drivers/media/pci/intel/ipu-bridge.c
->
-> and so far AFAIK there are 0 laptops where there actually is 100% functio=
-nal
-> ACPI MIPI information. I believe that some work is in place to get correc=
-t
-> usable ACPI MIPI information in place in the ACPI tables of some Meteor L=
-ake
-> laptops. But I believe that there too it does not work yet with the BIOS
-> version with which current Windows models are shipping. It is being fixed
-> for systems which have Linux support from the vendor but I suspect that
-> on other models if ACPI MIPI DISCO information is there it will not
-> necessarily be reliable because AFAICT Windows does not actually use it.
->
-> And TBH this has me worried about camera support for Meteor Lake devices
-> going forward. We really need to have 1 reliable source of truth here and
-> using information which is ignored by Windows does not seem like the best
-> source to use.
->
-> Sakari I know you have been pushing for MIPI camera descriptions under
-> ACPI to move to a standardized format and I can see how that is a good
-> thing, but atm it seems to mainly cause things to break and before
-> the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
-> since the information used by the ipu-bridge code does seem to be correct=
-.
 
-Well, if Windows doesn't use this information, it is almost guaranteed
-to be garbage.
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>=20
+> Ilkka or Steven, what happened to this? This thread looks stalled. I
+> also was unsuccessful when looking for other threads related to this
+> report or the culprit. Did it fall through the cracks or am I missing
+> something here?
 
-So maybe it would be better to make acpi_graph_ignore_port() return
-true by default and false only when the information is known to be
-valid.  IOW, whitelist things instead of adding blacklist entries in
-perpetuum.
+Honesty, I have no idea where the bug is. I can't reproduce it. These
+patches I sent would check all the places that add to the list to make
+sure the proper trace_inode was being added, and the output shows that
+they are all correct. Then suddenly, something that came from the
+inode cache is calling the tracefs inode cache to free it, and that's
+where the bug is happening.
 
-And hopefully we'll eventually get to the point at which we are able
-to say "whitelist everything from now on".
+This really looks like another bug that the recent changes have made
+more predominate.
+
+-- Steve
+
+
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+> On 02.06.24 09:32, Ilkka Naulap=C3=A4=C3=A4 wrote:
+> > sorry longer delay, been a bit busy but here is the result from that
+> > new patch. Only applied this patch so if the previous one is needed
+> > also, let me know and I'll rerun it.
+> >=20
+> > --Ilkka
+> >=20
+> > On Thu, May 30, 2024 at 5:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
+.org> wrote: =20
+> >>
+> >> On Thu, 30 May 2024 16:02:37 +0300
+> >> Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+> >> =20
+> >>> applied your patch and here's the output.
+> >>> =20
+> >>
+> >> Unfortunately, it doesn't give me any new information. I added one more
+> >> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
+> >>
+> >> -- Steve
+> >>
+> >> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> >> index de5b72216b1a..a090495e78c9 100644
+> >> --- a/fs/tracefs/inode.c
+> >> +++ b/fs/tracefs/inode.c
+> >> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct su=
+per_block *sb)
+> >>                 return NULL;
+> >>
+> >>         ti->flags =3D 0;
+> >> +       ti->magic =3D 20240823;
+> >>
+> >>         return &ti->vfs_inode;
+> >>  }
+> >>
+> >>  static void tracefs_free_inode(struct inode *inode)
+> >>  {
+> >> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
+> >> +       struct tracefs_inode *ti =3D get_tracefs(inode);
+> >> +
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >> +       kmem_cache_free(tracefs_inode_cachep, ti);
+> >>  }
+> >>
+> >>  static ssize_t default_read_file(struct file *file, char __user *buf,
+> >> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_=
+inode_operations =3D {
+> >>         .rmdir          =3D tracefs_syscall_rmdir,
+> >>  };
+> >>
+> >> -struct inode *tracefs_get_inode(struct super_block *sb)
+> >> -{
+> >> -       struct inode *inode =3D new_inode(sb);
+> >> -       if (inode) {
+> >> -               inode->i_ino =3D get_next_ino();
+> >> -               inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_=
+current(inode);
+> >> -       }
+> >> -       return inode;
+> >> -}
+> >> -
+> >>  struct tracefs_mount_opts {
+> >>         kuid_t uid;
+> >>         kgid_t gid;
+> >> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *den=
+try, struct inode *inode)
+> >>                 return;
+> >>
+> >>         ti =3D get_tracefs(inode);
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
+> >>                 eventfs_set_ef_status_free(dentry);
+> >>         iput(inode);
+> >> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry=
+ *dentry)
+> >>         return dentry;
+> >>  }
+> >>
+> >> +struct inode *tracefs_get_inode(struct super_block *sb)
+> >> +{
+> >> +       struct inode *inode =3D new_inode(sb);
+> >> +
+> >> +       BUG_ON(sb->s_op !=3D &tracefs_super_operations);
+> >> +       if (inode) {
+> >> +               inode->i_ino =3D get_next_ino();
+> >> +               inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_=
+current(inode);
+> >> +       }
+> >> +       return inode;
+> >> +}
+> >> +
+> >>  /**
+> >>   * tracefs_create_file - create a file in the tracefs filesystem
+> >>   * @name: a pointer to a string containing the name of the file to cr=
+eate.
+> >> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> >> index 69c2b1d87c46..9059b8b11bb6 100644
+> >> --- a/fs/tracefs/internal.h
+> >> +++ b/fs/tracefs/internal.h
+> >> @@ -9,12 +9,15 @@ enum {
+> >>  struct tracefs_inode {
+> >>         unsigned long           flags;
+> >>         void                    *private;
+> >> +       unsigned long           magic;
+> >>         struct inode            vfs_inode;
+> >>  };
+> >>
+> >>  static inline struct tracefs_inode *get_tracefs(const struct inode *i=
+node)
+> >>  {
+> >> -       return container_of(inode, struct tracefs_inode, vfs_inode);
+> >> +       struct tracefs_inode *ti =3D container_of(inode, struct tracef=
+s_inode, vfs_inode);
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >> +       return ti;
+> >>  }
+> >>
+> >>  struct dentry *tracefs_start_creating(const char *name, struct dentry=
+ *parent); =20
+
