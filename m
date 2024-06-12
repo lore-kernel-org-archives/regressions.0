@@ -1,45 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8EA374D3;
-	Wed, 12 Jun 2024 12:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA97016F28A
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 12:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718193883; cv=none; b=LlET33QSOzTncyRWdeRPSzpzYNpxE3epN1o4h5rv/l+GKmXfI+VJCGKlP9nUSvwSLi4pdevDHcehWNOrLW0/ARu8LodYFAl5Pa7cDFUAbafISC4HUq0caxxB2Vij3U5zAaz+vYmU1/K8skX4i7J6zbLIUvPh5ZMdZP93KqdB7T4=
+	t=1718194229; cv=none; b=DICYbnsX7dz+HAmu6TrdmQywm13j8yeOBcaf3prQB0we+m77eUxoUV45m37sKn2f3d/RWsN3pqPPyjFzqLrgCMQbbxe6Jrtvu0JuUMAvllHTAzTVYTZB1xJvGgJw+ZReTuCo0fu+TG0oEttpfLixhAy59xR65/4VEOfqUhPNGac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718193883; c=relaxed/simple;
-	bh=2B9cF8w213BqeGDWK69iJPR4rJyOwb3Wh0NtbWC8BSI=;
+	s=arc-20240116; t=1718194229; c=relaxed/simple;
+	bh=ulVQlXizho1q+gbUxAcMgft3CXjIyNd0pCbLQeN7++A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VctAa6V1xUja74sWK7XJag17hm57+701RR6fNVNckCv7glIwsFNiuUSU2YdF442qoLfa8Hv/O2P2zkkaHvKaKe21KzdsMoTDbNvjKZb2aBsDWYc1d/d+pBPkQwIocvusbuN4HOMoevfaIIoXio/YaDXpxOd/JKPKwTuGS0/LDug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wjf2cfxV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMQoBLPNj+E6Pd+phYP+2v8Ik6IGYd50huXfMz9rKb81HUEMmxuGqioCYP+kvGtpJkDzEXM/K8Fx7OfoEwUJzSWKQgV/hpDUFXKF142GkI19Lk8LhI3YKMM9QqF/FZVTdjpPI9ZwWS0kJ4xRK+xN0tSBZmW79XN7NXMb6vKvEHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hf5l7iP8; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wjf2cfxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61689C3277B;
-	Wed, 12 Jun 2024 12:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718193882;
-	bh=2B9cF8w213BqeGDWK69iJPR4rJyOwb3Wh0NtbWC8BSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wjf2cfxVvoniGDsb1tz6Ftg/fWlITXjuLZfBhXwqHfHGPLmBcceqsBI4WaffaHixq
-	 hFwzr7Ti81rAXJSxdVvisD5qw9J38qmKXw8meK5ebUk5Fkyg9a9SOP4i27EnF1OpiS
-	 YtXhGSBaTpEopKZAbwIkr2i3roa9zOpBbTG9YFVY=
-Date: Wed, 12 Jun 2024 14:04:40 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Sasha Levin <sashal@kernel.org>,
-	Jeremy =?iso-8859-1?Q?Lain=E9?= <jeremy.laine@m4x.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Mike <user.service2016@gmail.com>
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-Message-ID: <2024061258-boxy-plaster-7219@gregkh>
-References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
- <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hf5l7iP8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718194228; x=1749730228;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ulVQlXizho1q+gbUxAcMgft3CXjIyNd0pCbLQeN7++A=;
+  b=hf5l7iP8FPLx+15p5Q89OYNazELMP1tRa7B4TEnuf9v0Dd28RD1AITNv
+   SPYTxpFP2ey01Gh8nexhXJdqExCR2ggiB+O4/7vkgiAVOePiK42Gjxkp9
+   A6IsH9f9DqHNaXE5BwsABq4IkHMkGP1iFtNhYypA6qa47u5yvCGSfiNMl
+   slfROz3PbAseUbhwOf/3PsR4R16vflHjUSgJH5uN+PJkXorOIUCXaX5f2
+   zu/zG9TpXfD89WiCzU8JxGygS8z4uKUSkETBRtpXFPf/coM7hE7Kw595C
+   3X4umr+/owTHWCxvoPfGYMe7Y+dDdFuYAYkp6+3sqRgHxTakxwbuVnqvg
+   Q==;
+X-CSE-ConnectionGUID: 26hvbcVpShesr9fl5Hog1w==
+X-CSE-MsgGUID: 7l8N8xtqRWyWEOvG6wm96Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11100"; a="18732033"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="18732033"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:10:27 -0700
+X-CSE-ConnectionGUID: Em0Cr2PkQSS3XQMXaBHuqQ==
+X-CSE-MsgGUID: ZsmZCoSISxiQ8xgl0rYpEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="39834907"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 05:10:24 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 6A6A911FA94;
+	Wed, 12 Jun 2024 15:10:22 +0300 (EEST)
+Date: Wed, 12 Jun 2024 12:10:22 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Genes Lists <lists@sapience.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
+References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,45 +72,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
+In-Reply-To: <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
 
-On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
-> On 03.06.24 22:03, Mike wrote:
-> > On 29.05.24 11:06, Thorsten Leemhuis wrote:
-> >> Might be a good idea to share it, the developers might want to confirm
-> >> it's really the same bug.
-> > I'm attaching the stacktrace [1] and decodecode [2] at the end, generated
-> > on 6.1.92 vanilla+patch (1.).
-> > [...]
-> > I understand that 6.9-rc5[1] worked fine, but I guess it will take some
-> > time to be
-> > included in Debian stable, so having a patch for 6.1.x will be much
-> > appreciated.
-> > I do not have the time to follow the vanilla (latest) release as is
-> > likely the case for
-> > many other Linux users.
+Hi Hans,
+
+Just read this discussion, too...
+
+On Wed, Jun 12, 2024 at 12:08:49PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 6/6/24 8:12 PM, Hans de Goede wrote:
+> > Hi,
 > > 
-> > Let me know if there's anything else useful I can do for you.
-> > Thank you,
+> > +To: Rafael since this was Cc-ed to linux-acpi but never send
+> > to Rafael directly.
+> > 
+> > Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
+> > to make the cameras work on the Dell XPS 13 plus 9320 .
+> > 
+> > On 5/28/24 7:09 PM, Hans de Goede wrote:
+> >> Hi Sakari,
+> >>
+> >> On 5/28/24 10:44 AM, Sakari Ailus wrote:
+> >>> Ignore camera related graph port nodes on Dell XPS 9320. They data in BIOS
+> >>> is buggy, just like it is for Dell XPS 9315. The corresponding software
+> >>> nodes are created by the ipu-bridge.
+> >>>
+> >>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >>> ---
+> >>> Hi,
+> >>>
+> >>> Could you test this and see whether it fixes the warning?
+> >>>
+> >>> The camera might work with this change, too.
+> >>
+> >> Thank you I just received a Dell XPS 13 plus 9320 myself to use
+> >> for VSC testing and I can confirm that with this patch 6.10.0-rc1
+> >> works, including giving a picture with the libcamera software ISP +
+> >> 3 small libcamera patches.
+> > 
+> > I forgot to add:
+> > 
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Still no reaction from the bluetooth developers. Guess they are busy
-> and/or do not care about 6.1.y. In that case:
+> I just hit the same problem on another Dell laptop. It seems that
+> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> and Raptor Lake generations suffer from this problem.
 > 
-> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
-> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
-> cause this or if it's missing some per-requisite? If not I wonder if
-> reverting that patch from 6.1.y might be the best move to resolve this
-> regression. Mike earlier in
-> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
-> confirmed that this fixed the problem in tests. Jeremy (who started the
-> thread and afaics has the same problem) did not reply.
+> So instead of playing whack a mole with DMI matches we should
+> simply disable ACPI MIPI DISCO support on all Dell laptops
+> with those CPUs. I'm preparing a fix for this to replace
+> the DMI matching now.
 
-How was this reverted?  I get a bunch of conflicts as this commit was
-added as a dependency of a patch later in the series.
+DisCo for Imaging support shouldn't be dropped on these systems, and this
+isn't what your patch does either. Instead the ACPI graph port nodes (as
+per Linux specific definitions) are simply dropped, i.e. this isn't related
+to DisCo for Imaging at all.
 
-So if this wants to be reverted from 6.1.y, can someone send me the
-revert that has been tested to work?
+-- 
+Kind regards,
 
-thanks,
-
-greg k-h
+Sakari Ailus
