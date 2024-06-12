@@ -1,127 +1,180 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015B610FA;
-	Wed, 12 Jun 2024 00:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA8D5664
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 01:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718153812; cv=none; b=Un5SeJ4QOV7rpjJDhE8HzI7bkdPWNeMDrNT6OKLgilr61XQys9yz3g1329hHJISkPkEUGkYyS7ebMlKPRkMLxv448Cwuup8muJhgnNxcDYXbVDO0ZDW+vZP6/TlZnRYnZ9R4OSJ+ZY3onFYsALwPXJTmktFrNcf7G1fxTbp6qQ8=
+	t=1718156464; cv=none; b=IZJr9KBtBf/xTqQfiYs7jz3luIsjkRnOcCWonaivyo+Efznc5ui2mnmv7M5CSVg9nqdTOkFLU4CkZpBTC5fZBJp/5+mUNcNpraZ7QSNj4qZUd8Rl7dP7suIPF66oM3D1tBQxb3oFSFMAxaY9aelfDnKxsO3g4sOFoDouOCfVBSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718153812; c=relaxed/simple;
-	bh=WQEDdfIS01MttyVRpOjGsxOxeNT975E9YgMc/ccKkCo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Klf2UsqOYQ5kZ5tx2W29NHAHNzIH7wNQ6sJKyzMWXc4pyywx2v84o0T1Ts5zDKh213eidRRKyyFJ5zWlTi8dbg89jJRLpBJ5Gu2ju4tNCVNyaQlB4e/lmumt4dMQPOia8SJH3BMej0XbtMSJxxGbhNBlfectdNhRroP5jM8yIJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45C0uKsI5643612, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45C0uKsI5643612
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Jun 2024 08:56:20 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 12 Jun 2024 08:56:21 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 12 Jun 2024 08:56:20 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Wed, 12 Jun 2024 08:56:20 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Thorsten Leemhuis
-	<regressions@leemhuis.info>,
-        Savyasaachi Vanga <savyasaachiv@gmail.com>,
-        Christian Heusel <christian@heusel.eu>
-CC: Kalle Valo <kvalo@kernel.org>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>
-Subject: RE: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor mode
-Thread-Topic: [REGRESSION][BISECTED] wifi: RTL8821CE does not work in monitor
- mode
-Thread-Index: AQHasIGBiI2kIPT9xk+a42EavL0uE7GryNkAgASPDICABOUZsIANAvMAgAEhOEA=
-Date: Wed, 12 Jun 2024 00:56:20 +0000
-Message-ID: <5318640d6eb74301b1fbf6d9385ba69e@realtek.com>
-References: <chwoymvpzwtbmzryrlitpwmta5j6mtndocxsyqvdyikqu63lon@gfds653hkknl>
-	 <a51f223f-18ac-4d67-9120-8da1c169b7eb@leemhuis.info>
-	 <809d2332-625e-4a46-a77e-ca2e49b0d651@leemhuis.info>
-	 <0e65ca6b471b4186a370b9a57de11abe@realtek.com>
- <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
-In-Reply-To: <36c1f49acfcc2cc16c7e54ffeb76f1e93cb96e91.camel@sipsolutions.net>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1718156464; c=relaxed/simple;
+	bh=8LosHYHTG9RbVy0F9ZTMuUgNALa2Ur9R8zNb7JuWaOg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qvbs5AmOrPD/X39ZQS4Cx8VebWnH+RX9apAtNksR6o2t9mrtgv8sKsDMpKJClnvqvBaLMS6LWg34sdlXmlpYpDghNYvSlfa7k2hDJIHagHv8ILVvAteeFd4AcWdN2a7leoLuByVEe0nkHOUjxIBlATklFBhdF5byxXjFZemE/l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nNbtfUT8; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nNbtfUT8"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718156453; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=1/401mu9gQEGLWBhJwl/y7E9wdlX+Wwp801PQuc4g0Q=;
+	b=nNbtfUT8Qj5NXjY1HyD6j0Tya6A2PGvtnUnZH8CJVW37lYsPudS9BM+MLZ/ImvJ+ILEUuAqXYdoo/zKkSbMqTqVSURRwz02ziIFgtwWaI28N+YiNS8Y5NttZx8M7prIqiK7Z067ZZt+czUPWICljgWKp9vlQQ6vnNLbKTR5VAuA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W8I3m95_1718156451;
+Received: from 30.97.56.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8I3m95_1718156451)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Jun 2024 09:40:52 +0800
+Message-ID: <7cfe60a2-cd8e-4af2-a5d9-6c790b6dd665@linux.alibaba.com>
+Date: Wed, 12 Jun 2024 09:40:51 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline
+ 6.10.rc3
+To: David Hildenbrand <david@redhat.com>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <baohua@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com>
+ <e8c10a52-61f9-4b46-bc50-e2c267b1aa56@redhat.com>
+ <80a05784-21dd-4f20-b441-1e2a2be0e0ff@linux.alibaba.com>
+ <3ce90ee2-f51b-49fc-b010-f97e61e617f4@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <3ce90ee2-f51b-49fc-b010-f97e61e617f4@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Sm9oYW5uZXMgQmVyZyA8am9oYW5uZXNAc2lwc29sdXRpb25zLm5ldD4gd3JvdGU6DQo+IA0KPiBP
-biBNb24sIDIwMjQtMDYtMDMgYXQgMDA6NDcgKzAwMDAsIFBpbmctS2UgU2hpaCB3cm90ZToNCj4g
-Pg0KPiA+DQo+ID4gV2UgaGF2ZSBhIGRyYWZ0IGZpeCBvZiBydHc4OCBkcml2ZXIgZm9yIFJUTDg4
-MjFDRSwgYnV0IGFzIG1lbnRpb25lZCBzb21lIGRyaXZlcnMNCj4gPiBhcmUgYWZmZWN0ZWQsIHNv
-IEkgZG9uJ3QgcGxhbiB0byBzZW5kIG91dCB0aGUgcGF0Y2guIEluc3RlYWQgd2UgYXJlIGxvb2tp
-bmcgZm9yDQo+ID4gdGhlIGZpeCBvZiBjZmc4MDIxMS9tYWM4MDIxMS4NCj4gPg0KPiANCj4gR3Vl
-c3MgeW91IGRpZG4ndCBmaW5kIGl0IDopDQoNCllvdSBhcmUgcmlnaHQuIFRoYXQgaXMgbm90IGVh
-c3kgdG8gbWUuIDopDQoNCj4gDQo+IEp1c3QgZ290IHBpbmdlZCAoc3A/KSBhYm91dCB0aGlzLCBj
-YW4geW91IHNoYXJlIHRoZSBkcml2ZXIgZml4IHNvIEkgY2FuDQo+IHRha2UgYSBsb29rIHdoYXQg
-dGhlIGlzc3VlIGlzIGFib3V0Pw0KPiANCg0KUGxlYXNlIHJlZmVyZW5jZSBwYXRjaCBiZWxvdy4g
-SSBjb3B5IHRoaXMgaWRlYSBmcm9tIHJ0dzg5IFsxXSwgd2hpY2ggdGhlIG1haW4NCnN0dWZmIGlz
-IHRvIGFkZCBXQU5UX01PTklUT1JfVklGIGFuZCBjYXNlIE5MODAyMTFfSUZUWVBFX01PTklUT1Ig
-aW4gYWRkX2ludGVyZmFjZSgpLiANCkFkZGl0aW9uYWxseSBjaGVjayB3aGV0aGVyIGJzc2lkIGlz
-IE5VTEwuDQoNCk1hbnkgb3RoZXIgZHJpdmVycyBsaWtlIHJ0bHdpZmksIHJ0bDh4eHh1ZSAuLi4g
-ZG9uJ3QgZGVjbGFyZSBXQU5UX01PTklUT1JfVklGLCBzbw0KSSB0aGluayBpdCB3b3VsZCBiZSBi
-ZXR0ZXIgdG8gZml4IHRoaXMgYnkgbWFjODAyMTEgaW5zdGVhZCBvZiBmaXhpbmcgdGhlc2UgZHJp
-dmVycw0Kb25lIGJ5IG9uZS4gDQoNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNz
-L3JlYWx0ZWsvcnR3ODgvbWFjODAyMTEuYyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsv
-cnR3ODgvbWFjODAyMTEuYw0KaW5kZXggMGFjZWJiZmExM2M0Li5iOTBkMDI2NTE5ZTIgMTAwNjQ0
-DQotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L21hYzgwMjExLmMNCisr
-KyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFjODAyMTEuYw0KQEAgLTE5
-MSw2ICsxOTEsNyBAQCBzdGF0aWMgaW50IHJ0d19vcHNfYWRkX2ludGVyZmFjZShzdHJ1Y3QgaWVl
-ZTgwMjExX2h3ICpodywNCiAgICAgICAgICAgICAgICBiY25fY3RybCA9IEJJVF9FTl9CQ05fRlVO
-Q1RJT04gfCBCSVRfRElTX1RTRl9VRFQ7DQogICAgICAgICAgICAgICAgYnJlYWs7DQogICAgICAg
-IGNhc2UgTkw4MDIxMV9JRlRZUEVfU1RBVElPTjoNCisgICAgICAgY2FzZSBOTDgwMjExX0lGVFlQ
-RV9NT05JVE9SOg0KICAgICAgICAgICAgICAgIHJ0d19hZGRfcnN2ZF9wYWdlX3N0YShydHdkZXYs
-IHJ0d3ZpZik7DQogICAgICAgICAgICAgICAgbmV0X3R5cGUgPSBSVFdfTkVUX05PX0xJTks7DQog
-ICAgICAgICAgICAgICAgYmNuX2N0cmwgPSBCSVRfRU5fQkNOX0ZVTkNUSU9OOw0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFpbi5jIGIvZHJpdmVycy9u
-ZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9tYWluLmMNCmluZGV4IDdhYjdhOTg4YjEyMy4uZDUx
-YzdjYWQ3OWRhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4
-OC9tYWluLmMNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvbWFpbi5j
-DQpAQCAtMjIzMSw2ICsyMjMxLDcgQEAgaW50IHJ0d19yZWdpc3Rlcl9odyhzdHJ1Y3QgcnR3X2Rl
-diAqcnR3ZGV2LCBzdHJ1Y3QgaWVlZTgwMjExX2h3ICpodykNCiAgICAgICAgaWVlZTgwMjExX2h3
-X3NldChodywgSEFTX1JBVEVfQ09OVFJPTCk7DQogICAgICAgIGllZWU4MDIxMV9od19zZXQoaHcs
-IFRYX0FNU0RVKTsNCiAgICAgICAgaWVlZTgwMjExX2h3X3NldChodywgU0lOR0xFX1NDQU5fT05f
-QUxMX0JBTkRTKTsNCisgICAgICAgaWVlZTgwMjExX2h3X3NldChodywgV0FOVF9NT05JVE9SX1ZJ
-Rik7DQoNCiAgICAgICAgaWYgKHN0YV9tb2RlX29ubHkpDQogICAgICAgICAgICAgICAgaHctPndp
-cGh5LT5pbnRlcmZhY2VfbW9kZXMgPSBCSVQoTkw4MDIxMV9JRlRZUEVfU1RBVElPTik7DQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9waHkuYyBiL2RyaXZl
-cnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvcGh5LmMNCmluZGV4IDM3ZWY4MGM5MDkxZC4u
-YjFiNzg5MjI2NmYwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9y
-dHc4OC9waHkuYw0KKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OC9waHku
-Yw0KQEAgLTYyNyw2ICs2MjcsOSBAQCBzdGF0aWMgdm9pZCBydHdfcGh5X3BhcnNpbmdfY2ZvX2l0
-ZXIodm9pZCAqZGF0YSwgdTggKm1hYywNCiAgICAgICAgdTggKmJzc2lkID0gaXRlcl9kYXRhLT5i
-c3NpZDsNCiAgICAgICAgdTggaTsNCg0KKyAgICAgICBpZiAoIXZpZi0+YnNzX2NvbmYuYnNzaWQp
-DQorICAgICAgICAgICAgICAgcmV0dXJuOw0KKw0KICAgICAgICBpZiAoIWV0aGVyX2FkZHJfZXF1
-YWwodmlmLT5ic3NfY29uZi5ic3NpZCwgYnNzaWQpKQ0KICAgICAgICAgICAgICAgIHJldHVybjsN
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4LmMgYi9k
-cml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4LmMNCmluZGV4IDg0YWVkYWJkZjI4
-NS4uNDNhYTVkZDZmMmNjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRl
-ay9ydHc4OC9yeC5jDQorKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg4L3J4
-LmMNCkBAIC0xMDQsNiArMTA0LDkgQEAgc3RhdGljIHZvaWQgcnR3X3J4X2FkZHJfbWF0Y2hfaXRl
-cih2b2lkICpkYXRhLCB1OCAqbWFjLA0KICAgICAgICBzdHJ1Y3QgcnR3X3J4X3BrdF9zdGF0ICpw
-a3Rfc3RhdCA9IGl0ZXJfZGF0YS0+cGt0X3N0YXQ7DQogICAgICAgIHU4ICpic3NpZCA9IGl0ZXJf
-ZGF0YS0+YnNzaWQ7DQoNCisgICAgICAgaWYgKCF2aWYtPmJzc19jb25mLmJzc2lkKQ0KKyAgICAg
-ICAgICAgICAgIHJldHVybjsNCisNCiAgICAgICAgaWYgKCFldGhlcl9hZGRyX2VxdWFsKHZpZi0+
-YnNzX2NvbmYuYnNzaWQsIGJzc2lkKSkNCiAgICAgICAgICAgICAgICByZXR1cm47DQoNCg0KWzFd
-IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3dpcmVsZXNz
-L3dpcmVsZXNzLW5leHQuZ2l0L2NvbW1pdC9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0
-dzg5P2lkPWNkOWI2YjNiYWY1Mjc4YzczYzkxZTI0MmQ0MTM4NzY4NGZjN2Y4ZDgNCg0KDQoNCg==
+
+
+On 2024/6/11 20:09, David Hildenbrand wrote:
+> On 11.06.24 13:39, Baolin Wang wrote:
+>>
+>>
+>> On 2024/6/11 18:32, David Hildenbrand wrote:
+>>> On 11.06.24 12:14, Naresh Kamboju wrote:
+>>>> The kernel panic was noticed while running LTP syscalls fork13 (long
+>>>> running) on
+>>>> the mainline master 6.10.rc3 kernel on arm64 rk3399-rock-pi-4 device.
+>>>>
+>>>> Please find detailed logs in the links,
+>>>>
+>>>> As you know fork13 is a stress test case trying to generate a maximum
+>>>> number
+>>>> of PID's in a 100,000 loop.
+>>>>
+>>>> This device is running via NFS mounted filesystem.
+>>>>
+>>>> I have tried to reproduce this problem in a loop but failed to
+>>>> reproduce the
+>>>> crash.
+>>>>
+>>>>
+>>>> Crash flow:
+>>>> ------
+>>>> fork13 run started
+>>>> BUG: Bad page map in process fork13
+>>>> BUG: Bad rss-counter state mm:
+>>>> Unable to handle kernel paging request at virtual address
+>>>> Internal error: Oops: 0000000096000046
+>>>> run for 800 secs ( 13 minutes) and more.
+>>>> fork14 run started and completed
+>>>>
+>>>> fpathconf01 run started and completed
+>>>> sugov:
+>>>>
+>>>> Unable to handle kernel NULL pointer dereference at virtual address
+>>>>
+>>>> Insufficient stack space to handle exception!
+>>>> end Kernel panic - not syncing: kernel stack overflow
+>>>>
+>>>> I have tried to decode stack dump by not being useful [1].
+>>>> [1] https://people.linaro.org/~naresh.kamboju/output-rk3399.txt
+>>>>
+>>>> Test log :
+>>>> --------
+>>>> tst_test.c:1733: TINFO: LTP version: 20240524
+>>>> tst_test.c:1617: TINFO: Timeout per run is 0h 15m 00s
+>>>> [  904.280569] BUG: Bad page map in process fork13  pte:2000000019ffc3
+>>>> pmd:80000000df55003
+>>>> [  904.281397] page: refcount:1 mapcount:-1 mapping:0000000000000000
+>>>> index:0x0 pfn:0x19f
+>>>
+>>> Mapcount underflow on a small folio (head: not printed).
+>>>
+>>> [...]
+>>>
+>>>> [  904.294564] BUG: Bad page map in process fork13  pte:200000002e4fc3
+>>>> pmd:80000000df55003
+>>>> [  904.295275] page: refcount:2 mapcount:-1 mapping:000000007885152f
+>>>> index:0x6 pfn:0x2e4
+>>>
+>>> Another mapcount underflow on a small folio (head: not printed).
+>>>
+>>>
+>>>> [  904.309309] BUG: Bad page map in process fork13  pte:20000000cc6fc3
+>>>> pmd:80000000df55003
+>>>> [  904.310031] page: refcount:1 mapcount:-1 mapping:0000000000000000
+>>>> index:0x6 pfn:0xcc6
+>>>> [  904.310728] head: order:3 mapcount:-1 entire_mapcount:0
+>>>> nr_pages_mapped:8388607 pincount:0
+>>>
+>>> Mapcount underflow on a large folio.
+>>>
+>>> ...
+>>>
+>>>> [  904.326666] BUG: Bad page map in process fork13  pte:20000000268fc3
+>>>> pmd:80000000df55003
+>>>> [  904.327390] page: refcount:1 mapcount:-1 mapping:00000000f0624181
+>>>> index:0x1b pfn:0x268
+>>>
+>>> Another mapcount underflow on a small folio (head: not printed).
+>>>
+>>>> [  904.328094] memcg:ffff0000016b4000
+>>>> [  904.328401] aops:nfs_file_aops ino:8526e6 dentry
+>>>> name:"libgpg-error.so.0.36.0"
+>>>> [  904.329051] flags:
+>>>> 0x3fffe000000002c(referenced|uptodate|lru|node=0|zone=0|lastcpupid=0x1ffff)
+>>>> [  904.329878] raw: 03fffe000000002c fffffdffc0009a48 fffffdffc022f3c8
+>>>> ffff00000688bd60
+>>>> [  904.330561] raw: 000000000000001b 0000000000000000 00000001fffffffe
+>>>> ffff0000016b4000
+>>>> [  904.331240] page dumped because: bad pte
+>>>> [  904.331590] addr:0000aaaad9afe000 vm_flags:00000075
+>>>> anon_vma:0000000000000000 mapping:ffff0000300d4188 index:2e
+>>>> [  904.332476] file:fork13 fault:filemap_fault mmap:nfs_file_mmap
+>>>> read_folio:nfs_read_folio
+>>>> [  904.333245] CPU: 5 PID: 22685 Comm: fork13 Tainted: G    B
+>>>
+>>>
+>>> Are these maybe side-effects due to
+>>>
+>>> https://lkml.kernel.org/r/20240607103241.1298388-1-wangkefeng.wang@huawei.com
+>>
+>> IIUC, the rk3399-rock-pi-4b device has no NUMA nodes (6 arm64 cores), so
+>> I don't think the numa balancing will cause this issue.
+>>
+>> Anyway, I will run fork13 test case on my arm64 server to try.
+> 
+> I have the faint recollection that we can (or at least could in the 
+> past) end up in do_numa_page() also without NUMA hinting.
+> 
+> I documented in 51d3d5eb74ff53b92dcff48b30ae2ed8edd85a32:
+> 
+> "
+> Note that do_numa_page() / do_huge_pmd_numa_page() can be reached even
+> without NUMA hinting (which currently doesn't seem to be applicable to
+> shmem), for example, by using uffd-wp with a PROT_WRITE shmem VMA.
+> "
+
+I see. Thanks for explanation.
