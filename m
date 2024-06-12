@@ -1,120 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3AD17FAC4
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 17:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A487383B0
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 18:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213020; cv=none; b=Mdmlg/VVeVwnTsRBAVLMELn+hjql7mlKBjO/LDohSwYjfnE8ApZKaEfCCJYUArGZ3y4QhjBWfyuQ2Sz0rezghNdqG+Wns6lJD2/iSGcAn5IenW49VYChWhUIVCGsDrrq6FOrhcm3YGOWgR9k0ERQEB2gVXsQtq+WuNnjJ1GHi1k=
+	t=1718216478; cv=none; b=V3Vqs8M9B+M3D0A2nl8aNC2BuyQLPfj7NyffQzPzuc4JI3oyWKSiw2WquWWQHtauMaNgvdUWBNrD0PcZ4WGF330HziSQl+0Li+ZnlZ3Zy1ZbMkmkLwW7eAPhKGPey2adKLXEn/ZJpE+uw9jjvxCaugQFA0zRQrtK+qWGon8YoFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718213020; c=relaxed/simple;
-	bh=SmhgWhV+k+k1Jn01Ck0bRn6varewMhGpbVWsepDCohQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g3sDqbfmFnMzPmE0DGAsvkphsvkw3t7xDLGx3efagXOdohSs2sIakU9rb8+WGir5I6/sPn0gF7ia0HMCefdgbzR23L3t6SF/5qqXxLTxIRwTm1OkctpTrlmT4m9Kh9lH4lPqNHmpmiPz19KYwzwh5pxA51HEWk9cjZ5xXlLlXrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqrTaVqb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718216478; c=relaxed/simple;
+	bh=UQ/0K0tgkEB2g6sr8y0pChy/iFNEa60HIj3E8+6/imk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQPtWAa+Mux3lLiqWzhYYN2hdHF/H3466QhEg2fVYIT1ffYzRhFBqcdtIMZNiQFAWlurK+cqjpV6l4hWnsapFYNwGORPDN9/aMm9P6twxrIsyrt/+cPTZTr0RYr25lwxZmdlbRYQV5ZiJr5kzopkGSEt+f00HZh7gyuXEvsjXk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gTeizW+V; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqrTaVqb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A3CC116B1
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 17:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718213019;
-	bh=SmhgWhV+k+k1Jn01Ck0bRn6varewMhGpbVWsepDCohQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pqrTaVqbhIjv/5M8kgJm/nWlZnSpwPKvcvfMYVmqbQDycCvmXpxhINXk0quLhfJji
-	 1tzAVwHYvTQgsXIAFqkJn1XZTdNgEiZWlgI04X/YzeTS91XRmErFPijdGVuxMV4xlT
-	 Fx+sQkld9jE73/EbIUyLBv3oLxx4puivwceUHjwZu8JjN6zgDb7AIoUBvooMLllAFq
-	 /Fs8A8/4om3TAYNL775gT2Z4Z0QRbBJSxKelhXDCoPcE7qiDklNkc0eclRMMxJKUw3
-	 xrd4Zm29I4LsOkbZUCSGMQDMRZ0j7WBR6ia/TOnXdbkaq5LUGuvdoXqwcq1D83o4/Z
-	 H2A+c+5PqbVyg==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5b3364995b4so24423eaf.0
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:23:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX78l+xECrJvpKefGcsctsNoOGO3e4A2/yCmb9Q/PHZuUqy9GpqUVjI6AqkLTIWF4QzHfk9wsY7Iu+EmkE681OSvMWSnbJfLyPwjfM=
-X-Gm-Message-State: AOJu0Yx73zGLiKw3SPgrvZeZUi2i0j0wEujrZdaBjymq+c0d9X1Xk3rF
-	qseauc+52WvJh9tlvC3CAAA6L/MB1Z88NGwnj+tbN40jiQ9mJyaqjxUplWZXHAGClZFNhVB54Wr
-	NH3uh6Kr+ajmjJakYUiErX9gHnV8=
-X-Google-Smtp-Source: AGHT+IGHa3GWElLGP/C9oYLMX2fq5ZVD08YJMHCa8lDrMbl1m3XVOVMRcQJFtQ9HX4T2TFlR2IblQMhR3cRApH+VIiA=
-X-Received: by 2002:a05:6871:286:b0:254:d417:351f with SMTP id
- 586e51a60fabf-25514bfd75fmr2688487fac.1.1718213018901; Wed, 12 Jun 2024
- 10:23:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gTeizW+V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718216477; x=1749752477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UQ/0K0tgkEB2g6sr8y0pChy/iFNEa60HIj3E8+6/imk=;
+  b=gTeizW+VwcXqwOAG7wix5ysyy6p2SftUgmql4OPAAy2oBtqOsuZNTA5y
+   N+ciAYQ2D54Fg59iGJ+5TDldyrRbmM8ZTWLLj3myAQOLg1ZfyOrBIQ06V
+   z2wzEKqw6lTDNqOP8tSK0n05/z08xELAFgMbeVBghXdkjmNemw+Gc5huB
+   I6RXDj9CRkyn+ZBhJJ3nIvzzsUpCAyAfOILqxWGE0Ec+QCUNS6JNNkDs5
+   +xXUQObkXeVt040/jc2GHOxFxi6nxnLHBW2gpbEdE6bBsW/aS7Runx63E
+   mSFA1aN5MsUCAqZ6HEsKGoF1MfRUJVUGfvKgo8kauhzYFfjLn2h/KLMul
+   A==;
+X-CSE-ConnectionGUID: snAtC9CmSOGEEhp/Mt8Nnw==
+X-CSE-MsgGUID: hfa+KUXxRf2G0uz+DXJAUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14962704"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="14962704"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:21:16 -0700
+X-CSE-ConnectionGUID: LhFJoJscTlmG4nGPqnjo+g==
+X-CSE-MsgGUID: DDhy7ZtYTnCfs4UbcFWAvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="44418408"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:21:13 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 5736811FA94;
+	Wed, 12 Jun 2024 21:21:10 +0300 (EEST)
+Date: Wed, 12 Jun 2024 18:21:10 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain>
+References: <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
+ <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
+ <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
+ <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
+ <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de> <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
- <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de> <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
- <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de> <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
- <78549853-1763-40cf-9974-3fc737fad093@yahoo.de> <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
- <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de> <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
- <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de> <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
- <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de> <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 19:23:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
-Message-ID: <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: "fhortner@yahoo.de" <fhortner@yahoo.de>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: multipart/mixed; boundary="000000000000a420a8061ab4a412"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
 
---000000000000a420a8061ab4a412
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Rafael,
 
-Restored list CCs.
-
-On Wed, Jun 12, 2024 at 3:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Wed, Jun 12, 2024 at 11:56=E2=80=AFAM fhortner@yahoo.de <fhortner@yaho=
-o.de> wrote:
+On Wed, Jun 12, 2024 at 03:06:53PM +0200, Rafael J. Wysocki wrote:
+> Hi Sakari,
+> 
+> On Wed, Jun 12, 2024 at 2:47 PM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
 > >
-> > Am 11.06.24 um 16:42 schrieb Rafael J. Wysocki:
+> > Hi Rafael,
 > >
-> > This doesn't make them run in a different order, it just delays both
-> > of them, because the notifiers are called sequentially.
+> > On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
+> > > > > > > I just hit the same problem on another Dell laptop. It seems that
+> > > > > > > all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> > > > > > > and Raptor Lake generations suffer from this problem.
+> > > > > > >
+> > > > > > > So instead of playing whack a mole with DMI matches we should
+> > > > > > > simply disable ACPI MIPI DISCO support on all Dell laptops
+> > > > > > > with those CPUs. I'm preparing a fix for this to replace
+> > > > > > > the DMI matching now.
+> > > > > >
+> > > > > > DisCo for Imaging support shouldn't be dropped on these systems, and this
+> > > > > > isn't what your patch does either. Instead the ACPI graph port nodes (as
+> > > > > > per Linux specific definitions) are simply dropped, i.e. this isn't related
+> > > > > > to DisCo for Imaging at all.
+> > > > >
+> > > > > So it looks like the changelog of that patch could be improved, right?
+> > > >
+> > > > Well, yes. The reason the function is in the file is that nearly all camera
+> > > > related parsing is located there, not that it would be related to DisCo for
+> > > > Imaging as such.
+> > >
+> > > So IIUC the camera graph port nodes are created by default with the
+> > > help of the firmware-supplied information, but if that is defective a
+> > > quirk can be added to skip the creation of those ports in which case
+> > > they will be created elsewhere.
+> > >
+> > > Is this correct?
 > >
-> > However, if you added the msleep() at the beginning of
-> > thermal_zone_device_resume(), it would change the ordering of this
-> > function with respect to the PM notifiers, so please try doing this.
-> >
-> > I did so and added msleep(1000) to thermal_core.c line 1634
-> > I have also reverted the patch you sent me.
-> >
-> > The battery readings after resume from S3 sleep where fine.
-> > I have tried 2 reboots with 4 sleep/wake cycles, respectively
->
-> Thanks!
->
-> This means that the two code paths in question somehow interfere
-> destructively when they are running in parallel with each other.
+> > Yes.
+> 
+> So it would be good to add a comment to this effect to
+> acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
+> called.
+> 
+> And there is a somewhat tangential question that occurred to me: If
+> the nodes are created elsewhere when acpi_graph_ignore_port() is true,
+> why is it necessary to consult the platform firmware for the
+> information on them at all?  Wouldn't it be better to simply always
+> create them elsewhere?
 
-One more thing to try is the attached patch (independent of the
-previous one) to lower the priority of the thermal PM notifier to make
-it run always after the ACPI battery one.
+Simple answer: for the same reason why in general system specific
+information comes from ACPI and not from platform data compiled into the
+kernel.
 
-Please test this one too and let me know if it works for you.
+Of course this is technically possible but it does not scale. On laptops
+shipped with Windows some additional information is also available from
+ACPI via custom objects but a lot of information is just hard coded into
+the IPU bridge as well as the INT3472 driver.
 
---000000000000a420a8061ab4a412
-Content-Type: text/x-patch; charset="US-ASCII"; name="thermal-core-resume-prio.patch"
-Content-Disposition: attachment; filename="thermal-core-resume-prio.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lxc3mpe90>
-X-Attachment-Id: f_lxc3mpe90
+-- 
+Kind regards,
 
-LS0tCiBkcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMgfCAgICAxICsKIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQoKSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvdGhlcm1hbC90aGVy
-bWFsX2NvcmUuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvdGhlcm1hbC90
-aGVybWFsX2NvcmUuYworKysgbGludXgtcG0vZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5j
-CkBAIC0xNzEyLDYgKzE3MTIsNyBAQCBzdGF0aWMgaW50IHRoZXJtYWxfcG1fbm90aWZ5KHN0cnVj
-dCBub3RpCiAKIHN0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgdGhlcm1hbF9wbV9uYiA9IHsK
-IAkubm90aWZpZXJfY2FsbCA9IHRoZXJtYWxfcG1fbm90aWZ5LAorCS5wcmlvcml0eSA9IC0xLAog
-fTsKIAogc3RhdGljIGludCBfX2luaXQgdGhlcm1hbF9pbml0KHZvaWQpCg==
---000000000000a420a8061ab4a412--
+Sakari Ailus
