@@ -1,169 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD5916E874
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C041233FE
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718186936; cv=none; b=E/guvRDDFRDjq5mPGd7XwGcLSM2f8HfRyZWZ4J3kDklB1zGs1DpsOb9bO5SoRxuVpC57lri3UFBYDWmNvzZZOYHwUAvf8CtsjWk/Da9yAJuFt7gpk2aVAk8YAPOSlgJhZ9/JnmjhzbZidCbFsrjfIywPOa/I1F5xIIbylsrXbi8=
+	t=1718187968; cv=none; b=aWI6yjfXHRttAGH/khQhJgn+lDt8Hlrdf9RteFIy9/XWxM+RmJNJzuneVuLnjuLgfFlAVya0H/PCyhMe2XZP/qiMNH63n2Whmz09nry0KovcvAOwe7N15I4+e/sYsYhXMrqoYX4alvlm3a/3ZYoASDBcX9CqV0Zfg6sobEC+T1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718186936; c=relaxed/simple;
-	bh=pw7HgWQK4sD0qp5qxOO2K9LVDQueOS/Y695OIEk7J9I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MPyv0hVq/6J1rNgh13aOzQZ2+/geLnvI2QJo/THCndo6B1FKqTQeOrzlBmDq8rAj5fBhYsJi+7vraUrVsypj6XPpINyUKWYxzTd5lSNtX3R3DPZxkT6Sod3sz41j2pe2pjtm+e8kXVOdTQe/yara/JeyrDHSqUqgYBe3kIgh9ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q+WKDUgC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718187968; c=relaxed/simple;
+	bh=Hy009I4Y0Qv6ns/yhERDJ2MDP1boihPeApgieoNPYl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CYVNsWUVrzy6DnJALpiJ3JQEM8dX0hPvJ/QUdWqzDSKzqeVgpbIdzF5TvFmKzo1XsZNA9Ew0ARIU52gO1fE6HkJbLeiFMI71jKSAT4dlRiVIjYEXhdVanMrIAUI+PJ2MeiBYEoyHj7mD5Cnbkp1i0VCClBafRsc6ojN1HSz9mrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJwAf12h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q+WKDUgC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718186933;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LLOfKzS9Is4M6RNWbUE4sMUvQ49ghZMG/yPmnPnTpYY=;
-	b=Q+WKDUgCEpp/RquVuRoyz0/6JOUDYAWAzL5wLxB+KfLtbz/nwT4nCC6j0jGG910JIXe8Un
-	eowQ89H0gDLzLyatVXBeC0WhQmVGPv4X4xp3ZXlxeCHXRPBHqFneLMlqxlN1NpiSppC4Nf
-	AG9MyVb7zyycuVPi3Bs+nQhGsDW71cc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-53-nVa8owwEOrmHtLPdvqmgcg-1; Wed, 12 Jun 2024 06:08:52 -0400
-X-MC-Unique: nVa8owwEOrmHtLPdvqmgcg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6def6e9ef2so55534666b.0
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 03:08:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718186931; x=1718791731;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLOfKzS9Is4M6RNWbUE4sMUvQ49ghZMG/yPmnPnTpYY=;
-        b=wizhPBsc5wif8Eptpy+xLGirpG9dN+x1BajZm+HYgSAOTl17IcAMCt0SyZK9Q2MBAF
-         eVCsJQb3qEAlMztGkFUf/nnj9VfcXI5xXvruiGWUeBFWuxcA9/I0XfoyOL5y5F55N3a3
-         yVeCAQ0jheqyQU68wqHHNG3Nhvoq2I0ul9vMhTk/ObsQj88700EhLw3xIcGwFIs2jCKz
-         d5P5Sns2+2dXCy3YElbxjwh9otkCCa/ze85oJ2hW/2iSHeMZo5aDOnGLze32jGqjYjXs
-         O6BVYiyhYa++6uVAN1kAKzSak5D8Pz2Ppa+XThUADHH0FiPU2dQekhGhuH7mUzTirA9j
-         t7jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYPH5Rq0jx3dDxcb8R9VcXfQ6E1MhKDEEXX7W18VkV8JfOwTVZOtMtQfyfmU2UV6tqlSmajcDsSrI7wApNs2X2GFRxB5AcuOEDK4I=
-X-Gm-Message-State: AOJu0YyGh7HIemcMgprx9PiffI1xVbow/4BZQdZAZeS3SGQbed7VMcqZ
-	+DyTJ8T9Xxg935AfVT3DTYwD9Z+rRq9/pYZ1FZG8pGkQfcsGELmf8OAgUJJxHfD9weS5ThuYbZ9
-	taD7hyZYP6XnsqwfRRfomYWVuFhgxDJa7ooIOFM4/eEG0zlvT6qzYBUK/I7SC
-X-Received: by 2002:a17:906:64d:b0:a6e:4e0:8a56 with SMTP id a640c23a62f3a-a6f34dddf97mr345487566b.32.1718186931120;
-        Wed, 12 Jun 2024 03:08:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDhKNb1woactSSXmyEjuzW+ovpxvmll3Rtvi6rex9IVe/7mfN7yKK6wLzv4CqXyzqlxcF2eg==
-X-Received: by 2002:a17:906:64d:b0:a6e:4e0:8a56 with SMTP id a640c23a62f3a-a6f34dddf97mr345485466b.32.1718186930674;
-        Wed, 12 Jun 2024 03:08:50 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0369399csm568681366b.3.2024.06.12.03.08.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 03:08:50 -0700 (PDT)
-Message-ID: <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
-Date: Wed, 12 Jun 2024 12:08:49 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJwAf12h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EEFC4AF49
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 10:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718187968;
+	bh=Hy009I4Y0Qv6ns/yhERDJ2MDP1boihPeApgieoNPYl8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jJwAf12hDyb8KkzUlwPaUpF7c/GBZv98SWRj4Lf7Q2TMs+Q7tb62d+3GheBOkS15W
+	 xEmMKdXRGR07q4E6e6O74S6NCtdLoEfSXxxwCJUrRvlBux5vAYNphgNW3GI/q1Kr9Q
+	 Ro0jgAAEzgD8sv7AFfAA1IoyTJMRM8i9wgI8jST5/pkVHYodWEtyPJ2rOohUXwzqJZ
+	 jZtuKEmQNSSV2kG4rl5awH4k4PeoAiPU9AIsyqkxD4epaYkNKR4toQkFf2iyHmgWZQ
+	 qOb4nkxbQ231vnHuorFvhl6zvOr7j/bGl6Rm+Hjfb+MtS2CUEdU0ictQb8sLW2hZ7u
+	 Ecq1omUKx1+CA==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5bb33237b60so36045eaf.0
+        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 03:26:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZlL8twki13k9tKsSS/trsRgp2HgSR6X2Rs9qTNJEMS0+yuH5cjXrJKxsWZ8kDChcizIhYYWxfEFWr9IUFYmWOEsz2SGTo2mhcPQI=
+X-Gm-Message-State: AOJu0YzkyX3TtRQ4EkR3NHSpF6CIGI3vZF/M2CWW90rpqvQhnCaLNV5J
+	C1xHaCN1Zg7ItgMmhWkmpUEAahdtqQIYk8SwO5wow1bxOYIotIloVdHnzMjY4lPuDhc/nwufJp2
+	OrTD66SfYNfARO5j5wCfVgZihyuI=
+X-Google-Smtp-Source: AGHT+IEhytvAjKaqXjVi4XDP6ekYnjP36qmWXpwgUUaoF04z3nVKwdXo5pIyTnVxdO7jVFV/WIeaQcFKeLMLVefzXso=
+X-Received: by 2002:a4a:3101:0:b0:5ba:ca8a:6598 with SMTP id
+ 006d021491bc7-5bb3b7b972bmr1488238eaf.0.1718187967599; Wed, 12 Jun 2024
+ 03:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
- nodes
-From: Hans de Goede <hdegoede@redhat.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Genes Lists <lists@sapience.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-kernel@vger.kernel.org, mchehab@kernel.org,
- hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
- wentong.wu@intel.com, linux-media@vger.kernel.org,
- linux-acpi@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
- <20240528084413.2624435-1-sakari.ailus@linux.intel.com>
- <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
-In-Reply-To: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20240528084413.2624435-1-sakari.ailus@linux.intel.com> <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+In-Reply-To: <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Jun 2024 12:25:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0itb45-hWS-JV5Nx8CQ7=CiS-dhJG8xJbrPNkY2=jN4jg@mail.gmail.com>
+Message-ID: <CAJZ5v0itb45-hWS-JV5Nx8CQ7=CiS-dhJG8xJbrPNkY2=jN4jg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Genes Lists <lists@sapience.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 6/6/24 8:12 PM, Hans de Goede wrote:
+On Wed, Jun 12, 2024 at 12:08=E2=80=AFPM Hans de Goede <hdegoede@redhat.com=
+> wrote:
+>
 > Hi,
-> 
-> +To: Rafael since this was Cc-ed to linux-acpi but never send
-> to Rafael directly.
-> 
-> Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
-> to make the cameras work on the Dell XPS 13 plus 9320 .
-> 
-> On 5/28/24 7:09 PM, Hans de Goede wrote:
->> Hi Sakari,
->>
->> On 5/28/24 10:44 AM, Sakari Ailus wrote:
->>> Ignore camera related graph port nodes on Dell XPS 9320. They data in BIOS
->>> is buggy, just like it is for Dell XPS 9315. The corresponding software
->>> nodes are created by the ipu-bridge.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> ---
->>> Hi,
->>>
->>> Could you test this and see whether it fixes the warning?
->>>
->>> The camera might work with this change, too.
->>
->> Thank you I just received a Dell XPS 13 plus 9320 myself to use
->> for VSC testing and I can confirm that with this patch 6.10.0-rc1
->> works, including giving a picture with the libcamera software ISP +
->> 3 small libcamera patches.
-> 
-> I forgot to add:
-> 
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> On 6/6/24 8:12 PM, Hans de Goede wrote:
+> > Hi,
+> >
+> > +To: Rafael since this was Cc-ed to linux-acpi but never send
+> > to Rafael directly.
+> >
+> > Rafael this fixes a crash in 6.10-rc1 for some users and is necessary
+> > to make the cameras work on the Dell XPS 13 plus 9320 .
+> >
+> > On 5/28/24 7:09 PM, Hans de Goede wrote:
+> >> Hi Sakari,
+> >>
+> >> On 5/28/24 10:44 AM, Sakari Ailus wrote:
+> >>> Ignore camera related graph port nodes on Dell XPS 9320. They data in=
+ BIOS
+> >>> is buggy, just like it is for Dell XPS 9315. The corresponding softwa=
+re
+> >>> nodes are created by the ipu-bridge.
+> >>>
+> >>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >>> ---
+> >>> Hi,
+> >>>
+> >>> Could you test this and see whether it fixes the warning?
+> >>>
+> >>> The camera might work with this change, too.
+> >>
+> >> Thank you I just received a Dell XPS 13 plus 9320 myself to use
+> >> for VSC testing and I can confirm that with this patch 6.10.0-rc1
+> >> works, including giving a picture with the libcamera software ISP +
+> >> 3 small libcamera patches.
+> >
+> > I forgot to add:
+> >
+> > Tested-by: Hans de Goede <hdegoede@redhat.com>
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> I just hit the same problem on another Dell laptop. It seems that
+> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> and Raptor Lake generations suffer from this problem.
+>
+> So instead of playing whack a mole with DMI matches we should
+> simply disable ACPI MIPI DISCO support on all Dell laptops
+> with those CPUs. I'm preparing a fix for this to replace
+> the DMI matching now.
+>
+> Rafael, please drop this patch, my more generic fix will replace it
+> and backporting will be easier without having the intermediate fix
+> in the middle.
 
-I just hit the same problem on another Dell laptop. It seems that
-all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-and Raptor Lake generations suffer from this problem.
-
-So instead of playing whack a mole with DMI matches we should
-simply disable ACPI MIPI DISCO support on all Dell laptops
-with those CPUs. I'm preparing a fix for this to replace
-the DMI matching now.
-
-Rafael, please drop this patch, my more generic fix will replace it
-and backporting will be easier without having the intermediate fix
-in the middle.
-
-Regards,
-
-Hans
-
-
-
-
->>>  drivers/acpi/mipi-disco-img.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/acpi/mipi-disco-img.c b/drivers/acpi/mipi-disco-img.c
->>> index d05413a0672a..bf9a5cee32ac 100644
->>> --- a/drivers/acpi/mipi-disco-img.c
->>> +++ b/drivers/acpi/mipi-disco-img.c
->>> @@ -732,6 +732,12 @@ static const struct dmi_system_id dmi_ignore_port_nodes[] = {
->>>  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 9315"),
->>>  		},
->>>  	},
->>> +	{
->>> +		.matches = {
->>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 9320"),
->>> +		},
->>> +	},
->>>  	{ }
->>>  };
->>>  
-> 
-
+Dropping, thanks!
