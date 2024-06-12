@@ -1,180 +1,211 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA8D5664
-	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 01:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718156464; cv=none; b=IZJr9KBtBf/xTqQfiYs7jz3luIsjkRnOcCWonaivyo+Efznc5ui2mnmv7M5CSVg9nqdTOkFLU4CkZpBTC5fZBJp/5+mUNcNpraZ7QSNj4qZUd8Rl7dP7suIPF66oM3D1tBQxb3oFSFMAxaY9aelfDnKxsO3g4sOFoDouOCfVBSA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718156464; c=relaxed/simple;
-	bh=8LosHYHTG9RbVy0F9ZTMuUgNALa2Ur9R8zNb7JuWaOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qvbs5AmOrPD/X39ZQS4Cx8VebWnH+RX9apAtNksR6o2t9mrtgv8sKsDMpKJClnvqvBaLMS6LWg34sdlXmlpYpDghNYvSlfa7k2hDJIHagHv8ILVvAteeFd4AcWdN2a7leoLuByVEe0nkHOUjxIBlATklFBhdF5byxXjFZemE/l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nNbtfUT8; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F6E63D5
+	for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 01:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718156945; cv=fail; b=DlP3Mc00xkNhkFEsw548KEwnH9u9/U0bvZjKBuT5nzt5pg2SB0gMStWliqYJBSwkaIP+nlresYTyyDswfMc/ZVHU5XLKF6mjWytOeLMPpCagFbZNPOgfz9In8eq6Tjn8HENz4CVT74TIaG42iMleikTiqc7EjLFTRYeUrVdv+b0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718156945; c=relaxed/simple;
+	bh=cLzgnUHlGD/ABm2tz6c17HnhmzW6JH4HuTMh76XwUvg=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=Mv07W4G3R6sjuiqQdvCjG+6ervXYtFyZjyqXnthxQOAEU12piF7OtCDTg9PoTwfvfARrxCxaBODDq72ZSSuE5feyX9qYgtn+CHnqb3JT+d1Asf1R4YbhRuQZXtPABZceWpM/MdMLxaCLEkMELe0jN1pvr6D5P8Lwj21EHaZxPIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TxQbkTrN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GOUD+sfd; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nNbtfUT8"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718156453; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=1/401mu9gQEGLWBhJwl/y7E9wdlX+Wwp801PQuc4g0Q=;
-	b=nNbtfUT8Qj5NXjY1HyD6j0Tya6A2PGvtnUnZH8CJVW37lYsPudS9BM+MLZ/ImvJ+ILEUuAqXYdoo/zKkSbMqTqVSURRwz02ziIFgtwWaI28N+YiNS8Y5NttZx8M7prIqiK7Z067ZZt+czUPWICljgWKp9vlQQ6vnNLbKTR5VAuA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W8I3m95_1718156451;
-Received: from 30.97.56.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8I3m95_1718156451)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Jun 2024 09:40:52 +0800
-Message-ID: <7cfe60a2-cd8e-4af2-a5d9-6c790b6dd665@linux.alibaba.com>
-Date: Wed, 12 Jun 2024 09:40:51 +0800
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TxQbkTrN";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GOUD+sfd"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BFeTDt004119;
+	Wed, 12 Jun 2024 01:48:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to
+	:cc:subject:from:in-reply-to:message-id:references:date
+	:content-type:mime-version; s=corp-2023-11-20; bh=fFmHcDkU0fXrb5
+	aGtfiJjpOpMnSxli5rTQaW5LVmFug=; b=TxQbkTrNEKOhIpmfemacGTJIlO0Lha
+	ASLK9RpXnf2F8adlz2BHv2g9yYvKAbmG5zs2H1xhLLP6BDKn7lE0OsHv3cTElkV3
+	HAdwkONhPrFM6fiZUq0mtIN9i8BZQoQnlA42mckdocfD49ck3DaAYb5v+fWDcqny
+	yiO2gRYnsjKfxGzsInCEcVbSpA+hj6P20Oac4x7uQOkOT5mAUdvWRkzyoh8uX7ku
+	wT2MlCmW8QNs1npe9nhEwOKrgfrbE3JCdbGxHYDgHOmERfX2IsoLzY6s6kfoVQIy
+	beCAufdZ63vB4M0Swel9nwsq9badZBtGgaj4bdasECc4ZK2C9e/hy5uw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh7dp4h6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Jun 2024 01:48:53 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45C0OFUd020262;
+	Wed, 12 Jun 2024 01:48:52 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ync8y1dnj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Jun 2024 01:48:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cSp442ZhCUV676/PY09A8I0m5GGSErb0I2XcPzOOPEefykMXDsTveEZXysGT/V5h/TgDfXtX1A0E6BIn3dcqNihIVg/OhIYuNBaKn03wdlh8I50cbVdefZfzniANDhY0HNlQhPKcKDtadZ2a49HRD5KIMvD3pVPakzOSzJpe4vfTWFx97XIdRGroDxalcde9r956Nz//YyaGGqIB73P2UWhP/ux1jnFcAtQCiIDNqOsWd4cJQ67/sYQ2JFa9s5TBs1Zzi3WqbtyO4QtN1D8kmV2kvPxKoZbcA2zlYh4a6TyoYCSygWGI1bPx/XHzJJI751DiuS/sydk6P09l/sgABA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fFmHcDkU0fXrb5aGtfiJjpOpMnSxli5rTQaW5LVmFug=;
+ b=S/KYJK1dIRA0kWLRsHZ8Cfxg7LNi4j5g+Da0L4SswwZi2LsRGmZYkbjCxdfVkcGjqe4JShCWJa0txiWD2Rqe9pd7PjxUUpAZtRANBVootUssEeJer9Jg27KxtLu6tziXeoz90TYa8NFlX9vjbfWsE12XZr84cqkCIIKlAIMt8B3kZBXnuOy7g/PYLqotwHKFful/jRkljczzjJZisV0ZW+mC3MHP2JbVL3M7apvyXiMT4ynA2Mk5dBLsbDWYdA/ueixFFKxfywAAJ+y7ytFO+rFl/k/nMhmbl4p+f1QCBaf/KfP84SdIJBr1hZ3SKGce+cy9TEwe4O5XnaUFr6d6iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fFmHcDkU0fXrb5aGtfiJjpOpMnSxli5rTQaW5LVmFug=;
+ b=GOUD+sfdhfOQAUcELbSq0ynE9m6H/rZNX8qhGiqfoGKPS39W/YUXURywIqUwI21M2qS8hjkEpNuHBAvPAv0h7PlVjF/r1Pc/FcypULhmX3n0OUxHgrmz8OjUF7Jkt+wR5qV55qkA3QU3aTx8aqvRBvJq+hdP0Ee83P5xtxJVRtY=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by IA0PR10MB7301.namprd10.prod.outlook.com (2603:10b6:208:404::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.20; Wed, 12 Jun
+ 2024 01:48:50 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7%4]) with mapi id 15.20.7633.037; Wed, 12 Jun 2024
+ 01:48:50 +0000
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Christian Heusel <christian@heusel.eu>,
+        Andy Shevchenko
+ <andy.shevchenko@gmail.com>,
+        "Martin K . Petersen"
+ <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jens Axboe
+ <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Daejun Park
+ <daejun7.park@samsung.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        Damien
+ Le Moal <dlemoal@kernel.org>,
+        "James E.J. Bottomley"
+ <jejb@linux.ibm.com>,
+        regressions@lists.linux.dev
+Subject: Re: [PATCH v9 11/19] scsi: sd: Translate data lifetime information
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <9dae2056-792a-4bd0-ab1d-6c545ec781b9@acm.org> (Bart Van Assche's
+	message of "Tue, 11 Jun 2024 16:08:44 -0700")
+Organization: Oracle Corporation
+Message-ID: <yq11q53ylsw.fsf@ca-mkp.ca.oracle.com>
+References: <20240130214911.1863909-1-bvanassche@acm.org>
+	<20240130214911.1863909-12-bvanassche@acm.org>
+	<Zmi6QDymvLY5wMgD@surfacebook.localdomain>
+	<678af54a-2f5d-451d-8a4d-9af4d88bfcbb@heusel.eu>
+	<9dae2056-792a-4bd0-ab1d-6c545ec781b9@acm.org>
+Date: Tue, 11 Jun 2024 21:48:48 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: BL0PR02CA0111.namprd02.prod.outlook.com
+ (2603:10b6:208:35::16) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: LTP: fork13: kernel panic on rk3399-rock-pi-4 running mainline
- 6.10.rc3
-To: David Hildenbrand <david@redhat.com>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <baohua@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvKmr84WzTArmfaypKM9+=Aw0uXCtuUKHQKFCNMGJyOgQ@mail.gmail.com>
- <e8c10a52-61f9-4b46-bc50-e2c267b1aa56@redhat.com>
- <80a05784-21dd-4f20-b441-1e2a2be0e0ff@linux.alibaba.com>
- <3ce90ee2-f51b-49fc-b010-f97e61e617f4@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <3ce90ee2-f51b-49fc-b010-f97e61e617f4@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|IA0PR10MB7301:EE_
+X-MS-Office365-Filtering-Correlation-Id: 442d7ab7-3385-42aa-4c0f-08dc8a81ce8e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230032|376006|1800799016|7416006|366008;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?udfnEImuv33dPG/kXAfFk4GmTqCBLFdVY/fMnG/ryHaSlm73KCQKZjR6Hueg?=
+ =?us-ascii?Q?/66Z6ss6DbB/8puuuAAFZL2AFLXOMBx4nOaHBVT0YPSWWGIYm8OhwjSxqg3b?=
+ =?us-ascii?Q?aLpOnsUKgKr0Y/aovt4y23Mv0Vcp4K3dsm9mFxIZdURrj0znlrVdrbbN2IEI?=
+ =?us-ascii?Q?trDLWLDyy2fB4z8oRJGaJ+MJlFmpVDx+I7j5AXAyWLxgtJFT6x28nBtXW+t1?=
+ =?us-ascii?Q?4s28jFE/tcSgwD7YpgwfIk64nvYBw5MEkNdzx5UWqWtyxVyAiB3DokgtWlmp?=
+ =?us-ascii?Q?4Ov81RFRlM5G0wirN5ev2i3FczW2dW49V+DAF8RBY3BVeShpacnBCLVbO6LO?=
+ =?us-ascii?Q?aNfXM1H3JR9yKRNKba6OUGPQ1AVnn/C+WM056O75F2eJ6m+WPCzogzVrEGzk?=
+ =?us-ascii?Q?7HYprR26kH/mVvJeDHoRE2c932tXiAsc79iUHmXrIfsKTStLJul4FIHYH9Rx?=
+ =?us-ascii?Q?CLWMS0f6+sQR10fhLpiCf5vgprgeBNhFS90U9JlsHWIIaakEbHMBCCBhZEM9?=
+ =?us-ascii?Q?vRUon7kPyyr08Cpz246lPJpkcXMNEOJZ5TzHQh0cJ074JyiLjkb/ZA/lqNJj?=
+ =?us-ascii?Q?WCFM0eJndSOHGXD9kjMIsaqMJpqCL2EUJMLGaCbkHMVEarYiEV19RQ5RD2hL?=
+ =?us-ascii?Q?Ero5jJzjpQrSANoML1SUE6S1cKupl55l0ppUVX9uaAupfsMQ/fagcXi1oTaS?=
+ =?us-ascii?Q?1/JGyygL4r8e7McaVzzxNQGFnsgkDFZPepH6sx3Vuis3ExIul2ZYgXAH7rBl?=
+ =?us-ascii?Q?LNha6p1ZGgtvUSdlBiV1JWPEsap4swZbokSyiQGsBxlOJ9cJi/eq//d1SIxK?=
+ =?us-ascii?Q?TgnWAB4JAHjyxH/tXo/ew5ZUfbhFPIGBa4SQO9vgmtMNqvTkAd82pm8niqDk?=
+ =?us-ascii?Q?B8d//vQIEOiFjE2VhxpzQVE0URePVDGfUsUc9k7qjfkYsYH+cliir3A//T7N?=
+ =?us-ascii?Q?SK5xcGrD5+iqB9BGQLVkDrOrLlnoD3Mpvv9mHCgfNgXUViDsujoXC/TMyIOw?=
+ =?us-ascii?Q?Tpjq4PSsMDfFCFSmqK50EskxYrGJlnoRQ+BA2IxRx8j2SW9mTMP88D5JBLJa?=
+ =?us-ascii?Q?GDnrI5DGPfgtxHuj+wNgRjlqaPtJaRorWJirocsW9aske3An0XQjyVgH1PAs?=
+ =?us-ascii?Q?CnIrRK7I/7Z0ySSh6lrNDzeRSGDR7zgbYVILD5dEC8c1ZaI+sT7KDYtLy7aj?=
+ =?us-ascii?Q?fKSh5Rcs/nssKWszcaNbEObfDUCULBR9aVbuQdWFQQeqkHxl3tMmJ+y0USwX?=
+ =?us-ascii?Q?Duvx5k6d0TrWSU0ckZUvcW/Cs5sLWwae/p0R+pZwOH44TL18FKFpsjq6sXFa?=
+ =?us-ascii?Q?9DPUfvD/OLaDvxaZ8IkWd+Ea?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230032)(376006)(1800799016)(7416006)(366008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?kHByuyoOARSSWV+QQutnCRO0JIkrghhFRwY0DdddvrQ7cIa8z5arsTYN/taq?=
+ =?us-ascii?Q?86AsX1dBDXuw2+QT0/KgwEA8KnbVBgGWNHLfLhvtRWm4MZMuwjm5PmjUYJtq?=
+ =?us-ascii?Q?HlgY6CJKajE/EB2V4BftuiWTEM1s/AMXSwAOSLJS2lPQy0QXc8ihL5S1OkrY?=
+ =?us-ascii?Q?7movKcodfp6V3QxxQahXBq88r9MZyKY+D1DfYoaMjnVgXS/UhG5MMiI5F5Cp?=
+ =?us-ascii?Q?1YUubxhuXFuubbDlYTUqjmH6G9Seb5lrdwObFKGtSFX7gAsFnQP/KtIemfaq?=
+ =?us-ascii?Q?ek2oWIfE4DtluX9pollYv3LynQrYpQWtSANp9Sdmb86O9KV7HSSd2dAPoNal?=
+ =?us-ascii?Q?hyHi+QgErVtMigmxLV2oMEZcVWULBrqehsCROBlgu/jRMi7cw5CmHCqE68sp?=
+ =?us-ascii?Q?HSmX/6QYg4up+3OTyM0dBK0TJuEy3ZzWaCY8890Og91rqzMxo7M9d9FZDoqx?=
+ =?us-ascii?Q?GmNApL0iwkhKjxorxrjtsmG79sJrzlIvekvgVlO8z0uAkdWikAhQuLjn92L4?=
+ =?us-ascii?Q?Py+J64oEr90tZeGP6qJqlBRREG2t2cc27fNI/P5Reluk8Gdqu9dYQNn57gX7?=
+ =?us-ascii?Q?jwu2ohHnPzGuUzB5TzRd5sK8FBMrKVyIK3cWrgvG0bu2n0eznq6w1xM4tDC/?=
+ =?us-ascii?Q?bGL0aS9letej3FauNhtEhfT/ZtWOwKaL2y2Nt6xuqjqnWi1vnBZhNhJ1vLV9?=
+ =?us-ascii?Q?dN21U1gLWKby4E7aNzCXoYr0r5DHupPXNWWh6Fw26v3lDhBA+gyAsEf/zvuM?=
+ =?us-ascii?Q?30Ul315K/OON9r5Y9OCuuysAvCEXqTpwNTvY6sdMdbD9W5RTfVNg7XIvFa9Z?=
+ =?us-ascii?Q?iYTEjWTDtuQrb2Qhv2MaVPSwFRTRhNw+de+NKUc0jKo0pFzT1vr/WNQKwut/?=
+ =?us-ascii?Q?oe7ICcsetT8krN1jNbD4EDzXgin/oHZPK48ccPHwXElSrc2VvdJuZ1sXbeEm?=
+ =?us-ascii?Q?nTLSXVhTHe3vtHVvPdkUJykd5/LstEcmyfD+pKNl1QAKP5sLxh60E1eEv8eM?=
+ =?us-ascii?Q?L/EyV/uvXVJnPteMXiahsQPSmIJ9suAoRBND+DAa9bS4AnkeiouuNE+PR7fK?=
+ =?us-ascii?Q?mE23VbupwiuOcVKgr9dIaiRd+SxXpc3PLq8k0g8P8x7F6at7Kazr5eDLzvge?=
+ =?us-ascii?Q?ZDrAcsorwZ4iGMxXFmMC3m521OC0eAue6Z5yQzdYr8CmRIDfcA3vlLJFgtBK?=
+ =?us-ascii?Q?TTSpmTBCnJ2C2xF171O5tnsTCneH5IRMn3ufC2dLaRMM6NDPWEH7ID/JfilQ?=
+ =?us-ascii?Q?2vbOCWVAd+um3Ze0qtOTZYh5EWawbweQzHHBGt4deD1eW/cNoq/0bhmlUL/p?=
+ =?us-ascii?Q?2bWNevRgCBPlG/IGbV/ncD9zUfwzOCLpMW5Eajduslj9ujgjO4keETVGUu5U?=
+ =?us-ascii?Q?IdAJrsX+BhCDwyc4kVhxBchqAfzKv10EQ1uGx0ciwXZ7XIWMzzM/NjdxKBlt?=
+ =?us-ascii?Q?zNV8r4cRjOEd7/kpIsF58o1Dt9LRNS9cxFBc1lvCBPVJCylBR4Wt96zwDOzH?=
+ =?us-ascii?Q?JaXBOHMWTQpjgEwfMnn+QUIVpE11KTIWCE1v9e3LQCh5fvUfYlnsTy08ya55?=
+ =?us-ascii?Q?3nAVZGxSMTnaRLay4k9ztCRnXTFvTLPM9gWbh30I80yvi0kXDveHSVHuSRxP?=
+ =?us-ascii?Q?EQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Er1rv8oBqwMITXwUPbkPqQgEbiOe1Fs0mUASqgZVF7JNpHh9NZ+oDfXvuSUcD5kH/dnyrQwWwiXPpk8i4EAMxVqi9tJ3bAyHgBu0p+gR7EGQkIXASiZBOAM1JrPzqX6uqSOsAafEjADBn7yU9mAEqKSFO8XRghhz91KQt8rEY7B39H/cYhLaXJyT+XwsA+333Hdx3zfQ5RFXcszu71V5bLM32Vhr6Ws3r61bd7vY0VMRS5cXgU8qaF+yz6PWLOY6MBgZgSGkmnuSjDlfCJfzpB+9sFI3yDxyYrgGw9YDXdmjL3kOBJw/6MuTtvwdb+oedqSw4anmkcFgwCShwyMkLV11SxrXTlaM1ccamrgoXC1ldelEIE4yhXaDJGBy6jmdW17VQ59hVgGTfgXKGRoQjv7aEc2XKFQK6xCwSQhuevTpMfjH+OC9zs3mKjXx8BKZu77C4l41wTjLuit94GMVReL9HQ849p5RURQus4U4KoYz5+L677gKIQBfid9fUlU1RlgSten3DCkUA5owtrHBwee61UufTSYKKSAr8ZIIyhsU6cn5OxhW2W7a82AUR7G2CzIzAlvwX572ZoNTYye8syXVVeSWpZKbYmRphTTd6Gg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 442d7ab7-3385-42aa-4c0f-08dc8a81ce8e
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 01:48:50.3059
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ns0ZMjj9bm0dyKLV7S0Dx9f6c/Pglal5zn5W8y1VdMQzwFepHZa92LiY7wo0u8sYcSlDe619HcNvQWcWgotcfPKwaCALezJSDtOTxPJpkic=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7301
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_13,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406120010
+X-Proofpoint-GUID: pwvcx6CSUj9D31uOyMlfNcyj91M4ULbx
+X-Proofpoint-ORIG-GUID: pwvcx6CSUj9D31uOyMlfNcyj91M4ULbx
 
 
+Hi Bart!
 
-On 2024/6/11 20:09, David Hildenbrand wrote:
-> On 11.06.24 13:39, Baolin Wang wrote:
->>
->>
->> On 2024/6/11 18:32, David Hildenbrand wrote:
->>> On 11.06.24 12:14, Naresh Kamboju wrote:
->>>> The kernel panic was noticed while running LTP syscalls fork13 (long
->>>> running) on
->>>> the mainline master 6.10.rc3 kernel on arm64 rk3399-rock-pi-4 device.
->>>>
->>>> Please find detailed logs in the links,
->>>>
->>>> As you know fork13 is a stress test case trying to generate a maximum
->>>> number
->>>> of PID's in a 100,000 loop.
->>>>
->>>> This device is running via NFS mounted filesystem.
->>>>
->>>> I have tried to reproduce this problem in a loop but failed to
->>>> reproduce the
->>>> crash.
->>>>
->>>>
->>>> Crash flow:
->>>> ------
->>>> fork13 run started
->>>> BUG: Bad page map in process fork13
->>>> BUG: Bad rss-counter state mm:
->>>> Unable to handle kernel paging request at virtual address
->>>> Internal error: Oops: 0000000096000046
->>>> run for 800 secs ( 13 minutes) and more.
->>>> fork14 run started and completed
->>>>
->>>> fpathconf01 run started and completed
->>>> sugov:
->>>>
->>>> Unable to handle kernel NULL pointer dereference at virtual address
->>>>
->>>> Insufficient stack space to handle exception!
->>>> end Kernel panic - not syncing: kernel stack overflow
->>>>
->>>> I have tried to decode stack dump by not being useful [1].
->>>> [1] https://people.linaro.org/~naresh.kamboju/output-rk3399.txt
->>>>
->>>> Test log :
->>>> --------
->>>> tst_test.c:1733: TINFO: LTP version: 20240524
->>>> tst_test.c:1617: TINFO: Timeout per run is 0h 15m 00s
->>>> [  904.280569] BUG: Bad page map in process fork13  pte:2000000019ffc3
->>>> pmd:80000000df55003
->>>> [  904.281397] page: refcount:1 mapcount:-1 mapping:0000000000000000
->>>> index:0x0 pfn:0x19f
->>>
->>> Mapcount underflow on a small folio (head: not printed).
->>>
->>> [...]
->>>
->>>> [  904.294564] BUG: Bad page map in process fork13  pte:200000002e4fc3
->>>> pmd:80000000df55003
->>>> [  904.295275] page: refcount:2 mapcount:-1 mapping:000000007885152f
->>>> index:0x6 pfn:0x2e4
->>>
->>> Another mapcount underflow on a small folio (head: not printed).
->>>
->>>
->>>> [  904.309309] BUG: Bad page map in process fork13  pte:20000000cc6fc3
->>>> pmd:80000000df55003
->>>> [  904.310031] page: refcount:1 mapcount:-1 mapping:0000000000000000
->>>> index:0x6 pfn:0xcc6
->>>> [  904.310728] head: order:3 mapcount:-1 entire_mapcount:0
->>>> nr_pages_mapped:8388607 pincount:0
->>>
->>> Mapcount underflow on a large folio.
->>>
->>> ...
->>>
->>>> [  904.326666] BUG: Bad page map in process fork13  pte:20000000268fc3
->>>> pmd:80000000df55003
->>>> [  904.327390] page: refcount:1 mapcount:-1 mapping:00000000f0624181
->>>> index:0x1b pfn:0x268
->>>
->>> Another mapcount underflow on a small folio (head: not printed).
->>>
->>>> [  904.328094] memcg:ffff0000016b4000
->>>> [  904.328401] aops:nfs_file_aops ino:8526e6 dentry
->>>> name:"libgpg-error.so.0.36.0"
->>>> [  904.329051] flags:
->>>> 0x3fffe000000002c(referenced|uptodate|lru|node=0|zone=0|lastcpupid=0x1ffff)
->>>> [  904.329878] raw: 03fffe000000002c fffffdffc0009a48 fffffdffc022f3c8
->>>> ffff00000688bd60
->>>> [  904.330561] raw: 000000000000001b 0000000000000000 00000001fffffffe
->>>> ffff0000016b4000
->>>> [  904.331240] page dumped because: bad pte
->>>> [  904.331590] addr:0000aaaad9afe000 vm_flags:00000075
->>>> anon_vma:0000000000000000 mapping:ffff0000300d4188 index:2e
->>>> [  904.332476] file:fork13 fault:filemap_fault mmap:nfs_file_mmap
->>>> read_folio:nfs_read_folio
->>>> [  904.333245] CPU: 5 PID: 22685 Comm: fork13 Tainted: G    B
->>>
->>>
->>> Are these maybe side-effects due to
->>>
->>> https://lkml.kernel.org/r/20240607103241.1298388-1-wangkefeng.wang@huawei.com
->>
->> IIUC, the rk3399-rock-pi-4b device has no NUMA nodes (6 arm64 cores), so
->> I don't think the numa balancing will cause this issue.
->>
->> Anyway, I will run fork13 test case on my arm64 server to try.
-> 
-> I have the faint recollection that we can (or at least could in the 
-> past) end up in do_numa_page() also without NUMA hinting.
-> 
-> I documented in 51d3d5eb74ff53b92dcff48b30ae2ed8edd85a32:
-> 
-> "
-> Note that do_numa_page() / do_huge_pmd_numa_page() can be reached even
-> without NUMA hinting (which currently doesn't seem to be applicable to
-> shmem), for example, by using uffd-wp with a PROT_WRITE shmem VMA.
-> "
+> diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+> index b31464740f6c..9a7185c68872 100644
+> --- a/drivers/usb/storage/scsiglue.c
+> +++ b/drivers/usb/storage/scsiglue.c
+> @@ -79,6 +79,8 @@ static int slave_alloc (struct scsi_device *sdev)
+>  	if (us->protocol == USB_PR_BULK && us->max_lun > 0)
+>  		sdev->sdev_bflags |= BLIST_FORCELUN;
+>
+> +	sdev->sdev_bflags |= BLIST_SKIP_IO_HINTS;
+> +
 
-I see. Thanks for explanation.
+I suspect this is the safest approach and prefer it over the individual
+device quirk.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
