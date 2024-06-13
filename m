@@ -1,132 +1,85 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3393C13D607
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 13:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BF214658B
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 14:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718286689; cv=none; b=UwsbUNTZXhhh0kupt+5+3fUKSvqHbHJibDJ0gtMDb311/O5iXHW002QhgswMT9N7D+FxC2Bwpie2NnQBvRwKc2aBjydIqxFSw6MSemXlncbbvXaj8TxNSA1VkEhN1gEE0MMqMtAxFqlzAIkfQ9vPF4VMeZ5vFhQCYmYrkEeymSM=
+	t=1718290186; cv=none; b=CdDpoVXMzz0/udkX6OJ2ThIVOdvAALvv35VXonj66E9RrORZCiYoaGjYoyQi+qB4P2SqCetH1xh1rByBTJxvaD6Hyu3RedvffE3vgohreJ2eki/TmqiSYTWdz+iXhqD0j/y9DwY0zVMnJBIVYmFQ78TaGqPKrGHKiJc9PTEtWQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718286689; c=relaxed/simple;
-	bh=7NG6uQtL8OtRJ9iIAYXtet9++FwRd1n+ZGC5Hg85Cjo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qHv0KTSLyqS+NFm7c8YXJHFg7shk77BDyHMAsasobnkFlFxJt7LqNBAK7dXZfVRiKDaRdON8rzS6XSINoVg3pqqet8LYrzzn4bsowCVPbLuNIGzdlbr0vA2rvdVZsAumQQVZ7hmLagvBlHSbzT+s5e49SvTjwAOXpupk+/4KU4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s2ypWxEm; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718290186; c=relaxed/simple;
+	bh=3agOKwAl5yF8NRQemc3BoaSiUROdNcnR6b8pjbA+FLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQwNXoive6vdU1zmBrosSGCRSuSMzIRo5M1M/3A1ujkhHe/Ll/wd5rdgEJfaXMLYU1zpVWSB1vBa7y4ZDg72XuKroaSSeKPCC6gZlKAuZFId2t8bz3+Sq8KORS4BtKmm/c6foi0zmefRilZuKAUjr7nm6/fdCT67xUqb+TPtx1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=LhqmP53n; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s2ypWxEm"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-80d6534e302so324163241.0
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 06:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718286687; x=1718891487; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qu/FWTV7834QtugMZZVu5W6bYVpF/xbRojpTSuPeXsU=;
-        b=s2ypWxEmMydWJplof2rzym5FweX8m+i0yefr3H/hrmot//IpJ0+bc5KCCng/ag8fVE
-         0xUG+5xculU9uawy+2EUnXpPYTjhLdNufSX0nlGTcydb2uffikOMLNfJLyCNnFtxRbbY
-         QSuQ6PiqbynIY8WNVlls5P2aoNhBWPQzbgLOZVu0T7Pw97bUxM7Mub8NFK0PsHUury+V
-         4AiE10Px0Fit5GYnNzK70/lmlYaHXOiDGIuh15UFj0GDDWw3zRhnAmQoZRhBC0zgQu9x
-         Ut9Bkl9eg7KlndaoyLcNEuUumfJGCOjTNh7ywdq2wsPFKT9UOCJ/hl7qbEbBOlYdISiA
-         e0Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718286687; x=1718891487;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qu/FWTV7834QtugMZZVu5W6bYVpF/xbRojpTSuPeXsU=;
-        b=VLHYy/KvLcq//69l9r3cVWVJhnVGdN5qrgDNBs3k2CurhXHKfvh+KuOO0J0MIPq785
-         1nlOFfUuTfoTSfeW66FNgfu2JIpt0WVzr+wbuzLMjEhmRaTZ1rScRzm/nCQshHhdOMR6
-         61C2rVZCeTOccvnUmLYHThiu3COPGAYEYACirKtzQpaLWRggko6C1ZJeO1H9y8/NYjFS
-         GeE1yEeBmfA9Dma4aCmIpyls5G97f+NFVvgx51zMNfEGVTlu2++CDgXZrSGAPJXUoXBv
-         UqmRES5KgRBIZBXcoBG/5N6k7SHH/GAhZfiLUA/Vhw2V/Z9qfPWlcO3TMN+QXnDWoPuH
-         uwPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURv+oFvZBwATtysqn5I3gEa05CBrjKHuN8VkXIPbXInKFKFl+WkhfN+StV8+cXHivwwsMHsBSfywQlfHqL2+5W32CpZq5/pOrfD+Y=
-X-Gm-Message-State: AOJu0YxmeSrxZrdlQyEHiiCwYQrfma69ULNhc0yD0dZt6lDGoVRssCFq
-	i12ajOLwNr9aVIhAKX3Y1fFx5w6A51RX6iU6LL94Y/C0HK7Bg7TxLsp93Ep0h/uquXqr8TrQ+9e
-	svhbS9Q4LlF+PnpzWQ7ZC6BpetbGx7bHAj1zFbA==
-X-Google-Smtp-Source: AGHT+IFt1qa9H5XAsUr+NTtJxBrGKdzFxfLI2hYbTpXslmysQ/glm8BiG+LX1EBRuRywvOkWId2XTxCK7ADRK0UzvG8=
-X-Received: by 2002:a05:6122:1cc:b0:4ec:fabd:d4ab with SMTP id
- 71dfb90a1353d-4ed07b0fc91mr4556612e0c.8.1718286686932; Thu, 13 Jun 2024
- 06:51:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="LhqmP53n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718290183;
+	bh=3agOKwAl5yF8NRQemc3BoaSiUROdNcnR6b8pjbA+FLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LhqmP53nx5pRPy5f3TyD+8tW19+AR7RTa6HwSCSHuhjWaVoVm91bUOAdWMW0WC+FF
+	 Duw6LEbqxvpsA/8FjTuHoMzIUma+wNXkAHdTXOFID/kQx4r0oIS9aZrYBGSOPV1NKv
+	 rdNYg3HauWdfoZQMrU7d8GdBXCwfMVXwnID9qrhI=
+Date: Thu, 13 Jun 2024 16:49:43 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, 
+	Werner Fischer <devlists@wefi.net>, Daniel Drake <drake@endlessos.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Jian-Hong Pan <jhp@endlessos.org>, 
+	Dieter Mummenschanz <dmummenschanz@web.de>, Mario Limonciello <mario.limonciello@amd.com>, 
+	linux-ide@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
+ port
+Message-ID: <10f95864-3674-4c69-8abf-d4b9f56f9ec4@t-8ch.de>
+References: <20240206211352.1664816-1-cassel@kernel.org>
+ <20240206211352.1664816-3-cassel@kernel.org>
+ <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
+ <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
+ <ZmrwksRyOkQq1OPV@x1-carbon.lan>
+ <Zmr2a53RwyevjQYA@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 13 Jun 2024 19:21:15 +0530
-Message-ID: <CA+G9fYtobhBTnH1=2oHxesLfyYd2VGK55nJn+iniWPj2vyNCOQ@mail.gmail.com>
-Subject: selftests: arm64: fp-stress: KERNEL-1-0/3-0/4-0/6-0 - gcc-13 - Failed
- - clang-pass
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	James Morse <james.morse@arm.com>, Aishwarya TCV <Aishwarya.TCV@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zmr2a53RwyevjQYA@ryzen.lan>
 
-The following selftests: arm64 tests failed on FVP-aemva test and kernel
-built with gcc-13 but pass with clang.
+On 2024-06-13 15:38:51+0000, Niklas Cassel wrote:
+> On Thu, Jun 13, 2024 at 03:13:54PM +0200, Niklas Cassel wrote:
+> > On Thu, Jun 13, 2024 at 05:29:31PM +0900, Damien Le Moal wrote:
+> > > On 6/13/24 15:34, Thomas Weißschuh wrote:
+> 
+> > I suggest that we:
+> > 1) Merge Damien's fix.
+> 
+> This might of course result in us getting other bug reports about their
+> distro no longer automounting their eSATA devices... and they might
+> consider that a user space regression as well.
+> (Since that behavior has now been there since 8a3e33cf92c7 ("ata: ahci:
+> find eSATA ports and flag them as removable"), which was merged in 2015.)
 
-arm64_fp-stress_KERNEL-1-0/3-0/4-0/6-0 - gcc-13 - Failed
-arm64_fp-stress_KERNEL-1-0/3-0/4-0/6-0 - clang-18 - Pass
+This is quite likely.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+How about reverting the "ata: ahci: a hotplug capable port is an external"
+for now and work on a proper fix, including dev_set_removable() for an
+upcoming release?
 
-Test log:
----------
-# timeout set to 45
-# selftests: arm64: fp-stress
-[  269.882519] NET: Registered PF_ALG protocol family
-# TAP version 13
-# 1..96
-# # 8 CPUs, 3 SVE VLs, 3 SME VLs, SME2 present
-# # Will run for 10s
-# # Started FPSIMD-0-0
-# # Started KERNEL-0-0
-# # Started SVE-VL-64-0
-...
-# ok 13 FPSIMD-1-0
-# # KERNEL-1-0 exited with error code 1
-# not ok 14 KERNEL-1-0
-# ok 15 SVE-VL-64-1
-...
-# ok 37 FPSIMD-3-0
-# # KERNEL-3-0 exited with error code 1
-# not ok 38 KERNEL-3-0
-# ok 39 SVE-VL-64-3
-...
-# ok 49 FPSIMD-4-0
-# # KERNEL-4-0 exited with error code 1
-# not ok 50 KERNEL-4-0
-# ok 51 SVE-VL-64-4
-...
-# ok 73 FPSIMD-6-0
-# # KERNEL-6-0 exited with error code 1
-# not ok 74 KERNEL-6-0
-# ok 75 SVE-VL-64-6
-...
-# # Totals: pass:92 fail:4 xfail:0 xpass:0 skip:0 error:0
-ok 16 selftests: arm64: fp-stress
-
-
-metadata:
-------
-  git_describe: next-20240613
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 6906a84c482f098d31486df8dc98cead21cce2d0
-  git_short_log: 6906a84c482f ("Add linux-next specific files for 20240613")
-  arch: arm64
-  test-environment: fvp-aemva
-  toolchain: gcc-13
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304165/suite/kselftest-arm64/test/arm64_fp-stress_KERNEL-3-0/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304165/suite/kselftest-arm64/tests/
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> However, considering that the definition of the RMB bit has recently
+> (2020) been clarified, it is quite clear that we are currently violating
+> the spec, so I do still think that setting the RMB bit according to spec
+> is the right thing to do.
+> 
+> 
+> > 2) Modify SCSI to call dev_set_removable() and modify ata_scsiop_inq_std()
+> >    to set the "HOT PLUGGABLE" field.
+> 
+> 
+> Kind regards,
+> Niklas
