@@ -1,244 +1,207 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9856513C83A
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 07:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5413C827;
+	Thu, 13 Jun 2024 07:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718263984; cv=none; b=hvVthdGpDY1uskNqe79iZ79549YvxtbnOWg5qb3OZzIVChPcVAlVK0vzP5cx5Ml1kV+2Hja4pGcvzYTs6rhHtDiyjoMNg87YMjzZ7fTPMJbMxmgT4Qru0j7xahdiWYMRwWFSBFJQ+E4NGrpcN2sdg01rbkdEVyS4MFcI7pIVsBM=
+	t=1718264928; cv=none; b=qUbIojJgibrRo6Hl89I7tFQDIsYvR0gUsc5XI4rL/jklAdVVhbm8zArNyw10SI/q7ip3MJUbrQm6+73TiPe//G8LWhiJfJ79Zixv1Kcm7EbxKuQtwdlSzokHwR9QaO/GOoMcv/T0Vsf+QJ9Cd/YzRLFdXLmB4OHNITMfFvO2vRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718263984; c=relaxed/simple;
-	bh=d0mZNWDpRk6kCJv92A4sILZo41s0K1Wp0msT2BRz2HA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I58bCfCjT+1AKDlJPXYweCQOpC9gKLVtrK2TxWhkH1pRCLBkLnvZrGh0kFXuOhpO4TxYspdjuZVoLfhH1BoNxRj8AVYpOoWsyOrokEBK3DUeBE5wUYtx2dEnSAYwrEEjA8qQQVQ2+nN0S5xdizJDAlVwdVTeO/5CYqQg1yMFHz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=loviFnE+; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718264928; c=relaxed/simple;
+	bh=/5EG8VMd7LliSml0B5DgPKmGWzFXy5kJxof/+4sXrGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JP2+I/V4ItF4TH5cOLhpxBfMrQS/ZPCWQp7jVYQoF21J/vvvPayAHSJu86STzzGywieWRT34YpB7OJXQgl7BS3z9HzqdxJ7/QZXrkqZo9bQdhBc5fuw8i39eQExIW4195Wzj9xIPW5+BSAeuR82wer0kGYbdAr9eJV+LXQJX14U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=adOEAd6b; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loviFnE+"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebd95f136bso7033461fa.0
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 00:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718263981; x=1718868781; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0C8KlVl3OW2PC2dRMHxIiA4eTV9+V+jwqso0xqeA27M=;
-        b=loviFnE+gcjE1ySFdNFGYN9UyeN0zFLNiwqiiUa/VmNUxZN3nLV4+8uBUnnKxxe3GC
-         gIit7wqRpahNuSCZZ1J9M1tG8B+YcoErVL8o/VQLdv/QZBPIlo9HMPPfuhJReK3E3ADd
-         UPFQAbuVgfPiuZ/q1OM4xl643lxSLE0qrXBWIZDJhKxvlD/cvjY/5XK6VF5zZuKKjKIl
-         4VGAKvK4TOOA7Tp5ISndLz5D8GVG4IQ1BPzMoC6ozXZpqhjTFjLKD5WD0CRGIs77FEan
-         FOe8RyzXm9KW0AGwoHWnNrrWDPUHYGWVaZ5Bus07gZdkwKGo4EzAAN+lgLOrfaTj/NT6
-         LGAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718263981; x=1718868781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0C8KlVl3OW2PC2dRMHxIiA4eTV9+V+jwqso0xqeA27M=;
-        b=ImfxH/iV8byceaebq9rb6bgVoQpZpA/lsQBhTVlR5jl+9mRTLnLvHgvYv9K0e3ejuD
-         Umr0iKXMX5KkG5qASV+TCM6mdycCDl16RuUNFbKGemzouCOr9C3lxA7f/4qsWRf3siPH
-         u2Ki9QgQLnm6mb3Eqh1v8dpp2inUWDr97E+0n0knaeH6NuuZP7mFe6xNqJRvq7/HUE72
-         8Cb3+lmtPn8IDL2uBhd4POcllWoIaqzeioZaxPQpWkZhBhuM8txs+uV72fAkA6BzmcXl
-         ZPhdFX/xUBktml/SFMR0Uy+XsBsWo/yJDg9zGCPfJtK4x8sDYKUTe+jS5hkxrd9ZZGZn
-         pZfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuJqUiS4DRlmelmlorRhk6GMlJmOMPAcVXj2FRTWtlJHbzWp0DROcWl1uq/MyHZT/iLyIIZOw8g20E32LEwzk02f00Tr1afI11gh0=
-X-Gm-Message-State: AOJu0YwnXtYJeDfEVESc3nnbhQH7t2YL62KwWh1xjLxD4fl8GMYzi1x0
-	Wcsc+0ctMiP9K3klbt5SyFHkse7q5d2cXQCWnj9FsEaxw0D6ijymyMaQBRhEqxOAXJuqHZbAPt5
-	7ZjIrIownvgy1Cqwj0U2n2PUboHw=
-X-Google-Smtp-Source: AGHT+IFSH1cz0gSocHoAg6tJNJ81lHTAApuUDBHX24yt9xXwpzJmO/R+w9fb+7XIYxSNcZJCRE4jhgyWvCzsdILNpcI=
-X-Received: by 2002:a2e:878f:0:b0:2eb:ecba:444a with SMTP id
- 38308e7fff4ca-2ebfc9fac80mr21389571fa.23.1718263980494; Thu, 13 Jun 2024
- 00:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="adOEAd6b"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Zjr+VSpN2YOV8SzNhgW0HxlJxurFf1+bVKCUe+pa/6g=;
+	t=1718264926; x=1718696926; b=adOEAd6bDO6WKtWHJJi5tI9lzcYLhC471j1AST0wa6gVTKx
+	OKHtZYCuNQ7vPSTgj5XU8PDSe/fI69n9lfVP1tcf4T93yoPzMEsgaG9mLMrxdJRn3SagALtFgrlCB
+	d6qAaOO/Mfi+2b07aWUciVxo15Ok5q5kxp3+o5EY6R+FrFUVMjwu7NdCsXH2jVX/HTb9nc5NyMaNp
+	m8ECo0Nbk7MqRLSB8xjCAF+a0TM8u94QzLIdNUPGaOzosQsou5Z4TZTinQRFigXcnWK+A6/DHpVjX
+	HGertUroJY3FxP5J3S2oL8fpZR+pIMT1TcvE1D0F3+eta0XShJ+JXGWeWIgkkKsw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHfCL-0007aF-Hm; Thu, 13 Jun 2024 09:48:41 +0200
+Message-ID: <d1a2072c-e558-418c-a3b0-280d9be0e8f3@leemhuis.info>
+Date: Thu, 13 Jun 2024 09:48:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+To: =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?= <digirigawa@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240527183139.42b6123c@rorschach.local.home>
+ <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+ <20240527183139.42b6123c@rorschach.local.home>
  <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
- <20240528144743.149e351b@rorschach.local.home> <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
- <20240529144757.79d09eeb@rorschach.local.home> <20240529154824.2db8133a@rorschach.local.home>
+ <20240528144743.149e351b@rorschach.local.home>
+ <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+ <20240529144757.79d09eeb@rorschach.local.home>
+ <20240529154824.2db8133a@rorschach.local.home>
  <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
- <20240530095953.0020dff9@rorschach.local.home> <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
- <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info> <20240612115612.2e5f4b34@rorschach.local.home>
-In-Reply-To: <20240612115612.2e5f4b34@rorschach.local.home>
-From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Date: Thu, 13 Jun 2024 10:32:24 +0300
-Message-ID: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <20240530095953.0020dff9@rorschach.local.home>
+ <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+ <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+ <20240612115612.2e5f4b34@rorschach.local.home>
+ <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718264926;2021880b;
+X-HE-SMSGID: 1sHfCL-0007aF-Hm
 
-ok, so if you don't have any idea where this bug is after those debug
-patches, I'll try to find some time to bisect it as a last resort.
-Stay tuned.
+On 13.06.24 09:32, Ilkka Naulapää wrote:
+> On Wed, Jun 12, 2024 at 6:56 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>> On Wed, 12 Jun 2024 15:36:22 +0200
+>> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+>>>
+>>> Ilkka or Steven, what happened to this? This thread looks stalled. I
+>>> also was unsuccessful when looking for other threads related to this
+>>> report or the culprit. Did it fall through the cracks or am I missing
+>>> something here?
+>
+>> Honesty, I have no idea where the bug is. I can't reproduce it. [...]
 
---Ilkka
+Steven, thx for the update! And yeah, that's how it sometimes is. Given
+that we haven't seen similar reports (at least afaics) it's nothing I
+worry much about.
 
-On Wed, Jun 12, 2024 at 6:56=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Wed, 12 Jun 2024 15:36:22 +0200
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.inf=
-o> wrote:
->
-> > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> > for once, to make this easily accessible to everyone.
-> >
-> > Ilkka or Steven, what happened to this? This thread looks stalled. I
-> > also was unsuccessful when looking for other threads related to this
-> > report or the culprit. Did it fall through the cracks or am I missing
-> > something here?
->
-> Honesty, I have no idea where the bug is. I can't reproduce it. These
-> patches I sent would check all the places that add to the list to make
-> sure the proper trace_inode was being added, and the output shows that
-> they are all correct. Then suddenly, something that came from the
-> inode cache is calling the tracefs inode cache to free it, and that's
-> where the bug is happening.
->
-> This really looks like another bug that the recent changes have made
-> more predominate.
->
-> -- Steve
->
->
-> >
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> >
-> > #regzbot poke
-> >
-> > On 02.06.24 09:32, Ilkka Naulap=C3=A4=C3=A4 wrote:
-> > > sorry longer delay, been a bit busy but here is the result from that
-> > > new patch. Only applied this patch so if the previous one is needed
-> > > also, let me know and I'll rerun it.
-> > >
-> > > --Ilkka
-> > >
-> > > On Thu, May 30, 2024 at 5:00=E2=80=AFPM Steven Rostedt <rostedt@goodm=
-is.org> wrote:
-> > >>
-> > >> On Thu, 30 May 2024 16:02:37 +0300
-> > >> Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
-> > >>
-> > >>> applied your patch and here's the output.
-> > >>>
-> > >>
-> > >> Unfortunately, it doesn't give me any new information. I added one m=
-ore
-> > >> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
-> > >>
-> > >> -- Steve
-> > >>
-> > >> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> > >> index de5b72216b1a..a090495e78c9 100644
-> > >> --- a/fs/tracefs/inode.c
-> > >> +++ b/fs/tracefs/inode.c
-> > >> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct =
-super_block *sb)
-> > >>                 return NULL;
-> > >>
-> > >>         ti->flags =3D 0;
-> > >> +       ti->magic =3D 20240823;
-> > >>
-> > >>         return &ti->vfs_inode;
-> > >>  }
-> > >>
-> > >>  static void tracefs_free_inode(struct inode *inode)
-> > >>  {
-> > >> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
-> > >> +       struct tracefs_inode *ti =3D get_tracefs(inode);
-> > >> +
-> > >> +       BUG_ON(ti->magic !=3D 20240823);
-> > >> +       kmem_cache_free(tracefs_inode_cachep, ti);
-> > >>  }
-> > >>
-> > >>  static ssize_t default_read_file(struct file *file, char __user *bu=
-f,
-> > >> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_di=
-r_inode_operations =3D {
-> > >>         .rmdir          =3D tracefs_syscall_rmdir,
-> > >>  };
-> > >>
-> > >> -struct inode *tracefs_get_inode(struct super_block *sb)
-> > >> -{
-> > >> -       struct inode *inode =3D new_inode(sb);
-> > >> -       if (inode) {
-> > >> -               inode->i_ino =3D get_next_ino();
-> > >> -               inode->i_atime =3D inode->i_mtime =3D inode_set_ctim=
-e_current(inode);
-> > >> -       }
-> > >> -       return inode;
-> > >> -}
-> > >> -
-> > >>  struct tracefs_mount_opts {
-> > >>         kuid_t uid;
-> > >>         kgid_t gid;
-> > >> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *d=
-entry, struct inode *inode)
-> > >>                 return;
-> > >>
-> > >>         ti =3D get_tracefs(inode);
-> > >> +       BUG_ON(ti->magic !=3D 20240823);
-> > >>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
-> > >>                 eventfs_set_ef_status_free(dentry);
-> > >>         iput(inode);
-> > >> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dent=
-ry *dentry)
-> > >>         return dentry;
-> > >>  }
-> > >>
-> > >> +struct inode *tracefs_get_inode(struct super_block *sb)
-> > >> +{
-> > >> +       struct inode *inode =3D new_inode(sb);
-> > >> +
-> > >> +       BUG_ON(sb->s_op !=3D &tracefs_super_operations);
-> > >> +       if (inode) {
-> > >> +               inode->i_ino =3D get_next_ino();
-> > >> +               inode->i_atime =3D inode->i_mtime =3D inode_set_ctim=
-e_current(inode);
-> > >> +       }
-> > >> +       return inode;
-> > >> +}
-> > >> +
-> > >>  /**
-> > >>   * tracefs_create_file - create a file in the tracefs filesystem
-> > >>   * @name: a pointer to a string containing the name of the file to =
-create.
-> > >> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-> > >> index 69c2b1d87c46..9059b8b11bb6 100644
-> > >> --- a/fs/tracefs/internal.h
-> > >> +++ b/fs/tracefs/internal.h
-> > >> @@ -9,12 +9,15 @@ enum {
-> > >>  struct tracefs_inode {
-> > >>         unsigned long           flags;
-> > >>         void                    *private;
-> > >> +       unsigned long           magic;
-> > >>         struct inode            vfs_inode;
-> > >>  };
-> > >>
-> > >>  static inline struct tracefs_inode *get_tracefs(const struct inode =
-*inode)
-> > >>  {
-> > >> -       return container_of(inode, struct tracefs_inode, vfs_inode);
-> > >> +       struct tracefs_inode *ti =3D container_of(inode, struct trac=
-efs_inode, vfs_inode);
-> > >> +       BUG_ON(ti->magic !=3D 20240823);
-> > >> +       return ti;
-> > >>  }
-> > >>
-> > >>  struct dentry *tracefs_start_creating(const char *name, struct dent=
-ry *parent);
->
+> ok, so if you don't have any idea where this bug is after those debug
+> patches, I'll try to find some time to bisect it as a last resort.
+> Stay tuned.
+
+Yeah, that would be great help. Thank you, too!
+
+Ciao, Thorsten
+
+>>> On 02.06.24 09:32, Ilkka Naulapää wrote:
+>>>> sorry longer delay, been a bit busy but here is the result from that
+>>>> new patch. Only applied this patch so if the previous one is needed
+>>>> also, let me know and I'll rerun it.
+>>>>
+>>>> --Ilkka
+>>>>
+>>>> On Thu, May 30, 2024 at 5:00 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>>>>>
+>>>>> On Thu, 30 May 2024 16:02:37 +0300
+>>>>> Ilkka Naulapää <digirigawa@gmail.com> wrote:
+>>>>>
+>>>>>> applied your patch and here's the output.
+>>>>>>
+>>>>>
+>>>>> Unfortunately, it doesn't give me any new information. I added one more
+>>>>> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
+>>>>>
+>>>>> -- Steve
+>>>>>
+>>>>> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+>>>>> index de5b72216b1a..a090495e78c9 100644
+>>>>> --- a/fs/tracefs/inode.c
+>>>>> +++ b/fs/tracefs/inode.c
+>>>>> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+>>>>>                 return NULL;
+>>>>>
+>>>>>         ti->flags = 0;
+>>>>> +       ti->magic = 20240823;
+>>>>>
+>>>>>         return &ti->vfs_inode;
+>>>>>  }
+>>>>>
+>>>>>  static void tracefs_free_inode(struct inode *inode)
+>>>>>  {
+>>>>> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
+>>>>> +       struct tracefs_inode *ti = get_tracefs(inode);
+>>>>> +
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>> +       kmem_cache_free(tracefs_inode_cachep, ti);
+>>>>>  }
+>>>>>
+>>>>>  static ssize_t default_read_file(struct file *file, char __user *buf,
+>>>>> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
+>>>>>         .rmdir          = tracefs_syscall_rmdir,
+>>>>>  };
+>>>>>
+>>>>> -struct inode *tracefs_get_inode(struct super_block *sb)
+>>>>> -{
+>>>>> -       struct inode *inode = new_inode(sb);
+>>>>> -       if (inode) {
+>>>>> -               inode->i_ino = get_next_ino();
+>>>>> -               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+>>>>> -       }
+>>>>> -       return inode;
+>>>>> -}
+>>>>> -
+>>>>>  struct tracefs_mount_opts {
+>>>>>         kuid_t uid;
+>>>>>         kgid_t gid;
+>>>>> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
+>>>>>                 return;
+>>>>>
+>>>>>         ti = get_tracefs(inode);
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
+>>>>>                 eventfs_set_ef_status_free(dentry);
+>>>>>         iput(inode);
+>>>>> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
+>>>>>         return dentry;
+>>>>>  }
+>>>>>
+>>>>> +struct inode *tracefs_get_inode(struct super_block *sb)
+>>>>> +{
+>>>>> +       struct inode *inode = new_inode(sb);
+>>>>> +
+>>>>> +       BUG_ON(sb->s_op != &tracefs_super_operations);
+>>>>> +       if (inode) {
+>>>>> +               inode->i_ino = get_next_ino();
+>>>>> +               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+>>>>> +       }
+>>>>> +       return inode;
+>>>>> +}
+>>>>> +
+>>>>>  /**
+>>>>>   * tracefs_create_file - create a file in the tracefs filesystem
+>>>>>   * @name: a pointer to a string containing the name of the file to create.
+>>>>> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+>>>>> index 69c2b1d87c46..9059b8b11bb6 100644
+>>>>> --- a/fs/tracefs/internal.h
+>>>>> +++ b/fs/tracefs/internal.h
+>>>>> @@ -9,12 +9,15 @@ enum {
+>>>>>  struct tracefs_inode {
+>>>>>         unsigned long           flags;
+>>>>>         void                    *private;
+>>>>> +       unsigned long           magic;
+>>>>>         struct inode            vfs_inode;
+>>>>>  };
+>>>>>
+>>>>>  static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+>>>>>  {
+>>>>> -       return container_of(inode, struct tracefs_inode, vfs_inode);
+>>>>> +       struct tracefs_inode *ti = container_of(inode, struct tracefs_inode, vfs_inode);
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>> +       return ti;
+>>>>>  }
+>>>>>
+>>>>>  struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+>>
+> 
+> 
