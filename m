@@ -1,107 +1,84 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7051F142E73
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 11:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4031448EB;
+	Thu, 13 Jun 2024 11:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718276698; cv=none; b=ubm5UFZytAFGpui+DSsPOXE6eriWKIj6f7csS0yjhpadb7fxagfnSEWIEJq70iWNuXxblD7CL8v+z/MronPhQ1W+8Eb4EsTXURR8UTrBLhmci3rfSmLaMKWEXEdhDLdIVlXvoqh4p12BjkWAa3nxQK+bJj+zWYa3DnCLGYEz4Vk=
+	t=1718279079; cv=none; b=pUmAHrFc93UC4OmgzpIHSkjx7t5kCAvp0uBVtcBcJfSCSIgsJiDZuuvSqurBuH2XbnNMjwd6/AvLXsSQo0viX1HuGxMuElUXLT4b10VrKNY1KvgJcpZrsLmm21oTW5u+YgWNX/c3FxENPuL1picMk3cqAYxvADxbbVqKPMblhmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718276698; c=relaxed/simple;
-	bh=QSVxZIE5HRdX2PZ65tmi5cZl1eXGEGpB1NH67xGpsZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KEs+Cm/cCpQZG7RyR8cqL9YW3RLibfNcl7k9lc52Y3bo0Rc8t4EKwBriWubwefT7KguqEm89lqEEbnHg20ZyOP0laanZwEJvSr1BqSiduc5CC4OiU6sPnMAqXz3wERpp4YXK8vVYZAXGO7fGIxjDCZCg/bk6qEWnfj2NpL5dONM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FWVLNwpR; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1718279079; c=relaxed/simple;
+	bh=2n+TNIHW7fyXz94EhLnmhhZsaSuYkTN3hTj+I+VmNYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jFMtIAwoVnQKrPEhzOXpAlL8X3TSTOL1/yHNSJ+GP73ntRGNF/KWuX9zPtXgAPkN9N+pGbyUrquXCPKf/efcA32AyYwx6gJEwODAQIXW+fPNMwjtq38tLyjVQVdTh98m3/sVu6nA6XKkkaMNM/TG0eaDoxcLWpQ/fdaJCV/WFbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cdN5nyZG; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FWVLNwpR"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 6CDE91C009C; Thu, 13 Jun 2024 13:04:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1718276694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JPFN6Dd+Rb4MFGhC14cx0oFBxuxBrErNFRFfqvuYr6Y=;
-	b=FWVLNwpRYJz6JPKdKp05j+vw9IFSV46i5t7cDqge8Gm+jo/bHVQwN/+/HpTq6oWpkMc9Bl
-	3zVPTNBd/i7setkhVqPdBZW4+lHKlX4E25W9tfN4+8N4dTj9CGumwDQNL1sg25+dJxDM79
-	WY0qpEnvpew5YRwCke7bmyoDqKKvrbQ=
-Date: Thu, 13 Jun 2024 13:04:53 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: David Wang <00107082@163.com>, regressions@lists.linux.dev
-Cc: sivanich@hpe.com, kevin.tian@intel.com, baolu.lu@linux.intel.co,
-	jroedel@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [Regression] 6.10-rc1: Fail to resurrect from suspend.
-Message-ID: <ZmrSVax+fzXNKyiq@duo.ucw.cz>
-References: <20240530114907.4836-1-00107082@163.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cdN5nyZG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=yFzarZ08c6f35rJCPnIaJIVfFjDEHxsEXnJtD6p8xVQ=;
+	t=1718279077; x=1718711077; b=cdN5nyZG392kRcHgUNiDXM7s6JQ1k1g5ubbz/p9NhbSMq8K
+	8hAgXRQl1KGB7s5Ei+bzawwVZauM+QfxvQmc8Hqtcoik+LYNo8AYo94vRn3+1PE7RSoHt+FJ8fnr2
+	n36QaH1HiPnKhsZouauSv5nR97ZZbRuPqg1lwowQCt1DBxePsY6NTrpn0d8bfKomHBMx2sQLdi/Rl
+	FyBaSDwp/m2QkJBHFGL6cBea8TCoJKaoKnKCnresz9pjI8OC0KEXi7zuE8GkllCnFSUYV++4K8t2/
+	qn9fVgrohvPxC1FF2ifq968vfeQmoGUsjuhOkNHt1LolPuN5U4BgdXvSe17YLoWg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHisa-0002dB-Er; Thu, 13 Jun 2024 13:44:32 +0200
+Message-ID: <48832f23-7593-4bc5-875b-83462a603949@leemhuis.info>
+Date: Thu, 13 Jun 2024 13:44:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zPE+q47d1Rs+wmMB"
-Content-Disposition: inline
-In-Reply-To: <20240530114907.4836-1-00107082@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] 6.10-rc1: Fail to resurrect from suspend.
+To: Pavel Machek <pavel@ucw.cz>, David Wang <00107082@163.com>,
+ regressions@lists.linux.dev
+Cc: sivanich@hpe.com, kevin.tian@intel.com, baolu.lu@linux.intel.co,
+ jroedel@suse.de, linux-kernel@vger.kernel.org
+References: <20240530114907.4836-1-00107082@163.com>
+ <ZmrSVax+fzXNKyiq@duo.ucw.cz>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZmrSVax+fzXNKyiq@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718279077;3b71a3fd;
+X-HE-SMSGID: 1sHisa-0002dB-Er
 
+On 13.06.24 13:04, Pavel Machek wrote:
+>> My system fails to resurrect after `systemctl suspend` with 6.10-rc1,
+>> when pressing power button, the machine "sounds" starting(fans roaring),
+>> but my keyboard/mouse/monitor is not powered, and I have nothing to
+>> do but powering cycle the system.
+>>
+>> I run a bisect session, and narrows it down to following commit:
+>>
+>> 	commit d74169ceb0d2e32438946a2f1f9fc8c803304bd6
+>> 	Author: Dimitri Sivanich <sivanich@hpe.com>
+>> 	Date:   Wed Apr 24 15:16:29 2024 +0800
+>>
+>> 	    iommu/vt-d: Allocate DMAR fault interrupts locally
+>> 	    
+> [...]
+>> And I have confirmed that reverting this commit can fix my problem.
+> 
+> Bisected regression. Should we simply revert the patch?
 
---zPE+q47d1Rs+wmMB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No need to afaics, as this afaics is fixed by "iommu/amd: Fix panic
+accessing amd_iommu_enable_faulting" which Joerg committed earlier today.
 
-Hi!
+https://lore.kernel.org/all/ZljHE%2FR4KLzGU6vx@hpe.com/
+https://lore.kernel.org/all/31f16e4e.afe2.18fc9d5dad0.Coremail.00107082@163.com/
 
-> My system fails to resurrect after `systemctl suspend` with 6.10-rc1,
-> when pressing power button, the machine "sounds" starting(fans roaring),
-> but my keyboard/mouse/monitor is not powered, and I have nothing to
-> do but powering cycle the system.
->=20
-> I run a bisect session, and narrows it down to following commit:
->=20
-> 	commit d74169ceb0d2e32438946a2f1f9fc8c803304bd6
-> 	Author: Dimitri Sivanich <sivanich@hpe.com>
-> 	Date:   Wed Apr 24 15:16:29 2024 +0800
->=20
-> 	    iommu/vt-d: Allocate DMAR fault interrupts locally
-> 	   =20
-> 	    The Intel IOMMU code currently tries to allocate all DMAR fault inte=
-rrupt
-> 	    vectors on the boot cpu.  On large systems with high DMAR counts this
-> 	    results in vector exhaustion, and most of the vectors are not initia=
-lly
-> 	    allocated socket local.
-> 	   =20
-> 	    Instead, have a cpu on each node do the vector allocation for the DM=
-ARs on
-> 	    that node.  The boot cpu still does the allocation for its node duri=
-ng its
-> 	    boot sequence.
-> 	   =20
-> 	    Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
-> 	    Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> 	    Link: https://lore.kernel.org/r/Zfydpp2Hm+as16TY@hpe.com
-> 	    Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> 	    Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> =20
-> And I have confirmed that reverting this commit can fix my problem.
-
-Bisected regression. Should we simply revert the patch?
-
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---zPE+q47d1Rs+wmMB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZmrSVQAKCRAw5/Bqldv6
-8ki+AJ9/bBY1k8ENQVWi+6+PKUSm2tkMyQCgoBbM80fLpif/6CObXI7quPCcmd0=
-=i6Pf
------END PGP SIGNATURE-----
-
---zPE+q47d1Rs+wmMB--
+Ciao, Thorsten
