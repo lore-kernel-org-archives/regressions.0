@@ -1,145 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9394313F44D;
-	Thu, 13 Jun 2024 08:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F18140E23
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 09:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267374; cv=none; b=i+UFXIBaJrdmy7tDhA1OJt/XKPPOvxnUSwQWjfO14xlXbAuSXd+2pzfgaYUEdBZENG6SMVuS+qfkKzc+9URarCvUQo8TXPQWiNNB+NrdOHaMP6QnPkHoQ5l+R1+gajlOKeVGlbph0FU/gfkh9sEqjqwPVFZH5Y53yXsqekJ4nVA=
+	t=1718272261; cv=none; b=KFd8ZG9C0GyebgyVBzOakx56+exqa1er6wcgYHFlPOzPFl11k6NMeADAseC5U6ytaYPgT/Oj2pOFBI+Y0JUuEYhQ+mgwRVDxHuz0KqUGF3Q5KZACPTAncygbYRpxHasmVWlZ1ch5zBGys7wwFaJ4+W+f5w63h+tqcy+RIvIE3kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267374; c=relaxed/simple;
-	bh=l4N3XZH/Lyc04zGUdvrDCw6fJqQjm5MgxchR1YGkeRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JPXS5dzSSBw8VGkcmFCq8pj1hD54gD1iRqLqHsHIpCT+OuTcxh3hDUQD2av/gApRkCQuk9i6VqMYfhB25et1cNpoU3h/7HW7F9tsTa0Wb8UWww7e6S8P7sOFpOVSgvPpzS/Th691WMJ6evPE3wj1dkiN+BN23/bYEmnYtJttG/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgoYzJV/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718272261; c=relaxed/simple;
+	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dxq9czCkXUNoQVEaeBDzEae8DcrK6ppZFngxlwLa1dwPTm2aSx01GWqXXdJV7Dy6FLONXhdH4ajy+I2HjZLsho1SAoPYogsFUdnsuOccBM3DlTX0LkiaSjxprNqDKQEA61PShk27veKXjS+cu5boQJ7oAc30XfJDiJS97RO4sUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVUcNJAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgoYzJV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6193C2BBFC;
-	Thu, 13 Jun 2024 08:29:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVUcNJAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C74C4AF50
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 09:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718267374;
-	bh=l4N3XZH/Lyc04zGUdvrDCw6fJqQjm5MgxchR1YGkeRs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AgoYzJV/XYhFcenw/J0LJ1afv7x5NXorTpp6unPhJyL7X8JFUxKkr8ypteePygtlk
-	 4iB5q6LplWWeGzSXYRt6xgJzmqyoiy+TvYClXzw+tE0HOmRrnjePn8SE3Ry+BwJSBM
-	 4iOj1DbuMB3YiGG5mdEqTOnf6F2fYYfj6b+kXePo69HMudb9w2eayMV6haahdh65u+
-	 pHRFghIbSAkAwY9LS1CN54iviA/hYy8D+3sQb3ssDnTNEWVi1r9c0R3JXVAJP4H5X2
-	 JrLRUgwaRcU8n3wTSGMjnje9d3O2k7Clay1JcuHX/pxU31kixxb7UBLD7a0fd4SHI3
-	 mCT0gkOcHjubg==
-Message-ID: <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
-Date: Thu, 13 Jun 2024 17:29:31 +0900
+	s=k20201202; t=1718272261;
+	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RVUcNJANurLX6qKW3W2xf6Fl4wZYNeNxn7+iw/2c4zp+OVda5WkTyj/41ummI67UZ
+	 Ud8ChBUTEDR0WQBxQeWf9uDUv9tplmGh/y+r2RFJT6XmSYbXho2hxiAg7JA49uj8l1
+	 evis/bFksYao+zUPUJYcW1HBigOmKlFfm5k+gucc4Xfp0hPvZAXEQFg/O0lvQRiNA1
+	 po1Dfo9GJvDuLjzVLmeuYruiATe2PEs+mbrAYE24sCqvMeaC53qLgtoAI2jnn0lnoW
+	 2hdmxd1NVeO9UR+32gNQwc8uLACi8So5g5+gE9gGcNho89lZg8xzuws/IfvItRNZ0X
+	 tocH7TK9zapvA==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b335681e82so51738eaf.2
+        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 02:51:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVlbX8rmTW9RSgyWU6O7PCxNT/MJ8fmKrXQActatvOo7Qvds8GCggxgmkvkdz4EqrUmOnChNiF0Oj6pjOpXakSpwMk3b+jd8Uqgd10=
+X-Gm-Message-State: AOJu0YyIaHCAvhLoKkTWyz5IsCse3RXq1XY3fB9G8NBrZscW0bvuBfjs
+	TOqKaUHdD3rilvOTYLUeIzqvcspN2qnZQqyCBVynjoQ4e/3/IHSeM6bhNVxJRX0EfIwnwa7PvXv
+	zvnf2HGo+qG2C6A8i0wqNYxtrQFk=
+X-Google-Smtp-Source: AGHT+IEcaBEAG1NmWL/I9RS0vHUxgrV83BuKZJ+zxf4O57zYlHmYtUHwc4Z7TBN+zb6NrRmrRDwkdL+RKuRXm9EHD20=
+X-Received: by 2002:a05:6820:2c86:b0:5aa:3e4f:f01e with SMTP id
+ 006d021491bc7-5bb3b9c614cmr4555004eaf.1.1718272260335; Thu, 13 Jun 2024
+ 02:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
- port
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Niklas Cassel <cassel@kernel.org>
-Cc: Werner Fischer <devlists@wefi.net>, Daniel Drake <drake@endlessos.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jian-Hong Pan <jhp@endlessos.org>, Dieter Mummenschanz
- <dmummenschanz@web.de>, Mario Limonciello <mario.limonciello@amd.com>,
- linux-ide@vger.kernel.org, regressions@lists.linux.dev
-References: <20240206211352.1664816-1-cassel@kernel.org>
- <20240206211352.1664816-3-cassel@kernel.org>
- <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
+ <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
+ <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com> <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
+In-Reply-To: <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 13 Jun 2024 11:50:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
+Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/13/24 15:34, Thomas Weißschuh wrote:
-> Hi everbody,
-> 
-> On 2024-02-06 22:13:43+0000, Niklas Cassel wrote:
->> A hotplug capable port is an external port, so mark it as such.
->>
->> We even say this ourselves in libata-scsi.c:
->> /* set scsi removable (RMB) bit per ata bit, or if the
->>  * AHCI port says it's external (Hotplug-capable, eSATA).
->>  */
->>
->> This also matches the terminology used in AHCI 1.3.1
->> (the keyword to search for is "externally accessible").
->>
->> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
->> Signed-off-by: Niklas Cassel <cassel@kernel.org>
->> ---
->>  drivers/ata/ahci.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
->> index aa58ce615e79..4d3ec6d15ad1 100644
->> --- a/drivers/ata/ahci.c
->> +++ b/drivers/ata/ahci.c
->> @@ -1648,9 +1648,10 @@ static void ahci_mark_external_port(struct ata_port *ap)
->>  	void __iomem *port_mmio = ahci_port_base(ap);
->>  	u32 tmp;
->>  
->> -	/* mark esata ports */
->> +	/* mark external ports (hotplug-capable, eSATA) */
->>  	tmp = readl(port_mmio + PORT_CMD);
->> -	if ((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS))
->> +	if (((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS)) ||
->> +	    (tmp & PORT_CMD_HPCP))
->>  		ap->pflags |= ATA_PFLAG_EXTERNAL;
->>  }
-> 
-> This seems to introduce a userspace regression.
-> 
-> GNOME/udisks are now automounting internal disks, which they didn't before.
-> See [0], [1], [2]
-> 
-> ATA_PFLAG_EXTERNAL is translated into GENHD_FL_REMOVABLE.
-> (Through ata_scsiop_inq_std(), scsi_add_lun(), sd_probe())
-> 
-> But GENHD_FL_REMOVABLE is not meant for hotpluggable devices but for
-> media-changable devices (See its description in include/linux/blkdev.h).
-> 
-> To indicate hotplug, dev_set_removable() is to be used.
-> 
-> (Both end up in "removable" sysfs attributes, but these have different
-> semantics...)
+Hi Sakari,
 
-This should take care of the issue.
+On Wed, Jun 12, 2024 at 10:17=E2=80=AFPM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Hans,
+>
+> On Wed, Jun 12, 2024 at 04:30:30PM +0200, Hans de Goede wrote:
+> > Sakari I know you have been pushing for MIPI camera descriptions under
+> > ACPI to move to a standardized format and I can see how that is a good
+> > thing, but atm it seems to mainly cause things to break and before
+> > the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
+> > since the information used by the ipu-bridge code does seem to be corre=
+ct.
+>
+> Support for capturing from cameras on IPU6 systems (IPU6 ISYS driver and
+> IPU bridge changes) was upstreamed for 6.10, with some drivers such as IV=
+SC
+> (four of them) and IVSC related IPU bridge changes merged for 6.8 already=
+.
+>
+> We can't guarantee the continued functioning of downstream drivers in cas=
+es
+> where new upstream drivers for the same devices get merged to the kernel,
+> often with different APIs. You know that as well as I do.
+>
+> In other words, there was no regression with respect to the upstream
+> kernel.
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 37ded3875ea3..170ed47ef74a 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1912,11 +1912,8 @@ static unsigned int ata_scsiop_inq_std(struct
-ata_scsi_args *args, u8 *rbuf)
-                2
-        };
+Users' opinions on this may differ I suppose.
 
--       /* set scsi removable (RMB) bit per ata bit, or if the
--        * AHCI port says it's external (Hotplug-capable, eSATA).
--        */
--       if (ata_id_removable(args->id) ||
--           (args->dev->link->ap->pflags & ATA_PFLAG_EXTERNAL))
-+       /* Set scsi removable (RMB) bit per ata bit. */
-+       if (ata_id_removable(args->id))
-                hdr[1] |= (1 << 7);
+If a user sees a new kernel warning on boot, they will easily count it
+as a regression, and with panic_on_warn this becomes a full-fledged
+kernel crash.
 
-        if (args->dev->class == ATA_DEV_ZAC) {
-
-BUT, need to check what SAT & SATA-IO have to say about this.
-
-> 
-> #regzbot introduced: 45b96d65ec68f625ad26ee16d2f556e29f715005
-> 
-> [0] https://bbs.archlinux.org/viewtopic.php?id=295958
-> [1] https://github.com/storaged-project/udisks/issues/1282
-> [2] https://github.com/util-linux/util-linux/issues/3088
-> 
-
--- 
-Damien Le Moal
-Western Digital Research
-
+This is bad, even though it may be coming from a new driver strictly speaki=
+ng.
