@@ -1,102 +1,142 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71297142654
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 12:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CBA1411C5
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 12:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718282615; cv=none; b=Zz27CAQL7YJJgdCZEN2qrKAzT5SUSH5Ubxo3+sztjz7FCDUgubWp6w8eD3bPZL8twa0V2GWi77rBvAdAcYBiFqWVWH3DFA1aX7EgKWIvss058DLWfsj4pyhyumRGlmWKBZdF0uugL2cfyvFyxxPBrCtK5gU7WpdnEU4Bg9tOgKw=
+	t=1718283386; cv=none; b=u1Bh1rz4WQYRFlZKiKgTzRge/x8SxUBL1L7Q10SZeWkaF+xMXMb0y/CoWp8cAeM1bA8/qtfPgtAsZ8yWrEDdiVlFLuzq3z/82Feiz8sIrVnOSgtPl+BHJAY6gS/WKKYixeu6vT4qVqDWkKhp6aLt1RccigeaS9OHJDo7MGiidAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718282615; c=relaxed/simple;
-	bh=9vhByrYTddCz5w69wCkBjEj1ybXh+NO+Xa1LhTP6Elw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cYtrM4qm9ebfxpLNZpUUopp0AkPq3QD6zvYyteQyK5vJDiVILJ22jloVLZZPAd8HNDBoAWbc7BIAlCTDR6kcOH35fN/Q+HOieA80fMJxdz8I205VWIUTBRd7VotH5akPj/JvphiEuNtCyMr0fVSRrATSq7Htk0KRdUB6lfSJcA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M1T5Qk6m; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718283386; c=relaxed/simple;
+	bh=PErDpwfSF06g3WVkwUq8fQ1sTFQVPl9LaAOByMCr+so=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k70ropEVd9gqRKKJRA9C0mjJnM/bV884axxzWXqXQg7nOqws9Il7dENYedltNf3XJ+s9AkT5abtOssI02xjmxffvKvjNiwN+7gJhdZJXbQA3tWqpTTKPbk7H5ZuWrGlJNhG/Gjh8Jnyhb/4vCyH7RHQImoeg09z6XxZfjKMb6Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gGo7rrIp; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M1T5Qk6m"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4eb5ea8dba6so291094e0c.0
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 05:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718282612; x=1718887412; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r/LfTxCOrGd7G5G1GEt1IaEmUTPInNVaJpu9fMewn5A=;
-        b=M1T5Qk6mfNh0DX2YR4PDkztLAJMvwWA0bJ/bl3ZaIAlITxO+QotulrrJ0hkffDlYXp
-         6zJ7Rp/Ogz3QyB/D36oFGyuH5yPGUQbTZKyiAeerIK3owoUlnKheDRCO3MT479NsK6fb
-         rqZ2JyNehN812K0oB5ntYGkAKRm23q8nHE21FfP7gRDFpUhlR/fC6IQY8wPxXqdk+Ove
-         PAV8dFduJpPkY4Z4AVXbEN3IoJUcZzHO48qF77Me8RqgqZAKpxc8/8lk/ZyInQzoNOp2
-         2je6xOaKOM31wAPiPPOIGjq0rZ3e2zpXRlvAZLuAowTgxCE1l+SgiUDkqsGogxs8RfKD
-         ZAWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718282612; x=1718887412;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r/LfTxCOrGd7G5G1GEt1IaEmUTPInNVaJpu9fMewn5A=;
-        b=clSWOzQHjjPXLl/TnhpSnolbSSJKRAP65BwUnpjNvfQXmQnFik7tUD8CI7tLCAmGGx
-         lCclnC9RDxvKA+cNYEy4We5v6smCIkliWhUw8QmyCSsyhl/VVu1y5pqIQYlYnPAfrZSx
-         vr4GWiT6+nn4keo3medM6Zo8XVruyeD0pD9egQ2IOPwKLChTn/SBrCIxqspq4pOMSpo+
-         4rEfInriSuTWHNcDnQFF2D2IE2zDWYnP6hLTijGqmlOF5SWQxg+tfD8k4Wq+lEubg0Wz
-         agzNjWHmLmv6LXolcyLqR3cbqOkKq439f8omiwIhcAl7caesUzA21xDFVtC9cIW335FR
-         Z6Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlauQ6my1AVVeYjv/Jjtc5Qv4TTBKmPotFXT/4jUsrnAg9pU4UQ3750hRcFeMHK+R1bLiPu1wD/gwmDEyjjrriKIhf5G2uhOibTN0=
-X-Gm-Message-State: AOJu0YxlqCeP0GxSquEWlcVOWmJmnjgknvR9hDwOunjC5+mlNunQzCgK
-	qP2Lk37H0d8kb6v8WsJvkOCSgsFiAUNTrmwHOhCGQX6jD4JnvlekaSiNpkWNg+LFfabhgGQMJhw
-	vfHQpQjCf3m/HQism8U1k2wlCndprhQuhdT0ccg==
-X-Google-Smtp-Source: AGHT+IE1yzoIiBI1Uass7Fh36Cfm7FBqITloTOhLEjBJOxttNrRWFltwQCAkGGTWxxFwSvpyp4qmtBdDb528xiWr3+U=
-X-Received: by 2002:a05:6122:324:b0:4ec:f175:8703 with SMTP id
- 71dfb90a1353d-4ed077296c4mr4733182e0c.0.1718282610792; Thu, 13 Jun 2024
- 05:43:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gGo7rrIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718283380;
+	bh=PErDpwfSF06g3WVkwUq8fQ1sTFQVPl9LaAOByMCr+so=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gGo7rrIp9b0b3ESvqV8dAbMoGgf66fOJSY9nwUM7VPKXLMStkqwZhTi4hqr4KJK4C
+	 XYRSgc3qd91qw7kXtUZeq6e8xlDB/uXbQDeuAiCIMbWR5Hf88qmY5ZuYdGOqx9tBgo
+	 NjwhpeznBdp6g2jTAU3Ss1LfBmA7uwPZ9KdgnhjQ=
+Date: Thu, 13 Jun 2024 14:56:19 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, Werner Fischer <devlists@wefi.net>, 
+	Daniel Drake <drake@endlessos.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Jian-Hong Pan <jhp@endlessos.org>, Dieter Mummenschanz <dmummenschanz@web.de>, 
+	Mario Limonciello <mario.limonciello@amd.com>, linux-ide@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
+ port
+Message-ID: <d1b3642d-45a8-4550-ae04-af3897a33571@t-8ch.de>
+References: <20240206211352.1664816-1-cassel@kernel.org>
+ <20240206211352.1664816-3-cassel@kernel.org>
+ <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
+ <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 13 Jun 2024 18:13:18 +0530
-Message-ID: <CA+G9fYvWXuWyd3NiX3WwRyorRiDRbxGmRW_7aVnBVKUVA_TaGg@mail.gmail.com>
-Subject: security: ima_policy.c:427:17: error: too many arguments to function 'ima_filter_rule_init'
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Paul Moore <paul@paul-moore.com>, GUO Zihua <guozihua@huawei.com>, 
-	John Johansen <john.johansen@canonical.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
 
-The arm and arm64 kselftests builds started failing on Linux next-20240613 tag.
-Please find the build log and related links below.
++Cc LKML for people to find it more easily.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On 2024-06-13 17:29:31+0000, Damien Le Moal wrote:
+> On 6/13/24 15:34, Thomas Weißschuh wrote:
+> > Hi everbody,
+> > 
+> > On 2024-02-06 22:13:43+0000, Niklas Cassel wrote:
+> >> A hotplug capable port is an external port, so mark it as such.
+> >>
+> >> We even say this ourselves in libata-scsi.c:
+> >> /* set scsi removable (RMB) bit per ata bit, or if the
+> >>  * AHCI port says it's external (Hotplug-capable, eSATA).
+> >>  */
+> >>
+> >> This also matches the terminology used in AHCI 1.3.1
+> >> (the keyword to search for is "externally accessible").
+> >>
+> >> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> >> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> >> ---
+> >>  drivers/ata/ahci.c | 5 +++--
+> >>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> >> index aa58ce615e79..4d3ec6d15ad1 100644
+> >> --- a/drivers/ata/ahci.c
+> >> +++ b/drivers/ata/ahci.c
+> >> @@ -1648,9 +1648,10 @@ static void ahci_mark_external_port(struct ata_port *ap)
+> >>  	void __iomem *port_mmio = ahci_port_base(ap);
+> >>  	u32 tmp;
+> >>  
+> >> -	/* mark esata ports */
+> >> +	/* mark external ports (hotplug-capable, eSATA) */
+> >>  	tmp = readl(port_mmio + PORT_CMD);
+> >> -	if ((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS))
+> >> +	if (((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS)) ||
+> >> +	    (tmp & PORT_CMD_HPCP))
+> >>  		ap->pflags |= ATA_PFLAG_EXTERNAL;
+> >>  }
+> > 
+> > This seems to introduce a userspace regression.
+> > 
+> > GNOME/udisks are now automounting internal disks, which they didn't before.
+> > See [0], [1], [2]
+> > 
+> > ATA_PFLAG_EXTERNAL is translated into GENHD_FL_REMOVABLE.
+> > (Through ata_scsiop_inq_std(), scsi_add_lun(), sd_probe())
+> > 
+> > But GENHD_FL_REMOVABLE is not meant for hotpluggable devices but for
+> > media-changable devices (See its description in include/linux/blkdev.h).
+> > 
+> > To indicate hotplug, dev_set_removable() is to be used.
+> > 
+> > (Both end up in "removable" sysfs attributes, but these have different
+> > semantics...)
+> 
+> This should take care of the issue.
+> 
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index 37ded3875ea3..170ed47ef74a 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -1912,11 +1912,8 @@ static unsigned int ata_scsiop_inq_std(struct
+> ata_scsi_args *args, u8 *rbuf)
+>                 2
+>         };
+> 
+> -       /* set scsi removable (RMB) bit per ata bit, or if the
+> -        * AHCI port says it's external (Hotplug-capable, eSATA).
+> -        */
+> -       if (ata_id_removable(args->id) ||
+> -           (args->dev->link->ap->pflags & ATA_PFLAG_EXTERNAL))
+> +       /* Set scsi removable (RMB) bit per ata bit. */
+> +       if (ata_id_removable(args->id))
+>                 hdr[1] |= (1 << 7);
+> 
+>         if (args->dev->class == ATA_DEV_ZAC) {
 
-Build error:
---------
-security/integrity/ima/ima_policy.c: In function 'ima_lsm_copy_rule':
-security/integrity/ima/ima_policy.c:427:17: error: too many arguments
-to function 'ima_filter_rule_init'
-  427 |                 ima_filter_rule_init(nentry->lsm[i].type, Audit_equal,
-      |                 ^~~~~~~~~~~~~~~~~~~~
+Thanks, looks good.
 
-metadata:
-------
-  git_describe: next-20240613
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 6906a84c482f098d31486df8dc98cead21cce2d0
-  git_short_log: 6906a84c482f ("Add linux-next specific files for 20240613")
-  arch: arm and arm64
-  config: kselftest merge
-  build_name: gcc-13-lkftconfig-kselftest
-  config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2hoLwDXEx5rCFxECYqQmkKEEurs/config
-  toolchain: gcc-13
+Tested-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Build log:
----------
-  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2hoLwDXEx5rCFxECYqQmkKEEurs/
-  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24303459/suite/build/test/gcc-13-lkftconfig-kselftest/details/
+> BUT, need to check what SAT & SATA-IO have to say about this.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Who takes care of this?
+
+> > #regzbot introduced: 45b96d65ec68f625ad26ee16d2f556e29f715005
+> > 
+> > [0] https://bbs.archlinux.org/viewtopic.php?id=295958
+> > [1] https://github.com/storaged-project/udisks/issues/1282
+> > [2] https://github.com/util-linux/util-linux/issues/3088
