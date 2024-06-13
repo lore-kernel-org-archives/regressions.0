@@ -1,84 +1,244 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4031448EB;
-	Thu, 13 Jun 2024 11:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E01877
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 12:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279079; cv=none; b=pUmAHrFc93UC4OmgzpIHSkjx7t5kCAvp0uBVtcBcJfSCSIgsJiDZuuvSqurBuH2XbnNMjwd6/AvLXsSQo0viX1HuGxMuElUXLT4b10VrKNY1KvgJcpZrsLmm21oTW5u+YgWNX/c3FxENPuL1picMk3cqAYxvADxbbVqKPMblhmo=
+	t=1718282241; cv=none; b=Ikl9kuIZ+SnlzbgtuafMLlrgHooc6/FdEQcP4h6yzKda5/Dv0QD4C1F5en4RhX1sTQBhrdrODeFNAcvmsvyZguFCZqILaHWVLmA/dxYkSRMrobNzvH4J0lPF55v4ugVSfUDTs5gHiXRB+kRyEnoJPpsnoq7k+lZCFmWtfXDcI4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279079; c=relaxed/simple;
-	bh=2n+TNIHW7fyXz94EhLnmhhZsaSuYkTN3hTj+I+VmNYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jFMtIAwoVnQKrPEhzOXpAlL8X3TSTOL1/yHNSJ+GP73ntRGNF/KWuX9zPtXgAPkN9N+pGbyUrquXCPKf/efcA32AyYwx6gJEwODAQIXW+fPNMwjtq38tLyjVQVdTh98m3/sVu6nA6XKkkaMNM/TG0eaDoxcLWpQ/fdaJCV/WFbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cdN5nyZG; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718282241; c=relaxed/simple;
+	bh=VDJefMT8xEQw6dtn2VOdumNzxAyhkyOn6nPBaW3ZJiI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mjfk6G0Jb4fzxKY5NPHBXzkRGLd6KWqplgc0S4RevfveQlZBZwIUXRAlfJylry0/eiEiEDfUIiBsVuBG57f56irAif0W5mcD+r4PVxoWfvEF5mTGcLLU4PpMQ2nquoo+mi2ALEwbxCfXKqVGIqItzm+O5u6MMHm45bjKXks5ryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TT64gkUy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cdN5nyZG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=yFzarZ08c6f35rJCPnIaJIVfFjDEHxsEXnJtD6p8xVQ=;
-	t=1718279077; x=1718711077; b=cdN5nyZG392kRcHgUNiDXM7s6JQ1k1g5ubbz/p9NhbSMq8K
-	8hAgXRQl1KGB7s5Ei+bzawwVZauM+QfxvQmc8Hqtcoik+LYNo8AYo94vRn3+1PE7RSoHt+FJ8fnr2
-	n36QaH1HiPnKhsZouauSv5nR97ZZbRuPqg1lwowQCt1DBxePsY6NTrpn0d8bfKomHBMx2sQLdi/Rl
-	FyBaSDwp/m2QkJBHFGL6cBea8TCoJKaoKnKCnresz9pjI8OC0KEXi7zuE8GkllCnFSUYV++4K8t2/
-	qn9fVgrohvPxC1FF2ifq968vfeQmoGUsjuhOkNHt1LolPuN5U4BgdXvSe17YLoWg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHisa-0002dB-Er; Thu, 13 Jun 2024 13:44:32 +0200
-Message-ID: <48832f23-7593-4bc5-875b-83462a603949@leemhuis.info>
-Date: Thu, 13 Jun 2024 13:44:31 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TT64gkUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6483AC4AF52
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 12:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718282241;
+	bh=VDJefMT8xEQw6dtn2VOdumNzxAyhkyOn6nPBaW3ZJiI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TT64gkUypWGpN57uf31YfLVd6Oqds94a3mJKRp0vfTVwexIHa2PHxnUkuIolWZg5Q
+	 zVI5g/L1svui4NPbN8DWXstFNwDSpy6G7ik0uXNbyE2WyloZt3tFMSJ4aHJz/qJyN5
+	 icnSJVk83GVjDCHJ8NsvbNcX8uUbi2cXzeo2fn/FHf4VmphJpN+ec5/hbI1mDCAXXA
+	 5mEI89vMLBYjxmHMHtbIduJQqnjjQZN0Zctylwv4P+qf3Pp59Y0kJwosGLdC65EPAe
+	 t7bK+FyJOxueWeJd22ryfPioTdnFg4CmFga9wgsl/UQekLcdwZ1mkJW6qit5znbWcy
+	 NZ3O8G/4+Dodg==
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5b3356fd4f3so56125eaf.1
+        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 05:37:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUwPYyKNiR5lSzEp+R1IKHlBIqVVXVflShTCXmxe28us9ItSWGyXpQEIDyYWjeVFkU7EpWKKysVvvkEwSwubiyk2qcPif+wv0sdPMo=
+X-Gm-Message-State: AOJu0YzQTznv4z6KSlSLc+I8QDVXDurNs33jolhOWVtU23FuwcLmISxc
+	mtLB6Z6Vx9XuuLn63KsbP4c6TXs/UfUV1g6rlqLdS8zXCJZiCLp/N4W+bXhunwFtLQtoCW3pRAy
+	7QYrDTxLaK6g2N1EUYrw1rpxmjik=
+X-Google-Smtp-Source: AGHT+IF3D9bX2FCgBxRWF3J91JRycIDlipicsuGKj32M8JQW0MoP4JJyINqoxlncsVsvD3FsRtlEpauxLEFmyLYNnDU=
+X-Received: by 2002:a4a:e9f6:0:b0:5bd:87a0:66d with SMTP id
+ 006d021491bc7-5bdabe6f5a3mr189994eaf.1.1718282240455; Thu, 13 Jun 2024
+ 05:37:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] 6.10-rc1: Fail to resurrect from suspend.
-To: Pavel Machek <pavel@ucw.cz>, David Wang <00107082@163.com>,
- regressions@lists.linux.dev
-Cc: sivanich@hpe.com, kevin.tian@intel.com, baolu.lu@linux.intel.co,
- jroedel@suse.de, linux-kernel@vger.kernel.org
-References: <20240530114907.4836-1-00107082@163.com>
- <ZmrSVax+fzXNKyiq@duo.ucw.cz>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZmrSVax+fzXNKyiq@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718279077;3b71a3fd;
-X-HE-SMSGID: 1sHisa-0002dB-Er
+References: <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
+ <ZmnnFueL-Cgw5Eqp@kekkonen.localdomain> <CAJZ5v0gtK9yusimCOVV2dGkQWDwQ6=r=vfbgC-eE60Cg-5wk_Q@mail.gmail.com>
+ <ZmnrtIEla9R24egi@kekkonen.localdomain> <CAJZ5v0hXU62QiXxWfkbiovciNNEk0h49kRdScmz5qONTMDA+4A@mail.gmail.com>
+ <20240612200012.GP28989@pendragon.ideasonboard.com> <CAJZ5v0hF+6_RCyP-Rr+ajNNEKe0YenFR8x6wX3dG1Pq+vguTwg@mail.gmail.com>
+ <20240612204114.GV28989@pendragon.ideasonboard.com>
+In-Reply-To: <20240612204114.GV28989@pendragon.ideasonboard.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 13 Jun 2024 14:37:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0geGXHM-yHR-CWN8JremnbnSNFkWJEB+8ZZ=jPbUNy6kA@mail.gmail.com>
+Message-ID: <CAJZ5v0geGXHM-yHR-CWN8JremnbnSNFkWJEB+8ZZ=jPbUNy6kA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, 
+	mchehab@kernel.org, hverkuil-cisco@xs4all.nl, wentong.wu@intel.com, 
+	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13.06.24 13:04, Pavel Machek wrote:
->> My system fails to resurrect after `systemctl suspend` with 6.10-rc1,
->> when pressing power button, the machine "sounds" starting(fans roaring),
->> but my keyboard/mouse/monitor is not powered, and I have nothing to
->> do but powering cycle the system.
->>
->> I run a bisect session, and narrows it down to following commit:
->>
->> 	commit d74169ceb0d2e32438946a2f1f9fc8c803304bd6
->> 	Author: Dimitri Sivanich <sivanich@hpe.com>
->> 	Date:   Wed Apr 24 15:16:29 2024 +0800
->>
->> 	    iommu/vt-d: Allocate DMAR fault interrupts locally
->> 	    
-> [...]
->> And I have confirmed that reverting this commit can fix my problem.
-> 
-> Bisected regression. Should we simply revert the patch?
+On Wed, Jun 12, 2024 at 10:41=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Wed, Jun 12, 2024 at 10:31:06PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jun 12, 2024 at 10:00=E2=80=AFPM Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com> wrote:
+> > >
+> > > On Wed, Jun 12, 2024 at 08:50:57PM +0200, Rafael J. Wysocki wrote:
+> > > > On Wed, Jun 12, 2024 at 8:41=E2=80=AFPM Sakari Ailus wrote:
+> > > > > On Wed, Jun 12, 2024 at 08:29:21PM +0200, Rafael J. Wysocki wrote=
+:
+> > > > > > On Wed, Jun 12, 2024 at 8:21=E2=80=AFPM Sakari Ailus wrote:
+> > > > > > > On Wed, Jun 12, 2024 at 03:06:53PM +0200, Rafael J. Wysocki w=
+rote:
+> > > > > > > > On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM Sakari Ailus wrote:
+> > > > > > > > > On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysoc=
+ki wrote:
+> > > > > > > > > > > > > > I just hit the same problem on another Dell lap=
+top. It seems that
+> > > > > > > > > > > > > > all Dell laptops with IPU6 camera from the Tige=
+r Lake, Alder Lake
+> > > > > > > > > > > > > > and Raptor Lake generations suffer from this pr=
+oblem.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > So instead of playing whack a mole with DMI mat=
+ches we should
+> > > > > > > > > > > > > > simply disable ACPI MIPI DISCO support on all D=
+ell laptops
+> > > > > > > > > > > > > > with those CPUs. I'm preparing a fix for this t=
+o replace
+> > > > > > > > > > > > > > the DMI matching now.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > DisCo for Imaging support shouldn't be dropped on=
+ these systems, and this
+> > > > > > > > > > > > > isn't what your patch does either. Instead the AC=
+PI graph port nodes (as
+> > > > > > > > > > > > > per Linux specific definitions) are simply droppe=
+d, i.e. this isn't related
+> > > > > > > > > > > > > to DisCo for Imaging at all.
+> > > > > > > > > > > >
+> > > > > > > > > > > > So it looks like the changelog of that patch could =
+be improved, right?
+> > > > > > > > > > >
+> > > > > > > > > > > Well, yes. The reason the function is in the file is =
+that nearly all camera
+> > > > > > > > > > > related parsing is located there, not that it would b=
+e related to DisCo for
+> > > > > > > > > > > Imaging as such.
+> > > > > > > > > >
+> > > > > > > > > > So IIUC the camera graph port nodes are created by defa=
+ult with the
+> > > > > > > > > > help of the firmware-supplied information, but if that =
+is defective a
+> > > > > > > > > > quirk can be added to skip the creation of those ports =
+in which case
+> > > > > > > > > > they will be created elsewhere.
+> > > > > > > > > >
+> > > > > > > > > > Is this correct?
+> > > > > > > > >
+> > > > > > > > > Yes.
+> > > > > > > >
+> > > > > > > > So it would be good to add a comment to this effect to
+> > > > > > > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port(=
+) is
+> > > > > > > > called.
+> > > > > > > >
+> > > > > > > > And there is a somewhat tangential question that occurred t=
+o me: If
+> > > > > > > > the nodes are created elsewhere when acpi_graph_ignore_port=
+() is true,
+> > > > > > > > why is it necessary to consult the platform firmware for th=
+e
+> > > > > > > > information on them at all?  Wouldn't it be better to simpl=
+y always
+> > > > > > > > create them elsewhere?
+> > > > > > >
+> > > > > > > Simple answer: for the same reason why in general system spec=
+ific
+> > > > > > > information comes from ACPI and not from platform data compil=
+ed into the
+> > > > > > > kernel.
+> > > > > > >
+> > > > > > > Of course this is technically possible but it does not scale.
+> > > > > >
+> > > > > > While I agree in general, in this particular case the platform =
+data
+> > > > > > compiled into the kernel needs to be present anyway, at least
+> > > > > > apparently, in case the data coming from the platform firmware =
+is
+> > > > > > invalid.
+> > > > > >
+> > > > > > So we need to do 3 things: compile in the platform data into th=
+e
+> > > > > > kernel and expect the platform firmware to provide the necessar=
+y
+> > > > > > information, and add quirks for the systems where it is known i=
+nvalid.
+> > > > > >
+> > > > > > Isn't this a bit too much?
+> > > > >
+> > > > > Isn't this pretty much how ACPI works currently?
+> > > >
+> > > > No, we don't need to put platform data into the kernel for every bi=
+t
+> > > > of information that can be retrieved from the platform firmware via
+> > > > ACPI.
+> > > >
+> > > > The vast majority of information in the ACPI tables is actually
+> > > > correct and if quirks are needed, they usually are limited in scope=
+.
+> > > >
+> > > > Where it breaks is when the ACPI tables are not sufficiently valida=
+ted
+> > > > by OEMs which mostly happens when the data in question are not need=
+ed
+> > > > to pass some sort of certification or admission tests.
+> > >
+> > > We have to be careful here. Part of the job of the ACPI methods for
+> > > camera objects is to control the camera sensor PMIC and set up the ri=
+ght
+> > > voltages (many PMICs have programmable output levels). In many cases
+> > > we've seen with the IPU3, broken ACPI support means the methods will =
+try
+> > > to do something completely bogus, like accessing a PMIC at an incorre=
+ct
+> > > I2C address. That's mostly fine, it will result in the camera not bei=
+ng
+> > > detected. We could however have broken ACPI implementation that would
+> > > program the PMIC to output voltages that would damage the sensor. Use=
+rs
+> > > won't be happy.
+> >
+> > My point is basically that if that data were also used by Windows,
+> > then chances are that breakage of this sort would be caught during
+> > Windows validation before shipping the machines and so it wouldn't
+> > affect Linux as well.
+> >
+> > However, if OEMs have no vehicle to validate their systems against,
+> > bad things can happen indeed.
+> >
+> > Also, if an OEM has no incentive to carry out the requisite checks,
+> > the result is likely to be invalid data in the platform firmware.
+>
+> We're exactly on the same page. The only solution [*] I can see for this
+> problem is to get the Windows drivers to use the same ACPI data as the
+> Linux drivers.
 
-No need to afaics, as this afaics is fixed by "iommu/amd: Fix panic
-accessing amd_iommu_enable_faulting" which Joerg committed earlier today.
+That is long-term, however, and in the meantime something needs to be
+done about it too.
 
-https://lore.kernel.org/all/ZljHE%2FR4KLzGU6vx@hpe.com/
-https://lore.kernel.org/all/31f16e4e.afe2.18fc9d5dad0.Coremail.00107082@163.com/
+Sakari is telling me that the warning on boot triggered by firmware
+issues was in a new driver and it has been addressed in 6.10-rc3
+already.
 
-Ciao, Thorsten
+This is good, as we don't need to worry about people reporting a
+regression because of it any more.
+
+Still, IIUC, the driver simply fails to probe if it doesn't get
+correct information from the platform firmware and a quirk needs to be
+added to the ACPI enumeration code for the driver to use a different
+source of information.
+
+I'm wondering if the driver could be modified to switch over to the
+different source of information automatically if the firmware-provided
+data don't make any sense to it, after logging an FW_BUG message.  It
+could even use the other source of information to sanity-check the
+firmware-provided data in principle.  It's all software, so it should
+be doable.
+
+> * Another solution would be for OEMs to stop caring about Windows and
+> testing their machines with Linux only, essentially reversing the
+> current situation. Chances of this happening however seem even tinier
+> :-)
+
+Seriously though, we could create a Linux-based utility that would
+retrieve all of the relevant information from the firmware using the
+existing kernel code and they say "this is what I would do to the
+hardware based on this information".  That could help people to do
+basic checks if they cared.
