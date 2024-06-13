@@ -1,55 +1,55 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFBF20E3
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 01:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709F68F68
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 01:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718241609; cv=none; b=jvJ14uTyOLIsYSXqM2rLr2CJWqE1BcLN9zL2MLNvWJy61+io1upiI98BA+Av5z7x/wn+K6vuO5UgQhmXQ5e1Bg8bW2g4BTHKFPwM5tqIvfJgQqK950JnYfR9pSSQB/K8sY7AVSrHWgq4b1Kq68aZ4ZOgwHp1/jfUe+gElXxugDE=
+	t=1718241649; cv=none; b=p4hCP/T5q6n6STWqTmKjHp/Tg/6y5YS1KxAyEaZJ2ZdjTrtmjVpKnGxtjJ4VPelYqZlS4U0MQdyGfIJ2KzAj3DrTxMWgmEI4SWNocNn14PGbxSdtsQEGfKyzeLZMXuY+mdlcu8LvrY/WtCcnsnZbi08wcrMjKjtNkqrOpogF5wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718241609; c=relaxed/simple;
-	bh=QtGWmQil4TeSKSjgXBUbVGSvaQMBAHNq8O6Nko5VADk=;
+	s=arc-20240116; t=1718241649; c=relaxed/simple;
+	bh=IGZb7jJzJ+fYgo3pfxxlYggzSezW8VULYkGVcUUXaL4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=JDpIP7PFWqJuadzm6oSQPIpIhyds4FUwU2Um4mE7rd7SWVV/MTlUBA7TPJyyAa2vsKY3/gJcLXq+3Xn8LC6NVj6pVpjK1vuGr2WtnuGmyuR2+CvDssmCbQslvE0pD20CgN/IM+mpsg5YDHX8swwjGa04XlhhfrDFQ3Jkhfgl+hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X07yHYh3; arc=none smtp.client-ip=209.85.210.53
+	 To:Cc:Content-Type; b=l5a6zJAVF1+HiBVkGQ0uavcAjfcsUOcweEB73CvDSUzrh9db8KBNAetCILYNWqP6KmzKjFFtS5EJFzHj3KnmCCuRv70xcftOCKpUaG8raWEiFY3t+p30CNBjLLIaVQ9bKdigRUyPUJsOpAb5G2YfvRlDcV6CYaasbba8bXECLLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WTn1YtFm; arc=none smtp.client-ip=209.85.160.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X07yHYh3"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6f9611fc320so227427a34.2
-        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 18:20:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTn1YtFm"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-25488f4e55aso157268fac.0
+        for <regressions@lists.linux.dev>; Wed, 12 Jun 2024 18:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718241606; x=1718846406; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1718241646; x=1718846446; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9OHbknK0aCqYgh28yIr2skMYn6T2UVxfBoEcmhHBS9k=;
-        b=X07yHYh3nOl3S4pgDt2GQLzkZ7iY/qXwpKtQEbgFuHjRIiJ2wuOV0M+YZs64Bgl8XO
-         drRpxItbDVYUtpWad9kRSD1KlqYbVTK2zjm1qcyZQR4qOt4oKf4VOdm/gY5h1aUX6s9B
-         GqXaHCXKJSZJfD32jg/6ny/shtRlMWRpv/Mh7kH/7ctWgWumtuad49unSjKkCEU8Bo0a
-         A0ML+rciwF2+nXLLEkT4Vd/y5+9wWe4r+5udUiBdzXBmabxth5Qh7GfAe/P0jCWEytke
-         MrruU385rdkeVlj5zWRDSeAJgB0qx8Ck+cHsfzZHuJzXYfn+LF9cMCnlNqF/cmNVD/6g
-         2k3Q==
+        bh=0wkEg0A6dLkLdYjqnlp/NhYfNHg7StDjTeCf/k0/xgQ=;
+        b=WTn1YtFmcLl4Ed0shVPltPVV0K+7pIv6vHb1ujojXzqANUl/q4me+lLj1Q/Y+CTtqT
+         bDr1AKMl9Obqsf6hxbI53FWaHwEDCb0vOVwD8y2+e1wTwYkPVO8wey3cN57eIfUowRxe
+         nDfqSkbgeP+JeIaau4yu5JhSx+TbXs/WnWoAhR3SnNbnVzAK0uah5MomQ1hEm2EyLxvI
+         tFISBhgoOmQUhN1veO+jUjDH//0MVoFWT2/EUl7WZK8w1bky7wxHyrwIATmGShLBPkl8
+         +Vmx6HrZV8VafJNEoRIXzdunylNNsBVlQOPCfoDQY/dgh/fXWT0aumV5uqLSfFg+5SOE
+         gAFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718241606; x=1718846406;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1718241646; x=1718846446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9OHbknK0aCqYgh28yIr2skMYn6T2UVxfBoEcmhHBS9k=;
-        b=d0JjMVfEPMSC3qOmxmzkjsU2fTgdNTDKr2jxvRfn4c8GZ+XjRXdxZV9yQaDLUc2PNn
-         5c+v8+VaY4TAHsM3G/vazqrVnOUJekKwNos0cWazYqoUEp/mPaVCV0Ka1NtLP/4b2xeD
-         XB/5ipMb0c9oH1QW7yn9F+YUDKVRn5q7P8fn+RnWiGXYYi45eF3pW4aFnTnM9tzLFHKN
-         nozvosKYsy5TVyVGkZIq1ZqWiC7tBtgCJzpcLOqOCdbTHpg5GQ65t0i06qlQWqiIRa5M
-         Xb/JqHgOkK39jOaG/OOz1TfvWhbdcHSkWagVuCIt+YzKioNCGOcc+HuLDCbXB3nOaylT
-         eWAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1jhyxp+MANEurAMC2dj48VicEDXQmS1xLiWZ3F8wlwYCCRV5nkJRmvuAF2Y9VZ1m8uGsyDKTklN8p2ILuc3+9cwFAa3BMakJLMpM=
-X-Gm-Message-State: AOJu0YzKHW5tl7mPvLAI8g5GX1wwxf2hMsuaTajfgCD+Sfbi0h1g/Uuv
-	lx9R6l5odQjnEWAaVFRjXnDGjRCpM6ueaS47XPciA0Vcfj+k6MGKhnH92ALOxThujsjIiPa4Bri
-	lW07d3tBFqxeDDV+lOIFOqjCEtBGuSvTsIC4=
-X-Google-Smtp-Source: AGHT+IE8gi3ZwhRtMlyxdfpaTukSBk2k+TtP06XW90u6F+c0maSgIwvWgd1zzwl4YPvlQcK4scYSidzOJanMVJc4zAM=
-X-Received: by 2002:a05:6871:5cc:b0:254:7661:befd with SMTP id
- 586e51a60fabf-25514f2b9eamr3787450fac.44.1718241604518; Wed, 12 Jun 2024
- 18:20:04 -0700 (PDT)
+        bh=0wkEg0A6dLkLdYjqnlp/NhYfNHg7StDjTeCf/k0/xgQ=;
+        b=uxaX7t30u7Q340XGKwee5T+UqNLX38CAtW87xR7tsASRDRCKCCcHayzj4+3da0dOBb
+         TBdLzJbqmuhcmXmNzALLyAD+kF8IIIfsP72JxI8TTepugYkh2C1Af5bvMmqN3dIIRO/q
+         KJ64ybNC8/xBdko0QO/uu/U7sMmPuyIHXQDOf/NStNwK1Ed/3x5LJyR4B8/OVFhNgSYE
+         x1bE4HOdojuxKH//7wRyyFeOxbuxuBAgnx6dSgdYsyj+QTZ8d7FFSibmeOE6hZAUajZT
+         aOT91wshu9rgVVFtmTVMN10M6/JBzsj5lmIGo2T897Ppxsr+dh/v1whEnvWm1eVv0/Fd
+         6YrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEHibylkaTVfN3BjBGEWUFLMFmKGDTJd/oz0l9Tnv6kABo4dM5lESqMGDL2M3nwgxnySAiQ/wVluDaZQ6CCt++iGAaFbs3BmOdvoc=
+X-Gm-Message-State: AOJu0Yz4ydUNLVHA43xIrw1BHKCXo2DmUmNOfw5UJONvvCaT5fLRzabi
+	bXYgnLo2BUVYbQfO4vZuMghJJi34FXkw1dTVVWCSlG8bzU1op+fwupf9exntitqAgWapYy69RIP
+	U544Wd3n4Z7FlEmEAf+SZVOisv544h7EuOb4=
+X-Google-Smtp-Source: AGHT+IE1vFsD+dtc5+J8vNziCv9wczwzIi64CT2+FvV0mYKajxmTTdW5qU4XW9h4Jue66DEOuvj6rfAnuXrKuz+aylE=
+X-Received: by 2002:a05:6870:148e:b0:254:a8d3:6fbb with SMTP id
+ 586e51a60fabf-25514c684e1mr4036360fac.24.1718241646341; Wed, 12 Jun 2024
+ 18:20:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,11 +61,14 @@ References: <CAMOvFfkQscju1spNKHmEC_Rut+2=qfhKGZSvGhCk_nd5VhuDkg@mail.gmail.com>
  <CAMOvFfkgsbez6fyqUWS9nA=1XubS7_PbjTJ9YzVyZ_MLsetC0Q@mail.gmail.com>
 In-Reply-To: <CAMOvFfkgsbez6fyqUWS9nA=1XubS7_PbjTJ9YzVyZ_MLsetC0Q@mail.gmail.com>
 From: Winston Ma <winstonhyypia@gmail.com>
-Date: Thu, 13 Jun 2024 09:19:51 +0800
-Message-ID: <CAMOvFfnbJzgezHYvqif2sm8iHDhzt_hSAYE9NaMFmmze1N6OxA@mail.gmail.com>
+Date: Thu, 13 Jun 2024 09:20:33 +0800
+Message-ID: <CAMOvFfmcepCLnMq7jSmidGWc__qTcBhwba5vc8eKHSZS=7rZuA@mail.gmail.com>
 Subject: Re: [bug report] drm/amdgpu: amdgpu crash on playing videos, linux 6.10-rc
 To: Wang Yunchen <mac-wang@sjtu.edu.cn>, 
 	Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Felix.Kuehling@amd.com, Xinhui.Pan@amd.com, alexander.deucher@amd.com, 
+	amd-gfx@lists.freedesktop.org, christian.koenig@amd.com, 
+	LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -82,6 +85,7 @@ allocations go to GTT domain on small APUs
 Coincidentally Yunchen and I use APU machines (7840 HS and 6800U), so
 just wonder if video playing issue happen on a dedicated AMD graphic
 card?
+
 
 Thanks and Regards,
 Winston
