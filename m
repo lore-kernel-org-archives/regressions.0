@@ -1,98 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3700437C;
-	Thu, 13 Jun 2024 06:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9FB4C69
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 06:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718258506; cv=none; b=sj3XIXDCnjI4haFpmlMob6kK3/3I16j2X0QKvbLdONF8brSHfDpfIv95QqTIyr8juiGKcJq3wY+c4tbeX3sInNXQPMtpQJ/73T+yD86mx7Y0cH1uve4MDDqO1a5kBHKYLSEwU+y+H9BkxeWWWKuDazj5KNiotpSEf0+WjOnYCwI=
+	t=1718260477; cv=none; b=am3kf751fncwHSWlxoP6qfyFHbdJj96q255vTnzwUkrOYKlM0K6WBxEuxDY/3muCr53W/sd22K6D5/7k12BTNXoYSfuOJXzGlnrCcgrocnPiaz3fF0tf/WUKR4t6RZZpdJVqm3xlaGZdLHTdGVy0PVYfbt92nmm4P7obqW/Huzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718258506; c=relaxed/simple;
-	bh=VDyY0lmwRe0rWjIOr32imsF5aAyZwpJKRIGVp3Fq27k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=up9sZ4nhgISrbl/OF76XWkOpwmtt0m0XxcRTOHCT7iqOrf/9aMXzxrrQ/JyVBdGF9cBdU1kIqmtLSDAxniXl4Ta0aFxq/qkqIOMxoIqkIlF0taFg2xvXEIvii4NDQ9ydRDnBSdxgxfJQrVBiq5uy6p3tATha5k8iG3I9SoZVTrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BhYfJ2RQ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718260477; c=relaxed/simple;
+	bh=SUZflCj1kPwQzMVejvVBZ++LrBeT1hRVFzr71Qg1gAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iyZNNLpfaPosIt7DUjQ+jIZQPr/72a0jO5IPr9QbwGet8hObCp4TQcEOR/E1Flok7Pjx/FWfSFXMhI9GrIXQrPPmuqR1nAJPgTZSJd30fbTU2+IEtrT5udLHhK6JwxADxf8TyMOBRMKN1w/coNqsV1tennJjR+k8qf/EIuharpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ditrHb/t; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BhYfJ2RQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=DjAortrBMsooQvo+oS5HLqOjhjZQ6sHhlWU7CDiPpck=;
-	t=1718258504; x=1718690504; b=BhYfJ2RQf+cct7yglQ95/xf1cPzkp2jP/w9pk9M0AZqIeiu
-	CnGK9z2OjBa/s1/usQTo58TGLV+14Nu1Jzrj5joszPlAdDAsKxr3aebwD43HMq0AmtukPXjb3bNy3
-	slvxLgQNWeYpRyq0FRIxnOKv2I+fwTpWVaIbaV6oQiJQFLzLzaghyuKI5dYi6K0LKQ8Ia6C8TTr26
-	SjhhpW8UzAdMG6sc+Ns0BI9G9h25b/3ng+lDZB/p0tssINVUIupUH6DNd6G2K277KhwM9bjkHHooc
-	eC929vXzQsixKKyKHSxuHrThSAZKNmOtgjFzNlXoUzJHSlUq9uHrqxWpm4kfgctQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHdWn-00027V-An; Thu, 13 Jun 2024 08:01:41 +0200
-Message-ID: <1ae0cbc0-c87f-409b-abe2-13c76414f5ba@leemhuis.info>
-Date: Thu, 13 Jun 2024 08:01:40 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ditrHb/t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1718260464;
+	bh=SUZflCj1kPwQzMVejvVBZ++LrBeT1hRVFzr71Qg1gAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ditrHb/tKH0UxnCXJZjN0LBTZtkxUfPp9YI86ZZ9bBDoZNxkb896r80jvb3cGjEvE
+	 bjGoiiVR+kbQ6NsMz5LLo7Y1t40bh00DZPpEnQiJsnP1Do9LUHAnHCov6nQ4RzoZOS
+	 NmAH8sVCP9VIblPgLz8zvWRPAXDrCP6BzhpFpVvM=
+Date: Thu, 13 Jun 2024 08:34:24 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, 
+	Werner Fischer <devlists@wefi.net>, Daniel Drake <drake@endlessos.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Jian-Hong Pan <jhp@endlessos.org>, 
+	Dieter Mummenschanz <dmummenschanz@web.de>, Mario Limonciello <mario.limonciello@amd.com>, 
+	linux-ide@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
+ port
+Message-ID: <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
+References: <20240206211352.1664816-1-cassel@kernel.org>
+ <20240206211352.1664816-3-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] leds: class: Revert: "If no default trigger is given,
- make hw_control trigger the default trigger"
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, linux-leds@vger.kernel.org,
- Genes Lists <lists@sapience.com>, =?UTF-8?Q?Johannes_W=C3=BCller?=
- <johanneswueller@gmail.com>, stable@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Hans de Goede <hdegoede@redhat.com>,
- Lee Jones <lee@kernel.org>
-References: <20240607101847.23037-1-hdegoede@redhat.com>
- <6ebdcaca-c95a-48bc-b1ca-51cc1d7a86a5@lunn.ch>
- <7a73693e-87b4-4161-a058-4e36f50e1376@redhat.com>
- <5e93d4ea-0247-4803-9c0e-215d009fb9d3@leemhuis.info>
- <0cdc9042-2cad-48d4-8eb6-0732cf9e7dfa@redhat.com>
- <20240612152635.GF1504919@google.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240612152635.GF1504919@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718258504;5627492e;
-X-HE-SMSGID: 1sHdWn-00027V-An
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206211352.1664816-3-cassel@kernel.org>
 
-On 12.06.24 17:26, Lee Jones wrote:
-> On Wed, 12 Jun 2024, Hans de Goede wrote:
->> On 6/12/24 4:58 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>
->>> Hans, from your point of view, how fast should we try to mainline this
->>> revert? I got the impression that you want it merged there rather sooner
->>> than later -- and that sounds appropriate to me.
->>
->> There are at least 2 separate bug reports from 6.9 users who are gettinhg
->> stuck tasks which should be fixed by this, so yes this should go upstream
->> soon.
->>
->>> So should we maybe ask
->>> Linus on Friday to pick this up from here? Ideally of course with an ACK
->>> from Pavel or Lee.
->>
->> Indeed having an ack from Lee or Pavel here would be great!
+Hi everbody,
+
+On 2024-02-06 22:13:43+0000, Niklas Cassel wrote:
+> A hotplug capable port is an external port, so mark it as such.
 > 
-> Acked-by: Lee Jones <lee@kernel.org>
+> We even say this ourselves in libata-scsi.c:
+> /* set scsi removable (RMB) bit per ata bit, or if the
+>  * AHCI port says it's external (Hotplug-capable, eSATA).
+>  */
+> 
+> This also matches the terminology used in AHCI 1.3.1
+> (the keyword to search for is "externally accessible").
+> 
+> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/ata/ahci.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> index aa58ce615e79..4d3ec6d15ad1 100644
+> --- a/drivers/ata/ahci.c
+> +++ b/drivers/ata/ahci.c
+> @@ -1648,9 +1648,10 @@ static void ahci_mark_external_port(struct ata_port *ap)
+>  	void __iomem *port_mmio = ahci_port_base(ap);
+>  	u32 tmp;
+>  
+> -	/* mark esata ports */
+> +	/* mark external ports (hotplug-capable, eSATA) */
+>  	tmp = readl(port_mmio + PORT_CMD);
+> -	if ((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS))
+> +	if (((tmp & PORT_CMD_ESP) && (hpriv->cap & HOST_CAP_SXS)) ||
+> +	    (tmp & PORT_CMD_HPCP))
+>  		ap->pflags |= ATA_PFLAG_EXTERNAL;
+>  }
 
-Thx everyone. In that case: why wait till Friday. :-D
+This seems to introduce a userspace regression.
 
-Linus, could you please pick the revert up this thread is about? You can
-find it here at the start of this thread, which is:
+GNOME/udisks are now automounting internal disks, which they didn't before.
+See [0], [1], [2]
 
-https://lore.kernel.org/all/20240607101847.23037-1-hdegoede@redhat.com/
+ATA_PFLAG_EXTERNAL is translated into GENHD_FL_REMOVABLE.
+(Through ata_scsiop_inq_std(), scsi_add_lun(), sd_probe())
 
-You can see the Ack from Lee above and there is a Reviewed-by: from
-Andrew in the first reply as well.
+But GENHD_FL_REMOVABLE is not meant for hotpluggable devices but for
+media-changable devices (See its description in include/linux/blkdev.h).
 
-Tia! Ciao, Thorsten
+To indicate hotplug, dev_set_removable() is to be used.
+
+(Both end up in "removable" sysfs attributes, but these have different
+semantics...)
+
+#regzbot introduced: 45b96d65ec68f625ad26ee16d2f556e29f715005
+
+[0] https://bbs.archlinux.org/viewtopic.php?id=295958
+[1] https://github.com/storaged-project/udisks/issues/1282
+[2] https://github.com/util-linux/util-linux/issues/3088
