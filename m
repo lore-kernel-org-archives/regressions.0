@@ -1,83 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BA6A94D;
-	Thu, 13 Jun 2024 13:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5711448E4;
+	Thu, 13 Jun 2024 13:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285937; cv=none; b=Csr8mUaDluGVCsEZFgyuIzU+bcZM9U6mdizufoJmyBfijl/LkEl/L3Kn/r50SVNa7ZwyZC7Dx5vlDgiAREZX3aPM7kNh1e4KNM5fF58clTtFbi+gDRj+IB+ZGhSlnr4HWBxkctw9cL/hgh8U1TBx6rhd1BEQGTbCHQMuq6AH6sY=
+	t=1718286164; cv=none; b=DxXqKSZWOku/j18lZ0IYxwb+hTfJv2pL/53ImdE/HotUYG7J9EmJlngl3T+WIx2Rf6k2W6UXMEcjZIGdgqtK1KJfsUBtGVOHE2kip9RRTB7nj4xhUIo4LLXe17I7StwUI/4nSdXEMTEHjcqaxqu/LlMI6M8ENOiREwVoFj/bvDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285937; c=relaxed/simple;
-	bh=TjT4QmoA+HDTCEVjWBmpuRPVNcZHx0a5efu4SQcVzR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2J4D92bapu9zXbhHGkEhjBjdkWudJCjhLTRUUwFCqNYXppfwoY2nOxFGQZeMX4KCR0YRalQUKc1PzwIyyA0ekuvKPKhWF6Bkwt2R3XSIbP/8ZqlyIbpt7pkzutH11uh2lqbJOtjimpBoq23Tolj0P4HSRYNwfSva/ZkndXm+aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ64UE31; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ64UE31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1213C2BBFC;
-	Thu, 13 Jun 2024 13:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718285937;
-	bh=TjT4QmoA+HDTCEVjWBmpuRPVNcZHx0a5efu4SQcVzR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQ64UE31AErtT4t+h9YhkQe0By0kar4MZ8VY7Bsr3xvxlV8btyeyjYVz17KBO8qIX
-	 ix710aK3bZGYsrUEWVUOeWiE/apxuOxxBsWsUDuyD/3PiH9MsWosQKNifBIR8aG//C
-	 LO0DE87sh9KjnBdx1E2/QYMI5PWJ8a7JAQjhflT/YhumJbdhmhWwyj8Dad4kQkIu9k
-	 Lzyexk0iBkkGx4ZAaeM5tEsWoqBEdd6D3G7qHAI8+LvgYMpwb1qIICkMsfff0PpGGF
-	 nQ3x6wdSUkmBxVTSVZOjIcQs0Dl0/ib66IgHABtNTGiN9d/53YnSzbjP0qCSLeAQOY
-	 VGQURfyKXL4+Q==
-Date: Thu, 13 Jun 2024 15:38:51 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Werner Fischer <devlists@wefi.net>,
-	Daniel Drake <drake@endlessos.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jian-Hong Pan <jhp@endlessos.org>,
-	Dieter Mummenschanz <dmummenschanz@web.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-ide@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
- port
-Message-ID: <Zmr2a53RwyevjQYA@ryzen.lan>
-References: <20240206211352.1664816-1-cassel@kernel.org>
- <20240206211352.1664816-3-cassel@kernel.org>
- <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
- <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
- <ZmrwksRyOkQq1OPV@x1-carbon.lan>
+	s=arc-20240116; t=1718286164; c=relaxed/simple;
+	bh=BYkU2H0S4zNO8fR5V5JXw4c7o2fqGO6rVne/z+EvD1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qCIP/QZXRjGKnwiowSF8LAAxhKLRRYTUKjmphwZI3LAINKYg0EPXNfAiUnoNQo5lRzV/PmvbFyUamirgJPv3iLdR5aSf3qkqduh6s70+T8ejfTHMhl0BwQ0ECK6PmobyKj03HQlrS9n2JXpUhYnbfdn4NidHDEKcgptbzZJDVlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D36EC2BBFC;
+	Thu, 13 Jun 2024 13:42:42 +0000 (UTC)
+Date: Thu, 13 Jun 2024 09:42:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: LTP tracing crashed on arm64 rk3399-rock-pi-4 - pc :
+ ftrace_ops_test
+Message-ID: <20240613094241.549038df@rorschach.local.home>
+In-Reply-To: <CA+G9fYu+GbYyw5J0XBy_W8VcHPdEf5Yu-gV7nhZTZioz9G6q_A@mail.gmail.com>
+References: <CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com>
+	<20240612125130.2c1d6d2d@rorschach.local.home>
+	<20240612171748.0bc6d9cb@rorschach.local.home>
+	<CA+G9fYu+GbYyw5J0XBy_W8VcHPdEf5Yu-gV7nhZTZioz9G6q_A@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZmrwksRyOkQq1OPV@x1-carbon.lan>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 03:13:54PM +0200, Niklas Cassel wrote:
-> On Thu, Jun 13, 2024 at 05:29:31PM +0900, Damien Le Moal wrote:
-> > On 6/13/24 15:34, Thomas Weißschuh wrote:
+On Thu, 13 Jun 2024 13:29:58 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-> I suggest that we:
-> 1) Merge Damien's fix.
+> > --- a/kernel/trace/fgraph.c
+> > +++ b/kernel/trace/fgraph.c
+> > @@ -641,7 +641,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+> >         {
+> >                 for_each_set_bit(i, &fgraph_array_bitmask,
+> >                                          sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
+> > -                       struct fgraph_ops *gops = fgraph_array[i];
+> > +                       struct fgraph_ops *gops = READ_ONCE(fgraph_array[i]);
+> >                         int save_curr_ret_stack;
+> >
+> >                         if (gops == &fgraph_stub)
+> >
+> >
+> > Because if the compiler decides to re-read gops from fgraph_array[i] after the
+> > above check for the following line that does:
+> >
+> >                         save_curr_ret_stack = current->curr_ret_stack;
+> >                         if (ftrace_ops_test(&gops->ops, func, NULL) &&
+> >                             gops->entryfunc(&trace, gops))
+> >                                 bitmap |= BIT(i);
+> >
+> >
+> > and gops now points to fgraph_stub, it will trigger this bug.
+> >
+> > Can you apply the above change and see if the bug goes away?  
+> 
+> I will apply this patch and run the test in a loop.
+> Since it is only seen once. Not sure I could validate this and confirm.
 
-This might of course result in us getting other bug reports about their
-distro no longer automounting their eSATA devices... and they might
-consider that a user space regression as well.
-(Since that behavior has now been there since 8a3e33cf92c7 ("ata: ahci:
-find eSATA ports and flag them as removable"), which was merged in 2015.)
+We could just look at the code that clang produced and see if it
+accesses the fgraph_array[] again. If this was the cause, it would show
+up it in the code.
 
-However, considering that the definition of the RMB bit has recently
-(2020) been clarified, it is quite clear that we are currently violating
-the spec, so I do still think that setting the RMB bit according to spec
-is the right thing to do.
+But regardless, I think I'm going to add that READ_ONCE() anyway,
+because it is legitimate for the compiler to do the above without it.
 
+Thanks,
 
-> 2) Modify SCSI to call dev_set_removable() and modify ata_scsiop_inq_std()
->    to set the "HOT PLUGGABLE" field.
-
-
-Kind regards,
-Niklas
+-- Steve
