@@ -1,102 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F18140E23
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 09:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7051F142E73
+	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 11:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718272261; cv=none; b=KFd8ZG9C0GyebgyVBzOakx56+exqa1er6wcgYHFlPOzPFl11k6NMeADAseC5U6ytaYPgT/Oj2pOFBI+Y0JUuEYhQ+mgwRVDxHuz0KqUGF3Q5KZACPTAncygbYRpxHasmVWlZ1ch5zBGys7wwFaJ4+W+f5w63h+tqcy+RIvIE3kU=
+	t=1718276698; cv=none; b=ubm5UFZytAFGpui+DSsPOXE6eriWKIj6f7csS0yjhpadb7fxagfnSEWIEJq70iWNuXxblD7CL8v+z/MronPhQ1W+8Eb4EsTXURR8UTrBLhmci3rfSmLaMKWEXEdhDLdIVlXvoqh4p12BjkWAa3nxQK+bJj+zWYa3DnCLGYEz4Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718272261; c=relaxed/simple;
-	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dxq9czCkXUNoQVEaeBDzEae8DcrK6ppZFngxlwLa1dwPTm2aSx01GWqXXdJV7Dy6FLONXhdH4ajy+I2HjZLsho1SAoPYogsFUdnsuOccBM3DlTX0LkiaSjxprNqDKQEA61PShk27veKXjS+cu5boQJ7oAc30XfJDiJS97RO4sUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVUcNJAN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718276698; c=relaxed/simple;
+	bh=QSVxZIE5HRdX2PZ65tmi5cZl1eXGEGpB1NH67xGpsZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KEs+Cm/cCpQZG7RyR8cqL9YW3RLibfNcl7k9lc52Y3bo0Rc8t4EKwBriWubwefT7KguqEm89lqEEbnHg20ZyOP0laanZwEJvSr1BqSiduc5CC4OiU6sPnMAqXz3wERpp4YXK8vVYZAXGO7fGIxjDCZCg/bk6qEWnfj2NpL5dONM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FWVLNwpR; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVUcNJAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C74C4AF50
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 09:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718272261;
-	bh=SNV35KtlQC31smqSFcPsdJtAGTjRT6XfQVyUb02BMzU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RVUcNJANurLX6qKW3W2xf6Fl4wZYNeNxn7+iw/2c4zp+OVda5WkTyj/41ummI67UZ
-	 Ud8ChBUTEDR0WQBxQeWf9uDUv9tplmGh/y+r2RFJT6XmSYbXho2hxiAg7JA49uj8l1
-	 evis/bFksYao+zUPUJYcW1HBigOmKlFfm5k+gucc4Xfp0hPvZAXEQFg/O0lvQRiNA1
-	 po1Dfo9GJvDuLjzVLmeuYruiATe2PEs+mbrAYE24sCqvMeaC53qLgtoAI2jnn0lnoW
-	 2hdmxd1NVeO9UR+32gNQwc8uLACi8So5g5+gE9gGcNho89lZg8xzuws/IfvItRNZ0X
-	 tocH7TK9zapvA==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b335681e82so51738eaf.2
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 02:51:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVlbX8rmTW9RSgyWU6O7PCxNT/MJ8fmKrXQActatvOo7Qvds8GCggxgmkvkdz4EqrUmOnChNiF0Oj6pjOpXakSpwMk3b+jd8Uqgd10=
-X-Gm-Message-State: AOJu0YyIaHCAvhLoKkTWyz5IsCse3RXq1XY3fB9G8NBrZscW0bvuBfjs
-	TOqKaUHdD3rilvOTYLUeIzqvcspN2qnZQqyCBVynjoQ4e/3/IHSeM6bhNVxJRX0EfIwnwa7PvXv
-	zvnf2HGo+qG2C6A8i0wqNYxtrQFk=
-X-Google-Smtp-Source: AGHT+IEcaBEAG1NmWL/I9RS0vHUxgrV83BuKZJ+zxf4O57zYlHmYtUHwc4Z7TBN+zb6NrRmrRDwkdL+RKuRXm9EHD20=
-X-Received: by 2002:a05:6820:2c86:b0:5aa:3e4f:f01e with SMTP id
- 006d021491bc7-5bb3b9c614cmr4555004eaf.1.1718272260335; Thu, 13 Jun 2024
- 02:51:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FWVLNwpR"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 6CDE91C009C; Thu, 13 Jun 2024 13:04:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1718276694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JPFN6Dd+Rb4MFGhC14cx0oFBxuxBrErNFRFfqvuYr6Y=;
+	b=FWVLNwpRYJz6JPKdKp05j+vw9IFSV46i5t7cDqge8Gm+jo/bHVQwN/+/HpTq6oWpkMc9Bl
+	3zVPTNBd/i7setkhVqPdBZW4+lHKlX4E25W9tfN4+8N4dTj9CGumwDQNL1sg25+dJxDM79
+	WY0qpEnvpew5YRwCke7bmyoDqKKvrbQ=
+Date: Thu, 13 Jun 2024 13:04:53 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: David Wang <00107082@163.com>, regressions@lists.linux.dev
+Cc: sivanich@hpe.com, kevin.tian@intel.com, baolu.lu@linux.intel.co,
+	jroedel@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [Regression] 6.10-rc1: Fail to resurrect from suspend.
+Message-ID: <ZmrSVax+fzXNKyiq@duo.ucw.cz>
+References: <20240530114907.4836-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a05df025-a0be-49cd-84a9-7d7fb2eeb33e@redhat.com>
- <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com> <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
- <ZmmQLt7wB-yGQBTw@kekkonen.localdomain> <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com> <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
-In-Reply-To: <ZmoCUZxlSHy_PclO@kekkonen.localdomain>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 13 Jun 2024 11:50:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
-Message-ID: <CAJZ5v0jN3CXM9vWQniu1Q2t1NvG9n5KoG0VGHnMgdPU2iHpBvw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zPE+q47d1Rs+wmMB"
+Content-Disposition: inline
+In-Reply-To: <20240530114907.4836-1-00107082@163.com>
+
+
+--zPE+q47d1Rs+wmMB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sakari,
+Hi!
 
-On Wed, Jun 12, 2024 at 10:17=E2=80=AFPM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Hans,
->
-> On Wed, Jun 12, 2024 at 04:30:30PM +0200, Hans de Goede wrote:
-> > Sakari I know you have been pushing for MIPI camera descriptions under
-> > ACPI to move to a standardized format and I can see how that is a good
-> > thing, but atm it seems to mainly cause things to break and before
-> > the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
-> > since the information used by the ipu-bridge code does seem to be corre=
-ct.
->
-> Support for capturing from cameras on IPU6 systems (IPU6 ISYS driver and
-> IPU bridge changes) was upstreamed for 6.10, with some drivers such as IV=
-SC
-> (four of them) and IVSC related IPU bridge changes merged for 6.8 already=
-.
->
-> We can't guarantee the continued functioning of downstream drivers in cas=
-es
-> where new upstream drivers for the same devices get merged to the kernel,
-> often with different APIs. You know that as well as I do.
->
-> In other words, there was no regression with respect to the upstream
-> kernel.
+> My system fails to resurrect after `systemctl suspend` with 6.10-rc1,
+> when pressing power button, the machine "sounds" starting(fans roaring),
+> but my keyboard/mouse/monitor is not powered, and I have nothing to
+> do but powering cycle the system.
+>=20
+> I run a bisect session, and narrows it down to following commit:
+>=20
+> 	commit d74169ceb0d2e32438946a2f1f9fc8c803304bd6
+> 	Author: Dimitri Sivanich <sivanich@hpe.com>
+> 	Date:   Wed Apr 24 15:16:29 2024 +0800
+>=20
+> 	    iommu/vt-d: Allocate DMAR fault interrupts locally
+> 	   =20
+> 	    The Intel IOMMU code currently tries to allocate all DMAR fault inte=
+rrupt
+> 	    vectors on the boot cpu.  On large systems with high DMAR counts this
+> 	    results in vector exhaustion, and most of the vectors are not initia=
+lly
+> 	    allocated socket local.
+> 	   =20
+> 	    Instead, have a cpu on each node do the vector allocation for the DM=
+ARs on
+> 	    that node.  The boot cpu still does the allocation for its node duri=
+ng its
+> 	    boot sequence.
+> 	   =20
+> 	    Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
+> 	    Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> 	    Link: https://lore.kernel.org/r/Zfydpp2Hm+as16TY@hpe.com
+> 	    Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 	    Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> =20
+> And I have confirmed that reverting this commit can fix my problem.
 
-Users' opinions on this may differ I suppose.
+Bisected regression. Should we simply revert the patch?
 
-If a user sees a new kernel warning on boot, they will easily count it
-as a regression, and with panic_on_warn this becomes a full-fledged
-kernel crash.
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-This is bad, even though it may be coming from a new driver strictly speaki=
-ng.
+--zPE+q47d1Rs+wmMB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZmrSVQAKCRAw5/Bqldv6
+8ki+AJ9/bBY1k8ENQVWi+6+PKUSm2tkMyQCgoBbM80fLpif/6CObXI7quPCcmd0=
+=i6Pf
+-----END PGP SIGNATURE-----
+
+--zPE+q47d1Rs+wmMB--
