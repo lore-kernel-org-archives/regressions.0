@@ -1,100 +1,106 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A77149C79
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 17:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531AE14A4D0;
+	Thu, 13 Jun 2024 17:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718300180; cv=none; b=FmZksS3PNxCBPX9fbM/8TTb/+xgoZx02/wviQo+tEEtqPfLpAEVQS+tUH8xabcm09pQhXpa9S+bT+0sdYdFKI/Su+8m17t1qs4RpDWosUQiwYJJqwcSsmgDscjROWxh5d2HThgldOWQ4SWlT1FsOoBQlVblRNlz8h/xW9eKJM6I=
+	t=1718301249; cv=none; b=RwQvFhixdZYjcAT15LfCNXULo9piD7v3iExvQTwkI0zeWSNQEfO/m+M4r7fuMl5Rm/z0eLPx6tZc6WnHNRFTDBI3Q0EIVceo9+OO8P4n8wtWLjcZjmmn26C9hHEB8L2lIzC5Gob4RzPJLsSlWxOnZojTiF53+ukufZlGvFD/zQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718300180; c=relaxed/simple;
-	bh=wpYAeO3qLDmEbVwjk+bLqgGvh+uERDkZc9Q/nNwO7LM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y1i/kEEm+FZ33E0ghXoWzSTEjUXMmVupcaZFvqrbioc3mEHLvpKN4y6fsJRYn8B0L4QqfJGNAELZSMONFCril6RXIqLIkWkJBS8uB6MKfiCyTwcTabriQAQ/dOHmgIRT7mvYRKAtu0hTnq87p5KTP/D2mqjLvl5rQZM2lwu8Aho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=fE2+e6Np; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1718301249; c=relaxed/simple;
+	bh=RBZcgEl7qpetDPHuJQ6Fm2I9ulDqJTKERRhzxqPui4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9L0aOTEVxR9nb/SPSnxeNAZIiPFZPw3TuVw3CNUBk42Xer2/AW1pd+bud+IKFBSyINuaMEP3stJb8okIXnDdFudMddrML1+ZcHKXbXmQdbVZnREWBn4h+hylgoFPqLgIkIgvB/nq/NmfRL/kNvP3RqR9kA7DgIyVRTvV0pqVMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ap1V0cn2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="fE2+e6Np"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dff13c4cec0so230014276.2
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 10:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1718300177; x=1718904977; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GErvgxd9rMF9jDiySOwKqOC0vAMN90Lf+q/hWMcRinA=;
-        b=fE2+e6NpA8b0HNW23OWX+CLUAYRq4BYO36yw8HFH/xAciysL5/wNUxFwfNE26rR6Kq
-         12MlTVrPZRxpSPcWIf7itEUl5vJLFwZiyEXnCuGx0P71XatA1WId0KGIHB1mO6yn3do8
-         XtF+Q2zgWEUchJkGtLItlRjL1dHCHdo18Q9ziKDe5bKnNRc9acahH9pn01/oTSdO5X7o
-         rtKJr+UKkilqQ8fj+jKjhVwd5YCmTFlK6+5ikQmDuXOKjuy6vHcTBp9p8xkECxTdA2Ki
-         B6szU//es9V0s1p9BMZPql5ig+WVmrMMOcTpMticz+Y40qZI3HDC7XYy/O8uuGoo/hdV
-         7Dmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718300177; x=1718904977;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GErvgxd9rMF9jDiySOwKqOC0vAMN90Lf+q/hWMcRinA=;
-        b=mnN9yg7moTNa5+8qZfeaVx8223vUydPVQMdM479ydcq/dLAdGOHv2Ew+K8Fh4NCQML
-         BmWiWMBAmB8VfTtjR0MhcfobJBuZi6BfQJHpLwL0fsPxuzdb5FV4bvzDcAcfzM78ueRi
-         SUV8OEobqfZI9AEEywnbs/qv9Unm6WR/OLPj2gwhBDTI7Qk4kcXFB0VNRp6Ai7SxCLPc
-         kjgABDsiljXWWsdmo67/XiHc0dDb6WZ7mudFSsXYsGEAAoQQJs/p/83oDmwI4eSI3yDn
-         AUWif/3eGw3r+fG1HTgxao43EOI5j8sbtKY5ibnsvn6dGpyI28KGeY+nItf8bykRfLbe
-         oDhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUk1IUruEYobzQ+8L4UmMyHgw4WMpKyWc7WmPyJ32zJT0lxxPGGw7YdkfxT/3z7ZUHPEaTvEPw0Btmbcg2X4jYerViMIZ1O4tUpqUw=
-X-Gm-Message-State: AOJu0YySiqW1jJHmjqWaXWfJAyTBVFs//RDSPHBXeNLuULKxU3e/YuF+
-	TYb3AXSuAYronzpAmEdKibi64mz//xXU0plfK3QIStFHSs+H829G8kyrZvtC+mWo9GJ3g8cXkWr
-	mFJiuoof5+YAwxpjOu9DXJq7OZeKP/O4AgHFC
-X-Google-Smtp-Source: AGHT+IFHmbiArDsXZWAVYs3rjmdh3ys4tk76bUfvWftcy8jvKjto9zOVodRX/SH/AwXV4pGdCMt5fhvB8xha1GEmN7I=
-X-Received: by 2002:a25:260b:0:b0:dfb:d69:5657 with SMTP id
- 3f1490d57ef6-dff1534f118mr168388276.9.1718300177648; Thu, 13 Jun 2024
- 10:36:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ap1V0cn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B18C2BBFC;
+	Thu, 13 Jun 2024 17:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718301248;
+	bh=RBZcgEl7qpetDPHuJQ6Fm2I9ulDqJTKERRhzxqPui4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ap1V0cn2mITe/r6d8gPV/ZQlSqB6ZJTFIGtjvDIZGzZrElc0rqdWDfF2xjA/ekaj7
+	 WKBf61aI/KJy3KyEJmgjua6x55EoeuZzfNQlFmvniIXTkdV4W8wZgbuGm5DIhRSRKz
+	 PeqmzsOvr+2wMvf13UI8akdJABeNaNU7qHsIcT84yRu6Q4xFmB3LTCga4/qQWRPy+K
+	 46/FJQ2KUkzxPUhe1N+lGlUqhMRZnyOT+ScQLVrmqj8pyGuE511Fe7bH3LXmDKUMjN
+	 yLJnreQkyRA3MrUbDMsfFrT0RmhNsPK0/xu/6BQCCwacKhcNd/22u6klXJwg/Q4kOv
+	 7zN4gZZdez0wQ==
+Date: Thu, 13 Jun 2024 19:54:02 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Werner Fischer <devlists@wefi.net>,
+	Daniel Drake <drake@endlessos.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jian-Hong Pan <jhp@endlessos.org>,
+	Dieter Mummenschanz <dmummenschanz@web.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-ide@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
+ port
+Message-ID: <ZmsyOjE5DkeM9Ut/@x1-carbon.lan>
+References: <20240206211352.1664816-1-cassel@kernel.org>
+ <20240206211352.1664816-3-cassel@kernel.org>
+ <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
+ <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
+ <ZmrwksRyOkQq1OPV@x1-carbon.lan>
+ <Zmr2a53RwyevjQYA@ryzen.lan>
+ <10f95864-3674-4c69-8abf-d4b9f56f9ec4@t-8ch.de>
+ <ZmsST1kF34A9f4-y@ryzen.lan>
+ <6d5e7f17-6760-4128-a5d5-22ae2a87dadf@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvWXuWyd3NiX3WwRyorRiDRbxGmRW_7aVnBVKUVA_TaGg@mail.gmail.com>
-In-Reply-To: <CA+G9fYvWXuWyd3NiX3WwRyorRiDRbxGmRW_7aVnBVKUVA_TaGg@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 13 Jun 2024 13:36:06 -0400
-Message-ID: <CAHC9VhSeNGo4fPY0H5eM_fFsPSQ18xWUYMvyHBChEysXk-+00Q@mail.gmail.com>
-Subject: Re: security: ima_policy.c:427:17: error: too many arguments to
- function 'ima_filter_rule_init'
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, GUO Zihua <guozihua@huawei.com>, 
-	John Johansen <john.johansen@canonical.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d5e7f17-6760-4128-a5d5-22ae2a87dadf@t-8ch.de>
 
-On Thu, Jun 13, 2024 at 8:43=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> The arm and arm64 kselftests builds started failing on Linux next-2024061=
-3 tag.
-> Please find the build log and related links below.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On Thu, Jun 13, 2024 at 07:33:09PM +0200, Thomas Weißschuh wrote:
+> On 2024-06-13 17:37:51+0000, Niklas Cassel wrote:
+> > On Thu, Jun 13, 2024 at 04:49:43PM +0200, Thomas Weißschuh wrote:
+> > > On 2024-06-13 15:38:51+0000, Niklas Cassel wrote:
+> > > > On Thu, Jun 13, 2024 at 03:13:54PM +0200, Niklas Cassel wrote:
+> > > > > On Thu, Jun 13, 2024 at 05:29:31PM +0900, Damien Le Moal wrote:
+> > > > > > On 6/13/24 15:34, Thomas Weißschuh wrote:
+> > > > 
+> > > > > I suggest that we:
+> > > > > 1) Merge Damien's fix.
+> > > > 
+> > > > This might of course result in us getting other bug reports about their
+> > > > distro no longer automounting their eSATA devices... and they might
+> > > > consider that a user space regression as well.
+> > > > (Since that behavior has now been there since 8a3e33cf92c7 ("ata: ahci:
+> > > > find eSATA ports and flag them as removable"), which was merged in 2015.)
+> > > 
+> > > This is quite likely.
+> > > 
+> > > How about reverting the "ata: ahci: a hotplug capable port is an external"
+> > > for now and work on a proper fix, including dev_set_removable() for an
+> > > upcoming release?
+> > 
+> > Perhaps I'm missing something here, but how will dev_set_removable(),
+> > which sets a different sysfs attibute solve that "problem"?
+> 
+> Indeed, it finally won't help.
+> But only reverting that single commit should minimize the impact on
+> users and give time to work on and discuss something better.
 
-Thank you, the same error was reported by the kernel test robot
-overnight.  I'm going to look at it today, I suspect it is a conflict
-between the LSM and IMA/EVM branches.  FWIW, I compiled and booted a
-kernel using the LSM changes yesterday without problem.
+Reverting is not a good solution, because that means that we will not
+disable LPM on hot-plug capable devices, which means that we will break
+hot-plug. So that would be an even more serious bug :)
 
-> Build error:
-> --------
-> security/integrity/ima/ima_policy.c: In function 'ima_lsm_copy_rule':
-> security/integrity/ima/ima_policy.c:427:17: error: too many arguments
-> to function 'ima_filter_rule_init'
->   427 |                 ima_filter_rule_init(nentry->lsm[i].type, Audit_e=
-qual,
->       |                 ^~~~~~~~~~~~~~~~~~~~
+In my opinion, it seems quite clear that the current code is wrong
+(at least according to the SPC-6 specification), so I see no reason
+why we shouldn't just make the code spec compliant.
 
---=20
-paul-moore.com
+(and if a device is not spec complinant, it should be quirked.)
+
+Damien, if you feel otherwise, please say so.
+
+
+Kind regards,
+Niklas
