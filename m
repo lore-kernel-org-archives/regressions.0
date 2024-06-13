@@ -1,176 +1,83 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CAF143747
-	for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 13:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BA6A94D;
+	Thu, 13 Jun 2024 13:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284565; cv=none; b=QWOV5Ze+ns6WMuz4+zmnazJFTKcMMdvfoRDQsJYtLc0olJGFC17skF2OPY7JEsrxZBrwsNTCQeiDxBr563FJ4ARgo9lqAwgiQbs7I59NzOGn27R8EBZMZZQcIL7S030bBFQ0ZPYXKHFwSNQuT4QgbGAScfXOjaumRdhJ8Sgdvkc=
+	t=1718285937; cv=none; b=Csr8mUaDluGVCsEZFgyuIzU+bcZM9U6mdizufoJmyBfijl/LkEl/L3Kn/r50SVNa7ZwyZC7Dx5vlDgiAREZX3aPM7kNh1e4KNM5fF58clTtFbi+gDRj+IB+ZGhSlnr4HWBxkctw9cL/hgh8U1TBx6rhd1BEQGTbCHQMuq6AH6sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284565; c=relaxed/simple;
-	bh=V1MODXg2FeVlGh8cU9j9/KuGFRIBbgRDLnpu/K0rcBE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oE10N0E64WdB9xcHBNpraPJZmkUjw0wt8SnwRTIjirJ+341D1nGvFOoRmXWwtKsjjudFPsA8xCF6PzOEfJhxZTND/s3i1ryiqtWLHBTfBRcYGdXyeuRNO6wtPzyBbnZ36/8stHFOnvQN7x0jEy8zMOgwNgzbvkVlIAnCZyHxOsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HBEd9/nS; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718285937; c=relaxed/simple;
+	bh=TjT4QmoA+HDTCEVjWBmpuRPVNcZHx0a5efu4SQcVzR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S2J4D92bapu9zXbhHGkEhjBjdkWudJCjhLTRUUwFCqNYXppfwoY2nOxFGQZeMX4KCR0YRalQUKc1PzwIyyA0ekuvKPKhWF6Bkwt2R3XSIbP/8ZqlyIbpt7pkzutH11uh2lqbJOtjimpBoq23Tolj0P4HSRYNwfSva/ZkndXm+aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ64UE31; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBEd9/nS"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-80b8d0d19e8so290369241.1
-        for <regressions@lists.linux.dev>; Thu, 13 Jun 2024 06:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718284561; x=1718889361; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=61ouTCt8HWN0ZdDws0+ptI7BCpGd4+Hs5oquQFyzwjk=;
-        b=HBEd9/nSPsP/rDsX8sKX72HMkBGj2p3pMWJDMiAL2BAo0PjCarcmSiIeeZX1lTxJeF
-         FPVEF6HtZ+lILzvR61L3YDuy03G6OFCtBQ9h39ot0WYDtx8mpFIGojE6tQIQtcGemUBJ
-         LazZrvqTRhNPxzOdl0obHTE3frAU/1wHYcb2pCkEaryHnBYftOHabjpmUysQla7+Psfx
-         9RT7GHN/BZj0db9vSIzGMC1Q0m+Mf1SgnPJPUCdWiWAfFOu21YMYH3P4/EolFSplvwLM
-         RBdiXu77bnwjGeRCrLYCr5KKSu4hVOVwbGAFVTdNIlZDXkd8ElSX2vnUrlo44RZk//ve
-         UuHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718284561; x=1718889361;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61ouTCt8HWN0ZdDws0+ptI7BCpGd4+Hs5oquQFyzwjk=;
-        b=GSg3AgnWSj7qwbtHPXWQd0GKjY347/sxsEgTQFsqYJ8zt9nX1dG7VBw6796z1CAo2h
-         mP8r/2ld2eMRpAllu+qwmOCirNGuEDQ/n4EN2ZI9g2WDbtN7NgfUapSqUwhX8n5Y35Xo
-         YYxX5Kt3pcPWrgtDe7GN3dOSQNatApHPiyA9qR4wttnMdQUAyIjIOBRhN+DYXJok1gjq
-         +OWXF/4LsDXAptDg9kSsJzpkgMb76h1bxRumJgF98glZH/gr2iZHCUScjd9B4bdWxQr3
-         5JveIrY1VP8PACJj/dmAP7aDtu2POgzoZVcbFF04JFrq1NbWIeX/V8UWwcI/MMsX/HNh
-         TIlw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/V+yHGMpL/RLj3tjEJ7xiHCiyEB3NNjBGxzwrKJFRgQNmbxnmu6I80pDDr9GF0nJc6unEt8q59+UQOfml9YdQc73vMRECURjW3P8=
-X-Gm-Message-State: AOJu0YxLfdJQyCdBgi5wUWZ+HJA7XkbiiXm0G2GatZsHsfjILMtDD444
-	YeKcYC+bu4rP4DcJJqvk0pymWFvDKIYKD5kmVcQZgHM/aagoqxAh2YywJ/JW90nGZH7daMsZ5ep
-	6NDTDBwMC7XnjpIMpENU35BinrVvXXZAVbO7EPA==
-X-Google-Smtp-Source: AGHT+IHv07AcEdT7ldaMS72kgcQ+CTnBQHmRnZDjUaiVpeh19fhu7+o9thMU27bhoaNTxcsaw8QJ+jw+l4h61EPdyUY=
-X-Received: by 2002:a1f:e4c2:0:b0:4ed:f1:e0b7 with SMTP id 71dfb90a1353d-4ed07aad6a4mr4561204e0c.2.1718284560997;
- Thu, 13 Jun 2024 06:16:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ64UE31"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1213C2BBFC;
+	Thu, 13 Jun 2024 13:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718285937;
+	bh=TjT4QmoA+HDTCEVjWBmpuRPVNcZHx0a5efu4SQcVzR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IQ64UE31AErtT4t+h9YhkQe0By0kar4MZ8VY7Bsr3xvxlV8btyeyjYVz17KBO8qIX
+	 ix710aK3bZGYsrUEWVUOeWiE/apxuOxxBsWsUDuyD/3PiH9MsWosQKNifBIR8aG//C
+	 LO0DE87sh9KjnBdx1E2/QYMI5PWJ8a7JAQjhflT/YhumJbdhmhWwyj8Dad4kQkIu9k
+	 Lzyexk0iBkkGx4ZAaeM5tEsWoqBEdd6D3G7qHAI8+LvgYMpwb1qIICkMsfff0PpGGF
+	 nQ3x6wdSUkmBxVTSVZOjIcQs0Dl0/ib66IgHABtNTGiN9d/53YnSzbjP0qCSLeAQOY
+	 VGQURfyKXL4+Q==
+Date: Thu, 13 Jun 2024 15:38:51 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Werner Fischer <devlists@wefi.net>,
+	Daniel Drake <drake@endlessos.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jian-Hong Pan <jhp@endlessos.org>,
+	Dieter Mummenschanz <dmummenschanz@web.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-ide@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 2/5] ata: ahci: a hotplug capable port is an external
+ port
+Message-ID: <Zmr2a53RwyevjQYA@ryzen.lan>
+References: <20240206211352.1664816-1-cassel@kernel.org>
+ <20240206211352.1664816-3-cassel@kernel.org>
+ <c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de>
+ <63b12a50-7921-4f61-b41f-74e074c5ceb3@kernel.org>
+ <ZmrwksRyOkQq1OPV@x1-carbon.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 13 Jun 2024 18:45:49 +0530
-Message-ID: <CA+G9fYveCjzej3SDZR=PBASc=ycdL7xvWENonYCOXCjRJe8+oQ@mail.gmail.com>
-Subject: selftests: ftrace: WARNING: at arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Nianyao Tang <tangnianyao@huawei.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <swboyd@chromium.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZmrwksRyOkQq1OPV@x1-carbon.lan>
 
-The following kernel warning noticed on arm64 qemu-arm64 and rk3399-rock-pi-4
-device while running selftests ftrace tests on Linux next-20240613.
+On Thu, Jun 13, 2024 at 03:13:54PM +0200, Niklas Cassel wrote:
+> On Thu, Jun 13, 2024 at 05:29:31PM +0900, Damien Le Moal wrote:
+> > On 6/13/24 15:34, Thomas Weißschuh wrote:
 
-This is always reproducible on qemu-arm64 and rock-pi-4 device with
-kselftest merge configs
+> I suggest that we:
+> 1) Merge Damien's fix.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+This might of course result in us getting other bug reports about their
+distro no longer automounting their eSATA devices... and they might
+consider that a user space regression as well.
+(Since that behavior has now been there since 8a3e33cf92c7 ("ata: ahci:
+find eSATA ports and flag them as removable"), which was merged in 2015.)
 
-Test log:
--------
-kselftest: Running tests in ftrace
-TAP version 13
-1..1
-# timeout set to 0
-# selftests: ftrace: ftracetest-ktap
-# unlink: cannot unlink
-'/opt/kselftests/default-in-kernel/ftrace/logs/latest': No such file
-or directory
-# TAP version 13
-# 1..141
-# ok 1 Basic trace file check
-<4>[   96.183553] ------------[ cut here ]------------
-<4>[ 96.187100] WARNING: CPU: 1 PID: 538 at
-arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:112 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[   96.188005] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
-sha512_ce sha512_arm64 fuse drm backlight dm_mod ip_tables x_tables
-<4>[   96.189034] CPU: 1 PID: 538 Comm: ftracetest Not tainted
-6.10.0-rc3-next-20240613 #1
-<4>[   96.189183] Hardware name: linux,dummy-virt (DT)
-<4>[   96.189366] pstate: 624000c9 (nZCv daIF +PAN -UAO +TCO -DIT
--SSBS BTYPE=--)
-<4>[ 96.189529] pc : arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:112 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[ 96.189562] lr : arch_stack_walk
-(arch/arm64/kernel/stacktrace.c:109 arch/arm64/kernel/stacktrace.c:155
-arch/arm64/kernel/stacktrace.c:172 arch/arm64/kernel/stacktrace.c:243
-arch/arm64/kernel/stacktrace.c:267)
-<4>[   96.189593] sp : ffff80008000bdf0
-<4>[   96.189610] x29: ffff80008000be80 x28: ffff9969bab84000 x27:
-ffff9969b9c53b98
-<4>[   96.189702] x26: ffff9969bb6a60c0 x25: ffff9969b9c53b98 x24:
-0000000082000000
-<4>[   96.189775] x23: 65cf9969b8823ddc x22: ffff9969b882e518 x21:
-ffff9969b8836200
-<4>[   96.189809] x20: ffff80008000bec8 x19: ffff9969b8823d70 x18:
-0000000002000000
-<4>[   96.189842] x17: 0000000000000000 x16: ffff800080008000 x15:
-00001e8480000000
-<4>[   96.189876] x14: 000000000003d090 x13: 0000000000000000 x12:
-003d090000000000
-<4>[   96.189910] x11: ffff9969bb764150 x10: ffff80008000bf30 x9 :
-ffff9969b88b2970
-<4>[   96.189958] x8 : ffff9969b882e518 x7 : 0000000000000000 x6 :
-0000000000000023
-<4>[   96.189990] x5 : 0000000000000000 x4 : ffff80008000bf30 x3 :
-ffff80008000bfe0
-<4>[   96.190021] x2 : ffff9969b882e518 x1 : ffff9969b882e518 x0 :
-ffff9969b882e518
-<4>[   96.190145] Call trace:
-<4>[ 96.190196] arch_stack_walk (arch/arm64/kernel/stacktrace.c:112
-(discriminator 1) arch/arm64/kernel/stacktrace.c:155 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:172 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:243 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:267 (discriminator 1))
-<4>[ 96.190269] return_address (arch/arm64/kernel/return_address.c:45)
-<4>[ 96.190335] trace_hardirqs_on (kernel/trace/trace_preemptirq.c:56
-(discriminator 1))
-<4>[ 96.190372] handle_softirqs (arch/arm64/include/asm/irqflags.h:26
-arch/arm64/include/asm/irqflags.h:48 kernel/softirq.c:538)
-<4>[   96.190744] ---[ end trace 0000000000000000 ]---
-# ok 2 Basic test for tracers
+However, considering that the definition of the RMB bit has recently
+(2020) been clarified, it is quite clear that we are currently violating
+the spec, so I do still think that setting the RMB bit according to spec
+is the right thing to do.
 
 
+> 2) Modify SCSI to call dev_set_removable() and modify ata_scsiop_inq_std()
+>    to set the "HOT PLUGGABLE" field.
 
-metadata:
-------
-git_describe: next-20240613
-git_ref: master
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-git_sha: 6906a84c482f098d31486df8dc98cead21cce2d0
-git_short_log: 6906a84c482f ("Add linux-next specific files for 20240613")
-arch: arm and arm64
-config: kselftest merge configs
 
-Links:
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304248/suite/log-parser-test/test/check-kernel-exception/log
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240613/testrun/24304248/suite/log-parser-test/tests/
-- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2hoMyyk19L9y5Hg3AT2V3yaedPU
-
-Build reproduce:
---
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2hoMxP9HQelutO3feaEW1G9KhDz/tuxmake_reproducer.sh
-- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2hoMyyk19L9y5Hg3AT2V3yaedPU/reproducer
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Kind regards,
+Niklas
