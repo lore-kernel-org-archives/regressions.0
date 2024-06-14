@@ -1,88 +1,122 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0604195F00
-	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 11:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8F0196C88
+	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 12:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718366285; cv=none; b=Z/C7CLBjN54X7sFpMGGV/e2DGTwKPWegIbjm8pUOBhTsHP7/3KFUWOLmrBOGnC8JDZI2uM0h9IKcfDOjhPNg8C3qa8E7uQufiyZrt95+4lPvsBiQaB7yCF4igoE5bSPuJayep7aAOJ6y8RPHHXTWgBJogUiRxNF3XCheZPR56sg=
+	t=1718367305; cv=none; b=NR1WnwFz7tP1h/6xKeRMqyXZIX93XrunXbpdaW+UkgT2hOktePS47JXrSc25eLP10u+N7frTLOEuF+oZ/+NhulPnJEABIwky/o93EcRBIuEDwsAUn73cwcJkEUVqnlYJBBAWE72Bhlt+JqEhB3PazTnwOli0ig33e9Q7muUzb3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718366285; c=relaxed/simple;
-	bh=gmejPbVGtpOc7QsM/XPi5VtNOQ5sTbkOK7nYwbb7TVE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=TY+5jBKr7+0dpOObC/kiXefnaio3wrY5J3/F/J88iuJsoihZ61c3k5gABV6IWPZebtNgXwcaXKTkgRvVpU/xQZ77+pcF2srfLVaCeMSl8psjNg8B82BEzT2Rp5hpywKyzVE96QAF+QLTp3qgHlxsB1AyF2XM2ZWc+xZZlubAjKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BxxroECE; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718367305; c=relaxed/simple;
+	bh=bT5WI50G/xe0b9CL3tlQRNjDOMccYX8o9ugjNQ5PcwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mrjXGUTZBY5Hq9RT2lwjIcMoyCPjoCdkte/FJ+cUlekIfoA35yTKxQn3Ond6wYIyNcEszbebWQLtQeVXRRoPHLF2ToDKKrAfR9P7yrEk+yHblGxdCg/+qF7YYUtUEzkjPHk2heDowBQxCs1tev4mh4Z3NL3PhJaQMiNB0HFryOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjkturUO; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BxxroECE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=gmejPbVGtpOc7QsM/XPi5VtNOQ5sTbkOK7nYwbb7TVE=; t=1718366282;
-	x=1718798282; b=BxxroECEYw5RtCAHODgJ7E6YVH6sDXWDe4rkrBfVsTWLaNAB1ecsC4uBkL4Yp
-	eZCFM6WntQqP9mnTFAVLums4/DDtCM/TkhL++alfhmzHvDAky0f9o++qrS6mUAEbbspDVjjaLZvvD
-	q0UZORXS/uaKGkqWVCtEACmOiGflD++NOu+T5NDyS5Fc+4OdMrLvghZpwxHzQy1PJ6VHUqhgmdf56
-	6h1lFyREwxOFGZxTz55vBeeHcOIbOCHkrWAMqxMPpUeXHX8CSJQejWz2btolgU8G/qpsHZ2egap1C
-	xEPBTnSoOYq8vUALdq1cxEGlU7XtPVVAloxuvLHrJykq2NYTjA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sI5Z4-00022N-Qw; Fri, 14 Jun 2024 13:57:54 +0200
-Message-ID: <fc203419-e550-4b58-83e1-b2340811faeb@leemhuis.info>
-Date: Fri, 14 Jun 2024 13:57:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjkturUO"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso2618408e87.1
+        for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 05:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718367302; x=1718972102; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LX4EUljvFqSnOBU+TT5aydICyOEMY1+G4VpnprRU4mo=;
+        b=XjkturUO5OAYyhySvyoZmWBZmqetU3l5KxRAuz+jhlsKGf1H9gU+45zoNJp8nod5rZ
+         K+JoH9RCw+w6z+JcqPuHdskxUfp+TcPqfAFFgSMuqM2EhwZ0IoYDEZnRff3dua6X+AH0
+         PcGxh4ZJum0g7LN6wPSpnxyPe5/3M99ADgTU4+SA9rxQdlkFeVtlHOBYWUiA/WVzbjYw
+         8OeLaeDAJ7e1VyHYA4m2vFGEtv3EjFe3Xe8NJAWjg96RpgZu/2X2Z/VCookXTUOPEQvs
+         2nXho8vueOcswiazoOBveQOmdr9T2yRXw+/I7k974MUF64n9lOkIR7hm+5Su8SXUgPkD
+         Odvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718367302; x=1718972102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LX4EUljvFqSnOBU+TT5aydICyOEMY1+G4VpnprRU4mo=;
+        b=VTtNluBzpsLuxDs1zKRKd3Xw35qqrFywfJptaNA7b1GWAIgwnjdWv+B1TNEPZSTneN
+         u9UbRZY5H9QW/DIZnrd9BRs+d+s40UNxw5PMiW5WTfHvQ9HLgrxiOznWZaXsaGdnCfJq
+         U4Vuu3TSBL/8k3j99lWxzOCzoRcEHNezMP8K4J91FnhVYBJfGbsVhy8e33wxALEuaYwj
+         WovchuJGIRXFwzH9yRUKkV1ce9n+cTfwUjAMH4Gxi1dv3bpp2rASdrFQ0CjsNlCE5y25
+         Hkr/1s/1knKdy814Lxj/Nia7h3/Eo8MZvkzlzCBfaHYpEF6sTvcl+FZz1NDscw/r54F2
+         VL6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXm7tlP5UwF5IgtSXjDj04gze6nYzTyOfRMN5sqi7aE2pv7l//f8RUAoMAMKbjcNjq5Kg0iWCwYFw/SE5q6ltelZ+yYeqQODo8Slgo=
+X-Gm-Message-State: AOJu0YyzNmv/3H/sSckzaeVhAYEWTWlK4GHdGF362QS3OKXaUooM4qJm
+	l0P120+/nBLStaWgwt6X1Rna+RCYcIKXZZUlYAemXReP2/x/roJC6iwIvjcVSfU61gk/4iTiGVY
+	8hFOP6jxYs08sVpZjxTRHqi/hfms=
+X-Google-Smtp-Source: AGHT+IEnSljkcDo4Wfe0Fr61DdCGe1zBjBWU2kejP8zs+dh2KgULXRKoka6ALHY8M0+zg9FByfz4kXlhX6OCrrwltRI=
+X-Received: by 2002:ac2:4181:0:b0:516:d219:3779 with SMTP id
+ 2adb3069b0e04-52ca6e99397mr1518697e87.58.1718367301474; Fri, 14 Jun 2024
+ 05:15:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718366282;e79871fe;
-X-HE-SMSGID: 1sI5Z4-00022N-Qw
+References: <CA+G9fYveCjzej3SDZR=PBASc=ycdL7xvWENonYCOXCjRJe8+oQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYveCjzej3SDZR=PBASc=ycdL7xvWENonYCOXCjRJe8+oQ@mail.gmail.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 14 Jun 2024 14:14:50 +0200
+Message-ID: <CANk7y0hEQVTRTZWCJiC8d8pmQVy7fvdL_qQM_Sa__YuBa-5s=A@mail.gmail.com>
+Subject: Re: selftests: ftrace: WARNING: at arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Nianyao Tang <tangnianyao@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Stephen Boyd <swboyd@chromium.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Naresh,
+
+Thanks for finding this.
+
+On Thu, Jun 13, 2024 at 3:16=E2=80=AFPM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> The following kernel warning noticed on arm64 qemu-arm64 and rk3399-rock-=
+pi-4
+> device while running selftests ftrace tests on Linux next-20240613.
+>
+> This is always reproducible on qemu-arm64 and rock-pi-4 device with
+> kselftest merge configs
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Test log:
+> -------
+> kselftest: Running tests in ftrace
+> TAP version 13
+> 1..1
+> # timeout set to 0
+> # selftests: ftrace: ftracetest-ktap
+> # unlink: cannot unlink
+> '/opt/kselftests/default-in-kernel/ftrace/logs/latest': No such file
+> or directory
+> # TAP version 13
+> # 1..141
+> # ok 1 Basic trace file check
+> <4>[   96.183553] ------------[ cut here ]------------
+> <4>[ 96.187100] WARNING: CPU: 1 PID: 538 at
+> arch/arm64/kernel/stacktrace.c:112 arch_stack_walk
 
 
+29c1c24a2707 ("function_graph: Fix up ftrace_graph_ret_addr()") made
+the ftrace_graph_ret_addr() use the
+'idx' pointer to optimise the stack unwinding but arm64, riscv, and
+some other architectures pass `NULL` for this
+parameter. The fix for this is to pass a valid pointer to
+ftrace_graph_ret_addr() like x86_64 is doing.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I will send a patch to fix this unless someone else has already sent one.
 
-#regzbot report:
-https://lore.kernel.org/lkml/ZmVfcEOxmjUHZTSX@hovoldconsulting.com/
-#regzbot introduced: 042a3d80f118
-
-#regzbot report:
-https://lore.kernel.org/lkml/CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com/
-#regzbot resolve: inconclusive: apparently cable related
-
-#regzbot report:
-https://lore.kernel.org/all/c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de/
-#regzbot title: ata: ahci: GNOME/udisks started automounting internal disks
-#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=295958
-#regzbot link: https://github.com/storaged-project/udisks/issues/1282
-#regzbot link: https://github.com/util-linux/util-linux/issues/3088
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218953
-#regzbot introduced: 169f9102f9198b04afffa6164372a4ba4070f
-#regzbot fix: ARM: Remove address checking for MMUless devices
-#regzbot monitor: 169f9102f9198b04afffa6164372a4ba4070f412
-
-#regzbot report: https://lore.kernel.org/all/ZmrTZozoi0t%2Ftuva@duo.ucw.cz/
-#regzbot introduced: v6.9..v6.10-rc3
-#regzbot summary: performance problems on Thinkpad X220 (GPU working
-harder and causing throttling?)
-
-#regzbot report: ttps://bugzilla.kernel.org/show_bug.cgi?id=218902
-#regzbot fix: 02c418774f76a0
+Thanks,
+Puranjay
