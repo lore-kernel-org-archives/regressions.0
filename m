@@ -1,91 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADFB146A7A;
-	Fri, 14 Jun 2024 09:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DD4193091
+	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 10:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718356205; cv=none; b=nqifJa01vcxtbLX/dp4wzouzJN3AIfz+sub7+qd8+7V4gkti3vMDCdCGejxXk7wzEsYe97/wuY2Vkp5WAHVjhwIPiAkq2ESNnn5AhK/BkB4pu+uS0xzA1mUFnPmSTjApTTa/cp8DAkBXf+6K/wiqQ6tSiujrgqumUsvMo3WcDeM=
+	t=1718360299; cv=none; b=rwxZq/4iSxIaj5ID3Qbs9V4TisfwFbP9y+MbGcafZFQCKOOjyVG8Ni3UNVczh0VIluduGehaQASp8sPb1RLltNzLWBZL9yrjGqxViGrh5O1XSvYNehFjKO5rU1B8JhGyCov5VO7C7YWq2hR85aVy+UklXRUbK1IFT7OGRtZmT0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718356205; c=relaxed/simple;
-	bh=CoUsKKpI32pU95daZgGcxXSyemfLlfTxinEmRmDSL1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBm5jfO2m6O6EoaAEGnukVFd55ti7MVcWOEI6rLcceOHhwcFltXhx5oG0lPaX4GnDLYqQo8TpV32VNvOpNvdU1tEDpnXLjBOeYBnAT9P4CvQIJ7QR7E8kXOOUU7JSBLpV61YhcHQUBKtWDABmPOY3VYEbT+3gtp14owzOcNiMTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vxxLdAaz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718360299; c=relaxed/simple;
+	bh=h8LI/aLo2YCQ6LHsew5aV45Yh/X6RYEb897K6QSHCcA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KjlGvp3r4vgPGtODuIXNuuR2VqyQRlp1hDxEGLu2jLVbOvBF1b3n6evmgKiNegy3XQ+B9DzLAmntOxrBXvxmsBvlwT1IVpoy5Fc41wr9QF2fCPT4u9btKMRxhQ1eeYyRQsaM6M1INPFJeuZlZMv0AlZ80izDFwja+EQTPipRF4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEbBKomz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vxxLdAaz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51142C2BD10;
-	Fri, 14 Jun 2024 09:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718356204;
-	bh=CoUsKKpI32pU95daZgGcxXSyemfLlfTxinEmRmDSL1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vxxLdAazcaZPdI0+ItnGVpNbpgrE1yvW7nZwkhj1881EeqjZjzXDLT8N8vfDMXGnq
-	 8oeTYCnMDkHLZdQD375/WN/aYgQ5ua9izz16Yu4dyNbc9LQFu8jJj0rn9E8KEnPnsD
-	 cYRD6pVO8ty/MBxzxKzs9zp00KUZB3rqZVyyWY3E=
-Date: Fri, 14 Jun 2024 11:10:02 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Ismael Luceno <ismael@iodev.co.uk>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>
-Subject: Re: Intel e1000e driver bug on stable (6.9.x)
-Message-ID: <2024061406-refreeze-flatfoot-f33a@gregkh>
-References: <ZmfcJsyCB6M3wr84@pirotess>
- <2024061323-unhappily-mauve-b7ea@gregkh>
- <6dcfa590-8d09-4d3a-9c35-0294099489ed@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEbBKomz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076D2C4AF1C
+	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 10:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718360299;
+	bh=h8LI/aLo2YCQ6LHsew5aV45Yh/X6RYEb897K6QSHCcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UEbBKomzV/KNMhnpo8CPfXQvLOiAnYpmsRSU+Noine82IcDR0hlgvkaKIbbgb+14z
+	 xjJSdxjyRNRJIGfyZ6nS+9FuoJTaWGFDugVjfOa1LaszunyM5QVvakBvbybI+bLrEu
+	 IezpSaCMIQg+Y+3uQDlZQwqizEHfR/KsgmNgdhqR4YBL2fTsnJ9RL+NoFU2MbecL4F
+	 +ziGgLNhu3HMsx4rD3p6Dwg8qHNOYmn0VBnkq0kAtms8a4N0QPWV7QvsFhyPyWhAd9
+	 B9MXHLa+teQhQ2ACerLRHy2yNiV5j03/voL9uXcXmpYAQwKRRYIVD6EpkDR2h42Jow
+	 mPEMcIgaHT2ig==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3d21e7aab20so83351b6e.3
+        for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 03:18:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUzB2n5iApKsU1qa9EnGWau0y5nu9zqBZZURpZ5X6gmhbiyoHLm2npzTqoYKFVLiT8WbX2Ujx/o7uU1ObYmY4Z4/t46V50XLkcVDjc=
+X-Gm-Message-State: AOJu0YyrihETAEnD39MDYzQAsput8VLbhGcsd9Uc9xvukuT6Oc2Evyph
+	X4HWoU8lIszBOE/mJdK1thLxEIP9hGAd3lrjwhPBDXh3mIRMb0Y0nkyp4HlzNoHaOw7Reeh0GWr
+	obpgk0f+LFhOOmRaGiiAjBR3oyuQ=
+X-Google-Smtp-Source: AGHT+IEHJ41s4vZC8w/qfjS4THnTprUyL/hz49O9TrABifs4wGJv/11tj8VA3mnTAyto3HebuvupmbVoS5vb7IMWMY4=
+X-Received: by 2002:a4a:de45:0:b0:5ba:ca86:a025 with SMTP id
+ 006d021491bc7-5bdad9f3f2dmr2229187eaf.0.1718360298223; Fri, 14 Jun 2024
+ 03:18:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6dcfa590-8d09-4d3a-9c35-0294099489ed@leemhuis.info>
+References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
+ <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info> <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+ <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+ <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de> <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
+ <78549853-1763-40cf-9974-3fc737fad093@yahoo.de> <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
+ <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de> <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
+ <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de> <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
+ <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de> <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
+ <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
+ <CAJZ5v0jGGV=i8Swu=c8f9bwo--AckUfqZrt0zeqDWKBijG+Z3A@mail.gmail.com> <bcac5925-fe2b-4570-83b6-182f4a301721@yahoo.de>
+In-Reply-To: <bcac5925-fe2b-4570-83b6-182f4a301721@yahoo.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 14 Jun 2024 12:18:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
+Message-ID: <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
+Subject: Re: Regression, thermal: core: battery reading wrong after wake from
+ S3 [Was: Bug Report according to thermal_core.c]
+To: "fhortner@yahoo.de" <fhortner@yahoo.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 14, 2024 at 08:58:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 13.06.24 10:35, Greg KH wrote:
-> > On Wed, Jun 12, 2024 at 10:33:19PM +0200, Ismael Luceno wrote:
-> >>
-> >> I noticed that the NIC started to fail on a couple of notebooks [0]
-> >> [1] after upgrading to 6.9.1.
-> >>
-> >> I tracked down the problem to commit 861e8086029e ("e1000e: move force
-> >> SMBUS from enable ulp function to avoid PHY loss issue", 2024-03-03),
-> >> included in all 6.9.x releases.
-> >>
-> >> The fix is in commit bfd546a552e1 ("e1000e: move force SMBUS near
-> >> the end of enable_ulp function", 2024-05-28) from mainline.
-> >>
-> >> The NIC fails right after boot on both systems I tried; I mention
-> >> because the description is a bit unclear about that on the fix, maybe
-> >> other systems are affected differently.
-> > 
-> > Now queued up, thanks.
-> 
-> I see that they are in the latest 6.6.y and 6.9.y stable-rcs. Thing is:
-> 
-> bfd546a552e1 causes other regressions, which is why Hui Wang submitted a
-> revert for that one:
-> 
-> https://lore.kernel.org/all/20240611062416.16440-1-hui.wang@canonical.com/
-> 
-> Vitaly Lifshits meanwhile submitted a change that afaics is meant to fix
-> that regression:
-> 
-> https://lore.kernel.org/all/20240613120134.224585-1-vitaly.lifshits@intel.com/
-> 
-> CCed both so they can comment.
-> 
-> Not sure what's the best way forward here, maybe it is "not picking up
-> bfd546a552e1 for now and waiting a few more days till the dust settles".
+On Thu, Jun 13, 2024 at 10:04=E2=80=AFPM fhortner@yahoo.de <fhortner@yahoo.=
+de> wrote:
+>
+> Am 13.06.24 um 17:14 schrieb Rafael J. Wysocki:
+>
+> Let's see if the ACPI thermal zone is the real culprit.
+>
+> The attached patch only adds the delay for thermal zone 0 which is the
+> ACPI thermal zone.  It also prints the ID and type for all of the
+> resuming thermal zones.
+>
+> Please test it (removing all of the test changes/patches tried so far)
+> and let me know what happens to the battery readings.
+>
+> Patch
+>
+> thermal-delay-resume.patch
+>
+> does not work. Output according to dmesg.txt
+>
+> Attached is a slightly modified version of the last patch I sent.
+> Please test it and let me know if it addresses the problem you are
+> seeing.
+>
+> If it helps, I think we are done with this at least for now.
+>
+> patch thermal-core-resume-prio.patch with .priority =3D -1 does work
+>
+> One more thing to try is the attached patch (independent of the
+> previous one) to lower the priority of the thermal PM notifier to make
+> it run always after the ACPI battery one.
+>
+> Please test this one too and let me know if it works for you.
+>
+> patch thermal-core-resume-prio.patch
+>
+> with .priority =3D INT_MIN does also work.
+>
+> If you need any further tests, please don't hesitate to tell me so.
 
-Ok, I'll just not pick this one up and let the maintainers figure it
-out as this is still broken in Linus's tree as well.
+No, thank you, I think you've done enough and it is appreciated.
 
-Thanks for noticing this!
+I don't see any particular drawbacks of this approach and investing
+more time in trying to get to the bottom of the issue is probably not
+worth it.
 
-thanks,
+I'm going to submit the last patch as the proposed solution.
 
-greg k-h
+> Thank you for your help!
+
+No problem and thank you!
