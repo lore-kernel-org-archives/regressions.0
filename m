@@ -1,119 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DD4193091
-	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 10:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0604195F00
+	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 11:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718360299; cv=none; b=rwxZq/4iSxIaj5ID3Qbs9V4TisfwFbP9y+MbGcafZFQCKOOjyVG8Ni3UNVczh0VIluduGehaQASp8sPb1RLltNzLWBZL9yrjGqxViGrh5O1XSvYNehFjKO5rU1B8JhGyCov5VO7C7YWq2hR85aVy+UklXRUbK1IFT7OGRtZmT0M=
+	t=1718366285; cv=none; b=Z/C7CLBjN54X7sFpMGGV/e2DGTwKPWegIbjm8pUOBhTsHP7/3KFUWOLmrBOGnC8JDZI2uM0h9IKcfDOjhPNg8C3qa8E7uQufiyZrt95+4lPvsBiQaB7yCF4igoE5bSPuJayep7aAOJ6y8RPHHXTWgBJogUiRxNF3XCheZPR56sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718360299; c=relaxed/simple;
-	bh=h8LI/aLo2YCQ6LHsew5aV45Yh/X6RYEb897K6QSHCcA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KjlGvp3r4vgPGtODuIXNuuR2VqyQRlp1hDxEGLu2jLVbOvBF1b3n6evmgKiNegy3XQ+B9DzLAmntOxrBXvxmsBvlwT1IVpoy5Fc41wr9QF2fCPT4u9btKMRxhQ1eeYyRQsaM6M1INPFJeuZlZMv0AlZ80izDFwja+EQTPipRF4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEbBKomz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718366285; c=relaxed/simple;
+	bh=gmejPbVGtpOc7QsM/XPi5VtNOQ5sTbkOK7nYwbb7TVE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=TY+5jBKr7+0dpOObC/kiXefnaio3wrY5J3/F/J88iuJsoihZ61c3k5gABV6IWPZebtNgXwcaXKTkgRvVpU/xQZ77+pcF2srfLVaCeMSl8psjNg8B82BEzT2Rp5hpywKyzVE96QAF+QLTp3qgHlxsB1AyF2XM2ZWc+xZZlubAjKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BxxroECE; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEbBKomz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076D2C4AF1C
-	for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 10:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718360299;
-	bh=h8LI/aLo2YCQ6LHsew5aV45Yh/X6RYEb897K6QSHCcA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UEbBKomzV/KNMhnpo8CPfXQvLOiAnYpmsRSU+Noine82IcDR0hlgvkaKIbbgb+14z
-	 xjJSdxjyRNRJIGfyZ6nS+9FuoJTaWGFDugVjfOa1LaszunyM5QVvakBvbybI+bLrEu
-	 IezpSaCMIQg+Y+3uQDlZQwqizEHfR/KsgmNgdhqR4YBL2fTsnJ9RL+NoFU2MbecL4F
-	 +ziGgLNhu3HMsx4rD3p6Dwg8qHNOYmn0VBnkq0kAtms8a4N0QPWV7QvsFhyPyWhAd9
-	 B9MXHLa+teQhQ2ACerLRHy2yNiV5j03/voL9uXcXmpYAQwKRRYIVD6EpkDR2h42Jow
-	 mPEMcIgaHT2ig==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3d21e7aab20so83351b6e.3
-        for <regressions@lists.linux.dev>; Fri, 14 Jun 2024 03:18:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUzB2n5iApKsU1qa9EnGWau0y5nu9zqBZZURpZ5X6gmhbiyoHLm2npzTqoYKFVLiT8WbX2Ujx/o7uU1ObYmY4Z4/t46V50XLkcVDjc=
-X-Gm-Message-State: AOJu0YyrihETAEnD39MDYzQAsput8VLbhGcsd9Uc9xvukuT6Oc2Evyph
-	X4HWoU8lIszBOE/mJdK1thLxEIP9hGAd3lrjwhPBDXh3mIRMb0Y0nkyp4HlzNoHaOw7Reeh0GWr
-	obpgk0f+LFhOOmRaGiiAjBR3oyuQ=
-X-Google-Smtp-Source: AGHT+IEHJ41s4vZC8w/qfjS4THnTprUyL/hz49O9TrABifs4wGJv/11tj8VA3mnTAyto3HebuvupmbVoS5vb7IMWMY4=
-X-Received: by 2002:a4a:de45:0:b0:5ba:ca86:a025 with SMTP id
- 006d021491bc7-5bdad9f3f2dmr2229187eaf.0.1718360298223; Fri, 14 Jun 2024
- 03:18:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BxxroECE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=gmejPbVGtpOc7QsM/XPi5VtNOQ5sTbkOK7nYwbb7TVE=; t=1718366282;
+	x=1718798282; b=BxxroECEYw5RtCAHODgJ7E6YVH6sDXWDe4rkrBfVsTWLaNAB1ecsC4uBkL4Yp
+	eZCFM6WntQqP9mnTFAVLums4/DDtCM/TkhL++alfhmzHvDAky0f9o++qrS6mUAEbbspDVjjaLZvvD
+	q0UZORXS/uaKGkqWVCtEACmOiGflD++NOu+T5NDyS5Fc+4OdMrLvghZpwxHzQy1PJ6VHUqhgmdf56
+	6h1lFyREwxOFGZxTz55vBeeHcOIbOCHkrWAMqxMPpUeXHX8CSJQejWz2btolgU8G/qpsHZ2egap1C
+	xEPBTnSoOYq8vUALdq1cxEGlU7XtPVVAloxuvLHrJykq2NYTjA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sI5Z4-00022N-Qw; Fri, 14 Jun 2024 13:57:54 +0200
+Message-ID: <fc203419-e550-4b58-83e1-b2340811faeb@leemhuis.info>
+Date: Fri, 14 Jun 2024 13:57:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info> <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
- <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
- <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de> <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
- <78549853-1763-40cf-9974-3fc737fad093@yahoo.de> <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
- <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de> <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
- <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de> <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
- <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de> <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
- <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
- <CAJZ5v0jGGV=i8Swu=c8f9bwo--AckUfqZrt0zeqDWKBijG+Z3A@mail.gmail.com> <bcac5925-fe2b-4570-83b6-182f4a301721@yahoo.de>
-In-Reply-To: <bcac5925-fe2b-4570-83b6-182f4a301721@yahoo.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 14 Jun 2024 12:18:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
-Message-ID: <CAJZ5v0h7WnfQxhobA6B7S3Tvo-AnKTR9kP+5aexa6rixqpyHJg@mail.gmail.com>
-Subject: Re: Regression, thermal: core: battery reading wrong after wake from
- S3 [Was: Bug Report according to thermal_core.c]
-To: "fhortner@yahoo.de" <fhortner@yahoo.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718366282;e79871fe;
+X-HE-SMSGID: 1sI5Z4-00022N-Qw
 
-On Thu, Jun 13, 2024 at 10:04=E2=80=AFPM fhortner@yahoo.de <fhortner@yahoo.=
-de> wrote:
->
-> Am 13.06.24 um 17:14 schrieb Rafael J. Wysocki:
->
-> Let's see if the ACPI thermal zone is the real culprit.
->
-> The attached patch only adds the delay for thermal zone 0 which is the
-> ACPI thermal zone.  It also prints the ID and type for all of the
-> resuming thermal zones.
->
-> Please test it (removing all of the test changes/patches tried so far)
-> and let me know what happens to the battery readings.
->
-> Patch
->
-> thermal-delay-resume.patch
->
-> does not work. Output according to dmesg.txt
->
-> Attached is a slightly modified version of the last patch I sent.
-> Please test it and let me know if it addresses the problem you are
-> seeing.
->
-> If it helps, I think we are done with this at least for now.
->
-> patch thermal-core-resume-prio.patch with .priority =3D -1 does work
->
-> One more thing to try is the attached patch (independent of the
-> previous one) to lower the priority of the thermal PM notifier to make
-> it run always after the ACPI battery one.
->
-> Please test this one too and let me know if it works for you.
->
-> patch thermal-core-resume-prio.patch
->
-> with .priority =3D INT_MIN does also work.
->
-> If you need any further tests, please don't hesitate to tell me so.
 
-No, thank you, I think you've done enough and it is appreciated.
 
-I don't see any particular drawbacks of this approach and investing
-more time in trying to get to the bottom of the issue is probably not
-worth it.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I'm going to submit the last patch as the proposed solution.
+#regzbot report:
+https://lore.kernel.org/lkml/ZmVfcEOxmjUHZTSX@hovoldconsulting.com/
+#regzbot introduced: 042a3d80f118
 
-> Thank you for your help!
+#regzbot report:
+https://lore.kernel.org/lkml/CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com/
+#regzbot resolve: inconclusive: apparently cable related
 
-No problem and thank you!
+#regzbot report:
+https://lore.kernel.org/all/c0de8262-dc4b-4c22-9fac-33432e5bddd3@t-8ch.de/
+#regzbot title: ata: ahci: GNOME/udisks started automounting internal disks
+#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=295958
+#regzbot link: https://github.com/storaged-project/udisks/issues/1282
+#regzbot link: https://github.com/util-linux/util-linux/issues/3088
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218953
+#regzbot introduced: 169f9102f9198b04afffa6164372a4ba4070f
+#regzbot fix: ARM: Remove address checking for MMUless devices
+#regzbot monitor: 169f9102f9198b04afffa6164372a4ba4070f412
+
+#regzbot report: https://lore.kernel.org/all/ZmrTZozoi0t%2Ftuva@duo.ucw.cz/
+#regzbot introduced: v6.9..v6.10-rc3
+#regzbot summary: performance problems on Thinkpad X220 (GPU working
+harder and causing throttling?)
+
+#regzbot report: ttps://bugzilla.kernel.org/show_bug.cgi?id=218902
+#regzbot fix: 02c418774f76a0
