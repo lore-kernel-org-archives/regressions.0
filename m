@@ -1,91 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678A015EFDF;
-	Fri, 14 Jun 2024 15:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75A2186E50;
+	Fri, 14 Jun 2024 22:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378618; cv=none; b=D9/mxI0VvFOxka9tDBDs9Zg/XStgKQjLzz2tRgKYy/xQe8+Rsk6vSC5xX8Mfm1AYJa11A9vS4gyd5q6HsDe+ic7WtwzJsoAbZGbrQ5q2GbmQZ+6YZfL82cUUMfbwt1fmH5ymXYaTHUCwrFex+WkffyH8Er2/Xhb8u8XlKkFkA/c=
+	t=1718405339; cv=none; b=olFffoW0bSeNabr2//GrxkgcNdSOEnlOVQo51pyhg3ISypIbIdWKENoYvSeAqk5ZaJUKYdmqnRl896Zy442q650zkly+2UtIAtw2icWg936poUBcq0xiORLgh6JaX7HP9aLhBaLbI/6cPl7ncfbHXsy7JjCFTsWj26dJr0qOCDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378618; c=relaxed/simple;
-	bh=D8SdDyZNxqPcDlfI0tBoGYiGmsRowmEdQjGm0ySvkak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gih61EeyzpPTpTGolZy6AdY6oR3N13U0OUOvJDkdHGBPEiUUfhHJydo9EEqyGbbM1OoosqYL5OrVom7wg0J/matmY/mTmVE/JEHknRy57p3WiYRNtloH9sZyL/3PywKKNinytD7C39e3wePuSWemONcwXgeN966M4O/bn67T/kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHpA3rsH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718405339; c=relaxed/simple;
+	bh=UB2dyq2YKXi+CwfD4VFvpLWhniVpGZGbq09DF5P2wbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JKi3R/87zzMa5kdUKpJ3ZZXAGweN7dSNNYbHvZF8LjtBhjswMCoCh8JcRitGpxbeg1h/4eVPSJ0kaxGs74FkwDXHMrxmddYKEWxq84B0kUplN6OGNQhyG8SSjwjleLbRH2vkOm0OxWBkhq1QQJeRm9cnM6ayWBs74Tt+4jvKVY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzrzyEjt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHpA3rsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFA3C2BD10;
-	Fri, 14 Jun 2024 15:23:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzrzyEjt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C20C2BD10;
+	Fri, 14 Jun 2024 22:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718378618;
-	bh=D8SdDyZNxqPcDlfI0tBoGYiGmsRowmEdQjGm0ySvkak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sHpA3rsHkpa6n6ixnEQO/NMuV/ZkYgZKABpMdhSMNnw5sd8BMJIJmB0IeNM2bVWTV
-	 8pt8diEECJ6RQLI+eaOzpI+0wzuHj1ZcD6cfZVsNNp3j0cIhdH0abpP1MzFw3YS192
-	 Bn0/xMXehyj0xc0h+LCZsMLv/mEFrFFooNnOBORaKEdtGYxj13kFgplmulbDkBr/0T
-	 mqdtEoxMQKPcwdS3fmdGN6hMMGvVw78VY0hxpjnzs3/cdoXFwOOvc9HQYK9k97Jz6i
-	 F9/z3o3bMhh9hJFqjDkkAxwqTG18R57nHz6Y7Gj+mv8P9DdxZazw5cNLSu2e5BrhVv
-	 vgNxLYRGfQFSw==
-Date: Fri, 14 Jun 2024 16:23:34 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Aishwarya TCV <Aishwarya.TCV@arm.com>
-Subject: Re: selftests: arm64: fp-stress: KERNEL-1-0/3-0/4-0/6-0 - gcc-13 -
- Failed - clang-pass
-Message-ID: <Zmxgds7Ms5K6wmkj@finisterre.sirena.org.uk>
-References: <CA+G9fYtobhBTnH1=2oHxesLfyYd2VGK55nJn+iniWPj2vyNCOQ@mail.gmail.com>
+	s=k20201202; t=1718405339;
+	bh=UB2dyq2YKXi+CwfD4VFvpLWhniVpGZGbq09DF5P2wbk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HzrzyEjtTELe122vYtu7ZuY7R5yFv9Q4+hohAQZzKb19Un0DuhGfnGhIRBioqaTXK
+	 pDzCVddIEQXlRUOkIC4lP2NISbEsAGhScXS9bMjEDQ33SgHv7DfmVF3/JMh2MrzRJv
+	 NNXY14PqAz8IOAWv0IdFZn4dcLMAn69uG0MnQuDtebs3TDo4rawgapTpUa4gpsAV29
+	 OueL1arucQ6BgmDwc//EVeZ2LbuEA620ATQ18S6pUQGSYSvuI0ZZ1qWIn5sutdkmMj
+	 ZlNhjPuMIQzPa/BY1OZ5HzocZ1vBvpNd0Q2t/WUnOLtkvxC/g4O8DbmoFsosnZj6ON
+	 WegJHN1KT6XEw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	regressions@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+Date: Fri, 14 Jun 2024 17:48:49 -0500
+Message-ID: <171840533353.102487.16743739137970732641.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240608114529.23060-1-johan+linaro@kernel.org>
+References: <20240608114529.23060-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HD+u2jxYKMXTxpY3"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYtobhBTnH1=2oHxesLfyYd2VGK55nJn+iniWPj2vyNCOQ@mail.gmail.com>
-X-Cookie: Your love life will be... interesting.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
---HD+u2jxYKMXTxpY3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, 08 Jun 2024 13:45:29 +0200, Johan Hovold wrote:
+> Disconnecting an external display triggers a hypervisor reset on the
+> Lenovo ThinkPad X13s since 6.10-rc1 which enabled UCSI. Disable it again
+> until the regression has been fixed properly.
+> 
+> 
 
-On Thu, Jun 13, 2024 at 07:21:15PM +0530, Naresh Kamboju wrote:
-> The following selftests: arm64 tests failed on FVP-aemva test and kernel
-> built with gcc-13 but pass with clang.
->=20
-> arm64_fp-stress_KERNEL-1-0/3-0/4-0/6-0 - gcc-13 - Failed
-> arm64_fp-stress_KERNEL-1-0/3-0/4-0/6-0 - clang-18 - Pass
+Applied, thanks!
 
-This seems vanishingly unlikely to be compiler related without some
-other information suggesting why it might compiler related.  It is more
-likely that your GCC run suffered the very intermittent glitch which
-we've been aware of for a while.
+[1/1] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+      commit: ad3dd9592b2a1d2f9e6ffeedfd81602f91f1ba09
 
---HD+u2jxYKMXTxpY3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZsYHUACgkQJNaLcl1U
-h9CAWwf/a0pSAw+DbWzM6Fe/PkhNmHLgbX+JX3F3jqYiNkqSry4njPH92PLX89Bx
-1FAcozNEF+GBfOMVJMyv9dkcE+YD8zIOC34vW5VYcHHnSsMXNZT9RrWWs6dWG0LS
-0FqH0mGjAJwk0ainYOBk/d+94Re0NP5vpHIOhqZ+vc+KM5t0bGRV/iIE6xiGlRqD
-40abY7vf9rdtMi+2qMLgR98VHI/32g2W3sPOjQSNogZKkw70s7txIfhoqIyA0WNK
-blLo5P4ehHnFwiq/JnjAtqKjc7Bgbs/l4E51jUDmomJ8LUcDU04MVVNd1WiGPSZW
-7+zPuhIcdrDn/AxrovzeewO1wloBuA==
-=i8mz
------END PGP SIGNATURE-----
-
---HD+u2jxYKMXTxpY3--
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
