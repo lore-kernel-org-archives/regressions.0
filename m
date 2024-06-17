@@ -1,90 +1,80 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650D5190463;
-	Mon, 17 Jun 2024 08:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CBD19067E;
+	Mon, 17 Jun 2024 09:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718614185; cv=none; b=b8qdk2MyesBB+2z/BCv/CO+cMOugJJVu4XFp00dp8wpr9uAjjbRpfSG0B/O4KswZc3uYCeCmaw3caNoixX8zxym7xV9JnBfRRdbHpALCZVvJvoM2yuU0V6oOwtgauFfvUmPYnlc4ajh3TFLiJ5HWoiG7xEpcopDR+dEyGo9t3Uk=
+	t=1718615307; cv=none; b=lKbP4qiO1vOZvKoMI9wLMITDyAUXW2+WnFhNHGHyJrVDTs1mw5Q/8SJ5+8YmoC19L9faPQE9PpfUPqdIqxUEr8KvsTPtnV6MkmO2NbUa6ukQO8Fr6x36kFh5xo58qzbsfhRl92RqhszHoVD3HwmqAtA63aASzkZB5rS08jAAck8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718614185; c=relaxed/simple;
-	bh=xG3H4SUiJTh6xwopJFfd72vmoAk7JKkimOYJ3eNKzM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IhKmkhBnkx2CCyk4rfK3OTGq8DZPpsAiVKQmPI147TQxQjjjyCRwhOEm6+Eou8Ko2owupj8+PFO1FNe61A+A/BGHrkvmRUMR/hzRdnX42h/pxbYG7+Ss+sf9ctPX+IIAecg6UUMvr0BG4MTpephH28Lt7G9gIwrT/vvIdn+ZKv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Z7WrvZrG; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718615307; c=relaxed/simple;
+	bh=A2Kts6YcthgukFSsC0XYRLdS7dysPwLYjFJ4PF+nqL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDdUPSUQMwkB1bI/N/xjgxzKOcUyQVweOF3ConW9sL5F63NjlrZ+LVVGT7Jxj4X6sv53xFk+gA5e8+iXRcG6KE5io002G4ctUHwbjnal8N17SRSv/BjlUMzKUPaBX+IBF2Ty9A+hS4JyOkOaJ1LfV6j/DGE7fs08mzB/j9fvZNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvrD59CD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Z7WrvZrG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=ASHs9FmRI1GdRpdQ4G//vd+YFqsUwo8o4b/Ho+LAxY0=;
-	t=1718614183; x=1719046183; b=Z7WrvZrGGEUEnWEWr+yejkJVzurPiK6VkPUnOXI367/CxQN
-	izmAw8W2i0h9AVmGaIWKy1+JMTcamkKeBcrWDvlTwJwgj91MA2u8ahqNJAnNY1F3pFWhC1m6ikuVM
-	n+19hQ1Lgkgx0W/ni38ndq4jTWOUvUO5jRJBuk5Qb7I7EpnYihNIuBTG4VC5TAxw2f8JqG9ejA+Q4
-	oiHB+0zUtlbSFFCap3MLRqfEA1oHOGmfanHNHhTEBHzlkj4wC4OJlVaBYjcRbcCyVl2CfesxldoW8
-	87cYBPqGS6UEtjryP7JGp7bYhNAED2KKfKQsXrBSJIBIaDadbu7A8jmCAUosTUcA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJ83Z-0008E4-9Y; Mon, 17 Jun 2024 10:49:41 +0200
-Message-ID: <50be24b4-54d6-4784-9ab9-83a90bf91a9d@leemhuis.info>
-Date: Mon, 17 Jun 2024 10:49:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvrD59CD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A436C2BD10;
+	Mon, 17 Jun 2024 09:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718615306;
+	bh=A2Kts6YcthgukFSsC0XYRLdS7dysPwLYjFJ4PF+nqL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CvrD59CDWLmDgMHtEgLxDTVfR7p6QVrdrXpy8/z5uQ61iciYw/OlI5Thspk+4OA52
+	 nBC09w+Q9v3+VgINniolM7YZLCSvOqQ9xHbGyuhXvtHf5P+FSzIJnlue0ydGco156O
+	 Tc7z0edwhMw/dhQ5vCUZrtJ1ruAWuR7zWpFDWRDSgkTtI0hw6YEhjBdnasPjpLevBa
+	 1NKXDvlHrsQq4EaPhmh1cMs1Wq5i5LlxLUUB+vdPgT5ZUWyqRbhYyCp/v2RU95Ie5D
+	 9WGPjS4eAfGUWliqemoZxacy8P0oLah9/mtPLlZisX7ke/nsWfqAzrl+p65shg9DeS
+	 J2GCcppqtH/jA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sJ8Lf-000000003d4-1c1O;
+	Mon, 17 Jun 2024 11:08:24 +0200
+Date: Mon, 17 Jun 2024 11:08:23 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
+Message-ID: <Zm_9B9a-8ljfJkOS@hovoldconsulting.com>
+References: <20240608114529.23060-1-johan+linaro@kernel.org>
+ <Zm_sJb3_xfMgLsnj@hovoldconsulting.com>
+ <50be24b4-54d6-4784-9ab9-83a90bf91a9d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: pmic_glink: disable UCSI on sc8280xp
-To: Johan Hovold <johan@kernel.org>, regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-References: <20240608114529.23060-1-johan+linaro@kernel.org>
- <Zm_sJb3_xfMgLsnj@hovoldconsulting.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zm_sJb3_xfMgLsnj@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718614183;2c46ea1d;
-X-HE-SMSGID: 1sJ83Z-0008E4-9Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50be24b4-54d6-4784-9ab9-83a90bf91a9d@leemhuis.info>
 
-On 17.06.24 09:56, Johan Hovold wrote:
-> [ Trimming CC list ]
-> On Sat, Jun 08, 2024 at 01:45:29PM +0200, Johan Hovold wrote:
->> Disconnecting an external display triggers a hypervisor reset on the
->> Lenovo ThinkPad X13s since 6.10-rc1 which enabled UCSI. Disable it again
->> until the regression has been fixed properly.
->
-> I noticed
+On Mon, Jun 17, 2024 at 10:49:40AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 17.06.24 09:56, Johan Hovold wrote:
+> > On Sat, Jun 08, 2024 at 01:45:29PM +0200, Johan Hovold wrote:
 
-First off: many thx for telling me about the problem!
+> > I noticed
 
-> that this one did not make into the regression tracker.
+> > that this one did not make into the regression tracker.
+> 
+> FWIW, it did:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240608114529.23060-1-johan+linaro@kernel.org/
+> 
+> > This
+> > may be related to the fact that this is the second time I'm disabling
+> > UCSI on sc8280xp and apparently I used the same patch Subject last time
+> > so they end up in the same thread on lore:
+> > 	https://lore.kernel.org/lkml/20240608114529.23060-1-johan+linaro@kernel.org/
+> 
+> Kinda. The thread is not the problem. I told regzbot about the subject
+> for the fix a few days ago and it then dutifully looked up if a commit
+> with that subject ended up in next or mainline already. Which normally
+> is the right thing to do -- but in this case it went sideways for
+> obvious reasons. :-/ Not sure yet how to handle that better; maybe that
+> falls into the ugly category called "there are bigger fish to fry,
+> ignore this corner case for now".
 
-FWIW, it did:
+Fair enough. At least it's a known issue then.
 
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240608114529.23060-1-johan+linaro@kernel.org/
-
-> This
-> may be related to the fact that this is the second time I'm disabling
-> UCSI on sc8280xp and apparently I used the same patch Subject last time
-> so they end up in the same thread on lore:
-> 	https://lore.kernel.org/lkml/20240608114529.23060-1-johan+linaro@kernel.org/
-
-Kinda. The thread is not the problem. I told regzbot about the subject
-for the fix a few days ago and it then dutifully looked up if a commit
-with that subject ended up in next or mainline already. Which normally
-is the right thing to do -- but in this case it went sideways for
-obvious reasons. :-/ Not sure yet how to handle that better; maybe that
-falls into the ugly category called "there are bigger fish to fry,
-ignore this corner case for now".
-
-Again, thx for telling me about this!
-
-Ciao, Thorsten
+Johan
