@@ -1,222 +1,295 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618A21922CA
-	for <regressions@lists.linux.dev>; Mon, 17 Jun 2024 11:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB10197A7A
+	for <regressions@lists.linux.dev>; Mon, 17 Jun 2024 13:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718622513; cv=none; b=W2UZWgzbxPIaV90Dv9hy7YMll3kl523hk0lRCUE0P/AV9SnREYmf1VhRDWv6CgicwIoMp6vtwyirVzbQ8sEWww5CfjTeoyMVJy+mNW99lEBI0qaCLoOQTYTW20jWuvezMfN7Ue2aAGOzIIYg5D1jYLxdgYVryhnyEbGOlUzq7lQ=
+	t=1718630096; cv=none; b=Rb6ii4+/04LfMSPY1Nv/3lw15EAas7yJhCd2qX8yOSuX1Ixk1z7mjaGhsgUKYryC+/ZX45iit389EaYN3XBQXPi0Yf+S3V2VqCa4ipxrkbvRAe1vPQipIngvVueXt59AjzsG9+HiB3jHuVM25WeabDcFLU6j4ksPSigrJ58HQm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718622513; c=relaxed/simple;
-	bh=xpb8F0NU2qMoAB1VMnLthvj39UVOwMQxVa6fpK9+LdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kZSdUihQ3H77e+VMFW8gmP4Cx6OXSxU2KNEmckgDsMWxX2LK5cpI1mmldqNhzO9wsnQNTNhgAZWY/j8F/gR/2Xfnfk1hf/b9rdMxeVzw3pH6eqzhVR1HaNYkSPie1S75eQouRucaLE8TJxRjyhVdX/n6kNwRoVo9H+gjZKE9/7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=JU8tmsmg; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1718630096; c=relaxed/simple;
+	bh=5Jrcj3XAZumucm9m3uCSbRINLaB+oDyONv5QhCmT9Ls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TA+YLarldJ6/NeFTVSXehwAtsOoloQvkg28gNm/JKv8jOQO7K31FXUOGy+f1B4pnGpehMU1BjAyw1NPaSmeBRS14pUCqeJ1meZFwqwXQwxPoQQWtv3IAyL7ZaEQmlUB1O+jrnj5I+n2nt2mp7JGmUUxoAIasEY+tlNJkaLUF3bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0AoVDka; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="JU8tmsmg"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 25E7B240002;
-	Mon, 17 Jun 2024 11:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1718622504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OF6t87ZOTovWqD1drOj8KVeXWAvWWRQUUmrsihK6t5U=;
-	b=JU8tmsmgpKGRObQmaZylENnbGAygRo5IuIquYGTP5DI7rNvxJ7vh4a9Vzf0OamJXgMww/e
-	JOsJvcqO5RmFTT0Bz8kj6gYsg9Pv5PInw3t6CeZtS6BrvptHCDpdnggR3GGsBoWd9iMUXE
-	cyvFPrRCqw+NPLObWzekiuX6nK1In0Q7WroisE1nJVIauZa2bGDYoUg72FB+OXLOa4Ygqa
-	Z3giDWFp2ZLOruLiRPKNxIacya+//YtOsyDAZs3ZTaKaOqd+uOts2Y0nxGweOOeDDRY2ra
-	zfT8vy72LqZYWgqCqqYrhqyW5fhBgtOpr5JXt+XimYT48opOSMRxQxtoftZBpw==
-Message-ID: <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
-Date: Mon, 17 Jun 2024 14:08:19 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0AoVDka"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c2c9199568so3748341a91.0
+        for <regressions@lists.linux.dev>; Mon, 17 Jun 2024 06:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718630094; x=1719234894; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7zPpuo+CDs0eM0LA7bPoQtMex24IJPtVQOpYyzHo8wQ=;
+        b=E0AoVDkaBWfMrAP8MQf6ky4zDR2nWnMA5vz1cgvwjKOYuQupWFWrKBm4/Gb42UdlIo
+         RnsaNRXdcwd0OOqQYPsbiMFLES/pbZpedZl4sJhr0rXhnDo6sniwChn01L+vhoCkVWdJ
+         uYrO+wzAs1aYnNb7cBzvlKKdEvN7aHXyLqXm4gkv8tjOlIfANTD+pafKuTVpl4mGRE2r
+         mgvLJkWogkmdCTqC2KR112/An5E5Hj2WGnK/euWQZLMiYKfcnetdWwVb7wTpBxsjhNK3
+         /ySiltqSFFQ1wVpuJVx44OD2D3eTcgmfhcs1mSZjJNRBoHZCKvq5+4uqBMt/I6fHh2JP
+         2usQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630094; x=1719234894;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7zPpuo+CDs0eM0LA7bPoQtMex24IJPtVQOpYyzHo8wQ=;
+        b=N94IQBG0OYgSZ5C0gAFLlqcPjZKZhU+ByCu7nxXM9BL+W5dIKo27mjiOFc3rcPao3t
+         0dDhqBlcNJiWIEPHLrONnPi5xmUfboOMzyghLhHTOHbsCKt65tHG4OPElOR9rMLrg8nO
+         ElliQcQvfBLzKWlEtGInSvhLFBi07lLvOFoqfZZhmV19/adxFpzp93wFlP/z3KGTXb67
+         IQ15PxA9hhRehNrWzo0wRfITka0Fbbg/+Q/6KtL/Jiz7bxeklGd3K22AcSSxrAn89q4P
+         mh/3cR63T5V4+oWpPZWnxe3eCDrT3CzwvkcZx79Pn6uHZVWeJoTbkQHgOCDLZ/4UKh+l
+         0eGA==
+X-Gm-Message-State: AOJu0YzMkwz+lwPlkrcJgtqkzYWfstxzPsXv6+AcLbQpnB+kyuG+FFd6
+	+a6rhOSoPwsBCOXJjLScmiDOj2NuzY2gCc/wPM9ATPAeqaDkgLpKaYFeWTB0U5ALNDzAH+sDAXS
+	sIAZ598qeADO+NZOBDbWrvtpttE92/vWm
+X-Google-Smtp-Source: AGHT+IFI7N0581urBHdxi21Z7/cG3Jr5D1/48li0S0yh2RX7x3pBEvua4YDdatMFekw++9wWC7A7tkRWSf/7dhHyrbU=
+X-Received: by 2002:a17:90a:ab8a:b0:2c4:b0f0:8013 with SMTP id
+ 98e67ed59e1d1-2c4db24b894mr8585594a91.11.1718630093378; Mon, 17 Jun 2024
+ 06:14:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
- Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
- <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
- <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
- <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
- <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
- <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
- <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
- <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
- <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
- <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
- <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
- <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
- <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
- <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+References: <20240601132459.81123-1-aford173@gmail.com> <7015c544-14c3-40af-aa10-e3088eea5633@leemhuis.info>
+In-Reply-To: <7015c544-14c3-40af-aa10-e3088eea5633@leemhuis.info>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 17 Jun 2024 08:14:41 -0500
+Message-ID: <CAHCN7xJfqcN=yqWAURuy-oF8EiwoB5i840Gct65xgqgxNSL_Ug@mail.gmail.com>
+Subject: Re: [PATCH V2] drm/bridge: adv7511: Fix Intermittent EDID failures
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dmitry.baryshkov@linaro.org, victor.liu@nxp.com, sui.jingfeng@linux.dev, 
+	aford@beaconembedded.com, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis) wrote:
-> This thread/fixing the regressions looks stalled again, let me jump in
-> here with a further comment below.
-> 
-> On 11.06.24 20:15, Arınç ÜNAL wrote:
->> On 11/06/2024 16:03, AngeloGioacchino Del Regno wrote:
->>> Il 11/06/24 14:56, Arınç ÜNAL ha scritto:
->>>> On 11/06/2024 15:28, AngeloGioacchino Del Regno wrote:
->>>>> Il 11/06/24 13:38, Arınç ÜNAL ha scritto:
->>>>>> On 11/06/2024 14:30, Thorsten Leemhuis wrote:
->>>>>>> On 07.06.24 16:15, Thorsten Leemhuis wrote:
->>>>>>>> On 07.06.24 16:03, Paolo Abeni wrote:
->>>>>>>>> On Thu, 2024-06-06 at 10:26 +0200, Thorsten Leemhuis wrote:
->>>>>>>>>> On 31.05.24 08:10, Arınç ÜNAL wrote:
->>>>>>>>>>> On 31/05/2024 08.40, Thorsten Leemhuis wrote:
->>>>>>>>>>>> [adding Paolo, who committed the culprit]
->>>>>>>>>>
->>>>>>>>>> /me slowly wonders if the culprit should be reverted for now
->>>>>>>>>> (see below)
->>>>>>>>>> and should be reapplied later together with the matching
->>>>>>>>>> changes from
->>>>>>>>>> Arınç ÜNAL.
->>>>>>>>>
->>>>>>>>> FWIS I think a revert should be avoided, given that a fix is
->>>>>>>>> available
->>>>>>>>> and nicely small.
->>>>>>>>
->>>>>>>> Yeah, on one hand I agree; but on the other it seems that the
->>>>>>>> maintainers that would have to take care of the dt changes to fix
->>>>>>>> this
->>>>>>>> until now remained silent in this thread, apart from Rob who sent
->>>>>>>> the
->>>>>>>> mail regarding the warnings.
->>>>>>>>
->>>>>>>> I put those maintainers in the To: field of this mail, maybe that
->>>>>>>> might
->>>>>>>> lead to some reaction.
->>>>>>>
->>>>>>> Still no reply from the DRS folks or any other progress I noticed.
->>>>>>> Guess
->>>>>>> that means I will soon have no other choice than to get Linus
->>>>>>> involved,
->>>>>>> as this looks stuck. :-( #sigh
->>>>>>
->>>>>> Does it have to be Linus that needs to apply "[PATCH 0/2] Set PHY
->>>>>> address
->>>>>> of MT7531 switch to 0x1f on MediaTek arm64 boards"? Aren't there
->>>>>> any other
->>>>>> ARM maintainers that can apply the fix to their tree?
->>>>>>
->>>>>> Arınç
->>>>>
->>>>> You have feedback from two people on the series that you mentioned,
->>>>> and noone
->>>>> is going to apply something that needs to be fixed.
->>>>>
->>>>> I'm giving you the possibility of addressing the comments in your
->>>>> patch, but
->>>>> I don't want to see any mention of the driver previously ignoring
->>>>> this or that
->>>>> as this is irrelevant for a hardware description. Devicetree only
->>>>> describes HW.
->>>>>
->>>>> Adding up, in commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY
->>>>> address of switch from device tree"),
->>>>> you have created a regression.
->>>>>
->>>>> Regressions should be fixed - as in - if the driver did work before
->>>>> with the old
->>>>> devicetrees, it shall still work. You can't break ABI. Any changes
->>>>> that you do
->>>>> to your driver must not break functionality with old devicetrees.
->>>>>
->>>>> So...
->>>>>
->>>>> ------> Fix the driver that you broke <------
->>>>
->>>> The device tree ABI before the change on the driver:
->>>>
->>>> The reg value represents the PHY address of the switch.
->>>>
->>>> The device tree ABI after the change on the driver:
->>>>
->>>> The reg value represents the PHY address of the switch.
->>>>
->>>> I see no device tree ABI breakage. What I see instead is the driver
->>>> starting enforcing the device tree ABI. No change had been made on the
->>>> device tree ABI so any non-Linux driver that controls this switch
->>>> continues
->>>> to work.
->>>>
->>>> These old device tree source files in question did not abide by the
->>>> device
->>>> tree ABI in the first place, which is why they don't work anymore as the
->>>> Linux driver now enforces the ABI. Device tree source files not
->>>> conforming
->>>> to the ABI is not something to maintain but to fix. The patch series
->>>> that
->>>> fixes them are already submitted.
->>>
->>> As I said, the devicetree MUST describe the hardware correctly, and on
->>> that I do
->>> agree, and I, again, said that I want to take the devicetree fix.
->>>
->>> However, the driver regressed, and this broke functionality with old
->>> device trees.
->>> Old device trees might have been wrong (and they are, yes), but
->>> functionality was
->>> there and the switch was working.
->>>
->>> I repeat, driver changes MUST be retro-compatible with older device
->>> trees, and your
->>> driver changes ARE NOT; otherwise, this wouldn't be called *regression*.
->>
->> I'm going to argue that what caused the regression is the broken device
->> tree. The recent change on the driver only worked towards exposing the
->> broken device tree.
-> 
-> Well, for the kernel that does not matter much: due to our "no
-> regressions" rule and how Linus handles it the author of that "recent
-> change" (e.g. you) is responsible to fix regressions a change exposed --
-> or that change is reverted (I might be wrong, but I think there are
-> quotes from Linus in
-> https://docs.kernel.org/process/handling-regressions.html to back this
-> up). So in the end a revert in a week or two is likely the outcome,
-> unless you or someone else fixes it in a way that pleases
-> AngeloGioacchino et. at.
+On Mon, Jun 17, 2024 at 8:00=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>
+> Hi! Top-posting for once, to make this easily accessible to everyone.
+>
+> Hmm, seem nobody took a look at below fix for a regression that seems to
+> be caused by f3d9683346d6b1 ("drm/bridge: adv7511: Allow IRQ to share
+> GPIO pins") [which went into v6.10-rc1].
+>
+> Adam and Dimitry, what are your stances on this patch from Adam? I'm
+> asking, as you authored respectively committed the culprit?
+>
 
-I've submitted a patch series that fixes the regression. Angelo argued
-against the way the regression is fixed. I've very clearly argued back why
-I find Angelo's approach wrong. There's been no response back. I don't
-understand why reverting the patch is the likely outcome whilst the
-standing argument points towards applying the said patch series. If a
-revert happens before this discussion with Angelo finalises, this will set
-a precedent that will tell maintainers that they can have their way by just
-not replying to the ongoing discussions.
+I learned of the regression from Liu Ying when he posted a proposed
+fix [1] which then resulted in some further discussion on how to
+better solve the issue.   I felt like I should be the one to fix the
+issue, since I accidentally caused it when trying to allow for shared
+GPIO IRQ's.  The shared GPIO IRQ was required on the imx8mp-beacon-kit
+because the interrupt GPIO for the hot-plug-detect IRQ is shared with
+a GPIO expander which also serves as an interrupt controller.
 
-That said, the decision of resolving the regression by either reverting the
-patch or applying the patch series shall not depend on whether or not
-Angelo is pleased but rather there're no counter-arguments left on the
-points brought, meaning the decision shall be made depending on the
-argument that stands.
+Dimitry had given me some suggestions, and from that,  I posted a V1.
+Dmitry had some more followup suggestions [2] which resulted in the
+V2.
 
-Therefore, I suggest that unless Angelo responds back with a
-counter-argument in the window of a week or two, as you've described, my
-patch series shall be applied.
+As far as I know, Liu was satisfied that this addressed the regression
+he reported.
 
-Arınç
+adam
+
+
+[1] - https://lore.kernel.org/linux-kernel/2f41a890-915b-4859-8ac9-5436da14=
+fe22@nxp.com/T/
+[2] - https://lore.kernel.org/all/7bb4d582-5d90-465e-a241-1ee8439a5057@nxp.=
+com/T/
+
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> On 01.06.24 15:24, Adam Ford wrote:
+> > In the process of adding support for shared IRQ pins, a scenario
+> > was accidentally created where adv7511_irq_process returned
+> > prematurely causing the EDID to fail randomly.
+> >
+> > Since the interrupt handler is broken up into two main helper functions=
+,
+> > update both of them to treat the helper functions as IRQ handlers. Thes=
+e
+> > IRQ routines process their respective tasks as before, but if they
+> > determine that actual work was done, mark the respective IRQ status
+> > accordingly, and delay the check until everything has been processed.
+> >
+> > This should guarantee the helper functions don't return prematurely
+> > while still returning proper values of either IRQ_HANDLED or IRQ_NONE.
+> >
+> > Reported-by: Liu Ying <victor.liu@nxp.com>
+> > Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins=
+")
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > Tested-by: Liu Ying <victor.liu@nxp.com> # i.MX8MP EVK ADV7535 EDID ret=
+rieval w/o IRQ
+> > ---
+> > V2:  Fix uninitialized cec_status
+> >      Cut back a little on error handling to return either IRQ_NONE or
+> >      IRQ_HANDLED.
+> >
+> > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm=
+/bridge/adv7511/adv7511.h
+> > index ea271f62b214..ec0b7f3d889c 100644
+> > --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> > @@ -401,7 +401,7 @@ struct adv7511 {
+> >
+> >  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
+> >  int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511);
+> > -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq=
+1);
+> > +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1=
+);
+> >  #else
+> >  static inline int adv7511_cec_init(struct device *dev, struct adv7511 =
+*adv7511)
+> >  {
+> > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c b/drivers/gpu=
+/drm/bridge/adv7511/adv7511_cec.c
+> > index 44451a9658a3..651fb1dde780 100644
+> > --- a/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
+> > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
+> > @@ -119,7 +119,7 @@ static void adv7511_cec_rx(struct adv7511 *adv7511,=
+ int rx_buf)
+> >       cec_received_msg(adv7511->cec_adap, &msg);
+> >  }
+> >
+> > -void adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq=
+1)
+> > +int adv7511_cec_irq_process(struct adv7511 *adv7511, unsigned int irq1=
+)
+> >  {
+> >       unsigned int offset =3D adv7511->info->reg_cec_offset;
+> >       const u32 irq_tx_mask =3D ADV7511_INT1_CEC_TX_READY |
+> > @@ -130,17 +130,21 @@ void adv7511_cec_irq_process(struct adv7511 *adv7=
+511, unsigned int irq1)
+> >                               ADV7511_INT1_CEC_RX_READY3;
+> >       unsigned int rx_status;
+> >       int rx_order[3] =3D { -1, -1, -1 };
+> > -     int i;
+> > +     int i, ret =3D 0;
+> > +     int irq_status =3D IRQ_NONE;
+> >
+> > -     if (irq1 & irq_tx_mask)
+> > +     if (irq1 & irq_tx_mask) {
+> >               adv_cec_tx_raw_status(adv7511, irq1);
+> > +             irq_status =3D IRQ_HANDLED;
+> > +     }
+> >
+> >       if (!(irq1 & irq_rx_mask))
+> > -             return;
+> > +             return irq_status;
+> >
+> > -     if (regmap_read(adv7511->regmap_cec,
+> > -                     ADV7511_REG_CEC_RX_STATUS + offset, &rx_status))
+> > -             return;
+> > +     ret =3D regmap_read(adv7511->regmap_cec,
+> > +                     ADV7511_REG_CEC_RX_STATUS + offset, &rx_status);
+> > +     if (ret < 0)
+> > +             return irq_status;
+> >
+> >       /*
+> >        * ADV7511_REG_CEC_RX_STATUS[5:0] contains the reception order of=
+ RX
+> > @@ -172,6 +176,8 @@ void adv7511_cec_irq_process(struct adv7511 *adv751=
+1, unsigned int irq1)
+> >
+> >               adv7511_cec_rx(adv7511, rx_buf);
+> >       }
+> > +
+> > +     return IRQ_HANDLED;
+> >  }
+> >
+> >  static int adv7511_cec_adap_enable(struct cec_adapter *adap, bool enab=
+le)
+> > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu=
+/drm/bridge/adv7511/adv7511_drv.c
+> > index 66ccb61e2a66..c8d2c4a157b2 100644
+> > --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> > @@ -469,6 +469,8 @@ static int adv7511_irq_process(struct adv7511 *adv7=
+511, bool process_hpd)
+> >  {
+> >       unsigned int irq0, irq1;
+> >       int ret;
+> > +     int cec_status =3D IRQ_NONE;
+> > +     int irq_status =3D IRQ_NONE;
+> >
+> >       ret =3D regmap_read(adv7511->regmap, ADV7511_REG_INT(0), &irq0);
+> >       if (ret < 0)
+> > @@ -478,29 +480,31 @@ static int adv7511_irq_process(struct adv7511 *ad=
+v7511, bool process_hpd)
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > -     /* If there is no IRQ to handle, exit indicating no IRQ data */
+> > -     if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+> > -         !(irq1 & ADV7511_INT1_DDC_ERROR))
+> > -             return -ENODATA;
+> > -
+> >       regmap_write(adv7511->regmap, ADV7511_REG_INT(0), irq0);
+> >       regmap_write(adv7511->regmap, ADV7511_REG_INT(1), irq1);
+> >
+> > -     if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.enc=
+oder)
+> > +     if (process_hpd && irq0 & ADV7511_INT0_HPD && adv7511->bridge.enc=
+oder) {
+> >               schedule_work(&adv7511->hpd_work);
+> > +             irq_status =3D IRQ_HANDLED;
+> > +     }
+> >
+> >       if (irq0 & ADV7511_INT0_EDID_READY || irq1 & ADV7511_INT1_DDC_ERR=
+OR) {
+> >               adv7511->edid_read =3D true;
+> >
+> >               if (adv7511->i2c_main->irq)
+> >                       wake_up_all(&adv7511->wq);
+> > +             irq_status =3D IRQ_HANDLED;
+> >       }
+> >
+> >  #ifdef CONFIG_DRM_I2C_ADV7511_CEC
+> > -     adv7511_cec_irq_process(adv7511, irq1);
+> > +     cec_status =3D adv7511_cec_irq_process(adv7511, irq1);
+> >  #endif
+> >
+> > -     return 0;
+> > +     /* If there is no IRQ to handle, exit indicating no IRQ data */
+> > +     if (irq_status =3D=3D IRQ_HANDLED || cec_status =3D=3D IRQ_HANDLE=
+D)
+> > +             return IRQ_HANDLED;
+> > +
+> > +     return IRQ_NONE;
+> >  }
+> >
+> >  static irqreturn_t adv7511_irq_handler(int irq, void *devid)
+> > @@ -509,7 +513,7 @@ static irqreturn_t adv7511_irq_handler(int irq, voi=
+d *devid)
+> >       int ret;
+> >
+> >       ret =3D adv7511_irq_process(adv7511, true);
+> > -     return ret < 0 ? IRQ_NONE : IRQ_HANDLED;
+> > +     return ret < 0 ? IRQ_NONE : ret;
+> >  }
+> >
+> >  /* -------------------------------------------------------------------=
+----------
