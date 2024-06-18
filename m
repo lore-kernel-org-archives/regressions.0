@@ -1,99 +1,127 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30BB1B966;
-	Tue, 18 Jun 2024 10:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86B313D27F
+	for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 10:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718706623; cv=none; b=Rj3BidP1B6L5oKLYzv1PV/uy0qsIRL7P0cgrXr50I3OXo27bbCtpCbqMDmDadg7RL5huEKkdBU18G7RRgQD/z5T/uPIvBzhpplp3ZGW41zMYL+2PpWLfiGX8C8w+Upc+hmokfxdmVytBe1UjI1uNkshLmYn2kKXYBFj/LOoMKJM=
+	t=1718707192; cv=none; b=RYIMJwXwFmECDYgjmHl7zQig5sq8KoRqQIbGE4JSUs7tLVUP4K+D3yo9SAIooCX8OfNZA6dGXpVc+BBD2y7zUtj/V5oSTrmCwIN1Yem6KDTVbaoOLqvbkWrZ1pv8b+BsbBFQ4cSt/s/CObwqNYHDd0YNvVfgxS70sNC9bw2qnS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718706623; c=relaxed/simple;
-	bh=SabcJjudxXLkszJUyYOi0DlrMsxTRRvN6zmEYuRvPDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q0cO/nO89Zf3/rlO3kxnwS87b8uOfzumdOMuPOt+bOM7IuSYp1VpgDy4MlPdcY6qBFemgOaPDMV+8SRRXSYUXm96ejY5naCAVjNaIeF8GDPlAIu85M1YY+hlj3ZMFbt4lJZG04IeH1T8Gdcs3NIiMqfLI9ZB56Zs4IfZx2iUO54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vcKuoDVj; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718707192; c=relaxed/simple;
+	bh=lPQaPdityDLfZbHzeDC8ojdjE2XvWy7QdXEXphUNQpc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Ja33nlbEdXWV45msDCKKUkXhKooNfly+EGiAYxpH1yGPUz1TypFbbvyr0rHSreATQN8RQDZxaN1mePgs8Nz9XcxOJKQnHZgGLDrmIDULMaDQzQfxaWqCGjQWT8Ij00nF1LHtFoETmsWa+9cIOCw2rAhNEFj4QtVUexHXUPOgOXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FmZpCVav; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vcKuoDVj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=WEJw5KzI2DTw//TdeTa5hGT3iNUEWTfTI8neMQtrapU=; t=1718706621;
-	x=1719138621; b=vcKuoDVj7k4IVLjo/2GAC4/h5dtfHWGfpWmnYsCHmzpJrxeRKKQTqci0lrmCZ
-	rpKw1OYS5MGiSQot95HDmjsKSJKQt4Iew7Hh3ZH8BFC9IGICRr7yOq99lXYrmkIWGuqGaR1GtmSVF
-	bHhxsXas0/FXjCEpxWG+Llt9mFD7AME5DgvgsiywzJiREp/HdEzC1Z3/xN1mjUokYm6De0R8CNzTn
-	IHSERW4OBPZ0NwduG1sdQXCjpwjQft8UQMXHObdexoSSsrTjvXRRyGQoNeuO6zQO5Jb9/pz3FlSbL
-	NSzejZLWRE8cfV0oPJnzxb+/VbIyzLCts5eKpTKjD24uNqTAFQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJW6U-0000L9-NW; Tue, 18 Jun 2024 12:30:18 +0200
-Message-ID: <d5aa11c9-6326-4096-9c29-d9f0d11f83b4@leemhuis.info>
-Date: Tue, 18 Jun 2024 12:30:18 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmZpCVav"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-80b841b1b80so1348492241.0
+        for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 03:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718707190; x=1719311990; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QEljk6ggn8rJlURGstQGLdKQqP2HSFqBtnN4P7FNF6w=;
+        b=FmZpCVavPie/BJpYuQleBI9EOppcb+6MdkrB0/YoVfK77O4hyVsxFM+vNUPgsrRFnT
+         P/baQjb9/LC99tpSbCiaI6A+Kfn6TTEoMQU39ZrkgfBHt13DS29l8wit5zuj2IlrXLTW
+         8FrbFIeoVadc15mua58/ziQ/KlBKBZmbfuqBrglktQcBFqMcfvJ8wvK/NiWOr/FrHEmb
+         DIfwq3MvdndysBXgbLzr/U5/DdqmznrPCMyrdAFI65jCzLEx+TZEfSzmjqfSxyQzIMbH
+         VJ73HdCE1BNn/0T266QM+tnaPl27nx6G90VMwsrv1O0h9HJknlJTuqvZlqBACwAb9UMU
+         T6nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718707190; x=1719311990;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QEljk6ggn8rJlURGstQGLdKQqP2HSFqBtnN4P7FNF6w=;
+        b=fowd41wo6YsTLrtMPn39bPlxpmho5OQ1pTGzUtrYnfAUoTI+V3ogdS5GV244JM0LRE
+         ZcPaMMbdpIijnLq7GAALnDL0yrOVnEcq1xNvM6vzwMomNg/h30NaUsHvVYH6f+T+YPwo
+         Ps0vvhdiDojUh+KNk7ypvlSgNbQydhtsJ4dsfsye4KVsZ3LZMmnwZgHyfxbevYec0/v5
+         Rbly8Ab2znJNi1nRr/UjVtsa4IZdPwkDMSRZLygyxZ41BBpaw6P/bWXxDsSxM2K5yWnQ
+         5+4Jwo41Ieb3cD8YreGTxJWOsPW7uJWtCM31DSOvF7BdjdsVaDqB+lOYVXAOvlT4FoTw
+         Bcbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnuD9MnWdXpjsOlAFakR63aRAogeEBwY+Jt8X31xIOwGJj0CxJ+trgblDCiprl1I0fneUAWKaPN4nPWScERPIgCKbzMK2lCzO3sss=
+X-Gm-Message-State: AOJu0Ywf0zkSBFWuXMmhomgaioRYxtaH9qDZyj6qprnBhl+UnqU/aBBA
+	CT5UhNGVkEzm2eUeDtM+9L8EPv4KrzDHxVVzbBdRU/qtN6mjqdki5THh8sN5qL7FEsc4YlLKYM6
+	YIaIGvO7ApfS2n5IbOHB1jyAEfe6XpHScipiOSg==
+X-Google-Smtp-Source: AGHT+IGlfvQiDWgG3QUajDlpAVMqRKc0CBGEed89cfHiSCFaLDQXr5lx8fTA31fnYSylIf9pn2jzMiwAhKa5hARvZYA=
+X-Received: by 2002:a67:f88e:0:b0:48d:920a:bd41 with SMTP id
+ ada2fe7eead31-48dae38578dmr10393370137.16.1718707189697; Tue, 18 Jun 2024
+ 03:39:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-To: Mike <user.service2016@gmail.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
- Sasha Levin <sashal@kernel.org>, =?UTF-8?Q?Jeremy_Lain=C3=A9?=
- <jeremy.laine@m4x.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
- <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
- <2024061258-boxy-plaster-7219@gregkh>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <2024061258-boxy-plaster-7219@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718706621;8161b518;
-X-HE-SMSGID: 1sJW6U-0000L9-NW
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 18 Jun 2024 16:09:38 +0530
+Message-ID: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
+Subject: mm/slub.c:1163:17: error: implicit declaration of function
+ '__memset'; did you mean '__memset64'? [-Werror=implicit-function-declaration]
+To: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Ilya Leoshkevich <iii@linux.ibm.com>, Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 12.06.24 14:04, Greg KH wrote:
-> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
->> On 03.06.24 22:03, Mike wrote:
->>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
->>> [...]
->>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
->>> time to be
->>> included in Debian stable, so having a patch for 6.1.x will be much
->>> appreciated.
->>> I do not have the time to follow the vanilla (latest) release as is
->>> likely the case for
->>> many other Linux users.
->>>
->> Still no reaction from the bluetooth developers. Guess they are busy
->> and/or do not care about 6.1.y. In that case:
->>
->> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
->> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
->> cause this or if it's missing some per-requisite? If not I wonder if
->> reverting that patch from 6.1.y might be the best move to resolve this
->> regression. Mike earlier in
->> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
->> confirmed that this fixed the problem in tests. Jeremy (who started the
->> thread and afaics has the same problem) did not reply.
-> 
-> How was this reverted?  I get a bunch of conflicts as this commit was
-> added as a dependency of a patch later in the series.
-> 
-> So if this wants to be reverted from 6.1.y, can someone send me the
-> revert that has been tested to work?
+The Following build failures have been noticed on Powerpc, mips and arc on the
+Linux next-20240617 tag.
 
-Mike, can you help out here, as you apparently managed a revert earlier?
-Without you or someone else submitting a revert I fear this won't be
-resolved...
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Ciao, Thorsten
+Regressions found on mips:
+  - gcc-12-bcm47xx_defconfig
+  - gcc-12-cavium_octeon_defconfig
+  - gcc-8-malta_defconfig
+  - gcc-12-malta_defconfig
+  - gcc-12-allnoconfig
+  - gcc-8-bcm47xx_defconfig
+  - gcc-8-allnoconfig
+  - gcc-8-cavium_octeon_defconfig
+  - clang-18-allnoconfig
+  - clang-nightly-allnoconfig
+
+
+Regressions found on arc:
+  - gcc-9-allnoconfig
+  - gcc-9-defconfig
+
+Regressions found on powerpc:
+  - clang-18-maple_defconfig
+  - gcc-13-ppc6xx_defconfig
+  - clang-18-allnoconfig
+  - clang-18-defconfig
+  - clang-18-ppc64e_defconfig
+  - gcc-13-defconfig
+
+Build log:
+--------
+mm/slub.c: In function 'init_object':
+mm/slub.c:1163:17: error: implicit declaration of function '__memset';
+did you mean '__memset64'? [-Werror=implicit-function-declaration]
+ 1163 |                 __memset(p - s->red_left_pad, val, s->red_left_pad);
+      |                 ^~~~~~~~
+      |                 __memset64
+
+The commit id:
+  ad5dde7da5f9 kmsan: support SLAB_POISON
+
+metadata:
+  git_describe: next-20240617
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/  -
+next-20240617/testrun/24380474/suite/  -
+test/gcc-13-ppc64e_defconfig/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/  -
+next-20240617/testrun/24380474/suite/  -
+test/gcc-13-ppc64e_defconfig/details/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
