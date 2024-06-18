@@ -1,36 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C322613C913;
-	Tue, 18 Jun 2024 10:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30BB1B966;
+	Tue, 18 Jun 2024 10:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718706172; cv=none; b=XKjtYWUhzASdzDZUIcl38+cOg+1rmMG1ho74vANp8I20J78Pz/SGySO0KlRIyRaGHdbpCkG/0EVnwWJHafTBI/1MYPwavNtC5kGmCFDriCK03m4pZmC0ZysWWG3Xm5ZgElhDT+AFZBPvHok0gQbwPEexc6WyZF3nq0PFWO4Z/eQ=
+	t=1718706623; cv=none; b=Rj3BidP1B6L5oKLYzv1PV/uy0qsIRL7P0cgrXr50I3OXo27bbCtpCbqMDmDadg7RL5huEKkdBU18G7RRgQD/z5T/uPIvBzhpplp3ZGW41zMYL+2PpWLfiGX8C8w+Upc+hmokfxdmVytBe1UjI1uNkshLmYn2kKXYBFj/LOoMKJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718706172; c=relaxed/simple;
-	bh=r6pJTIEmvLC1nd8y75hngavgg8Hy2QqhAckp8Oh9DaE=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=fzE+4I48gOStlZmM1jMDWAAcw2pockEhFKGHEi1kOoaz1refB+qXyyiQ/xd+kwYAVohgiehDIvh9iIseVIB0Zd6pwqaJbdJd0W+84cjchFR50/VhUnKQlPWIse5Skn6SsrpspbcJGL4x5oED92tKyfSU5a5szybOnOBe5o7Wz7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VKk2LFjR; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1718706623; c=relaxed/simple;
+	bh=SabcJjudxXLkszJUyYOi0DlrMsxTRRvN6zmEYuRvPDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q0cO/nO89Zf3/rlO3kxnwS87b8uOfzumdOMuPOt+bOM7IuSYp1VpgDy4MlPdcY6qBFemgOaPDMV+8SRRXSYUXm96ejY5naCAVjNaIeF8GDPlAIu85M1YY+hlj3ZMFbt4lJZG04IeH1T8Gdcs3NIiMqfLI9ZB56Zs4IfZx2iUO54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vcKuoDVj; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VKk2LFjR"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vcKuoDVj"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=gedkI59GOhsqqQN0ahgyfWFQH2lfghvEsw3T4E/Gb0E=; t=1718706170; x=1719138170;
-	 b=VKk2LFjRpyIy9V9Z8K++Kwo+Y8MTSAPppK0nIuA941ize+9V+cTYT1+p0XJ4tLLlfSRDeU/0LM
-	r6YG7A5KMq+lKsgtLXCQWM4nN8i7n41wUpsT+NjyjNMNpb99cU0V/frqXrtXvvb86QLJeHSNfcx+W
-	Jhg2+NfZPjXQF66bKuU2gjvK0MGTuDx3t/B5babESVZtZjJnFyS5M5A6Q8aituU+C4bTMnDb4vMqo
-	T+0S/AU58KSpXIfMpoNOKYlo7dJBZB1RidTHSPRjQFzW3DrXm7RKb1wgYW+E/Vr+gQHm2/HONGXN3
-	6z3rUwBY9rfWuPjv4EcDDV2Cj4eVVTgLbC2tg==;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=WEJw5KzI2DTw//TdeTa5hGT3iNUEWTfTI8neMQtrapU=; t=1718706621;
+	x=1719138621; b=vcKuoDVj7k4IVLjo/2GAC4/h5dtfHWGfpWmnYsCHmzpJrxeRKKQTqci0lrmCZ
+	rpKw1OYS5MGiSQot95HDmjsKSJKQt4Iew7Hh3ZH8BFC9IGICRr7yOq99lXYrmkIWGuqGaR1GtmSVF
+	bHhxsXas0/FXjCEpxWG+Llt9mFD7AME5DgvgsiywzJiREp/HdEzC1Z3/xN1mjUokYm6De0R8CNzTn
+	IHSERW4OBPZ0NwduG1sdQXCjpwjQft8UQMXHObdexoSSsrTjvXRRyGQoNeuO6zQO5Jb9/pz3FlSbL
+	NSzejZLWRE8cfV0oPJnzxb+/VbIyzLCts5eKpTKjD24uNqTAFQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJVzB-0006jm-SG; Tue, 18 Jun 2024 12:22:46 +0200
-Message-ID: <ca2d3d47-0ac0-48a5-910b-e481f2a9870a@leemhuis.info>
-Date: Tue, 18 Jun 2024 12:22:45 +0200
+	id 1sJW6U-0000L9-NW; Tue, 18 Jun 2024 12:30:18 +0200
+Message-ID: <d5aa11c9-6326-4096-9c29-d9f0d11f83b4@leemhuis.info>
+Date: Tue, 18 Jun 2024 12:30:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,85 +39,61 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+To: Mike <user.service2016@gmail.com>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Sasha Levin <sashal@kernel.org>, =?UTF-8?Q?Jeremy_Lain=C3=A9?=
+ <jeremy.laine@m4x.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
+ <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
+ <2024061258-boxy-plaster-7219@gregkh>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Todd Brandt <todd.e.brandt@intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Linux Sound System <linux-sound@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
-Subject: [Regression] Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
- S0ix fails in all further suspends
+In-Reply-To: <2024061258-boxy-plaster-7219@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718706170;f81fa682;
-X-HE-SMSGID: 1sJVzB-0006jm-SG
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718706621;8161b518;
+X-HE-SMSGID: 1sJW6U-0000L9-NW
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Pierre-Louis Bossart, I noticed a report about a regression in
-bugzilla.kernel.org that appears to be caused by the following change of
-yours: d5263dbbd8af02 ("ASoC: SOF: Intel: don't ignore IOC interrupts
-for non-audio transfers") [v6.10-rc1]
-
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=218961 :
-
-> We have a Lenovo Thinkpad X1 Carbon Gen 10 in our lab and ever since
-> 6.10.0-rc1 it has failed its first S2idle suspend, and has stopped
-> getting S0iX on subsequent successful S2idle suspends. The issue in the
-> first suspend fail is here in the audio driver (dmesg section shown):
+On 12.06.24 14:04, Greg KH wrote:
+> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
+>> On 03.06.24 22:03, Mike wrote:
+>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
+>>> [...]
+>>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
+>>> time to be
+>>> included in Debian stable, so having a patch for 6.1.x will be much
+>>> appreciated.
+>>> I do not have the time to follow the vanilla (latest) release as is
+>>> likely the case for
+>>> many other Linux users.
+>>>
+>> Still no reaction from the bluetooth developers. Guess they are busy
+>> and/or do not care about 6.1.y. In that case:
+>>
+>> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
+>> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
+>> cause this or if it's missing some per-requisite? If not I wonder if
+>> reverting that patch from 6.1.y might be the best move to resolve this
+>> regression. Mike earlier in
+>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
+>> confirmed that this fixed the problem in tests. Jeremy (who started the
+>> thread and afaics has the same problem) did not reply.
 > 
-> sof-audio-pci-intel-tgl 0000:00:1f.3: Code loader DMA did not complete
-> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump start ]------------
-> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware download failed
-> sof-audio-pci-intel-tgl 0000:00:1f.3: fw_state: SOF_FW_BOOT_READY_OK (6)
-> sof-audio-pci-intel-tgl 0000:00:1f.3: 0x00000005: module: ROM, state: FW_ENTERED, running
-> sof-audio-pci-intel-tgl 0000:00:1f.3: extended rom status:  0x5 0x0 0x4000 0x0 0x0 0x0 0x2560521 0x0
-> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump end ]------------
-> sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to start DSP
-> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to boot DSP firmware after resume -110
-> sof-audio-pci-intel-tgl 0000:00:1f.3: error: hda_dsp_core_reset_enter: timeout on HDA_DSP_REG_ADSPCS read
-> sof-audio-pci-intel-tgl 0000:00:1f.3: error: dsp core reset failed: core_mask 1
-> sof-audio-pci-intel-tgl 0000:00:1f.3: failed to power down DSP during suspend
-> sof-audio-pci-intel-tgl 0000:00:1f.3: error: suspending dsp
-> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to power down DSP during suspend -110
-> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: pci_pm_suspend(): snd_sof_suspend [snd_sof] returns -110
-> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: dpm_run_callback(): pci_pm_suspend returns -110
-> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: failed to suspend async: error -110
+> How was this reverted?  I get a bunch of conflicts as this commit was
+> added as a dependency of a patch later in the series.
 > 
-> This is the commit:
-> 
-> commit d5263dbbd8af026159b16a08a94bedfe51b5f67b
-> Author: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Date:   Thu Apr 4 13:54:47 2024 -0500
-> 
->     ASoC: SOF: Intel: don't ignore IOC interrupts for non-audio transfers
-> 
-> Reverting the commit thusly fixes things in everything up to 6.10.0-rc3.
-> 
-> %> git diff 6cbf086143cf9674c7f029e1cf435c65a537066a d5263dbbd8af026159b16a08a94bedfe51b5f67b > ../revert.patch
-> %> cat ../revert.patch | patch -1 -R
-> 
-> I've attached the sleepgraph timeline of the fail. The dmesg log is
-> accesible by clicking the "dmesg" button in the upper right hand corner.
-> They "log" button shows all the system details.
+> So if this wants to be reverted from 6.1.y, can someone send me the
+> revert that has been tested to work?
 
-See the ticket for more details.
+Mike, can you help out here, as you apparently managed a revert earlier?
+Without you or someone else submitting a revert I fear this won't be
+resolved...
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: d5263dbbd8af02
-#regzbot title: ASoC: SOF: Intel:
-#regzbot from: Todd Brandt
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218961
-#regzbot ignore-activity
+Ciao, Thorsten
