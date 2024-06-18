@@ -1,73 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B0B768E1;
-	Tue, 18 Jun 2024 14:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330641C69D;
+	Tue, 18 Jun 2024 16:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722361; cv=none; b=VQ5GUdNHJQ6c0YOkTvGi7cLY8SHuEzgqc8yviLpnSR++/d8JIUCLBLoXvL3/e5EEgbvvHpb4CwIcQ//Gkqu4/NlCjesoJ4tUQrWYYYySeXto3fQlMrBO4wKihho0ZkKVIqYmFOHdJxUW7WhHIPg5xjUMuZ0/9n1uQLhcoUwv20g=
+	t=1718727595; cv=none; b=rL/SoG97jxGH6yBntlD/Q8mPCWyrYVo9Gm4xhwKDeZIesoaFk09tB49lgsOIccagAvNPO9Zk3hkfz8JXzDOKYfptbA3pc8ud9zm9wRsEVug9psIhcKVeeOLfcnFTwQzj5pHsFYBczWOPWaybOIoJf49bs3w4bUz8unpR3Vlu5VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722361; c=relaxed/simple;
-	bh=TguY3CMuPmfVcYMtx2cC7kMtEqG6rcQyTG5JioFScNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YoN54gXO8UQMKF11NrWLX4w1L3sTRJQPw7/8m5HgKCQt0MC54rDkD2nB1Uur5xy5ULMdGGGzf4AQX67hBc6B9S5ORU3FFLrykA14k+GMAPcldmunNDmG5l5qB5lD2aXV1j53wUJUkgSMsrDXolytI0wHV7lRSZW3Ccn8WLtc0GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9345FC3277B;
-	Tue, 18 Jun 2024 14:52:40 +0000 (UTC)
-Date: Tue, 18 Jun 2024 10:52:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux regressions mailing list
- <regressions@lists.linux.dev>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240618105239.1feda53a@rorschach.local.home>
-In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-	<20240527183139.42b6123c@rorschach.local.home>
-	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-	<20240528144743.149e351b@rorschach.local.home>
-	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
-	<20240529144757.79d09eeb@rorschach.local.home>
-	<20240529154824.2db8133a@rorschach.local.home>
-	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
-	<20240530095953.0020dff9@rorschach.local.home>
-	<CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
-	<ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
-	<20240612115612.2e5f4b34@rorschach.local.home>
-	<CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718727595; c=relaxed/simple;
+	bh=+I09tVzQ9OtS9eIzACeB4nthPggIMP3+i7udNNOzVvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HEgzKX07qqX8uiQS3h7zCEOFwmQvfy+e1JK9lLq7r4qsDMGG2u8L+9ifde1dZjk3IA9PhYDuQIVNHPwqbRS+utsLzc43apQsU9nXO0PQoUh4brS9TXQfH90FVIEItmkeVZRuv/21/jHhwmX3aCgfbWlUroezFl9Ye1MJmldiY2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQzgJSBP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQzgJSBP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A927C4AF1C;
+	Tue, 18 Jun 2024 16:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718727594;
+	bh=+I09tVzQ9OtS9eIzACeB4nthPggIMP3+i7udNNOzVvs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LQzgJSBP7HFiHKA9jkri7zvJ7NUSfYuQQBSgKPuLmObptGzn1arS98vKbeihR775U
+	 GHvY/rrf46nqnbW7Q5H/7+Mx9E5qj8hlQr4tOaduAbDwmbMJ86Au5wGhh//4KEaklw
+	 nxhZE3I30uqXE+CkTmp3B3jNfcXdL1izhMeP99m81hqG0rJeBW4utT00qWx/s+5eEh
+	 pQrr7l25/x7MHNvOuJcGGPDit86H+B4evwMRuPpT1pFyH5f5pbRbx1pbfm5+rzZhv3
+	 HR8bVn/gZ3q+2pvNK570jImcDHca2ri4+oU3U2ZtSRd9GholN9FX0lWML3KYovd7y7
+	 6qBwy62s+zMQw==
+Date: Tue, 18 Jun 2024 11:19:52 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+	gloriouseggroll@gmail.com, Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: Fwd: Regression: Kernel 6.4 rc1 and higher causes Steam Deck to
+ fail to wake from suspend (bisected)
+Message-ID: <20240618161952.GA1258613@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4d09ffc-a8e4-4e9f-9032-7c8583ca6abd@leemhuis.info>
 
-On Thu, 13 Jun 2024 10:32:24 +0300
-Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+On Tue, Jun 18, 2024 at 08:42:07AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi Bjorn!
+> 
+> On 08.05.24 17:49, Bjorn Helgaas wrote:
+> > On Tue, Oct 31, 2023 at 03:21:20PM +0700, Bagas Sanjaya wrote:
+> >>
+> >> I notice a regression report on Bugzilla [1]. Quoting from it:
+> >> 
+> >>> On Kernel 6.4 rc1 and higher if you put the Steam Deck into suspend then press the power button again it will not wake up. 
+> >>>
+> >>> I don't have a clue as to -why- this commit breaks wake from suspend on steam deck, but it does. Bisected to:
+> >>>
+> >>> ```
+> >>> 1ad11eafc63ac16e667853bee4273879226d2d1b is the first bad commit
+> >>> commit 1ad11eafc63ac16e667853bee4273879226d2d1b
+> >>> Author: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Date:   Tue Mar 7 14:32:43 2023 -0600
+> >>>
+> >>>     nvme-pci: drop redundant pci_enable_pcie_error_reporting()
+> >>>     
+> >>>     pci_enable_pcie_error_reporting() enables the device to send ERR_*
+> >>>     Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
+> >>>     native"), the PCI core does this for all devices during enumeration, so the
+> >>>     driver doesn't need to do it itself.
+> >>> [...]
+> >>>
+> >>> Reverting that commit by itself on top of 6.5.9 (stable) allows it to wake from suspend properly.
+> >>
+> >>> https://bugzilla.kernel.org/show_bug.cgi?id=218090
+> >>
+> > I don't think regzbot picked this up [...]
+> 
+> This is still open and it seems nothing happened for a few weeks now
+> (sorry, should have sent a reminder earlier, but such old regressions
+> have a lower priority here). Did it fall through the cracks or is this
+> some good reason why giving up on this one might be the right thing to do?
 
-> ok, so if you don't have any idea where this bug is after those debug
-> patches, I'll try to find some time to bisect it as a last resort.
-> Stay tuned.
+Thanks for the reminder.  Will work on it today.
 
-FYI,
-
-I just debugged a strange crash that was caused by my config having
-something leftover from your config. Specifically, that was:
-
-CONFIG_FORCE_NR_CPUS
-
-Do you get any warning about nr cpus not matching at boot up?
-
-Regardless, can you disable that and see if you still get the same
-crash.
-
-Thanks,
-
--- Steve
+Bjorn
