@@ -1,89 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330641C69D;
-	Tue, 18 Jun 2024 16:19:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BC02139C6;
+	Tue, 18 Jun 2024 18:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718727595; cv=none; b=rL/SoG97jxGH6yBntlD/Q8mPCWyrYVo9Gm4xhwKDeZIesoaFk09tB49lgsOIccagAvNPO9Zk3hkfz8JXzDOKYfptbA3pc8ud9zm9wRsEVug9psIhcKVeeOLfcnFTwQzj5pHsFYBczWOPWaybOIoJf49bs3w4bUz8unpR3Vlu5VQ=
+	t=1718736177; cv=none; b=bFMg5kXuWhN0CoeDhwZUGi+a29B2V/gOPy5jpxQ2TrmihFC1JElCdOLoDGFp+uhGAEsKD2FboeDbEIpWcqzTLB8OIYI4nyivEIGKRk6LJacTymuszyxBzhZ6gM5OgpKwSxK4pUgij557/05xiAjY9eAQpR/l68/h8dn5o7fSLOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718727595; c=relaxed/simple;
-	bh=+I09tVzQ9OtS9eIzACeB4nthPggIMP3+i7udNNOzVvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HEgzKX07qqX8uiQS3h7zCEOFwmQvfy+e1JK9lLq7r4qsDMGG2u8L+9ifde1dZjk3IA9PhYDuQIVNHPwqbRS+utsLzc43apQsU9nXO0PQoUh4brS9TXQfH90FVIEItmkeVZRuv/21/jHhwmX3aCgfbWlUroezFl9Ye1MJmldiY2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQzgJSBP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718736177; c=relaxed/simple;
+	bh=nuDL896Rh8IWkg5KWCttBumtWgDs7+nzHP/nmSuQfok=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AHXHpC296U7Pzr2KeOZHmLoUvLKzjDYYFJSKq9fDEqFpgasWHg+hSj6/x8AmnEArEW3usFtMeG5KLdshvt2SlqLJNpvPbUsVFL039+VG0+X0mOqV8r31H6LqE6TFJeZlU2XCQTCJChlXRTofu+wmQ4iCOcXheT11E8mcLYfWV50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Q1PRAli5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQzgJSBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A927C4AF1C;
-	Tue, 18 Jun 2024 16:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718727594;
-	bh=+I09tVzQ9OtS9eIzACeB4nthPggIMP3+i7udNNOzVvs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=LQzgJSBP7HFiHKA9jkri7zvJ7NUSfYuQQBSgKPuLmObptGzn1arS98vKbeihR775U
-	 GHvY/rrf46nqnbW7Q5H/7+Mx9E5qj8hlQr4tOaduAbDwmbMJ86Au5wGhh//4KEaklw
-	 nxhZE3I30uqXE+CkTmp3B3jNfcXdL1izhMeP99m81hqG0rJeBW4utT00qWx/s+5eEh
-	 pQrr7l25/x7MHNvOuJcGGPDit86H+B4evwMRuPpT1pFyH5f5pbRbx1pbfm5+rzZhv3
-	 HR8bVn/gZ3q+2pvNK570jImcDHca2ri4+oU3U2ZtSRd9GholN9FX0lWML3KYovd7y7
-	 6qBwy62s+zMQw==
-Date: Tue, 18 Jun 2024 11:19:52 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux NVMe <linux-nvme@lists.infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>,
-	gloriouseggroll@gmail.com, Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: Fwd: Regression: Kernel 6.4 rc1 and higher causes Steam Deck to
- fail to wake from suspend (bisected)
-Message-ID: <20240618161952.GA1258613@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Q1PRAli5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8909CC3277B;
+	Tue, 18 Jun 2024 18:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718736177;
+	bh=nuDL896Rh8IWkg5KWCttBumtWgDs7+nzHP/nmSuQfok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Q1PRAli5A9nX45Y6kn04Af4ikKbEF0svjM18iw+VG7SWmToMNTZYFHzRo/O1/mKO/
+	 f61lKcZBin/mipTDH5RMCEyGyRtFBu9bGMij5ug2J+BvQBrqJ0M/Qt2cyrs4e1zUpi
+	 uF3coNwz59VhQuBlgiHjQVNPpWRXCdUMAyAMuO0s=
+Date: Tue, 18 Jun 2024 11:42:56 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, Ilya Leoshkevich <iii@linux.ibm.com>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David
+ Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: mm/slub.c:1163:17: error: implicit declaration of function
+ '__memset'; did you mean '__memset64'?
+ [-Werror=implicit-function-declaration]
+Message-Id: <20240618114256.81b30ab4e6de18acd4903c9b@linux-foundation.org>
+In-Reply-To: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
+References: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4d09ffc-a8e4-4e9f-9032-7c8583ca6abd@leemhuis.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 18, 2024 at 08:42:07AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi Bjorn!
+On Tue, 18 Jun 2024 16:09:38 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+
+> The Following build failures have been noticed on Powerpc, mips and arc on the
+> Linux next-20240617 tag.
 > 
-> On 08.05.24 17:49, Bjorn Helgaas wrote:
-> > On Tue, Oct 31, 2023 at 03:21:20PM +0700, Bagas Sanjaya wrote:
-> >>
-> >> I notice a regression report on Bugzilla [1]. Quoting from it:
-> >> 
-> >>> On Kernel 6.4 rc1 and higher if you put the Steam Deck into suspend then press the power button again it will not wake up. 
-> >>>
-> >>> I don't have a clue as to -why- this commit breaks wake from suspend on steam deck, but it does. Bisected to:
-> >>>
-> >>> ```
-> >>> 1ad11eafc63ac16e667853bee4273879226d2d1b is the first bad commit
-> >>> commit 1ad11eafc63ac16e667853bee4273879226d2d1b
-> >>> Author: Bjorn Helgaas <bhelgaas@google.com>
-> >>> Date:   Tue Mar 7 14:32:43 2023 -0600
-> >>>
-> >>>     nvme-pci: drop redundant pci_enable_pcie_error_reporting()
-> >>>     
-> >>>     pci_enable_pcie_error_reporting() enables the device to send ERR_*
-> >>>     Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> >>>     native"), the PCI core does this for all devices during enumeration, so the
-> >>>     driver doesn't need to do it itself.
-> >>> [...]
-> >>>
-> >>> Reverting that commit by itself on top of 6.5.9 (stable) allows it to wake from suspend properly.
-> >>
-> >>> https://bugzilla.kernel.org/show_bug.cgi?id=218090
-> >>
-> > I don't think regzbot picked this up [...]
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
-> This is still open and it seems nothing happened for a few weeks now
-> (sorry, should have sent a reminder earlier, but such old regressions
-> have a lower priority here). Did it fall through the cracks or is this
-> some good reason why giving up on this one might be the right thing to do?
+> Regressions found on mips:
+>   - gcc-12-bcm47xx_defconfig
+>   - gcc-12-cavium_octeon_defconfig
+>   - gcc-8-malta_defconfig
+>   - gcc-12-malta_defconfig
+>   - gcc-12-allnoconfig
+>   - gcc-8-bcm47xx_defconfig
+>   - gcc-8-allnoconfig
+>   - gcc-8-cavium_octeon_defconfig
+>   - clang-18-allnoconfig
+>   - clang-nightly-allnoconfig
+> 
+> 
+> Regressions found on arc:
+>   - gcc-9-allnoconfig
+>   - gcc-9-defconfig
+> 
+> Regressions found on powerpc:
+>   - clang-18-maple_defconfig
+>   - gcc-13-ppc6xx_defconfig
+>   - clang-18-allnoconfig
+>   - clang-18-defconfig
+>   - clang-18-ppc64e_defconfig
+>   - gcc-13-defconfig
+> 
+> Build log:
+> --------
+> mm/slub.c: In function 'init_object':
+> mm/slub.c:1163:17: error: implicit declaration of function '__memset';
+> did you mean '__memset64'? [-Werror=implicit-function-declaration]
+>  1163 |                 __memset(p - s->red_left_pad, val, s->red_left_pad);
+>       |                 ^~~~~~~~
+>       |                 __memset64
+> 
+> The commit id:
+>   ad5dde7da5f9 kmsan: support SLAB_POISON
 
-Thanks for the reminder.  Will work on it today.
-
-Bjorn
+Thanks.  I was hoping for at least a temporary workaround for this, but
+nothing is happening.  I'll disable that patch for now.
