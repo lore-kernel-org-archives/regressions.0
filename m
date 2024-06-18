@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7063219F6;
-	Tue, 18 Jun 2024 06:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5603F1BF38;
+	Tue, 18 Jun 2024 07:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718692936; cv=none; b=qucuIg/SieOLJbukFHVqUxkh6tZby8fwFJz3ZUC4d8X/V8RMzgC1iouikuppqOOl8qlgr1d8SLsci/TpGxxIqYAgcs+ceAzRKTNNx9Rx/QficpDlPLIYYth24MRR0rPaY9DV6cJySG17m5yFrDV7pkmhHbzlCOQ7kluCYVXA66I=
+	t=1718695348; cv=none; b=KzUpst8zLI0Uwue+yQzEsBhFhj3GpsAhbxZMleLA8vi2O3DSgdZ74yqEOw3Z3zGWeRA/rIL/+ORkMYCcI632oRI0krLJYMbrxGTbeUwIFSrUVGFxpInP4OL0qzyaqJXrqo/ZHo1xfCI3HMgVCFYaKERTNdioZDHgncoVmwYoCco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718692936; c=relaxed/simple;
-	bh=AhTLoDlSVCG/LHgqM8ZrXxu6yxrWcrH0cYlmPQnN/B0=;
+	s=arc-20240116; t=1718695348; c=relaxed/simple;
+	bh=fgOMeiSNWMTUpBSBXUqhL6wT38bkG2TPTOJfTexXmnw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MST3ovJVG596uWZOunZ3Lei+cYTShXZMdLAl/ZaoLXOOXHItfJ/0b9KXLQ11DE9R/6PwkbPlOKG5iY5GAeCKKwJ2VGB0bsn+9VTkMkDbz9FB0n5it3zspThsfshNOFWwMXaz6KyaDVW5MZ8CnS4+p96UxfXYTOkAxSmMG5tBRkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GpwweqzV; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=PaAh0LYUq8Ketwc5tz0tw1R2Bzp3UToBpyqquWobM5oNUg12t8dFn+Bd5w1vdHUtrMBT/CtXboS85zNNOp4RuCJH7SJiKmlNR9bH4/o5uC1klHSswgSpCIAcoepicYw5MWm7Bo+KyLdx18BDunpPvsCBieApdcg8egBhKIT4pqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=f9o9n/8A; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GpwweqzV"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="f9o9n/8A"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=NaDAiRmFCXMwg/Jif66ZjmayEhJaZCZNrfQ3r+T5BQA=;
-	t=1718692933; x=1719124933; b=GpwweqzVBB0DYxw6gVD/nab+QI89nixbewcXee88kF8c76J
-	sSySkW0ymJhjUkVhSXbVSxACZPPdkFkm9p+5dluQCfikLYlfZMPb4Btcq9U/AQEoyrAzNmwP2tedZ
-	w+3tvH5xdkGORQsLQh+PXfsDOmHUhb2WgkE6Ia6mnn9k00GJlrzNFNVU/+A25adcna5fMYn3wRO9l
-	OLVQ+ky82FYAm465sgcZ32dWtbaP9FYyFJgEja29ZJzcF3aMBfOAPlNbyrvmBewmLmCA/2IOxmEXO
-	/novFrkz0J6w46Q4ZtWsjmBtuoCBoZx+OssHA8YclQGFexPjx+mxhcK8VyYsPbzA==;
+	In-Reply-To:References; bh=lFXQoNB3NgLdP7vmjHlHVASYxjD4E3i9aARHyEZwpPQ=;
+	t=1718695346; x=1719127346; b=f9o9n/8AdOf+vQl5l4rPSdzVGbrgG1F6kQQ1wNUosMdY140
+	bpSWviEOWuRpnFzbXLexSsXDdLw50hsUivvkHTzJfxLT6MuQ7YEqAYd2o5ojfqBwEjTyeLliQP2g0
+	EKrBNUlVE5UYrIFsAFsMk5C1vIoF3DxYMGPZVWrHL20dlB0hQlQwn5gVU+eVVUCfNvQaa5hfi1Zh1
+	fIAy/cHgp822HPW8rUOmGHXH+6PyLkN4Wo2/XlOgS30/RZsI+EMaZLiSdpF3KN1C/Dgc806Ckmvq/
+	1oT8sRdwR0mz9ub3LMdcvaksBI2VxzNL+LTwTUoP/W/BOYlFnd50YqkIo/0yA3Hg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJSXg-0004zv-56; Tue, 18 Jun 2024 08:42:08 +0200
-Message-ID: <b4d09ffc-a8e4-4e9f-9032-7c8583ca6abd@leemhuis.info>
-Date: Tue, 18 Jun 2024 08:42:07 +0200
+	id 1sJTAb-0005x8-Bf; Tue, 18 Jun 2024 09:22:21 +0200
+Message-ID: <c11dc5f8-2638-40bf-b562-fa5cf8bf40fe@leemhuis.info>
+Date: Tue, 18 Jun 2024 09:22:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,66 +39,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Regression: Kernel 6.4 rc1 and higher causes Steam Deck to
- fail to wake from suspend (bisected)
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Chaitanya Kulkarni <kch@nvidia.com>,
- Christoph Hellwig <hch@lst.de>, gloriouseggroll@gmail.com,
- Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20240508154950.GA1768252@bhelgaas>
+Subject: Re: [REGRESSION] spi: omap2-mcspi: not working with kernel v6.10
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
+ <jpaulo.silvagoncalves@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>,
+ Louis Chauvet <louis.chauvet@bootlin.com>, linux-spi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, joao.goncalves@toradex.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240612170030.3qatttsgrwjg2m5s@joaog-nb>
+ <1b9852d1-4454-4f62-bd8a-fb6167dc0576@leemhuis.info>
+ <20240617195358.v3ewnsu4jgkygvby@joaog-nb>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240508154950.GA1768252@bhelgaas>
+In-Reply-To: <20240617195358.v3ewnsu4jgkygvby@joaog-nb>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718692933;de0b4c71;
-X-HE-SMSGID: 1sJSXg-0004zv-56
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718695346;2050ca34;
+X-HE-SMSGID: 1sJTAb-0005x8-Bf
 
-Hi Bjorn!
+On 17.06.24 21:53, João Paulo Gonçalves wrote:
+> 
+> On Mon, Jun 17, 2024 at 11:29:05AM +0200, Thorsten Leemhuis wrote:
+>> In that case the thing that really
+>> helps would be if you could use a git bisection to find the change that
+>> causes this.
+> 
+> For me, spi stopped working in commit d153ff4056cb ("spi: omap2-mcspi:
+> Add support for MULTI-mode").
 
-On 08.05.24 17:49, Bjorn Helgaas wrote:
-> On Tue, Oct 31, 2023 at 03:21:20PM +0700, Bagas Sanjaya wrote:
->>
->> I notice a regression report on Bugzilla [1]. Quoting from it:
->> 
->>> On Kernel 6.4 rc1 and higher if you put the Steam Deck into suspend then press the power button again it will not wake up. 
->>>
->>> I don't have a clue as to -why- this commit breaks wake from suspend on steam deck, but it does. Bisected to:
->>>
->>> ```
->>> 1ad11eafc63ac16e667853bee4273879226d2d1b is the first bad commit
->>> commit 1ad11eafc63ac16e667853bee4273879226d2d1b
->>> Author: Bjorn Helgaas <bhelgaas@google.com>
->>> Date:   Tue Mar 7 14:32:43 2023 -0600
->>>
->>>     nvme-pci: drop redundant pci_enable_pcie_error_reporting()
->>>     
->>>     pci_enable_pcie_error_reporting() enables the device to send ERR_*
->>>     Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
->>>     native"), the PCI core does this for all devices during enumeration, so the
->>>     driver doesn't need to do it itself.
->>> [...]
->>>
->>> Reverting that commit by itself on top of 6.5.9 (stable) allows it to wake from suspend properly.
->>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=218090
->>
-> I don't think regzbot picked this up [...]
+Hmmm, Louis (which already was in the CC) posted a patch with a Fixes:
+tag referencing that commit more than a month ago:
 
-This is still open and it seems nothing happened for a few weeks now
-(sorry, should have sent a reminder earlier, but such old regressions
-have a lower priority here). Did it fall through the cracks or is this
-some good reason why giving up on this one might be the right thing to do?
+spi: omap2-mcspi: Ensure that CS is correctly asserted when switching
+from MULTI mode to SINGLE mode
+https://lore.kernel.org/all/20240506-fix-omap2-mcspi-v2-1-d9c77ba8b9c7@bootlin.com/
+
+Unless I'm missing something, that patch did not make much progress
+since then. But I wonder if that might help. Louis? FWIW, this thread
+starts here with João problem description:
+https://lore.kernel.org/all/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
