@@ -1,37 +1,36 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF417EF04;
-	Tue, 18 Jun 2024 07:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C322613C913;
+	Tue, 18 Jun 2024 10:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718696661; cv=none; b=Up0j2M+5mdwYaINd5tuH6Rr8z9nvRGOwQaPAfMQxr9v6eZnKw2DIO9z8Q2cl3O4nF3Xcxlh4MWtutJ31m+bj0Y/S5dIKGNJMV+JKm/KChICoh8mEcvn1LCwY11rA++2eiBr8OfpCZKPc4ieYzYGfnIduwgSc8c1RS8TsGDFIeKI=
+	t=1718706172; cv=none; b=XKjtYWUhzASdzDZUIcl38+cOg+1rmMG1ho74vANp8I20J78Pz/SGySO0KlRIyRaGHdbpCkG/0EVnwWJHafTBI/1MYPwavNtC5kGmCFDriCK03m4pZmC0ZysWWG3Xm5ZgElhDT+AFZBPvHok0gQbwPEexc6WyZF3nq0PFWO4Z/eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718696661; c=relaxed/simple;
-	bh=quE7CbA+hJK4Q3E7v2W+XYSGoUEBpSjGu7J/FkZiGn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=uNSIM1JeXfwkKcav23glnZZYMYdcuMAYtoigIzkPp0PO4meKFqtqzGP/7HzOzESRI+7rCuhE/HN8UrLP/Nm3BCkAIwq0gJojqLC/mek7zUKIotuME53IWWvQMUXQHCYQ2nR69fSdZyqCGVAC7+mKm5J+eO4X+Avmui/DLT2NaeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3i17D+4H; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1718706172; c=relaxed/simple;
+	bh=r6pJTIEmvLC1nd8y75hngavgg8Hy2QqhAckp8Oh9DaE=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=fzE+4I48gOStlZmM1jMDWAAcw2pockEhFKGHEi1kOoaz1refB+qXyyiQ/xd+kwYAVohgiehDIvh9iIseVIB0Zd6pwqaJbdJd0W+84cjchFR50/VhUnKQlPWIse5Skn6SsrpspbcJGL4x5oED92tKyfSU5a5szybOnOBe5o7Wz7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VKk2LFjR; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3i17D+4H"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VKk2LFjR"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Nw4bJ4tSdfxhTXYp9MZQqf/Uh23gcXIcn+IQdoRdAUc=;
-	t=1718696659; x=1719128659; b=3i17D+4H0L6Wa/T9TPZ2mrGBxSyqEtmwZ2onp+i6sIKNwI4
-	56Cigv/Iy4B7JCnSp3NjYUFQBQ1gcgIwxomNhmKTwIynWVjsbbSS8k+X/UMnLiaXf+fNuNZiAf3aH
-	JJs1wmIzHmVfKn0mXCXMt1TRcLvpvkKv8c5yMyvw979PTjbEOicY+Ics5XvELZDzd4+khJ7qe5NUg
-	K0vAQEhlxh6naV/QgA86G9NwFRtx7iDeHSNqi2BosXPUF71XHboeOZVdtIrEFL7XWgyxVPka5AzkU
-	bP5cb1pDTdiUs3kf7f2dtTEKsivDGMERnhI1DvAlLOwTNZLUD6qJzbeDqDA11CxQ==;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=gedkI59GOhsqqQN0ahgyfWFQH2lfghvEsw3T4E/Gb0E=; t=1718706170; x=1719138170;
+	 b=VKk2LFjRpyIy9V9Z8K++Kwo+Y8MTSAPppK0nIuA941ize+9V+cTYT1+p0XJ4tLLlfSRDeU/0LM
+	r6YG7A5KMq+lKsgtLXCQWM4nN8i7n41wUpsT+NjyjNMNpb99cU0V/frqXrtXvvb86QLJeHSNfcx+W
+	Jhg2+NfZPjXQF66bKuU2gjvK0MGTuDx3t/B5babESVZtZjJnFyS5M5A6Q8aituU+C4bTMnDb4vMqo
+	T+0S/AU58KSpXIfMpoNOKYlo7dJBZB1RidTHSPRjQFzW3DrXm7RKb1wgYW+E/Vr+gQHm2/HONGXN3
+	6z3rUwBY9rfWuPjv4EcDDV2Cj4eVVTgLbC2tg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sJTVm-00028g-Pc; Tue, 18 Jun 2024 09:44:14 +0200
-Message-ID: <3eae9fcc-14fa-4292-945e-3339011825b9@leemhuis.info>
-Date: Tue, 18 Jun 2024 09:44:14 +0200
+	id 1sJVzB-0006jm-SG; Tue, 18 Jun 2024 12:22:46 +0200
+Message-ID: <ca2d3d47-0ac0-48a5-910b-e481f2a9870a@leemhuis.info>
+Date: Tue, 18 Jun 2024 12:22:45 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,105 +38,85 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Xinput Controllers No Longer Working
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <CABRw72orHLEqpAS=cW1ThGkVUW0juqc7Y_-N2=o-k0rSqgpLxA@mail.gmail.com>
- <bb96d22d-250f-4d5d-9c21-c2568d37b27b@leemhuis.info>
- <CABRw72rifuVjs+LU5bB-2va11h=COyPpeBzWYkEMP+dW_h6MQQ@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-Cc: Edward Wawrzynski <ewawrzynski16@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CABRw72rifuVjs+LU5bB-2va11h=COyPpeBzWYkEMP+dW_h6MQQ@mail.gmail.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Todd Brandt <todd.e.brandt@intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Linux Sound System <linux-sound@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
+Subject: [Regression] Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
+ S0ix fails in all further suspends
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718696659;31951e46;
-X-HE-SMSGID: 1sJTVm-00028g-Pc
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718706170;f81fa682;
+X-HE-SMSGID: 1sJVzB-0006jm-SG
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Dmitry, Edward seems to have some regression with Xinput Controllers no
-Longer Working since v6.8..v6.9 and still not working with mainline. The
-thread starts here:
-https://lore.kernel.org/all/CABRw72orHLEqpAS%3DcW1ThGkVUW0juqc7Y_-N2%3Do-k0rSqgpLxA@mail.gmail.com/
+Pierre-Louis Bossart, I noticed a report about a regression in
+bugzilla.kernel.org that appears to be caused by the following change of
+yours: d5263dbbd8af02 ("ASoC: SOF: Intel: don't ignore IOC interrupts
+for non-audio transfers") [v6.10-rc1]
 
-Dmesg files are attached to the parent of this mail. I briefly looked
-into them but no obvious problem jumped out to me untrained eyes.
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=218961 :
 
-Edward, with a bit of luck Dmitry might have an idea what's wrong here.
-But if not you might need to perform a git bisection to find the change
-that broke things:
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
-
-That process would also rule out that some config change on the Fedora
-side causes this.
-
-Ciao, Thorsten
-
-On 18.06.24 02:03, Edward Wawrzynski wrote:
-> Hi Thorsten - I've removed the stable mailing list.
+> We have a Lenovo Thinkpad X1 Carbon Gen 10 in our lab and ever since
+> 6.10.0-rc1 it has failed its first S2idle suspend, and has stopped
+> getting S0iX on subsequent successful S2idle suspends. The issue in the
+> first suspend fail is here in the audio driver (dmesg section shown):
 > 
-> Sorry I took so long to respond. I just got the information you
-> requested. To add onto the previous report, the kernel I booted into
-> this time is 6.8.12, and the Xinput controllers still work perfectly.
+> sof-audio-pci-intel-tgl 0000:00:1f.3: Code loader DMA did not complete
+> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump start ]------------
+> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware download failed
+> sof-audio-pci-intel-tgl 0000:00:1f.3: fw_state: SOF_FW_BOOT_READY_OK (6)
+> sof-audio-pci-intel-tgl 0000:00:1f.3: 0x00000005: module: ROM, state: FW_ENTERED, running
+> sof-audio-pci-intel-tgl 0000:00:1f.3: extended rom status:  0x5 0x0 0x4000 0x0 0x0 0x0 0x2560521 0x0
+> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump end ]------------
+> sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to start DSP
+> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to boot DSP firmware after resume -110
+> sof-audio-pci-intel-tgl 0000:00:1f.3: error: hda_dsp_core_reset_enter: timeout on HDA_DSP_REG_ADSPCS read
+> sof-audio-pci-intel-tgl 0000:00:1f.3: error: dsp core reset failed: core_mask 1
+> sof-audio-pci-intel-tgl 0000:00:1f.3: failed to power down DSP during suspend
+> sof-audio-pci-intel-tgl 0000:00:1f.3: error: suspending dsp
+> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to power down DSP during suspend -110
+> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: pci_pm_suspend(): snd_sof_suspend [snd_sof] returns -110
+> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: dpm_run_callback(): pci_pm_suspend returns -110
+> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: failed to suspend async: error -110
 > 
-> I've attached two separate files I've generated, one on 6.9.4 (the
-> broken one) and one on 6.8.12 (the working one). Please let me know if
-> I can be of any further assistance.
+> This is the commit:
 > 
-> On Mon, Jun 17, 2024 at 12:14 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> [to anyone that replies to this: please drop the stable mailing list
->> from CC, as this sounds like a mainline regressin]
->>
->> Hi Edward! Thx for your report
->>
->> On 17.06.24 17:37, Edward Wawrzynski wrote:
->>>
->>> I was reaching out to report that there's been a regression in the
->>> latest stable 6.9.4 kernel. I'm using Fedora 40 and 6.9.4 just got
->>> pushed to the repos recently. Upon updating, my wired USB Xinput
->>> controllers no longer get detected.
->>>
->>> I've tried two 8BitDo controllers, the one being the 8BitDo Pro 2
->>> Bluetooth (with a USB cable) and the other being the 8BitDo Pro 2
->>> Wired Controller for Xbox. Neither of them are being detected on
->>> Kernel 6.9.4, despite previously working throughout the lifetime of
->>> Fedora 40's 6.8.x kernel versions, the latest being 6.8.11. I've also
->>> tried the vanilla kernel, as well as the latest vanilla mainline
->>> kernel from Fedora's COPR: 6.10.0-0.rc4.337.vanilla.fc40.x86_64.
->>>
->>> To reproduce, simply load Kernel 6.9.4+
->>
->> That sounds a lot like it is a mainline regression that was introduced
->> between 6.8.y and 6.9;
->>
->>> and plug a USB controller in
->>> with XInput (either an Xbox controller or something else that emulates
->>> one). It won't be detected. I plugged in a PS5 controller and it
->>> worked, but when I plugged in an Xbox Series S controller, it didn't
->>> work. The 8BitDo Pro 2 Bluetooth controller has four different
->>> settings (Switch, Android, DirectInput, Xinput), and it was detected
->>> and worked on every setting except for the Xinput setting. Reverting
->>> to version 6.8.11 fixes the issues immediately.
->>
->> Could you please share the output of "journalctl --dmesg --output=short"
->> for both a working and a broken kernel?
+> commit d5263dbbd8af026159b16a08a94bedfe51b5f67b
+> Author: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Date:   Thu Apr 4 13:54:47 2024 -0500
+> 
+>     ASoC: SOF: Intel: don't ignore IOC interrupts for non-audio transfers
+> 
+> Reverting the commit thusly fixes things in everything up to 6.10.0-rc3.
+> 
+> %> git diff 6cbf086143cf9674c7f029e1cf435c65a537066a d5263dbbd8af026159b16a08a94bedfe51b5f67b > ../revert.patch
+> %> cat ../revert.patch | patch -1 -R
+> 
+> I've attached the sleepgraph timeline of the fail. The dmesg log is
+> accesible by clicking the "dmesg" button in the upper right hand corner.
+> They "log" button shows all the system details.
 
+See the ticket for more details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-P.S.: let me add this to the tracking:
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot report /
-#regzbot introduced v6.8..v6.9
-#regzbot title input: Xinput Controllers No Longer Working
+#regzbot introduced: d5263dbbd8af02
+#regzbot title: ASoC: SOF: Intel:
+#regzbot from: Todd Brandt
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218961
 #regzbot ignore-activity
