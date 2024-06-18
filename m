@@ -1,127 +1,74 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86B313D27F
-	for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 10:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741811A2C36
+	for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 12:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718707192; cv=none; b=RYIMJwXwFmECDYgjmHl7zQig5sq8KoRqQIbGE4JSUs7tLVUP4K+D3yo9SAIooCX8OfNZA6dGXpVc+BBD2y7zUtj/V5oSTrmCwIN1Yem6KDTVbaoOLqvbkWrZ1pv8b+BsbBFQ4cSt/s/CObwqNYHDd0YNvVfgxS70sNC9bw2qnS4=
+	t=1718714446; cv=none; b=odcs7D1xfhRy2ny8PuLD5+lRS/fI/86UFsJIlGWpsE1nUuuFwK4K3wBmQmpdmC4l/zU9URn8y4S1I0w0nSfdum7s+HFoNjJzukPxVdTgaJ3ON49/gmdbG4v3tZmnFk5+P0nyHwbxYQ0TqC8QRwTwI6GTWBhSNiekuexnh2iIsgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718707192; c=relaxed/simple;
-	bh=lPQaPdityDLfZbHzeDC8ojdjE2XvWy7QdXEXphUNQpc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Ja33nlbEdXWV45msDCKKUkXhKooNfly+EGiAYxpH1yGPUz1TypFbbvyr0rHSreATQN8RQDZxaN1mePgs8Nz9XcxOJKQnHZgGLDrmIDULMaDQzQfxaWqCGjQWT8Ij00nF1LHtFoETmsWa+9cIOCw2rAhNEFj4QtVUexHXUPOgOXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FmZpCVav; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718714446; c=relaxed/simple;
+	bh=bSJ2jaEfqtK6rpQXQu7mnH3+2YKmJiFFCHG2T8O/+60=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=JIccXBA82NnLhCqWQTOTD8u5qfLnYj7WVj1IbID0S8NnM/NqT9L4TEtOn/5y1uTkMQurbAPo7pwShzDoL8n/U5ITlW7zQmrWtdVA+VvBJIlb8+6CAAfTHkJXXLS7u8VJZoh1EOJ1/bpe4M5AMCfaXI+q4M8DxHXIaspKgUIdtf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CkzX03Mv; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmZpCVav"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-80b841b1b80so1348492241.0
-        for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 03:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718707190; x=1719311990; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QEljk6ggn8rJlURGstQGLdKQqP2HSFqBtnN4P7FNF6w=;
-        b=FmZpCVavPie/BJpYuQleBI9EOppcb+6MdkrB0/YoVfK77O4hyVsxFM+vNUPgsrRFnT
-         P/baQjb9/LC99tpSbCiaI6A+Kfn6TTEoMQU39ZrkgfBHt13DS29l8wit5zuj2IlrXLTW
-         8FrbFIeoVadc15mua58/ziQ/KlBKBZmbfuqBrglktQcBFqMcfvJ8wvK/NiWOr/FrHEmb
-         DIfwq3MvdndysBXgbLzr/U5/DdqmznrPCMyrdAFI65jCzLEx+TZEfSzmjqfSxyQzIMbH
-         VJ73HdCE1BNn/0T266QM+tnaPl27nx6G90VMwsrv1O0h9HJknlJTuqvZlqBACwAb9UMU
-         T6nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718707190; x=1719311990;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QEljk6ggn8rJlURGstQGLdKQqP2HSFqBtnN4P7FNF6w=;
-        b=fowd41wo6YsTLrtMPn39bPlxpmho5OQ1pTGzUtrYnfAUoTI+V3ogdS5GV244JM0LRE
-         ZcPaMMbdpIijnLq7GAALnDL0yrOVnEcq1xNvM6vzwMomNg/h30NaUsHvVYH6f+T+YPwo
-         Ps0vvhdiDojUh+KNk7ypvlSgNbQydhtsJ4dsfsye4KVsZ3LZMmnwZgHyfxbevYec0/v5
-         Rbly8Ab2znJNi1nRr/UjVtsa4IZdPwkDMSRZLygyxZ41BBpaw6P/bWXxDsSxM2K5yWnQ
-         5+4Jwo41Ieb3cD8YreGTxJWOsPW7uJWtCM31DSOvF7BdjdsVaDqB+lOYVXAOvlT4FoTw
-         Bcbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnuD9MnWdXpjsOlAFakR63aRAogeEBwY+Jt8X31xIOwGJj0CxJ+trgblDCiprl1I0fneUAWKaPN4nPWScERPIgCKbzMK2lCzO3sss=
-X-Gm-Message-State: AOJu0Ywf0zkSBFWuXMmhomgaioRYxtaH9qDZyj6qprnBhl+UnqU/aBBA
-	CT5UhNGVkEzm2eUeDtM+9L8EPv4KrzDHxVVzbBdRU/qtN6mjqdki5THh8sN5qL7FEsc4YlLKYM6
-	YIaIGvO7ApfS2n5IbOHB1jyAEfe6XpHScipiOSg==
-X-Google-Smtp-Source: AGHT+IGlfvQiDWgG3QUajDlpAVMqRKc0CBGEed89cfHiSCFaLDQXr5lx8fTA31fnYSylIf9pn2jzMiwAhKa5hARvZYA=
-X-Received: by 2002:a67:f88e:0:b0:48d:920a:bd41 with SMTP id
- ada2fe7eead31-48dae38578dmr10393370137.16.1718707189697; Tue, 18 Jun 2024
- 03:39:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CkzX03Mv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=bSJ2jaEfqtK6rpQXQu7mnH3+2YKmJiFFCHG2T8O/+60=; t=1718714444;
+	x=1719146444; b=CkzX03MvyCkl9+7DiTv0EgW8cDUIkgIU4WtCrHOOeVndNYr+wRsjq8it4y/7z
+	8WVE+B5e5tN5WQ4qRAYVR0gvT4yJ0uV5r9/ZX2VSibLR22QW72Yo3SAkx9/BhDJmpmYGhIn4+7h14
+	QAfAln/D5Pp4R/laRcGQ6m7H+xIEUtcrYR/ltwR5nw+u1eE8HCXWe5yswuYRJPJkPyOmCc1jCmPu2
+	EGBwVPQqz8X4BOF1c1m1GzhKh4zOKOIuCU1EkWNv3Udt6OQwd8Ia180zZmK+1F6Uu4uPjsI4RJ3sE
+	WB962eHt0tHDvFS9Cm2c48ZQ+ZjcSMxCJpyUCy1hoF8exa7MrA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sJY8g-00072T-6R; Tue, 18 Jun 2024 14:40:42 +0200
+Message-ID: <8aefa78e-10ec-4d6d-a9cd-ca0192fed5d3@leemhuis.info>
+Date: Tue, 18 Jun 2024 14:40:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 18 Jun 2024 16:09:38 +0530
-Message-ID: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
-Subject: mm/slub.c:1163:17: error: implicit declaration of function
- '__memset'; did you mean '__memset64'? [-Werror=implicit-function-declaration]
-To: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>, Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-
-The Following build failures have been noticed on Powerpc, mips and arc on the
-Linux next-20240617 tag.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Regressions found on mips:
-  - gcc-12-bcm47xx_defconfig
-  - gcc-12-cavium_octeon_defconfig
-  - gcc-8-malta_defconfig
-  - gcc-12-malta_defconfig
-  - gcc-12-allnoconfig
-  - gcc-8-bcm47xx_defconfig
-  - gcc-8-allnoconfig
-  - gcc-8-cavium_octeon_defconfig
-  - clang-18-allnoconfig
-  - clang-nightly-allnoconfig
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718714444;56c6f07d;
+X-HE-SMSGID: 1sJY8g-00072T-6R
 
 
-Regressions found on arc:
-  - gcc-9-allnoconfig
-  - gcc-9-defconfig
 
-Regressions found on powerpc:
-  - clang-18-maple_defconfig
-  - gcc-13-ppc6xx_defconfig
-  - clang-18-allnoconfig
-  - clang-18-defconfig
-  - clang-18-ppc64e_defconfig
-  - gcc-13-defconfig
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Build log:
---------
-mm/slub.c: In function 'init_object':
-mm/slub.c:1163:17: error: implicit declaration of function '__memset';
-did you mean '__memset64'? [-Werror=implicit-function-declaration]
- 1163 |                 __memset(p - s->red_left_pad, val, s->red_left_pad);
-      |                 ^~~~~~~~
-      |                 __memset64
+#regzbot report:
+https://lore.kernel.org/lkml/77b71bd9-42be-40e8-8b96-196e214c8afb@schmorgal.com/
+#regzbot fix: Revert "serial: core: only stop transmit when HW fifo is
+empty"
+#regzbot monitor:
+https://lore.kernel.org/all/20240606195632.173255-1-doug@schmorgal.com/
 
-The commit id:
-  ad5dde7da5f9 kmsan: support SLAB_POISON
-
-metadata:
-  git_describe: next-20240617
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/  -
-next-20240617/testrun/24380474/suite/  -
-test/gcc-13-ppc64e_defconfig/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/  -
-next-20240617/testrun/24380474/suite/  -
-test/gcc-13-ppc64e_defconfig/details/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+#regzbot report:
+https://lore.kernel.org/all/20240614155437.2063380-1-popcornmix@gmail.com/
+#regzbot introduced: 865e7a7700d9
+#regzbot summary: fs/ntfs3: memory corruption when page_size changes
+(like from Windows -> RasPi5)
+#regzbot link: https://github.com/raspberrypi/linux/issues/6036
