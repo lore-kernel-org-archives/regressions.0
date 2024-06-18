@@ -1,97 +1,202 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BC02139C6;
-	Tue, 18 Jun 2024 18:42:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211E84D8DC;
+	Tue, 18 Jun 2024 20:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718736177; cv=none; b=bFMg5kXuWhN0CoeDhwZUGi+a29B2V/gOPy5jpxQ2TrmihFC1JElCdOLoDGFp+uhGAEsKD2FboeDbEIpWcqzTLB8OIYI4nyivEIGKRk6LJacTymuszyxBzhZ6gM5OgpKwSxK4pUgij557/05xiAjY9eAQpR/l68/h8dn5o7fSLOA=
+	t=1718743720; cv=none; b=ns+oaNkwv3K97ResotHsm+CBiKLT1rM3r2reahgjPQKuPQ/3BQ4pTjOEiPngzJVPLHSD51I+4Y29d1aoMWfTkgtOaqyV3Z/MdofRjyrnJfZdX+mUKeVCwAvqpiPC9CYln1FZBkFdnlwoE8Ytn93a1VH9FkKCU+CJFAavmUvqY4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718736177; c=relaxed/simple;
-	bh=nuDL896Rh8IWkg5KWCttBumtWgDs7+nzHP/nmSuQfok=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AHXHpC296U7Pzr2KeOZHmLoUvLKzjDYYFJSKq9fDEqFpgasWHg+hSj6/x8AmnEArEW3usFtMeG5KLdshvt2SlqLJNpvPbUsVFL039+VG0+X0mOqV8r31H6LqE6TFJeZlU2XCQTCJChlXRTofu+wmQ4iCOcXheT11E8mcLYfWV50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Q1PRAli5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718743720; c=relaxed/simple;
+	bh=vifOR8wqTe33GN1ZxE0aE3JJoX2X6ojZd3vgLTYu4qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ayK02a5sNZiSFC3/B0ZDk6kF/jTBHVDTQTiBylDZHVl90TI87g03wuNSY2d22cPnlacXpATeqgkL1VqICiVhZPGYp+TchPGgWm/ljR/ZVuLkA3hhqCQb5YwdHaJ5tGYizjYi1ybq3viAY5XmGcZ8QSZSlcm6UtkQtNwpd9fxvow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkroOP1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Q1PRAli5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8909CC3277B;
-	Tue, 18 Jun 2024 18:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1718736177;
-	bh=nuDL896Rh8IWkg5KWCttBumtWgDs7+nzHP/nmSuQfok=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Q1PRAli5A9nX45Y6kn04Af4ikKbEF0svjM18iw+VG7SWmToMNTZYFHzRo/O1/mKO/
-	 f61lKcZBin/mipTDH5RMCEyGyRtFBu9bGMij5ug2J+BvQBrqJ0M/Qt2cyrs4e1zUpi
-	 uF3coNwz59VhQuBlgiHjQVNPpWRXCdUMAyAMuO0s=
-Date: Tue, 18 Jun 2024 11:42:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- lkft-triage@lists.linaro.org, Linux Regressions
- <regressions@lists.linux.dev>, Ilya Leoshkevich <iii@linux.ibm.com>,
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David
- Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: mm/slub.c:1163:17: error: implicit declaration of function
- '__memset'; did you mean '__memset64'?
- [-Werror=implicit-function-declaration]
-Message-Id: <20240618114256.81b30ab4e6de18acd4903c9b@linux-foundation.org>
-In-Reply-To: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
-References: <CA+G9fYvULzMHHQo3OKkcFYU+Tiw1fFU6LKbt3zHfX-E-ozcsdA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkroOP1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87306C3277B;
+	Tue, 18 Jun 2024 20:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718743719;
+	bh=vifOR8wqTe33GN1ZxE0aE3JJoX2X6ojZd3vgLTYu4qs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kkroOP1XahDe8y0PCYQZWwyr7NzPoNIwKnMyP+cVjWRCKFcCxKBzRGDNp5obZrYbz
+	 TXvRrpIY6765aIvN+9QFQnMrnolLmfu4CvKLK7bKU1bY4quBie2SutBEJe4aty31YW
+	 46peRLKOHaHiKEX9ERj/dQSuM/jhak/eoJ05OYZUB2jh7Nr0wShO63IhXLoT/4I5hU
+	 /GzijQeVV3O7i0uDFm9QjeJHWAIhkUsrRqB83M7ASE/xRb/Aj64+dtmUD6SN8zZ5CE
+	 cnAZbMmfem036ZIZuOAsM99HquNtT9GWtVtxfwcD78kDR96olXaYPTHaR4isWpg+AR
+	 IpRfOm6YY/erQ==
+Date: Tue, 18 Jun 2024 15:48:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com,
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kch@nvidia.com, hch@lst.de, gloriouseggroll@gmail.com,
+	kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+Message-ID: <20240618204837.GA1262769@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
 
-On Tue, 18 Jun 2024 16:09:38 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Thu, Apr 25, 2024 at 03:33:01PM +0800, Kai-Heng Feng wrote:
+> On Fri, Apr 19, 2024 at 4:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> > > When the power rail gets cut off, the hardware can create some electric
+> > > noise on the link that triggers AER. If IRQ is shared between AER with
+> > > PME, such AER noise will cause a spurious wakeup on system suspend.
+> > >
+> > > When the power rail gets back, the firmware of the device resets itself
+> > > and can create unexpected behavior like sending PTM messages. For this
+> > > case, the driver will always be too late to toggle off features should
+> > > be disabled.
+> > >
+> > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> > > Management", TLP and DLLP transmission are disabled for a Link in L2/L3
+> > > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
+> > > the power will be turned off during suspend process, disable AER service
+> > > and re-enable it during the resume process. This should not affect the
+> > > basic functionality.
+> > >
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >
+> > Thanks for reviving this series.  I tried follow the history about
+> > this, but there are at least two series that were very similar and I
+> > can't put it all together.
+> >
+> > > ---
+> > > v8:
+> > >  - Add more bug reports.
+> > >
+> > > v7:
+> > >  - Wording
+> > >  - Disable AER completely (again) if power will be turned off
+> > >
+> > > v6:
+> > > v5:
+> > >  - Wording.
+> > >
+> > > v4:
+> > > v3:
+> > >  - No change.
+> > >
+> > > v2:
+> > >  - Only disable AER IRQ.
+> > >  - No more check on PME IRQ#.
+> > >  - Use helper.
+> > >
+> > >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index ac6293c24976..bea7818c2d1b 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/delay.h>
+> > >  #include <linux/kfifo.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/suspend.h>
+> > >  #include <acpi/apei.h>
+> > >  #include <acpi/ghes.h>
+> > >  #include <ras/ras_event.h>
+> > > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
+> > >       return 0;
+> > >  }
+> > >
+> > > +static int aer_suspend(struct pcie_device *dev)
+> > > +{
+> > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > +     struct pci_dev *pdev = rpc->rpd;
+> > > +
+> > > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
+> > > +             aer_disable_rootport(rpc);
+> >
+> > Why do we check pci_ancestor_pr3_present(pdev) and
+> > pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+> > to disable AER interrupts on suspend in general.  I think it will be
+> > better if we do that consistently on all platforms, not special cases
+> > based on details of how we suspend.
+> 
+> Sure. Will change in next revision.
+> 
+> > Also, why do we use aer_disable_rootport() instead of just
+> > aer_disable_irq()?  I think it's the interrupt that causes issues on
+> > suspend.  I see that there *were* some versions that used
+> > aer_disable_irq(), but I can't find the reason it changed.
+> 
+> Interrupt can cause system wakeup, if it's shared with PME.
+> 
+> The reason why aer_disable_rootport() is used over aer_disable_irq()
+> is that when the latter is used the error still gets logged during
+> sleep cycle. Once the pcieport driver resumes, it invokes
+> aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
+> resumed yet.
+> 
+> So use aer_disable_rootport() to prevent such issue from happening.
 
-> The Following build failures have been noticed on Powerpc, mips and arc on the
-> Linux next-20240617 tag.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Regressions found on mips:
->   - gcc-12-bcm47xx_defconfig
->   - gcc-12-cavium_octeon_defconfig
->   - gcc-8-malta_defconfig
->   - gcc-12-malta_defconfig
->   - gcc-12-allnoconfig
->   - gcc-8-bcm47xx_defconfig
->   - gcc-8-allnoconfig
->   - gcc-8-cavium_octeon_defconfig
->   - clang-18-allnoconfig
->   - clang-nightly-allnoconfig
-> 
-> 
-> Regressions found on arc:
->   - gcc-9-allnoconfig
->   - gcc-9-defconfig
-> 
-> Regressions found on powerpc:
->   - clang-18-maple_defconfig
->   - gcc-13-ppc6xx_defconfig
->   - clang-18-allnoconfig
->   - clang-18-defconfig
->   - clang-18-ppc64e_defconfig
->   - gcc-13-defconfig
-> 
-> Build log:
-> --------
-> mm/slub.c: In function 'init_object':
-> mm/slub.c:1163:17: error: implicit declaration of function '__memset';
-> did you mean '__memset64'? [-Werror=implicit-function-declaration]
->  1163 |                 __memset(p - s->red_left_pad, val, s->red_left_pad);
->       |                 ^~~~~~~~
->       |                 __memset64
-> 
-> The commit id:
->   ad5dde7da5f9 kmsan: support SLAB_POISON
+I think the issue is more likely on the resume side.
 
-Thanks.  I was hoping for at least a temporary workaround for this, but
-nothing is happening.  I'll disable that patch for now.
+aer_disable_rootport() disables AER interrupts, then clears
+PCI_ERR_ROOT_STATUS, so the path looks like this:
+
+  aer_suspend
+    aer_disable_rootport
+      aer_disable_irq()
+      pci_write_config_dword(PCI_ERR_ROOT_STATUS)    # clear
+
+This happens during suspend, so at this point I think the link is
+still active and the spurious AER errors haven't happened yet and it
+probably doesn't matter that we clear PCI_ERR_ROOT_STATUS *here*.
+
+My guess is that what really matters is that we disable the AER
+interrupt so it doesn't happen during suspend, and then when we
+resume, we probably want to clear out the status registers before
+re-enabling the AER interrupt.
+
+In any event, I think we need to push this forward.  I'll post a v9
+based on this but dropping the pci_ancestor_pr3_present(pdev) and
+pm_suspend_via_firmware() tests so we do this unconditionally.
+
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int aer_resume(struct pcie_device *dev)
+> > > +{
+> > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > +     struct pci_dev *pdev = rpc->rpd;
+> > > +
+> > > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
+> > > +             aer_enable_rootport(rpc);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
+> > >       .service        = PCIE_PORT_SERVICE_AER,
+> > >
+> > >       .probe          = aer_probe,
+> > > +     .suspend        = aer_suspend,
+> > > +     .resume         = aer_resume,
+> > >       .remove         = aer_remove,
+> > >  };
+> > >
+> > > --
+> > > 2.34.1
+> > >
