@@ -1,173 +1,261 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47884D9EA
-	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 05:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB474A1D
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 06:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718775832; cv=none; b=koTKSfW5DwhCDld3CStOcyUOGzhjmpjtzxxW3psxZCt6r/YtX6CY0ry55VYtAUI02MQs4VH8ETE2RaYkx/nR5qh9e2KFMQ3knWh9F04VSCF1RT4cAoN7FKoClpy+cyE53r4OVCcP2H2DY2jCMBcULDCCunOh8aKNawW/x3PKwGI=
+	t=1718777151; cv=none; b=a2V1NySeBaTIkaKlIcpSphpLYptfu2LxhifpP+NSIdkZ3m8KCp06v6RJvMyELX7AWvm9tjpSiyeh0+8/XyrPFh0puj/FbKBR4hYkPRc3h8697CKJKJBp/mwA9a/zvGhw5GCLWRT9tI/Mkk4vz30l0xdo3zhc5tITAeERpkqLu3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718775832; c=relaxed/simple;
-	bh=1MWDSgrROFhu76DSyxYy7yjYvYvBvDjlXn+sMPQhZZw=;
-	h=From:To:Subject:Date:CC:Message-ID:MIME-Version:Content-Type; b=Evnw5XHOZoma2hrw5O1IDaSecuHobR6zmJ3sHe9IyF1uGgB/NrmOhpFJ+DtdXqWH7mpLX+NO2VHswakbgzs5zdepycncrHaqNwdL8FHqAtyAEnfYy86fYduCGm/ZeS9caNCHgopZ70FVTQ/v2LRlidTE+sUebuZNCtlJFDBEhWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RNNrPRHC; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718777151; c=relaxed/simple;
+	bh=l0mNs/FsDmY5dBfAxFirPNKQAqbJFE+jk9p6H27x4nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eGxt6Zz1pEiXM9n6BrbyPzy3xCht4WIxSLENQRZQuBmd9sf9r5ejcvzDmmK08LWE2YGyj5pk213IIyN+YKr0auJOVKaeN0EQcw0XCkMzakghyIqQDlxJ9z79+e/UEroiq614fXm97AK+vt0dMcCqPCgMgCFDCJFN0GQbx9AgHUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=rubDcka9; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNNrPRHC"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-6e41550ae5bso4619732a12.3
-        for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 22:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718775830; x=1719380630; darn=lists.linux.dev;
-        h=mime-version:message-id:cc:date:subject:to:from:user-agent:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1MWDSgrROFhu76DSyxYy7yjYvYvBvDjlXn+sMPQhZZw=;
-        b=RNNrPRHCehmOu8qe/0nzMSA4sRJOo6NwURcMFhrSS9VvXiosUxGL0U1YPKAMHqnTZE
-         IyWq3zkAu9rVZ6o10Z2DTtAjn+g4jtR4/MkLA0puSt3E57p2nk1bzAkt9l/xKe1/X7Z6
-         3Pf+yhXR/OA6Sp3blNETcGiiYTHieODZIpiLv1kOgB5+zTSmPLbhxmUnbwGSGqX0qMsh
-         nPvfsf8hy/2uzJZMLR0khNTrWnxzdC5ZzklLuBDmknn6qIbCvm+XHDUFomcQjcsQqFvn
-         71HtjpolV5OUc1Ss9B2WrrDlfGZnmw3jAfSpWLLCFDWLlgjKYDRg4NuEuScmvl7VTaxU
-         G0Hw==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="rubDcka9"
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 0B12F40D7B
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 06:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718777140;
+	bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=rubDcka99JK/9in+OTGFGfYGoumxjXi0kMZvJWAQjqfQHA2iqTtgcwRTasPzVoIu6
+	 NiPw4EdlaRPPVWSv9YM9lcJulCOIfQ+ohOQf5hG3Mx+qTi5ETHEhxqN8E47NAW5uhq
+	 Nc3H0vjtdBXiB0tZPEQw4RNH+edZnhFAWzW/B/WFl+tA3UBvNgMUlyCQemcIavzqhB
+	 ttdI/aegEHtAAzFZaxtI/7xGPHpCG1bJMLzWMPTTKpNUvDoKkoaNgPikPZErrn+xyz
+	 jmJIHehu8j9ZH49WUhRQXKWo3q8wN13fLFDg8v10HUGStIVoCcb8sjp5V5zXv+tzs6
+	 atwIfUMoz6xKw==
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-6e3341c8865so6026944a12.1
+        for <regressions@lists.linux.dev>; Tue, 18 Jun 2024 23:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718775830; x=1719380630;
-        h=mime-version:message-id:cc:date:subject:to:from:user-agent
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1MWDSgrROFhu76DSyxYy7yjYvYvBvDjlXn+sMPQhZZw=;
-        b=dIMKbaOeB9XKyqS/4ufGGi2Yg/Ku6ZO8YIr9wK4rxQ79LhXlCEyKd/Wx/rTVTrvW/s
-         cEyr4YjOO1InEuIUUiV9XgaWnhP1dZS/Lm3sSZ3Xh0Uh4rVFEBoK7THUEPENDOGiMmt6
-         plvDjXuzHZS9WZZJEOFZGfOSNxJ6SXwpVCIQViYhcExxI4jwMJfhSpeIcJlL0N9lwXmn
-         dh5P4wUUAByTFhruvZLXmdrNLH/PUJPHei5WTV0QetzDf0CgZMEzpgwgCJ229DgA4zQ/
-         YyDT3oz9nQcl07TDvV4UHZCF1wNus7eL5jGmNyB5Te86bbfOkxkxnDzpw7wT2L8wwmg8
-         NG5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXhy/wDshrh3n1VCzvx4GMA9a90F2CbFC6aY1elg/26npBYymesFM4kaq9iB4MvJupZkX1xf9aFpXlGiDsC5FaaPTbaCocYvOoz4zI=
-X-Gm-Message-State: AOJu0YztjES/2ApPACu7SDFUz0YGvKhB9M5MGkELw94ao+bKtVqTiPbf
-	XO7JKQTd8nIoz9wzvDJaFknGclvrvPer0rsdzxuuGUG7DBWJUU+phoBDLn2H
-X-Google-Smtp-Source: AGHT+IG4cfqY0r085GVp78gHD0WvEwQnaNKB8ctJdXB3EzIEPfgwgJ/alDtu38pkvaE8lUWvr11uPA==
-X-Received: by 2002:a17:903:40c7:b0:1f7:1cbc:184b with SMTP id d9443c01a7336-1f9aa3c362cmr17571975ad.20.1718775829404;
-        Tue, 18 Jun 2024 22:43:49 -0700 (PDT)
-Received: from terra ([122.171.16.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e704desm107512475ad.75.2024.06.18.22.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 22:43:48 -0700 (PDT)
-User-agent: Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0 Lightning/4.0.2
-From: Forty Five <mathewegeorge@gmail.com>
-To: linux-wireless@vger.kernel.org
-Subject: [REGRESSION] Freeze on resume from S3 (bisected)
-Date: Wed, 19 Jun 2024 10:09:03 +0530
-CC: linux-pm@vger.kernel.org,phhuang@realtek.com,pkshih@realtek.com,kvalo@kernel.org,regressions@lists.linux.dev
-Message-ID: <87tthpwkqf.fsf@gmail.com>
+        d=1e100.net; s=20230601; t=1718777138; x=1719381938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+        b=gJDhOvab5/6OqSug0XNrRH8Zxy3NV8rT8nabnGmlaUjrlFU7Y0hfmCyQkqMPQYLtT9
+         miDSDvjqkXInSXeYMsefvZM3UtJCsYaGhtl4gPWUWtR7w60gPW6lbehcvYWWdSqcBpVn
+         vO+8VHP9XWMKFP9qrgtP2qD3Q8oIkAWV8P/LweBDWWnWZloX2du5ptnnbO/lBNa6yRv7
+         iEK+VOIFK8cYcvUri58ZC1d7A8z9iqCSVnw6nZjJpDFd25nmIA7Vosora3j1pc9aoc/n
+         5DML2bolJ2eGVrBkThaARDEa6mwlayN6WI3wWNX+h/H5a3VgqitbtbFE0y4k4MT6ZJEh
+         2YLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3C9hiMX4+/7akgcdlGJmgiHKPcKA1oDW+nobdD2reBWW7DNDJ1eblBSwlWLenMZRuU4Kvl5tuS1Q0byQVPoTTb0Bzz2iLXov48HE=
+X-Gm-Message-State: AOJu0YxdX+nZuTVxeA1NoqQ81PIvW43Ju4cR2raTZvIheKfaMM09ZlVU
+	HFYcIYu1uXZvpeLABGblV7dR0godofvA3oQgYv9e3yme1M1BbHZG8kq/08ZQWKNLaa//sJYrGo+
+	ifuwDTRj3yQxZkMzuZYJXyo+XLUD5mjTnI2lEMAShM7HSiU3+00SuK7VV360mjIic34YloVYHZh
+	/1IoPr+bmDsZjE8c2iw4zFheUVu1UPDAoc5B0gE0VWLEj8S71tp/o=
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id adf61e73a8af0-1bcbb5f705dmr1512750637.41.1718777138512;
+        Tue, 18 Jun 2024 23:05:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmoBDk3wuIfStUvPkgN/DsQ3AqL87wGvMpH6BdkD1tmYIyQo/0+ajiApdNg790feEKy+jeMAf9CLNezX3NDog=
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id
+ adf61e73a8af0-1bcbb5f705dmr1512734637.41.1718777138116; Tue, 18 Jun 2024
+ 23:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
+ <20240618204837.GA1262769@bhelgaas>
+In-Reply-To: <20240618204837.GA1262769@bhelgaas>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Wed, 19 Jun 2024 14:05:26 +0800
+Message-ID: <CAAd53p4gHQeyDkusDW7rkjVKjTnyi+RjHZLbPU5CqfsuVRtodQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, kch@nvidia.com, 
+	hch@lst.de, gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, 
+	hare@suse.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 19, 2024 at 4:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Apr 25, 2024 at 03:33:01PM +0800, Kai-Heng Feng wrote:
+> > On Fri, Apr 19, 2024 at 4:35=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > >
+> > > On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> > > > When the power rail gets cut off, the hardware can create some elec=
+tric
+> > > > noise on the link that triggers AER. If IRQ is shared between AER w=
+ith
+> > > > PME, such AER noise will cause a spurious wakeup on system suspend.
+> > > >
+> > > > When the power rail gets back, the firmware of the device resets it=
+self
+> > > > and can create unexpected behavior like sending PTM messages. For t=
+his
+> > > > case, the driver will always be too late to toggle off features sho=
+uld
+> > > > be disabled.
+> > > >
+> > > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> > > > Management", TLP and DLLP transmission are disabled for a Link in L=
+2/L3
+> > > > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. S=
+o if
+> > > > the power will be turned off during suspend process, disable AER se=
+rvice
+> > > > and re-enable it during the resume process. This should not affect =
+the
+> > > > basic functionality.
+> > > >
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D209149
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218090
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > >
+> > > Thanks for reviving this series.  I tried follow the history about
+> > > this, but there are at least two series that were very similar and I
+> > > can't put it all together.
+> > >
+> > > > ---
+> > > > v8:
+> > > >  - Add more bug reports.
+> > > >
+> > > > v7:
+> > > >  - Wording
+> > > >  - Disable AER completely (again) if power will be turned off
+> > > >
+> > > > v6:
+> > > > v5:
+> > > >  - Wording.
+> > > >
+> > > > v4:
+> > > > v3:
+> > > >  - No change.
+> > > >
+> > > > v2:
+> > > >  - Only disable AER IRQ.
+> > > >  - No more check on PME IRQ#.
+> > > >  - Use helper.
+> > > >
+> > > >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+> > > >  1 file changed, 25 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > > index ac6293c24976..bea7818c2d1b 100644
+> > > > --- a/drivers/pci/pcie/aer.c
+> > > > +++ b/drivers/pci/pcie/aer.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/kfifo.h>
+> > > >  #include <linux/slab.h>
+> > > > +#include <linux/suspend.h>
+> > > >  #include <acpi/apei.h>
+> > > >  #include <acpi/ghes.h>
+> > > >  #include <ras/ras_event.h>
+> > > > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev=
+)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +static int aer_suspend(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware=
+())
+> > > > +             aer_disable_rootport(rpc);
+> > >
+> > > Why do we check pci_ancestor_pr3_present(pdev) and
+> > > pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+> > > to disable AER interrupts on suspend in general.  I think it will be
+> > > better if we do that consistently on all platforms, not special cases
+> > > based on details of how we suspend.
+> >
+> > Sure. Will change in next revision.
+> >
+> > > Also, why do we use aer_disable_rootport() instead of just
+> > > aer_disable_irq()?  I think it's the interrupt that causes issues on
+> > > suspend.  I see that there *were* some versions that used
+> > > aer_disable_irq(), but I can't find the reason it changed.
+> >
+> > Interrupt can cause system wakeup, if it's shared with PME.
+> >
+> > The reason why aer_disable_rootport() is used over aer_disable_irq()
+> > is that when the latter is used the error still gets logged during
+> > sleep cycle. Once the pcieport driver resumes, it invokes
+> > aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
+> > resumed yet.
+> >
+> > So use aer_disable_rootport() to prevent such issue from happening.
+>
+> I think the issue is more likely on the resume side.
+>
+> aer_disable_rootport() disables AER interrupts, then clears
+> PCI_ERR_ROOT_STATUS, so the path looks like this:
+>
+>   aer_suspend
+>     aer_disable_rootport
+>       aer_disable_irq()
+>       pci_write_config_dword(PCI_ERR_ROOT_STATUS)    # clear
+>
+> This happens during suspend, so at this point I think the link is
+> still active and the spurious AER errors haven't happened yet and it
+> probably doesn't matter that we clear PCI_ERR_ROOT_STATUS *here*.
+>
+> My guess is that what really matters is that we disable the AER
+> interrupt so it doesn't happen during suspend, and then when we
+> resume, we probably want to clear out the status registers before
+> re-enabling the AER interrupt.
 
-I've been experiencing system freezes that require a hard reset with the
-power button, starting from v6.8-rc1. The warnings produced suggest a
-wireless-related issue, and the bisection seems to confirm this.
+Thanks for catching this. Clearing status registers does the trick for
+my cases here.
 
-The freezes usually occur right after resuming from S3 (suspend). To
-reproduce the issue, I just suspend (`sudo systemctl suspend`) and
-resume (press any key on keyboard) a few times until the freeze happens.
-It takes 4-5 cycles of this most of the time, though it varies a lot.
+>
+> In any event, I think we need to push this forward.  I'll post a v9
+> based on this but dropping the pci_ancestor_pr3_present(pdev) and
+> pm_suspend_via_firmware() tests so we do this unconditionally.
 
-The upshot of all of this is that S3 (and S4 as well, see below) are
-pretty much unusable for me, due to the risk of losing work due to a
-freeze.
+Thanks for the v9.
 
-Since a hard reset causes the systemd journal to be dropped, I set up
-[kdumpst](https://gitlab.freedesktop.org/gpiccoli/kdumpst) so that I
-could record dmesg output at the time of the freeze. I've linked to the
-crash logs produced by that tool for every bad commit in the bisection
-(except in cases where I couldn't get the kdump to happen - see the
-comments in the bisection log below), as well as a crash log triggered
-by SysRq (Alt+SysRq+c) on a good commit for comparison.
+Kai-Heng
 
-I've already submitted this as an Arch Linux bug report:
-https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/61
-
-The freezes have also occurred (seemingly) at random times, although
-this is quite rare. They do seem to be more likely to occur after the
-system has been hibernated, although I don't really have any way to
-confirm this.
-
-
-Git bisect log:
-
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [83a7eefedc9b56fe7bfeff13b6c7356688ffa670] Linux 6.10-rc3
-git bisect bad 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-# good: [e8f897f4afef0031fe618a8e94127a0934896aba] Linux 6.8
-git bisect good e8f897f4afef0031fe618a8e94127a0934896aba
-# bad: [445e60303883950161f67e18b9f048b18d7fb706] Merge branch '1GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue
-git bisect bad 445e60303883950161f67e18b9f048b18d7fb706
-# bad: [e5e038b7ae9da96b93974bf072ca1876899a01a3] Merge tag 'fs_for_v6.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs
-# this one froze on the first suspend/resume
-git bisect bad e5e038b7ae9da96b93974bf072ca1876899a01a3
-# good: [1f440397665f4241346e4cc6d93f8b73880815d1] Merge tag 'docs-6.9' of git://git.lwn.net/linux
-git bisect good 1f440397665f4241346e4cc6d93f8b73880815d1
-# bad: [a2f24c8a955c8f941d6ac08dd7f401f54eef4627] Merge branch 'mptcp-some-clean-up-patches'
-git bisect bad a2f24c8a955c8f941d6ac08dd7f401f54eef4627
-# bad: [26f4dac11775a1ca24e2605cb30e828d4dbdea93] netfilter: x_tables: Use unsafe_memcpy() for 0-sized destination
-# This one was very hard to reproduce - it must have taken 25-30 cycles total, and I hibernated the system twice
-git bisect bad 26f4dac11775a1ca24e2605cb30e828d4dbdea93
-# good: [4f5e5092fdbf5cec6bedc19fbe69cce4f5f08372] Merge tag 'net-6.8-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-git bisect good 4f5e5092fdbf5cec6bedc19fbe69cce4f5f08372
-# good: [b4e8ae5c8c41355791a99fdf2fcac16deace1e79] net: add napi_busy_loop_rcu()
-git bisect good b4e8ae5c8c41355791a99fdf2fcac16deace1e79
-# bad: [20ea9327c2fd545d6b96e998727bcd724290694d] net: dccp: Simplify the allocation of slab caches in dccp_ackvec_init
-git bisect bad 20ea9327c2fd545d6b96e998727bcd724290694d
-# bad: [92046e83c07b064ca65ac4ae7660a540016bdfc1] Merge tag 'for-netdev' of https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
-git bisect bad 92046e83c07b064ca65ac4ae7660a540016bdfc1
-# bad: [b54846da45942bbe4e5ebc59d497e4a48525ba5a] Merge tag 'wireless-next-2024-01-25' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
-git bisect bad b54846da45942bbe4e5ebc59d497e4a48525ba5a
-# good: [3832a9c40b356500c5b85a6fdf9577c590fcd637] wifi: rtw89: fw: extend JOIN H2C command to support WiFi 7 chips
-git bisect good 3832a9c40b356500c5b85a6fdf9577c590fcd637
-# bad: [5ba45ba77616637e554d66a57ef0334e5cc2efe4] wifi: rtw89: fix disabling concurrent mode TX hang issue
-# I see the same kernel warnings here as with the other bad commits.
-# However, there is no crash after a few suspend/resume cycles - instead
-# the system simply restarts when I trigger the nth suspend. I'm not
-# able to trigger a crash with SysRq either (Alt+SysRq+c) - again, the
-# system restarts. This is the case with all bad commits after this.
-git bisect bad 5ba45ba77616637e554d66a57ef0334e5cc2efe4
-# good: [85da8f71aaa7b83ea7ef0e89182e0cd47e16d465] wifi: brcmfmac: Demote vendor-specific attach/detach messages to info
-git bisect good 85da8f71aaa7b83ea7ef0e89182e0cd47e16d465
-# good: [295304040d9f6f350b68652acd99650c7e16d0a8] wifi: rtw89: 8922a: add TX power related ops
-git bisect good 295304040d9f6f350b68652acd99650c7e16d0a8
-# good: [7cf6b6764b2f665d317ba0f91c247437019a2f4c] wifi: rtw89: Set default CQM config if not present
-git bisect good 7cf6b6764b2f665d317ba0f91c247437019a2f4c
-# good: [7e11a2966f51695c0af0b1f976a32d64dee243b2] wifi: rtw89: fix null pointer access when abort scan
-git bisect good 7e11a2966f51695c0af0b1f976a32d64dee243b2
-# bad: [f59a98c82534e986b06615ba94e060aa3129b08b] wifi: rtw89: fix HW scan timeout due to TSF sync issue
-git bisect bad f59a98c82534e986b06615ba94e060aa3129b08b
-# bad: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw89: add wait/completion for abort scan
-git bisect bad bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23
-# first bad commit: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw89: add wait/completion for abort scan
-
-
-#regzbot introduced: bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23
-
-
-Logs produced by kdumpst:
-
-[kdumpst-e5e038b7ae9da96b93974bf072ca1876899a01a3.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/b925cb5e9c6cfb6b224993c017ba61f5/kdumpst-e5e038b7ae9da96b93974bf072ca1876899a01a3.zip)
-
-[kdumpst-b54846da45942bbe4e5ebc59d497e4a48525ba5a.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/e1610c3ae26971a890121d3a5eb8fa9e/kdumpst-b54846da45942bbe4e5ebc59d497e4a48525ba5a.zip)
-
-[kdumpst-a2f24c8a955c8f941d6ac08dd7f401f54eef4627.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/34171a87da304987cc8ce5066fc35dd5/kdumpst-a2f24c8a955c8f941d6ac08dd7f401f54eef4627.zip)
-
-[kdumpst-92046e83c07b064ca65ac4ae7660a540016bdfc1.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/67d756f963ffafd0b332c88701286a30/kdumpst-92046e83c07b064ca65ac4ae7660a540016bdfc1.zip)
-
-[kdumpst-445e60303883950161f67e18b9f048b18d7fb706.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/f75f91d127050a327114bf904f335087/kdumpst-445e60303883950161f67e18b9f048b18d7fb706.zip)
-
-[kdumpst-26f4dac11775a1ca24e2605cb30e828d4dbdea93.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/f3d26fc4187c8b8854386fed6f15c972/kdumpst-26f4dac11775a1ca24e2605cb30e828d4dbdea93.zip)
-
-[kdumpst-20ea9327c2fd545d6b96e998727bcd724290694d.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/8618207aff0eb92413ce0c2994c7888f/kdumpst-20ea9327c2fd545d6b96e998727bcd724290694d.zip)
-
-Good commit: [kdumpst-e8f897f4afef0031fe618a8e94127a0934896aba.zip](https://gitlab.archlinux.org/archlinux/packaging/packages/linux/uploads/b13b3914e50fc85548c77a4163dec383/kdumpst-e8f897f4afef0031fe618a8e94127a0934896aba.zip)
---
+>
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int aer_resume(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware(=
+))
+> > > > +             aer_enable_rootport(rpc);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdri=
+ver =3D {
+> > > >       .service        =3D PCIE_PORT_SERVICE_AER,
+> > > >
+> > > >       .probe          =3D aer_probe,
+> > > > +     .suspend        =3D aer_suspend,
+> > > > +     .resume         =3D aer_resume,
+> > > >       .remove         =3D aer_remove,
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
