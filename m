@@ -1,71 +1,149 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF5159147;
-	Wed, 19 Jun 2024 06:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EA354650
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 06:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718777247; cv=none; b=XmRlsc6UX8T/aqt9kASL6fJaZDCavqKP7MEPNIcLSrrPWAlYnRDSg2nnuaMrvb46WWWY02OIww1eQ/LwvLUN+/1k9rMRJp2qS6x8mXw1apZRKQs4u84fBZW2MqZdUfmclDdGNUNOc14dBno3ZgdgNc6sE/K/TsdaGXgGRA/J1Xg=
+	t=1718778497; cv=none; b=MKzjz4OXbNo7SGXPKdRmW92xl4pJT50O+nPZRfbpw+dB1oyB65YerTCoiV06oZqzqr7E3i7SEY0v1TLBjorSp6oy3ayjEiHgYR0Qq/A41KF45aEJuYHqw+uBJYWX9dt6QPg9UffYrqQaXqeMKMWumjgWn3qkVVoq6zZ38KwexP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718777247; c=relaxed/simple;
-	bh=+P6dmFC4FbU41a9t+5uZ+SLhBH2vrK1uXjqcBeAq8KU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HvxBrAv2LqFRsvK+efyHIuAKOE65okRFHGdJ0/ma5eQ03oTKahSv3ok4xV5j6reDeWwCp5S7vFUf9I3TwyN473/ytIUvWQIf08x3c2alohoPw97y3ygokm/3uUwpKofoiPQ0FKGsBJIbQW8XUafzgG3vu9r9P2k8n8K3C5OSrgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45J67FxK41374906, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45J67FxK41374906
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Jun 2024 14:07:15 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 19 Jun 2024 14:07:15 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 19 Jun 2024 14:07:15 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Wed, 19 Jun 2024 14:07:15 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Forty Five <mathewegeorge@gmail.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Bernie Huang
-	<phhuang@realtek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Topic: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Index: AQHawgusbA+C/SyMRES67Y/3y6K7kbHOmQDA
-Date: Wed, 19 Jun 2024 06:07:15 +0000
-Message-ID: <2ce41d4129234ba9a91d5b4dcd8a40ee@realtek.com>
-References: <87tthpwkqf.fsf@gmail.com>
-In-Reply-To: <87tthpwkqf.fsf@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1718778497; c=relaxed/simple;
+	bh=5wpLH3UULQ70QIdi562QH80gx5EXjoJrYinxKDWNba8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BJ6LkIBLY6Ba3Sp1n/Zim0LTjxNidJqAu8KgEk8favJJsYCEMR88zrqnXPbwdkmDH8jqkrOm4oUhvpDMCOXzV1aYWC2fbgA/b7qU7to/QqUAeh0IArRwRWTowBSzHWQYjGBHHH45iGWqrrZlZ7WqRqj0mvVcxbTXnzn+nOUBXhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y/hllxRS; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y/hllxRS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718778495; x=1750314495;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5wpLH3UULQ70QIdi562QH80gx5EXjoJrYinxKDWNba8=;
+  b=Y/hllxRSQY42LIuFKL6XnA722DWrfZ0qAYCoUOpCC4s1aLAV4TH/JXOg
+   RtR19aY0s+4KoL837pzlBS6Zy/aTuwksWDEe3DtDuDmCZcVvhhGgvFoBM
+   8vzeBNjBLR7m7YykMm/kxB1vJsweBDirtZZikiN8QhwOtMyWt0gK81xa7
+   tkKgwphVlbSD7AmCG2ALhPyzjXjsV1K7hG5E5BrnDuabFoVvNI8UkJsX4
+   VyV7nl7h3ia/8v4hfeyEWqVsBdzOtK7CID1vCKUtsv10HzNFG6TMYvhz6
+   IHmlJYEGv5rjG1+p0puUO4L9td+uOZktjMXp1bLc+vH9bfnKGAOg5cCSG
+   w==;
+X-CSE-ConnectionGUID: FPMCz9Y6S8KJZVTVjQU8eg==
+X-CSE-MsgGUID: Lm1yGvtPRfWLZumYO0TZgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15838803"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="15838803"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 23:28:15 -0700
+X-CSE-ConnectionGUID: LfkoHihfTbOK1J2M4irh6w==
+X-CSE-MsgGUID: uYKUTPcRT4OHh5pfJW+Z6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="41644749"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO [10.245.246.239]) ([10.245.246.239])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 23:28:13 -0700
+Message-ID: <e49db7a2-b77e-4065-9400-84d3386fb169@linux.intel.com>
+Date: Wed, 19 Jun 2024 08:28:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
+ S0ix fails in all further suspends
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Todd Brandt <todd.e.brandt@intel.com>,
+ Linux Sound System <linux-sound@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
+References: <ca2d3d47-0ac0-48a5-910b-e481f2a9870a@leemhuis.info>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <ca2d3d47-0ac0-48a5-910b-e481f2a9870a@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> # first bad commit: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw8=
-9: add wait/completion for abort
-> scan
->=20
 
-Please try [1] that fixed "wifi: rtw89: add wait/completion for abort" for=
-=20
-certain cases.=20
 
-[1] https://lore.kernel.org/linux-wireless/20240517013350.11278-1-pkshih@re=
-altek.com/
+On 6/18/24 12:22, Thorsten Leemhuis wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+> 
+> Pierre-Louis Bossart, I noticed a report about a regression in
+> bugzilla.kernel.org that appears to be caused by the following change of
+> yours: d5263dbbd8af02 ("ASoC: SOF: Intel: don't ignore IOC interrupts
+> for non-audio transfers") [v6.10-rc1]
+> 
+> As many (most?) kernel developers don't keep an eye on the bug tracker,
+> I decided to write this mail. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=218961 :
 
+
+Thanks for the heads-up.
+SOF driver bugs are tracked on https://github.com/thesofproject/linux, I
+filed an issue https://github.com/thesofproject/linux/issues/5072 with
+the information copied.
+
+
+>> We have a Lenovo Thinkpad X1 Carbon Gen 10 in our lab and ever since
+>> 6.10.0-rc1 it has failed its first S2idle suspend, and has stopped
+>> getting S0iX on subsequent successful S2idle suspends. The issue in the
+>> first suspend fail is here in the audio driver (dmesg section shown):
+>>
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: Code loader DMA did not complete
+
+The only thing the commit below added is a 500ms timeout, but the log
+below shows the DSP boot failed already?
+
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump start ]------------
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware download failed
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: fw_state: SOF_FW_BOOT_READY_OK (6)
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: 0x00000005: module: ROM, state: FW_ENTERED, running
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: extended rom status:  0x5 0x0 0x4000 0x0 0x0 0x0 0x2560521 0x0
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: ------------[ DSP dump end ]------------
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to start DSP
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to boot DSP firmware after resume -110
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: error: hda_dsp_core_reset_enter: timeout on HDA_DSP_REG_ADSPCS read
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: error: dsp core reset failed: core_mask 1
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: failed to power down DSP during suspend
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: error: suspending dsp
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: error: failed to power down DSP during suspend -110
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: pci_pm_suspend(): snd_sof_suspend [snd_sof] returns -110
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: dpm_run_callback(): pci_pm_suspend returns -110
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: PM: failed to suspend async: error -110
+>>
+>> This is the commit:
+>>
+>> commit d5263dbbd8af026159b16a08a94bedfe51b5f67b
+>> Author: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> Date:   Thu Apr 4 13:54:47 2024 -0500
+>>
+>>     ASoC: SOF: Intel: don't ignore IOC interrupts for non-audio transfers
+>>
+>> Reverting the commit thusly fixes things in everything up to 6.10.0-rc3.
+>>
+>> %> git diff 6cbf086143cf9674c7f029e1cf435c65a537066a d5263dbbd8af026159b16a08a94bedfe51b5f67b > ../revert.patch
+>> %> cat ../revert.patch | patch -1 -R
+>>
+>> I've attached the sleepgraph timeline of the fail. The dmesg log is
+>> accesible by clicking the "dmesg" button in the upper right hand corner.
+>> They "log" button shows all the system details.
+> 
+> See the ticket for more details.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> P.S.: let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: d5263dbbd8af02
+> #regzbot title: ASoC: SOF: Intel:
+> #regzbot from: Todd Brandt
+> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218961
+> #regzbot ignore-activity
