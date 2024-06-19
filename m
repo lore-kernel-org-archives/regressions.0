@@ -1,112 +1,155 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC67F48C
-	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 10:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66A680C09
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793759; cv=none; b=VgwUYhsgh0l38PgLep6zy0qdHJixA+IDS+RRAydoFEUuRbF3LsKqDGhhX1capHCY4lgXJ1ex2CNSslH+ATuMb2nQlx/G+ePlwGzh7rMwtb60vAnuUvT3I7QJuM0XeWO5wiVlVjOQkfrilXA3155JX8Dozvv+X9v2Celtmy3tZEI=
+	t=1718794372; cv=none; b=ivElyXwrjuPLCingVIPlw7k5Ot61WMbw+bc/WCx+XSW1jw/IG80sszGoVt3np69oZJd8+1vT1oIx9MBFbJ2XrHyUhfD7szgbdgk2CRWNkanmhZULxoruVaCOiDOQpqTwv/fPm4x9BJiKY5/+nRsLsQKMPeHXs64hhnvDb8LA4Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793759; c=relaxed/simple;
-	bh=OH4j8K0eAER0yzFR+JWb3wfzjQkXj5AVKQoulvr5dpg=;
+	s=arc-20240116; t=1718794372; c=relaxed/simple;
+	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQ059KXwlENxYxLADbFn7Nx+fAr6AGnKo0DBu2jgRwZWEWUTfCpDh07P4c8+AOy15mVF1fsvaDA/vLhAklKRUgpQSZucjwzXgOaX9KjCAN1vQfGPplsuoYHybiehEObxDRoyC6Q1P0H3UDNB5BVAWYUb9bRhdqIquheDQDVcD8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WV6A4LPJ; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=iye1lPntt+VzWKk9p8rvPu2V5b/q4YQdgi8saMK0B/YGBXZB+lrgA6t+nDWlUXoveGF3LmqqRCTseNdyQyC5SfryK8F/c5Zu4ZdFA9GpaRM/t2d5sfXs6EvLKnwaszScUW04S5bjW5akA7YsegmfC+/wqX85rb9egWmW7NJ3T0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3uSaA84; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WV6A4LPJ"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so66714881fa.3
-        for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 03:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718793756; x=1719398556; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ytdGjGo0KSXMtOisu6BpBfldVzFpmCfYA0zu/R+JQKg=;
-        b=WV6A4LPJ3z+s+8TeocuD70Q4C6jks/WZsL2VmXhJDwEwtGUaEewmVyCyHM+CKlNUwO
-         3x5CwaderX0Phr3yRokq9h87QgJGjo3R3RxWFm7Swgo8F5xkaQq6j50QkwEQkshcvj7Y
-         L7W0SewhwoBzzNHYPZk8eSB3POt88gKsudeo7XPyBGOtOh39UOsmu2naL1/MD3MLKlsr
-         r6cpQbEpVgA/Lgf5uwrDadfX4EeHR2GQoDV8nQT4twWSIsxMFHaDxvoA4GG2LUO6XZla
-         x4aLc4F840r72MO9AtWMSDHVMqPx07miK+gXhgrC4OfmQAijpuB7LJ+Iqg8cwMLQnPIa
-         isSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718793756; x=1719398556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ytdGjGo0KSXMtOisu6BpBfldVzFpmCfYA0zu/R+JQKg=;
-        b=SpTCHsZpnPwTOADIjZFUmAzKYWHV0UgHAt99ePoFH2sOrzydVy2TkcBGa73IvUA7fq
-         XG93DTbVwEZJ42zcX/v/r7ZuD7upGAqeMhrRyTr7tIUj5gJzOQofmgDchSqJg0KSQNXk
-         QLRaMrfmHgrXoCEPLCf5F+ZTMUafCoRfjYpuUamM4tkOiBZdtx4XRP2BIXDR5Yx+jLMJ
-         99imEvnrryEsiV2kPacxvX7eXhSqMCSknJ9T9XRqFiQCRNAA/8AVG2OA6LcLhOvUm2Fs
-         h6HfSbq0rUjG0NlEnMd+wJjQTwPtOicq8KLizCKFi46XAnY8u/ReHp6heKb974vMfTdO
-         KyfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXO/1mRiSBP87q92swR2u4jeiExZwcOaLsP/blcTulRf+nbN/Pl6wQEQqa6hm2BlcMnH4xDZT8WNIYY7m+YSnkUw0Q98dlXDYLU1yg=
-X-Gm-Message-State: AOJu0YxPz0fugFWf6rAWTAI4uC98uC1UNTLvOLojB8arFg6PZM8BN5YZ
-	SrI/JL5Lj+pdgTCEmYQMIdjgy6lj1nYDtcBncZTR0IM9kHn1O8YdtdRnVrwMOTA40mCjl2VJStl
-	DXcbZlDnRyP+Zz46Mw7yn/92i6OyWSeCl664=
-X-Google-Smtp-Source: AGHT+IHizWCLJBVqkpMdTL/7gDJs+2m1dqzDpctk/052EPRcJ501DymTi7m4cUMUPe446g68hjRydPkMddzEEwoP6K4=
-X-Received: by 2002:a2e:7e0b:0:b0:2ec:2508:f370 with SMTP id
- 38308e7fff4ca-2ec3cfe1cb4mr12648381fa.51.1718793756074; Wed, 19 Jun 2024
- 03:42:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3uSaA84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47154C2BBFC
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718794372;
+	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u3uSaA84l5gVLsWmwxrOtJWM7MF0Vu51G0CMA1IUhuxDqK7DR2yRzGOKrg5XZfJyp
+	 gc1uZ0BFFh/wA26oymxl7R1SluIcT5SJ5t1Ag6XbCE5Xkm7ygActqF/NpHFUki9mlL
+	 JbLwuS31tzqYMGiroNPmsUu+jF8Vggo/jU2YswgPzfH0OUyJKD3lw6P18dgkFZl/0Y
+	 n5dvVHipC+NvVTsEaLa4yR6Z2kvQMtMEiStK1cuhhGDOlvFIk45u6nd3IWZNz0xwwZ
+	 4TMCjh7s4W1TjzGlDdladzFqHv7/kFYAVMXWKntAeSqEk/WhLSN/siYOf+znixzC+C
+	 tKhqZbYVCrBQQ==
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-250495bcd4fso433911fac.1
+        for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 03:52:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXwAX6lFcUhqg4DjFc+lGHvenHCxDZVy95+g/ZJ4hxAVkCwhIPapd5GQ4tKnMBr1DJn+6jKzwxvjJ8oztuPpKlpE2ZwCZGFp/lLfXs=
+X-Gm-Message-State: AOJu0YzteyzHhWFCLY4rJaQBFW2M2HHMIJZjMlsx/ozMiIXm8BpxLO5Y
+	cwcPy+2+WcrZQ6zVMFr+goe/s7TI1S4WIbxVhxoHLtnJHgk1ZBrAQw7CtBB3F5rO2UBLHyHNyoE
+	TFGjdMbBMQbUMwn/79EwVpiQrjLw=
+X-Google-Smtp-Source: AGHT+IHkfbPpplMOo0+AZF3Oi/SLUmBNejk3LQsh8tt80LEVbwbJ0RTdOmOkrR69Re/mAWO5+pPtyJBD56qHP10v7uQ=
+X-Received: by 2002:a05:6820:2210:b0:5ba:ead2:c742 with SMTP id
+ 006d021491bc7-5c1ad8a198cmr2995209eaf.0.1718794371598; Wed, 19 Jun 2024
+ 03:52:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240527183139.42b6123c@rorschach.local.home>
- <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
- <20240528144743.149e351b@rorschach.local.home> <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
- <20240529144757.79d09eeb@rorschach.local.home> <20240529154824.2db8133a@rorschach.local.home>
- <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
- <20240530095953.0020dff9@rorschach.local.home> <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
- <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info> <20240612115612.2e5f4b34@rorschach.local.home>
- <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com> <20240618105239.1feda53a@rorschach.local.home>
-In-Reply-To: <20240618105239.1feda53a@rorschach.local.home>
-From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Date: Wed, 19 Jun 2024 13:41:59 +0300
-Message-ID: <CAE4VaRFuZWEBEoNfApQL8SuUDxod9FcWhgzP1joTzDecf74B+Q@mail.gmail.com>
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20240618204946.1271042-1-helgaas@kernel.org>
+In-Reply-To: <20240618204946.1271042-1-helgaas@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 19 Jun 2024 12:52:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
+Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] PCI: Disable AER & DPC on suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	"Oliver O'Halloran" <oohall@gmail.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>, Thomas Crider <gloriouseggroll@gmail.com>, 
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-nvme@lists.infradead.org, 
+	regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-disabled  CONFIG_FORCE_NR_CPUS option for 6.9.5 but the trace + panic
-still exists. So that one didn't help. I've also been bisecting the
-trace but have not finished it yet as the last half dozen builds
-produced non-bootable kernels. Anyway, I will continue it soon(ish)
-when I have a bit more free time.
+On Tue, Jun 18, 2024 at 10:49=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> This is an old series from Kai-Heng that I didn't handle soon enough.  Th=
+e
+> intent is to fix several suspend/resume issues:
+>
+>   - Spurious wakeup from s2idle
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D216295)
+>
+>   - Steam Deck doesn't resume after suspend
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D218090)
+>
+>   - Unexpected ACS error and DPC event when resuming after suspend
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D209149)
+>
+> It seems that a glitch when the link is powered down during suspend cause=
+s
+> errors to be logged by AER.  When AER is enabled, this causes an AER
+> interrupt, and if that IRQ is shared with PME, it may cause a spurious
+> wakeup.
+>
+> Also, errors logged during link power-down and power-up seem to cause
+> unwanted error reporting during resume.
+>
+> This series disables AER interrupts, DPC triggering, and DPC interrupts
+> during suspend.  On resume, it clears AER and DPC error status before
+> re-enabling their interrupts.
+>
+> I added a couple cosmetic changes for the v9, but this is essentially all
+> Kai-Heng's work.  I'm just posting it as a v9 because I failed to act on
+> this earlier.
+>
+> Bjorn
+>
+> v9:
+>  - Drop pci_ancestor_pr3_present() and pm_suspend_via_firmware; do it
+>    unconditionally
+>  - Clear DPC status before re-enabling DPC interrupt
+>
+> v8: https://lore.kernel.org/r/20240416043225.1462548-1-kai.heng.feng@cano=
+nical.com
+>  - Wording.
+>  - Add more bug reports.
+>
+> v7:
+>  - Wording.
+>  - Disable AER completely (again) if power will be turned off
+>  - Disable DPC completely (again) if power will be turned off
+>
+> v6: https://lore.kernel.org/r/20230512000014.118942-1-kai.heng.feng@canon=
+ical.com
+>
+> v5: https://lore.kernel.org/r/20230511133610.99759-1-kai.heng.feng@canoni=
+cal.com
+>  - Wording.
+>
+> v4: https://lore.kernel.org/r/20230424055249.460381-1-kai.heng.feng@canon=
+ical.com
+> v3: https://lore.kernel.org/r/20230420125941.333675-1-kai.heng.feng@canon=
+ical.com
+>  - Correct subject.
+>
+> v2: https://lore.kernel.org/r/20230420015830.309845-1-kai.heng.feng@canon=
+ical.com
+>  - Only disable AER IRQ.
+>  - No more AER check on PME IRQ#.
+>  - Use AER helper.
+>  - Only disable DPC IRQ.
+>  - No more DPC check on PME IRQ#.
+>
+> v1: https://lore.kernel.org/r/20220727013255.269815-1-kai.heng.feng@canon=
+ical.com
+>
+> Kai-Heng Feng (2):
+>   PCI/AER: Disable AER service on suspend
+>   PCI/DPC: Disable DPC service on suspend
+>
+>  drivers/pci/pcie/aer.c | 18 +++++++++++++
+>  drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++++---------
+>  2 files changed, 66 insertions(+), 12 deletions(-)
+>
+> --
 
---Ilkka
+Please feel free to add
 
-On Tue, Jun 18, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 13 Jun 2024 10:32:24 +0300
-> Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
->
-> > ok, so if you don't have any idea where this bug is after those debug
-> > patches, I'll try to find some time to bisect it as a last resort.
-> > Stay tuned.
->
-> FYI,
->
-> I just debugged a strange crash that was caused by my config having
-> something leftover from your config. Specifically, that was:
->
-> CONFIG_FORCE_NR_CPUS
->
-> Do you get any warning about nr cpus not matching at boot up?
->
-> Regardless, can you disable that and see if you still get the same
-> crash.
->
-> Thanks,
->
-> -- Steve
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+to both patches in the series.
+
+Thanks!
