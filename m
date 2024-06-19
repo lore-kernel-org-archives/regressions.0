@@ -1,136 +1,112 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992D97868B;
-	Wed, 19 Jun 2024 08:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC67F48C
+	for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 10:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718784084; cv=none; b=Rcbx4jMQoqWjb75jwaN/2WTO7KTlYDv/F7KqgUaTg1xB6+JEARGceXszN+4UdlgKW7TPuOIPhxXGfk6lgAS4t6FWHGg9/d3y6+wrA/X5jqWbLadqCqfs10rrqezmj0kqJiqHFWOh/neIsV6+sdRZg0lQLkjkOlFFDuUgg0LXX8A=
+	t=1718793759; cv=none; b=VgwUYhsgh0l38PgLep6zy0qdHJixA+IDS+RRAydoFEUuRbF3LsKqDGhhX1capHCY4lgXJ1ex2CNSslH+ATuMb2nQlx/G+ePlwGzh7rMwtb60vAnuUvT3I7QJuM0XeWO5wiVlVjOQkfrilXA3155JX8Dozvv+X9v2Celtmy3tZEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718784084; c=relaxed/simple;
-	bh=PdAEo097Rs0EOuRHSnYrSWDaONVLaa5zFC8TP4Dn004=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=msG+2kHZgQJiBjtMEqPBSLPzYwDrESJ3RbBZ2tdjS++t7D/tx5HDbtWvp8AeoiznHLIl/3RNYDHs2t5+VCbK9hpYIS1AzAY+IYBgAmAoInCQEKhvIMtkWKGrIeDij1NCZtTXLnn7Ue/lGoYb5kxVcvD0GKkGBOdhRq57owAvZRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=I3aYBPwc; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=tCb+5qj6; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+	s=arc-20240116; t=1718793759; c=relaxed/simple;
+	bh=OH4j8K0eAER0yzFR+JWb3wfzjQkXj5AVKQoulvr5dpg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kQ059KXwlENxYxLADbFn7Nx+fAr6AGnKo0DBu2jgRwZWEWUTfCpDh07P4c8+AOy15mVF1fsvaDA/vLhAklKRUgpQSZucjwzXgOaX9KjCAN1vQfGPplsuoYHybiehEObxDRoyC6Q1P0H3UDNB5BVAWYUb9bRhdqIquheDQDVcD8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WV6A4LPJ; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="I3aYBPwc";
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="tCb+5qj6"
-Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 337031D0F;
-	Wed, 19 Jun 2024 07:46:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WV6A4LPJ"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so66714881fa.3
+        for <regressions@lists.linux.dev>; Wed, 19 Jun 2024 03:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1718783213;
-	bh=PdAEo097Rs0EOuRHSnYrSWDaONVLaa5zFC8TP4Dn004=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=I3aYBPwcm+ZpGLtAtXisY/W5H1xOB3HH5XeufOPvSS9z1YxrNoutxZQAXnlOLPyxh
-	 5eLw/rPSPQ+K7z4N3XrKE+F1ogwZclyBbiYU0Kn6ZTjHmyZRVYHIIREp2mDOwdHFaY
-	 N5QkvuiTT8GWGzbmV4c2fvZmmt21fpjtGBdrQzwQ=
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id D2A2A6A;
-	Wed, 19 Jun 2024 07:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1718783692;
-	bh=PdAEo097Rs0EOuRHSnYrSWDaONVLaa5zFC8TP4Dn004=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=tCb+5qj6BmBlvR3G2rYahlJ06oyY0Rrzq0+b7/BzEDBPyp2rPfSU1Ggnz9Ac9zh7h
-	 lSJ9dYS/xLx2xGlRS75Sp5liFRJDZfaYbqosbs646oDkBvQdVD4Tjv3doEs5zSCPWP
-	 GYjxovQSzgfe6jFMRWhupF1MV5guNZxwOOxGz4Uw=
-Received: from [192.168.211.147] (192.168.211.147) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Wed, 19 Jun 2024 10:54:52 +0300
-Message-ID: <b65e13cd-7479-4146-a6bf-cdbadab6795a@paragon-software.com>
-Date: Wed, 19 Jun 2024 10:54:51 +0300
+        d=gmail.com; s=20230601; t=1718793756; x=1719398556; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ytdGjGo0KSXMtOisu6BpBfldVzFpmCfYA0zu/R+JQKg=;
+        b=WV6A4LPJ3z+s+8TeocuD70Q4C6jks/WZsL2VmXhJDwEwtGUaEewmVyCyHM+CKlNUwO
+         3x5CwaderX0Phr3yRokq9h87QgJGjo3R3RxWFm7Swgo8F5xkaQq6j50QkwEQkshcvj7Y
+         L7W0SewhwoBzzNHYPZk8eSB3POt88gKsudeo7XPyBGOtOh39UOsmu2naL1/MD3MLKlsr
+         r6cpQbEpVgA/Lgf5uwrDadfX4EeHR2GQoDV8nQT4twWSIsxMFHaDxvoA4GG2LUO6XZla
+         x4aLc4F840r72MO9AtWMSDHVMqPx07miK+gXhgrC4OfmQAijpuB7LJ+Iqg8cwMLQnPIa
+         isSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718793756; x=1719398556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ytdGjGo0KSXMtOisu6BpBfldVzFpmCfYA0zu/R+JQKg=;
+        b=SpTCHsZpnPwTOADIjZFUmAzKYWHV0UgHAt99ePoFH2sOrzydVy2TkcBGa73IvUA7fq
+         XG93DTbVwEZJ42zcX/v/r7ZuD7upGAqeMhrRyTr7tIUj5gJzOQofmgDchSqJg0KSQNXk
+         QLRaMrfmHgrXoCEPLCf5F+ZTMUafCoRfjYpuUamM4tkOiBZdtx4XRP2BIXDR5Yx+jLMJ
+         99imEvnrryEsiV2kPacxvX7eXhSqMCSknJ9T9XRqFiQCRNAA/8AVG2OA6LcLhOvUm2Fs
+         h6HfSbq0rUjG0NlEnMd+wJjQTwPtOicq8KLizCKFi46XAnY8u/ReHp6heKb974vMfTdO
+         KyfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO/1mRiSBP87q92swR2u4jeiExZwcOaLsP/blcTulRf+nbN/Pl6wQEQqa6hm2BlcMnH4xDZT8WNIYY7m+YSnkUw0Q98dlXDYLU1yg=
+X-Gm-Message-State: AOJu0YxPz0fugFWf6rAWTAI4uC98uC1UNTLvOLojB8arFg6PZM8BN5YZ
+	SrI/JL5Lj+pdgTCEmYQMIdjgy6lj1nYDtcBncZTR0IM9kHn1O8YdtdRnVrwMOTA40mCjl2VJStl
+	DXcbZlDnRyP+Zz46Mw7yn/92i6OyWSeCl664=
+X-Google-Smtp-Source: AGHT+IHizWCLJBVqkpMdTL/7gDJs+2m1dqzDpctk/052EPRcJ501DymTi7m4cUMUPe446g68hjRydPkMddzEEwoP6K4=
+X-Received: by 2002:a2e:7e0b:0:b0:2ec:2508:f370 with SMTP id
+ 38308e7fff4ca-2ec3cfe1cb4mr12648381fa.51.1718793756074; Wed, 19 Jun 2024
+ 03:42:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Segfault running a binary in a compressed folder
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Giovanni
- Santini <giovannisantini93@yahoo.it>
-CC: <ntfs3@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <08d7de3c-d695-4b0c-aa5d-5b5c355007f8.ref@yahoo.it>
- <08d7de3c-d695-4b0c-aa5d-5b5c355007f8@yahoo.it>
- <0936a091-7a3a-40d7-8b87-837aed43966b@leemhuis.info>
- <bed7da51-cf89-422d-84f7-cb3d89ffbe40@yahoo.it>
- <0c871021-321b-4a44-b270-508a64be1cdd@leemhuis.info>
-Content-Language: en-US
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-In-Reply-To: <0c871021-321b-4a44-b270-508a64be1cdd@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+ <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240527183139.42b6123c@rorschach.local.home>
+ <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+ <20240528144743.149e351b@rorschach.local.home> <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+ <20240529144757.79d09eeb@rorschach.local.home> <20240529154824.2db8133a@rorschach.local.home>
+ <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+ <20240530095953.0020dff9@rorschach.local.home> <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+ <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info> <20240612115612.2e5f4b34@rorschach.local.home>
+ <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com> <20240618105239.1feda53a@rorschach.local.home>
+In-Reply-To: <20240618105239.1feda53a@rorschach.local.home>
+From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Date: Wed, 19 Jun 2024 13:41:59 +0300
+Message-ID: <CAE4VaRFuZWEBEoNfApQL8SuUDxod9FcWhgzP1joTzDecf74B+Q@mail.gmail.com>
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11.06.2024 14:15, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 11.06.24 12:55, Giovanni Santini wrote:
->> Hi Thorsten, nice to chat again!
-> :-D
+disabled  CONFIG_FORCE_NR_CPUS option for 6.9.5 but the trace + panic
+still exists. So that one didn't help. I've also been bisecting the
+trace but have not finished it yet as the last half dozen builds
+produced non-bootable kernels. Anyway, I will continue it soon(ish)
+when I have a bit more free time.
+
+--Ilkka
+
+On Tue, Jun 18, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
->> I am sorry for the lack of information,
-> Happens.
+> On Thu, 13 Jun 2024 10:32:24 +0300
+> Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
 >
->> this is my second bug report to
->> the kernel; the first one was via Bugzilla and I filled more information.
->>
->> Now, the missing information is:
->>
->> OS: ArchLinux
->>
->> Tested kernels: both latest Linux stable (6.9.3) and mainline (6.10rc3)
->>
->> Regression: no, I believe that this issue has been present forever.
-> Thx. Okay, in that case anyone that replies in this thread consider
-> dropping the stable and the regression lists to avoid confusion and
-> spare the subscribes of those lists a few cycles.
+> > ok, so if you don't have any idea where this bug is after those debug
+> > patches, I'll try to find some time to bisect it as a last resort.
+> > Stay tuned.
 >
->> I realized it may have been compression-related only recently.
->> I do remember testing ntfs3 long ago and having the same issues with a
->> Ruby vendoring folder.
->>
->> Please let me know if you need more information!
-> That's up to Konstantin (or others on the ntfs3 list), who is known to
-> sometimes reply quickly, while other times only replies after quite a
-> while. We'll see what it will be here. :-D
+> FYI,
 >
-> Ciao, Thorsten
+> I just debugged a strange crash that was caused by my config having
+> something leftover from your config. Specifically, that was:
 >
->> On 2024-06-11 12:04, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 11.06.24 11:19, Giovanni Santini wrote:
->>>> I am writing to report the issue mentioned in the subject.
->>>>
->>>> Essentially, when running an executable from a compressed folder in an
->>>> NTFS partition mounted via ntfs3 I get a segfault.
->>>>
->>>> The error line I get in dmesg is:
->>>>
->>>> ntfs3: nvme0n1p5: ino=c3754, "hello" mmap(write) compressed not
->>>> supported
->>>>
->>>> I've attached a terminal script where I show my source, Makefile and how
->>>> the error appears.
->>> You CCed the regression and the stable list, but that looks odd, as you
->>> don't even mention which kernel version you used (or which worked).
->>> Could you clarify? And ideally state if mainline (e.g. 6.10-rc3) is
->>> affected as well, as the answer to the question "who is obliged to look
->>> into this" depends on it.
->>>
->>> Ciao, Thorsten
-
-Hi Giovanni,
-
-ntfs3 currently does not support mmap write to compressed files,
-as indicated by the driver with
-
-   "mmap(write) compressed not supported."
-
-We are aware of this limitation and will implement this functionality in
-the future.
-
-Regards, Konstantin
+> CONFIG_FORCE_NR_CPUS
+>
+> Do you get any warning about nr cpus not matching at boot up?
+>
+> Regardless, can you disable that and see if you still get the same
+> crash.
+>
+> Thanks,
+>
+> -- Steve
