@@ -1,82 +1,71 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF481802E;
-	Thu, 20 Jun 2024 09:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EF72594;
+	Thu, 20 Jun 2024 09:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718876033; cv=none; b=H9jFtCUm+dOu4naMozxajyTRrCsfWUTDQ7Okom9tqeRma9CoKm3Rb4y3myboE0U7n8jKGmOlE2TcoKJp96b81LBSsl7P8wXrobzC/wz1uHYNbtBJbw7nxWNoS7vC02GcLv8ebFcGTHMdXYehGp+vUcfhSCGc9aKQq601kNgdcpM=
+	t=1718876800; cv=none; b=CgnwhJFIj3e189MiB9e3n/nrmxHHpOFkcUGvBQLTKZVT5GPZphp135zd3aNBs/ItTYDuk7q//96tgUQNE5sZaNw+4j27m2mryi7RFk6oNWlwptK9hni6ISjkZIalq/p9ye9pV6fa3yAty0013wEVpez8lcv0k8i8BR/+YjBUGtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718876033; c=relaxed/simple;
-	bh=sxoBp8344+h3toLqhD2tkt93nxAaMGVqGLXZJlV88us=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FGPBQl+fAj1CBaXnDOcu5AEahBwOQcIRJoDyGLHeZ3BQ3RzM4mg9UIN/YPQNeG6vyKSjd6rL2EfOinMzNTGxk419F297WhOIuY64y3LGdEuWrC838LGzgnxKVIK0EXI+thfzaiAB0/4nxliM91m8+6vH95diwrYvYVxCc9zvIOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45K9Xf6W22754179, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 45K9Xf6W22754179
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Jun 2024 17:33:41 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 20 Jun 2024 17:33:42 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 20 Jun 2024 17:33:41 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Thu, 20 Jun 2024 17:33:41 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Mathew George <mathewegeorge@gmail.com>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Bernie Huang
-	<phhuang@realtek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Topic: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Index: AQHawgusbA+C/SyMRES67Y/3y6K7kbHOmQDAgAALtgCAAakyAP//jZeAgACItrA=
-Date: Thu, 20 Jun 2024 09:33:41 +0000
-Message-ID: <342b6b95d97a4bf09afee15c09481efc@realtek.com>
-References: <87tthpwkqf.fsf@gmail.com>
- <2ce41d4129234ba9a91d5b4dcd8a40ee@realtek.com> <87sex93s63.fsf@gmail.com>
- <6970398610c546b1b62e599902c67572@realtek.com>
- <E3FF7BC1-725B-40E2-AAF0-CA41A44B9DF9@gmail.com>
-In-Reply-To: <E3FF7BC1-725B-40E2-AAF0-CA41A44B9DF9@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1718876800; c=relaxed/simple;
+	bh=qtrhxzMlR7VEQXRySvCqowwhZ+X8qE6LIHX+q3giQS4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rKLYvG1DAPoOZ7M3mhZgjX5x+p+QW+L8UDS7AT6VBzCS+yOX4hwW8nzdyTQeVNHJRbQxmsGFiLnhaHbFF7LJkIaFP8Xj2zMlz43BFlMLTAKQ6LwiDAkX39OuR0CsQn6TUea1xmVN4qMe0G/Ku9bVxFicWLAojMjNOP70TuSB/tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcttHybb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcttHybb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43019C2BD10;
+	Thu, 20 Jun 2024 09:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718876799;
+	bh=qtrhxzMlR7VEQXRySvCqowwhZ+X8qE6LIHX+q3giQS4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DcttHybbq13De9ntRHA9t4BtwllmfyP3riJ+eRzd8GphTobfg/C86uu88BSgEiMBL
+	 80afvXffY/SEvJQJHjZ2urAsEfUiETI4IrlPAVKoF9y8DA4L0s8BU18lYfwzGK0a2e
+	 KpnuzXd5+bCfSuSt43QgeCHfl5utsVImU8lB95jcwaJRJYBl2+M1m4hUhHnfZ6YEbl
+	 0CibpEPvGV+XCJ0ntW0Ed+aAgMnDIGpdYARWgF5gwpMoJyhCcqLu6k8iEzDEOz2w6t
+	 ecrQWcPZ9HGVy52hK3D+mhsrmUtJ7CJFp+Br+Ow9jQQCA2MkcAwxZOp+gLKEMVEJiO
+	 nWBWTJxaLXYBg==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, regressions@lists.linux.dev, 
+ linux-leds@vger.kernel.org, Genes Lists <lists@sapience.com>, 
+ =?utf-8?q?Johannes_W=C3=BCller?= <johanneswueller@gmail.com>, 
+ stable@vger.kernel.org
+In-Reply-To: <20240607101847.23037-1-hdegoede@redhat.com>
+References: <20240607101847.23037-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] leds: class: Revert: "If no default trigger is given,
+ make hw_control trigger the default trigger"
+Message-Id: <171887679701.1126294.11039062848140573919.b4-ty@kernel.org>
+Date: Thu, 20 Jun 2024 10:46:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-TWF0aGV3IEdlb3JnZSA8bWF0aGV3ZWdlb3JnZUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+IFBsZWFz
-ZSBzaGFyZSBBcmNoIExpbnV4IGltYWdlIHlvdSBhcmUgdXNpbmcuDQo+IA0KPiBOb3Qgc3VyZSB3
-aGF0IHlvdSBtZWFuIGJ5ICdpbWFnZScuIA0KDQpJIGZlZWwgdGhpcyBwcm9ibGVtIG1heSBiZSBl
-YXNpZXIgdG8gcmVwcm9kdWNlIG9uIEFyY2ggTGludXgsIHNvIEkgd291bGQgbGlrZQ0KdG8ga25v
-dyBBcmNoIExpbnV4IGlzbyBmaWxlIHlvdSBpbnN0YWxsZWQuIA0KDQo+IEFzIHlvdSBjYW4gc2Vl
-IGluIHRoZSBjcmFzaCBsb2cgYXR0YWNoZWQgdG8gbXkNCj4gcHJldmlvdXMgbWFpbCwgSSBidWls
-dCB0aGUgbGF0ZXN0IG1haW5saW5lIGtlcm5lbCAoNDQ1ZTYwMzAzODgzIGF0IHRoZSB0aW1lKSB3
-aXRoIHlvdXINCj4gcGF0Y2ggYXBwbGllZC4gSSB1c2VkIFt0aGlzIFBLR0JVSUxEXShodHRwczov
-L2F1ci5hcmNobGludXgub3JnL3BhY2thZ2VzL2xpbnV4LWdpdCkNCj4gdG8gYnVpbGQgaXQ7IHRo
-ZSBmaWxlIGBjb25maWdgIGNvbnRhaW5zIHRoZSBrZXJuZWwgY29uZmlndXJhdGlvbiAoSSBkaWQg
-bm90IGFwcGx5IGFueSBvdGhlcg0KPiBvcHRpb25zKSwgYW5kIHRoZXJlIGFyZSBubyBwYXRjaGVz
-IGFwcGxpZWQgZXhjZXB0IHlvdXJzLg0KDQpJIHdpbGwgZG8gaXQgYXMgeW91ciBzaWRlLiANCg0K
-PiANCj4gPiBDb3VsZCB5b3UgcGxlYXNlIGhlbHAgdG8gY29sbGVjdCAyIG9yIG1vcmUgY3Jhc2gg
-bG9nPw0KPiA+IFNvIEkgY2FuIGNoZWNrIGlmIHRoZXJlIGFyZQ0KPiA+IG1vcmUgdGhhbiBvbmUg
-Y3Jhc2ggY2FzZXMuDQo+IA0KPiBXaGVuIEkgYW0gYmFjayBhdCBteSBzeXN0ZW0sIEkgd2lsbCBy
-ZXByb2R1Y2UgdGhlIGlzc3VlIGEgZmV3IG1vcmUgdGltZXMgd2l0aA0KPiB0aGlzIGtlcm5lbCwg
-YW5kIGF0dGFjaCB0aGUgbG9ncy4gSW4gdGhlIG1lYW50aW1lLCB5b3UgY291bGQgaGF2ZSBhIGxv
-b2sgYXQgdGhlIGxvZ3MNCj4gbGlua2VkIGluIG15IGZpcnN0IG1haWwuIFRoZXJlIGFyZSBsb2dz
-IGZvciBtb3N0IG9mIHRoZSBiYWQgY29tbWl0cyBlbmNvdW50ZXJlZCBpbiB0aGUNCj4gYmlzZWN0
-aW9uLg0KDQpJIGhhdmUgc2VlbiB0aGF0LCBidXQgbm8gY2xlYXIgaWRlYSBmb3Igbm93LCBzbyBJ
-IHdpbGwgaW5zdGFsbCBBcmNoIExpbnV4IGFzIHlvdXJzDQppbiBteSBzaWRlLg0KDQoNCg0K
+On Fri, 07 Jun 2024 12:18:47 +0200, Hans de Goede wrote:
+> Commit 66601a29bb23 ("leds: class: If no default trigger is given, make
+> hw_control trigger the default trigger") causes ledtrig-netdev to get
+> set as default trigger on various network LEDs.
+> 
+> This causes users to hit a pre-existing AB-BA deadlock issue in
+> ledtrig-netdev between the LED-trigger locks and the rtnl mutex,
+> resulting in hung tasks in kernels >= 6.9.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] leds: class: Revert: "If no default trigger is given, make hw_control trigger the default trigger"
+      commit: 3acc45f2ceb0609812522e45aec4cb9516e1c586
+
+--
+Lee Jones [李琼斯]
+
