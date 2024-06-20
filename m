@@ -1,218 +1,72 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18163A1AC;
-	Thu, 20 Jun 2024 08:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A532D05D;
+	Thu, 20 Jun 2024 08:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718872995; cv=none; b=XYR3mUm4GBs/vEGkKhlsIbnI6Dz2B6EtJiOkAxn+IEtKrkDGNSNHX5bJrCXtzqsQ/rbiPOKSzdlrM4xhhV8c0eApsFTKDzYX7NG07SP2FNlOB8TtEhrxDg40OrmBJtQmUb31ChM8H2W6dZA/FlPN0gmHRYefWNK0RanHXfWB/lI=
+	t=1718873792; cv=none; b=HVjRRB0GLC7bXBq98hBHIcMvRsLYDaaviPR1YFvlyYEKVUk5X2LnsJKLvc5pi3PEZkUD41PpOwAG8tVBuyQ1Nm1SrY59wI08RMnuL9q4a+S2kkNv1Z4jHDOSi0V0dNNUjc6NftbiAqQs4gk8Vafvhi+geoFMN3I/N6cjm3ZTXgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718872995; c=relaxed/simple;
-	bh=nZJEaMbpFeoc/P5BBIcjevvUoedVneN/Gm5OjTef0IY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLzyqld53Nq1S4wbPjTFEOHplakf0P4TQ4hg85/DwUO0sDUJQfvfyn6BkJqSiWHnLG7Y2ka/76cLkFrEYpg0WTQXDFEU58zvglVuoiFqqHMWBSEwsVq2LmhYxThzPDmoyTL0vsjbbsDpQ0ymRegrBxdwts69F4ZLUJ6WQXi7fZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from [78.30.37.63] (port=43974 helo=gnumonks.org)
-	by ganesha.gnumonks.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <pablo@gnumonks.org>)
-	id 1sKDNi-00GII9-Ou; Thu, 20 Jun 2024 10:43:01 +0200
-Date: Thu, 20 Jun 2024 10:42:57 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: kadlec@netfilter.org, nnamrec@gmail.com,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	netdev@vger.kernel.org
-Subject: Re: 6.10/bisected/regression - commits 4e7aaa6b82d6 cause appearing
- WARNING at net/netfilter/ipset/ip_set_core.c:1200 suspicious
- rcu_dereference_protected() usage
-Message-ID: <ZnPrkcWkAxQrODju@calendula>
-References: <CABXGCsND1HmAjCZNS_fg59_qbQfxfcHCD_OYD2tjTYdWFDSajw@mail.gmail.com>
+	s=arc-20240116; t=1718873792; c=relaxed/simple;
+	bh=D8JkAvyTJRKTs9phf53QlPYRnQ/7w53n6hrOpwgwzuI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=YFYJ3sa5lk6qY3UCV8E2+X9mFwaKEGwTnnlMV3vLOj7CHILKFokai5f5byWjl0IlXezSGgsSojymZ3As7NQi6seS8S5BFFI1lAxpOe0QAPYIYj3vyaKTo7NzDy4OMHHU2YDynXh/InmcZlFySXVQRZ67GQdSzlpiCPHpCn7EacI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RL70s2uA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RL70s2uA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A13C2BD10;
+	Thu, 20 Jun 2024 08:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718873790;
+	bh=D8JkAvyTJRKTs9phf53QlPYRnQ/7w53n6hrOpwgwzuI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=RL70s2uAd+Gl4U4lMnjvdt1egt16wD1RBIltCoNgLzFBKvBuUSOpLuM6n8XtCYYw2
+	 dENUtpGMzEzBH0HilFTv2//LL/wWRnQkhZGvYyj97IPiF99Qnwr2rCbAkgDLAJPHaU
+	 xNGlRIcryZDD2rH2qNG31O6XsZttgaRcSGk5ing87S5wlVuUPtpQa0C9+mmZ0tfC2k
+	 OkHw37cYmfrUFwHJ1rU7IIXbAN8vIlyViG/tQzdQuGs9MBnGSfxfAFNCBmaoghOXn/
+	 FG4K1tOJdy59oQ7KBKlhRW/rRRTsVTjNTuCjgtLTBQ+39s4LuRA0YJ9eByuux+NRTp
+	 B8lJgnPWT9dWQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Forty Five <mathewegeorge@gmail.com>,  "linux-wireless@vger.kernel.org"
+ <linux-wireless@vger.kernel.org>,  "linux-pm@vger.kernel.org"
+ <linux-pm@vger.kernel.org>,  Bernie Huang <phhuang@realtek.com>,
+  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Freeze on resume from S3 (bisected)
+References: <87tthpwkqf.fsf@gmail.com>
+	<2ce41d4129234ba9a91d5b4dcd8a40ee@realtek.com>
+	<87sex93s63.fsf@gmail.com>
+	<6970398610c546b1b62e599902c67572@realtek.com>
+Date: Thu, 20 Jun 2024 11:56:27 +0300
+In-Reply-To: <6970398610c546b1b62e599902c67572@realtek.com> (Ping-Ke Shih's
+	message of "Thu, 20 Jun 2024 08:16:21 +0000")
+Message-ID: <87v824j8lg.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABXGCsND1HmAjCZNS_fg59_qbQfxfcHCD_OYD2tjTYdWFDSajw@mail.gmail.com>
-X-Spam-Score: -0.2 (/)
+Content-Type: text/plain
 
-Hi,
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-A fix has been included in this batch:
+> Forty Five <mathewegeorge@gmail.com> wrote:
+>> > Please try [1] that fixed "wifi: rtw89: add wait/completion for abort" for
+>> > certain cases.
+>> >
+>> > [1]
+>> > https://lore.kernel.org/linux-wireless/20240517013350.11278-1-pkshih@realtek.com/
+>> 
+>> Doesn't fix the issue. I get a freeze on the first suspend+resume.
+>> I've attached the crash log.
+>
+> I tried 4.10-rc4 + the patch on ubuntu. Never reproduce the symptom.
 
-https://lore.kernel.org/netfilter-devel/20240619170537.2846-1-pablo@netfilter.org/T/#m39095851d6fc9d1a04d9de66f5580f61c9593389
+I guess you mean v6.10-rc4?
 
-On Thu, Jun 20, 2024 at 11:55:05AM +0500, Mikhail Gavrilov wrote:
-> Hi,
-> between 2ef5971ff345 and rc4 I spotted a new regression.
-> It is expressed in the appearance warning with stacktrace after one
-> minute after boot.
-> 
->  =============================
->  WARNING: suspicious RCU usage
->  6.10.0-0.rc4.20240618git14d7c92f8df9.40.fc41.x86_64+debug #1 Tainted:
-> G        W    L    -------  ---
->  -----------------------------
->  net/netfilter/ipset/ip_set_core.c:1200 suspicious
-> rcu_dereference_protected() usage!
-> 
->  other info that might help us debug this:
-> 
-> 
->  rcu_scheduler_active = 2, debug_locks = 1
->  3 locks held by kworker/u128:1/264:
->   #0: ffff88810813c958 ((wq_completion)netns){+.+.}-{0:0}, at:
-> process_one_work+0xeab/0x1460
->   #1: ffffc90001477da0 (net_cleanup_work){+.+.}-{0:0}, at:
-> process_one_work+0x82b/0x1460
->   #2: ffffffff97d9ae98 (pernet_ops_rwsem){++++}-{3:3}, at:
-> cleanup_net+0xb9/0xa90
-> 
->  stack backtrace:
->  CPU: 30 PID: 264 Comm: kworker/u128:1 Tainted: G        W    L
-> -------  ---  6.10.0-0.rc4.20240618git14d7c92f8df9.40.fc41.x86_64+debug
-> #1
->  Hardware name: ASUS System Product Name/ROG STRIX B650E-I GAMING
-> WIFI, BIOS 2611 04/07/2024
->  Workqueue: netns cleanup_net
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x84/0xd0
->   lockdep_rcu_suspicious.cold+0xa1/0x134
->   _destroy_all_sets+0x1c7/0x560 [ip_set]
->   ip_set_net_exit+0x20/0x50 [ip_set]
->   ops_exit_list+0x99/0x170
->   cleanup_net+0x4d9/0xa90
->   ? __pfx_cleanup_net+0x10/0x10
->   process_one_work+0x8a4/0x1460
->   ? worker_thread+0xe3/0x1010
->   ? __pfx_process_one_work+0x10/0x10
->   ? assign_work+0x16c/0x240
->   worker_thread+0x5e6/0x1010
->   ? __kthread_parkme+0xb1/0x1d0
->   ? __pfx_worker_thread+0x10/0x10
->   ? __pfx_worker_thread+0x10/0x10
->   kthread+0x2d2/0x3a0
->   ? _raw_spin_unlock_irq+0x28/0x60
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork+0x31/0x70
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork_asm+0x1a/0x30
->   </TASK>
-> 
->  =============================
->  WARNING: suspicious RCU usage
->  6.10.0-0.rc4.20240618git14d7c92f8df9.40.fc41.x86_64+debug #1 Tainted:
-> G        W    L    -------  ---
->  -----------------------------
->  net/netfilter/ipset/ip_set_core.c:1211 suspicious
-> rcu_dereference_protected() usage!
-> 
->  other info that might help us debug this:
-> 
-> 
->  rcu_scheduler_active = 2, debug_locks = 1
->  3 locks held by kworker/u128:1/264:
->   #0: ffff88810813c958 ((wq_completion)netns){+.+.}-{0:0}, at:
-> process_one_work+0xeab/0x1460
->   #1: ffffc90001477da0 (net_cleanup_work){+.+.}-{0:0}, at:
-> process_one_work+0x82b/0x1460
->   #2: ffffffff97d9ae98 (pernet_ops_rwsem){++++}-{3:3}, at:
-> cleanup_net+0xb9/0xa90
-> 
->  stack backtrace:
->  CPU: 30 PID: 264 Comm: kworker/u128:1 Tainted: G        W    L
-> -------  ---  6.10.0-0.rc4.20240618git14d7c92f8df9.40.fc41.x86_64+debug
-> #1
->  Hardware name: ASUS System Product Name/ROG STRIX B650E-I GAMING
-> WIFI, BIOS 2611 04/07/2024
->  Workqueue: netns cleanup_net
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x84/0xd0
->   lockdep_rcu_suspicious.cold+0xa1/0x134
->   _destroy_all_sets+0x3a8/0x560 [ip_set]
->   ip_set_net_exit+0x20/0x50 [ip_set]
->   ops_exit_list+0x99/0x170
->   cleanup_net+0x4d9/0xa90
->   ? __pfx_cleanup_net+0x10/0x10
->   process_one_work+0x8a4/0x1460
->   ? worker_thread+0xe3/0x1010
->   ? __pfx_process_one_work+0x10/0x10
->   ? assign_work+0x16c/0x240
->   worker_thread+0x5e6/0x1010
->   ? __kthread_parkme+0xb1/0x1d0
->   ? __pfx_worker_thread+0x10/0x10
->   ? __pfx_worker_thread+0x10/0x10
->   kthread+0x2d2/0x3a0
->   ? _raw_spin_unlock_irq+0x28/0x60
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork+0x31/0x70
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork_asm+0x1a/0x30
->   </TASK>
->  workqueue: gc_worker [nf_conntrack] hogged CPU for >10000us 7 times,
-> consider switching to WQ_UNBOUND
->  workqueue: gc_worker [nf_conntrack] hogged CPU for >10000us 11 times,
-> consider switching to WQ_UNBOUND
-> 
-> Bisect blame this commit:
-> commit 4e7aaa6b82d63e8ddcbfb56b4fd3d014ca586f10
-> Author: Jozsef Kadlecsik <kadlec@netfilter.org>
-> Date:   Tue Jun 4 15:58:03 2024 +0200
-> 
->     netfilter: ipset: Fix race between namespace cleanup and gc in the
-> list:set type
-> 
->     Lion Ackermann reported that there is a race condition between
-> namespace cleanup
->     in ipset and the garbage collection of the list:set type. The namespace
->     cleanup can destroy the list:set type of sets while the gc of the
-> set type is
->     waiting to run in rcu cleanup. The latter uses data from the
-> destroyed set which
->     thus leads use after free. The patch contains the following parts:
-> 
->     - When destroying all sets, first remove the garbage collectors, then wait
->       if needed and then destroy the sets.
->     - Fix the badly ordered "wait then remove gc" for the destroy a single set
->       case.
->     - Fix the missing rcu locking in the list:set type in the userspace test
->       case.
->     - Use proper RCU list handlings in the list:set type.
-> 
->     The patch depends on c1193d9bbbd3 (netfilter: ipset: Add list
-> flush to cancel_gc).
-> 
->     Fixes: 97f7cf1cd80e (netfilter: ipset: fix performance regression
-> in swap operation)
->     Reported-by: Lion Ackermann <nnamrec@gmail.com>
->     Tested-by: Lion Ackermann <nnamrec@gmail.com>
->     Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
->     Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-> 
->  net/netfilter/ipset/ip_set_core.c     | 81
-> ++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------
->  net/netfilter/ipset/ip_set_list_set.c | 30 ++++++++++++++----------------
->  2 files changed, 60 insertions(+), 51 deletions(-)
-> 
-> And I can confirm after reverting 4e7aaa6b82d6 the issue is gone.
-> 
-> I also attach the build config and full kernel log.
-> 
-> My hardware specs: https://linux-hardware.org/?probe=80512f0c04
-> 
-> Jozsef can you look into this please?
-> 
-> -- 
-> Best Regards,
-> Mike Gavrilov.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
