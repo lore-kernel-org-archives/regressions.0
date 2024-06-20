@@ -1,91 +1,99 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A62170826;
-	Thu, 20 Jun 2024 11:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5FD1A4F2A
+	for <regressions@lists.linux.dev>; Thu, 20 Jun 2024 13:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718884753; cv=none; b=UD1D/c/F0fIU1GX+arTwudTrnf3bLecERbmnxnhvoxUtssaJ9kfbtYEWbSu2RsQB7E8u10NAoWZyfjWA//j0TNsKbSeSb+meUAHTDJMf53cavhsx9HmocNofongQDGAyMEsuuNiIqWDBPn2PmRBhTC5WAbnt4wSmQ9n11g1spmk=
+	t=1718888792; cv=none; b=hFNJ+AoZ0gwheBh+WPwvdgKyO9KSC1EW87ALcHPrwz/yPE05pi8XPC/gE2t+voR6Z9tNzXR6o+7mpAq+p96AwB3lF1xnBvYaI8BtGmeek6nLvJBae0XeaAAfPfqA1NQhofO4pxIW58fbgYrSZyptqRiwbdcOKOKRV5rLVI36A98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718884753; c=relaxed/simple;
-	bh=hg742+mt6Zi5lRHVjabFitH50pLzUlqnvHo+zO8xSvY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V9xKdqJNGJrAkkpc98w41tATCJ6sml1qL8tq95GZyPtMV4WLdy5OZQgbb//A4ZnHh+erd1LgT3axFCPtYjeB2Pt8gNUhHi+oX8/uvoDMEMpU+spT9NayzEAZ7uz9nYPZIKdJaclnc0eORhQvU9d/jLkMst8cmNjXgWMAIq3it1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=r1qngEQ5; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1718888792; c=relaxed/simple;
+	bh=U/Vzc484+V4lv4x3ivcc/NCSIiHpY+euyvJkYjGSyoM=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=LJ+lqWdLJi7CdzmIHEBwcI8T0pXIG3HBxaR98RHYGk4QWnZuHSxulmNaX1yh7EZWDaoZwvl2Q1vdM2RwmLsqh5RnjLTqTV3HJA19hBvf/O8Stha+QHqJ9X09NbrfNZHL20r4nG6vfH/BmLEeUrYpkbZOfVKk+UGxurKTQrC1K1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ckMqrp5U; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="r1qngEQ5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=cxEogzvsAiuPBeqtkh9eO0b3zL2yiJN0U5oh7Tmj944=;
-	t=1718884751; x=1720094351; b=r1qngEQ5QAck3Da8YkdwjeCniThKLlRm0kNKTy7Gu9R8qMh
-	9NB/g0LWkfRsaC8KWa10T9gfM31Xzkjo34sU6rqq9fdieXKcCzSyjYuoyQ2XAKrb8whc1RP1lEtmx
-	Rp8AOAQUc+K2DFMS4ZH1gWXE/CIeo/QcU6Hd0T1LhYO4IRt01fsb7z/fP8DQnNqeXoLUxa7+v2jnu
-	zyg8r2zQ4fivOgU1THWyEsx4IMV4e6W5kCaTSnBXgzs3S+gdJYoO5VWTYNMewXz+KVray1JaHKfL2
-	YXfXLHrqjI3IICDytWzsj9+zfMkgGOnpFy898tBpW3PN+66lc3CHfuMLvws7G1RQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sKGRQ-00000009Fjq-0Y9N;
-	Thu, 20 Jun 2024 13:59:00 +0200
-Message-ID: <b008224f6e7691234e52f8fb9400bbca50160235.camel@sipsolutions.net>
-Subject: Re: [REGRESSION] Freeze on resume from S3 (bisected)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Ping-Ke Shih <pkshih@realtek.com>, "mathewegeorge@gmail.com"
-	 <mathewegeorge@gmail.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
- "kvalo@kernel.org" <kvalo@kernel.org>, "linux-pm@vger.kernel.org"
- <linux-pm@vger.kernel.org>,  Bernie Huang <phhuang@realtek.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Date: Thu, 20 Jun 2024 13:58:59 +0200
-In-Reply-To: <a60692b7a0ec4caa5db64d369bebf18910102656.camel@realtek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckMqrp5U"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f9cd92b146so5114405ad.3
+        for <regressions@lists.linux.dev>; Thu, 20 Jun 2024 06:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718888789; x=1719493589; darn=lists.linux.dev;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=U/Vzc484+V4lv4x3ivcc/NCSIiHpY+euyvJkYjGSyoM=;
+        b=ckMqrp5U5w85UGpcKQG76i0KweGzjDc0LA5kaRILN6WarAFOIjWRnkaUaDTNGZmsEF
+         zDe4As3Y0G+G6wzbM2YtoqTiq2tueItEoMbY29HyxPcNJjnWeczyhosADmPSxgFB4RyN
+         h+covhLCR/lvzk4mzKGDQXB82uBbCqf/sf4CQJcMSQlTMwsUOQH2+FQmwbzu3z1F/17u
+         Cy49w0Lm8Zjit5eIgSPYvz9GjP0/IRN9Nc9vCKWGCGUe42T6xctheAOllPjwI8lmzRG6
+         w2CmMjsjBPb38x+YKZPoHj89YvaCU1eQemdtYHURJBKhjA/2VWSHqyBV+jVJY3PtjCm+
+         3QsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718888789; x=1719493589;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U/Vzc484+V4lv4x3ivcc/NCSIiHpY+euyvJkYjGSyoM=;
+        b=YhKFYMEETb6HBx+zM6ksJVZlFzDgBoqsNvARKsuIWFdB4kznosFVqI5kvBef5mGLFU
+         L9kNXuV8bdmzkNQfKP23fRrbFDoogxv6/NuAwdZ3wuKrljYkJyYzEpSUQeO39glw0PI1
+         HUfoKpD1OthDYZr5Si+YKhfJJ/FsiGvpgv8R1h+LmZF7I/GymxKRdgfg+cqLyS+wkitz
+         gTe1c/wUcjrrvoqTMVXDNVBodGivOyVxTt6WQURFn0eWAeCt1nm5pRDjjKeiF04y6IKH
+         zbzG0qUEWMhzAYzw3oGMhSgIJR1qPPO/L57kz0jK2LRJ+ioa5iQL4xE2BlvnAP7Sismq
+         JM2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtAEmTl++npELav7zrSfPY+/uUL8AWp30SUwF6Z/qG13/7B1c/pJhQGUbPRIhk5pV9+2a49eqHToSiGK/B92JggCf7QjRnJ6KvvxI=
+X-Gm-Message-State: AOJu0YwdA8OsHp7aGm5uO3aPmPFxw0J0tFHo1kNm/aKd4UawJp+/62Y1
+	x8XsNp6m/vQpA+DhzEuSVhIxuTd90UCLMmXAQOmnNVx8e+dGL6/0wsiuEy6krgg=
+X-Google-Smtp-Source: AGHT+IFWZjnmSAWvGOgm2kZzT3GlgTGUhE3W9jMnpBnvaQnIigpbklefAahul749zLDiOzMOeBMCiA==
+X-Received: by 2002:a17:903:1cf:b0:1f9:8cd9:96c9 with SMTP id d9443c01a7336-1f9aa45a571mr55098045ad.46.1718888789187;
+        Thu, 20 Jun 2024 06:06:29 -0700 (PDT)
+Received: from terra ([122.171.17.135])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855ee8489sm137619945ad.167.2024.06.20.06.06.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 06:06:28 -0700 (PDT)
 References: <87tthpwkqf.fsf@gmail.com>
-	 <2ce41d4129234ba9a91d5b4dcd8a40ee@realtek.com> <87sex93s63.fsf@gmail.com>
-	 <6970398610c546b1b62e599902c67572@realtek.com>
-	 <E3FF7BC1-725B-40E2-AAF0-CA41A44B9DF9@gmail.com>
-	 <342b6b95d97a4bf09afee15c09481efc@realtek.com>
-	 <CFB0314C-AE45-4563-BF41-F5D635BFCF86@gmail.com>
-	 <a60692b7a0ec4caa5db64d369bebf18910102656.camel@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
+ <2ce41d4129234ba9a91d5b4dcd8a40ee@realtek.com> <87sex93s63.fsf@gmail.com>
+ <6970398610c546b1b62e599902c67572@realtek.com>
+ <E3FF7BC1-725B-40E2-AAF0-CA41A44B9DF9@gmail.com>
+ <342b6b95d97a4bf09afee15c09481efc@realtek.com>
+ <CFB0314C-AE45-4563-BF41-F5D635BFCF86@gmail.com>
+ <a60692b7a0ec4caa5db64d369bebf18910102656.camel@realtek.com>
+User-agent: Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0 Lightning/4.0.2
+From: Forty Five <mathewegeorge@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>, "linux-pm@vger.kernel.org"
+ <linux-pm@vger.kernel.org>, Bernie Huang <phhuang@realtek.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Freeze on resume from S3 (bisected)
+Date: Thu, 20 Jun 2024 18:35:24 +0530
+In-reply-to: <a60692b7a0ec4caa5db64d369bebf18910102656.camel@realtek.com>
+Message-ID: <87jzij7ohf.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain
 
-I don't really know any of this here, but ...
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-+       ret =3D rtw89_hw_scan_offload(rtwdev, vif, false);
-+       if (ret)
-+               rtw89_hw_scan_complete(rtwdev, vif, true);
+> Please provide output of 'cat /etc/lsb-release', which Arch Linux version
+> should be there, to me.
 
-seems strange? You have to say that it was completed here, in the good
-case, so maybe that was meant to be !ret?
+I don't have that file. But I do have `/etc/os-release`:
 
-It _looks_ like the crash is a use-after-free (the wiphy pointer in a
-scan request cannot become NULL in normal flows), so maybe try with
-KASAN rather than waiting for the crash. According to the logs, it
-doesn't happen every time even for the reporter.
 
-There possibly seems to be some issue between cfg80211 and mac80211 in
-this code, we see the WARN_ON() in cfg80211_netdev_notifier_call() in
-the NETDEV_DOWN case, which calls ___cfg80211_scan_done() which frees
-the scan request. But shortly after the HW crashes, and we have
-"ieee80211_restart_work called with hardware scan in progress", mac80211
-wants to cancel the HW scan but the HW is dead ("wlo1: Failed check-
-sdata-in-driver check, flags: 0x0"), and we see again "phy0: resume with
-hardware scan still in progress" ... but this time once tasks are
-restarted it crashes ...
-
-So I think KASAN, possibly rtw debugs, and perhaps something like
-https://p.sipsolutions.net/602684f34abfcf7c.txt will help debug it (yes
-it adds a leak)
-
-johannes
+NAME="Arch Linux"
+PRETTY_NAME="Arch Linux"
+ID=arch
+BUILD_ID=rolling
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://archlinux.org/"
+DOCUMENTATION_URL="https://wiki.archlinux.org/"
+SUPPORT_URL="https://bbs.archlinux.org/"
+BUG_REPORT_URL="https://gitlab.archlinux.org/groups/archlinux/-/issues"
+PRIVACY_POLICY_URL="https://terms.archlinux.org/docs/privacy-policy/"
+LOGO=archlinux-logo
