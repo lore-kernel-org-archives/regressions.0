@@ -1,122 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0443125605
-	for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 14:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4239315F336;
+	Fri, 21 Jun 2024 15:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718978584; cv=none; b=HEKi46SmP89plGR0gzR3CX9xtwMW2ugegMbzFHnDZ4YESAm8nG7OFmsWJfrbTRYQXsdvuEgJCFMyYQTAqtEFfPmuR2iz6XK5+kbm0Naqa/G2dmJ7vkOa0uv2/DzXA4oRlpy1+Qf9L7rrOrCwl4gDYlTC7GgrTRpWACaz/y5D6kE=
+	t=1718985205; cv=none; b=NVmONKlAm2IgLzuTwPuk9EqzlvMcAe79H9ee3ZzKukXHTqQXFF8WiBRUpx34NL3dVrr3CZgO5Kk7blK24iQ2ZDM/2/2mfj3YPN5meYiJhQ/949xTNXBsVly0mwujwF0IoXjm6dJLc7cS4M8nMRTL/LZrVTwcwQb1rD5afDDW5vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718978584; c=relaxed/simple;
-	bh=sO2Vqa/xiHVkUc1MI7sSYJtHx5kboa5sTEpZ4k7n0Q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dp8nKRw7j0ZwE/7YOPSlDLUJseBvU7UchWUvB6jLUSJ7ov9k8ahVDXj0uzeqWVTPJrP38kfueK/W27V2K//qqo8YSjmU6Im1hmELRO4mHkErPNARLlgVH+uG0Ld2hzXFxruVCD8LZvMiY9maSJIDq2focfrzi/7SeFiJ0oUgCIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WPtyW3xj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718985205; c=relaxed/simple;
+	bh=GPgLEchZruVRitbipEYfYC0XmxVee3r1w12ag6nTYsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tar49RZxaFYOj/EM0TgjQfUabQbPkRerS9hHbJ9Bjs3WLclx1wfrNnfGw5lJesJCElSgwwoVVhK/KgwsE2ZftqsFLcn4RAmuc4G70DtvB+bPDnxnYnO+wYe3+ctLjCbNAEzOFgQeQ6Pc/Hndhv98vVLRfDGDrvviLyLzGU7CEOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=21o2wWoH; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WPtyW3xj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718978581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akLFQtt/+POxVR4pxOkO3hxUvw7PQRoqpGG2Zvxz0Ao=;
-	b=WPtyW3xj5EHVmfA2PGZ9u/2bT/Z1xDd3NVUa7eMWY4lzy+MPf2lXnadmLBtUWErH/6doOU
-	hA80EwgALHibC3ANwC4G0vjTFzs7m4iThZOX9J7F9ZuRovRtiOiLYnsyVYuk5/7vjhzyTL
-	TnbQWsuKFyFpLOszdDvxQTxQ2snRD4E=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-1-boMQmNw-Nki6ogvq3fnK8Q-1; Fri,
- 21 Jun 2024 10:02:58 -0400
-X-MC-Unique: boMQmNw-Nki6ogvq3fnK8Q-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D6BA1955F01;
-	Fri, 21 Jun 2024 14:02:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.17])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7D6303000218;
-	Fri, 21 Jun 2024 14:02:54 +0000 (UTC)
-Date: Fri, 21 Jun 2024 22:02:50 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Nick Bowler <nbowler@draconx.ca>, Hailong Liu <hailong.liu@oppo.com>,
-	linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
-References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
- <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
- <20240621033005.6mccm7waduelb4m5@oppo.com>
- <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
- <ZnVLbCCkvhf5GaTf@pc636>
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="21o2wWoH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1718985186; x=1719589986;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=sbGk7wulXzOIMg91aRqsVsZOGf+Ccg0ki+XG8mSiHiM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=21o2wWoHTbCBn71ZbD1PVhN8L1TFZpuHhGK8MAw+UMIwKyfAVqPE1y6OtXnUdGgy
+	 Kk2P5pAlY3ZxCl8g5L3v+spScnLlYWsW5B5vArnfuvJr2JCQxCXkdGYkMPolrRGAG
+	 mV2LLzkXIIL5yM/9om+RO9ueBxZWG9NYyCdAunLqtOPLcfq9NUFgT8Sc7xXCV5rXB
+	 H2Idw6iAI8MMv2ZD5RoNmbqCiuIUqqI4wUb6hw/ltUAJSrRdB4xILcZ9kitPKO5Uz
+	 kikZSJ4Igj0m+6FeNQFSGg7IKCIwtqcx1BqmvCgU/UU8gxhybMT3I5VxpwL4BbCCq
+	 JO9yd8oo1Zns7HhutQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.76] ([62.226.32.41]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MLiTI-1s39dL2GCe-00UbEH; Fri, 21 Jun 2024 17:47:31 +0200
+Message-ID: <6759ce9f-281d-4fcd-bb4c-b784a1cc5f6e@oldschoolsolutions.biz>
+Date: Fri, 21 Jun 2024 17:46:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnVLbCCkvhf5GaTf@pc636>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: cpufreq/thermal regression in 6.10
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Johan Hovold <johan@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
+ <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
+ <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5QkJm8WvoESZ4VDAwZ3Vd4f0aJM7/R/cNI3G49l1iNKwJnzz92R
+ zGI9ZJxOTSbp/huwR50hBTqJHAi1kBaqlfjH4cOuyUfuZDONrB5NSUkJqeBSGoOtNV79ABn
+ NLwXRxdLKVRzH9LRU87CGl8BEFheyudCrhVTV7RnOMbwPRV0Z755E67LIAGYwBGefixOmPL
+ rZAIKfSqq4MV8DW0W3VMQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:puLx8lytgao=;OvbuLcUWqO2GqyGm9ZDod3pwNdv
+ rvwC2srqJer9lAERjUa7/ZtCcrn7KWrdEt08msoVjDCk8/YeAxQEXk53mARk7IeVZpQIuArtO
+ ni5gx7KJl9DnOemlck4YR4cwwYarAOtUhO7s9vVrqunIB4PGB6AddKIdFHAn4Qs8UEkXNgWoB
+ SwiyYyX4Xl3BOD1ZYbombwCTHKumSWJn6xik0H2AGeYQ9gkZtAy8+exHRFKEIbiJW7K46sLhh
+ vHlSwQMCCtY6a82kD80jbX6mnyT4771zEohuOyI7IbacT2jD06lKLJ5agZu7P3qPTgWx4Ezjf
+ UBjOTSCGhQwjkPn1/SJREzKft4aWcpsjh3S7Fsb6D/6YAfTtszP76x9n+jQnxnqCoTvuiqiiH
+ Dh6kJaxruwYVgyiUyi+KWyz6/dRjn0H1WYt6lSJiF3N1X/QiLgSMSLklLOJQ5LBB2gMvyzETN
+ EzV8HKFdx7UXTKcGcRfMDT5Q8JYP4jE+N4pWEM7b0XuPdLXCBOXobcbPZcGU0zYMxpOcLOci1
+ yBcLA9K3Ho9Fdbsln4801ES+JGvzpJsgH8bdzvdRVL+ypEZDB7/allajYJdHoiDen11AP8aqU
+ 9W2IZIkSTaBjUxHtsHj/ms/WqlyucXHJV4FeQk90Tjx1oDcCpMxFKfZeqCTVvrRq6rgMY8bfX
+ /ZIL8bYWK6OAY87ydtR6/AQdzwQ/uwgVjsx0yT3XcvZzu80MR89cKuHFSfPKLbePeGEQVu/7N
+ xt3epvlh8ggcERgH8/kZ/iGN+E2mFskxuKboJpgvb+UvB4ARY3h3XI=
 
-On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
-> On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
-> > On 06/21/24 at 11:30am, Hailong Liu wrote:
-> > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
-> > > > On 2024-06-20 02:19, Nick Bowler wrote:
-......
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index be2dd281ea76..18e87cafbaf2 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
-> >  static struct xarray *
-> >  addr_to_vb_xa(unsigned long addr)
-> >  {
-> > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-> >  
-> >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> >  }
-> > 
-> The problem i see is about not-initializing of the:
-> <snip>
-> 	for_each_possible_cpu(i) {
-> 		struct vmap_block_queue *vbq;
-> 		struct vfree_deferred *p;
-> 
-> 		vbq = &per_cpu(vmap_block_queue, i);
-> 		spin_lock_init(&vbq->lock);
-> 		INIT_LIST_HEAD(&vbq->free);
-> 		p = &per_cpu(vfree_deferred, i);
-> 		init_llist_head(&p->list);
-> 		INIT_WORK(&p->wq, delayed_vfree_work);
-> 		xa_init(&vbq->vmap_blocks);
-> 	}
-> <snip>
-> 
-> correctly or fully. It is my bad i did not think that CPUs in a possible mask
-> can be non sequential :-/
-> 
-> nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
-> when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
+Hi there,
 
-I checked the generic version of setup_nr_cpu_ids(), from codes, they
-are different with my understanding.
+unfortunately I experienced the issue with the fix applied. I had to
+revert this and=C2=A0 the original commit to get back to normal behaviour.=
+ My
+system (also Lenovo Thinkpad X13s) uses the schedutil governor, the
+behaviour is as described from Steev and Johan. The full throttling
+happened during a package build and left the performance cores at 940800.
 
-kernel/smp.c
-void __init setup_nr_cpu_ids(void)
-{
-        set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
-}
+Cheers
 
-include/linux/cpumask.h:
-#define num_possible_cpus()     cpumask_weight(cpu_possible_mask)
+Jens
 
+On 6/11/24 12:54, Rafael J. Wysocki wrote:
+> On Mon, Jun 10, 2024 at 1:17=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
+.org> wrote:
+>> Hi,
+>>
+>> Thanks for the report.
+>>
+>> On Sun, Jun 9, 2024 at 9:53=E2=80=AFAM Johan Hovold <johan@kernel.org> =
+wrote:
+>>> Hi,
+>>>
+>>> Steev reported to me off-list that the CPU frequency of the big cores =
+on
+>>> the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
+>>> frequency with 6.10-rc2.
+>>>
+>>> I just confirmed that once the cores are fully throttled (using the
+>>> stepwise thermal governor) due to the skin temperature reaching the
+>>> first trip point, scaling_max_freq gets stuck at the next OPP:
+>>>
+>>>          cpu4/cpufreq/scaling_max_freq:940800
+>>>          cpu5/cpufreq/scaling_max_freq:940800
+>>>          cpu6/cpufreq/scaling_max_freq:940800
+>>>          cpu7/cpufreq/scaling_max_freq:940800
+>>>
+>>> when the temperature drops again.
+>> So apparently something fails to update its frequency QoS request.
+>>
+>> Would it be possible to provoke this with thermal debug enabled
+>> (CONFIG_THERMAL_DEBUGFS set) and see what's there in
+>> /sys/kernel/debug/thermal/?
+>>
+>>> This obviously leads to a massive performance drop and could possibly
+>>> also be related to reports like this one:
+>>>
+>>>          https://lore.kernel.org/all/CAHk-=3DwjwFGQZcDinK=3DBkEaA8FSyV=
+g5NaUe0BobxowxeZ5PvetA@mail.gmail.com/
+>>>
+>>> I assume the regression may have been introduced by all the thermal wo=
+rk
+>>> that went into 6.10-rc1, but I don't have time to try to track this do=
+wn
+>>> myself right now (and will be away from keyboard most of next week).
+>>>
+>>> I've confirmed that 6.9 works as expected.
+>> Well, I'd need to ask someone else affected by this, then.
+> If this is the step-wise governor, the problem might have been
+> introduced by commit
+>
+> 042a3d80f118 thermal: core: Move passive polling management to the core
+>
+> which removed passive polling count updates from that governor, so if
+> the thermal zone in question has passive polling only and no regular
+> polling, temperature updates may stop coming before the governor drops
+> the cooling device states to the "no target" level.
+>
+> So please test the attached partial revert of the above commit when you =
+can.
