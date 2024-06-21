@@ -1,151 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F2083A14
-	for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 07:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A415E16F0F6;
+	Fri, 21 Jun 2024 07:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718953651; cv=none; b=EBUzl20njzCvSsl66Tj2G9MPIdkBJLgjoZH7luJE5FgKFna6zaxlkdyUoRh0NVYqntzP0nF+i/mLWadt2Dd3ccCCAGp1b46K44amtH55T9bmKKtluTkl8HElFZSSUDNEoS1YORBqTPjHqgKQlOmFsWz8q5Rpy8DDad3MRL2Pgwg=
+	t=1718956587; cv=none; b=YYZDGdDjEuqTJshcc5CvB/qbVe4uk1h6MI5z0DhnFoinmAhej8Es8cNGULkpF65PF5ArfuM3nAa3ZLDYgnK0BD0jIfTpn4kd2VxJmh48PfQJEXRneOie8FjLVbZWRKDIwAiEnnQ7cQLmFjJBidSJ9K1Rjpc1EGAiRZIZsLmK9wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718953651; c=relaxed/simple;
-	bh=U7O/f4ugiEkC98DWZvtW3F9cYFCOjQxaBn1Mwd+XbA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jDGciUax0lZbTzu7vSJIQj2hJK/yM+JZo5fdQcaOBCkYTEx6W9tMoL344/azFnVvHfRv7o+fxpJXzF+AlcThDLUAKwVov1AVd9ts/bjKxyXlwpSq/zSPhQYC249Bunop7tJx/RudugT/XpL4E8C7v3LwkWyidk8nVfWRNjE52Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a9CTn9pR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718956587; c=relaxed/simple;
+	bh=6DSQuYQ1uEgRCZGH8rVjkNou/IsHOVw45KGYdtsaMoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p9YLJHkU97KBDWVwipUDfaDFxtCL5F50J+VZZ9UY83iZCYavpTBhQr8MFatd3gB1/J/aK3Kzt/uGP0swpuiC0gDI3N3KOHdPBDvRTZUmw7172vxZVoY+2AatQ3BIS5kG2HTL4pCLC9c2Mt6GrJUy+KhB8RUFtrRbebnl6o2432g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=v4izR6Vw; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a9CTn9pR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718953648;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pVNRr002L+NyIVSk486BNVmsI1O8j0gJ9CCkEeh4Wcg=;
-	b=a9CTn9pRy3f49QrGjgtkz4pR2562vVVndxZcCaaFcoELOZPmWafS5L9VoJCvd1hE2OpydR
-	UIEZyP263Gwa7gNgLr1Sz9K5XRE7kWDDTRAnRgCtkr8EhFx7NzN111VTHsa4ZkEUEaURH0
-	d3UVTay/s0mxuz9O82RU99AM5cI4Sgc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-FE3XjoE-MH2DRKwjKcM-DQ-1; Fri,
- 21 Jun 2024 03:07:24 -0400
-X-MC-Unique: FE3XjoE-MH2DRKwjKcM-DQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E01451956096;
-	Fri, 21 Jun 2024 07:07:22 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.17])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4738F19560AF;
-	Fri, 21 Jun 2024 07:07:20 +0000 (UTC)
-Date: Fri, 21 Jun 2024 15:07:16 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hailong Liu <hailong.liu@oppo.com>, Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
-References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
- <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
- <20240621033005.6mccm7waduelb4m5@oppo.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="v4izR6Vw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=EGT5e8L1pNhD0BVhYlvh53zXiul0Yh6rVbmqVvfwN2M=;
+	t=1718956584; x=1719388584; b=v4izR6VwdX7WcFq0sBqNkoLtZFS2vmsbmxz3RjZWAietfwr
+	pkiTPCgQJKkVTpys8gY26mKRuCwnp8utRgm14uY06DUDDM3nO1Xy5TTbMSdmtGvLREPSAavxdR3nr
+	ySvYggBZzZzrOu3wjHL8BsWCF2HMz+g8vWQE5d0gQbFn6xzsTsABeIsl59TQ9RdRRSFzGFX079cm5
+	C3sj21Rw5CStBLBwWTenelB6/3U98Jp8nZ6XybXA+7QYsPbL70o5ZKF/4chKihMH3M11qT6c0Gcrn
+	k87cl+zStGf2DmKw/dtQ6q+xQOTCFiAVpJIGMCza+e5hga6Kyo9AexrtCC9PVa0Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sKZ8A-0007Fh-7F; Fri, 21 Jun 2024 09:56:22 +0200
+Message-ID: <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
+Date: Fri, 21 Jun 2024 09:56:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621033005.6mccm7waduelb4m5@oppo.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and
+ 120Hz
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: Hamza Mahfooz <hamza.mahfooz@amd.com>, Rodrigo.Siqueira@amd.com,
+ "Deucher, Alexander" <alexander.deucher@amd.com>,
+ amd-gfx list <amd-gfx@lists.freedesktop.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718956584;5e20c670;
+X-HE-SMSGID: 1sKZ8A-0007Fh-7F
 
-On 06/21/24 at 11:30am, Hailong Liu wrote:
-> On Thu, 20. Jun 14:02, Nick Bowler wrote:
-> > On 2024-06-20 02:19, Nick Bowler wrote:
-> > > After upgrading my sparc to 6.9.5 I noticed that attempting to run
-> > > xfsdump instantly (within a couple seconds) and reliably crashes the
-> > > kernel.  The same problem is also observed on 6.10-rc4.
-> > [...]
-> > >   062eacf57ad91b5c272f89dc964fd6dd9715ea7d is the first bad commit
-> > >   commit 062eacf57ad91b5c272f89dc964fd6dd9715ea7d
-> > >   Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > >   Date:   Thu Mar 30 21:06:38 2023 +0200
-> > >
-> > >       mm: vmalloc: remove a global vmap_blocks xarray
-> >
-> > I think I might see what is happening here.
-> >
-> > On this machine, there are two CPUs numbered 0 and 2 (there is no CPU1).
-> >
-> +Baoquan
-
-Thanks for adding me, Hailong.
-
+On 09.06.24 23:19, Mikhail Gavrilov wrote:
+> On Fri, Jun 7, 2024 at 6:39 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>>
+>> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c
+>> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c
+>> @@ -944,7 +944,7 @@ void optc1_set_drr(
+>>                                 OTG_V_TOTAL_MAX_SEL, 1,
+>>                                 OTG_FORCE_LOCK_ON_EVENT, 0,
+>>                                 OTG_SET_V_TOTAL_MIN_MASK_EN, 0,
+>> -                               OTG_SET_V_TOTAL_MIN_MASK, 0);
+>> +                               OTG_SET_V_TOTAL_MIN_MASK, (1 << 1)); /* TRIGA */
+>>
+>>                 // Setup manual flow control for EOF via TRIG_A
+>>                 optc->funcs->setup_manual_trigger(optc);
 > 
-> Ahh, I thought you are right. addr_to_vb_xa assume that the CPU numbers are
-> contiguous. I don't have knowledge about CPU at all.
-> Technically change the implement addr_to_vb_xa() to
-> return &per_cpu(vmap_block_queue, raw_smp_processor_id()).vmap_blocks;
-> would also work, but it violate the load balance. Wating for
-> experts reply.
+> Thanks, Alex.
+> I applied this patch on top of 771ed66105de and unfortunately the
+> issue is not fixed.
+> I saw a green flashing bar on top of the screen again.
 
-Yeah, I think so as you explained.
+Hmmm, I might have missed something, but it looks like nothing happened
+here since then. What's the status? Is the issue still happening? Any
+solution in sight?
 
-> 
-> > The per-cpu variables in mm/vmalloc.c are initialized like this, in
-> > vmalloc_init
-> >
-> >   for_each_possible_cpu(i) {
-> >     /* ... */
-> >     vbq = &per_cpu(vmap_block_queue, i);
-> >     /* initialize stuff in vbq */
-> >   }
-> >
-> > This loops over the set bits of cpu_possible_mask, bits 0 and 2 are set,
-> > so it initializes stuff with i=0 and i=2, skipping i=1 (I added prints to
-> > confirm this).
-> >
-> > Then, in vm_map_ram, with the problematic change it calls the new
-> > function addr_to_vb_xa, which does this:
-> >
-> >   int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> >   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> >
-> > The num_possible_cpus() function counts the number of set bits in
-> > cpu_possible_mask, so it returns 2.  Thus, index is either 0 or 1, which
-> > does not correspond to what was initialized (0 or 2).  The crash occurs
-> > when the computed index is 1 in this function.  In this case, the
-> > returned value appears to be garbage (I added prints to confirm this).
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-This is a great catch. 
-
-> >
-> > If I change addr_to_vb_xa function to this:
-> >
-> >   int index = ((addr / VMAP_BLOCK_SIZE) & 1) << 1; /* 0 or 2 */
-> >   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-
-Yeah, while above change is not generic, e.g if it's CPU0 and CPU3.
-I think we should take the max possible CPU number as the hush bucket
-size. The vb->va is also got from global free_vmap_area, so no need to
-worry about the waste.
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index be2dd281ea76..18e87cafbaf2 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
- static struct xarray *
- addr_to_vb_xa(unsigned long addr)
- {
--	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-+	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
- 
- 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
- }
+#regzbot poke
 
