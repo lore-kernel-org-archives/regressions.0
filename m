@@ -1,80 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22008197
-	for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 10:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D52E10E3
+	for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 10:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718965456; cv=none; b=HG9AHBF7E6OjJQhpQGcbu0+cE3EF1AOFwEc7y27bUMSOOinlCmowOywgtwT+VGcoi79vJVINhtU5i0DVJKElGlJ8Y8pOeu/WzxAMp8hT1v1PZPqTTB5tfdpQVtrU6jzR5eBYfMWp8GyzEq4WUzxgobrw3Cu3UvkTm/24JppTRmY=
+	t=1718966712; cv=none; b=clPoidcyLxzpdsIiyZSDjtYdqaR6HE7Ti+BlLzfrgk5LK53U08/d+oGX9vgdEArZ9CJFQIiXyeORO6htjhE1v8wyM8f84PNb6JGl+szs+HpiDCi25OOMTsUYw0uQDMOTu7b8pGCc6u97YPoRDfqntrEU77dmE509NZD1azVTnQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718965456; c=relaxed/simple;
-	bh=FfjoPuVOWGJQTTdNMzgxMDtprN4q27AHcoal7fal25E=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=QS7KJAksbmy0PFhw1aYnKVHc4BzlGJfXI2NUtcVtECSLOBV+kQQv8Z2gSbqOnq0VTkR0yT2Ybxddfyy5WTIHsXz5kX+tNba5IyMtiGP4Ndyq1Y5N+W+vSb+dMVKrzZ2s3old4QapMbK5t1k9Cs/Jk2AJFn3XR+1mD6pcLiMicbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1iyTlElG; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718966712; c=relaxed/simple;
+	bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m3Uz0HTkXgucJFvwF6UkgCF4XMU9NvKWUtG0Gtygm+pPrv/TaMBKyzzFndzhGn9DkHi6ZNOvTCMl5HCuKgzGDw6vaRok1xJizN1SANSgBmXbBjUeCQ8iUKID280Dr0an/5cGOiR/CxwQWgxYAg1nr34/rCSKpn1iDoLsoOem7x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAcJ81XU; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1iyTlElG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=FfjoPuVOWGJQTTdNMzgxMDtprN4q27AHcoal7fal25E=; t=1718965454;
-	x=1719397454; b=1iyTlElGXP1qqEBmMh6y8x58Rk6DAD2DKdZ2oxlP1hS/1m8gNgG/z4QzCKUcG
-	3itjWMo4oLOr98FprqExbqokEvhj3WUd0CAAboXdMyGOwjyjN3WsjNFEPgp5T5JG8Vo3LZ8QSuoCo
-	JOCSpAOBGXCfYhcmm01Wm9zYIDE4KQ2+N4OJFJRwq+Qws2dRxxzIN6X8Tw8C13cwtqR/6awDGPdJQ
-	eiHEUylQRNGOfNy10MljjrTDVdLA6vyVLMfdfv+z8NHz8ZsTx18O3LeOFNF2RBkdpMLlSDC4a0AED
-	zsTkOfPgX2YzBObTcuwZD2ZdlzkBwc5iu6DMS7WMTAWO3P+9CQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sKbRE-000276-66; Fri, 21 Jun 2024 12:24:12 +0200
-Message-ID: <0a9f8fbc-7fc0-432b-8ac3-f2dffe499cae@leemhuis.info>
-Date: Fri, 21 Jun 2024 12:24:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAcJ81XU"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6b50a661090so2063356d6.2
+        for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 03:45:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718966709; x=1719571509; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
+        b=JAcJ81XUvJe3tyvvLyFf9Ts4mUfdEfWQEM+iM79cHcm5RPL+Gvqw0QGKicYbIXT8y2
+         5zd8APvao++5EC1lO3nayEae6xDiDVp3Jp8cTJmoTmw0hUAVUWKgkQKXO3xydEFkqwDd
+         qBkmYYImxJdmin2NwbJa3MgO7X8g9b+o12aNDO9k6OoMybgMh6In2vs9vi6e4S8SWNpW
+         k86Ttr69FBDF/ETHqkfnNtrCBBBksduqirHz0mUMVRz+puF9H8UIVHjSorohkIZHqjBj
+         m8d7RglcBBijiqcYEoz7Dns/ZHOfle/DR4ROXmPzH863ekAz5rA/RA3d2ERNed7bqwL1
+         6pug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718966709; x=1719571509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vCzKBkI0EOlIaIsyEt1Ho+UPCJV1SGzIjta1R/xOqyo=;
+        b=cnK45F7Jd5BEakpTrkr6aqKhsuHzV3gURX/DqRLBs59GmL9u7XE2GCA6P+E/7NXc7B
+         t+5F9HZsouE0WP6nDGCojbhpRhafARSu2u93Emjtg+iq1S/cT1AQJtEuKq5MUqsEUC7H
+         BfM0vdkvchObDr3O2GMMjit6dGcq2tZMk6htLrCw5GtiZKcEh56RN7+zMFoIE/6wFrBu
+         Tmc/UKqDrog1U3/WKqVSSo/7TOY2IteZLcGs6vstP3bR+DGaY3PWtWRScGROFhTdEghS
+         X2N/1ro3Iz57Pt+bdNPPPjOH4AfA2xFz23q1/mnGWZldgPqnCgH30ifT6jRfmJC6f5se
+         2G+g==
+X-Gm-Message-State: AOJu0YzYgVe5mvEAsmvfC/SFqv+An/W7vPDuF9oOMGcE0a15PCxE7KjU
+	kwA8PlhfQUOBUn+GXgIUgi2H1YdNYSuHifzKtdmTrG3bD+bGB8RtqoEyloZyzsYhHqPEsg+T0Pz
+	DcyWEl3dg3wNDfivLO9+19/cwXMVJbC8t9leVXY3Z
+X-Google-Smtp-Source: AGHT+IGI1lyNp+TbE3ThRp8In7N425hvlee/0+RjTWRu6FiUFfFtrbG1ST8pJQ2n45IwF01JbVb46PDQIa50lhYgPS4=
+X-Received: by 2002:a05:6214:c8b:b0:6b2:af02:28d6 with SMTP id
+ 6a1803df08f44-6b501d261e4mr83907056d6.0.1718966708856; Fri, 21 Jun 2024
+ 03:45:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718965454;b6782ac0;
-X-HE-SMSGID: 1sKbRE-000276-66
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com> <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
+In-Reply-To: <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Fri, 21 Jun 2024 15:44:58 +0500
+Message-ID: <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Alex Deucher <alexdeucher@gmail.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>, 
+	Rodrigo.Siqueira@amd.com, "Deucher, Alexander" <alexander.deucher@amd.com>, 
+	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 21, 2024 at 12:56=E2=80=AFPM Linux regression tracking (Thorste=
+n
+Leemhuis) <regressions@leemhuis.info> wrote:
+> Hmmm, I might have missed something, but it looks like nothing happened
+> here since then. What's the status? Is the issue still happening?
 
+Yes. Tested on e5b3efbe1ab1.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I spotted that the problem disappears after forcing the TV to sleep
+(activate screensaver <Super> + <L>) and then wake it up by pressing
+any button and entering a password.
+Hope this information can't help figure out how to fix it.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218975
-#regzbot introduced: v6.9..v6.10-rc1
-#regzbot summary: iommu: suspend broken when IOMMU is used
-#regzbot duplicate: https://gitlab.freedesktop.org/drm/amd/-/issues/3435
-#regzbot monitor:
-https://lore.kernel.org/linux-iommu/20240621101533.20216-1-vasant.hegde@amd.com/
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218861
-#regzbot resolve: apparently solved
-
-#regzbot report:
-https://lore.kernel.org/all/e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com/
-#regzbot introduced: a163c5761019b
-#regzbot summary: can: m_can: kernel hang
-
-#regzbot report:
-https://lore.kernel.org/all/75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca/
-#regzbot introduced: 062eacf57ad91b5c272f89dc964fd6dd9715ea7d
-#regzbot summary: mm: vmalloc: kernel crashes when running xfsdump
+--=20
+Best Regards,
+Mike Gavrilov.
