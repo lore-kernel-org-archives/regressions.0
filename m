@@ -1,177 +1,110 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2125.outbound.protection.outlook.com [40.107.237.125])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80198152180
-	for <regressions@lists.linux.dev>; Fri, 21 Jun 2024 16:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718989006; cv=fail; b=juGUAgHKwohgzwHqYt5ZR/WvpR9hhBAQJ//mTLY50N54sP1PGfaqtS5z7Rfg/63tA454KPm4bTW0sPYfhPFThHSRwsjPNn1BeC+utIykoaFln2XPW3zsvZAcE1KzPlhmT57Fv3coJBFMjG+nXF924yGUL6iMOHFnnmWsByNfoho=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718989006; c=relaxed/simple;
-	bh=3VeFuVjxJtm23X0WSqYOiNA46EfZpI0Izu6jJUb1PuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rECBdIMbubNfLqo39P437fT2/UC4Jl3uyRy3DNGPM35kZehg321czU8jDIHL/M1MmsA1Q4xL3F7CdxgyDFq0zF8NHRZyKkj4LAF2mey0E0oFBooXD4ODWFQSZj7/M4/BYuTYN1AUU7zucAePT3mK6Ep2P9PyaC0qCnLBt1/3CBw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com; spf=pass smtp.mailfrom=in-advantage.com; dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b=FdpoLc6c; arc=fail smtp.client-ip=40.107.237.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in-advantage.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E212BE9E;
+	Fri, 21 Jun 2024 20:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719000018; cv=none; b=iu4JFuVHjALJeEiYpmQugTYMQyVr9ri4LGvyUK3U8OTW4ZSQAPMRSgnWsy547YWaEiT30AMAItOh6I6CV0PNlXbNX88we1MrNAH9lDNJ5mYcMcGmi15POhg14CXHH2iwfPpHQgUvRaNbVku/i5sDqiUAJpRkll7hy4Y2FmBYxLw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719000018; c=relaxed/simple;
+	bh=FI/0tEmc4OrzQICRAJDQmwB80W2DKE27iYV+3AqZ6ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vB5Q+yAVQFMw+ecHzM138ZsZss/117LK/qVpc4WVvIvkVlNaYqpLoUkUo+CWdfWDwwGXxOJ/WPm4tRB9ZnrI+Z/62s/4Qqhk+XaiJuS1HngZKLyNY+HZ9FG1iqJoYspJI3EQLqe/U4lSyK8YVTA49u64dKmbF+DBr5nJtnl4IXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=o/bQAOwa; arc=none smtp.client-ip=212.227.17.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b="FdpoLc6c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cOPZ85GHht4SXJVaXifeQSnm7iDQSPGS3nZVOb/yVZxHQL+yM1WeADiURrqPpID5ZPMevaqHbqwA/qXRzSLdcf6Ifqp4Mkt5wkjwUCy79yw8q4xC4C+q3zaR97SO2d87UC97/FogBm7T8ASKBKByqKb65DLIkBQSrF/mTcvVfA8nUYY6WVO0cyweIxV+lMVajYkZCeOlraoC/KsIeKJTcIUGb7emnEFYxZKoe7jhmALuCy4Q+5p46+zlXykEYNjurZZlWmO8WmBVhV/fUbpMHxoGv6zk1UvxS7FQxb4l3UluUFKZ+v7Wd7Ii5c0m5NfK7t2mk0SVOO6fF77dtGgcGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M+AWnPZhgQZ3x3HiML18RA2AVQESVbxHRnnFQhiffw8=;
- b=eGBA+n+vwVJ+LAUFr8yld9SpOnfa/ev4O3Pwent6jl/P8tAjH0gwYvPWDlA4OT1Nu7kzptYqZaLJYLbBCML6VXPbou3305SYEL17pnXNMWih/3Fbql7LRCPiXQq/XOcBLwH6NCB1nAb7FMBOceic2ycV0487krq6lEzC/btg02RGlY4bzoPIeZi2hBCEKnwXshpI9oemmQWfSDB0/8yQ6kl7kzg/5Us0YRFflE2ZqrmMkchpH5bLvzyFEeN6ncYSAxuvCUKKeOyD9dZ66boaPSxSHwAGYEBrWldSyAdSRHN/W26fJtvaSzELvIui1RJzF9EGHjMkebZSfaHitrQXGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="o/bQAOwa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M+AWnPZhgQZ3x3HiML18RA2AVQESVbxHRnnFQhiffw8=;
- b=FdpoLc6cjaF+tOJzD/9vzUFb1ZtD0zdKyv7YBWtY7gWw5vlIFMUQDXXuzaZUamtmNOv8WrgE/aItYVt34YUVmKPIPHYkTvCH+YCkpWrqvL31fzfLJT9IA+qqGQJ5oblMXb7hDQeflxv2cZSAb/Xndm7Ack9AJ0RJnWw2XPxElD0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from DS0PR10MB6974.namprd10.prod.outlook.com (2603:10b6:8:148::12)
- by CH0PR10MB5164.namprd10.prod.outlook.com (2603:10b6:610:da::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Fri, 21 Jun
- 2024 16:56:39 +0000
-Received: from DS0PR10MB6974.namprd10.prod.outlook.com
- ([fe80::7603:d234:e4ab:3fea]) by DS0PR10MB6974.namprd10.prod.outlook.com
- ([fe80::7603:d234:e4ab:3fea%3]) with mapi id 15.20.7698.020; Fri, 21 Jun 2024
- 16:56:39 +0000
-Date: Fri, 21 Jun 2024 11:56:35 -0500
-From: Colin Foster <colin.foster@in-advantage.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Mark Brown <broonie@kernel.org>,
-	Louis Chauvet <louis.chauvet@bootlin.com>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	miquel.raynal@bootlin.com
-Subject: Re: omap2-mcspi multi mode
-Message-ID: <ZnWww9CF365YjF6P@colin-ia-desktop>
-References: <Zl/V0dU6SjAMkpLG@colin-ia-desktop>
- <ZmFt7yfZFFJdsZuJ@localhost.localdomain>
- <ZmJ7E305ow91ez2U@euler>
- <ZmMrJ8uaw85a03Ce@finisterre.sirena.org.uk>
- <ZmhdWw/dV5HRU/Nh@colin-ia-desktop>
- <acaf2d70-d821-4951-9072-931cb56b1b9f@leemhuis.info>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acaf2d70-d821-4951-9072-931cb56b1b9f@leemhuis.info>
-X-ClientProxiedBy: BN9PR03CA0733.namprd03.prod.outlook.com
- (2603:10b6:408:110::18) To DS0PR10MB6974.namprd10.prod.outlook.com
- (2603:10b6:8:148::12)
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1718999993; x=1719604793;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=w39pSbtwaT7fcka6jbgmU/6r3OCDP6+qZhZfAsB82t0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=o/bQAOwaeV7wjwdmJYfFmOUz4Vn6WjJOvdpHUSKaMBhJNkt4tmszbrLG+AD8yH9A
+	 rFt14FAPymoaqYnEf4FHCuZco4TP3itvRz/tqlJCkWshElkM/aFH/oMx1t6Cj+pnw
+	 DLaY9LDmfJ1XkBATxijkAwwcIKMgD9vgoJSAs0mL03StCbprEoqaglto98WeWfgW3
+	 noiA4GLHuBtz47iZNF89WeyQB3KZJfWjA85fLvIBbMs9KWfk39mSG57ckfVllP8Hg
+	 208+/+liY9qEGlc/ybe8hvU2EzRvWOkm89n4A+UJ0DZSSiIVkuQk7E9FaPw6TWrHj
+	 L2zddy3QB3QW0pSjiQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.78] ([62.226.32.41]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MQuLB-1rxq7K07c7-00YZXv; Fri, 21 Jun 2024 21:59:53 +0200
+Message-ID: <ebb02ff6-e0d3-45d0-b78e-7785d763e01b@oldschoolsolutions.biz>
+Date: Fri, 21 Jun 2024 21:59:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB6974:EE_|CH0PR10MB5164:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3eb12818-65a5-4227-84c5-08dc92131e30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|1800799021|376011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ahb7WJIMw7XNqgJdxZkm/XvhmXPPk5dV/GNHIo0HY2aE/t2iju6DsuPkM3DR?=
- =?us-ascii?Q?rfCcJwRuvPlqu8thknhJHJCro/2a/7qMDxKO9Zuhlv8hpPC6IoEgHfmpNxtZ?=
- =?us-ascii?Q?3Gyy677ivX5/xQGC9X11V9BaPgVllxtifkzhzJ50AaFn4UTadk5rRCUavjke?=
- =?us-ascii?Q?SiW2/1NU1l5AJLcMEILzjCak6Xg6b3EgaS8qT23NgOtrO1+H4W4M3yO6+OqJ?=
- =?us-ascii?Q?a8Kqo77P4RVV6mAJ7eonyM+yf8mUhIF1ieNo2FrmeF48+FnfES7qnrAvIr9F?=
- =?us-ascii?Q?g3fgHv7/DDrjJDU3mNK77LHyZIHOVLLpERqpwBMu+mSX8rhvaGaDP6nxdfy5?=
- =?us-ascii?Q?eXSbWubd+H/BT6Jz0fKacCfbfGQQv/WNmkaGRjKymDXv0Ns84q/S/X+leV7x?=
- =?us-ascii?Q?ABGCYcwV/l0rZ3OwYJpl2dPIE/cWnhetMewOTZpGTXGC6dMhJszhO+Y+UNNp?=
- =?us-ascii?Q?r3hs1k/WS9drk7l/L/T32AvHKmWMBSfiewK2L6zeDr92n3ZXHeW3Bn35nG+6?=
- =?us-ascii?Q?JjsCb5DXNFSzAfKogdmdAGR5Q87Xf/wN0UCRr3iaHUbqm7V6PvsZPkn0DiTe?=
- =?us-ascii?Q?2IoD75jhV0Pa4pvOFJx3VtyAq5XUrWJTeNL6OQTFBLO4OUAkBIVsMpzndZOB?=
- =?us-ascii?Q?IIeT/IX0L5J1aMXHgEuAyousqS92X5xBJB2t5rtoMEq8ILNBVUSUI5tKICCe?=
- =?us-ascii?Q?I9281EygLRJ7Kkzm/ZX44mEDVoi/xtwu1cU9i6kb6taYMOUGHyCDaPy4BCdR?=
- =?us-ascii?Q?zxmTyXT9m0OHSTojQ/3YGAscqiIpUDVx2HXdpbPDfo85evdntBmbJjaVF6l9?=
- =?us-ascii?Q?gs5f2mJi+W3nIvATLrZtFFlPCdVKhT7WS/8y74aCyytsG2yIvnu6Rmec3TMN?=
- =?us-ascii?Q?9XbWZqelEZWhKzKIVl9Balmg8dvJZ5QOl1AGWn5QNpsT4gvMdW0vClkoNp/H?=
- =?us-ascii?Q?PtNPhW0mTI4hCXtUc1eXpEZwLf8C4Q14BlQun4BICIUZeYQjo7U4jKUrfu2R?=
- =?us-ascii?Q?d1isbsW6XtJe82wRiqiotetb3hq13Bxint1HDI3y/84FCzvZc/UQ2QDzksle?=
- =?us-ascii?Q?0AmuGm+XrSdZUbON8RVYkQ4CzBJXMI6+ViPHztEChWwx6cghpXYgKzUM1lHI?=
- =?us-ascii?Q?5GYz/tvy2euQfFiCOQNS8OnyhZBN4+GHBmIQqTT1NQdmYlCyUHW0fxUVMXlZ?=
- =?us-ascii?Q?bA8JOBRRRBO0fIyD8jNxgvIOHD2ngEFnorVXrHWxWKUM9KAKvhxJGPPALotG?=
- =?us-ascii?Q?4TualcwiMCDJLrfMwDpvqVgPhz0LCueQdIA1Z5q0L14axAbs4/y7oBL3MdEM?=
- =?us-ascii?Q?Kg9RvJLANFQ/x4+VpCh7pj0s?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6974.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(376011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cg9NlwdNubdUgM/MnByVKMzr2Ivbjog8w32F2ZrG2GSDOnWbkJ38iBBtwuPc?=
- =?us-ascii?Q?f13zXa180+Wfw5vWXM1GyuY3Qwf+HqRBghYlRVP3xJt3VFBsRd1qn3ytfSbD?=
- =?us-ascii?Q?M+ri4cjCApMZjmH57KEcCI9kXysbvlUlrIBZELWe8jtt9fKeePzzLe9kNisH?=
- =?us-ascii?Q?KFJh3Ab7zHEZyJbSV3mfdgdGnkbTbpIZwT+rphEDndHDd7ZMRSpTua+5IoM/?=
- =?us-ascii?Q?yztmNIvbHYHzXm3aP6mVqsm5Gaxn7+q58z8qTstZlAG+CCJuk5PLj3x+6oCt?=
- =?us-ascii?Q?QMubPmsuAcnOHbgDbJF4xSxCmz7js9ovOuJQJbecOmC0rY1C/MX5/io5B5d8?=
- =?us-ascii?Q?NqmZMq5n6k6byHhRakUHY1jTQyyBKl9XyK7sMlb5PR3s10d5U8kA6PQ/gpR2?=
- =?us-ascii?Q?sgbjkSssn3u/BYhbxtrbyJ0jeQGKcrklgfqyy+hI0XAXNWIaWFr/9ny0ZBft?=
- =?us-ascii?Q?39ttVHC9ZDRt5GZdwEQcKQuVOqjNFrphGBEWO+jEiNE2/DJfQstN+ojHYFJ4?=
- =?us-ascii?Q?YUxR58ZUts11WWjT8LZMWMhEyfFp7QmK6jsuF8YkNHyUa+EcmQbWMracy2Qo?=
- =?us-ascii?Q?18fLO6AYSGRXAMtCp/Aeh+jtsKi0TMTgQ+cB7ihAvMaqcL59WR9ou8qReO+V?=
- =?us-ascii?Q?0M9iqXIZ/JcMpH/QZczwj2vJwY6kGRb4JcQgtmlDjedRvYQP+eHTWGCqisRC?=
- =?us-ascii?Q?ui3XmbH9U8s8jzwoRggwcPWEKBkc/1I6jTuDbSckLPG9Ea8whZ2qZ0q0UUSP?=
- =?us-ascii?Q?1hadhccPeZYcTBJpvSP1lduVzQManRmyljRBdL1ZU8/zk9RbcJKHazNW+y61?=
- =?us-ascii?Q?Ey94RJzD0mJACv9trjrFrG47YvxE6VqhCCjdioWwoMTMiPvbhB5GXkZ1Z8mC?=
- =?us-ascii?Q?I6gM1nBs62vJiQN5cwXb/+s6tpkVlq9odkMk2IV3+NNXOK798VybJzxYnzdp?=
- =?us-ascii?Q?zf2E15BgUVm9sJ+AHnsfSclDmnRkJabzQhKBOorL5fUQm95/ajOWPn8ZmfGn?=
- =?us-ascii?Q?ZFi7Z1v8Fxkg9MRHMIa6ZLyyeYZ7rT6zu73+EHgcDxJwz3pHXHJhq21s4Dy6?=
- =?us-ascii?Q?LsgTM1vrxJFk2WhhZDE6XMUbFtcod0fSz8xLwbJzRCiQrxW+647md39JGR+i?=
- =?us-ascii?Q?TdX5e+KNE1Y2574mOaWRXI6zA8ydkAUry8jzBFDtEN9Ip1uv2HKYxDx+LQwp?=
- =?us-ascii?Q?CLn+bUxxHcIp7sH9ga4SMMhj+RKweChQUlDHJjdj0H2eJEVKYzT9JLoMOL0T?=
- =?us-ascii?Q?r0zlXd6jB6Nh5fDJZoz9RTocUBLXwPI6sfzSN2R/igHFWY47P7LrP0Q1NEyX?=
- =?us-ascii?Q?0Xx2WRoIhKEwYDx6Itel4LfrVMiKwQY+OVuVLx4bru11toy33Nw7ccGrcYqR?=
- =?us-ascii?Q?ZbmfuAq+JJSpLitxhtv19BM7QQYkAgNyuBfi0YCUEfPM8gDlX+R6CItn314g?=
- =?us-ascii?Q?desNt7fjZcBCilC81K93wvK9VuyA62JJn5bxTLn1JU/W5OSGMeCL8j7ndnQs?=
- =?us-ascii?Q?ZiC8ToUa1MRHJKHLrj397k9Rs6GPTsLO7kd8ySMmwSVzgomrIerU13zgRUOi?=
- =?us-ascii?Q?QQSPdx5I+81w8pWOM/vU88emLH8AM2Z7LnvmC8N28dOdwPFnn1FTo9qp7y+R?=
- =?us-ascii?Q?w5BbUxtH64UxAEQzcZd3qI8=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eb12818-65a5-4227-84c5-08dc92131e30
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6974.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2024 16:56:38.9782
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: trDB1PjTEo5APLDj+QtG74Rbt06UQfECkIzyt3AKiet9LzKp+XKBiXG1ijW1AKCYNxQTDEU6YpxR9HqwduHUPitGe7N5bImsExJ3YjjoquU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5164
+User-Agent: Mozilla Thunderbird
+Subject: Re: cpufreq/thermal regression in 6.10
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Steev Klimaszewski <steev@kali.org>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
+ <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
+ <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
+ <6759ce9f-281d-4fcd-bb4c-b784a1cc5f6e@oldschoolsolutions.biz>
+ <CAJZ5v0gueSnaci601OkVq9_Ui09k8EsByRL08tFkzDoDGJpp6g@mail.gmail.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <CAJZ5v0gueSnaci601OkVq9_Ui09k8EsByRL08tFkzDoDGJpp6g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:seB3cm46O0wXLMy/GWgAZ4NghxwXbMYBfOyobMg2dbPB3R1I/Z5
+ 7fI3/4HcSp3d1eldVUqhv6NpswMrsDh7ns8QmTTuwU8C0QUoAI/2roUFr6hGpdBPY+gG6XM
+ A5pHDvXyGUqk8oTB41MYjiNOBHLwUkIa6/caikA0LdyfDKYFeY/7mcrZJF909Zev0ID35eD
+ 01j4C3R5ShiRkqNh/qcgg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ADKfqHl0ZVc=;QS4uLQ0fszDmH+IRyIqyycSIX5D
+ AehWkLL6/hM5zKmPxXvUPbWGBQhtwtFEUbiIJeNVmnvfUQACO3k4Byf7ybcejkVr9Hkla5853
+ NVwu0NjIlnc0oeXF+UipNeP/drU73oM+fNPmMGC9SOa54kR7BAR3qKcHj9AtHEslk1gNnMU6+
+ olvtJWBxuVCEGujWbXnGFLo83xfUxmuFFXPU3mAtP7PEMqUZrcSNB3vZ3P1+qGtzaQVlNykxs
+ wnU63rDsWe3U0AHNtK0m6mo5l4JQHzKG33Z2h2gxIY2PFPvfr7E4KC28zbemo4FBmaKehgH18
+ Qib9JsRQ04owdGC5a0wDoKeW/ay9xK9eBHChXvSFskemxdk9DyBQlDA2si3iawPruB6OqhFyV
+ ljlh2yYTCZ0HnwAnBAh/XGt4J/tr8CIUUj8QGju8i14Vt9g3E4ojjwTghhW9f+q0pN+SMzzFR
+ Dn3djFoRYOuuQxFWTUHrQgo8pGJGrT6WsgAOGI1U8PJwjSaBb2HFnoYzGD5nvi0+IN601wsHo
+ f2VSLBB0hu2leGNbw+2ijgUA9U/tSS/gLSVfIfGHETaqEXcE/nXAjRx8lfLKsVCKcwe/7D8Su
+ 0ipUzu/m/qxnCAkLzE+AMG1dyVQWPRbWnw0gcSX8PdNm+y6jGlFKxri1qExrGoEX142/HdSIL
+ 562oauKvcNrLIiMSzC1rYYMqAMsLQiSy/22mEhPopTUuyKtazzzIo2+u3F3+3Cd7d0pEWJny2
+ 3jztBf2dKbBPJNVMd9XIlW+TB7scmQ7M2jnUmerjdgSohsuJrv8H/g=
 
-Hi Thorsten,
+Hi there,
 
-On Fri, Jun 21, 2024 at 10:21:26AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 11.06.24 16:21, Colin Foster wrote:
-> > On Fri, Jun 07, 2024 at 04:45:43PM +0100, Mark Brown wrote:
-> >> On Thu, Jun 06, 2024 at 10:14:27PM -0500, Colin Foster wrote:
-> >>
-> >>> So I think the question I have is:
-> >>
-> >>> Should the CS line be de-asserted at the end of "spi_write"?
-> >>
-> >> Absent bodging with cs_change after any spi message the chip select
-> >> should be left deasserted.
-> > 
-> > Do you have hardware to reproduce my results of two spi messages no
-> > longer toggling the CS line and leaving the line at GND through the
-> > transactions?
-> 
-> Hmmm, I might have missed something, but it looks like nothing happened
-> since that exchange. Did this regression fall through the cracks or can
-> I consider the issue resolved for some reason?
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+thank you for the fast fix. Applied, built, installed. Test is
+successful, performance core scaling up to 2995200 comes back when skin
+temp drops below 55=C2=B0C.
 
-No, you haven't missed anything. This still feels like a regression to
-me, but historically "regressions" I've found end up being a
-misconfiguration on my part. I'm travelling this week so it won't be
-until next week / weekend that I can get to anything.
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-I'll plan to look into a fix if it is indeed an issue.
+Cheers
 
-Colin Foster
+Jens
+
+On 6/21/24 18:41, Rafael J. Wysocki wrote:
+> Hi,
+>
+> On Fri, Jun 21, 2024 at 5:53=E2=80=AFPM Jens Glathe
+> <jens.glathe@oldschoolsolutions.biz> wrote:
+>> Hi there,
+>>
+>> unfortunately I experienced the issue with the fix applied. I had to
+>> revert this and  the original commit to get back to normal behaviour. M=
+y
+>> system (also Lenovo Thinkpad X13s) uses the schedutil governor, the
+>> behaviour is as described from Steev and Johan. The full throttling
+>> happened during a package build and left the performance cores at 94080=
+0.
+> So can you please test the attached patch, on top of the fix?
