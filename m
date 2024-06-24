@@ -1,170 +1,181 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA7D19EEDA
-	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 17:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00548383B1
+	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 19:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719251976; cv=none; b=TicpoxEdv2oSZzEXcautYovlzVq33aPFT3Z70nk2uhrTQecGh88B6GedSErBuuyf+7vs73VhRB5JHIKeDvDAn+fcnAmeLeiWefT1rvMY1cVntbYSSnOP6bCnLdXm4cIKyJs8F6Tx9QhXnr55uq9f/4Df2dGxF/viMtqts+gWasM=
+	t=1719259009; cv=none; b=QewfQ1OlsmPPq//Ac9sDwVnOktsYst6f0INo78SDk4lUzopke3xIE8/3vS632F6TkGWBrAkHmTvR0/NqkIeY9YDDWdgEXGzj8fArq5yL4n8eRdBe9Yze0rB9rxQ5ZgpZSezmH9pfrJ3G1qmnPg9XWOZYRkXKPqgvQjNqL5fd6Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719251976; c=relaxed/simple;
-	bh=M/phQX0hH9rYXb4ZxBy7KtQfTLRuPv3EdCjqqg+AHBM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdNr7a8rheUv2wfC3PV0U0sl9RtRXnxlmrRbwMmTfz3EuU62c/f2xnx5kAYVfVDdFrWUCQesnBeQ3uQYShhLuJgol/EIkPe9wGQ4cgazjT141B+MVKA33oWKrLNj/dY6sVBO8yFuHbbEp6uCd8roqRdcoJvlSJmQ1DO8Zx6b6a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=KiAkohik; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1719259009; c=relaxed/simple;
+	bh=wfH4VLTZwqhNocG3xUbj2r3Te7N435LjMt4Lh3GT9Ug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wx652vNqHCrGuacVjqKToQToErbiEZGIGD6GNJrMegLY52kUdhuXMbi43tcJm+xoT0rcGNDrZqPTgNwRdI7fAhe69VvZ6/yk087grKwXpyY6wBESr38SmAUPUyLOTU7cOXQ05EzqUT8I0Qe0iekF6WITvRDX3cj03p4wl1LBboA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jw/wvatm; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KiAkohik"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jw/wvatm"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e72224c395so51765491fa.3
+        for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 12:56:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1719251975; x=1750787975;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PPo7y8yv85Odnfu13ied03pGxbHHn3NHPUOOH3BEjqo=;
-  b=KiAkohikrzdWr52DjK/FbhRRDm88JBHoj+cRuZPlpRWv/PVt6HTZYRjq
-   fuCEYAJvUTqRC5jNCRvh6YCc8Ho+zo/WwqIjzHLxRTUyql82Q/0CUN8Uo
-   zidZsM1nqMk0b1NGt5QqhB1pV7q+NkvgJAeLDrQp6ZwxEvP7qn2CRvSQ5
-   c=;
-X-IronPort-AV: E=Sophos;i="6.08,262,1712620800"; 
-   d="scan'208";a="415435616"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:59:32 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:64698]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.9.151:2525] with esmtp (Farcaster)
- id a92c4f05-8ddd-4534-b9e4-baab03ee6158; Mon, 24 Jun 2024 17:59:31 +0000 (UTC)
-X-Farcaster-Flow-ID: a92c4f05-8ddd-4534-b9e4-baab03ee6158
-Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 24 Jun 2024 17:59:31 +0000
-Received: from 3c06303d853a.ant.amazon.com (10.106.239.13) by
- EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 24 Jun 2024 17:59:27 +0000
-Date: Mon, 24 Jun 2024 10:59:20 -0700
-From: Andrew Paniakin <apanyaki@amazon.com>
-To: <pc@cjr.nz>, <stfrench@microsoft.com>, <sashal@kernel.org>,
-	<pc@manguebit.com>
-CC: <regressions@lists.linux.dev>, <stable@vger.kernel.org>,
-	<linux-cifs@vger.kernel.org>, <abuehaze@amazon.com>, <simbarb@amazon.com>,
-	<benh@amazon.com>
-Subject: Re: [REGRESSION][BISECTED] Commit 60e3318e3e900 in
- stable/linux-6.1.y breaks cifs client failover to another server in DFS
- namespace
-Message-ID: <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
-References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
+        d=gmail.com; s=20230601; t=1719259006; x=1719863806; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EeV/maekjPb/g21RQUWiF3q3foi+u70EVe41HOf7KOI=;
+        b=Jw/wvatmpbiXN8kblryugjLwwPUWQpAI7DWqOmgFJhOZ+EOZgEtsIXRaleFuy2haQM
+         M1MEtkHHRmRLUVgAqWv8PvFjDNyo4CeDG71g2JKa59QDRpt9kjHIlIwXcU2J0nykIx+1
+         qltfDSIGwOMkrYBUB+1oRgueCLer3t8VE8zZvAxDkYyCzInNUJyYivErCcXV4XRUWI1O
+         7Jl6tNP9jPWCO8A0PYMCBoEOCq4fjiGn8u6idT9nNnqldbAKT228mZyZXHhFC+2fsgj4
+         Ho/Vq3iCU6UScS1it07RdSm3xMQO6MGvkij5IKjKqHUJRlsrVmnh5eIjOeVvkDSn9VX5
+         L4QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719259006; x=1719863806;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EeV/maekjPb/g21RQUWiF3q3foi+u70EVe41HOf7KOI=;
+        b=sB2Et/nUDIDgBP9PmDGVLDGN08WyaofllBaTpH3C00IHXjotviETErbObxUk5dzzCS
+         eVLI74/ph+RTatNata536v8rHhJP9+6kmYqTm3kh0p9TYsjDJNkYQOYT8qYJJdGcMWcD
+         +ADb/N5FsEPcP1gyWXPGmvOuZ1H2cWyfO/LN0Z1YwQWXZuM6E9eH7osz7oUcZ9JGAY04
+         Cj0isLMpF9rLhImH0N79lhvaFWad/1v9gn6R+Kw/ARM6ARfNuJndKsIH+5Vjh+dgdZpz
+         S8X1xzM75Clg8piAubU+SLqeW+PCs0Gfnabo2uNpWYz+JIwgzS4s+wTZyCY5b8Xznx8q
+         an/A==
+X-Gm-Message-State: AOJu0YzVHCs8a1IcTMYjnurhz4GBPqqVMq9P8OQjnjZa1ZL7ooh14nc+
+	kLcCm9vMe0VnjvY1FiSrQEaMschg7dF8VAfOmXnaYyqCn1fNPRBs
+X-Google-Smtp-Source: AGHT+IF/Vj2cmEC/NaXSYrMy4Wxa3BHDV8iEcUl3ZXHdHpc8JIxOFMRZehsxBTO6IVO/0vBypRDPkQ==
+X-Received: by 2002:a05:6512:ba1:b0:52c:dd38:f3a3 with SMTP id 2adb3069b0e04-52ce185cf4amr4028544e87.46.1719259005615;
+        Mon, 24 Jun 2024 12:56:45 -0700 (PDT)
+Received: from ?IPV6:2a01:c23:c07d:2d00:ad78:a407:846a:969b? (dynamic-2a01-0c23-c07d-2d00-ad78-a407-846a-969b.c23.pool.telefonica.de. [2a01:c23:c07d:2d00:ad78:a407:846a:969b])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a724b3a5a04sm201040866b.51.2024.06.24.12.56.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 12:56:45 -0700 (PDT)
+Message-ID: <7003f6f3-a90f-4423-982b-7862bb9a1489@gmail.com>
+Date: Mon, 24 Jun 2024 21:57:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
-X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
- EX19D026EUB004.ant.amazon.com (10.252.61.64)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+To: Andrew Lunn <andrew@lunn.ch>, Hans de Goede <hdegoede@redhat.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Linux LEDs <linux-leds@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Genes Lists <lists@sapience.com>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+ <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+ <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+ <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+ <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+ <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 19/06/2024, Andrew Paniakin wrote:
-> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
-> released in v6.1.54 and broke the failover when one of the servers
-> inside DFS becomes unavailable. We reproduced the problem on the EC2
-> instances of different types. Reverting aforementioned commint on top of
-> the latest stable verison v6.1.94 helps to resolve the problem.
+On 31.05.2024 14:54, Andrew Lunn wrote:
+>> I actually have been looking at a ledtrig-netdev lockdep warning yesterday
+>> which I believe is the same thing. I'll include the lockdep trace below.
+>>
+>> According to lockdep there indeed is a ABBA (ish) cyclic deadlock with
+>> the rtnl mutex vs led-triggers related locks. I believe that this problem
+>> may be a pre-existing problem but this now actually gets hit in kernels >=
+>> 6.9 because of commit 66601a29bb23 ("leds: class: If no default trigger is
+>> given, make hw_control trigger the default trigger"). Before that commit
+>> the "netdev" trigger would not be bound / set as phy LEDs trigger by default.
+>>
+>> +Cc Heiner Kallweit who authored that commit.
+>>
+>> The netdev trigger typically is not needed because the PHY LEDs are typically
+>> under hw-control and the netdev trigger even tries to leave things that way
+>> so setting it as the active trigger for the LED class device is basically
+>> a no-op. I guess the goal of that commit is correctly have the triggers
+>> file content reflect that the LED is controlled by a netdev and to allow
+>> changing the hw-control mode without the user first needing to set netdev
+>> as trigger before being able to change the mode.
 > 
-> Earliest working version is v6.2-rc1. There were two big merges of CIFS fixes:
-> [1] and [2]. We would like to ask for the help to investigate this problem and
-> if some of those patches need to be backported. Also, is it safe to just revert
-> problematic commit until proper fixes/backports will be available?
+> It was not the intention that this triggers is loaded for all
+> systems. It should only be those that actually have LEDs which can be
+> controlled:
 > 
-> We will help to do testing and confirm if fix works, but let me also list the
-> steps we used to reproduce the problem if it will help to identify the problem:
-> 1. Create Active Directory domain eg. 'corp.fsxtest.local' in AWS Directory
-> Service with:
-> - three AWS FSX file systems filesystem1..filesystem3
-> - three Windows servers; They have DFS installed as per
->   https://learn.microsoft.com/en-us/windows-server/storage/dfs-namespaces/dfs-overview:
->     - dfs-srv1: EC2AMAZ-2EGTM59
->     - dfs-srv2: EC2AMAZ-1N36PRD
->     - dfs-srv3: EC2AMAZ-0PAUH2U 
+> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/ethernet/intel/igc/igc_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/dsa/qca/qca8k-leds.c:		port_led->cdev.hw_control_trigger = "netdev";
+> drivers/net/phy/phy_device.c:		cdev->hw_control_trigger = "netdev";
 > 
->  2. Create DFS namespace eg. 'dfs-namespace' in Windows server 2008 mode
->  and three folders targets in it:
-> - referral-a mapped to filesystem1.corp.local
-> - referral-b mapped to filesystem2.corp.local
-> - referral-c mapped to filesystem3.corp.local
-> - local folders dfs-srv1..dfs-srv3 in C:\DFSRoots\dfs-namespace of every
->   Windows server. This helps to quickly define underlying server when
->   DFS is mounted.
+> Reverting this patch does seem like a good way forward, but i would
+> also like to give Heiner a little bit of time to see if he has a quick
+> real fix.
 > 
-> 3. Enabled cifs debug logs:
-> ```
-> echo 'module cifs +p' > /sys/kernel/debug/dynamic_debug/control
-> echo 'file fs/cifs/* +p' > /sys/kernel/debug/dynamic_debug/control
-> echo 7 > /proc/fs/cifs/cifsFYI
-> ```
-> 
-> 4. Mount DFS namespace on Amazon Linux 2023 instance running any vanilla
-> kernel v6.1.54+:
-> ```
-> dmesg -c &>/dev/null
-> cd /mnt
-> mount -t cifs -o cred=/mnt/creds,echo_interval=5 \
->     //corp.fsxtest.local/dfs-namespace \
->     ./dfs-namespace
-> ```
-> 
-> 5. List DFS root, it's also required to avoid recursive mounts that happen
-> during regular 'ls' run:
-> ```
-> sh -c 'ls dfs-namespace'
-> dfs-srv2  referral-a  referral-b
-> ```
-> 
-> The DFS server is EC2AMAZ-1N36PRD, it's also listed in mount:
-> ```
-> [root@ip-172-31-2-82 mnt]# mount | grep dfs
-> //corp.fsxtest.local/dfs-namespace on /mnt/dfs-namespace type cifs (rw,relatime,vers=3.1.1,cache=strict,username=Admin,domain=corp.fsxtest.local,uid=0,noforceuid,gid=0,noforcegid,addr=172.31.11.26,file_mode=0755,dir_mode=0755,soft,nounix,mapposix,rsize=4194304,wsize=4194304,bsize=1048576,echo_interval=5,actimeo=1,closetimeo=1)
-> //EC2AMAZ-1N36PRD.corp.fsxtest.local/dfs-namespace/referral-a on /mnt/dfs-namespace/referral-a type cifs (rw,relatime,vers=3.1.1,cache=strict,username=Admin,domain=corp.fsxtest.local,uid=0,noforceuid,gid=0,noforcegid,addr=172.31.12.80,file_mode=0755,dir_mode=0755,soft,nounix,mapposix,rsize=4194304,wsize=4194304,bsize=1048576,echo_interval=5,actimeo=1,closetimeo=1)
-> ```
-> 
-> List files in first folder:
-> ```
-> sh -c 'ls dfs-namespace/referral-a'
-> filea.txt.txt
-> ```
-> 
-> 6. Shutdown DFS server-2.
-> List DFS root again, server changed from dfs-srv2 to dfs-srv1 EC2AMAZ-2EGTM59:
-> ```
-> sh -c 'ls dfs-namespace'
-> dfs-srv1  referral-a  referral-b
-> ```
-> 
-> 7. Try to list files in another folder, this causes ls to fail with error:
-> ```
-> sh -c 'ls dfs-namespace/referral-b'
-> ls: cannot access 'dfs-namespace/referral-b': No route to host```
-> 
-> Sometimes it's also 'Operation now in progress' error.
-> 
-> mount shows the same output:
-> ```
-> //corp.fsxtest.local/dfs-namespace on /mnt/dfs-namespace type cifs (rw,relatime,vers=3.1.1,cache=strict,username=Admin,domain=corp.fsxtest.local,uid=0,noforceuid,gid=0,noforcegid,addr=172.31.11.26,file_mode=0755,dir_mode=0755,soft,nounix,mapposix,rsize=4194304,wsize=4194304,bsize=1048576,echo_interval=5,actimeo=1,closetimeo=1)
-> //EC2AMAZ-1N36PRD.corp.fsxtest.local/dfs-namespace/referral-a on /mnt/dfs-namespace/referral-a type cifs (rw,relatime,vers=3.1.1,cache=strict,username=Admin,domain=corp.fsxtest.local,uid=0,noforceuid,gid=0,noforcegid,addr=172.31.12.80,file_mode=0755,dir_mode=0755,soft,nounix,mapposix,rsize=4194304,wsize=4194304,bsize=1048576,echo_interval=5,actimeo=1,closetimeo=1)
-> ```
-> 
-> I also attached kernel debug logs from this test.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=851f657a86421
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a924817d2ed9
-> 
-> Reported-by: Andrei Paniakin <apanyaki@amazon.com>
-> Bisected-by: Simba Bonga <simbarb@amazon.com>
-> ---
-> 
-> #regzbot introduced: v6.1.54..v6.2-rc1
+Sorry, I was on vacation and can reply only now.
+I agree that a revert is appropriate because the actual issue that this change revealed
+seems to be non-trivial to fix.
+Drawback is that now a user who wants to control LEDs has to know that he first has to
+manually load the netdev trigger module and set the netdev trigger.
 
+That the netdev trigger module is now loaded by default on systems with r8169 I don't
+really see as an issue. I think it's normal that this is opt-out.
+If a user has a problem with this for whatever reason he has several options to
+prevent this:
+- disable R8169 LED support in kernel config
+- disable netdev trigger in kernel config
+- remove netdev trigger module
+- blacklist netdev trigger module
 
-Friendly reminder, did anyone had a chance to look into this report?
+>      Andrew
+
+Heiner
