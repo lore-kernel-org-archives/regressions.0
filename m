@@ -1,152 +1,112 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682C8137911
-	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 12:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EB412FF84
+	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 16:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719231649; cv=none; b=D2uUMf61xSc2mYWfrUvNPHzvqa4YHs/lH7QAcbN7zr90aUzP/D5iNvyJ2OVhzf7YP6TlJUskKaS9mk+lvBYKAGvpvQ1U7JxdDRomOcRKvqrLljdj+D1qcpu/ps8f0f92Qang2tAzR5FdvVlw4ywg9L3AUe/hfJ5gFqFad6lphYY=
+	t=1719244898; cv=none; b=MuDbxXjv1L1mFEvBNW3NvMr520nTOQKhGqviLI2q4FlTucUiG3IMaQvxaLMtehFRPq4uiC0b//Bwz8lIc3GhHGpoaeyymulJhkIpZpkwoI1eKUWZuJHuhT62NRAZbU47OZ26ny79YbwyG+Gm+OJyDTkAf1K1+DdlSzAw2l2tglg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719231649; c=relaxed/simple;
-	bh=BzYVs4L6KpDuCZziyHHbj2IqHKvwwMV1R9l33WlK0HU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQQ6/fLH+qv4iuyKsHMboxhzGwteKWLl5u+uUZeJhRe7U3Zs2JViTv4iytDMYhLXY5jc72PhgsxyCFxrejpgcdWfdeH77FB1OoUDweVyXdTJbLaivGNj3LpOh+JwZHQ1pJ62CgOcV5IiuXQbARmhLhox+NqwXmh5m1ZqYdcOlPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIlZT2NJ; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719244898; c=relaxed/simple;
+	bh=eUZ497IKUTiEZRXQIx9KyELVsWkmyvORF+kN4fWI2m8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dzG5etGK0bPuwOnEvUAsVivhozlPwFu+rmJSaYp0OytqJ8tiboC0kmENXIWN6rVPvvzbcZNAK6qARsS6ekCiGft8YbHaDPYxaQhvSrQ2SKM2THVifBMwSlfdM48CszEse3k1Nt5pTmJWCBN6Za9iei3QvvgxzQBNoZEUVu2W+Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fkSlrzaq; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIlZT2NJ"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec59193468so12134021fa.1
-        for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 05:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719231645; x=1719836445; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TSI4KQV7tp+wxmh1FMoXKiaVJwFpmSl7UPXF+v3NqxA=;
-        b=VIlZT2NJb5ohMOzoQZpVQ93230HEKkc/v9y+L3GZzymUMdcy0e2WybSHFRFDjd33Oe
-         qLcLkyseUIbSmNcZSTIw6Kz3F89zcVAiTc/xLEMSEp5IKMYvcAs5WIQtwmEA1v0PMQgz
-         LU7iK+x5k1CoL8OuDavbG1UAbcvHKmzmPvUgjHUiaTmTIAInYQ1RyZSl0ometZXPRwHi
-         InbPrKwgVgz+lXofPEdcQ7Bye1nwaDNlF4WD29nygSgHkdkYx8gcu/NXXtG4Lo7Emic+
-         bkIeg0nYi199R1CuaKq3GRvywZFAb2hiSu6fVNXkjVW9zwYMpbl2hFpypb6gF8tVHnSB
-         5kLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719231645; x=1719836445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TSI4KQV7tp+wxmh1FMoXKiaVJwFpmSl7UPXF+v3NqxA=;
-        b=R8Uf/8r26S8bx7oQnLpLnRSaqZhycwzrr/nURHZzaVd7C8PgR+cFB5/a++SfLCoPN+
-         0IpZbpcfS028KKlzdE1acv5vTJ6Qtnd4LS2Zs7oymhrSo8+mox4Ziy7Ws+U1QEUOVsuw
-         KpRU4Obl7NnCimd3O2W1rhHftaH6ygzaVOfLcfvurrva9O2MkoDjdVqaDuOj6HfGYWpM
-         mydty/SanWlpQ6zR+TpVjddHGmKpMyt23UGngGfA0owXUeGS2O0uNpSqqVldIPEc9i+/
-         +Po1riO9RvztFuRmo/sauVOVJTO8Zb7DfvsNMR1qfxj22yuDRwabf96uBizrppLNT/jy
-         YaWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnZwO2wV7M0ydq7Cxb4jBltm1GAk9bmYZ8nZHFiTGDgwT3pupj9iUlmdr8TgpGwa24R3ezXAfBG9224AhSVwwMWva8ozaOlTPxK5s=
-X-Gm-Message-State: AOJu0YwhajLM4w93/Qw716OxlbZS/rFTaGYqJNo4qs1b8/dlgfA3JP2d
-	lk8/ZeL9AhfOGl3bmncMnx9Q/zaw0FB298uYp+TIDN0R/lLTI/Gv
-X-Google-Smtp-Source: AGHT+IEOEr0sFekIupSP3xekgic9S7PT2e9fYoRzjDiwd7jQcu7Ky0Mjk2cBkuub50BcjRZKEkBxKQ==
-X-Received: by 2002:a2e:9b0b:0:b0:2ec:5364:c792 with SMTP id 38308e7fff4ca-2ec56c86e7cmr16601251fa.13.1719231645324;
-        Mon, 24 Jun 2024 05:20:45 -0700 (PDT)
-Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec63baecafsm1388471fa.122.2024.06.24.05.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 05:20:44 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 24 Jun 2024 14:20:42 +0200
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnlkmkDAi2CtgwDF@pc636>
-References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
- <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fkSlrzaq"
+Received: from relay3-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::223])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id BB917C6D89
+	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 15:57:45 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 72EDA60004;
+	Mon, 24 Jun 2024 15:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719244657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iXxpqBP/kXN/wMkaImlR9s1zvlek3VuYbSbXjgAh4UM=;
+	b=fkSlrzaqErIejEv0bRSvz4p63dCyq63rzLVrG0NqgsMcRJhqCXcMJZNGn+Ih4mo8nWErrT
+	z6Oo21vzzE70h0iKDqV9Pz+yN5o1dXdpB/USXdMz/IEZr6iOxrbC78xamIgYvhIVhxlsyL
+	InkWvE8gUP+XrYalXcbSceATtwpl8+jpsB38yWB9c3TpCfxFKubu30r361tpd796qwBkS/
+	MVuB+qsEdnGK8BTm/J1jbP455dtMsoS2PMk+4KLbSWJgi9PlVSkBJCcebM7gqZ6OURSGOQ
+	X2pxDYoLBIt+AhO72xfjxYBa6a+fpTdmWALXmre6fznR8TxZwWYWMZbjnckcUA==
+Date: Mon, 24 Jun 2024 17:57:36 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: =?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Vaishnav Achath <vaishnav.a@ti.com>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, joao.goncalves@toradex.com
+Subject: Re: [REGRESSION] spi: omap2-mcspi: not working with kernel v6.10
+Message-ID: <ZnmXcNoPsPtjMuuF@louis-chauvet-laptop>
+Mail-Followup-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Vaishnav Achath <vaishnav.a@ti.com>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, joao.goncalves@toradex.com
+References: <20240612170030.3qatttsgrwjg2m5s@joaog-nb>
+ <1b9852d1-4454-4f62-bd8a-fb6167dc0576@leemhuis.info>
+ <20240617195358.v3ewnsu4jgkygvby@joaog-nb>
+ <c11dc5f8-2638-40bf-b562-fa5cf8bf40fe@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c11dc5f8-2638-40bf-b562-fa5cf8bf40fe@leemhuis.info>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-> On 2024-06-20 02:19, Nick Bowler wrote:
-> > After upgrading my sparc to 6.9.5 I noticed that attempting to run
-> > xfsdump instantly (within a couple seconds) and reliably crashes the
-> > kernel.  The same problem is also observed on 6.10-rc4.
-> [...]
-> >   062eacf57ad91b5c272f89dc964fd6dd9715ea7d is the first bad commit
-> >   commit 062eacf57ad91b5c272f89dc964fd6dd9715ea7d
-> >   Author: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> >   Date:   Thu Mar 30 21:06:38 2023 +0200
-> >   
-> >       mm: vmalloc: remove a global vmap_blocks xarray
+Le 18/06/24 - 09:22, Linux regression tracking (Thorsten Leemhuis) a écrit :
+> On 17.06.24 21:53, João Paulo Gonçalves wrote:
+> > 
+> > On Mon, Jun 17, 2024 at 11:29:05AM +0200, Thorsten Leemhuis wrote:
+> >> In that case the thing that really
+> >> helps would be if you could use a git bisection to find the change that
+> >> causes this.
+> > 
+> > For me, spi stopped working in commit d153ff4056cb ("spi: omap2-mcspi:
+> > Add support for MULTI-mode").
 > 
-> I think I might see what is happening here.
+> Hmmm, Louis (which already was in the CC) posted a patch with a Fixes:
+> tag referencing that commit more than a month ago:
 > 
-> On this machine, there are two CPUs numbered 0 and 2 (there is no CPU1).
+> spi: omap2-mcspi: Ensure that CS is correctly asserted when switching
+> from MULTI mode to SINGLE mode
+> https://lore.kernel.org/all/20240506-fix-omap2-mcspi-v2-1-d9c77ba8b9c7@bootlin.com/
 > 
-> The per-cpu variables in mm/vmalloc.c are initialized like this, in
-> vmalloc_init
+> Unless I'm missing something, that patch did not make much progress
+> since then. But I wonder if that might help. Louis? FWIW, this thread
+> starts here with João problem description:
+> https://lore.kernel.org/all/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
 > 
->   for_each_possible_cpu(i) {
->     /* ... */
->     vbq = &per_cpu(vmap_block_queue, i);
->     /* initialize stuff in vbq */
->   }
-> 
-> This loops over the set bits of cpu_possible_mask, bits 0 and 2 are set,
-> so it initializes stuff with i=0 and i=2, skipping i=1 (I added prints to
-> confirm this).
-> 
-> Then, in vm_map_ram, with the problematic change it calls the new
-> function addr_to_vb_xa, which does this:
-> 
->   int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
->   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> 
-> The num_possible_cpus() function counts the number of set bits in
-> cpu_possible_mask, so it returns 2.  Thus, index is either 0 or 1, which
-> does not correspond to what was initialized (0 or 2).  The crash occurs
-> when the computed index is 1 in this function.  In this case, the
-> returned value appears to be garbage (I added prints to confirm this).
-> 
-> If I change addr_to_vb_xa function to this:
-> 
->   int index = ((addr / VMAP_BLOCK_SIZE) & 1) << 1; /* 0 or 2 */
->   return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> 
-> xfsdump is working again.
-> 
-Could you please test below?
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 
-<snip>
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 5d3aa2dc88a8..1733946f7a12 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
-         */
-        vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+Hello everyone,
 
--       for_each_possible_cpu(i) {
-+       /*
-+        * We use "nr_cpu_ids" here because some architectures
-+        * may have "gaps" in cpu-possible-mask. It is OK for
-+        * per-cpu approaches but is not OK for cases where it
-+        * can be used as hashes also.
-+        */
-+       for (i = 0; i < nr_cpu_ids; i++) {
-                struct vmap_block_queue *vbq;
-                struct vfree_deferred *p;
-<snip>
+First of all, sorry for the delay, I was sick last week.
 
-Thank you in advance and i really appreciate for finding this
-issue!
+Regarding the timeout problem, it is probably solved by [1], can you try 
+this? I will send a v3 to apply Miquel's comments.
 
---
-Uladzislau Rezki
+For the other problem (spi not asserted properly at the end of the 
+message), I think I know how to solve it, I misunderstood the 
+property cs_change (which doesn't have the same meaning for the last 
+transfer). I will test it tomorrow and if it works I will send a patch.
+
+Louis Chauvet
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
