@@ -1,181 +1,200 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00548383B1
-	for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 19:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FC56D1AB
+	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 03:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719259009; cv=none; b=QewfQ1OlsmPPq//Ac9sDwVnOktsYst6f0INo78SDk4lUzopke3xIE8/3vS632F6TkGWBrAkHmTvR0/NqkIeY9YDDWdgEXGzj8fArq5yL4n8eRdBe9Yze0rB9rxQ5ZgpZSezmH9pfrJ3G1qmnPg9XWOZYRkXKPqgvQjNqL5fd6Oc=
+	t=1719286248; cv=none; b=j3Z1jVW40sdKbWEyzeRe7/c6qWu0OlZAOQ+5sS5MWJniqu4X8OU7N1gy6Erp+6hX5G3TrGsiZM/aHNidOnHSdzG/WPLXqkie3sHi80AoYglHSmm6gi4YIglsdB2QQ6mgobr1KfqCwd+JP2GMMzIfZi8dfLTMUcOxs5ICStIkQCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719259009; c=relaxed/simple;
-	bh=wfH4VLTZwqhNocG3xUbj2r3Te7N435LjMt4Lh3GT9Ug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wx652vNqHCrGuacVjqKToQToErbiEZGIGD6GNJrMegLY52kUdhuXMbi43tcJm+xoT0rcGNDrZqPTgNwRdI7fAhe69VvZ6/yk087grKwXpyY6wBESr38SmAUPUyLOTU7cOXQ05EzqUT8I0Qe0iekF6WITvRDX3cj03p4wl1LBboA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jw/wvatm; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719286248; c=relaxed/simple;
+	bh=obtN4FIZCGHWBgEuYxhVZcQaprmAm9UaJ5RFq/VLNBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJlr1CNuG0ZO+qJjMwjgSZb19rSJiVAPnND9FKAkOS7VkyfhbeJNb9aTkFddpKVLiVGgeSQIsg8MI6GT/wn4tpr8BYbu+q0djRB7f5Xg893jTuN7SQKIRsvUoljsTewWfFstAZxSKv538jCVvFsBLmRcsr1pcH97GkyqFFcw4r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BsXluhs/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jw/wvatm"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e72224c395so51765491fa.3
-        for <regressions@lists.linux.dev>; Mon, 24 Jun 2024 12:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719259006; x=1719863806; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=EeV/maekjPb/g21RQUWiF3q3foi+u70EVe41HOf7KOI=;
-        b=Jw/wvatmpbiXN8kblryugjLwwPUWQpAI7DWqOmgFJhOZ+EOZgEtsIXRaleFuy2haQM
-         M1MEtkHHRmRLUVgAqWv8PvFjDNyo4CeDG71g2JKa59QDRpt9kjHIlIwXcU2J0nykIx+1
-         qltfDSIGwOMkrYBUB+1oRgueCLer3t8VE8zZvAxDkYyCzInNUJyYivErCcXV4XRUWI1O
-         7Jl6tNP9jPWCO8A0PYMCBoEOCq4fjiGn8u6idT9nNnqldbAKT228mZyZXHhFC+2fsgj4
-         Ho/Vq3iCU6UScS1it07RdSm3xMQO6MGvkij5IKjKqHUJRlsrVmnh5eIjOeVvkDSn9VX5
-         L4QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719259006; x=1719863806;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EeV/maekjPb/g21RQUWiF3q3foi+u70EVe41HOf7KOI=;
-        b=sB2Et/nUDIDgBP9PmDGVLDGN08WyaofllBaTpH3C00IHXjotviETErbObxUk5dzzCS
-         eVLI74/ph+RTatNata536v8rHhJP9+6kmYqTm3kh0p9TYsjDJNkYQOYT8qYJJdGcMWcD
-         +ADb/N5FsEPcP1gyWXPGmvOuZ1H2cWyfO/LN0Z1YwQWXZuM6E9eH7osz7oUcZ9JGAY04
-         Cj0isLMpF9rLhImH0N79lhvaFWad/1v9gn6R+Kw/ARM6ARfNuJndKsIH+5Vjh+dgdZpz
-         S8X1xzM75Clg8piAubU+SLqeW+PCs0Gfnabo2uNpWYz+JIwgzS4s+wTZyCY5b8Xznx8q
-         an/A==
-X-Gm-Message-State: AOJu0YzVHCs8a1IcTMYjnurhz4GBPqqVMq9P8OQjnjZa1ZL7ooh14nc+
-	kLcCm9vMe0VnjvY1FiSrQEaMschg7dF8VAfOmXnaYyqCn1fNPRBs
-X-Google-Smtp-Source: AGHT+IF/Vj2cmEC/NaXSYrMy4Wxa3BHDV8iEcUl3ZXHdHpc8JIxOFMRZehsxBTO6IVO/0vBypRDPkQ==
-X-Received: by 2002:a05:6512:ba1:b0:52c:dd38:f3a3 with SMTP id 2adb3069b0e04-52ce185cf4amr4028544e87.46.1719259005615;
-        Mon, 24 Jun 2024 12:56:45 -0700 (PDT)
-Received: from ?IPV6:2a01:c23:c07d:2d00:ad78:a407:846a:969b? (dynamic-2a01-0c23-c07d-2d00-ad78-a407-846a-969b.c23.pool.telefonica.de. [2a01:c23:c07d:2d00:ad78:a407:846a:969b])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a724b3a5a04sm201040866b.51.2024.06.24.12.56.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 12:56:45 -0700 (PDT)
-Message-ID: <7003f6f3-a90f-4423-982b-7862bb9a1489@gmail.com>
-Date: Mon, 24 Jun 2024 21:57:36 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsXluhs/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719286245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/m8GXm0K69AMAk67ZrMEf4R6vclpB6T2QuYU2G6K8jY=;
+	b=BsXluhs/dJ2uJfF3GHglsRX5PbcfVYXvdD5c8fVvROOfbQz3QJ8D7WCPsjexSDli+jGcH+
+	DJLIo0muGONzjg/wF8g+YIcPClxfPTpLCrP95KARU1jUVNapVtQ/ULmSHmdj3aBFajiO4z
+	E6bxst8cxgDkdJX2OJhDTZYJJtBO0l4=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-WvBvJypYP3eb65TvXjMe_g-1; Mon,
+ 24 Jun 2024 23:30:41 -0400
+X-MC-Unique: WvBvJypYP3eb65TvXjMe_g-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A4E819560B1;
+	Tue, 25 Jun 2024 03:30:39 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.8])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB24F19560BF;
+	Tue, 25 Jun 2024 03:30:37 +0000 (UTC)
+Date: Tue, 25 Jun 2024 11:30:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Nick Bowler <nbowler@draconx.ca>, Hailong Liu <hailong.liu@oppo.com>,
+	linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
+References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
+ <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+ <20240621033005.6mccm7waduelb4m5@oppo.com>
+ <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
+ <ZnVLbCCkvhf5GaTf@pc636>
+ <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
+ <Znljtv5n-6EBgpsF@pc636>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
- rwsem and the rtnl mutex
-To: Andrew Lunn <andrew@lunn.ch>, Hans de Goede <hdegoede@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Linux LEDs <linux-leds@vger.kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Genes Lists <lists@sapience.com>
-References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
- <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
- <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
- <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
- <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
- <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Znljtv5n-6EBgpsF@pc636>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 31.05.2024 14:54, Andrew Lunn wrote:
->> I actually have been looking at a ledtrig-netdev lockdep warning yesterday
->> which I believe is the same thing. I'll include the lockdep trace below.
->>
->> According to lockdep there indeed is a ABBA (ish) cyclic deadlock with
->> the rtnl mutex vs led-triggers related locks. I believe that this problem
->> may be a pre-existing problem but this now actually gets hit in kernels >=
->> 6.9 because of commit 66601a29bb23 ("leds: class: If no default trigger is
->> given, make hw_control trigger the default trigger"). Before that commit
->> the "netdev" trigger would not be bound / set as phy LEDs trigger by default.
->>
->> +Cc Heiner Kallweit who authored that commit.
->>
->> The netdev trigger typically is not needed because the PHY LEDs are typically
->> under hw-control and the netdev trigger even tries to leave things that way
->> so setting it as the active trigger for the LED class device is basically
->> a no-op. I guess the goal of that commit is correctly have the triggers
->> file content reflect that the LED is controlled by a netdev and to allow
->> changing the hw-control mode without the user first needing to set netdev
->> as trigger before being able to change the mode.
+On 06/24/24 at 02:16pm, Uladzislau Rezki wrote:
+> On Fri, Jun 21, 2024 at 10:02:50PM +0800, Baoquan He wrote:
+> > On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
+> > > On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
+> > > > On 06/21/24 at 11:30am, Hailong Liu wrote:
+> > > > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
+> > > > > > On 2024-06-20 02:19, Nick Bowler wrote:
+> > ......
+> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > index be2dd281ea76..18e87cafbaf2 100644
+> > > > --- a/mm/vmalloc.c
+> > > > +++ b/mm/vmalloc.c
+> > > > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > > >  static struct xarray *
+> > > >  addr_to_vb_xa(unsigned long addr)
+> > > >  {
+> > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > > >  
+> > > >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > >  }
+> > > > 
+> > > The problem i see is about not-initializing of the:
+> > > <snip>
+> > > 	for_each_possible_cpu(i) {
+> > > 		struct vmap_block_queue *vbq;
+> > > 		struct vfree_deferred *p;
+> > > 
+> > > 		vbq = &per_cpu(vmap_block_queue, i);
+> > > 		spin_lock_init(&vbq->lock);
+> > > 		INIT_LIST_HEAD(&vbq->free);
+> > > 		p = &per_cpu(vfree_deferred, i);
+> > > 		init_llist_head(&p->list);
+> > > 		INIT_WORK(&p->wq, delayed_vfree_work);
+> > > 		xa_init(&vbq->vmap_blocks);
+> > > 	}
+> > > <snip>
+> > > 
+> > > correctly or fully. It is my bad i did not think that CPUs in a possible mask
+> > > can be non sequential :-/
+> > > 
+> > > nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
+> > > when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
+> > 
+> > I checked the generic version of setup_nr_cpu_ids(), from codes, they
+> > are different with my understanding.
+> > 
+> > kernel/smp.c
+> > void __init setup_nr_cpu_ids(void)
+> > {
+> >         set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
+> > }
+> > 
+> I see that it is not a weak function, so it is generic, thus the
+> behavior can not be overwritten, which is great. This does what we
+> need.
 > 
-> It was not the intention that this triggers is loaded for all
-> systems. It should only be those that actually have LEDs which can be
-> controlled:
-> 
-> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
-> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
-> drivers/net/ethernet/intel/igc/igc_leds.c:	led_cdev->hw_control_trigger = "netdev";
-> drivers/net/dsa/qca/qca8k-leds.c:		port_led->cdev.hw_control_trigger = "netdev";
-> drivers/net/phy/phy_device.c:		cdev->hw_control_trigger = "netdev";
-> 
-> Reverting this patch does seem like a good way forward, but i would
-> also like to give Heiner a little bit of time to see if he has a quick
-> real fix.
-> 
-Sorry, I was on vacation and can reply only now.
-I agree that a revert is appropriate because the actual issue that this change revealed
-seems to be non-trivial to fix.
-Drawback is that now a user who wants to control LEDs has to know that he first has to
-manually load the netdev trigger module and set the netdev trigger.
+> Thank you for checking this you are right!
 
-That the netdev trigger module is now loaded by default on systems with r8169 I don't
-really see as an issue. I think it's normal that this is opt-out.
-If a user has a problem with this for whatever reason he has several options to
-prevent this:
-- disable R8169 LED support in kernel config
-- disable netdev trigger in kernel config
-- remove netdev trigger module
-- blacklist netdev trigger module
+Thanks for confirming this.
 
->      Andrew
+> 
+> Then it is just a matter of proper initialization of the hash:
+> 
+> <snip>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 5d3aa2dc88a8..1733946f7a12 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
+>          */
+>         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+>  
+> -       for_each_possible_cpu(i) {
+> +       /*
+> +        * We use "nr_cpu_ids" here because some architectures
+> +        * may have "gaps" in cpu-possible-mask. It is OK for
+> +        * per-cpu approaches but is not OK for cases where it
+> +        * can be used as hashes also.
+> +        */
+> +       for (i = 0; i < nr_cpu_ids; i++) {
 
-Heiner
+I was wrong about earlier comments. Percpu variables are only available
+on possible CPUs. For those nonexistent possible CPUs of static percpu
+variable vmap_block_queue, there isn't memory allocated and mapped for
+them. So accessing into them will cause problem.
+
+In Nick's case, there are only CPU0, CPU2. If you access
+&per_cpu(vmap_block_queue, 1), problem occurs. So I think we may need to
+change to take other way for vbq. E.g:
+1) Storing the vb in the nearest neighbouring vbq on possible CPU as
+   below draft patch;
+2) create an normal array to store vbq of size nr_cpu_ids, then we can
+   store/fetch each vbq on non-possible CPU?
+
+The way 1) is simpler, the existing code can be adapted a little just as
+below.
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 633363997dec..59a8951cc6c0 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
++
++	if (!cpu_possible(idex))
++		index = cpumask_next(index, cpu_possible_mask);
+ 
+ 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+ }
+@@ -2556,9 +2559,15 @@ addr_to_vb_xa(unsigned long addr)
+ 
+ static unsigned long addr_to_vb_idx(unsigned long addr)
+ {
++	int id = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
++	int id_dest = id; 
++
++	if (!cpu_possible(id))
++		id_dest = cpumask_next(id, cpu_possible_mask);
++
+ 	addr -= VMALLOC_START & ~(VMAP_BLOCK_SIZE-1);
+ 	addr /= VMAP_BLOCK_SIZE;
+-	return addr;
++	return addr + (id_dest - id);
+ }
+
