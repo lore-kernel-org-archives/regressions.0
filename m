@@ -1,37 +1,37 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ACC6F065
-	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 06:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEB11459E5;
+	Tue, 25 Jun 2024 06:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719296238; cv=none; b=BYct9S4yQEMe9nLni0m67lJborAiX6IEjBmcIbrZgXn6KIDnVikwubrNvbGSHjmctykLWe8GW0KhLNVvmRuNwYkcxBp3MdtI5G9+HHxAnTCxb/1bh+NLMGYOMIKu3uHqP7XkovBr3i/RzkepRkBXh2gRcCoN3QJNpL94TWO7h6k=
+	t=1719298662; cv=none; b=pwQjSlDNJFsvb6oVZjUm6WN9ep9HRLNk2OZa507IL2nQjlxLocVjAzw/zCXQRVxDMRtaS0A2ofdnjbf8mExs5nMu1mMABuvUMqI6BjntWJhi84WEM1WaBlLbT34StP83uK1d+WCiPah5hwZcJvw27IKknnf6ARBaYACYooOrzFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719296238; c=relaxed/simple;
-	bh=L8zEZGlYA7775lSVBXfsdb08FWIrc0UKVLyrg5iti+A=;
+	s=arc-20240116; t=1719298662; c=relaxed/simple;
+	bh=bKPQsRHcbrOe9VWJG0E8XcG0bXIKSNlO9mTQ1r8Yml0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Prl2nI187GM7T0dxfU0TxtAFgxu3NCyKcb/JacU6Wk8JGFcniF0tUe+5TfQOqy+UsXZV+eU9tw+aN2ZKNmx0R2RVFXy43gk7uOOFIzUNCj/WH8tDqp3ONwfZlx4PuaZQmqDw7stShzMo827MntHzUIsE9SUzKyGuFyBkVv9Fi/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=gottfuXy; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	 In-Reply-To:Content-Type; b=HVpgJy5KPlsZuBOos+Oa7EKnmC3IBzeX5Cj2f8x4speg2H0JOVUGI3IDpdhEEtcOgXOM/ghs6ePpuRYe2YIcuMgzMd3bEHx0N53P2OZ6Q5J7eSOuTH4Nk1jalw4gW8mwLAD0wWvx+cEP/wCa/VFAnBgz9BdHUBI2zxo7ZM8M10I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IF+kpJjP; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="gottfuXy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1EFA3E0007;
-	Tue, 25 Jun 2024 06:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1719296234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lUfaaGjmkEsv8TO+/zIvt/jIaH/4czGbfBiNdDpBPnU=;
-	b=gottfuXyiDMseBTnGspopuXIw9529/9Sg8tVXkB/CfX+qkFNzuNLD3y0yeBtuhKxNBAkNe
-	ZK5m650lLIhx+QPEZIDBbbwDMsqsxTiecOt3ksKVFyPts+2z8TiWsCmNQYVWFzymGIRTaX
-	ahbVGJDQ3Z0cpMZg7en5CRA6laI8pgztW5RsyUdeskY58RAjMeGiQiKEYyXhwLFPen/f7k
-	T6LiwaW6m4tAC7Xm2gazxlRsD3SV+CqggSC1Nt/R3OC2k1RNfvPbuPZtBUOY8WtllyfGri
-	7Zkj2qEE5eYrmT8yZ1HWrJwS53nlyKa5iXgjb9IGSyDoZrV83rr0CioXdd9y1A==
-Message-ID: <7a2ea06b-ae4e-4374-82c2-4de4184e06c3@arinc9.com>
-Date: Tue, 25 Jun 2024 09:17:09 +0300
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IF+kpJjP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=kUl7QT2T3KPC925+9jNg+6Y6AiMpD0H7o74v93B+d+4=;
+	t=1719298660; x=1719730660; b=IF+kpJjPXpN4ufRistGLzEEwebkTy1G1d2poZ+2XjbJuBvM
+	QVZd7trglkJIq4Dt42/6mVdAvOCWx3yfo9bKVDcV0HOzss8YpZDzH3RLQj1NeHhzwOt5tXe7i+9Wk
+	9RBRMeZyL0oPURpUTHo3/GwBADqYar1PlcmjceegPBIVRxweyjKpmgMhZrZnEeWgQ1rfQNbuvXRwJ
+	E9KG1bbW8LbrOrf9KQoakYxMyhRxu7PYsxsPMlblGuv1GB0JFpfU8hOwm3VN9IozRxd3SWGTZt3IP
+	9/NW8l0H5vxW1WZX0txyGew6fZNLK3R4bu/osww4/zwhnwHVKQlFPpVa8INUhlDw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sM07Q-0005O4-C2; Tue, 25 Jun 2024 08:57:32 +0200
+Message-ID: <40035548-c76b-4b0d-915f-c513eaadbc5d@leemhuis.info>
+Date: Tue, 25 Jun 2024 08:57:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,7 +40,8 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
  Paolo Abeni <pabeni@redhat.com>,
  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -67,65 +68,100 @@ References: <20240516204847.171029-1-linux@fw-web.de>
  <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
  <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
  <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <7a2ea06b-ae4e-4374-82c2-4de4184e06c3@arinc9.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <7a2ea06b-ae4e-4374-82c2-4de4184e06c3@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719298660;454567c6;
+X-HE-SMSGID: 1sM07Q-0005O4-C2
 
-On 25/06/2024 08.56, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 17.06.24 13:08, Arınç ÜNAL wrote:
->> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [...]
->> I've submitted a patch series that fixes the regression. Angelo argued
->> against the way the regression is fixed. I've very clearly argued back why
->> I find Angelo's approach wrong. There's been no response back. I don't
->> understand why reverting the patch is the likely outcome
-> 
-> Long story short: because that how things like that are handled in the
-> Linux kernel project, as Linus wants it like that. See some of the
-> quotes from https://docs.kernel.org/process/handling-regressions.html
-> for details.
-> 
->> whilst the
->> standing argument points towards applying the said patch series. If a
->> revert happens before this discussion with Angelo finalises, this will set
->> a precedent that will tell maintainers that they can have their way by just
->> not replying to the ongoing discussions.
+On 25.06.24 08:17, Arınç ÜNAL wrote:
+> On 25/06/2024 08.56, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 17.06.24 13:08, Arınç ÜNAL wrote:
+>>> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis)
+>>> wrote:
+>>> [...]
+>>> I've submitted a patch series that fixes the regression. Angelo argued
+>>> against the way the regression is fixed. I've very clearly argued
+>>> back why
+>>> I find Angelo's approach wrong. There's been no response back. I don't
+>>> understand why reverting the patch is the likely outcome
 >>
->> That said, the decision of resolving the regression by either reverting the
->> patch or applying the patch series shall not depend on whether or not
->> Angelo is pleased but rather there're no counter-arguments left on the
->> points brought, meaning the decision shall be made depending on the
->> argument that stands.
+>> Long story short: because that how things like that are handled in the
+>> Linux kernel project, as Linus wants it like that. See some of the
+>> quotes from https://docs.kernel.org/process/handling-regressions.html
+>> for details.
 >>
->> Therefore, I suggest that unless Angelo responds back with a
->> counter-argument in the window of a week or two, as you've described, my
->> patch series shall be applied.
+>>> whilst the
+>>> standing argument points towards applying the said patch series. If a
+>>> revert happens before this discussion with Angelo finalises, this
+>>> will set
+>>> a precedent that will tell maintainers that they can have their way
+>>> by just
+>>> not replying to the ongoing discussions.
+>>>
+>>> That said, the decision of resolving the regression by either
+>>> reverting the
+>>> patch or applying the patch series shall not depend on whether or not
+>>> Angelo is pleased but rather there're no counter-arguments left on the
+>>> points brought, meaning the decision shall be made depending on the
+>>> argument that stands.
+>>>
+>>> Therefore, I suggest that unless Angelo responds back with a
+>>> counter-argument in the window of a week or two, as you've described, my
+>>> patch series shall be applied.
+>>
+>> It looks more and more like we are stuck here (or was there progress and
+>> I just missed it?) while the 6.10 final is slowly getting closer. Hence:
 > 
-> It looks more and more like we are stuck here (or was there progress and
-> I just missed it?) while the 6.10 final is slowly getting closer. Hence:
-
-There hasn't been progress at all. I believe I have clearly described the
-way out of this issue.
-
+> There hasn't been progress at all. I believe I have clearly described the
+> way out of this issue.
 > 
-> AngeloGioacchino, should we ask the net maintainers to revert
+>> AngeloGioacchino, should we ask the net maintainers to revert
+>> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
+>> device tree") for now to resolve this regression? Reminder, there is
+>> nothing wrong with that commit per se afaik, it just exposes a problem
+>> that needs to be fixed first before it can be reapplied.
+> 
+> Are you suggesting the patch shall be reverted first, then the DT patch
+> applied, then the reverted patch applied back?
+
+Yeah.
+
+> If only one of the first two
+> steps were done, it would fix the regression so I don't understand why go
+> through this tedious process when we can quite simply apply the DT patch to
+> resolve the regression.
+
+Which DT patch do you mean here? Your series or the one from Frank at
+the start of the thread (the one you seems to be unhappy about iirc, but
+I might be wrong there)?
+
+Anyway, to answer the statement: because the maintainers that would have
+to accept the DT patch to resolve the problem apparently are not happy
+with it -- and nobody seems to be working on providing patches that make
+them happy which are also acceptable at this point of the devel cycle;
+so as it looks like currently to prevent the regression from entering
+6.10 reverting the net change is the only option left.
+
+> Keep in mind that I maintain the MT7530 DSA subdriver and the company I
+> work with has got boards that uses the functionality the commit
 > 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
-> device tree") for now to resolve this regression? Reminder, there is
-> nothing wrong with that commit per se afaik, it just exposes a problem
-> that needs to be fixed first before it can be reapplied.
+> device tree") brings.
 
-Are you suggesting the patch shall be reverted first, then the DT patch
-applied, then the reverted patch applied back? If only one of the first two
-steps were done, it would fix the regression so I don't understand why go
-through this tedious process when we can quite simply apply the DT patch to
-resolve the regression.
+Don't see a revert as setback at all, that's just normal for the kernel.
+I'm not the one that will decide about this anyway. And everyone
+involved afaics would like to prevent a revert. But it seems more and
+more likely that we are not getting there in time for the 6.10 release
+(or ideally -rc6 or -rc7 to allow some testing, as last-minute reverts
+can cause new problems).
 
-Keep in mind that I maintain the MT7530 DSA subdriver and the company I
-work with has got boards that uses the functionality the commit
-868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
-device tree") brings.
-
-Arınç
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
