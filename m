@@ -1,200 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FC56D1AB
-	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 03:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029313C672;
+	Tue, 25 Jun 2024 05:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719286248; cv=none; b=j3Z1jVW40sdKbWEyzeRe7/c6qWu0OlZAOQ+5sS5MWJniqu4X8OU7N1gy6Erp+6hX5G3TrGsiZM/aHNidOnHSdzG/WPLXqkie3sHi80AoYglHSmm6gi4YIglsdB2QQ6mgobr1KfqCwd+JP2GMMzIfZi8dfLTMUcOxs5ICStIkQCE=
+	t=1719295011; cv=none; b=F4lVDSaP7mIb4G/kDVeTVUDWSLJysMKEm/8Ej9o/TNTpulBGCyhD7Q4GF/D/FmSlfEQ3rVHgX1q1rBUg1ajYfV+YshZ+SknW86CrEzqEFP4kCtyhEgJEOzBB8UXYAFviuOweCBEDfu9qWvIajdPYvjJyrXjy1sQEUgoglPW/GZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719286248; c=relaxed/simple;
-	bh=obtN4FIZCGHWBgEuYxhVZcQaprmAm9UaJ5RFq/VLNBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJlr1CNuG0ZO+qJjMwjgSZb19rSJiVAPnND9FKAkOS7VkyfhbeJNb9aTkFddpKVLiVGgeSQIsg8MI6GT/wn4tpr8BYbu+q0djRB7f5Xg893jTuN7SQKIRsvUoljsTewWfFstAZxSKv538jCVvFsBLmRcsr1pcH97GkyqFFcw4r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BsXluhs/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719295011; c=relaxed/simple;
+	bh=e0hrp29pJGltLjFx/bA1YnlRBCvvlo7g+owpNA6BfM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yty11959ZEZMsH9ZLc0xemlVY/psejuzf3dDTJF+ZnjlCqZGw/7F+jTti6qDHlDnRJ0Ov/1KbsYSrAr6EQtY1kWnD42kprCegSg35sMMzdxl1hTSuWwgYgjhixt/Ijo3lh7m5/a3ZoJwbA+7FzEe+cwJiWloL/5UEwm9nXx8HfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WtK3zRrQ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsXluhs/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719286245;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/m8GXm0K69AMAk67ZrMEf4R6vclpB6T2QuYU2G6K8jY=;
-	b=BsXluhs/dJ2uJfF3GHglsRX5PbcfVYXvdD5c8fVvROOfbQz3QJ8D7WCPsjexSDli+jGcH+
-	DJLIo0muGONzjg/wF8g+YIcPClxfPTpLCrP95KARU1jUVNapVtQ/ULmSHmdj3aBFajiO4z
-	E6bxst8cxgDkdJX2OJhDTZYJJtBO0l4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-WvBvJypYP3eb65TvXjMe_g-1; Mon,
- 24 Jun 2024 23:30:41 -0400
-X-MC-Unique: WvBvJypYP3eb65TvXjMe_g-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A4E819560B1;
-	Tue, 25 Jun 2024 03:30:39 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB24F19560BF;
-	Tue, 25 Jun 2024 03:30:37 +0000 (UTC)
-Date: Tue, 25 Jun 2024 11:30:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Nick Bowler <nbowler@draconx.ca>, Hailong Liu <hailong.liu@oppo.com>,
-	linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
-References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
- <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
- <20240621033005.6mccm7waduelb4m5@oppo.com>
- <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
- <ZnVLbCCkvhf5GaTf@pc636>
- <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
- <Znljtv5n-6EBgpsF@pc636>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WtK3zRrQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Fi0PpkRAy7VQ2C54ZJo6BAKncB41h/I16eVpJYJGK3U=;
+	t=1719295009; x=1719727009; b=WtK3zRrQ5t2CsfcpBMn/YxXgnp1YaNsEds/5wVeR7giu74A
+	FGNKXRpKR+qkia8UqERgiB4pFQlPvBtQp00TLcbd9J/+KnbuChwn7MqASi23mCGa2BEcbhDiM9GBl
+	dFzD+g/BNLlK62YWQUidLdIGqmr82T9UR32mpi/ynIV+7J+3HDrqsymJs1GHecI0uUWpkdLghQKH8
+	3eSU5fnDe6kLxzeV+yvTnIsAN6/xTvgoagY+vqhqyEnD3/uMr4gA1cugKZh36/4rY/QpizsLukfI+
+	ePnnIBUjksq85SPWNmY46uqbAsPGCAXYHdCSshY63hLToWclOhtzqQ2G+Rwm7CDg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sLzAM-0002GH-6n; Tue, 25 Jun 2024 07:56:30 +0200
+Message-ID: <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
+Date: Tue, 25 Jun 2024 07:56:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Znljtv5n-6EBgpsF@pc636>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: Paolo Abeni <pabeni@redhat.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
+ Frank Wunderlich <linux@fw-web.de>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
+ <arinc.unal@arinc9.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+ <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+ <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
+ <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
+ <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+ <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
+ <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719295009;5742f5c7;
+X-HE-SMSGID: 1sLzAM-0002GH-6n
 
-On 06/24/24 at 02:16pm, Uladzislau Rezki wrote:
-> On Fri, Jun 21, 2024 at 10:02:50PM +0800, Baoquan He wrote:
-> > On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
-> > > On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
-> > > > On 06/21/24 at 11:30am, Hailong Liu wrote:
-> > > > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
-> > > > > > On 2024-06-20 02:19, Nick Bowler wrote:
-> > ......
-> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > index be2dd281ea76..18e87cafbaf2 100644
-> > > > --- a/mm/vmalloc.c
-> > > > +++ b/mm/vmalloc.c
-> > > > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
-> > > >  static struct xarray *
-> > > >  addr_to_vb_xa(unsigned long addr)
-> > > >  {
-> > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-> > > >  
-> > > >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> > > >  }
-> > > > 
-> > > The problem i see is about not-initializing of the:
-> > > <snip>
-> > > 	for_each_possible_cpu(i) {
-> > > 		struct vmap_block_queue *vbq;
-> > > 		struct vfree_deferred *p;
-> > > 
-> > > 		vbq = &per_cpu(vmap_block_queue, i);
-> > > 		spin_lock_init(&vbq->lock);
-> > > 		INIT_LIST_HEAD(&vbq->free);
-> > > 		p = &per_cpu(vfree_deferred, i);
-> > > 		init_llist_head(&p->list);
-> > > 		INIT_WORK(&p->wq, delayed_vfree_work);
-> > > 		xa_init(&vbq->vmap_blocks);
-> > > 	}
-> > > <snip>
-> > > 
-> > > correctly or fully. It is my bad i did not think that CPUs in a possible mask
-> > > can be non sequential :-/
-> > > 
-> > > nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
-> > > when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
-> > 
-> > I checked the generic version of setup_nr_cpu_ids(), from codes, they
-> > are different with my understanding.
-> > 
-> > kernel/smp.c
-> > void __init setup_nr_cpu_ids(void)
-> > {
-> >         set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
-> > }
-> > 
-> I see that it is not a weak function, so it is generic, thus the
-> behavior can not be overwritten, which is great. This does what we
-> need.
+On 17.06.24 13:08, Arınç ÜNAL wrote:
+> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [...]
+> I've submitted a patch series that fixes the regression. Angelo argued
+> against the way the regression is fixed. I've very clearly argued back why
+> I find Angelo's approach wrong. There's been no response back. I don't
+> understand why reverting the patch is the likely outcome
+
+Long story short: because that how things like that are handled in the
+Linux kernel project, as Linus wants it like that. See some of the
+quotes from https://docs.kernel.org/process/handling-regressions.html
+for details.
+
+> whilst the
+> standing argument points towards applying the said patch series. If a
+> revert happens before this discussion with Angelo finalises, this will set
+> a precedent that will tell maintainers that they can have their way by just
+> not replying to the ongoing discussions.
 > 
-> Thank you for checking this you are right!
-
-Thanks for confirming this.
-
+> That said, the decision of resolving the regression by either reverting the
+> patch or applying the patch series shall not depend on whether or not
+> Angelo is pleased but rather there're no counter-arguments left on the
+> points brought, meaning the decision shall be made depending on the
+> argument that stands.
 > 
-> Then it is just a matter of proper initialization of the hash:
-> 
-> <snip>
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 5d3aa2dc88a8..1733946f7a12 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
->          */
->         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
->  
-> -       for_each_possible_cpu(i) {
-> +       /*
-> +        * We use "nr_cpu_ids" here because some architectures
-> +        * may have "gaps" in cpu-possible-mask. It is OK for
-> +        * per-cpu approaches but is not OK for cases where it
-> +        * can be used as hashes also.
-> +        */
-> +       for (i = 0; i < nr_cpu_ids; i++) {
+> Therefore, I suggest that unless Angelo responds back with a
+> counter-argument in the window of a week or two, as you've described, my
+> patch series shall be applied.
 
-I was wrong about earlier comments. Percpu variables are only available
-on possible CPUs. For those nonexistent possible CPUs of static percpu
-variable vmap_block_queue, there isn't memory allocated and mapped for
-them. So accessing into them will cause problem.
+It looks more and more like we are stuck here (or was there progress and
+I just missed it?) while the 6.10 final is slowly getting closer. Hence:
 
-In Nick's case, there are only CPU0, CPU2. If you access
-&per_cpu(vmap_block_queue, 1), problem occurs. So I think we may need to
-change to take other way for vbq. E.g:
-1) Storing the vb in the nearest neighbouring vbq on possible CPU as
-   below draft patch;
-2) create an normal array to store vbq of size nr_cpu_ids, then we can
-   store/fetch each vbq on non-possible CPU?
+AngeloGioacchino, should we ask the net maintainers to revert
+868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
+device tree") for now to resolve this regression? Reminder, there is
+nothing wrong with that commit per se afaik, it just exposes a problem
+that needs to be fixed first before it can be reapplied.
 
-The way 1) is simpler, the existing code can be adapted a little just as
-below.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 633363997dec..59a8951cc6c0 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
- static struct xarray *
- addr_to_vb_xa(unsigned long addr)
- {
--	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-+	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-+
-+	if (!cpu_possible(idex))
-+		index = cpumask_next(index, cpu_possible_mask);
- 
- 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
- }
-@@ -2556,9 +2559,15 @@ addr_to_vb_xa(unsigned long addr)
- 
- static unsigned long addr_to_vb_idx(unsigned long addr)
- {
-+	int id = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-+	int id_dest = id; 
-+
-+	if (!cpu_possible(id))
-+		id_dest = cpumask_next(id, cpu_possible_mask);
-+
- 	addr -= VMALLOC_START & ~(VMAP_BLOCK_SIZE-1);
- 	addr /= VMAP_BLOCK_SIZE;
--	return addr;
-+	return addr + (id_dest - id);
- }
-
+#regzbot poke
