@@ -1,59 +1,59 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96EA14D2BD
-	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 12:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F28D156646
+	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 12:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319226; cv=none; b=SNOHuXNqnrWPMROLmUG0tbyQmxgTp5X8/jksI9vsCz/p1TIr0wyMBL8hRTtuAgrmAJU7+9U2cBa3ySCr6vatnHhBJQIYShUqMvVD5WZEK49U6BquqWDGZ3j/jfhuWLDBzo/6PbP6SI1QkoKseswK81K9kqM0AGWe8zUrLdrWNpc=
+	t=1719319320; cv=none; b=fMLCmXmVD9cd/EfvU/huYiFCYa/aBOEGvsKSzWQAs3u7Ut01utaW+TAaWZIQ97Lc0YCyu9iXefh8ScOv/AkimNlaTDoRnVgA4xrQZxndad5/R6d1qF2qq+yupQePVuH/DQOOmW+YfdteS+H8JgLJ15E6p3HhSluwqftjKBkDM9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319226; c=relaxed/simple;
-	bh=xJZC0ZWdKW7k5RvmuvvgEZNEvkDgI1taC7UFj87I6eg=;
+	s=arc-20240116; t=1719319320; c=relaxed/simple;
+	bh=wo5JZVa8axtbZPu/P+YlNFKLSNSVsD1rl5F4Kiopv7A=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PpMwWaH/9+85UWO7sKLVnkDoQlIY0ptVVXdIKyJsxpWXlH4OBjmR7HPKoutxF1/O4vuteKn24arMcjMMQnLrueCanxTotmAtF0Vj/7rKBr3YksF4N59Gfybb1D1IsfleTTXl0DgvA9DTdtzhccvSSXaypl/4Dg0xnclh9RC0yrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XkuOW/oP; arc=none smtp.client-ip=209.85.208.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=CfEkwgdjgfYhEdGT1+aRezoaSQl01uNbl9n2A6ymuHgKBce2QOuy+5KLdei1eZgMkc6+bfEWrxOmTxV733l0R7dOa0Iw/1bJIRn1H1aFF8LFi0JFvHNG+DDE8Ktyhw3SgakgKfL6+ULiCaKslV0HaCRibXbWIt8Wt4tH+I6cOKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=goHfOX9A; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkuOW/oP"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cf8880f95so6305016a12.3
-        for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 05:40:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="goHfOX9A"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a724a8097deso296650766b.1
+        for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 05:41:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719319223; x=1719924023; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1719319317; x=1719924117; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WoVkX+/SqvLNF+tl9I//nQP7hSOM7jd83RwihftTHdk=;
-        b=XkuOW/oPrNmmgR+mr93bSplgovuYJvV6KXX4+fMXQYXzOg5jmQlcnjASHhca563tWt
-         1g2nSgjd/c8CP7GiWQP79zFgowS88HfQnSFwQ6iomfYjYk1Wmv2cEAH9QpElja32+cz4
-         7Zf+9iosREm2P02fTMq4nn9mmqDE5UzsYqwR3JL8Nabee8PG/NfaH2aYmaynpRsvyGyE
-         VAAqmpMonch906DgSx4z/uAnS1r6gopmK1DAbNctp8Q/SOKBVnrMYVwzxJ6JusvHIt9D
-         eC5ZyDlfmMpZtjQb6uwHkM4JJViEnoL6QiZzHXNKLhqLd24v9j9r79TA10s1jQd+vyGd
-         IBKw==
+        bh=yBzuofG6T7lvGEuAx25osRPS6h4Ox6IqcEZGgGnza9Y=;
+        b=goHfOX9AC29UnliCdHOXPjQOSTCWvCMwki+F0QFhgJC9lmUvzFgtJ/HXt4Tb6WdNsM
+         kxvKhYl4wr8mghBhuh+CJFjIN6+PkTTjXi3LUDmOBwGEdxZux7etkqBitrcUEEGn2pNq
+         ERhxN0XI+PoJuGAJ9FfQ1jEwKsizytOr9ONDBvW0ruhIZYYTogtESSAogjCUntXHORX1
+         YkLWD6rpEgAQ7hnypVv5eC4URu4jLw2T9IptjKmdOTpCEbPNXEyDs1K4GWdg+Ep6MECX
+         TZnKAPAsGz3RynvxRjBpzuy9xZ7aJMpxfjGYpVSNp/bLRIbbTpxtzqHC9ZwhqXeA0Rcn
+         hr4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719319223; x=1719924023;
+        d=1e100.net; s=20230601; t=1719319317; x=1719924117;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WoVkX+/SqvLNF+tl9I//nQP7hSOM7jd83RwihftTHdk=;
-        b=LzaGy4xDDwVURlACqVkaUECQcg6rOGrhmtWviTF964RkcC65BNGp+4G9tnL2aN6DQa
-         T5T4KsR2wv1n3WPpEEmIgxhSdW9WOC4RiwUk0vyInwRwAavaKIR+MMGWiopgB5AGNY3v
-         Drd0kErHi5p7QjBuIPTuOL1bpODSpKcTU8ZP0GeBJSfOmRPClD7uk7aY9onwmvJEvVh9
-         N0dTBghuNpqzHwnCgFgo1Qja4woreduCJpoSeStwNQwqx41ilZZ/AlZ9W/OBpdci1dPQ
-         q/aqs+iSjTdce5LpcxydZYLItWoU8k67zQezNclf+xFHhFwVaRp9FxEyMkgPFYl+5Hqt
-         URRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWELscTLRr1I58KLhlPf8SpAYBgsa4hCHNzNCjP/dsUeklXf5o5DE8rRScWbSeDrPBS3xZWQEYJlWz6S4PTfzibVJbKj/drp46hyyk=
-X-Gm-Message-State: AOJu0YwqX4UUNOxiq7eAFz60h+7pOfz+QCir1W5yp02rwLNfEHRc9J8v
-	dMnwNfpA+U7zJS2MLaqxl7FFH4nNBOWv4q44nErtrSJeFUHDtjMP
-X-Google-Smtp-Source: AGHT+IFxTLa8c3S5ivxUnXxBLRu48xXYi/65NyP5o9yS4QN739SX8vgF3IZu8OCLLzy1iVUqusy0fA==
-X-Received: by 2002:aa7:cb59:0:b0:57d:4fd8:db59 with SMTP id 4fb4d7f45d1cf-57d4fd8dc94mr6295848a12.0.1719319222848;
-        Tue, 25 Jun 2024 05:40:22 -0700 (PDT)
+        bh=yBzuofG6T7lvGEuAx25osRPS6h4Ox6IqcEZGgGnza9Y=;
+        b=YSfAUDCsq85TSTOsIJpIugJTEGMbJeqrTV6ySvM9efEcdJEcyP78dFF8PN1MtAyJKZ
+         7afmveZVesJ//ZPiAt6Wni9rJel+xE+836A4sbTm2KQnDrJXU5yX24R0oQFj0VOqall/
+         KCzG9kWgXc3JqxcqwYERPt43M2oiG0bItgC1r3BndqS8rG9D735kCJZ9VZeKSTxmJSUa
+         oQfnuaK8Qe98Kgj3rx1u+vzrZyWxSnYPGv9zlMfJPBpVRKlfpVd2iotU2BWcXk+d2rfQ
+         w8O92iy33uK1y2Lj0MBurS03PflJsdfBZjWcIyqtg5FiJYtNV2fF66Bbumnw6W77yFhV
+         r4tA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ4uWacHr2nLZxa3R6k66dMHe1BrXvfeCwa5tcErPY4DBXFKwHoGFYHH98qbdWJIWDiJSFH2ETHJwMTL0pFevtBiMMrQjwaf47PAw=
+X-Gm-Message-State: AOJu0YwuKaTd2NdsI3ONyRXOJNPbhRzijOsAbka9zrxWGer6GmnzFugo
+	bySRTbWgTgwbw+dGwaZRw+Iv+Uzh9Bxar909VydIxE+SpB81j0+y
+X-Google-Smtp-Source: AGHT+IHBTTZyGAjFLKKGRDnrtRxXSLYDLYujtC0zC79VRvwIGx29Betppcd4H0MdIE0BeqapvW25yQ==
+X-Received: by 2002:a17:906:52d2:b0:a6e:f7ee:b1fa with SMTP id a640c23a62f3a-a7242e13207mr406032166b.72.1719319316725;
+        Tue, 25 Jun 2024 05:41:56 -0700 (PDT)
 Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30563440sm5853522a12.84.2024.06.25.05.40.21
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7251ace5besm234139266b.179.2024.06.25.05.41.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 05:40:22 -0700 (PDT)
+        Tue, 25 Jun 2024 05:41:56 -0700 (PDT)
 From: Uladzislau Rezki <urezki@gmail.com>
 X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
-Date: Tue, 25 Jun 2024 14:40:20 +0200
+Date: Tue, 25 Jun 2024 14:41:54 +0200
 To: Baoquan He <bhe@redhat.com>
 Cc: Uladzislau Rezki <urezki@gmail.com>, Nick Bowler <nbowler@draconx.ca>,
 	Hailong Liu <hailong.liu@oppo.com>, linux-kernel@vger.kernel.org,
@@ -61,7 +61,7 @@ Cc: Uladzislau Rezki <urezki@gmail.com>, Nick Bowler <nbowler@draconx.ca>,
 	linux-mm@kvack.org, sparclinux@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <Znq6tEtCgB6QnnJH@pc638.lan>
+Message-ID: <Znq7EtiOnV8YLHDK@pc638.lan>
 References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
  <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
  <20240621033005.6mccm7waduelb4m5@oppo.com>
@@ -70,8 +70,6 @@ References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
  <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
  <Znljtv5n-6EBgpsF@pc636>
  <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
- <ZnqcuKt2qrR-wmH3@pc636>
- <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -80,149 +78,269 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
+In-Reply-To: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
 
-On Tue, Jun 25, 2024 at 07:40:21PM +0800, Baoquan He wrote:
-> On 06/25/24 at 12:32pm, Uladzislau Rezki wrote:
-> > On Tue, Jun 25, 2024 at 11:30:33AM +0800, Baoquan He wrote:
-> > > On 06/24/24 at 02:16pm, Uladzislau Rezki wrote:
-> > > > On Fri, Jun 21, 2024 at 10:02:50PM +0800, Baoquan He wrote:
-> > > > > On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
-> > > > > > On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
-> > > > > > > On 06/21/24 at 11:30am, Hailong Liu wrote:
-> > > > > > > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
-> > > > > > > > > On 2024-06-20 02:19, Nick Bowler wrote:
-> > > > > ......
-> > > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > > > > index be2dd281ea76..18e87cafbaf2 100644
-> > > > > > > --- a/mm/vmalloc.c
-> > > > > > > +++ b/mm/vmalloc.c
-> > > > > > > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
-> > > > > > >  static struct xarray *
-> > > > > > >  addr_to_vb_xa(unsigned long addr)
-> > > > > > >  {
-> > > > > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > > > > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-> > > > > > >  
-> > > > > > >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> > > > > > >  }
-> > > > > > > 
-> > > > > > The problem i see is about not-initializing of the:
-> > > > > > <snip>
-> > > > > > 	for_each_possible_cpu(i) {
-> > > > > > 		struct vmap_block_queue *vbq;
-> > > > > > 		struct vfree_deferred *p;
-> > > > > > 
-> > > > > > 		vbq = &per_cpu(vmap_block_queue, i);
-> > > > > > 		spin_lock_init(&vbq->lock);
-> > > > > > 		INIT_LIST_HEAD(&vbq->free);
-> > > > > > 		p = &per_cpu(vfree_deferred, i);
-> > > > > > 		init_llist_head(&p->list);
-> > > > > > 		INIT_WORK(&p->wq, delayed_vfree_work);
-> > > > > > 		xa_init(&vbq->vmap_blocks);
-> > > > > > 	}
-> > > > > > <snip>
-> > > > > > 
-> > > > > > correctly or fully. It is my bad i did not think that CPUs in a possible mask
-> > > > > > can be non sequential :-/
-> > > > > > 
-> > > > > > nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
-> > > > > > when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
+On Tue, Jun 25, 2024 at 11:30:33AM +0800, Baoquan He wrote:
+> On 06/24/24 at 02:16pm, Uladzislau Rezki wrote:
+> > On Fri, Jun 21, 2024 at 10:02:50PM +0800, Baoquan He wrote:
+> > > On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
+> > > > On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
+> > > > > On 06/21/24 at 11:30am, Hailong Liu wrote:
+> > > > > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
+> > > > > > > On 2024-06-20 02:19, Nick Bowler wrote:
+> > > ......
+> > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > index be2dd281ea76..18e87cafbaf2 100644
+> > > > > --- a/mm/vmalloc.c
+> > > > > +++ b/mm/vmalloc.c
+> > > > > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > > > >  static struct xarray *
+> > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > >  {
+> > > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > > > >  
+> > > > >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > > >  }
 > > > > > 
-> > > > > I checked the generic version of setup_nr_cpu_ids(), from codes, they
-> > > > > are different with my understanding.
-> > > > > 
-> > > > > kernel/smp.c
-> > > > > void __init setup_nr_cpu_ids(void)
-> > > > > {
-> > > > >         set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
-> > > > > }
-> > > > > 
-> > > > I see that it is not a weak function, so it is generic, thus the
-> > > > behavior can not be overwritten, which is great. This does what we
-> > > > need.
-> > > > 
-> > > > Thank you for checking this you are right!
-> > > 
-> > > Thanks for confirming this.
-> > > 
-> > > > 
-> > > > Then it is just a matter of proper initialization of the hash:
-> > > > 
+> > > > The problem i see is about not-initializing of the:
 > > > > <snip>
-> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > index 5d3aa2dc88a8..1733946f7a12 100644
-> > > > --- a/mm/vmalloc.c
-> > > > +++ b/mm/vmalloc.c
-> > > > @@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
-> > > >          */
-> > > >         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
-> > > >  
-> > > > -       for_each_possible_cpu(i) {
-> > > > +       /*
-> > > > +        * We use "nr_cpu_ids" here because some architectures
-> > > > +        * may have "gaps" in cpu-possible-mask. It is OK for
-> > > > +        * per-cpu approaches but is not OK for cases where it
-> > > > +        * can be used as hashes also.
-> > > > +        */
-> > > > +       for (i = 0; i < nr_cpu_ids; i++) {
+> > > > 	for_each_possible_cpu(i) {
+> > > > 		struct vmap_block_queue *vbq;
+> > > > 		struct vfree_deferred *p;
+> > > > 
+> > > > 		vbq = &per_cpu(vmap_block_queue, i);
+> > > > 		spin_lock_init(&vbq->lock);
+> > > > 		INIT_LIST_HEAD(&vbq->free);
+> > > > 		p = &per_cpu(vfree_deferred, i);
+> > > > 		init_llist_head(&p->list);
+> > > > 		INIT_WORK(&p->wq, delayed_vfree_work);
+> > > > 		xa_init(&vbq->vmap_blocks);
+> > > > 	}
+> > > > <snip>
+> > > > 
+> > > > correctly or fully. It is my bad i did not think that CPUs in a possible mask
+> > > > can be non sequential :-/
+> > > > 
+> > > > nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
+> > > > when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
 > > > 
-> > > I was wrong about earlier comments. Percpu variables are only available
-> > > on possible CPUs. For those nonexistent possible CPUs of static percpu
-> > > variable vmap_block_queue, there isn't memory allocated and mapped for
-> > > them. So accessing into them will cause problem.
+> > > I checked the generic version of setup_nr_cpu_ids(), from codes, they
+> > > are different with my understanding.
 > > > 
-> > > In Nick's case, there are only CPU0, CPU2. If you access
-> > > &per_cpu(vmap_block_queue, 1), problem occurs. So I think we may need to
-> > > change to take other way for vbq. E.g:
-> > > 1) Storing the vb in the nearest neighbouring vbq on possible CPU as
-> > >    below draft patch;
-> > > 2) create an normal array to store vbq of size nr_cpu_ids, then we can
-> > >    store/fetch each vbq on non-possible CPU?
+> > > kernel/smp.c
+> > > void __init setup_nr_cpu_ids(void)
+> > > {
+> > >         set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
+> > > }
 > > > 
-> > A correct way, i think, is to create a normal array. A quick fix can be
-> > to stick to a next possible CPU.
+> > I see that it is not a weak function, so it is generic, thus the
+> > behavior can not be overwritten, which is great. This does what we
+> > need.
 > > 
-> > > The way 1) is simpler, the existing code can be adapted a little just as
-> > > below.
-> > > 
-> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > index 633363997dec..59a8951cc6c0 100644
-> > > --- a/mm/vmalloc.c
-> > > +++ b/mm/vmalloc.c
-> > > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
-> > >  static struct xarray *
-> > >  addr_to_vb_xa(unsigned long addr)
-> > >  {
-> > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-> > > +
-> > > +	if (!cpu_possible(idex))
-> > > +		index = cpumask_next(index, cpu_possible_mask);
-> > >
-> > cpumask_next() can return nr_cpu_ids if no next bits set.
+> > Thank you for checking this you are right!
 > 
-> It won't. nr_cpu_ids is the largest index + 1, the hashed index will
-> be:  0 =<  index  <= (nr_cpu_ids - 1) e.g cpu_possible_mask is
-> b10001111, the nr_cpu_ids is 8, the largest bit is cpu7.
-> cpu_possible(index) will check that. So the largest bit of cpumask_next()
-> returns is (nr_cpu_ids - 1).
+> Thanks for confirming this.
 > 
-/**
- * cpumask_next - get the next cpu in a cpumask
- * @n: the cpu prior to the place to search (i.e. return will be > @n)
- * @srcp: the cpumask pointer
- *
- * Return: >= nr_cpu_ids if no further cpus set.
- */
-static inline
-unsigned int cpumask_next(int n, const struct cpumask *srcp)
-{
-	/* -1 is a legal arg here. */
-	if (n != -1)
-		cpumask_check(n);
-	return find_next_bit(cpumask_bits(srcp), small_cpumask_bits, n + 1);
-}
+> > 
+> > Then it is just a matter of proper initialization of the hash:
+> > 
+> > <snip>
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 5d3aa2dc88a8..1733946f7a12 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
+> >          */
+> >         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+> >  
+> > -       for_each_possible_cpu(i) {
+> > +       /*
+> > +        * We use "nr_cpu_ids" here because some architectures
+> > +        * may have "gaps" in cpu-possible-mask. It is OK for
+> > +        * per-cpu approaches but is not OK for cases where it
+> > +        * can be used as hashes also.
+> > +        */
+> > +       for (i = 0; i < nr_cpu_ids; i++) {
+> 
+> I was wrong about earlier comments. Percpu variables are only available
+> on possible CPUs. For those nonexistent possible CPUs of static percpu
+> variable vmap_block_queue, there isn't memory allocated and mapped for
+> them. So accessing into them will cause problem.
+> 
+> In Nick's case, there are only CPU0, CPU2. If you access
+> &per_cpu(vmap_block_queue, 1), problem occurs. So I think we may need to
+> change to take other way for vbq. E.g:
+> 1) Storing the vb in the nearest neighbouring vbq on possible CPU as
+>    below draft patch;
+> 2) create an normal array to store vbq of size nr_cpu_ids, then we can
+>    store/fetch each vbq on non-possible CPU?
+> 
+See below how the patch look like if we switch to hash array:
+
+<snip>
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 45e1506d58c3..a8bcd9ceec2d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2501,7 +2501,8 @@ struct vmap_block {
+ };
+ 
+ /* Queue of free and dirty vmap blocks, for allocation and flushing purposes */
+-static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
++static struct vmap_block_queue *vmap_block_queue;
++static bool vmap_block_queue_initialized;
+ 
+ /*
+  * In order to fast access to any "vmap_block" associated with a
+@@ -2542,9 +2543,9 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+ 
+-	return &per_cpu(vmap_block_queue, index).vmap_blocks;
++	return &vmap_block_queue[index].vmap_blocks;
+ }
+ 
+ /*
+@@ -2626,7 +2627,7 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 		return ERR_PTR(err);
+ 	}
+ 
+-	vbq = raw_cpu_ptr(&vmap_block_queue);
++	vbq = &vmap_block_queue[raw_smp_processor_id()];
+ 	spin_lock(&vbq->lock);
+ 	list_add_tail_rcu(&vb->free_list, &vbq->free);
+ 	spin_unlock(&vbq->lock);
+@@ -2657,6 +2658,9 @@ static bool purge_fragmented_block(struct vmap_block *vb,
+ 		struct vmap_block_queue *vbq, struct list_head *purge_list,
+ 		bool force_purge)
+ {
++	if (!vmap_block_queue_initialized)
++		return false;
++
+ 	if (vb->free + vb->dirty != VMAP_BBMAP_BITS ||
+ 	    vb->dirty == VMAP_BBMAP_BITS)
+ 		return false;
+@@ -2692,7 +2696,12 @@ static void purge_fragmented_blocks(int cpu)
+ {
+ 	LIST_HEAD(purge);
+ 	struct vmap_block *vb;
+-	struct vmap_block_queue *vbq = &per_cpu(vmap_block_queue, cpu);
++	struct vmap_block_queue *vbq;
++
++	if (!vmap_block_queue_initialized)
++		return;
++
++	vbq = &vmap_block_queue[cpu];
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(vb, &vbq->free, free_list) {
+@@ -2715,7 +2724,7 @@ static void purge_fragmented_blocks_allcpus(void)
+ {
+ 	int cpu;
+ 
+-	for_each_possible_cpu(cpu)
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+ 		purge_fragmented_blocks(cpu);
+ }
+ 
+@@ -2739,7 +2748,7 @@ static void *vb_alloc(unsigned long size, gfp_t gfp_mask)
+ 	order = get_order(size);
+ 
+ 	rcu_read_lock();
+-	vbq = raw_cpu_ptr(&vmap_block_queue);
++	vbq = &vmap_block_queue[raw_smp_processor_id()];
+ 	list_for_each_entry_rcu(vb, &vbq->free, free_list) {
+ 		unsigned long pages_off;
+ 
+@@ -2822,13 +2831,13 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+ 	LIST_HEAD(purge_list);
+ 	int cpu;
+ 
+-	if (unlikely(!vmap_initialized))
++	if (unlikely(!vmap_initialized || !vmap_block_queue_initialized))
+ 		return;
+ 
+ 	mutex_lock(&vmap_purge_lock);
+ 
+-	for_each_possible_cpu(cpu) {
+-		struct vmap_block_queue *vbq = &per_cpu(vmap_block_queue, cpu);
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		struct vmap_block_queue *vbq = &vmap_block_queue[cpu];
+ 		struct vmap_block *vb;
+ 		unsigned long idx;
+ 
+@@ -2910,7 +2919,7 @@ void vm_unmap_ram(const void *mem, unsigned int count)
+ 
+ 	kasan_poison_vmalloc(mem, size);
+ 
+-	if (likely(count <= VMAP_MAX_ALLOC)) {
++	if (likely(count <= VMAP_MAX_ALLOC) && vmap_block_queue_initialized) {
+ 		debug_check_no_locks_freed(mem, size);
+ 		vb_free(addr, size);
+ 		return;
+@@ -2946,7 +2955,7 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
+ 	unsigned long addr;
+ 	void *mem;
+ 
+-	if (likely(count <= VMAP_MAX_ALLOC)) {
++	if (likely(count <= VMAP_MAX_ALLOC && vmap_block_queue_initialized)) {
+ 		mem = vb_alloc(size, GFP_KERNEL);
+ 		if (IS_ERR(mem))
+ 			return NULL;
+@@ -5087,17 +5096,28 @@ void __init vmalloc_init(void)
+ 	 */
+ 	vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+ 
++	vmap_block_queue = kmalloc_array(
++		nr_cpu_ids, sizeof(struct vmap_block_queue), GFP_NOWAIT);
++
++	if (vmap_block_queue) {
++		for (i = 0; i < nr_cpu_ids; i++) {
++			struct vmap_block_queue *vbq =
++				&vmap_block_queue[i];
++
++			spin_lock_init(&vbq->lock);
++			INIT_LIST_HEAD(&vbq->free);
++			xa_init(&vbq->vmap_blocks);
++		}
++	} else {
++		pr_err("Failed to allocate vmap_block_queue array, use fallback path!\n");
++	}
++
+ 	for_each_possible_cpu(i) {
+-		struct vmap_block_queue *vbq;
+-		struct vfree_deferred *p;
++		struct vfree_deferred *p =
++			&per_cpu(vfree_deferred, i);
+ 
+-		vbq = &per_cpu(vmap_block_queue, i);
+-		spin_lock_init(&vbq->lock);
+-		INIT_LIST_HEAD(&vbq->free);
+-		p = &per_cpu(vfree_deferred, i);
+ 		init_llist_head(&p->list);
+ 		INIT_WORK(&p->wq, delayed_vfree_work);
+-		xa_init(&vbq->vmap_blocks);
+ 	}
+ 
+ 	/*
+@@ -5125,6 +5145,9 @@ void __init vmalloc_init(void)
+ 	vmap_init_free_space();
+ 	vmap_initialized = true;
+ 
++	if (vmap_block_queue)
++		vmap_block_queue_initialized = true;
++
+ 	vmap_node_shrinker = shrinker_alloc(0, "vmap-node");
+ 	if (!vmap_node_shrinker) {
+ 		pr_err("Failed to allocate vmap-node shrinker!\n");
+<snip>
+
+Any thoughts?
 
 --
 Uladzislau Rezki
+
