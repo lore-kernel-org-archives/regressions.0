@@ -1,137 +1,167 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2078.outbound.protection.outlook.com [40.107.117.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F35143C67
-	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 08:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719305495; cv=none; b=R0iVpYtgS0NgqmhhdjExNwTz/Q4pcpsoT3NmyWg2oFiI+pFKVBvo33PDrkp/VfZMmJ6juCp34Lz0hlvUUM/ilQun/buky4RKxFj5v3yqT9Z7LoZn7cmuygpfJOSzgmmPIuNieIX171mMRrZ9OvSmfk7lFstBL65mOoa3vhLdGZM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719305495; c=relaxed/simple;
-	bh=J7W6jQQOq6oMCiMWpafdMRKX7RlHQIMkt8NcZBcjKOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XuESg7BWMno+4rTp7xKkjKkfMdNLASpSduIDNpSEb0a9viV23qk7Z5EpebdgR+RlMDZdTiSuGgQvkCWK9n18OOd0H3bH43cxVLKm/Jv9ZDEKzyoiV+lv3F38csndGt53r5HLN6lHTjZAhFsnqH6iWu2VLz1piWPBa8c0RLkkLb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S2JST7Gt; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2D61494AF
+	for <regressions@lists.linux.dev>; Tue, 25 Jun 2024 09:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719307572; cv=fail; b=q4ul0kLNC123MRd0SGa4atEJKOIHxgPanucg+vKQG6oHLv1cKEnGw49Q9fLjA3+t+9ElvSLInev6fwRpfZlm4M3Cou/7OTn31gqeTU8mxJI46C6TIYfM3pGfo5FR3WzSt8BkyXs9GJeK+aQPbUS/7/m/CZBP5937uPJyAtjJkkM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719307572; c=relaxed/simple;
+	bh=RSDL5hBt8Fi1ZXPvWH9y8ycn+n8iYssGwdzzMyL6Mnw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9AL9QJWXW8uF59EdnNDBrjrS9gDWEeNQUa+Y0Lv0Z2umSNGsrOr8/fH0i8ljZifti/TAJ0l487AgF+Rs7rbJyEsr5qGCs/ODjmZSodwPtX9h/lM0PCuCucUat/49tRZUXoOi3CQ3/XFXqw81jBNC4GVMDGVQbgbE8xFPctCb3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=ZRk8uGMo; arc=fail smtp.client-ip=40.107.117.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S2JST7Gt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719305492;
-	bh=J7W6jQQOq6oMCiMWpafdMRKX7RlHQIMkt8NcZBcjKOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S2JST7Gtm+r4PcCve+QDN4GXwgH8RYiAG870eilIPav2n3x4SlVt+Lm1R+3ADFdTb
-	 iSOhePfe6weu4x/WNfuo8HTjZA7EeP9PMNW9IGckoUJRWp+jksOOHjfmxD+raBBPi9
-	 MaEhWi5sXVg+XKrtY5rPBKlkPPx43SSP5rx1xBvte8IjgZvBoo+5gk31oQol8rBhyq
-	 lgjc6Em6c+7ARiHDEUxwSRtwk/3DFxJgikGbpaj9hb/XHBchFMCKRmZ7E/Orp6Y/y4
-	 R94oswSbt3e8dBu7W5ybEe+Eq09WnWs5TRrlKHOFhQ/IUV35i82dPGiPza0aMJkBHr
-	 /9pH1mbAdHrzw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A6353378045F;
-	Tue, 25 Jun 2024 08:51:31 +0000 (UTC)
-Message-ID: <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
-Date: Tue, 25 Jun 2024 10:51:31 +0200
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="ZRk8uGMo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PAUW/QUBCwqLz+Tv0DfSLnsd/ZqztK94Q6P8i5HQbp/A33W/5ULJO8yK6FPZ+EHYsiaNR2EYzaQx9LGrlbEMmZw8TlR1bkTe7MyoffRwQJkapd6yXR8js1bZc1UNG8pAMIUAeWo4BgELVYr+YRIAX4oP/jawUpA/v5hodQuAC80pTcPLnNwfQ3v6iZEkC+13il6hThgOZZkz4U2MhiU9eVzKaYF21HO+6Vht9h0oCfuLD3rO7h2qyGZq4WgkwL8JzFp+41lx0xbbWAZpjobB2wSVWZp85EZrZ6b5Kh1hhDW6CnKSrVg5+MWvgHirtG42GV+TAWUU9rO93Ncn4Torbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Nn5OfTdMtMQMGlKkSRIaWerEI8y0XVnBuW5ZQDzKdNo=;
+ b=L6oMeJUUfuUniR7hTdOMgYEJ1ckgsJKNgaVxaTlaYXgqTuTdLS0MCUesrBDDxTbnrDsGe9bS7yNLiu9SzGXZgyas1r8s8k/ZCIKCG8s4qCMs0ZzWn2lS6DXQu+nuNM5AkpHUvvM8ITYMr7zypG07zdXA2kUXYVqT53M2XP+UKx7pZeqaFcjzaoz5VclkO/GGDsVEiYvFjTwUYyim6Ga4XTcaw/ILKiN9chUqaHzjAqYb+/iMNBr5hf9Qr0vQ8QGeykz+jVGUAZKs15gXzndUeglCN2unBi8OrNYO54QJ7JY3oc5RjlX5wLuw8Lmj1YfZeO9NLqsl0IwVyv3wsQ96/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=gmail.com smtp.mailfrom=oppo.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=oppo.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nn5OfTdMtMQMGlKkSRIaWerEI8y0XVnBuW5ZQDzKdNo=;
+ b=ZRk8uGMo4PdePwNswH6p4UBq8+BfMF2z1IZBzSpw6+B7nMhxVmegHMNVJn6vpxwdiROyee0FnCFqYAr4HfOkfx8riaLO800HBy5GSBOicGwQL68Jw+oBp8lqbghKSGKe6DJIhNCsrXrYyvQwsjD4/QZM2E9dASVvOkFrRrPVBE4=
+Received: from SI2PR02CA0040.apcprd02.prod.outlook.com (2603:1096:4:196::6) by
+ SEYPR02MB5509.apcprd02.prod.outlook.com (2603:1096:101:3e::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.28; Tue, 25 Jun 2024 09:26:03 +0000
+Received: from SG1PEPF000082E5.apcprd02.prod.outlook.com
+ (2603:1096:4:196:cafe::e) by SI2PR02CA0040.outlook.office365.com
+ (2603:1096:4:196::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Tue, 25 Jun 2024 09:26:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ SG1PEPF000082E5.mail.protection.outlook.com (10.167.240.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Tue, 25 Jun 2024 09:26:02 +0000
+Received: from oppo.com (172.16.40.118) by mailappw31.adc.com (172.16.56.198)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Jun
+ 2024 17:26:02 +0800
+Date: Tue, 25 Jun 2024 17:26:01 +0800
+From: Hailong Liu <hailong.liu@oppo.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+CC: Baoquan He <bhe@redhat.com>, Nick Bowler <nbowler@draconx.ca>,
+	<linux-kernel@vger.kernel.org>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, <linux-mm@kvack.org>,
+	<sparclinux@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <20240625092601.uo7266gp5joluyg5@oppo.com>
+References: <75e17b57-1178-4288-b792-4ae68b19915e@draconx.ca>
+ <00d74f24-c49c-460e-871c-d5af64701306@draconx.ca>
+ <20240621033005.6mccm7waduelb4m5@oppo.com>
+ <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
+ <ZnVLbCCkvhf5GaTf@pc636>
+ <20240621111545.awvgrap2nscgehxv@oppo.com>
+ <ZnlkIy4XuzGBKinQ@pc636>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
- Frank Wunderlich <linux@fw-web.de>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
- <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
- <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
- <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
- <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
- <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
- <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
- <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
- <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
- <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
- <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
- <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
- <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
- <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
- <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
- <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZnlkIy4XuzGBKinQ@pc636>
+X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
+ (172.16.56.198)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E5:EE_|SEYPR02MB5509:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8910929c-80ac-4a12-e3ab-08dc94f8d52f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|36860700010|1800799021|376011|82310400023;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?S5gLv4t29S/h6LGpJ1YDFkcIZcIHbCKUxOYKOlVQ2TQsEhdTYx81spJTZcqp?=
+ =?us-ascii?Q?jHMJERHDk0o4cMycBzAnngILrJ8i8crFzPnkfM7Xo1GOQhhcTp4GllB5JUXD?=
+ =?us-ascii?Q?vLYgxK/Pb2fNCMTE1SHpsTKk+xrrV1owbCeovvwyC9EDsPfgKoZ+/M1GKuWM?=
+ =?us-ascii?Q?G6pPhn5n6JjaiGy866TN6H0KN0+BTplIiOBJYpsjSIyNIGmT5uARhO61vcGs?=
+ =?us-ascii?Q?ZtW0VGJJkzReeY+O9CAFMFfzushdUIZQPyZW7QOKRMF2ted1aKyIE9pLS/m4?=
+ =?us-ascii?Q?TMbpudD2RqtjCzb6OUWkjp5vAez7LHN3Z7xodEvPSKDDDF1Q1eQi+M0Fp4hS?=
+ =?us-ascii?Q?jIni++6e/YTmRCB5S4gPVn0yLAW4EGl6IO/Ha2R2njf8NCoG+AO18MI97F5o?=
+ =?us-ascii?Q?A1cVFFbCR1OYJosIP5WA5MBvoF0EzdMZ8RKOR3tu4bko+I/pyoaohJJbS616?=
+ =?us-ascii?Q?pdo5Y0YxxlboRSzel5pgyjfGpaeD4jnOUEKHW5dESUMYkiEeERznbATVFZAm?=
+ =?us-ascii?Q?rIoi33hEyo8GyN2kbUwtDy+oxqubt3GFsk9A0O+jM0D0xczHUvdT/EmaLFVK?=
+ =?us-ascii?Q?vWVpjvI23K0QpAzGzv+PVuTkn6t2lPAYCPo9knaeR8j5i7MMfT7teWcHbJDp?=
+ =?us-ascii?Q?wsIDP//bx6dd2lfHcEhRH8kt1hxMVKrnK6ZhyRzWD4RC7eRpCmbEU8tYfL+l?=
+ =?us-ascii?Q?zsfiGXb6cuN7fjyT6UUstkKO5OCU7QMHjA9gKclsFN2CPDRBVRWOU+QGrK/v?=
+ =?us-ascii?Q?+Rlhu4+89fWkZosVwFgl2zV6PDJDObUH1VQqUx2/seqvj+ugzXkm28RC8GIa?=
+ =?us-ascii?Q?pYi7Wg3VgcZDFnWJaaBni8ZlhjS3lAih8gAxaDFbVzbYOV+ceYD0SzqEoMAa?=
+ =?us-ascii?Q?51pwi/SWYgEQdQHa/MiNPnblLbahzl5Cnmhey0L2mnx7rmVvM81OpRJc9HhF?=
+ =?us-ascii?Q?PMM2swqZ0ogTKk1C52EtBZ8szyRXa9gzywIbADEW0N73Q11dQiWX5c2eOyrg?=
+ =?us-ascii?Q?JWlox4eblk/CddEZ9w7hG+x+QPNw1p1lM/dbm0crhWND0Xgsq+5k+2Yo7Wgj?=
+ =?us-ascii?Q?QNC5TlVEIPf84w9UQwGASG2nshBFlJZNK6ErFvdurD2zMcSsk96TSGJ0HFkU?=
+ =?us-ascii?Q?8SljcKzUnLH8Gx4KCIDX8CihdQuENmsx2Sf3eIRtlFasMzGnmQefxIo5EIZX?=
+ =?us-ascii?Q?+9zkC5mO1k6HU5a/asStMXPZR46prDCAj1J5E146Ep2Ulk0fKP33FeWi6wZb?=
+ =?us-ascii?Q?SsYS6a/nIPRk4CNo9+V2wffp4r7qIiW9CUZ5ZoBT33J403v3FPhhfjpHPdoX?=
+ =?us-ascii?Q?kNypBvRhvkRL0CExshDUxY2XFZnAeWNUzDql5nzuvelxl1rUkZiPDkW5FGNx?=
+ =?us-ascii?Q?NOH23Q9DPB0GdVAG9MkvWzQ9TU5ICAUswjPc5G1liopSfxCiOQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(1800799021)(376011)(82310400023);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 09:26:02.8316
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8910929c-80ac-4a12-e3ab-08dc94f8d52f
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG1PEPF000082E5.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR02MB5509
 
-Il 25/06/24 07:56, Linux regression tracking (Thorsten Leemhuis) ha scritto:
-> On 17.06.24 13:08, Arınç ÜNAL wrote:
->> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [...]
->> I've submitted a patch series that fixes the regression. Angelo argued
->> against the way the regression is fixed. I've very clearly argued back why
->> I find Angelo's approach wrong. There's been no response back. I don't
->> understand why reverting the patch is the likely outcome
-> 
-> Long story short: because that how things like that are handled in the
-> Linux kernel project, as Linus wants it like that. See some of the
-> quotes from https://docs.kernel.org/process/handling-regressions.html
-> for details.
-> 
->> whilst the
->> standing argument points towards applying the said patch series. If a
->> revert happens before this discussion with Angelo finalises, this will set
->> a precedent that will tell maintainers that they can have their way by just
->> not replying to the ongoing discussions.
->>
->> That said, the decision of resolving the regression by either reverting the
->> patch or applying the patch series shall not depend on whether or not
->> Angelo is pleased but rather there're no counter-arguments left on the
->> points brought, meaning the decision shall be made depending on the
->> argument that stands.
->>
->> Therefore, I suggest that unless Angelo responds back with a
->> counter-argument in the window of a week or two, as you've described, my
->> patch series shall be applied.
-> 
-> It looks more and more like we are stuck here (or was there progress and
-> I just missed it?) while the 6.10 final is slowly getting closer. Hence:
-> 
-> AngeloGioacchino, should we ask the net maintainers to revert
-> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
-> device tree") for now to resolve this regression? Reminder, there is
-> nothing wrong with that commit per se afaik, it just exposes a problem
-> that needs to be fixed first before it can be reapplied.
-> 
-
-To be clear on this: I asked for the commit to be fixed such that it guarantees
-backwards compatibility with older device trees.
-
-If no fix comes, then I guess that we should ask them to revert this commit
-until a fix is available.
-
-I don't like this situation, either, btw.
-
-Ciao!
-Angelo
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+On Mon, 24. Jun 14:18, Uladzislau Rezki wrote:
+> >
+> > IMO, I thought we can fix this by following.
+> > It doesn't initialize unused variables and utilize the percpu xarray. If I said
+> > anything wrong, please do let me know. I can learn a lot from you all :).
+> >
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 11fe5ea208aa..f9f981674b2d 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -4480,17 +4480,21 @@ void __init vmalloc_init(void)
+> >          */
+> >         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+> >
+> > -       for_each_possible_cpu(i) {
+> > +       for (i = 0; i < nr_cpu_ids; i++) {
+> >                 struct vmap_block_queue *vbq;
+> >                 struct vfree_deferred *p;
+> >
+> >                 vbq = &per_cpu(vmap_block_queue, i);
+> > +               xa_init(&vbq->vmap_blocks);
+> > +
+> > +               if (!cpu_possible(i))
+> Why do you need such check?
+IIUC, take this issue as example, cpumask is b101 and nr_cpu_id is
+3, if i = 1, There is no need to initialize unused variables here;
+initializing the xarray for the hash index is sufficient.
+>
+> Thanks!
+>
 > --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
+> Uladzislau Rezki
 
+--
+help you, help me,
+Hailong.
