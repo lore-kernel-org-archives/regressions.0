@@ -1,69 +1,69 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2087.outbound.protection.outlook.com [40.107.255.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D8C16EB52
-	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 09:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393365; cv=none; b=pgAdKe/uiBryA7/Ux8zlQRIITMNH7qNDkFLbwXBPAH+HsGR3UDqNqwuvfrpaJiC67iEmgMmXIEPAn7Uhvqky5usjFao4OlkfvQ6wUmNZ2QGdsBGR+1aLIGBBY6mZCxV+H6XS06S+R6EyEJ/3s/vmPUy8KcA08na7FwXiARUL/PI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393365; c=relaxed/simple;
-	bh=MMtXv5Ri6gnu/ZvxtyFF8jeukfcqm67vgKUvtekW57o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5+p7Dou+rfUZLvUkpE7uee727Rc/YSXA4Qp0BuhmhE5/TAKpUPac1hDipcNP1QUWmLZ86LmhDrTi+yvmKe8ar9NjsYrHguj6XbF7JZF05KJ/rpv9H1OavZd9YDKskad9AAIg9Nngv2MfKIBSODHkEIFGTVj7/9t9rzbr5We5Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mG8CTAL7; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6073F8003B
+	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719396234; cv=fail; b=om8wyxROVK7cAm9IrAMnjKroBp1RqSBX9Ts7gLEc576gh7tVCXGc1d6la+ecNhHADdA+gKbRUzmczbmuMrd0sZU0usqWV2doKO4MPI8Zb3mpU1W0i3UdYIHco6ZHIs24EfMFbZ3wHzQj9RJUKmVQQprGZna66i2RcDlAj8iVXdQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719396234; c=relaxed/simple;
+	bh=lqjATdbRgxbwx9DYVgnz2g+fHBzWiSrEZbGJMx260Uo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOsBBWd2sRLL2sE+YySCx76iJmTFuVGYg5BExL92eyuypmNR7stnHPVRZe3Oa/VdfWOy9FCE44AyhXP2+bh1ycF4K/bMak0ynttIAPsquWWj+2H2VQX0YJoVa4dcJliucN68zlssjftaFtf0n94u2Rz/YvwaIbDknMsURr3Ka/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=mFQ0FtQL; arc=fail smtp.client-ip=40.107.255.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mG8CTAL7"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec1620a956so77599581fa.1
-        for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 02:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719393362; x=1719998162; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eto0wDQ+VnHOvIV84i+qZbXGq9+6luYSO1FuNV/i1EM=;
-        b=mG8CTAL7WnxMl8yWFsKjB3E9UGdNMIt3tKOg7wEQPsAnLpp122+ZKo/f8RttlhXoVN
-         Y627HD8E+nyd3NahnL1SfjaJXv5W0/gd1sFGeDnKL/hVBp421L8pCAl1EiOdXjBFeIU2
-         QNBP46bGlxygQQHRvY9y7M1m86oEXAHVbJpsE7YqxQI/zpGt5Skvf0VfzZ0oJe4uHr5Q
-         E9AcZGV1gB6e+Ur1nGVTF7kxgObgE5dbGRm1tiCXcGvu05zVtpkPwv+KswPJ8tkQH7fV
-         rRanXDzjGK1R3g2xE0IVOIAekg+Mlmzx9ztpaJTFG//foMcuw7LiRq4cRatfdrloBu58
-         ZQbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719393362; x=1719998162;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eto0wDQ+VnHOvIV84i+qZbXGq9+6luYSO1FuNV/i1EM=;
-        b=ELU//fW/oQ0/7l17vjZ7ovaUCTJW46k4guOoJodbVWI9kmQoA6q0p2y4PkhNlTeHIp
-         FMAvOzHSMFOc38ZramzXnn5kHBAHseOUpMs+arvftKc18JUyMNcw/7F5YyBnDpVmS+UB
-         6ZgT28G7uBhARB3718jjYFSvbZvwYVq+MqR1levcoEI1FEMjLSPZ6g9lDjpsX8rc/KiU
-         R3CeJQTTH5nysXn+2091vdXXzrmykBQEfH4i4fEOClAX+HngV8HisoTvdcL3bZf3CXyL
-         5FZ7+bggwkBiN+JMz/esGKt4v605ZHl7OPv5EeqrpMmevkRJSdrPYmbjrzljIkzNvtRQ
-         RHMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2VF0ZUI4CpQrD0kQOpGh9W8pYJozRE+zkWiclst7ifTf1gZM29fIa3bT4gyihdEtyuCSvYF22iv1canMe+yHTGUuOk24pbU/rfQ8=
-X-Gm-Message-State: AOJu0YyKyR6AEfMp7UiPpHF7l/gxQRpkPJ9JyyCPiEVREEDaV+PUZ9GT
-	Efw2tDvIXXOUQsWdRS656ot3RA6FvqT2nR6+7bd2y9ng7SYPj6ho
-X-Google-Smtp-Source: AGHT+IH3CGPS2TZW4EbFb0VD5oUjqGvL3TfaspIt5F5OYeRa/0TR/mOSL97U7IIWNPSpBzA7tuqQqw==
-X-Received: by 2002:a2e:3218:0:b0:2ec:55f3:40d with SMTP id 38308e7fff4ca-2ec5b346102mr56875141fa.30.1719393361493;
-        Wed, 26 Jun 2024 02:16:01 -0700 (PDT)
-Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec53b7c876sm11450641fa.62.2024.06.26.02.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:16:00 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 26 Jun 2024 11:15:58 +0200
-To: Hailong Liu <hailong.liu@oppo.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Baoquan He <bhe@redhat.com>,
-	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="mFQ0FtQL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HYspFKHz2MrFlrrQ3jl3ma6R79zeegXD3bAAyyYi2zX5HmxdNvmGT9QD1gJbBFM3mZffPk5yJhRRfjvsYu6G0wP04Z6oLP70AHiuN/QPhkWkcY84IyqZMCj7AbvRLKx8lhfb6F0p2Pn8Rv4SSlIsms5dji9bxlay7wJSpBskX5K70DWatRy7j3ZuwcPrFnoC5SdoUWlbb9SLoV/P0ay7phaYmmVSXbQSLqSR3ZtIO8URB3fJrpN3YT9rpBeNWFUtnwq/f/Zc+QJGLX/5/UrV8FojvIDd06z00FNqMldrrMmoJunlnNcYqPKh8N7kUrziTEFQ0wpAJ5k4Kc6Vc7t8kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eZvnVaEwxpTQyauTTLqZou+VXTcWoWvqSQsp/cTpTdo=;
+ b=ZShHD3p1f6KP6ZEn/til5YwRUKFMKLcspSbNKfH6IFBJsS/QorRVigDcEGAQc5LqQZ2s20/cKPQrMgQj2fEt25MgIXUZvFwGaZfzVPl3pen2qRBSvGb2IPnjg8I9aAMYFRlUHnIx0JiVl3yLmvrXTKg7akbSrK5xGlbNfngndMDa++0bOAAs1CFZIP2bkhrutGiwd4fqV8Ls0hB2MCFJ+zFwYREwIriYpemsooYT0Mftt4PvnNTGgEsSjA5BPPNbrU53FGSYCDRc9Db6PebDM0qs+G+5aoXPj3z973BJeQwRp4ZX2kxaFnw6G87iwGQ4WC0N9B8/QANAxGoNNe4voA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=gmail.com smtp.mailfrom=oppo.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=oppo.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eZvnVaEwxpTQyauTTLqZou+VXTcWoWvqSQsp/cTpTdo=;
+ b=mFQ0FtQLWmd40ZOLXtw8822xsrXj0ogOpn0niRqTUAeEgCRHMbWJEblv8hrYHvRzbery/VMwhShRdCGp3PmZQ1nUvmvQxDZefl6q7ZElDW6SOxITQt8roHmHCF9NUUB3ZMMaBGPK+A7/uphxL1YyJyPOhPon5+KtwLVSKEei3aQ=
+Received: from SGAP274CA0017.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::29) by
+ SEZPR02MB5934.apcprd02.prod.outlook.com (2603:1096:101:76::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.30; Wed, 26 Jun 2024 10:03:49 +0000
+Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
+ (2603:1096:4:b6:cafe::e) by SGAP274CA0017.outlook.office365.com
+ (2603:1096:4:b6::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.22 via Frontend
+ Transport; Wed, 26 Jun 2024 10:03:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 10:03:48 +0000
+Received: from oppo.com (172.16.40.118) by mailappw31.adc.com (172.16.56.198)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Jun
+ 2024 18:03:47 +0800
+Date: Wed, 26 Jun 2024 18:03:42 +0800
+From: Hailong Liu <hailong.liu@oppo.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+CC: Baoquan He <bhe@redhat.com>, Nick Bowler <nbowler@draconx.ca>,
+	<linux-kernel@vger.kernel.org>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, <linux-mm@kvack.org>,
+	<sparclinux@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnvcToH1h-sVtikh@pc636>
-References: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
- <ZnqcuKt2qrR-wmH3@pc636>
+Message-ID: <20240626100342.2dudj6fjjx6srban@oppo.com>
+References: <ZnqcuKt2qrR-wmH3@pc636>
  <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
  <Znq6tEtCgB6QnnJH@pc638.lan>
  <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
@@ -72,128 +72,219 @@ References: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
  <Znr1IQ1mssdNNXbv@pc638.lan>
  <ZnsjIB2byIxSgbjc@pc636>
  <20240626051206.mx2r4iy3wpexykay@oppo.com>
+ <ZnvcToH1h-sVtikh@pc636>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240626051206.mx2r4iy3wpexykay@oppo.com>
+In-Reply-To: <ZnvcToH1h-sVtikh@pc636>
+X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
+ (172.16.56.198)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|SEZPR02MB5934:EE_
+X-MS-Office365-Filtering-Correlation-Id: 968c00a8-2aa7-4870-526e-08dc95c745d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230038|36860700011|376012|1800799022|82310400024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?H6JcD6L7iZFZEU+6qk2QUV5A2BpiKIL1fuVcu9pBc3Vmx/8uz3JXuL5zODG6?=
+ =?us-ascii?Q?GtDhT0FLUwRb2PRpUopRFBoVOuwztmpD3bFQP2eA3D7sVB3XjgpG/pRQTvho?=
+ =?us-ascii?Q?KjYmjOWBSh/lRntgzpOyeZe6FFa/2kRCZciUquLo6x1muwXXjE51OGlr2GyM?=
+ =?us-ascii?Q?OvETPhCWQ3jqY+Kd4XDANQC2bfZCcA7zcLhyb+62qnKs3woK2Pny3p2H5sAR?=
+ =?us-ascii?Q?yz7HqoI/W4OtwJZz4TuLr2qGqL15GjMsi0hIc7XEcHFATxEznJ89idKcC6+q?=
+ =?us-ascii?Q?K0qzM+iZG0dE/WUpOuIB1SMjqWFCgX03helG5aQdskT0ZhajMBeOmp6Y0AHh?=
+ =?us-ascii?Q?ua4yt4NICs63y6vuaC6Z3JgePf8qkwftLJ+B39lHAxIajSelpAhyKwGdFv/8?=
+ =?us-ascii?Q?Tba16y1XeouHD1yY0/RQ+lM/HaBzOJbCokPVhWZ2H8ne5OHNgMA8tM039xkI?=
+ =?us-ascii?Q?g0sr6S4JTXUxKW5HJAgglDZXuRb0Q2zsSTNrtF5rDxOvyEyfPBcL2DLr+i0s?=
+ =?us-ascii?Q?YE/k8z2m8TACS1eah8tSCu240CshA6/yMzk9yb4c4NdMGGQtjp9mtS2I6UJy?=
+ =?us-ascii?Q?LcO1ZKaL5zHM6dgfdcxmdhWy+LptwAld3EVn4w2DjC3rSwd5Ho1/9Djby9gO?=
+ =?us-ascii?Q?YLl5WZbxF6SsjkZkezouG/Z2ViT9IYvTs3v8yccfapTcMVJBjN9ryI2TSSsp?=
+ =?us-ascii?Q?och4hRGbLh/+33+Q2I7gJwiiplBzhJ5jWln0TEkWcwpU+3byhRu5RO1GcfVY?=
+ =?us-ascii?Q?3aANoGq3WKY2S7GMac+tKzgnaglE6mULv8ptYAuwisaBoNTokowKwcnh5oXC?=
+ =?us-ascii?Q?LXFWKAsnn0oAdavgXm4aKw8u+k+MsNm6VmWhyWr44Q4lfONkkgzQL3fZrjA+?=
+ =?us-ascii?Q?2oa8W28nMX6B1C3czkYxJTEwoyIwpAsUecrmA/zjXHja/AWQiLlTxfwFLl4l?=
+ =?us-ascii?Q?nivrTALMbR4MdhjcJudVGYCpJwsB8flAFKge0si6l6ZCHojCcziKgqoQbhNT?=
+ =?us-ascii?Q?hGmZT6UM9CTVS/A/alLrEgztVUO4C5xh3UeFVROhagrlYSWU9IBtBJ5jKJR/?=
+ =?us-ascii?Q?6Vmq5jdgWQl4eSD+mvxWv+3tEd33Fj+YLKOkAcoGSSFP5vupwnGj6c6xXOsv?=
+ =?us-ascii?Q?W8u7QSI/eJTTB8O3rbnSsdAuev9dmWBdddHBk4utEVO3bwHFNK8MOCTE9YU9?=
+ =?us-ascii?Q?exxKzla1jy7ze1PAqFZJnZnxvS/7b8TrQhR21TrTq2BZ+xKOjzT8Uk5/Uwil?=
+ =?us-ascii?Q?Mri05OhcfBqQJOgzW/MvL2vak0LFBSlu1WGX5K8qPCaETBj9w2IWjmA0Czk/?=
+ =?us-ascii?Q?G6/6IFsVoleUK6JOierKpd3qZuq7F7nh2i2ZGzTLojC8m0ZZdyAoV58OoVng?=
+ =?us-ascii?Q?PKXpvB7PvmHRzPw4j3ES/uuJTGi76xjCdRZHfxbFq4mLfym6iQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230038)(36860700011)(376012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 10:03:48.1665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968c00a8-2aa7-4870-526e-08dc95c745d8
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CD.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR02MB5934
 
-On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
-> On Tue, 25. Jun 22:05, Uladzislau Rezki wrote:
-> > > > > > > /**
-> > > > > > >  * cpumask_next - get the next cpu in a cpumask
-> > > > > > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
-> > > > > > >  * @srcp: the cpumask pointer
-> > > > > > >  *
-> > > > > > >  * Return: >= nr_cpu_ids if no further cpus set.
+On Wed, 26. Jun 11:15, Uladzislau Rezki wrote:
+> On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
+> > On Tue, 25. Jun 22:05, Uladzislau Rezki wrote:
+> > > > > > > > /**
+> > > > > > > >  * cpumask_next - get the next cpu in a cpumask
+> > > > > > > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > > > > > > >  * @srcp: the cpumask pointer
+> > > > > > > >  *
+> > > > > > > >  * Return: >= nr_cpu_ids if no further cpus set.
+> > > > > > >
+> > > > > > > Ah, I got what you mean. In the vbq case, it may not have chance to get
+> > > > > > > a return number as nr_cpu_ids. Becuase the hashed index limits the
+> > > > > > > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
+> > > > > > > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
+> > > > > > > be possible CPU.
+> > > > > > >
+> > > > > > > Do I miss some corner cases?
+> > > > > > >
+> > > > > > Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
+> > > > > > So we do not need to use *next_wrap() variant. You do not miss anything :)
 > > > > > >
-> > > > > > Ah, I got what you mean. In the vbq case, it may not have chance to get
-> > > > > > a return number as nr_cpu_ids. Becuase the hashed index limits the
-> > > > > > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
-> > > > > > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
-> > > > > > be possible CPU.
+> > > > > > Hailong Liu has proposed more simpler version:
 > > > > > >
-> > > > > > Do I miss some corner cases?
+> > > > > > <snip>
+> > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > > index 11fe5ea208aa..e1e63ffb9c57 100644
+> > > > > > --- a/mm/vmalloc.c
+> > > > > > +++ b/mm/vmalloc.c
+> > > > > > @@ -1994,8 +1994,9 @@ static struct xarray *
+> > > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > > >  {
+> > > > > >         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > > +       int cpu = cpumask_nth(index, cpu_possible_mask);
 > > > > > >
-> > > > > Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
-> > > > > So we do not need to use *next_wrap() variant. You do not miss anything :)
+> > > > > > -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > > > > +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+> > > > > > <snip>
+> > > > > >
+> > > > > > which just takes a next CPU if an index is not set in the cpu_possible_mask.
+> > > > > >
+> > > > > > The only thing that can be updated in the patch is to replace num_possible_cpu()
+> > > > > > by the nr_cpu_ids.
+> > > > > >
+> > > > > > Any thoughts? I think we need to fix it by a minor change so it is
+> > > > > > easier to back-port on stable kernels.
 > > > > >
-> > > > > Hailong Liu has proposed more simpler version:
+> > > > > Yeah, sounds good since the regresson commit is merged in v6.3.
+> > > > > Please feel free to post this and the hash array patch separately for
+> > > > > formal reviewing.
 > > > > >
-> > > > > <snip>
-> > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > > index 11fe5ea208aa..e1e63ffb9c57 100644
-> > > > > --- a/mm/vmalloc.c
-> > > > > +++ b/mm/vmalloc.c
-> > > > > @@ -1994,8 +1994,9 @@ static struct xarray *
-> > > > >  addr_to_vb_xa(unsigned long addr)
-> > > > >  {
-> > > > >         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > > > > +       int cpu = cpumask_nth(index, cpu_possible_mask);
-> > > > >
-> > > > > -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
-> > > > > +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
-> > > > > <snip>
-> > > > >
-> > > > > which just takes a next CPU if an index is not set in the cpu_possible_mask.
-> > > > >
-> > > > > The only thing that can be updated in the patch is to replace num_possible_cpu()
-> > > > > by the nr_cpu_ids.
-> > > > >
-> > > > > Any thoughts? I think we need to fix it by a minor change so it is
-> > > > > easier to back-port on stable kernels.
+> > > > Agreed! The patch about hash array i will post later.
 > > > >
-> > > > Yeah, sounds good since the regresson commit is merged in v6.3.
-> > > > Please feel free to post this and the hash array patch separately for
-> > > > formal reviewing.
+> > > > > By the way, when I am replying this mail, I check the cpumask_nth()
+> > > > > again. I doubt it may take more checking then cpu_possible(), given most
+> > > > > of systems don't have gaps in cpu_possible_mask. I could be dizzy at
+> > > > > this moment.
+> > > > >
+> > > > > static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
+> > > > > {
+> > > > >         return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
+> > > > > }
+> > > > >
+> > > > Yep, i do not think it is a big problem based on your noted fact.
 > > > >
-> > > Agreed! The patch about hash array i will post later.
+> > > Checked. There is a difference:
 > > >
-> > > > By the way, when I am replying this mail, I check the cpumask_nth()
-> > > > again. I doubt it may take more checking then cpu_possible(), given most
-> > > > of systems don't have gaps in cpu_possible_mask. I could be dizzy at
-> > > > this moment.
-> > > >
-> > > > static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
-> > > > {
-> > > >         return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
-> > > > }
-> > > >
-> > > Yep, i do not think it is a big problem based on your noted fact.
+> > > 1. Default
 > > >
-> > Checked. There is a difference:
+> > > <snip>
+> > > ...
+> > > +   15.95%     6.05%  [kernel]        [k] __vmap_pages_range_noflush
+> > > +   15.91%     1.74%  [kernel]        [k] addr_to_vb_xa <---------------
+> > > +   15.13%    12.05%  [kernel]        [k] vunmap_p4d_range
+> > > +   14.17%    13.38%  [kernel]        [k] __find_nth_bit <--------------
+> > > +   10.62%     0.00%  [kernel]        [k] ret_from_fork_asm
+> > > +   10.62%     0.00%  [kernel]        [k] ret_from_fork
+> > > +   10.62%     0.00%  [kernel]        [k] kthread
+> > > ...
+> > > <snip>
+> > >
+> > > 2. Check if cpu_possible() and then fallback to cpumask_nth() if not
+> > >
+> > > <snip>
+> > > ...
+> > > +    6.84%     0.29%  [kernel]          [k] alloc_vmap_area
+> > > +    6.80%     6.70%  [kernel]          [k] native_queued_spin_lock_slowpath
+> > > +    4.24%     0.09%  [kernel]          [k] free_vmap_block
+> > > +    2.41%     2.38%  [kernel]          [k] addr_to_vb_xa <-----------
+> > > +    1.94%     1.91%  [kernel]          [k] xas_start
+> > > ...
+> > > <snip>
+> > >
+> > > It is _worth_ to check if an index is in possible mask:
+> > >
+> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > index 45e1506d58c3..af20f78c2cbf 100644
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > >  static struct xarray *
+> > >  addr_to_vb_xa(unsigned long addr)
+> > >  {
+> > > -       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > +       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > IIUC, use nr_cpu_ids here maybe incorrect.
 > >
-> > 1. Default
+> > take b101 as example, nr_cpu_ids is 3. if index is 2 cpumask_nth(2, cpu_possible_mask);
+> > might return 64.
 > >
-> > <snip>
-> > ...
-> > +   15.95%     6.05%  [kernel]        [k] __vmap_pages_range_noflush
-> > +   15.91%     1.74%  [kernel]        [k] addr_to_vb_xa <---------------
-> > +   15.13%    12.05%  [kernel]        [k] vunmap_p4d_range
-> > +   14.17%    13.38%  [kernel]        [k] __find_nth_bit <--------------
-> > +   10.62%     0.00%  [kernel]        [k] ret_from_fork_asm
-> > +   10.62%     0.00%  [kernel]        [k] ret_from_fork
-> > +   10.62%     0.00%  [kernel]        [k] kthread
-> > ...
-> > <snip>
-> >
-> > 2. Check if cpu_possible() and then fallback to cpumask_nth() if not
-> >
-> > <snip>
-> > ...
-> > +    6.84%     0.29%  [kernel]          [k] alloc_vmap_area
-> > +    6.80%     6.70%  [kernel]          [k] native_queued_spin_lock_slowpath
-> > +    4.24%     0.09%  [kernel]          [k] free_vmap_block
-> > +    2.41%     2.38%  [kernel]          [k] addr_to_vb_xa <-----------
-> > +    1.94%     1.91%  [kernel]          [k] xas_start
-> > ...
-> > <snip>
-> >
-> > It is _worth_ to check if an index is in possible mask:
-> >
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index 45e1506d58c3..af20f78c2cbf 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
-> >  static struct xarray *
-> >  addr_to_vb_xa(unsigned long addr)
-> >  {
-> > -       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-> > +       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-> IIUC, use nr_cpu_ids here maybe incorrect.
-> 
-> take b101 as example, nr_cpu_ids is 3. if index is 2 cpumask_nth(2, cpu_possible_mask);
-> might return 64.
+> But then a CPU2 becomes possible? Cutting by % nr_cpu_ids generates values < nr_cpu_ids.
+> So, last CPU is always possible and we never do cpumask_nth() on a last possible CPU.
 >
-But then a CPU2 becomes possible? Cutting by % nr_cpu_ids generates values < nr_cpu_ids.
-So, last CPU is always possible and we never do cpumask_nth() on a last possible CPU.
+> What i miss here?
+>
+Sorry, I forget to reply to all :), I write a demo to test as follows:
 
-What i miss here?
+static int cpumask_init(void)
+{
+       struct cpumask mask;
+       unsigned int cpu_id;
+       cpumask_clear(&mask);
+
+       cpumask_set_cpu(1, &mask);
+       cpumask_set_cpu(3, &mask);
+       cpumask_set_cpu(5, &mask);
+
+       cpu_id = find_last_bit(cpumask_bits(&mask), NR_CPUS) + 1;
+       pr_info("cpu_id:%d\n", cpu_id);
+
+       for (; i < nr_cpu_ids; i++) {
+               pr_info("%d: cpu_%d\n", i, cpumask_nth(i, &mask));
+       }
+
+       return 0;
+}
+
+[    1.337020][    T1] cpu_id:6
+[    1.337338][    T1] 0: cpu_1
+[    1.337558][    T1] 1: cpu_3
+[    1.337751][    T1] 2: cpu_5
+[    1.337960][    T1] 3: cpu_64
+[    1.338183][    T1] 4: cpu_64
+[    1.338387][    T1] 5: cpu_64
+[    1.338594][    T1] 6: cpu_64
+
+In summary, the nr_cpu_ids = last_bit + 1, and cpumask_nth() return the nth cpu_id.
 
 --
-Uladzislau Rezki
+help you, help me,
+Hailong.
+
+> --
+> Uladzislau Rezki
+
+--
+help you, help me,
+Hailong.
