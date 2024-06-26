@@ -1,67 +1,55 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A6A181D1B
-	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ABC181D10
+	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719399108; cv=none; b=cVbnASUEkCiY96wKf/HfmdMa9VMEmn9tv7/kz8czM+VbwyBiRV0hui2CQKdW9QYX+r1+AJF7aChpUa0ZFL9BVj3aPvEnQGZaRK9/bAEm3mKAMxzoNyQ7WvbbiEkMqBgJEYtavmrHq6pUTCPXMxYY4cgDBk/wajMUTGlqG+f47uA=
+	t=1719399109; cv=none; b=BluE4OxOk1sIZ89LEz/T5AqAsBwOyJAOWDvtNv4Ik4U87nFsYGyC1R/2UWE2YoC6GMVbt9FaW4nt+9Iz/McO5Ps243iq5djtTa2Ygo7g7PHOju/LtaH3vP++70VvcxoO6HXtnRBYtBKUCM9Z5pIoIaoYroz8mS6LP0NUk1zNcRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719399108; c=relaxed/simple;
-	bh=njPBaVPiJ+OrsgkSQ4O6avilA3ChsvjLomkkhBGXUqg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUoDT6ftAOhHs85Km4CYU78CIQB14oi1TjJ44grboWTP+D4RjWeLghDRVHXutwiNnQMc10ijMMWTdTnysa21jjDXS3nL/WFcyoZnnY/9vZdOmuSeyw+Nhnm3bri7yHkmlo1ymGQiEkYHu64ztxi2g6/7mcnrbi6Z2P/uhDwJhHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/JM3Ulp; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719399109; c=relaxed/simple;
+	bh=IYp6s9dumUTDnxq8nPc4PYWKRMd2LaNg2CReE7Tj8Ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STpo2Uus/Ty2qVuhoxEnDaP6tP+0zSis6No5as4Qseqg03nhg5LHxY8oWmEAOV1CY2zi5Foslig0U723OfM9a8TgnjmCJ/fyQjIXrAk2T3/pf2oH/fNkzs7HO6d3ugRivVPzi0S3m4NIFKY6/WMEfr9MmzExuYbcCpXhVjShGc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HKRwXyJ9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/JM3Ulp"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so72307161fa.3
-        for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 03:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719399105; x=1720003905; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sAF9vjjeL2YSSoAhozbISzvWAPohgaJ/Mqgbub7kNF0=;
-        b=F/JM3UlpbQSZY8r/GkRRQrNJ40iLTzsl+1Z3UOm2F4tJRhgkQ3zCgwhe3nnhmPjUsn
-         PrkRw4grIvXgNXg9kDqpRrAxsb8PgezsBspgrp04cOf2sUgu6yfZ94qf/lyTke6cG4Rk
-         RSy9Y1TbVh8NbwiQ3QywOTYptZbBKYizMDvCsiO9HL2wPhZlxwH16kN06wQL/75gNane
-         Ev9HMnONUhFDajgHk21RI9TF15RCYRS8pLVwofrXlQJdKicY8JnHA+ngrigz1Q9oVQ9J
-         lhhGmWWsk+uXswltvR9rdP6+omQKIHd2uhURTH5i1JutyAS76/N95EBTq5TNEo4m9Nvr
-         ZRbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719399105; x=1720003905;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sAF9vjjeL2YSSoAhozbISzvWAPohgaJ/Mqgbub7kNF0=;
-        b=kWmdouyNZtIpeQHp11u8oHoaXxa5Q7pBOM4pH4ncDQlRxn6GBu9G+GBpNyLQxvZV/e
-         ggkcYPadoe7mvOI3S4rUDKN1H3kqd+WVbY8o52/tIVXUAyBA6e9C2qnMafBWunSPAXTo
-         1nRVxdPmE9OYvixOHmwOqRIAz5ZXT+NAp1sRk9jFQOx2WlYxW8Zz95XKaE0l36iL9POQ
-         Og5LA292rys7Omy01fFgiYV0QKd9dyaF9v0PbkDGD07UAhHxj/exE9VY+NIKe8gT0m6p
-         mUurul1bRbpk7/r53xNOUx4H2vI0wjc4wH5oVyoqQgi+qE+yIP0Rj2Yy9/TGC55R1qO3
-         H5jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWByBNwLAm68o1YfXe4VaI/+rtJGdDuPPTXzFiQK0eaGqmuP/ID+6GxDoPcvEBulcG8IRYwg8KlTNIpbQek/vsbet56wNhhmDUm18Q=
-X-Gm-Message-State: AOJu0YzExSUlbkeMB3vl+3odyFDvpvX32n5V7PROqp9CxvvW7qqJ45/d
-	jykUsqsuDrdhF/lvZOsa562mPAsSdSbM+bMME9FfdKG4NE12+q0R
-X-Google-Smtp-Source: AGHT+IFKZSVhxM5coOj5/CC3REPwevHkwWRCxIsgNzYe4QGbxv+o6yN+lc0AxHbPqS/w93Knm6WQlQ==
-X-Received: by 2002:a2e:9104:0:b0:2ec:57c7:c72c with SMTP id 38308e7fff4ca-2ec5b3d4979mr52834821fa.35.1719399104689;
-        Wed, 26 Jun 2024 03:51:44 -0700 (PDT)
-Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec54860756sm11434241fa.131.2024.06.26.03.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 03:51:44 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 26 Jun 2024 12:51:42 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKRwXyJ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719399106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bRpiuIFyD0DYgN6Da02SxVnuYQtZmCOUl7INhZ5MXTw=;
+	b=HKRwXyJ9wb7dlJ1mEjVDNROZY1bMvZCzV6vVbp3FdcGs9oWWonO0qj2tFvaMRvwQ4Nc/g8
+	VepRHz160mZMskgq/ZstFP0oURduQm9frNI1E/WVi2en1xFffzxPKZLEhWxN6BXC30oM/s
+	paa80ml+TtnVHzk1R3HeYN1bBNnwzWg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-353-2LD4IfWcMYu3I7VgzLHJKg-1; Wed,
+ 26 Jun 2024 06:51:40 -0400
+X-MC-Unique: 2LD4IfWcMYu3I7VgzLHJKg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EEA5419560AD;
+	Wed, 26 Jun 2024 10:51:38 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.83])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 949E7300021A;
+	Wed, 26 Jun 2024 10:51:36 +0000 (UTC)
+Date: Wed, 26 Jun 2024 18:51:32 +0800
+From: Baoquan He <bhe@redhat.com>
 To: Hailong Liu <hailong.liu@oppo.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, Baoquan He <bhe@redhat.com>,
-	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+Cc: Uladzislau Rezki <urezki@gmail.com>, Nick Bowler <nbowler@draconx.ca>,
+	linux-kernel@vger.kernel.org,
 	Linux regressions mailing list <regressions@lists.linux.dev>,
 	linux-mm@kvack.org, sparclinux@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <Znvyvof4CnFETJ-v@pc636>
+Message-ID: <ZnvytLzoLrVwymXv@MiWiFi-R3L-srv>
 References: <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
  <Znq6tEtCgB6QnnJH@pc638.lan>
  <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
@@ -81,8 +69,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240626100342.2dudj6fjjx6srban@oppo.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, Jun 26, 2024 at 06:03:42PM +0800, Hailong Liu wrote:
+On 06/26/24 at 06:03pm, Hailong Liu wrote:
 > On Wed, 26. Jun 11:15, Uladzislau Rezki wrote:
 > > On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
 > > > On Tue, 25. Jun 22:05, Uladzislau Rezki wrote:
@@ -229,36 +218,25 @@ On Wed, Jun 26, 2024 at 06:03:42PM +0800, Hailong Liu wrote:
 > [    1.338594][    T1] 6: cpu_64
 > 
 > In summary, the nr_cpu_ids = last_bit + 1, and cpumask_nth() return the nth cpu_id.
-> 
-OK, i misread the cpumask_nth(). We should go with *_next() variant instead.
 
-Thank you for pointing this. Below is updated version with extra comment:
+I think just using below change for a quick fix is enough. It doesn't
+have the issue cpumask_nth() has and very simple. For most of systems,
+it only adds an extra cpu_possible(idex) checking.
 
-<snip>
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 45e1506d58c3..03b82fb8ecd3 100644
+index 633363997dec..59a8951cc6c0 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
-@@ -2542,7 +2542,15 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+@@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
  static struct xarray *
  addr_to_vb_xa(unsigned long addr)
  {
--       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-+       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+-	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
 +
-+       /*
-+        * Please note, nr_cpu_ids points on a highest set
-+        * possible bit, i.e. we never invoke cpumask_next()
-+        * if an index points on it which is nr_cpu_ids - 1.
-+        */
-+       if (!cpu_possible(index))
-+               index = cpumask_next(index, cpu_possible_mask);
++	if (!cpu_possible(idex))
++		index = cpumask_next(index, cpu_possible_mask);
  
-        return &per_cpu(vmap_block_queue, index).vmap_blocks;
+ 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
  }
-<snip>
 
-Thanks!
-
---
-Uladzislau Rezki
