@@ -1,67 +1,69 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2044.outbound.protection.outlook.com [40.107.117.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1681552F6
-	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719399216; cv=none; b=tkt+6/mQ6+MZzQZj6lcRR0HhLF0bu7NNnI7rEYJHJS5Jdnf3iY9VVJxtGA+d1M+nsR1E7JOORwzNGevJoHdkkoDLGSEtcovkVwkHaisYp515t1I1DuylZQYXfDeP1LorNmc1x85hK+pq5Yf8j0qRNtNH5Hw2n4O0eovSIdtQlh0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719399216; c=relaxed/simple;
-	bh=Tjd6qxgmuQq6e7Z+qNWuQjTNx/yB7Hfx5SO8mRDyOyY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tZ2BSse444o3geuJ6UxV+rYVf8/JyoyrL6yO0pfTemMoLrKleO1YFxGJwoH1veb9aiQGEGAjbKu7moLW+19YCyodKBtZ1wjQ/lSai79EBwbpPJd5gywKo/wQqFQ3Uq9iWfkkhAdEWlXktckR1Eu8QwiKnjbYshrkpup/2q2q6qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAl0k6Uy; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A1316A959
+	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 11:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719401454; cv=fail; b=ViEEU7+i/Ctee5km+nxU78Lvz1pwivRkzxZqXCxsR3BklYim7nLVEuAyXYot6pkxVr5HxIOzs1wN8CblEn6ejmpanYdOgQj7MH8+hwYVXaP53vW6TsGzzwyzDWK9KbyLAqPSfjo7E/xL4tQ3WK9k8PmvjenemMhG6gAwYfn3dVQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719401454; c=relaxed/simple;
+	bh=K5aj5z24fFV+B7Bs/Zoma5PRvDHMp4HqXl6snvShnY8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bu4pG6jHsx7iRr5aOW0Cs0BjGMVLj5oZ2bzkQIojkozGSWSUKcpxrxpxhDeAuWxSbl3EaOPdQFclQ2ChLt8pFG73w2eVgUqPPQ41U/FgaQAe7II6eCNig784bi+1Y0aTpcWb9/eBobbt5JKJH/G0+BExZY7zlnnr3W5SIUYnQhg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=IuKFCHnZ; arc=fail smtp.client-ip=40.107.117.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAl0k6Uy"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52cd8897c73so5420279e87.2
-        for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 03:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719399212; x=1720004012; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ra0kofcvGPl3NCrJaksVA0UhehBYPZa3ZeHJvA50SBc=;
-        b=mAl0k6UyohLYJMDxmNxINuQ14Zyioc34FOdJYHgyWzf0CNV0reYb8oLrfMN2QqQV4Z
-         zhDfv/KXjKIQtO4qUTdSpFeIVzoHZZNJTkByxBDyN7wync9V9Jafg/N7CUpRjk3Wtuy9
-         ew5cjKpNsGRYJoCcNwSpnYSUw/yjdKX0xG9jm3/emrX9yVBXfkrW1L7IKMahBn6V2PU8
-         /Yl59AjzMWTbYeu1/ELh075LgWJG6EydPBpOBdNlL5R64Imqny3tVFpZ9h8WneQilQG8
-         qALXZTlzaf6195MGPPxsvWTDDgEtl5L4BOqu7ydTlNLNyg1DnoQnoLn6JIddgAK3txFj
-         fxcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719399212; x=1720004012;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ra0kofcvGPl3NCrJaksVA0UhehBYPZa3ZeHJvA50SBc=;
-        b=Z8icWvlm1KOallUYDZL3pW41b85kZ0eFEFbx2jsO0K17ylVbRl63aPt9R6sxXeUdEE
-         k83CIdd9ReSjWG/6MRUXs0+W+ccQM8PjqK/W9SfHMMnPnfutSy6XUjk8D+A3UBPnxtlq
-         jsAP0w9tq1YFXmbJoRHuq9phO5PumDFr87wz9+xRJnOfaLQx1IL4LLNcEfqLWxxXm2lm
-         3Sa+44FPPAnnNYBhj9/gTDOxosWf+etxFI/3w0tFjfmL7V72BvKTkx9/+4mFBCH7LepR
-         XAF6NZN/esygm87HuTjLO/mJ5NbRL5qy2o+aXI0JmSoJwfHNZSDsgJk77hRmZ1fjRJwW
-         qdwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWr3SiUj/90ccNO2fI31UaAikwSxoC81TJf+DpTkMqS3Mw3m1UDJW6sruFfvF1OXSJhly0vA5e9YfCgDGnyPF6TD+0o4Mds1oAH3EE=
-X-Gm-Message-State: AOJu0YwmcNCyu/XJqzQo3jD13QwQnpf1y/2qw/LB2HTYb+h/HkTQj38b
-	eYk7PVvnURaNbGOHpNzxxo2y0JynUL+VSvBIyM2iHzC+/xluxDt3
-X-Google-Smtp-Source: AGHT+IGeS99bKAOeCgtMTOiV4Uvt8+JDU6Dm/+UbirbkklB98PLofRgNc3HgnO5Why9YA3EeIRlLoQ==
-X-Received: by 2002:a05:6512:39cc:b0:52c:fd46:bf07 with SMTP id 2adb3069b0e04-52cfd46c32bmr2734125e87.49.1719399212035;
-        Wed, 26 Jun 2024 03:53:32 -0700 (PDT)
-Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdaa5a36asm1427268e87.141.2024.06.26.03.53.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 03:53:31 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 26 Jun 2024 12:53:29 +0200
-To: Baoquan He <bhe@redhat.com>
-Cc: Hailong Liu <hailong.liu@oppo.com>, Uladzislau Rezki <urezki@gmail.com>,
-	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-mm@kvack.org, sparclinux@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="IuKFCHnZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LQdXiemieWO0iMf2JrHVuOkNPZNZ1GcDrYOIHn3nrn8GZ1dMc9avXlCA5dKbnfewwJx1dAGF73wgh0uawHwpy+tULWnAgye9bngyNXlqnaf5biTjGeSzlSmT3rFbjt5GhUzRyy2jdGWfiYo1J4nea6tIy0eCoGtrU+3GskVC0+70yjBdvse18NcCjRcnR2PBXalIoVRXBEYiEXUl7OCkPqa6FDGdZeG7Eq5/wKExyDICMNFesYQ0OesthsevNb8XCT1sgfYUgUR6Az5pOr2rEI6lxFfWbJajh27NA4qVnFoGv72cz83BFv95713/nvxhZFEXzGokUAlRa98Oq1udoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=41jJPNm0cjyq/D5dkQDMA9IA9Xt9vDwZ8WR1Rj18iPE=;
+ b=eA/q63KLlpLSG9CH3+47o/ZQGexhYKPmFfx7dkV+VlBt8FWPnQzqlQwI4tjAV4ek3yllHhadkZr/BfnpjwDDXOivugcp9rCsxiejamfAXhqlDqyjpZ6WHvCOK+dTHMUzGdgSIopx8fPQtt6y3AIRiRUQSOjwGM247xIPAiIeWIVJL0Ldv8GrkNYLku5Y5xZrBOwyT53nEZq+1dxNgs4KFc5hbVxkYeGcT6nTSTijilPLUHOLjlACcEKT5izq/RyIBzBzYLfhmcPbPdoPkQVnIbyqvLTjBeXGaWL6UZwKrfBmGECvtCkEaxksGIfvqmGyjttzPfhDqnv4OeSo+BpD5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=redhat.com smtp.mailfrom=oppo.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=oppo.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=41jJPNm0cjyq/D5dkQDMA9IA9Xt9vDwZ8WR1Rj18iPE=;
+ b=IuKFCHnZu4o+Mb23Fk7CmVL/r3+TGPJJJ32S99evl+D2ZzCyvm+0Zr3PCtsm780J+kjS9I4H8cfCUSKOluCzytxpUz8Ilfj7m1Ycqbp1zAuWDYmO0vhVs6lZvYLrA7AYHGs/giTp4INwXMtIHXO7l0NMOx+m7WQ7heUPk/Jy5Vs=
+Received: from PS1PR01CA0012.apcprd01.prod.exchangelabs.com
+ (2603:1096:300:75::24) by KL1PR02MB6612.apcprd02.prod.outlook.com
+ (2603:1096:820:106::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
+ 2024 11:30:47 +0000
+Received: from HK3PEPF0000021C.apcprd03.prod.outlook.com
+ (2603:1096:300:75:cafe::47) by PS1PR01CA0012.outlook.office365.com
+ (2603:1096:300:75::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Wed, 26 Jun 2024 11:30:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ HK3PEPF0000021C.mail.protection.outlook.com (10.167.8.38) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 11:30:47 +0000
+Received: from oppo.com (172.16.40.118) by mailappw31.adc.com (172.16.56.198)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Jun
+ 2024 19:30:45 +0800
+Date: Wed, 26 Jun 2024 19:30:39 +0800
+From: Hailong Liu <hailong.liu@oppo.com>
+To: Baoquan He <bhe@redhat.com>, Uladzislau Rezki <urezki@gmail.com>
+CC: Uladzislau Rezki <urezki@gmail.com>, Nick Bowler <nbowler@draconx.ca>,
+	<linux-kernel@vger.kernel.org>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, <linux-mm@kvack.org>,
+	<sparclinux@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
-Message-ID: <ZnvzKSHfYn7A-PPp@pc636>
+Message-ID: <20240626113039.a2rvjarq6zbrgjis@oppo.com>
 References: <Znq6tEtCgB6QnnJH@pc638.lan>
  <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
  <ZnrjZRq5-_hemrbD@pc636>
@@ -78,11 +80,69 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <ZnvytLzoLrVwymXv@MiWiFi-R3L-srv>
+X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
+ (172.16.56.198)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021C:EE_|KL1PR02MB6612:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fbfe83f-8117-4abb-f6c6-08dc95d36c94
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230038|36860700011|376012|1800799022|82310400024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWdJRkErbCt2SENYL0lZWkdDaUdETWlnMHVuQjZaMHF4Q0IvSkJhV21DNDhS?=
+ =?utf-8?B?OUlIczV1aUUyRW1rUVdRYytkOXBrT0VweEZOQ1RKZU5Oa2hZRzh3NXIrMGww?=
+ =?utf-8?B?VlltSnVOb0F0TkhwdjF5UW5WQWNpVGlnT0lDb0p3U0g3Y0U5UThPb2R0UWlq?=
+ =?utf-8?B?cmlQdFhDd2U1elFYZ1AxOHRDZUJBMGlwMldFa1hLdStBNU02NUprcXF4ZzVs?=
+ =?utf-8?B?NGZVNlpnTjN5bGZJblMxQXFEdEh0YjBPd0ZBSjEvL2RsSmR1MHA2N0Z2Y3NC?=
+ =?utf-8?B?a0dxQXhFTEtrWUJWT1M1MEROOUJ4TGJDNlRjT0VSRDE5S05IUVdDK3lIcW9N?=
+ =?utf-8?B?T2x5ZS9nTDB5aFpnNlVZNnF1VUF6YmlGcEo1NzhWZ3p6eWRWU0E2TklvZmFx?=
+ =?utf-8?B?aXg2UkJwMmQxTnIwazE5NzltWjJrQzdXOU1OL0FJWHdPTmExQXlSNjVQT3Zv?=
+ =?utf-8?B?UFBLanR5V3Q5UHU5aC9odmdhTi9UK2tiUS9aMzNlc1V4QnlWb2RsS0FYbXpz?=
+ =?utf-8?B?WWRnSTN2cWNDT0cybnVsSnFXVW0vMURwVzZhWXhaTFU1RzJQK3N6cWF0a2dz?=
+ =?utf-8?B?NVpjTUdXaUlJTnkxcjFPRTJtcTJhaHFlZTBndEljOVhrd0dsRWw5azF0TTZH?=
+ =?utf-8?B?YVBVRSthZGZwVVpOS0dXaDVPbUdudjliUnJTL1hrWVl1UzlnKzI4LzhZSzhv?=
+ =?utf-8?B?a1EzckQxTm9KbnJYUUZLSXRFdWsydmdOcWc1SFB3bUxPeUhVK1NoNWs1dWJv?=
+ =?utf-8?B?UXFnNnRGS3lId0x3SGxKM3lGdW1iRUJjWVdsRDFObUVLd3MxVU9xWDIvdjZp?=
+ =?utf-8?B?SmJybnBockJOUUJVVVJIL2kzWW9mYWtkVCtzc0xTcnNmZTBsZVR4cGxhVldx?=
+ =?utf-8?B?QkhzTlRNQm9qbmI4L3lucEM4bkVuTnZPY3NKWTFLd3l1NU0xbVNHdnRXVEJz?=
+ =?utf-8?B?b1VERUwwUmU2K1ArU2pnYmZQY1Fldm02ek1sclYwOHVXaGdmdkV6dTVnb1FU?=
+ =?utf-8?B?Zm43b1pmNkxoSlZLNUJ4SjNRUzBDMEZYRWNxUW1lclJwVkxhdEZrYkZJeTRN?=
+ =?utf-8?B?aEphMTZ0bVhic2hZRFI5QytSYnI3U3MyRXFIcCtWMmZZNDdlL3RpVXVMZ1Vk?=
+ =?utf-8?B?MVRRYmlFaU1EMWdHc0lzTnpvRlNxNnNKTG0zUmluZHR3bUtoVm9jcXU3dDd2?=
+ =?utf-8?B?bVRXbCtRQXk3NzZCWHBYd1ZMWGtEMDd3YjhQeFBqYXJJMHl1UmtTNC8wZkNV?=
+ =?utf-8?B?TUdNUFhhODBlczUrN01QTHlqa2Y1d1VLSWJqNElpQW9ON29vRzBIWTFXeGlt?=
+ =?utf-8?B?R3U4NWdPalZQZHBQK0hIMHFCOGhiQ3g4R0VDbU5sNWFhclRHVDllVXovdWFK?=
+ =?utf-8?B?bHdyMXFOVGQ3S1RCdzYvWWZGT0Eybm9LZVZaSUhXN3hHUGRNUHY4b0lhSjJw?=
+ =?utf-8?B?bVNZUG4rZjFTd3VJVjl4MGxqVklXcjFnTTJQalhEM2xZeFNPQ1NES2FidkFH?=
+ =?utf-8?B?Q2FNVmxybVJKOFdXY0Vka0sxc1Bhc1Z0Zml2RDd6RTdQWE5KcCtRUmluWmJC?=
+ =?utf-8?B?RVVXTTI1V0JiZVRHVUNrNThRb3ByQU93UzlyZWJBaWc2MWFxZzVqZkFCbXNp?=
+ =?utf-8?B?bGlMSTlGaTl2RkFlUjlsdzhjTkxmMEJXOVlEQ05tMTRyZG9PSHQ1aWtiNzVz?=
+ =?utf-8?B?WjlFbU1JS0VyRHF0ZXFIR3d3dlhTNWZ0cmFDQUU4NHhBUEp5NUlmOWl4aUpK?=
+ =?utf-8?B?QnNtSjhnNkQ2K3ZsbnNTa3lsNGZMd1dYVW1qSHNwTG1ia1NGMEs5RE5pWjRF?=
+ =?utf-8?B?Q3cxaXgwTnJSMlgyeTU2L0pPZFB2eWs5bHhvdFZSUEFuQUM5QjVUaDBpOWVR?=
+ =?utf-8?B?UVVhYVlXR3ZvSFJ1d0F4aU1zRnRrdEZyL1A2K0dONURPb21sTFUxditkQndr?=
+ =?utf-8?Q?owDFn2VAHBx8DXP+GJdRI6RQzEFmujs4?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230038)(36860700011)(376012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 11:30:47.0545
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fbfe83f-8117-4abb-f6c6-08dc95d36c94
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK3PEPF0000021C.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB6612
 
-On Wed, Jun 26, 2024 at 06:51:32PM +0800, Baoquan He wrote:
+On Wed, 26. Jun 18:51, Baoquan He wrote:
 > On 06/26/24 at 06:03pm, Hailong Liu wrote:
 > > On Wed, 26. Jun 11:15, Uladzislau Rezki wrote:
 > > > On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
@@ -135,7 +195,7 @@ On Wed, Jun 26, 2024 at 06:51:32PM +0800, Baoquan He wrote:
 > > > > > > > formal reviewing.
 > > > > > > >
 > > > > > > Agreed! The patch about hash array i will post later.
-> > > > > >
+G> > > > > >
 > > > > > > > By the way, when I am replying this mail, I check the cpumask_nth()
 > > > > > > > again. I doubt it may take more checking then cpu_possible(), given most
 > > > > > > > of systems don't have gaps in cpu_possible_mask. I could be dizzy at
@@ -199,27 +259,27 @@ On Wed, Jun 26, 2024 at 06:51:32PM +0800, Baoquan He wrote:
 > > > What i miss here?
 > > >
 > > Sorry, I forget to reply to all :), I write a demo to test as follows:
-> > 
+> >
 > > static int cpumask_init(void)
 > > {
 > >        struct cpumask mask;
 > >        unsigned int cpu_id;
 > >        cpumask_clear(&mask);
-> > 
+> >
 > >        cpumask_set_cpu(1, &mask);
 > >        cpumask_set_cpu(3, &mask);
 > >        cpumask_set_cpu(5, &mask);
-> > 
+> >
 > >        cpu_id = find_last_bit(cpumask_bits(&mask), NR_CPUS) + 1;
 > >        pr_info("cpu_id:%d\n", cpu_id);
-> > 
+> >
 > >        for (; i < nr_cpu_ids; i++) {
 > >                pr_info("%d: cpu_%d\n", i, cpumask_nth(i, &mask));
 > >        }
-> > 
+> >
 > >        return 0;
 > > }
-> > 
+> >
 > > [    1.337020][    T1] cpu_id:6
 > > [    1.337338][    T1] 0: cpu_1
 > > [    1.337558][    T1] 1: cpu_3
@@ -228,13 +288,13 @@ On Wed, Jun 26, 2024 at 06:51:32PM +0800, Baoquan He wrote:
 > > [    1.338183][    T1] 4: cpu_64
 > > [    1.338387][    T1] 5: cpu_64
 > > [    1.338594][    T1] 6: cpu_64
-> > 
+> >
 > > In summary, the nr_cpu_ids = last_bit + 1, and cpumask_nth() return the nth cpu_id.
-> 
+>
 > I think just using below change for a quick fix is enough. It doesn't
 > have the issue cpumask_nth() has and very simple. For most of systems,
 > it only adds an extra cpu_possible(idex) checking.
-> 
+>
 > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
 > index 633363997dec..59a8951cc6c0 100644
 > --- a/mm/vmalloc.c
@@ -248,11 +308,24 @@ On Wed, Jun 26, 2024 at 06:51:32PM +0800, Baoquan He wrote:
 > +
 > +	if (!cpu_possible(idex))
 > +		index = cpumask_next(index, cpu_possible_mask);
->  
+>
 >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
 >  }
-> 
-Just submitted the same :) I will send out the patch.
+>
+Agreed! This is a very simple solution.
+
+If cpumask is b1000001, addresses being distributed across different
+CPUs could theoretically lead to such a situation, but it has not been
+encountered in practice. I’m just pointing out the possibility here.
+
+  CPU_0  CPU_6  CPU_6  CPU_6  CPU_6  CPU_6
+    |      |      |      |      |      |
+    V      V      V      V      V      V
+0     10     20     30     40     50     60
+|------|------|------|------|------|------|..
+
+Thanks again for your reply, I learned a lot.
 
 --
-Uladzislau Rezki
+help you, help me,
+Hailong.
