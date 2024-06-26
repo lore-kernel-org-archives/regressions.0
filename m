@@ -1,157 +1,264 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75D7181BB7
-	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A6A181D1B
+	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398963; cv=none; b=dtwWUnL7yEinrtWrU702ODucY/I0hKwvA0eSnWvlL7r96CkXxlDEionj2jpfJ2EeZzIV0hFSvqk325zCi2i4azoV+whCXmMOg06dxosHRveOSIAtjEO0DI3S3iDS+8wcdVHzLNzQ9ZeEShbxZiM7Q3qg0LdZahKf1VWYC85iuns=
+	t=1719399108; cv=none; b=cVbnASUEkCiY96wKf/HfmdMa9VMEmn9tv7/kz8czM+VbwyBiRV0hui2CQKdW9QYX+r1+AJF7aChpUa0ZFL9BVj3aPvEnQGZaRK9/bAEm3mKAMxzoNyQ7WvbbiEkMqBgJEYtavmrHq6pUTCPXMxYY4cgDBk/wajMUTGlqG+f47uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398963; c=relaxed/simple;
-	bh=LF+V/YGvNyhi6W1Q8K48YhxFw5P+05yaDiJQ3on2hCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=drgTrY6OCMx0ZvFYNYuFz/0OKk3nHip5U2HngHz0l9CSvvxe+lPqGjzVj2TuMXa3YZ1h+pjY4QCnA3DUd/YV12+zQgEF2/Jm9L+zl92zGdlh0BaJxhViqI7g/r5N+giMWycRJJUtjdIGNMnjn4c6eUZ3YEA9fsOfMW7hUpxK8B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGeb7LTR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719399108; c=relaxed/simple;
+	bh=njPBaVPiJ+OrsgkSQ4O6avilA3ChsvjLomkkhBGXUqg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUoDT6ftAOhHs85Km4CYU78CIQB14oi1TjJ44grboWTP+D4RjWeLghDRVHXutwiNnQMc10ijMMWTdTnysa21jjDXS3nL/WFcyoZnnY/9vZdOmuSeyw+Nhnm3bri7yHkmlo1ymGQiEkYHu64ztxi2g6/7mcnrbi6Z2P/uhDwJhHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/JM3Ulp; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGeb7LTR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8048CC32786
-	for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 10:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719398962;
-	bh=LF+V/YGvNyhi6W1Q8K48YhxFw5P+05yaDiJQ3on2hCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gGeb7LTRK+Sy61ygjpRWpFUJP3n3pd2vBAtVlkuGjoFbbVSRSsDcxA2+jGGB4jEwQ
-	 IRPx8KuGSG2mjC5GBG7ZkTxBAN840r9OxOnYrH2OJUMycsTD1u+/AxTO7jrRPT6VFQ
-	 IEOCdT77AgCF+WFgGjN3+xmeADz3xdwRt1abJ/PGamontinqsiKH+FxYh0e+cVV+Fa
-	 YMjQBCSYKhn5PCQaqf2Vir/qZ4j4PrYir3dLgWKjrBDUgnD7m/O63ol+QUViky9w1R
-	 9jh8hKSjUaGef8EGFLkQhDTMnUnfSOfKLlZq9KIFeO39YBTNy/9D6w27iUikhwzkWv
-	 ejub5egT4BadA==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6fbe639a76so72449966b.1
-        for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 03:49:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUecGniq/qQ6BR0Jn7rP8viDR3VKLPrF9VEy00O3IxH19IpxxS94CGiSn/jTSuLeod1MzaYdAftUtx262waD88zhK8bxNWnM8NwnsY=
-X-Gm-Message-State: AOJu0Yx8K5cw3P0puHYH2lRaOLp6tLzNOT899YY4bHW5vHc/pFNWbdL4
-	Q4pGUwIWzYt4583DCJa4mzAPVpSJdn8NFxFSdQI6rn/9q4qAzUxk2YSwUNMtO+x8O1CvQ571eH7
-	Lbqkp0C2faqJF8boYt8HquOQFNx4=
-X-Google-Smtp-Source: AGHT+IGf02sUk1R5VoUyhOJIJYA/N64Dho19OyqmfhLr+JY5KDzh6lEXiqS21ilAavBwhCqvfz+saZavIx6wmKimVkw=
-X-Received: by 2002:a17:907:c788:b0:a6f:996f:23ea with SMTP id
- a640c23a62f3a-a727fbd5c81mr238458466b.15.1719398961026; Wed, 26 Jun 2024
- 03:49:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/JM3Ulp"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so72307161fa.3
+        for <regressions@lists.linux.dev>; Wed, 26 Jun 2024 03:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719399105; x=1720003905; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sAF9vjjeL2YSSoAhozbISzvWAPohgaJ/Mqgbub7kNF0=;
+        b=F/JM3UlpbQSZY8r/GkRRQrNJ40iLTzsl+1Z3UOm2F4tJRhgkQ3zCgwhe3nnhmPjUsn
+         PrkRw4grIvXgNXg9kDqpRrAxsb8PgezsBspgrp04cOf2sUgu6yfZ94qf/lyTke6cG4Rk
+         RSy9Y1TbVh8NbwiQ3QywOTYptZbBKYizMDvCsiO9HL2wPhZlxwH16kN06wQL/75gNane
+         Ev9HMnONUhFDajgHk21RI9TF15RCYRS8pLVwofrXlQJdKicY8JnHA+ngrigz1Q9oVQ9J
+         lhhGmWWsk+uXswltvR9rdP6+omQKIHd2uhURTH5i1JutyAS76/N95EBTq5TNEo4m9Nvr
+         ZRbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719399105; x=1720003905;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sAF9vjjeL2YSSoAhozbISzvWAPohgaJ/Mqgbub7kNF0=;
+        b=kWmdouyNZtIpeQHp11u8oHoaXxa5Q7pBOM4pH4ncDQlRxn6GBu9G+GBpNyLQxvZV/e
+         ggkcYPadoe7mvOI3S4rUDKN1H3kqd+WVbY8o52/tIVXUAyBA6e9C2qnMafBWunSPAXTo
+         1nRVxdPmE9OYvixOHmwOqRIAz5ZXT+NAp1sRk9jFQOx2WlYxW8Zz95XKaE0l36iL9POQ
+         Og5LA292rys7Omy01fFgiYV0QKd9dyaF9v0PbkDGD07UAhHxj/exE9VY+NIKe8gT0m6p
+         mUurul1bRbpk7/r53xNOUx4H2vI0wjc4wH5oVyoqQgi+qE+yIP0Rj2Yy9/TGC55R1qO3
+         H5jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWByBNwLAm68o1YfXe4VaI/+rtJGdDuPPTXzFiQK0eaGqmuP/ID+6GxDoPcvEBulcG8IRYwg8KlTNIpbQek/vsbet56wNhhmDUm18Q=
+X-Gm-Message-State: AOJu0YzExSUlbkeMB3vl+3odyFDvpvX32n5V7PROqp9CxvvW7qqJ45/d
+	jykUsqsuDrdhF/lvZOsa562mPAsSdSbM+bMME9FfdKG4NE12+q0R
+X-Google-Smtp-Source: AGHT+IFKZSVhxM5coOj5/CC3REPwevHkwWRCxIsgNzYe4QGbxv+o6yN+lc0AxHbPqS/w93Knm6WQlQ==
+X-Received: by 2002:a2e:9104:0:b0:2ec:57c7:c72c with SMTP id 38308e7fff4ca-2ec5b3d4979mr52834821fa.35.1719399104689;
+        Wed, 26 Jun 2024 03:51:44 -0700 (PDT)
+Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec54860756sm11434241fa.131.2024.06.26.03.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 03:51:44 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 26 Jun 2024 12:51:42 +0200
+To: Hailong Liu <hailong.liu@oppo.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Baoquan He <bhe@redhat.com>,
+	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <Znvyvof4CnFETJ-v@pc636>
+References: <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
+ <Znq6tEtCgB6QnnJH@pc638.lan>
+ <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
+ <ZnrjZRq5-_hemrbD@pc636>
+ <ZnrnADHvOiNcZv9t@MiWiFi-R3L-srv>
+ <Znr1IQ1mssdNNXbv@pc638.lan>
+ <ZnsjIB2byIxSgbjc@pc636>
+ <20240626051206.mx2r4iy3wpexykay@oppo.com>
+ <ZnvcToH1h-sVtikh@pc636>
+ <20240626100342.2dudj6fjjx6srban@oppo.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
-In-Reply-To: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 26 Jun 2024 11:48:44 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
-Message-ID: <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626100342.2dudj6fjjx6srban@oppo.com>
 
-On Tue, Jun 25, 2024 at 10:04=E2=80=AFPM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> Hi,
-> after f1d97e769152 I spotted increased execution time of the kswapd0
-> process and symptoms as if there is not enough memory.
-> Very often I see that kswapd0 consumes 100% CPU [1].
-> Before f1d97e769152 after an hour kswapd0 is working ~3:51 and after
-> three hours ~10:13 time.
-> After f1d97e769152 kswapd0 time increased to ~25:48 after the first
-> hour and three hours it hit 71:01 time.
-> So execution time has increased by 6-7 times.
->
-> f1d97e76915285013037c487d9513ab763005286 is the first bad commit
-> commit f1d97e76915285013037c487d9513ab763005286 (HEAD)
-> Author: Filipe Manana <fdmanana@suse.com>
-> Date:   Fri Mar 22 18:02:59 2024 +0000
->
->     btrfs: add a global per cpu counter to track number of used extent ma=
-ps
->
->     Add a per cpu counter that tracks the total number of extent maps tha=
-t are
->     in extent trees of inodes that belong to fs trees. This is going to b=
-e
->     used in an upcoming change that adds a shrinker for extent maps. Only
->     extent maps for fs trees are considered, because for special trees su=
-ch as
->     the data relocation tree we don't want to evict their extent maps whi=
-ch
->     are critical for the relocation to work, and since those are limited,=
- it's
->     not a concern to have them in memory during the relocation of a block
->     group. Another case are extent maps for free space cache inodes, whic=
-h
->     must always remain in memory, but those are limited (there's only one=
- per
->     free space cache inode, which means one per block group).
->
->     Reviewed-by: Josef Bacik <josef@toxicpanda.com>
->     Signed-off-by: Filipe Manana <fdmanana@suse.com>
->     Reviewed-by: David Sterba <dsterba@suse.com>
->     Signed-off-by: David Sterba <dsterba@suse.com>
->
->  fs/btrfs/disk-io.c    |  9 +++++++++
->  fs/btrfs/extent_map.c | 17 +++++++++++++++++
->  fs/btrfs/fs.h         |  2 ++
->  3 files changed, 28 insertions(+)
->
-> Unfortunately I can't check the revert commit f1d97e769152 because of con=
-flicts.
+On Wed, Jun 26, 2024 at 06:03:42PM +0800, Hailong Liu wrote:
+> On Wed, 26. Jun 11:15, Uladzislau Rezki wrote:
+> > On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
+> > > On Tue, 25. Jun 22:05, Uladzislau Rezki wrote:
+> > > > > > > > > /**
+> > > > > > > > >  * cpumask_next - get the next cpu in a cpumask
+> > > > > > > > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > > > > > > > >  * @srcp: the cpumask pointer
+> > > > > > > > >  *
+> > > > > > > > >  * Return: >= nr_cpu_ids if no further cpus set.
+> > > > > > > >
+> > > > > > > > Ah, I got what you mean. In the vbq case, it may not have chance to get
+> > > > > > > > a return number as nr_cpu_ids. Becuase the hashed index limits the
+> > > > > > > > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
+> > > > > > > > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
+> > > > > > > > be possible CPU.
+> > > > > > > >
+> > > > > > > > Do I miss some corner cases?
+> > > > > > > >
+> > > > > > > Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
+> > > > > > > So we do not need to use *next_wrap() variant. You do not miss anything :)
+> > > > > > >
+> > > > > > > Hailong Liu has proposed more simpler version:
+> > > > > > >
+> > > > > > > <snip>
+> > > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > > > index 11fe5ea208aa..e1e63ffb9c57 100644
+> > > > > > > --- a/mm/vmalloc.c
+> > > > > > > +++ b/mm/vmalloc.c
+> > > > > > > @@ -1994,8 +1994,9 @@ static struct xarray *
+> > > > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > > > >  {
+> > > > > > >         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > > > +       int cpu = cpumask_nth(index, cpu_possible_mask);
+> > > > > > >
+> > > > > > > -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > > > > > +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+> > > > > > > <snip>
+> > > > > > >
+> > > > > > > which just takes a next CPU if an index is not set in the cpu_possible_mask.
+> > > > > > >
+> > > > > > > The only thing that can be updated in the patch is to replace num_possible_cpu()
+> > > > > > > by the nr_cpu_ids.
+> > > > > > >
+> > > > > > > Any thoughts? I think we need to fix it by a minor change so it is
+> > > > > > > easier to back-port on stable kernels.
+> > > > > >
+> > > > > > Yeah, sounds good since the regresson commit is merged in v6.3.
+> > > > > > Please feel free to post this and the hash array patch separately for
+> > > > > > formal reviewing.
+> > > > > >
+> > > > > Agreed! The patch about hash array i will post later.
+> > > > >
+> > > > > > By the way, when I am replying this mail, I check the cpumask_nth()
+> > > > > > again. I doubt it may take more checking then cpu_possible(), given most
+> > > > > > of systems don't have gaps in cpu_possible_mask. I could be dizzy at
+> > > > > > this moment.
+> > > > > >
+> > > > > > static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
+> > > > > > {
+> > > > > >         return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
+> > > > > > }
+> > > > > >
+> > > > > Yep, i do not think it is a big problem based on your noted fact.
+> > > > >
+> > > > Checked. There is a difference:
+> > > >
+> > > > 1. Default
+> > > >
+> > > > <snip>
+> > > > ...
+> > > > +   15.95%     6.05%  [kernel]        [k] __vmap_pages_range_noflush
+> > > > +   15.91%     1.74%  [kernel]        [k] addr_to_vb_xa <---------------
+> > > > +   15.13%    12.05%  [kernel]        [k] vunmap_p4d_range
+> > > > +   14.17%    13.38%  [kernel]        [k] __find_nth_bit <--------------
+> > > > +   10.62%     0.00%  [kernel]        [k] ret_from_fork_asm
+> > > > +   10.62%     0.00%  [kernel]        [k] ret_from_fork
+> > > > +   10.62%     0.00%  [kernel]        [k] kthread
+> > > > ...
+> > > > <snip>
+> > > >
+> > > > 2. Check if cpu_possible() and then fallback to cpumask_nth() if not
+> > > >
+> > > > <snip>
+> > > > ...
+> > > > +    6.84%     0.29%  [kernel]          [k] alloc_vmap_area
+> > > > +    6.80%     6.70%  [kernel]          [k] native_queued_spin_lock_slowpath
+> > > > +    4.24%     0.09%  [kernel]          [k] free_vmap_block
+> > > > +    2.41%     2.38%  [kernel]          [k] addr_to_vb_xa <-----------
+> > > > +    1.94%     1.91%  [kernel]          [k] xas_start
+> > > > ...
+> > > > <snip>
+> > > >
+> > > > It is _worth_ to check if an index is in possible mask:
+> > > >
+> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > index 45e1506d58c3..af20f78c2cbf 100644
+> > > > --- a/mm/vmalloc.c
+> > > > +++ b/mm/vmalloc.c
+> > > > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > > >  static struct xarray *
+> > > >  addr_to_vb_xa(unsigned long addr)
+> > > >  {
+> > > > -       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > +       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > > IIUC, use nr_cpu_ids here maybe incorrect.
+> > >
+> > > take b101 as example, nr_cpu_ids is 3. if index is 2 cpumask_nth(2, cpu_possible_mask);
+> > > might return 64.
+> > >
+> > But then a CPU2 becomes possible? Cutting by % nr_cpu_ids generates values < nr_cpu_ids.
+> > So, last CPU is always possible and we never do cpumask_nth() on a last possible CPU.
+> >
+> > What i miss here?
+> >
+> Sorry, I forget to reply to all :), I write a demo to test as follows:
+> 
+> static int cpumask_init(void)
+> {
+>        struct cpumask mask;
+>        unsigned int cpu_id;
+>        cpumask_clear(&mask);
+> 
+>        cpumask_set_cpu(1, &mask);
+>        cpumask_set_cpu(3, &mask);
+>        cpumask_set_cpu(5, &mask);
+> 
+>        cpu_id = find_last_bit(cpumask_bits(&mask), NR_CPUS) + 1;
+>        pr_info("cpu_id:%d\n", cpu_id);
+> 
+>        for (; i < nr_cpu_ids; i++) {
+>                pr_info("%d: cpu_%d\n", i, cpumask_nth(i, &mask));
+>        }
+> 
+>        return 0;
+> }
+> 
+> [    1.337020][    T1] cpu_id:6
+> [    1.337338][    T1] 0: cpu_1
+> [    1.337558][    T1] 1: cpu_3
+> [    1.337751][    T1] 2: cpu_5
+> [    1.337960][    T1] 3: cpu_64
+> [    1.338183][    T1] 4: cpu_64
+> [    1.338387][    T1] 5: cpu_64
+> [    1.338594][    T1] 6: cpu_64
+> 
+> In summary, the nr_cpu_ids = last_bit + 1, and cpumask_nth() return the nth cpu_id.
+> 
+OK, i misread the cpumask_nth(). We should go with *_next() variant instead.
 
-Yes, because there are follow up commits that depend on it.
+Thank you for pointing this. Below is updated version with extra comment:
 
-I seriously doubt that this is correctly bisected, because that commit
-only adds a counter for tracking the number of extent maps.
-It's using a per cpu counter and I can't think of anything more
-efficient than that.
+<snip>
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 45e1506d58c3..03b82fb8ecd3 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2542,7 +2542,15 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
++
++       /*
++        * Please note, nr_cpu_ids points on a highest set
++        * possible bit, i.e. we never invoke cpumask_next()
++        * if an index points on it which is nr_cpu_ids - 1.
++        */
++       if (!cpu_possible(index))
++               index = cpumask_next(index, cpu_possible_mask);
+ 
+        return &per_cpu(vmap_block_queue, index).vmap_blocks;
+ }
+<snip>
 
-The commit that adds the extent map shrinker, which is the next commit
-(956a17d9d050761e34ae6f2624e9c1ce456de204), that can
-explain what you are observing.
+Thanks!
 
-Now the one you bisected doesn't make sense, not just because it's
-just a counter update but also because you are
-only seeing the kswapd0 slowdown, which is what triggers the shrinker.
-
-The shrinker itself can be improved, there's one place where I know it
-might loop too much, and I'll improve that.
-
-Thanks.
-
->
-> > git reset --hard v6.10-rc1
-> HEAD is now at 1613e604df0c Linux 6.10-rc1
->
-> > git revert -n f1d97e76915285013037c487d9513ab763005286
-> Auto-merging fs/btrfs/disk-io.c
-> Auto-merging fs/btrfs/extent_map.c
-> Auto-merging fs/btrfs/fs.h
-> CONFLICT (content): Merge conflict in fs/btrfs/fs.h
-> error: could not revert f1d97e769152... btrfs: add a global per cpu
-> counter to track number of used extent maps
->
-> However I double checked every bisect step and I am confident in the
-> correctness of the result.
->
-> I also attach here a full kernel log and build config.
->
-> My hardware specs: https://linux-hardware.org/?probe=3Dd377acdb9e
->
-> Filipe can you look into this please?
->
-> [1] https://postimg.cc/Xrn6qfxh
->
-> --
-> Best Regards,
-> Mike Gavrilov.
+--
+Uladzislau Rezki
