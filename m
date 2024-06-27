@@ -1,75 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA4D1591F0
-	for <regressions@lists.linux.dev>; Thu, 27 Jun 2024 13:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BEC15EFA4
+	for <regressions@lists.linux.dev>; Thu, 27 Jun 2024 15:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719495458; cv=none; b=cIueHnw1Azw7+1JigAjMFqbYsq9vHztYE42hd7yQV1uOl8ghCffYhhQ1o2B5YOo00pEuXso0pyVoYQ9eeB1TYD4FdIDfTGac2fQKiVjWUHuDF5eF1TOW5RJkfwEbU4GR6VbgO5gBccRsXaexW4XKzPYcY+hdGPb8kUDkMQ25/B0=
+	t=1719501508; cv=none; b=NNXMiE3LFXhegkXmW3Sdv6mAltLLCrgsbP/cQ5pOlJqaWpiSF+JMxzFXj55keEfgSBDYz4tHJOdDX7M4zVp5Q0stvWmFyZ1MFIEYZDrYv0Dz7E9uFBK3OrlDXXkMXMc1aZ4N9WFUSORgtZecnf7ACGqwpMSnT0MNIW2QIiRM0fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719495458; c=relaxed/simple;
-	bh=EYXkiugLMl7Qig9AoKuF3ghnTZgptK5nSfVv935sqBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hW/PAxFRDe8x+dn7K450+TD8M52oKu6NlbpQjuDC26g7dmx8m4jfHhgs9HVhdCro21SDTvwq8M8frOQJ7fqVHMHWWu+lDrTjWlF/qJa82Q9GS3g1dJvL4756rxbpnDRb6AhIGos218F2OoOsftOWlpaLo2mYNT5guj6mGqGEZPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PuYqE71n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719501508; c=relaxed/simple;
+	bh=rd9B8xY0B5MwTnZwh8v0cz6l7vCZV1fvQFyayKh+SHg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=UJ9s8QX4EU7fIJmyUouEMbTWjTquuubg42foC+3o1y2PRAiWrJuxW+SVq20zKCV9hBpk2VxC6J/XdEbVOIZ31ktQyYkEv6zAA3CRaYsSkgicFbvkyDlLCRDfbwihs1+6VilC/Q7HZ7koWRWdIYex21wC+HpjWa+hx8SAgFkKyBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=tenjQByl; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PuYqE71n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC68C2BBFC;
-	Thu, 27 Jun 2024 13:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719495458;
-	bh=EYXkiugLMl7Qig9AoKuF3ghnTZgptK5nSfVv935sqBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PuYqE71nAMDxkos9MR3A11XtcDYVGETtSI1OYWPBeo8Naw9GmjgfTKZFXprepMEKc
-	 A0gP83g2jVdbaEz5pHOyaO7QjdD8X1Jn2WnXW7WJXmneQhbfECkmNPAT9rJnAiOtiC
-	 r0m76MQ4jhKRX0tH9QU80L74ixrQiYG+Po14H0gA=
-Date: Thu, 27 Jun 2024 15:37:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: =?iso-8859-1?Q?Steinbei=DFer=2C?= Sebastian <Sebastian.Steinbeisser@lrz.de>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"pc@manguebit.com" <pc@manguebit.com>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-Message-ID: <2024062719-landslide-customize-6415@gregkh>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="tenjQByl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=rd9B8xY0B5MwTnZwh8v0cz6l7vCZV1fvQFyayKh+SHg=; t=1719501505;
+	x=1719933505; b=tenjQByl+vmS/bFpwfUEKJFSFY2wkbMX7agIA4DJazKakt/dqar607oTrY70W
+	TRwlvjz64eF135/bRVg3IpRFglqzkX5AR4z9TG2JKe00u3tm2zR/p79aJSopQ2Kjo5hZsfGzfRoEo
+	j6Xg/+jktx58h9zCCYGr7IwkflDHqVZilEt82NO8cNAE6RmygqdRwWhkb0I+4Sjyck5umUa2AwHWT
+	Y5AEjc5t5BqOYz9fWtpOn+GKUcbLNrVCa0I+CK7ZTxKs2v83aK6sQuIzQa4Qy+Yi4BkiMSGLaPCgn
+	K81uyrZHb5RZ+2CX5y1Hh91cTtZFMcuv8nNUbGo9W4vMUW+UcQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sMqt8-00051T-7o; Thu, 27 Jun 2024 17:18:18 +0200
+Message-ID: <747fd0e2-acbe-426a-8fbf-0a04217b7469@leemhuis.info>
+Date: Thu, 27 Jun 2024 17:18:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719501505;31edb821;
+X-HE-SMSGID: 1sMqt8-00051T-7o
 
-On Thu, Jun 27, 2024 at 01:28:29PM +0000, Steinbeißer, Sebastian wrote:
-> #regzbot introduced: v6.6
-> 
-> Dear Kernel developers,
-> 
-> I'm a NetApp storage admin and we started receiving reports by our
-> customers that subvolumes of exported volumes can no longer be accessed
-> transparently but need to be mounted separately.
-> 
-> The way this works with NetApp is that a volume, e.g., myvol, within
-> the storage virtual machine (SVM - vserver) is exported and can be
-> accessed by mounting //SVM_IP/myvol into, e.g., /mnt/myvol
-> Subvolumes can be added to the junction path, e.g., mysubvol can be
-> mounted under myvol and used to be transparently accessable via
-> /mnt/myvol/mysubvol just like any directory within myvol would be.
-> This now is no longer the case and the subvolume needs to be mounted
-> separately.
-> 
-> This has started when customers upgraded distributions that shipped
-> with kernel >=6.6.
-> https://wiki.samba.org/index.php/LinuxCIFSKernel#6.6_(module_version_2.45)_(47_changesets)
-> 
-> We've been able to reproduce the behavior with Fedora/Ubuntu and
-> kernels 6.6 to 6.9.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Any chance you can use 'git bisect' to find the offending change if you
-can reproduce this?  And you might want to cc: the smbfs maintainers.
 
-thanks,
+#regzbot report:
+https://lore.kernel.org/all/210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu/
+#regzbot introduced: 60e3318e3e900
+#regzbot fix: cifs: use origin fullpath for automounts
 
-greg k-h
+#regzbot report:
+https://lore.kernel.org/all/CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs%2BA@mail.gmail.com/
+#regzbot introduced: 956a17d9d050761e
+#regzbot summary: btrfs: increased execution time of the kswapd0 process
+and symptoms as if there is not enough memory
