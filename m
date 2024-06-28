@@ -1,94 +1,76 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17AC1C9EB1
-	for <regressions@lists.linux.dev>; Fri, 28 Jun 2024 15:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9981DFFB
+	for <regressions@lists.linux.dev>; Fri, 28 Jun 2024 15:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719587971; cv=none; b=hMOVbjC/2IFma4QODzqhNtYKfZBLXWwZ/H14to4rPa+ozo4i3LITDXvT37FYehfHhm3GqWp2vFfrpwQMjMTLlkGU5gh9V8PpgX7CRCyLjichLPxe5VHm0s1pLArrau42h1ccZYgXAc85DtpDumoll/QIBJzYFCMdxvxqBVPCUvs=
+	t=1719588831; cv=none; b=ATklZpK1MOVXlBXvp1sVIWWFebJ9wpA6ghX0hFgosas6M0I6C06L1RUkdbKZxgTsq0eVUnl4n4sskOPSAitt/ejRbaL4iUe/enFQ9+XCFnu8R3yJ7gtwCRg5UqSGEFKR63+o5njP2dGaBfCP0ZpnpTBlTY6RdtksSkVDG58BVxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719587971; c=relaxed/simple;
-	bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qhFl1tSsrRVx+z99oBtilSoxeBBHYQeFA6bxW3CNuNz7wz6TovmIk3+TrhubJnORb0Q4WQKBzosg7Nh/q/R8aHilfEY2Kfftotjuhg1K6Xfp800dYynQwDCvq9gMcS14uhNvlPgjNHtHGRlvdIOFAkf8yWrcZyhrQqrAFyq+9HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dyI0ins2; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719588831; c=relaxed/simple;
+	bh=UGraYYRshWDZ/TSwoFBJ1oL9VD2hT5teuU1cfPnh0zQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=tA9kRFErQLBiAj4G6UoQInW8cpNyZz9XKLv+sc43P6YCeDMG7Tg95VSbUi0nz+O43wQj5e5QVY3GXQf4/B58y41C4gJ5AaKo0oT6wPBtTf4vy3PFW9NQS7ZLwnhc3paazk1llw4ddtnRLfV3a1GpMJx4RwP6Rx0srMnDVpb8QHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UBlyLmFW; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyI0ins2"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c8e7553c9eso536804a91.3
-        for <regressions@lists.linux.dev>; Fri, 28 Jun 2024 08:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719587969; x=1720192769; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-        b=dyI0ins2ScP5jiUVXw2P+Lmnu3cJWiOCS7Bg5SoJCa40BSY/Pc1edtqz5KfxI76X2S
-         jrzvmhN3b7BeOyFfc8vskLC+Mero4KsoLGaVDeQBRtaRUlrpG+FNejC/SEPqZR5dXJLm
-         quu6GQeXEGsWYeFE+IXsIQelsE6id7pwu+QKlHiqn+M9q422r7z//SUh4DezEclTgIdK
-         N+5qppVLf2XX/7cdiiJkWSvVg/YWaDefJ7IhhI6V0K33MqgLAkf+dCzfP6s7KfZnGxLn
-         UWSdK+TJixHV++Idet1esrvA0kkVRcWX1i67zdx+5Zur3ZyoodYO4Q54S68F2CJJU0mE
-         /j0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719587969; x=1720192769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-        b=DmOG+pGj9ZM0xJ/CZhhrILYjn53hMcnt9TGVg+XSIkcT+wtFeGSef3vESWr2Bj0v72
-         dWTDVcSANzT3CDkLJdCtnEzlJ8vuIS8X+kKamCpGjtUahTulfeLuxEa7q9EQZXB9jnc4
-         8hPM2SLPB/Kwg2ofDSUSTHbJhPEvtEzxVC1zY68DMDQKtHr1Ct486jDfC6ScWKZJrck4
-         74PCdY0UYuUF1HVfXpPclyZA/oQEd7W4A5ZV5n+WDZzRXQ/a1uT5viJlSVaow1o2Hf+Z
-         wlZ8WPaU9iOQk2ChiLhjaudpYcK5Dkc6GZdHNWGSJIK+jqQABr2MgzQ9yjCpmNOCU/cG
-         fEug==
-X-Gm-Message-State: AOJu0YzuB7S2Kr+mF1mL22BlFjcr+9a7PsTMCHGyi4SiCbXesgJVHPSb
-	kC1Opw2YFIGZJuniGwe1BfhkRCNfrFXk5rp9QjKJ2WPZD6m62BaLCc1GIVaCnO4GFQFvjpGrPq2
-	whuUn8LG3VeG4tVVtNMQYH/PPgWo=
-X-Google-Smtp-Source: AGHT+IFl/ePdhUfWsByY453UJoZtJx+hjy/QQ0/MmsxXqE51xtMz7GT1s16IgCAaFz1nVwJbQE6MR1Er5Iz8x1FG1QA=
-X-Received: by 2002:a17:90a:6885:b0:2c7:e24d:f695 with SMTP id
- 98e67ed59e1d1-2c861246b47mr15446562a91.12.1719587968869; Fri, 28 Jun 2024
- 08:19:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UBlyLmFW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=UGraYYRshWDZ/TSwoFBJ1oL9VD2hT5teuU1cfPnh0zQ=; t=1719588829;
+	x=1720020829; b=UBlyLmFWjl9yw53RSg0ek51+R0HPEo+Sub2n8S2K4Powdw5eEyPeKoCojHjhw
+	Q3pAXOOpN+eTEP/5QYGh89u12D4isAaWbOh2F1CFajZwR7J3f+do7NnaKFJohns/tZf3F107YKFVe
+	Qzmrt3fjI2DQ51bVHERKu0Dkq6DlVEvc2ivV6LnkpJuhBPXoHvVGbwP+nNxQrEeGsebqKmQm3qirA
+	8exvkZUqxv08UCFOiM5pwLtlt3gfd2KsucCCrgD+98QwjOh7I0UO2xMg0nZTI1Uyt9YIEp9JUIKOj
+	aAJx5zxYtcy64L1vNAe1N4zIg7zdw/gkr5qzqjGoEo90RKUkQA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sNDbZ-0005Tp-Ux; Fri, 28 Jun 2024 17:33:42 +0200
+Message-ID: <fe92af6e-438b-4c92-a16b-8a89dd751404@leemhuis.info>
+Date: Fri, 28 Jun 2024 17:33:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
- <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
- <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
-In-Reply-To: <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 28 Jun 2024 11:19:16 -0400
-Message-ID: <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Rodrigo.Siqueira@amd.com, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719588829;31cfa557;
+X-HE-SMSGID: 1sNDbZ-0005Tp-Ux
 
-On Fri, Jun 21, 2024 at 6:45=E2=80=AFAM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> On Fri, Jun 21, 2024 at 12:56=E2=80=AFPM Linux regression tracking (Thors=
-ten
-> Leemhuis) <regressions@leemhuis.info> wrote:
-> > Hmmm, I might have missed something, but it looks like nothing happened
-> > here since then. What's the status? Is the issue still happening?
->
-> Yes. Tested on e5b3efbe1ab1.
->
-> I spotted that the problem disappears after forcing the TV to sleep
-> (activate screensaver <Super> + <L>) and then wake it up by pressing
-> any button and entering a password.
-> Hope this information can't help figure out how to fix it.
 
-@Siqueira, Rodrigo @Mahfooz, Hamza any ideas?
 
-Alex
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/a57e9a39-13ce-4e4d-a7a1-c591f6b4ac65@ans.pl/
+#regzbot introduced: caba40ec3531b0849
+#regzbot summary: eeprom: at24: "sysfs: cannot create duplicate
+filename" and i2c registration errors
+
+#regzbot report:
+https://lore.kernel.org/all/5792762.DvuYhMxLoT@devpool47.emlix.com/
+#regzbot introduced: b1992c3772
+#regzbot summary: kbuild: "make xconfig" fails with "No rule to make
+target …/qconf-moc.cc …"
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218707
+#regzbot dup:
+https://lore.kernel.org/all/IdYcxU6x6xuUqUg8cliJUnucfwfTO29TrKIlLGCCYbbIr1EQnP0ZAtTxdAM2hp5e5Gny_acIN3OFDS6v0sazocnZZ1UBaINEJ0HoDnbasSI%3D@protonmail.com/
