@@ -1,97 +1,81 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E69639FF3
-	for <regressions@lists.linux.dev>; Sat, 29 Jun 2024 23:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5BF42AA9
+	for <regressions@lists.linux.dev>; Sun, 30 Jun 2024 10:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719703143; cv=none; b=e0GoFfzG2nMjXjlmO0S54lBrB6CZg/BwGOVBFh3WBvuvGmxSQMo9eoM1qZi16q8XE1PTQoVymrwdwNBeJC11v0yvtDK5JOB+J6ezoVJdN/4yWZ3M1lwyhO1iu67O2lhjuWDvEgbnknHPDnD14pcARgBFFJGnaP4BnqCy7iM+WGU=
+	t=1719741714; cv=none; b=T3XLxpC6zZaY7zuj9ni9UMcqISAM2kbWTVCoBvfEnEWFt5Dx8TBoed/WgTvtjNSViSDgoptGWbCqcgPY328GecEmss5WcmhmuM/c/8DPp9oKNpO05hLxiP/rv5U29iZ8ANxRz53M+H9oSAuOcvhnv6WO9w4SyzSl9XddomLLogc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719703143; c=relaxed/simple;
-	bh=FNv8/W0W5mKgnrGfxxg0WoBrrHGpsq48w5EU6tbPKHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YX5r/LiFLBp5rivBw20waHqEPkvqSlgVXhKaSWXJULEOpLwIp4i/UsGyCYdUh5FDeIuDi9OBJ09rysmfJ7nQnU4XwZVBNWc94yC6iSvEoW6DdaLbCCmm8FP9hs8q3hB5Yw8SPlIZyX82AwExz/4L+ZTES5Yk529sTFiQDRQtatw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IALas4Z5; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719741714; c=relaxed/simple;
+	bh=M8CNLowCG0pyurU9Ne+3PEfu07YNNDJCmGsq18NoByI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=qjWchshR7h2Gax2lP0qtgv237HtGFxQiz0NbwidSj4GCwEcB3exbdKvOzoKypJukUkY3cqbUAZkVn0Qy4DsC4pAHGYtKAqUd8JWPRdZ5dc9M9dCnjxqSy6pXodjzDk5pFPrMgqiVLIai7kWPlXMZuqXRkU/2OFREtzkrZNRAkcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LWBA803y; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IALas4Z5"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6b5217b189eso2055406d6.2
-        for <regressions@lists.linux.dev>; Sat, 29 Jun 2024 16:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719703141; x=1720307941; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XroRg26Q/56W42BWJJi+I1OGaZL3CPZqLZHzczquNHs=;
-        b=IALas4Z5EPvP9TU97gjxXvvx60qY6DhZN7TDpWKq1R/Os/uMFF/INEHgr/Ubkjeks1
-         Ha8yJGnkhw9nzYptBgier+lue+QXyboqnBpQcJ65Txg3rx4BqqVn/MBkDKqgyUSR6LrU
-         VDjvBYfQzylctV8dGiLgojxqFST/BbwJFPwaF62JowA68s8/vqKEKSGyhSqeT4N6uoYi
-         hfFwF1JIG7mvK0HgVAYlKhKirWs0OhWfwAb/lzGIZQSXwukq4sdBD+2gYK+Q2bI0Ng/w
-         sOta6tIkzmGLgeXteVLmejaPK9WACiJTIohQ219z3sN234GYl8vu9u7s/4t7LSJ35q5q
-         +dcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719703141; x=1720307941;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XroRg26Q/56W42BWJJi+I1OGaZL3CPZqLZHzczquNHs=;
-        b=j0OX1fS4736TCIERu5l0QQlo+646wpnxcXwH5wb8zeNOl4CrLW8ieeo5+B/H73Yp6e
-         /TJ1/6vEwK40fGlm1UHNsRfizlJ7ZuRT5jqjCvDkVHpuv1hDgqI4cmNtf86BnZSkVb7f
-         meEIk1DU9X3VyUi7t0i3YiWUmpvnZFJhWPaWaPeS34/WLfIr3b839Fz0ytWT2ZrV55wo
-         DW8UTIqDvzDSvT9Qd7oWw6gPbplRWbsox6+5hZDTkilt5X8q7k+LEDrzT2CRUc/c1qmg
-         jMY1WGmMaPbIE+k1xmg/N4zqvuXDOvoLbj9AXsW1McKo0x3nwn6Nn8xEXXczTKYEOI6V
-         ZcFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkatYx1OcayES7KUOyIoY5Uqe/L9yXMF1eNCukFFbnM/UC+IZklyaivaVn4fhRd6NSZjP1KU0083gG+0GgnRhTbBxQyfwbumF36T8=
-X-Gm-Message-State: AOJu0Yyq5INSwy9yF7YvuPtxxEtNczGqvOLMb8lC4HXkfkZar4YgfTWj
-	kyDd5VEqje3AxssRKT/65S0QRp803V7SBxqZ08VX+eeQ98gvlaACnmUd0ttoUxxFgJCbUsEymcJ
-	ETOePtDZuo4SfSocX/TBJMvc31k4=
-X-Google-Smtp-Source: AGHT+IGhxpyC1sq9wMq2Q8/QZ9d1fuFaSnh4PKaVqBVKSUiIvqWIae53ZCaOAlyNYIk/opAz33KCSq9czjF9x4ULey4=
-X-Received: by 2002:a05:6214:20a3:b0:6a0:cd65:599a with SMTP id
- 6a1803df08f44-6b5b70a3951mr22698716d6.2.1719703141242; Sat, 29 Jun 2024
- 16:19:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LWBA803y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=M8CNLowCG0pyurU9Ne+3PEfu07YNNDJCmGsq18NoByI=; t=1719741712;
+	x=1720173712; b=LWBA803yb60TdaVHCztkuAyqDPhMyWxkiybBgFevog7E+3IoiKZDb8hQiMnFQ
+	80mildbs2RdfZ+9UzL4dOFTH+HbnO9Ven0nVV34XV1sEx8agXqAlWRxKKItGJhiDStv3+q/jAy4sj
+	tulaBmeA55r850UunmgUqhbIe7cqjEbhVdrvYNvHzNcGYOOvFCvINz7AkDEqI5sYf0VMwb9x3dMx0
+	2yZtVRtsnaQqIR/Qijl0XL21n8jPxNcoIf1xbpakkWffwcvPq5OdRzP6wDOHTSzt1hdGNO6eVYSvE
+	wpJPy/FmQ19G9qjKZtAiHAFTd0fseg2g6LW61csjuMahZzwKHA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sNrNP-0001r8-SH; Sun, 30 Jun 2024 12:01:43 +0200
+Message-ID: <be6039dc-58a9-4e22-bd46-caed136460db@leemhuis.info>
+Date: Sun, 30 Jun 2024 12:01:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
- <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
- <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
- <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com> <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com>
-In-Reply-To: <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Sun, 30 Jun 2024 04:18:50 +0500
-Message-ID: <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-To: Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719741712;e36a8d7d;
+X-HE-SMSGID: 1sNrNP-0001r8-SH
 
-On Sat, Jun 29, 2024 at 9:46=E2=80=AFPM Rodrigo Siqueira Jordao
-<Rodrigo.Siqueira@amd.com> wrote:
-> Hi Mikhail,
->
-> I'm trying to reproduce this issue, but until now, I've been unable to
-> reproduce it. I tried some different scenarios with the following
-> components:
->
-> 1. Displays: I tried with one and two displays
->   - 4k@120 - DP && 4k@60 - HDMI
->   - 4k@244 Oled - DP
-> 2. GPU: 7900XTX
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The issue only reproduced with RDNA2 (6900XT)
-RDNA3 (7900XTX) is not affected.
+#regzbot report:
+https://lore.kernel.org/all/dc1e6cba-352b-4c78-93b5-94dd033fca16@linaro.org/
+#regzbot introduced: 202aa0d4bb53
+#regzbot summary: thermal: core: trip points crossed not detected when
+no cooling device bound
+#regzbot fix: thermal: core: Call monitor_thermal_zone() if zone
+temperature is invalid
+#regzbot monitor:
+https://lore.kernel.org/linux-pm/2764814.mvXUDI8C0e@rjwysocki.net/
 
---=20
-Best Regards,
-Mike Gavrilov.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218961
+#regzbot summary: ASoC: SOF: Intel: Lenovo Thinkpad X1 Carbon Gen 10
+first S2idle fails, S0ix fails in all further suspends
+
+#regzbot report:
+https://lore.kernel.org/lkml/20240617193408.1234365-1-stefanb@linux.ibm.com/
+#regzbot summary: tpm: init of TPM chip fails
+
+#regzbot report:
+#regzbot fix: kbuild: Use $(obj)/%.cc to fix host C++ module builds
+#regzbot monitor:
+https://lore.kernel.org/all/20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de/
