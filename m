@@ -1,317 +1,346 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0223EBE;
-	Sun, 30 Jun 2024 16:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7886D2576F
+	for <regressions@lists.linux.dev>; Sun, 30 Jun 2024 17:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719764014; cv=none; b=Dj0wJgySXNfkrLL7v+iAEEACUhnD/46z2jISbtIkt3FARwUhDgj52pA2xXBI5RU5dKW+MaTVTDlUlMX1dea5Tecxje9V27e8NW0Ttd+h+o0MZBa1BezvOVhlSdAG9acVylat7OJglMDjPIiKEvfPoqM0yHRqIEqUMKXtB3W/m2E=
+	t=1719770329; cv=none; b=fkV7KIsIe5x5NBxDwKUeQDCHbG/bdvMOc8WGDR0NqTeBh7jeUk2Dh/j4lfUrtBYRv+R8lh8dXhEHYAhTbfb2JuO648JoKmxWr17QINXxKsqMDGDV+nDKKubUnKF0MD7xPhJ1P/KgLibjxGpxa+kHe9M/YjFRD1O/bZBtmnXGTwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719764014; c=relaxed/simple;
-	bh=KZ9Fvjx21g1K1TNBXpyW6oYm1QN04Uupz8fL4zIgRR0=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=sKGqisp3TkepoV+6/OvNdilqhxymppjr8WCOwpDZEMH7eg9q9LxIXj5OP+O8cpyrCLFYelugM/EEzujVszgPm9/QDO0ZW7lKQxl8TFTV1Q0pgVKWIvqvD0mRBZoCk+RL11ShNOzjyhCbNj0CQJznumZ8KFeTAKIswpNHiKW74y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kc3Ow34u; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1719770329; c=relaxed/simple;
+	bh=HK3RambsDvRtQ6Hri0ymPUA6Mp8K9KQBFsJl0cE0uUQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UmIYNS9Bn8qRon+BKZTam2gzreaUi5k3D3fTFMpZd3Ni3ePCHGFou/dn8Zqf/p4uEQ7lcWkePbz4N/EzA+/yKls2mzVYfMfErQoPEVxcmQdwXeVPuwpEpPhOou7hl8lvMJpsdpea3oLpM5jdhkiyPb0iAB2XuMyO9QSx/fqLizE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwbHf3tf; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kc3Ow34u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=C+OMEzWC8Q8OfStFZ3sYY824ePX+m699ULbpSYW5f3Y=; t=1719764011; x=1720196011;
-	 b=kc3Ow34uc3m1h0DZt2RVSF6JOVGHfRjvu/7PTHlDqrBMBklCfVOxQxWixThv8P3+Pj0faBnxjU
-	IoqIKKyU7FI63g6XoFpf1F4WqjTo/dC5/1PU65D1CMxGoeJWGVehfOZ9IY24TFVtVNkAerVev5vEP
-	7unfNqSFEQ0QlZ2pgC8C0HnF8+9NINIBiAhRPvptXKQMMaArz96Gs84qfBwkGfdoWZ48zoYyu8Oho
-	N8d3UGu4bew2KOBUOCdPHG03Cj64KNTRz/rr/xYtYcd083Kdgi73cld8EUPkoCf7wgywhPU9NYE0R
-	jaJUufcoQI3KfC9BruruHasKe/+eb/9LtQl6g==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1sNxBA-00045G-My; Sun, 30 Jun 2024 18:13:28 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-06-30]
-Date: Sun, 30 Jun 2024 16:13:27 +0000
-Message-ID: <171976397650.2207205.3016482698479351675@leemhuis.info>
-X-Mailer: git-send-email 2.45.2
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwbHf3tf"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-80b58104615so554086241.1
+        for <regressions@lists.linux.dev>; Sun, 30 Jun 2024 10:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719770326; x=1720375126; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RooJD74YPhcavtOzToUvF7qoCvI/JEzdxnFDDQjDAGM=;
+        b=fwbHf3tft6AMEuEVj4pSLFqIL9M7hmQrHYH6FM634qNLE7W2X2nn7vPbsXRId4bSrI
+         E2hQZQSL1NBs3TQgCiRjSOzEwJzijG4LSWrlvG4JQpFw6mPjUVzSo4zJxK7yMZklIBr9
+         O3UfdeM1SiJPcbhaoMMiROjKin2bAuTtowIXdY+FVv8dwIwYn4vg50jpRaD1xZ2nQ5+k
+         bvGeCxq2sc5IXhy3Zmarj+D+gI1FPnDiVj5RznIjLqkRkiM7Bpc4ZZVfs+CoAibWiISW
+         E6CTmLhnwoAEvIDoVGCQMGpxBufng3u5wjQiNbeT2X+l3KumIm6eyFSlRNndAQooSjpx
+         wMGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719770326; x=1720375126;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RooJD74YPhcavtOzToUvF7qoCvI/JEzdxnFDDQjDAGM=;
+        b=Mu/IZffPQnyetPZpZGvrpQmKduTlxKiqE4k28U4v5sGIlORQNdEic/g9cImGVMRFxC
+         vgGChud1j1X1KOxuV8YtRGaXPj5ucjzM1B/C7p8JWqKRWPYHVpUpK7JioOSKAunv3HbM
+         owD/wsU7VU4N9y+A9sf1QAWD9iQi71vevN5jwFQhHMTzbaUDfG6zD7wg2/uHVh3DJit4
+         ir5OEg9/JM1uGUU22NQJs6j4WH16dJYu6QPr8eN55a9Xr8gCHHhf7D1rX85XDg8juLjU
+         hb0RK9mjTIR1hstyBDGIjwLDhKK9zgXK/hgf2FrWPMCSgaxXlzTkRRsB9BE59E//Tt4/
+         fj0g==
+X-Gm-Message-State: AOJu0Ywo7oeLUyr271olVo1oRP+3mUBhrMmd2PbOG02N1d9iXKBNoU4L
+	rDEMmzfePDjEOgLxTob2cB1f1MGk4DxCv8IgqPaaBjqAVsFn4T25UauF9mCTgHVfa0iy/dsmbSF
+	D+YcYyInoPgtfii5rLO/vZuONpvs=
+X-Google-Smtp-Source: AGHT+IFGWfhDQGxsQ5lZNUamWworOjiMfzJRND1IQcem6D2td64ZCDenu4H4Q65Ys79DKchydEyvsSisQLrSVjKmhls=
+X-Received: by 2002:a05:6102:3544:b0:48c:40cd:e4da with SMTP id
+ ada2fe7eead31-48faf0d6717mr3728175137.19.1719770325354; Sun, 30 Jun 2024
+ 10:58:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719764011;b9630135;
-X-HE-SMSGID: 1sNxBA-00045G-My
-
-Hi Linus, find below the weekly report for regressions introduced
-during this cycle. Overall it does not look to bad, but a bit worse then
-in the recent cycles. But there are a few discussions I will prod
-tomorrow to hopefully get a few of those resolved before -rc7; I might
-CC you on some of those threads if no resolution comes into sight soon.
-
-Ciao, Thorsten
-
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 14 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-=======================================================
-current cycle (v6.9.. aka v6.10-rc), culprit identified
-=======================================================
-
-
-:drm/amd: green flashing bar on top of screen
----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com/
-
-By Mikhail Gavrilov; 35 days ago; 9 activities, latest 0 days ago.
-Introduced in bc87d666c05a (v6.10-rc1)
-
-Recent activities from: Mikhail Gavrilov (2), Rodrigo Siqueira
-  Jordao (1), Alex Deucher (1)
-
-One patch associated with this regression:
-* Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-  https://lore.kernel.org/lkml/CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com/
-  23 days ago, by Alex Deucher
-
-
-[ *NEW* ] ASoC: SOF: Intel: Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails, S0ix fails in all further suspends
--------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218961/
-https://bugzilla.kernel.org/show_bug.cgi?id=218961
-https://lore.kernel.org/lkml/ca2d3d47-0ac0-48a5-910b-e481f2a9870a@leemhuis.info/
-https://github.com/thesofproject/linux/issues/5072
-
-By Todd Brandt, Todd Brandt, and Pierre-Louis Bossart; 16 days ago; 8 activities, latest 1 days ago.
-Introduced in d5263dbbd8af (v6.10-rc1)
-
-Recent activities from: Todd Brandt (5), Pierre Bossart (1)
-
-
-[ *NEW* ] tpm: init of TPM chip fails
--------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240617193408.1234365-1-stefanb@linux.ibm.com/
-https://lore.kernel.org/lkml/20240617193408.1234365-1-stefanb@linux.ibm.com/
-
-By Stefan Berger; 12 days ago; 9 activities, latest 1 days ago.
-Introduced in d2add27cf2b8 (v6.10-rc1)
-
-Recent activities from: Stefan Berger (5), James Bottomley (3), Michael
-  Ellerman (1)
-
-3 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize session support
-  https://lore.kernel.org/lkml/5427fe09-199b-4b4b-a451-044e8e352595@linux.ibm.com/
-  12 days ago, by Stefan Berger
-
-
-[ *NEW* ] thermal: core: trip points crossed not detected when no cooling device bound
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/dc1e6cba-352b-4c78-93b5-94dd033fca16@linaro.org/
-https://lore.kernel.org/linux-pm/dc1e6cba-352b-4c78-93b5-94dd033fca16@linaro.org/
-
-By Daniel Lezcano; 4 days ago; 11 activities, latest 2 days ago.
-Introduced in 202aa0d4bb53 (v6.10-rc1)
-
-Fix incoming:
-* thermal: core: Call monitor_thermal_zone() if zone temperature is invalid
-  https://lore.kernel.org/regressions/be6039dc-58a9-4e22-bd46-caed136460db@leemhuis.info/
-
-
-net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64 not detected
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240516204847.171029-1-linux@fw-web.de/
-https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
-
-By Frank Wunderlich; 44 days ago; 29 activities, latest 3 days ago.
-Introduced in 868ff5f4944a (v6.10-rc1)
-
-Fix incoming:
-* arm64: dts: mt7622: fix switch probe on bananapi-r64
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=df768350a87031971a3c834b480aef6ad6f1f1a0
-
-
-[ *NEW* ] btrfs: increased execution time of the kswapd0 process and symptoms as if there is not enough memory
---------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs%2BA@mail.gmail.com/
-
-By Mikhail Gavrilov; 4 days ago; 3 activities, latest 4 days ago.
-Introduced in 956a17d9d050 (v6.10-rc1)
-
-Recent activities from: Mikhail Gavrilov (2), Filipe Manana (1)
-
-
-[ *NEW* ] kbuild: "make xconfig" fails with "No rule to make target …/qconf-moc.cc …"
--------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/5792762.DvuYhMxLoT@devpool47.emlix.com/
-https://lore.kernel.org/all/5792762.DvuYhMxLoT@devpool47.emlix.com/
-
-By Rolf Eike Beer; 6 days ago; 2 activities, latest 6 days ago.
-Introduced in b1992c3772 (v6.10-rc1)
-
-Recent activities from: Nicolas Schier (1), Rolf Eike Beer (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: "make xconfig" fails with "No rule to make target …/qconf-moc.cc …"
-  https://lore.kernel.org/all/20240624-remarkable-hog-of-aurora-fefff1@buildd/
-  6 days ago, by Nicolas Schier
-
-
-spi: omap2-mcpsi: boot hangs with ocelot_mfd driver
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zl/V0dU6SjAMkpLG@colin-ia-desktop/
-https://lore.kernel.org/lkml/Zl%2FV0dU6SjAMkpLG@colin-ia-desktop/
-
-By Colin Foster; 25 days ago; 6 activities, latest 8 days ago.
-Introduced in e64d3b6fc9a3 (v6.10-rc1)
-
-Recent activities from: Colin Foster (1)
-
-One patch associated with this regression:
-* omap2-mcspi multi mode
-  https://lore.kernel.org/lkml/Zl%2FV0dU6SjAMkpLG@colin-ia-desktop/
-  25 days ago, by Colin Foster
-
-
-e1000e: s2idle and S3 broken
-----------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218936/
-https://bugzilla.kernel.org/show_bug.cgi?id=218936
-https://bugzilla.kernel.org/show_bug.cgi?id=218940
-
-By Dieter Mummenschanz and Todd Brandt; 25 days ago; 10 activities, latest 9 days ago.
-Introduced in bfd546a552e1 (v6.10-rc2)
-
-Recent activities from: Brandt, Todd E (1), Paul Menzel (1), Vitaly
-  Lifshits (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* Re: [Intel-wired-lan] [PATCH iwl-net v2 1/1] e1000e: fix force smbus during suspend flow [implicit due to Link/Closes tag]
-  https://lore.kernel.org/all/6be9d31678aa4d8bbe9e1ddb75a2791f@intel.com/
-  9 days ago, by Brandt, Todd E; thread monitored.
-
-Noteworthy links:
-* [iwl-net][PATCH] Revert "e1000e: move force SMBUS near the end of enable_ulp function" [implicit due to Link/Closes tag]
-  https://lore.kernel.org/netdev/20240610013222.12082-1-hui.wang@canonical.com/
-  20 days ago, by Hui Wang; thread monitored.
-* [iwl-net][PATCH v2] Revert "e1000e: move force SMBUS near the end of enable_ulp function" [implicit due to Link/Closes tag]
-  https://lore.kernel.org/netdev/20240611062416.16440-1-hui.wang@canonical.com/
-  19 days ago, by Hui Wang; thread monitored.
-* [Intel-wired-lan] [PATCH iwl-net v2 1/1] e1000e: fix force smbus during suspend flow [implicit due to Link/Closes tag]
-  https://lore.kernel.org/all/20240620063645.4151337-1-vitaly.lifshits@intel.com/
-  10 days ago, by Vitaly Lifshits; thread monitored.
-
-
-drm/bridge: adv7511: Intermittent EDID failures
------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240601132459.81123-1-aford173@gmail.com/
-https://lore.kernel.org/lkml/20240601132459.81123-1-aford173@gmail.com/
-
-By Adam Ford; 29 days ago; 6 activities, latest 9 days ago.
-Introduced in f3d9683346d6 (v6.10-rc1)
-
-Fix incoming:
-* drm/bridge: adv7511: Fix Intermittent EDID failures
-  https://lore.kernel.org/regressions/1b79fc84-588e-4ff1-8034-8fc99686f831@leemhuis.info/
-
-
-drm/qxl: VM graphics often malfunction after boot and sometimes shutdowns occur
--------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-
-By Kaplan, David; 27 days ago; 3 activities, latest 16 days ago.
-Introduced in b33651a5c98d (v6.10-rc1)
-
-
-====================================================
-current cycle (v6.9.. aka v6.10-rc), unknown culprit
-====================================================
-
-
-[ *NEW* ] spi: omap2-mcspi: omap2-mcspi broke, Oops after a timeout
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
-https://lore.kernel.org/lkml/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
-
-By João Paulo Gonçalves; 17 days ago; 5 activities, latest 6 days ago.
-Introduced in v6.9..v6.10-rc3
-
-Recent activities from: Louis Chauvet (1), Linux regression tracking
-  (Thorsten Leemhuis) (1), João Paulo Gonçalves (1), Thorsten
-  Leemhuis (1)
-
-
-performance problems on Thinkpad X220 (GPU working harder and causing throttling?)
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZmrTZozoi0t/tuva@duo.ucw.cz/
-https://lore.kernel.org/lkml/ZmrTZozoi0t%2Ftuva@duo.ucw.cz/
-
-By Pavel Machek; 17 days ago; 11 activities, latest 10 days ago.
-Introduced in v6.9..v6.10-rc3
-
-Recent activities from: Pavel Machek (2), Gerhard Stoiber (1), Linus
-  Torvalds (1)
-
-
-[ *NEW* ] iwlwifi 0000:02:00.0: Microcode SW error detected.  Restarting 0x82000000.
-------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218946/
-https://bugzilla.kernel.org/show_bug.cgi?id=218946
-https://lore.kernel.org/lkml/f16d49f6-01a4-45c7-aabf-ab6a1b8bfe6e@leemhuis.info/
-
-By doru iorgulescu and doru iorgulescu; 22 days ago; 8 activities, latest 13 days ago.
-Introduced in v6.9..v6.10-rc3
-
-Recent activities from: The Linux kernel's regression tracker (Thorsten
-  Leemhuis) (2), Miri Korenblit (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/171855416884.750783.12465497601688065358@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Sun, 30 Jun 2024 18:58:34 +0100
+Message-ID: <CAKbZUD1-kqfuV0U+KDKPkQbm=RwzD_A1H3qk_c+bw92CqtMbuw@mail.gmail.com>
+Subject: zswap_writeback_entry crashes in 6.9.5
+To: mm <linux-mm@kvack.org>
+Cc: Linux Regressions <regressions@lists.linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Heusel <christian@heusel.eu>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi everyone,
+
+Reporting a bug I've experienced over the last few releases, all in
+6.9. I don't have a repro for it (seems to happen randomly?). Distro
+is Arch Linux (which is itself minimally patched, config
+https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/blob/e1057d426590bd2064df83779f8644de519874c0/config).
+
+I understand 6.9.5 is a little old, but as I have no repro I'm posting
+this in case someone has any hints or has hit this before.
+
+dmesg:
+BUG: unable to handle page fault for address: 00000000000315af
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP PTI
+CPU: 5 PID: 90 Comm: kswapd0 Tainted: P     U     OE
+6.9.5-arch1-1 #1 b9e5462a84a73f67b5c7c6b73f88d2a6349ae768
+Hardware name: ASUSTeK COMPUTER INC. X542URR/X542URR, BIOS X542URR.310
+10/29/2021
+RIP: 0010:zswap_writeback_entry+0x128/0x1f0
+Code: 89 ef e8 3b 5a a8 00 48 89 de 48 89 ef e8 20 f4 ff ff 65 48 ff
+05 d8 82 68 7e 4c 8b 6d 38 4d 85 ed 74 1a 66 90 e8 f8 2a dc ff <49> 8b
+7d 10 be 6e 00 00 00 e8 fa eb ff ff e8 75 7d dc ff 48 89 ef
+RSP: 0018:ffffbc740049b848 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: ffffdcd8c489c480 RCX: 0000000000001000
+RDX: ffff9e0401e1ec00 RSI: 0000000000000f80 RDI: ffff9e04b3641bc8
+RBP: ffff9e04603b15a0 R08: 0000000000000080 R09: ffff9e0422713000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffbc740049b850
+R13: 000000000003159f R14: 00000000001d6747 R15: ffff9e040d207750
+FS:  0000000000000000(0000) GS:ffff9e0566c80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000000315af CR3: 000000020a420003 CR4: 00000000003706f0
+Call Trace:
+<TASK>
+? __die_body.cold+0x19/0x27
+? page_fault_oops+0x15a/0x2b0
+? exc_page_fault+0x81/0x190
+? asm_exc_page_fault+0x26/0x30
+? zswap_writeback_entry+0x128/0x1f0
+? zswap_writeback_entry+0x128/0x1f0
+shrink_memcg_cb+0x82/0xd0
+__list_lru_walk_one+0xa3/0x1b0
+? __pfx_shrink_memcg_cb+0x10/0x10
+? __pfx_shrink_memcg_cb+0x10/0x10
+list_lru_walk_one+0x5d/0x90
+zswap_shrinker_scan+0xbd/0x120
+do_shrink_slab+0x143/0x360
+shrink_slab+0x2a9/0x3b0
+shrink_one+0x120/0x1f0
+shrink_node+0x962/0xbb0
+balance_pgdat+0x4c5/0x960
+? psi_task_switch+0xd6/0x230
+? finish_task_switch.isra.0+0x99/0x2e0
+kswapd+0x1f5/0x380
+? __pfx_autoremove_wake_function+0x10/0x10
+? __pfx_kswapd+0x10/0x10
+kthread+0xcf/0x100
+? __pfx_kthread+0x10/0x10
+ret_from_fork+0x31/0x50
+? __pfx_kthread+0x10/0x10
+ret_from_fork_asm+0x1a/0x30
+</TASK>
+Modules linked in: snd_seq_dummy rfcomm snd_hrtimer snd_seq
+xt_conntrack xt_MASQUERADE nf_conntrack_netlink xt_addrtype nft_compat
+br_netfilter xfrm_interface xfrm6_tunnel tunnel4 tunnel6 xfrm_user
+xfrm_algo nf
+t_masq nft_ct nft_reject_ipv4 nf_reject_ipv4 nft_reject nft_chain_nat
+nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables libcrc32c
+bridge stp llc overlay cmac algif_hash algif_skcipher af_alg bnep vbox
+netflt(OE) vboxnetadp(OE) vboxdrv(OE) nvidia_uvm(POE) nvidia_drm(POE)
+nvidia_modeset(POE) snd_hda_codec_hdmi nvidia(POE)
+intel_uncore_frequency intel_uncore_frequency_common snd_soc_avs
+snd_soc_hda_codec snd_so
+c_skl snd_soc_hdac_hda snd_hda_ext_core snd_soc_sst_ipc
+snd_soc_sst_dsp intel_tcc_cooling x86_pkg_temp_thermal
+snd_soc_acpi_intel_match snd_hda_codec_realtek intel_powerclamp
+snd_soc_acpi coretemp snd_hda_codec
+_generic snd_soc_core snd_hda_scodec_component snd_compress kvm_intel
+ac97_bus vfat snd_pcm_dmaengine crct10dif_pclmul fat snd_hda_intel
+crc32_pclmul polyval_clmulni
+snd_intel_dspcfg ath10k_pci polyval_generic btusb uvcvideo
+snd_intel_sdw_acpi gf128mul ath10k_core videobuf2_vmalloc
+ghash_clmulni_intel btrtl snd_usb_audio sha512_ssse3 btintel uvc
+snd_hda_codec ath sha256_ss
+se3 processor_thermal_device_pci_legacy videobuf2_memops
+snd_usbmidi_lib btbcm processor_thermal_device videobuf2_v4l2
+sha1_ssse3 spi_pxa2xx_platform btmtk hid_multitouch aesni_intel
+8250_dw dw_dmac mac80211 le
+dtrig_netdev snd_ump processor_thermal_wt_hint snd_hda_core
+crypto_simd videodev bluetooth processor_thermal_rfim snd_rawmidi
+cryptd r8169 iTCO_wdt asus_nb_wmi snd_hwdep videobuf2_common
+processor_thermal_rapl
+rapl asus_wmi intel_pmc_bxt libarc4 snd_seq_device ecdh_generic mc
+mousedev joydev snd_pcm intel_rapl_msr ee1004 mei_hdcp mei_pxp
+iTCO_vendor_support intel_cstate snd_timer intel_rapl_common realtek
+platform_pr
+ofile cfg80211 intel_uncore pcspkr wmi_bmof i2c_i801 sparse_keymap
+processor_thermal_wt_req snd mei_me mdio_devres intel_lpss_pci
+processor_thermal_power_floor i2c_smbus rfkill
+processor_thermal_mbox intel_xhci_usb_role_switch intel_lpss soundcore
+libphy mei intel_pch_thermal roles intel_soc_dts_iosf idma64
+i2c_hid_acpi i2c_hid int3403_thermal intel_pmc_core
+int340x_thermal_zone inte
+l_vsec pmt_telemetry int3400_thermal acpi_thermal_rel
+pinctrl_sunrisepoint pmt_class acpi_pad asus_wireless mac_hid kvmgt
+mdev vfio_iommu_type1 vfio iommufd kvm i2c_dev sg crypto_user dm_mod
+loop nfnetlink ip_t
+ables x_tables ext4 crc32c_generic crc16 mbcache jbd2 hid_generic
+usbhid i915 serio_raw i2c_algo_bit atkbd drm_buddy libps2 ttm
+vivaldi_fmap mxm_wmi intel_gtt crc32c_intel drm_display_helper
+xhci_pci cec xhci_p
+ci_renesas i8042 video serio wmi
+CR2: 00000000000315af
+---[ end trace 0000000000000000 ]---
+RIP: 0010:zswap_writeback_entry+0x128/0x1f0
+Code: 89 ef e8 3b 5a a8 00 48 89 de 48 89 ef e8 20 f4 ff ff 65 48 ff
+05 d8 82 68 7e 4c 8b 6d 38 4d 85 ed 74 1a 66 90 e8 f8 2a dc ff <49> 8b
+7d 10 be 6e 00 00 00 e8 fa eb ff ff e8 75 7d dc ff 48 89 ef
+RSP: 0018:ffffbc740049b848 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: ffffdcd8c489c480 RCX: 0000000000001000
+RDX: ffff9e0401e1ec00 RSI: 0000000000000f80 RDI: ffff9e04b3641bc8
+RBP: ffff9e04603b15a0 R08: 0000000000000080 R09: ffff9e0422713000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffbc740049b850
+R13: 000000000003159f R14: 00000000001d6747 R15: ffff9e040d207750
+FS:  0000000000000000(0000) GS:ffff9e0566c80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000000315af CR3: 000000020a420003 CR4: 00000000003706f0
+note: kswapd0[90] exited with irqs disabled
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 90 at kernel/exit.c:827 do_exit+0x8c7/0xaf0
+Modules linked in: snd_seq_dummy rfcomm snd_hrtimer snd_seq
+xt_conntrack xt_MASQUERADE nf_conntrack_netlink xt_addrtype nft_compat
+br_netfilter xfrm_interface xfrm6_tunnel tunnel4 tunnel6 xfrm_user
+xfrm_algo nf
+t_masq nft_ct nft_reject_ipv4 nf_reject_ipv4 nft_reject nft_chain_nat
+nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables libcrc32c
+bridge stp llc overlay cmac algif_hash algif_skcipher af_alg bnep vbox
+netflt(OE) vboxnetadp(OE) vboxdrv(OE) nvidia_uvm(POE) nvidia_drm(POE)
+nvidia_modeset(POE) snd_hda_codec_hdmi nvidia(POE)
+intel_uncore_frequency intel_uncore_frequency_common snd_soc_avs
+snd_soc_hda_codec snd_so
+c_skl snd_soc_hdac_hda snd_hda_ext_core snd_soc_sst_ipc
+snd_soc_sst_dsp intel_tcc_cooling x86_pkg_temp_thermal
+snd_soc_acpi_intel_match snd_hda_codec_realtek intel_powerclamp
+snd_soc_acpi coretemp snd_hda_codec
+_generic snd_soc_core snd_hda_scodec_component snd_compress kvm_intel
+ac97_bus vfat snd_pcm_dmaengine crct10dif_pclmul fat snd_hda_intel
+crc32_pclmul polyval_clmulni
+snd_intel_dspcfg ath10k_pci polyval_generic btusb uvcvideo
+snd_intel_sdw_acpi gf128mul ath10k_core videobuf2_vmalloc
+ghash_clmulni_intel btrtl snd_usb_audio sha512_ssse3 btintel uvc
+snd_hda_codec ath sha256_ss
+se3 processor_thermal_device_pci_legacy videobuf2_memops
+snd_usbmidi_lib btbcm processor_thermal_device videobuf2_v4l2
+sha1_ssse3 spi_pxa2xx_platform btmtk hid_multitouch aesni_intel
+8250_dw dw_dmac mac80211 le
+dtrig_netdev snd_ump processor_thermal_wt_hint snd_hda_core
+crypto_simd videodev bluetooth processor_thermal_rfim snd_rawmidi
+cryptd r8169 iTCO_wdt asus_nb_wmi snd_hwdep videobuf2_common
+processor_thermal_rapl
+rapl asus_wmi intel_pmc_bxt libarc4 snd_seq_device ecdh_generic mc
+mousedev joydev snd_pcm intel_rapl_msr ee1004 mei_hdcp mei_pxp
+iTCO_vendor_support intel_cstate snd_timer intel_rapl_common realtek
+platform_pr
+ofile cfg80211 intel_uncore pcspkr wmi_bmof i2c_i801 sparse_keymap
+processor_thermal_wt_req snd mei_me mdio_devres intel_lpss_pci
+processor_thermal_power_floor i2c_smbus rfkill
+processor_thermal_mbox intel_xhci_usb_role_switch intel_lpss soundcore
+libphy mei intel_pch_thermal roles intel_soc_dts_iosf idma64
+i2c_hid_acpi i2c_hid int3403_thermal intel_pmc_core
+int340x_thermal_zone inte
+l_vsec pmt_telemetry int3400_thermal acpi_thermal_rel
+pinctrl_sunrisepoint pmt_class acpi_pad asus_wireless mac_hid kvmgt
+mdev vfio_iommu_type1 vfio iommufd kvm i2c_dev sg crypto_user dm_mod
+loop nfnetlink ip_t
+ables x_tables ext4 crc32c_generic crc16 mbcache jbd2 hid_generic
+usbhid i915 serio_raw i2c_algo_bit atkbd drm_buddy libps2 ttm
+vivaldi_fmap mxm_wmi intel_gtt crc32c_intel drm_display_helper
+xhci_pci cec xhci_p
+ci_renesas i8042 video serio wmi
+CPU: 5 PID: 90 Comm: kswapd0 Tainted: P     UD    OE
+6.9.5-arch1-1 #1 b9e5462a84a73f67b5c7c6b73f88d2a6349ae768
+Hardware name: ASUSTeK COMPUTER INC. X542URR/X542URR, BIOS X542URR.310
+10/29/2021
+RIP: 0010:do_exit+0x8c7/0xaf0
+Code: 08 00 00 e9 09 fe ff ff 49 8d 7c 24 18 e8 61 4f 07 00 e9 3b f8
+ff ff 48 8b bb 20 06 00 00 31 f6 e8 7e e1 ff ff e9 83 fd ff ff <0f> 0b
+e9 b1 f7 ff ff 48 89 df e8 ca 67 12 00 e9 54 f9 ff ff 0f 0b
+RSP: 0018:ffffbc740049bec8 EFLAGS: 00010282
+RAX: 0000000400000000 RBX: ffff9e0401e1ec00 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 0000000000002710 RDI: ffff9e0401017380
+RBP: 0000000000000009 R08: 0000000000000000 R09: ffffbc740049bdb8
+R10: ffffffff836b21a8 R11: 0000000000000003 R12: ffff9e040101f500
+R13: ffff9e0401017380 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff9e0566c80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000000315af CR3: 000000020a420003 CR4: 00000000003706f0
+Call Trace:
+<TASK>
+? do_exit+0x8c7/0xaf0
+? __warn.cold+0x8e/0xe8
+? do_exit+0x8c7/0xaf0
+? report_bug+0xff/0x140
+? handle_bug+0x3c/0x80
+? exc_invalid_op+0x17/0x70
+? asm_exc_invalid_op+0x1a/0x20
+? do_exit+0x8c7/0xaf0
+? do_exit+0x71/0xaf0
+make_task_dead+0x90/0x90
+rewind_stack_and_make_dead+0x16/0x20
+RIP: 0000:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX: 0000000000000000
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+</TASK>
+---[ end trace 0000000000000000 ]---
+
+A little disassembly around zswap_writeback_entry+0x128 (+296 in the disasm):
+   0xffffffff813a97ab <+267>:   call   0xffffffff813a8bd0 <zswap_decompress>
+  0xffffffff813a97b0 <+272>:   incq   %gs:0x7ec882d8(%rip)        #
+0x31a90 <vm_event_states+880>
+  0xffffffff813a97b8 <+280>:   mov    0x38(%rbp),%r13
+  0xffffffff813a97bc <+284>:   test   %r13,%r13
+  0xffffffff813a97bf <+287>:   je     0xffffffff813a97db
+<zswap_writeback_entry+315>
+  0xffffffff813a97c1 <+289>:   jmp    0xffffffff813a97db
+<zswap_writeback_entry+315>
+  0xffffffff813a97c3 <+291>:   call   0xffffffff8116c2c0 <__rcu_read_lock>
+  0xffffffff813a97c8 <+296>:   mov    0x10(%r13),%rdi
+  0xffffffff813a97cc <+300>:   mov    $0x6e,%esi
+  0xffffffff813a97d1 <+305>:   call   0xffffffff813a83d0
+<count_memcg_events.constprop.0>
+  0xffffffff813a97d6 <+310>:   call   0xffffffff81171550 <__rcu_read_unlock>
+  0xffffffff813a97db <+315>:   mov    %rbp,%rdi
+  0xffffffff813a97de <+318>:   call   0xffffffff813a9520 <zswap_entry_free>
+  0xffffffff813a97e3 <+323>:   lock orb $0x8,(%rbx)
+  0xffffffff813a97e7 <+327>:   lock orb $0x4,0x2(%rbx)
+  0xffffffff813a97ec <+332>:   mov    %r12,%rsi
+  0xffffffff813a97ef <+335>:   mov    %rbx,%rdi
+  0xffffffff813a97f2 <+338>:   call   0xffffffff8139f2e0 <__swap_writepage>
+
+which (by my manual inspection) more or less cleanly lands us around:
+
+
+zswap_decompress(entry, &folio->page);
+
+count_vm_event(ZSWPWB);
+if (entry->objcg)
+    count_objcg_event(entry->objcg, ZSWPWB);
+
+zswap_entry_free(entry);
+
+/* folio is up to date */
+folio_mark_uptodate(folio);
+
+/* move it to the tail of the inactive list after end_writeback */
+folio_set_reclaim(folio);
+
+/* start writeback */
+__swap_writepage(folio, &wbc);
+
+
+
+It looks like entry->objcg is garbage? My second-to-last repro of this
+(in my logs) has an equally bogus but different address (0x1317), on
+6.9.1.
+
+Again, really sorry I can't give out more information, but my repro
+really is "Use the system for a bunch of days in a row and we'll
+Eventually(tm) hit this", which really isn't suited for bisection or
+anything of the sort :)
+
+PS: I tested my RAM for a few memtest86 cycles, to be sure it wasn't
+just a RAM stick gone bad.
+
+Thanks!
+Pedro
