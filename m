@@ -1,99 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD42460BBE;
-	Mon,  1 Jul 2024 12:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E574664C6;
+	Mon,  1 Jul 2024 12:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835936; cv=none; b=QBcZXo/UVHpw96lpngWHbXCf+yIcaUq8RqU08lj/dUL97232Wt39HKmWIpr8OfMHOq5IK0YU4Bf39Q0jXrTs2STi9nBLzu15fVcbUaZPQ+quMwQYy8YCs3WoxyGnxrIIYpmwj0KRnm1HsE0S65zIqw8vFvGtU3WbgI4HyIPzBOY=
+	t=1719835988; cv=none; b=lz4VdTPcaUOHjHWFxAbJ7+ACCCDjglwxGw701swKfsqJ0yCy4ZjhYXJmvhD1LDISjYRQRqEr3/cbnES6r+GxeZ3TSfGj/rluie9+eFX2HMu73tPvB5VtZ4ODr7GVj3NmmGO0Cvo7wHq6rMEHYDRuAntudRR4TTPGbYS3DOC1hXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835936; c=relaxed/simple;
-	bh=l1xklY2Zev/GPyKUlcXxfi6zfjXVvNRWMxSiulovik0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XSpyrpzM81Nepsru39l4xLyQ9uxF4L9QnclcytpDYnv3qOduUYHB921P01XmpzZhcBtUExFPwz556Ud6HB9SGmaJHcCetu0TvfMQs30qQk9b56jxXBThKsd4C/xKS8bWLMbP1Ft005KUH9Qc7XjjaNEmFO5UTUteYU/FtAujxGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnQG9xaz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719835988; c=relaxed/simple;
+	bh=Y4zVJ4xfJdxCJO2uOyRE9CjN3rspmO3rce9CIk7rvxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kyIwajOgI6uwLdtCBT9hnPvSahDdRqu7+16RTxTSKvbjAqOTGxj1P5Ptl4upEKd0E7WqkLa8XRnF+V8u875RSD4aff0BkbYB9OD83TfdyNwO9Eb4qWuaLRvksTmahM/hctakLIDXYfnFSmVrMWXYHB1Lj6JbkC28HPdqBvDLUXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=H7bMJYQo; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnQG9xaz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A29C116B1;
-	Mon,  1 Jul 2024 12:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719835936;
-	bh=l1xklY2Zev/GPyKUlcXxfi6zfjXVvNRWMxSiulovik0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FnQG9xazNlsDRaAjHllhxv+zbCRx9t69JrF7sKxFyLIEfMahQR5aVxh/JG3PGe2pV
-	 asgiPbWw19rxl7aZ+J3yYCAGuposUiZSqvyBPIeoXzPNJA8o/iZoSug3VzeAiiwOzF
-	 QL1MVInotzbbS12IQBuh4+Kx8qojl/t6C5EzsrZU0bM51NDB8wjzJQs4YKx3bCOiC9
-	 Q2C/DKmuMK3D1I73x1bPqFKfrhiItI1AoYaCpca7xL5w1gkPdCs2keLYo833Rviux6
-	 PTEmZwBH+NHzUm7IhkblVhCtYAVRM8EdriQsaxQ87+eQgxaBSj8AKYpFqg+ZQvNPRU
-	 b9G/ZhPZHOehw==
-Date: Mon, 1 Jul 2024 13:12:07 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Aishwarya TCV <Aishwarya.TCV@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: Mainline: v6.10-rc6 boot failed across all arm64 devices
-Message-ID: <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
-References: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="H7bMJYQo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=s0SQSY2/qlwdSn2Ne62QkwvKmp6lPNA13idmIDBlXko=;
+	t=1719835986; x=1720267986; b=H7bMJYQo+acxT/MFT40LuTU9RZ6ksOuW+VKrMjaNuW6/6mo
+	Q40czHwmGgT2gyCWjzbMLmErFgMvEXCIEHJgwRBH1QcMK7bHjBL23uMK0ThetwfZewmR/ef5AAK+f
+	9vk1Obx0ZJsDrrp43YZ3SzkC1oX0olIqVWRx/i21q2MFkfjK76sL3/OoaIAysHi3N3wRfzAMrr0Rv
+	UoRiK65dHEVBj3RO1lWk13G7bK7wNw9XynQSKJDrxp+Qsn0x8zu+WpxZ6YYE47WvNNL+tZToavrBL
+	JDHBwmkFw0f90JaBWgVbshS+w+2nDTSZNpS/A+PS1Pgdtf14ZJ6ZzI8V0LX5qbZw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sOFtw-000089-AO; Mon, 01 Jul 2024 14:12:56 +0200
+Message-ID: <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
+Date: Mon, 1 Jul 2024 14:12:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SErMzyUBNKIJosZk"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
-X-Cookie: Microwaves frizz your heir.
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
+ timer together with interrupts"
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+ Markus Schneider-Pargmann <msp@baylibre.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Tony Lindgren <tony@atomide.com>, Judith Mendez <jm@ti.com>,
+ linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux@ew.tq-group.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719835986;baec6e98;
+X-HE-SMSGID: 1sOFtw-000089-AO
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
---SErMzyUBNKIJosZk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
-> The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
-> qemu-arm64 and no crash log found (earlycon) did not help.
->=20
-> But the defconfig builds boot PASS.
->=20
-> The boot problem is with defconfig + Extra Kconfigs and builds links
-> provided in the bottom of this email.
->=20
-> The boot test history shows that,
->   GOOD: v6.10-rc5
->   BAD:  v6.10-rc6
+Hmm, looks like there was not even a single reply to below regression
+report. But also seens Markus hasn't posted anything archived on Lore
+since about three weeks now, so he might be on vacation.
 
-Other CI systems aren't showing this.  I'm guessing you've updated the
-toolchain versions you're using and are running into:
+Marc, do you might have an idea what's wrong with the culprit? Or do we
+expected Markus to be back in action soon?
 
-   https://sourceware.org/bugzilla/show_bug.cgi?id=3D31924#c9
+Ciao, Thorsten
 
-and will see this with other kernels.  It's probably worth testing
-toolchains before deploying them...
-
---SErMzyUBNKIJosZk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaCnRcACgkQJNaLcl1U
-h9DLqQf8DuNdqMpFfWH8UckxMvlJ5nxNQzVWVdvFlhYyZSIS2XLM+nxCRHTTUFfF
-ttdjQXc6GDaOrPaimM1tPBVjXrT2mFOFxmmr3aYq/WSX53GXiHDGVLpjAV9ojbGk
-wFnIcW4Hkty+BC4z+/WwESwGwu1qRSQHDJeNtoygLMSStD71bUHacIVALZlo/QeV
-zbn79KTfW65d+gu99hoprVzHypT90ukUKOVpGhmAP1vScP0QDkj7sTSY62yLDTU2
-te88tGSiHxzK2n9Z7gw/57kovCSe5E0/6Mp1dHUybZENyjlbSpkbWKa0RfgNutXL
-1GmwzJS/0GHaTuNvBCYc6/lFnhUAHg==
-=Oo/v
------END PGP SIGNATURE-----
-
---SErMzyUBNKIJosZk--
+On 18.06.24 18:12, Matthias Schiffer wrote:
+> Hi Markus,
+> 
+> we've found that recent kernels hang on the TI AM62x SoC (where no m_can interrupt is available and
+> thus the polling timer is used), always a few seconds after the CAN interfaces are set up.
+> 
+> I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cancel polling timer together
+> with interrupts"). Both master and 6.6 stable (which received a backport of the commit) are
+> affected. On 6.6 the commit is easy to revert, but on master a lot has happened on top of that
+> change.
+> 
+> As far as I can tell, the reason is that hrtimer_cancel() tries to cancel the timer synchronously,
+> which will deadlock when called from the hrtimer callback itself (hrtimer_callback -> m_can_isr ->
+> m_can_disable_all_interrupts -> hrtimer_cancel).
+> 
+> I can try to come up with a fix, but I think you are much more familiar with the driver code. Please
+> let me know if you need any more information.
+> 
+> Best regards,
+> Matthias
+> 
+> 
