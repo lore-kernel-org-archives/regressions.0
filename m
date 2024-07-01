@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F67115A85A;
-	Mon,  1 Jul 2024 12:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA83315990C
+	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 12:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838440; cv=none; b=IViLG9qZNCQnlnPOjhlQI4CBXQKiMbNOiTxEAvoGObKx7gnJu1ej/6PWnI7GpRAWEsG5OD5xksgGWmLIt33uKr2FxsxCJnXtYgTosBnDtAiTe/XIX64EBBZxpZwmc/ez/mzNtLOGsYaHAihxLWP5tzzXrBYAfY82fMrb1pOCrgQ=
+	t=1719838566; cv=none; b=mms/3MS8y0ror54wzrhFParxT7uzqhgLquFL929fJatSarX7Dg+KrK3/XSkIWv9UFNW7j4bKOx1+hGoYkshJLI59btHYTsD1Ki6MGUTy7/p36E0k9hRcEX1bZnXSYIK1dDpwAqiElNKUem9dyXMlxgN8LwxkE3upvw871RQn4tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838440; c=relaxed/simple;
-	bh=joqZqxfvJhfI6MGsku+7ZiuyZkmDI6a7ruDeHS6gU1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=UipSaXj1wp4C6Igh9xRMrVqZP3+IXmPoAKPL2+HsYHdgFbiIUFQYmgFbsmq76vBx5DZxhLdBgkIoUKXoiQ0lbDX3DrHSB+4BW7CzkRVLmoNuDvxkKyoxlq8UJi8mXUMufEUV/kciEXvEXhiayMFgMZw0v23qLDZmOJD4Y6Pl2xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Hc9VI9Ov; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1719838566; c=relaxed/simple;
+	bh=ymeRYDkDFyj2blcTHiN/CKTx37liY8ukVFboMDmLo90=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=cK8RNcLJ5yvClpq2LbNs44EMGaJJf9sUaeRRpn0bN1KuwXQwTPM7mrPKn0fVimk7WmUB1dIGN/Hr1k5nFkgvn7VlivHQ91u76nm89iX/Eqh6DtoYjQyNdT7hABvhM2K9rWV0nj+P7Dj2uxhc4NXlKzNzSbPnqZDrZNnwcDEXWuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qeOVj8Tx; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Hc9VI9Ov"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qeOVj8Tx"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=t+dVjH56wuvAZMPLxREj1dS4Lb8ihceYjbLapljYOh8=;
-	t=1719838438; x=1720270438; b=Hc9VI9OvKZk9XydVJKeulcENUM/WMLZTPlh9I4LB0vd8F+O
-	JIZ8CpLlIM2wA/EMhYcOvZk8d8NmaI0liLETGL6x0lwYU4/5jXroGpqLdyTHwqhUHY/aVUIZBpeLi
-	TEASf/fXYNM6fdLfGCZUqf6quNiWX6FgkQCHzF/C1HhFH+Qw0qInElZGtOXcmjTh3/wg2sOMATIv9
-	rovKekvSQyfqaTj2DQGYKl+7/5yJ5kK9R7USI7z51iJf6h27Oi3J0pKY+aHbMcNinK3iY/9UEi9nT
-	6XOZMbCdSfO8L23zzLhvLRiRpnzBmA1TPMtCot4yQMjNyyNIL/mG3odNr4qk+IlA==;
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=ymeRYDkDFyj2blcTHiN/CKTx37liY8ukVFboMDmLo90=; t=1719838565;
+	x=1720270565; b=qeOVj8TxYB0zmHpY2JB7XIXnmkHMnBw45zR+Thx1NHLLA9BqEtz8lCi/HhfQG
+	XVpWtKnAK4Jwx03m8gF0rhoz5nMs3W6k8Sd87juyD+AyOjwozhjuorddoO00vTcjfS+34tXL6gcjc
+	TAbMDLyciOx2zzkenVm7YnBXP6A4HtcrpR54urclVkoUVLPNVyHtO8mfFjd8XwEmt230V0GjR9T0M
+	rW94IMSY0J82v1web2XDl2+KFOqzPMP9Pxn+wCXl9sdorhz5azo5mcia1CwBjYMp+rEhj5ZHMlCHg
+	zlPeZIVs0nEmtIQG9RVS1CvK7BqHDiIcJ0/dl11nJXnEW8K6qQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sOGXc-0008Qe-Fb; Mon, 01 Jul 2024 14:53:56 +0200
-Message-ID: <a60fc742-0ad4-498d-b90f-793b9578b843@leemhuis.info>
-Date: Mon, 1 Jul 2024 14:53:55 +0200
+	id 1sOGZe-0000LO-Tu; Mon, 01 Jul 2024 14:56:02 +0200
+Message-ID: <aa18b913-63e3-4019-afc2-61d522130fbe@leemhuis.info>
+Date: Mon, 1 Jul 2024 14:56:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,65 +39,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] fs/ntfs3: Fix memory corruption when page_size changes
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-References: <20240614155437.2063380-1-popcornmix@gmail.com>
- <CAEi1pCSQePMo4X_RvMfYmpxYwmuamhd8=1OXgNCU-N2BBdTXPg@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-Cc: popcorn mix <popcornmix@gmail.com>, ntfs3@lists.linux.dev,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <CAEi1pCSQePMo4X_RvMfYmpxYwmuamhd8=1OXgNCU-N2BBdTXPg@mail.gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719838438;8fe70a28;
-X-HE-SMSGID: 1sOGXc-0008Qe-Fb
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719838565;ad776fd8;
+X-HE-SMSGID: 1sOGZe-0000LO-Tu
 
-[CCing a few lists]
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
 
-Konstantin, what's the status of this regression report or the patch Dom
-Cobley propsed to fix the issue? From here it looks like it fall through
-the cracks, but I might be missing something.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+#regzbot report: https://lore.kernel.org/all/87tthpwkqf.fsf@gmail.com/
+#regzbot relate: https://lore.kernel.org/all/87ikxqs0tj.fsf@gmail.com/
 
-#regzbot poke
+#regzbot report:
+https://lore.kernel.org/lkml/wL3vtEh_zTQSCqS6d5YCJReErDDy_dw-dW5L9TSpp9VFDVHfkSN8lNo8i1ZVUD9NU-eIvF2M84nhfdt2O7spGu2Nv5-oz9FLohYO7SuJzWQ=@micha.zone/
+#regzbot resolve: inconclusive: reporter MIA, maybe device was not
+authorized
 
-On 14.06.24 18:24, popcorn mix wrote:
-> On Fri, Jun 14, 2024 at 4:55 PM Dom Cobley <popcornmix@gmail.com> wrote:
->> The kernel panic can be observed when connecting an
->> ntfs formatted drive that has previously been connected
->> to a Windows machine to a Raspberry Pi 5, which by defauilt
->> uses a 16K kernel pagesize.
-> 
-> Here are links to some bug reports about the issue:
-> https://github.com/raspberrypi/linux/issues/6036
-> https://forum.libreelec.tv/thread/28620-libreelec-12-0-rpi5-and-ntfs-hdd-problem/?postID=192713#post192713
-> https://forums.raspberrypi.com/viewtopic.php?p=2203090#p2203090
-> https://forums.raspberrypi.com/viewtopic.php?t=367545
-> 
-> The common points are it occurs on the (default) 16K pagesize kernel,
-> but switching to 4K pagesize kernel
-> avoids the issue.
-> 
-> Issue wasn't present in previous RPiOS LTS kernel (6.1), but is
-> present in current LTS kernel (6.6).
-> Revering to 6.1 kernel avoids the issue.
-> 
-> I've confirmed that reverting the commit:
-> 865e7a7700d9 ("fs/ntfs3: Reduce stack usage")
-> 
-> avoids the issue.
-> 
-> This patch avoids the issue for me, and I'd like confirmation it is correct.
+#regzbot report:
+https://lore.kernel.org/lkml/20240601132459.81123-1-aford173@gmail.com/
+#regzbot fix: drm/bridge: adv7511: Fix Intermittent EDID failures
+#regzbot relate:
+https://lore.kernel.org/all/20240630221931.1650565-1-aford173@gmail.com/
+
+#regzbot report:
+https://lore.kernel.org/all/5792762.DvuYhMxLoT@devpool47.emlix.com/
+#regzbot fix: kbuild: Use $(obj)/%.cc to fix host C++ module builds
+#regzbot monitor:
+https://lore.kernel.org/all/20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de/
+
+#regzbot report:
+https://lore.kernel.org/linux-scsi/Zmi6QDymvLY5wMgD@surfacebook.localdomain/
+#regzbot fix: 57619f3cdeb5ae
+
+#regzbot report:
+https://lore.kernel.org/dri-devel/845642ff-ba16-4066-aad0-f0d68a47d865@suse.de/
+#regzbot fix: firmware: sysfb: Fix reference count of sysfb parent device
+
+#regzbot report:
+https://lore.kernel.org/lkml/13a313c7-c214-4d49-9029-c79b503c17dd@canonical.com/
+#regzbot resolve: inconclusive: reporter MIA, but likely resolved
+
+#regzbot report:
+https://lore.kernel.org/linux-nfs/aaeae060-2be0-4b9f-818c-1b7d87e41a5f@molgen.mpg.de/
+#regzbot fix: 559427332ab9f4
+
+#regzbot report:
+https://lore.kernel.org/lkml/ZaQS5x-XK08Jre6I@smile.fi.intel.com/
+#regzbot fix: c50814a288dcee
