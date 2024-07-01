@@ -1,49 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7450158DDD;
-	Mon,  1 Jul 2024 12:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E9E15A489;
+	Mon,  1 Jul 2024 12:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719837715; cv=none; b=I15rFh+wR10o/I/DB6su0DPCTPsP/epAreJKq+Hj2NVR4X1jYDOFhbDaNXSExXzB/8BufVZcWnHTTZui93RJSV8w1NqDe0KHHQLuaq4nVhw4mdNvuDJyCgjdlpju6T5uQVpBto6fthBkovAdt+U/KyHlDaTNFPNovFTrnF55xVQ=
+	t=1719838060; cv=none; b=SkDVI5hlYD6NjktDNFNcpOr5kmkr1P4KbDYpIIMrinbr/Q9fpKG4pNj9KgSqOKkFkJL4ErXdVP+sHtzadUSnseQFArxxBi3H785zBzTj2tnCd++4SMl4jVZmg9zpnWWsSt48hqk94sVYadiA+KiiGxju9r5nyFw1k7OjgLnlZ78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719837715; c=relaxed/simple;
-	bh=ihcaF3I5EST7/gh26RJbcWXrvF2VUf3XZhHK396ADEY=;
+	s=arc-20240116; t=1719838060; c=relaxed/simple;
+	bh=LfYQTMCfmMbGIovdjPNb6rCWeA4AeChPckEiZHS4laY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4Uhs2xzBMI397LtT600R/fVYOwjma/nNrFBUpBxaQqOY7KXP6tU8l5LGMCBLq/Zyk8aSbjTLdYiUfCAs/YjWRHDO5iPNM50SPvgjwL5/l9jpTTf1oFhvwGnfrojFuAA2h8yIhd520Aj9wzXor4aGhTf5XNW4g6iLhlscvcg5x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOrGFwGG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dAtCLoUC+rDcgEezx3qV60tAlvKh9yEnjTGvNqH6+7UouNWlYwk599rIrXl2qczhFafwT1T7H4EjWzPLeVYN1prAJXOb+NznggJCMS1aegbqZDclHGKTxVA7N9afD5O71uIFEUH0AYCGEiwE2YarBdlylNT/NXt4vnWy2ZJkDrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EX1nvOxp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOrGFwGG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05CB6C116B1;
-	Mon,  1 Jul 2024 12:41:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EX1nvOxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6D7C32786;
+	Mon,  1 Jul 2024 12:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719837715;
-	bh=ihcaF3I5EST7/gh26RJbcWXrvF2VUf3XZhHK396ADEY=;
+	s=k20201202; t=1719838059;
+	bh=LfYQTMCfmMbGIovdjPNb6rCWeA4AeChPckEiZHS4laY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VOrGFwGGKN5lI/CJUfdrHs/8GxLfqXIKjyaI9b1Hd1PWF6oNMCa9sg/PEoF0+L547
-	 djeXuDFAvRf01uwC4eXKoueFCp4+GHY//51rEsCpY1YSSPvIyep6ByNVH7s0a+Nzx6
-	 ITyRLFEMGh+4rkSQh0o0V7KDaflJroM081iuWe83EH3gy5u05LBpKkEKolaFkuuaMu
-	 0NMWR+RwmYCIs1ubSRDuwdrwRBhXDP+MfStM9oGjB87efyEPlWSdD6mBPKnmtrdqpi
-	 WQkPebsQ9TVZdnHLbTrXa0EhP+O/eQ6xTjnbKuX+Zc19lqU+mR481VPfJWR5hlcV4x
-	 GHkzRz4hzZxBg==
-Date: Mon, 1 Jul 2024 13:41:49 +0100
+	b=EX1nvOxpwjmROiPDwmMaf2i/4KZEarkTkP2uaL++hxCyQP5dFxCtOUkbBdA5RKehE
+	 l/KdTXQF1gVv9Y6StTRp4EZG48AiZUmXEI76/iE5xf/AucSmCD7d9aGevX52EhRVmc
+	 q0IneWK85/Qfkr1dV1rZzppu4KnGQNV3iOOZYMFhReKieI/sYJ4KXIYGQtppnja5lE
+	 6rGZ3PsCR3ik9+AbnzFWePNcGqMpAR0Y1pZImCl+402Na9zm4kpuxu1uZNTJsfMSga
+	 KBr20GXD3lCPp15Y5LeBg2Iiq4L02MOBD6GiGMWeS1ukIt/TB698Ls/uHe73iHkRwd
+	 ojdmNskJL74Aw==
+Date: Mon, 1 Jul 2024 13:47:34 +0100
 From: Will Deacon <will@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>,
 	lkft-triage@lists.linaro.org,
 	Linux Regressions <regressions@lists.linux.dev>,
 	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Aishwarya TCV <Aishwarya.TCV@arm.com>,
 	Arnd Bergmann <arnd@arndb.de>,
 	Dan Carpenter <dan.carpenter@linaro.org>,
 	Anders Roxell <anders.roxell@linaro.org>
 Subject: Re: Mainline: v6.10-rc6 boot failed across all arm64 devices
-Message-ID: <20240701124149.GA2095@willie-the-truck>
+Message-ID: <20240701124733.GB2095@willie-the-truck>
 References: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
- <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,33 +51,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
+In-Reply-To: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jul 01, 2024 at 01:12:07PM +0100, Mark Brown wrote:
-> On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
-> > The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
-> > qemu-arm64 and no crash log found (earlycon) did not help.
-> > 
-> > But the defconfig builds boot PASS.
-> > 
-> > The boot problem is with defconfig + Extra Kconfigs and builds links
-> > provided in the bottom of this email.
-> > 
-> > The boot test history shows that,
-> >   GOOD: v6.10-rc5
-> >   BAD:  v6.10-rc6
-> 
-> Other CI systems aren't showing this.  I'm guessing you've updated the
-> toolchain versions you're using and are running into:
-> 
->    https://sourceware.org/bugzilla/show_bug.cgi?id=31924#c9
-> 
-> and will see this with other kernels.  It's probably worth testing
-> toolchains before deploying them...
+Hi Naresh,
 
-Aha, that would explain why I'm failing to reproduce this with clang or
-my old version of GCC. I only see the problem with the binary provided
-by the CI.
+This report is quite hard to follow, so just some minor comments which
+you can hopefully take on board to improve things in future:
+
+On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
+> The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
+> qemu-arm64 and no crash log found (earlycon) did not help.
+> 
+> But the defconfig builds boot PASS.
+> 
+> The boot problem is with defconfig + Extra Kconfigs and builds links
+> provided in the bottom of this email.
+
+If I go to the bottom of the email, I see this:
+
+> Links:
+> -----
+>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrbdtwMqpD9wx7IPRGJ7Dsx3/
+>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrYDposdlRsS4jwF916a0qGE/
+>  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473346/suite/boot/test/gcc-13-lkftconfig-libgpiod/history/
+>  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473903/suite/boot/test/gcc-13-lkftconfig-rcutorture/history/
+
+but these are just random links without any context. The first two appear
+to be kernel build artifacts, but I can't tell:
+
+  - Are both "good" or "bad"?
+  - What is the difference between them?
+
+If I look at the first of the last two links, click through to the
+"qemu-arm64" target and follow the "job_url" link, then I end up at:
+
+  https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2idWuAb51mcz7lO1BAj8Aw0BrNY
+
+which has some empty logs and something from "TuxRun" which says:
+
+  {"error": "File not found"}
+
+It's very hard to know what to do with this :/
 
 Will
