@@ -1,146 +1,174 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8407D16B750;
-	Mon,  1 Jul 2024 16:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620CE16EB44
+	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 17:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719850448; cv=none; b=gWcWl82v0WrDxBSOCWi/jGr88SXLINQ4xeeBh6m5Q7sA2csEhjjcTpuydqT+OpJlF0oWt36paAepk6JeGvEUvpnPBoI47w7ZrtBpjbPsOP8Nuf59cXLaK/i18JkTCMOlWJKTKGwoEpK8QnexdNDjdYiI4O2b39CUDysUSOvUocw=
+	t=1719855414; cv=none; b=XHCdNfoP/z4sKMwgw3dHtMhNGzcS4ofiQKcBEeyr6UdQfaUTclsvIT0VVvjfpsntohP5jWMyE5zMQp6OnQLRcW4NX2rx5PT1zmn4yPkVNLX4xm/TQZEjK6bjRqn44TfV6XvmxUW2AJlQCrXI3p70SpZbCfB0a4g+uTymNiKRrME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719850448; c=relaxed/simple;
-	bh=tEp5w7MyAdLH0DTcYwl0fttbcn3WiIXoF3gGuIxKOwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YHIbeQpjvtE2mE6JT6b0q2ef7fZAafVcfA88PZMhDm/iMZHycJaT9DTWbJDmZzlFT9W0ZM5KhSyiRe7s3OcVswf/9LPerBehbNvB5kHxmhbZQsrABQOs3gL8gR9NYdIRcCCl7abtHUz8dm7sl0F51ytWFSMnykeQVw1usfL28wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=wendler.lars@web.de header.b=QA/QlUzQ; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719855414; c=relaxed/simple;
+	bh=AJ43U8TxBFG1R0W4PvfAZW+pIgCbJ/wmU+LmsAUrYjU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WH2iT0gGPn6LvVv8rgvk6FBaSaE2fs5T6MDhWLdR/KoxzcPz8NX1r2B1xGNMDf7PtNyH6Pa1nQoRnPvBkkU/7R2IG8zu2erw/K2yMV62tBSpf6nl9L5f9o4Z3DWS4uKjiG1QglybVBUwfwVsSVpCUQDLgDZvTGTHIMtGstcmP10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAQem2J7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=wendler.lars@web.de header.b="QA/QlUzQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719850440; x=1720455240; i=wendler.lars@web.de;
-	bh=qbmq9OhbELMMVzqVItX0Z0Vr4RvG26IJ/YtlBtAWJ6c=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=QA/QlUzQWf6Rf4x64CL98Owis23ARQzDihZb0hI+zTooLgju87ScPMeQr6TpwsO6
-	 2xKofxpfNSU5E0PiTUxgB3TDFQTS0E7YZQXkrJghNVw9qnJD5pJLq4+jNm0faeG/K
-	 IH5ourjcujHf6BnUrX/wCZ+0eXIVqlJLdjJWYtBhv44JcrpBMRQv91+HnDzBXDKxi
-	 A0NumJ0/Ivm/+Fnyi7VBkOOaFVsqQkbOdi8lvIP8jbyAPLConf6QlheEEuzTcLGZa
-	 RQq8VxC5g/oceaWmy1GV/BPR9w89EweBEHl6g1GhGnSWNHq9ZIQmE+YzqKajGwscx
-	 FOqLW6MhG5qSl4FRpg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from chagall.paradoxon.rec ([84.169.215.76]) by smtp.web.de
- (mrweb105 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1MG994-1sepwS0uDs-001HFW; Mon, 01 Jul 2024 18:14:00 +0200
-Date: Mon, 1 Jul 2024 18:13:49 +0200
-From: Lars Wendler <wendler.lars@web.de>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, "Huang,
- Ray" <Ray.Huang@amd.com>, "Yuan, Perry" <Perry.Yuan@amd.com>, "Shenoy,
- Gautham Ranjal" <gautham.shenoy@amd.com>, "Du, Xiaojian"
- <Xiaojian.Du@amd.com>, "Meng, Li (Jassmine)" <Li.Meng@amd.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: linux-6.6.y: Regression in amd-pstate cpufreq driver since
- 6.6.34
-Message-ID: <20240701181349.5e8e76b8@chagall.paradoxon.rec>
-In-Reply-To: <fd892ad7-7bf9-4135-ba59-6b70e593df4e@amd.com>
-References: <20240701112944.14de816f@chagall.paradoxon.rec>
-	<SJ2PR12MB8690E3E2477CA9F558849835ECD32@SJ2PR12MB8690.namprd12.prod.outlook.com>
-	<7f1aaa11-2c08-4f33-b531-331e50bd578e@amd.com>
-	<20240701174539.4d479d56@chagall.paradoxon.rec>
-	<fd892ad7-7bf9-4135-ba59-6b70e593df4e@amd.com>
-Organization: privat
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAQem2J7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F92C4AF0A
+	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 17:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719855413;
+	bh=AJ43U8TxBFG1R0W4PvfAZW+pIgCbJ/wmU+LmsAUrYjU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GAQem2J7raFxA9lVH1y/ketnYyyQZqQuNgSlgcormbdqA2tFRR6DN/a/dm9X5gmE4
+	 C0tl9VQBQr8ZDrVNlCp9IGe6wnCBdQnJtbnRlVPcbeFOMzQE/djT5Ol/0ThKZ0iviR
+	 QTA1LIEvrrAJqitmAGmvFuTQ2OzGd2+tM8H0K195ySIgZ1C+f8oesPwR74lZsLzAmR
+	 uwB9V+PJuHLxarOivu9iQkb59MHjnE98JlrR814m9MkBiIOizRrhpWg1/KQphZl4oY
+	 g1cDEZA8Leus4rSBd+V8R4IxckGHbR5CLU0/MW+gp8syg1YkVybnyCorrkddk55gLr
+	 O0Mg0T3/IxMHg==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5c411d037b3so81914eaf.2
+        for <regressions@lists.linux.dev>; Mon, 01 Jul 2024 10:36:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUm/G6e2jbclYlTA55OrSwf77NK6pupFL85ErpWokqjl9y9rmvOaZpSqYTNz9FvvCwmpdW0XqcaLlFFId+GRdBen4ARhyxY9WkXmdU=
+X-Gm-Message-State: AOJu0YxK262VT/AEoNuzpbWZVXI1DRNXGc6p2tQh42TRqgBPXme0J7K2
+	e+24gAlbDwmquV8qyYaI6Rv37YoWslmLqZigZoKfJ/LfZTQNqPYXiY1s8vOWh5Hwke5RRtthz50
+	lc0DLy/Ed8ovIoqsGTs0VY+A79Wk=
+X-Google-Smtp-Source: AGHT+IHwSaJ1hicMo5mBvoWp89o0ASG0KBJLQ81cNcOTGZ3yBfDdae3nh4KtC0AqPvla0OZvfnqwU4SaJJoAWy55Gc8=
+X-Received: by 2002:a4a:c914:0:b0:5ba:ca86:a025 with SMTP id
+ 006d021491bc7-5c438d51dfcmr5664269eaf.0.1719855412448; Mon, 01 Jul 2024
+ 10:36:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MuoKgmndHIbJ/sj81b.B1_6";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Provags-ID: V03:K1:ljjpFkjEpOn2wqvibHTDR3t8CsRrxd9LsIpI3+iZlS1XLtZxbnn
- Pz7unZcX5b7oNgagAFugx69Q4LjaLJ3vf1ylcbczPJ7rrdlzK6OtY/q/CBDYZJjQ5Yw94ng
- xnAFJPj/95m9OmCY3CSWRBXYixAvQKhMUIKFMc/f11skx0KG7eZatLuLrirs1jGB7rLi19w
- gmJkV2pP1pKXs3hhCr7/g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8jbhY0sSlYE=;q0docJlicDsV9FLILWh4xG82fWy
- zyCyCcZghrQpSrjaiQCkRQM56M2aWGOGUYIFGu2P+ms1BjppJwNSy/+3lq0KMdE2OkkHflC3T
- leES1Frp1SftJtfS5mj88rg3O6GYvezHRA31UI268tZxf2rDbtkx6wpMZGB/l4dpq5/HU9meq
- n04AVsUI+B+Av3hwUD6QWVInFjDO7GSqhkwt93Fu6O80vbmcEzW37zKOot+VOjJ/NIvm6JzhV
- MDKUWnxHtECYiYnIuH1KNsqnEf5Gg60NmhIJpyyqLe0IZ/ActggIwZ6RyPVao2rdTNmtRgMMA
- t8cc6JVFthcpwoqM/5kG/ljbSlP/2z1/aSGEB9AK0F8KCqXaC8CHIH0nnmK5tgXJ78uPaCURm
- 3VnZ1l3KRHuwq3bsGGv+94UrqFVzLaM3ymNeU57D2JRMtQqKoit0NC3KxwSfGhj9joXLlDlg+
- E5y7XQ6Pvsrgu+UPcZOEFHf9cDnFjHGVTogEJcr+kqNrtpI1n4fEWF6hrLkBr97DrBAJnbCIJ
- H/+/jOtFNUbAGJKkjzEEFgr8F8aZ1YzZy4WK5FQUEHMupz0FaddXc710dGa3O/IWdloejbwwt
- kiqPHzG3pjvBz7V8ozmyp9WkMdIFUMPeWvFasG9+CW7GD9h3Ggfw+7enGRa6+ueG3aRvDm22M
- 8D7/8rBuOWf6O5Rh8+WCj219JmrFZT0HBJHlORpkUuNv2Gm5r9y6qdL1kHfmOzUS/o9cPM9FW
- vcYbxVclOq7+Lz1KKRYujzFc/6rir1aHQlgf5nZar8Jkicn7ZpRpasWBAp717LRyplzGwzjHW
- /MbO3HnOR64XoJoT/WogQ+4qeUh/CWudRDMiFdmh6YGqM=
-
---Sig_/MuoKgmndHIbJ/sj81b.B1_6
-Content-Type: text/plain; charset=US-ASCII
+References: <46742c5a-5df4-46d1-bf5f-b74067866fec@amd.com> <20240701161039.80008-1-visitorckw@gmail.com>
+In-Reply-To: <20240701161039.80008-1-visitorckw@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jul 2024 19:36:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iY=S+WKWvDAAWxLcOwvpOG5Cck1gQv4p+FfW1Nca0Yqw@mail.gmail.com>
+Message-ID: <CAJZ5v0iY=S+WKWvDAAWxLcOwvpOG5Cck1gQv4p+FfW1Nca0Yqw@mail.gmail.com>
+Subject: Re: [PATCH v3] ACPI: processor_idle: Fix invalid comparison with
+ insertion sort for latency
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com, 
+	akpm@linux-foundation.org, jserv@ccns.ncku.edu.tw, alexdeucher@gmail.com, 
+	belegdol@gmail.com, regressions@leemhuis.info, linux-acpi@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mario,
+On Mon, Jul 1, 2024 at 6:10=E2=80=AFPM Kuan-Wei Chiu <visitorckw@gmail.com>=
+ wrote:
+>
+> The acpi_cst_latency_cmp comparison function currently used for sorting
+> C-state latencies does not satisfy transitivity, causing incorrect
+> sorting results. Specifically, if there are two valid acpi_processor_cx
+> elements A and B and one invalid element C, it may occur that A < B,
+> A =3D C, and B =3D C. Sorting algorithms assume that if A < B and A =3D C=
+,
+> then C < B, leading to incorrect ordering.
+>
+> Given the small size of the array (<=3D8), we replace the library sort
+> function with a simple insertion sort that properly ignores invalid
+> elements and sorts valid ones based on latency. This change ensures
+> correct ordering of the C-state latencies.
+>
+> Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not=
+ ordered")
+> Cc: stable@vger.kernel.org
+> Reported-by: Julian Sikorski <belegdol@gmail.com>
+> Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df=
+@gmail.com/
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> ---
+> v2 -> v3:
+> - Remove #include <linux/sort.h>
+> - Cc @stable
+>
+> Note: I only performed a build test and a simple unit test to ensure
+>       the latency of valid elements is correctly sorted in the randomly
+>           generated data.
+>
+>  drivers/acpi/processor_idle.c | 36 ++++++++++++++---------------------
+>  1 file changed, 14 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.=
+c
+> index bd6a7857ce05..17cc81340b4b 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>  #include <linux/sched.h>       /* need_resched() */
+> -#include <linux/sort.h>
+>  #include <linux/tick.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpu.h>
+> @@ -386,25 +385,21 @@ static void acpi_processor_power_verify_c3(struct a=
+cpi_processor *pr,
+>         acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
+>  }
+>
+> -static int acpi_cst_latency_cmp(const void *a, const void *b)
+> +static void acpi_cst_latency_sort(struct acpi_processor_cx *arr, size_t =
+length)
 
-Am Mon, 1 Jul 2024 10:58:17 -0500
-schrieb Mario Limonciello <mario.limonciello@amd.com>:
+s/arr/states/ please.
 
-> > I've tested both, 6.9.7 and 6.10-rc6 and they both don't have that
-> > issue. I can disable CPU boost with both kernel versions.
->=20
-> Thanks for checking those.  That's good to hear it's only an issue in=20
-> the LTS series.
->=20
-> It means we have the option to either drop that patch from LTS kernel=20
-> series or identify the other commit(s) that helped it.
->=20
-> Can you see if adding this commit to 6.6.y helps you?
->=20
-> https://git.kernel.org/superm1/c/8164f743326404fbe00a721a12efd86b2a8d74d2
+>  {
+> -       const struct acpi_processor_cx *x =3D a, *y =3D b;
+> +       int i, j, k;
+>
+> -       if (!(x->valid && y->valid))
+> -               return 0;
+> -       if (x->latency > y->latency)
+> -               return 1;
+> -       if (x->latency < y->latency)
+> -               return -1;
+> -       return 0;
+> -}
+> -static void acpi_cst_latency_swap(void *a, void *b, int n)
+> -{
+> -       struct acpi_processor_cx *x =3D a, *y =3D b;
+> -
+> -       if (!(x->valid && y->valid))
+> -               return;
+> -       swap(x->latency, y->latency);
+> +       for (i =3D 1; i < length; i++) {
+> +               if (!arr[i].valid)
+> +                       continue;
 
-that commit does not fix the regression.
+Please add an empty line here (and analogously below).
 
-> >=20
-> >> I'd like to understand if we just have a missing commit to backport
-> >> or it's a problem in the mainline kernel as well.
-> >>
-> >>   From the below description it's specifically with boost in
-> >> passive mode, right?
-> >=20
-> > I have only tested the passive mode on all my Ryzen systems and
-> > only my Zen4 machine shows this regression.
-> >  =20
->=20
-> That's an interesting finding.  Do you know if your other system(s)=20
-> support preferred cores?
->=20
-> Also as a curiosity why don't you use active mode (EPP)?  Most people=20
-> find a better balance with perf/efficiency with EPP.
->=20
+> +               for (j =3D i - 1, k =3D i; j >=3D 0; j--) {
+> +                       if (!arr[j].valid)
+> +                               continue;
+> +                       if (arr[j].latency > arr[k].latency)
+> +                               swap(arr[j].latency, arr[k].latency);
 
+And here.
 
---Sig_/MuoKgmndHIbJ/sj81b.B1_6
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEWCOBmo8i7LhvVmNAVx3S0DQ8YDkFAmaC1b0ACgkQVx3S0DQ8
-YDmaHw//YTVPbeOkFlCmnUFPAUFileajbaH7aAyFl/cOmNXE+gYWUZDB8l8alWde
-XXEXDcbXz83NTvjfyCABZbmccAzqOciqzOPHgIcnse8ADHH4PsRtvEEUt7rVSM2b
-EMX2BVQVs34mtfcOXai4r74ODxOU/YXAX9yqJAKVT+72YhSiUPURP1DkhwJ5oMTR
-82G8bpsINzIl8+43q075mmO9EDDvbas6z5/d2RpJhkJWNPKucljZ7mFDVT10SKsB
-t6YRHMupI/3ycxim6/QsrJZWYgXjw4GzCERX79vwTlehfYJ5g6rUCA3fhukR2vFS
-oB5eKmdMs9ctTM8GcgjJUFVIz2+MxE7EK2J+LFE2uFncEHL+dTNj/EtN0DM8E+T6
-VHxJlzaR0XBl7COiKwXozpNTtmcAewOXfNG0KdUsM8umy4H8jZlrGGEp6jxJySKC
-50nwbsSCHUVjLXioLj261KZ5Pa13AlI0vn663i33g2FdzZ+7mi0nHQnysMSkH7+X
-MOoj7fWnnXO0WUYlgItJCuICCf03Qxf08Unt9gSl+whE/vJ4qqPtORWpFPTdKKRA
-05m83qulKQyTujWo938gCAw2sSNzWNvZso4t8xs9+Stc53AZfBKQ/7g0HOs+iLl4
-LDcm6Y8iHI4MS5b+g+ax10Ms+/Ur52Cqe0dI3vcMNDo87Z147mM=
-=Uul6
------END PGP SIGNATURE-----
-
---Sig_/MuoKgmndHIbJ/sj81b.B1_6--
+> +                       k =3D j;
+> +               }
+> +       }
+>  }
+>
+>  static int acpi_processor_power_verify(struct acpi_processor *pr)
+> @@ -449,10 +444,7 @@ static int acpi_processor_power_verify(struct acpi_p=
+rocessor *pr)
+>
+>         if (buggy_latency) {
+>                 pr_notice("FW issue: working around C-state latencies out=
+ of order\n");
+> -               sort(&pr->power.states[1], max_cstate,
+> -                    sizeof(struct acpi_processor_cx),
+> -                    acpi_cst_latency_cmp,
+> -                    acpi_cst_latency_swap);
+> +               acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
+>         }
+>
+>         lapic_timer_propagate_broadcast(pr);
+> --
