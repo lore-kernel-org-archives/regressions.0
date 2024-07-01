@@ -1,62 +1,67 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0394E59160;
-	Mon,  1 Jul 2024 06:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8585729AB;
+	Mon,  1 Jul 2024 07:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719814606; cv=none; b=LLSpwS8BxY/9cfENZXFJfiVfXpaUdHzXuOSkYchNh1M6tg58xPYr8/ve7Pc946ICFkwu68JqHPyRbSylx42b3EsXEa9+omIgOpEQMlJ+03zxc2yf6rVpY5nnwFk+qJKG2IyEAuX5L9CluMY/n+UGEz7AsnINoWcJ4ac/9LHprik=
+	t=1719817344; cv=none; b=KzYTGOTEUVRGFBClxJFlcTUmbhrKQ7WL1TjTlt8e4F033SZfniHZUo+31z8Zkgw9J6+bjOJxTC+vJ7PlGu7X96AgP9yOMh2U7o2lgGH6trBzM6mjywEk3DFUdWIQOkrrclJ4cw9LlNhFnNde6jWpJ4BxARWNSI5pdUV8jebGlNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719814606; c=relaxed/simple;
-	bh=5miFg8Cm5ArCbMrcvQJy9y7rYZlHY79Uk7nIu2PM3a0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qCgej/OpxwLEF2AeGu3xz4quzbwtTrsBlIe6nsZCRb5wy6MmB1gQXqfPkjxu4EbBSqULmZQ1t3TLNow1PoMs90vi4qd4TP4KXtNRdqEfLX6o9dP78LvkNp4ItCqeFQM4NrYlPBRuKnA8pILlOevY2GaFYIaZBE1L5yJjDo7Ci0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PkhUfSK+; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1719817344; c=relaxed/simple;
+	bh=7yktUN/gStqRPZN7+y3ofWazn0UWTgeoET7Zwx12TTg=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=DZ6MOEQt1VMVjWz64i2RQ4bpq1qzhjPxv60wIKZOyTCV96szIkZHFSesh656R+5ZvMdeUF2RrjcG2n0ozST58DKhJOxs4hRWUByMbXZrEpd7pFSpNbUeW/MC7wAiC123Na8R7vS44aHPoeFjqf3neM7VcubBDZRaIm5clygUDkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=A1U6ZGQ/; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PkhUfSK+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=fXyGQ5yDjGp7ZJaBVw0haYA/oXbMVh7sNoBQsxpRsYs=;
-	t=1719814604; x=1720246604; b=PkhUfSK+IZwLbLNGo6RDxuacZFkQd0uI2rFDLN+9jNBHit8
-	yjxfFvk6SXbiuJZCb788PLVMosdpnDgoOiu6daKS+aaMnPgovDFgTvmjIJKkT35WIflgnK7C9f6O0
-	M3oPf5iuomyCRhbnouVNd+kGv8sWlqERVCvR/zbTWxQ3t4KPX2R2NEHkaaBOqcrk71E8FTPVnxF01
-	TFbwIF9qQrNgidQKitdcFm2UD3RKdBZWOvU8lNt7t8ro9hpn/cMN25NFYlUZiOVz0p3HY6CyKrRcv
-	DlkKbuLphtgzSYxnXgym6KFJvFXm4Dn5rQ8Wb5SMhMfPDYPMtE2nWCBulztur49A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sOAL4-00045O-IX; Mon, 01 Jul 2024 08:16:34 +0200
-Message-ID: <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
-Date: Mon, 1 Jul 2024 08:16:33 +0200
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="A1U6ZGQ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1719817320; x=1720422120; i=frank-w@public-files.de;
+	bh=7yktUN/gStqRPZN7+y3ofWazn0UWTgeoET7Zwx12TTg=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=A1U6ZGQ//VDcVnLCnj99gRSn1/RH0ykxvaX4PgnWzoAQJ9TUXeFCTMPtEREF3cpC
+	 l2IUXgVxGDUuEFo4XO763sQXZKAEBlrolIM+JbSl2vk/HWDawRJaGwqT2BcaW4tvB
+	 chbOTy4f8kppxOR04f+EfAHh283jRbzl0ktT6gTU7TCP4uTY3lk7XhzketFFdbcmb
+	 VLhgRWGi1J0P2dzvJgubyMEaYQ2tHsGXAlLywlUFSiZUPrNvDKhDDQzWDPRDGqqNN
+	 UWFi8jVqGpEuaIP+p2Gj1oqps4sv5kC6cHf6K0ysJf5+v0d/dNxy1pRbX8O0YXAhE
+	 F6yc13/VTRfl7y1MSQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [217.61.148.41] ([217.61.148.41]) by web-mail.gmx.net
+ (3c-app-gmx-bap25.server.lan [172.19.172.95]) (via HTTP); Mon, 1 Jul 2024
+ 09:02:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
- Frank Wunderlich <linux@fw-web.de>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
+Message-ID: <trinity-4bc16904-d2f8-4932-8ec9-2973560f1dde-1719817320042@3c-app-gmx-bap25>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: regressions@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Jakub Kicinski
+ <kuba@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>,
+ Frank Wunderlich <linux@fw-web.de>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=
+ <arinc.unal@arinc9.com>, Rob Herring <robh@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias
+ Brugger <matthias.bgg@gmail.com>, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Subject: Aw: Re: [PATCH] arm64: dts: mt7622: fix switch probe on
+ bananapi-r64
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 1 Jul 2024 09:02:00 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
 References: <20240516204847.171029-1-linux@fw-web.de>
- <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
- <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
- <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
- <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
- <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
  <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
  <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
  <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
@@ -70,56 +75,105 @@ References: <20240516204847.171029-1-linux@fw-web.de>
  <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
  <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
  <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719814604;b653b989;
-X-HE-SMSGID: 1sOAL4-00045O-IX
+ <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
+Content-Transfer-Encoding: quoted-printable
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:iSzNiwwEGm+X9Sk/waPaMhv+3missYA8VAXRSbGHCV+HKBSTSrTEZxICirIavHnwicFi9
+ 2srm4ZrjCYSwJ1GlRhIvaheYakXtMAyZRQ2H7TXkUrFo2gDZ1vGImR9OQUSUqjTrzHaZpfFtlcyX
+ qCFHGcVuA9dNudxieUc08D5y02DNqdADfpT2+y0BqeascmO1QbZSDhed5WvfIMYguEvqwW3rxCys
+ wsKoON+aZlWXBRR926oMZQT7S9jj6ti+qsgQU+wrxYSPGL4lSymwuT4Hsr5cGnXQT8kyse1wY6kh
+ W0=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TFqw0JB/3K4=;HFFRgvoA1Z6/Iqd3nHpxa9dft/I
+ JzIG7BujbzaBNJHe6yIPS+fOp1Tf6fBi5hrwRM+ldiLXXK6NpOnWxMUsxzm/Vn4TL/4d9NrPN
+ Li62NNQz3UYCSmsDwN6apWd7AROrSW3KOcqNwFcXqbZgrfqLnoSPADq6ha7PnsNfjnHbyD8ef
+ D9qSlIzE4GKDTqJzQCsTwRxACO0FX1O5NMrTQ1NYlGEpYODBr/Ah2o/UGQGn1IXV+IObXJ6Ru
+ h+mpqfBRH0O/RUEdMGukKfst435YgjuR2OkwgGuf6FX+ABCXtsmUQEju4wEHUCEnNxvv617ei
+ qdR3WCdcJHrvCRUte02QMiOip0563rfBUR6VmTq5LVB8mr2Krhrd5j3qA1NJ7M6ToSDTxgrCJ
+ Fwqfp+/nckb2HfyJXc1ajs2xOdfn4GvXsomUd24z7o9iT7AjcBOW34zx8r+8uwU7NzCkRDfXr
+ Y976xfry+f24JhklN/mvDwElK3QgfHx3r6q7zoRK1VV6ggbFdYiDDLzyS/IJDbWFyg6itVnui
+ U3o3KjF5oWi0TSGICHtMil/jixrS6/2qMcM0T4eXm/kb1qNwMbjQfP4+yc5cyiICiBWRk5trt
+ NFcWrTc1aL9M+i8ycJe+sONMDaUGFMS8r1fDBZIhltL5z8joBDF+3iPGSa18hTK1tQ0mXK/b2
+ +8kp9jb3a+hnmiYkinzBsCB53g3OEjbwuu2saeIwO2xCOh9ny/qhK6HnnZNa028=
 
-[CCing the other net maintainers]
+Hi,
 
-On 25.06.24 10:51, AngeloGioacchino Del Regno wrote:
-> Il 25/06/24 07:56, Linux regression tracking (Thorsten Leemhuis) ha
-> scritto:
->> On 17.06.24 13:08, Arınç ÜNAL wrote:
->>> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis)
->>> wrote:
->>> [...]
->> It looks more and more like we are stuck here (or was there progress and
->> I just missed it?) while the 6.10 final is slowly getting closer. Hence:
->>
->> AngeloGioacchino, should we ask the net maintainers to revert
->> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
->> device tree") for now to resolve this regression? Reminder, there is
->> nothing wrong with that commit per se afaik, it just exposes a problem
->> that needs to be fixed first before it can be reapplied.
-> 
-> To be clear on this: I asked for the commit to be fixed such that it
-> guarantees
-> backwards compatibility with older device trees.
-> 
-> If no fix comes,
+i can confirm that daniels patch pointed by arinc fixes driver for the wro=
+ng devicetree on BPI-R64=2E
 
-I haven't see any since that mail, did you? If not, I think...
+but there are concerns from the netdev/dsa maintainers in its current stat=
+e
 
-> then I guess that we should ask them to revert this commit
-> until a fix is available.
+https://patchwork=2Ekernel=2Eorg/project/linux-mediatek/patch/11f5f127d035=
+0e72569c36f9060b6e642dfaddbb=2E1714514208=2Egit=2Edaniel@makrotopia=2Eorg/
 
-...it's time to ask them for the revert to resolve this for -rc7 (and
-avoid a last minute revert), or what do you think?
+regards Frank
 
-> I don't like this situation, either, btw.
 
-I guess none of us does. :-/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+> Gesendet: Montag, 01=2E Juli 2024 um 08:16 Uhr
+> Von: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhu=
+is=2Einfo>
+> An: "Paolo Abeni" <pabeni@redhat=2Ecom>, "David S=2E Miller" <davem@dave=
+mloft=2Enet>, "AngeloGioacchino Del Regno" <angelogioacchino=2Edelregno@col=
+labora=2Ecom>, "Jakub Kicinski" <kuba@kernel=2Eorg>
+> Cc: devicetree@vger=2Ekernel=2Eorg, linux-kernel@vger=2Ekernel=2Eorg, li=
+nux-arm-kernel@lists=2Einfradead=2Eorg, linux-mediatek@lists=2Einfradead=2E=
+org, "Daniel Golle" <daniel@makrotopia=2Eorg>, frank-w@public-files=2Ede, "=
+Frank Wunderlich" <linux@fw-web=2Ede>, "Ar=C4=B1n=C3=A7 =C3=9CNAL" <arinc=
+=2Eunal@arinc9=2Ecom>, "Rob Herring" <robh@kernel=2Eorg>, "Conor Dooley" <c=
+onor+dt@kernel=2Eorg>, "Krzysztof Kozlowski" <krzk+dt@kernel=2Eorg>, "Matth=
+ias Brugger" <matthias=2Ebgg@gmail=2Ecom>, "Linux regressions mailing list"=
+ <regressions@lists=2Elinux=2Edev>
+> Betreff: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r6=
+4
+>
+> [CCing the other net maintainers]
+>=20
+> On 25=2E06=2E24 10:51, AngeloGioacchino Del Regno wrote:
+> > Il 25/06/24 07:56, Linux regression tracking (Thorsten Leemhuis) ha
+> > scritto:
+> >> On 17=2E06=2E24 13:08, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >>> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis)
+> >>> wrote:
+> >>> [=2E=2E=2E]
+> >> It looks more and more like we are stuck here (or was there progress =
+and
+> >> I just missed it?) while the 6=2E10 final is slowly getting closer=2E=
+ Hence:
+> >>
+> >> AngeloGioacchino, should we ask the net maintainers to revert
+> >> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch fr=
+om
+> >> device tree") for now to resolve this regression? Reminder, there is
+> >> nothing wrong with that commit per se afaik, it just exposes a proble=
+m
+> >> that needs to be fixed first before it can be reapplied=2E
+> >=20
+> > To be clear on this: I asked for the commit to be fixed such that it
+> > guarantees
+> > backwards compatibility with older device trees=2E
+> >=20
+> > If no fix comes,
+>=20
+> I haven't see any since that mail, did you? If not, I think=2E=2E=2E
+>=20
+> > then I guess that we should ask them to revert this commit
+> > until a fix is available=2E
+>=20
+> =2E=2E=2Eit's time to ask them for the revert to resolve this for -rc7 (=
+and
+> avoid a last minute revert), or what do you think?
+>=20
+> > I don't like this situation, either, btw=2E
+>=20
+> I guess none of us does=2E :-/
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking=2Eleemhuis=2Einfo/about/#tldr
+> If I did something stupid, please tell me, as explained on that page=2E
+>=20
+> #regzbot poke
+>
