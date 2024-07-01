@@ -1,165 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5112F29;
-	Mon,  1 Jul 2024 05:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9D618622;
+	Mon,  1 Jul 2024 05:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719810378; cv=none; b=A5Gzfx4Ko8nQ4Qe8dlWFCXqSzPFI9vACsEc4cwVK5/Wd7llr3Us3xdMzlrGGz9pDhspoUkpdsCpwdCqEVV8HiR2y5b1ltg3ms1f2vgTQ2kG4QME6CxUr+VS9BjDsbxAqdmWiyMMsAD14tg1QTkg3AiN97EdHjQjcoW0dohuaBl4=
+	t=1719812214; cv=none; b=a9s80o6vpHwNt2hQOMDiWmUeQ8SuT87x6Vb/xfdrIVXlaoTsMXzWzWmu8jZH8REYxfATjbXrBOsIaVv/+vboxLwQw+Qj9RHZ8v6TdpurEOY4o189SBzzcbXGKLODgPnh2Q1xwmxkTaoDUcF7M7TGkPiA0hy0gxvFD4hO/zEG+40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719810378; c=relaxed/simple;
-	bh=nTVRxiCIHz9LY6D6rR9agA7CNvFvd2tSLrxtF3txtyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ts5zjAE/jeM1SGxlc9SoZ/mCR8p0j30oOKzRNCEk/Mq3T2OZ85VG2UeNQ0qZUdej/mRGYnVRse03rXobxqs/sovsxyCteF7+y5ctAkq5llxAJeGs4syrWmnMIStEDn/ioT6GE53ZTLbmFO4iKOR7At6SrgOIUX0dTrHVreKFx/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Rsj1X60r; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Rsj1X60r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EF9C116B1;
-	Mon,  1 Jul 2024 05:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719810378;
-	bh=nTVRxiCIHz9LY6D6rR9agA7CNvFvd2tSLrxtF3txtyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rsj1X60r5k8zoOZ/tMjPj3MEpSt29Ik/CKAZFecM6Ah22Hlw235MtTmJjnKDaiEph
-	 hGGJJegMH85RkxbVEcbcr5PRR167fxuaKkN2nGi4ekEWMaruAglDJvv0lkz6ubQ45h
-	 q7IuooW9Xzvd8Hxw+scIOS5OGIK05SqHjhr76Q24=
-Date: Mon, 1 Jul 2024 07:06:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
-	akpm@linux-foundation.org, jserv@ccns.ncku.edu.tw,
-	alexdeucher@gmail.com, belegdol@gmail.com,
-	regressions@leemhuis.info, linux-acpi@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ACPI: processor_idle: Fix invalid comparison with
- insertion sort for latency
-Message-ID: <2024070102-overvalue-barber-806a@gregkh>
-References: <ZoHKhr9896+Kf65F@visitorckw-System-Product-Name>
- <20240701044232.42266-1-visitorckw@gmail.com>
+	s=arc-20240116; t=1719812214; c=relaxed/simple;
+	bh=GuQf7TfBkCRJA2hBO+RSxsU6GtFO7TmAZo2ViDhCMzI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
+	 MIME-Version; b=nkE5dBdXNXjzQxX/1Och285gai0g++WUn28WEHYvqwhdzNfGqis76Bv9OAlCUVvhtSP9mXHWEi/Wj93t5wCfobDekYUxxAkoNTD+Q7+Y/PT/q5qGZYLevsD2Jw32iBhOGBvorN/RvH8dTpiCPf24jVCsz9r+3dER8r/SKfdYieU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4615ae7733440549, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 4615ae7733440549
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 13:36:40 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 1 Jul 2024 13:36:40 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 1 Jul 2024 13:36:39 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
+ 15.01.2507.035; Mon, 1 Jul 2024 13:36:39 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Forty Five <mathewegeorge@gmail.com>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Bernie Huang
+	<phhuang@realtek.com>,
+        "kvalo@kernel.org" <kvalo@kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
+Thread-Topic: [REGRESSION] Freeze on resume from S3 (bisected)
+Thread-Index: AQHayyKWbA+C/SyMRES67Y/3y6K7kbHhKj7wgAAv2IA=
+Date: Mon, 1 Jul 2024 05:36:39 +0000
+Message-ID: <21ef26fea9b84ce3bd537301664931d1@realtek.com>
+References: <875xtqjli4.fsf@gmail.com> <87a5j2s0e2.fsf@gmail.com> 
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701044232.42266-1-visitorckw@gmail.com>
 
-On Mon, Jul 01, 2024 at 12:42:32PM +0800, Kuan-Wei Chiu wrote:
-> The acpi_cst_latency_cmp comparison function currently used for sorting
-> C-state latencies does not satisfy transitivity, causing incorrect
-> sorting results. Specifically, if there are two valid acpi_processor_cx
-> elements A and B and one invalid element C, it may occur that A < B,
-> A = C, and B = C. Sorting algorithms assume that if A < B and A = C,
-> then C < B, leading to incorrect ordering.
-> 
-> Given the small size of the array (<=8), we replace the library sort
-> function with a simple insertion sort that properly ignores invalid
-> elements and sorts valid ones based on latency. This change ensures
-> correct ordering of the C-state latencies.
-> 
-> Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not ordered")
-> Reported-by: Julian Sikorski <belegdol@gmail.com>
-> Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df@gmail.com/
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
-> v1 -> v2:
-> - Avoid swapping if arr[i] is an invalid element.
-> 
-> I do not have the appropriate AMD hardware to reproduce this issue and
-> test the patch. However, if the aforementioned reason is indeed the
-> source of the problem, I believe this patch might help.
-> 
->  drivers/acpi/processor_idle.c | 35 ++++++++++++++---------------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index bd6a7857ce05..813c718b9108 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -386,25 +386,21 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
->  	acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
->  }
->  
-> -static int acpi_cst_latency_cmp(const void *a, const void *b)
-> +static void acpi_cst_latency_sort(struct acpi_processor_cx *arr, size_t length)
->  {
-> -	const struct acpi_processor_cx *x = a, *y = b;
-> +	int i, j, k;
->  
-> -	if (!(x->valid && y->valid))
-> -		return 0;
-> -	if (x->latency > y->latency)
-> -		return 1;
-> -	if (x->latency < y->latency)
-> -		return -1;
-> -	return 0;
-> -}
-> -static void acpi_cst_latency_swap(void *a, void *b, int n)
-> -{
-> -	struct acpi_processor_cx *x = a, *y = b;
-> -
-> -	if (!(x->valid && y->valid))
-> -		return;
-> -	swap(x->latency, y->latency);
-> +	for (i = 1; i < length; i++) {
-> +		if (!arr[i].valid)
-> +			continue;
-> +		for (j = i - 1, k = i; j >= 0; j--) {
-> +			if (!arr[j].valid)
-> +				continue;
-> +			if (arr[j].latency > arr[k].latency)
-> +				swap(arr[j].latency, arr[k].latency);
-> +			k = j;
-> +		}
-> +	}
->  }
->  
->  static int acpi_processor_power_verify(struct acpi_processor *pr)
-> @@ -449,10 +445,7 @@ static int acpi_processor_power_verify(struct acpi_processor *pr)
->  
->  	if (buggy_latency) {
->  		pr_notice("FW issue: working around C-state latencies out of order\n");
-> -		sort(&pr->power.states[1], max_cstate,
-> -		     sizeof(struct acpi_processor_cx),
-> -		     acpi_cst_latency_cmp,
-> -		     acpi_cst_latency_swap);
-> +		acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
->  	}
->  
->  	lapic_timer_propagate_broadcast(pr);
-> -- 
-> 2.34.1
-> 
-> 
+Ping-Ke Shih wrote:
+> Forty Five <mathewegeorge@gmail.com> wrote:
+> > Forty Five <mathewegeorge@gmail.com> writes:
+> >
+> > > I applied both patches on the latest master; here are the crash logs.
+> >
+> > Just realized I forgot to run the commands to get debug messages for al=
+l
+> > except the first crash log (kdumpst-202406301756.zip). I'll send more
+> > logs later.
+>=20
+> It looks like you forgot to apply my attached debug patch. With debug mas=
+k,
+> many messages output to kernel log but I can't see things before suspendi=
+ng,
+> is it possible to enlarge buffer size of kdump?
 
-Hi,
+Sorry. I misread what you meant. I have seen logs after kdumpst-20240630180=
+0.zip.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
