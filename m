@@ -1,140 +1,113 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADEC38397
-	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 10:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85A14A098
+	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 11:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719828337; cv=none; b=fYGSyiVK3huyPcNwMBTeQesR36/QDow21t+xMF/8NXx3hYeb7becpb33YwlhrqDTexCoanNHnDPmTPAYyOR1+tvPm2eUraaMZM7KPj65WEjB3VcQr7FNPuV1Kv78hPEATTt/R01iCZvFuUJujerP0MCMXwhTeb1TEtpiXvLwIcI=
+	t=1719834877; cv=none; b=fCQE1UR6fkVYgZLB+xkw4FFgCvTmyFi+xRwm/mql4vz8C/NURd7e8MgWLlGgDiklbcZCgyj2Xd+TGh5AJNcoadiVAqRurmeZU1db3vdkvOi/x0ZNt7kPGf/IrZENJg2blpE3bNuZ0ief8FGPMdQMz19GsaoQz3c68d0jen8jWc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719828337; c=relaxed/simple;
-	bh=PcbjUIaNFUdO8prWOO3zwLLEe3a64pHF28ZtjbLenhA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ijdGAIbELXftqUyHB8/3gSDD/1fOPhwVlPmJ4t0jLQjm2kpTsyuKRo+pXG1r04w7jCTZRxLCg9P5fvqluzAZGePSc73SJ9Wb+Jo6XiFHYDzBLYw+YvidX+HWBLpYf0h6rSoK71y7HswjD7kywUvY0LhAU6LlKihTn1G+rwHEu/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v7cPBJJ3; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719834877; c=relaxed/simple;
+	bh=mzIyDrfjJn4GAeJjASEHoad7oOdOGxyr40glDiHK6V4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dCN6B9sqL7KQrwnZVoIzVdhHdpMQIPWFWuBgDStK3kk+eDQ2rCJZW2xGH86H+6M9tUDWSGVEn+Tzxy1j/K4LBdvSnEkVCU53Po6k5bsRKekUiPlpnkYYvzb3IJlb2PXhlVmPKFhPCCHVPeHCU2enG9o6toiO/W5GUV5uIDh+HVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=B2ACoB+H; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v7cPBJJ3"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-80fe89eaa4dso1092484241.1
-        for <regressions@lists.linux.dev>; Mon, 01 Jul 2024 03:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719828334; x=1720433134; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=I4DXBAWMyQsPIP/BlZF0MhKJYIvvGxN8nErZr4nhF+E=;
-        b=v7cPBJJ3YBL8Ygr2nYOyzv9QfAK5c4RewpBUah0jEEQBHk82I41jz7x/cPFtgLVS73
-         6y0qDxjn+DOwGb+hUTuQm4MzEk7g5QErWAFrSZdZhAZBebquB9534qMJPslGhMYSj0f7
-         1OOmibj2396o99wOSTlPrMGQCdUwjN6b1M5oM3OAv6MXAb2xUWaWPTz5QXKE/Zxf0cZ+
-         TFOciuc5jk7Q4C8uo6euQxX7iWBXCz4y+JIXaJZZ16/J4NXDBH0s02PHmLYeMEX7iKm2
-         ahgobEuhYs7sB7r6Sxiot6bgdTjotk8ofDaiLRVebjw/xqqZzJ4F2/F05Oi8KKqU4ojT
-         E5Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719828334; x=1720433134;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I4DXBAWMyQsPIP/BlZF0MhKJYIvvGxN8nErZr4nhF+E=;
-        b=Oqd4hUeakBae7AZA2fcAZ4PknQhY3/uiu0hgahbIoIu2NDuMQWXDGwzwl5wrxfDTY8
-         /+2wzgV3QW6aCvsw+N0SetAUG6jvN7yWTut6A6MM6zg/xTztmPLvHk68v0pBFlLEs7V7
-         cLsrA/6H627+C4U1wRjjQhC4BEQporEMnju/y9aNsjCTnq3KeCsxMM/05CwNICYDpQTI
-         1qXeyNwAlca2qV6miE0DiUCzLD7VwivLIAS2SD/T+hBSmssP0AK/uQquh91LtlERm1oG
-         Qytb3yOVY3nHx8Ke0ZX+59oTYBkKc0fprJzb5o6AQEt2l4LOawTrAks6dc/N2cDjfV4B
-         hiwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaF/WND+zJLZtUu16+PCjnwlzBPyDTJhL42Ij+PIPljgq3uIiMojM/FXRnRuHoE1IwGTIruMxcnVgL2020ic5iNCrUM6q9MMyXges=
-X-Gm-Message-State: AOJu0Yxfmg+vv7X9BWfMtd7RYAknhU/jrnNZtVVuTwySZD8XsDeQj1wo
-	AVcX4IfrE+eexrXP+lqnrPod+19eIwfKgbGVK2CFDxjhmoIpMuPhu5FOL+37PdYRf247Ex4/llC
-	02JchzHw2zDlbZOk+9ncoVOGfpfdy0+fgbpXZxA==
-X-Google-Smtp-Source: AGHT+IG/UJLtDpqLnWBEhTMwLbgorI6NfFHGnvnXUhY4RXRD1i3Q/9cj2Xrr1s9Ry+0T5PQVhvZc+dVzAoKpfP89VE8=
-X-Received: by 2002:ac5:cd4f:0:b0:4ef:8574:ce18 with SMTP id
- 71dfb90a1353d-4f295e9d7cdmr4071960e0c.6.1719828334606; Mon, 01 Jul 2024
- 03:05:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="B2ACoB+H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=r/DPyCOKb9CHlsupcTq714J2hmRN1rJ3LyROXFIsDm8=;
+	t=1719834875; x=1720266875; b=B2ACoB+H9F8RLlv/czmzXgZnzvuyI7QyvVVbtRuhKQ5MU5l
+	w0OebsHAkaq49M9P+Ha5Qgv6fgQIsz2tOL4TTdy92jiNGR/vBaIYtlDRy4BtqupkOu2qE4ZLIIpQy
+	IQwLLGnXK+0qgwqW7D9TPNcS6SnbxEIWZjvtdeEG/PUkOf41oAbdSn+gXIGJN/NfWkyrM5yDViMoS
+	gsRlohISLnmYqAXj0sLgO5E36rXysZI6cRLwLqy0FBeTs+pfgG1p7fD2/M9zk7LgI8hIHpQQ/Tpr/
+	2YROM4BjgFfxXQBHmZUzQ64c78pgrXUoLOHh8KT1v3DxzO9o4io7OaxNtOTL7b2w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sOFby-0004jI-Co; Mon, 01 Jul 2024 13:54:22 +0200
+Message-ID: <6767f6e1-f7b7-4b3e-8173-32f1472f56d6@leemhuis.info>
+Date: Mon, 1 Jul 2024 13:54:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 1 Jul 2024 15:35:23 +0530
-Message-ID: <CA+G9fYve66bw-4xVrJnfeXtRV1et1UhEZMFAvvTXbKB2-m--fg@mail.gmail.com>
-Subject: mm: gup.c:2827:22: error: conflicting types for 'try_grab_folio_fast';
- have 'struct folio
-To: lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-mm <linux-mm@kvack.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] ARM: Remove address checking for MMUless devices
+To: Yanjun Yang <yangyj.ee@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Brown <broonie@kernel.org>, rmk+kernel@armlinux.org.uk,
+ Ard Biesheuvel <ardb@kernel.org>, akpm@linux-foundation.org,
+ ben@decadent.org.uk, Wang Kefeng <wangkefeng.wang@huawei.com>,
+ Kees Cook <kees@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240611100947.32241-1-yangyj.ee@gmail.com>
+ <CAE8JAfxkbw4+wsKjoH1qyo1r69TpgLtfRjchTJ=4vVvvM46CuA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <CAE8JAfxkbw4+wsKjoH1qyo1r69TpgLtfRjchTJ=4vVvvM46CuA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719834875;70df2771;
+X-HE-SMSGID: 1sOFby-0004jI-Co
 
-The powerpc build failures noticed on Linux next-20240628 tag.
+On 12.06.24 03:25, Yanjun Yang wrote:
+> Apologies for not CCing the relevant maintainers in my previous email.
+> 
+> On Tue, Jun 11, 2024 at 6:09 PM Yanjun Yang <yangyj.ee@gmail.com> wrote:
+>>
+>> Commit 169f9102f9198b ("ARM: 9350/1: fault:
+>> Implement copy_from_kernel_nofault_allowed()") added the function to check
+>> address before use. However, for devices without MMU, addr > TASK_SIZE
+>> will always fail.  This patch move this function after the #ifdef
+>> CONFIG_MMU statement.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+What happened to this fix regression for a 6.9 regression? From here it
+looks like it fell through the cracks, but I might be missing something.
 
-Regressions found on powerpc:
+>> Also reported at https://bugzilla.kernel.org/show_bug.cgi?id=218953
 
-  - gcc-13-maple_defconfig
-  - gcc-13-cell_defconfig
-  - clang-nightly-maple_defconfig
-  - gcc-8-defconfig
-  - gcc-8-tqm8xx_defconfig
-  - clang-18-tqm8xx_defconfig
-  - gcc-8-maple_defconfig
-  - clang-nightly-cell_defconfig
-  - clang-18-maple_defconfig
-  - gcc-13-defconfig
-  - clang-18-defconfig
-  - clang-nightly-defconfig
-  - gcc-13-tqm8xx_defconfig
-  - clang-nightly-tqm8xx_defconfig
-  - gcc-8-cell_defconfig
-  - clang-18-cell_defconfig
+Side note: this afaics ideally should be:
 
-Build error:
----
-mm/gup.c: In function 'gup_hugepte':
-mm/gup.c:525:25: error: implicit declaration of function
-'try_grab_folio_fast'; did you mean 'try_grab_folio'?
-[-Werror=implicit-function-declaration]
-  525 |                 folio = try_grab_folio_fast(page, refs, flags);
-      |                         ^~~~~~~~~~~~~~~~~~~
-      |                         try_grab_folio
-mm/gup.c:525:23: warning: assignment to 'struct folio *' from 'int'
-makes pointer from integer without a cast [-Wint-conversion]
-  525 |                 folio = try_grab_folio_fast(page, refs, flags);
-      |                       ^
-mm/gup.c: At top level:
-mm/gup.c:2827:22: error: conflicting types for 'try_grab_folio_fast';
-have 'struct folio *(struct page *, int,  unsigned int)'
- 2827 | static struct folio *try_grab_folio_fast(struct page *page, int refs,
-      |                      ^~~~~~~~~~~~~~~~~~~
-mm/gup.c:525:25: note: previous implicit declaration of
-'try_grab_folio_fast' with type 'int()'
-  525 |                 folio = try_grab_folio_fast(page, refs, flags);
-      |                         ^~~~~~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+ Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218953
 
-Steps to reproduce:
-----
+Ciao, Thorsten
 
-# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
---kconfig cell_defconfig
-
-
-
-metadata:
-----
- git_describe: next-20240628
- git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
- git_short_log: 1eb586a9782c ("Add linux-next specific files for 20240628")
- arch: powerpc
- toolchain: gcc-13 and clang-18
-
-Links:
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2iWYcbTLGMcGuxl7caQ3jwv9C4a/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240628/testrun/24464887/suite/build/test/gcc-13-cell_defconfig/details/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240628/testrun/24464887/suite/build/test/gcc-13-cell_defconfig/log
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+>> Signed-off-by: Yanjun Yang <yangyj.ee@gmail.com>
+>> ---
+>>  arch/arm/mm/fault.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+>> index 67c425341a95..ab01b51de559 100644
+>> --- a/arch/arm/mm/fault.c
+>> +++ b/arch/arm/mm/fault.c
+>> @@ -25,6 +25,8 @@
+>>
+>>  #include "fault.h"
+>>
+>> +#ifdef CONFIG_MMU
+>> +
+>>  bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+>>  {
+>>         unsigned long addr = (unsigned long)unsafe_src;
+>> @@ -32,8 +34,6 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
+>>         return addr >= TASK_SIZE && ULONG_MAX - addr >= size;
+>>  }
+>>
+>> -#ifdef CONFIG_MMU
+>> -
+>>  /*
+>>   * This is useful to dump out the page tables associated with
+>>   * 'addr' in mm 'mm'.
+>> --
+>> 2.45.2
+>>
+> 
