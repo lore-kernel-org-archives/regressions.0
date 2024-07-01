@@ -1,174 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620CE16EB44
-	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 17:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F608174EF3
+	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 18:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719855414; cv=none; b=XHCdNfoP/z4sKMwgw3dHtMhNGzcS4ofiQKcBEeyr6UdQfaUTclsvIT0VVvjfpsntohP5jWMyE5zMQp6OnQLRcW4NX2rx5PT1zmn4yPkVNLX4xm/TQZEjK6bjRqn44TfV6XvmxUW2AJlQCrXI3p70SpZbCfB0a4g+uTymNiKRrME=
+	t=1719858596; cv=none; b=fsmhkQmMhYuF4KE321ZsIr/GqHN9dRCAHwLwIrU3LFbi+6xBUEgo/d+PYDy3PETyuVCJIpk9d0CFm1TOWrKZMOZH35VaVi8QK+1cB0opaL77lSWD36GeSdgnzs+CsIzkMRrkYPTicak3QGFScNjq6h4OxCmYna1nQaWM/aiOy/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719855414; c=relaxed/simple;
-	bh=AJ43U8TxBFG1R0W4PvfAZW+pIgCbJ/wmU+LmsAUrYjU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WH2iT0gGPn6LvVv8rgvk6FBaSaE2fs5T6MDhWLdR/KoxzcPz8NX1r2B1xGNMDf7PtNyH6Pa1nQoRnPvBkkU/7R2IG8zu2erw/K2yMV62tBSpf6nl9L5f9o4Z3DWS4uKjiG1QglybVBUwfwVsSVpCUQDLgDZvTGTHIMtGstcmP10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAQem2J7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719858596; c=relaxed/simple;
+	bh=3S2ICPf18exw28+3T4mdb3eom9LuI6fEgQhS5aTgFec=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lPqlRzLco0VK3IXQ6a+rLWLSCw409Tz0stGqZTuLEjKjmFwzs6AVlBUNWT1CL29/0PwGZkaFnySnOSlar0CKj3jFYdSvL243jw6hMTnQsI6LNdLEL7dIqcynl3lukY77Xsrv/mNpHhyxgpRqrZDuPhNIubpUvXFAv+fQ5yQ8tzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I4cOk3eM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAQem2J7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F92C4AF0A
-	for <regressions@lists.linux.dev>; Mon,  1 Jul 2024 17:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719855413;
-	bh=AJ43U8TxBFG1R0W4PvfAZW+pIgCbJ/wmU+LmsAUrYjU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GAQem2J7raFxA9lVH1y/ketnYyyQZqQuNgSlgcormbdqA2tFRR6DN/a/dm9X5gmE4
-	 C0tl9VQBQr8ZDrVNlCp9IGe6wnCBdQnJtbnRlVPcbeFOMzQE/djT5Ol/0ThKZ0iviR
-	 QTA1LIEvrrAJqitmAGmvFuTQ2OzGd2+tM8H0K195ySIgZ1C+f8oesPwR74lZsLzAmR
-	 uwB9V+PJuHLxarOivu9iQkb59MHjnE98JlrR814m9MkBiIOizRrhpWg1/KQphZl4oY
-	 g1cDEZA8Leus4rSBd+V8R4IxckGHbR5CLU0/MW+gp8syg1YkVybnyCorrkddk55gLr
-	 O0Mg0T3/IxMHg==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5c411d037b3so81914eaf.2
-        for <regressions@lists.linux.dev>; Mon, 01 Jul 2024 10:36:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUm/G6e2jbclYlTA55OrSwf77NK6pupFL85ErpWokqjl9y9rmvOaZpSqYTNz9FvvCwmpdW0XqcaLlFFId+GRdBen4ARhyxY9WkXmdU=
-X-Gm-Message-State: AOJu0YxK262VT/AEoNuzpbWZVXI1DRNXGc6p2tQh42TRqgBPXme0J7K2
-	e+24gAlbDwmquV8qyYaI6Rv37YoWslmLqZigZoKfJ/LfZTQNqPYXiY1s8vOWh5Hwke5RRtthz50
-	lc0DLy/Ed8ovIoqsGTs0VY+A79Wk=
-X-Google-Smtp-Source: AGHT+IHwSaJ1hicMo5mBvoWp89o0ASG0KBJLQ81cNcOTGZ3yBfDdae3nh4KtC0AqPvla0OZvfnqwU4SaJJoAWy55Gc8=
-X-Received: by 2002:a4a:c914:0:b0:5ba:ca86:a025 with SMTP id
- 006d021491bc7-5c438d51dfcmr5664269eaf.0.1719855412448; Mon, 01 Jul 2024
- 10:36:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I4cOk3eM"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461IQpAZ023037;
+	Mon, 1 Jul 2024 18:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	8M/NcLEsRj+FlvECMzLMigBD/zG81chYyCp7F5PFqCA=; b=I4cOk3eMOhM/v4Xp
+	5RtQeHaUhKll9ZmTN6E5LFmSwRtwcNMlvvcT1YUa2SlAYUhGLZOr8voWFr+WZ81b
+	C5G4HQmoMVP7tGdQfIwTxO7tYucZFxEANGZOPZKIW/Jw0BbqIouH3K5xG43brGa/
+	ZOdrBXZSEj/dsob8ZE8l9vx72ub1rOMYwPFgqVAHmna5Lli4/I9+MnaFPl6lZ7yU
+	EDPZxyR8ugSAfM+QpKmQAhDnc2DDqGEiip1GRTyevuj8MH1BiJk/+GwwHpjbPtnk
+	gXHlsB7aUGn9Ly7Bfs4r6iN/MRnmccl8apBvTTsBMOP3bKhaDBFz8WCS2Gk9WfIH
+	EPT+SA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4041car1hh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 18:29:48 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 461H0Fsv024077;
+	Mon, 1 Jul 2024 18:29:47 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya38b0w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 18:29:47 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 461ITi7325035476
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 18:29:47 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3C5258054;
+	Mon,  1 Jul 2024 18:29:44 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5CF9A5803F;
+	Mon,  1 Jul 2024 18:29:44 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jul 2024 18:29:44 +0000 (GMT)
+Message-ID: <53d96a8b-26ef-46a3-9b68-3d791613e47c@linux.ibm.com>
+Date: Mon, 1 Jul 2024 14:29:43 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize
+ session support
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: naveen.n.rao@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20240617193408.1234365-1-stefanb@linux.ibm.com>
+ <9e167f3e-cd81-45ab-bd34-939f516b05a4@linux.ibm.com>
+ <55e8331d-4682-40df-9a1b-8a08dc5f6409@leemhuis.info>
+ <9f86a167074d9b522311715c567f1c19b88e3ad4.camel@kernel.org>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <9f86a167074d9b522311715c567f1c19b88e3ad4.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: TxbAsl9mb4epcgFCGrxx9fVFbeSNOPDy
+X-Proofpoint-ORIG-GUID: TxbAsl9mb4epcgFCGrxx9fVFbeSNOPDy
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <46742c5a-5df4-46d1-bf5f-b74067866fec@amd.com> <20240701161039.80008-1-visitorckw@gmail.com>
-In-Reply-To: <20240701161039.80008-1-visitorckw@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jul 2024 19:36:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iY=S+WKWvDAAWxLcOwvpOG5Cck1gQv4p+FfW1Nca0Yqw@mail.gmail.com>
-Message-ID: <CAJZ5v0iY=S+WKWvDAAWxLcOwvpOG5Cck1gQv4p+FfW1Nca0Yqw@mail.gmail.com>
-Subject: Re: [PATCH v3] ACPI: processor_idle: Fix invalid comparison with
- insertion sort for latency
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com, 
-	akpm@linux-foundation.org, jserv@ccns.ncku.edu.tw, alexdeucher@gmail.com, 
-	belegdol@gmail.com, regressions@leemhuis.info, linux-acpi@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-01_18,2024-07-01_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 mlxscore=0 malwarescore=0 mlxlogscore=999
+ suspectscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407010138
 
-On Mon, Jul 1, 2024 at 6:10=E2=80=AFPM Kuan-Wei Chiu <visitorckw@gmail.com>=
- wrote:
->
-> The acpi_cst_latency_cmp comparison function currently used for sorting
-> C-state latencies does not satisfy transitivity, causing incorrect
-> sorting results. Specifically, if there are two valid acpi_processor_cx
-> elements A and B and one invalid element C, it may occur that A < B,
-> A =3D C, and B =3D C. Sorting algorithms assume that if A < B and A =3D C=
-,
-> then C < B, leading to incorrect ordering.
->
-> Given the small size of the array (<=3D8), we replace the library sort
-> function with a simple insertion sort that properly ignores invalid
-> elements and sorts valid ones based on latency. This change ensures
-> correct ordering of the C-state latencies.
->
-> Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not=
- ordered")
-> Cc: stable@vger.kernel.org
-> Reported-by: Julian Sikorski <belegdol@gmail.com>
-> Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df=
-@gmail.com/
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
-> v2 -> v3:
-> - Remove #include <linux/sort.h>
-> - Cc @stable
->
-> Note: I only performed a build test and a simple unit test to ensure
->       the latency of valid elements is correctly sorted in the randomly
->           generated data.
->
->  drivers/acpi/processor_idle.c | 36 ++++++++++++++---------------------
->  1 file changed, 14 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.=
-c
-> index bd6a7857ce05..17cc81340b4b 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -16,7 +16,6 @@
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
->  #include <linux/sched.h>       /* need_resched() */
-> -#include <linux/sort.h>
->  #include <linux/tick.h>
->  #include <linux/cpuidle.h>
->  #include <linux/cpu.h>
-> @@ -386,25 +385,21 @@ static void acpi_processor_power_verify_c3(struct a=
-cpi_processor *pr,
->         acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
->  }
->
-> -static int acpi_cst_latency_cmp(const void *a, const void *b)
-> +static void acpi_cst_latency_sort(struct acpi_processor_cx *arr, size_t =
-length)
 
-s/arr/states/ please.
 
->  {
-> -       const struct acpi_processor_cx *x =3D a, *y =3D b;
-> +       int i, j, k;
->
-> -       if (!(x->valid && y->valid))
-> -               return 0;
-> -       if (x->latency > y->latency)
-> -               return 1;
-> -       if (x->latency < y->latency)
-> -               return -1;
-> -       return 0;
-> -}
-> -static void acpi_cst_latency_swap(void *a, void *b, int n)
-> -{
-> -       struct acpi_processor_cx *x =3D a, *y =3D b;
-> -
-> -       if (!(x->valid && y->valid))
-> -               return;
-> -       swap(x->latency, y->latency);
-> +       for (i =3D 1; i < length; i++) {
-> +               if (!arr[i].valid)
-> +                       continue;
+On 7/1/24 11:22, Jarkko Sakkinen wrote:
+> On Fri, 2024-06-28 at 17:00 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing the regression list]
+>>
+>> On 20.06.24 00:34, Stefan Berger wrote:
+>>> Jarkko,
+>>>    are you ok with this patch?
+>>
+>> Hmmm, hope I did not miss anythng, but looks like nothing happened for
+>> about 10 days here. Hence:
+>>
+>> Jarkko, looks like some feedback from your side really would help to
+>> find a path to get this regression resolved before 6.10 is released.
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> Sorry for latency, and except a bit more slow phase also during
+> July because I'm most of this month on Holiday, except taking care
+> 6.11 release.
+> 
+> This really is a bug in the HMAC code not in the IBM driver as
+> it should not break because of a new feature, i.e. this is only
+> correct conclusions, give the "no regressions" rule.
+> 
+> Since HMAC is by default only for x86_64 and it does not break
+> defconfig's, we should take time and fix the actual issue.
 
-Please add an empty line here (and analogously below).
+It was enabled it on my ppc64 system after a git pull -- at least I did 
+not enable it explicitly. Besides that others can enable it on any arch 
+unless you now change the 'default x86_64' to a 'depends x86_64' iiuc 
+otherwise the usage of a Fixes: , as I used in my patch, would be justified.
 
-> +               for (j =3D i - 1, k =3D i; j >=3D 0; j--) {
-> +                       if (!arr[j].valid)
-> +                               continue;
-> +                       if (arr[j].latency > arr[k].latency)
-> +                               swap(arr[j].latency, arr[k].latency);
+config TCG_TPM2_HMAC
+	bool "Use HMAC and encrypted transactions on the TPM bus"
+	default X86_64
+	select CRYPTO_ECDH
+	select CRYPTO_LIB_AESCFB
+	select CRYPTO_LIB_SHA256
 
-And here.
+https://elixir.bootlin.com/linux/v6.10-rc6/source/drivers/char/tpm/Kconfig
 
-> +                       k =3D j;
-> +               }
-> +       }
->  }
->
->  static int acpi_processor_power_verify(struct acpi_processor *pr)
-> @@ -449,10 +444,7 @@ static int acpi_processor_power_verify(struct acpi_p=
-rocessor *pr)
->
->         if (buggy_latency) {
->                 pr_notice("FW issue: working around C-state latencies out=
- of order\n");
-> -               sort(&pr->power.states[1], max_cstate,
-> -                    sizeof(struct acpi_processor_cx),
-> -                    acpi_cst_latency_cmp,
-> -                    acpi_cst_latency_swap);
-> +               acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
->         }
->
->         lapic_timer_propagate_broadcast(pr);
-> --
+> 
+> BR, Jarkko
+> 
