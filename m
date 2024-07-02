@@ -1,37 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36513D548;
-	Tue,  2 Jul 2024 05:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15169148856
+	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 07:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719898641; cv=none; b=jdFplU/ECBwfugav6HansAePBdmXpfNZIBZLp1yAuT3n1TbrJaU+wXg5GKSmVnD+hO+aE7ckGx7xp7VZMRFc/q41LCMRnXhcpsIQkH0ys4UcV5EJvlJq22J+1IvT69cRh4cFBBRbXXfSFWipzCmh26SQdGjcZJjiFs7rFTX1S5o=
+	t=1719905324; cv=none; b=T1OfgvqKX2XW0R68JErCpXByAkWx3T3528HfmEzP0vuq5WxEmORU5RabVqW498Np6c14Ny667i+X2UEDD27wRwgFyfE4QwLXPKVp1cQBf9NvaComLOb05liXbnJ+ChAUVe+v/9/576QqGKUnMcGVmLLxc1LUrh4vFfEdV7G5G+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719898641; c=relaxed/simple;
-	bh=16pWVQDlV3oMxIYcAJWP63TGtGj5GzcFV1gJpcFFfU8=;
+	s=arc-20240116; t=1719905324; c=relaxed/simple;
+	bh=vsqePUHcK0fv7suLmKyy9AE69S893Nx2DFSfYA7/48Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqzGakV/Mupa1j1FwbvYIggT7deS7wjpEHP/F3QPRIx++kNfCOZDopnfvlhlhBlUC1g2B+WERTgYzEIMB9npFa/e6qwpfmB1z3eibqKwmCFnRuC8q84PsG9ht58pKGohty3C3xfsh1qvitSxwy7TigR2Ra/cAG/lE01+hQR4VzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N7bKrAr2; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=OoxRegWOymJwRKq3s6PFL6Ev2Ijn4MrfeoUdVPo29n5V2ppJl+2Ebdh5V6kWW2aybLvVaxJ1i+DLKmlzqHnGhpK0v5qDF3gNTRfOnAHkxA6EJoEMJiUMZ0yNfZDzOyxJG+4V1+OBFlk0gALHuhWBrEpCPB+BEMb2TKkUJtFi5oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Raa+3UKz; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N7bKrAr2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=DS77JC9w8wcnStim2W/xitvraXik/3HNJqyNkDayJog=;
-	t=1719898639; x=1720330639; b=N7bKrAr2jZFhWWJg3MaE1vvqSt9XZbCWHIbSiBIIOWWwuTe
-	rNtukRTtpO115hOHSdFI5XF9LlkZbl7e2i0/JV+s4fp6U7NHJcuISmRbYMGMofYmIG8U+2DGNpkY6
-	+v77NiPXsblmvgp7DvBRBNQL+SBHFxYKxzhY+LuJy24w/PUANPzOjtGFenImkMKUzCWPzXOVBbdqz
-	4R2AcCyKP3/O/ojTLnIc2B7Z77Bvs8Zbm4QVbMz3ENdz74DxbcIyQNvALcTlIE4kzZutXYWT1Gpia
-	Nv4qw5VAsKLurRRZ6OZToFyEJf8p3oaLrxZP8xyNJ3RjjITaBqsppX1AfhMMeqgw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sOWCX-0005Ro-VY; Tue, 02 Jul 2024 07:37:14 +0200
-Message-ID: <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
-Date: Tue, 2 Jul 2024 07:37:13 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Raa+3UKz"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso465481866b.1
+        for <regressions@lists.linux.dev>; Tue, 02 Jul 2024 00:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719905321; x=1720510121; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjkiIMimDM469BE4g0PtLb2eLPRo0mVKPcjnEkFhjs0=;
+        b=Raa+3UKzIG2iIDcPEDSH2k5UuUJ7Lwy8vDA77RON9EtoPhfeoj6yKdg7nQBv2t5fFA
+         3E9l7PTVh9YH3KgtQnCbi6lJUxolxFf1MufC403IlvOPM5Y1borc+RUpqTkgwqA3tZ2+
+         10QVpMIuL9dwu+MaoPjB/LojUBIVvLpHufrJHVtBBNo1DLQWrs3QIOPuLfNKOh855p2M
+         ELhZMCLKr1eas/qN6r8JGx6HMDUR0L9s7RTL9aglZLMQQM2fAOVYpJjmXYRJrvqW2E4J
+         UZXNlhFBmRtlrVNr5QK6ihqHiMuFimmxpX57qzSxVujfTUPgA9Nge7NywhatP/+RQIb0
+         jMDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719905321; x=1720510121;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjkiIMimDM469BE4g0PtLb2eLPRo0mVKPcjnEkFhjs0=;
+        b=BX4nXi2UZw/LwG4dBgFgwaul1XOO6jxrolnPP3pubjUfiRjO6aaGYLyMdNhJcJV17v
+         gk0OWRgddMMJVGzDFwC0mQd9oBWqCAcXyUWim2jebdUmi3cDMDgjOi1DlAd+axsbpd80
+         dIhqLkCKVyl4yCMEl4vNt1r/SSpzI/GKb0YB6M0923MjuKWXooGijuEeaY8Yew5vr0WU
+         XDA2hAC9bIgY7a/dXgB5SRxYVntognb3+VpWTcfSTrWVjium7ZBkZ9B0D5UkzsXfUE5y
+         D6Gf8z7bWoIyn49S7lD4QmxLKHQLhVd5R5j4RRrvuJ0FtDE/zENPAMQvMVF2I+YADbDg
+         CEfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2ZeJ3QEFruP0D+SkWiZLOfmgScCX64xZLCDQg/IbgkMiikPue0TmI8H3Kd+x8HCD2n5ee0jkGoJGz2c9Gn6pQrc0HQGvYR89uEm8=
+X-Gm-Message-State: AOJu0YyrnGp7NBTG9PnRZgjqmx/lbW5K4uwX7HelijdwCKS73RVOqqYG
+	/D6gGNIEOdA9l9EyPSicav8Lv19OkCc+uKcheQQG0vqm1nqkMNA7
+X-Google-Smtp-Source: AGHT+IEqfipeae6eXqvRg9I/YLGEBz4jcyUx09ob+ngbQXPCuRclXOGmihGS1vdIK2VK9uvDeeqapg==
+X-Received: by 2002:a17:906:d7a2:b0:a72:7da4:267c with SMTP id a640c23a62f3a-a751440237fmr490569466b.12.1719905321190;
+        Tue, 02 Jul 2024 00:28:41 -0700 (PDT)
+Received: from ?IPV6:2a02:908:1980:aac0::f4a9? ([2a02:908:1980:aac0::f4a9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7525fb8387sm166302366b.94.2024.07.02.00.28.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 00:28:40 -0700 (PDT)
+Message-ID: <81aa100e-044c-4ea8-a2ff-cd34711e137e@gmail.com>
+Date: Tue, 2 Jul 2024 09:28:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,84 +61,128 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
- timer together with interrupts"
-To: Markus Schneider-Pargmann <msp@baylibre.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Tony Lindgren <tony@atomide.com>, Judith Mendez <jm@ti.com>,
- linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
- <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
- <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v4] ACPI: processor_idle: Fix invalid comparison with
+ insertion sort for latency
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, rafael@kernel.org
+Cc: lenb@kernel.org, mario.limonciello@amd.com, akpm@linux-foundation.org,
+ jserv@ccns.ncku.edu.tw, alexdeucher@gmail.com, regressions@leemhuis.info,
+ linux-acpi@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <CAJZ5v0iY=S+WKWvDAAWxLcOwvpOG5Cck1gQv4p+FfW1Nca0Yqw@mail.gmail.com>
+ <20240701205639.117194-1-visitorckw@gmail.com>
+Content-Language: en-US
+From: Julian Sikorski <belegdol@gmail.com>
+In-Reply-To: <20240701205639.117194-1-visitorckw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719898639;2ce6bdd2;
-X-HE-SMSGID: 1sOWCX-0005Ro-VY
 
-On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
-> On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [CCing the regression list, as it should be in the loop for regressions:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Hmm, looks like there was not even a single reply to below regression
->> report. But also seens Markus hasn't posted anything archived on Lore
->> since about three weeks now, so he might be on vacation.
->>
->> Marc, do you might have an idea what's wrong with the culprit? Or do we
->> expected Markus to be back in action soon?
+Am 01.07.24 um 22:56 schrieb Kuan-Wei Chiu:
+> The acpi_cst_latency_cmp comparison function currently used for sorting
+> C-state latencies does not satisfy transitivity, causing incorrect
+> sorting results. Specifically, if there are two valid acpi_processor_cx
+> elements A and B and one invalid element C, it may occur that A < B,
+> A = C, and B = C. Sorting algorithms assume that if A < B and A = C,
+> then C < B, leading to incorrect ordering.
 > 
-> Great, ping here.
-
-Thx for replying!
-
-> @Matthias: Thanks for debugging and sorry for breaking it. If you have a
-> fix for this, let me know. I have a lot of work right now, so I am not
-> sure when I will have a proper fix ready. But it is on my todo list.
-
-Thx. This made me wonder: is "revert the culprit to resolve this quickly
-and reapply it later together with a fix" something that we should
-consider if a proper fix takes some time? Or is this not worth it in
-this case or extremely hard? Or would it cause a regression on it's own
-for users of 6.9?
-
-Ciao, Thorsten
-
->> On 18.06.24 18:12, Matthias Schiffer wrote:
->>> Hi Markus,
->>>
->>> we've found that recent kernels hang on the TI AM62x SoC (where no m_can interrupt is available and
->>> thus the polling timer is used), always a few seconds after the CAN interfaces are set up.
->>>
->>> I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cancel polling timer together
->>> with interrupts"). Both master and 6.6 stable (which received a backport of the commit) are
->>> affected. On 6.6 the commit is easy to revert, but on master a lot has happened on top of that
->>> change.
->>>
->>> As far as I can tell, the reason is that hrtimer_cancel() tries to cancel the timer synchronously,
->>> which will deadlock when called from the hrtimer callback itself (hrtimer_callback -> m_can_isr ->
->>> m_can_disable_all_interrupts -> hrtimer_cancel).
->>>
->>> I can try to come up with a fix, but I think you are much more familiar with the driver code. Please
->>> let me know if you need any more information.
->>>
->>> Best regards,
->>> Matthias
->>>
->>>
+> Given the small size of the array (<=8), we replace the library sort
+> function with a simple insertion sort that properly ignores invalid
+> elements and sorts valid ones based on latency. This change ensures
+> correct ordering of the C-state latencies.
 > 
+> Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not ordered")
+> Cc: stable@vger.kernel.org
+> Reported-by: Julian Sikorski <belegdol@gmail.com>
+> Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df@gmail.com/
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> ---
+> v3 -> v4:
+> - Rename the parameter 'arr' to 'states'.
+> - Add empty lines to enhance readability.
 > 
+> Note: I only performed a build test and a simple unit test to ensure
+>        the latency of valid elements is correctly sorted in the randomly
+>        generated data.
+> 
+
+Hello,
+
+thanks for the patch. I have tested this applied on top of Fedora 6.9.7 
+kernel on my Asus laptop and the message about suspend not reaching the 
+deepest state is gone. Thank you.
+I wonder whether this will also fix random S3 suspend issues I have been 
+seeing on my 5600x since 6.9 kernel too. I will definitely try.
+
+Best regards,
+Julian
+
+Tested-by: Julian Sikorski <belegdol@gmail.com>
+
+>   drivers/acpi/processor_idle.c | 37 +++++++++++++++--------------------
+>   1 file changed, 16 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index bd6a7857ce05..831fa4a12159 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -16,7 +16,6 @@
+>   #include <linux/acpi.h>
+>   #include <linux/dmi.h>
+>   #include <linux/sched.h>       /* need_resched() */
+> -#include <linux/sort.h>
+>   #include <linux/tick.h>
+>   #include <linux/cpuidle.h>
+>   #include <linux/cpu.h>
+> @@ -386,25 +385,24 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
+>   	acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
+>   }
+>   
+> -static int acpi_cst_latency_cmp(const void *a, const void *b)
+> +static void acpi_cst_latency_sort(struct acpi_processor_cx *states, size_t length)
+>   {
+> -	const struct acpi_processor_cx *x = a, *y = b;
+> +	int i, j, k;
+>   
+> -	if (!(x->valid && y->valid))
+> -		return 0;
+> -	if (x->latency > y->latency)
+> -		return 1;
+> -	if (x->latency < y->latency)
+> -		return -1;
+> -	return 0;
+> -}
+> -static void acpi_cst_latency_swap(void *a, void *b, int n)
+> -{
+> -	struct acpi_processor_cx *x = a, *y = b;
+> +	for (i = 1; i < length; i++) {
+> +		if (!states[i].valid)
+> +			continue;
+>   
+> -	if (!(x->valid && y->valid))
+> -		return;
+> -	swap(x->latency, y->latency);
+> +		for (j = i - 1, k = i; j >= 0; j--) {
+> +			if (!states[j].valid)
+> +				continue;
+> +
+> +			if (states[j].latency > states[k].latency)
+> +				swap(states[j].latency, states[k].latency);
+> +
+> +			k = j;
+> +		}
+> +	}
+>   }
+>   
+>   static int acpi_processor_power_verify(struct acpi_processor *pr)
+> @@ -449,10 +447,7 @@ static int acpi_processor_power_verify(struct acpi_processor *pr)
+>   
+>   	if (buggy_latency) {
+>   		pr_notice("FW issue: working around C-state latencies out of order\n");
+> -		sort(&pr->power.states[1], max_cstate,
+> -		     sizeof(struct acpi_processor_cx),
+> -		     acpi_cst_latency_cmp,
+> -		     acpi_cst_latency_swap);
+> +		acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
+>   	}
+>   
+>   	lapic_timer_propagate_broadcast(pr);
+
