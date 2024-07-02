@@ -1,105 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23EB14039D;
-	Tue,  2 Jul 2024 09:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF084DFF
+	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 10:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719912188; cv=none; b=B6TIgeuYTOrzvu2+cERHYFLXzp0ieTfN8ROeXvCct5xKLyX0dKUIBBoA09hJeu50arjj7IaTFrhBZ8scmlT/wLTntR138f4HJIoFKlBDU5ty828EMbyP/0aFiqEC9bWbZYCFJMQiKgL+6omHkXvBA4IW1dyERFC/+JiDKUJUmVc=
+	t=1719914602; cv=none; b=Q6v4ZcvJZGu7zMsY2S5XdSjXXyK688UtFMJO+muFc+8lNMEJZWMRUU8+0PLuWBppYOJlB0qyzP2YT9OAk2+o0f4Ih3+5zA/k5r4KMGpm2XJBBfeG6f9D4U2wYHXA/3Pg4Lh/KLg5kLiR79QPtdcQfjuaulT5gGP6fQV6Mu+LeNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719912188; c=relaxed/simple;
-	bh=fvBgyHVx8lerUt4pRwq0j/4HkKCsNdFkbt0Du2sotNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8l3YV9MNXJS//RIY43G61JodBhHkDwbDcndU1y+VPl5bRFXoCTVATtRPYvWZAD0aZmui36C0UBDUeeo3v1LsK77Sju4ieEyxucno6VQZGiiECyOH9TIsHuyCL7jZsVj3iPL11YJRZ0SVVTLrcdNmG26qnMBmYPjwV8rhQM78nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w3RCObYu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719914602; c=relaxed/simple;
+	bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ShFm5Z+0jLuW0hLJZoXOOAb7zq7ZmqbnhhLn2Hf+6yazZnJUzwUTlIimFWw3f6VIc/9h2XaiZuKSSSosiFsVThMXBe/SD4l7QQkewu+D7xnqGh4ybrAjr7CYlI9snLSmx7B/A9/6otQ1BbavBLGFP7rzbhjXypsg6m+vhOx5GEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=QOzpz46D; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ZOrQNQtM reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w3RCObYu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B319DC116B1;
-	Tue,  2 Jul 2024 09:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719912188;
-	bh=fvBgyHVx8lerUt4pRwq0j/4HkKCsNdFkbt0Du2sotNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=w3RCObYuv7sGeSSQFKrzyzEXwOKh998P2r5kCgX3h4h4Bq1P8JSX0Ae8EynVpBhQ5
-	 HpiYGrqb/14rhvNjqEQY0N/OZT3kz+6QjzDudw2n0S0iu9M84DNjuFndkFahcqDrGz
-	 Wra9UnXl17nqgs3vA//QRwyBVRkjzCuSolM1HgS0=
-Date: Tue, 2 Jul 2024 11:23:05 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Lars Wendler <wendler.lars@web.de>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	"Huang, Ray" <Ray.Huang@amd.com>,
-	"Yuan, Perry" <Perry.Yuan@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	"Du, Xiaojian" <Xiaojian.Du@amd.com>,
-	"Meng, Li (Jassmine)" <Li.Meng@amd.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: linux-6.6.y: Regression in amd-pstate cpufreq driver since 6.6.34
-Message-ID: <2024070258-popper-unheard-3592@gregkh>
-References: <20240701112944.14de816f@chagall.paradoxon.rec>
- <SJ2PR12MB8690E3E2477CA9F558849835ECD32@SJ2PR12MB8690.namprd12.prod.outlook.com>
- <7f1aaa11-2c08-4f33-b531-331e50bd578e@amd.com>
- <20240701174539.4d479d56@chagall.paradoxon.rec>
- <fd892ad7-7bf9-4135-ba59-6b70e593df4e@amd.com>
- <20240701181349.5e8e76b8@chagall.paradoxon.rec>
- <18882bfe-4ca5-495c-ace5-b9bcab796ae5@amd.com>
- <2024070251-victory-evacuate-1b56@gregkh>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="QOzpz46D";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ZOrQNQtM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1719914599; x=1751450599;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+  b=QOzpz46Dlaj/mxiKpoLF2k8HUTTOvgCeRWw9Jl5g0kRJfwlA+a/xrwdE
+   xzIqJ7F8S7deX4fNIBrgqxNBEnmHZtGZMELJfIM0woY6bOQnQhS+KKJIs
+   UHiayoevtoGuLnJgdbX8zZFwTb4gDsVvzXT/BfqxpM7aLpqadKhRxQObJ
+   pkEgzA9GFPPu2jMbiOkQbKRSLonfz2gZvo2XuuqjZX6CuTOn6VUI8gDTo
+   Io1vYEdWVv4kdka0xRwxgC3q7wiRdecO3S0WENWFJfOmezVwsl5h7Qu5F
+   kfW7EesSp04DyoteAuEbOPvWGll7TA9gVhgPed0N7cEv+rPCItvcRAC1h
+   A==;
+X-CSE-ConnectionGUID: LYzK7jUlQ2y1hld4f6tLmA==
+X-CSE-MsgGUID: uNEUPFhTQ+KBuwDotQUbhQ==
+X-IronPort-AV: E=Sophos;i="6.09,178,1716242400"; 
+   d="scan'208";a="37697386"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 02 Jul 2024 12:03:10 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 968581658FC;
+	Tue,  2 Jul 2024 12:03:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1719914586;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ZZC6RUME3C3T+j6uBSf5KK5uj8Trge04Cv6a6nZ23VQ=;
+	b=ZOrQNQtMSkAIaicd+ssSgMSS1f+2sT2dsUkHW279QXJMAqSbTxnzoRPxc0FgXXNwdiHVCB
+	nSZ4yfF2iFgFsFuQ3fb1K6Rj3NM1OjCGGWLFgEm0vbn1+LHZA272r4EoZuV5aaNlgFFG8q
+	jhZ/D3aa/i1yQBV8oymhfJtmjSBlzSPf5nen2Sub0M8Lx0rJSannB9FREn/TynYfxLDJHc
+	T5+iNFM07fZ2aoMQSjH2m4GJnuG/2aqubOWMB/+RNEYotShXZdMvDtl8amC6157oDG0otU
+	WedOEuLJFj5dqT79l51MHNvODXL9cMToZmUR6Hnjh6XJUshbZHd6S+U3GbBVOw==
+Message-ID: <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
+Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
+ timer together with interrupts"
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Markus
+	Schneider-Pargmann
+	 <msp@baylibre.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Chandrasekar Ramakrishnan
+ <rcsekar@samsung.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Tony Lindgren
+ <tony@atomide.com>, Judith Mendez <jm@ti.com>,  linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,  linux@ew.tq-group.com
+Date: Tue, 02 Jul 2024 12:03:01 +0200
+In-Reply-To: <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+	 <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
+	 <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
+	 <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024070251-victory-evacuate-1b56@gregkh>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Jul 02, 2024 at 11:15:14AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jul 01, 2024 at 04:53:20PM -0500, Mario Limonciello wrote:
-> > On 7/1/2024 11:13, Lars Wendler wrote:
-> > > Hello Mario,
-> > > 
-> > > Am Mon, 1 Jul 2024 10:58:17 -0500
-> > > schrieb Mario Limonciello <mario.limonciello@amd.com>:
-> > > 
-> > > > > I've tested both, 6.9.7 and 6.10-rc6 and they both don't have that
-> > > > > issue. I can disable CPU boost with both kernel versions.
-> > > > 
-> > > > Thanks for checking those.  That's good to hear it's only an issue in
-> > > > the LTS series.
-> > > > 
-> > > > It means we have the option to either drop that patch from LTS kernel
-> > > > series or identify the other commit(s) that helped it.
-> > > > 
-> > > > Can you see if adding this commit to 6.6.y helps you?
-> > > > 
-> > > > https://git.kernel.org/superm1/c/8164f743326404fbe00a721a12efd86b2a8d74d2
-> > > 
-> > > that commit does not fix the regression.
-> > > 
-> > 
-> > I think I might have found the issue.
-> > 
-> > With that commit backported on 6.6.y in amd_pstate_set_boost() the policy
-> > max frequency is nominal  *1000 [1].
-> > 
-> > However amd_get_nominal_freq() already returns nominal *1000 [2].
-> > 
-> > If you compare on 6.9 get_nominal_freq() doesn't return * 1000 [3].
-> > 
-> > So the patch only makes sense on 6.9 and later.
-> > 
-> > We should revert it in 6.6.y.
-> > 
-> > 
-> > 
-> > Greg,
-> > 
-> > 
-> > Can you please revert 8f893e52b9e0 ("cpufreq: amd-pstate: Fix the
-> > inconsistency in max frequency units") in 6.6.y?
-> 
-> Sure, but why only 6.6.y?  What about 6.1.y, should it be reverted from
-> there as well?
+On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Leem=
+huis) wrote:
+>=20
+>=20
+> On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
+> > On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thor=
+sten Leemhuis) wrote:
+> > > [CCing the regression list, as it should be in the loop for regressio=
+ns:
+> > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> > >=20
+> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> > > for once, to make this easily accessible to everyone.
+> > >=20
+> > > Hmm, looks like there was not even a single reply to below regression
+> > > report. But also seens Markus hasn't posted anything archived on Lore
+> > > since about three weeks now, so he might be on vacation.
+> > >=20
+> > > Marc, do you might have an idea what's wrong with the culprit? Or do =
+we
+> > > expected Markus to be back in action soon?
+> >=20
+> > Great, ping here.
+>=20
+> Thx for replying!
+>=20
+> > @Matthias: Thanks for debugging and sorry for breaking it. If you have =
+a
+> > fix for this, let me know. I have a lot of work right now, so I am not
+> > sure when I will have a proper fix ready. But it is on my todo list.
+>=20
+> Thx. This made me wonder: is "revert the culprit to resolve this quickly
+> and reapply it later together with a fix" something that we should
+> consider if a proper fix takes some time? Or is this not worth it in
+> this case or extremely hard? Or would it cause a regression on it's own
+> for users of 6.9?
+>=20
+> Ciao, Thorsten
 
-And have now done so.
+Hi,
+
+I think on 6.9 a revert is not easily possible (without reverting several o=
+ther commits adding new
+features), but it should be considered for 6.6.
+
+I don't think further regressions are possible by reverting, as on 6.6 the =
+timer is only used for
+platforms without an m_can IRQ, and on these platforms the current behavior=
+ is "the kernel
+reproducibly deadlocks in atomic context", so there is not much room for ma=
+king it worse.
+
+Like Markus, I have writing a proper fix for this on my TODO list, but I'm =
+not sure when I can get
+to it - hopefully next week.
+
+Best regards,
+Matthias
+
+
+
+>=20
+> > > On 18.06.24 18:12, Matthias Schiffer wrote:
+> > > > Hi Markus,
+> > > >=20
+> > > > we've found that recent kernels hang on the TI AM62x SoC (where no =
+m_can interrupt is available and
+> > > > thus the polling timer is used), always a few seconds after the CAN=
+ interfaces are set up.
+> > > >=20
+> > > > I have bisected the issue to commit a163c5761019b ("can: m_can: Sta=
+rt/Cancel polling timer together
+> > > > with interrupts"). Both master and 6.6 stable (which received a bac=
+kport of the commit) are
+> > > > affected. On 6.6 the commit is easy to revert, but on master a lot =
+has happened on top of that
+> > > > change.
+> > > >=20
+> > > > As far as I can tell, the reason is that hrtimer_cancel() tries to =
+cancel the timer synchronously,
+> > > > which will deadlock when called from the hrtimer callback itself (h=
+rtimer_callback -> m_can_isr ->
+> > > > m_can_disable_all_interrupts -> hrtimer_cancel).
+> > > >=20
+> > > > I can try to come up with a fix, but I think you are much more fami=
+liar with the driver code. Please
+> > > > let me know if you need any more information.
+> > > >=20
+> > > > Best regards,
+> > > > Matthias
+> > > >=20
+> > > >=20
+> >=20
+> >=20
+
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
