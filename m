@@ -1,98 +1,122 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6114A03
-	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 00:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36513D548;
+	Tue,  2 Jul 2024 05:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719880433; cv=none; b=MIAfkpojO/+wBz1KRv/0ib5xsAikf9XcXA72zfn17eKsg11405r3J7wQUpPHVLvIvs+6thFbVy+v+f1bkZN0k3n6miq5Xeh7p2ozDVavjSSTcOAPtd6iEXOQ5r3xFlxnb98Isy3c1O915dgWhRWnP+B/pczbxCDlJmFWGnvZ4wA=
+	t=1719898641; cv=none; b=jdFplU/ECBwfugav6HansAePBdmXpfNZIBZLp1yAuT3n1TbrJaU+wXg5GKSmVnD+hO+aE7ckGx7xp7VZMRFc/q41LCMRnXhcpsIQkH0ys4UcV5EJvlJq22J+1IvT69cRh4cFBBRbXXfSFWipzCmh26SQdGjcZJjiFs7rFTX1S5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719880433; c=relaxed/simple;
-	bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FGAPcS/jSENwrZ33i4o0Gf1tNTBiwJJjotdXZ8foULCQ/S5NlXdV6kAowPhRjJ5a3kjhrBHJ1C2reI71E5ODuWyCmwT35XAXrsIwCpxC7ftcJlm8su9WXLv06QdlmC/IgaEYakKyiX+wl0xIT4YT1dlZpAOF8nJDhDWNWgpxJ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QnUMXkrk; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719898641; c=relaxed/simple;
+	bh=16pWVQDlV3oMxIYcAJWP63TGtGj5GzcFV1gJpcFFfU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bqzGakV/Mupa1j1FwbvYIggT7deS7wjpEHP/F3QPRIx++kNfCOZDopnfvlhlhBlUC1g2B+WERTgYzEIMB9npFa/e6qwpfmB1z3eibqKwmCFnRuC8q84PsG9ht58pKGohty3C3xfsh1qvitSxwy7TigR2Ra/cAG/lE01+hQR4VzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N7bKrAr2; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnUMXkrk"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42565cdf99cso31890065e9.3
-        for <regressions@lists.linux.dev>; Mon, 01 Jul 2024 17:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719880431; x=1720485231; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
-        b=QnUMXkrkoFIVg06PLo+DTAuEi3ngjRqi2qPGwyq7WQb82bikqD8+TNuz+gt0NkIYq5
-         m0XaxvGy0Qhke+l1NrbGVoBG2aR1R0KUn100aE5WmB2527NIiryed3zN/wloeFmlUzVa
-         x4lJZU9y+KMImqjAk+yJFCCvC1B0soY8gstiFn3vPQ55lSJ15ziKBgoqaJhx+JQJZove
-         Yc7HcFYF4lH+QsrtrY0N9s5rMd07RHfeBmy8TiU2JhflE2XdG+t0Jp5TzdQfiL2pjmRI
-         +QzkF2OEjcPdOpYk8W9WWb4BMNL++Vo5Jtr+ROG3pGAG7oBw84ceUcKMiyb08k/Qgktq
-         2+DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719880431; x=1720485231;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
-        b=tQjJ9GuEaeID++XtCBt2PMi08ALAXDus1ibU6WMxCXtl389iToXv62VdgNdkePC42B
-         aZHhKy/BRlSN1JWPGDn1uhMSTMh56xPmnWBPzeFOtn8LdN2m+95gD2K8IdxVb4uWocyc
-         WlQbXKlsAyTmBRs9wVrWCbCRcqeRtlOuZuSVIFRhwaTEXi+fviNwpz+0GSEmwmivIcaB
-         KlJq7dX8jCAbnn8IttjPnvcV2BrKF0FRUdLBgE2GntGZ3Q1ZfjF/+wh25pqAgDQatbqh
-         2tQsVXTJEzWieh0NsqLo+4HTl38QhqtoPrwT1BM7UzYbI0s6A6TqSMHpsXPkoiDnHrUW
-         rPNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpXfQKTjn+bboQ/1bYa1aEzBUv1+TUUMa6kxhNyQ/kULHeVG+IjJ9U+d7nxu2GBgkk3Z39M8ZhxFwa1ZssJNYd4zi6T3tirlbjyAY=
-X-Gm-Message-State: AOJu0Yzsx72jBwGk0BwnVwhWZcRPtHX+JbmDiyfVGDosqHtVCvlaNJiZ
-	hSB8WhnCBbhm48V3/BwPgDWeDwyHRHjBAajtAz4ngW9ZIkIwZhwc
-X-Google-Smtp-Source: AGHT+IGRVjiOMyiN21zj2JUMYkA1mdi3+Ic5d9/fN0c8x7mDnIAq+B/ATBK+3WKMJlHZGi6XHzmopw==
-X-Received: by 2002:a05:600c:470a:b0:425:692d:c72d with SMTP id 5b1f17b1804b1-4257a020429mr59651565e9.32.1719880430535;
-        Mon, 01 Jul 2024 17:33:50 -0700 (PDT)
-Received: from node-04.shui.grid ([31.94.4.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b097c2asm174130515e9.38.2024.07.01.17.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 17:33:50 -0700 (PDT)
-From: Builder <yshuiv7@gmail.com>
-X-Google-Original-From: Builder <builder@example.org>
-To: pedro.falcato@gmail.com
-Cc: chengming.zhou@linux.dev,
-	christian@heusel.eu,
-	hannes@cmpxchg.org,
-	linux-mm@kvack.org,
-	nphamcs@gmail.com,
-	regressions@lists.linux.dev,
-	yosryahmed@google.com
-Subject: Re: zswap_writeback_entry crashes in 6.9.5
-Date: Tue,  2 Jul 2024 01:33:42 +0100
-Message-ID: <20240702003343.2756828-1-builder@example.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <CAKbZUD1-kqfuV0U+KDKPkQbm=RwzD_A1H3qk_c+bw92CqtMbuw@mail.gmail.com>
-References: <CAKbZUD1-kqfuV0U+KDKPkQbm=RwzD_A1H3qk_c+bw92CqtMbuw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N7bKrAr2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=DS77JC9w8wcnStim2W/xitvraXik/3HNJqyNkDayJog=;
+	t=1719898639; x=1720330639; b=N7bKrAr2jZFhWWJg3MaE1vvqSt9XZbCWHIbSiBIIOWWwuTe
+	rNtukRTtpO115hOHSdFI5XF9LlkZbl7e2i0/JV+s4fp6U7NHJcuISmRbYMGMofYmIG8U+2DGNpkY6
+	+v77NiPXsblmvgp7DvBRBNQL+SBHFxYKxzhY+LuJy24w/PUANPzOjtGFenImkMKUzCWPzXOVBbdqz
+	4R2AcCyKP3/O/ojTLnIc2B7Z77Bvs8Zbm4QVbMz3ENdz74DxbcIyQNvALcTlIE4kzZutXYWT1Gpia
+	Nv4qw5VAsKLurRRZ6OZToFyEJf8p3oaLrxZP8xyNJ3RjjITaBqsppX1AfhMMeqgw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sOWCX-0005Ro-VY; Tue, 02 Jul 2024 07:37:14 +0200
+Message-ID: <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+Date: Tue, 2 Jul 2024 07:37:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
+ timer together with interrupts"
+To: Markus Schneider-Pargmann <msp@baylibre.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Tony Lindgren <tony@atomide.com>, Judith Mendez <jm@ti.com>,
+ linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux@ew.tq-group.com
+References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+ <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
+ <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719898639;2ce6bdd2;
+X-HE-SMSGID: 1sOWCX-0005Ro-VY
 
-On Sun, Jun 30, 2024 at 10:58 AM Pedro Falcato <pedro.falcato@gmail.com> wrote:
->
-> Hi everyone,
+On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
+> On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing the regression list, as it should be in the loop for regressions:
+>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>>
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Hmm, looks like there was not even a single reply to below regression
+>> report. But also seens Markus hasn't posted anything archived on Lore
+>> since about three weeks now, so he might be on vacation.
+>>
+>> Marc, do you might have an idea what's wrong with the culprit? Or do we
+>> expected Markus to be back in action soon?
+> 
+> Great, ping here.
 
-Hi,
+Thx for replying!
 
-I think I have hit this problem a well. I actually reported this on RedHat's
-bug tracker a while back, along with a couple of stack traces:
+> @Matthias: Thanks for debugging and sorry for breaking it. If you have a
+> fix for this, let me know. I have a lot of work right now, so I am not
+> sure when I will have a proper fix ready. But it is on my todo list.
 
-https://bugzilla.redhat.com/show_bug.cgi?id=2275252
+Thx. This made me wonder: is "revert the culprit to resolve this quickly
+and reapply it later together with a fix" something that we should
+consider if a proper fix takes some time? Or is this not worth it in
+this case or extremely hard? Or would it cause a regression on it's own
+for users of 6.9?
 
-Reverting the commit I mentioned there seems to make this problem go away for
-me. This is a long shot, but I am curious if it will also fix the problem for
-you.
+Ciao, Thorsten
 
-(Also inserting myself into this thread so I will get updates.)
-
-Regards,
-Yuxuan Shui
+>> On 18.06.24 18:12, Matthias Schiffer wrote:
+>>> Hi Markus,
+>>>
+>>> we've found that recent kernels hang on the TI AM62x SoC (where no m_can interrupt is available and
+>>> thus the polling timer is used), always a few seconds after the CAN interfaces are set up.
+>>>
+>>> I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cancel polling timer together
+>>> with interrupts"). Both master and 6.6 stable (which received a backport of the commit) are
+>>> affected. On 6.6 the commit is easy to revert, but on master a lot has happened on top of that
+>>> change.
+>>>
+>>> As far as I can tell, the reason is that hrtimer_cancel() tries to cancel the timer synchronously,
+>>> which will deadlock when called from the hrtimer callback itself (hrtimer_callback -> m_can_isr ->
+>>> m_can_disable_all_interrupts -> hrtimer_cancel).
+>>>
+>>> I can try to come up with a fix, but I think you are much more familiar with the driver code. Please
+>>> let me know if you need any more information.
+>>>
+>>> Best regards,
+>>> Matthias
+>>>
+>>>
+> 
+> 
