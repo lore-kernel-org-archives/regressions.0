@@ -1,130 +1,212 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4377199BC
-	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 19:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9265715B0FA
+	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 23:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719949615; cv=none; b=Bvy1hU5b62+b/G9TDgSl8wLqYezFYIKJFgwIGaExoNMRXtaVuAt3l5SBS4ODEUN0OMJwlw/hxwhAIYfZAZFrBrq+LsAS+ekcakyPUwj9MQQcGrStYtgeveEMJYLBVpkGGvvio0Q40bmGSlm14Y8YnF3PHHGmUIjES0eqRGME6Xg=
+	t=1719963898; cv=none; b=AK6P8DT2ViA4V70OoGN+wUFH35UNxBCgQ9wHNi4Wv7Ss6xeRB/FTLvYjH573fDo7RKq0hxAB09/MZxbBvNAacTfPfnQoYwAeyk999V+b/RgTjE5Jd8Pkf/HZY1Srb9fwBuyhS0G3s68Yon23hK8y4tTLf3hGuKqy7FT3ALtqx3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719949615; c=relaxed/simple;
-	bh=qZaEi+CqhBPcsH5Eow79zhbsY4RJIggjmkMPqJf8N0k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=i00FawLrpkxYCVoaxBShRhxxznEEJnKjKuJiHEeGbB/fjkwI6jBqwKO/fhExz5Z18Qj82E244a+FSfVbjzVS8i6AfXiOw9hU2sLcopKRYLrmP+lP34kHw99hjU2AqMf2IFGs0ln5JiqsBRyeb4Q9UqS+pDkFx00vQUqhsaZ0Kn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=colorremedies.com; spf=pass smtp.mailfrom=colorremedies.com; dkim=pass (2048-bit key) header.d=colorremedies.com header.i=@colorremedies.com header.b=MBKu923b; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KkgGMGoj; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=colorremedies.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=colorremedies.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorremedies.com header.i=@colorremedies.com header.b="MBKu923b";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KkgGMGoj"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 0EB79114021B;
-	Tue,  2 Jul 2024 15:46:53 -0400 (EDT)
-Received: from imap50 ([10.202.2.100])
-  by compute4.internal (MEProxy); Tue, 02 Jul 2024 15:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	colorremedies.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1719949613; x=1720036013; bh=qZaEi+CqhB
-	PcsH5Eow79zhbsY4RJIggjmkMPqJf8N0k=; b=MBKu923baKTVC4S1f+EmmxDywZ
-	BbVqs4kIev4QCGLw+ujN1H/1v7JGwMvuIGaL8diK0XuNTHpMf+ubvkgIIaRjqfAF
-	pPklYXrJ6qdOYnfpf+V1UjEKUB3cLinQye0Uic1dAiGfBmrxkcktBK0v3lwzDr2f
-	qN1017/nZ9OsJ2NZqosfXwv67jJByr1mzwrIoLCzpKXt0SX5rPONe1h0gEV8ZUJU
-	hRIzlzpYjOjdqybIaTbYe2yWOkZ4UmA6S/alFGDR5GGcvf4magTo/N5PCxJV9S6m
-	b0A8MS3tX5lPDDrkgeUhAyljC/FWEHTPN5tQ8LxiRzy+WOLdQq/UJLXMKZ/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719949613; x=
-	1720036013; bh=qZaEi+CqhBPcsH5Eow79zhbsY4RJIggjmkMPqJf8N0k=; b=K
-	kgGMGoj9N/GlnGimst7f0kLl0AoVr5VSMYpDDl2k+TxhYY/gG6oxpTy8d+ODqdOJ
-	QWOTBO3hXluQwkWfDC5UT04/9PSF5a0UX6+xBkzdV2Fj1WXK6lKZ27exyLet/UbR
-	toaU5ht0QYirVsKivLljWaF/0xqEUQqcbyGL5kP+ZtPW9RK3vfosPVDqmItNuB97
-	tj8VT0MCIbafzfm/tlfESOoUsTUxgFeiJ0Gd9i6ENJEIWzTk3YpxwqymxJS7jLJq
-	n2c7LJMBE/fBCiBtMx7L5SBrBv93Yf22+PPLnQkU/ll44AcctDC0l6nt3RfzctXI
-	lXGPB5d1cAbz7jrm5+/dw==
-X-ME-Sender: <xms:LFmEZh4osfu8j9Yp-zKhewtDYcUryrMhEkMaUxZ_2fW5EJiIB8ue3w>
-    <xme:LFmEZu4kF5x1L-319bqGfC_nt7HCAZXGKEMs7rllPsfLFQc78hvfglgAO2XgiANMV
-    ftHyCeTNe70Lhsj5m8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehgddufeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdev
-    hhhrihhsucfouhhrphhhhidfuceolhhishhtshestgholhhorhhrvghmvgguihgvshdrtg
-    homheqnecuggftrfgrthhtvghrnhepleeifeeutdefgfejgfetieeiveektdevvdetiefh
-    vdelveetlefhuedvffejieeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheplhhishhtshestgholhhorhhrvghmvgguihgvshdrtghomh
-X-ME-Proxy: <xmx:LFmEZofl0KdKIRU3e_cyh62iflkW4ccCiC7bbB2z-mXKXMaOmigFkw>
-    <xmx:LFmEZqJwgBH8hh99M-kq0Ngu5PJ9f7fF2F7vbzKqaEU6N1FfEi-vWQ>
-    <xmx:LFmEZlJFfWZ7gnthytXGz6jW0YewId_vwSeOe6a5xFDrDM2WVLmTdA>
-    <xmx:LFmEZjzMHLSy1dvBEOYWiz3qnASPsMld9dSddStS0UCn56PlZ7letw>
-    <xmx:LVmEZt_QUGNeUjtF0fyU8Hng0kzDB6xTJPlI0LghNJrAXI3A3K7uxWQ2>
-Feedback-ID: i06494636:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B4EED1700093; Tue,  2 Jul 2024 15:46:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
+	s=arc-20240116; t=1719963898; c=relaxed/simple;
+	bh=QIGQ12SfRMKhY4RdG2H7gQvUao7tIDkEk7Yy9wG41gc=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ab1/dFvT8kvs1K8GDbJcP1rUTfITGLM3oCqSkrPBR1BuaETxmw6G7QZSLVM5U4pMmfklsFhdxgt1aPrZ3ELzMxxksxVNd3Sr3UhIcMyjNoRcv1CcXtlUMO+buAZmUQ1di0jkM/42Qf3B3ibBlVjzpLhFgxZL9uRnwlM552Pj7+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sOnAq-000000006lM-23eU;
+	Tue, 02 Jul 2024 23:44:36 +0000
+Date: Wed, 3 Jul 2024 00:44:28 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev
+Subject: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address and
+ issue warning
+Message-ID: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <93b5fac5-6315-4f2e-a2df-37ef4bf56f9e@app.fastmail.com>
-In-Reply-To: 
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
-References: 
- <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
-Date: Tue, 02 Jul 2024 15:46:30 -0400
-From: "Chris Murphy" <lists@colorremedies.com>
-To: "Filipe Manana" <fdmanana@kernel.org>,
- =?UTF-8?Q?=D0=9C=D0=B8=D1=85=D0=B0=D0=B8=D0=BB_=D0=93=D0=B0=D0=B2=D1=80?=
- =?UTF-8?Q?=D0=B8=D0=BB=D0=BE=D0=B2?= <mikhail.v.gavrilov@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>,
- "Linux regressions mailing list" <regressions@lists.linux.dev>,
- "Btrfs BTRFS" <linux-btrfs@vger.kernel.org>,
- "David Sterba" <dsterba@suse.com>, "Josef Bacik" <josef@toxicpanda.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough
- memory
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+The MDIO address of the MT7530 and MT7531 switch ICs can be configured
+using bootstrap pins. However, there are only 4 possible options for the
+switch itself: 7, 15, 23 and 31. As in MediaTek's SDK the address of the
+switch is wrongly stated in the device tree as 0 (while in reality it is
+31), warn the user about such broken device tree and make a good guess
+what was actually intended.
 
+This is imporant also to not break compatibility with older Device Trees
+as with commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of
+switch from device tree") the address in device tree will be taken into
+account, while before it was hard-coded to 0x1f.
 
-On Tue, Jul 2, 2024, at 1:22 PM, Filipe Manana wrote:
-> On Tue, Jul 2, 2024 at 3:13=E2=80=AFPM Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+Only tested on BPi-R3 (with various deliberately broken DT) for now!
 
->> Unfortunately, the patch didn't improve anything.
->> kswapd0 still consumes 100% CPU under load.
->> And my system continues to freeze.
->
-> Ok, the concerning part is the freezing and high cpu usage.
+Changes since v2 [2]:
+ - use macros instead of magic numbers
+ - introduce helper functions
+ - register new device on MDIO bus instead of messing with the address
+   and schedule delayed_work to unregister the "wrong" device.
+   This is a slightly different approach than suggested by Russell, but
+   imho makes things much easier than keeping the "wrong" device and
+   having to deal with keeping the removal of both devices linked.
+ - improve comments
 
-We're seeing this in Fedora Rawhide, which is always using the most rece=
-nt mainline kernel.=20
+Changes since v1 [1]:
+ - use FW_WARN as suggested.
+ - fix build on net tree which doesn't have 'mdiodev' as member of the
+   priv struct. Imho including this patch as fix makes sense to warn
+   users about broken firmware, even if the change introducing the
+   actual breakage is only present in net-next for now.
 
-User first reported June 25 they were experiencing much longer backup ti=
-mes, normal is ~5 minutes, they're taking 1+ hours now, with frequent fr=
-eezes of the DE, notices kswapd using 100% CPU and then other processes =
-also start hanging with 100% CPU. Resolution is a power cycle and revert=
-ing to 6.9 series.
+[1]: https://patchwork.kernel.org/project/netdevbpf/patch/e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org/
+[2]: https://patchwork.kernel.org/project/netdevbpf/patch/11f5f127d0350e72569c36f9060b6e642dfaddbb.1714514208.git.daniel@makrotopia.org/
 
-The workload is described as "restic via ssh to a repo on a backup serve=
-r".
+ drivers/net/dsa/mt7530-mdio.c | 92 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-I can try to get more info to narrow down the last known good and first =
-known bad kernels if that's useful.
+diff --git a/drivers/net/dsa/mt7530-mdio.c b/drivers/net/dsa/mt7530-mdio.c
+index 51df42ccdbe6..b5049ec2d84d 100644
+--- a/drivers/net/dsa/mt7530-mdio.c
++++ b/drivers/net/dsa/mt7530-mdio.c
+@@ -11,6 +11,7 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/workqueue.h>
+ #include <net/dsa.h>
+ 
+ #include "mt7530.h"
+@@ -136,6 +137,93 @@ static const struct of_device_id mt7530_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, mt7530_of_match);
+ 
++static int
++mt7530_correct_addr(int phy_addr)
++{
++	/* The corrected address is calculated as stated below:
++	 * 0~6   -> 31
++	 * 8~14  -> 7
++	 * 16~22 -> 15
++	 * 24~30 -> 23
++	 */
++return ((((phy_addr - MT7530_NUM_PORTS) & ~MT7530_NUM_PORTS) % PHY_MAX_ADDR) +
++	MT7530_NUM_PORTS) & (PHY_MAX_ADDR - 1);
++}
++
++static bool
++mt7530_is_invalid_addr(int phy_addr)
++{
++	/* Only MDIO bus addresses 7, 15, 23, and 31 are valid options,
++	 * which all have the least significant three bits set. Check
++	 * for this.
++	 */
++	return (phy_addr & MT7530_NUM_PORTS) != MT7530_NUM_PORTS;
++}
++
++struct remove_impossible_priv {
++	struct delayed_work remove_impossible_work;
++	struct mdio_device *mdiodev;
++};
++
++static void
++mt7530_remove_impossible(struct work_struct *work)
++{
++	struct remove_impossible_priv *priv = container_of(work, struct remove_impossible_priv,
++							   remove_impossible_work.work);
++	struct mdio_device *mdiodev = priv->mdiodev;
++
++	mdio_device_remove(mdiodev);
++	mdio_device_free(mdiodev);
++	kfree(priv);
++}
++
++static int
++mt7530_reregister(struct mdio_device *mdiodev)
++{
++	/* If the address in DT must be wrong, make a good guess about
++	 * the most likely intention, issue a warning, register a new
++	 * MDIO device at the correct address and schedule the removal
++	 * of the device having an impossible address.
++	 */
++	struct fwnode_handle *fwnode = dev_fwnode(&mdiodev->dev);
++	int corrected_addr = mt7530_correct_addr(mdiodev->addr);
++	struct remove_impossible_priv *rem_priv;
++	struct mdio_device *new_mdiodev;
++	int ret;
++
++	rem_priv = kmalloc(sizeof(*rem_priv), GFP_KERNEL);
++	if (!rem_priv)
++		return -ENOMEM;
++
++	new_mdiodev = mdio_device_create(mdiodev->bus, corrected_addr);
++	if (IS_ERR(new_mdiodev)) {
++		ret = PTR_ERR(new_mdiodev);
++		goto out_free_work;
++	}
++	device_set_node(&new_mdiodev->dev, fwnode);
++
++	ret = mdio_device_register(new_mdiodev);
++	if (WARN_ON(ret))
++		goto out_free_dev;
++
++	dev_warn(&mdiodev->dev, FW_WARN
++		 "impossible switch MDIO address in device tree, assuming %d\n",
++		 corrected_addr);
++
++	/* schedule impossible device for removal from mdio bus */
++	rem_priv->mdiodev = mdiodev;
++	INIT_DELAYED_WORK(&rem_priv->remove_impossible_work, mt7530_remove_impossible);
++	schedule_delayed_work(&rem_priv->remove_impossible_work, 0);
++
++	return -EFAULT;
++
++out_free_dev:
++	mdio_device_free(new_mdiodev);
++out_free_work:
++	kfree(rem_priv);
++	return ret;
++}
++
+ static int
+ mt7530_probe(struct mdio_device *mdiodev)
+ {
+@@ -144,6 +232,10 @@ mt7530_probe(struct mdio_device *mdiodev)
+ 	struct device_node *dn;
+ 	int ret;
+ 
++	/* Check and if needed correct the MDIO address of the switch */
++	if (mt7530_is_invalid_addr(mdiodev->addr))
++		return mt7530_reregister(mdiodev);
++
+ 	dn = mdiodev->dev.of_node;
+ 
+ 	priv = devm_kzalloc(&mdiodev->dev, sizeof(*priv), GFP_KERNEL);
+-- 
+2.45.2
 
-
---=20
-Chris Murphy
