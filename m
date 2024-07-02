@@ -1,112 +1,98 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDD53D6D
-	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 00:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6114A03
+	for <regressions@lists.linux.dev>; Tue,  2 Jul 2024 00:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719879552; cv=none; b=Xojy2bA1YcArHcAvWVDQu9oPSkjy2uPoXmLt3oWM8kMcA557bmoR83BiRQrFDnZcTdc7l1jWe/snAX3jGUCBRIDhf36CgzUcRq8hJKVaN0C1KqllJKL2zEao64xWYg8ysYQwMp7ubu+oZZuKMtL0mdYOBOgKzn7KHqdl46nE7KM=
+	t=1719880433; cv=none; b=MIAfkpojO/+wBz1KRv/0ib5xsAikf9XcXA72zfn17eKsg11405r3J7wQUpPHVLvIvs+6thFbVy+v+f1bkZN0k3n6miq5Xeh7p2ozDVavjSSTcOAPtd6iEXOQ5r3xFlxnb98Isy3c1O915dgWhRWnP+B/pczbxCDlJmFWGnvZ4wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719879552; c=relaxed/simple;
-	bh=K9oeLGJQU+rgsK96dB9QMC+iN8/+4+J/PBYB7gUN7Zs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=G9JAvIX4zMnLDtv/WXMyiDr4ue7bLZ0xgi7e8NYVRIsFesUIOYe62qMN8zkcGGvZUCLoxpH91XdXHHgmHpFEdwg+0x+OSZjj4xAKTo5/L2Bw8W+v6S7PeWz0vPubZmLlDc44vdKbfT1PyCEs2VpFsSx8zs6lX+PaxAjzH60OTSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=hgsDS1QC; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1719880433; c=relaxed/simple;
+	bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FGAPcS/jSENwrZ33i4o0Gf1tNTBiwJJjotdXZ8foULCQ/S5NlXdV6kAowPhRjJ5a3kjhrBHJ1C2reI71E5ODuWyCmwT35XAXrsIwCpxC7ftcJlm8su9WXLv06QdlmC/IgaEYakKyiX+wl0xIT4YT1dlZpAOF8nJDhDWNWgpxJ+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QnUMXkrk; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="hgsDS1QC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1719879545;
-	bh=K9oeLGJQU+rgsK96dB9QMC+iN8/+4+J/PBYB7gUN7Zs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=hgsDS1QCjQdVgp1dT+k+xCgYKDv9+/NO7OuKPD5gSHHb2n8GHvpxBWICIUFcSQ/P/
-	 zq5c3c4v6Qz0rYIbBLCIHsOOrOfmrz/rWjzlKveoQz2j0f/gb5DN/4DOOqGQmPtqs5
-	 MRYrGg/V2soCvU5db/DmnXP/3dGLtMrrPQo0ZXYvGiLpnbWiW5WGoo5yut6MxTw+7S
-	 LxrRj3oJZJy7PvTxv7E5koOZUTmk6IEYQZRksmLTRf2HRBEykDbUKgW08ebGdrpr38
-	 eP2AiFpQlI9Vemdz1ACoQG6wJ6IeHZhuNuaTIhnWobz/8mQjdvdGE6EyUhcQV9Vkfe
-	 YyN2U+C+GZWew==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCk6d19g7z4wcS;
-	Tue,  2 Jul 2024 10:19:04 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
- regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com, Stefan Berger
- <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, jarkko@kernel.org
-Subject: Re: [PATCH] tpm: ibmvtpm: Call tpm2_sessions_init() to initialize
- session support
-In-Reply-To: <4108938158d888cc6ec371bb151e7ac35d3b4cb0.camel@HansenPartnership.com>
-References: <20240617193408.1234365-1-stefanb@linux.ibm.com>
- <87pls1lwe0.fsf@mail.lhotse>
- <4108938158d888cc6ec371bb151e7ac35d3b4cb0.camel@HansenPartnership.com>
-Date: Tue, 02 Jul 2024 10:19:04 +1000
-Message-ID: <87y16kk5mv.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnUMXkrk"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42565cdf99cso31890065e9.3
+        for <regressions@lists.linux.dev>; Mon, 01 Jul 2024 17:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719880431; x=1720485231; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
+        b=QnUMXkrkoFIVg06PLo+DTAuEi3ngjRqi2qPGwyq7WQb82bikqD8+TNuz+gt0NkIYq5
+         m0XaxvGy0Qhke+l1NrbGVoBG2aR1R0KUn100aE5WmB2527NIiryed3zN/wloeFmlUzVa
+         x4lJZU9y+KMImqjAk+yJFCCvC1B0soY8gstiFn3vPQ55lSJ15ziKBgoqaJhx+JQJZove
+         Yc7HcFYF4lH+QsrtrY0N9s5rMd07RHfeBmy8TiU2JhflE2XdG+t0Jp5TzdQfiL2pjmRI
+         +QzkF2OEjcPdOpYk8W9WWb4BMNL++Vo5Jtr+ROG3pGAG7oBw84ceUcKMiyb08k/Qgktq
+         2+DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719880431; x=1720485231;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=puwSc/uwxHtVr/n/Fbgth64ZlTW3eNLDkiWw2TqgglA=;
+        b=tQjJ9GuEaeID++XtCBt2PMi08ALAXDus1ibU6WMxCXtl389iToXv62VdgNdkePC42B
+         aZHhKy/BRlSN1JWPGDn1uhMSTMh56xPmnWBPzeFOtn8LdN2m+95gD2K8IdxVb4uWocyc
+         WlQbXKlsAyTmBRs9wVrWCbCRcqeRtlOuZuSVIFRhwaTEXi+fviNwpz+0GSEmwmivIcaB
+         KlJq7dX8jCAbnn8IttjPnvcV2BrKF0FRUdLBgE2GntGZ3Q1ZfjF/+wh25pqAgDQatbqh
+         2tQsVXTJEzWieh0NsqLo+4HTl38QhqtoPrwT1BM7UzYbI0s6A6TqSMHpsXPkoiDnHrUW
+         rPNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpXfQKTjn+bboQ/1bYa1aEzBUv1+TUUMa6kxhNyQ/kULHeVG+IjJ9U+d7nxu2GBgkk3Z39M8ZhxFwa1ZssJNYd4zi6T3tirlbjyAY=
+X-Gm-Message-State: AOJu0Yzsx72jBwGk0BwnVwhWZcRPtHX+JbmDiyfVGDosqHtVCvlaNJiZ
+	hSB8WhnCBbhm48V3/BwPgDWeDwyHRHjBAajtAz4ngW9ZIkIwZhwc
+X-Google-Smtp-Source: AGHT+IGRVjiOMyiN21zj2JUMYkA1mdi3+Ic5d9/fN0c8x7mDnIAq+B/ATBK+3WKMJlHZGi6XHzmopw==
+X-Received: by 2002:a05:600c:470a:b0:425:692d:c72d with SMTP id 5b1f17b1804b1-4257a020429mr59651565e9.32.1719880430535;
+        Mon, 01 Jul 2024 17:33:50 -0700 (PDT)
+Received: from node-04.shui.grid ([31.94.4.1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b097c2asm174130515e9.38.2024.07.01.17.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 17:33:50 -0700 (PDT)
+From: Builder <yshuiv7@gmail.com>
+X-Google-Original-From: Builder <builder@example.org>
+To: pedro.falcato@gmail.com
+Cc: chengming.zhou@linux.dev,
+	christian@heusel.eu,
+	hannes@cmpxchg.org,
+	linux-mm@kvack.org,
+	nphamcs@gmail.com,
+	regressions@lists.linux.dev,
+	yosryahmed@google.com
+Subject: Re: zswap_writeback_entry crashes in 6.9.5
+Date: Tue,  2 Jul 2024 01:33:42 +0100
+Message-ID: <20240702003343.2756828-1-builder@example.org>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <CAKbZUD1-kqfuV0U+KDKPkQbm=RwzD_A1H3qk_c+bw92CqtMbuw@mail.gmail.com>
+References: <CAKbZUD1-kqfuV0U+KDKPkQbm=RwzD_A1H3qk_c+bw92CqtMbuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-James Bottomley <James.Bottomley@HansenPartnership.com> writes:
-> On Fri, 2024-06-28 at 10:54 +1000, Michael Ellerman wrote:
->> Stefan Berger <stefanb@linux.ibm.com> writes:
->> > Fix the following type of error message caused by a missing call to
->> > tpm2_sessions_init() in the IBM vTPM driver:
->> >=20
->> > [=C2=A0=C2=A0=C2=A0 2.987131] tpm tpm0: tpm2_load_context: failed with=
- a TPM error
->> > 0x01C4
->> > [=C2=A0=C2=A0=C2=A0 2.987140] ima: Error Communicating to TPM chip, re=
-sult: -14
->> >=20
->> > Fixes: d2add27cf2b8 ("tpm: Add NULL primary creation")
->> > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> > ---
->> > =C2=A0drivers/char/tpm/tpm_ibmvtpm.c | 4 ++++
->> > =C2=A01 file changed, 4 insertions(+)
->> >=20
->> > diff --git a/drivers/char/tpm/tpm_ibmvtpm.c
->> > b/drivers/char/tpm/tpm_ibmvtpm.c
->> > index d3989b257f42..1e5b107d1f3b 100644
->> > --- a/drivers/char/tpm/tpm_ibmvtpm.c
->> > +++ b/drivers/char/tpm/tpm_ibmvtpm.c
->> > @@ -698,6 +698,10 @@ static int tpm_ibmvtpm_probe(struct vio_dev
->> > *vio_dev,
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0rc =3D tpm2_get_cc_attrs_tbl(chip);
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0if (rc)
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-goto init_irq_cleanup;
->> > +
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0rc =3D tpm2_sessions_init(chip);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (rc)
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto i=
-nit_irq_cleanup;
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
->> > =C2=A0
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return tpm_chip_regist=
-er(chip);
->>=20
->> #regzbot ^introduced: d2add27cf2b8=20
+On Sun, Jun 30, 2024 at 10:58 AM Pedro Falcato <pedro.falcato@gmail.com> wrote:
 >
-> Could you please test out the patch I proposed for this:
->
-> https://lore.kernel.org/linux-integrity/1302b413a2d7bf3b275133e7fdb04b44b=
-fe2d5e3.camel@HansenPartnership.com/
+> Hi everyone,
 
-Your patch does fix the issue on my PowerVM system, as does Stefan's.
+Hi,
 
-cheers
+I think I have hit this problem a well. I actually reported this on RedHat's
+bug tracker a while back, along with a couple of stack traces:
+
+https://bugzilla.redhat.com/show_bug.cgi?id=2275252
+
+Reverting the commit I mentioned there seems to make this problem go away for
+me. This is a long shot, but I am curious if it will also fix the problem for
+you.
+
+(Also inserting myself into this thread so I will get updates.)
+
+Regards,
+Yuxuan Shui
