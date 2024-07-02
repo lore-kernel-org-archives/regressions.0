@@ -1,37 +1,48 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00CA17BBB;
-	Tue,  2 Jul 2024 10:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35E215B104;
+	Tue,  2 Jul 2024 11:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719916222; cv=none; b=o/rWr186LgrEkrTT9E3jiBWFGPS8b8KzV2t4ZWNw9xsp1uH3LRWLY+zVbOxlpWwYZRoY5UwZzSwmvv0ZKwNRoVID8w5snM7slWdEr19bQ5GLOCoFRTnLrvlRP8LvcsAr/h65Hlbnt9tB/DaC/l/ZHM49NlSQjdl0wJ+m2tzfLqA=
+	t=1719920494; cv=none; b=rkO0UGYNFll2XyBbkJb0XzxYlbyHMece4gV7zJQktIa+3JGOGAQuWLPBmwmkmhf7gFM/MdFt4+F51aI41XdG8utqzw56a/7vV9km1LcO4ED9XuZ5pGHEKCJdd8hNoUItmCdQtOOgJ48Yn9W5Rz4g2w/qCsvAChutveCaYEKUGqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719916222; c=relaxed/simple;
-	bh=1B+3GT30ZinzSkjOdYycyY46lYkUK/OOoaS5AOUtjso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QX6Euwz2gy98HWoZaYMh8QInyHYWldaSke4eJinP70qwCGDr591mcIfUxk4OqJeeIy6crrjr+TNzQxU7khlzoIsWFVn7eSBQloHhCxczwfMubYGDNpQk21kmLQj7ZnYULz/GRnzJiM3dflF6ZD0KXR3azLmRAUnfnVkyrBjfKC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YN8Aq/Fz; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1719920494; c=relaxed/simple;
+	bh=XpF7Ovdn2GPQkALgInOtej7RrXCY+KCbZ7EXlTpeWSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oeplTcifxmQf5CZbX4qUkSqrYnZ+CNd38sGY2QG0QST+ycSbk34wveBoRj95c/2/RnlDGNg+5/SUOziYB5waIT+b5kWJ9l/Up6D7bkeCTJzNSJWcL8dWV1fudyfyHM2hX7zKW7n7T9WvUDMfFZcJne92g7G0VG/t0X0kT59cdT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=FCktr51S; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=jtKEKH4I; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YN8Aq/Fz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=0qf92CZPlH8uBrIdQYOCZH5zn+O7ufKU3N+Njh8N6FI=;
-	t=1719916219; x=1720348219; b=YN8Aq/Fz/3/68OHbPf+/Su+eX0aoDB9+l08kXea9Zte/ctC
-	09sHBDuHGIwThUfW7EsKADke7wy7v3ZhJa4MVTEnl7cwDPQx6q89NQx047kaQAKwc12f7KT+HQ9JU
-	s3BTXlpC0A4Q7TEUozJs5/McZpps0l7UUv0j6mLbIQvP3tzhH4CHu36mxrwuj+vqF+W8xIlKlrcHM
-	jfdlaMRvnU0oOhF8+C90cIvv5jeJmw3qswm5n5draI/JWiEzPHouhB2w0iTYl9AkqiP31llRy2Mmx
-	ScqpERsJiWKvY2niAS213K8jJy7kHUa+ETd+zsDZquZMEw4lK0p5PSP0FoOXL6UQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sOam1-000827-BY; Tue, 02 Jul 2024 12:30:09 +0200
-Message-ID: <c7bca2f0-1006-45c1-a13d-6d8f19357533@leemhuis.info>
-Date: Tue, 2 Jul 2024 12:30:08 +0200
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="FCktr51S";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="jtKEKH4I"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 5FE612168;
+	Tue,  2 Jul 2024 11:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1719919998;
+	bh=FvoWozv7kiGX5kCPeJTR6YhhTOGEpNfWM7pqi1LrdKY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=FCktr51SmR4olYGJ2vxwHBcO9KwMO0dynZxEPPwC4TICQrPHkOTp9uyX/e436o/H/
+	 FS2BngZMp2ilR77GMkvhC2JtJ6kQlVOIGHVHrWfXSgGoHIdgcYDa38fchFG+dQ8g07
+	 CqN5nDgoL4/xrvtjf0DuYH7fkz27aIbNT12VHg8I=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 7B7D61D09;
+	Tue,  2 Jul 2024 11:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1719920484;
+	bh=FvoWozv7kiGX5kCPeJTR6YhhTOGEpNfWM7pqi1LrdKY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=jtKEKH4IolMCs3UOtawejZ+BFvpJonwAYywkAZ7FfIcy8hEMni8YtmybQMmQJw+3R
+	 0J5ZrJmE8FhZdY6sQkIgk1/kPSNbFldTIwcnyu2GHj7p7BDlndTthxu6d0zUdCqagF
+	 VYCZh3Yusvofwdnt/JUZTXc+kyipk3+5IiVT3wiQ=
+Received: from [192.168.211.37] (192.168.211.37) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Tue, 2 Jul 2024 14:41:23 +0300
+Message-ID: <b41e693f-940b-42a8-8154-1721c7ff13e1@paragon-software.com>
+Date: Tue, 2 Jul 2024 14:41:23 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,99 +50,72 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
- timer together with interrupts"
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Markus Schneider-Pargmann <msp@baylibre.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>,
- Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Tony Lindgren <tony@atomide.com>, Judith Mendez <jm@ti.com>,
- linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
- <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
- <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
- <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
- <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719916219;976f19fd;
-X-HE-SMSGID: 1sOam1-000827-BY
+Subject: Re: [PATCH] fs/ntfs3: Fix memory corruption when page_size changes
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+CC: popcorn mix <popcornmix@gmail.com>, <ntfs3@lists.linux.dev>, Linux-fsdevel
+	<linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20240614155437.2063380-1-popcornmix@gmail.com>
+ <CAEi1pCSQePMo4X_RvMfYmpxYwmuamhd8=1OXgNCU-N2BBdTXPg@mail.gmail.com>
+ <a60fc742-0ad4-498d-b90f-793b9578b843@leemhuis.info>
+Content-Language: en-US
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+In-Reply-To: <a60fc742-0ad4-498d-b90f-793b9578b843@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-On 02.07.24 12:03, Matthias Schiffer wrote:
-> On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
->>> On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thorsten Leemhuis) wrote:
+
+On 01.07.2024 15:53, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing a few lists]
 >
->>> @Matthias: Thanks for debugging and sorry for breaking it. If you have a
->>> fix for this, let me know. I have a lot of work right now, so I am not
->>> sure when I will have a proper fix ready. But it is on my todo list.
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Konstantin, what's the status of this regression report or the patch Dom
+> Cobley propsed to fix the issue? From here it looks like it fall through
+> the cracks, but I might be missing something.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> On 14.06.24 18:24, popcorn mix wrote:
+>> On Fri, Jun 14, 2024 at 4:55 PM Dom Cobley <popcornmix@gmail.com> wrote:
+>>> The kernel panic can be observed when connecting an
+>>> ntfs formatted drive that has previously been connected
+>>> to a Windows machine to a Raspberry Pi 5, which by defauilt
+>>> uses a 16K kernel pagesize.
+>> Here are links to some bug reports about the issue:
+>> https://github.com/raspberrypi/linux/issues/6036
+>> https://forum.libreelec.tv/thread/28620-libreelec-12-0-rpi5-and-ntfs-hdd-problem/?postID=192713#post192713
+>> https://forums.raspberrypi.com/viewtopic.php?p=2203090#p2203090
+>> https://forums.raspberrypi.com/viewtopic.php?t=367545
 >>
->> Thx. This made me wonder: is "revert the culprit to resolve this quickly
->> and reapply it later together with a fix" something that we should
->> consider if a proper fix takes some time? Or is this not worth it in
->> this case or extremely hard? Or would it cause a regression on it's own
->> for users of 6.9?
-> 
-> I think on 6.9 a revert is not easily possible (without reverting several other commits adding new
-> features), but it should be considered for 6.6.
->> I don't think further regressions are possible by reverting, as on
-6.6 the timer is only used for
-> platforms without an m_can IRQ, and on these platforms the current behavior is "the kernel
-> reproducibly deadlocks in atomic context", so there is not much room for making it worse.
-
-Often Greg does not revert commits in a stable branches when they cause
-the same problem in mainline. But I suspect in this case it is something
-different. But I guess he would prefer to hear "please revert
-887407b622f8e4 ("can: m_can: Start/Cancel polling timer together with
-interrupts")" coming from Markus, hence:
-
-Markus, if you agree that a revert from 6.6.y might be best, could you
-simply ask for a revert in a reply to this mail while CCing Greg and the
-stable list? tia!
-
-Ciao, Thorsten
-
-> Like Markus, I have writing a proper fix for this on my TODO list, but I'm not sure when I can get
-> to it - hopefully next week.
-> 
-> Best regards,
-> Matthias
-> 
-> 
-> 
+>> The common points are it occurs on the (default) 16K pagesize kernel,
+>> but switching to 4K pagesize kernel
+>> avoids the issue.
 >>
->>>> On 18.06.24 18:12, Matthias Schiffer wrote:
->>>>> Hi Markus,
->>>>>
->>>>> we've found that recent kernels hang on the TI AM62x SoC (where no m_can interrupt is available and
->>>>> thus the polling timer is used), always a few seconds after the CAN interfaces are set up.
->>>>>
->>>>> I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cancel polling timer together
->>>>> with interrupts"). Both master and 6.6 stable (which received a backport of the commit) are
->>>>> affected. On 6.6 the commit is easy to revert, but on master a lot has happened on top of that
->>>>> change.
->>>>>
->>>>> As far as I can tell, the reason is that hrtimer_cancel() tries to cancel the timer synchronously,
->>>>> which will deadlock when called from the hrtimer callback itself (hrtimer_callback -> m_can_isr ->
->>>>> m_can_disable_all_interrupts -> hrtimer_cancel).
->>>>>
->>>>> I can try to come up with a fix, but I think you are much more familiar with the driver code. Please
->>>>> let me know if you need any more information.
->>>>>
->>>>> Best regards,
->>>>> Matthias
->>>>>
->>>>>
->>>
->>>
-> 
+>> Issue wasn't present in previous RPiOS LTS kernel (6.1), but is
+>> present in current LTS kernel (6.6).
+>> Revering to 6.1 kernel avoids the issue.
+>>
+>> I've confirmed that reverting the commit:
+>> 865e7a7700d9 ("fs/ntfs3: Reduce stack usage")
+>>
+>> avoids the issue.
+>>
+>> This patch avoids the issue for me, and I'd like confirmation it is correct.
+Hello everyone,
+
+I recently accepted this patch with the same fix:
+https://lore.kernel.org/ntfs3/20240529064053.2741996-2-chenhuacai@loongson.cn/.
+
+Unfortunately, I don't have an RPi with a pagesize=16K at hand, so I 
+can't practically test it.
+
+Regards, Konstantin
