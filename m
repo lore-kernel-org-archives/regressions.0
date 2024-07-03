@@ -1,180 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1E313F432
-	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 10:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5000176ADB
+	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 12:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003510; cv=none; b=XewEbY6YctYoe9Gn/tBDxgqLjYHmjAl2pQUfozQFMlA3XBj1XPNH4FWPvCQb3DxFtoKbkzGk1DgzGCGAt8Ez0pAvAqVJOUlu39ZTUctOnseXt3pYBySh+O4U9EKai5rfZClSbZ5Jm1mZF2MXDwMuAibJfhUuc0HwF2I6J2zTPjY=
+	t=1720011028; cv=none; b=OsANi9zcuJ/VG3OnuFCTuYnZlvdMtSivkyOeuGM8z328fOTNWkwp9CQfLtS7z1Y5wXDe+xoLPNk16JQddsd0XDcEPRmIF3po+Op0HGAK15giqzk1maB1ZdYjNZbFJXPIYAbXSHScOQT6wklrOdLrzj/dqe632ZvOh6XxhQiJkPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003510; c=relaxed/simple;
-	bh=PtQNUlx8ansBCk+WctUe9IMiEXLQyi16mlQEDtfaI0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+7Ln4YMpG7EPjN/995k3jRDzwcVppJ3u3OEmOqEav3ekCuYZ5lKyJjg9IqtdMiZj419zotq7ftANSGNDVQTXnTnvmM+cde1Xc/rfsh9szWdZ+rrGuNRbXL75xUj8TfkwvdPF6j74Sk3M1pw0drkoBOjEO2O7XUbcV0DmtU9BPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/dbKkCo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720011028; c=relaxed/simple;
+	bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LR8jpTyuVvi/r6wShVpSV4FXQPOW3P8gxHX8cqsyyZXzk99BYZ104QThRZLMJEoEjRVnBORTXWZxxncWVRXqX645jjCqqv4UYDA7whAMDVg7eYbu6BvgFRoLOf1AX5PYvwsrtcuB+gFA3t78fFqNGOn9cNBJyp0gC0coFCJXe4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=JkNwwcz6; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=m5aSbOPw reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/dbKkCo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C0CC4AF0D
-	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 10:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720003510;
-	bh=PtQNUlx8ansBCk+WctUe9IMiEXLQyi16mlQEDtfaI0k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h/dbKkCo8418U3YgZo3vL3QEhwgmbEw8uLXqVq9r7Deo8OCi/A9mI4fIukRYmYSPx
-	 xD7O9t/Ocjt+XcklvHPEFdF/LmpkdwcgYEVY2eOpcDj5ZJKEMebFDbYaPkwdf05tgF
-	 5y4+m4AWLppp/Fw2MO9G3VSJuwmRgrXPVId2Qtl/9EdybbCXIEbaEoC5D1aw3nHqnn
-	 k3iT9KNH2aQYV028PVlvFtjvc0XbgIcFItBvJNv+tNxPqvGKS1n1jhJ0FGX2VMzlar
-	 8HsMtM0GqbSVrZPmk0NlXTdNEjlMPrlR4+SbMUOjfvNBvYehyvep4jJCmAILYHKzZD
-	 eVzxLrFETSKHA==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7245453319so82342766b.1
-        for <regressions@lists.linux.dev>; Wed, 03 Jul 2024 03:45:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW3r10ZCVmJhF4OlHz+qrdBjbjb+WEn5/0yRId4axaA8eP7xhqYqUjHFeWKpCDeZSgHIzHrr6Jd9XRKJ21JyiLGBMd9Zun0LReuXZQ=
-X-Gm-Message-State: AOJu0YwAaf18R+rUwN9LSpB5YIcqLwjtG16qKG3xJYKDVY/YXDpUjYKX
-	vFSPhuFxc3twrAZ9iv7dHkNnSSFmvsR1h16WQV2BPS+jhpML4Deca8dxtF3FH/vKFko5fThLhHE
-	W3DkoHCMTYopCiTb2oTwhRuK6Ii8=
-X-Google-Smtp-Source: AGHT+IFSSZRSZiPOdAVlcgtTYF0Q7TZArdGktuMCmFK5m3DdOJNmu80FkBBogvdkrJxRYC7UIxsHSxlNbePArkkq+no=
-X-Received: by 2002:a17:906:5a91:b0:a6f:b352:a74b with SMTP id
- a640c23a62f3a-a77a252e4d9mr84232066b.38.1720003508655; Wed, 03 Jul 2024
- 03:45:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="JkNwwcz6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="m5aSbOPw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1720011025; x=1751547025;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
+  b=JkNwwcz6Fjb+8ft0GfS5n4B4/BkNnLauTWgEuWGbZ5t72ArZdxU2D7Av
+   /pVKpykaXadiunU9z0NVNsWSNX21OeyzdmHjrjGKC9E0JmB8YtQXz4Hnt
+   vPDmTuxJREH+Cs1GaQJ97BwVF/O9mTpvx52TsWL40MLmnyu60QxJYPCyO
+   sv4gv8u0/q5Cp7w5cLV8NE2OpOAS+uytZoXTaUAvghd2ufUKWJHtzV5yP
+   ItevK2fD+xZAaijtgdwuqFxLwHq7JcWgKh65ATCkLiNTLCncvY88bJ1Yw
+   QjL7vrbkio5ECZWtyaZosCnITdAjK9OP1sFc702M2xY4hwGxJgzv+ogac
+   Q==;
+X-CSE-ConnectionGUID: UmoDDHTySqmy3obZG+emog==
+X-CSE-MsgGUID: E3uAuytsQTaT+bzp83WV6Q==
+X-IronPort-AV: E=Sophos;i="6.09,182,1716242400"; 
+   d="scan'208";a="37726950"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 03 Jul 2024 14:50:23 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A8D9F1667A7;
+	Wed,  3 Jul 2024 14:50:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1720011008;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
+	b=m5aSbOPwNA8DlMbJCgRwbV7PyXvKbpIn70J+te46DpME8mLBQXLbkBCA3WCZCI80xKnGVO
+	G529PFjz9zq3fawD3YcJZOz8jnRZlUbLcdebaC54mY/6kbsHDlZbzXi5uFEFKl9e3hF+IU
+	+09q+tzRlK4vNIoSIfGvhNm0q+YwVVmtry6xry4LoklhXWgM1RUbJ5Afr7uEPqYaFFF6tl
+	EfmpuBFBWvlH+vf6RIPBvXbX4FqenHjsICDuzh4dayXSDTwDbuPgkOPCxrsnXMjaimfITx
+	bB5dwwP+2Y3Ij/0sH2QgeNGWzs1fJLCrsX7WuMGQ/6B0+aW/lgvn4QEBpTct1A==
+Message-ID: <76faeb323353b584b310f2f1b53e9b2745d2f12c.camel@ew.tq-group.com>
+Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
+ timer together with interrupts"
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Markus Schneider-Pargmann <msp@baylibre.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Chandrasekar Ramakrishnan
+ <rcsekar@samsung.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Tony Lindgren
+ <tony@atomide.com>, Judith Mendez <jm@ti.com>,  linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux@ew.tq-group.com, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Date: Wed, 03 Jul 2024 14:50:04 +0200
+In-Reply-To: <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
+References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
+	 <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
+	 <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
+	 <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
+	 <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com> <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
-In-Reply-To: <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 3 Jul 2024 11:44:32 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
-Message-ID: <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Jul 3, 2024 at 11:31=E2=80=AFAM Filipe Manana <fdmanana@kernel.org>=
- wrote:
->
-> On Tue, Jul 2, 2024 at 6:22=E2=80=AFPM Filipe Manana <fdmanana@kernel.org=
-> wrote:
-> >
-> > On Tue, Jul 2, 2024 at 3:13=E2=80=AFPM Mikhail Gavrilov
-> > <mikhail.v.gavrilov@gmail.com> wrote:
-> > >
-> > > On Mon, Jul 1, 2024 at 2:31=E2=80=AFPM Filipe Manana <fdmanana@kernel=
-.org> wrote:
-> > > >
-> > > > Try this:
-> > > >
-> > > > https://lore.kernel.org/linux-btrfs/cb12212b9c599817507f3978c910276=
-7267625b2.1719825714.git.fdmanana@suse.com/
-> > > >
-> > > > That applies only to the "for-next", it will need conflict resoluti=
+On Tue, 2024-07-02 at 12:03 +0200, Matthias Schiffer wrote:
+> On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Le=
+emhuis) wrote:
+> >=20
+> >=20
+> > On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
+> > > On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Th=
+orsten Leemhuis) wrote:
+> > > > [CCing the regression list, as it should be in the loop for regress=
+ions:
+> > > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> > > >=20
+> > > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posti=
+ng
+> > > > for once, to make this easily accessible to everyone.
+> > > >=20
+> > > > Hmm, looks like there was not even a single reply to below regressi=
 on
-> > > > for 6.10-rc, as noted in the commnets.
-> > > > For a version that cleanly applies to 6.10-rc:
-> > > >
-> > > > https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f=
-8dad49863/raw/1a82fe8eafbd5f6958dddf34d3c9648d7335018e/btrfs-don-t-loop-aga=
-in-over-pinned-extent-maps-when-.patch
-> > >
-> > > I tested this patch on top of v6.10-rc6
-> > >
-> > > > Btw, besides the longer kswapd execution times, what else do you ob=
-serve?
-> > > > Is it impacting performance of any applications?
-> > >
-> > > I observe that the system freezes under load.
-> > > Demonstration: https://youtu.be/1-gUrnEi2aU
-> > > The GNOME shell stops responding, and even the clock in the GNOME
-> > > status bar stops updating seconds.
-> > > And this didn't happen when the v6.9 kernel was running. Second, I
-> > > spotted high CPU usage by process kswapd0 when freezes occurred.
-> > > Therefore, I decided to find the commit that led to high CPU
-> > > consumption by the kswapd0 process.
-> > > As we found out, this commit turned out to be 956a17d9d050.
-> > >
-> > > > I think no matter what we do, it's likely that kswapd will take mor=
-e
-> > > > time than before, because now there's extra work of going through
-> > > > extent maps and dropping them.
-> > > > We had to do it to prevent OOM situations because extent map creati=
-on
-> > > > was unbounded.
-> > >
-> > > Unfortunately, the patch didn't improve anything.
-> > > kswapd0 still consumes 100% CPU under load.
-> > > And my system continues to freeze.
-> >
-> > Ok, the concerning part is the freezing and high cpu usage.
-> >
-> > So besides that patch, try 2 other patches on top of it:
-> >
-> > 1) https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f8=
-dad49863/raw/aaf4c00fd40aaee0ee2788cd9fdfe2f083328c39/btrfs-don-t-loop-agai=
-n-over-pinned-extent-maps-when-.patch
-> >     (this is the patch you tried before)
-> >
-> > 2) https://gist.githubusercontent.com/fdmanana/f2275050f04d1830adb81174=
-5bfd99d4/raw/1001d8154133d862e305959ee9eedebf55941669/gistfile1.txt
-> >
-> > 3) https://gist.githubusercontent.com/fdmanana/0a71b9e0fe71f38f67a50b7b=
-53d520e6/raw/680cab70d2ef32337583bee6a4fb6519241b2faa/0003-btrfs-prevent-ex=
-tent-map-shrinker-from-monopolizing-.patch
-> >
-> > Apply those patches on top of 6.10-rc in that order and let me know how=
- it goes.
->
-> Also, a 4th one:
->
-> https://gist.githubusercontent.com/fdmanana/638d90142e4db7cd462121d812075=
-de7/raw/acb90d92c1cab512414e0bd5461640c9015da4ec/0004-btrfs-use-delayed-ipu=
-t-during-extent-map-shrinking.patch
->
-> This one should apply in any order. Try all those 4 together please.
-> Thanks!
+> > > > report. But also seens Markus hasn't posted anything archived on Lo=
+re
+> > > > since about three weeks now, so he might be on vacation.
+> > > >=20
+> > > > Marc, do you might have an idea what's wrong with the culprit? Or d=
+o we
+> > > > expected Markus to be back in action soon?
+> > >=20
+> > > Great, ping here.
+> >=20
+> > Thx for replying!
+> >=20
+> > > @Matthias: Thanks for debugging and sorry for breaking it. If you hav=
+e a
+> > > fix for this, let me know. I have a lot of work right now, so I am no=
+t
+> > > sure when I will have a proper fix ready. But it is on my todo list.
+> >=20
+> > Thx. This made me wonder: is "revert the culprit to resolve this quickl=
+y
+> > and reapply it later together with a fix" something that we should
+> > consider if a proper fix takes some time? Or is this not worth it in
+> > this case or extremely hard? Or would it cause a regression on it's own
+> > for users of 6.9?
+> >=20
+> > Ciao, Thorsten
+>=20
+> Hi,
+>=20
+> I think on 6.9 a revert is not easily possible (without reverting several=
+ other commits adding new
+> features), but it should be considered for 6.6.
+>=20
+> I don't think further regressions are possible by reverting, as on 6.6 th=
+e timer is only used for
+> platforms without an m_can IRQ, and on these platforms the current behavi=
+or is "the kernel
+> reproducibly deadlocks in atomic context", so there is not much room for =
+making it worse.
+>=20
+> Like Markus, I have writing a proper fix for this on my TODO list, but I'=
+m not sure when I can get
+> to it - hopefully next week.
+>=20
+> Best regards,
+> Matthias
 
-I'm collecting all the patches in this branch:
+A small update from my side:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/?h=
-=3Dem_shrinker_6.10
+I had a short look into the issue today, but I've found that I don't quite =
+grasp the (lack of)
+locking in the m_can driver. The m_can_classdev fields active_interrupts an=
+d irqstatus are accessed
+from a number of=C2=A0different contexts:
 
-They apply cleanly to 6.10-rc.
+- active_interrupts is *mostly* read and written from the ISR/hrtimer callb=
+ack, but also from
+m_can_start()/m_can_stop() and (in error paths) indirectly from m_can_poll(=
+) (NAPI callback). It is
+not clear to me whether start/stop/poll could race with the ISR on a differ=
+ent CPU. Besides being
+used for ndo_open/stop, m_can_start/stop also happen from PM callbacks.
+- irqstatus is written from the ISR (or hrtimer callback) and read from m_c=
+an_poll() (NAPI callback)
 
->
-> > Thanks.
-> >
-> > >
-> > > 6.10.0-0.rc6.51.fc41.x86_64+debug with patch
-> > > up  1:00
-> > > root         269 13.1  0.0      0     0 ?        S    12:24   7:53 [k=
-swapd0]
-> > > up  2:00
-> > > root         269 29.9  0.0      0     0 ?        R    12:24  36:02 [k=
-swapd0]
-> > > up  3:00
-> > > root         269 37.8  0.0      0     0 ?        S    12:24  68:19 [k=
-swapd0]
-> > > up  4:05
-> > > root         269 39.3  0.0      0     0 ?        R    12:24  96:40 [k=
-swapd0]
-> > > up  5:01
-> > > root         269 38.8  0.0      0     0 ?        R    12:24 117:00 [k=
-swapd0]
-> > > up  6:00
-> > > root         269 40.3  0.0      0     0 ?        S    12:24 145:24 [k=
-swapd0]
-> > >
-> > > --
-> > > Best Regards,
-> > > Mike Gavrilov.
+Is this correct without explicit sychronization, or should there be some lo=
+cking or atomic for these
+accesses?
+
+Best regards,
+Matthias
+
+
+
+>=20
+>=20
+>=20
+> >=20
+> > > > On 18.06.24 18:12, Matthias Schiffer wrote:
+> > > > > Hi Markus,
+> > > > >=20
+> > > > > we've found that recent kernels hang on the TI AM62x SoC (where n=
+o m_can interrupt is available and
+> > > > > thus the polling timer is used), always a few seconds after the C=
+AN interfaces are set up.
+> > > > >=20
+> > > > > I have bisected the issue to commit a163c5761019b ("can: m_can: S=
+tart/Cancel polling timer together
+> > > > > with interrupts"). Both master and 6.6 stable (which received a b=
+ackport of the commit) are
+> > > > > affected. On 6.6 the commit is easy to revert, but on master a lo=
+t has happened on top of that
+> > > > > change.
+> > > > >=20
+> > > > > As far as I can tell, the reason is that hrtimer_cancel() tries t=
+o cancel the timer synchronously,
+> > > > > which will deadlock when called from the hrtimer callback itself =
+(hrtimer_callback -> m_can_isr ->
+> > > > > m_can_disable_all_interrupts -> hrtimer_cancel).
+> > > > >=20
+> > > > > I can try to come up with a fix, but I think you are much more fa=
+miliar with the driver code. Please
+> > > > > let me know if you need any more information.
+> > > > >=20
+> > > > > Best regards,
+> > > > > Matthias
+> > > > >=20
+> > > > >=20
+> > >=20
+> > >=20
+>=20
+
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
