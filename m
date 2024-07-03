@@ -1,344 +1,165 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92206136E37;
-	Wed,  3 Jul 2024 07:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F5113D61B
+	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 10:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719992368; cv=none; b=s8Wuhg7m+A3KIWqZhcpAXDxt5LK6gEkxz9BKdO1M6PCXCkfMeTHUz8n5oFDdTpN1Oq411KcK9dICHQzXgVmuqmWreqGgFR1FUMiXJ6CaOwPFxBIuY8h8HgJOpQ/OYPk92Pu7190EvNrPyTOi6Ab6MaYrJKISQJxXmK3och2E8Lk=
+	t=1720002726; cv=none; b=bTlOAtm5ngq+gF9xer3qjg+sUUiA0H1zNZWj5uE/Jpo7EBt8kUa4dm0ofENGPHfQfZAPcli91U9vlgOoT/IMTBJbe2SmQcy+OQ8CQmaihXXYyjXxIkrloQEl3BfAZ55T4mn8QtjOwokATLev+ozB1faIN1rN8KlrcDI1u3HqDBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719992368; c=relaxed/simple;
-	bh=a2evVl/Drqj0cUOAQUU6wEoa9PX4CeAmbK4LR6KG8fE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LlOVsVwP8n4QqvKPOUXkZQYnz5OGwdsbQ7geWldsih7UtelIP5Y9hIHWAHuLL2waPXuy7Vig6rJnLRwO+rPzK8sS16g2muH9iUrxSsCHLedpM5OJYyhPbsUq2ltYwbXvDC9YZ33s2VH2ba0JQQ4aQ2uXvnEEVIe7lGiAtQArvb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4637dH9I11921736, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 4637dH9I11921736
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jul 2024 15:39:17 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 3 Jul 2024 15:39:17 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Jul 2024 15:39:16 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Wed, 3 Jul 2024 15:39:16 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Forty Five <mathewegeorge@gmail.com>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Bernie Huang
-	<phhuang@realtek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Topic: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Index: AQHayyFKbA+C/SyMRES67Y/3y6K7kbHkjzsw
-Date: Wed, 3 Jul 2024 07:39:16 +0000
-Message-ID: <d6b9e886e3dd4d5e9c1f718448c455db@realtek.com>
-References: <87ikxqs0tj.fsf@gmail.com>
-In-Reply-To: <87ikxqs0tj.fsf@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: yes
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: multipart/mixed;
-	boundary="_002_d6b9e886e3dd4d5e9c1f718448c455dbrealtekcom_"
+	s=arc-20240116; t=1720002726; c=relaxed/simple;
+	bh=BUNSlRMhsXsEjdrAtE/PYMno10A849bFR3slyOWBk3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rqDS7qcdsTCvuCWXytIPlwJh1GZv2pRv6qZIKm6xRC859fWpjpwV2XLEwk3jVWabodCoddzfQSjIJZHh7VRs7JbgCK1mLgMgpg/ycIUX83EjD2pMPUGsUN3pa6jvjYTzSI2IVmvwO8BYmMRdxzb2RWuEMF9LRDd1mSfCjg8X/VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJ0INMgy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJ0INMgy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C671AC2BD10
+	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 10:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720002725;
+	bh=BUNSlRMhsXsEjdrAtE/PYMno10A849bFR3slyOWBk3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TJ0INMgyD2BoRmYOHUOrTecvxiFkfVB66qsNgUKwo002D2jJU6GT/9qxyptfyzJ79
+	 VXr+mVCjVe54B7ugnpL7FCLJuFfNydWuLuylWtBav/JNdtmGOmJ3mO1BhTi3e9ztgn
+	 tZ0ClbLI9jdHjrWp1RU/wuvcTkca07AelHthOBNoJiTEnDDZKmLNBBu5ZCKfSoxQ85
+	 GI9TJVgUPMdPW8Cu+3M9lVAaEIeSWYdZ7NucC5czGksniKkWJ8UtwbbYVERa4EV8Yi
+	 0artv+v9ZApYBkgwe6wJRXA2mE7cUtf2k+sX3VsEh1/wavV357lmGjG99PYTLAZrNu
+	 UjJLpHLLKUzfw==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52cdf2c7454so11317054e87.1
+        for <regressions@lists.linux.dev>; Wed, 03 Jul 2024 03:32:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXWkoZXfPoLKkJHarVAsVsPcFvmbFsIue42kD7kwCiixAiMEyHCRwMsYoekAXApoRq1Fu7g09Nwhjex7dMouAeiBVzJbl/TVeUD65I=
+X-Gm-Message-State: AOJu0YwzgSJULgAT7gga672Na1mOLP4KzDNioQhN/FNFYb/JZkaTTvii
+	8J8ErInQU1hhSczpeBSCc9/xRPXwM0f39H2YglMOF5WhVdd6+EOBcpn5uCUEmCsvwXGHqa1QN0v
+	rNOjP6mhoju9d8kbn0Jud5Iwjq8s=
+X-Google-Smtp-Source: AGHT+IGPM4Is6nxQwc56lNT3I/hYoefrXRTPEi/138EUSwH0uHYyo0NY+hUL96/N+jlwBdYXSK+Eau7G9dEFmyfawRY=
+X-Received: by 2002:a05:6512:b96:b0:52e:8071:e89d with SMTP id
+ 2adb3069b0e04-52e82688db8mr11844670e87.40.1720002724112; Wed, 03 Jul 2024
+ 03:32:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-
---_002_d6b9e886e3dd4d5e9c1f718448c455dbrealtekcom_
-Content-Type: text/plain; charset="us-ascii"
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com> <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+In-Reply-To: <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 3 Jul 2024 11:31:27 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+Message-ID: <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mathew,
+On Tue, Jul 2, 2024 at 6:22=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
+wrote:
+>
+> On Tue, Jul 2, 2024 at 3:13=E2=80=AFPM Mikhail Gavrilov
+> <mikhail.v.gavrilov@gmail.com> wrote:
+> >
+> > On Mon, Jul 1, 2024 at 2:31=E2=80=AFPM Filipe Manana <fdmanana@kernel.o=
+rg> wrote:
+> > >
+> > > Try this:
+> > >
+> > > https://lore.kernel.org/linux-btrfs/cb12212b9c599817507f3978c91027672=
+67625b2.1719825714.git.fdmanana@suse.com/
+> > >
+> > > That applies only to the "for-next", it will need conflict resolution
+> > > for 6.10-rc, as noted in the commnets.
+> > > For a version that cleanly applies to 6.10-rc:
+> > >
+> > > https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f8d=
+ad49863/raw/1a82fe8eafbd5f6958dddf34d3c9648d7335018e/btrfs-don-t-loop-again=
+-over-pinned-extent-maps-when-.patch
+> >
+> > I tested this patch on top of v6.10-rc6
+> >
+> > > Btw, besides the longer kswapd execution times, what else do you obse=
+rve?
+> > > Is it impacting performance of any applications?
+> >
+> > I observe that the system freezes under load.
+> > Demonstration: https://youtu.be/1-gUrnEi2aU
+> > The GNOME shell stops responding, and even the clock in the GNOME
+> > status bar stops updating seconds.
+> > And this didn't happen when the v6.9 kernel was running. Second, I
+> > spotted high CPU usage by process kswapd0 when freezes occurred.
+> > Therefore, I decided to find the commit that led to high CPU
+> > consumption by the kswapd0 process.
+> > As we found out, this commit turned out to be 956a17d9d050.
+> >
+> > > I think no matter what we do, it's likely that kswapd will take more
+> > > time than before, because now there's extra work of going through
+> > > extent maps and dropping them.
+> > > We had to do it to prevent OOM situations because extent map creation
+> > > was unbounded.
+> >
+> > Unfortunately, the patch didn't improve anything.
+> > kswapd0 still consumes 100% CPU under load.
+> > And my system continues to freeze.
+>
+> Ok, the concerning part is the freezing and high cpu usage.
+>
+> So besides that patch, try 2 other patches on top of it:
+>
+> 1) https://gist.githubusercontent.com/fdmanana/5262e608b3eecb9a3b2631f8da=
+d49863/raw/aaf4c00fd40aaee0ee2788cd9fdfe2f083328c39/btrfs-don-t-loop-again-=
+over-pinned-extent-maps-when-.patch
+>     (this is the patch you tried before)
+>
+> 2) https://gist.githubusercontent.com/fdmanana/f2275050f04d1830adb811745b=
+fd99d4/raw/1001d8154133d862e305959ee9eedebf55941669/gistfile1.txt
+>
+> 3) https://gist.githubusercontent.com/fdmanana/0a71b9e0fe71f38f67a50b7b53=
+d520e6/raw/680cab70d2ef32337583bee6a4fb6519241b2faa/0003-btrfs-prevent-exte=
+nt-map-shrinker-from-monopolizing-.patch
+>
+> Apply those patches on top of 6.10-rc in that order and let me know how i=
+t goes.
 
-Forty Five <mathewegeorge@gmail.com> wrote:
->=20
-> Ping-Ke Shih <pkshih@realtek.com> writes:
->=20
-> > Since I saw 'NetworkManager' and 'hostapd' in code trace, I would like =
-to know
-> > if you have two virtual interfaces, which for STA and AP modes? (Please=
- check
-> > this by 'iw dev') If so, is it possible to remove hostapd (AP mode) to =
-see if
-> > this is a factor causing crash.
->=20
-> I use hostapd as part of a Wi-Fi hotspot setup for this laptop. I REALLY
-> wish I'd connected the dots earlier and realised that it could be
-> related to this issue. While running gbcbefbd032 (first bad commit), I
-> disabled all the components of my setup and the issue went away; then I
-> enabled them one by one until the issue emerged. I'll walk you through
-> the relevant details, and my observations during this process.
->=20
-> I create a virtual interface for hostapd using this systemd unit:
->=20
-> ```
-> [Unit]
-> Requires=3Dsys-subsystem-net-devices-wlo1.device
-> After=3Dnetwork.target
-> After=3Dsys-subsystem-net-devices-wlo1.device
-> [Service]
-> Type=3Doneshot
-> ExecStart=3D/usr/bin/iw dev wlo1 interface add wlo1_ap type __ap addr "xx=
-:xx:xx:xx:xx:xx"
-> ExecStart=3D/usr/bin/ip addr add 192.168.30.1/24 dev wlo1_ap
-> [Install]
-> WantedBy=3Dmulti-user.target
-> ```
->=20
-> I need the '__ap' type because my card doesn't support two interfaces in
-> managed mode; see [1] for details.
->=20
-> [1] https://wiki.archlinux.org/title/Talk:Software_access_point#Two_inter=
-faces_on_same_card
->=20
-> Then I configure NetworkManager to ignore this interface.
->=20
-> ```
-> ;; in /etc/NetworkManager/conf.d/unmanaged.conf
-> [keyfile]
-> unmanaged-devices=3Dinterface-name:wlo1_ap
-> ```
->=20
-> Coming to hostapd - this is where it gets rather complicated. First off,
-> let me mention that when I enabled hostapd.service again, I started
-> seeing the 'phy0: resume with hardware scan still in progress' warnings,
-> which had gone away upto this point.
->=20
-> Next - once I enabled hostapd.service, I was able to reproduce the
-> crashes. However, the dmesg in the crash log was different from what I
-> see when I have the rest of my setup enabled (I hadn't applied either
-> patch when this crash happened, and it's on b54846da4 because that's the
-> earliest bad commit in which I'm able to produce crash logs at all, as I
-> described in my original message):
+Also, a 4th one:
 
-Your setup is very complicated, so I can't setup in my side easily, and
-haven't time to dig deeper. I feel there are more than one problems, so ple=
-ase
-help to do some experiments to narrow down scope.=20
+https://gist.githubusercontent.com/fdmanana/638d90142e4db7cd462121d812075de=
+7/raw/acb90d92c1cab512414e0bd5461640c9015da4ec/0004-btrfs-use-delayed-iput-=
+during-extent-map-shrinking.patch
 
-First problem is the culprit commit [1] that makes system frozen, and I sti=
-ll
-feel the patch [2] you have taken can fix it. Please use [1] as code base a=
-nd
-apply patch [2] to see the result (#exp 1). The difference between without =
-[1] and
-with [1] + [2] is the timing driver report scan abort completion to mac8021=
-1.
-And the last few logs you collected show that crash after long time from
-scanning abort.
+This one should apply in any order. Try all those 4 together please.
+Thanks!
 
-Second problem is WiFi firmware get abnormal during doing resume. The log
-looks like (partially):
-	 [    T562] rtw89_8852be 0000:02:00.0: R_AX_RPQ_RXBD_IDX =3D0x00000000
-	 [    T562] rtw89_8852be 0000:02:00.0: R_AX_DBG_ERR_FLAG=3D0x00000000
-	 [    T562] rtw89_8852be 0000:02:00.0: R_AX_LBC_WATCHDOG=3D0x00000081
-	 [    T562] rtw89_8852be 0000:02:00.0: <---
-	 [    T562] rtw89_8852be 0000:02:00.0: SER catches error: 0x5000
-In my side, this is rare, and your last few logs seem not happen. Not sure =
-if
-this is because of timing result from adding many logs. I would defer this
-problem for now.
-
-Third (unsure) problem could be introduced by commits between [1] and [3].
-If first problem can be addressed by #exp 1, it could be possible to bisect
-the problem between [1] and [3]. Even if [1] is the only problem, revert
-the commit to see if it becomes good (#exp 2).
-
-Summary:=20
-
-     o 5bbd9b249880 [3] (v6.10-rc5)
-     |              #exp 2: 5bbd9b249880 + [4] (revert [1]; I feel this wou=
-ld be bad).
-     :
-     :
-     :
-     o bcbefbd032df [1] ("wifi: rtw89: add wait/completion for abort scan")
-     |              #exp 1: bcbefbd032df + [2] (I think this will be good.)
-     o 7e11a2966f51 (this commit is good)
-
-
-
-[1] bcbefbd032df ("wifi: rtw89: add wait/completion for abort scan")
-[2] fix scan abort https://lore.kernel.org/linux-wireless/20240517013350.11=
-278-1-pkshih@realtek.com/
-[3] 5bbd9b249880 (v6.10-rc5; the top of tree you are tring)
-[4] attached revert patch of [1]
-
-Ping-Ke
-
-
---_002_d6b9e886e3dd4d5e9c1f718448c455dbrealtekcom_
-Content-Type: application/octet-stream;
-	name="0001-Revert-wifi-rtw89-add-wait-completion-for-abort-scan.patch"
-Content-Description: 0001-Revert-wifi-rtw89-add-wait-completion-for-abort-scan.patch
-Content-Disposition: attachment;
-	filename="0001-Revert-wifi-rtw89-add-wait-completion-for-abort-scan.patch";
-	size=8312; creation-date="Wed, 03 Jul 2024 07:13:12 GMT";
-	modification-date="Wed, 03 Jul 2024 07:13:11 GMT"
-Content-Transfer-Encoding: base64
-
-RnJvbSBlMDM1YzhiYzc5YzA1Y2IwYTIwODU2NmY5MTQ1NTkwZTEwNGY2NTcxIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4KRGF0
-ZTogV2VkLCAzIEp1bCAyMDI0IDE1OjA5OjA1ICswODAwClN1YmplY3Q6IFtQQVRDSF0gUmV2ZXJ0
-ICJ3aWZpOiBydHc4OTogYWRkIHdhaXQvY29tcGxldGlvbiBmb3IgYWJvcnQgc2NhbiIKClRoaXMg
-cmV2ZXJ0cyBjb21taXQgYmNiZWZiZDAzMmRmNmJmZTkyNWU2YWZlY2E4MmViOWQyY2MwY2IyMy4K
-ClNpZ25lZC1vZmYtYnk6IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29tPgotLS0KIGRy
-aXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvY29yZS5oIHwgIDEgLQogZHJpdmVycy9u
-ZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9mdy5jICAgfCAyMyArKysrLS0tLS0tLS0tLS0KIGRy
-aXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvZncuaCAgIHwgMTAgLS0tLS0tLQogZHJp
-dmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9tYWMuYyAgfCAzNiArKy0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQogZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9tYWMuaCAgfCAg
-MyArLQogNSBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCA2MyBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2NvcmUuaCBi
-L2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvY29yZS5oCmluZGV4IDExMmJkZDk1
-ZmM2ZS4uNDZkNTM1Zjk4MDgzIDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFs
-dGVrL3J0dzg5L2NvcmUuaAorKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5
-L2NvcmUuaApAQCAtNTA3OCw3ICs1MDc4LDYgQEAgc3RydWN0IHJ0dzg5X2h3X3NjYW5faW5mbyB7
-CiAJc3RydWN0IGllZWU4MDIxMV92aWYgKnNjYW5uaW5nX3ZpZjsKIAlzdHJ1Y3QgbGlzdF9oZWFk
-IHBrdF9saXN0W05VTV9OTDgwMjExX0JBTkRTXTsKIAlzdHJ1Y3QgcnR3ODlfY2hhbiBvcF9jaGFu
-OwotCWJvb2wgYWJvcnQ7CiAJdTMyIGxhc3RfY2hhbl9pZHg7CiB9OwogCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2Z3LmMgYi9kcml2ZXJzL25ldC93aXJl
-bGVzcy9yZWFsdGVrL3J0dzg5L2Z3LmMKaW5kZXggMDQ0YTViOTBjN2Y0Li5kYzc2YWY5MjQ1ODAg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvZncuYworKysg
-Yi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2Z3LmMKQEAgLTQ2NTMsNyArNDY1
-Myw3IEBAIGludCBydHc4OV9md19oMmNfc2Nhbl9saXN0X29mZmxvYWQoc3RydWN0IHJ0dzg5X2Rl
-diAqcnR3ZGV2LCBpbnQgY2hfbnVtLAogCQkJICAgICAgSDJDX0NBVF9NQUMsIEgyQ19DTF9NQUNf
-RldfT0ZMRCwKIAkJCSAgICAgIEgyQ19GVU5DX0FERF9TQ0FOT0ZMRF9DSCwgMSwgMSwgc2tiX2xl
-bik7CiAKLQljb25kID0gUlRXODlfU0NBTk9GTERfV0FJVF9DT05EX0FERF9DSDsKKwljb25kID0g
-UlRXODlfRldfT0ZMRF9XQUlUX0NPTkQoMCwgSDJDX0ZVTkNfQUREX1NDQU5PRkxEX0NIKTsKIAog
-CXJldCA9IHJ0dzg5X2gyY190eF9hbmRfd2FpdChydHdkZXYsIHNrYiwgd2FpdCwgY29uZCk7CiAJ
-aWYgKHJldCkgewpAQCAtNDc0OSw3ICs0NzQ5LDcgQEAgaW50IHJ0dzg5X2Z3X2gyY19zY2FuX2xp
-c3Rfb2ZmbG9hZF9iZShzdHJ1Y3QgcnR3ODlfZGV2ICpydHdkZXYsIGludCBjaF9udW0sCiAJCQkg
-ICAgICBIMkNfQ0FUX01BQywgSDJDX0NMX01BQ19GV19PRkxELAogCQkJICAgICAgSDJDX0ZVTkNf
-QUREX1NDQU5PRkxEX0NILCAxLCAxLCBza2JfbGVuKTsKIAotCWNvbmQgPSBSVFc4OV9TQ0FOT0ZM
-RF9XQUlUX0NPTkRfQUREX0NIOworCWNvbmQgPSBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgwLCBI
-MkNfRlVOQ19BRERfU0NBTk9GTERfQ0gpOwogCiAJcmV0ID0gcnR3ODlfaDJjX3R4X2FuZF93YWl0
-KHJ0d2Rldiwgc2tiLCB3YWl0LCBjb25kKTsKIAlpZiAocmV0KSB7CkBAIC00ODA4LDEwICs0ODA4
-LDcgQEAgaW50IHJ0dzg5X2Z3X2gyY19zY2FuX29mZmxvYWQoc3RydWN0IHJ0dzg5X2RldiAqcnR3
-ZGV2LAogCQkJICAgICAgSDJDX0ZVTkNfU0NBTk9GTEQsIDEsIDEsCiAJCQkgICAgICBsZW4pOwog
-Ci0JaWYgKG9wdGlvbi0+ZW5hYmxlKQotCQljb25kID0gUlRXODlfU0NBTk9GTERfV0FJVF9DT05E
-X1NUQVJUOwotCWVsc2UKLQkJY29uZCA9IFJUVzg5X1NDQU5PRkxEX1dBSVRfQ09ORF9TVE9QOwor
-CWNvbmQgPSBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgwLCBIMkNfRlVOQ19TQ0FOT0ZMRCk7CiAK
-IAlyZXQgPSBydHc4OV9oMmNfdHhfYW5kX3dhaXQocnR3ZGV2LCBza2IsIHdhaXQsIGNvbmQpOwog
-CWlmIChyZXQpIHsKQEAgLTU1MDEsNyArNTQ5OCw3IEBAIHN0YXRpYyBib29sIHJ0dzg5X2Z3X2My
-aF9jaGtfYXRvbWljKHN0cnVjdCBydHc4OV9kZXYgKnJ0d2RldiwKIAlkZWZhdWx0OgogCQlyZXR1
-cm4gZmFsc2U7CiAJY2FzZSBSVFc4OV9DMkhfQ0FUX01BQzoKLQkJcmV0dXJuIHJ0dzg5X21hY19j
-MmhfY2hrX2F0b21pYyhydHdkZXYsIGMyaCwgY2xhc3MsIGZ1bmMpOworCQlyZXR1cm4gcnR3ODlf
-bWFjX2MyaF9jaGtfYXRvbWljKHJ0d2RldiwgY2xhc3MsIGZ1bmMpOwogCWNhc2UgUlRXODlfQzJI
-X0NBVF9PVVRTUkM6CiAJCXJldHVybiBydHc4OV9waHlfYzJoX2Noa19hdG9taWMocnR3ZGV2LCBj
-bGFzcywgZnVuYyk7CiAJfQpAQCAtNjE3OCw3ICs2MTc1LDYgQEAgdm9pZCBydHc4OV9od19zY2Fu
-X3N0YXJ0KHN0cnVjdCBydHc4OV9kZXYgKnJ0d2Rldiwgc3RydWN0IGllZWU4MDIxMV92aWYgKnZp
-ZiwKIAlydHc4OV9nZXRfY2hhbm5lbChydHdkZXYsIHJ0d3ZpZiwgJnJ0d2Rldi0+c2Nhbl9pbmZv
-Lm9wX2NoYW4pOwogCXJ0d2Rldi0+c2Nhbl9pbmZvLnNjYW5uaW5nX3ZpZiA9IHZpZjsKIAlydHdk
-ZXYtPnNjYW5faW5mby5sYXN0X2NoYW5faWR4ID0gMDsKLQlydHdkZXYtPnNjYW5faW5mby5hYm9y
-dCA9IGZhbHNlOwogCXJ0d3ZpZi0+c2Nhbl9pZXMgPSAmc2Nhbl9yZXEtPmllczsKIAlydHd2aWYt
-PnNjYW5fcmVxID0gcmVxOwogCWllZWU4MDIxMV9zdG9wX3F1ZXVlcyhydHdkZXYtPmh3KTsKQEAg
-LTYyMzEsMjEgKzYyMjcsMTQgQEAgdm9pZCBydHc4OV9od19zY2FuX2NvbXBsZXRlKHN0cnVjdCBy
-dHc4OV9kZXYgKnJ0d2Rldiwgc3RydWN0IGllZWU4MDIxMV92aWYgKnZpZiwKIAlydHd2aWYtPnNj
-YW5faWVzID0gTlVMTDsKIAlzY2FuX2luZm8tPmxhc3RfY2hhbl9pZHggPSAwOwogCXNjYW5faW5m
-by0+c2Nhbm5pbmdfdmlmID0gTlVMTDsKLQlzY2FuX2luZm8tPmFib3J0ID0gZmFsc2U7CiAKIAly
-dHc4OV9jaGFuY3R4X3Byb2NlZWQocnR3ZGV2KTsKIH0KIAogdm9pZCBydHc4OV9od19zY2FuX2Fi
-b3J0KHN0cnVjdCBydHc4OV9kZXYgKnJ0d2Rldiwgc3RydWN0IGllZWU4MDIxMV92aWYgKnZpZikK
-IHsKLQlzdHJ1Y3QgcnR3ODlfaHdfc2Nhbl9pbmZvICpzY2FuX2luZm8gPSAmcnR3ZGV2LT5zY2Fu
-X2luZm87Ci0JaW50IHJldDsKLQotCXNjYW5faW5mby0+YWJvcnQgPSB0cnVlOwotCi0JcmV0ID0g
-cnR3ODlfaHdfc2Nhbl9vZmZsb2FkKHJ0d2RldiwgdmlmLCBmYWxzZSk7Ci0JaWYgKHJldCkKLQkJ
-cnR3ODlfaHdfc2Nhbl9jb21wbGV0ZShydHdkZXYsIHZpZiwgdHJ1ZSk7CisJcnR3ODlfaHdfc2Nh
-bl9vZmZsb2FkKHJ0d2RldiwgdmlmLCBmYWxzZSk7CisJcnR3ODlfaHdfc2Nhbl9jb21wbGV0ZShy
-dHdkZXYsIHZpZiwgdHJ1ZSk7CiB9CiAKIHN0YXRpYyBib29sIHJ0dzg5X2lzX2FueV92aWZfY29u
-bmVjdGVkX29yX2Nvbm5lY3Rpbmcoc3RydWN0IHJ0dzg5X2RldiAqcnR3ZGV2KQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9mdy5oIGIvZHJpdmVycy9uZXQv
-d2lyZWxlc3MvcmVhbHRlay9ydHc4OS9mdy5oCmluZGV4IDQxNTFjOWQ1NjZiZC4uOTlkYTY0Y2Yx
-YjAxIDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2Z3LmgK
-KysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9mdy5oCkBAIC0yMTAsMTIg
-KzIxMCw2IEBAIGVudW0gcnR3ODlfc2Nhbm9mbGRfbm90aWZ5X3JlYXNvbiB7CiAJUlRXODlfU0NB
-Tl9MRUFWRV9PUF9OT1RJRlksCiB9OwogCi1lbnVtIHJ0dzg5X3NjYW5vZmxkX3N0YXR1cyB7Ci0J
-UlRXODlfU0NBTl9TVEFUVVNfTk9USUZZLAotCVJUVzg5X1NDQU5fU1RBVFVTX1NVQ0NFU1MsCi0J
-UlRXODlfU0NBTl9TVEFUVVNfRkFJTCwKLX07Ci0KIGVudW0gcnR3ODlfY2hhbl90eXBlIHsKIAlS
-VFc4OV9DSEFOX09QRVJBVEUgPSAwLAogCVJUVzg5X0NIQU5fQUNUSVZFLApAQCAtMzk5NywxMCAr
-Mzk5MSw2IEBAIGVudW0gcnR3ODlfZndfb2ZsZF9oMmNfZnVuYyB7CiAJUlRXODlfRldfT0ZMRF9X
-QUlUX0NPTkQoUlRXODlfUEtUX09GTERfV0FJVF9UQUcocGt0X2lkLCBwa3Rfb3ApLCBcCiAJCQkJ
-SDJDX0ZVTkNfUEFDS0VUX09GTEQpCiAKLSNkZWZpbmUgUlRXODlfU0NBTk9GTERfV0FJVF9DT05E
-X0FERF9DSCBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgwLCBIMkNfRlVOQ19BRERfU0NBTk9GTERf
-Q0gpCi0KLSNkZWZpbmUgUlRXODlfU0NBTk9GTERfV0FJVF9DT05EX1NUQVJUIFJUVzg5X0ZXX09G
-TERfV0FJVF9DT05EKDAsIEgyQ19GVU5DX1NDQU5PRkxEKQotI2RlZmluZSBSVFc4OV9TQ0FOT0ZM
-RF9XQUlUX0NPTkRfU1RPUCBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgxLCBIMkNfRlVOQ19TQ0FO
-T0ZMRCkKICNkZWZpbmUgUlRXODlfU0NBTk9GTERfQkVfV0FJVF9DT05EX1NUQVJUIFJUVzg5X0ZX
-X09GTERfV0FJVF9DT05EKDAsIEgyQ19GVU5DX1NDQU5PRkxEX0JFKQogI2RlZmluZSBSVFc4OV9T
-Q0FOT0ZMRF9CRV9XQUlUX0NPTkRfU1RPUCBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgxLCBIMkNf
-RlVOQ19TQ0FOT0ZMRF9CRSkKIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVh
-bHRlay9ydHc4OS9tYWMuYyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvbWFj
-LmMKaW5kZXggM2ZlMDA0NmY2ZWFhLi44MzNjNjQ4NDQwYWIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-bmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvbWFjLmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxl
-c3MvcmVhbHRlay9ydHc4OS9tYWMuYwpAQCAtNDc2NSw3ICs0NzY1LDcgQEAgcnR3ODlfbWFjX2My
-aF9zY2Fub2ZsZF9yc3Aoc3RydWN0IHJ0dzg5X2RldiAqcnR3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAq
-c2tiLAogCQkJCXJ0dzg5X3dhcm4ocnR3ZGV2LCAiSFcgc2NhbiBmYWlsZWQ6ICVkXG4iLCByZXQp
-OwogCQkJfQogCQl9IGVsc2UgewotCQkJcnR3ODlfaHdfc2Nhbl9jb21wbGV0ZShydHdkZXYsIHZp
-ZiwgcnR3ZGV2LT5zY2FuX2luZm8uYWJvcnQpOworCQkJcnR3ODlfaHdfc2Nhbl9jb21wbGV0ZShy
-dHdkZXYsIHZpZiwgZmFsc2UpOwogCQl9CiAJCWJyZWFrOwogCWNhc2UgUlRXODlfU0NBTl9FTlRF
-Ul9PUF9OT1RJRlk6CkBAIC00ODg4LDEwICs0ODg4LDggQEAgcnR3ODlfbWFjX2MyaF9kb25lX2Fj
-ayhzdHJ1Y3QgcnR3ODlfZGV2ICpydHdkZXYsIHN0cnVjdCBza19idWZmICpza2JfYzJoLCB1MzIg
-bGUKIAkJZGVmYXVsdDoKIAkJCXJldHVybjsKIAkJY2FzZSBIMkNfRlVOQ19BRERfU0NBTk9GTERf
-Q0g6Ci0JCQljb25kID0gUlRXODlfU0NBTk9GTERfV0FJVF9DT05EX0FERF9DSDsKLQkJCWJyZWFr
-OwogCQljYXNlIEgyQ19GVU5DX1NDQU5PRkxEOgotCQkJY29uZCA9IFJUVzg5X1NDQU5PRkxEX1dB
-SVRfQ09ORF9TVEFSVDsKKwkJCWNvbmQgPSBSVFc4OV9GV19PRkxEX1dBSVRfQ09ORCgwLCBoMmNf
-ZnVuYyk7CiAJCQlicmVhazsKIAkJY2FzZSBIMkNfRlVOQ19TQ0FOT0ZMRF9CRToKIAkJCWNvbmQg
-PSBSVFc4OV9TQ0FOT0ZMRF9CRV9XQUlUX0NPTkRfU1RBUlQ7CkBAIC01MjYwLDMyICs1MjU4LDcg
-QEAgdm9pZCAoKiBjb25zdCBydHc4OV9tYWNfYzJoX3dvd19oYW5kbGVyW10pKHN0cnVjdCBydHc4
-OV9kZXYgKnJ0d2RldiwKIAlbUlRXODlfTUFDX0MySF9GVU5DX0FPQUNfUkVQT1JUXSA9IHJ0dzg5
-X21hY19jMmhfd293X2FvYWNfcnB0LAogfTsKIAotc3RhdGljIHZvaWQgcnR3ODlfbWFjX2MyaF9z
-Y2Fub2ZsZF9yc3BfYXRvbWljKHN0cnVjdCBydHc4OV9kZXYgKnJ0d2RldiwKLQkJCQkJICAgICAg
-c3RydWN0IHNrX2J1ZmYgKnNrYikKLXsKLQljb25zdCBzdHJ1Y3QgcnR3ODlfYzJoX3NjYW5vZmxk
-ICpjMmggPQotCQkoY29uc3Qgc3RydWN0IHJ0dzg5X2MyaF9zY2Fub2ZsZCAqKXNrYi0+ZGF0YTsK
-LQlzdHJ1Y3QgcnR3ODlfd2FpdF9pbmZvICpmd19vZmxkX3dhaXQgPSAmcnR3ZGV2LT5tYWMuZndf
-b2ZsZF93YWl0OwotCXN0cnVjdCBydHc4OV9jb21wbGV0aW9uX2RhdGEgZGF0YSA9IHt9OwotCXVu
-c2lnbmVkIGludCBjb25kOwotCXU4IHN0YXR1cywgcmVhc29uOwotCi0Jc3RhdHVzID0gbGUzMl9n
-ZXRfYml0cyhjMmgtPncyLCBSVFc4OV9DMkhfU0NBTk9GTERfVzJfU1RBVFVTKTsKLQlyZWFzb24g
-PSBsZTMyX2dldF9iaXRzKGMyaC0+dzIsIFJUVzg5X0MySF9TQ0FOT0ZMRF9XMl9SU04pOwotCWRh
-dGEuZXJyID0gc3RhdHVzICE9IFJUVzg5X1NDQU5fU1RBVFVTX1NVQ0NFU1M7Ci0KLQlpZiAocmVh
-c29uID09IFJUVzg5X1NDQU5fRU5EX1NDQU5fTk9USUZZKSB7Ci0JCWlmIChydHdkZXYtPmNoaXAt
-PmNoaXBfZ2VuID09IFJUVzg5X0NISVBfQkUpCi0JCQljb25kID0gUlRXODlfU0NBTk9GTERfQkVf
-V0FJVF9DT05EX1NUT1A7Ci0JCWVsc2UKLQkJCWNvbmQgPSBSVFc4OV9TQ0FOT0ZMRF9XQUlUX0NP
-TkRfU1RPUDsKLQotCQlydHc4OV9jb21wbGV0ZV9jb25kKGZ3X29mbGRfd2FpdCwgY29uZCwgJmRh
-dGEpOwotCX0KLX0KLQotYm9vbCBydHc4OV9tYWNfYzJoX2Noa19hdG9taWMoc3RydWN0IHJ0dzg5
-X2RldiAqcnR3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAqYzJoLAotCQkJICAgICAgdTggY2xhc3MsIHU4
-IGZ1bmMpCitib29sIHJ0dzg5X21hY19jMmhfY2hrX2F0b21pYyhzdHJ1Y3QgcnR3ODlfZGV2ICpy
-dHdkZXYsIHU4IGNsYXNzLCB1OCBmdW5jKQogewogCXN3aXRjaCAoY2xhc3MpIHsKIAlkZWZhdWx0
-OgpAQCAtNTMwMiw5ICs1Mjc1LDYgQEAgYm9vbCBydHc4OV9tYWNfYzJoX2Noa19hdG9taWMoc3Ry
-dWN0IHJ0dzg5X2RldiAqcnR3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAqYzJoLAogCQlzd2l0Y2ggKGZ1
-bmMpIHsKIAkJZGVmYXVsdDoKIAkJCXJldHVybiBmYWxzZTsKLQkJY2FzZSBSVFc4OV9NQUNfQzJI
-X0ZVTkNfU0NBTk9GTERfUlNQOgotCQkJcnR3ODlfbWFjX2MyaF9zY2Fub2ZsZF9yc3BfYXRvbWlj
-KHJ0d2RldiwgYzJoKTsKLQkJCXJldHVybiBmYWxzZTsKIAkJY2FzZSBSVFc4OV9NQUNfQzJIX0ZV
-TkNfUEtUX09GTERfUlNQOgogCQkJcmV0dXJuIHRydWU7CiAJCX0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvbWFjLmggYi9kcml2ZXJzL25ldC93aXJlbGVz
-cy9yZWFsdGVrL3J0dzg5L21hYy5oCmluZGV4IGE1ODBjYjcxOTIzMy4uNWE5NzY2YTM2ZmU0IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L21hYy5oCisrKyBi
-L2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvbWFjLmgKQEAgLTExNzIsOCArMTE3
-Miw3IEBAIHN0YXRpYyBpbmxpbmUgaW50IHJ0dzg5X2NoaXBfcmVzZXRfYmJfcmYoc3RydWN0IHJ0
-dzg5X2RldiAqcnR3ZGV2KQogCiB1MzIgcnR3ODlfbWFjX2dldF9lcnJfc3RhdHVzKHN0cnVjdCBy
-dHc4OV9kZXYgKnJ0d2Rldik7CiBpbnQgcnR3ODlfbWFjX3NldF9lcnJfc3RhdHVzKHN0cnVjdCBy
-dHc4OV9kZXYgKnJ0d2RldiwgdTMyIGVycik7Ci1ib29sIHJ0dzg5X21hY19jMmhfY2hrX2F0b21p
-YyhzdHJ1Y3QgcnR3ODlfZGV2ICpydHdkZXYsIHN0cnVjdCBza19idWZmICpjMmgsCi0JCQkgICAg
-ICB1OCBjbGFzcywgdTggZnVuYyk7Citib29sIHJ0dzg5X21hY19jMmhfY2hrX2F0b21pYyhzdHJ1
-Y3QgcnR3ODlfZGV2ICpydHdkZXYsIHU4IGNsYXNzLCB1OCBmdW5jKTsKIHZvaWQgcnR3ODlfbWFj
-X2MyaF9oYW5kbGUoc3RydWN0IHJ0dzg5X2RldiAqcnR3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAqc2ti
-LAogCQkJICB1MzIgbGVuLCB1OCBjbGFzcywgdTggZnVuYyk7CiBpbnQgcnR3ODlfbWFjX3NldHVw
-X3BoeWNhcChzdHJ1Y3QgcnR3ODlfZGV2ICpydHdkZXYpOwotLSAKMi4yNS4xCgo=
-
---_002_d6b9e886e3dd4d5e9c1f718448c455dbrealtekcom_--
+> Thanks.
+>
+> >
+> > 6.10.0-0.rc6.51.fc41.x86_64+debug with patch
+> > up  1:00
+> > root         269 13.1  0.0      0     0 ?        S    12:24   7:53 [ksw=
+apd0]
+> > up  2:00
+> > root         269 29.9  0.0      0     0 ?        R    12:24  36:02 [ksw=
+apd0]
+> > up  3:00
+> > root         269 37.8  0.0      0     0 ?        S    12:24  68:19 [ksw=
+apd0]
+> > up  4:05
+> > root         269 39.3  0.0      0     0 ?        R    12:24  96:40 [ksw=
+apd0]
+> > up  5:01
+> > root         269 38.8  0.0      0     0 ?        R    12:24 117:00 [ksw=
+apd0]
+> > up  6:00
+> > root         269 40.3  0.0      0     0 ?        S    12:24 145:24 [ksw=
+apd0]
+> >
+> > --
+> > Best Regards,
+> > Mike Gavrilov.
