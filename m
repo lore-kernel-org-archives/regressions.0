@@ -1,218 +1,135 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5000176ADB
-	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 12:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4A817DA30
+	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 21:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720011028; cv=none; b=OsANi9zcuJ/VG3OnuFCTuYnZlvdMtSivkyOeuGM8z328fOTNWkwp9CQfLtS7z1Y5wXDe+xoLPNk16JQddsd0XDcEPRmIF3po+Op0HGAK15giqzk1maB1ZdYjNZbFJXPIYAbXSHScOQT6wklrOdLrzj/dqe632ZvOh6XxhQiJkPA=
+	t=1720040857; cv=none; b=VEbglqzG91JtizxVkDWDd7vkTCADts6gz5HYSYz9v3kAANo8KmnoT5FFtJWzYQ4XEF3yfPf8YLjWhqSkfddA+jYcIiiApzKyI22Er6SUZbXy7dl7h5CoPBQdga4gdVM2lTbntvWvha2hR01HrEZPFRMbb0EWVvjNGPRNq6BH9VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720011028; c=relaxed/simple;
-	bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LR8jpTyuVvi/r6wShVpSV4FXQPOW3P8gxHX8cqsyyZXzk99BYZ104QThRZLMJEoEjRVnBORTXWZxxncWVRXqX645jjCqqv4UYDA7whAMDVg7eYbu6BvgFRoLOf1AX5PYvwsrtcuB+gFA3t78fFqNGOn9cNBJyp0gC0coFCJXe4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=JkNwwcz6; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=m5aSbOPw reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1720040857; c=relaxed/simple;
+	bh=d3j3Jt+5xROvPvBtgHKISgptkKKHnFIIctEGnJooIDw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NXSBJABV3fxpJIYM/0pkjb1ZtpT998GbcdLlAcz9z8m7ZbsZLKMEl6JE8VVP0yy0AUFtcOaOqesMkAiB8IN+rCIm1wfeOji3hiriwn0a2Yv3whaan05ui0R7gqIvgnpKRatnPphzMHHbt8XApiURYuMpBzGATpijdwwfBQ2QXVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2fcSoF4; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="JkNwwcz6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="m5aSbOPw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2fcSoF4"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-64b5617ba47so50739087b3.3
+        for <regressions@lists.linux.dev>; Wed, 03 Jul 2024 14:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1720011025; x=1751547025;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
-  b=JkNwwcz6Fjb+8ft0GfS5n4B4/BkNnLauTWgEuWGbZ5t72ArZdxU2D7Av
-   /pVKpykaXadiunU9z0NVNsWSNX21OeyzdmHjrjGKC9E0JmB8YtQXz4Hnt
-   vPDmTuxJREH+Cs1GaQJ97BwVF/O9mTpvx52TsWL40MLmnyu60QxJYPCyO
-   sv4gv8u0/q5Cp7w5cLV8NE2OpOAS+uytZoXTaUAvghd2ufUKWJHtzV5yP
-   ItevK2fD+xZAaijtgdwuqFxLwHq7JcWgKh65ATCkLiNTLCncvY88bJ1Yw
-   QjL7vrbkio5ECZWtyaZosCnITdAjK9OP1sFc702M2xY4hwGxJgzv+ogac
-   Q==;
-X-CSE-ConnectionGUID: UmoDDHTySqmy3obZG+emog==
-X-CSE-MsgGUID: E3uAuytsQTaT+bzp83WV6Q==
-X-IronPort-AV: E=Sophos;i="6.09,182,1716242400"; 
-   d="scan'208";a="37726950"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 03 Jul 2024 14:50:23 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A8D9F1667A7;
-	Wed,  3 Jul 2024 14:50:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1720011008;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=//htds0Gxwdc60HRVxJ4E2umUzYUbcipiNv8kYB+0lo=;
-	b=m5aSbOPwNA8DlMbJCgRwbV7PyXvKbpIn70J+te46DpME8mLBQXLbkBCA3WCZCI80xKnGVO
-	G529PFjz9zq3fawD3YcJZOz8jnRZlUbLcdebaC54mY/6kbsHDlZbzXi5uFEFKl9e3hF+IU
-	+09q+tzRlK4vNIoSIfGvhNm0q+YwVVmtry6xry4LoklhXWgM1RUbJ5Afr7uEPqYaFFF6tl
-	EfmpuBFBWvlH+vf6RIPBvXbX4FqenHjsICDuzh4dayXSDTwDbuPgkOPCxrsnXMjaimfITx
-	bB5dwwP+2Y3Ij/0sH2QgeNGWzs1fJLCrsX7WuMGQ/6B0+aW/lgvn4QEBpTct1A==
-Message-ID: <76faeb323353b584b310f2f1b53e9b2745d2f12c.camel@ew.tq-group.com>
-Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
- timer together with interrupts"
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Markus Schneider-Pargmann <msp@baylibre.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Chandrasekar Ramakrishnan
- <rcsekar@samsung.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Tony Lindgren
- <tony@atomide.com>, Judith Mendez <jm@ti.com>,  linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux@ew.tq-group.com, Linux regressions mailing list
- <regressions@lists.linux.dev>
-Date: Wed, 03 Jul 2024 14:50:04 +0200
-In-Reply-To: <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
-References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
-	 <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
-	 <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
-	 <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
-	 <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        d=gmail.com; s=20230601; t=1720040854; x=1720645654; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0SnXlEOPg3pOmAN6QKmu6lQOCIYqazBXlDQ6+OJY8hk=;
+        b=j2fcSoF44jh82vfua5YASbfP3npteDgu9RRZVMWYJhueqLdz2VuO3zLtbZYz8taOQS
+         6fJbIDghZHQPJzoOeIq3vSC4o/RWqxiQ05zwbg8pk2gSir5oe702eO1d2bn+oF45JZNh
+         1eubvpOYMqDfEuUISFcD1aEqe9hxFWFeSTGX1tUDjN4gJtTRmp45XJLDHWnN9BCvpaTk
+         mXIQsxDmPLsvXwNQdEJj5W3hK1AtA8nPpRymTIjCrtX34hooXDmMGbStv4sldyE/tELq
+         ZVMSjjEIalg/H/uFScBkl+X/TLE+K5+lpBstYThyz8wmwwBCuiVt0hKzEliCGwbUZp2M
+         8QEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720040854; x=1720645654;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0SnXlEOPg3pOmAN6QKmu6lQOCIYqazBXlDQ6+OJY8hk=;
+        b=eSjQMdjfJVRj2/iiYsuG9gcY9eMTlkDAX2OD4BD4EizE/i43iCZx2N4t4bcCMXobat
+         w6oe1JTRM/YdSHIbO8siNDtNATuRTZaoKRimkSTMfm6nGdHCns6M4+5ljuHUkZ4qvF1X
+         vO6OIo0bKaVb9Bg1iXzROtKdRhh1vffeFbxIuSTPgBy000FpYHN+Jr2OveNBJLVf7w90
+         4m1PGubEkTO2pZQE9fgh3Y7HWswpg0Str46Us+rN+uz+gw6BqXIBpHAddzKQ5OWqy0zG
+         PoC60bcROo1d1A9u3suq8CX3cWexlijhXgyovFhbfrgZFm7ctMHXu2/teSWkIaulPWos
+         mhHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPg+TF9d7nB2D5V2TK8pvguqCLY264PvM0PIBrh6bhSjdp0xkQa+Fz8X6qTD8/vUWHsMRGBF39ASiGopxKcd471FNCSBnD23f+M5o=
+X-Gm-Message-State: AOJu0YycJo5q/oGy9wX4Bpds9OWjRKYQVlyAB+Sl1R8w8WLWdcEwaWNC
+	rWFxI+hoGmNC++yzyh1ZMEDErNN0KmUBunmOEdZA0gCi9gzAMKb4LfB+iOq+4EiHsP6PIu3HcVM
+	g66Z5MGUw129JRBCNeKZrowmfmV4=
+X-Google-Smtp-Source: AGHT+IHRgvANBePYdyGn36Qed6OqdXiePmvi5R5cRU25K/Y8UM3ov1wQca6P6l6iyyoSORmTD27KWeJ38mnlX6Y1Yno=
+X-Received: by 2002:a05:690c:d95:b0:64b:44f2:70fb with SMTP id
+ 00721157ae682-64c7350dad9mr141355007b3.41.1720040854422; Wed, 03 Jul 2024
+ 14:07:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com> <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+In-Reply-To: <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+From: Andrea Gelmini <andrea.gelmini@gmail.com>
+Date: Wed, 3 Jul 2024 23:07:17 +0200
+Message-ID: <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2024-07-02 at 12:03 +0200, Matthias Schiffer wrote:
-> On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Le=
-emhuis) wrote:
-> >=20
-> >=20
-> > On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
-> > > On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Th=
-orsten Leemhuis) wrote:
-> > > > [CCing the regression list, as it should be in the loop for regress=
-ions:
-> > > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> > > >=20
-> > > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posti=
-ng
-> > > > for once, to make this easily accessible to everyone.
-> > > >=20
-> > > > Hmm, looks like there was not even a single reply to below regressi=
-on
-> > > > report. But also seens Markus hasn't posted anything archived on Lo=
-re
-> > > > since about three weeks now, so he might be on vacation.
-> > > >=20
-> > > > Marc, do you might have an idea what's wrong with the culprit? Or d=
-o we
-> > > > expected Markus to be back in action soon?
-> > >=20
-> > > Great, ping here.
-> >=20
-> > Thx for replying!
-> >=20
-> > > @Matthias: Thanks for debugging and sorry for breaking it. If you hav=
-e a
-> > > fix for this, let me know. I have a lot of work right now, so I am no=
-t
-> > > sure when I will have a proper fix ready. But it is on my todo list.
-> >=20
-> > Thx. This made me wonder: is "revert the culprit to resolve this quickl=
-y
-> > and reapply it later together with a fix" something that we should
-> > consider if a proper fix takes some time? Or is this not worth it in
-> > this case or extremely hard? Or would it cause a regression on it's own
-> > for users of 6.9?
-> >=20
-> > Ciao, Thorsten
->=20
-> Hi,
->=20
-> I think on 6.9 a revert is not easily possible (without reverting several=
- other commits adding new
-> features), but it should be considered for 6.6.
->=20
-> I don't think further regressions are possible by reverting, as on 6.6 th=
-e timer is only used for
-> platforms without an m_can IRQ, and on these platforms the current behavi=
-or is "the kernel
-> reproducibly deadlocks in atomic context", so there is not much room for =
-making it worse.
->=20
-> Like Markus, I have writing a proper fix for this on my TODO list, but I'=
-m not sure when I can get
-> to it - hopefully next week.
->=20
-> Best regards,
-> Matthias
+Il giorno mer 3 lug 2024 alle ore 13:59 Filipe Manana
+<fdmanana@kernel.org> ha scritto:
+>
+> I'm collecting all the patches in this branch:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/?h=em_shrinker_6.10
+>
+> They apply cleanly to 6.10-rc.
 
-A small update from my side:
+Yeap, as I wrote before, same problem here.
+I tried the branch over today Linus git (master), and nothing changed.
+But, good news, I can provide a few more details.
 
-I had a short look into the issue today, but I've found that I don't quite =
-grasp the (lack of)
-locking in the m_can driver. The m_can_classdev fields active_interrupts an=
-d irqstatus are accessed
-from a number of=C2=A0different contexts:
+So, no need to use restic. On my laptop (nvme + ssd, 32GB RAM, Lenovo T480):
+a) boot up;
+b) just open Window Maker and two Konsole, one with htop (with a few
+tricks to view PSI and so on);
+c) on one terminal run: tar cp /home/ | pv > /dev/null
+d) wait less than one minutes, and I see "PSI full memory" increase
+more than 50, memory pressure on swap, and two CPU threads (out of
+eight) busy at  100%;
+e) system get sluggish (on htop I see no process eating CPU);
+f) if I kill tar, PSI memory keeps going up and down, so the threads.
+After lots of minutes, everything get back to no activity. In these
+minutes I see by iotop there's no activity nor on ssd or nvme. Until
+the end, the system is unresponsive, oh well, really slow.
 
-- active_interrupts is *mostly* read and written from the ISR/hrtimer callb=
-ack, but also from
-m_can_start()/m_can_stop() and (in error paths) indirectly from m_can_poll(=
-) (NAPI callback). It is
-not clear to me whether start/stop/poll could race with the ISR on a differ=
-ent CPU. Besides being
-used for ndo_open/stop, m_can_start/stop also happen from PM callbacks.
-- irqstatus is written from the ISR (or hrtimer callback) and read from m_c=
-an_poll() (NAPI callback)
+My / is BTRFS. Not many years of aging. Usually with daily snapshots
+and forced compression.
 
-Is this correct without explicit sychronization, or should there be some lo=
-cking or atomic for these
-accesses?
+Less than 4.000.000 files on the system. Usually .git and source code.
 
-Best regards,
-Matthias
+root@glen:/home/gelma# btrfs filesystem usage /
+Overall:
+   Device size:                   3.54TiB
+   Device allocated:              2.14TiB
+   Device unallocated:            1.40TiB
+   Device missing:                  0.00B
+   Device slack:                    0.00B
+   Used:                          2.03TiB
+   Free (estimated):              1.50TiB      (min: 1.50TiB)
+   Free (statfs, df):             1.50TiB
+   Data ratio:                       1.00
+   Metadata ratio:                   1.00
+   Global reserve:              512.00MiB      (used: 0.00B)
+   Multiple profiles:                  no
 
+Data,single: Size:2.12TiB, Used:2.02TiB (95.09%)
+  /dev/mapper/sda6_crypt          2.12TiB
 
+Metadata,single: Size:16.00GiB, Used:14.73GiB (92.04%)
+  /dev/mapper/sda6_crypt         16.00GiB
 
->=20
->=20
->=20
-> >=20
-> > > > On 18.06.24 18:12, Matthias Schiffer wrote:
-> > > > > Hi Markus,
-> > > > >=20
-> > > > > we've found that recent kernels hang on the TI AM62x SoC (where n=
-o m_can interrupt is available and
-> > > > > thus the polling timer is used), always a few seconds after the C=
-AN interfaces are set up.
-> > > > >=20
-> > > > > I have bisected the issue to commit a163c5761019b ("can: m_can: S=
-tart/Cancel polling timer together
-> > > > > with interrupts"). Both master and 6.6 stable (which received a b=
-ackport of the commit) are
-> > > > > affected. On 6.6 the commit is easy to revert, but on master a lo=
-t has happened on top of that
-> > > > > change.
-> > > > >=20
-> > > > > As far as I can tell, the reason is that hrtimer_cancel() tries t=
-o cancel the timer synchronously,
-> > > > > which will deadlock when called from the hrtimer callback itself =
-(hrtimer_callback -> m_can_isr ->
-> > > > > m_can_disable_all_interrupts -> hrtimer_cancel).
-> > > > >=20
-> > > > > I can try to come up with a fix, but I think you are much more fa=
-miliar with the driver code. Please
-> > > > > let me know if you need any more information.
-> > > > >=20
-> > > > > Best regards,
-> > > > > Matthias
-> > > > >=20
-> > > > >=20
-> > >=20
-> > >=20
->=20
+System,single: Size:32.00MiB, Used:320.00KiB (0.98%)
+  /dev/mapper/sda6_crypt         32.00MiB
 
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+Unallocated:
+  /dev/mapper/sda6_crypt          1.40TiB
