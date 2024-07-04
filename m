@@ -1,108 +1,231 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E1644C8C
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 17:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542DF39FC1
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 17:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720113721; cv=none; b=PAWMj7UgQGwBnVSyfqJL44V+F1xKo73Y/O0JOPTwMHeT6CefZ2X9csuY11ujJGvoXwtA4Vbn0d5KnleAZ32uzTA4ZJpyRUIpleaV7QlyqEIMn8HIffCoIxUY/TSHYCY0a+xhPU63hFbwjDJ8VmRVq6Tgw05B03kVnn4J7BSbpjc=
+	t=1720113956; cv=none; b=auIeOrwlhX7lIvW6IBfexyNrLc+SZuv815/cY70ylUSQZ3bpTvxA0xhE6uSAlM+lvVCKZwrG0AxEIYz3pqc3JTjfpz71+PUmiB8Lqq9ciTb8N31kXI0nCViFbNqKjWC69rKBGRDQfgQdG8neE1T7Xd6vVeb9ao3gIzoUNTXiuu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720113721; c=relaxed/simple;
-	bh=N5Rrw2MRuk1dzaCiuF3YDvfjUvsE9TiN6DdBtTtQZ8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a1qTv6wdizsGbeljo5/hf56xM9vFc4J1qEUwSNrfmBjeItrQujFfXfgUbed8gHNH+gQ7nuxIR9Q0aSUC6XZJF5bV9RWMNUFrpYW60LJlMJmiWfT7QvoUW1vZxYkBZ/oEjp5H9x4KOScspzFIYp3QT3/3rBvwfGO+Wu+nSBZZCaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MH7Sw6W+; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720113956; c=relaxed/simple;
+	bh=ivjABJQIZ/XjKkNr92Gnumgb4BuLwGJuayEUON94iIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G31g3wpmFRBnABufGinK0CdvXYZCzF9N49Dbv/J0KiW2ogealUcEmmLpLnjA4cMZEwkghde0nUOxP0m9pcuOt8hlFFAUM/tjlBu1i84yF/yRW8a92vREDckPvut0cXrx9YRSdcEtCWQkbIp9RtUbTSGsYvAAACkXk+NUjbVTDWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGR6Sz06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH7Sw6W+"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42562e4b5d1so5740205e9.1
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 10:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720113718; x=1720718518; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xbMuRw1sQkRSiFh279rXdYSfGjfdwITvelsunE8eQ+o=;
-        b=MH7Sw6W+MkENuxm40pzLfYpX+1lthYJw2EWvUpfDJEJfXB/0fpIslcbN5ZwZVTrPtv
-         s91VfApU32JBtnFilRCwE8zjFiQmATenXNXXtrPQ0dnAnOmQzgktTiGcvlLxB7ey5Uep
-         POtyp3DdPxaDfQIobIqBGubF+5qJGoaOnng5D7ZCO+jAorjjN2RuECMRCcDC26l1YM0M
-         DE23c4P+euAt5wlk7mwP7yvQ84QME6xiJHuzu9hf8ptEFrWwcPpP3LUJK/SizXamC1ym
-         JKz8ORQDdvMqhuiFPWGJl3Bjhy2H49obtVTPkF+SdkXKHX9Dttz/12z904EKQzHlVdm+
-         9YdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720113718; x=1720718518;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xbMuRw1sQkRSiFh279rXdYSfGjfdwITvelsunE8eQ+o=;
-        b=bgExx1M0eoZeoKnVbnehKAOES+J8iDf2Wuzpsx51chmHJq7L5Ft/CiL6bluG4p4j02
-         vkY+XXLN7oqW7m/AmveVhyjoGvpTP9nVSfTseQBksJ/GahEAOgfedulQy9FXh8hbLyAP
-         HR068zYoBaifAecvFxnf6Yo452JFvu4weSsYJSAINkqg181b+jqmu6e1vc23ht/RM5qP
-         G5M5ISdSUnzgZMsIDaIeGpbFECtPME04ytuQa/8486yyV9ZLVftrCfhIDPDmcmIVmA0H
-         8NshncAIJITUds0WzpPVH3GbPV44F9BrVmOFJg6W40Yau9kPY8PYXztltfz37KMkipS1
-         mjyg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+PsLxsqOIOq46GifP6UY5Geq7STMxCjyS5In4O9wAWblTkyy2ttsoB3YmC6myo7ofQLSXfQ0tUldkXjRw/5Qlk6aZB35YgWEktIY=
-X-Gm-Message-State: AOJu0YyHoTM82UTVpCyaKuAfy0gxGZtva/rFVuosJgse1D/31zczx5il
-	7/vQaF7umuW2FHNYWBhYVLE4M4Ug/wKXCD+xJctyNuv83MdLRsiX
-X-Google-Smtp-Source: AGHT+IGdluLbnk0hTBC/jWbHuttDDQoIzwdZNIhKDlVq3XycWj2L2MDyVC25gNmwdtGq+W6484Ov3g==
-X-Received: by 2002:adf:e94a:0:b0:367:88c2:23a5 with SMTP id ffacd0b85a97d-3679dd2b344mr1283829f8f.27.1720113717962;
-        Thu, 04 Jul 2024 10:21:57 -0700 (PDT)
-Received: from skbuf ([188.25.110.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367947ddebfsm4574672f8f.34.2024.07.04.10.21.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 10:21:57 -0700 (PDT)
-Date: Thu, 4 Jul 2024 20:21:54 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev
-Subject: Re: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address and
- issue warning
-Message-ID: <20240704172154.opqyrv2mfgbxj7ce@skbuf>
-References: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
- <d3ac5584-8e52-46e0-b690-ad5faa1ede61@arinc9.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGR6Sz06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B48CC32781
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 17:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720113956;
+	bh=ivjABJQIZ/XjKkNr92Gnumgb4BuLwGJuayEUON94iIo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MGR6Sz06/uFgdzWis82KjYXYZx7aygIcldk0nNZ1ZTUYzL0UpQ9EiUAkyNHuNIoGp
+	 i5vBWqDjqPZt3ive3RD7OUc4W415x1hcrZmpUpIuGyYeXMbWbBQ/fRO5XQEkLzaZJV
+	 qh6cat5pxD3TOIy+8g1KwaKBkgO9tGEdKFIs3Ied+kyyo3xHbVK2db+VYydOeBL3aN
+	 iEePqdAwhs6C6RmF77IFV6egA0UhptiZIf2zIEJXYxu30B6nRCXaHRrfvZtyAe87jB
+	 ZN7Z0aBlGy91pQkpyYqdUJkfR8IPdfGXDeIoVl/e42N4T3vKdRLWa+YkT8LTLFmf7q
+	 5Djx6ZnMXo/kw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a77b4387302so110985466b.1
+        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 10:25:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUaFCQrUsseXto8F3U9YVUMUGV5YNo1Hr7AVKnobvo+6Y+p3/NC30y+HSkGVOtfnBsyy4aLg5GN6qI68GDi0OhfQRoLyFS27RX2W2U=
+X-Gm-Message-State: AOJu0YzdC9jpALD/GIg0br9lPLf0fHluP6sz/enJVaQhd2kNo0x/LCVo
+	TkAIwuKmXS8gIBIKouOs3WMu3y8NDDeuSRh781YUO8Looy5RskVr9sKXvmjKvCss/n4AvOD1m9Y
+	w+zbdiOB1rm2UVw/5kQfSXaJV2AQ=
+X-Google-Smtp-Source: AGHT+IHCaoSwecixF8KG9KKvBxFl5NV3BQBYQCNzIjG/bYJzqUiPJlG5EdctlAZ6Hm67lBypQxg9Uf/fgDEdfZlK8N0=
+X-Received: by 2002:a17:907:97c8:b0:a72:8c15:c73e with SMTP id
+ a640c23a62f3a-a77ba7099dbmr162064966b.55.1720113954579; Thu, 04 Jul 2024
+ 10:25:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d3ac5584-8e52-46e0-b690-ad5faa1ede61@arinc9.com>
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com> <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+In-Reply-To: <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Thu, 4 Jul 2024 18:25:17 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+Message-ID: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Andrea Gelmini <andrea.gelmini@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 03, 2024 at 10:03:09AM +0300, Arınç ÜNAL wrote:
-> Works on standalone MT7530, MT7621's MCM MT7530, and MT7531. From MT7621's
-> MCM MT7530:
-> 
-> [    1.357287] mt7530-mdio mdio-bus:1f: MT7530 adapts as multi-chip module
+On Thu, Jul 4, 2024 at 3:48=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmail=
+.com> wrote:
+>
+> Il giorno gio 4 lug 2024 alle ore 15:47 Andrea Gelmini
+> <andrea.gelmini@gmail.com> ha scritto:
+> > I send you everything when I collect enough data.
+>
+> Here we are.
+>
+> Kernel rc6+branch:
+>     Output of bfptrace:
+>     https://pastebin.com/P9RFp5mg
 
-Why is the device corresponding to the first print located at address 1f,
-then 0?
+So a couple interesting things here, which we didn't get in the short
+capture from Mikhail:
 
-> [    1.364065] mt7530-mdio mdio-bus:00: [Firmware Warn]: impossible switch MDIO address in device tree, assuming 31
-> [    1.374303] mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -14
-> [...]
-> [    1.448370] mt7530-mdio mdio-bus:1f: MT7530 adapts as multi-chip module
-> [    1.477676] mt7530-mdio mdio-bus:1f: configuring for fixed/rgmii link mode
-> [    1.485687] mt7530-mdio mdio-bus:1f: Link is Up - 1Gbps/Full - flow control rx/tx
-> [    1.493480] mt7530-mdio mdio-bus:1f: configuring for fixed/trgmii link mode
-> [    1.502680] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=17)
-> [    1.513620] mt7530-mdio mdio-bus:1f: Link is Up - 1Gbps/Full - flow control rx/tx
-> [    1.519671] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=18)
-> [    1.533072] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=19)
-> [    1.545042] mt7530-mdio mdio-bus:1f lan4 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=20)
-> [    1.557031] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=21)
+1) There's apparently multiple tasks entering the shrinker at the same time=
+:
+     kswapd0, Chrome_ChildIOT, Chrome_IOThread, chrome, Xorg.
+
+2) In some cases we get very large negative numbers for the number of
+extent maps to scan.
+    This shouldn't happen and either our own btrfs counter might have
+overflowed or some other bug,
+    or the super block's shrinker is being called with sc->nr_to_scan
+negative, and outside btrfs' control,
+    and it seems outside of control of the VFS's shrinker callback
+(see fs/super.c:super_cache_scan()).
+
+>
+>     Recording of tar session: (summary: start fast, then flipping super s=
+low)
+>     https://asciinema.org/a/BxYI83TkrlOhEe42IWXNY135D
+>
+>     Recording of htop session: (summary: PSI high and two threads at 100%=
+)
+>     https://asciinema.org/a/ZwGSepZZ8TSpFfPssACUUXcCB
+
+Ok, so maybe I missed it, but I haven't kswapd0 in there, or nothing
+taking 100% CPU.
+Maybe it was just Mikhail running into that?
+
+I was looking at the memory PSI and I never noticed it going over 60%.
+As for cpu and IO PSI, for cpu it was always low, under 3% from what
+I've seen and for IO even lower than that, very close to 0%.
+
+So I'm surprised that you get an unresponsive desktop.
+
+>
+>
+> Kernel 6.6.36:
+>     Recording of tar session: (summary: tar always fast)
+>     https://asciinema.org/a/a6dOkbjyPFkkQ5aNTaRiFD3H8
+>
+>     Recording of htop session: (summary: no threads and PSI load)
+>     https://asciinema.org/a/mFsypWzHfSdsjrIQf8zpzNpKo
+
+Interestingly, here the memory PSI stays at 0% or very close to that,
+it never reaches anything close to the 60%.
+
+>
+> If you need to run for longer time, I can do it in the weekend.
+> If you need dump of my BTRFS fs, no problem, but I need 'btrfs image
+> -s" working (point is: scrambling filenames).
+
+Ok, so I haven been delaying my reply because I kept accumulating
+things for you (or Mikhail) to try, and avoid sending several messages
+with very little.
+
+So first thing, I tried reproducing your scenario like you described
+in a previous message using tar:
+
+On a fresh btrfs filesystem, I cloned Linus' kernel tree into /mnt/git/linu=
+x
+Compiled a kernel.
+Then copied the tree 3 times like this:
+
+cd /mnt/git
+cp --reflink=3Dnever -r linux linux2
+cp --reflink=3Dnever -r linux linux3
+cp --reflink=3Dnever -r linux linux4
+
+The total size of /mnt/git was 62G (as reported by:  du -hs /mnt/git).
+
+Than I ran:
+
+cd /mnt/git
+tar cp git/ | pv > /dev/null
+
+With htop in parallel, the bpftrace script, and since my htop version
+doesn't show PSI information (probably an older version than yours), I
+kept monitoring PSI like this:
+
+watch -d -n 3 'echo "cpu:\n"; cat /proc/pressure/cpu ; echo
+"\nmemory:\n" ; cat /proc/pressure/memory ; echo "\nio:\n" ; cat
+/proc/pressure/io'
+
+Nothing went out of the roof, the machine was always responsive, never
+seen kswapd0 anywhere near the top, and the process using most CPU was
+tar (and always under 30%).
+PSI had all values low.
+
+The shrinker was being triggered very often, for small numbers (mostly
+under 1000, and most of the time much less than that), but I never had
+those large negative numbers nor apparently different tasks entering
+into it concurrently.
+It took a few seconds at most in each run.
+
+I also tried monitoring while doing the "cp --reflink=3Dnever -r"
+commands and while PSI often peaked to 92%, 93%, the system was always
+responsive (and such IO PSI seems reasonable since we are doing a lot
+of read and write IO).
+
+So several different things to try here:
+
+1) First let's check that the problem is really a consequence of the shrink=
+er.
+    Try this patch:
+
+    https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1ae3a=
+c4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
+
+    This disables the shrinker. This is just to confirm if I'm looking
+in the right direction, if your problem is the same as Mikhail's and
+double check his bisection.
+
+2) Then drop that patch that disables the shrinker.
+     With all the previous 4 patches applied, apply this one on top of them=
+:
+
+     https://gist.githubusercontent.com/fdmanana/9cea16ca56594f8c7e20b67dc6=
+6c6c94/raw/557bd5f6b37b65d210218f8da8987b74bfe5e515/gistfile1.txt
+
+     The goal here is to see if the extent map eviction done by the
+shrinker is making reads from other tasks too slow, and check if
+that's what0s making your system unresponsive.
+
+3) Then drop the patch from step 2), and on top of the previous 4
+patches from my git tree, apply this one:
+
+     https://gist.githubusercontent.com/fdmanana/a7c9c2abb69c978cf5b80c2f78=
+4243d5/raw/b4cca964904d3ec15c74e36ccf111a3a2f530520/gistfile1.txt
+
+     This is just to confirm if we do have concurrent calls to the
+shrinker, as the tracing seems to suggest, and where the negative
+numbers come from.
+     It also helps to check if not allowing concurrent calls to it, by
+skipping if it's already running, helps making the problems go away.
+
+>
+> Thanks a lot,
+
+Thanks a lot to you and Mikhail, not just for the reporting but also
+to apply patches, compile a kernel, run the tests and do all those
+valuable observations which are all very time consuming.
+
+Thanks!
+
+> Gelma
