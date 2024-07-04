@@ -1,135 +1,76 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4A817DA30
-	for <regressions@lists.linux.dev>; Wed,  3 Jul 2024 21:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145AD10A19;
+	Thu,  4 Jul 2024 02:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720040857; cv=none; b=VEbglqzG91JtizxVkDWDd7vkTCADts6gz5HYSYz9v3kAANo8KmnoT5FFtJWzYQ4XEF3yfPf8YLjWhqSkfddA+jYcIiiApzKyI22Er6SUZbXy7dl7h5CoPBQdga4gdVM2lTbntvWvha2hR01HrEZPFRMbb0EWVvjNGPRNq6BH9VQ=
+	t=1720059191; cv=none; b=ljGdVgrtmLXQu0u6PtZq39IWaRb4DfXo26Dh+XW4uvBzYCvWyJlC7EDLmK57YdFfmRjNL1UgiFVcPojdwvS8Bg2C5m9BglpovxRV1kMD5FXgE66+pRu/lj9T8njE3O1zO+3vA4v4llEmkUQYlO+GVonb17Z3iv9gw3JASfmYWGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720040857; c=relaxed/simple;
-	bh=d3j3Jt+5xROvPvBtgHKISgptkKKHnFIIctEGnJooIDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NXSBJABV3fxpJIYM/0pkjb1ZtpT998GbcdLlAcz9z8m7ZbsZLKMEl6JE8VVP0yy0AUFtcOaOqesMkAiB8IN+rCIm1wfeOji3hiriwn0a2Yv3whaan05ui0R7gqIvgnpKRatnPphzMHHbt8XApiURYuMpBzGATpijdwwfBQ2QXVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2fcSoF4; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720059191; c=relaxed/simple;
+	bh=7aPBsszqMYduEcu5a5wXNLYXdxnU8/yyohMqYvXO56c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BlX9YaiMGhwf76g0LszQKjHiidpp7OUsvFjHukRNF7ltkRP7ErkVG5LUJhIEqoCtJt2sAKlVusMyLUtRaQAvNyqLcBdhiorWO+HihYclFWsqrt1LyUfqz5iBQBhRQnEoOoJ9BoWPqyzwGU9HxOAqdTBvTcKNqAeJdgARK3LeOds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rH8a5j8F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2fcSoF4"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-64b5617ba47so50739087b3.3
-        for <regressions@lists.linux.dev>; Wed, 03 Jul 2024 14:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720040854; x=1720645654; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SnXlEOPg3pOmAN6QKmu6lQOCIYqazBXlDQ6+OJY8hk=;
-        b=j2fcSoF44jh82vfua5YASbfP3npteDgu9RRZVMWYJhueqLdz2VuO3zLtbZYz8taOQS
-         6fJbIDghZHQPJzoOeIq3vSC4o/RWqxiQ05zwbg8pk2gSir5oe702eO1d2bn+oF45JZNh
-         1eubvpOYMqDfEuUISFcD1aEqe9hxFWFeSTGX1tUDjN4gJtTRmp45XJLDHWnN9BCvpaTk
-         mXIQsxDmPLsvXwNQdEJj5W3hK1AtA8nPpRymTIjCrtX34hooXDmMGbStv4sldyE/tELq
-         ZVMSjjEIalg/H/uFScBkl+X/TLE+K5+lpBstYThyz8wmwwBCuiVt0hKzEliCGwbUZp2M
-         8QEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720040854; x=1720645654;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0SnXlEOPg3pOmAN6QKmu6lQOCIYqazBXlDQ6+OJY8hk=;
-        b=eSjQMdjfJVRj2/iiYsuG9gcY9eMTlkDAX2OD4BD4EizE/i43iCZx2N4t4bcCMXobat
-         w6oe1JTRM/YdSHIbO8siNDtNATuRTZaoKRimkSTMfm6nGdHCns6M4+5ljuHUkZ4qvF1X
-         vO6OIo0bKaVb9Bg1iXzROtKdRhh1vffeFbxIuSTPgBy000FpYHN+Jr2OveNBJLVf7w90
-         4m1PGubEkTO2pZQE9fgh3Y7HWswpg0Str46Us+rN+uz+gw6BqXIBpHAddzKQ5OWqy0zG
-         PoC60bcROo1d1A9u3suq8CX3cWexlijhXgyovFhbfrgZFm7ctMHXu2/teSWkIaulPWos
-         mhHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPg+TF9d7nB2D5V2TK8pvguqCLY264PvM0PIBrh6bhSjdp0xkQa+Fz8X6qTD8/vUWHsMRGBF39ASiGopxKcd471FNCSBnD23f+M5o=
-X-Gm-Message-State: AOJu0YycJo5q/oGy9wX4Bpds9OWjRKYQVlyAB+Sl1R8w8WLWdcEwaWNC
-	rWFxI+hoGmNC++yzyh1ZMEDErNN0KmUBunmOEdZA0gCi9gzAMKb4LfB+iOq+4EiHsP6PIu3HcVM
-	g66Z5MGUw129JRBCNeKZrowmfmV4=
-X-Google-Smtp-Source: AGHT+IHRgvANBePYdyGn36Qed6OqdXiePmvi5R5cRU25K/Y8UM3ov1wQca6P6l6iyyoSORmTD27KWeJ38mnlX6Y1Yno=
-X-Received: by 2002:a05:690c:d95:b0:64b:44f2:70fb with SMTP id
- 00721157ae682-64c7350dad9mr141355007b3.41.1720040854422; Wed, 03 Jul 2024
- 14:07:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rH8a5j8F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7D4C2BD10;
+	Thu,  4 Jul 2024 02:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720059190;
+	bh=7aPBsszqMYduEcu5a5wXNLYXdxnU8/yyohMqYvXO56c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rH8a5j8FtGcFZikQ/khrBlA/nEUjRassUOXtiiwFAoL18Wak0TVJP+LGuumESiKEh
+	 Kbs+ZSo5/m1AxakP01xHVU0pLFpoJ2oqsWRnUjDh1CGch3Pz0JRa+8Xk3QQsnRv0Cd
+	 QmjaFB5XedvS4ykjbEPZcT4BtDpk+chwbTyW2VbNGYZZRioNgLzfJNi3lZQQhmmeyk
+	 5kG1dGRitMwqwLgV6H102nBtdNawaBUmj2nMODjHr28MCSOCVfpfL/uMuezp4G/IX4
+	 DO5XGcZSQlfXqs+Fh865Y2FOjnFtAeMrJc73HYKq94CJS5eCB2WCbQcuG2WX96wlqx
+	 8MkVKPsgGNxig==
+Date: Wed, 3 Jul 2024 19:13:08 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>, DENG Qingfang
+ <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Andrew Lunn
+ <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Landen Chao
+ <Landen.Chao@mediatek.com>, Frank Wunderlich <linux@fw-web.de>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ regressions@lists.linux.dev
+Subject: Re: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address
+ and issue warning
+Message-ID: <20240703191308.3703099c@kernel.org>
+In-Reply-To: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
+References: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com> <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
-In-Reply-To: <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
-From: Andrea Gelmini <andrea.gelmini@gmail.com>
-Date: Wed, 3 Jul 2024 23:07:17 +0200
-Message-ID: <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Il giorno mer 3 lug 2024 alle ore 13:59 Filipe Manana
-<fdmanana@kernel.org> ha scritto:
->
-> I'm collecting all the patches in this branch:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/?h=em_shrinker_6.10
->
-> They apply cleanly to 6.10-rc.
+On Wed, 3 Jul 2024 00:44:28 +0100 Daniel Golle wrote:
+> +	/* The corrected address is calculated as stated below:
+> +	 * 0~6   -> 31
+> +	 * 8~14  -> 7
+> +	 * 16~22 -> 15
+> +	 * 24~30 -> 23
+> +	 */
+> +return ((((phy_addr - MT7530_NUM_PORTS) & ~MT7530_NUM_PORTS) % PHY_MAX_ADDR) +
+> +	MT7530_NUM_PORTS) & (PHY_MAX_ADDR - 1);
 
-Yeap, as I wrote before, same problem here.
-I tried the branch over today Linus git (master), and nothing changed.
-But, good news, I can provide a few more details.
+nit: the return statement lacks indentation
 
-So, no need to use restic. On my laptop (nvme + ssd, 32GB RAM, Lenovo T480):
-a) boot up;
-b) just open Window Maker and two Konsole, one with htop (with a few
-tricks to view PSI and so on);
-c) on one terminal run: tar cp /home/ | pv > /dev/null
-d) wait less than one minutes, and I see "PSI full memory" increase
-more than 50, memory pressure on swap, and two CPU threads (out of
-eight) busy at  100%;
-e) system get sluggish (on htop I see no process eating CPU);
-f) if I kill tar, PSI memory keeps going up and down, so the threads.
-After lots of minutes, everything get back to no activity. In these
-minutes I see by iotop there's no activity nor on ssd or nvme. Until
-the end, the system is unresponsive, oh well, really slow.
+but also based on the comment, isn't it:
 
-My / is BTRFS. Not many years of aging. Usually with daily snapshots
-and forced compression.
+	return (round_down(phy_addr, MT7530_NUM_PORTS + 1) - 1)	& (PHY_MAX_ADDR - 1);
 
-Less than 4.000.000 files on the system. Usually .git and source code.
-
-root@glen:/home/gelma# btrfs filesystem usage /
-Overall:
-   Device size:                   3.54TiB
-   Device allocated:              2.14TiB
-   Device unallocated:            1.40TiB
-   Device missing:                  0.00B
-   Device slack:                    0.00B
-   Used:                          2.03TiB
-   Free (estimated):              1.50TiB      (min: 1.50TiB)
-   Free (statfs, df):             1.50TiB
-   Data ratio:                       1.00
-   Metadata ratio:                   1.00
-   Global reserve:              512.00MiB      (used: 0.00B)
-   Multiple profiles:                  no
-
-Data,single: Size:2.12TiB, Used:2.02TiB (95.09%)
-  /dev/mapper/sda6_crypt          2.12TiB
-
-Metadata,single: Size:16.00GiB, Used:14.73GiB (92.04%)
-  /dev/mapper/sda6_crypt         16.00GiB
-
-System,single: Size:32.00MiB, Used:320.00KiB (0.98%)
-  /dev/mapper/sda6_crypt         32.00MiB
-
-Unallocated:
-  /dev/mapper/sda6_crypt          1.40TiB
+?
+-- 
+pw-bot: cr
