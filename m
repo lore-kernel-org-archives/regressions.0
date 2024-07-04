@@ -1,106 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDA01AAE2A;
-	Thu,  4 Jul 2024 09:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012501AB8E5
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 09:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720084983; cv=none; b=Y8L+J3V7xL9bdov4OoBLjKhjdvGCrH40AVbCWOZr/7MG6C1V36Nc1y9fuK/55fXXq5EecNF8baRMBz9oA/4EbtwS4SuwBvxcaTRTF/d5K6JzndPPE+21oGB27l6qW3+vIDcnD+Q4bDS8lFYzpAGSCsgIPCg5IqRilS40QS8PV9U=
+	t=1720086570; cv=none; b=CMujw2bNlR7e6LNN+vowWHfHfZ54vBMpzh6VgIvmAyrGb9Hh2kOOhLWMWyNYCLtYykTHRxpc77cy+QDWrLIcBF0D1v/KBZ5D+0P11n9SPC1SoiZ9nk+zTP8cgFT77gQGzMR6DhoBH68SRXyPYyYVzP2Wi17mR+J1S56VHcRoDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720084983; c=relaxed/simple;
-	bh=06as5BSvzilWjvhyp+ERYWakzCKolExpyqn7MKb+tp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o6hmCHI9Kgm5eSmRaU2HJcuq+rIOxQurR+Q9Sdy2lkvk6h/SBtaWPyTgxjcRroPAS/KkTzfhvL76OFHOnpnWpe9oSQODK6RSWIS+kV7o17XT3PUm2qCgRoW2TiJs4gatMgiELx9qORcP2HAS+yFr6MQfbsH1+qAKI9YRcBBLd9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XdQl5w4h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720086570; c=relaxed/simple;
+	bh=b00IxYDAeikWpgDJD4xLbTBlof/vNk7MI6sw5PDIdo0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KKQ4hmsWalZ1HMNSPNifnaBudf4sSlZwx74Kd/gjc3GC5vIti7VkQH2bQAd3vbM3qJwSFuTE9A3hckRa8hohWE1kFnkpM05xcBRn9ZbSY4mVdIfY6DpiJ8vpeZQl8mPBH81CCC72JHiPBy8Ewglpt6qlkXealiDxIzGoVVfkJrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/YIfZe+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XdQl5w4h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05D9C3277B;
-	Thu,  4 Jul 2024 09:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720084983;
-	bh=06as5BSvzilWjvhyp+ERYWakzCKolExpyqn7MKb+tp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XdQl5w4hibwsvoFcvyqbIF6922YZwN8ioFVVi1XjsiUP57Cc/N6U5OmyiCfiDLjw4
-	 SLMIgxen0L/I+Qyf5u0rKUTHPAlMHeJT/f9T+GtrONuSjpbLBh5lyf3wxPM2WTIVI9
-	 CzPt34rPX6MvAimaC+M5eN1Dg9DEKaHFbpCppPqs=
-Date: Thu, 4 Jul 2024 11:12:41 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rhyland Klein <rklein@nvidia.com>,
-	Anton Vorontsov <cbouatmailru@gmail.com>,
-	Jenny TC <jenny.tc@intel.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] power: supply: core: return -EAGAIN on uninitialized
- read temp
-Message-ID: <2024070430-backer-cedar-f1ea@gregkh>
-References: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/YIfZe+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD856C4AF0B
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 09:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720086569;
+	bh=b00IxYDAeikWpgDJD4xLbTBlof/vNk7MI6sw5PDIdo0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q/YIfZe+HLRZsqTOXHUjVoT1YVMaopeFByadpWoLIC6Ae8PQc7HFk4jjwLH4TWjLw
+	 Fbb9MLU5qMzwcZdD8KhjopAHkmikyeMnmqYcnSHtTOCiB8hj5DSVacn5CU5uhtVl9E
+	 mdInJCl+QpiU8sukf0oXa9uFOj0Y7g+Cb2SFl9LyUd4WxQGDRbDD9LeDGywb5NNz1M
+	 g2IeRkfLbtakP5FXo9aHAtDpjU7aJiOHGGli1ABz1ffyOJRYUE/3ftS7VDBegjX91b
+	 cWvSg6/Gz/85Zf+/8mJAsvDeeP8Zj/W0zF8nuT7NmcuO5bnsnNN70QfANKGeb/ZEgP
+	 aU35l9UmFPfLA==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-58bac81f341so525829a12.0
+        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 02:49:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVEgUhsVB6BKNnPMJ/OYtbRaB4vQaqg4kBDbU2QxmnsP+z+HKyhwXfrOz46mCRcifkvpmh8XktqhnsufJu1caXEXXjl0E0Z5vXYjcs=
+X-Gm-Message-State: AOJu0Yw38bpS9t39SKjFpFgkat9m0Wj4n0VF9KCVmtJF7StwfLThq09E
+	GkOHyQAH6mpc/OAe4KS/ukvMDziTZCqUawM41BibtFCi+aUr7BVkhvWJPbkbCbi+cVpoN8ymk7+
+	gnVXJL1CsyNOeMLh0m4eijJjKh1I=
+X-Google-Smtp-Source: AGHT+IHv4dV38PoUbX9m+h4A+7s5pTuFTanK6I1V7kPNHqAr4eytUG4G29nV3hhGsCAZN2J8p55FwDaJTvQx/PX/9j8=
+X-Received: by 2002:a17:906:4089:b0:a6f:c4d6:4874 with SMTP id
+ a640c23a62f3a-a77ba4c5901mr63594166b.34.1720086568232; Thu, 04 Jul 2024
+ 02:49:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com> <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+In-Reply-To: <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Thu, 4 Jul 2024 10:48:51 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+Message-ID: <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Andrea Gelmini <andrea.gelmini@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 04, 2024 at 10:52:08AM +0200, Neil Armstrong wrote:
-> If the thermal core tries to update the temperature from an
-> uninitialized power supply, it will swawn the following warning:
-> thermal thermal_zoneXX: failed to read out thermal zone (-19)
-> 
-> But reading from an uninitialized power supply should not be
-> considered as a fatal error, but the thermal core expects
-> the -EAGAIN error to be returned in this particular case.
-> 
-> So convert -ENODEV as -EAGAIN to express the fact that reading
-> temperature from an uninitialized power supply shouldn't be
-> a fatal error, but should indicate to the thermal zone it should
-> retry later.
-> 
-> It notably removes such messages on Qualcomm platforms using the
-> qcom_battmgr driver spawning warnings until the aDSP firmware
-> gets up and the battery manager reports valid data.
-> 
-> Link: https://lore.kernel.org/all/2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org/
-> Fixes: 5bc28b93a36e ("power_supply: power_supply_read_temp only if use_cnt > 0")
-> Fixes: 3be330bf8860 ("power_supply: Register battery as a thermal zone")
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/power/supply/power_supply_core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+On Wed, Jul 3, 2024 at 10:07=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmai=
+l.com> wrote:
+>
+> Il giorno mer 3 lug 2024 alle ore 13:59 Filipe Manana
+> <fdmanana@kernel.org> ha scritto:
+> >
+> > I'm collecting all the patches in this branch:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/=
+?h=3Dem_shrinker_6.10
+> >
+> > They apply cleanly to 6.10-rc.
+>
+> Yeap, as I wrote before, same problem here.
+> I tried the branch over today Linus git (master), and nothing changed.
+> But, good news, I can provide a few more details.
+>
+> So, no need to use restic. On my laptop (nvme + ssd, 32GB RAM, Lenovo T48=
+0):
+> a) boot up;
+> b) just open Window Maker and two Konsole, one with htop (with a few
+> tricks to view PSI and so on);
+> c) on one terminal run: tar cp /home/ | pv > /dev/null
+> d) wait less than one minutes, and I see "PSI full memory" increase
+> more than 50, memory pressure on swap, and two CPU threads (out of
+> eight) busy at  100%;
 
-Hi,
+I'll try that soon and see if I can reproduce.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+In the meanwhile, just curious: are you using swapfiles on btrfs?
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Thanks.
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+> e) system get sluggish (on htop I see no process eating CPU);
+> f) if I kill tar, PSI memory keeps going up and down, so the threads.
+> After lots of minutes, everything get back to no activity. In these
+> minutes I see by iotop there's no activity nor on ssd or nvme. Until
+> the end, the system is unresponsive, oh well, really slow.
+>
+> My / is BTRFS. Not many years of aging. Usually with daily snapshots
+> and forced compression.
+>
+> Less than 4.000.000 files on the system. Usually .git and source code.
+>
+> root@glen:/home/gelma# btrfs filesystem usage /
+> Overall:
+>    Device size:                   3.54TiB
+>    Device allocated:              2.14TiB
+>    Device unallocated:            1.40TiB
+>    Device missing:                  0.00B
+>    Device slack:                    0.00B
+>    Used:                          2.03TiB
+>    Free (estimated):              1.50TiB      (min: 1.50TiB)
+>    Free (statfs, df):             1.50TiB
+>    Data ratio:                       1.00
+>    Metadata ratio:                   1.00
+>    Global reserve:              512.00MiB      (used: 0.00B)
+>    Multiple profiles:                  no
+>
+> Data,single: Size:2.12TiB, Used:2.02TiB (95.09%)
+>   /dev/mapper/sda6_crypt          2.12TiB
+>
+> Metadata,single: Size:16.00GiB, Used:14.73GiB (92.04%)
+>   /dev/mapper/sda6_crypt         16.00GiB
+>
+> System,single: Size:32.00MiB, Used:320.00KiB (0.98%)
+>   /dev/mapper/sda6_crypt         32.00MiB
+>
+> Unallocated:
+>   /dev/mapper/sda6_crypt          1.40TiB
