@@ -1,125 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1559E1AE859
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 16:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759921B372D
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 16:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720111150; cv=none; b=YdoWbSSBBNCjGn9g0FNmqigUEQidO2vuEhXOI4ZJFnWWxa+PVx56wmpC+8UJHBH7SmBcbR/48D2OhHt7hSP/9WKRETI4nBimYz3q2qlPeMufFsdEsOxfrD5W8TVU0Z2akWEY2a5WT+pWWF5Sg42LBu1YyXofN6hGF1lZQ86ap3o=
+	t=1720111286; cv=none; b=uH+XNBaBk4HrD/x2SppsnHB+V5Vd/6wNhtqlYdtzj+1vrgkOVd8z5qVzCrh3UVkgbVffIh1IEMxRWDk1OkrwsdP/ja2d1aryDWEsh1IxmT4g22pA84/4IBEjzZQktRvqObw18EnlXML3jp/W7XU1OmZrnIKir+zh0qDztUwMJmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720111150; c=relaxed/simple;
-	bh=gRd4H9HAoXj9VT9zFnuZwGS9i7FBkfx85UHjFSlbhJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i+nifBaxhOGEnSuGPQ77vSJFxTHArXJF0d2m2q+9Cs5dWUV9xduIMjwuTgX6tasNmfHpeMBn05DGpLTrQTQTbVnztUSctiHqdaHo1iXqnX0wsoCizIrHJHqkQKpx/rP3u2TG2PFs45vfC6VrRGLQoU6boAGJ6/9Fzp24kZTSfLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq4+JFU9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720111286; c=relaxed/simple;
+	bh=j0MJRtYH6MPSRQ8QRM4Y07T56kAL7fwsjh0T91jkD/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l6UucB1zaoFLoyStHQOMMPTUDyC/TuYbpG7PZZZC6gSp7VGs751Pl+h0J57x+/h6mtsGGeXs+UmPbqm5F+F8oEot0FEzqmrp/V/Ho61Ctr5Vq0OJpFnDBLhVXKNRYndMrFG1nxiHZ8qAzxO+uxgK9GPKBnJ8O8CCpATUvZ5eyPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n2PdLu50; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq4+JFU9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA598C4AF0A
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 16:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720111149;
-	bh=gRd4H9HAoXj9VT9zFnuZwGS9i7FBkfx85UHjFSlbhJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gq4+JFU9Sr+KM1guFQ2TBMv3IwWpLOiOpkfyTZk1N+J+739UlBedXKjFxrAyVJ8/p
-	 /lo5+zZ4u3Af3KHCohdb6PgbWj8iRBW9sorQy/U33rOmehzaIZOYpv/qMmJoloiU5G
-	 TixTww2wWiyv030+bQ5tWIb4EHfNB3akgp0MwnaHiYQJ0LXdyyX7o4OEdNZf23Ky2l
-	 f3d82KjlZHj/IFmo/qNr8fyDJu2OJChKajBf87rtWGyWnRZBULAgPIlYe+8HD+qhZ1
-	 plKqF/2Hh0SeA4n14yAP/0HgML3nsiub1LJXHRkRgoZxXja2PwtwAc2rVjS9Sz+kY4
-	 1inAB4kWMIrOw==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77c080b521so80498266b.3
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 09:39:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWYKNy0pzc9iZ2PYOWAq8k/FKHtgIMuWA8F3wDihVsuGVGjysRcgrLMaTA3BGu5uM1zoYiNIPK7f70uOTbhN+hJfJuhPMJJBoB1sT4=
-X-Gm-Message-State: AOJu0YyzW+azEXQbyIUjwgBRJAIUJhBdtD1Ou9EMI7vySQrL64stXKv/
-	tkiJSQBC5H6h7N7pe4BzrasBlf/yULtxSiowpRWArMFffoGx33m7vVDnRcHuQi3NAevgaa2iBmj
-	WXNwi33caq3ryZeRE23KXTjrrnfA=
-X-Google-Smtp-Source: AGHT+IFoSHc48vw315GWCxZCeNwg7EaRGveE0Zaf/jsFIyoF0QggQomlhorwuzycIttmq4Bt17saZFGYhQtMdoFfmiA=
-X-Received: by 2002:a17:907:684:b0:a77:c3b5:9e5d with SMTP id
- a640c23a62f3a-a77c3b59f8cmr69408066b.47.1720111148322; Thu, 04 Jul 2024
- 09:39:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n2PdLu50"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4255fa23f7bso5439365e9.2
+        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 09:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720111283; x=1720716083; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RbhCAHjzwKa/kbyfp+8ibcL3AZKOrE0W6Q1q/9j6rtk=;
+        b=n2PdLu50i9K5/QQZuHvx21FWeIL6AVrqcx5Iml0odNJuzvHsAeYakOJg0URGHQQL7E
+         wJeO2zaJHZCWDmax/AWnUVgKc/ayKxmTb3mEjfr7S4Af93SqKPRgCSAJvtMQALtWd/Oo
+         42QhsevuaTV+1wYoE1HnhJv104IXEnA4j3AF8FTW3xKjTN9OtnmVJuq8D1cbNiPLvDoy
+         rT132/Iv7wpQJMFjsbC26RSB0zsvSO1cnOYXDj/7UqD6UyiZKtR6UClUGSYwBfZ7/lKB
+         THBltYIiWP/JKlxSnU1Si3uHi8dmkcKfMjgEczdjhMeFlrq4pzhhoU1uJ2ADFyK41hbH
+         VsgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720111283; x=1720716083;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbhCAHjzwKa/kbyfp+8ibcL3AZKOrE0W6Q1q/9j6rtk=;
+        b=vBjDSYdudTfAMFB3JST72U4SbkFrJQTZvvvDchTITrgcnr/UcJ4dUkOoeqjUdSqE2/
+         m9gaIHIp5GuOdXszsQ4E1JipknLZQ0EYCjRo1nxNQD7UB0QxKnFkq+cNIuSfdSXzpfZa
+         YwoFsXUN5bgoJDV96ehR/q1DJ5EatYv5/GSSr2CL260rVVleNR3O++AmbEG7a3MlJtbO
+         EAz4km7U2aYiYbt/9n5LZPyX+sf+19RyhE/11pFvpNUWBtmS4NOvUVmaj1ivosOAvUif
+         wj0Z+Kp/q4tHhHqFWIMEHf524K+W99asUDTHSJTS2ZXcplttP64IMz9jZHNn/JWdzTtZ
+         8wGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7KnVWzCI50UWvuNhQSg6FYuKdeFe+j3ULYp8FIPiziQ0WMFecxkfcOnDAYS8t1OuzwfREC9Q7N+mdvWb1NUQHBSO5VDLG1CTBPwY=
+X-Gm-Message-State: AOJu0YwyjQN9Cxu6HZq2iyQeZu2aScgSJL5fJe0IFpFLn+UHoDXWBFPX
+	5ZPZvZPFwuymurRPHYKIvZIZYjooyXuWuWzgkD8FxiqnKZ0a28TGRxCD3Kcgrjo=
+X-Google-Smtp-Source: AGHT+IEmjMnbNWTHVuKayDN1gPs03b/0eR6prKKemb8Ks2ETqeMZmhbCsamzyB5Q/aNz5Z43oBc85A==
+X-Received: by 2002:a05:600c:3420:b0:424:a588:ff08 with SMTP id 5b1f17b1804b1-4264a3dc76dmr16158095e9.23.1720111282853;
+        Thu, 04 Jul 2024 09:41:22 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367900fd1e5sm5477556f8f.63.2024.07.04.09.41.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 09:41:22 -0700 (PDT)
+Message-ID: <a50eb87a-4dcc-4272-b897-fb8170bfe58b@linaro.org>
+Date: Thu, 4 Jul 2024 18:41:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com> <CAK-xaQagqS0kePozkim7sB_Zi+8NrDRnbqFuLVQ3s4F+0WZ+DQ@mail.gmail.com>
-In-Reply-To: <CAK-xaQagqS0kePozkim7sB_Zi+8NrDRnbqFuLVQ3s4F+0WZ+DQ@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Thu, 4 Jul 2024 17:38:31 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H5AFbSy0JC=u_MAfNR-J_kFQkaG6_pXJimD80tchFXytg@mail.gmail.com>
-Message-ID: <CAL3q7H5AFbSy0JC=u_MAfNR-J_kFQkaG6_pXJimD80tchFXytg@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Andrea Gelmini <andrea.gelmini@gmail.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com, Qu Wenruo <wqu@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] power: supply: core: return -EAGAIN on uninitialized read
+ temp
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Rhyland Klein <rklein@nvidia.com>, Anton Vorontsov <cbouatmailru@gmail.com>,
+ Jenny TC <jenny.tc@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 4, 2024 at 12:19=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmai=
-l.com> wrote:
->
-> Il giorno gio 4 lug 2024 alle ore 11:49 Filipe Manana
-> <fdmanana@kernel.org> ha scritto:
-> > I'll try that soon and see if I can reproduce.
->
-> I'm creating a qcow installation with everything, to replicate this.
-> Sorry, it takes time.
->
-> By the way, it's just me? (latest git master btrfs-progs)
->  btrfs-image /dev/blah-blah loop.dd
-> works perfectly, but
->   btrfs-image -s  /dev/blah-blah loop.dd
-> generate an image impossible to mount:
-> [gio lug  4 11:20:05 2024] BTRFS info (device loop40): first mount of
-> filesystem 496b800d-2f32-46bb-b8d0-03d6f71cf4b2
-> [gio lug  4 11:20:05 2024] BTRFS info (device loop40): using crc32c
-> (crc32c-intel) checksum algorithm
-> [gio lug  4 11:20:05 2024] BTRFS info (device loop40): using free space t=
-ree
-> [gio lug  4 11:20:05 2024] BTRFS critical (device loop40): corrupt
-> leaf: root=3D1 block=3D40297906176 slot=3D6 ino=3D6, name hash mismatch w=
-ith
-> key,
+On 04/07/2024 10:52, Neil Armstrong wrote:
+> If the thermal core tries to update the temperature from an
+> uninitialized power supply, it will swawn the following warning:
+> thermal thermal_zoneXX: failed to read out thermal zone (-19)
+> 
+> But reading from an uninitialized power supply should not be
+> considered as a fatal error, but the thermal core expects
+> the -EAGAIN error to be returned in this particular case.
+> 
+> So convert -ENODEV as -EAGAIN to express the fact that reading
+> temperature from an uninitialized power supply shouldn't be
+> a fatal error, but should indicate to the thermal zone it should
+> retry later.
+> 
+> It notably removes such messages on Qualcomm platforms using the
+> qcom_battmgr driver spawning warnings until the aDSP firmware
+> gets up and the battery manager reports valid data.
 
-Sorry I have no idea about that. I don't use btrfs-image myself and I
-don't think I even ever looked at its source code.
-CC'ing Qu who might be interested in that.
+Is it possible to have the aDSP firmware ready first ?
 
-I'll reply very soon to the emails about the performance issues that
-correlated to related to the shrinker, there are some interesting
-things to look for.
+> Link: https://lore.kernel.org/all/2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org/
+> Fixes: 5bc28b93a36e ("power_supply: power_supply_read_temp only if use_cnt > 0")
+> Fixes: 3be330bf8860 ("power_supply: Register battery as a thermal zone")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>   drivers/power/supply/power_supply_core.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index 8f6025acd10a..b38bff4dbfc7 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -1287,8 +1287,13 @@ static int power_supply_read_temp(struct thermal_zone_device *tzd,
+>   	WARN_ON(tzd == NULL);
+>   	psy = thermal_zone_device_priv(tzd);
+>   	ret = power_supply_get_property(psy, POWER_SUPPLY_PROP_TEMP, &val);
+> +	/*
+> +	 * The thermal core expects -EAGAIN as non-fatal error,
+> +	 * convert -ENODEV as -EAGAIN since -ENODEV is returned
+> +	 * when a power supply device isn't initialized
+> +	 */
+>   	if (ret)
+> -		return ret;
+> +		return ret == -ENODEV ? -EAGAIN : ret;
+>   
+>   	/* Convert tenths of degree Celsius to milli degree Celsius. */
+>   	*temp = val.intval * 100;
+> 
+> ---
+> base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
+> change-id: 20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-077166861efb
+> 
+> Best regards,
 
-Thanks.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-> have 0x00000000365ce506 expect 0x000000008dbfc2d2
-> [gio lug  4 11:20:05 2024] BTRFS error (device loop40): read time tree
-> block corruption detected on logical 40297906176 mirror 1
-> [gio lug  4 11:20:05 2024] BTRFS critical (device loop40): corrupt
-> leaf: root=3D1 block=3D40297906176 slot=3D6 ino=3D6, name hash mismatch w=
-ith
-> key,
-> have 0x00000000365ce506 expect 0x000000008dbfc2d2
-> [gio lug  4 11:20:05 2024] BTRFS error (device loop40): read time tree
-> block corruption detected on logical 40297906176 mirror 2
-> [gio lug  4 11:20:05 2024] BTRFS warning (device loop40): couldn't
-> read tree root
-> [gio lug  4 11:20:05 2024] BTRFS error (device loop40): open_ctree failed
->
-> > In the meanwhile, just curious: are you using swapfiles on btrfs?
->
-> never used on BTRFS (i have a dedicated nvme partition).
->
-> Same effect also disabling the swap, btw, and thp.
