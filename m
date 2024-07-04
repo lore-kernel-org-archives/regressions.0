@@ -1,54 +1,54 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32AC26AFA
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 13:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8AD41A81
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 13:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720100029; cv=none; b=BplAY285gTXz59Atxbdad8F7yFE99xNtSMu2lryomteKPWYlNNiLJjk3i8/1lLWPrtTSLjBFPYApG9ObD/00baymqArIhR0DR4H8h2SIUyAwkKMef8vl/JgxLl/QPeRc1XUGmI5b7h9neSNNlcY+QE9EY9TlWsQoqlwqsj2/Ts4=
+	t=1720100844; cv=none; b=pneqkweqwDGmB/Khpnv0JXMrE20MZWSmDfeq8ef1EDf7Xws5/tVRqw21nhpr3m6G+/bah2WTvka0bPb0FCOlJL18qy1IaAv0ipYctIqxL96RoO+PXYIJzi7VgwvoUAVg/mr9Evdu2OlOvyslvRbJQS3pyRHepsikkN0NFGO40oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720100029; c=relaxed/simple;
-	bh=YTpdR8BWwbMhfLGFsScSQ+dfvCM1UcGB7JaHRWuCLtg=;
+	s=arc-20240116; t=1720100844; c=relaxed/simple;
+	bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fDc28cwVvFems9+9f8O1kIcORmDDclOYoLA/LrunUGpskGSPCO60SNOjx37JbsEVulbn5cXhA72LmqFaPxD3pn/Zs9H5Xi/meNdIfCpFcKL6WYLMcXcnaF2KYPZMhEhSsU66MIyh/Mkzbu9TLmOHJnXw+S0hYsM1sdQHL9oZVfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IT0LM+99; arc=none smtp.client-ip=209.85.128.170
+	 To:Cc:Content-Type; b=H2EbjMRQfBqG/Acictv8BkKgGMER85/PNQbdDAZ7dX4lkq0E9oF1a3iPLOXyauOApipFExGJKMRBXI5KGubIsw6Qgya/WtMpdOYvgkr9sHaIr78lD9K8f66L//nwNhcWsZk7hfP9348LiPPGe5W1xG7+2ma357Zzp40YigpoBTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFdU0Let; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IT0LM+99"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6518f8bc182so11540857b3.0
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 06:33:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFdU0Let"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-643efaf0786so5662277b3.1
+        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 06:47:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720100027; x=1720704827; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1720100842; x=1720705642; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YTpdR8BWwbMhfLGFsScSQ+dfvCM1UcGB7JaHRWuCLtg=;
-        b=IT0LM+99grt+7gOkQbl5dyQizbtEFjX374fdKPP2QKPdEJD3uiXdcdntxBzv3GzWRo
-         Z9fNa8JXfZfQumLPr5KtO3ee3WRGdNz5uLxv6fJaU5JHR4i+pBZ62Lv6Z3CLX7d+hYD0
-         0XBzxOqkLfJZbp1wMSYe2F3Zkjkz2PqJCXLOlKGmTNi94M4sQPB1agD/usT+Mt5xo0KF
-         sbH25NZNZa80r4xzM7g/gzqKDRscVm+o6gCBDuzoIQzExFF3E55UO99niTnHXYCQEIia
-         O3CzPLJ2bTF1ZDlmiJ+hGbyuVf++0TocY3X8Qv56toYs5ArPBm1ndpAkHuums4zfZicZ
-         FWVg==
+        bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
+        b=jFdU0LetPdoRwpEtVppqnA8w1Mh9sjSTqRceQyQeGORwyyKAUOOKfdXTphIBl1hGaG
+         scZC06R9Ut0xtB0beDrHSFffOxcYPsmVNHDh8GFW/ouJ0MfYcGmcBc8YD7Vj0c8FOVWy
+         eTMjKpQ4RaSbXT4atRKmQLUY89O0wXR+9VEnZB3ttDNtq+99d4VXK2p9qQnB6i/fO32o
+         RxJ2biYHXQp4CvEd0MFb+sX/02UmjCCAqJiZhJnfA1E7pkQPqPiKvuq/9n2iaFoXGiFH
+         oarl+FmfWV+vFW0ntTT30fUiKhLqBSigt9CTYY5YsbKtVmFBO2Tl0I8rOUF1efqn/k7+
+         zlCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720100027; x=1720704827;
+        d=1e100.net; s=20230601; t=1720100842; x=1720705642;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YTpdR8BWwbMhfLGFsScSQ+dfvCM1UcGB7JaHRWuCLtg=;
-        b=BQ1rq1iCyV58cEKrDrSULrAPlDEJKTZ2YmHZKF1VRZKmvTW3E8iiS2T5PNs/1dMP3R
-         rVFYOtusB8JwUgWghdmiTnw5yUUB4glS4EN1ub7xKcvh76zWRYGAi4S6f3RyetuInpML
-         dWm45y8jMxuH3TbubDdT7Um25cOngpWeHcZpHHi8ev26yUp8qNvKJvGnep3q0uNKnSFY
-         CsmiRA5i/lxC6jXyrBahYrsxUJwbzKRwPGM92mcd9V15emNC3zkYxommEuVcGb0tsw1O
-         rHHcXt9Gr01Hs+8yLRzbzzbZaMn19CzZ/IKr6kWn87vP2DzWcU4HoXc2NWTFlQIRKPzy
-         cXxg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9AEUA2Hz9IN61/7iy5x2+p8ARvluzRssNgNtLnP3QTVwXd5qb3Bf44JWMnpebsxEIUiiYPvoBi9TJOoXgoUZG/sFZJb85O/DmXeY=
-X-Gm-Message-State: AOJu0Yxt5sJTXPM0+PtZ+MJ7+qjjskZolPe5674uYAi4aZ4tXhM3Try4
-	TI6xwdFCrywuDMjVXCJEgN9I0OTbFIvZJ2fRMzXqzq9wLagdsFxeOKMz37xuL7n+jWPf6f+jPkJ
-	yHW7JsKyoxwbYZha2zov/LLhDNrw=
-X-Google-Smtp-Source: AGHT+IEnPiXYKGoZAEcWbV0vplxMesyCar7SVTa8AM31q8atEL/J3INWycW/KyiHzI5JnUxFQ7SXn4y6RT/9fhMRiCM=
-X-Received: by 2002:a05:690c:ec4:b0:651:4b29:403c with SMTP id
- 00721157ae682-652f5778b8dmr10432037b3.2.1720100026775; Thu, 04 Jul 2024
- 06:33:46 -0700 (PDT)
+        bh=UI3dF8OYMSUWU9X9suKWJKp7BkGBDJB8qJBGh0o1NCQ=;
+        b=hKzJyYNCYtB1JskgPqqodut8cGpsjt3cCTksUuLXlS/IytuZDtiU9+rOS+LNLoWJ7s
+         DecECcdlTctZFK6cCgbEIk/wDprULFoZR8SE0dHuFhfsLu0tU71HnGwnhxsLx64zQLNS
+         JTbPAKWH/89twGb93dGPNknBo6XrTI55EMhOmWkmmm6SSeiiGwfW3Luq3nEOLEiW26Qf
+         pddtuGDWkJieiWB24TIZrGhFjkTeAJmSheLY+cqi1BP4T2PCGKgA9348sWuisQcda/f6
+         eJYVZyBx7RyVUpyDiZnu+OjVColnuFGIdPJ4V8TOoyhWFRKKxY5Uf3suNnhoYGAJ3GO3
+         Qd1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXfw/Yzv0I+ljYBeHuku3XFKG405vCp5h9pr9kaCcE7duUgwP7etajm7IncHWUzrbu/DlBhjrwZRg3nfo0KB5TTB94DBEDV1/suOPM=
+X-Gm-Message-State: AOJu0YyszbtG8EtseB0tZaNJOgc7J49HG7e0xMs8jHwTCzZAly/HluxS
+	ekWD9LkTxM2jrqknQWmWPxllP7bdM0apZWw8NEMNyse2J/H45yNc2bO/5H/Wp9JXPhQh1Ri5mGA
+	7xea5OXtQe8OIwkNTZqLo0SRtdy8=
+X-Google-Smtp-Source: AGHT+IH6YM6GLafKg9XBe0axWFXO3AhGkvxdQYhJOJum9ZzTHvtWe5dJcPzvzcyam1htB/hWj7nXRx0+wUWo96dItps=
+X-Received: by 2002:a81:ab52:0:b0:62c:c65d:8d1c with SMTP id
+ 00721157ae682-652d8636094mr15666627b3.52.1720100842308; Thu, 04 Jul 2024
+ 06:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -64,11 +64,12 @@ References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
  <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
  <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
  <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com> <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
-In-Reply-To: <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com> <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+In-Reply-To: <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
 From: Andrea Gelmini <andrea.gelmini@gmail.com>
-Date: Thu, 4 Jul 2024 15:33:30 +0200
-Message-ID: <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+Date: Thu, 4 Jul 2024 15:47:06 +0200
+Message-ID: <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
 Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
  execution time of the kswapd0 process and symptoms as if there is not enough memory
 To: Filipe Manana <fdmanana@kernel.org>
@@ -78,30 +79,13 @@ Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
 	dsterba@suse.com, josef@toxicpanda.com
 Content-Type: text/plain; charset="UTF-8"
 
-Il giorno gio 4 lug 2024 alle ore 11:57 Filipe Manana
-<fdmanana@kernel.org> ha scritto:
-> I wonder if you have bpftrace installed and can run the following
-> script while doing the test:
+Il giorno gio 4 lug 2024 alle ore 15:33 Andrea Gelmini
+<andrea.gelmini@gmail.com> ha scritto:
+> Well, I have the nighlty snapshot (well, it's not on every subvolume
+> of the fs). I ran tar on that, and we see.
 
-Yeap, no problem. It worked. I mean, recorded on external usb stick... But...
-On my laptop I have kernel 6.6.36 and rc6+branch...
-Uhm... Yesterday I switched back to 6.6.36 after wrote the email,
-well, not exactly, I usually work with 6.6.36 and yesterday rebooted
-with rc6 to test the branch patches (so the sluggish issue weeks ago,
-so I didn't move from 6.6.36).
-Anyway, after wrote you the report while watching the "live action", I
-rebooted 6.6.36.
+Well, using the laptop for daily work and running tar on snapshots,
+recreate the issue.
+I am collecting the htop output and bfptrace.
 
-Anyway, tried right now with bpftrace and I can't replicate it. Kernel
-exactly the same. No recompilo or so on...
-
-I just can think about a few LibreOffice git subvolume deleted
-(~215000 files), and a few created.
-A few tens of giga deleted of files (mp4 and mkv). Uhm... dunno if it
-could be related or something changed on BTRFS layout.
-
-Well, I have the nighlty snapshot (well, it's not on every subvolume
-of the fs). I ran tar on that, and we see.
-
-I tell you in a few hours. In the meanwhile I keep running rc6+ and
-see if something happens.
+I send you everything when I collect enough data.
