@@ -1,181 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A43318FC81
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 09:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2871BC4E
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 10:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720087051; cv=none; b=WoJpDhurVht+geHM3V+KAyupUIrbrEVzuAt7KjZTEPwN4M3jFPJTkL2IeB3iTgK2SI2ePnPkxR2Bku4KZMhUA7PXAkVysM3eyKdH/3O6I1OfHVDCXlaEuLVHxaK2fkGrvufMxFxaQaXKG5iemznb7ooqgtrSbXKHDqCG1XjvQr4=
+	t=1720088914; cv=none; b=GPSzKaKv+G9f10Cp01K+D0u+V/gydpCM4PnyAVmxRkgc5UWdm0wnx7T2D+JR3Q8zHwpbDz8sZSmXxcPhGl4u0K1+06NNdOrAJQGmEekBG3Sj3AABBhGuE0VI74MX4M2w2SBuFx+2O97CeGIz7Kv6ARxzO3f0TEXpjazqByPDUtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720087051; c=relaxed/simple;
-	bh=Xr6B17nW/I57xdcXG07JqJqh4hldNLJBk9kDAFf/DQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BhR7MpE3krkD3w3+D/HKX3vTP9apvtNhlLh93/c+y/E9B3rAbbT+YAYvX5GiJyjRX3ZcX1lG86nneZJufaYeXubgPQuCFfIGG7noQWDItRNyr52+zoHZhsDPjW/Q9oVivkC3AEkcGSiv1Kwlmn4uPeIRyX9ncFZCCjSyXX5+7Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMfXuc3g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720088914; c=relaxed/simple;
+	bh=YWy3d3DnvJyT0JoKU9GO44PEEtPz9f+YneBPzWEB9Qg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=cCDgvNTP2LwbmzcLeuaLBoVVmjhjhWNzWK5RedbipTNCmxtSiTPENgUiQVzKVK90PETCEit9HG/nJCA+0YpyVYH7/LEc5ncC+v05Htbczw0Q//uTZ84T7UXjN1zyCchZKnnYBn2oRSZ9g/JTOqUmCmFJGjLOW8M3IMQS6qd7fD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oUhJwOE9; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMfXuc3g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 231A2C3277B
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 09:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720087051;
-	bh=Xr6B17nW/I57xdcXG07JqJqh4hldNLJBk9kDAFf/DQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HMfXuc3gOBpVU4VmafZvgD5uTTlSiE/zeE6fbrXg4zCb6Ir1Yu3EEgihMP10agEqB
-	 1c4gNs3ASl968ey8wUXzo9/pTmsbz6p9wNxO7kdt6aVn07LsnSnzJ6UEf1HXkiFYly
-	 Xj1RxUjQNOw2taYfEsP0lTggZ69kwRFEvtFsmwseXkK121LQgwkkJAmKH7VdxmX75a
-	 wcY5hUsEqWrvG6CB+gY7oyLQwXyl5XHCvzh1QU6eO0dPARxnUbgy3mauUx9Uw+nAQD
-	 +yz7tTgnA6DguwzMI8TMbyrzWI571Ho6EhvCygYKTRKqDRLpawnFTNDV5MA9EHiqEJ
-	 /xxV+osxiiNNg==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a77c349bb81so2477666b.3
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 02:57:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVf5zFa8N15gRfg/DHuHYf/GdU7f4zOxCqZqEcRhITjdSQfAKY0MGDtw04y+yhzgp9HnG/D9daWXDAgVGY5D9MyZlu0B0BeIIkNJ7Q=
-X-Gm-Message-State: AOJu0YzBCWumWBFG0u+Rmo5r+1ws/E7+lhuJGE/ilu8aveuwnvoCJmcR
-	KXgMamVmsrKFBJwJQzQLhG+Q4LM7HmXXQ0V5r10OXGARGr7640YhF+6q49eyP7TGWL5HADzNWvG
-	GU35IIm0iLuAN+MOKcpG4o5FO7WI=
-X-Google-Smtp-Source: AGHT+IFM2J4ZPmhN4lgXEZMzfk3lH5FGbKSx2yLA5OmBD93zi4PSvy7DVElSaZMfWeTsYNWheM3Zw0ujj9A+44w+1+g=
-X-Received: by 2002:a17:907:3d9f:b0:a6f:5318:b8f0 with SMTP id
- a640c23a62f3a-a77ba48df9dmr89454066b.37.1720087049692; Thu, 04 Jul 2024
- 02:57:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oUhJwOE9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=YWy3d3DnvJyT0JoKU9GO44PEEtPz9f+YneBPzWEB9Qg=; t=1720088911;
+	x=1720520911; b=oUhJwOE97yAsEgBoG7ffGLR1l4tIYdaTklEeFZ38zjNxmB4fJ3MZJyIQqhPJb
+	WZnXD7+2ePoWbWzk95xWbnKhsPL0/jHBiRvcbuToevLeqNbxJ8WKwIc85SRaa5brwiK5bLEXMK0FQ
+	f8vXRVqiyzYClQLxJxx80l8OiCR0dmT4FEdZlNmcWxEHmLkirbYYydg2cunCpfijB/I9sJ0nbNY2h
+	f6OMPAGBYeJUb9Ye5LebTailNImNcWcaCzZ5o2+m91tSJok7CThhG7ukc68AZCUOiRsh6xcahXiIt
+	498vInokmolgQTMNOu5pWf59ul6M4zjLRfEvYZnvwa67er+FZA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sPJ1F-0006ZD-Ml; Thu, 04 Jul 2024 11:44:49 +0200
+Message-ID: <6302c372-3bb9-4b9d-a5c3-22f432f96329@leemhuis.info>
+Date: Thu, 4 Jul 2024 11:44:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com> <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
-In-Reply-To: <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Thu, 4 Jul 2024 10:56:52 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
-Message-ID: <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Andrea Gelmini <andrea.gelmini@gmail.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720088911;8481bbac;
+X-HE-SMSGID: 1sPJ1F-0006ZD-Ml
 
-On Thu, Jul 4, 2024 at 10:48=E2=80=AFAM Filipe Manana <fdmanana@kernel.org>=
- wrote:
->
-> On Wed, Jul 3, 2024 at 10:07=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gm=
-ail.com> wrote:
-> >
-> > Il giorno mer 3 lug 2024 alle ore 13:59 Filipe Manana
-> > <fdmanana@kernel.org> ha scritto:
-> > >
-> > > I'm collecting all the patches in this branch:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/lo=
-g/?h=3Dem_shrinker_6.10
-> > >
-> > > They apply cleanly to 6.10-rc.
-> >
-> > Yeap, as I wrote before, same problem here.
-> > I tried the branch over today Linus git (master), and nothing changed.
-> > But, good news, I can provide a few more details.
-> >
-> > So, no need to use restic. On my laptop (nvme + ssd, 32GB RAM, Lenovo T=
-480):
-> > a) boot up;
-> > b) just open Window Maker and two Konsole, one with htop (with a few
-> > tricks to view PSI and so on);
-> > c) on one terminal run: tar cp /home/ | pv > /dev/null
-> > d) wait less than one minutes, and I see "PSI full memory" increase
-> > more than 50, memory pressure on swap, and two CPU threads (out of
-> > eight) busy at  100%;
->
-> I'll try that soon and see if I can reproduce.
->
-> In the meanwhile, just curious: are you using swapfiles on btrfs?
 
-I wonder if you have bpftrace installed and can run the following
-script while doing the test:
 
-$ cat bpftrace-em-shrinker.sh
-#!/usr/bin/bpftrace
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-tracepoint:btrfs:btrfs_extent_map_shrinker_scan_enter
-{
-time("%H:%M:%S ");
-@start_em_scan[tid] =3D nsecs;
-printf("%s enter shrinker scan %ld nr %ld root %llu ino %llu\n",
-       comm, args->nr_to_scan, args->nr, args->last_root_id, args->last_ino=
-);
-}
+#regzbot report:
+https://lore.kernel.org/all/2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org/
+#regzbot introduced: 5725f40698b9ba
+#regzbot summary: thermal: core: "thermal thermal_zoneXX: failed to read
+out thermal zone" output in a loop
 
-tracepoint:btrfs:btrfs_extent_map_shrinker_scan_exit
-/@start_em_scan[tid]/
-{
-time("%H:%M:%S ");
-$dur =3D (nsecs - @start_em_scan[tid]) / 1000;
-delete(@start_em_scan[tid]);
-printf("%s exit shrinker drop %ld nr %ld root %llu ino %llu | %llu us\n",
-       comm, args->nr_dropped, args->nr, args->last_root_id,
-args->last_ino, $dur);
-}
+#regzbot report:
+https://lore.kernel.org/all/3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de/
+#regzbot introduced: 935df1bd40d43c
+#regzbot summary: of/irq: identification of ATA drives with P.A.
+Semi Nemo boards broke
 
-END
-{
-clear(@start_em_scan);
-}
+#regzbot report: https://lore.kernel.org/all/ZoM6CUhbWuAFuHjP@krava/
+#regzbot introduced: v6.9..v6.10-rc6
+#regzbot summary: bpf: build error with CONFIG_WERROR and CONFIG_BPF
+#regzbot fix: bpf: fix order of args in call to bpf_map_kvcalloc
+#regzbot relate:
+https://lore.kernel.org/bpf/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@intel.com/
 
-The run it like:
-
-$ ./bpftrace-em-shrinker.sh 2>&1 | tee em_shrinker_log.txt
-
-And provide the log file.
-
-Thanks.
-
->
-> Thanks.
->
-> > e) system get sluggish (on htop I see no process eating CPU);
-> > f) if I kill tar, PSI memory keeps going up and down, so the threads.
-> > After lots of minutes, everything get back to no activity. In these
-> > minutes I see by iotop there's no activity nor on ssd or nvme. Until
-> > the end, the system is unresponsive, oh well, really slow.
-> >
-> > My / is BTRFS. Not many years of aging. Usually with daily snapshots
-> > and forced compression.
-> >
-> > Less than 4.000.000 files on the system. Usually .git and source code.
-> >
-> > root@glen:/home/gelma# btrfs filesystem usage /
-> > Overall:
-> >    Device size:                   3.54TiB
-> >    Device allocated:              2.14TiB
-> >    Device unallocated:            1.40TiB
-> >    Device missing:                  0.00B
-> >    Device slack:                    0.00B
-> >    Used:                          2.03TiB
-> >    Free (estimated):              1.50TiB      (min: 1.50TiB)
-> >    Free (statfs, df):             1.50TiB
-> >    Data ratio:                       1.00
-> >    Metadata ratio:                   1.00
-> >    Global reserve:              512.00MiB      (used: 0.00B)
-> >    Multiple profiles:                  no
-> >
-> > Data,single: Size:2.12TiB, Used:2.02TiB (95.09%)
-> >   /dev/mapper/sda6_crypt          2.12TiB
-> >
-> > Metadata,single: Size:16.00GiB, Used:14.73GiB (92.04%)
-> >   /dev/mapper/sda6_crypt         16.00GiB
-> >
-> > System,single: Size:32.00MiB, Used:320.00KiB (0.98%)
-> >   /dev/mapper/sda6_crypt         32.00MiB
-> >
-> > Unallocated:
-> >   /dev/mapper/sda6_crypt          1.40TiB
+#regzbot report:
+https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
+#regzbot fix: drm/qxl: Pin buffer objects for internal mappings
+#regzbot relate:
+https://lore.kernel.org/dri-devel/20240702142034.32615-1-tzimmermann@suse.de/
