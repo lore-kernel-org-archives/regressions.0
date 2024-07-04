@@ -1,243 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430F34962E
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 17:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FCD49659
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 18:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720114349; cv=none; b=CX8t3+xEX5riHYj/qJ7MxOGvz7yApDde7JM9iY6Kz6wf0vaY0DpsrwCB/l2IcN0nd1PLMxso4tQQkxwx2stEwmKv2xlxVC1tf4FwLPKq+PayqSjqUGl1YWFaXR9Whk7spR7svMG/Yps9nCYGUzPaCcfGk1KpBmboH1hnVLEsDzM=
+	t=1720117177; cv=none; b=EzctsGhFPrKoPQdyEk39CIwPQse2Sg77X4MQc/7wUiyvIRCnMNy0JA+JF+LBtpVzr2XQ2Evh9jUjrDbfFLnNi4+Iy2MzMXiNZNJo74kMV+VKuOQwXddb9BT5jQHtGnoOmVeK7S9zCKWgB/0y2Wo65BON4oVFzhXeQoiEda8FTB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720114349; c=relaxed/simple;
-	bh=ln09xEmOM+kzw9WpLfjUjc3sZlPX+iXLorhBcZY3XKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YNOH4/9CHLpb15M0K9xIy1/+EmrzObVkMn+IuW1zdkMmq+kEdTd4Wd/7BkSWvvIoCA1ljDLbqDegFr+mpCNRHqtepKiIho4f0WLKzltMCnWNEGJflNdaAB5DaBNeDAMBt2OERUh4kcO3hqAxyUXt3EJcduSciJfhM1pLjmwxZNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWYl9MG2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720117177; c=relaxed/simple;
+	bh=pWtII7theaktCzlZ4eN742XXnIUqYR3Cg5v7uSpJRNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJrFI491InUFrMYnGFYsPDAV87/3Ozru4vvUdCrICpGyCQAlWu+IV2rV+Q9hrZY8ONQVVgrPdqhfj28PUKmP0pU+iz/Etr3+T6SSaCLvwbmTIyX5xTZ0nO0uxfM4uqlAgt6cViWHPlR0QOlz9yYOh62DWv72mIMHc5WjeBPylAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=GIyWfvOs; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWYl9MG2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB70EC4AF0B
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 17:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720114349;
-	bh=ln09xEmOM+kzw9WpLfjUjc3sZlPX+iXLorhBcZY3XKw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HWYl9MG2yZ1rikoO6BWyPW3+TPODsL/ZKnK72pN3QFBIibrvYswoMFSTxtl3XFL2Y
-	 3XEPC7MHkI2bAakxNXGSlJB0tlAjrWYYkCCqa4dAA3noOyJA7oKbtQSsaHW5QBXS17
-	 Tk/RdspGp6aeY5U5WL0dL1a0MvPuxhdbcFRJr5ksCrdilan6o7upEJiJ9pAkzvJah1
-	 hIsgxN6CC/BbjVmoXvqE92jpAknZOxYOrKJrYn+Z9qUCJYPJfVmo5/rPtFGo5CtZpK
-	 YJ8S+ptTVDcCwbHCErE4JSYBS7sNvpFnQlPq7cgKt3MIh56paIhva74tR2mMuJg5n1
-	 2Pzn51pQYoBGQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a724a8097deso105447766b.1
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 10:32:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX6VXyRJyhHbUhllokDi2Awg+zZ0EJJLyyNAbW/yBwRFH51yCHV+XMg+8nqYbmUAgnSsuaZlt579c2gXL2dfGiJ3/uNzgxuB7XtwDI=
-X-Gm-Message-State: AOJu0Yz2dqyik+A7fwUc0OkxZutkPX78eBAyjV1Ah3Qenpwf10AF25xh
-	gE39DJtRqlia1OfHTFzq6u2t3rIbuQuc4LhIv+/RW/TSkSasGD2sCMsl8nGcCKgaTVWbkbQC9sH
-	GkfOvqYM/pq3sEMZwvLlimBiJQmM=
-X-Google-Smtp-Source: AGHT+IFZqWRfzSyRUXYjto4ORJlfnjFaKu7LIbKOqkA2/uYCdlWzOclXoUWpuR7YqssOCDNWdst5UtNTXEsgE0DjuJc=
-X-Received: by 2002:a17:906:c256:b0:a72:7da4:267c with SMTP id
- a640c23a62f3a-a77ba44cfb2mr124294166b.12.1720114347425; Thu, 04 Jul 2024
- 10:32:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="GIyWfvOs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D6AC420007;
+	Thu,  4 Jul 2024 18:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1720117173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5ehU1NmAgichp4m8MzuZQfqjkE5PpzEKSy+xvBxKSSM=;
+	b=GIyWfvOsTGUSv1/hsEaQVUE21GVQxnlG9LLyOmGhlOs7w1X1KeauR8lrmiY2n2Pl/kDnxu
+	SL8ZpoW2YP8tfX/vRHE1nn/qME2Xq17RjKRxcdk1LLZDf1s36vtnQbPg/4Rv3q+G6Epf+t
+	b+rGBRLglsMjoBRhBcguxOkpLIWgsmc6oetK4kfpzzOwHCA0PiknZDyQtvvpz9US6lRADC
+	jp1RSOpkOW04ZsNt2EbLJntTgjVy6rqMrSPjA3gD0aH1TLh+QelkOB/RIFyLQtfCLQiAqE
+	W3ktQqovAEuhBgpIyksbbXE1mCkv/x+ZjhB089n3IDS2eOj4/fSpt7FgEQQwtQ==
+Message-ID: <a57dd43e-0798-4dab-853f-da84a19ee153@arinc9.com>
+Date: Thu, 4 Jul 2024 21:19:28 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
- <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
- <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
- <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
- <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com> <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
-In-Reply-To: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Thu, 4 Jul 2024 18:31:50 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H5MEyR+=_16bzq533ua-Ne3F1evZmt2NMcYoT9t=XtPig@mail.gmail.com>
-Message-ID: <CAL3q7H5MEyR+=_16bzq533ua-Ne3F1evZmt2NMcYoT9t=XtPig@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Andrea Gelmini <andrea.gelmini@gmail.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address and
+ issue warning
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, Frank Wunderlich <linux@fw-web.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ regressions@lists.linux.dev
+References: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
+ <d3ac5584-8e52-46e0-b690-ad5faa1ede61@arinc9.com>
+ <20240704172154.opqyrv2mfgbxj7ce@skbuf>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240704172154.opqyrv2mfgbxj7ce@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Thu, Jul 4, 2024 at 6:25=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
-wrote:
->
-> On Thu, Jul 4, 2024 at 3:48=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gma=
-il.com> wrote:
-> >
-> > Il giorno gio 4 lug 2024 alle ore 15:47 Andrea Gelmini
-> > <andrea.gelmini@gmail.com> ha scritto:
-> > > I send you everything when I collect enough data.
-> >
-> > Here we are.
-> >
-> > Kernel rc6+branch:
-> >     Output of bfptrace:
-> >     https://pastebin.com/P9RFp5mg
->
-> So a couple interesting things here, which we didn't get in the short
-> capture from Mikhail:
->
-> 1) There's apparently multiple tasks entering the shrinker at the same ti=
-me:
->      kswapd0, Chrome_ChildIOT, Chrome_IOThread, chrome, Xorg.
->
-> 2) In some cases we get very large negative numbers for the number of
-> extent maps to scan.
->     This shouldn't happen and either our own btrfs counter might have
-> overflowed or some other bug,
->     or the super block's shrinker is being called with sc->nr_to_scan
-> negative, and outside btrfs' control,
->     and it seems outside of control of the VFS's shrinker callback
-> (see fs/super.c:super_cache_scan()).
->
-> >
-> >     Recording of tar session: (summary: start fast, then flipping super=
- slow)
-> >     https://asciinema.org/a/BxYI83TkrlOhEe42IWXNY135D
-> >
-> >     Recording of htop session: (summary: PSI high and two threads at 10=
-0%)
-> >     https://asciinema.org/a/ZwGSepZZ8TSpFfPssACUUXcCB
->
-> Ok, so maybe I missed it, but I haven't kswapd0 in there, or nothing
-> taking 100% CPU.
-> Maybe it was just Mikhail running into that?
->
-> I was looking at the memory PSI and I never noticed it going over 60%.
-> As for cpu and IO PSI, for cpu it was always low, under 3% from what
-> I've seen and for IO even lower than that, very close to 0%.
->
-> So I'm surprised that you get an unresponsive desktop.
->
-> >
-> >
-> > Kernel 6.6.36:
-> >     Recording of tar session: (summary: tar always fast)
-> >     https://asciinema.org/a/a6dOkbjyPFkkQ5aNTaRiFD3H8
-> >
-> >     Recording of htop session: (summary: no threads and PSI load)
-> >     https://asciinema.org/a/mFsypWzHfSdsjrIQf8zpzNpKo
->
-> Interestingly, here the memory PSI stays at 0% or very close to that,
-> it never reaches anything close to the 60%.
->
-> >
-> > If you need to run for longer time, I can do it in the weekend.
-> > If you need dump of my BTRFS fs, no problem, but I need 'btrfs image
-> > -s" working (point is: scrambling filenames).
->
-> Ok, so I haven been delaying my reply because I kept accumulating
-> things for you (or Mikhail) to try, and avoid sending several messages
-> with very little.
->
-> So first thing, I tried reproducing your scenario like you described
-> in a previous message using tar:
->
-> On a fresh btrfs filesystem, I cloned Linus' kernel tree into /mnt/git/li=
-nux
-> Compiled a kernel.
-> Then copied the tree 3 times like this:
->
-> cd /mnt/git
-> cp --reflink=3Dnever -r linux linux2
-> cp --reflink=3Dnever -r linux linux3
-> cp --reflink=3Dnever -r linux linux4
->
-> The total size of /mnt/git was 62G (as reported by:  du -hs /mnt/git).
->
-> Than I ran:
->
-> cd /mnt/git
-> tar cp git/ | pv > /dev/null
->
-> With htop in parallel, the bpftrace script, and since my htop version
-> doesn't show PSI information (probably an older version than yours), I
-> kept monitoring PSI like this:
->
-> watch -d -n 3 'echo "cpu:\n"; cat /proc/pressure/cpu ; echo
-> "\nmemory:\n" ; cat /proc/pressure/memory ; echo "\nio:\n" ; cat
-> /proc/pressure/io'
->
-> Nothing went out of the roof, the machine was always responsive, never
-> seen kswapd0 anywhere near the top, and the process using most CPU was
-> tar (and always under 30%).
-> PSI had all values low.
->
-> The shrinker was being triggered very often, for small numbers (mostly
-> under 1000, and most of the time much less than that), but I never had
-> those large negative numbers nor apparently different tasks entering
-> into it concurrently.
-> It took a few seconds at most in each run.
->
-> I also tried monitoring while doing the "cp --reflink=3Dnever -r"
-> commands and while PSI often peaked to 92%, 93%, the system was always
-> responsive (and such IO PSI seems reasonable since we are doing a lot
-> of read and write IO).
->
-> So several different things to try here:
->
-> 1) First let's check that the problem is really a consequence of the shri=
-nker.
->     Try this patch:
->
->     https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1ae=
-3ac4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
->
->     This disables the shrinker. This is just to confirm if I'm looking
-> in the right direction, if your problem is the same as Mikhail's and
-> double check his bisection.
->
-> 2) Then drop that patch that disables the shrinker.
->      With all the previous 4 patches applied, apply this one on top of th=
-em:
->
->      https://gist.githubusercontent.com/fdmanana/9cea16ca56594f8c7e20b67d=
-c66c6c94/raw/557bd5f6b37b65d210218f8da8987b74bfe5e515/gistfile1.txt
->
->      The goal here is to see if the extent map eviction done by the
-> shrinker is making reads from other tasks too slow, and check if
-> that's what0s making your system unresponsive.
->
-> 3) Then drop the patch from step 2), and on top of the previous 4
-> patches from my git tree, apply this one:
->
->      https://gist.githubusercontent.com/fdmanana/a7c9c2abb69c978cf5b80c2f=
-784243d5/raw/b4cca964904d3ec15c74e36ccf111a3a2f530520/gistfile1.txt
->
->      This is just to confirm if we do have concurrent calls to the
-> shrinker, as the tracing seems to suggest, and where the negative
-> numbers come from.
->      It also helps to check if not allowing concurrent calls to it, by
-> skipping if it's already running, helps making the problems go away.
+On 04/07/2024 20:21, Vladimir Oltean wrote:
+> On Wed, Jul 03, 2024 at 10:03:09AM +0300, Arınç ÜNAL wrote:
+>> Works on standalone MT7530, MT7621's MCM MT7530, and MT7531. From MT7621's
+>> MCM MT7530:
+>>
+>> [    1.357287] mt7530-mdio mdio-bus:1f: MT7530 adapts as multi-chip module
+> 
+> Why is the device corresponding to the first print located at address 1f,
+> then 0?
 
-Oh and for this one, show your 'dmesg' after your testing to see if
-any stack traces or warning messages were logged (even if it happens
-to solve all the problems).
+Because mdio_device_register() in mt7530_reregister() runs with new_mdiodev
+after dev_warn() runs with mdiodev.
 
-Thanks!
+> 
+>> [    1.364065] mt7530-mdio mdio-bus:00: [Firmware Warn]: impossible switch MDIO address in device tree, assuming 31
+>> [    1.374303] mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -14
+>> [...]
+>> [    1.448370] mt7530-mdio mdio-bus:1f: MT7530 adapts as multi-chip module
+>> [    1.477676] mt7530-mdio mdio-bus:1f: configuring for fixed/rgmii link mode
+>> [    1.485687] mt7530-mdio mdio-bus:1f: Link is Up - 1Gbps/Full - flow control rx/tx
+>> [    1.493480] mt7530-mdio mdio-bus:1f: configuring for fixed/trgmii link mode
+>> [    1.502680] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=17)
+>> [    1.513620] mt7530-mdio mdio-bus:1f: Link is Up - 1Gbps/Full - flow control rx/tx
+>> [    1.519671] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=18)
+>> [    1.533072] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=19)
+>> [    1.545042] mt7530-mdio mdio-bus:1f lan4 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=20)
+>> [    1.557031] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=21)
 
-
->
-> >
-> > Thanks a lot,
->
-> Thanks a lot to you and Mikhail, not just for the reporting but also
-> to apply patches, compile a kernel, run the tests and do all those
-> valuable observations which are all very time consuming.
->
-> Thanks!
->
-> > Gelma
+Arınç
