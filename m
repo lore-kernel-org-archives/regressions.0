@@ -1,85 +1,85 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2871BC4E
-	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 10:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88E1AC229
+	for <regressions@lists.linux.dev>; Thu,  4 Jul 2024 10:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720088914; cv=none; b=GPSzKaKv+G9f10Cp01K+D0u+V/gydpCM4PnyAVmxRkgc5UWdm0wnx7T2D+JR3Q8zHwpbDz8sZSmXxcPhGl4u0K1+06NNdOrAJQGmEekBG3Sj3AABBhGuE0VI74MX4M2w2SBuFx+2O97CeGIz7Kv6ARxzO3f0TEXpjazqByPDUtc=
+	t=1720090141; cv=none; b=YKBQyXSz1FtAehs0RlX9xLRZyVV5VIEUwoMc/z4CjvUdtp0gI//GT9i8jUQOrto8u9qQdrgd/afPtw8/HEzKUlInIWriFSAzQDkpJDnaF9XrT3iSLS+zOkx9AJQjJC5/VeCvgHbl2uLSezWYwvw7D4pvGoKYyLLUI8dC0XHJZWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720088914; c=relaxed/simple;
-	bh=YWy3d3DnvJyT0JoKU9GO44PEEtPz9f+YneBPzWEB9Qg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=cCDgvNTP2LwbmzcLeuaLBoVVmjhjhWNzWK5RedbipTNCmxtSiTPENgUiQVzKVK90PETCEit9HG/nJCA+0YpyVYH7/LEc5ncC+v05Htbczw0Q//uTZ84T7UXjN1zyCchZKnnYBn2oRSZ9g/JTOqUmCmFJGjLOW8M3IMQS6qd7fD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oUhJwOE9; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oUhJwOE9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=YWy3d3DnvJyT0JoKU9GO44PEEtPz9f+YneBPzWEB9Qg=; t=1720088911;
-	x=1720520911; b=oUhJwOE97yAsEgBoG7ffGLR1l4tIYdaTklEeFZ38zjNxmB4fJ3MZJyIQqhPJb
-	WZnXD7+2ePoWbWzk95xWbnKhsPL0/jHBiRvcbuToevLeqNbxJ8WKwIc85SRaa5brwiK5bLEXMK0FQ
-	f8vXRVqiyzYClQLxJxx80l8OiCR0dmT4FEdZlNmcWxEHmLkirbYYydg2cunCpfijB/I9sJ0nbNY2h
-	f6OMPAGBYeJUb9Ye5LebTailNImNcWcaCzZ5o2+m91tSJok7CThhG7ukc68AZCUOiRsh6xcahXiIt
-	498vInokmolgQTMNOu5pWf59ul6M4zjLRfEvYZnvwa67er+FZA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sPJ1F-0006ZD-Ml; Thu, 04 Jul 2024 11:44:49 +0200
-Message-ID: <6302c372-3bb9-4b9d-a5c3-22f432f96329@leemhuis.info>
-Date: Thu, 4 Jul 2024 11:44:49 +0200
+	s=arc-20240116; t=1720090141; c=relaxed/simple;
+	bh=mtHqDFTlBtadte2NCXM5kXHaYvGqZmcw7tbdCVEx7JE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EE1bQp+xVPEZmLPq+v0Ttq96Ap/sH8SJpZVBFgPshM8RDvPgGblSvvf8Zf3HGb04RO6f41AhB8i6tvgdyQKfpTxpcKUEK9fwMKgQvYQ+NwEbANU0tP+k5B6TBEYSd6bIfvT0UXbU/py7sV4mBwQp/yjCk7rOxHtY/ObPGiuYemI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sPK18-000000008CZ-2DuW;
+	Thu, 04 Jul 2024 10:48:46 +0000
+Date: Thu, 4 Jul 2024 11:48:42 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net v3] net: dsa: mt7530: fix impossible MDIO address and
+ issue warning
+Message-ID: <ZoZ-ClhHUWzAPB1D@makrotopia.org>
+References: <7e3fed489c0bbca84a386b1077c61589030ff4ab.1719963228.git.daniel@makrotopia.org>
+ <20240703191308.3703099c@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720088911;8481bbac;
-X-HE-SMSGID: 1sPJ1F-0006ZD-Ml
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703191308.3703099c@kernel.org>
 
+On Wed, Jul 03, 2024 at 07:13:08PM -0700, Jakub Kicinski wrote:
+> On Wed, 3 Jul 2024 00:44:28 +0100 Daniel Golle wrote:
+> > +	/* The corrected address is calculated as stated below:
+> > +	 * 0~6   -> 31
+> > +	 * 8~14  -> 7
+> > +	 * 16~22 -> 15
+> > +	 * 24~30 -> 23
+> > +	 */
+> > +return ((((phy_addr - MT7530_NUM_PORTS) & ~MT7530_NUM_PORTS) % PHY_MAX_ADDR) +
+> > +	MT7530_NUM_PORTS) & (PHY_MAX_ADDR - 1);
+> 
+> nit: the return statement lacks indentation
 
+Yes, lacks an additional space to match the level of the first open parentheses.
+I'll fix that in the next round.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> 
+> but also based on the comment, isn't it:
+> 
+> 	return (round_down(phy_addr, MT7530_NUM_PORTS + 1) - 1)	& (PHY_MAX_ADDR - 1);
 
-#regzbot report:
-https://lore.kernel.org/all/2ed4c630-204a-4f80-a37f-f2ca838eb455@linaro.org/
-#regzbot introduced: 5725f40698b9ba
-#regzbot summary: thermal: core: "thermal thermal_zoneXX: failed to read
-out thermal zone" output in a loop
+The original, more complicated statement covers also the correct addresses,
+ie. 31 -> 31, 7 -> 7, 15 -> 15, 23 -> 23. However, the function is never
+called if the address is deemed correct, so that doesn't actually matter.
 
-#regzbot report:
-https://lore.kernel.org/all/3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de/
-#regzbot introduced: 935df1bd40d43c
-#regzbot summary: of/irq: identification of ATA drives with P.A.
-Semi Nemo boards broke
+It's kinda difficult to decide whether it is more important to return
+correct results also for values never used with the current code, or
+have a slightly more readable and shorter function but with expectations
+regarding the input values given by the caller.
 
-#regzbot report: https://lore.kernel.org/all/ZoM6CUhbWuAFuHjP@krava/
-#regzbot introduced: v6.9..v6.10-rc6
-#regzbot summary: bpf: build error with CONFIG_WERROR and CONFIG_BPF
-#regzbot fix: bpf: fix order of args in call to bpf_map_kvcalloc
-#regzbot relate:
-https://lore.kernel.org/bpf/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@intel.com/
-
-#regzbot report:
-https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-#regzbot fix: drm/qxl: Pin buffer objects for internal mappings
-#regzbot relate:
-https://lore.kernel.org/dri-devel/20240702142034.32615-1-tzimmermann@suse.de/
+Opinions?
