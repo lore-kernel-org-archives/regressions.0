@@ -1,101 +1,117 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4F4144D22
-	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 06:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F234813AD03
+	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 08:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720161049; cv=none; b=Blg4XCW+ayDW0Hn2suxQgrtnabZ58eGki7NttiGmXClrTJJgvZk5nO/uvJEygIhLeRj4hGLncamFReYig4DFzWQYFfhLJQnZSKfpKCF6XMAVu8/dRWNkzp+AZDUKI05IpYST3vGcriI1XCQLsKThcaUM8ujLLHS/oINciVp0xyI=
+	t=1720166892; cv=none; b=ADA46Xir481uCSsm0rtemNucdGk4xLOlHvDEYTmBF+fvw2xzfvqVLtDAy6LZMj3524Olb6ARqZ1+TMzbNxV5aUkhVfl+I/Kvq78sD1GY6vU7JCsmLe9r7sqwVu0X+eJH/DyFnYoUFkCmBRQ8CGAQ5JzpKRlx1WMH/KsL3S7rirc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720161049; c=relaxed/simple;
-	bh=3y1kYHHnYGzeD6Wz0nY/wCVLnjXbc4LLizc2QWYCsb4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NPV3CxccwKAHPadFeyMiw95U1AwB23jdVEHdt2EpnvvZn7jp9ueOfY8uDn+whQdFUxHvhrEOdaE7yvdXYVUeUqacwbSIWZOhgM8cdv5V///IobXSuo9yNdtMLwL4ynlWmfcXoUQ7fssC7r1g6xifLihqanhkHiN8HFeWj5/J8jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fM3RemUW; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720166892; c=relaxed/simple;
+	bh=wvdYHlQL8lO+IlfRdDENMqAj3V5CQXQwPRSb2U+uwUE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a2JbR06kYk8jEBs2BTUsziAL3hzuuny2mM3UvvZDeLb6kVKO/NHJV9uh0RjTLSE4e9Hp1J+/+DD+J0LhBw8Y3Tak+jivpZcMKaJ/JLL2VqQMutq3wWFaeovdPrffps1ymrm9HrLQFcJwZ9Co2GDUu/OMRL9v5yXpEja+aeIK+X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QaLs78Zu; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fM3RemUW"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-64b29539d86so11262427b3.2
-        for <regressions@lists.linux.dev>; Thu, 04 Jul 2024 23:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QaLs78Zu"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42578fe58a6so9266905e9.3
+        for <regressions@lists.linux.dev>; Fri, 05 Jul 2024 01:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720161047; x=1720765847; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jQbhl45iOUg0QGUWvg2xNxmieezt2A1bnLf0za/XLZY=;
-        b=fM3RemUWm8CvpDCCzKk62CJiG8IKDItGzU8AyBT8hiuBsObLvlgOwYuFuh8j+8Ddhy
-         MRDWupU/CtLsGjjngBgNSs9iZfT72nKZ4tjxFWgnAKw4b4Ar8DAVPGDgBBRft7qLvnKg
-         A22Zns1KfBytngy2tKY3VtzS8qE7DChZzM5YqOOEXK8lB77dGydeKu7FWD40yRiB8EG+
-         u8zh+C66fZbkjy7UqzNGhzOeBWIuuRhQ9ILdCAdME81BFCg3xxxSi2uDDQ8hckE8+6ST
-         RcIYhIltRoqr2KhG53AItNvbVVSXtvWhgtdCDQLLXGVT1IB5rxODZTJqCvLTFqC2Ize7
-         V/qw==
+        d=linaro.org; s=google; t=1720166889; x=1720771689; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WjGU82DEow4vCfytvOBUtVOJAoZCXHrpyKm0G7YFVnw=;
+        b=QaLs78ZuonC+T9nCLmtjhph/NOAsBoCbnpOarnZKGq7HxeQYwt1nkiEI/6QNdWGk/t
+         XBYHHJQKi7ynknRp77ArwwdRvg+LbUPqoX5qLAKKMkqQvts6Tc4ggSTrQp+OK2AZDlng
+         Fjv5dpFrC00KxvPF51fhToAkxQvBjDwwyydzN0i8Zp1s+K8k4ZO5dY7FNhQpqfYz29mx
+         KSNZD8gtB516jNRsfcMfrFLVWIq1BB5dRD5rv9ep5GeuEFqWECWD7Y0PDmtf4L183Dq4
+         lsR+u7L2UgfS+aMe2GvQz6BbosPUH4MWl4a8hpJV7g0XwUKXaeJR5y8bDs9xzZaU4AcE
+         ofuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720161047; x=1720765847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jQbhl45iOUg0QGUWvg2xNxmieezt2A1bnLf0za/XLZY=;
-        b=RXQvqEhEx5i2QjDaCsAMydo4/N78XaWUFaC2cxqpKzbLYOI7JCjbe5rE6LQmc387tm
-         zpvv/j9YxwrF30+GEGuLGkul5gFikafuUTaS3EQXeZQYjpcMyDiHoRt0kECRXcLWOBvY
-         MftWvE2jH3FbMasSOynL1osYaF7cDSn/2ni74z34zOwI8P8YR9fU+yMmtG4SasJpA2F7
-         +vL3OFmS/3Wfk9GqeAf83evnd9vB7c4i7tzayzOwtBE+zMmlWM8ZUgxw4LvFCexQx8rR
-         X8sPitfFAmslPVTCeupCNGF29x1TxI9yZMpwFsaPx0ojuM9eB3tOoIvqekhMdrjdUiem
-         NIUw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6z0E0na6EAm32GA9vcgS5tts6tZVcQt44tX9lw0OU9uFQT0MPIILktbe9XPalAMe9WN2megOCjgncNWth2gfUkMyyEWJK5ZXkyig=
-X-Gm-Message-State: AOJu0YwKbmdRdUAbQPjRYJttM1UmdJXVOpjN1LIncl1jsEWQLY+W8DLJ
-	djdgf8iyoGQoyPK3qkVxNfToTftQsqFR0diyV+b4y+WAskimcFKqSypWMtUyugCeJ7iJ+qhXqyc
-	WK118PtbJABiV+kxx6Juf814AUh4=
-X-Google-Smtp-Source: AGHT+IEb2d4TYFx4dcPUM/2H6DuAxz2Xagt477hoH4hD4d6CeTKaXtpWV6ii11wwbYejeouG4e95xSVT7l9Y54yfW1k=
-X-Received: by 2002:a05:690c:3382:b0:627:d92a:bdc0 with SMTP id
- 00721157ae682-652d7683982mr46295877b3.36.1720161047227; Thu, 04 Jul 2024
- 23:30:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720166889; x=1720771689;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WjGU82DEow4vCfytvOBUtVOJAoZCXHrpyKm0G7YFVnw=;
+        b=Gd/ZH1YMdN1bfHF9JOAP4WSoyg+HLdDLMydvOGW0sDtaYZIRDKGLYL7AQFJLkYfqGq
+         xOp3edklCTYTQ+Y9kQyFb84nH7aOyIxqXNuHRvgnY4vdcHw7pbcHlb9+1UbyvkMu3Qos
+         zqth4IVzd8T/dc/F8SHFZSskN6s/LO5htUZIb19Bwk+tawU4F1gumSTMtkswSP4AOU1C
+         skVO9ZkaaFd3gsSy+chrAuBy/YH2axZXRGrvmSUH1+rWKhY+5bn2/MZ1NN0gJyWOFUmh
+         l3WmArOonBQ0VD7qMFudSFrfhL+mxCIeeyu0GBkCEOUv7FBuCJL5379kTb3gHokFLedV
+         /zjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVERlgx9XgiSYD2upzS6XY1IrjAy5CLilhKJTqXRSQurLybgJ7QdbefPe0SduGYAbw1AAWsldrlC4FKuwDae+cP1009SJS52Rf8jbY=
+X-Gm-Message-State: AOJu0YxnEWqyDxNUgzimWtEkNTH8D4jBPCxpHZAuSpR60R6qjAO3hSTC
+	8vyURBvDglx4RgGepJPsMMp0EDrlZYKD3fdYSFJAb5lt9qZ9uL3JyecmIcYRnLc=
+X-Google-Smtp-Source: AGHT+IFknzjJC+OXw3nrKuw0O6Ja5aXZl7xCifpIrGmyLs9uFgT9hmZIVSZhR+sgHT6jrB7dDgY4ZA==
+X-Received: by 2002:a05:600c:1c11:b0:424:ada1:6d9 with SMTP id 5b1f17b1804b1-4264a46928dmr31258775e9.34.1720166889435;
+        Fri, 05 Jul 2024 01:08:09 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4264a1d69d8sm51097775e9.19.2024.07.05.01.08.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 01:08:09 -0700 (PDT)
+Message-ID: <b63ac8c6-213b-4307-8d33-48badee7881d@linaro.org>
+Date: Fri, 5 Jul 2024 10:08:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
- <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
- <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
- <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
- <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com> <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
-In-Reply-To: <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
-From: Andrea Gelmini <andrea.gelmini@gmail.com>
-Date: Fri, 5 Jul 2024 08:30:31 +0200
-Message-ID: <CAK-xaQYwgOKkeD4HvMtNqNqqchW4aS2gtvzGJ-yKwfE6uaUYng@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] power: supply: core: return -EAGAIN on uninitialized read
+ temp
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Sebastian Reichel <sre@kernel.org>, Rhyland Klein <rklein@nvidia.com>,
+ Anton Vorontsov <cbouatmailru@gmail.com>, Jenny TC <jenny.tc@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20240704-topic-sm8x50-upstream-fix-battmgr-temp-tz-warn-v1-1-9d66d6f6efde@linaro.org>
+ <a50eb87a-4dcc-4272-b897-fb8170bfe58b@linaro.org>
+ <0516a900-0911-47f3-888e-57d014986e3b@kernel.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <0516a900-0911-47f3-888e-57d014986e3b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Il giorno gio 4 lug 2024 alle ore 19:25 Filipe Manana
-<fdmanana@kernel.org> ha scritto:
-> 1) First let's check that the problem is really a consequence of the shrinker.
->     Try this patch:
->
->     https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1ae3ac4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
->
->     This disables the shrinker. This is just to confirm if I'm looking
-> in the right direction, if your problem is the same as Mikhail's and
-> double check his bisection.
+On 05/07/2024 07:56, Krzysztof Kozlowski wrote:
+> On 04/07/2024 18:41, Daniel Lezcano wrote:
+>> On 04/07/2024 10:52, Neil Armstrong wrote:
+>>> If the thermal core tries to update the temperature from an
+>>> uninitialized power supply, it will swawn the following warning:
+>>> thermal thermal_zoneXX: failed to read out thermal zone (-19)
+>>>
+>>> But reading from an uninitialized power supply should not be
+>>> considered as a fatal error, but the thermal core expects
+>>> the -EAGAIN error to be returned in this particular case.
+>>>
+>>> So convert -ENODEV as -EAGAIN to express the fact that reading
+>>> temperature from an uninitialized power supply shouldn't be
+>>> a fatal error, but should indicate to the thermal zone it should
+>>> retry later.
+>>>
+>>> It notably removes such messages on Qualcomm platforms using the
+>>> qcom_battmgr driver spawning warnings until the aDSP firmware
+>>> gets up and the battery manager reports valid data.
+>>
+>> Is it possible to have the aDSP firmware ready first ?
+> 
+> I don't think so. ADSP firmware is a file, so as every firmware it can
+> be loaded from rootfs, not initramfs (unlike this driver), or even missing.
 
-Ok, so, I confirm. With this change, just a little bit of PSI memory
-sometime (<3%), but no skyrocket. Also, tar at full speed.
+Ok, said differently, can't we initialize the thermal zone after the 
+firmware is loaded ?
 
-Now, I'm going to prepare the btrfs image to send you.
 
-The other steps later.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
