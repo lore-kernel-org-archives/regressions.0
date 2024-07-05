@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB526144D38
-	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 11:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD3F1494D7
+	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 11:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177251; cv=none; b=C4pyrMJ9Z8t6wk9S5c08lvNS9Y1YCQDLZ6SwUpF392JPB17zqDKgbTeeuSdcrmwqvBRc/1bxnHR33heBMtBeu6eTKKmyLZTbccj0NOxw0j1WyH2qwywq+xAapJw4INHCw5VnJWeSkKwQzsbJ+ZjD+Yt9SHgNMWrYkD8huzQAY54=
+	t=1720177606; cv=none; b=mfAIOX92J9njlCgGVttXwvXXcbWFVULTG8/axfArFviM+qYITUJ6aLGEcmQbEI2bzldsWOBReXOMVFp4hk+ZMhUMUCiPiDnGHiX5PzTFXOOyoks/3/gXzoTgCWDjNZZGNGn1oZ+PHOENTE90MGtmkraHg4uyzHKN5lLnYBUeAqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177251; c=relaxed/simple;
-	bh=Fgt3RnGtwmO5wB3uewwZsYlqeRL9Q4dvJgMlsjigWf8=;
+	s=arc-20240116; t=1720177606; c=relaxed/simple;
+	bh=8+WZaP3nhTCnIc1AsENbtDY0K0ju2lbrz8eZmgxBEWs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b7IKNPKZg+TcjFqzJDbawH8imXWcnsrVpr57dacZ+wysFLgbpp3CVRM6dvDORbEvrAmFUak+9RCG9U2wQW3LOqweNS3rZ6nHpaQv/h0IpKH9u6mPSbDrrRuExyDNQ8Pq3EUWR7yiNJWHClBrOvyD/Tr0th1b+c7G1XIdObGz1sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFtDFdLJ; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=W72u6aOGri1kUwRHVJgfplansBvQgtJKIJeM5z53LId+N4bJY+umJEhD7zns9WfpWi5rf3OXNOWOYgtCbjiURLBeyASLhU6v8+NnxZ0+n5M4NNFCYBvVOgdwkb03Ak5F8xb7L+TXJfcFwL2lkF4x68/FyvDiAFFEJxpxnMym8BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkviSif6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFtDFdLJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A18C4AF0A
-	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 11:00:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkviSif6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A456C116B1
+	for <regressions@lists.linux.dev>; Fri,  5 Jul 2024 11:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720177250;
-	bh=Fgt3RnGtwmO5wB3uewwZsYlqeRL9Q4dvJgMlsjigWf8=;
+	s=k20201202; t=1720177605;
+	bh=8+WZaP3nhTCnIc1AsENbtDY0K0ju2lbrz8eZmgxBEWs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bFtDFdLJdRmvD9F9W42sJ63l9PJA+ADSBPMhYYGhWwbbo5N6VBjcZyctbbtaYGu8L
-	 3+cTV7GZZBh17NRGcFsm+9bumcNUjAdcmhemprwgTPG9VxfjTeOoa4uUxab3K9wsmm
-	 Mh0LfLofall1YnvJEwOlEKwsgAqYZ9O0RSL02l2SMZiNx6DANNBPHO/Bd7RUSE+QX/
-	 2dlxx8yZ3K7oT0ncdNxBfMapkQmAS+TqcoIM6SQKLXl0SBHcmJASt57vN0Zo7CrMmA
-	 gMBUnuWlRyw2JESv+bfxscF0i+Sl+JQ2MUvPDzNOtNEXYzSEcvuiKfEJX/1OjEYoBm
-	 hii88eyCQU/pA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a72988749f0so204656566b.0
-        for <regressions@lists.linux.dev>; Fri, 05 Jul 2024 04:00:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNuLo+nINUMkmR9VkgJn/Plzrs6DcnkHaom6AsyocMot5LAP0A+O0bTH/BLULEngpGsyPc4j7+LlWiQpV7EFdEmp7vvcc0IJoMAi4=
-X-Gm-Message-State: AOJu0YzL3JED/wE5LSxey4Zwg3C0rjYxkKI13SOOXgLSvC+aOYG1RuJD
-	jPmse01zcq3yI1mlrfyuS+GTuMruzkdzDPsuU66E0EGcr5fP2qfzb3YfkUxDEg1z0+E8Kzm2Haw
-	DhUzOyqJyxYf/xqE7BTWuburS9vE=
-X-Google-Smtp-Source: AGHT+IFuUSm9RlYCkmQLzKs9FUyEgaD5z0JbhqzUNvkEF0C7nb1RcZBZwuulQciVrer2M2tG71l2ufmovAY64qV1q1A=
-X-Received: by 2002:a17:906:c247:b0:a77:c548:6456 with SMTP id
- a640c23a62f3a-a77c54864b3mr189131966b.59.1720177249139; Fri, 05 Jul 2024
- 04:00:49 -0700 (PDT)
+	b=YkviSif608l3PyrpIrzjpfqMhEuyNel8EH9tgZC+AAUw5qIdfQ0Q/K6q2Z3Anys1A
+	 DzQTUVFSpsNJXzsdW3iMTBpLjiLDuF2abP2v/fJ+LjQnSMZQ8YLTgngvWYX608rgMq
+	 fZ6oI9oANIDXaOtkYbegNp42/11V83GSUBHy/gZTFBLzDwxff/qji2mIcAwaFTRYI+
+	 iwE4jOBiE3XAtb/+kdXJlqpaQ+S8SYc7WRHfmC/JyLu6MfExrzZy+AfBsTSw08/1Xz
+	 dl2QdCwOFDvTDpsL7sc38km2ZKn5NsROADXmuLmW6f+DpDJziAn46pQCMzBcVPheRa
+	 UPMyOCHwxq/wA==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a724a8097deso187240066b.1
+        for <regressions@lists.linux.dev>; Fri, 05 Jul 2024 04:06:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWcBdxFIe4keCUukj69kJTE5sz/6vYrJHnAqYXgtPeINUHsiU3/Dkrrge+Nc/YJZT84WPQYnTgSBUBNYnDwhfAZrHJLdEg3tQPofVE=
+X-Gm-Message-State: AOJu0YyV4Us3ATgKseMEhJNf8Yeqk6fFZRN1fWFJLVHDKpWc5FSsZNFB
+	YnSr2ub92r/nVDaXcp9/s+eatjQkKYuTFayBVcisHUdy05+16Ov8OvltNCP6T4+OymYl7l7rbYc
+	LWXjSSi8QdMaO/4JALtxe7H7iRhA=
+X-Google-Smtp-Source: AGHT+IH64c+v1szNlZ0nWhKoen4VTG9k6IK/Oj+q+L+IPrB+lOM0thHysuOIn7Ff3Wm2h1RYlJynnym5RR6NAAryEa0=
+X-Received: by 2002:a17:906:34d3:b0:a6f:b58f:ae3c with SMTP id
+ a640c23a62f3a-a77ba468a2amr307138466b.26.1720177601984; Fri, 05 Jul 2024
+ 04:06:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -56,12 +56,12 @@ References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
  <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
  <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
  <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
- <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com> <CAK-xaQa2NP0kfwQZoko-FUsSCbW31F1S48SJy8+94aSs7PCd3w@mail.gmail.com>
-In-Reply-To: <CAK-xaQa2NP0kfwQZoko-FUsSCbW31F1S48SJy8+94aSs7PCd3w@mail.gmail.com>
+ <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com> <CAK-xaQYwgOKkeD4HvMtNqNqqchW4aS2gtvzGJ-yKwfE6uaUYng@mail.gmail.com>
+In-Reply-To: <CAK-xaQYwgOKkeD4HvMtNqNqqchW4aS2gtvzGJ-yKwfE6uaUYng@mail.gmail.com>
 From: Filipe Manana <fdmanana@kernel.org>
-Date: Fri, 5 Jul 2024 12:00:11 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6G43cb-k-efam8=ydR0L_MdEXvFtLf4T6uqakuS1FBiw@mail.gmail.com>
-Message-ID: <CAL3q7H6G43cb-k-efam8=ydR0L_MdEXvFtLf4T6uqakuS1FBiw@mail.gmail.com>
+Date: Fri, 5 Jul 2024 12:06:04 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7MP7HQbyMpGgRrG+rejQX+5Hc7ipPNPN_tjbaUzNBNGQ@mail.gmail.com>
+Message-ID: <CAL3q7H7MP7HQbyMpGgRrG+rejQX+5Hc7ipPNPN_tjbaUzNBNGQ@mail.gmail.com>
 Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
  execution time of the kswapd0 process and symptoms as if there is not enough memory
 To: Andrea Gelmini <andrea.gelmini@gmail.com>
@@ -72,112 +72,37 @@ Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 4, 2024 at 11:15=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmai=
-l.com> wrote:
+On Fri, Jul 5, 2024 at 7:30=E2=80=AFAM Andrea Gelmini <andrea.gelmini@gmail=
+.com> wrote:
 >
 > Il giorno gio 4 lug 2024 alle ore 19:25 Filipe Manana
 > <fdmanana@kernel.org> ha scritto:
-> > 2) In some cases we get very large negative numbers for the number of
-> > extent maps to scan.
-> >     This shouldn't happen and either our own btrfs counter might have
-> > overflowed or some other bug,
+> > 1) First let's check that the problem is really a consequence of the sh=
+rinker.
+> >     Try this patch:
+> >
+> >     https://gist.githubusercontent.com/fdmanana/b44abaade0000d28ba0e1e1=
+ae3ac4fee/raw/5c9bf0beb5aa156b893be2837c9244d035962c74/gistfile1.txt
+> >
+> >     This disables the shrinker. This is just to confirm if I'm looking
+> > in the right direction, if your problem is the same as Mikhail's and
+> > double check his bisection.
 >
-> Well, I was thinking about my specific odds, and I tried this:
-> a) kernel 6.6.36;
-> b) on spare partition nvme created a new shiny btrfs;
-> c) then mount it forcing compression;
-> d) multiple parallel cp of kernel and libreoffice src;
-> e) reboot with same rc6+branch already used;
-> f) tar of the new btrfs: no problem at all;
-> g) let it finish;
-> h) tar of /.snapshots: PSI memory skyrocket, and usual slowdown reading;
-> i) stop it;
-> l) again tar of the new btrfs: no problem
-> m) repeat a few times.
->
-> You can see the output here:
-> https://asciinema.org/a/rJpGWvXYH6IDBXWYhtJckkKWo
->
-> In the end you see I kill tar and let the PSI going down to zero, if
-> you are interested.
->
-> > Ok, so maybe I missed it, but I haven't kswapd0 in there, or nothing
-> > taking 100% CPU.
-> > Maybe it was just Mikhail running into that?
->
-> To have this effect and the extreme luggish response (I mean, click
-> something and it takes more than 30 seconds to react)
-> I need to work at least one day on my laptop. At this point also
-> cycling to virtual desktop takes a lot.
->
-> Thinking about my different use case:
-> a) i always suspend. I just reboot when change kernel. So, I can work
-> for weeks with same kernel. Suspend2RAM, not disk, btw;
-> b) months ago I let run beesd for a day.
->
-> > So I'm surprised that you get an unresponsive desktop.
-> Same point as before. In this case is not so luggish, but - i.e. - if
-> I click for screenlock it doesn't start immediately, it waits for a
-> little bit more than one second.
+> Ok, so, I confirm. With this change, just a little bit of PSI memory
+> sometime (<3%), but no skyrocket. Also, tar at full speed.
 
-Oh I see that on my main desktop which only uses ext4 and always has 2
-qemu vms usually running debian and opensuse.
-Sometimes even if the VMs aren't doing anything, but they used to be
-doing IO heavy testing, the desktop in the host gets unresponsive,
-clicking the screenlock often takes at least some 5 seconds, or
-changing workspaces takes a few seconds too, etc. Shouldn't happen in
-theory.
+Ok, so the bisection is reliable and it means you are experiencing the
+same problem that Mikhail reported.
 
 >
-> > Interestingly, here the memory PSI stays at 0% or very close to that,
-> > it never reaches anything close to the 60%.
->
-> You see the same thing with the last test with new btrfs partition.
-> New partition: ~0%
-> /.snapshots/: near 60%.
+> Now, I'm going to prepare the btrfs image to send you.
 
-It could be due to heavy fragmentation, but that should only be too
-slow if you were using a spinning disk.
-I think somewhere you mentioned nvme or ssd.
-
-Removing the extent maps could cause extra reads of metadata and be slow.
-But the number of extent maps removed on every iteration is relatively
-small, and round-robin, so... it's strange that it causes such huge
-pressure and desktop unresponsiveness.
-We will know if that's the case with the 2nd test patch.
+That might not be necessary, not sure how it would help, the 2nd patch
+to try would confirm if it's any fragmentation causing too many slow
+reads after extent map eviction.
+So save yourself some time for now because making the image is likely slow.
 
 >
->
-> > With htop in parallel, the bpftrace script, and since my htop version
-> > doesn't show PSI information (probably an older version than yours), I
-> > kept monitoring PSI like this:
->
-> Well, mine is taken from here:
-> https://github.com/htop-dev/htop.git
-> Compiled with:
-> ./configure --enable-capabilities --enable-delayacct --enable-sensors
-> --enable-werror   --enable-affinity
-> And tweaked config file. If you want I can send it.
+> The other steps later.
 
-Thanks, I'll have to try it eventually.
-
->
->
-> > So several different things to try here:
->
-> I stop here for the moment. I have to sleep.
-> In the weekend I do the rest and reply to you!
-
-Sure, take your time. It takes time patching and building kernels,
-plus the testing, etc.
-Many thanks for that!
-
->
-> > Thanks a lot to you and Mikhail, not just for the reporting but also
-> > to apply patches, compile a kernel, run the tests and do all those
-> > valuable observations which are all very time consuming.
->
-> My little contribution to free software!
->
-> Ciao,
-> Gelma
+Thanks!
