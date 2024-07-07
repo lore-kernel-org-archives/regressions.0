@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32B84F20C
-	for <regressions@lists.linux.dev>; Sat,  6 Jul 2024 17:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855348F6D
+	for <regressions@lists.linux.dev>; Sun,  7 Jul 2024 09:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720287481; cv=none; b=AP4etG4hqsA/KMeiDv69LinGnEXwGJ+7OwLzZ4B4zH1OIEnhDAfnlYJvdz8F0WWRec6LTBl03v12MLIOUVdbgRqtvNLAtelIH02tJUZRy/0wrhPiVbu8IqV43fGh9SjKlmsoNFR0ZQHBPQdPhOsZaimEoUeb3KppGzJKci6cjZc=
+	t=1720345302; cv=none; b=WpxWkMKdPVImYhjA7QMhef50hwZ1wGC2sXKoMjdz/NWHeLZA1I3TuCEEAlmn1qrJPiCY7iMZvSv9y6lTEBmbLIpYDCtA3CT3gyYHD6WKxi/e+svAl7ihmsaTYYGOYl4iY32GX7WpgjDegya7aQ8lUh18IplWR/hdjoNhsJMicd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720287481; c=relaxed/simple;
-	bh=G8HAvOUQlBzu7G/UjupxOn5yO3GOMwZPT+ciOrnoizg=;
+	s=arc-20240116; t=1720345302; c=relaxed/simple;
+	bh=2bi+gBoUIyePjQNmV3oMEFozEHi+tWljkvNKMDbCNKM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WEugX5Yvfdsk3SG+odjW1jvxE2VBexnsTR2Cas9rxFKJgQETJq8Z5j+okBQFBNCP+Xp/bTlfUFlYv2zqEc4+0ZZrZ2Bm6co8CBDAAGzOgt9N3w1raTxDLkMZ7hdlyq/51OOoE5rxojDTYZQGuvXzdhYaiCOCf1q/iy0sAiMDjSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6W+Z9z7; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=US5+eT/MKgOvNSIubhvGMHh0EDI91iS598dnlihCCSBVEwryfww66kNd+zP8rpWqEOc38WzaWUW15n9X9weM1bANz/di6hkMmVfmgohbQwcMwvbWF/tkEdV/BZHGw3bSDslyatrNkjPCwsCS5iOpq0dgICIvkL7k9beIbPNjCoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCz5xzgD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6W+Z9z7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCA2C32781
-	for <regressions@lists.linux.dev>; Sat,  6 Jul 2024 17:38:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCz5xzgD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 231C4C32781
+	for <regressions@lists.linux.dev>; Sun,  7 Jul 2024 09:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720287481;
-	bh=G8HAvOUQlBzu7G/UjupxOn5yO3GOMwZPT+ciOrnoizg=;
+	s=k20201202; t=1720345302;
+	bh=2bi+gBoUIyePjQNmV3oMEFozEHi+tWljkvNKMDbCNKM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D6W+Z9z7t5b1kMOTrKieOgN8eP330WS1YFeQOs3l9n2oxJLeRH4JxSEKJBIA5p/AS
-	 gixphbw2tD7EYiB+T6aTT2xd2ZgTEr4Tpgm39Q+UV+2fPP6LZvzLvkX7kfR69ZXyAM
-	 IAncBuIcT7mP7YJ+thvdiJINz255wtrX7tUaBbBJ1XiHDwNSrufLkYynWQxUGoNKTp
-	 1MPIQhXP230ksGQP4GZcZw1mXVdg/wsDpZHTMLYiYwYrbQKfY/aG0djIRSUETXUvJ1
-	 smay4fENmOsNdLACqj3D1TsCy5/eMSV0UafNUYp//hbu4wp9DBSOdujpqzlNuP0kZ6
-	 9v8IaJE3H2AvA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77c9c5d68bso191094866b.2
-        for <regressions@lists.linux.dev>; Sat, 06 Jul 2024 10:38:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1bNtlMbPnrB+IaZcqXxXJ2DE58u6uCLBdwd80XYbBvMLTFsG1Vvl9ui/iC0SPUATOjGPe54ei37JUC3lMhq0XtkaF02HQdKLUqCU=
-X-Gm-Message-State: AOJu0YwnnlpWyAEYUfZhL6qctWkD8+nWGE2lx1+NkgUxNw0BqH2EBMZv
-	87l8eamW1uEOzW8IqqelKX7hAX/SjdU0N55CgE3vYogfJrWPbaBCcKCV4W261GOMVq0HZDyW0rP
-	/7+/9tCBd5BwEpan0dSpkunXdPMM=
-X-Google-Smtp-Source: AGHT+IFJnEIjQr2TMHx6R9QnPx1HaevVsaLMROke+LS5GWjcZlwwSzJKRYzqL7AWu3WJFj0TJ7SauUVWWPUfhZv4oyk=
-X-Received: by 2002:a17:907:72d0:b0:a77:c84b:5a60 with SMTP id
- a640c23a62f3a-a77c84b5b74mr467337266b.26.1720287479897; Sat, 06 Jul 2024
- 10:37:59 -0700 (PDT)
+	b=GCz5xzgDtIuxMlDXqu23YwMYw85Qa+Wnx13bogly93GyXjydn2JqllMLKim/S1G2N
+	 wUqznKfACiO+slZzXmPPV/V57AgZzvLh8iccQY3ULqt3BKf0h+CEL08k6hlUx0sufq
+	 6OCGqNZgmI4mXZG7/DgS9w85XJxOb/NyMT6aIX5QhsBb+QZipHbiz5be0ArS2oNwcX
+	 Kwcu/6PCbxU8uWQHzM+KGuuYIu1IyWwvEXdnBFGs0lciyNmD4eOqAKU1/lsIZOBYvg
+	 DtdBi8UdZRbwDy3XH43GRZ/RfxHUeytH98pc8+sRg22Y+Jew+h4KKLR/QhnnHbtW18
+	 lszYXzqAdhrvw==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a7523f0870cso343358466b.3
+        for <regressions@lists.linux.dev>; Sun, 07 Jul 2024 02:41:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVo3onUwgPzlhCNpHrlhQXxKIIyHqXBubTyup4kwwtMh07R9MjzW9fRqr8fuWTumPTK6E06Kvkj7EeKC8G+3vudC/LoU5AsTOR4scQ=
+X-Gm-Message-State: AOJu0Yw4Trq+S59tcI2oNpgpeDNC8BfLPVP3BPx+cPtKDKId7aZFg7C2
+	GijFoMkxdPLWLsl7mQGPsGufTPuNlJH2975CZlCN5qIqFXxCiaoA/2+6euhHX5dvCfADL/oQsoZ
+	1XyU8uX/+BsQWbLRo0aGPG7LFoes=
+X-Google-Smtp-Source: AGHT+IH1noGpdqiH/cDwVQT78zL9snwgWra8FrGjlWR7/FpRQhygswid+vuySB0yHKuQqphJKgNb2eS6WEfMIRLKfwM=
+X-Received: by 2002:a17:906:5ca:b0:a77:c26c:a571 with SMTP id
+ a640c23a62f3a-a77c26cb495mr494257066b.54.1720345300648; Sun, 07 Jul 2024
+ 02:41:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,12 +57,13 @@ References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
  <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
  <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
  <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
- <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com> <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
-In-Reply-To: <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
+ <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com>
+ <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com> <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
+In-Reply-To: <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
 From: Filipe Manana <fdmanana@kernel.org>
-Date: Sat, 6 Jul 2024 18:37:22 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
-Message-ID: <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
+Date: Sun, 7 Jul 2024 10:41:03 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H5fogJTfdkj_7y8upZj7+4dz65o-tKzyGf0WfLwm3nfUw@mail.gmail.com>
+Message-ID: <CAL3q7H5fogJTfdkj_7y8upZj7+4dz65o-tKzyGf0WfLwm3nfUw@mail.gmail.com>
 Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
  execution time of the kswapd0 process and symptoms as if there is not enough memory
 To: Andrea Gelmini <andrea.gelmini@gmail.com>
@@ -73,95 +74,103 @@ Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 6, 2024 at 1:07=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gmail=
-.com> wrote:
+On Sat, Jul 6, 2024 at 6:37=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
+wrote:
 >
-> Il giorno sab 6 lug 2024 alle ore 02:11 Andrea Gelmini
-> <andrea.gelmini@gmail.com> ha scritto:
-> > For the moment it seems we have a winner!
+> On Sat, Jul 6, 2024 at 1:07=E2=80=AFPM Andrea Gelmini <andrea.gelmini@gma=
+il.com> wrote:
+> >
+> > Il giorno sab 6 lug 2024 alle ore 02:11 Andrea Gelmini
+> > <andrea.gelmini@gmail.com> ha scritto:
+> > > For the moment it seems we have a winner!
+> >
+> > I confirm this, but I forgot to add this (a lot of these):
 >
-> I confirm this, but I forgot to add this (a lot of these):
-
-Oh, those I added on purpose to confirm what the bpftrace logs
-suggested: concurrent calls into the shrinker.
-
-
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm firefox-bin nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm firefox-bin nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
-> [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
-> shrinker already running, comm cc1plus nr_to_scan 2
+> Oh, those I added on purpose to confirm what the bpftrace logs
+> suggested: concurrent calls into the shrinker.
 >
-> Just for the record, compiling LibreOffice.
 >
-> In the meanwhile running restic (full backup to force read
-> everything), no sluggish at all.
-
-That's great!
-
-So I've been working on a proper approach following all those test
-results from you and Mikhail, and I would like to ask you both to try
-this branch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/?h=
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm firefox-bin nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm firefox-bin nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:06 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> > [sab lug  6 13:12:07 2024] BTRFS warning (device dm-0): extent
+> > shrinker already running, comm cc1plus nr_to_scan 2
+> >
+> > Just for the record, compiling LibreOffice.
+> >
+> > In the meanwhile running restic (full backup to force read
+> > everything), no sluggish at all.
+>
+> That's great!
+>
+> So I've been working on a proper approach following all those test
+> results from you and Mikhail, and I would like to ask you both to try
+> this branch:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/log/?h=
 =3Dtest3_em_shrinker_6.10
+>
+> Again, this is based on 6.10-rc6 plus 3 fixes for this issue you're both =
+having.
+>
+> Can you guys test that branch?
 
-Again, this is based on 6.10-rc6 plus 3 fixes for this issue you're both ha=
-ving.
+I just updated the branch with a last minute change to avoid an
+unnecessary reschedule and re-lock, therefore helping reduce latency.
+Thanks.
 
-Can you guys test that branch?
-
-Thank you a lot for all the time spent on this!
+>
+> Thank you a lot for all the time spent on this!
