@@ -1,145 +1,125 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.175])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B7A558B7
-	for <regressions@lists.linux.dev>; Sun,  7 Jul 2024 19:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03238BEF
+	for <regressions@lists.linux.dev>; Sun,  7 Jul 2024 22:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720382224; cv=none; b=LwrtqF6+vtS4AO1U0jh6/lz0JsAO1amL01jI2L+Rx3bN5zNLZKQ1+q8UOxsgfTNku0fD/74gvpc/VTVuzfEPOd7NtdTPfXEEfs+xnJqzdm+42Zhv4yTPimKseF+CGm6/luWGpCZau9jtOhACnaeJflviHgr5rvxJXr2K5mQRdKY=
+	t=1720392901; cv=none; b=RW7fHbvCfnQuuaupBjIWCoaEDEi4rwd6eHFzESdMo9KFFBTyrNdRTO0lFhUs86PGuEKSYpnMdzGwHvzA2XfJl/nNmkanGecBzoJhJnCsZZOJpFDj4YWff+OiniSYZifWDxqjnoPHtDLrXhft9bRz9zrScnnZX71Qezbt1twg0Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720382224; c=relaxed/simple;
-	bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JNfyTxtEmuJflxZLDpWUH/qlFeVo38Zm+6Hs8K1tv0WhSwQ3zkDEl2k66M27U3tcNsEwKr15duhbx2ZWbkyp/IUAc5KeSqhmr/O8IVFUujnh5O9H5CEtnM/XtvqxjKT4zUyaEON6dSKewQSd0bQAotD+L9q9FXCkrzrwCAD6LQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=uGlNR3SU; arc=none smtp.client-ip=193.222.135.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1720392901; c=relaxed/simple;
+	bh=eOFktLONr/+Ya3ae294AwwKc7bRELhJw3YO/9AsLcSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THiQhcbZ9ZQ6KF9iG83nfW3Ya8QY+2h4OL/2PAmZU7/xXZ4A6RzEURRIetl3jMSvV4ALBbdadSCfWwMHI7xuwnAJ/Y3cWnjUeJAVjKgbIEK7hVpe0TMiX69Za1PTgLn/0FtnyhkQdxYBEQQOKqVSkg9rc3TbyYmG7Z4g9t/lS8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=QH0VIWmz; arc=none smtp.client-ip=217.72.192.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="uGlNR3SU"
-Received: (wp-smtpd smtp.tlen.pl 20924 invoked from network); 7 Jul 2024 21:50:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1720381820; bh=q6/jRZtqsE3Cn59iyfo+2FWJygpr/zkT0pcQNmhnO58=;
-          h=Subject:To:Cc:From;
-          b=uGlNR3SUDtCS2tRHO2hNO1SfM3LZKFcD7329ziYyIGzZh7KlMTkITKperOBL2+h7o
-           jKwHMnSPIeS26fdCfKr/JHGhlNr9TPX25ubXx9voacNFSQkDRjsiqleTEOVJ39e6iN
-           3GOyAvy3VP1p0ZmSW/tW69viKS3SrYgsbRK9T+yM=
-Received: from aafe223.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.223])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linux-raid@vger.kernel.org>; 7 Jul 2024 21:50:19 +0200
-Message-ID: <3f934c1b-756f-4560-9798-98a74c32d857@o2.pl>
-Date: Sun, 7 Jul 2024 21:50:16 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="QH0VIWmz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1720392888; x=1720997688; i=christian@heusel.eu;
+	bh=eOFktLONr/+Ya3ae294AwwKc7bRELhJw3YO/9AsLcSc=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QH0VIWmz5WNfKGsxIAK2IdB/3HXcbpjz31Ng1r+jo38OfXaMtkY/SVhfhcsiyF6Z
+	 oINV2EWaaTTj9V+al6Ko2ssiY+EHHpZMzgIQLgI4B2xPpDQtOoUQFBMdor25BmbYj
+	 usY4yLJ5GnylZYpoGEX/3h0k26AXD/3ALfABM3Jh1kY+JkeBQCDIxvemBthCMh9Oi
+	 YUKQdIkfbfpO4QgFSoKC2NKhs7xo8c+j+lo62lo6vNmiWykOa3gdo5+pxXg8lGghj
+	 Vd42PVRPeABj6SwQ+1t8Lyq2mGQcG+wLpZKAT2BLDHbybo6nTVW5ENUERKpEg6Klp
+	 I+jqNDzTPgzXE0EqXQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([84.170.80.140]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Ma1D8-1swZWG2Rs4-00HyWH; Mon, 08 Jul 2024 00:54:48 +0200
+Date: Mon, 8 Jul 2024 00:54:46 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Message-ID: <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
- write-mostly flag
-To: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai3@huawei.com>, Paul Luse <paul.e.luse@linux.intel.com>,
- Xiao Ni <xni@redhat.com>
-References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-Content-Language: en-GB
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: cbed63988452608ec28fa2cdc602d631
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [oVPw]                               
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="luufe4zaf3viyg2y"
+Content-Disposition: inline
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+X-Provags-ID: V03:K1:ukRaYYL/cOD6vSPk1t0/AjLIucDFcw0hFdcp8RNnuR9DjlDNHpY
+ yEoQjSN3gx1rZIKDceDxhRNEq8g1oyQ3bCM9hnztu/s93+cjbLMI/uqKJShZuquumy5m41Q
+ nXdbHUWWT+pH5iNv4/kZ6WvWXZ9iUpOIe1lwwPMVY7hQMVGCTVYRd9LWLl3+otq6XMkPqJo
+ z6F/B8bBD+sBvuKpNljSA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tXOY0rVx2/8=;a5jvstMfQKx2YGli6/6DGMBNwym
+ nAmWnnzNU8PVXXfXoxMI5XahkImYMVTzu0K1f1oPrGF5vkmffQ0WXfEikFwKNXIimaX8sM6vX
+ Enw/CRmXwQ/Zsl7KSwhhJILNeSZ6uAkxfkh5hWHRW8xdG53RDnM2wcGxjCt+uZhiiqz8MRxyp
+ nOOOAZOMjTdCNtieua4r+AY9yI3jDCRovaf82tWYnHfZSNzNryVkcAOPlUVRbziVBRUDXdsU0
+ S2kSpF0F4zVxE+3z2jH+TyV4gps9Lg6OcSNZ570u7tTvoJz+hr1PLtZ6S6BeClDzByz9hHnFU
+ 4400Jooqofi1AXF7WcWXk532lEu35B9QURbTvM+y3wQpM2yU5c+Ey8MFwR8vgsmHG3FoyJcqX
+ QrSHh3euSBGRB2FekUJGxXfzy2gYc9hYetv0G0dvjwoSxHx5FtbZ5csUwiLFl6nay6uXIVGm3
+ 3WMK6yfgAQEEDZvi6H5RFRVi6j691LvV1qXxEhAnlIOfQbQtnfb5ybovUfjCaPy3G86rg13cb
+ vqcnsBSfo7VpwPv6AWFeJemMr17Wz8ZJmzqjSSSha6DWVwuw1rdPCAjJRti/jB8bI3CJMeC8q
+ joMTokKPmSFyjsHm/IAw/wm6ul7i3xM9xLdUYVXz5oLXX2ZdMNM8QpZYlJc8nVHL55xGhbMvy
+ hW3l/8OMBsG+Hp2dsSdsev+NsthNHZ64W8bzgTRxM4pA4/9ryJlYq7RmD5rlzT74g8gwWrNCt
+ 4iBccC9Vm7EDgXRgDzi7FKc0k/tvjuMhF00+1a2gcaF89lWh1C01GM=
 
-W dniu 6.07.2024 o 16:30, Mateusz Jończyk pisze:
-> Hello,
->
-> Linux 6.9+ cannot start a degraded RAID1 array when the only remaining
-> device has the write-mostly flag set. Linux 6.8.0 works fine, as does
-> 6.1.96.
-[snip]
-> After some investigation, I have determined that the bug is most likely in
-> choose_slow_rdev() in drivers/md/raid1.c, which doesn't set max_sectors
-> before returning early. A test patch (below) seems to fix this issue (Linux
-> boots and appears to be working correctly with it, but I didn't do any more
-> advanced experiments yet).
->
-> This points to
-> commit dfa8ecd167c1 ("md/raid1: factor out choose_slow_rdev() from read_balance()")
-> as the most likely culprit. However, I was running into other bugs in mdadm when
-> trying to test this commit directly.
->
-> Distribution: Ubuntu 20.04, hardware: a HP 17-by0001nw laptop.
 
-I have been testing this patch carefully:
+--luufe4zaf3viyg2y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1. I have been reliably getting deadlocks when adding / removing devices
-on an array that contains a component with the write-mostly flag set
-- while the array was loaded with fsstress. When the array was idle,
-no such deadlocks happened. This occurred also on Linux 6.8.0
-though, but not on 6.1.97-rc1, so this is likely an independent regression.
+On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+>=20
+> Interacting with regzbot from arbitrary places is a recently added
+> feature of regzbot usable via the new '#regzbot report <url>' command.
+> The indented use of this feature is for updating minor aspect of
+> regressions already tracked, e.g. "change the title" or "tell regzbot
+> about a related discussion". Such things until now had to be done using
+> regzbot commands in a direct or indirect reply to report -- but there
+> they would mainly be noise for most others and just add to the huge
+> amount of mail people already get. It's also takes a more time to send a
+> lot of individual mails instead of preparing just one.
+>=20
+> The new command will be documented on
+> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
+>=20
+> Ciao, Thorsten
+>=20
 
-2. When adding a device to the array (/dev/sda1), I once got the following warnings in dmesg on patched 6.10-rc6:
+#regzbot report: https://lore.kernel.org/linux-kernel/32fd8274-d5f-3eca-f5d=
+2-1a9117fd8edb@redhat.com/
+#regzbot introduced: 63c5484e74952f60f5810256bd69814d167b8d22
+#regzbot summary: workqueue: dm-crypt performance regression
 
-        [ 8253.337816] md: could not open device unknown-block(8,1).
-        [ 8253.337832] md: md_import_device returned -16
-        [ 8253.338152] md: could not open device unknown-block(8,1).
-        [ 8253.338169] md: md_import_device returned -16
-        [ 8253.674751] md: recovery of RAID array md2
+--luufe4zaf3viyg2y
+Content-Type: application/pgp-signature; name="signature.asc"
 
-(/dev/sda1 has device major/minor numbers = 8,1). This may be caused by some interaction with udev, though.
-I have also seen this on Linux 6.8.
+-----BEGIN PGP SIGNATURE-----
 
-Additionally, on an unpatched 6.1.97-rc1 (which was handy for testing), I got a deadlock
-when removing a bitmap from such an array while it was loaded with fsstress.
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmaLHLYACgkQwEfU8yi1
+JYVwHxAAzyf9xuuVqe1mCbYprGYPORzksnyqzA+pF018cdfTC6r8c7yFDQucBnKH
+DAivLS2pWNyxQwfRcU+tuo6JV1yp4+IAp7uyujjK5tSYXxIeIv+BPeb6Zlbvh23B
+DIQmlvInQjbmNEApwajmLRtdv1G9Y/nFLL3F3GA3ZFcaYeTUmyu1Mpl6uC4I9t7H
+Kw91wXBc3JEh1ven6orTpazYfKvaZHq0ilSw40nAZ6hKjQBkAB6icK5iQMPtbRws
+9oK/ow3/eyab+T+JdYNNb14lWAOrTUET+68+ERcNUoCUQKpnTCpEyyVZFBtBnb+l
+mGw1SkDIOhPC4aJHEUOGHSv5Bb7pda0Vy0aSLTDotClEMdjcxqm3hsrqDcrcOLs2
+TfoeW8eHEsn3IeHlvpSpBqmx4VJoHvg3N8UUZk6PXYHssBOZ7Qu4gnGrv2JYhrIp
+HOQIkin4AThee++CUFBFBfLTURIfTbPzte7jnmKVAiHXtwIi0AJ35En5kzK27NKy
+nd0iYS1G+dQ6A/yqQy/629ja7VGlQyXdhJ/Op/5UMO3gWj27gfWZ6dwCIv6X+W05
+VXTx7jjQ1ImD58A+qeBwbCkrt1MN1540M5t/KBAT/TN/+/0DXH9jVmKW9Hue9RpK
+GMXsRK9MEggAzWYwQyv9Ma0DVkRWlNOZXdbQQ6v40YGnWqLJwXs=
+=s0dC
+-----END PGP SIGNATURE-----
 
-I'll file independent reports, but wanted to give a head's up.
-
-Greetings,
-
-Mateusz
-
+--luufe4zaf3viyg2y--
