@@ -1,101 +1,82 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E550D1C06
-	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 02:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E77E13ACC
+	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 07:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720404702; cv=none; b=ojfWiZJUHAXiJfZDBrmYL3vjc0P+slft310e/NWYk9yvVEEqwr+s74LPqqumXSPaKJdb3afp0P1QBSwvPxLhuGPUlHTkECpH29elh++KylqkaCLo1swBTRVP1Hhyk7ZoJeo05qS+lGTcuO4YZIQNxg5hHWsgSzOG9fkS/j5jKQM=
+	t=1720422515; cv=none; b=ULRSgTIeAOzKNJrwpthwiPlmfJ5j09nilS7+4o/ei8w9DFCCqDA7tOvthgZn8vbywNPVkYl4YJyeVL8izYtwD98KnvOyzoeoB+vBaeXTpukyLxDLXelukmEqKbYslbGBcNmsiat6ldmmK8nA41J700iGCKD0cQJUSfeFNx+4U8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720404702; c=relaxed/simple;
-	bh=9nD53nRrte+kAzCjSb9QVY/6h91GoXPMMNzBGJ+2RLU=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S6C68M7bkyjI8pmivn8rYdEu8IS/pVnYh05C12Nspc3/qbYRHW3ssmpo8B7UAm/zoHTtzWXo2a2BwB0db9cHI4ZIT+xfVT1jaaltRJTr4q86cmZGRtjC1R4k0EsHH6PFOrPlhIdgMMIghy6xxDE6Z3rHUq1wqMLdiLE6N6m0K7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WHRw71Nvnz1xtLf;
-	Mon,  8 Jul 2024 09:52:55 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id E019A1400DD;
-	Mon,  8 Jul 2024 09:54:29 +0800 (CST)
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 8 Jul 2024 09:54:29 +0800
-Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
- write-mostly flag
-To: =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>,
-	<linux-raid@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <regressions@lists.linux.dev>, Song Liu <song@kernel.org>, Paul Luse
-	<paul.e.luse@linux.intel.com>, "yukuai (C)" <yukuai3@huawei.com>
-References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-From: Yu Kuai <yukuai3@huawei.com>
-Message-ID: <a703ec45-6cd5-4970-db22-fb9e7469332a@huawei.com>
-Date: Mon, 8 Jul 2024 09:54:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1720422515; c=relaxed/simple;
+	bh=DIU8dmfslZRLf1+pJBGe3Skn0UYVHyS7c1pVbIQqTaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fuvxs/cma0F9METAzm0iWTkU0x9KNqwtcpvBBBoNeCfgOBBCqfalkgz1fVvR0M5uF4HtrnqW85CoGoJ5bDe874esKfgv6X9rDT32TDtf/nVQTs5lKVI1/8EBY770RS65vXeSxOEXRUZOAzP3pmICLK5C9pvQKwPGZBem/CbB2qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DpRuCtNs; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DpRuCtNs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=a+IC7dMGoV3T5+yo8Urn4pdz1psq+4B65srNVNBEp78=; t=1720422513;
+	x=1720854513; b=DpRuCtNsfCM58o86Jvg8/zTIyGZohSElOSt2sV+BQwpv7/MpUq2cetJVghb3I
+	qQoKUlUjl2jS6Bi3pFwD5WnPujCX6CjT11reEFAHF2X94jkHM9QK54HbURnpHl/hC1Z8nIWLe+3oB
+	Y1AmlcIBwB5rocQNJK9wCxuo6EvqMO7z+YK2L5S4itgDmaNVMjmkECYwh5LOlP1/jPjQ4HXK6Cg2B
+	JVfFLsO4qbiQDD3Ju3zRHYn4ABBa3s0R670nwc+7AWoOZSWNYBf3hXuc9Z9l3FzCyyBg2/VQHUFJa
+	8jRRtTDfH9d6G4oLAjJrDUEEg43stKMkrxXaOO9wvqJUq8ZnYw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sQiU5-0001FK-5J; Mon, 08 Jul 2024 09:08:25 +0200
+Message-ID: <26f1b4f8-c78b-4aff-b748-58abaa01671f@leemhuis.info>
+Date: Mon, 8 Jul 2024 09:08:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20240706143038.7253-1-mat.jonczyk@o2.pl>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+User-Agent: Mozilla Thunderbird
+Subject: dm-crypt performance regression due to workqueue changes (was: Re:
+ Thread for updating minor properties of tracked regressions [consider
+ ignoring it!])
+To: Christian Heusel <christian@heusel.eu>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+ <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720422513;68d73706;
+X-HE-SMSGID: 1sQiU5-0001FK-5J
 
-Hi,
+On 08.07.24 00:54, Christian Heusel wrote:
+> On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
+>> Hi! This is the start of a thread I'll use for updating minor properties
+>> of regressions tracked by regzbot. Consider telling your mailer to
+>> ignore this thread, the replies are unlikely to be of relevance for you,
+>> but done here to ensure a public paper trail.
+> 
+> #regzbot report: https://lore.kernel.org/linux-kernel/32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com/
+> #regzbot introduced: 63c5484e74952f60f5810256bd69814d167b8d22
+> #regzbot summary: workqueue: dm-crypt performance regression
 
-‘⁄ 2024/07/06 22:30, Mateusz Jo®Ωczyk –¥µ¿:
-> Subject: [RFC PATCH] md/raid1: fill in max_sectors
-> 
-> 
-> 
-> Not yet fully tested or carefully investigated.
-> 
-> 
-> 
-> Signed-off-by: Mateusz Jo≈Ñczyk<mat.jonczyk@o2.pl>
-> 
-> 
-> 
-> ---
-> 
->   drivers/md/raid1.c | 1 +
-> 
->   1 file changed, 1 insertion(+)
-> 
-> 
-> 
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> 
-> index 7b8a71ca66dd..82f70a4ce6ed 100644
-> 
-> --- a/drivers/md/raid1.c
-> 
-> +++ b/drivers/md/raid1.c
-> 
-> @@ -680,6 +680,7 @@ static int choose_slow_rdev(struct r1conf *conf, struct r1bio *r1_bio,
-> 
->   		len = r1_bio->sectors;
-> 
->   		read_len = raid1_check_read_range(rdev, this_sector, &len);
-> 
->   		if (read_len == r1_bio->sectors) {
-> 
-> +			*max_sectors = read_len;
-> 
->   			update_read_sectors(conf, disk, this_sector, read_len);
-> 
->   			return disk;
-> 
->   		}
+Christian, thx for adding this, but please allow me to ask: what's your
+intention here?
 
-This looks correct, can you give it a test and cook a patch?
+Is this something like "I have seen a regression report and all
+regressions must be fixed" or "I or someone else I know is affected by
+this and we think this should be fixed".
 
-Thanks,
-Kuai
+Because the thing is: the former might not be enough to convince
+developers to fix this, as that thread are mainly developers debating
+the change and the culprit is in the tree for a while already; but the
+latter case mentioned above might be. At least that's how I would assume
+Linus stance would be in this case -- but I might be wrong there, hard
+to say.
+
+Ciao, Thorsten
