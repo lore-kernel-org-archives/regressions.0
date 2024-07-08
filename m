@@ -1,100 +1,137 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242DB56766
-	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 11:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2694C9B
+	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 14:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720437412; cv=none; b=H3q3xWoo757UujioPqZ1M5s9ozLKJxUzKs8F77zqULurNqF7t1gq8E5DDr6PJNXvLOdU4fq2pWkEvjH5pHegj7gixW7sCg7iENFwpTBQ4CK7uqgE6dG5dtqWSEUDka0U3E4KPEeUOewBTF9i8t6p2qAdhIZJiqgWhQVOyiOfC0U=
+	t=1720448186; cv=none; b=J0Wjcm0HE3tsnQFwiOKp84g6tNHVK8BJsolp+QoRtrdd/VsVtPZogReFkiafzwJ/CDtQore0iYUqjTL7DI7PlB5qotiGg7/qI22xJ6RNqxKtCachG9sHZnxkCW0/CWvxPpKiRyQwkRzMrh25r3sNSLc8GD7T/Hz5WThdDWhi3QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720437412; c=relaxed/simple;
-	bh=Q0AX5g5tPFinxipZ4fOhKx3+WoFGiRskwa1al6yQ8tA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Penim0wzadLV+9VUDeLEPngvzfPwWY4nLIQUFTbdJGB0Wr00ARsOcwouwrDIwhdmOnn4jj0JIeZaGkst1MXCzWgCDfgTcI7QFSmN6nbCYJeIPdSrfSX4cWbb1QZArb+4mJ5bepxaxjcqGqzb5fKVTJbjqZ6B6jJkooQzbIDyZS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pTJ4kdzJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1720448186; c=relaxed/simple;
+	bh=FgcQ9yN4o1kQ+a55KbWLYhrnj3J8YjDuKyMmaGE3KVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KCZqHls13daJKxGy2+MMhKRbpVQn/XdpQjlUpkge529zvxKXnA8SaCFQKZs5haZg7S/2qI23UTyFbSrYuOIOCP2ONjSKwb9LMv9RwlPA5VX2pDV2DqSjcwsRoIhtngJrqrA9/lBylTAb1vA5nHUvBcvz63SuibZEYhj9GRMq2C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ0R1v/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pTJ4kdzJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=ZafBfG+X5+9uEjdKKOVxG/pWWkx49xVK4LJ9YEsOA3Y=; t=1720437410;
-	x=1720869410; b=pTJ4kdzJILIP9hXj086KkvRcr1VDUtn3biplMKfZ5+VWQYnD5h9ykLwCfMRHE
-	Ew0Ri8rRKD35A+f7JS1loMBXWpT6E0FsxE65wttZWLk/MoQombcBHgNAAdNHy6ZH/HWfmU+NatsWq
-	VfHqrUiXcC5wwQcW8rdTxV/RqqAxVjJJf8UXVrZfotJxGs33u0Tf43xwY7K3AhIZth2m7MueGwlDn
-	pMaugmT+0Bkp97qE1d2iNyaZ5xRZkEEk2BKBuYENWfvSLZ3nWXaGrKck+skpmSSLXXEDtQrw8zcPZ
-	DfwEEdsPsuUp7HiqoCcgQ4CqpGKSC1pUfTrEqT8jSiAgS6uJEg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sQmMR-0003eD-Qb; Mon, 08 Jul 2024 13:16:47 +0200
-Message-ID: <75ccb99c-a42f-4866-9550-f3d9dae2e554@leemhuis.info>
-Date: Mon, 8 Jul 2024 13:16:47 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ0R1v/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78942C4AF0E
+	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 14:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720448186;
+	bh=FgcQ9yN4o1kQ+a55KbWLYhrnj3J8YjDuKyMmaGE3KVU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IQ0R1v/3PmT4JmG1nLlCohG9zs3RwdsRF38x5kSBW4K6GrNgM6h/StgZcl1AcpWW+
+	 W9z1tsATbEFkEHgMEsegGKEQjZ2198ZQP07iHeDbvgjmyAjiHvN9HaZhkKHnaTnXS1
+	 ijg9DyKQIjFJoEiFI+Niy8OtY5xViIAfRvOnz5TMS+WAbCyuoCqb/eaLsv6p6gwhoN
+	 4kzN4OAfxZ2ugvec7lomKy0ckrVKo06z4cApEGOftVdFgLYAdF3R4MkdhKEGpxBdfy
+	 JD/HI8RDC0FncJSR9zY2J9AdTRh4sR8k8YinEnH2pXnPGCoxrkv+cloRDdAVbVYLqA
+	 6hkLwn9HwJoxQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so5339884a12.1
+        for <regressions@lists.linux.dev>; Mon, 08 Jul 2024 07:16:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXluh3lWVD23hfY5JGb5ffujGrR444fbSkXMT6aNdH15ni5kMmKZ3pu0XBhmpOr9y9iLkwpht9+kvn/iZkgz+rFGfdePTROKoLcbvg=
+X-Gm-Message-State: AOJu0YzyZChGJsPsNpjSjMEZYsBDTy7KZjWLMDOZmkiq4/0fNtw4SvqU
+	kKm5avYw5smBjEjWij6G32j59ZdpL1PPoEWS+DE+mvMXd7CpsJeCTM7E4S/WhXnN0J/aDnhv/AP
+	Bixawd5S5EGMLez+nKSppY9DxyhU=
+X-Google-Smtp-Source: AGHT+IERLtMd2OfFHU2P+fXHlx0JnkHsh4Y0GYWvCgqIZO1TZGoRX0fR8Fg5cP2TjvxuwFJDTgPPK9XFWssFcnedS9c=
+X-Received: by 2002:a17:906:605:b0:a72:428f:cd66 with SMTP id
+ a640c23a62f3a-a77ba4cca35mr659280266b.39.1720448185018; Mon, 08 Jul 2024
+ 07:16:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dm-crypt performance regression due to workqueue changes
-To: Christian Heusel <christian@heusel.eu>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
- <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
- <26f1b4f8-c78b-4aff-b748-58abaa01671f@leemhuis.info>
- <84ea4156-74b6-4a8d-8101-92d212015def@heusel.eu>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <84ea4156-74b6-4a8d-8101-92d212015def@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720437410;b0e01c66;
-X-HE-SMSGID: 1sQmMR-0003eD-Qb
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
+ <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+ <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+ <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com>
+ <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
+ <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
+ <CABXGCsO_6cJruBxKdqXzEze_hDGVsPtN8DBCob=OWF5OpT4s7Q@mail.gmail.com>
+ <CAL3q7H46BxXUnrZ8Q3WxYf=2Tx0taMt9-2wf0TCrwj_kOiC=Dg@mail.gmail.com> <CABXGCsOcpzy7QvRUuSDT-Ouvp_jJHDvuziPQbej4rHLh9te58g@mail.gmail.com>
+In-Reply-To: <CABXGCsOcpzy7QvRUuSDT-Ouvp_jJHDvuziPQbej4rHLh9te58g@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Mon, 8 Jul 2024 15:15:47 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
+Message-ID: <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Andrea Gelmini <andrea.gelmini@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08.07.24 12:51, Christian Heusel wrote:
-> On 24/07/08 09:08AM, Thorsten Leemhuis wrote:
->> On 08.07.24 00:54, Christian Heusel wrote:
->>> On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
->>>> Hi! This is the start of a thread I'll use for updating minor properties
->>>> of regressions tracked by regzbot. Consider telling your mailer to
->>>> ignore this thread, the replies are unlikely to be of relevance for you,
->>>> but done here to ensure a public paper trail.
->>>
->>> #regzbot report: https://lore.kernel.org/linux-kernel/32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com/
->>> #regzbot introduced: 63c5484e74952f60f5810256bd69814d167b8d22
->>> #regzbot summary: workqueue: dm-crypt performance regression
->>
->> thx for adding this, but please allow me to ask: what's your
->> intention here?
->>
->> Is this something like "I have seen a regression report and all
->> regressions must be fixed" or "I or someone else I know is affected by
->> this and we think this should be fixed".
-> 
-> I have come across the linked report on Social Media[0] and thought it
-> would be good to have it tracked by regzbot since it looked like a valid
-> regression, so its a bit a mix of the two.
+On Sun, Jul 7, 2024 at 8:16=E2=80=AFPM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Sunday, Jul 7, 2024, at 5:15 PM Filipe Manana <fdmanana@kernel.org>, w=
+rote:
+> > That's good. And is the DE unresponsiveness gone too?
+>
+> Yes. I don=E2=80=99t know how to objectively measure responsiveness, but =
+there
+> There were no more freezes like those on my video.
 
-:-D
+That's good.
 
-> Is this creating significant overhead for you or anybody else? 
+>
+> > I see you tested d22fedf5058d, but I updated the branch a couple hours
+> > ago, now the top commit is fa8b5dd7fa18.
+> > Can you test the updated branch? It may help further in your case.
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/fdmanana/linux.git/comm=
+it/?h=3Dtest3_em_shrinker_6.10&id=3Dfa8b5dd7fa18a4dc2ea6bdeaf5525b1af348f38=
+3
+>
+> 6.10.0-rc6-test3_em_shrinker_6.10-fa8b5dd7fa18
+> up  1:00
+> root         269 13.1  0.0      0     0 ?        S    18:01   7:54 [kswap=
+d0]
+> up  2:00
+> root         269  9.8  0.0      0     0 ?        S    18:01  11:46 [kswap=
+d0]
+> up  3:00
+> root         269 10.8  0.0      0     0 ?        S    18:01  19:36 [kswap=
+d0]
+> up  4:00
+> root         269 11.9  0.0      0     0 ?        R    18:01  28:37 [kswap=
+d0]
+> up  5:00
+> root         269 13.1  0.0      0     0 ?        S    18:01  39:29 [kswap=
+d0]
+> up  6:00
+> root         269 13.1  0.0      0     0 ?        S    Jul07  47:24 [kswap=
+d0]
+>
+> It=E2=80=99s as if kswapd0 got worse based on time measurements (it becam=
+e
+> like on the test2 branch), but subjectively, the responsiveness got
+> better.
 
-It does, as I basically go through the list of tracked regressions every
-few days to prevent something along the lines of "regzbot is yet another
-bug tracker where the data does not match reality and where nobody is
-podding stalled reports when needed". And every entry obviously takes
-some time.
+That's weird, I think you might be observing some variance.
+I noticed that too for your reports of the test2 branch and the old
+test3 branch, which were very identical, yet you got a very
+significant difference between them.
 
-> AFAIU the report will be autoclosed once a fix lands, so I thought
-> giving it some visibility on the regression overview wouldn't hurt.
+Thanks.
 
-If it's fixed with a proper Link: or Closes: tag, yes. But from the
-discussion it looks a lot like this is a bug nobody wants to address.
-Without a proper "I'm affected by this" report from a user (not sure if
-Mikulas reports counts) it might not be worth trying to change that by
-prodding the developers.
-
-Ciao, Thorsten
+>
+> --
+> Best Regards,
+> Mike Gavrilov.
