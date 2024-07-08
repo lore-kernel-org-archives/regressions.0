@@ -1,138 +1,164 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193FF15217A
-	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95A82262B
+	for <regressions@lists.linux.dev>; Mon,  8 Jul 2024 20:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720458559; cv=none; b=LD0iJO/EGCTLXTI2as5zeK9UuKDRlp/80NKR3HGMJcwbzTQZA3MxZn1bKiHFB7XXhNzOtXce+x/CYNPUB9haHRqiAPN9meDCUWzS1sGePxo9hOsf1KbxXeRj3HXXU+lhuxUaiof9i0O6+dDVPgJS21rt+fSTcTS7Kb5IVW0hj04=
+	t=1720469406; cv=none; b=R/mHsV0o57PJldbDbPTdH1DZ8q9VbmvNYVR8X6WJy2bLvD3T+JERoWzRDFGeSG3GWtBt/7AFXj4EkvMRDfQKKULaObWwBv1gBt9ZV2QI8YQbLORXDRcKM5EsTxZd1/kf6AzIUOAiMABCtUK8u6W9OUNv5yYGbm87do30aGS+LOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720458559; c=relaxed/simple;
-	bh=KmUE88Sot7G1np7qjrV9+Eu8x2SGk2DBq3q8tIVzL4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ii7rMhuqdguUcTtq9x2/rrrzmeR3gIX65DJboohPrUg03SizCStKY0PBqfL0L6ir0iqDM2hh7qVk2C0NoZBqGNRQdexX4jQZL3qYTeG84P3S6RDfjUJbXsxo0SGqBGqDAD5XT5NkTd+JpRDN/13coEHqOsQFz6qEj/bUAw6XYng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=1TrdYICf; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1720469406; c=relaxed/simple;
+	bh=n60Mp60lwLMScqZqyruLpm9lLaKf5f7PJsKEYZNxkpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YXYu4O16GXg9+nh+KMn8emLbhGMaJGNPowiMFnKUf3Tg7Xs9lTGSgk/qv4xZlZLNMVVuFn/zFaw0LDM4eVN8succtfO9riZ9T/96ypJpq/02aBLc5S1ePJFQFAMvVhUbuOB8U+Sqi2XXe/uFz6wEwxeY48hn1CtENufLaW6aId4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=OoU0Qi1D; arc=none smtp.client-ip=193.222.135.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="1TrdYICf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1720458555; x=1721063355; i=christian@heusel.eu;
-	bh=KmUE88Sot7G1np7qjrV9+Eu8x2SGk2DBq3q8tIVzL4o=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=1TrdYICfNIS6OjUBxqb8yfdzvEVQIcpivhVnMXKlHTp2aX4YzTl+Pr4s5PBT8jhT
-	 GwVnmjzkztx2q0mZYP2CXrf89nb9COUZ/5KCHKBlP6fU3BkeXNEmaufprE+XVEPCt
-	 FnJ89OgKQt7xCXy8pZ0kOINPdshTm0vu9J4lRvfaRrNZowAOCQHJdd1ib8NPs39XI
-	 DPPJlP9G/6w8wzBwQ2/mI1s8hsdLGm6ECCsqxZfkQvq3N+OeaBeAhsoqD7WEUz+sy
-	 WHzE5MfgKgoFw6MoctaS2E2uJG/PNUVlAmnwOUbM7bbZZCsdW/8vXICiL9pDxdyHM
-	 Efxcutrd0Zae8zXjdw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([93.196.131.151]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MaIGB-1suvbl2Dsz-00QHyi; Mon, 08 Jul 2024 19:03:56 +0200
-Date: Mon, 8 Jul 2024 19:03:55 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: dm-crypt performance regression due to workqueue changes
-Message-ID: <0176fb44-8209-4b18-98fc-f10a0626fd13@heusel.eu>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
- <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
- <26f1b4f8-c78b-4aff-b748-58abaa01671f@leemhuis.info>
- <84ea4156-74b6-4a8d-8101-92d212015def@heusel.eu>
- <75ccb99c-a42f-4866-9550-f3d9dae2e554@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="OoU0Qi1D"
+Received: (wp-smtpd smtp.tlen.pl 20049 invoked from network); 8 Jul 2024 22:09:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1720469394; bh=n60Mp60lwLMScqZqyruLpm9lLaKf5f7PJsKEYZNxkpY=;
+          h=Subject:To:Cc:From;
+          b=OoU0Qi1Dy/tg216KaRhjpBsz3bl4Dl97jKn3LolUsbbRULFzJ4rz7vZ4kFIsM232y
+           lTVSDYOmDVEJnggVf+lLe4ysCOVFWq/8Ajx5rhs58CEpO9C87wFcboPeWXRPNfVJjy
+           /8YqOioUvz3WOl/i1LYQQE+/Ylf1377TzPPUgSyU=
+Received: from aafe223.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.223])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <yukuai3@huawei.com>; 8 Jul 2024 22:09:54 +0200
+Message-ID: <e6c48984-01ee-411f-a013-7e5068641363@o2.pl>
+Date: Mon, 8 Jul 2024 22:09:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vlteznn3sdyrfd4l"
-Content-Disposition: inline
-In-Reply-To: <75ccb99c-a42f-4866-9550-f3d9dae2e554@leemhuis.info>
-X-Provags-ID: V03:K1:LC/qBzU457Nq08WoKvURNh87DMB9l2qLO2EDFH78nGIIBWYzebe
- f7ivnyCycGaCJ7l917kmJZ7RNm7ylt9Vns5u3H1YBuJN3ETZq7davA0oyQGvfYlr3Z30vHp
- aJFjkPmVd5DHgzgrzTwPWQ3hR7fBS6AWyJ9PECcj5F7VLBj88Z27mWRbJzuz2kkmYLuj11M
- eQpLnm/XQjmi8XFtdXPfg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BDSgwjx2Qrs=;/wQ5ql5Pfyb3AS3sptXIci14boy
- 48zTHgDfIeTSqugGiGgw6s7CKWN09Eql+4N/X9CWvBNAz4w0II1lFODzZ/aFfrz/o3wnaKrlD
- cgksmL6iyWc+yzY5RYo8BW+KSEnFXmRL3LQfB10Ux74WjubVKQgk2ISVGLY7DJjU/k7hoIXUt
- giY2dXpq7B4JXPKjXr/eV6io4Izx6Wyl4Ilyr6qZMgwgr7cO7lGFshzBNC35aiZP6kYT/gsBw
- Qm/HXL40oKZqc+3M/6XaoRLM0YSuazqaMTADx9/9B/MzZ5DEsDZ7iZr82y33sAChavCxkPW2+
- t2RdJLR2E9v0hEP7ROVNL6N95zfVBHAoCP78RUU+bbUUcKTmHxtGt/nj0p087mnnHQzkzriPr
- kfW3LVRrP0OZrW7ujYHx6FJqF0fRaACbcwD3TWt51s0RmW4AidL67ML3i2cUP98cEsszGKWas
- pYZCzfZzJCuGjgRSNfbURsvYDgrRuyuaYZ+HF3evWAz+Q1BE+rRpsKTotogPjlVvda1GNsSVB
- IF0/c5WpBUG6d8ICOMSCyK/RPJICSAIIzSKFDisoP/xVP9v+ncLV5hzmXpVJ+xbXavd322YgC
- gVJ6BEh9DJVK6Vvmj1PaNnhKW3Fhjz7DbgeYpFNOcp3h/QURaNOBkjribO/CGjATWU/CxJWRI
- LSEyaqerAGS+jsM2fyfKLvxeHiDancZN45iyY82f4afFXLRQOB/OagBfFHeBHZe/1lLED0X68
- 2MpE3r2eM5F25nkWUe8QB0CnsV4JkIi3pVFGkeRuEhpNFXPDXZ33qY=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
+ write-mostly flag
+To: Yu Kuai <yukuai3@huawei.com>, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: regressions@lists.linux.dev, Song Liu <song@kernel.org>,
+ Paul Luse <paul.e.luse@linux.intel.com>
+References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
+ <a703ec45-6cd5-4970-db22-fb9e7469332a@huawei.com>
+Content-Language: en-GB
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <a703ec45-6cd5-4970-db22-fb9e7469332a@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: b733eab9b9972d2497c77cb991a877fd
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [4QNh]                               
 
+W dniu 8.07.2024 o 03:54, Yu Kuai pisze:
+> Hi,
+>
+> 在 2024/07/06 22:30, Mateusz Jończyk 写道:
+>> Subject: [RFC PATCH] md/raid1: fill in max_sectors
+>>
+>>
+>>
+>> Not yet fully tested or carefully investigated.
+>>
+>>
+>>
+>> Signed-off-by: Mateusz Jo艅czyk<mat.jonczyk@o2.pl>
+>>
+>>
+>>
+>> ---
+>>
+>>   drivers/md/raid1.c | 1 +
+>>
+>>   1 file changed, 1 insertion(+)
+>>
+>>
+>>
+>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+>>
+>> index 7b8a71ca66dd..82f70a4ce6ed 100644
+>>
+>> --- a/drivers/md/raid1.c
+>>
+>> +++ b/drivers/md/raid1.c
+>>
+>> @@ -680,6 +680,7 @@ static int choose_slow_rdev(struct r1conf *conf, struct r1bio *r1_bio,
+>>
+>>           len = r1_bio->sectors;
+>>
+>>           read_len = raid1_check_read_range(rdev, this_sector, &len);
+>>
+>>           if (read_len == r1_bio->sectors) {
+>>
+>> +            *max_sectors = read_len;
+>>
+>>               update_read_sectors(conf, disk, this_sector, read_len);
+>>
+>>               return disk;
+>>
+>>           }
+>
+> This looks correct, can you give it a test and cook a patch?
+>
+> Thanks,
+> Kuai
+Hello,
 
---vlteznn3sdyrfd4l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I'm working on it. Patch description is nearly done.
+Kernel with this patch works well with normal usage and
+fsstress, except when modifying the array, as I have written
+in my previous email. Will test some more.
 
-On 24/07/08 01:16PM, Thorsten Leemhuis wrote:
-> On 08.07.24 12:51, Christian Heusel wrote:
->=20
-> > Is this creating significant overhead for you or anybody else?=20
->=20
-> It does, as I basically go through the list of tracked regressions every
-> few days to prevent something along the lines of "regzbot is yet another
-> bug tracker where the data does not match reality and where nobody is
-> podding stalled reports when needed". And every entry obviously takes
-> some time.
+I'm feeling nervous working on such sensitive code as md, though.
+I'm not an experienced kernel dev.
 
-So what would you suggest on how I should deal with this in the future?
-I have no problem re-reviewing the status for the ones I have added to
-regzbot, but I can also just (fully) leave adding regressions (that I
-did not report/debug myself) to you.
+Greetings,
 
-With regard to scaling properties it would maybe be good to get some
-more people involved, but I can also see how it causes some extra work
-=2E. So what I want to say is that in general I'm open to help but only
-when it's of actual help and not just causing extra work x)
+Mateusz
 
-> > AFAIU the report will be autoclosed once a fix lands, so I thought
-> > giving it some visibility on the regression overview wouldn't hurt.
->=20
-> If it's fixed with a proper Link: or Closes: tag, yes. But from the
-> discussion it looks a lot like this is a bug nobody wants to address.
-> Without a proper "I'm affected by this" report from a user (not sure if
-> Mikulas reports counts) it might not be worth trying to change that by
-> prodding the developers.
-
-Alright, thanks for the feedback!
-
-> Ciao, Thorsten
-
-Cheers,
-Chris
-
---vlteznn3sdyrfd4l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmaMG/sACgkQwEfU8yi1
-JYU09BAAmRVt9MGpXi6rq5gqcU/QxOh5bBq52mw87erGy444k4QGMkL6b707kYHN
-Vv9BATb9sVMQ4Qh1Cl0ZQyoXC99MFJdEOJEUxzvHNwso1e2euKKBdMdXlKjbcA4Q
-w9q9xVI93XSIZVOLVR3qraCtXYXD78MfsLD5tuVUZi+l3VTxY7wav+CWWyHRUK6Z
-fZuirJ5ryU42BC1mqAGdmef+jwWxOiGcd/+tCyRBX59hl+VdRBn6NbLRQBjgm0rf
-VGC2GkVX7RpMm+ltuif3dC4jfp3IxvkSY2SHe8UxB1wSJOoqMz8V9rkJpz/obWCw
-PCaWqI7iVOEhAuFHK9ZgO+Uaemu7njxBLokSD+lDKscQ72IL+jfe+lVYw90PmQIH
-yR4xakoenlNCCf6aTCF5JeWxBqSXjyXD67g7EN9DBsyDwnTRIZTOPxy3c/6Gss/+
-rT/YMrrGFFe1h1IUWiXFcx7v9W1LFFSjB33eMjXgVpMQaIVIvXPQ50iYmJ14t4ql
-ORS+Kgj0tDllM/Nj/i8xjaTcTZzXQ2EHrXtmME37kMd2EeA9T4DiGFFzTU4Oggi8
-wp3qTInAn/WMw1r0gXysC7e2upM1wDHVxeENg9AEJPMwvxWfV+SWPcjK1CFH5w4B
-EdmpE8EaznCvlhRTn9Axp4U2pokvbyposEz1TlKilXqmnSrjTIE=
-=gL2Z
------END PGP SIGNATURE-----
-
---vlteznn3sdyrfd4l--
