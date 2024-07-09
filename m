@@ -1,109 +1,89 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3D928DB3;
-	Tue,  9 Jul 2024 04:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98B314C582
+	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 07:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720499135; cv=none; b=kaqWwoHpcjj+sfryztqbleh0auTWUReg1I/BgeDc4I2cN94nnG0uFyfVpLtFGpI+HYddnMBZX/qVM35t0vhwi3LLsIM+lmHwqC35lu/VsdQenLBBvIgBZyPz5taWq/qMu1Jca1pg7QF2xS93+cStR4LH7OPWyNl3WHs6KwyW6Yg=
+	t=1720511650; cv=none; b=HWbWBnb1HnKP+Hovnyx4pCqwdYPXGmSRDsAQY8fm2JvtDZZjiPG7sAQtgxAUlpXMD0aOWgj0dzuUa73Fb4NLi/pnqRKXBn7Gk1A4IlNoVYndgKOe0ahYCDC+NfE4rnz3yL0dQ2PZWw144rOg0VCh1/ulr7VBAjmRf1fp19oYUz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720499135; c=relaxed/simple;
-	bh=xlUZK+6sDB8jq8BTErl0bTqYq7TYFfrIpzBCtDc5mrk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OHcluzaQKc7wOM4d1tie6tnaC0IGc1clpPZaqVdQXQNesG6pok6WMxvS+iTm7TQsBRGFaW487AuRazJgm0UXfbGhefkAcSr6rjFFmB+5N8XlAEl5f/Vr4Q1JSRwXeWgFhWjpgBwAOYz+f37Z0Ht3PrZ9hvz/y8BJWsgLDXUk/Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=fQQSJx3s; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1720511650; c=relaxed/simple;
+	bh=mxDhXYW4b4UaLDofCILdQvO0N1H1w4xDNIWfXpyOj90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uv5gaT/j2TMuwhR8qBm/Wy0qVhZtfbnycvEvU3XVlThGApQWAxrUHqoMF/bmsS9y9DrWi8zCItTpIlzGPm0ma/IQSy7ZC/KTlFGTD0IRh2pH+pphdH5WoHISNJLbhzQ8SZBcUnv+pDAlm1oe1Ms56/M0QcRx7v6+pCw25XHDU1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cWiWBxnV; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="fQQSJx3s"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4694PJwX4303240, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1720499119; bh=xlUZK+6sDB8jq8BTErl0bTqYq7TYFfrIpzBCtDc5mrk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=fQQSJx3stDnp5lbVEdFUaCYZVeiOTC/L7/JrX6WYPyB3nja81NY5GC6sbbKrACl0A
-	 E5DaMvqVko/2Kfn8zgEpUtpxAJO+GymPNr0prli8zMVsN+Ui5sRlBekd0m+x1Jn4nm
-	 jNKSItWcKj8I2wOD4EIIBDgmQ147inLzpU6RxqOd+RCGzTND4/roLBxOulmG2INqgD
-	 LVRwMHejPT/+4+cUdQo29gHZlpypypIjX+wI+z2uDx0XO/cQpx81S3118WguDG5DWu
-	 bFjL0cNJ4YqtagpBtYwOQivHGvgrAU0Sp28fkMXlh0af4RFv6YsnmGMmNO9DuITLS4
-	 LWreQLazICTHg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 4694PJwX4303240
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jul 2024 12:25:19 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 9 Jul 2024 12:25:20 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Jul 2024 12:25:19 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Tue, 9 Jul 2024 12:25:19 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Forty Five <mathewegeorge@gmail.com>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Bernie Huang
-	<phhuang@realtek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Topic: [REGRESSION] Freeze on resume from S3 (bisected)
-Thread-Index: AQHa0VQl1ZM9p1UVPU2+rvQ8T/H4+rHtmRKw//+qGICAAIjSQA==
-Date: Tue, 9 Jul 2024 04:25:19 +0000
-Message-ID: <e9c35b3d72a34c8e8ac607590917681a@realtek.com>
-References: <draft-87msmrdgkb.fsf@gmail.com> <87h6czdexm.fsf@gmail.com>
- <6673a2dc01a941f5900da7393d160005@realtek.com> <87o777tdbw.fsf@gmail.com>
-In-Reply-To: <87o777tdbw.fsf@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cWiWBxnV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=KD1KDwYLjMteuzilVm1ud7e+p1+TxgpxGGygAd8eHOU=; t=1720511647;
+	x=1720943647; b=cWiWBxnVACMngZiugPr4WyZA32yEqAkGvjh46VbKB3JR+I/B21rKjVW3u7jo1
+	fUN5o1vVMaU0jJLdjUYnEHXG3V4zTD1KmObziR1aUVZw6pWQP/VZlaukHNH2XQZwJM2ewnv1Ypx7L
+	+37dkL95s3K90XX9Qw65v31MA/+msOU4q38OsaR9nWMX4vfKQddGZ8NqChb6fcnNs35+0tH0rghuz
+	vLRBdOqHf7qIM4zEXfSRQ1RTh03nU3RyVQGiWQqpy6vPAA+Q5IroV6ILQaq4nU/QLvbyHnkS6FUgI
+	W6OQyfC5HhUAXAtZav1hI7aj3LAR9UvZBLO0lY5HdIcyyj/02g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sR5fk-0005gx-5w; Tue, 09 Jul 2024 09:54:00 +0200
+Message-ID: <f4455168-e855-49e0-80de-0f1940502227@leemhuis.info>
+Date: Tue, 9 Jul 2024 09:53:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla Thunderbird
+Subject: Re: dm-crypt performance regression due to workqueue changes
+To: Christian Heusel <christian@heusel.eu>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+ <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
+ <26f1b4f8-c78b-4aff-b748-58abaa01671f@leemhuis.info>
+ <84ea4156-74b6-4a8d-8101-92d212015def@heusel.eu>
+ <75ccb99c-a42f-4866-9550-f3d9dae2e554@leemhuis.info>
+ <0176fb44-8209-4b18-98fc-f10a0626fd13@heusel.eu>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <0176fb44-8209-4b18-98fc-f10a0626fd13@heusel.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720511647;c0119dea;
+X-HE-SMSGID: 1sR5fk-0005gx-5w
 
-Forty Five <mathewegeorge@gmail.com> wrote:
->=20
-> Ping-Ke Shih <pkshih@realtek.com> writes:
->=20
-> > Right. Only apply [1] in every bisection step.
->=20
-> Patch fails on 57f22c8dab6b266ae. Could you send a version that succeeds?
->=20
-> Bisection log so far:
->=20
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [5bbd9b249880dba032bffa002dd9cd12cd5af09c] Merge tag 'v6.10-p4' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
-> git bisect bad 5bbd9b249880dba032bffa002dd9cd12cd5af09c
-> # status: waiting for good commit(s), bad commit known
-> # good: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw89: add wait/=
-completion for abort scan
-> git bisect good bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23
-> # bad: [480e035fc4c714fb5536e64ab9db04fedc89e910] Merge tag 'drm-next-202=
-4-03-13' of
-> https://gitlab.freedesktop.org/drm/kernel
-> git bisect bad 480e035fc4c714fb5536e64ab9db04fedc89e910
+On 08.07.24 19:03, Christian Heusel wrote:
+> On 24/07/08 01:16PM, Thorsten Leemhuis wrote:
+>> On 08.07.24 12:51, Christian Heusel wrote:
+>>
+>>> Is this creating significant overhead for you or anybody else? 
+>>
+>> It does, as I basically go through the list of tracked regressions every
+>> few days to prevent something along the lines of "regzbot is yet another
+>> bug tracker where the data does not match reality and where nobody is
+>> podding stalled reports when needed". And every entry obviously takes
+>> some time.
+> 
+> So what would you suggest on how I should deal with this in the future?
 
-The commit date of culprit bcbefbd032d ("wifi: rtw89: add wait/completion f=
-or abort scan") is
-     CommitDate: Tue Jan 23 13:38:15 2024 +0200
+It was totally fine to add this, don't worry. But at the same time it
+looks like the discussion kinda ended already for now. So what is needed
+now is someone that prods it and asks questions like "Mikulas, are you
+satisfied with changing the config? Or do you think/should we consider
+this something that should be fixed? Is it maybe possible to detect this
+odd configuration and have a quirk for it to avoid the problem? Or is
+that considered too much work for a corner case only found after 10
+months and thus likely not something many people care about?".
 
-But, you want to apply to the top of 57f22c8dab6b whose date is=20
-     CommitDate: Fri Jan 19 13:49:16 2024 -0800
-and doesn't contain commit bcbefbd032d, so no need to apply [1] at this poi=
-nt.
+But there are dragons here, the right tone is important: it's easy to
+upset people and that does not help anyone in the end. So a blunt reply
+along the lines of "this is a regression that has to be fixed" would be
+a really bad idea.
+
+Ciao, Thorsten
 
 
