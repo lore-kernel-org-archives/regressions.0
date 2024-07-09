@@ -1,199 +1,100 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FAF15884A
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 12:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD0515821E;
+	Tue,  9 Jul 2024 12:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720527795; cv=none; b=bm8wzr02nXWbFZBqPauJBv4McJHZJOH1PFnXL1ML9MuzmTxpKnekZsCDfEOz75MCi92LQzE2AetEYSauR7hPxdSW87jfIg+GXYAiuc/YFt4hglfsMoHbHiv0SA3kTDsRNVDHfmSm4Ffwz6lUckSmwbxNHRDMr0Y4dIMGC3PEPmc=
+	t=1720528919; cv=none; b=TbiUajeygd7v30kj+UiiCWmZaxFMmLf8JOYM4KO2fPjg6+OX26vh2y8lqI31Mj0FlLUlYOXA9h1yhmokZ7GnruhNrh5cxkzhpiA9jzJxopkkhCp13xUiVKQBoYEhoDRkazjHdXMGWBYSlyiGYfTkuCq2/kpHk2kSUYWUHAvVkZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720527795; c=relaxed/simple;
-	bh=3hx7EtNft1u++RNUMER3G1fS/fYucdBVhfI01ALgg6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCbKA0VMvj76lcycQgoYusizLSImF52dEgHtxyZ6D3zuDx/aqPxCtfsCBDkRv3Ul6g6c8+TXLZHPTkTa4IBVrJ2ph4S237ceeKmZmLsW42ErPO97qx+YmPayVAIFj4McXNKm/x/MBKRmITpcCpTczcUswT1JyXRYVyA5MLvWvuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v/V4yzVP; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720528919; c=relaxed/simple;
+	bh=TCDiYy0B5r09T63GQAuwabjoGpA2IUzYq0e5h49R2xA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ogzacx+8q3aG3P8eG/uldIDUlgBLNCpD2J4jYOXk4tnF2Jpr4556PJCXKnisBmc/7VHnKLwtGdkaHhYAcmlzFQogUaNxM0wT7FfXeiEduLjCNM1YZ0kgecBYcA7LLXTo4vCe4mXtR68sm/9ME9Yq4j2XXYtPSCwMnMvlDqskiyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=sJzvxjyX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v/V4yzVP"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5956fbe6d0dso609382a12.1
-        for <regressions@lists.linux.dev>; Tue, 09 Jul 2024 05:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720527791; x=1721132591; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xo8UYbec6E2ZLXNuTkqkHT1FutOwjchp6ATsVfTvLfA=;
-        b=v/V4yzVPEcMZQaZTgNw78Xmy2Tee4ypzZp+4m95jPUSgP9l46jKsIly1qtfGqGiUHZ
-         0GI1zPeDifxiBT4oWKnw0wq9bkmRYvo5XAMuG+VPPrNLwmvJ2X1eZktbwm0rSi+B3DDi
-         4+wkYpgCglwFcT1/fpmdlR2m5QF02Qg1idBEokr3qBieaSyPfwqfxaOQ1MIJDxGNRSne
-         hMjcgZ/goVKmLrXRbTTc4Ol5NWGmi6ngc/5QbNDp6QzyvF8npLl49VsdXbj7UhZi/Ot+
-         JlESF/islYXyQRniGX7oWtlBspbR365QSbRa+T+fxAvI60RzlIjtWPECx7ycoYrvrHU/
-         F83A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720527791; x=1721132591;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xo8UYbec6E2ZLXNuTkqkHT1FutOwjchp6ATsVfTvLfA=;
-        b=ebb91Ypm9bYUhXBJyXdjOvHeTplh9KrfdEjqHImAXcPrixV7Yz/4ArHOKCseAeEGdD
-         Bm9HbMS8p66hgMf0rhtdY+kOcSnT57YgslGylh4dTOewLTHhVfKJV/D1KdMN056DAoYF
-         lzejw9+6hAnOVH/yetO1Ca839DUxXS79m4uH55WyBxqk3gBwhY385Rcgkxv1Jsjai2Io
-         RM+WvJxuWw0s5CsCdo3sFzfnAzUEYQIecDbHvRujAKyhZhphAuoUjum2WZrPejCS9m8B
-         M/+rCEs3ieF6omKAYr/g8H3rQ0jit6YEv78HbVjGkzXfMCk6dKrRnDvSmDbr0k2zuPKR
-         tzbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTNSZPI29lz7p2r/k7HgnvI3he10xo1FmwH2TtKo+pIdwsJVRZds+oSrXRPa1+3R5LdrvKfdRFcS7PzxtVewfIc+hU71JYBUbSeg8=
-X-Gm-Message-State: AOJu0YyoRPMLLI5bHgUYT8BvRMLJztTkA9OGHwn3JsCtoEVkaCB8eJaB
-	6L/w/T4lrs0xl/3aOyks9bEBl3vFhkHfQKMabDq8trQBzvhHa0q0iGlEKSSr5dI=
-X-Google-Smtp-Source: AGHT+IG0aIGpCzQySW4SYlwxYSifYCyNlpjHG9RRBhAFaTgQAx4j6VjuDezQ2wW6rVDfCJwHOhPcEQ==
-X-Received: by 2002:a05:6402:2747:b0:57c:d237:4fd with SMTP id 4fb4d7f45d1cf-594ba98f7d9mr1901386a12.4.1720527791056;
-        Tue, 09 Jul 2024 05:23:11 -0700 (PDT)
-Received: from blmsp ([2001:4091:a245:8609:c1c4:a4f8:94c8:31f2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bb9604f7sm1005094a12.15.2024.07.09.05.23.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 05:23:10 -0700 (PDT)
-Date: Tue, 9 Jul 2024 14:23:09 +0200
-From: Markus Schneider-Pargmann <msp@baylibre.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, 
-	Chandrasekar Ramakrishnan <rcsekar@samsung.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Tony Lindgren <tony@atomide.com>, Judith Mendez <jm@ti.com>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux@ew.tq-group.com, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Kernel hang caused by commit "can: m_can: Start/Cancel polling
- timer together with interrupts"
-Message-ID: <tyq2h55iyfxmebysxbdv352vops7i5fhi3avs6u7h6yinwv75j@m6wicydoobbp>
-References: <e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com>
- <c93ab2cc-d8e9-41ba-9f56-51acb331ae38@leemhuis.info>
- <h7lmtmqizoipzlazl36fz37w2f5ow7nbghvya3wu766la5hx6d@3jdesa3ltmuz>
- <08aabeaf-6a81-48a9-9c5b-82a69b071faa@leemhuis.info>
- <734a29a87613b9052fc795d56a30690833e4aba9.camel@ew.tq-group.com>
- <76faeb323353b584b310f2f1b53e9b2745d2f12c.camel@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="sJzvxjyX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ziBWPyZuXFGkV8kVZKK0Xj6BNHEbLXnVYFACz7/URSM=;
+	t=1720528917; x=1720960917; b=sJzvxjyXeNPWd/2fkdOEVFOHfCUVkv6GXeVmKNGTIf2ojdP
+	ocSEHmIeeMUOuMPAjrwzwp2NxLBZxbmBjRTLUkFjlWDpzDonLUgjfox3lVdTIgjqROJTqkDVOIDso
+	dYb8Nc2Ea6aKDNAyEwgDutkuMW82Ru03ZSCzyhuTLJFFS91mr+jbm2139Gl6xDNvINyO8ZFNdKI3i
+	+LK24AuDwzH8iaSzMblz++sM4jDQ4iw6Q2il/0uRgVhXwgSgvZZADqcyXps/t1oy1dZfdFN310B0L
+	rn3OOtuB0CaR5IZhtcgw6D8eWBz3M5DiVs79HPOdYgPAe2sU2D5U6/I4qIZ7RIOA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sRAAN-0006uA-4B; Tue, 09 Jul 2024 14:41:55 +0200
+Message-ID: <af91ef9c-5050-4f16-898a-f0c02a293d3f@leemhuis.info>
+Date: Tue, 9 Jul 2024 14:41:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and
+ 120Hz
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Deucher, Alexander" <alexander.deucher@amd.com>,
+ amd-gfx list <amd-gfx@lists.freedesktop.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+ <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
+ <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+ <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
+ <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com>
+ <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <76faeb323353b584b310f2f1b53e9b2745d2f12c.camel@ew.tq-group.com>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720528917;5dd8eef7;
+X-HE-SMSGID: 1sRAAN-0006uA-4B
 
-Hi,
+On 30.06.24 01:18, Mikhail Gavrilov wrote:
+> On Sat, Jun 29, 2024 at 9:46 PM Rodrigo Siqueira Jordao
+> <Rodrigo.Siqueira@amd.com> wrote:
+>>
+>> I'm trying to reproduce this issue, but until now, I've been unable to
+>> reproduce it. I tried some different scenarios with the following
+>> components:
+>>
+>> 1. Displays: I tried with one and two displays
+>>   - 4k@120 - DP && 4k@60 - HDMI
+>>   - 4k@244 Oled - DP
+>> 2. GPU: 7900XTX
+> 
+> The issue only reproduced with RDNA2 (6900XT)
+> RDNA3 (7900XTX) is not affected.
 
-On Wed, Jul 03, 2024 at 02:50:04PM GMT, Matthias Schiffer wrote:
-> On Tue, 2024-07-02 at 12:03 +0200, Matthias Schiffer wrote:
-> > On Tue, 2024-07-02 at 07:37 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > 
-> > > 
-> > > On 01.07.24 16:34, Markus Schneider-Pargmann wrote:
-> > > > On Mon, Jul 01, 2024 at 02:12:55PM GMT, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > > > [CCing the regression list, as it should be in the loop for regressions:
-> > > > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> > > > > 
-> > > > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> > > > > for once, to make this easily accessible to everyone.
-> > > > > 
-> > > > > Hmm, looks like there was not even a single reply to below regression
-> > > > > report. But also seens Markus hasn't posted anything archived on Lore
-> > > > > since about three weeks now, so he might be on vacation.
-> > > > > 
-> > > > > Marc, do you might have an idea what's wrong with the culprit? Or do we
-> > > > > expected Markus to be back in action soon?
-> > > > 
-> > > > Great, ping here.
-> > > 
-> > > Thx for replying!
-> > > 
-> > > > @Matthias: Thanks for debugging and sorry for breaking it. If you have a
-> > > > fix for this, let me know. I have a lot of work right now, so I am not
-> > > > sure when I will have a proper fix ready. But it is on my todo list.
-> > > 
-> > > Thx. This made me wonder: is "revert the culprit to resolve this quickly
-> > > and reapply it later together with a fix" something that we should
-> > > consider if a proper fix takes some time? Or is this not worth it in
-> > > this case or extremely hard? Or would it cause a regression on it's own
-> > > for users of 6.9?
-> > > 
-> > > Ciao, Thorsten
-> > 
-> > Hi,
-> > 
-> > I think on 6.9 a revert is not easily possible (without reverting several other commits adding new
-> > features), but it should be considered for 6.6.
-> > 
-> > I don't think further regressions are possible by reverting, as on 6.6 the timer is only used for
-> > platforms without an m_can IRQ, and on these platforms the current behavior is "the kernel
-> > reproducibly deadlocks in atomic context", so there is not much room for making it worse.
-> > 
-> > Like Markus, I have writing a proper fix for this on my TODO list, but I'm not sure when I can get
-> > to it - hopefully next week.
-> > 
-> > Best regards,
-> > Matthias
-> 
-> A small update from my side:
-> 
-> I had a short look into the issue today, but I've found that I don't quite grasp the (lack of)
-> locking in the m_can driver. The m_can_classdev fields active_interrupts and irqstatus are accessed
-> from a number of different contexts:
-> 
-> - active_interrupts is *mostly* read and written from the ISR/hrtimer callback, but also from
-> m_can_start()/m_can_stop() and (in error paths) indirectly from m_can_poll() (NAPI callback). It is
-> not clear to me whether start/stop/poll could race with the ISR on a different CPU. Besides being
-> used for ndo_open/stop, m_can_start/stop also happen from PM callbacks.
-> - irqstatus is written from the ISR (or hrtimer callback) and read from m_can_poll() (NAPI callback)
-> 
-> Is this correct without explicit sychronization, or should there be some locking or atomic for these
-> accesses?
+Hmmm, again this looks stalled -- and the regression report is 6 weeks
+old by now. :-/ Or was a solution found in between?
 
-Thanks for pointing these out. I started creating some fixes for some of
-the patches. Not done yet, but I am working on it.
+So I assume no solution will be ready in time for the 6.10 final? I also
+assume a "simple" temporary revert is not a option or bears big risks?
 
-Best,
-Markus
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-> 
-> Best regards,
-> Matthias
-> 
-> 
-> 
-> > 
-> > 
-> > 
-> > > 
-> > > > > On 18.06.24 18:12, Matthias Schiffer wrote:
-> > > > > > Hi Markus,
-> > > > > > 
-> > > > > > we've found that recent kernels hang on the TI AM62x SoC (where no m_can interrupt is available and
-> > > > > > thus the polling timer is used), always a few seconds after the CAN interfaces are set up.
-> > > > > > 
-> > > > > > I have bisected the issue to commit a163c5761019b ("can: m_can: Start/Cancel polling timer together
-> > > > > > with interrupts"). Both master and 6.6 stable (which received a backport of the commit) are
-> > > > > > affected. On 6.6 the commit is easy to revert, but on master a lot has happened on top of that
-> > > > > > change.
-> > > > > > 
-> > > > > > As far as I can tell, the reason is that hrtimer_cancel() tries to cancel the timer synchronously,
-> > > > > > which will deadlock when called from the hrtimer callback itself (hrtimer_callback -> m_can_isr ->
-> > > > > > m_can_disable_all_interrupts -> hrtimer_cancel).
-> > > > > > 
-> > > > > > I can try to come up with a fix, but I think you are much more familiar with the driver code. Please
-> > > > > > let me know if you need any more information.
-> > > > > > 
-> > > > > > Best regards,
-> > > > > > Matthias
-> > > > > > 
-> > > > > > 
-> > > > 
-> > > > 
-> > 
-> 
-> -- 
-> TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-> Amtsgericht München, HRB 105018
-> Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-> https://www.tq-group.com/
+#regzbot poke
