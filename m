@@ -1,148 +1,89 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3D241C73
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 02:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B39433DC
+	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 04:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720493854; cv=none; b=Ux0v8GcaPgYU+Uorq/3/NidN2gKFOO3U6yUf8CvXm++1+n7zHJrcuCa4D5UAs5EB8/6HGEosn3qMFrvQIDKJBESGJXdpseVymQ/c9voZScKtFRaPLpdQoy9lj9ApSbCgtbsl0+REyKML45sB3CfEcXR2WUHJ6w7v6EUp2kJswiE=
+	t=1720498255; cv=none; b=NNQ4aiQicA5LvXzAXr3IfEFoZAL2p+sqA0fB5EzNaKtm32RaU+ETsb763tdv2v1N7nFy1YQyqNXCjnlQLnK4+fgs8UNScJER2vVkP/1DYw+O6Mk86fYphJaNWjw+ijUivziiNca7SNPUDDZqtYJhtPw4eiJbE17M9UyL/OayBHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720493854; c=relaxed/simple;
-	bh=f8tf64RYLXczMC87XQUo/kloKRfhEw9Bo//uVd9bMow=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RhpC54pu85F3sJbL5aJMu293+m8BfdYXGlapBx4lOapyNq3IqRFUSRkDo589+VHVAyEIAzAFyOjT45OrFTd7nG/qvnDR/nBBu4W0mZaoQGTfXI4rTryObWq7+nm7GES/zUJZ5jd0sSHmQ+eg6tXNzDGD+JfSR6XcEtLEOUVD37g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WJ5Hq2lj0z4f3jdP
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 10:57:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E8B901A0189
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 10:57:22 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP2 (Coremail) with SMTP id Syh0CgBn0YYRp4xmfplTBg--.35701S3;
-	Tue, 09 Jul 2024 10:57:21 +0800 (CST)
-Subject: Re: [REGRESSION] Cannot start degraded RAID1 array with device with
- write-mostly flag
-To: =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>,
- linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, Song Liu <song@kernel.org>,
- Paul Luse <paul.e.luse@linux.intel.com>, "yukuai (C)" <yukuai3@huawei.com>
-References: <20240706143038.7253-1-mat.jonczyk@o2.pl>
- <a703ec45-6cd5-4970-db22-fb9e7469332a@huawei.com>
- <e6c48984-01ee-411f-a013-7e5068641363@o2.pl>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <349e4894-b6ea-6bc4-b040-4a816b6960ab@huaweicloud.com>
-Date: Tue, 9 Jul 2024 10:57:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1720498255; c=relaxed/simple;
+	bh=WwBa9BXZQA9Efu51eAIBLmbMfDzQGg9zvOjMoSgyZ7M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MES0ELgukqGVRFqRV6STKckSC0dRvl9Vc2oAxsODtvOPS3j9JUj9pxWvDcCck9JE4FUuD0cETu+C9vdrDm1fs1diIo0PkFdV58GkxSpINyiDpgB2E0FKVbkuf7rdD5YsxxiRE8kZ6UzijxlDe9M4QK28bj/+RF9Xd9X08ZPeY/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d9USV7m/; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9USV7m/"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-75e7e110e89so2523049a12.3
+        for <regressions@lists.linux.dev>; Mon, 08 Jul 2024 21:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720498253; x=1721103053; darn=lists.linux.dev;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fXx0sxLfBp39ss0ZLVw4RKIlabfntiMnDwiiVSgheOA=;
+        b=d9USV7m/z53oBkMKrI2BeufJP2vxYteSIUoNGkul7CiwYDMjstE0I/uiYvkuRdCeOT
+         Ul0lY7SHiQJvWSW21WdY+WsqUDQIfOYhDOLL0DQavcSVIg7dSgkzmQYm7pYXnqaGa+Mc
+         7uldGKU8ZC6VPl5CpVF/BilsPBeU7tZA+ueQ5A7xnVTjPsEJbTcnqlh6XfxJh9d10pZ0
+         XDuLRkGG6aEsVGiyJaSNO02PJYqH/T9z4BVNFV0TEJUVghtoHYOLMpwSbbRrBIZfNrWS
+         /qQXAVk1J964vsoikkI4Q5nNdAavkGveLujYXUDYTmX9qPk0tbxXd9P6HkqoPGnieAsM
+         ETkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720498253; x=1721103053;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fXx0sxLfBp39ss0ZLVw4RKIlabfntiMnDwiiVSgheOA=;
+        b=C+cvLtmC0kV1ZDiW+ACaufedK0Th/meRMgt1eQPVAGfVK419/lupxU2UqGJp9TnGNj
+         ZomavG2KVddXFu1n/wiLk0kanujbEhAB0Og2QB5kZR91xb/npgyPacXRmyu1pqse4+bp
+         9ysXGyXUFzjve2PxWtxEtC/vAn0UZa5d15x42WquYF8rFPaKRBxmFGP4oyrDM+DjfztS
+         eqRg3CYrFMxNM7u6b3vg9OnZ4rmxc4G45p/TyHKELk1pGLfLIPOHQpQ6W2uZkm19KPBv
+         GO1nEA6fEVn11yulchJgQfzmwQp7HCit+GgcRITwrxLtLhxjNJPM0Yw65el2IgbncKvQ
+         LT7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSCmDLc4dxOaS0mL+Fm71tNX1c4IjZ+eXSllLYdWHekd13iib4tBsYR1vEnCy57U9oBP6VSw5r/BfbcRivpCGP625luH7iETf5jfI=
+X-Gm-Message-State: AOJu0Yw83EG7Bvw8QEQJLltxK5w95eQoc8B6CrcLtUPW+xsAmy6nXEpn
+	/J0wz2viRzTXO15Jjr+Ht6ZXLnsJVpdQPR6Arvi3xDGK7MAJq8uKTFGy4pR9
+X-Google-Smtp-Source: AGHT+IEwMXV0jbIqGc+PaZ6TD7061c9KxYMG2X/7h+OrJ9MVmcaDcf1X5ENn1TZN6gt9o0KGTiJXIw==
+X-Received: by 2002:a05:6a21:1a7:b0:1c0:f2a5:c8f2 with SMTP id adf61e73a8af0-1c2983ba264mr1490532637.48.1720498253067;
+        Mon, 08 Jul 2024 21:10:53 -0700 (PDT)
+Received: from terra ([122.171.22.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6abfc56sm6183215ad.196.2024.07.08.21.10.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 21:10:52 -0700 (PDT)
+From: Forty Five <mathewegeorge@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Bernie Huang
+ <phhuang@realtek.com>, "kvalo@kernel.org" <kvalo@kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
+In-Reply-To: <6673a2dc01a941f5900da7393d160005@realtek.com>
+References: <draft-87msmrdgkb.fsf@gmail.com> <87h6czdexm.fsf@gmail.com>
+ <6673a2dc01a941f5900da7393d160005@realtek.com>
+Date: Tue, 09 Jul 2024 09:40:43 +0530
+Message-ID: <87o777tdbw.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e6c48984-01ee-411f-a013-7e5068641363@o2.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBn0YYRp4xmfplTBg--.35701S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw4UCw43Wr4rtw48Kw1DAwb_yoW8Cr1kpw
-	1kJFWrZrWUGr18Aw1Utr18Wryrtw1UGa4UXr18X3W8XrnFqFyqqr1UXryqgr1DJr4rGw17
-	X3WUJr17uF1jvFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbPEf5UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain
 
-Hi,
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-在 2024/07/09 4:09, Mateusz Jończyk 写道:
-> W dniu 8.07.2024 o 03:54, Yu Kuai pisze:
->> Hi,
->>
->> 在 2024/07/06 22:30, Mateusz Jończyk 写道:
->>> Subject: [RFC PATCH] md/raid1: fill in max_sectors
->>>
->>>
->>>
->>> Not yet fully tested or carefully investigated.
->>>
->>>
->>>
->>> Signed-off-by: Mateusz Jo艅czyk<mat.jonczyk@o2.pl>
->>>
->>>
->>>
->>> ---
->>>
->>>    drivers/md/raid1.c | 1 +
->>>
->>>    1 file changed, 1 insertion(+)
->>>
->>>
->>>
->>> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
->>>
->>> index 7b8a71ca66dd..82f70a4ce6ed 100644
->>>
->>> --- a/drivers/md/raid1.c
->>>
->>> +++ b/drivers/md/raid1.c
->>>
->>> @@ -680,6 +680,7 @@ static int choose_slow_rdev(struct r1conf *conf, struct r1bio *r1_bio,
->>>
->>>            len = r1_bio->sectors;
->>>
->>>            read_len = raid1_check_read_range(rdev, this_sector, &len);
->>>
->>>            if (read_len == r1_bio->sectors) {
->>>
->>> +            *max_sectors = read_len;
->>>
->>>                update_read_sectors(conf, disk, this_sector, read_len);
->>>
->>>                return disk;
->>>
->>>            }
->>
->> This looks correct, can you give it a test and cook a patch?
->>
->> Thanks,
->> Kuai
-> Hello,
-> 
-> Yes, I'm working on it. Patch description is nearly done.
-> Kernel with this patch works well with normal usage and
-> fsstress, except when modifying the array, as I have written
-> in my previous email. Will test some more.
+> Right. Only apply [1] in every bisection step. 
 
-Please run mdadm tests at least. And we may need to add a new test.
+Patch fails on 57f22c8dab6b266ae. Could you send a version that succeeds?
 
-https://kernel.googlesource.com/pub/scm/utils/mdadm/mdadm.git
+Bisection log so far:
 
-./test --dev=loop
-
-Thanks,
-Kuai
-
-> 
-> I'm feeling nervous working on such sensitive code as md, though.
-> I'm not an experienced kernel dev.
-> 
-> Greetings,
-> 
-> Mateusz
-> 
-> .
-> 
-
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [5bbd9b249880dba032bffa002dd9cd12cd5af09c] Merge tag 'v6.10-p4' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad 5bbd9b249880dba032bffa002dd9cd12cd5af09c
+# status: waiting for good commit(s), bad commit known
+# good: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw89: add wait/completion for abort scan
+git bisect good bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23
+# bad: [480e035fc4c714fb5536e64ab9db04fedc89e910] Merge tag 'drm-next-2024-03-13' of https://gitlab.freedesktop.org/drm/kernel
+git bisect bad 480e035fc4c714fb5536e64ab9db04fedc89e910
