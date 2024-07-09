@@ -1,212 +1,263 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2064.outbound.protection.outlook.com [40.107.237.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB1319CD1A
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 14:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537050; cv=fail; b=eFbRMLfSPTReTrkpah3j2Y8gQTyNGILoaOemzD8sGJIMefRDRci1B2AvVDLBy8UKq463EcgsG15XryYOtb8ERtV4D1y1rGQhqbyIRCHacE5KhsMOos4CnnAJmR9SqDNfokRJM+5NU3wIMZB2UO1Z15kOn8mJOCnGu2FqTHub1/Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537050; c=relaxed/simple;
-	bh=NXT4BV9dwGGfGY/9jm1d5huU03DQmADuydmgv7fyhkE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pVf29npM+fvTIG460T0A5ZAhooytvCAi5aOSq+zJ7Qd2zFIlo5eyZFL33RH7pEoQZBninI60SUGNOd5hRmq2Rtbn9YsbnQnhaWE4nG7hfXt0FG6eiPg09Dq85PHpSs0LO4Syw2E9eqTnQTc/z/hddD+EQCM1av3xd+xJs8ZO+qE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LR86TvGD; arc=fail smtp.client-ip=40.107.237.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C9A15573B
+	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 15:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720538050; cv=none; b=hDganlFnzFQpg88FtXi8qVH9l43wIbaD+mJMzqp6+BNMurs4jhpZjNDaB995v6BfxkKETzSxvm6U9iJPUy0AVHqm5EJCtUegLm+X/F63XUXu/Zh386VVH8vm02Yt/2g4Epg/XzSUQqdmSAviOyOmbmpp+UqRnBkWt9LbKGp9094=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720538050; c=relaxed/simple;
+	bh=JYz3AaDPCRTJHCNuh89fGaqlz5sXiB4BKMrQ3NS/lJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s6vmBBvRMvhZrB6JJO/rSiA9V+0rOT3T1YAXVrrCMsClzollR1p/JlnNUy6D3IrLMXtqQKq4NM/A7e+zxjYNiQvU6qiDikGiOl5SIdM7j5HhYVsxycmkBOTYfDKGauKLtvRXqckZf3qdDwJandILhdpkgNL8ElPfk9YDj0mHYtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lRZaociA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4xj2GpB7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ht9Pe9CQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4arC1bzl; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LR86TvGD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d7/DgevdnoYH8BKH6R2i7cqeC4ChGB05i1mRzVCXI6hnVbY/JJZ8GaD1CsC8rgcm/ySq5OClinufK9E5kyHZZFLgjY9/GaGRiqGnGr1sY+d2LPsCZM0UTslFS8Arb0F9bm/qEmbIChseJNiwX+4wWb8zx13QetlZzWtXlTHc9RY/48FRiocIZqfrnvsoqaCJ1cRIu0grqD3/FJYyN2meyuUdwEk4lN30+TNSbkcKk9pn5jBXnOS27T5O5rQsoErGNyLMxKytOjxqjBkzKoXDw7YE1kZEMjV3nXfKZR578fLUwqUt3WB5MtpUzryOP6WBxOF65rSFlTR3XtzRf0+NlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ja2cXDJLvu/O8Y3olXVXteDDXq9mvtrMptGFV3Ye7bo=;
- b=meJT3dIFaqY2HOpgPlR/1VvcJA55PsiaaXjYoBzJCWQFci1NJ6OKNWOGUCU2CNEm7uCwV8QPg3IGFVpM/pAD5rypVOe8NbmSM/owA2NZDkq3XRS7Yy98cue0G3P9VvtnHlefUNw4+oKZ0wTLtOjyPB3aX5AwwJ6hVyxyLEW5ms3+nZdwrhqwUWDsIsuTzXX5JeCUL8cUWj6+fDiu9RxNBqmalvlRKd7TfHR/3qMCNtOnemsvkbzQwVKr6RgPsw8ohraSCWMSiQoyq38JZocmqEpSOdZkB5tkmDWtJY5Uz6EH5SPVbJKM7DgMOak1PyA9m5LLv/jqOULJslPEzsxCdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ja2cXDJLvu/O8Y3olXVXteDDXq9mvtrMptGFV3Ye7bo=;
- b=LR86TvGDEgMHuysbPCy/lU9lHN0jSMZ+k6wGOu+sjrecwEpxlqpEFacgiMIzaUiKX+2Fi60H7i5k40VETnXzOoUSzwGkiMRzBMdmR6c/hCDrIlsGf9UfZBPWHvD25aiWPDzWCu7t0L8DTIQWyvftQs3oHrdLsgRukqCK0RB7gyc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW6PR12MB8733.namprd12.prod.outlook.com (2603:10b6:303:24c::8)
- by DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Tue, 9 Jul
- 2024 14:57:23 +0000
-Received: from MW6PR12MB8733.namprd12.prod.outlook.com
- ([fe80::71a6:a9da:c464:fa2e]) by MW6PR12MB8733.namprd12.prod.outlook.com
- ([fe80::71a6:a9da:c464:fa2e%5]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
- 14:57:22 +0000
-Message-ID: <f2c15b94-5b94-4e58-959f-4912047eec47@amd.com>
-Date: Tue, 9 Jul 2024 08:57:18 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and
- 120Hz
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
- "Deucher, Alexander" <alexander.deucher@amd.com>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
- <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
- <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
- <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
- <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
- <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com>
- <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
- <af91ef9c-5050-4f16-898a-f0c02a293d3f@leemhuis.info>
-From: Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>
-In-Reply-To: <af91ef9c-5050-4f16-898a-f0c02a293d3f@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN9PR03CA0317.namprd03.prod.outlook.com
- (2603:10b6:408:112::22) To MW6PR12MB8733.namprd12.prod.outlook.com
- (2603:10b6:303:24c::8)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lRZaociA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4xj2GpB7";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ht9Pe9CQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4arC1bzl"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7E381219A3;
+	Tue,  9 Jul 2024 15:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720538046; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WPuLd+YMay7WlvMNyPzhdyz/MBhPuJyZzzlVCWYmlgc=;
+	b=lRZaociADIsnQ/tEyTrE5VGo8KIGIqmmk2iZJsItX0gAwGERakB1mopkdk/2VHa14oRgYD
+	rrInSyjw139BHytOPs35QL7+yccryaVymjb83vxYXZ/oK4KEctLZQxSW6smxQ+94R1h1qy
+	JGqUSifJY8lupIRFuuCGBaUrgGJFGb4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720538046;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WPuLd+YMay7WlvMNyPzhdyz/MBhPuJyZzzlVCWYmlgc=;
+	b=4xj2GpB7AUKs3XQeHN+Dn+0fa3LiFtYNafvBslbXxN9oiU1rvkjeCGyqoeXl7qMcsC5Aig
+	jpnqup7+s/1eihDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720538043; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WPuLd+YMay7WlvMNyPzhdyz/MBhPuJyZzzlVCWYmlgc=;
+	b=ht9Pe9CQ/UKouD2ZKDNkNKd0we+091pU05yjOKMTapp3mjPckWdpF3mxulVoLRekFzFHvH
+	uMLhojmxmX596uLPEMxJruzlzYLlsFwC4uDqqvCZy0ZxVU4A1q0/Z7LqAJuckrZwGtL69Y
+	lid1G0lUwcgbE45lYIIT35TGhc3mMok=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720538043;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WPuLd+YMay7WlvMNyPzhdyz/MBhPuJyZzzlVCWYmlgc=;
+	b=4arC1bzl1UhNhMYLr6DeBFoijvbdN2LnBV9fPYz8gEvvm/oYmdrEwDFFgDH7BE+vxMeUO2
+	VHlpt1sVcmelhSCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F04C1369A;
+	Tue,  9 Jul 2024 15:14:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oy77ErtTjWZsLgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 09 Jul 2024 15:14:03 +0000
+Message-ID: <2c9089c9-4314-4e4a-a7e2-2dd09716962f@suse.cz>
+Date: Tue, 9 Jul 2024 17:14:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW6PR12MB8733:EE_|DS7PR12MB6214:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32973ca4-67b4-450c-9def-08dca027703f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TnhtMVh5V2JvaEQ1V0I2SnlLb05WMHYwODI5UUxvZk91bzdRckxjVmEwamM0?=
- =?utf-8?B?RFUrNWE5ZGpwcHhDVlkramEwTDlhSkhYZ2VpWjlNa0g3Q2dZb1JSZktzZzVM?=
- =?utf-8?B?MVpJL1Roc1JPTmExMTlOY0h5VlNJRjcvM3djRTlzS1hBSC9IZm5xY3I2d1d5?=
- =?utf-8?B?S3hOVTZIencyM1dQTUZlV3J0R2M4a2hVMm5WT09Vc2xMZVc1NjZsREtJK2pJ?=
- =?utf-8?B?S3R5Nm5ENXdWMzNSR3BlT3UyOWhkTFVCSHBzcXd6YzhuZVFRTHlqeTU0ZDlL?=
- =?utf-8?B?MGNLcHViTEU3N29FcWhrY1doWEN6NWxIR29reEpBdmhqaWtZbFRJNHVBYm5W?=
- =?utf-8?B?S0U1c2tkN2ZzR2NOWllaOVFSbDB4Y056TEFFUUhnUFVvZEw4R0RFbUNSSmtC?=
- =?utf-8?B?ZnEyS1Q2d0U1U2ZNbWlreHBmc0lrK2VvcXAxcUtxcUc0MFhGT21sejhpUWRl?=
- =?utf-8?B?YkhzYlN2SWh1TlVlSjM0c2c0M21vQXovNy8yaXB2VThIMlRtOFVFSThBZWdm?=
- =?utf-8?B?VVlqL0pnTHVzRmR3QUpJZGVMMHNYWVFta0k5ZHByZ1pUczh2U2N3U0xrRDFY?=
- =?utf-8?B?UHpObVdkSVhjL281UEErNkFwd3dJT3hleWRsVFVZVDJ4MHc0RjVYNDBsQmZh?=
- =?utf-8?B?RHQrRlc5OU9QWENTV0VGT2ZtKzJEckVDaURoWkhmelNzcGl5TE5zdEdnc1JR?=
- =?utf-8?B?OXk3dG5uTmo2NHYwYVpjUmkzQUIwN1NtV0dEeXUzbHFaQjQvbzlLYTErZy9o?=
- =?utf-8?B?Skc3clpQS3l1REx5Zjl2bVVmRlZoeVZiVDFFQ3FSOUhOaVozeDgxR3RMR0Zy?=
- =?utf-8?B?bWZ6a2wrVU0rSUUwWjJmMDVVb0ZmUWZkQVEvRFQvVis0aUs2L25zNTFIUWc1?=
- =?utf-8?B?MC9Nenp5Tk04NkVCdjJjbUkwMUtSZU9NN3dqaCt1NDdyMUMvMVQwYmtrRUlD?=
- =?utf-8?B?ZEszNkt0MlZrWksyRWQwWDRVcUtZNmtUU0RoOFJYQnI4K0F0ZjhYem42Rkxs?=
- =?utf-8?B?Q0NVV2QvN2RsK28wNU83UVJjUkZJK3IxOXFZVjNkNWQ0ZjVlcDBwOExFMzIr?=
- =?utf-8?B?YkM3M3hjRnU0MHo5UmVIcVJaZUtmZlB2WHFHdmpQcU9lZmRmMzBzTUl5Y1do?=
- =?utf-8?B?TUFMZ1RYWlRyTVdIdkM5a1JiMDdqbE4raVVpZDJpWGZJYk9MN2Y4N3UxeUpH?=
- =?utf-8?B?VExyVUk1ZmFXMHA0ZmhhYnYvUDRwa094VW9NZkp3Uyt3ckhPM0JQK2xlUTky?=
- =?utf-8?B?dTE2b1BmN2MxdzVMdWVnWGxmd09GbExhbXFoaEFmTFRyK1dSRVo2ckFMc1pa?=
- =?utf-8?B?WjFDUkloNk5SaFBsSDI1MVJ0UmxmSGFKSjd1eUdwWjRtQXNpTVkwSmd5MFVi?=
- =?utf-8?B?VGNTUERrc1BVNFpUMmFRVzRmTmpKZEJsenJDQkx6RHorNWNOd0Znbi9VRzNt?=
- =?utf-8?B?ZzVqMzBkbWsrM0lQU01TZnlYZmdMbTF0Tkk4dUV2OE9JNjlxby9PbktOTDlm?=
- =?utf-8?B?YTVIM3RVaTVkKzZUcE9HdEtxU0lzMXhVL29QVjBBWExsdWVTTnJZa1VFb1R5?=
- =?utf-8?B?M1BuK2Y5ckVSY2dwaFZxVk1yZG9yYjcvbmJTeXVOQnFhMzRsd0VPQUwyMWJa?=
- =?utf-8?B?Sy8wejVpY05zYVAvZzdxTjBsbk9RWlg0NUFtVGM5dXE1ajhtZDlkUFNQU1pL?=
- =?utf-8?B?c1k2TjMzZ1hHcHlYWE12ampUTjdpTEtRbGdkMTU5ZURuUmxQY24rTE9XZ3U0?=
- =?utf-8?Q?ukIbGtNmzNtmyz9uKE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ODlLb0k3MkpEdHc4TkpjL1hqa2ZaQWN4Y0JKeVVWNUZWR3d1Z2RHcDhJOXN0?=
- =?utf-8?B?K1FaVlhQTmRIdDlCWHVycHNBZjdIOUNPb1hFaUlGV2xyYmhld0FpdERteXFP?=
- =?utf-8?B?clVXQkh0MFl0NWsza1p1WExQUlVIMGJWWmIwRXdoWVFPZGI0ZXVoMGhwenJj?=
- =?utf-8?B?RkFTSEVGdVJEYlgySW1VZlJtdVJtWWk0eW8yZDlra09uWElBcWpkVGhadWJs?=
- =?utf-8?B?OVV1UmhMMGROUVBPZGZ1YTF5ZVFDY2Y0OUdJa2hsdGJtSis1bFQrbGpnT3o2?=
- =?utf-8?B?Ynl6eTBXbzNnN0dlUi9TT3pFM0M2czdvV280VnBJL3Vuck5ZTnBHZllEcUI0?=
- =?utf-8?B?dEN3eUVkR2cvVnhZSTB2N3YweEVEcFN6bnE5U1RRL1BaWjRHZEpKY3laeEpE?=
- =?utf-8?B?anZHdnhSSWFzRkNJYTZYbmFTWEFHclhIUGRYZU5qMEtzaExGaEl1aldwZjl2?=
- =?utf-8?B?QUxUTW9ELzZXM2ZlY2pQNzFwQWhBczFjN096d2RhcVVYWEg3bEpNTHRON1hR?=
- =?utf-8?B?MUR2ZHNSaGxyQk1mNVVnRU5LWUJzRisrZ3JwV1gwV3dwRnFHUjZsVk5kaktZ?=
- =?utf-8?B?K3g5dUhNQTNiVHZ0Uk1hZ1RSSW93SzZFM0tpdCtaaHFkQndFRXpjTjhGN1lH?=
- =?utf-8?B?ejNXTnBEWVhESVkvOUt4WHV6bzNoSUhNWjhSa1RJZjFpc0tZSXlLUDk3anVp?=
- =?utf-8?B?Vzk3YUwrM2QreWo1SUU2SFlBeDZmbzNmZVM2UFpjU1hldTF0SFpuL2pwMzlN?=
- =?utf-8?B?YzdZcm1QaGhPV1NkS29aNVE2UHd4OXcvUCtNam9hYkNqenZ2SElSMWdnZVA3?=
- =?utf-8?B?RUFrSkZuSEtGMHZTZnFiZlNTekt6NHVibHplWWwzM1hsZmltUGswTmN6UEtC?=
- =?utf-8?B?bkZ1dVZ1YWp5SjRvNnExSldFR0tzdENwMTEwSlo1WFlsOW9pamhBbXZMUmo3?=
- =?utf-8?B?Y3cyZ2l5Uk1jZXZnT3VMaUdpVjdIMnpsb1VuWlFHR0haN3VkSm5IRHlWeHdR?=
- =?utf-8?B?ZUt5QkNLZmhsdEl5ZlZqdTd1REtTaVhTeXA3STA3UUFCdFlFVUxQWGE5NVpZ?=
- =?utf-8?B?MUc1bU5hNmd6eEtRZkwzcStibkw3YzlrcURueWlRREREYmVhMTdIRng2RW1n?=
- =?utf-8?B?aTkxRGloQS9QdW94b0xWZ1lqTUdDR3lZSmc5MlRLQjRBRDUvaDRLaDgrc3I1?=
- =?utf-8?B?bEsvUUxXZkxTaDUwR3pneUExeGc5ZlcvVHRVWU9FM05hZW91aEZUVlltRWx2?=
- =?utf-8?B?NmYyQ3BwdU9sUWQ1ZHlVVWk2K1FZZGV5TkFKb3dsK1AxZEpESTdoLzZwSVJL?=
- =?utf-8?B?cTYwN2JQcjJKenM5Mm96bXJUNTM0R0tOVm1UblozNEp0MEZPVGR0VUZtVnZm?=
- =?utf-8?B?cUxGbGFwdkhBeGk5WXQ3enBlSzFiWGNyalMvVFJUSnhUdVJqZUYzUVh0Y3lo?=
- =?utf-8?B?WlRBTkg3NE9yZ1ZlOGkxWlFkcjB1ZGpVb1ByWmNwcy83enZRaXQ5UlBvQ3pB?=
- =?utf-8?B?cTh0VTRLV05teUc4WFdVQWJucUlNSnlpN2ZrMkJZZ3pXejREcklLd09mL2E4?=
- =?utf-8?B?ays1TDhIanFJTW9TYWJUQ1ZCellUTmRya0ZKRlhGRVhiSjRjUkpTeGc2bjBQ?=
- =?utf-8?B?MTcwOVV0L1dHNTRINTJ2aytpNU9nL1ZnQ0hkWGVQZStaZlY5WVZtdWJ6ZUlm?=
- =?utf-8?B?ZDZUWW5odzdndmJacXg3RFR2S3BHdDBzNld4b3Rjdlowd1Y0eEdlZnBJMExs?=
- =?utf-8?B?NWdXMEZaZjdQQjIwMW02eFJrQlB4VWJCdWVuajlmUjZJM1ZIVUdzU2Jwamk1?=
- =?utf-8?B?a091YWhWZFFNS3B2S200elZmMjdKMk9iaG5tYi9QS3oyOWZZQ0NrMW9wZlQ5?=
- =?utf-8?B?UGFRQVBscXU0M29FMjFjQkFzbmxKQ2NmcDY2VUIwM0NvSmxnK2l0U3JaeUwr?=
- =?utf-8?B?Wnh2RFRVMVFvanl2OXBkZTF2ZU9XUFF5V0wwcnVwVkxDZE1qZlp2NDkvNlhZ?=
- =?utf-8?B?TFMvMkc1VFlWMnJKS1hPRUNXMDZUZWowZW5mTWZ1Q1lkdzFHb1QybitVa1kx?=
- =?utf-8?B?R1hpMGVCUHNFMHQrVGtidkxjT0pwVDJQWEdGcDI3ZUpBZ2JnWnUySDkvcGRD?=
- =?utf-8?Q?6cBksRy5KoLBWN4Kvq8Xf8LRE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32973ca4-67b4-450c-9def-08dca027703f
-X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8733.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 14:57:22.8628
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y3mLKCFDhkAmKN8uPPjIk3DVU0xZor7+WRv+sA1gW4Rk2Iu/ZOPjb2zZK+I5UkV53VfQSL7N/IiIt+kD92G8SQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6214
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] bpf: fix order of args in call to bpf_map_kvcalloc
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Christian Kujau <lists@nerdbynature.de>,
+ =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@intel.com>,
+ Lorenzo Stoakes <lstoakes@gmail.com>, Suren Baghdasaryan
+ <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>
+References: <20240612-master-v1-1-a95f24339dab@gmail.com>
+ <CAADnVQJLgo4zF5SVf-P5U_nOaiFW--mCe-zY6_Dec98z_QE24A@mail.gmail.com>
+ <270804d4-b751-4ac9-99b2-80e364288c37@leemhuis.info>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
+ ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
+ Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
+ AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
+ V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
+ PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
+ KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
+ Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
+ ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
+ h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
+ De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
+ J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
+ /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
+ IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
+ X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
+ wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
+ PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
+ 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
+ EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
+ tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
+ eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
+ PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
+ HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
+ 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
+ w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
+ 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <270804d4-b751-4ac9-99b2-80e364288c37@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.79
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[lists.linux.dev,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.dev,kernel.org,iogearbox.net,gmail.com,google.com,vger.kernel.org,nerdbynature.de,intel.com];
+	TO_DN_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-
-
-On 7/9/24 6:41 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 30.06.24 01:18, Mikhail Gavrilov wrote:
->> On Sat, Jun 29, 2024 at 9:46 PM Rodrigo Siqueira Jordao
->> <Rodrigo.Siqueira@amd.com> wrote:
+On 7/8/24 10:20 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing the regressions list and people mentioned below]
+> 
+> On 12.06.24 16:53, Alexei Starovoitov wrote:
+>> On Wed, Jun 12, 2024 at 2:51 AM Mohammad Shehar Yaar Tausif
+>> <sheharyaar48@gmail.com> wrote:
 >>>
->>> I'm trying to reproduce this issue, but until now, I've been unable to
->>> reproduce it. I tried some different scenarios with the following
->>> components:
+>>> The original function call passed size of smap->bucket before the number of
+>>> buckets which raises the error 'calloc-transposed-args' on compilation.
 >>>
->>> 1. Displays: I tried with one and two displays
->>>    - 4k@120 - DP && 4k@60 - HDMI
->>>    - 4k@244 Oled - DP
->>> 2. GPU: 7900XTX
->>
->> The issue only reproduced with RDNA2 (6900XT)
->> RDNA3 (7900XTX) is not affected.
+>>> Fixes: 62827d612ae5 ("bpf: Remove __bpf_local_storage_map_alloc")
+>>> Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
+>>> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+>>> ---
+>>> - already merged in linux-next
+>>> - [1] suggested sending as a fix for 6.10 cycle
+>> 
+>> No. It's not a fix.
 > 
-> Hmmm, again this looks stalled -- and the regression report is 6 weeks
-> old by now. :-/ Or was a solution found in between?
+> If you have a minute, could you please explain why that is? From what I
+> can see a quite a few people run into build problems with 6.10-rc
+> recently that are fixed by the patch:
+> 
+> * Péter Ujfalusi
+> https://lore.kernel.org/bpf/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@intel.com/
+> 
+> * Christian Kujau
+> https://lore.kernel.org/bpf/48360912-b239-51f2-8f25-07a46516dc76@nerdbynature.de/
+> https://lore.kernel.org/lkml/d0dd2457-ab58-1b08-caa4-93eaa2de221e@nerdbynature.de/
+> 
+> * Lorenzo Stoakes
+> https://fosstodon.org/@ljs@social.kernel.org/112734050799590482
+> 
+> At the same time I see that the culprit mentioned above is from 6.4-rc1,
 
-I'm okay with reverting the patch, but I want to see the requested data 
-and tests first. I could not reproduce this issue on my side, and others 
-did not see it either. I suspect this is something related to firmware 
-or it is a display-specific issue, that's why the data/test that I 
-requested would be useful.
+IIUC the order was wrong even before, but see below.
 
-Thanks
-Siqueira
+> so I guess it there must be some other reason why a few people seem to
+> tun into this now. Did some other change expose this problem? Or are
+> updated compilers causing this?
 
+I think it's because of 2c321f3f70bc ("mm: change inlined allocation helpers
+to account at the call site"), which was added in 6.10-rc1 and thus makes
+this technically a 6.10 regression after all. So what triggers the bug is
+AFAICS the following together:
+
+- gcc-14 (didn't see it with gcc-13)
+- commit 2c321f3f70bc that makes bpf_map_kvcalloc a macro that does
+kvcalloc() directly instead of static inline function wrapping it for
+!CONFIG_MEMCG
+- CONFIG_MEMCG=n in .config
+
+The fix is so trivial, it's better to include it in 6.10 even this late.
+
+> Ciao, Thorsten
 > 
-> So I assume no solution will be ready in time for the 6.10 final? I also
-> assume a "simple" temporary revert is not a option or bears big risks?
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
+>>> [1] https://lore.kernel.org/all/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@intel.com/
+>>> ---
+>>>  kernel/bpf/bpf_local_storage.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
+>>> index 976cb258a0ed..c938dea5ddbf 100644
+>>> --- a/kernel/bpf/bpf_local_storage.c
+>>> +++ b/kernel/bpf/bpf_local_storage.c
+>>> @@ -782,8 +782,8 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
+>>>         nbuckets = max_t(u32, 2, nbuckets);
+>>>         smap->bucket_log = ilog2(nbuckets);
+>>>
+>>> -       smap->buckets = bpf_map_kvcalloc(&smap->map, sizeof(*smap->buckets),
+>>> -                                        nbuckets, GFP_USER | __GFP_NOWARN);
+>>> +       smap->buckets = bpf_map_kvcalloc(&smap->map, nbuckets,
+>>> +                                        sizeof(*smap->buckets), GFP_USER | __GFP_NOWARN);
+>>>         if (!smap->buckets) {
+>>>                 err = -ENOMEM;
+>>>                 goto free_smap;
+>>>
+>>> ---
+>>> base-commit: 2ef5971ff345d3c000873725db555085e0131961
+>>> change-id: 20240612-master-fe9e63ab5c95
+>>>
+>>> Best regards,
+>>> --
+>>> Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+>>>
 
