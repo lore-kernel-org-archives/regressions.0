@@ -1,89 +1,102 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98B314C582
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 07:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB2014884D
+	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 11:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720511650; cv=none; b=HWbWBnb1HnKP+Hovnyx4pCqwdYPXGmSRDsAQY8fm2JvtDZZjiPG7sAQtgxAUlpXMD0aOWgj0dzuUa73Fb4NLi/pnqRKXBn7Gk1A4IlNoVYndgKOe0ahYCDC+NfE4rnz3yL0dQ2PZWw144rOg0VCh1/ulr7VBAjmRf1fp19oYUz4=
+	t=1720525805; cv=none; b=kPAvvZTtlrtR9r6UoJK1MkEAdqLxiW5UQQeslA5A0zIW2Rh24vK5CUE8Y4SIXybm7rGNIdl4pUGfk4KuGWSQSVSRk9ZD/mEWEl7qba8g300ajHZE+nXfMbbyc73EqRMOiRqnbnoq0HNVKsy9KS8GN//san+CLwB4HNBOzSjNF8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720511650; c=relaxed/simple;
-	bh=mxDhXYW4b4UaLDofCILdQvO0N1H1w4xDNIWfXpyOj90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uv5gaT/j2TMuwhR8qBm/Wy0qVhZtfbnycvEvU3XVlThGApQWAxrUHqoMF/bmsS9y9DrWi8zCItTpIlzGPm0ma/IQSy7ZC/KTlFGTD0IRh2pH+pphdH5WoHISNJLbhzQ8SZBcUnv+pDAlm1oe1Ms56/M0QcRx7v6+pCw25XHDU1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cWiWBxnV; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1720525805; c=relaxed/simple;
+	bh=lNlid3H/kN6Odo1mBwFYYrRtvNdI/Uorb7eOHuXh8L4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Auxz3Yw5qezgUwXm8fLaJ4WjN389+rrfDAblkR8bBraShLXhBXNUMPmh2AWI6XWixp27n6baLdDzJ2DF0btBvLqGdtXR3J1ypfYM6b7kToet6PtRfNASr+PKJleftG9HB0DTm4Yo+g7AEK2G6Afku3J4WtWRBx/yXkHkXPtDlCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aibK6RVL; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cWiWBxnV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=KD1KDwYLjMteuzilVm1ud7e+p1+TxgpxGGygAd8eHOU=; t=1720511647;
-	x=1720943647; b=cWiWBxnVACMngZiugPr4WyZA32yEqAkGvjh46VbKB3JR+I/B21rKjVW3u7jo1
-	fUN5o1vVMaU0jJLdjUYnEHXG3V4zTD1KmObziR1aUVZw6pWQP/VZlaukHNH2XQZwJM2ewnv1Ypx7L
-	+37dkL95s3K90XX9Qw65v31MA/+msOU4q38OsaR9nWMX4vfKQddGZ8NqChb6fcnNs35+0tH0rghuz
-	vLRBdOqHf7qIM4zEXfSRQ1RTh03nU3RyVQGiWQqpy6vPAA+Q5IroV6ILQaq4nU/QLvbyHnkS6FUgI
-	W6OQyfC5HhUAXAtZav1hI7aj3LAR9UvZBLO0lY5HdIcyyj/02g==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sR5fk-0005gx-5w; Tue, 09 Jul 2024 09:54:00 +0200
-Message-ID: <f4455168-e855-49e0-80de-0f1940502227@leemhuis.info>
-Date: Tue, 9 Jul 2024 09:53:59 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aibK6RVL"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fb72eb3143so18523365ad.1
+        for <regressions@lists.linux.dev>; Tue, 09 Jul 2024 04:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720525802; x=1721130602; darn=lists.linux.dev;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MRGbhkDfzuBSO1BGfrLFHwF8BBPQc55G/CgkIUBsVh4=;
+        b=aibK6RVL7HL4jR93ZBq2SV3yaTn+mZejFu5g5+aEoQPfX/5rZSVEJ93jOKoo6UuUE4
+         ZSA/c7HdZoNIrH1AsPLorQvGIGjbdHyABu5yxeyB1I50ezBlenAEqUVp0wFX08kQojGQ
+         zTHjtZ7c61ixfQyY0zZVKhU//P/9n/zQTsaGGl8UJgr3tbWOERo+MFA+bVw4Mt9eTszg
+         IWUsTEAMp+L5Ug4miZ7cjB/3iS6GmmG1H6dosZuQCYTdvyOPsyWfL5J3/Vfym6pLdPQk
+         k2qZcy0WgPvtkQgRIwnYoRlgjrvsbbes2Su8XB9+J8egk7oa50MGT7pxzc8AnDSdaXb1
+         mLYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720525802; x=1721130602;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MRGbhkDfzuBSO1BGfrLFHwF8BBPQc55G/CgkIUBsVh4=;
+        b=CfhoQOpe3WMAyd8PXOjyc3mUKWh6x1NsTlhMrGwhmSXCHSe8hymVVEp9Na0v7Moq0V
+         R/pk3vOSI09mIYLvlkpj0ubuwa+OskxXP1EbcCCB6ESVDCQNotKDK6Fh4wE/M3hx4DMZ
+         OsZC6gZVN/+rZL9jtHhC0rLQZIOek4JoJ/Ou1uGyWGFSMHMaBh5fXwTUFH4LCiNlubIA
+         pOv8H0yLdPUMw8KLtr6gCkDVRm/lyH3J3+DAkhZiolz7iaD2otEMH7c0QpagdWb/+WPm
+         ReTN8uaM5Cx2MupRwbHORMpdWVOPBOFE904sS76EBe4efIWSC3SylW8uCd0pbue6U1Lw
+         ib0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWJ88AHP2dpT3lB7R3trTlZuj7ap/0TcbGH+CCprFB5q51Rdy2ICCt+Cm+S0Fi58eI9OQTH4JkYWh3U78AAcz/j1YlZ9T0cjOmDtc=
+X-Gm-Message-State: AOJu0YwAji6fz4ltgxgQCtj8gUQ2ecOYulPdDzWMfpO23DvbfmLPe7eG
+	S8Uow9C1stDg5CDWpD4e+1jLK4H3gp8UVSSHV0UMekLB4UuBub4X8ncnLtQL
+X-Google-Smtp-Source: AGHT+IFbcw5Rbnlg5vNsawjDtxjUrTIEdZVU+0P3B3/uXitWW7pGl52jTKe3eD0Jktlg0ppOD+QWKg==
+X-Received: by 2002:a17:903:2bcb:b0:1fb:24ea:fe29 with SMTP id d9443c01a7336-1fbb7fea2e0mr26955925ad.15.1720525802132;
+        Tue, 09 Jul 2024 04:50:02 -0700 (PDT)
+Received: from terra ([122.171.22.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6d3bsm14372405ad.159.2024.07.09.04.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 04:50:01 -0700 (PDT)
+From: Forty Five <mathewegeorge@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Bernie Huang
+ <phhuang@realtek.com>, "kvalo@kernel.org" <kvalo@kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: RE: [REGRESSION] Freeze on resume from S3 (bisected)
+In-Reply-To: <e9c35b3d72a34c8e8ac607590917681a@realtek.com>
+References: <draft-87msmrdgkb.fsf@gmail.com> <87h6czdexm.fsf@gmail.com>
+ <6673a2dc01a941f5900da7393d160005@realtek.com> <87o777tdbw.fsf@gmail.com>
+ <e9c35b3d72a34c8e8ac607590917681a@realtek.com>
+Date: Tue, 09 Jul 2024 17:19:52 +0530
+Message-ID: <87o776g4yn.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dm-crypt performance regression due to workqueue changes
-To: Christian Heusel <christian@heusel.eu>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
- <d3b6a145-ed72-4da4-ace5-b6d99d3e4ff7@heusel.eu>
- <26f1b4f8-c78b-4aff-b748-58abaa01671f@leemhuis.info>
- <84ea4156-74b6-4a8d-8101-92d212015def@heusel.eu>
- <75ccb99c-a42f-4866-9550-f3d9dae2e554@leemhuis.info>
- <0176fb44-8209-4b18-98fc-f10a0626fd13@heusel.eu>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <0176fb44-8209-4b18-98fc-f10a0626fd13@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720511647;c0119dea;
-X-HE-SMSGID: 1sR5fk-0005gx-5w
+Content-Type: text/plain
 
-On 08.07.24 19:03, Christian Heusel wrote:
-> On 24/07/08 01:16PM, Thorsten Leemhuis wrote:
->> On 08.07.24 12:51, Christian Heusel wrote:
->>
->>> Is this creating significant overhead for you or anybody else? 
->>
->> It does, as I basically go through the list of tracked regressions every
->> few days to prevent something along the lines of "regzbot is yet another
->> bug tracker where the data does not match reality and where nobody is
->> podding stalled reports when needed". And every entry obviously takes
->> some time.
-> 
-> So what would you suggest on how I should deal with this in the future?
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-It was totally fine to add this, don't worry. But at the same time it
-looks like the discussion kinda ended already for now. So what is needed
-now is someone that prods it and asks questions like "Mikulas, are you
-satisfied with changing the config? Or do you think/should we consider
-this something that should be fixed? Is it maybe possible to detect this
-odd configuration and have a quirk for it to avoid the problem? Or is
-that considered too much work for a corner case only found after 10
-months and thus likely not something many people care about?".
+> The commit date of culprit bcbefbd032d ("wifi: rtw89: add wait/completion for abort scan") is
+>      CommitDate: Tue Jan 23 13:38:15 2024 +0200
+>
+> But, you want to apply to the top of 57f22c8dab6b whose date is 
+>      CommitDate: Fri Jan 19 13:49:16 2024 -0800
+> and doesn't contain commit bcbefbd032d, so no need to apply [1] at this point.
 
-But there are dragons here, the right tone is important: it's easy to
-upset people and that does not help anyone in the end. So a blunt reply
-along the lines of "this is a regression that has to be fixed" would be
-a really bad idea.
+Ah, I get it. So, from here on, I'll be applying the patch only if this
+command returns exit status 0:
+git merge-base --is-ancestor bcbefbd032d <commit-to-test>
 
-Ciao, Thorsten
-
-
+Bisection log so far:
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [5bbd9b249880dba032bffa002dd9cd12cd5af09c] Merge tag 'v6.10-p4' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad 5bbd9b249880dba032bffa002dd9cd12cd5af09c
+# status: waiting for good commit(s), bad commit known
+# good: [bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23] wifi: rtw89: add wait/completion for abort scan
+git bisect good bcbefbd032df6bfe925e6afeca82eb9d2cc0cb23
+# bad: [480e035fc4c714fb5536e64ab9db04fedc89e910] Merge tag 'drm-next-2024-03-13' of https://gitlab.freedesktop.org/drm/kernel
+git bisect bad 480e035fc4c714fb5536e64ab9db04fedc89e910
+# good: [57f22c8dab6b266ae36b89b073a4a33dea71e762] Merge tag 'strlcpy-removal-v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux
+git bisect good 57f22c8dab6b266ae36b89b073a4a33dea71e762
+# good: [43a7548e28a6df12a6170421d9d016c576010baa] Merge tag 'for-6.9-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+git bisect good 43a7548e28a6df12a6170421d9d016c576010baa
+# bad: [8c9c2f851b5a58195ed7ebd67d7c59683d1a02bc] Merge tag 'iommu-updates-v6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu
+git bisect bad 8c9c2f851b5a58195ed7ebd67d7c59683d1a02bc
