@@ -1,88 +1,136 @@
-Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D905192484
-	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.185.90.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0111D1514C6
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607836; cv=none; b=oMSL1K+SOk2CdxhVEr2W8Vp4+6Qsh58vnfOsA5r+xy5O3p7yRetVoSIOIF9jvUmfuPuxtzaLCPUzP1QV338XnHXgd1sfUpbG6qa/+4IB3reH5nK2U7Va4ysx5yQkuYXooiF+c7UyFKSX30Tfdteh5RDiYN5//8GA8/jEmPnbNoY=
+	t=1720608839; cv=none; b=VT3fhP2mxTHZpbby1fTrsZNmCDV21JUA64z4Vp2xiEsI6xun5l13JOoGnhMJ2JT5zuP1BN8Sj6OXk8wsuEI6NpGrT+5pR59Al3CQR/mxRRcjZOg8VOuZsRzQIZ0Y7hH4U0fThcu2NJ7N8grCxOtS9qyRxb6C4s473jIFxHUKfFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607836; c=relaxed/simple;
-	bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pJkFcevqYikB4f9+grXlW+C5juLE8vIRIly6NQDu8LRgqbAyeXEeBptivN0EZGg836YlewFE4dj4H0x3FsURGwoD2SUvxnzlGGepliVsEGLPBcjfhv6Q2I7dWNfV3XqZJ3YeZHB7L5o/S9/v88ImDD03vpEuO3RHiQ1EGbg14I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de; spf=pass smtp.mailfrom=nerdbynature.de; dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=1OLhefG3; dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=hPcthnPY; dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=Cf5PUmHi; arc=none smtp.client-ip=94.185.90.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nerdbynature.de
+	s=arc-20240116; t=1720608839; c=relaxed/simple;
+	bh=OD3bqGvL2hPkyOSps3OHYrVBAjoKhSimI4RhpJ9k4mg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XEy0+ytK26TGMjROKlAoyf1qXxTUW0FRbG2RLfSNCSG4TnEBkpl+ReEwufQzVPGrjR7DZctlbTkzfQC2oMGI/9Rj+TSYla/c0vxpEOVRucd7H+OFyiE8BJwnfV+JlVi2yv/VkUCYZ/kg4NSQHPLezdTlYbCcViXwztV8u2nH/aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLWt3CKt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="1OLhefG3";
-	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="hPcthnPY";
-	dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="Cf5PUmHi"
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple;
- d=nerdbynature.de; i=@nerdbynature.de; q=dns/txt; s=key1;
- t=1720607227; h=date : from : to : cc : subject : in-reply-to :
- message-id : references : mime-version : content-type : from;
- bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
- b=1OLhefG3fY7X3piTjP8dU57Kk6b/puhbX86fKVURh4XTnBxWW/HxXdThGhMuczN2Q8/Tl
- lrs0qu1n2sPyf2HBQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=nerdbynature.de;
-	s=dkim; t=1720607227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IPG40DNeh1bA8vQMqxypWsF1Z7oGkQ4DVc3MuZC4QII=;
-	b=hPcthnPYx9cfRcsQRcbRHAQnryhhxTX4kyN2wOg1V736dJQelk0pUokIA68Rx8eANwPGun
-	64usllrnYTr1PuAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nerdbynature.de;
- i=@nerdbynature.de; q=dns/txt; s=key0; t=1720607227; h=date : from :
- to : cc : subject : in-reply-to : message-id : references :
- mime-version : content-type : from;
- bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
- b=Cf5PUmHimuZy3iMD3QwqJy9btT9R/vv119rhUjoQVC5elWFjKiRD1hoRQoV8z1xoZXmLe
- 86TGGVTONoY5oeN2AYV6aZiGsT6b8zSpktTWpiuWxgv8jPglggcAPILRTOy4+HYvxCrApj8
- pwK0pksynmC6CNP9SbljvMFb/rokWZEqOWVnUSgJOG1Idwm/cwzWHvK8VXcmmRdDGIj2W5i
- mSQmqNz2qwsbqAIkONNWCSMLHAJq0vFDvyERc7WFXu0JQ0kVQg+v1sJ4PtBM7SneyIeQygk
- 0NuDodHK0wIGOBfw7RrqVQUhX1Ve1EHg8Nujf8ZQpf9nyxK+YgdWwBPyszjg==
-Received: from localhost (localhost [IPv6:::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by trent.utfs.org (Postfix) with ESMTPS id D3E8C5FA2F;
-	Wed, 10 Jul 2024 12:27:07 +0200 (CEST)
-Date: Wed, 10 Jul 2024 12:27:07 +0200 (CEST)
-From: Christian Kujau <lists@nerdbynature.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, andrii@kernel.org, 
-    ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
-    eddyz87@gmail.com, haoluo@google.com, javier.carrasco.cruz@gmail.com, 
-    john.fastabend@gmail.com, jolsa@kernel.org, kent.overstreet@linux.dev, 
-    kpsingh@kernel.org, linux-kernel@vger.kernel.org, lstoakes@gmail.com, 
-    martin.lau@linux.dev, peter.ujfalusi@intel.com, 
-    regressions@lists.linux.dev, sdf@google.com, sheharyaar48@gmail.com, 
-    song@kernel.org, surenb@google.com, yonghong.song@linux.dev
-Subject: Re: [PATCH for 6.10] bpf: fix order of args in call to
- bpf_map_kvcalloc
-In-Reply-To: <20240710100521.15061-2-vbabka@suse.cz>
-Message-ID: <d4e5caad-7a5d-863d-bf65-63978ff9a865@nerdbynature.de>
-References: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com> <20240710100521.15061-2-vbabka@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLWt3CKt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9984C4AF07
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720608838;
+	bh=OD3bqGvL2hPkyOSps3OHYrVBAjoKhSimI4RhpJ9k4mg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qLWt3CKtxsB5Azz4cujIwWErXOQYbp8JczXL+F1U/0yEAsZEu/KP9OmUtRkJFmrRX
+	 jN0NiCKuyPF5qxXqA7Qc+OYiC2KQz1hjeTGn2sxGfmLBBwd3MMBw1UNpH3luwQJsdb
+	 7c02jBUpbWat6d2eTGiEZX9ZokiKeASqYeBsBfm3N42/egW2/7brA87idfJAcpfNpU
+	 CDX1w3Tyq1vuRFA/mC7kt6p8jPg7WuMXxO3oF0mJh3uxe+kosNn6KYeEXd4BuplK11
+	 l/jzs2F5ulTbH+bUedrOGoNGlHATR5gSufOJuEojPHsaeLg9s0IAwh779O2mxOTP20
+	 7ZsYWzwpx/gcA==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a77e2f51496so518014766b.0
+        for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 03:53:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2U3oAm3XPPozIC3QGAE5pyWMm12/EV0M0+WQ3JxJcWAkEtv2NiL6uMTRfmWFn7/vge3yseOIlrkKbJhSj2wkWl01gqhDYjh5ZWzI=
+X-Gm-Message-State: AOJu0YyCyFVpszY6v5xGk56Ijf1OhFSIxlc17xzKR3DNCfZZQOVia9tp
+	W6/JHSg+BxLrH3snp0txZ0T2X6EAtu1UA0zs28dJ9Ckxqm6mBMh/nKw0/JR2KH2aTfkXWY2dXYY
+	8l5mrulR1/QljiaOKGYrAClBAM34=
+X-Google-Smtp-Source: AGHT+IHpD80G3Seki3XvE5LyhZ4sCGFSCXxvHpad6cyq05UMHyp/ueL/EP8hXnuK/LcWCyN0vZycsZF3Iv0QNg7ooz8=
+X-Received: by 2002:a17:906:478f:b0:a74:914b:ffb2 with SMTP id
+ a640c23a62f3a-a780b89e8f0mr413161266b.72.1720608837248; Wed, 10 Jul 2024
+ 03:53:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
+ <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+ <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+ <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com>
+ <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
+ <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
+ <CABXGCsO_6cJruBxKdqXzEze_hDGVsPtN8DBCob=OWF5OpT4s7Q@mail.gmail.com>
+ <CAL3q7H46BxXUnrZ8Q3WxYf=2Tx0taMt9-2wf0TCrwj_kOiC=Dg@mail.gmail.com>
+ <CABXGCsOcpzy7QvRUuSDT-Ouvp_jJHDvuziPQbej4rHLh9te58g@mail.gmail.com>
+ <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com> <CABXGCsP_V-Dh97SkLbYZvHSUdfhgXY_-RSqdRwv16hz+r3B3FQ@mail.gmail.com>
+In-Reply-To: <CABXGCsP_V-Dh97SkLbYZvHSUdfhgXY_-RSqdRwv16hz+r3B3FQ@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 10 Jul 2024 11:53:20 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
+Message-ID: <CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Andrea Gelmini <andrea.gelmini@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jul 2024, Vlastimil Babka wrote:
-> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
+On Wed, Jul 10, 2024 at 10:24=E2=80=AFAM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Mon, Jul 8, 2024 at 7:16=E2=80=AFPM Filipe Manana <fdmanana@kernel.org=
+> wrote:
+> >
+> > That's weird, I think you might be observing some variance.
+> > I noticed that too for your reports of the test2 branch and the old
+> > test3 branch, which were very identical, yet you got a very
+> > significant difference between them.
+> >
+> > Thanks.
+> >
+>
+> up  1:00
+> root         269 10.2  0.0      0     0 ?        S    10:06   6:13 [kswap=
+d0]
+> up  2:01
+> root         269  9.1  0.0      0     0 ?        S    10:06  11:07 [kswap=
+d0]
+> up  3:00
+> root         269  8.4  0.0      0     0 ?        R    10:06  15:18 [kswap=
+d0]
+> up  4:21
+> root         269 11.7  0.0      0     0 ?        S    10:06  30:33 [kswap=
+d0]
+> up  5:01
+> root         269 11.7  0.0      0     0 ?        S    10:06  35:19 [kswap=
+d0]
+> up  6:27
+> root         269 11.5  0.0      0     0 ?        S    10:06  44:39 [kswap=
+d0]
+> up  7:00
+> root         269 11.2  0.0      0     0 ?        R    10:06  47:18 [kswap=
+d0]
+>
+> The measurement error can reach =C2=B110 min.
+> Did you plan to merge the fix before the 6.10 release?
 
-Thanks for not forgetting about this! If this matters, just tested this 
-against today's mainline:
+I've submitted a patchset with the goal to apply against 6.10 (see the
+notes there in the cover letter):
 
-Tested-by: Christian Kujau <lists@nerdbynature.de>
+https://lore.kernel.org/linux-btrfs/cover.1720448663.git.fdmanana@suse.com/
 
-C.
--- 
-BOFH excuse #418:
+But it's up to David to submit to Linus, as he's the maintainer.
+Though I haven't heard from him yet.
 
-Sysadmins busy fighting SPAM.
+I plan at least one more improvement for the shrinker, but I would
+like to know too if those patches go into 6.10 before it's released or
+not,
+because there are conflicts with the for-next branch.
+
+> --
+> Best Regards,
+> Mike Gavrilov.
