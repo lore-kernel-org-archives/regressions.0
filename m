@@ -1,137 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1679F18635;
-	Wed, 10 Jul 2024 15:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CE41946BB
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 15:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720624555; cv=none; b=TnpuWLwjSqac17cSgW/hZE2jJ0w5xwNvJVYbGZ74IvHAUH/zwqNGdaAsUIpjIrkzFd2HT+yOomQ7Jr3cF5c5jTYj5fJEqUYHEhSdkyg8RPFROLrkVN4XwdumhdjZ+F1C2oW4JbnbKbUP7IWkb3Xt+XJgOYRZH2cfFFCTDsUbpBY=
+	t=1720625830; cv=none; b=gnVYMknQ0UYQmjR/xNhPK4+v9mn3xfIr5hOagzJ6HsmGauAPAKhKoLRTYF0Y8SMD1V1EH95uvu9mMRcm9DOTqKxs2Fr5HQBFgiOSbfqvRbJ8easNvOtklsZPGIge2xhdLJiQmCn3a9E8Y68wPyuk6V4fbJ97h3VDg5vTlZYSYGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720624555; c=relaxed/simple;
-	bh=wYrR1El+TS0rB0KwLL4f7USQe4e6pmH8PrDQ/6V2wPc=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=fbhvuIyywImwJaGcaVThkC+OdBwojThwetkxestDW5ersLC+dAnxuOH3JkoGyOy+PKvMEHYL3F15jNmtpvn60RA0G0NA+SuOHcjUHa/neuvilO51O9y1+cbXKy3ogXiTLLWooNaq1SONJWZzUtASzNDLv7J+XJEx0pPzf6R/StM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=figjelsX; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1720625830; c=relaxed/simple;
+	bh=x+o4kPbiFSGaMLLk+/3IeoS/mUq9fZMtsf7DYiEwpco=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=un2sGXx9Kdtm7irDFZF2bxriPYvFeHLbDvRA9USBCORs0SVG8Q6IVTXUx6BUCyI8E8VmKnVS4tt7+2uEJIkIbxLy3jSysvRR+WqRsQOnOfR3Q+mdjn33G8XXUMpMB/VoDsbzyUERFp3KIWbWUDZHrxhEB3M+1+R6y0ol3xg2+bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uAT5Ie4d; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="figjelsX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=wYrR1El+TS0rB0KwLL4f7USQe4e6pmH8PrDQ/6V2wPc=; t=1720624553; x=1721056553;
-	 b=figjelsXZWv/q9RXbUbeWW2h9rcMwAk6W+k57+Z/pvbOxg7urwJcA+n3PAHXouiNeEa4VXn8Z2
-	ofLYeIcZZwz8Eon8lC/UkEB3x4uBloCYT81CDfAPH+ixpgTqna3elPHQRMdusZSLnYD+Md0AWIfXg
-	g1bTmx2+yIH0NFsKKnbQMiJO25jTbjG0XJvUCRiyTrDWkoi/WOO4hVDpivwU2SUEJ+IhmI58k2/DF
-	ptmmUCMl5Sxjb1oblUfdAhHmjx0jBAN88+bXCoj/tAo4tZLDw53WrxBp+/qAfSjSweY5hRsaDNgVU
-	BD4qiDm73XJeB4K4r7CYrtJl5Qx6ebG9wS9GQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sRZ2n-00022J-Dw; Wed, 10 Jul 2024 17:15:45 +0200
-Message-ID: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
-Date: Wed, 10 Jul 2024 17:15:44 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uAT5Ie4d"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e0354459844so6496750276.3
+        for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 08:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720625827; x=1721230627; darn=lists.linux.dev;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Zc8nMT3AAU8QDxt/phKAKKjkSLDSDuDLlhBSXcN3vI=;
+        b=uAT5Ie4dSmpl4ELkpuUpGeJuTFKo2pyfeycluIodC/p0LXf10dezucTv5vusYk4CQ5
+         1khb3wMvbv7kerWQC2hm6fzuIt1SIh1lEqXux/ZdyOW75YBQI+VelhcqbFb7tzUSWtom
+         tiRr/xL9j5/9RMbAI2dvWuqIkfFHkV74FN1RVuPtdZNcmM0/E5ztjGE6n5DQPU3SC2PT
+         1njaR6+hYTlQBTr9dokHW/yF9Jksg7+N2oOMVyF2wfCFIDfCINurK8kkkf79aNBnE3R+
+         OKBnz8eh81lWfSAPXMYpfETu4c66NHy7t6Sqb45KguXikGwjFF1YRG1q6Eb/f+NZixcL
+         YtjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720625827; x=1721230627;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Zc8nMT3AAU8QDxt/phKAKKjkSLDSDuDLlhBSXcN3vI=;
+        b=StgUYB9J5+0ukVyeRLHyalFSVmgI/sCg0taIglvjeakLGiW9Ksg6EGrSFtwcJK7V+T
+         Ikj70hTWOnWhPu9RLP8sSX4K8bSM1CP53p0KSuNVjS/JS43gJ2TCYDQ0+xYx8MXg0qlZ
+         UYg514SFsWLgJ62VBH+OR8aZMm7l+Uir0YKBw0dEZoFfFwY8K1wQSM7BiOOwQ9Ws5VBI
+         PKcL3rxkd0eGLd7tA729zihWkxHi01qZLdLFgsA6o/OCTbTOsk/YRFomg2za9Hf2UdOn
+         5JHfAai6qArP7bSbWtkqPX9T0/MuY5eOjh/csQfCYX5kDC6UHGylZiqXprCggAcJqUEp
+         HP+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUgbvj3yeXpbHofU15dfxX17BdU+t9lK0xM9QWkWOBzL8WmltVvsZwEaJdH5oNrRkOIrp+uB+bFz948KeYQBenvKetEqVqvHrlc/9Y=
+X-Gm-Message-State: AOJu0YxgYsMZ1xYKu0y/NJfZyYGiuLNFwHJlXAAVYKjkL7Fz3LOkZ3Th
+	EC0rERQ4Ez5XuNkeQ06ZTpJwwJHQj+HIrpj7dvJaIa2FTNSBHBUQn3xCZzZDhQ==
+X-Google-Smtp-Source: AGHT+IFHIo6fU+7NNSLyfzTcFAbf/t4vdnUEaBIfh5qv8+9oqH3J3Xkmyxjko8dPd+A7uoIPPYKtPA==
+X-Received: by 2002:a25:7408:0:b0:e03:34ec:16b2 with SMTP id 3f1490d57ef6-e041b11d31amr6735103276.42.1720625826988;
+        Wed, 10 Jul 2024 08:37:06 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e041a9a156fsm637366276.65.2024.07.10.08.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 08:37:06 -0700 (PDT)
+Date: Wed, 10 Jul 2024 08:36:54 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Hugh Dickins <hughd@google.com>, Sagi Grimberg <sagi@grimberg.me>, 
+    Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+    Eric Dumazet <edumazet@google.com>, 
+    Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] net: fix rc7's __skb_datagram_iter()
+In-Reply-To: <51b9cb9c-cf7d-47b3-ab08-c9efbdb1b883@grimberg.me>
+Message-ID: <66e53f14-bfca-6b1a-d9db-9b1c0786d07a@google.com>
+References: <58ad4867-6178-54bd-7e49-e35875d012f9@google.com> <ae4e55df-6fe6-4cab-ac44-3ed10a63bfbe@grimberg.me> <fef352e8-b89a-da51-f8ce-04bc39ee6481@google.com> <51b9cb9c-cf7d-47b3-ab08-c9efbdb1b883@grimberg.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Quick extra regression report listing regression which available
- fixes
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720624553;1e34e3ea;
-X-HE-SMSGID: 1sRZ2n-00022J-Dw
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Linus, as you might release the final on Sunday, here is a quick
-"extra" report in case you want to know about a few unfixed regressions
-introduced during the 6.10 cycle. By chance this list only contains
-issues for which a fix is already available; I track a few more
-regression, but they are IMHO not worth mentioning for one reason or
-another.
+X would not start in my old 32-bit partition (and the "n"-handling looks
+just as wrong on 64-bit, but for whatever reason did not show up there):
+"n" must be accumulated over all pages before it's added to "offset" and
+compared with "copy", immediately after the skb_frag_foreach_page() loop.
 
-There are two issues that worry me somewhat:
+Fixes: d2d30a376d9c ("net: allow skb_datagram_iter to be called from any context")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+---
+v3: added reviewed-by Sagi, try sending direct to Linus
+v2: moved the "n = 0" down, per Sagi: no functional change.
 
-* A btrfs regression that leads to increased execution time of the
-kswapd0 process and symptoms as if there is not enough memory; at least
-two people are affected by this -- but there are indicators that this is
-only the tip of the iceberg. Luckily Filipe Manana a few days ago
-submitted a patch-set to fix this. It might or might not be picked up by
-David and sent to you this week:
-https://lore.kernel.org/lkml/CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs%2BA@mail.gmail.com/
-https://lore.kernel.org/linux-btrfs/cover.1720448663.git.fdmanana@suse.com/
+ net/core/datagram.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-* bpf: build error with CONFIG_WERROR and CONFIG_BPF. Known for 8 weeks
-now since a patch to fix this was posted; my recent prodding was
-ignored; luckily two -mm developers yesterday convinced Alexei that it
-might be worth fixing for 6.10 with a updated patch from Vlastimil Babka:
-https://lore.kernel.org/bpf/20240516072411.42016-1-sheharyaar48@gmail.com/
-https://lore.kernel.org/all/20240710100521.15061-2-vbabka@suse.cz/
-
-
-There are a few regressions with available fixes, which seem to be
-unlikely to be submitted for mainline inclusion during this week afaics:
-
-* net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64 not detected
-(known for 8 weeks already):
-https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
-https://lore.kernel.org/lkml/f485d1d4f7b34cc2ebf3d60030d1c67b4016af3c.1720107535.git.daniel@makrotopia.org/
-
-* drm/qxl: VM graphics often malfunction after boot and sometimes
-shutdowns occur (known for 5 weeks already):
-https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-https://lore.kernel.org/dri-devel/20240708142208.194361-1-tzimmermann@suse.de/
-
-
-There are a few regressions for which fixes are available, but those
-might or might not will be submitted for mainline inclusion during this
-week:
-
-* ASoC: SOF: Intel: Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
-S0ix not even tried to enter from there on:
-https://github.com/thesofproject/linux/issues/5072
-https://bugzilla.kernel.org/show_bug.cgi?id=218961#c10
-
-* of/irq: identification of ATA drives with P.A. Semi Nemo boards broke:
-https://lore.kernel.org/lkml/3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de/
-https://lore.kernel.org/lkml/c8010a06-9d8d-466a-9a83-ee25950f1885@xenosoft.de/
-
-* e1000e: s2idle and S3 broken. That's the issue I highlighted a few
-days ago in a separate mail, but I never got a reply. Anyway, looks like
-a patch finally is submitted for inclusion into net (five weeks after
-the issue was reported, which is related to another issue that is in 6.9
-and 6.6.y kernels):
-https://bugzilla.kernel.org/show_bug.cgi?id=218936
-https://bugzilla.kernel.org/show_bug.cgi?id=218940
-https://lore.kernel.org/all/0b96edcc-6b5f-447f-8023-440427a9fff2@leemhuis.info/
-https://lore.kernel.org/all/20240709203123.2103296-1-anthony.l.nguyen@intel.com/
-
-* pinctrl: rockchip: boot broke on RK3328 / Rock64
-https://lore.kernel.org/all/705544af-d615-4ff0-a54c-72a69140ce6d@eh5.me/
-https://lore.kernel.org/lkml/20240709105428.1176375-1-i@eh5.me/
-
-
-There furthermore are a few regressions with available fixes in next
-through -fixes branches, which thus will likely be submitted for
-mainline inclusion during this week:
-
-* drm/bridge: adv7511: Intermittent EDID failures; the fix after six
-weeks finally made it to a branch that likely will be submitted for
-mainline inclusion later this week.
-https://lore.kernel.org/lkml/20240521011614.496421-1-aford173@gmail.com/
-https://lore.kernel.org/lkml/20240630221931.1650565-1-aford173@gmail.com/
-
-* spi: omap2-mcpsi: boot hangs with ocelot_mfd driver and spi:
-omap2-mcspi: omap2-mcspi broke, Oops after a timeout.
-https://lore.kernel.org/lkml/Zl%2FV0dU6SjAMkpLG@colin-ia-desktop/
-https://lore.kernel.org/lkml/20240612170030.3qatttsgrwjg2m5s@joaog-nb/
-https://lore.kernel.org/lkml/20240704-spi-revert-omap2-multi-v1-1-69357ef13fdc@kernel.org/
-
-Ciao, Thorsten
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index e9ba4c7b449d..e72dd78471a6 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -423,11 +423,12 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+ 			if (copy > len)
+ 				copy = len;
+ 
++			n = 0;
+ 			skb_frag_foreach_page(frag,
+ 					      skb_frag_off(frag) + offset - start,
+ 					      copy, p, p_off, p_len, copied) {
+ 				vaddr = kmap_local_page(p);
+-				n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
++				n += INDIRECT_CALL_1(cb, simple_copy_to_iter,
+ 					vaddr + p_off, p_len, data, to);
+ 				kunmap_local(vaddr);
+ 			}
+-- 
+2.35.3
