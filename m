@@ -1,132 +1,192 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CBF17BB31
-	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 09:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5D118FA28
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720603480; cv=none; b=LnKxlB8JHGzWDXXpJfZVynAIIjhv1vq41rtDXYYvDE6j9PnwX1W6kcfuC6ocThIeQ1OXqnWoRb4ZWYVZTsQPcAKRtHN1kQB8+VXI29WYZ/s4JqKRhgZ5BwJIOWDT92iN22AO1vrVeSdf2M8ADOmU7qVuoRlDzRZcn5d72Ino7p8=
+	t=1720605928; cv=none; b=l65Et/s06GuLAk4XTTn/SNlcMp6UioDeIh5oL623AO7lkkl3UmiTdWkrK8t0/vEl12P1XI5nyvgTTP+IJ7BCkInMinClUQmcWCjlSLHRh3t2iaUN/ikC3fCiY59xh+FUClFmCPs4URkVe/Sa3cuT3XoT9xxXI+rv4vKNYJ7gS/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720603480; c=relaxed/simple;
-	bh=mt5D8AY+7EO0szlXthTVjPtn1EMLtk1kIsZWF6D2fXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1F001cHHgfuRatSkpuJSuRX1xHejVflbgZiEmMBAoVILnmfAA81ubpzlzg96dGNbuBVdfy+7MWeQD734c0vAoJE9I1EwTiOOMdk66AK3TO6vymO2a3QCIKQ2puY9u/eq8ONH5kh1INHIj5HIU+Znk2x0F0gX29UkZS9WtuN87M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGkKmKjj; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720605928; c=relaxed/simple;
+	bh=uZxAF7XgQqF1Sg+dYcymPO7TahFggn/RlM3shTrDiWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OQ6B/xVZLmU9FuLkTRfQjN+n7+fyxRzv2zSfHQ6CTVNdRsX77MpBpLmj/a5YHnMLFO/b5UD0VGhD2EwtwkwGjlqsoGrRha+mHZAy33PNugSxlAs1W5TPiZIvcQWRv3cJujB+ykU4n/WASulaV0OnQ+yahz2BNJRMuCbIPTzhnuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bL0BN0sR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bA4KwbV5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p0wzvfRu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HrqZ3W00; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGkKmKjj"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-447e221150cso1742391cf.3
-        for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 02:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720603477; x=1721208277; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWMHgpbIy0GnN29ystn44vJIYgOS+Ps6swBxJ3oTQT8=;
-        b=NGkKmKjjopYS0BC7ebpypJ9EgPFu9ht0VSo/Q//BCDnlgHe5sKqPQpqMqfDovGG1Q9
-         j6WwoLhtGKme6TFGxb7Q4oW92PDWiwojQEe5TTeBXtddtP891ULI9CLLG+reotNBmEpl
-         5zb/WcGvjwNiJsooz2dsS/ALZRbeWZzAHDnrmF/P7nqXRSLUbxYl1Xf3Ylk+9DV5S5Hg
-         irAHuTbrWLhcE4UFyG1yOZxiF6GN6WV8wbB69yv08qARrF8uWfhNsrb42Pc0teMevU5d
-         zylIg9GzTdMZZVhb+gbIISjVfoeI6NrJCY2IHN0nZfyr53etUDvoj9oSRa2DlD58IhXR
-         aSYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720603477; x=1721208277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWMHgpbIy0GnN29ystn44vJIYgOS+Ps6swBxJ3oTQT8=;
-        b=twuvPzsRZGhGTXdk2uKwmWGgOmZGfmvZ0+JyYeAWTll7XrVSo5SZujZZ37TTUKS2bC
-         +NxL+l2Y0c1LtqufxRfrfFn8N+W1zNcdMNghl82ZYri65SxgsVJAERfHRszY3ABe2h71
-         ViLzs6X14RS0eN+x7o6P+4K+mSpBhfwArHz39LoKBJ3b4tF+FyCqUCIEnedIo9MV5GK9
-         UonS5vE4HcqMIh1+QjfFPj8ZGzbI27L3cuV60xcjxctc5Xxj57zLofAp/ht2LgneFpmu
-         5ScP0yRtXL21mFrC9Ena+6Mewy+v1MyKvmhLt3PKGZKO2CKJgzmeML2El/8NEHjGKM4c
-         HR8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVpWHl4SjulQTs9ZGzp7WzvIQOdJ7POmt+jrFcmIu9YdZ24Ow/BV5Pi6zhJjLFwdnPU0/RR/MJ20qQ2O24s/5bfLMDnMUdHNJRrono=
-X-Gm-Message-State: AOJu0YyIZq1MPmggpH04VBJ8Hbo61jiiBuF+6/MOixXo2Y36LT1avUCk
-	X269iLFJmdKdEXwhhTUrnL3KjpMu6Q8oaw9g/U/EJE3PGvenB7VNTqM3qWrdnkqeD/V1bVed44j
-	r3Q0acaYYw2/CDawW6KnpqbcNLAk=
-X-Google-Smtp-Source: AGHT+IF7E8zn61udfFE2MLrr5RfDLaBzXvM82WJiBjIRP1r9i+9UFnsbu3O6AeiGCBZSYyYR7HPPSUE7OQ7NYaQcYK8=
-X-Received: by 2002:ad4:5b8f:0:b0:6b5:ec9a:41ef with SMTP id
- 6a1803df08f44-6b61bca42a1mr53442686d6.2.1720603477379; Wed, 10 Jul 2024
- 02:24:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bL0BN0sR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bA4KwbV5";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p0wzvfRu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HrqZ3W00"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D03E11F822;
+	Wed, 10 Jul 2024 10:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720605925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
+	b=bL0BN0sRuIlV9IS0L05LSKrwq7oDelOmcW3+PTt+x9+MRo4rygeHpWwHZLULxE3+wNlPd6
+	UBShK9bOcw7VoWU7qwTZmR1SzlipQjhmzHfM+ekciaXn+qP7zBauUsFQ3jBgW4Mtt45AN3
+	NbNMfInkzzauz5WPBCorHfeuOkvARYU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720605925;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
+	b=bA4KwbV5ZiSzKslzk8pXyDa/OnlZqcX/OQDNyJ4h4Hu8U+ra3pv/ij3vNg4fRkxzIrOeGq
+	+FVl3yp+2QlQlmBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1720605924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
+	b=p0wzvfRuApLW/RWhWIId8cY0wJplKR83JTiPxLO9BAtB3uP5S54lEP/hzXFtXq4LBgVmLh
+	CzwNgdmUGPyyYImxBu5dAcT81G3x0EneND412bYz76S6Yx9Axt1GVMxHLEAVnjOdCbIPNo
+	qT/N056Jfw0INIeNMd1aI3bJAjWHt+4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1720605924;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
+	b=HrqZ3W00whQfH41bHoBlBwE0UbrpHyNdLYN4ECI4PHeUEHs+cAB4d2kk5wZuQ/Cu5Adamb
+	AWApoCNm5VEG5kCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B478137D2;
+	Wed, 10 Jul 2024 10:05:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id A1iNJeRcjmbyZAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 10 Jul 2024 10:05:24 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	javier.carrasco.cruz@gmail.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kent.overstreet@linux.dev,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	lists@nerdbynature.de,
+	lstoakes@gmail.com,
+	martin.lau@linux.dev,
+	peter.ujfalusi@intel.com,
+	regressions@lists.linux.dev,
+	sdf@google.com,
+	sheharyaar48@gmail.com,
+	song@kernel.org,
+	surenb@google.com,
+	vbabka@suse.cz,
+	yonghong.song@linux.dev
+Subject: [PATCH for 6.10] bpf: fix order of args in call to bpf_map_kvcalloc
+Date: Wed, 10 Jul 2024 12:05:22 +0200
+Message-ID: <20240710100521.15061-2-vbabka@suse.cz>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com>
+References: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
- <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
- <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
- <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
- <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
- <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
- <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
- <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
- <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
- <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
- <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
- <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
- <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
- <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
- <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
- <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com>
- <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
- <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
- <CABXGCsO_6cJruBxKdqXzEze_hDGVsPtN8DBCob=OWF5OpT4s7Q@mail.gmail.com>
- <CAL3q7H46BxXUnrZ8Q3WxYf=2Tx0taMt9-2wf0TCrwj_kOiC=Dg@mail.gmail.com>
- <CABXGCsOcpzy7QvRUuSDT-Ouvp_jJHDvuziPQbej4rHLh9te58g@mail.gmail.com> <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
-In-Reply-To: <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Wed, 10 Jul 2024 14:24:25 +0500
-Message-ID: <CABXGCsP_V-Dh97SkLbYZvHSUdfhgXY_-RSqdRwv16hz+r3B3FQ@mail.gmail.com>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough memory
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Andrea Gelmini <andrea.gelmini@gmail.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
-	dsterba@suse.com, josef@toxicpanda.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,iogearbox.net,gmail.com,google.com,linux.dev,nerdbynature.de,intel.com,lists.linux.dev,suse.cz];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
+X-Spam-Level: 
 
-On Mon, Jul 8, 2024 at 7:16=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
-wrote:
->
-> That's weird, I think you might be observing some variance.
-> I noticed that too for your reports of the test2 branch and the old
-> test3 branch, which were very identical, yet you got a very
-> significant difference between them.
->
-> Thanks.
->
+From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
 
-up  1:00
-root         269 10.2  0.0      0     0 ?        S    10:06   6:13 [kswapd0=
-]
-up  2:01
-root         269  9.1  0.0      0     0 ?        S    10:06  11:07 [kswapd0=
-]
-up  3:00
-root         269  8.4  0.0      0     0 ?        R    10:06  15:18 [kswapd0=
-]
-up  4:21
-root         269 11.7  0.0      0     0 ?        S    10:06  30:33 [kswapd0=
-]
-up  5:01
-root         269 11.7  0.0      0     0 ?        S    10:06  35:19 [kswapd0=
-]
-up  6:27
-root         269 11.5  0.0      0     0 ?        S    10:06  44:39 [kswapd0=
-]
-up  7:00
-root         269 11.2  0.0      0     0 ?        R    10:06  47:18 [kswapd0=
-]
+The original function call passed size of smap->bucket before the number of
+buckets which raises the error 'calloc-transposed-args' on compilation.
 
-The measurement error can reach =C2=B110 min.
-Did you plan to merge the fix before the 6.10 release?
+Vlastimil Babka added:
 
---=20
-Best Regards,
-Mike Gavrilov.
+The order of parameters can be traced back all the way to 6ac99e8f23d4
+("bpf: Introduce bpf sk local storage") accross several refactorings,
+and that's why the commit is used as a Fixes: tag.
+
+In v6.10-rc1, a different commit 2c321f3f70bc ("mm: change inlined
+allocation helpers to account at the call site") however exposed the
+order of args in a way that gcc-14 has enough visibility to start
+warning about it, because (in !CONFIG_MEMCG case) bpf_map_kvcalloc is
+then a macro alias for kvcalloc instead of a static inline wrapper.
+
+To sum up the warning happens when the following conditions are all met:
+
+- gcc-14 is used (didn't see it with gcc-13)
+- commit 2c321f3f70bc is present
+- CONFIG_MEMCG is not enabled in .config
+- CONFIG_WERROR turns this from a compiler warning to error
+
+Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
+Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ kernel/bpf/bpf_local_storage.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
+index 976cb258a0ed..c938dea5ddbf 100644
+--- a/kernel/bpf/bpf_local_storage.c
++++ b/kernel/bpf/bpf_local_storage.c
+@@ -782,8 +782,8 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
+ 	nbuckets = max_t(u32, 2, nbuckets);
+ 	smap->bucket_log = ilog2(nbuckets);
+ 
+-	smap->buckets = bpf_map_kvcalloc(&smap->map, sizeof(*smap->buckets),
+-					 nbuckets, GFP_USER | __GFP_NOWARN);
++	smap->buckets = bpf_map_kvcalloc(&smap->map, nbuckets,
++					 sizeof(*smap->buckets), GFP_USER | __GFP_NOWARN);
+ 	if (!smap->buckets) {
+ 		err = -ENOMEM;
+ 		goto free_smap;
+-- 
+2.45.2
+
