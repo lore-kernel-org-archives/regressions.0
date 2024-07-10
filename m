@@ -1,171 +1,166 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CBB17B044
-	for <regressions@lists.linux.dev>; Tue,  9 Jul 2024 18:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541D8BEC
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 07:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720548733; cv=none; b=Tm8okdobl/fRKvTdXARIRcI6LX/D/hsZOMKZVkfE815pdI6XkXEwf31MGEOxRmAJYjKDtMxZQYxgcSY7c4MWm+KzaFiKW3YVJu5vWdkuGoKi29r/7tcXFWr0Bj9ANkcfg5D6ATY/tMMv2DOHX7wcoujtYdZTlCwQafzy5O/SBUk=
+	t=1720594874; cv=none; b=ij4TMCiFBgHvGvo/LRpkJeM/PiCS3np7l2p86ELn/k0lUUO+nuk7aB1eEuqrmIJno8HMiRE0z0fjIx7HnWoYFavXWRrhcNeXDrRxtXhJzJwwUa5X1/K3qOYaQD041e5UMQOSX0uC6qKSNWTJcy0p/Sfb0OVYredWmZXCDHvnkks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720548733; c=relaxed/simple;
-	bh=158cZUlmlIr5dPwD52dAc3U5dHPzagtOg3XpKlSlH+E=;
+	s=arc-20240116; t=1720594874; c=relaxed/simple;
+	bh=0g/tbN5BOdpCUSIAXDAOLNWIFD9iOc+XZRuFSDfjuIw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NUsjJEne7nyp+pNXMpI5tH/D3HC8Wr/TYkugy0kFxA/SHdkiW37cIQjOioNz9OHyR4z5MjANWBBKVIWMJ8GZqlsuvyAXvS69vfKYxMUS6dudWhqoVKLIP0BYvs6ZrI/llMbvr9eZU25LtrEN+T7D9c1iK4fuS9qlNJcUyL5YFNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EyeZCG0T; arc=none smtp.client-ip=209.85.221.48
+	 To:Cc:Content-Type; b=NXGyoyvoGvYWIL11jvcmlMvwx+buny+PPX49NwC9NfXD0/el04V2q9+O13bvWr9V+ob4YZt8gBJ15ZtcYyJ3zOuC84bPaPqIoiA8x8Sg2p/aWN3YpHhqgDgcCOYaF4eMo70OcaaNSWIr0XgK5r0tCR/fVFU0D3h8SfJ321AJgEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhycYVGf; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyeZCG0T"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3679df4cb4cso14225f8f.0
-        for <regressions@lists.linux.dev>; Tue, 09 Jul 2024 11:12:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhycYVGf"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5c680f40faeso62637eaf.1
+        for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 00:01:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720548730; x=1721153530; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1720594872; x=1721199672; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=158cZUlmlIr5dPwD52dAc3U5dHPzagtOg3XpKlSlH+E=;
-        b=EyeZCG0TMIUDxeR+SbntKTHq41bjbPu9JhuV7RrBNHfFbwzpPJq30ttKoAzw2aFM7d
-         wXKvbJJfdvzLSiNsPyzft6ormuNb7m1UUe5FDlE/VtodKrv2rTnJtx0uXINOpPWQFjef
-         LUA1h0VJw7Uofe0IaZmXhYZIy1wOrTGlHAx98z+T5i98ETU3RtqRf/tZjS29ZeObtZNN
-         NYbswPLQIPB2Zr733d0STllXxlrkPN6z4VaMOpSpnj+EFhsbzH3UNesTxWQjoRBlNk1t
-         6uFGu8uOaZTc40WRZLd3aHB+UrWdiVw2LFDIs12YvQOI+isrO/+uIqQSdhgv8pxGqig1
-         dYTg==
+        bh=0g/tbN5BOdpCUSIAXDAOLNWIFD9iOc+XZRuFSDfjuIw=;
+        b=NhycYVGf3nPkQLj92JIislMY7Kb36+L6tjxYOzbYOX1MVA3u6jjphArOCvBigidgE/
+         uRjj5O6ZHRpqvwMtGh1Zd1rEcIrm5pj45QiQV3c1lLaRUb93M8CgIjSK0Rfj3WVn4WCZ
+         YJgfCmdG87daJaCdmLtY6mtj2I8eHX2pePORcwjKp5OH8TrJYW1tnyXCm5gPxAvLfnnb
+         7T7kYEcfqi9ZDcMNZCXuOxFCmhp0/xkeJKFMZEkkxQBs3t3sZy1Wd9+OpSXbpU4e6kG7
+         zkQWvc26IqCESLN2juQQ4aOW9hCs/vUbBJqZg+hkbh96BMidqSKIEk/miMfHbMLu4rKU
+         F1OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720548730; x=1721153530;
+        d=1e100.net; s=20230601; t=1720594872; x=1721199672;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=158cZUlmlIr5dPwD52dAc3U5dHPzagtOg3XpKlSlH+E=;
-        b=DCjXGY9PA5JWbx9Q22+sMrKrhGHXvBpECke9v/9PMZOT5g22asSCLt8iiDPFDO/0Tx
-         pDIJh1uy7WLGUWnrzqucflOfTEK6B1AJuAfSwv0YySWG89pMh0SI9NY/eZbPST7hQ3Mi
-         IUbwS/BHjvOvE6qsycab6e4R9yVMSmtbxXb+TYItPPZzxcT5EDuJCJqWOGUPBRsurShW
-         BUGihMNu8CQQP117oOkiK4hJCqyCtSLa1lgjK0E8dfDifZzN+kfgitNQIF7GWG6MvG+3
-         cBfkSIwFAMLKhQH6LR1EAzwZhJAswiHglviVvu+XDzTBzED074M8DAUkMaZ4HD1LixIg
-         8DAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9U1HRh5ZeME21Hkuad9MkqoNz+sEek9m7J38Hz288wSbyBNjEYWobukoexzbHNScs99NeYD8NaIpZRS47x/sBYsVvrczGaM+pNVg=
-X-Gm-Message-State: AOJu0YzStY7oSqgwFWdohrEu5Bhj8uI2JnA9JdHD1XkNiPKtErUAMK80
-	ehoxrdMp/l8cOdo/+eRLOOiqSZDKNn+H9dfv4lltnPYvRgaQ5c5Omb45MXJloTD1tlHUpdkKRqj
-	gHGXg3GH2OdDsNitHJkg8r9vgfQM=
-X-Google-Smtp-Source: AGHT+IGLVg2FRz2+w0XtmmxlRun9h4Ybp36gLJSCBUdlGaA1HiqJFnHDxXBSojzDhlUcoRgkZOmBeHW91MU0DR6KcDU=
-X-Received: by 2002:a5d:4490:0:b0:366:e308:f9a1 with SMTP id
- ffacd0b85a97d-367d2d51899mr3022882f8f.23.1720548730208; Tue, 09 Jul 2024
- 11:12:10 -0700 (PDT)
+        bh=0g/tbN5BOdpCUSIAXDAOLNWIFD9iOc+XZRuFSDfjuIw=;
+        b=pScfEfLYCRrv45SSh01vGd548mO2j018wMOLYxCgjh920+GuXqlfjnl5d/O8ZvAEwm
+         k4UlyPLqlIBNb9xnJO5OH99RhT+T/eiembkZMKd73faCTuqGIqB7soW9z+sqvcz0VFt/
+         3ZI3Dh5kY7w1oeQVOPpV1eVqv3O399z+R8TsQTTTc6fYYtuEj/t65kH/OMxtvyqBrDvK
+         Ea/x5Bk9FuLB8OtpR8g7ZvxROUXwQjkbLSNNNtsfY5LNlrgQndLQdXoTOAzuYOWLm94z
+         25Env6JpdheYv/fgyWlN/GjJvUukaBxKKvAPVIvdJv90vyoHAnSlQbHsPZ4q8X4LTrWQ
+         2+KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWFj/9a2D2l3tN9KV2gVjiyyPWT8EDJfNS6t/nZ27ezn9S2zLA1EPMg6idWHdWQ0yyN35Z5ieUtqQIbPoVpCoZRDIBhCSjOzAEa/I=
+X-Gm-Message-State: AOJu0Yxhsi/JdoYfccilh0RwGcKpz6SYkhQErLItOay2myVkTaaAi7Uk
+	qAzldudUetfDLzAfy63Nu1cTQvoUkgyuYuWh1uVMb4LiXVCFgjvol7bK9hAgu+hDoyNiM39COyT
+	i625ZnFMZQT6UWzfG3wc8qetvDVQ=
+X-Google-Smtp-Source: AGHT+IFx2BRvjtFXqoSg1+PvMMQRdSDlmRVGe6OqPGstIMZOnCPopgGEXsf8wsKHq0X3hpEtGSjUw3Isc0L2F8oBYBc=
+X-Received: by 2002:a05:6820:2c05:b0:5c7:b587:40a7 with SMTP id
+ 006d021491bc7-5c7b58743aemr806363eaf.1.1720594871696; Wed, 10 Jul 2024
+ 00:01:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240612-master-v1-1-a95f24339dab@gmail.com> <CAADnVQJLgo4zF5SVf-P5U_nOaiFW--mCe-zY6_Dec98z_QE24A@mail.gmail.com>
- <270804d4-b751-4ac9-99b2-80e364288c37@leemhuis.info> <2c9089c9-4314-4e4a-a7e2-2dd09716962f@suse.cz>
- <CAJuCfpFsKsA3vTZCPTCKL9-Xs9G+07b8vgr0PunqZzVSN1Lmmg@mail.gmail.com>
-In-Reply-To: <CAJuCfpFsKsA3vTZCPTCKL9-Xs9G+07b8vgr0PunqZzVSN1Lmmg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 9 Jul 2024 11:11:59 -0700
-Message-ID: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] bpf: fix order of args in call to bpf_map_kvcalloc
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, 
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+ <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+ <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
+ <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com> <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
+ <2915a8c4-ebac-4dae-8f09-32a5b4d9aeda@amd.com>
+In-Reply-To: <2915a8c4-ebac-4dae-8f09-32a5b4d9aeda@amd.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 10 Jul 2024 12:01:00 +0500
+Message-ID: <CABXGCsPuRViSd_WeOciLKcQ4hjYxJ7e3i7LomwsUMzd0a+zvBw@mail.gmail.com>
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
+To: Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>
+Cc: Alex Deucher <alexdeucher@gmail.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>, 
 	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Christian Kujau <lists@nerdbynature.de>, 
-	=?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@intel.com>, 
-	Lorenzo Stoakes <lstoakes@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>
+	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 9, 2024 at 8:39=E2=80=AFAM Suren Baghdasaryan <surenb@google.co=
-m> wrote:
+On Tue, Jul 9, 2024 at 7:48=E2=80=AFPM Rodrigo Siqueira Jordao
+<Rodrigo.Siqueira@amd.com> wrote:
+> Hi,
 >
-> On Tue, Jul 9, 2024 at 8:14=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
-rote:
-> >
-> > On 7/8/24 10:20 AM, Linux regression tracking (Thorsten Leemhuis) wrote=
-:
-> > > [CCing the regressions list and people mentioned below]
-> > >
-> > > On 12.06.24 16:53, Alexei Starovoitov wrote:
-> > >> On Wed, Jun 12, 2024 at 2:51=E2=80=AFAM Mohammad Shehar Yaar Tausif
-> > >> <sheharyaar48@gmail.com> wrote:
-> > >>>
-> > >>> The original function call passed size of smap->bucket before the n=
-umber of
-> > >>> buckets which raises the error 'calloc-transposed-args' on compilat=
-ion.
-> > >>>
-> > >>> Fixes: 62827d612ae5 ("bpf: Remove __bpf_local_storage_map_alloc")
-> > >>> Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
-> > >>> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-> > >>> ---
-> > >>> - already merged in linux-next
-> > >>> - [1] suggested sending as a fix for 6.10 cycle
-> > >>
-> > >> No. It's not a fix.
-> > >
-> > > If you have a minute, could you please explain why that is? From what=
- I
-> > > can see a quite a few people run into build problems with 6.10-rc
-> > > recently that are fixed by the patch:
-> > >
-> > > * P=C3=A9ter Ujfalusi
-> > > https://lore.kernel.org/bpf/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@inte=
-l.com/
-> > >
-> > > * Christian Kujau
-> > > https://lore.kernel.org/bpf/48360912-b239-51f2-8f25-07a46516dc76@nerd=
-bynature.de/
-> > > https://lore.kernel.org/lkml/d0dd2457-ab58-1b08-caa4-93eaa2de221e@ner=
-dbynature.de/
-> > >
-> > > * Lorenzo Stoakes
-> > > https://fosstodon.org/@ljs@social.kernel.org/112734050799590482
-> > >
-> > > At the same time I see that the culprit mentioned above is from 6.4-r=
-c1,
-> >
-> > IIUC the order was wrong even before, but see below.
-> >
-> > > so I guess it there must be some other reason why a few people seem t=
-o
-> > > tun into this now. Did some other change expose this problem? Or are
-> > > updated compilers causing this?
-> >
-> > I think it's because of 2c321f3f70bc ("mm: change inlined allocation he=
-lpers
-> > to account at the call site"), which was added in 6.10-rc1 and thus mak=
-es
-> > this technically a 6.10 regression after all.
+> I also tried it with 6900XT. I got the same results on my side.
+
+This is weird.
+
+> Anyway, I could not reproduce the issue with the below components. I may
+> be missing something that will trigger this bug; in this sense, could
+> you describe the following:
+> - The display resolution and refresh rate.
+
+3840x2160 and 120Hz
+At 60Hz issue not reproduced.
+
+> - Are you able to reproduce this issue with DP and HDMI?
+
+My TV, an OLED LG C3, has only an HDMI 2.1 port.
+
+> - Could you provide the firmware information: sudo cat
+> /sys/kernel/debug/dri/0/amdgpu_firmware_info
+
+> sudo cat /sys/kernel/debug/dri/0/amdgpu_firmware_info
+[sudo] password for mikhail:
+VCE feature version: 0, firmware version: 0x00000000
+UVD feature version: 0, firmware version: 0x00000000
+MC feature version: 0, firmware version: 0x00000000
+ME feature version: 38, firmware version: 0x0000000e
+PFP feature version: 38, firmware version: 0x0000000e
+CE feature version: 38, firmware version: 0x00000003
+RLC feature version: 1, firmware version: 0x0000001f
+RLC SRLC feature version: 1, firmware version: 0x00000001
+RLC SRLG feature version: 1, firmware version: 0x00000001
+RLC SRLS feature version: 1, firmware version: 0x00000001
+RLCP feature version: 0, firmware version: 0x00000000
+RLCV feature version: 0, firmware version: 0x00000000
+MEC feature version: 38, firmware version: 0x00000015
+MEC2 feature version: 38, firmware version: 0x00000015
+IMU feature version: 0, firmware version: 0x00000000
+SOS feature version: 0, firmware version: 0x00000000
+ASD feature version: 553648344, firmware version: 0x210000d8
+TA XGMI feature version: 0x00000000, firmware version: 0x00000000
+TA RAS feature version: 0x00000000, firmware version: 0x00000000
+TA HDCP feature version: 0x00000000, firmware version: 0x1700003f
+TA DTM feature version: 0x00000000, firmware version: 0x12000016
+TA RAP feature version: 0x00000000, firmware version: 0x00000000
+TA SECUREDISPLAY feature version: 0x00000000, firmware version: 0x00000000
+SMC feature version: 0, program: 0, firmware version: 0x00544fdf (84.79.223=
+)
+SDMA0 feature version: 52, firmware version: 0x00000009
+VCN feature version: 0, firmware version: 0x0311f002
+DMCU feature version: 0, firmware version: 0x00000000
+DMCUB feature version: 0, firmware version: 0x05000f00
+TOC feature version: 0, firmware version: 0x00000007
+MES_KIQ feature version: 0, firmware version: 0x00000000
+MES feature version: 0, firmware version: 0x00000000
+VPE feature version: 0, firmware version: 0x00000000
+VBIOS version: 102-RAPHAEL-008
+
+> Also, could you conduct the below tests and report the results:
 >
-> IIUC the above mentioned change reveals a problem that was there
-> before the change. So, it's a build regression in 6.10 because the bug
-> got exposed but the bug was introduced much earlier. The fix should be
-> marked as:
->
-> Fixes: ddef81b5fd1d ("bpf: use bpf_map_kvcalloc in bpf_local_storage")
+> - Test 1: Just revert the fallback patch (drm/amd/display: Add fallback
+> configuration for set DRR in DCN10) and see if it solves the issue.
 
-Not really. The order was flipped before that patch.
+It's not enough.
+I checked revert commit bc87d666c05 on top of 34afb82a3c67.
 
-> > So what triggers the bug is
-> > AFAICS the following together:
-> >
-> > - gcc-14 (didn't see it with gcc-13)
-> > - commit 2c321f3f70bc that makes bpf_map_kvcalloc a macro that does
-> > kvcalloc() directly instead of static inline function wrapping it for
-> > !CONFIG_MEMCG
-> > - CONFIG_MEMCG=3Dn in .config
+> - Test 2: Try the latest amd-staging-drm-next
+> (https://gitlab.freedesktop.org/agd5f/linux) and see if the issue is gone=
+.
 
-Can somebody respin the patch with above details?
+I checked commit 7cef45b1347a in the amd-staging-drm-next branch. Same here=
+.
 
-tbh I don't think it qualifies as a "bug".
-Plenty of code places mix up size/n arguments to calloc.
-Erroring the build in such cases is imo wrong.
-Not sure what makes gcc-14 produce such warn/error.
+> - Test 3: In the kernel that you see the issue, could you install the
+> latest firmware and see if it fix the issue? Check:
+> https://gitlab.freedesktop.org/drm/firmware P.S.: Don't forget to update
+> the initramfs or something similar in your system.
 
-But since the patch is trivial we can get that in quickly.
-Pls respin with all details.
+Is this any sense? Fedora Rawhide always ships with the latest kernel
+and firmware.
+
+--=20
+Best Regards,
+Mike Gavrilov.
