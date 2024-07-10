@@ -1,192 +1,88 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5D118FA28
-	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D905192484
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 10:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.185.90.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720605928; cv=none; b=l65Et/s06GuLAk4XTTn/SNlcMp6UioDeIh5oL623AO7lkkl3UmiTdWkrK8t0/vEl12P1XI5nyvgTTP+IJ7BCkInMinClUQmcWCjlSLHRh3t2iaUN/ikC3fCiY59xh+FUClFmCPs4URkVe/Sa3cuT3XoT9xxXI+rv4vKNYJ7gS/o=
+	t=1720607836; cv=none; b=oMSL1K+SOk2CdxhVEr2W8Vp4+6Qsh58vnfOsA5r+xy5O3p7yRetVoSIOIF9jvUmfuPuxtzaLCPUzP1QV338XnHXgd1sfUpbG6qa/+4IB3reH5nK2U7Va4ysx5yQkuYXooiF+c7UyFKSX30Tfdteh5RDiYN5//8GA8/jEmPnbNoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720605928; c=relaxed/simple;
-	bh=uZxAF7XgQqF1Sg+dYcymPO7TahFggn/RlM3shTrDiWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OQ6B/xVZLmU9FuLkTRfQjN+n7+fyxRzv2zSfHQ6CTVNdRsX77MpBpLmj/a5YHnMLFO/b5UD0VGhD2EwtwkwGjlqsoGrRha+mHZAy33PNugSxlAs1W5TPiZIvcQWRv3cJujB+ykU4n/WASulaV0OnQ+yahz2BNJRMuCbIPTzhnuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bL0BN0sR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bA4KwbV5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p0wzvfRu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HrqZ3W00; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1720607836; c=relaxed/simple;
+	bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pJkFcevqYikB4f9+grXlW+C5juLE8vIRIly6NQDu8LRgqbAyeXEeBptivN0EZGg836YlewFE4dj4H0x3FsURGwoD2SUvxnzlGGepliVsEGLPBcjfhv6Q2I7dWNfV3XqZJ3YeZHB7L5o/S9/v88ImDD03vpEuO3RHiQ1EGbg14I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de; spf=pass smtp.mailfrom=nerdbynature.de; dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=1OLhefG3; dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=hPcthnPY; dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=Cf5PUmHi; arc=none smtp.client-ip=94.185.90.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nerdbynature.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bL0BN0sR";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bA4KwbV5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p0wzvfRu";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HrqZ3W00"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="1OLhefG3";
+	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="hPcthnPY";
+	dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="Cf5PUmHi"
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple;
+ d=nerdbynature.de; i=@nerdbynature.de; q=dns/txt; s=key1;
+ t=1720607227; h=date : from : to : cc : subject : in-reply-to :
+ message-id : references : mime-version : content-type : from;
+ bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
+ b=1OLhefG3fY7X3piTjP8dU57Kk6b/puhbX86fKVURh4XTnBxWW/HxXdThGhMuczN2Q8/Tl
+ lrs0qu1n2sPyf2HBQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=nerdbynature.de;
+	s=dkim; t=1720607227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IPG40DNeh1bA8vQMqxypWsF1Z7oGkQ4DVc3MuZC4QII=;
+	b=hPcthnPYx9cfRcsQRcbRHAQnryhhxTX4kyN2wOg1V736dJQelk0pUokIA68Rx8eANwPGun
+	64usllrnYTr1PuAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nerdbynature.de;
+ i=@nerdbynature.de; q=dns/txt; s=key0; t=1720607227; h=date : from :
+ to : cc : subject : in-reply-to : message-id : references :
+ mime-version : content-type : from;
+ bh=Vmbz1kK3GlYxZQsiTl+3RZqOOLwNAAA/LayB1v2Vt7g=;
+ b=Cf5PUmHimuZy3iMD3QwqJy9btT9R/vv119rhUjoQVC5elWFjKiRD1hoRQoV8z1xoZXmLe
+ 86TGGVTONoY5oeN2AYV6aZiGsT6b8zSpktTWpiuWxgv8jPglggcAPILRTOy4+HYvxCrApj8
+ pwK0pksynmC6CNP9SbljvMFb/rokWZEqOWVnUSgJOG1Idwm/cwzWHvK8VXcmmRdDGIj2W5i
+ mSQmqNz2qwsbqAIkONNWCSMLHAJq0vFDvyERc7WFXu0JQ0kVQg+v1sJ4PtBM7SneyIeQygk
+ 0NuDodHK0wIGOBfw7RrqVQUhX1Ve1EHg8Nujf8ZQpf9nyxK+YgdWwBPyszjg==
+Received: from localhost (localhost [IPv6:::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D03E11F822;
-	Wed, 10 Jul 2024 10:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720605925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
-	b=bL0BN0sRuIlV9IS0L05LSKrwq7oDelOmcW3+PTt+x9+MRo4rygeHpWwHZLULxE3+wNlPd6
-	UBShK9bOcw7VoWU7qwTZmR1SzlipQjhmzHfM+ekciaXn+qP7zBauUsFQ3jBgW4Mtt45AN3
-	NbNMfInkzzauz5WPBCorHfeuOkvARYU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720605925;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
-	b=bA4KwbV5ZiSzKslzk8pXyDa/OnlZqcX/OQDNyJ4h4Hu8U+ra3pv/ij3vNg4fRkxzIrOeGq
-	+FVl3yp+2QlQlmBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720605924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
-	b=p0wzvfRuApLW/RWhWIId8cY0wJplKR83JTiPxLO9BAtB3uP5S54lEP/hzXFtXq4LBgVmLh
-	CzwNgdmUGPyyYImxBu5dAcT81G3x0EneND412bYz76S6Yx9Axt1GVMxHLEAVnjOdCbIPNo
-	qT/N056Jfw0INIeNMd1aI3bJAjWHt+4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720605924;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AtL6vijXehWhaAedbqt4n8Gq7UnfDWoxWKhwbH6Yqwk=;
-	b=HrqZ3W00whQfH41bHoBlBwE0UbrpHyNdLYN4ECI4PHeUEHs+cAB4d2kk5wZuQ/Cu5Adamb
-	AWApoCNm5VEG5kCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B478137D2;
-	Wed, 10 Jul 2024 10:05:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id A1iNJeRcjmbyZAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 10 Jul 2024 10:05:24 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	javier.carrasco.cruz@gmail.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kent.overstreet@linux.dev,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	lists@nerdbynature.de,
-	lstoakes@gmail.com,
-	martin.lau@linux.dev,
-	peter.ujfalusi@intel.com,
-	regressions@lists.linux.dev,
-	sdf@google.com,
-	sheharyaar48@gmail.com,
-	song@kernel.org,
-	surenb@google.com,
-	vbabka@suse.cz,
-	yonghong.song@linux.dev
-Subject: [PATCH for 6.10] bpf: fix order of args in call to bpf_map_kvcalloc
-Date: Wed, 10 Jul 2024 12:05:22 +0200
-Message-ID: <20240710100521.15061-2-vbabka@suse.cz>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com>
-References: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com>
+	by trent.utfs.org (Postfix) with ESMTPS id D3E8C5FA2F;
+	Wed, 10 Jul 2024 12:27:07 +0200 (CEST)
+Date: Wed, 10 Jul 2024 12:27:07 +0200 (CEST)
+From: Christian Kujau <lists@nerdbynature.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, andrii@kernel.org, 
+    ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
+    eddyz87@gmail.com, haoluo@google.com, javier.carrasco.cruz@gmail.com, 
+    john.fastabend@gmail.com, jolsa@kernel.org, kent.overstreet@linux.dev, 
+    kpsingh@kernel.org, linux-kernel@vger.kernel.org, lstoakes@gmail.com, 
+    martin.lau@linux.dev, peter.ujfalusi@intel.com, 
+    regressions@lists.linux.dev, sdf@google.com, sheharyaar48@gmail.com, 
+    song@kernel.org, surenb@google.com, yonghong.song@linux.dev
+Subject: Re: [PATCH for 6.10] bpf: fix order of args in call to
+ bpf_map_kvcalloc
+In-Reply-To: <20240710100521.15061-2-vbabka@suse.cz>
+Message-ID: <d4e5caad-7a5d-863d-bf65-63978ff9a865@nerdbynature.de>
+References: <CAADnVQK_ftwe5Dxtc0bopeDg2ku=GrFYrMOUWHLnXaK1bqoXXA@mail.gmail.com> <20240710100521.15061-2-vbabka@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,iogearbox.net,gmail.com,google.com,linux.dev,nerdbynature.de,intel.com,lists.linux.dev,suse.cz];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
 
-From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+On Wed, 10 Jul 2024, Vlastimil Babka wrote:
+> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
 
-The original function call passed size of smap->bucket before the number of
-buckets which raises the error 'calloc-transposed-args' on compilation.
+Thanks for not forgetting about this! If this matters, just tested this 
+against today's mainline:
 
-Vlastimil Babka added:
+Tested-by: Christian Kujau <lists@nerdbynature.de>
 
-The order of parameters can be traced back all the way to 6ac99e8f23d4
-("bpf: Introduce bpf sk local storage") accross several refactorings,
-and that's why the commit is used as a Fixes: tag.
-
-In v6.10-rc1, a different commit 2c321f3f70bc ("mm: change inlined
-allocation helpers to account at the call site") however exposed the
-order of args in a way that gcc-14 has enough visibility to start
-warning about it, because (in !CONFIG_MEMCG case) bpf_map_kvcalloc is
-then a macro alias for kvcalloc instead of a static inline wrapper.
-
-To sum up the warning happens when the following conditions are all met:
-
-- gcc-14 is used (didn't see it with gcc-13)
-- commit 2c321f3f70bc is present
-- CONFIG_MEMCG is not enabled in .config
-- CONFIG_WERROR turns this from a compiler warning to error
-
-Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
-Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- kernel/bpf/bpf_local_storage.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
-index 976cb258a0ed..c938dea5ddbf 100644
---- a/kernel/bpf/bpf_local_storage.c
-+++ b/kernel/bpf/bpf_local_storage.c
-@@ -782,8 +782,8 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
- 	nbuckets = max_t(u32, 2, nbuckets);
- 	smap->bucket_log = ilog2(nbuckets);
- 
--	smap->buckets = bpf_map_kvcalloc(&smap->map, sizeof(*smap->buckets),
--					 nbuckets, GFP_USER | __GFP_NOWARN);
-+	smap->buckets = bpf_map_kvcalloc(&smap->map, nbuckets,
-+					 sizeof(*smap->buckets), GFP_USER | __GFP_NOWARN);
- 	if (!smap->buckets) {
- 		err = -ENOMEM;
- 		goto free_smap;
+C.
 -- 
-2.45.2
+BOFH excuse #418:
 
+Sysadmins busy fighting SPAM.
