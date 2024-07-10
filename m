@@ -1,103 +1,76 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4498198A30
-	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 16:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201C848E
+	for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 17:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720629422; cv=none; b=nNdMBfySt6HWmMqIFRzKAPp2S2SFjFuGqNQbTLctz4czWpZsIBYALAL7MWP1IVuTwLj7L+/d6QPFsMQ9f9EzdhlE9QfTy0n34Dt8yB+BiNd4HtDl4RClOYFa6TS+EaoKcsGvcg2nYtlDn79za93+6L4OTi3MmhtsOpoL9GgaqtI=
+	t=1720633668; cv=none; b=ChFBHPKjhe4Pjfys5OnekZq0xvJFuDDR1dyeyAo4NOraKB/e3HyGvg152f+XkUBL4HUBoy/BY745gWrKWGxcuNsS0w73Heo4X0ALQKRYcyrgNag3TblqBAYy/kn6+FiHf4SUIiMTKRQRyAoqvFC3jTc2WZDIi+VXjEwXH+WWmRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720629422; c=relaxed/simple;
-	bh=+9WXWxoYOKWamD+vE5uwNUduTJzyXrMb8PWgNp0n1rI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=banJNbojIotz+iHi2lm90wvhB1FORA22Ahzml0VFb8AEsgUbO0EXjpp6slnjlDDdiZu9NQo7TyH0l5XGD7E65qbJHbpxWwn/xqU95lZ7Nj27jLhWxBZyBjCBPaSYOV81Q1i5MgdVAvwERh1OJDnly+GachxwhQODIhGPx7JfFBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pwR2j1BQ; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720633668; c=relaxed/simple;
+	bh=efTqtViJJCQXSf2Lh2tRxpTH3KDrFOhERXSCFDaCWDw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=FkfUrE7643Nc4djZ4G11AUGA7KwkqgCqZHIq/scfuQXOYfBKCt9ZLcPK8BWFpBijUdkq9RRd1nkyuPze8QSll/Ojm4dWqrT99l8Mvq81oTrAS67n+rFhS8nvt9NPFWdIojS/1j9f4ewGUteG/ooQXV/f0Vp40k3u5+2OpVKwCQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=acrqqk5d; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pwR2j1BQ"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e03a9f7c6a6so7053100276.3
-        for <regressions@lists.linux.dev>; Wed, 10 Jul 2024 09:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720629420; x=1721234220; darn=lists.linux.dev;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JdEk/xS42cer+nsNbr3GxVg6aR55CredoMdTWrvWjPQ=;
-        b=pwR2j1BQUDhetrRNZbIQ7J5pKyPAF9cjQ7OZL95L5dXv90rw8KMchr8PdnM9GRRm96
-         fxTOjgEnhyUu3LnG++9Gp+nHXMc0n8QcXzLe4lLW1m1l8PF1fuKF7++PqHjDvabUpQGA
-         5IPMy4+jdT50trIhoCIxYQ9Gr+YyeHylqEuOflf7EnH6Aj8uAfb10V3WQHmoNeNDX0n+
-         AFpm3z2JiHFbq77Y73idTzmP+BE5jzsMtDyBl+FNbotXUj/s++YSkYBw+300feHX06rt
-         VulJ+iJ2oPKgTn1QboSF1EdXrXl5zwPT27MZtZvzOdvtP3F3yzC8nGGKJ5uFnNqrrc7t
-         unFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720629420; x=1721234220;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JdEk/xS42cer+nsNbr3GxVg6aR55CredoMdTWrvWjPQ=;
-        b=ny+7GsX72FTsAqCclO/yrp4eWCqi97uatvHTaxYDvpiYH7xWgqKk1va/e0lb3M1nXv
-         GaPKC+bKG/UmX61wbKireXxK8M7B2mtKbAHivKLJLaxxeex3WqVAvHu+UzABpChDCwau
-         MyIVXML+UXuHYUSsPywUCU1nTRfB+XmV920HBLWHUCB9ekaRUxQEk7tcDk/DTcKt8Z0B
-         gEVgioRhG7bPSBa13ege/qAW16sGatggrDklkAJtvRK2XFfqWoekTCEi2p77Zz8hTNe/
-         4M42qilZsTv7HKZt/1kT6Jfl6BE+mmhO669vJDFPQkivfJbQ8JqEW9I4xIw4qwFTWUcY
-         CPyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVe9fCGjCIvSlFK8il7nX4+KKxYIDF9JvdbFnLxX5KodzJ3CPVcggkl2STAou0UKm4yrPjp5IVi3TLznJc1WVPZdMo4iSHWs1aEy50=
-X-Gm-Message-State: AOJu0Yws2dakWkXdyiglmU7LO7jLJb5doKEeMXWb1QFEN7OlDZhPvsDR
-	4xG/YZGawK1DkUsLxrupOa4lbFbV5vhmD4ztI6m/F5ewiUuxncLpwWZ6OUXhOg==
-X-Google-Smtp-Source: AGHT+IHmlzxMBt1I02mYgCVVFfyZwoIJo3cnM1aEwxkR/fsMcy2EzuwB+V0Pzq8JtvZgB7eiWJDgSg==
-X-Received: by 2002:a25:6808:0:b0:df7:8dca:1ef2 with SMTP id 3f1490d57ef6-e041b0788b3mr7334664276.34.1720629419734;
-        Wed, 10 Jul 2024 09:36:59 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e041a99e948sm655418276.63.2024.07.10.09.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 09:36:59 -0700 (PDT)
-Date: Wed, 10 Jul 2024 09:36:48 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Hugh Dickins <hughd@google.com>, Sagi Grimberg <sagi@grimberg.me>, 
-    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
-    Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v3] net: fix rc7's __skb_datagram_iter()
-In-Reply-To: <934ac0b8491ec56dd35b9f0ab7422daa1926c4df.camel@redhat.com>
-Message-ID: <1c72ac52-9830-c2f9-5a14-d1487da8fabf@google.com>
-References: <58ad4867-6178-54bd-7e49-e35875d012f9@google.com> <ae4e55df-6fe6-4cab-ac44-3ed10a63bfbe@grimberg.me> <fef352e8-b89a-da51-f8ce-04bc39ee6481@google.com> <51b9cb9c-cf7d-47b3-ab08-c9efbdb1b883@grimberg.me> <66e53f14-bfca-6b1a-d9db-9b1c0786d07a@google.com>
- <934ac0b8491ec56dd35b9f0ab7422daa1926c4df.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="acrqqk5d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=efTqtViJJCQXSf2Lh2tRxpTH3KDrFOhERXSCFDaCWDw=; t=1720633665;
+	x=1721065665; b=acrqqk5dM2n5g+RE/Ud2THYvqQt61Sno/i4TAQvRaKsPa4o085EmGHi8NcHqh
+	/DjECl1UtvCyplZSPK7tdDaesdRcRcA4UZ+Dw/tfpGRtHJTL542GgVjF9hgtRjLji4tekSdIHeh13
+	Vb0r5FtMUbUjXmO0D7qFz2ZZzf93m3R8AQ+ZIXO9spLCDbgb7SF/iSlzrBrhHN0yK5jxYicn7dNWI
+	7mSsZPo7WTmfOy0vRFcF8jpfj1WsgS311Ajzdy0mMvh7pA2CZcdGDR3FBGExkC0GUKZBbns7d3S7M
+	Gpreag6hx0ufsETbYx9I6e3WTYSLfSoUMhHKgWoeNwEbNFecjQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sRbPo-0004Le-49; Wed, 10 Jul 2024 19:47:40 +0200
+Message-ID: <c4813fee-750e-42f9-9a75-35356c69b09c@leemhuis.info>
+Date: Wed, 10 Jul 2024 19:47:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720633665;b1096998;
+X-HE-SMSGID: 1sRbPo-0004Le-49
 
-On Wed, 10 Jul 2024, Paolo Abeni wrote:
-> On Wed, 2024-07-10 at 08:36 -0700, Hugh Dickins wrote:
-> > X would not start in my old 32-bit partition (and the "n"-handling looks
-> > just as wrong on 64-bit, but for whatever reason did not show up there):
-> > "n" must be accumulated over all pages before it's added to "offset" and
-> > compared with "copy", immediately after the skb_frag_foreach_page() loop.
-> > 
-> > Fixes: d2d30a376d9c ("net: allow skb_datagram_iter to be called from any context")
-> > Signed-off-by: Hugh Dickins <hughd@google.com>
-> > Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-> > ---
-> > v3: added reviewed-by Sagi, try sending direct to Linus
-> 
-> V2 is already applied to the 'net' tree and will be included in our
-> next 'net' PR, coming tomorrow.
-> 
-> It looks like the netdev bot decided it needed an holiday (or was
-> fooled by the threaded submission for v2), so no notification landed on
-> the ML.
-> 
-> @Hugh: next time please check the current tree status or patchwork
-> before submitting a new revision. And please avoid submitting the new
-> version in reply to a previous one, it makes things difficult for our
-> CI.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Ah, great, thanks. Yes, I'd heard only silence (and was worried because,
-although I only saw the effect of this on 32-bit, suspect it could cause
-lots of obscure trouble more generally).
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219010
+#regzbot introduced: f6944d4a0b87
+#regzbot summary: vfio/pci: qemu crash with some pass through devices
+#regzbot fix: vfio/pci: Init the count variable in collecting hot-reset
+devices
+#regzbot relate:
+https://lore.kernel.org/kvm/20240710004150.319105-1-yi.l.liu@intel.com/
 
-Hugh
+#regzbot report:
+https://lore.kernel.org/stable/CAE4VaREzY%2Ba2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com/
+#regzbot resolve: inconclusive: might be some oddity on the reporter's
+system
+
+#regzbot report:
+https://lore.kernel.org/all/20240614155437.2063380-1-popcornmix@gmail.com/
+#regzbot fix: fs/ntfs3: Update log->page_{mask,bits} if log->page_size
+changed
