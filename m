@@ -1,37 +1,56 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3870716D4F4;
-	Thu, 11 Jul 2024 16:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F204014C5B3
+	for <regressions@lists.linux.dev>; Thu, 11 Jul 2024 20:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717136; cv=none; b=RFL99AEdxKETTnu56N/2sQuxB2Hd+geVXuGjZgVUzvQeVf5aqmtHPyMHeP9jfDaukFwByOvyTuwHm+n83z5w5yuzBkEjaHw+EDL7AKLTLrJntKIOl0LHfnZyRFPd4VrGK+EWxFeJ3M20PFvwuXQwhnugXvR3cQbXWPdUKWJkQyE=
+	t=1720730240; cv=none; b=mqUzMGJs8Kxr00XduyFbgQpRy9x51Mc9RXMyLWRHgYXHnoselt5i2JpgGgU+cT/6S8UoypKYuiXUEPpTnaqQGWrSK1LsFJWoA+qUJQ2WG+kZKnCS1tGvuWrXfYD1Cx1EqlOdOz2yiBrXbURVD+xA4sEuvr7pwHgTPGTq3KMv6rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717136; c=relaxed/simple;
-	bh=64KH7PTBGPdIivIu0imh6UyExWNoqFfbdzOXdF2F5os=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZedODwsvoHpFrzdnV3sMRYE5AAJZ9ZXgXgElpe2uhJ5VdzIaLnTapLcnevkX3OCSZYe1IjVIZRtxR75ChqlTPaRGj6gElD/Pdbro25aUspEJnPvwoo+zXRJ2UMPquTHtKB1wA8//8IST3QdLdqU/oGfOErHjsi75uWJ8ZXSlbo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ib0PEyRO; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1720730240; c=relaxed/simple;
+	bh=ifVsO/BE+qnlPLrx1hI36429uKdXpygJkc87odKt5Vg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=KQukWEKSutcZ2sSVB294I35Tl6oj/CgrhHbBKlHex/c4LKLXPuJURRkwhJX7Kq+6S76uoPLQkjQV7hHq7agjP+7Dggt0/l2Fju5Lf4LRIQ4lqLYeLJaHSrrZSBFT8ffiNvLPbHApKHSO7ZDlJMPjBoZANnbtpHqcguIwQXntqt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=schmorgal.com; spf=pass smtp.mailfrom=schmorgal.com; dkim=pass (1024-bit key) header.d=schmorgal.com header.i=@schmorgal.com header.b=Wn+/Y5UX; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=schmorgal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schmorgal.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ib0PEyRO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=64KH7PTBGPdIivIu0imh6UyExWNoqFfbdzOXdF2F5os=; t=1720717134;
-	x=1721149134; b=ib0PEyROMPzkQseuvZs1eMYseLOW9e4ABjtNgRLtY6xe0a6XUdgu7/oeiCol4
-	LW5W/x1g6zdneQg86Gzrt0obmKw011ovnEVudTtuMdCqExYu8H8TleBmO+5OuZBcyxRO1+iBAJX53
-	Rz5mBLPU1hS945KcbFifchjRGsBRi+jfcWPxF/JL8ibd+Knjufqs3LiewlEFwvQ6le/ec3P8kBuNh
-	1HIzqzdwC2i8IS/FqbkjJvNNZ8ox8UiswqKofNsu+xW7ra6nrWsb2xLr1ex6pdZKP9ZeJPX4t9UGp
-	aenKL41V96uq5CS/yD/vREW/b1zHtpODlF99vpnZvvBUC3uR4g==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sRx88-0000rP-9X; Thu, 11 Jul 2024 18:58:52 +0200
-Message-ID: <cc8317fd-4b3f-4b0b-b141-104393d66574@leemhuis.info>
-Date: Thu, 11 Jul 2024 18:58:51 +0200
+	dkim=pass (1024-bit key) header.d=schmorgal.com header.i=@schmorgal.com header.b="Wn+/Y5UX"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fb129e6a3eso1288825ad.2
+        for <regressions@lists.linux.dev>; Thu, 11 Jul 2024 13:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=schmorgal.com; s=google; t=1720730238; x=1721335038; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PQm2wVcFVV2Ej/3DCwFpioRvEPP+XotE4XPlIbOYt9I=;
+        b=Wn+/Y5UXAezUDolakjRi20IMStXcIlyKcz0bCaT2aqGYQstgBkQkVMp/zbvdmJN/LW
+         wU9AQwkxTLfZmzPmVUh4MpXc9Ie29Hs0lRptdfqWyF961UUw1OPljBOyAFIm8XLbYoD9
+         6PViPoQcc+7vglEcpZHzhO7zBs41soLXBgI00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720730238; x=1721335038;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PQm2wVcFVV2Ej/3DCwFpioRvEPP+XotE4XPlIbOYt9I=;
+        b=camTOYEXyimda7O092aNHmAE7tkAUQYa1qG5EbPfq9BMyZUBfjjQmNaoYv4GcvilrH
+         oHNWGAW5nXx3OHW3jA0XDk6YTDfRe563Hcc35vTbSpFcOpIX/L7H+s3mR83Xiq4YZ1aJ
+         VTGYKKWgWPQc8URJ66tzmyytthwTcbyGT52wuZ85CDg1IU3NkI0pfI7QebogkPTttj3t
+         VIH7hHoQo/oOyCDSuAnmFtGBk9nn4OetDLjNPKIIDQxBmNfS6BfBoiTbWMndHWyO31sM
+         buMQl4rGyV1c86lOdNDGjTGyRS0n7a9Hu/YF+iANV/NCcM6GcylLjV4iae01mj6QxXEJ
+         k0gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsRobXC5zHWFhvrl5uevdHqwSIkdnlA82gxUPOhEigOtY18Zgrse6c2sZyDIiXMmtWPV+D8Xs/yxLKXyYNlSRZdoS03Hv+uvbSDJU=
+X-Gm-Message-State: AOJu0YwVKy0dj0INiIIE+HOyY4D0ymeAJjV+Pl3gyrbHZO2jsXVhSeYQ
+	1i65SPkvaKF8Oty9m7CMFYXuw/e0k1BkVv3Lgz67DgpMMBuiX4t3WjxUnXOgL/Tj3ZvdZnxxloQ
+	43ls=
+X-Google-Smtp-Source: AGHT+IFxDT1MFtFyDgFQOw+HdKxecmIIfRF0jLmAo+tw80ob7sxgjLLFO1MjXqjSb7A2ok1PhNUK1w==
+X-Received: by 2002:a17:902:e546:b0:1fa:ab4a:fb02 with SMTP id d9443c01a7336-1fbdc389e10mr36455985ad.0.1720730238082;
+        Thu, 11 Jul 2024 13:37:18 -0700 (PDT)
+Received: from [192.168.1.33] ([50.120.71.169])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1fbb6a12cdbsm54481135ad.48.2024.07.11.13.37.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 13:37:17 -0700 (PDT)
+Message-ID: <bd9cb3c7-90e8-435d-bc28-0e38fee58977@schmorgal.com>
+Date: Thu, 11 Jul 2024 13:37:15 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,89 +58,68 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Quick extra regression report listing regression which available
- fixes
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+From: Doug Brown <doug@schmorgal.com>
+Subject: [REGRESSION] drm/vmwgfx shows green Xv instead of actual video
+ (bisected I think)
+To: Zack Rusin <zack.rusin@broadcom.com>
+Cc: dri-devel@lists.freedesktop.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720717134;c2017f8d;
-X-HE-SMSGID: 1sRx88-0000rP-9X
 
-On 10.07.24 17:15, Thorsten Leemhuis wrote:
-> Hi Linus, as you might release the final on Sunday, here is a quick
-> "extra" report in case you want to know about a few unfixed regressions
-> introduced during the 6.10 cycle. By chance this list only contains
-> issues for which a fix is already available; I track a few more
-> regression, but they are IMHO not worth mentioning for one reason or
-> another.
-> [...]
+Hello,
 
+I have discovered a problem in vmwgfx that caused Xv playback to break
+between v6.3 and v6.4-rc1. In v6.3, inside of an Ubuntu 24.04 VMware VM
+with 3D acceleration disabled, I can run the following GStreamer command
+("sudo apt install gstreamer1.0-tools" if you don't already have it):
 
-FWIW a quick add-on in case you are interested.
+gst-launch-1.0 videotestsrc ! 
+video/x-raw,format=YV12,width=640,height=480 ! xvimagesink
 
-There are two regressions from recent cycles that have available fixes
-that afaics will miss 6.10:
+And it works fine, showing a test pattern.
 
-* copy_from_kernel_nofault_allowed() breaks MMUless devices:
-https://bugzilla.kernel.org/show_bug.cgi?id=218953
-Known for 4 weeks. Caused by 169f9102f9198b ("ARM: 9350/1: fault:
-Implement copy_from_kernel_nofault_allowed()") [v6.9-rc1]. Fix is in
--next as 3ccea4784fddd9 ("ARM: Remove address checking for MMUless
-devices") since earlier this week:
-https://lore.kernel.org/all/20240611100947.32241-1-yangyj.ee@gmail.com/
+In v6.4-rc1 and all the way up to a build I just made today of Linus's
+latest master branch and also including Zack's latest patchset [1]:
 
-* fs/ntfs3: memory corruption when page_size changes (like from Windows
--> RasPi5)
-https://lore.kernel.org/ntfs3/20240529064053.2741996-1-chenhuacai@loongson.cn/
-https://lore.kernel.org/all/20240614155437.2063380-1-popcornmix@gmail.com/
-Known since the end of May. Caused by 865e7a7700d930 ("fs/ntfs3: Reduce
-stack usage") [v6.8-rc4, v6.6.19]. Fix is in -next as 68ef5b8c612b0c
-("fs/ntfs3: Update log->page_{mask,bits} if log->page_size changed"
-(likely for 3+ weeks already, not sure, did not verify):
-https://lore.kernel.org/ntfs3/20240529064053.2741996-2-chenhuacai@loongson.cn/
+Linux doug-Ubuntu-MATE-2404 6.10.0-rc7+ #55 SMP PREEMPT_DYNAMIC Thu Jul
+11 12:46:06 PDT 2024 x86_64 x86_64 x86_64 GNU/Linux
 
-* perf jevents: DDR controller metrics are completely unavailable on
-i.MX8M* systems
-https://lore.kernel.org/linux-perf-users/20240531194414.1849270-1-l.stach@pengutronix.de/
-Known since the end of May through a proposed fix which fell through the
-cracks once already -- and maybe that happened again, as since a week
-nothing happened.
+...if I run the same command, the GStreamer window shows up containing
+solid green rather than the test pattern.
 
+I believe I have bisected the problem to commit:
 
-And while at it and in case you care, there are also a few regressions
-from recent cycles where the culprit is identified for more than three
-weeks now, but there still is no fix in sight or in -next:
+39985eea5a6d ("drm/vmwgfx: Abstract placement selection")
 
-* 9p: autopkgtest qemu jobs broken
-https://bugzilla.kernel.org/show_bug.cgi?id=218916
-https://lore.kernel.org/lkml/Zj0ErxVBE3DYT2Ea@gpd/
-https://bugs.launchpad.net/ubuntu/+source/autopkgtest/+bug/2056461
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1072004
-Known upstream for 2 months now. To quote a complaint about it I got
-today: "[this is] causing the testing infrastructure of two distros to
-grind to a halt, requiring pinning old kernels (Ubuntu) or simply
-disabling all tests that require qemu (Debian). The reporters have
-analyzed it, root caused it, found the commit causing it, provided
-reproducers, reported to mailing list and bugzilla, provided tentative
-patches. On the kernel side? Crickets."
+However, the bisect process was complicated because two earlier commits
+temporarily broke vmwgfx so I had to undo them during bisection, which
+also required some conflict resolution:
 
-* x86/bugs: dosemu crashes on some x86-32 machines
-https://bugzilla.kernel.org/show_bug.cgi?id=218707
-https://lore.kernel.org/lkml/IdYcxU6x6xuUqUg8cliJUnucfwfTO29TrKIlLGCCYbbIr1EQnP0ZAtTxdAM2hp5e5Gny_acIN3OFDS6v0sazocnZZ1UBaINEJ0HoDnbasSI=@protonmail.com/
-Known for 13 weeks. Fixes are under review for some time, but review is
-slow. Latest proposed fix is:
-https://lore.kernel.org/lkml/20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com/
+180253782038 ("drm/ttm: stop allocating dummy resources during BO 
+creation") and
+f87c1f0b7b79 ("drm/ttm: prevent moving of pinned BOs")
 
-* can: m_can: kernel hang
-https://lore.kernel.org/lkml/e72771c75988a2460fa8b557b0e2d32e6894f75d.camel@ew.tq-group.com/
-Known for three weeks now and no fix in sight because people are
-apparently busy with other stuff. But likely not something many people
-care about.
+Note that if you have gstreamer1.0-vaapi installed, you should
+temporarily remove it first before testing because there is a separate
+Xorg bug that causes Xorg to crash when you run the above command if
+gstreamer1.0-vaapi is installed.
 
-Ciao, Thorsten
+I'm happy to do any further testing as needed. I've reproduced this
+problem across several different machines and distros. A fully-updated
+Arch Linux is also affected.
+
+As a side note, that same gst-launch-1.0 command is also currently
+broken with 3D acceleration enabled, but that's a separate issue in mesa
+that I've submitted a patch for [2].
+
+Thanks,
+Doug
+
+[1] 
+https://lore.kernel.org/all/20240702021254.1610188-1-zack.rusin@broadcom.com/#t
+[2] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/30116
+
+#regzbot introduced: v6.3..v6.4-rc1
