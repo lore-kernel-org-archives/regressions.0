@@ -1,107 +1,144 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9D17EEE7;
-	Thu, 11 Jul 2024 09:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317AC166317
+	for <regressions@lists.linux.dev>; Thu, 11 Jul 2024 15:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720691359; cv=none; b=ijjWvT6Lrotu3tSHxSUUaZj8E3i2h7ZyRHgFE4gVWqeLxctp9HX7v8BUovbthZBcIOGFj1R3o/XGJ5CcJHW2DwoiiicsAk24bjwJZCf8seXgPcmeFA5uqeD+D5MogGTKrlSRgyV8nqS+HFb3cMKzg2jbCbMCM2XjrOS2x5zPTxM=
+	t=1720711559; cv=none; b=rH0ggeXsStFWGNvMeMI6QnV6QHnYPwmzxmu+Pa8OBe0RJwqAIoNWNo9oEkNpFYhkGsT4aC2GS0DGnucWZOhTjfz/SOnpUs1fYmQaqDoSQaydfc8Y8TgqRHU0lOp3Op+ysBvmofVrCUk7/XNQrKbDrEwLLSFzkOl8ojgF/jXGGow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720691359; c=relaxed/simple;
-	bh=sYG5usZsNSnkOdgvDMVaBnhwUqfaAUQMHiYYhFQMdxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HukFDanVN7IdN6DyBD7G3wTpOAyP0eW0NemqbHUSwyPHfTC5tgczcO2oFvFfY8ZW+QF96Mw0c1DdjHv2ItDQ8tUpa6lVkBDC/RvbFT/j8breEB2bv+2jgm3xkWc9KYuNL7bPTMD4Xdvhp+E3dtd+K5M9cpkP6/CBjJxKEoGcYG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wJ8YO72S; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1720711559; c=relaxed/simple;
+	bh=8QFxYxWDh+5QE92/1KHtuX+530nNg+IcxrBqvUorkAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGWSMHFzjtHYU1phQarBtRAJi6TKzF3kzDnuRaWXTGSmSCjK1zCGoV2ue46yt1VtLHBCdZBRJCdXrSoW1qfUiu6hysLzyY68R0ENih5bFyF5tgrVa0PFSTjYTkekZVxvouyM4YaFhNRFQ3nD2tjf1S2tZZisDeaJkbyab9Dc7wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=RkttleH1; arc=none smtp.client-ip=212.227.17.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wJ8YO72S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=fbpbQLUloPKBX1PeXfC9DHyVOS0hmylV5zJFAZRG1jE=;
-	t=1720691356; x=1721123356; b=wJ8YO72Syd/bn5JYrOJi+DWp4l52Kzw8jgrjHEzha4XDEWR
-	rAO2p/LWl5QfxbeOj5BBbChC4AT73/QHZqbazQiQllmzpk/Jrm0tfz3xG8zx+CeMaMVrOR51YRi11
-	NJXQWRojmb0nsH+/g2jKjqvgb7q7yhphNXYvVaTrmIMSzpjEv5U/uJOoBI4WxwTRKi55DYxofkeqr
-	7jfKseGFSjCcoLsYND8ZedHNgD+Ou0zkxVhbzH6udlXA9nhn9bvyo/35gVhXC3Fit+xfPNpn2Q/rz
-	A04sGBFX4wMnQ+tGbzozMhsU9NPt2bbGnHcjm99+FIgXt+DczEviJt6dAsUMPqbg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sRqQL-0000jZ-13; Thu, 11 Jul 2024 11:49:13 +0200
-Message-ID: <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
-Date: Thu, 11 Jul 2024 11:49:10 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="RkttleH1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1720711552; x=1721316352; i=christian@heusel.eu;
+	bh=HokDd+hZRcfm0eI5jULh5zyog5RMgXvPsFxjaqhVOtM=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=RkttleH1SjCjiIw0yKALZOtS2zYqbBjoAmVGoDp9bW8k/CILyY8Lf2tolc0mPh/e
+	 LL6Eb8qjDPWaji9uYHW2drlRWkGox6QXgjO+GyyKiuAM1wPyig0uALC3rS3YJPLha
+	 cB8/W/dRdpibLf6sZY6ByabNNzpcr6OdwOp1SY29OwLNi9oeHgJyNoJ0IcbJdEWoH
+	 YmfsMmDmFETYejXRsbezvu0zAVHsB7/G/g0a5bVFbg4Bc+z6i1Q6XkajvQHcieDm2
+	 WVYFnJ179bgn+yS+XlxG1m+Si2JePk+0MIHtebmbe48Bj5o5X49VtZcc0sD7GRWXA
+	 hZgUmvRLrCEaaNaIXA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([93.196.149.99]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N7AEs-1sJy0d0XQi-017tF8; Thu, 11 Jul 2024 17:20:35 +0200
+Date: Thu, 11 Jul 2024 17:20:34 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: =?utf-8?Q?Steinbei=C3=9Fer=2C?= Sebastian <Sebastian.Steinbeisser@lrz.de>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"pc@manguebit.com" <pc@manguebit.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
+Message-ID: <cda8ab6f-0c56-422a-aab6-7e98449b1d0c@heusel.eu>
+References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
+ <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
+ <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
+ <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
- stable/linux-6.1.y breaks cifs client failover to another server in DFS
- namespace
-To: Christian Heusel <christian@heusel.eu>,
- Andrew Paniakin <apanyaki@amazon.com>
-Cc: pc@cjr.nz, stfrench@microsoft.com, sashal@kernel.org, pc@manguebit.com,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- linux-cifs@vger.kernel.org, abuehaze@amazon.com, simbarb@amazon.com,
- benh@amazon.com, gregkh@linuxfoundation.org
-References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
- <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
- <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
- <ZnyRlEUqgZ_m_pu-@3c06303d853a>
- <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720691356;ee6cc0fc;
-X-HE-SMSGID: 1sRqQL-0000jZ-13
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6i6jblpa35jvrslx"
+Content-Disposition: inline
+In-Reply-To: <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
+X-Provags-ID: V03:K1:WMon4YEFuW/cRgrBF7wbbhi1c1BDDgoYrzVY6m+nfSuJWUHScSu
+ OvVZiHvkvf/GJCvIC2oz40YwQbkV65a79itBTDgdKMw1U6hcvJuRP5tLyY1M42N0EX4EE8+
+ PvBUWjAm097mb1lhbc4QEwAvBWjML7k02mXnTtodYoqwBRltgj5HfON/hu2DK16PdrK8xwU
+ S3XSkhjAqNsYMx9Ivz5Ag==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:98xR6/9dDns=;Z7PTlD2T/rsBK6MNvziKV7/os/r
+ DkQg3jYgJTYYTiF4xP3OEwfHfqY9rnDNITe5tGWSqkQeehVNC+Bxpi2iguqjyMVd6CTlJCbjl
+ BrTrYIN7y15Iii5OS6PdYxZWcgx8KTui9kwUaiUwRxFHO/9xz8c9i6CrBe5o+x9COTR3DtpJO
+ Sp2CJJfZvgMvRXD5y+YcvzzsY8f/+Hm8HbXK8CKD/YYUuyj4FCy9pv7A5NyjmUjXIfLqmW9/e
+ BQUoPeKKrI6udZU0s1/9FFfYsy5j0fdZ5RZ+PYMw0e34c6yXtSTjConRwsT1LCiSzdMAgyA1r
+ HkUpplLwLD1d1m5torBQfji+1oRApCrIIHQjhp1uYgbXvU71kussw+IwObe3/ct435xJVhFm7
+ n4aaekErnEtWK3BJdeBaP8CL2Q+r+hxHGKiumlN3hBsO7yP27yYNM8oTQVeJ6vPk3aCe1Zirk
+ 64uV0n2pwYLoBkiBS5FbskijmLIsSCxvP51FMnhusWXq8So9yFxe6k+ACff4oY5bQr9hiRIAH
+ cxTI7F6I59yYRRuo6TbaUvjSCAz6KILmm8mIzlkMx+lNFVc3+1BrgZj233aRaAlrm/QaUkdSb
+ bNCljlbVgLyTJPuzQ4HMnEZCI+isJ73/ApcJE/XkTbsjLtOzWNQwrjiayYRtYw6dm1emWh0IN
+ 4P75q8qWSmk9sPXT9DvoG4D5N14svHtXejb163LFQ+GC0gmLCM51hTAHdRRAAnGtaooL30VDW
+ KT3Nws3Rc4ZEz4jsG7BJIa/Ij8zMDapgg==
 
-On 27.06.24 22:16, Christian Heusel wrote:
-> On 24/06/26 03:09PM, Andrew Paniakin wrote:
->> On 25/06/2024, Christian Heusel wrote:
->>> On 24/06/24 10:59AM, Andrew Paniakin wrote:
->>>> On 19/06/2024, Andrew Paniakin wrote:
->>>>> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
->>>>> released in v6.1.54 and broke the failover when one of the servers
->>>>> inside DFS becomes unavailable.
->>>> Friendly reminder, did anyone had a chance to look into this report?
->>>
->>> If I understand the report correctly the regression is specific for the
->>> current 6.1.y stable series, so also not much the CIFS devs themselves
->>> can do. Maybe the stable team missed the report with the plethora of
->>> mail that they get.. I'll change the subject to make this more prominent
->>> for them.
->>>
->>> I think a good next step would be to bisect to the commit that fixed the
->>> relevant issue somewhere between v6.1.54..v6.2-rc1 so the stable team
->>> knows what needs backporting .. You can do that somewhat like so[0]:
->>
->> Bisection showed that 7ad54b98fc1f ("cifs: use origin fullpath for
->> automounts") is a first good commit. Applying it on top of 6.1.94 fixed
->> the reported problem. It also passed Amazon Linux kernel regression
->> tests when applied on top of our latest kernel 6.1. Since the code in
->> 6.1.92 is a bit different I updated the original patch:
-> 
-> I think it might make sense to send the backported version of the patch
-> for inclusion to the stable tree directly (see "Option 3" [here][0]).
-> 
-> [0]: https://www.kernel.org/doc/html/next/process/stable-kernel-rules.html#option-3
 
-Hmmm, unless I'm missing something it seems nobody did so. Andrew, could
-you take care of that to get this properly fixed to prevent others from
-running into the same problem?
+--6i6jblpa35jvrslx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+On 24/07/11 06:20AM, Steinbei=DFer, Sebastian wrote:
 
-#regzbot poke
+> Dear Greg,
+> Dear Paulo,
+
+Hey Sebastian,
+
+> Have you been able to take a look at the logs I sent?
+
+It seems like so far nobody from the developers had the chance to have a
+look at the issue you have reported. It reminded me about [another
+report][0] about failover issues for CIFS failover issues, which may or
+may not be related (to me it looks unrelated, but you never know).
+
+After some back and forth they found that a fix for their issue was
+already in the mainline tree (7ad54b98fc1f ("cifs: use origin fullpath
+for automounts")).
+
+> Is there any additional information I can provide?
+
+I think doing as Greg initally requested and allocating the resources to
+bisect the issue would be good, especially since the mentioned commit
+range is still pretty big:
+
+  $ git rev-list --count 9a49e221a6411..539aad7f14da                       =
+                =20
+  32044
+
+As with the issue I mentioned before it would also be intersting if the
+issue also exists with the mainline tree and only misses a backport or
+if the issue is currently still unfixed.
+
+> Thanks!
+>
+> Best
+> Sebastian
+
+Cheers,
+Christian
+
+[0]: https://lore.kernel.org/all/ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.c=
+om/
+
+--6i6jblpa35jvrslx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmaP+EEACgkQwEfU8yi1
+JYUoeRAAw6MY/i7oZrGLMGNdXXhHuAUJhNHRyFFJb1XJ+3X9xpvY8ezfO7iMyLAK
+JsZo6JumL11lwTjDaBoeq21sizRSzkkCAwYoofOVrwcrze/SoWimZl/K/sBhERRN
+0W1iBXqb+LZtkDv7zZuzjbuf2PNl9vVNMRyvAcw20t2+GKY3jEW5jjvjNYCncPeJ
+zEV925eW4A35hhHFWPQj1rI1+3fTYAhKuJmarfBG1qHprrScQ4tL4+3kNZC1wnKR
+1CviNf7C4hp5aM/BZc2z8tM1K8p+fImvruKoOb2GGk0YEumzn4JYS+CPPrNoBSt3
+7r/zz+N0bdP56eztRrtFLfR8TdhTXNkQ1Zb5yqOpDArsFxCe0TuTUNP0mxS11NRg
+jR+y/0xzKyZcgJff2Z0jRiGaTTRcTKJu0atcQj0bVbDG7lyTIJhdWZOJgA1mBYT3
+8z/95N7fNmPm2aYfYBn2pJF9/VUG17WKV8DDd0vddp2mlZrmHf8b0melEv94Chrx
+z97+GDJ3REi7ndjaD0nLzL4D9bT15mDoXK8aM5NkXqcamm38JFG2X6IaFSD/IhGS
+mgGJxPb+444yIVOhLqPaqm4ZOvG3gNIv/+BZvXB2qfeydFT8rqGFnVYcUjEO6Uim
+vGv+jD9pnMY8yJSgLBcq86oZKCK0nflKbxNnyrzNNtcAoT13iDU=
+=XCBU
+-----END PGP SIGNATURE-----
+
+--6i6jblpa35jvrslx--
