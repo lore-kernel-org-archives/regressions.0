@@ -1,144 +1,73 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317AC166317
-	for <regressions@lists.linux.dev>; Thu, 11 Jul 2024 15:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A09716D4FB
+	for <regressions@lists.linux.dev>; Thu, 11 Jul 2024 16:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711559; cv=none; b=rH0ggeXsStFWGNvMeMI6QnV6QHnYPwmzxmu+Pa8OBe0RJwqAIoNWNo9oEkNpFYhkGsT4aC2GS0DGnucWZOhTjfz/SOnpUs1fYmQaqDoSQaydfc8Y8TgqRHU0lOp3Op+ysBvmofVrCUk7/XNQrKbDrEwLLSFzkOl8ojgF/jXGGow=
+	t=1720717046; cv=none; b=BtavM0sG+/xZjio0XBwu+vMcswJXz4BsHHMvM0XvTgm/sjqkCb3EQKtoBLILNaPqoUxjm0x4VrdKbLElLOEDOSohmMszjf8jvIrVl1qO6oQIpqK1kSE0HpIwxpp02dmcryWKq4lzgIMJ3UK9iEdeYWcqtdMebebjXDrEzCf9Ajg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711559; c=relaxed/simple;
-	bh=8QFxYxWDh+5QE92/1KHtuX+530nNg+IcxrBqvUorkAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rGWSMHFzjtHYU1phQarBtRAJi6TKzF3kzDnuRaWXTGSmSCjK1zCGoV2ue46yt1VtLHBCdZBRJCdXrSoW1qfUiu6hysLzyY68R0ENih5bFyF5tgrVa0PFSTjYTkekZVxvouyM4YaFhNRFQ3nD2tjf1S2tZZisDeaJkbyab9Dc7wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=RkttleH1; arc=none smtp.client-ip=212.227.17.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1720717046; c=relaxed/simple;
+	bh=9XoM2UoDtCrzKQNIStrTRl5RglmP/JkLg5A+aKQ0os4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=ToTPwK4stEaB2qcX76RR3azLAEVIWHc7rIhmhM23w8XAlIlekmnyVRrAKPtpsVz/hew4TEBvU8UrlXfa3bQQWs2AiPfCv9p0hJZYlZOTCDGHOZMJy6vzkNgFqRN9CzzmReuRJJliPUDwWEFHVNPf+6IauTX/mE9Q0hsbbIcP0DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uI/5HxWq; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="RkttleH1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1720711552; x=1721316352; i=christian@heusel.eu;
-	bh=HokDd+hZRcfm0eI5jULh5zyog5RMgXvPsFxjaqhVOtM=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RkttleH1SjCjiIw0yKALZOtS2zYqbBjoAmVGoDp9bW8k/CILyY8Lf2tolc0mPh/e
-	 LL6Eb8qjDPWaji9uYHW2drlRWkGox6QXgjO+GyyKiuAM1wPyig0uALC3rS3YJPLha
-	 cB8/W/dRdpibLf6sZY6ByabNNzpcr6OdwOp1SY29OwLNi9oeHgJyNoJ0IcbJdEWoH
-	 YmfsMmDmFETYejXRsbezvu0zAVHsB7/G/g0a5bVFbg4Bc+z6i1Q6XkajvQHcieDm2
-	 WVYFnJ179bgn+yS+XlxG1m+Si2JePk+0MIHtebmbe48Bj5o5X49VtZcc0sD7GRWXA
-	 hZgUmvRLrCEaaNaIXA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([93.196.149.99]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N7AEs-1sJy0d0XQi-017tF8; Thu, 11 Jul 2024 17:20:35 +0200
-Date: Thu, 11 Jul 2024 17:20:34 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: =?utf-8?Q?Steinbei=C3=9Fer=2C?= Sebastian <Sebastian.Steinbeisser@lrz.de>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"pc@manguebit.com" <pc@manguebit.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-Message-ID: <cda8ab6f-0c56-422a-aab6-7e98449b1d0c@heusel.eu>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
- <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
- <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
- <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uI/5HxWq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=9XoM2UoDtCrzKQNIStrTRl5RglmP/JkLg5A+aKQ0os4=; t=1720717044;
+	x=1721149044; b=uI/5HxWqKgCfCzpLFeejHByPuVb+yI3+cOMuSY84eWl39ED4miK+v5L7lVUPe
+	KrZS+oHxhtRUnsr/LDcWKigFnKG0eklaNBCHxOsO/EfUhkW+9wZMOGs1ojZ9qmrWAK9tFf3GEhXN1
+	VHwHDBEJe3vV7HOdkE5kvW2QLvA0CVe2sB6U8IXojGWiK0xcp181iQTQuksf+An3w0DEJaC7p8sSu
+	grZlcDMPhQo22JQpNKmEUptICfCJWA7vkzWSKHPclf6f2WRynmxh0ABy7rX3ZTOGra3wqieJjBZKh
+	QYi3IPPHXCH/2gGFVix8qwwlK8yg2daU/wJn0QtkCzIhotnrog==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sRx6Z-0000ON-Kc; Thu, 11 Jul 2024 18:57:15 +0200
+Message-ID: <8871360a-b4bc-42b3-9a3e-e779e82b41d5@leemhuis.info>
+Date: Thu, 11 Jul 2024 18:57:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6i6jblpa35jvrslx"
-Content-Disposition: inline
-In-Reply-To: <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
-X-Provags-ID: V03:K1:WMon4YEFuW/cRgrBF7wbbhi1c1BDDgoYrzVY6m+nfSuJWUHScSu
- OvVZiHvkvf/GJCvIC2oz40YwQbkV65a79itBTDgdKMw1U6hcvJuRP5tLyY1M42N0EX4EE8+
- PvBUWjAm097mb1lhbc4QEwAvBWjML7k02mXnTtodYoqwBRltgj5HfON/hu2DK16PdrK8xwU
- S3XSkhjAqNsYMx9Ivz5Ag==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:98xR6/9dDns=;Z7PTlD2T/rsBK6MNvziKV7/os/r
- DkQg3jYgJTYYTiF4xP3OEwfHfqY9rnDNITe5tGWSqkQeehVNC+Bxpi2iguqjyMVd6CTlJCbjl
- BrTrYIN7y15Iii5OS6PdYxZWcgx8KTui9kwUaiUwRxFHO/9xz8c9i6CrBe5o+x9COTR3DtpJO
- Sp2CJJfZvgMvRXD5y+YcvzzsY8f/+Hm8HbXK8CKD/YYUuyj4FCy9pv7A5NyjmUjXIfLqmW9/e
- BQUoPeKKrI6udZU0s1/9FFfYsy5j0fdZ5RZ+PYMw0e34c6yXtSTjConRwsT1LCiSzdMAgyA1r
- HkUpplLwLD1d1m5torBQfji+1oRApCrIIHQjhp1uYgbXvU71kussw+IwObe3/ct435xJVhFm7
- n4aaekErnEtWK3BJdeBaP8CL2Q+r+hxHGKiumlN3hBsO7yP27yYNM8oTQVeJ6vPk3aCe1Zirk
- 64uV0n2pwYLoBkiBS5FbskijmLIsSCxvP51FMnhusWXq8So9yFxe6k+ACff4oY5bQr9hiRIAH
- cxTI7F6I59yYRRuo6TbaUvjSCAz6KILmm8mIzlkMx+lNFVc3+1BrgZj233aRaAlrm/QaUkdSb
- bNCljlbVgLyTJPuzQ4HMnEZCI+isJ73/ApcJE/XkTbsjLtOzWNQwrjiayYRtYw6dm1emWh0IN
- 4P75q8qWSmk9sPXT9DvoG4D5N14svHtXejb163LFQ+GC0gmLCM51hTAHdRRAAnGtaooL30VDW
- KT3Nws3Rc4ZEz4jsG7BJIa/Ij8zMDapgg==
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720717044;530db52d;
+X-HE-SMSGID: 1sRx6Z-0000ON-Kc
 
 
---6i6jblpa35jvrslx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 24/07/11 06:20AM, Steinbei=DFer, Sebastian wrote:
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> Dear Greg,
-> Dear Paulo,
+#regzbot report:
+https://lore.kernel.org/lkml/3ab66fab-c3f2-4bed-a04d-a10c57dcdd9b@xenosoft.de/
+#regzbot fix: 2cf6b7d15a2864011
 
-Hey Sebastian,
+#regzbot report:
+https://lore.kernel.org/linux-wireless/87tthpwkqf.fsf@gmail.com/
+#regzbot relate: https://lore.kernel.org/all/87h6czdexm.fsf@gmail.com/
 
-> Have you been able to take a look at the logs I sent?
-
-It seems like so far nobody from the developers had the chance to have a
-look at the issue you have reported. It reminded me about [another
-report][0] about failover issues for CIFS failover issues, which may or
-may not be related (to me it looks unrelated, but you never know).
-
-After some back and forth they found that a fix for their issue was
-already in the mainline tree (7ad54b98fc1f ("cifs: use origin fullpath
-for automounts")).
-
-> Is there any additional information I can provide?
-
-I think doing as Greg initally requested and allocating the resources to
-bisect the issue would be good, especially since the mentioned commit
-range is still pretty big:
-
-  $ git rev-list --count 9a49e221a6411..539aad7f14da                       =
-                =20
-  32044
-
-As with the issue I mentioned before it would also be intersting if the
-issue also exists with the mainline tree and only misses a backport or
-if the issue is currently still unfixed.
-
-> Thanks!
->
-> Best
-> Sebastian
-
-Cheers,
-Christian
-
-[0]: https://lore.kernel.org/all/ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.c=
-om/
-
---6i6jblpa35jvrslx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmaP+EEACgkQwEfU8yi1
-JYUoeRAAw6MY/i7oZrGLMGNdXXhHuAUJhNHRyFFJb1XJ+3X9xpvY8ezfO7iMyLAK
-JsZo6JumL11lwTjDaBoeq21sizRSzkkCAwYoofOVrwcrze/SoWimZl/K/sBhERRN
-0W1iBXqb+LZtkDv7zZuzjbuf2PNl9vVNMRyvAcw20t2+GKY3jEW5jjvjNYCncPeJ
-zEV925eW4A35hhHFWPQj1rI1+3fTYAhKuJmarfBG1qHprrScQ4tL4+3kNZC1wnKR
-1CviNf7C4hp5aM/BZc2z8tM1K8p+fImvruKoOb2GGk0YEumzn4JYS+CPPrNoBSt3
-7r/zz+N0bdP56eztRrtFLfR8TdhTXNkQ1Zb5yqOpDArsFxCe0TuTUNP0mxS11NRg
-jR+y/0xzKyZcgJff2Z0jRiGaTTRcTKJu0atcQj0bVbDG7lyTIJhdWZOJgA1mBYT3
-8z/95N7fNmPm2aYfYBn2pJF9/VUG17WKV8DDd0vddp2mlZrmHf8b0melEv94Chrx
-z97+GDJ3REi7ndjaD0nLzL4D9bT15mDoXK8aM5NkXqcamm38JFG2X6IaFSD/IhGS
-mgGJxPb+444yIVOhLqPaqm4ZOvG3gNIv/+BZvXB2qfeydFT8rqGFnVYcUjEO6Uim
-vGv+jD9pnMY8yJSgLBcq86oZKCK0nflKbxNnyrzNNtcAoT13iDU=
-=XCBU
------END PGP SIGNATURE-----
-
---6i6jblpa35jvrslx--
+#regzbot report: https://lore.kernel.org/lkml/ZoM6CUhbWuAFuHjP@krava/
+#regzbot introduced: 2c321f3f70bc
+#regzbot relate:
+https://lore.kernel.org/all/20240612-master-v1-1-a95f24339dab@gmail.com/
