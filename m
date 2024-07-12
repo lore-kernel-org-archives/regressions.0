@@ -1,98 +1,116 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB7D512
-	for <regressions@lists.linux.dev>; Fri, 12 Jul 2024 12:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD9C16EB54
+	for <regressions@lists.linux.dev>; Fri, 12 Jul 2024 12:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720786405; cv=none; b=L4fkTByPAXNbAnlqZOfZQqkVMLXYnd/OL2j6oUEU3YtUIoJl1FUI3KLhAA+Z6FMChzDX6Fu/Qo24jkEYLVqip62BzPKn+mULGCtPOmLQ9yYByb8Er3cH6FR95nGCELf9ooNHcBBO2AiiocdZZSAYVeKSnpBv4LGzh3ezu9ChkHk=
+	t=1720787344; cv=none; b=PBdKCVr0/3XZHw1GY1zv5t+Y1f5mR7W0jHhGV/eUCnY+pMxO2ediN22v9iovajYUeg9D7xR2LeSAfugJ/4TNHNGTYE5MmSXg2M/YZ3MNHmlaOJJT3dxm6BqbJ41yBQ+qQ5vMz8j9hk0MeBvH9iMNuU98nTHH1hrUg6pdmBZUY2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720786405; c=relaxed/simple;
-	bh=LBj4SQRwyrE8yY7XesL7tCePMcwxLzLVnEVEAGo/kgM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZvmEEzf4pGoFEuVz/SXqc3bbc51OTU7fVWFK51rxq75CnGkdNIkkBCLYvFSp42vBqUsIAZr9+6EvJFaMTWhFnqccdbnnSjojh/no3paVmj5YXLhJAIfymiSva8eilBkrbwld1SRKj9CDoU9PHgc1pjWn6mrBP5N7Lv9qaEZb9dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eFv5gurO; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720787344; c=relaxed/simple;
+	bh=lJ23vDx6v+OivJuVkN9SXhsy0zNALvQx9pJz/uUZOEE=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=G0j2APqzBordAcHpOOanNkHdWm5VU7eq+ygLkB3epWy42Cr68Rzby9MaYZSHUOgUJAgIuKs5SSbcuBAvHFOb2+7U86W3PboQk84sLwIn2OIUfJbGs9c0w1rdb2X5SCNIy90vHEK3pxEEBCqKSqB42Fuo3D6/mpBxPVuYJI5IkPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GvtxtZN9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jwvNGdW3; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eFv5gurO"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4f485148d8fso732636e0c.2
-        for <regressions@lists.linux.dev>; Fri, 12 Jul 2024 05:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720786402; x=1721391202; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gwhdBjeO0fqelfc4OGEmz1A/F4AWgJGOt3zPASzEWac=;
-        b=eFv5gurOfquejORbv0RIKmeCZSbpOR5SStLn7+mSGYDNgJ44BWX37dxJ/lf8M9AIaG
-         OKCWbXOr/vGFJQUVHKSfdCCdZ0U905Uyb/FbxIDztRq32gVIv+JJpG1tCD8nN9czd83X
-         czuECn5IjbN6W7qsVSAMBHL1nCweibRbo+Fgc7Jvv0VFTJa7QYV7lo0BDW081fD6yJac
-         mUd8npxOob0cNKFRG4/lq2du94e7jRW0wZELKCl7RXyaW1fYs/yAMgywsjghD/tjAW2s
-         TBvoz+QZj0S/Ysry6jIz2xW/KfWqbw68+5xpRV63lC8UO6K7xIDN+l6WZa5jP26W/7Pt
-         RrAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720786402; x=1721391202;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gwhdBjeO0fqelfc4OGEmz1A/F4AWgJGOt3zPASzEWac=;
-        b=HqWUE3AyirQ0ZT3LdZJebjCQr8L7pQDME+7FYqTvRTtBpWSDQh8Bj2Ke0F3BEfwEjH
-         EwGqNPfAQdACsEkSfa5VGdMfVlEBcS0cxxvL6c88GuKCkmdUaVdfpWCl3queyNoXAbZ0
-         tKorHi+bBuA5WvD0nc7I7wGc6pw70lDWUV9uX25x535U6oMkEWo11Cvnb2/rrsgcKD0z
-         coeBVlOz9tRFxRpsOpRiND2v8rWMM2LGW4wUPDO1eZXyk9X+dymQg3iTgdv/Z6Btd3Yu
-         iADVn182CvAWb46dR0PS1UJsrQwQaU2b/uG9AyzuI5ybH8kaXfqLLOro5bZoRl7mVlIM
-         jGIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSzbF+CqDBpWnUY6TiPdAqCuHc3AUzhDpEh3P7jATjf+7KiaOArQgCBxJEOmsDsSxAHkh1WgTgJxhKyYkItePYtxsoLMnSzAwSHYI=
-X-Gm-Message-State: AOJu0Yyg/e9Ncj0NLEZ1oUHag2Kszg3foogDIKxUaPacJU2rrWKEIkA3
-	z4ZKvgqmQq3j2FLViJXrvYVphXLxS6nOfxUCbHF9LACSgHqjOLK7sNpxXSrSisJyoe/T+SQF6oG
-	Oh+kLFE0AMOQtQdCf2wqeVmF7ZWuwT0IIK6MuAA==
-X-Google-Smtp-Source: AGHT+IEgrOE8YMX97+A4eDRf9A0EAdSUgcmTic5fHDg/T2R33V8gb4DhoqOcfnYofwrjC9lpqa3D2Ysp+1hDHZh7sj8=
-X-Received: by 2002:a05:6122:2a0e:b0:4f2:ff08:ba3c with SMTP id
- 71dfb90a1353d-4f33f1bf527mr14016158e0c.5.1720786402550; Fri, 12 Jul 2024
- 05:13:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GvtxtZN9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jwvNGdW3"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id A65401143995;
+	Fri, 12 Jul 2024 08:29:01 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 12 Jul 2024 08:29:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1720787341; x=1720873741; bh=eARDcejekm
+	zNYMJwYKo8pcFYVkx5npQBheYRXF8XDpA=; b=GvtxtZN9Sw31Hud51fOpdUdakl
+	msKdbZxb3rSKDAjYlBojdXebnVb1jB/D+LKzm7n7FnqANh8fuwBBc51ljiYuU+bs
+	+zC5lvWRr3jptSQCYsdpLEQA4zBZaGWz9Ini9qihTunEdFZe6BqUxcQc+tbPVXR9
+	ZtezT7tZxc393xgRqmzv5W0vLqUsIjX3GdcQ2Irt0NE9d8cppyEzyUCSOKkk+sC2
+	xWD8/MxzrYP8L90UfwhJ/i4VT4tb62fd47p4QUnVGSPpPKGquejZqXGNp/cBK8lA
+	6aDXK9y561ohfIvGZAzu87qBnvvFnJzGcdIeVQCiSU0lXxOBLSkMsZ+dpmTg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720787341; x=1720873741; bh=eARDcejekmzNYMJwYKo8pcFYVkx5
+	npQBheYRXF8XDpA=; b=jwvNGdW37kLHQ/ZQ97OXn6GuYYGukE8lTs4Omd+h77vL
+	wkLvkNXq8gPRcuFCNZNnIzHIxh+KSZtgiAzjT4/mcfQGIZl8AYDjwdvMYamfhnqD
+	Y30UYgTEe3ETwY2aqbf60YYWlgs5MSV6fwSv+ar4s0+HwWwLCI4hhO9OvG2KWUyi
+	o0OaQvfkDNtO4tbosou+b0+PRr4NYNdubpHQ2/276SjWPruTN47nesZaorcgZ4XH
+	XQy8R+t4KSWTgY4MqvU1uJJ+v7VrUsPU7+8rLOact1vOpHs/8VyeyDJr7e+hD7kV
+	OL73t79y/w/yhWoFX//rqfVz90D4qOBOWXzYtRxPuQ==
+X-ME-Sender: <xms:jCGRZq3uUFVKhbwyMBw4NFA1gP44hW7S3Lzt_MNMc_u1VwoJvvvnwA>
+    <xme:jCGRZtEpV18r5psZRDuOFZRxPHh76jIWfmAD5dW7R3fS8ekVGiYP7c7nSE6pr8UL-
+    AlSNgTwkDByRo2sSrU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeeigdegjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:jCGRZi7suqma90bfZ8c6k0Aitfhxd0AifSdA-G0EUX0qA2fSa28rRQ>
+    <xmx:jCGRZr1PExgpIjPjwcIWQsizX0gbhgsbYWq5CUZTOnD-7TonQHtMQA>
+    <xmx:jCGRZtGFXD6YuR_xNQY-C9dw4EA6KOynwYXuRU00uJ0GGYEcCNnxww>
+    <xmx:jCGRZk9cMcmsty-WlzKFmmYyxFOdZLNm_gncMUdAiYzw7GY2M1py-w>
+    <xmx:jSGRZk3KkijdRMCWDTeDWtIZ8hoyhMGeHrRGUgYkRiAyX5NgzoDJOTs6>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id ED5C0B6008D; Fri, 12 Jul 2024 08:28:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Jul 2024 17:43:11 +0530
-Message-ID: <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
-Subject: next-20240712: task_work.c:(.text+0xc2): undefined reference to `irq_work_queue'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <e25a690e-6cb9-4e00-ac1d-07cda43b12de@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
+References: 
+ <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
+Date: Fri, 12 Jul 2024 14:28:38 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>
+Cc: "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
+ "Peter Zijlstra" <peterz@infradead.org>
+Subject: Re: next-20240712: task_work.c:(.text+0xc2): undefined reference to
+ `irq_work_queue'
+Content-Type: text/plain
 
-The 32-bit arm, mips and powerpc the tinyconfig builds failed on today's
-Linux next-20240712 tag with gcc and clang builds.
-The defconfig builds pass.
+On Fri, Jul 12, 2024, at 14:13, Naresh Kamboju wrote:
+> The 32-bit arm, mips and powerpc the tinyconfig builds failed on today's
+> Linux next-20240712 tag with gcc and clang builds.
+> The defconfig builds pass.
+>
+>   GOOD: next-20240711
+>   BAD:  next-20240712
+>
+> Build error:
+> ------
+> arm-linux-gnueabihf-ld: kernel/task_work.o: in function `task_work_add':
+> task_work.c:(.text+0xc2): undefined reference to `irq_work_queue'
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-  GOOD: next-20240711
-  BAD:  next-20240712
+The call to this function was added in 466e4d801cd4 ("task_work:
+Add TWA_NMI_CURRENT as an additional notify mode.").  It's possible
+that we may have to always enable IRQ_WORK even on non-SMP
+kernels now. In practice it is already enabled in most
+configurations for one reason or another, the the cost is
+likely very small.
 
-Build error:
-------
-arm-linux-gnueabihf-ld: kernel/task_work.o: in function `task_work_add':
-task_work.c:(.text+0xc2): undefined reference to `irq_work_queue'
+Otherwise checking for CONFIG_HAVE_NMI in the new code might work.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build link:
------
-  [1] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j8Y3PffxvTIFJIR8HODmHEU9oM/
-  [2] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j8Y3PffxvTIFJIR8HODmHEU9oM/config
-
-Build details:
---------
-  git_describe: next-20240712
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 3fe121b622825ff8cc995a1e6b026181c48188db
-  git_short_log: 3fe121b62282 ("Add linux-next specific files for 20240712")
-  arch: arm, mips, powerpc, s390
-  config: tinyconfig
-  toolchain: gcc-13, gcc-12 and clang
-
---
-Linaro LKFT
-https://lkft.linaro.org
+     Arnd
