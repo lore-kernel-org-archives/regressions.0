@@ -1,116 +1,120 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD9C16EB54
-	for <regressions@lists.linux.dev>; Fri, 12 Jul 2024 12:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F7213CFB0;
+	Fri, 12 Jul 2024 13:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720787344; cv=none; b=PBdKCVr0/3XZHw1GY1zv5t+Y1f5mR7W0jHhGV/eUCnY+pMxO2ediN22v9iovajYUeg9D7xR2LeSAfugJ/4TNHNGTYE5MmSXg2M/YZ3MNHmlaOJJT3dxm6BqbJ41yBQ+qQ5vMz8j9hk0MeBvH9iMNuU98nTHH1hrUg6pdmBZUY2U=
+	t=1720790674; cv=none; b=KL48yJS635L9Yo+XZiXJzx9OJbzQD/1gNK5MAmACiCogymB+VkuE+4KqjVop9Me6QCBg1+iZ0xEEV8WGKEM1D9H1pd3uKDioi0qXNJUkLPRqDpTEjekrBkDppo+5mV9J/HD4Nx/+lV/3LIo7uohtaVCpj+B+FCabk0J93JNMbTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720787344; c=relaxed/simple;
-	bh=lJ23vDx6v+OivJuVkN9SXhsy0zNALvQx9pJz/uUZOEE=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=G0j2APqzBordAcHpOOanNkHdWm5VU7eq+ygLkB3epWy42Cr68Rzby9MaYZSHUOgUJAgIuKs5SSbcuBAvHFOb2+7U86W3PboQk84sLwIn2OIUfJbGs9c0w1rdb2X5SCNIy90vHEK3pxEEBCqKSqB42Fuo3D6/mpBxPVuYJI5IkPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GvtxtZN9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jwvNGdW3; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720790674; c=relaxed/simple;
+	bh=Ms4/VdauvJ2o9F0Vstk/RWolp62CQIUlz7Z8RKTuaN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iUOR1lYlegP4rT0Iwdac+TjKnU5IZVIe08fK25P4oGOXFK0Y85tSxQIAH/pZcXSfUPc4dPQdOXkQYAZBHxFOKvDA3ZWl4uVi64Om6jwHPSp0y7LiZK3Ash7oXtb6nAZ8JJbdPVGAe50OAZuq0M48lFHGXX9YZerJG/tmkl3pl/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ayX18Nb6; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GvtxtZN9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jwvNGdW3"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id A65401143995;
-	Fri, 12 Jul 2024 08:29:01 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 12 Jul 2024 08:29:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1720787341; x=1720873741; bh=eARDcejekm
-	zNYMJwYKo8pcFYVkx5npQBheYRXF8XDpA=; b=GvtxtZN9Sw31Hud51fOpdUdakl
-	msKdbZxb3rSKDAjYlBojdXebnVb1jB/D+LKzm7n7FnqANh8fuwBBc51ljiYuU+bs
-	+zC5lvWRr3jptSQCYsdpLEQA4zBZaGWz9Ini9qihTunEdFZe6BqUxcQc+tbPVXR9
-	ZtezT7tZxc393xgRqmzv5W0vLqUsIjX3GdcQ2Irt0NE9d8cppyEzyUCSOKkk+sC2
-	xWD8/MxzrYP8L90UfwhJ/i4VT4tb62fd47p4QUnVGSPpPKGquejZqXGNp/cBK8lA
-	6aDXK9y561ohfIvGZAzu87qBnvvFnJzGcdIeVQCiSU0lXxOBLSkMsZ+dpmTg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1720787341; x=1720873741; bh=eARDcejekmzNYMJwYKo8pcFYVkx5
-	npQBheYRXF8XDpA=; b=jwvNGdW37kLHQ/ZQ97OXn6GuYYGukE8lTs4Omd+h77vL
-	wkLvkNXq8gPRcuFCNZNnIzHIxh+KSZtgiAzjT4/mcfQGIZl8AYDjwdvMYamfhnqD
-	Y30UYgTEe3ETwY2aqbf60YYWlgs5MSV6fwSv+ar4s0+HwWwLCI4hhO9OvG2KWUyi
-	o0OaQvfkDNtO4tbosou+b0+PRr4NYNdubpHQ2/276SjWPruTN47nesZaorcgZ4XH
-	XQy8R+t4KSWTgY4MqvU1uJJ+v7VrUsPU7+8rLOact1vOpHs/8VyeyDJr7e+hD7kV
-	OL73t79y/w/yhWoFX//rqfVz90D4qOBOWXzYtRxPuQ==
-X-ME-Sender: <xms:jCGRZq3uUFVKhbwyMBw4NFA1gP44hW7S3Lzt_MNMc_u1VwoJvvvnwA>
-    <xme:jCGRZtEpV18r5psZRDuOFZRxPHh76jIWfmAD5dW7R3fS8ekVGiYP7c7nSE6pr8UL-
-    AlSNgTwkDByRo2sSrU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeeigdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:jCGRZi7suqma90bfZ8c6k0Aitfhxd0AifSdA-G0EUX0qA2fSa28rRQ>
-    <xmx:jCGRZr1PExgpIjPjwcIWQsizX0gbhgsbYWq5CUZTOnD-7TonQHtMQA>
-    <xmx:jCGRZtGFXD6YuR_xNQY-C9dw4EA6KOynwYXuRU00uJ0GGYEcCNnxww>
-    <xmx:jCGRZk9cMcmsty-WlzKFmmYyxFOdZLNm_gncMUdAiYzw7GY2M1py-w>
-    <xmx:jSGRZk3KkijdRMCWDTeDWtIZ8hoyhMGeHrRGUgYkRiAyX5NgzoDJOTs6>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id ED5C0B6008D; Fri, 12 Jul 2024 08:28:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ayX18Nb6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=khhH7O9qoqZ53M4xcspaIIlSf1+Vi7hAzvc5E+wsfVM=; b=ayX18Nb6RdZ0UQuqRIW6xk2u1O
+	Aj9E4j5d0eoywdrwCk/J+baXDDx8MS0enBn1VwLJbqvQCcv4Gteywu7rolH98bPvES9dZ+JXUeoZv
+	5fxQY4JSVGkoONfB4pXgFRlwPkY6/XAJsUw8u5UD9bJGD+QN0AQxDyJxe3A9+vhK5aH0/E2MC24Cz
+	upMu5N71WBJtGlWj+gM/YrILXHL5V13cVMnEU8f/zo+Ez8NKNKb1wIV0ynSiN5THXhFaGPsLuAsgZ
+	y+vXTEHG8bNQz7ldDr3ex2yu4OsSsQpXW+N/WJNiKOhkONfFB244Zf2TYf7aNAXPA4xpT8VXE2oFv
+	LpxtfVaw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sSGGC-00000001J6Z-0LnE;
+	Fri, 12 Jul 2024 13:24:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4250930050D; Fri, 12 Jul 2024 15:24:27 +0200 (CEST)
+Date: Fri, 12 Jul 2024 15:24:27 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: next-20240712: task_work.c:(.text+0xc2): undefined reference to
+ `irq_work_queue'
+Message-ID: <20240712132427.GJ27299@noisy.programming.kicks-ass.net>
+References: <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
+ <e25a690e-6cb9-4e00-ac1d-07cda43b12de@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <e25a690e-6cb9-4e00-ac1d-07cda43b12de@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
-References: 
- <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
-Date: Fri, 12 Jul 2024 14:28:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>
-Cc: "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
- "Peter Zijlstra" <peterz@infradead.org>
-Subject: Re: next-20240712: task_work.c:(.text+0xc2): undefined reference to
- `irq_work_queue'
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e25a690e-6cb9-4e00-ac1d-07cda43b12de@app.fastmail.com>
 
-On Fri, Jul 12, 2024, at 14:13, Naresh Kamboju wrote:
-> The 32-bit arm, mips and powerpc the tinyconfig builds failed on today's
-> Linux next-20240712 tag with gcc and clang builds.
-> The defconfig builds pass.
->
->   GOOD: next-20240711
->   BAD:  next-20240712
->
-> Build error:
-> ------
-> arm-linux-gnueabihf-ld: kernel/task_work.o: in function `task_work_add':
-> task_work.c:(.text+0xc2): undefined reference to `irq_work_queue'
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On Fri, Jul 12, 2024 at 02:28:38PM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 12, 2024, at 14:13, Naresh Kamboju wrote:
+> > The 32-bit arm, mips and powerpc the tinyconfig builds failed on today's
+> > Linux next-20240712 tag with gcc and clang builds.
+> > The defconfig builds pass.
+> >
+> >   GOOD: next-20240711
+> >   BAD:  next-20240712
+> >
+> > Build error:
+> > ------
+> > arm-linux-gnueabihf-ld: kernel/task_work.o: in function `task_work_add':
+> > task_work.c:(.text+0xc2): undefined reference to `irq_work_queue'
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> The call to this function was added in 466e4d801cd4 ("task_work:
+> Add TWA_NMI_CURRENT as an additional notify mode.").  It's possible
 
-The call to this function was added in 466e4d801cd4 ("task_work:
-Add TWA_NMI_CURRENT as an additional notify mode.").  It's possible
-that we may have to always enable IRQ_WORK even on non-SMP
-kernels now. In practice it is already enabled in most
-configurations for one reason or another, the the cost is
-likely very small.
+Thanks, that initial report was mostly useless without that sha. I do
+wonder why 0day build robot didn't complain to me about this. It seems
+something it should definitely find.
 
-Otherwise checking for CONFIG_HAVE_NMI in the new code might work.
+> that we may have to always enable IRQ_WORK even on non-SMP
+> kernels now. In practice it is already enabled in most
+> configurations for one reason or another, the the cost is
+> likely very small.
+> 
+> Otherwise checking for CONFIG_HAVE_NMI in the new code might work.
 
-     Arnd
+ARM seems to have HAVE_NMI while also being one of the architectures
+that is now failing.
+
+I'm a bit confused though, perf is already depending on irq_work (and
+perf is the user of TWA_NMI_CURRENT). So I'm not exactly sure what
+config fail is leading to all this.
+
+I suppose we can do something like the below.. it'll end up in a runtime
+fail for whoever manages to use TWA_NMI_CURRENT without also having
+irq_work enabled, but that should currently be nobody.
+
+---
+ kernel/task_work.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 5c2daa7ad3f9..276e245b7e7e 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -81,9 +81,11 @@ int task_work_add(struct task_struct *task, struct callback_head *work,
+ 	case TWA_SIGNAL_NO_IPI:
+ 		__set_notify_signal(task);
+ 		break;
++#ifdef CONFIG_IRQ_WORK
+ 	case TWA_NMI_CURRENT:
+ 		irq_work_queue(this_cpu_ptr(&irq_work_NMI_resume));
+ 		break;
++#endif
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		break;
