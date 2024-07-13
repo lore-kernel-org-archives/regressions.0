@@ -1,100 +1,125 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB08B17591
-	for <regressions@lists.linux.dev>; Sat, 13 Jul 2024 03:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEAF125B9;
+	Sat, 13 Jul 2024 12:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720840942; cv=none; b=r1TGKXG4ioA0kK4UwU3o4eud3vAsNNu1RtYOVkCLUsy9DxUgE0Fyv8aszADgeQNm7fEa5p18rKIOV5ewsNBFzXPr0ggd1ZXAldnIqHICdF3a2ofvuLF3AEBB98GozOqR8jUvW9b0Iic93d7b90lxF6adTtUJm4s23glFZeF+H64=
+	t=1720873598; cv=none; b=BS/n87BgXt0m42YCyIagimYNX7Eu+8NOBeTvEgBa8Y4IgB63kii2M7xVEHO4aSO5MvTGssfoLh5RcdA46aBpxjeNiydGt6vU6wpM+GGwB4DKJnZ+XuN4pKClo+duZ8o78YkrCbzOiwRUan9VfvIjFE57uPh3eXTC1NPXqusak6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720840942; c=relaxed/simple;
-	bh=XQRK3olFcGYDhpyX/gjVvN4c01L8z83NPrVTYmMOqp8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQualyjYLuvsSanyOkM2Z12NrMhkjxeaKD8kaaSXyhYq2Voq4RZUgYlwKHcB99SritoQbDzbZFS+1GTKMXY9KJ9Hi374Czlo/7QBNWhcmLlfAob1bcTH3SwcioTp9nJk5BlvuyUY56iOJUxEKeRqQkqO8BZ2t9yQuVdm4OhOnXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mFbEdoaC; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1720873598; c=relaxed/simple;
+	bh=c7d5FFu4/4QR50/cDz1H5YRI4DQGYwqJXU/vWU59WeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ckuUkP+X7I/v5gy1gOo2zCgA06ijt+3++9zLNnnbNEu9Ts8pSNXD28B2QDkNBn7o7lhmg26TlDt0B8y+IMlTBdpDszliUf2EH3gN8RcMyN4scUMzSBrh9Q91fQXyds3QFdZNJjj7zAyKr13+RqVrqd2pQ3V1+KX4180ArUTHm0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rPY00GjR; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mFbEdoaC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1720840941; x=1752376941;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HFQVoU++qjoMPpjt/cUGGmwpKXJ4P+TR3Qf9WgP35GU=;
-  b=mFbEdoaCTL2Dux5ka9yeOTApCp0oMWv4ITXfAgcQeWCgsEN7X/CVqd1g
-   9OO3uZmrEQMX03gd5wCCO3vrI4/xvxphz8RSdANaLxP9Kn7AXiLu2wQCR
-   swqLcK21fv2wplmv5hjytWRSrj35nN1iLe0TRb0osTkSo0QoQwWBeWOCn
-   A=;
-X-IronPort-AV: E=Sophos;i="6.09,204,1716249600"; 
-   d="scan'208";a="419984667"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2024 03:22:19 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:49511]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.30:2525] with esmtp (Farcaster)
- id e4354d46-f591-41c7-a032-eb8684858776; Sat, 13 Jul 2024 03:22:17 +0000 (UTC)
-X-Farcaster-Flow-ID: e4354d46-f591-41c7-a032-eb8684858776
-Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Sat, 13 Jul 2024 03:22:17 +0000
-Received: from 3c06303d853a.ant.amazon.com (10.187.170.15) by
- EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Sat, 13 Jul 2024 03:22:14 +0000
-Date: Fri, 12 Jul 2024 20:22:09 -0700
-From: Andrew Paniakin <apanyaki@amazon.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-CC: Christian Heusel <christian@heusel.eu>, <pc@cjr.nz>,
-	<stfrench@microsoft.com>, <sashal@kernel.org>, <pc@manguebit.com>,
-	<stable@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
-	<abuehaze@amazon.com>, <simbarb@amazon.com>, <benh@amazon.com>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
- stable/linux-6.1.y breaks cifs client failover to another server in DFS
- namespace
-Message-ID: <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
-References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
- <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
- <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
- <ZnyRlEUqgZ_m_pu-@3c06303d853a>
- <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
- <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rPY00GjR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=P1XV7Rv5uafTDVUfOke6IbO5Jkmk6GUZlP0DD1NBgEQ=; t=1720873595;
+	x=1721305595; b=rPY00GjRZml2eeut+Pg2oNobHXHKQLClgmIJrCcuU98GMqS3E8Ua5fSNabEVu
+	x9ITO+R2TWvJpYXUrVrn/xYFPtJdV901oH9jYizalHk3IRuDxUQYq9HS1JvVVYsD8kEE+T222sazY
+	fpZEIbBznyfUuP2se//o9iEA4yo0Ajvvq4RGYCQ7KyjeWkZoXRFAJB5jTz0pD2VwUthZ9qe0Pz4qg
+	RjHS63QowxSplmE2n6xFpEzZPipnmIAJECSg9F5h2dQi0SXIYXjzZfDxq+CE8PPEGO4l7wYfK/WpU
+	ZQJHm08JLsojevBJe4jBss3672TYnTqY+7Qg+WZpphGkXpM3Bw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sSbpc-0003rk-9X; Sat, 13 Jul 2024 14:26:28 +0200
+Message-ID: <ac5d5415-bcc5-4db0-b1bb-6a8d193d43a7@leemhuis.info>
+Date: Sat, 13 Jul 2024 14:26:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
-X-ClientProxiedBy: EX19D035UWA002.ant.amazon.com (10.13.139.60) To
- EX19D026EUB004.ant.amazon.com (10.252.61.64)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Quick extra regression report listing regression which available
+ fixes
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720873595;0efdb3bf;
+X-HE-SMSGID: 1sSbpc-0003rk-9X
 
-On 11/07/2024, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.06.24 22:16, Christian Heusel wrote:
-> > On 24/06/26 03:09PM, Andrew Paniakin wrote:
-> >> On 25/06/2024, Christian Heusel wrote:
-> >>> On 24/06/24 10:59AM, Andrew Paniakin wrote:
-> >>>> On 19/06/2024, Andrew Paniakin wrote:
-> >>>>> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
+Quick update:
 
-[snip]
+On 10.07.24 17:15, Thorsten Leemhuis wrote:
 
-> Hmmm, unless I'm missing something it seems nobody did so. Andrew, could
-> you take care of that to get this properly fixed to prevent others from
-> running into the same problem?
+> There are two issues that worry me somewhat:
 > 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
+> * A btrfs regression that leads to increased execution time of the
+> kswapd0 process and symptoms as if there is not enough memory;
+> [...]
+> * bpf: build error with CONFIG_WERROR and CONFIG_BPF. 
 
-We got the confirmation from requesters that the kernel with this patch
-works properly, our regression tests also passed, so I submitted
-backport request:
-https://lore.kernel.org/stable/20240713031147.20332-1-apanyaki@amazon.com/
+Fixers for those to were mainlined, yeah. \o/
+
+> There are a few regressions with available fixes, which seem to be
+> unlikely to be submitted for mainline inclusion during this week afaics:
+> 
+> * net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64 not detected
+> (known for 8 weeks already):
+> https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
+> https://lore.kernel.org/lkml/f485d1d4f7b34cc2ebf3d60030d1c67b4016af3c.1720107535.git.daniel@makrotopia.org/
+
+No progress here afaics. This BTW is caused by 868ff5f4944aa9 ("net:
+dsa: mt7530-mdio: read PHY address of switch from device tree")
+[v6.10-rc1], which brings support for MT7530 and is part of a small
+patch-set:
+https://lore.kernel.org/all/20240418-b4-for-netnext-mt7530-phy-addr-from-dt-and-simplify-core-ops-v3-0-3b5fb249b004@arinc9.com/
+Makes me wonder if this could be fixed through a temporary revert; I
+argued for that some time ago, but in the end found no support for it:
+https://lore.kernel.org/lkml/2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com/
+
+> * drm/qxl: VM graphics often malfunction after boot and sometimes
+> shutdowns occur (known for 5 weeks already):
+> https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
+> https://lore.kernel.org/dri-devel/20240708142208.194361-1-tzimmermann@suse.de/
+
+That issue is caused by b33651a5c98dbd ("drm/qxl: Do not pin buffer
+objects for vmap") [v6.10-rc1]; the fix was queued for -next a few days
+ago as c537fb4e3d36e7 ("drm/qxl: Pin buffer objects for internal
+mappings") [next-20240711]
+
+> There are a few regressions for which fixes are available, but those
+> might or might not will be submitted for mainline inclusion during this
+> week:
+> 
+> * ASoC: SOF: Intel: Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
+> S0ix not even tried to enter from there on:
+> https://github.com/thesofproject/linux/issues/5072
+> https://bugzilla.kernel.org/show_bug.cgi?id=218961#c10
+
+This issue is caused by d5263dbbd8af02 ("ASoC: SOF: Intel: don't ignore
+IOC interrupts for non-audio transfers"); the fix "ASOC: SOF: Intel:
+hda-loader: only wait for HDaudio IOC for IPC4 devices" is in a github
+repo for more than a week already:
+https://github.com/plbossart/sound/commit/7a8379a0d960ea48ef4ec8e682f0ea46e27e8020
+
+> * pinctrl: rockchip: boot broke on RK3328 / Rock64
+> https://lore.kernel.org/all/705544af-d615-4ff0-a54c-72a69140ce6d@eh5.me/
+> https://lore.kernel.org/lkml/20240709105428.1176375-1-i@eh5.me/
+
+That fix is still waiting for review.
+
+> * drm/bridge: adv7511: Intermittent EDID failures; the fix after six
+> weeks finally made it to a branch that likely will be submitted for
+> mainline inclusion later this week.
+> https://lore.kernel.org/lkml/20240521011614.496421-1-aford173@gmail.com/
+> https://lore.kernel.org/lkml/20240630221931.1650565-1-aford173@gmail.com/
+
+That fix is in the DRM PR airlied sent on Friday morning.
+
+Ciao, Thorsten
