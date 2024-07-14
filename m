@@ -1,125 +1,111 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail-200165.simplelogin.co (mail-200165.simplelogin.co [176.119.200.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEAF125B9;
-	Sat, 13 Jul 2024 12:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720873598; cv=none; b=BS/n87BgXt0m42YCyIagimYNX7Eu+8NOBeTvEgBa8Y4IgB63kii2M7xVEHO4aSO5MvTGssfoLh5RcdA46aBpxjeNiydGt6vU6wpM+GGwB4DKJnZ+XuN4pKClo+duZ8o78YkrCbzOiwRUan9VfvIjFE57uPh3eXTC1NPXqusak6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720873598; c=relaxed/simple;
-	bh=c7d5FFu4/4QR50/cDz1H5YRI4DQGYwqJXU/vWU59WeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ckuUkP+X7I/v5gy1gOo2zCgA06ijt+3++9zLNnnbNEu9Ts8pSNXD28B2QDkNBn7o7lhmg26TlDt0B8y+IMlTBdpDszliUf2EH3gN8RcMyN4scUMzSBrh9Q91fQXyds3QFdZNJjj7zAyKr13+RqVrqd2pQ3V1+KX4180ArUTHm0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rPY00GjR; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE4C7F
+	for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 14:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=176.119.200.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720968585; cv=pass; b=URF2EgdbBkFScrk0WYE6350JB8gnQnIx9Oh/IrlT8tmUKrm3KrLJkce3hxvuBl2BjlEvjwhRURhk5YR8U3Mf7VseUXITw+ZvOVzPm0blD9p/MAKIcF8Vrd6f+uaj6iAQhSZE+BRqcT/+oS0D3C82UGY65/52h5Wfdp/UoYy0tEo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720968585; c=relaxed/simple;
+	bh=Y0ztaWB4OzAmGhQOBiUbzEAiBu6xITn3W2JYbeT4ZuA=;
+	h=Date:Subject:In-Reply-To:MIME-Version:Content-Type:From:To:Cc:
+	 Message-ID:References; b=pFbtZ7eEIOJrCEoMrHnEoCTXnT+KXzIhvnw72b8t4NWwRhRCy8QO6DEbogkF/QigYV7EVHow20riKG99/JqjD7CWglikj1MD57m70yo1YrKtKf7y7w0gd5+jCirVTGfIY58gP81UzHIHYley2Q18bilaD8D4Uzxlwr44CLytEFs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com; spf=pass smtp.mailfrom=simplelogin.com; dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b=mGdddm82; arc=pass smtp.client-ip=176.119.200.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelogin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rPY00GjR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=P1XV7Rv5uafTDVUfOke6IbO5Jkmk6GUZlP0DD1NBgEQ=; t=1720873595;
-	x=1721305595; b=rPY00GjRZml2eeut+Pg2oNobHXHKQLClgmIJrCcuU98GMqS3E8Ua5fSNabEVu
-	x9ITO+R2TWvJpYXUrVrn/xYFPtJdV901oH9jYizalHk3IRuDxUQYq9HS1JvVVYsD8kEE+T222sazY
-	fpZEIbBznyfUuP2se//o9iEA4yo0Ajvvq4RGYCQ7KyjeWkZoXRFAJB5jTz0pD2VwUthZ9qe0Pz4qg
-	RjHS63QowxSplmE2n6xFpEzZPipnmIAJECSg9F5h2dQi0SXIYXjzZfDxq+CE8PPEGO4l7wYfK/WpU
-	ZQJHm08JLsojevBJe4jBss3672TYnTqY+7Qg+WZpphGkXpM3Bw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sSbpc-0003rk-9X; Sat, 13 Jul 2024 14:26:28 +0200
-Message-ID: <ac5d5415-bcc5-4db0-b1bb-6a8d193d43a7@leemhuis.info>
-Date: Sat, 13 Jul 2024 14:26:27 +0200
+	dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b="mGdddm82"
+ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1720968056;
+	cv=none; b=uIOLPcGIMeR3DwT1tX8HjyUTReB+/QyIZflbf7un1ugQshjoeLIEePKSwnB95VE0E91AOQ0boag8U4Hi/QYlQeyaYoPhht4AdnfbYDzRMNvDPPuZTb65g34FBCZ/Vy7RX0rdnEiHyoStALObRO9W8zOP/oTRD5GO6MBuYZX3f2w/bIwy7d56AEw0vlRCFNcb3rcdJQ8WiRVm+GVx3uhfO6qMfLys0KwzDpvqQZnORbr7sjHaSX/QjvchbJ8qFcEulxKAmBuyKfrAa5ZJ+lvJaUGjJRlHOOIcLlJtTksWNeIJotCDX+VDNlnutJsrPIZOIWRKeU7V1wzIAlng/59cgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
+	t=1720968056; c=relaxed/simple;
+	bh=Y0ztaWB4OzAmGhQOBiUbzEAiBu6xITn3W2JYbeT4ZuA=;
+	h=Date:Subject:In-Reply-To:From:To:Cc:References; b=W7Xe3d1Sbs7G34ev2zpCu8jKjV0xG5gSgFasf9a3sLZkun4k1vnuTdTSNWS8HHvogE7pzWPIWVO2mcI2r0vq4XMXOBrssdG/HDDh1KT1EckXSfQ8LYzoD1U9iQpvATfNvz4EfzvSehgMyGs5hbn2BBaNr6iL0HSPJg2me7D1jntPTKHT8k0ZzRdJf1rwJUzjE8x16mAOaftaOPDdSC3qG9BngL9j8N0uKOU7JEUywXx0OQN4jKNeuKk8sCqcT6Cd/tDAUC+5lpt+hrcALZaTd8r5EG7mrFnalNlmX9F6E8UXFsPH0zrAW8D/TwvjQlBh1/sHYs6NxGzqaSZvqYDTvw==
+ARC-Authentication-Results: i=1; mail.protonmail.ch
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simplelogin.com;
+	s=dkim; t=1720968055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k0F5CgJQpZiqLI39KgMfAPBRVZgL2dLXXBSyWpkwcdU=;
+	b=mGdddm82bTzkfRNpQPJ78/JlOfsoFlYMVJm3WlRlzkXrwcWZLYa4r8khlG9JjqjRI1a2v2
+	z7fFldEz1OtcOXEauwNzXkbKfi0Pz/oqo9H+molPb0pYrfjoXv+QtBeFBsfDegwTe4BbYi
+	MEiN3uiNnCWVtGgWBx7eApZ6gfSRjDM=
+Date: Sun, 14 Jul 2024 14:40:46 +0000
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+In-Reply-To: <32bd7226-5d26-46fd-a3bb-5b14344bc0b5@pm.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Quick extra regression report listing regression which available
- fixes
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <64d01ac5-9a84-44db-be72-ef22e6e5fc07@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1720873595;0efdb3bf;
-X-HE-SMSGID: 1sSbpc-0003rk-9X
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: mavrix#kernel@simplelogin.com
+To: Ard Biesheuvel <ardb@kernel.org>,Radek Podgorny <radek@podgorny.cz>
+Cc: regressions@lists.linux.dev,regressions@leemhuis.info,christian@heusel.eu
+Message-ID: <172096805546.8.15772688283210394474.379370367@simplelogin.com>
+References: <172096653882.8.16813493378478071178.379356753@simplelogin.com>
+X-SimpleLogin-Type: Reply
+X-SimpleLogin-EmailLog-ID: 379370371
+X-SimpleLogin-Want-Signing: yes
 
-Quick update:
+Hi
 
-On 10.07.24 17:15, Thorsten Leemhuis wrote:
+My system appears to be affected by a regression originating with commit=20
+8117961d98fb2d335ab6de2cad7afb8b6171f5fe as well, with the main=20
+difference being that the current fix does not resolve the issue for me.=20
+What I don't know is whether it's a different regression resulting from=20
+the same commit or if the core issue is the same and the patch only=20
+fixes it is some cases. I decided that replying here would be the most=20
+efficient way to bring this to attention, but if I should start a new=20
+report altogether, please let me know.
 
-> There are two issues that worry me somewhat:
-> 
-> * A btrfs regression that leads to increased execution time of the
-> kswapd0 process and symptoms as if there is not enough memory;
-> [...]
-> * bpf: build error with CONFIG_WERROR and CONFIG_BPF. 
+Here's the story so far: After updating from 6.6.9-arch1-1 to the next=20
+regular kernel version, I had an unbootable system where I could still=20
+select the systemd-boot loader entry but then the computer became=20
+unresponsive with a black screen, where not even sysrq worked anymore.=20
+For a while the Arch LTS kernels still worked as a fallback after that,=20
+but eventually they resulted in the same behaviour. I recently posted on=20
+the Arch forum about the problem -=20
+https://bbs.archlinux.org/viewtopic.php?id=3D297453 - where Christian=20
+Heusel, who I CC'd in this reply as well - helped me bisect the first=20
+bad Arch LTS kernel, i.e. 6.6.18. This lead to the aforementioned=20
+commit. Mainline unfortunately does not fix it for me (as of=20
+linux-mainline-6.10rc6-1). I also have other machines with a similar=20
+setup as far as the operating system goes (but on different hardware)=20
+that work fine.
 
-Fixers for those to were mainlined, yeah. \o/
+I have an otherwise up to date Arch system that I've originally set up=20
+well over 5 years ago on a Dell XPS 13 and that has been regularly=20
+maintained and updated, mostly without issues. The information requested=20
+so far in this thread in my case is as follows:
 
-> There are a few regressions with available fixes, which seem to be
-> unlikely to be submitted for mainline inclusion during this week afaics:
-> 
-> * net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64 not detected
-> (known for 8 weeks already):
-> https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
-> https://lore.kernel.org/lkml/f485d1d4f7b34cc2ebf3d60030d1c67b4016af3c.1720107535.git.daniel@makrotopia.org/
+bootctl - https://drive.proton.me/urls/P1TKZPA98R#YHmvPFBCRy7v
+dmidecode - https://drive.proton.me/urls/GXTZVVSTK0#43CCvNy1m6dh
+dmesg - https://drive.proton.me/urls/6DSXK4R2D8#8TFGkw6yvFfx
 
-No progress here afaics. This BTW is caused by 868ff5f4944aa9 ("net:
-dsa: mt7530-mdio: read PHY address of switch from device tree")
-[v6.10-rc1], which brings support for MT7530 and is part of a small
-patch-set:
-https://lore.kernel.org/all/20240418-b4-for-netnext-mt7530-phy-addr-from-dt-and-simplify-core-ops-v3-0-3b5fb249b004@arinc9.com/
-Makes me wonder if this could be fixed through a temporary revert; I
-argued for that some time ago, but in the end found no support for it:
-https://lore.kernel.org/lkml/2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com/
+I hope this all is of some help; if you need further information, please=20
+let me know.
 
-> * drm/qxl: VM graphics often malfunction after boot and sometimes
-> shutdowns occur (known for 5 weeks already):
-> https://lore.kernel.org/regressions/DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com/
-> https://lore.kernel.org/dri-devel/20240708142208.194361-1-tzimmermann@suse.de/
+-t
 
-That issue is caused by b33651a5c98dbd ("drm/qxl: Do not pin buffer
-objects for vmap") [v6.10-rc1]; the fix was queued for -next a few days
-ago as c537fb4e3d36e7 ("drm/qxl: Pin buffer objects for internal
-mappings") [next-20240711]
 
-> There are a few regressions for which fixes are available, but those
-> might or might not will be submitted for mainline inclusion during this
-> week:
-> 
-> * ASoC: SOF: Intel: Lenovo Thinkpad X1 Carbon Gen 10 first S2idle fails,
-> S0ix not even tried to enter from there on:
-> https://github.com/thesofproject/linux/issues/5072
-> https://bugzilla.kernel.org/show_bug.cgi?id=218961#c10
+On 3/29/24 3:36 PM, Ard Biesheuvel wrote:
+> On Fri, 29 Mar 2024 at 12:43, Radek Podgorny<radek@podgorny.cz>  wrote:
+>> hello,
+>>
+>> this patch (i named it 112) WORKS. no initramfs error, normal boot seque=
+nce.
+>>
+> I'll take that as a tested-by, thanks
+>
+> I'll send this fix out to Linus today, so it should hit v6.9-rc2 and
+> make its way back through the stable releases in the following weeks.
+>
 
-This issue is caused by d5263dbbd8af02 ("ASoC: SOF: Intel: don't ignore
-IOC interrupts for non-audio transfers"); the fix "ASOC: SOF: Intel:
-hda-loader: only wait for HDaudio IOC for IPC4 devices" is in a github
-repo for more than a week already:
-https://github.com/plbossart/sound/commit/7a8379a0d960ea48ef4ec8e682f0ea46e27e8020
 
-> * pinctrl: rockchip: boot broke on RK3328 / Rock64
-> https://lore.kernel.org/all/705544af-d615-4ff0-a54c-72a69140ce6d@eh5.me/
-> https://lore.kernel.org/lkml/20240709105428.1176375-1-i@eh5.me/
-
-That fix is still waiting for review.
-
-> * drm/bridge: adv7511: Intermittent EDID failures; the fix after six
-> weeks finally made it to a branch that likely will be submitted for
-> mainline inclusion later this week.
-> https://lore.kernel.org/lkml/20240521011614.496421-1-aford173@gmail.com/
-> https://lore.kernel.org/lkml/20240630221931.1650565-1-aford173@gmail.com/
-
-That fix is in the DRM PR airlied sent on Friday morning.
-
-Ciao, Thorsten
