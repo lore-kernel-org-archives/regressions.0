@@ -1,96 +1,96 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EF91BDD3
-	for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 19:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720984838; cv=pass; b=shvDXaeeJ3qiyS2IggVLa2KDpdA+wm4SgVw6v7+t9lARo5i6CEJQ1dSgyhA50+6xaKbqdog9GUAG2UFxiBtZs7mLlhevV0TzBJyZvH1FnqyBVVUXMfU7q9+u7LVMW15TdhQ3+ige1+eTkma/PtpSppeOomezo2Utr0CnslmJ9CI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720984838; c=relaxed/simple;
-	bh=/FcZ9N1c4VlhCvMsxwcRFAnyKtuw+w7WfA9ghnPfVj0=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=DHcDvEqrefoh6gqEDbJduYgOo3w2T2edLR/fMGMLub/OehGplg0Vdy5GEwOCJB30JvadnRhxi090ZymkeVbrrnTTbg8awNMiyyLfjWoy7XFLm6sT7f6mnPkGPklyUM9ICZfvdOJzxFOCZS5lVamqBPulB39YHaWZL5hfX5A9KMg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=AaINHtOa; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F26E13D88E
+	for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 20:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720989707; cv=none; b=GLg1h6xwx7Hxzw81CocOBVinHvrJLkd7e78YS70rDJkVN2hen3ukA4UciSbkjAZjBurqfU20WQPtZL9Ke5QcY3l1lKrdd4FWDeFjJ8oMDcr7q8xGL+Xf4A2RX1SNZI6/+/7Hu/f4VWJA+rA5nj7YglrU6e276HbhGeNGquZRe5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720989707; c=relaxed/simple;
+	bh=Rbhi9raS35yjLs44ICMqmzwlTLdlFu8DJr1zq7AF6AA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJGmSSNnxhy2gp42LA3ULlZTNSVsdtQIifx+2CTvy9vkWNTcKgE09guGSA4ovzKZIGHeZVbirZHKJrPNEVMwZ6AXu/ViOF/LFlxrTuTIS1q1ubwbri8B5I+VNhf7vLdSyqhbcOyC5cRZK2nvTbFurLd4LAQVOCUQudJddKosXhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FK3itkE0; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="AaINHtOa"
-Message-ID: <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1720984333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k0qixKwhN6tzqluWu6/T48t7L7Ai9CTcLb/etE0sBoM=;
-	b=AaINHtOaH7ifXZT8SD2wGllbEMQLlQoP0M0Qyvos9isOjZOSdyy2OqgnbevzcRRq1J/MOk
-	paBiEtRKC/QG6pXPL7zXpT4LTeXTea/1wJoGlbwP5h3jtx4O+rhHS790SaM1bJErPjT+Nv
-	DST6i7Z6ynzb6m01BXizGs2wg8JFANCXnmV+FYn7x6u8qnC32iUph741D/qSig6FxoTYWR
-	votlutiNdrZjO4Fl2oPo+jhYObFCuUf5+xXjCm3doMNWtO+gx+Nhy7Fsk9LNL/vcUILNka
-	6cEcHsbUMpwAsGIWZ4XfJl7vkkyes/WsplaVMs9K7B11YBq2t0tmGlmf11vMCQ==
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1720984333; a=rsa-sha256;
-	cv=none;
-	b=gXovMOtnBXS2D8dD398zcVEWJz9q2LjVxjNWf1bsCpODT2xlh8kO8kUzOQvlwZ/IYmi5Sa
-	W4p1YWdJag8cg7EiSI0TbK/xPKDB/S4OXzxnINH7HM8fkjrjJOVRBN2lN4F9KgQAcLGF2w
-	vli7mGgoM5OIoWrhYjts/gThjg+7bz+BI8vbZoJSlbCkyV2Sr0ogwv4OovqmhEB/dULfxc
-	m7f0C5yvbamjxQNFUsuxJRMs7nqx9Gj9zhtXucrXZZdijZxzoSBe8eb9gL0Vz7uCkKsJ84
-	pEUCY/v1XoKr9q7nEQ3r0EYkvmI23ca5xEUwb5/T7SWde8w35EWm/b4ZOFQQOA==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1720984333; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k0qixKwhN6tzqluWu6/T48t7L7Ai9CTcLb/etE0sBoM=;
-	b=dQd0u+FyK/QyXSz1FkfigxrSAQB9TLz3kSXm2q3vroi365/QCQZtrJKYmVpKSOI1TFLJVY
-	1DEACYcJMZFOLdxmT7D8el1Y3kdUzNKhph3Xuw9L7wDp19+0dkXS7zlAX8qSy3XTj4iNTy
-	rWefJqPyY/+3Dfg06cDnpRkmqrHNuLKMr74WzRDlNapb8slbLl1gtau3p0AGhKE3aRneIF
-	1+MNYhdvjzlzzVk6wU6xOqjK+rWdn1Czqq1wru7aFWzuE14FnIzquMTmSPHFXRmsBAYev5
-	MlT7h3/BeKxVefeBkWexQ/9HJK8h3V1MWTqEoPzihQZGdmXMEFp2AEyMptUeUw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
- <Sebastian.Steinbeisser@lrz.de>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-In-Reply-To: <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
- <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
- <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
- <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
-Date: Sun, 14 Jul 2024 16:12:09 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FK3itkE0"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58bac81f3f9so4187452a12.2
+        for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 13:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720989704; x=1721594504; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z/cK++aNJsVXbuZ4CO83IGAtI8ojo7ZZbJZliVitl0M=;
+        b=FK3itkE0en8MGL8iG3mzb5doWd87RG6hh5VsQIxmWpNBWe4gItQb1/z7k55F96Fdmb
+         em6GuHBbo8QnN1PXNLgrbsf+PuWOSFPkljKCg4YXBD24qkormKwK2AmotJHUAj37Fut/
+         ynpcZlpq2UyW+Yh52DVgxF9BNAskAsU4ljHmrgIy2iuvtOo7D79K3fkSxxtSrdmaNs4o
+         kj8/M7P7IFwhf/fDy+pz8T/KhvwUQNNOKfRVTSiGDuj/NEaZnwCiXBJCwDmr/TRwAT7h
+         FKXH/mz37/CRdLve214NT5BU5lOCZDqYTFVIkGD9lLyPOdpJ0og+E/JWUssZlYmAz+op
+         ssAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720989704; x=1721594504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z/cK++aNJsVXbuZ4CO83IGAtI8ojo7ZZbJZliVitl0M=;
+        b=v3B1tUlGtVcY0ZINZ2QLQHY0RZcRq4v7P9cY8gRZsCLh7EXmRwJ8Lg4Cta3cerB3+8
+         2XSiqNuPcTLxxeK9aCpaVVOwVF49csP5B4EA4D+ezP8RVkL+33h96uViwUEgs2p48zk7
+         oN8HehVkbtuguKYQO01dYkk3yy9vFXZQaJdF0RlvbEQ0qxI9pAaIgMv/1txyMkQoz/EY
+         EgFBIBbeWogN8bxYKF+49FHaZwJyMDci6l80Zw3/hfiOuNseCAoKCICXRjZsw03ZR/sc
+         Lpt9UyuNM02MV7IY0QvySwewRVIED7bmCYoUqjqvF99yA1njCMmM8h4WSmRdgvRe4fXi
+         9DVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXq3DMKScjEIOdpXHI64dMTHOFESzVPYuVcIaFFWbe8n675MCtmBaNFDAlIpDgXJintRus0Tth0cKtjYZeHoDEfQ9YLfh1JWWEAzQc=
+X-Gm-Message-State: AOJu0Yx4N3Yu35whVt9HqApztI8HrPR9Oq/H9+FZHZs28WGsV/K8rwxb
+	Q3gMS9ddD4hC58g49OXpLnBvHHgnIO+vCIH270AiHawv+PzYuB6Cl44D6Q5TqvNjuPNtj80O5/9
+	YDU0OcJUqnQLAJ7+WznDs/y3g4Ts=
+X-Google-Smtp-Source: AGHT+IFFU4LKVj2rB7Y2ql4XbS+Q0ZtDsClPyxLPu1EwMtucLEgaSQSDlc3rjRfkgzPGNZviraCFeIooj9FdKqL4z9M=
+X-Received: by 2002:a50:ee0b:0:b0:58d:836e:5d83 with SMTP id
+ 4fb4d7f45d1cf-594ba59f8eamr10226955a12.22.1720989703622; Sun, 14 Jul 2024
+ 13:41:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
+ <20240714173043.668756e4@foxbook> <ZpP3RU-MKb4pMmZH@eldamar.lan>
+In-Reply-To: <ZpP3RU-MKb4pMmZH@eldamar.lan>
+From: Tim Lewis <elatllat@gmail.com>
+Date: Sun, 14 Jul 2024 16:41:31 -0400
+Message-ID: <CA+3zgmtwunPaLbKygi0y+XY7XUd2cBGVP8So8MXxK_1pOX3miQ@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+To: gregkh@linuxfoundation.org
+Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	mathias.nyman@linux.intel.com, niklas.neronin@linux.intel.com, 
+	stable@vger.kernel.org, regressions@lists.linux.dev, 
+	Salvatore Bonaccorso <carnil@debian.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
+On Sun, Jul 14, 2024 at 11:32=E2=80=AFAM Micha=C5=82 Pecio <michal.pecio@gm=
+ail.com> wrote:
+>  see if my suggested solution works.
 
-> Is there any additional information I can provide?
+On Sun, Jul 14, 2024 at 12:05=E2=80=AFPM Salvatore Bonaccorso <carnil@debia=
+n.org> wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D219039
 
-Yes.  Please provide again the network traces of both working and
-non-working kernels along with the session keys in order to decrypt the
-packets.
+Not on 6.1.y:
+    drivers/usb/host/xhci-ring.c:2644:31: error: ~@~Xir~@~Y undeclared
+(first use in this fuunction); did you mean ~@~Xidr~@~Y?
+    2644 |                 inc_deq(xhci, ir->event_ring);
 
-You can retrieve the session keys by running `smbinfo keys
-/mounted/share/some/file` [1].
+On Sun, Jul 14, 2024 at 2:30=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> Ick
 
-Make sure you can decrypt the packets with dumped keys before sending
-those out.
-
-Besides running ls, try to stat those files as well.  If you can provide
-network traces with smbclient(2) [2], it would be great, too.
-
-Thanks.
-
-[1] https://wiki.samba.org/index.php/Wireshark_Decryption#Obtaining_the_keys
-[2] https://wiki.samba.org/index.php/Wireshark_Decryption#Samba_client_and_=
-server
+We now have 3 USB HDD Vendors that are reported to crash the kernel
+because of this patch.  I think it best we take time to sort out the
+long standing minor issue this patch is for, after we quickly revert
+the major issues it is causing. Can we get it removed from 6.6.y and
+older branches for the hopefully soon next release?
