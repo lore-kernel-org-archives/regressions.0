@@ -1,42 +1,71 @@
-Received: from mail-200165.simplelogin.co (mail-200165.simplelogin.co [176.119.200.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE4C7F
-	for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 14:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=176.119.200.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720968585; cv=pass; b=URF2EgdbBkFScrk0WYE6350JB8gnQnIx9Oh/IrlT8tmUKrm3KrLJkce3hxvuBl2BjlEvjwhRURhk5YR8U3Mf7VseUXITw+ZvOVzPm0blD9p/MAKIcF8Vrd6f+uaj6iAQhSZE+BRqcT/+oS0D3C82UGY65/52h5Wfdp/UoYy0tEo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720968585; c=relaxed/simple;
-	bh=Y0ztaWB4OzAmGhQOBiUbzEAiBu6xITn3W2JYbeT4ZuA=;
-	h=Date:Subject:In-Reply-To:MIME-Version:Content-Type:From:To:Cc:
-	 Message-ID:References; b=pFbtZ7eEIOJrCEoMrHnEoCTXnT+KXzIhvnw72b8t4NWwRhRCy8QO6DEbogkF/QigYV7EVHow20riKG99/JqjD7CWglikj1MD57m70yo1YrKtKf7y7w0gd5+jCirVTGfIY58gP81UzHIHYley2Q18bilaD8D4Uzxlwr44CLytEFs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com; spf=pass smtp.mailfrom=simplelogin.com; dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b=mGdddm82; arc=pass smtp.client-ip=176.119.200.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelogin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363DD13A275
+	for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 16:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720973129; cv=none; b=dCrhKOSu+oXjCuBjUl6A1KRh2BPiCLcMub35NjLqqTVCSvDe5u69Z5GhCxAQVd1gNk7gzMlGpb2CIrY+spf07pgfrikWC0f3UPy0Omt7/5NDuTQQRmCsy/k8MoG6oRnxTfxOci//+Uv2g3Ioixq/rTFnyl+tOffvnYN4cR6i33U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720973129; c=relaxed/simple;
+	bh=BThKgLOyiZs0ED0qNul/PfREiwkcu0W/YUKGklz/5DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aW0G0EgwkBbhWJ77ns06Q02k20RTdWF8cWUdW9pmK6nMFohrwEiLwnNLXYwT5ROzdGj0r2MW+661onV0oJUMwbb62nPUKlXfzaU1HKC+NHqrx2NXIHKhJdn2uDRXx28nefQH8U7HU7shHMGajjnUIPwSoBS30B4cpR9Lpp+vsC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L22cdTWB; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b="mGdddm82"
-ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1720968056;
-	cv=none; b=uIOLPcGIMeR3DwT1tX8HjyUTReB+/QyIZflbf7un1ugQshjoeLIEePKSwnB95VE0E91AOQ0boag8U4Hi/QYlQeyaYoPhht4AdnfbYDzRMNvDPPuZTb65g34FBCZ/Vy7RX0rdnEiHyoStALObRO9W8zOP/oTRD5GO6MBuYZX3f2w/bIwy7d56AEw0vlRCFNcb3rcdJQ8WiRVm+GVx3uhfO6qMfLys0KwzDpvqQZnORbr7sjHaSX/QjvchbJ8qFcEulxKAmBuyKfrAa5ZJ+lvJaUGjJRlHOOIcLlJtTksWNeIJotCDX+VDNlnutJsrPIZOIWRKeU7V1wzIAlng/59cgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
-	t=1720968056; c=relaxed/simple;
-	bh=Y0ztaWB4OzAmGhQOBiUbzEAiBu6xITn3W2JYbeT4ZuA=;
-	h=Date:Subject:In-Reply-To:From:To:Cc:References; b=W7Xe3d1Sbs7G34ev2zpCu8jKjV0xG5gSgFasf9a3sLZkun4k1vnuTdTSNWS8HHvogE7pzWPIWVO2mcI2r0vq4XMXOBrssdG/HDDh1KT1EckXSfQ8LYzoD1U9iQpvATfNvz4EfzvSehgMyGs5hbn2BBaNr6iL0HSPJg2me7D1jntPTKHT8k0ZzRdJf1rwJUzjE8x16mAOaftaOPDdSC3qG9BngL9j8N0uKOU7JEUywXx0OQN4jKNeuKk8sCqcT6Cd/tDAUC+5lpt+hrcALZaTd8r5EG7mrFnalNlmX9F6E8UXFsPH0zrAW8D/TwvjQlBh1/sHYs6NxGzqaSZvqYDTvw==
-ARC-Authentication-Results: i=1; mail.protonmail.ch
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simplelogin.com;
-	s=dkim; t=1720968055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k0F5CgJQpZiqLI39KgMfAPBRVZgL2dLXXBSyWpkwcdU=;
-	b=mGdddm82bTzkfRNpQPJ78/JlOfsoFlYMVJm3WlRlzkXrwcWZLYa4r8khlG9JjqjRI1a2v2
-	z7fFldEz1OtcOXEauwNzXkbKfi0Pz/oqo9H+molPb0pYrfjoXv+QtBeFBsfDegwTe4BbYi
-	MEiN3uiNnCWVtGgWBx7eApZ6gfSRjDM=
-Date: Sun, 14 Jul 2024 14:40:46 +0000
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-In-Reply-To: <32bd7226-5d26-46fd-a3bb-5b14344bc0b5@pm.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L22cdTWB"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5957040e32aso2265296a12.2
+        for <regressions@lists.linux.dev>; Sun, 14 Jul 2024 09:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720973126; x=1721577926; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zzsOW3jPrt4WczAvScEktJZjwhVKZi7MkvjsHuWYwOI=;
+        b=L22cdTWBEBF+ta4tnC5XzvXgok8BquOTE+d+8827BfYRcYUzYUwzt53OOWKzHhgSWH
+         pkW6UGlr/DYR7DdJKM/IjfMwKZ4nZIcc7lDIDxNAfyxVOR+SUohm4McsU3fMg/Nl7WXu
+         2bux01+XyF21cZiQkSAShuvCr3vOxw+Z+0Kfh1hWDJ+DPx+RwxBn6x6WuEZIiorkRen8
+         EXzc2VOHqI2pGdqJtuU2YcAGko1CU64/9nogY4LhVmAR2zQAMtvxX27Y2JuSuiPoXaGP
+         rV0JjyibkBCXcw4v8mYoKSt8SkWQTfzc6s6UVvDAUZAYnrF/4ovjeeaGEi+vd2jT0usc
+         1HjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720973126; x=1721577926;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zzsOW3jPrt4WczAvScEktJZjwhVKZi7MkvjsHuWYwOI=;
+        b=Rb7kC0QVF5SUPrCkif8CaA6jblVKxtvQQUivx6VHxyYZEP/ghvNjlMoClHO2rv3VEj
+         UsZErPpoqcLfv1tEl8yChN+0GDmbK25c90JTDbeDrtaPo1uJ7u5ZZWs0Hh7jamAaUDB7
+         7R59fD8ajvmk40h1Y+kpWOqgC4wz+IPfx+GJxBouEOeSJ2OaFYfigbvNNHAuq7inxW+Y
+         TwK/J9OjanaZDlInUUdNVvU7/6miWoQQANrbw+PqDBPNRq31t1QeNC59xbyf37d0swQ/
+         YSXgIcjr9UZWh+wHpJ9hxAYsYOginZxlqdfZYuSxRJ9yGuCHdh04c+6E7S1TE+PY+T7h
+         ukRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpG6BXqhw8apGjBFAe/LK2Ns5MnrTYzCwWiuJEBLAmOZc1wIiweG7DAY8Qa0qjZGjcg2s9aB541yLAQo8uCDB7KQmUk0jLZJ9Pqpc=
+X-Gm-Message-State: AOJu0YwJt86QPnuWzQ4pSKYxtHV2TCSZGYKj1tIb3gk1huDVhZpl8kki
+	ukmzhylB8u2SyBFT+trqp0oh4nqGs15WqhiuQjpABeUezkY8dHXR
+X-Google-Smtp-Source: AGHT+IE0HZvjsq7HBzHlKX6FbekQ5XaoHXqLiwC3jNlpB+voSFxqC7aMQAWXjZQzIO5j1pfzY67A1g==
+X-Received: by 2002:a05:6402:1eca:b0:57c:5d4a:4122 with SMTP id 4fb4d7f45d1cf-594bac74fbemr14077949a12.9.1720973126324;
+        Sun, 14 Jul 2024 09:05:26 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b255275bcsm2206984a12.48.2024.07.14.09.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jul 2024 09:05:25 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 0BF49BE2EE8; Sun, 14 Jul 2024 18:05:25 +0200 (CEST)
+Date: Sun, 14 Jul 2024 18:05:25 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>
+Cc: elatllat@gmail.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	mathias.nyman@linux.intel.com, niklas.neronin@linux.intel.com,
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+Message-ID: <ZpP3RU-MKb4pMmZH@eldamar.lan>
+References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
+ <20240714173043.668756e4@foxbook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,68 +73,44 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: mavrix#kernel@simplelogin.com
-To: Ard Biesheuvel <ardb@kernel.org>,Radek Podgorny <radek@podgorny.cz>
-Cc: regressions@lists.linux.dev,regressions@leemhuis.info,christian@heusel.eu
-Message-ID: <172096805546.8.15772688283210394474.379370367@simplelogin.com>
-References: <172096653882.8.16813493378478071178.379356753@simplelogin.com>
-X-SimpleLogin-Type: Reply
-X-SimpleLogin-EmailLog-ID: 379370371
-X-SimpleLogin-Want-Signing: yes
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240714173043.668756e4@foxbook>
 
-Hi
+Hi,
 
-My system appears to be affected by a regression originating with commit=20
-8117961d98fb2d335ab6de2cad7afb8b6171f5fe as well, with the main=20
-difference being that the current fix does not resolve the issue for me.=20
-What I don't know is whether it's a different regression resulting from=20
-the same commit or if the core issue is the same and the patch only=20
-fixes it is some cases. I decided that replying here would be the most=20
-efficient way to bring this to attention, but if I should start a new=20
-report altogether, please let me know.
+On Sun, Jul 14, 2024 at 05:32:39PM +0200, Michał Pecio wrote:
+> This looks like bug 219039, please see if my suggested solution works.
+> 
+> The upstream commit is correct, because the call to inc_deq() has been
+> moved outside handle_tx_event() so there is no longer this critical
+> difference between doing 'goto cleanup' and 'return 0'. The intended
+> change of this commit also makes sense to me.
+> 
+> This refactor is already present in v6.9 so I don't think the commit
+> will have any effect besides fixing the isochronous bug which it is
+> meant to fix.
+> 
+> But it is not present in v6.6 and v6.1, so they break/crash/hang/etc.
+> Symptoms may vary, but I believe the root cause is the same because the
+> code is visibly wrong.
+> 
+> 
+> I would like to use this opportunity to point out that the xhci driver
+> is currenty undergoing (much needed IMO) cleanups and refactors and
+> this is not the first time when a naive, verbatim backport is attempted
+> of a patch which works fine on upstream, but causes problems on earlier
+> kernels. These things need special scrutiny, beyond just "CC:stable".
 
-Here's the story so far: After updating from 6.6.9-arch1-1 to the next=20
-regular kernel version, I had an unbootable system where I could still=20
-select the systemd-boot loader entry but then the computer became=20
-unresponsive with a black screen, where not even sysrq worked anymore.=20
-For a while the Arch LTS kernels still worked as a fallback after that,=20
-but eventually they resulted in the same behaviour. I recently posted on=20
-the Arch forum about the problem -=20
-https://bbs.archlinux.org/viewtopic.php?id=3D297453 - where Christian=20
-Heusel, who I CC'd in this reply as well - helped me bisect the first=20
-bad Arch LTS kernel, i.e. 6.6.18. This lead to the aforementioned=20
-commit. Mainline unfortunately does not fix it for me (as of=20
-linux-mainline-6.10rc6-1). I also have other machines with a similar=20
-setup as far as the operating system goes (but on different hardware)=20
-that work fine.
+For tracking I guess this should go as well to the regressions list?
 
-I have an otherwise up to date Arch system that I've originally set up=20
-well over 5 years ago on a Dell XPS 13 and that has been regularly=20
-maintained and updated, mostly without issues. The information requested=20
-so far in this thread in my case is as follows:
+#regzbot introduced: 948554f1bb16e15b90006c109c3a558c66d4c4ac
+#regzbot title: freezes on plugging USB connector due to 948554f1bb16 ("usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB")
+#regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=219039
 
-bootctl - https://drive.proton.me/urls/P1TKZPA98R#YHmvPFBCRy7v
-dmidecode - https://drive.proton.me/urls/GXTZVVSTK0#43CCvNy1m6dh
-dmesg - https://drive.proton.me/urls/6DSXK4R2D8#8TFGkw6yvFfx
+Thorsten I hope I got the most bits correctly, how would one inform
+regzbot about the regresssion for 6.1.98 and 6.6.39 but not happening
+in the upper versions?
 
-I hope this all is of some help; if you need further information, please=20
-let me know.
-
--t
-
-
-On 3/29/24 3:36 PM, Ard Biesheuvel wrote:
-> On Fri, 29 Mar 2024 at 12:43, Radek Podgorny<radek@podgorny.cz>  wrote:
->> hello,
->>
->> this patch (i named it 112) WORKS. no initramfs error, normal boot seque=
-nce.
->>
-> I'll take that as a tested-by, thanks
->
-> I'll send this fix out to Linus today, so it should hit v6.9-rc2 and
-> make its way back through the stable releases in the following weeks.
->
-
-
+Regards,
+Salvatore
