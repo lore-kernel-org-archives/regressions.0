@@ -1,85 +1,179 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD13418C335
-	for <regressions@lists.linux.dev>; Mon, 15 Jul 2024 14:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721053506; cv=pass; b=qiwphrJBTy03rznDCJAf+f0QoCesW0eon0Fhja63AJqdwYcs6lisbBfqvfUVCvZGbX9bJ2++J3otsOWglYZGUZZEnV36mL92U2p8QkZwFcmzoR8B8LIWaDc540xYgTgrt5DiqsbQGgXpXV/NqgxT13gYwT38MDmV4xGWWJJx1AE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721053506; c=relaxed/simple;
-	bh=e/c6viLZXMzQDrggkaDt7b3UtJWaL6FVCkK5MphGJrQ=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=TYHQwS/qEfvgj7EUs3AI3UwtXpE7FBAG/8lT6Wd4FofhlhU5BlmkW0YeKICJM14KaLxliNCdiiFZPdN6Y3iwqq36C3d38m+M4XiwNKWqN/bI1X0YuaEu4vPtmwprDjEqYOLaXDqBjHV5bJ4n3Dxl8OBDN9geOGsIFOez8suP9hQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=dDve9anL; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881FB36B0D
+	for <regressions@lists.linux.dev>; Mon, 15 Jul 2024 17:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721065766; cv=none; b=h35KXCEs8T0Cxsegya01oVeVi+dWIH6DOTbsYadHxAAAa2H4XZ+dBiUJsJahGyOXqiu1DNjFt112fUOSD2xu69q4pmUnBGzHFTqN18ndQHgF9H0NSqQVKQZavvf9zCUaRjj2D30rHPyXs3cAL9jSpfO/Yvv1CbVQ8HnYxb/53aM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721065766; c=relaxed/simple;
+	bh=IF2yrLjoxT0h6e+1eVvUPCO0jY/8dmFWBEa0TyqEXhg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=KK0moBgDVExXOFroXTzdaLTKKUa5zaHyrwnnBElWyQwOd2CASixeuI0wWIKeg51hDOjcw5QWcU7qfn+jlhOeyp+nIbCaBwRvNzy6b0dLO5J98earlNpcm3RdvUc3ao7aGwWzLhDZlhA6OUHuPf+mFr7dFgz+ZC/+nUcTPF0Nbtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3QQI9Gg; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="dDve9anL"
-Message-ID: <d978adcf400b3f938eebc4c4d66c754c@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1721053502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b3ybVPzSI4vGZE7JpCvLCbbwt31ZuXts/vp62X+TbvI=;
-	b=dDve9anLRrGUXyRtFbEc0xgKpPJcfZwvckS97ZaIlwJg1+ltpm+sHUK9ce7MEKXfKcJ32Q
-	n4sE89n7nYeFBzUDle7mUADCyzU729xbwdks7IK8sQp3tSI2UMum3EV052YOe+CEuGUtHL
-	cR0NpQBoNGKsfmiw3vPvenFx3sXLkZ/VZAKpKy7ywy/Wajd05IOy4ANfJUlpRHmWEHyEqx
-	biu8vJ8hl9uq/9QmybsVkKE11qJ9tx5FKSNHg8g4nat6iPXWxkQl0fJ0r4nQJxb5/efbtn
-	Q7Cc3yzTiz6ayixb748OBH77Oeg7VRtjPA2rPxtppQcjSxpYQd+OuNCRKwTwHQ==
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1721053502; a=rsa-sha256;
-	cv=none;
-	b=hpNIktDC++L9xg0b4ByqJ3u9QHbl8reiJGjLQI1XmYKihVLN9Q4NZ6jC44C38bHQzv0CZB
-	0Nq3RmDpSVmHUAfC4zDL2OTGqC9Uhl2AbvN7TI2yORVrOcHQ5XsaRSAAKR77uDB2T6v4CG
-	jL8zyoZnbAHH6/1nQzKUO5+kH57TyecuzSstEuZYklbYQXyui5mifaR5ADkokl/W4A7+Qb
-	XK97MXZ9Hyq4mwZHpWmy0qH1WB97rxxTQi57uyjn2OWGegMqCkyuoZ7E1thNdZaNqOekJn
-	ZOiyHuposDcAnfIzQuQSBVd8n1xdKl0tI9zt+dAgYNIUqdTpjdniR0wNkh+Jlw==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1721053502; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b3ybVPzSI4vGZE7JpCvLCbbwt31ZuXts/vp62X+TbvI=;
-	b=aO+JIdBr46fdrTrYy6qFIjA9ofEkFH2BdigQGC7+bt6Lj347GF8W6oQul4BnHGVdvgP4ZW
-	mkP1aHskzejHUnBYZAtg5TmbV6GSU7b8SRp7KqobHMpuhSLfb2YBjNiaEGgfzsOztEZ/Z7
-	p86BGFVh1TQuY8Ikf4E2PCZnrxfRgETU5vTUZe/AjE8u6gjEpvO4F/k4CCtqkRLJuMlozj
-	svnq/5v5l+DnFx+7NZRXuJB3AI3d605YXUzasZz5lDcpznbve7KiE1z/GMggk2i5bEAEV2
-	09TmnhjOvEcF/TVYZ0zICsyOxD57My0hzDcFi9D1H6F17rj/l2ak+5AY7C9w6Q==
-From: Paulo Alcantara <pc@manguebit.com>
-To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
- <Sebastian.Steinbeisser@lrz.de>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-In-Reply-To: <bacefa19d08f36755a74a85e9c1d8600223c1944.camel@lrz.de>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
- <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
- <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
- <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
- <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
- <00654293b73f861514a9fb61723a8a424be92bc2.camel@lrz.de>
- <505eef55e45f00146321b7de6549ca46@manguebit.com>
- <bacefa19d08f36755a74a85e9c1d8600223c1944.camel@lrz.de>
-Date: Mon, 15 Jul 2024 11:24:58 -0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3QQI9Gg"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4f30331218eso2407719e0c.1
+        for <regressions@lists.linux.dev>; Mon, 15 Jul 2024 10:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721065763; x=1721670563; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2TCN+mtAfqSFvf2FCnrFAIjr/fY03vnJ5dZhsJkvwYQ=;
+        b=g3QQI9Gg3deqbqyRkE1D+Pd4bkMQMfZ6XhOO6O5SxOLkj/V2TNJEiq+sFVrkypXa8n
+         V5whbrr1spVzxXIdsIE+fTKvIamTT2HW73MVmbR5QTULWNahR77Y6YKkU3DqK7jbZ7jn
+         LdCCuNGSt1ez2Zp1MPMAaqhOJ9DamsEUXjKFs9V13hd3Ssp48+oZSQohrvoiowFeMO/4
+         MJVskFeHWwdRwvjFxkoho32njvC8AY7sgzECWqghmpOkzIISEf+D/NEyAT7dhJiN6zCf
+         GQpgvyIUKd70PmGYa4xsavurVuUpj2tezKw59eKC9hc0zgdu6KDW1lU4BGvtABjpwvIg
+         vReg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721065763; x=1721670563;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2TCN+mtAfqSFvf2FCnrFAIjr/fY03vnJ5dZhsJkvwYQ=;
+        b=sp1/LDgwldukWuX0QA0WVtYzqjte3Oxoeri5vmM/A+e8vaAtx43xRC1sSxkdvxp0Vs
+         ELspyyR4IGqaWjvdNE/rO0Ol3BH3SDyjxYfj+z94u0oXeotJB2GwzFnVrIYFTnphEq7M
+         WbbW85q27b0o1pKmblTjhmaX3b3xGwZ4GuM2FurdoKzIcFKy6VWTmPyeJlwY4i/yx4UE
+         2XyAWpbWXn9Sc38nRAMWq2DaZPDXrORAm6kx195jUVb7fttCTlvDtiJlzlt3zdnW6y7O
+         /oFt7CfJH7vU7RD+AeHq++XqcYHQwUHSqR4YC5YM37/EYWqopGgYCEdpQ1adAjnOo5Gw
+         iTgg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+A+hl0lWVWI4CheMcs4siLKiQHDxiq8OPRDvKedkSFnobRDeTVRFm81aA8rP1ZsZ13qFcaJq8OhzVdthcDe9/rKnyJ3tnCfbCBCc=
+X-Gm-Message-State: AOJu0YwWb6canNFRrOaG/ByBiRLNvEpZyxvSt4tvnf5icWuYK0Ecjhmo
+	BhIGxkPTdSBvnklUyIBOmE/qpRaAAj8ZDdmk8RFK7haxSOqeQGbvwrtTDF+ZGDBa/ncrSjVdd2T
+	7RYz81by3ie2U6m3mBPfAeqf3WBrHmOuaK9ow8w==
+X-Google-Smtp-Source: AGHT+IHmQdZH1T6f8//lyjnZOeWGMzQnj/b4V5M1kqpMLo1UsssriZE2N9YRNkxSh8XT0qhPeiQCYIl7EHJDHzWBFbU=
+X-Received: by 2002:a05:6122:1796:b0:4b9:e8bd:3b2 with SMTP id
+ 71dfb90a1353d-4f4cd294049mr977929e0c.2.1721065763380; Mon, 15 Jul 2024
+ 10:49:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 15 Jul 2024 23:19:11 +0530
+Message-ID: <CA+G9fYtg6tjSpVSN+OJRrSFhKcH5NkXVH7ccZMkXDpKjV5TYmA@mail.gmail.com>
+Subject: next-20240715: WARNING: at kernel/cpu.c:527 lockdep_assert_cpus_held
+ (kernel/cpu.c:527 (discriminator 7) kernel/cpu.c:516 (discriminator 7))
+To: open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Tejun Heo <tj@kernel.org>, 
+	void@manifault.com, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
+The following kernel warnings are noticed on today's Linux next-20240715 tag
+on the arm64 Raspberry Pi 4 Model B and x86_64 devices while booting.
 
-> I'll try and get a setup where we can capture non-encrypted traffic.
+This is always reproducible: yes.
 
-You can also send the encrypted packets as long as you provide the
-necessary the keys to decrypt them.  Check my last email on how to
-retrieve such keys.
+  GOOD: next-20240712
+  BAD:  next-20240715
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Warning log:
+----
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd083]
+[    0.000000] Linux version 6.10.0-next-20240715 (tuxmake@tuxmake)
+(aarch64-linux-gnu-gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils
+for Debian) 2.42) #1 SMP PREEMPT @1721032044
+[    0.000000] KASLR disabled due to lack of seed
+[    0.000000] Machine model: Raspberry Pi 4 Model B
+...
+[   33.796467] ------------[ cut here ]------------
+[   33.801373] WARNING: CPU: 2 PID: 134 at kernel/cpu.c:527
+lockdep_assert_cpus_held (kernel/cpu.c:527 (discriminator 7)
+kernel/cpu.c:516 (discriminator 7))
+[   33.801410] Modules linked in: dm_mod(+)
+[   33.801428] CPU: 2 UID: 0 PID: 134 Comm: modprobe Not tainted
+6.10.0-next-20240715 #1
+[   33.801445] Hardware name: Raspberry Pi 4 Model B (DT)
+[   33.801452] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   33.801465] pc : lockdep_assert_cpus_held (kernel/cpu.c:527
+(discriminator 7) kernel/cpu.c:516 (discriminator 7))
+[   33.801479] lr : lockdep_assert_cpus_held (kernel/cpu.c:527
+(discriminator 1))
+[   33.801491] sp : ffff800087583560
+[   33.801497] x29: ffff800087583560 x28: 0000000000000000 x27: 0000000000000000
+[   33.801515] x26: ffff000046714c10 x25: ffff800084edb000 x24: 0000000000000008
+[   33.801532] x23: ffff800082d10740 x22: ffff800084f12128 x21: ffff8000857a9a38
+[   33.801547] x20: ffff000046714c00 x19: 0000000000020002 x18: 0000000000000000
+[   33.801562] x17: ffff800080205c24 x16: ffff8000802058c4 x15: ffff800080204170
+[   33.801577] x14: ffff8000800152dc x13: ffff800080011550 x12: ffff800081d31448
+[   33.801592] x11: 000000000000002c x10: 000000000000002c x9 : ffff800080101d4c
+[   33.801608] x8 : 00000000ffffffff x7 : 00000000000b663d x6 : ffff8000857afdd0
+[   33.801623] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff8000732be000
+[   33.801638] x2 : 0000000000000000 x1 : 00000000000000c0 x0 : 0000000000000000
+[   33.801652] Call trace:
+[   33.801658] lockdep_assert_cpus_held (kernel/cpu.c:527
+(discriminator 7) kernel/cpu.c:516 (discriminator 7))
+[   33.801671] alloc_and_link_pwqs (kernel/workqueue.c:5438)
+[   33.801682] alloc_workqueue (kernel/workqueue.c:5703 (discriminator 1))
+[   33.801692] local_init+0x34/0xc0 dm_mod
+[   33.801805] dm_init+0x54/0xf8 dm_mod
+[   33.801900] do_one_initcall (init/main.c:1267)
+[   33.801916] do_init_module (kernel/module/main.c:2543)
+[   33.801930] load_module (kernel/module/main.c:3009)
+[   33.801942] init_module_from_file (kernel/module/main.c:3177)
+[   33.801955] idempotent_init_module (kernel/module/main.c:3193)
+[   33.801968] __arm64_sys_finit_module (kernel/module/main.c:3214
+kernel/module/main.c:3197 kernel/module/main.c:3197)
+[   33.801980] invoke_syscall (arch/arm64/include/asm/current.h:19
+arch/arm64/kernel/syscall.c:54)
+[   33.801990] el0_svc_common (include/linux/thread_info.h:127
+(discriminator 2) arch/arm64/kernel/syscall.c:140 (discriminator 2))
+[   33.801999] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+[   33.802008] el0_svc (arch/arm64/include/asm/irqflags.h:82
+(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+arch/arm64/kernel/entry-common.c:165 (discriminator 1)
+arch/arm64/kernel/entry-common.c:178 (discriminator 1)
+arch/arm64/kernel/entry-common.c:713 (discriminator 1))
+[   33.802020] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:731)
+[   33.802032] el0t_64_sync (arch/arm64/kernel/entry.S:598)
+[   33.802042] irq event stamp: 35480
+[   33.802046] hardirqs last enabled at (35479):
+_raw_spin_unlock_irqrestore (arch/arm64/include/asm/irqflags.h:82
+(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+include/linux/spinlock_api_smp.h:151 (discriminator 1)
+kernel/locking/spinlock.c:194 (discriminator 1))
+[   33.802064] hardirqs last disabled at (35480): el1_dbg
+(arch/arm64/kernel/entry-common.c:371 (discriminator 1)
+arch/arm64/kernel/entry-common.c:471 (discriminator 1))
+[   33.802077] softirqs last enabled at (35456): handle_softirqs
+(arch/arm64/include/asm/current.h:19
+arch/arm64/include/asm/preempt.h:13 kernel/softirq.c:401
+kernel/softirq.c:582)
+[   33.802096] softirqs last disabled at (35389): __do_softirq
+(kernel/softirq.c:589)
+[   33.802107] ---[ end trace 0000000000000000 ]---
+
+
+metadata:
+------
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 91e3b24eb7d297d9d99030800ed96944b8652eaf
+  git_describe: next-20240715
+  kernel_version: 6.10.0
+  kernel-config:
+    https://storage.tuxsuite.com/public/linaro/lkft/builds/2jH6dXP5XS72ybkPa57keKJ7q3z/config
+  artifact-location:
+    https://storage.tuxsuite.com/public/linaro/lkft/builds/2jH6dXP5XS72ybkPa57keKJ7q3z/
+  toolchain: gcc-13
+  build_name: gcc-13-lkftconfig-kselftest
+  arch: arm64 and x86_64
+
+Kernel boot log links:
+-------
+ [1] https://lkft.validation.linaro.org/scheduler/job/7729587#L844
+ [2] https://lkft.validation.linaro.org/scheduler/job/7728947#L1742
+
+--
+Linaro LKFT
+https://lkft.linaro.org
