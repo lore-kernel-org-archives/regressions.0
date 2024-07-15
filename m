@@ -1,91 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5EA1F94C;
-	Mon, 15 Jul 2024 05:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209A23F8E4;
+	Mon, 15 Jul 2024 06:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721022311; cv=none; b=Ev9m11kRnfjT/Dmk8gsCAhf3XMUAmH3lg0AiyjzX7TGn9I59TrY4+GtmvtiMwfkxpPuBVxK3Fmo4IDbLM6v3uLahbODtKKe4jI9J/rIs4uJSSQi6MOBNEnEWxcs3uZFYgqmNd9SnIORZz3ouWWpLa3UanpQxDsuXlbeyKBT+TsI=
+	t=1721024658; cv=none; b=jOUFloSPB5aY43zJwQeTTXBlCT5UHZRAEJ+5elIaCSyy9UdJTr8zwCIVcmOuz02dM9qKIRGth1Mg4RNtvfX5Wl8LIgKTcIEoaDnxlcmWyjwsscaSk1DvsWR/kLfJ+w9C66AzEw9UpskQ8qrkDcro5JRiA681xarEV+UJDU0RqMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721022311; c=relaxed/simple;
-	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BvdnGFNB/ofmjgik4foCYk9erjrUgQLYuPbV2lqfQHRCtKdiktp1W/iGwKSgRG7eWqhhBNHUDh3waGJhj0hYDbHCBRia9dJVF8ArRaWQER21own9SaqKZy0GMynXmzElzVyItkKR1I3DKGBZnrV0AsfIQyBJS+UfESFZ/d8ycyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S09H0GWD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721024658; c=relaxed/simple;
+	bh=UL5FQfANxI+qYkk3a9jwzdH+IG6RWRcwYTkX30elwUM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=IuDaCW873tW88daU1Pa+hj164lOK93/yLsUVq1m1XOBnns8svaVtLnwl6vPSZvzcLzZpyhvf2SwwQgEIZsBjL/x+RsdVvJno5JhVHzgdy8uw1UGv0Mdf8yFirG7etapsxbcFjfOcrecWboqvqW3YNyiqtW8swAzlsEI8fBB/C8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=d3O+blyL; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S09H0GWD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BFDC4AF0A;
-	Mon, 15 Jul 2024 05:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721022310;
-	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S09H0GWDhJjfmBpx+yEvnmibPChqCIv3Wy2DZWKcR+LC3m1lbTB3GQ1WMgy/Q0swj
-	 cN34ZtXoFEs4oCT//jhjw68LjZmfG4ixHXVc5t4iqCAHbgEh0r0wzV9IKU4banQnwS
-	 qyleiUgWxoS4jKQteTJ9yPhkyOK2i1e9+oKyZO5c=
-Date: Mon, 15 Jul 2024 07:45:07 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>,
-	elatllat@gmail.com, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
-	niklas.neronin@linux.intel.com, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
-Message-ID: <2024071540-commute-curler-26d3@gregkh>
-References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
- <20240714173043.668756e4@foxbook>
- <ZpP3RU-MKb4pMmZH@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="d3O+blyL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Cc:To:
+	Subject:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=CVKNT0DWuTIcJYbk3ROolMw+sbtGpk7moqSCzc6nXeA=; t=1721024656; x=1721456656;
+	 b=d3O+blyLMG9SX5qIyVyRX5KL50lM7imj1mHe6rCweKp98tcZAdKi7/HT2poapJwYIglZeKeT5P
+	kOE1XeKJCp22wxPQb34ezdeAaApIv3rh7PXb4ZY2wUpJu6lsJ08QEglT47xb/RuwEVcDBJ3/oxnZZ
+	RuEUw61xguMDXhqCKEi4Pq8ItVRlXxRlxLxRRV9PEVs8n8dqHCGWMIwlImsJF113yyovdhrM3d37a
+	1DA9mqFWAIM8cay/lo3PYIoSFNFwRGsHXH/a1ZezXzQMKHbuGeud/v6SzStGefw8IMGHTtgUEIrcC
+	8+pK3xZfgZ6V4Yi4PGnLGN3azSEJaMhBMXw2Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sTF81-0004lI-KQ; Mon, 15 Jul 2024 08:24:05 +0200
+Message-ID: <1a61d10f-7974-4fb5-ada6-f2c40c55f2f7@leemhuis.info>
+Date: Mon, 15 Jul 2024 08:24:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZpP3RU-MKb4pMmZH@eldamar.lan>
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Subject: Boot error since 6.9: Initramfs unpacking failed: invalid magic at
+ start of compressed archive
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jack D <wm2vdghq@duck.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721024656;03d24d17;
+X-HE-SMSGID: 1sTF81-0004lI-KQ
 
-On Sun, Jul 14, 2024 at 06:05:25PM +0200, Salvatore Bonaccorso wrote:
-> Hi,
-> 
-> On Sun, Jul 14, 2024 at 05:32:39PM +0200, Michał Pecio wrote:
-> > This looks like bug 219039, please see if my suggested solution works.
-> > 
-> > The upstream commit is correct, because the call to inc_deq() has been
-> > moved outside handle_tx_event() so there is no longer this critical
-> > difference between doing 'goto cleanup' and 'return 0'. The intended
-> > change of this commit also makes sense to me.
-> > 
-> > This refactor is already present in v6.9 so I don't think the commit
-> > will have any effect besides fixing the isochronous bug which it is
-> > meant to fix.
-> > 
-> > But it is not present in v6.6 and v6.1, so they break/crash/hang/etc.
-> > Symptoms may vary, but I believe the root cause is the same because the
-> > code is visibly wrong.
-> > 
-> > 
-> > I would like to use this opportunity to point out that the xhci driver
-> > is currenty undergoing (much needed IMO) cleanups and refactors and
-> > this is not the first time when a naive, verbatim backport is attempted
-> > of a patch which works fine on upstream, but causes problems on earlier
-> > kernels. These things need special scrutiny, beyond just "CC:stable".
-> 
-> For tracking I guess this should go as well to the regressions list?
-> 
-> #regzbot introduced: 948554f1bb16e15b90006c109c3a558c66d4c4ac
-> #regzbot title: freezes on plugging USB connector due to 948554f1bb16 ("usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB")
-> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=219039
-> 
-> Thorsten I hope I got the most bits correctly, how would one inform
-> regzbot about the regresssion for 6.1.98 and 6.6.39 but not happening
-> in the upper versions?
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-I'll handle this and go release new kernels with just this reverted in
-it.  Let my morning coffee kick in first...
+I noticed a report about a regression in bugzilla.kernel.org that a user
+bisected to the main ARM64 merge commit from the 6.9 cycle. So the real
+issue might be somewhere else, but some help would be appreciated. To
+quote from https://bugzilla.kernel.org/show_bug.cgi?id=219014 :
 
-thanks,
+> Hi.
+> 
+> I'm marking as arm64 since git bisect identifies the first problematic commit as:
+>   6d75c6f40a03c97e1ecd683ae54e249abb9d922b
+> 
+> git bisect log is attached.
+> 
+> Any kernel tagged v6.9x and later fails to boot with the following error:
+> 
+> [    0.420154] Initramfs unpacking failed: invalid magic at start of compressed archive
+> [    0.433178] Freeing initrd memory: 8820K
+> ... snip ...
+> [    0.701958] List of all partitions:
+> [    0.705604] No filesystem could mount root, tried: 
+> [    0.705608] 
+> [    0.712166] Kernel panic - not syncing: VFS: Unable to mount root fs on "UUID=a889afec-1ced-4493-ab8b-cf1569819c49" or unknown-block(0,0)                                                
+> [    0.724903] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.8-sheeva64 #sheeva64
+> [    0.732356] Hardware name: gti sheeva64 development board (DT)
+> [    0.738369] Call trace:
+> 
+> full start-up log attached.
+> 
+> kernel 6.8.12 and earlier builds boot no problem. 
+> 
+> Info:
+> 
+> - hardware: sheeva64 plug (Marvell Armada 3720 dual core ARMv8 Cortex-A53)
+> - uboot version: U-Boot 2017.03-armada-18.09.1-gc338309136
+>   - uboot init script with kernel cmdline is attached (I haven't changed this in at least a few years)
+> - ext4 rootfs is on external usb drive
+> - kernel 6.8.12 and earlier boot without issue (see attached: .config.6.8.12)
+> - problem first seen in commit: 6d75c6f40a03c97e1ecd683ae54e249abb9d922b (see attached: git_bisect.log)
+> - any kernel tagged 6.9x and later that I've tried fails with above error (see attached: .config.6.9.8.broken)
+> - I'm building the kernel by cross-compiling on debian "testing" (`crossbuild-essential-arm64`)
+> - the `initrd.img-6.9x` file itself appears valid:
+>   - `lsinitramfs` works no problem
+>   - `file initrd.img-6.9x` output is the same as the working initrds (`Zstandard compressed data (v0.8+), Dictionary ID: None`)
+> 
+> The bisected commit 6d75c6f40a03c97e1ecd683ae54e249abb9d922b is a merge of some 130+ arm64-related commits, so I'm having a hard time narrowing this down further. I'm glad to help test/troubleshoot but I'd need someone to give me some pointers.
+> 
+> thanks.
+> 
+> Jack Donohue
 
-greg k-h
+See the ticket for more details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 6d75c6f40a03c97e1ecd683ae54e249abb9d922b
+#regzbot title: arm64: Initramfs unpacking failed: invalid magic at
+start of compressed archive
+#regzbot from: Jack D <wm2vdghq@duck.com>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219014
+#regzbot ignore-activity
