@@ -1,174 +1,264 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC0E41A87;
-	Tue, 16 Jul 2024 09:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF1513C690;
+	Tue, 16 Jul 2024 12:20:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721122172; cv=none; b=O3Q14awU+HHlOkASVBbyZvIGv4F3Zd8NIBJiDQ1e0sZsbyr53/D0ELwgos7eaYVx88b45BHLe6TNasiQxZTmjwjwqa8EOv5uicOL9MHCwtcBJLgKUUohp4HAUw4t6b6k+2nJ13FRpvnQ33JC/7WfP9e1sA9GHujPXP6MBhzxgyk=
+	t=1721132450; cv=none; b=STUrH2eyKPSauiLkga2nhMbJCA8lFZ5iSTdsPmCD9fS/5C8+b0AACI4V4BsnzAIB8dLZldrqkzpwPNhYfrxYhj/m9uJfka/9QL1GCT9SbXpHpn3lf7eoFTsaFJ3Q/GexQXL81IVEppnNOSuOTGygtqjedazkltdvqqQd6AHp37Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721122172; c=relaxed/simple;
-	bh=JxMuxlRBzE5uRQvKjxLt3Zs2WRCk/QqMJSaQV4qQONE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IzF67YnAuXsvprexW4kkiUGlqIIk+wWm1lkHYdmPjbIbN8HtiT6gnMFkdiv9CGw9H6DrJo1wWkxaSOAaJxO8zXD3xSsDxAyh5S9JAQ1vffe58FjzokBl5LGnBCuEbhP5YMJL7c7FN8VzeOGBUyfWJnCfuzhnvZAjmsp8eCg8nL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YDab9KKL; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1721132450; c=relaxed/simple;
+	bh=y8HI8xRdksJwPRHN3YDGk5+wY/3kT/9sHJmSGStf0Zc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nr/N2vLX838vK0wHdKHHiq/P2mHp39aWpnKHtcQ0Rra2Werzij1hJYKuv16q99iOvvhkl4R97xBVLo6IgLiT/Bvhzds4SeM49Dh+VZkOphfWWzVTfBge+eUMzP0Hxvw7OAtfqhg0C9KIbQGpXbTcXzlhtce0AdePTOJ4ojCCbz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rBDKFr9f; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YDab9KKL"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rBDKFr9f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721122169;
-	bh=JxMuxlRBzE5uRQvKjxLt3Zs2WRCk/QqMJSaQV4qQONE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YDab9KKLIXSUg6jXTsAolHHxcj6GRuZucscY6cfDZeq7ONUXi42rDBE1mpznuLsTT
-	 XB+KVnejJQBgNAceYYO3N+Z0nxMN+JqSOmpR/5Hm4YvZd2cBNS5dkUCyQ1tr1jOfij
-	 BpFd2T+e42e0ANgLAv8fYrfwjwP6g6iQkFdH3uW4NqeDzI4fCpRkPdRxVZueFXK5gs
-	 OVkQzuRPZTcmqAVK+UlJ80gk6+vF8F4dHSGy9yV3ZiB+G7A41IZdbPfGMljppf8pYt
-	 OBPqoc1n/DlSrUJ1UG7BiDxwBpqciNc8HFBKhG2qDCAN5RkUd/H3ANLEQDalYFtmEk
-	 zNbNIHIkpcYdg==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	s=mail; t=1721132447;
+	bh=y8HI8xRdksJwPRHN3YDGk5+wY/3kT/9sHJmSGStf0Zc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rBDKFr9f8mL6ZNX6Eq3DNkWMBRe5ZT3AI/4+iN6TRRLDtF78IqvSUKuKxoz+j00RV
+	 y7Scp/toztjyqfH6qk89pU5uZC4rS/qdnTAqtUhN/ylpCAwIN6MLY3QVMQ+0jk4joh
+	 DrT9wAouq8ce/n2bbUuSEl2C+zQXWdR+nDDyxnwiyJojwi2Kd0waOCPBQqANqhrU5Y
+	 8TltoV4caZfnLLVbH5UqOJ6tH3FhPZJyrhHzu4qahuNibdPlgWSc2obOuFeiwjRc9S
+	 +ytdSMi+E3/VWOERTZx5iGFQuTCRL/XmVDgsu8mtw9iHt+lBWMXC9oLq5pd4/lOdrz
+	 lbX3DRaYtCGSg==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1F7103780C13;
-	Tue, 16 Jul 2024 09:29:29 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: laura.nao@collabora.com
-Cc: kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	mingo@kernel.org,
-	regressions@lists.linux.dev,
-	chrome-platform@lists.linux.dev
-Subject: Re: [REGRESSION] next boot regression caused by RIP: 0010:usercopy_abort+0x74/0x76 kernel panic
-Date: Tue, 16 Jul 2024 11:29:53 +0200
-Message-Id: <20240716092953.295122-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240705142130.928396-1-laura.nao@collabora.com>
-References: <20240705142130.928396-1-laura.nao@collabora.com>
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1ED443780EC6;
+	Tue, 16 Jul 2024 12:20:43 +0000 (UTC)
+Date: Tue, 16 Jul 2024 08:20:41 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Chris Lu =?utf-8?B?KOmZuOeomuazkyk=?= <Chris.Lu@mediatek.com>
+Cc: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
+	"marcel@holtmann.org" <marcel@holtmann.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kernelci@lists.linux.dev" <kernelci@lists.linux.dev>,
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
+	Steve Lee =?utf-8?B?KOadjuimluiqoCk=?= <steve.lee@mediatek.com>,
+	"kernel@collabora.com" <kernel@collabora.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Aaron Hou =?utf-8?B?KOS+r+S/iuS7sCk=?= <Aaron.Hou@mediatek.com>
+Subject: Re: [PATCH v7 8/8] Bluetooth: btusb: mediatek: add ISO data
+ transmission functions
+Message-ID: <e9bdcf44-e20a-4824-a0d4-8c6c52ed1e9b@notapiano>
+References: <20240704060116.16600-1-chris.lu@mediatek.com>
+ <20240704060116.16600-9-chris.lu@mediatek.com>
+ <7851401b-e884-4ed4-998d-7651f427ad37@notapiano>
+ <6a6dc0b081e8caa99172666c71b0826c1cb17a1c.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6a6dc0b081e8caa99172666c71b0826c1cb17a1c.camel@mediatek.com>
 
-Hello,
-
-On 7/5/24 16:21, Laura Nao wrote:
-> On 6/7/24 17:14, Laura Nao wrote:
->> Hello,
->>
->> KernelCI has detected a boot regression affecting all AMD and Intel
->> Chromebooks in the Collabora LAVA lab, occurring between next-20240605
->> and next-20240606.
->>
->> The following kernel panic has been reported in the logs. The trace
->> provided below is from an Acer Chromebook 317, with similar traces
->> observed on other devices:
->>
->> [    5.944268] RIP: 0010:usercopy_abort+0x74/0x76
->> [    5.944276] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
->> [    5.944278] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
->> [    5.944280] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
->> [    5.944281] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
->> [    5.944282] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
->> [    5.944284] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
->> [    5.944285] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
->> [    5.944286] FS:  0000000000000000(0003) GS:ffff8e7bc0100000(0063) knlGS:00000000eca4d440
->> [    5.944288] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
->> [    5.944289] CR2: 00000000080e61d0 CR3: 0000000107002000 CR4: 0000000000350ef0
->> [    5.944290] Call Trace:
->> [    5.944293]  <TASK>
->> [    5.944295]  ? __die_body+0x1b/0x5d
->> [    5.944300]  ? die+0x31/0x4b
->> [    5.944303]  ? do_trap+0x7c/0xfe
->> [    5.944306]  ? usercopy_abort+0x74/0x76
->> [    5.944309]  ? usercopy_abort+0x74/0x76
->> [    5.944312]  ? do_error_trap+0x6f/0x99
->> [    5.944315]  ? usercopy_abort+0x74/0x76
->> [    5.944318]  ? exc_invalid_op+0x4e/0x65
->> [    5.944321]  ? usercopy_abort+0x74/0x76
->> [    5.944324]  ? asm_exc_invalid_op+0x16/0x20
->> [    5.944327]  ? usercopy_abort+0x74/0x76
->> [    5.944330]  __check_heap_object+0xcb/0x110
->> [    5.944334]  __check_object_size+0x181/0x26d
->> [    5.944336]  copy_from_buffer+0x43/0x66
->> [    5.944340]  copy_uabi_to_xstate+0x113/0x194
->> [    5.944343]  __fpu_restore_sig+0x3a3/0x4be
->> [    5.944347]  fpu__restore_sig+0x6c/0x83
->> [    5.944350]  ia32_restore_sigcontext+0x14e/0x16d
->> [    5.944354]  __do_compat_sys_sigreturn+0x7b/0xbc
->> [    5.944357]  do_int80_emulation+0xad/0xd3
->> [    5.944360]  ? handle_mm_fault+0x10e/0x199
->> [    5.944363]  ? exc_page_fault+0x27b/0x42f
->> [    5.944365]  ? fpregs_assert_state_consistent+0x22/0x47
->> [    5.944368]  ? clear_bhb_loop+0x45/0xa0
->> [    5.944370]  ? clear_bhb_loop+0x45/0xa0
->> [    5.944372]  ? clear_bhb_loop+0x45/0xa0
->> [    5.944374]  ? clear_bhb_loop+0x45/0xa0
->> [    5.944375]  ? clear_bhb_loop+0x45/0xa0
->> [    5.944377]  ? clear_bhb_loop+0xe/0xa0
->> [    5.944379]  asm_int80_emulation+0x16/0x20
->> [    5.944382] RIP: 0023:0xeca52579
->> [    5.944384] Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
->> [    5.944386] RSP: 002b:00000000ff879cbc EFLAGS: 00000246
->> [    5.944387] RAX: 0000000000000060 RBX: 00000000ffffffff RCX: 00000000ff879d08
->> [    5.944389] RDX: 0000000000000000 RSI: 0000000009b111a0 RDI: 00000000ff879d08
->> [    5.944390] RBP: 00000000080d1801 R08: 0000000000000000 R09: 0000000000000000
->> [    5.944391] R10: 0000000000000000 R11: 0000000000000282 R12: 0000000000000000
->> [    5.944392] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
->> [    5.944393]  </TASK>
->> [    5.944394] Modules linked in:
->> [    5.944433] ---[ end trace 0000000000000000 ]---
->> [    6.287986] RIP: 0010:usercopy_abort+0x74/0x76
->> [    6.293033] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
->> [    6.313975] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
->> [    6.319810] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
->> [    6.327780] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
->> [    6.335744] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
->> [    6.343710] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
->> [    6.351678] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
->> [    6.359646] FS:  0000000000000000(0003) GS:ffff8e7bc0000000(0063) knlGS:00000000eca4d440
->> [    6.368680] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
->> [    6.375098] CR2: 00000000f322e480 CR3: 0000000107002000 CR4: 0000000000350ef0
->> [    6.383065] Kernel panic - not syncing: Fatal exception
->> [    6.388907] Kernel Offset: 0x1ba00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->>
->> The full kernel log is available on [1]. The config used was the
->> upstream x86_64 defconfig with a fragment applied on top [2].
->>
->> The issue is still present on next-20240607.
->>
->> I'm sending this report to track the regression while a fix is
->> identified. I'll investigate the issue/run a bisection and report back
->> with the results.
->>
+On Tue, Jul 16, 2024 at 07:59:53AM +0000, Chris Lu (陸稚泓) wrote:
+> Hi Nicolas,
 > 
-> Reverting this series fixes the issue first observed in next-20240606
-> (CC Ingo):
-> https://lore.kernel.org/all/20240605083557.2051480-1-mingo@kernel.org/
-> 
-> The issue is no longer present as of next-20240703, where the series was
-> dropped. I'm marking this as resolved for now.
-> 
+> Thanks for reporting the crash issue, I've sent another patc to avoid
+> this crash issue happened. kill anchor function wasn't protect well if
+> MediaTek Bluetooth failed to setup. Add a flag check when running into
+> btmtk_usb_suspend function.
 
-The issue started happening again since next-20240712, as the series
-landed back on linux-next (see full kernel log [1] and config [2] from a 
-next-20240715 run).
+Hi Chris,
 
-Ingo, do you have any pointers or suggestions on how we can further debug 
-this issue?
+thanks for the quick follow up! I see the patch at
+https://lore.kernel.org/all/20240716074947.23073-1-chris.lu@mediatek.com/
 
-Thorsten, is there any way to mark this regression as unresolved again?
+I'll try it and reply there with my results.
 
 Thanks,
+Nícolas
 
-Laura Nao
-
-[1] https://pastebin.com/raw/saEHbXgY
-[2] https://pastebin.com/raw/aC1Kqi4Y
-
-#regzbot introduced: 81106b7e0b
-
+> 
+> Thanks a lot,
+> Chris
+> 
+> On Mon, 2024-07-15 at 18:36 -0400, Nícolas F. R. A. Prado wrote:
+> > On Thu, Jul 04, 2024 at 02:01:16PM +0800, Chris Lu wrote:
+> > > This patch implements functions for ISO data send and receive in
+> > > btusb
+> > > driver for MediaTek's controller.
+> > > 
+> > > MediaTek defines a specific interrupt endpoint for ISO data
+> > > transmissin
+> > > because the characteristics of interrupt endpoint are similar to
+> > > the
+> > > application of ISO data which can support guaranteed transmissin
+> > > bandwidth, enough maximum data length and error checking mechanism.
+> > > 
+> > > Driver sets up ISO interface and endpoints in btusb_mtk_setup and
+> > > clears
+> > > the setup in btusb_mtk_shutdown. These flow can't move to btmtk.c
+> > > due to
+> > > btusb_driver is only defined in btusb.c when claiming/relaesing
+> > > interface.
+> > > ISO packet anchor stops when driver suspending and resubmit
+> > > interrupt urb
+> > > for ISO data when driver resuming.
+> > > 
+> > > Signed-off-by: Chris Lu <chris.lu@mediatek.com>
+> > > ---
+> > 
+> > Hi,
+> > 
+> > KernelCI has identified a boot regression originating from this
+> > patch. It
+> > affects the mt8195-cherry-tomato-r2 platform.
+> > 
+> > Through additional runs I've determined that it only happens when the
+> > bluetooth
+> > firmware (BT_RAM_CODE_MT7961_1_2_hdr.bin) isn't present. I realize
+> > the firmware
+> > should be present to make proper use of the bluetooth driver, and
+> > I'll add it to
+> > our testing images. Still, a panic shouldn't happen when it's
+> > missing, hence
+> > this report.
+> > 
+> > Reverting this patch fixes the issue.
+> > 
+> > This is the traceback:
+> > 
+> > [    6.734214] BUG: spinlock bad magic on CPU#3, kworker/3:1/104
+> > [    6.740002]  lock: 0xffff2c7b8655f660, .magic: 00000000, .owner:
+> > <none>/-1, .owner_cpu: 0
+> > [    6.748207] CPU: 3 UID: 0 PID: 104 Comm: kworker/3:1 Not tainted
+> > 6.10.0-next-20240715 #1 35893202ca8f99b37129997821441a29d2b23f0a
+> > [    6.759874] Hardware name: Acer Tomato (rev2) board (DT)
+> > [    6.765195] Workqueue: pm pm_runtime_work
+> > [    6.769235] Call trace:
+> > [    6.771689]  dump_backtrace+0x9c/0x100
+> > [    6.775456]  show_stack+0x20/0x38
+> > [    6.778786]  dump_stack_lvl+0x80/0xf8
+> > [    6.782463]  dump_stack+0x18/0x28
+> > [    6.785791]  spin_bug+0x90/0xd8
+> > [    6.788950]  do_raw_spin_lock+0xf4/0x128
+> > [    6.792890]  _raw_spin_lock_irq+0x30/0x70
+> > [    6.796915]  usb_kill_anchored_urbs+0x48/0x1e0
+> > [    6.801378]  btmtk_usb_suspend+0x20/0x38 [btmtk
+> > 5f200a97badbdfda4266773fee49acfc8e0224d5]
+> > [    6.809578]  btusb_suspend+0xd0/0x210 [btusb
+> > 0bfbf19a87ff406c83b87268b87ce1e80e9a829b]
+> > [    6.817527]  usb_suspend_both+0x90/0x288
+> > [    6.821469]  usb_runtime_suspend+0x3c/0xa8
+> > [    6.825585]  __rpm_callback+0x50/0x1f0
+> > [    6.829351]  rpm_callback+0x70/0x88
+> > [    6.832856]  rpm_suspend+0xe4/0x5a0
+> > [    6.836361]  pm_runtime_work+0xd4/0xe0
+> > [    6.840126]  process_one_work+0x18c/0x440
+> > [    6.844156]  worker_thread+0x314/0x428
+> > [    6.847923]  kthread+0x128/0x138
+> > [    6.851167]  ret_from_fork+0x10/0x20
+> > [    6.854769] Unable to handle kernel paging request at virtual
+> > address ffffffffffffffd8
+> > [    6.862694] Mem abort info:
+> > [    6.865494]   ESR = 0x0000000096000006
+> > [    6.869249]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [    6.874571]   SET = 0, FnV = 0
+> > [    6.877632]   EA = 0, S1PTW = 0
+> > [    6.880780]   FSC = 0x06: level 2 translation fault
+> > [    6.885665] Data abort info:
+> > [    6.888553]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+> > [    6.894044]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > [    6.899103]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [    6.904423] swapper pgtable: 4k pages, 48-bit VAs,
+> > pgdp=0000000042533000
+> > [    6.911134] [ffffffffffffffd8] pgd=0000000000000000,
+> > p4d=0000000042e94003, pud=0000000042e95003, pmd=0000000000000000
+> > lav[    6.921781] Internal error: Oops: 0000000096000006 [#1] PREEMPT
+> > SMP
+> > [    6.921794] Modules linked in: mt7921e mt7921_common mt792x_lib
+> > mt76_connac_lib mt76 mtk_vcodec_dec_hw mac80211 cros_ec_lid_angle
+> > cros_ec_sensors cros_ec_sensors_core industrialio_triggered_buffer
+> > cfg80211 kfifo_buf mtk_vcodec_dec mtk_jpeg v4l2_vp9 cros_ec_rpmsg
+> > mtk_vcodec_enc v4l2_h264 mtk_jpeg_enc_hw btusb mtk_vcodec_dbgfs
+> > mtk_jpeg_dec_hw mtk_dp mtk_vcodec_common btintel btbcm uvcvideo btmtk
+> > mtk_mdp3 videobuf2_vmalloc v4l2_mem2mem btrtl uvc joydev
+> > videobuf2_v4l2 videobuf2_dma_contig bluetooth elan_i2c
+> > videobuf2_memops ecdh_generic ecc videobuf2_common cros_ec_sensorhub
+> > cros_kbd_led_backlight mtk_scp snd_sof_mt8195 pcie_mediatek_gen3
+> > mtk_rpmsg mtk_svs mtk_adsp_common snd_sof_xtensa_dsp rpmsg_core
+> > lvts_thermal snd_sof_of mtk_scp_ipi snd_soc_mt8195_afe snd_sof
+> > snd_sof_utils mtk_wdt mt6577_auxadc mt8195_mt6359
+> > [    6.922087] CPU: 3 UID: 0 PID: 104 Comm: kworker/3:1 Not tainted
+> > 6.10.0-next-20240715 #1 35893202ca8f99b37129997821441a29d2b23f0a
+> > [    6.922106] Hardware name: Acer Tomato (rev2) board (DT)
+> > [    6.922114] Workqueue: pm pm_runtime_work
+> > [    6.922132] pstate: 804000c9 (Nzcv daIF +PAN -UAO -TCO -DIT -SSBS
+> > BTYPE=--)
+> > [    6.922147] pc : usb_kill_anchored_urbs+0x6c/0x1e0
+> > [    6.922164] lr : usb_kill_anchored_urbs+0x48/0x1e0
+> > [    6.922181] sp : ffff800080903b60
+> > [    6.922187] x29: ffff800080903b60 x28: ffff2c7b85c32b80 x27:
+> > ffff2c7bbb370930
+> > [    6.922211] x26: 00000000000f4240 x25: 00000000ffffffff x24:
+> > ffffd49ece2dcb48
+> > [    6.922233] x23: 0000000000000001 x22: ffff2c7b8655f660 x21:
+> > ffff2c7b8655f628
+> > [    6.922255] x20: ffffffffffffffd8 x19: 0000000000000000 x18:
+> > 0000000000000006
+> > [    6.922276] x17: 6531656337386238 x16: 3632373862333863 x15:
+> > ffff800080903480
+> > [    6.922297] x14: 0000000000000000 x13: 303278302f303178 x12:
+> > ffffd49ecf090e30
+> > [    6.922318] x11: 0000000000000001 x10: 0000000000000001 x9 :
+> > ffffd49ecd2c5bb4
+> > [    6.922339] x8 : c0000000ffffdfff x7 : ffffd49ecefe0db8 x6 :
+> > 00000000000affa8
+> > [    6.922360] x5 : ffff2c7bbb35dd48 x4 : 0000000000000000 x3 :
+> > 0000000000000000
+> > [    6.922379] x2 : 0000000000000000 x1 : 0000000000000003 x0 :
+> > ffffffffffffffd8
+> > [    6.922400] Call trace:
+> > [    6.922405]  usb_kill_anchored_urbs+0x6c/0x1e0
+> > [    6.922422]  btmtk_usb_suspend+0x20/0x38 [btmtk
+> > 5f200a97badbdfda4266773fee49acfc8e0224d5]
+> > [    6.922444]  btusb_suspend+0xd0/0x210 [btusb
+> > 0bfbf19a87ff406c83b87268b87ce1e80e9a829b]
+> > [    6.922469]  usb_suspend_both+0x90/0x288
+> > [    6.922487]  usb_runtime_suspend+0x3c/0xa8
+> > [    6.922507]  __rpm_callback+0x50/0x1f0
+> > [    6.922523]  rpm_callback+0x70/0x88
+> > [    6.922538]  rpm_suspend+0xe4/0x5a0
+> > [    6.922553]  pm_runtime_work+0xd4/0xe0
+> > [    6.922569]  process_one_work+0x18c/0x440
+> > [    6.922588]  worker_thread+0x314/0x428
+> > [    6.922606]  kthread+0x128/0x138
+> > [    6.922621]  ret_from_fork+0x10/0x20
+> > [    6.922644] Code: f100a274 54000520 d503201f d100a260 (b8370000)
+> > [    6.922654] ---[ end trace 0000000000000000 ]---
+> > a-148[    7.203910] Kernel panic - not syncing: Oops: Fatal exception
+> > [    7.209649] SMP: stopping secondary CPUs
+> > [    7.213713] Kernel Offset: 0x549e4c400000 from 0xffff800080000000
+> > [    7.219796] PHYS_OFFSET: 0xfff0d38580000000
+> > [    7.223969] CPU features: 0x04,0000000b,80140528,4200720b
+> > [    7.229360] Memory Limit: none
+> > 
+> > Full kernel log: 
+> > https://urldefense.com/v3/__http://0x0.st/X9rx.txt__;!!CTRNKA9wMg0ARbw!g_UleOH6C5AdZoKEVoko3ewb6zKCcWfDGfw3u6LV_x3JCST7WnvMrAzM7wP0A4WkiW4v0EM53wjf8el1gXWfqA$
+> >  
+> > Config: 
+> > https://urldefense.com/v3/__http://0x0.st/X9r2.txt__;!!CTRNKA9wMg0ARbw!g_UleOH6C5AdZoKEVoko3ewb6zKCcWfDGfw3u6LV_x3JCST7WnvMrAzM7wP0A4WkiW4v0EM53wjf8enPGJN1sg$
+> >  
+> > 
+> > #regzbot introduced: ee6bd4b95c66
+> > #regzbot title: usb_kill_anchored_urbs panic during boot on mt8195-
+> > cherry-tomato-r2
+> > 
+> > Thanks,
+> > Nícolas
