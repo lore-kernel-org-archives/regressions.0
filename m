@@ -1,105 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-outbound4.duck.com (smtp-outbound4.duck.com [20.67.222.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D6D558BA
-	for <regressions@lists.linux.dev>; Wed, 17 Jul 2024 22:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE6B1B86FB
+	for <regressions@lists.linux.dev>; Thu, 18 Jul 2024 04:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.67.222.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721254535; cv=none; b=b1UUiyueodOCg/Ttg4fT3DuJq0Z6kDJS4wBuhV9GcDsVVWei/a7WVPMM+aAQQLXVALDmosg+ZUDb2UwQ0Cj6gvK72hvkIVVTh4VXj4jRq2z27vrQBbeJs0T+84cxu//pmmSRUKp9e/mr0A3p8nQVagK051jfHgc7Tt975g2541g=
+	t=1721277539; cv=none; b=Gfq7fzMRH/cMkFCX+mZXP8tPt7WdALdo2kKraTQDuAi2S47YkcXbJWo7gRYWAL7XVKNgwzO4LWQ0gtqj5Gvdohybz7Kw9E7lJ9M7jq25U7hfqC3ov0E9oMPWQQ6kPLFBeHnRVHeOYr8AdU08mHbxz70rTTSrxzQg2FRR3r7i9LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721254535; c=relaxed/simple;
-	bh=iqBWdnCWVVGjxsKJHYFJ10ygsTLaTiTXo//SBjsxAE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nlb5VSWa5SRfnUIHtmCSWTM7RFLF0fMivjIypvwa7oLu7lIxKexFAZ9LQiGA4dtxeURyxFnEga4qXOmFuglbzJSImWYq7mm1eTzLWbZtHg92QEcdaZssj/w+VGJ2m4HuGYHqWNZyj61psfmLOu2rzKdkUL5pkp10hGtdyrwJSq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cub6CPSH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721277539; c=relaxed/simple;
+	bh=uGmYkX/il414SzMLrlXQtLMd5aniBrjc2NutAo9I05s=;
+	h=References:Subject:MIME-Version:Content-Type:To:Cc:Message-ID:
+	 Date:From; b=G7AhGnye+C1oIBN3Gr9ft2IC0e7QtKBbzbuATueE+W3NHrx9jfrnpmeJ6cRnoep1/Ee7cbCZxUpCKf1ai8T1+/Ymgl3uo5HIWWz4oYihFqgsX4hLbfze+BvMeeiepIACSQnbMjyn3dGIdE0n9mcQEGpg8GG77qhWGsZfyAEM+TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=duck.com; spf=pass smtp.mailfrom=duck.com; dkim=pass (1024-bit key) header.d=duck.com header.i=@duck.com header.b=QT24PT/Q; arc=none smtp.client-ip=20.67.222.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=duck.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=duck.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cub6CPSH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC79C2BD10
-	for <regressions@lists.linux.dev>; Wed, 17 Jul 2024 22:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721254535;
-	bh=iqBWdnCWVVGjxsKJHYFJ10ygsTLaTiTXo//SBjsxAE4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cub6CPSHniJx3TJQaxyfEE/GYn0y38zEiLsaPo4DC2z7G+WoshibxkmZC7/kJIpB5
-	 yA5unh2IghV0CtO5Qk/2P/ZQu2PqrpHNJS7nAYhWYlMvltCVzKu9oJnQa4sb/JYYMU
-	 oE4Irez6L4XAqKViwgZNO9S1bjuMW8d0KviSq5Rp8xvhVgVdXAGhWVS35H7nTftcad
-	 8HmePaeFPID5s79h0tnbZTCFlVk2vhsf8ys8ldSTZdxOXnNKVSyJFC2kgq37EWfPe3
-	 91FFbkuoeZrztHoOVocw3gIDmcRqKwbe8RlC9D1ZDh1NcZMahcBkdHa9NvKerCEp5C
-	 /ZhfW62ifoQcw==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eecd2c6432so3193001fa.3
-        for <regressions@lists.linux.dev>; Wed, 17 Jul 2024 15:15:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4dm6aXFu6NQw09en+9aFPZAXa4buihxFrupczTlFkUpcv+sodh+FbACzUC76dwTLCaGZD323Us4ZOEIMI1XXRgHljDHfcRh5QXb4=
-X-Gm-Message-State: AOJu0YwCavsyLRjSw99ExpVAgylBzZrg7Q1wtW91SVbwWq9HJVbhmLi2
-	8m5eLixsd1E2E5XWdthvkHeXFH+k3ffyRIIoODpdjtHMVEiOs2Taepbgfljm0aQkMLJ64DsGCH1
-	V2liZD4J9Ez/dH6n9cVpGcUPV3So=
-X-Google-Smtp-Source: AGHT+IEU6ZQrYMuYJ/9M1fmYRSJPnE25AZqLH+OZwIxNyWA9mXOujQZS5A5SYe9auV31g7kZ1FwU+rC3LylCPl5OGkI=
-X-Received: by 2002:a2e:82d6:0:b0:2ee:4d37:91df with SMTP id
- 38308e7fff4ca-2ef05c9c8femr5090041fa.27.1721254533653; Wed, 17 Jul 2024
- 15:15:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=duck.com header.i=@duck.com header.b="QT24PT/Q"
+References: <1a61d10f-7974-4fb5-ada6-f2c40c55f2f7@leemhuis.info> <20240715100424.GA18686@willie-the-truck> <1a61d10f-7974-4fb5-ada6-f2c40c55f2f7@leemhuis.info> <37EBD2B9-3314-4F42-8DDB-5D08242959E0.1@smtp-inbound1.duck.com>
+Subject: Re: Boot error since 6.9: Initramfs unpacking failed: invalid magic
+ at start of compressed archive
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <172096653882.8.16813493378478071178.379356753@simplelogin.com>
- <CAMj1kXG9AjvChj9O6LR+2bFVUoa225phaXndYvQ_f4X4bKioaw@mail.gmail.com> <172125357072.7.13007674265724826216.382402450@simplelogin.com>
-In-Reply-To: <172125357072.7.13007674265724826216.382402450@simplelogin.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 17 Jul 2024 15:15:22 -0700
-X-Gmail-Original-Message-ID: <CAMj1kXGYicoxQGsv=3uM2bgs99aXxPMFUwib5bTVa6U6OSxzUg@mail.gmail.com>
-Message-ID: <CAMj1kXGYicoxQGsv=3uM2bgs99aXxPMFUwib5bTVa6U6OSxzUg@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: mavrix#kernel@simplelogin.com
-Cc: Radek Podgorny <radek@podgorny.cz>, regressions@lists.linux.dev, 
-	regressions@leemhuis.info, Christian Heusel <christian@heusel.eu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+	charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Bar: +++++++
+X-Rspamd-Report: DMARC_POLICY_ALLOW(-0.5) SPOOF_DISPLAY_NAME(8) R_DKIM_ALLOW(-0.2) MIME_GOOD(-0.1) R_SPF_ALLOW(-0.2)
+X-Rspamd-Score: 7
+X-Rspamd-Action: add header
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jack D <wm2vdghq@duck.com>
+Received: by smtp-inbound1.duck.com; Thu, 18 Jul 2024 00:38:56 -0400
+Message-ID: <2440170F-4F1B-42E2-8DED-BED5D92D32C8.1@smtp-inbound1.duck.com>
+Date: Thu, 18 Jul 2024 00:38:56 -0400
+From: wm2vdghq@duck.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duck.com; h=From:
+ Date: Message-ID: Cc: To: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Subject: References; q=dns/txt; s=postal-KpyQVw;
+ t=1721277536; bh=uGmYkX/il414SzMLrlXQtLMd5aniBrjc2NutAo9I05s=;
+ b=QT24PT/QQD8i+w2ZxaYpxD7TiNtboEpKeBq1CuPlsCWPR4hBsvaargZUOGCIN7JKfWfWt/GnP
+ STfJWzxsnjmdBXk9TEy5a7ntn2N2l0k8KgKyL/j1QGo7lhMxgISpLh+///SVCmVxk8x3tI99Oq6
+ P0vKV66FD4agsNwwgm5eZBE=
 
-On Wed, 17 Jul 2024 at 14:59, <mavrix#kernel@simplelogin.com> wrote:
->
-> On 7/17/24 5:55 PM, Ard Biesheuvel - ardb at kernel.org wrote:
-> > Does it make any difference if you boot with 'nokaslr' on the command line?
-> >
-> > Another thing you might try is applying the hunk below, to try and see
-> > whether the placement of boot_params in the binary is causing the
-> > issue.
-> >
-> > I can also provide a partial backport of the offending patch, to
-> > figure out whether it is the allocation that triggers the issue, or
-> > the way the boot_params data structure is populated.
-> >
-> >
-> >
-> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> > @@ -55,8 +55,7 @@ SECTIONS
-> >          . = ALIGN(L1_CACHE_BYTES);
-> >          .bss : {
-> >                  _bss = . ;
-> > -               *(.bss)
-> > -               *(.bss.*)
-> > +               *(SORT_BY_ALIGNMENT(.bss*))
-> >                  *(COMMON)
-> >                  . = ALIGN(8);   /* For convenience during zeroing */
-> >                  _ebss = .;
-> >
->
-> On 7/17/24 7:16 PM, Ard Biesheuvel - ardb at kernel.org wrote:
-> > Please also share your kernel build config and the output of
-> >
-> > hexdump -C /sys/firmware/efi/efivars/MemoryOverwriteRequestControl-e20939be-32d4-41be-a150-897f85d49829
->
-> - nokaslr does not make a difference; it will still not boot
-> - linux 6.10 with the partial revert applied, as provided by*@loqs on the Arch forum thread, does not work either - the requested
-> hexdump is: *00000000  07 00 00 00 00                                    |.....|
-> 00000005
->
+On Monday, July 15, 2024 at 03:04:34 AM PDT, Will Deacon wrote:
+> On Mon, Jul 15, 2024 at 08:24:04AM +0200, Thorsten Leemhuis wrote:
+> quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D219014 :
+> >=20
+> > I'm marking as arm64 since git bisect identifies the first problematic =
+commit as:
+> >=C2=A0 6d75c6f40a03c97e1ecd683ae54e249abb9d922b
+> >=20
+> > git bisect log is attached.
+> >=20
+> > Any kernel tagged v6.9x and later fails to boot with the following =
+error:
+> >=20
+> > [=C2=A0 =C2=A0 0.420154] Initramfs unpacking failed: invalid magic at =
+start of compressed archive
 
-Thanks for testing.
+> My guess (based on times I've seen this sort of thing in the past) is
+> that the kernel binary grew in size and the broken bootloader is loading
+> the kernel over the initramfs instead of parsing the 'image_size' field
+> in the boot header.
 
-Please try the partial reverts in the following message
+(I hope I got the email formatting for this list correct. Apologies if I =
+messed it up.)
 
-https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz/T/#mc9943f4fc27c2f4637d697a4d23e37d2c334d076
+Yes, that was it. Thank you for your quick (and accurate) assessment. The =
+commit
+increased my uncompressed kernel by ~1MB. Not much, but enough to cause an
+address conflict.
 
-and determine which of the two returns your system to a working state.
