@@ -1,77 +1,98 @@
-Received: from mail-200161.simplelogin.co (mail-200161.simplelogin.co [176.119.200.161])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76961B86D2
-	for <regressions@lists.linux.dev>; Thu, 18 Jul 2024 20:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=176.119.200.161
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721335441; cv=pass; b=lCuew0h8q8HehNVbC3XRZozT7pk9ycdcKC+XmVJBBSslrEiUkmtJjS4+6mWfQwmiB3elVj39pdwFBEs2UgAe0PhA5A6T7ac2g9DddV3OAfvbq7F8KPG9w9m8gBeEBt8XknTI+IR774/K8JKpYnHaw3sBxy8IBL/e1NTeY6GxXbI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721335441; c=relaxed/simple;
-	bh=TUhi+CeX6Fxm6rH7ijVkPjTdOJiUxQkOroUN2Wfh10k=;
-	h=Date:Subject:In-Reply-To:MIME-Version:Content-Type:From:To:Cc:
-	 Message-ID:References; b=kDAzGTAZ1vsMFVTa6BZEUtpvHt66j7TKB12nVezLk0eNx4GH9N9VC1J5uW3D6T6v79Q+4ZHF2Yb+yfSqyvso1EvE1Zoq0xMwqMI+pL2NOqFezHt4WiKJEOf97hkcdAPWbw4ccRRFPfYQVOzVS/lQqmgTwyifHsY4sDGX+qcoxV8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com; spf=pass smtp.mailfrom=simplelogin.com; dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b=ErFfCIwV; arc=pass smtp.client-ip=176.119.200.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelogin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B646FBF
+	for <regressions@lists.linux.dev>; Fri, 19 Jul 2024 09:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721382287; cv=none; b=jhWcdEpH4x+K7XjOG+8xpSMtCogEVgub8pMJGPJD1gMX9R+kqfI9Bl1KILi7dUM0R+HOkinoNDSHHuuFPullFesfLYXX8w3RJWbNRK5vIQYTPvj+1+bVpLCuIVrj9/assB/Q9Z36AGzIrwj35xz8N5gxh7zd+88KWZrSsnOePfs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721382287; c=relaxed/simple;
+	bh=Mt94dJv93p4gadMAHrUU0whW8FUf/NSds7a+yWzs9gw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=USAGc1ET4TQakmkYuo6/IA1SIpOCdBW9ToWNRbxUBl2fsmTjf2rxF/gr2lyiqkw+8YNIw7LavkufYbeZd/Aj5w6SMlb1KZl+/Mc6/pImkhGRk5ZQ8bC9OBARZAoSo6bCJeuRfhjDfSbeOoT6RiYsNXinMFryrbETY2NNd9+Sg5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=toqXbq2f; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b="ErFfCIwV"
-ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1721334513;
-	cv=none; b=APU/mXAEsYQoM3dGn6KEQ8AStPc2aQvHP8+3ldFbceo8RqWKQyS82Xr5SE5kfumqa6cul9YOahUkq0ynl4V3eNsXRKlGgyNa+Rq4y6+lvL1tYo2ror96Pj52UQoYgB8kctqLHeoqohjNU/1jYFzyTZ6c/rpq5x0I2Pk3DU4dt/GoVuhJKMrFsR99ChaMZGVUuhPmSjjBTXIepLrFPb63Zc511cs+N2RvqRhb2rln3KsG0MtaOUBzXzHsmangnCfvkHa52Dx3yVq5Zkv+8W/244bU8tc9ETE5BvNb1FIUKMQ7//+gMgcuByX7Pz5LamwSzHgYZruK256iSfsPU/KwYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
-	t=1721334513; c=relaxed/simple;
-	bh=TUhi+CeX6Fxm6rH7ijVkPjTdOJiUxQkOroUN2Wfh10k=;
-	h=Date:Subject:In-Reply-To:From:To:Cc:References; b=KVVFfcVXYQkIKdBet9LR8LhuIAxBkKHjMmktSZBkPBT/m2WVoZVKcJq7dAasrqMFrvW4nCQJYFFfuqZVH8xxUlHOmaN/WiWkRAou7pHmKuVv5nSEh3/zU6d22l+DDVt1k56XG8jd3WETszQ9gfWZWQ31AGy/VHz/Z6Zg7LWcaSWB8gFEwRRVLcnROdJGs7s+oqBTQ6/m6DTgfC6Vl2xNBbefDUwmUzDGUYuJ6xU2mHtgV5wrRQNQgpw/m0Y44lAeQpGvi+e5XFQwVUvSMfQP51wUCL+Ee7LRPPhK3kmyQMqOiVpxOGy9FlVosDa+NnO2NsIry2ISvB3A+slfMH76ZA==
-ARC-Authentication-Results: i=1; mail.protonmail.ch
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simplelogin.com;
-	s=dkim; t=1721334513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUhi+CeX6Fxm6rH7ijVkPjTdOJiUxQkOroUN2Wfh10k=;
-	b=ErFfCIwVzkyqcmr7zsFEmZt8lVuPgowUQlkDy6QXB8NFuP/+LSAc/wJFcOR0bx5GRLi/YJ
-	uVfGUmrCV9624ItUqI4AzZJbN/tRTfw2FEwaS1UADSQFZzVt2gLP4TaHrrqrab02p2aamt
-	aWSBaSRIY8YVWGwtS/57aT/Po8k+BWE=
-Date: Thu, 18 Jul 2024 20:28:27 +0000
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-In-Reply-To: 
- <CAMj1kXGYicoxQGsv=3uM2bgs99aXxPMFUwib5bTVa6U6OSxzUg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="toqXbq2f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Mt94dJv93p4gadMAHrUU0whW8FUf/NSds7a+yWzs9gw=; t=1721382284;
+	x=1721814284; b=toqXbq2fSiuypx0oNKtIepr9qGzXXRuouqdAjlmSX5ahhrSXQ1YWbv50BCYhj
+	kalOrPprKRKQ1HRkUFXydhqRBuuQZmpq2g/SO2A/TJTcgEuSP71AZkoIP6wZF6M5QA2WAjHU26fRn
+	bigVXvGjMYp57c7I3ZhnYjgZDjPnZP+8eIV088FcmAxRrJvc0fmxzNdZXfXqBbvToqupEpPtNwSt0
+	UW8x/ImPgz4yA+VI2NEFWrnPwyLpiJ8bckSstcmko/d89OGGEvkgwARlorpf6aaYSySxlOa6V9joa
+	BhBq/Ge0QgB2OpebkUnnwx6I0LedjHQcyTiWm4666Xt5c+5w9w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sUkAH-0006Ld-0J; Fri, 19 Jul 2024 11:44:37 +0200
+Message-ID: <5d532252-7cbb-40ff-85b4-d638a2d86d29@leemhuis.info>
+Date: Fri, 19 Jul 2024 11:44:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: mavrix#kernel@simplelogin.com
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Radek Podgorny
- <radek@podgorny.cz>,regressions@lists.linux.dev,regressions@leemhuis.info,Christian
- Heusel <christian@heusel.eu>
-Message-ID: <172133451315.7.8041341910867954609.383315718@simplelogin.com>
-References: <172096653882.8.16813493378478071178.379356753@simplelogin.com>
- <CAMj1kXG9AjvChj9O6LR+2bFVUoa225phaXndYvQ_f4X4bKioaw@mail.gmail.com>
- <172125357072.7.13007674265724826216.382402450@simplelogin.com>
- <CAMj1kXGYicoxQGsv=3uM2bgs99aXxPMFUwib5bTVa6U6OSxzUg@mail.gmail.com>
-X-SimpleLogin-Type: Reply
-X-SimpleLogin-EmailLog-ID: 383315718
-X-SimpleLogin-Want-Signing: yes
-
-On 7/18/24 12:15 AM, Ard Biesheuvel - ardb at kernel.org wrote:
-> Thanks for testing.
->
-> Please try the partial reverts in the following message
->
-> https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny=
-.cz/T/#mc9943f4fc27c2f4637d697a4d23e37d2c334d076
->
-> and determine which of the two returns your system to a working state.
->
-6.10 mainline with 3-0001-Partial-revert-of-8117961d98f-1.patch works.=20
-The other one doesn't.
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721382284;6aab83a1;
+X-HE-SMSGID: 1sUkAH-0006Ld-0J
 
 
 
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20240715044527.GA1544@sol.localdomain/
+#regzbot introduced: a8a261774466d8
+#regzbot summary: thermal: core: a lot of warnings like "thermal
+thermal_zone0: failed to read out thermal zone (-61)"
+#regzbot fix: thermal: core: Back off when polling thermal zones on errors
+#regzbot monitor:
+https://lore.kernel.org/all/2348857.ElGaqSPkdT@rjwysocki.net/
+
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219014
+#regzbot resolve: invalid: kernel just grew, which triggered a u-boot bug
+
+#regzbot report:
+https://lore.kernel.org/all/87138377-d5b0-4c28-96bd-35a0ffd5f204@kernel.org/
+#regzbot introduced: 8b2cb32cf0c613
+#regzbot summary: drm/amd/display: secondary monitor does not to come up
+at all
+
+#regzbot report:
+https://lore.kernel.org/regressions/172096805546.8.15772688283210394474.379370367@simplelogin.com/
+#regzbot fix: x86/efistub: Revert to heap allocated boot_params for PE
+entrypoint
+#regzbot monitor:
+https://lore.kernel.org/all/20240718205806.2888909-2-ardb+git@google.com/
+
+
+#regzbot report:
+https://lore.kernel.org/lkml/CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com/
+#regzbot fix: drm/amd/display: fix corruption with high refresh rates on
+DCN 3.0
+#regzbot title: drm/amd: green flashing bar on top of screen
+
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218961
+#regzbot fix: ASOC: SOF: Intel: hda-loader: only wait for HDaudio IOC
+for IPC4 devices
