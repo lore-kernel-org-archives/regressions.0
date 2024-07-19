@@ -1,166 +1,141 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7071D84A50
-	for <regressions@lists.linux.dev>; Fri, 19 Jul 2024 12:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233AB1459F7
+	for <regressions@lists.linux.dev>; Fri, 19 Jul 2024 14:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721392312; cv=none; b=tc72c5He2s7BZFrqFoUgJBGwBrpgsRxQP5Qq6wdRH+90Crf25nNtROZlt1ml4wTMI1wDphbAZeVT7BBHHSjgbZxzIaW/VsjKmQekwT7S+9VjpRIIYMS9U7tFchQ1ZEAGFrG+OVO1eI1CQHrXyxaKenlUNfgsFVOk9kIM8AkfIW0=
+	t=1721398667; cv=none; b=QQP3oMvHMO+zqNs8kDZaygZB24gmNyUIcjXfEjtokvOYF4bRIfMDGmhJvGXcy5re/8StPQjZJFrNMMx2gz37e1QlHyzz1Hf7GNvjVU/WX9BrlISxbEBmx4YJQ5FE/S/FC3aCjFMCJO4NcCcWpgxm0FwbLV9Xggqs5y1zZPm/t70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721392312; c=relaxed/simple;
-	bh=WMBUqQCYMwP3xZyQaOz6+ylqD28wFZLdaxROs3OTmQk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=b/qw0xh5buNEbTgEr/ijKEkG9nZwLK8kKhqBCGYaTOmV4+KbBHDHpUtgZeVWoOxaGt2WAXRSjKjREItpAC1KqTnHfMiThmYlFMo7C8biGjOqnae1xZIVNarkCnBvbs6cTnjy8riWSui4BRIzC57tSNeWjQKRhBcS1vE4ckbnU/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3CA0461E5FE01;
-	Fri, 19 Jul 2024 14:31:33 +0200 (CEST)
-Message-ID: <518cd6b4-68a8-4895-b8fc-97d4dae1ddc4@molgen.mpg.de>
-Date: Fri, 19 Jul 2024 14:31:32 +0200
+	s=arc-20240116; t=1721398667; c=relaxed/simple;
+	bh=Az+UsAqAJwkvCMdiQaGSuSpQNVXsDjznheL9GDF0c5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qba1gW9kAtoqWd0X+09HSczpqIMjH7WIoiU+Oy5LBKM6hPCKHR5ElVkf8u+oFtTauCVZgteR5W09PAMpNus6xM3j1NGYZKA2jZBGpQgJAzrFJ58dtBqkUacMxBW10PLHoZC9lsfBCjAtxAaKeRmgV+9jnCw3af0fK3/KwFvxDm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zu/t8rZb; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zu/t8rZb"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70af8128081so753793b3a.1
+        for <regressions@lists.linux.dev>; Fri, 19 Jul 2024 07:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721398665; x=1722003465; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rzIrXxd4OTzhQ6j9JNpbeNXo+mLOT8iXvmw4VxrmH2I=;
+        b=Zu/t8rZbanbe2CuGnL1Hvz213fT3wX4FEv6M7O7lbb7A8Qz8sDnuyuE4lz+t6B4d4b
+         JyxXpmlDcMZQYjBR/VnRpKKSUWvWmho49dl6mSehKyCLJcZ8BKt+re7GBV5OhknZdJ19
+         8dzV+rZCYZ0fJAsBPhzCXiuOs/3l5kRs7kh+w/IwbbZXCBsANvsCNBtGopchkcEba6C5
+         PWHeFOAwyt6O9flC0F3fzLx3Y4/3V3/hKn6PO2HhBZLxkdY01F6AfrS6XEuVquunzc5R
+         7rNFYbiIIxAqGrDdHcdCbrh/suBtfdzFWt8zMEhyTAMg8sVpwOUXk6XdUoyqcN7bepMz
+         9afg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721398665; x=1722003465;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rzIrXxd4OTzhQ6j9JNpbeNXo+mLOT8iXvmw4VxrmH2I=;
+        b=PDqjEpKy7IIvCfYkupowB5K//wSv4dAeJ26vyxrx9Ktt3K5wHoT2GbSDwf0wp3QTn1
+         9Vm5Ex5Oy1wJNlyVo3oriCv2UVkhW87QRzCVeHEqqOnoB/LE0BRGzx0UVYnFlTnbezGW
+         JRcUc0eAyAmziuRxDxML78Mqfkjzl0Z7CcFfP2fsUy3XGwPIscWffXQPgejNXbvsasCU
+         7Yydsxa16SlxaPDHr7iMx5bYSUT6tDwYCkgZRMZDvcSQnhrtCePhQw7xQVYJtYwXz1zq
+         blXUQTEigkf4IQiHkn1B5lcLYIoJM0aeN6/SSuUq9XUJ0eJgdRwP782shAXDL0wU/iLK
+         sNuA==
+X-Forwarded-Encrypted: i=1; AJvYcCULy/RbChhKYzqGVqi8U7UJOZ9PeWiU+wfPpms5aUNRggvgxhHPm89L5ltdkAfScmr+N+oBz4YaFUNugUoSdMYYYtCCmEbE8SXYYg8=
+X-Gm-Message-State: AOJu0YynNHFgC/OtZ4gj3UvGwrSSq9AmL1cx39MqWN9uO/ggn0+00h/C
+	vBynys9NrtGNTCXJ1vHVJLfu/nYluZzPxhm75uTSb8E4TAkCEUhJ
+X-Google-Smtp-Source: AGHT+IHeBT9xaOFtzeEq4GEAk6Ado/fBfBa7U2IRTbvu7dQgTaP64FDMcUnRPI3fjWsx5/QZEyyYsA==
+X-Received: by 2002:a05:6a00:99d:b0:706:423b:2ed1 with SMTP id d2e1a72fcca58-70ce4f935fbmr9675543b3a.6.1721398665221;
+        Fri, 19 Jul 2024 07:17:45 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70cff4b1d67sm1243284b3a.60.2024.07.19.07.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jul 2024 07:17:44 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 19 Jul 2024 07:17:42 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: next-20240712: task_work.c:(.text+0xc2): undefined reference to
+ `irq_work_queue'
+Message-ID: <406ffd29-6f92-48ab-924b-8d4f0973e50a@roeck-us.net>
+References: <CA+G9fYv0xfJbt=+STRDu65G-Tq_w9wEH3C0q1ucyoAa7DbWLAQ@mail.gmail.com>
+ <e25a690e-6cb9-4e00-ac1d-07cda43b12de@app.fastmail.com>
+ <20240712132427.GJ27299@noisy.programming.kicks-ass.net>
+ <6494316f-fcf9-4c19-9f3c-f8ad6f0810fa@app.fastmail.com>
+ <20240712150333.GN27299@noisy.programming.kicks-ass.net>
+ <20240718162527.GA197917@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux logs error `Failed to query (GET_CUR) UVC control X on unit
- Y: -75 (exp. 1).` (75 == EOVERFLOW?)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg KH <gregkh@linuxfoundation.org>, Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- regressions@lists.linux.dev
-References: <af462e20-d158-4c5c-8dae-ce48f4192087@molgen.mpg.de>
- <2024071939-wrought-repackage-f3c5@gregkh>
- <20240719093819.GE12656@pendragon.ideasonboard.com>
- <2a2cac3c-f9cd-4b20-ae53-9e6963c7889f@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <2a2cac3c-f9cd-4b20-ae53-9e6963c7889f@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240718162527.GA197917@thelio-3990X>
 
-#regzbot ^introduced: b2b5fcb1c5b645d5177ef3e3f41c7a706fc2688d
-
-Dear Laurent, dear Greg, dear Ricardo,
-
-
-Am 19.07.24 um 13:33 schrieb Paul Menzel:
-
-
-> Am 19.07.24 um 11:38 schrieb Laurent Pinchart:
->> (CC'ing Ricardo)
->>
->> On Fri, Jul 19, 2024 at 08:05:35AM +0200, Greg KH wrote:
->>> On Fri, Jul 19, 2024 at 07:22:54AM +0200, Paul Menzel wrote:
+On Thu, Jul 18, 2024 at 09:25:27AM -0700, Nathan Chancellor wrote:
+> On Fri, Jul 12, 2024 at 05:03:33PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jul 12, 2024 at 04:11:54PM +0200, Arnd Bergmann wrote:
+> > > On Fri, Jul 12, 2024, at 15:24, Peter Zijlstra wrote:
+> > > > On Fri, Jul 12, 2024 at 02:28:38PM +0200, Arnd Bergmann wrote:
+> > > >> On Fri, Jul 12, 2024, at 14:13, Naresh Kamboju wrote:
+> > > >
+> > > >> that we may have to always enable IRQ_WORK even on non-SMP
+> > > >> kernels now. In practice it is already enabled in most
+> > > >> configurations for one reason or another, the the cost is
+> > > >> likely very small.
+> > > >> 
+> > > >> Otherwise checking for CONFIG_HAVE_NMI in the new code might work.
+> > > >
+> > > > ARM seems to have HAVE_NMI while also being one of the architectures
+> > > > that is now failing.
+> > > 
+> > > Right, in this case we would also need
+> > > 
+> > > --- a/arch/Kconfig
+> > > +++ b/arch/Kconfig
+> > > @@ -236,6 +236,7 @@ config HAVE_FUNCTION_ERROR_INJECTION
+> > >  
+> > >  config HAVE_NMI
+> > >         bool
+> > > +       select IRQ_WORK
+> > >  
+> > >  config HAVE_FUNCTION_DESCRIPTORS
+> > >         bool
+> > 
+> > Yeah, that works for me I suppose.
 > 
->>>> Today, starting the Intel Kaby Lake laptop Dell XPS 13 9360/0596KF, 
->>>> BIOS
->>>> 2.21.0 06/02/2022 with
->>>>
->>>>      Bus 001 Device 004: ID 0c45:670c Microdia Integrated Webcam HD
->>>>
->>>> Linux “6.11-rc0” (v6.10-8070-gcb273eb7c839) logged UVC errors:
->>>
->>> Does 6.10-final have the same issue?
+> Was there any conclusion to this thread that I missed? The
+> configurations Naresh mentioned in the original post are now broken in
+> mainline because the pull request was sent without any solution to this
+> issue.
 > 
-> No, it does not. Linux 6.10-04829-ge2f710f97f35 (Merge tag 'ata-6.11-rc1' of 
-> git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux) does also 
-> not show this, and 6.10-rc3-00148-g8676a5e796fa (media: uvcvideo: Fix 
-> integer overflow calculating timestamp) neither.
+> FWIW, that diff doesn't fix ARCH=powerpc tinyconfig, as it does not have
+> CONFIG_HAVE_NMI. kernel/task_work.c is unconditionally built so
+> shouldn't IRQ_WORK now be 'default y' (or just eliminated altogether)?
 > 
->>> If not, can you use 'git bisect' to track down the offending commit?
-> 
-> I am on it. I tried to pass the USB device through to a VM and try to 
-> reproduce there. Thank you for the comment, that reloading the module is 
-> (of course) also possible. That avoids rebooting the system.
 
-The hard way found commit:
+Actually, many tinyconfig builds are now broken.
 
-commit b2b5fcb1c5b645d5177ef3e3f41c7a706fc2688d
-Author: Ricardo Ribalda <ribalda@chromium.org>
-Date:   Mon Jun 10 23:09:54 2024 +0000
+Example from alpha:
 
-     media: uvcvideo: Probe the PLF characteristics
+alpha-linux-ld: kernel/task_work.o: in function `task_work_add':
+(.text+0x1b4): undefined reference to `irq_work_queue'
+alpha-linux-ld: (.text+0x1bc): undefined reference to `irq_work_queue'
 
-     The UVC 1.5 standard defines 4 values for the PLF control: Off, 50Hz,
-     60Hz and Auto. But it does not clearly define if all the values must be
-     implemented or not.
+alpha does not set "HAVE_NMI". AFAICS task_work.c is always built,
+and it now calls irq_work_queue() unconditionally, so unless that
+is changed IRQ_WORK is now mandatory and must not just depend on
+HAVE_NMI or anything else.
 
-     Instead of just using the UVC version to determine what the PLF control
-     can do, probe it.
-
-     Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-     Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-     Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-     Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-     Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-
-Looking at it, it’s plausible as new `uvc_query_ctrl()` calls are added.
-
->>> There have not been any USB changes in Linus's tree yet, but there have
->>> been a bunch of media changes, so perhaps something in the uvc driver is
->>> causing this?
->>
->> We've merged quite a few changes for the uvcvideo driver recently.
->> Bisecting the problem would help greatly. It could also be helpful to
->> set the uvcvideo module 'trace' parameter to 0xffff (e.g. add
->> `uvcvideo.trace=0xffff` to the kernel command line, or unload and reload
->> the uvcvideo module with the parameter set to 0xffff) and give us the
->> additional messages printed to the kernel log.
-> 
-> ```
-> [   10.688580] usb 1-5: Adding mapping 'Brightness' to control 00000000-0000-0000-0000-000000000101/2
-> [   10.689134] usb 1-5: Failed to query (GET_CUR) UVC control 2 on unit 2: -75 (exp. 1).
-> [   10.689209] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/3 to device 5 entity 2
-> [   10.691085] usb 1-5: Adding mapping 'Contrast' to control 00000000-0000-0000-0000-000000000101/3
-> [   10.691645] usb 1-5: Failed to query (GET_CUR) UVC control 3 on unit 2: -75 (exp. 1).
-> [   10.691709] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/6 to device 5 entity 2
-> [   10.692729] usb 1-5: Adding mapping 'Hue' to control 00000000-0000-0000-0000-000000000101/6
-> [   10.693530] usb 1-5: Failed to query (GET_CUR) UVC control 6 on unit 2: -75 (exp. 1).
-> [   10.693604] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/7 to device 5 entity 2
-> [   10.698164] usb 1-5: Adding mapping 'Saturation' to control 00000000-0000-0000-0000-000000000101/7
-> [   10.699621] usb 1-5: Failed to query (GET_CUR) UVC control 7 on unit 2: -75 (exp. 1).
-> [   10.699708] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/8 to device 5 entity 2
-> [   10.700676] usb 1-5: Adding mapping 'Sharpness' to control 00000000-0000-0000-0000-000000000101/8
-> [   10.701263] usb 1-5: Failed to query (GET_CUR) UVC control 8 on unit 2: -75 (exp. 1).
-> [   10.701325] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/9 to device 5 entity 2
-> [   10.702991] usb 1-5: Adding mapping 'Gamma' to control 00000000-0000-0000-0000-000000000101/9
-> [   10.705787] usb 1-5: Failed to query (GET_CUR) UVC control 9 on unit 2: -75 (exp. 1).
-> [   10.705860] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/10 to device 5 entity 2
-> [   10.707036] usb 1-5: Adding mapping 'White Balance Temperature' to control 00000000-0000-0000-0000-000000000101/10
-> [   10.708098] usb 1-5: Failed to query (GET_CUR) UVC control 10 on unit 2: -75 (exp. 1).
-> [   10.708150] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/1 to device 5 entity 2
-> [   10.709279] usb 1-5: Adding mapping 'Backlight Compensation' to control 00000000-0000-0000-0000-000000000101/1
-> [   10.710748] usb 1-5: Failed to query (GET_CUR) UVC control 1 on unit 2: -75 (exp. 1).
-> [   10.711147] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/4 to device 5 entity 2
-> [   10.713670] usb 1-5: Adding mapping 'Gain' to control 00000000-0000-0000-0000-000000000101/4
-> [   10.714623] usb 1-5: Failed to query (GET_CUR) UVC control 4 on unit 2: -75 (exp. 1).
-> [   10.715104] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/5 to device 5 entity 2
-> [   10.803567] usb 1-5: Adding mapping 'Power Line Frequency' to control 00000000-0000-0000-0000-000000000101/5
-> [   10.803573] usb 1-5: Added control 00000000-0000-0000-0000-000000000101/11 to device 5 entity 2
-> [   10.804683] usb 1-5: Adding mapping 'White Balance, Automatic' to control 00000000-0000-0000-0000-000000000101/11
-> ```
-> 
-> Full log attached.
-> 
->> Could you also provide the output of `lsusb -v -d 0c45:670c` (running as
->> root if possible) ?
-> 
-> Attached.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b2b5fcb1c5b645d5177ef3e3f41c7a706fc2688d
+Guenter
