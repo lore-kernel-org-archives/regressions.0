@@ -1,155 +1,146 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C768F70
-	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 14:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C05426ACD;
+	Mon, 22 Jul 2024 16:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721658611; cv=none; b=eE+DrOFRzWtrr7BHeEC3i2YGyB08u0SBJRaxF9J6my2lXW0fxJQMAJL7BifLYavv9f3oavoGsxK0R+5GRZ+uTeOTmc0M/T5bad48BKZsBs1n7/0V3k9iXo8YPl0DuKoNNLDW1AOaj92BTmAheTZXK569AFasB9gu6UljMk5skqk=
+	t=1721665849; cv=none; b=MUXerL9S1M+bj4DLZiPKhGoLSiFhrvpauCTnG30Zfsg36jd0Wf2ygI8AIyEZD6sN2FRssaWKdPPDgTI+0PoH2ZVj+qksvoho1AVP1t804aQxOHZxP1V/OZubaoWUZQRLWDpVXjJZIB+V5E5A/fGhaqGbemsTwHNL5BTBiFoP6MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721658611; c=relaxed/simple;
-	bh=jc4Vg8pnrmtIFW3yAyOhk5obEdegT8XbOWOdWVUTDMw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Wj1f8vho5pfPVnwXSx/rTH7SsHNotrHQM5DYWYPIk8ApDpn6DEVhGKGV1xdeiV+0FIWxed1z5ycWAukpuJgdEA3M4bSn8L5UIeI5aEYW3vy/gLMP2h0Qgp5vW6Jlu2dayEILk621uUuO3o4rTPrtjpYrnFjSx50uroaCGRfgvaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cD1yZBv6; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721665849; c=relaxed/simple;
+	bh=iy+DHszSYzVd/2RQ3w/4OKIj+1QnSngPdSBIBoonwvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEsHPMeOwvDg/UUVekH4OgsFK0OW8JwQ6Ye1wpDxl2O9CxzD0cBihjiMLu18sx5pDtkROnexfdL31AvskQigov6chCis5NxJE6sIb9IP/DmAMrQuPew3TZarfa1HTQ9kk/Nkc7/qRMQ5lSq4nS6mUl/K6WrnN2e3eYGdy5E5nHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DardbNI0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cD1yZBv6"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8100f08b5a8so1293889241.0
-        for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 07:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721658609; x=1722263409; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eNQj5L480GiXOYni+r7oo8capetgUsj9Z2Zw/kMU9Lo=;
-        b=cD1yZBv6hQZyU2YNhb7U2vwStZWNYXAD7kFCxII5K4wIOyzZNvYVRzeSIoc3FabBos
-         2SvzLHUzZZhslBnY4dzE+NFFKffCF9N2ZWGRPaMec2NkXXXkR88GUel++rnEjH1f5iv2
-         x0wPYTWEkiO4lqAoUn9mHOyc5Pj/dwvhr8v0g/dXhxtl1wVS/gQbBSnd8WITWK2AyCoM
-         GUjtY5jjgmontmn47Gi6NHjBGvDhT0qbqc8NJ5ZpN+SaLdWiDMpmYAGhWuIoxn7a4Xb3
-         HywRcCrJL2o8KAgLfpgZQdMySr25acOfUtryyf+yeNOtiMEXurubLCZ6qn6pQ1RZUNDI
-         LuqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721658609; x=1722263409;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eNQj5L480GiXOYni+r7oo8capetgUsj9Z2Zw/kMU9Lo=;
-        b=vyga+uy2MR+cLw2WETONoknBei7y67Qou48AYExQICUGq3QxpeaBAPiwJUywRHmUuj
-         FSlnyqOiuN9+HYvdlYhfx8al4M2d4bXpoPMfLU0zGNb1+/MBZXmKUB3Z3YGec9K6tjxt
-         6k0heoXejnudqsCoQ6utXxLcF7zTtCYcb0LTFYHQY0SNAtAG3eJ393bkMsbB+JveRTRK
-         Pz5qSfzJ9CAeEtPkyCvKMJa3C2q686nO46y3Yk+WsYuxgyboSyBOzx/tYXvIRa+49gzs
-         /qLSZwNtQwYYYxsI3EhpdjCv2mZWDTe57EvWbqNgvMd9A1NI6NPPxUrOoWEKy4rFDjYc
-         lPxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOiXQAA1zGP5H6KYwTCn0sQGLp9R5w8O8lQ6HKgWMQjKS1bYYIm4rPpIySgd+K3SS/VwVMxhMDy6AdhK7KR470f6q3HmxZaewzhHY=
-X-Gm-Message-State: AOJu0YwZ8kb2yiqH1jTfeLG8OAZZBFOMjMl8iHtvfPbUmeC2RQnCDkXW
-	rAjEwygOLKBwc2IZ3memHtuM+UxNSzMX3YFnM1mQ5PoPsnBLnd3/C/1Kneos2kzElMK2XZmh083
-	ZU18vd4UB5gjhKKF522qaEhoeDEd6bJE7y4DYpA==
-X-Google-Smtp-Source: AGHT+IFus2Eig2CcvD+a8Ar+gdFVn560QbNbPQwuRz7NrBNpKGVdfa/jGlZ7xniv7mXXNeI9EWiqcwMovH8pwOaAJrA=
-X-Received: by 2002:a05:6102:36cd:b0:48f:eb37:fd86 with SMTP id
- ada2fe7eead31-4928ba881damr4622730137.30.1721658608416; Mon, 22 Jul 2024
- 07:30:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DardbNI0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792BAC32782;
+	Mon, 22 Jul 2024 16:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721665848;
+	bh=iy+DHszSYzVd/2RQ3w/4OKIj+1QnSngPdSBIBoonwvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DardbNI0Zi+RDgiJERVOwi5alDu4PtEZH0sFLoddTiENZ55EbDexeoAcOfqHVvglk
+	 /MXT8RiVqvx7VkKtnCWluzn1ycZhiD+EEz82YPRWKOSt7H9ZMgBQXEjVHNhgXC44YV
+	 pfBzYsQYIoUraJ9xm93Tig6NG8PH2XK1oGLEf1eqJL4oj8mN5yeaYBz5qrP2zCU6af
+	 a3gubOF6zHJ2mYvpsc8EsKMQubuLDrmgmREaSL4NqlDBtYtpkrykwI4oaT0FVtNDbh
+	 8iTk+rUpXIu+zkdfMo4axtftmQoHqUx8Sq8CYJ+FIzopdcldIAtkCMeYojAr7/wyhy
+	 JNstCBkcNlmcg==
+Date: Mon, 22 Jul 2024 18:30:44 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Chris Hixon <linux-kernel-bugs@hixontech.com>, 
+	Basavaraj Natikar <bnatikar@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	Jiri Kosina <jkosina@suse.com>, LKML <linux-kernel@vger.kernel.org>, Li Ma <li.ma@amd.com>, 
+	amd-gfx@lists.freedesktop.org, Alexander.Deucher@amd.com, yifan1.zhang@amd.com, 
+	linux-input@vger.kernel.org, Basavaraj Natikar <basavaraj.natikar@amd.com>
+Subject: Re: [BUG] HID: amd_sfh (drivers/hid/amd-sfh-hid/): memory/page
+ corruption
+Message-ID: <kkenglf5lkvu2um3o44umdxaoeh5zgsaus73kauc6vwcqpnsfv@5i6xtjnxtb5c>
+References: <3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com>
+ <ade43b5b-9b93-40a8-acbf-99df944b45f9@leemhuis.info>
+ <11fdf362-8fa5-4d44-904b-c0c9867ebd07@amd.com>
+ <f6162b22-c6c6-47d7-9bda-dd702fcc5b4b@hixontech.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 22 Jul 2024 19:59:56 +0530
-Message-ID: <CA+G9fYsdQ58YL96Kv7dY1nb5Ok3=o7L68JdpOH4yZJ_3nAdExw@mail.gmail.com>
-Subject: WARNING: at kernel/time/timer_migration.c:1714 tmigr_cpu_prepare
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6162b22-c6c6-47d7-9bda-dd702fcc5b4b@hixontech.com>
 
-The following boot warnings noticed on all the devices running today's
-Linux next-20240722 tag. The system is stable and booted to console.
+On Jul 21 2024, Chris Hixon wrote:
+> On 7/21/24 00:20, Basavaraj Natikar wrote:
+> 
+> > On 7/17/2024 4:51 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 15.07.24 06:39, Chris Hixon wrote:
+> >>> System: HP ENVY x360 Convertible 15-ds1xxx; AMD Ryzen 7 4700U with
+> >>> Radeon Graphics
+> >>>
+> >>> Problem commits (introduced in v6.9-rc1):
+> >>> 6296562f30b1 HID: amd_sfh: Extend MP2 register access to SFH
+> >>> 2105e8e00da4 HID: amd_sfh: Improve boot time when SFH is available
+> >>>> It appears amd_sfh commits 6296562f30b1 and 2105e8e00da4 correlate with
+> >>> some form of memory/page corruption. 
+> >> Hi! From a quick search on lore it looks like Basavaraj Natikar who
+> >> authored those two commits is inactive since a few days. This is totally
+> >> fine, but given the nature of the problem slightly unfortunate. That's
+> >> why I'm trying to raise awareness to this report by adding the
+> >> subsystems maintainers, a few lists, and a few people to the list of
+> >> recipients that were involved in the submission of those two patches.
+> >> With a bit of luck somebody might be able to help out. Ciao, Thorsten
+> >>
+> >>> On my system, this typically
+> >>> presents itself as a page dump followed by BTRFS errors, usually
+> >>> involving "corrupt leaf" (see dmesg output below); often the BTRFS
+> >>> filesystem becomes read-only afterwards. Note that the underlying NVME
+> >>> disk seems fine, and the BTRFS filesystem does not actually appear to be
+> >>> corrupt when booted/checked from kernels without this bug (no BTRFS
+> >>> errors or I/O errors reported on non-problem kernels).
+> >>>
+> >>> I have no problems when I blacklist the amd_sfh module (any kernel
+> >>> version), or revert both commits 6296562f30b1 and 2105e8e00da4 (on
+> >>> stable, linux-6.9.y). I have no problems on any recent linux-mainline
+> >>> (v6.10{,-rc*}) when reverting these two commits (in addition to
+> >>> reverting 7902ec988a9a and 6856f079cd45 to successfully build the
+> >>> kernel). I have had no problems with any 6.6.y, v6.7.y, or v6.8.y version.
+> >>>
+> >>> It is curious BTRFS always seems involved, but problems go away with
+> >>> these amd_sfh commits reverted (or amd_afh disabled).
+> >>>
+> >>> Further notes:
+> >>>
+> >>> I have not specifically used the amd_sfh module for anything. As far
+> >>> I've been able to determine, my system has the "Sensor Fusion Hub" mp2
+> >>> chip, but has no supported sensors/sub-devices (or I need to do
+> >>> something to enable them), (or there is an error while detecting
+> >>> sensors?). All logs I've checked contain something like:
+> >>>
+> >>> Jul 09 04:14:37 arch kernel: pcie_mp2_amd 0000:04:00.7: enabling device
+> >>> (0000 -> 0002)
+> >>> Jul 09 04:15:07 arch kernel: pcie_mp2_amd 0000:04:00.7: Failed to
+> >>> discover, sensors not enabled is 0
+> >>> Jul 09 04:15:07 arch kernel: pcie_mp2_amd 0000:04:00.7:
+> >>> amd_sfh_hid_client_init failed err -95
+> >>>
+> >>> Excerpt from lshw:
+> >>>            *-generic:1 UNCLAIMED
+> >>>                 description: Signal processing controller
+> >>>                 product: Sensor Fusion Hub
+> >>>                 vendor: Advanced Micro Devices, Inc. [AMD]
+> >>>                 physical id: 0.7
+> >>>                 bus info: pci@0000:04:00.7
+> >>>                 version: 00
+> >>>                 width: 32 bits
+> >>>                 clock: 33MHz
+> >>>                 capabilities: pm pciexpress msi msix cap_list
+> >>>                 configuration: latency=0
+> >>>                 resources: memory:fe000000-fe0fffff
+> >>> memory:fe4cc000-fe4cdfff
+> > 
+> > Could you please check with the latest version, including the patch below?
+> > 
+> > https://lore.kernel.org/all/20240718111616.3012155-1-Basavaraj.Natikar@amd.com/
+> > 
+> > Thanks,
+> > --
+> > Basavaraj
+> > 
+> 
+> Hi,
+> 
+> Unfortunately, that patch doesn't fix the issue. I do get different crashes...
 
-First seen on next-20240722.
+Thanks for the quick testing.
 
-  GOOD: next-20240719
-  BAD: next-20240722
+Basavaraj, was the patch from above an attempt at fixing that particular
+regression or was it emerging from some other means?
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+In other words: should I apply the fix even if it's still not the
+correct one for Chris?
 
-Boot log:
------------
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
-[    0.000000] Linux version 6.10.0-next-20240722 (tuxmake@tuxmake)
-(aarch64-linux-gnu-gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils
-for Debian) 2.42) #1 SMP PREEMPT @1721630963
-[    0.000000] KASLR enabled
-[    0.000000] Machine model: Thundercomm Dragonboard 845c
-...
-[    0.007393] rcu: Max phase no-delay instances is 1000.
-[    0.007773] Timer migration: 1 hierarchy levels; 8 children per
-group; 1 crossnode level
-[    0.007823] ------------[ cut here ]------------
-[    0.007833] WARNING: CPU: 0 PID: 1 at
-kernel/time/timer_migration.c:1714 tmigr_cpu_prepare
-(kernel/time/timer_migration.c:1714 (discriminator 1))
-[    0.007858] Modules linked in:
-[    0.007870] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-6.10.0-next-20240722 #1
-[    0.007878] Hardware name: Thundercomm Dragonboard 845c (DT)
-[    0.007883] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.007890] pc : tmigr_cpu_prepare
-(kernel/time/timer_migration.c:1714 (discriminator 1))
-[    0.007896] lr : cpuhp_invoke_callback (kernel/cpu.c:194)
-[    0.007907] sp : ffff80008005bb20
-[    0.007910] x29: ffff80008005bbb0 x28: ffffa8983a9defd0 x27: ffff422c792f74f8
-[    0.007920] x26: ffff99943f4ea000 x25: ffff422c792f2c68 x24: ffffa8983a9e35c0
-[    0.007928] x23: ffffa898379aa798 x22: 0000000000000000 x21: ffffa89839e08c68
-[    0.007936] x20: ffffa89839e0d000 x19: 0000000000000000 x18: 0000000000000006
-[    0.007943] x17: 6f72632031203b70 x16: 756f726720726570 x15: 0720072007200720
-[    0.007951] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
-[    0.007959] x11: 0720072007200720 x10: ffffa8983aa5df30 x9 : ffffa898378b2a88
-[    0.007967] x8 : 00000000ffffefff x7 : ffffa8983aa5df30 x6 : 0000000000000001
-[    0.007975] x5 : 0000000000000000 x4 : ffffa89839e0d4f8 x3 : ffff99943f4ea000
-[    0.007982] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffffa89839e0d4f8
-[    0.007990] Call trace:
-[    0.007993] tmigr_cpu_prepare (kernel/time/timer_migration.c:1714
-(discriminator 1))
-[    0.007998] cpuhp_invoke_callback (kernel/cpu.c:194)
-[    0.008004] cpuhp_issue_call (kernel/cpu.c:2359 kernel/cpu.c:2339)
-[    0.008011] __cpuhp_setup_state_cpuslocked (kernel/cpu.c:2505)
-[    0.008021] __cpuhp_setup_state (kernel/cpu.c:2534)
-[    0.008027] tmigr_init (include/linux/cpuhotplug.h:277
-kernel/time/timer_migration.c:1794)
-[    0.008040] do_one_initcall (init/main.c:1267)
-[    0.008049] kernel_init_freeable (init/main.c:1372 (discriminator
-1) init/main.c:1567 (discriminator 1))
-[    0.008057] kernel_init (init/main.c:1471)
-[    0.008068] ret_from_fork (arch/arm64/kernel/entry.S:861)
-[    0.008076] ---[ end trace 0000000000000000 ]---
-
-
-metadata:
------
-  artifact-location:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/
-  build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/
-  build_name: gcc-13-lkftconfig-debug
-  git_describe: next-20240722
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: dee7f101b64219f512bb2f842227bd04c14efe30
-  kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/config
-  toolchain: gcc-13
-
-Steps to reproduce:
--------
- - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2jagaCWDNIYL1r8qprPP81YQdaF/reproducer
-
-
-Full dmesg link:
---------
- - https://lkft.validation.linaro.org/scheduler/job/7753578#L5022
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240722/testrun/24669141/suite/log-parser-boot/test/check-kernel-exception-a189d92b895bd0de96c24e2d262e9caa627c25600bb7fda7c5894f2ce03ebb57/log
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Cheers,
+Benjamin
