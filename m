@@ -1,138 +1,92 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8366D610C
-	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 08:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2EC1B977
+	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 08:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721635322; cv=none; b=lyRNoWDkzD4vEew9YaH69NC3x7IlPJGEkJTkp2GbE1XRKoZpufiguy/7R3l4aLJ/3GmuhLYl2rXrTTF+8bNzKtI4SGtHnGFNPmn25YsvutK37XYZfUifbdf/7jWjrb/7R7TZ2FTPEJ5IdzoloZUvG2olM/wO7Aacmd1l8uPvPjU=
+	t=1721637357; cv=none; b=eo+W4vR30NE1wSlHUW1nvJavjYgGtgeYdJQCSAr9hQJ/gdQY+HfLT28SE1CVpx5wn/mRD87Nk2ni9Nw61Tb3GZgFZ73Tjwrwc9kfTpjJ3J/ApqVG/TwtlB9s2+rDm/J4tYRTomk/LCzC8qPdSnbt956P0ENRI/l8hF6GwThK2Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721635322; c=relaxed/simple;
-	bh=0BirbRm+kgTZ/6PSUV3ulLz8ivD6qWRaU/XrHJu0rnc=;
+	s=arc-20240116; t=1721637357; c=relaxed/simple;
+	bh=7v/EFZmoSbcmIaGzG3bWgy5wWp2UjKu4OKO13pGyiYo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pdcioxVZ2Bn/NnfQ5YLhPe2Py6x9YSjUW8/UX7h3zCWS7L1D6XwtJmACyLoCcGoZxyMUYCyzD33teuOcYcC1wzd+G677kAs8l3BIa0g8uWVrqem5n+LS5sDcta+IJxRdm5VERnIpMCrwEzIsGCNzOxvcBc6cCXdahS42vzg9CXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kl7lWIZE; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=Kudkn5nv5zfLXRA/1A7kxSmCQddX83tMBIN3FsP7UtVEHVMBb64i2OiaPOe5oFsxidXpzynJTIOL7tVvf5rhMh+DTXSrCeoRTxVLPgL3A2Mn2MDYqXy1dxcyvg8nWcE69VUWVk/+SfvCOhm0xV1xtG8Nnt6x6CO3Wj/vGFRFMrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueezcu/o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kl7lWIZE"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5854ac817afso2301196a12.2
-        for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 01:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721635319; x=1722240119; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6b/8hE5ThHqalqFhzwrKVICTF1CGDaYIS8tWzxne3NU=;
-        b=Kl7lWIZE9W/feBFEAU2MnXPNJ3HSJcVDiXnktJSDzG9hPGighLw5C0zOwDEB/FUh+g
-         58DMznEARe3oM3NiR6jL/lI9W+0urk81+7jOa8XljQeQlfo2ZrZeHfYUJhgUv0ULcOPx
-         Q/nPm4LsxCQKc5OP2Ynzy2ljQMqO7v+0rPjW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721635319; x=1722240119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6b/8hE5ThHqalqFhzwrKVICTF1CGDaYIS8tWzxne3NU=;
-        b=WKG0rdCXHejswM2xCCO8TynqeE8/tzJWLhN34CKTXW4vpu8q4Iz/ovl9Jx3Lxy2xl8
-         VDReSsOcgvQT63+ALIPjSCRkJTk5iqgtByfx74JcCK7bkgkehd4wizZalciV+ahGPAcw
-         0zARev7pNzjgoB8w7sZYnUJYmSA0g6wywusxwIPXI3NMfSQo0V/yDXUD9RX+L/YMFjwf
-         G1iFYFF4nh84NPCyy1LXGtXMh1aV+C8FCFWar3+FeTXiMabG3u+DmHl2pSe4nCPKd30j
-         o2LQ06B6l+VaCCEEtOzlINCrp65UAfa3wJccjDJxu0L1eH0860GG4edIkYAOyPMGbbh6
-         Kxag==
-X-Forwarded-Encrypted: i=1; AJvYcCUT575UCL8dZvKmoLf3sMEH1Sce2j1/ru8z21JyLnWzxXCimlckm238ljKyP4vBy5LFKm9ze9jdVneOtFL9QWp3p//PyezHYEBFt4U=
-X-Gm-Message-State: AOJu0YyQU/gq2Ng4zqRAqSWQSu1PMl6zmsoSYyMsxr1jTXQLXUzehyyG
-	YnKbwdaQfAnVrK8oJ/ARyBJq8ZelZqhjjAWjbRhn0gs1p1JluFiQOV9gMRQA62uSdfY9rFmKLNv
-	qYA==
-X-Google-Smtp-Source: AGHT+IEkOMGbdcuqugYRrrP8T9AwBHzvtcurfvqTAudoPTdOGFDk04hZU9yMZEXyvjbKQ4FFQXDh1A==
-X-Received: by 2002:a05:6402:1d4c:b0:5a1:73fc:6bdd with SMTP id 4fb4d7f45d1cf-5a479874d0amr4725288a12.15.1721635318690;
-        Mon, 22 Jul 2024 01:01:58 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a30c2f87b0sm5713381a12.59.2024.07.22.01.01.57
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jul 2024 01:01:57 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5a15692b6f6so3159041a12.0
-        for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 01:01:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUI1j2SNAyHmmimecSv2Non8TSw+vDx3a3Ii3XN3jPI3XrtgF/vviToTWhjtNqfT8LDg5LCxOwpd52AFRFwibCrgiN/HvS46h7IDZU=
-X-Received: by 2002:a17:906:7315:b0:a6f:586b:6c2 with SMTP id
- a640c23a62f3a-a7a4c44efb5mr426001366b.60.1721635316929; Mon, 22 Jul 2024
- 01:01:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueezcu/o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28ED0C4AF0D
+	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 08:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721637357;
+	bh=7v/EFZmoSbcmIaGzG3bWgy5wWp2UjKu4OKO13pGyiYo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ueezcu/oVKx2GmTI/BJy6N+utVfg3rB3sze9V9K/v7CRlDjF39KtOs23ajo25LPCt
+	 PK75lEOqGOMQljXvsdaFAxfhReu8LNx2sCnsbhSOVF4p1YYvC6R4rYBWvvgeuouGsN
+	 mS6KBkpbonHUisteOj0jNAawlRF1swknxu/N30kwtuyzATUUsvyVmXaasWFLGPoPYb
+	 X7/RjMJHt5d7xwXAeypyweERGQM3f9ASrA8xW9O1sLsWBQ6tKZVrP6otQLfef77TK7
+	 xn66cP1MZGVrNS/wu6YI70hfWRELyuvZaJHdCQ4Pecpgjpw84s4KrelK+qP1OcJ6Hf
+	 4u9R7F9FDaxag==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ef2cb7d562so11802471fa.3
+        for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 01:35:57 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yz7W+UHrLp2xiz562xic/1rc1DYkqREtZe4FWlAa+YB7trxAO57
+	FYfRf+ayUEd3izhRD+qmsehvs9LwZuMrGXCb5pECKQdyEomtR65AXOFzha/l0e20RIRx4KLmpR0
+	fRvcghFZ7bv35YLtycVbO6jf9rWI=
+X-Google-Smtp-Source: AGHT+IGCUWtDUrSLq9FUywisPB9ubGYpBGp5pqJFhGHITugCMNZBLgHhzSXLdVhRu72bTvFPeT/Snlu70QjEOJqI1sg=
+X-Received: by 2002:a2e:b704:0:b0:2ec:63f:fe91 with SMTP id
+ 38308e7fff4ca-2ef16849d7emr44823171fa.38.1721637355474; Mon, 22 Jul 2024
+ 01:35:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <af462e20-d158-4c5c-8dae-ce48f4192087@molgen.mpg.de>
- <2024071939-wrought-repackage-f3c5@gregkh> <20240719093819.GE12656@pendragon.ideasonboard.com>
- <2a2cac3c-f9cd-4b20-ae53-9e6963c7889f@molgen.mpg.de> <518cd6b4-68a8-4895-b8fc-97d4dae1ddc4@molgen.mpg.de>
-In-Reply-To: <518cd6b4-68a8-4895-b8fc-97d4dae1ddc4@molgen.mpg.de>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 22 Jul 2024 10:01:42 +0200
-X-Gmail-Original-Message-ID: <CANiDSCuPR8LryVVhodJKFoYh6xGLGo47_XJ3Oqt9+nz84JfpYg@mail.gmail.com>
-Message-ID: <CANiDSCuPR8LryVVhodJKFoYh6xGLGo47_XJ3Oqt9+nz84JfpYg@mail.gmail.com>
-Subject: Re: Linux logs error `Failed to query (GET_CUR) UVC control X on unit
- Y: -75 (exp. 1).` (75 == EOVERFLOW?)
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Greg KH <gregkh@linuxfoundation.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-usb@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+References: <172096653882.8.16813493378478071178.379356753@simplelogin.com>
+ <CAMj1kXG9AjvChj9O6LR+2bFVUoa225phaXndYvQ_f4X4bKioaw@mail.gmail.com>
+ <172125357072.7.13007674265724826216.382402450@simplelogin.com>
+ <CAMj1kXGYicoxQGsv=3uM2bgs99aXxPMFUwib5bTVa6U6OSxzUg@mail.gmail.com> <172133451315.7.8041341910867954609.383315718@simplelogin.com>
+In-Reply-To: <172133451315.7.8041341910867954609.383315718@simplelogin.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 22 Jul 2024 10:35:44 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEk150dOFbAXAOD1=eJcS_9J5L5=GWJo97HneNyr+7kAA@mail.gmail.com>
+Message-ID: <CAMj1kXEk150dOFbAXAOD1=eJcS_9J5L5=GWJo97HneNyr+7kAA@mail.gmail.com>
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+To: mavrix#kernel@simplelogin.com, "Shao, Marshall" <Marshall.Shao@dell.com>
+Cc: regressions@lists.linux.dev, regressions@leemhuis.info, 
+	Christian Heusel <christian@heusel.eu>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Paul
+cc Marshall, remove Radek
+
+Link to full thread here:
+https://lore.kernel.org/regressions/172096805546.8.15772688283210394474.379370367@simplelogin.com/
+
+Hello Marshall,
+
+Do you happen to any insights as to why this change breaks the boot on
+an older Dell XPS 13 laptop? Do you imagine it might be caused by the
+same issue you are trying to fix in
+
+https://lore.kernel.org/linux-efi/DS7PR19MB570996A580C6F5D2C9CACCE48BA32@DS7PR19MB5709.namprd19.prod.outlook.com/#t
+
+Thanks,
+Ard.
 
 
-
-On Fri, 19 Jul 2024 at 14:31, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+On Thu, 18 Jul 2024 at 22:28, <mavrix#kernel@simplelogin.com> wrote:
 >
-> #regzbot ^introduced: b2b5fcb1c5b645d5177ef3e3f41c7a706fc2688d
->
-> Dear Laurent, dear Greg, dear Ricardo,
->
->
-> Am 19.07.24 um 13:33 schrieb Paul Menzel:
->
->
-> > Am 19.07.24 um 11:38 schrieb Laurent Pinchart:
-> >> (CC'ing Ricardo)
-> >>
-> >> On Fri, Jul 19, 2024 at 08:05:35AM +0200, Greg KH wrote:
-> >>> On Fri, Jul 19, 2024 at 07:22:54AM +0200, Paul Menzel wrote:
+> On 7/18/24 12:15 AM, Ard Biesheuvel - ardb at kernel.org wrote:
+> > Thanks for testing.
 > >
-> >>>> Today, starting the Intel Kaby Lake laptop Dell XPS 13 9360/0596KF,
-> >>>> BIOS
-> >>>> 2.21.0 06/02/2022 with
-> >>>>
-> >>>>      Bus 001 Device 004: ID 0c45:670c Microdia Integrated Webcam HD
-> >>>>
-> >>>> Linux =E2=80=9C6.11-rc0=E2=80=9D (v6.10-8070-gcb273eb7c839) logged U=
-VC errors:
-> >>>
-> >>> Does 6.10-final have the same issue?
+> > Please try the partial reverts in the following message
 > >
-> > No, it does not. Linux 6.10-04829-ge2f710f97f35 (Merge tag 'ata-6.11-rc=
-1' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux) does also
-> > not show this, and 6.10-rc3-00148-g8676a5e796fa (media: uvcvideo: Fix
-> > integer overflow calculating timestamp) neither.
+> > https://lore.kernel.org/all/a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz/T/#mc9943f4fc27c2f4637d697a4d23e37d2c334d076
 > >
-> >>> If not, can you use 'git bisect' to track down the offending commit?
+> > and determine which of the two returns your system to a working state.
 > >
-> > I am on it. I tried to pass the USB device through to a VM and try to
-> > reproduce there. Thank you for the comment, that reloading the module i=
-s
-> > (of course) also possible. That avoids rebooting the system.
+> 6.10 mainline with 3-0001-Partial-revert-of-8117961d98f-1.patch works.
+> The other one doesn't.
 >
-> The hard way found commit:
-
-Thanks a lot for bisecting the error.
-
-BTW, besided the error messages, the camera was working fine correct?
-
-Could you check if this fixes your issue?
-
-https://lore.kernel.org/linux-media/20240722-fix-filter-mapping-v1-1-07cc9c=
-6bf4e3@chromium.org/T/#u
-
-Thanks!
+>
+>
