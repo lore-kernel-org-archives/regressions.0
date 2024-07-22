@@ -1,206 +1,155 @@
-Received: from mx0a-00154904.pphosted.com (mx0a-00154904.pphosted.com [148.163.133.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44F316D4C2
-	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 12:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721651328; cv=fail; b=glktkii7LG9nGOrfo5u6r2+OF/zmzGJPjAZ68AtiHGb8R0D10to4LxiAjpT1cxjTZiDIeCTp9VKMkmMjxzx2Xm1wuyXnbtFR9gwcyyN/vGfNPnT0N5XXsbciXC8jQky4ouXMs/kGrwWuMThWh/sdlzg7Cx3SX8qZvuGVc5TXnaE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721651328; c=relaxed/simple;
-	bh=uEsF3ypO3lz2IORk84nuFtd7dgCgQ6EvjF+PWcp75GY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gIrFThJFsPXukhski67SOV8G2siRF9Q8bkiPzmxU9Pwmm391PEu3+mXv5+ATlMdGSmBL44g3N5BJglJayuY1nN5tn5cpPA63QtcOXE6ETB2LjBv0QKEiw2irqOkjVXh8hPLadgEwWGtavJWbzI0fQs0BI0UyJ6QDu6NWC1fqZYg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=Dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=FLEXZr14; arc=fail smtp.client-ip=148.163.133.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=Dell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C768F70
+	for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 14:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721658611; cv=none; b=eE+DrOFRzWtrr7BHeEC3i2YGyB08u0SBJRaxF9J6my2lXW0fxJQMAJL7BifLYavv9f3oavoGsxK0R+5GRZ+uTeOTmc0M/T5bad48BKZsBs1n7/0V3k9iXo8YPl0DuKoNNLDW1AOaj92BTmAheTZXK569AFasB9gu6UljMk5skqk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721658611; c=relaxed/simple;
+	bh=jc4Vg8pnrmtIFW3yAyOhk5obEdegT8XbOWOdWVUTDMw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Wj1f8vho5pfPVnwXSx/rTH7SsHNotrHQM5DYWYPIk8ApDpn6DEVhGKGV1xdeiV+0FIWxed1z5ycWAukpuJgdEA3M4bSn8L5UIeI5aEYW3vy/gLMP2h0Qgp5vW6Jlu2dayEILk621uUuO3o4rTPrtjpYrnFjSx50uroaCGRfgvaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cD1yZBv6; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="FLEXZr14"
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-	by mx0a-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46M96R1o025265;
-	Mon, 22 Jul 2024 08:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from
-	:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	smtpout1; bh=uEsF3ypO3lz2IORk84nuFtd7dgCgQ6EvjF+PWcp75GY=; b=FLE
-	XZr14GdMK8FgJEZ1URcllWZvgAAlBLECYDGA2NFLwbOIci1aOtFkkqxxCnMzV2yA
-	tP7orBb4iwjK4ZKlMB7e8t5/jn5r0WVn+e1G+dazXzfYx8NwK+abvzerw0zn+jL1
-	t6mTpBKgQKjk74/Tz5q2nn0gjkBKeCfDhoB5IlpyoRa6R0KO5k9rQ46DcB9uxiYP
-	Fv/mPR+DmH6SxGSl/iU+AyWdc29ox64LnK4gJcEjkhI0qLYqGgJdmpsWq7qbgJtB
-	aY/658Uu/0dCQ79XLAOdhq20Ml6UPa2fDgzQqTTzQTAShwRjYS+wB2fpZ7vs09f3
-	xX9JOu20OoInMWYZwbg==
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-	by mx0a-00154904.pphosted.com (PPS) with ESMTPS id 40hbg5jj98-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jul 2024 08:28:36 -0400 (EDT)
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-	by mx0b-00154901.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 46MAjUAU038536;
-	Mon, 22 Jul 2024 08:28:35 -0400
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2041.outbound.protection.outlook.com [104.47.55.41])
-	by mx0b-00154901.pphosted.com (PPS) with ESMTPS id 40gtbkyvy4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Jul 2024 08:28:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mN5qjdbwRl8tSAMjTk4N6DanmVsoJT+xqLP3l7XoihePcdd32QASTRImQD52fv6kL0RrCD8b7LdVJowIyrqUKnz8yGGrYJ6W6Lj/I+tDDE8ta3+XkcScvdpl5WSQRnAe0aByY1MwL4A3qecHWT7cfMgq2gee97xG9lFGnHIo61VAfay3bxUMTC/LxbH/+If+GD6HrCO0l74rmjOqNfA3MXNK2IsvCyTeX2jU3bRQNTmLzUpW1x98XlwswkuQQoCKFMFTQnr2xl8PNvkJx6UwjIDNqIJ1gXK0729jmhOUxj5JhQGkKlxOaTCkjejFn3bZde8kR00h6ArjVPdUj6QXGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uEsF3ypO3lz2IORk84nuFtd7dgCgQ6EvjF+PWcp75GY=;
- b=A1lYmzrSmSr0dxERkwgn2PdkTYmpKQH9ZF2u++5JJ0JNGoi2DQ1aWO2+Ktuq+fIei1WZoCLVsCarSCY1lR8NXyd48Reak7+OKaZ2J2Fm7/umGcJlwUYtZdURosY6NSjZu77puvYsISTh0qUXK+lfYIp4vqyEKYILsRPfF1/wDFJomtWLwWpp+6a8RTKHIFsQmcdb4qEOJLXuYtKY6y71meDbRRBizdLIxXBrVMIriMRW20EnQTPovCbHHQIR5VpagG+yYbstmEbuddassTdcxHHPZGuMGrcq+Klhe5lYaozs2w8vjHJaDWg39TXze6GyuxtsCNwYwME3V7FYSR2QAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from DS7PR19MB5709.namprd19.prod.outlook.com (2603:10b6:8:70::15) by
- SN7PR19MB6783.namprd19.prod.outlook.com (2603:10b6:806:261::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.28; Mon, 22 Jul 2024 12:28:31 +0000
-Received: from DS7PR19MB5709.namprd19.prod.outlook.com
- ([fe80::3d06:d879:7717:36e0]) by DS7PR19MB5709.namprd19.prod.outlook.com
- ([fe80::3d06:d879:7717:36e0%5]) with mapi id 15.20.7784.016; Mon, 22 Jul 2024
- 12:28:31 +0000
-From: "Shao, Marshall" <Marshall.Shao@Dell.com>
-To: "ardb@kernel.org" <ardb@kernel.org>
-CC: Christian Heusel <christian@heusel.eu>,
-        "mavrix#kernel@simplelogin.com"
-	<mavrix#kernel@simplelogin.com>,
-        "regressions@leemhuis.info"
-	<regressions@leemhuis.info>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>
-Subject: RE: Re: [REGRESSION] linux 6.6.18 and later fails to boot with
- "initramfs unpacking failed: invalid magic at start of compressed archive"
-Thread-Topic: Re: [REGRESSION] linux 6.6.18 and later fails to boot with
- "initramfs unpacking failed: invalid magic at start of compressed archive"
-Thread-Index: AdrcLO1SOmt+HIyyReWwKuR8EdkjPwABaqbQ
-Date: Mon, 22 Jul 2024 12:28:31 +0000
-Message-ID:
- <DS7PR19MB5709352911E93DBAA427EFEA8BA82@DS7PR19MB5709.namprd19.prod.outlook.com>
-References:
- <DS7PR19MB5709A3ABE92F17FAF56386128BA82@DS7PR19MB5709.namprd19.prod.outlook.com>
-In-Reply-To:
- <DS7PR19MB5709A3ABE92F17FAF56386128BA82@DS7PR19MB5709.namprd19.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ActionId=f3eb1962-a9c6-4cb5-812b-84ab38cbd790;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ContentBits=0;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Enabled=true;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Method=Privileged;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Name=Public
- No Visual
- Label;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SetDate=2024-07-22T12:28:11Z;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR19MB5709:EE_|SN7PR19MB6783:EE_
-x-ms-office365-filtering-correlation-id: 64302e17-6ca8-4504-00b9-08dcaa49cc37
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?QQNFnT0a/WZmXo5v38bFim5a3atFs8JUqVXAO5E8/ou4uiK3ntL2z+sum4?=
- =?iso-8859-1?Q?h57a25NSqKGq5mOpCeVQFdJ7Dpm4JtIg+gfquIUGTme3VBoh61voVSiZqx?=
- =?iso-8859-1?Q?XESjLpOJgpjZnhdoCjRJ+mfrLpubwIDPsBeNUVayMWjGGwaKLk9OoORxI8?=
- =?iso-8859-1?Q?j3ywGzb5Dcs74qfZiZ0I9XB00TjjESqRRYW8tYT1B2kuevYkeKEHYEG4iQ?=
- =?iso-8859-1?Q?qsq+Q2CJx7t99karufzcybKiriJ11BXHYQ8gr5F4XoUt03pktD0QaVNc64?=
- =?iso-8859-1?Q?nhOtEX9hIbhQwjOFgwQAzsl/Knw/MJb42CA+LMSyhXSNhJ3xsk9DPFX4j+?=
- =?iso-8859-1?Q?QFDZkJAH38E8Mpz7PRwg4o/AKfvXKP3tDDv3KetEaIYnJ8PrV/oaw5tNSR?=
- =?iso-8859-1?Q?193jJZX7HZZ8WldHv8bwF5BR8Ap+x+Jk31/dJMxeyneMLtcDpYqEnIXeib?=
- =?iso-8859-1?Q?hehobOSJ38iawZi/kSzgayL4I7y5XcDVIqI6uiAegYWU7gkbgdmTgkOvbp?=
- =?iso-8859-1?Q?4292vNUwBu7KS9QRuTRHCBgYNDQfEAFqVeoQEkK7qhLpNf+ddqbqSFdOsC?=
- =?iso-8859-1?Q?W8ZWBVhkIxqUHhmASdeCc2+yzm2Hzk6lpheC0H46WKN7dSSYJZoejPJE3b?=
- =?iso-8859-1?Q?3YVRu//dIXEsTY9TcKHW4/waorvltY69QZs4cMGNTW+772sEuP4s0I2Drn?=
- =?iso-8859-1?Q?D7EPE3qfDUg5NlMVd0sxH78c5+c6CnGKyuAFjx4QsgYoQyaTBLTStFSc2I?=
- =?iso-8859-1?Q?wh37CR6S+PfI3zBZ3f6w3k8gyZ4WZMM3yMeujsfufizNjKK/D5O9Bus+Za?=
- =?iso-8859-1?Q?EIFdExHMHmEAebK90D42FHVioZcjPRzulHnmfmliYmvXwT4lsFoBV0f8Qo?=
- =?iso-8859-1?Q?Z5RoDPRmxfZbeCksmOgAJIadfnsYPsgst58NfOeD1TpPlOVfP4914Y/DHX?=
- =?iso-8859-1?Q?WOmmuN2Y5ix8puMZpG227a+lubDAAvqb+tT/UW2Tb/v7i8Yf6NPP6bl0/8?=
- =?iso-8859-1?Q?pjBKzZs8IwsOpu+Q4dvQcAE6yDutmQGDFJQYtZ5CvqV7iFPB36xnf6QBas?=
- =?iso-8859-1?Q?RtZLHqmfwjmU67XXDgjpl8LD2ScpSyuvZVn/RUkTwWPpzAjKsaklpcjKxN?=
- =?iso-8859-1?Q?NysANE1RgQpXkT8ZOoUcSM+aOjDKSVxPFMPoSmwQQ3VjC6JrRDy5uOPwfk?=
- =?iso-8859-1?Q?+de5/58b9xgvhAywjetZ+Wrx5MuFmE+1fOyecxMtOxkhr7jiLJIt4C6fBs?=
- =?iso-8859-1?Q?hQ6mvKhMdv4Y2V2fEiPLXL4Cs5Y8S50qWGstT0HUbumOp7rwOlzktfNkMi?=
- =?iso-8859-1?Q?0fcqFRHvd+RZPhgW32jBzArnnWMgdL/uUFzGKj9ESwvIh724UkMFPaB5xu?=
- =?iso-8859-1?Q?VvaD4O/3vlzwjbo/F1DsCsitvQylmdiqxQROG1qy8Sfg8ks9ZSKLwU14LX?=
- =?iso-8859-1?Q?v835UsarTpvaJXFEDAixJo8G/8XNTjxNAUXcdg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR19MB5709.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?pFYzpRbldfwnrllktXUfJpOfroZmWJiyWsOtfsM0TCLam5slq7q34t5h09?=
- =?iso-8859-1?Q?TwmQy+AOhUHNWwbHGjmrCXJh91I/i8hX3jKhcOMFFb9UdmSQqLcymoEZfx?=
- =?iso-8859-1?Q?l+kyrXkU3l5zCSkG107B1WzxCixJkIAPa++TEppmr3bb58Xx2jXZRYRf3X?=
- =?iso-8859-1?Q?41fa1vLSIVJPuVrwynlmXUxUL0/ksQ/TjOaVTKT5VFUzEPcOwX6BoS7I0E?=
- =?iso-8859-1?Q?SqsyI8t/UMBWkC/rPYk4/KwiyM819jHWcb0hvXvHy4fLOT+mZeeksW5Uqs?=
- =?iso-8859-1?Q?zaVIF4XuCRhjnu+4a//6z3UovhZhHlw7rRXzWlu9J4WoavZ4MoNgLbAnYw?=
- =?iso-8859-1?Q?PtjmDaS2/q2w4HJ7EnCkL32EYTxgaUPoWnxnbTI57N7vXbeu6NPUXc0zTt?=
- =?iso-8859-1?Q?JV/IFom1fNEhMVlhoUTmK8Id0S5S4PfySg1wDXXqS2wPoMrY8a2t4ZpIRx?=
- =?iso-8859-1?Q?HeAyxn03KMJomwm1mrw8MdHxxsp9s9LrqTPg7nimz+wMUgTyqqvi94c6Gu?=
- =?iso-8859-1?Q?YGDoqN70XjNHBp2O2TnTo1RlSvjq6nL1tfwu1a/Pu99myMO/hFAu4VtnJz?=
- =?iso-8859-1?Q?VpeM/3u3bueX+rVL4lfVXc4pqxlU2r3YYO/uFIVIlX/zr7vaTm0O8l1n5b?=
- =?iso-8859-1?Q?wl+bBsUeg4b9bRN2ppTTiEwh3GqMT6cRBF6AJzB7M2JvVUHaYcBBFDqF8J?=
- =?iso-8859-1?Q?2acTRJRG2iHCJU8Nd6j9CVivh04qVP+ZLiNH1W0oAOArbE31ECuXMPpZCP?=
- =?iso-8859-1?Q?YuF4dBx1hhgOv4dfbGq0JK7lzLBrjy3hqIdcepV/X1QquKFBSpT9HTueUC?=
- =?iso-8859-1?Q?XTltq9QUBiPDtxjmOFwqMd3prBCaBTrOUAl4Tlb0NSWXQ+kOacvUP1b+Nw?=
- =?iso-8859-1?Q?np1YBeVFBefJ9dHK4XNlK3s5QgnMyex74tLeh69WGpWIRb8ZJeDqX5+KQi?=
- =?iso-8859-1?Q?cP8NQ5bKS7wjheIlkqVTIs9Uu+vEdEcaGK9QMWH2LOc0I8cZbn99hxF0qw?=
- =?iso-8859-1?Q?Sj3oQUREMa0ljdWR4ehNGRieiyPHVdTJZiKWagHejYQyeI0B1kis+XpYBQ?=
- =?iso-8859-1?Q?KTg4AU1AJ1bH6gLC6vWpk7dVJWnbTfszVtkbA2Dzpm/19CBsdINFsvGPaq?=
- =?iso-8859-1?Q?7W6HMZpuDYC78zvk1BzMMQ0uRgiNdWNGGnLV9Pa6mfjvQb9p/3dMa8XTNw?=
- =?iso-8859-1?Q?GJabgh/4+mRSPRueMl/DNXn5Xev7wBIfPJxvkG3gBZzH7E291ETaW6VtEd?=
- =?iso-8859-1?Q?vAhl/Z5+6txJHMqW76SOIaYYqQDRM2Rs3hMC4BzGhc4Of3066ncHjN6w83?=
- =?iso-8859-1?Q?7pB5a/x9ngJdhAUQkym+8dKDDHvX5U/WZBur5IxhKGlqWSn5NMFbuAhRHG?=
- =?iso-8859-1?Q?9eiiOCepnMlhIlaKfVZJZSvnqknX+P5xJ5g/5zxOC4WMYSXawUV30YwJq8?=
- =?iso-8859-1?Q?hJFYBXQNJ8BIqYEVT7c3DD5Fz0uaYDYay/QR/ps2q6brjOCVQ3/wvmjVUP?=
- =?iso-8859-1?Q?2qBXOLQh84m/b11stDFGeNAQR9xW2Wy9Oig7//WResDO3AHLahasyyfzxQ?=
- =?iso-8859-1?Q?tojTlvstKheGLO61035jdC+N+Z8+QFIaQcq53iGpPrHIzepJ9rOyj+ZlMr?=
- =?iso-8859-1?Q?xwysbr3t1Vlyj1ubahuE5yel0fXaSsO1t0?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cD1yZBv6"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8100f08b5a8so1293889241.0
+        for <regressions@lists.linux.dev>; Mon, 22 Jul 2024 07:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721658609; x=1722263409; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eNQj5L480GiXOYni+r7oo8capetgUsj9Z2Zw/kMU9Lo=;
+        b=cD1yZBv6hQZyU2YNhb7U2vwStZWNYXAD7kFCxII5K4wIOyzZNvYVRzeSIoc3FabBos
+         2SvzLHUzZZhslBnY4dzE+NFFKffCF9N2ZWGRPaMec2NkXXXkR88GUel++rnEjH1f5iv2
+         x0wPYTWEkiO4lqAoUn9mHOyc5Pj/dwvhr8v0g/dXhxtl1wVS/gQbBSnd8WITWK2AyCoM
+         GUjtY5jjgmontmn47Gi6NHjBGvDhT0qbqc8NJ5ZpN+SaLdWiDMpmYAGhWuIoxn7a4Xb3
+         HywRcCrJL2o8KAgLfpgZQdMySr25acOfUtryyf+yeNOtiMEXurubLCZ6qn6pQ1RZUNDI
+         LuqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721658609; x=1722263409;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eNQj5L480GiXOYni+r7oo8capetgUsj9Z2Zw/kMU9Lo=;
+        b=vyga+uy2MR+cLw2WETONoknBei7y67Qou48AYExQICUGq3QxpeaBAPiwJUywRHmUuj
+         FSlnyqOiuN9+HYvdlYhfx8al4M2d4bXpoPMfLU0zGNb1+/MBZXmKUB3Z3YGec9K6tjxt
+         6k0heoXejnudqsCoQ6utXxLcF7zTtCYcb0LTFYHQY0SNAtAG3eJ393bkMsbB+JveRTRK
+         Pz5qSfzJ9CAeEtPkyCvKMJa3C2q686nO46y3Yk+WsYuxgyboSyBOzx/tYXvIRa+49gzs
+         /qLSZwNtQwYYYxsI3EhpdjCv2mZWDTe57EvWbqNgvMd9A1NI6NPPxUrOoWEKy4rFDjYc
+         lPxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOiXQAA1zGP5H6KYwTCn0sQGLp9R5w8O8lQ6HKgWMQjKS1bYYIm4rPpIySgd+K3SS/VwVMxhMDy6AdhK7KR470f6q3HmxZaewzhHY=
+X-Gm-Message-State: AOJu0YwZ8kb2yiqH1jTfeLG8OAZZBFOMjMl8iHtvfPbUmeC2RQnCDkXW
+	rAjEwygOLKBwc2IZ3memHtuM+UxNSzMX3YFnM1mQ5PoPsnBLnd3/C/1Kneos2kzElMK2XZmh083
+	ZU18vd4UB5gjhKKF522qaEhoeDEd6bJE7y4DYpA==
+X-Google-Smtp-Source: AGHT+IFus2Eig2CcvD+a8Ar+gdFVn560QbNbPQwuRz7NrBNpKGVdfa/jGlZ7xniv7mXXNeI9EWiqcwMovH8pwOaAJrA=
+X-Received: by 2002:a05:6102:36cd:b0:48f:eb37:fd86 with SMTP id
+ ada2fe7eead31-4928ba881damr4622730137.30.1721658608416; Mon, 22 Jul 2024
+ 07:30:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB5709.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64302e17-6ca8-4504-00b9-08dcaa49cc37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2024 12:28:31.5148
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A7TlTZnwryco7tIGWiIbtq/RpAuiF17dwe3SBa6eltujMkot0OyD3LZX3eg87NzwIcwcT1sxfmB6mgE4o4K8eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR19MB6783
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-22_08,2024-07-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- bulkscore=0 spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=853
- impostorscore=0 priorityscore=1501 clxscore=1015 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2407110000 definitions=main-2407220093
-X-Proofpoint-GUID: Fv0BxY5vcqT1BQPTri4UHIpPQkUoaa7Q
-X-Proofpoint-ORIG-GUID: Fv0BxY5vcqT1BQPTri4UHIpPQkUoaa7Q
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 adultscore=0 spamscore=0
- impostorscore=0 malwarescore=0 phishscore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 suspectscore=0 lowpriorityscore=0 mlxlogscore=810
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2407220093
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 22 Jul 2024 19:59:56 +0530
+Message-ID: <CA+G9fYsdQ58YL96Kv7dY1nb5Ok3=o7L68JdpOH4yZJ_3nAdExw@mail.gmail.com>
+Subject: WARNING: at kernel/time/timer_migration.c:1714 tmigr_cpu_prepare
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ard,
+The following boot warnings noticed on all the devices running today's
+Linux next-20240722 tag. The system is stable and booted to console.
 
-This problem seems not relevant to my fix, I didn't see any efi_pe_entry
-booting problem on my firmware so far.=20
+First seen on next-20240722.
 
-BIOS Information
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Vendor: Dell Inc.
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Version: 1.13.0
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Release Date: 02/10/2020
+  GOOD: next-20240719
+  BAD: next-20240722
 
-It seems that they have stopped to update this BIOS. Anyway, I don't
-have much information about XPS firmware, let me try to ask someone=20
-else to take a look.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Regards,
-Marshall Shao
+Boot log:
+-----------
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+[    0.000000] Linux version 6.10.0-next-20240722 (tuxmake@tuxmake)
+(aarch64-linux-gnu-gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils
+for Debian) 2.42) #1 SMP PREEMPT @1721630963
+[    0.000000] KASLR enabled
+[    0.000000] Machine model: Thundercomm Dragonboard 845c
+...
+[    0.007393] rcu: Max phase no-delay instances is 1000.
+[    0.007773] Timer migration: 1 hierarchy levels; 8 children per
+group; 1 crossnode level
+[    0.007823] ------------[ cut here ]------------
+[    0.007833] WARNING: CPU: 0 PID: 1 at
+kernel/time/timer_migration.c:1714 tmigr_cpu_prepare
+(kernel/time/timer_migration.c:1714 (discriminator 1))
+[    0.007858] Modules linked in:
+[    0.007870] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.10.0-next-20240722 #1
+[    0.007878] Hardware name: Thundercomm Dragonboard 845c (DT)
+[    0.007883] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    0.007890] pc : tmigr_cpu_prepare
+(kernel/time/timer_migration.c:1714 (discriminator 1))
+[    0.007896] lr : cpuhp_invoke_callback (kernel/cpu.c:194)
+[    0.007907] sp : ffff80008005bb20
+[    0.007910] x29: ffff80008005bbb0 x28: ffffa8983a9defd0 x27: ffff422c792f74f8
+[    0.007920] x26: ffff99943f4ea000 x25: ffff422c792f2c68 x24: ffffa8983a9e35c0
+[    0.007928] x23: ffffa898379aa798 x22: 0000000000000000 x21: ffffa89839e08c68
+[    0.007936] x20: ffffa89839e0d000 x19: 0000000000000000 x18: 0000000000000006
+[    0.007943] x17: 6f72632031203b70 x16: 756f726720726570 x15: 0720072007200720
+[    0.007951] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
+[    0.007959] x11: 0720072007200720 x10: ffffa8983aa5df30 x9 : ffffa898378b2a88
+[    0.007967] x8 : 00000000ffffefff x7 : ffffa8983aa5df30 x6 : 0000000000000001
+[    0.007975] x5 : 0000000000000000 x4 : ffffa89839e0d4f8 x3 : ffff99943f4ea000
+[    0.007982] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffffa89839e0d4f8
+[    0.007990] Call trace:
+[    0.007993] tmigr_cpu_prepare (kernel/time/timer_migration.c:1714
+(discriminator 1))
+[    0.007998] cpuhp_invoke_callback (kernel/cpu.c:194)
+[    0.008004] cpuhp_issue_call (kernel/cpu.c:2359 kernel/cpu.c:2339)
+[    0.008011] __cpuhp_setup_state_cpuslocked (kernel/cpu.c:2505)
+[    0.008021] __cpuhp_setup_state (kernel/cpu.c:2534)
+[    0.008027] tmigr_init (include/linux/cpuhotplug.h:277
+kernel/time/timer_migration.c:1794)
+[    0.008040] do_one_initcall (init/main.c:1267)
+[    0.008049] kernel_init_freeable (init/main.c:1372 (discriminator
+1) init/main.c:1567 (discriminator 1))
+[    0.008057] kernel_init (init/main.c:1471)
+[    0.008068] ret_from_fork (arch/arm64/kernel/entry.S:861)
+[    0.008076] ---[ end trace 0000000000000000 ]---
 
+
+metadata:
+-----
+  artifact-location:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/
+  build-url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/
+  build_name: gcc-13-lkftconfig-debug
+  git_describe: next-20240722
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: dee7f101b64219f512bb2f842227bd04c14efe30
+  kernel-config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2jagYnqJwwRb1upwVgqd6h6cQoU/config
+  toolchain: gcc-13
+
+Steps to reproduce:
+-------
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2jagaCWDNIYL1r8qprPP81YQdaF/reproducer
+
+
+Full dmesg link:
+--------
+ - https://lkft.validation.linaro.org/scheduler/job/7753578#L5022
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240722/testrun/24669141/suite/log-parser-boot/test/check-kernel-exception-a189d92b895bd0de96c24e2d262e9caa627c25600bb7fda7c5894f2ce03ebb57/log
+
+--
+Linaro LKFT
+https://lkft.linaro.org
