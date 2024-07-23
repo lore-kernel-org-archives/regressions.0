@@ -1,106 +1,142 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0B512E1DB
-	for <regressions@lists.linux.dev>; Tue, 23 Jul 2024 00:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ABB61FE1;
+	Tue, 23 Jul 2024 04:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721695889; cv=none; b=blm88kBFLrGS8550BoMCJbkU/YVKZjX9IyhgL8aRQz9dnMCZ7wT0Mt3QNCG+pY1mYxqNhCgdV9b3O3dsPCBpRscaE2RMm22G0JQkGmMYqy5NqVdwEvRfzGezUV5JH02jwUVuZl6wxEZugZT+VwuonEVUQHdrv+OvkloZWD5AFB4=
+	t=1721708663; cv=none; b=p8BZiEaDnRe+5fBhd7v9UAX0srvftzFBSlrQbgyXR0LY3cviYmRAXKIj908j425hGvdH2eE6417FrSILn2/2cpCW24+dYLsdcoZGummks0pxkEbDvC3wI6IeoqUBd2QBwpLkxP9udSG2DjFn5Gs+oDHD5bXMiZ9VEdU22yPT4B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721695889; c=relaxed/simple;
-	bh=I80HJJ0uWLSCDX0+f3gDi4OoFh5QNskt1isnchAx8kU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EH5cAmspwVhOrrXvM3AUif1BdcG7S6mujqjMeVvjibq6nsAqa0OXUOUUuiVWhHo5f5AASt8aWgp5Fr3KVy2mz+acvWvLCcOxXbQEjtWOR81Ni3EamujzdUA0UN4BxLkUB1eVRLUfytPR8vkPcd0tiCOOm0DaWB+Xn1E4bJWlxso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=esModib6; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1721708663; c=relaxed/simple;
+	bh=b+/UhKRdO01MBVJflNIZgGIuDWT+kECWlSkFyJLs79A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLH4H7nPLEnU5HTH5tCObLjeytT6QdxHlvzx5d39NTudlZN0Mf179HF97zhpIwEotNTahNbnf2Amu65lqngBPuj0tBdLaoPcbbzadMmC0iW63lhtmZnEO8DnxSXcDD1tAddKe1IRWsWVgF3a5ycIH68vbPRQRMoTbkpwLteCgk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjWadY0k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="esModib6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1721695887; x=1753231887;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8upgokxXsouhrUx6bkYmKhiOfAsG7NKO2JmhE0OOTtM=;
-  b=esModib6kcAwu2UC+U7AkTjrqQmfASU+1KFsZg40pDSlYq7dZIsogFAn
-   gM5lOdFz1zttMEF5QaBg8AZekolh7nGJQ8d5gzyzJMUjezxsf+O2Dk41f
-   Xe+x9sjpVCoFCn8fx/h9P6USUH1S+DDZsDyLYz5praZ6kBcB67aW8vlSv
-   0=;
-X-IronPort-AV: E=Sophos;i="6.09,229,1716249600"; 
-   d="scan'208";a="412592983"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 00:51:24 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:38811]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.42.47:2525] with esmtp (Farcaster)
- id 8632a391-44c4-41ee-9546-d1ec88e94edf; Tue, 23 Jul 2024 00:51:23 +0000 (UTC)
-X-Farcaster-Flow-ID: 8632a391-44c4-41ee-9546-d1ec88e94edf
-Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 23 Jul 2024 00:51:23 +0000
-Received: from 3c06303d853a.ant.amazon.com (10.187.170.41) by
- EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 23 Jul 2024 00:51:19 +0000
-Date: Mon, 22 Jul 2024 17:51:14 -0700
-From: Andrew Paniakin <apanyaki@amazon.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-CC: Christian Heusel <christian@heusel.eu>, <pc@cjr.nz>,
-	<stfrench@microsoft.com>, <sashal@kernel.org>, <pc@manguebit.com>,
-	<stable@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
-	<abuehaze@amazon.com>, <simbarb@amazon.com>, <benh@amazon.com>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
- stable/linux-6.1.y breaks cifs client failover to another server in DFS
- namespace
-Message-ID: <Zp7-gl5mMFCb4UWa@3c06303d853a.ant.amazon.com>
-References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
- <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
- <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
- <ZnyRlEUqgZ_m_pu-@3c06303d853a>
- <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
- <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
- <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjWadY0k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859FDC4AF0C;
+	Tue, 23 Jul 2024 04:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721708662;
+	bh=b+/UhKRdO01MBVJflNIZgGIuDWT+kECWlSkFyJLs79A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XjWadY0khbOna8w6igG13xlZMKf2O7B0W8Fe5DjLqlD5gO4ZH3+Kd1UANiK5YqMC5
+	 8n56bI2axfzSSjbRLP8pVtsJemUJW7OHvKQIFUeS0jGzS/hWrQ7yY7BedSgUNd5Z1U
+	 4WfAIefuMGM4qqKrhiXucn0m4QETSoONnIjRVL1uBKHJFuuFae9st1buKRguaMH79X
+	 oF5KZMlJf0kSAMXOTGHBR38et6zlwU9Va/qVIJksbtPqS8aW0S4m+/GJzg+teaBPOI
+	 4TFy/gsHfJ8G0+4k/iF4FJAza/AAHsQ7DmQNPOjQ/mlmALzkVcsx0IGXxBSTCFarrx
+	 JcPugYkkwM/Kg==
+Date: Mon, 22 Jul 2024 21:24:20 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>,
+	"Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"Deucher, Alexander" <alexander.deucher@amd.com>,
+	amd-gfx list <amd-gfx@lists.freedesktop.org>,
+	dri-devel <dri-devel@lists.freedesktop.org>,
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and
+ 120Hz
+Message-ID: <20240723042420.GA1455@sol.localdomain>
+References: <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+ <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info>
+ <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+ <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
+ <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com>
+ <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
+ <2915a8c4-ebac-4dae-8f09-32a5b4d9aeda@amd.com>
+ <CABXGCsPuRViSd_WeOciLKcQ4hjYxJ7e3i7LomwsUMzd0a+zvBw@mail.gmail.com>
+ <CABXGCsOsfP2SToiDhRAS51nPJ+Qr2v7B3Kjr+yVeP4G7zFZpMA@mail.gmail.com>
+ <CADnq5_Mjxna+aqhWT49YLmXGH+piittc4FUSyCDEJ8s7G-Rb3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
-X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
- EX19D026EUB004.ant.amazon.com (10.252.61.64)
+In-Reply-To: <CADnq5_Mjxna+aqhWT49YLmXGH+piittc4FUSyCDEJ8s7G-Rb3Q@mail.gmail.com>
 
-On 12/07/2024, Andrew Paniakin wrote:
-> On 11/07/2024, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 27.06.24 22:16, Christian Heusel wrote:
-> > > On 24/06/26 03:09PM, Andrew Paniakin wrote:
-> > >> On 25/06/2024, Christian Heusel wrote:
-> > >>> On 24/06/24 10:59AM, Andrew Paniakin wrote:
-> > >>>> On 19/06/2024, Andrew Paniakin wrote:
-> > >>>>> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
+On Tue, Jul 16, 2024 at 01:10:37PM -0400, Alex Deucher wrote:
+> From 8aaf8da07a8b542c0a0f4da2601da07beddfdeb0 Mon Sep 17 00:00:00 2001
+> From: Alex Deucher <alexander.deucher@amd.com>
+> Date: Tue, 16 Jul 2024 12:49:25 -0400
+> Subject: [PATCH] drm/amd/display: fix corruption with high refresh rates on
+>  DCN 3.0
 > 
-> [snip]
+> This reverts commit bc87d666c05a13e6d4ae1ddce41fc43d2567b9a2 and the
+> register changes from commit 6d4279cb99ac4f51d10409501d29969f687ac8dc.
 > 
-> > Hmmm, unless I'm missing something it seems nobody did so. Andrew, could
-> > you take care of that to get this properly fixed to prevent others from
-> > running into the same problem?
-> > 
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> > 
-> > #regzbot poke
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3478
+> Cc: mikhail.v.gavrilov@gmail.com
+> Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> ---
+>  .../drm/amd/display/dc/optc/dcn10/dcn10_optc.c    | 15 +++------------
+>  .../drm/amd/display/dc/optc/dcn20/dcn20_optc.c    | 10 ++++++++++
+>  2 files changed, 13 insertions(+), 12 deletions(-)
 > 
-> We got the confirmation from requesters that the kernel with this patch
-> works properly, our regression tests also passed, so I submitted
-> backport request:
-> https://lore.kernel.org/stable/20240713031147.20332-1-apanyaki@amazon.com/
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c
+> index 4f82146d94b1..f00d27b7c6fe 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn10/dcn10_optc.c
+> @@ -950,19 +950,10 @@ void optc1_set_drr(
+>  				OTG_FORCE_LOCK_ON_EVENT, 0,
+>  				OTG_SET_V_TOTAL_MIN_MASK_EN, 0,
+>  				OTG_SET_V_TOTAL_MIN_MASK, 0);
+> -
+> -		// Setup manual flow control for EOF via TRIG_A
+> -		optc->funcs->setup_manual_trigger(optc);
+> -
+> -	} else {
+> -		REG_UPDATE_4(OTG_V_TOTAL_CONTROL,
+> -				OTG_SET_V_TOTAL_MIN_MASK, 0,
+> -				OTG_V_TOTAL_MIN_SEL, 0,
+> -				OTG_V_TOTAL_MAX_SEL, 0,
+> -				OTG_FORCE_LOCK_ON_EVENT, 0);
+> -
+> -		optc->funcs->set_vtotal_min_max(optc, 0, 0);
+>  	}
+> +
+> +	// Setup manual flow control for EOF via TRIG_A
+> +	optc->funcs->setup_manual_trigger(optc);
+>  }
+>  
+>  void optc1_set_vtotal_min_max(struct timing_generator *optc, int vtotal_min, int vtotal_max)
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> index 43417cff2c9b..b4694985a40a 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> @@ -453,6 +453,16 @@ void optc2_setup_manual_trigger(struct timing_generator *optc)
+>  {
+>  	struct optc *optc1 = DCN10TG_FROM_TG(optc);
+>  
+> +	/* Set the min/max selectors unconditionally so that
+> +	 * DMCUB fw may change OTG timings when necessary
+> +	 * TODO: Remove the w/a after fixing the issue in DMCUB firmware
+> +	 */
+> +	REG_UPDATE_4(OTG_V_TOTAL_CONTROL,
+> +				 OTG_V_TOTAL_MIN_SEL, 1,
+> +				 OTG_V_TOTAL_MAX_SEL, 1,
+> +				 OTG_FORCE_LOCK_ON_EVENT, 0,
+> +				 OTG_SET_V_TOTAL_MIN_MASK, (1 << 1)); /* TRIGA */
+> +
+>  	REG_SET_8(OTG_TRIGA_CNTL, 0,
+>  			OTG_TRIGA_SOURCE_SELECT, 21,
+>  			OTG_TRIGA_SOURCE_PIPE_SELECT, optc->inst,
+> -- 
+> 2.45.2
 
-There was an issue with backporting the follow-up fix for this patch:
-https://lore.kernel.org/all/20240716152749.667492414@linuxfoundation.org/
-I'll work on fixing this issue and send new patches again for the next cycle.
+This patch fixes the bug for me too.  I am using a Radeon RX 6400, and I've been
+encountering the bug when using 1920x1080 resolution on a monitor whose native
+resolution is 2560x1440.  Feel free to add:
+
+    Tested-by: Eric Biggers <ebiggers@kernel.org>
+
+Thanks,
+
+- Eric
