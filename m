@@ -1,98 +1,109 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B912152787;
-	Wed, 24 Jul 2024 09:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127BD7C0B7
+	for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 09:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721814540; cv=none; b=ao9MCjWmmubZrH2x5jLWS2JvxGmuwF/xFmSzDA5RC73CYap60HsD3/q96rYYjlEsspRke4ghZ38nHjMphuyv3tMuVa5d0ioRe0EJwDrueTjH4LCWXHpzgsA0Ss/VTVCpzvNWpR11MKW2AR/xZ8RKfb3QRPg+gZlL5KqI2AEbJSU=
+	t=1721814908; cv=none; b=ia0k/5vbkc6VZPFTkIiFfHQQXea1KmEIazicAZwO8q+rGJUv3fuvI0WdyApAwad6beyuCB3NyvjdL+2Sm552sM7v/G3wKkRw+ixacj2R/iKcJ+tjFUg0HOsX2EjSFlQVCfK0gy/9+oEJ73dLCALUQdiYl4da4Eq1SohX/iimSQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721814540; c=relaxed/simple;
-	bh=hr5t1jxhQpxDUa/kqmRw/ckmeINvL3jsJ9Xn4zbAPrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=bTTy67zSDapo9cTVkYuzjCBm+J995oCsAqMDiPhNXexGMJWLK6PM9aXTj6DkTL2uTNchWLvKktG/x+eS/I8I5BxH41rZPCyu+WitHl0nqFLKBvZX/qOaEqXcAhQm7SuovvfuJ4Al9Vzy8z/RanTotue/LwL8UDhYXxmxpYBlzF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ScMM3yCb; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1721814908; c=relaxed/simple;
+	bh=vkZ9bKcc+m7SD4464UmlON9t99s4f0ufpAep5jNiCME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N7GToZNsFQp274yMY6RmvCCaV4NC0kcqrKJ5bG4SIMhTEx7LaKm/0NtY2wMxJ3b7OcWcjIrQiZnOlNDIU5fqUejQCEqkS7/bj8XT+gbiDjBBYRq0cNbjecRJ6R3VXnQ7sKCxOnLyEaF1+SqmqZr3wfMh6b9UMpTF+/CFZBeaRyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNabl3nz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ScMM3yCb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=A5IR7bUrgPRi6UY+iawNpG8X/Zh7ZD4sw1KQ94n9lG8=;
-	t=1721814538; x=1722246538; b=ScMM3yCbJHDOaMLpyD4hMhwtAL31LyOkkueVfOD03btV3NM
-	sZ/bhzKkYiGFuHP7CruALzyIX/gzkeba8RWo2mAw+5MDtctV0DapS2IIsEi7xymkSlsj4V5E70hHC
-	dkHgs4FUlueDiIoGPJHUMTIbK7D2AEl0fI1K9Y1Re2mcgmnvMFkIAysc4F/sbIpR/DJB7p+mO5qXp
-	uWkx0sS486p7KLXtpu3IoM9LMdwxZjQXyNGw4qVGdfh/mYgLPKi1eUsGqQ2xjJNHqUb6s8ObTCQ9U
-	1WanmbMAupXv3rZvmxO/IbBvTYH0nVR/WaIBBSbvrR/YiWGEE+eNyj5WuXUhlmyA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sWYcC-0000l7-64; Wed, 24 Jul 2024 11:48:56 +0200
-Message-ID: <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
-Date: Wed, 24 Jul 2024 11:48:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNabl3nz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1503C32782
+	for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 09:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721814907;
+	bh=vkZ9bKcc+m7SD4464UmlON9t99s4f0ufpAep5jNiCME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eNabl3nzqLyjvNdu0PHAl+6qfFD0+xO+RcOOmOXkTFbNuLxh4T5G2OvFXdpqFAxF4
+	 feLUuwq2DWqCY4DE2COpDHahRsDChmxvqq5q3+Qh+WMWg+SGQfz6HhYhPPa+NmAHpH
+	 4VYZOENisbERkbStuBZB14GXfqpqLx+MXVJADD5iEKj3JG5c1iL6NaEgA7kS/muErL
+	 B25xoFgPVEZPVyzEb8PzhksMV8s8G22s/5XwQCd4vWc3CpQE1zepHGX7qExHF9vrjo
+	 2190kwag/d7y9e5mDgP728lhn7SbZs6eW7KKAcT4lZ48XoAZRj6ZjvPpie6K0PJgp5
+	 AHdVYYi3aaPCg==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5c66797e197so140136eaf.3
+        for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 02:55:07 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyK+i/ta6rAXu3TdUZcNFmNOQNynkDrdftLWhh71Xc+WWRdoZb3
+	ML+DhZ7ibo/S8CYyDXkLb9IPmZAfE/vvjLlpX9xYLN52ohSVROvyEqNQAAgnYnE7dbmrOFpzDWv
+	3BG/wia4PNEASBRaRFxxTWzhEI0U=
+X-Google-Smtp-Source: AGHT+IGKLC1hSlYLZWYmUI7NWJHWhNgU7MZHB9ttlJd3e+g3YUJ0ofAsCVy8XN2eGhjvBnsx9thAzcDqkNgh6PLUbsA=
+X-Received: by 2002:a4a:d74a:0:b0:5d5:a381:f303 with SMTP id
+ 006d021491bc7-5d5a381f7abmr589325eaf.0.1721814907012; Wed, 24 Jul 2024
+ 02:55:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
+ <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
+In-Reply-To: <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 24 Jul 2024 11:54:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gfTKDtjsAuyMRRhaZx600XZ6q+WsUes2osRwQSoXM=9Q@mail.gmail.com>
+Message-ID: <CAJZ5v0gfTKDtjsAuyMRRhaZx600XZ6q+WsUes2osRwQSoXM=9Q@mail.gmail.com>
 Subject: Re: [Bug][Regression] non-stop ACPI ([\_SB.PC00.LPCB.HEC.TSR1]) and
  thermal zone error
-To: Tom Yan <tom.ty89@gmail.com>, linux-acpi@vger.kernel.org
-References: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721814538;ad55500a;
-X-HE-SMSGID: 1sWYcC-0000l7-64
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Tom Yan <tom.ty89@gmail.com>, linux-acpi@vger.kernel.org, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jul 24, 2024 at 11:49=E2=80=AFAM Linux regression tracking (Thorste=
+n
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+>
+>
+> On 24.07.24 07:42, Tom Yan wrote:
+> > Up til 6.9.10, I would see these errors every boot *twice*:
+> >
+> > ACPI BIOS Error (bug): Could not resolve symbol
+> > [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230628/psargs-330)
+> > ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
+> > previous error (AE_NOT_FOUND) (20230628/psparse-529)
+> >
+> > (they do get occasionally repeated again)
+> >
+> > and these *once*:
+> >
+> > thermal thermal_zone2: failed to read out thermal zone (-5)
+> > thermal thermal_zone7: failed to read out thermal zone (-61)
+> >
+> > But since the distro I use (Arch) has moved on to 6.10, these are
+> > spammed *non-stop*:
+> >
+> > ACPI BIOS Error (bug): Could not resolve symbol
+> > [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20240322/psargs-330)
+> > ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
+> > previous error (AE_NOT_FOUND) (20240322/psparse-529)
+> > thermal thermal_zone1: failed to read out thermal zone (-5)
+> >
+> > in the frequency of *three to four times per second*.
+> >
+> > For the record, this is now consecutively repeated 5 times every boot a=
+s well:
+> >
+> > thermal thermal_zone7: failed to read out thermal zone (-61)
+> >
+> > But at least this one would stop.
+>
+> I suspect this will be fixed by "thermal: core: Allow thermal zones to
+> tell the core to ignore them" which is heading towards mainline currently=
+:
+> https://lore.kernel.org/all/4950004.31r3eYUQgx@rjwysocki.net/
 
+No, it won't be fixed by this commit.  It is a real thermal zone
+breakage.  Fortunately, there are patches mitigating it in my queue.
 
-On 24.07.24 07:42, Tom Yan wrote:
-> Up til 6.9.10, I would see these errors every boot *twice*:
-> 
-> ACPI BIOS Error (bug): Could not resolve symbol
-> [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230628/psargs-330)
-> ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-> previous error (AE_NOT_FOUND) (20230628/psparse-529)
-> 
-> (they do get occasionally repeated again)
-> 
-> and these *once*:
-> 
-> thermal thermal_zone2: failed to read out thermal zone (-5)
-> thermal thermal_zone7: failed to read out thermal zone (-61)
-> 
-> But since the distro I use (Arch) has moved on to 6.10, these are
-> spammed *non-stop*:
-> 
-> ACPI BIOS Error (bug): Could not resolve symbol
-> [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20240322/psargs-330)
-> ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-> previous error (AE_NOT_FOUND) (20240322/psparse-529)
-> thermal thermal_zone1: failed to read out thermal zone (-5)
-> 
-> in the frequency of *three to four times per second*.
-> 
-> For the record, this is now consecutively repeated 5 times every boot as well:
-> 
-> thermal thermal_zone7: failed to read out thermal zone (-61)
-> 
-> But at least this one would stop.
+> CCing Rafael, who authored that change.
 
-I suspect this will be fixed by "thermal: core: Allow thermal zones to
-tell the core to ignore them" which is heading towards mainline currently:
-https://lore.kernel.org/all/4950004.31r3eYUQgx@rjwysocki.net/
-
-CCing Rafael, who authored that change.
-
-Ciao, Thorsten
+Thanks, I've seen the original message already.  Please see my reply
+to it for more information.
