@@ -1,104 +1,100 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C921C2AD;
-	Wed, 24 Jul 2024 08:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624891BF2B
+	for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 09:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721810834; cv=none; b=AhlnNjLYp2OoFXkdDdoIFNPlrbsqMA/Mud+u0QJNr3N6Fpywu9PY/KFvQNM4b7rhHXDuLu9AgrE6csCAhLPAOgOEVGastNlBsbF3w4m+afXldKJWGlohnzr6attAOMu8SOxtof7+iJ6rU7xTBcQAylu1dj+T3pKNIuHpXmpYS1k=
+	t=1721813593; cv=none; b=VWxMudxYIePWLOs7J4dheC0BsiNUJWVr7DLgMH3h/Rcz0BjLzfVrEcvW9lMyH4ZiXydVz+B5wupjBxFIzQt8625Tu+k7ZGtk1UtjhG08RS3/meCYBMo80zW8V3NvfhH3aA/BZwZgV7XA52ocVSQQwkNYe2uyJhKMgwps5qsljsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721810834; c=relaxed/simple;
-	bh=GjBzsYD6K6w17JNxvzYv8w4oRfzXrpu2qCSi4+bb+28=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sYNIsxnQ8jGO+cmBnNzgX6aGJBkYPl24cBg9arkOhiVDGHZaeawk0zJft/SdTM59J+J+Ib3IDXQtp0zbQEYF1U1M2+49moJ+eMsz8YDnJYqtfVq30Z6rqzquawrXCig489x+krahE8JwWJCmTSRQ/m8wgf6ZLsfDUN5YOysHBLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=E/SefcR/; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1721813593; c=relaxed/simple;
+	bh=AU9FHIyKwh22UtWH8C4pSVAjybvHTu8SscNEP2qvYT8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=r7HdrvZJ27/EytDF1MWpTurFwO8xGZ1STsJOrB9DCwTRBZZiOkrO7eUMmdFWGEfwlkN1saR6Bkq5Wuy6gh8Hd++9GxCEQ2VMEV2GebgTfs73lKXHiwA7i5mlRijWwe+YylLzOv3vzVufsjRquroAgBmFhUat457xN9FrT6mfZ74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uAFm2/mk; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="E/SefcR/"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uAFm2/mk"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=hsI3nZ44Y5P47LGt5BrokAu47Wy+gx9WyMBY6tap8m0=;
-	t=1721810830; x=1723020430; b=E/SefcR/J70dNYw9EJMzJ9F42SY1hYsCFKG1szGi79RRjSJ
-	DZUxGR3r6SGdzBbobcMY7T72x8+Ur4lke4strsdSigBg3fI7c7mTCdu+parU/WfL7hOG5ztR9imZ0
-	nwaNYGBGsJXG3xGWeES7ZWtyyovGMMfcNKgF9H6Ipcw2S96rej4tUYsipZwnz0o2ZOpZ9FczOVYNV
-	EuGEymq/6GbwppZt6m69dafQ9X5a3rcgpPwFjg2bLcWB7OH2pF5jYFFz+HE9iz1UZMsAb/MgjzI78
-	HMqDoLBfhTDemBOv6WViMbSfAS3SvqoU+0vz0h2ba5EGZbnLfKFwfgXsWWTDkZqg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sWXeL-0000000DJUi-3qkP;
-	Wed, 24 Jul 2024 10:47:06 +0200
-Message-ID: <c4a67a0418e7068fc534f39f3c1dce21d082dd8f.camel@sipsolutions.net>
-Subject: Re: [regression] mt76x2u: NULL pointer dereference since recent
- change to fix chanctx emulation for monitor mode
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Felix
- Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee
- <ryder.lee@mediatek.com>
-Cc: Michael <ZeroBeat@gmx.de>, "linux-wireless@vger.kernel.org"
- <linux-wireless@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Kalle Valo <kvalo@kernel.org>
-Date: Wed, 24 Jul 2024 10:47:04 +0200
-In-Reply-To: <8c91352f-a404-4ba6-aa27-1253468c830d@leemhuis.info>
-References: <8c91352f-a404-4ba6-aa27-1253468c830d@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=hKWOiUpQVpINz9xAf5KATe6ICkWI3O1bGT22uSRGDCk=; t=1721813591;
+	x=1722245591; b=uAFm2/mkVxdqMqQAFk8JEHr85k4O1LyEAIXKufaHtcakUtF0vsa5Cz41w84pv
+	PMYAyjpEdkwtiwxL+gcHYjzAsuujQeufRYO85gMtquUmVIxsGE5gqbbezSrmlJZADGNsba+70wMKf
+	m2cEUlVP6na9yfiBkgf7/EaGVSEKtiyWMhmmVwIvomSsNq4N5p8OGvaGxB7q03zQKDTjJHjx8epx/
+	34xhcOUlnWWK/iyMFRFb9xYgAIfeouFXskun5ZGxBnZW91y74mdWXWQWlsF4GyZT3Lsn9e3oNfXpo
+	QxFpEebk9KdIay9I2Em8I5h81ji3Gi+QYl/X/Le6RW2quTOBvA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sWYMv-0005sR-5j; Wed, 24 Jul 2024 11:33:09 +0200
+Message-ID: <9fa3934b-d45d-4c86-9bb9-06ca9b20f835@leemhuis.info>
+Date: Wed, 24 Jul 2024 11:33:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721813591;a23a8a98;
+X-HE-SMSGID: 1sWYMv-0005sR-5j
 
-On Wed, 2024-07-24 at 09:58 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> Johannes, Felix, Lorenzo, Ryder, I noticed a report about a regression
-> in bugzilla.kernel.org that (for my untrained eyes) appears to be a bug
-> in some code paths of mt76x2u that was exposed by 0d9c2beed116e6 ("wifi:
-> mac80211: fix monitor channel with chanctx emulation") [v6.10-rc5,
-> v6.9.7] from Johannes.
->=20
-> As many (most?) kernel developers don't keep an eye on the bug tracker,
-> I decided to write this mail. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D219086 :
->=20
-> >  Michael 2024-07-23 15:38:43 UTC
-> >=20
-> > After a user opened this discussion:
-> > https://github.com/ZerBea/hcxdumptool/discussions/465
-> >=20
-> > Jul 21 05:40:39 rpi4b-aarch kernel: mt76x2u 2-2:1.0 wlan1: entered prom=
-iscuous mode
-> > Jul 21 05:40:45 rpi4b-aarch kernel: Unable to handle kernel NULL pointe=
-r dereference at virtual address 0000000000000000
-> > Jul 21 05:40:45 rpi4b-aarch kernel: Mem abort info:
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   ESR =3D 0x0000000096000044
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   EC =3D 0x25: DABT (current EL), I=
-L =3D 32 bits
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   SET =3D 0, FnV =3D 0
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   EA =3D 0, S1PTW =3D 0
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   FSC =3D 0x04: level 0 translation=
- fault
-> > Jul 21 05:40:45 rpi4b-aarch kernel: Data abort info:
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   ISV =3D 0, ISS =3D 0x00000044, IS=
-S2 =3D 0x00000000
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   CM =3D 0, WnR =3D 1, TnD =3D 0, T=
-agAccess =3D 0
-> > Jul 21 05:40:45 rpi4b-aarch kernel:   GCS =3D 0, Overlay =3D 0, DirtyBi=
-t =3D 0, Xs =3D 0
-> > Jul 21 05:40:45 rpi4b-aarch kernel: user pgtable: 4k pages, 48-bit VAs,=
- pgdp=3D0000000041300000
-> >=20
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Not too well-versed with ARM, does that tel me anything about where in
-the code the crash was? Without any further information I don't think I
-can see anything here, and I don't have an affected device.
+#regzbot report:
+https://lore.kernel.org/all/2a2cac3c-f9cd-4b20-ae53-9e6963c7889f@molgen.mpg.de/
+#regzbot duplicate:
+https://lore.kernel.org/all/af462e20-d158-4c5c-8dae-ce48f4192087@molgen.mpg.de/
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219054
 
-johannes
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219084
+#regzbot introduced: 1541d63c5fe2cebce85b2af84a2850a302ffda9c
+#regzbot summary: net: wifi: mt76: mt7921: null pointer access in
+mt792x_mac_link_bss_remove
+#regzbot duplicate:
+https://lore.kernel.org/all/20240711175156.4465-1-spasswolf@web.de/
+#regzbot duplicate:
+https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZkZF9pz37Bmh2iw@mail.gmail.com/
+#regzbot fix: wifi: mt76: mt7921: fix null pointer access in
+mt792x_mac_link_bss_remove
+#regzbot monitor:
+https://lore.kernel.org/all/20240718234633.12737-1-sean.wang@kernel.org/
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219061
+#regzbot introduced: f40f939917b2b4cbf18450096c0ce1c58ed59fae
+#regzbot summary: platform/x86: hp-bioscfg(?): memory leak and crash on
+32 bit machines
+#regzbot duplicate:
+https://lore.kernel.org/all/3bd6b12c-533c-4b6d-bc91-696db8837b3e@oracle.com/
+
+#regzbot report:
+https://lore.kernel.org/all/PmbX6S6Osc50o8nCGiyOtYWlewq2QKXVo69V_1hkK0WeFxprG387m1JY619uKGK0Kynb7Jdb7plnUWfzKgV0UP9L7RIA4E2KnupKhIr5aYQ%3D@urja.dev/
+#regzbot introduced: 7af5b901e84743
+#regzbot summary: arm: userspace programs segfaulting when CONFIG_ARM_PAN=y
+
+#regzbot report:
+https://lore.kernel.org/all/20240722141440.7210-1-blazej.kucman@intel.com/
+#regzbot introduced: abaaac4845a0
+#regzbot summary: PCI: pciehp_hpc: loss bits for power indicator status
+interface
+
+#regzbot report:
+https://lore.kernel.org/all/1474761635.17820466.1721651484902.JavaMail.root@zimbra60-e10.priv.proxad.net/
+#regzbot introduced: 9f625f5e6cf9
+#regzbot summary: ASoC: sti:  missing probe entry for player and reader
