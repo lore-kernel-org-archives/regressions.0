@@ -1,109 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127BD7C0B7
-	for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 09:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4889C15B554;
+	Wed, 24 Jul 2024 15:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721814908; cv=none; b=ia0k/5vbkc6VZPFTkIiFfHQQXea1KmEIazicAZwO8q+rGJUv3fuvI0WdyApAwad6beyuCB3NyvjdL+2Sm552sM7v/G3wKkRw+ixacj2R/iKcJ+tjFUg0HOsX2EjSFlQVCfK0gy/9+oEJ73dLCALUQdiYl4da4Eq1SohX/iimSQg=
+	t=1721835789; cv=none; b=oAURuAzTgcbuLTKitNkcidIfwSUrgaPhqa8pRWD5HPfptFzZ8tYwWQrcynt4mGBeGw9w0Vy57QbACrCm59zRYCAEd3EQusgJqEakmpSxO+pMtzMuhM0xbP0YJCsJOiOTMsncVUn064jdfUIRdF/INWj1DOWrjOgBKvGCWcrheX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721814908; c=relaxed/simple;
-	bh=vkZ9bKcc+m7SD4464UmlON9t99s4f0ufpAep5jNiCME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7GToZNsFQp274yMY6RmvCCaV4NC0kcqrKJ5bG4SIMhTEx7LaKm/0NtY2wMxJ3b7OcWcjIrQiZnOlNDIU5fqUejQCEqkS7/bj8XT+gbiDjBBYRq0cNbjecRJ6R3VXnQ7sKCxOnLyEaF1+SqmqZr3wfMh6b9UMpTF+/CFZBeaRyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNabl3nz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721835789; c=relaxed/simple;
+	bh=AukMGJiOqCCtt17aswDkfUN2mPrEt30Ji1pkpma+scc=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=dRPFTqCpPJP1L1xl3Ii3GgbIxuMxpK33lSj+KR2/oHsGpXZutUWZkTFp5uqBnAfYGDVYr6has2Yc9hV5W68gQk8O5ilsrNswmoEDvMXKALZ+tdU5VOo2Ph58/6TpoxB6rimP28wxjTZXhu8smfSX8Nl5aDvQGdhBqX8RHv/3mrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=h3xTsq3U; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNabl3nz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1503C32782
-	for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 09:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721814907;
-	bh=vkZ9bKcc+m7SD4464UmlON9t99s4f0ufpAep5jNiCME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eNabl3nzqLyjvNdu0PHAl+6qfFD0+xO+RcOOmOXkTFbNuLxh4T5G2OvFXdpqFAxF4
-	 feLUuwq2DWqCY4DE2COpDHahRsDChmxvqq5q3+Qh+WMWg+SGQfz6HhYhPPa+NmAHpH
-	 4VYZOENisbERkbStuBZB14GXfqpqLx+MXVJADD5iEKj3JG5c1iL6NaEgA7kS/muErL
-	 B25xoFgPVEZPVyzEb8PzhksMV8s8G22s/5XwQCd4vWc3CpQE1zepHGX7qExHF9vrjo
-	 2190kwag/d7y9e5mDgP728lhn7SbZs6eW7KKAcT4lZ48XoAZRj6ZjvPpie6K0PJgp5
-	 AHdVYYi3aaPCg==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5c66797e197so140136eaf.3
-        for <regressions@lists.linux.dev>; Wed, 24 Jul 2024 02:55:07 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyK+i/ta6rAXu3TdUZcNFmNOQNynkDrdftLWhh71Xc+WWRdoZb3
-	ML+DhZ7ibo/S8CYyDXkLb9IPmZAfE/vvjLlpX9xYLN52ohSVROvyEqNQAAgnYnE7dbmrOFpzDWv
-	3BG/wia4PNEASBRaRFxxTWzhEI0U=
-X-Google-Smtp-Source: AGHT+IGKLC1hSlYLZWYmUI7NWJHWhNgU7MZHB9ttlJd3e+g3YUJ0ofAsCVy8XN2eGhjvBnsx9thAzcDqkNgh6PLUbsA=
-X-Received: by 2002:a4a:d74a:0:b0:5d5:a381:f303 with SMTP id
- 006d021491bc7-5d5a381f7abmr589325eaf.0.1721814907012; Wed, 24 Jul 2024
- 02:55:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="h3xTsq3U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=crvD7PrqGMqV/Y/g69Di0jX+60ZadkqnzEmO6bIr5Ak=; t=1721835787;
+	x=1722267787; b=h3xTsq3UaeAXfhF832IKP/qfRwoWgzlGhvSWhILvsU4c24Dkz87zkaphZhtrK
+	s5S8QNbgvIwTLfW4d5T2HGphv6fTssjFhB+zziSj3C6BNNsDAlxn0m38x2CaqPhuR2QeRJbJOTj06
+	SvxSKperIUUP6F9VXXfdTrSYPAOD8wxPqlR/5L5obrGQ9oF7UpAFcxZ6/WV4t5EUDklA2NoGEen0J
+	9mTDZBtz2BXkCRk9aXWFv8jwyYzfToRwWIe5ta4blQmhqNAqFZT4Paf73OpreNtCb28rpw5RXlyNf
+	mNVX/pbjnhWOjp6i43gv65bTLQo3RUT7PEnyDpFsW87TUJAJlg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sWe8m-0001Zq-LO; Wed, 24 Jul 2024 17:42:56 +0200
+Message-ID: <1ff5b407-ff81-40ef-8aa3-9f155491f497@leemhuis.info>
+Date: Wed, 24 Jul 2024 17:42:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
- <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
-In-Reply-To: <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 24 Jul 2024 11:54:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gfTKDtjsAuyMRRhaZx600XZ6q+WsUes2osRwQSoXM=9Q@mail.gmail.com>
-Message-ID: <CAJZ5v0gfTKDtjsAuyMRRhaZx600XZ6q+WsUes2osRwQSoXM=9Q@mail.gmail.com>
-Subject: Re: [Bug][Regression] non-stop ACPI ([\_SB.PC00.LPCB.HEC.TSR1]) and
- thermal zone error
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tom Yan <tom.ty89@gmail.com>, linux-acpi@vger.kernel.org, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: ML dri-devel <dri-devel@lists.freedesktop.org>,
+ Colin Ian King <colin.i.king@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+Subject: [regression] opening and closing /dev/dri/card0 in a QEMU KVM
+ instance will shutdown system
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721835787;8d1a1c47;
+X-HE-SMSGID: 1sWe8m-0001Zq-LO
 
-On Wed, Jul 24, 2024 at 11:49=E2=80=AFAM Linux regression tracking (Thorste=
-n
-Leemhuis) <regressions@leemhuis.info> wrote:
->
->
->
-> On 24.07.24 07:42, Tom Yan wrote:
-> > Up til 6.9.10, I would see these errors every boot *twice*:
-> >
-> > ACPI BIOS Error (bug): Could not resolve symbol
-> > [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230628/psargs-330)
-> > ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-> > previous error (AE_NOT_FOUND) (20230628/psparse-529)
-> >
-> > (they do get occasionally repeated again)
-> >
-> > and these *once*:
-> >
-> > thermal thermal_zone2: failed to read out thermal zone (-5)
-> > thermal thermal_zone7: failed to read out thermal zone (-61)
-> >
-> > But since the distro I use (Arch) has moved on to 6.10, these are
-> > spammed *non-stop*:
-> >
-> > ACPI BIOS Error (bug): Could not resolve symbol
-> > [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20240322/psargs-330)
-> > ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-> > previous error (AE_NOT_FOUND) (20240322/psparse-529)
-> > thermal thermal_zone1: failed to read out thermal zone (-5)
-> >
-> > in the frequency of *three to four times per second*.
-> >
-> > For the record, this is now consecutively repeated 5 times every boot a=
-s well:
-> >
-> > thermal thermal_zone7: failed to read out thermal zone (-61)
-> >
-> > But at least this one would stop.
->
-> I suspect this will be fixed by "thermal: core: Allow thermal zones to
-> tell the core to ignore them" which is heading towards mainline currently=
-:
-> https://lore.kernel.org/all/4950004.31r3eYUQgx@rjwysocki.net/
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-No, it won't be fixed by this commit.  It is a real thermal zone
-breakage.  Fortunately, there are patches mitigating it in my queue.
+I noticed a report about a regression in bugzilla.kernel.org that
+appears to be related to the simpledrm driver. As many (most?) kernel
+developers don't keep an eye on the bug tracker, I decided to write this
+mail. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=219007 :
 
-> CCing Rafael, who authored that change.
+>  Colin Ian King 2024-07-05 16:05:27 UTC
+> 
+> The following code when run as root on a Debian sid amd64 server
+> running in virt-manager (KVM QEMU) will shut the system down with
+> 6.10.0-rc6.  The fork() is required to cause racing on the open/close on
+> /dev/dri/card0
+> 
+> #include <fcntl.h>
+> #include <unistd.h>
+> 
+> int main(void)
+> {
+> 	 pid_t pid = fork();
+> 
+> 	 while (1) {
+> 	 	int fd;
+> 
+> 	 	fd = openat(AT_FDCWD, "/dev/dri/card0", O_WRONLY|O_NONBLOCK|O_SYNC);
+> 	 	close(fd);
+> 	 }
+> }
+> 
+> This was originally found using: while true; do sudo ./stress-ng
+> --dev 4 --dev-file /dev/dri/card0 -t 5; done and narrowed down to the
+> above reproducer. (cf:
+> https://github.com/ColinIanKing/stress-ng/issues/407 )
+> 
+> This does not occur on pre 6.10 kernels, so it looks like a 6.10 regression.
 
-Thanks, I've seen the original message already.  Please see my reply
-to it for more information.
+See the ticket for more details, which also contains a dmesg from a boot
+in the VM: https://bugzilla.kernel.org/attachment.cgi?id=306610
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.9..v6.10
+#regzbot title: drm: opening and closing /dev/dri/card0 in a QEMU KVM
+instance will shutdown system
+#regzbot from: Colin Ian King <colin.i.king@gmail.com>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219007
+#regzbot ignore-activity
