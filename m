@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683B613DDC2;
-	Wed, 24 Jul 2024 09:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B912152787;
+	Wed, 24 Jul 2024 09:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721813801; cv=none; b=NtA/c6ZCxEB74H0aSAtVJd9lskm1J1sj7vh4iYeCvZ+ylHGul+xeyzjCI057091mOg1O1+V3xHNCb0kIacq7nuHn8qcBOU7vTDylXfqlQ7to8pEah6uIvvZxUWhBQ1q1nfTrb4xXdPu8vA8IZH5+ANxdswTCUFS+hZLhc0NJkKo=
+	t=1721814540; cv=none; b=ao9MCjWmmubZrH2x5jLWS2JvxGmuwF/xFmSzDA5RC73CYap60HsD3/q96rYYjlEsspRke4ghZ38nHjMphuyv3tMuVa5d0ioRe0EJwDrueTjH4LCWXHpzgsA0Ss/VTVCpzvNWpR11MKW2AR/xZ8RKfb3QRPg+gZlL5KqI2AEbJSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721813801; c=relaxed/simple;
-	bh=La77EI5N5q2GMTwHDJWq5kA72eNXvF1GPhtzwQ0NKxk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B6jN3kwT6hLbzJ94f7BXvvnyeCWsR8wXltMkjwq61eWvwU8A4aibEmflnVjd+CKMMj0OEw+jTDeHOYVYMfr+T6RP7ThAS4+wx12EqHvLglalPe+mcUE7LshuPCr84VrKIvDG3GXvBQ6LuFbzIZkFsikRQXl+iI8qAbdcs3w1ED4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C7aT2+oI; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1721814540; c=relaxed/simple;
+	bh=hr5t1jxhQpxDUa/kqmRw/ckmeINvL3jsJ9Xn4zbAPrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=bTTy67zSDapo9cTVkYuzjCBm+J995oCsAqMDiPhNXexGMJWLK6PM9aXTj6DkTL2uTNchWLvKktG/x+eS/I8I5BxH41rZPCyu+WitHl0nqFLKBvZX/qOaEqXcAhQm7SuovvfuJ4Al9Vzy8z/RanTotue/LwL8UDhYXxmxpYBlzF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ScMM3yCb; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C7aT2+oI"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ScMM3yCb"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=hjn9u+OdaMy0APR3lesVd6VwainbD/Tq9CR8YxQHmzo=;
-	t=1721813799; x=1722245799; b=C7aT2+oIsCEbHEuEaNUH1Iv7ZeXsz0M07Uxe7TeTSN1Qmwx
-	pJSKeLxX7RU/e5/OKuqWyN6h7shZN0YXUsdIwgcONBspW4dzwe2VBqLPiT733LlVNo3OFRu2g0pDt
-	60K8cxmRfnEBc2qNOzb7FkXvMwZA+IzFlmb40SyhPwKSuCLId7tyUL/exBV5HSCLAHzTXdF/83kWB
-	nVHAF+tzSv1s1PhCTcIOxFAJpg867nCPSlx5gIqsr9xh5jx0hlekk62V526ZXVQBlaUzXVpKLY4C1
-	uUdBf8ld+LrI8kOy3MK4N6q2FdNAb+ivX0558wga6b0KIgs7ILo49bsnwDk19fIQ==;
+	In-Reply-To:References; bh=A5IR7bUrgPRi6UY+iawNpG8X/Zh7ZD4sw1KQ94n9lG8=;
+	t=1721814538; x=1722246538; b=ScMM3yCbJHDOaMLpyD4hMhwtAL31LyOkkueVfOD03btV3NM
+	sZ/bhzKkYiGFuHP7CruALzyIX/gzkeba8RWo2mAw+5MDtctV0DapS2IIsEi7xymkSlsj4V5E70hHC
+	dkHgs4FUlueDiIoGPJHUMTIbK7D2AEl0fI1K9Y1Re2mcgmnvMFkIAysc4F/sbIpR/DJB7p+mO5qXp
+	uWkx0sS486p7KLXtpu3IoM9LMdwxZjQXyNGw4qVGdfh/mYgLPKi1eUsGqQ2xjJNHqUb6s8ObTCQ9U
+	1WanmbMAupXv3rZvmxO/IbBvTYH0nVR/WaIBBSbvrR/YiWGEE+eNyj5WuXUhlmyA==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sWYQB-0006Zs-8l; Wed, 24 Jul 2024 11:36:31 +0200
-Message-ID: <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
-Date: Wed, 24 Jul 2024 11:36:30 +0200
+	id 1sWYcC-0000l7-64; Wed, 24 Jul 2024 11:48:56 +0200
+Message-ID: <820130ae-2473-4282-9be1-9f3aab1434f0@leemhuis.info>
+Date: Wed, 24 Jul 2024 11:48:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,51 +39,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
- mt792x_mac_link_bss_remove
-To: sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com
-Cc: sean.wang@mediatek.com, deren.wu@mediatek.com,
- mingyen.hsieh@mediatek.com, linux-wireless@vger.kernel.org,
- linux-mediatek@lists.infradead.org, Bert Karwatzki <spasswolf@web.de>,
- Mike Lothian <mike@fireburn.co.uk>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240718234633.12737-1-sean.wang@kernel.org>
+Subject: Re: [Bug][Regression] non-stop ACPI ([\_SB.PC00.LPCB.HEC.TSR1]) and
+ thermal zone error
+To: Tom Yan <tom.ty89@gmail.com>, linux-acpi@vger.kernel.org
+References: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <20240718234633.12737-1-sean.wang@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAGnHSE=RyPK++UG0-wAtVKgeJxe0uzFYgLxm+RUOKKoQquW=Ow@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721813799;26d02e41;
-X-HE-SMSGID: 1sWYQB-0006Zs-8l
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721814538;ad55500a;
+X-HE-SMSGID: 1sWYcC-0000l7-64
 
 
 
-On 19.07.24 01:46, sean.wang@kernel.org wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 24.07.24 07:42, Tom Yan wrote:
+> Up til 6.9.10, I would see these errors every boot *twice*:
 > 
-> Fix null pointer access in mt792x_mac_link_bss_remove.
+> ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230628/psargs-330)
+> ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
+> previous error (AE_NOT_FOUND) (20230628/psparse-529)
 > 
-> To prevent null pointer access, we should assign the vif to bss_conf in
-> mt7921_add_interface. This ensures that subsequent operations on the BSS
-> can properly reference the correct vif.
->
-> [...]
->> Fixes: 1541d63c5fe2 ("wifi: mt76: mt7925: add
-mt7925_mac_link_bss_remove to remove per-link BSS")
-> Reported-by: Bert Karwatzki <spasswolf@web.de>
-> Closes: https://lore.kernel.org/linux-wireless/2fee61f8c903d02a900ca3188c3742c7effd102e.camel@web.de/#b
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> (they do get occasionally repeated again)
+> 
+> and these *once*:
+> 
+> thermal thermal_zone2: failed to read out thermal zone (-5)
+> thermal thermal_zone7: failed to read out thermal zone (-61)
+> 
+> But since the distro I use (Arch) has moved on to 6.10, these are
+> spammed *non-stop*:
+> 
+> ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20240322/psargs-330)
+> ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
+> previous error (AE_NOT_FOUND) (20240322/psparse-529)
+> thermal thermal_zone1: failed to read out thermal zone (-5)
+> 
+> in the frequency of *three to four times per second*.
+> 
+> For the record, this is now consecutively repeated 5 times every boot as well:
+> 
+> thermal thermal_zone7: failed to read out thermal zone (-61)
+> 
+> But at least this one would stop.
 
-TWIMC, Mike (now CCed) ran into the problem and on bugzilla confirmed
-that this fixes the problem:
+I suspect this will be fixed by "thermal: core: Allow thermal zones to
+tell the core to ignore them" which is heading towards mainline currently:
+https://lore.kernel.org/all/4950004.31r3eYUQgx@rjwysocki.net/
 
-https://bugzilla.kernel.org/show_bug.cgi?id=219084
-https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZkZF9pz37Bmh2iw@mail.gmail.com/
+CCing Rafael, who authored that change.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Ciao, Thorsten
