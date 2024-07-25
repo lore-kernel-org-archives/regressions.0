@@ -1,146 +1,115 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A9F17557C
-	for <regressions@lists.linux.dev>; Thu, 25 Jul 2024 13:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF111103
+	for <regressions@lists.linux.dev>; Thu, 25 Jul 2024 14:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721912829; cv=none; b=L0KpUpuP1KKzz3INoLOopP4wQr8o688eUCdWho2F4xWYNVV8GpO9rTT/a20q+A6CwxdZVz96cY1Bd2gzP+Dx8gGJq6NwcPruaVG6lmAbs7NSwS9lflFjf2Jjbar8ayJXdzKs3T2VXzLYbJcWKIpj+Xk7JV/ac6kvKJhdFONWcGc=
+	t=1721916500; cv=none; b=gF0B07TwUacQcxZ/zcdAnNkq1fWIbP6ZbnwJhrOTviKVQYx8AyGQI8JOVfXyvY8npbAeAqrfxiUNFQUtQpYl35GnvGs92j7zVwSN/UfxZJdt1XaSsV0O5OC/gxdB9U0r45y48OCP0vqUm62vMu4Mf6xEM5FNRU5vQvSy5QqKaXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721912829; c=relaxed/simple;
-	bh=27UdjVY2T9kftaELLseaAoaA4TD8YZeRfanOV32l7I0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p59T+cvO7FnqivV+iYza/aND4FBI1HrASy7iCn0Fs//4OAMbHNtHgp/lwMngEUF7rwECkxJe+MlOp9U8GTx+5RBjmsVZD5ZNz55Mp/x5VuJASmd7wvd9y0sT89db8MW5OuhrNd4usis2xlmLWojSxwMDizedvadY2LFK+9jTjhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oUd2QNDt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SCp6G7Eq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oUd2QNDt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SCp6G7Eq; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1721916500; c=relaxed/simple;
+	bh=SADbPCxd17HIrLkpJURAjijzrsQZxo+Zf0YZKJ7WTR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3l4BxEj13oGQc+uqs+AmX52l+xj1K7Ua3uXvb3AN3RaebvQcGVKnG33HdINy6V9wqOqu0EgMvWXRmrj+p3O3Vj60QLyGTe3tqTkCeeV32GqKvU6fSDYMBelGdXcBpgGXqa9Zzrib1pM3UoPnJOoQcXYz5mp8UHhAJ/mBhZpIWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=aXma48aL; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oUd2QNDt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SCp6G7Eq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oUd2QNDt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SCp6G7Eq"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9FA471FC24;
-	Thu, 25 Jul 2024 13:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721912825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x7a2eLlH3iIWOinS6JEA7tMaX+0WlcTQWISwluY5v5U=;
-	b=oUd2QNDtyhsQ3bE2a/AeXhL7YygsZVTa8e7uZ4oGeucZyLPU93E6qpdGMpnms41r6AHiAI
-	L4M7Prp9JhVQuI7ZOcq4vaiRNKQEYbUxQM4d5gt/D52cC0H2QivekzVC4bqDVQgyaUkzAC
-	bGuWh1c7DEW4I6O8Yn8goQsp5Y6k31g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721912825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x7a2eLlH3iIWOinS6JEA7tMaX+0WlcTQWISwluY5v5U=;
-	b=SCp6G7Eq6DJVRxI6M3JoMYXXwQI5pP0r1nwln+zkmD4qugxDH/d6P00SvZq4MXl1lUJEKL
-	1dp4w/20ll4/4+Dw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=oUd2QNDt;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SCp6G7Eq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721912825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x7a2eLlH3iIWOinS6JEA7tMaX+0WlcTQWISwluY5v5U=;
-	b=oUd2QNDtyhsQ3bE2a/AeXhL7YygsZVTa8e7uZ4oGeucZyLPU93E6qpdGMpnms41r6AHiAI
-	L4M7Prp9JhVQuI7ZOcq4vaiRNKQEYbUxQM4d5gt/D52cC0H2QivekzVC4bqDVQgyaUkzAC
-	bGuWh1c7DEW4I6O8Yn8goQsp5Y6k31g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721912825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x7a2eLlH3iIWOinS6JEA7tMaX+0WlcTQWISwluY5v5U=;
-	b=SCp6G7Eq6DJVRxI6M3JoMYXXwQI5pP0r1nwln+zkmD4qugxDH/d6P00SvZq4MXl1lUJEKL
-	1dp4w/20ll4/4+Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 68FBC13874;
-	Thu, 25 Jul 2024 13:07:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zDuHGPlNomaCegAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 25 Jul 2024 13:07:05 +0000
-Date: Thu, 25 Jul 2024 15:07:40 +0200
-Message-ID: <87r0bhipr7.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "edmund.raile" <edmund.raile@proton.me>
-Cc: alsa-devel@alsa-project.org,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	o-takashi@sakamocchi.jp,
-	gustavoars@kernel.org,
-	clemens@ladisch.de,
-	linux-sound@vger.kernel.org
-Subject: Re: [REGRESSION] ALSA: firewire-lib: heavy digital distortion with Fireface 800
-In-Reply-To: <rrufondjeynlkx2lniot26ablsltnynfaq2gnqvbiso7ds32il@qk4r6xps7jh2>
-References: <rrufondjeynlkx2lniot26ablsltnynfaq2gnqvbiso7ds32il@qk4r6xps7jh2>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aXma48aL"
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id WvGWsv5S3g2lzWz8jsPNiT; Thu, 25 Jul 2024 14:08:17 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Wz8isa2h3XCIHWz8is0P2M; Thu, 25 Jul 2024 14:08:16 +0000
+X-Authority-Analysis: v=2.4 cv=dKWgmvZb c=1 sm=1 tr=0 ts=66a25c50
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=fdGasvwXBZ8LG8062yEA:9
+ a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=UNSukhC8/XJWiqFsl1PRoBN34Cj/n6wZBImH+0eEHqg=; b=aXma48aLrxjiLwn6vTTMuFEmdc
+	VZqW3FeBIBqN2H24BwRFhyL1zKgndA2E2oNQs8awmsSEYrKOIKdZ9bzgmyBgECW+FMtk4GKxyFfMl
+	uwK9vz0tzxJEJCa+eRSNpo8ssslXoKnqUAdDApkmU7OwJN1FfecOyiQeqi1guAa3KYgMVxe7fp8IG
+	vIPijEZ4L1HNBsFL/xWnlsKLYCVA0FeCIsA0gbnyKBNnrdS7lRt5AoZQgMuU/baYzeaXiLFAVgE/x
+	zOQgMZ8NpZjx1xNnHEtKeeSCArnBfri2tnYthD2bDGsv/N2jEVgtCm520Lhth38dr3259CSkoyrPf
+	m2fqJGDw==;
+Received: from [201.172.173.139] (port=54024 helo=[192.168.15.5])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sWz8h-0019bE-2f;
+	Thu, 25 Jul 2024 09:08:15 -0500
+Message-ID: <906edca8-a357-4fc2-913d-be447a86963c@embeddedor.com>
+Date: Thu, 25 Jul 2024 08:08:14 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.31 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spamd-Bar: /
-X-Rspamd-Queue-Id: 9FA471FC24
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -0.31
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ALSA: firewire-lib: heavy digital distortion with
+ Fireface 800
+To: Takashi Iwai <tiwai@suse.de>, "edmund.raile" <edmund.raile@proton.me>
+Cc: alsa-devel@alsa-project.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev, o-takashi@sakamocchi.jp, gustavoars@kernel.org,
+ clemens@ladisch.de, linux-sound@vger.kernel.org
+References: <rrufondjeynlkx2lniot26ablsltnynfaq2gnqvbiso7ds32il@qk4r6xps7jh2>
+ <87r0bhipr7.wl-tiwai@suse.de>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <87r0bhipr7.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sWz8h-0019bE-2f
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:54024
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOTmQPoC4ZhTuGkIYhcGjP4TsJYcDA+SlbznhbpH4pRaGgUePlQtjkjOZ0xxL2dLEpHYukxn6fHHbCQL/N4OpF0nYq4m59OX4IUdWUVHNwPfkgDUek9z
+ egPfUcER3K+ety6IKSGIhjSIRnV9QgPNGhwRHD5DDSBfbi/X3bHu4BVvtjxTI9KAoOF3mhNRnYyzA7EqtEr5gIJlveaFkF6f/8uSwGfib2NAHQ3CZiHW977Z
 
-On Thu, 25 Jul 2024 00:24:29 +0200,
-edmund.raile wrote:
+Hi!
+
+On 25/07/24 07:07, Takashi Iwai wrote:
+> On Thu, 25 Jul 2024 00:24:29 +0200,
+> edmund.raile wrote:
+>>
+>> Bisection revealed that the bitcrushing distortion with RME FireFace 800
+>> was caused by 1d717123bb1a7555
+>> ("ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning").
+>>
+>> Reverting this commit yields restoration of clear audio output.
+>> I will send in a patch reverting this commit for now, soonTM.
+>>
+>> #regzbot introduced: 1d717123bb1a7555
 > 
-> Bisection revealed that the bitcrushing distortion with RME FireFace 800
-> was caused by 1d717123bb1a7555
-> ("ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning").
+> While it's OK to have a quick revert, it'd be worth to investigate
+> further what broke there; the change is rather trivial, so it might be
+> something in the macro expansion or a use of flex array stuff.
 > 
-> Reverting this commit yields restoration of clear audio output.
-> I will send in a patch reverting this commit for now, soonTM.
-> 
-> #regzbot introduced: 1d717123bb1a7555
 
-While it's OK to have a quick revert, it'd be worth to investigate
-further what broke there; the change is rather trivial, so it might be
-something in the macro expansion or a use of flex array stuff.
+I wonder is there is any log that I can take a look at. That'd be really
+helpful.
 
-
-thanks,
-
-Takashi
+Thanks!
+--
+Gustavo
