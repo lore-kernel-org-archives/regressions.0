@@ -1,197 +1,156 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.148])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B94815FA96
-	for <regressions@lists.linux.dev>; Thu, 25 Jul 2024 07:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB3172BAF;
+	Thu, 25 Jul 2024 08:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721891813; cv=none; b=kkoT6JzrCCqLoy18pppw8soqORPPyuXajLnotVaEEHarf2N0sYNZ8BhJQk7mm2VO5nQMcQ5XmhYyoqf8+x97CM+6FeRB9YfixyKFkVFhtFOPixaanG2RceJShMV2R+cclOllZSSjpUq5xsMD6cuxiAeNQIf7I9NxG7sVSq0b7+Y=
+	t=1721897473; cv=none; b=qAxpe9GtEdyekIc5z6nMDxRqomTAVpMKunYWBAc0uDUHnh05onRg6/b5dFxtyZlR8a+ArPNndTom9MsHAKOPGQ5sHRM49UTYTEmWAmuR6XmC8MVm0pd4NVRCw+2905NNH/kwDm1F89UHCjvKsyswu6qnlqwA/ascO2gkJamOSwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721891813; c=relaxed/simple;
-	bh=iRiZSjOVzyMj4SAUrdzoEmxUrieP5Mlht5w42sA7nZM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=P6fLbFUiHWOYqC1+SzjZNAPyCBHH/GkyiWvbEJbXkjBLwGFPxfcd0XVRJzD/b5i9awbuSvXLG2RKK4qOrxBEZii7vGbbGwMsbiRJKwHW1wASM4N62wMTnz83wTFlBk+g0t+fqzqdqp7CajT0EKBo82bEwJp7k4MJ3hZouUVxkEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=nVyNd2J/; arc=none smtp.client-ip=193.222.135.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1721897473; c=relaxed/simple;
+	bh=dHODdX/8kdpsxIa/rTtzdc5tTqYEofnfE/ezMJ1823I=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=d3m1Ki6TN3YH42jQ6Dd5vPab8LKZzX/quAunw/j62sRcEjI1WZie181GH8dVfL3m67JJadVgdqsTBXWLfPu5UURTms0dNjx4zYwonc7HimcocXUF8VSTG/O5g1hColEN2KMjq+UIE5VoaiHsp/dMxCdQ4Y1JXSlE3TU8lJ1nBl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=tht9vLj+; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="nVyNd2J/"
-Received: (wp-smtpd smtp.tlen.pl 45789 invoked from network); 25 Jul 2024 09:16:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1721891801; bh=vMfoJ6VDxLmxzRr6RMfJhEfVmXvH4xRv1RuIwr71CqI=;
-          h=From:To:CC:Subject;
-          b=nVyNd2J/rDnr47uvQ5yqBflH39CyAkkyCT8B0/SHBgZWBSxFEgBzIO70XLa3b8VE+
-           KR12JvMAty6a1HSrPN5mQFkQ/1pk4a12aREdxKVY6CE9sqtShsIp7KjswYBJ1zIuLc
-           R62O9KcyZYzQqSuDDFE6IJSHT3zQTXSDej7I7b1o=
-Received: from 46.204.13.103.mobile.internet.t-mobile.pl (HELO [127.0.0.1]) (mat.jonczyk@o2.pl@[46.204.13.103])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <paul.e.luse@linux.intel.com>; 25 Jul 2024 09:16:41 +0200
-Date: Thu, 25 Jul 2024 09:15:40 +0200
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-To: Paul E Luse <paul.e.luse@linux.intel.com>
-CC: Yu Kuai <yukuai3@huawei.com>, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
- regressions@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_Filesystem_corruption_when_adding_a_new?=
- =?US-ASCII?Q?_RAID_device_=28delayed-resync=2C_write-mostly=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240724141906.10b4fc4e@peluse-desk5>
-References: <9952f532-2554-44bf-b906-4880b2e88e3a@o2.pl> <ce95e64c-1a67-4a92-984a-c1eab0894857@o2.pl> <f28f9eec-d318-46e2-b2a1-430c9302ba43@o2.pl> <20240724141906.10b4fc4e@peluse-desk5>
-Message-ID: <2123BF84-5F16-4938-915B-B1EE0931AC03@o2.pl>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="tht9vLj+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=tW4sVbmZ6IkoO9JFHpG0v9V4u4ngChK5k3H+tBu6Tis=; t=1721897470; x=1722329470;
+	 b=tht9vLj+JV/Q0cPQyR/8gSnTKHw2KsGupBV16agfkQPl1ksEsWXoA9mL5eL+m5vLf32Dc5EdVF
+	ouaywJldYeXhJgpDO19SO0qE/6I0ZpVWDLj3QLqIASMDBq/F6Kn3omsTPpJg4OyupYQF/hc49u0hf
+	iuEP4O5TymWDbDMPCUttU2uFJ0ScNKjyVEa22zyYF1dreb74S1ne+C4QjFc/QHA5ZD6jq8M3xmhLc
+	jAhgvl6BIYhN7draDJ03JGk4ie4AHcXyZ7ReIVoh9M9tX7R7wjI9ZNDcRWSwsceGtNrQzVAAGOq0p
+	GY9dV8enfPgiuaf1saXjHxkkJn+m0FV24JhcQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sWuBn-00088i-HD; Thu, 25 Jul 2024 10:51:07 +0200
+Message-ID: <564711dc-488c-4898-93fc-bcf42e3a8ccd@leemhuis.info>
+Date: Thu, 25 Jul 2024 10:50:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-WP-MailID: a78301d0c9577853a67c75e05b3e30fe
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [MfPA]                               
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Eugene Shalygin <eugene.shalygin@gmail.com>
+Subject: [regression] bluetooth scanning on AX210 stopped working
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1721897470;377314e6;
+X-HE-SMSGID: 1sWuBn-00088i-HD
 
-Dnia 24 lipca 2024 23:19:06 CEST, Paul E Luse <paul=2Ee=2Eluse@linux=2Einte=
-l=2Ecom> napisa=C5=82/a:
->On Wed, 24 Jul 2024 22:35:49 +0200
->Mateusz Jo=C5=84czyk <mat=2Ejonczyk@o2=2Epl> wrote:
->
->> W dniu 22=2E07=2E2024 o=C2=A007:39, Mateusz Jo=C5=84czyk pisze:
->> > W dniu 20=2E07=2E2024 o=C2=A016:47, Mateusz Jo=C5=84czyk pisze:
->> >> Hello,
->> >>
->> >> In my laptop, I used to have two RAID1 arrays on top of NVMe and
->> >> SATA SSD drives: /dev/md0 for /boot (not partitioned), /dev/md1
->> >> for remaining data (LUKS
->> >> + LVM + ext4)=2E For performance, I have marked the RAID component
->> >> device for /dev/md1 on the SATA SSD drive write-mostly, which
->> >> "means that the 'md' driver will avoid reading from these devices
->> >> if at all possible" (man mdadm)=2E
->> >>
->> >> Recently, the NVMe drive started having problems (PCI AER errors
->> >> and the controller disappearing), so I removed it from the arrays
->> >> and wiped it=2E However, I have reseated the drive in the M=2E2 sock=
-et
->> >> and this apparently fixed it (verified with tests)=2E
->> >>
->> >> =C2=A0=C2=A0 =C2=A0$ cat /proc/mdstat
->> >> =C2=A0=C2=A0 =C2=A0Personalities : [raid1] [linear] [multipath] [rai=
-d0] [raid6]
->> >> [raid5] [raid4] [raid10] md1 : active raid1 sdb5[1](W)
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 471727104 blocks s=
-uper 1=2E2 [2/1] [_U]
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bitmap: 4/4 pages =
-[16KB], 65536KB chunk
->> >>
->> >> =C2=A0=C2=A0 =C2=A0md2 : active (auto-read-only) raid1 sdb6[3](W) sd=
-a1[2]
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3142656 blocks sup=
-er 1=2E2 [2/2] [UU]
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bitmap: 0/1 pages =
-[0KB], 65536KB chunk
->> >>
->> >> =C2=A0=C2=A0 =C2=A0md0 : active raid1 sdb4[3]
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2094080 blocks sup=
-er 1=2E2 [2/1] [_U]
->> >> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
->> >> =C2=A0=C2=A0 =C2=A0unused devices: <none>
->> >>
->> >> (md2 was used just for testing, ignore it)=2E
->> >>
->> >> Today, I have tried to add the drive back to the arrays by using a
->> >> script that executed in quick succession:
->> >>
->> >> =C2=A0=C2=A0 =C2=A0mdadm /dev/md0 --add --readwrite /dev/nvme0n1p2
->> >> =C2=A0=C2=A0 =C2=A0mdadm /dev/md1 --add --readwrite /dev/nvme0n1p3
->> >>
->> >> This was on Linux 6=2E10=2E0, patched with my previous patch:
->> >>
->> >> =C2=A0=C2=A0=C2=A0 https://lore=2Ekernel=2Eorg/linux-raid/2024071120=
-2316=2E10775-1-mat=2Ejonczyk@o2=2Epl/
->> >>
->> >> (which fixed a regression in the kernel and allows it to start
->> >> /dev/md1 with a single drive in write-mostly mode)=2E
->> >> In the background, I was running "rdiff-backup --compare" that was
->> >> comparing data between my array contents and a backup attached via
->> >> USB=2E
->> >>
->> >> This, however resulted in mayhem - I was unable to start any
->> >> program with an input-output error, etc=2E I used SysRQ + C to save
->> >> a kernel log:
->> >>
->> > Hello,
->> >
->> > It is possible that my second SSD has some problems and high read
->> > activity during RAID resync triggered it=2E Reads from that drive are
->> > now very slow (between 10 - 30 MB/s) and this suggests that
->> > something is not OK=2E
->>=20
->> Hello,
->>=20
->> Unfortunately, hardware failure seems not to be the case=2E
->>=20
->> I did test it again on 6=2E10, twice, and in both cases I got
->> filesystem corruption (but not as severe)=2E
->>=20
->> On Linux 6=2E1=2E96 it seems to be working well (also did two tries)=2E
->>=20
->> Please note: in my tests, I was using a RAID component device with
->> a write-mostly bit set=2E This setup does not work on 6=2E9+ out of the
->> box and requires the following patch:
->>=20
->> commit 36a5c03f23271 ("md/raid1: set max_sectors during early return
->> from choose_slow_rdev()")
->>=20
->> that is in master now=2E
->>=20
->> It is also heading into stable, which I'm going to interrupt=2E
->
->Hi Mateusz,
->
->I'm pretty interested in what is happening here especially as it
->relates to write-mostly=2E  Couple of questions for you:
->
->1) Are you able to find a simpler reproduction for this, for example
->without mixing SATA and NVMe=2E  Maybe just using two known good NVMe
->SSDs and follow your steps to repro?
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Hello,
+Luiz, I noticed a report about a regression in bugzilla.kernel.org that
+appears to be caused by a change of yours:
 
-Well, I have three drives in my laptop: NVMe, SATA SSD (in the DVD bay) an=
-d SATA HDD (platter)=2E I could do tests on top of these two SATA drives=2E
-But maybe it would be easier for me to bisect (or guess-bisect) in the cur=
-rent setup, I haven't made up my mind yet=2E
+2e2515c1ba384a ("Bluetooth: hci_event: Set DISCOVERY_FINDING on
+SCAN_ENABLED") [v6.10-rc1]
 
->
->2) I don't fully understand your last two statements, maybe you can
->clarify?  With your max_sectors patch does it pass or fail?  If pass,
->what do mean by "I'm going to interrupt"? It sounds like you mean the
->patch doesn't work and you are trying to stop it??
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from █ :
 
-Without this patch I wouldn't be able to do the tests=2E Without it, degra=
-ded RAID1 with a single drive in write-mostly mode doesn=E2=80=99t start at=
- all=2E
+>  Eugene Shalygin 2024-07-23 19:39:38 UTC
+> 
+> With kernel 6.10.0 bluetooth scanning finds no devices (Intel AX210). 6.9.9 works.
 
-With my last statement I meant that I was going to stop this patch from go=
-ing to stable kernels=2E At this point, it doesn=E2=80=99t seem to me that =
-my patch
-is the direct cause of the problems, that I missed something=2E However, I=
- think that it is currently better to fail this setup outright rather than =
-risk
-somebody's data=2E
+>  Eugene Shalygin 2024-07-24 06:56:42 UTC
+> 
+> $ dmesg | grep -e 'iwlwifi\|Bluetooth'                                                                                                                                                                                          
+> [    2.633116] iwlwifi 0000:03:00.0: enabling device (0000 -> 0002)
+> [    2.643454] Bluetooth: Core ver 2.22
+> [    2.646521] Bluetooth: HCI device and connection manager initialized
+> [    2.647920] Bluetooth: HCI socket layer initialized
+> [    2.648885] Bluetooth: L2CAP socket layer initialized
+> [    2.649972] Bluetooth: SCO socket layer initialized
+> [    2.658734] iwlwifi 0000:03:00.0: Detected crf-id 0x400410, cnv-id 0x400410 wfpm id 0x80000000
+> [    2.660717] iwlwifi 0000:03:00.0: PCI dev 2725/0024, rev=0x420, rfid=0x10d000
+> [    2.662120] Loading firmware: iwlwifi-ty-a0-gf-a0-89.ucode
+> [    2.667789] iwlwifi 0000:03:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 0.0.2.42
+> [    2.668164] iwlwifi 0000:03:00.0: loaded firmware version 89.202a2f7b.0 ty-a0-gf-a0-89.ucode op_mode iwlmvm
+> [    2.693021] Bluetooth: hci0: Device revision is 0
+> [    2.694469] Bluetooth: hci0: Secure boot is enabled
+> [    2.698894] Bluetooth: hci0: OTP lock is enabled
+> [    2.700339] Bluetooth: hci0: API lock is enabled
+> [    2.701262] Bluetooth: hci0: Debug lock is disabled
+> [    2.702069] Bluetooth: hci0: Minimum firmware build 1 week 10 2014
+> [    2.702719] Bluetooth: hci0: Bootloader timestamp 2019.40 buildtype 1 build 38
+> [    2.703431] Bluetooth: hci0: No support for _PRR ACPI method
+> [    2.708740] Bluetooth: hci0: Found device firmware: intel/ibt-0041-0041.sfi
+> [    2.711227] Bluetooth: hci0: Boot Address: 0x100800
+> [    2.711230] Bluetooth: hci0: Firmware Version: 120-18.24
+> [    2.773104] iwlwifi 0000:03:00.0: Detected Intel(R) Wi-Fi 6 AX210 160MHz, REV=0x420
+> [    2.783598] iwlwifi 0000:03:00.0: WRT: Invalid buffer destination
+> [    2.943521] iwlwifi 0000:03:00.0: WFPM_UMAC_PD_NOTIFICATION: 0x20
+> [    2.943552] iwlwifi 0000:03:00.0: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+> [    2.943578] iwlwifi 0000:03:00.0: WFPM_AUTH_KEY_0: 0x90
+> [    2.943602] iwlwifi 0000:03:00.0: CNVI_SCU_SEQ_DATA_DW9: 0x0
+> [    2.943608] Loading firmware: iwlwifi-ty-a0-gf-a0.pnvm
+> [    2.944080] iwlwifi 0000:03:00.0: loaded PNVM version 35148b80
+> [    2.959773] iwlwifi 0000:03:00.0: Detected RF GF, rfid=0x10d000
+> [    3.029643] iwlwifi 0000:03:00.0: base HW address: 2c:33:58:e9:d5:1d
+> [    3.822131] Bluetooth: hci0: Waiting for firmware download to complete
+> [    3.822963] Bluetooth: hci0: Firmware loaded in 1085762 usecs
+> [    3.822999] Bluetooth: hci0: Waiting for device to boot
+> [    3.848969] Bluetooth: hci0: Device booted in 25377 usecs
+> [    3.848982] Bluetooth: hci0: Malformed MSFT vendor event: 0x02
+> [    3.858349] Bluetooth: hci0: Found Intel DDC parameters: intel/ibt-0041-0041.ddc
+> [    3.864001] Bluetooth: hci0: Applying Intel DDC parameters completed
+> [    3.872025] Bluetooth: hci0: Firmware timestamp 2024.18 buildtype 1 build 81528
+> [    3.872028] Bluetooth: hci0: Firmware SHA1: 0xa8bb3f39
+> [    3.882989] Bluetooth: hci0: Fseq status: Success (0x00)
+> [    3.883003] Bluetooth: hci0: Fseq executed: 00.00.02.41
+> [    3.883014] Bluetooth: hci0: Fseq BT Top: 00.00.02.41
+> [    6.943128] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    6.943131] Bluetooth: BNEP filters: protocol multicast
+> [    6.943133] Bluetooth: BNEP socket layer initialized
+> [    6.943661] Bluetooth: MGMT ver 1.22
+> [    6.946103] Bluetooth: ISO socket layer initialized
+> [    7.068883] iwlwifi 0000:03:00.0: WRT: Invalid buffer destination
+> [    7.224190] iwlwifi 0000:03:00.0: WFPM_UMAC_PD_NOTIFICATION: 0x20
+> [    7.225614] iwlwifi 0000:03:00.0: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+> [    7.226232] iwlwifi 0000:03:00.0: WFPM_AUTH_KEY_0: 0x90
+> [    7.226803] iwlwifi 0000:03:00.0: CNVI_SCU_SEQ_DATA_DW9: 0x0
+> [    7.384675] iwlwifi 0000:03:00.0: WRT: Invalid buffer destination
+> [    7.539920] iwlwifi 0000:03:00.0: WFPM_UMAC_PD_NOTIFICATION: 0x20
+> [    7.541272] iwlwifi 0000:03:00.0: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+> [    7.541861] iwlwifi 0000:03:00.0: WFPM_AUTH_KEY_0: 0x90
+> [    7.542422] iwlwifi 0000:03:00.0: CNVI_SCU_SEQ_DATA_DW9: 0x0
+> [   16.078066] Bluetooth: RFCOMM TTY layer initialized
+> [   16.078073] Bluetooth: RFCOMM socket layer initialized
+> [   16.078077] Bluetooth: RFCOMM ver 1.11
 
-I have made further tests:
+>  Eugene Shalygin 2024-07-25 00:13:34 UTC
+> 
+> [bisection] converges to 2e2515c1ba384ae44f6bf13dd64b9a0a950798c4
 
-- vanilla 6=2E8=2E0 with a write-mostly drive works correctly,
+See the ticket for more details.
 
-- vanilla 6=2E10-rc6 without the write mostly bit set also works correctly=
-=2E=20
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-So it seems that the problem happens only with the write-mostly mode and a=
-fter 6=2E8=2E0=2E
 
-Greetings,
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-Mateusz
-
+#regzbot introduced: 2e2515c1ba384ae44f6bf13dd64b9a0a950798c4
+#regzbot title: Bluetooth: hci_event: bluetooth scanning on AX210
+stopped working
+#regzbot from: Eugene Shalygin <eugene.shalygin@gmail.com>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219088
+#regzbot ignore-activity
