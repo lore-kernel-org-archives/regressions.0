@@ -1,51 +1,40 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B09E18028
-	for <regressions@lists.linux.dev>; Thu, 25 Jul 2024 15:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207FC19CCE6;
+	Thu, 25 Jul 2024 15:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721922540; cv=none; b=hXSzXcPlOgQEJerOfTgtOa1Al5nDIRnw85e/qRc3uX05OWS03MxneKPD6EBTO3Iw4bsKsRBU8o2O12we85sv+B884dDfDOpwHA19dd/n6ThfRFfSbeDAQkN/JET151FaG+gmPebuMHEfFFrwC+7mtHMcWRY1BVui6dMX6yluIh0=
+	t=1721922866; cv=none; b=WdK//uPjg0BNIHpKDWqsdUzxpEWoPspRw0/ijgvsXahTsPf41wJzCmxdFjzqVEJy1VIqKuprhpdU3C1kHDMse8V83UOAl3A6CwpFjs9Fo7iesylMkWjYoiYFTon7Y4rz4L3bqFnDUCUlH4bX8XyrI8hP7Tm8AuOxfMfwXltF4b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721922540; c=relaxed/simple;
-	bh=ejEGIAVjF+qJVA4AR6q3llobF6/SxBpE8GwTPxRQFEY=;
+	s=arc-20240116; t=1721922866; c=relaxed/simple;
+	bh=bdP+YdPqiuJw1UDcTuhjsm43Pem6j3mr5KQTovbwUpg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DRnIDP+TMlnGx9CgqB3CdXqpvzYz2QIHzhacvnRUB3yxM9882zBXJtiSSFrKmjEsOAp0stNpene/rCqZ/gRy+slIAOPeSH7rV9YyAk+Rcl9j8yPXP+2VW/0qXQpQ/dA42e12k+CxxJxHb0gsEyVxbAvMQBK+P74JRM2FY8z5CdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=g2m+00bS; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=Kb6Te/VqMAJpUh0+ytNA34V4bFgotnJOs4Sbuv9rH9cawE0VXHT16E+UPZaDqxRVLbnaFiXrabZso95NBY7YnUKwrBvdoEtw60LjI2CuYVTL0bi3PAQ/UMu6vxPEetaqrTUGzEjPBxs1d6sWBwECZIydotlrE9gQqImuPsFRnH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=zerobeat@gmx.de header.b=st+eFtrE; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="g2m+00bS"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id WxzrsotKuvH7lX0i9sTxOc; Thu, 25 Jul 2024 15:48:57 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id X0i9sbqNuXCIHX0i9s21Ak; Thu, 25 Jul 2024 15:48:57 +0000
-X-Authority-Analysis: v=2.4 cv=dKWgmvZb c=1 sm=1 tr=0 ts=66a273e9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=ki618tANScE7zih50KsA:9
- a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nGP2Gm8OPOv2rvxIia8efzaHXlpHG6xvUKGj0VIuDjc=; b=g2m+00bSuKk9CBtAaDbOq/rXhG
-	72S9HCWEHg8xgMR1YzXN1hHNXgljD97jvW3RN0WG6ePVKbjUAszudJiHDh9sA789tEzbJtMqXwEXk
-	bWH5d5IXAgXG46GSeqrt2Q1lAqmXMbZP3ZHoCnbhzfAF8HAJRM4PmPIDQXpmnl8K/LjSNt9y0gPN+
-	OeiBfR6xhvaI9rYqW9iJ5C3/VVeg5oRsXhLa3ivHvoHgzqioxJiqLMMF2MIXi+8VhLJSjohjVj/of
-	eK+2lG/RyPoZaL9H0RFSnuL3Ot/xxOr5GUAD3iQ6GpeAaFl7iBnmPO1meMLutXmKgnnPmuDImJK7t
-	PF8x3w5w==;
-Received: from [201.172.173.139] (port=37644 helo=[192.168.15.5])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sX0i8-002dRG-1h;
-	Thu, 25 Jul 2024 10:48:56 -0500
-Message-ID: <dabb394e-6c85-45a0-bc06-7a45262a9a8c@embeddedor.com>
-Date: Thu, 25 Jul 2024 09:48:55 -0600
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=zerobeat@gmx.de header.b="st+eFtrE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1721922848; x=1722527648; i=zerobeat@gmx.de;
+	bh=bdP+YdPqiuJw1UDcTuhjsm43Pem6j3mr5KQTovbwUpg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=st+eFtrE0QbMW8s4HgnGeMM1Yause0/FzacVLMKNRQjsC/ZiyPg8sQIXF3ohlh6T
+	 hVTIhaVEzcCAkFgwwK+BszV4ZzEUGoQBSzMZkarxW9KbtQGb3+h5F0mFGE3nDrH13
+	 CJl7ELblO9RArKtFeqePBVXLux4/wzAwO5FUCyaG8CKm458ZKP7NC5aySg+bQCb65
+	 1q2U2/YBTjBEOmUb94gyZhtBWOf9gi30zptOXwgNSlBiECSqbXiZrfoXzg54X/nnv
+	 vMMNnS0k52bIFzAcrI9+hesHxZOCXvXH5OWeh8YAPGWQ2hp2cEpgyyurREzReaibb
+	 Vrupiqa2bxddALN9Nw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.2] ([79.194.93.171]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mwwdf-1sLndj1yWp-012CYz; Thu, 25
+ Jul 2024 17:54:08 +0200
+Message-ID: <231c6ea5-b8a3-4500-b994-46a45b6ab515@gmx.de>
+Date: Thu, 25 Jul 2024 17:54:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,210 +42,178 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ALSA: firewire-lib: heavy digital distortion with
- Fireface 800
-To: Takashi Iwai <tiwai@suse.de>
-Cc: "edmund.raile" <edmund.raile@proton.me>, alsa-devel@alsa-project.org,
- stable@vger.kernel.org, regressions@lists.linux.dev,
- o-takashi@sakamocchi.jp, gustavoars@kernel.org, clemens@ladisch.de,
- linux-sound@vger.kernel.org
-References: <rrufondjeynlkx2lniot26ablsltnynfaq2gnqvbiso7ds32il@qk4r6xps7jh2>
- <87r0bhipr7.wl-tiwai@suse.de>
- <906edca8-a357-4fc2-913d-be447a86963c@embeddedor.com>
- <9135b5d8-01fe-4250-8236-e76194cd6efc@embeddedor.com>
- <87h6cdiisg.wl-tiwai@suse.de>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <87h6cdiisg.wl-tiwai@suse.de>
+Subject: Re: [regression] mt76x2u: NULL pointer dereference since recent
+ change to fix chanctx emulation for monitor mode
+To: Johannes Berg <johannes@sipsolutions.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>
+References: <8c91352f-a404-4ba6-aa27-1253468c830d@leemhuis.info>
+ <c4a67a0418e7068fc534f39f3c1dce21d082dd8f.camel@sipsolutions.net>
+Content-Language: de-DE, en-US
+From: ZeroBeat <ZeroBeat@gmx.de>
+In-Reply-To: <c4a67a0418e7068fc534f39f3c1dce21d082dd8f.camel@sipsolutions.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------JTQ8da0GOX30oJzcOgOYNLXW"
+X-Provags-ID: V03:K1:PdwRORGShgBkamhFKHdlyWTp+UtlhmPPRhe2/zghnJdzFo4qJIO
+ TcRUg3PyValtDnQkPYZH++qcMWiFZ8WdRBpY0Kz8lURSZ4jKWthci8r/XENo8JQJLmcGidV
+ MzQVEJSn+pVtWoBVAxdQ74yViezon7t76wt4YHH9L8AVDsNIVO3CFQAcwUQX+is27C3/YhE
+ PlcLCnzUFayA2AF3WG3Kg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cNmBaEELWLc=;fevnq1TPTEyONuFZQbrbmquhpQ3
+ on0698T3vQvgas3n630ktq9O5dJ8GnJa8Je0tTLToyY3Ukkt4eC60J0YprCFnQyupZOIVdwjj
+ TizMjaymw8oCPzNrnkSv1grxh7gt+X5ZlLR8WwTUmc6gL+FKHo72hGkgRb/G9sqpxWCkTY8dS
+ +aboO1M/VbJQFqx2EBU0r5UviZud66eDOjXtnP5D1n0nGLnl3Vw/7G0hdPfZgq04iq/GhRkCH
+ 4h16qI4wW8XKYS+Xiql2D4eJfTsKyAO55K5n2g81m6P0zls+HyFrh2bbVDR63T8nyyaI4Zvng
+ XA36tgmRozXf6AWYAkhOSBEyVk66ZXIR6rZ9/eugNwb6ztTGfZcMw6XbnTluT1u6xiSqFvAhu
+ YDl5utd26EW92J4nSDg6iOhiRX7I2x54ZGes7nusexMrppnA8GrJroEESiVJos+32cf2WAKMM
+ nb/uAfg06PQ0WTlhIkln2RLSbaW2RANgxh8AGHyiSBgmfMBLoVFhjFjd0uXtqQCpNb8vAAyON
+ jU9gBf1ZrnwaTHJG+sM9yvc0s4iUOHySfnzE1yiPUgRpWcg6CnT0Wa+98v1YnGmsMGZh2K+4Q
+ NO56UpIMLv1tV1S9AQC5EisUIZbGXZF3DyO1S7D0eJ8I6zJ/i1mBB83o4PfZWJJmozWMERxT7
+ I6obHfdnmJYvizdEGXY6LfO+363kbayLO/5+Demcc4/G+BEtaadjtFXTy6z4OCai2GeL+RB5U
+ xwT/nwD97iJwNN6pSyd4kSiSWNgMepC+7b8tFSD2bbdXs2FbnIi4s/wc3y1sIB1Nu9Kf27LWj
+ JzrWOArRIs9AYQLg9C7Og0SQ==
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------JTQ8da0GOX30oJzcOgOYNLXW
+Content-Type: multipart/mixed; boundary="------------B0KcU6ru6MVpg0ujme5EtDHi";
+ protected-headers="v1"
+From: ZeroBeat <ZeroBeat@gmx.de>
+To: Johannes Berg <johannes@sipsolutions.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>
+Message-ID: <231c6ea5-b8a3-4500-b994-46a45b6ab515@gmx.de>
+Subject: Re: [regression] mt76x2u: NULL pointer dereference since recent
+ change to fix chanctx emulation for monitor mode
+References: <8c91352f-a404-4ba6-aa27-1253468c830d@leemhuis.info>
+ <c4a67a0418e7068fc534f39f3c1dce21d082dd8f.camel@sipsolutions.net>
+In-Reply-To: <c4a67a0418e7068fc534f39f3c1dce21d082dd8f.camel@sipsolutions.net>
+
+--------------B0KcU6ru6MVpg0ujme5EtDHi
+Content-Type: multipart/mixed; boundary="------------u5J9N4P8a0mmp1CeE9Xac3Go"
+
+--------------u5J9N4P8a0mmp1CeE9Xac3Go
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sX0i8-002dRG-1h
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.5]) [201.172.173.139]:37644
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPmI976tpWL73QUPS0zkYs1aqxS/zlweAJM70T35AcpObkfkP+tnkJxFWT4I0wZVbhZ6NY8Mb9WZOQ7GHwYp2j6EbekWmQnWx2Sf354NzV/KRgw0t22Z
- CUcE7otTTWcJixCT8n9fX49X+roaIosXZvpYRuutFnzdqsvtStzY/cUT0B7OExN32SnWoP8BHKKB/exHxsbBJpHSv5peEJUvK4CNq9VCdAibt5b9uZd3pHE5
+Content-Transfer-Encoding: base64
 
+SnVzdCB0byBtZW50aW9uIGl0IGhlcmUuIFRoZSByZWdyZXNzaW9uIGhhcyBub3cgcmVhY2hl
+ZCB0aGUgbG9uZ3Rlcm0ga2VybmVsOg0KYWZmZWN0ZWQgZGV2aWNlczogbXQ3NiBzZXJpZXMg
+KG5vdCBhZmZlY3RlZCBtdDc2MDF1KQ0KDQoNCmJlZm9yZSB1cGRhdGU6DQokIHVuYW1lIC1y
+DQo2LjYuNDAtMi1sdHMNCg0KJCBzdWRvIGhjeGR1bXB0b29sIC1pIHdscDVzMGY0dTIgLS1y
+Y2FzY2FuPWFjdGl2ZQ0KXkMNCjM4IFBhY2tldChzKSBjYXB0dXJlZCBieSBrZXJuZWwNCjAg
+UGFja2V0KHMpIGRyb3BwZWQgYnkga2VybmVsDQoxNCBQUk9CRVJFU1BPTlNFKHMpIGNhcHR1
+cmVkDQoNCmV4aXQgb24gc2lndGVybQ0KDQoNCg0KYWZ0ZXIgdXBkYXRlOg0KJCB1bmFtZSAt
+cg0KNi42LjQxLTEtbHRzDQoNCiQgc3VkbyBoY3hkdW1wdG9vbCAtaSB3bHA0OHMwZjR1MnUx
+IC0tcmNhc2Nhbj1hY3RpdmUNCl5DDQowIFBhY2tldChzKSBjYXB0dXJlZCBieSBrZXJuZWwN
+CjAgUGFja2V0KHMpIGRyb3BwZWQgYnkga2VybmVsDQpXYXJuaW5nOiB0b28gbGVzcyBwYWNr
+ZXRzIHJlY2VpdmVkIChtb25pdG9yIG1vZGUgbWF5IG5vdCB3b3JrIGFzIGV4cGVjdGVkKQ0K
+UG9zc2libGUgcmVhc29uczoNCiAgbm8gdHJhbnNtaXR0ZXIgaW4gcmFuZ2UNCiAgZnJhbWVz
+IGFyZSBmaWx0ZXJlZCBvdXQgYnkgQlBGDQogIGRyaXZlciBpcyBicm9rZW4NCldhcm5pbmc6
+IG5vIFBST0JFUkVTUE9OU0VTIHJlY2VpdmVkIChmcmFtZSBpbmplY3Rpb24gbWF5IG5vdCB3
+b3JrIGFzIGV4cGVjdGVkKQ0KUG9zc2libGUgcmVhc29uczoNCiAgbm8gQVAgaW4gcmFuZ2UN
+CiAgZnJhbWVzIGFyZSBmaWx0ZXJlZCBvdXQgYnkgQlBGDQogIGRyaXZlciBpcyBicm9rZW4N
+CiAgZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgZnJhbWUgaW5qZWN0aW9uDQoNCmV4aXQgb24g
+c2lndGVybQ0KDQoNCkJlc3QgcmVnYXJkcw0KTWlrZQ0KDQoNCg0KDQoNCg0KQW0gMjQuMDcu
+MjQgdW0gMTA6NDcgc2NocmllYiBKb2hhbm5lcyBCZXJnOg0KPiBPbiBXZWQsIDIwMjQtMDct
+MjQgYXQgMDk6NTggKzAyMDAsIExpbnV4IHJlZ3Jlc3Npb24gdHJhY2tpbmcgKFRob3JzdGVu
+DQo+IExlZW1odWlzKSB3cm90ZToNCj4+IEhpLCBUaG9yc3RlbiBoZXJlLCB0aGUgTGludXgg
+a2VybmVsJ3MgcmVncmVzc2lvbiB0cmFja2VyLg0KPj4NCj4+IEpvaGFubmVzLCBGZWxpeCwg
+TG9yZW56bywgUnlkZXIsIEkgbm90aWNlZCBhIHJlcG9ydCBhYm91dCBhIHJlZ3Jlc3Npb24N
+Cj4+IGluIGJ1Z3ppbGxhLmtlcm5lbC5vcmcgdGhhdCAoZm9yIG15IHVudHJhaW5lZCBleWVz
+KSBhcHBlYXJzIHRvIGJlIGEgYnVnDQo+PiBpbiBzb21lIGNvZGUgcGF0aHMgb2YgbXQ3Nngy
+dSB0aGF0IHdhcyBleHBvc2VkIGJ5IDBkOWMyYmVlZDExNmU2ICgid2lmaToNCj4+IG1hYzgw
+MjExOiBmaXggbW9uaXRvciBjaGFubmVsIHdpdGggY2hhbmN0eCBlbXVsYXRpb24iKSBbdjYu
+MTAtcmM1LA0KPj4gdjYuOS43XSBmcm9tIEpvaGFubmVzLg0KPj4NCj4+IEFzIG1hbnkgKG1v
+c3Q/KSBrZXJuZWwgZGV2ZWxvcGVycyBkb24ndCBrZWVwIGFuIGV5ZSBvbiB0aGUgYnVnIHRy
+YWNrZXIsDQo+PiBJIGRlY2lkZWQgdG8gd3JpdGUgdGhpcyBtYWlsLiBUbyBxdW90ZSBmcm9t
+DQo+PiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIxOTA4
+NiA6DQo+Pg0KPj4+ICAgTWljaGFlbCAyMDI0LTA3LTIzIDE1OjM4OjQzIFVUQw0KPj4+DQo+
+Pj4gQWZ0ZXIgYSB1c2VyIG9wZW5lZCB0aGlzIGRpc2N1c3Npb246DQo+Pj4gaHR0cHM6Ly9n
+aXRodWIuY29tL1plckJlYS9oY3hkdW1wdG9vbC9kaXNjdXNzaW9ucy80NjUNCj4+Pg0KPj4+
+IEp1bCAyMSAwNTo0MDozOSBycGk0Yi1hYXJjaCBrZXJuZWw6IG10NzZ4MnUgMi0yOjEuMCB3
+bGFuMTogZW50ZXJlZCBwcm9taXNjdW91cyBtb2RlDQo+Pj4gSnVsIDIxIDA1OjQwOjQ1IHJw
+aTRiLWFhcmNoIGtlcm5lbDogVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgTlVMTCBwb2ludGVy
+IGRlcmVmZXJlbmNlIGF0IHZpcnR1YWwgYWRkcmVzcyAwMDAwMDAwMDAwMDAwMDAwDQo+Pj4g
+SnVsIDIxIDA1OjQwOjQ1IHJwaTRiLWFhcmNoIGtlcm5lbDogTWVtIGFib3J0IGluZm86DQo+
+Pj4gSnVsIDIxIDA1OjQwOjQ1IHJwaTRiLWFhcmNoIGtlcm5lbDogICBFU1IgPSAweDAwMDAw
+MDAwOTYwMDAwNDQNCj4+PiBKdWwgMjEgMDU6NDA6NDUgcnBpNGItYWFyY2gga2VybmVsOiAg
+IEVDID0gMHgyNTogREFCVCAoY3VycmVudCBFTCksIElMID0gMzIgYml0cw0KPj4+IEp1bCAy
+MSAwNTo0MDo0NSBycGk0Yi1hYXJjaCBrZXJuZWw6ICAgU0VUID0gMCwgRm5WID0gMA0KPj4+
+IEp1bCAyMSAwNTo0MDo0NSBycGk0Yi1hYXJjaCBrZXJuZWw6ICAgRUEgPSAwLCBTMVBUVyA9
+IDANCj4+PiBKdWwgMjEgMDU6NDA6NDUgcnBpNGItYWFyY2gga2VybmVsOiAgIEZTQyA9IDB4
+MDQ6IGxldmVsIDAgdHJhbnNsYXRpb24gZmF1bHQNCj4+PiBKdWwgMjEgMDU6NDA6NDUgcnBp
+NGItYWFyY2gga2VybmVsOiBEYXRhIGFib3J0IGluZm86DQo+Pj4gSnVsIDIxIDA1OjQwOjQ1
+IHJwaTRiLWFhcmNoIGtlcm5lbDogICBJU1YgPSAwLCBJU1MgPSAweDAwMDAwMDQ0LCBJU1My
+ID0gMHgwMDAwMDAwMA0KPj4+IEp1bCAyMSAwNTo0MDo0NSBycGk0Yi1hYXJjaCBrZXJuZWw6
+ICAgQ00gPSAwLCBXblIgPSAxLCBUbkQgPSAwLCBUYWdBY2Nlc3MgPSAwDQo+Pj4gSnVsIDIx
+IDA1OjQwOjQ1IHJwaTRiLWFhcmNoIGtlcm5lbDogICBHQ1MgPSAwLCBPdmVybGF5ID0gMCwg
+RGlydHlCaXQgPSAwLCBYcyA9IDANCj4+PiBKdWwgMjEgMDU6NDA6NDUgcnBpNGItYWFyY2gg
+a2VybmVsOiB1c2VyIHBndGFibGU6IDRrIHBhZ2VzLCA0OC1iaXQgVkFzLCBwZ2RwPTAwMDAw
+MDAwNDEzMDAwMDANCj4+Pg0KPiANCj4gTm90IHRvbyB3ZWxsLXZlcnNlZCB3aXRoIEFSTSwg
+ZG9lcyB0aGF0IHRlbCBtZSBhbnl0aGluZyBhYm91dCB3aGVyZSBpbg0KPiB0aGUgY29kZSB0
+aGUgY3Jhc2ggd2FzPyBXaXRob3V0IGFueSBmdXJ0aGVyIGluZm9ybWF0aW9uIEkgZG9uJ3Qg
+dGhpbmsgSQ0KPiBjYW4gc2VlIGFueXRoaW5nIGhlcmUsIGFuZCBJIGRvbid0IGhhdmUgYW4g
+YWZmZWN0ZWQgZGV2aWNlLg0KPiANCj4gam9oYW5uZXMNCg==
+--------------u5J9N4P8a0mmp1CeE9Xac3Go
+Content-Type: application/pgp-keys; name="OpenPGP_0x375516A45DB88630.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x375516A45DB88630.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-On 25/07/24 09:38, Takashi Iwai wrote:
-> On Thu, 25 Jul 2024 17:11:31 +0200,
-> Gustavo A. R. Silva wrote:
->>
->>
->>
->> On 25/07/24 08:08, Gustavo A. R. Silva wrote:
->>> Hi!
->>>
->>> On 25/07/24 07:07, Takashi Iwai wrote:
->>>> On Thu, 25 Jul 2024 00:24:29 +0200,
->>>> edmund.raile wrote:
->>>>>
->>>>> Bisection revealed that the bitcrushing distortion with RME FireFace 800
->>>>> was caused by 1d717123bb1a7555
->>>>> ("ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning").
->>>>>
->>>>> Reverting this commit yields restoration of clear audio output.
->>>>> I will send in a patch reverting this commit for now, soonTM.
->>>>>
->>>>> #regzbot introduced: 1d717123bb1a7555
->>>>
->>>> While it's OK to have a quick revert, it'd be worth to investigate
->>>> further what broke there; the change is rather trivial, so it might be
->>>> something in the macro expansion or a use of flex array stuff.
->>>>
->>>
->>> I wonder is there is any log that I can take a look at. That'd be really
->>> helpful.
->>
->> OK, I found a discrepancy in how the `header_length` field in the flexible
->> structure (a struct that contains a flexible-array member) below is used:
->>
->> include/linux/firewire.h:
->> 458 struct fw_iso_packet {
->> ...
->> 465         u32 header_length:8;    /* Length of immediate header           */
->> 466                                 /* tx: Top of 1394 isoch. data_block    */
->> 467         u32 header[] __counted_by(header_length);
->> 468 };
->>
->> Take a look at the following piece of code:
->>
->> sound/firewire/amdtp-stream.c:
->> 1164         if (!(s->flags & CIP_NO_HEADER))
->> 1165                 pkt_header_length = IT_PKT_HEADER_SIZE_CIP;
->>
->> In the code above `pkt_header_length` is set to `IT_PKT_HEADER_SIZE_CIP`, which based
->> on the following macros is 8 _bytes_:
->>
->> sound/firewire/amdtp-stream.c:37:#define CIP_HEADER_QUADLETS	2
->> sound/firewire/amdtp-stream.c:58:#define CIP_HEADER_SIZE		(sizeof(__be32) * CIP_HEADER_QUADLETS)
->> sound/firewire/amdtp-stream.c:72:#define IT_PKT_HEADER_SIZE_CIP		CIP_HEADER_SIZE
->>
->> Then we use the DEFINE_FLEX() macro, which internally sets `template->header_length`
->> to `CIP_HEADER_QUADLETS`, which based on the macros above, takes the value
->> of 2 _elements_. We set `header_length` because such variable is the _counter_
->> used during the `__counted_by()` annotation in `struct fw_iso_packet`. The
->> _counter_ is the variable that holds the number of _elements_ in the flex-array
->> member at some point at run-time[1].
->>
->> So, we set the counter to `CIP_HEADER_QUADLETS` because that's the total number
->> of _elements_ allocated for the flexible-array member `header[]` by the DEFINE_FLEX()
->> macro.
->>
->> 1183                 DEFINE_FLEX(struct fw_iso_packet, template, header,
->> 1184                             header_length, CIP_HEADER_QUADLETS);
->> 1185                 bool sched_irq = false;
->>
->> Then we call function `build_it_pkt_header()` and pass as arguments a pointer
->> to `template`, and `pkt_header_length`, which at this point might hold the
->> value of 8 _bytes_.
->>
->> 1187                 build_it_pkt_header(s, desc->cycle, template, pkt_header_length,
->> 1188                                     desc->data_blocks, desc->data_block_counter,
->> 1189                                     desc->syt, i, curr_cycle_time);
->>
->> Then inside function `build_it_pkt_header()`, the _counter_ is updated
->> `params->header_length = header_length;`:
->>
->>   680 static void build_it_pkt_header(struct amdtp_stream *s, unsigned int cycle,
->>   681                                 struct fw_iso_packet *params, unsigned int header_length,
->> ...
->>   692         if (header_length > 0) {
->>   693                 cip_header = (__be32 *)params->header;
->>   694                 generate_cip_header(s, cip_header, data_block_counter, syt);
->>   695                 params->header_length = header_length;
->>   696         } else {
->>
->> This causes `params->header_length == 8`; however, only enough space for 2
->> _elements_ was allocated for the flex array (via DEFINE_FLEX()).
->>
->> So, regardless of how `pkt_header_length` is intended to be used in the rest of
->> the code inside `build_it_pkt_header()`, this last update to `params->header_length`
->> seems to be incorrect.
->>
->> So, my question here is whether this `header_length` struct member was originally
->> intended to be used as a counter for the elements in the flex array or as size
->> variable to hold the total number of bytes in the array?
->>
->> Based on the comment "Length of immediate header", I suppose `header_length` would
->> hold _elements_ not _bytes_.
-> 
-> Thanks, now I took a look over the whole picture, and I guess there
-> are two problems:
-> 
-> - The header_length should be in bytes, as far as I read the code in
->    drivers/firwire/*.  So the assumption in the commit d3155742db89
->    ("firewire: Annotate struct fw_iso_packet with __counted_by()") was
->    already wrong, and it couldn't be annotated like that -- unless we
->    fix up all users of header_length field.
+xsBNBE5aUQ0BCADlsVJE1z92lgySX+Nro7RSqTCAd6y41EljlISd8fGCoFbu0UBO
+OPHFVQ1RYvjdRf29IUqfrtGjzucMBFs0Z061rna+omw4LqwMeMlMk1GLMWttCAnm
+PQIYqj5BcqtIp5jh1vRggdg3Am6DTHhjqAAnGO+94sW2XnBLESRayGdBrQtUH2UL
+Qe1XvTtG066HB3RtzPNO7irB/UDBs7PfJgXmvF1sQB7UyqEMaMr1Oi5DzYGn8AVa
+zWTjuN7nQ5D8w3hnGbXmtPwm8dhKUO/UQjtOty8K95/0dP4Py/roBUTbNxzrC+Iz
+FAiU5t4l83T1cg8fERl9a3kBB++A0y3OFmi7ABEBAAHNGlplcm9CZWF0IDxaZXJv
+QmVhdEBnbXguZGU+wsB4BBMBAgAiBQJOWlENAhsjBgsJCAcDAgYVCAIJCgsEFgID
+AQIeAQIXgAAKCRA3VRakXbiGMJLfB/4uTRxIRDrMrKXoy5IshxbyPpcKPt2fFsyJ
+7lwozr8bZbYJfbrdXpYH2Arzegqy+gStJ94UNw3e2heihS0x+x8ukOHJ4XmzocDT
+TgQDiciLF/y/T9GwvEeHiaws024hZ729w5eA/Gaa046lkYt6eqfW9+VIkzWMAl0V
+/pNa63QVfHhZWBuj8EYIyCVhysxBa0tDyRPK1Ulih42lDXWCd1yN/ddaKE+m/+Nu
+yWSybV2w/yaboWLQWZNVRRLcdFnognXUo2P3+MM8XNP6EePtQgJaKQ7vfm7RmM8F
+3R8gX6lOiDIPZCoatsbSyPdlQ/rVkIDZ6FT0VW9yfdkV1RRLoCd5zsBNBE5aUQ0B
+CADV1OCkQeXFo+C76N4QMxGf72FGrbbdTMQcyTtVAEgMh5Kkzuuf5OfP5FCGxOtw
+YVXFe8mZeO3C6RrYid2GR0HFkx/wV4w/W68bRa85Hb6hxVddgmPhwvsJQpXItTaX
+AjKH5soPHBmPZcl+3KUfqfL/nA4x4JrUJeMaM/X8Gek+uVbTKhwTvObSxPG6DvOd
+mfHyUM0bhFV48ooC6IIc+VaHwyY1cgCLliErHrpKhIqP/N+UZpwDtZ+r0fFYIkuw
+eJvU+qJmgEgyKrSHY06GspHOMSk5OclLQ8vxvyPbTeemz7fnnYlDc+yBLUfi5/wf
+hW0vBI/pAhFVIvTCOtuLbgVhABEBAAHCwF8EGAECAAkFAk5aUQ0CGwwACgkQN1UW
+pF24hjC74gf/V9YDe9ZnOUobCghW5qMK0wT2EGcl85rAQ878Awt0/ZMiHaCyAvXp
+gsXVKeBFwfGzLdp5RGZJGYnEv3SltrF8uPslcCVmiFe+sZzR8RP61b6fdtRj8x+u
+UMKMojonhQWNbkGcFtjbFZcbL91kjTwXJP8QV/KRaw6w2BtZf8he4LiCU3Mj1VVw
+DIu16iodSb84NyvRRJtoW9qRakS78aDCHhJuPV0o8dDhZie1OqJDFODrlRsfPSCK
+59xYsi6FMxT1fTp9mnh52Qre1YEvOtYgaps8mvtLI0wuJ4QwLgbGPk5WJvooGkKS
+9e9rzZBHTO1QuH+ZvMR4+BDER+Pj9nXw4Q=3D=3D
+=3D5ikK
+-----END PGP PUBLIC KEY BLOCK-----
 
-I see. In this case, the code comment should also be changed:
+--------------u5J9N4P8a0mmp1CeE9Xac3Go--
 
-s/Length/Size
+--------------B0KcU6ru6MVpg0ujme5EtDHi--
 
-to prevent any further confusion, as Size is clearly for bytes.
+--------------JTQ8da0GOX30oJzcOgOYNLXW
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-> - By the use of DEFINE_FLEX() in amdtp-stream.c, process_rx_packets()
->    sets the header_length field to CIP_HEADER_QUADLETS (= 2) as
->    default.  Meanwhile, build_it_pkt_header() doesn't touch
->    header_length unless non-zero pkt_header_length is passed, supposing
->    it being zero.  So this may lead to a bogus header_length, which is
->    processed by the firewire core code wrongly.
-> 
-> The actual effect we see is likely the latter.  A simple fix would be
-> to use DEFINE_RAW_FLEX() instead of DEFINE_FLEX() like below.
+-----BEGIN PGP SIGNATURE-----
 
-Yes, `DEFINE_RAW_FLEX()` is the way to go in this case, as long as the
-following patch is also applied:
+wsB5BAABCAAjFiEEWSDOHFZ5SK/SwKm3N1UWpF24hjAFAmaidR0FAwAAAAAACgkQN1UWpF24hjDS
+ZAf+P/uys0piTjGwodfdcKLWla4myTMpicw7TE0hEHIL0Ztc7r3dzVpuoUNwju5wMYuWf+IE2/be
+S0DNVCiJfUJUixDKDPxlbl4rBf1bTpIoHeWvS6uAJicYhpvg+DboG7QS2iQo99wejzvamPv+neEa
+TzVTiKTioJmslVxauImOgm/19XHYQ7nRvhbiedaKaoSkpzzDDx21KKxN8xvSoZ/ZmV0ZdmAhyEdC
+iMsMXSyxezeA2hVFEoxaEYf0LI6FGQnrGBlmo/cvtvt2oPm33maLbSeQzICdzSMTg8pdFiVL20Jv
+fb0BiKbjUYA9dyHKy0WQnKkRL3q5JjdH0HWLYstVMA==
+=/sFZ
+-----END PGP SIGNATURE-----
 
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -462,9 +462,9 @@ struct fw_iso_packet {
-                                 /* rx: Sync bit, wait for matching sy   */
-         u32 tag:2;              /* tx: Tag in packet header             */
-         u32 sy:4;               /* tx: Sy in packet header              */
--       u32 header_length:8;    /* Length of immediate header           */
-+       u32 header_length:8;    /* Size of immediate header             */
-                                 /* tx: Top of 1394 isoch. data_block    */
--       u32 header[] __counted_by(header_length);
-+       u32 header[];
-  };
-
-Thanks
-- Gustavo
-
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> -- 8< --
-> --- a/sound/firewire/amdtp-stream.c
-> +++ b/sound/firewire/amdtp-stream.c
-> @@ -1180,8 +1180,8 @@ static void process_rx_packets(struct fw_iso_context *context, u32 tstamp, size_
->   		(void)fw_card_read_cycle_time(fw_parent_device(s->unit)->card, &curr_cycle_time);
->   
->   	for (i = 0; i < packets; ++i) {
-> -		DEFINE_FLEX(struct fw_iso_packet, template, header,
-> -			    header_length, CIP_HEADER_QUADLETS);
-> +		DEFINE_RAW_FLEX(struct fw_iso_packet, template, header,
-> +				CIP_HEADER_QUADLETS);
->   		bool sched_irq = false;
->   
->   		build_it_pkt_header(s, desc->cycle, template, pkt_header_length,
+--------------JTQ8da0GOX30oJzcOgOYNLXW--
