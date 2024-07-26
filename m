@@ -1,102 +1,154 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD7A5661
-	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 18:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722016816; cv=pass; b=ZpkWUvE2HUQZFA60RkJnPqTFx4ex0WBlLYRn8YlDFw/GlXpcbNZBu9n9ORMmD+Zd0fgQvkISnCv/Q20XFyfZZpT6JZOytBpotDN90Ttdvy/W8/PypvGZx0g8W0xZMOYuzwoFnDszVPImi2f3Ttdz6Qwd+Gk5AbY+H3HAUomzUjs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722016816; c=relaxed/simple;
-	bh=/QxxV53B7TKlTHAg1CbBXfLP6Ja5x50Gljoy04IwgAM=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=AX29W0aG0vcKq1IDTulS13i+jsGo++4862SAln5lEJqdoLPIxRovoN5pyCxHRrLKqYQHD0p7kjh2uhlpMoIaODSJN+E7nWH0tj8j7vEMKnFZVLjGuEEWPZKkLrnVPhtwvvt7eLRr7z+CoG2x4ohWtPUCcGerOMJTMJaL2qPcb7w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=foKIPS+a; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="foKIPS+a"
-Message-ID: <1b5c2b978faac9e5f14f1de4e7c57f32@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1722016806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gazRt8U1zHUMH5FSe1dGfI6wbPzLN80MrjUUb3ctapE=;
-	b=foKIPS+aHB4XYzsBvaaz8FzWu5xNPJ2UK+c3ilKYw930ospCLv9vcYfil+7I5mvq3D502k
-	5X3tIbsiVPDjzfD5La14Qs6sBiWiMyX1LcN1NXwI0m+n2ZkpjqHntZYWKNJoUaIYUE4veg
-	vY+PBz3HB252tPMEjBoF3Codh0orLCM1TSe2Y8ZJPep+zGKX/zG9PSd8Sw7pvFgRWEs/hp
-	GJUaeO41AFTgqbIIbCjTHkUL307mWV0tt1aEm+EPKdg4wcusYYIuI/a/mk1JUM83i5SKWn
-	aGW2EXW2fQZ+euDsaJj8+qQS/4PehwrmkYApbQOEOJGrJVCFU+un7Po1YzXabg==
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1722016806; a=rsa-sha256;
-	cv=none;
-	b=jrdWkwX2lGr+ca3jZCpYz/XC8U2nxMTujXEB5hhJgz49H+fepouVTrimuXx0bnjCHXKN2o
-	Y7u0x3Pn1LsdyzO46Nmb5rSwIX4CyAalb3xyO/aYRDVAJ9S81h+dZxzz5tADm3KaTXLInB
-	B9nkBiYQcWxSbGbht5sobgh3losuWhNRxJ6cpLdvssFNKFAhkVn1XGsX6pghAw/e4TZW7G
-	u5nifwbbbTc0IPFpwGMdsCfNGXcghzQu/R+jH6NbceT7Q5R1SDvdT2OotSI8f2AmrmF3I9
-	e45OaTRAMk4RDmsdLBnuiR3x045DjIQ1A2eXEIc0XzXcKficII3ruEUX+Lr3Fg==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1722016806; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gazRt8U1zHUMH5FSe1dGfI6wbPzLN80MrjUUb3ctapE=;
-	b=Wk3V3I4nPRiMsO/GKLKlC05Xxeh/2JagLZcX0pDtFQQj9hUtupr2Eurctsc3RLh1ZQt1Oz
-	4flPKki/mJt7gV1DxYAR2YddogjEdZQnjkgsy6YPKWFwF/kmtxoSoI2dB1Gl3jmmU9idqJ
-	kHGU6oZyMQF5N5HnCvouJ5SYg8w2PGbq0gkEa7LzhF7p/+Q2nq8zxEEU7wv3gJzSiBwRdO
-	V2em1RB5bZRE+GPB9kdJy3V9SG1WK3tftNRs8a27LbVN3EMZOGDUkthpaejXC+ocVlYGL8
-	F5zFublkiSa7HU+nx71tcvnzpSs3ZWOU75sgQI61T1FCI0nUi3ai4FivDixSGg==
-From: Paulo Alcantara <pc@manguebit.com>
-To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
- <Sebastian.Steinbeisser@lrz.de>,
- "tom@talpey.com" <tom@talpey.com>, "gregkh@linuxfoundation.org"
- <gregkh@linuxfoundation.org>
-Cc: "smfrench@gmail.com" <smfrench@gmail.com>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-In-Reply-To: <c101642079d4f0c54edd681c70b8ccf37f4f1982.camel@lrz.de>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
- <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
- <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
- <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
- <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
- <dd0259752e3557fa1b60dda4db3bf790d9ff877c.camel@lrz.de>
- <4b718a0b9a967d4bc0428a3f706e3b15@manguebit.com>
- <98d458ba-4258-4598-b8fc-0fe6cfeb2f87@talpey.com>
- <2849de0676a015619b922708005a243595f9f56b.camel@lrz.de>
- <6db3dbb8a7a6f4f5ed0f63d0e0c784c7@manguebit.com>
- <c101642079d4f0c54edd681c70b8ccf37f4f1982.camel@lrz.de>
-Date: Fri, 26 Jul 2024 15:00:04 -0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916217D35C
+	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 18:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722016886; cv=none; b=tn8FNhu8WUmKzRwcUI9BzmbxlVBNyYjdYbQBLOTt3SEkY5URaAsbZ/idm46rbbOt/6idpKEDK7yrQKzOmxdSykeac/KjJFBz6mRUwvUcQ/BVNdDA4HCk4okQQL+cLPZfHwKP2/hM/mk6rt3N6rWlq9qzsy5sxBJwLw2cHAyud/4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722016886; c=relaxed/simple;
+	bh=fsPOQi8hZSnAkVNEphoW3BG3NXknge1cg+UsCj3f5rQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ut58JfVXiaVVrtTC7IyppyojmHYiFDLtyu4G0CMbwSfC9rt3iW4RdxKgpGRZIqO8Gm/6fKtk/RE/q+JR0FnK0tX69+JHv+k6ZGN1h6d6UfV0rUEVuejU5AyvIn3lw5Ahsn+JW4hpK9TxZTNetWW+Xe5jtfIFpXJqHjFMVKSRrVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVwWD4kNgz6K5rw;
+	Sat, 27 Jul 2024 01:59:36 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 46C62140C9C;
+	Sat, 27 Jul 2024 02:01:21 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
+ 2024 19:01:20 +0100
+Date: Fri, 26 Jul 2024 19:01:19 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, <linuxarm@huawei.com>,
+	<rafael.j.wysocki@intel.com>, <guohanjun@huawei.com>, <gshan@redhat.com>,
+	<miguel.luis@oracle.com>, <catalin.marinas@arm.com>, "Linux List Kernel
+ Mailing" <linux-kernel@vger.kernel.org>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Bowman, Terry"
+	<Terry.bowman@amd.com>, Shameerali Kolothum Thodi
+	<shameerali.kolothum.thodi@huawei.com>
+Subject: Re: 6.11/regression/bisected - The commit c1385c1f0ba3 caused a new
+ possible recursive locking detected warning at computer boot.
+Message-ID: <20240726190119.00002557@Huawei.com>
+In-Reply-To: <20240726181424.000039a4@Huawei.com>
+References: <CABXGCsPvqBfL5hQDOARwfqasLRJ_eNPBbCngZ257HOe=xbWDkA@mail.gmail.com>
+	<20240723112456.000053b3@Huawei.com>
+	<20240723181728.000026b3@huawei.com>
+	<20240725181354.000040bf@huawei.com>
+	<87le1ounl2.ffs@tglx>
+	<20240726181424.000039a4@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
+On Fri, 26 Jul 2024 18:14:24 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> Our technical rep. has opened a case in our name and promised to
-> directly escalate it to the US engineering (we're based off Germany)
-> and to keep us in the loop. I've made them aware of the discussion as
-> well and suggested they should directly reply to the list.
-> I haven't heard back jet.
+> On Fri, 26 Jul 2024 18:26:01 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> > On Thu, Jul 25 2024 at 18:13, Jonathan Cameron wrote:  
+> > > On Tue, 23 Jul 2024 18:20:06 +0100
+> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > >    
+> > >> > This is an interesting corner and perhaps reflects a flawed
+> > >> > assumption we were making that for this path anything that can happen for an
+> > >> > initially present CPU can also happen for a hotplugged one. On the hotplugged
+> > >> > path the lock was always held and hence the static_key_enable() would
+> > >> > have failed.    
+> > 
+> > No. The original code invoked this without cpus read locked via:
+> > 
+> > acpi_processor_driver.probe()
+> >    __acpi_processor_start()
+> >        ....
+> > 
+> > and the cpu hotplug callback finds it already set up, so it won't reach
+> > the static_key_enable() anymore.
+> >   
+> > > One bit I need to check out tomorrow is to make sure this doesn't race with the
+> > > workfn that is used to tear down the same static key on error.    
+> > 
+> > There is a simpler solution for that. See the uncompiled below.  
+> 
+> Thanks.  FWIW I got pretty much the same suggestion from Shameer this
+> morning when he saw the workfn solution on list. Classic case of me
+> missing the simple solution because I was down in the weeds.
+> 
+> I'm absolutely fine with this fix.
+Hi Thomas,
 
-Thanks for the updates!
+I tested it on an emulated setup with your changes on top of
+mainline as of today and the issue is resolved.
 
-> Due to being on a trip this week I'll only be able to test your patch
-> next week.
+Would you mind posting a formal patch? Or I can do it on Monday if that's
+easier for you.
 
-No problem.
+Thanks
 
-> As far as I understand a simple git apply patch on top of the 6.10 tag
-> should suffice, right?
+Jonathan
 
-Yep.  If you need any help with that, please let me know.
+> 
+> Mikhail, please could you test Thomas' proposal so we are absolutely sure
+> nothing else is hiding.
+> 
+> Tglx's solution is much less likely to cause problems than what I proposed because
+> it avoids changing the ordering.
+> 
+> Jonathan
+> 
+> 
+> 
+> 
+> > 
+> > Thanks,
+> > 
+> >         tglx
+> > ---
+> > diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+> > index b3fa61d45352..0b69bfbf345d 100644
+> > --- a/arch/x86/kernel/cpu/aperfmperf.c
+> > +++ b/arch/x86/kernel/cpu/aperfmperf.c
+> > @@ -306,7 +306,7 @@ static void freq_invariance_enable(void)
+> >  		WARN_ON_ONCE(1);
+> >  		return;
+> >  	}
+> > -	static_branch_enable(&arch_scale_freq_key);
+> > +	static_branch_enable_cpuslocked(&arch_scale_freq_key);
+> >  	register_freq_invariance_syscore_ops();
+> >  	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
+> >  }
+> > @@ -323,8 +323,10 @@ static void __init bp_init_freq_invariance(void)
+> >  	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+> >  		return;
+> >  
+> > -	if (intel_set_max_freq_ratio())
+> > +	if (intel_set_max_freq_ratio()) {
+> > +		guard(cpus_read_lock)();
+> >  		freq_invariance_enable();
+> > +	}
+> >  }
+> >  
+> >  static void disable_freq_invariance_workfn(struct work_struct *work)
+> > 
+> >   
+> 
+
