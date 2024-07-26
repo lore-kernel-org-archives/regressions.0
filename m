@@ -1,119 +1,226 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C795E23759
-	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 16:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA1817CA0A
+	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 16:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722011168; cv=none; b=blQJZEXHd7xqoAMzPuZo6mLCrKgZhbCtM4Gcv8zpJGJ9tIj5165rdrYwCvdN3CL4fMfUXqd/cukdNUfyt0c4zIKEy3niEMcRZQo+9foRBTu7GzHymGiutmXmpOsaJIAhDMZ7jvcbMtA+uJeRs4W0e34JxIyek9lZscPYb+ASf4U=
+	t=1722011855; cv=none; b=sbc2J2pwwowPNrpKJnVQNKUIQXjIGboNXnsCETVm7sv4pQw4miH4Tjtj1xc3oMq41Axe0qARd8sJKeopu3v/5RpsVtb+U7aRA8r8P6383Ig0fkRdPxtInwBW7yzotdNWXQLoQMexa7cqwpPPSiVMOfgvp762Gf5NMBI0RCqDt/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722011168; c=relaxed/simple;
-	bh=VS/Wdm7JJfmKhtGCX3NWy4+tlvuj14byjVjq/5nLy+I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ntls019yViZi4BCcY6fDApOPk8pS16evIWUd8XbMaeCvRoD2VSmL/EPMHzy+TPUBQSxATm+tc1HkwfnGY926kD6Pn0EWGvDPRHS+r+xRYkwy0IKBlwRyi2818+6+KkG98suENPINtlYksQ/01EmcwlIIa49MC6Bt7NL0I2+MjNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nUs+t3rV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t+4yH+js; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nUs+t3rV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t+4yH+js"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722011162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RoTw2oBJco+k8odnRLjjddu12/BJ3g3lZ54Pqub+t04=;
-	b=nUs+t3rVdBR90l6Gck0IAwyaEV6q9OrMfuVVQJZjQTl0Vi4oqutSpJefgd/sOBJwQn4yr7
-	bsd3ZQRGebL8U4voYRXdmrkowdKJPbPvDxjQCVQjx/UsWliB+C35HcbmkjRs2BDw2tsnOz
-	Bg8YFQNQ7pnzrCdbYzYLBc+cPawO4ebrohDveyCet2BlVvk0qtN+6z+XfbmuuZUyADX6wi
-	BH5g6VO8ZxraUjNOX54yvgkk+c8SD/Bn3WtzC0nv/uDli/jN7QKTMgQnhc4at7f2DtHLXs
-	hdil2nJNCUehgLTZNaK2ga/+pFg6yiYnrUh+hHF2ZweCrgxVMbCEAMrldGR10Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722011162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RoTw2oBJco+k8odnRLjjddu12/BJ3g3lZ54Pqub+t04=;
-	b=t+4yH+jsgWgYPjhZHZsa+Ykrvkg/MecpL5Lv7QvawtHfdhq2TMYp9ZjYjYvTKED/boExoy
-	j43wqfr6EmKeZsBQ==
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mikhail Gavrilov
- <mikhail.v.gavrilov@gmail.com>, linuxarm@huawei.com
-Cc: rafael.j.wysocki@intel.com, guohanjun@huawei.com, gshan@redhat.com,
- miguel.luis@oracle.com, catalin.marinas@arm.com, Linux List Kernel
- Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, "Bowman, Terry" <Terry.bowman@amd.com>
+	s=arc-20240116; t=1722011855; c=relaxed/simple;
+	bh=Wu18FSOUqzY+kaBnxBjnAUfxwOwAJXC+OIUtQPJk54I=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q9QbWDKocL+zn/m76JfUD0XQDvGI5vnueklt747P1nHhhNgEAeYSA91mmumnKF+MduysFYnWgVMhwJ60CKBrQpKZ5Ga8ujxPTIKtxrM+oFHtpFT/rIpqHMic2vhUabTuJFQ9QC3h3rvFCgckAbFjZb4KTaBZCBI5HKRxea0Hr4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVtdf1R4tz6K9LS;
+	Sat, 27 Jul 2024 00:35:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id E92F2140B3C;
+	Sat, 27 Jul 2024 00:37:29 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
+ 2024 17:37:29 +0100
+Date: Fri, 26 Jul 2024 17:37:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <Terry.Bowman@amd.com>
+CC: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, <linuxarm@huawei.com>,
+	<rafael.j.wysocki@intel.com>, <guohanjun@huawei.com>, <gshan@redhat.com>,
+	<miguel.luis@oracle.com>, <catalin.marinas@arm.com>, "Linux List Kernel
+ Mailing" <linux-kernel@vger.kernel.org>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, "Ingo
+ Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>
 Subject: Re: 6.11/regression/bisected - The commit c1385c1f0ba3 caused a new
  possible recursive locking detected warning at computer boot.
-In-Reply-To: <20240725181354.000040bf@huawei.com>
+Message-ID: <20240726173728.00006769@Huawei.com>
+In-Reply-To: <12255504-a80a-41da-b702-094af6957eef@amd.com>
 References: <CABXGCsPvqBfL5hQDOARwfqasLRJ_eNPBbCngZ257HOe=xbWDkA@mail.gmail.com>
- <20240723112456.000053b3@Huawei.com> <20240723181728.000026b3@huawei.com>
- <20240725181354.000040bf@huawei.com>
-Date: Fri, 26 Jul 2024 18:26:01 +0200
-Message-ID: <87le1ounl2.ffs@tglx>
+	<20240723112456.000053b3@Huawei.com>
+	<20240723181728.000026b3@huawei.com>
+	<20240725181354.000040bf@huawei.com>
+	<12255504-a80a-41da-b702-094af6957eef@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Jul 25 2024 at 18:13, Jonathan Cameron wrote:
-> On Tue, 23 Jul 2024 18:20:06 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
->
->> > This is an interesting corner and perhaps reflects a flawed
->> > assumption we were making that for this path anything that can happen for an
->> > initially present CPU can also happen for a hotplugged one. On the hotplugged
->> > path the lock was always held and hence the static_key_enable() would
->> > have failed.
+On Fri, 26 Jul 2024 10:07:39 -0500
+Terry Bowman <Terry.Bowman@amd.com> wrote:
 
-No. The original code invoked this without cpus read locked via:
+> On 7/25/24 12:13, Jonathan Cameron wrote:
+> > On Tue, 23 Jul 2024 18:20:06 +0100
+> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> >   
+> >> On Tue, 23 Jul 2024 11:24:56 +0100
+> >> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> >>  
+> >>> On Tue, 23 Jul 2024 00:36:18 +0500
+> >>> Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> wrote:
+> >>>     
+> >>>> Hi,
+> >>>> The first Fedora update to the 6.11 kernel
+> >>>> (kernel-debug-6.11.0-0.rc0.20240716gitd67978318827.2.fc41.x86_64)
+> >>>> brings a new warning: possible recursive locking detected.      
+> >>>
+> >>> Hi Mikhail,
+> >>>
+> >>> Thanks for the report.
+> >>>
+> >>> This is an interesting corner and perhaps reflects a flawed
+> >>> assumption we were making that for this path anything that can happen for an
+> >>> initially present CPU can also happen for a hotplugged one. On the hotplugged
+> >>> path the lock was always held and hence the static_key_enable() would
+> >>> have failed.
+> >>>
+> >>> I'm somewhat stumped on working out why this path couldn't happen
+> >>> for a hotplugged CPU so why this is a new problem?
+> >>>
+> >>> Maybe this is just a case of no one is providing _CPC for CPUs in virtual
+> >>> machines so the path wasn't seen? QEMU doesn't generate ACPI tables with
+> >>> _CPC today, so maybe that's it.
+> >>>
+> >>> So maybe this is has revealed an existing latent  bug.  There have been
+> >>> QEMU patches for _CPC in the past but never merged. I'll hack them
+> >>> into an x86 virtual machine and see if we hit the same bug you have
+> >>> here before and after the series.
+> >>>
+> >>> Either way obviously we need to fix it for the current kernel (and maybe
+> >>> backport the fix if I can verify it's a latent bug).  I'll get a test
+> >>> setup running asap and see if I can replicate.
+> >>>
+> >>> +CC x86 maintainers.    
+> >>
+> >> It will take me a little longer to emulate a suitable setup to hit the
+> >> AMD case on (I have it run on arm64 now, but no similar issue occurs)
+> >>
+> >> Ultimately the problem is occurring in arch_init_invariance_cppc
+> >> I note that the arm64 version of that topology_init_cpu_capacity_cppc
+> >> delays some activity via a work queue specifically to avoid some
+> >> locking issues.
+> >>
+> >> On AMD systems arch_init_invariance_cppc is defined
+> >> as init_freq_invariance_cppc which calls amd_set_max_freq_ratio just
+> >> once (there is a static bool) which in turn calls
+> >> freq_invariance_set_perf_ratio() / freq_invariance_enable()
+> >>
+> >> Until I have a setup to test on I'm not going to draw firm conclusions
+> >> but how much would it matter if we set that static key a bit late
+> >> via a workqueue?  In the meantime go with a default value similar to
+> >> that disable_freq_invariance_work sets (which is done via a workqueue).
+> >>
+> >> The intel equivalent is called via an early_init() so not
+> >> the hotplug path.
+> >>
+> >> Any hints on from people familiar with this code would be most
+> >> welcome.  Whilst git suggests tglx touched these paths most recently that
+> >> was in tidying them up to split the Intel and AMD paths.
+> >>  
+> > 
+> > Hi Mikhail.
+> > 
+> > So the short story, ignoring the journey (which should only be described
+> > with beer in hand), is that I now have an emulated test setup in QEMU
+> > that fakes enough of the previously missing bits to bring up this path
+> > and can trigger the splat you shared.  With the below fix I can get to
+> > something approaching a running system.
+> > 
+> > However, without more work the emulation isn't actually doing any control
+> > of frequency etc so I have no idea if the code actually works after this
+> > patch.
+> > 
+> > If you are in a position to test a patch, could you try the following?
+> > 
+> > One bit I need to check out tomorrow is to make sure this doesn't race with the
+> > workfn that is used to tear down the same static key on error.
+> > 
+> > From 8f7ad4c73954aae74265a3ec50a1d56e0c56050d Mon Sep 17 00:00:00 2001
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Date: Thu, 25 Jul 2024 17:56:00 +0100
+> > Subject: [RFC PATCH] x86/aperfmperf: Push static_branch_enable(&arch_scale_freq_key) onto work queue
+> > 
+> > This to avoid a deadlock reported by lockdep.
+> > 
+> > TODO: Fix up this commit message before posting to actually give
+> > some details and tags etc.
+> > 
+> > Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  arch/x86/kernel/cpu/aperfmperf.c | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
+> > index b3fa61d45352..41c729d3517c 100644
+> > --- a/arch/x86/kernel/cpu/aperfmperf.c
+> > +++ b/arch/x86/kernel/cpu/aperfmperf.c
+> > @@ -300,15 +300,22 @@ static void register_freq_invariance_syscore_ops(void)
+> >  static inline void register_freq_invariance_syscore_ops(void) {}
+> >  #endif
+> >  
+> > +static void enable_freq_invariance_workfn(struct work_struct *work)
+> > +{
+> > +	static_branch_enable(&arch_scale_freq_key);
+> > +	register_freq_invariance_syscore_ops();
+> > +	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
+> > +}
+> > +static DECLARE_WORK(enable_freq_invariance_work,
+> > +		    enable_freq_invariance_workfn);
+> > +
+> >  static void freq_invariance_enable(void)
+> >  {
+> >  	if (static_branch_unlikely(&arch_scale_freq_key)) {
+> >  		WARN_ON_ONCE(1);
+> >  		return;
+> >  	}
+> > -	static_branch_enable(&arch_scale_freq_key);
+> > -	register_freq_invariance_syscore_ops();
+> > -	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
+> > +	schedule_work(&enable_freq_invariance_work);
+> >  }
+> >  
+> >  void freq_invariance_set_perf_ratio(u64 ratio, bool turbo_disabled)  
+> 
+> Hi Jonathan,
+> 
+> I was able to recreate the problem using base d67978318827 with a Ryzen laptop.
 
-acpi_processor_driver.probe()
-   __acpi_processor_start()
-       ....
+So that's the original reported tag. 
 
-and the cpu hotplug callback finds it already set up, so it won't reach
-the static_key_enable() anymore.
+> 
+> I was unable to recreate the issue using base 72ec37390a71 with the same Ryzen laptop.
 
-> One bit I need to check out tomorrow is to make sure this doesn't race with the
-> workfn that is used to tear down the same static key on error.
+Huh? - I see that is yesterday's tree so further through the merge window.
+I wonder what changed - I'll poke the emulation some more and
+see if it disappeared for me too.  
 
-There is a simpler solution for that. See the uncompiled below.
+I can't immediately spot any changes in the relevant paths that would
+make this go away...
+
+Thanks for the info though.  Maybe this explains why we saw no reports
+of this in linux-next.
 
 Thanks,
 
-        tglx
----
-diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
-index b3fa61d45352..0b69bfbf345d 100644
---- a/arch/x86/kernel/cpu/aperfmperf.c
-+++ b/arch/x86/kernel/cpu/aperfmperf.c
-@@ -306,7 +306,7 @@ static void freq_invariance_enable(void)
- 		WARN_ON_ONCE(1);
- 		return;
- 	}
--	static_branch_enable(&arch_scale_freq_key);
-+	static_branch_enable_cpuslocked(&arch_scale_freq_key);
- 	register_freq_invariance_syscore_ops();
- 	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
- }
-@@ -323,8 +323,10 @@ static void __init bp_init_freq_invariance(void)
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
- 		return;
- 
--	if (intel_set_max_freq_ratio())
-+	if (intel_set_max_freq_ratio()) {
-+		guard(cpus_read_lock)();
- 		freq_invariance_enable();
-+	}
- }
- 
- static void disable_freq_invariance_workfn(struct work_struct *work)
+Jonathan
 
+
+> 
+> Ive attached the dmesg logs and dmidecode.
+> 
+> Regards,
+> Terry
+> 
 
