@@ -1,244 +1,102 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718C517623E
-	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 17:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722016777; cv=none; b=BD7r0x/p2W26QhQv9clqdLU/gem52Hs1KNiIo+D+YP31IDECHS1/oRQkYuZdh7lGgmyW4/fXuhg8P+eqzBCdYK7+TwgR4LCPry1iWc1LrAeuhn/k2cX+Lo5EyK1khTwgYv5ErKqA962TlfABH4d6IVPxbL7tN0Ire5uaPMHFH2w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722016777; c=relaxed/simple;
-	bh=/yTp3HWlCW8kJjkhnQCYVzP5hkmgHw6K9cHAIUEBcKM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZcSX0fOLkr1LSgXfsS5llO13qxFuo7TaztwiFIfnQPvonlefZVN6BKJyMYFccacDRl/vHyrOhDJ92M3zF3JfTOmWN4nEOSwjOtitqYCP29SO5uE3PjbMNHvn2qQPiZO0nLJCK0jfOhR4XzBnmIcP+FAl1zFqWyFT51VDWOPJx3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVwT816cgz6K5sc;
-	Sat, 27 Jul 2024 01:57:48 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C238B140B73;
-	Sat, 27 Jul 2024 01:59:32 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
- 2024 18:59:32 +0100
-Date: Fri, 26 Jul 2024 18:59:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <Terry.Bowman@amd.com>
-CC: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, <linuxarm@huawei.com>,
-	<rafael.j.wysocki@intel.com>, <guohanjun@huawei.com>, <gshan@redhat.com>,
-	<miguel.luis@oracle.com>, <catalin.marinas@arm.com>, "Linux List Kernel
- Mailing" <linux-kernel@vger.kernel.org>, Linux regressions mailing list
-	<regressions@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, "Ingo
- Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>
-Subject: Re: 6.11/regression/bisected - The commit c1385c1f0ba3 caused a new
- possible recursive locking detected warning at computer boot.
-Message-ID: <20240726185931.00006f74@Huawei.com>
-In-Reply-To: <20240726173728.00006769@Huawei.com>
-References: <CABXGCsPvqBfL5hQDOARwfqasLRJ_eNPBbCngZ257HOe=xbWDkA@mail.gmail.com>
-	<20240723112456.000053b3@Huawei.com>
-	<20240723181728.000026b3@huawei.com>
-	<20240725181354.000040bf@huawei.com>
-	<12255504-a80a-41da-b702-094af6957eef@amd.com>
-	<20240726173728.00006769@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD7A5661
+	for <regressions@lists.linux.dev>; Fri, 26 Jul 2024 18:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722016816; cv=pass; b=ZpkWUvE2HUQZFA60RkJnPqTFx4ex0WBlLYRn8YlDFw/GlXpcbNZBu9n9ORMmD+Zd0fgQvkISnCv/Q20XFyfZZpT6JZOytBpotDN90Ttdvy/W8/PypvGZx0g8W0xZMOYuzwoFnDszVPImi2f3Ttdz6Qwd+Gk5AbY+H3HAUomzUjs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722016816; c=relaxed/simple;
+	bh=/QxxV53B7TKlTHAg1CbBXfLP6Ja5x50Gljoy04IwgAM=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=AX29W0aG0vcKq1IDTulS13i+jsGo++4862SAln5lEJqdoLPIxRovoN5pyCxHRrLKqYQHD0p7kjh2uhlpMoIaODSJN+E7nWH0tj8j7vEMKnFZVLjGuEEWPZKkLrnVPhtwvvt7eLRr7z+CoG2x4ohWtPUCcGerOMJTMJaL2qPcb7w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=foKIPS+a; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="foKIPS+a"
+Message-ID: <1b5c2b978faac9e5f14f1de4e7c57f32@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1722016806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gazRt8U1zHUMH5FSe1dGfI6wbPzLN80MrjUUb3ctapE=;
+	b=foKIPS+aHB4XYzsBvaaz8FzWu5xNPJ2UK+c3ilKYw930ospCLv9vcYfil+7I5mvq3D502k
+	5X3tIbsiVPDjzfD5La14Qs6sBiWiMyX1LcN1NXwI0m+n2ZkpjqHntZYWKNJoUaIYUE4veg
+	vY+PBz3HB252tPMEjBoF3Codh0orLCM1TSe2Y8ZJPep+zGKX/zG9PSd8Sw7pvFgRWEs/hp
+	GJUaeO41AFTgqbIIbCjTHkUL307mWV0tt1aEm+EPKdg4wcusYYIuI/a/mk1JUM83i5SKWn
+	aGW2EXW2fQZ+euDsaJj8+qQS/4PehwrmkYApbQOEOJGrJVCFU+un7Po1YzXabg==
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1722016806; a=rsa-sha256;
+	cv=none;
+	b=jrdWkwX2lGr+ca3jZCpYz/XC8U2nxMTujXEB5hhJgz49H+fepouVTrimuXx0bnjCHXKN2o
+	Y7u0x3Pn1LsdyzO46Nmb5rSwIX4CyAalb3xyO/aYRDVAJ9S81h+dZxzz5tADm3KaTXLInB
+	B9nkBiYQcWxSbGbht5sobgh3losuWhNRxJ6cpLdvssFNKFAhkVn1XGsX6pghAw/e4TZW7G
+	u5nifwbbbTc0IPFpwGMdsCfNGXcghzQu/R+jH6NbceT7Q5R1SDvdT2OotSI8f2AmrmF3I9
+	e45OaTRAMk4RDmsdLBnuiR3x045DjIQ1A2eXEIc0XzXcKficII3ruEUX+Lr3Fg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1722016806; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gazRt8U1zHUMH5FSe1dGfI6wbPzLN80MrjUUb3ctapE=;
+	b=Wk3V3I4nPRiMsO/GKLKlC05Xxeh/2JagLZcX0pDtFQQj9hUtupr2Eurctsc3RLh1ZQt1Oz
+	4flPKki/mJt7gV1DxYAR2YddogjEdZQnjkgsy6YPKWFwF/kmtxoSoI2dB1Gl3jmmU9idqJ
+	kHGU6oZyMQF5N5HnCvouJ5SYg8w2PGbq0gkEa7LzhF7p/+Q2nq8zxEEU7wv3gJzSiBwRdO
+	V2em1RB5bZRE+GPB9kdJy3V9SG1WK3tftNRs8a27LbVN3EMZOGDUkthpaejXC+ocVlYGL8
+	F5zFublkiSa7HU+nx71tcvnzpSs3ZWOU75sgQI61T1FCI0nUi3ai4FivDixSGg==
+From: Paulo Alcantara <pc@manguebit.com>
+To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
+ <Sebastian.Steinbeisser@lrz.de>,
+ "tom@talpey.com" <tom@talpey.com>, "gregkh@linuxfoundation.org"
+ <gregkh@linuxfoundation.org>
+Cc: "smfrench@gmail.com" <smfrench@gmail.com>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
+In-Reply-To: <c101642079d4f0c54edd681c70b8ccf37f4f1982.camel@lrz.de>
+References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
+ <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
+ <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
+ <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
+ <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
+ <dd0259752e3557fa1b60dda4db3bf790d9ff877c.camel@lrz.de>
+ <4b718a0b9a967d4bc0428a3f706e3b15@manguebit.com>
+ <98d458ba-4258-4598-b8fc-0fe6cfeb2f87@talpey.com>
+ <2849de0676a015619b922708005a243595f9f56b.camel@lrz.de>
+ <6db3dbb8a7a6f4f5ed0f63d0e0c784c7@manguebit.com>
+ <c101642079d4f0c54edd681c70b8ccf37f4f1982.camel@lrz.de>
+Date: Fri, 26 Jul 2024 15:00:04 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 26 Jul 2024 17:37:28 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
 
-> On Fri, 26 Jul 2024 10:07:39 -0500
-> Terry Bowman <Terry.Bowman@amd.com> wrote:
-> 
-> > On 7/25/24 12:13, Jonathan Cameron wrote:  
-> > > On Tue, 23 Jul 2024 18:20:06 +0100
-> > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > >     
-> > >> On Tue, 23 Jul 2024 11:24:56 +0100
-> > >> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > >>    
-> > >>> On Tue, 23 Jul 2024 00:36:18 +0500
-> > >>> Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> wrote:
-> > >>>       
-> > >>>> Hi,
-> > >>>> The first Fedora update to the 6.11 kernel
-> > >>>> (kernel-debug-6.11.0-0.rc0.20240716gitd67978318827.2.fc41.x86_64)
-> > >>>> brings a new warning: possible recursive locking detected.        
-> > >>>
-> > >>> Hi Mikhail,
-> > >>>
-> > >>> Thanks for the report.
-> > >>>
-> > >>> This is an interesting corner and perhaps reflects a flawed
-> > >>> assumption we were making that for this path anything that can happen for an
-> > >>> initially present CPU can also happen for a hotplugged one. On the hotplugged
-> > >>> path the lock was always held and hence the static_key_enable() would
-> > >>> have failed.
-> > >>>
-> > >>> I'm somewhat stumped on working out why this path couldn't happen
-> > >>> for a hotplugged CPU so why this is a new problem?
-> > >>>
-> > >>> Maybe this is just a case of no one is providing _CPC for CPUs in virtual
-> > >>> machines so the path wasn't seen? QEMU doesn't generate ACPI tables with
-> > >>> _CPC today, so maybe that's it.
-> > >>>
-> > >>> So maybe this is has revealed an existing latent  bug.  There have been
-> > >>> QEMU patches for _CPC in the past but never merged. I'll hack them
-> > >>> into an x86 virtual machine and see if we hit the same bug you have
-> > >>> here before and after the series.
-> > >>>
-> > >>> Either way obviously we need to fix it for the current kernel (and maybe
-> > >>> backport the fix if I can verify it's a latent bug).  I'll get a test
-> > >>> setup running asap and see if I can replicate.
-> > >>>
-> > >>> +CC x86 maintainers.      
-> > >>
-> > >> It will take me a little longer to emulate a suitable setup to hit the
-> > >> AMD case on (I have it run on arm64 now, but no similar issue occurs)
-> > >>
-> > >> Ultimately the problem is occurring in arch_init_invariance_cppc
-> > >> I note that the arm64 version of that topology_init_cpu_capacity_cppc
-> > >> delays some activity via a work queue specifically to avoid some
-> > >> locking issues.
-> > >>
-> > >> On AMD systems arch_init_invariance_cppc is defined
-> > >> as init_freq_invariance_cppc which calls amd_set_max_freq_ratio just
-> > >> once (there is a static bool) which in turn calls
-> > >> freq_invariance_set_perf_ratio() / freq_invariance_enable()
-> > >>
-> > >> Until I have a setup to test on I'm not going to draw firm conclusions
-> > >> but how much would it matter if we set that static key a bit late
-> > >> via a workqueue?  In the meantime go with a default value similar to
-> > >> that disable_freq_invariance_work sets (which is done via a workqueue).
-> > >>
-> > >> The intel equivalent is called via an early_init() so not
-> > >> the hotplug path.
-> > >>
-> > >> Any hints on from people familiar with this code would be most
-> > >> welcome.  Whilst git suggests tglx touched these paths most recently that
-> > >> was in tidying them up to split the Intel and AMD paths.
-> > >>    
-> > > 
-> > > Hi Mikhail.
-> > > 
-> > > So the short story, ignoring the journey (which should only be described
-> > > with beer in hand), is that I now have an emulated test setup in QEMU
-> > > that fakes enough of the previously missing bits to bring up this path
-> > > and can trigger the splat you shared.  With the below fix I can get to
-> > > something approaching a running system.
-> > > 
-> > > However, without more work the emulation isn't actually doing any control
-> > > of frequency etc so I have no idea if the code actually works after this
-> > > patch.
-> > > 
-> > > If you are in a position to test a patch, could you try the following?
-> > > 
-> > > One bit I need to check out tomorrow is to make sure this doesn't race with the
-> > > workfn that is used to tear down the same static key on error.
-> > > 
-> > > From 8f7ad4c73954aae74265a3ec50a1d56e0c56050d Mon Sep 17 00:00:00 2001
-> > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Date: Thu, 25 Jul 2024 17:56:00 +0100
-> > > Subject: [RFC PATCH] x86/aperfmperf: Push static_branch_enable(&arch_scale_freq_key) onto work queue
-> > > 
-> > > This to avoid a deadlock reported by lockdep.
-> > > 
-> > > TODO: Fix up this commit message before posting to actually give
-> > > some details and tags etc.
-> > > 
-> > > Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > >  arch/x86/kernel/cpu/aperfmperf.c | 13 ++++++++++---
-> > >  1 file changed, 10 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
-> > > index b3fa61d45352..41c729d3517c 100644
-> > > --- a/arch/x86/kernel/cpu/aperfmperf.c
-> > > +++ b/arch/x86/kernel/cpu/aperfmperf.c
-> > > @@ -300,15 +300,22 @@ static void register_freq_invariance_syscore_ops(void)
-> > >  static inline void register_freq_invariance_syscore_ops(void) {}
-> > >  #endif
-> > >  
-> > > +static void enable_freq_invariance_workfn(struct work_struct *work)
-> > > +{
-> > > +	static_branch_enable(&arch_scale_freq_key);
-> > > +	register_freq_invariance_syscore_ops();
-> > > +	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
-> > > +}
-> > > +static DECLARE_WORK(enable_freq_invariance_work,
-> > > +		    enable_freq_invariance_workfn);
-> > > +
-> > >  static void freq_invariance_enable(void)
-> > >  {
-> > >  	if (static_branch_unlikely(&arch_scale_freq_key)) {
-> > >  		WARN_ON_ONCE(1);
-> > >  		return;
-> > >  	}
-> > > -	static_branch_enable(&arch_scale_freq_key);
-> > > -	register_freq_invariance_syscore_ops();
-> > > -	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
-> > > +	schedule_work(&enable_freq_invariance_work);
-> > >  }
-> > >  
-> > >  void freq_invariance_set_perf_ratio(u64 ratio, bool turbo_disabled)    
-> > 
-> > Hi Jonathan,
-> > 
-> > I was able to recreate the problem using base d67978318827 with a Ryzen laptop.  
-> 
-> So that's the original reported tag. 
-> 
-> > 
-> > I was unable to recreate the issue using base 72ec37390a71 with the same Ryzen laptop.  
-> 
-> Huh? - I see that is yesterday's tree so further through the merge window.
-> I wonder what changed - I'll poke the emulation some more and
-> see if it disappeared for me too.  
-> 
-> I can't immediately spot any changes in the relevant paths that would
-> make this go away...
-> 
-> Thanks for the info though.  Maybe this explains why we saw no reports
-> of this in linux-next.
+> Our technical rep. has opened a case in our name and promised to
+> directly escalate it to the US engineering (we're based off Germany)
+> and to keep us in the loop. I've made them aware of the discussion as
+> well and suggested they should directly reply to the list.
+> I haven't heard back jet.
 
-Nope. I built mainline as of now and still see the issue.
-On plus side it finishes booting unlike the earlier version where
-something was dying well after this bug raised it's head.
+Thanks for the updates!
 
-So something is hiding it in your test setup.
+> Due to being on a trip this week I'll only be able to test your patch
+> next week.
 
-Plus side - I also tested tglx's simpler fix and all looks good.
+No problem.
 
-A good end to a Friday :)
+> As far as I understand a simple git apply patch on top of the 6.10 tag
+> should suffice, right?
 
-Jonathan
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> > 
-> > Ive attached the dmesg logs and dmidecode.
-> > 
-> > Regards,
-> > Terry
-> >   
-> 
-
+Yep.  If you need any help with that, please let me know.
