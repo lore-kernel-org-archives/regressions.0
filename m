@@ -1,103 +1,94 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF761DA23
-	for <regressions@lists.linux.dev>; Sat, 27 Jul 2024 16:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E2028DB3
+	for <regressions@lists.linux.dev>; Sat, 27 Jul 2024 19:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722099151; cv=none; b=RS5hJuT/bjfO6ejh9RiJR7uOgYeWY5VYn5U/g8+vhnAyxX4xpw7bZ05bUqHHGgK2J7kIBJ9ZMOLz2AwqbiN92IeBVla6qg5EC+CPLxjRzn7fvWs44bQdnnVTh4l5kNhhS5sZWrFmv5cncdiyEx1RDwEPzr6VqBHMB1a+yOmSB+w=
+	t=1722107776; cv=none; b=N5yltz1vN5vy1ExFJJd+zZd9R6PVhcQi8oZoyzB91T34qUdc6YAvTsDcJ/MEXnkYkSwMSMFXDwMNL8HyJpBXA0VvoWLEBI8QVk3qwq2X7st5z7hkhI168qwVmWTwDfzARYjuPgBZOyi61h5VhamzvQcb5tSSDQ8wWmbtZCmaydQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722099151; c=relaxed/simple;
-	bh=Kt3UTHXY6pUS1uNOKixy1D9DX1Rs2NDL7dotc9CQrko=;
-	h=Date:From:Subject:To:Cc:Message-Id:MIME-Version:Content-Type; b=i5LPeL2E9dEZfYq8uXhi7Bp0fKHlDoCxaukfkcTvc/9GvEghvCNhR3WxxOjzVBed8xRnFLzByZsZdVbrf6bdHjzP3tKqxeqNfDnwWRKRRHbMAm/GxAdz0MbuMy1w/VKnZAv53mZIGYJkZdPWmhqq7RR3XvE+9j3/ARquJjRa8Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d3LMC3O9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722107776; c=relaxed/simple;
+	bh=k32fOmOoY4xEboeP8ZAixCPVCT8lmKxnWRu6+/+2jtw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=rI3QdvlZC9OQghsIvOv1+CkLBpcvcgfPH/A3IbawXiVfnv6yiUmzEnX84LIfvhiZg5wQCsRCXNfJ3upLPFhT9m8vvtM2YcYo0UZ3V13QItgYM6rsr2Z3qXj7VqIg4dZu4RCp93yLpeRI3ig7dCJWU8jwZD2svZQzv0wMiOt9yOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mX8M8RRw; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3LMC3O9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ed741fe46so2369139e87.0
-        for <regressions@lists.linux.dev>; Sat, 27 Jul 2024 09:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722099148; x=1722703948; darn=lists.linux.dev;
-        h=mime-version:message-id:cc:to:subject:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=32TR7SGEwzQNHi8BSEjhZCZbMRgIoVZcq32HmZiwQ2g=;
-        b=d3LMC3O9jg0FcXf4g4BPspPvnfKYuTz0B4mB2msoOWezkfmFcRDItd1U63Nl5JvIDs
-         YrlmssFP3lDZqRhC2QoV4iNLTsQMtqNwA+EdgnOTEPwX7fDM0R5lPaIT+P2UIfCrfuAW
-         6FKWw8JQ9si1Xq2FjTf/+et+Bvda96glF5krfCb36H4TrYJzpY+iNSXgyaTTKdnLY1tC
-         jjm+ycD3whd9CuhowcoWe2mCu1BwnbdJf3gYsNTW+7Kqab7B7CA82kc/cS5bYILctAAb
-         o0GUIUeH7UXts2utvGXbE06TYdTZ2PCSuVIizpRKgpRsBT6AoTZLg6U9B1+a/TMaHTGz
-         HDHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722099148; x=1722703948;
-        h=mime-version:message-id:cc:to:subject:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=32TR7SGEwzQNHi8BSEjhZCZbMRgIoVZcq32HmZiwQ2g=;
-        b=hQUaMCxXup6FshLas6QWfv+bU/D9WMZUTbGTm7SB/p4ZIGXgMln1E3sXUkUD3RXHVB
-         YqOdRJhPRAV3wh+IEfNpU8NLDA7llwigZqBrKxTn+B0tVYwuBG/B+gzkrLEuWaDhvAdW
-         ILUTiyCEUc26tuL+ycjHOrq2pYNsyXPfkjob/VYSvC1JnnyG+cfFcx7F74G3U0MpsmzY
-         oHmFYpVEZgYTmpSrYZaVIKhE8D6C7hh60cBsabv0VSF0tIijSX+uZ2nOTPQjgS2Tdr6p
-         eAPqndD0L0mSzEicbh00YFkAcl81+O5FFD0NBHm+aPVwXITabJeTzU2KGN/G5BKBrSAB
-         O/Cg==
-X-Gm-Message-State: AOJu0YwIt3SPyiW7+9XT3rvutdZ4UIYgiT809SC3hitLHwKWrYXfkxP3
-	oxM5ai2COW2R5HtJg9oB7xQLr9SRYrBt4Iso62NbbcrTxOhAIjkXmQR4RpCi
-X-Google-Smtp-Source: AGHT+IGuAop1O4/gAYTT5gL+X62ar7kjLB5+Ie9wR9wU6dXF9aYRZO7tFMq0G/kr9w7fDqsKQUzmGg==
-X-Received: by 2002:a05:6512:451:b0:52f:d128:bd13 with SMTP id 2adb3069b0e04-5309b2c39d0mr1685683e87.39.1722099147651;
-        Sat, 27 Jul 2024 09:52:27 -0700 (PDT)
-Received: from [192.168.1.69] ([93.170.44.26])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52fd5bc42ecsm808811e87.49.2024.07.27.09.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jul 2024 09:52:27 -0700 (PDT)
-Date: Sat, 27 Jul 2024 19:52:19 +0300
-From: serg.partizan@gmail.com
-Subject: [REGRESSION] Brightness at max level after waking up from sleep on
- AMD Laptop
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, mario.limonciello@amd.com,
-	hamza.mahfooz@amd.com, alexander.deucher@amd.com
-Message-Id: <77KAHS.13UUH2XVHQQF1@gmail.com>
-X-Mailer: geary/46.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mX8M8RRw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=k32fOmOoY4xEboeP8ZAixCPVCT8lmKxnWRu6+/+2jtw=; t=1722107774;
+	x=1722539774; b=mX8M8RRwtUXJNfUpvFcVI+KfEolP+DQg2s0YuCcNVZs/8M8xLR1llB1z63w+f
+	99XhvmdKtiZi6TI1VK8VA32wdfUebDBaQzmPdBNYrGxM8xPXC58xxEMfLJ4sRsy8pIRYQRkbeWm+Y
+	FQ2SLcb0PKQcBZfSUEQZJR1MPyxdZnPQj3P+q+bOqSW7T2xWam+ejiJX05D0NPL49H9kIF3laTGwq
+	ql0aY+vGUZx8hAl2Caa+eyjUvtWLRCMFxPWmYhnlYP156lLWORMaVdRkWIhSF/mSYcDm7XU5QxZLn
+	foYsGHhKZeTp7NnCxNW3DPumtJCEVsCzQ/HqY5vgn1sQNMvy6Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sXmto-0000wH-By; Sat, 27 Jul 2024 21:16:12 +0200
+Message-ID: <fff8cd31-5911-491f-ab7a-344b5c8d74f8@leemhuis.info>
+Date: Sat, 27 Jul 2024 21:16:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-
-Hello,
-
-After updating from 6.8.9 to 6.9.1 I noticed a bug on my HP Envy x360 
-with AMD Ryzen 5 4500U.
-
-#regzbot introduced: v6.8.9..v6.9.1
-
-After waking up from sleep brightness is set to max level, ignoring 
-previous value.
-
-With the help of Arch Linux team, we was able to track bad commit to 
-this: 
-https://gitlab.freedesktop.org/agd5f/linux/-/commit/63d0b87213a0ba241b3fcfba3fe7b0aed0cd1cc5
-
-I have tested this on latest mainline kernel:
-
-Results after waking up:
-
- > cat /sys/class/backlight/amdgpu_bl1/{brightness,actual_brightness}
-12
-252
-
-Then, on exact this commit (63d0b87213a0ba241b3fcfba3fe7b0aed0cd1cc5), 
-result is the same.
-
-Then, on commit just before this one (aeaf3e6cf842):
-
- > cat /sys/class/backlight/amdgpu_bl1/{brightness,actual_brightness}
-12
-12
-
-I hope I included all relevant information, more info can be found here:
-
-https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/52
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722107774;a8b6e62e;
+X-HE-SMSGID: 1sXmto-0000wH-By
 
 
+
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20240719204701.1605950-1-minipli@grsecurity.net/
+#regzbot introduced: 27152bceea1df2
+#regzbot summary: tracing: user events UAF crash
+#regzbot monitor:
+https://lore.kernel.org/all/20240726132811.306a449e@rorschach.local.home/
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219054#c6
+#regzbot duplicate:
+https://lore.kernel.org/lkml/af462e20-d158-4c5c-8dae-ce48f4192087@molgen.mpg.de/
+#regzbot fix: media: uvcvideo: Fix custom control mapping probing
+#regzbot monitor:
+https://lore.kernel.org/linux-media/20240722-fix-filter-mapping-v2-1-7ed5bb6c1185@chromium.org/
+
+#regzbot report: https://lore.kernel.org/all/77KAHS.13UUH2XVHQQF1@gmail.com/
+#regzbot introduced: 63d0b87213a0ba241b3fcfba3fe7b0aed0cd1cc5
+
+#regzbot report:
+https://lore.kernel.org/all/0ea167a1-75d0-469d-a79f-ff2cb5e81bdc@gmail.com/
+#regzbot introduced: 5537f653d9be09
+#regzbot summary: iio: imu: inv_mpu6050: log flooded with "failed to ack
+interrupt -121"
+
+#regzbot report:
+https://lore.kernel.org/all/26c01e3b726812979846710afcaab81e92da6a40.camel@declera.com/
+#regzbot introduced: 0ddd2ae586d2
+#regzbot summary: drm/ttm: choppy youtube video playback in
+google-chrome-stable
+
+#regzbot report:
+https://lore.kernel.org/all/b8f4ba97-84fc-4b7e-ba1a-99de2d9f0118@kernel.org/
+#regzbot introduced: 25216afc9db5
+#regzbot summary: pci: Re-initializing the AHCI adapter fails
