@@ -1,113 +1,135 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E297D74055
-	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 10:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E727D143873;
+	Mon, 29 Jul 2024 10:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248530; cv=none; b=E6Te9fz7JLnJBHb/lEvIcEzFEZ4Xc75lvr4cqJJcG2hgyCwAFe4Y3wX4dZ7hioRoZFXKzyZRUs9NfoDihGNQIZeQt6Jul8h+NQmYkFJc+OUGERX1Ou1bFRbEyRgCl/HBGzJYpoKmHaFp0W+qbnH8UQs51aEC9OyPeM9Lzqz0TkI=
+	t=1722248892; cv=none; b=YzNIMK0aezvFvoqBOYl/SObcIPJ5UBYOGePCSZPl1ucoJ3ZmLkPqd1kW/gaEOgKZrEwahzyW+Y7k6gZ5XHnKI/iX7jHCik1m/uKQzscHxhyZVYaqewT660Q8xOJE+pXtOv05cQFQNg4xz66IHsBgfGlHqwLLwRYa++joCiNm8iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248530; c=relaxed/simple;
-	bh=ggPiKzMFxwpeO1xIvCR8I2M+CpPVZDjRP8p/t87aFqY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EcnVUwdwZzGDak4cup6ILP0sOw1jGqI6Ur8WMSVo8tniCFC9ZmmrOaCKDYnuBO0FqCU/ZqWoW0dOvHLb1DxFVllhwbIK26OI/LZzDZN1sU1VQsN0cKf61Pq3MCBbZAunc9n2BsGDxCQI4chaqsQtBYXOfFXhbONMVaCmKPTN41I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.53] (ip5f5ae9dc.dynamic.kabel-deutschland.de [95.90.233.220])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2268261E5FE35;
-	Mon, 29 Jul 2024 12:21:35 +0200 (CEST)
-Message-ID: <aa9d6aec-ef94-4137-b2ff-0c86d9a92d42@molgen.mpg.de>
-Date: Mon, 29 Jul 2024 12:21:34 +0200
+	s=arc-20240116; t=1722248892; c=relaxed/simple;
+	bh=KuzVOdTe+hO7Q9gOCAU1cgdeJs4oTsd+ZTmC99wf0o8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKKIWGK1NnLu4ozjPZlH5lEz5CtVPgMvvAl4mZBY+GAUZbZ9OoSMnnq4fPuD7gTG+Dl7oXrN/NKschrD5VssQLiNwSp/ADEAGTCb3ThML19rP1Z3/dspTTBks8HZ1iKeslalIu46l/nfSKaRt8PAGSNyQpqZDtJbaTJRbIaHxUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1a2rk9l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1a2rk9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD0CC4AF0A;
+	Mon, 29 Jul 2024 10:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722248891;
+	bh=KuzVOdTe+hO7Q9gOCAU1cgdeJs4oTsd+ZTmC99wf0o8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U1a2rk9lQllu79+405YVwLqJgJVAm4OxAJrnNMwo1dIHOL4CYoFWk4f/VXJf3rY3S
+	 sGPT96RzP8fiAnSr08OIsw1NLP5gwztytDF8ZQg4zDTN0qfyhPKK78avJNX9hHwkCH
+	 T9Z5ceOjLkzubEacjKSk/8osk7tj791Wa9Q4VZ4cEOSp4gZJRGjbqdAEX4nkfvtEto
+	 V4Nbols+cZ1tM34A8qw6ioxgKTCCSwEsLAOTw1+SxwF1fuoqKAitoLGbP9NgTeajX7
+	 RPx9hujv/r4ObGNN5lRmHZWBUHSAdcTOBd0DUopVAXOCY7mTwqDVlnJdybx26paQ7G
+	 DC0OoIpFX5bDA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sYNbz-000000007W7-2zXI;
+	Mon, 29 Jul 2024 12:28:16 +0200
+Date: Mon, 29 Jul 2024 12:28:15 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Amirreza Zarrabi <quic_azarrabi@quicinc.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "firmware: qcom: qseecom: convert to using the TZ
+ allocator"
+Message-ID: <Zqduv66H2OczRgaH@hovoldconsulting.com>
+References: <20240729095542.21097-1-johan+linaro@kernel.org>
+ <CAMRc=McuqEv1Sk9O6kn4aHo9wOfzskZS0z2QxzNM=q2N8XZ3zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: btqca: crash with linux-next on bt power down
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <su3wp6s44hrxf4ijvsdfzbvv4unu4ycb7kkvwbx6ltdafkldir@4g7ydqm2ap5j>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <su3wp6s44hrxf4ijvsdfzbvv4unu4ycb7kkvwbx6ltdafkldir@4g7ydqm2ap5j>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McuqEv1Sk9O6kn4aHo9wOfzskZS0z2QxzNM=q2N8XZ3zw@mail.gmail.com>
 
-#regzbot: ^introduced: 6.10..
-
-Dear Dmitry,
-
-
-Thank you for the report.
-
-
-Am 29.07.24 um 04:11 schrieb Dmitry Baryshkov:
-
-> On Qualcomm Dragonboard 820c (APQ8096, QCA6174) soon after the boot I
-> observe the following crash:
+On Mon, Jul 29, 2024 at 12:03:55PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Jul 29, 2024 at 11:58 AM Johan Hovold <johan+linaro@kernel.org> wrote:
+> >
+> > This reverts commit 6612103ec35af6058bb85ab24dae28e119b3c055.
+> >
+> > Using the "TZ allocator" for qcseecom breaks efivars on machines like
+> > the Lenovo ThinkPad X13s and x1e80100 CRD:
+> >
+> >         qcom_scm firmware:scm: qseecom: scm call failed with error -22
+> >
+> > Reverting to the 6.10 state makes qseecom work again.
+> >
+> > Fixes: 6612103ec35a ("firmware: qcom: qseecom: convert to using the TZ allocator")
+> > Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> > Cc: regressions@lists.linux.dev
+> >
+> > #regzbot introduced: 6612103ec35a
 > 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
-> Mem abort info:
->    ESR = 0x0000000096000006
->    EC = 0x25: DABT (current EL), IL = 32 bits
->    SET = 0, FnV = 0
->    EA = 0, S1PTW = 0
->    FSC = 0x06: level 2 translation fault
-> Data abort info:
->    ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
->    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010da63000
-> [0000000000000018] pgd=080000010da62003, p4d=080000010da62003, pud=080000010da61003, pmd=0000000000000000
-> Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
-> Modules linked in: hci_uart btqca
-> CPU: 2 UID: 0 PID: 66 Comm: kworker/u19:0 Not tainted 6.10.0-next-20240726-13923-gd3ce7ebd61f9-dirty #2722
+> How about at least giving me the chance to react to the report and fix
+> it instead of reverting it right away?
 
-I am unable to find the commit. Your tree also seems dirty. What is the 
-last working commit?
+Lots of folks have been running linux-next on Qualcomm machines for a
+month without reporting or fixing the issue. And v10 of the offending
+patch was apparently never even tested before being merged.
 
-> Hardware name: Qualcomm Technologies, Inc. DB820c (DT)
-> Workqueue: hci0 hci_power_off
-> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : qca_power_shutdown+0x8c/0x210 [hci_uart]
-> lr : qca_power_shutdown+0x7c/0x210 [hci_uart]
-> sp : ffff8000836f3c50
-> x29: ffff8000836f3c50 x28: ffff00008337b900 x27: ffff000084085000
-> x26: 0000000000000000 x25: 0000000000000000 x24: ffff00009276f800
-> x23: ffff00009276f918 x22: ffff000081e1fc80 x21: 0000000000000001
-> x20: ffff000081e1fc80 x19: ffff00009276f800 x18: ffff0000de422170
-> x17: 0000000000061d88 x16: 0000000000000000 x15: 0000000000000001
-> x14: ffff0000813b3580 x13: 0000000000000000 x12: 00000000000001a0
-> x11: 0000000000000001 x10: 00000000000013f0 x9 : 0000000000000000
-> x8 : ffff8000836f3b40 x7 : 0000000000000000 x6 : ffff800080d52e88
-> x5 : 0000000000000000 x4 : ffff8000836f0000 x3 : 0000000000000000
-> x2 : 0000000000000000 x1 : ffff00008f56d000 x0 : 0000000000000000
-> Call trace:
->   qca_power_shutdown+0x8c/0x210 [hci_uart]
->   qca_power_off+0x70/0xfb8 [hci_uart]
->   hci_dev_close_sync+0x4b0/0x6d8
->   hci_power_off+0x2c/0x44
->   process_one_work+0x20c/0x62c
->   worker_thread+0x1bc/0x36c
->   kthread+0x120/0x124
->   ret_from_fork+0x10/0x20
-> Code: f9400681 b4000441 f9403c36 f94102c0 (f9400c00)
-> ---[ end trace 0000000000000000 ]---
-If you can reproduce this, bisecting this would be great.
+I'm sure you'll have a few days to look at this before we revert.
 
+I'll be on holiday for a few weeks, but you have an X13s so you should
+be able to reproduce this yourself.
 
-Kind regards,
+> Are there any other messages about SHM bridge/SCM calls in the kernel log?
 
-Paul
+I've also seen this combo:
+
+	[    3.219296] qcom_scm firmware:scm: qseecom: scm call failed with error -22
+        [    3.227153] efivars: get_next_variable: status=8000000000000007
+
+But usually the first message is the only hint why efivars is completely
+broken.
+
+> Do you have QCOM_TZMEM_MODE_GENERIC=y or QCOM_TZMEM_MODE_SHM_BRIDGE=y
+> in your config? If the latter: can you try changing it to the former
+> and retest?
+
+I have the former in my config but have tested both, made no difference.
+
+> > It's a little frustrating to find that no-one tested this properly or
+> > even noticed the regression for the past month that this has been
+> > sitting in linux-next.
+> 
+> I have tested many platforms and others have done the same but
+> unfortunately cannot possibly test every single use-case on every
+> platform. This is what next is for after all.
+
+I doubt this is specific to sc8280xp and x1e80100. Which platforms did
+you test qseecom and efivars on?
+
+> > Looks like Maximilian may have hit this with v9 too:
+> >
+> >         https://lore.kernel.org/lkml/CAMRc=Mf_pvrh2VMfTVE-ZTypyO010p=to-cd8Q745DzSDXLGFw@mail.gmail.com/
+> >
+> > even if there were further issues with that revision.
+> 
+> This is a different issue that was fixed in a later iteration.
+
+The symptoms appear to be the same once you get past the locking splats:
+
+	[    2.507347] qcom_scm firmware:scm: qseecom: scm call failed with error -22
+	[    2.507813] efivars: get_next_variable: status=8000000000000007
+
+So it's possible that this never worked.
+
+Johan
