@@ -1,130 +1,134 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BF513CA95;
-	Mon, 29 Jul 2024 08:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0462D7E782;
+	Mon, 29 Jul 2024 09:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722242678; cv=none; b=Xq1oUQzexPGnduNETeV/06y6ApS5gRvJNmkWlN2uotz91Uixr+6vPsM1hjjyGbvUIURtSNYVxoneyXp9HrBxsKgzwfaAb/R/Y+Lz9dZd+MOajYTwn8B6BZlgLT9IFllk/4fGNJphN0S4q8s9cYOKEKMrQUZxmjdYa09yGBh6sL0=
+	t=1722243694; cv=none; b=ApPmt3BP8mGowDyOJ+pqOVAnectglRkgDVySQwnjZ0lOQuJhfYhs9+MMYww8/NcUo5OeFW7TeazJFjvbvuszGC/gJRLpR3S/Q5SbKiEJMdptPgaDl441yL1xt5Yk2sX9FC3XFYaN2LkTorda5gd918ns4uMZX0qoP3cHaPFVHa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722242678; c=relaxed/simple;
-	bh=sUzxl/I0BxPm2sNMAsakjMuhdwuD8G3WNcAs5INaddY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=l65TbMfw/QD+QgUB+GzOem4y1ylvQape6jT9cJlgIfx3csRk5R+lI/1aLiujt1ILqDokssLDBb0W59/9ZwpOKKolP34mtUZfm3tBbmO/fLCDAcEi7rQ97Yw7tioZV6wytnHBzTcMauErgB2kJBABiFoWALzWLqZlNB3/Dj+bEYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uqjOXaVM; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1722243694; c=relaxed/simple;
+	bh=N+NwBbz+/aJSBJUMWMagSHJ6kZuiXC8iiLcDvJJtxAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLPYoJlmj6BS4NcImvSM67xxcxpjfbN/8WD4CS00IAwLVu3OpZTbAMbw+Rrt81e+ynEKAl/WL9y9Fy02vfhn0pMJQHhnJJSgcvDSt7kRuNU+8Apqb+hQNuG7Q/5B7EROQec7G26C/Yc55Ad9x+wmL3XMmmHV/Ssrs1dEJ4nj09A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=zGYOajJ0; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uqjOXaVM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=qvmM1LnMtxEgPpQ4kkzr+8JDGpi0m4C+JZPiDrVi5IM=;
-	t=1722242676; x=1722674676; b=uqjOXaVMt4IKSPHr52LWuDaojG7W8tqELrrXnFbGgAh3KnA
-	JH1lkybm7MNzIkicBUujeUFZ3b9ijSSOM2CwIi1UEflBKaKt2HELoVUWWMRqq5oqRhno2LCat5Rtf
-	tyfFY42kg0M+VcM3Zp/uGx641uN8BYELPFQkmTYxbm6V5IF+GlWFj/jmdFqX0xsmP+I3YFfMLIl7h
-	KCej49TQmtRk/5953sUVP/0wf+OAc4lNenJiaZHvCT3EZ4BXttupjHkQ6e5AqRaBwXiKg5uEYwans
-	KIgSi5csEqrS3WTCb5rJbtc9pF5L9bhW+VacQ2q7ISsSejMGAIZxRY/o2Q/BWpYw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sYLzd-0006iU-LI; Mon, 29 Jul 2024 10:44:33 +0200
-Message-ID: <1d5d764b-65a4-42a2-8cc7-37d558aab381@leemhuis.info>
-Date: Mon, 29 Jul 2024 10:44:33 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="zGYOajJ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1722243684; x=1722848484; i=christian@heusel.eu;
+	bh=N+NwBbz+/aJSBJUMWMagSHJ6kZuiXC8iiLcDvJJtxAM=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=zGYOajJ03DwVcnKOxN1bGVpI3JtnErUyrQNPoNGG8hKJ6Us3ddPW5Jr4DssgCnF8
+	 bP+DcwgFSTEsGMjfa55acrh2l19OcvuKJbkUZt0AfZtTO9cHM01HVgA2F9fuQXRt3
+	 CRxEyCYjTGNe3ZZNspZeGzHcCVOWNDS7/cmDUI1j8qK0p1UiItqpyPxMZJJxF9LiB
+	 cQ/uOb6eVRCe5B4792P6P/wCi4VQJyepm3ZtQ+BFEMddKSgDG9XsyMrsqg4si+d4a
+	 Se7agM2gVJOnqf6L/6NteYI0NB/ByNbIjJ+jkz2WPKJ5jD6r7X7eek4EXqV0nH/Wt
+	 38b+T4c9DLvaz47/og==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue012
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1MVJZv-1sfBg84Bkt-00Ukrx; Mon, 29
+ Jul 2024 10:48:00 +0200
+Date: Mon, 29 Jul 2024 10:47:58 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Greg KH <gregkh@linuxfoundation.org>, "Lin, Wayne" <Wayne.Lin@amd.com>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	ML dri-devel <dri-devel@lists.freedesktop.org>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+	"Wu, Hersen" <hersenxs.wu@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"kevin@holm.dev" <kevin@holm.dev>
+Subject: Re: [REGRESSION] No image on 4k display port displays connected
+ through usb-c dock in kernel 6.10
+Message-ID: <b7f0f3e1-522b-4763-be31-dcee1948f7b3@heusel.eu>
+References: <d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev>
+ <9ca719e4-2790-4804-b2cb-4812899adfe8@leemhuis.info>
+ <fd8ece71459cd79f669efcfd25e4ce38b80d4164@holm.dev>
+ <CO6PR12MB54897CE472F9271B25883DF6FCB72@CO6PR12MB5489.namprd12.prod.outlook.com>
+ <e2050c2e-582f-4c6c-bf5f-54c5abd375cb@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: ntfs3: Folders mounted with 555 permissions?
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-References: <edcd6eb8-8682-6552-a5f6-584ac103d0e9@gmail.com>
- <05b8cdbf-6ca7-40b8-9292-f332e1ad3a84@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Cc: Julian Sikorski <belegdol@gmail.com>, ntfs3@lists.linux.dev,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <05b8cdbf-6ca7-40b8-9292-f332e1ad3a84@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722242676;0ed11e12;
-X-HE-SMSGID: 1sYLzd-0006iU-LI
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n63a2yfaefc6qmdi"
+Content-Disposition: inline
+In-Reply-To: <e2050c2e-582f-4c6c-bf5f-54c5abd375cb@leemhuis.info>
+X-Provags-ID: V03:K1:VUQmBHNbUxSuivJa3UWDZUqROOuD+vc3R6CCCrrh1OCODtgXJZY
+ whBiOcObwswdViHJ7YQFJWyEGkXfr5cc17ziisLlaAyGJQtzW9LNeUIG1daJeIbnckfphJr
+ kIfm1yEZmZtTsw+BEw6S2QdqYF3E0UzgvrM6rkWWVIL3M3rsVmwO6MxdO1CKyRkQkRKwRik
+ u5VMTw6Z6RC7sZmXJ+NcQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+4I8fJmNOAo=;6USdeDx0VA9MfugZc889578EMYq
+ VLc8LHLmB5hVVq/x8HSEEwKZkLM0+V95CXkZJ7c7Qe5naqciCpkaNpxFQFxxL9jfT03mq3Z7e
+ qsQG3k75CdPV9MStJTPp1U3uc2HcQJz42BqzW0IBVtF0USO+HQ4GJE3wqDi9mqUpN0TnZHjgM
+ eh4MarDo5i7yFwFzZ9/KY8eKy0r6HjtjZmdgDBaaYGBcxNdQ0SQQgBve8LGIT927QetoCVc58
+ +kWc1r95yWkTqXayt0Rbmx8kF03w61AbuCAVGIdar7IghOQ/vPtexmMmv+O0W3/tKe4x1V1QE
+ alUTZP/gUQ2c+8cRUcE8VP7CM8Up7V1JuCixC3H0SR/QM+/GeKedFKhagX/ODbrqtkM5tqeO+
+ to23Zssmp03tvKoAIZGsVlukqxWFZSUWzFQLBcsC9LK7b901K+M+Q3mA3XLM5dRKtmIncQzzi
+ L2lijFTHhGD5XamGxJpgFit0Zac/xp7rlemZpxhr/1fS47QELrX1rzI37HPMSd4Aay3KF+9er
+ dJc94n1LWlSez+8VCj1Mx5LFIJML03GfOkUZJ/kNob/MRq3O0sDb3Z4jnavJu6BIHJyHgbwqD
+ lpuLJCOKiSOpgZRF4Jvziq5cVSa5VEnmdhOyhWTP9RyRx08kgEDK5PsG9ysUUuZ3vzLHz8G9w
+ vnXxGeM60ZV8mlL8ot2eSHsh5jEiyaxeYaOFvuAgpf87Q/wlJgwIKhcdN8A59OryaodPbDIv6
+ i0dgEJI4td8SSs2/9e/OpA3B8V+z4BumA==
 
-Top-posting: adding Konstantin to the list of recipients, he might have
-missed this on the list.
 
-Side note: this seems to be a regression, but given that it seems only
-few people care and apparently is caused by the removal of a feature not
-working properly beforehand, I don't think this is something covered by
-the no regressions" rule.
+--n63a2yfaefc6qmdi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten
+On 24/07/29 10:35AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [+Greg +stable]
+>=20
+> On 29.07.24 10:16, Lin, Wayne wrote:
+> >
+> > Thanks for the report.
+> >=20
+> > Patch fa57924c76d995 ("drm/amd/display: Refactor function dm_dp_mst_is_=
+port_support_mode()")
+> > is kind of correcting problems causing by commit:
+> > 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mod=
+e validation")
+> >=20
+> > Sorry if it misses fixes tag and would suggest to backport to fix it. T=
+hanks!
+>=20
+> Greg, seem it would be wise to pick up fa57924c76d995 for 6.10.y as
+> well, despite a lack of Fixes or stable tags.
+>=20
+> Ciao, Thorsten
 
-On 27.07.24 22:34, Julian Sikorski wrote:
-> Am 11.07.23 um 10:04 schrieb Julian Sikorski:
->>
->> with linux-6.4, now that noacsrules option is gone, an old issue has
->> become problematic. When I mount my windows drive, some of the folders
->> in Users are mounted with 555 permissions, including the ones I would
->> like to edit:
->>
->> $ ls -l /mnt/windows/ | grep Users
->> lrwxrwxrwx. 1 julas julas          8  1. Dez 2018  Documents and
->> Settings -> ./Users
->> lrwxrwxrwx. 1 julas julas          8  9. Okt 2022  Dokumente und
->> Einstellungen -> ./Users
->> dr-xr-xr-x. 1 julas julas       4096  9. Okt 2022  Users
->>
->> $ ls -l /mnt/windows/Users/beleg/ | grep Documents
->> dr-xr-xr-x. 1 julas julas    8192  7. Jul 15:28 Documents
->> lrwxrwxrwx. 1 julas julas      24  9. Okt 2022  Eigene Dateien ->
->> ./../../Users/beleg/Documents
->> lrwxrwxrwx. 1 julas julas      24  1. Nov 2021  Moje dokumenty ->
->> ./../../Users/beleg/Documents
->>
->> Is this intended behaviour? It appears to be quite an old issue [1].
->> If so, is there any other fix than running a recursive chmod?
->>
->> Best regards,
->> Julian
->>
->> [1]
->> https://www.reddit.com/r/archlinux/comments/r325t3/permissions_problems_with_the_new_ntfs3_driver/
-> 
-> One year later the issue is still there with kernel 6.9.11:
-> 
-> $ ls -lh /mnt/windows/Users/beleg/
-> insgesamt 18M
-> dr-xr-xr-x. 1 julas julas    0 19. Jul 2020  '3D Objects'
-> -rwxr-xr-x. 1 julas julas  77K 20. Nov 2022   AMDRM_Install.log
-> -rwxr-xr-x. 1 julas julas 2,7M 20. Nov 2022   AMD_RyzenMaster.log
-> drwxr-xr-x. 1 julas julas    0  2. Dez 2018   ansel
-> lrwxrwxrwx. 1 julas julas   30  9. Okt 2022   Anwendungsdaten ->
-> ./../../Users/beleg/AppData/Roaming
-> drwxr-xr-x. 1 julas julas    0  9. Okt 2022   AppData
-> -rwxr-xr-x. 1 julas julas 1,4K 18. Feb 15:30  aqtinstall.log
-> dr-xr-xr-x. 1 julas julas    0  9. Okt 2022   Contacts
-> lrwxrwxrwx. 1 julas julas   58  9. Okt 2022   Cookies ->
-> ./../../Users/beleg/AppData/Local/Microsoft/Windows/INetCookies
-> lrwxrwxrwx. 1 julas julas   30  1. Nov 2021  'Dane aplikacji' ->
-> ./../../Users/beleg/AppData/Roaming
-> dr-xr-xr-x. 1 julas julas 4,0K 15. Mai 20:41  Desktop
-> dr-xr-xr-x. 1 julas julas 8,0K  5. Jul 22:43  Documents
-> 
-> Here are the mount options:
-> /dev/nvme0n1p4 on /mnt/windows type ntfs3
-> (rw,relatime,uid=1000,gid=1000,iocharset=utf8)
-> 
-> It is the main issue preventing me from switching away from ntfs-3g. Can
-> I somehow investigate this further to help fixing this?
-> 
-> Best regards,
-> Julian
-> 
+The issue is that the fixing commit does not apply to the 6.10 series
+without conflict and the offending commit does not revert cleanly
+aswell.
+
+Cheers,
+Chris
+
+--n63a2yfaefc6qmdi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmanVz4ACgkQwEfU8yi1
+JYUDMQ//Y8/U38qoRUI7sbmJIBjtkpE62b//dAJYdlSyjbvLe2/qOs+pp0oXFn4D
+bkw39ja845pauQ0ISjSOm3lJkxLxsHHhU4Ea9z1ww1wrONnPTPImpf3v7bKPnVJu
+pHS6fYP61Wfpktv+lXbsscprlWyvejjRwlwSJT8NXKdPtIn7qXK/hQkmYZQg7CwO
+GGjBMAOG/ocpLk9UGkmCN8ncArXDpzP+jIJMl0LE6TNtiBl6V6rtFsqEm2dVCqtJ
+pLE4FT/t3/FfAaRMn2U1HyLTsxYy/FIYtQr5eogDcShmkKL2k9mHfTJuKxKhvYWU
+z1qfWD0T1pxGnl+EnKUmnuX+ypACWYpGRLWdoIWJLke9aKCjpF559xEArom3djfb
+KK3yOm9EjxXQYqZuroLCYn8IA+OlWuIZX8wo2g/6/WsVnxM5pb6QeuZMNAs9Il/8
+UxaOxBNMx5eyGqNEvlBaG3re/wsfwKucjA3fqnjVqoc31527EpNcH/3edRtwdARd
+ApvEueEJXC//c+liEQFhXwc+p+yGAWpf0jAagpd5Z3XdvQkcMOEFrejsOLuZb7/Z
+nnEluHAheR+CrUAQEefHWjjjcrNx8/yFKmLj7yTeV7T9VwKkbTEW7mJFgFp56fFf
+MlSoriJ2BgHDaHW7gRUisq0D+CopuNS3nQUBGc4unCALCCLlIGI=
+=jOkp
+-----END PGP SIGNATURE-----
+
+--n63a2yfaefc6qmdi--
