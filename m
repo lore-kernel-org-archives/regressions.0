@@ -1,108 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4992E145B3F
-	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 11:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64FE13DDAA
+	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 11:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722252604; cv=none; b=dXqT622v2EWLKtbgakFKS5lxypiNT/20Gzk7K9dp1OKkzO6GoQOPBpmHzO/B/pW936t5mW+xoFFxodmAzpmOZuvgEtmyMZVehBHU3aOZFKzIVPp1UupkFGTWzeYSXTi2waRF4EOdc1O5SNa+VP5C4OzQWmZeYoZAbPPn1togRyI=
+	t=1722253225; cv=none; b=X/aZJZscLCqCdq9iHgFLYMERc9/OCD2/78P0etvNMwYjfPAmJ3g5kHkGCvkLDPVLnVoPX5SGQ+IaIE7/0caXwiAXvETnJYU9xXd1yM3fgq5ec3nzjBnOhWgs3YCx3nFKgsMEL+tXGdYZWEJcrMQSg3Hnd5xsZaXvZJts7sUimB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722252604; c=relaxed/simple;
-	bh=TipJLAp0H5sPs0dIPuvouVg0CMwOZ5mJT4nmIW/gW74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RDp5wzcBMAmHvj0ZitdBlT2fbbRCZXoeE+Mdrvf4iSSZoEZkkc/4XdPv4BRM2HFkaHkPK+6ujdh6ADqbJDrK9gWFLyg7ztK31i4fCUKth933OPSkudJt7OZJu5h+XWkvoklmnWNJTEIcE/V30bVmtWRpvpJeCJ08czZDnaHa+qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VPFnkrdy; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1722253225; c=relaxed/simple;
+	bh=u6PeKF92llI1DdNMZvjP1sdulzCRGYxmKMJErbhj+wU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OrzzNXXcm5PfBQsUb+RdgtV4MRagw1f8XgnPPwg8+sI6x8AoyzO5lcKbrI4qyxGYkhz2/gYKZUiIG1Xd7PSUhDXzHCC8oEUrUN9gzoovJkuj4Z09AHbopFG3BY0CZEs6VvzoowyPddJNKXgOOe3AZf72gMIeW5G7fcTS5Y7RH7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DeMed2O3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KnHBcMJh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VPFnkrdy"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2082840E01BB;
-	Mon, 29 Jul 2024 11:29:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id GHOm4pgWY5FW; Mon, 29 Jul 2024 11:29:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1722252595; bh=KG8CQ1KpLh65pKJVY3yFSoZNet0pxmhw1NBNwH+ki5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VPFnkrdy9eI+mk47prim7u5B0t0009V/erEUG3ooBQFZvphCNy6oo1hhJjCcX6Qpc
-	 +cUFDvI34Pr7lVGVRjbXi0KXT09YETU4DyX3KYJ/HF7TsKJuQWEF172FxrD+/aSnvO
-	 pekJi6ylLN4isF5860ktgonn//4dB2LDy2yMdiZCUq7sNHlXmamMp3Ot1IIhm5If36
-	 AiNWhDNgjCb7NJW667wBRmUJUDj7R+qfMN7qRkBCQ/x1Lx76S4PZ1H3mL2LV7nsHp+
-	 NFvSVNv31tkNqjijhIUqCfA7BjFn4ZbgNy0xDFMp0rgvVl+iOUPnNfhpjYOL6BuJ3G
-	 9cPQ/zlL+MBustMik0w/Rf1eqOUvKWC6izx+3pjeD+KpSVn0G1E6b0Hei1/3jhG9Nr
-	 DAmd/ZeygtcSnqb2sHHY+5B5++jtq4TKwsSxsuPGfs6AXzWI143pbaVm/8Cw61P1OB
-	 NBWgPByMVnhvkoKMibfEj7zqZYhvFE17W4jpKU//BGAYgU8eSb24wjU4jzq2QU2cH6
-	 Z2K2Trdxx/ciZWAbzR68+93iRqEcGfUybYglzVGcH5mHbmge/ThOp0+wjPtPMrHRt0
-	 xaXscIpeEreuimI9Kip4fnf9KRMQssPkz3hPQoro1LfEIbtoHX77CIlx5nshl++zp4
-	 YGFwEcqoPWUKTJ/Fzv1di8EI=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E173340E00F4;
-	Mon, 29 Jul 2024 11:29:38 +0000 (UTC)
-Date: Mon, 29 Jul 2024 13:29:38 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-	rafael.j.wysocki@intel.com, catalin.marinas@arm.com,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Terry.bowman@amd.com,
-	linuxarm@huawei.com, guohanjun@huawei.com, gshan@redhat.com,
-	miguel.luis@oracle.com,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	shameerali.kolothum.thodi@huawei.com
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DeMed2O3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KnHBcMJh"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1722253216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=94M1ZHgpWiyBrLavpWVI1M/6xVg1GAI3Q3mDFVuUqsU=;
+	b=DeMed2O3bIGHSsOeMP2yVVapGbMCQoMEtCp1rFpDSafgSOc78P5nYbHoTVpmLP3n5dfRHU
+	+Z6BpbtQigjY7JU0i4GtWPK349Q2YAeTA0BVz13fysqPxfkVPR+xR1r8BbBpAPzFHNSH00
+	NTHkRr2t1vFyCHJa2emRHRtSlK44pvQbxPQm7NuWWP883OyKTJiT0EEEGnbc4hKKUA0dyp
+	W27KCJnO6YNv7x7VSnd0/gDV5MYspCvKK1K1TNkBJMvjftR8vGc2K3O6MIGGMu5zvNIVtN
+	YHe9UEOcG3sd5C7lytW/8Znf/dESpZhOzXlwcBCzlWDuLV1gFmDIEc7HClqflA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1722253216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=94M1ZHgpWiyBrLavpWVI1M/6xVg1GAI3Q3mDFVuUqsU=;
+	b=KnHBcMJhHHOX/OiJv7nWbU1GdA2qpdn3yHzkqY5SZonany/sgX/UIb2D8YZbkwRfpse2DP
+	eB+AgzX156FjotAw==
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mikhail Gavrilov
+ <mikhail.v.gavrilov@gmail.com>, rafael.j.wysocki@intel.com,
+ catalin.marinas@arm.com, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>, Terry.bowman@amd.com
+Cc: linuxarm@huawei.com, guohanjun@huawei.com, gshan@redhat.com,
+ miguel.luis@oracle.com, Linux List Kernel Mailing
+ <linux-kernel@vger.kernel.org>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, shameerali.kolothum.thodi@huawei.com
 Subject: Re: [PATCH] x86/aperfmperf: Fix deadlock on cpu_hotplug_lock
-Message-ID: <20240729112938.GCZqd9IvTZmKXVGt9T@fat_crate.local>
+In-Reply-To: <20240729105504.2170-1-Jonathan.Cameron@huawei.com>
 References: <20240729105504.2170-1-Jonathan.Cameron@huawei.com>
+Date: Mon, 29 Jul 2024 13:40:15 +0200
+Message-ID: <87ikwo8m00.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240729105504.2170-1-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain
 
-On Mon, Jul 29, 2024 at 11:55:04AM +0100, Jonathan Cameron wrote:
+On Mon, Jul 29 2024 at 11:55, Jonathan Cameron wrote:
 > The broken patch results in a call to init_freq_invariance_cppc() in a CPU
 > hotplug handler in both the path for initially present CPUs and those
 > hotplugged later.  That function includes a one time call to
 > amd_set_max_freq_ratio() which in turn calls freq_invariance_enable() that
 > has a static_branch_enable() which takes the cpu_hotlug_lock which is
 > already held.
-> 
+>
 > Avoid the deadlock by using static_branch_enable_cpuslocked() as the lock
 > will always be already held.  The equivalent path on Intel does not
 > already hold this lock, so take it around the call to
 > freq_invariance_enable(), which results in it being held over the call to
 > register_syscall_ops, which looks to be safe to do.
-> 
+>
 > Fixes: c1385c1f0ba3 ("ACPI: processor: Simplify initial onlining to use same path for cold and hotplug")
 > Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 > Closes: https://lore.kernel.org/all/CABXGCsPvqBfL5hQDOARwfqasLRJ_eNPBbCngZ257HOe=xbWDkA@mail.gmail.com/
 > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 > Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  arch/x86/kernel/cpu/aperfmperf.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
 
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
-
-I'll take it through tip if no one objects...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
