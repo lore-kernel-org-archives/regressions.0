@@ -1,37 +1,36 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mr85p00im-ztdg06011101.me.com (mr85p00im-ztdg06011101.me.com [17.58.23.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546401E515;
-	Mon, 29 Jul 2024 13:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D9E15DBDD
+	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 16:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722261007; cv=none; b=BeIHe8aPJBaLqm40J/ceBmb5Xeg9oUnYG5sNrjcpq7zazzpaOqjkpwNGCaqV+E+oRxYb7MFS5tEwbxNd8O/21MONaPTdZT5PB0MvibeHOz0yi0iWdiXdbqXjywXEtX7VWRndf4W8z2mTsyVT3alLy0p7FJ8LekcpGPbknljbF1o=
+	t=1722270321; cv=none; b=tgXDGdqmNALfExkHVk9TPClpX4rjdInE3i4OWFegWoD/regznWlD3IcBcWyutbquXMi+0ZjIemkjT4v7dpizLRRbDfJRD51Be4Bod/QJzoh7WMwLFJlpQDnDOg751IYEXpt3PSxFxyRv8yeyrnNs3iln4abAlkdZT/na4P1Suqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722261007; c=relaxed/simple;
-	bh=Y88pXK83406HjjGj/zFnZd3lYT3ci/aeqPXOfD3LW/M=;
+	s=arc-20240116; t=1722270321; c=relaxed/simple;
+	bh=r/F3iIRqf4k027XfLlRecRR4by/sm8fT3dp3ec98uJ0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HGMqmaKLUoEzRjx4q9N1mpxXM1kDXH8XW6OfvE1XnyExuqzj6RGq6Y1ipHsXgrFdP1D+g/gDzviRUghvtye7EpJn9mpp0prvVAVRDmooa8ZkPvrw6hhr8bAdyjMbOL595F+eyesiGKl/xOYCSo/B+9CRTxJ2n0Ysv+BWv1cbN9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KJqrb5W9; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=Mw8HqxGejFssbBbqi2+Ic3/wMectVPkb7XmeoK1onzDHjBzDRGdC0VbQkc+J1zkh9vOo7JfUm2QKVv9X5NVrqZVSqaNvHIiilZwKucVZGch7cBd7fHJUIlRtxaG+5YJbVxIh+KddApAFYZs8JpDQZSsagz8/TlP/Q+NIRljJqrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=aL38q4Qn; arc=none smtp.client-ip=17.58.23.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KJqrb5W9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=HRwq4iryWCGtxaVXelfLfM8LtnioMELn/jHh8pE2A+Q=;
-	t=1722261005; x=1722693005; b=KJqrb5W9ka6K3oTEkVn2VUYotoQNWNMKxAWoTe/kakykxLh
-	xJzOdAuN5VBM1tG3BpZ+pZ2gNPnZANW581Kjtrt63a055GuCM58P0CPLFr+hz8EeNKxiM6KiBVlJ3
-	nGWmkbAdKAT3szmRba46NIKMEvztZ2H+/WKLuqSpeJ4KdBSzgv2kO9EjfLG5iukK5z3j7OLkTCn8R
-	I/W6VsFcYG3qxegaYJQGdiKamMI8Zre4HSyCyFk1UwxfXYIMc3oXbnh/sUMCi4AxHR6Bqs6V0cRny
-	A+dEbXFmK/tTvXFNuGPesVpQpJRRnAByKglkRUS8yBEgMaKnT2v3Ii9+M4o9CsBw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sYQlC-0000uL-Pn; Mon, 29 Jul 2024 15:49:58 +0200
-Message-ID: <c6f93f9d-db6e-40c8-9973-18374af08ab1@leemhuis.info>
-Date: Mon, 29 Jul 2024 15:49:58 +0200
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="aL38q4Qn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1722270319;
+	bh=7rKJ2lXzfu2h4kyLwKXVgGR8R2Mb89gfb6wVtXvor1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=aL38q4QnZZttFrpq2ywebhjODv+joRbetW9FGq4Eejjh9rHhXPUNqizH9K6mZeFku
+	 tb2NhGLS0JYvB9DSw2Ut6wxKYQQJ1F7fTVQGmccn7TegVUuOYpI4wq653IqQ/2e55E
+	 mxRIdCdIrWavb6t9YJn76V4VmMmpmmJcIQjr29v4kaQ+8tOI09c11iMbGbO/2rBbOq
+	 Lg3/NnjNltwmuf4EsBufjLG9baBcHyNeI0xrGczjoM4/36pEXYd9slm/rzLzaNJK7Y
+	 UkUAIgzEFcFnZsmz7NqpDxbfjHvgP39PhPwZLES6+skd6Zfztzi3qVgSqW/k6185JX
+	 cG8ze0pqZdRGQ==
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06011101.me.com (Postfix) with ESMTPSA id CD833DA049D;
+	Mon, 29 Jul 2024 16:25:16 +0000 (UTC)
+Message-ID: <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
+Date: Tue, 30 Jul 2024 00:25:12 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,55 +38,77 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
- mt792x_mac_link_bss_remove
-To: Bert Karwatzki <spasswolf@web.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com
-Cc: sean.wang@mediatek.com, deren.wu@mediatek.com,
- mingyen.hsieh@mediatek.com, linux-wireless@vger.kernel.org,
- linux-mediatek@lists.infradead.org, Mike Lothian <mike@fireburn.co.uk>
-References: <20240718234633.12737-1-sean.wang@kernel.org>
- <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
- <81a6dad7119069d446a982d1c7da4fff5726d26b.camel@web.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <81a6dad7119069d446a982d1c7da4fff5726d26b.camel@web.de>
+Subject: Re: QCA6390 broken in current kernel
+To: Wren Turkal <wt@penguintechs.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
+ <CABBYNZ+vVFUm1Tb+BvViYMJd6XQczTYPgyO++GGbCcWrkaC4Kg@mail.gmail.com>
+ <30319168-9456-49dd-be27-480b2a068fe3@penguintechs.org>
+ <1a519b2f-f5cf-40b3-8223-162dc04f8ca8@penguintechs.org>
+ <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722261005;64e50b16;
-X-HE-SMSGID: 1sYQlC-0000uL-Pn
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: XHfUFPvkbX7z9VdUdkmEWZhcK9BiUKcv
+X-Proofpoint-ORIG-GUID: XHfUFPvkbX7z9VdUdkmEWZhcK9BiUKcv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-29_14,2024-07-26_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1011
+ phishscore=0 spamscore=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2407290110
 
-On 29.07.24 12:51, Bert Karwatzki wrote:
-> Am Mittwoch, dem 24.07.2024 um 11:36 +0200 schrieb Linux regression tracking
-> (Thorsten Leemhuis):
->>
->> On 19.07.24 01:46, sean.wang@kernel.org wrote:
->>> From: Sean Wang <sean.wang@mediatek.com>
+On 2024/7/27 03:25, Wren Turkal wrote:
+> On 7/26/24 11:52 AM, Wren Turkal wrote:
+>> On 7/25/24 1:47 PM, Wren Turkal wrote:
+>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
+>>>> Hi Wren,
+>>>>
+>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
+>>>> wrote:
+>>>>>
+>>>>> Hello BT folks,
+>>>>>
+>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
+>>>>> broken
+>>>>> at least since commit 720261cfc732.
+>>>>>
+>>>>> The KDE and Gnome bluetooth control panels appear to think there is no
+>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
+>>>>>
+>>>>> I have a Dell XPS13 9310.
+>>>>>
+>>>>> I will attempt to capture some kernel logs in a bit.
+>>>>
+>>>> git show 720261cfc732
+>>>> fatal: ambiguous argument '720261cfc732': unknown revision or path not
+>>>> in the working tree.
 >>>
->>> Fix null pointer access in mt792x_mac_link_bss_remove.
+>>> I gave you the sha for the built fedora rawhide kernel package, not a
+>>> mainline sha. Sorry about that. I thought it was a mainline sha. I am
+>>> trying to bisect the problem. Hopefully, I can get a mainline git sha
+>>> for you soon.
 >>>
->>> To prevent null pointer access, we should assign the vif to bss_conf in
->>> mt7921_add_interface. This ensures that subsequent operations on the BSS
->>> can properly reference the correct vif.
+>>> If it helps, the build date of the kernel is 2024-07-19.
 >>>
->>> [...]
->>>> Fixes: 1541d63c5fe2 ("wifi: mt76: mt7925: add
->> mt7925_mac_link_bss_remove to remove per-link BSS")
->>> Reported-by: Bert Karwatzki <spasswolf@web.de>
->>> Closes: https://lore.kernel.org/linux-wireless/2fee61f8c903d02a900ca3188c3742c7effd102e.camel@web.de/#b
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> Sorry about the confusion. Hope this helps track down the problem.
 >>
->> TWIMC, Mike (now CCed) ran into the problem and on bugzilla confirmed
->> that this fixes the problem:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=219084
->> https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZkZF9pz37Bmh2iw@mail.gmail.com/
+>> I have managed to get the following commit id range for the issue:
+>> 80ab5445da6235..e2f710f97f35
 > 
-> Unfortunately this NULL pointer dereference made it into linux-6.11-rc1.
+> Narrowed to 80ab5445da6235..586f14a6a182
+> 
+i feel a little sad that QCA6390 of your machine are broken again.
+i find out a doubtful point by checking recent changes.
 
-Thx for letting us known. Seems this happened due to unlucky timing. But
-the fix afaics will be part of this weeks -net pull , so it should be
-fixed by -rc2 unless something odd happens. Ciao, Thorsten
+you maybe have a attempt for below change if you would like to do that.
+https://patchwork.kernel.org/project/bluetooth/patch/20240730-qca6390_fix-v1-1-e0340a511756@icloud.com/
+
+thanks
+
+
