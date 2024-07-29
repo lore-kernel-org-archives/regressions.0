@@ -1,128 +1,113 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC4A84DE4
-	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 10:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E297D74055
+	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 10:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722247450; cv=none; b=i2XE2bNctkWR/gP0A5Gh0QlKMzPJ+O1L7JSqLSHVaiG5fzcRtjZbWTkY7I0oMWLdmFrjz4dgvQNNYoNsp5XuhbJ0n6g0JtT137S/CAA5nKCqvo/QoEksmHVev+18Jk1Y0/p+pp5h8UwJecuftEfYAMbcj5dFajELdP1ZjJwkk5U=
+	t=1722248530; cv=none; b=E6Te9fz7JLnJBHb/lEvIcEzFEZ4Xc75lvr4cqJJcG2hgyCwAFe4Y3wX4dZ7hioRoZFXKzyZRUs9NfoDihGNQIZeQt6Jul8h+NQmYkFJc+OUGERX1Ou1bFRbEyRgCl/HBGzJYpoKmHaFp0W+qbnH8UQs51aEC9OyPeM9Lzqz0TkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722247450; c=relaxed/simple;
-	bh=QgDh+hX2CfcVVZFKmfCfQ+4wGGlEPdOz/4DRO+xcBYk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pt1hjApov7Oun+nFm0Pq3TXdTh2YiKp+gdJ1fHq7svFqB1u04SsPP1V2dYvbuxTi0YTkiRrfDYZcJLDO5lZIKk1fuUhE/w7xWrqDYe7UFnPbiywpu01oDC02fXzxBxk9RIV9S3Vi71fOwK1hdQbihQ37lquiUhaHuLM8GvRFsHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VuDANfbw; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VuDANfbw"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2f136e23229so13166021fa.1
-        for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 03:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1722247446; x=1722852246; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t23oL5r7qrH6VMZ6nqcOfP88iRYOauRT235fj9H/sb4=;
-        b=VuDANfbw6Y6mB8EHeplBa6AKaDZo1G8OlbWIzlDQuKMjn6k6AIutUnY7Uv64wWXSqe
-         kson3zGAyru7EWXtKvEST3GxeLTW6uaazpW5W3RTIqPLGyyDmHV7L52gnMBuGhwsXNAN
-         ZLCdY5YfeH3B41QkjMxJ9l2o82wGlEDPJh26XnQJtRx7mLGbYbtgJ7fIss1Op3jjs++V
-         TI/KeVXkcWb/pPsD4imSOR74hoxCB6OH9SKAbbW/zaATfifvddFMB0K0wdxdl0cFY83g
-         ZFvnpyBCzip3bTGJUvLPDZ/O1ZgD4N2aQeNW4nRlr2L2Jpj+8jdQ1jq57AYBCwMjcTqZ
-         4k+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722247446; x=1722852246;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t23oL5r7qrH6VMZ6nqcOfP88iRYOauRT235fj9H/sb4=;
-        b=gDWD6SO7QmhgN3MNIVJrkl2O5mIjO0cAHVhDzeOxNMMWt5dSCvcFnbh9gqHQRIAo4L
-         kSfW0LmB6CuSeOyWgiWq5QPh/EBSfRjdbe7Y/KuNFvpfgiV17mN3GrBUMrDpHgMhlZZB
-         SKQLbDZWFISdQmMFK9G1OtZwmSnS7/zpQGhLeWemkKvzEXKmOLeKej/im9Wxs0pYg3w5
-         vrPJq3ge7VQBRgAtguSF4u3MxHgNf1x7yLxLObn5XQZYoUy1uI2LtWo6AZYDvlieOZE8
-         l95JfZeuwQAv4gGFZJjyCAbXcD5ildj3o8crpSOQ+y7j98963lAgGzkzIMnn2yqWlf3O
-         jmaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwSUbR2jUMW5lpAOWae7UXb40bDJgPe+GcXdx3jCMlzfM7Go80aLjUXkzJ+zB1M8jrHkk59+YaFceSBfQprX0MQ+Jt9cGasjjdGT0=
-X-Gm-Message-State: AOJu0Yx0Wqax6q6LmzDHktvzS1JtSm5V+b+85AF2Jf3eT69zn8qqIakX
-	4q6EchQyeKaxOOgqipPhdCgLLyBvurpwmutvLF7tmB/74mEvPLXMtIbvm9xhNJ6VBt584Uk55w0
-	mDXYAPCDiZJ3XZfeWFuMiBdrx2bCspkkKJTPEhQ==
-X-Google-Smtp-Source: AGHT+IGq14q7ZB+CrHf7BL0wsC4WC1GH18TcWHVWGRmnWpnnGZoopVgB1sYJg+4GH1UMU/cFQxpVls2AeyCAqvBP318=
-X-Received: by 2002:a2e:8057:0:b0:2ef:23a2:7efa with SMTP id
- 38308e7fff4ca-2f12ee1b184mr45849721fa.27.1722247446521; Mon, 29 Jul 2024
- 03:04:06 -0700 (PDT)
+	s=arc-20240116; t=1722248530; c=relaxed/simple;
+	bh=ggPiKzMFxwpeO1xIvCR8I2M+CpPVZDjRP8p/t87aFqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EcnVUwdwZzGDak4cup6ILP0sOw1jGqI6Ur8WMSVo8tniCFC9ZmmrOaCKDYnuBO0FqCU/ZqWoW0dOvHLb1DxFVllhwbIK26OI/LZzDZN1sU1VQsN0cKf61Pq3MCBbZAunc9n2BsGDxCQI4chaqsQtBYXOfFXhbONMVaCmKPTN41I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.53] (ip5f5ae9dc.dynamic.kabel-deutschland.de [95.90.233.220])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2268261E5FE35;
+	Mon, 29 Jul 2024 12:21:35 +0200 (CEST)
+Message-ID: <aa9d6aec-ef94-4137-b2ff-0c86d9a92d42@molgen.mpg.de>
+Date: Mon, 29 Jul 2024 12:21:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240729095542.21097-1-johan+linaro@kernel.org>
-In-Reply-To: <20240729095542.21097-1-johan+linaro@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 29 Jul 2024 12:03:55 +0200
-Message-ID: <CAMRc=McuqEv1Sk9O6kn4aHo9wOfzskZS0z2QxzNM=q2N8XZ3zw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "firmware: qcom: qseecom: convert to using the TZ allocator"
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Amirreza Zarrabi <quic_azarrabi@quicinc.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Elliot Berman <quic_eberman@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: btqca: crash with linux-next on bt power down
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <su3wp6s44hrxf4ijvsdfzbvv4unu4ycb7kkvwbx6ltdafkldir@4g7ydqm2ap5j>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <su3wp6s44hrxf4ijvsdfzbvv4unu4ycb7kkvwbx6ltdafkldir@4g7ydqm2ap5j>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 29, 2024 at 11:58=E2=80=AFAM Johan Hovold <johan+linaro@kernel.=
-org> wrote:
->
-> This reverts commit 6612103ec35af6058bb85ab24dae28e119b3c055.
->
-> Using the "TZ allocator" for qcseecom breaks efivars on machines like
-> the Lenovo ThinkPad X13s and x1e80100 CRD:
->
->         qcom_scm firmware:scm: qseecom: scm call failed with error -22
->
-> Reverting to the 6.10 state makes qseecom work again.
->
-> Fixes: 6612103ec35a ("firmware: qcom: qseecom: convert to using the TZ al=
-locator")
-> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
-> Cc: regressions@lists.linux.dev
->
-> #regzbot introduced: 6612103ec35a
->
+#regzbot: ^introduced: 6.10..
 
-How about at least giving me the chance to react to the report and fix
-it instead of reverting it right away?
+Dear Dmitry,
 
-Are there any other messages about SHM bridge/SCM calls in the kernel log?
 
-Do you have QCOM_TZMEM_MODE_GENERIC=3Dy or QCOM_TZMEM_MODE_SHM_BRIDGE=3Dy
-in your config? If the latter: can you try changing it to the former
-and retest?
+Thank you for the report.
 
->
-> It's a little frustrating to find that no-one tested this properly or
-> even noticed the regression for the past month that this has been
-> sitting in linux-next.
->
 
-I have tested many platforms and others have done the same but
-unfortunately cannot possibly test every single use-case on every
-platform. This is what next is for after all.
+Am 29.07.24 um 04:11 schrieb Dmitry Baryshkov:
 
-> Looks like Maximilian may have hit this with v9 too:
->
->         https://lore.kernel.org/lkml/CAMRc=3DMf_pvrh2VMfTVE-ZTypyO010p=3D=
-to-cd8Q745DzSDXLGFw@mail.gmail.com/
->
-> even if there were further issues with that revision.
+> On Qualcomm Dragonboard 820c (APQ8096, QCA6174) soon after the boot I
+> observe the following crash:
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+> Mem abort info:
+>    ESR = 0x0000000096000006
+>    EC = 0x25: DABT (current EL), IL = 32 bits
+>    SET = 0, FnV = 0
+>    EA = 0, S1PTW = 0
+>    FSC = 0x06: level 2 translation fault
+> Data abort info:
+>    ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+>    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010da63000
+> [0000000000000018] pgd=080000010da62003, p4d=080000010da62003, pud=080000010da61003, pmd=0000000000000000
+> Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+> Modules linked in: hci_uart btqca
+> CPU: 2 UID: 0 PID: 66 Comm: kworker/u19:0 Not tainted 6.10.0-next-20240726-13923-gd3ce7ebd61f9-dirty #2722
 
-This is a different issue that was fixed in a later iteration.
+I am unable to find the commit. Your tree also seems dirty. What is the 
+last working commit?
 
->
-> Johan
->
+> Hardware name: Qualcomm Technologies, Inc. DB820c (DT)
+> Workqueue: hci0 hci_power_off
+> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : qca_power_shutdown+0x8c/0x210 [hci_uart]
+> lr : qca_power_shutdown+0x7c/0x210 [hci_uart]
+> sp : ffff8000836f3c50
+> x29: ffff8000836f3c50 x28: ffff00008337b900 x27: ffff000084085000
+> x26: 0000000000000000 x25: 0000000000000000 x24: ffff00009276f800
+> x23: ffff00009276f918 x22: ffff000081e1fc80 x21: 0000000000000001
+> x20: ffff000081e1fc80 x19: ffff00009276f800 x18: ffff0000de422170
+> x17: 0000000000061d88 x16: 0000000000000000 x15: 0000000000000001
+> x14: ffff0000813b3580 x13: 0000000000000000 x12: 00000000000001a0
+> x11: 0000000000000001 x10: 00000000000013f0 x9 : 0000000000000000
+> x8 : ffff8000836f3b40 x7 : 0000000000000000 x6 : ffff800080d52e88
+> x5 : 0000000000000000 x4 : ffff8000836f0000 x3 : 0000000000000000
+> x2 : 0000000000000000 x1 : ffff00008f56d000 x0 : 0000000000000000
+> Call trace:
+>   qca_power_shutdown+0x8c/0x210 [hci_uart]
+>   qca_power_off+0x70/0xfb8 [hci_uart]
+>   hci_dev_close_sync+0x4b0/0x6d8
+>   hci_power_off+0x2c/0x44
+>   process_one_work+0x20c/0x62c
+>   worker_thread+0x1bc/0x36c
+>   kthread+0x120/0x124
+>   ret_from_fork+0x10/0x20
+> Code: f9400681 b4000441 f9403c36 f94102c0 (f9400c00)
+> ---[ end trace 0000000000000000 ]---
+If you can reproduce this, bisecting this would be great.
 
-Bartosz
+
+Kind regards,
+
+Paul
