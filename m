@@ -1,100 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA4A145B3E;
-	Mon, 29 Jul 2024 13:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B4814EC47
+	for <regressions@lists.linux.dev>; Mon, 29 Jul 2024 13:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722258848; cv=none; b=i5mJ9zI1TeszZBQmz5kRW9qA4hu0UA0hxMOgSz0M69b35IyvPvRMrRvaa2AhGMroUDbiErJnw75JNpRH1pMoDYDG6ExsLHKbCtatL9pVg3YTdBDGyL1nTx87B4vut2+c0T8PMu8FleuxqoyAs1FreVbJgS+KeiJ7Udxm410B/zw=
+	t=1722259308; cv=none; b=TbNtmFy4lT9dLqhLA+GXNXAqUjyQjLWDRsqSqDeTdr/a9ULPDcFT79T/fEP9G1HQp/6p4vc8fBcmuLIYtbxtAbgyctFwvOHkLUvPUwDOFis3th1mbp04gLUy+ghHGS4il409oFMuyFBg3hHMkAGXfaqlys7p91lbsGGM+JrQ54s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722258848; c=relaxed/simple;
-	bh=2/YZLHYwe6VeiM3pUFkU5Uwf+RFlzvvWMDWutDwHs1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T2BubfQAfdYgymnwz0RN4mq4mAxsL/3CqB62x3wAHZrJ3qG7cx/6NMUclLmiWgpkIVp/UDNSMt9feDYa0Io0yoZ8cTEqfbXUunwFTBu8Eb4dIPuN79dsZ5Liixyqwn0AWIpe34/fco2s9wH8bAJuFbUxTufLdliFOwmx1Koyj7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bclbK1iY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722259308; c=relaxed/simple;
+	bh=c9nQ9YWCNihxBoNQr/shbdk4nPMbm5IIfUt9rbzw6nQ=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=bLdDXPWOwbOIDNs0+Vxkxwu87TcHtPp3T5dHVLuUdsoprAM5Isqseu2HMm4qCJfo62DlDj4FQl8qnQwCOp6IHDGwMZu+YBDWDFSPwZRIzmZgnQVcruZqauADl64LOtu5osdkVQLtRxexYQc2rKuYXwgMi4/vKvP+gl7ea2rEpw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev; spf=pass smtp.mailfrom=holm.dev; dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b=PqEKLtsl; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holm.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bclbK1iY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A48C32786;
-	Mon, 29 Jul 2024 13:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722258848;
-	bh=2/YZLHYwe6VeiM3pUFkU5Uwf+RFlzvvWMDWutDwHs1Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bclbK1iYJNgcrsT5kdKuydrNKIIhB9Xkxuu1vbCk/IdIchAHY6fpEbFbDii9Glg8A
-	 0/Qbp/aoa7Axdt7t/0BEA4CsN1wHaj7u5GNvphqVma1VRiAhZs649aYytLB3nM0oml
-	 0/6VaNQmEls7l/T0BYUAVW5rJL/5DUL7F4xgS980I3Kahyo+Nek+D/G3/hVJwdbRLx
-	 YqmlZRo0FlELbCfH7iCamL0xvOhnpQX2TjiPtqu1cDrL3J6jUVl/R6TVgMkwyaPzqK
-	 xV/8LfAblWT7U5DkEL/SqAvZJJrQXP4CwZdKpxwlZzofWC/fr0PMh9rJU6AO0g1N2O
-	 JH9JhCwmkpcGw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1sYQCa-000000007G9-1tX1;
-	Mon, 29 Jul 2024 15:14:13 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	alsa-devel@alsa-project.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	regressions@lists.linux.dev
-Subject: [PATCH] ASoC: codecs: lpass-macro: fix missing codec version
-Date: Mon, 29 Jul 2024 15:13:51 +0200
-Message-ID: <20240729131351.27886-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.44.2
+	dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b="PqEKLtsl"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holm.dev; s=key1;
+	t=1722259302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G1Agd5vRjGskPC+jhoG7bLdcvURz2aFKxK/qDcooy8Y=;
+	b=PqEKLtsleFSFZPHLbs8jFKP/lXcMKZuWAJLaMSv+BmPZ0SDnt9m8rVAX6HVrpbVRUINwUp
+	qMAD26NOhMKIvW/RATtyDc1Rw9gV0wj+fSbZVAZjLXwpxwe7vjkX9v8jinHYHITGdyk+uE
+	yu3qx0YUXuFiSe19j5OAfRtkFuchIFScLlHUyU74Hbzy3qlIo+C0rvrOVHtP253xX18/mM
+	mrALJB3DFkl/+mcjwhoPEP7Ag6P7R0PCvQ7Q4/Str/2gD9n0N3SonW4FSo9yHBMHzmzTga
+	Fuy9oIT4WMFRYp2jh6qgPDRWeBa4/cJc7TsnYs28kBK5SsHYOEq+z+RE2lhezQ==
+Date: Mon, 29 Jul 2024 13:21:40 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: kevin@holm.dev
+Message-ID: <7bf26283474fbb6ea915f93f4db0bc614a627617@holm.dev>
+TLS-Required: No
+Subject: Re: [REGRESSION] No image on 4k display port displays connected
+ through usb-c dock in kernel 6.10
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>,
+ "Christian Heusel" <christian@heusel.eu>
+Cc: "Greg KH" <gregkh@linuxfoundation.org>, "Lin, Wayne" <Wayne.Lin@amd.com>,
+ stable@vger.kernel.org, "LKML" <linux-kernel@vger.kernel.org>, "ML
+ dri-devel" <dri-devel@lists.freedesktop.org>,
+ amd-gfx@lists.freedesktop.org, "Wu, Hersen" <hersenxs.wu@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>
+In-Reply-To: <ca007d54-c204-4f7f-9eca-5a282324b941@leemhuis.info>
+References: <d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev>
+ <9ca719e4-2790-4804-b2cb-4812899adfe8@leemhuis.info>
+ <fd8ece71459cd79f669efcfd25e4ce38b80d4164@holm.dev>
+ <CO6PR12MB54897CE472F9271B25883DF6FCB72@CO6PR12MB5489.namprd12.prod.outlook.com>
+ <e2050c2e-582f-4c6c-bf5f-54c5abd375cb@leemhuis.info>
+ <b7f0f3e1-522b-4763-be31-dcee1948f7b3@heusel.eu>
+ <ca007d54-c204-4f7f-9eca-5a282324b941@leemhuis.info>
+X-Migadu-Flow: FLOW_OUT
 
-Recent changes that started checking the codec version broke audio on
-the Lenovo ThinkPad X13s:
+July 29, 2024 at 11:15 AM, "Linux regression tracking (Thorsten Leemhuis)=
+" <regressions@leemhuis.info> wrote:
 
-	wsa_macro 3240000.codec: Unsupported Codec version (0)
-	wsa_macro 3240000.codec: probe with driver wsa_macro failed with error -22
-	rx_macro 3200000.rxmacro: Unsupported Codec version (0)
-	rx_macro 3200000.rxmacro: probe with driver rx_macro failed with error -22
 
-Add the missing codec version to the lookup table so that the codec
-drivers probe successfully.
 
-Note that I'm just assuming that this is a 2.0 codec based on the fact
-that this device uses the older register layout.
+>=20
+>=20On 29.07.24 10:47, Christian Heusel wrote:
+>=20
+>=20>=20
+>=20> On 24/07/29 10:35AM, Linux regression tracking (Thorsten Leemhuis) =
+wrote:
+> >=20
+>=20> >=20
+>=20> > [+Greg +stable]
+> > >=20
+>=20> >  On 29.07.24 10:16, Lin, Wayne wrote:
+> > >=20
+>=20>=20
+>=20>  Thanks for the report.
+> >=20
+>=20>  Patch fa57924c76d995 ("drm/amd/display: Refactor function dm_dp_ms=
+t_is_port_support_mode()")
+> >=20
+>=20>  is kind of correcting problems causing by commit:
+> >=20
+>=20>  4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for ms=
+t mode validation")
+> >=20
+>=20>  Sorry if it misses fixes tag and would suggest to backport to fix =
+it. Thanks!
+> >=20
+>=20> >=20
+>=20> > Greg, seem it would be wise to pick up fa57924c76d995 for 6.10.y =
+as
+> > >=20
+>=20> >  well, despite a lack of Fixes or stable tags.
+> > >=20
+>=20> >  Ciao, Thorsten
+> > >=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  The issue is that the fixing commit does not apply to the 6.10 ser=
+ies
+> >=20
+>=20>  without conflict and the offending commit does not revert cleanly
+> >=20
+>=20>  aswell.
+> >=20
+>=20
+> Hah, many thx, I should have checked that.
+>=20
+>=20Lin, Wayne: could you maybe help out here and provide something for 6=
+.10.y?
+>=20
+>=20Ciao, Thorsten
+>
 
-Fixes: 378918d59181 ("ASoC: codecs: lpass-macro: add helpers to get codec version")
-Fixes: dbacef05898d ("ASoC: codec: lpass-rx-macro: prepare driver to accomdate new codec versions")
-Fixes: 727de4fbc546 ("ASoC: codecs: lpass-wsa-macro: Correct support for newer v2.5 version")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+I reverted 4df96ba6676034 from v6.10.2 from the stable/linux git, resolvi=
+ng the conflict by removing everything that git marked as from the curren=
+t branch and kept everything marked as from before the branch to merge. T=
+hat resulted in a patch that is fixing the problem on my machine. Since I=
+ don't understand what the code is actually doing it might break things o=
+n other machines.
+
+From cd1674a469cede83f6b0907f320b6af08c3c8950 Mon Sep 17 00:00:00 2001
+From: Kevin Holm <kevin@holm.dev>
+Date: Mon, 29 Jul 2024 13:24:38 +0200
+Subject: [PATCH] Test patch
+
 ---
-Cc: regressions@lists.linux.dev
-#regzbot introduced: 378918d59181
+ .../display/amdgpu_dm/amdgpu_dm_mst_types.c   | 33 +++----------------
+ 1 file changed, 5 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c =
+b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index a5e1a93ddaea..5c555a37e367 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -1599,7 +1599,7 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+     struct amdgpu_dm_connector *aconnector,
+     struct dc_stream_state *stream)
+ {
+-    int pbn, branch_max_throughput_mps =3D 0;
++    int bpp, pbn, branch_max_throughput_mps =3D 0;
+     struct dc_link_settings cur_link_settings;
+     unsigned int end_to_end_bw_in_kbps =3D 0;
+     unsigned int upper_link_bw_in_kbps =3D 0, down_link_bw_in_kbps =3D 0=
+;
+@@ -1649,34 +1649,11 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+             }
+         }
+     } else {
+-        /* Check if mode could be supported within max slot
+-         * number of current mst link and full_pbn of mst links.
+-         */
+-        int pbn_div, slot_num, max_slot_num;
+-        enum dc_link_encoding_format link_encoding;
+-        uint32_t stream_kbps =3D
+-            dc_bandwidth_in_kbps_from_timing(&stream->timing,
+-                dc_link_get_highest_encoding_format(stream->link));
+-
+-        pbn =3D kbps_to_peak_pbn(stream_kbps);
+-        pbn_div =3D dm_mst_get_pbn_divider(stream->link);
+-        slot_num =3D DIV_ROUND_UP(pbn, pbn_div);
+-
+-        link_encoding =3D dc_link_get_highest_encoding_format(stream->li=
+nk);
+-        if (link_encoding =3D=3D DC_LINK_ENCODING_DP_8b_10b)
+-            max_slot_num =3D 63;
+-        else if (link_encoding =3D=3D DC_LINK_ENCODING_DP_128b_132b)
+-            max_slot_num =3D 64;
+-        else {
+-            DRM_DEBUG_DRIVER("Invalid link encoding format\n");
++        /* check if mode could be supported within full_pbn */
++        bpp =3D convert_dc_color_depth_into_bpc(stream->timing.display_c=
+olor_depth) * 3;
++        pbn =3D drm_dp_calc_pbn_mode(stream->timing.pix_clk_100hz / 10, =
+bpp << 4);
++        if (pbn > aconnector->mst_output_port->full_pbn)
+             return DC_FAIL_BANDWIDTH_VALIDATE;
+-        }
+-
+-        if (slot_num > max_slot_num ||
+-            pbn > aconnector->mst_output_port->full_pbn) {
+-            DRM_DEBUG_DRIVER("Mode can not be supported within mst links=
+!");
+-            return DC_FAIL_BANDWIDTH_VALIDATE;
+-        }
+     }
+=20
+=20    /* check is mst dsc output bandwidth branch_overall_throughput_0_m=
+ps */
+--=20
+2.45.2
 
 
- sound/soc/codecs/lpass-va-macro.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/codecs/lpass-va-macro.c b/sound/soc/codecs/lpass-va-macro.c
-index b852cc7ffad9..a62ccd09bacd 100644
---- a/sound/soc/codecs/lpass-va-macro.c
-+++ b/sound/soc/codecs/lpass-va-macro.c
-@@ -1472,6 +1472,8 @@ static void va_macro_set_lpass_codec_version(struct va_macro *va)
- 
- 	if ((core_id_0 == 0x01) && (core_id_1 == 0x0F))
- 		version = LPASS_CODEC_VERSION_2_0;
-+	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && core_id_2 == 0x01)
-+		version = LPASS_CODEC_VERSION_2_0;
- 	if ((core_id_0 == 0x02) && (core_id_1 == 0x0E))
- 		version = LPASS_CODEC_VERSION_2_1;
- 	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x50 || core_id_2 == 0x51))
--- 
-2.44.2
-
+Regards,
+Kevin
