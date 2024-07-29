@@ -1,78 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B773E14A08D;
-	Mon, 29 Jul 2024 12:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA4A145B3E;
+	Mon, 29 Jul 2024 13:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722257383; cv=none; b=HdS6rGWeb50Wz5IMGi/Wpd9Wv+jTvd9c2/+81sntm69XXDavJ3a1QHBu74920XEBMgt5avtG4qv/wBe+bEb/yMXcEOu8+Ypn5mFCB78BuVcwTJpiuPiO8bgsFSAG7gHcd/ZEIS32XVAlN609Y6pvGayKh82KTCiyLdhyTFzNmjk=
+	t=1722258848; cv=none; b=i5mJ9zI1TeszZBQmz5kRW9qA4hu0UA0hxMOgSz0M69b35IyvPvRMrRvaa2AhGMroUDbiErJnw75JNpRH1pMoDYDG6ExsLHKbCtatL9pVg3YTdBDGyL1nTx87B4vut2+c0T8PMu8FleuxqoyAs1FreVbJgS+KeiJ7Udxm410B/zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722257383; c=relaxed/simple;
-	bh=nQGvM2ffOyyckVEVORwdxjX3xtz5tqK6vFCOtu/m4SU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P3mNHlo55l0jEPjcTuyBobrlOzDw1N/21JbsLDDy6sDHzWTMM6nhdro2q3hO2J9GCSCZjdaP4aeRyA27/eYTL+nBy0sQ+iVQrLBu9dT+Qo+FZDsdzzF53YXSn/LvoHmv7FNM8hwOio7CAmGx/a6DFgx7SDXGMEAvNgdsk5LmiIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMEIOQvg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722258848; c=relaxed/simple;
+	bh=2/YZLHYwe6VeiM3pUFkU5Uwf+RFlzvvWMDWutDwHs1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T2BubfQAfdYgymnwz0RN4mq4mAxsL/3CqB62x3wAHZrJ3qG7cx/6NMUclLmiWgpkIVp/UDNSMt9feDYa0Io0yoZ8cTEqfbXUunwFTBu8Eb4dIPuN79dsZ5Liixyqwn0AWIpe34/fco2s9wH8bAJuFbUxTufLdliFOwmx1Koyj7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bclbK1iY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMEIOQvg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84377C32786;
-	Mon, 29 Jul 2024 12:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bclbK1iY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A48C32786;
+	Mon, 29 Jul 2024 13:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722257383;
-	bh=nQGvM2ffOyyckVEVORwdxjX3xtz5tqK6vFCOtu/m4SU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MMEIOQvg5mYhWaJVuTiToITfRt+RI+BRm52y4xcu+mpa2tFd0krJMkVBehsIXOkPd
-	 66sKg5GN/FpyzhV6T9Ca/BYCdz3g6Cs07+Ymbzeom6hZkc8IN8j8eQebWmQzDOY5Ow
-	 o+NB9O+ojDSpMs587Y81rA1+4eW8XFkfTR/+HBjG8DRsi8VD3n0Oa9YZaE0qIZBuPT
-	 y/0gP+5nQUWnaHUnZ+B5FX4fdsLLiShPdpTu1QgKDSQA11Fj25nRG2GL8MgupqNuVw
-	 vrTWoNtR/baw4riYHSxayXcALe8sny8+yrdFU0zFaI7Bbi9BOGV2v63kSbpvXFu6p1
-	 wHNZXXO1nCQVg==
+	s=k20201202; t=1722258848;
+	bh=2/YZLHYwe6VeiM3pUFkU5Uwf+RFlzvvWMDWutDwHs1Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bclbK1iYJNgcrsT5kdKuydrNKIIhB9Xkxuu1vbCk/IdIchAHY6fpEbFbDii9Glg8A
+	 0/Qbp/aoa7Axdt7t/0BEA4CsN1wHaj7u5GNvphqVma1VRiAhZs649aYytLB3nM0oml
+	 0/6VaNQmEls7l/T0BYUAVW5rJL/5DUL7F4xgS980I3Kahyo+Nek+D/G3/hVJwdbRLx
+	 YqmlZRo0FlELbCfH7iCamL0xvOhnpQX2TjiPtqu1cDrL3J6jUVl/R6TVgMkwyaPzqK
+	 xV/8LfAblWT7U5DkEL/SqAvZJJrQXP4CwZdKpxwlZzofWC/fr0PMh9rJU6AO0g1N2O
+	 JH9JhCwmkpcGw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sYPoy-000000005B1-2cuA;
-	Mon, 29 Jul 2024 14:49:48 +0200
-Date: Mon, 29 Jul 2024 14:49:48 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Amirreza Zarrabi <quic_azarrabi@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1sYQCa-000000007G9-1tX1;
+	Mon, 29 Jul 2024 15:14:13 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	alsa-devel@alsa-project.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
 	regressions@lists.linux.dev
-Subject: Re: [PATCH] Revert "firmware: qcom: qseecom: convert to using the TZ
- allocator"
-Message-ID: <ZqeP7CqEoC5iWAdL@hovoldconsulting.com>
-References: <20240729095542.21097-1-johan+linaro@kernel.org>
- <CAMRc=McuqEv1Sk9O6kn4aHo9wOfzskZS0z2QxzNM=q2N8XZ3zw@mail.gmail.com>
- <Zqduv66H2OczRgaH@hovoldconsulting.com>
- <CAMRc=MfEkPcKUNb7HbiNrqv+7q1n0wRD9sKQ8WrydoR4grao2A@mail.gmail.com>
+Subject: [PATCH] ASoC: codecs: lpass-macro: fix missing codec version
+Date: Mon, 29 Jul 2024 15:13:51 +0200
+Message-ID: <20240729131351.27886-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfEkPcKUNb7HbiNrqv+7q1n0wRD9sKQ8WrydoR4grao2A@mail.gmail.com>
 
-On Mon, Jul 29, 2024 at 02:35:39PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Jul 29, 2024 at 11:58 AM Johan Hovold <johan+linaro@kernel.org> wrote:
-> > > >
-> > > > This reverts commit 6612103ec35af6058bb85ab24dae28e119b3c055.
-> > > >
-> > > > Using the "TZ allocator" for qcseecom breaks efivars on machines like
-> > > > the Lenovo ThinkPad X13s and x1e80100 CRD:
-> > > >
-> > > >         qcom_scm firmware:scm: qseecom: scm call failed with error -22
+Recent changes that started checking the codec version broke audio on
+the Lenovo ThinkPad X13s:
 
-> How do you reproduce this on x1e?
+	wsa_macro 3240000.codec: Unsupported Codec version (0)
+	wsa_macro 3240000.codec: probe with driver wsa_macro failed with error -22
+	rx_macro 3200000.rxmacro: Unsupported Codec version (0)
+	rx_macro 3200000.rxmacro: probe with driver rx_macro failed with error -22
 
-Just boot 6.11-rc1 and you should see the above error (and there are no
-variables under /sys/firmware/efi/efivars/).
+Add the missing codec version to the lookup table so that the codec
+drivers probe successfully.
 
-Johan
+Note that I'm just assuming that this is a 2.0 codec based on the fact
+that this device uses the older register layout.
+
+Fixes: 378918d59181 ("ASoC: codecs: lpass-macro: add helpers to get codec version")
+Fixes: dbacef05898d ("ASoC: codec: lpass-rx-macro: prepare driver to accomdate new codec versions")
+Fixes: 727de4fbc546 ("ASoC: codecs: lpass-wsa-macro: Correct support for newer v2.5 version")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+Cc: regressions@lists.linux.dev
+#regzbot introduced: 378918d59181
+
+
+ sound/soc/codecs/lpass-va-macro.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/codecs/lpass-va-macro.c b/sound/soc/codecs/lpass-va-macro.c
+index b852cc7ffad9..a62ccd09bacd 100644
+--- a/sound/soc/codecs/lpass-va-macro.c
++++ b/sound/soc/codecs/lpass-va-macro.c
+@@ -1472,6 +1472,8 @@ static void va_macro_set_lpass_codec_version(struct va_macro *va)
+ 
+ 	if ((core_id_0 == 0x01) && (core_id_1 == 0x0F))
+ 		version = LPASS_CODEC_VERSION_2_0;
++	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && core_id_2 == 0x01)
++		version = LPASS_CODEC_VERSION_2_0;
+ 	if ((core_id_0 == 0x02) && (core_id_1 == 0x0E))
+ 		version = LPASS_CODEC_VERSION_2_1;
+ 	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x50 || core_id_2 == 0x51))
+-- 
+2.44.2
+
