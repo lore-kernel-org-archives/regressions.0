@@ -1,40 +1,58 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C413C196D8D
-	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 09:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329E518FDD7;
+	Tue, 30 Jul 2024 11:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722332505; cv=none; b=pH2t5Q9VnwiKspwgSFIyzhhnul5AMj+Z9ptDEgU1Oq6DhxdNi7BGEyJWduXvwtBmdTCfR023ikPFXpQG9ryllMrqzxkQf5Xq9Pd1NtHQZW8osT6jSos4OEutt2Hk94RaITb2hDAVt0HmRFv8PqadIMmjclVwOREF018WP49CwEM=
+	t=1722337926; cv=none; b=tSD35zbwjZWinAQiRIGkEbCSaPlXe7hmeM67iCV+yFKaHQqziuEg3SZ1esncqhtJ0JHvWTJEcpJxQbKswCFfjVTVYgBg9Z+5VV0qUJ4bwLCIwC8aG+nhEV0BLNa5tMLLfOTx9gRBWDaApSGQ8c/IQdCjKFHR0WlrO1rS2FmR9OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722332505; c=relaxed/simple;
-	bh=hgNqnU4Er33p+LqqcZgo595E37aXhaKnOBZSc3IoLZ4=;
+	s=arc-20240116; t=1722337926; c=relaxed/simple;
+	bh=OiKNuyUUycHp+DcRuys+22df2w8deZY63KZCSZoiHbM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZYgNdIDriPEbcGC3gBA5yzuQoeKFUmbZIN/paRyJM/CBcteJyFj/osPRKPOFr42rdgswe8S7zD2+nvsjIdPhA3jqGcE6o8744JJdz8kXFLdgr3zeRYQWQ0Z+t3qdS9PFAt8eoBh6aK2pdhDxXGAwFbK+aExhiBgAX3sr/FB8Iqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Uor3g7kK; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=R+lKSZqwA4UGIOdtJtcRKvTQ4RAvfzj79Rmyfr3XTxIMWCdMxC3dgGpqDddnNcXXt94XGRjnXsIHN2XoYXCk5fbrsoZbvPuF9tvjiAGdBWiYmFFKjMPDgHh7Vs0y254MYvJz+3x6rkkLU1Lu0X8CuSGQ6W8QkDOznyKLOP8lk38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyPgftAS; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Uor3g7kK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1722332502;
-	bh=hgNqnU4Er33p+LqqcZgo595E37aXhaKnOBZSc3IoLZ4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Uor3g7kK6v9AlBioKHDcqkhdlnieTcyYn3qckI4rk6+5sXc81Gz2+lksR4tytnMY2
-	 uXWTq4OLNv6r46AZt7vDdXrhM33klHA7KuauybDtyJIs5UwM1RpUn8q+tfDf01L+D/
-	 TSlIl7gUmyZOej7bei8TpGrCWTUxAxkpFLxjrBh4Asr8v5On4cesJaIIX8d6d5/kvq
-	 Gvo18xarfxaF53LYuv5+HcOkCsMpHt8qYmPLw8MhYAZY3DI0BJPu50QMdLzzHwWQKm
-	 6M0GHl/uCrZ5vUjw2w0Jv8ZgEtbfluOpr01A9sItS5rn5+UZ3k5uM9Ik+Zz41gTUi4
-	 Wh3nS5xL7dsdA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 13D4E37821ED;
-	Tue, 30 Jul 2024 09:41:41 +0000 (UTC)
-Message-ID: <b3fa66cc-516b-4d78-aee5-62a47b52a3b1@collabora.com>
-Date: Tue, 30 Jul 2024 11:41:40 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyPgftAS"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52efbb55d24so6676870e87.1;
+        Tue, 30 Jul 2024 04:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722337923; x=1722942723; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HIJ0xWQHIT+ZhGzKTfqkUzIlhOjoSzit5i+9fa21rOw=;
+        b=YyPgftASUpjz8n4oK6eCfZY5SF7EO2+0GksCGbFvFqVf45PW3JwDnZKnElwbWdC0Ql
+         61LDN0wSxMz7XO3hR/hcGSTI/uM3z1J5UB8US+dDjtLE5AjiYvS2dfKNAxeoxQWxIAfj
+         PQ4xeIzd0uU/BZEG8ggglGLAwXG5zvrJl1FCjljFHGHdcanqoRgWqXWbaHB4lO+ugTkg
+         tyycwq1ibfOkJQHLXfJA/Ys3bZ1k2VkNkptrN0vV3qZPUFGIHUK7r9o7rH2eLPCayoEk
+         W7dICkzMx/eToVXiFeIyAuMq4t6zfyoW1cGK1HYYUtYP/z5naPK4UAwxlVY2YJpdR1mA
+         K5iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722337923; x=1722942723;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HIJ0xWQHIT+ZhGzKTfqkUzIlhOjoSzit5i+9fa21rOw=;
+        b=lF5GeoHGLYGKHFMzaMuo3mqKIhKT6yG5trVTD6vJusbgok/ls4yiVBXHT/lG8E+JrW
+         hhgcONfVD6KfdtsinISRwldjv64jReKYmtP/jp/QbVGRAU7/vwQ6gYR4nQkVWQvlSggX
+         qMn05PKOxal1uOxi1teq6tE7YzT7z0R8EB9vQlN+ORb5VbbXuqv0vChAEh2A2hSQc9CR
+         L1IPdHe4CpVmSr6793MX10Nmh7xjR7Vs+0ZDmYDEc+Zf1CEuZp99gCwWBY57k6XLQUgi
+         /gI/FNJ5kKSj6HTDxsNMN8VoIETIhVTJ1MKP4Kg7MP8H3sOpfCyTEMx/rnMuorIFNTQb
+         c3jA==
+X-Gm-Message-State: AOJu0YydGaoDjMcH2sPsQFsaeXsSA9wBseO9Y5tUPNh3hzv4pHLF8i0d
+	EdM4qH7XK9vWQj8g0TAbfQzUaJaFaMvmXoloNBRztBe+lBmNa1HhND0g1ZF0
+X-Google-Smtp-Source: AGHT+IHUxD77mDH/d9mMpgxALtiJAh34ewMy3CKZweCMv3mJqycIuSfBladaljtDRbcVoiaKT23Z+w==
+X-Received: by 2002:a05:6512:2ef:b0:52e:9808:3f48 with SMTP id 2adb3069b0e04-5309b27d45amr7968939e87.21.1722337922942;
+        Tue, 30 Jul 2024 04:12:02 -0700 (PDT)
+Received: from [192.168.0.21] (ip-095-223-231-216.um35.pools.vodafone-ip.de. [95.223.231.216])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad414e2sm628783766b.127.2024.07.30.04.12.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jul 2024 04:12:02 -0700 (PDT)
+Message-ID: <15f5e406-f81c-4e78-ba1c-26430d4254a5@gmail.com>
+Date: Tue, 30 Jul 2024 13:12:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,130 +60,100 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
- Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
- <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
- <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
- <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
- <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
- <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
- <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
- <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
- <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
- <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
- <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
- <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
- <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
- <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
- <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
- <1aedb1d4-8dc3-4e17-aff1-7cc417465967@arinc9.com>
- <130518e2-d6dd-49ed-9cc2-ca9cdec93b98@leemhuis.info>
- <aeb255ff-3755-4f76-a8f8-cda27a67f818@arinc9.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: ntfs3: Folders mounted with 555 permissions?
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <edcd6eb8-8682-6552-a5f6-584ac103d0e9@gmail.com>
+ <05b8cdbf-6ca7-40b8-9292-f332e1ad3a84@gmail.com>
+ <1d5d764b-65a4-42a2-8cc7-37d558aab381@leemhuis.info>
 Content-Language: en-US
-In-Reply-To: <aeb255ff-3755-4f76-a8f8-cda27a67f818@arinc9.com>
+From: Julian Sikorski <belegdol@gmail.com>
+In-Reply-To: <1d5d764b-65a4-42a2-8cc7-37d558aab381@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Il 01/07/24 10:15, Arınç ÜNAL ha scritto:
-> On 01/07/2024 11:04, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 01.07.24 09:44, Arınç ÜNAL wrote:
->>> On 01/07/2024 09:16, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> [CCing the other net maintainers]
->>>>
->>>> On 25.06.24 10:51, AngeloGioacchino Del Regno wrote:
->>>>> Il 25/06/24 07:56, Linux regression tracking (Thorsten Leemhuis) ha
->>>>> scritto:
->>>>>> On 17.06.24 13:08, Arınç ÜNAL wrote:
->>>>>>> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis)
->>>>>>> wrote:
->>>>>>> [...]
->>>>>> It looks more and more like we are stuck here (or was there progress
->>>>>> and
->>>>>> I just missed it?) while the 6.10 final is slowly getting closer.
->>>>>> Hence:
->>>>>>
->>>>>> AngeloGioacchino, should we ask the net maintainers to revert
->>>>>> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
->>>>>> device tree") for now to resolve this regression? Reminder, there is
->>>>>> nothing wrong with that commit per se afaik, it just exposes a problem
->>>>>> that needs to be fixed first before it can be reapplied.
->>>>>
->>>>> To be clear on this: I asked for the commit to be fixed such that it
->>>>> guarantees
->>>>> backwards compatibility with older device trees.
->>>>>
->>>>> If no fix comes,
->>>>
->>>> I haven't see any since that mail, did you? If not, I think...
->>>>
->>>>> then I guess that we should ask them to revert this commit
->>>>> until a fix is available.
->>>>
->>>> ...it's time to ask them for the revert to resolve this for -rc7 (and
->>>> avoid a last minute revert), or what do you think?
->>>
->>> This is quite frustrating. I absolutely won't consent to a revert. [...]
->>
->> Reminder: try to not see a revert as a bad thing. It's just means "not
->> ready yet, revert and we'll try again later" -- that's actually
->> something Linus wrote just a few hours ago:
->> https://lore.kernel.org/lkml/CAHk-=wgQMOscLeeA3QXOs97xOz_CTxdqJjpC20tJ-7bUdHWtSA@mail.gmail.com/
-> 
-> Except it is ready and trying again is my responsibility, which means
-> unnecessary work for me to do. I've already got a ton of things to do.
-> Applying the device tree patch resolves this regression; no reverts needed.
-> And then there's the patch in the works by Daniel that will address all the
-> remaining cases outside of the reported regression.
-> 
+Hi,
 
-The commit that fixes your breakage in a way that does *not* please me
-(because of older devicetrees being still broken with the new driver) was
-picked and it is in v6.11-rc1.
-
-I had to do this because I value the community (in this case, the users) much
-more than trying to make an arrogant developer to act in a community-friendly
-manner while leaving things completely broken.
-
-That said, remembering that we're humans and, as such, it's normal to get something
-wrong during the development process, I want to remind you that:
-
-  1. A series that creates regressions is *not* good and *not* ready to be
-     upstreamed; and
-  2. As a maintainer, you have the responsibility of not breaking the kernel,
-     not breaking devices and not breaking currently working functionality; and
-  3. Devicetrees being wrong (but working) since day 0 is not an excuse to break
-     functionality; and
-  4. Blaming the one who introduced the devicetree (you're doing that, since you
-     are blaming the devicetree being wrong) isn't solving anything and will not
-     magically make your code acceptable or good; and
-  5. If you push a wrong commit, there's nothing to be ashamed of; and
-  6. If you make a mistake, you should recognize that and find a way to
-     make things right, that should be done for the community, not for
-     yourself; and
-  7. You shall respect the community: in this case, with your arrogant behavior
-     you did *not* respect the users.
-
-P.S.: The right way of making such change is to:
-       1. Avoid breaking currently working devices by making sure that their DT
-          still works with the new driver; and
-       2. If breakage is unavoidable, make it so one kernel version has a fix that
-          works with both old and new driver, and the next version introduces the
-          breakage. N.2 should ideally never happen, anyway.
-
-Let's wrap up this matter now - I don't want to spend any more word, nor time,
-on this, as I really have nothing else to say.
+well I would not call it a regression either because it never worked 
+properly(*) in the first place. noacsrules option just allowed the 
+problem to be worked around.
+(*) Properly meaning that, however unlikely, this could be an intended 
+behaviour. Having said that, ntfs-3g does not require any special mount 
+options or chmod calls to be able to write to Windows' Documents folder.
 
 Best regards,
-Angelo
+Julian
+
+Am 29.07.24 um 10:44 schrieb Linux regression tracking (Thorsten Leemhuis):
+> Top-posting: adding Konstantin to the list of recipients, he might have
+> missed this on the list.
+> 
+> Side note: this seems to be a regression, but given that it seems only
+> few people care and apparently is caused by the removal of a feature not
+> working properly beforehand, I don't think this is something covered by
+> the no regressions" rule.
+> 
+> Ciao, Thorsten
+> 
+> On 27.07.24 22:34, Julian Sikorski wrote:
+>> Am 11.07.23 um 10:04 schrieb Julian Sikorski:
+>>>
+>>> with linux-6.4, now that noacsrules option is gone, an old issue has
+>>> become problematic. When I mount my windows drive, some of the folders
+>>> in Users are mounted with 555 permissions, including the ones I would
+>>> like to edit:
+>>>
+>>> $ ls -l /mnt/windows/ | grep Users
+>>> lrwxrwxrwx. 1 julas julas          8  1. Dez 2018  Documents and
+>>> Settings -> ./Users
+>>> lrwxrwxrwx. 1 julas julas          8  9. Okt 2022  Dokumente und
+>>> Einstellungen -> ./Users
+>>> dr-xr-xr-x. 1 julas julas       4096  9. Okt 2022  Users
+>>>
+>>> $ ls -l /mnt/windows/Users/beleg/ | grep Documents
+>>> dr-xr-xr-x. 1 julas julas    8192  7. Jul 15:28 Documents
+>>> lrwxrwxrwx. 1 julas julas      24  9. Okt 2022  Eigene Dateien ->
+>>> ./../../Users/beleg/Documents
+>>> lrwxrwxrwx. 1 julas julas      24  1. Nov 2021  Moje dokumenty ->
+>>> ./../../Users/beleg/Documents
+>>>
+>>> Is this intended behaviour? It appears to be quite an old issue [1].
+>>> If so, is there any other fix than running a recursive chmod?
+>>>
+>>> Best regards,
+>>> Julian
+>>>
+>>> [1]
+>>> https://www.reddit.com/r/archlinux/comments/r325t3/permissions_problems_with_the_new_ntfs3_driver/
+>>
+>> One year later the issue is still there with kernel 6.9.11:
+>>
+>> $ ls -lh /mnt/windows/Users/beleg/
+>> insgesamt 18M
+>> dr-xr-xr-x. 1 julas julas    0 19. Jul 2020  '3D Objects'
+>> -rwxr-xr-x. 1 julas julas  77K 20. Nov 2022   AMDRM_Install.log
+>> -rwxr-xr-x. 1 julas julas 2,7M 20. Nov 2022   AMD_RyzenMaster.log
+>> drwxr-xr-x. 1 julas julas    0  2. Dez 2018   ansel
+>> lrwxrwxrwx. 1 julas julas   30  9. Okt 2022   Anwendungsdaten ->
+>> ./../../Users/beleg/AppData/Roaming
+>> drwxr-xr-x. 1 julas julas    0  9. Okt 2022   AppData
+>> -rwxr-xr-x. 1 julas julas 1,4K 18. Feb 15:30  aqtinstall.log
+>> dr-xr-xr-x. 1 julas julas    0  9. Okt 2022   Contacts
+>> lrwxrwxrwx. 1 julas julas   58  9. Okt 2022   Cookies ->
+>> ./../../Users/beleg/AppData/Local/Microsoft/Windows/INetCookies
+>> lrwxrwxrwx. 1 julas julas   30  1. Nov 2021  'Dane aplikacji' ->
+>> ./../../Users/beleg/AppData/Roaming
+>> dr-xr-xr-x. 1 julas julas 4,0K 15. Mai 20:41  Desktop
+>> dr-xr-xr-x. 1 julas julas 8,0K  5. Jul 22:43  Documents
+>>
+>> Here are the mount options:
+>> /dev/nvme0n1p4 on /mnt/windows type ntfs3
+>> (rw,relatime,uid=1000,gid=1000,iocharset=utf8)
+>>
+>> It is the main issue preventing me from switching away from ntfs-3g. Can
+>> I somehow investigate this further to help fixing this?
+>>
+>> Best regards,
+>> Julian
+>>
