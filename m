@@ -1,56 +1,34 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D645418A6A3
-	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 20:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED20F18DF93
+	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 20:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722370342; cv=none; b=ECoWMtslC43+RW7SdoqPVmz9rjYw6ZTUD/6ZbSEbhlMOJ/y90WDkwFwfEFMiMxGZx2q+yabFHLr5dHz3y94IePLsQ77rOKmzBoDi5OBWGZICUPTgiw5ze/U/k6typTYapljVatr82kPrZXPbhJ+o51uCRMbKQAIW8byjaSb2urE=
+	t=1722372157; cv=none; b=XdkOZhKcJqWUT81HiUU0ibLFFxgQtSNfAN0Jyd9hJwqygzxXZBuLH+zN9O3ktYDbdQy56D4Eal4BBcOKRX7G+JCfSgsuQBSXYV2tF4/wP1hvjLQsl0JyiLz0m3A/kM3++BPn3fXYJRHegffFPqp2gZAhn5UfQ55Piy+ATubsQNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722370342; c=relaxed/simple;
-	bh=oHch0y/liq/Caz2nDw5kDy4+ZU0NklzCUbiD/jkjkyU=;
+	s=arc-20240116; t=1722372157; c=relaxed/simple;
+	bh=XVZkvr8rRK1fFs58uRtlrNGnzD6sb3MOuVh+AvEFx1A=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kMmpfbVHPViYOq7cK8/WyenvH5X8JTzuCMojzD+sTIpyjpzNXoOe5uMIfypo7umYURzVN71ERdOCGELTad/S3pdE69mJ9rHlODUS9KZzIrDhWMNN+TcNBODLaTiHZfcBFu0nL31m4R4HV1sMqb3K1DenQznhUBqunp8WOlQdNRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=aXd3Jhlk; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
+	 In-Reply-To:Content-Type; b=V0+a1G7lTuIrfbZD5tP4cjhD42q+MTwRcMP95vE0cLGUxx3xcoJeSMcgxXhMzLzHUYk7yGpCRjnqL/g079YjWtO1dYp8W6IAfoxvjl5f6PdzetSD7hpa5KAa2aLGOrmqI4B2WtS7pzNRTX7O/wXfFQnP7Z14GRS0+12dsjDJwr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=EnFIPKC+; arc=none smtp.client-ip=193.222.135.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="aXd3Jhlk"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fd90c2fc68so37154845ad.1
-        for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 13:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=penguintechs.org; s=google; t=1722370340; x=1722975140; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V5dnQkBu9QVO+QrJ4DY+jfJtkpb3lw/S4HsL3/yvfpQ=;
-        b=aXd3JhlkOQ3+B8x0mYXTD7UlZYRaTHC14sUQvwtjKwfst2s5dAP5G3Jz4fQATlwg2N
-         6f+B6gLAsRcqj4Fd6UP9rwrCOohPj1rbpDaKVZ1LJEamYaZvMUspt5c9l1N3J4myVZlV
-         n86JxLFn4onUveJH0J7Wmn1og7BVWpYqQWJNQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722370340; x=1722975140;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V5dnQkBu9QVO+QrJ4DY+jfJtkpb3lw/S4HsL3/yvfpQ=;
-        b=IqzMkTgk1xqMunP6kmv3DXsZtmb8bfSY88F5dQ7bcD/MnLEWu6nZrlWVgft3qr+1SH
-         BOHQXO5osgQHIF66vPTbjFjGW8r1APE9YxLS/e+saqEJSlloSMzlj+fWDXKpEZC1LTDZ
-         vrnbcmOIuEuTmHEpakd7GvF71BZvM0r8lKKACqZR4xjRNVVtYCj2jDYzg3ABv5nhF14V
-         kd2UPfLI5L9mSFGtQeL5ON5de0FYG8sf82uXLmpHWZcb67PROx8V8UBDfIZ1/6Nq4CG8
-         28oTSYSxmphkipIaJre2X+0O4wJPGPPfvxC80dYbT3uMbtzcJfpHjzsINjJs4tci7Uea
-         Y/9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWHawLr/Oi9+9a3WxwL3PaipjYnwHalshJuJa/lkBIXgHfx+pInrVuI3eCf8FLRJ5qclWrRKB5iKdxjWlDnk4tFeXA/EF8lp8PDbUQ=
-X-Gm-Message-State: AOJu0Yxr75er9Pwt3OakTzHRWJqU7e6FBQxzHyIa2sX9n0CHFd66ytwv
-	0MsWV11O2kLbOb+dgCuuTYw0CK9QiP5d5o5+7rIYvobQJCoaYmSnIL1na0c7bw==
-X-Google-Smtp-Source: AGHT+IHYOfAoq/mXpTcbUCI/fd0dOFN8EoCUrJ9OgGJ4yonhtdAS2E632yMQi/HDhX8eSqbYEKgw/w==
-X-Received: by 2002:a17:903:27cd:b0:1fd:aac9:a712 with SMTP id d9443c01a7336-1ff0486b617mr90900755ad.37.1722370339965;
-        Tue, 30 Jul 2024 13:12:19 -0700 (PDT)
-Received: from ?IPV6:2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08? ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7f1aa0dsm105977355ad.187.2024.07.30.13.12.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 13:12:19 -0700 (PDT)
-Message-ID: <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
-Date: Tue, 30 Jul 2024 13:12:18 -0700
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="EnFIPKC+"
+Received: (wp-smtpd smtp.tlen.pl 38704 invoked from network); 30 Jul 2024 22:35:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1722371752; bh=XVZkvr8rRK1fFs58uRtlrNGnzD6sb3MOuVh+AvEFx1A=;
+          h=Subject:From:To:Cc;
+          b=EnFIPKC+Rtb518OCwjia/+Ix/LiFdrgtUuOLjeLT0VxItTdokZhEafo1bALnFmmhE
+           KnWZUMeLUqsl+ekJ3w6F+KD52oJ5y4nmKQyli+Jwh26Roht4GxpgRapFNjAs1mAq54
+           b5clI3HA0/hW2fBDll0kwdBwjWxrD57SpT+62Qlg=
+Received: from aaen12.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.117.12])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <paul.e.luse@linux.intel.com>; 30 Jul 2024 22:35:51 +0200
+Message-ID: <3f2b66d4-8d4e-440b-b67e-1665925c359c@o2.pl>
+Date: Tue, 30 Jul 2024 22:35:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,117 +36,211 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: QCA6390 broken in current kernel
-From: Wren Turkal <wt@penguintechs.org>
-To: Zijun Hu <zijun_hu@icloud.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
- Paul Menzel <pmenzel@molgen.mpg.de>
-References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
- <CABBYNZ+vVFUm1Tb+BvViYMJd6XQczTYPgyO++GGbCcWrkaC4Kg@mail.gmail.com>
- <30319168-9456-49dd-be27-480b2a068fe3@penguintechs.org>
- <1a519b2f-f5cf-40b3-8223-162dc04f8ca8@penguintechs.org>
- <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
- <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
- <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
- <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
-Content-Language: en-US
-In-Reply-To: <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] Filesystem corruption when adding a new RAID device
+ (delayed-resync, write-mostly)
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+To: Paul E Luse <paul.e.luse@linux.intel.com>
+Cc: linux-raid@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+ linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
+ regressions@lists.linux.dev,
+ Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+References: <9952f532-2554-44bf-b906-4880b2e88e3a@o2.pl>
+ <ce95e64c-1a67-4a92-984a-c1eab0894857@o2.pl>
+ <f28f9eec-d318-46e2-b2a1-430c9302ba43@o2.pl>
+ <20240724141906.10b4fc4e@peluse-desk5>
+ <2123BF84-5F16-4938-915B-B1EE0931AC03@o2.pl>
+ <20240725072742.1664beec@peluse-desk5>
+ <713ce46b-8751-49fb-b61f-2eb3e19459dc@o2.pl>
+Content-Language: en-GB
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <713ce46b-8751-49fb-b61f-2eb3e19459dc@o2.pl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-WP-MailID: db89ae2a4c4e0c6ebb362d93f9e08e3b
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [MRPF]                               
 
-Zijun,
-
-On 7/30/24 12:48 PM, Wren Turkal wrote:
-> Zijun,
-> 
-> On 7/30/24 12:26 PM, Wren Turkal wrote:
->> On 7/29/24 9:25 AM, Zijun Hu wrote:
->>> On 2024/7/27 03:25, Wren Turkal wrote:
->>>> On 7/26/24 11:52 AM, Wren Turkal wrote:
->>>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
->>>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
->>>>>>> Hi Wren,
+W dniu 28.07.2024 o 12:30, Mateusz Jończyk pisze:
+> W dniu 25.07.2024 o 16:27, Paul E Luse pisze:
+>> On Thu, 25 Jul 2024 09:15:40 +0200
+>> Mateusz Jończyk <mat.jonczyk@o2.pl> wrote:
+>>
+>>> Dnia 24 lipca 2024 23:19:06 CEST, Paul E Luse
+>>> <paul.e.luse@linux.intel.com> napisał/a:
+>>>> On Wed, 24 Jul 2024 22:35:49 +0200
+>>>> Mateusz Jończyk <mat.jonczyk@o2.pl> wrote:
+>>>>
+>>>>> W dniu 22.07.2024 o 07:39, Mateusz Jończyk pisze:
+>>>>>> W dniu 20.07.2024 o 16:47, Mateusz Jończyk pisze:
+>>>>>>> Hello,
 >>>>>>>
->>>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
->>>>>>> wrote:
->>>>>>>>
->>>>>>>> Hello BT folks,
->>>>>>>>
->>>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
->>>>>>>> broken
->>>>>>>> at least since commit 720261cfc732.
->>>>>>>>
->>>>>>>> The KDE and Gnome bluetooth control panels appear to think there 
->>>>>>>> is no
->>>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
->>>>>>>>
->>>>>>>> I have a Dell XPS13 9310.
->>>>>>>>
->>>>>>>> I will attempt to capture some kernel logs in a bit.
+>>>>>>> In my laptop, I used to have two RAID1 arrays on top of NVMe and
+>>>>>>> SATA SSD drives: /dev/md0 for /boot (not partitioned), /dev/md1
+>>>>>>> for remaining data (LUKS
+>>>>>>> + LVM + ext4). For performance, I have marked the RAID component
+>>>>>>> device for /dev/md1 on the SATA SSD drive write-mostly, which
+>>>>>>> "means that the 'md' driver will avoid reading from these
+>>>>>>> devices if at all possible" (man mdadm).
 >>>>>>>
->>>>>>> git show 720261cfc732
->>>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or 
->>>>>>> path not
->>>>>>> in the working tree.
->>>>>>
->>>>>> I gave you the sha for the built fedora rawhide kernel package, not a
->>>>>> mainline sha. Sorry about that. I thought it was a mainline sha. I am
->>>>>> trying to bisect the problem. Hopefully, I can get a mainline git sha
->>>>>> for you soon.
->>>>>>
->>>>>> If it helps, the build date of the kernel is 2024-07-19.
->>>>>>
->>>>>> Sorry about the confusion. Hope this helps track down the problem.
+>>>>>>> Recently, the NVMe drive started having problems (PCI AER errors
+>>>>>>> and the controller disappearing), so I removed it from the
+>>>>>>> arrays and wiped it. However, I have reseated the drive in the
+>>>>>>> M.2 socket and this apparently fixed it (verified with tests).
+>>>>>>>
+>>>>>>>     $ cat /proc/mdstat
+>>>>>>>     Personalities : [raid1] [linear] [multipath] [raid0] [raid6]
+>>>>>>> [raid5] [raid4] [raid10] md1 : active raid1 sdb5[1](W)
+>>>>>>>           471727104 blocks super 1.2 [2/1] [_U]
+>>>>>>>           bitmap: 4/4 pages [16KB], 65536KB chunk
+>>>>>>>
+>>>>>>>     md2 : active (auto-read-only) raid1 sdb6[3](W) sda1[2]
+>>>>>>>           3142656 blocks super 1.2 [2/2] [UU]
+>>>>>>>           bitmap: 0/1 pages [0KB], 65536KB chunk
+>>>>>>>
+>>>>>>>     md0 : active raid1 sdb4[3]
+>>>>>>>           2094080 blocks super 1.2 [2/1] [_U]
+>>>>>>>          
+>>>>>>>     unused devices: <none>
+>>>>>>>
+>>>>>>> (md2 was used just for testing, ignore it).
+>>>>>>>
+>>>>>>> Today, I have tried to add the drive back to the arrays by
+>>>>>>> using a script that executed in quick succession:
+>>>>>>>
+>>>>>>>     mdadm /dev/md0 --add --readwrite /dev/nvme0n1p2
+>>>>>>>     mdadm /dev/md1 --add --readwrite /dev/nvme0n1p3
+>>>>>>>
+>>>>>>> This was on Linux 6.10.0, patched with my previous patch:
+>>>>>>>
+>>>>>>>     https://lore.kernel.org/linux-raid/20240711202316.10775-1-mat.jonczyk@o2.pl/
+>>>>>>>
+>>>>>>> (which fixed a regression in the kernel and allows it to start
+>>>>>>> /dev/md1 with a single drive in write-mostly mode).
+>>>>>>> In the background, I was running "rdiff-backup --compare" that
+>>>>>>> was comparing data between my array contents and a backup
+>>>>>>> attached via USB.
+>>>>>>>
+>>>>>>> This, however resulted in mayhem - I was unable to start any
+>>>>>>> program with an input-output error, etc. I used SysRQ + C to
+>>>>>>> save a kernel log:
+>>>>>>>
+>>>>> Hello,
 >>>>>
->>>>> I have managed to get the following commit id range for the issue:
->>>>> 80ab5445da6235..e2f710f97f35
->>>>
->>>> Narrowed to 80ab5445da6235..586f14a6a182
->>>>
->>> i feel a little sad that QCA6390 of your machine are broken again.
->>> i find out a doubtful point by checking recent changes.
->>>
->>> you maybe have a attempt for below change if you would like to do that.
->>> https://patchwork.kernel.org/project/bluetooth/patch/20240730- 
->>> qca6390_fix-v1-1-e0340a511756@icloud.com/
->>>
->>> thanks
->>>
->>>
->>
->> Yeah, I am sad that my bluetooth is broken again as well. I am trying 
->> your patch now to see if it gets my hardware working. Will reply back 
->> soon.
->>
->> wt
-> 
-> This patch does not fix the problem. The first broken commit is 
-> 9a15ce685706e73154. This patch effectively reverts only one part of that 
-> patch.
-> 
-> FTR, I applied this patch on top of the parent commit of the first 
-> broken commit. I will try it on the tip of mainline as well.
+>>>>> Unfortunately, hardware failure seems not to be the case.
+>>>>>
+>>>>> I did test it again on 6.10, twice, and in both cases I got
+>>>>> filesystem corruption (but not as severe).
+>>>>>
+>>>>> On Linux 6.1.96 it seems to be working well (also did two tries).
+>>>>>
+>>>>> Please note: in my tests, I was using a RAID component device with
+>>>>> a write-mostly bit set. This setup does not work on 6.9+ out of the
+>>>>> box and requires the following patch:
+>>>>>
+>>>>> commit 36a5c03f23271 ("md/raid1: set max_sectors during early
+>>>>> return from choose_slow_rdev()")
+>>>>>
+>>>>> that is in master now.
+>>>>>
+>>>>> It is also heading into stable, which I'm going to interrupt.
+> Hello,
+>
+> With much effort (challenging to reproduce reliably) I think have nailed down the issue to the read_balance refactoring series in 6.9:
+[snip]
+> After code analysis, I have noticed that the following check that was present in old
+> read_balance() is not present (in equivalent form in the new code):
+>
+>                 if (!test_bit(In_sync, &rdev->flags) &&
+>                     rdev->recovery_offset < this_sector + sectors)
+>                         continue;
+>
+> (in choose_slow_rdev() and choose_first_rdev() and possibly other functions)
+>
+> which would cause the kernel to read from the device being synced to before
+> it is ready.
 
-This patch doesn't appear to apply cleanly to the current tip of 
-bluetooth-next/master, so I can't really go further in testing it right now.
+Hello,
 
-Also, so you know, Bartosz has said that he is aware of the regression 
-and is working on it.
+I think have made a reliable (and safe) reproducer for this bug:
 
-Zijun, you should talk the folks at qualcomm and see if there is any 
-appetite for getting closer to the Linaro folks with regard to this 
-stuff. You have been very eager to jump in, and I see that Bartosz and 
-Luis also seem interested in fixing this. I do wonder if there a way to 
-take advantage of that to build a better working relationship in this 
-bluetooth space with qualcomm and the linux kernel devs.
+Prerequisite: create an array on top of 2 devices 1GB+ large:
 
-If qualcomm would be interested in hiring a tech person to help with 
-this stuff. I am definitely interested in helping in this area.
+mdadm --create /dev/md4 --level=1 --raid-devices=2 /dev/nvme0n1p5 --write-mostly /dev/sdb8
+The script:
+-------------------------------8<------------------------
 
-Thanks,
-wt
--- 
-You're more amazing than you think!
+#!/bin/bash
+
+mdadm /dev/md4 --fail /dev/nvme0n1p5
+sleep 1
+mdadm /dev/md4 --remove failed
+sleep 1
+
+# fill with random data
+shred -n1 -v /dev/md4
+# fill with zeros
+shred -n0 -zv /dev/nvme0n1p5
+
+sha256sum /dev/md4
+
+echo 1 > /proc/sys/vm/drop_caches
+
+date
+
+# calculate a shasum while the array is being synced
+( sha256sum /dev/md4; date ) &
+mdadm /dev/md4 --add --readwrite /dev/nvme0n1p5
+date
+
+-------------------------------8<------------------------
+
+The two shasums should be equal, but they were different in my tests on affected kernels.
+
+Also, in my tests with the script, *without* a write-mostly device in the array, the problems did not happen.
+
+Greetings,
+
+Mateusz
 
