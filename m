@@ -1,56 +1,56 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8CD18CC02
-	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 19:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D645418A6A3
+	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 20:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722368936; cv=none; b=Ahjv1X5v2QARl8sknSPDi7cHHrRTp3hsx/9Fkvq66YlvaaM4SjRGP7Rh9jQBZ/jMC/lXK9ymxtNn2qZUyqMkpCdVcxu5Xhw8KUwo2+E/MC1H/R1eElXGkC3EA9fPjjfepkTSJUwNw7i6IK0Dx4TUp+vOB7kafEUb8WFP2Qqzmt4=
+	t=1722370342; cv=none; b=ECoWMtslC43+RW7SdoqPVmz9rjYw6ZTUD/6ZbSEbhlMOJ/y90WDkwFwfEFMiMxGZx2q+yabFHLr5dHz3y94IePLsQ77rOKmzBoDi5OBWGZICUPTgiw5ze/U/k6typTYapljVatr82kPrZXPbhJ+o51uCRMbKQAIW8byjaSb2urE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722368936; c=relaxed/simple;
-	bh=OXu4MibL4JredU/PNwNqIGdiLxd/4iWXMnITBO3/gu4=;
+	s=arc-20240116; t=1722370342; c=relaxed/simple;
+	bh=oHch0y/liq/Caz2nDw5kDy4+ZU0NklzCUbiD/jkjkyU=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RJJsmWHrnzxAD/qwF5jB4sazjGEEOPLjtPzLnaI6Ug+IGeXhXqohQ4Angr2T6aqbHIYDFt1UlgUL1eCB29fgEbeAvD39dTCcglKbID/CrRTvE+7Tm963p1u/qGwS9seqavsBQSxGmQBGkxrZAaM1mbIca/fgy0c3wBBNJHY4maI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=lc6xAgvc; arc=none smtp.client-ip=209.85.215.176
+	 In-Reply-To:Content-Type; b=kMmpfbVHPViYOq7cK8/WyenvH5X8JTzuCMojzD+sTIpyjpzNXoOe5uMIfypo7umYURzVN71ERdOCGELTad/S3pdE69mJ9rHlODUS9KZzIrDhWMNN+TcNBODLaTiHZfcBFu0nL31m4R4HV1sMqb3K1DenQznhUBqunp8WOlQdNRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=aXd3Jhlk; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="lc6xAgvc"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-6bce380eb96so2908809a12.0
-        for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 12:48:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="aXd3Jhlk"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fd90c2fc68so37154845ad.1
+        for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 13:12:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=penguintechs.org; s=google; t=1722368934; x=1722973734; darn=lists.linux.dev;
+        d=penguintechs.org; s=google; t=1722370340; x=1722975140; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=c9EkhHDAPH3EY2x4sYEJYBBnr14AvRj62l4IGCGKO5A=;
-        b=lc6xAgvcl86TmvJoErJ/Jd/huicy6treQALputbD5vP6sDfb32AywTiH9iiU2eL0g7
-         EjUWoXO1zxKiObrKLI1MtR3tfaS2BxKles9eMGg6YXP18KwyFfNcbijH3lQCySLrgZj0
-         oThlGbOotqjCY86MlyCkB58ToXUl0mm9tpdAU=
+        bh=V5dnQkBu9QVO+QrJ4DY+jfJtkpb3lw/S4HsL3/yvfpQ=;
+        b=aXd3JhlkOQ3+B8x0mYXTD7UlZYRaTHC14sUQvwtjKwfst2s5dAP5G3Jz4fQATlwg2N
+         6f+B6gLAsRcqj4Fd6UP9rwrCOohPj1rbpDaKVZ1LJEamYaZvMUspt5c9l1N3J4myVZlV
+         n86JxLFn4onUveJH0J7Wmn1og7BVWpYqQWJNQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722368934; x=1722973734;
+        d=1e100.net; s=20230601; t=1722370340; x=1722975140;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c9EkhHDAPH3EY2x4sYEJYBBnr14AvRj62l4IGCGKO5A=;
-        b=Iji9juSpgzFOTilFjmCbs2O89zBPKWO5HWMZdTrSUVheWiJV0JS/e6oIUaJxDxjOpp
-         nQF8zM/YEfceIqpwsyPvkNSkUxqiWgGWCZ4c4WLhJuESkaN1P1U7/0fvcsnrobCeiXuP
-         VxD1apCzwILHz8xJU/RkYP64JyEv/Y2piZc5mTpoOlWZy3Mevt7MzmPgbkhrzyMovLf4
-         UF7uI8seyXvzOI3I2/mw9QJGWda4lWKAE7Uh/bqE8QXYQaqCWnC6tnqSDPE81I4ChmWD
-         9C/T8TaCjppAMoOL4lYJZJb5Pj4hrM2MeHUkZxu951L/1v0RELGqCvoonZIOP+C7di6/
-         zxrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJzhTgOcd+cPixoqHHHy3Qae8pThHx8uff4bH+tavc3bgH+wRIr+lij2A1VKeH1GiG7ZaNt8d1KvYo+FqlVOhRhXPULNUUTenNaMQ=
-X-Gm-Message-State: AOJu0YwwpQhyLKQvfvQ/jtP0fzK44WquFpd3uUt/EBuFtq0vInaOFl41
-	GQPnGXW6dCxiDzyNjoAiCScv+TQdyH9xS7hI1R1FEYcyuPAedP8MAMs72ItyzQ==
-X-Google-Smtp-Source: AGHT+IESMFG7TMqZ8KvnM0uOd8+NR/Y9WY4gRiEXGGsXw6F29eUbRL8YprJYY7XiR2lm7b4JXyD7cQ==
-X-Received: by 2002:a05:6a21:e91:b0:1c4:dfa7:d3ce with SMTP id adf61e73a8af0-1c4dfa7d655mr3491303637.17.1722368933807;
-        Tue, 30 Jul 2024 12:48:53 -0700 (PDT)
+        bh=V5dnQkBu9QVO+QrJ4DY+jfJtkpb3lw/S4HsL3/yvfpQ=;
+        b=IqzMkTgk1xqMunP6kmv3DXsZtmb8bfSY88F5dQ7bcD/MnLEWu6nZrlWVgft3qr+1SH
+         BOHQXO5osgQHIF66vPTbjFjGW8r1APE9YxLS/e+saqEJSlloSMzlj+fWDXKpEZC1LTDZ
+         vrnbcmOIuEuTmHEpakd7GvF71BZvM0r8lKKACqZR4xjRNVVtYCj2jDYzg3ABv5nhF14V
+         kd2UPfLI5L9mSFGtQeL5ON5de0FYG8sf82uXLmpHWZcb67PROx8V8UBDfIZ1/6Nq4CG8
+         28oTSYSxmphkipIaJre2X+0O4wJPGPPfvxC80dYbT3uMbtzcJfpHjzsINjJs4tci7Uea
+         Y/9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWHawLr/Oi9+9a3WxwL3PaipjYnwHalshJuJa/lkBIXgHfx+pInrVuI3eCf8FLRJ5qclWrRKB5iKdxjWlDnk4tFeXA/EF8lp8PDbUQ=
+X-Gm-Message-State: AOJu0Yxr75er9Pwt3OakTzHRWJqU7e6FBQxzHyIa2sX9n0CHFd66ytwv
+	0MsWV11O2kLbOb+dgCuuTYw0CK9QiP5d5o5+7rIYvobQJCoaYmSnIL1na0c7bw==
+X-Google-Smtp-Source: AGHT+IHYOfAoq/mXpTcbUCI/fd0dOFN8EoCUrJ9OgGJ4yonhtdAS2E632yMQi/HDhX8eSqbYEKgw/w==
+X-Received: by 2002:a17:903:27cd:b0:1fd:aac9:a712 with SMTP id d9443c01a7336-1ff0486b617mr90900755ad.37.1722370339965;
+        Tue, 30 Jul 2024 13:12:19 -0700 (PDT)
 Received: from ?IPV6:2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08? ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7a9f884c166sm9310838a12.49.2024.07.30.12.48.52
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7f1aa0dsm105977355ad.187.2024.07.30.13.12.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jul 2024 12:48:53 -0700 (PDT)
-Message-ID: <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
-Date: Tue, 30 Jul 2024 12:48:51 -0700
+        Tue, 30 Jul 2024 13:12:19 -0700 (PDT)
+Message-ID: <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
+Date: Tue, 30 Jul 2024 13:12:18 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -72,82 +72,103 @@ References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
  <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
  <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
  <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
+ <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
 Content-Language: en-US
-In-Reply-To: <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
+In-Reply-To: <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 Zijun,
 
-On 7/30/24 12:26 PM, Wren Turkal wrote:
-> On 7/29/24 9:25 AM, Zijun Hu wrote:
->> On 2024/7/27 03:25, Wren Turkal wrote:
->>> On 7/26/24 11:52 AM, Wren Turkal wrote:
->>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
->>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
->>>>>> Hi Wren,
+On 7/30/24 12:48 PM, Wren Turkal wrote:
+> Zijun,
+> 
+> On 7/30/24 12:26 PM, Wren Turkal wrote:
+>> On 7/29/24 9:25 AM, Zijun Hu wrote:
+>>> On 2024/7/27 03:25, Wren Turkal wrote:
+>>>> On 7/26/24 11:52 AM, Wren Turkal wrote:
+>>>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
+>>>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
+>>>>>>> Hi Wren,
+>>>>>>>
+>>>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
+>>>>>>> wrote:
+>>>>>>>>
+>>>>>>>> Hello BT folks,
+>>>>>>>>
+>>>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
+>>>>>>>> broken
+>>>>>>>> at least since commit 720261cfc732.
+>>>>>>>>
+>>>>>>>> The KDE and Gnome bluetooth control panels appear to think there 
+>>>>>>>> is no
+>>>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
+>>>>>>>>
+>>>>>>>> I have a Dell XPS13 9310.
+>>>>>>>>
+>>>>>>>> I will attempt to capture some kernel logs in a bit.
+>>>>>>>
+>>>>>>> git show 720261cfc732
+>>>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or 
+>>>>>>> path not
+>>>>>>> in the working tree.
 >>>>>>
->>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
->>>>>> wrote:
->>>>>>>
->>>>>>> Hello BT folks,
->>>>>>>
->>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
->>>>>>> broken
->>>>>>> at least since commit 720261cfc732.
->>>>>>>
->>>>>>> The KDE and Gnome bluetooth control panels appear to think there 
->>>>>>> is no
->>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
->>>>>>>
->>>>>>> I have a Dell XPS13 9310.
->>>>>>>
->>>>>>> I will attempt to capture some kernel logs in a bit.
+>>>>>> I gave you the sha for the built fedora rawhide kernel package, not a
+>>>>>> mainline sha. Sorry about that. I thought it was a mainline sha. I am
+>>>>>> trying to bisect the problem. Hopefully, I can get a mainline git sha
+>>>>>> for you soon.
 >>>>>>
->>>>>> git show 720261cfc732
->>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or path 
->>>>>> not
->>>>>> in the working tree.
+>>>>>> If it helps, the build date of the kernel is 2024-07-19.
+>>>>>>
+>>>>>> Sorry about the confusion. Hope this helps track down the problem.
 >>>>>
->>>>> I gave you the sha for the built fedora rawhide kernel package, not a
->>>>> mainline sha. Sorry about that. I thought it was a mainline sha. I am
->>>>> trying to bisect the problem. Hopefully, I can get a mainline git sha
->>>>> for you soon.
->>>>>
->>>>> If it helps, the build date of the kernel is 2024-07-19.
->>>>>
->>>>> Sorry about the confusion. Hope this helps track down the problem.
+>>>>> I have managed to get the following commit id range for the issue:
+>>>>> 80ab5445da6235..e2f710f97f35
 >>>>
->>>> I have managed to get the following commit id range for the issue:
->>>> 80ab5445da6235..e2f710f97f35
+>>>> Narrowed to 80ab5445da6235..586f14a6a182
+>>>>
+>>> i feel a little sad that QCA6390 of your machine are broken again.
+>>> i find out a doubtful point by checking recent changes.
 >>>
->>> Narrowed to 80ab5445da6235..586f14a6a182
+>>> you maybe have a attempt for below change if you would like to do that.
+>>> https://patchwork.kernel.org/project/bluetooth/patch/20240730- 
+>>> qca6390_fix-v1-1-e0340a511756@icloud.com/
 >>>
->> i feel a little sad that QCA6390 of your machine are broken again.
->> i find out a doubtful point by checking recent changes.
+>>> thanks
+>>>
+>>>
 >>
->> you maybe have a attempt for below change if you would like to do that.
->> https://patchwork.kernel.org/project/bluetooth/patch/20240730- 
->> qca6390_fix-v1-1-e0340a511756@icloud.com/
+>> Yeah, I am sad that my bluetooth is broken again as well. I am trying 
+>> your patch now to see if it gets my hardware working. Will reply back 
+>> soon.
 >>
->> thanks
->>
->>
+>> wt
 > 
-> Yeah, I am sad that my bluetooth is broken again as well. I am trying 
-> your patch now to see if it gets my hardware working. Will reply back soon.
+> This patch does not fix the problem. The first broken commit is 
+> 9a15ce685706e73154. This patch effectively reverts only one part of that 
+> patch.
 > 
-> wt
+> FTR, I applied this patch on top of the parent commit of the first 
+> broken commit. I will try it on the tip of mainline as well.
 
-This patch does not fix the problem. The first broken commit is 
-9a15ce685706e73154. This patch effectively reverts only one part of that 
-patch.
+This patch doesn't appear to apply cleanly to the current tip of 
+bluetooth-next/master, so I can't really go further in testing it right now.
 
-FTR, I applied this patch on top of the parent commit of the first 
-broken commit. I will try it on the tip of mainline as well.
+Also, so you know, Bartosz has said that he is aware of the regression 
+and is working on it.
 
+Zijun, you should talk the folks at qualcomm and see if there is any 
+appetite for getting closer to the Linaro folks with regard to this 
+stuff. You have been very eager to jump in, and I see that Bartosz and 
+Luis also seem interested in fixing this. I do wonder if there a way to 
+take advantage of that to build a better working relationship in this 
+bluetooth space with qualcomm and the linux kernel devs.
+
+If qualcomm would be interested in hiring a tech person to help with 
+this stuff. I am definitely interested in helping in this area.
+
+Thanks,
 wt
-
 -- 
 You're more amazing than you think!
 
