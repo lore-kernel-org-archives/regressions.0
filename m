@@ -1,181 +1,348 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1957E188014
-	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 16:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C031AA3D3
+	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 18:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722357498; cv=none; b=hHPPJjewCrfBtTcNyaNfevJ/FakUCEcxczvIrEblqw9V4kl4fP66Qeu1M/nuFaHc/g3REsjVTrmEz8b3dTix+zQYFfvgYk3nTJohgLVa3Zq70XX0rFU7tlltkrmvuCnaoL/ALSOmCsNIGmYeYuEtXwK/8l3hJsPT4NzUkFFdWFA=
+	t=1722365631; cv=none; b=lTUuIm8sZR5OvBmDrJRO9caEREs/IqbVMozn93xmiOv8eLQj2ivZE5K1jJYbgbUHNNFUdRR4TosUcS83ldNHn2ndAD9ucubRoJWbpd7h68q26e/FgV1HGcAjHe/AvkRP6qYvmNsdAQmDbkNjZ3DXvXKPg+5BTgrCHoDiWBXHJNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722357498; c=relaxed/simple;
-	bh=62xIos+Gvt2zovnHW3Alk6oI02ztwSKcZ3tqrlGrKRE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dm/qmZPAjGBV5V0rZHc6+qxJxFcbWHa8oKeUiMupfDGkBLCuSItPUAx/DA5s2OhvHJPljrz9/ajOZUysnyi84Hz1DpgyEUHdX7pIZ3uHGx7dvQtIY9C1PDfkDBomm75VzCdtgt7fsOg13eP5nTxPDH2TqLK3WHx+PXaesaptBtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=bgtL+o52; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1722365631; c=relaxed/simple;
+	bh=3KF1m7Yt4Ol9otmLzmXemHFItOj8lfFyse+zAjzf1lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H21gx+Qv9ZXD4ClMy5+1k4BoXvco6h1VPNrBm1yyK1DyM72ZIMhEte/JdS1MscN2igU/yakx0kGDbku/zEpics5ivlPi/6y8wPBDet1bkVPp+Frcs3Dx1IJ954eRarTaa9ZfdLVUgw6F4NuKX+qjlKb8XH23cRrXoC45+H2z2Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev; spf=pass smtp.mailfrom=holm.dev; dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b=mKbTeXjP; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holm.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="bgtL+o52"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 637C21BF20A;
-	Tue, 30 Jul 2024 16:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1722357494;
+	dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b="mKbTeXjP"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holm.dev; s=key1;
+	t=1722365626;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NnbvuVHDbWwwk4Gu5lDCFcSTqlVTHWq0eITAVsUoCWs=;
-	b=bgtL+o521SArrgfKSvfoEAiRDSauzSciKRX0MiCGm7uZHQ0VvHfkT5DM4HFQfOs4LS5fpe
-	kH2d8Xz7McJ1R5oGUh9Y8IWUpLqFY9LQUH5IBo9pmXhmq12Nyd/XvSwG1JDq8B8X4lU/FL
-	K3yvuvLDN2MO3ov16KEt3ccYKkEi8CWAiJ4JITftWR2obwzPZGE6wKNp98O75EIm1+Dxmr
-	0GPAYiB3HnutGj9FyISXLYBVrFUaEW71tSe/lyyl6xixbdA9iZlgnzBgJ0FzZtxzkHBMB1
-	MdXANQsMMVvUnjKmUS1/xfwOzYcClkc5YTr8aR+CB8KlvUg338xwTqWTwJpm8Q==
-Message-ID: <0f417818-3009-4476-88fb-47a9ca15d525@arinc9.com>
-Date: Tue, 30 Jul 2024 19:38:08 +0300
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Dn0xLoWfpimcsell+FemET9LAXc+6vt12NIgpqJmTuA=;
+	b=mKbTeXjP4/9I1YF92icnDI09ZeHIfFWNXVz6Xr+njiwq//LEdXFTrZXsXIM/NRagozi3Bq
+	V15l4NcBHoTVjm0dsn9tpEt58s4cDH/KDmdeLnYedz8WcFEZHS6m8uB4JfWAa1TcOLAgs8
+	1lnJfWAr3RxvEL/vTM+G+hhlnMhrUHjlnT8z2LBVsf5Hc1ZCljUD4ysAmgmKuHD8MZgStY
+	84jmZj3d2GQ8UsTyLI99gc+PJFhEAdIds2eGNQXGy6JUMBQpOa+UbS9e8X7WnFboTGXMtb
+	nthKe0cP7YjasayTr4vDRHHlXOAhH0Kpfch8cthWynbQPBRrkhXZhji8QxMiCw==
+From: Kevin Holm <kevin@holm.dev>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+	amd-gfx@lists.freedesktop.org,
+	ML dri-devel <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Wayne Lin <wayne.lin@amd.com>,
+	Jerry Zuo <jerry.zuo@amd.com>,
+	Zaeem Mohamed <zaeem.mohamed@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Kevin Holm <kevin@holm.dev>
+Subject: [PATCH 6.10] drm/amd/display: Refactor function dm_dp_mst_is_port_support_mode()
+Date: Tue, 30 Jul 2024 20:53:39 +0200
+Message-ID: <20240730185339.543359-1-kevin@holm.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>,
- frank-w@public-files.de, Frank Wunderlich <linux@fw-web.de>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-References: <20240516204847.171029-1-linux@fw-web.de>
- <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
- <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
- <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
- <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
- <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
- <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
- <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
- <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
- <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
- <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
- <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
- <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
- <1aedb1d4-8dc3-4e17-aff1-7cc417465967@arinc9.com>
- <130518e2-d6dd-49ed-9cc2-ca9cdec93b98@leemhuis.info>
- <aeb255ff-3755-4f76-a8f8-cda27a67f818@arinc9.com>
- <b3fa66cc-516b-4d78-aee5-62a47b52a3b1@collabora.com>
- <2076f699540c3c9d10effdb8b55d3f89@arinc9.com>
- <921f448b-4085-4c8d-85f8-478318d9c054@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <921f448b-4085-4c8d-85f8-478318d9c054@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: arinc.unal@arinc9.com
+X-Migadu-Flow: FLOW_OUT
 
-On 30/07/2024 19:04, Krzysztof Kozlowski wrote:
-> On 30/07/2024 13:22, arinc.unal@arinc9.com wrote:
->>>>>
->>>>> Reminder: try to not see a revert as a bad thing. It's just means
->>>>> "not
->>>>> ready yet, revert and we'll try again later" -- that's actually
->>>>> something Linus wrote just a few hours ago:
->>>>> https://lore.kernel.org/lkml/CAHk-=wgQMOscLeeA3QXOs97xOz_CTxdqJjpC20tJ-7bUdHWtSA@mail.gmail.com/
->>>>
->>>> Except it is ready and trying again is my responsibility, which means
->>>> unnecessary work for me to do. I've already got a ton of things to do.
->>>> Applying the device tree patch resolves this regression; no reverts
->>>> needed.
->>>> And then there's the patch in the works by Daniel that will address
->>>> all the
->>>> remaining cases outside of the reported regression.
->>>>
->>>
->>> The commit that fixes your breakage in a way that does *not* please me
->>> (because of older devicetrees being still broken with the new driver)
->>> was
->>> picked and it is in v6.11-rc1.
->>>
->>> I had to do this because I value the community (in this case, the
->>> users) much
->>> more than trying to make an arrogant developer to act in a
->>> community-friendly
->>> manner while leaving things completely broken.
->>>
->>> That said, remembering that we're humans and, as such, it's normal to
->>> get something
->>> wrong during the development process, I want to remind you that:
->>>
->>>   1. A series that creates regressions is *not* good and *not* ready to
->>> be
->>>      upstreamed; and
->>>   2. As a maintainer, you have the responsibility of not breaking the
->>> kernel,
->>>      not breaking devices and not breaking currently working
->>> functionality; and
->>>   3. Devicetrees being wrong (but working) since day 0 is not an excuse
->>> to break
->>>      functionality; and
->>>   4. Blaming the one who introduced the devicetree (you're doing that,
->>> since you
->>>      are blaming the devicetree being wrong) isn't solving anything and
->>> will not
->>>      magically make your code acceptable or good; and
->>>   5. If you push a wrong commit, there's nothing to be ashamed of; and
->>>   6. If you make a mistake, you should recognize that and find a way to
->>>      make things right, that should be done for the community, not for
->>>      yourself; and
->>>   7. You shall respect the community: in this case, with your arrogant
->>> behavior
->>>      you did *not* respect the users.
->>>
->>> P.S.: The right way of making such change is to:
->>>        1. Avoid breaking currently working devices by making sure that
->>> their DT
->>>           still works with the new driver; and
->>>        2. If breakage is unavoidable, make it so one kernel version has
->>> a fix that
->>>           works with both old and new driver, and the next version
->>> introduces the
->>>           breakage. N.2 should ideally never happen, anyway.
->>>
->>> Let's wrap up this matter now - I don't want to spend any more word,
->>> nor time,
->>> on this, as I really have nothing else to say.
->>>
->>> Best regards,
->>> Angelo
->>
->> To be clear, I only became aware that my patch was picked by reading
->> this
->> email. It is clear that we have different views. To that extend, all of
->> what you have written above can be answered to by reading what I have
->> already written in this thread. Therefore, I don't see any wrongdoing
->> from
->> my side and invite everyone to fully read this thread to draw their own
->> conclusions; something you seem not to have done. And I'm not the one,
->> calling people names here. I can only offer my respect for hard working
->> people.
->>
->> In my view, your behaviour of not applying a devicetree patch before a
->> Linux driver patch was applied, and then not replying to any arguments
->> whatsoever, was keeping the devicetree files hostage until your demands
-> 
-> Hm, why ever DTS patch should be applied before driver patch is? This
-> clearly suggests ABI break. You proposed to fix ABI issue by fixing DTS,
-> which is not the way, because it literally fixes nothing. You got
-> comments - fix the driver to be backwards compatible.
+From: Wayne Lin <wayne.lin@amd.com>
 
-As I argued in this thread, I see no ABI issue here. I proposed to fix
-broken devicetrees, nothing more. Please read the full thread to understand
-where I'm coming from.
+[ Upstream commit fa57924c76d995e87ca3533ec60d1d5e55769a27 ]
 
-Arınç
+[Why]
+dm_dp_mst_is_port_support_mode() is a bit not following the original design rule and cause
+light up issue with multiple 4k monitors after mst dsc hub.
+
+[How]
+Refactor function dm_dp_mst_is_port_support_mode() a bit to solve the light up issue.
+
+Reviewed-by: Jerry Zuo <jerry.zuo@amd.com>
+Acked-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[kevin@holm.dev: Resolved merge conflict in .../amdgpu_dm_mst_types.c]
+Fixes: 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation")
+Link: https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u
+Signed-off-by: Kevin Holm <kevin@holm.dev>
+---
+I resolved the merge conflict so that, after this patch is applied to the
+linux-6.10.y branch of the stable git repository, the resulting function
+dm_dp_mst_is_port_support_mode (and also the new function 
+dp_get_link_current_set_bw) is identical to the original commit.
+
+I've confirmed that it fixes the regression I reported for my use case.
+---
+ .../display/amdgpu_dm/amdgpu_dm_mst_types.c   | 232 +++++++++++-------
+ 1 file changed, 147 insertions(+), 85 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index a5e1a93ddaea..e90f9d697511 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -1595,109 +1595,171 @@ static bool is_dsc_common_config_possible(struct dc_stream_state *stream,
+ 	return bw_range->max_target_bpp_x16 && bw_range->min_target_bpp_x16;
+ }
+ 
++#if defined(CONFIG_DRM_AMD_DC_FP)
++static bool dp_get_link_current_set_bw(struct drm_dp_aux *aux, uint32_t *cur_link_bw)
++{
++	uint32_t total_data_bw_efficiency_x10000 = 0;
++	uint32_t link_rate_per_lane_kbps = 0;
++	enum dc_link_rate link_rate;
++	union lane_count_set lane_count;
++	u8 dp_link_encoding;
++	u8 link_bw_set = 0;
++
++	*cur_link_bw = 0;
++
++	if (drm_dp_dpcd_read(aux, DP_MAIN_LINK_CHANNEL_CODING_SET, &dp_link_encoding, 1) != 1 ||
++		drm_dp_dpcd_read(aux, DP_LANE_COUNT_SET, &lane_count.raw, 1) != 1 ||
++		drm_dp_dpcd_read(aux, DP_LINK_BW_SET, &link_bw_set, 1) != 1)
++		return false;
++
++	switch (dp_link_encoding) {
++	case DP_8b_10b_ENCODING:
++		link_rate = link_bw_set;
++		link_rate_per_lane_kbps = link_rate * LINK_RATE_REF_FREQ_IN_KHZ * BITS_PER_DP_BYTE;
++		total_data_bw_efficiency_x10000 = DATA_EFFICIENCY_8b_10b_x10000;
++		total_data_bw_efficiency_x10000 /= 100;
++		total_data_bw_efficiency_x10000 *= DATA_EFFICIENCY_8b_10b_FEC_EFFICIENCY_x100;
++		break;
++	case DP_128b_132b_ENCODING:
++		switch (link_bw_set) {
++		case DP_LINK_BW_10:
++			link_rate = LINK_RATE_UHBR10;
++			break;
++		case DP_LINK_BW_13_5:
++			link_rate = LINK_RATE_UHBR13_5;
++			break;
++		case DP_LINK_BW_20:
++			link_rate = LINK_RATE_UHBR20;
++			break;
++		default:
++			return false;
++		}
++
++		link_rate_per_lane_kbps = link_rate * 10000;
++		total_data_bw_efficiency_x10000 = DATA_EFFICIENCY_128b_132b_x10000;
++		break;
++	default:
++		return false;
++	}
++
++	*cur_link_bw = link_rate_per_lane_kbps * lane_count.bits.LANE_COUNT_SET / 10000 * total_data_bw_efficiency_x10000;
++	return true;
++}
++#endif
++
+ enum dc_status dm_dp_mst_is_port_support_mode(
+ 	struct amdgpu_dm_connector *aconnector,
+ 	struct dc_stream_state *stream)
+ {
+-	int pbn, branch_max_throughput_mps = 0;
++#if defined(CONFIG_DRM_AMD_DC_FP)
++	int branch_max_throughput_mps = 0;
+ 	struct dc_link_settings cur_link_settings;
+-	unsigned int end_to_end_bw_in_kbps = 0;
+-	unsigned int upper_link_bw_in_kbps = 0, down_link_bw_in_kbps = 0;
++	uint32_t end_to_end_bw_in_kbps = 0;
++	uint32_t root_link_bw_in_kbps = 0;
++	uint32_t virtual_channel_bw_in_kbps = 0;
+ 	struct dc_dsc_bw_range bw_range = {0};
+ 	struct dc_dsc_config_options dsc_options = {0};
++	uint32_t stream_kbps;
+ 
+-	/*
+-	 * Consider the case with the depth of the mst topology tree is equal or less than 2
+-	 * A. When dsc bitstream can be transmitted along the entire path
+-	 *    1. dsc is possible between source and branch/leaf device (common dsc params is possible), AND
+-	 *    2. dsc passthrough supported at MST branch, or
+-	 *    3. dsc decoding supported at leaf MST device
+-	 *    Use maximum dsc compression as bw constraint
+-	 * B. When dsc bitstream cannot be transmitted along the entire path
+-	 *    Use native bw as bw constraint
++	/* DSC unnecessary case
++	 * Check if timing could be supported within end-to-end BW
+ 	 */
+-	if (is_dsc_common_config_possible(stream, &bw_range) &&
+-	   (aconnector->mst_output_port->passthrough_aux ||
+-	    aconnector->dsc_aux == &aconnector->mst_output_port->aux)) {
+-		cur_link_settings = stream->link->verified_link_cap;
+-		upper_link_bw_in_kbps = dc_link_bandwidth_kbps(aconnector->dc_link, &cur_link_settings);
+-		down_link_bw_in_kbps = kbps_from_pbn(aconnector->mst_output_port->full_pbn);
+-
+-		/* pick the end to end bw bottleneck */
+-		end_to_end_bw_in_kbps = min(upper_link_bw_in_kbps, down_link_bw_in_kbps);
+-
+-		if (end_to_end_bw_in_kbps < bw_range.min_kbps) {
+-			DRM_DEBUG_DRIVER("maximum dsc compression cannot fit into end-to-end bandwidth\n");
++	stream_kbps =
++		dc_bandwidth_in_kbps_from_timing(&stream->timing,
++			dc_link_get_highest_encoding_format(stream->link));
++	cur_link_settings = stream->link->verified_link_cap;
++	root_link_bw_in_kbps = dc_link_bandwidth_kbps(aconnector->dc_link, &cur_link_settings);
++	virtual_channel_bw_in_kbps = kbps_from_pbn(aconnector->mst_output_port->full_pbn);
++
++	/* pick the end to end bw bottleneck */
++	end_to_end_bw_in_kbps = min(root_link_bw_in_kbps, virtual_channel_bw_in_kbps);
++
++	if (stream_kbps <= end_to_end_bw_in_kbps) {
++		DRM_DEBUG_DRIVER("No DSC needed. End-to-end bw sufficient.");
++		return DC_OK;
++	}
++
++	/*DSC necessary case*/
++	if (!aconnector->dsc_aux)
++		return DC_FAIL_BANDWIDTH_VALIDATE;
++
++	if (is_dsc_common_config_possible(stream, &bw_range)) {
++
++		/*capable of dsc passthough. dsc bitstream along the entire path*/
++		if (aconnector->mst_output_port->passthrough_aux) {
++			if (bw_range.min_kbps > end_to_end_bw_in_kbps) {
++				DRM_DEBUG_DRIVER("DSC passthrough. Max dsc compression can't fit into end-to-end bw\n");
+ 			return DC_FAIL_BANDWIDTH_VALIDATE;
+-		}
++			}
++		} else {
++			/*dsc bitstream decoded at the dp last link*/
++			struct drm_dp_mst_port *immediate_upstream_port = NULL;
++			uint32_t end_link_bw = 0;
++
++			/*Get last DP link BW capability*/
++			if (dp_get_link_current_set_bw(&aconnector->mst_output_port->aux, &end_link_bw)) {
++				if (stream_kbps > end_link_bw) {
++					DRM_DEBUG_DRIVER("DSC decode at last link. Mode required bw can't fit into available bw\n");
++					return DC_FAIL_BANDWIDTH_VALIDATE;
++				}
++			}
+ 
+-		if (end_to_end_bw_in_kbps < bw_range.stream_kbps) {
+-			dc_dsc_get_default_config_option(stream->link->dc, &dsc_options);
+-			dsc_options.max_target_bpp_limit_override_x16 = aconnector->base.display_info.max_dsc_bpp * 16;
+-			if (dc_dsc_compute_config(stream->sink->ctx->dc->res_pool->dscs[0],
+-					&stream->sink->dsc_caps.dsc_dec_caps,
+-					&dsc_options,
+-					end_to_end_bw_in_kbps,
+-					&stream->timing,
+-					dc_link_get_highest_encoding_format(stream->link),
+-					&stream->timing.dsc_cfg)) {
+-				stream->timing.flags.DSC = 1;
+-				DRM_DEBUG_DRIVER("end-to-end bandwidth require dsc and dsc config found\n");
+-			} else {
+-				DRM_DEBUG_DRIVER("end-to-end bandwidth require dsc but dsc config not found\n");
+-				return DC_FAIL_BANDWIDTH_VALIDATE;
++			/*Get virtual channel bandwidth between source and the link before the last link*/
++			if (aconnector->mst_output_port->parent->port_parent)
++				immediate_upstream_port = aconnector->mst_output_port->parent->port_parent;
++
++			if (immediate_upstream_port) {
++				virtual_channel_bw_in_kbps = kbps_from_pbn(immediate_upstream_port->full_pbn);
++				virtual_channel_bw_in_kbps = min(root_link_bw_in_kbps, virtual_channel_bw_in_kbps);
++				if (bw_range.min_kbps > virtual_channel_bw_in_kbps) {
++					DRM_DEBUG_DRIVER("DSC decode at last link. Max dsc compression can't fit into MST available bw\n");
++					return DC_FAIL_BANDWIDTH_VALIDATE;
++				}
+ 			}
+ 		}
+-	} else {
+-		/* Check if mode could be supported within max slot
+-		 * number of current mst link and full_pbn of mst links.
+-		 */
+-		int pbn_div, slot_num, max_slot_num;
+-		enum dc_link_encoding_format link_encoding;
+-		uint32_t stream_kbps =
+-			dc_bandwidth_in_kbps_from_timing(&stream->timing,
+-				dc_link_get_highest_encoding_format(stream->link));
+-
+-		pbn = kbps_to_peak_pbn(stream_kbps);
+-		pbn_div = dm_mst_get_pbn_divider(stream->link);
+-		slot_num = DIV_ROUND_UP(pbn, pbn_div);
+-
+-		link_encoding = dc_link_get_highest_encoding_format(stream->link);
+-		if (link_encoding == DC_LINK_ENCODING_DP_8b_10b)
+-			max_slot_num = 63;
+-		else if (link_encoding == DC_LINK_ENCODING_DP_128b_132b)
+-			max_slot_num = 64;
+-		else {
+-			DRM_DEBUG_DRIVER("Invalid link encoding format\n");
+-			return DC_FAIL_BANDWIDTH_VALIDATE;
+-		}
+ 
+-		if (slot_num > max_slot_num ||
+-			pbn > aconnector->mst_output_port->full_pbn) {
+-			DRM_DEBUG_DRIVER("Mode can not be supported within mst links!");
++		/*Confirm if we can obtain dsc config*/
++		dc_dsc_get_default_config_option(stream->link->dc, &dsc_options);
++		dsc_options.max_target_bpp_limit_override_x16 = aconnector->base.display_info.max_dsc_bpp * 16;
++		if (dc_dsc_compute_config(stream->sink->ctx->dc->res_pool->dscs[0],
++				&stream->sink->dsc_caps.dsc_dec_caps,
++				&dsc_options,
++				end_to_end_bw_in_kbps,
++				&stream->timing,
++				dc_link_get_highest_encoding_format(stream->link),
++				&stream->timing.dsc_cfg)) {
++			stream->timing.flags.DSC = 1;
++			DRM_DEBUG_DRIVER("Require dsc and dsc config found\n");
++		} else {
++			DRM_DEBUG_DRIVER("Require dsc but can't find appropriate dsc config\n");
+ 			return DC_FAIL_BANDWIDTH_VALIDATE;
+ 		}
+-	}
+ 
+-	/* check is mst dsc output bandwidth branch_overall_throughput_0_mps */
+-	switch (stream->timing.pixel_encoding) {
+-	case PIXEL_ENCODING_RGB:
+-	case PIXEL_ENCODING_YCBCR444:
+-		branch_max_throughput_mps =
+-			aconnector->dc_sink->dsc_caps.dsc_dec_caps.branch_overall_throughput_0_mps;
+-		break;
+-	case PIXEL_ENCODING_YCBCR422:
+-	case PIXEL_ENCODING_YCBCR420:
+-		branch_max_throughput_mps =
+-			aconnector->dc_sink->dsc_caps.dsc_dec_caps.branch_overall_throughput_1_mps;
+-		break;
+-	default:
+-		break;
+-	}
++		/* check is mst dsc output bandwidth branch_overall_throughput_0_mps */
++		switch (stream->timing.pixel_encoding) {
++		case PIXEL_ENCODING_RGB:
++		case PIXEL_ENCODING_YCBCR444:
++			branch_max_throughput_mps =
++				aconnector->dc_sink->dsc_caps.dsc_dec_caps.branch_overall_throughput_0_mps;
++			break;
++		case PIXEL_ENCODING_YCBCR422:
++		case PIXEL_ENCODING_YCBCR420:
++			branch_max_throughput_mps =
++				aconnector->dc_sink->dsc_caps.dsc_dec_caps.branch_overall_throughput_1_mps;
++			break;
++		default:
++			break;
++		}
+ 
+-	if (branch_max_throughput_mps != 0 &&
+-		((stream->timing.pix_clk_100hz / 10) >  branch_max_throughput_mps * 1000))
++		if (branch_max_throughput_mps != 0 &&
++			((stream->timing.pix_clk_100hz / 10) >  branch_max_throughput_mps * 1000)) {
++			DRM_DEBUG_DRIVER("DSC is required but max throughput mps fails");
+ 		return DC_FAIL_BANDWIDTH_VALIDATE;
+-
++		}
++	} else {
++		DRM_DEBUG_DRIVER("DSC is required but can't find common dsc config.");
++		return DC_FAIL_BANDWIDTH_VALIDATE;
++	}
++#endif
+ 	return DC_OK;
+ }
+-- 
+2.45.2
+
