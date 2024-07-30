@@ -1,117 +1,90 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855B318D4D7
-	for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 11:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE0618A92F;
+	Tue, 30 Jul 2024 15:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722340305; cv=none; b=OWPIhIHhShZ20H8fJHIImKE+R27qA1g5omhJmp+bikZF6BAHDJHwZfaiiiaQPw8n6agWgI/+G2xqvR3sx6rnaCB0ftsAAEcuE4CmQI4TCFkzW517WH3fui+NACtP4s7uS6ArBlYH2h8bHuVOod7QoSplK8hpF/9RCBSIZCJuXDQ=
+	t=1722353896; cv=none; b=Py2JnWjq7ph7NQ0fa3lGZ1phHVqMxdUiIfyMAwzvdtZenIUVm9NIf4fBAlcQ1ix0ASM3tMmQJrTkGfR0YZWkz7ghDpAnlsJcQA4HIL5hxUPoace7dfOsAxKrZZu3SakxGL8HzZCJUflhH6J8TlTIWBEgfXQS/3T1zXpPkcqo+kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722340305; c=relaxed/simple;
-	bh=/LxOA/sf8jUq2ce1URddnOWOpBaWlE7GJFwaYB1FXgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z3dEam2kqQmdtY4wznW85SisIWifQBqSMrTImU8LlhvwkKy8BuVTNV3qq4Hbi5mR0aWMtrwIguE/Yq2apx2mnXyEybmoG/AsHINeWA9j0wSO8GmpZuph0bou6qhb2+f9cq7POfsJLX42++eC/FgM3Z5YOwkRBRhn98NbX4hkots=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hZYBWgnL; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1722353896; c=relaxed/simple;
+	bh=xXFjtGCvB3jw9r5d2Ci29zrADIaI+wUIH9WGTHNxLwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T/sXIAvyUfljP2GFHgHDwtojx/1YtmgkcZCqd89jyWRP71Ah1JwO847XG6xgvkt/QDk6B86qN83T9TGqGn3cLiJZ4se1FdGQsgPwRqXFw3y9S6q894iMK5UGo7knNdqGqf6hQgfYOWIxqBaXxJgM7Wp4cb0f287gtYT15HrHncI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pdqh2AOE; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hZYBWgnL"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ef2d7d8854so56633581fa.0
-        for <regressions@lists.linux.dev>; Tue, 30 Jul 2024 04:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1722340302; x=1722945102; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mj9g02teE95oWkxud71FxjRcOnjoY1sRk9LiH0FRY4s=;
-        b=hZYBWgnL8x42wCcf5oDbCZVd1Bf4kBKe6qDpWCaWdZvaWnKLC65vvwdwMawx5lAz+t
-         qx1cOcghJGe5WkMaN8lJ3OqolNu4Rp8Ygy2GDckJC0zbqr/YnD/ydc1bB9RkavZ3vr8S
-         lkRUvTt7jU4b3Da05JNdS4ew85TDM7GIwAb869Q59X19myM4hYQC/vGKnm3SjpZZxeQg
-         PLRLrx2lNyFQpW8m8HW3pfV0nackoclGi0CjZlKZjYclOsP4oDuwR9wAJZA+BDpbOAUM
-         r7HXYBfYoWn79kw9DMycRdF82dVJBlE8YmjsK+v84RFQxLIHbaJs4Xyn5QSKEi+6pTEi
-         ccGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722340302; x=1722945102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mj9g02teE95oWkxud71FxjRcOnjoY1sRk9LiH0FRY4s=;
-        b=P9W9iPAoji1N9u3xP90xuzzL3rlSn9lzu8vhY2ZXhfHuHQW+rf+zqJI1LqO0xpiXdO
-         N7YeC6lKVKrYVsgejnyingRnBs/iStielQVdJSQFOz5Bz+9G7QfDb+zaKmCsYDYet6Ck
-         dSCoCjgTcjHX5FgibTdcUclDgH0G6O/Sa3isHE1r7dKtnn7a9ootzFgFeovTQefSfFEd
-         6hBkbkQVqJD5qwVwfLtNlRsVqezXTuEGyf8PLnMaFDZ+dl9yMB5L+EDS3WfmWzKj2YlB
-         z6N63fKWGIDt7a8ArQUlSRAQIeNER8yATQx/PNR6psW+KMyHxOxCOS37VZORh4Nwl430
-         dqjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPlKOBBWC2+30siYHbmjqH/nWY2ML7JLU5b1fpMSdp9jOmiSMaKnuHlQwNtZNGuDHhYDgwZUqyaasHaAzCe2/h/rKXg/yZEpJjXJQ=
-X-Gm-Message-State: AOJu0Ywiu0DFpcC/MqAjyuKSGrvaBNpzwMYq/BkjwYH/xaKxrNu6tb33
-	8Zt8WV8oQnptYvrNENpZ/F58Ba7ip4XGGNPapU+bijC5ypyaecA29rWj0HkuRt4FrQCBU4LC+pA
-	7hLD4X94clGWAzFfz5uefosQ2Gs/SulBADRHBzA==
-X-Google-Smtp-Source: AGHT+IGKbiw+jL9QwWM+pv2VMutUmDfrKG8cwt2tgt9Gcf3IMi7/XSU9egzEdXOKkg8uxDSXz6DRPDTvLA5vScLpLBk=
-X-Received: by 2002:a05:651c:1541:b0:2ef:2d3d:3cc3 with SMTP id
- 38308e7fff4ca-2f12ebc95b8mr81065521fa.4.1722340301491; Tue, 30 Jul 2024
- 04:51:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pdqh2AOE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1722353893;
+	bh=xXFjtGCvB3jw9r5d2Ci29zrADIaI+wUIH9WGTHNxLwo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pdqh2AOE/X6L98VB19J/mS17tNPr+cEov9didJwrYLmS/Y7E3unbnze2RoDtDXREt
+	 GsVd+kQuqQDDr2FAigtkXCKtlD4N/LuWYgWnjyZ3Uy3rG66UCCIuo0Sk+ykzMrUNb4
+	 mQIMdkRetXXolEEiQMpuJwGk4IxumSxwqyJFtliPF+F+2f9b4eZZd2aoKh/XzEg99l
+	 QYTwst8mcKGTmNsjliv8vB3Fk8+isihNxfxRZjrttpnD3MarVzdFdm80QRt88ka+0E
+	 NMj3Ia7XabkVWCvIHuYTRa7CQcMXKOQvPi83EFonyMePAXqPCMzccQfGY//919UEOh
+	 hLtclEDo0lDnw==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E6CBB37809CE;
+	Tue, 30 Jul 2024 15:38:09 +0000 (UTC)
+Date: Tue, 30 Jul 2024 11:38:07 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Chris Lu =?utf-8?B?KOmZuOeomuazkyk=?= <Chris.Lu@mediatek.com>
+Cc: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
+	"marcel@holtmann.org" <marcel@holtmann.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kernelci@lists.linux.dev" <kernelci@lists.linux.dev>,
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
+	Steve Lee =?utf-8?B?KOadjuimluiqoCk=?= <steve.lee@mediatek.com>,
+	"kernel@collabora.com" <kernel@collabora.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Aaron Hou =?utf-8?B?KOS+r+S/iuS7sCk=?= <Aaron.Hou@mediatek.com>
+Subject: Re: [PATCH v7 8/8] Bluetooth: btusb: mediatek: add ISO data
+ transmission functions
+Message-ID: <9a1697ef-27d9-452c-89ea-159ec3d028d7@notapiano>
+References: <20240704060116.16600-1-chris.lu@mediatek.com>
+ <20240704060116.16600-9-chris.lu@mediatek.com>
+ <7851401b-e884-4ed4-998d-7651f427ad37@notapiano>
+ <6a6dc0b081e8caa99172666c71b0826c1cb17a1c.camel@mediatek.com>
+ <e9bdcf44-e20a-4824-a0d4-8c6c52ed1e9b@notapiano>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240729095542.21097-1-johan+linaro@kernel.org>
- <CAMRc=McuqEv1Sk9O6kn4aHo9wOfzskZS0z2QxzNM=q2N8XZ3zw@mail.gmail.com>
- <Zqduv66H2OczRgaH@hovoldconsulting.com> <CAMRc=MfEkPcKUNb7HbiNrqv+7q1n0wRD9sKQ8WrydoR4grao2A@mail.gmail.com>
- <ZqeP7CqEoC5iWAdL@hovoldconsulting.com> <CAMRc=MecyZU6DBWjg7vtohhxtVoaOR6jCRHdEiAKinqvmEtDyQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MecyZU6DBWjg7vtohhxtVoaOR6jCRHdEiAKinqvmEtDyQ@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 30 Jul 2024 13:51:30 +0200
-Message-ID: <CAMRc=Mcwe0nV=pgfk=Wezq5eopJiZZii=BZ162QknT0t1Uf9Rw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "firmware: qcom: qseecom: convert to using the TZ allocator"
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Amirreza Zarrabi <quic_azarrabi@quicinc.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Elliot Berman <quic_eberman@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e9bdcf44-e20a-4824-a0d4-8c6c52ed1e9b@notapiano>
 
-On Tue, Jul 30, 2024 at 1:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Mon, Jul 29, 2024 at 2:49=E2=80=AFPM Johan Hovold <johan@kernel.org> w=
-rote:
-> >
-> > On Mon, Jul 29, 2024 at 02:35:39PM +0200, Bartosz Golaszewski wrote:
-> > > > > On Mon, Jul 29, 2024 at 11:58=E2=80=AFAM Johan Hovold <johan+lina=
-ro@kernel.org> wrote:
-> > > > > >
-> > > > > > This reverts commit 6612103ec35af6058bb85ab24dae28e119b3c055.
-> > > > > >
-> > > > > > Using the "TZ allocator" for qcseecom breaks efivars on machine=
-s like
-> > > > > > the Lenovo ThinkPad X13s and x1e80100 CRD:
-> > > > > >
-> > > > > >         qcom_scm firmware:scm: qseecom: scm call failed with er=
-ror -22
-> >
-> > > How do you reproduce this on x1e?
-> >
-> > Just boot 6.11-rc1 and you should see the above error (and there are no
-> > variables under /sys/firmware/efi/efivars/).
-> >
-> > Johan
->
-> I'm trying to figure out what the difference is with and without
-> tzmem. Surprisingly the physical address passed down to the SCM call
-> is actually the same in both cases.
->
-> I figured that maybe using different struct device for the underlying
-> dma_alloc_coherent() would be the culprit but I checked and no.
->
-> I'm still on it.
->
-> Bart
+On Tue, Jul 16, 2024 at 08:20:46AM -0400, Nícolas F. R. A. Prado wrote:
+> On Tue, Jul 16, 2024 at 07:59:53AM +0000, Chris Lu (陸稚泓) wrote:
+> > Hi Nicolas,
+> > 
+> > Thanks for reporting the crash issue, I've sent another patc to avoid
+> > this crash issue happened. kill anchor function wasn't protect well if
+> > MediaTek Bluetooth failed to setup. Add a flag check when running into
+> > btmtk_usb_suspend function.
+> 
+> Hi Chris,
+> 
+> thanks for the quick follow up! I see the patch at
+> https://lore.kernel.org/all/20240716074947.23073-1-chris.lu@mediatek.com/
 
-Nevermind, I found the culprit. I will send a fix proposal shortly.
+That patch was merged without the Closes tag, so manually closing the
+regression:
 
-Bart
+#regzbot fix: 'Bluetooth: btmtk: Fix kernel crash when entering btmtk_usb_suspend'
+
+Thanks,
+Nícolas
