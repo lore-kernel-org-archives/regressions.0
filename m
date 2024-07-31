@@ -1,298 +1,223 @@
-Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CA44594A
-	for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 05:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.187.255.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00E254757;
+	Wed, 31 Jul 2024 05:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722402466; cv=none; b=NXiomUIhFg16gcsZjZoPY+Ul2apIjGuyF/QMgUUbKKrTzXsyMSDixet6rrBaHiRQpUkgYY8kNUoS8bxKEsgD0CTHmKMl9wiwV4vT6MnXItJXjGEj/ZeXvHJ/N3W5KmA1Dl5Pw2nm8hEQlft0udyn1IqBOQ/3yzxyBS89d9MY74A=
+	t=1722403784; cv=none; b=RDvyecfKxP0BYY4DeiNCaP83zwPT469Xo8IEbWu2zsKJKtNbW2elG0v6ZzWOeMphVioXlVb16z99Doi2y/XsrSstVwZYNVHD0s/lexJwSXoeKeRfAAN8WBiQi+OwBIhKj+oooqIgIt8dO7x+NwdnbSWjc2Z1F63tfayUsJCBa40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722402466; c=relaxed/simple;
-	bh=STfa0ffgYpEmNpG5fAKalGLK9F7Eo7viw6QnTSHaTBI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fAudmMvw/4UKg/zUPRLKkC8Xu/bqh+yyKWEL5hIDfTuZdq8PfjAsOlhrnXSitOS1X5vvfcsaRltJEJKp8xIaaTjmGM8jcjwnq+Bmy/6qQSjVAs1jgsO8yMaeSsmqyCTEL+GRsfSBAu8fzcw2eiZFBKJuPK9S6HRAUrThYQle5E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lrz.de; spf=pass smtp.mailfrom=lrz.de; dkim=pass (2048-bit key) header.d=lrz.de header.i=@lrz.de header.b=BHJ+oy1k; arc=none smtp.client-ip=129.187.255.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lrz.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lrz.de
+	s=arc-20240116; t=1722403784; c=relaxed/simple;
+	bh=3W6YIQ+d6psr2gJmbzeY43nLgDeraSCtjLccpe/FL9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D43IrTyU2/qEHF5Ekg4FhOqJ7W9Thi7ntXDBz+Kk64H2fTSF7QSJX28vPt1e2SOQjPes7EaUVur07C5eoul9UwKrqPkxc6BV1d5bGtsHmsQgqSjfUYNdIhmcFnQdT2Gd/Wcv8bJO+6C/lDFaokezIO71tti85eUfUtr/tqGPRxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p20YRzta; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lrz.de header.i=@lrz.de header.b="BHJ+oy1k"
-Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
-	by postout2.mail.lrz.de (Postfix) with ESMTP id 4WYg8C35sSzyXN;
-	Wed, 31 Jul 2024 07:07:39 +0200 (CEST)
-Authentication-Results: postout.lrz.de (amavisd-new); dkim=pass (2048-bit key)
-	reason="pass (just generated, assumed good)" header.d=lrz.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lrz.de; h=
-	mime-version:content-type:content-type:content-language
-	:accept-language:in-reply-to:references:message-id:date:date
-	:subject:subject:from:from:received:received:received:received;
-	 s=postout; t=1722402459; bh=STfa0ffgYpEmNpG5fAKalGLK9F7Eo7viw6Q
-	nTSHaTBI=; b=BHJ+oy1kgvpCVHsC0flIhvmu63hPAht/kOEZU7GEc52Frplq7XO
-	iKS0B5YSkd0d92Sd6aEjv2XyNEWkRfvx66VQQGEzOnJ/KdyUvRIMzaxX1e5dAQ5H
-	rBGV8Sdu7V6WTkR+NTChacbqPGb7gpmdMFAbyfU6MoE4184v9BLAu8sf+5hgXypX
-	0H7I0UuBuyK1pvH9QZWAHxFp6UF1exX61kOQJSpV/qzvUBYyYEPbF/O04wywjnqS
-	eYHFAJ52Ri8eRtZxk8JdwSH2iSR1dFUhV5k0SloNQIsLiw/onycmNwWZo/TZPMRn
-	EWQJvZh/dxTb1KV7xg8H7FpDEt4i75zvI/Q==
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -2.865
-X-Spam-Level:
-Received: from postout2.mail.lrz.de ([127.0.0.1])
-	by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-	with LMTP id 7meKKkO2y3u2; Wed, 31 Jul 2024 07:07:39 +0200 (CEST)
-Received: from BADWLRZ-SWEX01B.ads.mwn.de (BADWLRZ-SWEX01B.ads.mwn.de [IPv6:2001:4ca0:0:108::192])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "BADWLRZ-SWEX01B", Issuer "BADWLRZ-SWEX01B" (not verified))
-	by postout2.mail.lrz.de (Postfix) with ESMTPS id 4WYg8B6vpYzyXD;
-	Wed, 31 Jul 2024 07:07:38 +0200 (CEST)
-Received: from BADWLRZ-SWEX03A.ads.mwn.de (2001:4ca0:0:108::195) by
- BADWLRZ-SWEX01B.ads.mwn.de (2001:4ca0:0:108::192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 31 Jul 2024 07:07:38 +0200
-Received: from BADWLRZ-SWEX03A.ads.mwn.de ([fe80::135:d2e8:a257:4168]) by
- BADWLRZ-SWEX03A.ads.mwn.de ([fe80::135:d2e8:a257:4168%15]) with mapi id
- 15.02.1544.011; Wed, 31 Jul 2024 07:07:38 +0200
-From: =?utf-8?B?U3RlaW5iZWnDn2VyLCBTZWJhc3RpYW4=?=
-	<Sebastian.Steinbeisser@lrz.de>
-To: "tom@talpey.com" <tom@talpey.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "pc@manguebit.com" <pc@manguebit.com>
-CC: "smfrench@gmail.com" <smfrench@gmail.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-Thread-Topic: Potential smb/dfs regression introduced in kernel 6.6
-Thread-Index: AQHayJXmtmc2qLL700qAmNg0Q6RQvrHbwjy5gADy1QCAFEz7gIAFjrOAgAJLRwCAAl6KgIAAG4OAgACiDYCACrkegIAGlHEAgABu4gCAARpwgIABYvyAgAApEoCAAAFcgA==
-Date: Wed, 31 Jul 2024 05:07:38 +0000
-Message-ID: <ff47edb26e0cd9e591cfb3ece2407971202dfc09.camel@lrz.de>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
-	 <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
-	 <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
-	 <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
-	 <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
-	 <dd0259752e3557fa1b60dda4db3bf790d9ff877c.camel@lrz.de>
-	 <4b718a0b9a967d4bc0428a3f706e3b15@manguebit.com>
-	 <98d458ba-4258-4598-b8fc-0fe6cfeb2f87@talpey.com>
-	 <2849de0676a015619b922708005a243595f9f56b.camel@lrz.de>
-	 <6db3dbb8a7a6f4f5ed0f63d0e0c784c7@manguebit.com>
-	 <8bf2462eb9aa4d30b866da57720a36c90c0a43df.camel@lrz.de>
-	 <d208a9307b32ccf4d3fd7b08c6b95445@manguebit.com>
-	 <aed542086314197bcec6a50c7d6ee76cb6e65f96.camel@lrz.de>
-	 <ac58f36e10af65cd672fba66e99faa2c@manguebit.com>
-	 <1359665240338585cfbc4eac58339ab1d0423788.camel@lrz.de>
-In-Reply-To: <1359665240338585cfbc4eac58339ab1d0423788.camel@lrz.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-Content-Type: multipart/signed; micalg=sha-384;
-	protocol="application/pkcs7-signature"; boundary="=-tjnm2oYJrh/guqWbdQmr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p20YRzta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34E81C116B1;
+	Wed, 31 Jul 2024 05:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722403783;
+	bh=3W6YIQ+d6psr2gJmbzeY43nLgDeraSCtjLccpe/FL9Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p20YRzta010P+AcV9PFcQ1YAcBQ6Vnx3lYqbZylZZis/ZrV6P9JfUkW+1KtW9IoeT
+	 AELzD1bTWQm7WDKg1/ODUxOsZFDLdbcSnV2B1MzS6gNqwvrggfX6NetIr9kSBI5Ydd
+	 JSZmcKjeWDgRl9Xp8AjIKpySBK/Dhy1emAnj5hT2N3YWA4S2re8MZ0etBSnhea0dO9
+	 5KQV3QBWjbuJoxu/Rozg1N8qtdnGxkodFBUSgLuXOcNu9RFAIGsFH90rdShkxsoJdj
+	 D2rttS7LLUGllSE4faUn6iSsFzmrBd9mjzSFYh0l0n+ZtaD/R8K39Htl9Dl6n+ISa9
+	 Hlnv3CFJAXG9Q==
+Message-ID: <cf031c05-4082-4cfe-9a4a-0c855764ee04@kernel.org>
+Date: Wed, 31 Jul 2024 07:29:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>,
+ frank-w@public-files.de, Frank Wunderlich <linux@fw-web.de>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+ <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+ <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
+ <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
+ <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+ <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
+ <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+ <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
+ <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
+ <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
+ <1aedb1d4-8dc3-4e17-aff1-7cc417465967@arinc9.com>
+ <130518e2-d6dd-49ed-9cc2-ca9cdec93b98@leemhuis.info>
+ <aeb255ff-3755-4f76-a8f8-cda27a67f818@arinc9.com>
+ <b3fa66cc-516b-4d78-aee5-62a47b52a3b1@collabora.com>
+ <2076f699540c3c9d10effdb8b55d3f89@arinc9.com>
+ <921f448b-4085-4c8d-85f8-478318d9c054@kernel.org>
+ <0f417818-3009-4476-88fb-47a9ca15d525@arinc9.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <0f417818-3009-4476-88fb-47a9ca15d525@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---=-tjnm2oYJrh/guqWbdQmr
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-X7FMb7xzvfnLb5BE50P1"
+On 30/07/2024 18:38, Arınç ÜNAL wrote:
+> On 30/07/2024 19:04, Krzysztof Kozlowski wrote:
+>> On 30/07/2024 13:22, arinc.unal@arinc9.com wrote:
+>>>>>>
+>>>>>> Reminder: try to not see a revert as a bad thing. It's just means
+>>>>>> "not
+>>>>>> ready yet, revert and we'll try again later" -- that's actually
+>>>>>> something Linus wrote just a few hours ago:
+>>>>>> https://lore.kernel.org/lkml/CAHk-=wgQMOscLeeA3QXOs97xOz_CTxdqJjpC20tJ-7bUdHWtSA@mail.gmail.com/
+>>>>>
+>>>>> Except it is ready and trying again is my responsibility, which means
+>>>>> unnecessary work for me to do. I've already got a ton of things to do.
+>>>>> Applying the device tree patch resolves this regression; no reverts
+>>>>> needed.
+>>>>> And then there's the patch in the works by Daniel that will address
+>>>>> all the
+>>>>> remaining cases outside of the reported regression.
+>>>>>
+>>>>
+>>>> The commit that fixes your breakage in a way that does *not* please me
+>>>> (because of older devicetrees being still broken with the new driver)
+>>>> was
+>>>> picked and it is in v6.11-rc1.
+>>>>
+>>>> I had to do this because I value the community (in this case, the
+>>>> users) much
+>>>> more than trying to make an arrogant developer to act in a
+>>>> community-friendly
+>>>> manner while leaving things completely broken.
+>>>>
+>>>> That said, remembering that we're humans and, as such, it's normal to
+>>>> get something
+>>>> wrong during the development process, I want to remind you that:
+>>>>
+>>>>   1. A series that creates regressions is *not* good and *not* ready to
+>>>> be
+>>>>      upstreamed; and
+>>>>   2. As a maintainer, you have the responsibility of not breaking the
+>>>> kernel,
+>>>>      not breaking devices and not breaking currently working
+>>>> functionality; and
+>>>>   3. Devicetrees being wrong (but working) since day 0 is not an excuse
+>>>> to break
+>>>>      functionality; and
+>>>>   4. Blaming the one who introduced the devicetree (you're doing that,
+>>>> since you
+>>>>      are blaming the devicetree being wrong) isn't solving anything and
+>>>> will not
+>>>>      magically make your code acceptable or good; and
+>>>>   5. If you push a wrong commit, there's nothing to be ashamed of; and
+>>>>   6. If you make a mistake, you should recognize that and find a way to
+>>>>      make things right, that should be done for the community, not for
+>>>>      yourself; and
+>>>>   7. You shall respect the community: in this case, with your arrogant
+>>>> behavior
+>>>>      you did *not* respect the users.
+>>>>
+>>>> P.S.: The right way of making such change is to:
+>>>>        1. Avoid breaking currently working devices by making sure that
+>>>> their DT
+>>>>           still works with the new driver; and
+>>>>        2. If breakage is unavoidable, make it so one kernel version has
+>>>> a fix that
+>>>>           works with both old and new driver, and the next version
+>>>> introduces the
+>>>>           breakage. N.2 should ideally never happen, anyway.
+>>>>
+>>>> Let's wrap up this matter now - I don't want to spend any more word,
+>>>> nor time,
+>>>> on this, as I really have nothing else to say.
+>>>>
+>>>> Best regards,
+>>>> Angelo
+>>>
+>>> To be clear, I only became aware that my patch was picked by reading
+>>> this
+>>> email. It is clear that we have different views. To that extend, all of
+>>> what you have written above can be answered to by reading what I have
+>>> already written in this thread. Therefore, I don't see any wrongdoing
+>>> from
+>>> my side and invite everyone to fully read this thread to draw their own
+>>> conclusions; something you seem not to have done. And I'm not the one,
+>>> calling people names here. I can only offer my respect for hard working
+>>> people.
+>>>
+>>> In my view, your behaviour of not applying a devicetree patch before a
+>>> Linux driver patch was applied, and then not replying to any arguments
+>>> whatsoever, was keeping the devicetree files hostage until your demands
+>>
+>> Hm, why ever DTS patch should be applied before driver patch is? This
+>> clearly suggests ABI break. You proposed to fix ABI issue by fixing DTS,
+>> which is not the way, because it literally fixes nothing. You got
+>> comments - fix the driver to be backwards compatible.
+> 
+> As I argued in this thread, I see no ABI issue here. I proposed to fix
+> broken devicetrees, nothing more. Please read the full thread to understand
+> where I'm coming from.
 
+I read most of it and it does suggest ABI break. But even if you do not
+focus on that aspect, your suggestion that DTS should be applied before
+driver patch is just wrong. It was never like this and it must not be
+like this.
 
---=-X7FMb7xzvfnLb5BE50P1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Best regards,
+Krzysztof
 
-Dear Paulo,
-
-one thing I should have tested but forgot and now did:
-With the patch applied it is also possible to mount one of the SMB 3.1
-signed & encrypted shares that were originally affected on the
-production system and not only the test one!
-
-Best
-Sebastian
-+-------------------------------------------------------------+
- Sebastian Steinbei=C3=9Fer
- Leibniz-Rechenzentrum   Tel.:+49-89-35831-8779
- Boltzmannstra=C3=9Fe 1       E-Mail: Sebastian.Steinbeisser@lrz.de
- D-85748 Garching
-+-------------------------------------------------------------+
-
-
------Original Message-----
-From: Sebastian Steinbei=C3=9Fer <Sebastian.Steinbeisser@lrz.de>
-To: Paulo Alcantara <pc@manguebit.com>, tom@talpey.com
-<tom@talpey.com>, gregkh@linuxfoundation.org
-<gregkh@linuxfoundation.org>
-Cc: smfrench@gmail.com <smfrench@gmail.com>,
-regressions@lists.linux.dev <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-Date: 31.07.2024 07:02:45
-
-Dear Paulo,
-
-that might have fixed it.
-Logs attached.
-
-Best
-Sebastian
-+-------------------------------------------------------------+
-=C2=A0Sebastian Steinbei=C3=9Fer
-=C2=A0Leibniz-Rechenzentrum=C2=A0=C2=A0 Tel.:+49-89-35831-8779
-=C2=A0Boltzmannstra=C3=9Fe 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 E-Mail: Se=
-bastian.Steinbeisser@lrz.de
-=C2=A0D-85748 Garching
-+-------------------------------------------------------------+
-
-
------Original Message-----
-From: Paulo Alcantara <pc@manguebit.com>
-To: "Steinbei=C3=9Fer, Sebastian" <Sebastian.Steinbeisser@lrz.de>,
-tom@talpey.com=C2=A0<tom@talpey.com>, gregkh@linuxfoundation.org
-<gregkh@linuxfoundation.org>
-Cc: smfrench@gmail.com=C2=A0<smfrench@gmail.com>,
-regressions@lists.linux.dev=C2=A0<regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-Date: 31.07.2024 04:35:45
-
-Hi Sebastian,
-
-Steinbei=C3=9Fer, Sebastian=C2=A0=C2=A0<Sebastian.Steinbeisser@lrz.de> writ=
-es:
-
-> Find the logs attached.
-
-Thanks.
-
-Could you please try the attached patch instead?
-
-Whether it works or not, please provide new network traces and logs.
-
---=-X7FMb7xzvfnLb5BE50P1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEyYbfXNcMyuhbpCh3C0OiiRZtSGkFAmapxpkACgkQC0OiiRZt
-SGmMRQf+JAPWWQl3h08hbc4iNCQeo/3owx/jDUrRDnemWoFKXC4uNl+C2mJIlext
-eXsgr5LGiEG1xTxYZuF4JNHeVWYC85fT2lnETx3S3oNmAqm3O5fq2sMVZ2KGkCew
-zkoO9yNtENuDhOEO7xLaWz0px7Xbam9a8A5ShSEDh5nfcNrtXST7FraeFta5H1cd
-AAiu19MndBlQT2zB6huuZwqnLJTnf8UGiLQAGH9I1ZdOotcPZxgfoPRpj3o3MjHW
-CNRWnns1Oy+azU3JLNUmUDK3iIJhDb3YfE0qrPZoUs+d3q6ER/zYPXT1DU8I2Lxg
-UGayzfJ922azEZPSUuxClbNQIckKjg==
-=21vN
------END PGP SIGNATURE-----
-
---=-X7FMb7xzvfnLb5BE50P1--
-
---=-tjnm2oYJrh/guqWbdQmr
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgIFADCABgkqhkiG9w0BBwEAAKCCE9Yw
-ggZyMIIEWqADAgECAhB4WSw8yggu2tjprafqDVB3MA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYT
-Ak5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBD
-QSA0MB4XDTIzMDQwNTAwMDAwMFoXDTI2MDQwNDIzNTk1OVowgdYxSTBHBgNVBAoTQExlaWJuaXot
-UmVjaGVuemVudHJ1bSBkZXIgQmF5ZXJpc2NoZW4gQWthZGVtaWUgZC4gV2lzc2Vuc2NoYWZ0ZW4x
-GzAZBgNVBAkMEkJvbHR6bWFubnN0cmHDn2UgMTEPMA0GA1UECBMGQmF5ZXJuMQswCQYDVQQGEwJE
-RTEgMB4GA1UEAwwXU3RlaW5iZWnDn2VyLCBTZWJhc3RpYW4xLDAqBgkqhkiG9w0BCQEWHXNlYmFz
-dGlhbi5zdGVpbmJlaXNzZXJAbHJ6LmRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-1tOueshjEujWZwBYyHyoO+kmDqVsdk7ahy3ey10S/PULIgHs2LcorCvy06ayLeMMkQVJqCJ7l/XW
-dSgKdjvkklBYay6U6bB3sSDkHUSMNDscJYctXgxQd9/6o7WCdxXhTekd/L+YDueL/sG6ozfynduZ
-j4ivj64T38neSm0hOKhd1+vK3yNbQLebuQ6CZRpb7ZjGcmIh+ro252MAedmhyyrCljtOsr2LdWMX
-GvXhwcEvf2XqRj2HXOdEpbKoKooENN8ah5WQTUtB94BtBCQMbGzg8nmcwR3B38Ice97Wjv1+Kf4t
-ueH+TlVWOiLpY5JqwOl/GFpIAU6lp0HgSO83IQIDAQABo4IByTCCAcUwHwYDVR0jBBgwFoAUaQCh
-xyFY+ODFGyCwCt2nUb8T2eQwHQYDVR0OBBYEFH+HEyIOkKU+emsScF+IW9dWTcMHMA4GA1UdDwEB
-/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjA/BgNV
-HSAEODA2MDQGCysGAQQBsjEBAgJPMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20v
-Q1BTMEIGA1UdHwQ7MDkwN6A1oDOGMWh0dHA6Ly9HRUFOVC5jcmwuc2VjdGlnby5jb20vR0VBTlRQ
-ZXJzb25hbENBNC5jcmwweAYIKwYBBQUHAQEEbDBqMD0GCCsGAQUFBzAChjFodHRwOi8vR0VBTlQu
-Y3J0LnNlY3RpZ28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3J0MCkGCCsGAQUFBzABhh1odHRwOi8v
-R0VBTlQub2NzcC5zZWN0aWdvLmNvbTBHBgNVHREEQDA+gR1TZWJhc3RpYW4uU3RlaW5iZWlzc2Vy
-QGxyei5kZYEdc2ViYXN0aWFuLnN0ZWluYmVpc3NlckBscnouZGUwDQYJKoZIhvcNAQEMBQADggIB
-ABGFqf3GfUcKjIValp5G72ihJu6fz9GT/2WTgs6MUyDjHZdm425XgXd0xTqqBCnQKma8GPJd61AY
-3a6fUGlsrW96ZwlUWNJ1q/6qy0JC6c/Z+K7QP/2sBc07rea59p0RI500ADdWJjLv2aL71d0nammo
-eiRPe5Ax5ho6lufR+wFiIABZri87n6e1N2ukQt9Hyk/TdsdyU6WYBD/0fP/p/73lr5Pc6npXxOfm
-lryNcW3fBt+rGksfyH3qnCbISbUFUvqlglJ1viOEmACP7x1550Txcf96MPD2SNxT9rVUXhAYODHw
-KA2H+Hx5s9ILt/7oTf6HqM959zQIdu9ATU7RMlUFpxN0chYYTgp4HBU5Gtm4hvLshS/WA1YVLNHa
-Z/nTCyoFwYRw1IDwvHmbj9kOyhkvDkTpUQHgw38HU2qFiIzXnUEgQfOZkjYjgiRMIDL2tOaPrvgj
-FaFqc4hWQ0/E1GYSsDDQrXmmz790lA7HAulMNOCiWN38eMSHH0rSUIogHudq0kswlX9mFDYfsWSi
-/QR6ZuNMxo32asPGk7twzRcRAeSYk5GrGl5sqt4LD8GsWXz8rmvwYjZN/l5Jd/Dt8OvqyDC/Chwy
-SfPsY027BfZyvDAjHD2luySuUB2dLHP90w8vRsNvKbhIF5Dh4t73nUGB79kaGi2BrQVXdCxzhp/z
-MIIGcjCCBFqgAwIBAgIQeFksPMoILtrY6a2n6g1QdzANBgkqhkiG9w0BAQwFADBGMQswCQYDVQQG
-EwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwg
-Q0EgNDAeFw0yMzA0MDUwMDAwMDBaFw0yNjA0MDQyMzU5NTlaMIHWMUkwRwYDVQQKE0BMZWlibml6
-LVJlY2hlbnplbnRydW0gZGVyIEJheWVyaXNjaGVuIEFrYWRlbWllIGQuIFdpc3NlbnNjaGFmdGVu
-MRswGQYDVQQJDBJCb2x0em1hbm5zdHJhw59lIDExDzANBgNVBAgTBkJheWVybjELMAkGA1UEBhMC
-REUxIDAeBgNVBAMMF1N0ZWluYmVpw59lciwgU2ViYXN0aWFuMSwwKgYJKoZIhvcNAQkBFh1zZWJh
-c3RpYW4uc3RlaW5iZWlzc2VyQGxyei5kZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-ANbTrnrIYxLo1mcAWMh8qDvpJg6lbHZO2oct3stdEvz1CyIB7Ni3KKwr8tOmsi3jDJEFSagie5f1
-1nUoCnY75JJQWGsulOmwd7Eg5B1EjDQ7HCWHLV4MUHff+qO1gncV4U3pHfy/mA7ni/7BuqM38p3b
-mY+Ir4+uE9/J3kptITioXdfryt8jW0C3m7kOgmUaW+2YxnJiIfq6NudjAHnZocsqwpY7TrK9i3Vj
-Fxr14cHBL39l6kY9h1znRKWyqCqKBDTfGoeVkE1LQfeAbQQkDGxs4PJ5nMEdwd/CHHve1o79fin+
-Lbnh/k5VVjoi6WOSasDpfxhaSAFOpadB4EjvNyECAwEAAaOCAckwggHFMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR/hxMiDpClPnprEnBfiFvXVk3DBzAOBgNVHQ8B
-Af8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwPwYD
-VR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3NlY3RpZ28uY29t
-L0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3RpZ28uY29tL0dFQU5U
-UGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcwAoYxaHR0cDovL0dFQU5U
-LmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDApBggrBgEFBQcwAYYdaHR0cDov
-L0dFQU5ULm9jc3Auc2VjdGlnby5jb20wRwYDVR0RBEAwPoEdU2ViYXN0aWFuLlN0ZWluYmVpc3Nl
-ckBscnouZGWBHXNlYmFzdGlhbi5zdGVpbmJlaXNzZXJAbHJ6LmRlMA0GCSqGSIb3DQEBDAUAA4IC
-AQARhan9xn1HCoyFWpaeRu9ooSbun8/Rk/9lk4LOjFMg4x2XZuNuV4F3dMU6qgQp0CpmvBjyXetQ
-GN2un1BpbK1vemcJVFjSdav+qstCQunP2fiu0D/9rAXNO63mufadESOdNAA3ViYy79mi+9XdJ2pp
-qHokT3uQMeYaOpbn0fsBYiAAWa4vO5+ntTdrpELfR8pP03bHclOlmAQ/9Hz/6f+95a+T3Op6V8Tn
-5pa8jXFt3wbfqxpLH8h96pwmyEm1BVL6pYJSdb4jhJgAj+8deedE8XH/ejDw9kjcU/a1VF4QGDgx
-8CgNh/h8ebPSC7f+6E3+h6jPefc0CHbvQE1O0TJVBacTdHIWGE4KeBwVORrZuIby7IUv1gNWFSzR
-2mf50wsqBcGEcNSA8Lx5m4/ZDsoZLw5E6VEB4MN/B1NqhYiM151BIEHzmZI2I4IkTCAy9rTmj674
-IxWhanOIVkNPxNRmErAw0K15ps+/dJQOxwLpTDTgoljd/HjEhx9K0lCKIB7natJLMJV/ZhQ2H7Fk
-ov0EembjTMaN9mrDxpO7cM0XEQHkmJORqxpebKreCw/BrFl8/K5r8GI2Tf5eSXfw7fDr6sgwvwoc
-Mknz7GNNuwX2crwwIxw9pbskrlAdnSxz/dMPL0bDbym4SBeQ4eLe951Bge/ZGhotga0FV3Qsc4af
-8zCCBuYwggTOoAMCAQICEDECcNQ1vpskmvhW0OHihUkwDQYJKoZIhvcNAQEMBQAwgYgxCzAJBgNV
-BAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5MRQwEgYDVQQHEwtKZXJzZXkgQ2l0eTEeMBwGA1UE
-ChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMS4wLAYDVQQDEyVVU0VSVHJ1c3QgUlNBIENlcnRpZmlj
-YXRpb24gQXV0aG9yaXR5MB4XDTIwMDIxODAwMDAwMFoXDTMzMDUwMTIzNTk1OVowRjELMAkGA1UE
-BhMCTkwxGTAXBgNVBAoTEEdFQU5UIFZlcmVuaWdpbmcxHDAaBgNVBAMTE0dFQU5UIFBlcnNvbmFs
-IENBIDQwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCzSuIiXidb6QRbFAQ1MiAUrrTS
-MUDGzVDAHqFEyq+eSmF/LZDeYpszai2kQsqWATz/cBA9gGjunvJ45G48ycC4D6gwZFvbBt5Jotxl
-unBeB8K+crGar3v+RCQ4VfvToX07v+HTJ6EeEONR3IzJPTMyzgAwENGsAWf9va9HePQFJiChCzXq
-hKpp0zen53S+8f9itEy06GS8aku7Mvyb4tMBBa9An3Y3ALIqIeymg/iYs8m9WkSkMyekNtFRB1+1
-KlnNUpM05G8+sY9EucnQQRUIdHzYsvqjP3XlaSuB4Jj0ia66UGfi5Wx31mm5sKAz8Re9UGVWIqq6
-wKFKxkSfuO4iwYiIPJoiGEux3dqabwFLduAroDF1IxE40PqGIdPXzYuZ/wL6BEfFAb0xy8bfm5S9
-G7y/ts9mIlFpPtkLZ/nQ/iVOWdsu9ale/nK/uGF47xsxeW2LIvB4sH5U2+D4ad8vpNbcCrXIXXKt
-kBnNHgxumNNZ0R1Isq/Pz7TALCxxDzWdsM7AO32/Jn7R4ldtGRZmKpJyfACDn8HU1QPhOtiWsjif
-rMWnanJhQ6K7M/5qz8BmfPrca+MUrr1Y4NHZb9MrgPtWKQQyGDXy+G5F/iHGdZk7LS+F8NH+Ddol
-t2wZpz52JqGMTDPIH5Qok4LLO95wbxtn+79Tw+wQxmDTuIg+LwIDAQABo4IBizCCAYcwHwYDVR0j
-BBgwFoAUU3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFGkAocchWPjgxRsgsArdp1G/E9nk
-MA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMC
-BggrBgEFBQcDBDA4BgNVHSAEMTAvMC0GBFUdIAAwJTAjBggrBgEFBQcCARYXaHR0cHM6Ly9zZWN0
-aWdvLmNvbS9DUFMwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VT
-RVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/Bggr
-BgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0Eu
-Y3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBDAUA
-A4ICAQAKBU57DY8fEzkA/W/sYsbD7e0XquMBzHjcP0eXXXRD4EAEAGCWSs+QRL9XIxmx+52zx9wM
-a8YTejlR+NKejiyKPTF0q63zMxrO/z/hUwo8IDcRRLS0NSgvTW6AN2rCXJe5iLN5fIfYgIBB9cy1
-L6trPuZ/vjUJm87nQ7ExQzGqWN5F9U8MlAk0c5iLanG7GCMoNjHiF1n0baj6guUeG7n5qcwOQTyD
-S19+NEqfwjUPUGasN1ZH8h1sE6PrzvRpti+rKzWpiU+i2/k3l2b5fFDy+Wu9jv6R9BoBh47es/UM
-zwEZ2kSrIVVr4jSukk+FpmR5ZbtwiYNAV6sdb1srMGsILzXlrdasSE2nGHvZklk2zUdgn7b01MHq
-67g0mNozGmT6Dam41Kbhv25WMFs871XqwVIb4gGoT1yRf/VePMm1jwauqijhKJFvrNweGnebGPei
-paLxIo2iEA4qdRztEg/qyzWGogXK/TFdmivg322fMPQWjQkMhRGMM8SCjlZN22L8x0ZOYoVA2rHJ
-m5P25IjZe+HPyn7ikJiSJmqlqFmUeowXF3D1dFlCCs/5yC06RYRqI2REFu+28t2nswIvY6xCFAR0
-RtS8Mz2yXNld0js2MmiRUGrc7imWzdUPbPcv9sdUF7SsERGPIzYL8dIiHzit+YCoGCSXMg6peF37
-hHNp1TGCAtowggLWAgEBMFowRjELMAkGA1UEBhMCTkwxGTAXBgNVBAoTEEdFQU5UIFZlcmVuaWdp
-bmcxHDAaBgNVBAMTE0dFQU5UIFBlcnNvbmFsIENBIDQCEHhZLDzKCC7a2Omtp+oNUHcwDQYJYIZI
-AWUDBAICBQCgggFRMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0
-MDczMTA1MDczOFowPwYJKoZIhvcNAQkEMTIEMO479TTkSOWjxrUK8u5rz3m+Fj6yeNvlG1Zhg9/+
-WPNLS8Q1TOjtB4Fi33Jkzo1uRDBpBgkrBgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYD
-VQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhB4WSw8
-yggu2tjprafqDVB3MGsGCyqGSIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQ
-R0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQeFksPMoILtrY
-6a2n6g1QdzANBgkqhkiG9w0BAQEFAASCAQDR0AsfXqd3eM3hKW/jXGaIueuaYWjeNpo9r9yqSveM
-iuAVBVdaoCELuqagKoE0TNVVa6m2Awh0QgC/O7AaVFoVLTISgat2MgQ68eAJFpg1PPCfBAS17y3b
-59uuBxw2PuyhvSYtSZfMR6m6wkdpCqJC8U0yS8YVx1q8xTRbW8b/aOPkigHpLdsxJSwxPkITW+w1
-T7lW5JYESYwgqYhtweHVxW/YQnxNlBmV6hGPL0ad/quHTYGfuorQIx5HWF9gyrC55IeEEEKWlaRo
-J8kGfmvLT1MBGlygPP7KvU9cjPVr//9DD6ZDtl2t7or2GSDR573bl84bAQbhwmA3NhUdbmLXAAAA
-AAAA
-
-
---=-tjnm2oYJrh/guqWbdQmr--
