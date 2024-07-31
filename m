@@ -1,45 +1,45 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9570A24B2F
-	for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 07:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709DE335C7
+	for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 07:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722411598; cv=none; b=GLiv+LdNXSytle0vR0F9e/bLlhkCrSROkjCQTNhoKPK2TI7I/fwKH/NJWAEAjnD2ShfLP+bXzcoLXdxvWkjNttnIYmandUUtBtBJjrYhdvgjkWD28aRloGcgANrJkYosnfk+Z75H7/VNrGYxmvS/tCn4+QIFAtmGdx1YSA/SuA0=
+	t=1722411806; cv=none; b=K5yDGuATLDGKml08zMKmwruPNIMfuUus8UeW4krOI0LaREWmr/HzQDiS5yoOnGSSWmMOrTEi/x9zxfQENe3dQU4D1sSlFVjUC6MVa6/mNZxp7vEXS0URwar2C1Fom6Cadjfy9JtCZB+HdJfJjv+wVf1r33Y98CvHffC+Mi8yVa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722411598; c=relaxed/simple;
-	bh=/JSbzRJzxpeCHC+fniDOZTVAGkIorOEd93ZY9MZx8zg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k62WZjbIw9mXK91ZzYoHGer1JH3fhOQ54alEjgKT7suppi1WtlkvDno1A5jqTcIb1r1352apy2LkRFGVVllVCl+KYoDtdu4VuqcMl0eB9NYPiGVuh8TQXyv950lPHI/+umKyb/7MHnmA+uh1xxKrKHElV6TZA7s/yibRR5RjYb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1722411806; c=relaxed/simple;
+	bh=+RxIbRKdxBoqFwTrEcMqyr1qTFEZLj1r+9/p28lMvnE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tbFttqkz5VR2n3jkiYq+BwQvJ7BTjpQ6Nf9NuSzulbYucMAKI5+AYiCe8qMwBTq7+KFgCShpuFjTlBbNvc/zrmFnN1dQKkg3jvfZKHbsFFzU27yHxDw3Q29Q5Y4LL8rV0jQMKs1pzsaiA9ka/9upcG0mJ+4GYaztFZtChhs+iYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7d2a9a23d9so616601566b.3
-        for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 00:39:56 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7a9a7af0d0so707003466b.3
+        for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 00:43:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722411595; x=1723016395;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mTAiD7OJGmglnjodT9lzLgeo0l1roG6m4mQwdtsR5nU=;
-        b=oj3dP2VVX49kdiVdd2HbC+dAx8CJCC9X6DNe2+dHqP4Q2i7f6fa4+EIJj5grY2+Cqv
-         fKRyq/rVgR0xLHMlnL0oInp8FKHywvhsqLh1NAyt50wzkcOy8Mfdl4DrNp4X4yXXY5zX
-         QTtS7N7sq5mrsocIuyAEbHFbadbEVjQXhHYhEBy/zmP1+bXQINJYm90JYO2YhlbeZSbH
-         p4XtGBW+1B51+t0BLr43zHyMhVqqi2Oh02/azVxTcMAFPfMYAKg//+ihCRYE7+Qqyof8
-         fY37WSgdX5dGYN/CDKbKgv9GxQUogacxTLN+Q1nRfEok0zXaS3s+SbuKHUQNUM74l8n/
-         j3uw==
-X-Gm-Message-State: AOJu0Ywt8oOUdx6Wa0U9LplYlJQfza82km9M/s3GQI8B08SMPLitS41c
-	ZLnKrStPLElBJt2CGIDcfaOoNSAHEBA4RgYLVjyJStmaP1i/f4jdXisWVA==
-X-Google-Smtp-Source: AGHT+IHGNUJXB9gO2NY6LP4A1Xyp7yIktyWFllxi8SjOGCT5qSPnI3w3Ge2it22T8cU/exbU92ZPqQ==
-X-Received: by 2002:a17:906:f58c:b0:a77:c26c:a571 with SMTP id a640c23a62f3a-a7d401795a1mr930298066b.54.1722411594719;
-        Wed, 31 Jul 2024 00:39:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722411803; x=1723016603;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vu1EISL8BN9yanPqcsi5XTIGcrHTZAMrGA+WEofj3pE=;
+        b=Ay+mjfOQc54uhGYZ42l+2+R26X5VTZMarPxEa+QM2sPPfjRyt0dlsIq4rQP01Os7yw
+         ol2V4GFbDXV01+qIirUjrsJp1A7e4jaFlSqQfFEUXeMSu439xe838mQG++OVhBVRyvWg
+         ZmmtnCk4ftV14H9GgPGEsFtijnpsfN9jCen/0b+vZKzox44MWRxinevE/xKYff2/IPhR
+         fk4aCvP1r+R0qZjgkac9JyhiOPTYLsFowesY43GlnFuKMaHKQY683v1uUwn98GpJfmX2
+         r76tmvVrQ1qjOyPgQPvFTgNMwXiNMLzjjnuG3Wm50bK0ZvdKUuTknIh2Eq2jaSsc7yoO
+         vFnw==
+X-Gm-Message-State: AOJu0YwmF0v+3I9DHf8LRD2gDIiy2ZeLdI3cM9zmYgCBc8ILNkJoZv/6
+	ymejr5uR4g8JduUA1oq4w5ILMe0WVaP9blV9x95a7TX11GWnr1myDrzthw==
+X-Google-Smtp-Source: AGHT+IE4/ttD3GJt957JgBhXxJvnGVVx7VCFsQ7PrQvOcUgOUqBmlVvKqefdIdCHtvpIPn7TgUub6Q==
+X-Received: by 2002:a17:907:eaa:b0:a7d:2c91:fb1b with SMTP id a640c23a62f3a-a7d40175b2cmr1070901466b.68.1722411802540;
+        Wed, 31 Jul 2024 00:43:22 -0700 (PDT)
 Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad411d2sm737743566b.126.2024.07.31.00.39.54
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acadb985csm732989666b.212.2024.07.31.00.43.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jul 2024 00:39:54 -0700 (PDT)
-Message-ID: <54b32f3f-1e5a-4429-b81d-4ab91ceb6bcb@kernel.org>
-Date: Wed, 31 Jul 2024 09:39:53 +0200
+        Wed, 31 Jul 2024 00:43:22 -0700 (PDT)
+Message-ID: <6f60115a-e69a-4ee8-b79b-cac016cac55d@kernel.org>
+Date: Wed, 31 Jul 2024 09:43:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,12 +48,13 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: mmap 0-th page
+From: Jiri Slaby <jirislaby@kernel.org>
 To: "michal.hrachovec@volny.cz" <michal.hrachovec@volny.cz>,
  stable@vger.kernel.org
 Cc: regressions@lists.linux.dev
 References: <3855f3cf-9c63-4498-853a-d3a0a2f47e7f@volny.cz>
+ <54b32f3f-1e5a-4429-b81d-4ab91ceb6bcb@kernel.org>
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
 Autocrypt: addr=jirislaby@kernel.org; keydata=
  xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
  rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
@@ -96,24 +97,27 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <3855f3cf-9c63-4498-853a-d3a0a2f47e7f@volny.cz>
+In-Reply-To: <54b32f3f-1e5a-4429-b81d-4ab91ceb6bcb@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 26. 07. 24, 12:36, michal.hrachovec@volny.cz wrote:
-> I am trying to allocate the 0-th page with mmap function in my code.
-> I am always getting this error with this error-code: mmap error ffffffff
-> Then I was searching the internet for this topic and I have found the 
-> same topic at stackoverflow web pages.
+On 31. 07. 24, 9:39, Jiri Slaby wrote:
+> On 26. 07. 24, 12:36, michal.hrachovec@volny.cz wrote:
+>> I am trying to allocate the 0-th page with mmap function in my code.
+>> I am always getting this error with this error-code: mmap error ffffffff
+>> Then I was searching the internet for this topic and I have found the 
+>> same topic at stackoverflow web pages.
+> 
+> 
+>          char *zero = mmap(NULL, 4096, PROT_READ | PROT_WRITE, 
+> MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+>          *(char *)(NULL) = 'A';
+>          printf("%c\n", *zero);
+> 
+> still yields 'A' here with 6.10.2 w/ vm.mmap_min_addr=0.
+Yeah and mind LSMs...
 
-
-         char *zero = mmap(NULL, 4096, PROT_READ | PROT_WRITE, 
-MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-         *(char *)(NULL) = 'A';
-         printf("%c\n", *zero);
-
-still yields 'A' here with 6.10.2 w/ vm.mmap_min_addr=0.
-
+-- 
 -- 
 js
 suse labs
