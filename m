@@ -1,184 +1,229 @@
-Received: from pv50p00im-ztdg10021201.me.com (pv50p00im-ztdg10021201.me.com [17.58.6.45])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B161E946C
-	for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 01:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722389301; cv=none; b=XHmWoph73uXRG3hizJ0lo6AAKOI+hZCPL5jt0bUESHmogfJ7ahnPlPd//mbJona7zgbeF5Ut+KA1FF9ko/cpJqXWnS8RVHLWR2anM8uyIqO7EhBBbcRO0vpmkfz/LsiZIJs7BKXUbrR/98m5Akcysl1lkcxOdn5CZtrASCLi904=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722389301; c=relaxed/simple;
-	bh=XoiFHRh5kSMydfHNzk7c6DRzmIVpis/amHTntELtn+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n5VGKHUzWEKhtICjCjmR2m94+fhfzFydZPXgoUleAAtgehfU6FX6FcbCOZopKd+a3QNs3ia+36GvrX0LW48XDUp1YouUOL+ORA0M9K4iU8PanKpBL6h/UVeCnuInJzyrqOiVUPZlveGIoQ7BPvTijso2QG2Fa8LCRFcHNf+a33c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=aZg12fmQ; arc=none smtp.client-ip=17.58.6.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B347748D
+	for <regressions@lists.linux.dev>; Wed, 31 Jul 2024 02:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722393359; cv=pass; b=t09Pkn3kavltXijvW6eKQ2qhFHbAe1af880w/wKaEdCAMPeyNHnA6YhCjV2SGvmndtNYLvjmX7CSWbp7qFVEp2/6YHhn5jTd02b3yhnGq3dTwKQStTg2IlivxW14otjT2BHV4MXWdUmljGu93gjnFfWWKpZ0DbYKeALI5aSmpHg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722393359; c=relaxed/simple;
+	bh=GIdOJPQRfuvBzAySs3qm01wZ2N2wnYcXbUj+wJsb+/k=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=bbgeIMoXD7k3eThmoBAiQveIUoEvLVQe8BlDkNL4INWnNVUQQQrqFeTc++7vutLkcbdKhQidXwJiwvXkQKQ0pzY8dxXVnhgogDu8b3a2Wg18Rf8nYiDWON6axAjauGhzeigJjpCkYxc4bDa46caCHZ/7sBaaK+PI5NESju6SX8E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=RSdwsk1b; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="aZg12fmQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1722389299;
-	bh=i5UjbYgpPHBxuJklrxlOsJ228mvCOcaNaWk9wClBz/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=aZg12fmQqlMWDdQdhj2VGowJ6PayeeyBF7hLaIu79u96VeX6djTfCk5eZ7+hWvtBD
-	 wOBHNH1DTq08JM3YLVLsZSzjEJOVo4LKKwtFFjDG/PeSJN7zShc+CH8TaSvbeH03TF
-	 yI2suSNTPzimkPtzj9vanuaWTSlk9Robf+7bGvYj982zmfJjrc+iMQ0H/PTqNBlkRL
-	 eMoyd2dJEJH+BwoUquqiHhA0zg27XwIv05yHoL/kPJFEnYXAtEjYLQ/i77Kp6/sU6C
-	 ttxKjGzyt3rCNZwKxPe9NDwCHd55DFcJy2Yl49iqW4CIyLxS5us/f2tTCl3E5fW8Gm
-	 K0JirLH1FwZsA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021201.me.com (Postfix) with ESMTPSA id 09ACB68022A;
-	Wed, 31 Jul 2024 01:28:15 +0000 (UTC)
-Message-ID: <3996ac6a-4b9b-4049-83e7-530eb49616de@icloud.com>
-Date: Wed, 31 Jul 2024 09:28:12 +0800
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="RSdwsk1b"
+Message-ID: <ac58f36e10af65cd672fba66e99faa2c@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1722393350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hxipKliiMKa/7DuRS/Ce+aaWDKWfZdaQQ+MuwSJ/gLo=;
+	b=RSdwsk1bsLjFB79Am7ykzAxpeYJ4t+b3Mwr+SNUq6OHhvcjuBJ4SGsRWP/HppoiR7r/aug
+	ZKXkUWD6um0DUNNCusxFTuJEL8OksMUJM/EeKUj8LgAB4B8p1xa7wI8x+f8DOrzvoGxg97
+	MCa0aSDc0BlvEXpH2AjB4lBZUkBTgyROqX9kSH4+SG5mlNBl9/3d2UsXd1+DGPb5jUuYtw
+	zU90YWR81boJ1WfhTW1wEWE9CkrVNNNgzLW206fU7sTDaw+LStWsTQDqFZP3EgnMJeCO6o
+	WWe8S1VqM4Tae62CmCRD1RijcTmdn6sG2A4hCqQ5ADMC1p3vc7S11s2lsLO0Rg==
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1722393350; a=rsa-sha256;
+	cv=none;
+	b=PgLeVlg6+YK4iaZFYEe8VGc1uiS74xKeG+fs5EQRAo4hwPJ+foDWBFPzhFFsXwuYycKGpq
+	J/S7ru3REO2KrBJfYzd9nagJpAglnI98Z8MWXubcRHoewDQzo2HozrFLZJQ7HVvzVCyvz6
+	sjqYvNjcMf+YFemNxZS3pXpMTKQ/m8LOtP++EuwMMHEXiW2bG1vNzZZmr4YJBjLXbeQO6x
+	i2xqVUEE0kYHTwZ5YfdVtSONAIKEugHWjafegHUjGid7VvatYIcCutBhFJfhebeIjYtU9o
+	pTeHQMwp/lkQ9iTJvqK2W9vGk+HeAS4QCYxONT8y2xFojNAnl/umbBwzAG+4OQ==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1722393350; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hxipKliiMKa/7DuRS/Ce+aaWDKWfZdaQQ+MuwSJ/gLo=;
+	b=TrnzLtVlOwnXYpjBdE07a3Sr+/CQXJXpemp91hkIRc2T08ZiKFhKuukwHDkTNmYgsoNq20
+	t3vaiFaYQCBh03lQ0+rKyIob3ltFMFynGjUd6r6l4o8auYDtj1vRQY/nZLDYbOp9JH/BlQ
+	/sMNyASQLJF7SZGsFwDzTJipz7NIufygp1aRqMFKFemm4s7DiBRxXAMwG9f59pkxOhqf+j
+	bQ/3RhNHEPQIQWIVf7svUV6Wmgd9yCOs3fWTlxis0/0ufSlqfCOHtAYZN/nTEW1kD1tjMu
+	gdNPkJ4TlU2VMLKFHJGCiVbw99lb6zvIQvevZ40owkcFOHcBigB1luMkQvtSeA==
+From: Paulo Alcantara <pc@manguebit.com>
+To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
+ <Sebastian.Steinbeisser@lrz.de>,
+ "tom@talpey.com" <tom@talpey.com>, "gregkh@linuxfoundation.org"
+ <gregkh@linuxfoundation.org>
+Cc: "smfrench@gmail.com" <smfrench@gmail.com>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
+In-Reply-To: <aed542086314197bcec6a50c7d6ee76cb6e65f96.camel@lrz.de>
+References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
+ <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
+ <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
+ <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
+ <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
+ <dd0259752e3557fa1b60dda4db3bf790d9ff877c.camel@lrz.de>
+ <4b718a0b9a967d4bc0428a3f706e3b15@manguebit.com>
+ <98d458ba-4258-4598-b8fc-0fe6cfeb2f87@talpey.com>
+ <2849de0676a015619b922708005a243595f9f56b.camel@lrz.de>
+ <6db3dbb8a7a6f4f5ed0f63d0e0c784c7@manguebit.com>
+ <8bf2462eb9aa4d30b866da57720a36c90c0a43df.camel@lrz.de>
+ <d208a9307b32ccf4d3fd7b08c6b95445@manguebit.com>
+ <aed542086314197bcec6a50c7d6ee76cb6e65f96.camel@lrz.de>
+Date: Tue, 30 Jul 2024 23:35:45 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: QCA6390 broken in current kernel
-To: Wren Turkal <wt@penguintechs.org>, Zijun Hu <zijun_hu@icloud.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
- Paul Menzel <pmenzel@molgen.mpg.de>
-References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
- <CABBYNZ+vVFUm1Tb+BvViYMJd6XQczTYPgyO++GGbCcWrkaC4Kg@mail.gmail.com>
- <30319168-9456-49dd-be27-480b2a068fe3@penguintechs.org>
- <1a519b2f-f5cf-40b3-8223-162dc04f8ca8@penguintechs.org>
- <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
- <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
- <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
- <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
- <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: aK8TWiCLMxNqUNkptQPKiZ2-SNKNmcsE
-X-Proofpoint-GUID: aK8TWiCLMxNqUNkptQPKiZ2-SNKNmcsE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-30_21,2024-07-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 mlxscore=0 bulkscore=0 clxscore=1011 malwarescore=0
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2407310009
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: multipart/mixed; boundary="=-=-="
 
-On 2024/7/31 04:12, Wren Turkal wrote:
-> Zijun,
-> 
-> On 7/30/24 12:48 PM, Wren Turkal wrote:
->> Zijun,
->>
->> On 7/30/24 12:26 PM, Wren Turkal wrote:
->>> On 7/29/24 9:25 AM, Zijun Hu wrote:
->>>> On 2024/7/27 03:25, Wren Turkal wrote:
->>>>> On 7/26/24 11:52 AM, Wren Turkal wrote:
->>>>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
->>>>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
->>>>>>>> Hi Wren,
->>>>>>>>
->>>>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
->>>>>>>> wrote:
->>>>>>>>>
->>>>>>>>> Hello BT folks,
->>>>>>>>>
->>>>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
->>>>>>>>> broken
->>>>>>>>> at least since commit 720261cfc732.
->>>>>>>>>
->>>>>>>>> The KDE and Gnome bluetooth control panels appear to think
->>>>>>>>> there is no
->>>>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
->>>>>>>>>
->>>>>>>>> I have a Dell XPS13 9310.
->>>>>>>>>
->>>>>>>>> I will attempt to capture some kernel logs in a bit.
->>>>>>>>
->>>>>>>> git show 720261cfc732
->>>>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or
->>>>>>>> path not
->>>>>>>> in the working tree.
->>>>>>>
->>>>>>> I gave you the sha for the built fedora rawhide kernel package,
->>>>>>> not a
->>>>>>> mainline sha. Sorry about that. I thought it was a mainline sha.
->>>>>>> I am
->>>>>>> trying to bisect the problem. Hopefully, I can get a mainline git
->>>>>>> sha
->>>>>>> for you soon.
->>>>>>>
->>>>>>> If it helps, the build date of the kernel is 2024-07-19.
->>>>>>>
->>>>>>> Sorry about the confusion. Hope this helps track down the problem.
->>>>>>
->>>>>> I have managed to get the following commit id range for the issue:
->>>>>> 80ab5445da6235..e2f710f97f35
->>>>>
->>>>> Narrowed to 80ab5445da6235..586f14a6a182
->>>>>
->>>> i feel a little sad that QCA6390 of your machine are broken again.
->>>> i find out a doubtful point by checking recent changes.
->>>>
->>>> you maybe have a attempt for below change if you would like to do that.
->>>> https://patchwork.kernel.org/project/bluetooth/patch/20240730-
->>>> qca6390_fix-v1-1-e0340a511756@icloud.com/
->>>>
->>>> thanks
->>>>
->>>>
->>>
->>> Yeah, I am sad that my bluetooth is broken again as well. I am trying
->>> your patch now to see if it gets my hardware working. Will reply back
->>> soon.
->>>
->>> wt
->>
->> This patch does not fix the problem. The first broken commit is
->> 9a15ce685706e73154. This patch effectively reverts only one part of
->> that patch.
->>
->> FTR, I applied this patch on top of the parent commit of the first
->> broken commit. I will try it on the tip of mainline as well.
-> 
-> This patch doesn't appear to apply cleanly to the current tip of
-> bluetooth-next/master, so I can't really go further in testing it right
-> now.
-> 
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-my aim is to known which commit cause this issue ASAP since i very care
-about QCA6390, now i got it, so don't need any further actions any more.
+Hi Sebastian,
 
-> Also, so you know, Bartosz has said that he is aware of the regression
-> and is working on it.
-> 
+Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
 
-i did not notice above info before my last reply, i did not see such
-info in this discussion thread until your reply as well.
+> Find the logs attached.
 
-BTW, you maybe add relevant link if you are referring something from
-another discussion thread.
+Thanks.
 
-> Zijun, you should talk the folks at qualcomm and see if there is any
-> appetite for getting closer to the Linaro folks with regard to this
-> stuff. You have been very eager to jump in, and I see that Bartosz and
-> Luis also seem interested in fixing this. I do wonder if there a way to
-> take advantage of that to build a better working relationship in this
-> bluetooth space with qualcomm and the linux kernel devs.
-> 
+Could you please try the attached patch instead?
 
-you maybe ignore that all my reply come from icloud.com, so you maybe
-not associate it with qualcomm, it is the first time for icloud.com to
-join BT relevant discussion. (^^)
+Whether it works or not, please provide new network traces and logs.
 
-> If qualcomm would be interested in hiring a tech person to help with
-> this stuff. I am definitely interested in helping in this area.
-> 
-> Thanks,
-> wt
+--=-=-=
+Content-Type: text/x-patch
+Content-Disposition: attachment;
+ filename=0001-smb-client-handle-lack-of-FSCTL_GET_REPARSE_POINT-su.patch
 
+From 667667048d5f2762689b19d8f2e99e3858abf259 Mon Sep 17 00:00:00 2001
+From: Paulo Alcantara <pc@manguebit.com>
+Date: Tue, 30 Jul 2024 23:07:45 -0300
+Subject: [PATCH] smb: client: handle lack of FSCTL_GET_REPARSE_POINT support
+
+As per MS-FSA 2.1.5.10.14, support for FSCTL_GET_REPARSE_POINT is
+optional and if the server doesn't support it,
+STATUS_INVALID_DEVICE_REQUEST must be returned for the operation.
+
+If we find files with reparse points and we can't parse them due to
+lack of client or server support, just ignore it and then treat them
+as regular files or junctions.
+
+Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+---
+ fs/smb/client/inode.c     | 17 +++++++++++++++--
+ fs/smb/client/reparse.c   |  4 ++++
+ fs/smb/client/reparse.h   | 19 +++++++++++++++++--
+ fs/smb/client/smb2inode.c |  2 ++
+ 4 files changed, 38 insertions(+), 4 deletions(-)
+
+diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
+index 4a8aa1de9522..dd0afa23734c 100644
+--- a/fs/smb/client/inode.c
++++ b/fs/smb/client/inode.c
+@@ -1042,13 +1042,26 @@ static int reparse_info_to_fattr(struct cifs_open_info_data *data,
+ 	}
+ 
+ 	rc = -EOPNOTSUPP;
+-	switch ((data->reparse.tag = tag)) {
+-	case 0: /* SMB1 symlink */
++	data->reparse.tag = tag;
++	if (!data->reparse.tag) {
+ 		if (server->ops->query_symlink) {
+ 			rc = server->ops->query_symlink(xid, tcon,
+ 							cifs_sb, full_path,
+ 							&data->symlink_target);
+ 		}
++		if (rc == -EOPNOTSUPP)
++			data->reparse.tag = IO_REPARSE_TAG_INTERNAL;
++	}
++
++	switch (data->reparse.tag) {
++	case 0: /* SMB1 symlink */
++		break;
++	case IO_REPARSE_TAG_INTERNAL:
++		rc = 0;
++		if (le32_to_cpu(data->fi.Attributes) & ATTR_DIRECTORY) {
++			cifs_create_junction_fattr(fattr, sb);
++			goto out;
++		}
+ 		break;
+ 	case IO_REPARSE_TAG_MOUNT_POINT:
+ 		cifs_create_junction_fattr(fattr, sb);
+diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
+index a0ffbda90733..689d8a506d45 100644
+--- a/fs/smb/client/reparse.c
++++ b/fs/smb/client/reparse.c
+@@ -505,6 +505,10 @@ bool cifs_reparse_point_to_fattr(struct cifs_sb_info *cifs_sb,
+ 	}
+ 
+ 	switch (tag) {
++	case IO_REPARSE_TAG_INTERNAL:
++		if (!(fattr->cf_cifsattrs & ATTR_DIRECTORY))
++			return false;
++		fallthrough;
+ 	case IO_REPARSE_TAG_DFS:
+ 	case IO_REPARSE_TAG_DFSR:
+ 	case IO_REPARSE_TAG_MOUNT_POINT:
+diff --git a/fs/smb/client/reparse.h b/fs/smb/client/reparse.h
+index 6b55d1df9e2f..2c0644bc4e65 100644
+--- a/fs/smb/client/reparse.h
++++ b/fs/smb/client/reparse.h
+@@ -12,6 +12,12 @@
+ #include "fs_context.h"
+ #include "cifsglob.h"
+ 
++/*
++ * Used only by cifs.ko to ignore reparse points from files when client or
++ * server doesn't support FSCTL_GET_REPARSE_POINT.
++ */
++#define IO_REPARSE_TAG_INTERNAL ((__u32)~0U)
++
+ static inline dev_t reparse_nfs_mkdev(struct reparse_posix_data *buf)
+ {
+ 	u64 v = le64_to_cpu(*(__le64 *)buf->DataBuffer);
+@@ -78,10 +84,19 @@ static inline u32 reparse_mode_wsl_tag(mode_t mode)
+ static inline bool reparse_inode_match(struct inode *inode,
+ 				       struct cifs_fattr *fattr)
+ {
++	struct cifsInodeInfo *cinode = CIFS_I(inode);
+ 	struct timespec64 ctime = inode_get_ctime(inode);
+ 
+-	return (CIFS_I(inode)->cifsAttrs & ATTR_REPARSE) &&
+-		CIFS_I(inode)->reparse_tag == fattr->cf_cifstag &&
++	/*
++	 * Do not match reparse tags when client or server doesn't support
++	 * FSCTL_GET_REPARSE_POINT.  @fattr->cf_cifstag should contain correct
++	 * reparse tag from query dir response but the client won't be able to
++	 * read the reparse point data anyway.  This spares us a revalidation.
++	 */
++	if (cinode->reparse_tag != IO_REPARSE_TAG_INTERNAL &&
++	    cinode->reparse_tag != fattr->cf_cifstag)
++		return false;
++	return (cinode->cifsAttrs & ATTR_REPARSE) &&
+ 		timespec64_equal(&ctime, &fattr->cf_ctime);
+ }
+ 
+diff --git a/fs/smb/client/smb2inode.c b/fs/smb/client/smb2inode.c
+index 5c02a12251c8..062b86a4936f 100644
+--- a/fs/smb/client/smb2inode.c
++++ b/fs/smb/client/smb2inode.c
+@@ -930,6 +930,8 @@ int smb2_query_path_info(const unsigned int xid,
+ 
+ 	switch (rc) {
+ 	case 0:
++		rc = parse_create_response(data, cifs_sb, &out_iov[0]);
++		break;
+ 	case -EOPNOTSUPP:
+ 		/*
+ 		 * BB TODO: When support for special files added to Samba
+-- 
+2.45.2
+
+
+--=-=-=--
