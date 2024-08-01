@@ -1,109 +1,265 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7BF183CC2
-	for <regressions@lists.linux.dev>; Thu,  1 Aug 2024 16:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722529542; cv=pass; b=omhBTXM07RwQTZeTPxWj8SfRdbEQc7aQeojnVuuFVzpo9/FcXc9CYsNuF2Cxat6ZeFvSAs/qiyYg6E8qWeBZ/UKXvp5K/MuX3okGKcfcaSYCHFLv6JtAnXJyIESf7ZeuJF6wyQZcZUQlR5ZQp+ES5GToR42evdmTzUAHWrD8eOg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722529542; c=relaxed/simple;
-	bh=zQPo2zJcwoNEbYJLVtndtzeqqUhTziU9DHdmAZIqyrg=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=SP2PBTQSB29golIe3LA29CTgl7uw+DSukIyL5/6zGFWqzhwwielwMoYrIgc5ndAVoR+a8p/1ZYIRv4wVGcp1GhvcKFH6ZpLAepWQr4IXDTulJZCRYBD93R/SFNA84HQxkzg+MgZSftb1KAFMlXoTlhktFTh6LVd8bVAd26cF0Tk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=HU6/RmqV; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896D61B8EAD;
+	Thu,  1 Aug 2024 16:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722531506; cv=none; b=iKkDz6nasPIz/lKf8x164zSyb1bV0kgMiGystqpMPNd4Qg0rCQNWyxZ9AhjljfnrLJm0rVMTnOMcJG/4NuMR7gXgcCsjEiGVa0KbfYyhwHpPuQta9ah2JEAXwZSKJZzBhP2dGhUK1esULhFCQ1FaoSYmiJXG3xaxvQeim0Q+BSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722531506; c=relaxed/simple;
+	bh=ZI34vjqxI7yPIRPabWzSdrt1Lzynw0RymZUQcWX0qXY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qlpYLgryRA+nu7IrKfGsIQiRII9it0AzQhAZ3OjQQS2thCzHdChxqKVbl68GMFmkQp7J9an8n3nVOrcJjDn/CXST5ozH/Lxo78RH8UcXnSQ2jZf6HlcCwVHSrpFRClWimZpYxAYpZfIubB38Ah7HtUpXXkw3F8v6xqadojbwLy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=U4mKjoyQ; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="HU6/RmqV"
-Message-ID: <c095559def052b738f040ffb52400e75@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1722529532;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PjhXgEerCShU5LYVdSkfuK0ArlHKeZ3+kVUKZObqmIk=;
-	b=HU6/RmqVZRBADAtop5FvUm4HqnIZZPkvgoh7xOKktO8hotxg21VM9puwhUAIKHkP9QPeyk
-	R8wk2JFsFMDBZmHCJmkV8asxD8zq0Do6G1V2x14Ut0Z/DoNE8sft2sqXU4vfKo874K80II
-	Yv40WtQ8jMHZ/ojji9KT6TAYBogwMi0DC5JoeLaq9T9CCsz7A9RaHsTzk8ciifziCLflmV
-	OgewSGIGM5vDY00TWmQLbzRxd2hHRtwegN4mFba+qMu8SxCLg6g4utQ56812Uaf55Qeu84
-	jJ23EgnfsgLo6taa5IPPwtZUtfPxw+zOotxdFY2h+jzf5zTkqRcODbqabquFyg==
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1722529532; a=rsa-sha256;
-	cv=none;
-	b=eZnG6W+ya/a7xMkEtci+QXYT3VpX7RiMeOK1uAbGA6/aAkZOxqp/sPo2r2EhtY/q/IgtBa
-	XCX1rURzc/BztPS8rauxH7avkx7UTRkQi9jVlb1llHW4zGLh07HBnyQ9qDcSw0En4QaVW+
-	94Ry4tH8dQfHHCACoUHYicV8IPE/PLrpZPmdZr9cx1qtrIxUE+cDNxHgv1ls2K5LcOqf2y
-	7xFt7Nmm9yTSOaqI+XzbQNVBNGrJomPHoz7fxO11yt4t7Avd3NzVNMtTVVNIHEqnEp/lfd
-	kBzxvrZX1jpVFKISH+DJNMxaoKhhThjkbSK/o4i9z+pQmGZp/TJMUVxLwoHqkw==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1722529532; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PjhXgEerCShU5LYVdSkfuK0ArlHKeZ3+kVUKZObqmIk=;
-	b=KxjlrVidK2sW0+GRgglPugj6vQnOqqaPKaEr97M9ow5+P8IJtXrTLukBXQHXSsHY/z0HDS
-	XCW/zDR2WpI1TBT742OfkVwyx+h1sZ3SdXJ1PHG4CDOPwy7qKyyu4ZMJ7vprpqqlPLcE7C
-	UtWhMajvqxycFi96c4KrkJyt6uW0HiBOERcOzBlSY4HMiNaj6PUj+W3Rs8xrhd/UiAAH4+
-	r6P6aYbdtPs3+5/Wb0z3kr956ZkprUW6TlFFfvl6JM5fgp0BNhJGLjM5UWJVMgF+cU779u
-	uw4TL9QVjJIVU5K0q+rMg6VBDUWAUTkpwtircCBiIQqO6Z98MDuVx8wqc6YyAg==
-From: Paulo Alcantara <pc@manguebit.com>
-To: =?utf-8?Q?Steinbei=C3=9Fer=2C_Sebastian?=
- <Sebastian.Steinbeisser@lrz.de>,
- "tom@talpey.com" <tom@talpey.com>, "gregkh@linuxfoundation.org"
- <gregkh@linuxfoundation.org>
-Cc: "smfrench@gmail.com" <smfrench@gmail.com>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: Potential smb/dfs regression introduced in kernel 6.6
-In-Reply-To: <7be5122d65dabd96a28a71678ca0efb93cbe749f.camel@lrz.de>
-References: <dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de>
- <f3a02647b6fcb27a70da4c334930ad3c@manguebit.com>
- <9654b28ff276b5b78ffcc3078bd4dd1ccf80ec73.camel@lrz.de>
- <5210f9e7b720dc1d150bd2ebd9f4edadf39685aa.camel@lrz.de>
- <0ff960c2bde0f213cc9b7ef98b993bfb@manguebit.com>
- <dd0259752e3557fa1b60dda4db3bf790d9ff877c.camel@lrz.de>
- <4b718a0b9a967d4bc0428a3f706e3b15@manguebit.com>
- <98d458ba-4258-4598-b8fc-0fe6cfeb2f87@talpey.com>
- <2849de0676a015619b922708005a243595f9f56b.camel@lrz.de>
- <6db3dbb8a7a6f4f5ed0f63d0e0c784c7@manguebit.com>
- <8bf2462eb9aa4d30b866da57720a36c90c0a43df.camel@lrz.de>
- <d208a9307b32ccf4d3fd7b08c6b95445@manguebit.com>
- <aed542086314197bcec6a50c7d6ee76cb6e65f96.camel@lrz.de>
- <ac58f36e10af65cd672fba66e99faa2c@manguebit.com>
- <1359665240338585cfbc4eac58339ab1d0423788.camel@lrz.de>
- <ff47edb26e0cd9e591cfb3ece2407971202dfc09.camel@lrz.de>
- <ff56ae33c66856c0cf21b4049dc84bcb@manguebit.com>
- <7be5122d65dabd96a28a71678ca0efb93cbe749f.camel@lrz.de>
-Date: Thu, 01 Aug 2024 13:25:28 -0300
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="U4mKjoyQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1722531483; x=1723136283; i=spasswolf@web.de;
+	bh=/mOvDuH31mixq8nqy0ztmB/EKm8jqbrQctqS6v/XGl4=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U4mKjoyQD1o4dzNCNr9scDcazpaq9vzTzqwAIrOlZtGiqkipn7nNazIioeNpfevU
+	 NRzdsCKMeEQ+Z40wXp5ZieUsD+yel1WpOuiN/S7CWck/anSjy8vjG5AXVU9YeUZyL
+	 nkfyAEJB2FQ5n5jCnVwyE8L4vyg0bESE0jnM1BV46FcfjQqFV7NEDXmsRnL66G4cc
+	 9ZxAIydFfH7m3798xPU6zgnU75OnxSRjCViv2UVkepuOisO+Qxf9uQjGAW8HQuVKi
+	 qokwuWGYNUiRLI5vDEjSGCr0x7olEg+t33qYFimAkBt2visF5sPQHHKnCtsBXLy5Q
+	 h76tUz8UnpvgeNEYkg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([84.119.92.193]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MA4fW-1sNyHQ3dNK-00GIJj; Thu, 01
+ Aug 2024 18:58:02 +0200
+Message-ID: <f7197c55d059cc8ddbf6c3def16dc414c5ec0b42.camel@web.de>
+Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
+ mt792x_mac_link_bss_remove
+From: Bert Karwatzki <spasswolf@web.de>
+To: Mike Lothian <mike@fireburn.co.uk>, Linux regressions mailing list
+	 <regressions@lists.linux.dev>
+Cc: sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com, 
+	sean.wang@mediatek.com, deren.wu@mediatek.com, mingyen.hsieh@mediatek.com, 
+	linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	spasswolf@web.de
+Date: Thu, 01 Aug 2024 18:57:59 +0200
+In-Reply-To: <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
+References: <20240718234633.12737-1-sean.wang@kernel.org>
+	 <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
+	 <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:D3ZiO6A7SyYNsUkH17ivk05uxqWGmmscTUBsY/AOcrC5RuMrT9K
+ CbNBBA4ZruAfvfY8wUFkzDT45mlqCvfggfg3YZq5tEg9o805u9jVUNX4ulwtuhalb5tNl9s
+ +mDvJc0HzpHFB+vq1jx3zzt+IZdFmDcnyG+YBAF+ogJBGNLwL2+1suNhou0qx3VmdwcdvrG
+ 5TDewtw6rwiWP7JL+Zw0Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:oYKo5puL6Lk=;pFwf0KR/IgHvFXZB4lSx2li+qzq
+ RYDg2y1DARSMaCFYZ4FQK4w9ghuH5z3OUwYSCZXn1AXitARfJuZR6Gcikva/ttGI1SxSufTFJ
+ dSxAEAm1y/RunSMGNaNW1Uzl50jruC47vMZ5xStR8moUHnA5mHjbKE+k/h1t2tK/yr16+Hw17
+ j2lfn3yeuzrcMM3Q922lPkOH0ZgKIFtNie0t20NO2Dz4BWp4N1Z/uHJkvnYpxbJONtTm4c40H
+ VFzx9rHgzLBp+4Xonv/fQ+1NUCU58gu16hhC/x1EB2Rl6IBzervuKK7fpGy/v6A0lMcVfSvoQ
+ Kys+CKFdLhAMVGOU7QL/euYRVi1dnFvg8efxyUFBulYEsLtH75wUjI7i/FweCf3pzsWo4b43D
+ yozZzBZdPtZXRZjOIIzedRmgVZjJiOwNuHMcBcsZpk1m3aVu9h/dAdMrOid88QlrHZSLpuAZK
+ Y98RsABvF3nMPc936BiOs8ghIcrbcz2OvqGcZX2tjT1a/1oAhY1zGH8+9XWjcIYOnf2EwJb1v
+ 0XKIfoCUsO+PZ0T9HlmQJdbj80bDcQdrn4/yLkNgY7EN5Jp2HKkkweeFBFelO14bZlTyOWLls
+ k9KEO2WuJ/R+MQqcdRAONrcWq9Qwbv+a/2XfmNq7fT4DdxZxOlwhAPiDc0w0ePPd+z4pohbM/
+ Kl4es/upSdtqjmnV1xGdUgNiIllWwE4XvBcjVDEAevMupKA/FKX9twFXLibIWLo4tyhvs8X+W
+ XmLAZ1zufycXjOT50vkHhj8RtmT6tRHU79YyzYCMIxyjVLTRvcyKpiMbfm2/Cdy3nar3av5Iw
+ yoPSyti/Gq1CI6SRXG38mMuA==
 
-Hi Sebastian,
+Am Donnerstag, dem 01.08.2024 um 13:38 +0100 schrieb Mike Lothian:
+> I also saw the following after I restarted my router on two machines -
+> they both have this fix applied already:
+>
+> Aug 01 08:59:33 quark kernel: BUG: kernel NULL pointer dereference,
+> address: 0000000000000008
+> Aug 01 08:59:33 quark kernel: #PF: supervisor read access in kernel mode
+> Aug 01 08:59:33 quark kernel: #PF: error_code(0x0000) - not-present page
+> Aug 01 08:59:33 quark kernel: PGD 0 P4D 0
+> Aug 01 08:59:33 quark kernel: Oops: Oops: 0000 [#1] PREEMPT SMP
+> Aug 01 08:59:33 quark kernel: CPU: 13 UID: 0 PID: 468 Comm:
+> NetworkManager Not tainted 6.11.0-rc1-tip+ #3200
+> 9c927d6f3c59d826d15d8e39c195392d1d16b8a8
+> Aug 01 08:59:33 quark kernel: Hardware name: Micro Computer (HK) Tech
+> Limited EliteMini Series/HPBSD, BIOS 1.02 03/28/2024
+> Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+> Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+> 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+> 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
+> c6 44 24 07 00 66 c7
+> Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 0001028=
+2
+> Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+> ffff888106740920 RCX: 0000000000000000
+> Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+> ffff88810bb35ca0 RDI: ffff888106854a68
+> Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+> 0000000000000000 R09: ffff888104c98200
+> Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+> 0000000000000020 R12: 0000000000000002
+> Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> ffff888106854800 R15: ffff888106854a68
+> Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+> GS:ffff888c2df40000(0000) knlGS:0000000000000000
+> Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008=
+0050033
+> Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+> 0000000117250000 CR4: 0000000000350ef0
+> Aug 01 08:59:33 quark kernel: Call Trace:
+> Aug 01 08:59:33 quark kernel:  <TASK>
+> Aug 01 08:59:33 quark kernel:  ? __die_body+0x66/0xb0
+> Aug 01 08:59:33 quark kernel:  ? page_fault_oops+0x39a/0x410
+> Aug 01 08:59:33 quark kernel:  ? exc_page_fault+0x59/0xa0
+> Aug 01 08:59:33 quark kernel:  ? asm_exc_page_fault+0x22/0x30
+> Aug 01 08:59:33 quark kernel:  ? mt7921_ipv6_addr_change
+> Aug 01 08:59:33 quark kernel:  ? __try_to_del_timer_sync
+> Aug 01 08:59:33 quark kernel:  ieee80211_ifa6_changed+0x68/0x120
+> Aug 01 08:59:33 quark kernel:  atomic_notifier_call_chain+0x45/0xc0
+> Aug 01 08:59:33 quark kernel:  addrconf_ifdown+0x521/0x7d0
+> Aug 01 08:59:33 quark kernel:  addrconf_notify+0x1ed/0x4a0
+> Aug 01 08:59:33 quark kernel:  raw_notifier_call_chain+0x45/0xb0
+> Aug 01 08:59:33 quark kernel:  __dev_notify_flags+0xf4/0x200
+> Aug 01 08:59:33 quark kernel:  dev_change_flags+0x49/0x50
+> Aug 01 08:59:33 quark kernel:  do_setlink+0x49b/0x1300
+> Aug 01 08:59:33 quark kernel:  ? terminate_walk+0x6b/0x100
+> Aug 01 08:59:33 quark kernel:  ? __nla_validate_parse
+> Aug 01 08:59:33 quark kernel:  ? filename_lookup+0xc7/0x1b0
+> Aug 01 08:59:33 quark kernel:  rtnl_newlink+0xb6a/0xde0
+> Aug 01 08:59:33 quark kernel:  ? __wake_up_sync_key+0x51/0x80
+> Aug 01 08:59:33 quark kernel:  ? scm_destroy+0xc/0x30
+> Aug 01 08:59:33 quark kernel:  ? security_capable+0x38/0x50
+> Aug 01 08:59:33 quark kernel:  rtnetlink_rcv_msg+0x2dd/0x330
+> Aug 01 08:59:33 quark kernel:  ? select_task_rq_fair
+> Aug 01 08:59:33 quark kernel:  ? rtnetlink_bind+0x30/0x30
+> Aug 01 08:59:33 quark kernel:  netlink_rcv_skb+0xb5/0xf0
+> Aug 01 08:59:33 quark kernel:  netlink_unicast+0x230/0x330
+> Aug 01 08:59:33 quark kernel:  netlink_sendmsg+0x3b1/0x460
+> Aug 01 08:59:33 quark kernel:  ____sys_sendmsg
+> Aug 01 08:59:33 quark kernel:  ? chacha_block_generic+0x6a/0x130
+> Aug 01 08:59:33 quark kernel:  ___sys_sendmsg+0x282/0x2a0
+> Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> Aug 01 08:59:33 quark kernel:  __se_sys_sendmsg+0xf4/0x120
+> Aug 01 08:59:33 quark kernel:  do_syscall_64+0x7e/0x130
+> Aug 01 08:59:33 quark kernel:  ? pollwake+0x52/0x60
+> Aug 01 08:59:33 quark kernel:  ? do_task_dead+0x50/0x50
+> Aug 01 08:59:33 quark kernel:  ? __wake_up_locked_key+0x48/0x70
+> Aug 01 08:59:33 quark kernel:  ? eventfd_write+0x193/0x1b0
+> Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> Aug 01 08:59:33 quark kernel:  ? vfs_write+0xfa/0x3d0
+> Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> Aug 01 08:59:33 quark kernel:  ? ksys_write+0x8f/0xb0
+> Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x5=
+0
+> Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x5=
+0
+> Aug 01 08:59:33 quark kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> Aug 01 08:59:33 quark kernel: RIP: 0033:0x7f4264d31fae
+> Aug 01 08:59:33 quark kernel: Code: 20 89 54 24 1c 48 89 74 24 10 89
+> 7c 24 08 e8 a9 75 f7 ff 41 89 c0 8b 54 24 1c 48 8b 74 24 10 b8 2e 00
+> 00 00 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 3a 44 89 c7 48 89 44 24
+> 08 e8 fd 75 f7 ff 48
+> Aug 01 08:59:33 quark kernel: RSP: 002b:00007ffff4b1afa0 EFLAGS:
+> 00000293 ORIG_RAX: 000000000000002e
+> Aug 01 08:59:33 quark kernel: RAX: ffffffffffffffda RBX:
+> 000055c35260c570 RCX: 00007f4264d31fae
+> Aug 01 08:59:33 quark kernel: RDX: 0000000000000000 RSI:
+> 00007ffff4b1afe0 RDI: 000000000000000d
+> Aug 01 08:59:33 quark kernel: RBP: 00007ffff4b1b050 R08:
+> 0000000000000000 R09: 0000000000000000
+> Aug 01 08:59:33 quark kernel: R10: 000000000000009d R11:
+> 0000000000000293 R12: 0000000000000004
+> Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> 0000000000000000 R15: 0000000000000000
+> Aug 01 08:59:33 quark kernel:  </TASK>
+> Aug 01 08:59:33 quark kernel: Modules linked in:
+> Aug 01 08:59:33 quark kernel: CR2: 0000000000000008
+> Aug 01 08:59:33 quark kernel: ---[ end trace 0000000000000000 ]---
+> Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+> Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+> 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+> 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
+> c6 44 24 07 00 66 c7
+> Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 0001028=
+2
+> Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+> ffff888106740920 RCX: 0000000000000000
+> Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+> ffff88810bb35ca0 RDI: ffff888106854a68
+> Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+> 0000000000000000 R09: ffff888104c98200
+> Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+> 0000000000000020 R12: 0000000000000002
+> Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> ffff888106854800 R15: ffff888106854a68
+> Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+> GS:ffff888c2df40000(0000) knlGS:0000000000000000
+> Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008=
+0050033
+> Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+> 0000000117250000 CR4: 0000000000350ef0
+>
+> On Wed, 24 Jul 2024 at 10:36, Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> >
+> >
+> > On 19.07.24 01:46, sean.wang@kernel.org wrote:
+> > > From: Sean Wang <sean.wang@mediatek.com>
+> > >
+> > > Fix null pointer access in mt792x_mac_link_bss_remove.
+> > >
+> > > To prevent null pointer access, we should assign the vif to bss_conf=
+ in
+> > > mt7921_add_interface. This ensures that subsequent operations on the=
+ BSS
+> > > can properly reference the correct vif.
+> > >
+> > > [...]
+> > > > Fixes: 1541d63c5fe2 ("wifi: mt76: mt7925: add
+> > mt7925_mac_link_bss_remove to remove per-link BSS")
+> > > Reported-by: Bert Karwatzki <spasswolf@web.de>
+> > > Closes: https://lore.kernel.org/linux-wireless/2fee61f8c903d02a900ca=
+3188c3742c7effd102e.camel@web.de/#b
+> > > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> >
+> > TWIMC, Mike (now CCed) ran into the problem and on bugzilla confirmed
+> > that this fixes the problem:
+> >
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D219084
+> > https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZkZF9p=
+z37Bmh2iw@mail.gmail.com/
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
+t)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:d
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.
 
-Steinbei=C3=9Fer, Sebastian	<Sebastian.Steinbeisser@lrz.de> writes:
+The fix to this issue has been posted here by Felix Fietkau:
+> Am Mittwoch, dem 17.07.2024 um 17:25 +0200 schrieb Felix Fietkau:
+>
+> This change should fix it: https://nbd.name/p/0747f54f
+> Please test.
+>
+> Thanks,
+>
+> - Felix
 
-> thank you! I've poked our NetApp rep. again hoping to get some
-> technical answers out of them finally ;)
-
-No worries.  I've been there :-)
-
-> With the additional patch applied I can access signed & encrypted
-> shares as well as the test share from which the logs are attached.
-
-Thanks!  This just confirms that FSCTL_GET_REPARSE_POINT against NetApp
-indeed requires the FILE_READ_EA bit being set and it has never worked
-since then.
-
-I'll send an additional fix shortly to make FSCTL_GET_REPARSE_POINT work
-against NetApp.  I've tested it against Windows Server 2022 and it works
-with FILE_READ_EA bit set as well.
+Bert Karwatzki
