@@ -1,208 +1,232 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3450157A5C
-	for <regressions@lists.linux.dev>; Thu,  1 Aug 2024 07:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C7196DA1
+	for <regressions@lists.linux.dev>; Thu,  1 Aug 2024 12:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722498804; cv=none; b=qphf2fjfWIMlnXvevkU0qR3PBIDVcZtNba9vYreaZPEsvoN+IP01IUjC3Wge9HUSlA5efxPYVykmXVvzAWLzPbDIgV9LA4xDQHPChtysWwpcLH7qW753856lAdYzDG+6PMiggDzmY67xybO4MeVBSvQSR37MaiMz2Q44Mx7xsDU=
+	t=1722515950; cv=none; b=frwXfcwuYcGZ3VX75+ZDuy1vdvZ+S82xcfNyRidAEAZG8Bx3ou+/g8MfwTs9089yDJykCnAfY2qWwTCit5UdMmFgjNOiu0f4rjHDdc/rEAVr1UItoDNsYishM5AQ2yvMZ2qrfNt+oofo9UjoEmZMUqbyaw6v31gBS5stju2gM8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722498804; c=relaxed/simple;
-	bh=1vMAoAs0mZsaXqJKrSidydDhDckA/Xhiuk4iUkA+y3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VATFjq+5cXGTTtdrXCu4Be7v2h49Z+VaFDVNSo+X2UWpTeRcQk/jl4hrPpG3QaVlCKdMAOgToQaQT6Rbp3vUaynV4tKir3XPUWTJF8t1nc8M55bzQ6FT/2p2juFHU69ufxsR5Go8pp3TG1HfoYl1Egk6k4yRZxxxbxr76jyK69U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org; spf=pass smtp.mailfrom=penguintechs.org; dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b=jPT0P4P0; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=penguintechs.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=penguintechs.org
+	s=arc-20240116; t=1722515950; c=relaxed/simple;
+	bh=zcVFHyUhhqksUdY+DtBXCI0/oWDesYhI7MXAVS7mOBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hDDa1AAWnR/BM8UKl5DWMK4A1CmWFFRNzVzyhLqbXyGfj7N7uaeq5udC9Xf9cvnaN1HHgUDnYmB3CC+4XIPtRu46toSZ648bU1oPHBuzNHtd1UV8w0p/raFiTDf7bTX16zFWv2p/FKe+4mJ49tk9GbjJS8RTmUB9XvqwXtZ9VZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk; spf=none smtp.mailfrom=fireburn.co.uk; dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b=Sk856xs8; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fireburn.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=penguintechs.org header.i=@penguintechs.org header.b="jPT0P4P0"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70d18112b60so1480005b3a.1
-        for <regressions@lists.linux.dev>; Thu, 01 Aug 2024 00:53:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b="Sk856xs8"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc47abc040so47231005ad.0
+        for <regressions@lists.linux.dev>; Thu, 01 Aug 2024 05:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=penguintechs.org; s=google; t=1722498802; x=1723103602; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xGB/2XQq/7ZCXGPIPBVqSmNziWCjEOy2DmhtcCr21Vk=;
-        b=jPT0P4P0YU1JYvxru3B/aZVJAVbFCk4nRE31F4tKycCTFdJs67r6VjD2B8ObD8NXUw
-         dWaicrRmr1LMgZvesJrxFoUF97kW6VRPqEUwxJT3ZSl3J3S42iP/wtnbofHGN6rmErMW
-         CABfOJOsWiWN86JgvM78N9JNVt/ZmYdSTuQjs=
+        d=fireburn-co-uk.20230601.gappssmtp.com; s=20230601; t=1722515948; x=1723120748; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MbYBU0g1PDFZ6+yRzVBM4s7sIwBVy5IXaPrCJ87cuSc=;
+        b=Sk856xs8criaSbgdb9xnWgQkjfnT/eo4aSTpNhW+inUr3sorv9hWPK+Lvlt/lHV3Nk
+         8AvM/Bj6HBF7AiWNELe9G8185YBElA2rkOM/I2Ojnp7a4HAMk4vni9DoLypHTgQHycZH
+         ylvnFNHXWkY8H/vHNTk2tkxjcKu6EQhjGc10FBXMJ5Hd8zjqpmxEylObohwKN7E5SjWX
+         8SUcZHlpf3yMFVZidTReBDaesn1KjveVaFiN9OaWFUrg14Q44VZwGN4kTBKVBn/zlOPv
+         WsS1HlGLpRBxVdxDu19D6+d8OWb3f5pfMFkICjb1kVMuN3UA05dfQBzUw+Yb1xUpQbAq
+         sx8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722498802; x=1723103602;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xGB/2XQq/7ZCXGPIPBVqSmNziWCjEOy2DmhtcCr21Vk=;
-        b=N0kohTtshc1wHkDWAHnipuRWB9cZ0WSn640tUD1g4F4ftKUk1YE7nrTpmL9NvXofJa
-         M+rtGaIwWYmGQYrKIUMX23E/IjnsVOYpWg3xv0CTsfP+lN7w5DatsAaw+c2pVe9UXqwC
-         GLE6YRT3XWhPhXP0m/WUeKsacbjnORyihBTQi8RZJb0QmPdSyLYqCFyWBMnGCsWj+nxq
-         HdD85H60fm8D/R4IYc2KcPqH2rJ880BwrOn1OTakhOj7VCDBAOFMTaVtTo0fCqGSCBuo
-         qpnt2YObCr0Jp8mc9nCwZ9YWcIk3UyTT11L8SYQsqBzatWDl+hIpgpHGshqlaL05JzBM
-         iyHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcowGcxcmUwDul+Zj92ET2uYbMNzau2USezbb/eYIhJj0KpKsqSCWCzjcvJ7ivorSfh0vyzHEx9GFh4LmSVqPpbj7ON+uM+wTDL6c=
-X-Gm-Message-State: AOJu0YysvIqKsKOjGwPZ5ioKvMojO+4xrRD2odEOtbDObKRYvsiGZdb7
-	hMDW2zFcBQnasxzplmeJ8lZVTwmvOLhrN9MnTLS4VH5PnvgS31uoVD3vbyUAaA==
-X-Google-Smtp-Source: AGHT+IFmZgorEuoJtBDUjF73dk7CdEGsO2rlcI03MN5SDR9x3EtpO2YEO0tLSB0swdVkb18+aia+GQ==
-X-Received: by 2002:a05:6a00:1302:b0:70d:26cd:9741 with SMTP id d2e1a72fcca58-71065ec3947mr891818b3a.12.1722498801831;
-        Thu, 01 Aug 2024 00:53:21 -0700 (PDT)
-Received: from ?IPV6:2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08? ([2601:646:8700:dd30:5f3e:5ba7:e0ea:9a08])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead715733sm10977195b3a.84.2024.08.01.00.53.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Aug 2024 00:53:21 -0700 (PDT)
-Message-ID: <9fd98bc2-d19a-4ad2-9f0a-02baae89ac08@penguintechs.org>
-Date: Thu, 1 Aug 2024 00:53:19 -0700
+        d=1e100.net; s=20230601; t=1722515948; x=1723120748;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MbYBU0g1PDFZ6+yRzVBM4s7sIwBVy5IXaPrCJ87cuSc=;
+        b=QGxpv+45SbhyK51WTQugA6Q/aNqCQzSvOCYHU7+/jVOgWBWzmahxjmNbmG5rzo76MW
+         fLCaB5Zvim+bUGnKSwMTjWOkK096ZFXBScJLGEMtt9Ci4kvXPDfgTO8oFoJs7OPwgw5X
+         ewN3L17ssitZxnNu0YA3dzULLSEydfyG8Lt8NpvNvlRSte8++RfQcP1B1NThQbkJEL+1
+         AEd7MCK/PJLL07kgy3vmumMXBIrtNU6wiaGtNrnSSIJ+1CZK20QicXN6p2irfvqTjcDB
+         rY4G0nesOp8xSTrZ63su+vkI0inuOSlakFrDkVsRCWG6Y9DXIZzFWGWY9qYUEju/PO8p
+         JsbQ==
+X-Gm-Message-State: AOJu0YzBeCQpsYhl304jyGSlfJEkDL+jjVKiWyabMzRDUYp1kTBGJvpW
+	2kCPiFAY7QlQcedkHPL+lsdgPfkc3OV5Xdj8/Uwl+ZYvsCQbzbwHyHdHdTDHpc1xLtKOXL4+Clj
+	iotQwAGCa7vqHWLbSKPpBf6X060tiiQ4YSJEHNvziC5Ay7rIvRxrb
+X-Google-Smtp-Source: AGHT+IFcAwRba/Wnq/d/tsC7gPw09U1eIez2hkzSdTwIOETKZUMnFEIqS0htBpssgcfUtPxxzgLZRtMlHGNpzqbH+Wg=
+X-Received: by 2002:a17:90a:6282:b0:2c9:a015:ac2e with SMTP id
+ 98e67ed59e1d1-2cff940e47fmr31681a91.14.1722515947772; Thu, 01 Aug 2024
+ 05:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: QCA6390 broken in current kernel
-To: Zijun Hu <zijun_hu@icloud.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
- Paul Menzel <pmenzel@molgen.mpg.de>
-References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
- <CABBYNZ+vVFUm1Tb+BvViYMJd6XQczTYPgyO++GGbCcWrkaC4Kg@mail.gmail.com>
- <30319168-9456-49dd-be27-480b2a068fe3@penguintechs.org>
- <1a519b2f-f5cf-40b3-8223-162dc04f8ca8@penguintechs.org>
- <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
- <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
- <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
- <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
- <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
- <3996ac6a-4b9b-4049-83e7-530eb49616de@icloud.com>
-Content-Language: en-US
-From: Wren Turkal <wt@penguintechs.org>
-In-Reply-To: <3996ac6a-4b9b-4049-83e7-530eb49616de@icloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240718234633.12737-1-sean.wang@kernel.org> <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
+In-Reply-To: <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
+From: Mike Lothian <mike@fireburn.co.uk>
+Date: Thu, 1 Aug 2024 13:38:56 +0100
+Message-ID: <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
+Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in mt792x_mac_link_bss_remove
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com, 
+	sean.wang@mediatek.com, deren.wu@mediatek.com, mingyen.hsieh@mediatek.com, 
+	linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	Bert Karwatzki <spasswolf@web.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Zijun,
+I also saw the following after I restarted my router on two machines -
+they both have this fix applied already:
 
-On 7/30/24 6:28 PM, Zijun Hu wrote:
-> On 2024/7/31 04:12, Wren Turkal wrote:
->> Zijun,
->>
->> On 7/30/24 12:48 PM, Wren Turkal wrote:
->>> Zijun,
->>>
->>> On 7/30/24 12:26 PM, Wren Turkal wrote:
->>>> On 7/29/24 9:25 AM, Zijun Hu wrote:
->>>>> On 2024/7/27 03:25, Wren Turkal wrote:
->>>>>> On 7/26/24 11:52 AM, Wren Turkal wrote:
->>>>>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
->>>>>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
->>>>>>>>> Hi Wren,
->>>>>>>>>
->>>>>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
->>>>>>>>> wrote:
->>>>>>>>>>
->>>>>>>>>> Hello BT folks,
->>>>>>>>>>
->>>>>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
->>>>>>>>>> broken
->>>>>>>>>> at least since commit 720261cfc732.
->>>>>>>>>>
->>>>>>>>>> The KDE and Gnome bluetooth control panels appear to think
->>>>>>>>>> there is no
->>>>>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
->>>>>>>>>>
->>>>>>>>>> I have a Dell XPS13 9310.
->>>>>>>>>>
->>>>>>>>>> I will attempt to capture some kernel logs in a bit.
->>>>>>>>>
->>>>>>>>> git show 720261cfc732
->>>>>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or
->>>>>>>>> path not
->>>>>>>>> in the working tree.
->>>>>>>>
->>>>>>>> I gave you the sha for the built fedora rawhide kernel package,
->>>>>>>> not a
->>>>>>>> mainline sha. Sorry about that. I thought it was a mainline sha.
->>>>>>>> I am
->>>>>>>> trying to bisect the problem. Hopefully, I can get a mainline git
->>>>>>>> sha
->>>>>>>> for you soon.
->>>>>>>>
->>>>>>>> If it helps, the build date of the kernel is 2024-07-19.
->>>>>>>>
->>>>>>>> Sorry about the confusion. Hope this helps track down the problem.
->>>>>>>
->>>>>>> I have managed to get the following commit id range for the issue:
->>>>>>> 80ab5445da6235..e2f710f97f35
->>>>>>
->>>>>> Narrowed to 80ab5445da6235..586f14a6a182
->>>>>>
->>>>> i feel a little sad that QCA6390 of your machine are broken again.
->>>>> i find out a doubtful point by checking recent changes.
->>>>>
->>>>> you maybe have a attempt for below change if you would like to do that.
->>>>> https://patchwork.kernel.org/project/bluetooth/patch/20240730-
->>>>> qca6390_fix-v1-1-e0340a511756@icloud.com/
->>>>>
->>>>> thanks
->>>>>
->>>>>
->>>>
->>>> Yeah, I am sad that my bluetooth is broken again as well. I am trying
->>>> your patch now to see if it gets my hardware working. Will reply back
->>>> soon.
->>>>
->>>> wt
->>>
->>> This patch does not fix the problem. The first broken commit is
->>> 9a15ce685706e73154. This patch effectively reverts only one part of
->>> that patch.
->>>
->>> FTR, I applied this patch on top of the parent commit of the first
->>> broken commit. I will try it on the tip of mainline as well.
->>
->> This patch doesn't appear to apply cleanly to the current tip of
->> bluetooth-next/master, so I can't really go further in testing it right
->> now.
->>
-> 
-> my aim is to known which commit cause this issue ASAP since i very care
-> about QCA6390, now i got it, so don't need any further actions any more.
-> 
->> Also, so you know, Bartosz has said that he is aware of the regression
->> and is working on it.
->>
-> 
-> i did not notice above info before my last reply, i did not see such
-> info in this discussion thread until your reply as well.
-> 
-> BTW, you maybe add relevant link if you are referring something from
-> another discussion thread.
+Aug 01 08:59:33 quark kernel: BUG: kernel NULL pointer dereference,
+address: 0000000000000008
+Aug 01 08:59:33 quark kernel: #PF: supervisor read access in kernel mode
+Aug 01 08:59:33 quark kernel: #PF: error_code(0x0000) - not-present page
+Aug 01 08:59:33 quark kernel: PGD 0 P4D 0
+Aug 01 08:59:33 quark kernel: Oops: Oops: 0000 [#1] PREEMPT SMP
+Aug 01 08:59:33 quark kernel: CPU: 13 UID: 0 PID: 468 Comm:
+NetworkManager Not tainted 6.11.0-rc1-tip+ #3200
+9c927d6f3c59d826d15d8e39c195392d1d16b8a8
+Aug 01 08:59:33 quark kernel: Hardware name: Micro Computer (HK) Tech
+Limited EliteMini Series/HPBSD, BIOS 1.02 03/28/2024
+Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
+c6 44 24 07 00 66 c7
+Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 00010282
+Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+ffff888106740920 RCX: 0000000000000000
+Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+ffff88810bb35ca0 RDI: ffff888106854a68
+Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+0000000000000000 R09: ffff888104c98200
+Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+0000000000000020 R12: 0000000000000002
+Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+ffff888106854800 R15: ffff888106854a68
+Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+GS:ffff888c2df40000(0000) knlGS:0000000000000000
+Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+0000000117250000 CR4: 0000000000350ef0
+Aug 01 08:59:33 quark kernel: Call Trace:
+Aug 01 08:59:33 quark kernel:  <TASK>
+Aug 01 08:59:33 quark kernel:  ? __die_body+0x66/0xb0
+Aug 01 08:59:33 quark kernel:  ? page_fault_oops+0x39a/0x410
+Aug 01 08:59:33 quark kernel:  ? exc_page_fault+0x59/0xa0
+Aug 01 08:59:33 quark kernel:  ? asm_exc_page_fault+0x22/0x30
+Aug 01 08:59:33 quark kernel:  ? mt7921_ipv6_addr_change
+Aug 01 08:59:33 quark kernel:  ? __try_to_del_timer_sync
+Aug 01 08:59:33 quark kernel:  ieee80211_ifa6_changed+0x68/0x120
+Aug 01 08:59:33 quark kernel:  atomic_notifier_call_chain+0x45/0xc0
+Aug 01 08:59:33 quark kernel:  addrconf_ifdown+0x521/0x7d0
+Aug 01 08:59:33 quark kernel:  addrconf_notify+0x1ed/0x4a0
+Aug 01 08:59:33 quark kernel:  raw_notifier_call_chain+0x45/0xb0
+Aug 01 08:59:33 quark kernel:  __dev_notify_flags+0xf4/0x200
+Aug 01 08:59:33 quark kernel:  dev_change_flags+0x49/0x50
+Aug 01 08:59:33 quark kernel:  do_setlink+0x49b/0x1300
+Aug 01 08:59:33 quark kernel:  ? terminate_walk+0x6b/0x100
+Aug 01 08:59:33 quark kernel:  ? __nla_validate_parse
+Aug 01 08:59:33 quark kernel:  ? filename_lookup+0xc7/0x1b0
+Aug 01 08:59:33 quark kernel:  rtnl_newlink+0xb6a/0xde0
+Aug 01 08:59:33 quark kernel:  ? __wake_up_sync_key+0x51/0x80
+Aug 01 08:59:33 quark kernel:  ? scm_destroy+0xc/0x30
+Aug 01 08:59:33 quark kernel:  ? security_capable+0x38/0x50
+Aug 01 08:59:33 quark kernel:  rtnetlink_rcv_msg+0x2dd/0x330
+Aug 01 08:59:33 quark kernel:  ? select_task_rq_fair
+Aug 01 08:59:33 quark kernel:  ? rtnetlink_bind+0x30/0x30
+Aug 01 08:59:33 quark kernel:  netlink_rcv_skb+0xb5/0xf0
+Aug 01 08:59:33 quark kernel:  netlink_unicast+0x230/0x330
+Aug 01 08:59:33 quark kernel:  netlink_sendmsg+0x3b1/0x460
+Aug 01 08:59:33 quark kernel:  ____sys_sendmsg
+Aug 01 08:59:33 quark kernel:  ? chacha_block_generic+0x6a/0x130
+Aug 01 08:59:33 quark kernel:  ___sys_sendmsg+0x282/0x2a0
+Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+Aug 01 08:59:33 quark kernel:  __se_sys_sendmsg+0xf4/0x120
+Aug 01 08:59:33 quark kernel:  do_syscall_64+0x7e/0x130
+Aug 01 08:59:33 quark kernel:  ? pollwake+0x52/0x60
+Aug 01 08:59:33 quark kernel:  ? do_task_dead+0x50/0x50
+Aug 01 08:59:33 quark kernel:  ? __wake_up_locked_key+0x48/0x70
+Aug 01 08:59:33 quark kernel:  ? eventfd_write+0x193/0x1b0
+Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+Aug 01 08:59:33 quark kernel:  ? vfs_write+0xfa/0x3d0
+Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+Aug 01 08:59:33 quark kernel:  ? ksys_write+0x8f/0xb0
+Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x50
+Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x50
+Aug 01 08:59:33 quark kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+Aug 01 08:59:33 quark kernel: RIP: 0033:0x7f4264d31fae
+Aug 01 08:59:33 quark kernel: Code: 20 89 54 24 1c 48 89 74 24 10 89
+7c 24 08 e8 a9 75 f7 ff 41 89 c0 8b 54 24 1c 48 8b 74 24 10 b8 2e 00
+00 00 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 3a 44 89 c7 48 89 44 24
+08 e8 fd 75 f7 ff 48
+Aug 01 08:59:33 quark kernel: RSP: 002b:00007ffff4b1afa0 EFLAGS:
+00000293 ORIG_RAX: 000000000000002e
+Aug 01 08:59:33 quark kernel: RAX: ffffffffffffffda RBX:
+000055c35260c570 RCX: 00007f4264d31fae
+Aug 01 08:59:33 quark kernel: RDX: 0000000000000000 RSI:
+00007ffff4b1afe0 RDI: 000000000000000d
+Aug 01 08:59:33 quark kernel: RBP: 00007ffff4b1b050 R08:
+0000000000000000 R09: 0000000000000000
+Aug 01 08:59:33 quark kernel: R10: 000000000000009d R11:
+0000000000000293 R12: 0000000000000004
+Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+0000000000000000 R15: 0000000000000000
+Aug 01 08:59:33 quark kernel:  </TASK>
+Aug 01 08:59:33 quark kernel: Modules linked in:
+Aug 01 08:59:33 quark kernel: CR2: 0000000000000008
+Aug 01 08:59:33 quark kernel: ---[ end trace 0000000000000000 ]---
+Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
+c6 44 24 07 00 66 c7
+Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 00010282
+Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+ffff888106740920 RCX: 0000000000000000
+Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+ffff88810bb35ca0 RDI: ffff888106854a68
+Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+0000000000000000 R09: ffff888104c98200
+Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+0000000000000020 R12: 0000000000000002
+Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+ffff888106854800 R15: ffff888106854a68
+Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+GS:ffff888c2df40000(0000) knlGS:0000000000000000
+Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+0000000117250000 CR4: 0000000000350ef0
 
-The discussion was in a another branch on this thread. I think I added 
-you to the discussion there.
-
->> Zijun, you should talk the folks at qualcomm and see if there is any
->> appetite for getting closer to the Linaro folks with regard to this
->> stuff. You have been very eager to jump in, and I see that Bartosz and
->> Luis also seem interested in fixing this. I do wonder if there a way to
->> take advantage of that to build a better working relationship in this
->> bluetooth space with qualcomm and the linux kernel devs.
->>
-> 
-> you maybe ignore that all my reply come from icloud.com, so you maybe
-> not associate it with qualcomm, it is the first time for icloud.com to
-> join BT relevant discussion. (^^)
-
-I'm sorry. I didn't realize you weren't associated with Qualcomm here. 
-Apologies.
-
->> If qualcomm would be interested in hiring a tech person to help with
->> this stuff. I am definitely interested in helping in this area.
->>
->> Thanks,
->> wt
-> 
-
--- 
-You're more amazing than you think!
-
+On Wed, 24 Jul 2024 at 10:36, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+>
+>
+> On 19.07.24 01:46, sean.wang@kernel.org wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> >
+> > Fix null pointer access in mt792x_mac_link_bss_remove.
+> >
+> > To prevent null pointer access, we should assign the vif to bss_conf in
+> > mt7921_add_interface. This ensures that subsequent operations on the BSS
+> > can properly reference the correct vif.
+> >
+> > [...]
+> >> Fixes: 1541d63c5fe2 ("wifi: mt76: mt7925: add
+> mt7925_mac_link_bss_remove to remove per-link BSS")
+> > Reported-by: Bert Karwatzki <spasswolf@web.de>
+> > Closes: https://lore.kernel.org/linux-wireless/2fee61f8c903d02a900ca3188c3742c7effd102e.camel@web.de/#b
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>
+> TWIMC, Mike (now CCed) ran into the problem and on bugzilla confirmed
+> that this fixes the problem:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=219084
+> https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZkZF9pz37Bmh2iw@mail.gmail.com/
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
