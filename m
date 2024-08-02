@@ -1,37 +1,36 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mr85p00im-ztdg06021701.me.com (mr85p00im-ztdg06021701.me.com [17.58.23.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7021C2327
-	for <regressions@lists.linux.dev>; Fri,  2 Aug 2024 12:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A6E1DF67E
+	for <regressions@lists.linux.dev>; Fri,  2 Aug 2024 12:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722600435; cv=none; b=Ffbpi7gj9NfAHPXBfS0p4gAGPSdGbJ82VUbfgogZVpCIOPxENiB23ad7gtx7Zagzcax50KgORt47LgqVwPhxLiAD5uYKLQJpo5lNajJNwLQPgXn/qMEnwFMNlyx9QuSdR7DMu4IF/HNUi187GNbWqr4Ek4cOrfS9rBDl7SY5nqg=
+	t=1722600517; cv=none; b=RMulm+J8JhYKhNd3BZ4QUnVjybSP3UB7yt6kIHem+CvlnbPJwqVGxXc1ZPcNMs9ybVbhqq1FiogkyA6/O+C1drAbrHJ9x3qDUJl3AIAT7ZR2zvCiEfQJ+uYN5azKDq6MZ29gL9GsW+VpEhXCQvKv85clc+rnEFgvCBt8lLGDy4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722600435; c=relaxed/simple;
-	bh=QBRkjrDckM68zEssK1/pk3DFZl3ezC4O4MyAx3z96sE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=TTrc7Xkv8KWNhxvFFpW8Voxzz1KpI7fTpTwAXTUNKpJDthNqkLg8fKMVl5//hcXbYSVXqf0+DZMqTYGWUvBotA4FD1YGlG52moLFYdIaJyhJXXuLv6OIuCSh/kdfufMrj+6okQC/5SQmFP0k4P21QtjbGml4REMo0tzxjr53wq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jAWRAR3o; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1722600517; c=relaxed/simple;
+	bh=89nulqnXxNwhGOlndsgyv3bH0m3zbFfHEdrmKz4/xVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j6/hUgKCPTMLH0DHCqT8tWtLWIyqv8qXOO8/kqXOTrRB4EWKCkZi00PUZvBFHXektLxo1g13Omblv1Gtrl2PhHiUu0VrhrNXXfIGwnB28oG08+Bx3nTIf/9ZQ53gItVjI7szDrHg0H27H6tH7H+ciK7r3u6UzKWyk2SEPPu9R8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=D2zIFqrl; arc=none smtp.client-ip=17.58.23.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jAWRAR3o"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=QBRkjrDckM68zEssK1/pk3DFZl3ezC4O4MyAx3z96sE=; t=1722600433;
-	x=1723032433; b=jAWRAR3ofw/j4WbGqrfAzrG0FppYLRfE71urNZWY7SVfHnO8HLS17XQms3Fah
-	AF/Om5UCKgEnxR292L+jJ78gH4106Sy5rxp/F3ChBGsxMiUkJC5FoGItUjTdVp55pKlGZXAPR3lTK
-	4ka8dXmditdSp3yCX9k5iBvzUeeyyeVBJbIq9LaMjVE8qsW15XHSCPfGZuTAPb8yHGxE+fr/I1mBp
-	Do55cy6Z52ke5hAWCZtCfO5DbpftM/OL2RiRNZY6YXnpxyP+OEnvhTfhverOCCEIvKojd9egQ1K5V
-	IFbFDEjarq7HhIcBMJg9VpQ/H4tbXrRotUoC0/xer88pr1Vhzg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sZr3v-0006Pl-LC; Fri, 02 Aug 2024 14:07:11 +0200
-Message-ID: <348fc7ae-a7ba-482b-a14d-a83b76637b89@leemhuis.info>
-Date: Fri, 2 Aug 2024 14:07:10 +0200
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="D2zIFqrl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1722600514;
+	bh=ZDCmrHFtysqSllvt/pIep85MEC+dACdY7R8MN51kJpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=D2zIFqrli3F3CZA9nFE4EpTDTVsuzPwpq+EQLpL0qE7u9UZbruQfeEZzALl5N9jVh
+	 qoMRv9PGkoEWKmg2UKsK22Gz/gP26Mq6G0Ropu2VpIP2ZGF2Fo0ikGktGXgw++CdBv
+	 Pe/9ZJZVd+lmIJIDF9AhXhnv//blRk6YPKAfvqYc30mFLGIP7JhKEliUiLl4DC1X8a
+	 RgGGsCTgG0LM8CPVVir12d2YbFH9K7KzKD0YvLMmuEixXeouQ32OP8iAVBnxLc9Mzm
+	 UsBMqjX5OtMDy7kv+SRLNQNs/gZlLgan29Kn1v9veiPyZZJt+Zi3dFUDHzKkVph/R2
+	 ApsHgCZ7svK4Q==
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06021701.me.com (Postfix) with ESMTPSA id 3D91526334E7;
+	Fri,  2 Aug 2024 12:08:31 +0000 (UTC)
+Message-ID: <34b74dbf-d57d-473a-93aa-ba970f4e4b7b@icloud.com>
+Date: Fri, 2 Aug 2024 20:08:25 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,43 +38,182 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: QCA6390 broken in current kernel
+To: Wren Turkal <wt@penguintechs.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+References: <27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org>
+ <CABBYNZ+vVFUm1Tb+BvViYMJd6XQczTYPgyO++GGbCcWrkaC4Kg@mail.gmail.com>
+ <30319168-9456-49dd-be27-480b2a068fe3@penguintechs.org>
+ <1a519b2f-f5cf-40b3-8223-162dc04f8ca8@penguintechs.org>
+ <21645f07-da90-4441-8dbb-d999298165e9@penguintechs.org>
+ <09962266-9b55-408b-8b5d-d2387c871eef@icloud.com>
+ <0940abda-fe74-4009-9a83-7384bb8cf103@penguintechs.org>
+ <1ff58133-7322-47fc-b3db-6fe4a697aefe@penguintechs.org>
+ <7e447839-4976-4d3b-aee5-c0961637deb5@penguintechs.org>
+ <3996ac6a-4b9b-4049-83e7-530eb49616de@icloud.com>
+ <9fd98bc2-d19a-4ad2-9f0a-02baae89ac08@penguintechs.org>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <9fd98bc2-d19a-4ad2-9f0a-02baae89ac08@penguintechs.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722600433;ca0f0a79;
-X-HE-SMSGID: 1sZr3v-0006Pl-LC
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: EiLxPi1gUcE58RVUAbJOSRjMY-Wu2Hqr
+X-Proofpoint-GUID: EiLxPi1gUcE58RVUAbJOSRjMY-Wu2Hqr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-02_08,2024-08-01_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 clxscore=1015 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2408020082
 
+On 2024/8/1 15:53, Wren Turkal wrote:
+> Zijun,
+> 
+> On 7/30/24 6:28 PM, Zijun Hu wrote:
+>> On 2024/7/31 04:12, Wren Turkal wrote:
+>>> Zijun,
+>>>
+>>> On 7/30/24 12:48 PM, Wren Turkal wrote:
+>>>> Zijun,
+>>>>
+>>>> On 7/30/24 12:26 PM, Wren Turkal wrote:
+>>>>> On 7/29/24 9:25 AM, Zijun Hu wrote:
+>>>>>> On 2024/7/27 03:25, Wren Turkal wrote:
+>>>>>>> On 7/26/24 11:52 AM, Wren Turkal wrote:
+>>>>>>>> On 7/25/24 1:47 PM, Wren Turkal wrote:
+>>>>>>>>> On 7/25/24 1:35 PM, Luiz Augusto von Dentz wrote:
+>>>>>>>>>> Hi Wren,
+>>>>>>>>>>
+>>>>>>>>>> On Thu, Jul 25, 2024 at 2:35 PM Wren Turkal <wt@penguintechs.org>
+>>>>>>>>>> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Hello BT folks,
+>>>>>>>>>>>
+>>>>>>>>>>> Just so y'all know, the QCA6390 bluetooth hardware appears to be
+>>>>>>>>>>> broken
+>>>>>>>>>>> at least since commit 720261cfc732.
+>>>>>>>>>>>
+>>>>>>>>>>> The KDE and Gnome bluetooth control panels appear to think
+>>>>>>>>>>> there is no
+>>>>>>>>>>> bluetooth hardware. Rolling back to 6.10 appear to function.
+>>>>>>>>>>>
+>>>>>>>>>>> I have a Dell XPS13 9310.
+>>>>>>>>>>>
+>>>>>>>>>>> I will attempt to capture some kernel logs in a bit.
+>>>>>>>>>>
+>>>>>>>>>> git show 720261cfc732
+>>>>>>>>>> fatal: ambiguous argument '720261cfc732': unknown revision or
+>>>>>>>>>> path not
+>>>>>>>>>> in the working tree.
+>>>>>>>>>
+>>>>>>>>> I gave you the sha for the built fedora rawhide kernel package,
+>>>>>>>>> not a
+>>>>>>>>> mainline sha. Sorry about that. I thought it was a mainline sha.
+>>>>>>>>> I am
+>>>>>>>>> trying to bisect the problem. Hopefully, I can get a mainline git
+>>>>>>>>> sha
+>>>>>>>>> for you soon.
+>>>>>>>>>
+>>>>>>>>> If it helps, the build date of the kernel is 2024-07-19.
+>>>>>>>>>
+>>>>>>>>> Sorry about the confusion. Hope this helps track down the problem.
+>>>>>>>>
+>>>>>>>> I have managed to get the following commit id range for the issue:
+>>>>>>>> 80ab5445da6235..e2f710f97f35
+>>>>>>>
+>>>>>>> Narrowed to 80ab5445da6235..586f14a6a182
+>>>>>>>
+>>>>>> i feel a little sad that QCA6390 of your machine are broken again.
+>>>>>> i find out a doubtful point by checking recent changes.
+>>>>>>
+>>>>>> you maybe have a attempt for below change if you would like to do
+>>>>>> that.
+>>>>>> https://patchwork.kernel.org/project/bluetooth/patch/20240730-
+>>>>>> qca6390_fix-v1-1-e0340a511756@icloud.com/
+>>>>>>
+>>>>>> thanks
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> Yeah, I am sad that my bluetooth is broken again as well. I am trying
+>>>>> your patch now to see if it gets my hardware working. Will reply back
+>>>>> soon.
+>>>>>
+>>>>> wt
+>>>>
+>>>> This patch does not fix the problem. The first broken commit is
+>>>> 9a15ce685706e73154. This patch effectively reverts only one part of
+>>>> that patch.
+>>>>
+>>>> FTR, I applied this patch on top of the parent commit of the first
+>>>> broken commit. I will try it on the tip of mainline as well.
+>>>
+>>> This patch doesn't appear to apply cleanly to the current tip of
+>>> bluetooth-next/master, so I can't really go further in testing it right
+>>> now.
+>>>
+>>
+>> my aim is to known which commit cause this issue ASAP since i very care
+>> about QCA6390, now i got it, so don't need any further actions any more.
+>>
+>>> Also, so you know, Bartosz has said that he is aware of the regression
+>>> and is working on it.
+>>>
+>>
+>> i did not notice above info before my last reply, i did not see such
+>> info in this discussion thread until your reply as well.
+>>
+>> BTW, you maybe add relevant link if you are referring something from
+>> another discussion thread.
+> 
+> The discussion was in a another branch on this thread. I think I added
+> you to the discussion there.
+> 
 
+actually, my first reply is earlier than the other branch of this thread
+as shown by below link (^^).
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/regressions/dd878fc236840921d3e31944e26694fed941d0c6.camel@lrz.de/
-#regzbot fix: smb: client: handle lack of FSCTL_GET_REPARSE_POINT support
-#regzbot monitor:
-https://lore.kernel.org/all/20240731132339.471321-1-pc@manguebit.com/
-
-#regzbot report:
-https://lore.kernel.org/all/b7ecddb7-4486-4b2d-9179-82250cf830e7@roeck-us.net/
-#regzbot fix: x86/mm: Fix pti_clone_pgtable() alignment assumption
-
-#regzbot report: https://lore.kernel.org/all/20240801165146.38991f60@mir/
-#regzbot introduced: 2052138b7da52ad5ccaf74f736d00f39a1c919
-#regzbot summary: media: dvb-usb: TeVii s480 dual DVB-S2 broken
-
-#regzbot report:
-https://lore.kernel.org/all/CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com/
-#regzbot introduced: 15995a35247442aefa0ffe36a6dad51cb46b09
-#regzbot summary: mm: general protection fault observed after destroy
-the devdax
+https://lore.kernel.org/linux-bluetooth/27e6a6c5-fb63-4219-be0b-eefa2c116e06@penguintechs.org/
+2024-07-25 18:34 QCA6390 broken in current kernel Wren Turkal
+2024-07-25 20:35 ` Luiz Augusto von Dentz
+2024-07-25 20:47   ` Wren Turkal
+2024-07-26 18:52     ` Wren Turkal
+2024-07-26 19:25       ` Wren Turkal
+*2024-07-29 16:25         ` Zijun Hu*
+2024-07-30 19:26           ` Wren Turkal
+2024-07-30 19:48             ` Wren Turkal
+2024-07-30 20:12               ` Wren Turkal
+2024-07-31  1:28                 ` Zijun Hu
+2024-08-01  7:53                   ` Wren Turkal
+*2024-07-30 19:03         ` Wren Turkal*
+2024-07-30 19:59           ` Bartosz Golaszewski
+2024-07-30 20:05             ` Wren Turkal
+2024-07-31  8:51               ` Bartosz Golaszewski
+......
+>>> Zijun, you should talk the folks at qualcomm and see if there is any
+>>> appetite for getting closer to the Linaro folks with regard to this
+>>> stuff. You have been very eager to jump in, and I see that Bartosz and
+>>> Luis also seem interested in fixing this. I do wonder if there a way to
+>>> take advantage of that to build a better working relationship in this
+>>> bluetooth space with qualcomm and the linux kernel devs.
+>>>
+>>
+>> you maybe ignore that all my reply come from icloud.com, so you maybe
+>> not associate it with qualcomm, it is the first time for icloud.com to
+>> join BT relevant discussion. (^^)
+> 
+> I'm sorry. I didn't realize you weren't associated with Qualcomm here.
+> Apologies.
+>it is all right (^^).
+>>> If qualcomm would be interested in hiring a tech person to help with
+>>> this stuff. I am definitely interested in helping in this area.
+>>>
+>>> Thanks,
+>>> wt
+>>
+> 
 
