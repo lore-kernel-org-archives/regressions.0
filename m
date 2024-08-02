@@ -1,173 +1,142 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5931428F0
-	for <regressions@lists.linux.dev>; Thu,  1 Aug 2024 19:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046491BF311;
+	Fri,  2 Aug 2024 09:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722539141; cv=none; b=jO8N0r5+wi9VC+4TIvMeGFhm8nCdN7E060a305kcJbjdaWbYT1pSohxgmSuijkpkBgA4fl+jYoqBOsqmvNI+5e8Z5G2l0mPRy53JgQnpfVAxQubCJjYF2gi4iAtq7nASNnC1PnHjqvpan4LFhdlHaro1r2z/L8yAP1m2Dibuqqk=
+	t=1722591870; cv=none; b=K6DTcK9zsf07on41F9JgOeZINpfwQjPrXnDQ3klprO/eNSeBZHjmMLGkaxH3+olZshplgA8OM/EmLx2OudK4TX9AXSu7EkVKoc1W52sx0UEV2JumXLHLJ3RwcKY0sWk56I9RFC5a6cLYohyWzFLHFsX+CfwCpmldNA4hEfabYHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722539141; c=relaxed/simple;
-	bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FLMeeAkZ91sxCk5vmHH26rnfA4YgtcqKIEdf2o9wfIY4k5qK1FnjJ3Z+2ikWFCMdyi8/B/g1I9RvWu0Fft2Hze9dEH4Da1Y7vtCjX4R5zCWBkQbi3TciRP7GvN8OQFPGyaG3NOlZomFxg2cXd+//PprWLe/GaIxDGLw3sMmW/x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Du4wpBjo; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722591870; c=relaxed/simple;
+	bh=0KsIn/0/DWTpo7S1UBSEjNExMpvPx+YcOvQCaYBrQw0=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=YlaFuV4YpnRDhIHXZYDh9MJoMjUALfGk4jHo0zfvopXDNz85mCiYZkKK1OdSdBNTM8SkMH1D7X/LduG1Vej07CUnsZvWWq/6GzwzuojMsQxMsGcxAVnvEvHG9WhteUdy7vGwTaVSU/IcbsZkfNKGGZjVPRl7zDYqGGZmGamuNTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w3PLQRUX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Du4wpBjo"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fed726aefcso423885ad.1
-        for <regressions@lists.linux.dev>; Thu, 01 Aug 2024 12:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722539139; x=1723143939; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-        b=Du4wpBjohZHdVq2f3OZ7sU/MXGoRZejcvnUz3hRmxSVAJnwk1y5IMt39C6j2EfbFV/
-         x2Rinh8NS3PMbqBRcRBuZYHzoHdy+1OPMjrsZylZi+FB+A1Nbu8AZffjKR8ahCn3v0yZ
-         T9Jzxv4dV5ixrhdSW4bbZwPSShV+6frNfGTiFgBNFcZ1/L/tdztGKP4owP1tr7glwMsn
-         UOhGP4SwMRS9PyxpNMK+WCGSRd/ESglC6W99zETHQMZCeLA1v/gJdU+ukM4aLHnd/ykf
-         mmpAzmMHerTq6BpUSwNawgv0U0jNWI55JM3jno9Bodgn6cKeRIhasddm+adV8jVPrInj
-         dZ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722539139; x=1723143939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-        b=rzlMWEz/ReI5eFhf4gemdz3hbXEH2kCnVTvpsQGpkAoZ6FVbxjo74eEVEvOsoK+p7e
-         j8GfXZXR/E48wyWnFWUXOsgZnl+uG/mqbfyhPkWlbPjuA0vulXWxx0K0kRV68ah96e2j
-         mP4SXsY4Z2vELIUw5hcoclM6zvrBVDdiuhgOD81GhOQ57g0HwFQ9xm1C+Wyq7emK/zDZ
-         nfgXHcveNFFnnSDSA9Jk+9MRUm/c7VJhaIz6Q/O5bNE0hExJYlx/7GnaCdoVS0tq4onJ
-         mi8juM3ddxvTPGA1+NJY+JTa1IQk2+E0fdHIVJVL/D4dtsI6iMOys7eKUE4ujU/U/GaS
-         HyoQ==
-X-Gm-Message-State: AOJu0Ywtdy2kgFnPvi0RMGZEoIYw0oMJKf5q2ZuCCLfw2lDGOAQWIAeO
-	HNcF3vZoOF0S1pxn55OfeFgyNH86yzZEvW19iG32X0U/tExMzCgaA8QEaJfjtC4JDlbDutqHbC9
-	BcBcNMUTRmBR06Sf5u4Z/igbskhJSCHxrezrdJyVFqfVko4RoI//+WVc=
-X-Google-Smtp-Source: AGHT+IH5gl/Q1rzqHjQTr5aMEvKhR4tZEBFmlt3ipoX2Gur/J079ohFRNbLWktgdCJ8jGqV1lw0RjS5xWfmRyNlmBsQ=
-X-Received: by 2002:a17:902:ce8f:b0:1ff:3b0f:d61d with SMTP id
- d9443c01a7336-1ff5a47d480mr363295ad.24.1722539138858; Thu, 01 Aug 2024
- 12:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w3PLQRUX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=tYBNKUdLVBT8EAn0QM/7P3VwYTzBHo4it3VetCjlnIA=; t=1722591868;
+	x=1723023868; b=w3PLQRUX70Hpwlo9isDFSw52fHNxRajsdpWeyy9BAoKOzp6soXj0p+sG5j9MZ
+	6IHV4cFx4v3AZZsxzE8kst+B5MdiPcWiAWoQHl61O2dourb+Rk0IeAFtzPIkEHycbsy71w7mWegfQ
+	OP2a1tlumBswb5uH9xoMCghTIZ8tFX/FbMwCmaiq/1TsqWhsoqpLODS9F7pgbdLBHZUpqcTo7Z7qi
+	KbWJswfClCmw6qfH0NYIS8DxaMULki3dw9w/qvIDWklsrnyuHlzeFgSt9IQzn5zKGwIUIfgGatLcl
+	YUYiUnpiCj96y7dhzgtPZFUfBWxbbQMcSFLDvNFl017p3o9rGA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sZopf-00078S-Pw; Fri, 02 Aug 2024 11:44:19 +0200
+Message-ID: <c0967665-343d-4ca9-90a0-a072159c1056@leemhuis.info>
+Date: Fri, 2 Aug 2024 11:44:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me> <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
-In-Reply-To: <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 Aug 2024 12:05:27 -0700
-Message-ID: <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-To: Linux regressions mailing list <regressions@lists.linux.dev>, "to: Mark Rutland" <mark.rutland@arm.com>
-Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Clark <james.clark@arm.com>, 
-	"cc: Marc Zyngier" <maz@kernel.org>, Hector Martin <marcan@marcan.st>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Asahi Linux <asahi@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Steve French <sfrench@samba.org>,
+ Gleb Korobeynikov <gkorobeynikov@astralinux.ru>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] smb: client: - Failure to mount DFS namespaces without
+ ASCII symbols
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722591868;e7825c62;
+X-HE-SMSGID: 1sZopf-00078S-Pw
 
-On Wed, Dec 6, 2023 at 4:09=E2=80=AFAM Linux regression tracking #update
-(Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->
-> [TLDR: This mail in primarily relevant for Linux kernel regression
-> tracking. See link in footer if these mails annoy you.]
->
-> On 22.11.23 00:43, Bagas Sanjaya wrote:
-> > On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
-> >> Perf broke on all Apple ARM64 systems (tested almost everything), and
-> >> according to maz also on Juno (so, probably all big.LITTLE) since v6.5=
-.
->
-> #regzbot fix: perf parse-events: Make legacy events lower priority than
-> sysfs/JSON
-> #regzbot ignore-activity
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Note, this is still broken. The patch changed the priority in the case
-that you do something like:
+Paulo, I noticed a report about a regression in bugzilla.kernel.org that
+appears to be caused by this change of yours:
 
-$ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
+3ae872de410751 ("smb: client: fix shared DFS root mounts with different
+prefixes") [v6.5-rc1]
 
-but if you do:
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219083 :
 
-$ perf stat -e 'cycles' benchmark
+>  Gleb Korobeynikov 2024-07-22 10:59:46 UTC
+> 
+> Windows version of SMB host: Windows Server 2022 Standard x64
+> Kernel: 6.3.13(upstream)
+> CONFIG_CIFS_DFS_UPCALL
+> 
+> In the function cifs_inval_name_dfs_link_error(), a check was added for tcon->origin_fullpath (3ae872de410751fe5e629e04da491a632d95201c). I believe it's unnecessary because when mounting a dfs name without ASCII characters, we always fail at this check and exit the function, leading to dfs namespaces not being mounted
+> 
+> Steps to reproduce:
+> 
+> 1. At Windows, create DFS namespace with name containing non-ASCII symbols (for example дфс)
+> 
+> 2. mount -t cifs \\\\<smb_server>\\дфс  /tmp/dfs -o domain=...,user=...,password=...
+> 
+> result:
+> mount error(2): No such file or directory
+> Refer to the mount.cifs(8) manual page (e.g. man mount.cifs) and kernel log messages (dmesg)
+> 
+> CIFS debug log:
+> [Mon Jul 22 11:00:24 2024] CIFS: Status code returned 0xc0000033 STATUS_OBJECT_NAME_INVALID
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2maperror.c: Mapping SMB2 status code 0xc0000033 to POSIX err -2
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/dfs_cache.c: dfs_cache_noreq_update_tgthint: path: \test.local\дфс
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=2
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\test.local\IPC$
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: cifs_put_tcon: tc_count=1
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in cifs_put_tcon as Xid: 17 with uid: 0
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: Tree Disconnect
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/fscache.c: cifs_fscache_release_super_cookie: (0x0000000000000000)
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=1
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\DC.test.local\IPC$
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in __cifs_put_smb_ses as Xid: 18 with uid: 0
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: disconnect session 00000000360c6881
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=1
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\test.local\IPC$
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in __cifs_put_smb_ses as Xid: 19 with uid: 0
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: disconnect session 00000000db1ddbb6
+> [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: leaving cifs_mount_put_conns (xid = 13) rc = 0
+> [Mon Jul 22 11:00:24 2024] CIFS: VFS: cifs_mount failed w/return code = -2
 
-then the broken behavior will happen as legacy events have priority
-over sysfs/json events in that case. To fix this you need to revert:
-4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
-events over legacy"
+And
 
-This causes some testing issues resolved in this unmerged patch series:
-https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
+>  Gleb Korobeynikov 2024-07-30 11:03:01 UTC
+> 
+> (In reply to Gleb Korobeynikov from comment #5)
+>> (In reply to The Linux kernel's regression tracker (Thorsten Leemhuis) from
+>> comment #4)
+>> > Please check if 6.10 (or 6.11-rc1 once it's out on Monday) is still
+>> affected
+>> 
+>> Alright, I will definitely check
+> 
+> Checked on 6.11-rc1. The reproduction issue happens identically.
 
-There is a bug as the arm_dsu PMU advertises an event called "cycles"
-and this PMU is present on Ampere systems. Reverting the commit above
-will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
-__evlist__add_default") to fix ARM's BIG.little systems (opening a
-cycles event on all PMUs not just 1) will cause the arm_dsu event to
-be opened by perf record and fail as the event won't support sampling.
+See the ticket for more details.
 
-The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@goog=
-le.com/
-fixes this by only opening the cycles event on core PMUs when choosing
-default events.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Rather than take this patch the revert happened as Linus runs the
-command "perf record -e cycles:pp" (ie using a specified event and not
-defaults) and considers it a regression in the perf tool that on an
-Ampere system to need to do "perf record -e
-'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
-will choose the cycles event correctly and with better precision the
-pp for systems that support it, but it was still considered a
-regression in the perf tool so the revert was made to happen. There is
-a lack of perf testing coverage for ARM, in particular as they choose
-to do everything in a different way to x86. The patch in question was
-in the linux-next tree for weeks without issues.
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
 
-ARM/Ampere could fix this by renaming the event from cycles to
-cpu_cycles, or by following Intel's convention that anything uncore
-uses the name clockticks rather than cycles. This could break people
-who rely on an event called arm_dsu/cycles/ but I imagine such people
-are rare. There has been no progress I'm aware of on renaming the
-event.
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-Making perf not terminate on opening an event for perf record seems
-like the most likely workaround as that is at least something under
-the tool maintainers control. ARM have discussed doing this on the
-lists:
-https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
-but since the revert in v6.10 no patches have appeared for the v6.11
-merge window. Feature work like coresight improvements and ARMv9 are
-being actively pursued by ARM, but feature work won't resolve this
-regression.
-
-I'm keen to see such patches as there are perf stat fixes reliant on
-the stacked parse event fixes that are consequently not merged
-affecting more than just ARM.
-
-There is a related discussion that events specified without PMUs
-should inherently only mean core PMUs. Unfortunately such a change
-would break uncore events specified without a PMU, for example `perf
-stat -e data_read -a sleep 1` gathers read memory bandwidth on uncore
-memory controllers on recent Intel devices. Not specifying a PMU for
-uncore events is also assumed by perf metrics, so a large number of
-metrics would need updating to make such a change work. Many existing
-JSON uncore events specify a PMU in their name like
-UNC_M2HBM_CMS_CLOCKTICKS and it feels somewhat redundant to have to
-make that h2hbm/UNC_M2HBM_CMS_CLOCKTICKS/. It is unclear who would
-pursue fixing all of this, and so it seems not specifying a PMU with
-an event for perf will keep meaning trying to open the event on all
-PMUs that advertise such an event.
-
-Thanks,
-Ian
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
->
+#regzbot introduced: 3ae872de410751fe5e629e04da491a632d95201c
+#regzbot title: smb: client: failure to mount DFS namespaces without
+ASCII symbols
+#regzbot from: Gleb Korobeynikov <gkorobeynikov@astralinux.ru>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219083
+#regzbot ignore-activity
