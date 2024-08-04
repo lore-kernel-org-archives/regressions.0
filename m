@@ -1,65 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0239814F9F1
-	for <regressions@lists.linux.dev>; Sat,  3 Aug 2024 15:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5D280B;
+	Sun,  4 Aug 2024 07:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722700108; cv=none; b=UW7VMLFXJbxywrkYqxrrKvY55dzTfEBVDHqnJEBzlW14zK3or8TfT4WGDlD1rpH5o3KnGPWeYc08A/xcU/gyRl5/A/X63TR/z4nrqgH6DiYYL2p1XIpaphIOaBr3FMc9G6qb1GxBVs2wuzICpSWgnaJodQHq+G1NmWs7Xc2vh+0=
+	t=1722756393; cv=none; b=EIbjdhV4cl34F73irJ9vX1N3TLeK/SkTx6zhnjcDAt+EtSd5K1tvXWswkaZo2sHuBs4gSQ2Nm7hb4YuylTEgXiWc5fysmMu+Gq/d/fNOTEvWZ+VhN+YrdfoOVMRfAp7rvNB3Y8KzuVk7cWTDIy9lwFIV+PhNJ9JXKz+DOl4fCSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722700108; c=relaxed/simple;
-	bh=fIgR+HLJfTmDAaWxU6LJmI5nlywv/z9jP0Ucwc+N0Cs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezvIkLQCcI9tL4X3KDX6aILe/T57N8tu9E+fnVqgZQc97woleTJGUJgMsVwfhc1rj8sH/jQJ8rhIblDhNQzM9gpzAPP2pdKvtEVaZW0C0HkX7pjVeOixprGi2zLg9o0SnYS+QiO/gJk0HDY4b3mm/EtZ4UasZ5M0rAd+ya6wZ9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ra/17V55; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722756393; c=relaxed/simple;
+	bh=dAuVDlSyMeZNuLqxSz7NterThlpbjr86z6ZKmpDC2VM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=MhitSZs3mVWwV5rmDi/imDqjv9uLdxepF2KWYgRnGL3Ru7aDWz9IsoHCrVugpKDDXWTYP6iIOzLcmJRJ83hafmPvu7bhHzpEsP+82CGjTfvVRQvHgxP0wYVRFLaEXaP3/y/Ab05aitD2dWUutlcwhxa7Y4Lb1ZVA7UwkMXZUpg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=0O9wSYA/; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ra/17V55"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722700103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l31j21mLxNy3zew5HKBy+ii9WMR6iWk+7TgHezIdgjE=;
-	b=Ra/17V55yacFynmlhuMJQSqhWJpPxgnA9V1HSKpvl9D7yg4SEUEVGuxQ/1mVdXvBasETec
-	atjwOMlXkV4IN60nCVmIbMftVrmmqhKfPVNEC0ak/NZb9D8eCPbG+AR0BRJ3TBgmKl8GA2
-	Zr9FDtgzitQhRLrgrvm6X5+FmxKZXwA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629--Xl340t-ODC6gHeVhlFd0A-1; Sat, 03 Aug 2024 11:48:21 -0400
-X-MC-Unique: -Xl340t-ODC6gHeVhlFd0A-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7aa5885be3so760222066b.0
-        for <regressions@lists.linux.dev>; Sat, 03 Aug 2024 08:48:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722700100; x=1723304900;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l31j21mLxNy3zew5HKBy+ii9WMR6iWk+7TgHezIdgjE=;
-        b=YAGicpJQcN5HWeRfZt0XbWqzUe2RcNCGS6By8K8MYVC/isO4Q/j3ku5PliWNLTu0vX
-         inDi23L5Y8Zzp3p/pPGWXHo2KwEGcfAQZxyHyybApWTrWNpZZOAy9THa+61ajPMDaVB9
-         lJtvDXGJ5K3mh2ZzFQJfnjIsCo9ZxLmyFxGIdXuOmtDQcYsKQ8Lsep2fjwCHL4vQGYMG
-         VFmI85dMmMy7pg98DmVp0IN4rdB/WgM27QIjq2Hc+6wtlHHbRa2JyFCQu5AFkmQrRSa6
-         NYar1Eh2R9LIZgcGTXPt1Gl+m+HOhBL9bXuu4id0bw6qL3F/Ve/HTzYNcSKyJsvc+dwF
-         3loQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvsc+tWT8ZBh5zC6hZRXKF2xKIdcy/Ly//vbYLVUI4e+SD06GD13vti6CIThTbPaJw7BcoLd0OO4HNxwOkh54a6/DSqoXlxDylUng=
-X-Gm-Message-State: AOJu0YwOk1a9LRFvtWR9iu27CKeRn/wMPjWvEP2APWIUO0cS08ynMyD/
-	19mn1e+Wzn+7mU01fRG3L2TUcI90b6oljCJOW9MmJOakQ+Hwe4l2+bXDK3ZVc70hrcfI5mZSw/S
-	m0bY1MGnRTGBH7i18XaeGph+J+hNEonkpHAivu30HxIYIPK9h8VlQZErtk0AU
-X-Received: by 2002:a17:907:c291:b0:a7d:e5b1:bf65 with SMTP id a640c23a62f3a-a7de5b1c431mr65340766b.21.1722700100110;
-        Sat, 03 Aug 2024 08:48:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgKX5w8FE5x/yWsgpmLhRPClUTzoxmhjH21zbqMY6OyWTdQgVnoHeQBRQi7az8kIYmM+iegA==
-X-Received: by 2002:a17:907:c291:b0:a7d:e5b1:bf65 with SMTP id a640c23a62f3a-a7de5b1c431mr65339266b.21.1722700099587;
-        Sat, 03 Aug 2024 08:48:19 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9ec8860sm226968366b.209.2024.08.03.08.48.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Aug 2024 08:48:19 -0700 (PDT)
-Message-ID: <2dd6b8e1-6f06-4ab8-b610-c0bd95a397e8@redhat.com>
-Date: Sat, 3 Aug 2024 17:48:18 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="0O9wSYA/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=BwTIUcXIVgQHlYGADSPLZfW1MO/RwoZ6H/jWVojHn4c=; t=1722756390;
+	x=1723188390; b=0O9wSYA/QdE35yBuFt7AyBNqnU3sOrVuZAJTR+7Dwn12RlW/xO2WNxhJlzzZB
+	ceteaH862qKPGu7l50uMzjeMbcblKzplhZF/RM6ZKOYCZk2Gs4w5ksfqp0U0wtlB8wmhub8UiUATk
+	tHJ8sjdOfusqU3M595ndhnHE8eNRz+cpkj5yzLAPw4OFOswtntn4f1VP2GhiustCI7uC7qVcrvtFS
+	TMVhwcMmQLRjRRQwfCGD1q+KcW51dKXclqpmDoenbtX/pFbKtDh7c2N2zth7bGivowXteUPVFOzCr
+	9ILtZhjPzTOt3x5jko5QHhq2uiUybTenxx5IWfJ6KJ3xJXhpfA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1saV2U-00084M-Re; Sun, 04 Aug 2024 08:48:22 +0200
+Message-ID: <8a541683-36da-4cea-a8a9-db6ee875c86d@leemhuis.info>
+Date: Sun, 4 Aug 2024 08:48:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,96 +38,71 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.11/regression/bisected - The commit c1385c1f0ba3 caused a new
- possible recursive locking detected warning at computer boot.
-To: Thomas Gleixner <tglx@linutronix.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, linuxarm@huawei.com
-Cc: rafael.j.wysocki@intel.com, guohanjun@huawei.com, gshan@redhat.com,
- miguel.luis@oracle.com, catalin.marinas@arm.com,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Bowman, Terry" <Terry.bowman@amd.com>
-References: <CABXGCsPvqBfL5hQDOARwfqasLRJ_eNPBbCngZ257HOe=xbWDkA@mail.gmail.com>
- <20240723112456.000053b3@Huawei.com> <20240723181728.000026b3@huawei.com>
- <20240725181354.000040bf@huawei.com> <87le1ounl2.ffs@tglx>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <87le1ounl2.ffs@tglx>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: "Christian A. Ehrhardt" <lk@c--e.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Christian Heusel <christian@heusel.eu>
+Subject: [REGRESSION] Keys register not or only later on the keyboard on the
+ 2022 Asus Vivobook S15 OLED
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722756390;825f6818;
+X-HE-SMSGID: 1saV2U-00084M-Re
 
-Hi,
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-On 7/26/24 6:26 PM, Thomas Gleixner wrote:
-> On Thu, Jul 25 2024 at 18:13, Jonathan Cameron wrote:
->> On Tue, 23 Jul 2024 18:20:06 +0100
->> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
->>
->>>> This is an interesting corner and perhaps reflects a flawed
->>>> assumption we were making that for this path anything that can happen for an
->>>> initially present CPU can also happen for a hotplugged one. On the hotplugged
->>>> path the lock was always held and hence the static_key_enable() would
->>>> have failed.
+Christian, I noticed a report about a regression in bugzilla.kernel.org
+that appears to be caused by a change of yours:
+
+de52aca4d9d56c ("usb: typec: ucsi: Never send a lone connector change
+ack") [v6.10-rc1]
+
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219108 :
+
+> As the summary says, on the 2022 Asus Vivobook S15 OLED (model
+> K3502ZA.306), the inbuilt keyboard has bad key registration after
+> plugging the laptop in for charging. Sometimes, the keys pressed do not
+> register at all, and sometimes they register very late. The keyboard
+> works properly if I don't plug the laptop in to charge, and this issue
+> doesn't manifest ever on kernels older than 6.6.37-1.
 > 
-> No. The original code invoked this without cpus read locked via:
-> 
-> acpi_processor_driver.probe()
->    __acpi_processor_start()
->        ....
-> 
-> and the cpu hotplug callback finds it already set up, so it won't reach
-> the static_key_enable() anymore.
-> 
->> One bit I need to check out tomorrow is to make sure this doesn't race with the
->> workfn that is used to tear down the same static key on error.
-> 
-> There is a simpler solution for that. See the uncompiled below.
+> I have tested every lts kernel after 6.6.37-1 and all of them have 
+> the same problem. I have also tested the latest mainline and zen
+> kernels (versions 6.10.1 for both) and they too have the the same
+> problem.> Once the laptop is plugged into it's charging cable, the
+> keyboard fails and unplugging the laptop doesn't fix the situation.
+> However, if I don't plug the laptop into it's charging cable, the
+> problem never manifests itself. The charging cable itself is a usb
+> type c cable and the laptop charges over thunderbolt.
+See the ticket for more details. The problem still happens with
+6.11-rc1, a straight revert was not possible.
 
-I was seeing the same lockdep issue as the original reporter on my
-AMD Ryzen 9 5950X machine and I can confirm that the suggested patch
-(below) fixes this:
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
 
-Tested-by: Hans de Goede <hdegoede@redhat.com>
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Regards,
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
 
-Hans
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-
-
-
-> ---
-> diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
-> index b3fa61d45352..0b69bfbf345d 100644
-> --- a/arch/x86/kernel/cpu/aperfmperf.c
-> +++ b/arch/x86/kernel/cpu/aperfmperf.c
-> @@ -306,7 +306,7 @@ static void freq_invariance_enable(void)
->  		WARN_ON_ONCE(1);
->  		return;
->  	}
-> -	static_branch_enable(&arch_scale_freq_key);
-> +	static_branch_enable_cpuslocked(&arch_scale_freq_key);
->  	register_freq_invariance_syscore_ops();
->  	pr_info("Estimated ratio of average max frequency by base frequency (times 1024): %llu\n", arch_max_freq_ratio);
->  }
-> @@ -323,8 +323,10 @@ static void __init bp_init_freq_invariance(void)
->  	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
->  		return;
->  
-> -	if (intel_set_max_freq_ratio())
-> +	if (intel_set_max_freq_ratio()) {
-> +		guard(cpus_read_lock)();
->  		freq_invariance_enable();
-> +	}
->  }
->  
->  static void disable_freq_invariance_workfn(struct work_struct *work)
-> 
-> 
-> 
-
+#regzbot introduced: de52aca4d9d56c3b2f00b638d457075914b1a227
+#regzbot title: usb: typec: ucsi: Keys register not or only later on the
+keyboard on the 2022 Asus Vivobook S15 OLED
+#regzbot from: No Name
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219108
+#regzbot ignore-activity
