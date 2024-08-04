@@ -1,36 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3772618028;
-	Sun,  4 Aug 2024 07:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46351173F
+	for <regressions@lists.linux.dev>; Sun,  4 Aug 2024 12:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722757172; cv=none; b=QwiW4nckvPIL/akC9Orof+kZSolUtb2wwDmsajziErP/ljXFVjzxdzrOR+aXS73rMKeVXR0SBl6jhK2djNcNJkVRwQ5e6zC8xsYIQHy0J19HlPP9iHRWilQAjtn0Wfnvx1ZFfBEW9wDc11cxK5cYXkUcXK7ladA50/mvBMw2Zx0=
+	t=1722775206; cv=none; b=Yajnuk6CIRjCnMqQLrn0kepqvx/ZixnQZbMcwu5CzPxsKtLwU0iwfRoQr9A8I/6Ha+z5mSWQ0l2IdHf+yK3QATKqjsQP0dFAB7Y23jfq9xXQroZ7AYFXlionyJ21/+udbPclcYACVCLzJV8li9BoIN5mJR/tpXer9bAQoZUFimo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722757172; c=relaxed/simple;
-	bh=dx1qsJWwPqbDPWHNQRSyT6YxQ55c4Kz9aQMnwMhOiK0=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=bfreXouz4tX7VcToC338ngUiuI/l20hDViaZN8mFTbacN5b0Cm8MDqpfDEKiXDoou7J+NBCAyoloagvXDZw2OzwnDkrFfPhZqnHLKrTfqB2tTd4efUMalu3AqueSERN2ufnC19/RxSCHgE4ehF5Dcp2nky4Mf0y9NtYwOccOjJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Emc8r4lg; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1722775206; c=relaxed/simple;
+	bh=tRzIJ+LUi6P8pV+JB0mC1CB0e/wLnzuuYvwLiQ4sRA4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=LrOzDDA3ZOEv2p8UuaT7DzoHD43+00t5sBHSUiHF97jaVEgmHecVnE6imoagH1aElbAilJAyKa1Zc+XL/fWK3sKcPu64aHYqkAdApc+8DP8CJ1TeRM4tdruSVFsH2hNRiV/dSJag7HC20fTTtD7rwWRLu4Zu0UJ6n8hCzaOkgLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gftQm90e; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Emc8r4lg"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gftQm90e"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
-	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=VA7tExR2XPaZPXzIax6ElMB4EKjXC6966mpWAb1KBac=; t=1722757170;
-	x=1723189170; b=Emc8r4lgGpiS74tsqEdgVZbpUa5GfpkWoCV0ocE2yTL7nDO8uSUo878CjSx+H
-	w26OEaWUeraHvpYKXKFFNDZbxQwrYdmwv1rju0HHeY68BSCbENABLevqYAzNFjOcDDUILqq6PhUQJ
-	+lSG+kYts3woDXLueMqNtCNGU2Pw5wt9EbyOX55uXcdwQ75CaM+wZAekMScMYCQe0gyJi2/EmQ2w5
-	vsjpBVO4LLjk/pbToN/sG5WdW2/vtTcKoDnymru2OWIRKnFSurQsXqsr6MgMQi1nQegU5YcB8zUIY
-	GOcPgSMecknYlirVEjZ9VsBKh3goaQBLHYf1l6EoHl/kw7Eo+A==;
+	References; bh=tRzIJ+LUi6P8pV+JB0mC1CB0e/wLnzuuYvwLiQ4sRA4=; t=1722775204;
+	x=1723207204; b=gftQm90efMTyoJTbwvcz5YwrIOws5EE8K8l35BcJflDXHhRpJmYXIOuz8+2Ds
+	of+RwBfN0I+9RGNKgrBfIPhMZEhDto5yGmJqeXzb9uT86IrqRnu1yHQ4kU2/7jmRGQWvhQB2EpS6k
+	e1ElfHYzNIi2D0mDbVvUX0n7E6JtPT0Y+1G+epf7y6q7Urbxz4yMldZ079cBcqz4BCbvMc89LEDcZ
+	M3aEfNIeDIHYsAwqoXsBzKMKCobiENt2QoVxJEADqtBPYUZH09mLxiTZ/MT1KXLIus2p80npuW/ui
+	al3FPGfksk0pMCjnMbX0fHCQcPdDJifL4TomwBtpVb1JdVoi+A==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1saVpv-0005fK-1W; Sun, 04 Aug 2024 09:39:27 +0200
-Message-ID: <412463d7-5259-4c99-bfda-1f5f9d2893cf@leemhuis.info>
-Date: Sun, 4 Aug 2024 09:39:26 +0200
+	id 1saaWn-0002aG-OO; Sun, 04 Aug 2024 14:40:01 +0200
+Message-ID: <96f21252-029a-4a83-948b-99ff5ce6cfd4@leemhuis.info>
+Date: Sun, 4 Aug 2024 14:40:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,79 +39,43 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-To: Jann Horn <jannh@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Matan Ziv-Av <matan@svgalib.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] LG Gram Laptop Extra Features stopped working
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722757170;ce8c2813;
-X-HE-SMSGID: 1saVpv-0005fK-1W
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722775204;356f5231;
+X-HE-SMSGID: 1saaWn-0002aG-OO
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Jann, I noticed a report about a regression in bugzilla.kernel.org that
-appears to be caused directly or indirectly by a change of yours:
 
-3cad1bc010416c ("filelock: Remove locks reliably when fcntl/close race
-is detected") [v6.10-rc7]
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219075 :
+#regzbot report:
+https://lore.kernel.org/all/CAH2r5mtNqn0i5NQSQvMvbHDdRDJxcNQh7iTj76L=90kEhDA7iw@mail.gmail.com/
+#regzbot introduced: v6.10..v6.11-rc1
+#regzbot summary: reports about suspend hanging the system from Steve
+French and Mike Galbraith
 
-> On my 2023, LG Gram laptop (kernel 6.9.10), the Laptop extra features
-> stopped working, and like in
-> https://bugzilla.kernel.org/show_bug.cgi?id=218901, none of the
-> kernel variables for the are writable. for example, trying to write
-> 80 to `/sys/devices/platform/lg-laptop/battery_care_limit` or
-> `/sys/class/power_supply/BAT0/charge_control_end_threshold` results
-> in 0 when running cat. The same issue occurs when I try set these
-> parameters with EndeavorOS.
-> 
-> 
-> Output of `sudo dmesg | grep -iC 3 "lg_laptop" `
-> 
-> ``
-> [    4.283723] ACPI Error: No handler for Region [XIN1] (0000000011d0c87d) [UserDefinedRegion] (20230628/evregion-126)
-> [    4.284919] ACPI Error: Region UserDefinedRegion (ID=143) has no handler (20230628/exfldio-261)
-> [    4.286191] ACPI Error: Aborting method \_SB.PC00.LPCB.LGEC.SEN1._TMP due to previous error (AE_NOT_EXIST) (20230628/psparse-529)
-> [    4.286773] lg_laptop: product: 16ZB90R-G.AA75G  year: 2019
-> [    4.292951] input: LG WMI hotkeys as /devices/virtual/input/input6
-> [    4.293115] ACPI: battery: new extension: LG Battery Extension
-> [    4.293296] resource: resource sanity check: requesting [mem 0x00000000fedc0000-0x00000000fedcffff], which spans more than pnp 00:04 [mem 0xfedc0000-0xfedc7fff]
-> ``
+#regzbot report:
+https://lore.kernel.org/all/20240803125153.216030-1-gnurou@gmail.com/
+#regzbot introduced: b1992c3772e6
+#regzbot summary: Makefile: compile_commands.json target from an
+external module's directory can fail
 
-6.11-rc1 is still affected.
+#regzbot report:
+https://lore.kernel.org/lkml/20240729095542.21097-1-johan%2Blinaro@kernel.org/
+#regzbot summary: firmware: efivars broken on machines like
+the Lenovo ThinkPad X13s and x1e80100 CRD
 
-See the ticket for more details and additional comments. Note, you have
-to use bugzilla to reach the reporter, as I sadly[1] can not CCed them
-in mails like this.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 3cad1bc010416c6dd780643476bc59ed742436b9
-#regzbot title: vfs/platform-drivers: LG Gram Laptop Extra Features
-stopped working
-#regzbot from: Chris
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219075
-#regzbot ignore-activity
+#regzbot report:
+https://lore.kernel.org/lkml/20240730033849.GH6352@frogsfrogsfrogs/
+#regzbot fix: jump_label: Fix the fix, brown paper bags galore
