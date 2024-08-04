@@ -1,36 +1,36 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5D280B;
-	Sun,  4 Aug 2024 07:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3772618028;
+	Sun,  4 Aug 2024 07:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722756393; cv=none; b=EIbjdhV4cl34F73irJ9vX1N3TLeK/SkTx6zhnjcDAt+EtSd5K1tvXWswkaZo2sHuBs4gSQ2Nm7hb4YuylTEgXiWc5fysmMu+Gq/d/fNOTEvWZ+VhN+YrdfoOVMRfAp7rvNB3Y8KzuVk7cWTDIy9lwFIV+PhNJ9JXKz+DOl4fCSE=
+	t=1722757172; cv=none; b=QwiW4nckvPIL/akC9Orof+kZSolUtb2wwDmsajziErP/ljXFVjzxdzrOR+aXS73rMKeVXR0SBl6jhK2djNcNJkVRwQ5e6zC8xsYIQHy0J19HlPP9iHRWilQAjtn0Wfnvx1ZFfBEW9wDc11cxK5cYXkUcXK7ladA50/mvBMw2Zx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722756393; c=relaxed/simple;
-	bh=dAuVDlSyMeZNuLqxSz7NterThlpbjr86z6ZKmpDC2VM=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=MhitSZs3mVWwV5rmDi/imDqjv9uLdxepF2KWYgRnGL3Ru7aDWz9IsoHCrVugpKDDXWTYP6iIOzLcmJRJ83hafmPvu7bhHzpEsP+82CGjTfvVRQvHgxP0wYVRFLaEXaP3/y/Ab05aitD2dWUutlcwhxa7Y4Lb1ZVA7UwkMXZUpg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=0O9wSYA/; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1722757172; c=relaxed/simple;
+	bh=dx1qsJWwPqbDPWHNQRSyT6YxQ55c4Kz9aQMnwMhOiK0=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=bfreXouz4tX7VcToC338ngUiuI/l20hDViaZN8mFTbacN5b0Cm8MDqpfDEKiXDoou7J+NBCAyoloagvXDZw2OzwnDkrFfPhZqnHLKrTfqB2tTd4efUMalu3AqueSERN2ufnC19/RxSCHgE4ehF5Dcp2nky4Mf0y9NtYwOccOjJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Emc8r4lg; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="0O9wSYA/"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Emc8r4lg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=BwTIUcXIVgQHlYGADSPLZfW1MO/RwoZ6H/jWVojHn4c=; t=1722756390;
-	x=1723188390; b=0O9wSYA/QdE35yBuFt7AyBNqnU3sOrVuZAJTR+7Dwn12RlW/xO2WNxhJlzzZB
-	ceteaH862qKPGu7l50uMzjeMbcblKzplhZF/RM6ZKOYCZk2Gs4w5ksfqp0U0wtlB8wmhub8UiUATk
-	tHJ8sjdOfusqU3M595ndhnHE8eNRz+cpkj5yzLAPw4OFOswtntn4f1VP2GhiustCI7uC7qVcrvtFS
-	TMVhwcMmQLRjRRQwfCGD1q+KcW51dKXclqpmDoenbtX/pFbKtDh7c2N2zth7bGivowXteUPVFOzCr
-	9ILtZhjPzTOt3x5jko5QHhq2uiUybTenxx5IWfJ6KJ3xJXhpfA==;
+	References; bh=VA7tExR2XPaZPXzIax6ElMB4EKjXC6966mpWAb1KBac=; t=1722757170;
+	x=1723189170; b=Emc8r4lgGpiS74tsqEdgVZbpUa5GfpkWoCV0ocE2yTL7nDO8uSUo878CjSx+H
+	w26OEaWUeraHvpYKXKFFNDZbxQwrYdmwv1rju0HHeY68BSCbENABLevqYAzNFjOcDDUILqq6PhUQJ
+	+lSG+kYts3woDXLueMqNtCNGU2Pw5wt9EbyOX55uXcdwQ75CaM+wZAekMScMYCQe0gyJi2/EmQ2w5
+	vsjpBVO4LLjk/pbToN/sG5WdW2/vtTcKoDnymru2OWIRKnFSurQsXqsr6MgMQi1nQegU5YcB8zUIY
+	GOcPgSMecknYlirVEjZ9VsBKh3goaQBLHYf1l6EoHl/kw7Eo+A==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1saV2U-00084M-Re; Sun, 04 Aug 2024 08:48:22 +0200
-Message-ID: <8a541683-36da-4cea-a8a9-db6ee875c86d@leemhuis.info>
-Date: Sun, 4 Aug 2024 08:48:22 +0200
+	id 1saVpv-0005fK-1W; Sun, 04 Aug 2024 09:39:27 +0200
+Message-ID: <412463d7-5259-4c99-bfda-1f5f9d2893cf@leemhuis.info>
+Date: Sun, 4 Aug 2024 09:39:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,52 +41,60 @@ User-Agent: Mozilla Thunderbird
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
+To: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>,
- Christian Heusel <christian@heusel.eu>
-Subject: [REGRESSION] Keys register not or only later on the keyboard on the
- 2022 Asus Vivobook S15 OLED
+ Matan Ziv-Av <matan@svgalib.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] LG Gram Laptop Extra Features stopped working
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722756390;825f6818;
-X-HE-SMSGID: 1saV2U-00084M-Re
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722757170;ce8c2813;
+X-HE-SMSGID: 1saVpv-0005fK-1W
 
 Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Christian, I noticed a report about a regression in bugzilla.kernel.org
-that appears to be caused by a change of yours:
+Jann, I noticed a report about a regression in bugzilla.kernel.org that
+appears to be caused directly or indirectly by a change of yours:
 
-de52aca4d9d56c ("usb: typec: ucsi: Never send a lone connector change
-ack") [v6.10-rc1]
+3cad1bc010416c ("filelock: Remove locks reliably when fcntl/close race
+is detected") [v6.10-rc7]
 
 As many (most?) kernel developers don't keep an eye on the bug tracker,
 I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219108 :
+https://bugzilla.kernel.org/show_bug.cgi?id=219075 :
 
-> As the summary says, on the 2022 Asus Vivobook S15 OLED (model
-> K3502ZA.306), the inbuilt keyboard has bad key registration after
-> plugging the laptop in for charging. Sometimes, the keys pressed do not
-> register at all, and sometimes they register very late. The keyboard
-> works properly if I don't plug the laptop in to charge, and this issue
-> doesn't manifest ever on kernels older than 6.6.37-1.
+> On my 2023, LG Gram laptop (kernel 6.9.10), the Laptop extra features
+> stopped working, and like in
+> https://bugzilla.kernel.org/show_bug.cgi?id=218901, none of the
+> kernel variables for the are writable. for example, trying to write
+> 80 to `/sys/devices/platform/lg-laptop/battery_care_limit` or
+> `/sys/class/power_supply/BAT0/charge_control_end_threshold` results
+> in 0 when running cat. The same issue occurs when I try set these
+> parameters with EndeavorOS.
 > 
-> I have tested every lts kernel after 6.6.37-1 and all of them have 
-> the same problem. I have also tested the latest mainline and zen
-> kernels (versions 6.10.1 for both) and they too have the the same
-> problem.> Once the laptop is plugged into it's charging cable, the
-> keyboard fails and unplugging the laptop doesn't fix the situation.
-> However, if I don't plug the laptop into it's charging cable, the
-> problem never manifests itself. The charging cable itself is a usb
-> type c cable and the laptop charges over thunderbolt.
-See the ticket for more details. The problem still happens with
-6.11-rc1, a straight revert was not possible.
+> 
+> Output of `sudo dmesg | grep -iC 3 "lg_laptop" `
+> 
+> ``
+> [    4.283723] ACPI Error: No handler for Region [XIN1] (0000000011d0c87d) [UserDefinedRegion] (20230628/evregion-126)
+> [    4.284919] ACPI Error: Region UserDefinedRegion (ID=143) has no handler (20230628/exfldio-261)
+> [    4.286191] ACPI Error: Aborting method \_SB.PC00.LPCB.LGEC.SEN1._TMP due to previous error (AE_NOT_EXIST) (20230628/psparse-529)
+> [    4.286773] lg_laptop: product: 16ZB90R-G.AA75G  year: 2019
+> [    4.292951] input: LG WMI hotkeys as /devices/virtual/input/input6
+> [    4.293115] ACPI: battery: new extension: LG Battery Extension
+> [    4.293296] resource: resource sanity check: requesting [mem 0x00000000fedc0000-0x00000000fedcffff], which spans more than pnp 00:04 [mem 0xfedc0000-0xfedc7fff]
+> ``
 
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
+6.11-rc1 is still affected.
+
+See the ticket for more details and additional comments. Note, you have
+to use bugzilla to reach the reporter, as I sadly[1] can not CCed them
+in mails like this.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -100,9 +108,9 @@ If I did something stupid, please tell me, as explained on that page.
 P.S.: let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: de52aca4d9d56c3b2f00b638d457075914b1a227
-#regzbot title: usb: typec: ucsi: Keys register not or only later on the
-keyboard on the 2022 Asus Vivobook S15 OLED
-#regzbot from: No Name
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219108
+#regzbot introduced: 3cad1bc010416c6dd780643476bc59ed742436b9
+#regzbot title: vfs/platform-drivers: LG Gram Laptop Extra Features
+stopped working
+#regzbot from: Chris
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219075
 #regzbot ignore-activity
