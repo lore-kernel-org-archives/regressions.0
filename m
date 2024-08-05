@@ -1,149 +1,86 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E50E3FBB2
-	for <regressions@lists.linux.dev>; Sun,  4 Aug 2024 15:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C0C1442F7;
+	Mon,  5 Aug 2024 06:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722783818; cv=none; b=JdTnrfNF3Pn+LnUZUuoen0ra7wAKwuPzoZx4JyyoX4mOepELawIGF+mKu36DBElbSZfDurxz32UYl/8i2U780Y1TN3o1xH6x9V4coFn67I6z07oLEv+vVMnVI0qtOxSknEPCMyJy12JuYhc2lJ6/Hyto8F7SsDX5oZ0LJhmnAlI=
+	t=1722838632; cv=none; b=XM4L+cQtbIwhXw9Gk0jRK93F9pSgfJ/WBwglv+o1DV2nPFZKGvRGHW17ndP51glcbocpAkJp+lAZrODIWBSGvy/u8171GNXjHc9gwGUtitp3PSVrPpTGA8C5K8sFI6aEu9kHwG7J2T/uFqCdDr6PqUIlJLNB3B5tXVKARt9Tsp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722783818; c=relaxed/simple;
-	bh=64fQVaczufE3HS8AgC+4WNqdmfTFZLjyFnUF9JCrBCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EuHzPWWNoHm9zkec519VMtLDbWrD9xbQ8Uw3pW4yyOaeZLu6PcA6S/EN8EgzN5fec8zD1NohTX7jLsvaHrrSlBskt49QK+yC3+nbXNCZ6gNUflqfuOOx+GRU4d7TD82H9T5fU5JWIn/D3Mm4Kw4Kxoq8ZsKnYSi1XOakJM84iFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OOmkc4AN; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1722838632; c=relaxed/simple;
+	bh=ZjgDYjq7powx6dku1RjeF1PGGwTeU3pln+4TmeKsj4w=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oJN17daE/3pmlDaFXy/xC5Bz5kNUOZ8ckF0PV2d0i3GgwSKXur9IneIwoOqrdqMGyCRdgGPHr+z2CSimAjJBe7wn+VdP6Nil5FhuuXZIgxtL5Q7oKu6s1HFKUsU3b51A4H+yiGxBBhrH2zZabGTVTPHQxYxfpTWEm3nHPIw9tSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csYKHGs/; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OOmkc4AN"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52f01993090so13557337e87.2
-        for <regressions@lists.linux.dev>; Sun, 04 Aug 2024 08:03:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csYKHGs/"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5b7b6a30454so4839273a12.2;
+        Sun, 04 Aug 2024 23:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722783815; x=1723388615; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CEwiM67K6TOyUjPbByvDl5BteCRvkr/bmWWcBlwbZ5M=;
-        b=OOmkc4ANGW3fWJDvMJgXlZwdMzYBpAGg2yh57xuo17qnbToH2IwsN76FYG4OqZa856
-         j7uWD5V5xYoJMhsM3wCCJbZ4iz2AXDLyBtNii0ZRgoLn4xxiOUF85BrSX64zuB/6vmFg
-         JEk7JmFt4XvNQ3Ojn7EixdWculR7MHJTs751af96n+0oxFp/jwbQpl4JfelHvBDSRfyJ
-         6b0rzW88W6iQIN/qcRIpoUO+jmrkvPe1kcxgK2elfCOkoB9fvCY+6HfHHhDvggFG9UIw
-         LDc4cgKyJw38F/9DgtW2aFVK1643d2zEEesEPJ+VGHwiCkuLz1RXVfDiBiEx2IlqrIgO
-         w55w==
+        d=gmail.com; s=20230601; t=1722838630; x=1723443430; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZjgDYjq7powx6dku1RjeF1PGGwTeU3pln+4TmeKsj4w=;
+        b=csYKHGs/FGscfc1TUEfklE7YKGTtz3Gim0xcFKfYFOi8oqq0Ps19RJrrPh0w5Po23V
+         5XtT+3Wa55PrEFG8Tx/nb9AeKX2qKv/Gg3ezpCJpXkNCEg7uDnWM5RIQR9F5kHWenJFp
+         yG29oZ4/VSfj2WrrnZLQZCybtd+kcRmfbkm3u9s5Us1Fx2u16UXdhIBspiKMKB3lJc/h
+         zaipXmWWUnZ+HVBj/mpAPnqR0QXsFMrvJwztjSGIzu4w9Mj3ZZPBBtliTwd/7HVO71C8
+         oE5Rss5hw7XmI5u2dw+EARRaKV+GXQxlO4cZ2cKP158quyjuJIm7Fe47H1BhRsneVXUN
+         mN9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722783815; x=1723388615;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CEwiM67K6TOyUjPbByvDl5BteCRvkr/bmWWcBlwbZ5M=;
-        b=NjkeYhMzwxyXot+kND3MP7YP75ccUyo8CECFVTa9jaCXZh4N1m2EJNmZnzUAgtdSmf
-         Rn+dALtfDLay5j44/QWc9NFVz6TO/bmfWa2e1aUhPWgyGEO1eselpS+ZupVCATotfKBB
-         4zvVLi9LGF+HQXZ+WrZtCai1jliPy41ZqbiHwHo6usbQxPfh9frB4N0xnz/Ox20agboX
-         nNRh2Ci4XGkm+v9Ho5PC8ti7UZWn2u0oYu0mi4pFGcfGhQBW4ofB5x0qyCVddToyM/E6
-         eGiG29zkJHC+kpIeZxn59kt9POWdVAyU0DV+6YmkwIsI2ZXiCSDe1lUUeBIhXnk+q6DF
-         uwDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDXzCoSMQaMgHpBDUx3VKCQctvwPS/wfhxGAEjCuk1W1CCrkWvd9dKCIhlDGwgaKn1h0JxK9j+GTiuG9yidOqqesEmGUctE1hwVZU=
-X-Gm-Message-State: AOJu0Yxsyg4D0ltTi7MuD92pszOLH5Kd/KrM6PibSaI8cjsbSNckiOeO
-	D8HfQxvysHH3tw0obp0DufO2YThE8YSCHV+uXQqEvhSw74PpHgxYB9TiVcKnC0Q=
-X-Google-Smtp-Source: AGHT+IGneXt1dFxPw+SaUnLoig2VToT62r4amOZ66tPHFqLmbLdAQjfxHZeozGHFzarvcyNU+kSM4g==
-X-Received: by 2002:a05:6512:b29:b0:52c:e047:5c38 with SMTP id 2adb3069b0e04-530bb36e672mr6513893e87.15.1722783815026;
-        Sun, 04 Aug 2024 08:03:35 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b83a03b403sm3745364a12.42.2024.08.04.08.03.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Aug 2024 08:03:34 -0700 (PDT)
-Message-ID: <b00f98db-92f3-4fb2-b268-0d94e52d28f4@linaro.org>
-Date: Sun, 4 Aug 2024 17:03:32 +0200
+        d=1e100.net; s=20230601; t=1722838630; x=1723443430;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjgDYjq7powx6dku1RjeF1PGGwTeU3pln+4TmeKsj4w=;
+        b=W4cpkT+S4BvmcKp+Qulo5ssDBNAbI+NLVG39J42XIfnXrAx4GvUM2M5wabB0TD/FWz
+         wcErW9pXIZxtmr3tssmL4Vzbm3xblXL+DGw8vUe7pC8kUz8fC5SzQMgf9IJb7kcw3G9Z
+         kg86nAFmqaeqlAz0WExDyAlhPqSvD/ygjkkdJMHBPht/phAY3eDmUpPJzlN6BOHsD1Do
+         nBqE79pF6vkD/ib+CKpwIg3dZy1KEARVxP+DuAwzpAI3Ka68VRmq/HvTVlBCwZjBDmpb
+         KuQVoEk0ZNCALKYdKsgcBdixi+gLFtTlRGJPNc7Zs3+q7dGK+geJ6x9xHCGv+NEHF78W
+         JyUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ0x8sbgRIjtuLR+18vUptI3NQjKVGFD27pMPAQTVvJcytKafSQE5hxen+l8nvQYJgwHFxdIW1WPly9WJu8r/b7D6rVeJv7MAJawUYh3gSBqs85vBGyzU5fDEMrp2/1jHVt2sFPkmwZf7hUg==
+X-Gm-Message-State: AOJu0Ywi+ERXgurBWuTDMyHNqBjRhhU0n4t0TvyTJIwWcq4H1S/1A0LW
+	NfTk1FqTXs0qYmeobKa4Q6RN9lIvlkV/IUyR8tmeZaAI8fj3rhnApCTFhujW/IR95tOzDdemgSg
+	WG48SOtBamZgOr21TilhwNwxkP/I=
+X-Google-Smtp-Source: AGHT+IH2X+IzhQIlgRtIy+23FBJcyC76pAnuCJKL1BEcOA5ltqEPwE/yzKrKToEs9l3ENoVBbVuHzWjyCgNPj4ajEAM=
+X-Received: by 2002:aa7:c50e:0:b0:5a2:87d3:6ee6 with SMTP id
+ 4fb4d7f45d1cf-5b7f57f41f4mr7296865a12.32.1722838629097; Sun, 04 Aug 2024
+ 23:17:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: codecs: lpass-macro: fix missing codec version
-To: Johan Hovold <johan+linaro@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, alsa-devel@alsa-project.org,
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <20240729131351.27886-1-johan+linaro@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240729131351.27886-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Blake Sperling <breakingspell@gmail.com>
+Date: Mon, 5 Aug 2024 01:16:32 -0500
+Message-ID: <CAGRfhun+pAYRjS8p9066HYV+wjyvCWoLtK03Nr0GXmYHzFDPpA@mail.gmail.com>
+Subject: [REGRESSION] [PATCH v2] net: missing check virtio
+To: arefev@swemel.ru
+Cc: edumazet@google.com, eperezma@redhat.com, jasowang@redhat.com, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, mst@redhat.com, 
+	netdev@vger.kernel.org, virtualization@lists.linux.dev, 
+	xuanzhuo@linux.alibaba.com, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 29/07/2024 15:13, Johan Hovold wrote:
-> Recent changes that started checking the codec version broke audio on
-> the Lenovo ThinkPad X13s:
-> 
-> 	wsa_macro 3240000.codec: Unsupported Codec version (0)
-> 	wsa_macro 3240000.codec: probe with driver wsa_macro failed with error -22
-> 	rx_macro 3200000.rxmacro: Unsupported Codec version (0)
-> 	rx_macro 3200000.rxmacro: probe with driver rx_macro failed with error -22
-> 
-> Add the missing codec version to the lookup table so that the codec
-> drivers probe successfully.
-> 
-> Note that I'm just assuming that this is a 2.0 codec based on the fact
-> that this device uses the older register layout.
-> 
-> Fixes: 378918d59181 ("ASoC: codecs: lpass-macro: add helpers to get codec version")
-> Fixes: dbacef05898d ("ASoC: codec: lpass-rx-macro: prepare driver to accomdate new codec versions")
-> Fixes: 727de4fbc546 ("ASoC: codecs: lpass-wsa-macro: Correct support for newer v2.5 version")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Hello, I noticed a regression from v.6.6.43 to v6.6.44 caused by this commit.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+When using virtio NIC with a QEMU/KVM Windows guest, network traffic
+from the VM stalls in the outbound (upload) direction.This affects
+remote access and file shares most noticeably, and the inbound
+(download) direction does not have the issue.
 
-Best regards,
-Krzysztof
+iperf3 will show consistent results, 0 bytes/sec when initiating a
+test within the guest to a server on LAN, and reverse will be full
+speed. Nothing out of the ordinary in host dmesg or guest Event Viewer
+while the behavior is being displayed.
 
+Crucially, this only seems to affect Windows guests, a Ubuntu guest
+with the same NIC configuration works fine in both directions.
+I wonder if NetKVM guest drivers may be related, the current latest
+version of the drivers (v248) did not make a difference, but it is
+several months old.
+
+Let me know if there are any further tests or info I can provide, thanks!
