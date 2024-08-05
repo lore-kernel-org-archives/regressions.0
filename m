@@ -1,304 +1,545 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2047.outbound.protection.outlook.com [40.107.212.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B603149C45;
-	Mon,  5 Aug 2024 08:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722846450; cv=none; b=jqtxQvIoXh4ZgZbbLyV2PK9ABcgG82PFF7x8QcQcxgGzDF9oDyJ+A6X39Jfg7GGOXrfGuIFfk+9CBWer1ZyfIqjs9097rDMJeV9JywMWiyIHLnuYzRg6GVbobwlRmRR3/fBaloNzwRy6KQzWe7rOVWBT/830Mo/HdxF+pUhVkkw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722846450; c=relaxed/simple;
-	bh=XQduA1yrJcEmZ0MOj0pc8jiP7CVFLf9SEAEfyYpUppY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ekmlqs/E46cYyoWpKQqQouUILZbu1yP/OjuS4v8jRtjspsKUnnxfUTcMe1WyWtLd7HEOcTVqx2rgf/xySmrspS+fuWTMhKOi8mLqOVdirtvHq89f+Ijp+AT0HZHQu9eLFx+0tLKs4Y3HKHtMciBG5TgzTGz9HS9U10Hy41xoKsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=2O40tvta; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436F0381BE
+	for <regressions@lists.linux.dev>; Mon,  5 Aug 2024 14:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722869599; cv=fail; b=RkgWngluEqStJB/9zhUPXK7DQaChLmuejBJ047iZh2iXBUposDdP+ml08qNpUllaOC4cOVxTIEo2LaNU1LpsBzdr5w+71e0456r0f/rr4Dq3UlwJSHorBSVUX8xJ2RioLjx9vWq10IVmBxkKcJ2mwKh4KJxPAnrAemWqHpPxUrY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722869599; c=relaxed/simple;
+	bh=ukRjQCHfk3fhtk2Liz1cjXo6yGsT4iUSpE7sHCnEAfE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KQKI5wRp8Tm45jCWDHgXSId48OZ0eainRju5CCIEF2xx7x4pTfQnhxHiO90dJ8Da5yTsAe2rnDPLKp6CMKPhZSkpWCgGjV8y/X9fjqh/b+fGy/VlZA8r+kTUZQpVJhlDn6CD7/LzSi9Ucp8D9Sahk3zR8AxBZYK0slVDAUOuM3I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TwhlmkhZ; arc=fail smtp.client-ip=40.107.212.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="2O40tvta"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=11StMB/CHBVgYxZV+/tIFDr6XxButiIMJq6QA32Y3As=; t=1722846448; x=1723278448;
-	 b=2O40tvtaeiCKO5kgmm0g2/hDsrPwvLAPViJp5TyoIhFhV3YV3CwN2LiVf/q14NVV1QA7jD10/x
-	a6nOm5PMbcyQh4n2SEabbNzFH2PkkSDMcgsOU2Q5DAHECtt7q5qODKlW9QGqoh3O7Jbq3rp/10umX
-	fKUbVyMW3sF5Lr2rbiOIdHzUxCGwmAs8gYDWYK/bApRisfFntHAUrvNNkYKkt4ZT9JxqbNJ2wjcXJ
-	tjWbwczO98X563lClKmuYX7iU31EqkPDIyRh7fgWv5GYWn4jVkx3DEfmMkFV1TeT+OTLWz4jz/sI7
-	D2Z5Zy90BfPolCEjTGqae0steC1gTWliM471A==;
-Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1sat3k-00030P-GN; Mon, 05 Aug 2024 10:27:16 +0200
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: regressions@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
-Subject: [PATCH v1] docs: bug-bisect: rewrite to better match the other bisecting text
-Date: Mon,  5 Aug 2024 10:27:15 +0200
-Message-ID: <10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TwhlmkhZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LWUzX5bOib1HLH85KdEU6VzrhTk0Vd1n2nB4iBegOhfV4olk7P/fKBj7PEDZQjhx5cCCFVGbjfcDVXWby1+WPwUEFQLPDLbl5DkzXWKUvMCeys2QgMhA0mpXthWTzG+B0r6QRGCyPchG4x8r6rL205j6FG6VXE/I0wuuSL/NIG6UM93MtDaBEsBmwIV8IYAmsPbcLDFdAZ8LXw4EP7JPobeJpjw3hG5uaR60t/OMkfORDMNpD35z+phJTwkYDTuXz8I399zKdil1rg/FklPbslR3C1M+pCzkaUNprvxTBQ+gsqGzUhBUbnvvE5CjXkpwc1Vmgcmu5MCrj+0qXoE+kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7k84rXDxULlXTFRNgiGQheUUSbMplieTIhKSaJm1csw=;
+ b=knJR4uaexmSYbIx7BGudLkM4HbFRNI/0VZPjlTtDR4t/g2UA+TYuPh6KpisfV4jUQnyuu3OHCC/VplTPP6pDJVbftaksHSCnuUGn51vs+pLZ4wRm3o6qe+vhp4Q/NEKxjY1hLr0mTI41ef9qXWH+SLhJm6HJ/hK1Nz9GBnr6qvUU8AcsKreKr5GG5R2j4ziXZRucBgZ32+XFgi/SnuoTREnFd1xbnozkLD2NLboLl4y6RyL2fIQl98Qbw+ifVfpS1CDUVzIszm/pDboDajDvOTXOojuxaGpZCYn/FGPySH9rHR6ILya7QCl7/7yObMuw7KHOfmx2q64So8dSHevNvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7k84rXDxULlXTFRNgiGQheUUSbMplieTIhKSaJm1csw=;
+ b=TwhlmkhZ19/4PY8KtSySnKYaLa74BMS7euA5FE9Scc93powOAlCK5+j5dpPUgqDDAR+MDpRnXy1bYep7Ja/P+Pjkew9veQ6qk1NCVLGUunymnFwCauV33XPkRxS3CDXwWg/FDm4vjF8WEK6RHQgsefdfqairmXqv7JJazk4ZXXE=
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
+ by MW3PR12MB4425.namprd12.prod.outlook.com (2603:10b6:303:5e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.24; Mon, 5 Aug
+ 2024 14:53:12 +0000
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::491a:cce3:e531:3c42]) by BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::491a:cce3:e531:3c42%4]) with mapi id 15.20.7828.023; Mon, 5 Aug 2024
+ 14:53:12 +0000
+From: "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To: Kevin Holm <kevin@holm.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, ML dri-devel
+	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, "Lin,
+ Wayne" <Wayne.Lin@amd.com>, "Zuo, Jerry" <Jerry.Zuo@amd.com>, "Mohamed,
+ Zaeem" <Zaeem.Mohamed@amd.com>, "Wheeler, Daniel" <Daniel.Wheeler@amd.com>
+Subject: RE: [PATCH 6.10] drm/amd/display: Refactor function
+ dm_dp_mst_is_port_support_mode()
+Thread-Topic: [PATCH 6.10] drm/amd/display: Refactor function
+ dm_dp_mst_is_port_support_mode()
+Thread-Index: AQHa4rHW43j5fShMmkG6pSIm6JTBz7IYyLkw
+Date: Mon, 5 Aug 2024 14:53:12 +0000
+Message-ID:
+ <BL1PR12MB5144C6C4CA6661626CA81ADCF7BE2@BL1PR12MB5144.namprd12.prod.outlook.com>
+References: <20240730185339.543359-1-kevin@holm.dev>
+In-Reply-To: <20240730185339.543359-1-kevin@holm.dev>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ActionId=2975144f-c0b1-47f9-afcb-dc959d91d1fe;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=0;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=true;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
+ Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2024-08-05T14:52:32Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR12MB5144:EE_|MW3PR12MB4425:EE_
+x-ms-office365-filtering-correlation-id: 4bcb3db2-844e-4285-8dc4-08dcb55e541c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?kw1+AXRwtV9Fh80pqFr/TTMlx4DRPYg8iDaxC9g8Zk/EAdc21JVCotfnjKtI?=
+ =?us-ascii?Q?qaade2N+nbqVsVahj1IJecUJr8PUfYwnTNtbPXFb9r7xV1CjLw9ubTYPTDsb?=
+ =?us-ascii?Q?Pul/oUOk97CKHgqXWrpHsaZlI8F6Z/FyosoviVbOEgqOdaYTx7yQyluFmeyf?=
+ =?us-ascii?Q?XAfQSQZ/v2oDIjq1C6F5yVoaf6r16o+F4Iytrq7jVwYsAoWHDS37aDhFIKl7?=
+ =?us-ascii?Q?u7H0viuWQvWKUlb1sRdYL5V21zm0Z8sC1AeWWJPruPUr6ofSo8gE+Q/9JCfX?=
+ =?us-ascii?Q?5ONdqzfd5/sdONh2SUJ5Kg+6PZw8+CLdAHE1M1RtvObpI/3CmTANR6S75RWA?=
+ =?us-ascii?Q?FD6bf8hwExVaK89+Xv2Ce5X74xYZCgTIpYMJwqtn8MxSjTvwvN22dqcOFQu3?=
+ =?us-ascii?Q?nCuRf6YxHCn6hEs70Sf22BTc8f1XTsf79pbnjOpuq8GtYeuUKgzawwwnrGeI?=
+ =?us-ascii?Q?4lHsJR/CBKu6HqvcLRjlTfS4LPglm9VelhwqlUZrWnmyNc2XTZxtQyC5FLMl?=
+ =?us-ascii?Q?wU3hKElUs0fs7W6YirGrxrh7T9RqSXFgxlbdgLPds3mdixE7rKK3MFpv2BcS?=
+ =?us-ascii?Q?9Dwhhbj4Ms0I3K7Ipr2Ctb7pSXOLxsmzK9zPXqKCP3SRYUfLKNILhIwk+/vf?=
+ =?us-ascii?Q?XQw5/SfgNRYuSSwY0ZdUKNeqnCE2qS8hUTU6ZKwqGPCjMuJ/AqQG9Q5AkoKL?=
+ =?us-ascii?Q?oCn/LKrBChkAUhDWiiRqxUeS7czPe0+o8Kqdx542eb5v7wfFVK18WXPuGk1v?=
+ =?us-ascii?Q?Fjw/7KxHS5FNdgVzFVFiw8LFYDBR/zFA9oErHIuEz+E9GwtTvymqw6Zw4seM?=
+ =?us-ascii?Q?xgEN82QT1o3i6j/nulEiYOyr7mbbnfI8d73FhwhW+r34i2EglPQzoCJelyJt?=
+ =?us-ascii?Q?OqZF6lMLOWOQP+j7S/1kwKP+Tzi48t309H+04wSLMMeFDioyoi7BShQFw+cN?=
+ =?us-ascii?Q?dhsgOLJBp/wIRqhOXWzxH5hvgJe24VWsB1Wa1Fe0W1Uo/yfLHsyFXBpFbt1/?=
+ =?us-ascii?Q?q9JRk9cvm+XLpN44Ofzrt42bbLOUFYRyvGthgYXeMBs+0utwLm1gv2hLo2Hv?=
+ =?us-ascii?Q?rwldginDmjjHDSwyVcdQGyng+gl/DxWiINVy2s9TeOfLB5kb3OIEVEDQ6qOg?=
+ =?us-ascii?Q?HnuTh64Foh2qVAWIrI2VNueiQYbnb7hWBkpUU0tFjbGA/Hz6hCfi5MOe3/vV?=
+ =?us-ascii?Q?GN42VwpBLPTsjXomZalk0/HpXYmtH4i9hBWrIya8xLtvK2nUKMnHeMZS3RNW?=
+ =?us-ascii?Q?YRbm4PXYu/I/Rm+lyZbrsEMALaT5iMlMbexbINims+lFwA9PP+zWPozCXpbP?=
+ =?us-ascii?Q?X/GjTU0zJiq+t2DgKuks8plnnW0+qvJy3KiK8l9rUagd/Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?SjUyYoTnWAVBks7JKQ0jTccRq6zKkTM9HTiSQhpNhsoMGi5HCcKLUn+aMtIA?=
+ =?us-ascii?Q?qELhypGhKV3bE5Ch1LNilQi17OAUMs94Kmn9DwshHqgFKSO6Th3yfTkZxDLP?=
+ =?us-ascii?Q?giPkjVRA2XzeovTx66DnUwkLGiOkDe93DoxGM4Err4Og8DXzTHN6hTN8oZEY?=
+ =?us-ascii?Q?oTCawyloJvINF6cD7reSiwqFd6u6skctlgJKxHRjCxa7yx1NlenZ3IeHjiRC?=
+ =?us-ascii?Q?lbR4jbQAhC98kVTy/etlNK2MzXBiPvK4i+r5CZYLxeiWDwB4+N3sXo9G1dxf?=
+ =?us-ascii?Q?HStfwUkajat74FOtyKc9UeV05a37qLKUsHIgagEPRtrGIc1YZDLfDvpNsFjY?=
+ =?us-ascii?Q?48T92/lQUa+YIteUOtGU5ZCJQuPGttqufUK79klXGI3OK2nrwNJuVAMW0GW5?=
+ =?us-ascii?Q?qCWpNrNWl7jhJjvotgVoGmaJPXNjxPzi94G4Z3mgpAhl7m60JAdbTNVwj4Sb?=
+ =?us-ascii?Q?ELbEI+viGW+dNkRpDGu4pE/ko7Kei6q84x2KDyrolhLPjgsNInYTmJqBePee?=
+ =?us-ascii?Q?4+fnddUJXMefGAMmk70q5EwinZaQEKBBX7PxpzHsy9NjrCavQaPnDXJquM8g?=
+ =?us-ascii?Q?0hGra+e6TGBCogIPSjDJulu96dv5Y6NhBZOw3LK/WpKcqCv2Gs6YPxjMwuWU?=
+ =?us-ascii?Q?ePFmLNjrE2xDOwRGptgcgzQ7+kxwGaYet9PzfXh16//Yyw7UyQcPP1Nbo5vr?=
+ =?us-ascii?Q?aPMCKq1sJW8BYll9pv7QSdLRNyARkcR8JM8DYZieNBzTYtlqX7uoBsB8M0Pf?=
+ =?us-ascii?Q?5lsHI44nmQ2/NGSRJNfiOkF8faIevck0mshVSoQkM/WYzyF/WCU2362dRbx9?=
+ =?us-ascii?Q?x/KS74z/PuVtVs1f5EFW0OWlFGbhl2Wuo5XTZbuEZdO5Rm/MrtOxARaMRPM1?=
+ =?us-ascii?Q?Slza+lzxktjKZCh4RrHgOeo7xwOTHoK6cB3I1RVclc6dALO9lyOVlvuU2iAt?=
+ =?us-ascii?Q?mqijBAINtXW+jk4tCJYvpHw0MCji+kGn3DXlqpoRZ7ytkXlApv37f04aMCuS?=
+ =?us-ascii?Q?dhUlY6cxvNqeMbJVvIXQ9ozwH0r0xN4XYAJaodTmRupvjuXsFX3Vt4evyZ86?=
+ =?us-ascii?Q?IWu6kpKt6TbX33/Hyb37ydLCxKl4Ag5/og18nOsO8nDg0XbjbsMXlMwD134z?=
+ =?us-ascii?Q?CAfWwWdAvaXi/xFfiUubfw6J8sEFoXK0RKTLM3WHbRQVk6vyBQEhrWX8oZUv?=
+ =?us-ascii?Q?RhHbYo11QWo5/E6nn7OlPKiSeA4nAJpS5gEtMh2E7lT7DMjdx3ltfSQTw+wV?=
+ =?us-ascii?Q?HhKl0uggzNeLR7CMGyFV5kYbS5q7q3ue5qY1974FHGHpvnGEACRLsi0Qqwsi?=
+ =?us-ascii?Q?/RS688ktYNOCPHx6Gw2xPG/4JMt3XYIeZSiv1tEPZUde2XlIpwVS04Q9yFdI?=
+ =?us-ascii?Q?CyKQOFR8VU4EVUt+ncJv25y4weVrxN4ko2wvKetQcvz0oI35dUDStAyP0k84?=
+ =?us-ascii?Q?IjOH238HUho9XVRYEP01d3KY4bpc1UY+f/xeBq6fn2P+G3gRZCPeanpG9FtU?=
+ =?us-ascii?Q?cdi6a5pDF1G4EReBiEcqGi+NwTy0rVLpocmKOJZ747rLA/qk0JsZSexMBOHU?=
+ =?us-ascii?Q?vRRflLDYwBjHAmearWU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1722846448;2e1dcc07;
-X-HE-SMSGID: 1sat3k-00030P-GN
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bcb3db2-844e-4285-8dc4-08dcb55e541c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2024 14:53:12.1969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m9LdonpT3IglWaqj0N5INZy37eoq91MK5wJ6xW9Q72nEkInG5ZXsmZeUJCY6IOBX7M7gxZaMX0/NrJxD8aKtWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4425
 
-Rewrite the short document on bisecting kernel bugs. The new text
-improves .config handling, brings a mention of 'git skip', and explains
-what to do after the bisection finished -- including trying a revert to
-verify the result. The rewrite at the same time removes the unrelated
-and outdated section on 'Devices not appearing' and replaces some
-sentences about bug reporting with a pointer to the document covering
-that topic in detail.
+[Public]
 
-This overall brings the approach close to the one in the recently added
-text Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
-As those two texts serve a similar purpose for different audiences,
-mention that document in the head of this one and outline when the
-other might be the better one to follow.
+> -----Original Message-----
+> From: Kevin Holm <kevin@holm.dev>
+> Sent: Tuesday, July 30, 2024 2:54 PM
+> To: stable@vger.kernel.org
+> Cc: regressions@lists.linux.dev; amd-gfx@lists.freedesktop.org; ML dri-de=
+vel
+> <dri-devel@lists.freedesktop.org>; LKML <linux-kernel@vger.kernel.org>; L=
+in,
+> Wayne <Wayne.Lin@amd.com>; Zuo, Jerry <Jerry.Zuo@amd.com>;
+> Mohamed, Zaeem <Zaeem.Mohamed@amd.com>; Wheeler, Daniel
+> <Daniel.Wheeler@amd.com>; Deucher, Alexander
+> <Alexander.Deucher@amd.com>; Kevin Holm <kevin@holm.dev>
+> Subject: [PATCH 6.10] drm/amd/display: Refactor function
+> dm_dp_mst_is_port_support_mode()
+>
+> From: Wayne Lin <wayne.lin@amd.com>
+>
+> [ Upstream commit fa57924c76d995e87ca3533ec60d1d5e55769a27 ]
+>
+> [Why]
+> dm_dp_mst_is_port_support_mode() is a bit not following the original desi=
+gn
+> rule and cause light up issue with multiple 4k monitors after mst dsc hub=
+.
+>
+> [How]
+> Refactor function dm_dp_mst_is_port_support_mode() a bit to solve the lig=
+ht
+> up issue.
+>
+> Reviewed-by: Jerry Zuo <jerry.zuo@amd.com>
+> Acked-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+> Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+> Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> [kevin@holm.dev: Resolved merge conflict in .../amdgpu_dm_mst_types.c]
+> Fixes: 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for
+> mst mode validation")
+> Link:
+> https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e
+> 24@holm.dev/T/#u
+> Signed-off-by: Kevin Holm <kevin@holm.dev>
 
-Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
----
- Documentation/admin-guide/bug-bisect.rst | 205 +++++++++++++++--------
- MAINTAINERS                              |   1 +
- 2 files changed, 135 insertions(+), 71 deletions(-)
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
-diff --git a/Documentation/admin-guide/bug-bisect.rst b/Documentation/admin-guide/bug-bisect.rst
-index 325c5d0ed34a0a..f4a9acab65d0f5 100644
---- a/Documentation/admin-guide/bug-bisect.rst
-+++ b/Documentation/admin-guide/bug-bisect.rst
-@@ -1,76 +1,139 @@
--Bisecting a bug
--+++++++++++++++
--
--Last updated: 28 October 2016
--
--Introduction
--============
--
--Always try the latest kernel from kernel.org and build from source. If you are
--not confident in doing that please report the bug to your distribution vendor
--instead of to a kernel developer.
--
--Finding bugs is not always easy. Have a go though. If you can't find it don't
--give up. Report as much as you have found to the relevant maintainer. See
--MAINTAINERS for who that is for the subsystem you have worked on.
--
--Before you submit a bug report read
--'Documentation/admin-guide/reporting-issues.rst'.
--
--Devices not appearing
--=====================
--
--Often this is caused by udev/systemd. Check that first before blaming it
--on the kernel.
--
--Finding patch that caused a bug
--===============================
--
--Using the provided tools with ``git`` makes finding bugs easy provided the bug
--is reproducible.
--
--Steps to do it:
--
--- build the Kernel from its git source
--- start bisect with [#f1]_::
-+.. SPDX-License-Identifier: (GPL-2.0+ OR CC-BY-4.0)
-+.. [see the bottom of this file for redistribution information]
- 
--	$ git bisect start
--
--- mark the broken changeset with::
--
--	$ git bisect bad [commit]
--
--- mark a changeset where the code is known to work with::
--
--	$ git bisect good [commit]
--
--- rebuild the Kernel and test
--- interact with git bisect by using either::
--
--	$ git bisect good
--
--  or::
--
--	$ git bisect bad
--
--  depending if the bug happened on the changeset you're testing
--- After some interactions, git bisect will give you the changeset that
--  likely caused the bug.
--
--- For example, if you know that the current version is bad, and version
--  4.8 is good, you could do::
--
--           $ git bisect start
--           $ git bisect bad                 # Current version is bad
--           $ git bisect good v4.8
-+===============
-+Bisecting a bug
-+===============
- 
-+This document describes how to find a change causing a kernel regression using
-+``git bisect``.
- 
--.. [#f1] You can, optionally, provide both good and bad arguments at git
--	 start with ``git bisect start [BAD] [GOOD]``
-+The text focuses on the gist of the process. If you are new to bisecting the
-+kernel, better follow Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-+instead: it depicts everything from start to finish while covering multiple
-+aspects even kernel developers occasionally forget. This includes:
- 
--For further references, please read:
-+- Detecting situations where a bisections would be a waste of time, as nobody
-+  would care about the result -- for example, because the problem is triggered
-+  by a .config change, was already fixed, is caused by something your Linux
-+  distributor changed, occurs in an abandoned version, or happens after the
-+  kernel marked itself as 'tainted'.
-+- Preparing the .config file using an appropriate kernel while enabling or
-+  disabling debug symbols depending on the situation's needs -- while optionally
-+  trimming the .config to tremendously reduce the build time per bisection step.
-+- For regressions in stable or longterm kernels: checking mainline as well, as
-+  the result determines to whom the regression must be reported to.
- 
--- The man page for ``git-bisect``
--- `Fighting regressions with git bisect <https://www.kernel.org/pub/software/scm/git/docs/git-bisect-lk2009.html>`_
--- `Fully automated bisecting with "git bisect run" <https://lwn.net/Articles/317154>`_
--- `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_
-+Neither document describes how to report a regression, as that is covered by
-+Documentation/admin-guide/reporting-issues.rst.
-+
-+Finding the change causing a kernel issue using a bisection
-+===========================================================
-+
-+*Note: the following process assumes you prepared everything for a bisection;
-+this includes having a Git clone with the appropriate sources, installing the
-+software required to build and install kernels, as well as a .config file stored
-+in a safe place (the following example assumes '~/prepared_kernel_.config') to
-+use as pristine base at each bisection step.*
-+
-+* Preparation: start the bisection and tell Git about the points in the history
-+  you consider to be working and broken, which Git calls 'good' and 'bad'::
-+
-+    git bisect start
-+    git bisect good v6.0
-+    git bisect bad v6.1
-+
-+  Instead of Git tags like 'v6.0' and 'v6.1' you can specify commit-ids, too.
-+
-+1. Copy your prepared .config into the build directory and adjust it to the
-+   needs of the codebase Git checked out for testing::
-+
-+     cp ~/prepared_kernel_.config .config
-+     make olddefconfig
-+
-+2. Now build, install, and boot a kernel; if any of this fails for unrelated
-+   reasons, run ``git bisect skip`` and go back to step 1.
-+
-+3. Check if the feature that regressed works in the kernel you just built.
-+
-+   If it does, execute::
-+
-+     git bisect good
-+
-+   If it does not, run::
-+
-+     git bisect bad
-+
-+   Be sure what you tell Git is correct, as getting this wrong just once will
-+   send the rest of the bisection totally off course.
-+
-+   Go back to back to step 1, if Git after issuing one of those commands checks
-+   out another bisection point while printing something like 'Bisecting:
-+   675 revisions left to test after this (roughly 10 steps)'.
-+
-+   You finished the bisection and move to the next point below, if Git instead
-+   prints something like 'cafecaca0c0dacafecaca0c0dacafecaca0c0da is the first
-+   bad commit'; right afterwards it will show some details about the culprit
-+   including its patch description. The latter can easily fill your terminal,
-+   so you might need to scroll up to see the message mentioning the culprit's
-+   commit-id; alternatively, run ``git bisect log`` to show the result.
-+
-+* Recommended complementary task: put the bisection log and the current
-+  .config file aside for the bug report; furthermore tell Git to reset the
-+  sources to the state before the bisection::
-+
-+     git bisect log > ~/bisection-log
-+     cp .config ~/bisection-config-culprit
-+     git bisect reset
-+
-+* Recommended optional task: try reverting the culprit on top of the latest
-+  codebase; if successful, this will validate your bisection and enable
-+  developers to resolve the regression through a revert.
-+
-+  To try this, update your clone and check out latest mainline. Then tell Git to
-+  revert the change::
-+
-+     git revert --no-edit cafec0cacaca0
-+
-+  This might be impossible, for example when the bisection landed on a merge
-+  commit. In that case, abandon the attempt. Do the same, if Git fails to revert
-+  the culprit because later changes depend on it -- unless you bisected using a
-+  stable or longterm kernel series, in which case you want to retry using the
-+  latest code from that series.
-+
-+  If a revert succeeds, build and test another kernel to validate the result of
-+  the bisection. Mention the outcome in your bug report.
-+
-+Additional reading material
-+---------------------------
-+
-+* The `man page for 'git bisect' <https://git-scm.com/docs/git-bisect>`_ and
-+  `fighting regressions with 'git bisect' <https://git-scm.com/docs/git-bisect-lk2009.html>`_
-+  in the Git documentation.
-+* `Working with git bisect <https://nathanchance.dev/posts/working-with-git-bisect/>`_
-+  from kernel developer Nathan Chancellor.
-+* `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_.
-+* `Fully automated bisecting with 'git bisect run' <https://lwn.net/Articles/317154>`_.
-+
-+..
-+   end-of-content
-+..
-+   This document is maintained by Thorsten Leemhuis <linux@leemhuis.info>. If
-+   you spot a typo or small mistake, feel free to let him know directly and
-+   he'll fix it. You are free to do the same in a mostly informal way if you
-+   want to contribute changes to the text -- but for copyright reasons please CC
-+   linux-doc@vger.kernel.org and 'sign-off' your contribution as
-+   Documentation/process/submitting-patches.rst explains in the section 'Sign
-+   your work - the Developer's Certificate of Origin'.
-+..
-+   This text is available under GPL-2.0+ or CC-BY-4.0, as stated at the top
-+   of the file. If you want to distribute this text under CC-BY-4.0 only,
-+   please use 'The Linux kernel development community' for author attribution
-+   and link this as source:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/Documentation/admin-guide/bug-bisect.rst
-+
-+..
-+   Note: Only the content of this RST file as found in the Linux kernel sources
-+   is available under CC-BY-4.0, as versions of this text that were processed
-+   (for example by the kernel's build system) might contain content taken from
-+   files which use a more restrictive license.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b34385f2e46d92..90c8681d4d311c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6719,6 +6719,7 @@ DOCUMENTATION REPORTING ISSUES
- M:	Thorsten Leemhuis <linux@leemhuis.info>
- L:	linux-doc@vger.kernel.org
- S:	Maintained
-+F:	Documentation/admin-guide/bug-bisect.rst
- F:	Documentation/admin-guide/quickly-build-trimmed-linux.rst
- F:	Documentation/admin-guide/reporting-issues.rst
- F:	Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-
-base-commit: 8663dd38a7ba5b2bfd2c7b4271e6e63bc0ef1e42
--- 
-2.45.0
+> ---
+> I resolved the merge conflict so that, after this patch is applied to the=
+ linux-
+> 6.10.y branch of the stable git repository, the resulting function
+> dm_dp_mst_is_port_support_mode (and also the new function
+> dp_get_link_current_set_bw) is identical to the original commit.
+>
+> I've confirmed that it fixes the regression I reported for my use case.
+> ---
+>  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   | 232 +++++++++++-----
+> --
+>  1 file changed, 147 insertions(+), 85 deletions(-)
+>
+> diff --git
+> a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+> index a5e1a93ddaea..e90f9d697511 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+> @@ -1595,109 +1595,171 @@ static bool
+> is_dsc_common_config_possible(struct dc_stream_state *stream,
+>       return bw_range->max_target_bpp_x16 && bw_range-
+> >min_target_bpp_x16;  }
+>
+> +#if defined(CONFIG_DRM_AMD_DC_FP)
+> +static bool dp_get_link_current_set_bw(struct drm_dp_aux *aux, uint32_t
+> +*cur_link_bw) {
+> +     uint32_t total_data_bw_efficiency_x10000 =3D 0;
+> +     uint32_t link_rate_per_lane_kbps =3D 0;
+> +     enum dc_link_rate link_rate;
+> +     union lane_count_set lane_count;
+> +     u8 dp_link_encoding;
+> +     u8 link_bw_set =3D 0;
+> +
+> +     *cur_link_bw =3D 0;
+> +
+> +     if (drm_dp_dpcd_read(aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+> &dp_link_encoding, 1) !=3D 1 ||
+> +             drm_dp_dpcd_read(aux, DP_LANE_COUNT_SET,
+> &lane_count.raw, 1) !=3D 1 ||
+> +             drm_dp_dpcd_read(aux, DP_LINK_BW_SET, &link_bw_set, 1)
+> !=3D 1)
+> +             return false;
+> +
+> +     switch (dp_link_encoding) {
+> +     case DP_8b_10b_ENCODING:
+> +             link_rate =3D link_bw_set;
+> +             link_rate_per_lane_kbps =3D link_rate *
+> LINK_RATE_REF_FREQ_IN_KHZ * BITS_PER_DP_BYTE;
+> +             total_data_bw_efficiency_x10000 =3D
+> DATA_EFFICIENCY_8b_10b_x10000;
+> +             total_data_bw_efficiency_x10000 /=3D 100;
+> +             total_data_bw_efficiency_x10000 *=3D
+> DATA_EFFICIENCY_8b_10b_FEC_EFFICIENCY_x100;
+> +             break;
+> +     case DP_128b_132b_ENCODING:
+> +             switch (link_bw_set) {
+> +             case DP_LINK_BW_10:
+> +                     link_rate =3D LINK_RATE_UHBR10;
+> +                     break;
+> +             case DP_LINK_BW_13_5:
+> +                     link_rate =3D LINK_RATE_UHBR13_5;
+> +                     break;
+> +             case DP_LINK_BW_20:
+> +                     link_rate =3D LINK_RATE_UHBR20;
+> +                     break;
+> +             default:
+> +                     return false;
+> +             }
+> +
+> +             link_rate_per_lane_kbps =3D link_rate * 10000;
+> +             total_data_bw_efficiency_x10000 =3D
+> DATA_EFFICIENCY_128b_132b_x10000;
+> +             break;
+> +     default:
+> +             return false;
+> +     }
+> +
+> +     *cur_link_bw =3D link_rate_per_lane_kbps *
+> lane_count.bits.LANE_COUNT_SET / 10000 *
+> total_data_bw_efficiency_x10000;
+> +     return true;
+> +}
+> +#endif
+> +
+>  enum dc_status dm_dp_mst_is_port_support_mode(
+>       struct amdgpu_dm_connector *aconnector,
+>       struct dc_stream_state *stream)
+>  {
+> -     int pbn, branch_max_throughput_mps =3D 0;
+> +#if defined(CONFIG_DRM_AMD_DC_FP)
+> +     int branch_max_throughput_mps =3D 0;
+>       struct dc_link_settings cur_link_settings;
+> -     unsigned int end_to_end_bw_in_kbps =3D 0;
+> -     unsigned int upper_link_bw_in_kbps =3D 0, down_link_bw_in_kbps =3D =
+0;
+> +     uint32_t end_to_end_bw_in_kbps =3D 0;
+> +     uint32_t root_link_bw_in_kbps =3D 0;
+> +     uint32_t virtual_channel_bw_in_kbps =3D 0;
+>       struct dc_dsc_bw_range bw_range =3D {0};
+>       struct dc_dsc_config_options dsc_options =3D {0};
+> +     uint32_t stream_kbps;
+>
+> -     /*
+> -      * Consider the case with the depth of the mst topology tree is equ=
+al
+> or less than 2
+> -      * A. When dsc bitstream can be transmitted along the entire path
+> -      *    1. dsc is possible between source and branch/leaf device (com=
+mon
+> dsc params is possible), AND
+> -      *    2. dsc passthrough supported at MST branch, or
+> -      *    3. dsc decoding supported at leaf MST device
+> -      *    Use maximum dsc compression as bw constraint
+> -      * B. When dsc bitstream cannot be transmitted along the entire pat=
+h
+> -      *    Use native bw as bw constraint
+> +     /* DSC unnecessary case
+> +      * Check if timing could be supported within end-to-end BW
+>        */
+> -     if (is_dsc_common_config_possible(stream, &bw_range) &&
+> -        (aconnector->mst_output_port->passthrough_aux ||
+> -         aconnector->dsc_aux =3D=3D &aconnector->mst_output_port->aux)) =
+{
+> -             cur_link_settings =3D stream->link->verified_link_cap;
+> -             upper_link_bw_in_kbps =3D
+> dc_link_bandwidth_kbps(aconnector->dc_link, &cur_link_settings);
+> -             down_link_bw_in_kbps =3D kbps_from_pbn(aconnector-
+> >mst_output_port->full_pbn);
+> -
+> -             /* pick the end to end bw bottleneck */
+> -             end_to_end_bw_in_kbps =3D min(upper_link_bw_in_kbps,
+> down_link_bw_in_kbps);
+> -
+> -             if (end_to_end_bw_in_kbps < bw_range.min_kbps) {
+> -                     DRM_DEBUG_DRIVER("maximum dsc compression
+> cannot fit into end-to-end bandwidth\n");
+> +     stream_kbps =3D
+> +             dc_bandwidth_in_kbps_from_timing(&stream->timing,
+> +                     dc_link_get_highest_encoding_format(stream->link));
+> +     cur_link_settings =3D stream->link->verified_link_cap;
+> +     root_link_bw_in_kbps =3D dc_link_bandwidth_kbps(aconnector-
+> >dc_link, &cur_link_settings);
+> +     virtual_channel_bw_in_kbps =3D
+> +kbps_from_pbn(aconnector->mst_output_port->full_pbn);
+> +
+> +     /* pick the end to end bw bottleneck */
+> +     end_to_end_bw_in_kbps =3D min(root_link_bw_in_kbps,
+> +virtual_channel_bw_in_kbps);
+> +
+> +     if (stream_kbps <=3D end_to_end_bw_in_kbps) {
+> +             DRM_DEBUG_DRIVER("No DSC needed. End-to-end bw
+> sufficient.");
+> +             return DC_OK;
+> +     }
+> +
+> +     /*DSC necessary case*/
+> +     if (!aconnector->dsc_aux)
+> +             return DC_FAIL_BANDWIDTH_VALIDATE;
+> +
+> +     if (is_dsc_common_config_possible(stream, &bw_range)) {
+> +
+> +             /*capable of dsc passthough. dsc bitstream along the entire
+> path*/
+> +             if (aconnector->mst_output_port->passthrough_aux) {
+> +                     if (bw_range.min_kbps > end_to_end_bw_in_kbps) {
+> +                             DRM_DEBUG_DRIVER("DSC passthrough.
+> Max dsc compression can't fit
+> +into end-to-end bw\n");
+>                       return DC_FAIL_BANDWIDTH_VALIDATE;
+> -             }
+> +                     }
+> +             } else {
+> +                     /*dsc bitstream decoded at the dp last link*/
+> +                     struct drm_dp_mst_port *immediate_upstream_port
+> =3D NULL;
+> +                     uint32_t end_link_bw =3D 0;
+> +
+> +                     /*Get last DP link BW capability*/
+> +                     if (dp_get_link_current_set_bw(&aconnector-
+> >mst_output_port->aux, &end_link_bw)) {
+> +                             if (stream_kbps > end_link_bw) {
+> +                                     DRM_DEBUG_DRIVER("DSC decode at
+> last link. Mode required bw can't fit into available bw\n");
+> +                                     return
+> DC_FAIL_BANDWIDTH_VALIDATE;
+> +                             }
+> +                     }
+>
+> -             if (end_to_end_bw_in_kbps < bw_range.stream_kbps) {
+> -                     dc_dsc_get_default_config_option(stream->link->dc,
+> &dsc_options);
+> -                     dsc_options.max_target_bpp_limit_override_x16 =3D
+> aconnector->base.display_info.max_dsc_bpp * 16;
+> -                     if (dc_dsc_compute_config(stream->sink->ctx->dc-
+> >res_pool->dscs[0],
+> -                                     &stream->sink-
+> >dsc_caps.dsc_dec_caps,
+> -                                     &dsc_options,
+> -                                     end_to_end_bw_in_kbps,
+> -                                     &stream->timing,
+> -
+>       dc_link_get_highest_encoding_format(stream->link),
+> -                                     &stream->timing.dsc_cfg)) {
+> -                             stream->timing.flags.DSC =3D 1;
+> -                             DRM_DEBUG_DRIVER("end-to-end
+> bandwidth require dsc and dsc config found\n");
+> -                     } else {
+> -                             DRM_DEBUG_DRIVER("end-to-end
+> bandwidth require dsc but dsc config not found\n");
+> -                             return DC_FAIL_BANDWIDTH_VALIDATE;
+> +                     /*Get virtual channel bandwidth between source and
+> the link before the last link*/
+> +                     if (aconnector->mst_output_port->parent-
+> >port_parent)
+> +                             immediate_upstream_port =3D
+> +aconnector->mst_output_port->parent->port_parent;
+> +
+> +                     if (immediate_upstream_port) {
+> +                             virtual_channel_bw_in_kbps =3D
+> kbps_from_pbn(immediate_upstream_port->full_pbn);
+> +                             virtual_channel_bw_in_kbps =3D
+> min(root_link_bw_in_kbps, virtual_channel_bw_in_kbps);
+> +                             if (bw_range.min_kbps >
+> virtual_channel_bw_in_kbps) {
+> +                                     DRM_DEBUG_DRIVER("DSC decode at
+> last link. Max dsc compression can't fit into MST available bw\n");
+> +                                     return
+> DC_FAIL_BANDWIDTH_VALIDATE;
+> +                             }
+>                       }
+>               }
+> -     } else {
+> -             /* Check if mode could be supported within max slot
+> -              * number of current mst link and full_pbn of mst links.
+> -              */
+> -             int pbn_div, slot_num, max_slot_num;
+> -             enum dc_link_encoding_format link_encoding;
+> -             uint32_t stream_kbps =3D
+> -                     dc_bandwidth_in_kbps_from_timing(&stream-
+> >timing,
+> -
+>       dc_link_get_highest_encoding_format(stream->link));
+> -
+> -             pbn =3D kbps_to_peak_pbn(stream_kbps);
+> -             pbn_div =3D dm_mst_get_pbn_divider(stream->link);
+> -             slot_num =3D DIV_ROUND_UP(pbn, pbn_div);
+> -
+> -             link_encoding =3D
+> dc_link_get_highest_encoding_format(stream->link);
+> -             if (link_encoding =3D=3D DC_LINK_ENCODING_DP_8b_10b)
+> -                     max_slot_num =3D 63;
+> -             else if (link_encoding =3D=3D
+> DC_LINK_ENCODING_DP_128b_132b)
+> -                     max_slot_num =3D 64;
+> -             else {
+> -                     DRM_DEBUG_DRIVER("Invalid link encoding
+> format\n");
+> -                     return DC_FAIL_BANDWIDTH_VALIDATE;
+> -             }
+>
+> -             if (slot_num > max_slot_num ||
+> -                     pbn > aconnector->mst_output_port->full_pbn) {
+> -                     DRM_DEBUG_DRIVER("Mode can not be supported
+> within mst links!");
+> +             /*Confirm if we can obtain dsc config*/
+> +             dc_dsc_get_default_config_option(stream->link->dc,
+> &dsc_options);
+> +             dsc_options.max_target_bpp_limit_override_x16 =3D
+> aconnector->base.display_info.max_dsc_bpp * 16;
+> +             if (dc_dsc_compute_config(stream->sink->ctx->dc->res_pool-
+> >dscs[0],
+> +                             &stream->sink->dsc_caps.dsc_dec_caps,
+> +                             &dsc_options,
+> +                             end_to_end_bw_in_kbps,
+> +                             &stream->timing,
+> +
+>       dc_link_get_highest_encoding_format(stream->link),
+> +                             &stream->timing.dsc_cfg)) {
+> +                     stream->timing.flags.DSC =3D 1;
+> +                     DRM_DEBUG_DRIVER("Require dsc and dsc config
+> found\n");
+> +             } else {
+> +                     DRM_DEBUG_DRIVER("Require dsc but can't find
+> appropriate dsc
+> +config\n");
+>                       return DC_FAIL_BANDWIDTH_VALIDATE;
+>               }
+> -     }
+>
+> -     /* check is mst dsc output bandwidth
+> branch_overall_throughput_0_mps */
+> -     switch (stream->timing.pixel_encoding) {
+> -     case PIXEL_ENCODING_RGB:
+> -     case PIXEL_ENCODING_YCBCR444:
+> -             branch_max_throughput_mps =3D
+> -                     aconnector->dc_sink-
+> >dsc_caps.dsc_dec_caps.branch_overall_throughput_0_mps;
+> -             break;
+> -     case PIXEL_ENCODING_YCBCR422:
+> -     case PIXEL_ENCODING_YCBCR420:
+> -             branch_max_throughput_mps =3D
+> -                     aconnector->dc_sink-
+> >dsc_caps.dsc_dec_caps.branch_overall_throughput_1_mps;
+> -             break;
+> -     default:
+> -             break;
+> -     }
+> +             /* check is mst dsc output bandwidth
+> branch_overall_throughput_0_mps */
+> +             switch (stream->timing.pixel_encoding) {
+> +             case PIXEL_ENCODING_RGB:
+> +             case PIXEL_ENCODING_YCBCR444:
+> +                     branch_max_throughput_mps =3D
+> +                             aconnector->dc_sink-
+> >dsc_caps.dsc_dec_caps.branch_overall_throughput_0_mps;
+> +                     break;
+> +             case PIXEL_ENCODING_YCBCR422:
+> +             case PIXEL_ENCODING_YCBCR420:
+> +                     branch_max_throughput_mps =3D
+> +                             aconnector->dc_sink-
+> >dsc_caps.dsc_dec_caps.branch_overall_throughput_1_mps;
+> +                     break;
+> +             default:
+> +                     break;
+> +             }
+>
+> -     if (branch_max_throughput_mps !=3D 0 &&
+> -             ((stream->timing.pix_clk_100hz / 10) >
+> branch_max_throughput_mps * 1000))
+> +             if (branch_max_throughput_mps !=3D 0 &&
+> +                     ((stream->timing.pix_clk_100hz / 10) >
+> branch_max_throughput_mps * 1000)) {
+> +                     DRM_DEBUG_DRIVER("DSC is required but max
+> throughput mps fails");
+>               return DC_FAIL_BANDWIDTH_VALIDATE;
+> -
+> +             }
+> +     } else {
+> +             DRM_DEBUG_DRIVER("DSC is required but can't find common
+> dsc config.");
+> +             return DC_FAIL_BANDWIDTH_VALIDATE;
+> +     }
+> +#endif
+>       return DC_OK;
+>  }
+> --
+> 2.45.2
 
