@@ -1,91 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE26813D521;
-	Mon,  5 Aug 2024 19:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C1C15C124
+	for <regressions@lists.linux.dev>; Tue,  6 Aug 2024 05:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722886031; cv=none; b=BOQAtA5GIaL2wxdRsS/ARBRHAJ9BfRHXcywbr/jXKPPj/s2JNsLMeCxCz255nxRFhImpFsBg7WbW+bBHOwyCse9C5Jm/Ggk9w8K8GDPzIMOHWG3oaqlG+2QGqZNFF+hWYQoKx/w8sSYhzWaAewRnJaY6oSUdYcyT0McmSozlH2k=
+	t=1722920840; cv=none; b=kbvPvNcGIxh8DplrzYsnvsm0VL+zdtHm0rqbCgWdnqg1eq7niy8dLqUaStXBf/X2vvHpQFaClKXYP5Rj82MbGwlEtJgcha2RI0tD9h5J7ppU/hcavGBsRdhKDSg8Ha5OBsmKfBpPHckHBjYlcd+HIQRaCAMpnkEtEGEJXYTL4Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722886031; c=relaxed/simple;
-	bh=90UvNn9K0mZ6VrUXGfzqNLue5sPsRmDgWkhqlksvKHY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qpA38BFii1b+wgfbA6ui3NrrE5mm8LO5Bt2ea5T6F10Ni+pfpww+kcOraAKz21YQPOc6Uqc5DTLLeUmUevaC+0lJoxEfCeuVmlNTs/EXBGN6k79ZzVa4oAdH2Z2UdqRLzh0DPFdD2jKlWZwPf7DDqGCKAuvcVlLHapBEm+FBvyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQ4xXIkX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722920840; c=relaxed/simple;
+	bh=apDWX41hzTvepTsaor7Otn5/Ivr3hjk1x5Lq8kdkbQo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XoCRUWHWp00UzbM64kqUpEhHpJktec54q3Q9RTpitK2XnvTupWEYPhygUff+Ju6DLBrbSj/MwNhbjxaKbJMgwcvCjoU4+zpVY8lAveDKhqs+3qhE56f80AFrgZL79j8/WKvPUx6TLmQ+SnPPN8/A2p8amJUz2InzNkKR7wQyMxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=D2QoG28i; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NZtpEaaw; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQ4xXIkX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416FAC32782;
-	Mon,  5 Aug 2024 19:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722886031;
-	bh=90UvNn9K0mZ6VrUXGfzqNLue5sPsRmDgWkhqlksvKHY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pQ4xXIkXzdww4DSnoBtUXTP2AgYpid/Rv4LvFJEs1ZEUcUj92JsyVM8l8Zkxyamh7
-	 2K2iF3O3Al/2zB2gQdl5dDk+xKm928QHeqWIYfP8GQzBKTsVHbrb3CmuB5+7YTdqov
-	 UywWvzSaTcdldKe/xGKlr69a1yc8ZfL+PiTORqX6IEc3PdahXNz+rtD68aG5aHosC+
-	 /MclcdPlCuVGZ7v5YQ+E6/68n2lntkyghABGyXE17Was3kh0/lygbpLowac25Hbwk9
-	 pxf7kLQap9nHV7gDJoE6htfXy/cGQOQMFawLvZSyMU8TKS4RslBzhzuGsGZYcPZVXz
-	 FPA+zP0dCDZuQ==
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Johan Hovold <johan+linaro@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, alsa-devel@alsa-project.org, 
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-In-Reply-To: <20240729131351.27886-1-johan+linaro@kernel.org>
-References: <20240729131351.27886-1-johan+linaro@kernel.org>
-Subject: Re: [PATCH] ASoC: codecs: lpass-macro: fix missing codec version
-Message-Id: <172288602778.71820.9069423638402649413.b4-ty@kernel.org>
-Date: Mon, 05 Aug 2024 20:27:07 +0100
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="D2QoG28i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NZtpEaaw"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id B4BC4115184B;
+	Tue,  6 Aug 2024 01:07:17 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute5.internal (MEProxy); Tue, 06 Aug 2024 01:07:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1722920837;
+	 x=1723007237; bh=BgnfkzSExE/qxu88/0KK7QSWgDm/YVsejCE1GRTeWMQ=; b=
+	D2QoG28iZfuj6HVD2ACxzTeTPStEIrdqFSWIkc8/5CmOQwIg4eVniMGB1lXxV2vO
+	n6HGWjHlhuNsSX2Msb73Zlvw+OO8W5xJx0QYY7ETOX/uVZbEN9mfvFkPPm9SxZlP
+	YnP1By9Hvqg7RCt43znDt2VMEcfr0RHgmbYgdPEUh8C/DirM2VGwzciTUimfKhq/
+	JNH4emj3d5tVqubeTI09n+4LN/S0REuwAO96DfdnMwLrVzld8axWuneyCaHuijgJ
+	1nRNszvpMJZV7UvK7Lvna/3u9bxfQ3lkXRNeJwOduiQ/fZyj+rkTSAaCXK8IV30v
+	ENjWYfCU+NQSUEl+/gFn5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1722920837; x=
+	1723007237; bh=BgnfkzSExE/qxu88/0KK7QSWgDm/YVsejCE1GRTeWMQ=; b=N
+	ZtpEaawHsVkrXwlydpyeNoZrmDQzwaPtDWibrL4CSC8CuE51QYHmynaUuW+QB6sc
+	D3ZRr2qXQKl3SzGCXcjFJfaJgdFscolNrhbMB5wDADGlSgoINwXYAXDK1PGB/DMA
+	JrC+5bmJRaPdht7moV7Hucqb0wxyBIlFvbO4jIEKYMWDyWO0TLcwZcmcX2ncDzE9
+	/MiWfaIw9I2p4h3hBYWBOBuhDYEmMPvESOxJm3i9f7HMQPdU40dhIrEx3y5db9Lm
+	j7JO3LoSyxOPBYUsIyno9is3x8KQvLvKPZAVkj/3i3w1ig+ljs1OIU8DtALAU6y/
+	b6kqgVo5bJDfwHhxgvu8A==
+X-ME-Sender: <xms:hK-xZsPuwW7Y3wlUfLkNlNFh76UKOl5oSVi9J40pGmJLrLXYLCv_og>
+    <xme:hK-xZi_3z-L5Lc9V_YHAGUJ4bCgeEZ4-QF3CljHKduS9BOQC-PVRR5q3esrnJi4DT
+    ypKR6DlBl9pKxIYRjU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrkeejgdelvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgr
+    gihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpeffkeevtedtueevfefhkefhudfggeetjeffjeduueehueej
+    gfeludevkedutdeuheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghn
+    ghesfhhlhihgohgrthdrtghomhdpnhgspghrtghpthhtoheptd
+X-ME-Proxy: <xmx:ha-xZjTRVAObh7Uv0wtlJQT-LCXPIBcBDlQtrlwILzCa2ByRvApwrQ>
+    <xmx:ha-xZks35dc82f9GsuY0rcK_gN9nERwkjYZLG029PLh2mfFQbdAs-g>
+    <xmx:ha-xZkexrRstUjfb15YI24IlQwjKqalVZGC3RzrmK3xihn5jPnMaEw>
+    <xmx:ha-xZo3hlFYLDmdrEtWPl79KGIi5OdKwd1tOgGBtl726jk6DUcVy-g>
+    <xmx:ha-xZrxuagU7lHBLOfOx0Nq2bfYelBgdGaphPrdL5GpuLA8HIzDkkJI8>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id DA53219C0079; Tue,  6 Aug 2024 01:07:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-37811
+Date: Tue, 06 Aug 2024 06:06:56 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Guenter Roeck" <linux@roeck-us.net>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Serge Semin" <fancer.lancer@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Message-Id: <97ad6c99-ca4e-463b-aee0-9a7e9455fea3@app.fastmail.com>
+In-Reply-To: <fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net>
+References: <20240612-mips-clks-v2-0-a57e6f49f3db@flygoat.com>
+ <20240612-mips-clks-v2-2-a57e6f49f3db@flygoat.com>
+ <fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net>
+Subject: Re: [PATCH v2 2/7] MIPS: csrc-r4k: Apply verification clocksource flags
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Jul 2024 15:13:51 +0200, Johan Hovold wrote:
-> Recent changes that started checking the codec version broke audio on
-> the Lenovo ThinkPad X13s:
-> 
-> 	wsa_macro 3240000.codec: Unsupported Codec version (0)
-> 	wsa_macro 3240000.codec: probe with driver wsa_macro failed with error -22
-> 	rx_macro 3200000.rxmacro: Unsupported Codec version (0)
-> 	rx_macro 3200000.rxmacro: probe with driver rx_macro failed with error -22
-> 
-> [...]
 
-Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+=E5=9C=A82024=E5=B9=B48=E6=9C=886=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
+=8D=8812:09=EF=BC=8CGuenter Roeck=E5=86=99=E9=81=93=EF=BC=9A
+> Hi,
+>
+> On Wed, Jun 12, 2024 at 09:54:29AM +0100, Jiaxun Yang wrote:
+>> CP0 counter suffers from various problems like SMP sync,
+>> behaviour on wait.
+>>=20
+>> Set CLOCK_SOURCE_MUST_VERIFY and CLOCK_SOURCE_VERIFY_PERCPU,
+>> as what x86 did to TSC, to let kernel test it before use.
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Thanks!
+Hi Guenter,
 
-[1/1] ASoC: codecs: lpass-macro: fix missing codec version
-      commit: 9a1af1e218779724ff29ca75f2b9397dc3ed11e7
+Thanks for the report, it makes no sense to me though....
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+I can't reproduce it with QEMU git master, do you mind specifying your Q=
+EMU
+version for me? Also is it possible to have a copy of dmesg when failure=
+ happens.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+If I'm unable to resolve it in a couple of days, I'll send a patch to re=
+vert this change.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Thanks
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+>
+> With this patch in the mainline kernel, about one in five qemu
+> boot attempts with e1000 Ethernet controller fail to activate
+> the network interface (specifically, the dhcp client is unable to
+> get an IP address for the interface). Bisect log is attached below.
+>
+> For reference, here is an example command line.
+>
+> qemu-system-mips64 -kernel vmlinux -M malta -cpu 5KEc \
+> 	-initrd rootfs-n32.cpio \
+> 	-device e1000,netdev=3Dnet0 -netdev user,id=3Dnet0 \
+> 	-vga cirrus -no-reboot -m 256 \
+> 	--append "rdinit=3D/sbin/init mem=3D256M console=3DttyS0 console=3Dtt=
+y " \
+> 	-nographic
+>
+> Reverting this patch fixes the probem.
+>
+> Thanks,
+> Guenter
+>
+> ---
+> # bad: [de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed] Linux 6.11-rc2
+> # good: [0c3836482481200ead7b416ca80c68a29cfdaabd] Linux 6.10
+> git bisect start 'HEAD' 'v6.10'
+> # good: [280e36f0d5b997173d014c07484c03a7f7750668] nsfs: use cleanup=20
+> guard
+> git bisect good 280e36f0d5b997173d014c07484c03a7f7750668
+> # good: [a4f9285520584977127946a22eab2adfbc87d1bf] Merge tag=20
+> 'clk-for-linus' of=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+> git bisect good a4f9285520584977127946a22eab2adfbc87d1bf
+> # bad: [8e313211f7d46d42b6aa7601b972fe89dcc4a076] Merge tag=20
+> 'pinctrl-v6.11-1' of=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+> git bisect bad 8e313211f7d46d42b6aa7601b972fe89dcc4a076
+> # good: [acc5965b9ff8a1889f5b51466562896d59c6e1b9] Merge tag=20
+> 'char-misc-6.11-rc1' of=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+> git bisect good acc5965b9ff8a1889f5b51466562896d59c6e1b9
+> # bad: [d2be38b9a5514dbc7dc0c96a2a7f619fcddce00d] Merge tag 'mips_6.11=
+'=20
+> of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+> git bisect bad d2be38b9a5514dbc7dc0c96a2a7f619fcddce00d
+> # good: [45659274e60864f9acabba844468e405362bdc8c] Merge branch=20
+> 'pci/misc'
+> git bisect good 45659274e60864f9acabba844468e405362bdc8c
+> # good: [8e5c0abfa02d85b9cd2419567ad2d73ed8fe4b74] Merge tag=20
+> 'input-for-v6.11-rc0' of=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+> git bisect good 8e5c0abfa02d85b9cd2419567ad2d73ed8fe4b74
+> # good: [3c3ff7be9729959699eb6cbc7fd7303566d74069] Merge tag=20
+> 'powerpc-6.11-1' of=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+> git bisect good 3c3ff7be9729959699eb6cbc7fd7303566d74069
+> # good: [3de96d810ffd712b7ad2bd764c1390fac2436551] dt-bindings: mips:=20
+> brcm: Document brcm,bmips-cbr-reg property
+> git bisect good 3de96d810ffd712b7ad2bd764c1390fac2436551
+> # bad: [9c7a86c935074525f24cc20e78a7d5150e4600e3] MIPS: lantiq: improv=
+e=20
+> USB initialization
+> git bisect bad 9c7a86c935074525f24cc20e78a7d5150e4600e3
+> # bad: [580724fce27f2b71b3e4d58bbe6d83b671929b33] MIPS: sync-r4k:=20
+> Rework based on x86 tsc_sync
+> git bisect bad 580724fce27f2b71b3e4d58bbe6d83b671929b33
+> # good: [c171186c177970d3ec22dd814f2693f1f7fc1e7d] MIPS: csrc-r4k:=20
+> Refine rating computation
+> git bisect good c171186c177970d3ec22dd814f2693f1f7fc1e7d
+> # bad: [426fa8e4fe7bb914b5977cbce453a9926bf5b2e6] MIPS: csrc-r4k:=20
+> Select HAVE_UNSTABLE_SCHED_CLOCK if SMP && 64BIT
+> git bisect bad 426fa8e4fe7bb914b5977cbce453a9926bf5b2e6
+> # bad: [7190401fc56fb5f02ee3d04476778ab000bbaf32] MIPS: csrc-r4k: Appl=
+y=20
+> verification clocksource flags
+> git bisect bad 7190401fc56fb5f02ee3d04476778ab000bbaf32
+> # first bad commit: [7190401fc56fb5f02ee3d04476778ab000bbaf32] MIPS:=20
+> csrc-r4k: Apply verification clocksource flags
 
-Thanks,
-Mark
-
+--=20
+- Jiaxun
