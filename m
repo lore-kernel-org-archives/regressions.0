@@ -1,75 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEA857CBB
-	for <regressions@lists.linux.dev>; Tue,  6 Aug 2024 17:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4104C7346F
+	for <regressions@lists.linux.dev>; Tue,  6 Aug 2024 17:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722966303; cv=none; b=JeiCLenjY0Cl8ePYRd4W5x+DsMD3mthBMuS2pIndem8d11P+74Nf2MoS31ssyAnx3LIm1asc9Lm7sr33oYtdQDLAv8YXt7gX4TWsvBwzQOFS08oJXapeSyiDbQs8r4qECmwzx0WI/MI0MKlfeK2rxqaqrZo3AK25co2Ups+1/gg=
+	t=1722966919; cv=none; b=W8Nm6TyzPK4e+4QYEHxaAI6YvrwlZ38x1pIH3NaaEojK0JkI383mB409ARB/XiTeT9j+O2bYguWb9or3l4cMbt/ighvZowrs/+YGThHHYo1Zj/rwT3SFjVMnsm8jzuVo8BcffJPedjjb/xTfg42U/75RylwqI5TcZR+1Y8yjbYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722966303; c=relaxed/simple;
-	bh=m4n/n8d0yhcqbAYUaN7Qk3uAJICwA+uUTvDl5O0qTU4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Js8ag5q1rkLPIcXKJRvKNazCRygAMufARP5/3K3tqoWcu3xv3cu7AtJbfZc4i0KQCgRnJ+6FaWpShStg30+LG79QitJfKkz8YmFW6X2ov+fvFoOyM28PW2cTmh54VdISLCesW9+GEuWTtL3fd+WX7zzCDNtAbSvFNCJ6iJH8JFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CBePy7cr; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1722966919; c=relaxed/simple;
+	bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKRVLCRzCeIUxiKfFram8NtOQ8TlmJ1e3KHe6oMbnYZubegZWQDQCw3KoajhniHDYJEQHwG9192AMWfw1JXbhiqBdRHurxWkKk59wxxGRRp46Q+axxVhjvKlylMYlmH4xZF5L80EJKQSUFm/JEi+I6Xra6rHzcnpgZfwH44YjoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nO7wGKCj; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CBePy7cr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=m4n/n8d0yhcqbAYUaN7Qk3uAJICwA+uUTvDl5O0qTU4=; t=1722966301;
-	x=1723398301; b=CBePy7cr6GkvmE/kSCqdLsiPCb0EeK948XsoQ8HEWecHrxdnCfiHntdy0+RJh
-	FFxRIYIwoc8G3u+suRQdX5hGIteTez54052C+YzpyL1jh6D/JwCGA1QKWGu6yWEM0mH03zLIpXi1B
-	i6m7h6nT4duaW8prI5uCe1tvi+1aVVBwWIcgjTFBDMOgBhsrSCJpAoeqeuGWnmFHf8lpYqCXppzQr
-	2m9uBc1r/Lo57HFFhRm4beWSH8JcGEpJ53w5/6fSanAHEECNeVPNEsRgY+BE0orYbO/6FVO3oASbo
-	sPbWzuwszny5wuLSHn2jDztBxhrABerJ/F3g3RLuJrwY0pdLdQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sbOF1-00081M-Gn; Tue, 06 Aug 2024 19:44:59 +0200
-Message-ID: <ef9505e3-0d18-4b16-92a1-f54ee54e5391@leemhuis.info>
-Date: Tue, 6 Aug 2024 19:44:59 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nO7wGKCj"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f189a2a7f8so11552621fa.2
+        for <regressions@lists.linux.dev>; Tue, 06 Aug 2024 10:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722966916; x=1723571716; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+        b=nO7wGKCjD89ql9OcM2gnTjc0viZuWWy63qYC9gvxBjTTrbWHSueouRnDk9QERgOqi8
+         jAyDACn6pjANodQ6ydgBu6wyG+XyEUIRRU4QXLeAPpF18OWYLMbVRK9omw6M7LeUq0Z/
+         XuVU5ID5zlQ8Uf6wB3+uyA2I1xdopKJJe+Mm6r4KUFOV7PyyAzV6VaUV0NvWGSohhqR/
+         0q4JM3VVHDkkjb3uUTCXO8PORr4HQIsECILXo7YPvRz8aVsZZ+aD4fXw9eMsuziR1LKI
+         G6UxFejKvT8apjVKtaBaqR/GbLR8IesqAL2l45RmoyQWuwjW21H8BrCZUG2zK+tqydCv
+         dGpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722966916; x=1723571716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+        b=AKusgBSz4lgqAQd1yklpBE7lXCYi90df/wsLnXiSaRju56bWwFK1KCgIlvHKKkvSUK
+         6VNl4BOYk+C+4yTRNLtc8O9a9fob8KZAhKzvFZ4mDqUnG72Kqkag+pdSGggvYojaYM5B
+         A5zctC+zhqpxFRevnK6ib7HZPbjvSw+4TUUBynMFzn4LylU6b2yWai+teMEgGlNveOte
+         jc1vczCd/kffl/fUxQmWMS1UciABiFsqFN9lxKx3w7einCRxHE6MPgv43VmXFYWHDELW
+         gx5dHdP6EUqx5B/ttUCycPXxHq4SiddzBMINONM15IP0tls9Brc61BTiEbAlFg7W9sUJ
+         i/ag==
+X-Gm-Message-State: AOJu0Yydnfdjvhg1WvBkU8Vq0dKNF09496TguQd72HOcmQLZA6F08Toh
+	6MmwgXoIWsn0tIcXJjj90Zre4fhTYfrtNCEiDkej8T0DiXYOk2bTltitLA==
+X-Google-Smtp-Source: AGHT+IGslzbtBNGll023sYG20tJekoTuYzSHLMfH/zJMMs3DJvHbbhuUhDqEdxd54NQsliKDQzpvXQ==
+X-Received: by 2002:a2e:9e02:0:b0:2ec:617b:4757 with SMTP id 38308e7fff4ca-2f15aa95757mr105344631fa.13.1722966915621;
+        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
+Received: from alexis-pc ([2a01:e0a:d77:ff0:2146:fb54:fbe:f1d0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb64952sm253629025e9.37.2024.08.06.10.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
+Date: Tue, 6 Aug 2024 19:55:13 +0200
+From: Alexis Belmonte <alexbelm48@gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support
+ for 8BAD boards
+Message-ID: <ZrJjgVkVO5S7ljY9@alexis-pc>
+References: <ZZFGgfsfrU2vuQoI@alexis-pc>
+ <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722966301;38e5d106;
-X-HE-SMSGID: 1sbOF1-00081M-Gn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
 
+Hi Thorsten!
 
+Thanks for the heads up! I've taken a look at the report and proposed a
+patch to them that I've not submitted yet to the mailing list.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I'll wait on their feedback and see if it works for them.
 
-#regzbot report: https://github.com/systemd/systemd/issues/33775
-#regzbot introduced: bf2ac490d28c
-#regzbot from: peterneutron
-#regzbot summary: netfilter: nfnetlink: systemd-networkd SEGV
-#regzbot fix: netfilter: nfnetlink: Initialise extack before use in ACKs
+Thanks again and have a great day,
 
-#regzbot report:
-https://lore.kernel.org/all/314ee964-fe3f-4b4a-b83f-76ed6e6e16dd@roeck-us.net/
-#regzbot introduced: 7190401fc56fb5f02ee3d04476778ab000bbaf32
-#regzbot dup:
-https://lore.kernel.org/all/b0d32b16-2def-48cf-84c1-3403f71c5b03@app.fastmail.com/
-#regzbot summary: MIPS: csrc-r4k: QEMU malta MIPS64 network failure
-
-
+Alexis
