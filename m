@@ -1,61 +1,37 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EAA1D54FB
-	for <regressions@lists.linux.dev>; Tue,  6 Aug 2024 15:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEA857CBB
+	for <regressions@lists.linux.dev>; Tue,  6 Aug 2024 17:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722956813; cv=none; b=mQXIFbmIbsAmEf2oAbNlQ4ZF/ssQC+vqZ4O4pVbOZ6+xFCxU+ZMrVvypruYNRyBMpblQglx3o/t32XMPJ2wpskCj0YenCCc6KZrA1PXcuGuSe1IsBfUPurPDRMzMV5tms5Lm+B4cd9T8CxZYFc4lXI+UvTUxwIHCISWllbl9yEk=
+	t=1722966303; cv=none; b=JeiCLenjY0Cl8ePYRd4W5x+DsMD3mthBMuS2pIndem8d11P+74Nf2MoS31ssyAnx3LIm1asc9Lm7sr33oYtdQDLAv8YXt7gX4TWsvBwzQOFS08oJXapeSyiDbQs8r4qECmwzx0WI/MI0MKlfeK2rxqaqrZo3AK25co2Ups+1/gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722956813; c=relaxed/simple;
-	bh=JlMO4F3cSR8KssXl8sgOq1OXS7xAKJj6mVCZp5Uz4Ec=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LfCpewmT300t2gXoIwznNa6eiVpx/5O/etOVU7kGLhMm+di+UmrhWgBeAchN9ojkYnG2pyxN53Z4sD8Y+sRbkcgr7ExKT75cwzcrxtb5GGcj01oLtcmovjh9Fv5qiADDm6Cn8NFHpova4D+pqGhB8WTgUwmfia3WnYyVPaCxXw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mI2SeowT; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722966303; c=relaxed/simple;
+	bh=m4n/n8d0yhcqbAYUaN7Qk3uAJICwA+uUTvDl5O0qTU4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Js8ag5q1rkLPIcXKJRvKNazCRygAMufARP5/3K3tqoWcu3xv3cu7AtJbfZc4i0KQCgRnJ+6FaWpShStg30+LG79QitJfKkz8YmFW6X2ov+fvFoOyM28PW2cTmh54VdISLCesW9+GEuWTtL3fd+WX7zzCDNtAbSvFNCJ6iJH8JFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CBePy7cr; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI2SeowT"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fc60c3ead4so5738155ad.0
-        for <regressions@lists.linux.dev>; Tue, 06 Aug 2024 08:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722956812; x=1723561612; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=OrDsz0XE0x5bR55QR2nM7yv4fZk6jVk6rHKzH1A8O2E=;
-        b=mI2SeowTDUwTIOyQgp4atr+dZ3JMzCgoJ3nVFxpn8vwdddYX34VNiFZIftgBrqkxrI
-         EXXqn3COLbQRAXOsAOYbmSLQjWpoPLLgwkHtOYZrY2+dLgd+45sRsH3DNpsvs0zSGQEs
-         /EOmke/Kv+AJXbhaxDoU4pNdY6GeTs3PaWwSKFy8sOdMR028NdkT5c8y8e1/YxPrMEVe
-         cC99zgqBP3amJRPVESG9JqdUmF3TWb3j5QUMyiq8GNrm479Ktc80akJmRh63K5Va/PPE
-         Sy0B9xz+sH6QAMeh9Pj1m7eDvEob3NRIVsRHwKd9BPKOe0y+7IqsvklZQEiEU4lkMDI6
-         99sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722956812; x=1723561612;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OrDsz0XE0x5bR55QR2nM7yv4fZk6jVk6rHKzH1A8O2E=;
-        b=oojhfF4NvS30PZsyUgj3DEIlCfWWMvqh0LkBk2JwIcMmuiETVKT+x0I/dkqHEXXgdE
-         usOYxWkr/UdR+wRQOmgaLFsOUKIbape1Rs0fY7AX83YScyNQasVslIHrKwp/G9jK4K+R
-         /jsEowwHmtX0VGcpVy9ewNZSNq5QkuKZLho2TYaPXF8xBf7jpQdrBOhlZaAxANfn84JN
-         N4eLAG+Tabe/vuZn0K5WFy2jlu+nq3n/ONFuOk9lrq+y1gEkpmdBySKIAXVMg5q5+Xoy
-         fFjxUVzrvTnaSJ4NrqH0K+IjEoRvN1nJnD1p/3G0aDt0nYR0Jztxhs3FC0HY8jUPdztA
-         Up4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU1uEwpceENykAM/Gc5HJcSE6WSa5wkIwrQnp7TUW7EY0UtS1H4s5uaBMRxnDXTmWleQcTnsdvZdS/1seCYsfo94maJrXBtpj5kKQE=
-X-Gm-Message-State: AOJu0Yzun70dqgmFX95S90DMRlwyqQxtvOWrdiD91kbJ5EIYFFwC/4e8
-	6oeTnTVf2/tdXmoy+SmGsBCKVsjYqtdq0kK1qMrLUvJJzaOe9xdC
-X-Google-Smtp-Source: AGHT+IHwejZcW1jpQSvHj9nn0EIJDjptOBSgF+7+uAEcf9yLPPvacuMtCBGhTBOdj5GahG/nwJ+eTQ==
-X-Received: by 2002:a17:902:d4c2:b0:1ff:4fa5:62f2 with SMTP id d9443c01a7336-1ff57361144mr167028475ad.30.1722956811477;
-        Tue, 06 Aug 2024 08:06:51 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b8a7453e92sm4474937a12.41.2024.08.06.08.06.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Aug 2024 08:06:50 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <900ae60e-84f8-4300-87e7-7f35d16ad439@roeck-us.net>
-Date: Tue, 6 Aug 2024 08:06:49 -0700
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CBePy7cr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=m4n/n8d0yhcqbAYUaN7Qk3uAJICwA+uUTvDl5O0qTU4=; t=1722966301;
+	x=1723398301; b=CBePy7cr6GkvmE/kSCqdLsiPCb0EeK948XsoQ8HEWecHrxdnCfiHntdy0+RJh
+	FFxRIYIwoc8G3u+suRQdX5hGIteTez54052C+YzpyL1jh6D/JwCGA1QKWGu6yWEM0mH03zLIpXi1B
+	i6m7h6nT4duaW8prI5uCe1tvi+1aVVBwWIcgjTFBDMOgBhsrSCJpAoeqeuGWnmFHf8lpYqCXppzQr
+	2m9uBc1r/Lo57HFFhRm4beWSH8JcGEpJ53w5/6fSanAHEECNeVPNEsRgY+BE0orYbO/6FVO3oASbo
+	sPbWzuwszny5wuLSHn2jDztBxhrABerJ/F3g3RLuJrwY0pdLdQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sbOF1-00081M-Gn; Tue, 06 Aug 2024 19:44:59 +0200
+Message-ID: <ef9505e3-0d18-4b16-92a1-f54ee54e5391@leemhuis.info>
+Date: Tue, 6 Aug 2024 19:44:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,107 +39,37 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] MIPS: csrc-r4k: Apply verification clocksource
- flags
-From: Guenter Roeck <linux@roeck-us.net>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Serge Semin <fancer.lancer@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, "Maciej W. Rozycki"
- <macro@orcam.me.uk>, "linux-mips@vger.kernel.org"
- <linux-mips@vger.kernel.org>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20240612-mips-clks-v2-0-a57e6f49f3db@flygoat.com>
- <20240612-mips-clks-v2-2-a57e6f49f3db@flygoat.com>
- <fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net>
- <97ad6c99-ca4e-463b-aee0-9a7e9455fea3@app.fastmail.com>
- <62e8056b-6a6c-42d1-89f6-7306bb2a528b@roeck-us.net>
-Content-Language: en-US
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <62e8056b-6a6c-42d1-89f6-7306bb2a528b@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722966301;38e5d106;
+X-HE-SMSGID: 1sbOF1-00081M-Gn
 
-On 8/5/24 22:13, Guenter Roeck wrote:
-> On 8/5/24 22:06, Jiaxun Yang wrote:
->>
->>
->> 在2024年8月6日八月 下午12:09，Guenter Roeck写道：
->>> Hi,
->>>
->>> On Wed, Jun 12, 2024 at 09:54:29AM +0100, Jiaxun Yang wrote:
->>>> CP0 counter suffers from various problems like SMP sync,
->>>> behaviour on wait.
->>>>
->>>> Set CLOCK_SOURCE_MUST_VERIFY and CLOCK_SOURCE_VERIFY_PERCPU,
->>>> as what x86 did to TSC, to let kernel test it before use.
->>>>
->>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>
->> Hi Guenter,
->>
->> Thanks for the report, it makes no sense to me though....
->>
->> I can't reproduce it with QEMU git master, do you mind specifying your QEMU
->> version for me? Also is it possible to have a copy of dmesg when failure happens.
->>
-> 
-> I currently use v9.0.2. I'll try with some other versions tomorrow.
-> A complete log is at
-> https://kerneltests.org/builders/qemu-mips64-master/builds/241/steps/qemubuildcommand/logs/stdio
-> 
-> Are you trying to instantiate an e1000 (or a variant of it) ? So far
-> I have only seen the problem with that controller. There is no specific
-> error message, the network interface just doesn't get an IP address.
-> 
 
-I am able to reproduce the problem with qemu 6.2.0 (Debian build).
-http://server.roeck-us.net/qemu/mips64/ should have everything needed to
-reproduce it. "repeat.sh" repeats the test until it fails.
 
-Hope this helps,
-Guenter
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report: https://github.com/systemd/systemd/issues/33775
+#regzbot introduced: bf2ac490d28c
+#regzbot from: peterneutron
+#regzbot summary: netfilter: nfnetlink: systemd-networkd SEGV
+#regzbot fix: netfilter: nfnetlink: Initialise extack before use in ACKs
+
+#regzbot report:
+https://lore.kernel.org/all/314ee964-fe3f-4b4a-b83f-76ed6e6e16dd@roeck-us.net/
+#regzbot introduced: 7190401fc56fb5f02ee3d04476778ab000bbaf32
+#regzbot dup:
+https://lore.kernel.org/all/b0d32b16-2def-48cf-84c1-3403f71c5b03@app.fastmail.com/
+#regzbot summary: MIPS: csrc-r4k: QEMU malta MIPS64 network failure
+
 
