@@ -1,221 +1,307 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAA313F012;
-	Wed,  7 Aug 2024 18:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C00B12B169
+	for <regressions@lists.linux.dev>; Wed,  7 Aug 2024 18:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723055208; cv=none; b=QppFfPORdAANrg5I4fiC+5cFasblKJwbzPghubuYH+Y+ffNRFmb6ggPkWo3xQzBDgtmVXteyoWDgDQ82At2c6K1XVGnwXHYFXuNAE/9vX/U6ruA2hoVe/S/ysnsjjxeCuIN+dg/d4nH7nSUsweezn0mgokypy44UtTefzP4kd40=
+	t=1723055864; cv=none; b=WGSeE7f7tYKoFOyCWsJPjxqgIKZ+AElfq+aNgTEexGazyvZm7+7gGIQZfmARjmXNxD/ystDN1S0GDdzWfZTdUGhuOC+/jwtHJbV2jf7n46g0IEL2+uQjO14S2tuPNAO+aQoU/DALrjX/rethHIqvLPiLTbNC9SSkAU7g8E0PzJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723055208; c=relaxed/simple;
-	bh=qiQ964hV5kDZS/RItHahPQgdcg5kxk6+8N4yNvf/Trg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ceH+Otq0Sn8EDdMKSDBpVdEvmVOB1MOZXolwPo1dW/xwQ7DL31cOmoOgY8/VZ4aubxVGnKfmIuzvc1UvK396PbfItMEDqf1i+P90u9nL1qY7MEnY0RzrR6uYdus4CcBssyhpRdBD0a3BaGZvdB1pGtMUhUCVLOWY1f6qAB4EtpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNpUT1HT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723055864; c=relaxed/simple;
+	bh=CI38NBqvpLgEio8pnShmGbgJ4EtQ22pvUjsmaMuyq64=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CqJmb1saFeAx7SPGVlBFHnReDSjiMCZ2jQaK3m9XLkgCj1a0JtpyrBzLZp4ryrbv0OUrL4WBfN8M8iTF1bociLw62Pv2CzUDH2I+NFK9aeEu38EUTlDxkGYoCiSfMJK1qF0w/CYLRoCo4NxuP3LD0ysLEU9jdPImcBbRswAWF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=B206mSKX; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNpUT1HT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36309C32781;
-	Wed,  7 Aug 2024 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723055207;
-	bh=qiQ964hV5kDZS/RItHahPQgdcg5kxk6+8N4yNvf/Trg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UNpUT1HTP3iOXlZ2uIs6pmVjUc0GPwhCg5jRbvrSz/cv0bQ2yn3Oem6Bfd4HGrCRs
-	 0lXM8ecAkMOGThEgPNj3i2ZaoBvFUo2X94KRawQC+bHpYdN7AZDJs2iWBRfqbqHCr3
-	 nR7h/ssu7CI0L1Ml/WxcPPNGtTE5p6cvFOw2i+toEnUTp0ZxJ/O4wdn8BFotivq63X
-	 tvjtZ2ahT4hGZZzCPyVes3hxvoIwiN4zfQQZFrNW6Zp5sUV3iU2IQllGOSGAPzne8R
-	 HKa6xL2cmInpcJGkwJR9H1KFfKhSDSXu/tL/iUzHgaBANbpVGcZ3GAav44O6mTBKPq
-	 f0NUN9eGtyvyA==
-Message-ID: <45cdf1c2-9056-4ac2-8e4d-4f07996a9267@kernel.org>
-Date: Wed, 7 Aug 2024 11:26:46 -0700
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="B206mSKX"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 40314418B1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1723055857; bh=j5tAlNX+pQUFnmYMm1+XGm4T1zHfXV5AsYeIWLqsfhk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=B206mSKX1ap3GEhkyNPF/td7lR907oObEkliyxa37AQRSt16MSPApNHFnqkaCSQwU
+	 Wqm1DWFay3XZ6wkIpFiG7Dgiixq/vp16Opvj3xrHU00EcIEKJi1XYYe3RCGY6YbgqO
+	 yyCPAComXzcjiDDVsA1j8JvCct67Wdsw49d6+EsyKFcw230sjPcTmmNTI7YK9F/FNN
+	 neCN+HDCv33dn0KMznLpsvU9131i3KDj5IX7MA5MVEKRpEKWJdmW9JapxDurcRdwPX
+	 RiYmXKyOxpfeHJZhxMqbwY9FtSF/UImJEwtKj10ZxWxAqWNLpcmB/bGmCirsy8CygI
+	 4z7XhdHcaHtjw==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 40314418B1;
+	Wed,  7 Aug 2024 18:37:37 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
+ =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v1] docs: bug-bisect: rewrite to better match the other
+ bisecting text
+In-Reply-To: <10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info>
+References: <10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info>
+Date: Wed, 07 Aug 2024 12:37:36 -0600
+Message-ID: <87ttfwrxfz.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED][STABLE] hdparm errors since 28ab9769117c
-To: Christian Heusel <christian@heusel.eu>, Igor Pylypiv
- <ipylypiv@google.com>, Niklas Cassel <cassel@kernel.org>,
- linux-ide@vger.kernel.org
-Cc: Hannes Reinecke <hare@suse.de>, regressions@lists.linux.dev,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <0bf3f2f0-0fc6-4ba5-a420-c0874ef82d64@heusel.eu>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <0bf3f2f0-0fc6-4ba5-a420-c0874ef82d64@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 2024/08/07 10:23, Christian Heusel wrote:
-> Hello Igor, hello Niklas,
-> 
-> on my NAS I am encountering the following issue since v6.6.44 (LTS),
-> when executing the hdparm command for my WD-WCC7K4NLX884 drives to get
-> the active or standby state:
-> 
->     $ hdparm -C /dev/sda
->     /dev/sda:
->     SG_IO: bad/missing sense data, sb[]:  f0 00 01 00 50 40 ff 0a 00 00 78 00 00 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->      drive state is:  unknown
-> 
-> 
-> While the expected output is the following:
-> 
->     $ hdparm -C /dev/sda
->     /dev/sda:
->      drive state is:  active/idle
-> 
-> I did a bisection within the stable series and found the following
-> commit to be the first bad one:
-> 
->     28ab9769117c ("ata: libata-scsi: Honor the D_SENSE bit for CK_COND=1 and no error")
-> 
-> According to kernel.dance the same commit was also backported to the
-> v6.10.3 and v6.1.103 stable kernels and I could not find any commit or
-> pending patch with a "Fixes:" tag for the offending commit.
-> 
-> So far I have not been able to test with the mainline kernel as this is
-> a remote device which I couldn't rescue in case of a boot failure. Also
-> just for transparency it does have the out of tree ZFS module loaded,
-> but AFAIU this shouldn't be an issue here, as the commit seems clearly
-> related to the error. If needed I can test with an untainted mainline
-> kernel on Friday when I'm near the device.
-> 
-> I have attached the output of hdparm -I below and would be happy to
-> provide further debug information or test patches.
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-I confirm this, using 6.11-rc2. The problem is actually hdparm code which
-assumes that the sense data is in descriptor format without ever looking at the
-D_SENSE bit to verify that. So commit 28ab9769117c reveals this issue because as
-its title explains, it (correctly) honors D_SENSE instead of always generating
-sense data in descriptor format.
-
-Hmm... This is annoying. The kernel is fixed to be spec compliant but that
-breaks old/non-compliant applications... We definitely should fix hdparm code,
-but I think we still need to revert 28ab9769117c...
-
-Niklas, Igor, thoughts ?
-
-> 
-> Cheers,
-> Christian
-> 
+> Rewrite the short document on bisecting kernel bugs. The new text
+> improves .config handling, brings a mention of 'git skip', and explains
+> what to do after the bisection finished -- including trying a revert to
+> verify the result. The rewrite at the same time removes the unrelated
+> and outdated section on 'Devices not appearing' and replaces some
+> sentences about bug reporting with a pointer to the document covering
+> that topic in detail.
+>
+> This overall brings the approach close to the one in the recently added
+> text Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
+> As those two texts serve a similar purpose for different audiences,
+> mention that document in the head of this one and outline when the
+> other might be the better one to follow.
+>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 > ---
-> 
-> #regzbot introduced: 28ab9769117c
-> #regzbot title: ata: libata-scsi: Sense data errors breaking hdparm with WD drives
-> 
-> ---
-> 
-> $ pacman -Q hdparm
-> hdparm 9.65-2
-> 
-> $ hdparm -I /dev/sda
-> 
-> /dev/sda:
-> 
-> ATA device, with non-removable media
-> 	Model Number:       WDC WD40EFRX-68N32N0
-> 	Serial Number:      WD-WCC7K4NLX884
-> 	Firmware Revision:  82.00A82
-> 	Transport:          Serial, SATA 1.0a, SATA II Extensions, SATA Rev 2.5, SATA Rev 2.6, SATA Rev 3.0
-> Standards:
-> 	Used: unknown (minor revision code 0x006d) 
-> 	Supported: 10 9 8 7 6 5 
-> 	Likely used: 10
-> Configuration:
-> 	Logical		max	current
-> 	cylinders	16383	0
-> 	heads		16	0
-> 	sectors/track	63	0
-> 	--
-> 	LBA    user addressable sectors:   268435455
-> 	LBA48  user addressable sectors:  7814037168
-> 	Logical  Sector size:                   512 bytes
-> 	Physical Sector size:                  4096 bytes
-> 	Logical Sector-0 offset:                  0 bytes
-> 	device size with M = 1024*1024:     3815447 MBytes
-> 	device size with M = 1000*1000:     4000787 MBytes (4000 GB)
-> 	cache/buffer size  = unknown
-> 	Form Factor: 3.5 inch
-> 	Nominal Media Rotation Rate: 5400
-> Capabilities:
-> 	LBA, IORDY(can be disabled)
-> 	Queue depth: 32
-> 	Standby timer values: spec'd by Standard, with device specific minimum
-> 	R/W multiple sector transfer: Max = 16	Current = 16
-> 	DMA: mdma0 mdma1 mdma2 udma0 udma1 udma2 udma3 udma4 udma5 *udma6 
-> 	     Cycle time: min=120ns recommended=120ns
-> 	PIO: pio0 pio1 pio2 pio3 pio4 
-> 	     Cycle time: no flow control=120ns  IORDY flow control=120ns
-> Commands/features:
-> 	Enabled	Supported:
-> 	   *	SMART feature set
-> 	    	Security Mode feature set
-> 	   *	Power Management feature set
-> 	   *	Write cache
-> 	   *	Look-ahead
-> 	   *	Host Protected Area feature set
-> 	   *	WRITE_BUFFER command
-> 	   *	READ_BUFFER command
-> 	   *	NOP cmd
-> 	   *	DOWNLOAD_MICROCODE
-> 	    	Power-Up In Standby feature set
-> 	   *	SET_FEATURES required to spinup after power up
-> 	    	SET_MAX security extension
-> 	   *	48-bit Address feature set
-> 	   *	Device Configuration Overlay feature set
-> 	   *	Mandatory FLUSH_CACHE
-> 	   *	FLUSH_CACHE_EXT
-> 	   *	SMART error logging
-> 	   *	SMART self-test
-> 	   *	General Purpose Logging feature set
-> 	   *	64-bit World wide name
-> 	   *	IDLE_IMMEDIATE with UNLOAD
-> 	   *	WRITE_UNCORRECTABLE_EXT command
-> 	   *	{READ,WRITE}_DMA_EXT_GPL commands
-> 	   *	Segmented DOWNLOAD_MICROCODE
-> 	   *	Gen1 signaling speed (1.5Gb/s)
-> 	   *	Gen2 signaling speed (3.0Gb/s)
-> 	   *	Gen3 signaling speed (6.0Gb/s)
-> 	   *	Native Command Queueing (NCQ)
-> 	   *	Host-initiated interface power management
-> 	   *	Phy event counters
-> 	   *	Idle-Unload when NCQ is active
-> 	   *	NCQ priority information
-> 	   *	READ_LOG_DMA_EXT equivalent to READ_LOG_EXT
-> 	   *	DMA Setup Auto-Activate optimization
-> 	   *	Device-initiated interface power management
-> 	   *	Software settings preservation
-> 	   *	SMART Command Transport (SCT) feature set
-> 	   *	SCT Write Same (AC2)
-> 	   *	SCT Error Recovery Control (AC3)
-> 	   *	SCT Features Control (AC4)
-> 	   *	SCT Data Tables (AC5)
-> 	    	unknown 206[12] (vendor specific)
-> 	    	unknown 206[13] (vendor specific)
-> 	   *	DOWNLOAD MICROCODE DMA command
-> 	   *	WRITE BUFFER DMA command
-> 	   *	READ BUFFER DMA command
-> Security: 
-> 	Master password revision code = 65534
-> 		supported
-> 	not	enabled
-> 	not	locked
-> 		frozen
-> 	not	expired: security count
-> 		supported: enhanced erase
-> 	504min for SECURITY ERASE UNIT. 504min for ENHANCED SECURITY ERASE UNIT.
-> Logical Unit WWN Device Identifier: 50014ee2647735a1
-> 	NAA		: 5
-> 	IEEE OUI	: 0014ee
-> 	Unique ID	: 2647735a1
-> Checksum: correct
+>  Documentation/admin-guide/bug-bisect.rst | 205 +++++++++++++++--------
+>  MAINTAINERS                              |   1 +
+>  2 files changed, 135 insertions(+), 71 deletions(-)
 
--- 
-Damien Le Moal
-Western Digital Research
+So overall this seems like a good thing to do.  I wouldn't be me if I
+didn't have some comments though...:)
 
+> diff --git a/Documentation/admin-guide/bug-bisect.rst b/Documentation/admin-guide/bug-bisect.rst
+> index 325c5d0ed34a0a..f4a9acab65d0f5 100644
+> --- a/Documentation/admin-guide/bug-bisect.rst
+> +++ b/Documentation/admin-guide/bug-bisect.rst
+> @@ -1,76 +1,139 @@
+> -Bisecting a bug
+> -+++++++++++++++
+> -
+> -Last updated: 28 October 2016
+> -
+> -Introduction
+> -============
+> -
+> -Always try the latest kernel from kernel.org and build from source. If you are
+> -not confident in doing that please report the bug to your distribution vendor
+> -instead of to a kernel developer.
+> -
+> -Finding bugs is not always easy. Have a go though. If you can't find it don't
+> -give up. Report as much as you have found to the relevant maintainer. See
+> -MAINTAINERS for who that is for the subsystem you have worked on.
+> -
+> -Before you submit a bug report read
+> -'Documentation/admin-guide/reporting-issues.rst'.
+> -
+> -Devices not appearing
+> -=====================
+> -
+> -Often this is caused by udev/systemd. Check that first before blaming it
+> -on the kernel.
+> -
+> -Finding patch that caused a bug
+> -===============================
+> -
+> -Using the provided tools with ``git`` makes finding bugs easy provided the bug
+> -is reproducible.
+> -
+> -Steps to do it:
+> -
+> -- build the Kernel from its git source
+> -- start bisect with [#f1]_::
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR CC-BY-4.0)
+> +.. [see the bottom of this file for redistribution information]
+>  
+> -	$ git bisect start
+> -
+> -- mark the broken changeset with::
+> -
+> -	$ git bisect bad [commit]
+> -
+> -- mark a changeset where the code is known to work with::
+> -
+> -	$ git bisect good [commit]
+> -
+> -- rebuild the Kernel and test
+> -- interact with git bisect by using either::
+> -
+> -	$ git bisect good
+> -
+> -  or::
+> -
+> -	$ git bisect bad
+> -
+> -  depending if the bug happened on the changeset you're testing
+> -- After some interactions, git bisect will give you the changeset that
+> -  likely caused the bug.
+> -
+> -- For example, if you know that the current version is bad, and version
+> -  4.8 is good, you could do::
+> -
+> -           $ git bisect start
+> -           $ git bisect bad                 # Current version is bad
+> -           $ git bisect good v4.8
+> +===============
+> +Bisecting a bug
+> +===============
+>  
+> +This document describes how to find a change causing a kernel regression using
+> +``git bisect``.
+
+This seems a bit terse.  A bit of information on when doing a bisection
+makes sense would not go amiss - when somebody has observed that a
+previously working feature broke with an update.
+
+> -.. [#f1] You can, optionally, provide both good and bad arguments at git
+> -	 start with ``git bisect start [BAD] [GOOD]``
+> +The text focuses on the gist of the process. If you are new to bisecting the
+> +kernel, better follow Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> +instead: it depicts everything from start to finish while covering multiple
+> +aspects even kernel developers occasionally forget. This includes:
+>  
+> -For further references, please read:
+> +- Detecting situations where a bisections would be a waste of time, as nobody
+> +  would care about the result -- for example, because the problem is triggered
+> +  by a .config change, was already fixed, is caused by something your Linux
+> +  distributor changed, occurs in an abandoned version, or happens after the
+> +  kernel marked itself as 'tainted'.
+> +- Preparing the .config file using an appropriate kernel while enabling or
+> +  disabling debug symbols depending on the situation's needs -- while optionally
+> +  trimming the .config to tremendously reduce the build time per bisection step.
+> +- For regressions in stable or longterm kernels: checking mainline as well, as
+> +  the result determines to whom the regression must be reported to.
+
+This instead seems a bit verbose; I'd be tempted to take out the
+itemized list and leave just the paragraph above.
+
+> -- The man page for ``git-bisect``
+> -- `Fighting regressions with git bisect <https://www.kernel.org/pub/software/scm/git/docs/git-bisect-lk2009.html>`_
+> -- `Fully automated bisecting with "git bisect run" <https://lwn.net/Articles/317154>`_
+> -- `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_
+> +Neither document describes how to report a regression, as that is covered by
+> +Documentation/admin-guide/reporting-issues.rst.
+
+This could maybe go at the end - "once you've found the regression, see
+this document on how to report it" ?
+
+> +Finding the change causing a kernel issue using a bisection
+> +===========================================================
+> +
+> +*Note: the following process assumes you prepared everything for a bisection;
+> +this includes having a Git clone with the appropriate sources, installing the
+> +software required to build and install kernels, as well as a .config file stored
+> +in a safe place (the following example assumes '~/prepared_kernel_.config') to
+> +use as pristine base at each bisection step.*
+> +
+> +* Preparation: start the bisection and tell Git about the points in the history
+> +  you consider to be working and broken, which Git calls 'good' and 'bad'::
+> +
+> +    git bisect start
+> +    git bisect good v6.0
+> +    git bisect bad v6.1
+> +
+> +  Instead of Git tags like 'v6.0' and 'v6.1' you can specify commit-ids, too.
+> +
+> +1. Copy your prepared .config into the build directory and adjust it to the
+> +   needs of the codebase Git checked out for testing::
+> +
+> +     cp ~/prepared_kernel_.config .config
+> +     make olddefconfig
+> +
+> +2. Now build, install, and boot a kernel; if any of this fails for unrelated
+> +   reasons, run ``git bisect skip`` and go back to step 1.
+
+Spell out "unrelated reasons" a bit more thoroughly?  I'd mention that
+things can go wrong (despite our best efforts) when bisect lands in the
+middle of a patch series, and to recognize a failure that is not the bug
+in question.
+
+> +3. Check if the feature that regressed works in the kernel you just built.
+> +
+> +   If it does, execute::
+> +
+> +     git bisect good
+> +
+> +   If it does not, run::
+> +
+> +     git bisect bad
+> +
+> +   Be sure what you tell Git is correct, as getting this wrong just once will
+> +   send the rest of the bisection totally off course.
+
+Something about hard-to-trigger bugs and putting in the effort to be
+sure that a good kernel is really good?  Along those lines, maybe
+something at the top about having a well-defined reproducer for the
+problem would be good.
+
+> +   Go back to back to step 1, if Git after issuing one of those commands checks
+> +   out another bisection point while printing something like 'Bisecting:
+> +   675 revisions left to test after this (roughly 10 steps)'.
+> +
+> +   You finished the bisection and move to the next point below, if Git instead
+> +   prints something like 'cafecaca0c0dacafecaca0c0dacafecaca0c0da is the first
+> +   bad commit'; right afterwards it will show some details about the culprit
+> +   including its patch description.
+
+That's a big and hard-to-parse sentence.  I'd start with the "if"
+condition - this isn't perl :)
+
+>     The latter can easily fill your terminal,
+> +   so you might need to scroll up to see the message mentioning the culprit's
+> +   commit-id; alternatively, run ``git bisect log`` to show the result.
+> +
+> +* Recommended complementary task: put the bisection log and the current
+> +  .config file aside for the bug report; furthermore tell Git to reset the
+> +  sources to the state before the bisection::
+> +
+> +     git bisect log > ~/bisection-log
+> +     cp .config ~/bisection-config-culprit
+> +     git bisect reset
+> +
+> +* Recommended optional task: try reverting the culprit on top of the latest
+> +  codebase; if successful, this will validate your bisection and enable
+> +  developers to resolve the regression through a revert.
+
+"successful" could be misinterpreted as referring to the revert itself
+here.  An explicit "if that fixes the bug..." would be more clear.
+
+> +  To try this, update your clone and check out latest mainline. Then tell Git to
+> +  revert the change::
+> +
+> +     git revert --no-edit cafec0cacaca0
+> +
+> +  This might be impossible, for example when the bisection landed on a merge
+> +  commit. In that case, abandon the attempt. Do the same, if Git fails to revert
+> +  the culprit because later changes depend on it -- unless you bisected using a
+> +  stable or longterm kernel series, in which case you want to retry using the
+> +  latest code from that series.
+> +
+> +  If a revert succeeds, build and test another kernel to validate the result of
+> +  the bisection. Mention the outcome in your bug report.
+> +
+> +Additional reading material
+> +---------------------------
+> +
+> +* The `man page for 'git bisect' <https://git-scm.com/docs/git-bisect>`_ and
+> +  `fighting regressions with 'git bisect' <https://git-scm.com/docs/git-bisect-lk2009.html>`_
+> +  in the Git documentation.
+> +* `Working with git bisect <https://nathanchance.dev/posts/working-with-git-bisect/>`_
+> +  from kernel developer Nathan Chancellor.
+> +* `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_.
+> +* `Fully automated bisecting with 'git bisect run' <https://lwn.net/Articles/317154>`_.
+> +
+> +..
+> +   end-of-content
+
+end-of-comments
+
+Thanks for doing this.
+
+jon
