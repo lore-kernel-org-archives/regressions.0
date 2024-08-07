@@ -1,307 +1,182 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C00B12B169
-	for <regressions@lists.linux.dev>; Wed,  7 Aug 2024 18:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF86C146599;
+	Wed,  7 Aug 2024 22:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723055864; cv=none; b=WGSeE7f7tYKoFOyCWsJPjxqgIKZ+AElfq+aNgTEexGazyvZm7+7gGIQZfmARjmXNxD/ystDN1S0GDdzWfZTdUGhuOC+/jwtHJbV2jf7n46g0IEL2+uQjO14S2tuPNAO+aQoU/DALrjX/rethHIqvLPiLTbNC9SSkAU7g8E0PzJY=
+	t=1723068653; cv=none; b=Umgzp9WoaKejs3eeYfa7xl8EFsikG5nr9w+FEuWObHoGUeiXAIwC0Jm3ST84ODLGeuOd6NvA52SmlUrU/MDNfPyA+zXvMI4GlrftAEq3DQBU9JeXLdUYd9CkyvTwwX0X931bCTSXLTM3TrDNh8Uud8HCSYh3cTXGl6DLWop9Gjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723055864; c=relaxed/simple;
-	bh=CI38NBqvpLgEio8pnShmGbgJ4EtQ22pvUjsmaMuyq64=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CqJmb1saFeAx7SPGVlBFHnReDSjiMCZ2jQaK3m9XLkgCj1a0JtpyrBzLZp4ryrbv0OUrL4WBfN8M8iTF1bociLw62Pv2CzUDH2I+NFK9aeEu38EUTlDxkGYoCiSfMJK1qF0w/CYLRoCo4NxuP3LD0ysLEU9jdPImcBbRswAWF+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=B206mSKX; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1723068653; c=relaxed/simple;
+	bh=52U4ikLqPnTKxZ5k11tuw7eLmIr+Ye2H9uupdyAHg9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GmlvzQFsal0tITX8y+KPPxpp0/KJZLqyS5KUWNUdwzS+cHhU6CIdT18GUAVu5LknHj+ut3ATyduSz7+bSq/CyXnBNamybu3XnrmrNEq83tCsJwS7wBliMBs7Ybv7RnSbouGQ+jMUja20HB7vnPPzdplBOADirrBC3J4NjqMNX+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOTfR83w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="B206mSKX"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 40314418B1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1723055857; bh=j5tAlNX+pQUFnmYMm1+XGm4T1zHfXV5AsYeIWLqsfhk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=B206mSKX1ap3GEhkyNPF/td7lR907oObEkliyxa37AQRSt16MSPApNHFnqkaCSQwU
-	 Wqm1DWFay3XZ6wkIpFiG7Dgiixq/vp16Opvj3xrHU00EcIEKJi1XYYe3RCGY6YbgqO
-	 yyCPAComXzcjiDDVsA1j8JvCct67Wdsw49d6+EsyKFcw230sjPcTmmNTI7YK9F/FNN
-	 neCN+HDCv33dn0KMznLpsvU9131i3KDj5IX7MA5MVEKRpEKWJdmW9JapxDurcRdwPX
-	 RiYmXKyOxpfeHJZhxMqbwY9FtSF/UImJEwtKj10ZxWxAqWNLpcmB/bGmCirsy8CygI
-	 4z7XhdHcaHtjw==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 40314418B1;
-	Wed,  7 Aug 2024 18:37:37 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
- =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-Subject: Re: [PATCH v1] docs: bug-bisect: rewrite to better match the other
- bisecting text
-In-Reply-To: <10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info>
-References: <10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info>
-Date: Wed, 07 Aug 2024 12:37:36 -0600
-Message-ID: <87ttfwrxfz.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOTfR83w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA6DEC32781;
+	Wed,  7 Aug 2024 22:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723068653;
+	bh=52U4ikLqPnTKxZ5k11tuw7eLmIr+Ye2H9uupdyAHg9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DOTfR83w9NnkLL0j9S1JJsgivgfYwMxG5c9FIasz7snbpQUDB13Fz556v4/Jv3VSO
+	 lll+82IQx2Jfxx4Ig2rTmnAYWBHDw7GuGhVQa6LSrdJW37E4o4Kpp4+2aJxRBVDAwi
+	 iOGcG6NqPmsmdg0EW9AuQfmspED4e3GBxrl+g1jbTkSCgUuzQatXBo94uZHe+RZjlR
+	 mASnzGYTE8XaQE9nKybaIW9DmiAQ7kPP36zhLEGBZ2uxxPupTQILcmmjqMYUvahgOO
+	 gTIplMeHmGA9IPh7z511fLvKWAyQIUAGqjTe5Sl2dt6TFx43VXFV4chxYmzXzfCxhO
+	 oD2Dm5AfnDCaw==
+Date: Thu, 8 Aug 2024 00:10:46 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christian Heusel <christian@heusel.eu>,
+	Igor Pylypiv <ipylypiv@google.com>, linux-ide@vger.kernel.org,
+	Hannes Reinecke <hare@suse.de>, regressions@lists.linux.dev,
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED][STABLE] hdparm errors since 28ab9769117c
+Message-ID: <ZrPw5m9LwMH5NQYy@x1-carbon.lan>
+References: <0bf3f2f0-0fc6-4ba5-a420-c0874ef82d64@heusel.eu>
+ <45cdf1c2-9056-4ac2-8e4d-4f07996a9267@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45cdf1c2-9056-4ac2-8e4d-4f07996a9267@kernel.org>
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On Wed, Aug 07, 2024 at 11:26:46AM -0700, Damien Le Moal wrote:
+> On 2024/08/07 10:23, Christian Heusel wrote:
+> > Hello Igor, hello Niklas,
+> > 
+> > on my NAS I am encountering the following issue since v6.6.44 (LTS),
+> > when executing the hdparm command for my WD-WCC7K4NLX884 drives to get
+> > the active or standby state:
+> > 
+> >     $ hdparm -C /dev/sda
+> >     /dev/sda:
+> >     SG_IO: bad/missing sense data, sb[]:  f0 00 01 00 50 40 ff 0a 00 00 78 00 00 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >      drive state is:  unknown
+> > 
+> > 
+> > While the expected output is the following:
+> > 
+> >     $ hdparm -C /dev/sda
+> >     /dev/sda:
+> >      drive state is:  active/idle
+> > 
+> > I did a bisection within the stable series and found the following
+> > commit to be the first bad one:
+> > 
+> >     28ab9769117c ("ata: libata-scsi: Honor the D_SENSE bit for CK_COND=1 and no error")
+> > 
+> > According to kernel.dance the same commit was also backported to the
+> > v6.10.3 and v6.1.103 stable kernels and I could not find any commit or
+> > pending patch with a "Fixes:" tag for the offending commit.
+> > 
+> > So far I have not been able to test with the mainline kernel as this is
+> > a remote device which I couldn't rescue in case of a boot failure. Also
+> > just for transparency it does have the out of tree ZFS module loaded,
+> > but AFAIU this shouldn't be an issue here, as the commit seems clearly
+> > related to the error. If needed I can test with an untainted mainline
+> > kernel on Friday when I'm near the device.
+> > 
+> > I have attached the output of hdparm -I below and would be happy to
+> > provide further debug information or test patches.
+> 
+> I confirm this, using 6.11-rc2. The problem is actually hdparm code which
+> assumes that the sense data is in descriptor format without ever looking at the
+> D_SENSE bit to verify that. So commit 28ab9769117c reveals this issue because as
+> its title explains, it (correctly) honors D_SENSE instead of always generating
+> sense data in descriptor format.
 
-> Rewrite the short document on bisecting kernel bugs. The new text
-> improves .config handling, brings a mention of 'git skip', and explains
-> what to do after the bisection finished -- including trying a revert to
-> verify the result. The rewrite at the same time removes the unrelated
-> and outdated section on 'Devices not appearing' and replaces some
-> sentences about bug reporting with a pointer to the document covering
-> that topic in detail.
->
-> This overall brings the approach close to the one in the recently added
-> text Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
-> As those two texts serve a similar purpose for different audiences,
-> mention that document in the head of this one and outline when the
-> other might be the better one to follow.
->
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  Documentation/admin-guide/bug-bisect.rst | 205 +++++++++++++++--------
->  MAINTAINERS                              |   1 +
->  2 files changed, 135 insertions(+), 71 deletions(-)
+You mean: the user space application is using the sense buffer without first
+checking if the returned sense buffer is in descriptor or fixed format.
 
-So overall this seems like a good thing to do.  I wouldn't be me if I
-didn't have some comments though...:)
+This seems like a fundamentally flawed assumption by the user space program.
+If it doesn't even bother checking the first field in the sense buffer, sb[0],
+perhaps it shouldn't bother trying to use the sense buffer at all.
 
-> diff --git a/Documentation/admin-guide/bug-bisect.rst b/Documentation/admin-guide/bug-bisect.rst
-> index 325c5d0ed34a0a..f4a9acab65d0f5 100644
-> --- a/Documentation/admin-guide/bug-bisect.rst
-> +++ b/Documentation/admin-guide/bug-bisect.rst
-> @@ -1,76 +1,139 @@
-> -Bisecting a bug
-> -+++++++++++++++
-> -
-> -Last updated: 28 October 2016
-> -
-> -Introduction
-> -============
-> -
-> -Always try the latest kernel from kernel.org and build from source. If you are
-> -not confident in doing that please report the bug to your distribution vendor
-> -instead of to a kernel developer.
-> -
-> -Finding bugs is not always easy. Have a go though. If you can't find it don't
-> -give up. Report as much as you have found to the relevant maintainer. See
-> -MAINTAINERS for who that is for the subsystem you have worked on.
-> -
-> -Before you submit a bug report read
-> -'Documentation/admin-guide/reporting-issues.rst'.
-> -
-> -Devices not appearing
-> -=====================
-> -
-> -Often this is caused by udev/systemd. Check that first before blaming it
-> -on the kernel.
-> -
-> -Finding patch that caused a bug
-> -===============================
-> -
-> -Using the provided tools with ``git`` makes finding bugs easy provided the bug
-> -is reproducible.
-> -
-> -Steps to do it:
-> -
-> -- build the Kernel from its git source
-> -- start bisect with [#f1]_::
-> +.. SPDX-License-Identifier: (GPL-2.0+ OR CC-BY-4.0)
-> +.. [see the bottom of this file for redistribution information]
->  
-> -	$ git bisect start
-> -
-> -- mark the broken changeset with::
-> -
-> -	$ git bisect bad [commit]
-> -
-> -- mark a changeset where the code is known to work with::
-> -
-> -	$ git bisect good [commit]
-> -
-> -- rebuild the Kernel and test
-> -- interact with git bisect by using either::
-> -
-> -	$ git bisect good
-> -
-> -  or::
-> -
-> -	$ git bisect bad
-> -
-> -  depending if the bug happened on the changeset you're testing
-> -- After some interactions, git bisect will give you the changeset that
-> -  likely caused the bug.
-> -
-> -- For example, if you know that the current version is bad, and version
-> -  4.8 is good, you could do::
-> -
-> -           $ git bisect start
-> -           $ git bisect bad                 # Current version is bad
-> -           $ git bisect good v4.8
-> +===============
-> +Bisecting a bug
-> +===============
->  
-> +This document describes how to find a change causing a kernel regression using
-> +``git bisect``.
+(Yes, the D_SENSE bit can be configured by the user, but that doesn't change
+the fact that a user space program must check the format of the returned buffer
+before trying to use it.)
 
-This seems a bit terse.  A bit of information on when doing a bisection
-makes sense would not go amiss - when somebody has observed that a
-previously working feature broke with an update.
 
-> -.. [#f1] You can, optionally, provide both good and bad arguments at git
-> -	 start with ``git bisect start [BAD] [GOOD]``
-> +The text focuses on the gist of the process. If you are new to bisecting the
-> +kernel, better follow Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-> +instead: it depicts everything from start to finish while covering multiple
-> +aspects even kernel developers occasionally forget. This includes:
->  
-> -For further references, please read:
-> +- Detecting situations where a bisections would be a waste of time, as nobody
-> +  would care about the result -- for example, because the problem is triggered
-> +  by a .config change, was already fixed, is caused by something your Linux
-> +  distributor changed, occurs in an abandoned version, or happens after the
-> +  kernel marked itself as 'tainted'.
-> +- Preparing the .config file using an appropriate kernel while enabling or
-> +  disabling debug symbols depending on the situation's needs -- while optionally
-> +  trimming the .config to tremendously reduce the build time per bisection step.
-> +- For regressions in stable or longterm kernels: checking mainline as well, as
-> +  the result determines to whom the regression must be reported to.
+> Hmm... This is annoying. The kernel is fixed to be spec compliant but that
+> breaks old/non-compliant applications... We definitely should fix hdparm code,
+> but I think we still need to revert 28ab9769117c...
 
-This instead seems a bit verbose; I'd be tempted to take out the
-itemized list and leave just the paragraph above.
+Well.. if we look at commit:
+11093cb1ef56 ("libata-scsi: generate correct ATA pass-through sense")
+https://github.com/torvalds/linux/commit/11093cb1ef56147fe33f5750b1eab347bdef30db
 
-> -- The man page for ``git-bisect``
-> -- `Fighting regressions with git bisect <https://www.kernel.org/pub/software/scm/git/docs/git-bisect-lk2009.html>`_
-> -- `Fully automated bisecting with "git bisect run" <https://lwn.net/Articles/317154>`_
-> -- `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_
-> +Neither document describes how to report a regression, as that is covered by
-> +Documentation/admin-guide/reporting-issues.rst.
+We can see that before that commit, the kernel used to call
+ata_scsi_set_sense().
 
-This could maybe go at the end - "once you've found the regression, see
-this document on how to report it" ?
+Back then ata_scsi_set_sense() was defined as:
+https://github.com/torvalds/linux/blob/11093cb1ef56147fe33f5750b1eab347bdef30db/drivers/ata/libata-scsi.c#L280
+scsi_build_sense_buffer(0, cmd->sense_buffer, sk, asc, ascq);
 
-> +Finding the change causing a kernel issue using a bisection
-> +===========================================================
-> +
-> +*Note: the following process assumes you prepared everything for a bisection;
-> +this includes having a Git clone with the appropriate sources, installing the
-> +software required to build and install kernels, as well as a .config file stored
-> +in a safe place (the following example assumes '~/prepared_kernel_.config') to
-> +use as pristine base at each bisection step.*
-> +
-> +* Preparation: start the bisection and tell Git about the points in the history
-> +  you consider to be working and broken, which Git calls 'good' and 'bad'::
-> +
-> +    git bisect start
-> +    git bisect good v6.0
-> +    git bisect bad v6.1
-> +
-> +  Instead of Git tags like 'v6.0' and 'v6.1' you can specify commit-ids, too.
-> +
-> +1. Copy your prepared .config into the build directory and adjust it to the
-> +   needs of the codebase Git checked out for testing::
-> +
-> +     cp ~/prepared_kernel_.config .config
-> +     make olddefconfig
-> +
-> +2. Now build, install, and boot a kernel; if any of this fails for unrelated
-> +   reasons, run ``git bisect skip`` and go back to step 1.
+Where the first argument to scsi_build_sense_buffer() is if the generated sense
+buffer should be fixed or desc format (0 == fixed format), so we used to
+generate the sense buffer in fixed format:
+https://github.com/torvalds/linux/blob/11093cb1ef56147fe33f5750b1eab347bdef30db/drivers/scsi/scsi_common.c#L231
 
-Spell out "unrelated reasons" a bit more thoroughly?  I'd mention that
-things can go wrong (despite our best efforts) when bisect lands in the
-middle of a patch series, and to recognize a failure that is not the bug
-in question.
+However, as we can see, the kernel then used to incorrectly just
+change sb[0} to say that the buffer was in desc format,
+without updating the other fields, e.g. sb[2]:
+https://github.com/torvalds/linux/blob/11093cb1ef56147fe33f5750b1eab347bdef30db~/drivers/ata/libata-scsi.c#L1026
+so the format was really in some franken format...
+following neither fixed or descriptor format.
 
-> +3. Check if the feature that regressed works in the kernel you just built.
-> +
-> +   If it does, execute::
-> +
-> +     git bisect good
-> +
-> +   If it does not, run::
-> +
-> +     git bisect bad
-> +
-> +   Be sure what you tell Git is correct, as getting this wrong just once will
-> +   send the rest of the bisection totally off course.
+11093cb1ef56 ("libata-scsi: generate correct ATA pass-through sense")
+did change so that successful ATA-passthrough commands always generated
+the sense data in descriptor format. However, that commit also managed to
+mess up the offsets for fixed format sense...
 
-Something about hard-to-trigger bugs and putting in the effort to be
-sure that a good kernel is really good?  Along those lines, maybe
-something at the top about having a well-defined reproducer for the
-problem would be good.
+The commit that later changed ata_scsi_set_sense() to honor D_SENSE
+was commit: 06dbde5f3a44 ("libata: Implement control mode page to select
+sense format")
 
-> +   Go back to back to step 1, if Git after issuing one of those commands checks
-> +   out another bisection point while printing something like 'Bisecting:
-> +   675 revisions left to test after this (roughly 10 steps)'.
-> +
-> +   You finished the bisection and move to the next point below, if Git instead
-> +   prints something like 'cafecaca0c0dacafecaca0c0dacafecaca0c0da is the first
-> +   bad commit'; right afterwards it will show some details about the culprit
-> +   including its patch description.
+So basically:
+Before commit 11093cb1ef56 ("libata-scsi: generate correct ATA pass-through
+sense"), we generated sense data in some franken format for both successful
+and failed ATA-passthrough commands.
 
-That's a big and hard-to-parse sentence.  I'd start with the "if"
-condition - this isn't perl :)
+After commit 11093cb1ef56 ("libata-scsi: generate correct ATA pass-through
+sense") we generate sense data for sucessful ATA-passthrough commands in
+descriptor format unconditionally, but still in franken format for failed
+ATA-passthrough commands.
 
->     The latter can easily fill your terminal,
-> +   so you might need to scroll up to see the message mentioning the culprit's
-> +   commit-id; alternatively, run ``git bisect log`` to show the result.
-> +
-> +* Recommended complementary task: put the bisection log and the current
-> +  .config file aside for the bug report; furthermore tell Git to reset the
-> +  sources to the state before the bisection::
-> +
-> +     git bisect log > ~/bisection-log
-> +     cp .config ~/bisection-config-culprit
-> +     git bisect reset
-> +
-> +* Recommended optional task: try reverting the culprit on top of the latest
-> +  codebase; if successful, this will validate your bisection and enable
-> +  developers to resolve the regression through a revert.
+After commit 06dbde5f3a44 ("libata: Implement control mode page to select
+sense format") we generate sense data for sucessful ATA-passthrough commands
+in descriptor format unconditionally, but for failed commands we actually
+honored D_SENSE to generate it either in fixed format or descriptor format.
+(However, because of a bug in 11093cb1ef56, if using fixed format, the
+offsets were wrong...)
 
-"successful" could be misinterpreted as referring to the revert itself
-here.  An explicit "if that fixes the bug..." would be more clear.
 
-> +  To try this, update your clone and check out latest mainline. Then tell Git to
-> +  revert the change::
-> +
-> +     git revert --no-edit cafec0cacaca0
-> +
-> +  This might be impossible, for example when the bisection landed on a merge
-> +  commit. In that case, abandon the attempt. Do the same, if Git fails to revert
-> +  the culprit because later changes depend on it -- unless you bisected using a
-> +  stable or longterm kernel series, in which case you want to retry using the
-> +  latest code from that series.
-> +
-> +  If a revert succeeds, build and test another kernel to validate the result of
-> +  the bisection. Mention the outcome in your bug report.
-> +
-> +Additional reading material
-> +---------------------------
-> +
-> +* The `man page for 'git bisect' <https://git-scm.com/docs/git-bisect>`_ and
-> +  `fighting regressions with 'git bisect' <https://git-scm.com/docs/git-bisect-lk2009.html>`_
-> +  in the Git documentation.
-> +* `Working with git bisect <https://nathanchance.dev/posts/working-with-git-bisect/>`_
-> +  from kernel developer Nathan Chancellor.
-> +* `Using Git bisect to figure out when brokenness was introduced <http://webchick.net/node/99>`_.
-> +* `Fully automated bisecting with 'git bisect run' <https://lwn.net/Articles/317154>`_.
-> +
-> +..
-> +   end-of-content
+The incorrect offsets for fixed format was fixed recently, in commit
+38dab832c3f4 ("ata: libata-scsi: Fix offsets for the fixed format sense data")
 
-end-of-comments
+Commit 28ab9769117c ("ata: libata-scsi: Honor the D_SENSE bit for CK_COND=1 and
+no error") fixed so that we actually honor D_SENSE not only for failed
+ATA-passthrough commands, but also for successfull ATA-passthrough commands.
 
-Thanks for doing this.
+TL;DR: it is very hard to say that we have introduced a regression, because
+this crap has basically been broken in one way or another since it was
+introduced... Personally, I would definitely want all the patches that are in
+mainline in the kernel running on my machine, since that is the only thing
+that is consistent.
 
-jon
+However, that assumes that user space programs that are trying to parse the
+sense data actually bothers to check the first field in the sense data,
+to see which format the returned sense data is in... Applications that
+do not even both with that will have problems on a lot of (historic) kernel
+versions.
+
+
+Kind regards,
+Niklas
