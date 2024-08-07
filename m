@@ -1,253 +1,182 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02047829C;
-	Wed,  7 Aug 2024 17:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6697C13C9A2
+	for <regressions@lists.linux.dev>; Wed,  7 Aug 2024 17:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723051415; cv=none; b=UP86OJqjxLQvEFb1Ub2bRZB7ncLsluBVXIvxrDVoQy1JI7sQpLw4moMtJfJ2mGUHLDy1xkFLesq9fGLbQ92K1dV2Qe5/WA/p7gCXwscgOb/m1MYEchGzOscGr9676yQJQSfO/tKedy/6RcF3KtZnYDlQEV41ctLmHBhrDA6lxz8=
+	t=1723052100; cv=none; b=ddqtFFAgNazFhiodMdoGf/oByqGBuZ8G6vxUc9F0sMVDq1R4X/bWKRzWr2zma6HlsYYL41KpWgJ5fq9HwKG4q7UizkzovoUwgIL0X3vu5tkCW7Xg8c4/DWTwfh3kyQ0AoKdqAsD67ISFJEarSVD0Ivrfs51ft3CUoRTF6N59C4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723051415; c=relaxed/simple;
-	bh=DeHERJlAyVaAM7mD5mBWKnAuOj19JGCsB8/0dA8JQIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iXsYNq+4IKDGBSNHXgr6OBD+OWwLlyFAZjqpkH+fqmz2mrzSEPuJH32WxsjdrWN2EXrmCNzvHpDdZv9lAS4mu0cmhiou0+P9oI2MlU+Ue0HMuwzp32Ey5h/Wajg3yR69Knm00Nqe/XDxS5Lag9kTb2LE0LXiJHA+VL8hK886RBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=lGEqKG9g; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1723052100; c=relaxed/simple;
+	bh=ltPpByyDG4lbIVSNFqUspG0YQ+VcetI5FnIT2s9392Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b45s1zkLqIq1z9cZJxADovdkqlUQbb42nbLDd04kUljHs6x5fAqSVKQWsZdktWVUoomCAyrulmXI27/K5j+d4pRkVcXjCEhqdoAIIlkf7EBhL8/d/vFWD4uRy4BMqwAb5TlBsROCBuarLQE2Y5AQK8TAnUbHAHFkNxQpVq9IWv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OLqA1qXw; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="lGEqKG9g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1723051392; x=1723656192; i=christian@heusel.eu;
-	bh=nsT5DPVZKkmpZvH2h/IqV+PYUy007MA2rcGXRfKet7o=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lGEqKG9gHAPutaeUlow/V/51fwngpV5VXxDJwtjV+S/OaV57MX/iQ/VfBn8INNxL
-	 BKv0buAEsNbmkZOS9V4sGxaVeYckS2TekiJoJEwOn2RjawHt9jxMGxu2klr+9mtVH
-	 dZZyQH22NBQEKlhDI9WQWi5yek4gvVOxJk2F28KPR8ThLHosE4kTVzGtXUPlAIrBK
-	 nadtoSkDPM5jTyGlqsApyHZEaKdjlfeXACRoE0qdlYjSKWBwxKBWcpYnXoBO3Yop4
-	 9N9yCGfXHn/r4hsEcyaboi9W9Aw0UD/yXkQmfvehw3D55uExFzLcowSj1u90ymtY+
-	 CL47Bi7RlniRWh5OdQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.187.64.180]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M1INQ-1sdOH40B7i-006v2B; Wed, 07 Aug 2024 19:23:12 +0200
-Date: Wed, 7 Aug 2024 19:23:10 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Igor Pylypiv <ipylypiv@google.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org
-Cc: Hannes Reinecke <hare@suse.de>, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [REGRESSION][BISECTED][STABLE] hdparm errors since 28ab9769117c
-Message-ID: <0bf3f2f0-0fc6-4ba5-a420-c0874ef82d64@heusel.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLqA1qXw"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-44ff132ff9cso684911cf.2
+        for <regressions@lists.linux.dev>; Wed, 07 Aug 2024 10:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723052097; x=1723656897; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=l/Bi5E2ofh7mXD0UatHWFQLqSTihcAGldUhDFV3L1+o=;
+        b=OLqA1qXwef+b4NQYw/TmpdMns1NBxdAjAfaTR0An9S/7O3I/itQ0PWNOQWM1AI5V+F
+         Tso6ppkIcgZy3Tz5w+pnjDHdbw2PM7+yvuQFu2axxIE5U7WFFVqPWT1IIZAzFm5zQzCF
+         tXH34t276J9ti8gedhg3y8OTr/qS/UpRzd+lRO97mSM4sJw5uJc98gilJO9O1ygpKNoI
+         2EcRjIo+1idg4qAd5dztcHCBdoc2QehbcbmcVujY1OwBwF8xbi4bUnindDWaVoaIH3m3
+         zj7d7FQnEsLbeP3J5ra74KmQnt8typfGutJxd1bUXVYdhQPRiXxrVViMAhkXh6yDBW4R
+         ddeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723052097; x=1723656897;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l/Bi5E2ofh7mXD0UatHWFQLqSTihcAGldUhDFV3L1+o=;
+        b=d8ULFM6acRDiTAVa3AgDd+vVQzT+74ENB1CXEfe4777X8VdcgqiRGZhbldMysG0QG6
+         GITHn4HKzJF+ktO/quLN4MdMzVy9dmcSHfEjGiEtpLqqB4+SkhXBqcxJUHdUw7WeKr4W
+         /QBXS8ifD4muKgEJDfGC+XpyFpyavu0e8AUgNw9tU1Ja4CRBQhTCiI/O4GOmPkiCysU1
+         2S2PjK7vUqV+xyI64544+DuHLlj0qUvC7mmB3lFKXkhygtDjNC/cF32FhMWXJjveQXUa
+         rTwGaLq6ffCVAuFlwCsdmGHDE1V1rre8SqSZqMs1ADZFCmGDQLnC1WMnOBnrbnI3cqPm
+         VgCQ==
+X-Gm-Message-State: AOJu0Yy/opKxnmg/M6p5WLC0aHnt5ED8+G+n8eiYYJMKYUVnsmsDfifH
+	vmDvQZdpPlD4hNDe9iZ2QUxTevIvOFsEhRJRemb3aN8qCo8yIRRmrX/8E6HG
+X-Google-Smtp-Source: AGHT+IG4REbO+g++rxr1kDFTByvVVNIX1KSXzHakhJaQK3kI6Bh+2X//hZVZ/0h11ao+NGu9CwDUPw==
+X-Received: by 2002:a05:622a:13c6:b0:447:f259:2956 with SMTP id d75a77b69052e-451892c2f83mr217341841cf.59.1723052096895;
+        Wed, 07 Aug 2024 10:34:56 -0700 (PDT)
+Received: from nandaa-linux-dev.lp3xo4ddmz1ulowbk5mwlke0vc.bx.internal.cloudapp.net ([135.237.123.86])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-451c87da6d9sm6448661cf.78.2024.08.07.10.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Aug 2024 10:34:56 -0700 (PDT)
+Date: Wed, 7 Aug 2024 17:34:55 +0000
+From: Anthony Nandaa <profnandaa@gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	smfrench@gmail.com, Paulo Alcantara <pc@manguebit.com>
+Cc: linux-cifs@vger.kernel.org, gkorobeynikov@astralinux.ru,
+	linux-kernel@vger.kernel.org, annandaa@linux.microsoft.com
+Subject: Re: [regression] smb: client: - Failure to mount DFS namespaces
+ without ASCII symbols
+Message-ID: <ZrOwPx+jhEM+sJFM@nandaa-linux-dev.lp3xo4ddmz1ulowbk5mwlke0vc.bx.internal.cloudapp.net>
+References: <c0967665-343d-4ca9-90a0-a072159c1056@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lq4zqbwcozebnqgu"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Provags-ID: V03:K1:re/u57c9LiiKnOyxy/v/YoI96ZGo5b3UusYKY4512VsUbItP0ZV
- bE4dvipEOOfmGpVNc8QBsHKy5QTyB83NR2EHdIkhEAJ0Vlb9fYnAWmjJ97KkHw+LRGxRWM/
- BvZE9CKF3ZblB5bu91CIBMRXlPQ9KWnRU0zH70XA37W0PQWVO8tRuGc1K5H6LOmglNBrtMc
- XbTYbHxNueeEujOf4hsSw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Sgj5yfUsPnI=;oWv0C/OeJkqW7tOPGUStrVRIg+/
- clEXJBTWpkSj1ib9dZnlcTP4wji5U9D1fjiMd/u6iBiUwMbKvxgO0vuL+ESDLvk3XUo9h1eDI
- YwEIwMie+mDMQEpOjxUfdPnd6gV4GD8NFKyQ7b3cidAQZYB/hZsOuQ9AKdzmPNk8JywiXwH0k
- yK9GBjVC/KKJEMVtFWEi3m5lu0M0NscHfoBrL1TGgJ+4SDJfkaNLvM1q6AdUSLTwghIKe3U5B
- 8gqhtH9LE3P4b1Q+0uMj1ENYFyQI15dMAqRlCLTokkbhYfyL42iDda4K/dFmf8XZ7ZUNuzaHN
- Bct0LxO8XGKt0CwT0ZdmL3fwWZujNTOHWx+ycyS8GyyUzTiXVweZIrq2BNffUwm4jnyu0k7on
- QK8w6vCzo4ARHnWpc8Z169WhDdTjeFKXy6Zj38iicPs5IzKkQXWnq5BqZwSkGZXyQoZ/sAmqT
- a6Vd5vKV8FQGy848gqiJ+Hy1FBzsF60hKE0+DB2ia+dEMbAerPBSXuA/SPw1R9Yy9zXBcEcPI
- irt4ca9BD5u/XH7rPg8yi8WJi5ft1B8EBqr1xtb9Jja6m8C+6NkirRLe2KwIe45RiKukwTfWh
- Pfw3BQcg4Xn4dzruJ7iBtwNhODQmf5Itr9cD+9hTwXD59eOTlJ/Mr7Yv3FtFTDGuWPfkdcaOr
- vfiodr7hgCO4l2cv7KJFnuTattUVv6WGp9x8ovs3yRjLRNTrXoSZF1K68tWe079CD/o2AwpA+
- +gjyqb1zadWqWsmHaAAftOFhjgW0pODlg==
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c0967665-343d-4ca9-90a0-a072159c1056@leemhuis.info>
 
+On Fri, Aug 02, 2024 at 11:44:18AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+> 
+> Paulo, I noticed a report about a regression in bugzilla.kernel.org that
+> appears to be caused by this change of yours:
+> 
+> 3ae872de410751 ("smb: client: fix shared DFS root mounts with different
+> prefixes") [v6.5-rc1]
+> 
+> As many (most?) kernel developers don't keep an eye on the bug tracker,
+> I decided to write this mail. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=219083 :
+> 
+> >  Gleb Korobeynikov 2024-07-22 10:59:46 UTC
+> > 
+> > Windows version of SMB host: Windows Server 2022 Standard x64
+> > Kernel: 6.3.13(upstream)
+~~~~~~~~~~~~^~~~ Testing with same WS2022 host with 6.11.0-rc1+
 
---lq4zqbwcozebnqgu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > CONFIG_CIFS_DFS_UPCALL
+> > 
+> > In the function cifs_inval_name_dfs_link_error(), a check was added for tcon->origin_fullpath (3ae872de410751fe5e629e04da491a632d95201c). I believe it's unnecessary because when mounting a dfs name without ASCII characters, we always fail at this check and exit the function, leading to dfs namespaces not being mounted
+> > 
+> > Steps to reproduce:
+> > 
+> > 1. At Windows, create DFS namespace with name containing non-ASCII symbols (for example дфс)
+> > 
+> > 2. mount -t cifs \\\\<smb_server>\\дфс  /tmp/dfs -o domain=...,user=...,password=...
+> > 
+> > result:
+> > mount error(2): No such file or directory
+> > Refer to the mount.cifs(8) manual page (e.g. man mount.cifs) and kernel log messages (dmesg)
+> > 
+I couldn't repro this issue.
+I rebuilt the cifs modules both on master and in the recent 
+for-next@cecb49e3594c2a69163865c214b71fff26d5761d sources:
 
-Hello Igor, hello Niklas,
+	$ sudo mount -t cifs //WIN-31GSG2M9E6N/дфс /mnt/utf_repro -o `
+		username=administrator,password=xxx
+	$ ls -l /mnt/utf_repro
+	total 0
+	-rwxr-xr-x 1 root root 0 Aug  7 15:54 hello_cifs.txt
+	drwxr-xr-x 2 root root 0 Aug  7 15:54 test_utf8_дфс
 
-on my NAS I am encountering the following issue since v6.6.44 (LTS),
-when executing the hdparm command for my WD-WCC7K4NLX884 drives to get
-the active or standby state:
+	// nothing outstanding in dmesg
+	[430885.246220] CIFS: Attempting to mount //WIN-31GSG2M9E6N/дфс
 
-    $ hdparm -C /dev/sda
-    /dev/sda:
-    SG_IO: bad/missing sense data, sb[]:  f0 00 01 00 50 40 ff 0a 00 00 78 =
-00 00 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-     drive state is:  unknown
+Is there anything I might be missing?
 
-
-While the expected output is the following:
-
-    $ hdparm -C /dev/sda
-    /dev/sda:
-     drive state is:  active/idle
-
-I did a bisection within the stable series and found the following
-commit to be the first bad one:
-
-    28ab9769117c ("ata: libata-scsi: Honor the D_SENSE bit for CK_COND=3D1 =
-and no error")
-
-According to kernel.dance the same commit was also backported to the
-v6.10.3 and v6.1.103 stable kernels and I could not find any commit or
-pending patch with a "Fixes:" tag for the offending commit.
-
-So far I have not been able to test with the mainline kernel as this is
-a remote device which I couldn't rescue in case of a boot failure. Also
-just for transparency it does have the out of tree ZFS module loaded,
-but AFAIU this shouldn't be an issue here, as the commit seems clearly
-related to the error. If needed I can test with an untainted mainline
-kernel on Friday when I'm near the device.
-
-I have attached the output of hdparm -I below and would be happy to
-provide further debug information or test patches.
-
-Cheers,
-Christian
-
----
-
-#regzbot introduced: 28ab9769117c
-#regzbot title: ata: libata-scsi: Sense data errors breaking hdparm with WD=
- drives
-
----
-
-$ pacman -Q hdparm
-hdparm 9.65-2
-
-$ hdparm -I /dev/sda
-
-/dev/sda:
-
-ATA device, with non-removable media
-	Model Number:       WDC WD40EFRX-68N32N0
-	Serial Number:      WD-WCC7K4NLX884
-	Firmware Revision:  82.00A82
-	Transport:          Serial, SATA 1.0a, SATA II Extensions, SATA Rev 2.5, S=
-ATA Rev 2.6, SATA Rev 3.0
-Standards:
-	Used: unknown (minor revision code 0x006d)=20
-	Supported: 10 9 8 7 6 5=20
-	Likely used: 10
-Configuration:
-	Logical		max	current
-	cylinders	16383	0
-	heads		16	0
-	sectors/track	63	0
-	--
-	LBA    user addressable sectors:   268435455
-	LBA48  user addressable sectors:  7814037168
-	Logical  Sector size:                   512 bytes
-	Physical Sector size:                  4096 bytes
-	Logical Sector-0 offset:                  0 bytes
-	device size with M =3D 1024*1024:     3815447 MBytes
-	device size with M =3D 1000*1000:     4000787 MBytes (4000 GB)
-	cache/buffer size  =3D unknown
-	Form Factor: 3.5 inch
-	Nominal Media Rotation Rate: 5400
-Capabilities:
-	LBA, IORDY(can be disabled)
-	Queue depth: 32
-	Standby timer values: spec'd by Standard, with device specific minimum
-	R/W multiple sector transfer: Max =3D 16	Current =3D 16
-	DMA: mdma0 mdma1 mdma2 udma0 udma1 udma2 udma3 udma4 udma5 *udma6=20
-	     Cycle time: min=3D120ns recommended=3D120ns
-	PIO: pio0 pio1 pio2 pio3 pio4=20
-	     Cycle time: no flow control=3D120ns  IORDY flow control=3D120ns
-Commands/features:
-	Enabled	Supported:
-	   *	SMART feature set
-	    	Security Mode feature set
-	   *	Power Management feature set
-	   *	Write cache
-	   *	Look-ahead
-	   *	Host Protected Area feature set
-	   *	WRITE_BUFFER command
-	   *	READ_BUFFER command
-	   *	NOP cmd
-	   *	DOWNLOAD_MICROCODE
-	    	Power-Up In Standby feature set
-	   *	SET_FEATURES required to spinup after power up
-	    	SET_MAX security extension
-	   *	48-bit Address feature set
-	   *	Device Configuration Overlay feature set
-	   *	Mandatory FLUSH_CACHE
-	   *	FLUSH_CACHE_EXT
-	   *	SMART error logging
-	   *	SMART self-test
-	   *	General Purpose Logging feature set
-	   *	64-bit World wide name
-	   *	IDLE_IMMEDIATE with UNLOAD
-	   *	WRITE_UNCORRECTABLE_EXT command
-	   *	{READ,WRITE}_DMA_EXT_GPL commands
-	   *	Segmented DOWNLOAD_MICROCODE
-	   *	Gen1 signaling speed (1.5Gb/s)
-	   *	Gen2 signaling speed (3.0Gb/s)
-	   *	Gen3 signaling speed (6.0Gb/s)
-	   *	Native Command Queueing (NCQ)
-	   *	Host-initiated interface power management
-	   *	Phy event counters
-	   *	Idle-Unload when NCQ is active
-	   *	NCQ priority information
-	   *	READ_LOG_DMA_EXT equivalent to READ_LOG_EXT
-	   *	DMA Setup Auto-Activate optimization
-	   *	Device-initiated interface power management
-	   *	Software settings preservation
-	   *	SMART Command Transport (SCT) feature set
-	   *	SCT Write Same (AC2)
-	   *	SCT Error Recovery Control (AC3)
-	   *	SCT Features Control (AC4)
-	   *	SCT Data Tables (AC5)
-	    	unknown 206[12] (vendor specific)
-	    	unknown 206[13] (vendor specific)
-	   *	DOWNLOAD MICROCODE DMA command
-	   *	WRITE BUFFER DMA command
-	   *	READ BUFFER DMA command
-Security:=20
-	Master password revision code =3D 65534
-		supported
-	not	enabled
-	not	locked
-		frozen
-	not	expired: security count
-		supported: enhanced erase
-	504min for SECURITY ERASE UNIT. 504min for ENHANCED SECURITY ERASE UNIT.
-Logical Unit WWN Device Identifier: 50014ee2647735a1
-	NAA		: 5
-	IEEE OUI	: 0014ee
-	Unique ID	: 2647735a1
-Checksum: correct
-
---lq4zqbwcozebnqgu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmazrX4ACgkQwEfU8yi1
-JYWKRBAAuWTcdMItCNZaRa8QUD3EXBVDf23VX0879nToFEt5rbGnBXEH/SCvhhJ5
-uiM59L6kCsOFMhqFruuCglkKooxrR30aHMNRBj2F4UMYXBvrfgAoI1aWp4EgE+WC
-mBC5w87QzOHoVh9edDinqSmuu8upFB5Fl6xSrIpg8+Sk8Nx5gL3Lj3nzPD4NLF9W
-rgMxX7OQEWMyEN9IFvVQd/IfOdt3JFTo7RZTxmvFK8j9b3m8LXxGDqJzcUHS5ytE
-aXFtcoiQxE3NXkU11p9rHvjDeSVsF4SakJ+a6HX+pGMCQhauvydW2ap9cIhhFPww
-I/7TdHa1cZit3FMDVsSI8aAnO8L5FsPCL806Q3uqqpp+UePVH1YXcIT6HCudiyEI
-s8qgTsQlscaDHTpjZG71dHMRZxod4IZ9XL/fYvD0RD/566/Pf65Aks0/O44ahcH6
-Y6opytCJ3hlgtocu3hMSqGF0vrwITSB0nVxJANixYjxhLMQTChVxien2znoD6uqx
-A3eIU6x6s1DqyFJZLdn6B76XqwVPgLSGvshHNET4mEpMmEcvF4YymAmhT871rcAP
-f2rOtfEBU1sp7Tr3C2uWU19oOES2JPyRGVlPoFofcZE1PAdaJozWZwzMnzy34lYb
-qUA2JNqkGVbBDPIytlwjtIXiwcnh7yulkSSxn+PgQcmGFHhU/uk=
-=Lqj2
------END PGP SIGNATURE-----
-
---lq4zqbwcozebnqgu--
+> > CIFS debug log:
+> > [Mon Jul 22 11:00:24 2024] CIFS: Status code returned 0xc0000033 STATUS_OBJECT_NAME_INVALID
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2maperror.c: Mapping SMB2 status code 0xc0000033 to POSIX err -2
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/dfs_cache.c: dfs_cache_noreq_update_tgthint: path: \test.local\дфс
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=2
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\test.local\IPC$
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: cifs_put_tcon: tc_count=1
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in cifs_put_tcon as Xid: 17 with uid: 0
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: Tree Disconnect
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/fscache.c: cifs_fscache_release_super_cookie: (0x0000000000000000)
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=1
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\DC.test.local\IPC$
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in __cifs_put_smb_ses as Xid: 18 with uid: 0
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: disconnect session 00000000360c6881
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses_count=1
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: __cifs_put_smb_ses: ses ipc: \\test.local\IPC$
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: in __cifs_put_smb_ses as Xid: 19 with uid: 0
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/smb2pdu.c: disconnect session 00000000db1ddbb6
+> > [Mon Jul 22 11:00:24 2024] CIFS: fs/smb/client/connect.c: VFS: leaving cifs_mount_put_conns (xid = 13) rc = 0
+> > [Mon Jul 22 11:00:24 2024] CIFS: VFS: cifs_mount failed w/return code = -2
+> 
+> And
+> 
+> >  Gleb Korobeynikov 2024-07-30 11:03:01 UTC
+> > 
+> > (In reply to Gleb Korobeynikov from comment #5)
+> >> (In reply to The Linux kernel's regression tracker (Thorsten Leemhuis) from
+> >> comment #4)
+> >> > Please check if 6.10 (or 6.11-rc1 once it's out on Monday) is still
+> >> affected
+> >> 
+> >> Alright, I will definitely check
+> > 
+> > Checked on 6.11-rc1. The reproduction issue happens identically.
+> 
+> See the ticket for more details.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
+> 
+> P.S.: let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: 3ae872de410751fe5e629e04da491a632d95201c
+> #regzbot title: smb: client: failure to mount DFS namespaces without
+> ASCII symbols
+> #regzbot from: Gleb Korobeynikov <gkorobeynikov@astralinux.ru>
+> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219083
+> #regzbot ignore-activity
+>
+Thanks,
+Nandaa
+ 
