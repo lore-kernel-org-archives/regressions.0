@@ -1,75 +1,179 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4337018785A;
-	Thu,  8 Aug 2024 06:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E22F188CAE
+	for <regressions@lists.linux.dev>; Thu,  8 Aug 2024 07:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723099442; cv=none; b=KckdeWTp0b93cM0TGMRpuDb2zxkC6RCx96YViXjo8vM2zJqVWgDD4XMpvXW6Ku/6Q1gpE5uFqWJbTc3cvavK7Xq1c9BtmLmNpt1XD7f0Qr8IdKjIaXtKnfq8wxmHGbYSp30B8mHik24w7VeEmT7BSqltdhn5Xd/hj1brLn79qQA=
+	t=1723102559; cv=none; b=c3IrqTifhdcW57Sio08H1Rxp0SrfLFgS5VJNDvehgPEK/d/hAMp027mYQZismkvfFoBITSsAqYxncHYD2jZ53877zaKNEr1UbhHpajCgcouu7miIkZtsaLdp3ObhC2nLWTtaUgY/xDRsTDkM6rjCIf37Rr3/GmjZ5nF2ylBdKOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723099442; c=relaxed/simple;
-	bh=yPACO+Jpk57bGOXKE6eH4KJVxi21a77o4RVFUjZxEII=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=u8uQmi84eAPIFVUHCt+wTOVmgmy5Hq3GUbkmjIZaVpKe171uUUe+qmithb6KiaJHua0OHRBTcAKOIEgUeUMt6D5JEZnpXySiJ2ErZU5QoND3JWP+kJZLxgITT3M515bmVciMhpQA0VHfiem8ogX47+eTH5IjQK8SFDC+dW/wFzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Rbte1X6j; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723102559; c=relaxed/simple;
+	bh=L6+YeIn/Vp1pbx3yet9x4syQyFrDr8NrjU/GSzGYsuc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bsTSnHdfVH07t9cwuILM/8xXRZKrIEmc5UglJS6S0IdnJhex82WwWUGvTq9L19LqGQ3LmHjTK5OLj8zHusu+HI0lfCn6cEMIUV0ZMowTUvkPs7Es/cvfbm5c2szGO/mLRFjkKoTRogRDut5RVsJLs/fuojhRT8ktKHNuXHLHEzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=hVx2Exae; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RC+EEX+O; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Rbte1X6j"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=LO0DrB2M3N7hfrUS+mFnSFKIjIfPOXAvmp2wA4sqSDw=;
-	t=1723099439; x=1723531439; b=Rbte1X6jdR6OjLsOvOEfZqT5yYETRUbci5tMVspYxWDhL9D
-	NYcT13DOn3GHThEV9rSQG08ostJoOgcLQdaCyXqMKHIk7f76eSWg1BUCft/xnXrWoISu1eVt0w94E
-	3ebQayFIBv3xtJqas/kH8GykxuxGHgfCCZnMATLQwhRvzSfsSFzVqFbtWQzW4Nsn6LZ4FXdnCKQ1b
-	N2uzzA/F1pjGiMy0MJ5/G/S1QSxH2OrV53CpZj+/wAFTeQZ79W/p3eHb7vPRQvNLh00m2D8eBS58G
-	Xh6lX7AQy2yJrTD/qyor9oWQqg2IkvVIZht+lUGnCHDPrYMuTv5GQMxVuWxSd/7A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sbwsL-0000ZV-R7; Thu, 08 Aug 2024 08:43:53 +0200
-Message-ID: <8e9c5c74-9b36-48bb-b74a-9a209b71a634@leemhuis.info>
-Date: Thu, 8 Aug 2024 08:43:53 +0200
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hVx2Exae";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RC+EEX+O"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 84E171151BEF;
+	Thu,  8 Aug 2024 03:35:56 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute5.internal (MEProxy); Thu, 08 Aug 2024 03:35:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1723102556;
+	 x=1723188956; bh=fMFJm5IlFxBmEa62YMJEhbiKsIZQqiP31Px8V8AfdNY=; b=
+	hVx2ExaejuSrIfGHB0X94CrBVfdkmsna7NDUz0c/QmuxRhZRxcHT2G54tYhw8XwD
+	DAozKrOTgwEwcuiDp6xOUonyCN87fG2/itoNWCFmstTy1g0JTZoBEDXRUE8JYS7c
+	SRVInd1ZbKwfPjHkxlIRr863cZuwDfgfqF+jXmbuOrgF74KAn8Gx+IBTgdzwN8+V
+	prDWnEUskXOcmWcbJRH8nRFHPCX/higE9lFraUxHPbNEECZX2Rtp9ISiW5G2kCVA
+	9aSBWmqtit3131ogn6s8wr9QDlSQBmFRkMs9nnu/Sht8StIKfkNllPFqsOD+LVUc
+	BvfQ17hMlLTjOmiv30Hz1A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1723102556; x=
+	1723188956; bh=fMFJm5IlFxBmEa62YMJEhbiKsIZQqiP31Px8V8AfdNY=; b=R
+	C+EEX+OBxAIDeqhr/KFfs+qCOQ23Q26BLOtA9xOS7swUsL33Db10vcgrKpg7mjk4
+	4a40Li1H/CuYw5kCPnhI3aZSknYCgDBlTOaOL7lgupzAKz+uXuGJV3E+q+U2sVJ9
+	7qMR5po+Sx3da4bd0W923GPoJ8qxgOJT4E7jTN9YWgss2KIz40eDKrwqhFLI5pLL
+	wl42zqfFM16SW5LWvsgoiCutIPIzKGmcpDlW+E3EpDQ4PNOsPrr9a5gh26jD0uFT
+	RtU9DS8Glt+h24t17/+FRHPcVgDG1tY2S3VOAvBI3kuR8Pc2A1yBz9gNfJNdUXkt
+	KS43A0svI2/1TV4/np4Cw==
+X-ME-Sender: <xms:W3W0ZkAQ_ohYCHduJH5FpYMFViVW5NfzXx68QX427308HoZgQHIi5Q>
+    <xme:W3W0ZmiHvFnA4z-yDWSsVMJN16n1wKNFqNEflIPWK31ztvPodgglsbQRyeEOHPmq2
+    Nd_iF0ElrVaPeBesjs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrledugdduvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
+    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepfeeuueehudffkeeihefhgeeh
+    veefffdugefhffeuffdvheeggeefkeefffeivdegnecuffhomhgrihhnpehkvghrnhgvlh
+    htvghsthhsrdhorhhgpdhrohgvtghkqdhushdrnhgvthenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihgh
+    horghtrdgtohhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpth
+    htohepfhgrnhgtvghrrdhlrghntggvrhesghhmrghilhdrtghomhdprhgtphhtthhopegu
+    rghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglh
+    igsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoheprhgvghhrvghsshhiohhnshes
+    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehmrggtrhhosehorhgtrghmrd
+    hmvgdruhhkpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghp
+    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:W3W0ZnlvLZIrKzF05cUbaXeRQUIpRV0_hRv6olwl7l6eEpnKf8jA1A>
+    <xmx:W3W0ZqyY7gUxPb1YXZULdV-vUPwAqAbEjQq9MSHyZ4keb6-67k3Y_Q>
+    <xmx:W3W0ZpRNlQaKNW4285SaRxbCxoy5r2NL21aWOkh1kstto4oVJYs6uQ>
+    <xmx:W3W0Zlacm04dElUYnSJknRTeBMXNN65OKEzKSK9AuHdiK0NQfHOvxA>
+    <xmx:XHW0ZkEo65KxlfY4YidS9vjfsDBWqWJ-m6NkB9UCHgwcBt2Sk2OFvulw>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id B8A5619C0079; Thu,  8 Aug 2024 03:35:55 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [regression] Significant WiFi Speed Reduction with Kernel
- Versions > 6.8.12 on Intel Wi-Fi 6 AX203
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Mukesh Sisodiya <mukesh.sisodiya@intel.com>
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Johannes Berg <johannes.berg@intel.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <7a43d26e-95eb-49d4-bc02-434c239909ff@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <7a43d26e-95eb-49d4-bc02-434c239909ff@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723099439;01696715;
-X-HE-SMSGID: 1sbwsL-0000ZV-R7
+Date: Thu, 08 Aug 2024 08:35:35 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Guenter Roeck" <linux@roeck-us.net>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Serge Semin" <fancer.lancer@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Message-Id: <8d3abbdb-7574-486f-82dd-4213b806a6d8@app.fastmail.com>
+In-Reply-To: <900ae60e-84f8-4300-87e7-7f35d16ad439@roeck-us.net>
+References: <20240612-mips-clks-v2-0-a57e6f49f3db@flygoat.com>
+ <20240612-mips-clks-v2-2-a57e6f49f3db@flygoat.com>
+ <fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net>
+ <97ad6c99-ca4e-463b-aee0-9a7e9455fea3@app.fastmail.com>
+ <62e8056b-6a6c-42d1-89f6-7306bb2a528b@roeck-us.net>
+ <900ae60e-84f8-4300-87e7-7f35d16ad439@roeck-us.net>
+Subject: Re: [PATCH v2 2/7] MIPS: csrc-r4k: Apply verification clocksource flags
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 07.08.24 11:12, Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
-> Mukesh Sisodiya, I noticed a report about a regression in
-> bugzilla.kernel.org that appears to be caused by a change of yours:
-> 
-> 099a47dbe71b75 ("wifi: iwlwifi: Add support for new 802.11be device")
-> [v6.9-rc1]
 
-For the record, turns out the bisection went a bit sideways and the
-problems apparently is caused by 84ec2d2e960f33 ("wifi: iwlwifi: disable
-160 MHz based on subsystem device ID") [v6.9-rc1]. For details, see
-https://bugzilla.kernel.org/show_bug.cgi?id=219114#c8
 
-Ciao, Thorsten
+=E5=9C=A82024=E5=B9=B48=E6=9C=886=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
+=8D=884:06=EF=BC=8CGuenter Roeck=E5=86=99=E9=81=93=EF=BC=9A
+> On 8/5/24 22:13, Guenter Roeck wrote:
+>> On 8/5/24 22:06, Jiaxun Yang wrote:
+>>>
+>>>
+>>> =E5=9C=A82024=E5=B9=B48=E6=9C=886=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=
+=E5=8D=8812:09=EF=BC=8CGuenter Roeck=E5=86=99=E9=81=93=EF=BC=9A
+>>>> Hi,
+>>>>
+>>>> On Wed, Jun 12, 2024 at 09:54:29AM +0100, Jiaxun Yang wrote:
+>>>>> CP0 counter suffers from various problems like SMP sync,
+>>>>> behaviour on wait.
+>>>>>
+>>>>> Set CLOCK_SOURCE_MUST_VERIFY and CLOCK_SOURCE_VERIFY_PERCPU,
+>>>>> as what x86 did to TSC, to let kernel test it before use.
+>>>>>
+>>>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>>
+>>> Hi Guenter,
+>>>
+>>> Thanks for the report, it makes no sense to me though....
+>>>
+>>> I can't reproduce it with QEMU git master, do you mind specifying yo=
+ur QEMU
+>>> version for me? Also is it possible to have a copy of dmesg when fai=
+lure happens.
+>>>
+>>=20
+>> I currently use v9.0.2. I'll try with some other versions tomorrow.
+>> A complete log is at
+>> https://kerneltests.org/builders/qemu-mips64-master/builds/241/steps/=
+qemubuildcommand/logs/stdio
+>>=20
+>> Are you trying to instantiate an e1000 (or a variant of it) ? So far
+>> I have only seen the problem with that controller. There is no specif=
+ic
+>> error message, the network interface just doesn't get an IP address.
+>>=20
+>
+> I am able to reproduce the problem with qemu 6.2.0 (Debian build).
+> http://server.roeck-us.net/qemu/mips64/ should have everything needed =
+to
+> reproduce it. "repeat.sh" repeats the test until it fails.
+
+Thanks for the info, I'm able to reproduce that. It can be reproduced fa=
+ster
+on system with lower CPU performance.
+
+So the actual failure is:
+
+clocksource: timekeeping watchdog on CPU0: Marking clocksource 'MIPS' as=
+ unstable because the skew is too large:
+clocksource:                       'jiffies' wd_nsec: 500000000 wd_now: =
+ffff8bde wd_last: ffff8bac mask: ffffffff
+clocksource:                       'MIPS' cs_nsec: 940634468 cs_now: 310=
+181c4 cs_last: 28090a09 mask: ffffffff
+clocksource:                       Clocksource 'MIPS' skewed 440634468 n=
+s (440 ms) over watchdog 'jiffies' interval of 500000000 ns (500 ms)
+clocksource:                       'MIPS' is current clocksource.
+
+Jiffies is not an ideal clocksource as watchdog base, really....
+I guess clocksource selection process needs to be improved, let me think=
+ about it.
+
+>
+> Hope this helps,
+> Guenter
+
+--=20
+- Jiaxun
