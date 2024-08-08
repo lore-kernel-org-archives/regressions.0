@@ -1,179 +1,250 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E22F188CAE
-	for <regressions@lists.linux.dev>; Thu,  8 Aug 2024 07:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7883418A952
+	for <regressions@lists.linux.dev>; Thu,  8 Aug 2024 10:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723102559; cv=none; b=c3IrqTifhdcW57Sio08H1Rxp0SrfLFgS5VJNDvehgPEK/d/hAMp027mYQZismkvfFoBITSsAqYxncHYD2jZ53877zaKNEr1UbhHpajCgcouu7miIkZtsaLdp3ObhC2nLWTtaUgY/xDRsTDkM6rjCIf37Rr3/GmjZ5nF2ylBdKOY=
+	t=1723113095; cv=none; b=nCAGNDSRjLJRnzIRrz+4BMYdcqbLEtFiJIab1eagp08rj7wtb8hQKfy3vN9QjPY0RYK+bJSiPdqAP1I9gRxJcnH4M+BjDM4Y1ZLPCCI898wOwKIg2JxJ3T0oVNnRL4u8fziy0onSWEoAlkWSU78cB5J02+abtKwxGczOcSxoijE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723102559; c=relaxed/simple;
-	bh=L6+YeIn/Vp1pbx3yet9x4syQyFrDr8NrjU/GSzGYsuc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=bsTSnHdfVH07t9cwuILM/8xXRZKrIEmc5UglJS6S0IdnJhex82WwWUGvTq9L19LqGQ3LmHjTK5OLj8zHusu+HI0lfCn6cEMIUV0ZMowTUvkPs7Es/cvfbm5c2szGO/mLRFjkKoTRogRDut5RVsJLs/fuojhRT8ktKHNuXHLHEzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=hVx2Exae; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RC+EEX+O; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1723113095; c=relaxed/simple;
+	bh=bT9AI8B5Rt/jTvoUWHcjOzWMOy/YdVV4pdOpyGVjc5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YY4tF4w/Q6qtnBNH6hsuvCIC0gzJajjJR0aR2EqkI7xQGeBcURoI/bB9bnxpYIK/Yp2HPUpLV0ILlFlHBtQKA0swrDxH37qYtuPos54Hnz6SNk+o85/WXnmHlmt/L05m0gZIW8XRssajzWdtTibs7wLK3GT2r8W6DbfwYzT6u6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com; spf=none smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Sfzg6hgX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k+p26n/Y; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hVx2Exae";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RC+EEX+O"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 84E171151BEF;
-	Thu,  8 Aug 2024 03:35:56 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute5.internal (MEProxy); Thu, 08 Aug 2024 03:35:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1723102556;
-	 x=1723188956; bh=fMFJm5IlFxBmEa62YMJEhbiKsIZQqiP31Px8V8AfdNY=; b=
-	hVx2ExaejuSrIfGHB0X94CrBVfdkmsna7NDUz0c/QmuxRhZRxcHT2G54tYhw8XwD
-	DAozKrOTgwEwcuiDp6xOUonyCN87fG2/itoNWCFmstTy1g0JTZoBEDXRUE8JYS7c
-	SRVInd1ZbKwfPjHkxlIRr863cZuwDfgfqF+jXmbuOrgF74KAn8Gx+IBTgdzwN8+V
-	prDWnEUskXOcmWcbJRH8nRFHPCX/higE9lFraUxHPbNEECZX2Rtp9ISiW5G2kCVA
-	9aSBWmqtit3131ogn6s8wr9QDlSQBmFRkMs9nnu/Sht8StIKfkNllPFqsOD+LVUc
-	BvfQ17hMlLTjOmiv30Hz1A==
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Sfzg6hgX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k+p26n/Y"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id A269C1146C2A;
+	Thu,  8 Aug 2024 06:31:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 08 Aug 2024 06:31:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1723102556; x=
-	1723188956; bh=fMFJm5IlFxBmEa62YMJEhbiKsIZQqiP31Px8V8AfdNY=; b=R
-	C+EEX+OBxAIDeqhr/KFfs+qCOQ23Q26BLOtA9xOS7swUsL33Db10vcgrKpg7mjk4
-	4a40Li1H/CuYw5kCPnhI3aZSknYCgDBlTOaOL7lgupzAKz+uXuGJV3E+q+U2sVJ9
-	7qMR5po+Sx3da4bd0W923GPoJ8qxgOJT4E7jTN9YWgss2KIz40eDKrwqhFLI5pLL
-	wl42zqfFM16SW5LWvsgoiCutIPIzKGmcpDlW+E3EpDQ4PNOsPrr9a5gh26jD0uFT
-	RtU9DS8Glt+h24t17/+FRHPcVgDG1tY2S3VOAvBI3kuR8Pc2A1yBz9gNfJNdUXkt
-	KS43A0svI2/1TV4/np4Cw==
-X-ME-Sender: <xms:W3W0ZkAQ_ohYCHduJH5FpYMFViVW5NfzXx68QX427308HoZgQHIi5Q>
-    <xme:W3W0ZmiHvFnA4z-yDWSsVMJN16n1wKNFqNEflIPWK31ztvPodgglsbQRyeEOHPmq2
-    Nd_iF0ElrVaPeBesjs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrledugdduvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepfeeuueehudffkeeihefhgeeh
-    veefffdugefhffeuffdvheeggeefkeefffeivdegnecuffhomhgrihhnpehkvghrnhgvlh
-    htvghsthhsrdhorhhgpdhrohgvtghkqdhushdrnhgvthenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihgh
-    horghtrdgtohhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpth
-    htohepfhgrnhgtvghrrdhlrghntggvrhesghhmrghilhdrtghomhdprhgtphhtthhopegu
-    rghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglh
-    igsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoheprhgvghhrvghsshhiohhnshes
-    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehmrggtrhhosehorhgtrghmrd
-    hmvgdruhhkpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghp
-    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:W3W0ZnlvLZIrKzF05cUbaXeRQUIpRV0_hRv6olwl7l6eEpnKf8jA1A>
-    <xmx:W3W0ZqyY7gUxPb1YXZULdV-vUPwAqAbEjQq9MSHyZ4keb6-67k3Y_Q>
-    <xmx:W3W0ZpRNlQaKNW4285SaRxbCxoy5r2NL21aWOkh1kstto4oVJYs6uQ>
-    <xmx:W3W0Zlacm04dElUYnSJknRTeBMXNN65OKEzKSK9AuHdiK0NQfHOvxA>
-    <xmx:XHW0ZkEo65KxlfY4YidS9vjfsDBWqWJ-m6NkB9UCHgwcBt2Sk2OFvulw>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B8A5619C0079; Thu,  8 Aug 2024 03:35:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1723113092; x=1723199492; bh=MX
+	44/EWhOUxV2E2PRqPcKlXwkRrpynBXksdVpdffh/o=; b=Sfzg6hgXJ1wKHB9P/L
+	+Fel/YzCpIfhYgYm/2ItWvfwPJRzbHti4ZIUPmVBCvaZYLlnjPW78aHFUpWsZHbT
+	AQFOU/RWjxM6F6StxaKYPoC1+4vrR0qLmazfcnUbwHfjwN3RwJEM5bEgs5ZnNm0H
+	xTJFKOoSAFqgkGVH5ovD73lTbj5iD9eL4Ic0rzxqBzRK5VdKcoSn6rliFrmiELtr
+	AKBpksKgFzOvPgG+q6TpguvENTi0KzaZN4dGXsTVxAgduGWkBUy2GiftfpIUAaRZ
+	jhfAxdGXdFukphepXXQegqdObXN2T2/bIaDGSLw8tyRGwPzO3SC32ECMMAO9yqBk
+	QzMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1723113092; x=1723199492; bh=MX44/EWhOUxV2E2PRqPcKlXwkRrpynBXksd
+	Vpdffh/o=; b=k+p26n/Y3/RUqrhpgNcikgQf5f/0GmeD7IPqTmvi+EofKyVm734
+	TjADUpCWWvFZ4nnMnivCcpEeT0oo2gaG4HZjhUrU1v1aXSh8LJAV6Sw/OPzUd/08
+	2D9isZCEol7pojvle//jXE8IiuHe2WfwSbfpnpgDepAzvyuWlegADrCXODsK6nsy
+	pELW6o4IxH/nlkux0dirrP9xlfY7N+3Nul0CCHZCfObUEALteAfMORVf4vSn9ZLN
+	dgjLWzzsy4RZIiklUQcsw+fU4oUtAqDLcB1/Pot6UEXYJN4HPYjqC04bLsWQ4Xeo
+	CIkzNZm5MyjDY+Oao8IOZ+dTG6LZgtiAlQg==
+X-ME-Sender: <xms:hJ60ZgECmiSryqumJyj4CpKH6jbimkWZO4XJJrSfAK2Ywcq9QapKgQ>
+    <xme:hJ60ZpXcQfLAkcBNYklqZ206ZhST5MegOG5jP1QeTsVcSc3SE2PBvuVbXB1yT2AF3
+    XOn4KG7d2Aang>
+X-ME-Received: <xmr:hJ60ZqIh9djv6u8XbYmWzfoQ-HKLiFvPwxIpDnkdpKZ9Uy3e1OnJ-IA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrledvgddvlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpeffhffvvefukfggtggusehgtderredttdejnecuhfhr
+    ohhmpeforghrvghkucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmh
+    grrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrght
+    thgvrhhnpeehgfeuvdejkeeikeeludelteevfeegffegteefffetheetffduudejuedugf
+    dvteenucffohhmrghinhepqhhusggvshdqohhsrdhorhhgpdhgihhthhhusgdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmh
+    grrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphht
+    thhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeigvghnqdguvghvvghlse
+    hlihhsthhsrdigvghnphhrohhjvggtthdrohhrghdprhgtphhtthhopehjghhrohhsshes
+    shhushgvrdgtohhmpdhrtghpthhtohepshhsthgrsggvlhhlihhniheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepohhlvghkshgrnhgurhgpthihshhhtghhvghnkhhosegvphgr
+    mhdrtghomhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuh
+    igrdguvghv
+X-ME-Proxy: <xmx:hJ60ZiFK0l7BtgmVhziBoIOkfp6sZckUZStschxVBC9zR2ytrNAj9w>
+    <xmx:hJ60ZmX60n78_jvGaZmsCaYL6EymfslYmknDzO1CJplaPCk3sIOfRA>
+    <xmx:hJ60ZlP3zXhYPP-iRvLbxHrdS2cOpZ6khrTYzNQBmp4UG7D2WJlYAw>
+    <xmx:hJ60Zt1xCOmu9eXBsSpXeM9hTXsFX4q4g77MOeNupKAK9lXM8tesBg>
+    <xmx:hJ60Zkx_sVU4AhNMumtRm3FetoBMlX98_yXouWAjz0O3_EO9Rt-3XwHY>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 8 Aug 2024 06:31:31 -0400 (EDT)
+Date: Thu, 8 Aug 2024 12:31:13 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: xen-devel <xen-devel@lists.xenproject.org>
+Cc: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] kernel NULL pointer dereference in xen-balloon with mem
+ hotplug
+Message-ID: <ZrSecpuTN9zgtqYu@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 08 Aug 2024 08:35:35 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Guenter Roeck" <linux@roeck-us.net>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Serge Semin" <fancer.lancer@gmail.com>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Maciej W. Rozycki" <macro@orcam.me.uk>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Message-Id: <8d3abbdb-7574-486f-82dd-4213b806a6d8@app.fastmail.com>
-In-Reply-To: <900ae60e-84f8-4300-87e7-7f35d16ad439@roeck-us.net>
-References: <20240612-mips-clks-v2-0-a57e6f49f3db@flygoat.com>
- <20240612-mips-clks-v2-2-a57e6f49f3db@flygoat.com>
- <fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net>
- <97ad6c99-ca4e-463b-aee0-9a7e9455fea3@app.fastmail.com>
- <62e8056b-6a6c-42d1-89f6-7306bb2a528b@roeck-us.net>
- <900ae60e-84f8-4300-87e7-7f35d16ad439@roeck-us.net>
-Subject: Re: [PATCH v2 2/7] MIPS: csrc-r4k: Apply verification clocksource flags
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kt7u1tiUe8A/rt3t"
+Content-Disposition: inline
+
+
+--kt7u1tiUe8A/rt3t
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Date: Thu, 8 Aug 2024 12:31:13 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: xen-devel <xen-devel@lists.xenproject.org>
+Cc: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] kernel NULL pointer dereference in xen-balloon with mem
+ hotplug
 
+Hi,
 
+When testing Linux 6.11-rc2, I've got the crash like below. It's a PVH
+guest started with 400MB memory, and then extended via mem hotplug (I
+don't know to what exact size it was at this time, but up to 4GB), it
+was quite early in the domU boot process, I suspect it could be the
+first mem hotplug even happening there.
+Unfortunately I don't have reliable reproducer, it crashed only once
+over several test runs. I don't remember seeing such crash before, so it
+looks like a regression in 6.11. I'm not sure if that matters, but it's
+on ADL, very similar to the qubes-hw2 gitlab runner.
 
-=E5=9C=A82024=E5=B9=B48=E6=9C=886=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
-=8D=884:06=EF=BC=8CGuenter Roeck=E5=86=99=E9=81=93=EF=BC=9A
-> On 8/5/24 22:13, Guenter Roeck wrote:
->> On 8/5/24 22:06, Jiaxun Yang wrote:
->>>
->>>
->>> =E5=9C=A82024=E5=B9=B48=E6=9C=886=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=
-=E5=8D=8812:09=EF=BC=8CGuenter Roeck=E5=86=99=E9=81=93=EF=BC=9A
->>>> Hi,
->>>>
->>>> On Wed, Jun 12, 2024 at 09:54:29AM +0100, Jiaxun Yang wrote:
->>>>> CP0 counter suffers from various problems like SMP sync,
->>>>> behaviour on wait.
->>>>>
->>>>> Set CLOCK_SOURCE_MUST_VERIFY and CLOCK_SOURCE_VERIFY_PERCPU,
->>>>> as what x86 did to TSC, to let kernel test it before use.
->>>>>
->>>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>>
->>> Hi Guenter,
->>>
->>> Thanks for the report, it makes no sense to me though....
->>>
->>> I can't reproduce it with QEMU git master, do you mind specifying yo=
-ur QEMU
->>> version for me? Also is it possible to have a copy of dmesg when fai=
-lure happens.
->>>
->>=20
->> I currently use v9.0.2. I'll try with some other versions tomorrow.
->> A complete log is at
->> https://kerneltests.org/builders/qemu-mips64-master/builds/241/steps/=
-qemubuildcommand/logs/stdio
->>=20
->> Are you trying to instantiate an e1000 (or a variant of it) ? So far
->> I have only seen the problem with that controller. There is no specif=
-ic
->> error message, the network interface just doesn't get an IP address.
->>=20
->
-> I am able to reproduce the problem with qemu 6.2.0 (Debian build).
-> http://server.roeck-us.net/qemu/mips64/ should have everything needed =
-to
-> reproduce it. "repeat.sh" repeats the test until it fails.
+The crash message:
 
-Thanks for the info, I'm able to reproduce that. It can be reproduced fa=
-ster
-on system with lower CPU performance.
+    [    3.606538] BUG: kernel NULL pointer dereference, address: 000000000=
+0000000
+    [    3.606556] #PF: supervisor read access in kernel mode
+    [    3.606568] #PF: error_code(0x0000) - not-present page
+    [    3.606580] PGD 0 P4D 0=20
+    [    3.606590] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+    [    3.606603] CPU: 1 UID: 0 PID: 45 Comm: xen-balloon Not tainted 6.11=
+=2E0-0.rc2.1.qubes.1.fc37.x86_64 #1
+    [    3.606623] RIP: 0010:phys_pmd_init+0x96/0x500
+    [    3.606636] Code: 89 ed 48 c1 e8 12 48 81 e7 00 00 e0 ff 25 f8 0f 00=
+ 00 4c 8d af 00 00 20 00 4c 8d 24 03 48 8b 1c 24 4c 39 fd 0f 83 89 02 00 00=
+ <49> 8b 0c 24 48 f7 c1 9f ff ff ff 0f 84 b6 01 00 00 48 8b 05 d2 99
+    [    3.606680] RSP: 0018:ffffc90000987b90 EFLAGS: 00010287
+    [    3.606695] RAX: 0000000000000000 RBX: 8000000000000163 RCX: 0000000=
+000000004
+    [    3.606713] RDX: 0000000090000000 RSI: 0000000080000000 RDI: 0000000=
+080000000
+    [    3.606729] RBP: 0000000080000000 R08: 8000000000000163 R09: 0000000=
+000000001
+    [    3.606748] R10: 0000000000000000 R11: 0000000000ffff0a R12: 0000000=
+000000000
+    [    3.606766] R13: 0000000080200000 R14: 0000000000000000 R15: 0000000=
+090000000
+    [    3.606784] FS:  0000000000000000(0000) GS:ffff888018500000(0000) kn=
+lGS:0000000000000000
+    [    3.606802] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [    3.606819] CR2: 0000000000000000 CR3: 00000000107bc000 CR4: 0000000=
+000750ef0
+    [    3.606840] PKRU: 55555554
+    [    3.606847] Call Trace:
+    [    3.606854]  <TASK>
+    [    3.606862]  ? __die+0x23/0x70
+    [    3.606876]  ? page_fault_oops+0x95/0x190
+    [    3.606887]  ? exc_page_fault+0x76/0x190
+    [    3.606900]  ? asm_exc_page_fault+0x26/0x30
+    [    3.606917]  ? phys_pmd_init+0x96/0x500
+    [    3.606927]  phys_pud_init+0xe8/0x4f0
+    [    3.606940]  __kernel_physical_mapping_init+0x1d5/0x380
+    [    3.606955]  ? synchronize_rcu_normal.part.0+0x45/0x70
+    [    3.606971]  init_memory_mapping+0xb0/0x1f0
+    [    3.606983]  arch_add_memory+0x2f/0x50
+    [    3.606997]  add_memory_resource+0xff/0x2c0
+    [    3.607008]  reserve_additional_memory+0x162/0x1d0
+    [    3.607026]  balloon_thread+0xe4/0x490
+    [    3.607041]  ? __pfx_autoremove_wake_function+0x10/0x10
+    [    3.607060]  ? __pfx_balloon_thread+0x10/0x10
+    [    3.607076]  kthread+0xcf/0x100
+    [    3.607090]  ? __pfx_kthread+0x10/0x10
+    [    3.607101]  ret_from_fork+0x31/0x50
+    [    3.607112]  ? __pfx_kthread+0x10/0x10
+    [    3.607123]  ret_from_fork_asm+0x1a/0x30
+    [    3.607135]  </TASK>
+    [    3.607141] Modules linked in: xenfs binfmt_misc nft_reject_inet nf_=
+reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6 nf=
+_defrag_ipv4 nf_tables nfnetlink intel_rapl_msr intel_rapl_common intel_unc=
+ore_frequency_common crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clm=
+ulni polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 sha1_sss=
+e3 xen_netfront xen_privcmd xen_gntdev xen_gntalloc xen_blkback xen_evtchn =
+loop fuse ip_tables overlay xen_blkfront
+    [    3.607266] CR2: 0000000000000000
+    [    3.607277] ---[ end trace 0000000000000000 ]---
+    [    3.607291] RIP: 0010:phys_pmd_init+0x96/0x500
+    [    3.607307] Code: 89 ed 48 c1 e8 12 48 81 e7 00 00 e0 ff 25 f8 0f 00=
+ 00 4c 8d af 00 00 20 00 4c 8d 24 03 48 8b 1c 24 4c 39 fd 0f 83 89 02 00 00=
+ <49> 8b 0c 24 48 f7 c1 9f ff ff ff 0f 84 b6 01 00 00 48 8b 05 d2 99
+    [    3.607356] RSP: 0018:ffffc90000987b90 EFLAGS: 00010287
+    [    3.607371] RAX: 0000000000000000 RBX: 8000000000000163 RCX: 0000000=
+000000004
+    [    3.607389] RDX: 0000000090000000 RSI: 0000000080000000 RDI: 0000000=
+080000000
+    [    3.607406] RBP: 0000000080000000 R08: 8000000000000163 R09: 0000000=
+000000001
+    [    3.607428] R10: 0000000000000000 R11: 0000000000ffff0a R12: 0000000=
+000000000
+    [    3.607449] R13: 0000000080200000 R14: 0000000000000000 R15: 0000000=
+090000000
+    [    3.607469] FS:  0000000000000000(0000) GS:ffff888018500000(0000) kn=
+lGS:0000000000000000
+    [    3.607488] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [    3.607504] CR2: 0000000000000000 CR3: 00000000107bc000 CR4: 0000000=
+000750ef0
+    [    3.607525] PKRU: 55555554
+    [    3.607533] Kernel panic - not syncing: Fatal exception
+    [    3.607599] Kernel Offset: disabled
 
-So the actual failure is:
+Full domU log:
+https://openqa.qubes-os.org/tests/108883/file/system_tests-qubes.tests.inte=
+g.vm_qrexec_gui.TC_20_NonAudio_whonix-workstation-17.test_105.guest-test-in=
+st-vm2.log
+Other logs, including dom0 and Xen messages:
+https://openqa.qubes-os.org/tests/108883#downloads
 
-clocksource: timekeeping watchdog on CPU0: Marking clocksource 'MIPS' as=
- unstable because the skew is too large:
-clocksource:                       'jiffies' wd_nsec: 500000000 wd_now: =
-ffff8bde wd_last: ffff8bac mask: ffffffff
-clocksource:                       'MIPS' cs_nsec: 940634468 cs_now: 310=
-181c4 cs_last: 28090a09 mask: ffffffff
-clocksource:                       Clocksource 'MIPS' skewed 440634468 n=
-s (440 ms) over watchdog 'jiffies' interval of 500000000 ns (500 ms)
-clocksource:                       'MIPS' is current clocksource.
+Kernel config is build from merging
+https://github.com/QubesOS/qubes-linux-kernel/blob/005ae1ac3819d957379e48fb=
+2cfd33f511a47275/config-base
+with
+https://github.com/QubesOS/qubes-linux-kernel/blob/005ae1ac3819d957379e48fb=
+2cfd33f511a47275/config-qubes
+(options set in the latter takes precedence)
+Especially, it has:
+CONFIG_XEN_BALLOON_MEMORY_HOTPLUG=3Dy
+CONFIG_XEN_UNPOPULATED_ALLOC=3Dy
 
-Jiffies is not an ideal clocksource as watchdog base, really....
-I guess clocksource selection process needs to be improved, let me think=
- about it.
-
->
-> Hope this helps,
-> Guenter
+#regzbot introduced: v6.10..v6.11-rc2
 
 --=20
-- Jiaxun
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--kt7u1tiUe8A/rt3t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAma0nnIACgkQ24/THMrX
+1yyw4wf/VHGBECVm870HmY0iwiXw0Wjf7qkIVuUbdK4O/z3R5o8tcv1MnkMM8wQG
+otXtOP6C3QN5GP0iILNlObzmsrtFpNXFDoDi8fWZkHJ2nOHo3tr9iGaOzlB+L2KM
+XpAT5n9JFSHAz8xY/DbU81m2CGGMvvRXTq9o6d/B5wO9lYbqOSN5yjPZHCifsHb9
+Vsnf3c0hzk2qBCzb5wq806kOit37+8RHjYy0vPQVjPwaZmTwT6NRxvunDmTjCXz2
+H2F93zXnRaC/6KGICTFJCjOYOYyLGhXUbYO+EOuVys6XDHQFO1YXa5Ob/1ylFVFg
+CI79rS8pTHkv9Il8KfiwnNc8ovwEAQ==
+=ZqgP
+-----END PGP SIGNATURE-----
+
+--kt7u1tiUe8A/rt3t--
