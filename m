@@ -1,70 +1,229 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955C21917DE
-	for <regressions@lists.linux.dev>; Thu,  8 Aug 2024 17:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ACF13D8A3
+	for <regressions@lists.linux.dev>; Thu,  8 Aug 2024 17:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723137774; cv=none; b=hk2XuCgtNjlXvjj6jztkwMqGMWijjr7NyD2KUtLhMNX1DlPlz61gtZCssP1NYqO5NDVzMCbqQ41vNtutzfQoVj2fY3xnyR9UkRh0UjGwelERDD7ZliH7so/aWLqP6QqKxahvZM6DRbe1vN+2sg+cJ1wtNaES2iPVwWePw9uSPFE=
+	t=1723138619; cv=none; b=NQS9PVcFM7hetiX6O+5lrha9laMlGePfUgAbfRKdpY5oUAgBr9Qkault7bPlMcxD7M8V+Mbki/EZXS2iQbulbWxmL27YppFQ8DsJTu2HTqL8IPrT2bv8t3Dvv+x5WqBar2X1IFvGa4M16v0YQx2sT2a2NzC2JedhzvyOUUj4BH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723137774; c=relaxed/simple;
-	bh=tlpXaGdyTtQ6hdLhhlFr0N5iVXE46ZNupqz1Zm5u10o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=khtGFGeyfEMCbJ2FRbp8PeyVUpw+Y802ucZmuLDNHGXiXU9bL00ymyp9Q9pj6xv6VBbdCPqqKB/Ci5QfeoWlunKtYRcIGJv6pL5/7ST0tpbdAZHBXuCLDvs9bPTWkXI1XjpcxUIV8+Nj6noAhL7kfrsVrRXNQbb8QF3dqaTDR0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZS3BYiC8; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723138619; c=relaxed/simple;
+	bh=DjMJFSg3h/5jJEUwmskiKSHfTFoF570NS4ON6sBbhNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a+sTJ8bRePHnvz0gMRaKdfkOLt/ggC3iI47D5bp7RGlQhGSzj+SLwGLRfZSoQdFfZT2jA6H7RBeMfNVsDwQxe0pqtReCyllmaUISInzzsgOkoFEh9x7nCJSH+lE8b+HglC73xChHjaK3BxylZFyKptTH+T8gXNIHYHOKD6KtxHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=pMG/eeo8; arc=none smtp.client-ip=67.231.154.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZS3BYiC8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=tlpXaGdyTtQ6hdLhhlFr0N5iVXE46ZNupqz1Zm5u10o=; t=1723137772;
-	x=1723569772; b=ZS3BYiC8GiePjoGR6yLXiTiSc/r3+98IkPBlzXBhYCK+fw0N2WYrqZBT8BFGw
-	7wZoNghrVkAKMqsHuGjESVQZwWd3F61O/l4aDxn05MpI81OlWnjG27C6OldHc5bn8O3sOdPuC92h7
-	Xxa9IA1I4Bibq6oL1RJ2T2i1LcUps9Y+dk0GBGx+riKi5mZWMT/5yIfgBFq3td1tSce4saM2VbmJi
-	N1p2CPLWZSAOoFddeb44HdEYh7YXG6UbqofkzfP5MgF2BFzoCaW6rZCSBEDQb/SPyxVkzbL13mLHo
-	0vK3KOCUzjd/X5U5pBDyOqTJsSUuC4c5TgqOJ71ftkPDuaxmQQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sc6qg-0006HZ-EA; Thu, 08 Aug 2024 19:22:50 +0200
-Message-ID: <3c6fc97e-1db7-4b15-bda2-330aebb893bf@leemhuis.info>
-Date: Thu, 8 Aug 2024 19:22:50 +0200
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="pMG/eeo8"
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 555E28007E;
+	Thu,  8 Aug 2024 17:36:54 +0000 (UTC)
+Received: from [192.168.100.159] (unknown [50.251.239.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail3.candelatech.com (Postfix) with ESMTPSA id 9B04713C2B0;
+	Thu,  8 Aug 2024 10:36:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 9B04713C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+	s=default; t=1723138613;
+	bh=DjMJFSg3h/5jJEUwmskiKSHfTFoF570NS4ON6sBbhNI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pMG/eeo8TGS1rdMJ9SIT+GAfTe4ipzx0DYK/kOKDbcO6N0sFqSmdPseFwTHKevPs1
+	 fToQ2PuYx2ng8auPxh6XLQwg21izPZAtQApvH3bcFRSXcR5pg1NbVGBnK2SvAvNaAs
+	 IEQvGdwUTCnfdxVcEEIop4c8WrHjvPkGGn2LRBX4=
+Message-ID: <85f652fa-7dc1-44ca-e185-6ecfc6269de7@candelatech.com>
+Date: Thu, 8 Aug 2024 10:36:53 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] wifi: iwlwifi: correctly lookup DMA address in SG table
+Content-Language: en-US
+To: Benjamin Berg <benjamin@sipsolutions.net>, linux-wireless@vger.kernel.org
+Cc: benjamin.berg@intel.com, miriam.rachel.korenblit@intel.com,
+ regressions@lists.linux.dev, johannes@sipsolutions.net,
+ Kalle Valo <kvalo@kernel.org>, Chris Bainbridge
+ <chris.bainbridge@gmail.com>, Rory Little <rory.little@candelatech.com>
+References: <20240808172948.303258-1-benjamin@sipsolutions.net>
+From: Ben Greear <greearb@candelatech.com>
+Organization: Candela Technologies
+In-Reply-To: <20240808172948.303258-1-benjamin@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723137772;dac11b5f;
-X-HE-SMSGID: 1sc6qg-0006HZ-EA
+X-MDID: 1723138616-rak8yNnzxTp4
+X-MDID-O:
+ us5;at1;1723138616;rak8yNnzxTp4;<greearb@candelatech.com>;9e529b45f983a2e6a3ac1f2f5cf09fc3
+
+On 8/8/24 10:29, Benjamin Berg wrote:
+> From: Benjamin Berg <benjamin.berg@intel.com>
+
+Hello,
+
+We'll try testing this on our systems...
+
+Thanks,
+Ben
+
+> 
+> The code to lookup the scatter gather table entry assumed that it was
+> possible to use sg_virt() in order to lookup the DMA address in a mapped
+> scatter gather table. However, this assumption is incorrect as the DMA
+> mapping code may merge multiple entries into one. In that case, the DMA
+> address space may have e.g. two consecutive pages which is correctly
+> represented by the scatter gather list entry, however the virtual
+> addresses for these two pages may differ and the relationship cannot be
+> resolved anymore.
+> 
+> Avoid this problem entirely by working with the offset into the mapped
+> area instead of using virtual addresses. With that we only use the DMA
+> length and DMA address from the scatter gather list entries. The
+> underlying DMA/IOMMU code is therefore free to merge two entries into
+> one even if the virtual addresses space for the area is not continuous.
+> 
+> Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when TXing an AMSDU")
+> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
+> Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+> 
+> ---
+> 
+> Note that I was not yet able to fully verify this patch, but will
+> probably get results tomorrow. Unfortunately, much of the testing we do
+> internally happens on machines that do not reproduce the problem.
+> 
+> Also, I think Ben already reported the same issue much earlier. At the
+> time, I was not yet aware of the internal reproductions and did not take
+> the report seriously.
+> ---
+>   .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
+>   .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c |  4 ++-
+>   drivers/net/wireless/intel/iwlwifi/pcie/tx.c  | 25 +++++++++++--------
+>   3 files changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+> index b59de4f80b4b..3af9c2b40ef1 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+> @@ -639,7 +639,7 @@ void iwl_trans_pcie_tx_reset(struct iwl_trans *trans);
+>   int iwl_pcie_txq_alloc(struct iwl_trans *trans, struct iwl_txq *txq,
+>   		       int slots_num, bool cmd_queue);
+>   
+> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr);
+> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset);
+>   struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
+>   				   struct iwl_cmd_meta *cmd_meta,
+>   				   u8 **hdr, unsigned int hdr_room);
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+> index 2e780fb2da42..54d26523f692 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+> @@ -168,6 +168,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+>   	struct ieee80211_hdr *hdr = (void *)skb->data;
+>   	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+>   	unsigned int mss = skb_shinfo(skb)->gso_size;
+> +	unsigned int data_offset = 0;
+>   	dma_addr_t start_hdr_phys;
+>   	u16 length, amsdu_pad;
+>   	u8 *start_hdr;
+> @@ -260,7 +261,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+>   			int ret;
+>   
+>   			tb_len = min_t(unsigned int, tso.size, data_left);
+> -			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
+> +			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
+>   			/* Not a real mapping error, use direct comparison */
+>   			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+>   				goto out_err;
+> @@ -272,6 +273,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+>   				goto out_err;
+>   
+>   			data_left -= tb_len;
+> +			data_offset += tb_len;
+>   			tso_build_data(skb, &tso, tb_len);
+>   		}
+>   	}
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+> index 22d482ae53d9..78f417cdb9ac 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+> @@ -1814,23 +1814,24 @@ static void *iwl_pcie_get_page_hdr(struct iwl_trans *trans,
+>   /**
+>    * iwl_pcie_get_sgt_tb_phys - Find TB address in mapped SG list
+>    * @sgt: scatter gather table
+> - * @addr: Virtual address
+> + * @offset: Offset into the mapped memory (i.e. SKB payload data)
+>    *
+> - * Find the entry that includes the address for the given address and return
+> - * correct physical address for the TB entry.
+> + * Find the DMA address that corresponds to the SKB payload data at the
+> + * position given by @offset.
+>    *
+>    * Returns: Address for TB entry
+>    */
+> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr)
+> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset)
+>   {
+>   	struct scatterlist *sg;
+> +	unsigned int sg_offset = 0;
+>   	int i;
+>   
+>   	for_each_sgtable_dma_sg(sgt, sg, i) {
+> -		if (addr >= sg_virt(sg) &&
+> -		    (u8 *)addr < (u8 *)sg_virt(sg) + sg_dma_len(sg))
+> -			return sg_dma_address(sg) +
+> -			       ((unsigned long)addr - (unsigned long)sg_virt(sg));
+> +		if (offset >= sg_offset && offset < sg_offset + sg_dma_len(sg))
+> +			return sg_dma_address(sg) + offset - sg_offset;
+> +
+> +		sg_offset += sg_dma_len(sg);
+>   	}
+>   
+>   	WARN_ON_ONCE(1);
+> @@ -1875,7 +1876,9 @@ struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
+>   
+>   	sg_init_table(sgt->sgl, skb_shinfo(skb)->nr_frags + 1);
+>   
+> -	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, 0, skb->len);
+> +	/* Only map the data, not the header (it is copied to the TSO page) */
+> +	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, skb_headlen(skb),
+> +				       skb->data_len);
+>   	if (WARN_ON_ONCE(sgt->orig_nents <= 0))
+>   		return NULL;
+>   
+> @@ -1900,6 +1903,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+>   	struct ieee80211_hdr *hdr = (void *)skb->data;
+>   	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+>   	unsigned int mss = skb_shinfo(skb)->gso_size;
+> +	unsigned int data_offset = 0;
+>   	u16 length, iv_len, amsdu_pad;
+>   	dma_addr_t start_hdr_phys;
+>   	u8 *start_hdr, *pos_hdr;
+> @@ -2000,7 +2004,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+>   						  data_left);
+>   			dma_addr_t tb_phys;
+>   
+> -			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
+> +			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
+>   			/* Not a real mapping error, use direct comparison */
+>   			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+>   				return -EINVAL;
+> @@ -2011,6 +2015,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+>   						tb_phys, size);
+>   
+>   			data_left -= size;
+> +			data_offset += size;
+>   			tso_build_data(skb, &tso, size);
+>   		}
+>   	}
+
+-- 
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
 
 
-
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/lkml/314ee964-fe3f-4b4a-b83f-76ed6e6e16dd@roeck-us.net/
-#regzbot dup:
-https://lore.kernel.org/all/fbe92f1c-3c08-4b46-9d7a-e098ac1656a8@roeck-us.net/
-
-#regzbot report:
-https://lore.kernel.org/all/14e9aefb-88d1-4eee-8288-ef15d4a9b059@gmail.com/
-#regzbot introduced: ed0f941022515f
-#regzbot summary: arm: arm32: LD segmentation fault during "make xipImage"
