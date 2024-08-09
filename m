@@ -1,95 +1,174 @@
-Received: from nov-007-i538.relay.mailchannels.net (nov-007-i538.relay.mailchannels.net [46.232.183.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB38C8D1
-	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 22:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.183.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FF0161304
+	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 22:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723242971; cv=none; b=uBkPvPIoXRLxdTMFoJ2LNN/6n2PGhZjRtlKgjTezjuB2WV6cPVdSKhmr6I6Wyp4Uqc2hMlwpiSH8z/p0t/1Tk2m4ndLfg74jrfAu92IcE0VmWEfY7DkL+2TTfCxt7DSCPOW7hRXQbVkrhsnmRLhybDGEpnXiQHU6qyrVWiSsldA=
+	t=1723243547; cv=none; b=pS7PxGu8adApbb2l0jlQ2P8eCjd763rQ55XIgZcvhNSLjoMrzrk323OIfYr+OxjNoRKVBiivboSai43Lh1a5b4qSm866LD5GrUPi32sTHMYoBBrAjzzLskqkRYFToY9KkP/eBIAzXR+71gWM29shI/WyHhmG/sMlfxBYrtPxb2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723242971; c=relaxed/simple;
-	bh=aP/hOF3NE3n2U2rR5esXT0nTIGcNIW7lIrmfXfwdq+g=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=ik//mF357L8NRTmTj9sGU4749arifkydKcXyDKt3YMotSK+056pwySfc3Opzlr0O0mUeF2EZ0qLAt1uw2JcNPnwgEaqgRoPqWrl77Ku0SJz7Os9fpHjH42yc03hROC/aA0Xmqd9nSpIYwafAWR2O3Zo27/E19C4wQwRJ4m4kwbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch; spf=pass smtp.mailfrom=bitron.ch; dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b=E1UnsJiK; arc=none smtp.client-ip=46.232.183.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitron.ch
+	s=arc-20240116; t=1723243547; c=relaxed/simple;
+	bh=wK54eJIWqazhX4Zw1ihr15CCyKt5osoYfLLgJ0yuBhs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bALxFhGGXbAxXJpPgKyleEeBuvNYE6vueCXy1TU2U6BJjErkW0Bh1qybtkyifkcKWYZ/6Tu1y67gSZAUUAvVH60og70AVrNbu17Rr8xC8f1jBXYMP6HmbO5xQrYIEvxeAYdqJ71nX0JOC+pQo9qKPJ0iJZTEe2lI5oX94y5Ffpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDnWpMhK; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b="E1UnsJiK"
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 584846C003D;
-	Fri,  9 Aug 2024 15:53:32 +0000 (UTC)
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: novatrend|x-authuser|juerg@bitron.ch
-X-MailChannels-Auth-Id: novatrend
-X-Celery-Troubled: 5685894b1f152663_1723218811960_1140344083
-X-MC-Loop-Signature: 1723218811960:2640313969
-X-MC-Ingress-Time: 1723218811960
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitron.ch;
-	s=default; h=MIME-Version:Content-Transfer-Encoding:Content-Type:Date:Cc:To:
-	From:Subject:Message-ID:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=5xVEy4feb3Ej8I1M7QxT41oUEdvWNYaTt4CMktm+C/o=; b=E1UnsJiKwvsaL7a6VnhQFd/Oag
-	13r5rjEmi3iChIBXHY7TF4HCkq5Pj+cTJ1U4Eh0TEpByw3EPzaeHNQTN2ehE1R03SFtRJGabjtEVG
-	2EV+W2f2r2I35zzBzEN7fYek4RtDfMMKVkvG3moB+RqKmkLO2mH8c7fMHC+KqbZOJlSyIZZvcVxTE
-	UIoajd+55bWs6kG3u/uf6MeYgdFFok30YI+5biOJojZgxaR+mgThKxfBlV9QUoKwer9IH7WRUFXjF
-	4jAvYWoedHGqM/iQ2ePlgprFi2d33G23j1RFGWxndLGCqay05Yhbv46abtDfxrpfEcA0tGPixQgey
-	svsKlNew==;
-Message-ID: <792a3f54b1d528c2b056ae3c4ebaefe46bca8ef9.camel@bitron.ch>
-Subject: [REGRESSION] fuse: copy_file_range() fails with EIO
-From: =?ISO-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>
-To: Miklos Szeredi <miklos@szeredi.hu>, "Matthew Wilcox (Oracle)"
-	 <willy@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev
-Date: Fri, 09 Aug 2024 17:53:26 +0200
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDnWpMhK"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4f51c1f9372so956752e0c.2
+        for <regressions@lists.linux.dev>; Fri, 09 Aug 2024 15:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723243544; x=1723848344; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0SGu7rNWw1yccOszm/5t/xC7aHPHs2sDPoMQdLd2AyI=;
+        b=hDnWpMhKOrYTxwexcR+pJ8sCHcVbp7482mVXd4fKhXt54rvkzWpWW2omVK0X2Yy3y1
+         VSMqo/e4Fx7Fj8snjSrabizIj5irJkFAhyDtjjRQIAfRvMdxx4m/U9mxBGk3sxLpfkt+
+         ArmVLM51/eVcbqqeKqI3C0b3MvDxGYIJLJ1CSmwXTC8plUuvAVlWbbO7xFJLfOnvWkhv
+         280zIOZ1yiOTfOZaGqqH3rFdkBdJji3snty4rCBme6hcrLKJ1vT6QEBXd4aH2suG+xp8
+         9wUd4lyR9uJxEDox07x5czwoFAIhXvnPbMXeSFbCnFck/L+XPlCV4MBg6aoOUGxqxpvX
+         x1Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723243544; x=1723848344;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0SGu7rNWw1yccOszm/5t/xC7aHPHs2sDPoMQdLd2AyI=;
+        b=py8UYbQRlOKgln+kaB7ouZiZJjL4n6iCdU/1yR6vY2APFacCo+NcaIYtlyhOYTChmT
+         tubAtfvOq6M+ZmXMBMQYNbzQy6ucU50M9226k0tRa1ITBbYzjMI7UgUUwpGGYIzF0dWx
+         zFgR9/JDozcJ5quh9CvweEtwxuqy0AvumeniALHi5wCCGj03Udu4mt8tnlxLA1lK6u53
+         DSh2QG5K5TQkfvZStYzSyaUtOIRb77HLldd+cgww6xCvuZwJSs1+WNe0MghCknyVFeMT
+         Arf4Nw1RGgGXUasQFkV3SwxyMc0VKPFq53MILPocVvIOOnDR9fOyXAxLJbUC6oLG2EYJ
+         Pk+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUh/84xI+EQlCoji51xQ6MLnS3Yhxmco3MBK866FSGv3lMA+NMGjPBAmjH6IlJF+4WfiWMhhchTRjb1SN9unxJToPwHE1NcauVR9+I=
+X-Gm-Message-State: AOJu0Yxes3YHJf71rl5Hh+zoEKqRsVHZ5w8cXGHSQ0ayXC0o70/qpZ6c
+	8Qcr4ax9OkkUkWi+BBmQqfQ5To4noRICFDadDHyrXn66pl92+aH8fc9VSOEch+l7pJT0KD4n/ef
+	7OrT/OSSU1Kl+Hg9DgDBybIp5XZE=
+X-Google-Smtp-Source: AGHT+IH6qliCTUoH8w8gBfJ+STHZC1rggIa4cyv1oLrBefM9dI1A33z+bzhJJLWNMzarscxovtPuUgaJioIV0N8RaeY=
+X-Received: by 2002:a05:6122:c94:b0:4f6:a697:d380 with SMTP id
+ 71dfb90a1353d-4f912e8de50mr3490314e0c.10.1723243544146; Fri, 09 Aug 2024
+ 15:45:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-AuthUser: juerg@bitron.ch
+From: Octavia Togami <octavia.togami@gmail.com>
+Date: Fri, 9 Aug 2024 15:45:33 -0700
+Message-ID: <CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com>
+Subject: [REGRESSION] bisected: btrfs: spin locks way too much when accessing
+ many files concurrently
+To: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Starting with 6.10, I'm seeing `copy_file_range()`, with source and
-destination being on the same FUSE filesystem[1], failing with EIO in
-some cases. The (low-level libfuse3) userspace filesystem does not
-implement `copy_file_range`, so the kernel falls back to the generic
-implementation. The userspace filesystem receives read requests and
-replies with the `FUSE_BUF_SPLICE_MOVE` flag.
+[1.] One line summary of the problem: BTRFS spin locks way too much
+when accessing many files concurrently
+[2.] Full description of the problem/report:
 
-I'm not sure what exactly triggers the issue but it may depend on the
-file size, among other things. I can reproduce it fairly reliably
-attempting to copy files that are exactly 65536 bytes in size.
+Accessing many files concurrently at once causes BTRFS to spin lock
+too much and basically lock up all other processes for seconds at a
+time.
 
-6.9 works fine but I see the issue in 6.10, 6.10.3 and also in current
-master ee9a43b7cfe2.
+Mostly happens when accessing their content, not the other metadata.
 
-413e8f014c8b848e4ce939156f210df59fbd1c24 is the first bad commit
-commit 413e8f014c8b848e4ce939156f210df59fbd1c24 (HEAD)
-Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-Date:   Sat Apr 20 03:50:06 2024 +0100
+This appears to be a performance regression since v6.9. I bisected to
+this commit: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=956a17d9d050761e34ae6f2624e9c1ce456de204
 
-    fuse: Convert fuse_readpages_end() to use folio_end_read()
-   =20
-    Nobody checks the error flag on fuse folios, so stop setting it.
-    Optimise the (optional) setting of the uptodate flag and clearing
-    of the lock flag by using folio_end_read().
-   =20
-    Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-    Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+The commit before this one has no issues, this one reliably reproduces
+the issue for me.
 
-I've confirmed the bisection by reverting this commit on top of 6.10.3,
-which resolves the issue.
+[3.] Keywords (i.e., modules, networking, kernel): btrfs, spin_lock,
+super_cache_scan
+[4.] Kernel information
+[4.1.] Kernel version (from /proc/version): Linux version
+6.10.3-arch1-1 (linux@archlinux) (gcc (GCC) 14.2.1 20240802, GNU ld
+(GNU Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Sun, 04 Aug 2024
+05:11:32 +0000
+[4.2.] Kernel .config file:
+https://gist.github.com/octylFractal/1344722b55f0a9eef4fc22fcfcc34177
+[5.] Most recent kernel version which did not have the bug: v6.9
+[6.] Output of Oops.. message (if applicable) with symbolic information
+     resolved (see Documentation/admin-guide/bug-hunting.rst): N/A
+[7.] A small shell script or example program which triggers the
+     problem (if possible): Not possible as it appears to need a
+specific set of data and/or an NVMe-speed drive (1-2GB/s). I was using
+`rg --no-ignore uncommon-phrase ~/Documents/` but it didn't appear to
+work in QEMU or on a different drive, only when using my NVMe SSD. I
+have 1,425,292 files comprising 424GB in my `~/Documents`.
+[8.] Environment
+[8.1.] Software (add the output of the ver_linux script here)
+Linux Draconnet 6.10.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Wed, 24 Jul 2024
+22:25:43 +0000 x86_64 GNU/Linux
 
-#regzbot introduced: 413e8f014c8b
+GNU C                   14.1.1
+GNU Make                4.4.1
+Binutils                2.42.0
+Util-linux              2.40.2
+Mount                   2.40.2
+Module-init-tools       32
+E2fsprogs               1.47.1
+Jfsutils                1.1.15
+Reiserfsprogs           3.6.27
+Xfsprogs                6.9.0
+PPP                     2.5.0
+Bison                   3.8.2
+Flex                    2.6.4
+Linux C++ Library       6.0.33
+Linux C++ Library       5.0.7
+Dynamic linker (ldd)    2.40
+Procps                  4.0.4
+Net-tools               2.10
+Kbd                     2.6.4
+Console-tools           2.6.4
+Sh-utils                9.5
+Udev                    256
+Wireless-tools          30
+Modules Loaded          aesni_intel af_alg algif_hash algif_skcipher
+amd_atl amdgpu amdxcp asus_wmi blake2b_generic bluetooth bnep bridge
+btbcm btintel btmtk btrfs btrtl b
+tusb ccp cec cmac crc16 crc32c_generic crc32c_intel crc32_pclmul
+crct10dif_pclmul cryptd crypto_simd crypto_user dm_mod drm_buddy
+drm_display_helper drm_exec drm_suballoc_
+helper drm_ttm_helper eeepc_wmi enclosure ext4 fat gf128mul
+ghash_clmulni_intel gpio_amdpt gpio_generic gpu_sched hid_generic
+hwmon_vid i2c_algo_bit i2c_dev i2c_piix4 i804
+2 intel_rapl_common intel_rapl_msr ip_tables jbd2 jfs joydev kvm
+kvm_amd ledtrig_timer libcrc32c libphy llc loop mac_hid mbcache mc
+mdio_devres mousedev nct6775 nct6775_co
+re nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 nf_nat nfnetlink
+nf_reject_ipv4 nf_tables nft_chain_nat nft_compat nft_ct nft_masq
+nft_reject nft_reject_ipv4 nilfs2 nls_iso8
+859_1 nls_ucs2_utils nvidia nvidia_drm nvidia_modeset nvidia_uvm nvme
+nvme_auth nvme_core pkcs8_key_parser platform_profile polyval_clmulni
+polyval_generic r8169 raid6_pq
+rapl realtek rfcomm rfkill scsi_transport_sas serio ses sg sha1_ssse3
+sha256_ssse3 sha512_ssse3 snd snd_hda_codec snd_hda_codec_generic
+snd_hda_codec_hdmi snd_hda_codec_re
+altek snd_hda_core snd_hda_intel snd_hda_scodec_component snd_hrtimer
+snd_hwdep snd_intel_dspcfg snd_intel_sdw_acpi snd_pcm snd_seq
+snd_seq_device snd_seq_dummy snd_timer
+soundcore sp5100_tco sparse_keymap stp ttm tun uas uinput usbhid usblp
+usb_storage uvc uvcvideo vfat video videobuf2_common videobuf2_memops
+videobuf2_v4l2 videobuf2_vmall
+oc videodev wacom wmi wmi_bmof xfs xhci_pci xhci_pci_renesas xor
+x_tables xt_conntrack xt_mark xt_MASQUERADE xt_tcpudp zenpower
 
-Cheers,
-J=C3=BCrg
+[8.2.] Processor information (from /proc/cpuinfo):
+https://gist.github.com/octylFractal/1dcb65816561aab9205fce590ec85e59
+[8.3.] Module information (from /proc/modules):
+https://gist.github.com/octylFractal/9c78960190b12e3634ae87e895858cb2
+[8.4.] Loaded driver and hardware information (/proc/ioports,
+/proc/iomem): https://gist.github.com/octylFractal/40a9f67dbaabac78cd2d03028dd994f7
+[8.5.] PCI information ('lspci -vvv' as root):
+https://gist.github.com/octylFractal/325a0f211094ff11643c16f1d1f63362
+[8.6.] SCSI information (from /proc/scsi/scsi):
+Attached devices:
+Host: scsi4 Channel: 00 Id: 00 Lun: 00
+ Vendor: ATA      Model: CT4000MX500SSD1  Rev: 045
+ Type:   Direct-Access                    ANSI  SCSI revision: 05
+[8.7.] Other information that might be relevant to the problem
+       (please look in /proc and include all information that you
+       think to be relevant): The NVMe SSD I'm using is a WDS100T3X0C-00SJG0.
 
-[1] https://gitlab.com/BuildGrid/buildbox/buildbox/-/tree/master/fuse
+#regzbot introduced: 956a17d9d050761e34ae6f2624e9c1ce456de204
