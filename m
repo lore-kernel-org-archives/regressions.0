@@ -1,240 +1,163 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B5F23DE
-	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 18:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1AC155CB3;
+	Fri,  9 Aug 2024 18:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723226633; cv=none; b=NxQ9Ctg/qyVvN2x8bgc3ncUbIZpQ+Tjj6y+oiuyFU2I9Qyx0cjj8B9gMEu/0krFmtiF4//IFgtsAThphInhmFr0rRqAcUyCM5HU0uHZyLYLlhUVmxhgtK8irSFMN4/jD+UmRrqBKDQnQMLK8jdEpHkypKn3nx4PEGNdKo9ozVno=
+	t=1723228973; cv=none; b=VbkzzwmtRFeQQ61QovLYxmnNvs3HkzMT1Cx2BRoZD5O+323BcqEx7sIt2kMKgSwrTtZXQF1yjVDSD28f6k2VIf3mD9mk4FgnwT13LrTOjGqb6wy8ACMfkI9zQiZ95QSZry0BH/x07alsi/tJ6w6DzSr3o9WOdQnj5jp40enDkhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723226633; c=relaxed/simple;
-	bh=1YCWIii/i6R5rT/daIoObdAdlccM6AMejZ+PHrkgCyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S3EzFXxwGn/v1KogUWA9fZ2DJQNq8999nkzoR7xEX/07r0ezL8DcG23+nCzg3tYzOJiJfudbFIyzO3f/J4hGicBPvZZsW0MXklEewB7hVjL7K5oW2JCvmi2V0+iysm5xqSNRNK18skb8hzvk8Ql9kzY34t//modkwAM7RChhhgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=iS8W/9ep; arc=none smtp.client-ip=67.231.154.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
+	s=arc-20240116; t=1723228973; c=relaxed/simple;
+	bh=++5Q1VYKvXtJUJscG2q3w3Xg3TXoCvLyZdPWnHS9Glo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmqmGD6zFljD29yITs0RvgVbccWaWqYOEVKpCm0RuxTCg2qYUo06ZZYXUwHYwRHyexQeU02+S1j0s5W4UfVAc3pgy10aMSJmGyjA2tIBw7jTnRma99A2KQ3L3vvWlG6LIvlatfiHrCtQEXxFyHS4R55+Pk7IWrSJWze4EA/FGRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=NipKB8yA; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="iS8W/9ep"
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id EF77F24006E;
-	Fri,  9 Aug 2024 18:03:40 +0000 (UTC)
-Received: from [192.168.0.11] (c-98-247-188-21.hsd1.wa.comcast.net [98.247.188.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id EA3F013C2B0;
-	Fri,  9 Aug 2024 11:03:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com EA3F013C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1723226620;
-	bh=1YCWIii/i6R5rT/daIoObdAdlccM6AMejZ+PHrkgCyI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iS8W/9epPVaSrbePBNd8uc0alMa7D8U4cW3iQdEMA+yTxIc/APwOGbmG7XzBOrE0c
-	 Dx+a2eBevE3AuKF5ai8fnExrJU+sLqOFuEG4NtBlv4v/TrW9DDrvYVLBsW7CimluZy
-	 DM4XJUvbcodT+RfNZDwy7VS0PBb8/xc8eW+g5kEk=
-Message-ID: <c7e27caf-3001-4069-9e26-54e544a2e06e@candelatech.com>
-Date: Fri, 9 Aug 2024 11:03:38 -0700
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="NipKB8yA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1723228946; x=1723833746; i=christian@heusel.eu;
+	bh=9VJxNljMRbHuWlAL33wEBRP4XdGy3G5ZfaieYxNUqSw=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=NipKB8yAhnraXICoVCuEKc0MRQogeun5fyMYwxHMaMMcLgo3I7HhFclggETQXu19
+	 JXiKeADF4o/mAXJ+hx9ihEQyK6Iye5nSY2rcXs+6WYA/95pexlStHHame8RUpuVC8
+	 bxUyuhhc9efeS5pX9Mzfu5lV67rsMtmo8LBPBT88RPBpz5PBm7b5fxGfF1pLvMp+4
+	 g9sPgYA0V/GEQb6o6WP183aqC2tEJmjmZchXYa85cjJdiwCI2opqV6/hERy+wA4h9
+	 j5fBfpb38vf/Dn6ULoAss17fIT+bdUwNuuSu6lazSjSZVhrD0BUOTfLWQJGJTcZ2n
+	 wlRg9lBc9LlfxttmPQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([84.170.92.222]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MwPfX-1sK8nv1hjx-00wJhL; Fri, 09 Aug 2024 20:42:26 +0200
+Date: Fri, 9 Aug 2024 20:42:23 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, Igor Pylypiv <ipylypiv@google.com>, 
+	linux-ide@vger.kernel.org, Hannes Reinecke <hare@suse.de>, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED][STABLE] hdparm errors since 28ab9769117c
+Message-ID: <df43ed14-9762-4193-990a-daec1a320288@heusel.eu>
+References: <0bf3f2f0-0fc6-4ba5-a420-c0874ef82d64@heusel.eu>
+ <45cdf1c2-9056-4ac2-8e4d-4f07996a9267@kernel.org>
+ <ZrPw5m9LwMH5NQYy@x1-carbon.lan>
+ <1376f541-bc8a-4162-a814-a9146ebaf4eb@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlwifi: correctly lookup DMA address in SG table
-To: Ben Greear <greearb@candelatech.com>,
- Benjamin Berg <benjamin@sipsolutions.net>, linux-wireless@vger.kernel.org
-Cc: benjamin.berg@intel.com, miriam.rachel.korenblit@intel.com,
- regressions@lists.linux.dev, johannes@sipsolutions.net,
- Kalle Valo <kvalo@kernel.org>, Chris Bainbridge
- <chris.bainbridge@gmail.com>, Rory Little <rory.little@candelatech.com>
-References: <20240808172948.303258-1-benjamin@sipsolutions.net>
- <85f652fa-7dc1-44ca-e185-6ecfc6269de7@candelatech.com>
-Content-Language: en-US
-From: Rory Little <rory@candelatech.com>
-In-Reply-To: <85f652fa-7dc1-44ca-e185-6ecfc6269de7@candelatech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MDID: 1723226622-of81SaQTi8ec
-X-MDID-O:
- us5;at1;1723226622;of81SaQTi8ec;<rory@candelatech.com>;9e529b45f983a2e6a3ac1f2f5cf09fc3
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ptudwdcg6mr7zqda"
+Content-Disposition: inline
+In-Reply-To: <1376f541-bc8a-4162-a814-a9146ebaf4eb@kernel.org>
+X-Provags-ID: V03:K1:4kPBECwcfyBekMCXJyemCQew6S6+W8u03kFT1ejrE7e9dtHWcYa
+ DS7JWAc/aa5waekKra8/pzD2Ecvm12+cN368ta2A0oj2EuO/RAf7gNysQ6bDRHSxYbZGQgl
+ fs3xOxO5vhsZQ3cAqVGGDQVyE+7njkZyYe8nThDOs9FWfrmu0X8C333QWgJEXyQdRaqwp0v
+ HFUsvuZrnRZHY8SX7lnmw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8dCMNt/qDbc=;YKd+L8XFNXrlaxOjept3pkVxcnD
+ lg0aVRzlnVsYHSdGrEjbOLu/n3YMnqA129H6vZfY8u+Ro5PpkL5lC2+xIHBYQjV3FFEG2kuyr
+ 33HC0iDT4Dj1McEKWlKrL7IHhm8QKH8UJm3+mUefGftr7uHknUrdnkaUdrZo9sbKMzQgu86kI
+ ASEWLfTPJu1idicC5Sm+DwX8IwJbqTJyBzdjn0RZVJ4xIf2CEoRyWDR4cDALqPOP16BWvpmO2
+ oJxPLy7Pv5tJm23iTPuhfZUKIAmUZELay0o0fjtVHoCeIQr4z78k9hTqRiT4j+OEfCBbh38pJ
+ n95z7DrJL0mhhACnH8LWLWfru9d03045LQVuoDP+6cBxjg6zfKDmlsUjyh2Bfo1dDyPtChyS0
+ vyyyP9Le6xnSDnZw5nT5JvS5r2SQ7U9xRghrsWR0qKPUDoZWhLzYBCwPEedwSSdrq5UHGQLj4
+ BTfB6qqVm5KU17XuD3xiFLke2Mx/QgvISfbjUn8HVdDNWsgXXjVTOBVgQaHCpoxZH0IWNcNcZ
+ Rd/M7gxMhJyeMDMoZwl+B9BR54SF03UkaW9VH4XBwnp8zj6kzBFecPLqaLk/1yY/nTi2fOu1x
+ skUKAxklp82Q1KL3IV3MCpIpVNcFOI7Gh4sL+Mn52eKYNm/i7C0S1O2FLqiLuGyYD+VXASuMW
+ w/qMOX+vASqAVtkCmfArxB46Xs0+NaPwK339atecBUDFKrJ5PueQg7Gmkk+Sm5vQ1qz5dyQdk
+ 5pAqcOnazJe/+OdY8VSzulFiyzNt6adpA==
 
-Hi,
 
-We have tested this on our system and verified that we are no longer 
-seeing the issue with this patch applied.
+--ptudwdcg6mr7zqda
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Rory
+On 24/08/09 08:34AM, Damien Le Moal wrote:
+> On 2024/08/07 15:10, Niklas Cassel wrote:
+> > On Wed, Aug 07, 2024 at 11:26:46AM -0700, Damien Le Moal wrote:
+> >> On 2024/08/07 10:23, Christian Heusel wrote:
+> >>> Hello Igor, hello Niklas,
+> >>>
+> >>> on my NAS I am encountering the following issue since v6.6.44 (LTS),
+> >>> when executing the hdparm command for my WD-WCC7K4NLX884 drives to get
+> >>> the active or standby state:
+> >>>
+> >>>     $ hdparm -C /dev/sda
+> >>>     /dev/sda:
+> >>>     SG_IO: bad/missing sense data, sb[]:  f0 00 01 00 50 40 ff 0a 00 =
+00 78 00 00 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >>>      drive state is:  unknown
+> >>>
+> >>>
+> >>> While the expected output is the following:
+> >>>
+> >>>     $ hdparm -C /dev/sda
+> >>>     /dev/sda:
+> >>>      drive state is:  active/idle
+> >>>
+>=20
+> Yes, indeed. I do not want to revert any of these recent patches, because=
+ as you
+> rightly summarize here, these fix something that has been broken for a lo=
+ng
+> time. We were just lucky that we did not see more application failures un=
+til
+> now, or rather unlucky that we did not as that would have revealed these
+> problems earlier.
+>=20
+> So I think we will have some patching to do to hdparm at least to fix the
+> problems there.
 
-On 8/8/24 10:36, Ben Greear wrote:
-> On 8/8/24 10:29, Benjamin Berg wrote:
->> From: Benjamin Berg <benjamin.berg@intel.com>
-> 
-> Hello,
-> 
-> We'll try testing this on our systems...
-> 
-> Thanks,
-> Ben
-> 
->>
->> The code to lookup the scatter gather table entry assumed that it was
->> possible to use sg_virt() in order to lookup the DMA address in a mapped
->> scatter gather table. However, this assumption is incorrect as the DMA
->> mapping code may merge multiple entries into one. In that case, the DMA
->> address space may have e.g. two consecutive pages which is correctly
->> represented by the scatter gather list entry, however the virtual
->> addresses for these two pages may differ and the relationship cannot be
->> resolved anymore.
->>
->> Avoid this problem entirely by working with the offset into the mapped
->> area instead of using virtual addresses. With that we only use the DMA
->> length and DMA address from the scatter gather list entries. The
->> underlying DMA/IOMMU code is therefore free to merge two entries into
->> one even if the virtual addresses space for the area is not continuous.
->>
->> Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when 
->> TXing an AMSDU")
->> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
->> Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
->> Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
->>
->> ---
->>
->> Note that I was not yet able to fully verify this patch, but will
->> probably get results tomorrow. Unfortunately, much of the testing we do
->> internally happens on machines that do not reproduce the problem.
->>
->> Also, I think Ben already reported the same issue much earlier. At the
->> time, I was not yet aware of the internal reproductions and did not take
->> the report seriously.
->> ---
->>   .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
->>   .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c |  4 ++-
->>   drivers/net/wireless/intel/iwlwifi/pcie/tx.c  | 25 +++++++++++--------
->>   3 files changed, 19 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h 
->> b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
->> index b59de4f80b4b..3af9c2b40ef1 100644
->> --- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
->> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
->> @@ -639,7 +639,7 @@ void iwl_trans_pcie_tx_reset(struct iwl_trans 
->> *trans);
->>   int iwl_pcie_txq_alloc(struct iwl_trans *trans, struct iwl_txq *txq,
->>                  int slots_num, bool cmd_queue);
->> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr);
->> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned 
->> int offset);
->>   struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct 
->> sk_buff *skb,
->>                      struct iwl_cmd_meta *cmd_meta,
->>                      u8 **hdr, unsigned int hdr_room);
->> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c 
->> b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
->> index 2e780fb2da42..54d26523f692 100644
->> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
->> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
->> @@ -168,6 +168,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
->> iwl_trans *trans,
->>       struct ieee80211_hdr *hdr = (void *)skb->data;
->>       unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
->>       unsigned int mss = skb_shinfo(skb)->gso_size;
->> +    unsigned int data_offset = 0;
->>       dma_addr_t start_hdr_phys;
->>       u16 length, amsdu_pad;
->>       u8 *start_hdr;
->> @@ -260,7 +261,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
->> iwl_trans *trans,
->>               int ret;
->>               tb_len = min_t(unsigned int, tso.size, data_left);
->> -            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
->> +            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
->>               /* Not a real mapping error, use direct comparison */
->>               if (unlikely(tb_phys == DMA_MAPPING_ERROR))
->>                   goto out_err;
->> @@ -272,6 +273,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
->> iwl_trans *trans,
->>                   goto out_err;
->>               data_left -= tb_len;
->> +            data_offset += tb_len;
->>               tso_build_data(skb, &tso, tb_len);
->>           }
->>       }
->> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c 
->> b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
->> index 22d482ae53d9..78f417cdb9ac 100644
->> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
->> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
->> @@ -1814,23 +1814,24 @@ static void *iwl_pcie_get_page_hdr(struct 
->> iwl_trans *trans,
->>   /**
->>    * iwl_pcie_get_sgt_tb_phys - Find TB address in mapped SG list
->>    * @sgt: scatter gather table
->> - * @addr: Virtual address
->> + * @offset: Offset into the mapped memory (i.e. SKB payload data)
->>    *
->> - * Find the entry that includes the address for the given address and 
->> return
->> - * correct physical address for the TB entry.
->> + * Find the DMA address that corresponds to the SKB payload data at the
->> + * position given by @offset.
->>    *
->>    * Returns: Address for TB entry
->>    */
->> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr)
->> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned 
->> int offset)
->>   {
->>       struct scatterlist *sg;
->> +    unsigned int sg_offset = 0;
->>       int i;
->>       for_each_sgtable_dma_sg(sgt, sg, i) {
->> -        if (addr >= sg_virt(sg) &&
->> -            (u8 *)addr < (u8 *)sg_virt(sg) + sg_dma_len(sg))
->> -            return sg_dma_address(sg) +
->> -                   ((unsigned long)addr - (unsigned long)sg_virt(sg));
->> +        if (offset >= sg_offset && offset < sg_offset + sg_dma_len(sg))
->> +            return sg_dma_address(sg) + offset - sg_offset;
->> +
->> +        sg_offset += sg_dma_len(sg);
->>       }
->>       WARN_ON_ONCE(1);
->> @@ -1875,7 +1876,9 @@ struct sg_table *iwl_pcie_prep_tso(struct 
->> iwl_trans *trans, struct sk_buff *skb,
->>       sg_init_table(sgt->sgl, skb_shinfo(skb)->nr_frags + 1);
->> -    sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, 0, skb->len);
->> +    /* Only map the data, not the header (it is copied to the TSO 
->> page) */
->> +    sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, skb_headlen(skb),
->> +                       skb->data_len);
->>       if (WARN_ON_ONCE(sgt->orig_nents <= 0))
->>           return NULL;
->> @@ -1900,6 +1903,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
->> iwl_trans *trans, struct sk_buff *skb,
->>       struct ieee80211_hdr *hdr = (void *)skb->data;
->>       unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
->>       unsigned int mss = skb_shinfo(skb)->gso_size;
->> +    unsigned int data_offset = 0;
->>       u16 length, iv_len, amsdu_pad;
->>       dma_addr_t start_hdr_phys;
->>       u8 *start_hdr, *pos_hdr;
->> @@ -2000,7 +2004,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
->> iwl_trans *trans, struct sk_buff *skb,
->>                             data_left);
->>               dma_addr_t tb_phys;
->> -            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
->> +            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
->>               /* Not a real mapping error, use direct comparison */
->>               if (unlikely(tb_phys == DMA_MAPPING_ERROR))
->>                   return -EINVAL;
->> @@ -2011,6 +2015,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
->> iwl_trans *trans, struct sk_buff *skb,
->>                           tb_phys, size);
->>               data_left -= size;
->> +            data_offset += size;
->>               tso_build_data(skb, &tso, size);
->>           }
->>       }
-> 
+It seems like this does not only break hdparm but also hddtemp, which
+does not use hdparm as dep as far as I can tell:
+
+    # on bad kernel for the above issue
+    $ hddtemp /dev/sda
+    /dev/sda: WDC WD40EFRX-68N32N0                    : drive is sleeping
+
+    # on good kernel for the above issue
+    $ hddtemp /dev/sda
+    /dev/sda: WDC WD40EFRX-68N32N0: 31=B0C
+
+I didn't take the time to actually verify that this is the same issue,
+but it seems very likely from what we have gathered in this thread
+already.
+
+So while I agree that it might have previously just worked by chance it
+seems like there is quite some stuff depending on the previous behavior.
+
+This was first discovered in [this thread in the Arch Linux Forums][0]
+by user @GerBra.
+
+ ~Chris
+
+[0]: https://bbs.archlinux.org/viewtopic.php?id=3D298407
+
+--ptudwdcg6mr7zqda
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAma2Yw4ACgkQwEfU8yi1
+JYXAQRAAv9TUqnuZ/OI7N3unkZfyQFbfAWEcf5ex4wpw78jUNQqd9b6JNZ5c4nVn
+eF/Vn4ge+xuQAzjv2QeATsibRVY+61tENkNq06fHavugICCu8Mij/h42hgFQ0Pob
+G6dtgo/P7aFl9123von4sZJevtn3YvtTfq3AcJZdGgEvivnSeQvdQ2i6E5BiGPk/
+bypLY9+RUNHT5ZMix6tEmfEPsBI6Px1gzS6oRG2CFfQ2H0nGqiBK5wMLH0goijLx
+sPBaHf9xgC15SDvA6q4v2LZliG2vS5OUsRX+HMDhoOGi5agFN02+L8X8Ic0iBZmK
+eY5eKrMXPmDYlLxF3y2KmqMd1Fie1eQ7fnDogz6ycq2Yz1etDCJvYNqnALOTzQBi
+jyLlVD3L3GH2e0dhsGraVcJynWbUdz1cbmLeYcFP6SEkLtKMrhgY8jVWuFLdxPGo
+r7su1c7dCZSDg9BOrz4xuu/ELD2BRinWEh89CFDBiV1bwT5gluGMMHV2UIIhQ3hh
+DbHYNzdBe+gXyYZTQi7T0sQiP86+LcTFF7He5whhtEgHRLJbrMJmd8pIdrZ/CAyS
+CtDpWT+0W6NN4ZyDE5C0PxtJLus8klIVDyUWorvWwJ0qpax+Ox565Onxjf7+Hs7a
+yTsvxqcGdj+Q3C+l7rqFf5+odAVWjewprtewftHUBCUAtCn+XRE=
+=TnUX
+-----END PGP SIGNATURE-----
+
+--ptudwdcg6mr7zqda--
