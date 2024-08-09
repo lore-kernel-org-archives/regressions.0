@@ -1,55 +1,41 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD6D16A92F
-	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 22:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D931716D338
+	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 23:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723244029; cv=none; b=KAHSObBvjBdnleN6ZsraAOxWQvxQyNnpw5jA182rbrP1K1J7Tw4oDUqzmI7X5TNo/Npp6nIpZ+Enfj49MTJ/5Ux+qOVRa5u4fjiQlGp83GMlGhy9MS0S7rhCnrRV0alNft3krbO6vcM+gL3TZ27Bgw3FMx4mM3blLTOtTKH5XK8=
+	t=1723247366; cv=none; b=J4oQled2aH5VwLo8Xdp+K+h70GbQkJK18JLms238zb3gDzEWIp+Lt2Mq68thvY/goZmn92e0/JRBrTzJ0w9qlibPLrH/1AZ1jG4fh39g8RVQQRemho7YRNdjBijRjCXRJ+rQ18Qu6S+C/HBIjsPbAL18E9lrdncvaG8CAEiS+Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723244029; c=relaxed/simple;
-	bh=Jo+GEXR/j3q9tiYjjOSqNJkRvpYS8QlFxphmwCppwHg=;
+	s=arc-20240116; t=1723247366; c=relaxed/simple;
+	bh=N8zKFltuXkKh/nbvOJqSrnmQM8Qic67tuRsow/rwL7I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PGB6GOTbakTUncatpgHK03PXN74EPuI568VDpLEh1EQ52TS+44s3NJGCB4kmxmXWx6oONchAp3JYjK7+B6EFO7Urk4CEd1rfFI0zrFqOoWEX2/pOlmq6DfF0Bk4CYWfvNgTwAzJ1UUa8nUiB+xzVE9GSQqjyHug7BDFFgYomauU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BwHIse7N; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=MjFqjrtoeONWCqADdXhyDPzJm5MYSQYi90A+6lYVhvaZcgrh09IlLGUYBPKhstRO5GUvUqJHneN/NGI0ZebfoMk5daCvy5BiiOg8do0qJs6TUIxWk53z5tZ4rDhm93QWwHfwunXf/o+1Bhmg4wTaCqiW0jaI7dHD87Bw15PcE84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MedOejx2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwHIse7N"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-826fee202d3so936648241.1
-        for <regressions@lists.linux.dev>; Fri, 09 Aug 2024 15:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723244027; x=1723848827; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIzOwBnzjtqIdqmmFL1DHp29M+tm7MBatvbfKbJc6+U=;
-        b=BwHIse7NUtP6lbZrIHlmiue+tLDCBbMmCR2esLiGHOd1QD7g0IDK2fzwQV6wSY3zKn
-         MvuPMTQQpJfjTQRTMjz4OlwR7KAHpF3Ky7v9jwnjYwcRSTcJLJ/RGkz/FOcQ42UNwVmV
-         mJwvqyv/jRv8d6nalKTcntdyb41R3BGvxLa4oEHVJg28voy8EIJ7P+SkIBGHShm3RQLP
-         kUtb5WQp5D6MoXoFFXgWQNnwEisCRXjq8XLi8/pO5/fzCrlkgEggXdL+WtblsisI/i0M
-         2cDJdTJdzuDG/PKoYVz55bthvShC4VjI+IM+7VetXHA19CV2jqOLsNpVqWxr2x6WGRg6
-         tYVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723244027; x=1723848827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KIzOwBnzjtqIdqmmFL1DHp29M+tm7MBatvbfKbJc6+U=;
-        b=aV1AAtate5Q+Ln5qT5BUOmgDTNqAjj91MhvC8uFzpMVOIuUllawgq8+q38zKcrYpQC
-         IqbqlNPFAvVD9OyPiNYzZLg0izLRl5BbP/n8v8xsm+pF6gR+Q3L1iahhMvgTzV4gHHWD
-         /grK1x0JJi1eima6uuGWIF8N+M21mBCZqusNtpuluA9vp1oxXaJ4IaLI26KWXBt4EymF
-         BW4U/2i2WfQ1VZ6p9utUFYhZPVOoI3xcTQgyALOB3gTgRSPYSmtd1PubZBGRu3dFRMO4
-         EVKz5AzSgIk9XxmisMH0HohenDyf0llQ0uRUOVwH2OAjdbJ/msN5C8gzWYvMOkpRJ32x
-         6UXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkjY4mgeXUgZZ9+7p1ExHcXW1Ly8K1qmk5mWSj5MTcBhLKYXqpvDH5jDo1eTcWznm0LLuIXGbCvBRItKYKNWCoyrMzjHriYxFH4BA=
-X-Gm-Message-State: AOJu0Ywlzv4Spihx/FiNE0KHFtHM5yj6lWZpLN/ovjf42X7FyM1xazUo
-	M59gj/X1AVbqEf4UbMQIcjeTIkGhxNgXVzLn2ubItR5ASTUcMQgP1ZXV4qaTNFngmPotVIrylxF
-	xwFLQaI05spIV95a8UIph1HBbu/ZEghBHuAU=
-X-Google-Smtp-Source: AGHT+IHSGdEaRAcT6f8ptUQbSNtNR96UgF73F9e0gerk6Yf3AHJST0XePRr+OrfRTk3j3DRiLnHw94lgePO87qsReRI=
-X-Received: by 2002:a05:6122:2903:b0:4f5:26ac:e4a with SMTP id
- 71dfb90a1353d-4f91325bcc7mr4014975e0c.12.1723244026745; Fri, 09 Aug 2024
- 15:53:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MedOejx2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55025C32782
+	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 23:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723247366;
+	bh=N8zKFltuXkKh/nbvOJqSrnmQM8Qic67tuRsow/rwL7I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MedOejx2cNe4NXj3oet+yi+1QwNXtcV2S8VrG3IA94VqvUT0qZ8r+T98uYNXOjMe/
+	 xltIk15gw4/MwZW0VGC4PRgrD1Ao/YB1MJJbCwJJcn7MsJ74uWQIus++TpVfXqpkp1
+	 LKoGDrazKSfJavd1sxvgVYFaJA5utkDxzC821HIptg66BMlkg8ARMlmoxpnB5n+BKc
+	 lkr8go7LurL2VehdhWVeQHfXGVO3to0ZofnoYS//Kt+r1ZSirNs/Q79jpSF6q4FZRf
+	 x6Id/8SYEq6uXMSdhIcSJ7917PlxPVWZQpBTCUEngtRGY4aeH1MUlgQuAbL9gtahPH
+	 up3BL5h4fV0hw==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a7de4364ca8so308993766b.2
+        for <regressions@lists.linux.dev>; Fri, 09 Aug 2024 16:49:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKQ8tw2qf5wifkdHbzrLn66nn+9S3u2UMYy652+pSZa2TbHJVGKOeaXxxZKHAx5ArtBDCNgBILiJwGY05MRnzLoh3iQQMly29TkIM=
+X-Gm-Message-State: AOJu0YyFVWl1BJSuYpbAcykY1KnTY71gNiWkKO+uO0MjW2YdTlSFp5oO
+	nEIjjp25YuAc0yGBoBOwCFXkqltstQjglSY5FijsW/SSrxiyQvpZDmcWMYrwtNGyX8PDpltUEkA
+	hWIzqYwJ5VOQ1rDn4lIJu2/hk0rs=
+X-Google-Smtp-Source: AGHT+IHxlo1OeNW+WeH65MvGd5lPb8MSK0PgMAaOcVfiZ6N0lkRelFxTyktFNfZTqLThc1V/yXRx4baH0wzb3p7zs9c=
+X-Received: by 2002:a17:906:cae5:b0:a77:dcda:1fe1 with SMTP id
+ a640c23a62f3a-a80aa598db8mr215869266b.25.1723247364929; Fri, 09 Aug 2024
+ 16:49:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,9 +44,10 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com>
 In-Reply-To: <CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com>
-From: Octavia Togami <octavia.togami@gmail.com>
-Date: Fri, 9 Aug 2024 15:53:36 -0700
-Message-ID: <CAHPNGSTZJW9Rn2Aac=PhjSTiDYX_wc3DwtK=QkiHh-haShBybQ@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Sat, 10 Aug 2024 00:48:48 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H6HG0w4wAvmYeqOeO5dyUgKLH4Ds7wOSxW2opE83XtHfg@mail.gmail.com>
+Message-ID: <CAL3q7H6HG0w4wAvmYeqOeO5dyUgKLH4Ds7wOSxW2opE83XtHfg@mail.gmail.com>
 Subject: Re: [REGRESSION] bisected: btrfs: spin locks way too much when
  accessing many files concurrently
 To: Octavia Togami <octavia.togami@gmail.com>
@@ -69,11 +56,8 @@ Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Oh, I did forget I also captured a `perf report` for this:
-https://nextcloud.octyl.net/s/xmbGAziwTCjRLnc
-
-On Fri, Aug 9, 2024 at 3:45=E2=80=AFPM Octavia Togami <octavia.togami@gmail=
-.com> wrote:
+On Fri, Aug 9, 2024 at 11:45=E2=80=AFPM Octavia Togami <octavia.togami@gmai=
+l.com> wrote:
 >
 > [1.] One line summary of the problem: BTRFS spin locks way too much
 > when accessing many files concurrently
@@ -91,6 +75,11 @@ ux.git/commit/?id=3D956a17d9d050761e34ae6f2624e9c1ce456de204
 >
 > The commit before this one has no issues, this one reliably reproduces
 > the issue for me.
+
+This is already being tracked at
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219121
+There are patches there if you want to test.
+
 >
 > [3.] Keywords (i.e., modules, networking, kernel): btrfs, spin_lock,
 > super_cache_scan
@@ -186,5 +175,12 @@ ux.git/commit/?id=3D956a17d9d050761e34ae6f2624e9c1ce456de204
 >        (please look in /proc and include all information that you
 >        think to be relevant): The NVMe SSD I'm using is a WDS100T3X0C-00S=
 JG0.
+
+All of this is redundant, like loaded modules, versions of installed
+libraries and programs (it's a kernel problem).
+
+Thanks.
+
 >
 > #regzbot introduced: 956a17d9d050761e34ae6f2624e9c1ce456de204
+>
