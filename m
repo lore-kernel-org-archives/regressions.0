@@ -1,103 +1,240 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3D918AF9;
-	Fri,  9 Aug 2024 16:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B5F23DE
+	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 18:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723219442; cv=none; b=Uzk5clgtpIKT17UzzWmwNolsE7fUkVTaM174ZCNHBfhtWz2W1Ga2E53ag/Cy3YI8VzlVixkGREcar6ev/GhpMh22G5Jq3vYqV+/SXLgnW5C/Mx6AaIwkKf9PlZrxfhRDXmIVfX/w1NxlB7eBLrUMIzR55JeMZaq9dJkx5IrT7pE=
+	t=1723226633; cv=none; b=NxQ9Ctg/qyVvN2x8bgc3ncUbIZpQ+Tjj6y+oiuyFU2I9Qyx0cjj8B9gMEu/0krFmtiF4//IFgtsAThphInhmFr0rRqAcUyCM5HU0uHZyLYLlhUVmxhgtK8irSFMN4/jD+UmRrqBKDQnQMLK8jdEpHkypKn3nx4PEGNdKo9ozVno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723219442; c=relaxed/simple;
-	bh=/TwqSYdP2eTeRw4+V9mHKhuIJJr/NXSu+QP2k09qYYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HpcgPZFKOQIwW/JTRknbxcOoyY1KsUIfVolDJIQeJP5pwhoBmreq0VhRfh67KF7ldTt6LiAbsELX2Z6xWpyf1o2f3bJm5uEL9NmOjugiQX1HUJolw4Dk8TdS8we5fUyCUiDWWogmz/fiU/rRZ9OpbtmIW5Hkb9xgPuz8Tm9IMco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U06bC5C7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1723226633; c=relaxed/simple;
+	bh=1YCWIii/i6R5rT/daIoObdAdlccM6AMejZ+PHrkgCyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S3EzFXxwGn/v1KogUWA9fZ2DJQNq8999nkzoR7xEX/07r0ezL8DcG23+nCzg3tYzOJiJfudbFIyzO3f/J4hGicBPvZZsW0MXklEewB7hVjL7K5oW2JCvmi2V0+iysm5xqSNRNK18skb8hzvk8Ql9kzY34t//modkwAM7RChhhgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=iS8W/9ep; arc=none smtp.client-ip=67.231.154.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U06bC5C7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=p+HKet5Xq76vUhEX4KeY5OC4X4HMbnKEvmndrRAXLrs=; b=U06bC5C7BHpLcTbm6mHky7qz/P
-	6UYO6pJt0LYGfEs11cG4CPcrL/RRQWJFNQ2LEkGX5jJmFNizKWWltlJaN2advBQUB7WH4kdjqJHnH
-	VQWAVqnh8YIBwMVA3HpuW6sWb2hwgh/ljZlXp3AButxmZUbS3WYHDkYyqKVF622LL83n5caz5OUCK
-	GxyiwyVhexkqyvEyNjrkVIiRxkzpQaDBxoCgBcWciIbD6lbaJ+yNYEDwGYdeqOMJEGAtd77zs8hFY
-	keK8xHCD9wKOPjbS9X6LH6QYLRQ7EiBF6GP+BtGx4IUCzV2ew0xD0bH845AqG6xwGBf8ZOy9hTxQl
-	iP/RIakA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1scS5s-0000000AnjP-30no;
-	Fri, 09 Aug 2024 16:03:56 +0000
-Date: Fri, 9 Aug 2024 17:03:56 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: =?iso-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fuse: copy_file_range() fails with EIO
-Message-ID: <ZrY97Pq9xM-fFhU2@casper.infradead.org>
-References: <792a3f54b1d528c2b056ae3c4ebaefe46bca8ef9.camel@bitron.ch>
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="iS8W/9ep"
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id EF77F24006E;
+	Fri,  9 Aug 2024 18:03:40 +0000 (UTC)
+Received: from [192.168.0.11] (c-98-247-188-21.hsd1.wa.comcast.net [98.247.188.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail3.candelatech.com (Postfix) with ESMTPSA id EA3F013C2B0;
+	Fri,  9 Aug 2024 11:03:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com EA3F013C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+	s=default; t=1723226620;
+	bh=1YCWIii/i6R5rT/daIoObdAdlccM6AMejZ+PHrkgCyI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iS8W/9epPVaSrbePBNd8uc0alMa7D8U4cW3iQdEMA+yTxIc/APwOGbmG7XzBOrE0c
+	 Dx+a2eBevE3AuKF5ai8fnExrJU+sLqOFuEG4NtBlv4v/TrW9DDrvYVLBsW7CimluZy
+	 DM4XJUvbcodT+RfNZDwy7VS0PBb8/xc8eW+g5kEk=
+Message-ID: <c7e27caf-3001-4069-9e26-54e544a2e06e@candelatech.com>
+Date: Fri, 9 Aug 2024 11:03:38 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: iwlwifi: correctly lookup DMA address in SG table
+To: Ben Greear <greearb@candelatech.com>,
+ Benjamin Berg <benjamin@sipsolutions.net>, linux-wireless@vger.kernel.org
+Cc: benjamin.berg@intel.com, miriam.rachel.korenblit@intel.com,
+ regressions@lists.linux.dev, johannes@sipsolutions.net,
+ Kalle Valo <kvalo@kernel.org>, Chris Bainbridge
+ <chris.bainbridge@gmail.com>, Rory Little <rory.little@candelatech.com>
+References: <20240808172948.303258-1-benjamin@sipsolutions.net>
+ <85f652fa-7dc1-44ca-e185-6ecfc6269de7@candelatech.com>
+Content-Language: en-US
+From: Rory Little <rory@candelatech.com>
+In-Reply-To: <85f652fa-7dc1-44ca-e185-6ecfc6269de7@candelatech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <792a3f54b1d528c2b056ae3c4ebaefe46bca8ef9.camel@bitron.ch>
+X-MDID: 1723226622-of81SaQTi8ec
+X-MDID-O:
+ us5;at1;1723226622;of81SaQTi8ec;<rory@candelatech.com>;9e529b45f983a2e6a3ac1f2f5cf09fc3
 
-On Fri, Aug 09, 2024 at 05:53:26PM +0200, J�rg Billeter wrote:
-> Starting with 6.10, I'm seeing `copy_file_range()`, with source and
-> destination being on the same FUSE filesystem[1], failing with EIO in
-> some cases. The (low-level libfuse3) userspace filesystem does not
-> implement `copy_file_range`, so the kernel falls back to the generic
-> implementation. The userspace filesystem receives read requests and
-> replies with the `FUSE_BUF_SPLICE_MOVE` flag.
+Hi,
+
+We have tested this on our system and verified that we are no longer 
+seeing the issue with this patch applied.
+
+- Rory
+
+On 8/8/24 10:36, Ben Greear wrote:
+> On 8/8/24 10:29, Benjamin Berg wrote:
+>> From: Benjamin Berg <benjamin.berg@intel.com>
 > 
-> I'm not sure what exactly triggers the issue but it may depend on the
-> file size, among other things. I can reproduce it fairly reliably
-> attempting to copy files that are exactly 65536 bytes in size.
+> Hello,
 > 
-> 6.9 works fine but I see the issue in 6.10, 6.10.3 and also in current
-> master ee9a43b7cfe2.
+> We'll try testing this on our systems...
 > 
-> 413e8f014c8b848e4ce939156f210df59fbd1c24 is the first bad commit
-> commit 413e8f014c8b848e4ce939156f210df59fbd1c24 (HEAD)
-> Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Date:   Sat Apr 20 03:50:06 2024 +0100
+> Thanks,
+> Ben
 > 
->     fuse: Convert fuse_readpages_end() to use folio_end_read()
->     
->     Nobody checks the error flag on fuse folios, so stop setting it.
->     Optimise the (optional) setting of the uptodate flag and clearing
->     of the lock flag by using folio_end_read().
->     
->     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
->     Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+>>
+>> The code to lookup the scatter gather table entry assumed that it was
+>> possible to use sg_virt() in order to lookup the DMA address in a mapped
+>> scatter gather table. However, this assumption is incorrect as the DMA
+>> mapping code may merge multiple entries into one. In that case, the DMA
+>> address space may have e.g. two consecutive pages which is correctly
+>> represented by the scatter gather list entry, however the virtual
+>> addresses for these two pages may differ and the relationship cannot be
+>> resolved anymore.
+>>
+>> Avoid this problem entirely by working with the offset into the mapped
+>> area instead of using virtual addresses. With that we only use the DMA
+>> length and DMA address from the scatter gather list entries. The
+>> underlying DMA/IOMMU code is therefore free to merge two entries into
+>> one even if the virtual addresses space for the area is not continuous.
+>>
+>> Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when 
+>> TXing an AMSDU")
+>> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+>> Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
+>> Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+>>
+>> ---
+>>
+>> Note that I was not yet able to fully verify this patch, but will
+>> probably get results tomorrow. Unfortunately, much of the testing we do
+>> internally happens on machines that do not reproduce the problem.
+>>
+>> Also, I think Ben already reported the same issue much earlier. At the
+>> time, I was not yet aware of the internal reproductions and did not take
+>> the report seriously.
+>> ---
+>>   .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
+>>   .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c |  4 ++-
+>>   drivers/net/wireless/intel/iwlwifi/pcie/tx.c  | 25 +++++++++++--------
+>>   3 files changed, 19 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h 
+>> b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+>> index b59de4f80b4b..3af9c2b40ef1 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+>> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+>> @@ -639,7 +639,7 @@ void iwl_trans_pcie_tx_reset(struct iwl_trans 
+>> *trans);
+>>   int iwl_pcie_txq_alloc(struct iwl_trans *trans, struct iwl_txq *txq,
+>>                  int slots_num, bool cmd_queue);
+>> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr);
+>> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned 
+>> int offset);
+>>   struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct 
+>> sk_buff *skb,
+>>                      struct iwl_cmd_meta *cmd_meta,
+>>                      u8 **hdr, unsigned int hdr_room);
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c 
+>> b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+>> index 2e780fb2da42..54d26523f692 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+>> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+>> @@ -168,6 +168,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
+>> iwl_trans *trans,
+>>       struct ieee80211_hdr *hdr = (void *)skb->data;
+>>       unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+>>       unsigned int mss = skb_shinfo(skb)->gso_size;
+>> +    unsigned int data_offset = 0;
+>>       dma_addr_t start_hdr_phys;
+>>       u16 length, amsdu_pad;
+>>       u8 *start_hdr;
+>> @@ -260,7 +261,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
+>> iwl_trans *trans,
+>>               int ret;
+>>               tb_len = min_t(unsigned int, tso.size, data_left);
+>> -            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
+>> +            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
+>>               /* Not a real mapping error, use direct comparison */
+>>               if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+>>                   goto out_err;
+>> @@ -272,6 +273,7 @@ static int iwl_txq_gen2_build_amsdu(struct 
+>> iwl_trans *trans,
+>>                   goto out_err;
+>>               data_left -= tb_len;
+>> +            data_offset += tb_len;
+>>               tso_build_data(skb, &tso, tb_len);
+>>           }
+>>       }
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c 
+>> b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+>> index 22d482ae53d9..78f417cdb9ac 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+>> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+>> @@ -1814,23 +1814,24 @@ static void *iwl_pcie_get_page_hdr(struct 
+>> iwl_trans *trans,
+>>   /**
+>>    * iwl_pcie_get_sgt_tb_phys - Find TB address in mapped SG list
+>>    * @sgt: scatter gather table
+>> - * @addr: Virtual address
+>> + * @offset: Offset into the mapped memory (i.e. SKB payload data)
+>>    *
+>> - * Find the entry that includes the address for the given address and 
+>> return
+>> - * correct physical address for the TB entry.
+>> + * Find the DMA address that corresponds to the SKB payload data at the
+>> + * position given by @offset.
+>>    *
+>>    * Returns: Address for TB entry
+>>    */
+>> -dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr)
+>> +dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned 
+>> int offset)
+>>   {
+>>       struct scatterlist *sg;
+>> +    unsigned int sg_offset = 0;
+>>       int i;
+>>       for_each_sgtable_dma_sg(sgt, sg, i) {
+>> -        if (addr >= sg_virt(sg) &&
+>> -            (u8 *)addr < (u8 *)sg_virt(sg) + sg_dma_len(sg))
+>> -            return sg_dma_address(sg) +
+>> -                   ((unsigned long)addr - (unsigned long)sg_virt(sg));
+>> +        if (offset >= sg_offset && offset < sg_offset + sg_dma_len(sg))
+>> +            return sg_dma_address(sg) + offset - sg_offset;
+>> +
+>> +        sg_offset += sg_dma_len(sg);
+>>       }
+>>       WARN_ON_ONCE(1);
+>> @@ -1875,7 +1876,9 @@ struct sg_table *iwl_pcie_prep_tso(struct 
+>> iwl_trans *trans, struct sk_buff *skb,
+>>       sg_init_table(sgt->sgl, skb_shinfo(skb)->nr_frags + 1);
+>> -    sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, 0, skb->len);
+>> +    /* Only map the data, not the header (it is copied to the TSO 
+>> page) */
+>> +    sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, skb_headlen(skb),
+>> +                       skb->data_len);
+>>       if (WARN_ON_ONCE(sgt->orig_nents <= 0))
+>>           return NULL;
+>> @@ -1900,6 +1903,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
+>> iwl_trans *trans, struct sk_buff *skb,
+>>       struct ieee80211_hdr *hdr = (void *)skb->data;
+>>       unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+>>       unsigned int mss = skb_shinfo(skb)->gso_size;
+>> +    unsigned int data_offset = 0;
+>>       u16 length, iv_len, amsdu_pad;
+>>       dma_addr_t start_hdr_phys;
+>>       u8 *start_hdr, *pos_hdr;
+>> @@ -2000,7 +2004,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
+>> iwl_trans *trans, struct sk_buff *skb,
+>>                             data_left);
+>>               dma_addr_t tb_phys;
+>> -            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
+>> +            tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset);
+>>               /* Not a real mapping error, use direct comparison */
+>>               if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+>>                   return -EINVAL;
+>> @@ -2011,6 +2015,7 @@ static int iwl_fill_data_tbs_amsdu(struct 
+>> iwl_trans *trans, struct sk_buff *skb,
+>>                           tb_phys, size);
+>>               data_left -= size;
+>> +            data_offset += size;
+>>               tso_build_data(skb, &tso, size);
+>>           }
+>>       }
 > 
-> I've confirmed the bisection by reverting this commit on top of 6.10.3,
-> which resolves the issue.
-
-Umm.  I don't see it.  This is all that's in the commit:
-
-        for (i = 0; i < ap->num_pages; i++) {
--               struct page *page = ap->pages[i];
-+               struct folio *folio = page_folio(ap->pages[i]);
-
--               if (!err)
--                       SetPageUptodate(page);
--               else
--                       SetPageError(page);
--               unlock_page(page);
--               put_page(page);
-+               folio_end_read(folio, !err);
-+               folio_put(folio);
-        }
-
-Do you have CONFIG_DEBUG_VM enabled?  There are some debugging asserts
-which that will enable that might indicate a problem.
-
-Otherwise we can try splitting the commit into individual steps and
-seeing which one shows the problem.
