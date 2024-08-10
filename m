@@ -1,166 +1,156 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from nov-007-i675.relay.mailchannels.net (nov-007-i675.relay.mailchannels.net [46.232.183.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95D8107A0;
-	Sat, 10 Aug 2024 05:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653A938FA3
+	for <regressions@lists.linux.dev>; Sat, 10 Aug 2024 05:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.183.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723268206; cv=none; b=bvxIt+uOkYNf8XfIJA+PxmS4hlskm3L5yTdSHm06sxlh4euAi8JKBw/Gp5xOBp69XqpX1W4NF/rQqgZqP8SfV/IbUs+CzkgFkhKhGTRSi50rlTZhLLzihtkd9UbfJyPHkrpGMxdKG3injY+AK7SsE3gggHrU2yumlVPrzRIySyA=
+	t=1723269397; cv=none; b=YVaIvW4xpxuziRuW5ERlX9FCrGnq1Gu3QQe+SsWtUqu68gpnHVWkPZUmc7shkLPScmYJy1Flt7Hwo0LvqRxduxoza34FHfBKYr+R8QY4ibWBnfLkOuWN4b+zmfAfJ9yZGqzpiyWLBzZomQlYktYfXTwteJzR5ruDmjAmxECgB/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723268206; c=relaxed/simple;
-	bh=t4qDXuJ3LWu7+c88bMi8bdmGb/8sdDFS6TnXOjpDKPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=Bl2Tu/RBgOvD2LpjUEkVriLOlbbWxC+dpdIndmBt2G6PqIs8e6b41bA6n4nX/huL+GigABbFofNG9t6eHAsqnua+qWwL1cY9aDmDCLKYqGCSFm6hq1lBtjH0FVCLaZ9BjAXfckrubes5vagCY8hlmteVk95NXhdfsOohARifZcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XVlnXFg0; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723269397; c=relaxed/simple;
+	bh=VxgaU1LK9xtJ0JbcMhju+WzSssGxxFYTn5cSdpfNky4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M0nQnP2deBWCbFbSzsBf13r1qwCE6Qz+xPFWbMYPunHq9jyuV952+uN4Wholb9j4tZ+aQvW8SGWQcUmTaoQxEJ5UhmnkTQk0md+CgtjyNPcWr9+sZX/zoF2yXlFSgyzHhrK19HWwIKEyCUXT67kS+Bf2l2F/qIbeoIk+zwBxvig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch; spf=pass smtp.mailfrom=bitron.ch; dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b=I9mMPaOM; arc=none smtp.client-ip=46.232.183.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitron.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XVlnXFg0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=PJAH/CyktIH57Dj1P/inZNXFX+n40cLs0bpRdnjZKo0=;
-	t=1723268204; x=1723700204; b=XVlnXFg0ZlPTLukxDhGM4SoTabQJmjidKbqBzJCp+FgxrG9
-	yfkuxBbf2PPbTyrufw2furbfQfEmkaDhSi+Cps3GSO8GoZSOHWgH178i+UzLf/Il832bMsslrfW7Z
-	2I6f7IE0gWetg7raBSiJJ/WcKxUu+8scw45X9bCxQbj4RtPj3899Z/TruqHImC3Y0eHEBL20fNfWA
-	ZhE1ucugFeKA6YOtrqu5joLYLSJDCHnGpN2KvSx0Zvf5dOdqgmOAiH01GG/V319MD0vm3tK/Kqfgj
-	8E6pAR0He+u/0alYwo6DtpGdPVpkkxyjlk6qkZF4Bx8Rovrb433M9XT+K+O0tOdQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1scemI-0000NC-UF; Sat, 10 Aug 2024 07:36:35 +0200
-Message-ID: <3b3262d9-5383-494e-a19b-698a9e289c2c@leemhuis.info>
-Date: Sat, 10 Aug 2024 07:36:34 +0200
+	dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b="I9mMPaOM"
+X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D4D3B7E000F;
+	Sat, 10 Aug 2024 05:56:29 +0000 (UTC)
+X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: novatrend|x-authuser|juerg@bitron.ch
+X-MailChannels-Auth-Id: novatrend
+X-Tank-Obese: 75ea7ae33ffd7d1e_1723269389321_906078804
+X-MC-Loop-Signature: 1723269389321:2065153395
+X-MC-Ingress-Time: 1723269389321
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitron.ch;
+	s=default; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=J2Iw9kGo2ORryaAUGaJlxOEenGCMX0xfNB34sdFoAFw=; b=I9mMPaOMJRF9Z5P4uUgy+xLgpW
+	dVamQ+XssGgUm6GVdf/UWQfQr8c16bXrDfcKlNkgZdfFUt0LKyTZEOsq5Ua4OD8qayaXd5X1Uc1uy
+	YE7OD6S4tdVAIg1/VjmBs8aWDWhoejAADzL8758Se21DOlYLYrkjaO2J/cYPf7cWv8egFV9Zx+w/9
+	gWkWjnDYtxciYU2juHc//H/IMe89Pcex8AlrbAS+0TCMEs+yuCWBY6UhFWlcS1lF4c7lxg+NFAEp8
+	3OUNXqyEOLwVmK6w0Hh96x8EMsJ2loLtmzJym6JUCO4ihUESCTvo+19WZxNirbYPkc0JY6Wq7H8br
+	Hf5CwTwg==;
+Message-ID: <5b54cb7e5bfdd5439c3a431d4f86ad20c9b22e76.camel@bitron.ch>
+Subject: Re: [REGRESSION] fuse: copy_file_range() fails with EIO
+From: =?ISO-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Date: Sat, 10 Aug 2024 07:56:21 +0200
+In-Reply-To: <ZrY97Pq9xM-fFhU2@casper.infradead.org>
+References: <792a3f54b1d528c2b056ae3c4ebaefe46bca8ef9.camel@bitron.ch>
+	 <ZrY97Pq9xM-fFhU2@casper.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bisected Regression: Cache filling up causing drastic performance
- degradation on Linux 6.10.3
-To: Filipe Manana <fdmanana@suse.com>,
- Abhinav Praveen <abhinav@praveen.org.uk>
-References: <f43jqpkjg7gehwtskurg5ze6omkcldme62u32ftsht32xevc5y@sdnm66w24ins>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Language: en-US, de-DE
-Cc: regressions@lists.linux.dev, linux-btrfs <linux-btrfs@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, David Sterba <dsterba@suse.com>,
- Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>
-In-Reply-To: <f43jqpkjg7gehwtskurg5ze6omkcldme62u32ftsht32xevc5y@sdnm66w24ins>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723268204;b50555c4;
-X-HE-SMSGID: 1scemI-0000NC-UF
+X-AuthUser: juerg@bitron.ch
 
-On 10.08.24 02:28, Abhinav Praveen wrote:
-> I recently ran into an IO/Memory Management issue and posted about it on
-> the linux-mm mailing list here:
-> https://marc.info/?l=linux-mm&m=172306192530745&w=2
-> 
-> I have since bisected with mainline and found that:
-> 956a17d9d050761e34ae6f2624e9c1ce456de204 is the first bad commit
+Hi Matthew,
 
-TWIMC, that is 956a17d9d05076 ("btrfs: add a shrinker for extent maps")
-[v6.10-rc1]
+Thanks for the quick response.
 
-Adding Filipe and the Btrfs folks to the list of recipients.
+On Fri, 2024-08-09 at 17:03 +0100, Matthew Wilcox wrote:
+> Do you have CONFIG_DEBUG_VM enabled?=C2=A0 There are some debugging asser=
+ts
+> which that will enable that might indicate a problem.
 
-Abhinav: thx for the report. There are at least two other discussion
-ongoing about what to my untrained eyes look like similar problems that
-remain after the fixes than went into 6.10 right before the release. You
-might want to consult them:
+With CONFIG_DEBUG_VM enabled, I get:
 
-https://lore.kernel.org/all/CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com/
-https://bugzilla.kernel.org/show_bug.cgi?id=219121
+page: refcount:2 mapcount:0 mapping:00000000b2c30835 index:0x0 pfn:0x12a113
+memcg:ffff9d8e3a660800
+aops:0xffffffff8a056820 ino:21 dentry name:"bash"
+flags: 0x24000000000022d(locked|referenced|uptodate|lru|workingset|node=3D0=
+|zone=3D2)
+raw: 024000000000022d ffffd9ce04a827c8 ffffd9ce04a84508 ffff9d8e0bbc99f0
+raw: 0000000000000000 0000000000000000 00000002ffffffff ffff9d8e3a660800
+page dumped because: VM_BUG_ON_FOLIO(folio_test_uptodate(folio))
+------------[ cut here ]------------
+kernel BUG at mm/filemap.c:1534!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 0 UID: 1000 PID: 1638 Comm: buildbox-fuse Not tainted 6.11.0-rc2+ #26
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+RIP: 0010:folio_end_read+0xa2/0xb0
+Code: 37 8a e8 21 1b 05 00 0f 0b 48 c7 c6 48 7f 39 8a e8 13 1b 05 00 0f 0b =
+31 f6 e9 7a f9 ff ff 48 c7 c6 a8 7f 39 8a e8 fe 1a 05 00 <0f> 0b 90 66 66 2=
+e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90
+RSP: 0018:ffffaa0ec289fc68 EFLAGS: 00010246
+RAX: 0000000000000040 RBX: ffffd9ce04a844c0 RCX: 0000000000000027
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9d8f77c1c8c0
+RBP: ffff9d8e07298a38 R08: 00000000ffffefff R09: ffffffff8a6b0d68
+R10: 0000000000000003 R11: 0000000000000002 R12: 0000000000000000
+R13: 0000000000000001 R14: ffff9d8e305ba098 R15: 0000000000000000
+FS:  00007f83d62b4140(0000) GS:ffff9d8f77c00000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000564ef5598078 CR3: 00000001013be000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ ? __die+0x56/0x97
+ ? die+0x2e/0x50
+ ? do_trap+0x10a/0x110
+ ? do_error_trap+0x65/0x80
+ ? folio_end_read+0xa2/0xb0
+ ? exc_invalid_op+0x50/0x70
+ ? folio_end_read+0xa2/0xb0
+ ? asm_exc_invalid_op+0x1a/0x20
+ ? folio_end_read+0xa2/0xb0
+ ? folio_end_read+0xa2/0xb0
+ fuse_readpages_end+0xc3/0x150
+ fuse_request_end+0x84/0x170
+ fuse_dev_do_write+0x24d/0x1050
+ ? __kmalloc_node_noprof+0x25e/0x480
+ ? fuse_dev_splice_write+0x9d/0x390
+ fuse_dev_splice_write+0x2b0/0x390
+ do_splice+0x311/0x8b0
+ __do_splice+0x204/0x220
+ __x64_sys_splice+0xb2/0x120
+ do_syscall_64+0x54/0x140
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f83d5f29a03
+Code: 64 89 02 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 =
+80 3d 29 48 0d 00 00 49 89 ca 74 14 b8 13 01 00 00 0f 05 <48> 3d 00 f0 ff f=
+f 77 75 c3 0f 1f 40 00 55 48 83 ec 30 44 89 4c 24
+RSP: 002b:00007fff2c0b8ce8 EFLAGS: 00000202 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 00007fff2c0b8eb0 RCX: 00007f83d5f29a03
+RDX: 0000000000000105 RSI: 0000000000000000 RDI: 0000000000000106
+RBP: 0000564ef555a4f0 R08: 0000000000004010 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff2c0b8e20
+R13: 0000000000000001 R14: 00000000000000fb R15: 0000000000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:folio_end_read+0xa2/0xb0
+Code: 37 8a e8 21 1b 05 00 0f 0b 48 c7 c6 48 7f 39 8a e8 13 1b 05 00 0f 0b =
+31 f6 e9 7a f9 ff ff 48 c7 c6 a8 7f 39 8a e8 fe 1a 05 00 <0f> 0b 90 66 66 2=
+e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90
+RSP: 0018:ffffaa0ec289fc68 EFLAGS: 00010246
+RAX: 0000000000000040 RBX: ffffd9ce04a844c0 RCX: 0000000000000027
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9d8f77c1c8c0
+RBP: ffff9d8e07298a38 R08: 00000000ffffefff R09: ffffffff8a6b0d68
+R10: 0000000000000003 R11: 0000000000000002 R12: 0000000000000000
+R13: 0000000000000001 R14: ffff9d8e305ba098 R15: 0000000000000000
+FS:  00007f83d62b4140(0000) GS:ffff9d8f77c00000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000564ef5598078 CR3: 00000001013be000 CR4: 0000000000350ef0
+Kernel panic - not syncing: Fatal exception
+Kernel Offset: 0x8000000 from 0xffffffff81000000 (relocation range: 0xfffff=
+fff80000000-0xffffffffbfffffff)
 
-Ciao, Thorsten
-
-> The issue is present on mainline commit:
-> 58d40f5f8131479a1e688828e2fa0a7836cf5358 (Fri Aug 9 10:23:18 2024)
-> 
-> The bisect log is below:
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [58d40f5f8131479a1e688828e2fa0a7836cf5358] Merge tag 'asm-generic-fixes-6.11-2' of git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
-> git bisect bad 58d40f5f8131479a1e688828e2fa0a7836cf5358
-> # status: waiting for good commit(s), bad commit known
-> # good: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
-> git bisect good a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-> # bad: [3e334486ec5cc6e79e7b0c4f58757fe8e05fbe5a] Merge tag 'tty-6.10-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-> git bisect bad 3e334486ec5cc6e79e7b0c4f58757fe8e05fbe5a
-> # bad: [d34672777da3ea919e8adb0670ab91ddadf7dea0] Merge tag 'fbdev-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
-> git bisect bad d34672777da3ea919e8adb0670ab91ddadf7dea0
-> # bad: [b850dc206a57ae272c639e31ac202ec0c2f46960] Merge tag 'firewire-updates-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394
-> git bisect bad b850dc206a57ae272c639e31ac202ec0c2f46960
-> # good: [59729c8a76544d9d7651287a5d28c5bf7fc9fccc] Merge tag 'tag-chrome-platform-for-v6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux
-> git bisect good 59729c8a76544d9d7651287a5d28c5bf7fc9fccc
-> # good: [101b7a97143a018b38b1f7516920a7d7d23d1745] Merge tag 'acpi-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect good 101b7a97143a018b38b1f7516920a7d7d23d1745
-> # good: [47e9bff7fc042b28eb4cf375f0cf249ab708fdfa] Merge tag 'erofs-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
-> git bisect good 47e9bff7fc042b28eb4cf375f0cf249ab708fdfa
-> # bad: [b2665fe61d8a51ef70b27e1a830635a72dcc6ad8] Merge tag 'ata-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
-> git bisect bad b2665fe61d8a51ef70b27e1a830635a72dcc6ad8
-> # bad: [aa5ccf29173acfaa8aa2fdd1421aa6aca1a50cf2] btrfs: handle errors in btrfs_reloc_clone_csums properly
-> git bisect bad aa5ccf29173acfaa8aa2fdd1421aa6aca1a50cf2
-> # good: [d3fbb00f5e21c6dfaa6e820a21df0c9a3455a028] btrfs: embed data_ref and tree_ref in btrfs_delayed_ref_node
-> git bisect good d3fbb00f5e21c6dfaa6e820a21df0c9a3455a028
-> # good: [5fa8a6baff817c1b427aa7a8bfc1482043be6d58] btrfs: pass the extent map tree's inode to try_merge_map()
-> git bisect good 5fa8a6baff817c1b427aa7a8bfc1482043be6d58
-> # bad: [9a7b68d32afc4e92909c21e166ad993801236be3] btrfs: report filemap_fdata<write|wait>_range() error
-> git bisect bad 9a7b68d32afc4e92909c21e166ad993801236be3
-> # bad: [85d288309ab5463140a2d00b3827262fb14e7db4] btrfs: use btrfs_get_fs_generation() at try_release_extent_mapping()
-> git bisect bad 85d288309ab5463140a2d00b3827262fb14e7db4
-> # bad: [65bb9fb00b7012a78b2f5d1cd042bf098900c5d3] btrfs: update comment for btrfs_set_inode_full_sync() about locking
-> git bisect bad 65bb9fb00b7012a78b2f5d1cd042bf098900c5d3
-> # bad: [956a17d9d050761e34ae6f2624e9c1ce456de204] btrfs: add a shrinker for extent maps
-> git bisect bad 956a17d9d050761e34ae6f2624e9c1ce456de204
-> # good: [f1d97e76915285013037c487d9513ab763005286] btrfs: add a global per cpu counter to track number of used extent maps
-> git bisect good f1d97e76915285013037c487d9513ab763005286
-> # first bad commit: [956a17d9d050761e34ae6f2624e9c1ce456de204] btrfs: add a shrinker for extent maps
-> 
-> The original issue (from my previous post) is as follows:
-> 
-> If I read from my Steam Library (this has about 430GiB of data), stored on an
-> ext4 formatted NVMe drive like this:
-> 
-> find /mnt/SteamLibrary/steamapps/common -type f -exec cat {} + -type f | pv >
-> /dev/null
-> 
-> I see that it initially starts reading at 800MiB/s (6.4 Gbps) then, once my
-> cache fills up (as shown by buff/cache in free), the read speed drops to as low
-> as 6MiB/s (48 Mbps) but periodically returns to 800MiB/s as the cache gets
-> freed.
-> 
-> When the cache fills, other tasks are also affected (e.g video playback
-> stutters or stops). I also see high CPU usage from kswapd0 and btrfs-cleaner
-> (which is strange because, again, it's an ext4 filesystem that I'm reading
-> from) using top.
-> 
-> Running echo 1 > /proc/sys/vm/drop_caches immediately improves performance.
-> 
-> But, instead, if I run the same read command in a Memory cgroup with memory.max
-> set to 500M, I get a solid 800MiB/s read speed without filling up the cache or
-> affecting other tasks.
-> 
-> TL;DR simply reading files seems to be enough to cause major system-wide
-> performance degradation. This also applies when updating games on Steam or
-> moving them between Library locations.
-> 
-> Anyone know if this is a bug or regression in Linux 6.10? Or whether there are
-> any tunables or Sysctls that could improve performance without manually running
-> things in CGroups?
-> 
-> This happens on a AMD 7950X3D with 96GB of ram.
-> 
-> I describe the same thing on my post at:
-> https://www.reddit.com/r/linuxquestions/comments/1emetro/cache_filling_up_causing_drastic_performance/
-> 
-> It also seems that someone else has experienced something similar here*:
-> https://www.reddit.com/r/linuxquestions/comments/1e83ltj/610_disk_caching_vs_memory_exhaustion_issues/
-> 
-> *Their issue seems to have been resolved by 6.10.2 however.
+Cheers,
+J=C3=BCrg
