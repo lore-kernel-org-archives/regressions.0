@@ -1,224 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.praveen.org.uk (mail.praveen.org.uk [78.141.237.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6BC16B381
-	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 23:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8422745B
+	for <regressions@lists.linux.dev>; Sat, 10 Aug 2024 00:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.141.237.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723247726; cv=none; b=MzhJu6ieGyfONWG9r0GU2246xVhu8Z1er3njyYMohC0nE6WqT45dHxssZzjmdu5n9TSFEniVhcnuk1nMc5XHLSueMbZfFZdHI5L8mbVU19bSIwOhOIGnJRiuDMLCvd44je5L/gXWuGYFZ3hI5BzdwqrShmXvT2PEHfZoWymHPuw=
+	t=1723250111; cv=none; b=uQhrLyy3F/AGYTg58ZjVyzK7N6uxcrrvVHZ9Rno3MR1cXD9vWGMqPRK1txNUvj9t8Fw7XVp+HwRlhRPBJn0ntucqByowxYMj3s4gWTI6IfKJDPNEoKmYjoByk4aZXcvmNRoVAp22cyEPp0xL9gODidVkIyVLV7a7D1sIi5mFYRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723247726; c=relaxed/simple;
-	bh=rKsx7Fz0PxnHu+sT4TiSMkyOkBuqjHkz00zTrLT8Qnc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qg1FVuWPp9nfA9Z5qyDDaqTksisfWpLXL/y2Ok46fDMf3MTMbqzj9uTdd6a5rjleo5dVB+ZkRFCJqXxITtDTK6/X4QfNPKK3K9vblfhL7yxNTJRJI9mLq4DdCMEUPXQU7J24ygFyjy/28EFHdFz3MVwrs7Sep3GTYGyewm7lBX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQwItig3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723250111; c=relaxed/simple;
+	bh=NfiyBoDrS/tdm+lc9Almp5uz4bzO0ZKbZ8wKsxgWkxI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FiOBTb3KkaUbYwhX+cvySM0aN7Ray19/L4852oI9IagNMsJzHcPOp9HxNOkl7Gm1hgdCKpWWNC012Fc4OUJrZ0RCNU1V7yrwQToITgT3JW8gRJJpkaT6cnRQg7v/6lI8NawWCieQq2G34Nj0XpSUKvOl+b9dqoi6jBLSmjbD6Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=praveen.org.uk; spf=pass smtp.mailfrom=praveen.org.uk; dkim=pass (1024-bit key) header.d=praveen.org.uk header.i=@praveen.org.uk header.b=koTNZvO0; dkim=permerror (0-bit key) header.d=praveen.org.uk header.i=@praveen.org.uk header.b=9u5QRblv; arc=none smtp.client-ip=78.141.237.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=praveen.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=praveen.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQwItig3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B08DC4AF11
-	for <regressions@lists.linux.dev>; Fri,  9 Aug 2024 23:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723247726;
-	bh=rKsx7Fz0PxnHu+sT4TiSMkyOkBuqjHkz00zTrLT8Qnc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FQwItig32NNMSD+fxs3+kkW6h0l6aJM3qM6sAOI79L5+ygT2AaM1+Wl6qJ+GTo54V
-	 fsurvafXIaJWS7h3cpEOfTtPD8IajQxHve7GhOHbqCmdjhBJe86nKiGFUAylGubtXE
-	 bsj/n0QJmkyIHCTgeLDUPUKDhe66WD/APnWez+zDG2wIkvab9lZrU/INVk7PbMasVx
-	 JE2xkrJ65XA3D4okE39JmEc/cL2PirSZ2KZwzRwZWA9AY2hAHWBBqqdOZnsY/9tbA6
-	 ttTtOAUeCQnJfVinnpkE/isQLy4YEEVw+BZJEu1QXjafN2qlwuEXIApfyMqYNLxbWX
-	 z6DPFrcHqb5Xw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5b5b67d0024so2997895a12.0
-        for <regressions@lists.linux.dev>; Fri, 09 Aug 2024 16:55:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWr2vlvbv0il+4ay+nbcmbbkXPr8pMYL8VU6GKT0CpsXv8HdeHoYnkoozHfYJQ5Jc+uDaWaxnOyD2J0rtPcQKTD5crCaVLogK+bg1I=
-X-Gm-Message-State: AOJu0YwD+arLkM6DNxPcqkbSrqvY/X3LIZ7tXmK61c78gsLyEG0n/3tU
-	/2Z34ZYbrh2Fq0zs4jxCQKMHZJ4vw4lMN5GvTi7V3FPrGZvmHjbo7ZGb/5OzdA45CadBhK3ocvU
-	1GOwne+W0fnkwuAE+uG2cg/yKRKU=
-X-Google-Smtp-Source: AGHT+IGiqvhNUKXKmRDp+aCihfOXS14A5erPwb8sKFVybqBZ8a28N9mlsgoOpqhOOYC+d+N5IK8qMAv+sE1i9E8yQEE=
-X-Received: by 2002:a17:907:c7d2:b0:a7a:8876:4427 with SMTP id
- a640c23a62f3a-a80aa59b6b6mr236626666b.25.1723247724572; Fri, 09 Aug 2024
- 16:55:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=praveen.org.uk header.i=@praveen.org.uk header.b="koTNZvO0";
+	dkim=permerror (0-bit key) header.d=praveen.org.uk header.i=@praveen.org.uk header.b="9u5QRblv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=praveen.org.uk;
+	s=2108-rsa; t=1723249692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=0z5yTKDGIUiBoVfxnoH8DMBNcdInfUhZr4qmwZJvpaw=;
+	b=koTNZvO0MDYap3CP8XfpNwivx44xooCJGdaflwbzUv+Mi6cp3mCtPPyFPb+z84jPk4vDzQ
+	CnAh4TNwkJ1rtd4JM2nlMRcGfWz9cCtray+HolH0nqyIHHnmsFw1xbJY9I7+Pb+nOe3Ze/
+	nYP960TwdM3hIcKjg1ShZ9pAaBDHQjk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=praveen.org.uk;
+	s=2108-ed; t=1723249692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=0z5yTKDGIUiBoVfxnoH8DMBNcdInfUhZr4qmwZJvpaw=;
+	b=9u5QRblvTcG4u4UXFeQbApXz4+dO2qliT0rqShjNhrH3KUXuhp5BoG3vNRobo7Edd5g7YB
+	PaRcaDriz0QQv9Cg==
+Received: 
+	by mail.praveen.org.uk (OpenSMTPD) with ESMTPSA id fb4c6b07 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <regressions@lists.linux.dev>;
+	Sat, 10 Aug 2024 01:28:12 +0100 (BST)
+Date: Sat, 10 Aug 2024 01:28:08 +0100
+From: Abhinav Praveen <abhinav@praveen.org.uk>
+To: regressions@lists.linux.dev
+Subject: Bisected Regression:  Cache filling up causing drastic performance
+ degradation on Linux 6.10.3
+Message-ID: <f43jqpkjg7gehwtskurg5ze6omkcldme62u32ftsht32xevc5y@sdnm66w24ins>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com>
- <CAHPNGSTZJW9Rn2Aac=PhjSTiDYX_wc3DwtK=QkiHh-haShBybQ@mail.gmail.com>
-In-Reply-To: <CAHPNGSTZJW9Rn2Aac=PhjSTiDYX_wc3DwtK=QkiHh-haShBybQ@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Sat, 10 Aug 2024 00:54:48 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H4jcWK9AnJ=T+U84Rq9dmJXmpdGyN10oBqFdw7JCqLmew@mail.gmail.com>
-Message-ID: <CAL3q7H4jcWK9AnJ=T+U84Rq9dmJXmpdGyN10oBqFdw7JCqLmew@mail.gmail.com>
-Subject: Re: [REGRESSION] bisected: btrfs: spin locks way too much when
- accessing many files concurrently
-To: Octavia Togami <octavia.togami@gmail.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Fri, Aug 9, 2024 at 11:53=E2=80=AFPM Octavia Togami <octavia.togami@gmai=
-l.com> wrote:
->
-> Oh, I did forget I also captured a `perf report` for this:
-> https://nextcloud.octyl.net/s/xmbGAziwTCjRLnc
+I recently ran into an IO/Memory Management issue and posted about it on
+the linux-mm mailing list here:
+https://marc.info/?l=linux-mm&m=172306192530745&w=2
 
-It's more useful if you provided the output of "perf report", because
-with a different kernel version or compiled with different config and
-settings, the name resolution fails:
+I have since bisected with mainline and found that:
+956a17d9d050761e34ae6f2624e9c1ce456de204 is the first bad commit
 
-$ perf report
-No kallsyms or vmlinux with build-id
-8c3b2978a6fc575ae62885e359d781865efe6a0f was found
-# To display the perf.data header info, please use
---header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 40K of event 'cycles:P'
-# Event count (approx.): 1771180105130
-#
-# Children      Self  Command  Shared Object
-        Symbol
-# ........  ........  .......
-..............................................
-..................................................
-#
-    94.38%     0.01%  rg       [kernel.kallsyms]
-        [k] 0xffffffff9900012f
-            |
-             --94.38%--0xffffffff9900012f
-                       |
-                        --94.14%--0xffffffff98e464b2
-                                  |
-                                  |--82.08%--0xffffffff9842eb0d
-                                  |          |
-                                  |           --81.96%--0xffffffff9842dcb9
-                                  |                     |
-                                  |
-|--79.91%--0xffffffff983127d0
-(...)
+The issue is present on mainline commit:
+58d40f5f8131479a1e688828e2fa0a7836cf5358 (Fri Aug 9 10:23:18 2024)
 
-So in the future please paste the output of "perf report" too.
+The bisect log is below:
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [58d40f5f8131479a1e688828e2fa0a7836cf5358] Merge tag 'asm-generic-fixes-6.11-2' of git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+git bisect bad 58d40f5f8131479a1e688828e2fa0a7836cf5358
+# status: waiting for good commit(s), bad commit known
+# good: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
+git bisect good a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+# bad: [3e334486ec5cc6e79e7b0c4f58757fe8e05fbe5a] Merge tag 'tty-6.10-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
+git bisect bad 3e334486ec5cc6e79e7b0c4f58757fe8e05fbe5a
+# bad: [d34672777da3ea919e8adb0670ab91ddadf7dea0] Merge tag 'fbdev-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+git bisect bad d34672777da3ea919e8adb0670ab91ddadf7dea0
+# bad: [b850dc206a57ae272c639e31ac202ec0c2f46960] Merge tag 'firewire-updates-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394
+git bisect bad b850dc206a57ae272c639e31ac202ec0c2f46960
+# good: [59729c8a76544d9d7651287a5d28c5bf7fc9fccc] Merge tag 'tag-chrome-platform-for-v6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux
+git bisect good 59729c8a76544d9d7651287a5d28c5bf7fc9fccc
+# good: [101b7a97143a018b38b1f7516920a7d7d23d1745] Merge tag 'acpi-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+git bisect good 101b7a97143a018b38b1f7516920a7d7d23d1745
+# good: [47e9bff7fc042b28eb4cf375f0cf249ab708fdfa] Merge tag 'erofs-for-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+git bisect good 47e9bff7fc042b28eb4cf375f0cf249ab708fdfa
+# bad: [b2665fe61d8a51ef70b27e1a830635a72dcc6ad8] Merge tag 'ata-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
+git bisect bad b2665fe61d8a51ef70b27e1a830635a72dcc6ad8
+# bad: [aa5ccf29173acfaa8aa2fdd1421aa6aca1a50cf2] btrfs: handle errors in btrfs_reloc_clone_csums properly
+git bisect bad aa5ccf29173acfaa8aa2fdd1421aa6aca1a50cf2
+# good: [d3fbb00f5e21c6dfaa6e820a21df0c9a3455a028] btrfs: embed data_ref and tree_ref in btrfs_delayed_ref_node
+git bisect good d3fbb00f5e21c6dfaa6e820a21df0c9a3455a028
+# good: [5fa8a6baff817c1b427aa7a8bfc1482043be6d58] btrfs: pass the extent map tree's inode to try_merge_map()
+git bisect good 5fa8a6baff817c1b427aa7a8bfc1482043be6d58
+# bad: [9a7b68d32afc4e92909c21e166ad993801236be3] btrfs: report filemap_fdata<write|wait>_range() error
+git bisect bad 9a7b68d32afc4e92909c21e166ad993801236be3
+# bad: [85d288309ab5463140a2d00b3827262fb14e7db4] btrfs: use btrfs_get_fs_generation() at try_release_extent_mapping()
+git bisect bad 85d288309ab5463140a2d00b3827262fb14e7db4
+# bad: [65bb9fb00b7012a78b2f5d1cd042bf098900c5d3] btrfs: update comment for btrfs_set_inode_full_sync() about locking
+git bisect bad 65bb9fb00b7012a78b2f5d1cd042bf098900c5d3
+# bad: [956a17d9d050761e34ae6f2624e9c1ce456de204] btrfs: add a shrinker for extent maps
+git bisect bad 956a17d9d050761e34ae6f2624e9c1ce456de204
+# good: [f1d97e76915285013037c487d9513ab763005286] btrfs: add a global per cpu counter to track number of used extent maps
+git bisect good f1d97e76915285013037c487d9513ab763005286
+# first bad commit: [956a17d9d050761e34ae6f2624e9c1ce456de204] btrfs: add a shrinker for extent maps
 
-Thanks.
+The original issue (from my previous post) is as follows:
 
->
-> On Fri, Aug 9, 2024 at 3:45=E2=80=AFPM Octavia Togami <octavia.togami@gma=
-il.com> wrote:
-> >
-> > [1.] One line summary of the problem: BTRFS spin locks way too much
-> > when accessing many files concurrently
-> > [2.] Full description of the problem/report:
-> >
-> > Accessing many files concurrently at once causes BTRFS to spin lock
-> > too much and basically lock up all other processes for seconds at a
-> > time.
-> >
-> > Mostly happens when accessing their content, not the other metadata.
-> >
-> > This appears to be a performance regression since v6.9. I bisected to
-> > this commit: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/l=
-inux.git/commit/?id=3D956a17d9d050761e34ae6f2624e9c1ce456de204
-> >
-> > The commit before this one has no issues, this one reliably reproduces
-> > the issue for me.
-> >
-> > [3.] Keywords (i.e., modules, networking, kernel): btrfs, spin_lock,
-> > super_cache_scan
-> > [4.] Kernel information
-> > [4.1.] Kernel version (from /proc/version): Linux version
-> > 6.10.3-arch1-1 (linux@archlinux) (gcc (GCC) 14.2.1 20240802, GNU ld
-> > (GNU Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Sun, 04 Aug 2024
-> > 05:11:32 +0000
-> > [4.2.] Kernel .config file:
-> > https://gist.github.com/octylFractal/1344722b55f0a9eef4fc22fcfcc34177
-> > [5.] Most recent kernel version which did not have the bug: v6.9
-> > [6.] Output of Oops.. message (if applicable) with symbolic information
-> >      resolved (see Documentation/admin-guide/bug-hunting.rst): N/A
-> > [7.] A small shell script or example program which triggers the
-> >      problem (if possible): Not possible as it appears to need a
-> > specific set of data and/or an NVMe-speed drive (1-2GB/s). I was using
-> > `rg --no-ignore uncommon-phrase ~/Documents/` but it didn't appear to
-> > work in QEMU or on a different drive, only when using my NVMe SSD. I
-> > have 1,425,292 files comprising 424GB in my `~/Documents`.
-> > [8.] Environment
-> > [8.1.] Software (add the output of the ver_linux script here)
-> > Linux Draconnet 6.10.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Wed, 24 Jul 2024
-> > 22:25:43 +0000 x86_64 GNU/Linux
-> >
-> > GNU C                   14.1.1
-> > GNU Make                4.4.1
-> > Binutils                2.42.0
-> > Util-linux              2.40.2
-> > Mount                   2.40.2
-> > Module-init-tools       32
-> > E2fsprogs               1.47.1
-> > Jfsutils                1.1.15
-> > Reiserfsprogs           3.6.27
-> > Xfsprogs                6.9.0
-> > PPP                     2.5.0
-> > Bison                   3.8.2
-> > Flex                    2.6.4
-> > Linux C++ Library       6.0.33
-> > Linux C++ Library       5.0.7
-> > Dynamic linker (ldd)    2.40
-> > Procps                  4.0.4
-> > Net-tools               2.10
-> > Kbd                     2.6.4
-> > Console-tools           2.6.4
-> > Sh-utils                9.5
-> > Udev                    256
-> > Wireless-tools          30
-> > Modules Loaded          aesni_intel af_alg algif_hash algif_skcipher
-> > amd_atl amdgpu amdxcp asus_wmi blake2b_generic bluetooth bnep bridge
-> > btbcm btintel btmtk btrfs btrtl b
-> > tusb ccp cec cmac crc16 crc32c_generic crc32c_intel crc32_pclmul
-> > crct10dif_pclmul cryptd crypto_simd crypto_user dm_mod drm_buddy
-> > drm_display_helper drm_exec drm_suballoc_
-> > helper drm_ttm_helper eeepc_wmi enclosure ext4 fat gf128mul
-> > ghash_clmulni_intel gpio_amdpt gpio_generic gpu_sched hid_generic
-> > hwmon_vid i2c_algo_bit i2c_dev i2c_piix4 i804
-> > 2 intel_rapl_common intel_rapl_msr ip_tables jbd2 jfs joydev kvm
-> > kvm_amd ledtrig_timer libcrc32c libphy llc loop mac_hid mbcache mc
-> > mdio_devres mousedev nct6775 nct6775_co
-> > re nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 nf_nat nfnetlink
-> > nf_reject_ipv4 nf_tables nft_chain_nat nft_compat nft_ct nft_masq
-> > nft_reject nft_reject_ipv4 nilfs2 nls_iso8
-> > 859_1 nls_ucs2_utils nvidia nvidia_drm nvidia_modeset nvidia_uvm nvme
-> > nvme_auth nvme_core pkcs8_key_parser platform_profile polyval_clmulni
-> > polyval_generic r8169 raid6_pq
-> > rapl realtek rfcomm rfkill scsi_transport_sas serio ses sg sha1_ssse3
-> > sha256_ssse3 sha512_ssse3 snd snd_hda_codec snd_hda_codec_generic
-> > snd_hda_codec_hdmi snd_hda_codec_re
-> > altek snd_hda_core snd_hda_intel snd_hda_scodec_component snd_hrtimer
-> > snd_hwdep snd_intel_dspcfg snd_intel_sdw_acpi snd_pcm snd_seq
-> > snd_seq_device snd_seq_dummy snd_timer
-> > soundcore sp5100_tco sparse_keymap stp ttm tun uas uinput usbhid usblp
-> > usb_storage uvc uvcvideo vfat video videobuf2_common videobuf2_memops
-> > videobuf2_v4l2 videobuf2_vmall
-> > oc videodev wacom wmi wmi_bmof xfs xhci_pci xhci_pci_renesas xor
-> > x_tables xt_conntrack xt_mark xt_MASQUERADE xt_tcpudp zenpower
-> >
-> > [8.2.] Processor information (from /proc/cpuinfo):
-> > https://gist.github.com/octylFractal/1dcb65816561aab9205fce590ec85e59
-> > [8.3.] Module information (from /proc/modules):
-> > https://gist.github.com/octylFractal/9c78960190b12e3634ae87e895858cb2
-> > [8.4.] Loaded driver and hardware information (/proc/ioports,
-> > /proc/iomem): https://gist.github.com/octylFractal/40a9f67dbaabac78cd2d=
-03028dd994f7
-> > [8.5.] PCI information ('lspci -vvv' as root):
-> > https://gist.github.com/octylFractal/325a0f211094ff11643c16f1d1f63362
-> > [8.6.] SCSI information (from /proc/scsi/scsi):
-> > Attached devices:
-> > Host: scsi4 Channel: 00 Id: 00 Lun: 00
-> >  Vendor: ATA      Model: CT4000MX500SSD1  Rev: 045
-> >  Type:   Direct-Access                    ANSI  SCSI revision: 05
-> > [8.7.] Other information that might be relevant to the problem
-> >        (please look in /proc and include all information that you
-> >        think to be relevant): The NVMe SSD I'm using is a WDS100T3X0C-0=
-0SJG0.
-> >
-> > #regzbot introduced: 956a17d9d050761e34ae6f2624e9c1ce456de204
->
+If I read from my Steam Library (this has about 430GiB of data), stored on an
+ext4 formatted NVMe drive like this:
+
+find /mnt/SteamLibrary/steamapps/common -type f -exec cat {} + -type f | pv >
+/dev/null
+
+I see that it initially starts reading at 800MiB/s (6.4 Gbps) then, once my
+cache fills up (as shown by buff/cache in free), the read speed drops to as low
+as 6MiB/s (48 Mbps) but periodically returns to 800MiB/s as the cache gets
+freed.
+
+When the cache fills, other tasks are also affected (e.g video playback
+stutters or stops). I also see high CPU usage from kswapd0 and btrfs-cleaner
+(which is strange because, again, it's an ext4 filesystem that I'm reading
+from) using top.
+
+Running echo 1 > /proc/sys/vm/drop_caches immediately improves performance.
+
+But, instead, if I run the same read command in a Memory cgroup with memory.max
+set to 500M, I get a solid 800MiB/s read speed without filling up the cache or
+affecting other tasks.
+
+TL;DR simply reading files seems to be enough to cause major system-wide
+performance degradation. This also applies when updating games on Steam or
+moving them between Library locations.
+
+Anyone know if this is a bug or regression in Linux 6.10? Or whether there are
+any tunables or Sysctls that could improve performance without manually running
+things in CGroups?
+
+This happens on a AMD 7950X3D with 96GB of ram.
+
+I describe the same thing on my post at:
+https://www.reddit.com/r/linuxquestions/comments/1emetro/cache_filling_up_causing_drastic_performance/
+
+It also seems that someone else has experienced something similar here*:
+https://www.reddit.com/r/linuxquestions/comments/1e83ltj/610_disk_caching_vs_memory_exhaustion_issues/
+
+*Their issue seems to have been resolved by 6.10.2 however.
+-- 
+Abhinav Praveen
