@@ -1,132 +1,109 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from mail.typeblog.net (mail.typeblog.net [88.151.33.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F0447A64
-	for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 12:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA8148FEB
+	for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 13:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.151.33.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723378412; cv=none; b=AqtJ69SAScdTs/91ntgOxhZJIVfi+ao5eEyViBcciH/3o80/JcKjdpvyXgYPxZWPZFXCSdYJZ5sEY7HCbIIMrT8NEGOKHKvqMU1alG++4W4unrro/Eu0Ox8XhSxaum7YQ+OUFwJZ4L+2MEpu0fc5WNgT+6Wui6ZFQUTvNr+996Y=
+	t=1723383758; cv=none; b=P6EPOftzdZw5x7S7b6ccuYPfNqOlzes09XcqhzwGtUgLSeDDZEflQSCkUY6YxOXEzqicOq8U/Mu+EOAFl7i2UkeadxByQazGcjLLeRJLUerxj+VPQxmPOJn4wQ6cyxZi2k+v7xH5K3JxAiV2dJ7Db8LrGRqeImpgIhfBZXOwTDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723378412; c=relaxed/simple;
-	bh=WWnL96gAy3HoQSrpoi+3mq3BYzsQnPVg3/BiFHBYxFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0EdRVVqNzE8MZ3lyXnlLSa8EbZ2TbLctt8eaWq8Mcfy+7t36jcy0XALzpDbrpW1Etkt9ugexZ/3hSOUFdRhX+7SuieZ81TU6RGn5Ie53G/0wIYv5uqmuL2+axbonm3NqFc3iyEO08miw8alFmj+p+f5h5X9au8uAFqBtmYivSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=iqagdlus; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=edfi6leC; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1723383758; c=relaxed/simple;
+	bh=pfNi+gg4c3wax4XFCl4PGju4pYSvVmsWKNB09BfMBr4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=JA/7z+cVVZ97ojOHVa1nADSzNHzTbvOHqgOidZf847sDOTe1tDaN4BDztGv2TnK6PYO66bTtIWIgaoX6lxI9AVhZgapxOIVpq7gkdBWiNQdRdRBbN4gbjgXn//5EpDnmrOdK5A86WlfzAbJAEyjA34tiyw9ap6Gm49AQ94jA6s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net; spf=pass smtp.mailfrom=typeblog.net; dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b=JyxgTnhJ; arc=none smtp.client-ip=88.151.33.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=typeblog.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="iqagdlus";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="edfi6leC"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 7022F138FCDC;
-	Sun, 11 Aug 2024 08:13:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 11 Aug 2024 08:13:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1723378408; x=1723464808; bh=bN/mOZQgK8
-	R1TmjEJ6lNJc8Sf+gJv+a60h50Kou4cuo=; b=iqagdlusCS3dT9FpqXKasV4YaT
-	ekkx/vsqvF44Q+nQfhN+McGfpZKm7VUSBEElOU/ajtQyLOaQjEwo5IHFzpSVc6P9
-	t9+mr51AhancDTbLYI4LVP6FCeZZEJ6JL2F9H2sgCY6tsIvIzNytC/bQk7rqpGMo
-	Obhm94DXk0CmdjhINN+hxPA72KNmRS4RGW2e7nXLYAi2oPksJuFQ6qeKVFOTUGAX
-	zFFd1t3Ih+oUf4UZDeVUe3gk/QI2YvIwQt/iPQYup4Zql/UlskvYprIF53xpTBXl
-	yj6LkopuvmmtNxE4oY8bNwcE9VgJzNiX86P0haEVCmXCVOcxyQOCd8kks0Fg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1723378408; x=1723464808; bh=bN/mOZQgK8R1TmjEJ6lNJc8Sf+gJ
-	v+a60h50Kou4cuo=; b=edfi6leCnJJ0Cv/rslMCnBHnWOAsCMpvCcwiXb7a7cii
-	W7gjtn5jbDlF9CMgpYnjio3UDEDAvdXpkoPaSaW1s7qGehxXMgKO3r/mPr1cifKI
-	IO1E/fdpIKw2xVABNJbOXc4DQfp5yuenE7l4ss7vp6dYOKndpne4tF/Y73uT4A0A
-	SvotFEDZ/WMOifzM7KmstFHmtuJrnfyY1vh8BOwlLE6IBl73pPrkjRAezHgqnbGs
-	KEqD/+GB2Rcwd4Wl5IyhT6QByN+6dyoFU16F/P0Vu3CkHy4iFBvmKvpz+h7WOBTA
-	ZrpjlMB4DxHRbhJmZvaLjPPit4cecC349KAfMb/YcA==
-X-ME-Sender: <xms:6Kq4Zp_YHSX5EGYFLSiQLTRCT1YPwkKD8ZqG9awFX5TeRgwKIdt1gg>
-    <xme:6Kq4Ztsx3nrIt1HKgE_w_KsvpdC4iJUbgWTHT6d8dtCUTPhSDqlXZRU2m6HqQxyNX
-    ftSkKMobbCrfw>
-X-ME-Received: <xmr:6Kq4ZnBUqsgVUTSDts07H4vhNbwitVpDx8ZkEcgzuhVT30KwwK6YlhG1Yb2A7YvfPxolu0nnHqq_kj_UAyYhK_URPSyiUPYfgBv0ZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrleekgdehudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeegheeuhefgtdeluddtleekfeegjeetgeeikeehfeduieffvddufeefleev
-    tddtvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmpdhn
-    sggprhgtphhtthhopedvvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhgvvh
-    hinheshhholhhmrdguvghvpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinh
-    hugidruggvvhdprhgtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghs
-    khhtohhprdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvg
-    gvuggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeifrgihnhgvrdhlihhnsegrmhgurd
-    gtohhmpdhrtghpthhtohepjhgvrhhrhidriihuohesrghmugdrtghomhdprhgtphhtthho
-    peiirggvvghmrdhmohhhrghmvggusegrmhgurdgtohhm
-X-ME-Proxy: <xmx:6Kq4Ztf_hbQWGCQSsIvsVGTJ3d4HSeQPG3dfo1AWRsNbsJV6uxGBKg>
-    <xmx:6Kq4ZuPcYMlfMNoRFyiC3ARBJNUz3iJSJHUVaPStD5RZhmFDHoFRZg>
-    <xmx:6Kq4Zvma3MCkKGDsk74sGuJq28jYf6dYxOYlb1EfZXWuTBaa3TcrjA>
-    <xmx:6Kq4ZotDU49Hf7RGXvdKesU2U7DCA-k5v01lsrrVnCY331CgMG4N2Q>
-    <xmx:6Kq4Zl-uHpbt6TYXbwRDt-dbGnrCgYhpBaRBDcIccYuU6rbOi89l6EUe>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 11 Aug 2024 08:13:27 -0400 (EDT)
-Date: Sun, 11 Aug 2024 14:13:26 +0200
-From: Greg KH <greg@kroah.com>
-To: Kevin Holm <kevin@holm.dev>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org,
-	ML dri-devel <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>, Wayne Lin <wayne.lin@amd.com>,
-	Jerry Zuo <jerry.zuo@amd.com>,
-	Zaeem Mohamed <zaeem.mohamed@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH 6.10] drm/amd/display: Refactor function
- dm_dp_mst_is_port_support_mode()
-Message-ID: <2024081141-clump-obliged-8fb0@gregkh>
-References: <20240730185339.543359-1-kevin@holm.dev>
+	dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b="JyxgTnhJ"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 552E89B05D6;
+	Sun, 11 Aug 2024 15:36:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=typeblog.net;
+	s=mailcow; t=1723383379;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language;
+	bh=ivigbb9xMm1ZNuDdd5y5spX8twxwH/H+kZwec4D/O+I=;
+	b=JyxgTnhJdRhvid7qS+A+E7MsFr5L1oQwnAK/ROxakAzbSrt50j7bkFTlkwlJTvnaMU+pIH
+	zCOpXy1i03noxA1dURp0WR68uKCiV/jKSEKV0K/jNZPbqaPmofLz5v3g+FGAdzL5Mx6KQm
+	TFl2+sGUN+R9mxDIqt+8nq/gXAo3HW3e6SMrwcIbSBXs6AsNRtPxf6ZzbHaNrdj7bV3jl8
+	FtQzPr1nSaFeyNbJYHvf/cvvQPU5i9ZAhiudy1Xnvag0bze7AOPmWANc9RnHJJ+Nk7DAjn
+	ImWwSOpfCp6ny13pD+GG4GkPkXaU8eetshPojO0ec34VgRzZs9YfvJ1ugt2bRg==
+Message-ID: <872a3e83-9bc5-47de-8514-48abe8ff03c5@typeblog.net>
+Date: Sun, 11 Aug 2024 09:36:13 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240730185339.543359-1-kevin@holm.dev>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Wayne Lin <wayne.lin@amd.com>, amd-gfx@lists.freedesktop.org,
+ regressions@lists.linux.dev
+From: Peter Cai <peter@typeblog.net>
+Subject: [REGRESSION] amdgpu enables DSC unnecessarily over MST hubs on kernel
+ 6.11+
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Jul 30, 2024 at 08:53:39PM +0200, Kevin Holm wrote:
-> From: Wayne Lin <wayne.lin@amd.com>
-> 
-> [ Upstream commit fa57924c76d995e87ca3533ec60d1d5e55769a27 ]
-> 
-> [Why]
-> dm_dp_mst_is_port_support_mode() is a bit not following the original design rule and cause
-> light up issue with multiple 4k monitors after mst dsc hub.
-> 
-> [How]
-> Refactor function dm_dp_mst_is_port_support_mode() a bit to solve the light up issue.
-> 
-> Reviewed-by: Jerry Zuo <jerry.zuo@amd.com>
-> Acked-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
-> Signed-off-by: Wayne Lin <wayne.lin@amd.com>
-> Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> [kevin@holm.dev: Resolved merge conflict in .../amdgpu_dm_mst_types.c]
-> Fixes: 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation")
-> Link: https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u
-> Signed-off-by: Kevin Holm <kevin@holm.dev>
-> ---
-> I resolved the merge conflict so that, after this patch is applied to the
-> linux-6.10.y branch of the stable git repository, the resulting function
-> dm_dp_mst_is_port_support_mode (and also the new function 
-> dp_get_link_current_set_bw) is identical to the original commit.
-> 
-> I've confirmed that it fixes the regression I reported for my use case.
+Hi,
 
-Now queued up, thanks.
+I have been using a DisplayPort MST hub with a AMD Ryzen 6800U laptop 
+(GPD Win Max 2) for a while. The hub exposes 2 downstream ports, both of 
+which are connected to 4K (3840x2160) displays. Recently I was hit with 
+another regression in Linux 6.10 (link: 
+https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u) 
+that caused MST displays to stop lighting up. This was caused by 
+4df96ba66760345471a85ef7bb29e1cd4e956057 and later fixed in mainline by 
+fa57924c76d995e87ca3533ec60d1d5e55769a27.
 
-greg k-h
+However, even with that fix, one of my displays is still misbehaving. 
+The display seems to be running at no more than 20Hz even though the 
+output mode is clearly set to 3840x2160@60 from the point of view of 
+both the Wayland compositor and the kernel. Some debugging again pointed 
+to the refactored `dm_dp_mst_is_port_support_mode()` function involved 
+in the aforementioned commits as the problem. Specifically, it seems 
+that the function before commit 4df96ba66760345471a85ef7bb29e1cd4e956057 
+returns `DC_OK` for my setup, while the version after 
+`fa57924c76d995e87ca3533ec60d1d5e55769a27` insists that it must set the 
+DSC bit, shown by the debug kernel message "Require dsc and dsc config 
+found". When the DSC flag is set, this display of mine seems to just 
+misbehave like what is mentioned.
+
+I've done some further print-based debugging to identify why the DSC 
+branch is now taken. Adding a print right before
+
+ > if (stream_kbps <= end_to_end_bw_in_kbps) {
+
+gives me
+
+ > [   38.079643] [drm:dm_dp_mst_is_port_support_mode [amdgpu]] 
+stream_kbps = 12798000, root_link_bw_in_kbps = 12571200, 
+virtual_channel_bw_in_kbps = 17176320
+
+Since `end_to_end_bw_in_kbps` is `min(root_link_bw_in_kbps, 
+virtual_channel_bw_in_kbps)`, this causes the DSC branch to be taken.
+
+Before the changes that took `root_link_bw_in_kbps` into consideration, 
+my setup was clearly working and I haven't encountered any problem 
+whatsoever. The value `12571200` also feels a bit off to me since if 
+this is fetched from `aconnector->dc_link`, it should represent the 
+bandwidth available on the entire DP link between PC <-> MST Hub? In 
+this case, it seems to be way too low to be correct; and, again, the 
+dual 4K display setup has been working without checking this value. 
+Modifying the latest mainline to remove `root_link_bw_in_kbps` from the 
+equation also seems to fix the problem for me.
+
+It feels like my display shouldn't misbehave like that with the DSC bit 
+set, but again it is the kernel that didn't set the DSC bit before but 
+now does. I think this should count as a regression, but I'm not sure if 
+it is just me who is seeing this problem.
+
+For reference, the problematic display in question here is a Samsung 
+LS27A80. The MST hub used is an Anker 554 USB-C Docking Station / KVM 
+Switch.
+
+Regards,
+Peter.
