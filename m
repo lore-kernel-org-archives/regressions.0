@@ -1,109 +1,103 @@
-Received: from mail.typeblog.net (mail.typeblog.net [88.151.33.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA8148FEB
-	for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 13:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.151.33.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F1022615
+	for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 15:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723383758; cv=none; b=P6EPOftzdZw5x7S7b6ccuYPfNqOlzes09XcqhzwGtUgLSeDDZEflQSCkUY6YxOXEzqicOq8U/Mu+EOAFl7i2UkeadxByQazGcjLLeRJLUerxj+VPQxmPOJn4wQ6cyxZi2k+v7xH5K3JxAiV2dJ7Db8LrGRqeImpgIhfBZXOwTDo=
+	t=1723390473; cv=none; b=B2Je7TN0Dj374QXwFPqjS9F6G/t5FpQ8DCMGj3IpLV/O66bXWbCk6h/SCRhUeug0XmjmY2yfMVueZ326b8h/UdCf7ER2zYpVTH6vb33S6Gmd33nYZ2Uty9XIPb7ny2XItWiTIvTqI84++BOkG9iCJcZ8u2RFzRezXud2COZxHTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723383758; c=relaxed/simple;
-	bh=pfNi+gg4c3wax4XFCl4PGju4pYSvVmsWKNB09BfMBr4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=JA/7z+cVVZ97ojOHVa1nADSzNHzTbvOHqgOidZf847sDOTe1tDaN4BDztGv2TnK6PYO66bTtIWIgaoX6lxI9AVhZgapxOIVpq7gkdBWiNQdRdRBbN4gbjgXn//5EpDnmrOdK5A86WlfzAbJAEyjA34tiyw9ap6Gm49AQ94jA6s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net; spf=pass smtp.mailfrom=typeblog.net; dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b=JyxgTnhJ; arc=none smtp.client-ip=88.151.33.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=typeblog.net
+	s=arc-20240116; t=1723390473; c=relaxed/simple;
+	bh=YwksnDw8VPXal3P7dd2jgZKdFH8IbM7kCgoHRSJTUYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JgPShqX5j8Hpy8KCi4fBpDrM0EfDJX2Tw7QzlOp/YI2AAWNHR/aoRURQOq3WhyAe/0ipZk8f3eCYg70jKxg8GdnQVNhGXDs/sOJFEDTQEncXP9Z9gsgkPxZ3QA85tlqoyF3/TGf71Afuo472KUrRVq2rayOq+GmuXH4a1yRNWHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uP0h/ov2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b="JyxgTnhJ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 552E89B05D6;
-	Sun, 11 Aug 2024 15:36:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=typeblog.net;
-	s=mailcow; t=1723383379;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language;
-	bh=ivigbb9xMm1ZNuDdd5y5spX8twxwH/H+kZwec4D/O+I=;
-	b=JyxgTnhJdRhvid7qS+A+E7MsFr5L1oQwnAK/ROxakAzbSrt50j7bkFTlkwlJTvnaMU+pIH
-	zCOpXy1i03noxA1dURp0WR68uKCiV/jKSEKV0K/jNZPbqaPmofLz5v3g+FGAdzL5Mx6KQm
-	TFl2+sGUN+R9mxDIqt+8nq/gXAo3HW3e6SMrwcIbSBXs6AsNRtPxf6ZzbHaNrdj7bV3jl8
-	FtQzPr1nSaFeyNbJYHvf/cvvQPU5i9ZAhiudy1Xnvag0bze7AOPmWANc9RnHJJ+Nk7DAjn
-	ImWwSOpfCp6ny13pD+GG4GkPkXaU8eetshPojO0ec34VgRzZs9YfvJ1ugt2bRg==
-Message-ID: <872a3e83-9bc5-47de-8514-48abe8ff03c5@typeblog.net>
-Date: Sun, 11 Aug 2024 09:36:13 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uP0h/ov2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45177C4AF0D
+	for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 15:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723390473;
+	bh=YwksnDw8VPXal3P7dd2jgZKdFH8IbM7kCgoHRSJTUYY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uP0h/ov2VCuj/kvYMNcD36MxjugPyiSj+MHglw0bQ0tA5F8/GSpNRpJJAgiHY86pU
+	 8QxTnuajNui3/AMs27Lv2hMZPz6N+VlvuOERM8EOenyAStEpB12ZFcfIw0zmQCXBVF
+	 k6GOpVD1uw/MsGuWF8o1ROayt3thJLY13Q3pjmkzkDqho+pwt/PfKX+JYyNdUX+66m
+	 CZJOYiDGGq3Uiu7YjD+PepjdsWE13UGnxgma1FHfgoZtXbYO4C139Lkf2wN0qDfKi8
+	 lqEIFp7zVqSFItxiX4T2nwOXDrRq5REMkulNTZd9W3cbIfiCQq+T8enrER5t7qCtVl
+	 dD7+as510aapQ==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52f01993090so4771388e87.2
+        for <regressions@lists.linux.dev>; Sun, 11 Aug 2024 08:34:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3sT5qDxhRmmzo44FTOI0hH4pnvtu2Ed7V7/9QfGJ8APXbTtQTv+Tt4UlBF9BH2Ivar3cZYsWOK5SXFMVq6qntSJ/gM5NsfM0RUxw=
+X-Gm-Message-State: AOJu0YwVdInAFKdIznPC4G8FeodETTGvxLDz8BAXnuQfvJJ2S937Az9r
+	NIFAHWOe/OZMzb1Yy9/Z8U5kZu0S2iy1J588+NQ/sgEA9n9xG53wzZmCOzw8t8tWayYxgZF9qTa
+	vv4NiOEZKF6ifiP8BWQJp9hWiBvg=
+X-Google-Smtp-Source: AGHT+IES5W/xGCH2uWWHRv0dGCi0+rtFXcqtmn0Bv5Fx/hX0jdnU/L373uRehGhIcqIZ7MBs+7C0ZG9WFLxHO80NtD0=
+X-Received: by 2002:a05:6512:690:b0:52e:933c:5a18 with SMTP id
+ 2adb3069b0e04-530eea5da02mr4470050e87.56.1723390471606; Sun, 11 Aug 2024
+ 08:34:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Wayne Lin <wayne.lin@amd.com>, amd-gfx@lists.freedesktop.org,
- regressions@lists.linux.dev
-From: Peter Cai <peter@typeblog.net>
-Subject: [REGRESSION] amdgpu enables DSC unnecessarily over MST hubs on kernel
- 6.11+
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
+ <277314c9-c4aa-4966-9fbe-c5c42feed7ef@gmail.com>
+In-Reply-To: <277314c9-c4aa-4966-9fbe-c5c42feed7ef@gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Sun, 11 Aug 2024 16:33:54 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
+Message-ID: <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: =?UTF-8?Q?Jannik_Gl=C3=BCckert?= <jannik.glueckert@gmail.com>
+Cc: andrea.gelmini@gmail.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mikhail.v.gavrilov@gmail.com, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sun, Aug 11, 2024 at 9:08=E2=80=AFAM Jannik Gl=C3=BCckert
+<jannik.glueckert@gmail.com> wrote:
+>
+> Hello,
+>
+> I am still encountering this issue on 6.10.3. As far as I can see this
+> is the last post in the thread, if the discussion continued elsewhere
+> please let me know.
+>
+> My workload is a backup via restic, the system is idle otherwise.
+> This is on a Zen4 CPU with a very fast PCIe Gen4 nvme, so perhaps it was
+> fixed for others because they had comparatively slow IO or a smaller
+> workload?
+>
+> I have attached the bpftrace run and a graph of the memory PSI. kswapd0
+> is at 100% during the critical sections. dmesg is empty.
+> Important events were e.g. 09:31-09:32 and 09:33-09:34 where the system
+> was completely unresponsive multiple times, for about 5 seconds at a time=
+.
+>
+> I did also mention this on the #btrfs IRC channel and there are other
+> users still encountering this on 6.10
 
-I have been using a DisplayPort MST hub with a AMD Ryzen 6800U laptop 
-(GPD Win Max 2) for a while. The hub exposes 2 downstream ports, both of 
-which are connected to 4K (3840x2160) displays. Recently I was hit with 
-another regression in Linux 6.10 (link: 
-https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u) 
-that caused MST displays to stop lighting up. This was caused by 
-4df96ba66760345471a85ef7bb29e1cd4e956057 and later fixed in mainline by 
-fa57924c76d995e87ca3533ec60d1d5e55769a27.
+This came to my attention a couple days ago in a bugzilla report here:
 
-However, even with that fix, one of my displays is still misbehaving. 
-The display seems to be running at no more than 20Hz even though the 
-output mode is clearly set to 3840x2160@60 from the point of view of 
-both the Wayland compositor and the kernel. Some debugging again pointed 
-to the refactored `dm_dp_mst_is_port_support_mode()` function involved 
-in the aforementioned commits as the problem. Specifically, it seems 
-that the function before commit 4df96ba66760345471a85ef7bb29e1cd4e956057 
-returns `DC_OK` for my setup, while the version after 
-`fa57924c76d995e87ca3533ec60d1d5e55769a27` insists that it must set the 
-DSC bit, shown by the debug kernel message "Require dsc and dsc config 
-found". When the DSC flag is set, this display of mine seems to just 
-misbehave like what is mentioned.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219121
 
-I've done some further print-based debugging to identify why the DSC 
-branch is now taken. Adding a print right before
+There's also 2 other recent threads in the mailing about it.
 
- > if (stream_kbps <= end_to_end_bw_in_kbps) {
+There's a fix there in the bugzilla, and I've just sent it to the mailing l=
+ist.
+In case you want to try it:
 
-gives me
+https://lore.kernel.org/linux-btrfs/d85d72b968a1f7b8538c581eeb8f5baa973dfc9=
+5.1723377230.git.fdmanana@suse.com/
 
- > [   38.079643] [drm:dm_dp_mst_is_port_support_mode [amdgpu]] 
-stream_kbps = 12798000, root_link_bw_in_kbps = 12571200, 
-virtual_channel_bw_in_kbps = 17176320
+Thanks.
 
-Since `end_to_end_bw_in_kbps` is `min(root_link_bw_in_kbps, 
-virtual_channel_bw_in_kbps)`, this causes the DSC branch to be taken.
 
-Before the changes that took `root_link_bw_in_kbps` into consideration, 
-my setup was clearly working and I haven't encountered any problem 
-whatsoever. The value `12571200` also feels a bit off to me since if 
-this is fetched from `aconnector->dc_link`, it should represent the 
-bandwidth available on the entire DP link between PC <-> MST Hub? In 
-this case, it seems to be way too low to be correct; and, again, the 
-dual 4K display setup has been working without checking this value. 
-Modifying the latest mainline to remove `root_link_bw_in_kbps` from the 
-equation also seems to fix the problem for me.
 
-It feels like my display shouldn't misbehave like that with the DSC bit 
-set, but again it is the kernel that didn't set the DSC bit before but 
-now does. I think this should count as a regression, but I'm not sure if 
-it is just me who is seeing this problem.
-
-For reference, the problematic display in question here is a Samsung 
-LS27A80. The MST hub used is an Anker 554 USB-C Docking Station / KVM 
-Switch.
-
-Regards,
-Peter.
+>
+> Best
+> Jannik
