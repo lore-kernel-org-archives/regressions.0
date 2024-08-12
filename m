@@ -1,87 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491D317D354;
-	Mon, 12 Aug 2024 14:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE6A180032
+	for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 15:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723471903; cv=none; b=cIPSEg+yBVMooeTIIx9JY5rNaIfcgJ80dEpJKB8oa1144Q3k6Lv+BrPr/pb7sWmrYJEpKe6g+znyVL88P1260bBchYAHQvjokAKvNZBu+X8hAeKOdpT57CabcLMpnQzo5+cicTHBKIbOJlh76GAwDnAFS3/zJLdtRafgIl+j8Eg=
+	t=1723476122; cv=none; b=Ac6ygsBrhtTIXi/gdVmjDnXmE3dL4eEMR9aDy8TB7+kUD34o47WAo2akhPCfawJ4bWAMU+mHlQQP01oauQx7IeIBzVzlFMjuEZJ8hdhu/ketjCWOcjq1EGxynNoTo55c6VVWps1M9Crew6j8cCNodS7QRISgg5ET4ddCe0WQrTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723471903; c=relaxed/simple;
-	bh=gKJvIG9hbJBYPQKEZrJUxeBcBJnzTBvTuXGF+X5/AcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/w4JUzhr/AUd2c2NyRugniC6uY1Girg5F37YMENJvooY25/j5XNOQsiYGl6+0tPmejtcumiEJO0H2ZckRPImBYW9trFrXOXCLTgisjGKSYWuihNeGhR6rNz+odbBfkNyH0P+y58Ey6Oh5oNA9Z828RLVjV2L8wfeqYGG2oSYzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z8so9v+2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723476122; c=relaxed/simple;
+	bh=lSsAnkXf5jPBhzbxD9KtBubzyOKnZjU+B5FDzBMSFHg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=hwwgpgrwrZjBqx1vrZumlu5AeG1A90wGTU7oXfZ+3tZmzwZCkhBqjk5tGrgHjPQQNXLfXjxAowBakEZobY1nYmUjNB/7Vl2gWAWzRgeP4o1G94545RLN5o6bSqNGxbpO9B5N31mHTSVSCCSDe6qjQ12g9np6g+pgvvDbYiOcoOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5NqDPOu; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z8so9v+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4612FC4AF0D;
-	Mon, 12 Aug 2024 14:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723471902;
-	bh=gKJvIG9hbJBYPQKEZrJUxeBcBJnzTBvTuXGF+X5/AcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=z8so9v+2zqO7LZvSRu33YPAG1N39VT/VdTyRosPCjMk6pycW3bchMHsDXMDeXA+v7
-	 63scewEZ3+2RohR4qF1146VbplLd9R5P10Icj+PjNpXA8+i1TC03kE+D9OMM7eSf3M
-	 Ca7wFNlfPPjEvb8HqYf8vNo+xsHdi74r4iKmyd1g=
-Date: Mon, 12 Aug 2024 16:11:40 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Vitaly Chikunov <vt@altlinux.org>
-Cc: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
- corruption
-Message-ID: <2024081227-wrangle-overlabor-cf31@gregkh>
-References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
- <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
- <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
- <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
- <2024081225-finally-grandma-011d@gregkh>
- <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5NqDPOu"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e0bf9b821e8so4352367276.3
+        for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 08:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723476120; x=1724080920; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ue1sHXfyUCE7PmBtVmSVDAbi9+yYyzirjA/qmg0B6WU=;
+        b=i5NqDPOuaKAGs3FKL0q2Cq2nrS9tqJ32G1BFkFvJcIaKeQtgaJRM16sE2q7cgqDIEk
+         56ZzaGNLTMpkLtLHV5FyEfSjUC+XQLCLaKHntzqrojA8LclDgjsdglDWcGeRog5crlZE
+         9DLqy73w++HxjotDXZg2jr0NLvsoZ0ZUGs7Cz6usDHEqtkGLwx4Z3w5GWVaeV2KSxeLR
+         m/34993nM4QEAiMC4J7RZANMWqYz3hJnUtz55jJJyVW0HbP3HroywdKUQM/mDpccjDUV
+         b24zTC6FL1otddeuC9AVwcyqm0fGu0XFYU7gExXOhajTZpiD2QxpotxdtOfzRjTdApnw
+         u64w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723476120; x=1724080920;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ue1sHXfyUCE7PmBtVmSVDAbi9+yYyzirjA/qmg0B6WU=;
+        b=Vyhk/H2t0D02XJr9GYQGZ8Zk/IJcAemDVGffdGrKxYcMnQ64MAzIDTrUPZU+/3jAXi
+         juqQ2b/WPIc5ArnxCObAvCt9XApBMJyc2jtf6opDeCD+WYQkkUzyuRtb0dvAHkkUh/lS
+         DVIjXSIsj1GnlT0sX8aU+2VHN7jOU5cYiBnC6H3/G1ThIJxdwcBCpfaDGq3LrEq9qv9c
+         ES8uPlxRKgFKQVoDoWdvk8dSxrdwiQkZd2jrV1+3/2wq/CIHyfKZDN9pAEMHumbJ4OKT
+         ekQqtWfhnJG6NDmZOScioYAXpoSvK0ET9YoDXYdKf+oYUJxizCj0kKmeZMDsrw8eTh0s
+         2iOw==
+X-Gm-Message-State: AOJu0YxV5nkpQMaKc62KALZRMIWrIfGM9hAx+YDV3QPBgASIaJ8/fRmC
+	HeY+oMW9CB9uLKZ+sMynWSoI1mX8zXqvjOEj/I24O6ZRobsKPXrQ3iWEAUQHL64dfqf9y7UtxEd
+	ZPCI2mzukIixu43MSIsacclJUvfnDT+AK
+X-Google-Smtp-Source: AGHT+IGMCaMR1agMARb8QcxjE2ZP6TRfCodl9pIrqV7g9fkN/x7z6r/yHJEa937nGta6f7iJwZgYyjfefWhyeOFpw3k=
+X-Received: by 2002:a05:6902:e8e:b0:e0b:b83e:7c59 with SMTP id
+ 3f1490d57ef6-e113d2bc30emr780245276.53.1723476119998; Mon, 12 Aug 2024
+ 08:21:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
+References: <Zrog4DYXrirhJE7P@debian.local>
+In-Reply-To: <Zrog4DYXrirhJE7P@debian.local>
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Mon, 12 Aug 2024 16:21:49 +0100
+Message-ID: <CAP-bSRbx2yWxErkiSf_Ux3Lnm0RGNvZQbpSvrqCcCtb_-aUoVA@mail.gmail.com>
+Subject: Fwd: [REGRESSION] critical target error, bisected
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Aug 12, 2024 at 01:38:42PM +0300, Vitaly Chikunov wrote:
-> Greg,
-> 
-> On Mon, Aug 12, 2024 at 12:25:54PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
-> > > I guess that for completeness you need to apply both patches:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
-> > 
-> > This is already in the tree.
-> > 
-> > > was an incorrect fix which was later fixed by:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
-> > 
-> > This commit will not apply :(
-> 
-> It depends upon e0e7bc2cbee9 ("ASoC: topology: Clean up route loading"),
-> which was in the same patchset that didn't get applied.
->   
->   https://lore.kernel.org/stable/?q=ASoC%3A+topology%3A+Clean+up+route+loading
-> 
-> I see, Mark Brown said it's not suitable material for stable kernels
-> (since it's code cleanup), and Sasha Levin dropped it, and the dependent
-> commit with real fix.
+---------- Forwarded message ---------
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Mon, 12 Aug 2024 at 15:49
+Subject: [REGRESSION] critical target error, bisected
+To: <fengli@smartx.com>, <hch@lst.de>, <martin.petersen@oracle.com>
+Cc: <axboe@kernel.dk>, <linux-scsi@vger.kernel.org>,
+<linux-kernel@vger.kernel.org>
 
-Ok, then someone needs to provide a working backport please...
 
-thanks,
+Hello,
 
-greg k-h
+Machine is HP Aero 13 laptop. The following error appears in 6.11-rc3
+when booted from USB drive:
+
+[  195.647081] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK
+driverbyte=DRIVER_OK cmd_age=0s
+[  195.647093] sd 0:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current]
+[  195.647096] sd 0:0:0:0: [sda] tag#0 Add. Sense: Invalid command
+operation code
+[  195.647099] sd 0:0:0:0: [sda] tag#0 CDB: Write same(16) 93 08 00 00
+00 00 04 dd 42 f8 00 00 2d 48 00 00
+[  195.647101] critical target error, dev sda, sector 81609464 op
+0x3:(DISCARD) flags 0x800 phys_seg 1 prio class 0
+
+This error appears on two different laptops with different USB drives.
+
+
+Bisect result:
+
+f874d7210d882cb1c58a8e3da66f61cdc63cd4b4 is the first bad commit
+commit f874d7210d882cb1c58a8e3da66f61cdc63cd4b4
+Author: Li Feng <fengli@smartx.com>
+Date:   Thu Jul 18 16:07:22 2024 +0800
+
+    scsi: sd: Keep the discard mode stable
+
+    There is a scenario where a large number of discard commands are issued
+    when the iscsi initiator connects to the target and then performs a session
+    rescan operation. There is a time window, most of the commands are in UNMAP
+    mode, and some discard commands become WRITE SAME with UNMAP.
+
+    The discard mode has been negotiated during the SCSI probe. If the mode is
+    temporarily changed from UNMAP to WRITE SAME with UNMAP, an I/O ERROR may
+    occur because the target may not implement WRITE SAME with UNMAP. Keep the
+    discard mode stable to fix this issue.
+
+    Signed-off-by: Li Feng <fengli@smartx.com>
+    Link: https://lore.kernel.org/r/20240718080751.313102-2-fengli@smartx.com
+    Reviewed-by: Christoph Hellwig <hch@lst.de>
+    Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+    Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+ drivers/scsi/sd.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+#regzbot introduced: f874d7210d882cb1c58a8e3da66f61cdc63cd4b4
