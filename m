@@ -1,87 +1,215 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D2916F0F0
-	for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 10:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6D316F907;
+	Mon, 12 Aug 2024 11:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723459131; cv=none; b=TlgbO3D2BLerqNf5SN3gh7vAgwS6rmv8xyN+UW1xABqa3Waf4kJZXBjUCxAm5KM4nhNlv5mt7QXhBOCbKhFRYu9niK9F2KDh15I+xq9xsf+61cVzddSkrR9+kOoQ5ZLNemweK4tQIIMqvAXN3PEiiGbHamxjZTMulVILcCUl364=
+	t=1723460845; cv=none; b=DlOSoZkjM3TmfLGYZExItPN1HxyzADwnbf7tG1JOechR/JITCjkxwFt6oBRfa+rp2/25K0yZ84HyYT07t9LCbJYW34vTH//EAgjIkv+uloz4nm6mzqNs7Qua7qKo2RwnsM7hToMBiYwdpFJFvBmwZ3MbT/joCCHvx1c6NzIGigQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723459131; c=relaxed/simple;
-	bh=4UYDJVRe6KgTAVzMjSOYGd2NkpVsSHKygr+86n9S3QE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYZ2qpM2h5OcjpY6V4Yw/o2Sjvztr/GCFstvM97tV3Bz3g30bIy3BoSyNFnbeq1QZhQ393h5BDQ6SytMLp26nsN/YFL4KqhesHIptIAogRwKL3WB3pSMWLStoUmbk2tdPGPlVCYoo3cj9uauVlUEua2RHr4QT/Y9DWFIpz0qYaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 88ABE72C8CC;
-	Mon, 12 Aug 2024 13:38:42 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 78B4836D0246;
-	Mon, 12 Aug 2024 13:38:42 +0300 (MSK)
-Date: Mon, 12 Aug 2024 13:38:42 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	=?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
- corruption
-Message-ID: <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
-References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
- <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
- <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
- <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
- <2024081225-finally-grandma-011d@gregkh>
+	s=arc-20240116; t=1723460845; c=relaxed/simple;
+	bh=ZkWGOvAiTXljKnzyOzFKqYTKfuoA05mVKqDQ0eGsrWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hIWe25IAJU+oI4AWOeBWTq67ErUtijkB2SzX0rxXlqaXC86WACmqlza9Z0Nkfk5yaf49QvjEdzqFdn7ALSlSi4c0RUifpESci9W30Hq1uVkYLK+dJCEASFJnMjuFvIpeAkyIozMyZNYV/jzPwzKikEz2xOwlBwh5tTcPnzPX4Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fJ4rHGRX; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fJ4rHGRX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
+	Resent-Message-ID:In-Reply-To:References;
+	bh=27ZKGG4VxdrVIFu8j9Q0Ud8z+GJLacCG1tqoQwWgSIE=; t=1723460842; x=1724670442; 
+	b=fJ4rHGRXI9W3NGPimKzye0Gw/7O1/EY5IPRQOFFSrsuD862/emPoSkHcGxhQQH3H4rmVTtN8yQ8
+	y/0KjPnrS8ujQRlOif/lsvDiQgV1BljPYA+4daisi92jpG5Z5nA/IgIjnMyOjADgmx53QVasKTXgI
+	28CwOc/F9QDQF+s6vx/g1u71gUSYKWuZ0lqdulDnU6bk19uP6Yt+ePB7h3hhht/yWhipW7/DAkd0Y
+	zeX82WlT0FqZ92V5hWUgz52EQDi1eh/ASuYCDt5FMQDDMqRRcKyyuZ+WehMqg4pFMcKGvhInDLLQg
+	63UEelUGef2e00JhrqOhGLALHKhozyLYfKSw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <benjamin@sipsolutions.net>)
+	id 1sdStK-0000000E6xn-1lZB;
+	Mon, 12 Aug 2024 13:07:10 +0200
+From: Benjamin Berg <benjamin@sipsolutions.net>
+To: linux-wireless@vger.kernel.org
+Cc: benjamin.berg@intel.com,
+	miriam.rachel.korenblit@intel.com,
+	regressions@lists.linux.dev,
+	johannes@sipsolutions.net,
+	Kalle Valo <kvalo@kernel.org>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>,
+	Ben Greear <greearb@candelatech.com>
+Subject: [PATCH v2] wifi: iwlwifi: correctly lookup DMA address in SG table
+Date: Mon, 12 Aug 2024 13:06:40 +0200
+Message-ID: <20240812110640.460514-1-benjamin@sipsolutions.net>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024081225-finally-grandma-011d@gregkh>
 
-Greg,
+From: Benjamin Berg <benjamin.berg@intel.com>
 
-On Mon, Aug 12, 2024 at 12:25:54PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
-> > I guess that for completeness you need to apply both patches:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
-> 
-> This is already in the tree.
-> 
-> > was an incorrect fix which was later fixed by:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
-> 
-> This commit will not apply :(
+The code to lookup the scatter gather table entry assumed that it was
+possible to use sg_virt() in order to lookup the DMA address in a mapped
+scatter gather table. However, this assumption is incorrect as the DMA
+mapping code may merge multiple entries into one. In that case, the DMA
+address space may have e.g. two consecutive pages which is correctly
+represented by the scatter gather list entry, however the virtual
+addresses for these two pages may differ and the relationship cannot be
+resolved anymore.
 
-It depends upon e0e7bc2cbee9 ("ASoC: topology: Clean up route loading"),
-which was in the same patchset that didn't get applied.
-  
-  https://lore.kernel.org/stable/?q=ASoC%3A+topology%3A+Clean+up+route+loading
+Avoid this problem entirely by working with the offset into the mapped
+area instead of using virtual addresses. With that we only use the DMA
+length and DMA address from the scatter gather list entries. The
+underlying DMA/IOMMU code is therefore free to merge two entries into
+one even if the virtual addresses space for the area is not continuous.
 
-I see, Mark Brown said it's not suitable material for stable kernels
-(since it's code cleanup), and Sasha Levin dropped it, and the dependent
-commit with real fix.
+Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when TXing an AMSDU")
+Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
+Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
 
-Thanks,
+---
 
-> 
-> > Applying just first one will result in runtime problems, while applying just
-> > second one will result in missing NULL checks on allocation.
-> 
-> The second patch can not apply to the stable trees, so we need a
-> backported version please.
-> 
-> thanks,
-> 
-> greg k-h
+We also verified the (previous) patch internally and it is working well
+there now.
+
+v2: Add proper bounds checking by verifying the length
+---
+ .../wireless/intel/iwlwifi/pcie/internal.h    |  3 +-
+ .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c |  5 ++-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c  | 32 +++++++++++++------
+ 3 files changed, 28 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index b59de4f80b4b..27a7e0b5b3d5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -639,7 +639,8 @@ void iwl_trans_pcie_tx_reset(struct iwl_trans *trans);
+ int iwl_pcie_txq_alloc(struct iwl_trans *trans, struct iwl_txq *txq,
+ 		       int slots_num, bool cmd_queue);
+ 
+-dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr);
++dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset,
++				    unsigned int len);
+ struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
+ 				   struct iwl_cmd_meta *cmd_meta,
+ 				   u8 **hdr, unsigned int hdr_room);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+index 2e780fb2da42..b1846abb99b7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -168,6 +168,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+ 	struct ieee80211_hdr *hdr = (void *)skb->data;
+ 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+ 	unsigned int mss = skb_shinfo(skb)->gso_size;
++	unsigned int data_offset = 0;
+ 	dma_addr_t start_hdr_phys;
+ 	u16 length, amsdu_pad;
+ 	u8 *start_hdr;
+@@ -260,7 +261,8 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+ 			int ret;
+ 
+ 			tb_len = min_t(unsigned int, tso.size, data_left);
+-			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
++			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset,
++							   tb_len);
+ 			/* Not a real mapping error, use direct comparison */
+ 			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+ 				goto out_err;
+@@ -272,6 +274,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
+ 				goto out_err;
+ 
+ 			data_left -= tb_len;
++			data_offset += tb_len;
+ 			tso_build_data(skb, &tso, tb_len);
+ 		}
+ 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+index 22d482ae53d9..9fe050f0ddc1 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
+@@ -1814,23 +1814,31 @@ static void *iwl_pcie_get_page_hdr(struct iwl_trans *trans,
+ /**
+  * iwl_pcie_get_sgt_tb_phys - Find TB address in mapped SG list
+  * @sgt: scatter gather table
+- * @addr: Virtual address
++ * @offset: Offset into the mapped memory (i.e. SKB payload data)
++ * @len: Length of the area
+  *
+- * Find the entry that includes the address for the given address and return
+- * correct physical address for the TB entry.
++ * Find the DMA address that corresponds to the SKB payload data at the
++ * position given by @offset.
+  *
+  * Returns: Address for TB entry
+  */
+-dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr)
++dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset,
++				    unsigned int len)
+ {
+ 	struct scatterlist *sg;
++	unsigned int sg_offset = 0;
+ 	int i;
+ 
++	/*
++	 * Search the mapped DMA areas in the SG for the area that contains the
++	 * data at offset with the given length.
++	 */
+ 	for_each_sgtable_dma_sg(sgt, sg, i) {
+-		if (addr >= sg_virt(sg) &&
+-		    (u8 *)addr < (u8 *)sg_virt(sg) + sg_dma_len(sg))
+-			return sg_dma_address(sg) +
+-			       ((unsigned long)addr - (unsigned long)sg_virt(sg));
++		if (offset >= sg_offset &&
++		    offset + len <= sg_offset + sg_dma_len(sg))
++			return sg_dma_address(sg) + offset - sg_offset;
++
++		sg_offset += sg_dma_len(sg);
+ 	}
+ 
+ 	WARN_ON_ONCE(1);
+@@ -1875,7 +1883,9 @@ struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
+ 
+ 	sg_init_table(sgt->sgl, skb_shinfo(skb)->nr_frags + 1);
+ 
+-	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, 0, skb->len);
++	/* Only map the data, not the header (it is copied to the TSO page) */
++	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, skb_headlen(skb),
++				       skb->data_len);
+ 	if (WARN_ON_ONCE(sgt->orig_nents <= 0))
+ 		return NULL;
+ 
+@@ -1900,6 +1910,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+ 	struct ieee80211_hdr *hdr = (void *)skb->data;
+ 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+ 	unsigned int mss = skb_shinfo(skb)->gso_size;
++	unsigned int data_offset = 0;
+ 	u16 length, iv_len, amsdu_pad;
+ 	dma_addr_t start_hdr_phys;
+ 	u8 *start_hdr, *pos_hdr;
+@@ -2000,7 +2011,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+ 						  data_left);
+ 			dma_addr_t tb_phys;
+ 
+-			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
++			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset, size);
+ 			/* Not a real mapping error, use direct comparison */
+ 			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
+ 				return -EINVAL;
+@@ -2011,6 +2022,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
+ 						tb_phys, size);
+ 
+ 			data_left -= size;
++			data_offset += size;
+ 			tso_build_data(skb, &tso, size);
+ 		}
+ 	}
+-- 
+2.46.0
+
