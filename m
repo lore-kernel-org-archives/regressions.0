@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C609E16EC16;
-	Mon, 12 Aug 2024 10:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA3033C7;
+	Mon, 12 Aug 2024 10:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723458282; cv=none; b=Z+a6CNBsYxGfNPKdNs1iYY1TnFAo/H6XYlCR/fYbtTHnwGu54BmOFKhrjHaUqHx2Isq94x/CJsmqH78k7zVqvtTcOJ/fBsHNrgM5WnDjblb9U8t3efOC2Ojd8bUtIytgWq+pP+jfl68HKZ9AwVXj8vFaLH8aA53DzLY/PTF6Xwk=
+	t=1723458358; cv=none; b=BgrHiCoDU+kwnnzPmJWkpv8fyBcnck38/bztUkRwzTLvkZN8d/WV8VrVtclzG3cyOEyTujwffd++QPj7gvmnJceb+y+hgANFGhFEo6zVex0qgkfi7YMCCX/2SAzH7VX8NMP0aymepjFZbObmXip+CPK8j4k6ol64Y0DnYbt8Bf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723458282; c=relaxed/simple;
-	bh=+cVxtBneiG5GQqDahZath/rPvSDoru3swRCQjqvU6Rg=;
+	s=arc-20240116; t=1723458358; c=relaxed/simple;
+	bh=ttaFByXujcrFeaJqlERmoZ+PKQvsCarqcYRjNobIhgs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZcsoQzqUZogHp+6SFQ/1oxWwTEXm+tHNWQaovxJD4XJQrp13fjaZMgabiAUmrhn6IajCQ8iE4l9KMVyMdBS67htzQ/BdMEJ5HtyrBtEv5sN1A1nCI0Nj6+p40cmtL9b/0dS+UXlc+r7K4kZbieAus5EwfZAB4BAKXihMskwX8gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cPjC/vwO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdZRkHPKEz+DfAJOrHKC5Wl9BgLTxRpYdOSLw4O3+briAHmKIrp3Ph0tHowaFBzsdYxUMmkxJlw1LDLPjAQ4wQ5QCMgbgbYgmxDnsm3ccO5ifwe+pviL8VW4IW4GHodwjdZJabSRP7ZPlxi8SfxRRz+10Tt0/EdZapBW5Kx51yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bokAFO4Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cPjC/vwO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDB0C32782;
-	Mon, 12 Aug 2024 10:24:41 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bokAFO4Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62FDC32782;
+	Mon, 12 Aug 2024 10:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723458282;
-	bh=+cVxtBneiG5GQqDahZath/rPvSDoru3swRCQjqvU6Rg=;
+	s=korg; t=1723458357;
+	bh=ttaFByXujcrFeaJqlERmoZ+PKQvsCarqcYRjNobIhgs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cPjC/vwOU70CRZg8jZYlnOFDuG8J2sg6HRwJZ8seRgE25CTFEdkpvbwWWrdGxhZg4
-	 qQdiwyGLZphu3l5QYx1FjgIy+IzUkvgOLh+Z3wNm0wk3pZtrJlRVfJVuCFrOl/GgeB
-	 3RNscbtLoBnP4W5FIzdcwhdU90Zl/IvUoJ2fVuM4=
-Date: Mon, 12 Aug 2024 12:24:39 +0200
+	b=bokAFO4YoVrOcK6BIu2kjVwcW0z5V8dHJ1YeRJT1Nk4PRWI0o94sozhi8nMt2i/mZ
+	 mi1kDPi/XS5s6Xm46wPCSMXPVeet/R9LM/53M+WrYAo7dByzrrw7JhkEeoXb95mX7j
+	 guQF/u3LqkKlKoljIiB6hoxj50rfj1q2O0CQzBzE=
+Date: Mon, 12 Aug 2024 12:25:54 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+To: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
 	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
 	Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
 	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
@@ -36,36 +36,39 @@ Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Vitaly Chikunov <vt@altlinux.org>, stable@vger.kernel.org
 Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
  corruption
-Message-ID: <2024081204-delirious-nursery-f950@gregkh>
+Message-ID: <2024081225-finally-grandma-011d@gregkh>
 References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
  <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
  <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
+ <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
 
-On Mon, Aug 12, 2024 at 11:53:17AM +0200, Thorsten Leemhuis wrote:
-> Hi, top-posting for once, to make this easily accessible to everyone.
+On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
+> I guess that for completeness you need to apply both patches:
 > 
-> Greg, Sasha, to me it looks like something fell through the cracks.
-> Pierre-Louis afaics about a week ago asked (see the quote below) to
-> revert 97ab304ecd95c0 ("ASoC: topology: Fix references to freed memory")
-> [v6.10-rc6, v6.9.11, v6.6.42, v6.1.101] from the stable branches *or*
-> pick up b9dd212b14d27a ("ASoC: topology: Fix route memory corruption").
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
 
-Commit b9dd212b14d27a is a merge commit, nothing that we can take at all
-here, sorry.
+This is already in the tree.
 
-> But nothing like that has happened yet and I can't see any of those
-> resolutions in the 6.6 queue.
+> was an incorrect fix which was later fixed by:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
 
-Again, I can't take a merge commit :(
+This commit will not apply :(
+
+> Applying just first one will result in runtime problems, while applying just
+> second one will result in missing NULL checks on allocation.
+
+The second patch can not apply to the stable trees, so we need a
+backported version please.
 
 thanks,
 
