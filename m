@@ -1,215 +1,72 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6D316F907;
-	Mon, 12 Aug 2024 11:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DD7175D2A
+	for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 11:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723460845; cv=none; b=DlOSoZkjM3TmfLGYZExItPN1HxyzADwnbf7tG1JOechR/JITCjkxwFt6oBRfa+rp2/25K0yZ84HyYT07t9LCbJYW34vTH//EAgjIkv+uloz4nm6mzqNs7Qua7qKo2RwnsM7hToMBiYwdpFJFvBmwZ3MbT/joCCHvx1c6NzIGigQ=
+	t=1723461418; cv=none; b=fM/gOeTF7mduns1rXGzHXl+J0pneehWdlWVq593FuQCl+SRM5hlx/KNeClgszBnFqlMQjr8XIsR9VIVOSS6u1SwmtwXYim+4EZ4MBI2PcfIkUQ9MKn/bNh3AtPzUEmKOkIBxMCplzFO2M8gMB96gRCtaO5qOJbqIzHYg4se/lkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723460845; c=relaxed/simple;
-	bh=ZkWGOvAiTXljKnzyOzFKqYTKfuoA05mVKqDQ0eGsrWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hIWe25IAJU+oI4AWOeBWTq67ErUtijkB2SzX0rxXlqaXC86WACmqlza9Z0Nkfk5yaf49QvjEdzqFdn7ALSlSi4c0RUifpESci9W30Hq1uVkYLK+dJCEASFJnMjuFvIpeAkyIozMyZNYV/jzPwzKikEz2xOwlBwh5tTcPnzPX4Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fJ4rHGRX; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1723461418; c=relaxed/simple;
+	bh=3Q9HpBLZUATK8uhYpQ/jWm7IJfKXpraFjmqLSJJYwuc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=QWdmpAZaT7yu6bEvcSF7E3YNWYoBbJ5QwCn7spLX23zTnViuQDe8rh2eLHTiWJUWfs48ZMTj7S6zCjOik/ZPTD6JJWy0nrIFQ9NUA40DBCQx0/RRfDOzq8NnwfnHNP7FEedfEnITsQjOW/wRX1jnQDaVZqxDvzkijAb1X7eXh9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jUOLDOoM; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fJ4rHGRX"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jUOLDOoM"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=27ZKGG4VxdrVIFu8j9Q0Ud8z+GJLacCG1tqoQwWgSIE=; t=1723460842; x=1724670442; 
-	b=fJ4rHGRXI9W3NGPimKzye0Gw/7O1/EY5IPRQOFFSrsuD862/emPoSkHcGxhQQH3H4rmVTtN8yQ8
-	y/0KjPnrS8ujQRlOif/lsvDiQgV1BljPYA+4daisi92jpG5Z5nA/IgIjnMyOjADgmx53QVasKTXgI
-	28CwOc/F9QDQF+s6vx/g1u71gUSYKWuZ0lqdulDnU6bk19uP6Yt+ePB7h3hhht/yWhipW7/DAkd0Y
-	zeX82WlT0FqZ92V5hWUgz52EQDi1eh/ASuYCDt5FMQDDMqRRcKyyuZ+WehMqg4pFMcKGvhInDLLQg
-	63UEelUGef2e00JhrqOhGLALHKhozyLYfKSw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1sdStK-0000000E6xn-1lZB;
-	Mon, 12 Aug 2024 13:07:10 +0200
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: linux-wireless@vger.kernel.org
-Cc: benjamin.berg@intel.com,
-	miriam.rachel.korenblit@intel.com,
-	regressions@lists.linux.dev,
-	johannes@sipsolutions.net,
-	Kalle Valo <kvalo@kernel.org>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>,
-	Ben Greear <greearb@candelatech.com>
-Subject: [PATCH v2] wifi: iwlwifi: correctly lookup DMA address in SG table
-Date: Mon, 12 Aug 2024 13:06:40 +0200
-Message-ID: <20240812110640.460514-1-benjamin@sipsolutions.net>
-X-Mailer: git-send-email 2.46.0
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=3Q9HpBLZUATK8uhYpQ/jWm7IJfKXpraFjmqLSJJYwuc=; t=1723461416;
+	x=1723893416; b=jUOLDOoMFnCZCUX3nq9HFpU/PRlEy8+BKtI6wo9JNc93Btfp1V001uyj/FVQl
+	4x3FJKCcy7kBC5qysFCXA+z9n6RUFdzZOgXnSkp2Tq6b/E4jJQQCK7e/x3SLQs6PcIq+7EgxFBOSb
+	xm8cosLcBqhrYhn7NH4axg+kcNEuIAwIzbpNewPC6scucS9trr/v3MThgY3zgF5duSvjMKIwXPj8R
+	LAFngzP38wbU4A77Nyf5O5zJFzLEiM89OwcseJp/6uNfm5TXfBsm8hlLwOenjB4QxL6L09oelsgdV
+	b5ZsYu/SkxEcmxx7E8/smlSfJ5BQpUZNMBaNOs6nq41NCiScnw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sdT2k-0003Sw-GM; Mon, 12 Aug 2024 13:16:55 +0200
+Message-ID: <21632179-d818-48a4-b576-210784802c51@leemhuis.info>
+Date: Mon, 12 Aug 2024 13:16:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723461416;b13550aa;
+X-HE-SMSGID: 1sdT2k-0003Sw-GM
 
-From: Benjamin Berg <benjamin.berg@intel.com>
 
-The code to lookup the scatter gather table entry assumed that it was
-possible to use sg_virt() in order to lookup the DMA address in a mapped
-scatter gather table. However, this assumption is incorrect as the DMA
-mapping code may merge multiple entries into one. In that case, the DMA
-address space may have e.g. two consecutive pages which is correctly
-represented by the scatter gather list entry, however the virtual
-addresses for these two pages may differ and the relationship cannot be
-resolved anymore.
 
-Avoid this problem entirely by working with the offset into the mapped
-area instead of using virtual addresses. With that we only use the DMA
-length and DMA address from the scatter gather list entries. The
-underlying DMA/IOMMU code is therefore free to merge two entries into
-one even if the virtual addresses space for the area is not continuous.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when TXing an AMSDU")
-Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
-Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
+#regzbot report: https://lore.kernel.org/all/7hzfplplfs.fsf@baylibre.com/
+#regzbot introduced: 68e6939ea9ec
+#regzbot summary: serial: 8250_omap: crash during suspend on platforms
+that don't use PM domains (like AM335x Beaglebone Black.)
 
----
-
-We also verified the (previous) patch internally and it is working well
-there now.
-
-v2: Add proper bounds checking by verifying the length
----
- .../wireless/intel/iwlwifi/pcie/internal.h    |  3 +-
- .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c |  5 ++-
- drivers/net/wireless/intel/iwlwifi/pcie/tx.c  | 32 +++++++++++++------
- 3 files changed, 28 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-index b59de4f80b4b..27a7e0b5b3d5 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-@@ -639,7 +639,8 @@ void iwl_trans_pcie_tx_reset(struct iwl_trans *trans);
- int iwl_pcie_txq_alloc(struct iwl_trans *trans, struct iwl_txq *txq,
- 		       int slots_num, bool cmd_queue);
- 
--dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr);
-+dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset,
-+				    unsigned int len);
- struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
- 				   struct iwl_cmd_meta *cmd_meta,
- 				   u8 **hdr, unsigned int hdr_room);
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-index 2e780fb2da42..b1846abb99b7 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -168,6 +168,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
- 	struct ieee80211_hdr *hdr = (void *)skb->data;
- 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
- 	unsigned int mss = skb_shinfo(skb)->gso_size;
-+	unsigned int data_offset = 0;
- 	dma_addr_t start_hdr_phys;
- 	u16 length, amsdu_pad;
- 	u8 *start_hdr;
-@@ -260,7 +261,8 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
- 			int ret;
- 
- 			tb_len = min_t(unsigned int, tso.size, data_left);
--			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
-+			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset,
-+							   tb_len);
- 			/* Not a real mapping error, use direct comparison */
- 			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
- 				goto out_err;
-@@ -272,6 +274,7 @@ static int iwl_txq_gen2_build_amsdu(struct iwl_trans *trans,
- 				goto out_err;
- 
- 			data_left -= tb_len;
-+			data_offset += tb_len;
- 			tso_build_data(skb, &tso, tb_len);
- 		}
- 	}
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
-index 22d482ae53d9..9fe050f0ddc1 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx.c
-@@ -1814,23 +1814,31 @@ static void *iwl_pcie_get_page_hdr(struct iwl_trans *trans,
- /**
-  * iwl_pcie_get_sgt_tb_phys - Find TB address in mapped SG list
-  * @sgt: scatter gather table
-- * @addr: Virtual address
-+ * @offset: Offset into the mapped memory (i.e. SKB payload data)
-+ * @len: Length of the area
-  *
-- * Find the entry that includes the address for the given address and return
-- * correct physical address for the TB entry.
-+ * Find the DMA address that corresponds to the SKB payload data at the
-+ * position given by @offset.
-  *
-  * Returns: Address for TB entry
-  */
--dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, void *addr)
-+dma_addr_t iwl_pcie_get_sgt_tb_phys(struct sg_table *sgt, unsigned int offset,
-+				    unsigned int len)
- {
- 	struct scatterlist *sg;
-+	unsigned int sg_offset = 0;
- 	int i;
- 
-+	/*
-+	 * Search the mapped DMA areas in the SG for the area that contains the
-+	 * data at offset with the given length.
-+	 */
- 	for_each_sgtable_dma_sg(sgt, sg, i) {
--		if (addr >= sg_virt(sg) &&
--		    (u8 *)addr < (u8 *)sg_virt(sg) + sg_dma_len(sg))
--			return sg_dma_address(sg) +
--			       ((unsigned long)addr - (unsigned long)sg_virt(sg));
-+		if (offset >= sg_offset &&
-+		    offset + len <= sg_offset + sg_dma_len(sg))
-+			return sg_dma_address(sg) + offset - sg_offset;
-+
-+		sg_offset += sg_dma_len(sg);
- 	}
- 
- 	WARN_ON_ONCE(1);
-@@ -1875,7 +1883,9 @@ struct sg_table *iwl_pcie_prep_tso(struct iwl_trans *trans, struct sk_buff *skb,
- 
- 	sg_init_table(sgt->sgl, skb_shinfo(skb)->nr_frags + 1);
- 
--	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, 0, skb->len);
-+	/* Only map the data, not the header (it is copied to the TSO page) */
-+	sgt->orig_nents = skb_to_sgvec(skb, sgt->sgl, skb_headlen(skb),
-+				       skb->data_len);
- 	if (WARN_ON_ONCE(sgt->orig_nents <= 0))
- 		return NULL;
- 
-@@ -1900,6 +1910,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
- 	struct ieee80211_hdr *hdr = (void *)skb->data;
- 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
- 	unsigned int mss = skb_shinfo(skb)->gso_size;
-+	unsigned int data_offset = 0;
- 	u16 length, iv_len, amsdu_pad;
- 	dma_addr_t start_hdr_phys;
- 	u8 *start_hdr, *pos_hdr;
-@@ -2000,7 +2011,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
- 						  data_left);
- 			dma_addr_t tb_phys;
- 
--			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, tso.data);
-+			tb_phys = iwl_pcie_get_sgt_tb_phys(sgt, data_offset, size);
- 			/* Not a real mapping error, use direct comparison */
- 			if (unlikely(tb_phys == DMA_MAPPING_ERROR))
- 				return -EINVAL;
-@@ -2011,6 +2022,7 @@ static int iwl_fill_data_tbs_amsdu(struct iwl_trans *trans, struct sk_buff *skb,
- 						tb_phys, size);
- 
- 			data_left -= size;
-+			data_offset += size;
- 			tso_build_data(skb, &tso, size);
- 		}
- 	}
--- 
-2.46.0
-
+#regzbot report:
+https://lore.kernel.org/intel-wired-lan/CAN0jFd1kO0MMtOh8N2Ztxn6f7vvDKp2h507sMryobkBKe=xk=w@mail.gmail.com/
+#regzbot introduced: ee14cc9ea19b
+#regzbot summary: net: igb: PTP on the 82580 controller broken
+#regzbot monitor:
+https://lore.kernel.org/all/20240810002302.2054816-1-vinicius.gomes@intel.com/
