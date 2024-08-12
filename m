@@ -1,78 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB09178378;
-	Mon, 12 Aug 2024 12:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3111607AA
+	for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 12:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723464713; cv=none; b=H2WbcR1ob5VEga2U6GcsRu/Hf3w1biHeUpxrpZPpUKfwb2Bok6Rz85GR2vPbr0gALu4asMQ7GmiocgDSF1F0wm86h7LMa8BKj4XZSEMVvocEQUTP5JV/FRlCfygl6Hw5F2Lo2+tritct3MeaY2ct4kaX+d5KbSn776gG3yKy2SM=
+	t=1723465222; cv=none; b=HdUxb7hh9w7Vjb0WkiyiT3qvHy3g9jexxKx0KA6fGKT6SzNh8/huOPob6/oG8KvSDlKrAo+cSLDF28tO9IOkRxS0lpFdToh488QrHTVwYPwR+l2AeqWgGWIA8PnE+PXumJJLgXzguiXU+yDSab14Zh7lsgEV0DNSHd4ni9DDSSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723464713; c=relaxed/simple;
-	bh=U3BJflhY7WPD1IxSWU1W91AcK1N2c18oHaTsBoI6ENQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bp8CGA5zK/fGvYwuAaX6ShUsUBQnNmBjFM4IDdxbz1098DsqA4LS1gByKOrIA1ywRb81okk/z3X9bBTL70LmjQbOz33DCJ+DMN9JbyCynWrH+xTLl2Yh9rl4gX3kIqcNmeWjlVttuEMR7WR80wxExzRwRyfeqtw4BVcch3rwh68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MMju6fgu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723465222; c=relaxed/simple;
+	bh=kq679JXFB637W1Tqu4I1bX+A6aIDNhhFQURQtdBO5n8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kuguL8zzyTfQAJOs40OAT4YY5hOQgN0KL7IVA5OUpmC0FhxXSr1NdnK01kLfi9nuQSkZuQUKY4o50jgjg4YbiVSHcraQVaQns/R6ajFZA5lLA5ug+Mop44G5MIlLQSrXS3bapqLcZsevdAbXnkodzOatR6EntFkz7q04eRx7oK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnY0CMfi; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MMju6fgu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 708ACC32782;
-	Mon, 12 Aug 2024 12:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723464712;
-	bh=U3BJflhY7WPD1IxSWU1W91AcK1N2c18oHaTsBoI6ENQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MMju6fgunQZUV2NyRavTOI12WQBuPbckj0+mY+pqqfM3LqsIP8RwmWeYVGeeGSiuz
-	 Z95B8in+1IxnoQZ/M0I/MO4OMTMKLEfo/E0BzJnw7UgDSmO/cQUXLzODjc5Z9v7/hc
-	 gcOG7oYYEAT7EpAyuJfZoLwxE+F2gMAkLxbm2fR8=
-Date: Mon, 12 Aug 2024 14:11:20 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Thomas Lindroth <thomas.lindroth@gmail.com>, stable@vger.kernel.org,
-	tony.luck@intel.com, Dave Hansen <dave.hansen@linux.intel.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [STABLE REGRESSION] Possible missing backport of x86_match_cpu()
- change in v6.1.96
-Message-ID: <2024081217-putt-conform-4b53@gregkh>
-References: <eb709d67-2a8d-412f-905d-f3777d897bfa@gmail.com>
- <a79fa3cc-73ef-4546-b110-1f448480e3e6@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnY0CMfi"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6512866fa87so37187747b3.2
+        for <regressions@lists.linux.dev>; Mon, 12 Aug 2024 05:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723465219; x=1724070019; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kq679JXFB637W1Tqu4I1bX+A6aIDNhhFQURQtdBO5n8=;
+        b=dnY0CMfi1XvWAT9zIbbqbcxGbphSJ2e7206RBE4E7F7+vPhvNPj7kbm0AgIwKhoW+Y
+         p86oAr1Cqsd1JZE4WB1y2s9hB3PKIb6/3BmiDQD01md/Z2n2Pd8zTfSqKPKOtnoeO2hI
+         wJMgLd8t+gLVpBrmQLO8oYSxOfAd+pOCrE7v0DOBsLsO6iEX9gzwCmLrWV61Cuc5YvqW
+         mVP/q3JOkxuHZb7l0FDnjSfMGIfFQlDJXi/dXpQKR4flot0V0+iLRhvlaz+T1kbh7a5r
+         5iYjgbFpwb1jbJALpPzA+XuBM8/2RIvhmQa7bL5eUREQpt1LnHnXsFMHGZqysfKjp7XU
+         99Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723465219; x=1724070019;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kq679JXFB637W1Tqu4I1bX+A6aIDNhhFQURQtdBO5n8=;
+        b=UwdLQtRZv8BAZKghIeNvZM9t2n4LkiMmg1Tf21vuKZ97G1G5CFTy5gFBG5tyZk0R7U
+         gOD58WneX2Y763cxJzaRhabx1cZSez1b/74Z9eiTYOs3bEIae7tYygkjCN1BJTEuE2ws
+         CM2AY89rV4Q0ByjD/Q/UwJOgqujTz0FB4mh+hDrNTpnG+qdenplEpAaQ7zdEPoaknx2w
+         fa060gLUwTTq5rtTN9cL6pKPUtZqckAoC5BELUYxzC+Eww5X34bx8XUOhJDQC1Fbm431
+         pQ0j2zM1xpkbbKZYGu/FsgjHuNvNdltXOtEfPcgAPjMhFKv4FHlPWnQLmtYPbuwNAJLr
+         ddSw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7EqqhQC9w8VnntF6PDJuHIy6o7sTlWmv9fAAJE3OewcQV6CymMvEONrfCHYFt1SlomcQAppjdaul9VjOhbEa3hSbQls9XXDcTPns=
+X-Gm-Message-State: AOJu0Yw08UH1YBbSwzvUFahOlWLz4wRVPuJE1MG5oBWRZUKBSsc2gx6c
+	xfnLZqzzpVlN88WPOLb5u+jvFRIWdbCAgP22QEg2poapFVjIeJlKMB9lS8DHggRuvPZUu9IT32w
+	BJ78aHvhww8sISYrEBLMhkUi+e/Y=
+X-Google-Smtp-Source: AGHT+IHoFBN/+scGNP7kMLSb+aFYncBccPyOI8lBlEngugp5xukhJsJHIQw6I+Ur9TP2C5RZZu3F4dqoOyQT+HCJCRM=
+X-Received: by 2002:a05:690c:ed6:b0:669:e266:2c55 with SMTP id
+ 00721157ae682-6a971ade176mr2159407b3.5.1723465218646; Mon, 12 Aug 2024
+ 05:20:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a79fa3cc-73ef-4546-b110-1f448480e3e6@leemhuis.info>
+References: <20240812110640.460514-1-benjamin@sipsolutions.net>
+In-Reply-To: <20240812110640.460514-1-benjamin@sipsolutions.net>
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Mon, 12 Aug 2024 13:20:07 +0100
+Message-ID: <CAP-bSRY+F=_zek7Y1mMftQJqmkTenc8_sg9J-GO=aaAcLVRvGw@mail.gmail.com>
+Subject: Re: [PATCH v2] wifi: iwlwifi: correctly lookup DMA address in SG table
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, benjamin.berg@intel.com, 
+	miriam.rachel.korenblit@intel.com, regressions@lists.linux.dev, 
+	johannes@sipsolutions.net, Kalle Valo <kvalo@kernel.org>, 
+	Ben Greear <greearb@candelatech.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Aug 07, 2024 at 10:15:23AM +0200, Thorsten Leemhuis wrote:
-> [CCing the x86 folks, Greg, and the regressions list]
-> 
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> On 30.07.24 18:41, Thomas Lindroth wrote:
-> > I upgraded from kernel 6.1.94 to 6.1.99 on one of my machines and
-> > noticed that
-> > the dmesg line "Incomplete global flushes, disabling PCID" had
-> > disappeared from
-> > the log.
-> 
-> Thomas, thx for the report. FWIW, mainline developers like the x86 folks
-> or Tony are free to focus on mainline and leave stable/longterm series
-> to other people -- some nevertheless help out regularly or occasionally.
-> So with a bit of luck this mail will make one of them care enough to
-> provide a 6.1 version of what you afaics called the "existing fix" in
-> mainline (2eda374e883ad2 ("x86/mm: Switch to new Intel CPU model
-> defines") [v6.10-rc1]) that seems to be missing in 6.1.y. But if not I
-> suspect it might be up to you to prepare and submit a 6.1.y variant of
-> that fix, as you seem to care and are able to test the patch.
+On Mon, 12 Aug 2024 at 12:07, Benjamin Berg <benjamin@sipsolutions.net> wrote:
+> [...]
 
-Needs to go to 6.6.y first, right?  But even then, it does not apply to
-6.1.y cleanly, so someone needs to send a backported (and tested) series
-to us at stable@vger.kernel.org and we will be glad to queue them up
-then.
+Works for me.
 
-thanks,
+Tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
 
-greg k-h
+(btw Benjamin, did you see my other email? Subject "iwlwifi: WRT:
+Invalid buffer destination".)
