@@ -1,85 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19AB3C0B;
-	Mon, 12 Aug 2024 11:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB09178378;
+	Mon, 12 Aug 2024 12:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723462259; cv=none; b=SI8yx18SzO2RghQ8+tGja1MvFD+4VPCHDijs9B702PzBmm/s+7+9rhhcfQ3wKBmZfmGdCZLm4zop3JsAaBJxbQUYyM2gBvmkvqlrN4yfFBB3DdQW4aPNnDlykzvxed4Qu7X1kazg3t8PyH/FwaEYHuuZcjT+XMz1C1zPADTmZXQ=
+	t=1723464713; cv=none; b=H2WbcR1ob5VEga2U6GcsRu/Hf3w1biHeUpxrpZPpUKfwb2Bok6Rz85GR2vPbr0gALu4asMQ7GmiocgDSF1F0wm86h7LMa8BKj4XZSEMVvocEQUTP5JV/FRlCfygl6Hw5F2Lo2+tritct3MeaY2ct4kaX+d5KbSn776gG3yKy2SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723462259; c=relaxed/simple;
-	bh=KqbuYjVKAwBokFKAy/lvQSRnx3nUBagrATlyS/atdkc=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=C/LQiUhZUcIopHvrwkuV04wqGAtphldhzCmtV9q7Lug9BtYSIo6+qtorhXrUmFMW2EGmyyf3PujlZhFyuhzUmTa59pY1Il9Gg19sSXzB8vl0F+xlk2DcXg01RmWldwWt3UwnLm+QYOQQTgOdN+FRWmziThq22sOvb4vN5JDzgg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNFdpf1W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723464713; c=relaxed/simple;
+	bh=U3BJflhY7WPD1IxSWU1W91AcK1N2c18oHaTsBoI6ENQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bp8CGA5zK/fGvYwuAaX6ShUsUBQnNmBjFM4IDdxbz1098DsqA4LS1gByKOrIA1ywRb81okk/z3X9bBTL70LmjQbOz33DCJ+DMN9JbyCynWrH+xTLl2Yh9rl4gX3kIqcNmeWjlVttuEMR7WR80wxExzRwRyfeqtw4BVcch3rwh68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MMju6fgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNFdpf1W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D79C32782;
-	Mon, 12 Aug 2024 11:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723462259;
-	bh=KqbuYjVKAwBokFKAy/lvQSRnx3nUBagrATlyS/atdkc=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=LNFdpf1W91rtB/grMvyJSCSAPJpQoGyJoCG36F5o5oAuQCCvhCMsK+0ECs+VGfSnh
-	 lu/BmJZ65u+EQFKY/ZemGjNHVHSILVvh5AHZIuKkT0cOifwdEs5j/6PTQnpOe+ouYb
-	 nehLK6fB3uKmc0gN/MGiHsZsXKf3JCrSGNCgRbYtaan6ugnGeqjnubAXxNAMI1HPHE
-	 ApakdJ8gK2J9WUvAcJKCBvyVbueAWDfcGHzVs/ILgxh0gSEPF+x7crwPISalmtOAKG
-	 OwVDBAtUmWlQkfYAR79EVqh3xhJLfYlyUdoWlV73hy7uE/pTIrX4ZGUmCXGMdjCnrF
-	 YqqWUQQYiY42g==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MMju6fgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 708ACC32782;
+	Mon, 12 Aug 2024 12:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1723464712;
+	bh=U3BJflhY7WPD1IxSWU1W91AcK1N2c18oHaTsBoI6ENQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MMju6fgunQZUV2NyRavTOI12WQBuPbckj0+mY+pqqfM3LqsIP8RwmWeYVGeeGSiuz
+	 Z95B8in+1IxnoQZ/M0I/MO4OMTMKLEfo/E0BzJnw7UgDSmO/cQUXLzODjc5Z9v7/hc
+	 gcOG7oYYEAT7EpAyuJfZoLwxE+F2gMAkLxbm2fR8=
+Date: Mon, 12 Aug 2024 14:11:20 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Thomas Lindroth <thomas.lindroth@gmail.com>, stable@vger.kernel.org,
+	tony.luck@intel.com, Dave Hansen <dave.hansen@linux.intel.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [STABLE REGRESSION] Possible missing backport of x86_match_cpu()
+ change in v6.1.96
+Message-ID: <2024081217-putt-conform-4b53@gregkh>
+References: <eb709d67-2a8d-412f-905d-f3777d897bfa@gmail.com>
+ <a79fa3cc-73ef-4546-b110-1f448480e3e6@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wifi: iwlwifi: correctly lookup DMA address in SG table
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20240808172948.303258-1-benjamin@sipsolutions.net>
-References: <20240808172948.303258-1-benjamin@sipsolutions.net>
-To: Benjamin Berg <benjamin@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, benjamin.berg@intel.com,
- miriam.rachel.korenblit@intel.com, regressions@lists.linux.dev,
- johannes@sipsolutions.net, Chris Bainbridge <chris.bainbridge@gmail.com>,
- Ben Greear <greearb@candelatech.com>
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <172346225593.632971.15310170952433244795.kvalo@kernel.org>
-Date: Mon, 12 Aug 2024 11:30:57 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a79fa3cc-73ef-4546-b110-1f448480e3e6@leemhuis.info>
 
-Benjamin Berg <benjamin@sipsolutions.net> wrote:
-
-> From: Benjamin Berg <benjamin.berg@intel.com>
+On Wed, Aug 07, 2024 at 10:15:23AM +0200, Thorsten Leemhuis wrote:
+> [CCing the x86 folks, Greg, and the regressions list]
 > 
-> The code to lookup the scatter gather table entry assumed that it was
-> possible to use sg_virt() in order to lookup the DMA address in a mapped
-> scatter gather table. However, this assumption is incorrect as the DMA
-> mapping code may merge multiple entries into one. In that case, the DMA
-> address space may have e.g. two consecutive pages which is correctly
-> represented by the scatter gather list entry, however the virtual
-> addresses for these two pages may differ and the relationship cannot be
-> resolved anymore.
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 > 
-> Avoid this problem entirely by working with the offset into the mapped
-> area instead of using virtual addresses. With that we only use the DMA
-> length and DMA address from the scatter gather list entries. The
-> underlying DMA/IOMMU code is therefore free to merge two entries into
-> one even if the virtual addresses space for the area is not continuous.
+> On 30.07.24 18:41, Thomas Lindroth wrote:
+> > I upgraded from kernel 6.1.94 to 6.1.99 on one of my machines and
+> > noticed that
+> > the dmesg line "Incomplete global flushes, disabling PCID" had
+> > disappeared from
+> > the log.
 > 
-> Fixes: 90db50755228 ("wifi: iwlwifi: use already mapped data when TXing an AMSDU")
-> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-> Closes: https://lore.kernel.org/r/ZrNRoEbdkxkKFMBi@debian.local
-> Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
-> Tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Thomas, thx for the report. FWIW, mainline developers like the x86 folks
+> or Tony are free to focus on mainline and leave stable/longterm series
+> to other people -- some nevertheless help out regularly or occasionally.
+> So with a bit of luck this mail will make one of them care enough to
+> provide a 6.1 version of what you afaics called the "existing fix" in
+> mainline (2eda374e883ad2 ("x86/mm: Switch to new Intel CPU model
+> defines") [v6.10-rc1]) that seems to be missing in 6.1.y. But if not I
+> suspect it might be up to you to prepare and submit a 6.1.y variant of
+> that fix, as you seem to care and are able to test the patch.
 
-v2:
+Needs to go to 6.6.y first, right?  But even then, it does not apply to
+6.1.y cleanly, so someone needs to send a backported (and tested) series
+to us at stable@vger.kernel.org and we will be glad to queue them up
+then.
 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240812110640.460514-1-benjamin@sipsolutions.net/
+thanks,
 
-Patch set to Superseded.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240808172948.303258-1-benjamin@sipsolutions.net/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+greg k-h
