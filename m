@@ -1,109 +1,181 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBE320DF4
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 08:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383EB19EEDB
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 09:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723623751; cv=none; b=VUpTy+9socYVsh+Rc/uknFoiO8IugBGQgRlDMZjpmUVpDfZ+Oovj86npDjIj2iQvsVonOunKre23OhyqLVRc15nSekASQrZdOXeb80WZz7fVY5VF8HCfPPjrz8Ph/H7qMUVbKSTwe/PhEUvk00Qy326xgZubpr3wEBuReyWMxqc=
+	t=1723628739; cv=none; b=De3f868tJG/tklatc9hi7DW60bmNWZkhxCxTOIaVgdOOaWW2s8ezHLgmwLzYHZtr2RK405dsbSlMjE8CQNr9B5bidCxpT8U3JLYmiMt94Q6i0Og3z1jhph/ygTCz/YAoBJH/8QQ1H5TauMYCs6PCd9assZOzczsmaKCsQBvWuvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723623751; c=relaxed/simple;
-	bh=tjZzVQlCkocLYuUE/5/U34JYpsWrhIGFHf68xzjh6ps=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=rI+ye4EFjJ3zgipMfti06w1DTrxN2qTE8M+FBdF84NvaUUPInvdpVRwr27tutZFAHlv2k3xD2y50aFGhpSJXznMjuM9LdCLFBM2/CgnmJIKPU6xeM7fOcvYRxHoh9nHwhIOXfjMeKW0eYE5ONhlBg2jeOwDVBn47hnxugjbe21w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dsKL4KGb; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723628739; c=relaxed/simple;
+	bh=Ti/Zf51kEl+alJ3brHpunVBp5ba7bOLyXd8+PQAs/1M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=FHsUzud4pKDiv8YE+ITOiFk06RgIfoSQ+IovHAx6Mshs3MGM6N1oTCwhUSEVZhU2hsSjITkxbR7RASG3+J+Y65+SG3AIeb/ISypiRih1u/n8cpyAm4LvMAYzlUStB0WLrVFjEzRBiOWxP/oyF5LbliM0n4eokXf9d7t80wDBP4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ssuP/TV8; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dsKL4KGb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=tjZzVQlCkocLYuUE/5/U34JYpsWrhIGFHf68xzjh6ps=; t=1723623749;
-	x=1724055749; b=dsKL4KGbgB1xjG+qg++xDeYXpqELryuV/3ns6H17SBrgAAp/zvmLdGbUfvcNw
-	egI47uvbSCnVPQpuyEGF928JU46555WlatqWSnyXObEeqdYOsiNxWOk1LGwJHqBH+2jHGE5D4pU28
-	oS5k4s9jZVvB3XEQ9CkpinekGFqzZ0/5h++q2ahcEAA3ZGlEH69NxPV7ODmi/6BZ+aZAhKfe4QE/y
-	HOEVHDD88qoDR9Pl+r+0T793ebetMQR/svrTDLrfi17bUdQ/mYVor8aOHH9Ngjsf4yn6zx+efMENh
-	l5La2ohAWRatQwaYth6CAQm47QyOCTBJV9NdZkyeW7LCVmoWJQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1se9Gw-0002W5-Ca; Wed, 14 Aug 2024 10:22:22 +0200
-Message-ID: <38ec5db8-66ad-49f1-9fed-5410b360b207@leemhuis.info>
-Date: Wed, 14 Aug 2024 10:22:22 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ssuP/TV8"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-493e8ef36b4so2388929137.2
+        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 02:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723628736; x=1724233536; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AqTddAzKnNUZIAwEfzKnnscE8MqF5HGYJSDp7SE0qdk=;
+        b=ssuP/TV8NELyKtyQGpGFXNXBHVI9JMiKmDD2jKNBT2DIFSnS6hwjBXxDghFO4Y2NO6
+         Gu0MCN8LcmUPWIHGcKtguM0REbYzKZ1QgKAxmeA1TDUqkr058rBu5xYmkOfJhQFxnyfp
+         79arUA3zYw9CEUyYmQ7rzIn9Kmsarfxswe0LmDYQW8Ovbt8J2vCtWAmdfBp2NjT6bCqX
+         bXHKX4RMeYsr/3Qzw6x76XQ9rmUBsitedLApqajcgfTSmQtDt+4lZ39ySOuLq7htHsjf
+         7GgzKPzne7Hp6vh/r0QukojqHfhTq8q0ip6qPmkFmahtk9PlHbd22znqj1STwTIFce9D
+         3cjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723628736; x=1724233536;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AqTddAzKnNUZIAwEfzKnnscE8MqF5HGYJSDp7SE0qdk=;
+        b=PaNkMqhKHYu21c18bygNiQYukZFlw+ffZvv8tEG07RvGFcFSgJLSWurV2qIkxdcsWP
+         XLc6pPXsO6BtdQCAirC5UzDmz81992xVJpI/5Ce7gHekO9vxySsfJzN5z+oUzgdfWx2/
+         F+g6Vsev4WN1SYN6RHH7HukAkr8A/OMCrgk3g6U4Gf2Eo88kEsVvG1Bxw6OMA0r1MXIK
+         v9+O66JQsdDS1lelBWY67s5hoWrjE/x5zqjQIylYVXD76+309JSFaW6jUTJQJA2La2EL
+         nb3/vt0L8LDn1gZbbIUAH1IOOcBSiYkv9rayq2pZeYOpfZyxLjDtxXPixP/y5wu//FDP
+         IpNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV24bqZOC58/xbnvCqPz8U2boNoHCFFL5rthYCYiqI9q8/e5JcUzrGZvIqGTeFZW6spwc2mWLI5JQhYpQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxvy68GJz4GC9HGSV2BZHidVLj2W04IZxlsmpgQLaFSYbSBFUj6
+	dus/qcuQUyoFpeP0sgKgYKkBGLF68t+VIJ2J52cQYN6wpyjT+S3RWABFzfIwKLae7Y1VgJ6/CDo
+	ggbLH+Rdh4B2rHpKEpQwWNVRqnfARv+LedGNaCw==
+X-Google-Smtp-Source: AGHT+IEu4m8IvoB2eT7Lab+NoT1ZY4XAOC4ts3bgwowFq88amATwROVe4cIvi0Pv2rWtvrkoloA6dxkqDzUo5Q/ZIr8=
+X-Received: by 2002:a05:6102:36ca:b0:494:3a8d:c793 with SMTP id
+ ada2fe7eead31-497599d00a9mr2130293137.28.1723628735955; Wed, 14 Aug 2024
+ 02:45:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723623749;7c8e162f;
-X-HE-SMSGID: 1se9Gw-0002W5-Ca
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 14 Aug 2024 15:15:24 +0530
+Message-ID: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
+Subject: next: x86_64: ahci 0000:00:1f.2: probe with driver ahci failed with
+ error -12
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-block <linux-block@vger.kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
+	Alexey Dobriyan <adobriyan@gmail.com>, Christoph Hellwig <hch@lst.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+The qemu-x86_64 boot failed with today's Linux next-20240814 tag due to
+following crash.
 
+The catch here is the crash seen on both x86_64 device and qemu-x86_64
+but x86_64 device is able to boot successfully.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219143
-#regzbot introduced: 6f31d6b643a32c
-#regzbot summary: net: igc: does not function anymore after second
-resume from standby
+Boot log:
+---
+[    0.000000] Linux version 6.11.0-rc3-next-20240814
+(tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 13.3.0-1) 13.3.0, GNU
+ld (GNU Binutils for Debian) 2.42.50.20240625) #1 SMP PREEMPT_DYNAMIC
+@1723614704
+...
+<6>[    2.479915] scsi host0: ahci
+<4>[    2.484371] sysfs: cannot create duplicate filename
+'/devices/virtual/workqueue/scsi_tmf_-1073661392'
+<4>[    2.486170] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.11.0-rc3-next-20240814 #1
+<4>[    2.486709] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[    2.486709] Call Trace:
+<4>[    2.486709]  <TASK>
+<4>[    2.486709]  dump_stack_lvl+0x96/0xb0
+<4>[    2.486709]  dump_stack+0x14/0x20
+<4>[    2.486709]  sysfs_warn_dup+0x5f/0x80
+<4>[    2.486709]  sysfs_create_dir_ns+0xd0/0xf0
+<4>[    2.486709]  kobject_add_internal+0xa8/0x2e0
+<4>[    2.486709]  kobject_add+0x97/0x100
+<4>[    2.486709]  ? get_device_parent+0x109/0x1d0
+<4>[    2.486709]  device_add+0xe4/0x880
+<4>[    2.486709]  ? hrtimer_init+0x2b/0x80
+<4>[    2.486709]  device_register+0x1e/0x30
+<4>[    2.486709]  workqueue_sysfs_register+0x91/0x140
+<4>[    2.486709]  __alloc_workqueue+0x664/0x800
+<4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
+<4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
+<4>[    2.486709]  alloc_workqueue+0x5a/0x80
+<4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
+<4>[    2.486709]  scsi_host_alloc+0x365/0x470
+<4>[    2.486709]  ata_scsi_add_hosts+0xc2/0x130
+<4>[    2.486709]  ata_host_register+0xb5/0x260
+<4>[    2.486709]  ata_host_activate+0xe9/0x140
+<4>[    2.486709]  ahci_host_activate+0x16a/0x190
+<4>[    2.486709]  ahci_init_one+0xe0f/0x1080
+<4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
+<4>[    2.486709]  local_pci_probe+0x48/0xa0
+<4>[    2.486709]  pci_device_probe+0xc6/0x1f0
+<4>[    2.486709]  really_probe+0xcc/0x3b0
+<4>[    2.486709]  __driver_probe_device+0x7d/0x160
+<4>[    2.486709]  driver_probe_device+0x24/0xa0
+<4>[    2.486709]  __driver_attach+0xdd/0x1d0
+<4>[    2.486709]  ? __pfx___driver_attach+0x10/0x10
+<4>[    2.486709]  bus_for_each_dev+0x91/0xe0
+<4>[    2.486709]  driver_attach+0x22/0x30
+<4>[    2.486709]  bus_add_driver+0x118/0x240
+<4>[    2.486709]  driver_register+0x62/0x120
+<4>[    2.486709]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+<4>[    2.486709]  __pci_register_driver+0x62/0x70
+<4>[    2.486709]  ahci_pci_driver_init+0x22/0x30
+<4>[    2.486709]  do_one_initcall+0x62/0x250
+<4>[    2.486709]  kernel_init_freeable+0x1ba/0x310
+<4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
+<4>[    2.486709]  kernel_init+0x1e/0x1d0
+<4>[    2.486709]  ret_from_fork+0x41/0x60
+<4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
+<4>[    2.486709]  ret_from_fork_asm+0x1a/0x30
+<4>[    2.486709]  </TASK>
+<3>[    2.508109] kobject: kobject_add_internal failed for
+scsi_tmf_-1073661392 with -EEXIST, don't try to register things with
+the same name in the same directory.
+<4>[    2.519098] scsi host1: failed to create tmf workq
+<6>[    2.524520] kworker/R-scsi_ (56) used greatest stack depth:
+15464 bytes left
+<6>[    2.528402] scsi_eh_1 (55) used greatest stack depth: 14872 bytes left
+<3>[    2.540312] ahci 0000:00:1f.2: probe with driver ahci failed
+with error -12
 
-#regzbot report:
-https://lore.kernel.org/all/71864473-f0f7-41c3-95f2-c78f6edcfab9@gmail.com/
-#regzbot introduced: 14dd46cf31f4aaffcf26b00de9af39d01ec8d547
-#regzbot summary: xfs: mount timeouts
-#regzbot fix: xfs: xfs_finobt_count_blocks() walks the wrong btree
+Full dmesg log:
+-----------
+  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240814/testrun/24850492/suite/boot/test/gcc-13-lkftconfig-rcutorture/log
 
-#regzbot report:
-https://lore.kernel.org/all/20240811041703.2775153-1-yuzhao@google.com/
-#regzbot introduced: bd225530a4c7
-#regzbot summary: mm: performance decrease on demoting hugeTLB folios
-#regzbot fix: mm/hugetlb_vmemmap: batch HVO work when demoting
+Reproduce script:
+---
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2kdXPeyCZIUn4AYH0UrByWXzepD/reproducer
+ - Qemu version: 8.2.4
 
-#regzbot report: https://lore.kernel.org/lkml/ZpFfocvyF3KHaSzF@LQ3V64L9R2/
-#regzbot introduced: f11f10bfa1ca
-#regzbot summary: perf/bpf: problem when tracing due to
-#regzbot fix: perf/bpf: Don't call bpf_overflow_handler() for tracing events
-#regzbot monitor:
-https://lore.kernel.org/all/20240813151727.28797-1-jdamato@fastly.com/
+Boot command: /usr/bin/qemu-system-x86_64 -cpu Nehalem -machine q35
+-nographic -nic none -m 4G -monitor none -no-reboot -smp 2 -kernel
+kernel/bzImage -append \"console=ttyS0,115200 rootwait root=/dev/sda
+debug verbose console_msg_format=syslog systemd.log_level=warning rw
+earlycon\" -drive file=rootfs.ext4,if=ide,format=raw"
 
-#regzbot report:
-https://lore.kernel.org/all/872a3e83-9bc5-47de-8514-48abe8ff03c5@typeblog.net/
-#regzbot introduced: fa57924c76d995e
-#regzbot summary: drm/amdgpu: DSC enabled unnecessarily over MST hubs
+Build link:
+------
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/config
 
-#regzbot report:
-https://lore.kernel.org/all/597dd1bb-43ee-4531-8869-c46b38df56bd@westnet.com.au/
-#regzbot introduced: d86f2de026c57e
-#regzbot summary: folio/romfs: m68k/ColdFire broke
+metadata:
+---
+  git_ref: master
+  git_describe: next-20240814
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  kernel_version: 6.11.0-rc3
+  arch: x86
+  device: qemu-x86_64
 
-#regzbot report:
-https://lore.kernel.org/all/5b51975f-6d0b-413c-8b38-39a6a45e8821@westnet.com.au/
-#regzbot introduced: 10e29251be0e9f
-#regzbot summary: binfmt_elf_fdpic: ARM nommu broke
+Please let me know if you need more information.
 
-#regzbot report:
-https://lore.kernel.org/all/cabe5701-6e25-4a15-b711-924034044331@samsung.com/
-#regzbot introduced: c8bd1f7f3e61
-#regzbot summary: virtio_net: driver occasionally crashes
-
-#regzbot report:
-https://lore.kernel.org/all/62d248bb-e97a-25d2-bcf2-9160c518cae5@kolla.no/
-#regzbot introduced: 09fe2bfa6b83f865126ce3964744863f69a4a030
-#regzbot summary: ata: pata_macio: oops/panics on G4 macmini
+--
+Linaro LKFT
+https://lkft.linaro.org
