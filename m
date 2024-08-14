@@ -1,126 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA451B8E8E
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 15:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479F81B8EA3;
+	Wed, 14 Aug 2024 16:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723650435; cv=none; b=KAUc5NA9fj2bYEN8zOwfGXWoRHZwTT56FhzAvbUT5+1HpZpyJfSBULPx5arWlQawWGR/Mim7ibjzbimI0SmwTWJ68BJTTmlE2cwf0w9fJB5hwkeL1gPoUQBBK8UciRVapbhx20UaesTDLDBd2ClQWhNkZCJUlkE0eizkFeBgKj0=
+	t=1723652414; cv=none; b=CMLompSr3FW26XGWqrzPPgKrXqlj37+v9NYDruvUMnbZXLsYOCIAb3AP/Rn0DMojziH4ODGSHL6L6Flw2qbpj1soOo8idOatf6VKYLuDFMP4rAFCXkwn4AUw/DFJEuNQuyHQH/Rzx/1BBEH5NtZX/BbHzmAMVXrf1A9DQgee1+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723650435; c=relaxed/simple;
-	bh=mF3IyTz4B68pPQXgPxWQqg6T2YX1f2V+LIgDKhqHrQA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IroAGB/WM0sXBerWf0v+MC91uGxf+e18E0nZW4P3o10fT4dt4IcXkpagadZ5C231+gifLKGN5hdHjSJpOubmRI758QiOBpudGyNLJDExiSB1WYxzK7MqhMRoziZGSBayScEOicBg/uqakTQN2nVjJDtggS8EMh4mbKketqcFsEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c35oT3os; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723652414; c=relaxed/simple;
+	bh=VXiYQYW56dc1WuzNWrZC5w5JZm2UFMALypsJ26n7j7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Oo5Uw7p9Pg2LmTDxrDETXj+nIwFG++kaxOuYWaq8TDPrr3ATJsGULkNa+u5dcYMNe6K5nP7l6Tn48tlnXc+JmWca45+peDrAUnaZ2gppOlHV2sPmw9jhzsxCUVfeIwraNjTLD6OTjTDsCn9RDmlZhYCLyMkPkJFtNCAetWeP0bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tRSNjNt6; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c35oT3os"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723650434; x=1755186434;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mF3IyTz4B68pPQXgPxWQqg6T2YX1f2V+LIgDKhqHrQA=;
-  b=c35oT3osToJj35ljfNrEkvbSoYekcEUFREFqsxm44ZPCFPuIIlm2ll3K
-   w5dWTJkR/UV7UbmtxDXhiEO2Vz89FXx8hpU2StEVWAz2Gi2cRXkT6mFyH
-   6U0GVAg1LpL5pVdEGzjW7NEboxbJ6POZaHUy0KFR2EaCUlaQONPQ+YcfJ
-   hS85rmSt8GW1o24B00ePOafuzTVymGOvN8Xu1vrkt1aEdikY+Z8qQjKvX
-   X/FAlXzwCQPZ5SMbifIaMXIPeF4wT//xHFbafVTBTLAhbsx62YBxA8gqS
-   XroUbLH4yR0FioVO1CKKTxpPCToCYG0KVFqWkPkx3q1FCmnIdMP4iWYQC
-   Q==;
-X-CSE-ConnectionGUID: EgA/KU9RTe6Z116b0rLF6A==
-X-CSE-MsgGUID: MHSSweNgQf2uNE9ywsBvcQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="47279535"
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="47279535"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 08:47:06 -0700
-X-CSE-ConnectionGUID: pTb/7qr1QgWk4nqWPvmY0w==
-X-CSE-MsgGUID: 8xM7Sv2hREyamnKvVm16Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="58936611"
-Received: from dev2.igk.intel.com ([10.237.148.94])
-  by orviesa010.jf.intel.com with ESMTP; 14 Aug 2024 08:47:02 -0700
-From: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
-	tiwai@suse.com,
-	perex@perex.cz,
-	lgirdwood@gmail.com,
-	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Vitaly Chikunov <vt@altlinux.org>,
-	Mark Brown <broonie@kernel.org>,
-	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
-Subject: [PATCH for stable v2 2/2] ASoC: topology: Fix route memory corruption
-Date: Wed, 14 Aug 2024 17:47:49 +0200
-Message-Id: <20240814154749.2723275-3-amadeuszx.slawinski@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240814154749.2723275-1-amadeuszx.slawinski@linux.intel.com>
-References: <20240814154749.2723275-1-amadeuszx.slawinski@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tRSNjNt6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1723652392; x=1724257192; i=wahrenst@gmx.net;
+	bh=fhv16sAFZtiVB6MEuR24ksCEmVo3hs4EEJychzW9vXQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=tRSNjNt6B+3a+h0Vl3BPLciPR3jiSwuS0mcjxJ4CX8lR+k62BFpqsGf8rUofV70j
+	 hTy/Qm8g21k50quHTYC7zguO4/7TFROxl9SVExep8miPzNWQVGPdTg6sWZbsg56AZ
+	 oKYUhoDhINLI1dKWbaaHM7ercj+e3UjpOVKtpQp68mb/s+PF9aRyOYexALuESw62K
+	 ihv9fgT3ZK8GBEMBQsaAX85dR6Q6DpfOCvGAQ4rxplxI4SQBjGlHX7FPjI7fRoQ6J
+	 O5C0KHbgOLyElwBDYoDrCQKCe0w9EC7YC/MXisukO33xOw0ZYU41tWIjzPx6qRwEo
+	 VQeLqOKGFKa7sz2EDg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M1HZi-1scc1y0MFG-007OGa; Wed, 14
+ Aug 2024 18:19:52 +0200
+Message-ID: <da941b0e-8e29-4ff7-aff8-683da0aef8da@gmx.net>
+Date: Wed, 14 Aug 2024 18:19:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20240814: bcm2711-rpi-4-b boot failed
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, krzk+dt@kernel.org,
+ Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYuncv0fuBSC0A1z1G_UOv_XuMQz=DsrLZDK-Wc=10ghag@mail.gmail.com>
+ <CA+G9fYv2M8tqwXQF5At4KmG3PFJoiv3D-4Tn_q87MfBvAqLmag@mail.gmail.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <CA+G9fYv2M8tqwXQF5At4KmG3PFJoiv3D-4Tn_q87MfBvAqLmag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IeOG4wCqf/I7ymjxrQPF+8blCRLHHx+GB+X2mnKoMgayFr756xQ
+ AUBHwVCJilhu/e0W6C7GUSRomlnhs1QLn0eBfHZth7mpR3J43Zvns+V4mxvdGGOkuqo+3Dl
+ cyjYEgXFzwtK/rpL32r2qgm7OJWN2mg0e/6SEcT3jYFqBKwHWXrjCpI1mcVUnd5D/duvQ7X
+ ZJLn99g1zlMCPYZwa8e6g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MJIlye475sk=;XABxdiC7P8vifFQyBUK9264GLmw
+ qfQXpPXaG+VapmRVWuuI610qcYm5DZJLNB4ByzyCsZBgaINBd+N9Je1aaa9SozSp6yt//L4nM
+ 9CSippfLor2W5vayApOCTfJj+bN4CKHePv/OWJV4HOF0pMYbod3s6Owk11P9mTgunMLSsHVhd
+ gJnCJ5khCCnulKIhxocqB1Oh6D0eoYwimQLpd329CLeCgG4XV8SdfhswxUoT1H95oBGm8geCh
+ EbrlhoKTd7geG9SDwzXxgDhzLwCDxGf+2+sGca3a+7+lS0mGLCxSnsHpHgbaTYVOK+l2QVgnK
+ WYcpj24NZ33Z/muGeXpf71/0GKqj888Oz/XzCjJ6kaA/JsMxOw9/20uaK/Li+/KmtFSNsBZTf
+ JKPmn/wFYLixyAOBRPhSW9qMx0OQbSRoWjVzmeFeKEgdKhCj4t9T1kEMolTOcH6VY9SlN0+wo
+ 4sNCkPLXjbhGidZNFC8P9ORvkV7h3rU/j3sQpi6dQibs+NDFlzvJo5vxlwnq7dtmUdFBehjLM
+ SFRWufYDh4uXaKCGL5ICgZd9zpvNjG8GthDhm4oTfnbLdZX/VPWV8aEoJvayBlPphUpmGrJJ3
+ fn26VXme0HHOaQfvIliPhusGPZxJEakyshbbDNPbApBJBunmUZ5tvBRp/zxvoQC9mKw4/W4B/
+ C+BjT0WFjbUZC9hwnrqLP3xjHyfSfvoQ5M4cdhKW/gm9DZd+sasZVjEzTBuB5zTxrxgfDHOwi
+ xq3Y3jRSplgKpJGqN1CQnN5Xuzvc8u0xxU2vtKpxr589ITwpcgeq8/cMU4t0qKcXFr2WMyG8I
+ nAC1KlFxjgkKpsDrCXT0Aisw==
 
-[ Upstream commit 0298f51652be47b79780833e0b63194e1231fa34 ]
+Hi Naresh,
 
-It was reported that recent fix for memory corruption during topology
-load, causes corruption in other cases. Instead of being overeager with
-checking topology, assume that it is properly formatted and just
-duplicate strings.
+Am 14.08.24 um 17:26 schrieb Naresh Kamboju:
+> On Wed, 14 Aug 2024 at 20:54, Naresh Kamboju <naresh.kamboju@linaro.org>=
+ wrote:
+>> The arm64 kernel booting on bcm2711-rpi-4-b boot failed with today's Li=
+nux
+>> next-20240814 tag. The boot failed with half boot log [1]
+>>
+>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>
+>>   GOOD: next-20240813
+>>   BAD:  next-20240814
+>>
+>> The first investigation show the following to changes and I have revert=
+ed the
+>> following two commits and the boot test is back to pass [2].
+>>
+>> $ git log --oneline  next-20240813..next-20240814
+>> arch/arm64/boot/dts/broadcom/
+>>    6e7b99d720da6 ARM: dts: bcm271x: add missing properties to local_int=
+c
+>>    eb81f43c901ff ARM: dts: bcm2837/bcm2712: adjust local intc node name=
+s
+>>
+> Anders bisected down to first bad commit as,
+>     6e7b99d720da ("ARM: dts: bcm271x: add missing properties to local_in=
+tc")
+thank you for the report and sorry about that mess. I don't why i was
+under the impression they were harmless DT properties. I look into this,
+so a revert is the proper solution for now.
 
-Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Closes: https://lore.kernel.org/linux-sound/171812236450.201359.3019210915105428447.b4-ty@kernel.org/T/#m8c4bd5abf453960fde6f826c4b7f84881da63e9d
-Suggested-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20240613090126.841189-1-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
----
- sound/soc/soc-topology.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 52752e0a5dc27..27aba69894b17 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1052,21 +1052,15 @@ static int soc_tplg_dapm_graph_elems_load(struct soc_tplg *tplg,
- 			break;
- 		}
- 
--		route->source = devm_kmemdup(tplg->dev, elem->source,
--					     min(strlen(elem->source), maxlen),
--					     GFP_KERNEL);
--		route->sink = devm_kmemdup(tplg->dev, elem->sink,
--					   min(strlen(elem->sink), maxlen),
--					   GFP_KERNEL);
-+		route->source = devm_kstrdup(tplg->dev, elem->source, GFP_KERNEL);
-+		route->sink = devm_kstrdup(tplg->dev, elem->sink, GFP_KERNEL);
- 		if (!route->source || !route->sink) {
- 			ret = -ENOMEM;
- 			break;
- 		}
- 
- 		if (strnlen(elem->control, maxlen) != 0) {
--			route->control = devm_kmemdup(tplg->dev, elem->control,
--						      min(strlen(elem->control), maxlen),
--						      GFP_KERNEL);
-+			route->control = devm_kstrdup(tplg->dev, elem->control, GFP_KERNEL);
- 			if (!route->control) {
- 				ret = -ENOMEM;
- 				break;
--- 
-2.34.1
-
+Regards
