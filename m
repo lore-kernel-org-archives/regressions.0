@@ -1,41 +1,59 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479F81B8EA3;
-	Wed, 14 Aug 2024 16:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BCA1B86EF
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 16:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723652414; cv=none; b=CMLompSr3FW26XGWqrzPPgKrXqlj37+v9NYDruvUMnbZXLsYOCIAb3AP/Rn0DMojziH4ODGSHL6L6Flw2qbpj1soOo8idOatf6VKYLuDFMP4rAFCXkwn4AUw/DFJEuNQuyHQH/Rzx/1BBEH5NtZX/BbHzmAMVXrf1A9DQgee1+U=
+	t=1723652927; cv=none; b=eBoz4cgOlychOm+iNhjo9q+hyu9UNjhp8yAQpsLrEXqNM6govCPiLRDkmBIVXQSU+jflkyd6tNaa5pgwSQEbU/uFGAl6XRdbXznkPT0/dy6YUnSpUx+bTganh3AQIEvCAcZIByjN1hJVhZRbdHd9hOQsKLCtO9A2H84HB1+xwgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723652414; c=relaxed/simple;
-	bh=VXiYQYW56dc1WuzNWrZC5w5JZm2UFMALypsJ26n7j7Y=;
+	s=arc-20240116; t=1723652927; c=relaxed/simple;
+	bh=NKfwsZeTlnXRMDvq8E5vaLoO5hPrCvbfTXzCITw9KOA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oo5Uw7p9Pg2LmTDxrDETXj+nIwFG++kaxOuYWaq8TDPrr3ATJsGULkNa+u5dcYMNe6K5nP7l6Tn48tlnXc+JmWca45+peDrAUnaZ2gppOlHV2sPmw9jhzsxCUVfeIwraNjTLD6OTjTDsCn9RDmlZhYCLyMkPkJFtNCAetWeP0bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tRSNjNt6; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	 In-Reply-To:Content-Type; b=bB8gweybeUYg+65hXlkHxgxTPhUnpkXl95S3BkFaPPoubdJgI3mGpTqt3GNy7pdtCvXOcS5gcPdrBnyQ2Dj1Di7vJR5f6fzIAlHf6WSKrkNJoJ0rlSpy1CpjoW1oO7eQRyTPP/t+//xjZf+ahwADLoc6kOd5rohLUs9ptcN17UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xYmxjbOK; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tRSNjNt6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1723652392; x=1724257192; i=wahrenst@gmx.net;
-	bh=fhv16sAFZtiVB6MEuR24ksCEmVo3hs4EEJychzW9vXQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=tRSNjNt6B+3a+h0Vl3BPLciPR3jiSwuS0mcjxJ4CX8lR+k62BFpqsGf8rUofV70j
-	 hTy/Qm8g21k50quHTYC7zguO4/7TFROxl9SVExep8miPzNWQVGPdTg6sWZbsg56AZ
-	 oKYUhoDhINLI1dKWbaaHM7ercj+e3UjpOVKtpQp68mb/s+PF9aRyOYexALuESw62K
-	 ihv9fgT3ZK8GBEMBQsaAX85dR6Q6DpfOCvGAQ4rxplxI4SQBjGlHX7FPjI7fRoQ6J
-	 O5C0KHbgOLyElwBDYoDrCQKCe0w9EC7YC/MXisukO33xOw0ZYU41tWIjzPx6qRwEo
-	 VQeLqOKGFKa7sz2EDg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M1HZi-1scc1y0MFG-007OGa; Wed, 14
- Aug 2024 18:19:52 +0200
-Message-ID: <da941b0e-8e29-4ff7-aff8-683da0aef8da@gmx.net>
-Date: Wed, 14 Aug 2024 18:19:50 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xYmxjbOK"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42809d6e719so52269375e9.3
+        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 09:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723652924; x=1724257724; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ClfwenGLJtFMHfZRAp5xBKpkrKx7yBYttQI6ee32yHs=;
+        b=xYmxjbOKoQDol04ZpgDUWhm5lg4ps+E8nWHEy2uxC9ZilkWP92dw26kem7GFCWY8I/
+         hXQnFPHE3EIJ3vHvPtVXhJtt08iAxvhZbYrPPx/j5Zgi6MfPrvGh7aHFW4UdeBOpHUtf
+         p/gdwyBnez/kMk/OYH6iqIaPDbgpbD/kJVMirXSx76fSih7awcGsITxjkzLIYEyQADa1
+         27euTNI5skp9Vf4IF/YajsiSWfy12Z3cZBHuI2hyaV/wQDTRIu5SF26Vkpx3dbjSLObI
+         hM4fgy818VpQT5lXITtkZ5xZW/8d8chRMzlBWjQ1aCj/KuebO9n61vx/lTLltJEm2S41
+         Z3XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723652924; x=1724257724;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ClfwenGLJtFMHfZRAp5xBKpkrKx7yBYttQI6ee32yHs=;
+        b=LqgnLyQM3m7D28JM2hkkJkOHv6mRrAr4/h+rlADTAtvJefSscaSRO5YSEQ9Tsi71Lm
+         yElqZRHMMLtL8XHd9aL+kPRk5D8W3ZkJ6XMLsJwJ3h2fi4nW95DrMuOREoRcfpbOXBjA
+         wvCg7BP+FRxyH3oJKuzYXeFiOLM+kMuB/qR3kAAISTQuLKtUEAxtAwKBx31tvPtu1iy3
+         yU8x7VEBBKSh6ho/tcv1EzZJh4onGB7look08IPLMctV7O1JKlzxjiynIma8yUrpousN
+         tOtWJkpU7qUxH7XbhEY6Z3kqoRcebLz3REPhSE+JIIoxYpYigyl9g2n0hjuXKxHa11tW
+         a0GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx1TjgrDZSygpjETmzbvZqrFSf22PSJ5hguJ703fnEfZq66bECmLaqn04EDtQwnGxxMrRujMgsM8araBrStmp9zTw/P5Layjd/1cM=
+X-Gm-Message-State: AOJu0YyGGOvHy9Ii3m4O8xjdZce/A88VD62MwrntSRE3nUHVcBaEnfyj
+	Uvgl20R3+BT6M1MsLTEEriqDR6X/ysNaG7eV4U5TOeWct1uAuNffuDLAubv7Vd4=
+X-Google-Smtp-Source: AGHT+IFvN9G5J/WAGwqQb+FfIdaSv/o6JbQZtqSoFJqYXKwjyr2vAVPTq3A4iENCVN6KuTwWS4rSPw==
+X-Received: by 2002:a05:600c:a07:b0:428:2e9:65a9 with SMTP id 5b1f17b1804b1-429e0f80bc3mr8847605e9.28.1723652923491;
+        Wed, 14 Aug 2024 09:28:43 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429d877f234sm48235275e9.1.2024.08.14.09.28.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2024 09:28:43 -0700 (PDT)
+Message-ID: <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
+Date: Wed, 14 Aug 2024 17:28:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,72 +61,135 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: next-20240814: bcm2711-rpi-4-b boot failed
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, krzk+dt@kernel.org,
- Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYuncv0fuBSC0A1z1G_UOv_XuMQz=DsrLZDK-Wc=10ghag@mail.gmail.com>
- <CA+G9fYv2M8tqwXQF5At4KmG3PFJoiv3D-4Tn_q87MfBvAqLmag@mail.gmail.com>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
+ v6.5
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ James Clark <james.clark@arm.com>, "cc: Marc Zyngier" <maz@kernel.org>,
+ Hector Martin <marcan@marcan.st>, Asahi Linux <asahi@lists.linux.dev>,
+ Ian Rogers <irogers@google.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "to: Mark Rutland" <mark.rutland@arm.com>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
+ <ZV1AnNB2CSbAUFVg@archie.me>
+ <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
+ <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
+ <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <CA+G9fYv2M8tqwXQF5At4KmG3PFJoiv3D-4Tn_q87MfBvAqLmag@mail.gmail.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IeOG4wCqf/I7ymjxrQPF+8blCRLHHx+GB+X2mnKoMgayFr756xQ
- AUBHwVCJilhu/e0W6C7GUSRomlnhs1QLn0eBfHZth7mpR3J43Zvns+V4mxvdGGOkuqo+3Dl
- cyjYEgXFzwtK/rpL32r2qgm7OJWN2mg0e/6SEcT3jYFqBKwHWXrjCpI1mcVUnd5D/duvQ7X
- ZJLn99g1zlMCPYZwa8e6g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MJIlye475sk=;XABxdiC7P8vifFQyBUK9264GLmw
- qfQXpPXaG+VapmRVWuuI610qcYm5DZJLNB4ByzyCsZBgaINBd+N9Je1aaa9SozSp6yt//L4nM
- 9CSippfLor2W5vayApOCTfJj+bN4CKHePv/OWJV4HOF0pMYbod3s6Owk11P9mTgunMLSsHVhd
- gJnCJ5khCCnulKIhxocqB1Oh6D0eoYwimQLpd329CLeCgG4XV8SdfhswxUoT1H95oBGm8geCh
- EbrlhoKTd7geG9SDwzXxgDhzLwCDxGf+2+sGca3a+7+lS0mGLCxSnsHpHgbaTYVOK+l2QVgnK
- WYcpj24NZ33Z/muGeXpf71/0GKqj888Oz/XzCjJ6kaA/JsMxOw9/20uaK/Li+/KmtFSNsBZTf
- JKPmn/wFYLixyAOBRPhSW9qMx0OQbSRoWjVzmeFeKEgdKhCj4t9T1kEMolTOcH6VY9SlN0+wo
- 4sNCkPLXjbhGidZNFC8P9ORvkV7h3rU/j3sQpi6dQibs+NDFlzvJo5vxlwnq7dtmUdFBehjLM
- SFRWufYDh4uXaKCGL5ICgZd9zpvNjG8GthDhm4oTfnbLdZX/VPWV8aEoJvayBlPphUpmGrJJ3
- fn26VXme0HHOaQfvIliPhusGPZxJEakyshbbDNPbApBJBunmUZ5tvBRp/zxvoQC9mKw4/W4B/
- C+BjT0WFjbUZC9hwnrqLP3xjHyfSfvoQ5M4cdhKW/gm9DZd+sasZVjEzTBuB5zTxrxgfDHOwi
- xq3Y3jRSplgKpJGqN1CQnN5Xuzvc8u0xxU2vtKpxr589ITwpcgeq8/cMU4t0qKcXFr2WMyG8I
- nAC1KlFxjgkKpsDrCXT0Aisw==
+Content-Transfer-Encoding: 8bit
 
-Hi Naresh,
 
-Am 14.08.24 um 17:26 schrieb Naresh Kamboju:
-> On Wed, 14 Aug 2024 at 20:54, Naresh Kamboju <naresh.kamboju@linaro.org>=
- wrote:
->> The arm64 kernel booting on bcm2711-rpi-4-b boot failed with today's Li=
-nux
->> next-20240814 tag. The boot failed with half boot log [1]
->>
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>
->>   GOOD: next-20240813
->>   BAD:  next-20240814
->>
->> The first investigation show the following to changes and I have revert=
-ed the
->> following two commits and the boot test is back to pass [2].
->>
->> $ git log --oneline  next-20240813..next-20240814
->> arch/arm64/boot/dts/broadcom/
->>    6e7b99d720da6 ARM: dts: bcm271x: add missing properties to local_int=
-c
->>    eb81f43c901ff ARM: dts: bcm2837/bcm2712: adjust local intc node name=
-s
->>
-> Anders bisected down to first bad commit as,
->     6e7b99d720da ("ARM: dts: bcm271x: add missing properties to local_in=
-tc")
-thank you for the report and sorry about that mess. I don't why i was
-under the impression they were harmless DT properties. I look into this,
-so a revert is the proper solution for now.
 
-Regards
+On 07/08/2024 9:54 am, Thorsten Leemhuis wrote:
+> On 01.08.24 21:05, Ian Rogers wrote:
+>> On Wed, Dec 6, 2023 at 4:09 AM Linux regression tracking #update
+>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>>
+>>> [TLDR: This mail in primarily relevant for Linux kernel regression
+>>> tracking. See link in footer if these mails annoy you.]
+>>>
+>>> On 22.11.23 00:43, Bagas Sanjaya wrote:
+>>>> On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
+>>>>> Perf broke on all Apple ARM64 systems (tested almost everything), and
+>>>>> according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+>>>
+>>> #regzbot fix: perf parse-events: Make legacy events lower priority than
+>>> sysfs/JSON
+>>> #regzbot ignore-activity
+>>
+>> Note, this is still broken.
+> 
+> Hmmm, so all that became somewhat messy. Arnaldo, what's the way out of
+> this? Or is this a "we are screwed one way or another and someone has to
+> bite the bullet" situation?
+> 
+> Ciao, Thorsten
+> 
+>> The patch changed the priority in the case
+>> that you do something like:
+>>
+>> $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
+>>
+>> but if you do:
+>>
+>> $ perf stat -e 'cycles' benchmark
+>>
+>> then the broken behavior will happen as legacy events have priority
+>> over sysfs/json events in that case. To fix this you need to revert:
+>> 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
+>> events over legacy"
+>>
+>> This causes some testing issues resolved in this unmerged patch series:
+>> https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
+>>
+>> There is a bug as the arm_dsu PMU advertises an event called "cycles"
+>> and this PMU is present on Ampere systems. Reverting the commit above
+>> will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
+>> __evlist__add_default") to fix ARM's BIG.little systems (opening a
+>> cycles event on all PMUs not just 1) will cause the arm_dsu event to
+>> be opened by perf record and fail as the event won't support sampling.
+>>
+>> The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
+>> fixes this by only opening the cycles event on core PMUs when choosing
+>> default events.
+>>
+>> Rather than take this patch the revert happened as Linus runs the
+>> command "perf record -e cycles:pp" (ie using a specified event and not
+>> defaults) and considers it a regression in the perf tool that on an
+>> Ampere system to need to do "perf record -e
+>> 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
+>> will choose the cycles event correctly and with better precision the
+>> pp for systems that support it, but it was still considered a
+>> regression in the perf tool so the revert was made to happen. There is
+>> a lack of perf testing coverage for ARM, in particular as they choose
+>> to do everything in a different way to x86. The patch in question was
+>> in the linux-next tree for weeks without issues.
+>>
+>> ARM/Ampere could fix this by renaming the event from cycles to
+>> cpu_cycles, or by following Intel's convention that anything uncore
+>> uses the name clockticks rather than cycles. This could break people
+>> who rely on an event called arm_dsu/cycles/ but I imagine such people
+>> are rare. There has been no progress I'm aware of on renaming the
+>> event.
+>>
+>> Making perf not terminate on opening an event for perf record seems
+>> like the most likely workaround as that is at least something under
+>> the tool maintainers control. ARM have discussed doing this on the
+>> lists:
+>> https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
+>> but since the revert in v6.10 no patches have appeared for the v6.11
+>> merge window. Feature work like coresight improvements and ARMv9 are
+>> being actively pursued by ARM, but feature work won't resolve this
+>> regression.
+>>
+
+I got some hardware with the DSU PMU so I'm going to have a go at trying 
+to send some fixes for this. My initial idea was to try incorporate the 
+"not terminate on opening" change as discussed in the link directly 
+above. And then do the revert of the "revert of prefer sysfs/json".
+
+FWIW I don't think Juno currently is broken if the kernel supports 
+extended type ID? I could have missed some output in this thread but it 
+seems like it's mostly related to Apple M hardware. I'm also a bit 
+confused why the "supports extended type" check fails there, but maybe 
+the v6.9 commit 25412c036 from Mark is missing?
+
+I sent a small fix the other day to make perf stat default arguments 
+work on Juno, and didn't notice anything out of the ordinary: 
+https://lore.kernel.org/linux-perf-users/dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org/T/#t
+I agree that change is quite narrow but it does incrementally improve 
+things for the time being. It's possible that it would become redundant 
+if I can just include Ian's change to use strings for Perf stat.
+
+Of course I only think I have a handle on the issue right now, seems 
+like it has a lot of moving parts and something else always comes up. If 
+I hit a wall at some point I will come back here.
+
+Thanks
+James
