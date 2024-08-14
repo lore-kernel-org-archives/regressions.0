@@ -1,68 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E6E1B8EB4;
-	Wed, 14 Aug 2024 17:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B4D1B5804
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 19:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723658116; cv=none; b=c0CFTfUNKsKh32DJLRDaKn8WcImS/lmpg0aIQO5kQIN2iBayGuWcpcWfrcw/ogKgzkIBm9V+NeDj4AgvrCD45A/tqR05tJGfyQ1kYBYPGnkAODSc3u1MQn1hkZ744s6ywskljiFgTITSthsCfVD2rseX83+g/YduC7s+nM+Ghkg=
+	t=1723664928; cv=none; b=VFH3iqI5tCvxxKrJZwkCX+PJsgsKRJzgigOwwDnQbeWIBT2KJFF1u1Ptyd6JbhN8jl7eTQjxDDkD7OeUIQupsa3/cB72Hgj8hxVZNvhw/UONZlnoGBYZrbw11y/78CVOkR+iKx1JNOHXNVwzEUcxxzqHFsCnitmQ33r0SDWt5I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723658116; c=relaxed/simple;
-	bh=4u34LfFjV5jM2GYYXrlW7ZaS3ZVv+MHfwtakKnz4rS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r2wXSAtnRoWs2uIU+B0RfG0cnWcd9pYH/Uj0EZIMJNahmtjv+kgzX0vXgNUvGQZobISsADkaYY6hMTW1z1LddxeaCVoBEkvw0KT8kBXrXK2l/7kI8w8pa4M0VlBqPzMulYJpjh2QP13NU9+UEw9tWIeS27a9U6Vnq8PCD+uD318=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZdT/skdD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723664928; c=relaxed/simple;
+	bh=bO4WtZtWmYiSVgyoN5ROmGMKSl9sSFMBfoMJEjZv/fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y+g6Ig/s3yUDz6tRe1m4xpcGmGnUvGAUCFTtteTxUUJeGGD9msGPbYgM0u4QJJEJ3F4vdFILJ5xMsO8W5m0plvi7N1yu3eoMEXPg/fxuy8U9TxjpM55e698a4KDSy7V+fpcQyGjaDNRvH20s5rMSPkQs6mlJww70++D9xLBycU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XWZBDIt1; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZdT/skdD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E046EC116B1;
-	Wed, 14 Aug 2024 17:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723658115;
-	bh=4u34LfFjV5jM2GYYXrlW7ZaS3ZVv+MHfwtakKnz4rS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZdT/skdDW0Tc1I1r4xCJD8oCj0VwBij8xecbXBETAJoMvLk4d36l6dT0WEYPrJMaE
-	 6RUZOa16lgMNUjik/HMwaXIWnB20JMsoSIVwKwSCn3+6//gkdREp/cebfyGeDYyHta
-	 hsaZnxXKb646GTO+q6WQ09Ktum13s0vGMVajC2IA=
-Date: Wed, 14 Aug 2024 19:55:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
-Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	tiwai@suse.com, perex@perex.cz, lgirdwood@gmail.com,
-	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Vitaly Chikunov <vt@altlinux.org>, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH for stable v2 0/2] ASoC: topology: Fix loading topology
- issue
-Message-ID: <2024081442-thimble-widget-e370@gregkh>
-References: <20240814154749.2723275-1-amadeuszx.slawinski@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XWZBDIt1"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7a3574acafeso12731685a.1
+        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 12:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1723664926; x=1724269726; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3OmmmmMrDC4W0F8lkbGFHwEP3JYoA6/5jhkQ/viF1A=;
+        b=XWZBDIt1FKPTA45ztSjmp5sN2OGXAiO9auXs1LYxVNJc4znRUIHc3DMExd3gXp9i1a
+         qWgRmvfdzV529Cov1Xy5RhJvrWig+Dn+nfx1Jcfx9RIqXSaZl0Kafrb+J6FtGx8lTMxm
+         VaQiG4d1A/Kf18SdUaOCkPqgaoWbfeKOvoIPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723664926; x=1724269726;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3OmmmmMrDC4W0F8lkbGFHwEP3JYoA6/5jhkQ/viF1A=;
+        b=ueBzJXahhNN3X4wDBSr0Cdk9Rq26vGbGECKNdzmZaJdTb758sLbcaNhxqHHjOHiMex
+         h6+ffg3fV4Uq14murIC6xGpoRU4v5fwtv6pOfPfIDWBVd0kmQN+KO5jgo1dGV+Czt2wq
+         bzeQxpRXEij5dHbANQPB8I+t+8tRyjyFfjhy5wWbgD3G/wzkDjnAgDnPC29odgO6DYnD
+         6RD+6MnxWwN67xIk9cFiKiVsFYq8xyKX+lnRBur26zxuGxKxJ4VgagECqj1x/RwUJhQJ
+         RCBQdEl55gbFTcNyJ/2N8RBwvzXTwnUKEYgL3BQ9oWX1FcFkEcKMWs1juOAykTd/JgoP
+         Rohg==
+X-Forwarded-Encrypted: i=1; AJvYcCXH8eOzpiENSb86C0eWH4ru6E1ON7SoEDiC43XfiwunLXLENbW3xjJwmSff4ZccEmrTewyH38e/LjBakw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyx6q9y60k9rA5gst7vx2dn8sPiB7IWzz2QB2IxwUFRXEuUSSXC
+	ZcKKXNiiMEwYamRdto7pNY9ctLq5niDR3l+52a6VTbDn0iUibG3DGPOdq6F6zg==
+X-Google-Smtp-Source: AGHT+IErhyyNUmYKZjBsCxqT8g+w40XAlnbdemc/QTHXnJAI6P9zVnBqiDbV3X7fOMunqAkgxUG9Lw==
+X-Received: by 2002:a05:6214:4290:b0:6bb:3f69:dd0b with SMTP id 6a1803df08f44-6bf5d175ed3mr61544606d6.18.1723664925768;
+        Wed, 14 Aug 2024 12:48:45 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bd82e65c15sm46976756d6.130.2024.08.14.12.48.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2024 12:48:45 -0700 (PDT)
+Message-ID: <03524012-0f88-4990-811e-1e76c2b8e7af@broadcom.com>
+Date: Wed, 14 Aug 2024 12:48:42 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20240814: bcm2711-rpi-4-b boot failed
+To: Stefan Wahren <wahrenst@gmx.net>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: krzk+dt@kernel.org, Rob Herring <robh@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYuncv0fuBSC0A1z1G_UOv_XuMQz=DsrLZDK-Wc=10ghag@mail.gmail.com>
+ <CA+G9fYv2M8tqwXQF5At4KmG3PFJoiv3D-4Tn_q87MfBvAqLmag@mail.gmail.com>
+ <da941b0e-8e29-4ff7-aff8-683da0aef8da@gmx.net>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <da941b0e-8e29-4ff7-aff8-683da0aef8da@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240814154749.2723275-1-amadeuszx.slawinski@linux.intel.com>
 
-On Wed, Aug 14, 2024 at 05:47:47PM +0200, Amadeusz Sławiński wrote:
-> Commit 97ab304ecd95 ("ASoC: topology: Fix references to freed memory")
-> is a problematic fix for issue in topology loading code, which was
-> cherry-picked to stable. It was later corrected in
-> 0298f51652be ("ASoC: topology: Fix route memory corruption"), however to
-> apply cleanly e0e7bc2cbee9 ("ASoC: topology: Clean up route loading")
-> also needs to be applied.
+On 8/14/24 09:19, Stefan Wahren wrote:
+> Hi Naresh,
 > 
-> Link: https://lore.kernel.org/linux-sound/ZrwUCnrtKQ61LWFS@sashalap/T/#mbfd273adf86fe93b208721f1437d36e5d2a9aa19
-> 
-> Should be applied to stable 6.1, 6.6, 6.9.
+> Am 14.08.24 um 17:26 schrieb Naresh Kamboju:
+>> On Wed, 14 Aug 2024 at 20:54, Naresh Kamboju 
+>> <naresh.kamboju@linaro.org> wrote:
+>>> The arm64 kernel booting on bcm2711-rpi-4-b boot failed with today's 
+>>> Linux
+>>> next-20240814 tag. The boot failed with half boot log [1]
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>>
+>>>   GOOD: next-20240813
+>>>   BAD:  next-20240814
+>>>
+>>> The first investigation show the following to changes and I have 
+>>> reverted the
+>>> following two commits and the boot test is back to pass [2].
+>>>
+>>> $ git log --oneline  next-20240813..next-20240814
+>>> arch/arm64/boot/dts/broadcom/
+>>>    6e7b99d720da6 ARM: dts: bcm271x: add missing properties to local_intc
+>>>    eb81f43c901ff ARM: dts: bcm2837/bcm2712: adjust local intc node names
+>>>
+>> Anders bisected down to first bad commit as,
+>>     6e7b99d720da ("ARM: dts: bcm271x: add missing properties to 
+>> local_intc")
+> thank you for the report and sorry about that mess. I don't why i was
+> under the impression they were harmless DT properties. I look into this,
+> so a revert is the proper solution for now.
 
-6.9 is long end-of-life (as shown on the front page of kernel.org.)
+Without the 'interrupt-controller' of_irq_init() would not be picking up 
+the interrupt-controller@7cd00000 node and it would not attempt to 
+register the driver. We can see that the GIC is still the primary 
+interrupt controller for that system:
 
-Patches queued up to 6.1 and 6.6 now, thanks.
+[    0.000000] Root IRQ handler: gic_handle_irq
 
-greg k-h
+my suspicion here is that irq-bcm2836.c still wants to own the inter 
+processor operations and calls set_smp_ipi_range() which then replaces 
+what the GIC has installed, thus diverting all interrupts towards 
+itself, when it should not, and that won't work as there is no 
+coordination with the ARM GIC driver. Stefan do you know how the VPU 
+decides between one interrupt controller versus the other, assuming 
+there is even a choice offered to users? Is it via adding/removing the 
+'interrupt-controller' property, or is it via the more conventional 
+'status' property?
+
+FWIW, I did changes back in the days to support the 7211 sister chip of 
+2711:
+
+https://lore.kernel.org/lkml/20191015185919.GA26464@bogus/T/
+
+Dropping the patch for now, thanks!
+-- 
+Florian
+
