@@ -1,143 +1,94 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54C1B142B
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 13:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADEA1B29BE
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 14:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723643642; cv=none; b=e/pAIXsKYlfmu0AemzWkWmnwmn4+CEVb6ZBNIepPht/FgX9VAbhpGMNSvQwABvJvBLlQp8Lf3NRzy5bL8EZtRXnfVewVfoZcy8muVgQXsBTSfZODS74I3o3fnLvV7bM7pNGFEj99jW1zsB1YHfrEqJkpSY5v1KtcaEk1W0ZR8iM=
+	t=1723644369; cv=none; b=rrnGPHzcq+cV27u2ItRjE0ijzjDIMSXaCd4MrBAN/ia1yv4q+Gt9pqXQWAdh5/pJV+/RINoyGRuiSzWe8ahoYc6E+Q6zZFuoIq3fZIwNWSPsnLrF+lpdylHkKSyqDGioziMvHyG0I94W/zLo2X1b53WmcCmfmuQpV4efYzqpRbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723643642; c=relaxed/simple;
-	bh=pVmwF7G2P8agT0vOSGb5CBnNzfqC5aZAhldqlokDAlQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=uoaUBzdKN9ecOn+/iHV76kAuJVHWfJUGO0XYT8fh97qFUOwz2OkYTUcIyUnqx1SGi9SIoPMrtyhvrcH6ZDGqzQ85rrpwCMPPTOEFyxkTjUEMWzBv2ZdSskjikCs/CKmPsrafeM7NWaoGi6J1wpO/1jvg+xMoVB5gtByhvSntemc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kr+rRJZo; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723644369; c=relaxed/simple;
+	bh=hXbD/MNaISTuwz3URmp0i6sywhLG6Vsf/+KsLDYciYk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fLl2xgscoau+jJk22+jExBnCz3uWyuyTw6yqXnuhbBOOSlzXFvxW/6iN/QmJ91z8ncNr22tF1zYtQVMugk9eT93/HPDU64o1yjJUmUZv/hl2+RuehxKVbFz6uQ0HRIOUMoofnM0zRAgobZEU5gpEqvPwSkr7HXeU1GKEY16j2f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gG3IXTHx; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr+rRJZo"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-45019dccc3aso36949551cf.1
-        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 06:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723643639; x=1724248439; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=utWJHul5Du4R9rd2S0MY4SOzJbviKmWuhT4Hw98IBd8=;
-        b=Kr+rRJZocFlqgQtZW94jlNm5chBm0teCHReIuvgDaLK/6BjMMUTn6XP6dVS2zNm4kN
-         MrME5pPG4DiBiqrJAEw8rAFoL7WXkg7jQpyWclxXkLKhVExzVcPKptOHIBVSXwxplBcR
-         +wVRiC2fKvV0zorYI1AmviF3G/7tciw3xkyi21AiiNJM0QVHTuA1tlqMbiLbqeUHcC7K
-         su21GIlWZu/XEtXajzt1A4YP7jfO4UaC3FT/MVbAJ3xMftqKHPlrCnZfaGp6HrXde0wb
-         SxO2Hrg0U3ALVVQU1Qt0DCH4zF5hy7i/LjIWFs18hLrBP31Fk61A0tpPmIhh15s1nh3u
-         1GYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723643639; x=1724248439;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=utWJHul5Du4R9rd2S0MY4SOzJbviKmWuhT4Hw98IBd8=;
-        b=MyTKshMCTaIlbCTu2T1e9EqVEGWmdEFCtAXjd2Xde2UkfdhCccQSZgAwyPcAwMKD8A
-         rSI0solO/mxK9S4TscSpxHljN8vpCZ+AJ+lOwOex/NhVAzcEi5uWsOWV0fGM8gi7HC0Z
-         OlBKqbU85YtS7jgITLepKv4jRBZxJacjaCwc2seoODKrBY1xUWykms1/5r+xqcpm1tQj
-         n/l6vxk6OORnoI6I6IJdmehD2Kx358o+XU1mw8RDk0NDNaO63JzjfEEPj6E26aynd8N7
-         gZAbm7ylQjcYxx/bUEVPjmpChmzmu0yGcuYmUE9b0eS7UNuIW0SZIXfvVGoVBeaqbuKw
-         weeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQogzBKwY3tKryne04tXYIapNb9X5N1dT1nkq7ZYc7Ss0FDjoIcYRhHfb+fKuT8k2jlLXub4WEzjRhoTJqqwFWwVU3Mx47MJkxBig=
-X-Gm-Message-State: AOJu0Ywoj8VqJlvGxfWZNRn/1c6huIa3B4jvKhIG7W+ndeS80r+BryGK
-	Us3hVW5wbSWhLDQs2r/oYtsTqCoPo5Gu+hK9iex4yMhTw3LRiOhC
-X-Google-Smtp-Source: AGHT+IG26aHZQ4o0SHh+Y2TSRBi05r/HN4WM3gUgtjuZvwpzGsDAKYKOBtBVn8mEfs/ixoJC6h9VXA==
-X-Received: by 2002:a05:622a:5b0a:b0:44f:ddad:c21c with SMTP id d75a77b69052e-4535ba7aee4mr25549581cf.13.1723643639434;
-        Wed, 14 Aug 2024 06:53:59 -0700 (PDT)
-Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4531c1a7f28sm41705531cf.10.2024.08.14.06.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 06:53:58 -0700 (PDT)
-Date: Wed, 14 Aug 2024 09:53:58 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Christian Heusel <christian@heusel.eu>, 
- Adrian Vladu <avladu@cloudbasesolutions.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
- Greg KH <gregkh@linuxfoundation.org>, 
- "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>, 
- "alexander.duyck@gmail.com" <alexander.duyck@gmail.com>, 
- "arefev@swemel.ru" <arefev@swemel.ru>, 
- "davem@davemloft.net" <davem@davemloft.net>, 
- "edumazet@google.com" <edumazet@google.com>, 
- "jasowang@redhat.com" <jasowang@redhat.com>, 
- "kuba@kernel.org" <kuba@kernel.org>, 
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
- "pabeni@redhat.com" <pabeni@redhat.com>, 
- "stable@vger.kernel.org" <stable@vger.kernel.org>, 
- "willemb@google.com" <willemb@google.com>, 
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Message-ID: <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
-In-Reply-To: <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
-References: <20240726023359.879166-1-willemdebruijn.kernel@gmail.com>
- <20240805212829.527616-1-avladu@cloudbasesolutions.com>
- <2024080703-unafraid-chastise-acf0@gregkh>
- <146d2c9f-f2c3-4891-ac48-a3e50c863530@heusel.eu>
- <2024080857-contusion-womb-aae1@gregkh>
- <60bc20c5-7512-44f7-88cb-abc540437ae1@heusel.eu>
- <0d897b58-f4b8-4814-b3f9-5dce0540c81d@heusel.eu>
- <20240814055408-mutt-send-email-mst@kernel.org>
- <c746a1d2-ba0d-40fe-8983-0bf1f7ce64a7@heusel.eu>
- <PR3PR09MB5411FC965DBCCC26AF850EA5B0872@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
-Subject: Re: [PATCH net] net: drop bad gso csum_start and offset in
- virtio_net_hdr
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gG3IXTHx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723644368; x=1755180368;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hXbD/MNaISTuwz3URmp0i6sywhLG6Vsf/+KsLDYciYk=;
+  b=gG3IXTHxhq4jYf17ewTM3XFbwPTmfxovdRab8UFu7FIxcXWJXx1RjGsI
+   ID9fWItWgCKt1ajl2HXrsJ8y8TnK7j17zX3NjC5jVwv5CjHpmRpiY/zAB
+   raBMEcMo2AO26SmSc+9VU2Af3wRDIjvJ58Sv1p2kS/Vhxtf9mi/JbbmeI
+   hlCCh8/H11nYLYVfb8d1yhpHEIFIE3+AbaTuYbzh7OUTr46pyGgASpsLW
+   dKdr1JLAc71vu8VJ2cYNpZW4iOVvgmyhFKaLj7QWyof50r1YDItM/fzIt
+   u/7edUqVXuNIb+VOJ0fX2TWxDVaovaPnrOmhleQfw8CZO88iMY/b/SlTT
+   A==;
+X-CSE-ConnectionGUID: nfDqRGqLR5WGRCmwGSSg0g==
+X-CSE-MsgGUID: 4dd0f8xnRwirhaOU0ArfaA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="13010056"
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="13010056"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 07:06:07 -0700
+X-CSE-ConnectionGUID: TUucd5uGSj+7BYDcONmK6Q==
+X-CSE-MsgGUID: tw5v2nbrSXuMCYS3yB9cfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="59305655"
+Received: from dev2.igk.intel.com ([10.237.148.94])
+  by orviesa006.jf.intel.com with ESMTP; 14 Aug 2024 07:06:03 -0700
+From: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+	tiwai@suse.com,
+	perex@perex.cz,
+	lgirdwood@gmail.com,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Vitaly Chikunov <vt@altlinux.org>,
+	Mark Brown <broonie@kernel.org>,
+	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH for stable 0/2] ASoC: topology: Fix loading topology issue
+Date: Wed, 14 Aug 2024 16:06:55 +0200
+Message-Id: <20240814140657.2369433-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Christian Heusel wrote:
-> On 24/08/14 10:10AM, Adrian Vladu wrote:
-> > Hello,
-> > 
-> > The 6.6.y branch has the patch already in the stable queue -> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=3e713b73c01fac163a5c8cb0953d1e300407a773, and it should be available in the 6.6.46 upcoming minor.
-> > 
-> > Thanks, Adrian.
-> 
-> Yeah it's also queued up for 6.10, which I both missed (sorry for that!).
-> If I'm able to properly backport the patch for 6.1 I'll send that one,
-> but my hopes are not too high that this will work ..
+Commit 97ab304ecd95 ("ASoC: topology: Fix references to freed memory")
+is a problematic fix for issue in topology loading code, which was
+cherry-picked to stable. It was later corrected in
+0298f51652be ("ASoC: topology: Fix route memory corruption"), however to
+apply cleanly e0e7bc2cbee9 ("ASoC: topology: Clean up route loading")
+also needs to be applied.
 
-There are two conflicts.
+Link: https://lore.kernel.org/linux-sound/ZrwUCnrtKQ61LWFS@sashalap/T/#mbfd273adf86fe93b208721f1437d36e5d2a9aa19
 
-The one in include/linux/virtio_net.h is resolved by first backporting
-commit fc8b2a6194693 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4
-validation")
+Amadeusz Sławiński (2):
+  ASoC: topology: Clean up route loading
+  ASoC: topology: Fix route memory corruption
 
-We did not backport that to stable because there was some slight risk
-that applications might be affected. This has not surfaced.
+ sound/soc/soc-topology.c | 32 ++++++++------------------------
+ 1 file changed, 8 insertions(+), 24 deletions(-)
 
-The conflict in net/ipv4/udp_offload.c is not so easy to address.
-There were lots of patches between v6.1 and linus/master, with far
-fewer of these betwee v6.1 and linux-stable/linux-6.1.y.
 
-We can also avoid the backport of fc8b2a6194693 and construct a custom
-version for this older kernel. All this is needed in virtio_net.h is
-
-+               case SKB_GSO_UDP_L4:
-+               case SKB_GSO_TCPV4:
-+               case SKB_GSO_TCPV6:
-+                       if (skb->csum_offset != offsetof(struct tcphdr, check))
-
-and in __udp_gso_segment
-
-+       if (unlikely(skb_checksum_start(gso_skb) !=
-+                    skb_transport_header(gso_skb)))
-+               return ERR_PTR(-EINVAL);
-+
-
-The Fixes tag points to a commit introduced in 6.1. 6.6 is queued up,
-so this is the only release for which we have to create a custom
-patch, right?
-
-Let me know if you will send this, or I should?
+base-commit: 878fbff41def4649a2884e9d33bb423f5a7726b0
+-- 
+2.34.1
 
