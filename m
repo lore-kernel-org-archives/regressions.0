@@ -1,70 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5843219D07D
-	for <regressions@lists.linux.dev>; Tue, 13 Aug 2024 14:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EBBDA953
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 00:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723560134; cv=none; b=ui5+CNPH/dzHnMUoE8cnPYZCseZSqJhJr1bTzcuTP7Z+mL6t59kz+qlJkmjbmME6cKEAkSW2ocoFHIChzx78CfMv9k0H1Cj+P5dw8KIDx4HuKcullogv1PhoPFFlORbOlfDG7Z89C5Iljc39liffac28vyY0QnlzWf6nw057hzw=
+	t=1723593663; cv=none; b=Ar3uHtfhn5XJF3+8JOf30zvq/TJgVx5sF+EuQXR2i7S0AmLbNqj8AW6/HtWH39zJcD0BexI/U/LGgBzKyj0i/qxL9OwfsECjhVE3BFvoLBTcHlmYBwZcQrIxtMAyx8JUsG5Tvn3lRon2e0FwrBiPvofqaovNJi5eqmqHxNDmGmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723560134; c=relaxed/simple;
-	bh=t/3sn+zJb5soHCGFSsLi8+AAfVQY4IzOjU0MFJj9U0s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hcULs/UJ9Kpn+BRHwbf3NG6vaNHxWqovEShKeACj2ezS4GPRAks9dgDmfKmQ8XHaS1/F2cunfqOrkHF6IKTyLUkYePYfW5ffPT2qB4wI6KghyU/hi0WV81VraLNFK8vYFxnkU43CJz7A68kFN9saX6Djeq/2j1spJJSrcwvZyVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=egosHgS9; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="egosHgS9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723560133; x=1755096133;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=t/3sn+zJb5soHCGFSsLi8+AAfVQY4IzOjU0MFJj9U0s=;
-  b=egosHgS9cgUnogsT3oDKXkVGZxReD6D+UFjVsooG6zgXBv2j0PLG7U+z
-   3LhBSjqtfRcd29E1jzaXAmugQCA2K5s8Pzmx6w4Grspj5mY/G/FAd7hwu
-   /Z8Q091fZAWBh+RGK39ax4mKRNnoN6HdGI+gPeU1IKzS1c+O3PtgnNib7
-   OM/nXVjSriczjMQKgumXVbNRwGvEHdfggjgGAgSqGzqmAC0efhLi5tDhU
-   uL1zPvQxw6BimPFu60DLTcim54lKPAzGGbxZLB0Q5ou2roGNQMV3/4Ko/
-   ZQo17kofVC869Juw1f3NIfVHri3XHXOk6IIK9CEFs6RctEV3Evg1wddb/
-   A==;
-X-CSE-ConnectionGUID: XoxPGYRdSxOP40GTJQkbQQ==
-X-CSE-MsgGUID: cotCSS3kR2W29rkg5UQiXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="25518838"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="25518838"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:42:12 -0700
-X-CSE-ConnectionGUID: 6ft7ySktRo2/qjTJZk4hFg==
-X-CSE-MsgGUID: 5sMOjk9aSR+hZ5XsGoH20w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="63110132"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:42:06 -0700
-Message-ID: <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
-Date: Tue, 13 Aug 2024 16:42:04 +0200
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	s=arc-20240116; t=1723593663; c=relaxed/simple;
+	bh=/jt2KQ3hYUB2qH6NZxlcN8hjxzqNHCvKIia+tiAkrmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLabdBJpJXVoxVJvPoyokyOzfr+H2Xqt/6OGBqAJYAYa850n05QWS2nzUsnwQe2fCG/Ibe7XvJHnKsH9Vuu83yzzwla7qUkyHxHL8JSVV8v8UqIVyw4Crhd5UKrKvxV4vUGCq0zvmzskBg4Mec6rZttOFysd79HtLZFlrCjnz8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 7C9D172C8CC;
+	Wed, 14 Aug 2024 03:00:53 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 65D5936D0246;
+	Wed, 14 Aug 2024 03:00:53 +0300 (MSK)
+Date: Wed, 14 Aug 2024 03:00:53 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	=?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>
 Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
  corruption
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Vitaly Chikunov <vt@altlinux.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
- Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com, perex@perex.cz,
- tiwai@suse.com, linux-sound@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
+Message-ID: <20240814000053.posrfbgoic2yzpsk@altlinux.org>
 References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
  <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
  <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
@@ -72,42 +40,63 @@ References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
  <2024081225-finally-grandma-011d@gregkh>
  <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
  <2024081227-wrangle-overlabor-cf31@gregkh>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <2024081227-wrangle-overlabor-cf31@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
 
-On 8/12/2024 4:11 PM, Greg Kroah-Hartman wrote:
-> On Mon, Aug 12, 2024 at 01:38:42PM +0300, Vitaly Chikunov wrote:
->> Greg,
->>
->> On Mon, Aug 12, 2024 at 12:25:54PM +0200, Greg Kroah-Hartman wrote:
->>> On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
->>>> I guess that for completeness you need to apply both patches:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
->>>
->>> This is already in the tree.
->>>
->>>> was an incorrect fix which was later fixed by:
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
->>>
->>> This commit will not apply :(
->>
->> It depends upon e0e7bc2cbee9 ("ASoC: topology: Clean up route loading"),
->> which was in the same patchset that didn't get applied.
->>    
->>    https://lore.kernel.org/stable/?q=ASoC%3A+topology%3A+Clean+up+route+loading
->>
->> I see, Mark Brown said it's not suitable material for stable kernels
->> (since it's code cleanup), and Sasha Levin dropped it, and the dependent
->> commit with real fix.
-> 
-> Ok, then someone needs to provide a working backport please...
-> 
+Greg, Amadeusz,
 
-Should this be cherry-pick of both (they should apply cleanly):
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=e0e7bc2cbee93778c4ad7d9a792d425ffb5af6f7
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
-or just the second one adjusted to apply for stable trees?
+On Tue, Aug 13, 2024 at 04:42:04PM +0200, Amadeusz Sławiński wrote:
+> On 8/12/2024 4:11 PM, Greg Kroah-Hartman wrote:
+> > On Mon, Aug 12, 2024 at 01:38:42PM +0300, Vitaly Chikunov wrote:
+> > > Greg,
+> > > 
+> > > On Mon, Aug 12, 2024 at 12:25:54PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
+> > > > > I guess that for completeness you need to apply both patches:
+> > > > > 
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
+> > > > 
+> > > > This is already in the tree.
+> > > > 
+> > > > > was an incorrect fix which was later fixed by:
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
+> > > > 
+> > > > This commit will not apply :(
+> > > 
+> > > It depends upon e0e7bc2cbee9 ("ASoC: topology: Clean up route loading"),
+> > > which was in the same patchset that didn't get applied.
+> > >    https://lore.kernel.org/stable/?q=ASoC%3A+topology%3A+Clean+up+route+loading
+> > > 
+> > > I see, Mark Brown said it's not suitable material for stable kernels
+> > > (since it's code cleanup), and Sasha Levin dropped it, and the dependent
+> > > commit with real fix.
+> > 
+> > Ok, then someone needs to provide a working backport please...
+> > 
+> 
+> Should this be cherry-pick of both (they should apply cleanly):
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=e0e7bc2cbee93778c4ad7d9a792d425ffb5af6f7
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
+> or just the second one adjusted to apply for stable trees?
+
+I think having commit with memory corruption fix is more important to
+stable kernels than not having the code cleanup commit. So, I would
+suggest stable policy to be changed a bit, and minor commits like this
+code cleanup, be allowed in stable if they are dependence of bug fixing
+commits.
+
+Additionally, these neutral commits just make stable trees become closer
+to mainline trees (which allows more bug fix commits to be applied
+cleanly).
+
+Thanks,
+
