@@ -1,102 +1,78 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EBBDA953
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 00:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C362943F;
+	Wed, 14 Aug 2024 02:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723593663; cv=none; b=Ar3uHtfhn5XJF3+8JOf30zvq/TJgVx5sF+EuQXR2i7S0AmLbNqj8AW6/HtWH39zJcD0BexI/U/LGgBzKyj0i/qxL9OwfsECjhVE3BFvoLBTcHlmYBwZcQrIxtMAyx8JUsG5Tvn3lRon2e0FwrBiPvofqaovNJi5eqmqHxNDmGmg=
+	t=1723601932; cv=none; b=vCt68/IUhtrgokCrozd4cFjdy7JIV9oO9q5YkZZkaTLFZAbVEasjLymoqHURvm7bgHTdJAzEUwWmfwWGffiDEr7lbdBx0MViPFN97k98aYqsMqEt/8MmHr/dXS2agj4LGUG/EIqBIMhvGfug6bR0JvlJkCEUdkg2bTJTmDLw6R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723593663; c=relaxed/simple;
-	bh=/jt2KQ3hYUB2qH6NZxlcN8hjxzqNHCvKIia+tiAkrmc=;
+	s=arc-20240116; t=1723601932; c=relaxed/simple;
+	bh=SYXpdKKAIUAaMVyIUQOLGHSUglp33AepZ89w18ifSmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLabdBJpJXVoxVJvPoyokyOzfr+H2Xqt/6OGBqAJYAYa850n05QWS2nzUsnwQe2fCG/Ibe7XvJHnKsH9Vuu83yzzwla7qUkyHxHL8JSVV8v8UqIVyw4Crhd5UKrKvxV4vUGCq0zvmzskBg4Mec6rZttOFysd79HtLZFlrCjnz8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 7C9D172C8CC;
-	Wed, 14 Aug 2024 03:00:53 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 65D5936D0246;
-	Wed, 14 Aug 2024 03:00:53 +0300 (MSK)
-Date: Wed, 14 Aug 2024 03:00:53 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRjDwnLxPjryD0kkMyIXunmdsswLc9Loh7qOJk6AZoHhi7sOgGq/sU7twUrFAYfqaDczFQnsJbqAVs6x+dfuQ0sWOJXNv5DiqEj3tfjMjbc1Kkxh96154k3QPl64Dvb7MkAlNhyXHE8zfdq8/M+wIX14nWAfkPkQUEa6WjY+/m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vD/hBeC/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vD/hBeC/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE16C32782;
+	Wed, 14 Aug 2024 02:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723601932;
+	bh=SYXpdKKAIUAaMVyIUQOLGHSUglp33AepZ89w18ifSmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vD/hBeC/kQYwGGdgwg2F1siBMH5FbFMAmwb0EfwSIAEcMQdWalSE1LVApkJABpQjT
+	 N+jdTQNNs41B/zxCzu0axloV0m+o3N/vtrNg8cSo6xapJu4xAJ+A5zE9xrZupZ3amE
+	 woHpZKWblgCFgQ+DG5r85KaskKbqptgwXHMB6ZC140DPEWqKiaQHSSZulKjthmvUsy
+	 Gxi7o/sGvczwtu8KD2tsLU0lj6O/p4xB0oMmpsLoJV6lSFlZKgEe9R8qFxC+v1VxIc
+	 4tiBoW1TJbS/vYiJEuCRXxJlELk3sTdCZZvhBN2eHM2NJkypx14CymvGSW9+GjdBPy
+	 p8guwfOB7Vm7g==
+Date: Tue, 13 Aug 2024 22:18:50 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	=?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
 	Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
 	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Vitaly Chikunov <vt@altlinux.org>, stable@vger.kernel.org
 Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
  corruption
-Message-ID: <20240814000053.posrfbgoic2yzpsk@altlinux.org>
+Message-ID: <ZrwUCnrtKQ61LWFS@sashalap>
 References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
  <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
  <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
- <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
- <2024081225-finally-grandma-011d@gregkh>
- <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
- <2024081227-wrangle-overlabor-cf31@gregkh>
- <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
+In-Reply-To: <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
 
-Greg, Amadeusz,
+On Mon, Aug 12, 2024 at 11:53:17AM +0200, Thorsten Leemhuis wrote:
+>Hi, top-posting for once, to make this easily accessible to everyone.
+>
+>Greg, Sasha, to me it looks like something fell through the cracks.
+>Pierre-Louis afaics about a week ago asked (see the quote below) to
+>revert 97ab304ecd95c0 ("ASoC: topology: Fix references to freed memory")
+>[v6.10-rc6, v6.9.11, v6.6.42, v6.1.101] from the stable branches *or*
+>pick up b9dd212b14d27a ("ASoC: topology: Fix route memory corruption").
+>But nothing like that has happened yet and I can't see any of those
+>resolutions in the 6.6 queue.
+>
+>Side note: I have a very strong feeling that I'm missing or
+>misunderstood something, but I decided to send this mail despite this...
+>If something like that was the case: apologies in advance.
 
-On Tue, Aug 13, 2024 at 04:42:04PM +0200, Amadeusz Sławiński wrote:
-> On 8/12/2024 4:11 PM, Greg Kroah-Hartman wrote:
-> > On Mon, Aug 12, 2024 at 01:38:42PM +0300, Vitaly Chikunov wrote:
-> > > Greg,
-> > > 
-> > > On Mon, Aug 12, 2024 at 12:25:54PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Mon, Aug 12, 2024 at 12:01:48PM +0200, Amadeusz Sławiński wrote:
-> > > > > I guess that for completeness you need to apply both patches:
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=97ab304ecd95c0b1703ff8c8c3956dc6e2afe8e1
-> > > > 
-> > > > This is already in the tree.
-> > > > 
-> > > > > was an incorrect fix which was later fixed by:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
-> > > > 
-> > > > This commit will not apply :(
-> > > 
-> > > It depends upon e0e7bc2cbee9 ("ASoC: topology: Clean up route loading"),
-> > > which was in the same patchset that didn't get applied.
-> > >    https://lore.kernel.org/stable/?q=ASoC%3A+topology%3A+Clean+up+route+loading
-> > > 
-> > > I see, Mark Brown said it's not suitable material for stable kernels
-> > > (since it's code cleanup), and Sasha Levin dropped it, and the dependent
-> > > commit with real fix.
-> > 
-> > Ok, then someone needs to provide a working backport please...
-> > 
-> 
-> Should this be cherry-pick of both (they should apply cleanly):
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=e0e7bc2cbee93778c4ad7d9a792d425ffb5af6f7
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/sound/soc/soc-topology.c?id=0298f51652be47b79780833e0b63194e1231fa34
-> or just the second one adjusted to apply for stable trees?
+For AUTOSEL mails, I only end up looking at the threads when I'm about
+to actually queue those commits up into the stable-queue, which is what
+happened here.
 
-I think having commit with memory corruption fix is more important to
-stable kernels than not having the code cleanup commit. So, I would
-suggest stable policy to be changed a bit, and minor commits like this
-code cleanup, be allowed in stable if they are dependence of bug fixing
-commits.
-
-Additionally, these neutral commits just make stable trees become closer
-to mainline trees (which allows more bug fix commits to be applied
-cleanly).
-
+-- 
 Thanks,
-
+Sasha
