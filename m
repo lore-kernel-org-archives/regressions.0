@@ -1,200 +1,112 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793581586D3
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 10:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B823D552;
+	Wed, 14 Aug 2024 10:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723631231; cv=none; b=YCjATwlJT0VgectQHJK3JfDKqHdjCaKHdFubbnB3R4BOijjJyesm7+kSQ5mHHfPHNi9BOeN7GgwNIELhvMeMt3tQLpz0ab0LzMdTl2N2AJQaggURxuT1JCnQV8hlQsNT20fI4M8IMq48M6nARKq2Ur2ieuZdfm0+jQn2mBozNwA=
+	t=1723631610; cv=none; b=dmGIueS1Xd8VS9BxzXuji5fVpXbCOMSOX0Up+zW4pO/pC/uTus59VkaKXnoyA4bE4HuNiWzJjk2jP0sn2Gar0VKkbhmnCK3jJxSkfOqc0fumcInS3LGvCkM6gxX4lc1rl5koU5CXjGXlES7eKOvfpsQwyVGncgmpbqNSAZGvEU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723631231; c=relaxed/simple;
-	bh=NFd//9rvuW/5AfMJD4NStL+5w9YGT8NLe7gO4v888AM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KIohMDP98su7/M9qAirHrED+gm6ZkPOd+kP+6DiHMGSfASk/Dbp9XzhNJguEIV8CEBpaIIz4AYqKNIXbjyyu6/+7p0QQs102J7QjkY8/PaGag90DKZWHL9BaQiREV9RGgoyuhdBm1psY6721pNmL/yDmJ9hR8sJumsYc/2LlmUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PKk6H7+H; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723631610; c=relaxed/simple;
+	bh=KpPZgmHtH/1QMwBxAjeLq+Z4Flu+D6NzLewjyw97fjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t44uflWzFHC787QGWx1EyQLi58yMjPX4BqtFTZLa6hT3Cny2NKFgUEnSVQNPgiHRD4Bf9IpIQJltexRf1AdimLFeW5USSbOrmcwN7gqhk6wCoOj0gY1K/5q0/vg+5OwhXKbYg1mQxyzmG6inZ2v7a6mR8yHTEMuKSvZxMVWvuYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIOyxwbf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PKk6H7+H"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4f8c50440e6so2315139e0c.3
-        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 03:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723631228; x=1724236028; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qZiDUHoYgeH6Nw5eD9esliOomFOFpX11zNwcrK4A4zE=;
-        b=PKk6H7+H9z87b2m1q1W8Z0atuP3dc//8KZl5lwMmIEE+8ow6DzdOoLWttBkBJ0NTul
-         ZhlHmiLUlGD+0kx258SqrKWKStBy/p0ES2J4lHUhm8dR1cPO3+AHxS6A7wE7gaShjrmS
-         PSNZD34zNHqUO4YenUE9M2RsdsMdsLY6qAkzSO6/1rUhLH6dYjN8gXXV33h8cr3TZILy
-         X2efiz+aTThjMNH8uJF9cUMu2aJKcrCh5rVBTn1Kgkljlrq/UUF3Q2zPjuKXMOyaCs78
-         /af62iLT452Vfe64mnaASoylnSEByHxIkMDVmdoKVhk6JolqXGJM5iu6yZ4PN9B7b+s4
-         YbRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723631228; x=1724236028;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qZiDUHoYgeH6Nw5eD9esliOomFOFpX11zNwcrK4A4zE=;
-        b=e/m+o9smyb8VFbvOxXywMkmehwwlq7PlIt6prhZnHerSFjkVY2t+kmNHA+Cs+zPMOU
-         By6TzB/tqEQ9HGJ0f7WGnG1Qw5rqarVpYdk7p2+np8JB4yRMN0he0rE1q/EGeRabCjAL
-         o64ytJSCYCxV675IX68yxKJcIO+xK5qsZX/BJDUPsUv+yGZtasPjIhRfoeNL0pIWsP21
-         ck+fSpgaR52V+6XF/YxJgOcoYS2bb+9qAzxm0FFCw1yZ4Y1xxXWnZQ9CSYRLXPGZXbXQ
-         vlrXiWWs5cKrk8JCxgH6SoMd4WFy2rx84S8G3lmiknPQikXSQJohxU6ETEostiyGGNDH
-         Bp6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLpPodlCrco9umeuhPJkEbODGo05T8gvBod06wla40u+NDdWaJlaUkOVRHCZoswq1/Rpp0AlpPQwNp6ISjHQ2aeuGCtCJkjYfYIEY=
-X-Gm-Message-State: AOJu0YxxD5NY5DkIxpRNTdvnxI8YcPuuEzSrh3lknPlFhQ9K7uPIJdpV
-	ZElCAnmsSJfqtom3XkeuPi+7IRwb4Kribmj/lhDoiTe1ebGBsma16WGG0G2WIlu+/LK3/8Pt7G/
-	Wiyk+ySIZcCkj+g54luZ2RkxwEe28SjjmXpAiCA==
-X-Google-Smtp-Source: AGHT+IEZQLTPuqAIwcCEYngNT/EgYitRatZi9G4a93T/n23io4rsnyUMn72jWYsiRKonY0tY7n6Y3HLh4JhGEgdrY3w=
-X-Received: by 2002:a05:6122:3c8f:b0:4f5:261a:bdae with SMTP id
- 71dfb90a1353d-4fad2358458mr3129650e0c.14.1723631228257; Wed, 14 Aug 2024
- 03:27:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIOyxwbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3D5C32786;
+	Wed, 14 Aug 2024 10:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723631609;
+	bh=KpPZgmHtH/1QMwBxAjeLq+Z4Flu+D6NzLewjyw97fjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FIOyxwbfv56q4xNyWm9Y0/+kYJlFBDXXn01sT/qSWopRKDfyPzjiiGam0l1ST408Y
+	 tpwRAyeYiU8y23EvPkhCxNt22mKpJWgLmL+HVY+MFw+cNgNFzoXOoGf7zTwhBYyl0x
+	 ASWUnLOCOxqhf/Z/KJmpl872A9XUqj2L8gz2IltLdb8sn1Lsw9alkagzFk+AOiFoeg
+	 amLdXDGVmVtnjBr6w9WJ6DlIPE3oJwHBKbkywpEOLVBKi51pYGkSR7Y+CgPljVgaAg
+	 3cOLQrrtEAqfiRx9tPBFjN8paWKzCeQML6jyjK4tH1WJuzyFz7wOI00jq2c4lLp920
+	 09bLRiuHqeA5A==
+Date: Wed, 14 Aug 2024 11:33:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Vitaly Chikunov <vt@altlinux.org>
+Cc: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH AUTOSEL 6.9 17/40] ASoC: topology: Fix route memory
+ corruption
+Message-ID: <e7b0597c-72d8-4cb6-bcec-19e29c1b864e@sirena.org.uk>
+References: <czx7na7qfoacihuxcalowdosncubkqatf7gkd3snrb63wvpsdb@mncryvo4iiep>
+ <14e54a89-5c62-41b2-8205-d69ddf75e7c7@linux.intel.com>
+ <e95a876a-b4b4-4a9d-9608-ec27a9db3e0c@leemhuis.info>
+ <210a825d-ace3-4873-ba72-2c15347f9812@linux.intel.com>
+ <2024081225-finally-grandma-011d@gregkh>
+ <20240812103842.p7mcx7iyb5oyj7ly@altlinux.org>
+ <2024081227-wrangle-overlabor-cf31@gregkh>
+ <53ab1511-b79c-4378-b2b5-ea9e19e8f65b@linux.intel.com>
+ <20240814000053.posrfbgoic2yzpsk@altlinux.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
-In-Reply-To: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 14 Aug 2024 15:56:56 +0530
-Message-ID: <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
-Subject: Re: next: x86_64: ahci 0000:00:1f.2: probe with driver ahci failed
- with error -12
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-block <linux-block@vger.kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
-	Alexey Dobriyan <adobriyan@gmail.com>, Christoph Hellwig <hch@lst.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="A8cRzxVvx8vzJbx5"
+Content-Disposition: inline
+In-Reply-To: <20240814000053.posrfbgoic2yzpsk@altlinux.org>
+X-Cookie: The second best policy is dishonesty.
 
-On Wed, 14 Aug 2024 at 15:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The qemu-x86_64 boot failed with today's Linux next-20240814 tag due to
-> following crash.
->
-> The catch here is the crash seen on both x86_64 device and qemu-x86_64
-> but x86_64 device is able to boot successfully.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Boot log:
-> ---
-> [    0.000000] Linux version 6.11.0-rc3-next-20240814
-> (tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 13.3.0-1) 13.3.0, GNU
-> ld (GNU Binutils for Debian) 2.42.50.20240625) #1 SMP PREEMPT_DYNAMIC
-> @1723614704
-> ...
-> <6>[    2.479915] scsi host0: ahci
-> <4>[    2.484371] sysfs: cannot create duplicate filename
-> '/devices/virtual/workqueue/scsi_tmf_-1073661392'
 
-Anders bisected to the following first commit and reverted this commit
-and qemu-x86_64 boot successful now.
+--A8cRzxVvx8vzJbx5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-# first bad commit: [b188c57af2b5c17a1e8f71a0358f330446a4f788]
-      workqueue: Split alloc_workqueue into internal function and lockdep init
+On Wed, Aug 14, 2024 at 03:00:53AM +0300, Vitaly Chikunov wrote:
+> On Tue, Aug 13, 2024 at 04:42:04PM +0200, Amadeusz S=C5=82awi=C5=84ski wr=
+ote:
 
-original report link:
-https://lore.kernel.org/all/CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com/
+> > Should this be cherry-pick of both (they should apply cleanly):
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/sound/soc/soc-topology.c?id=3De0e7bc2cbee93778c4ad7d9a792d425ffb5af6f7
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/sound/soc/soc-topology.c?id=3D0298f51652be47b79780833e0b63194e1231fa34
+> > or just the second one adjusted to apply for stable trees?
 
-> <4>[    2.486170] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-> 6.11.0-rc3-next-20240814 #1
-> <4>[    2.486709] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> <4>[    2.486709] Call Trace:
-> <4>[    2.486709]  <TASK>
-> <4>[    2.486709]  dump_stack_lvl+0x96/0xb0
-> <4>[    2.486709]  dump_stack+0x14/0x20
-> <4>[    2.486709]  sysfs_warn_dup+0x5f/0x80
-> <4>[    2.486709]  sysfs_create_dir_ns+0xd0/0xf0
-> <4>[    2.486709]  kobject_add_internal+0xa8/0x2e0
-> <4>[    2.486709]  kobject_add+0x97/0x100
-> <4>[    2.486709]  ? get_device_parent+0x109/0x1d0
-> <4>[    2.486709]  device_add+0xe4/0x880
-> <4>[    2.486709]  ? hrtimer_init+0x2b/0x80
-> <4>[    2.486709]  device_register+0x1e/0x30
-> <4>[    2.486709]  workqueue_sysfs_register+0x91/0x140
-> <4>[    2.486709]  __alloc_workqueue+0x664/0x800
-> <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
-> <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
-> <4>[    2.486709]  alloc_workqueue+0x5a/0x80
-> <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
-> <4>[    2.486709]  scsi_host_alloc+0x365/0x470
-> <4>[    2.486709]  ata_scsi_add_hosts+0xc2/0x130
-> <4>[    2.486709]  ata_host_register+0xb5/0x260
-> <4>[    2.486709]  ata_host_activate+0xe9/0x140
-> <4>[    2.486709]  ahci_host_activate+0x16a/0x190
-> <4>[    2.486709]  ahci_init_one+0xe0f/0x1080
-> <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
-> <4>[    2.486709]  local_pci_probe+0x48/0xa0
-> <4>[    2.486709]  pci_device_probe+0xc6/0x1f0
-> <4>[    2.486709]  really_probe+0xcc/0x3b0
-> <4>[    2.486709]  __driver_probe_device+0x7d/0x160
-> <4>[    2.486709]  driver_probe_device+0x24/0xa0
-> <4>[    2.486709]  __driver_attach+0xdd/0x1d0
-> <4>[    2.486709]  ? __pfx___driver_attach+0x10/0x10
-> <4>[    2.486709]  bus_for_each_dev+0x91/0xe0
-> <4>[    2.486709]  driver_attach+0x22/0x30
-> <4>[    2.486709]  bus_add_driver+0x118/0x240
-> <4>[    2.486709]  driver_register+0x62/0x120
-> <4>[    2.486709]  ? __pfx_ahci_pci_driver_init+0x10/0x10
-> <4>[    2.486709]  __pci_register_driver+0x62/0x70
-> <4>[    2.486709]  ahci_pci_driver_init+0x22/0x30
-> <4>[    2.486709]  do_one_initcall+0x62/0x250
-> <4>[    2.486709]  kernel_init_freeable+0x1ba/0x310
-> <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
-> <4>[    2.486709]  kernel_init+0x1e/0x1d0
-> <4>[    2.486709]  ret_from_fork+0x41/0x60
-> <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
-> <4>[    2.486709]  ret_from_fork_asm+0x1a/0x30
-> <4>[    2.486709]  </TASK>
-> <3>[    2.508109] kobject: kobject_add_internal failed for
-> scsi_tmf_-1073661392 with -EEXIST, don't try to register things with
-> the same name in the same directory.
-> <4>[    2.519098] scsi host1: failed to create tmf workq
-> <6>[    2.524520] kworker/R-scsi_ (56) used greatest stack depth:
-> 15464 bytes left
-> <6>[    2.528402] scsi_eh_1 (55) used greatest stack depth: 14872 bytes left
-> <3>[    2.540312] ahci 0000:00:1f.2: probe with driver ahci failed
-> with error -12
->
-> Full dmesg log:
-> -----------
->   - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240814/testrun/24850492/suite/boot/test/gcc-13-lkftconfig-rcutorture/log
->
-> Reproduce script:
-> ---
->  - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2kdXPeyCZIUn4AYH0UrByWXzepD/reproducer
->  - Qemu version: 8.2.4
->
-> Boot command: /usr/bin/qemu-system-x86_64 -cpu Nehalem -machine q35
-> -nographic -nic none -m 4G -monitor none -no-reboot -smp 2 -kernel
-> kernel/bzImage -append \"console=ttyS0,115200 rootwait root=/dev/sda
-> debug verbose console_msg_format=syslog systemd.log_level=warning rw
-> earlycon\" -drive file=rootfs.ext4,if=ide,format=raw"
->
-> Build link:
-> ------
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/config
->
-> metadata:
-> ---
->   git_ref: master
->   git_describe: next-20240814
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   kernel_version: 6.11.0-rc3
->   arch: x86
->   device: qemu-x86_64
->
-> Please let me know if you need more information.
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> I think having commit with memory corruption fix is more important to
+> stable kernels than not having the code cleanup commit. So, I would
+> suggest stable policy to be changed a bit, and minor commits like this
+> code cleanup, be allowed in stable if they are dependence of bug fixing
+> commits.
 
-- Naresh
+> Additionally, these neutral commits just make stable trees become closer
+> to mainline trees (which allows more bug fix commits to be applied
+> cleanly).
+
+The reason I nacked the cleanup commit was just that there was no
+indication that it was a dependency or anything, it just looked like
+standard stuff with not reviewing bot output.
+
+--A8cRzxVvx8vzJbx5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAma8h/IACgkQJNaLcl1U
+h9DnQQf/TKq4Vc8SiV/EVDnt3MX1aX8RSRj02uCVscH5YRFRhBZJtQouANZy90Hm
+igbypwI3awsWw/rrq8OnSLz2LY118/SIYIlJ3Ha6pgrnUoJd4xTsOCLOBN24SyaS
++nXeD6jFATJpR9JmqhVkM2jqrK9dbtWpRt/f9OxZW2AzRU+EVRdvTLYooUI3WzOD
+rhVIC1NCVhLOOWbwr9RHpz6iTUMgJpnFu3lgp/dfJ6cTNN8ZPTgtb1FJGJbDDfkH
+2qntUSTLYMix3C52VfaPAlrDj+8foF81PXQx1XnDfWyrQ90AdIZNoLZiFjOdh31t
+LEN4cmQnh10Ath7r3PLvvrdR+OK5Sw==
+=SCAF
+-----END PGP SIGNATURE-----
+
+--A8cRzxVvx8vzJbx5--
