@@ -1,137 +1,143 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5591AE03D;
-	Wed, 14 Aug 2024 10:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54C1B142B
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 13:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723632178; cv=none; b=EnWSPhpW2gjhJHHVcU59/zjBA09bxFj8bIqwETpFXEkvyJedC3j38QyJ58OkHzbIvIzP296kAHLowHjra8+Yu54Gpt3QxGU18yVyCoYxtrOCrYLa1ZvW8SwlE8JU9q8+p6vaandxmn0uOj6BuN/0ZdG4XSHlIdkfbyZVWQSPoBw=
+	t=1723643642; cv=none; b=e/pAIXsKYlfmu0AemzWkWmnwmn4+CEVb6ZBNIepPht/FgX9VAbhpGMNSvQwABvJvBLlQp8Lf3NRzy5bL8EZtRXnfVewVfoZcy8muVgQXsBTSfZODS74I3o3fnLvV7bM7pNGFEj99jW1zsB1YHfrEqJkpSY5v1KtcaEk1W0ZR8iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723632178; c=relaxed/simple;
-	bh=6mXSBK4xubtEQgdCw6P5qUaQJpOScDBvwcEqrYfyU2k=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=kKXGtT/waAql8Whi9wHIRPvqoB//dT3CAiCeEdlep5sOcuneGV+MZosO5dZkWUqqGaMB4cMLsbca62bHjndAl5DTPuC5dlRkua5+EDEa7Bxn4OzFferQEeyuP33EojPMfr5T3CQKB+kW9ss969HO4nKlL5Qifwmg+6bXW6cMuqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vhxvKKi8; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723643642; c=relaxed/simple;
+	bh=pVmwF7G2P8agT0vOSGb5CBnNzfqC5aZAhldqlokDAlQ=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=uoaUBzdKN9ecOn+/iHV76kAuJVHWfJUGO0XYT8fh97qFUOwz2OkYTUcIyUnqx1SGi9SIoPMrtyhvrcH6ZDGqzQ85rrpwCMPPTOEFyxkTjUEMWzBv2ZdSskjikCs/CKmPsrafeM7NWaoGi6J1wpO/1jvg+xMoVB5gtByhvSntemc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kr+rRJZo; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vhxvKKi8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=oChSn+ddY3rawqfzReuNujffEuD1pwyybyXLWnykGyA=; t=1723632176;
-	x=1724064176; b=vhxvKKi8uFMCUyyq0Q1PxOhN6sK+V2hZH3Fjhk194HJjoFV9rwSvxtqUC/zAa
-	5WCkO1Lzx+SgQ+mp3U96YAgBMKvYvEy5YgctJNytHsfFZ853MO6XEF9fVc7LlUGEwEW8q3yTqYq6S
-	b25Y3dQPvyvJLZ+9gXWFYISwl49QjDHNMydTsYqKTqg1JI/uZNFM3cnAKOlLdwZ42PC1xRSXHUQ2Z
-	0xlgOoHo8y5YSUldEwAHnvJaZSwmSLHjnYPgsIi8DqyLp6UvpSO++Jv4mFBhNcdIAMelrhlRt3VlM
-	M6hSWifXJ973UoIXMsvUZ/IkyxWUR/uPF4/Y4fXefyLSLcFoSw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1seBSt-0000u4-Nb; Wed, 14 Aug 2024 12:42:51 +0200
-Message-ID: <acaa3e31-a6f4-4c45-b795-d12b0d2743da@leemhuis.info>
-Date: Wed, 14 Aug 2024 12:42:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr+rRJZo"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-45019dccc3aso36949551cf.1
+        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 06:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723643639; x=1724248439; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=utWJHul5Du4R9rd2S0MY4SOzJbviKmWuhT4Hw98IBd8=;
+        b=Kr+rRJZocFlqgQtZW94jlNm5chBm0teCHReIuvgDaLK/6BjMMUTn6XP6dVS2zNm4kN
+         MrME5pPG4DiBiqrJAEw8rAFoL7WXkg7jQpyWclxXkLKhVExzVcPKptOHIBVSXwxplBcR
+         +wVRiC2fKvV0zorYI1AmviF3G/7tciw3xkyi21AiiNJM0QVHTuA1tlqMbiLbqeUHcC7K
+         su21GIlWZu/XEtXajzt1A4YP7jfO4UaC3FT/MVbAJ3xMftqKHPlrCnZfaGp6HrXde0wb
+         SxO2Hrg0U3ALVVQU1Qt0DCH4zF5hy7i/LjIWFs18hLrBP31Fk61A0tpPmIhh15s1nh3u
+         1GYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723643639; x=1724248439;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=utWJHul5Du4R9rd2S0MY4SOzJbviKmWuhT4Hw98IBd8=;
+        b=MyTKshMCTaIlbCTu2T1e9EqVEGWmdEFCtAXjd2Xde2UkfdhCccQSZgAwyPcAwMKD8A
+         rSI0solO/mxK9S4TscSpxHljN8vpCZ+AJ+lOwOex/NhVAzcEi5uWsOWV0fGM8gi7HC0Z
+         OlBKqbU85YtS7jgITLepKv4jRBZxJacjaCwc2seoODKrBY1xUWykms1/5r+xqcpm1tQj
+         n/l6vxk6OORnoI6I6IJdmehD2Kx358o+XU1mw8RDk0NDNaO63JzjfEEPj6E26aynd8N7
+         gZAbm7ylQjcYxx/bUEVPjmpChmzmu0yGcuYmUE9b0eS7UNuIW0SZIXfvVGoVBeaqbuKw
+         weeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQogzBKwY3tKryne04tXYIapNb9X5N1dT1nkq7ZYc7Ss0FDjoIcYRhHfb+fKuT8k2jlLXub4WEzjRhoTJqqwFWwVU3Mx47MJkxBig=
+X-Gm-Message-State: AOJu0Ywoj8VqJlvGxfWZNRn/1c6huIa3B4jvKhIG7W+ndeS80r+BryGK
+	Us3hVW5wbSWhLDQs2r/oYtsTqCoPo5Gu+hK9iex4yMhTw3LRiOhC
+X-Google-Smtp-Source: AGHT+IG26aHZQ4o0SHh+Y2TSRBi05r/HN4WM3gUgtjuZvwpzGsDAKYKOBtBVn8mEfs/ixoJC6h9VXA==
+X-Received: by 2002:a05:622a:5b0a:b0:44f:ddad:c21c with SMTP id d75a77b69052e-4535ba7aee4mr25549581cf.13.1723643639434;
+        Wed, 14 Aug 2024 06:53:59 -0700 (PDT)
+Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4531c1a7f28sm41705531cf.10.2024.08.14.06.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 06:53:58 -0700 (PDT)
+Date: Wed, 14 Aug 2024 09:53:58 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Christian Heusel <christian@heusel.eu>, 
+ Adrian Vladu <avladu@cloudbasesolutions.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
+ Greg KH <gregkh@linuxfoundation.org>, 
+ "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>, 
+ "alexander.duyck@gmail.com" <alexander.duyck@gmail.com>, 
+ "arefev@swemel.ru" <arefev@swemel.ru>, 
+ "davem@davemloft.net" <davem@davemloft.net>, 
+ "edumazet@google.com" <edumazet@google.com>, 
+ "jasowang@redhat.com" <jasowang@redhat.com>, 
+ "kuba@kernel.org" <kuba@kernel.org>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "pabeni@redhat.com" <pabeni@redhat.com>, 
+ "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+ "willemb@google.com" <willemb@google.com>, 
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Message-ID: <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
+In-Reply-To: <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
+References: <20240726023359.879166-1-willemdebruijn.kernel@gmail.com>
+ <20240805212829.527616-1-avladu@cloudbasesolutions.com>
+ <2024080703-unafraid-chastise-acf0@gregkh>
+ <146d2c9f-f2c3-4891-ac48-a3e50c863530@heusel.eu>
+ <2024080857-contusion-womb-aae1@gregkh>
+ <60bc20c5-7512-44f7-88cb-abc540437ae1@heusel.eu>
+ <0d897b58-f4b8-4814-b3f9-5dce0540c81d@heusel.eu>
+ <20240814055408-mutt-send-email-mst@kernel.org>
+ <c746a1d2-ba0d-40fe-8983-0bf1f7ce64a7@heusel.eu>
+ <PR3PR09MB5411FC965DBCCC26AF850EA5B0872@PR3PR09MB5411.eurprd09.prod.outlook.com>
+ <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
+Subject: Re: [PATCH net] net: drop bad gso csum_start and offset in
+ virtio_net_hdr
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Sasha Neftin <sasha.neftin@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-Cc: netdev <netdev@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
- Martin <mwolf@adiumentum.com>
-Subject: [regression] igc does not function anymore after second resume from
- standby
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723632176;5c4f8b5c;
-X-HE-SMSGID: 1seBSt-0000u4-Nb
 
-[Tony, Przemek: lore did not find any mail from Sasha in the past few
-weeks, so from here it looks like this might be something somebody else
-needs to handle.]
-
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Sasha, I noticed a report about a regression in bugzilla.kernel.org that
-appears to be caused by this change of yours:
-6f31d6b643a32c ("igc: Refactor runtime power management flow") [v6.10-rc1]
-
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219143 :
-
->  Martin 2024-08-09 15:17:49 UTC
+Christian Heusel wrote:
+> On 24/08/14 10:10AM, Adrian Vladu wrote:
+> > Hello,
+> > 
+> > The 6.6.y branch has the patch already in the stable queue -> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=3e713b73c01fac163a5c8cb0953d1e300407a773, and it should be available in the 6.6.46 upcoming minor.
+> > 
+> > Thanks, Adrian.
 > 
-> Starting with Kernel 6.10.x I experienced network connection
-> problems after resuming my system for the second time.
-> 
-> My system contains two Intel I225-V (rev2 and rev3) cards.
-> 
-> I ran a bisection and got a hit: 6f31d6b643a32cc126cf86093fca1ea575948bf0
-> 
-> rmmod igc ; modprobe igc remedies the issue till the next but one resume.
+> Yeah it's also queued up for 6.10, which I both missed (sorry for that!).
+> If I'm able to properly backport the patch for 6.1 I'll send that one,
+> but my hopes are not too high that this will work ..
 
-See the ticket for more details. Martin, the reporter, is CCed.
+There are two conflicts.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+The one in include/linux/virtio_net.h is resolved by first backporting
+commit fc8b2a6194693 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4
+validation")
 
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219143
-#regzbot from: Martin
+We did not backport that to stable because there was some slight risk
+that applications might be affected. This has not surfaced.
+
+The conflict in net/ipv4/udp_offload.c is not so easy to address.
+There were lots of patches between v6.1 and linus/master, with far
+fewer of these betwee v6.1 and linux-stable/linux-6.1.y.
+
+We can also avoid the backport of fc8b2a6194693 and construct a custom
+version for this older kernel. All this is needed in virtio_net.h is
+
++               case SKB_GSO_UDP_L4:
++               case SKB_GSO_TCPV4:
++               case SKB_GSO_TCPV6:
++                       if (skb->csum_offset != offsetof(struct tcphdr, check))
+
+and in __udp_gso_segment
+
++       if (unlikely(skb_checksum_start(gso_skb) !=
++                    skb_transport_header(gso_skb)))
++               return ERR_PTR(-EINVAL);
++
+
+The Fixes tag points to a commit introduced in 6.1. 6.6 is queued up,
+so this is the only release for which we have to create a custom
+patch, right?
+
+Let me know if you will send this, or I should?
+
