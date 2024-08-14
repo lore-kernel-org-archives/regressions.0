@@ -1,44 +1,46 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BD86E2AE
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 05:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB716BA46
+	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 06:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723612971; cv=none; b=Rttvd1LM8QkmompRE57VuRGvuTvnCtvFLxiST4MHN51/8yE101tOm1/tpal2tGw1CKWPOThB9podVbUKdOSiBCZFqarX2fCtWnX3OPX+mntJyJ6miIbntsLlUCnTcwvahUrXRWjukl+0YAuMy8Psn1MS1LiczmRtawPhPji9AHk=
+	t=1723618080; cv=none; b=Mm3bnZ4R7ZgJ2UXv/koBVk9KZfnp2Jzw+NSSO2uZ7QiSVOsDBesb65bnpa06hdT2TIt+Busp/qdFSih1FVm2AD3oZHT1KIP+wSXr7GKVOk6niA7dkFAu6moTHDJg5IfVbk2bqnjbINvtVtI5GkISA3u6uFxMHtHdlfMq2H+WfVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723612971; c=relaxed/simple;
-	bh=QOxvKD6mdRI5zUGMXtUaVqcQjFYBQSeZRXbWDE2fotk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dZMd00Ah7hO5P1i6v7cS1ODXLnkbz8dHWiVhI6TVxtmCijej84GcpABlH9Dta/W0l0ZYae30yT1kY3ayt2aHMbjhHKPZ509WJWb7KrvVveKxOHZ5FdULrYjAbD5ndXq7Ky4FpLbqawiVd4KGLfdP/IG3VOoYG3cpqtwaYD516Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1723618080; c=relaxed/simple;
+	bh=DCNr5+4t1xytMUt0Xt3CcaIGKJSMLIYDREjZP8TkHXI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HT1TlCeZt1h5FSZh4jFgbN5H8R3dgom1s6tdusMobtGzOu/CwGk62SeKMjIMGKvxvq7l5ppzEOdlCwo+R8O/tDJMB1fZ+aIDuARoHaNViv0OFH5jlA8YSrIRd+VmvM6s7e2oK6NY6T9Zxf2VBH1zRWoK07Fwu3GECRC8PZdiB9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5a156557026so6435994a12.2
-        for <regressions@lists.linux.dev>; Tue, 13 Aug 2024 22:22:49 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5a10bb7bcd0so7767738a12.3
+        for <regressions@lists.linux.dev>; Tue, 13 Aug 2024 23:47:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723612967; x=1724217767;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBxz/yI6iP/vJJDGJ4pN7KwEbLJNNeReRtmR06yY6Hc=;
-        b=C452AMo5XUITxIA7m+igSisJHsWRgXt2chag7GDtVcR6fEaMW6GFVf5cHLBjs4OyZj
-         25w6TN7ZPnMYXj0IeHuXzVd11CD+fjiHUhZg5YSV+d8H17KTqIeZ0CfQIFea5W6e2Zmp
-         slLpgxPK1qhL1goGccWdpKMm85PS+QEIxQfWSQBuWnv3xqPVpKoRZ/dqpRF0FnQuFkD9
-         akG55WoFLHdPZcAj8DxcCMdTybATfuPXik1olaL1R1SFpGE64oVRpRVtqrvXEo48BD0H
-         fcnNvKClJGI5ETBSFF2+1EdVUEMbUuzRNI2Gjli8NsWBGrt+bxt/EtnWmaP7s3D9Wguh
-         Srwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrVse83MBDoswA/I/Iq0FQF4TxsGUHkq4yu4ZsSgKuhR1pdMS0PoV5dXDZDU2dKlYTyuP9WWEsaT+8nS/kB+46xNbtu1KX7GeRmmY=
-X-Gm-Message-State: AOJu0YwF/PqE4Ih8K+iAN/gTps+RodKr5SwENcgxQX/kNgJdN+IPLef/
-	XqfIONkS2fjJOZdTU0jWze+mXH/M88KmX8y1QK36Lejdj9/U/SMb
-X-Google-Smtp-Source: AGHT+IFkp4ZMyR031eOsGBkK52Ysok/eJv1pHfGN8G3HknAgdHQaZ1y5Ea19k9HSF1AN6A/NGlE0dQ==
-X-Received: by 2002:a17:907:d862:b0:a6f:4804:d41a with SMTP id a640c23a62f3a-a8367026b4dmr110999266b.55.1723612966965;
-        Tue, 13 Aug 2024 22:22:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723618076; x=1724222876;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a5bvJSxOBvuWRxdChoobI1KogQglvyFcn+jWX2rf1tk=;
+        b=DHggxZCFNQnDaB8h89GlNSsYG9ZqSWr2ueOIpcNWBZNO025Vi02Y1PTVXyxw2s7dg5
+         d7jTNR7J++8eaXed/YfF7gvfNC1PzjoP6BdcRd2oIEmCcrgLV8xOi/vU62WjRdMVThMb
+         RqmlR2orwF199hI8q1/iDeKaNOVHt3IzpiuVGOEgesRQe24/fvl2Bma5Iyy1d2jq4Mgx
+         ZqvQKb0C8WWCKqToynvzjRdpBX/Rd41uVnviWTZOuoSHwAS80xEqSJ+x5NfCo5i0VYJU
+         mu2EXBwGCJra2mHowwC22xrmLfBcmQftJyZ1FzyI3ebKOWtvYryfipA594d4GcY3soVT
+         MWnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfE1DFtOWCRf0f0uQBfQ6b3nEAtxfHkSX2FKcCZM6fZxtw6jLoyHY/S4+Nutj5RNslHfpminOdOHjq/8AjrMmSP01AnnzoMKc5eqQ=
+X-Gm-Message-State: AOJu0YzXq1WrWdsKnv4ZoPaYgHu06nXVxC2AiRsxhaGT7D3ALcQzFDS1
+	l7mHDD4eD0ee/e2aUzOuzsF83whm/TWbQvpgaVRSWV+e90nrHSElRWsVtg==
+X-Google-Smtp-Source: AGHT+IFkVLt6ZhrJ+Mk88Qj0+zLTEI8i6U6Pp7fDBVP+I8kkl10IsUNniwNrnOveK5Mfogtyzkd3sA==
+X-Received: by 2002:a05:6402:42d1:b0:5b8:f69b:65e8 with SMTP id 4fb4d7f45d1cf-5bea1beba00mr1484632a12.0.1723618075536;
+        Tue, 13 Aug 2024 23:47:55 -0700 (PDT)
 Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f414e041sm127289266b.168.2024.08.13.22.22.45
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd190ad278sm3534134a12.25.2024.08.13.23.47.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 22:22:46 -0700 (PDT)
-Message-ID: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
-Date: Wed, 14 Aug 2024 07:22:45 +0200
+        Tue, 13 Aug 2024 23:47:55 -0700 (PDT)
+Message-ID: <bd149809-f670-4b5d-a18a-f1f63624265f@kernel.org>
+Date: Wed, 14 Aug 2024 08:47:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,13 +48,14 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
+Subject: Re: ACPI IRQ storm with 6.10
+From: Jiri Slaby <jirislaby@kernel.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 Cc: Linux kernel mailing list <linux-kernel@vger.kernel.org>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-From: Jiri Slaby <jirislaby@kernel.org>
-Subject: ACPI IRQ storm with 6.10
+References: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=jirislaby@kernel.org; keydata=
  xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
  rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
@@ -95,121 +98,48 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 14. 08. 24, 7:22, Jiri Slaby wrote:
+> Hi,
+> 
+> one openSUSE's user reported that with 6.10, he sees one CPU under an 
+> IRQ storm from ACPI (sci_interrupt):
+>     9:   20220768          ...  IR-IO-APIC    9-fasteoi   acpi
+> 
+> At:
+> https://bugzilla.suse.com/show_bug.cgi?id=1229085
+> 
+> 6.9 was OK.
+> 
+> With acpi.debug_level=0x08000000 acpi.debug_layer=0xffffffff, there is a 
+> repeated load of:
+>> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6D: 
+>> Status=20, Enable=00, RunEnable=4A, WakeEnable=00
 
-one openSUSE's user reported that with 6.10, he sees one CPU under an 
-IRQ storm from ACPI (sci_interrupt):
-    9:   20220768          ...  IR-IO-APIC    9-fasteoi   acpi
+0x6d seems to count excessively (10 snapshots every 1 second):
+> /sys/firmware/acpi/interrupts/gpe6D:   82066  EN STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:   86536  EN STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:   90990     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:   95468  EN STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  100282  EN STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  105187     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  110014     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  114852     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  119682     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  124194     STS enabled      unmasked
+> /sys/firmware/acpi/interrupts/gpe6D:  128641  EN STS enabled      unmasked
 
-At:
-https://bugzilla.suse.com/show_bug.cgi?id=1229085
+acpidump:
+https://bugzilla.suse.com/attachment.cgi?id=876677
 
-6.9 was OK.
+DSDT:
+https://bugzilla.suse.com/attachment.cgi?id=876678
 
-With acpi.debug_level=0x08000000 acpi.debug_layer=0xffffffff, there is a 
-repeated load of:
-> event-0188 ev_fixed_event_detect : Fixed Event Block: Enable 00000020 Status 00000000
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 00: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 01: Status=00, Enable=02, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 02: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 03: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 04: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 05: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 06: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 07: Status=00, Enable=00, RunEnable=02, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 08-0F: RunEnable=00, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 10: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 11: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 12: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 13: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 14: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 15: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 16: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 17: Status=00, Enable=80, RunEnable=80, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 18-1F: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 20-27: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 28-2F: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 30-37: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 38-3F: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 40-47: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 48-4F: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 50-57: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 58-5F: RunEnable=00, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 60: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 61: Status=00, Enable=02, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 62: Status=00, Enable=04, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 63: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 64: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 65: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 66: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 67: Status=00, Enable=00, RunEnable=06, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 68: Status=00, Enable=00, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 69: Status=00, Enable=02, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6A: Status=00, Enable=00, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6B: Status=00, Enable=08, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6C: Status=00, Enable=00, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6D: Status=20, Enable=00, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6E: Status=40, Enable=40, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6F: Status=00, Enable=00, RunEnable=4A, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 70: Status=00, Enable=00, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 71: Status=00, Enable=02, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 72: Status=00, Enable=04, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 73: Status=00, Enable=08, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 74: Status=00, Enable=00, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 75: Status=00, Enable=00, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 76: Status=00, Enable=00, RunEnable=0E, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 77: Status=00, Enable=00, RunEnable=0E, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 78-7F: RunEnable=00, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 80: Status=00, Enable=01, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 81: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 82: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 83: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 84: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 85: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 86: Status=40, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 87: Status=00, Enable=00, RunEnable=01, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 88: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 89: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8A: Status=00, Enable=04, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8B: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8C: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8D: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8E: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE 8F: Status=00, Enable=00, RunEnable=04, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 90-97: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE 98-9F: RunEnable=00, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A0: Status=00, Enable=01, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A1: Status=00, Enable=02, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A2: Status=00, Enable=04, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A3: Status=00, Enable=00, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A4: Status=00, Enable=00, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A5: Status=00, Enable=00, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A6: Status=00, Enable=00, RunEnable=87, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE A7: Status=00, Enable=80, RunEnable=87, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE A8-AF: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE B0-B7: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE B8-BF: RunEnable=00, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C0: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C1: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C2: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C3: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C4: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C5: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C6: Status=00, Enable=00, RunEnable=80, WakeEnable=00
-> evgpe-0673 ev_detect_gpe         : Read registers for GPE C7: Status=00, Enable=80, RunEnable=80, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE C8-CF: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE D0-D7: RunEnable=00, WakeEnable=00
-> evgpe-0396 ev_gpe_detect         : Ignore disabled registers for GPE D8-DF: RunEnable=00, WakeEnable=00
-
-Longer (yet still trimmed due to pace of the messages) log:
-https://bugzilla.suse.com/attachment.cgi?id=876664
-
-Any ideas?
-
-thanks,
--- 
+> Any ideas?
+> 
+> thanks,-- 
 js
-suse labs
+
