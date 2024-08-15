@@ -1,236 +1,96 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F131AAE30
-	for <regressions@lists.linux.dev>; Thu, 15 Aug 2024 15:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DD51AED32
+	for <regressions@lists.linux.dev>; Thu, 15 Aug 2024 15:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723735227; cv=none; b=RT8khg2Vaql+W/OPUNu9nB/QmjjwJ/sGQcquZhOtuA636HCwwHcyr1e6QFU9T8S1xCwVaCDVjIucBQBEglwIZGbSA25BFPO4QH/mDZG/K+lC8ZPqoBJMY0ySifAanuO0DkaJ1on1SfqC8/mbsFc+uoascO4rjYtIre093qdQIyE=
+	t=1723735404; cv=none; b=AK84XCmLqb6qQPgCCHBWVOF1hopNGwdy07PMishmQRZTbdihjLf8zJ0PDX0XwN3xxe2VJrH0nqZ4GaBOU5NCBd8ooCo3LuAqkthENHSab/1ufXhfTiyn/hRjSDsYL3imYqFNdz0az114vlbQRNbpUD0qb04IzhpjcH5NScClGwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723735227; c=relaxed/simple;
-	bh=kynn0aDXaFm7QAh66HtBgvf/rrrNs3iw+NMTFkx0KDY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QWzNx6AdjeMGsHbj7Z793EHDNKlByi6gMttxQlqmz1cwvqMktI8/lm4o+WhEhQPstoFIyQ7J7oNNEf5kCoQUmEcE+mt6rBODIy2e79EKaxGYkHMavR82YPQbBgzHSWwiyIiJGBoj52NUbQwAedcSiHigFfy8VUogcfeBnt0Eim0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ilcMAFxE; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723735404; c=relaxed/simple;
+	bh=Z0PZF3iT3kmG4kVxpER+Pkc+8Vs70AzAJbTnaHohF+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=gJfkwAK7h5VQRRGFC6WNo7m1WlvVRVb2Um9XwRUYYfcTBx2j/HamM8dMACowx39BDeaxwP2ot1JMRcpKz6jMgCtidN3n5355r2DndpcFtLFbTDfwbQufohmeHhbKz4NMdWlgtIvBu7h3aXrvss0plpelgT63LEBshUvjxEzTKyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eFQD0nev; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ilcMAFxE"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-428e0d184b4so6797695e9.2
-        for <regressions@lists.linux.dev>; Thu, 15 Aug 2024 08:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723735224; x=1724340024; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=77DObEs8JyX6qlVaOpYeNL1lsgUGU/YYzxon+g94vZI=;
-        b=ilcMAFxEmObCgTYGagXeuHKBH96kAF87C9xNaa3hFJZiuA4oRqHJ2K/AK8jyMqcovb
-         ZMdCcZ8B+6GMghZW47U8ocbQD5CiLq/wpkVH0/L6nPteJqyMrBlrkw5N4nwi6XZRtogC
-         ZclpCstTVvdKoOAUe7c2OYzvoWyZxsBahRf5u53IFUufBrzbL3zgt9xoUJe+0/Rt0Hna
-         PNmitr6PFuf+rh8rnAQFhUarwREKb4rvOKb3HB/vWi9of851PO+dNITABq+jhQvhy12D
-         /Q+iRfL5J60M76u8frev6/FM7jeUiENc6S5GJ2jijeped4yf0H6Q0eSdzaVQq1HIV8AJ
-         AI5g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFQD0nev"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723735402;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z0PZF3iT3kmG4kVxpER+Pkc+8Vs70AzAJbTnaHohF+Q=;
+	b=eFQD0nevqfO/haJ9/Ucomfn3UuNhzfJNzpIHMP6gaeReC9MKunvTd82n7Q6rbyFvjfSjGt
+	UbRXmHIsOs8rJgHMP3jfluxZ8c8tsKve0iDVN2+bG+JNm+F1SDGvi+XtRf2Wa+qBhRotq/
+	G+JQckSpTu+5gCmgId2vkEZU+5babXo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-532-5jFEk3qNPHaA1zsSzrqBIw-1; Thu, 15 Aug 2024 11:23:21 -0400
+X-MC-Unique: 5jFEk3qNPHaA1zsSzrqBIw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a7aa7e86b5eso95402966b.2
+        for <regressions@lists.linux.dev>; Thu, 15 Aug 2024 08:23:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723735224; x=1724340024;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=77DObEs8JyX6qlVaOpYeNL1lsgUGU/YYzxon+g94vZI=;
-        b=FnCNg4wcOjvhgHTL5j7fiDrKyG5KjhCcMg84w/DUDtMlm/zO8AjJrx8Cgbt7dOl8AQ
-         nP5NPOBvpFQ2uc7Rg2JRtuoWvZvA7llkVPNFxhaLNapA7uAypZz9z139kpEIW33whpJl
-         es1AztFreIoFKluDES3wzRt5QVBLbCdkd0bNbhRfbL2KsxENabN7DczDsJLznUEuYcAh
-         /YjVDGgv/ECQNZx7pVemilo0AdMpKOWjT4v6/YpDYr7Mx/xYYWfIpxctQVUF3gY1iJAx
-         u4yfBYBMxUeMaTu2vCQdjh02arqBd4Ky78P8RFJullgF4UfQjYajEdhinYJnj+OYOf+a
-         M5ag==
-X-Forwarded-Encrypted: i=1; AJvYcCU1tCDax6H38/WUShnuY28TMtmwpvQ5fEZ8F7pk+BBi5D/h1UdtlBPx4ZzuaDv+GDKCZlAy/cbkmS5PjPDwNft+LdvBc9JJ9yY++Gw=
-X-Gm-Message-State: AOJu0YwhrgvnwBeiGS7f0LJGTRZwCDTfs3jaYV0fNx0U/pPWp4aXzJ19
-	JoKOKzqQTvkSzh8vylBbCuMGeU6uB82Hd9zjpIl1ms3jdTVm/XwU5osYFSz6kHk=
-X-Google-Smtp-Source: AGHT+IGqMleaD0yuCnI3sW+DxpEGDkIUT2PMFVSMNi6ePjupPJkLEGDnKEcO/CRoXc3Deb9XPcPDdg==
-X-Received: by 2002:a05:600c:1990:b0:428:1d27:f3db with SMTP id 5b1f17b1804b1-429dd26c213mr40980305e9.35.1723735223450;
-        Thu, 15 Aug 2024 08:20:23 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3718983a3a3sm1773010f8f.12.2024.08.15.08.20.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Aug 2024 08:20:22 -0700 (PDT)
-Message-ID: <351904c9-d661-46bc-94cf-b6cea8371dad@linaro.org>
-Date: Thu, 15 Aug 2024 16:20:22 +0100
+        d=1e100.net; s=20230601; t=1723735399; x=1724340199;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z0PZF3iT3kmG4kVxpER+Pkc+8Vs70AzAJbTnaHohF+Q=;
+        b=DG4cmOYz97KQsz3dJSBgp8d2OlmFNf2DgcGq2OJ2YMgcp77Q/dI/ZVqjVYE/zhVZaO
+         NaA9TOe6sItQRKa+28WnkGwGiwv8IjVu8z9MT360vICvjcCDRyCABrLGPT2WhFEImjwb
+         gU4eioA/zSCNmtnKUqtrPmw+D6ey63SIUG0rTD/23I9uHlTN/S5+mc2Y55OU5tYZkBEr
+         AylMzF4NcjG5a3/5cN+we8Vyk5tmIoik/5sh4T/9NhbVs8rhkpJuoQarvgc4uXUjD0+J
+         VHFLod1FKqvbm3ZAixBU1f+gMZf3ty7+naPYQEvvO7QOjA4PL3uu1Pvm+swnU3b8Aa2j
+         siPA==
+X-Gm-Message-State: AOJu0YyT5tCZ8lBhfNqmyfzWRFSgwMIwKlL3blsD7g0RMQCls/uh5Tid
+	68lJXGEEsSww4PSvLWi5J5OdBApwYv0vgmSd7bwE3tljOdPXg2LOxAGBx7OhpfxKkPxRbLKJv6R
+	mjdzblE2IWKVCX5q01rW3Q25tCORXCPG+fbmm70W3VtTRTM0XhEgFf+P4EY0SzSFyd+M05s1Zmf
+	SoFxaQyonblons5C8uzOLvWGVSgBOo66IOQIN5NA==
+X-Received: by 2002:a17:907:f782:b0:a7a:9f0f:ab14 with SMTP id a640c23a62f3a-a8366d7786fmr467852166b.33.1723735399634;
+        Thu, 15 Aug 2024 08:23:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmfTaj56j9tYVD0QKL1sNvdoIgl/XRqpaSrAVLu8JRyiak502h9wKyYixOsF/EtaN1gS67Hg==
+X-Received: by 2002:a17:907:f782:b0:a7a:9f0f:ab14 with SMTP id a640c23a62f3a-a8366d7786fmr467848466b.33.1723735398782;
+        Thu, 15 Aug 2024 08:23:18 -0700 (PDT)
+Received: from redhat.com ([2a02:14f:178:8f0f:2cfe:cb96:98c4:3fd0])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c65f2sm117028966b.29.2024.08.15.08.23.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2024 08:23:16 -0700 (PDT)
+Date: Thu, 15 Aug 2024 11:23:11 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Jason Wang <jasowang@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	virtualization@lists.linux.dev,
+	Darren Kenny <darren.kenny@oracle.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: Re: [PATCH RFC 0/3] Revert "virtio_net: rx enable premapped mode by
+ default"
+Message-ID: <20240815112228-mutt-send-email-mst@kernel.org>
+References: <20240511031404.30903-1-xuanzhuo@linux.alibaba.com>
+ <a6ec1c84-428f-41b7-9a57-183f2aeca289@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
- v6.5
-From: James Clark <james.clark@linaro.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Ian Rogers <irogers@google.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Linux perf Profiling <linux-perf-users@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- James Clark <james.clark@arm.com>, "cc: Marc Zyngier" <maz@kernel.org>,
- Hector Martin <marcan@marcan.st>, Asahi Linux <asahi@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me>
- <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
- <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
- <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
- <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org> <ZrzeRM3ekLl9zp3z@x1>
- <348ea015-eccf-4f44-a332-a1d9d8baf81f@linaro.org>
-Content-Language: en-US
-In-Reply-To: <348ea015-eccf-4f44-a332-a1d9d8baf81f@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a6ec1c84-428f-41b7-9a57-183f2aeca289@leemhuis.info>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Aug 15, 2024 at 09:14:27AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [side note: the message I have been replying to at least when downloaded
+> from lore has two message-ids, one of them identical two a older
+> message, which is why this looks odd in the lore archives:
+> https://lore.kernel.org/all/20240511031404.30903-1-xuanzhuo@linux.alibaba.com/]
 
-
-On 15/08/2024 4:15 pm, James Clark wrote:
-> 
-> 
-> On 14/08/2024 5:41 pm, Arnaldo Carvalho de Melo wrote:
->> On Wed, Aug 14, 2024 at 05:28:42PM +0100, James Clark wrote:
->>>
->>>
->>> On 07/08/2024 9:54 am, Thorsten Leemhuis wrote:
->>>> On 01.08.24 21:05, Ian Rogers wrote:
->>>>> On Wed, Dec 6, 2023 at 4:09 AM Linux regression tracking #update
->>>>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>>>>>
->>>>>> [TLDR: This mail in primarily relevant for Linux kernel regression
->>>>>> tracking. See link in footer if these mails annoy you.]
->>>>>>
->>>>>> On 22.11.23 00:43, Bagas Sanjaya wrote:
->>>>>>> On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
->>>>>>>> Perf broke on all Apple ARM64 systems (tested almost 
->>>>>>>> everything), and
->>>>>>>> according to maz also on Juno (so, probably all big.LITTLE) 
->>>>>>>> since v6.5.
->>>>>>
->>>>>> #regzbot fix: perf parse-events: Make legacy events lower priority 
->>>>>> than
->>>>>> sysfs/JSON
->>>>>> #regzbot ignore-activity
->>>>>
->>>>> Note, this is still broken.
->>>>
->>>> Hmmm, so all that became somewhat messy. Arnaldo, what's the way out of
->>>> this? Or is this a "we are screwed one way or another and someone 
->>>> has to
->>>> bite the bullet" situation?
->>>>
->>>> Ciao, Thorsten
->>>>
->>>>> The patch changed the priority in the case
->>>>> that you do something like:
->>>>>
->>>>> $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
->>>>>
->>>>> but if you do:
->>>>>
->>>>> $ perf stat -e 'cycles' benchmark
->>>>>
->>>>> then the broken behavior will happen as legacy events have priority
->>>>> over sysfs/json events in that case. To fix this you need to revert:
->>>>> 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
->>>>> events over legacy"
->>>>>
->>>>> This causes some testing issues resolved in this unmerged patch 
->>>>> series:
->>>>> https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
->>>>>
->>>>> There is a bug as the arm_dsu PMU advertises an event called "cycles"
->>>>> and this PMU is present on Ampere systems. Reverting the commit above
->>>>> will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
->>>>> __evlist__add_default") to fix ARM's BIG.little systems (opening a
->>>>> cycles event on all PMUs not just 1) will cause the arm_dsu event to
->>>>> be opened by perf record and fail as the event won't support sampling.
->>>>>
->>>>> The patch 
->>>>> https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
->>>>> fixes this by only opening the cycles event on core PMUs when choosing
->>>>> default events.
->>>>>
->>>>> Rather than take this patch the revert happened as Linus runs the
->>>>> command "perf record -e cycles:pp" (ie using a specified event and not
->>>>> defaults) and considers it a regression in the perf tool that on an
->>>>> Ampere system to need to do "perf record -e
->>>>> 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
->>>>> will choose the cycles event correctly and with better precision the
->>>>> pp for systems that support it, but it was still considered a
->>>>> regression in the perf tool so the revert was made to happen. There is
->>>>> a lack of perf testing coverage for ARM, in particular as they choose
->>>>> to do everything in a different way to x86. The patch in question was
->>>>> in the linux-next tree for weeks without issues.
->>>>>
->>>>> ARM/Ampere could fix this by renaming the event from cycles to
->>>>> cpu_cycles, or by following Intel's convention that anything uncore
->>>>> uses the name clockticks rather than cycles. This could break people
->>>>> who rely on an event called arm_dsu/cycles/ but I imagine such people
->>>>> are rare. There has been no progress I'm aware of on renaming the
->>>>> event.
->>>>>
->>>>> Making perf not terminate on opening an event for perf record seems
->>>>> like the most likely workaround as that is at least something under
->>>>> the tool maintainers control. ARM have discussed doing this on the
->>>>> lists:
->>>>> https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
->>>>> but since the revert in v6.10 no patches have appeared for the v6.11
->>>>> merge window. Feature work like coresight improvements and ARMv9 are
->>>>> being actively pursued by ARM, but feature work won't resolve this
->>>>> regression.
->>>>>
->>>
->>> I got some hardware with the DSU PMU so I'm going to have a go at 
->>> trying to
->>> send some fixes for this. My initial idea was to try incorporate the 
->>> "not
->>> terminate on opening" change as discussed in the link directly above. 
->>> And
->>> then do the revert of the "revert of prefer sysfs/json".
->>>
->>> FWIW I don't think Juno currently is broken if the kernel supports 
->>> extended
->>> type ID? I could have missed some output in this thread but it seems 
->>> like
->>> it's mostly related to Apple M hardware. I'm also a bit confused why the
->>> "supports extended type" check fails there, but maybe the v6.9 commit
->>> 25412c036 from Mark is missing?
->>>
->>> I sent a small fix the other day to make perf stat default arguments 
->>> work on
->>> Juno, and didn't notice anything out of the ordinary: 
->>> https://lore.kernel.org/linux-perf-users/dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org/T/#t
->>> I agree that change is quite narrow but it does incrementally improve 
->>> things
->>> for the time being. It's possible that it would become redundant if I 
->>> can
->>> just include Ian's change to use strings for Perf stat.
->>>
->>> Of course I only think I have a handle on the issue right now, seems 
->>> like it
->>> has a lot of moving parts and something else always comes up. If I hit a
->>> wall at some point I will come back here.
->>
->> Thanks for working on this, hopefully we'll get to a solution that keeps
->> all the expectations expressed in this thread about not breaking
->> existing muscle memory and that allows us to progress on this matter.
->>
->> - Arnaldo
-> 
-> Hi Arnaldo,
-> 
-> In one of your investigations here 
-> https://lore.kernel.org/lkml/Zld3dlJHjFMFG02v@x1/ comparing "cycles", 
-> "cpu-cycles" and "cpu_cycles" events on Arm you say only some of them 
-> open events on both core types. I wasn't able to reproduce that on 
-> perf-tools-next (27ac597c0e) or v6.9 (a38297e3fb) for perf record or 
-> stat. I guessed the 6.9 tag because you only mentioned it was on tip and 
-> it was 29th May. For me they all open exactly the same two legacy events 
-> with the extended type ID set.
-
-Minor correction, one opens using the PMU type rather a legacy event 
-with extended type ID. But importantly they do all open on both CPU types.
+Sorry, could you clarify - which message has two message IDs?
 
