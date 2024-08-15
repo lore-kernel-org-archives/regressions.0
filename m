@@ -1,59 +1,37 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799971B4C42
-	for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 21:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266851EB31;
+	Thu, 15 Aug 2024 07:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723670670; cv=none; b=G8Hj1PZsag0kPg4IV2DsXxvavsqnw6VP0kPT88HmRrql4demtF0kyHwG0UmqxyAxeqbiEfu+C7BuuUo4uycTEI5I3Ucs7mn59wpFKjA5Wr1FHAHtoDxXxGlMTTmAzdokw6Sj7T18ZxK7lq1wgVIxaqVqtL72bBK2WKAOCbfVGzo=
+	t=1723706073; cv=none; b=ObUt1ygyIK3qG25dRi7QpWDiiRI1p2CkHpolRsN24RQCACjRbdFgRYlW559Agni3av2myzuZU7Vq5eVEMg1RDo1MvzPrhdqGzf6Uyo0XRDVW9m4SHO6OwxCCH93bSor92US1GbFoeTmClHI+coHDXsiGxVV34a08yktldfXCD3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723670670; c=relaxed/simple;
-	bh=70ZVhRIeQZZoEcfgxUeSKJYGOEmRh5NTAji1BZ8/rMk=;
+	s=arc-20240116; t=1723706073; c=relaxed/simple;
+	bh=Jrjcm6+EhcaXEJi1rFzH1jGC5K6EkwBZ3kV70fPa7t4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TkrOynn6bnskbozUf+p9IXd9yrRhgkqTRBHt1BOjFJCZp+DdkaURDhaennUZgGdQv9BXOU/P5xG1NQv3b/0c2ypYChCxTmGu0Q/OHHfez9bxMko/jrJHpShyaKh+6ABLIA0Iv4F9acM7mn7hqJX5XcKKkYUqASGk0v9w0Menmok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFRRusYT; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ejaKwYo7btNjIwZfYW9enIWlYarFEemR3ISzWdVFyz7q5G9Myd6Ltja6o/LcUndSQifTMixxfYTiWfFbzZMQcC+0R43yMJeaU7q60t7hT9yfN57IQPWDhEMK4BP6ns7pSqR1IixASSZrkC/JWWfusivMASxgHXq9TJKPQ9XCYsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vDP945ET; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFRRusYT"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-368313809a4so768500f8f.0
-        for <regressions@lists.linux.dev>; Wed, 14 Aug 2024 14:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723670667; x=1724275467; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CJ8c8qOAB5Bc3n9KNWTAAiBx1ZDIQSVvg8ywZE8CxyA=;
-        b=jFRRusYTP04ALkAtuP3kdicLDDCUYcqaGtIsvJWY7Gtdqb9t72OUz42Hy9vLLuOyKm
-         GynvidgoDgpN9lTyci3oweh8xRz2lVzZmMYbz1ly7a+Rt4j+azzLeu2/NVeVWq8Z5Laq
-         1dBn6oJ+j1qtc6IobfmkaNQ9MjgflGGCCpnQdVEW0XfxwpQwTBK+ROW/idTRg0liK7BJ
-         gRY/hyX8KakKJN9a+Y7KFKWDGaYAnRdyghRWPS5BanJ4iMn8wKLLxSFYNjvwmyPqnhQt
-         ecmF2vA6lylK7L5uUEeHiiXmz4e2dxJTUx/Ra6L7VWoFzDnO3y4YsVFIPnuOPtf8BcQR
-         6rzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723670667; x=1724275467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CJ8c8qOAB5Bc3n9KNWTAAiBx1ZDIQSVvg8ywZE8CxyA=;
-        b=gpcBXe4OSJVU9Xq/XDo46uiSsCZhoaWRg91RCben/9PNavU1uSipx0RujOaDyNReam
-         PgiWWLqk+rIN9ACHF3z51nw2VcU8dMXy/Q+j6yMe9tgrTHk2Fh4UhdMcsEonsHn+uymd
-         vV1FCooLxG9Jzxm2H4zvNmFMFR6ZW3I9M5yOQYPiJCs7WyOQdMAZyYk28wH9MQHzc4w0
-         3moz28nEClv/mdIYRBG9E6GQrvq3EQvbZbbt7UM8yK+hyPB6CxHGUvc2aVX0ACz1CriA
-         vDuGnemh2aH98ApWMxAGNg6Y+OTT6yYr6ejI3ZYnYMXuxLE0Wp3OHPsZrYjN+UJx0LbT
-         W++A==
-X-Forwarded-Encrypted: i=1; AJvYcCXcBzYF1ZUnXz14DMhotMWThyQQDeMTeYxOazs1+TVAMQpC4ClQ3lToGpD9DI5cUQ++AlpZUhnqM/t1c8N0lFYwmjkTl1zmzpzwyRw=
-X-Gm-Message-State: AOJu0YzeXw6zNNqR4A2uH0e+Mep06G892YuZKJ1C1xXlKQLKMM5v4H9N
-	5XLk5BzycEf5zJyxtwqEvm7ZYG+5z3duhbut0O1Fp6hF60UU+0/T
-X-Google-Smtp-Source: AGHT+IE0tdjKd7Izw/570py8NiZmTH5iwdogIHFsUVNtPvq7imLC1cuCKjotWItEmXe2EeaQooQnTg==
-X-Received: by 2002:adf:fd8e:0:b0:371:8319:98de with SMTP id ffacd0b85a97d-37186c121e2mr541370f8f.14.1723670666380;
-        Wed, 14 Aug 2024 14:24:26 -0700 (PDT)
-Received: from ?IPV6:2003:cf:3f1a:a602:9067:1658:40a2:feec? (p200300cf3f1aa6029067165840a2feec.dip0.t-ipconnect.de. [2003:cf:3f1a:a602:9067:1658:40a2:feec])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-371898ab469sm45884f8f.100.2024.08.14.14.24.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Aug 2024 14:24:26 -0700 (PDT)
-Message-ID: <c30fd6b3-ca7a-4759-8a53-d42878bf84f7@gmail.com>
-Date: Wed, 14 Aug 2024 23:24:39 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vDP945ET"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=9qxoS+3oeTjP70ryzrOdH6IaU/FJ7BJBCt3EOY6TtFk=;
+	t=1723706072; x=1724138072; b=vDP945ETztl0XzPCLUkZEkthJF1Pz7cC97vowEZUnyXVplh
+	5IOpnEDMe7FedeNw93/vPAAduNsTiAumSBvnEs35lsbF2BkVgTzMk0KBIO3WnGLf9tQ6pZothMwp8
+	oYrQ0i/LF5HDUxKcGAF6gz93ouCsXGNxZSrrVF0M4Cci4vpKxIEvCVWBW1UC2EPSCMbhtOo5UMZVq
+	sxTecF69WmM0CEi06GccHu6T5BLcR8G+GxFKIxyaK+U4WW7iSPWfs+Zotyw3w60v9cW5lbrIUoWQb
+	/qQnFG1CmH35TrBdeiKahqn5rmbeLJ+b/z+tsmz8j9mGG7Sjr2K8nm2e5svNTFeQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1seUgm-0003lm-Bo; Thu, 15 Aug 2024 09:14:28 +0200
+Message-ID: <a6ec1c84-428f-41b7-9a57-183f2aeca289@leemhuis.info>
+Date: Thu, 15 Aug 2024 09:14:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,35 +39,106 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
- execution time of the kswapd0 process and symptoms as if there is not enough
- memory
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: andrea.gelmini@gmail.com, dsterba@suse.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- mikhail.v.gavrilov@gmail.com, regressions@lists.linux.dev
-References: <CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
- <277314c9-c4aa-4966-9fbe-c5c42feed7ef@gmail.com>
- <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Jannik_Gl=C3=BCckert?= <jannik.glueckert@gmail.com>
-In-Reply-To: <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH RFC 0/3] Revert "virtio_net: rx enable premapped mode by
+ default"
+To: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ virtualization@lists.linux.dev, Darren Kenny <darren.kenny@oracle.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240511031404.30903-1-xuanzhuo@linux.alibaba.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240511031404.30903-1-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723706072;233a5b5e;
+X-HE-SMSGID: 1seUgm-0003lm-Bo
 
-On 8/11/24 17:33, Filipe Manana wrote:
-> There's a fix there in the bugzilla, and I've just sent it to the mailing list.
-> In case you want to try it:
+[side note: the message I have been replying to at least when downloaded
+from lore has two message-ids, one of them identical two a older
+message, which is why this looks odd in the lore archives:
+https://lore.kernel.org/all/20240511031404.30903-1-xuanzhuo@linux.alibaba.com/]
+
+On 14.08.24 08:59, Michael S. Tsirkin wrote:
+> Note: Xuan Zhuo, if you have a better idea, pls post an alternative
+> patch.
 > 
-> https://lore.kernel.org/linux-btrfs/d85d72b968a1f7b8538c581eeb8f5baa973dfc95.1723377230.git.fdmanana@suse.com/
+> Note2: untested, posting for Darren to help with testing.
 > 
-> Thanks
+> Turns out unconditionally enabling premapped 
+> virtio-net leads to a regression on VM with no ACCESS_PLATFORM, and with
+> sysctl net.core.high_order_alloc_disable=1
+> 
+> where crashes and scp failures were reported (scp a file 100M in size to VM):
+> [...]
 
-Hi Filipe,
+TWIMC, there is a regression report on lore and I wonder if this might
+be related or the same problem, as it also mentioned a "get_swap_device:
+Bad swap file entry" error:
+https://bugzilla.kernel.org/show_bug.cgi?id=219154
 
-this patch mostly fixes the issue, but I still get a 1-2 second window 
-of freezing every now and then. I also still see long periods of 100% 
-kswapd0 usage, but without the periodic freezing.
+To quote:
 
-Thanks
-Jannik
+"""
+Hello,
+
+I've encountered repeated crashes or freezes when a KVM VM receives
+large amounts of data over the network while the system is under memory
+load and performing I/O operations. The crashes sometimes occur in the
+filesystem code (ext4 and btrfs, at least), but they also happen in
+other locations.
+
+This issue occurs on my custom builds using kernel versions v6.10 to
+v6.11-rc2, with virtio network and disk drivers, and either Ubuntu 22.04
+or Debian 12 user space.
+
+The same kernel build did not crash on an Azure VM, which does not use
+the virtio network driver. Since this issue only appears when receiving
+data, I suspect there could be an issue related to the virtio interface
+or receive buffer handling.
+
+This issue did not occur on the Debian backport kernel 6.9.7-1~bpo12+1
+amd64.
+
+Steps to Reproduce:
+1. Setup a small VM on a KVM host.
+   I tested this on an x86_64 KVM VM with 1 CPU, 512 MB RAM, 2 GB SWAP
+(the smallest configuration from Vultr), using a Debian 12 user space,
+virtio disk, and virtio net.
+2. Induce high memory and I/O load. Run the following command:
+   stress --vm 2 --hdd 1
+   (Adjust --vm to to occupy all the RAM)
+   This slows down the system but does not cause a crash.
+3. Send large data to the VM.
+   I used `iperf3 -s` on the VM and sent data using `iperf3 -c` from
+another host. The system crashes within a few seconds to a few minutes.
+(The reverse direction `iperf3 -c -R` did not cause a crash.)
+
+
+The OOPS messages are mostly general protection faults, but sometimes I
+see "Bad pagetable" or other errors, such as:
+Oops: general protection fault, probably for non-canonical address
+0x2f9b7fa5e2bde696: 0000 [#1] PREEMPT SMP PTI
+Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+Oops: Bad pagetable: 000d [#1] PREEMPT SMP PTI
+
+In some cases, dmesg contains something like:
+UBSAN: shift-out-of-bounds in lib/xarray.c:158:34
+
+When the system freezes without crash, I sometimes found BUGON messages
+in some cases, such as:
+get_swap_device: Bad swap file entry 3403b0f5b2584992
+BUG: Bad page map in process stress  pte:c42f93fac0299e1d pmd:0d9b2047
+BUG: Bad rss-counter-state mm:000000004df3dd9a type:MM_ANONPAGES val:2
+BUG: Bad rss-counter-state mm:000000004df3dd9a type:MM_SWAPENTS val:-1
+
+Thanks.
+"""
+
+Ciao, Thorsten
