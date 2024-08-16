@@ -1,106 +1,98 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC33C77105;
-	Fri, 16 Aug 2024 05:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9682490
+	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 06:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723784638; cv=none; b=rcSVJRgDOzNLH/LTUEcXSj8B++SjmOStPXaMwrgAebTvBgj8tKAdIf5QJQTMyQDj1csHOJ8j8wqa1jhZPHfvJCHnuLeT1T8wxAIthOm0949xcuJfwAQOGlKGvJbknUOXIQ8CN9SVkWVQtuZ91h0tuctlDpAD///DpcycXEXbFO8=
+	t=1723790582; cv=none; b=YfLw+VHVzJDM3L33MV+3y86bcKO8FbUY9en4/I4VqAKrbCPHDt8ZMEhOsjAaONmoEn+/J2EKw64qPOKEQ8dWLP0Qv2S1L7ojg1nHKrgyB4mo+g2ez9MVeSzC0kpC2oeNm6vm7lmaTiQrqXMbKXoYfrYoN7m0jRaRPIp+12+st8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723784638; c=relaxed/simple;
-	bh=B5pKNxQq47mR1PSLdcFE+nJoBZ1+Ub4soJBgBS4ov9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJMOo7XGgN5LJdy4znc9ptWa76z2BGyI3fNu9JdptEsAMb3ikSFzNczF7gv9iguX9XrMAU8yKuN+3mLI5rJzpHJ9OqbRb794EWWcnmLZ14Y/MTH7EgVpDbika3jhGDPWRs8F8HwR82iGiHKIrfkSENv6axx+aoZIEyEUbSjl1eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=beVfNyYv; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723790582; c=relaxed/simple;
+	bh=9MzRT6MQhoASRVKxtLl6TLviFlnQnH0RbQCnybUc2go=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=chUyrlNoAek88k1Hx7GwFn+LJislVu5zwIdFjkb1WMjsU0nUuKK00nK3cYJR0om4tZ0BYDczkuczXQzKsVa1NzdwhD7QlIMKbdqOEHk/WQc9IXaNQuDw84qGlchWL6Qm69Kw1LqlLvnWQyun7bwwNd7Zzp15pLFjussqT02vftM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUwzyhUd; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="beVfNyYv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=6amONoml4yC14YwrkWl2obGeotHupqEWZAFYL4LGlHQ=;
-	t=1723784637; x=1724216637; b=beVfNyYvbamdSaMXvR0Ra+hNh5mWyHg+RCXT5X3uNA0s9kv
-	JSfyGPoZmi1xIdil4m+VN4bFIN42T6fm6n7OyjssL1G9K6caZr2RWgebbi5hWBpGef8o4KACEec4l
-	GE/JwOfVCo/MKz5v+kEWJm17/fy/0pGBw6Of/HgxaAerUx7jIKKFR5qf4r9GBSwPnNCAWLqy/0PZG
-	O+gLI7Bgv/U643nZnFdyRXKVsfFtFNPgy61afkz1C5/NDTnt83zPCRbr+LvHJ/eCbSdOuRCs6AZh5
-	EWwDp6KMMvAFuXitJSB18gNas4mwGCTMBRDbKd04LAOUmFel2fQ5ODYpMcpGbZqA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sep7u-0002Ah-Q9; Fri, 16 Aug 2024 07:03:50 +0200
-Message-ID: <a3ba7028-b6c8-4d0d-b53a-8ecf9e69978c@leemhuis.info>
-Date: Fri, 16 Aug 2024 07:03:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUwzyhUd"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-66c7aeac627so19079667b3.1
+        for <regressions@lists.linux.dev>; Thu, 15 Aug 2024 23:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723790579; x=1724395379; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9984CAS7CNIQxBvvTikDkZZTlOsU6w6r8X2XroTC3V8=;
+        b=SUwzyhUdaj1DmPqmlKBu45BL4RmtmIPRYZttQNi/kU8R7Pa8TW7o7KnyJRYxQX6Ebb
+         thzkkV5IRRGhNzk2Fm0U+Gs7j4j6qETCPz61XSyu9PDJyqDEP6rpa/MPiWt4zxl/au/k
+         PXkxhXcwGntcKkiZI/UAPkyaz0fZ3H93aYomurhb4Qrqh+YxOf5AqKPLUKuxvosSG+Ot
+         oc2ovO+2lqjcvYVx9WMyWuTmAm+U29MVl6c956jP3wqqhirtyghttZAaF3ppqYTQN37O
+         zd2+hTKmif3gc6c3CWIOZViToaXyhPo4y1UrCgbf1ippDfRJAUSJ5DswCLc6ZBFSgLrh
+         MPzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723790579; x=1724395379;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9984CAS7CNIQxBvvTikDkZZTlOsU6w6r8X2XroTC3V8=;
+        b=tryMypdoDKeGNxg61fVUKGQwuD1yXd5ZBu942IsnBsaJ+Mgjwk/nWJr+MJVqNVzLT/
+         ZVRSKdG0MvlhfzIMEevGgwXMN8XFh51dALL002ye5AEAlH7l0WVMKT0NgiVOsTDWqit/
+         IrSIT1jrmHwoz3r91vauJNNToRI6gHezPN+Bm5uBCJTWcy+kFoaEl9bDpAGAhFiOf6Ei
+         s2hTtEKBNwsy6lvprG3kCxHLPRpKww6yFe5tsnA25caTj8yzAP+6G+A1PBiz30yusHCB
+         8s0wrA/x0TTTra95mgMVaSmYtOSNveXO5CCjZsG0UCarVFvZBE6vt3YFr10PMrnciqnc
+         bAGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCaG1kVjULo7C/CzWN/xtElxe3WpTL1F6wNUJ2SPHiYDe2yKaME5r/USHGz1d78JEoxanNvoOTGaM1A4x8atyvVT34UMWpNZh0feo=
+X-Gm-Message-State: AOJu0Yy/lDYeXSx8qt3iQnhSfTDuicBHTxsCq9bZnfPBSs2y23U3ugaB
+	RgEWc+0Wu449xOgx0ehYWzYXyLIKg3zrakgguCUG/fSrPviCwqF/U1FU31j/dSaBaBbPa2nFbk9
+	pmCCz/ZQPRG5HJ7neabpbyi+NlIs=
+X-Google-Smtp-Source: AGHT+IFwaUdjqwZ0EpK280Y4+BayIVwVmptraNcFRsFUCRRzajjVCxtXiorbxlU3aWf+0BDjO9tNnEDrqszN/MseIaw=
+X-Received: by 2002:a05:690c:438a:b0:6b0:70fc:f6d3 with SMTP id
+ 00721157ae682-6b1bcf8ec67mr14579087b3.45.1723790579487; Thu, 15 Aug 2024
+ 23:42:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/3] Revert "virtio_net: rx enable premapped mode by
- default"
-To: Darren Kenny <darren.kenny@oracle.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Jason Wang <jasowang@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- virtualization@lists.linux.dev, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Takero Funaki <flintglass@gmail.com>
-References: <20240511031404.30903-1-xuanzhuo@linux.alibaba.com>
- <a6ec1c84-428f-41b7-9a57-183f2aeca289@leemhuis.info>
- <m2r0aqrsq6.fsf@oracle.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <m2r0aqrsq6.fsf@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723784637;33b23499;
-X-HE-SMSGID: 1sep7u-0002Ah-Q9
+References: <CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
+ <277314c9-c4aa-4966-9fbe-c5c42feed7ef@gmail.com> <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
+ <3df4acd616a07ef4d2dc6bad668701504b412ffc.camel@intelfx.name> <95f2c790f1746b6a3623ceb651864778d26467af.camel@intelfx.name>
+In-Reply-To: <95f2c790f1746b6a3623ceb651864778d26467af.camel@intelfx.name>
+From: Andrea Gelmini <andrea.gelmini@gmail.com>
+Date: Fri, 16 Aug 2024 08:42:43 +0200
+Message-ID: <CAK-xaQaPbmZ+pcqFvfgtwTyMnHbMcs6j8KjgVOYBxGzGgoAJ7Q@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: intelfx@intelfx.name
+Cc: Filipe Manana <fdmanana@kernel.org>, =?UTF-8?Q?Jannik_Gl=C3=BCckert?= <jannik.glueckert@gmail.com>, 
+	dsterba@suse.com, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mikhail.v.gavrilov@gmail.com, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 15.08.24 12:22, Darren Kenny wrote:
-> On Thursday, 2024-08-15 at 09:14:27 +02, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 14.08.24 08:59, Michael S. Tsirkin wrote:
->>> Note: Xuan Zhuo, if you have a better idea, pls post an alternative
->>> patch.
->>>
->>> Note2: untested, posting for Darren to help with testing.
->>>
->>> Turns out unconditionally enabling premapped 
->>> virtio-net leads to a regression on VM with no ACCESS_PLATFORM, and with
->>> sysctl net.core.high_order_alloc_disable=1
->>>
->>> where crashes and scp failures were reported (scp a file 100M in size to VM):
->>> [...]
->>
->> TWIMC, there is a regression report on lore
+Il giorno ven 16 ago 2024 alle ore 01:17 <intelfx@intelfx.name> ha scritto:
+> Can we please have it reverted on the basis of this severe regression,
+> until a better solution is found?
 
-Obviously I meant bugzilla here, sorry.
+To disable the shrinker I simply remove two items:
 
->> and I wonder if this might
->> be related or the same problem, as it also mentioned a "get_swap_device:
->> Bad swap file entry" error:
->> https://bugzilla.kernel.org/show_bug.cgi?id=219154
-> 
-> I took a look at the stack traces, they don't look similar to what I was
-> seeing, but I wasn't running with an ASAN enabled in the kernel.
-> [...]
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index f05cce7c8b8d..4f958ba61e0e 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2410,8 +2410,6 @@ static const struct super_operations btrfs_super_ops = {
+       .statfs         = btrfs_statfs,
+       .freeze_fs      = btrfs_freeze,
+       .unfreeze_fs    = btrfs_unfreeze,
+-   .nr_cached_objects = btrfs_nr_cached_objects,
+-   .free_cached_objects = btrfs_free_cached_objects,
+};
 
-Yeah, but in the end it seems it is the same problem: The reporter,
-Takero Funaki (now CCed) meanwhile performed a bisection that ended up
-on f9dac92ba908 (virtio_ring: enable premapped mode regardless of
-use_dma_api) -- and later confirmed in bugzilla that reverting the three
-patches resolved the problem. Feel free to CC Takero on further mails
-about this.
+static const struct file_operations btrfs_ctl_fops = {
 
-Ciao, Thorsten
+This is from my thread with Filipe about same topic you can find in
+the mailing list archive.
 
-#regzbot report:
-https://lore.kernel.org/all/8b20cc28-45a9-4643-8e87-ba164a540c0a@oracle.com/
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219154
+Ciao,
+Gelma
