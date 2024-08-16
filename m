@@ -1,84 +1,124 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6F2137747
-	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 20:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723839851; cv=none; b=QF65VIPy4uxO2fTgozzBviJKUkxCMOGwOSxlG1DmCFmZYiJfgy8uYWJCNVsxy5Y73lD9HhD7nXQg5axyg7gl1D56VDcdTFn8Sc5AcYG8+n2IMiTdxmb1bK4M8MWlVnodDEhcSfqUjtT99LphH6STMIx+4KcGyMijzeMUfFNlhSA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723839851; c=relaxed/simple;
-	bh=WIYuYFHWdCQrD1vc4jBbvWdC6Mea0hURnFAGiSCYhC0=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E33136E21
+	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 21:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723844198; cv=pass; b=tPQz4Xh1AfZKYroyM61l1mhYffpG2pYZG+wNs7uRsN49FS2glrVOdkEkaJcf+ci8N70RNG1BnAhhJuNwArWjQLt9qt1dvKlBlTwJrYJ8PcfnpQp0R+p8W7OJ4u4UpwZ94FkPvZpQRRpqRaInn54qJr3QcZEMZHaQIGIkV+JzTOc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723844198; c=relaxed/simple;
+	bh=c17FZbLWCHlwpY1peGpdkedS72div4Jo5jTC/JJCJQ4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VyUGX8TgyO6xRKcYMSNw2eWVlGI1YHmeZJ1GQjELDYRvyTKHaINUNHWeOJpxBEGtlLfPvZRi2tWhfS8P+xhB6FQuOo/lyeNPt9ZtnWs1C9YrwQJQWtRYTEwhdtJ28NwF3bF2uawR3AYDq1BrukiSUoKXDy+NVysoxoSq3PYHdcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=E0bkcHva; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	 In-Reply-To:Content-Type; b=WPA5xphM36Ajv3PX2UuWmryY3JFEbxgtBH+pYLs7s35z1r/8s+nW1ifrBxmumLwP5K2Kccq9hpRP9RnNmpBOFAg+JZ3ZRJRjV6bt3TOP43/X3OEIuaD20FyZFh3XuulrLAlS1PWXKP5u2oA/g9LyrywyPvVQvyDK9bn6iTREuAo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz; spf=pass smtp.mailfrom=jevklidu.cz; dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b=DZUv6dqx; arc=pass smtp.client-ip=136.143.188.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jevklidu.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="E0bkcHva"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Wltk76Mlqz9smd;
-	Fri, 16 Aug 2024 22:23:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1723839839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y2a5uwxoWmK4hGq387/Bj9tHFW7u7XNQSFK7pAHa9AI=;
-	b=E0bkcHvajiOa+ioQ9d6R959bOkg5yCiLLrj9cjdg22FWipTMe/cDKtzPFs0GeP26UVcMgX
-	ziqA8k/nCKxqCXVYu+rc39h9GqoEmH9UOWiL4bL8Oo0TcWCHyafPo1RdhHlGRiTNZwQlSr
-	SFAkQqhX24A8N1xSK6VhLU4h6RQQjSPjfQTPYdB6PUxPnczeMTTFNN3HVHJy6y8pgGUjH1
-	mppCFhVBQ2AX6Fes1RKvRKiHE04DD6YiQ7mdZ8DqeAuBQg0EAtIpW5hp1X2qTOalhv/Rhf
-	Tpf67i9nUlR7y9LUS19Y0HhIxQKtpbkCZ9c4s0T7BqFTCxEvLZjE3mLbW9X0wg==
-Message-ID: <e345252b-9370-4491-ac5d-d2dbe1005451@mailbox.org>
-Date: Fri, 16 Aug 2024 22:23:54 +0200
+	dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b="DZUv6dqx"
+ARC-Seal: i=1; a=rsa-sha256; t=1723844190; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bQk8V4jUloaXUJr4avZp2TOnuOcY6nOoujAoF1vTkj7qlQebEQbtB/30yF17TDVabMEO+Swk9WRyaiRjtApNmffEaLYaVBqqkhLT2vuohIzFior1jYZSj8jR3RVGtRhAe29IFOsBRCHod4RktGwSvMeZafHtiy3j7YqOY/B+jTc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1723844190; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=d+nsXWkB2Aw92a5tKCDR/lymJS8ziMLdHe14zTquOHE=; 
+	b=HIIcACDp/SIs8kVX6QaRf9SIAGk5v4QcgHwrnmmtTPjemAHImAYcyHoBpOlYejWImiIpBGUsC6rF9Fpex/ZFP7Ba04BESQckhDw+3BacC/qay3/Jk6Y5oq35V9apg/KRXLqSajrAZQqY8gmYsQvyUs3umv7wesuuIzc5KHjuiFU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=jevklidu.cz;
+	spf=pass  smtp.mailfrom=petr@jevklidu.cz;
+	dmarc=pass header.from=<petr@jevklidu.cz>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723844190;
+	s=zoho; d=jevklidu.cz; i=petr@jevklidu.cz;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=d+nsXWkB2Aw92a5tKCDR/lymJS8ziMLdHe14zTquOHE=;
+	b=DZUv6dqx3JwJLj1hW/OtijSJvEg6L+mZTMiZUzYnZrnRLx2nKKG3uawvPbIx45du
+	QVP6DClEweEo9tyPybHD5NGF1YJStGwIJop+M+F1wWxt4KeLoeJf5kZOlzKrfv0aJTQ
+	TY9+n/MkGg83+/PlZoqEd4rdOm5WLDMR4sedWgu8=
+Received: by mx.zohomail.com with SMTPS id 1723844188239272.99156550785096;
+	Fri, 16 Aug 2024 14:36:28 -0700 (PDT)
+Message-ID: <512c2b92-bad8-4dd6-9db9-a6260dc1cdb5@jevklidu.cz>
+Date: Fri, 16 Aug 2024 23:36:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION][BISECTED] vmwgfx crashes with command buffer error
- after update
-To: Zack Rusin <zack.rusin@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, christian@heusel.eu,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- maaz.mombasawala@broadcom.com, martin.krastev@broadcom.com,
- rdkehn@gmail.com, regressions@lists.linux.dev, spender@grsecurity.net
-References: <CABQX2QM09V=+G=9T6Ax8Ad3F85hU0Cg4WqD82hTN=yhktXNDaQ@mail.gmail.com>
- <40cf01ab-73ad-4243-b851-a02c377bdbde@mailbox.org>
- <CABQX2QM1A9yWCuOHV6kgi3YbPvPHz-zazkOXM6Up9RWrZ-CgPQ@mail.gmail.com>
-Content-Language: en-US
-From: Andreas Piesk <a.piesk@mailbox.org>
-In-Reply-To: <CABQX2QM1A9yWCuOHV6kgi3YbPvPHz-zazkOXM6Up9RWrZ-CgPQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: ACPI IRQ storm with 6.10
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
+ <bd149809-f670-4b5d-a18a-f1f63624265f@kernel.org>
+ <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
+Content-Language: cs-CZ
+From: Petr Valenta <petr@jevklidu.cz>
+In-Reply-To: <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: jjckur8ysfr994hsbwpexesbwirt7yay
-X-MBO-RS-ID: 970057b013337eca572
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Am 16.08.24 um 20:56 schrieb Zack Rusin:
+
+
+Dne 16. 08. 24 v 20:29 Rafael J. Wysocki napsal(a):
+> On Wed, Aug 14, 2024 at 8:48 AM Jiri Slaby <jirislaby@kernel.org> wrote:
+>>
+>> On 14. 08. 24, 7:22, Jiri Slaby wrote:
+>>> Hi,
+>>>
+>>> one openSUSE's user reported that with 6.10, he sees one CPU under an
+>>> IRQ storm from ACPI (sci_interrupt):
+>>>      9:   20220768          ...  IR-IO-APIC    9-fasteoi   acpi
+>>>
+>>> At:
+>>> https://bugzilla.suse.com/show_bug.cgi?id=1229085
+>>>
+>>> 6.9 was OK.
+>>>
+>>> With acpi.debug_level=0x08000000 acpi.debug_layer=0xffffffff, there is a
+>>> repeated load of:
+>>>> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6D:
+>>>> Status=20, Enable=00, RunEnable=4A, WakeEnable=00
+>>
+>> 0x6d seems to count excessively (10 snapshots every 1 second):
+>>> /sys/firmware/acpi/interrupts/gpe6D:   82066  EN STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:   86536  EN STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:   90990     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:   95468  EN STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  100282  EN STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  105187     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  110014     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  114852     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  119682     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  124194     STS enabled      unmasked
+>>> /sys/firmware/acpi/interrupts/gpe6D:  128641  EN STS enabled      unmasked
+>>
+>> acpidump:
+>> https://bugzilla.suse.com/attachment.cgi?id=876677
+>>
+>> DSDT:
+>> https://bugzilla.suse.com/attachment.cgi?id=876678
+>>
+>>> Any ideas?
 > 
-> Thanks! I see. I have a patch out that fixes it, but in general I
-> think those vm's with 16mb for graphics are very risky and I'd suggest
-> bumping them to at least 32mb. The vram portion can stay at 16mb, but
-> the graphicsMemoryKB can be safely set to fourth or even half of
-> memsize (in your config 256mb or even 512mb), which will make the vm's
-> a lot safer and allow actual ui usage because with console being
-> pinned we just don't have a lot of wiggle room otherwise and we just
-> can't migrate pinned framebuffers.
-> The patch that "regressed" this makes dumb buffers surface that
-> actually respect pinning, but as long as you don't have gpu host side
-> things will be ok. Otherwise we can't make a config with 16mb of
-> available graphics memory and graphics acceleration work.
+> GPE 6D is listed in _PRW for some devices, so maybe one of them
+> continues to trigger wakeup events?
+> 
+> You can ask the reporter to mask that GPE via "echo mask >
+> /sys/firmware/acpi/interrupts/gpe6D" and see if the storm goes away
+> then.
+> 
 
-Thanks for the looking into it and fixing it.
-The explanation with details is much appreciated and I will keep your suggestions in mind.
-I just used the VMware defaults for Linux 6.x+ in ESXi 8, maybe they should be bumped up a little bit.
+It works, thank you. High CPU usage by irq/9-acpi is immediately gone.
 
-Best,
--ap
-
+> The only ACPI core issue introduced between 6.9 and 6.10 I'm aware of
+> is the one addressed by this series
+> 
+> https://lore.kernel.org/linux-acpi/22385894.EfDdHjke4D@rjwysocki.net/
+> 
+> but this is about the EC and the problem here doesn't appear to be
+> EC-related.  It may be worth trying anyway, though.
+> 
