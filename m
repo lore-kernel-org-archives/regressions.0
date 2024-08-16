@@ -1,202 +1,103 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54651B86EB
-	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 11:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817F98563E
+	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 12:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723806986; cv=none; b=LHwmbNoOHFuq2HIiEQN0GPHUosuRiQ/EbTQQ3glhiVJBv86oRo+2WmkX0swgaG3ueDFfzG+fnbHoGqfSmV7rmqiVBwJsR6MVQRvuWBANMvqTmbk1lEEj+RH+4UfqhTQ8FpFl3afVCcKG+9KZ6rbnXtNWRWaQCzXv9MVfNQmmAis=
+	t=1723809631; cv=none; b=Y0DB4DovE36xd3Tyd8Ry3q2Exu4IUx6fgGlh1MxpglfAeFax/7spv+AI0ctv0YYv5AnC5LxB73tvcX2C7KDjfIStFqkMM/DRVej09bNRCP+qLu75aX55Dx2/jW6kV3sA4JtDZvrg1kvryaclKD8m7E9Kmp2IdSlVebw+eJSrPFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723806986; c=relaxed/simple;
-	bh=dUl1HtKDQhN3EIbS7a4MMSHD3zQmh7SyIBtWzRSlcyg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ocM4cVdFdbm7qlVgKJ4xanx/Jx9Jj+wgvZ9nTaoAF7r0yu7z7tH4rAXOaEvJO5j1YFIPoFFGSDUMSCEFAp8ge/IwnJAaCOq0WpbatGcGY5fxqEdIhgRzz6YIpnfkS4Hin8IRmG3Lum0hQu7fjMvYvBM4rEhlaqueanagaGsODLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intelfx.name; spf=pass smtp.mailfrom=intelfx.name; dkim=pass (1024-bit key) header.d=intelfx.name header.i=@intelfx.name header.b=fvKlksMl; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intelfx.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intelfx.name
+	s=arc-20240116; t=1723809631; c=relaxed/simple;
+	bh=i0Y1KmVWVrvEYzHwHjqEf3or3XmD3696jYz67yYOA4o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=bfWKnDHRi3+bgAPPJmUlSZ1IOi3klreNnQJgdbS0FoHWsCQ4TGe8CxKkf+dCDZ6zMzeU0ObybXLgoXYOkiy6wRjenWWNMJXandLbRK1MVC9WKnUpKBZQP2KJA/fEJW5keKpoUeG/P3575V2F96QB0iPPdB3Di6qx1bLi2a0WRws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iYSyrs8x; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=intelfx.name header.i=@intelfx.name header.b="fvKlksMl"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-369f68f63b1so1095282f8f.2
-        for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 04:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intelfx.name; s=google; t=1723806983; x=1724411783; darn=lists.linux.dev;
-        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
-         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=dUl1HtKDQhN3EIbS7a4MMSHD3zQmh7SyIBtWzRSlcyg=;
-        b=fvKlksMlODdMOyZgNx0gxB8KptLjLg3FHvpa/0WcWknQ50QscSu8VSO0RA/VNvnzP2
-         vw+F+7iTcUoZTGBuhHy4rbBnkWXWmJb7P/HA1Zea2xy8fQK959brh5BlGpG638KrdS5Q
-         rCQqdrfIVlnLTf6uBoR388yTmhUnEnV3pa2dE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723806983; x=1724411783;
-        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dUl1HtKDQhN3EIbS7a4MMSHD3zQmh7SyIBtWzRSlcyg=;
-        b=eE+SVPi45tOEKlgZoELROFpeQwUawmFuhhsqPTGpdya02Y/uO54fhv484y7+WhF9BZ
-         JeA1R9czAYgoQKXVrZC/srz457Cu0Wqn5gCptMs+PuRZQTF9XIfCH29hnZexiDmirhMa
-         q5gTW8GwE+YV41jpmfGWD+Vn2XjcmeqyZSsQ842v/4NE9AcsDzkO1e3XzpkqxzOWC4Lk
-         ssN5AtZluqh7LEIcFTIypJvg1tuifT8pFNolc28fRX/w4nhw5JjiUQp04ZYxljSHJDEa
-         TOSnENEcDMgAJDtRPScqQP2PyVaYAnozSQJMIFoG5pGNr6rG6tjxYWfUKv9u9yXkChiX
-         DngQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUq82Hl8jc0sv5U2b/NlMRIxp5E0WU/KA3L2KyynWN79HUgrgzDwK9y61e7KVCTr0iEJN8ihdMdPk3LFzLzRIKZbxjHpdbrFyemVU0=
-X-Gm-Message-State: AOJu0YxDie6eXTZvlPgPOnLFv7P+7kv67fgXGGMwKSPBfE04WfDVCc04
-	MTYVTiyYnj1BkdYekXzrhufKhCmB4ej5fT1aYbzJBZwWnGDVuqftb24vFq28z88=
-X-Google-Smtp-Source: AGHT+IFmKCzYTCM+3t4wnCLK96lkKAVIemH6mOEI6TJNtckUppFzJFnxeosm+5/WkgLETAoiAV2SHQ==
-X-Received: by 2002:adf:b307:0:b0:368:4edc:611e with SMTP id ffacd0b85a97d-37194344041mr1665229f8f.14.1723806982640;
-        Fri, 16 Aug 2024 04:16:22 -0700 (PDT)
-Received: from able.exile.i.intelfx.name ([109.172.181.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37189859d4esm3433562f8f.49.2024.08.16.04.16.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 04:16:22 -0700 (PDT)
-Message-ID: <c876143d683d356a1c657455e295525f18e08895.camel@intelfx.name>
-Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted
- increased execution time of the kswapd0 process and symptoms as if there is
- not enough memory
-From: Ivan Shapovalov <intelfx@intelfx.name>
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Jannik =?ISO-8859-1?Q?Gl=FCckert?= <jannik.glueckert@gmail.com>, 
-	andrea.gelmini@gmail.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mikhail.v.gavrilov@gmail.com, regressions@lists.linux.dev
-Date: Fri, 16 Aug 2024 13:16:19 +0200
-In-Reply-To: <CAL3q7H7-04s=j0fwGRx-TxGeP2-7ZeZ5Kdeo2fYdDFLE9ijupA@mail.gmail.com>
-References: 
-	<CAL3q7H5zfQNS1qy=jAAZa-7w088Q1K-R7+asj-f++6=N8skWzg@mail.gmail.com>
-	 <277314c9-c4aa-4966-9fbe-c5c42feed7ef@gmail.com>
-	 <CAL3q7H4iYRsjG9BvRYh_aB6UN-QFuTCqJdiq6hV_Xh7+U7qJ5A@mail.gmail.com>
-	 <3df4acd616a07ef4d2dc6bad668701504b412ffc.camel@intelfx.name>
-	 <95f2c790f1746b6a3623ceb651864778d26467af.camel@intelfx.name>
-	 <CAL3q7H7-04s=j0fwGRx-TxGeP2-7ZeZ5Kdeo2fYdDFLE9ijupA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-k+P2PspMaBe/8arJkmZN"
-User-Agent: Evolution 3.52.4 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iYSyrs8x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=i0Y1KmVWVrvEYzHwHjqEf3or3XmD3696jYz67yYOA4o=; t=1723809629;
+	x=1724241629; b=iYSyrs8xYYZ9wakd4lBGvQXj1hZDv/cE30XdpyOtbAOmKgiMHtBDwuFre98Gp
+	LNYKl3B2u3IOqYvkKnHpKHOmqU2atJPGu7PMnB4z4ph98IzWNSoifC/WQE46KKFWgKlhy0isAJWaN
+	/rc67S2wQVL6GOYTvRDEaI8xnv6myzqJ6qyNMTUjqfyqPkE7BiaHEtaQVgIdHayvGDOadRQOGZHq7
+	FopwmsUiRRnCpu9Ok9K9rha+B6Vb2nJBoOgdmJAazm/gCFqmKhHd6QWRhtZa1iL/3vJ8FEG9kH9we
+	eGY5oQ9VnlHleTTHcl4X4wlcrMd/mzfntYCcuPgwTISSygYTWA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sevd5-00065o-6Y; Fri, 16 Aug 2024 14:00:27 +0200
+Message-ID: <b78baef8-b601-4154-a489-71a9e432078c@leemhuis.info>
+Date: Fri, 16 Aug 2024 14:00:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723809629;6c742dc8;
+X-HE-SMSGID: 1sevd5-00065o-6Y
 
 
---=-k+P2PspMaBe/8arJkmZN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On 2024-08-16 at 11:58 +0100, Filipe Manana wrote:
-> On Fri, Aug 16, 2024 at 12:17=E2=80=AFAM <intelfx@intelfx.name> wrote:
-> >=20
-> > On 2024-08-16 at 00:21 +0200, intelfx@intelfx.name wrote:
-> > > On 2024-08-11 at 16:33 +0100, Filipe Manana wrote:
-> > > > <...>
-> > > > This came to my attention a couple days ago in a bugzilla report he=
-re:
-> > > >=20
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219121
-> > > >=20
-> > > > There's also 2 other recent threads in the mailing about it.
-> > > >=20
-> > > > There's a fix there in the bugzilla, and I've just sent it to the m=
-ailing list.
-> > > > In case you want to try it:
-> > > >=20
-> > > > https://lore.kernel.org/linux-btrfs/d85d72b968a1f7b8538c581eeb8f5ba=
-a973dfc95.1723377230.git.fdmanana@suse.com/
-> > > >=20
-> > > > Thanks.
-> > >=20
-> > > Hello,
-> > >=20
-> > > I confirm that excessive "system" CPU usage by kswapd and btrfs-clean=
-er
-> > > kernel threads is still happening on the latest 6.10 stable with all
-> > > quoted patches applied, making the system close to unusable (not to
-> > > mention excessive power usage which crosses the line well *into*
-> > > "unusable" for low-power systems such as laptops).
-> > >=20
-> > > With just 5 minutes of uptime on a freshly booted 6.10.5 system, the
-> > > cumulative CPU time of kswapd is already at 2 minutes.
->=20
-> Less than 24 hours before your message, there was a patch merged to
-> Linus' tree, which was not (and is not) yet in any stable release
-> (including 6.10.5 of course).
-> Have you tried that patch?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Yes, I did =E2=80=94 as I said, I tried 6.10.5 with all combinations of pat=
-ches
-ever posted in this thread (skipping those that I was not able to
-apply; it seems that there were a few mutually incompatible attempts to
-improve the extent map shrinker, some of which have already gone into
-the stable tree, thus making others inapplicable).
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219158
+#regzbot introduced: v6.8..v6.9
+#regzbot summary: alsa: Headset mic stopped working
 
-> > As a follow-up, after 1 hour of uptime of this system the total CPU
-> > time of kswapd0 is exactly 30 minutes. So whatever is the theoretical
-> > OOM issue that the extent map shrinker is trying to solve, the solution
->=20
-> It's not a theoretical problem.
-> It's a problem that any unprivileged user can trigger provided that
-> the amount of available disk space is much higher than total RAM,
-> which is by far the most common case.
->=20
-> The problem is explained in the commit change log, there's a
-> reproducer and it was even reported by a user:
->=20
-> https://lore.kernel.org/linux-btrfs/13f94633dcf04d29aaf1f0a43d42c55e@amaz=
-on.com/
->=20
-> This link was included in the changelog of the patch when submitted to
-> the list [1], but somehow it disappeared when it was merged to the git
-> repository.
->=20
-> Any user can effectively trigger a denial of service by creating an
-> unlimited number of extent maps that never get removed while it keeps
-> a file descriptor open and doing writes, either with direct IO, which
-> is simpler, or even buffered IO in case it creates holes in the files
-> (example: keep doing append writes starting after current eof, to
-> create a bunch of holes). Even if that task doing that gets killed by
-> the OOM, as long as there are idle processes keeping the file open,
-> the problem doesn't go away.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219143
+#regzbot duplicate:
+https://lore.kernel.org/lkml/acaa3e31-a6f4-4c45-b795-d12b0d2743da@leemhuis.info/
 
-Sorry, I did not intend to sound dismissive =E2=80=94 what I wanted to say =
-was
-that we fixed an edge case (and yes, I acknowledge that this edge case
-could be a security problem) by instead pessimizing a common case.
+#regzbot report:
+https://lore.kernel.org/lkml/acaa3e31-a6f4-4c45-b795-d12b0d2743da@leemhuis.info/
+#regzbot from: Martin
 
---=20
-Ivan Shapovalov / intelfx /
+#regzbot report:
+https://lore.kernel.org/all/1f76b7e2-1928-4598-8037-28a1785c2d13@redhat.com/
+#regzbot introduced: 60fa6ae6e6d0
 
-> [1] https://lore.kernel.org/linux-btrfs/1cb649870b6cad4411da7998735ab1141=
-bb9f2f0.1712837044.git.fdmanana@suse.com/
->=20
-> > in its current form is clearly unacceptable.
-> >=20
-> > Can we please have it reverted on the basis of this severe regression,
-> > until a better solution is found?
->=20
-> Disabling the shrinker might be the best for now. I'm on vacation and
-> can't write and test code, but I do have plans for making it better
-> and solving any remaining issues.
-> There's already a patch for that from Qu.
+#regzbot report:
+https://lore.kernel.org/stable/ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com/
+#regzbot link:
+https://lore.kernel.org/stable/2024071751-manhandle-taunt-00ef@gregkh/
 
---=-k+P2PspMaBe/8arJkmZN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+#regzbot report: https://lore.kernel.org/lkml/ZpP3RU-MKb4pMmZH@eldamar.lan/
+#regzbot fix: Revert "usb: xhci: prevent potential failure in
+handle_tx_event() for Transfer events without TRB"
 
------BEGIN PGP SIGNATURE-----
+#regzbot report:
+https://lore.kernel.org/lkml/20240729131351.27886-1-johan%2Blinaro@kernel.org/
+#regzbot fix: 9a1af1e2187797
 
-iQJJBAABCgAzFiEE5N8nvImcx2nJlFGce94XyOTjDp0FAma/NQMVHGludGVsZnhA
-aW50ZWxmeC5uYW1lAAoJEHveF8jk4w6dHSAP/1BkpltZKUNJDVE7zomlJTj4FZkC
-1hFVcsp+kzmxj7DlH4d7xYVfSqq9Vvkccvv6iB99Euj+GolBzI5b6JoY9LoCwxR/
-JCT0o3PB6RcoP6DCjyEs5c3a/9D9HLvSTxBoE0y69ySaLIitngiIGP3Ja15UW0hH
-Y3boIz9DLUvRpjPMSIk750u7uQSGI+0ryvVqIv70CWNwjjiTCsTYzDQ8dIqLHNrn
-3y5B+zpqvwBOu7c1oIIurKq13f5HejV+SnIfzMxzqC3J9SCkBGHXOz2q6rrXFiQC
-pxv1VG8nwFUai1JKrLDEB+dYju8PtQRVVbuX0/pHfhqmSzT4wKuJMOrLFomJ+82O
-rJo/LOyG5AVea/Yp0jOLLFaW2AguywRRoP/H916eacu8erF5f/HtHFXUgFcEkGlN
-KuqMxwtQw5phNpSgMBxMvtMd8XbzQZqrig3HTGZPBKsppnUYWFyMXO342aIaCZUf
-NvkaQ0eALBHRfgLa+Qyy0pbN0GpEijZMJH6yRk57eRtw6om2UT0bhcsOV70bBT72
-PkdewZ4h8Wu/oPUAukOY3HNhMwpiXzp8qe2YZrhiISkyxVo7P6jztaLXKGmbSDNP
-XI947jo1QGHdVkOO8HWtwCygj6gj/v5SaLs5dmR46w4vO0RBbBnw0yLSVQq9qp0P
-1PJj5UTecYEiwVfw
-=EBDq
------END PGP SIGNATURE-----
+#regzbot report:
+https://lore.kernel.org/lkml/2c7adbc9-609d-41a9-8a3b-a63d59e21a1f@roeck-us.net/
+#regzbot fix: powerpc/mm: Fix size of allocated PGDIR
 
---=-k+P2PspMaBe/8arJkmZN--
+#regzbot report:
+https://lore.kernel.org/linux-arm-kernel/PmbX6S6Osc50o8nCGiyOtYWlewq2QKXVo69V_1hkK0WeFxprG387m1JY619uKGK0Kynb7Jdb7plnUWfzKgV0UP9L7RIA4E2KnupKhIr5aYQ=@urja.dev/
+#regzbot resolve: apparently fixed (bisect gone wrong? reporter did not
+complain after a fix was mentioned...)
+
+#regzbot report:
+https://lore.kernel.org/amd-gfx/87138377-d5b0-4c28-96bd-35a0ffd5f204@kernel.org/
+#regzbot duplicate: https://gitlab.freedesktop.org/drm/amd/-/issues/3495
+#regzbot fix: drm/amd/display: Take Synaptics Cascaded Topology into Account
