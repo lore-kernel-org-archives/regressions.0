@@ -1,124 +1,114 @@
-Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E33136E21
-	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 21:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723844198; cv=pass; b=tPQz4Xh1AfZKYroyM61l1mhYffpG2pYZG+wNs7uRsN49FS2glrVOdkEkaJcf+ci8N70RNG1BnAhhJuNwArWjQLt9qt1dvKlBlTwJrYJ8PcfnpQp0R+p8W7OJ4u4UpwZ94FkPvZpQRRpqRaInn54qJr3QcZEMZHaQIGIkV+JzTOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723844198; c=relaxed/simple;
-	bh=c17FZbLWCHlwpY1peGpdkedS72div4Jo5jTC/JJCJQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WPA5xphM36Ajv3PX2UuWmryY3JFEbxgtBH+pYLs7s35z1r/8s+nW1ifrBxmumLwP5K2Kccq9hpRP9RnNmpBOFAg+JZ3ZRJRjV6bt3TOP43/X3OEIuaD20FyZFh3XuulrLAlS1PWXKP5u2oA/g9LyrywyPvVQvyDK9bn6iTREuAo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz; spf=pass smtp.mailfrom=jevklidu.cz; dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b=DZUv6dqx; arc=pass smtp.client-ip=136.143.188.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jevklidu.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3970313C80F
+	for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 22:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723848630; cv=none; b=GSRztL46+ITEx2X2KkPKEp3XVCRdnLnsMIO/rj7Ufx04ZqBRN/tHHzwegmdg2wfy9vhWaMTxu/1bhyR11PoIeaBiSV2JcDhMBsqxJBTn4bxQOd5ef0RSIldNtI+86V5q3rf3I+7ooO82PdjYJXXRg1xYJVL9Ds3j2GYdXdMD5+Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723848630; c=relaxed/simple;
+	bh=4sFCiaTXrG/c3VpDIkVNec8p/t/V/GjyJ1lQxTaGo1k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGwS538oAvAA/5x//ZsgzA4BHFPgwdRbaky0EySik+eUtFmIjORXTEEFdPYtjtIvQuV/pkd1LdZmfKZ66XwwAXwYaBLR+0Nb4vAV/4fMvR0opelb6SR9N8Kt6Ud3ixOq3r+FfW/QCYEu5xyZRahpvLinMPB0v8dYTs4nb3d4dDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8b/rxrc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b="DZUv6dqx"
-ARC-Seal: i=1; a=rsa-sha256; t=1723844190; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bQk8V4jUloaXUJr4avZp2TOnuOcY6nOoujAoF1vTkj7qlQebEQbtB/30yF17TDVabMEO+Swk9WRyaiRjtApNmffEaLYaVBqqkhLT2vuohIzFior1jYZSj8jR3RVGtRhAe29IFOsBRCHod4RktGwSvMeZafHtiy3j7YqOY/B+jTc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1723844190; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=d+nsXWkB2Aw92a5tKCDR/lymJS8ziMLdHe14zTquOHE=; 
-	b=HIIcACDp/SIs8kVX6QaRf9SIAGk5v4QcgHwrnmmtTPjemAHImAYcyHoBpOlYejWImiIpBGUsC6rF9Fpex/ZFP7Ba04BESQckhDw+3BacC/qay3/Jk6Y5oq35V9apg/KRXLqSajrAZQqY8gmYsQvyUs3umv7wesuuIzc5KHjuiFU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=jevklidu.cz;
-	spf=pass  smtp.mailfrom=petr@jevklidu.cz;
-	dmarc=pass header.from=<petr@jevklidu.cz>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723844190;
-	s=zoho; d=jevklidu.cz; i=petr@jevklidu.cz;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=d+nsXWkB2Aw92a5tKCDR/lymJS8ziMLdHe14zTquOHE=;
-	b=DZUv6dqx3JwJLj1hW/OtijSJvEg6L+mZTMiZUzYnZrnRLx2nKKG3uawvPbIx45du
-	QVP6DClEweEo9tyPybHD5NGF1YJStGwIJop+M+F1wWxt4KeLoeJf5kZOlzKrfv0aJTQ
-	TY9+n/MkGg83+/PlZoqEd4rdOm5WLDMR4sedWgu8=
-Received: by mx.zohomail.com with SMTPS id 1723844188239272.99156550785096;
-	Fri, 16 Aug 2024 14:36:28 -0700 (PDT)
-Message-ID: <512c2b92-bad8-4dd6-9db9-a6260dc1cdb5@jevklidu.cz>
-Date: Fri, 16 Aug 2024 23:36:20 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8b/rxrc"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47GMmH2E013748;
+	Fri, 16 Aug 2024 22:50:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=iboElvC40g+k3Ef6sTPLY5xE
+	vHgmIN9WYKSF8oebX3Q=; b=n8b/rxrcXliV/7A81Hfekr/fOqC7i4mteWIh1EiR
+	w171zvjNN+Ie7831E7YF3NIJTnYibV50+drAKxZx43ApQsgPrJA/XL9hMxDsBwbO
+	MoOw+V1HKTt8P0BhOUNnwxoYRRDf1SIM7Fc0xzAOvu9COpWiWNLmQQNFF5+Hj9DW
+	U4udVgFIfomZJBc/lu7Q638inBkfvGeYyW161cBvZFvBH/btHICE7eDU7tIaPrLm
+	fOazRCgNB1ciNK9neIV8B1Jnqb07SYdp4OviPMZs8DYbi6j2gAESpSMpIXOsGQfT
+	fkG0C63d0pTNOZZFaw23WPm5A0Ur4zt9JfdS77U3ozyJFw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 412bqe8jqx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Aug 2024 22:50:22 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47GMoLR1032159
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 Aug 2024 22:50:21 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 16 Aug 2024 15:50:21 -0700
+Date: Fri, 16 Aug 2024 15:50:20 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: <regressions@lists.linux.dev>, Kyoungrul Kim <k831.kim@samsung.com>
+CC: "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@hansenpartnership.com>,
+        "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "Ed.Tsai@mediatek.com" <Ed.Tsai@mediatek.com>,
+        Minwoo Im
+	<minwoo.im@samsung.com>,
+        "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V4] scsi: ufs: core: Check LSDBS cap when !mcq
+Message-ID: <Zr/XrH1hsp0seP2Q@hu-bjorande-lv.qualcomm.com>
+References: <CGME20240709232520epcms2p8ebdb5c4fccc30a6221390566589bf122@epcms2p8>
+ <20240709232520epcms2p8ebdb5c4fccc30a6221390566589bf122@epcms2p8>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ACPI IRQ storm with 6.10
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux kernel mailing list <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
- <bd149809-f670-4b5d-a18a-f1f63624265f@kernel.org>
- <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
-Content-Language: cs-CZ
-From: Petr Valenta <petr@jevklidu.cz>
-In-Reply-To: <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240709232520epcms2p8ebdb5c4fccc30a6221390566589bf122@epcms2p8>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: x8rIhf8rJX-QQ7rTOprVbAbUF1u37MsT
+X-Proofpoint-ORIG-GUID: x8rIhf8rJX-QQ7rTOprVbAbUF1u37MsT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-16_16,2024-08-16_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 spamscore=0 adultscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408160163
 
+On Wed, Jul 10, 2024 at 08:25:20AM +0900, Kyoungrul Kim wrote:
+> if the user sets use_mcq_mode to 0, the host will try to activate the
+> lsdb mode unconditionally even when the lsdbs of device hci cap is 1. so
+> it makes timeout cmds and fail to device probing.
+> 
+> To prevent that problem. check the lsdbs cap when mcq is not supported
+> case.
+> 
+> Signed-off-by: k831.kim <k831.kim@samsung.com>
+> ---
+> Changes to v1: Fix wrong bit of lsdb support.
+> Changes to v2: Fix extra space and wrong commit messeage.
+> Changes to v3: Close missing parenthesis and fix grammatical error.
 
+This causes the probe of the UFSHCD in Qualcomm SM8550 MTP to fail with
+-EINVAL.
 
-Dne 16. 08. 24 v 20:29 Rafael J. Wysocki napsal(a):
-> On Wed, Aug 14, 2024 at 8:48 AM Jiri Slaby <jirislaby@kernel.org> wrote:
->>
->> On 14. 08. 24, 7:22, Jiri Slaby wrote:
->>> Hi,
->>>
->>> one openSUSE's user reported that with 6.10, he sees one CPU under an
->>> IRQ storm from ACPI (sci_interrupt):
->>>      9:   20220768          ...  IR-IO-APIC    9-fasteoi   acpi
->>>
->>> At:
->>> https://bugzilla.suse.com/show_bug.cgi?id=1229085
->>>
->>> 6.9 was OK.
->>>
->>> With acpi.debug_level=0x08000000 acpi.debug_layer=0xffffffff, there is a
->>> repeated load of:
->>>> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6D:
->>>> Status=20, Enable=00, RunEnable=4A, WakeEnable=00
->>
->> 0x6d seems to count excessively (10 snapshots every 1 second):
->>> /sys/firmware/acpi/interrupts/gpe6D:   82066  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   86536  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   90990     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   95468  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  100282  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  105187     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  110014     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  114852     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  119682     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  124194     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  128641  EN STS enabled      unmasked
->>
->> acpidump:
->> https://bugzilla.suse.com/attachment.cgi?id=876677
->>
->> DSDT:
->> https://bugzilla.suse.com/attachment.cgi?id=876678
->>
->>> Any ideas?
-> 
-> GPE 6D is listed in _PRW for some devices, so maybe one of them
-> continues to trigger wakeup events?
-> 
-> You can ask the reporter to mask that GPE via "echo mask >
-> /sys/firmware/acpi/interrupts/gpe6D" and see if the storm goes away
-> then.
-> 
+[    6.132937] ufshcd-qcom 1d84000.ufs: Adding to iommu group 4
+[    6.142509] ufshcd-qcom 1d84000.ufs: freq-table-hz property not specified
+[    6.149843] ufshcd-qcom 1d84000.ufs: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+[    6.209794] ufshcd-qcom 1d84000.ufs: ufshcd_init: failed to initialize (legacy doorbell mode not supported)
+[    6.226571] ufshcd-qcom 1d84000.ufs: error -EINVAL: Initialization failed with error -22
+[    6.348770] ufshcd-qcom 1d84000.ufs: error -EINVAL: ufshcd_pltfrm_init() failed
+[    6.363203] ufshcd-qcom 1d84000.ufs: probe with driver ufshcd-qcom failed with error -22
 
-It works, thank you. High CPU usage by irq/9-acpi is immediately gone.
+#regzbot introduced: 0c60eb0cc320
+#regzbot title: scsi: ufs: Qualcomm SM8550 MTP UFSHCD probe failing
 
-> The only ACPI core issue introduced between 6.9 and 6.10 I'm aware of
-> is the one addressed by this series
-> 
-> https://lore.kernel.org/linux-acpi/22385894.EfDdHjke4D@rjwysocki.net/
-> 
-> but this is about the EC and the problem here doesn't appear to be
-> EC-related.  It may be worth trying anyway, though.
-> 
+Regards,
+Bjorn
