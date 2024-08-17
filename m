@@ -1,181 +1,111 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C0513B78F
-	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 20:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBA71386C6
+	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 23:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723926650; cv=none; b=aZYoQsXVYDVH5nRYa4xQ6T9c3QuOu3nNlw/x60fV7F39S8bRTuT87kV9U/8eeOWOSvlztmq+0A3rdwW4FVO1lz5NVGKyATy07HpagVBrbbWV9rPZkhIm3SByxj6hDXeAQ0xSIMZo1vgJily2xZC+32Cjjgkmiuw828s64RVVm1U=
+	t=1723938415; cv=none; b=tRmiQSyJ+6WOEtVnA4Rzh4cvWlSN2kJKetAmRJVn093I9kDQEGlQsTZ3L4gLA+wdDoiuZOv/AYKvpc/hl1wmU1qaSH8sxW2VY56fy9l8+/Au7sqx8e2F4cFldAcq9ojHcDs+CAPBZRhOSHq1CEkHJayOHi0CWGAnJHuK75OpweM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723926650; c=relaxed/simple;
-	bh=9pVBnF/IoqoTA9giQFUXONfm/EXkOUlqKduLvu0uTR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S11gk9wzcbcGjJjji5KoeqslgSlIPNwoQ8TZtkX0P8frO7jxeQIp7DNXfwiL6k25b+SCbO5GlP+3rCk6V8TOb9MCxg8xkblmOkygDDgNcrElu6bE1OVKsCVr/5cnKzdFnFDuHt02yjeH9KmxZQNLic/7amAvDihjZh+GEIX7E2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev; spf=pass smtp.mailfrom=holm.dev; dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b=xAEGVIcP; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holm.dev
+	s=arc-20240116; t=1723938415; c=relaxed/simple;
+	bh=l+v85gKWtxhzD66uOw4BW1TzyQEIvhfDX4xdo53zdhA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aeIuomYNr03/ls2eI3KPr3m8Ft38pAra3WVW8kMTE10XAj7TytNufujuSTGO5/Rfl9k0sWLHRRk9QR5nLspQlu6tmAb3T8RPdBFnzjxdGijA/uR2FLuZAewwoJuqmtf4JrJ1QoLh5OpD/iU/5HIoflPGkONtPrrhVwe6NrTtcP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sj1vi1tI; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b="xAEGVIcP"
-Message-ID: <e518ef00-4c7a-4719-bc58-90d782e34b30@holm.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holm.dev; s=key1;
-	t=1723926645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RiMzr2mOghlf7iiDaqEMg26CjM/eQ8wr+mNOVNBO9T4=;
-	b=xAEGVIcPQJt5llu96Y8JewrBti+W3MjnLAKMZadCVm5MruQjiBAKEN2skzp8aTFjwPjX8u
-	8HPDBLLrEA7tyzsraZrdiWCfBGKVC7AlK0OQ+zpB7UqoMsN/VLkXb1YhdBlvHye/+vxKXk
-	qGi2JTZ1s+lprhbPrkppOY+2AiBxGNaZfQRb94U7Hx918DkNMuh2mNLCiup2x1CpAcw6NY
-	d+fQ1eL2yJKm/IKfaSHooV3SMJHHhxjYwNi9vBM6ZOW+hAWpN9EZRyESmoUtK9wg22Iqr5
-	KPYzKv4eHL5r82wuOVG6+EE74AHBgs0U9ZLWL+DaR6WwAdMtti910CvHdnSdxA==
-Date: Sat, 17 Aug 2024 22:30:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sj1vi1tI"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42817bee9e8so22712955e9.3
+        for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 16:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723938412; x=1724543212; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l+v85gKWtxhzD66uOw4BW1TzyQEIvhfDX4xdo53zdhA=;
+        b=Sj1vi1tIoAjfsnjynYgSkcsvBZjn/ZwSJXSQc/kLPF3A8Nar0lCBbwnlHM+DTgxby1
+         kPXcpDbOYIOokgPU6wu+BPhmWUry6IiGmHnEneZ9e/PZxly1qLUspCRFo+hyZv/pPtz2
+         GVxL2f/5ApsFx1Ki9RYZ0Qm4oojKO5fMW+aowDRLiaIl4Eul3JkUFcGTiKaSLkN4onDS
+         XdcJev7rcQSLoURZoaw00EjCzzGgqwWa0c/PZ8pBhNX96Vi9NhZ7HnmSxXE4Bk/1VHC+
+         wK5QCjKkcREXDDr+J+oaO+OkpDrNtoHXrqugBwPmcx3b6FFS19+xwtRDwR5u7rEHqONd
+         7x9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723938412; x=1724543212;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l+v85gKWtxhzD66uOw4BW1TzyQEIvhfDX4xdo53zdhA=;
+        b=AJCggYQfyL4VHHPOjQDcvfryaLFyRdvk0htXS7zGcXh4YBqAZU4T85OnnjGUgeo7RD
+         Jy4iexIADUuxf7sFkna4bLMgpIDtaGm1mnp2orOleXtSqBiKcUwYem+vAXHBFY3RtF2T
+         jHRBujl4wJKikeco9BepvEaC+B6uswmr0r+Uu803vNf8EUU+WO1lhFl/TObIFg4lz1pM
+         pwk8sR1pZKr8RSOwSzDhDP9Qtq0uT4a1DiJgG5mTHokaHnfIM0O1IoDVOTu33J7Y3bGF
+         +H8KzerI5hQrAKyAA0F66TIwzu89JDG0xEGL/QTvIAvOYo8Fu94VW9qxWkJWlBc9f0Tm
+         NW9g==
+X-Gm-Message-State: AOJu0Yz3Ia35hJBP/5js4uI3X44Wmy15vFw0S/yjAAwvoj4dj6CfpPpS
+	e0OJcNRVKknAPMKnszzmsr0poGRh3cunRqta++RxEkG8+WnXCR8jsnc7VwPl
+X-Google-Smtp-Source: AGHT+IG3UALrq/UQ4xcK92W6vqfpkfsnEizhUqmvHtg/EglYTF6LB8XWQKQZog25XQ6bIkcF1BOx2g==
+X-Received: by 2002:a05:600c:4f45:b0:428:1b0d:8657 with SMTP id 5b1f17b1804b1-429ed7ba9a9mr49075005e9.22.1723938412168;
+        Sat, 17 Aug 2024 16:46:52 -0700 (PDT)
+Received: from [10.33.80.43] (mem-185.47.220.165.jmnet.cz. [185.47.220.165])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ed7945cesm60488635e9.40.2024.08.17.16.46.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Aug 2024 16:46:51 -0700 (PDT)
+Message-ID: <1e962f52a2b1bb243227348dc998273eaf19cdab.camel@gmail.com>
+Subject: Re: [REGRESSION] Brightness at max level after waking up from sleep
+ on AMD Laptop
+From: Filip Hejsek <filip.hejsek@gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: alexander.deucher@amd.com, serg.partizan@gmail.com, 
+ amd-gfx@lists.freedesktop.org, mario.limonciello@amd.com,
+ hamza.mahfooz@amd.com,  ML dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Date: Sun, 18 Aug 2024 01:46:50 +0200
+In-Reply-To: <77KAHS.13UUH2XVHQQF1@gmail.com>
+References: <77KAHS.13UUH2XVHQQF1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH 6.10] drm/amd/display: Refactor function
- dm_dp_mst_is_port_support_mode()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, ML dri-devel
- <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
- Wayne Lin <wayne.lin@amd.com>, Jerry Zuo <jerry.zuo@amd.com>,
- Zaeem Mohamed <zaeem.mohamed@amd.com>,
- Daniel Wheeler <daniel.wheeler@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>
-References: <20240730185339.543359-1-kevin@holm.dev>
- <2024081739-suburb-manor-e6c3@gregkh>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kevin Holm <kevin@holm.dev>
-Content-Language: en-US
-In-Reply-To: <2024081739-suburb-manor-e6c3@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+
+Hello,
+
+On Sat, 2024-07-27 at 19:52 +0300, serg.partizan@gmail.com wrote:
+> Hello,
+>=20
+> After updating from 6.8.9 to 6.9.1 I noticed a bug on my HP Envy x360=20
+> with AMD Ryzen 5 4500U.
+>=20
+> #regzbot introduced: v6.8.9..v6.9.1
+>=20
+> After waking up from sleep brightness is set to max level, ignoring=20
+> previous value.
+
+This issue is tracked here:
+#regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/3474
 
 
+> With the help of Arch Linux team, we was able to track bad commit to=20
+> this:=20
+> https://gitlab.freedesktop.org/agd5f/linux/-/commit/63d0b87213a0ba241b3fc=
+fba3fe7b0aed0cd1cc5
+>=20
+> [...]
 
-On 17.08.24 10:42, Greg KH wrote:
-> On Tue, Jul 30, 2024 at 08:53:39PM +0200, Kevin Holm wrote:
->> From: Wayne Lin <wayne.lin@amd.com>
->>
->> [ Upstream commit fa57924c76d995e87ca3533ec60d1d5e55769a27 ]
->>
->> [Why]
->> dm_dp_mst_is_port_support_mode() is a bit not following the original design rule and cause
->> light up issue with multiple 4k monitors after mst dsc hub.
->>
->> [How]
->> Refactor function dm_dp_mst_is_port_support_mode() a bit to solve the light up issue.
->>
->> Reviewed-by: Jerry Zuo <jerry.zuo@amd.com>
->> Acked-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
->> Signed-off-by: Wayne Lin <wayne.lin@amd.com>
->> Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
->> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->> [kevin@holm.dev: Resolved merge conflict in .../amdgpu_dm_mst_types.c]
->> Fixes: 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation")
->> Link: https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u
->> Signed-off-by: Kevin Holm <kevin@holm.dev>
->> ---
->> I resolved the merge conflict so that, after this patch is applied to the
->> linux-6.10.y branch of the stable git repository, the resulting function
->> dm_dp_mst_is_port_support_mode (and also the new function
->> dp_get_link_current_set_bw) is identical to the original commit.
->>
->> I've confirmed that it fixes the regression I reported for my use case.
-> 
-> And it turns out this change breaks the arm and arm64 builds.  I tried
-> to fix it up by applying the fixup afterward for this file, but it's
-> just too much of a mess to unwind this, so I'm going to have to revert
-> this now, sorry.
-That sucks, sorry for the problems my patch caused. :(
+This commit does not introduce the bug, it only makes it possible to
+set the ABM level without requiring support from the compositor. It's
+very likely that the bug has existed for a long time, it just hasn't
+surfaced because no compositor enabled the ABM power savings featue.
+Now that power-profiles-daemon can enable it through sysfs, the bug has
+been exposed.
 
-> See:
-> 	https://lore.kernel.org/r/b27c5434-f1b1-4697-985b-91bb3e9a22df@roeck-us.net
-> for details.
-I unfortunately don't know the amdgpu driver and kernel code in general enough to help fix
-that. The back-ported patch I send was my first patch to the kernel.
+So I think this actually might not be a regression, just a new feature
+that exposed an old bug.
 
-In the email thread where I reported the problem I send a patch that reverts
-4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation") to
-fix the problem that way [1]. I've included a copy of that below.
-I've tested that it still applies to 6.10.6-rc3 without conflicts and compiles for me. I
-could not test if the 6.10.6-rc3 with the revert applied fixes the problem as I'm
-traveling and don't have access to my normal setup. I can only say that reverting it on
-v6.10.2 fixed the problem for me.
-
-I don't know how to compile for other architectures so I did not test that.
-
-Not sure what would be best, reverting the problem commit so the regression is fixed in
-the 6.10 stable kernel (and maybe breaking something else?) or waiting for someone at AMD
-with better knowledge of the amdgpu driver to back-port the fixing commit in a non-broken
-way.
-
-~kevin
-
-[1] https://lore.kernel.org/regressions/7bf26283474fbb6ea915f93f4db0bc614a627617@holm.dev/
-> 
-> greg k-h
----
-  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   | 33 +++----------------
-  1 file changed, 5 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c 
-b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-index a5e1a93ddaea..5c555a37e367 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-@@ -1599,7 +1599,7 @@ enum dc_status dm_dp_mst_is_port_support_mode(
-         struct amdgpu_dm_connector *aconnector,
-         struct dc_stream_state *stream)
-  {
--       int pbn, branch_max_throughput_mps = 0;
-+       int bpp, pbn, branch_max_throughput_mps = 0;
-         struct dc_link_settings cur_link_settings;
-         unsigned int end_to_end_bw_in_kbps = 0;
-         unsigned int upper_link_bw_in_kbps = 0, down_link_bw_in_kbps = 0;
-@@ -1649,34 +1649,11 @@ enum dc_status dm_dp_mst_is_port_support_mode(
-                         }
-                 }
-         } else {
--               /* Check if mode could be supported within max slot
--                * number of current mst link and full_pbn of mst links.
--                */
--               int pbn_div, slot_num, max_slot_num;
--               enum dc_link_encoding_format link_encoding;
--               uint32_t stream_kbps =
--                       dc_bandwidth_in_kbps_from_timing(&stream->timing,
--                               dc_link_get_highest_encoding_format(stream->link));
--
--               pbn = kbps_to_peak_pbn(stream_kbps);
--               pbn_div = dm_mst_get_pbn_divider(stream->link);
--               slot_num = DIV_ROUND_UP(pbn, pbn_div);
--
--               link_encoding = dc_link_get_highest_encoding_format(stream->link);
--               if (link_encoding == DC_LINK_ENCODING_DP_8b_10b)
--                       max_slot_num = 63;
--               else if (link_encoding == DC_LINK_ENCODING_DP_128b_132b)
--                       max_slot_num = 64;
--               else {
--                       DRM_DEBUG_DRIVER("Invalid link encoding format\n");
-+               /* check if mode could be supported within full_pbn */
-+               bpp = convert_dc_color_depth_into_bpc(stream->timing.display_color_depth) * 3;
-+               pbn = drm_dp_calc_pbn_mode(stream->timing.pix_clk_100hz / 10, bpp << 4);
-+               if (pbn > aconnector->mst_output_port->full_pbn)
-                         return DC_FAIL_BANDWIDTH_VALIDATE;
--               }
--
--               if (slot_num > max_slot_num ||
--                       pbn > aconnector->mst_output_port->full_pbn) {
--                       DRM_DEBUG_DRIVER("Mode can not be supported within mst links!");
--                       return DC_FAIL_BANDWIDTH_VALIDATE;
--               }
-         }
-
-         /* check is mst dsc output bandwidth branch_overall_throughput_0_mps */
--- 
-2.45.2
+--
+Filip
