@@ -1,446 +1,116 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3965522F
-	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 01:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AA084DF1
+	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 05:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723858716; cv=none; b=RxIkjRF9Q0wZ6w3nyDMDeE76pCdo7vEnk9rFI+sR8Wo+XbKXvZUduAD9u0ZjBRD9XYRBNxsJOSH1vsmctYfB/WNKemIBnc8ONxfNaJybl4c5B7ZexfckrOvJ6LsokTlYgq+XZQY7P0V+cobNAjw+vojCqNCjrxwuRdBn32yI0K4=
+	t=1723874117; cv=none; b=jc1/MAJqO9N4++6reebGQsS6bpBHyT3QZ0jPBZW+XY9Toeb0Wugi1J45+MryRjvQF58M1yTYhNJESEJ4mJFAW04jTvcEqrXEiLnY3E7odLp1YIu4AO+dxeh1Mxsx0aiBjmahQaSLsIalnBXfAwBloxL8xdKp9qoTeRdRNpVSIZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723858716; c=relaxed/simple;
-	bh=YMndA6gm2WglsPJPIxoUSLLSTAyxiJ/tPDTjLgXpuqs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PygxlIonpNONClG8oepxrRP5l1dGEDmhB9AV+lvuS78kB4W32X0ghyALf6Tb8ab5I+cnAdCSpf6la6PsVn4ALf+hST91U1qKG36IkaQ8F+l9n3WaYiYRXBORi6THsvh8bA28rCP8UBdfd3Tv5BkJ77ozM4K7UCT5D7BCQeEOTrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=a6MCkBiK; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1723874117; c=relaxed/simple;
+	bh=HKG2pveTsX+z1Xe9DReCbD4Qokg0N7ksaogIoX/ziqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDRCz2odJ1WRBKveeNjWJzd6IIY1gmZhrOa0+iyIsRsYaXbjEqJmkQa67OWYg7Ox5R5jBzQaUrC+Tjga3p02j7APT60BYrswKtPHGXuLGwspG88+IrQr8VEgme07Waykmpsd8LHTA29M8E3V7vFQY4lhNE4WLvUY5y4BdAjaEqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C29yt2ic; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="a6MCkBiK"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52fc4388a64so3299350e87.1
-        for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 18:38:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C29yt2ic"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2d3ec4bacc5so831286a91.1
+        for <regressions@lists.linux.dev>; Fri, 16 Aug 2024 22:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1723858710; x=1724463510; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cFe7AahprE6s2YtEoEg3v2lR7yjBv8hqbL/0X1aLqdo=;
-        b=a6MCkBiKEybm+GQZxGp/RzWB80fdcgXfVCdIPJ5sS0Q4D8nHuQXrCyzxgYhWQyOYAp
-         4j10tDxehOy7jg5Reyz+D1rHes8S/Q96bR3RH7P/KlYD9sadPmIe1l1+I84YarOR2bgc
-         Bn0oR6wBKavORVPa0UM+r62BxFPguPrHgYMgzlRc19oztNoa9UD9OnR+nhhr+/GgBazX
-         +mnDrcLXD2YI/BuQNdtQcYQXHx99IOpnma2UBky5l1cOKUN6Iu2P8PRhCkoO4iug4v6Z
-         BwpBBI5FKs5rmppNuyZdi0hDlyZ94WNFUzbHsVzW/U5QqNsQWIVo+JV1p1v+cUV24IaX
-         ddbQ==
+        d=gmail.com; s=20230601; t=1723874115; x=1724478915; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tcGPNa2OqtrLegopPjqkiD5lC5fpo5SZicIuaeN9D3o=;
+        b=C29yt2ic2ojPycIxrHfAh7GN5EmpEs34MNPb4VOPP1+6KA9Q1xkF0N9wkj3wx448/7
+         zCA+QCaAG+zxDSYnBH7vRrcxhusEmShnyaEx9JQSGhj2bQo4WY9unBCKtjc9COezd7OF
+         NdTKpPj2r6FKfg6KM1vraIFVjM4Gm1W9h6YKl05TMKovDlCi4oFU7+HmzaGxFikWIW1j
+         L6X3ie6NTxob3uVdIqEyhRnLfQdugf3zK/ORKYPIfVoa5lQ5df5+3QsVYEGTehw0eiNJ
+         /rcYg5CbYgQnO2OMIPzeL+/PvGSPRa7OD2Om8PfKz0VOkpjcT/KOO3F2ew/cb8w3OVvI
+         yLTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723858710; x=1724463510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cFe7AahprE6s2YtEoEg3v2lR7yjBv8hqbL/0X1aLqdo=;
-        b=KHUQg/eTouyQI+Rbuu3f1c+ofBSQAyzgy7tVaacVIpCFQuuqGPU73laD+Vlsjf2Lka
-         2h140H/uCm3JH3QlaH98+dkMvsTeCbYrnhI/FcSeYHYYoNyR6idfR7Xer1vBqsJYc5PS
-         dYZKDyHEf4tnjsy+D86YMivIdpaCXpLdmrr/mrraA9sh5+l7eI4pZ2hoORhtMZZzz09P
-         eYpHfUfQ3KpYqWtPq7wSlgkjgKlpos9Lvu9OZhP782cBdfLYs1DMJ3uBlUYAtdJcjgMQ
-         qo4ROuWRut/Bar9tZpSyf4Ojc7g3WDfqKJzuLOtFCJGLSiDbVQ+hlQAtO5PUDN8lmD5P
-         DLJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwXbglIc/u/VCcqZRcEqSFIeyEM4Vk/4H6CewtCFusouavx4ZhEZ7bzSTZS9aVO+IDwmR6ZPvlx2ig6Bo9h2ODlznUg1tzsKR9LXU=
-X-Gm-Message-State: AOJu0YwwYpbS33ST4NKyh+uVP4oPGBZVf1Tysx72vH+lsmPHkxty4C8V
-	reDOru9WbsaknOZ7DhMVlIVa4ZEpIAQjFDdG5frp1+/4r/VxVYE4VOyMdniDLXEYSWs/Ny1Mwhg
-	xQt5z5eUKMPFKlnwlffmbW6vciDbY8+6L2g7h1w==
-X-Google-Smtp-Source: AGHT+IHdv5Y/2LjORAtY3flQrvtdD0G3wpHOlX1La92acZG9slSJQ0oo5c592B4ccXyRx3KLPyhzSHDRxOFBqM4UMyA=
-X-Received: by 2002:a05:6512:6c8:b0:530:aba8:d37a with SMTP id
- 2adb3069b0e04-5331c6e3a8amr2641096e87.37.1723858709943; Fri, 16 Aug 2024
- 18:38:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723874115; x=1724478915;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tcGPNa2OqtrLegopPjqkiD5lC5fpo5SZicIuaeN9D3o=;
+        b=Vezao8MXb69XKIPNMPiSxzpH5LeEUd7ZPfP2H1dycFle/gamaqTXBBDkOXpEd9E1Hd
+         W1WMxOEd8KRskiQ88H1ar8E1xQEJe89+vC8eFqq+Ry1AH73GE2ywBswtoe31xgoijs18
+         lj6MqcW7uJrkSa8Vhb3cx3aHGqwI1FgDmZz8+X2L3M6Umu+GgFcY68QYjExru3f4XC1X
+         F8WScg9SN/nCHx7C00M4lbQF5APcfBP97ig3MZS1hvfoUqZNPQAREHpn2DA+F4yckmz7
+         wnFRGre/D9nGn7y/hKWrJec8G0VxaZ9VoSg9hnKx881kz9Hcv5v1nBYjz9jki4pvcwrB
+         A6Pg==
+X-Gm-Message-State: AOJu0YxnnV38Rw3p4glLpIQv+8AHR8Vilau6AYVvluewZgboJrOi7tIN
+	WyGQqc/oNuWKiUII0emaOMCv7QFsKr3GKK+C9g3wYH66+jQxPe1e
+X-Google-Smtp-Source: AGHT+IEEwioOC1xEMy2g9xf3Rrr/B/HzHjvzlQGeZZ7FWZdw4oqMAkK/JDXIipPJivoGID6UBn4Iig==
+X-Received: by 2002:a17:90a:3ea5:b0:2c2:d590:808e with SMTP id 98e67ed59e1d1-2d3e4579733mr7071507a91.13.1723874115023;
+        Fri, 16 Aug 2024 22:55:15 -0700 (PDT)
+Received: from thinkpad ([220.158.156.182])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e2e6b2d1sm2978924a91.18.2024.08.16.22.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2024 22:55:14 -0700 (PDT)
+Date: Sat, 17 Aug 2024 11:25:08 +0530
+From: Manivannan Sadhasivam <manisadhasivam.linux@gmail.com>
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: regressions@lists.linux.dev, Kyoungrul Kim <k831.kim@samsung.com>,
+	"James.Bottomley@HansenPartnership.com" <James.Bottomley@hansenpartnership.com>,
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+	"bvanassche@acm.org" <bvanassche@acm.org>,
+	"Ed.Tsai@mediatek.com" <Ed.Tsai@mediatek.com>,
+	Minwoo Im <minwoo.im@samsung.com>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH V4] scsi: ufs: core: Check LSDBS cap when !mcq
+Message-ID: <20240817055508.iomq7c4wvsn5gvj3@thinkpad>
+References: <CGME20240709232520epcms2p8ebdb5c4fccc30a6221390566589bf122@epcms2p8>
+ <20240709232520epcms2p8ebdb5c4fccc30a6221390566589bf122@epcms2p8>
+ <Zr/XrH1hsp0seP2Q@hu-bjorande-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me> <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
- <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
- <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info> <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
- <CAP-5=fVSVe=C5dHaOV22+YOZ_JCD0mDoByoubSFY3w4au5zwQg@mail.gmail.com>
- <6cbd2f1d-2aea-486c-a3cb-bb6eb08d8bdc@linaro.org> <CAP-5=fXX10Jra-LogXL0M3O5OU_YpBaA=7S54upENzJ86Y5Hvw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXX10Jra-LogXL0M3O5OU_YpBaA=7S54upENzJ86Y5Hvw@mail.gmail.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Fri, 16 Aug 2024 18:38:18 -0700
-Message-ID: <CAHBxVyGz5Cjd_QH4AWWZ=cQnQ0KKCJeLcT+aKO5QUxpGegdRLw@mail.gmail.com>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Linux perf Profiling <linux-perf-users@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Clark <james.clark@arm.com>, 
-	"cc: Marc Zyngier" <maz@kernel.org>, Hector Martin <marcan@marcan.st>, Asahi Linux <asahi@lists.linux.dev>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zr/XrH1hsp0seP2Q@hu-bjorande-lv.qualcomm.com>
 
-On Fri, Aug 16, 2024 at 8:30=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Fri, Aug 16, 2024 at 2:23=E2=80=AFAM James Clark <james.clark@linaro.o=
-rg> wrote:
-> >
-> >
-> >
-> > On 15/08/2024 6:29 pm, Ian Rogers wrote:
-> > > On Wed, Aug 14, 2024 at 9:28=E2=80=AFAM James Clark <james.clark@lina=
-ro.org> wrote:
-> > >> On 07/08/2024 9:54 am, Thorsten Leemhuis wrote:
-> > >>> On 01.08.24 21:05, Ian Rogers wrote:
-> > >>>> On Wed, Dec 6, 2023 at 4:09=E2=80=AFAM Linux regression tracking #=
-update
-> > >>>> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
-> > >>>>>
-> > >>>>> [TLDR: This mail in primarily relevant for Linux kernel regressio=
-n
-> > >>>>> tracking. See link in footer if these mails annoy you.]
-> > >>>>>
-> > >>>>> On 22.11.23 00:43, Bagas Sanjaya wrote:
-> > >>>>>> On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
-> > >>>>>>> Perf broke on all Apple ARM64 systems (tested almost everything=
-), and
-> > >>>>>>> according to maz also on Juno (so, probably all big.LITTLE) sin=
-ce v6.5.
-> > >>>>>
-> > >>>>> #regzbot fix: perf parse-events: Make legacy events lower priorit=
-y than
-> > >>>>> sysfs/JSON
-> > >>>>> #regzbot ignore-activity
-> > >>>>
-> > >>>> Note, this is still broken.
-> > >>>
-> > >>> Hmmm, so all that became somewhat messy. Arnaldo, what's the way ou=
-t of
-> > >>> this? Or is this a "we are screwed one way or another and someone h=
-as to
-> > >>> bite the bullet" situation?
-> > >>>
-> > >>> Ciao, Thorsten
-> > >>>
-> > >>>> The patch changed the priority in the case
-> > >>>> that you do something like:
-> > >>>>
-> > >>>> $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
-> > >>>>
-> > >>>> but if you do:
-> > >>>>
-> > >>>> $ perf stat -e 'cycles' benchmark
-> > >>>>
-> > >>>> then the broken behavior will happen as legacy events have priorit=
-y
-> > >>>> over sysfs/json events in that case. To fix this you need to rever=
-t:
-> > >>>> 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
-> > >>>> events over legacy"
-> > >>>>
-> > >>>> This causes some testing issues resolved in this unmerged patch se=
-ries:
-> > >>>> https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@goog=
-le.com/
-> > >>>>
-> > >>>> There is a bug as the arm_dsu PMU advertises an event called "cycl=
-es"
-> > >>>> and this PMU is present on Ampere systems. Reverting the commit ab=
-ove
-> > >>>> will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remo=
-ve
-> > >>>> __evlist__add_default") to fix ARM's BIG.little systems (opening a
-> > >>>> cycles event on all PMUs not just 1) will cause the arm_dsu event =
-to
-> > >>>> be opened by perf record and fail as the event won't support sampl=
-ing.
-> > >>>>
-> > >>>> The patch https://lore.kernel.org/lkml/20240525152927.665498-1-iro=
-gers@google.com/
-> > >>>> fixes this by only opening the cycles event on core PMUs when choo=
-sing
-> > >>>> default events.
-> > >>>>
-> > >>>> Rather than take this patch the revert happened as Linus runs the
-> > >>>> command "perf record -e cycles:pp" (ie using a specified event and=
- not
-> > >>>> defaults) and considers it a regression in the perf tool that on a=
-n
-> > >>>> Ampere system to need to do "perf record -e
-> > >>>> 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying=
- -e
-> > >>>> will choose the cycles event correctly and with better precision t=
-he
-> > >>>> pp for systems that support it, but it was still considered a
-> > >>>> regression in the perf tool so the revert was made to happen. Ther=
-e is
-> > >>>> a lack of perf testing coverage for ARM, in particular as they cho=
-ose
-> > >>>> to do everything in a different way to x86. The patch in question =
-was
-> > >>>> in the linux-next tree for weeks without issues.
-> > >>>>
-> > >>>> ARM/Ampere could fix this by renaming the event from cycles to
-> > >>>> cpu_cycles, or by following Intel's convention that anything uncor=
-e
-> > >>>> uses the name clockticks rather than cycles. This could break peop=
-le
-> > >>>> who rely on an event called arm_dsu/cycles/ but I imagine such peo=
-ple
-> > >>>> are rare. There has been no progress I'm aware of on renaming the
-> > >>>> event.
-> > >>>>
-> > >>>> Making perf not terminate on opening an event for perf record seem=
-s
-> > >>>> like the most likely workaround as that is at least something unde=
-r
-> > >>>> the tool maintainers control. ARM have discussed doing this on the
-> > >>>> lists:
-> > >>>> https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@=
-arm.com/
-> > >>>> but since the revert in v6.10 no patches have appeared for the v6.=
-11
-> > >>>> merge window. Feature work like coresight improvements and ARMv9 a=
-re
-> > >>>> being actively pursued by ARM, but feature work won't resolve this
-> > >>>> regression.
-> > >>>>
-> > >>
-> > >> I got some hardware with the DSU PMU so I'm going to have a go at tr=
-ying
-> > >> to send some fixes for this. My initial idea was to try incorporate =
-the
-> > >> "not terminate on opening" change as discussed in the link directly
-> > >> above. And then do the revert of the "revert of prefer sysfs/json".
-> > >
-> > > Thanks, I think this would be good. The biggest issue is that none of
-> > > the record logic expects a file descriptor to be not opened, deleting
-> > > unopened evsels from the evlist breaks all the indexing into the
-> > > mmaps, etc. Tbh, you probably wouldn't do the code this way if was
-> > > written afresh. Perhaps a hashmap would map from an evsel to ring
-> > > buffer mmaps, etc. Trying to avoid having global state and benefittin=
-g
-> > > from encapsulation. I'd focus on just doing the expedient thing in th=
-e
-> > > changes, which probably just means making the record code tolerant of
-> > > evsels that fail to open and not modifying the evlist due to the risk
-> > > it breaks the indices.
-> > >
-> >
-> > Thanks for the tips.
-> >
-> > > (To point out the obvious, this work wouldn't be necessary if arm_dsu
-> > > event were renamed from "cycles" to "cpu_cycles" which would also mak=
-e
-> > > it more intention revealing alongside the arm_dsu's "bus_cycles" even=
-t
-> > > name).
-> > >
-> >
-> > I understand but I can imagine the following conversation if we rename =
-that:
-> >
-> >    User: "I updated my kernel and now my (non Perf) tool fails to open
-> >           the DSU cycles event because it doesn't exist anymore"
-> >
-> >    Linus/maintainers: "Oh ok yes that was a userspace breaking change,
-> >                       lets revert it"
-> >
-> > Just because Perf can handle 3 different names for cycles doesn't mean
-> > other tools can.
->
-> cycles was a bad event name, dsu is a terrible name for what is mainly
-> the l3 cache, the risk that the two are combined get broken I'm fine
-> with as neoverse users with uncore permissions are say much rarer than
-> Apple M users. Having a cycles and a bus_cycles event is already
-> ambiguous, they sound the same. Renaming cycles to cpu_cycles would be
-> best.
->
-> > >> FWIW I don't think Juno currently is broken if the kernel supports
-> > >> extended type ID? I could have missed some output in this thread but=
- it
-> > >> seems like it's mostly related to Apple M hardware. I'm also a bit
-> > >> confused why the "supports extended type" check fails there, but may=
-be
-> > >> the v6.9 commit 25412c036 from Mark is missing?
-> > >
-> > > So I think your later emails clarify Arnaldo is probably missing:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/commit/drivers/perf/arm_pmu.c?h=3Dperf-tools-next&id=3D5c816728651ae425=
-954542fed64d21d40cb75a9f
-> > >
-> > > Fwiw, the Apple M hardware issue came to me by way of Mark Rutland
-> > > (iirc), this regression report, etc. My understanding is that Apple M
-> > > has something like a v2 ARM PMU and the legacy events are encoded
-> > > incorrectly in the driver for this. The regression in v6.5 happened
-> >
-> > I'm not sure about that. The M PMU events may be incomplete, but the tw=
-o
-> > that are there have a mapping that looks sane:
-> >
-> >    static const unsigned m1_pmu_perf_map[PERF_COUNT_HW_MAX] =3D {
-> >         PERF_MAP_ALL_UNSUPPORTED,
-> >         [PERF_COUNT_HW_CPU_CYCLES]      =3D M1_PMU_PERFCTR_CPU_CYCLES,
-> >         [PERF_COUNT_HW_INSTRUCTIONS]    =3D M1_PMU_PERFCTR_INSTRUCTIONS=
-,
-> >         /* No idea about the rest yet */
-> >    };
-> >
-> > And they map to the same named events:
-> >
-> >    static struct attribute *m1_pmu_event_attrs[] =3D {
-> >         M1_PMU_EVENT_ATTR(cycles, M1_PMU_PERFCTR_CPU_CYCLES),
-> >         M1_PMU_EVENT_ATTR(instructions, M1_PMU_PERFCTR_INSTRUCTIONS),
-> >         NULL,
-> >    };
-> >
-> > So in this case I can't see using legacy vs sysfs events making a
-> > difference. Maybe there is some other case that was mentioned in a
-> > previous thread that I missed though.
->
-> No idea, iirc Mark Rutland requested not to use legacy events for Apple M=
-.
->
-> > > because ARM's core PMUs had previously been treated as uncore PMUs,
-> > > meaning we wouldn't try to program legacy events on them. Fixing the
-> > > handling of ARM's core PMUs broke Apple M due to the broken legacy
-> > > event mappings. Why not fix the Apple M PMU driver? Well there was
-> > > anyway a similar RISC-V issue reported by Atish Patra (iirc) where th=
-e
-> > > RISC-V PMU driver wants to delegate the mapping of legacy events to
-> > > the perf tool so the driver needn't be aware of all and future RISC-V
-> > > configurations. The fix discussed with Mark, Atish, etc. has been to
-> > > swap the priority of legacy and sysfs/json events so that the latter
-> > > has priority. We need the revert of the revert as currently we only d=
-o
-> > > this if a PMU is specified with an event, not for the general wildcar=
-d
-> > > PMUs case that most people use. There was huge fallout from flipping
-> >
-> > Yep makes sense to do the revert if RISC-V isn't going to support any
-> > legacy events. Although from what I understand that would technically
-> > only require JSON to be the highest priority? Because putting named
-> > events in sysfs still requires kernel involvement so doesn't get you an=
-y
-> > further than supporting the legacy events?
->
-> The sysfs and json event handling is interwoven, for example you can
-> add to a sysfs event with json information. There are basically two
-> approaches in the event parser, hardcoded legacy things and event
-> names (optionally with PMU names). I'm trying to get rid of the
-> hardcoded legacy things as they were fine when you had a single core
-> type, but I want to have events everywhere - say instructions and
-> cycles on a GPU so we can IPC on a GPU. For RISC-V as long as the
-> legacy events are covered as names in json and json/sysfs has priority
-> over legacy then things will be fine.
->
+On Fri, Aug 16, 2024 at 03:50:20PM -0700, Bjorn Andersson wrote:
+> On Wed, Jul 10, 2024 at 08:25:20AM +0900, Kyoungrul Kim wrote:
+> > if the user sets use_mcq_mode to 0, the host will try to activate the
+> > lsdb mode unconditionally even when the lsdbs of device hci cap is 1. so
+> > it makes timeout cmds and fail to device probing.
+> > 
+> > To prevent that problem. check the lsdbs cap when mcq is not supported
+> > case.
+> > 
+> > Signed-off-by: k831.kim <k831.kim@samsung.com>
+> > ---
+> > Changes to v1: Fix wrong bit of lsdb support.
+> > Changes to v2: Fix extra space and wrong commit messeage.
+> > Changes to v3: Close missing parenthesis and fix grammatical error.
+> 
+> This causes the probe of the UFSHCD in Qualcomm SM8550 MTP to fail with
+> -EINVAL.
+> 
+> [    6.132937] ufshcd-qcom 1d84000.ufs: Adding to iommu group 4
+> [    6.142509] ufshcd-qcom 1d84000.ufs: freq-table-hz property not specified
+> [    6.149843] ufshcd-qcom 1d84000.ufs: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+> [    6.209794] ufshcd-qcom 1d84000.ufs: ufshcd_init: failed to initialize (legacy doorbell mode not supported)
+> [    6.226571] ufshcd-qcom 1d84000.ufs: error -EINVAL: Initialization failed with error -22
+> [    6.348770] ufshcd-qcom 1d84000.ufs: error -EINVAL: ufshcd_pltfrm_init() failed
+> [    6.363203] ufshcd-qcom 1d84000.ufs: probe with driver ufshcd-qcom failed with error -22
+> 
+> #regzbot introduced: 0c60eb0cc320
+> #regzbot title: scsi: ufs: Qualcomm SM8550 MTP UFSHCD probe failing
+> 
 
-RISC-V does want to support legacy events as that's how users on other
-architectures are used to
-run perf. It would be weird if we don't support it.
+Fix got merged for v6.11: https://lore.kernel.org/linux-scsi/20240816-ufs-bug-fix-v3-0-e6fe0e18e2a3@linaro.org/
 
-Our initial reasoning behind relying on json for legacy events to
-avoid vendor specific encodings for these
-events in the driver. Unlike other ISAs, RISC-V ISA doesn't define an
-event encoding for these legacy
-events. As a result every platform vendor will have custom encoding.
-Managing them in the driver is
-cumbersome. Many thanks to Ian for posting the patches to reverse the
-priority which works fine for RISC-V.
+- Mani
 
-However, I understand that it is easier said than done and some use
-cases are broken. We also discovered
-there are few other use cases which still have the same problem even
-if we solve the bigger problem via json parsing
-for legacy events.
-
-1. Any other user profiling application that invokes perf system calls
-directly may also try to just legacy event attributes in
-perf_event_attr.
-Android simpleperf application also falls in this category. We need to
-describe the platform specific encoding somewhere for these
-applications.
-
-2. Perf running inside guests may run on any hardware and can't be
-tied to a platform specific json file. If we bind the legacy
-events via json file, those users won't be able to use perf cycle or
-instruction without the json file available.
-
-I don't have any good solutions for the above said problems without
-specifying the encoding in the driver itself.
-Given all the problems around json parsing for legacy events, we are
-thinking of biting the bullet and allowing platform vendors
-to encode the legacy events in the driver itself similar to other
-ISAs. We will try to keep the interface as scalable as possible.
-
-Any suggestions ?
-
-> > Seems like there is another reason to do the revert though as Mark
-> > mentioned: That now directly specifying the PMU eg "-e
-> > arm_cortex_a56/cycles/" opens a legacy event if the event matches one,
-> > which is not the best thing to do. But the revert fixes this AFAIK, so
-> > while having the priority JSON/legacy/sysfs might work for RISC-V it
-> > wouldn't work for a platform that wants a slightly different sysfs even=
-t
-> > than legacy but with the same name. And the priority should be
-> > JSON/sysfs/legacy.
->
-> The priority for events with a PMU is the sysfs/json has a priority
-> over legacy names, so I don't understand what you're saying here. Your
-> example shouldn't be broken. The revert is for the case where no PMU
-> is specified, where the priority is the opposite which is at best
-> inconsistent.
->
-> > > the priority particularly on Intel as all test expectations needed
-> > > updating. I've sent out similar fixes that need incorporating when th=
-e
-> > > revert is reverted. Ideally tools/perf/tests/parse-events.c would be
-> > > updated to cover ARM's PMUs that don't follow the normal pattern that
-> > > the core PMU is called "cpu" (this would mean that we were testing
-> > > event parsing on ARM was WAI wrt encoding priorities, BIG.little,
-> > > etc).
-> > >
-> > >> I sent a small fix the other day to make perf stat default arguments
-> > >> work on Juno, and didn't notice anything out of the ordinary:
-> > >> https://lore.kernel.org/linux-perf-users/dac6ad1d-5aca-48b4-9dcb-ff7=
-e54ca43f6@linaro.org/T/#t
-> > >> I agree that change is quite narrow but it does incrementally improv=
-e
-> > >> things for the time being. It's possible that it would become redund=
-ant
-> > >> if I can just include Ian's change to use strings for Perf stat.
-> > >
-> > > I'd prefer we didn't merge this as we'd need to rebase:
-> > > https://lore.kernel.org/lkml/20240510053705.2462258-4-irogers@google.=
-com/
-> > > and those changes would then delete the code introduced. I'm fine wit=
-h
-> > > adding the tests.
-> > >
-> > > There are more exotic heterogeneous core things upcoming, probably
-> > > also from ARM, and the thought of duplicating the default attribute
-> > > logic and event parsing constraints is just something I'd prefer not
-> > > to have to do.
-> > >
-> >
-> > Yep I don't have any strong feelings about this. Even if we don't merge
-> > it it helped me understand the code and the issue a bit.
-> >
-> > I think one thing I assumed about your change was that there was some
-> > dependency on these other changes. But the more I look at it I think
-> > it's actually fine on it's own?
->
-> Which change? If the change is trying to use "cycles" to open on all
-> PMUs because it will be wild carded then it will run into the priority
-> issue.
->
-> > Using the cycles string actually works today, even on Apple M. The only
-> > real remaining issue is softening the error for failure to open, but
-> > that's _after_ doing the revert of the revert and is separate.
-> >
-> > I will re-test that one today with fresh eyes.
->
-> Perhaps it is other legacy events, not cycles and instructions. There
-> must have been a reason for this regression report but I don't have an
-> Apple M CPU to test on.
->
-> Thanks,
-> Ian
+-- 
+மணிவண்ணன் சதாசிவம்
