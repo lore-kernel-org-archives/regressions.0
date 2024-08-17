@@ -1,157 +1,181 @@
-Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE68DC133
-	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 17:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723917457; cv=pass; b=IJM8z/hs3hcpi979a2ylX4r6zOYzpEB14H2rfXnA68r9PsTTvL2Ml+lTu0BW88GRWQEpir8Jl/gDV+aoUM6MhMpqkJL32NXMD+/Z34WvpzovrxBEpkVgMUJMc3EGe6Z38E/8lRfoCTUVt2+i2c59s2dTc1cWJ7VsQogLjuFXWcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723917457; c=relaxed/simple;
-	bh=ofA6MwBB9myYSOX62CFyfawqJEj8oehsD1BG4ehoB18=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C0513B78F
+	for <regressions@lists.linux.dev>; Sat, 17 Aug 2024 20:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723926650; cv=none; b=aZYoQsXVYDVH5nRYa4xQ6T9c3QuOu3nNlw/x60fV7F39S8bRTuT87kV9U/8eeOWOSvlztmq+0A3rdwW4FVO1lz5NVGKyATy07HpagVBrbbWV9rPZkhIm3SByxj6hDXeAQ0xSIMZo1vgJily2xZC+32Cjjgkmiuw828s64RVVm1U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723926650; c=relaxed/simple;
+	bh=9pVBnF/IoqoTA9giQFUXONfm/EXkOUlqKduLvu0uTR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UTclOX1oR01j4lvi1LfZ3RbvO+oRPlXkJ6biPDcwu4rKMiaMam8egCVLdK/Gp2/2hxuftv8X4siQONedGyOuhbSoMTe8nEiGG35FGnpcgiitEjhe4EefVLM6PPBEtK1kFlg+YZcQhkQY8fMXYhsv4ATxGEp0DKH1m9u70tBTwsE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz; spf=pass smtp.mailfrom=jevklidu.cz; dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b=W1UaxZjz; arc=pass smtp.client-ip=136.143.188.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jevklidu.cz
+	 In-Reply-To:Content-Type; b=S11gk9wzcbcGjJjji5KoeqslgSlIPNwoQ8TZtkX0P8frO7jxeQIp7DNXfwiL6k25b+SCbO5GlP+3rCk6V8TOb9MCxg8xkblmOkygDDgNcrElu6bE1OVKsCVr/5cnKzdFnFDuHt02yjeH9KmxZQNLic/7amAvDihjZh+GEIX7E2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev; spf=pass smtp.mailfrom=holm.dev; dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b=xAEGVIcP; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=holm.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holm.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b="W1UaxZjz"
-ARC-Seal: i=1; a=rsa-sha256; t=1723917451; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Fjjt0jYToWMT9OoGJmKva7yfjhbiNkBiriB8tWAH8Un5iuKT4OqgS2UkchG0h6gMzEDeaRV9bwawq/LVEfXUEn6J8rENVf6ZEuojvsXKfPW/FQyTp/OAA6i4nlpl1CzVOcIpJnx5eIEiX0uUukLe2FDkkYKyY2BZzbGvDMVObL0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1723917451; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=V227+9OZSU+cAq7GWLgJgCLEHnyka3YBMISfs8NB9lU=; 
-	b=foyAm2g4DguzyHVxz5SjZBbYX7IXFlqliGwwspri5tMEorhu83F9AVki05OcX+4OceXRq4zmeTynxO2pf66CWec6y1w7lpQ7TzCbwea71Yt5r9hFmHqpz5BzZJDZrzqvy4lKmNa6x3Go9Jc89bKS4OeMNUzOAPiLwe+eEYhNfB4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=jevklidu.cz;
-	spf=pass  smtp.mailfrom=petr@jevklidu.cz;
-	dmarc=pass header.from=<petr@jevklidu.cz>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1723917451;
-	s=zoho; d=jevklidu.cz; i=petr@jevklidu.cz;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=V227+9OZSU+cAq7GWLgJgCLEHnyka3YBMISfs8NB9lU=;
-	b=W1UaxZjzAkJ4PNRu58CEyvRjXGPY7tsjoAmCl/nU7iJkZ4GsV/BN4n1SBZtoEgIb
-	7KhI/ry6fWeHEIpumeXAfgqM5EBiwHQyl6GOLa8fpZSuVZEWYs3QOIvu7GLAyS65Gtn
-	t7hNDh6/1awZUWNFlm3fE0YyWXIu+ZUjvZKRQ3Yw=
-Received: by mx.zohomail.com with SMTPS id 172391745003275.63577164506398;
-	Sat, 17 Aug 2024 10:57:30 -0700 (PDT)
-Message-ID: <6eac5c37-a5a8-4ccf-aef6-62a4a0bfcea0@jevklidu.cz>
-Date: Sat, 17 Aug 2024 19:57:24 +0200
+	dkim=pass (2048-bit key) header.d=holm.dev header.i=@holm.dev header.b="xAEGVIcP"
+Message-ID: <e518ef00-4c7a-4719-bc58-90d782e34b30@holm.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holm.dev; s=key1;
+	t=1723926645;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RiMzr2mOghlf7iiDaqEMg26CjM/eQ8wr+mNOVNBO9T4=;
+	b=xAEGVIcPQJt5llu96Y8JewrBti+W3MjnLAKMZadCVm5MruQjiBAKEN2skzp8aTFjwPjX8u
+	8HPDBLLrEA7tyzsraZrdiWCfBGKVC7AlK0OQ+zpB7UqoMsN/VLkXb1YhdBlvHye/+vxKXk
+	qGi2JTZ1s+lprhbPrkppOY+2AiBxGNaZfQRb94U7Hx918DkNMuh2mNLCiup2x1CpAcw6NY
+	d+fQ1eL2yJKm/IKfaSHooV3SMJHHhxjYwNi9vBM6ZOW+hAWpN9EZRyESmoUtK9wg22Iqr5
+	KPYzKv4eHL5r82wuOVG6+EE74AHBgs0U9ZLWL+DaR6WwAdMtti910CvHdnSdxA==
+Date: Sat, 17 Aug 2024 22:30:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ACPI IRQ storm with 6.10
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux kernel mailing list <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
- <bd149809-f670-4b5d-a18a-f1f63624265f@kernel.org>
- <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
-Content-Language: cs-CZ, en-US
-From: Petr Valenta <petr@jevklidu.cz>
-In-Reply-To: <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
+Subject: Re: [PATCH 6.10] drm/amd/display: Refactor function
+ dm_dp_mst_is_port_support_mode()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, ML dri-devel
+ <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
+ Wayne Lin <wayne.lin@amd.com>, Jerry Zuo <jerry.zuo@amd.com>,
+ Zaeem Mohamed <zaeem.mohamed@amd.com>,
+ Daniel Wheeler <daniel.wheeler@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>
+References: <20240730185339.543359-1-kevin@holm.dev>
+ <2024081739-suburb-manor-e6c3@gregkh>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kevin Holm <kevin@holm.dev>
+Content-Language: en-US
+In-Reply-To: <2024081739-suburb-manor-e6c3@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
 
-Dne 16. 08. 24 v 20:29 Rafael J. Wysocki napsal(a):
-> On Wed, Aug 14, 2024 at 8:48 AM Jiri Slaby <jirislaby@kernel.org> wrote:
+On 17.08.24 10:42, Greg KH wrote:
+> On Tue, Jul 30, 2024 at 08:53:39PM +0200, Kevin Holm wrote:
+>> From: Wayne Lin <wayne.lin@amd.com>
 >>
->> On 14. 08. 24, 7:22, Jiri Slaby wrote:
->>> Hi,
->>>
->>> one openSUSE's user reported that with 6.10, he sees one CPU under an
->>> IRQ storm from ACPI (sci_interrupt):
->>>      9:   20220768          ...  IR-IO-APIC    9-fasteoi   acpi
->>>
->>> At:
->>> https://bugzilla.suse.com/show_bug.cgi?id=1229085
->>>
->>> 6.9 was OK.
->>>
->>> With acpi.debug_level=0x08000000 acpi.debug_layer=0xffffffff, there is a
->>> repeated load of:
->>>> evgpe-0673 ev_detect_gpe         : Read registers for GPE 6D:
->>>> Status=20, Enable=00, RunEnable=4A, WakeEnable=00
+>> [ Upstream commit fa57924c76d995e87ca3533ec60d1d5e55769a27 ]
 >>
->> 0x6d seems to count excessively (10 snapshots every 1 second):
->>> /sys/firmware/acpi/interrupts/gpe6D:   82066  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   86536  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   90990     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:   95468  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  100282  EN STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  105187     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  110014     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  114852     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  119682     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  124194     STS enabled      unmasked
->>> /sys/firmware/acpi/interrupts/gpe6D:  128641  EN STS enabled      unmasked
+>> [Why]
+>> dm_dp_mst_is_port_support_mode() is a bit not following the original design rule and cause
+>> light up issue with multiple 4k monitors after mst dsc hub.
 >>
->> acpidump:
->> https://bugzilla.suse.com/attachment.cgi?id=876677
+>> [How]
+>> Refactor function dm_dp_mst_is_port_support_mode() a bit to solve the light up issue.
 >>
->> DSDT:
->> https://bugzilla.suse.com/attachment.cgi?id=876678
+>> Reviewed-by: Jerry Zuo <jerry.zuo@amd.com>
+>> Acked-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+>> Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+>> Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+>> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>> [kevin@holm.dev: Resolved merge conflict in .../amdgpu_dm_mst_types.c]
+>> Fixes: 4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation")
+>> Link: https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/T/#u
+>> Signed-off-by: Kevin Holm <kevin@holm.dev>
+>> ---
+>> I resolved the merge conflict so that, after this patch is applied to the
+>> linux-6.10.y branch of the stable git repository, the resulting function
+>> dm_dp_mst_is_port_support_mode (and also the new function
+>> dp_get_link_current_set_bw) is identical to the original commit.
 >>
->>> Any ideas?
+>> I've confirmed that it fixes the regression I reported for my use case.
 > 
-> GPE 6D is listed in _PRW for some devices, so maybe one of them
-> continues to trigger wakeup events?
+> And it turns out this change breaks the arm and arm64 builds.  I tried
+> to fix it up by applying the fixup afterward for this file, but it's
+> just too much of a mess to unwind this, so I'm going to have to revert
+> this now, sorry.
+That sucks, sorry for the problems my patch caused. :(
+
+> See:
+> 	https://lore.kernel.org/r/b27c5434-f1b1-4697-985b-91bb3e9a22df@roeck-us.net
+> for details.
+I unfortunately don't know the amdgpu driver and kernel code in general enough to help fix
+that. The back-ported patch I send was my first patch to the kernel.
+
+In the email thread where I reported the problem I send a patch that reverts
+4df96ba6676034 ("drm/amd/display: Add timing pixel encoding for mst mode validation") to
+fix the problem that way [1]. I've included a copy of that below.
+I've tested that it still applies to 6.10.6-rc3 without conflicts and compiles for me. I
+could not test if the 6.10.6-rc3 with the revert applied fixes the problem as I'm
+traveling and don't have access to my normal setup. I can only say that reverting it on
+v6.10.2 fixed the problem for me.
+
+I don't know how to compile for other architectures so I did not test that.
+
+Not sure what would be best, reverting the problem commit so the regression is fixed in
+the 6.10 stable kernel (and maybe breaking something else?) or waiting for someone at AMD
+with better knowledge of the amdgpu driver to back-port the fixing commit in a non-broken
+way.
+
+~kevin
+
+[1] https://lore.kernel.org/regressions/7bf26283474fbb6ea915f93f4db0bc614a627617@holm.dev/
 > 
+> greg k-h
+---
+  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   | 33 +++----------------
+  1 file changed, 5 insertions(+), 28 deletions(-)
 
-Disabling powertop service (which calls /usr/sbin/powertop --auto-tune) 
-solves problem completely. After some search I have found this is the cause:
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c 
+b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index a5e1a93ddaea..5c555a37e367 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -1599,7 +1599,7 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+         struct amdgpu_dm_connector *aconnector,
+         struct dc_stream_state *stream)
+  {
+-       int pbn, branch_max_throughput_mps = 0;
++       int bpp, pbn, branch_max_throughput_mps = 0;
+         struct dc_link_settings cur_link_settings;
+         unsigned int end_to_end_bw_in_kbps = 0;
+         unsigned int upper_link_bw_in_kbps = 0, down_link_bw_in_kbps = 0;
+@@ -1649,34 +1649,11 @@ enum dc_status dm_dp_mst_is_port_support_mode(
+                         }
+                 }
+         } else {
+-               /* Check if mode could be supported within max slot
+-                * number of current mst link and full_pbn of mst links.
+-                */
+-               int pbn_div, slot_num, max_slot_num;
+-               enum dc_link_encoding_format link_encoding;
+-               uint32_t stream_kbps =
+-                       dc_bandwidth_in_kbps_from_timing(&stream->timing,
+-                               dc_link_get_highest_encoding_format(stream->link));
+-
+-               pbn = kbps_to_peak_pbn(stream_kbps);
+-               pbn_div = dm_mst_get_pbn_divider(stream->link);
+-               slot_num = DIV_ROUND_UP(pbn, pbn_div);
+-
+-               link_encoding = dc_link_get_highest_encoding_format(stream->link);
+-               if (link_encoding == DC_LINK_ENCODING_DP_8b_10b)
+-                       max_slot_num = 63;
+-               else if (link_encoding == DC_LINK_ENCODING_DP_128b_132b)
+-                       max_slot_num = 64;
+-               else {
+-                       DRM_DEBUG_DRIVER("Invalid link encoding format\n");
++               /* check if mode could be supported within full_pbn */
++               bpp = convert_dc_color_depth_into_bpc(stream->timing.display_color_depth) * 3;
++               pbn = drm_dp_calc_pbn_mode(stream->timing.pix_clk_100hz / 10, bpp << 4);
++               if (pbn > aconnector->mst_output_port->full_pbn)
+                         return DC_FAIL_BANDWIDTH_VALIDATE;
+-               }
+-
+-               if (slot_num > max_slot_num ||
+-                       pbn > aconnector->mst_output_port->full_pbn) {
+-                       DRM_DEBUG_DRIVER("Mode can not be supported within mst links!");
+-                       return DC_FAIL_BANDWIDTH_VALIDATE;
+-               }
+         }
 
-# causes IRQ storm on 6.10.x
-# kernel 6.9.9 is immune
-echo 'auto' > /sys/bus/pci/devices/0000:00:1f.6/power/control
-
-lspci | grep 1f.6
-00:1f.6 Ethernet controller: Intel Corporation Device 550b (rev 20)
-
-journalctl -b | grep 1f.6
-srp 17 19:44:17 e14 kernel: pci 0000:00:1f.6: [8086:550b] type 00 class 
-0x020000 conventional PCI endpoint
-srp 17 19:44:17 e14 kernel: pci 0000:00:1f.6: BAR 0 [mem 
-0x9c300000-0x9c31ffff]
-srp 17 19:44:17 e14 kernel: pci 0000:00:1f.6: PME# supported from D0 
-D3hot D3cold
-srp 17 19:44:17 e14 kernel: pci 0000:00:1f.6: Adding to iommu group 12
-srp 17 19:44:19 e14 kernel: e1000e 0000:00:1f.6: Interrupt Throttling 
-Rate (ints/sec) set to dynamic conservative mode
-srp 17 19:44:19 e14 kernel: e1000e 0000:00:1f.6 0000:00:1f.6 
-(uninitialized): registered PHC clock
-srp 17 19:44:20 e14 kernel: e1000e 0000:00:1f.6 eth0: (PCI 
-Express:2.5GT/s:Width x1) fc:5c:ee:b0:13:74
-srp 17 19:44:20 e14 kernel: e1000e 0000:00:1f.6 eth0: Intel(R) PRO/1000 
-Network Connection
-srp 17 19:44:20 e14 kernel: e1000e 0000:00:1f.6 eth0: MAC: 16, PHY: 12, 
-PBA No: FFFFFF-0FF
-srp 17 19:44:20 e14 kernel: e1000e 0000:00:1f.6 enp0s31f6: renamed from eth0
-srp 17 19:44:24 e14 ModemManager[1434]: <info>  [base-manager] couldn't 
-check support for device '/sys/devices/pci0000:00/0000:00:1f.6': not 
-supported by any plugin
-
-
-
-> You can ask the reporter to mask that GPE via "echo mask >
-> /sys/firmware/acpi/interrupts/gpe6D" and see if the storm goes away
-> then.
-> 
-> The only ACPI core issue introduced between 6.9 and 6.10 I'm aware of
-> is the one addressed by this series
-> 
-> https://lore.kernel.org/linux-acpi/22385894.EfDdHjke4D@rjwysocki.net/
-> 
-> but this is about the EC and the problem here doesn't appear to be
-> EC-related.  It may be worth trying anyway, though.
-> 
+         /* check is mst dsc output bandwidth branch_overall_throughput_0_mps */
+-- 
+2.45.2
