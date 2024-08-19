@@ -1,115 +1,192 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC921DC481
-	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 19:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3502C18C
+	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 21:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724097480; cv=none; b=Lwy+UYT2Zzzo9dywIdCsOPYzAyuQUcsK1ABF3VH+4n+KMxjmwIVlgqMYr8TV1iaM0RaJqn0/ezT/XJyhnqsJQPVMUt87XPbWVsM0A8c4M9c2BPRnQgRo6rjihLFzM/sG8wCVcGAjydevCQ/PrHrmoTEWZl1Eg7AJ7yJkduF6idQ=
+	t=1724101361; cv=none; b=OBM0smtXO57ylFPgQnjVUshQHuUoepXXXjk0N0tNzGsSJJ9dy0NVPZ8sPCxU8U70jMKCsrn5ArufwgnyS+4DFL9IRajaLmmuXXEqlczfQDkQy88IPdYUmyb4REX1S9Qt3r+4eITfnEjm6EVibTL+f7JAyGOxBvmXXCMf9HETz0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724097480; c=relaxed/simple;
-	bh=KeLyc45Fa3bvQdr6Qz/zOaHsEIUZHjNw5l90KB0Fe2k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gk+8DzNp/IVcUt45lQAhvBIt0ktGAo70chDnzMrjxA1kdHUusb9NY1ryctEcosfOZzNBlcDCqJJ7rI5z8A5Smiw6ZrQFfx3DkO4Dr6Mn7pEe+pu6nOHpZp2MzteKBNRhuS9Xw2QVDsQZgUHoE09UCUIoHAE2loneO7GhTRtDYLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zKi3cUPs; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zKi3cUPs"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4989b18ee2aso1242950137.0
-        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 12:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724097476; x=1724702276; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dnpJD7zOEcGCzuRggKrq3czVGY129TNUmE3//qsWRmo=;
-        b=zKi3cUPs47iHumb/Jalhtu1qdlDFy8q9tRwly/6M8dRP6pFQpwcjebpV5u21h/HzEf
-         suK9VoB8YUdgDcCbDL3lSbSo6i6o3Rg8yKON9ps5oCt5eX03VMk606GU4agfqBqoqdWG
-         iqVOlQXVdU7xeVe2/TGPv2Ku1PqrqE2gtP6kqAgXD/Zcpo8cA6vLuxPHC0XnPNgP0oLQ
-         Ksd9lSJMPNmiUL1HOWuccVGE1HThMThkbgcG/9AZ30NVCyyHE9/T9i/P9Ug/qQeIey1s
-         +21TX+o4TWt4poFdtj/q7md858KeCizPbOFljXRfLwFApmwG1yty4QeyEYKtHZewdsdn
-         NBZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724097476; x=1724702276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dnpJD7zOEcGCzuRggKrq3czVGY129TNUmE3//qsWRmo=;
-        b=ESCoUEluRfqvMAyJfQT/LWZTLMjVRYKm8iMRFWIYxgVmPtroCsAFCr2BKpNZn5TFTY
-         j+2dxZZ11uL2avFafD8AhaLVw3L2CetB+8wgIHhT+RR6bxh01wAoMq5sWaMeF5grfkmM
-         nWRLP2UdBn5C0jtaKs1zxWtokNsDe5PNZ7jU9+4SlOuPt4LqC1lJBtBbc8EDGJcB9ypB
-         2iRKje1csgIskL2itayC8sUzP10VzzuSs99X7zatqUUodZkjotJWx9ujNgy8Hnowvk88
-         wGVP6K1IpeA9SYUd/76AaY0XC/vYGWlWCBJjtQcIuBs4G5ql6y6MKBgRAJ1RKT+cLC1r
-         H2Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUIroSGC9mT2npw/0vtH6pYFFWhpCsCNgvnQfERF708m2pkzoWjelVFssVHyRW/kf8Oz+7XKS7wxM8Pgg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywjxy8pERNBQw/TRWvbB2ddKt1U9jl5fPkyIam7zbrktktq+o2M
-	25cecByOlG+Lm410g5gU6f16eLPbCJ0CQn9HlO3nLQhqH0v0caOfaOXk1ni83pQG+JYcG/jGTLj
-	sDPz846UPyjcgdL0vCji7xTlS6smvTIBp7mkbLQ==
-X-Google-Smtp-Source: AGHT+IGK0LY3tdtqWeFRG+uZZtVR/W7GoroGGMy79582gduYyn5m8Nqwz9BjE5mfCd13Nrjeql+K94+u37gPhcxzdQU=
-X-Received: by 2002:a05:6102:3912:b0:48f:361:9fe9 with SMTP id
- ada2fe7eead31-498be9fdbc6mr800429137.3.1724097476320; Mon, 19 Aug 2024
- 12:57:56 -0700 (PDT)
+	s=arc-20240116; t=1724101361; c=relaxed/simple;
+	bh=FRxG+PwVNksBAOivZ7dAalfoABiyFwkhb887w+m7jZ4=;
+	h=Message-ID:Date:MIME-Version:Cc:To:From:Subject:Content-Type; b=vDg/3PmLWlpaK+odORwfNRX1v6FbWiwfWMWTZED6Hp7GELObYMRnmwbRWjXi3b1HgIhG3ZSXbfBXgkW28klnpIQUGGuimU2ozIFcBBdy7i3Niyg0Qdt7uAUm8Afo4+zBzkpPtPXPNJtR9f6vhanAYYRbCmArCkrL6/JYvtjwwg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af273.dynamic.kabel-deutschland.de [95.90.242.115])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8275961E5FE07;
+	Mon, 19 Aug 2024 23:02:19 +0200 (CEST)
+Message-ID: <3a1c9e27-6dcb-4eec-85cb-c03271c61a37@molgen.mpg.de>
+Date: Mon, 19 Aug 2024 23:02:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuFDon59=Nw6WCdgp0FanZ1oE3dCkoq71EK0Bxe6Jhe_g@mail.gmail.com>
- <CA+G9fYtd1Hw9YLpceUAwwC+UytVQVXOET4gmGT9jiCgHa+WexQ@mail.gmail.com> <CAMgjq7Bz0DY+rY0XgCoH7-Q=uHLdo3omi8kUr4ePDweNyofsbQ@mail.gmail.com>
-In-Reply-To: <CAMgjq7Bz0DY+rY0XgCoH7-Q=uHLdo3omi8kUr4ePDweNyofsbQ@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 20 Aug 2024 01:27:44 +0530
-Message-ID: <CA+G9fYv42RAzYp6i-hUNz2dDn0i=_qoQXtjgc6h4z+wY9-GREA@mail.gmail.com>
-Subject: Re: gcc-8: mm/swapfile.c:863:40: error: array subscript 1 is above
- array bounds of 'struct list_head[1]' [-Werror=array-bounds]
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Chris Li <chrisl@kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Barry Song <21cnbao@gmail.com>, 
-	"Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Language: en-US
+To: Christian Brauner <brauner@kernel.org>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Commit *pidfd: prevent creation of pidfds for kthreads* causes
+ `Failed to remount '/' read-only: Device or resource busy`
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 19 Aug 2024 at 17:14, Kairui Song <ryncsn@gmail.com> wrote:
->
-> On Mon, Aug 19, 2024 at 6:16=E2=80=AFPM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Mon, 19 Aug 2024 at 13:58, Naresh Kamboju <naresh.kamboju@linaro.org=
-> wrote:
-> > >
-> > > The x86 builds failed with gcc-8 due to following build warnings / er=
-rors on
-> > > Linux next-20240802 to next-20240819.
-> > >
-> > > x86_64 defconfig gcc-8 build failed
-> > > x86_64 defconfig gcc-13 build pass
-> > >
-> > > First seen on the next-20240802 tag.
-> > >
-> > >   GOOD: next-20240730
-> > >   BAD:  next-20240802
-> >
-> > Anders bisected this and found the first bad commit id as,
-> > aded4352f648 ("mm: swap: separate SSD allocation from
-> > scan_swap_map_slots()") first faulty one
-> >
-> > - Naresh
-> >
->
-> Hi Naresh,
->
-> Thanks for the report, the problem will occur when CONFIG_THP_SWAP is
-> disabled. Can you try the following patch? I can confirm it's fixed
-> with my test.
+#regzbot introduced: 3b5bbe798b24
 
-Thanks for the patch.
-I have tested your patch and it fixes the reported problem.
+Dear Christian,
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-- Naresh
+Commit 3b5bbe798b24 (pidfd: prevent creation of pidfds for kthreads) 
+causes a regression. On the Dell XPS 13 9360 with Debian sid/unstable 
+and *systemd* 256.5-1, systemd is not able to unmount the root partition 
+(LUKS encrypted) anymore.
+
+```
+[…]
+Aug 19 22:45:45 abreu systemd[1]: Shutting down.
+Aug 19 22:45:45 abreu systemd[1]: Using hardware watchdog 'iTCO_wdt', 
+version 4, device /dev/watchdog0
+Aug 19 22:45:45 abreu systemd[1]: Watchdog running with a hardware 
+timeout of 10min.
+Aug 19 22:45:45 abreu kernel: watchdog: watchdog0: watchdog did not stop!
+Aug 19 22:45:45 abreu systemd-shutdown[1]: Using hardware watchdog 
+'iTCO_wdt', version 4, device /dev/watchdog0
+Aug 19 22:45:45 abreu systemd-shutdown[1]: Watchdog running with a 
+hardware timeout of 10min.
+Aug 19 22:45:45 abreu systemd-shutdown[1]: Syncing filesystems and block 
+devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Sending SIGTERM to remaining 
+processes...
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Failed to enumerate /proc/: 
+Invalid argument
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Sending SIGKILL to remaining 
+processes...
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Failed to enumerate /proc/: 
+Invalid argument
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Unmounting file systems.
+Aug 19 22:45:46 abreu (sd-umount)[1585]: Unmounting 
+'/run/credentials/systemd-journald.service'.
+Aug 19 22:45:46 abreu (sd-remount)[1586]: Remounting '/' read-only with 
+options 'errors=remount-ro'.
+Aug 19 22:45:46 abreu (sd-remount)[1586]: Failed to remount '/' 
+read-only: Device or resource busy
+Aug 19 22:45:46 abreu (sd-remount)[1587]: Remounting '/' read-only with 
+options 'errors=remount-ro'.
+Aug 19 22:45:46 abreu (sd-remount)[1587]: Failed to remount '/' 
+read-only: Device or resource busy
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all file systems 
+unmounted, 1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Deactivating swaps.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: All swaps deactivated.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Detaching loop devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: All loop devices detached.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Stopping MD devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: All MD devices stopped.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Detaching DM devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all DM devices detached, 
+1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Unmounting file systems.
+Aug 19 22:45:46 abreu (sd-remount)[1588]: Remounting '/' read-only with 
+options 'errors=remount-ro'.
+Aug 19 22:45:46 abreu (sd-remount)[1588]: Failed to remount '/' 
+read-only: Device or resource busy
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all file systems 
+unmounted, 1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Detaching DM devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all DM devices detached, 
+1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Unmounting file systems.
+Aug 19 22:45:46 abreu (sd-remount)[1589]: Remounting '/' read-only with 
+options 'errors=remount-ro'.
+Aug 19 22:45:46 abreu (sd-remount)[1589]: Failed to remount '/' 
+read-only: Device or resource busy
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all file systems 
+unmounted, 1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Detaching DM devices.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Not all DM devices detached, 
+1 left.
+Aug 19 22:45:46 abreu systemd-shutdown[1]: Cannot finalize remaining 
+file systems, DM devices, continuing.
+Aug 19 22:45:46 abreu kernel: watchdog: watchdog0: watchdog did not stop!
+```
+
+On the next boot, the journal needs to be recovered.
+
+
+Kind regards,
+
+Paul
+
+
+PS: For the record:
+
+$ git bisect bad
+3b5bbe798b2451820e74243b738268f51901e7d0 is the first bad commit
+commit 3b5bbe798b2451820e74243b738268f51901e7d0 (HEAD)
+Author: Christian Brauner <brauner@kernel.org>
+Date:   Wed Jul 31 12:01:12 2024 +0200
+
+     pidfd: prevent creation of pidfds for kthreads
+
+     It's currently possible to create pidfds for kthreads but it is unclear
+     what that is supposed to mean. Until we have use-cases for it and we
+     figured out what behavior we want block the creation of pidfds for
+     kthreads.
+
+     Link: 
+https://lore.kernel.org/r/20240731-gleis-mehreinnahmen-6bbadd128383@brauner
+     Fixes: 32fcb426ec00 ("pid: add pidfd_open()")
+     Cc: stable@vger.kernel.org
+     Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+  kernel/fork.c | 25 ++++++++++++++++++++++---
+  1 file changed, 22 insertions(+), 3 deletions(-)
+$ git bisect log
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [df6cbc62cc9b3bcf593d13400dd58cd339a0f56d] Merge tag 'scsi-fixes' 
+of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+git bisect bad df6cbc62cc9b3bcf593d13400dd58cd339a0f56d
+# status: waiting for good commit(s), bad commit known
+# good: [d74da846046aeec9333e802f5918bd3261fb5509] Merge tag 
+'platform-drivers-x86-v6.11-3' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+git bisect good d74da846046aeec9333e802f5918bd3261fb5509
+# bad: [d7a5aa4b3c007fae50405ca75c40258d90300e96] Merge tag 
+'perf-tools-fixes-for-v6.11-2024-08-15' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
+git bisect bad d7a5aa4b3c007fae50405ca75c40258d90300e96
+# good: [9c5af2d7dfe18e3a36f85fad8204cd2442ecd82b] Merge tag 
+'nf-24-08-15' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
+git bisect good 9c5af2d7dfe18e3a36f85fad8204cd2442ecd82b
+# bad: [d07b43284ab356daf7ec5ae1858a16c1c7b6adab] Merge tag 'for-linus' 
+of git://git.kernel.org/pub/scm/virt/kvm/kvm
+git bisect bad d07b43284ab356daf7ec5ae1858a16c1c7b6adab
+# bad: [4ac0f08f44b62e59a389c7ed87c89087d9fefe29] Merge tag 
+'vfs-6.11-rc4.fixes' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs
+git bisect bad 4ac0f08f44b62e59a389c7ed87c89087d9fefe29
+# bad: [e3786b29c54cdae3490b07180a54e2461f42144c] 9p: Fix DIO read 
+through netfs
+git bisect bad e3786b29c54cdae3490b07180a54e2461f42144c
+# good: [889ced4c9388785952d78d20d338bda2df209bb5] netfs: clean up after 
+renaming FSCACHE_DEBUG config
+git bisect good 889ced4c9388785952d78d20d338bda2df209bb5
+# bad: [8e5ced7804cb9184c4a23f8054551240562a8eda] netfs, ceph: Revert 
+"netfs: Remove deprecated use of PG_private_2 as a second writeback flag"
+git bisect bad 8e5ced7804cb9184c4a23f8054551240562a8eda
+# skip: [86509e38a80da34d7800985fa2be183475242c8c] file: fix typo in 
+take_fd() comment
+git bisect skip 86509e38a80da34d7800985fa2be183475242c8c
+# bad: [3b5bbe798b2451820e74243b738268f51901e7d0] pidfd: prevent 
+creation of pidfds for kthreads
+git bisect bad 3b5bbe798b2451820e74243b738268f51901e7d0
+# first bad commit: [3b5bbe798b2451820e74243b738268f51901e7d0] pidfd: 
+prevent creation of pidfds for kthreads
