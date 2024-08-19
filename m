@@ -1,210 +1,152 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376B515622E
-	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 07:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCD815B57B
+	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 08:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724053785; cv=none; b=eIuES+tdOAOchGuIe6UULNcGPRlfyMqvNKm97CUn/IgoMOVKQ+nLwTyLGOVhYhJzOtjshEnz+FqE+HPuwkBCIu6a/nXEuznV+2UhsKBWG1lnuQiubnc+fcUlU2uSStozwNnVAk1cig26KKvjIBOmujeKsQ5BtN9i1NrPHiEQg+s=
+	t=1724056143; cv=none; b=RGYuB/r/6OSYP7mvn7JpJ5D502WKSJlpeFyy+L6mRH3wM8KNQrk5NntvooijjPWWudtbdtwms+sWKeozMXkfUvL1eyeXPtr/6+7xgwBgi5ngP3IeL5VSmL74NxL/q96FFf/cJElMKMax0GapdHtQg8BFwGrYyZ3ekKEUgWa8Phc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724053785; c=relaxed/simple;
-	bh=sx6PmWH0A35LfzG2HSz3bstgdltXdA/Sva8mvjibDIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BjrgahneYIDOCGqqGoAMS4f4LFj/MKKMRwoIQKrGAryN4p+tGFXpiM5+7DwEwAXRTNLwUdPSuqKDIwJNWcsa5wAk8wc9Tfy7RkI2eAvZcawSN43cI2k9x8kxb1v8bRCARpDXTarBZ3A7C6XUwsuYtkYghUjAmdQbAtk6OEJman8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tyjdar7X; arc=none smtp.client-ip=209.85.221.171
+	s=arc-20240116; t=1724056143; c=relaxed/simple;
+	bh=FVAVj1LvGkF/qSjcgZvVxOe72okf4eq3mAz9Bqo5X84=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=b6gTHBD+K6IKaPrl5HvTw9nswP1SxZrxMf16nE2N+NLHsRrdWFSh2ek9PwDXiWmrWbkZwJbKwbMsOZNCDM10/+jrdK4Uh+zJh5flSA4wq9e6fsbL4lA3OtS9UO/PTQ+0+6knXbDw3n2ZgJ5Kf3a7WguaqlQZZpdaLV5nNFIuGvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WqvREHpA; arc=none smtp.client-ip=209.85.217.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tyjdar7X"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4f524fa193aso3329246e0c.0
-        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 00:49:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WqvREHpA"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4929fd67c7bso1257200137.0
+        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 01:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724053782; x=1724658582; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j/s5eSp55kJmjKTWCRvYRqFXs2anNEkZMyc6DD7OVTQ=;
-        b=Tyjdar7XZZhTsp51qm8ppUtQqfkZWAD0fTypF90sVbzLqaFZIukxYS3FeniApR83p2
-         DSVGLzu18qqlZ5CXi/v8iFP73tqdkIDeUZ5pTqGVZjXFVl5Xvi1kExtPWuE8PuNEY+xj
-         73FOzSpYIuJx6lrtr2q2D33W4vzOpLTQXUdO2kr5hBnQOFVmH+NbKZQjnJg9K6SG5Wr3
-         HOpl25Kcyrc3veiZ3JvkKjMqFiCsYghgqK8gzfxoSKw4IV+eKirck2/eC8qh+QWF9KGA
-         QaTVg169IMXCZwM+a1RychB6pNUTASlTJwHv3vxsVI0S5a3tAeJJxdqd7fygbmKkPA+o
-         qC4g==
+        d=linaro.org; s=google; t=1724056140; x=1724660940; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UpX4LsrqwRDqFBD8C2IBSkZVW31sWUBwFvypF0QOuuo=;
+        b=WqvREHpAuJEPBOwCTbAtKDw/iViXdWrLoLO8f5gcpf2guHW7SpfsZCJfZaoy48TrNQ
+         i4gSwDwpr0oeKEZ3Wo0XCvX/KiuqSBHTnYazsGt5BYFISSaNaFou7spTQNDftdMoXnqs
+         bVAdnGgMSBsHaFS1FTArczHwI0FckYkCYrhyRHHWD9swNbpbaD9K5SPWQBMqB1vqYE58
+         HmRfH7uFYIbn80rkw03De8lPsuLO4+oH/Rmf5pjAokBkW8nDH+zzEBz7s4TFhqbPtuSa
+         Bda/lzDGc78LMrETEYnt0RVpTRN7vpcb/zPBvuqp/lis4isuZZJPj06MHoEnLbGAbzRz
+         oPrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724053782; x=1724658582;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j/s5eSp55kJmjKTWCRvYRqFXs2anNEkZMyc6DD7OVTQ=;
-        b=gDJHeOwpErcVqL/uc3dABv52cBZr64ggmA1wHrP9oopX+Q+Q0G12/LQG07qFhy9Cot
-         ru0/m7mvSVSgY9ydpcyw9gWQiLRK+K2K9Rba5UfZ4j4L1pdBKqMzQF8M8BpSVkTuuz2/
-         KvfjGlGsjwe1AeG720nG+YINhLKCuecbBmh7VUVFEwx4F1ava2TB9E+lR28GhOkP+Pxb
-         b5uvlp4tOllFJW601H0Scs1dmTCEZdNA2U7dUGvCvE/awgEs0+CKbr1v/b6LBL6uSTcz
-         hSni4RRrMDukIjShJ4LLZDouyHP93EeESN/PHuYofjiT5bZLt0G1v242+3nb7vHiGgKF
-         f0Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWAR39vjwk/oXvmDYI2tSCtDmsv2ehfY+slhhhk1HqCjn2M+hueWhVk+LN/zpysdepMICIDVyE5L4lVJsvwS7fMH0ebAbz9VQuSio=
-X-Gm-Message-State: AOJu0YxytOn3aW4Ywov1Kjak1tnckRutRvgHe+pCXrkoleof47Jnk8gG
-	IKpvOQkBZ33goVeyGc1KGInnUkWXdIZPhvUl4+rWgEMw9JyLl/A9FBdG4RdfdaP2rYqcQDFG0GO
-	oR+0SVBP0QcfTkJM1N+XULSBvBvgqet3tznq3zg==
-X-Google-Smtp-Source: AGHT+IEUUzi1hfxh9ntCtG/z4OgyGT9Fe7tMvLDI9rF6mfrANf/qH3M8lWtHLqsSgZQqcOGVrm6SPWleT8TqNoOZDIE=
-X-Received: by 2002:a05:6122:4789:b0:4f6:b320:d3ee with SMTP id
- 71dfb90a1353d-4fc6f5fa004mr4276827e0c.2.1724053781953; Mon, 19 Aug 2024
- 00:49:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724056140; x=1724660940;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UpX4LsrqwRDqFBD8C2IBSkZVW31sWUBwFvypF0QOuuo=;
+        b=udR9Ef/anNU088Pbn6gNZ8FC8WTy3IHgLgh3rKGl88DNhCzPtQqnUgUzzeoBmGIR83
+         Rwi2lmlU80dyZGXLoeitLTqU7y12yFqj9aIdA2quJF7MFqzD3G2aqjRUaAvtgnF2q3m3
+         YHe9STS38WKKcSFdgW1+Fg8dih3o4DBB77WiHKHgnjpSMiWNXhKpwRGhh9A4Axd4NvAN
+         oXbbfiPvmRg/Yuur83Ke6ukkojqAMC5Mjt/xP0Uw7ovX3DI54i6YKshVl3nrOVRbumvD
+         skog2a1avGDGsMO2bxU/hlQ/IuRb5RrGPdk2Rde+Jmx9PeQYcOMQMxdvidc8rTyJd4fK
+         wZpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUFUr87wOYXW26fLNNLl3dE6g9EOZo0BGOt+AItJffvhdvdO5emHCGwyo69dfPEsH2VCfwJwUNKJz0j9UDAYyEr8dSuSqNUF/bRT8=
+X-Gm-Message-State: AOJu0YxWuR2mLSX6mZx6ddy1A/dMUIwh3mnuj8sBEIVRhl+e0+KMFd5J
+	7DEtYOEj8cT9tI8zWvReXdZ5ZvajbABTlox6FaDDu4lYqJ+ViXodYbGe41DIBc5Tm4WrogwBr0G
+	jSDYfu1BeWRSIiUoDAZcTPIoiatBNHv/GXG5FaQ==
+X-Google-Smtp-Source: AGHT+IHKVi6WKmdyAQ6QyA73ge60UMveA7EfNgA9AWldj2xZheTdlekHgzFhLgWv7yt/BTmNdTQkVOzDSqv76IZiO/8=
+X-Received: by 2002:a05:6102:5487:b0:495:6aeb:a0e9 with SMTP id
+ ada2fe7eead31-49779881408mr11886459137.4.1724056140489; Mon, 19 Aug 2024
+ 01:29:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
- <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
-In-Reply-To: <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 19 Aug 2024 13:19:30 +0530
-Message-ID: <CA+G9fYvRA=K=S7Vv0-gfypG2vFGYQqgvWVaPx6uGDjwZq3N_kg@mail.gmail.com>
-Subject: Re: next: x86_64: ahci 0000:00:1f.2: probe with driver ahci failed
- with error -12
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-block <linux-block@vger.kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
-	Alexey Dobriyan <adobriyan@gmail.com>, Christoph Hellwig <hch@lst.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
+Date: Mon, 19 Aug 2024 13:58:49 +0530
+Message-ID: <CA+G9fYuFDon59=Nw6WCdgp0FanZ1oE3dCkoq71EK0Bxe6Jhe_g@mail.gmail.com>
+Subject: gcc-8: mm/swapfile.c:863:40: error: array subscript 1 is above array
+ bounds of 'struct list_head[1]' [-Werror=array-bounds]
+To: linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Kairui Song <kasong@tencent.com>, Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>, 
+	"Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>, 
+	Kalesh Singh <kaleshsingh@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 14 Aug 2024 at 15:56, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Wed, 14 Aug 2024 at 15:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > The qemu-x86_64 boot failed with today's Linux next-20240814 tag due to
-> > following crash.
-> >
-> > The catch here is the crash seen on both x86_64 device and qemu-x86_64
-> > but x86_64 device is able to boot successfully.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Boot log:
-> > ---
-> > [    0.000000] Linux version 6.11.0-rc3-next-20240814
-> > (tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 13.3.0-1) 13.3.0, GNU
-> > ld (GNU Binutils for Debian) 2.42.50.20240625) #1 SMP PREEMPT_DYNAMIC
-> > @1723614704
-> > ...
-> > <6>[    2.479915] scsi host0: ahci
-> > <4>[    2.484371] sysfs: cannot create duplicate filename
-> > '/devices/virtual/workqueue/scsi_tmf_-1073661392'
->
-> Anders bisected to the following first commit and reverted this commit
-> and qemu-x86_64 boot successful now.
->
-> # first bad commit: [b188c57af2b5c17a1e8f71a0358f330446a4f788]
->       workqueue: Split alloc_workqueue into internal function and lockdep init
+The x86 builds failed with gcc-8 due to following build warnings / errors on
+Linux next-20240802 to next-20240819.
 
-This reported problem is still seen on today's Linux next-20240819 tag.
+x86_64 defconfig gcc-8 build failed
+x86_64 defconfig gcc-13 build pass
 
->
-> original report link:
-> https://lore.kernel.org/all/CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com/
->
-> > <4>[    2.486170] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-> > 6.11.0-rc3-next-20240814 #1
-> > <4>[    2.486709] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> > BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> > <4>[    2.486709] Call Trace:
-> > <4>[    2.486709]  <TASK>
-> > <4>[    2.486709]  dump_stack_lvl+0x96/0xb0
-> > <4>[    2.486709]  dump_stack+0x14/0x20
-> > <4>[    2.486709]  sysfs_warn_dup+0x5f/0x80
-> > <4>[    2.486709]  sysfs_create_dir_ns+0xd0/0xf0
-> > <4>[    2.486709]  kobject_add_internal+0xa8/0x2e0
-> > <4>[    2.486709]  kobject_add+0x97/0x100
-> > <4>[    2.486709]  ? get_device_parent+0x109/0x1d0
-> > <4>[    2.486709]  device_add+0xe4/0x880
-> > <4>[    2.486709]  ? hrtimer_init+0x2b/0x80
-> > <4>[    2.486709]  device_register+0x1e/0x30
-> > <4>[    2.486709]  workqueue_sysfs_register+0x91/0x140
-> > <4>[    2.486709]  __alloc_workqueue+0x664/0x800
-> > <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
-> > <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
-> > <4>[    2.486709]  alloc_workqueue+0x5a/0x80
-> > <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
-> > <4>[    2.486709]  scsi_host_alloc+0x365/0x470
-> > <4>[    2.486709]  ata_scsi_add_hosts+0xc2/0x130
-> > <4>[    2.486709]  ata_host_register+0xb5/0x260
-> > <4>[    2.486709]  ata_host_activate+0xe9/0x140
-> > <4>[    2.486709]  ahci_host_activate+0x16a/0x190
-> > <4>[    2.486709]  ahci_init_one+0xe0f/0x1080
-> > <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
-> > <4>[    2.486709]  local_pci_probe+0x48/0xa0
-> > <4>[    2.486709]  pci_device_probe+0xc6/0x1f0
-> > <4>[    2.486709]  really_probe+0xcc/0x3b0
-> > <4>[    2.486709]  __driver_probe_device+0x7d/0x160
-> > <4>[    2.486709]  driver_probe_device+0x24/0xa0
-> > <4>[    2.486709]  __driver_attach+0xdd/0x1d0
-> > <4>[    2.486709]  ? __pfx___driver_attach+0x10/0x10
-> > <4>[    2.486709]  bus_for_each_dev+0x91/0xe0
-> > <4>[    2.486709]  driver_attach+0x22/0x30
-> > <4>[    2.486709]  bus_add_driver+0x118/0x240
-> > <4>[    2.486709]  driver_register+0x62/0x120
-> > <4>[    2.486709]  ? __pfx_ahci_pci_driver_init+0x10/0x10
-> > <4>[    2.486709]  __pci_register_driver+0x62/0x70
-> > <4>[    2.486709]  ahci_pci_driver_init+0x22/0x30
-> > <4>[    2.486709]  do_one_initcall+0x62/0x250
-> > <4>[    2.486709]  kernel_init_freeable+0x1ba/0x310
-> > <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
-> > <4>[    2.486709]  kernel_init+0x1e/0x1d0
-> > <4>[    2.486709]  ret_from_fork+0x41/0x60
-> > <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
-> > <4>[    2.486709]  ret_from_fork_asm+0x1a/0x30
-> > <4>[    2.486709]  </TASK>
-> > <3>[    2.508109] kobject: kobject_add_internal failed for
-> > scsi_tmf_-1073661392 with -EEXIST, don't try to register things with
-> > the same name in the same directory.
-> > <4>[    2.519098] scsi host1: failed to create tmf workq
-> > <6>[    2.524520] kworker/R-scsi_ (56) used greatest stack depth:
-> > 15464 bytes left
-> > <6>[    2.528402] scsi_eh_1 (55) used greatest stack depth: 14872 bytes left
-> > <3>[    2.540312] ahci 0000:00:1f.2: probe with driver ahci failed
-> > with error -12
-> >
-> > Full dmesg log:
-> > -----------
-> >   - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240814/testrun/24850492/suite/boot/test/gcc-13-lkftconfig-rcutorture/log
-> >
-> > Reproduce script:
-> > ---
-> >  - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2kdXPeyCZIUn4AYH0UrByWXzepD/reproducer
-> >  - Qemu version: 8.2.4
-> >
-> > Boot command: /usr/bin/qemu-system-x86_64 -cpu Nehalem -machine q35
-> > -nographic -nic none -m 4G -monitor none -no-reboot -smp 2 -kernel
-> > kernel/bzImage -append \"console=ttyS0,115200 rootwait root=/dev/sda
-> > debug verbose console_msg_format=syslog systemd.log_level=warning rw
-> > earlycon\" -drive file=rootfs.ext4,if=ide,format=raw"
-> >
-> > Build link:
-> > ------
-> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/
-> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/config
-> >
-> > metadata:
-> > ---
-> >   git_ref: master
-> >   git_describe: next-20240814
-> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-> >   kernel_version: 6.11.0-rc3
-> >   arch: x86
-> >   device: qemu-x86_64
-> >
-> > Please let me know if you need more information.
+First seen on the next-20240802 tag.
 
-Latest crash log link,
- -  https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240819/testrun/24919484/suite/boot/test/gcc-13-lkftconfig-no-kselftest-frag/log
+  GOOD: next-20240730
+  BAD:  next-20240802
 
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
->
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-- Naresh
+Build errors:
+--------
+mm/swapfile.c: In function 'scan_swap_map_slots.constprop':
+mm/swapfile.c:863:40: error: array subscript 1 is above array bounds
+of 'struct list_head[1]' [-Werror=array-bounds]
+   while (!list_empty(&si->frag_clusters[o])) {
+                       ~~~~~~~~~~~~~~~~~^~~
+mm/swapfile.c:872:43: error: array subscript 1 is above array bounds
+of 'struct list_head[1]' [-Werror=array-bounds]
+   while (!list_empty(&si->nonfull_clusters[o])) {
+                       ~~~~~~~~~~~~~~~~~~~~^~~
+In file included from include/linux/list.h:5,
+                 from include/linux/wait.h:7,
+                 from include/linux/wait_bit.h:8,
+                 from include/linux/fs.h:6,
+                 from include/linux/highmem.h:5,
+                 from include/linux/bvec.h:10,
+                 from include/linux/blk_types.h:10,
+                 from include/linux/blkdev.h:9,
+                 from mm/swapfile.c:9:
+include/linux/list.h:612:18: error: array subscript 1 is above array
+bounds of 'struct list_head[1]' [-Werror=array-bounds]
+  list_entry((ptr)->next, type, member)
+                  ^~
+include/linux/container_of.h:19:26: note: in definition of macro 'container_of'
+  void *__mptr = (void *)(ptr);     \
+                          ^~~
+include/linux/list.h:612:2: note: in expansion of macro 'list_entry'
+  list_entry((ptr)->next, type, member)
+  ^~~~~~~~~~
+mm/swapfile.c:873:9: note: in expansion of macro 'list_first_entry'
+    ci = list_first_entry(&si->nonfull_clusters[o],
+         ^~~~~~~~~~~~~~~~
+include/linux/list.h:612:18: error: array subscript 1 is above array
+bounds of 'struct list_head[1]' [-Werror=array-bounds]
+  list_entry((ptr)->next, type, member)
+                  ^~
+include/linux/container_of.h:19:26: note: in definition of macro 'container_of'
+  void *__mptr = (void *)(ptr);     \
+                          ^~~
+include/linux/list.h:612:2: note: in expansion of macro 'list_entry'
+  list_entry((ptr)->next, type, member)
+  ^~~~~~~~~~
+mm/swapfile.c:864:9: note: in expansion of macro 'list_first_entry'
+    ci = list_first_entry(&si->frag_clusters[o],
+         ^~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+Steps to reproduce:
+-------
+# tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8
+--kconfig x86_64_defconfig
+
+Build log link,
+------
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240819/testrun/24918869/suite/build/test/gcc-8-x86_64_defconfig/log
+
+metadata:
+-----
+  git describe: next-20240802
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git short_log: f524a5e4dfb7 ("Add linux-next specific files for 20240802")
+  config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2k6wLr4UFODrd3snUDTPPevXpPY/config
+  download_url:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2k6wLr4UFODrd3snUDTPPevXpPY/
+  toolchain: gcc-8
+  arch: x86_64
+
+--
+Linaro LKFT
+https://lkft.linaro.org
