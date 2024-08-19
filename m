@@ -1,152 +1,110 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCD815B57B
-	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 08:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91FE15B986
+	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 08:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724056143; cv=none; b=RGYuB/r/6OSYP7mvn7JpJ5D502WKSJlpeFyy+L6mRH3wM8KNQrk5NntvooijjPWWudtbdtwms+sWKeozMXkfUvL1eyeXPtr/6+7xgwBgi5ngP3IeL5VSmL74NxL/q96FFf/cJElMKMax0GapdHtQg8BFwGrYyZ3ekKEUgWa8Phc=
+	t=1724056936; cv=none; b=CkM66z8KTyHaqu1dEE+CotpOq2G4X/74IrlA6uJ2uAnZ9eES35nYwD1xLOEPRqZNx/um6UdPVshybVBPJZRI8+w+YfG+T1iuOphOyzA/MPy6U0fWTcXeW8glxHbHTqBlM7omC2kT6c4R93P6KPCQoEfQGWR3nKb+wQ2xS2EGi3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724056143; c=relaxed/simple;
-	bh=FVAVj1LvGkF/qSjcgZvVxOe72okf4eq3mAz9Bqo5X84=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=b6gTHBD+K6IKaPrl5HvTw9nswP1SxZrxMf16nE2N+NLHsRrdWFSh2ek9PwDXiWmrWbkZwJbKwbMsOZNCDM10/+jrdK4Uh+zJh5flSA4wq9e6fsbL4lA3OtS9UO/PTQ+0+6knXbDw3n2ZgJ5Kf3a7WguaqlQZZpdaLV5nNFIuGvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WqvREHpA; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1724056936; c=relaxed/simple;
+	bh=PGZHOvJ3I/sGSsvElOZ3BaRzkT4FOqGOtisCrn6fvqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WvCYLahSwC7i148/SG2tZJySBHdNyekAGuI2Aa5M+7eLkDiGtwDPk+fAGN3XgBObeneIhqmYPgjtLuM6Z0/XJBUuJcGEyoysvUWrJjRZFWkhfCbLaevu6BBBsQzorvaLWceiTPGGnylhLdfgvgOhnqjmULaYy35tKrHYHKaEOuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H6kB6Xyd; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WqvREHpA"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4929fd67c7bso1257200137.0
-        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 01:29:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6kB6Xyd"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-202376301e6so4769665ad.0
+        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 01:42:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724056140; x=1724660940; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UpX4LsrqwRDqFBD8C2IBSkZVW31sWUBwFvypF0QOuuo=;
-        b=WqvREHpAuJEPBOwCTbAtKDw/iViXdWrLoLO8f5gcpf2guHW7SpfsZCJfZaoy48TrNQ
-         i4gSwDwpr0oeKEZ3Wo0XCvX/KiuqSBHTnYazsGt5BYFISSaNaFou7spTQNDftdMoXnqs
-         bVAdnGgMSBsHaFS1FTArczHwI0FckYkCYrhyRHHWD9swNbpbaD9K5SPWQBMqB1vqYE58
-         HmRfH7uFYIbn80rkw03De8lPsuLO4+oH/Rmf5pjAokBkW8nDH+zzEBz7s4TFhqbPtuSa
-         Bda/lzDGc78LMrETEYnt0RVpTRN7vpcb/zPBvuqp/lis4isuZZJPj06MHoEnLbGAbzRz
-         oPrQ==
+        d=gmail.com; s=20230601; t=1724056934; x=1724661734; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGZHOvJ3I/sGSsvElOZ3BaRzkT4FOqGOtisCrn6fvqo=;
+        b=H6kB6XydaxDw/pCEGq/rdeM++PcIV6QUx1OUm49u09psF1Qf3K/Cx66d4SjeQqxkVH
+         EiGdk7xTHqHNbaZv0bAMR+kD/PF/Y2VUqu2hitMUqkeTcmkUhy5Ua5fdKdZ9/hd++VZZ
+         bWCEFr3Q73nOhE/hxhnu472Xlku+KoUDhm5vsLfZSRSfP20ekRnCmnEfXZxMlmcab4xM
+         AddrcXAZgnC0J/trpawZuEG8E+Yf5tV6zujR6egi/ajaE1ueIsGJ/NK1u630aU5/eh99
+         Zy7L6kvePEeSTj9A/iS4A6FBFGXUoOvpeE20xo0cFS16iuKc1slwTEciVTFmLBVq2O1p
+         skVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724056140; x=1724660940;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UpX4LsrqwRDqFBD8C2IBSkZVW31sWUBwFvypF0QOuuo=;
-        b=udR9Ef/anNU088Pbn6gNZ8FC8WTy3IHgLgh3rKGl88DNhCzPtQqnUgUzzeoBmGIR83
-         Rwi2lmlU80dyZGXLoeitLTqU7y12yFqj9aIdA2quJF7MFqzD3G2aqjRUaAvtgnF2q3m3
-         YHe9STS38WKKcSFdgW1+Fg8dih3o4DBB77WiHKHgnjpSMiWNXhKpwRGhh9A4Axd4NvAN
-         oXbbfiPvmRg/Yuur83Ke6ukkojqAMC5Mjt/xP0Uw7ovX3DI54i6YKshVl3nrOVRbumvD
-         skog2a1avGDGsMO2bxU/hlQ/IuRb5RrGPdk2Rde+Jmx9PeQYcOMQMxdvidc8rTyJd4fK
-         wZpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUFUr87wOYXW26fLNNLl3dE6g9EOZo0BGOt+AItJffvhdvdO5emHCGwyo69dfPEsH2VCfwJwUNKJz0j9UDAYyEr8dSuSqNUF/bRT8=
-X-Gm-Message-State: AOJu0YxWuR2mLSX6mZx6ddy1A/dMUIwh3mnuj8sBEIVRhl+e0+KMFd5J
-	7DEtYOEj8cT9tI8zWvReXdZ5ZvajbABTlox6FaDDu4lYqJ+ViXodYbGe41DIBc5Tm4WrogwBr0G
-	jSDYfu1BeWRSIiUoDAZcTPIoiatBNHv/GXG5FaQ==
-X-Google-Smtp-Source: AGHT+IHKVi6WKmdyAQ6QyA73ge60UMveA7EfNgA9AWldj2xZheTdlekHgzFhLgWv7yt/BTmNdTQkVOzDSqv76IZiO/8=
-X-Received: by 2002:a05:6102:5487:b0:495:6aeb:a0e9 with SMTP id
- ada2fe7eead31-49779881408mr11886459137.4.1724056140489; Mon, 19 Aug 2024
- 01:29:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724056934; x=1724661734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PGZHOvJ3I/sGSsvElOZ3BaRzkT4FOqGOtisCrn6fvqo=;
+        b=ivLLWgjnzMwiC5skJmXkxwDacoNDyicWNg8FK+durbzCeauya2Co3Q80duSJij1NRN
+         sQCbGRuTdULvzuM2yrUNeBqYkD+Fy8r5dkMydWmN8UCfK8JSl7C81YSbYGnLY5RnYNLL
+         tPSWWFfBIhch1cVoUhbefI7et9IjQc/P+1Tz0emgijaHiD/V306lUURxVno9h7IWU9qZ
+         NjLdrKVQcGGVT5Y/ouq8c4hp80GWJWUZnUQK6KbABOCrkH0CQ8wgwYRF6K+3O4VVUpUq
+         Q9L+7u7aoMyl5Q8vWDIK29Q7EQrsg2dbQ06FLs1LA1SbS9+m4A8xJnbbA0b+CEnGk6eK
+         RHew==
+X-Gm-Message-State: AOJu0Yymzenxd2MmoDzpTY2IzEJs8RQR23WDFCbMlRcIU9tu6xKrTeAK
+	2n8itRd9/HObMHNaYE5mN2t5EOhyWz64ccVjd04MQIITHe2eE+kxS+v2TA==
+X-Google-Smtp-Source: AGHT+IH8SJoDTYfYGz7l1cO0TAPnu6MgibpGDFz1bUdQ2iWqX54EE35IqxQA8L2v7vNWAVB3QWu/QQ==
+X-Received: by 2002:a17:902:ea0e:b0:202:3e32:5d3a with SMTP id d9443c01a7336-2023e326545mr24339245ad.26.1724056933917;
+        Mon, 19 Aug 2024 01:42:13 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f037895dsm58858255ad.155.2024.08.19.01.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 01:42:13 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 923474935788; Mon, 19 Aug 2024 15:42:09 +0700 (WIB)
+Date: Mon, 19 Aug 2024 15:42:09 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v2] docs: bug-bisect: rewrite to better match the other
+ bisecting text
+Message-ID: <ZsMFYRzba6cf5v_E@archie.me>
+References: <fbeae4056ae8174f454c3865bc45633281bb1b31.1723997526.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 19 Aug 2024 13:58:49 +0530
-Message-ID: <CA+G9fYuFDon59=Nw6WCdgp0FanZ1oE3dCkoq71EK0Bxe6Jhe_g@mail.gmail.com>
-Subject: gcc-8: mm/swapfile.c:863:40: error: array subscript 1 is above array
- bounds of 'struct list_head[1]' [-Werror=array-bounds]
-To: linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Kairui Song <kasong@tencent.com>, Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>, 
-	"Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pS632mJ10TyJMNVd"
+Content-Disposition: inline
+In-Reply-To: <fbeae4056ae8174f454c3865bc45633281bb1b31.1723997526.git.linux@leemhuis.info>
 
-The x86 builds failed with gcc-8 due to following build warnings / errors on
-Linux next-20240802 to next-20240819.
 
-x86_64 defconfig gcc-8 build failed
-x86_64 defconfig gcc-13 build pass
+--pS632mJ10TyJMNVd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First seen on the next-20240802 tag.
+On Sun, Aug 18, 2024 at 06:12:13PM +0200, Thorsten Leemhuis wrote:
+> Rewrite the short document on bisecting kernel bugs. The new text
+> improves .config handling, brings a mention of 'git skip', and explains
+> what to do after the bisection finished -- including trying a revert to
+> verify the result. The rewrite at the same time removes the unrelated
+> and outdated section on 'Devices not appearing' and replaces some
+> sentences about bug reporting with a pointer to the document covering
+> that topic in detail.
 
-  GOOD: next-20240730
-  BAD:  next-20240802
+Looks good, thanks!
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Acked-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Build errors:
---------
-mm/swapfile.c: In function 'scan_swap_map_slots.constprop':
-mm/swapfile.c:863:40: error: array subscript 1 is above array bounds
-of 'struct list_head[1]' [-Werror=array-bounds]
-   while (!list_empty(&si->frag_clusters[o])) {
-                       ~~~~~~~~~~~~~~~~~^~~
-mm/swapfile.c:872:43: error: array subscript 1 is above array bounds
-of 'struct list_head[1]' [-Werror=array-bounds]
-   while (!list_empty(&si->nonfull_clusters[o])) {
-                       ~~~~~~~~~~~~~~~~~~~~^~~
-In file included from include/linux/list.h:5,
-                 from include/linux/wait.h:7,
-                 from include/linux/wait_bit.h:8,
-                 from include/linux/fs.h:6,
-                 from include/linux/highmem.h:5,
-                 from include/linux/bvec.h:10,
-                 from include/linux/blk_types.h:10,
-                 from include/linux/blkdev.h:9,
-                 from mm/swapfile.c:9:
-include/linux/list.h:612:18: error: array subscript 1 is above array
-bounds of 'struct list_head[1]' [-Werror=array-bounds]
-  list_entry((ptr)->next, type, member)
-                  ^~
-include/linux/container_of.h:19:26: note: in definition of macro 'container_of'
-  void *__mptr = (void *)(ptr);     \
-                          ^~~
-include/linux/list.h:612:2: note: in expansion of macro 'list_entry'
-  list_entry((ptr)->next, type, member)
-  ^~~~~~~~~~
-mm/swapfile.c:873:9: note: in expansion of macro 'list_first_entry'
-    ci = list_first_entry(&si->nonfull_clusters[o],
-         ^~~~~~~~~~~~~~~~
-include/linux/list.h:612:18: error: array subscript 1 is above array
-bounds of 'struct list_head[1]' [-Werror=array-bounds]
-  list_entry((ptr)->next, type, member)
-                  ^~
-include/linux/container_of.h:19:26: note: in definition of macro 'container_of'
-  void *__mptr = (void *)(ptr);     \
-                          ^~~
-include/linux/list.h:612:2: note: in expansion of macro 'list_entry'
-  list_entry((ptr)->next, type, member)
-  ^~~~~~~~~~
-mm/swapfile.c:864:9: note: in expansion of macro 'list_first_entry'
-    ci = list_first_entry(&si->frag_clusters[o],
-         ^~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Steps to reproduce:
--------
-# tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8
---kconfig x86_64_defconfig
+--pS632mJ10TyJMNVd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Build log link,
-------
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240819/testrun/24918869/suite/build/test/gcc-8-x86_64_defconfig/log
+-----BEGIN PGP SIGNATURE-----
 
-metadata:
------
-  git describe: next-20240802
-  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git short_log: f524a5e4dfb7 ("Add linux-next specific files for 20240802")
-  config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2k6wLr4UFODrd3snUDTPPevXpPY/config
-  download_url:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2k6wLr4UFODrd3snUDTPPevXpPY/
-  toolchain: gcc-8
-  arch: x86_64
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZsMFWgAKCRD2uYlJVVFO
+oxYKAP9O/K/Lvo59SJjRHKJ2qQp3tKXCIPyg2s7DnlLhwr2GqQEAh2Vl4S5BD3ez
+BDuXXN1nrniU70JJvlrxiZVKQmS8NQ0=
+=O1gW
+-----END PGP SIGNATURE-----
 
---
-Linaro LKFT
-https://lkft.linaro.org
+--pS632mJ10TyJMNVd--
