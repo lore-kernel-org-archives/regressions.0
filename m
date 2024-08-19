@@ -1,163 +1,210 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989421482E8
-	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 05:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376B515622E
+	for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 07:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724045027; cv=none; b=I9OuatGI3vGxGAQxA2MJmg7l5PtPtd0IMlFH9dDFia6rNMy/yS/sqd1JZVu923trYeFI4YPGOi3sJ2azzB+0ciycs6g6ZxUBGgKxMtFS+Oxv4szi3mrOz4vZwomVVazSFFq/4+vIzGJ9fMJ70et0V2kbiEpharJbktwKvaPv7Qw=
+	t=1724053785; cv=none; b=eIuES+tdOAOchGuIe6UULNcGPRlfyMqvNKm97CUn/IgoMOVKQ+nLwTyLGOVhYhJzOtjshEnz+FqE+HPuwkBCIu6a/nXEuznV+2UhsKBWG1lnuQiubnc+fcUlU2uSStozwNnVAk1cig26KKvjIBOmujeKsQ5BtN9i1NrPHiEQg+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724045027; c=relaxed/simple;
-	bh=X3EgMsIbon1gHKAxnq591Y3MaAWr5c+4mgi81laTTTo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Rt1+3Am4m1Qu/lUcw4m6Y6eGuaSLylcRPqnoyRECi4fxRP1NBtwhKLsQFm2oh73f80dw/zP5xl67Ow1C2LIUX8EPf+5PoscRfFEZm87PU3dUGp/Q66hl9cbmxdeT7nXN3O1HOp9WPfaqk8WFCGuM/XfZYo21fgUWdv0wcCsABrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42808071810so30975075e9.1
-        for <regressions@lists.linux.dev>; Sun, 18 Aug 2024 22:23:45 -0700 (PDT)
+	s=arc-20240116; t=1724053785; c=relaxed/simple;
+	bh=sx6PmWH0A35LfzG2HSz3bstgdltXdA/Sva8mvjibDIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BjrgahneYIDOCGqqGoAMS4f4LFj/MKKMRwoIQKrGAryN4p+tGFXpiM5+7DwEwAXRTNLwUdPSuqKDIwJNWcsa5wAk8wc9Tfy7RkI2eAvZcawSN43cI2k9x8kxb1v8bRCARpDXTarBZ3A7C6XUwsuYtkYghUjAmdQbAtk6OEJman8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tyjdar7X; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tyjdar7X"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4f524fa193aso3329246e0c.0
+        for <regressions@lists.linux.dev>; Mon, 19 Aug 2024 00:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724053782; x=1724658582; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=j/s5eSp55kJmjKTWCRvYRqFXs2anNEkZMyc6DD7OVTQ=;
+        b=Tyjdar7XZZhTsp51qm8ppUtQqfkZWAD0fTypF90sVbzLqaFZIukxYS3FeniApR83p2
+         DSVGLzu18qqlZ5CXi/v8iFP73tqdkIDeUZ5pTqGVZjXFVl5Xvi1kExtPWuE8PuNEY+xj
+         73FOzSpYIuJx6lrtr2q2D33W4vzOpLTQXUdO2kr5hBnQOFVmH+NbKZQjnJg9K6SG5Wr3
+         HOpl25Kcyrc3veiZ3JvkKjMqFiCsYghgqK8gzfxoSKw4IV+eKirck2/eC8qh+QWF9KGA
+         QaTVg169IMXCZwM+a1RychB6pNUTASlTJwHv3vxsVI0S5a3tAeJJxdqd7fygbmKkPA+o
+         qC4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724045024; x=1724649824;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1724053782; x=1724658582;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QRPnZgfuD04mlqn1AsHHKOM++TRQ9dP251PdCGyiwmk=;
-        b=o4QDVJEMkNBKaS+o0m7ltk6ZO8ehsdeeS1GFHluj/834uJK/fUpvavv61mxYtBwdrD
-         d2oSL5tRPOuXCyU163RqO8qCgsLseFshjJBYAKcqBBtf9A6kiKp9xJbJ/NiktWVJHYvD
-         Tu/N9IcFeiZso/8iPIsLqn3NmW85gfSHEZ7v4xLjV528/YbBVfhb8ID90RxdBia+FyFz
-         tYkVdN4qnaUiUqH8Gj4Z7/TrOIjiplbp+PbWfzyIGhf4Un0BojQdlW6TMwQueyCs60dt
-         BjfPcSE9o9f2AERzKAdu7LvcMb39DD6T4uuIuGayyJOoW5SklGYwxABE4d2oejKQ4neh
-         i0rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqtnDXl5qXaBf3Fq7Yq1zRBeUiSMlmFlOr8c3vIey1bfqt96UGpK7VsQu0ZVVChSVak+JWdpEGjB24hOHqId6QsspQofDmr1bVrsA=
-X-Gm-Message-State: AOJu0YxUOWpdlbHomd+wxvZlJOfFznIDnBcKh0mG3RQDKYZ8cpHAasZD
-	3+MnrlPrTPYjVcemsuuxpHWpWEJeTn0Dkj11CFqx/XaGC/ckiC2m
-X-Google-Smtp-Source: AGHT+IHKzVPlN+RRAyCEZScNVcdul0vfaAZE0h4JYP0WeGlRZ4xobxUDZoF2oj/4yb3KyKR8uZjxNA==
-X-Received: by 2002:a05:600c:4692:b0:425:7bbf:fd07 with SMTP id 5b1f17b1804b1-429ed7856b4mr71755305e9.5.1724045023749;
-        Sun, 18 Aug 2024 22:23:43 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-371898aa229sm9438557f8f.88.2024.08.18.22.23.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Aug 2024 22:23:43 -0700 (PDT)
-Message-ID: <782b7159-076a-4064-8333-69c454972b29@kernel.org>
-Date: Mon, 19 Aug 2024 07:23:42 +0200
+        bh=j/s5eSp55kJmjKTWCRvYRqFXs2anNEkZMyc6DD7OVTQ=;
+        b=gDJHeOwpErcVqL/uc3dABv52cBZr64ggmA1wHrP9oopX+Q+Q0G12/LQG07qFhy9Cot
+         ru0/m7mvSVSgY9ydpcyw9gWQiLRK+K2K9Rba5UfZ4j4L1pdBKqMzQF8M8BpSVkTuuz2/
+         KvfjGlGsjwe1AeG720nG+YINhLKCuecbBmh7VUVFEwx4F1ava2TB9E+lR28GhOkP+Pxb
+         b5uvlp4tOllFJW601H0Scs1dmTCEZdNA2U7dUGvCvE/awgEs0+CKbr1v/b6LBL6uSTcz
+         hSni4RRrMDukIjShJ4LLZDouyHP93EeESN/PHuYofjiT5bZLt0G1v242+3nb7vHiGgKF
+         f0Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWAR39vjwk/oXvmDYI2tSCtDmsv2ehfY+slhhhk1HqCjn2M+hueWhVk+LN/zpysdepMICIDVyE5L4lVJsvwS7fMH0ebAbz9VQuSio=
+X-Gm-Message-State: AOJu0YxytOn3aW4Ywov1Kjak1tnckRutRvgHe+pCXrkoleof47Jnk8gG
+	IKpvOQkBZ33goVeyGc1KGInnUkWXdIZPhvUl4+rWgEMw9JyLl/A9FBdG4RdfdaP2rYqcQDFG0GO
+	oR+0SVBP0QcfTkJM1N+XULSBvBvgqet3tznq3zg==
+X-Google-Smtp-Source: AGHT+IEUUzi1hfxh9ntCtG/z4OgyGT9Fe7tMvLDI9rF6mfrANf/qH3M8lWtHLqsSgZQqcOGVrm6SPWleT8TqNoOZDIE=
+X-Received: by 2002:a05:6122:4789:b0:4f6:b320:d3ee with SMTP id
+ 71dfb90a1353d-4fc6f5fa004mr4276827e0c.2.1724053781953; Mon, 19 Aug 2024
+ 00:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ACPI IRQ storm with 6.10
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux kernel mailing list <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, przemyslaw.kitszel@intel.com,
- intel-wired-lan@lists.osuosl.org, jesse.brandeburg@intel.com,
- "Rafael J. Wysocki" <rafael@kernel.org>, Petr Valenta <petr@jevklidu.cz>
-References: <60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org>
- <bd149809-f670-4b5d-a18a-f1f63624265f@kernel.org>
- <CAJZ5v0jrgC+cvjDfw+vQ1jyVz1oj28uTf9k+-Kk2EAPJj3VmdQ@mail.gmail.com>
- <6eac5c37-a5a8-4ccf-aef6-62a4a0bfcea0@jevklidu.cz>
- <95ef6fd9-6d86-40e2-9814-d1f671b2262d@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <95ef6fd9-6d86-40e2-9814-d1f671b2262d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
+ <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
+In-Reply-To: <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 19 Aug 2024 13:19:30 +0530
+Message-ID: <CA+G9fYvRA=K=S7Vv0-gfypG2vFGYQqgvWVaPx6uGDjwZq3N_kg@mail.gmail.com>
+Subject: Re: next: x86_64: ahci 0000:00:1f.2: probe with driver ahci failed
+ with error -12
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-block <linux-block@vger.kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
+	Alexey Dobriyan <adobriyan@gmail.com>, Christoph Hellwig <hch@lst.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 19. 08. 24, 6:50, Jiri Slaby wrote:
-> CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+On Wed, 14 Aug 2024 at 15:56, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Wed, 14 Aug 2024 at 15:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > The qemu-x86_64 boot failed with today's Linux next-20240814 tag due to
+> > following crash.
+> >
+> > The catch here is the crash seen on both x86_64 device and qemu-x86_64
+> > but x86_64 device is able to boot successfully.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Boot log:
+> > ---
+> > [    0.000000] Linux version 6.11.0-rc3-next-20240814
+> > (tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 13.3.0-1) 13.3.0, GNU
+> > ld (GNU Binutils for Debian) 2.42.50.20240625) #1 SMP PREEMPT_DYNAMIC
+> > @1723614704
+> > ...
+> > <6>[    2.479915] scsi host0: ahci
+> > <4>[    2.484371] sysfs: cannot create duplicate filename
+> > '/devices/virtual/workqueue/scsi_tmf_-1073661392'
+>
+> Anders bisected to the following first commit and reverted this commit
+> and qemu-x86_64 boot successful now.
+>
+> # first bad commit: [b188c57af2b5c17a1e8f71a0358f330446a4f788]
+>       workqueue: Split alloc_workqueue into internal function and lockdep init
 
-Bjorn,
+This reported problem is still seen on today's Linux next-20240819 tag.
 
-I am confused by these changes:
-==========================================
-@@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct 
-net_device *net
-dev,
-          * duplex is forced.
-          */
-         if (cmd->base.eth_tp_mdix_ctrl) {
--               if (hw->phy.media_type != e1000_media_type_copper) {
--                       ret_val = -EOPNOTSUPP;
--                       goto out;
--               }
-+               if (hw->phy.media_type != e1000_media_type_copper)
-+                       return -EOPNOTSUPP;
+>
+> original report link:
+> https://lore.kernel.org/all/CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com/
+>
+> > <4>[    2.486170] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+> > 6.11.0-rc3-next-20240814 #1
+> > <4>[    2.486709] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> > <4>[    2.486709] Call Trace:
+> > <4>[    2.486709]  <TASK>
+> > <4>[    2.486709]  dump_stack_lvl+0x96/0xb0
+> > <4>[    2.486709]  dump_stack+0x14/0x20
+> > <4>[    2.486709]  sysfs_warn_dup+0x5f/0x80
+> > <4>[    2.486709]  sysfs_create_dir_ns+0xd0/0xf0
+> > <4>[    2.486709]  kobject_add_internal+0xa8/0x2e0
+> > <4>[    2.486709]  kobject_add+0x97/0x100
+> > <4>[    2.486709]  ? get_device_parent+0x109/0x1d0
+> > <4>[    2.486709]  device_add+0xe4/0x880
+> > <4>[    2.486709]  ? hrtimer_init+0x2b/0x80
+> > <4>[    2.486709]  device_register+0x1e/0x30
+> > <4>[    2.486709]  workqueue_sysfs_register+0x91/0x140
+> > <4>[    2.486709]  __alloc_workqueue+0x664/0x800
+> > <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
+> > <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
+> > <4>[    2.486709]  alloc_workqueue+0x5a/0x80
+> > <4>[    2.486709]  ? __kthread_create_on_node+0x108/0x170
+> > <4>[    2.486709]  scsi_host_alloc+0x365/0x470
+> > <4>[    2.486709]  ata_scsi_add_hosts+0xc2/0x130
+> > <4>[    2.486709]  ata_host_register+0xb5/0x260
+> > <4>[    2.486709]  ata_host_activate+0xe9/0x140
+> > <4>[    2.486709]  ahci_host_activate+0x16a/0x190
+> > <4>[    2.486709]  ahci_init_one+0xe0f/0x1080
+> > <4>[    2.486709]  ? trace_preempt_on+0x1e/0x70
+> > <4>[    2.486709]  local_pci_probe+0x48/0xa0
+> > <4>[    2.486709]  pci_device_probe+0xc6/0x1f0
+> > <4>[    2.486709]  really_probe+0xcc/0x3b0
+> > <4>[    2.486709]  __driver_probe_device+0x7d/0x160
+> > <4>[    2.486709]  driver_probe_device+0x24/0xa0
+> > <4>[    2.486709]  __driver_attach+0xdd/0x1d0
+> > <4>[    2.486709]  ? __pfx___driver_attach+0x10/0x10
+> > <4>[    2.486709]  bus_for_each_dev+0x91/0xe0
+> > <4>[    2.486709]  driver_attach+0x22/0x30
+> > <4>[    2.486709]  bus_add_driver+0x118/0x240
+> > <4>[    2.486709]  driver_register+0x62/0x120
+> > <4>[    2.486709]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+> > <4>[    2.486709]  __pci_register_driver+0x62/0x70
+> > <4>[    2.486709]  ahci_pci_driver_init+0x22/0x30
+> > <4>[    2.486709]  do_one_initcall+0x62/0x250
+> > <4>[    2.486709]  kernel_init_freeable+0x1ba/0x310
+> > <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
+> > <4>[    2.486709]  kernel_init+0x1e/0x1d0
+> > <4>[    2.486709]  ret_from_fork+0x41/0x60
+> > <4>[    2.486709]  ? __pfx_kernel_init+0x10/0x10
+> > <4>[    2.486709]  ret_from_fork_asm+0x1a/0x30
+> > <4>[    2.486709]  </TASK>
+> > <3>[    2.508109] kobject: kobject_add_internal failed for
+> > scsi_tmf_-1073661392 with -EEXIST, don't try to register things with
+> > the same name in the same directory.
+> > <4>[    2.519098] scsi host1: failed to create tmf workq
+> > <6>[    2.524520] kworker/R-scsi_ (56) used greatest stack depth:
+> > 15464 bytes left
+> > <6>[    2.528402] scsi_eh_1 (55) used greatest stack depth: 14872 bytes left
+> > <3>[    2.540312] ahci 0000:00:1f.2: probe with driver ahci failed
+> > with error -12
+> >
+> > Full dmesg log:
+> > -----------
+> >   - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240814/testrun/24850492/suite/boot/test/gcc-13-lkftconfig-rcutorture/log
+> >
+> > Reproduce script:
+> > ---
+> >  - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2kdXPeyCZIUn4AYH0UrByWXzepD/reproducer
+> >  - Qemu version: 8.2.4
+> >
+> > Boot command: /usr/bin/qemu-system-x86_64 -cpu Nehalem -machine q35
+> > -nographic -nic none -m 4G -monitor none -no-reboot -smp 2 -kernel
+> > kernel/bzImage -append \"console=ttyS0,115200 rootwait root=/dev/sda
+> > debug verbose console_msg_format=syslog systemd.log_level=warning rw
+> > earlycon\" -drive file=rootfs.ext4,if=ide,format=raw"
+> >
+> > Build link:
+> > ------
+> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/
+> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2kdXMb8C1EcMoXxMdKTWd4TB8Ef/config
+> >
+> > metadata:
+> > ---
+> >   git_ref: master
+> >   git_describe: next-20240814
+> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+> >   kernel_version: 6.11.0-rc3
+> >   arch: x86
+> >   device: qemu-x86_64
+> >
+> > Please let me know if you need more information.
 
-                 if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
-                     (cmd->base.autoneg != AUTONEG_ENABLE)) {
-                         e_err("forcing MDI/MDI-X state is not supported 
-when lin
-k speed and/or duplex are forced\n");
--                       ret_val = -EINVAL;
--                       goto out;
-+                       return -EINVAL;
-                 }
-         }
+Latest crash log link,
+ -  https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240819/testrun/24919484/suite/boot/test/gcc-13-lkftconfig-no-kselftest-frag/log
 
-@@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct 
-net_device *netde
-v,
-         }
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+>
 
-  out:
--       pm_runtime_put_sync(netdev->dev.parent);
-         clear_bit(__E1000_RESETTING, &adapter->state);
-         return ret_val;
-  }
-==========================================
-
-So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that 
-intentional?
-
-thanks,
--- 
-js
-suse labs
-
+- Naresh
