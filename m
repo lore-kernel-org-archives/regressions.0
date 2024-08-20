@@ -1,163 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B004210EE;
-	Tue, 20 Aug 2024 18:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724179467; cv=none; b=dsm3eJjXfA6kvY8QVnt9J2a+g9tI8N70Bdo7ZUz4QPZrQ7c9gQM3qsQt6R8c8lXDDROLNGaxkuVPnio6WygcCYYQ+bAEIltZ7kFC7GwmIdctmj+cWb5O3/VfQgKLMLcowb/IUaej0QpmrAVzabDqtXUsb3Vo46WcpIZnM8ho7Iw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724179467; c=relaxed/simple;
-	bh=R/txcs1DZkukly3Qa0Vt3JIrM10BbblB1vJcIw6/Yq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Lr79x7LvOFGo+d/GZwwpkyTL89Uim6IHuiYF2ynmTCBYLEdGPnuQq0tN/Ad9kz1sWkb2qSTOLH1cMoPjPVchsI3YlOxTIX1RahiOwCLIBYQJEL+q+s2sj0qtImJKsO0gxNfjg4ggGTvOLiI+x27dJJItD491mY4p1ms+9fH+jTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rliiBxSj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509621BE222
+	for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 21:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724188448; cv=pass; b=gaPcCngFeKCQ+H9LjfD1xlClNAaG6LHLA0/F5stVt+j7u7i5Nzv6QC8aff/3jRiTE3FHlgxkg+2LHBPXV/u+IJBbUdDyoO+Wna++EU+tqjUY/9NrySsm7hg0Le5A8ZgK5k8HSpWj7S2Gz2drZPcrvOXECwaRh65N4yRZvF4Xo4g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724188448; c=relaxed/simple;
+	bh=iQcZCIQuE7z+MWtObJKVOdi8N46uoOEHZoUaAeS2o5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EJiCC5fqJdvxRnSlHmqHuC0pZ38SEovci4A+Tb1WmF3ZvoLemftDLRZ1LFBNx3cyaYKpQbWYfe+D0v1zWKZBl8xUz+NT0otAkwNoWSZTnDDmBeyJ44qmIaJFXueAgfs2xRYgHej+oxY8KQ3TC9VNrpMoP84N68lwQurTt2uWmk4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz; spf=pass smtp.mailfrom=jevklidu.cz; dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b=gfjM65wv; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jevklidu.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rliiBxSj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130A5C4AF17;
-	Tue, 20 Aug 2024 18:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724179466;
-	bh=R/txcs1DZkukly3Qa0Vt3JIrM10BbblB1vJcIw6/Yq8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rliiBxSjFnjRgV0xG3x/qTaAvHoVWNLmRb0wKuTy2oPrAmwnkwsP22UkvwhsXTIL3
-	 F4dxD5FiaDReJIUlHPyTU2loYJXasYBu20Q2ibWG07aJtW81dvqdfL7NfmUCBCWe2A
-	 9hGNH2HZ+fJnjNWIYGotEr8FUouWMqGFPWocX60/G7eGkr5CY4dql0KmXCXpjHKjEj
-	 BeslEFR6tpTI59xZLd7vuRD8/gYfmGPtgUvDWxE1AEOVwghPbQIdiHkeXQtDheq0Wm
-	 bA1IXutwpO9Ztp+5LVZdKJtKlKqDO5iAJkAWOOTpKkazVmrgiAdLg+iiqwqNNnP32h
-	 RwwsvQ9IRG8/w==
-Date: Tue, 20 Aug 2024 13:44:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	intel-wired-lan@lists.osuosl.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Petr Valenta <petr@jevklidu.cz>, Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: ACPI IRQ storm with 6.10
-Message-ID: <20240820184424.GA216935@bhelgaas>
+	dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b="gfjM65wv"
+ARC-Seal: i=1; a=rsa-sha256; t=1724188442; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XgwUiGPDQfkbe7/DE86c/wlUPudOjaYrTgsQwmHvJP8W1kX0j+BfuXJB9uCSkH7dLgN9KUjbhgnhn1S0mcIIakKDG7n3lqNFYzMKpWNWoegoJKgsum4c4I4PaXJJ4OqP2qmSySDAu3/Bg48kWE5NJAKwpnJc3b0+F5YeQWDbaQo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724188442; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ELfzGSU85Ube/i21ISp5VK7kSe9amSr2lKEG2/Vg88Q=; 
+	b=AvaVi8ioUWKvYFBKSzbvBEiIRFIUzlMWTDRqdbB8RXtplHbcPMt0ZCBkyThQ3nBx0L98qra81TXMltVqKypAUXXewupbyZRpBPdIHEaI9jf1HtPxJB5Cf98YKcYgcGB7P1oxY27qdbrblyUnQF+/mpscHqRazKkc6KHnQvNnQAM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=jevklidu.cz;
+	spf=pass  smtp.mailfrom=petr@jevklidu.cz;
+	dmarc=pass header.from=<petr@jevklidu.cz>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724188442;
+	s=zoho; d=jevklidu.cz; i=petr@jevklidu.cz;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=ELfzGSU85Ube/i21ISp5VK7kSe9amSr2lKEG2/Vg88Q=;
+	b=gfjM65wvvqAxR8k4L1ciKz1ZZUbT1MRfaVvxZcdd2EloJ8lm8nPTY+6K4HryPGw6
+	3FLGI/Bl/vxcVE8llS785UAggco7b+kQyWtdSW4vfH2u6jdVCtr+Lwgjh4Qrezy5tio
+	TDQ5UxZACk4zfL0IJ4jy8tBm3XXh/LF7Nw93+Aew=
+Received: by mx.zohomail.com with SMTPS id 1724188440687689.5836446683727;
+	Tue, 20 Aug 2024 14:14:00 -0700 (PDT)
+Message-ID: <7ec28d20-c729-496a-b8bf-2bf88bbb4d70@jevklidu.cz>
+Date: Tue, 20 Aug 2024 23:13:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <782b7159-076a-4064-8333-69c454972b29@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: ACPI IRQ storm with 6.10
+To: Bjorn Helgaas <helgaas@kernel.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, przemyslaw.kitszel@intel.com,
+ intel-wired-lan@lists.osuosl.org, "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20240820180952.GA217979@bhelgaas>
+Content-Language: cs-CZ
+From: Petr Valenta <petr@jevklidu.cz>
+In-Reply-To: <20240820180952.GA217979@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-[+to Tony, Przemek for e1000e questions; -cc Jesse]
 
-On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
-> On 19. 08. 24, 6:50, Jiri Slaby wrote:
-> > CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+
+Dne 20. 08. 24 v 20:09 Bjorn Helgaas napsal(a):
+> [+to Petr, -cc Jesse, bouncing]
 > 
-> Bjorn,
+> On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
+>> On 19. 08. 24, 6:50, Jiri Slaby wrote:
+>>> CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+>>
+>> Bjorn,
+>>
+>> I am confused by these changes:
+>> ==========================================
+>> @@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct net_device
+>> *net
+>> dev,
+>>           * duplex is forced.
+>>           */
+>>          if (cmd->base.eth_tp_mdix_ctrl) {
+>> -               if (hw->phy.media_type != e1000_media_type_copper) {
+>> -                       ret_val = -EOPNOTSUPP;
+>> -                       goto out;
+>> -               }
+>> +               if (hw->phy.media_type != e1000_media_type_copper)
+>> +                       return -EOPNOTSUPP;
+>>
+>>                  if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>>                      (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>>                          e_err("forcing MDI/MDI-X state is not supported when
+>> lin
+>> k speed and/or duplex are forced\n");
+>> -                       ret_val = -EINVAL;
+>> -                       goto out;
+>> +                       return -EINVAL;
+>>                  }
+>>          }
+>>
+>> @@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct net_device
+>> *netde
+>> v,
+>>          }
+>>
+>>   out:
+>> -       pm_runtime_put_sync(netdev->dev.parent);
+>>          clear_bit(__E1000_RESETTING, &adapter->state);
+>>          return ret_val;
+>>   }
+>> ==========================================
+>>
+>> So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that
+>> intentional?
 > 
-> I am confused by these changes:
-> ==========================================
-> @@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct net_device
-> *net
-> dev,
->          * duplex is forced.
->          */
->         if (cmd->base.eth_tp_mdix_ctrl) {
-> -               if (hw->phy.media_type != e1000_media_type_copper) {
-> -                       ret_val = -EOPNOTSUPP;
-> -                       goto out;
-> -               }
-> +               if (hw->phy.media_type != e1000_media_type_copper)
-> +                       return -EOPNOTSUPP;
+> Not intentional.  Petr, do you have the ability to test the patch
+> below?  I'm not sure it's the correct fix, but it reverts the pieces
+> of b2c289415b2b that Jiri pointed out.
 > 
->                 if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
->                     (cmd->base.autoneg != AUTONEG_ENABLE)) {
->                         e_err("forcing MDI/MDI-X state is not supported when
-> lin
-> k speed and/or duplex are forced\n");
-> -                       ret_val = -EINVAL;
-> -                       goto out;
-> +                       return -EINVAL;
->                 }
->         }
-> 
-> @@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct net_device
-> *netde
-> v,
->         }
-> 
->  out:
-> -       pm_runtime_put_sync(netdev->dev.parent);
->         clear_bit(__E1000_RESETTING, &adapter->state);
->         return ret_val;
->  }
-> ==========================================
-> 
-> So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that
-> intentional?
 
-I don't remember if it was intentional, but the use of
-__E1000_RESETTING is a bit subtle and I don't know what is correct.
+I tested the patch below but it didn't help. After the first boot with 
+new kernel it looked promising as the irq storm only appeared for a few 
+seconds, but with subsequent reboots it was the same as without the patch.
 
-Here's how it was used before I changed it with b2c289415b2b, i.e., in
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/intel/e1000e/ethtool.c?id=39f59c72ad3a:
+To be sure, I also send the md5sum of ethtool.c after applying the patch:
 
-  e1000_set_link_ksettings(...)
-  {
-    if (hw->phy.ops.check_reset_block(hw)) {
-      ret_val = -EINVAL;
-      goto out;
-    }
-    while (test_and_set_bit(__E1000_RESETTING, &adapter->state))
-      usleep_range(1000, 2000);
-    if (err) {
-      ret_val = -EINVAL;
-      goto out;
-    }
-    ...
-  out:
-    clear_bit(__E1000_RESETTING, &adapter->state);
-  }
+a25c003257538f16994b4d7c4260e894 ethtool.c
 
-In this case, we *always* clear __E1000_RESETTING, even if we bail out
-before the test_and_set_bit(__E1000_RESETTING).
-
-It makes sense to me that we clear __E1000_RESETTING after we've set
-it via test_and_set_bit() because we know it was set *here*.
-
-But it seems wrong to me that we clear __E1000_RESETTING even when we
-haven't done the test_and_set_bit() because it may have been set by a
-concurrent thread executing a different operation.
-
-  e1000_set_ringparam(...)
-  {
-    if ((ring->rx_mini_pending) || (ring->rx_jumbo_pending))
-      return -EINVAL;
-    while (test_and_set_bit(__E1000_RESETTING, &adapter->state))
-      usleep_range(1000, 2000);
-    err = e1000e_setup_tx_resources(...);
-    if (err)
-      goto out;
-    ...
-  out:
-    clear_bit(__E1000_RESETTING, &adapter->state);
-  }
-
-But here, we *don't* clear __E1000_RESETTING if we bail out before the
-test_and_set_bit(__E1000_RESETTING).  This seems like the correct
-behavior.
-
-In the e1000 driver (not the e1000e driver),
-e1000_set_link_ksettings() does *not* clear __E1000_RESETTING unless
-it has already done the test_and_set_bit().
-
-b2c289415b2b changed e1000e to work that way, too.
-
-FWIW, 3ef672ab1862 ("e1000e: ethtool unnecessarily takes device out of
-RPM suspend") changed e1000e e1000_set_link_ksettings() to clear
-__E1000_RESETTING even when bailing out before the test_and_set_bit().
-That part of 3ef672ab1862 looks possibly buggy to me.
-
-Bjorn
+> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> index 9364bc2b4eb1..9db36ee71684 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> @@ -280,7 +280,8 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	if (hw->phy.ops.check_reset_block &&
+>   	    hw->phy.ops.check_reset_block(hw)) {
+>   		e_err("Cannot change link characteristics when SoL/IDER is active.\n");
+> -		return -EINVAL;
+> +		ret_val = -EINVAL;
+> +		goto out;
+>   	}
+>   
+>   	/* MDI setting is only allowed when autoneg enabled because
+> @@ -288,13 +289,16 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	 * duplex is forced.
+>   	 */
+>   	if (cmd->base.eth_tp_mdix_ctrl) {
+> -		if (hw->phy.media_type != e1000_media_type_copper)
+> -			return -EOPNOTSUPP;
+> +		if (hw->phy.media_type != e1000_media_type_copper) {
+> +			ret_val = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+>   
+>   		if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>   		    (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>   			e_err("forcing MDI/MDI-X state is not supported when link speed and/or duplex are forced\n");
+> -			return -EINVAL;
+> +			ret_val = -EINVAL;
+> +			goto out;
+>   		}
+>   	}
+>   
