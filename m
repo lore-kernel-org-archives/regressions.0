@@ -1,79 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1523142A9D;
-	Tue, 20 Aug 2024 05:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2921862
+	for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 05:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724130350; cv=none; b=Bzru+b5GKMjbkGH2tumgA7yYZZOnozsbukhBDyagx0GYLwtHhj87qnqOduduKxjShqfZL9G/ZhIUnOLpHiyKhthfDmpGilaTyQRRzH1dZVF7pYAvEDJn1gzrK6Xy6bkshOxOQMUiHQde/vU4wsUZ2ugOB5tC3hsqGvNFXL9SKpA=
+	t=1724131893; cv=none; b=Rm0myI0LZKcnV8Kahako3vkIS+EEDSHDkTKsNoqP1x6bMlu5bs9ES4SBm2f070bGU2Evwlo4z+022iZQKPWtIanphWxyI6ZIPwde88hHQeAQCQd2b9g6qmueY1u56L7B0yApNklA4gdEl61EfVWhzDDMLljHhx+jlWeRiS6l2QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724130350; c=relaxed/simple;
-	bh=Qk4x8r7jRJD6hkIYmtG/mztRf8YMFcS8K5ZNtoCas2c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=klQVOnc1unbF2Dd5tf9KbX3jTH1Vy41mZCchrdezW7w2wcovR4TysXKjUZnNCsHN8oyLaIO8gfZg4V/6kgbe/CadYUPS8FlyAq7ZbmoldeSTJRPQ+Z1tp0326NzCw/fDFlqnEgySLqIlOgb/RT7NG6eIwWYxyPGiSyKgNGy7tqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PMIn2RWX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PMIn2RWX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17699C4AF0B;
-	Tue, 20 Aug 2024 05:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1724130349;
-	bh=Qk4x8r7jRJD6hkIYmtG/mztRf8YMFcS8K5ZNtoCas2c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PMIn2RWXlS1k3tsabpC+vfCMInsVGJyUNEOITWfgeANg2b7JoeXNBin+vZ7/T9rCM
-	 j6GyRIQqo1/LOxEGVvwKs8CamVyaFDb2UZScOYpHZEkCzl5hqRZV96GmtZ6a+hXdO+
-	 CiZwvFdf7iyfBbbaauyGUnjjQjF17cZ/5ed3/QCU=
-Date: Mon, 19 Aug 2024 22:05:48 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Chris Li
- <chrisl@kernel.org>, linux-mm <linux-mm@kvack.org>, open list
- <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Linux
- Regressions <regressions@lists.linux.dev>, Barry Song <21cnbao@gmail.com>,
- "Huang, Ying" <ying.huang@intel.com>, Hugh Dickins <hughd@google.com>,
- Kalesh Singh <kaleshsingh@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: gcc-8: mm/swapfile.c:863:40: error: array subscript 1 is above
- array bounds of 'struct list_head[1]' [-Werror=array-bounds]
-Message-Id: <20240819220548.d8f1ea5cf504cfd8feb5780e@linux-foundation.org>
-In-Reply-To: <CAMgjq7Bz0DY+rY0XgCoH7-Q=uHLdo3omi8kUr4ePDweNyofsbQ@mail.gmail.com>
-References: <CA+G9fYuFDon59=Nw6WCdgp0FanZ1oE3dCkoq71EK0Bxe6Jhe_g@mail.gmail.com>
-	<CA+G9fYtd1Hw9YLpceUAwwC+UytVQVXOET4gmGT9jiCgHa+WexQ@mail.gmail.com>
-	<CAMgjq7Bz0DY+rY0XgCoH7-Q=uHLdo3omi8kUr4ePDweNyofsbQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724131893; c=relaxed/simple;
+	bh=lnn1cMwZ5xGuxZXmYgF8Mux94AyucGFh2qMYd0RHS4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FBhvpJUg4Qbn/Zr1nOCxxS6TARwmlWnypXy/btqM6IuJp4phrLWuA7Cwn+j5MO04uYrxJWysn3GCHVG+HxKjQfP2/4MxrrAqDfefp3kYU4jC6kZLNYXzOOHo6k+NTSVtWengoPc7YoSHbtcP6kyEYt45Vj332UvYts+Elo4VgMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af271.dynamic.kabel-deutschland.de [95.90.242.113])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5486861E5FE07;
+	Tue, 20 Aug 2024 07:31:12 +0200 (CEST)
+Message-ID: <17001e93-7baf-428b-b979-e6fb8330cb84@molgen.mpg.de>
+Date: Tue, 20 Aug 2024 07:31:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Commit *pidfd: prevent creation of pidfds for kthreads* causes
+ `Failed to remount '/' read-only: Device or resource busy`
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <3a1c9e27-6dcb-4eec-85cb-c03271c61a37@molgen.mpg.de>
+ <b21aa149-fd70-4aa0-9b25-886c81ebfae2@leemhuis.info>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <b21aa149-fd70-4aa0-9b25-886c81ebfae2@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 19 Aug 2024 19:44:25 +0800 Kairui Song <ryncsn@gmail.com> wrote:
+Dear Thorsten,
 
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -836,7 +836,7 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si, int o
->  		goto done;
->  
->  	/* Order 0 stealing from higher order */
-> -	for (int o = 1; o < PMD_ORDER; o++) {
-> +	for (int o = 1; o < SWAP_NR_ORDERS; o++) {
->  		/*
->  		 * Clusters here have at least one usable slots and can't fail order 0
->  		 * allocation, but reclaim may drop si->lock and race with another user.
 
-OK, I got that landed in the right place, but...
+Am 20.08.24 um 07:03 schrieb Thorsten Leemhuis:
+> On 19.08.24 23:02, Paul Menzel wrote:
+>> #regzbot introduced: 3b5bbe798b24
+>>
+>> Commit 3b5bbe798b24 (pidfd: prevent creation of pidfds for kthreads)
+>> causes a regression. On the Dell XPS 13 9360 with Debian sid/unstable
+>> and *systemd* 256.5-1, systemd is not able to unmount the root partition
+>> (LUKS encrypted) anymore.
+> 
+> Hi Paul! Thx for the report. FWIW, a revert to fix this is already
+> queued as 780d60bac21ebe ("Revert "pidfd: prevent creation of pidfds for
+> kthreads"") [next-20240820 (pending-fixes)] after Eric reported similar
+> problems recently:
+> 
+> https://lore.kernel.org/all/20240819-staudamm-rederei-cb7092f54e76@brauner/
 
-The definition of `o' within the for statement isn't typical kernel
-style - I'm surprised we didn't get a warning for this - maybe things
-have changed when I wasn't looking.
+Thank you for digging this up. I thought I search for the commit hash in 
+lore.kernel.org, but maybe I hit the wrong button *locate inbox*.
 
-Also, this code makes no attempt to honor our "The preferred limit on
-the length of a single line is 80 columns" objective.  There's just no
-reason for comment blocks to violate this.
+Anyway, reverting the patch on top of master also fixes the issue for 
+me. Maybe Linus can take it directly, as more people are going to run 
+into this.
 
-So Chris, please attend to such things when preparing v6, which I
-assume is in the works.
 
+Kind regards,
+
+Paul
