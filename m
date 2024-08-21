@@ -1,124 +1,109 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B49C18E351
-	for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 23:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB83D4778E
+	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 01:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724197766; cv=none; b=kZ8nnYPRC7GPK/fYsXApsa3k2PPmUYKn5z6wzoHGHBliRdCThe0Zb8AIlGv2kcpnrWqlXFNUG69nLI2jD2K1UWOVHVg6M/rTYajaxCqF0FtTLkNsVEIWrdxdtrpUWB8uQ9Kggi1vjczArOjKpuLhFkGKU7yLp7W1SeHr8guu27I=
+	t=1724203999; cv=none; b=cTxMwlsVB6PSovquOF+y1krEE+mGCaXDxuVn23jmkxTY02iHAKqpVBj+QGUnmbPnbr2AEY7yzb9E2mzAkKcUdrAvuhNbJGDseaArq/4OndNDOTdQqVI4dep9BxE87uKbU3V9RbEiLOvpmMK8867GdImu58Zlt4Hlaa0JRg/6Y9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724197766; c=relaxed/simple;
-	bh=3xXoEPw0QvtqxRGoUrCgC4DZMIWpcqUSeNKklTgjsGQ=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZzkIQZiK0I35SRhymVV0JOcS4D4tO72HyeqJs2htdPd28bYF98DLG/YsTYblrLYS4xZ7S11i5U/YQTNDLAeLJBU/2POaZChtb95DsEO7QdFsaIJUDhYKU0oGrdCWDnDTcpRGCM+u7otDnV/jkdrhlEOJaZKQ0WPl1SVfL6xm/k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=QKRrzjLI; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1724203999; c=relaxed/simple;
+	bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lMaLfI8lcebVA2i7d5TYWFIR/X3iHl23K1B6PQC8EDjuHmbxqHtnz89foNUxTqJ9REXmPj5vwodvzHu1XJ1BczjNDNXkgk+Md4lwk9yZKr8AkUJcMcy2hBfdzTfe6pIFSRn1Y0EeVtSITq4OGGVMCRt56p7avyNlVz4CZQ4jRq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVwaYBav; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="QKRrzjLI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1724197755; x=1724802555; i=christian@heusel.eu;
-	bh=3xXoEPw0QvtqxRGoUrCgC4DZMIWpcqUSeNKklTgjsGQ=;
-	h=X-UI-Sender-Class:Date:From:To:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QKRrzjLIMv3oK2TsqoMjraGbzo42lk0SdJwxYgSbP0n0vPVt3PBGgV2XT0POyDSM
-	 c8lZ0OcMdNzr2TfBAR7NsRBUikxa+Q5l9XkXS/2IPIiEBnenBWGwj8xbNwfk3LA7g
-	 YErwg5Ls0dUD4tQ+m1HdbmHsoO+XZ+6ACCa7XFsQfpMhYAUcgx16bA4vkIp7cDbLZ
-	 kQhoumgqIhO8hSaJd98B+zb4jBvPpc8u5ZeFrC3Pb/ngCK1isyspC6vwRUJMaqcGv
-	 Pqcm8FiwkYLn9UzQbke06k5G4WhevUJbm+6syDopPxWGyGP7/udjPpIGENqIqWABw
-	 AsXrrcLPd/Vjcv/x9w==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([84.170.90.59]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MhUDl-1sCBaa091n-00pgtu for <regressions@lists.linux.dev>; Wed, 21 Aug 2024
- 01:49:15 +0200
-Date: Wed, 21 Aug 2024 01:49:14 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Message-ID: <ea930a4d-1185-4b1b-9bdd-45005ae88872@heusel.eu>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVwaYBav"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5d5e1c86b83so3943382eaf.3
+        for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 18:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724203997; x=1724808797; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
+        b=WVwaYBavmayoZ6QOTXo+xFfWaIptFoqr1n2KPhJFr3kUFA+VzFUeUTAuk/gaGmmz+1
+         HzcxIBB0CE937PkzldksLihOFI1ieYPfCyklYGg5Sjkub+dDy5h65nNq71UgF23GqZUG
+         X63i5QCqnYjnjvxD6sISlUOu0lL+tx2Ab7DJg0WM9CBCAz5xlvh+G31mkIQwmVwM01Cd
+         EVBZKFcp3dqHB8pimP9g7fg5i81zancU2MgrIqyEyHHck2oYCHMQNOHP9lkAGMwUnBDP
+         zD0W5MfA6I5MUJli5PrWyPTtjp1P73IMuwsxbPL2k8AbGf9wvvTZAQGgG+5BoaU5yBdK
+         KnmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724203997; x=1724808797;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
+        b=FdcvpZMs/wcNYAfR363DMWPCrcScaqXOdlQ/tvkDLLfbaKmtOPbdjuAAjwSUpD+EhH
+         vn3pzX0GMYBlJtarRLjJUumyGe+phF1TZkAqc/Gg6P8g2/VEoPbhIQ/iPwzsiOnlzVuy
+         lDj1D+PIUG37vkdmd46WhUASXh/QOLH5KZ5cDQCdb8A/ODwL3xedRBwiNco/qLXv1dFl
+         uZSFMd/9B+a6SoCv+x8WagE6uidNBCFF2RiEpbSiWZ0cftiyBRcMQ3lO/6eOmE5J21rR
+         HcTcd5Em1hPeQZcqTbhq/F8mM1vfiHCNCQ0oe/TmggSIC118jNHYdv8OhPwNgWCHYbDy
+         c+hA==
+X-Gm-Message-State: AOJu0YzLmwacjCPMP2/8HL6vkMAmHzJPWS332XL51vcKDiLNTXCH49Sr
+	Xd+ybZAb6bobbW26LgtjYT4m9oFIlKZrSpj71qpeI1lPI//ek1RV
+X-Google-Smtp-Source: AGHT+IE1kzwvIGqsTUReVp+W70RugwByu2Io0zMFp8r1glHtNYXZClYMXgt3mQ/S3Og1YfGV/mOO4Q==
+X-Received: by 2002:a05:6358:8096:b0:1ac:ed54:224d with SMTP id e5c5f4694b2df-1b5a287043fmr65787955d.11.1724203996707;
+        Tue, 20 Aug 2024 18:33:16 -0700 (PDT)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af18937sm8853894b3a.150.2024.08.20.18.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2024 18:33:16 -0700 (PDT)
+Message-ID: <badd583d09868ffdd48a97c727680ca6f5699727.camel@gmail.com>
+Subject: Re: KASAN: null-ptr-deref in bpf_core_calc_relo_insn
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Liu RuiTong <cnitlrt@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 20 Aug 2024 18:33:11 -0700
+In-Reply-To: <CAK55_s6do7C+DVwbwY_7nKfUz0YLDoiA1v6X3Y9+p0sWzipFSA@mail.gmail.com>
+References: 
+	<CAK55_s6do7C+DVwbwY_7nKfUz0YLDoiA1v6X3Y9+p0sWzipFSA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h5uiyn7ijaoxwjer"
-Content-Disposition: inline
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-X-Provags-ID: V03:K1:FAAS+ft0/iuF+avHyKPDPzLW7Q3oy/MR5Dir6tv90QCOVkv9A1Z
- sEZhXQqCod71j0yddd8LtJRgA1DcP8DV4Qv51sxpA9wIDQh6w/RYuH7k2LXMiy2usJgl4Ew
- Lh/h1NaUForWMQ2f7pAbI7QYtu5ZKfJrj7VVozhe6pqFIBIIy+xoWxr7o2YibtYaL5t6zo0
- lgN9tiA9fxeSQfLufLnfw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gHoHONgRjuY=;sdLCsInXyhm5oHxNabgYtYIX+7o
- McPBMUyF60CiCOZ26SLq0LfvI1hNGRMHJc7676nfqlC02awsoti20NgbbDgpctsbKe2BRuejB
- nRJbFhSz/RZgzYNjv/g30uGeCkMI332L+GlNYbYTB0glUyiqsI4J/YPvpq3AuARaLz4Mvunu3
- H1RsEH0ov/uW/1rq36TmLHRRSDKN6osTsNb2Bhz6G725sY56yBYj/7q8coFvijUe7S0Q1su3F
- BjUd62HGkrHL3AjAOnhpgDesEJ3OQuj/uol7cx5ches5Nt3j5JdTY0XWJ88dqyP/DVZtus9Q5
- +5rxl5b8xMrB+thm73b+QC0mHaPT7l0C7n7s3LVwQZw5CLCQWR8YGxZFwTgjcavvfQkg1MgfO
- UoAobbkaG0bE9GgukvPJoGXUIShj6ot37q2l2mtymiHFAAEqycrFSR7fr9RXOwNMYZgmEc64P
- hJvdQetkRejbZna/Pmxy2OZIuTzOE1ddbQUZA0JLSSy5/+D4JMmhRMBO2lLo7OlqF1FajBslR
- 0xjDxhM6LDN6nVmbFNE4wqvj6H0m+OdfWjW0mtomVEEuCElRiGyBIVAFC21/2CthI5zP9pWD2
- brj+JSB8tKWgkqdYtGKETd6Av7VlQIg1IBJs+amAUnoaFAqM/wuE3eM1+3atv703B5DA8Zh4l
- GgmhcoY3VHOpVqPxiU8BqKEyO6+2fNifBvyYsjYlRfxJRYNePAYuvcs7spkGZkyjOJDEqLAV1
- Hiu7S7z1tFlr1Tu5kBHp6q9i1e1bm9iuQ==
 
+T24gVHVlLCAyMDI0LTA4LTIwIGF0IDE3OjIxICswODAwLCBMaXUgUnVpVG9uZyB3cm90ZToKClsu
+Li5dCgo+IGJwZl9jb3JlX2NhbGNfcmVsb19pbnNuKzMxMSAgICAgICAgICAgIDxicGZfY29yZV9j
+YWxjX3JlbG9faW5zbiszMTE+Cj4g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSAWwo+IFNPVVJDRSAoQ09ERSkgXeKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAo+IEluIGZpbGU6IC9ob21lL3VidW50dS9m
+dXp6L2xpbnV4LTYuMTEtcmM0L3Rvb2xzL2xpYi9icGYvcmVsb19jb3JlLmM6MTMwMAo+ICAgIDEy
+OTUgICAgICAgICBjaGFyIHNwZWNfYnVmWzI1Nl07Cj4gICAgMTI5NiAgICAgICAgIGludCBpLCBq
+LCBlcnI7Cj4gICAgMTI5Nwo+ICAgIDEyOTggICAgICAgICBsb2NhbF9pZCA9IHJlbG8tPnR5cGVf
+aWQ7Cj4gICAgMTI5OSAgICAgICAgIGxvY2FsX3R5cGUgPSBidGZfdHlwZV9ieV9pZChsb2NhbF9i
+dGYsIGxvY2FsX2lkKTsKPiAg4pa6IDEzMDAgICAgICAgICBsb2NhbF9uYW1lID0gYnRmX19uYW1l
+X2J5X29mZnNldChsb2NhbF9idGYsCj4gbG9jYWxfdHlwZS0+bmFtZV9vZmYpOwoKSGkgTGl1LAoK
+VGhhbmsgeW91IGZvciB0aGUgcmVwb3J0LCBJIGNhbiByZXByb2R1Y2UgdGhlIGlzc3VlLgpXaWxs
+IGNvbW1lbnQgbGF0ZXIgdG9kYXkuCgo+ICAgIDEzMDEgICAgICAgICBpZiAoIWxvY2FsX25hbWUp
+Cj4gICAgMTMwMiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4gICAgMTMwMwo+ICAg
+IDEzMDQgICAgICAgICBlcnIgPSBicGZfY29yZV9wYXJzZV9zcGVjKHByb2dfbmFtZSwgbG9jYWxf
+YnRmLCByZWxvLAo+IGxvY2FsX3NwZWMpOwo+ICAgIDEzMDUgICAgICAgICBpZiAoZXJyKSB7Cj4g
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSAWwo+IFNUQUNLIF3ilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIAKPiBgYGAKCgo=
 
---h5uiyn7ijaoxwjer
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
->=20
-> Interacting with regzbot from arbitrary places is a recently added
-> feature of regzbot usable via the new '#regzbot report <url>' command.
-> The indented use of this feature is for updating minor aspect of
-> regressions already tracked, e.g. "change the title" or "tell regzbot
-> about a related discussion". Such things until now had to be done using
-> regzbot commands in a direct or indirect reply to report -- but there
-> they would mainly be noise for most others and just add to the huge
-> amount of mail people already get. It's also takes a more time to send a
-> lot of individual mails instead of preparing just one.
->=20
-> The new command will be documented on
-> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
->=20
-> Ciao, Thorsten
->=20
-
-#regzbot report: https://lore.kernel.org/all/ZsTh7Jyug7MbZsLE@mdpsys.co.uk
-#regzbot introduced: ccfc8948d7e4
-#regzbot summary: btusb: driver fails to initialize MT7921AUN on v6.11-rc4
-
---h5uiyn7ijaoxwjer
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmbFK3oACgkQwEfU8yi1
-JYVC5hAAhFD0T+NV/9H7xH+YfYzqnSG+pg7NgZIJkjpaYyPn8fYeyyJexilcdrCB
-tAG0QXRVvlu4yJxEJ/M+ZLlslW3WVM4JH08smy1g7qJ4cnf8vGSVBqngkeeU1ZlT
-NzTJMNAGdO1hUi2dbw/+pyJCS8xSXjSK90NvYZLu41O1dURcLn9oXtmQYgso+rAT
-tuGuq8l+2Qehy5LY0BqmgwtCmCXKaq9ZABiZRSsTwlE5dwrI8u/bgaTh0h0BXGsz
-YbMhjc0vWwBmbZTTua/O6hIYFIPvWFferrvaQbqNf4MSHlElAqZTekdNMWMKn6yd
-Gc5ZVd+ZeYPBWxhJVC5zVIeDaPwOS1IvMoRs7ygNfOnrsSW+UhPH5UbyZ3sduC8a
-A32xOIJ2m0tDNo47HvmP+4gLDbcYoZ+zgdh/UazLheKFQ4o1yByw7Ld9V6zdc7TK
-SC0sOz6jNCdJ3V1ABGZe4qdZ0XPQmWxFm+SqyKkvUcRlXtCVGr3mhkGzs94LgeW3
-ouCvpMuGiEoSEChkwOBWFeCrUptx16IPD7qtteQiGbHgvgJT82wfuPnceA6LT/jx
-x1JKqB3e8uyR2u0di2v88GhA7s19bxsBFxAZO5w8WS7j+56volHvv14/Dc5IWq6G
-2EZFkmCCDm3fUYJkm26/ou4SBrl300H8vM5vcKWSBNEbZAZy+0s=
-=8EWC
------END PGP SIGNATURE-----
-
---h5uiyn7ijaoxwjer--
