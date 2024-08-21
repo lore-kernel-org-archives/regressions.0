@@ -1,109 +1,218 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB83D4778E
-	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 01:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35172175A6
+	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 05:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724203999; cv=none; b=cTxMwlsVB6PSovquOF+y1krEE+mGCaXDxuVn23jmkxTY02iHAKqpVBj+QGUnmbPnbr2AEY7yzb9E2mzAkKcUdrAvuhNbJGDseaArq/4OndNDOTdQqVI4dep9BxE87uKbU3V9RbEiLOvpmMK8867GdImu58Zlt4Hlaa0JRg/6Y9o=
+	t=1724216965; cv=none; b=m6U9LP4aK4YdmFsb+sD99T/VPRGH9Ui9ji6qjIb3ArCRt8/R81R2v3KFht1xUp9EI1yi3d526W7eMK4KlaDU/jyMN9SizBORrBxh+b2jMkzb6hBYlmluhGlZlHzpH1L0aXhX19OuX+QiKxJj0KX/kenpjiTQ9S3bz9BkF/fadn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724203999; c=relaxed/simple;
-	bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lMaLfI8lcebVA2i7d5TYWFIR/X3iHl23K1B6PQC8EDjuHmbxqHtnz89foNUxTqJ9REXmPj5vwodvzHu1XJ1BczjNDNXkgk+Md4lwk9yZKr8AkUJcMcy2hBfdzTfe6pIFSRn1Y0EeVtSITq4OGGVMCRt56p7avyNlVz4CZQ4jRq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVwaYBav; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1724216965; c=relaxed/simple;
+	bh=cLiCYiXS25Xlf0dh4DbE+mTVWRQPILO7MGKR9lCv5L0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aVhiIzl4ITSjNZbVI865zh9NIPQNg2HKvSXXOCiFv28uQT+m9Pl1kO9XHUq/qcy7igILmNeDO5Y2zASQ4qWrM4tJKOcZWnD3EtZz1iulTZdfDMdkYbwbI81BcwRYl5s0eBK+P4D1dXaa59rMPVmRDrOj4x3OXf5LCYYkyadvdsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVwaYBav"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5d5e1c86b83so3943382eaf.3
-        for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 18:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724203997; x=1724808797; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
-        b=WVwaYBavmayoZ6QOTXo+xFfWaIptFoqr1n2KPhJFr3kUFA+VzFUeUTAuk/gaGmmz+1
-         HzcxIBB0CE937PkzldksLihOFI1ieYPfCyklYGg5Sjkub+dDy5h65nNq71UgF23GqZUG
-         X63i5QCqnYjnjvxD6sISlUOu0lL+tx2Ab7DJg0WM9CBCAz5xlvh+G31mkIQwmVwM01Cd
-         EVBZKFcp3dqHB8pimP9g7fg5i81zancU2MgrIqyEyHHck2oYCHMQNOHP9lkAGMwUnBDP
-         zD0W5MfA6I5MUJli5PrWyPTtjp1P73IMuwsxbPL2k8AbGf9wvvTZAQGgG+5BoaU5yBdK
-         KnmA==
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-371b97cfd6fso2127583f8f.2
+        for <regressions@lists.linux.dev>; Tue, 20 Aug 2024 22:09:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724203997; x=1724808797;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TVozaWtR1PMKJJ2DJx8WYtFk8+BhPIloZFUmV+h063U=;
-        b=FdcvpZMs/wcNYAfR363DMWPCrcScaqXOdlQ/tvkDLLfbaKmtOPbdjuAAjwSUpD+EhH
-         vn3pzX0GMYBlJtarRLjJUumyGe+phF1TZkAqc/Gg6P8g2/VEoPbhIQ/iPwzsiOnlzVuy
-         lDj1D+PIUG37vkdmd46WhUASXh/QOLH5KZ5cDQCdb8A/ODwL3xedRBwiNco/qLXv1dFl
-         uZSFMd/9B+a6SoCv+x8WagE6uidNBCFF2RiEpbSiWZ0cftiyBRcMQ3lO/6eOmE5J21rR
-         HcTcd5Em1hPeQZcqTbhq/F8mM1vfiHCNCQ0oe/TmggSIC118jNHYdv8OhPwNgWCHYbDy
-         c+hA==
-X-Gm-Message-State: AOJu0YzLmwacjCPMP2/8HL6vkMAmHzJPWS332XL51vcKDiLNTXCH49Sr
-	Xd+ybZAb6bobbW26LgtjYT4m9oFIlKZrSpj71qpeI1lPI//ek1RV
-X-Google-Smtp-Source: AGHT+IE1kzwvIGqsTUReVp+W70RugwByu2Io0zMFp8r1glHtNYXZClYMXgt3mQ/S3Og1YfGV/mOO4Q==
-X-Received: by 2002:a05:6358:8096:b0:1ac:ed54:224d with SMTP id e5c5f4694b2df-1b5a287043fmr65787955d.11.1724203996707;
-        Tue, 20 Aug 2024 18:33:16 -0700 (PDT)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af18937sm8853894b3a.150.2024.08.20.18.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 18:33:16 -0700 (PDT)
-Message-ID: <badd583d09868ffdd48a97c727680ca6f5699727.camel@gmail.com>
-Subject: Re: KASAN: null-ptr-deref in bpf_core_calc_relo_insn
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Liu RuiTong <cnitlrt@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Tue, 20 Aug 2024 18:33:11 -0700
-In-Reply-To: <CAK55_s6do7C+DVwbwY_7nKfUz0YLDoiA1v6X3Y9+p0sWzipFSA@mail.gmail.com>
-References: 
-	<CAK55_s6do7C+DVwbwY_7nKfUz0YLDoiA1v6X3Y9+p0sWzipFSA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+        d=1e100.net; s=20230601; t=1724216962; x=1724821762;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kdvr3vsjNyF52JtCUkc2L1/v/zvdzK9Ic64vH1PZOq8=;
+        b=IhzCGNiNEOW5guXhBG+XBqCc8v9rCVwoddvGi38ZBUIYgfSpNzZ0Ws0cOGqQB9xHGH
+         2h8UAJ1qXg1bH6K6W4tWCuY249+d545g/UItxDmv05wmNHT7gQ8rywSTWjMosUcLtfnT
+         t2qNBI7HwZiF1SUY/LLcivlsrx8q/u/1FdZWoak31IPCmduq/WabfZ3fqBftrCFPIC/9
+         R/I8ZYokPhkWl/qExlT56bZyk8Dn0auJaXiD1uXvyOMMZoWK1IV4VZy43Iu7f5w1Un+r
+         A2mqFyIBOUq4+dXS39DQvkbMwt5Fzg0YvdvouuwlI9cfccSmUXesb2nWlLt3em/8Q01I
+         r0YA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0ttZJtJx+bZw/ynVW+wrpjYlDChna2iyG+5YrB8ur3LL9Hzox0ZkB2do92A2yyGydYHpbGi9gaf7wGQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxd6xWjGuVcVIDH2jBV49dMhOFS6Z87cGtcOXhU8cTKEVBA78vT
+	V8TlX5vPDLAJTDG7w4Bl/4vkyTiNnOGMptNrEgBvJ1gsI3ZJQ++Y
+X-Google-Smtp-Source: AGHT+IFC+H4F04UVve3eU5bbnNUszYbRb6wUtv+vOGJqJygUV5UOMblQx6KJUIV8GGsZjVSSaKInLQ==
+X-Received: by 2002:a5d:6483:0:b0:371:8eaf:3c49 with SMTP id ffacd0b85a97d-372fd82bf2bmr698882f8f.40.1724216962083;
+        Tue, 20 Aug 2024 22:09:22 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37195c57d48sm12533357f8f.53.2024.08.20.22.09.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2024 22:09:21 -0700 (PDT)
+Message-ID: <f0552842-7824-424e-af21-ac9eb3c5c14d@kernel.org>
+Date: Wed, 21 Aug 2024 07:09:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: ACPI IRQ storm with 6.10
+To: Bjorn Helgaas <helgaas@kernel.org>, Petr Valenta <petr@jevklidu.cz>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, przemyslaw.kitszel@intel.com,
+ intel-wired-lan@lists.osuosl.org, "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20240820213035.GA226181@bhelgaas>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20240820213035.GA226181@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDI0LTA4LTIwIGF0IDE3OjIxICswODAwLCBMaXUgUnVpVG9uZyB3cm90ZToKClsu
-Li5dCgo+IGJwZl9jb3JlX2NhbGNfcmVsb19pbnNuKzMxMSAgICAgICAgICAgIDxicGZfY29yZV9j
-YWxjX3JlbG9faW5zbiszMTE+Cj4g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSAWwo+IFNPVVJDRSAoQ09ERSkgXeKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
-gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAo+IEluIGZpbGU6IC9ob21lL3VidW50dS9m
-dXp6L2xpbnV4LTYuMTEtcmM0L3Rvb2xzL2xpYi9icGYvcmVsb19jb3JlLmM6MTMwMAo+ICAgIDEy
-OTUgICAgICAgICBjaGFyIHNwZWNfYnVmWzI1Nl07Cj4gICAgMTI5NiAgICAgICAgIGludCBpLCBq
-LCBlcnI7Cj4gICAgMTI5Nwo+ICAgIDEyOTggICAgICAgICBsb2NhbF9pZCA9IHJlbG8tPnR5cGVf
-aWQ7Cj4gICAgMTI5OSAgICAgICAgIGxvY2FsX3R5cGUgPSBidGZfdHlwZV9ieV9pZChsb2NhbF9i
-dGYsIGxvY2FsX2lkKTsKPiAg4pa6IDEzMDAgICAgICAgICBsb2NhbF9uYW1lID0gYnRmX19uYW1l
-X2J5X29mZnNldChsb2NhbF9idGYsCj4gbG9jYWxfdHlwZS0+bmFtZV9vZmYpOwoKSGkgTGl1LAoK
-VGhhbmsgeW91IGZvciB0aGUgcmVwb3J0LCBJIGNhbiByZXByb2R1Y2UgdGhlIGlzc3VlLgpXaWxs
-IGNvbW1lbnQgbGF0ZXIgdG9kYXkuCgo+ICAgIDEzMDEgICAgICAgICBpZiAoIWxvY2FsX25hbWUp
-Cj4gICAgMTMwMiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4gICAgMTMwMwo+ICAg
-IDEzMDQgICAgICAgICBlcnIgPSBicGZfY29yZV9wYXJzZV9zcGVjKHByb2dfbmFtZSwgbG9jYWxf
-YnRmLCByZWxvLAo+IGxvY2FsX3NwZWMpOwo+ICAgIDEzMDUgICAgICAgICBpZiAoZXJyKSB7Cj4g
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSAWwo+IFNUQUNLIF3ilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIAKPiBgYGAKCgo=
+On 20. 08. 24, 23:30, Bjorn Helgaas wrote:
+> On Tue, Aug 20, 2024 at 11:13:54PM +0200, Petr Valenta wrote:
+>> Dne 20. 08. 24 v 20:09 Bjorn Helgaas napsal(a):
+>>> On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
+>>>> On 19. 08. 24, 6:50, Jiri Slaby wrote:
+>>>>> CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+>>>>
+>>>> Bjorn,
+>>>>
+>>>> I am confused by these changes:
+>>>> ==========================================
+>>>> @@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *net
+>>>> dev,
+>>>>            * duplex is forced.
+>>>>            */
+>>>>           if (cmd->base.eth_tp_mdix_ctrl) {
+>>>> -               if (hw->phy.media_type != e1000_media_type_copper) {
+>>>> -                       ret_val = -EOPNOTSUPP;
+>>>> -                       goto out;
+>>>> -               }
+>>>> +               if (hw->phy.media_type != e1000_media_type_copper)
+>>>> +                       return -EOPNOTSUPP;
+>>>>
+>>>>                   if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>>>>                       (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>>>>                           e_err("forcing MDI/MDI-X state is not supported when
+>>>> lin
+>>>> k speed and/or duplex are forced\n");
+>>>> -                       ret_val = -EINVAL;
+>>>> -                       goto out;
+>>>> +                       return -EINVAL;
+>>>>                   }
+>>>>           }
+>>>>
+>>>> @@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *netde
+>>>> v,
+>>>>           }
+>>>>
+>>>>    out:
+>>>> -       pm_runtime_put_sync(netdev->dev.parent);
+>>>>           clear_bit(__E1000_RESETTING, &adapter->state);
+>>>>           return ret_val;
+>>>>    }
+>>>> ==========================================
+>>>>
+>>>> So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that
+>>>> intentional?
+>>>
+>>> Not intentional.  Petr, do you have the ability to test the patch
+>>> below?  I'm not sure it's the correct fix, but it reverts the pieces
+>>> of b2c289415b2b that Jiri pointed out.
+>>
+>> I tested the patch below but it didn't help. After the first boot with new
+>> kernel it looked promising as the irq storm only appeared for a few seconds,
+>> but with subsequent reboots it was the same as without the patch.
+> 
+> Thank you very much for testing that!
+
+
+>> To be sure, I also send the md5sum of ethtool.c after applying the patch:
+>>
+>> a25c003257538f16994b4d7c4260e894 ethtool.c
+> 
+> Thanks, that matches what I get when applying the patch on v6.10.
+> 
+> I'm at a loss.  You could try reverting the entire b2c289415b2b commit
+> (patch for that is below).
+
+FWIW he already tested with b2c289415b2b reverted (I provided him with a 
+built kernel). It behaves the same. So you are not the breaker.
+
+> If that doesn't help, I guess you could try reverting the other
+> commits Jiri mentioned:
+> 
+>    76a0a3f9cc2f e1000e: fix force smbus during suspend flow
+>    c93a6f62cb1b e1000e: Fix S0ix residency on corporate systems
+>    bfd546a552e1 e1000e: move force SMBUS near the end of enable_ulp function
+>    6918107e2540 net: e1000e & ixgbe: Remove PCI_HEADER_TYPE_MFD duplicates
+>    1eb2cded45b3 net: annotate writes on dev->mtu from ndo_change_mtu()
+>    b2c289415b2b e1000e: Remove redundant runtime resume for ethtool_ops
+>    75a3f93b5383 net: intel: implement modern PM ops declarations
+> 
+> If you do this, I would revert 76a0a3f9cc2f, test, then revert
+> c93a6f62cb1b in addition, test, then revert bfd546a552e1 in addition,
+> etc.
+
+Or perhaps easier to do:
+   git bisect v6.10 v6.9 -- drivers/net/ethernet/intel/e1000e/
+directly. But that assumes one of the above commits broke it. If they 
+did not, as a last resort, you can still do full bisect (without the "-- 
+drivers" part).
+
+I would take v6.10 suses config.
+Would boot 6.10.
+do lsmod > /tmp/lsmod
+make LSMOD=/tmp/lsmod localyesconfig
+make bzImage
+and use that bzImage.
+
+Note that graphics, wireless and other stuff will be defunct unless you 
+build in firmwares for them (EXTRA_FIRMWARE config). Alternatively use 
+localmodconfig and build and install also modules (now limited to your 
+machine).
+
+thanks,
+-- 
+js
+suse labs
 
