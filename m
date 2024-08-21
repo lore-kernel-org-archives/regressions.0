@@ -1,28 +1,43 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634A016726E
-	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 05:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724218054; cv=none; b=hNoqdy0yVXsyNl/WOyMAOJnhLhBjd0aT1AVHBqZDkHn99UzP++dJEaxESrPuLoNIFXZXMz7gmZXNycm54G4TIXiNKyQiuFm0oY3QuAJLkowmYifzeLNSC8QPIX99jXmqMnkk4WEr/nv9a4mv40STdYC5EYaz5yfib4MsBWIgyZE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724218054; c=relaxed/simple;
-	bh=2vVZJMV/2z3nomDeKBEgSrSvAaWtlBgY0zsyZQhxpxs=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDE51A4AB5
+	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 11:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724240369; cv=pass; b=Zgrra6RGUqArZi6zfz0Y/7Kxdt/4rQCmqtQNs0t1v5RlGd1bHjRa5ibyTprHOysHxyjbvUc3pD+Q0vWAsCowfMnoNY6LnsadBSxgA4iN/Cs3LKuD4F0OeEY4jvCD/1SA/1YYpnZwqqoRT2MjdJm97bcwewzaWBVfVvoYxSWfPiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724240369; c=relaxed/simple;
+	bh=u9MgrTFOoIcDh0w2sZi1sSwKkyW5dBw/JMTXeij7p20=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PfZmmR7WHaD3Wgsm3bGWdMIoB+n8BfnWEf+3inAI6JiuKnnotPVk2Qi+yZfhpyhwV4LxuTm9gbbnmO1zVKSed8jB/r/8aSpwj3IhQlVzJfBgOtJCamBaBW9jXB9TKNC85BczOJs5uqIM26pq059St1/3xWeLbDgpJt9i83/JL6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af2a8.dynamic.kabel-deutschland.de [95.90.242.168])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9437761E5FE05;
-	Wed, 21 Aug 2024 07:27:05 +0200 (CEST)
-Message-ID: <76922517-7497-48b5-a581-d1290d413604@molgen.mpg.de>
-Date: Wed, 21 Aug 2024 07:27:04 +0200
+	 In-Reply-To:Content-Type; b=GVATP6FCocv41ES+EDN/SChC46g65W7JDoPdh3BLwzyg9qSt5fgfW3H4PGAJe3Z5duHhH6YyyONOR09mDoTxq66yiJ3cMO/xm9R9bJuq2ls0k6bu3F7bKvDUxfqBAp1PE6yVb/4QUrmHEDHWtXQprzf+q+R8dtPBrYRFQWok+mY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz; spf=pass smtp.mailfrom=jevklidu.cz; dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b=XqUQOBbF; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jevklidu.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jevklidu.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=jevklidu.cz header.i=petr@jevklidu.cz header.b="XqUQOBbF"
+ARC-Seal: i=1; a=rsa-sha256; t=1724240362; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nyc4BASOTXbnfHuthUwnpnHtOAGn/zmpmnxcUTYUK2NR1yp3sbcnYrble9WlX93e0ABqHp6HvrT+5L2QKAevCDTO9oVPWjfW0+D+jLpHT7qQVnAZ7LCDQ1fc5B3EF5J5RDnd3RXDU/i6rIEsqWXRMcBbI78nyN7VaI0m5UIeGL8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724240362; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xQE9O4VsDMrQ4BIQLTgCLmj5iahMklQtOcDE0Zxb79Q=; 
+	b=Sn4zDlTE3LA8Fhy1NV2eX+z4Vnt1oc1RfIKV4iMqsHJytGFmh1l4LQdVF8QOspAgPUGyfNM1GLTRS5+Z5e0mdV0sUTthdwclps5nxLyh0kLnLopKaloApgbGf9gTRgw60pIG9e2AQTWcg5AienW23fZ/i+bYxCqCxJQLwY5eQ9k=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=jevklidu.cz;
+	spf=pass  smtp.mailfrom=petr@jevklidu.cz;
+	dmarc=pass header.from=<petr@jevklidu.cz>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724240362;
+	s=zoho; d=jevklidu.cz; i=petr@jevklidu.cz;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=xQE9O4VsDMrQ4BIQLTgCLmj5iahMklQtOcDE0Zxb79Q=;
+	b=XqUQOBbFG8FicnMeTkku6fFRPIzvPanLQtic9bJe3EnJIFYkhMclMbUBZ5WF0KMm
+	DCEuYMROeC3mNLmzIfWUnTyt/9kzLNn8mh1+FeL48vZxDg5WJ+86od6javCsV1TeaN4
+	NWjW1awn4MvYEUWwRZuhRW/tYF1XUWZaQLHeGc3k=
+Received: by mx.zohomail.com with SMTPS id 1724240358733590.0863393254813;
+	Wed, 21 Aug 2024 04:39:18 -0700 (PDT)
+Message-ID: <b190e352-e11f-4795-941a-62c09ba5f602@jevklidu.cz>
+Date: Wed, 21 Aug 2024 13:39:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,210 +45,836 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] [BISECTED] btusb: driver fails to initialize
- MT7921AUN on v6.11-rc4
-To: Marc Payne <marc.payne@mdpsys.co.uk>, Hao Qin <hao.qin@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Chris Lu <chris.lu@mediatek.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, regressions@lists.linux.dev
-References: <ZsTh7Jyug7MbZsLE@mdpsys.co.uk>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <ZsTh7Jyug7MbZsLE@mdpsys.co.uk>
+Subject: Re: ACPI IRQ storm with 6.10
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, przemyslaw.kitszel@intel.com,
+ intel-wired-lan@lists.osuosl.org, "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20240820213035.GA226181@bhelgaas>
+Content-Language: cs-CZ
+From: Petr Valenta <petr@jevklidu.cz>
+In-Reply-To: <20240820213035.GA226181@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-W0NjOiArTWFyY2VsLCArTHVpel0NCg0KI3JlZ3pib3QgXmludHJvZHVjZWQ6IGNjZmM4OTQ4
-ZDdlNA0KDQoNCkRlYXIgTWFyYywNCg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmVwb3J0IGFu
-ZCBiaXNlY3RpbmcgdGhlIGlzc3VlLiBJIGp1c3QgYWRkIHRoZSANCm1haW50YWluZXJzLCBh
-bmQgdGVsbCByZWd6Ym90IGFib3V0IGl0Lg0KDQoNCktpbmQgcmVnYXJkcywNCg0KUGF1bA0K
-DQoNCkFtIDIwLjA4LjI0IHVtIDIwOjM1IHNjaHJpZWIgTWFyYyBQYXluZToNCj4gSGVsbG8s
-DQo+IA0KPiBJJ20gdGVzdGluZyB2Ni4xMS1yYzQgYW5kIHRoZSBidHVzYiBkcml2ZXIgZmFp
-bHMgdG8gcHJvcGVybHkgaW5pdGlhbGl6ZSBteQ0KPiBNVDc5MjFBVU4tYmFzZWQgQWxmYSBO
-ZXR3b3JrcyBBV1VTMDM2QVhNTDoNCj4gDQo+IFsgICA2My44OTYzMTldIHVzYiA0LTMuMS4y
-OiBuZXcgU3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciA0IHVzaW5nIHhoY2lfaGNkDQo+
-IFsgICA2My45MTU0MzZdIHVzYiA0LTMuMS4yOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRW
-ZW5kb3I9MGU4ZCwgaWRQcm9kdWN0PTc5NjEsIGJjZERldmljZT0gMS4wMA0KPiBbICAgNjMu
-OTE1NDUwXSB1c2IgNC0zLjEuMjogTmV3IFVTQiBkZXZpY2Ugc3RyaW5nczogTWZyPTYsIFBy
-b2R1Y3Q9NywgU2VyaWFsTnVtYmVyPTgNCj4gWyAgIDYzLjkxNTQ1NV0gdXNiIDQtMy4xLjI6
-IFByb2R1Y3Q6IFdpcmVsZXNzX0RldmljZQ0KPiBbICAgNjMuOTE1NDU5XSB1c2IgNC0zLjEu
-MjogTWFudWZhY3R1cmVyOiBNZWRpYVRlayBJbmMuDQo+IFsgICA2My45MTU0NjFdIHVzYiA0
-LTMuMS4yOiBTZXJpYWxOdW1iZXI6IDAwMDAwMDAwMA0KPiBbICAgNjkuMTQ2ODU2XSBCbHVl
-dG9vdGg6IGhjaTE6IEZhaWxlZCB0byB3cml0ZSB1aHcgcmVnKC0xMTApDQo+IFsgICA2OS4x
-NDkyMTNdIEJsdWV0b290aDogaGNpMTogSFcvU1cgVmVyc2lvbjogMHgwMDhhMDA4YSwgQnVp
-bGQgVGltZTogMjAyNDA3MTYxNTE0NDUNCj4gWyAgIDc4LjUzMDYyMV0gdXNiIDQtMy4xLjI6
-IEZhaWxlZCB0byBzdXNwZW5kIGRldmljZSwgZXJyb3IgLTExMA0KPiBbICAgODguNTUzMDc0
-XSBCbHVldG9vdGg6IGhjaTE6IEV4ZWN1dGlvbiBvZiB3bXQgY29tbWFuZCB0aW1lZCBvdXQN
-Cj4gWyAgIDg4LjU1MzA5N10gQmx1ZXRvb3RoOiBoY2kxOiBGYWlsZWQgdG8gc2VuZCB3bXQg
-cGF0Y2ggZHdubGQgKC0xMTApDQo+IFsgICA4OC41NTMxODZdIEJsdWV0b290aDogaGNpMTog
-RmFpbGVkIHRvIHNldCB1cCBmaXJtd2FyZSAoLTExMCkNCj4gWyAgIDg4LjU1MzE5M10gQmx1
-ZXRvb3RoOiBoY2kxOiBIQ0kgRW5oYW5jZWQgU2V0dXAgU3luY2hyb25vdXMgQ29ubmVjdGlv
-biBjb21tYW5kIGlzIGFkdmVydGlzZWQsIGJ1dCBub3Qgc3VwcG9ydGVkLg0KPiBbICAgOTAu
-ODk5NDYyXSB1c2IgNC0zLjEuMjogRmFpbGVkIHRvIHN1c3BlbmQgZGV2aWNlLCBlcnJvciAt
-MTEwDQo+IA0KPiBJIGhhdmUgYmlzZWN0ZWQgdGhlIGlzc3VlIGRvd24gdG8gdGhlIGZvbGxv
-d2luZyBjb21taXQ6DQo+IA0KPiAgICAgIGNjZmM4OTQ4ZDdlNCAoIkJsdWV0b290aDogYnR1
-c2I6IG1lZGlhdGVrOiByZXNldCB0aGUgY29udHJvbGxlciBiZWZvcmUgZG93bmxvYWRpbmcg
-dGhlIGZ3IikNCj4gDQo+IFRoZSBjb21taXQgZG9lcyBub3QgcmV2ZXJ0IGNsZWFubHkgZHVl
-IHRvIHJlZmFjdG9yaW5nIGluIHN1YnNlcXVlbnQgY29tbWl0cyBidXQNCj4gcmVtb3Zpbmcg
-dGhlIHJlbGV2YW50IHRlbiBsaW5lcyBvZiBjb2RlIGFsbG93cyB0aGUgZHJpdmVyIHRvIGlu
-aXRpYWxpemUgdGhlDQo+IGRldmljZSBjb3JyZWN0bHksIGFsYmVpdCB3aXRoIHNvbWUgZmFp
-bHVyZXMgYW5kICdNZWRpYXRlayBjb3JlZHVtcCcgZXJyb3JzDQo+IGZvbGxvd2VkIGJ5IGFu
-IGFkZGl0aW9uYWwgcmVzZXQuIEludGVyZXN0aW5nbHksIGFmdGVyIHRoZSByZXNldCB0aGUg
-ZGV2aWNlIGlzDQo+IG5vdyBzaG93aW5nIGFzIGhjaTIgcmF0aGVyIHRoYW4gaGNpMSwgc3Vn
-Z2VzdGluZyBhbiBIQ0kgZGV2aWNlIHJlZ2lzdHJhdGlvbg0KPiBpc3N1ZS4uLiBCbHVldG9v
-dGggZGV2aWNlcyBhcmUgYWJsZSB0byBwYWlyIGFuZCBjb25uZWN0IGFzIGV4cGVjdGVkOg0K
-PiANCj4gWyAgIDc3Ljc2NTA0N10gdXNiIDQtMy4xLjI6IG5ldyBTdXBlclNwZWVkIFVTQiBk
-ZXZpY2UgbnVtYmVyIDQgdXNpbmcgeGhjaV9oY2QNCj4gWyAgIDc3Ljc4NTA0NF0gdXNiIDQt
-My4xLjI6IE5ldyBVU0IgZGV2aWNlIGZvdW5kLCBpZFZlbmRvcj0wZThkLCBpZFByb2R1Y3Q9
-Nzk2MSwgYmNkRGV2aWNlPSAxLjAwDQo+IFsgICA3Ny43ODUwNjNdIHVzYiA0LTMuMS4yOiBO
-ZXcgVVNCIGRldmljZSBzdHJpbmdzOiBNZnI9NiwgUHJvZHVjdD03LCBTZXJpYWxOdW1iZXI9
-OA0KPiBbICAgNzcuNzg1MDY5XSB1c2IgNC0zLjEuMjogUHJvZHVjdDogV2lyZWxlc3NfRGV2
-aWNlDQo+IFsgICA3Ny43ODUwNzNdIHVzYiA0LTMuMS4yOiBNYW51ZmFjdHVyZXI6IE1lZGlh
-VGVrIEluYy4NCj4gWyAgIDc3Ljc4NTA3N10gdXNiIDQtMy4xLjI6IFNlcmlhbE51bWJlcjog
-MDAwMDAwMDAwDQo+IFsgICA3Ny44MDc2ODVdIEJsdWV0b290aDogaGNpMTogSFcvU1cgVmVy
-c2lvbjogMHgwMDhhMDA4YSwgQnVpbGQgVGltZTogMjAyNDA3MTYxNTE0NDUNCj4gWyAgIDgw
-LjU3MDE2M10gQmx1ZXRvb3RoOiBoY2kxOiBEZXZpY2Ugc2V0dXAgaW4gMjcxMDE4NiB1c2Vj
-cw0KPiBbICAgODAuNTcwMTczXSBCbHVldG9vdGg6IGhjaTE6IEhDSSBFbmhhbmNlZCBTZXR1
-cCBTeW5jaHJvbm91cyBDb25uZWN0aW9uIGNvbW1hbmQgaXMgYWR2ZXJ0aXNlZCwgYnV0IG5v
-dCBzdXBwb3J0ZWQuDQo+IFsgICA4MS44NzE1MTZdIEJsdWV0b290aDogaGNpMTogTWVkaWF0
-ZWsgY29yZWR1bXAgZW5kDQo+IFsgICA4Mi43MzQ4MDVdIEJsdWV0b290aDogaGNpMTogT3Bj
-b2RlIDB4MGMwMyBmYWlsZWQ6IC0xMTANCj4gWyAgIDgyLjc1NDgwN10gQmx1ZXRvb3RoOiBo
-Y2kxOiBNZWRpYXRlayBjb3JlZHVtcCBlbmQNCj4gWyAgIDg0Ljg2ODIxNV0gQmx1ZXRvb3Ro
-OiBoY2kxOiBGYWlsZWQgdG8gcmVhZCBNU0ZUIHN1cHBvcnRlZCBmZWF0dXJlcyAoLTExMCkN
-Cj4gWyAgIDg3LjAwMTU2Nl0gQmx1ZXRvb3RoOiBoY2kxOiBBT1NQIGdldCB2ZW5kb3IgY2Fw
-YWJpbGl0aWVzICgtMTEwKQ0KPiBbICAgOTIuMjkyMzc1XSB1c2IgNC0zLjEuMjogcmVzZXQg
-U3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciA0IHVzaW5nIHhoY2lfaGNkDQo+IFsgICA5
-Mi4zODU2MTldIHVzYiA0LTMuMS4yOiByZXNldCBTdXBlclNwZWVkIFVTQiBkZXZpY2UgbnVt
-YmVyIDQgdXNpbmcgeGhjaV9oY2QNCj4gWyAgIDkyLjQwNjc4Nl0gQmx1ZXRvb3RoOiBoY2ky
-OiBIVy9TVyBWZXJzaW9uOiAweDAwOGEwMDhhLCBCdWlsZCBUaW1lOiAyMDI0MDcxNjE1MTQ0
-NQ0KPiBbICAgOTQuOTIwMzM3XSBCbHVldG9vdGg6IGhjaTI6IERldmljZSBzZXR1cCBpbiAy
-NDU1ODM5IHVzZWNzDQo+IFsgICA5NC45MjAzNDNdIEJsdWV0b290aDogaGNpMjogSENJIEVu
-aGFuY2VkIFNldHVwIFN5bmNocm9ub3VzIENvbm5lY3Rpb24gY29tbWFuZCBpcyBhZHZlcnRp
-c2VkLCBidXQgbm90IHN1cHBvcnRlZC4NCj4gWyAgIDk0Ljk5NDQ4MF0gQmx1ZXRvb3RoOiBo
-Y2kyOiBBT1NQIGV4dGVuc2lvbnMgdmVyc2lvbiB2MS4wMA0KPiBbICAgOTQuOTk0NDk0XSBC
-bHVldG9vdGg6IGhjaTI6IEFPU1AgcXVhbGl0eSByZXBvcnQgaXMgc3VwcG9ydGVkDQo+IFsg
-ICA5NC45OTUwMDFdIEJsdWV0b290aDogTUdNVCB2ZXIgMS4yMw0KPiANCj4gSG93ZXZlciwg
-d2hlbiBkaXNjb25uZWN0aW5nIHRoZSBBV1VTMDM2QVhNTCBkZXZpY2UgSSBnZXQgYW4gT29w
-cyBpbg0KPiB0aGUgaGNpX3VucmVnaXN0ZXJfZGV2IGZ1bmN0aW9uLCBhZ2FpbiBpbmRpY2F0
-aW5nIGFuIGlzc3VlIHdpdGggSENJIHJlZ2lzdHJhdGlvbg0KPiB3aGljaCB3YXMgbm90IHBy
-ZXNlbnQgaW4gdGhlIDYuMTAga2VybmVsIHZlcnNpb25zOg0KPiANCj4gWyAxMjEwLjIyMjM1
-MV0gdXNiIDQtMy4xLjI6IFVTQiBkaXNjb25uZWN0LCBkZXZpY2UgbnVtYmVyIDQNCj4gWyAx
-MjEwLjI3MTE0Nl0gT29wczogZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0LCBwcm9iYWJseSBm
-b3Igbm9uLWNhbm9uaWNhbCBhZGRyZXNzIDB4ZGVhZDAwMDAwMDAwMDEyMjogMDAwMCBbIzFd
-IFBSRUVNUFQgU01QIE5PUFRJDQo+IFsgMTIxMC4yNzExNjZdIENQVTogMiBVSUQ6IDAgUElE
-OiAyMjc1IENvbW06IGt3b3JrZXIvMjoxIE5vdCB0YWludGVkIDYuMTEuMC1yYzQtZGlydHkg
-IzY3IGEzMTk4OTBhMWJjMzIzZmMyOTdhNzBiZmM5ODA4OTc5MTNjMDU5ZjcNCj4gWyAxMjEw
-LjI3MTE3OF0gSGFyZHdhcmUgbmFtZTogSW50ZWwoUikgQ2xpZW50IFN5c3RlbXMgTlVDMTJX
-U0hpNy9OVUMxMldTQmk3LCBCSU9TIFdTQURMMzU3LjAwODguMjAyMy4wNTA1LjE2MjMgMDUv
-MDUvMjAyMw0KPiBbIDEyMTAuMjcxMTgzXSBXb3JrcXVldWU6IHVzYl9odWJfd3EgaHViX2V2
-ZW50DQo+IFsgMTIxMC4yNzEyMDBdIFJJUDogMDAxMDpoY2lfdW5yZWdpc3Rlcl9kZXYrMHg0
-NS8weDFmMCBbYmx1ZXRvb3RoXQ0KPiBbIDEyMTAuMjcxMjkyXSBDb2RlOiA4OSBlZiBlOCAw
-ZSBjNCBjYSBkYyBmMCA4MCA4YiBlOSAwZSAwMCAwMCAwOCA0OCA4OSBlZiBlOCA2ZSBiMSBj
-YSBkYyA0OCBjNyBjNyA2OCA3MCA0NCBjMSBlOCA4MiAxMiBjYiBkYyA0OCA4YiA0MyAwOCA0
-OCA4YiAxMyA8NDg+IDNiIDE4IDBmIDg1IDM1IGM4IDA2IDAwIDQ4IDNiIDVhIDA4IDBmIDg1
-IDJiIGM4IDA2IDAwIDQ4IDg5IDQyDQo+IFsgMTIxMC4yNzEyOTddIFJTUDogMDAxODpmZmZm
-YmIzYjA2NjFiYjk4IEVGTEFHUzogMDAwMTAyNDYNCj4gWyAxMjEwLjI3MTMwNV0gUkFYOiBk
-ZWFkMDAwMDAwMDAwMTIyIFJCWDogZmZmZjk3YmM4ZjkyZTAwMCBSQ1g6IDAwMDAwMDAwMDAw
-MDAwMDANCj4gWyAxMjEwLjI3MTMxMF0gUkRYOiBkZWFkMDAwMDAwMDAwMTAwIFJTSTogZmZm
-Zjk3YmM4YmE4YjYxMCBSREk6IGZmZmZmZmZmYzE0NDcwNjgNCj4gWyAxMjEwLjI3MTMxNF0g
-UkJQOiBmZmZmOTdiYzhmOTJlNGQwIFIwODogZmZmZjk3YmM4NDI0YjVjMCBSMDk6IDAwMDAw
-MDAwODAyYTAwMjYNCj4gWyAxMjEwLjI3MTMxOF0gUjEwOiAwMDAwMDAwMDgwMmEwMDI2IFIx
-MTogMDAwMDAwMDAwMDAwMDAwMSBSMTI6IGZmZmY5N2JjOGY5MmUwMDANCj4gWyAxMjEwLjI3
-MTMyM10gUjEzOiBmZmZmZmZmZmMxMmZmMjc4IFIxNDogZmZmZmZmZmZjMTJmZjI3OCBSMTU6
-IGZmZmY5N2JjZjI1YWNjNTANCj4gWyAxMjEwLjI3MTMyN10gRlM6ICAwMDAwMDAwMDAwMDAw
-MDAwKDAwMDApIEdTOmZmZmY5N2NiZDczMDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAw
-MDAwMA0KPiBbIDEyMTAuMjcxMzMyXSBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1Iw
-OiAwMDAwMDAwMDgwMDUwMDMzDQo+IFsgMTIxMC4yNzEzMzddIENSMjogMDAwMDI4NWMwMWIx
-MDAwMCBDUjM6IDAwMDAwMDAzZDZlMjIwMDAgQ1I0OiAwMDAwMDAwMDAwZjUwZWYwDQo+IFsg
-MTIxMC4yNzEzNDJdIFBLUlU6IDU1NTU1NTU0DQo+IFsgMTIxMC4yNzEzNDZdIENhbGwgVHJh
-Y2U6DQo+IFsgMTIxMC4yNzEzNTJdICA8VEFTSz4NCj4gWyAxMjEwLjI3MTM1OV0gID8gX19k
-aWVfYm9keS5jb2xkKzB4MTkvMHgyNw0KPiBbIDEyMTAuMjcxMzcxXSAgPyBkaWVfYWRkcisw
-eDNjLzB4NjANCj4gWyAxMjEwLjI3MTM3OF0gID8gZXhjX2dlbmVyYWxfcHJvdGVjdGlvbisw
-eDE3ZC8weDQwMA0KPiBbIDEyMTAuMjcxMzkxXSAgPyBhc21fZXhjX2dlbmVyYWxfcHJvdGVj
-dGlvbisweDI2LzB4MzANCj4gWyAxMjEwLjI3MTQwM10gID8gaGNpX3VucmVnaXN0ZXJfZGV2
-KzB4NDUvMHgxZjAgW2JsdWV0b290aCBmZmRiNGZiNjVjZWFkMDMyZmJiOGY0NzE4ZTVkMGFh
-N2I5NGQ0OTJmXQ0KPiBbIDEyMTAuMjcxNDc5XSAgPyBoY2lfdW5yZWdpc3Rlcl9kZXYrMHgz
-ZS8weDFmMCBbYmx1ZXRvb3RoIGZmZGI0ZmI2NWNlYWQwMzJmYmI4ZjQ3MThlNWQwYWE3Yjk0
-ZDQ5MmZdDQo+IFsgMTIxMC4yNzE1NTFdICBidHVzYl9kaXNjb25uZWN0KzB4NjcvMHgxNzAg
-W2J0dXNiIGNlMzIyYmRhOTE1NjM5OTc5ZWMzMWY3MmEyYjg1ZWI3NTIxODhkMzZdDQo+IFsg
-MTIxMC4yNzE1NjNdICB1c2JfdW5iaW5kX2ludGVyZmFjZSsweDkwLzB4MjkwDQo+IFsgMTIx
-MC4yNzE1NzZdICBkZXZpY2VfcmVsZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHgxOWMvMHgyMDAN
-Cj4gWyAxMjEwLjI3MTU4OV0gIGJ1c19yZW1vdmVfZGV2aWNlKzB4YzYvMHgxMzANCj4gWyAx
-MjEwLjI3MTU5OV0gIGRldmljZV9kZWwrMHgxNjEvMHgzZTANCj4gWyAxMjEwLjI3MTYwOF0g
-ID8ga29iamVjdF9wdXQrMHhhMC8weDFkMA0KPiBbIDEyMTAuMjcxNjE3XSAgdXNiX2Rpc2Fi
-bGVfZGV2aWNlKzB4MTA0LzB4MjIwDQo+IFsgMTIxMC4yNzE2MjddICB1c2JfZGlzY29ubmVj
-dCsweGU2LzB4MmUwDQo+IFsgMTIxMC4yNzE2MzddICBodWJfZXZlbnQrMHg3ZjkvMHgxOWQw
-DQo+IFsgMTIxMC4yNzE2NDhdICA/IF9fc2NoZWR1bGUrMHgzZGQvMHgxNTIwDQo+IFsgMTIx
-MC4yNzE2NTZdICBwcm9jZXNzX29uZV93b3JrKzB4MTdiLzB4MzMwDQo+IFsgMTIxMC4yNzE2
-NjddICB3b3JrZXJfdGhyZWFkKzB4MmQyLzB4NDAwDQo+IFsgMTIxMC4yNzE2NzZdICA/IF9f
-cGZ4X3dvcmtlcl90aHJlYWQrMHgxMC8weDEwDQo+IFsgMTIxMC4yNzE2ODRdICBrdGhyZWFk
-KzB4Y2YvMHgxMDANCj4gWyAxMjEwLjI3MTY5NV0gID8gX19wZnhfa3RocmVhZCsweDEwLzB4
-MTANCj4gWyAxMjEwLjI3MTcwNV0gIHJldF9mcm9tX2ZvcmsrMHgzMS8weDUwDQo+IFsgMTIx
-MC4yNzE3MTFdICA/IF9fcGZ4X2t0aHJlYWQrMHgxMC8weDEwDQo+IFsgMTIxMC4yNzE3MjBd
-ICByZXRfZnJvbV9mb3JrX2FzbSsweDFhLzB4MzANCj4gWyAxMjEwLjI3MTczMl0gIDwvVEFT
-Sz4NCj4gWyAxMjEwLjI3MTczNV0gTW9kdWxlcyBsaW5rZWQgaW46IG10NzkyeF91c2IgbXQ3
-OTIxX2NvbW1vbiBtdDc5MnhfbGliIG10NzZfY29ubmFjX2xpYiBtdDc2X3VzYiBtdDc2IGNj
-bSBvcHRpb24gdXNiX3d3YW4gcm5kaXNfaG9zdCB1aGlkIGNtYWMgYWxnaWZfaGFzaCBhbGdp
-Zl9za2NpcGhlciBhZl9hbGcgYm5lcCB2ZmF0IGZhdCBjZGNfZXRoZXIgdXNibmV0IGludGVs
-X3JhcGxfbXNyIGludGVsX3JhcGxfY29tbW9uIGludGVsX3VuY29yZV9mcmVxdWVuY3kgaW50
-ZWxfdW5jb3JlX2ZyZXF1ZW5jeV9jb21tb24gc25kX3NvZl9wY2lfaW50ZWxfdGdsIHNuZF9z
-b2ZfcGNpX2ludGVsX2NubCBpd2xtdm0gc25kX3NvZl9pbnRlbF9oZGFfZ2VuZXJpYyBzb3Vu
-ZHdpcmVfaW50ZWwgc291bmR3aXJlX2NhZGVuY2Ugc25kX3NvZl9pbnRlbF9oZGFfY29tbW9u
-IHg4Nl9wa2dfdGVtcF90aGVybWFsIGludGVsX3Bvd2VyY2xhbXAgc25kX3NvZl9pbnRlbF9o
-ZGFfbWxpbmsgc25kX3NvZl9pbnRlbF9oZGEgY29yZXRlbXAgc25kX3NvZl9wY2kgc25kX3Nv
-Zl94dGVuc2FfZHNwIGt2bV9pbnRlbCBzbmRfc29mIHI4MTUyIG1paSBzbmRfc29mX3V0aWxz
-IG1hYzgwMjExIGxpYnBoeSBzbmRfc29jX2hkYWNfaGRhIGt2bSBzbmRfc29jX2FjcGlfaW50
-ZWxfbWF0Y2ggc291bmR3aXJlX2dlbmVyaWNfYWxsb2NhdGlvbiBzbmRfc29jX2FjcGkgc291
-bmR3aXJlX2J1cyBzbmRfc29jX2F2cyBzbmRfaGRhX2NvZGVjX2hkbWkgc25kX3NvY19oZGFf
-Y29kZWMgc25kX2hkYV9leHRfY29yZSBzbmRfaGRhX2NvZGVjX3JlYWx0ZWsgc25kX3NvY19j
-b3JlIHNuZF9oZGFfY29kZWNfZ2VuZXJpYyBzbmRfaGRhX3Njb2RlY19jb21wb25lbnQgY3Jj
-dDEwZGlmX3BjbG11bCBjcmMzMl9wY2xtdWwgcG9seXZhbF9jbG11bG5pIHNuZF9jb21wcmVz
-cyBwb2x5dmFsX2dlbmVyaWMgYWM5N19idXMgbGliYXJjNCBnaGFzaF9jbG11bG5pX2ludGVs
-IHNuZF9wY21fZG1hZW5naW5lIHNoYTUxMl9zc3NlMyBzaGEyNTZfc3NzZTMgc25kX2hkYV9p
-bnRlbCBzaGExX3Nzc2UzDQo+IFsgMTIxMC4yNzE4NTFdICBhZXNuaV9pbnRlbCBidHVzYiBz
-bmRfaW50ZWxfZHNwY2ZnIHNuZF9pbnRlbF9zZHdfYWNwaSBnZjEyOG11bCBpd2x3aWZpIHNu
-ZF9oZGFfY29kZWMgYnRydGwgY3J5cHRvX3NpbWQgY3J5cHRkIGJ0aW50ZWwgdHBzNjU5OHgg
-YnRiY20gdHlwZWMgc25kX2hkYV9jb3JlIGJ0bXRrIHJhcGwgY2ZnODAyMTEgcm9sZXMgbWVp
-X3B4cCBtZWlfaGRjcCBzbmRfaHdkZXAgaW50ZWxfY3N0YXRlIGVlMTAwNCBibHVldG9vdGgg
-aWdjIHNuZF9wY20gc3BpX25vciBpbnRlbF91bmNvcmUgb3YxMzg1OCBtZWlfbWUgc25kX3Rp
-bWVyIHRodW5kZXJib2x0IHY0bDJfZndub2RlIHNuZCBwdHAgbWVpIGkyY19pODAxIHY0bDJf
-YXN5bmMgd2RhdF93ZHQgbXRkIHBjc3BrciBpbnRlbF9scHNzX3BjaSB3bWlfYm1vZiBwcHNf
-Y29yZSBpMmNfc21idXMgaW50ZWxfbHBzcyB2aWRlb2RldiBzb3VuZGNvcmUgaTJjX211eCBy
-ZmtpbGwgaWRtYTY0IGludGVsX3BtY19jb3JlIG1vdXNlZGV2IGlnZW42X2VkYWMgam95ZGV2
-IHNlcmlhbF9tdWx0aV9pbnN0YW50aWF0ZSBpbnRlbF92c2VjIG1jIHBtdF90ZWxlbWV0cnkg
-YWNwaV9wYWQgYWNwaV90YWQgcGluY3RybF90aWdlcmxha2UgcG10X2NsYXNzIG1hY19oaWQg
-aTJjX2RldiBkbV9tb2Qgc2cgY3J5cHRvX3VzZXIgbG9vcCBuZm5ldGxpbmsgaXBfdGFibGVz
-IHhfdGFibGVzIGV4dDQgY3JjMzJjX2dlbmVyaWMgY3JjMTYgbWJjYWNoZSBqYmQyIHhlIGRy
-bV90dG1faGVscGVyIGdwdV9zY2hlZCBkcm1fc3ViYWxsb2NfaGVscGVyIGRybV9ncHV2bSBk
-cm1fZXhlYyBpOTE1IGhpZF9nZW5lcmljIHVzYmhpZCBpMmNfYWxnb19iaXQgZHJtX2J1ZGR5
-IHR0bSBpbnRlbF9ndHQgbnZtZSBkcm1fZGlzcGxheV9oZWxwZXIgbnZtZV9jb3JlIHZpZGVv
-IHNwaV9pbnRlbF9wY2kgY2VjIHhoY2lfcGNpIGNyYzMyY19pbnRlbCBudm1lX2F1dGggc3Bp
-X2ludGVsIHhoY2lfcGNpX3JlbmVzYXMgd21pDQo+IFsgMTIxMC4yNzE5OTJdIC0tLVsgZW5k
-IHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQ0KPiBbIDEyMTAuMjcxOTk2XSBSSVA6IDAw
-MTA6aGNpX3VucmVnaXN0ZXJfZGV2KzB4NDUvMHgxZjAgW2JsdWV0b290aF0NCj4gWyAxMjEw
-LjI3MjA2MV0gQ29kZTogODkgZWYgZTggMGUgYzQgY2EgZGMgZjAgODAgOGIgZTkgMGUgMDAg
-MDAgMDggNDggODkgZWYgZTggNmUgYjEgY2EgZGMgNDggYzcgYzcgNjggNzAgNDQgYzEgZTgg
-ODIgMTIgY2IgZGMgNDggOGIgNDMgMDggNDggOGIgMTMgPDQ4PiAzYiAxOCAwZiA4NSAzNSBj
-OCAwNiAwMCA0OCAzYiA1YSAwOCAwZiA4NSAyYiBjOCAwNiAwMCA0OCA4OSA0Mg0KPiBbIDEy
-MTAuMjcyMDY2XSBSU1A6IDAwMTg6ZmZmZmJiM2IwNjYxYmI5OCBFRkxBR1M6IDAwMDEwMjQ2
-DQo+IFsgMTIxMC4yNzIwNzFdIFJBWDogZGVhZDAwMDAwMDAwMDEyMiBSQlg6IGZmZmY5N2Jj
-OGY5MmUwMDAgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQo+IFsgMTIxMC4yNzIwNzVdIFJEWDog
-ZGVhZDAwMDAwMDAwMDEwMCBSU0k6IGZmZmY5N2JjOGJhOGI2MTAgUkRJOiBmZmZmZmZmZmMx
-NDQ3MDY4DQo+IFsgMTIxMC4yNzIwNzhdIFJCUDogZmZmZjk3YmM4ZjkyZTRkMCBSMDg6IGZm
-ZmY5N2JjODQyNGI1YzAgUjA5OiAwMDAwMDAwMDgwMmEwMDI2DQo+IFsgMTIxMC4yNzIwODJd
-IFIxMDogMDAwMDAwMDA4MDJhMDAyNiBSMTE6IDAwMDAwMDAwMDAwMDAwMDEgUjEyOiBmZmZm
-OTdiYzhmOTJlMDAwDQo+IFsgMTIxMC4yNzIwODVdIFIxMzogZmZmZmZmZmZjMTJmZjI3OCBS
-MTQ6IGZmZmZmZmZmYzEyZmYyNzggUjE1OiBmZmZmOTdiY2YyNWFjYzUwDQo+IFsgMTIxMC4y
-NzIwODhdIEZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOTdjYmQ3MzAwMDAw
-KDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gWyAxMjEwLjI3MjA5Ml0gQ1M6ICAw
-MDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPiBbIDEyMTAu
-MjcyMDk2XSBDUjI6IDAwMDAyODVjMDFiMTAwMDAgQ1IzOiAwMDAwMDAwM2Q2ZTIyMDAwIENS
-NDogMDAwMDAwMDAwMGY1MGVmMA0KPiBbIDEyMTAuMjcyMDk5XSBQS1JVOiA1NTU1NTU1NA0K
-PiBbIDEyMTAuMjcyMTAyXSBub3RlOiBrd29ya2VyLzI6MVsyMjc1XSBleGl0ZWQgd2l0aCBw
-cmVlbXB0X2NvdW50IDENCj4gDQo+IA0KPiBUaGUga3dvcmtlciBleGl0aW5nIG9idmlvdXNs
-eSBtZWFucyB0aGF0IHRoZSBrZXJuZWwgbm8gbG9uZ2VyIHJlc3BvbmRzIHRvIGV2ZW50cw0K
-PiBvbiBhbnkgb2YgdGhlIFVTQiBwb3J0cy4uLg0KPiANCj4gSSBob3BlIHlvdSBjYW4gdHJh
-Y2sgZG93biB0aGUgaXNzdWUsIGxldCBtZSBrbm93IGlmIHlvdSBuZWVkIGFueSBhZGRpdGlv
-bmFsDQo+IGRldGFpbHMuDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gTWFyYw0K
+
+
+Dne 20. 08. 24 v 23:30 Bjorn Helgaas napsal(a):
+> On Tue, Aug 20, 2024 at 11:13:54PM +0200, Petr Valenta wrote:
+>> Dne 20. 08. 24 v 20:09 Bjorn Helgaas napsal(a):
+>>> On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
+>>>> On 19. 08. 24, 6:50, Jiri Slaby wrote:
+>>>>> CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+>>>>
+>>>> Bjorn,
+>>>>
+>>>> I am confused by these changes:
+>>>> ==========================================
+>>>> @@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *net
+>>>> dev,
+>>>>            * duplex is forced.
+>>>>            */
+>>>>           if (cmd->base.eth_tp_mdix_ctrl) {
+>>>> -               if (hw->phy.media_type != e1000_media_type_copper) {
+>>>> -                       ret_val = -EOPNOTSUPP;
+>>>> -                       goto out;
+>>>> -               }
+>>>> +               if (hw->phy.media_type != e1000_media_type_copper)
+>>>> +                       return -EOPNOTSUPP;
+>>>>
+>>>>                   if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>>>>                       (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>>>>                           e_err("forcing MDI/MDI-X state is not supported when
+>>>> lin
+>>>> k speed and/or duplex are forced\n");
+>>>> -                       ret_val = -EINVAL;
+>>>> -                       goto out;
+>>>> +                       return -EINVAL;
+>>>>                   }
+>>>>           }
+>>>>
+>>>> @@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *netde
+>>>> v,
+>>>>           }
+>>>>
+>>>>    out:
+>>>> -       pm_runtime_put_sync(netdev->dev.parent);
+>>>>           clear_bit(__E1000_RESETTING, &adapter->state);
+>>>>           return ret_val;
+>>>>    }
+>>>> ==========================================
+>>>>
+>>>> So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that
+>>>> intentional?
+>>>
+>>> Not intentional.  Petr, do you have the ability to test the patch
+>>> below?  I'm not sure it's the correct fix, but it reverts the pieces
+>>> of b2c289415b2b that Jiri pointed out.
+>>
+>> I tested the patch below but it didn't help. After the first boot with new
+>> kernel it looked promising as the irq storm only appeared for a few seconds,
+>> but with subsequent reboots it was the same as without the patch.
+> 
+> Thank you very much for testing that!
+> 
+>> To be sure, I also send the md5sum of ethtool.c after applying the patch:
+>>
+>> a25c003257538f16994b4d7c4260e894 ethtool.c
+> 
+> Thanks, that matches what I get when applying the patch on v6.10.
+> 
+> I'm at a loss.  You could try reverting the entire b2c289415b2b commit
+> (patch for that is below).
+
+This patch didn't help, so I reverted it back.
+
+> 
+> If that doesn't help, I guess you could try reverting the other
+> commits Jiri mentioned:
+> 
+>    76a0a3f9cc2f e1000e: fix force smbus during suspend flow
+>    c93a6f62cb1b e1000e: Fix S0ix residency on corporate systems
+>    bfd546a552e1 e1000e: move force SMBUS near the end of enable_ulp function
+>    6918107e2540 net: e1000e & ixgbe: Remove PCI_HEADER_TYPE_MFD duplicates
+>    1eb2cded45b3 net: annotate writes on dev->mtu from ndo_change_mtu()
+>    b2c289415b2b e1000e: Remove redundant runtime resume for ethtool_ops
+>    75a3f93b5383 net: intel: implement modern PM ops declarations
+> 
+> If you do this, I would revert 76a0a3f9cc2f, test, then revert
+> c93a6f62cb1b in addition, test, then revert bfd546a552e1 in addition,
+> etc.
+
+I have created revert patches like this:
+git format-patch --stdout -1 76a0a3f9cc2f | interdiff -q /dev/stdin \
+/dev/null > revert_76a0a3f9cc2f.patch
+
+I have applied revert_76a0a3f9cc2f.patch (rebuild and tested), then in 
+addition revert_c93a6f62cb1b.patch and after applying 
+revert_bfd546a552e1.patch irq storm didn't appear.
+
+I have tested it with 3 subsequent reboots and in all those cases it was ok.
+
+> 
+> commit 5e92945ffe5c ("Revert "e1000e: Remove redundant runtime resume for ethtool_ops"")
+> Author: Bjorn Helgaas <bhelgaas@google.com>
+> Date:   Tue Aug 20 16:18:32 2024 -0500
+> 
+>      Revert "e1000e: Remove redundant runtime resume for ethtool_ops"
+>      
+>      This reverts commit b2c289415b2b2ef112b78d5e73b4acecf5db409e.
+> 
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> index 9364bc2b4eb1..61fa2f6b3708 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> @@ -156,7 +156,7 @@ static int e1000_get_link_ksettings(struct net_device *netdev,
+>   			speed = adapter->link_speed;
+>   			cmd->base.duplex = adapter->link_duplex - 1;
+>   		}
+> -	} else {
+> +	} else if (!pm_runtime_suspended(netdev->dev.parent)) {
+>   		u32 status = er32(STATUS);
+>   
+>   		if (status & E1000_STATUS_LU) {
+> @@ -274,13 +274,16 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	ethtool_convert_link_mode_to_legacy_u32(&advertising,
+>   						cmd->link_modes.advertising);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	/* When SoL/IDER sessions are active, autoneg/speed/duplex
+>   	 * cannot be changed
+>   	 */
+>   	if (hw->phy.ops.check_reset_block &&
+>   	    hw->phy.ops.check_reset_block(hw)) {
+>   		e_err("Cannot change link characteristics when SoL/IDER is active.\n");
+> -		return -EINVAL;
+> +		ret_val = -EINVAL;
+> +		goto out;
+>   	}
+>   
+>   	/* MDI setting is only allowed when autoneg enabled because
+> @@ -288,13 +291,16 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	 * duplex is forced.
+>   	 */
+>   	if (cmd->base.eth_tp_mdix_ctrl) {
+> -		if (hw->phy.media_type != e1000_media_type_copper)
+> -			return -EOPNOTSUPP;
+> +		if (hw->phy.media_type != e1000_media_type_copper) {
+> +			ret_val = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+>   
+>   		if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>   		    (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>   			e_err("forcing MDI/MDI-X state is not supported when link speed and/or duplex are forced\n");
+> -			return -EINVAL;
+> +			ret_val = -EINVAL;
+> +			goto out;
+>   		}
+>   	}
+>   
+> @@ -341,6 +347,7 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	}
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	clear_bit(__E1000_RESETTING, &adapter->state);
+>   	return ret_val;
+>   }
+> @@ -376,6 +383,8 @@ static int e1000_set_pauseparam(struct net_device *netdev,
+>   	while (test_and_set_bit(__E1000_RESETTING, &adapter->state))
+>   		usleep_range(1000, 2000);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (adapter->fc_autoneg == AUTONEG_ENABLE) {
+>   		hw->fc.requested_mode = e1000_fc_default;
+>   		if (netif_running(adapter->netdev)) {
+> @@ -408,6 +417,7 @@ static int e1000_set_pauseparam(struct net_device *netdev,
+>   	}
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	clear_bit(__E1000_RESETTING, &adapter->state);
+>   	return retval;
+>   }
+> @@ -438,6 +448,8 @@ static void e1000_get_regs(struct net_device *netdev,
+>   	u32 *regs_buff = p;
+>   	u16 phy_data;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	memset(p, 0, E1000_REGS_LEN * sizeof(u32));
+>   
+>   	regs->version = (1u << 24) |
+> @@ -483,6 +495,8 @@ static void e1000_get_regs(struct net_device *netdev,
+>   	e1e_rphy(hw, MII_STAT1000, &phy_data);
+>   	regs_buff[24] = (u32)phy_data;	/* phy local receiver status */
+>   	regs_buff[25] = regs_buff[24];	/* phy remote receiver status */
+> +
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   }
+>   
+>   static int e1000_get_eeprom_len(struct net_device *netdev)
+> @@ -515,6 +529,8 @@ static int e1000_get_eeprom(struct net_device *netdev,
+>   	if (!eeprom_buff)
+>   		return -ENOMEM;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (hw->nvm.type == e1000_nvm_eeprom_spi) {
+>   		ret_val = e1000_read_nvm(hw, first_word,
+>   					 last_word - first_word + 1,
+> @@ -528,6 +544,8 @@ static int e1000_get_eeprom(struct net_device *netdev,
+>   		}
+>   	}
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	if (ret_val) {
+>   		/* a read error occurred, throw away the result */
+>   		memset(eeprom_buff, 0xff, sizeof(u16) *
+> @@ -577,6 +595,8 @@ static int e1000_set_eeprom(struct net_device *netdev,
+>   
+>   	ptr = (void *)eeprom_buff;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (eeprom->offset & 1) {
+>   		/* need read/modify/write of first changed EEPROM word */
+>   		/* only the second byte of the word is being modified */
+> @@ -617,6 +637,7 @@ static int e1000_set_eeprom(struct net_device *netdev,
+>   		ret_val = e1000e_update_nvm_checksum(hw);
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	kfree(eeprom_buff);
+>   	return ret_val;
+>   }
+> @@ -712,6 +733,8 @@ static int e1000_set_ringparam(struct net_device *netdev,
+>   		}
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	e1000e_down(adapter, true);
+>   
+>   	/* We can't just free everything and then setup again, because the
+> @@ -750,6 +773,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
+>   		e1000e_free_tx_resources(temp_tx);
+>   err_setup:
+>   	e1000e_up(adapter);
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   free_temp:
+>   	vfree(temp_tx);
+>   	vfree(temp_rx);
+> @@ -1792,6 +1816,8 @@ static void e1000_diag_test(struct net_device *netdev,
+>   	u8 autoneg;
+>   	bool if_running = netif_running(netdev);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	set_bit(__E1000_TESTING, &adapter->state);
+>   
+>   	if (!if_running) {
+> @@ -1877,6 +1903,8 @@ static void e1000_diag_test(struct net_device *netdev,
+>   	}
+>   
+>   	msleep_interruptible(4 * 1000);
+> +
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   }
+>   
+>   static void e1000_get_wol(struct net_device *netdev,
+> @@ -2018,11 +2046,15 @@ static int e1000_set_coalesce(struct net_device *netdev,
+>   		adapter->itr_setting = adapter->itr & ~3;
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (adapter->itr_setting != 0)
+>   		e1000e_write_itr(adapter, adapter->itr);
+>   	else
+>   		e1000e_write_itr(adapter, 0);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -2036,7 +2068,9 @@ static int e1000_nway_reset(struct net_device *netdev)
+>   	if (!adapter->hw.mac.autoneg)
+>   		return -EINVAL;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+>   	e1000e_reinit_locked(adapter);
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   
+>   	return 0;
+>   }
+> @@ -2050,8 +2084,12 @@ static void e1000_get_ethtool_stats(struct net_device *netdev,
+>   	int i;
+>   	char *p = NULL;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	dev_get_stats(netdev, &net_stats);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	for (i = 0; i < E1000_GLOBAL_STATS_LEN; i++) {
+>   		switch (e1000_gstrings_stats[i].type) {
+>   		case NETDEV_STATS:
+> @@ -2108,7 +2146,9 @@ static int e1000_get_rxnfc(struct net_device *netdev,
+>   		struct e1000_hw *hw = &adapter->hw;
+>   		u32 mrqc;
+>   
+> +		pm_runtime_get_sync(netdev->dev.parent);
+>   		mrqc = er32(MRQC);
+> +		pm_runtime_put_sync(netdev->dev.parent);
+>   
+>   		if (!(mrqc & E1000_MRQC_RSS_FIELD_MASK))
+>   			return 0;
+> @@ -2171,9 +2211,13 @@ static int e1000e_get_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   		return -EOPNOTSUPP;
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	ret_val = hw->phy.ops.acquire(hw);
+> -	if (ret_val)
+> +	if (ret_val) {
+> +		pm_runtime_put_sync(netdev->dev.parent);
+>   		return -EBUSY;
+> +	}
+>   
+>   	/* EEE Capability */
+>   	ret_val = e1000_read_emi_reg_locked(hw, cap_addr, &phy_data);
+> @@ -2213,6 +2257,8 @@ static int e1000e_get_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   	if (ret_val)
+>   		ret_val = -ENODATA;
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return ret_val;
+>   }
+>   
+> @@ -2253,12 +2299,16 @@ static int e1000e_set_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   
+>   	hw->dev_spec.ich8lan.eee_disable = !edata->eee_enabled;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	/* reset the link */
+>   	if (netif_running(netdev))
+>   		e1000e_reinit_locked(adapter);
+>   	else
+>   		e1000e_reset(adapter);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return 0;
+>   }
+>   
+> 
+>  From mboxrd@z Thu Jan  1 00:00:00 1970
+> Return-Path: <intel-wired-lan-bounces@osuosl.org>
+> X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+> 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+> Received: from smtp2.osuosl.org (smtp2.osuosl.org [140.211.166.133])
+> 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+> 	(No client certificate requested)
+> 	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22EE6C3DA4A
+> 	for <intel-wired-lan@archiver.kernel.org>; Tue, 20 Aug 2024 21:30:44 +0000 (UTC)
+> Received: from localhost (localhost [127.0.0.1])
+> 	by smtp2.osuosl.org (Postfix) with ESMTP id E223040474;
+> 	Tue, 20 Aug 2024 21:30:43 +0000 (UTC)
+> X-Virus-Scanned: amavis at osuosl.org
+> Received: from smtp2.osuosl.org ([127.0.0.1])
+>   by localhost (smtp2.osuosl.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+>   id bS7tH8aI4dXw; Tue, 20 Aug 2024 21:30:42 +0000 (UTC)
+> X-Comment: SPF check N/A for local connections - client-ip=140.211.166.34; helo=ash.osuosl.org; envelope-from=intel-wired-lan-bounces@osuosl.org; receiver=<UNKNOWN>
+> DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org 9F4E940B38
+> DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=osuosl.org;
+> 	s=default; t=1724189442;
+> 	bh=mlj2OU/9jQQlYVgc8xXGFGEbmSA2BUO2s9ZMNvlZa5E=;
+> 	h=Date:From:To:In-Reply-To:Subject:List-Id:List-Unsubscribe:
+> 	 List-Archive:List-Post:List-Help:List-Subscribe:Cc:From;
+> 	b=gRsw4VpLnbvTsoxcHbTQgLUM2iVdECmRSG1uEylrYmPsdWJDin8aVjhm4QrxSXuMO
+> 	 g+6njzmv+w6950L+rcQlJiK6ry1jbhFrNzTmFOyCvctsUeLmaqGu1jrLvOp2XhP3uJ
+> 	 dOpebDahCjpzldI2iCU6Oy/iNQsLx2KSsxzZgtlNqOx3rXCjDFXINVRKkL9Sz2kv5b
+> 	 etzK/KOTa/xffZ7mnp9ZelV0v0YGUFmgFKvt6/QLqeTpqpXphMr3MntldSJLu7BrFm
+> 	 4EJloku9spGmIB2ZBt4wRHhPvuoKG4HPu8DszG7VJAOAj52QaC1bmnQ19OKwKM+Rlz
+> 	 C0+0QilD6XFkQ==
+> Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
+> 	by smtp2.osuosl.org (Postfix) with ESMTP id 9F4E940B38;
+> 	Tue, 20 Aug 2024 21:30:42 +0000 (UTC)
+> Received: from smtp4.osuosl.org (smtp4.osuosl.org [140.211.166.137])
+>   by ash.osuosl.org (Postfix) with ESMTP id B70001BF3B8
+>   for <intel-wired-lan@lists.osuosl.org>; Tue, 20 Aug 2024 21:30:40 +0000 (UTC)
+> Received: from localhost (localhost [127.0.0.1])
+>   by smtp4.osuosl.org (Postfix) with ESMTP id B04CA4067F
+>   for <intel-wired-lan@lists.osuosl.org>; Tue, 20 Aug 2024 21:30:40 +0000 (UTC)
+> X-Virus-Scanned: amavis at osuosl.org
+> Received: from smtp4.osuosl.org ([127.0.0.1])
+>   by localhost (smtp4.osuosl.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+>   id 6VOvnWK04xp7 for <intel-wired-lan@lists.osuosl.org>;
+>   Tue, 20 Aug 2024 21:30:39 +0000 (UTC)
+> Received-SPF: Pass (mailfrom) identity=mailfrom;
+>   client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org;
+>   envelope-from=helgaas@kernel.org; receiver=<UNKNOWN>
+> DMARC-Filter: OpenDMARC Filter v1.4.2 smtp4.osuosl.org 3098940679
+> DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 3098940679
+> Received: from dfw.source.kernel.org (dfw.source.kernel.org
+>   [IPv6:2604:1380:4641:c500::1])
+>   by smtp4.osuosl.org (Postfix) with ESMTPS id 3098940679
+>   for <intel-wired-lan@lists.osuosl.org>; Tue, 20 Aug 2024 21:30:39 +0000 (UTC)
+> Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+>   by dfw.source.kernel.org (Postfix) with ESMTP id EF93D60DF6;
+>   Tue, 20 Aug 2024 21:30:37 +0000 (UTC)
+> Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A00BC4AF09;
+>   Tue, 20 Aug 2024 21:30:37 +0000 (UTC)
+> Date: Tue, 20 Aug 2024 16:30:35 -0500
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> To: Petr Valenta <petr@jevklidu.cz>
+> Message-ID: <20240820213035.GA226181@bhelgaas>
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=us-ascii
+> Content-Disposition: inline
+> In-Reply-To: <7ec28d20-c729-496a-b8bf-2bf88bbb4d70@jevklidu.cz>
+> X-Mailman-Original-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+>   d=kernel.org; s=k20201202; t=1724189437;
+>   bh=0t79HOH2kYVclDTTF8FvHw6OfaaM4JS6jorC17zXI3k=;
+>   h=Date:From:To:Cc:Subject:In-Reply-To:From;
+>   b=GhFyFhraHJm9t4ey15N3XxG5Bc8U2z1N5/4pJSFm4vNlndjUOQltzb39mj8r5tzdO
+>   0Qrk2iUfn9usdQTfr3eHowUDbvxoFI6z/iFJUe0kPts5eaue6Z5J1ESezm6daA6gwZ
+>   yJtcho1EXrvEH0dGBx7xhKIKBezS0BAXW2lbUFKuTB9YSHJvprlgy0VZjDNjg/G3WL
+>   4nV3cEtNJ3EiMYMMNl9JNQtJDhvg/VIeHBFzQPJHHzBh+gZ4MmwNPJSkTNCDceZicW
+>   OJIm3Vprxxg/osSezx/ysd0VAXqV7ywftKaXHshPID8u49v2SiJtBafOh/+7jMlh+U
+>   CASP86+QHj9sA==
+> X-Mailman-Original-Authentication-Results: smtp4.osuosl.org;
+>   dmarc=pass (p=quarantine dis=none)
+>   header.from=kernel.org
+> X-Mailman-Original-Authentication-Results: smtp4.osuosl.org;
+>   dkim=pass (2048-bit key,
+>   unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+>   header.s=k20201202 header.b=GhFyFhra
+> Subject: Re: [Intel-wired-lan] ACPI IRQ storm with 6.10
+> X-BeenThere: intel-wired-lan@osuosl.org
+> X-Mailman-Version: 2.1.29
+> Precedence: list
+> List-Id: Intel Wired Ethernet Linux Kernel Driver Development
+>   <intel-wired-lan.osuosl.org>
+> List-Unsubscribe: <https://lists.osuosl.org/mailman/options/intel-wired-lan>,
+>   <mailto:intel-wired-lan-request@osuosl.org?subject=unsubscribe>
+> List-Archive: <http://lists.osuosl.org/pipermail/intel-wired-lan/>
+> List-Post: <mailto:intel-wired-lan@osuosl.org>
+> List-Help: <mailto:intel-wired-lan-request@osuosl.org?subject=help>
+> List-Subscribe: <https://lists.osuosl.org/mailman/listinfo/intel-wired-lan>,
+>   <mailto:intel-wired-lan-request@osuosl.org?subject=subscribe>
+> Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+>   "Rafael J. Wysocki" <rafael@kernel.org>, przemyslaw.kitszel@intel.com,
+>   Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+>   "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+>   Tony Nguyen <anthony.l.nguyen@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+>   intel-wired-lan@lists.osuosl.org, Jiri Slaby <jirislaby@kernel.org>,
+>   Len Brown <lenb@kernel.org>
+> Errors-To: intel-wired-lan-bounces@osuosl.org
+> Sender: "Intel-wired-lan" <intel-wired-lan-bounces@osuosl.org>
+> 
+> On Tue, Aug 20, 2024 at 11:13:54PM +0200, Petr Valenta wrote:
+>> Dne 20. 08. 24 v 20:09 Bjorn Helgaas napsal(a):
+>>> On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
+>>>> On 19. 08. 24, 6:50, Jiri Slaby wrote:
+>>>>> CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
+>>>>
+>>>> Bjorn,
+>>>>
+>>>> I am confused by these changes:
+>>>> ==========================================
+>>>> @@ -291,16 +288,13 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *net
+>>>> dev,
+>>>>            * duplex is forced.
+>>>>            */
+>>>>           if (cmd->base.eth_tp_mdix_ctrl) {
+>>>> -               if (hw->phy.media_type != e1000_media_type_copper) {
+>>>> -                       ret_val = -EOPNOTSUPP;
+>>>> -                       goto out;
+>>>> -               }
+>>>> +               if (hw->phy.media_type != e1000_media_type_copper)
+>>>> +                       return -EOPNOTSUPP;
+>>>>
+>>>>                   if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>>>>                       (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>>>>                           e_err("forcing MDI/MDI-X state is not supported when
+>>>> lin
+>>>> k speed and/or duplex are forced\n");
+>>>> -                       ret_val = -EINVAL;
+>>>> -                       goto out;
+>>>> +                       return -EINVAL;
+>>>>                   }
+>>>>           }
+>>>>
+>>>> @@ -347,7 +341,6 @@ static int e1000_set_link_ksettings(struct net_device
+>>>> *netde
+>>>> v,
+>>>>           }
+>>>>
+>>>>    out:
+>>>> -       pm_runtime_put_sync(netdev->dev.parent);
+>>>>           clear_bit(__E1000_RESETTING, &adapter->state);
+>>>>           return ret_val;
+>>>>    }
+>>>> ==========================================
+>>>>
+>>>> So no more clear_bit(__E1000_RESETTING in the above fail paths. Is that
+>>>> intentional?
+>>>
+>>> Not intentional.  Petr, do you have the ability to test the patch
+>>> below?  I'm not sure it's the correct fix, but it reverts the pieces
+>>> of b2c289415b2b that Jiri pointed out.
+>>
+>> I tested the patch below but it didn't help. After the first boot with new
+>> kernel it looked promising as the irq storm only appeared for a few seconds,
+>> but with subsequent reboots it was the same as without the patch.
+> 
+> Thank you very much for testing that!
+> 
+>> To be sure, I also send the md5sum of ethtool.c after applying the patch:
+>>
+>> a25c003257538f16994b4d7c4260e894 ethtool.c
+> 
+> Thanks, that matches what I get when applying the patch on v6.10.
+> 
+> I'm at a loss.  You could try reverting the entire b2c289415b2b commit
+> (patch for that is below).
+> 
+> If that doesn't help, I guess you could try reverting the other
+> commits Jiri mentioned:
+> 
+>    76a0a3f9cc2f e1000e: fix force smbus during suspend flow
+>    c93a6f62cb1b e1000e: Fix S0ix residency on corporate systems
+>    bfd546a552e1 e1000e: move force SMBUS near the end of enable_ulp function
+>    6918107e2540 net: e1000e & ixgbe: Remove PCI_HEADER_TYPE_MFD duplicates
+>    1eb2cded45b3 net: annotate writes on dev->mtu from ndo_change_mtu()
+>    b2c289415b2b e1000e: Remove redundant runtime resume for ethtool_ops
+>    75a3f93b5383 net: intel: implement modern PM ops declarations
+> 
+> If you do this, I would revert 76a0a3f9cc2f, test, then revert
+> c93a6f62cb1b in addition, test, then revert bfd546a552e1 in addition,
+> etc.
+> 
+> commit 5e92945ffe5c ("Revert "e1000e: Remove redundant runtime resume for ethtool_ops"")
+> Author: Bjorn Helgaas <bhelgaas@google.com>
+> Date:   Tue Aug 20 16:18:32 2024 -0500
+> 
+>      Revert "e1000e: Remove redundant runtime resume for ethtool_ops"
+>      
+>      This reverts commit b2c289415b2b2ef112b78d5e73b4acecf5db409e.
+> 
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> index 9364bc2b4eb1..61fa2f6b3708 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> @@ -156,7 +156,7 @@ static int e1000_get_link_ksettings(struct net_device *netdev,
+>   			speed = adapter->link_speed;
+>   			cmd->base.duplex = adapter->link_duplex - 1;
+>   		}
+> -	} else {
+> +	} else if (!pm_runtime_suspended(netdev->dev.parent)) {
+>   		u32 status = er32(STATUS);
+>   
+>   		if (status & E1000_STATUS_LU) {
+> @@ -274,13 +274,16 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	ethtool_convert_link_mode_to_legacy_u32(&advertising,
+>   						cmd->link_modes.advertising);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	/* When SoL/IDER sessions are active, autoneg/speed/duplex
+>   	 * cannot be changed
+>   	 */
+>   	if (hw->phy.ops.check_reset_block &&
+>   	    hw->phy.ops.check_reset_block(hw)) {
+>   		e_err("Cannot change link characteristics when SoL/IDER is active.\n");
+> -		return -EINVAL;
+> +		ret_val = -EINVAL;
+> +		goto out;
+>   	}
+>   
+>   	/* MDI setting is only allowed when autoneg enabled because
+> @@ -288,13 +291,16 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	 * duplex is forced.
+>   	 */
+>   	if (cmd->base.eth_tp_mdix_ctrl) {
+> -		if (hw->phy.media_type != e1000_media_type_copper)
+> -			return -EOPNOTSUPP;
+> +		if (hw->phy.media_type != e1000_media_type_copper) {
+> +			ret_val = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+>   
+>   		if ((cmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_AUTO) &&
+>   		    (cmd->base.autoneg != AUTONEG_ENABLE)) {
+>   			e_err("forcing MDI/MDI-X state is not supported when link speed and/or duplex are forced\n");
+> -			return -EINVAL;
+> +			ret_val = -EINVAL;
+> +			goto out;
+>   		}
+>   	}
+>   
+> @@ -341,6 +347,7 @@ static int e1000_set_link_ksettings(struct net_device *netdev,
+>   	}
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	clear_bit(__E1000_RESETTING, &adapter->state);
+>   	return ret_val;
+>   }
+> @@ -376,6 +383,8 @@ static int e1000_set_pauseparam(struct net_device *netdev,
+>   	while (test_and_set_bit(__E1000_RESETTING, &adapter->state))
+>   		usleep_range(1000, 2000);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (adapter->fc_autoneg == AUTONEG_ENABLE) {
+>   		hw->fc.requested_mode = e1000_fc_default;
+>   		if (netif_running(adapter->netdev)) {
+> @@ -408,6 +417,7 @@ static int e1000_set_pauseparam(struct net_device *netdev,
+>   	}
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	clear_bit(__E1000_RESETTING, &adapter->state);
+>   	return retval;
+>   }
+> @@ -438,6 +448,8 @@ static void e1000_get_regs(struct net_device *netdev,
+>   	u32 *regs_buff = p;
+>   	u16 phy_data;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	memset(p, 0, E1000_REGS_LEN * sizeof(u32));
+>   
+>   	regs->version = (1u << 24) |
+> @@ -483,6 +495,8 @@ static void e1000_get_regs(struct net_device *netdev,
+>   	e1e_rphy(hw, MII_STAT1000, &phy_data);
+>   	regs_buff[24] = (u32)phy_data;	/* phy local receiver status */
+>   	regs_buff[25] = regs_buff[24];	/* phy remote receiver status */
+> +
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   }
+>   
+>   static int e1000_get_eeprom_len(struct net_device *netdev)
+> @@ -515,6 +529,8 @@ static int e1000_get_eeprom(struct net_device *netdev,
+>   	if (!eeprom_buff)
+>   		return -ENOMEM;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (hw->nvm.type == e1000_nvm_eeprom_spi) {
+>   		ret_val = e1000_read_nvm(hw, first_word,
+>   					 last_word - first_word + 1,
+> @@ -528,6 +544,8 @@ static int e1000_get_eeprom(struct net_device *netdev,
+>   		}
+>   	}
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	if (ret_val) {
+>   		/* a read error occurred, throw away the result */
+>   		memset(eeprom_buff, 0xff, sizeof(u16) *
+> @@ -577,6 +595,8 @@ static int e1000_set_eeprom(struct net_device *netdev,
+>   
+>   	ptr = (void *)eeprom_buff;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (eeprom->offset & 1) {
+>   		/* need read/modify/write of first changed EEPROM word */
+>   		/* only the second byte of the word is being modified */
+> @@ -617,6 +637,7 @@ static int e1000_set_eeprom(struct net_device *netdev,
+>   		ret_val = e1000e_update_nvm_checksum(hw);
+>   
+>   out:
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   	kfree(eeprom_buff);
+>   	return ret_val;
+>   }
+> @@ -712,6 +733,8 @@ static int e1000_set_ringparam(struct net_device *netdev,
+>   		}
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	e1000e_down(adapter, true);
+>   
+>   	/* We can't just free everything and then setup again, because the
+> @@ -750,6 +773,7 @@ static int e1000_set_ringparam(struct net_device *netdev,
+>   		e1000e_free_tx_resources(temp_tx);
+>   err_setup:
+>   	e1000e_up(adapter);
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   free_temp:
+>   	vfree(temp_tx);
+>   	vfree(temp_rx);
+> @@ -1792,6 +1816,8 @@ static void e1000_diag_test(struct net_device *netdev,
+>   	u8 autoneg;
+>   	bool if_running = netif_running(netdev);
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	set_bit(__E1000_TESTING, &adapter->state);
+>   
+>   	if (!if_running) {
+> @@ -1877,6 +1903,8 @@ static void e1000_diag_test(struct net_device *netdev,
+>   	}
+>   
+>   	msleep_interruptible(4 * 1000);
+> +
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   }
+>   
+>   static void e1000_get_wol(struct net_device *netdev,
+> @@ -2018,11 +2046,15 @@ static int e1000_set_coalesce(struct net_device *netdev,
+>   		adapter->itr_setting = adapter->itr & ~3;
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	if (adapter->itr_setting != 0)
+>   		e1000e_write_itr(adapter, adapter->itr);
+>   	else
+>   		e1000e_write_itr(adapter, 0);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -2036,7 +2068,9 @@ static int e1000_nway_reset(struct net_device *netdev)
+>   	if (!adapter->hw.mac.autoneg)
+>   		return -EINVAL;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+>   	e1000e_reinit_locked(adapter);
+> +	pm_runtime_put_sync(netdev->dev.parent);
+>   
+>   	return 0;
+>   }
+> @@ -2050,8 +2084,12 @@ static void e1000_get_ethtool_stats(struct net_device *netdev,
+>   	int i;
+>   	char *p = NULL;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	dev_get_stats(netdev, &net_stats);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	for (i = 0; i < E1000_GLOBAL_STATS_LEN; i++) {
+>   		switch (e1000_gstrings_stats[i].type) {
+>   		case NETDEV_STATS:
+> @@ -2108,7 +2146,9 @@ static int e1000_get_rxnfc(struct net_device *netdev,
+>   		struct e1000_hw *hw = &adapter->hw;
+>   		u32 mrqc;
+>   
+> +		pm_runtime_get_sync(netdev->dev.parent);
+>   		mrqc = er32(MRQC);
+> +		pm_runtime_put_sync(netdev->dev.parent);
+>   
+>   		if (!(mrqc & E1000_MRQC_RSS_FIELD_MASK))
+>   			return 0;
+> @@ -2171,9 +2211,13 @@ static int e1000e_get_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   		return -EOPNOTSUPP;
+>   	}
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	ret_val = hw->phy.ops.acquire(hw);
+> -	if (ret_val)
+> +	if (ret_val) {
+> +		pm_runtime_put_sync(netdev->dev.parent);
+>   		return -EBUSY;
+> +	}
+>   
+>   	/* EEE Capability */
+>   	ret_val = e1000_read_emi_reg_locked(hw, cap_addr, &phy_data);
+> @@ -2213,6 +2257,8 @@ static int e1000e_get_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   	if (ret_val)
+>   		ret_val = -ENODATA;
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return ret_val;
+>   }
+>   
+> @@ -2253,12 +2299,16 @@ static int e1000e_set_eee(struct net_device *netdev, struct ethtool_keee *edata)
+>   
+>   	hw->dev_spec.ich8lan.eee_disable = !edata->eee_enabled;
+>   
+> +	pm_runtime_get_sync(netdev->dev.parent);
+> +
+>   	/* reset the link */
+>   	if (netif_running(netdev))
+>   		e1000e_reinit_locked(adapter);
+>   	else
+>   		e1000e_reset(adapter);
+>   
+> +	pm_runtime_put_sync(netdev->dev.parent);
+> +
+>   	return 0;
+>   }
+>   
+> 
