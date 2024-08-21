@@ -1,49 +1,76 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECCF189BA4
-	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 13:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AFB1AD5E5
+	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 13:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724245437; cv=none; b=bXXe9yt6yAFxD9W6xOj646rbPahzWbtbJ0TGww1anGSzm9qhx1ar+CQLhl7bzQXbekpjxz7jxlXHummDD+tBD3MbPYKhE3TLboN4epUVl9BH0qSXHdh8df5Qe/LV9q08yKsPHlgBZ1VQO8ZMzSNhjFYyofn34nMhE/uK533tI/8=
+	t=1724247802; cv=none; b=RIile2PeMbvXptGuCSjYt0zmXPFwTe2moJOyjjjprdJZvqKlnvdSVCC28L3WvTZ53vRlzYBG/Vy7g4/TfSJhaV4VXlZINKbK9e3I67FK8A2wiGNGu7PAasq3/boSq1gWlomfLu3GTVm+qg9t/3e4BMlEfJ6camiGFsZGdbM2rCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724245437; c=relaxed/simple;
-	bh=EsZd7zphgRfp+Pj+5bpQt0D8iW92EupN1ZQaK+j/SKA=;
+	s=arc-20240116; t=1724247802; c=relaxed/simple;
+	bh=c93I54raOSbs0VRQIoGu5KAoP5RS/AuhuCp4Xi1YKXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BxTzBB4ih7Zq2vbQs9qg7O6XdDaYJFagwGJccbiK5cTU580Vh9Yzl6c79apRHcCYzdUaP23udEwr6KO7yiPrYXuLaUJhz9qg1r0OdVpghTFHrukwfOAXzjdOT5/m4Nisu1wKVaIt4kcs2+pdjidzsaRr8iEE+1VaqyzmP0p8RW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id BF7B572C8CC;
-	Wed, 21 Aug 2024 15:57:58 +0300 (MSK)
-Received: from pony.office.basealt.ru (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id B626636D0178;
-	Wed, 21 Aug 2024 15:57:58 +0300 (MSK)
-Received: by pony.office.basealt.ru (Postfix, from userid 500)
-	id 95406360C1DE; Wed, 21 Aug 2024 15:57:58 +0300 (MSK)
-Date: Wed, 21 Aug 2024 15:57:58 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Christian Heusel <christian@heusel.eu>, 
-	Adrian Vladu <avladu@cloudbasesolutions.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, "alexander.duyck@gmail.com" <alexander.duyck@gmail.com>, 
-	"arefev@swemel.ru" <arefev@swemel.ru>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"edumazet@google.com" <edumazet@google.com>, "jasowang@redhat.com" <jasowang@redhat.com>, 
-	"kuba@kernel.org" <kuba@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"willemb@google.com" <willemb@google.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH net] net: drop bad gso csum_start and offset in
- virtio_net_hdr
-Message-ID: <zkpazbrdirbgp6xgrd54urzjv2b5o3gjfubj6hi673uf35aep3@hrqxcdd7vj5c>
-References: <2024080703-unafraid-chastise-acf0@gregkh>
- <146d2c9f-f2c3-4891-ac48-a3e50c863530@heusel.eu>
- <2024080857-contusion-womb-aae1@gregkh>
- <60bc20c5-7512-44f7-88cb-abc540437ae1@heusel.eu>
- <0d897b58-f4b8-4814-b3f9-5dce0540c81d@heusel.eu>
- <20240814055408-mutt-send-email-mst@kernel.org>
- <c746a1d2-ba0d-40fe-8983-0bf1f7ce64a7@heusel.eu>
- <PR3PR09MB5411FC965DBCCC26AF850EA5B0872@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
- <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0Rfv6FgCIXQYJ+re9MBW3cwHIoPiyNB/NvJjrjqVQOF/NIebB5zDYD/lDahD8xZNwQjtovhsI39eLZekvlzgdJEZq/SiPBpsjYp8sTK5SBK5p6c4WCqAt2gRxCbVNTYWEuX0s28uJyebsBFDQGy0SVNvp7JDynmtyVtW1Qm+KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wrPAicw8; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wrPAicw8"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f3f163e379so26185321fa.3
+        for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 06:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724247799; x=1724852599; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vq7tOAAcz6ewTIYXkiPmAfOTq4iDQRtjoPIe2wulO0E=;
+        b=wrPAicw8IF8YIAUWaKKIqyzP/HqSbNHZYivbZe0PgLBmGuFvp0mMdvPPINBYgnaNWo
+         njohxAEWMwVvxDm9RACktc2lKFdC4fAEbDmELeDWZ4iZSW4mP+dHk3rSlS3diwFzv1D5
+         ahPhjjl/VZdVmrIBNfPUYWEUoidhlMF0JGGy7nJJHWDNQ+slG5aRPswjpqNKnWEO/wcK
+         aOIIu/TgQjipfgPjclqQSoQk16SOZDmx4hXD3yAz0qOtQY4jboYb9Ey2guoAaoSsZs8G
+         4+c426DW87KkDEl3wqfGl37kUNAuVe1jRcHR3A5H2wDwvobMo2Xl1etCmuMPc0eZ21LQ
+         uByg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724247799; x=1724852599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vq7tOAAcz6ewTIYXkiPmAfOTq4iDQRtjoPIe2wulO0E=;
+        b=nuU0pScy2djiGIo47s1k1xDb+gxE/ODbkGs5pg/KpyL9Q52pawDGHAXgaYjSI4aEFK
+         m+068OVD+HRBaCKXlQ+1cxKczr71kM70qz9HuXusSpWDX6TnmYHNtybkaN3lGmmWfxFt
+         gxxF2Wce7zLodPeULlLxKreTnZerDe1n5DlHlnFGDl8v0jv0dfhIz5v2QxIggM74Sytq
+         kWO5dAmT0Ry5oAk03GymY0dzryogJ67zZl+NBvKl6XveangfMapx/GGP3b7ectc6AfZR
+         SCOx7RDX1cxfe2ZFzCTKMHQh31mIYkzroYDz5aeK7b1c4JTVjxigPlPJ6m4aNUgHK2tp
+         iOfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdRVN9n6s/SeNSACTtj4CGnjUIsfPaKYrmnbs3lVObuaZY3QfkAd7/UlYalVoCh8yP5NFhy+ohOpIxZw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTk+zBgi1IRICO/YfItcvtsJeLHZxFG3T7bje7JS5dwiTiuJfV
+	0nqCMf/suBqb9IWuZBbiFG5Wyy9xF+q+gA3SFwiPzUe2UxZ/vy9tWj80k5LLFQ0=
+X-Google-Smtp-Source: AGHT+IHQbdHH8LzMKMml3FZkZHmsIF0qxWUa69l3XY4StmtQ7T+OKiiLyZ1IaFB9tC0TLHlDr4Jl1Q==
+X-Received: by 2002:a2e:b8cb:0:b0:2ef:1b1b:7f42 with SMTP id 38308e7fff4ca-2f3f89489a5mr23557941fa.36.1724247799207;
+        Wed, 21 Aug 2024 06:43:19 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebbe7f17bsm8234877a12.59.2024.08.21.06.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 06:43:18 -0700 (PDT)
+Date: Wed, 21 Aug 2024 16:43:15 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Matthew Brost <matthew.brost@intel.com>, Tejun Heo <tj@kernel.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-block <linux-block@vger.kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: next: x86_64: ahci 0000:00:1f.2: probe with driver ahci failed
+ with error -12
+Message-ID: <af7dea7d-446c-4b25-a1e9-bd1f3753f589@stanley.mountain>
+References: <CA+G9fYuD4-qKAX9nDS-3cy+HwGbyJ6WoD7bZ_QL0J__A++P9aA@mail.gmail.com>
+ <CA+G9fYuYfNA7NZDHpq2K24CsUn21LAb8vn38=JTz=54bsdSd9g@mail.gmail.com>
+ <43be498f-5a25-4ee2-8c5d-1ef75c4d1ff3@stanley.mountain>
+ <eb78af03-b407-49d9-b605-af9632eda08e@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,66 +79,17 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
+In-Reply-To: <eb78af03-b407-49d9-b605-af9632eda08e@stanley.mountain>
 
-Willem,
+On Wed, Aug 21, 2024 at 02:54:28PM +0300, Dan Carpenter wrote:
+> Give this patch a shot and I'll resend if it fixes the bug.
+> 
+> Fixes: b188c57af2b5 ("workqueue: Split alloc_workqueue into internal function and lockdep init")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-On Wed, Aug 14, 2024 at 09:53:58AM GMT, Willem de Bruijn wrote:
-> Christian Heusel wrote:
-> > On 24/08/14 10:10AM, Adrian Vladu wrote:
-> > > Hello,
-> > > 
-> > > The 6.6.y branch has the patch already in the stable queue -> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=3e713b73c01fac163a5c8cb0953d1e300407a773, and it should be available in the 6.6.46 upcoming minor.
-> > > 
-> > > Thanks, Adrian.
-> > 
-> > Yeah it's also queued up for 6.10, which I both missed (sorry for that!).
-> > If I'm able to properly backport the patch for 6.1 I'll send that one,
-> > but my hopes are not too high that this will work ..
-> 
-> There are two conflicts.
-> 
-> The one in include/linux/virtio_net.h is resolved by first backporting
-> commit fc8b2a6194693 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4
-> validation")
-> 
-> We did not backport that to stable because there was some slight risk
-> that applications might be affected. This has not surfaced.
-> 
-> The conflict in net/ipv4/udp_offload.c is not so easy to address.
-> There were lots of patches between v6.1 and linus/master, with far
-> fewer of these betwee v6.1 and linux-stable/linux-6.1.y.
+Actually never mind.  Matthew sent this same patch today so this bug is fixed
+on today's linux-next.
 
-BTW, we successfully cherry-picked 3 suggested[1] commits over v6.1.105 in
-ALT, and there is no reported problems as of yet.
+regards,
+dan carpenter
 
-  89add40066f9 ("net: drop bad gso csum_start and offset in virtio_net_hdr")
-  fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-  9840036786d9 ("gso: fix dodgy bit handling for GSO_UDP_L4")
-
-[1] https://lore.kernel.org/all/2024081147-altitude-luminous-19d1@gregkh/
-
-Thanks,
-
-> 
-> We can also avoid the backport of fc8b2a6194693 and construct a custom
-> version for this older kernel. All this is needed in virtio_net.h is
-> 
-> +               case SKB_GSO_UDP_L4:
-> +               case SKB_GSO_TCPV4:
-> +               case SKB_GSO_TCPV6:
-> +                       if (skb->csum_offset != offsetof(struct tcphdr, check))
-> 
-> and in __udp_gso_segment
-> 
-> +       if (unlikely(skb_checksum_start(gso_skb) !=
-> +                    skb_transport_header(gso_skb)))
-> +               return ERR_PTR(-EINVAL);
-> +
-> 
-> The Fixes tag points to a commit introduced in 6.1. 6.6 is queued up,
-> so this is the only release for which we have to create a custom
-> patch, right?
-> 
-> Let me know if you will send this, or I should?
-> 
