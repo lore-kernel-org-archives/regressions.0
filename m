@@ -1,105 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FD41B2516;
-	Wed, 21 Aug 2024 15:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88672136E09
+	for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 16:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724252401; cv=none; b=aArarHeZKUpDmo2MZYOfyn76UOE6eiZ/IAzlNUMXjqZ/xZz50/0SmwFeeV5qNtJtJHBaRSZ3737uciokwEMDZbsgBPEa1DwbiFzp1SrKAaLcqi0xy8iJWiOiOCoMY90PQV6dBEm91urdba1zkyuyC3sx9t+6inqHYsqbIvk3DGY=
+	t=1724256274; cv=none; b=Ic6i1pWE8klM0mxLadkGdJMgRsF8bB3k5TBr+c4NnX26LzeDVEUC1yHXUJPtpPtS7BhtVI82FO+3VKDjlhhTK4q/zmRXQNhlxoXw9SE/x/UrIDlwYipQAfqtUsCHaD2BnP/mqusDSvt915aVuZcpzTN7tmE/JQGeS53DI9fz4co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724252401; c=relaxed/simple;
-	bh=IBN6ywL7mYkh82/j5VznfLF6ZiKDxwfMVwAbnqTvVlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hseRpfRA7BUUSQx8qf2fZ3mcXq+OxUoYqH7GmrhkfcJAz1QEqGacDr3RMdO+7FIBuAsCpmL9+n4J9nnOhjRDPl6NO26iJwJXiNe0dyIAT3AptZdJS5+zf2EY4VIFY7XZs1j0CjB3FMNBwLiMZd4Hrn3CfafVx4w7ESjKpfbu6gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjP4IpRm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724256274; c=relaxed/simple;
+	bh=0+ktvaMb9+xdI3BvRNEJgnY+N0roVpt98Vg//lch6Cs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WbQIe4HtxXyLqd0040QNgC+qPxS99hyNl8QuFIujZb6wzUWi8v5uI6zp0KF+f/M/ANGllEV6m5cdlJwpt4rLvl0u4dEcTvpgdRY4Ny6FL0/eoKEfI1Pfnqz7+hhkVp5esfh+62srlywhGdd9erUGlNCAJC70rboV8NWurN47+JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBZ2qFHC; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjP4IpRm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E858FC32781;
-	Wed, 21 Aug 2024 15:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724252401;
-	bh=IBN6ywL7mYkh82/j5VznfLF6ZiKDxwfMVwAbnqTvVlQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TjP4IpRmrQyy63JtLyx5SlJeP/OGNKmXSdI6LYE+ayq6fxjrkIoDchMWUyvBTxbRo
-	 NOzqYvLPKVT0oRHTjQbpsSwBeOH4ZmatOUNaTJXPIvRMzUn95AY4VBod0pT+3fJpfR
-	 GXKsc1Ar2SQ+dp3rFdro1yeBZnlsCdVy6BqVMnGzti52CoFgHgxML388qpHmX68Hr+
-	 va/fmNM9zrLWGJ7uZZForOWUpR1R8Bbi+aWRPTwWlqHB2YD3Dnmz5wiMLEbnE/Kac3
-	 yCZYxMmgZdNoo8PuK9fcD5qzAmo6NwAYJY5uV/bgZCBrjJlpI0LMwXmcp10MfryWdI
-	 1apXowugEdYgQ==
-Date: Wed, 21 Aug 2024 09:59:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Petr Valenta <petr@jevklidu.cz>,
-	Dima Ruinskiy <dima.ruinskiy@intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Hui Wang <hui.wang@canonical.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	przemyslaw.kitszel@intel.com, intel-wired-lan@lists.osuosl.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: ACPI IRQ storm with 6.10
-Message-ID: <20240821145959.GA248604@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBZ2qFHC"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7141285db14so1461501b3a.1
+        for <regressions@lists.linux.dev>; Wed, 21 Aug 2024 09:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724256272; x=1724861072; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0+ktvaMb9+xdI3BvRNEJgnY+N0roVpt98Vg//lch6Cs=;
+        b=hBZ2qFHC5No0xLJR8vyRKqieRX4s6dbylYZJ+ZWC1aBzK+YhUJD3ZsN8Jiw7nVZYMG
+         PIUvuU60z5QUrV9O6l2uAMlsqwl7Trx6g+OM4ZRPlYWowCThHGkNy9B9x+QZSQOnS2gj
+         R69oup78Lkuuoj03b0E7m820Am6SmcSKpDyRMqHbCjlobWkL4DrydPJXCNJXpQ/FWrph
+         LkODMXY1BbR7nSSsf/JYEiTFlUJkBsr2TG7lhWoEZ6HQHxG6CKv8L7OuuykYu+8qwPNh
+         CYQOv7t806T16Rc6d0gVJULuEdofdb49xWtUV8tbe8WClVCGRUT7HH/WrA1noRmpjF7j
+         /OMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724256272; x=1724861072;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0+ktvaMb9+xdI3BvRNEJgnY+N0roVpt98Vg//lch6Cs=;
+        b=C5pUhAY2A7wzWSJII5R9pJdPY1QWEeBnsCcYCdbsyf0JE6JQDQ8PdceSETDfEgjamN
+         U68PQ2Pz4UqWa45aaokP5NN2jGyufCMuF8aYPbM3GVHeZYu4v9VK0BT6z25yoxTurKNv
+         LV9DlOrDE8TmshPPYD+B06i4x+dkf5beSrEEgxpmkU0BkhbPyJdmnF8HMCKeRgxZU5Sk
+         Yfekd5+j3jMlAQHS3TNe1KwJHyNQoj8emdEABX94DcIlPFyjUeXoK/qWy/BlTnA6Cy4I
+         /oEOC4jeu/5URGz/T5ktT/Wgxv5FwhfBeCK+7H1xcY5EHdRBQVbXvBFrjDLKb+afFm4P
+         Ez7w==
+X-Gm-Message-State: AOJu0Yw6lkdbOuixSyGcg2mlHm1dDPsN7L4IX9t01CTRmRxFGWISgcAP
+	4jYNJ4CLwraHtmKBdHYSz54UDdBLgG3EmGgadhAZ+W2YQf9vBfPC
+X-Google-Smtp-Source: AGHT+IG/rbFlFVuwrw+YDsQyuuBns2vfsbiCf6DnPSaDf3Ohl3baq7iQSNHITEkd1eaXENVMWU6SNw==
+X-Received: by 2002:a05:6a20:cfa4:b0:1c8:b145:29cd with SMTP id adf61e73a8af0-1cad7fc7118mr3702775637.24.1724256271557;
+        Wed, 21 Aug 2024 09:04:31 -0700 (PDT)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c6b6365afcsm11222944a12.87.2024.08.21.09.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 09:04:30 -0700 (PDT)
+Message-ID: <2449825072217d392b5b631e8fd394e91b22a256.camel@gmail.com>
+Subject: Re: KASAN: null-ptr-deref in bpf_core_calc_relo_insn
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Liu RuiTong <cnitlrt@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 21 Aug 2024 09:04:24 -0700
+In-Reply-To: <188a0d1310609fddc29524a64fa3c470fc7c4c94.camel@gmail.com>
+References: 
+	<CAK55_s6do7C+DVwbwY_7nKfUz0YLDoiA1v6X3Y9+p0sWzipFSA@mail.gmail.com>
+	 <badd583d09868ffdd48a97c727680ca6f5699727.camel@gmail.com>
+	 <188a0d1310609fddc29524a64fa3c470fc7c4c94.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b190e352-e11f-4795-941a-62c09ba5f602@jevklidu.cz>
 
-[+to Dima, Vitaly, Hui; beginning of thread at
-https://lore.kernel.org/r/60ac8988-ace4-4cf0-8c44-028ca741c0a1@kernel.org]
+On Wed, 2024-08-21 at 04:46 -0700, Eduard Zingerman wrote:
 
-On Wed, Aug 21, 2024 at 01:39:11PM +0200, Petr Valenta wrote:
-> Dne 20. 08. 24 v 23:30 Bjorn Helgaas napsal(a):
-> > On Tue, Aug 20, 2024 at 11:13:54PM +0200, Petr Valenta wrote:
-> > > Dne 20. 08. 24 v 20:09 Bjorn Helgaas napsal(a):
-> > > > On Mon, Aug 19, 2024 at 07:23:42AM +0200, Jiri Slaby wrote:
-> > > > > On 19. 08. 24, 6:50, Jiri Slaby wrote:
-> > > > > > CC e1000e guys + Jesse (due to 75a3f93b5383) + Bjorn (due to b2c289415b2b)
-> ...
+[...]
 
-> > I'm at a loss.  You could try reverting the entire b2c289415b2b commit
-> > (patch for that is below).
-> 
-> This patch didn't help, so I reverted it back.
-> 
-> > If that doesn't help, I guess you could try reverting the other
-> > commits Jiri mentioned:
-> > 
-> >    76a0a3f9cc2f e1000e: fix force smbus during suspend flow
-> >    c93a6f62cb1b e1000e: Fix S0ix residency on corporate systems
-> >    bfd546a552e1 e1000e: move force SMBUS near the end of enable_ulp function
-> >    6918107e2540 net: e1000e & ixgbe: Remove PCI_HEADER_TYPE_MFD duplicates
-> >    1eb2cded45b3 net: annotate writes on dev->mtu from ndo_change_mtu()
-> >    b2c289415b2b e1000e: Remove redundant runtime resume for ethtool_ops
-> >    75a3f93b5383 net: intel: implement modern PM ops declarations
-> > 
-> > If you do this, I would revert 76a0a3f9cc2f, test, then revert
-> > c93a6f62cb1b in addition, test, then revert bfd546a552e1 in addition,
-> > etc.
-> 
-> I have created revert patches like this:
-> git format-patch --stdout -1 76a0a3f9cc2f | interdiff -q /dev/stdin \
-> /dev/null > revert_76a0a3f9cc2f.patch
-> 
-> I have applied revert_76a0a3f9cc2f.patch (rebuild and tested), then in
-> addition revert_c93a6f62cb1b.patch and after applying
-> revert_bfd546a552e1.patch irq storm didn't appear.
-> 
-> I have tested it with 3 subsequent reboots and in all those cases it was ok.
+> will post a fix to bpf mailing list shortly.
 
-Thanks for all this testing.  It sounds like reverting all three of
-76a0a3f9cc2f, c93a6f62cb1b, and bfd546a552e1 fixed the IRQ storm, but
-I'm not clear on the results of other situations.
+Status update:
+apologies for the delay, the fix is trivial but I have some problems
+with test case not printing expected log on BPF CI, need some time to debug=
+.
 
-It looks like c93a6f62cb1b could be reverted by itself because it's
-unrelated to 76a0a3f9cc2f and bfd546a552e1.  I added the authors of
-all three in case they have any insights.
+Link to wip patch:
+https://github.com/eddyz87/bpf/tree/relo-core-bad-local-id
 
-Bjorn
