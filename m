@@ -1,119 +1,137 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00191192585
-	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 15:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A01188001
+	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 16:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724425634; cv=none; b=pUdbMVBbqBPlY7JRE9qIoS8BN5hcda5iluw0K5/YR0rYYxSG0ESqqspXuJeeZP0+SWqkA4S9B2WHcgv+WHccqzS0DT2bwtMHy9O5k2ok3a5vwcnm1Nvs8sCRPmypSW7teET9fGrtS9BXRw5PpBy517q/EkFFx6JY7D47izPdhdc=
+	t=1724429306; cv=none; b=fEEwLroPi/B/S6m2XnZdCeTdhaSWqqufJh5vxamFMnnKjJ9MrRBgw+L4QGUzRYTLG3xPZI0qVqjIIJ7ZijGp1zwfEEIefwyDjkOiX5PvPJIlSOZYTdEObtJXU0MmHM7Gtj3GEpsyAMgDIkPlVz3mBJVDlK1LD2dlK1zgE7nPYK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724425634; c=relaxed/simple;
-	bh=Trk7kRqz9cwbWgyymtr7L+zIg0BtyDTU0ddlg39/M8Q=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LmtYWNjzuRbI3dxpgI+0h5QgC2bg8NDLgv0CamVOl/NIh1DOhIzKXTSUjwo7FTNIqDlHw5dYEaHjWkDYktqMRnbLZUkHXepi1TuOPGmZhY0CjxaZ5eeTyJqvq+QAbvqMiocnXrH81eOuZfbn+Fb0QZ9KuEip38lmcfbjokOkXsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8NuscBU; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724429306; c=relaxed/simple;
+	bh=+ZasLi+hclkNjCek93y8gPQorkAqqJ6TQAwzl8Op0MY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mUlaI2VvbnS3qJPE0eI4EQ+/jpwll82YBvE+LJMxfH8bRRV4n8aRikyaA1Nd4MVqw1Y5Xd1qcTHFO7H1c5u3bEYdxD2V3VbiSPkyo4GQEJp4VuQbWGPdyk3+zVu/7RhI4vlPJF+UCuIk3OzUZeVgr1j/03sOAwpCKJUflSwu5Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P9rINcU1; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8NuscBU"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a86910caf9cso333536766b.1
-        for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 08:07:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P9rINcU1"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52efdf02d13so3139908e87.2
+        for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 09:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724425631; x=1725030431; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1724429303; x=1725034103; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hN/u/MQcY1xAjLL8Hjod4ME8opqYEyKjoXDkSbZQ89U=;
-        b=S8NuscBUu+UfdQikR0xxOMPiAFK9WdvxHAtD/ea5YTVNvdme/PkMDT55Z+Rm9o11NO
-         CGM8nn3Qylw0cEo5txFGWsJh+87bSz6tjW4o89G8UecWToBWyCGW0zesMn1BaY5kSJvK
-         VGnTLkRnAuTtqeHUNRNXZ4m6MYzJidcHuxNLTHLUDaw2Unol9DUzU4Xq5NlkkIly+tN4
-         SvAHQExQjLmza+QI1jjRXGYWAWtWzo+7sTzwRQq1QZbBdGNC9RoH5f21zmO7IZwlrZwY
-         zue0EJ+lPXVqHB/hQ7Cd07G7P7TSE72BnLDFNt0fg0tDE1H/VmF9sgIZR93BXnLIuBDN
-         m4gg==
+        bh=60mDZjLohoH/Srn+FzsRdN5LB7GzcubV5MgxDtoHqBs=;
+        b=P9rINcU1M1FCedPhYfif4Q0OI4QaEWYLJhQPPh3zAMqfND28NX+7kmJrZgwBcyrIsV
+         sZI7KdhZwXiJEFs6U5Z13AjKMxgGDO3Zp/9pflTEOXQ+Us1gkFGpXXELVcugQeqktrz4
+         Pg+0q1HLro1GdclYFOdZePdsDDiLRLWKz2ftc5LROn7zb/eOpMmlfjvYj1Dihriq1wqL
+         kz6//5WckJzcuZmoitAv/s3cHzY78IqIq5G6g21QkbOuSL62p3DBt1vMTZh2a9wxQk+K
+         HKI3Acgsk1XdGhaWpJUMwk/YssfT8Daoqj4gtrfXuziymyue8nPY4w4Kiq5jkhWkRgkh
+         kyqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724425631; x=1725030431;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1724429303; x=1725034103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hN/u/MQcY1xAjLL8Hjod4ME8opqYEyKjoXDkSbZQ89U=;
-        b=b0oQMv7kBQGsP2xow2gwaFZ5xwshIqxKRBUaV4XO9Scq24anbRLmXJJujHiIXSd9yn
-         6r1EcfGB1+RvGvtHD2wDnCz44/KvGkKkwAFf/Dexxvu8VmvXQH6C1B53MJDfpXOrj/SP
-         0fRvVq1kNgz8CeYqFe1HipROfjN7leT4VYVxbQDr2bFWCgKdjSdNkcfAEyYJg5ayZ++v
-         MyT1j+knMGc1w3jdVj/xrQMmC3nXNxoDGZ2ykVw23b0tWxaJoQKlA+KZ+pDjEuBks8/c
-         nLdUBFbNyTgtVsWVIsFr8204dtsZ0IHWuShTT7iDCG3w6Ugk/PTZJcp8D5WTVqdOVpg9
-         wLwQ==
-X-Gm-Message-State: AOJu0Yw5O5uKna/VR01vt+Wsj2JQfGoCLXxHOGOsbzq8xl4uYAbVJtSd
-	vkFH5M/F6FJsXsNK+S6FcZWuJ0bLMRnqUX95Dwv7kX5Bsu2QlZvT
-X-Google-Smtp-Source: AGHT+IFyl+aF9R5RuSf+qHazg+rk9eimRMeCf57k838qIezH0l6uUevQOGnLjaOijBOPiJBcMEhZXQ==
-X-Received: by 2002:a17:907:724a:b0:a86:94cd:97f0 with SMTP id a640c23a62f3a-a86a2fae4f0mr277662266b.19.1724425631009;
-        Fri, 23 Aug 2024 08:07:11 -0700 (PDT)
-Received: from smtpclient.apple (89-73-96-21.dynamic.chello.pl. [89.73.96.21])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f2e48e2sm269559166b.89.2024.08.23.08.07.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2024 08:07:10 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        bh=60mDZjLohoH/Srn+FzsRdN5LB7GzcubV5MgxDtoHqBs=;
+        b=epIrAhazCa2UeTXrRxOS8Ax289ZZSB/oKKSMhAXNBPqzIrJblqYzmpfKp0aJFAAfVp
+         6mPCA2JT//YFWIGPUwkSBY+KHbIxP5Hjka/kagGeDP3kK3dpRsI5DiC/NZT8vvBQjs+D
+         PVjvIRlAXrwqNEGypD7z2iyTKqDBr2mZX/0cVv1p9SbZeD2+Xu3plqLWte+oEVpm9iNk
+         cw/IIpzbMa22TPiRxDggHK9mzsKWiYCSUioG2/BZ9k1nW8BLSIeBWvkKmn+xPZAqmnnG
+         JyQSe/oFAlU78SXaOMUD74JDiEa+901KD8Q8Cgbthng7bGuZnZKwR5Tr8xTXLI2C61ri
+         8gMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfzqHk1Z/MgYN+nRcbWHBP7sZi5bTYdD2KoDC4axI4JH/88do/Mp0YEr1/MgMY2apZjJAW+HFXLZ5clg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzecKJMBoNo1ltVX7HJ1ql8lZnmWIZVgMmzxuzE5cscVmQLvIbl
+	3nxrm6znOWzYpbhgnDghg7/rrozXFT7oyAUDmrN3MwOOpIX47+l48yGWbNFlzTpGbVhSn1FwRTh
+	MBd9ZEtcEhu0XrwhXowqnRnDo6Pu9TbDRwnGy
+X-Google-Smtp-Source: AGHT+IFzWoZ4n+2CZWNfhdJAMZParmTzQohv9bRH0x15mgayHZBeNg5k4entByf4z9D7oSlR7pVx0fhye36Aap4RFO0=
+X-Received: by 2002:a05:6512:234b:b0:533:4505:5b2a with SMTP id
+ 2adb3069b0e04-534388510cdmr2797061e87.28.1724429302210; Fri, 23 Aug 2024
+ 09:08:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+MIME-Version: 1.0
+References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
+ <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
+ <CAKEwX=PEye=VcXF=r-A9B47VsNtpLLxz5cJiswzuQXBio8rizA@mail.gmail.com> <Zsig_AZDT5zOO1Wg@casper.infradead.org>
+In-Reply-To: <Zsig_AZDT5zOO1Wg@casper.infradead.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Fri, 23 Aug 2024 09:07:44 -0700
+Message-ID: <CAJD7tkbO938ETJn0FOG_vVU4V2_dBanio1QG56cp6ctFHpSeNw@mail.gmail.com>
 Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
  mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <ZsiLElTykamcYZ6J@casper.infradead.org>
-Date: Fri, 23 Aug 2024 17:06:58 +0200
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Yosry Ahmed <yosryahmed@google.com>,
- Nhat Pham <nphamcs@gmail.com>,
- Linux-MM <linux-mm@kvack.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info>
- <ZsiLElTykamcYZ6J@casper.infradead.org>
 To: Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+Cc: Nhat Pham <nphamcs@gmail.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Aug 23, 2024 at 7:47=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Fri, Aug 23, 2024 at 10:35:19AM -0400, Nhat Pham wrote:
+> > On Fri, Aug 23, 2024 at 9:13=E2=80=AFAM Matthew Wilcox <willy@infradead=
+.org> wrote:
+> > >
+> > >
+> > > That said, zswap could handle this better.  There's no need to panic =
+the
+> > > entire machine over being unable to read a page from swap.  Killing j=
+ust
+> > > the process that needed this page is sufficient.
+> >
+> > Agree 100%. It is silly to kill the entire host for a swap read error,
+> > and extra silly to kill the process because we fail to writeback - for
+> > all we know that page might never be needed by the process again!!!
+> >
+> > >
+> > > Suggested patch at end after the oops.
+> > >
+> > > @@ -1601,6 +1613,7 @@ bool zswap_load(struct folio *folio)
+> > >         bool swapcache =3D folio_test_swapcache(folio);
+> > >         struct xarray *tree =3D swap_zswap_tree(swp);
+> > >         struct zswap_entry *entry;
+> > > +       int err;
+> > >
+> > >         VM_WARN_ON_ONCE(!folio_test_locked(folio));
+> > >
+> > > @@ -1638,10 +1651,13 @@ bool zswap_load(struct folio *folio)
+> > >         if (!entry)
+> > >                 return false;
+> > >
+> > > -       if (entry->length)
+> > > -               zswap_decompress(entry, folio);
+> > > -       else
+> > > +       if (entry->length) {
+> > > +               err =3D zswap_decompress(entry, folio);
+> > > +               if (err)
+> > > +                       return false;
+> >
+> > Here, if zswap decompression fails and zswap load returns false, the
+> > page_io logic will proceed as if zswap does not have the page and
+> > reads garbage from the backing device instead. This could potentially
+> > lead to silent data/memory corruption right? Or am I missing something
+> > :) Maybe we could be extra careful here and treat it as if there is a
+> > bio read error in the case zswap owns the page, but cannot decompress
+> > it?
+>
+> Ah; you know more about how zswap works than I do.  So it's not a
+> write-through cache?  I guess we need to go a bit further then and
+> return an errno from zswap_load -- EIO/ENOENT/0 and handle that
+> appropriately.
 
+It should work if we just return true without calling
+folio_mark_uptodate(), this is what we do if we get a large folio in
+zswap_load(). Returning true means that the page was found in zswap,
+so we won't fallback to reading from the backing device. Not marking
+the folio uptodate will cause an IO error IIUC.
 
-> Wiadomo=C5=9B=C4=87 napisana przez Matthew Wilcox =
-<willy@infradead.org> w dniu 23.08.2024, o godz. 15:13:
->=20
-> I wouldn't be surprised if this were dodgy ram.
-
-
-Well - that was my initial hypothesis.
-
-in fact i had few of them. Ranked (and ordered) like this:
-1. downstream kernel patches
-2. hw (ram) issue
-3. kernel bug
-
-So full history was:
--build myself archlinux 6.10.2 kernel; upgrade builder OS (only kernel; =
-nothing else)
--run normal devel process and (to my surprise) discover interrupted =
-CI/CD builds by kernel oops
--downgrade to 6.8.2 and done 4 full builds (full takes 8..9h of constant =
-12c/24/t compile). all good. =20
--prepare vanilla 6.10.6 (to exclude potential downstream (ArchLinux) =
-root causes)
--run normal devel process and still discover oops
--make sure hw is ok by week of test with 6.8.2 (recompiling for 3 =
-architectures on 4 OS (3 in kvm). This was almost 5 full days of 12c/24 =
-compiling. All good
--because last steep was all good - decide to go to you :-)
-
-sure - this is possible that 6.8.2 had luck with my ram and 6.10.6 had =
-no luck=E2=80=A6.but i personally don=E2=80=99t believe this is a =
-case=E2=80=A6.    =20
-
-btw: we can go with elimination strategy.
-So what i need to change/disable to be closer to finding root cause?
-swap?
-now it is swapfile on system nvme
-
+>
+> > The rest seems solid to me :)
