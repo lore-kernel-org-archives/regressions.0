@@ -1,90 +1,102 @@
-Received: from nov-007-i673.relay.mailchannels.net (nov-007-i673.relay.mailchannels.net [46.232.183.227])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4AB1CC8B1
-	for <regressions@lists.linux.dev>; Thu, 22 Aug 2024 15:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.183.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BA255E53;
+	Fri, 23 Aug 2024 05:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724340670; cv=none; b=fGtS4zNlFmU6NyPCwJX9kwnVisua8N+HEGRhqlPYR7vkdSdvgv96ZajYg0sE0fiaLcn3+rkYbwdJs+ERIFZX24DO/Pw3gARF79IA6PR28JQ0qTtNa2L2dPGJwH3+q3w4/LEHwJjUxtCIVnZBgMSc1IB7FcCGvJoO8u1J8xxFEEU=
+	t=1724390605; cv=none; b=Wgi3iGyM7lOTBaDd9KxpuPiYI6mh+L3i3QPTnsvYMS2nEb/E2tAOCSWYrqhq1dC4IuA1laedK3rlJDUjFIC0Ly8skXh14yzxxRCckPUaVTuBRw+R3m1y6dEXXQhM6QuhmGCsVIu98UaXaYd2TpQ+4e2tWi2dBMzSwkg6VLy3vEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724340670; c=relaxed/simple;
-	bh=Sgn+JlE+y02mD/2NB0fDhHhN/s8R73WdXbqdvYgKqsg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ChWn51nLIVenlchCXkYJ0pDTS0D7oj0YatwgPyuUmGfbM98SKiEkjSQcTjmb2JkykJvhQTkR0pgawOo/J2YjQIvjR/BRMC7z8VnClJigFi3QeQ2y5xFXGvF2++Nc4vuZGQwdznUjRRBhQGjg5QF+w/08JebFz1jednTybje6ukM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch; spf=pass smtp.mailfrom=bitron.ch; dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b=folE29DH; arc=none smtp.client-ip=46.232.183.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitron.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitron.ch
+	s=arc-20240116; t=1724390605; c=relaxed/simple;
+	bh=ptkDJuB4wN9LbPHBE9yxjtR4r1HRV4cAD6INkJxUbkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ciiTRgqIG9ycncMU1IMSEBR6tvxAMuXKvH9rK8yhSQhqYGcbIMojFGKSmuLuoB7ZblLEUv67CKRNmeyvcALnynbtb949b1LexUgfZtcWW3FawrUX000T04O3d1w99Pn7Ig5o/dZ42NGaKcECVtK/pHAJYjW3ds+6z2parKZMJxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JGJmwxWw; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitron.ch header.i=@bitron.ch header.b="folE29DH"
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D3470E0001A;
-	Thu, 22 Aug 2024 14:14:52 +0000 (UTC)
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: novatrend|x-authuser|juerg@bitron.ch
-X-MailChannels-Auth-Id: novatrend
-X-Trail-Thread: 663174d76a6c0544_1724336092710_2543201654
-X-MC-Loop-Signature: 1724336092710:2881423526
-X-MC-Ingress-Time: 1724336092710
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bitron.ch;
-	s=default; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Sgn+JlE+y02mD/2NB0fDhHhN/s8R73WdXbqdvYgKqsg=; b=folE29DHU4vK6Tvik02lZfZqUu
-	euDED2ozeUmrJZvzbipeKSdD3gkUJuJYVZMUEPPEMUwmEh6UceRQ8kUzdMFVW0Le8LFNxjF9jMClr
-	TqLn5x5O6IKv0EtauGZntSsLY68F08sPZnApnwT1UWpuOCaRo1GY7hEU6zPg0XBCHgYE0zcSn9Hq3
-	ud14ETW2kQ5o+wPmi2eICDRmqDbv1EEESvRgOezHGAmYCDlNHtONG3RMFoHOwHgMDDMfkKzxrsM3H
-	01iiIOHymop+j/ivjgmS+3ztMSW3s85kirIU1j9nbxss5tYZR32nAxi93TJiF/PAxps542YpIFQ2/
-	cADYBicw==;
-Message-ID: <dbe300f06380729372c42c0cb198c721d9d9b083.camel@bitron.ch>
-Subject: Re: [REGRESSION] fuse: copy_file_range() fails with EIO
-From: =?ISO-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-fsdevel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Date: Thu, 22 Aug 2024 16:14:45 +0200
-In-Reply-To: <CAJfpegtNF4yCH_00xzBB1OnPBHk+EP0ojxDPp=qCFVKC=c14ag@mail.gmail.com>
-References: <792a3f54b1d528c2b056ae3c4ebaefe46bca8ef9.camel@bitron.ch>
-	 <ZrY97Pq9xM-fFhU2@casper.infradead.org>
-	 <5b54cb7e5bfdd5439c3a431d4f86ad20c9b22e76.camel@bitron.ch>
-	 <ZreDcghI8t_1iXzQ@casper.infradead.org>
-	 <CAJfpegvVc_bZbL1bjcEbEh4+WU=XVS94NMyBPKbcHzAzyxM6_Q@mail.gmail.com>
-	 <ea297a16508dbf8ecfa4417cc88eef95b5d697e8.camel@bitron.ch>
-	 <CAJfpegsvQLtxk-2zEqa_ZsY5J_sLd0m4XhWXn1nVoLoSs8tjrw@mail.gmail.com>
-	 <CAJfpegtNF4yCH_00xzBB1OnPBHk+EP0ojxDPp=qCFVKC=c14ag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JGJmwxWw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=wSIT3l0Rz2s5QcxaavD9w3qriHdaS0mTvhZFg3F9mOY=;
+	t=1724390603; x=1724822603; b=JGJmwxWwPODZCpkWM4XOl/ZxNH9wtN+TdaL5JGD0zrTOWaN
+	9AttkRu+vvPIyZ/9jHgC5Kwc1N6RVuVW151tjVP7uBi3hnItjCdBSzaf3hbuV8Bxi9TnWAba63af3
+	NWtP0UxJua/Wx+QOERrHFK+2RwPu9m8tBOzKovqpTlse/zpZP5h4LTrjZx9fcUTIyQvSK5xBOZLhH
+	iDue+wI+jZT2dydMSyaAuqMm8SLR+sg+HlYQgWsu6kdegurOdoEafudojEwdLNAtLu7xDognPOOey
+	WoQ06XdJ9l13MQzQ8pmV4f5SX3yfh0Je9mmBHygyQfh39SPYEvtQD2tWMZbklA3Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1shMlX-0005Py-LR; Fri, 23 Aug 2024 07:23:15 +0200
+Message-ID: <93296f30-1a3c-44b6-91d1-61408e1d9270@leemhuis.info>
+Date: Fri, 23 Aug 2024 07:23:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-AuthUser: juerg@bitron.ch
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] pidfd: prevent creation of pidfds for kthreads
+To: stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <cyphar@cyphar.com>,
+ Tycho Andersen <tandersen@netflix.com>,
+ Daan De Meyer <daan.j.demeyer@gmail.com>, Tejun Heo <tj@kernel.org>,
+ Eric Biggers <ebiggers@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240731-gleis-mehreinnahmen-6bbadd128383@brauner>
+ <20240818035818.GA1929@sol.localdomain>
+ <20240819-staudamm-rederei-cb7092f54e76@brauner>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20240819-staudamm-rederei-cb7092f54e76@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724390603;21903e02;
+X-HE-SMSGID: 1shMlX-0005Py-LR
 
-On Thu, 2024-08-22 at 15:32 +0200, Miklos Szeredi wrote:
-> On Thu, 22 Aug 2024 at 15:14, Miklos Szeredi <miklos@szeredi.hu>
-> wrote:
->=20
-> > > > What I don't understand is how this results in the -EIO that J=C3=
-=BCrg
-> > > > reported.
-> > >=20
-> > > I'm not really familiar with this code but it seems `folio_end_read()=
-`
-> > > uses xor to update the `PG_uptodate` flag. So if it was already set, =
-it
-> > > will incorrectly clear the `PG_uptodate` set, which I guess triggers
-> > > the issue.
->=20
-> Untested patch attached.=C2=A0 Could you please try this?
+On 19.08.24 10:41, Christian Brauner wrote:
+> On Sat, Aug 17, 2024 at 08:58:18PM GMT, Eric Biggers wrote:
+>> On Wed, Jul 31, 2024 at 12:01:12PM +0200, Christian Brauner wrote:
+>>> It's currently possible to create pidfds for kthreads but it is unclear
+>>> what that is supposed to mean. Until we have use-cases for it and we
+>>> figured out what behavior we want block the creation of pidfds for
+>>> kthreads.
+>>>
+>>> Fixes: 32fcb426ec00 ("pid: add pidfd_open()")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Christian Brauner <brauner@kernel.org>
+>>> ---
+>>>  kernel/fork.c | 25 ++++++++++++++++++++++---
+>>>  1 file changed, 22 insertions(+), 3 deletions(-)
+>>
+>> Unfortunately this commit broke systemd-shutdown's ability to kill processes,
+>> which makes some filesystems no longer get unmounted at shutdown.
+>>
+>> It looks like systemd-shutdown relies on being able to create a pidfd for any
+>> process listed in /proc (even a kthread), and if it gets EINVAL it treats it a
+>> fatal error and stops looking for more processes...
+> 
+> Thanks for the report!
+> I talked to Daan De Meyer who made that change and he said that this
+> must a systemd version that hasn't gotten his fixes yet. In any case, if
+> this causes regression then I'll revert it right now. See the appended
+> revert.
 
-I can no longer reproduce the issue with this patch. So at least with
-regards to my test case, it looks good to me.
+Greg, Sasha, JFYI in case you are not already aware of it: I by
+chance[1] noticed that the patch Christian plans to revert is still in
+the 6.10-queue. You might want to drop it (or apply the revert as well,
+which is in -next, but not yet in mainline afaics).
 
-Cheers,
-J=C3=BCrg
+Ciao, Thorsten
+
+[1] after I noticed this thread a third time, this time via some SELinux
+problems it caused in Fedora land:
+https://bugzilla.redhat.com/show_bug.cgi?id=2306818
+https://bugzilla.redhat.com/show_bug.cgi?id=2305270
