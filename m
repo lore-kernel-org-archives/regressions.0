@@ -1,92 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A555C3E;
-	Fri, 23 Aug 2024 06:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78C613C9D4
+	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724393575; cv=none; b=SVHekzoHjXOseAEkFBovaqeCc9GsyEnZ7aDYZ+sCFTr9hvE8oUSyf+X/aCRZEAwzz7AXooJysy6FLQ/Y8O9zSIK819CsN/7lnMJDgP/YJdh2y46IPKAfkBWzOAd2uHWbqqJ3+aSXUASOAPjgjF/OSoN0gDJHk5CHIoGZ701AG0A=
+	t=1724398605; cv=none; b=V81C99jK3wq+ruX1b16VwEfWKznJwCoUqAqrwpo5NHeEVwbjvKQKvUtTe+ClMKuWsucRHc4Cu5M/jgdWx3sIay4NvG5CWvnKtyyQb5VkJMvk+OD1xGzPovTGE/1LYQ41f/7eIEPlpLHnEDAnOfU2o1g+JhoG/53hz3NYb6/c8sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724393575; c=relaxed/simple;
-	bh=VuaMXq/ic8X2m9kV83mf6YFYaszIuxekeGJm8Pfrrqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8wYm/TplyQcHaOZ/hFC5CeC8gB18imQ0wv59Juxykcjjufj01tqZ1vbLpRDBO4hGPPCjIuxcEz0b125va5sEaQEBns8+M/4u+tsK/+DG5msPWCo0qWqIOhOaXq9PdR2uW3JPcr9odojUPomL4FXk2PfaImz+XDRqCswnCD2rNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2cg4pVeJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724398605; c=relaxed/simple;
+	bh=s5N35l5clRxrtlNeVoVLCT3ZY3AY1oU49YBogcn/pXs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=XY7Sf/VcwYeUuOhhExACmuqc1frc7CkBtAJkDFAztORLcU5grt/sy+N5o2xYIH+SfuR6sHlws7juQQJP7Mm7vZRl1WuOgjOwpfYW5H7jKtC8SUPWYRJ3T4gF+NCKhf4sU1Ge5exets52d9CxvXbWH/A160UcQC7enZMqkNYXK/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OxgtDp1a; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2cg4pVeJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED127C32786;
-	Fri, 23 Aug 2024 06:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1724393574;
-	bh=VuaMXq/ic8X2m9kV83mf6YFYaszIuxekeGJm8Pfrrqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2cg4pVeJFoWhnJgcePmo6lZ4QBf+Lldz1O2gqcR/cj3fMPRDY1/5S+lSIdzQoJtx3
-	 liKnuqDEGtLZZVcWJrNXb4M6jpnSXRiNfXo2zpbMigL6yzFNkrUPrSmEbyKRfzi/op
-	 kuCgxH38zblAdnNsML67kVhuBCYId0ei/JDy9xO8=
-Date: Fri, 23 Aug 2024 14:12:51 +0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <cyphar@cyphar.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>, Tejun Heo <tj@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH] pidfd: prevent creation of pidfds for kthreads
-Message-ID: <2024082313-throttle-snuggle-6238@gregkh>
-References: <20240731-gleis-mehreinnahmen-6bbadd128383@brauner>
- <20240818035818.GA1929@sol.localdomain>
- <20240819-staudamm-rederei-cb7092f54e76@brauner>
- <93296f30-1a3c-44b6-91d1-61408e1d9270@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OxgtDp1a"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=s5N35l5clRxrtlNeVoVLCT3ZY3AY1oU49YBogcn/pXs=; t=1724398603;
+	x=1724830603; b=OxgtDp1aaPOLB6q6AfxOgQsw3aMx8sGiZBCjF2Nqxte3EaaGwoY9/ldlDTNjh
+	T2FkwNLICp9TH6UE2TtUHe52aJSLlsDnh+ORJ/Vccecca+e8vI0E9l22LpPkmtgVnigCUcdN9bKHJ
+	vm2FX/vxvLpeEF2PylYiDl9jB4WD3Wy3U/E+bTWMTbV3RqY5bcxygFBoT+6xepkscZ3FtWKlWEguD
+	zjlpSRKebKDeJwvMCeH0OEPGt7Szp+33tPJv+AxAJbkIgp6jaPD1vrzU7ZBQ135Nq+fSxTjoc+4z4
+	5nBAHcTKuWeiv2Q2iJyCO5H0JemGO59Xe6FhBuVwG9/bT4AgGw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1shOqf-0006Ox-Un; Fri, 23 Aug 2024 09:36:42 +0200
+Message-ID: <696cc489-aa38-4dab-b2f2-328dc972a6af@leemhuis.info>
+Date: Fri, 23 Aug 2024 09:36:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93296f30-1a3c-44b6-91d1-61408e1d9270@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724398603;1acf464b;
+X-HE-SMSGID: 1shOqf-0006Ox-Un
 
-On Fri, Aug 23, 2024 at 07:23:12AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 19.08.24 10:41, Christian Brauner wrote:
-> > On Sat, Aug 17, 2024 at 08:58:18PM GMT, Eric Biggers wrote:
-> >> On Wed, Jul 31, 2024 at 12:01:12PM +0200, Christian Brauner wrote:
-> >>> It's currently possible to create pidfds for kthreads but it is unclear
-> >>> what that is supposed to mean. Until we have use-cases for it and we
-> >>> figured out what behavior we want block the creation of pidfds for
-> >>> kthreads.
-> >>>
-> >>> Fixes: 32fcb426ec00 ("pid: add pidfd_open()")
-> >>> Cc: stable@vger.kernel.org
-> >>> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> >>> ---
-> >>>  kernel/fork.c | 25 ++++++++++++++++++++++---
-> >>>  1 file changed, 22 insertions(+), 3 deletions(-)
-> >>
-> >> Unfortunately this commit broke systemd-shutdown's ability to kill processes,
-> >> which makes some filesystems no longer get unmounted at shutdown.
-> >>
-> >> It looks like systemd-shutdown relies on being able to create a pidfd for any
-> >> process listed in /proc (even a kthread), and if it gets EINVAL it treats it a
-> >> fatal error and stops looking for more processes...
-> > 
-> > Thanks for the report!
-> > I talked to Daan De Meyer who made that change and he said that this
-> > must a systemd version that hasn't gotten his fixes yet. In any case, if
-> > this causes regression then I'll revert it right now. See the appended
-> > revert.
-> 
-> Greg, Sasha, JFYI in case you are not already aware of it: I by
-> chance[1] noticed that the patch Christian plans to revert is still in
-> the 6.10-queue. You might want to drop it (or apply the revert as well,
-> which is in -next, but not yet in mainline afaics).
 
-I was hoping it would get into Linus's tree "soon" so I could take the
-revert too.  As it's in -next, I'll grab it from there when I get a
-chance.
 
-thanks,
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-greg k-h
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219187
+#regzbot introduced: v6.10.4..6.10.5
+#regzbot summary: btrfs: kernel BUG at fs/btrfs/ordered-data.c:983!
+
+#regzbot report:
+https://lore.kernel.org/regressions/CAP-bSRbx2yWxErkiSf_Ux3Lnm0RGNvZQbpSvrqCcCtb_-aUoVA@mail.gmail.com/
+#regzbot fix: scsi: sd: Do not attempt to configure discard unless LBPME
+is set
+
+#regzbot report: https://lore.kernel.org/lkml/Zrog4DYXrirhJE7P@debian.local/
+#regzbot fix: scsi: sd: Do not attempt to configure discard unless LBPME
+is set
+
+#regzbot report:
+https://lore.kernel.org/netdev/cabe5701-6e25-4a15-b711-924034044331@samsung.com/
+#regzbot fix: b96ed2c97c7919
+
+#regzbot report:
+https://lore.kernel.org/linux-fsdevel/597dd1bb-43ee-4531-8869-c46b38df56bd@westnet.com.au/
+#regzbot fix: romfs: fix romfs_read_folio()
+
+#regzbot report:
+https://lore.kernel.org/linux-scsi/Zr%2FXrH1hsp0seP2Q@hu-bjorande-lv.qualcomm.com/
+#regzbot fix: scsi: ufs: qcom: Add UFSHCD_QUIRK_BROKEN_LSDBS_CAP for
+SM8550 SoC
+
+#regzbot report:
+https://lore.kernel.org/lkml/20240803125153.216030-1-gnurou@gmail.com/
+#regzbot fix: 6fc9aacad49e3f
+
+#regzbot report: ACPI: EC: Evaluate _REG outsid
+#regzbot fix: 71bf41b8e913ec
+
+#regzbot report:
+https://lore.kernel.org/linux-iio/0ea167a1-75d0-469d-a79f-ff2cb5e81bdc@gmail.com/
+#regzbot fix: iio: imu: inv_mpu6050: fix interrupt status read for old
+buggy chips
