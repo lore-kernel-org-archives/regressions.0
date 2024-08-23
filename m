@@ -1,140 +1,148 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281F618BC13
-	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 16:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1263618E03F
+	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 17:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724429827; cv=none; b=NhF0FhP4jsWB5bhCnpnhnLuc6f1UYJMoXnJlFRvnfCTcjpU4EootooYnYMn0/ii0H5V2RRMPDpnU5agjjnE7GgxStxAqSZAPm/3omLmK8c5miVrmP3XuJhOG174XTopsQTm6aBoESp10NidllPw267Ut1mSiXYQUt3Ppb87yUk8=
+	t=1724433885; cv=none; b=VgMtOCMtr83l64jrkIJlkuCkWGzvL+RaPghxlawNVmE7cWI3Wy3UOdIZi6vh0rcDhMNvpfNw+2XxoSIpjkUmNgGO69velNezt4yJ+uVW+EloHHxYaYvwsua532hzKuYpyDSeOxwURxBxDaO0ofeaVdGxhom/1naGPUsK1n/9JVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724429827; c=relaxed/simple;
-	bh=flB7OHR5QrKHPhbrF3On1DA0RFx/CeDMftCyKCVbPiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g+kou5Z0Zc0tJW/rrWL3toiObj2oGCsxVv/8ocKj5S2vu29+/Y4QZA+AhECPDZNoM0GIn8uoRoHG231VeI5A2XhBuds0qZZJDgAFYWhwcdX/OHZtI8RQflaurxjkcGyvmmN+fvM+79vaTvhyMYIZ0RUskLRIwFMw32M0XY2+PpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFBdDxK+; arc=none smtp.client-ip=209.85.160.179
+	s=arc-20240116; t=1724433885; c=relaxed/simple;
+	bh=II/l/BYUB8+ym0Bf6l9XPtXLxQdNIdTv3o6q40RMEhw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=cdT3RORRPgN4cV2s83BZX7PY8m9x3zu6bt9kJ1qoM/P0y4ZHDtMRYkN9kQaNNB0TNZ4IUPMKKIXCymkxgaPrU+c/BvlK4GAs7EYVHlFydEgHuoMtjQNr5ElQDsfUYOl6i2DK8NNlliRqgkQSSH+PtRmq7Rx1Hg/kcHPXOEIaSrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMYzZ9XG; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFBdDxK+"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-44fdde0c8dcso12238021cf.0
-        for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 09:17:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMYzZ9XG"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-533de5a88f8so1566060e87.3
+        for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 10:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724429825; x=1725034625; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1724433880; x=1725038680; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=flB7OHR5QrKHPhbrF3On1DA0RFx/CeDMftCyKCVbPiY=;
-        b=eFBdDxK+sHMQDM1eoM2RCw4ZPRqKppky9bpYg2YWAVHvqtglRCrTjLLqfgGXqEK9s3
-         LshjSCUBv34r0YrkIN/SoQGy0S6ypZ+Ln5m3l0ZRP3Wwm/xS7hQCePVQbzFcm/dkug/T
-         02xF8kl579HGE2/VwVrjLtgQqGULCmPUynJBSOu45auhoQn+lSHB7AKQa0fAzpQP3t/m
-         hjO+GKkkv86xsBzr0LIqCtuaUgHYJUH0LVOnqGKzdh1eKp6CoOWGNK5igGs2NEsVGBfk
-         UKUDjUks87RBs6dQe8daWC7FsRRaHtd+x0q4gb9RmdLKjraEbuQqaCszRIyRv3DxY0BZ
-         6HBA==
+        bh=wA90O16jMgd8CWh2MnYobE93W15NHZgeiwtdthdRGp4=;
+        b=GMYzZ9XGe5IzgTAyJb6aHk6AXu0u1on4qy5g4HQ/YjSZMaYYTKCLf+CpeQuzMsjuof
+         mgzswuipxpjfFsskGuvSXmwwL/hr3RVf/zrcpROdKuqdue4rGHUvuTDa70OWsHtCmWSq
+         KV+xvg7ruGY5D5pS4YWNi+smDsYoPA/Fy6GYripCav8elawGAM4s9HDwJUCJIu6w6kNS
+         AA/2eHS/JOP2f551p32dNC7twmc/Rgyf+nUvewmAncByM8cM56xUxuODBGW7hP8M2TiQ
+         3KlSPwqEiXe8xgkrwKib79NyeLNZC0tyHMnOmUUTbANW/oUncighcRkzGYvFYif3sVKA
+         Nf8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724429825; x=1725034625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1724433880; x=1725038680;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=flB7OHR5QrKHPhbrF3On1DA0RFx/CeDMftCyKCVbPiY=;
-        b=cm2PkDPa+Hsa46PBrLpSMkkCv10Brn6gtAh0PBXzMPTLbo3etpjpN+lhrv1oDLcZVY
-         KZwsh3kNeLukilq60RkSjsqkcZHhPuiCW0sz3u84LCZy9vfz6dXRdWtzGz7lf0vqBFXS
-         LSc8Sx5lwYU7ap5lGN5PViwKQFp20f3D03iwsJ2M6qQezjsiJPCVyyXda26xIgGgRIbO
-         ZzTmoicyUDVdFOc3vbqyJxSA7WH3ikIqMdqDOMREjF9PrAUpYzQzbpiK1lyVeCJY6Zkq
-         EmJ0Fy8sQetdPs2Zm6reXpDNEHH0Uuk3f9xuV3gj10SQMGGO9oPWVC0cYxRNurrxe5bl
-         2bvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYhP4WAzsBb1dS3Bmei8kfarHRkyvOEJV4nv7rowgrtxMHU6270xlKvanrIWLXYHQK1n79a2lBtP+lzg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyophskJb2ojKjvLuluvrzRcpDFfxfkB3yY4Uj/6DV3Ko4d8YzI
-	gQCHq98BIypzFrpHQYqvV/DWMsK3tpX0A5c1GitPN8PEUAWTJRQSCYY1OrwDOj1Ts2L+BobQuE1
-	YJUxZRE0ssGYYyuhDeYBaxohCp20=
-X-Google-Smtp-Source: AGHT+IFL358z/bGmiPDknmSO46yYht9Fbjiric2FHtiPjzBP0j8i9TbAuhNt5ETwz3uYpEPLaVomzadAPZWLpJ7izO0=
-X-Received: by 2002:a05:6214:3a87:b0:6b5:e1fb:68ee with SMTP id
- 6a1803df08f44-6c16dc7ca9dmr33223576d6.25.1724429824918; Fri, 23 Aug 2024
- 09:17:04 -0700 (PDT)
+        bh=wA90O16jMgd8CWh2MnYobE93W15NHZgeiwtdthdRGp4=;
+        b=vsr9+Xyi6ZhHggr6wpECuLdxEiNUFzk31XbFPod0V4/3DJaV0Ihb2uV5eWMEULv5Vl
+         dsA5Bpfu0OZkNRZzBuEH7LvL/FrEJKJE2suzUXyo25jrs+6uIKMUyg2U16DAYeCawWov
+         1uCulam3dPXNhWsi+mLVrmFC+WyvlhmyFZty4YUR95V4A9ONkyFDTvQnTZcfYDrLKkOG
+         WghozpYsYXI/JXR08ZzJhljVbi2P1IDc6GQ0WlRRpLqKqc4iWAvxi5myt3SSgUnVBhbb
+         sjRmwpAzcu8K4mwCK5Ky4B+JikrQo/Tjji2VdNHAAA+jdjuAzUi6O9+YO1WX/tGbDtTZ
+         1JYA==
+X-Forwarded-Encrypted: i=1; AJvYcCV75sFfahnDAIDVhvUOQ4dgw54HFsbDkcED3XuA4pW4HteffTLn5ahfXgFxflqCNIEZmm+6zr1H2a2afw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTt9pjwq5gwDv1aqu5OAHjR4MHWlxdSirzG5f3vrzsHm8RqZa+
+	f/NFZ7THWD9iUoUazv603pvvsXIJq9MXyn0PSTeYYvsEpfuuT0kW
+X-Google-Smtp-Source: AGHT+IFZHmqXsjrxBKhdu8OBEsZNOg0v/ZZ7Ci9CMduEvA+77wHDailfpz0DSdPAgrJBCpingvQDRw==
+X-Received: by 2002:a05:6512:3089:b0:52d:b150:b9b3 with SMTP id 2adb3069b0e04-53438785d61mr1902615e87.32.1724433879707;
+        Fri, 23 Aug 2024 10:24:39 -0700 (PDT)
+Received: from smtpclient.apple ([188.146.32.62])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5334ea88f82sm600036e87.257.2024.08.23.10.24.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Aug 2024 10:24:39 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
-In-Reply-To: <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Fri, 23 Aug 2024 12:16:53 -0400
-Message-ID: <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
 Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
  mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+In-Reply-To: <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
+Date: Fri, 23 Aug 2024 19:24:27 +0200
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Yosry Ahmed <yosryahmed@google.com>,
+ Linux-MM <linux-mm@kvack.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <9793DBCA-13F4-4B47-AD57-12A62F7DD8DD@gmail.com>
+References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
+ <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info>
+ <ZsiLElTykamcYZ6J@casper.infradead.org>
+ <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
+ <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
+To: Nhat Pham <nphamcs@gmail.com>
+X-Mailer: Apple Mail (2.3776.700.51)
 
-On Fri, Aug 23, 2024 at 11:07=E2=80=AFAM Piotr Oniszczuk
-<piotr.oniszczuk@gmail.com> wrote:
->
->
->
-> > Wiadomo=C5=9B=C4=87 napisana przez Matthew Wilcox <willy@infradead.org>=
- w dniu 23.08.2024, o godz. 15:13:
-> >
-> > I wouldn't be surprised if this were dodgy ram.
->
->
-> Well - that was my initial hypothesis.
->
-> in fact i had few of them. Ranked (and ordered) like this:
-> 1. downstream kernel patches
-> 2. hw (ram) issue
-> 3. kernel bug
->
-> So full history was:
-> -build myself archlinux 6.10.2 kernel; upgrade builder OS (only kernel; n=
-othing else)
-> -run normal devel process and (to my surprise) discover interrupted CI/CD=
- builds by kernel oops
-> -downgrade to 6.8.2 and done 4 full builds (full takes 8..9h of constant =
-12c/24/t compile). all good.
-> -prepare vanilla 6.10.6 (to exclude potential downstream (ArchLinux) root=
- causes)
-> -run normal devel process and still discover oops
-> -make sure hw is ok by week of test with 6.8.2 (recompiling for 3 archite=
-ctures on 4 OS (3 in kvm). This was almost 5 full days of 12c/24 compiling.=
- All good
-> -because last steep was all good - decide to go to you :-)
->
-> sure - this is possible that 6.8.2 had luck with my ram and 6.10.6 had no=
- luck=E2=80=A6.but i personally don=E2=80=99t believe this is a case=E2=80=
-=A6.
 
-Have you tried with 6.9 yet? IIRC, there are two major changes to
-zswap architecture in recent versions.
 
-1. In 6.9, we range-partition zswap's rbtrees to reduce lock contention.
+> Wiadomo=C5=9B=C4=87 napisana przez Nhat Pham <nphamcs@gmail.com> w =
+dniu 23.08.2024, o godz. 18:16:
+>=20
+> Have you tried with 6.9 yet? IIRC, there are two major changes to
+> zswap architecture in recent versions.
 
-2. In 6.10, we replace zswap's rbtrees with xarrays.
+No. But now building vanilla 6.9.12. Will install and see=E2=80=A6
+(This will take some time as catching issue needs days of compilation)
 
-If 6.9 is fine, then the latter is the suspect, and vice versa. Of
-course, the minor changes are still suspect - but you get the idea :)
+>=20
+> 1. In 6.9, we range-partition zswap's rbtrees to reduce lock =
+contention.
+>=20
+> 2. In 6.10, we replace zswap's rbtrees with xarrays.
+>=20
+> If 6.9 is fine, then the latter is the suspect, and vice versa. Of
+> course, the minor changes are still suspect - but you get the idea :)
+>=20
+>>=20
+>> btw: we can go with elimination strategy.
+>> So what i need to change/disable to be closer to finding root cause?
+>=20
+> Could you let me know more about the setup? A couple things come to my =
+mind:
+>=20
+> 1. zswap configs (allocator - is it zsmalloc? compressor?)
 
->
-> btw: we can go with elimination strategy.
-> So what i need to change/disable to be closer to finding root cause?
+Well - I=E2=80=99m not using zswap.
 
-Could you let me know more about the setup? A couple things come to my mind=
-:
+[root@minimyth2-aarch64-next piotro]# swapon -s
+Filename				Type		Size		=
+Used		Priority
+/dev/nvme0n1p3                          partition	16776188	=
+294164		-2
 
-1. zswap configs (allocator - is it zsmalloc? compressor?)
+>=20
+> 2. Is mTHP enabled? mTHP swapout was merged in 6.10, and there seems
 
-2. Is mTHP enabled? mTHP swapout was merged in 6.10, and there seems
-to be some conflicts with zswap, but Yosry will know more about this
-than me...
+I don=E2=80=99t have used config at the moment, but =
+/sys/kernel/mm/transparent_hugepage in I see:
 
-3. Is there any proprietary driver etc.?
+=E2=94=82/hugepages-1024kB
+=E2=94=82/hugepages-128kB
+=E2=94=82/hugepages-16kB
+=E2=94=82/hugepages-2048kB
+=E2=94=82/hugepages-256kB
+=E2=94=82/hugepages-32kB
+=E2=94=82/hugepages-512kB
+=E2=94=82/hugepages-64kB
 
-> swap?
-> now it is swapfile on system nvme
->
+
+> to be some conflicts with zswap, but Yosry will know more about this
+> than me...
+>=20
+> 3. Is there any proprietary driver etc.?
+>=20
+
+Only 2, both ryzen9 monitoring related:
+https://github.com/leogx9r/ryzen_smu/commits/master
+https://github.com/ocerman/zenpower/commits/master
+
+
+
