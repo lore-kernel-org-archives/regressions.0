@@ -1,136 +1,106 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD39746E
-	for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 18:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2EC257D
+	for <regressions@lists.linux.dev>; Sat, 24 Aug 2024 08:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724438580; cv=none; b=t/jQw73KR8Qex48eJmghyleugZ/xOdO9GCRKiZjvMWvfYGBJkcVqrz9SgkWvchpObeVkl9hgS8ohOJ8mjuIYgs5YbIlXmpPEUqUFVT8bFKU2QVvYeUd4wGC6FeAgkmDXrc3sLKLiRP5o7V+Cdoqv+0bgu7D2oGqX44Yhi18lUso=
+	t=1724487097; cv=none; b=F3z6hnk6S0eXLeEdEmamFJL8tT4yV6GnNZChzma9aA0PCI4IrYvDMagXBeb/RAqkgnqPoL5efrCoEo1dayMvY2gLQ5N2OOugHgG9wbXyepEONxSc19b7tG1uZga8D2SgYy5b8rFmFPGOaSko4prfvtF0j39iUKq+55qUJ2Q3LmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724438580; c=relaxed/simple;
-	bh=vDPsqzAoxenIzuwcubdWFxYwhXNsFjnpCK8a2v37uUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QmFCEn58M+1GLq4CN8VDZy24dqmyA4hTuTWFkOwzegPOIY8SntMGLwBcaOG9Diu501y3fs9kivcogVUwsgMIqz2oC0JVTWKh+ppBurJUhFKCAkACMquZO51V4dW5fvlChyb6og5zNomI3GsgJk9eEMKXNOEz/z1DqA/ExXPhOas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSWR8Vld; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724487097; c=relaxed/simple;
+	bh=lhS+cGfx/DYb9LBQhMCY9X5TfRKSI9OvUw0W/GvRdKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Rwp0LOJ6nBg3Wi3joxNqovQKxUaLO+wdb6IoSlC0r2s6FV952VP2CcSrRZ0s3tAeDQSnss2RnePK/EmUgRRGTGPrd6IyuKfJJYEnYvbaaka3QbZzTeCDQ0khLdHzatIFHlsQHT7hKyfNZdDq3lieB5Hu6VmpFJ5EoYm5adl1cqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=sEP261qd; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSWR8Vld"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dff1ccdc17bso2387335276.0
-        for <regressions@lists.linux.dev>; Fri, 23 Aug 2024 11:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724438578; x=1725043378; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vDPsqzAoxenIzuwcubdWFxYwhXNsFjnpCK8a2v37uUA=;
-        b=SSWR8VldMZC1QdqUm98buwf7ezXvcwFODGQo9zKItm8Rrz/C+wCiVXD318z8D3/1v/
-         0K6AXRfcVx11inBvjZAj7/ndR7ThUf9p3F9+C7+cXiwADca2thoQI9P3gFaYEW3PEV2S
-         hrZ4TB2fQwr9noLMMLTQOCEpWxPyvEDemnRRaTzgV/IQeNUcaAn1ZwtETdLmrL7keS/b
-         7BnRR7ic5g765sr/JJOgxdCWFv4i9FHp+n8oGperFbB8rILn0ZoUIAo0R41331f/FT2l
-         R8t9Rlfrgmk01GURNTVSi25RO18nlgmAokhMPomEnDfRIkfxNdT2u8zDRqHfOVXTGpQr
-         Crjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724438578; x=1725043378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vDPsqzAoxenIzuwcubdWFxYwhXNsFjnpCK8a2v37uUA=;
-        b=wHGjGuj6W/6Eh+rbQ7Zet55/P4VHsXrAX4mPi6vohN1w6t852KSpJMtofpxNoD0JLV
-         i94S2+9oPK5ZLD36Gnpj+VoENGssa7j8O4mFiGCtMZrWTehLVBJz/IpDXP77Qo3e9/b7
-         M+hM9OttkV/iC72VfF2kYiudPwnB/y7P1Oh7k4oY9bso4lhOl7eYkWFzeI+y+8f6xqao
-         nsaZDWPDFkuVV4kLKYp+VQTqE8zWXlaRrxQzfJjG1Et0D/UkkF6VWoFotZXEzMsHakNJ
-         zExbqfnYFjcAH8Wf8ZzEIz+iB+m1dAtl9tY3Z0RrCSqxTKmobam8EU5uo53w1dMtd0Ug
-         ASIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEF2vOoEIixT5FheeAXVeOKi+EVIH3a4IOutuRCYqGQ0ITZAkZnFfJSK6qzo9OQhp+NcFAWQbXW5zWAg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyARziQM0PTg4ABx6azy4oK/30aaEsvVEAIn8FWzSkuZbgQPMGz
-	449L+T8joXzf6X9g7UJzWJRBI/g+gjtouaVLRQGe5142M7kBVf2bMmaNsdM/Zkl+CK48W6mjB1V
-	FClIsmM7dp72sK28WWsCeVu/yXUo=
-X-Google-Smtp-Source: AGHT+IGP5XOWs22Ob+Od8cQep7S+t0IxbSv28R6vyQfhdmlVTie8ZZ9QOHt1cMUuQWZzMD4Z85T69CYO082JM6cj92s=
-X-Received: by 2002:a05:6902:1501:b0:e13:c854:2a2 with SMTP id
- 3f1490d57ef6-e17a83b28d3mr4049002276.11.1724438577951; Fri, 23 Aug 2024
- 11:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="sEP261qd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=lhS+cGfx/DYb9LBQhMCY9X5TfRKSI9OvUw0W/GvRdKQ=; t=1724487095;
+	x=1724919095; b=sEP261qdy+MI6fF6G25WtdSmzBF0s0oEN9fqdsrkzoR7dB3kwRQFnpoxsohC+
+	VeD2wzBkl1bd50/7nTx6zLSSZuAkRGFfYqiArmvKULkGOKpArf2QtHgNjmc8uyFFSMEqs9gTprGHv
+	OmS498e5llQjAsGimD9tidSReVXJY+asX+eWeJEZEf0fjEpYeB2SfHVG3W2J/xEcvbwhYgwy1sQJ9
+	Jt8rT7LK9IWbTsvuUnsyRGE9+F9Ld/haPLxBIAPwxRdD7E9Oqldi+T6tEzzLTSTFjEURidGRWfzZu
+	IlQIO6BphB73XrFFz6s+gSsJ7qAJSOVLiAHgECsvHSKgEAcSqw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1shlrr-0001Go-ME; Sat, 24 Aug 2024 10:11:28 +0200
+Message-ID: <9557fbaa-1a3c-4e9c-a922-9048efd1666e@leemhuis.info>
+Date: Sat, 24 Aug 2024 10:11:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
-In-Reply-To: <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
-From: Takero Funaki <flintglass@gmail.com>
-Date: Sat, 24 Aug 2024 03:42:47 +0900
-Message-ID: <CAPpoddere2g=kkMzrxuJ1KCG=0Hg1-1v=ppg4dON9wK=pKq2uQ@mail.gmail.com>
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724487095;5343919a;
+X-HE-SMSGID: 1shlrr-0001Go-ME
 
-2024=E5=B9=B48=E6=9C=8824=E6=97=A5(=E5=9C=9F) 0:07 Piotr Oniszczuk <piotr.o=
-niszczuk@gmail.com>:
->
->
->
-> > Wiadomo=C5=9B=C4=87 napisana przez Matthew Wilcox <willy@infradead.org>=
- w dniu 23.08.2024, o godz. 15:13:
-> >
-> > I wouldn't be surprised if this were dodgy ram.
->
->
-> Well - that was my initial hypothesis.
->
-> in fact i had few of them. Ranked (and ordered) like this:
-> 1. downstream kernel patches
-> 2. hw (ram) issue
-> 3. kernel bug
->
-> So full history was:
-> -build myself archlinux 6.10.2 kernel; upgrade builder OS (only kernel; n=
-othing else)
-> -run normal devel process and (to my surprise) discover interrupted CI/CD=
- builds by kernel oops
-> -downgrade to 6.8.2 and done 4 full builds (full takes 8..9h of constant =
-12c/24/t compile). all good.
-> -prepare vanilla 6.10.6 (to exclude potential downstream (ArchLinux) root=
- causes)
-> -run normal devel process and still discover oops
-> -make sure hw is ok by week of test with 6.8.2 (recompiling for 3 archite=
-ctures on 4 OS (3 in kvm). This was almost 5 full days of 12c/24 compiling.=
- All good
-> -because last steep was all good - decide to go to you :-)
->
-> sure - this is possible that 6.8.2 had luck with my ram and 6.10.6 had no=
- luck=E2=80=A6.but i personally don=E2=80=99t believe this is a case=E2=80=
-=A6.
->
-> btw: we can go with elimination strategy.
-> So what i need to change/disable to be closer to finding root cause?
-> swap?
-> now it is swapfile on system nvme
->
->
 
-Hello,
 
-I=E2=80=99m encountering a similar crash and trace in the issue I posted on=
- Bugzilla:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219154
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-If this is the same issue caused by virtio_net corrupting memory, you
-should be able to reproduce the crash by sending data to the VM over
-virtio interface while it is actively allocating memory (e.g., using
-iperf3 -s on the VM and running iperf -c from another host).
+#regzbot report:
+https://lore.kernel.org/all/CAHQZ30DXgctshMVfGRSyHudViapAs0ib=NPJnMR648dydO892g@mail.gmail.com/
+#regzbot introduced: 37f32f526438
+#regzbot summary: ovl: wrong lowerdir number check for parameter
+Opt_lowerdir
+#regzbot fix: ovl: fix wrong lowerdir number check for parameter
+Opt_lowerdir
+#regzbot dup:
+https://lore.kernel.org/all/CAHQZ30DXgctshMVfGRSyHudViapAs0ib=NPJnMR648dydO892g@mail.gmail.com/
 
-In my case, as Thorsten suggested, reverting bisected commit
-f9dac92ba908 (virtio_ring: enable premapped mode regardless of
-use_dma_api) along with two related commits in this series resolved
-the issue:
-https://lore.kernel.org/all/7774ac707743ad8ce3afeacbd4bee63ac96dd927.172361=
-7902.git.mst@redhat.com/
+
+#regzbot report:
+https://lore.kernel.org/all/CAH2r5mvXE9kKEFfEpsf3AA0s8oVA8737aLZ2LkOrz1hptujt2A@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/all/CAH2r5mssjjgO3hmNXhb12H1q%2BccTV4P%2BLzaL6kMwxpip6u6kjg@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/all/CAH2r5muJabg%3DdB9EkuZD26%2B2mnQGRYRbpbQ96UxTk2UF4ZNQ6g@mail.gmail.com/
+
+#regzbot report:
+https://lore.kernel.org/all/CAMHwNVv-B+Q6wa0FEXrAuzdchzcJRsPKDDRrNaYZJd6X-+iJzw@mail.gmail.com/
+#regzbot introduced: 539aad7f14da
+#regzbot summary: cifs: "VFS: parse_reparse_point: unhandled reparse
+tag: 0x9000601a"
+#regzbot fix: smb: client: ignore unhandled reparse tags
+#regzbot monitor:
+https://lore.kernel.org/all/20240821034503.739532-1-pc@manguebit.com/
+
+#regzbot report:
+https://lore.kernel.org/all/20240823074217.14653-1-hdegoede@redhat.com/
+#regzbot introduced: 7d99a70b6595
+#regzbot summary: ASoC: Intel: NULL pointer deref in BYT/CHT boards harder
+#regzbot fix: ASoC: Intel: Boards: Fix NULL pointer deref in BYT/CHT
+boards harder
+
+#regzbot report:
+https://lore.kernel.org/all/CA+Qy7vRQnWx+0Au06hPbgASTRTxtNnbMxV=0jmJaZtsEBQ81zg@mail.gmail.com/
+#regzbot introduced: v6.8..v6.9
+#regzbot summary: alsa: Headset mic stopped working
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219075
+#regzbot fix: 71bf41b8e913ec
+
+#regzbot report:
+https://lore.kernel.org/linux-scsi/Zr%2FXrH1hsp0seP2Q@hu-bjorande-lv.qualcomm.com/
+#regzbot fix: cd06b713a688
