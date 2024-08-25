@@ -1,295 +1,140 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from d.mail.sonic.net (d.mail.sonic.net [64.142.111.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC1055898
-	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 20:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD754778C
+	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 23:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724618454; cv=none; b=SL4IPbo0BxibfqlzVAvh0RjUD4+Qo1MmsSJ1FOT81Ob8NahP4D7d4AjpRYk9KZLx9Yh+8DVvx1oTRM9WUPXvSH7juQHS6wFE1EmHbr9STZJq7IMdKcElxgnm3B2ADkVvQY7J9d1vuaE1SdeBq9J+y5eY0tchgT5wa0mR2F7+MXk=
+	t=1724628406; cv=none; b=m6Cnpo4zMFlmPaxWWwaDcSyFN2fr985TG7b90e2OjRKkc0nZMypRS6ew761YyGWRlPvqloZFgtz61phBa1zdn/2zagBupf8VLZb3ZeUntJRqKhRxptU/4ernkDA9Yrgb5E2WofXu7IFKOSYOXt65DAcoS+d5WOing6xCKDFvmMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724618454; c=relaxed/simple;
-	bh=amKYQTvl4+mlU6E5LDBeL3PM5/I6xKgiZKAmZDjYMN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDHufKxibufrkp80so69j2gA72vA5DogSngFS3wzqKRelCvYRoXkLqKGgKh8xhVgui9idk1jk/5LAD9SHeqS2AGM6iUToUdOu4ts+2HuWglS6oXE1wzWTWNOezUYHNHOj8D5Gq9IaOY8dSps8mLwC4zl3gnPL6t4KJUNXFR/whg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bLhwLuZi; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLhwLuZi"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-714302e7285so3091490b3a.2
-        for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 13:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724618451; x=1725223251; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TCxFsqDg7k3l7ydum74j0hdDk9tuXyaerQ42M+BRL58=;
-        b=bLhwLuZiqcudZNLgM31KMdVDIxmcmO1pkbwjJw1XH932AIFk4VHv/MX+kUkACj7zi0
-         hhAyTrs1M+o8+zU2+Pf/N0SQxNe2gp2rg4MIIw4qtd6gfO/SafMA6zObAJw9+M/196E/
-         uHYvxRBRxE61IndNPtIbDSMADhk+cQV6LnmDNpRD4NfLaMrahNdro4Drq5p9gDV26d1w
-         oeIuImhlsYG8qWohURZYMNXtB//6f8qIXAwsdfoVBnJBy/GQRTV8FiQauHCKXscfxMfX
-         2MPR7Ib5YgQNT3STfrF8/9EQ8K7l1EVym6vlce6kGXh4+/LrOik1PJg9SxP6+15fv9Yv
-         ++nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724618451; x=1725223251;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCxFsqDg7k3l7ydum74j0hdDk9tuXyaerQ42M+BRL58=;
-        b=DmnnI9xvxS0bYyhfwxXyW7+aO9q5dZYdaeX6VZ5uZwwEqxNwjRUqMpxT8TLR3jy4Ap
-         glAO6mNb3n3o0xZYzU3rUuBN7eRZe6jDGhmkErmql4tqTNrWXAx12UxPrKloG62KVV0G
-         tJxr1LIZ8e57r3JBUnN2gV1aD+y0rcA8650O7gY9GkvVE0xqztaNSHIWCusLSUl8cStA
-         bSMyC67V8jT8xMGPLCjf8ueFDVfvD1gMvWMXoompGiwU2qoCYRVdT+rnUfndw0iMXF5P
-         LBGP8jkPqy7+MMq6F9IjOgr1T/V/SxLLPPb/6MdSQDEhv7B6BSGLZV9RclnoLBaPNqML
-         i5kg==
-X-Gm-Message-State: AOJu0YyxQkfdtivRDRqouFsXITgkgCoy+qZ/knyJtLqvejqkeAx3q8Kj
-	SchooflGuLhn5qw2N2D8BVsA9hubom5CEBlwzmjzcYZwJ9MmcHq37AUmwSAs4X1uOw==
-X-Google-Smtp-Source: AGHT+IFmOycEBGCMIqit9LrTg0UZlM/2egXWU32zBsDamnu33ZS7zF7tSygwm3lsMpaiA2G3029/4g==
-X-Received: by 2002:a05:6a00:1a8e:b0:710:4d08:e094 with SMTP id d2e1a72fcca58-7144573cd07mr8910315b3a.2.1724618450935;
-        Sun, 25 Aug 2024 13:40:50 -0700 (PDT)
-Received: from ?IPV6:2601:644:8501:8a10:d6be:d9ff:fe52:7e82? ([2601:644:8501:8a10:d6be:d9ff:fe52:7e82])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7cd9acc3968sm5633169a12.38.2024.08.25.13.40.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Aug 2024 13:40:50 -0700 (PDT)
-Message-ID: <dede22a9-e432-46e6-b4fc-ce67f6439710@gmail.com>
-Date: Sun, 25 Aug 2024 13:40:48 -0700
+	s=arc-20240116; t=1724628406; c=relaxed/simple;
+	bh=pXnVOgxruy7upgSFMu4G4QAIQBR9xZKhYwM8ouYK2ko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l5AtRY4izZiQlOiGK+4XT/znFaKHBTeG0hGnCP8MfXyny5mKNkKhv2p8S+LDPmOoQi7K7TCDxQojO870Vq37KGAi5xvCKxz3ZOX+oVTc8Tm1EFsN9VMEOUCL/r7DF2DBt2w1mBhbGF26xsJ7T/WMBe8WH1y2qRKNZbO4sH5J5io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one; spf=pass smtp.mailfrom=nom.one; arc=none smtp.client-ip=64.142.111.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nom.one
+Received: from 192-184-189-143.static.sonic.net (192-184-189-143.static.sonic.net [192.184.189.143])
+	(authenticated bits=0)
+	by d.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 47PNQfjR016820;
+	Sun, 25 Aug 2024 16:26:42 -0700
+From: Forest <forestix@nom.one>
+To: David Howells <dhowells@redhat.com>, Steve French <sfrench@samba.org>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Rohith Surabattula <rohiths.msft@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc: linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        regressions@lists.linux.dev
+Subject: [REGRESSION] cifs: Subreq overread in dmesg, invalid argument & no data available in apps
+Date: Sun, 25 Aug 2024 16:26:42 -0700
+Message-ID: <37fncjpgsq45becdf2pdju0idf3hj3dtmb@sonic.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] firmware: qcom: scm: smc: switch to using the SCM
- allocator
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- bartosz.golaszewski@linaro.org, andersson@kernel.org
-Cc: brgl@bgdev.pl, konrad.dybcio@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, robimarko@gmail.com,
- quic_gurus@quicinc.com, luzmaximilian@gmail.com, catalin.marinas@arm.com,
- will@kernel.org, srinivas.kandagatla@linaro.org, arnd@arndb.de,
- quic_eberman@quicinc.com, elder@kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@quicinc.com,
- ahalaney@redhat.com, quic_djaggi@quicinc.com
-References: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
- <48b20ca3-37f5-4d9c-b36f-1d05a2ee4f5c@leemhuis.info>
-Content-Language: en-US
-From: Rudraksha Gupta <guptarud@gmail.com>
-In-Reply-To: <48b20ca3-37f5-4d9c-b36f-1d05a2ee4f5c@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Sonic-CAuth: UmFuZG9tSVY9qXQA6gjyYUCqwUmjO34eOG5cOZDxGNJeFM6iyDDoSYbBnejS/v8rXX07lYcnqaR51DkoDWkqyM2hSy5c7rnM
+X-Sonic-ID: C;/qwxfDlj7xGgZa5Sr7edkQ== M;nHZCfDlj7xGgZa5Sr7edkQ==
+X-Spam-Flag: No
+X-Sonic-Spam-Details: -0.0/5.0 by cerberusd
 
-> Lo! Thx for your report!
+#regzbot introduced: e3786b29c54c
 
-Thanks for reading my report!
+Dear maintainers,
+
+Recent kernel release candidates have a cifs regression that produces
+unexpected errors in userspace and a WARNING (with stack trace) in dmesg.
+
+I can consistently reproduce it with these commands on a mounted Samba
+share:
 
 
-> Better include the exact problem you face in your report so
-> that search engines can do their magic; makes it also easier
-> to handle for everyone.
-
-Ack. Some communities like to keep their messages tidy, so I assumed 
-that was the case here as well.
-
-
-> Furthermore two quick questions:
->
-> [    0.000000] Linux version 6.10.0-rc1-msm8960+ (a@fpx-l-AMER03105) (Ubuntu clang version 16.0.6 (15), Ubuntu LLD 16.0.6) #17 SMP Sat
->
-> Is that a vanilla kernel or one close to it? That "msm8960+" sounds
-> somewhat suspicious.
-
-It's vanilla. I use this script to build Linux and busybox and then 
-flash it to my phone: 
-https://codeberg.org/LogicalErzor/mainline_builder/src/branch/master/samsung/expressatt/build.sh
-
-The msm8960 is defined as a localversion in the defconfig pastebin (I 
-should've named it config instead). Not sure where the + came from though
+$ echo hello > foo
+$ ls -l foo
+-rw-r----- 1 user user 6 Aug 25 15:41 foo
+$ cat foo
+cat: foo: Invalid argument
+$ xxd foo
+00000000: 6865 6c6c 6f0a 0000 0000 0000 0000 0000  hello...........
+00000010: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+(...more null bytes...)
+00001fe0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00001ff0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+xxd: No data available
 
 
-> And does the problem still happen with latest mainline? Cconsider
-> retrying with -rc5, which should be out in the next 24h.
+The xxd command above also triggers these kernel log messages...
 
-Yes, -rc5's commit is 5be63fc19fcaa4c236b307420483578a56986a37 and I'm 
-still encountering it. Pasted below
+  Subreq overread: R3[1] 312 > 8192 - 7956
+  WARNING: CPU: 30 PID: 421 at fs/netfs/io.c:495
 
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 6.11.0-rc5-msm8960 (a@fpx-l-AMER03105) 
-(Ubuntu clang version 16.0.6 (15), Ubuntu LLD 16.0.6) #19 SMP Sun Aug 25 
-15:55:46 EDT 2024
-[    0.000000] CPU: ARMv7 Processor [511f04d4] revision 4 (ARMv7), 
-cr=10c5787d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction 
-cache
-[    0.000000] OF: fdt: Machine model: Samsung Galaxy Express SGH-I437
-[    0.000000] earlycon: msm_serial_dm0 at MMIO 0x16440000 (options 
-'115200n8')
-[    0.000000] printk: legacy bootconsole [msm_serial_dm0] enabled
-[    0.000000] Memory policy: Data cache writealloc
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000080200000-0x00000000afffffff]
-[    0.000000]   HighMem  [mem 0x00000000b0000000-0x00000000bfffffff]
-[    0.000000] Movable zone start for each node
-[    0.000000] Early memory node ranges
-[    0.000000]   node   0: [mem 0x0000000080200000-0x0000000088cfffff]
-[    0.000000]   node   0: [mem 0x0000000090000000-0x00000000bfffffff]
-[    0.000000] Initmem setup node 0 [mem 
-0x0000000080200000-0x00000000bfffffff]
-[    0.000000] On node 0, zone Normal: 512 pages in unavailable ranges
-[    0.000000] On node 0, zone Normal: 768 pages in unavailable ranges
-[    0.000000] percpu: Embedded 19 pages/cpu s45144 r8192 d24488 u77824
-[    0.000000] Kernel command line: earlycon clk_ignore_unused 
-PMOS_NO_OUTPUT_REDIRECT console=ttyMSM0,115200
-[    0.000000] Unknown kernel command line parameters 
-"PMOS_NO_OUTPUT_REDIRECT", will be passed to user space.
-[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 
-bytes, linear)
-[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 
-bytes, linear)
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 232192
-[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-[    0.000000] ftrace: allocating 38226 entries in 75 pages
-[    0.000000] ftrace: allocated 75 pages with 4 groups
-[    0.000000] trace event string verifier disabled
-[    0.000000] rcu: Hierarchical RCU implementation.
-[    0.000000] rcu:     RCU event tracing is enabled.
-[    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
-[    0.000000]  Rude variant of Tasks RCU enabled.
-[    0.000000]  Tracing variant of Tasks RCU enabled.
-[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay 
-is 10 jiffies.
-[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
-[    0.000000] RCU Tasks Rude: Setting shift to 1 and lim to 1 
-rcu_task_cb_adjust=1.
-[    0.000000] RCU Tasks Trace: Setting shift to 1 and lim to 1 
-rcu_task_cb_adjust=1.
-[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on 
-contention.
-[    0.000000] clocksource: dg_timer: mask: 0xffffffff max_cycles: 
-0xffffffff, max_idle_ns: 283149695806 ns
-[    0.000003] sched_clock: 32 bits at 7MHz, resolution 148ns, wraps 
-every 318145725365ns
-[    0.009533] Switching to timer-based delay loop, resolution 148ns
-[    0.017921] Console: colour dummy device 80x30
-[    0.023312] Calibrating delay loop (skipped), value calculated using 
-timer frequency.. 13.50 BogoMIPS (lpj=67500)
-[    0.027574] CPU: Testing write buffer coherency: ok
-[    0.037857] pid_max: default: 32768 minimum: 301
-[    0.042568] LSM: initializing lsm=capability
-[    0.047412] Mount-cache hash table entries: 2048 (order: 1, 8192 
-bytes, linear)
-[    0.051538] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 
-bytes, linear)
-[    0.060533] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.066438] 8<--- cut here ---
-[    0.071897] Unable to handle kernel NULL pointer dereference at 
-virtual address 00000090 when read
-[    0.074743] [00000090] *pgd=00000000
-[    0.083672] Internal error: Oops: 5 [#1] SMP ARM
-[    0.087285] Modules linked in:
-[    0.091836] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-6.11.0-rc5-msm8960 #19
-[    0.094677] Hardware name: Generic DT based system
-[    0.102149] PC is at qcom_scm_get_tzmem_pool+0x1c/0x24
-[    0.106958] LR is at __scm_smc_call+0x30/0x2d4
-[    0.112026] pc : [<c08986c0>]    lr : [<c089b1e4>]    psr: 60000013
-[    0.116413] sp : f0815d78  ip : f0815e98  fp : f0815d78
-[    0.122511] r10: 00000002  r9 : f0815e18  r8 : 00000001
-[    0.127666] r7 : c1106694  r6 : f0815e30  r5 : c1270040  r4 : 00000001
-[    0.132825] r3 : f0815e18  r2 : 00000002  r1 : f0815e30  r0 : 00000000
-[    0.139355] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  
-Segment none
-[    0.145804] Control: 10c5787d  Table: 8000406a  DAC: 00000051
-[    0.152930] Register r0 information: NULL pointer
-[    0.158599] Register r1 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.163251] Register r2 information: non-paged memory
-[    0.173722] Register r3 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.178889] Register r4 information: non-paged memory
-[    0.189361] Register r5 information: non-slab/vmalloc memory
-[    0.194518] Register r6 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.200197] Register r7 information: non-slab/vmalloc memory
-[    0.210586] Register r8 information: non-paged memory
-[    0.216428] Register r9 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.221336] Register r10 information: non-paged memory
-[    0.231809] Register r11 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.236974] Register r12 information: 2-page vmalloc region starting 
-at 0xf0814000 allocated at copy_process+0x16c/0xdec
-[    0.247889] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-[    0.258620] Stack: (0xf0815d78 to 0xf0816000)
-[    0.264550] 5d60: f0815e08 c089b1e4
-[    0.268773] 5d80: f0815d9c c0193d54 c1117d70 c1124000 00000036 
-00000000 c1117d70 f0815da8
-[    0.276849] 5da0: c12589bc 00000800 00000035 00000000 039ba92c 
-00000000 c2000030 c0a6f3a4
-[    0.284927] 5dc0: f0815dd8 c0193d54 c1117d70 c1124000 00000036 
-00000000 c1117d70 00000000
-[    0.293004] 5de0: f0815e18 c0193d54 e37f60fb 00000001 c1270040 
-00000000 c1106694 00000001
-[    0.301080] 5e00: f0815ef0 00000000 f0815eb0 c089a830 00000001 
-c019428c f0815e78 c019428c
-[    0.309157] 5e20: f0815e48 00000000 f0815ebf f0815e4c 00000006 
-00000001 00000001 00000000
-[    0.317234] 5e40: 02000601 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.325310] 5e60: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.333387] 5e80: 00000000 00000000 00000000 00000000 00000002 
-00000000 f0815ebf e37f60fb
-[    0.341465] 5ea0: 00000000 f0815ee0 00000000 00000000 f0815ed0 
-c08989f4 f0815ec8 00aa2034
-[    0.349543] 5ec0: f0815ef8 c0b8d77f 00000001 00000000 f0815f68 
-c08988d4 00000001 c01012a0
-[    0.357618] 5ee0: 00000001 00000001 00000002 00000000 00000001 
-00000000 801012a0 00000000
-[    0.365695] 5f00: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.373771] 5f20: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.381851] 5f40: 00000002 00000000 e37f60fb c14ff100 00000001 
-c1568000 00000000 00000000
-[    0.389927] 5f60: 00000000 00000000 f0815f80 c100bf08 c14ff100 
-00000001 c1568000 00000000
-[    0.398005] 5f80: f0815f98 c1001538 00000000 c0a9dc8c 00000000 
-00000000 f0815fa8 c0a9dcac
-[    0.406082] 5fa0: 00000000 00000000 00000000 c010014c 00000000 
-00000000 00000000 00000000
-[    0.414158] 5fc0: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.422234] 5fe0: 00000000 00000000 00000000 00000000 00000013 
-00000000 00000000 00000000
-[    0.430303] Call trace:
-[    0.430329]  qcom_scm_get_tzmem_pool from __scm_smc_call+0x30/0x2d4
-[    0.440957]  __scm_smc_call from __get_convention+0xac/0x128
-[    0.446885]  __get_convention from qcom_scm_call_atomic+0x24/0x90
-[    0.452730]  qcom_scm_call_atomic from qcom_scm_set_boot_addr+0xe4/0x100
-[    0.458658]  qcom_scm_set_boot_addr from qcom_smp_prepare_cpus+0x1c/0x94
-[    0.465362]  qcom_smp_prepare_cpus from kernel_init_freeable+0xcc/0x140
-[    0.471978]  kernel_init_freeable from kernel_init+0x20/0x144
-[    0.478251]  kernel_init from ret_from_fork+0x14/0x28
-[    0.484086] Exception stack(0xf0815fb0 to 0xf0815ff8)
-[    0.489076] 5fa0:                                     00000000 
-00000000 00000000 00000000
-[    0.494068] 5fc0: 00000000 00000000 00000000 00000000 00000000 
-00000000 00000000 00000000
-[    0.502143] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.510226] Code: e28dd004 e3000044 e34c0127 e5900000 (e5900090)
-[    0.516655] ---[ end trace 0000000000000000 ]---
-[    0.522765] Kernel panic - not syncing: Attempted to kill init! 
-exitcode=0x0000000b
-[    0.527408] ---[ end Kernel panic - not syncing: Attempted to kill 
-init! exitcode=0x0000000b ]---
+...followed by the usual module list and stack trace.
 
 
-Thanks,
+The bug is present in kernel v6.11-rc5, but not the 6.10 series.
 
-Rudraksha
+Git bisect says:
 
+e3786b29c54cdae3490b07180a54e2461f42144c is the first bad commit
+commit e3786b29c54cdae3490b07180a54e2461f42144c
+Author: Dominique Martinet <asmadeus@codewreck.org>
+Date:   Thu Aug 8 14:29:38 2024 +0100
+    9p: Fix DIO read through netfs
+
+
+Here's the full dmesg output when I run xxd on kernel v6.11-rc5:
+
+[   48.137018] ------------[ cut here ]------------
+[   48.137021] Subreq overread: R3[1] 312 > 8192 - 7956
+[   48.137029] WARNING: CPU: 30 PID: 421 at fs/netfs/io.c:495 netfs_subreq_terminated+0x276/0x2d0 [netfs]
+[   48.137046] Modules linked in: rfcomm algif_hash algif_skcipher af_alg cmac nls_utf8 cifs cifs_arc4 nls_ucs2_utils cifs_md4 dns_resolver netfs nft_masq nft_chain_nat nf_nat
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 bridge stp llc nf_tables nfnetlink nvme_fabrics essiv authenc crypto_null snd_seq_dummy snd_hrtimer snd_seq snd_seq_device qrtr zstd
+zram bnep binfmt_misc nls_ascii nls_cp437 vfat fat mt7921e snd_hda_codec_realtek mt7921_common snd_hda_codec_generic mt792x_lib snd_hda_scodec_component mt76_connac_lib
+snd_hda_codec_hdmi mt76 btusb snd_hda_intel amd_atl btrtl intel_rapl_msr snd_intel_dspcfg intel_rapl_common snd_intel_sdw_acpi btintel amd64_edac edac_mce_amd mac80211 btbcm
+snd_hda_codec asus_nb_wmi eeepc_wmi btmtk asus_wmi kvm_amd snd_hda_core sparse_keymap bluetooth libarc4 snd_hwdep platform_profile kvm cfg80211 snd_pcm battery wmi_bmof rapl
+snd_timer sp5100_tco ccp pcspkr watchdog snd k10temp rfkill soundcore joydev sg evdev nct6775 nct6775_core hwmon_vid msr parport_pc ppdev lp parport loop efi_pstore
+[   48.137103]  configfs ip_tables x_tables autofs4 ext4 mbcache jbd2 btrfs dm_crypt dm_mod efivarfs raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx
+xor raid6_pq libcrc32c crc32c_generic raid1 raid0 md_mod hid_generic usbhid hid amdgpu amdxcp drm_exec gpu_sched drm_buddy i2c_algo_bit drm_suballoc_helper drm_display_helper
+sd_mod cec crct10dif_pclmul rc_core crc32_pclmul xhci_pci drm_ttm_helper crc32c_intel ttm ahci xhci_hcd drm_kms_helper libahci r8169 ghash_clmulni_intel libata sha512_ssse3
+realtek nvme mdio_devres sha256_ssse3 drm usbcore scsi_mod sha1_ssse3 i2c_piix4 libphy video nvme_core i2c_smbus usb_common scsi_common crc16 wmi gpio_amdpt gpio_generic button
+aesni_intel gf128mul crypto_simd cryptd
+[   48.137148] CPU: 30 UID: 0 PID: 421 Comm: kworker/30:1 Not tainted 6.11.0-rc5 #3
+[   48.137150] Hardware name: ASUS System XXXXXXXXXX
+[   48.137151] Workqueue: cifsiod smb2_readv_worker [cifs]
+[   48.137176] RIP: 0010:netfs_subreq_terminated+0x276/0x2d0 [netfs]
+[   48.137182] Code: 66 ff ff ff 0f 1f 44 00 00 e9 5c ff ff ff 48 89 f1 0f b7 93 86 00 00 00 8b b5 ac 01 00 00 48 c7 c7 78 81 7a c2 e8 ba 68 2f da <0f> 0b 48 8b 43 70 31 d2 4c
+8d ab 98 00 00 00 66 89 93 84 00 00 00
+[   48.137183] RSP: 0018:ffffad8942637e58 EFLAGS: 00010282
+[   48.137185] RAX: 0000000000000000 RBX: ffff9d09639a7200 RCX: 0000000000000027
+[   48.137186] RDX: ffff9d107e721788 RSI: 0000000000000001 RDI: ffff9d107e721780
+[   48.137187] RBP: ffff9d094bf38a00 R08: 0000000000000000 R09: 0000000000000003
+[   48.137187] R10: ffffad8942637ce8 R11: ffff9d109de3cfe8 R12: 0000000000000001
+[   48.137188] R13: ffff9d095fcf6000 R14: ffff9d09639a7208 R15: 0000000000000000
+[   48.137189] FS:  0000000000000000(0000) GS:ffff9d107e700000(0000) knlGS:0000000000000000
+[   48.137190] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   48.137191] CR2: 000055d1a3402760 CR3: 00000006b0222000 CR4: 0000000000750ef0
+[   48.137192] PKRU: 55555554
+[   48.137193] Call Trace:
+[   48.137194]  <TASK>
+[   48.137197]  ? __warn+0x80/0x120
+[   48.137201]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
+[   48.137207]  ? report_bug+0x164/0x190
+[   48.137210]  ? prb_read_valid+0x1b/0x30
+[   48.137213]  ? handle_bug+0x41/0x70
+[   48.137215]  ? exc_invalid_op+0x17/0x70
+[   48.137216]  ? asm_exc_invalid_op+0x1a/0x20
+[   48.137220]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
+[   48.137225]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
+[   48.137230]  process_one_work+0x179/0x390
+[   48.137233]  worker_thread+0x249/0x350
+[   48.137235]  ? __pfx_worker_thread+0x10/0x10
+[   48.137237]  kthread+0xcf/0x100
+[   48.137240]  ? __pfx_kthread+0x10/0x10
+[   48.137242]  ret_from_fork+0x31/0x50
+[   48.137244]  ? __pfx_kthread+0x10/0x10
+[   48.137246]  ret_from_fork_asm+0x1a/0x30
+[   48.137250]  </TASK>
+[   48.137251] ---[ end trace 0000000000000000 ]---
