@@ -1,181 +1,269 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC51801;
-	Sun, 25 Aug 2024 07:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6168A4A2C
+	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 15:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724570683; cv=none; b=LYRdJbrw8031Aqtr89DKX0PwzgX3ZtjFjYXzjYdxZxvubzxKdHxwXKpSrIjvZggEh+lwUAsx/B332905VBh2ZcPTKf42Wr7r/lgFsb5u6m/WZOw3BP3kxgy3MzNBWKOPvwEAG47Hvvttbe6wq+okVrrSEhiUHHyZU5izy/9WVts=
+	t=1724598335; cv=none; b=KbfJOVFf0ul5QvYzGT9qeg5PsEihYVEjWb3ETiNC18mximCZJk7Nng5AXzpDIACDCXvrGK5Ce6A7n/zz6fmkkVwH4myQh0qBRtLG9lJBaRYZT8ceyftmNnPp6thMD/CKtbO9x6MTG9jddiPm7hyyWePMHZ0eSXOwonMan+fy7fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724570683; c=relaxed/simple;
-	bh=XS0MxfMA8aJLVnkTb3Bae/I1bANDoeKJiCKxbvzpHHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZOUyldP8MdYoxLfoRI7ql/oucr33t7fydJE7IKjrW+hVVrkff16I0LV/p0H66eMScjfgW0qnyWCfYGrjtZkTiyNsPiu2Bfy+Y1xEiSBxJVTSJRUGcHZTCeHh0n3XAyT9DRxO6QYjvaK8t8NROYFrN1c1DGaz22FKCWoPSr3tPbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YzWp4HGm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1724598335; c=relaxed/simple;
+	bh=x9XZj+2QVK7S6rGnJgroP7f+2A3bAx40/TzKDdroHW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrVaktgKAxbQIJ2aYxAouIvoZelitkURqqL+3a10Z6xeXeCUNM63lbWiFkIGFG/S1o+zhaD6bGeVGnMShb4fcTG0OC+uDbtP6EKUfuxu4VfPbkRBri6qH9heYRSKq/iIR5Vq9Jm0CSDX/+X/gNK6hI/MBzfFBAE+n/XuhPDYou4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdwC3gxu; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YzWp4HGm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=GkeY4nW3vlCL/lRCei213Af711k/56MGA61cWokigp8=;
-	t=1724570680; x=1725002680; b=YzWp4HGmD/c/j0DzcABDtQdhF+iVY1MhZHXm+IDwUVSI3JT
-	+nHs6AXZ874jWiPU/p8CoJeTKBWYECdA5bFs055KqHs5sqF5UpFna1BJF+8FJzP5h2+scoKOkNosN
-	vF5EWNTxnYxQQvly9u2osZA80b7OiRkKG00TA/2gcTBlYcoRECohf/Md5Bn7wqWr1/aHMmF7DpyGi
-	Fe66Osr2ZlpltOML74Pj6WpdzOoD1CaEzpw2Ur5U/JGhJPoCpc9v9IgjRyqnMxnCtk+WQFWjosW5L
-	LHsaPRPWxMJD8IBpYpT3gnO1GHpoYUjUYkuGJ+8xNNmwRYkbJkCJLOfE6/Ri0CCw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1si7bz-0005uc-6Q; Sun, 25 Aug 2024 09:24:31 +0200
-Message-ID: <48b20ca3-37f5-4d9c-b36f-1d05a2ee4f5c@leemhuis.info>
-Date: Sun, 25 Aug 2024 09:24:27 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdwC3gxu"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4280bca3960so29761235e9.3
+        for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 08:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724598332; x=1725203132; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rRwQw9C33FiIRakw6tM5T98dS41FiRx5uyWXQePoqU0=;
+        b=gdwC3gxu0AZ1xp8zGK3B0DZjmLahRYbG4LukZnQjHlkORHbQ/1RBbfT4cbAX0TzfSd
+         ZHl7aEpvL2kJAEOlj67DdE0l4Q3L+yIhO4/Nwhn/+z354vBQTCLNlvo2R8BS2XwE6Nai
+         y29XxI5WzjbcGk5KsHmsUoU/gL0j+x3FDMhMJMBG4/uWAxhhR4xH6j5xFh5drT/i98Qc
+         JgFrlM8lhtg4fLX74jNIMA/WGkW8Gh15lAbsdwccyrACQk53IoXIYS+wj0oWQNsl6/wC
+         JVEk0iXNzNN4hxO84DFSsa/aWfqH3szPVhDJo+mvVcM4tqXAtNFMn3t+1IUg5WAKoaMh
+         7BWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724598332; x=1725203132;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rRwQw9C33FiIRakw6tM5T98dS41FiRx5uyWXQePoqU0=;
+        b=ReExh7MYM/lPEHcJJQUlOYblgNACU0YEmMTGWlH19IN2rvtklaEfgxqb4ImdbEFd3f
+         rHWBKMPSMOUtKwL0Z5d/Qej45tcksfM1xqIeeJa3g3ubKJzjbDZtFZI92HApnZRCoKks
+         C9dmq+UKXeEjhpuame3v25IZPB0XxcaEppzqno4Xe1V/2TLyRxkNlbo2YZAWpNQFF88o
+         lez4es0CisTAo9UCERlXbnqIrnldocfF72yQHNxAatJKW9rvERb2gbPLA5vJz3SGJ83X
+         ld392U7NulI+7OUY6YmFF3wr7iBr86YIFU43Pb5f4NIxqVngteWaWbyokVStLdH4Ui7Q
+         ejnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbrr09vbU2dbZJVRO4wY/Jm7tLiXw93fUUDrVhdNf6Ed26i9NNIiGRJ+iy9riBkRu19CbRKwBTDOlXCQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxvuI/YTdZoI19zUXyxobXtPYWkkvJF1guRgL5F9yRcWzTmpHVu
+	vORm2fe1VlgHRduoMHkRTgYE+yiyLAr2K+6YewPydSfBkcpZ3nWF
+X-Google-Smtp-Source: AGHT+IFZ2c3B6yNqs8uu6qTU8c+yCN+Sz4X6w3hW32d7eEOgQcIPU9gC5rxJ2k8lhsdYysFqLGdNbQ==
+X-Received: by 2002:adf:f151:0:b0:371:7cd1:86ec with SMTP id ffacd0b85a97d-373118587f9mr4711405f8f.21.1724598330951;
+        Sun, 25 Aug 2024 08:05:30 -0700 (PDT)
+Received: from PC-PEDRO-ARCH ([2001:818:e92f:6400:96b:aa92:afc0:2d3d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ab87f26c0sm158478755e9.1.2024.08.25.08.05.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2024 08:05:30 -0700 (PDT)
+Date: Sun, 25 Aug 2024 16:05:28 +0100
+From: Pedro Falcato <pedro.falcato@gmail.com>
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Cc: Nhat Pham <nphamcs@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
+	Linux-MM <linux-mm@kvack.org>
+Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
+ mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
+Message-ID: <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
+References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
+ <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info>
+ <ZsiLElTykamcYZ6J@casper.infradead.org>
+ <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
+ <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
+ <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] firmware: qcom: scm: smc: switch to using the SCM
- allocator
-To: bartosz.golaszewski@linaro.org, andersson@kernel.org,
- Rudraksha Gupta <guptarud@gmail.com>
-Cc: brgl@bgdev.pl, konrad.dybcio@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, robimarko@gmail.com,
- quic_gurus@quicinc.com, luzmaximilian@gmail.com, catalin.marinas@arm.com,
- will@kernel.org, srinivas.kandagatla@linaro.org, arnd@arndb.de,
- quic_eberman@quicinc.com, elder@kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kernel@quicinc.com,
- ahalaney@redhat.com, quic_djaggi@quicinc.com, regressions@lists.linux.dev
-References: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724570680;44f1ad5b;
-X-HE-SMSGID: 1si7bz-0005uc-6Q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com>
 
-Lo! Thx for your report!
+On Sun, Aug 25, 2024 at 07:55:36AM GMT, Piotr Oniszczuk wrote:
+>=20
+>=20
+> > Wiadomo=C5=9B=C4=87 napisana przez Nhat Pham <nphamcs@gmail.com> w dniu=
+ 23.08.2024, o godz. 18:16:
+> >=20
+> >=20
+> > Have you tried with 6.9 yet? IIRC, there are two major changes to
+> > zswap architecture in recent versions.
+> >=20
+> > 1. In 6.9, we range-partition zswap's rbtrees to reduce lock contention.
+> >=20
+>=20
+> Ok - after 32h of continuous compilation also on 6.9.12 I got series of o=
+ops (see below).
+>
 
-On 25.08.24 08:51, Rudraksha Gupta wrote:
-> 
-> Found a regression with a platform that has the msm8960 SoC. Was hoping
-> to code up a fix myself, but I'm not adept in ARM architecture or the
-> Linux kernel, so I'm just reporting it here. Reverting this commit seems
-> to fix it as well. Please let me know if there is anything else I should
-> provide for this regression report.
-> 
-> #regzbot introduced 449d0d84bcd8246b508d07995326d13c54488b8c
+Since you have a reliable-ish repro: Could you compile a KASAN kernel and r=
+un that? Note that
+KASAN has a very real performance hit (if you're using this for prod) but i=
+t'll probably help
+shake out the bug.
 
-FWIW, that is 449d0d84bcd824 ("firmware: qcom: scm: smc: switch to using
-the SCM allocator") [v6.11-rc1] which was authored by Bartosz
-Golaszewski and commited by Bjorn Andersson.
- 
-> Error: https://pastebin.com/SDRENUGk
+> [68616.350398] watchdog: BUG: soft lockup - CPU#4 stuck for 596s! [kcompa=
+ctd0:176]
+<snip>
+> [68616.350490]  ? hrtimer_interrupt+0xfa/0x230
+> [68616.350492]  ? __sysvec_apic_timer_interrupt+0x55/0x150
+> [68616.350494]  ? sysvec_apic_timer_interrupt+0x6c/0x90
+> [68616.350497]  </IRQ>
+> [68616.350498]  <TASK>
+> [68616.350500]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> [68616.350503]  ? native_queued_spin_lock_slowpath+0x6e/0x2e0
+> [68616.350506]  _raw_spin_lock+0x29/0x30
+> [68616.350509]  page_vma_mapped_walk+0x6a2/0x950
 
-Better include the exact problem you face in your report so
-that search engines can do their magic; makes it also easier
-to handle for everyone.
+I don't understand what this is spinning on here. Page table lock?
+Could you get the file/line number from this address?
 
-Furthermore two quick questions:
+> [68616.350511]  try_to_migrate_one+0x174/0xbf0
+> [68616.350515]  rmap_walk_anon+0xb6/0x190
+> [68616.350518]  try_to_migrate+0xf9/0x110
+> [68616.350520]  ? __pfx_try_to_migrate_one+0x10/0x10
+> [68616.350523]  ? __pfx_folio_not_mapped+0x10/0x10
+> [68616.350526]  ? __pfx_folio_lock_anon_vma_read+0x10/0x10
+> [68616.350528]  ? __pfx_invalid_migration_vma+0x10/0x10
+> [68616.350531]  migrate_pages_batch+0x545/0xb80
+> [68616.350534]  ? __pfx_compaction_free+0x10/0x10
+> [68616.350536]  ? __pfx_compaction_alloc+0x10/0x10
+> [68616.350540]  ? __pfx_remove_migration_pte+0x10/0x10
+> [68616.350542]  migrate_pages+0xada/0xd90
+> [68616.350545]  ? __pfx_compaction_alloc+0x10/0x10
+> [68616.350548]  ? __pfx_compaction_free+0x10/0x10
+> [68616.350551]  ? folio_add_lru+0x5f/0xb0
+> [68616.350553]  compact_zone+0x9e8/0x10c0
+<snip>
+> [68620.214430] RSP: 0000:ffffb2688397fbe0 EFLAGS: 00000202
+> [68620.214432] RAX: 00000000000c0101 RBX: ffff9388140cf738 RCX: 000000000=
+0000008
+> [68620.214434] RDX: 0000000000000000 RSI: 0000000000000101 RDI: ffff93881=
+40cf738
+> [68620.214436] RBP: ffff938b2e6373c0 R08: ffff938b2e6310c0 R09: 000000000=
+000000a
+> [68620.214438] R10: 0000000000000000 R11: 0000000000000000 R12: 000000000=
+0040000
+> [68620.214440] R13: 0000000000040000 R14: ffff9388140cf738 R15: ffff93881=
+40cf730
+> [68620.214442] FS:  00007fc78bf83f00(0000) GS:ffff938b2e600000(0000) knlG=
+S:0000000000000000
+> [68620.214445] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [68620.214447] CR2: 00007fc75b53f264 CR3: 00000001797f4000 CR4: 000000000=
+0350ef0
+> [68620.214449] Call Trace:
+> [68620.214450]  <IRQ>
+> [68620.214451]  ? watchdog_timer_fn+0x1dd/0x260
+> [68620.214454]  ? __pfx_watchdog_timer_fn+0x10/0x10
+> [68620.214457]  ? __hrtimer_run_queues+0x10f/0x2a0
+> [68620.214460]  ? hrtimer_interrupt+0xfa/0x230
+> [68620.214462]  ? __sysvec_apic_timer_interrupt+0x55/0x150
+> [68620.214465]  ? sysvec_apic_timer_interrupt+0x6c/0x90
+> [68620.214468]  </IRQ>
+> [68620.214469]  <TASK>
+> [68620.214470]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> [68620.214474]  ? native_queued_spin_lock_slowpath+0x21f/0x2e0
+> [68620.214477]  _raw_spin_lock+0x29/0x30
+> [68620.214479]  zswap_load+0x6a/0x160
 
-[    0.000000] Linux version 6.10.0-rc1-msm8960+ (a@fpx-l-AMER03105) (Ubuntu clang version 16.0.6 (15), Ubuntu LLD 16.0.6) #17 SMP Sat
+=2E.. and I don't how a zswap lock could be related to a page table lock (i=
+n case it is one).
 
-Is that a vanilla kernel or one close to it? That "msm8960+" sounds
-somewhat suspicious. 
+> [68620.214482]  swap_read_folio+0x64/0x450
+> [68620.214484]  swapin_readahead+0x1ea/0x4e0
+> [68620.214487]  do_swap_page+0x403/0xd20
+> [68620.214490]  ? shmem_file_write_iter+0x5e/0x90
+> [68620.214492]  ? __pte_offset_map+0x1b/0x180
+> [68620.214494]  __handle_mm_fault+0x868/0xdd0
+> [68620.214498]  handle_mm_fault+0x18d/0x320
+> [68620.214500]  do_user_addr_fault+0x175/0x6b0
+> [68620.214503]  exc_page_fault+0x7e/0x180
+> [68620.214505]  asm_exc_page_fault+0x26/0x30
+<snip>
+> [68620.214508] RIP: 0033:0x330a353
+> [68620.214512] Code: e2 03 48 01 d0 48 8b 00 48 89 45 e8 48 83 7d e8 00 0=
+f 84 11 01 00 00 48 83 7d e8 ff 75 08 8b 45 fc 89 45 f8 eb 42 48 8b 45 e8 <=
+8b> 40 0c 39 45 84 75 36 48 8b 45 e8 8b 40 08 48 8b 55 88 39 d0 75
+> [68620.214515] RSP: 002b:00007ffc42ae0390 EFLAGS: 00010217
+> [68620.214517] RAX: 00007fc75b53f258 RBX: 00000000000003e9 RCX: 00000000f=
+9107c14
+> [68620.214519] RDX: 000000000003e0a0 RSI: 00007ffc42ae04f1 RDI: 000000002=
+7ef6180
+> [68620.214521] RBP: 00007ffc42ae0410 R08: 0000000000000000 R09: 000000000=
+0000000
+> [68620.214523] R10: 00007fc78c106ac0 R11: 00007fc78c1073c0 R12: 000000000=
+0000000
+> [68620.214525] R13: 00007ffc42ae1030 R14: 00007fc78c66f000 R15: 000000000=
+3df8e50
+> [68620.214528]  </TASK>
+> [68632.363664] watchdog: BUG: soft lockup - CPU#8 stuck for 648s! [cc1plu=
+s:2982130]
+> [68632.363668] Modules linked in: tls rpcsec_gss_krb5 nfsv4 dns_resolver =
+nfs netfs rpcrdma rdma_cm iw_cm ib_cm ib_core br_netfilter iptable_filter x=
+t_physdev tun bridge stp llc ext4 crc16 mbcache jbd2 amd_atl intel_rapl_msr=
+ intel_rapl_common edac_mce_amd kvm_amd cfg80211 rfkill kvm crct10dif_pclmu=
+l crc32_pclmul polyval_clmulni polyval_generic gf128mul ghash_clmulni_intel=
+ sha512_ssse3 sha256_ssse3 sha1_ssse3 r8169 aesni_intel crypto_simd cryptd =
+realtek mdio_devres sp5100_tco wmi_bmof k10temp libphy ccp pcspkr rapl i2c_=
+piix4 acpi_cpufreq zenpower ryzen_smu gpio_amdpt gpio_generic mac_hid nfsd =
+auth_rpcgss nfs_acl lockd grace nct6775 nct6775_core hwmon_vid sunrpc sg cr=
+ypto_user fuse dm_mod loop nfnetlink bpf_preload ip_tables x_tables xfs lib=
+crc32c crc32c_generic drm_ttm_helper ttm video gpu_sched i2c_algo_bit drm_g=
+puvm drm_exec mxm_wmi nvme drm_display_helper crc32c_intel xhci_pci nvme_co=
+re cec xhci_pci_renesas wmi virtio_net net_failover failover virtio_blk vir=
+tio_pci virtio_pci_legacy_dev virtio_pci_modern_dev
+> [68632.363704]  [last unloaded: nouveau]
+> [68632.363719] CPU: 8 PID: 2982130 Comm: cc1plus Tainted: G      D W    L=
+     6.9.12-12 #1 e59bce453550af16b12fd25785f4d449e921764e
+> [68632.363722] Hardware name: To Be Filled By O.E.M. B450M Pro4-F R2.0/B4=
+50M Pro4-F R2.0, BIOS P10.08 01/19/2024
+> [68632.363724] RIP: 0010:native_queued_spin_lock_slowpath+0x2a1/0x2e0
+> [68632.363728] Code: c1 ea 12 83 e0 03 83 ea 01 48 c1 e0 05 48 63 d2 48 0=
+5 c0 73 03 00 48 03 04 d5 40 32 91 aa 48 89 28 8b 45 08 85 c0 75 09 f3 90 <=
+8b> 45 08 85 c0 74 f7 48 8b 55 00 48 85 d2 0f 84 6a ff ff ff 0f 0d
+> [68632.363732] RSP: 0000:ffffb26885e1f450 EFLAGS: 00000246
+> [68632.363734] RAX: 0000000000000000 RBX: ffff9388140cf738 RCX: fffffbc30=
+f2ad340
+> [68632.363736] RDX: 0000000000000014 RSI: 0000000000540101 RDI: ffff93881=
+40cf738
+> [68632.363738] RBP: ffff938b2ea373c0 R08: ffff93876cc2aaa0 R09: 0008c8130=
+ae03aa0
+> [68632.363740] R10: 020f0008c8130ae0 R11: 0000000000501000 R12: 000000000=
+0240000
+> [68632.363741] R13: 0000000000240000 R14: 03ffffffffffffff R15: 000000000=
+00005fa
+> [68632.363743] FS:  00007fd929957f00(0000) GS:ffff938b2ea00000(0000) knlG=
+S:0000000000000000
+> [68632.363746] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [68632.363748] CR2: 00007fd923600000 CR3: 0000000162ba8000 CR4: 000000000=
+0350ef0
+> [68632.363750] Call Trace:
+> [68632.363751]  <IRQ>
+> [68632.363752]  ? watchdog_timer_fn+0x1dd/0x260
+> [68632.363755]  ? __pfx_watchdog_timer_fn+0x10/0x10
+> [68632.363758]  ? __hrtimer_run_queues+0x10f/0x2a0
+> [68632.363761]  ? hrtimer_interrupt+0xfa/0x230
+> [68632.363763]  ? __sysvec_apic_timer_interrupt+0x55/0x150
+> [68632.363766]  ? sysvec_apic_timer_interrupt+0x6c/0x90
+> [68632.363769]  </IRQ>
+> [68632.363770]  <TASK>
+> [68632.363771]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> [68632.363775]  ? native_queued_spin_lock_slowpath+0x2a1/0x2e0
+> [68632.363778]  _raw_spin_lock+0x29/0x30
+> [68632.363781]  zswap_store+0x623/0xc70
 
-And does the problem still happen with latest mainline? Cconsider
-retrying with -rc5, which should be out in the next 24h.
+FWIW this is the same zswap lock as above.
 
-And FWIW, here is the afaics relevant part of the problem: 
+Also, could you try a memtest86 on your machine, to shake out potential har=
+dware problems?
 
-[    0.047411] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-[    0.051541] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-[    0.060470] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.066411] 8<--- cut here ---
-[    0.071896] Unable to handle kernel NULL pointer dereference at virtual address 00000090 when read
-[    0.074743] [00000090] *pgd=00000000
-[    0.083675] Internal error: Oops: 5 [#1] SMP ARM
-[    0.087283] Modules linked in:
-[    0.091833] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.10.0-rc1-msm8960+ #17
-[    0.094673] Hardware name: Generic DT based system
-[    0.101804] PC is at qcom_scm_get_tzmem_pool+0x1c/0x24
-[    0.106443] LR is at __scm_smc_call+0x30/0x2d4
-[    0.111511] pc : [<c089176c>]    lr : [<c0893fb0>]    psr: 60000013
-[    0.115896] sp : f0815d78  ip : f0815e98  fp : f0815d78
-[    0.121995] r10: 00000002  r9 : f0815e18  r8 : 00000001
-[    0.127150] r7 : c1106694  r6 : f0815e30  r5 : c126ff4c  r4 : 00000001
-[    0.132308] r3 : f0815e18  r2 : 00000002  r1 : f0815e30  r0 : 00000000
-[    0.138839] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[    0.145288] Control: 10c5787d  Table: 8000406a  DAC: 00000051
-[    0.152413] Register r0 information: NULL pointer
-[    0.158083] Register r1 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.162735] Register r2 information: non-paged memory
-[    0.173205] Register r3 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.178373] Register r4 information: non-paged memory
-[    0.188845] Register r5 information: non-slab/vmalloc memory
-[    0.194002] Register r6 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.199682] Register r7 information: non-slab/vmalloc memory
-[    0.210069] Register r8 information: non-paged memory
-[    0.215911] Register r9 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.220819] Register r10 information: non-paged memory
-[    0.231292] Register r11 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.236460] Register r12 information: 2-page vmalloc region starting at 0xf0814000 allocated at copy_process+0x16c/0xddc
-[    0.247372] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-[    0.258105] Stack: (0xf0815d78 to 0xf0816000)
-[    0.264034] 5d60:                                                       f0815e08 c0893fb0
-[    0.268257] 5d80: f0815d9c c01953fc c1118278 c1124508 00000037 00000000 c1118278 f0815da8
-[    0.276334] 5da0: c125875c 00000800 00000036 00000000 039ab58a 00000000 c2000030 c0a5cee4
-[    0.284411] 5dc0: f0815dd8 c01953fc c1118278 c1124508 00000037 00000000 c1118278 00000000
-[    0.292489] 5de0: f0815e18 c01953fc dedf13d9 00000001 c126ff4c 00000000 c1106694 00000001
-[    0.300564] 5e00: f0815ef0 00000000 f0815eb0 c0893658 00000001 c0195934 f0815e78 c0195934
-[    0.308641] 5e20: f0815e48 00000000 f0815ebf f0815e4c 00000006 00000001 00000001 00000000
-[    0.316718] 5e40: 02000601 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.324794] 5e60: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.332873] 5e80: 00000000 00000000 00000000 00000000 00000002 00000000 f0815ebf dedf13d9
-[    0.340950] 5ea0: 00000000 f0815ee0 00000000 00000000 f0815ed0 c0891aa0 f0815ec8 00a8fbe0
-[    0.349027] 5ec0: f0815ef8 c0b8c08f 00000001 00000000 f0815f68 c0891980 00000001 c01012a0
-[    0.357103] 5ee0: 00000001 00000001 00000002 00000000 00000001 00000000 801012a0 00000000
-[    0.365180] 5f00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.373258] 5f20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.381335] 5f40: 00000002 00000000 dedf13d9 c1509100 00000001 c1568000 00000000 00000000
-[    0.389411] 5f60: 00000000 00000000 f0815f80 c100bf5c c1509100 00000001 c1568000 00000000
-[    0.397489] 5f80: f0815f98 c1001538 00000000 c0a8b56c 00000000 00000000 f0815fa8 c0a8b58c
-[    0.405565] 5fa0: 00000000 00000000 00000000 c010014c 00000000 00000000 00000000 00000000
-[    0.413643] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.421718] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[    0.429788] Call trace:
-[    0.429813]  qcom_scm_get_tzmem_pool from __scm_smc_call+0x30/0x2d4
-[    0.440444]  __scm_smc_call from __get_convention+0xac/0x128
-[    0.446370]  __get_convention from qcom_scm_call_atomic+0x24/0x90
-[    0.452214]  qcom_scm_call_atomic from qcom_scm_set_boot_addr+0xe4/0x100
-[    0.458142]  qcom_scm_set_boot_addr from qcom_smp_prepare_cpus+0x1c/0x94
-[    0.464849]  qcom_smp_prepare_cpus from kernel_init_freeable+0xcc/0x140
-[    0.471462]  kernel_init_freeable from kernel_init+0x20/0x144
-[    0.477734]  kernel_init from ret_from_fork+0x14/0x28
-[    0.483571] Exception stack(0xf0815fb0 to 0xf0815ff8)
-[    0.488561] 5fa0:                                     00000000 00000000 00000000 00000000
-[    0.493554] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.501628] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.509710] Code: e28dd004 e30f0f50 e34c0126 e5900000 (e5900090)
-[    0.516140] ---[ end trace 0000000000000000 ]---
-[    0.522249] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[    0.526890] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+All-in-all if the above is a page table lock then this is a weird bug, beca=
+use I don't see
+how a zswap lock could be related to a ptlock through memory corruption, si=
+nce ptdescs are just
+struct pages... Either this is has to be a different bug than the one I rep=
+orted back then, or
+there's some side effect that's non-obvious to me.
 
-> Defconfig: https://pastebin.com/CRDjC39a
-> 
-> Platform:
-> https://wiki.postmarketos.org/wiki/Samsung_Galaxy_Express_SGH-I437_(samsung-expressatt)
-
-Ciao, Thorsten
-
-P.S.:
-
-#regzbot title: firmware: qcom: scm: smc: msm8960 SoC fails to boot
+--=20
+Pedro
