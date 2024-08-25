@@ -1,269 +1,120 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6168A4A2C
-	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 15:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1580B224DC
+	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 16:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724598335; cv=none; b=KbfJOVFf0ul5QvYzGT9qeg5PsEihYVEjWb3ETiNC18mximCZJk7Nng5AXzpDIACDCXvrGK5Ce6A7n/zz6fmkkVwH4myQh0qBRtLG9lJBaRYZT8ceyftmNnPp6thMD/CKtbO9x6MTG9jddiPm7hyyWePMHZ0eSXOwonMan+fy7fI=
+	t=1724603083; cv=none; b=A2m2fdP/nXQ5CgY3nEdon6QrlQFvPWxL2Guq2eDAjjuBLl/PGJft/e0Nkrc5TkEXSjRudB8jYi/aUFhYePdeSV17ktZqtsI3sNpQfnj+IBv7brI0K33hlpy4KXY1o9hkA1BSxTBYkjs5en5wBpcAkFF0n8UhFTx7iB6pST2Gios=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724598335; c=relaxed/simple;
-	bh=x9XZj+2QVK7S6rGnJgroP7f+2A3bAx40/TzKDdroHW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrVaktgKAxbQIJ2aYxAouIvoZelitkURqqL+3a10Z6xeXeCUNM63lbWiFkIGFG/S1o+zhaD6bGeVGnMShb4fcTG0OC+uDbtP6EKUfuxu4VfPbkRBri6qH9heYRSKq/iIR5Vq9Jm0CSDX/+X/gNK6hI/MBzfFBAE+n/XuhPDYou4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdwC3gxu; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1724603083; c=relaxed/simple;
+	bh=KJ+Z50j8sUoBHy3hhy960h2rh2ePf4Ly0jSUPqKdGDM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OMEdP4Xo8zRZ5eRHTmoIR9II4omZiq8i8OV7rAB741IhjEDJv9AxaoxK0vMbbbhJTpy8SHgkIuoExwZQ2ZFESxMgO9JfgsYEI0D811+jir8oc9IT+sZgCSg/kDN/lvNrMf+Qjq8arPqL4RYgMBIB+8W38QX6kf7QGmfBL+u5xhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhx4lEa/; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdwC3gxu"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4280bca3960so29761235e9.3
-        for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 08:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhx4lEa/"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f4f8742138so23342461fa.0
+        for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 09:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724598332; x=1725203132; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rRwQw9C33FiIRakw6tM5T98dS41FiRx5uyWXQePoqU0=;
-        b=gdwC3gxu0AZ1xp8zGK3B0DZjmLahRYbG4LukZnQjHlkORHbQ/1RBbfT4cbAX0TzfSd
-         ZHl7aEpvL2kJAEOlj67DdE0l4Q3L+yIhO4/Nwhn/+z354vBQTCLNlvo2R8BS2XwE6Nai
-         y29XxI5WzjbcGk5KsHmsUoU/gL0j+x3FDMhMJMBG4/uWAxhhR4xH6j5xFh5drT/i98Qc
-         JgFrlM8lhtg4fLX74jNIMA/WGkW8Gh15lAbsdwccyrACQk53IoXIYS+wj0oWQNsl6/wC
-         JVEk0iXNzNN4hxO84DFSsa/aWfqH3szPVhDJo+mvVcM4tqXAtNFMn3t+1IUg5WAKoaMh
-         7BWQ==
+        d=gmail.com; s=20230601; t=1724603080; x=1725207880; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n6XomT4xNhYnUhlhJpfg6DQnFwYDy19uzJG9jCJSIOE=;
+        b=nhx4lEa/0ewnmSKyQmedynWQgNJxCAA/htMwoHrrzwBl7URq6dHYde2pHtF3ONcGEk
+         +cNSkA2i3jkNbJOWW7WSXDqyVZFcxag7QKg8p6LqTcmpjz1Y13OCAhFOQ/iYVli4wPiT
+         Lv9fEIoe3fB82qijDR82m7erAA+NpwxhaVQGDRWHseWQ6KolwDJ/P7zOpcCpsS81SG8e
+         ce393hKZQ/dy23he3v5YwuVhPyOFIYdCgHmc2jlMOp6Z9e51t+UWU5HkdstI8DdSNeMr
+         7DNA2888w6Qw2DrXG5Ue3OxFk9mxc+uXeP981R/WvLz4oSvjf/j7ZXtGfqE1QedUjqBi
+         kIqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724598332; x=1725203132;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rRwQw9C33FiIRakw6tM5T98dS41FiRx5uyWXQePoqU0=;
-        b=ReExh7MYM/lPEHcJJQUlOYblgNACU0YEmMTGWlH19IN2rvtklaEfgxqb4ImdbEFd3f
-         rHWBKMPSMOUtKwL0Z5d/Qej45tcksfM1xqIeeJa3g3ubKJzjbDZtFZI92HApnZRCoKks
-         C9dmq+UKXeEjhpuame3v25IZPB0XxcaEppzqno4Xe1V/2TLyRxkNlbo2YZAWpNQFF88o
-         lez4es0CisTAo9UCERlXbnqIrnldocfF72yQHNxAatJKW9rvERb2gbPLA5vJz3SGJ83X
-         ld392U7NulI+7OUY6YmFF3wr7iBr86YIFU43Pb5f4NIxqVngteWaWbyokVStLdH4Ui7Q
-         ejnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbrr09vbU2dbZJVRO4wY/Jm7tLiXw93fUUDrVhdNf6Ed26i9NNIiGRJ+iy9riBkRu19CbRKwBTDOlXCQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxvuI/YTdZoI19zUXyxobXtPYWkkvJF1guRgL5F9yRcWzTmpHVu
-	vORm2fe1VlgHRduoMHkRTgYE+yiyLAr2K+6YewPydSfBkcpZ3nWF
-X-Google-Smtp-Source: AGHT+IFZ2c3B6yNqs8uu6qTU8c+yCN+Sz4X6w3hW32d7eEOgQcIPU9gC5rxJ2k8lhsdYysFqLGdNbQ==
-X-Received: by 2002:adf:f151:0:b0:371:7cd1:86ec with SMTP id ffacd0b85a97d-373118587f9mr4711405f8f.21.1724598330951;
-        Sun, 25 Aug 2024 08:05:30 -0700 (PDT)
-Received: from PC-PEDRO-ARCH ([2001:818:e92f:6400:96b:aa92:afc0:2d3d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ab87f26c0sm158478755e9.1.2024.08.25.08.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2024 08:05:30 -0700 (PDT)
-Date: Sun, 25 Aug 2024 16:05:28 +0100
-From: Pedro Falcato <pedro.falcato@gmail.com>
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Nhat Pham <nphamcs@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Linux-MM <linux-mm@kvack.org>
+        d=1e100.net; s=20230601; t=1724603080; x=1725207880;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n6XomT4xNhYnUhlhJpfg6DQnFwYDy19uzJG9jCJSIOE=;
+        b=C6NaezueKg/unelF56y+3XmfLsXA02RElZROYsMfDeiREk+ODt8r0RJR11PouVqP6G
+         fSk1ihY2WGY0Qb5ENt4xMMV2gSQhp2EfA/kbLJCAXZ0iWSe6ObJG3w0Vc+lYa3hcei/K
+         UFCQ9zT8wWX3VXRWXht2RASVH/yiYu1dOIB9Tt/Yy3aGIvdR6v9Jus3iIcA2ISnrHjlm
+         nFbwuznm96QUYlD48Ndhtgl4DQVDRYIs38SSSCyvgqKq6gQFOK3QPsdCerlh3oCzh86Z
+         sYM2GdTa3yRkq6GQevMnPIEa7n+JzMmhPxJrd9EGIMXKYHw8Yy/jUrXvG9g0VHTVpoCV
+         AL2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVc6hEsk3FPMagnORQIcbGgflVpFIGxq38MYHd/HSFcuOtezACEavRsjRunL7V6jGncAtXYbfmP7LVnWQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNCZpfkRoNoy1VzNXFcjAcrRM5YebYNiyHKX9gH2SFmhFdRkdF
+	QHJcJKPoF8fCbpViVKy18ueVvKBKURR/EihWzQxOq61sht0lomU9
+X-Google-Smtp-Source: AGHT+IHTCz6agKZpn/0TM6H5VB1xS4o1qPHzlO6+ruqCMC63cLFJxFAOns8FPsvm6zqLp2Zk54MvFg==
+X-Received: by 2002:a05:651c:211a:b0:2ef:2006:bfb1 with SMTP id 38308e7fff4ca-2f4f9dced35mr48808711fa.15.1724603079772;
+        Sun, 25 Aug 2024 09:24:39 -0700 (PDT)
+Received: from smtpclient.apple (89-73-96-21.dynamic.chello.pl. [89.73.96.21])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f4048acb0bsm10663581fa.125.2024.08.25.09.24.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Aug 2024 09:24:39 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
 Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
  mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-Message-ID: <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+In-Reply-To: <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
+Date: Sun, 25 Aug 2024 18:24:28 +0200
+Cc: Nhat Pham <nphamcs@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Yosry Ahmed <yosryahmed@google.com>,
+ Linux-MM <linux-mm@kvack.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com>
 References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
  <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info>
  <ZsiLElTykamcYZ6J@casper.infradead.org>
  <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
  <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
  <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com>
+ <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
+To: Pedro Falcato <pedro.falcato@gmail.com>
+X-Mailer: Apple Mail (2.3776.700.51)
 
-On Sun, Aug 25, 2024 at 07:55:36AM GMT, Piotr Oniszczuk wrote:
+
+
+> Wiadomo=C5=9B=C4=87 napisana przez Pedro Falcato =
+<pedro.falcato@gmail.com> w dniu 25.08.2024, o godz. 17:05:
 >=20
->=20
-> > Wiadomo=C5=9B=C4=87 napisana przez Nhat Pham <nphamcs@gmail.com> w dniu=
- 23.08.2024, o godz. 18:16:
-> >=20
-> >=20
-> > Have you tried with 6.9 yet? IIRC, there are two major changes to
-> > zswap architecture in recent versions.
-> >=20
-> > 1. In 6.9, we range-partition zswap's rbtrees to reduce lock contention.
-> >=20
->=20
-> Ok - after 32h of continuous compilation also on 6.9.12 I got series of o=
-ops (see below).
->
+> Also, could you try a memtest86 on your machine, to shake out =
+potential hardware problems?
 
-Since you have a reliable-ish repro: Could you compile a KASAN kernel and r=
-un that? Note that
-KASAN has a very real performance hit (if you're using this for prod) but i=
-t'll probably help
-shake out the bug.
 
-> [68616.350398] watchdog: BUG: soft lockup - CPU#4 stuck for 596s! [kcompa=
-ctd0:176]
-<snip>
-> [68616.350490]  ? hrtimer_interrupt+0xfa/0x230
-> [68616.350492]  ? __sysvec_apic_timer_interrupt+0x55/0x150
-> [68616.350494]  ? sysvec_apic_timer_interrupt+0x6c/0x90
-> [68616.350497]  </IRQ>
-> [68616.350498]  <TASK>
-> [68616.350500]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> [68616.350503]  ? native_queued_spin_lock_slowpath+0x6e/0x2e0
-> [68616.350506]  _raw_spin_lock+0x29/0x30
-> [68616.350509]  page_vma_mapped_walk+0x6a2/0x950
+I found less time consuming way to trigger issue: 12c24t cross compile =
+of llvm with =E2=80=9Eonly 16G=E2=80=9D of ram - as this triggers many =
+heavy swappings (top swap usage gets 8-9G out of 16G swap part)
 
-I don't understand what this is spinning on here. Page table lock?
-Could you get the file/line number from this address?
+With such setup - on 6.9.12 - i=E2=80=99m getting not available system =
+(due cpu soft lockup) just in 1..3h
+(usually first or second compile iteration; i wrote simple scrip =
+compiling in loop + counting interations)
 
-> [68616.350511]  try_to_migrate_one+0x174/0xbf0
-> [68616.350515]  rmap_walk_anon+0xb6/0x190
-> [68616.350518]  try_to_migrate+0xf9/0x110
-> [68616.350520]  ? __pfx_try_to_migrate_one+0x10/0x10
-> [68616.350523]  ? __pfx_folio_not_mapped+0x10/0x10
-> [68616.350526]  ? __pfx_folio_lock_anon_vma_read+0x10/0x10
-> [68616.350528]  ? __pfx_invalid_migration_vma+0x10/0x10
-> [68616.350531]  migrate_pages_batch+0x545/0xb80
-> [68616.350534]  ? __pfx_compaction_free+0x10/0x10
-> [68616.350536]  ? __pfx_compaction_alloc+0x10/0x10
-> [68616.350540]  ? __pfx_remove_migration_pte+0x10/0x10
-> [68616.350542]  migrate_pages+0xada/0xd90
-> [68616.350545]  ? __pfx_compaction_alloc+0x10/0x10
-> [68616.350548]  ? __pfx_compaction_free+0x10/0x10
-> [68616.350551]  ? folio_add_lru+0x5f/0xb0
-> [68616.350553]  compact_zone+0x9e8/0x10c0
-<snip>
-> [68620.214430] RSP: 0000:ffffb2688397fbe0 EFLAGS: 00000202
-> [68620.214432] RAX: 00000000000c0101 RBX: ffff9388140cf738 RCX: 000000000=
-0000008
-> [68620.214434] RDX: 0000000000000000 RSI: 0000000000000101 RDI: ffff93881=
-40cf738
-> [68620.214436] RBP: ffff938b2e6373c0 R08: ffff938b2e6310c0 R09: 000000000=
-000000a
-> [68620.214438] R10: 0000000000000000 R11: 0000000000000000 R12: 000000000=
-0040000
-> [68620.214440] R13: 0000000000040000 R14: ffff9388140cf738 R15: ffff93881=
-40cf730
-> [68620.214442] FS:  00007fc78bf83f00(0000) GS:ffff938b2e600000(0000) knlG=
-S:0000000000000000
-> [68620.214445] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [68620.214447] CR2: 00007fc75b53f264 CR3: 00000001797f4000 CR4: 000000000=
-0350ef0
-> [68620.214449] Call Trace:
-> [68620.214450]  <IRQ>
-> [68620.214451]  ? watchdog_timer_fn+0x1dd/0x260
-> [68620.214454]  ? __pfx_watchdog_timer_fn+0x10/0x10
-> [68620.214457]  ? __hrtimer_run_queues+0x10f/0x2a0
-> [68620.214460]  ? hrtimer_interrupt+0xfa/0x230
-> [68620.214462]  ? __sysvec_apic_timer_interrupt+0x55/0x150
-> [68620.214465]  ? sysvec_apic_timer_interrupt+0x6c/0x90
-> [68620.214468]  </IRQ>
-> [68620.214469]  <TASK>
-> [68620.214470]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> [68620.214474]  ? native_queued_spin_lock_slowpath+0x21f/0x2e0
-> [68620.214477]  _raw_spin_lock+0x29/0x30
-> [68620.214479]  zswap_load+0x6a/0x160
+Then i switched back to 6.8.2 and=E2=80=A6. decided interrupt successful =
+test after 14 iterations (it was 19h of non-stop compiling with heavy =
+swapping)
+(sure - i can still keep test going - but builder is also needed for my =
+normal development)
 
-=2E.. and I don't how a zswap lock could be related to a page table lock (i=
-n case it is one).
+So summarising:
+-on 6.9+ just 1..3h seems enough to provoke issue
+-on 6.8.2 so far never in past + currently can=E2=80=99t provoke issue =
+(last day in 19h test window nor 5 full distro builds nor last 2 weeks =
+of development)
 
-> [68620.214482]  swap_read_folio+0x64/0x450
-> [68620.214484]  swapin_readahead+0x1ea/0x4e0
-> [68620.214487]  do_swap_page+0x403/0xd20
-> [68620.214490]  ? shmem_file_write_iter+0x5e/0x90
-> [68620.214492]  ? __pte_offset_map+0x1b/0x180
-> [68620.214494]  __handle_mm_fault+0x868/0xdd0
-> [68620.214498]  handle_mm_fault+0x18d/0x320
-> [68620.214500]  do_user_addr_fault+0x175/0x6b0
-> [68620.214503]  exc_page_fault+0x7e/0x180
-> [68620.214505]  asm_exc_page_fault+0x26/0x30
-<snip>
-> [68620.214508] RIP: 0033:0x330a353
-> [68620.214512] Code: e2 03 48 01 d0 48 8b 00 48 89 45 e8 48 83 7d e8 00 0=
-f 84 11 01 00 00 48 83 7d e8 ff 75 08 8b 45 fc 89 45 f8 eb 42 48 8b 45 e8 <=
-8b> 40 0c 39 45 84 75 36 48 8b 45 e8 8b 40 08 48 8b 55 88 39 d0 75
-> [68620.214515] RSP: 002b:00007ffc42ae0390 EFLAGS: 00010217
-> [68620.214517] RAX: 00007fc75b53f258 RBX: 00000000000003e9 RCX: 00000000f=
-9107c14
-> [68620.214519] RDX: 000000000003e0a0 RSI: 00007ffc42ae04f1 RDI: 000000002=
-7ef6180
-> [68620.214521] RBP: 00007ffc42ae0410 R08: 0000000000000000 R09: 000000000=
-0000000
-> [68620.214523] R10: 00007fc78c106ac0 R11: 00007fc78c1073c0 R12: 000000000=
-0000000
-> [68620.214525] R13: 00007ffc42ae1030 R14: 00007fc78c66f000 R15: 000000000=
-3df8e50
-> [68620.214528]  </TASK>
-> [68632.363664] watchdog: BUG: soft lockup - CPU#8 stuck for 648s! [cc1plu=
-s:2982130]
-> [68632.363668] Modules linked in: tls rpcsec_gss_krb5 nfsv4 dns_resolver =
-nfs netfs rpcrdma rdma_cm iw_cm ib_cm ib_core br_netfilter iptable_filter x=
-t_physdev tun bridge stp llc ext4 crc16 mbcache jbd2 amd_atl intel_rapl_msr=
- intel_rapl_common edac_mce_amd kvm_amd cfg80211 rfkill kvm crct10dif_pclmu=
-l crc32_pclmul polyval_clmulni polyval_generic gf128mul ghash_clmulni_intel=
- sha512_ssse3 sha256_ssse3 sha1_ssse3 r8169 aesni_intel crypto_simd cryptd =
-realtek mdio_devres sp5100_tco wmi_bmof k10temp libphy ccp pcspkr rapl i2c_=
-piix4 acpi_cpufreq zenpower ryzen_smu gpio_amdpt gpio_generic mac_hid nfsd =
-auth_rpcgss nfs_acl lockd grace nct6775 nct6775_core hwmon_vid sunrpc sg cr=
-ypto_user fuse dm_mod loop nfnetlink bpf_preload ip_tables x_tables xfs lib=
-crc32c crc32c_generic drm_ttm_helper ttm video gpu_sched i2c_algo_bit drm_g=
-puvm drm_exec mxm_wmi nvme drm_display_helper crc32c_intel xhci_pci nvme_co=
-re cec xhci_pci_renesas wmi virtio_net net_failover failover virtio_blk vir=
-tio_pci virtio_pci_legacy_dev virtio_pci_modern_dev
-> [68632.363704]  [last unloaded: nouveau]
-> [68632.363719] CPU: 8 PID: 2982130 Comm: cc1plus Tainted: G      D W    L=
-     6.9.12-12 #1 e59bce453550af16b12fd25785f4d449e921764e
-> [68632.363722] Hardware name: To Be Filled By O.E.M. B450M Pro4-F R2.0/B4=
-50M Pro4-F R2.0, BIOS P10.08 01/19/2024
-> [68632.363724] RIP: 0010:native_queued_spin_lock_slowpath+0x2a1/0x2e0
-> [68632.363728] Code: c1 ea 12 83 e0 03 83 ea 01 48 c1 e0 05 48 63 d2 48 0=
-5 c0 73 03 00 48 03 04 d5 40 32 91 aa 48 89 28 8b 45 08 85 c0 75 09 f3 90 <=
-8b> 45 08 85 c0 74 f7 48 8b 55 00 48 85 d2 0f 84 6a ff ff ff 0f 0d
-> [68632.363732] RSP: 0000:ffffb26885e1f450 EFLAGS: 00000246
-> [68632.363734] RAX: 0000000000000000 RBX: ffff9388140cf738 RCX: fffffbc30=
-f2ad340
-> [68632.363736] RDX: 0000000000000014 RSI: 0000000000540101 RDI: ffff93881=
-40cf738
-> [68632.363738] RBP: ffff938b2ea373c0 R08: ffff93876cc2aaa0 R09: 0008c8130=
-ae03aa0
-> [68632.363740] R10: 020f0008c8130ae0 R11: 0000000000501000 R12: 000000000=
-0240000
-> [68632.363741] R13: 0000000000240000 R14: 03ffffffffffffff R15: 000000000=
-00005fa
-> [68632.363743] FS:  00007fd929957f00(0000) GS:ffff938b2ea00000(0000) knlG=
-S:0000000000000000
-> [68632.363746] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [68632.363748] CR2: 00007fd923600000 CR3: 0000000162ba8000 CR4: 000000000=
-0350ef0
-> [68632.363750] Call Trace:
-> [68632.363751]  <IRQ>
-> [68632.363752]  ? watchdog_timer_fn+0x1dd/0x260
-> [68632.363755]  ? __pfx_watchdog_timer_fn+0x10/0x10
-> [68632.363758]  ? __hrtimer_run_queues+0x10f/0x2a0
-> [68632.363761]  ? hrtimer_interrupt+0xfa/0x230
-> [68632.363763]  ? __sysvec_apic_timer_interrupt+0x55/0x150
-> [68632.363766]  ? sysvec_apic_timer_interrupt+0x6c/0x90
-> [68632.363769]  </IRQ>
-> [68632.363770]  <TASK>
-> [68632.363771]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> [68632.363775]  ? native_queued_spin_lock_slowpath+0x2a1/0x2e0
-> [68632.363778]  _raw_spin_lock+0x29/0x30
-> [68632.363781]  zswap_store+0x623/0xc70
+By above i personally don=E2=80=99t believe issue is in hw (ram)
 
-FWIW this is the same zswap lock as above.
 
-Also, could you try a memtest86 on your machine, to shake out potential har=
-dware problems?
-
-All-in-all if the above is a page table lock then this is a weird bug, beca=
-use I don't see
-how a zswap lock could be related to a ptlock through memory corruption, si=
-nce ptdescs are just
-struct pages... Either this is has to be a different bug than the one I rep=
-orted back then, or
-there's some side effect that's non-obvious to me.
-
---=20
-Pedro
+  =20=
