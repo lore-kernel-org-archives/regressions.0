@@ -1,140 +1,73 @@
-Received: from d.mail.sonic.net (d.mail.sonic.net [64.142.111.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD754778C
-	for <regressions@lists.linux.dev>; Sun, 25 Aug 2024 23:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD47D77111
+	for <regressions@lists.linux.dev>; Mon, 26 Aug 2024 07:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724628406; cv=none; b=m6Cnpo4zMFlmPaxWWwaDcSyFN2fr985TG7b90e2OjRKkc0nZMypRS6ew761YyGWRlPvqloZFgtz61phBa1zdn/2zagBupf8VLZb3ZeUntJRqKhRxptU/4ernkDA9Yrgb5E2WofXu7IFKOSYOXt65DAcoS+d5WOing6xCKDFvmMM=
+	t=1724656106; cv=none; b=iCoUP0Fg8spdCfED/wnqyXSFfPryXbuN3YD8MNxsAM6cgZc/4SeTU/qiOLUYAxjbYm8DLQ8yrOvltiwqQK2XN+fk1K2DGdTVB/7LMmndujjK5x0bvKCje+OxjSugZjpwNXzSsw0UNTww57shCB4KgXE0KlLyBIMRWJx8ymC1cS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724628406; c=relaxed/simple;
-	bh=pXnVOgxruy7upgSFMu4G4QAIQBR9xZKhYwM8ouYK2ko=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l5AtRY4izZiQlOiGK+4XT/znFaKHBTeG0hGnCP8MfXyny5mKNkKhv2p8S+LDPmOoQi7K7TCDxQojO870Vq37KGAi5xvCKxz3ZOX+oVTc8Tm1EFsN9VMEOUCL/r7DF2DBt2w1mBhbGF26xsJ7T/WMBe8WH1y2qRKNZbO4sH5J5io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one; spf=pass smtp.mailfrom=nom.one; arc=none smtp.client-ip=64.142.111.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nom.one
-Received: from 192-184-189-143.static.sonic.net (192-184-189-143.static.sonic.net [192.184.189.143])
-	(authenticated bits=0)
-	by d.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 47PNQfjR016820;
-	Sun, 25 Aug 2024 16:26:42 -0700
-From: Forest <forestix@nom.one>
-To: David Howells <dhowells@redhat.com>, Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc: linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        regressions@lists.linux.dev
-Subject: [REGRESSION] cifs: Subreq overread in dmesg, invalid argument & no data available in apps
-Date: Sun, 25 Aug 2024 16:26:42 -0700
-Message-ID: <37fncjpgsq45becdf2pdju0idf3hj3dtmb@sonic.net>
+	s=arc-20240116; t=1724656106; c=relaxed/simple;
+	bh=2RKWqivUTiCTAgm0apYM2cpY/LqWNwRXuOHoeen2znU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=r90p7uKDmDSBXJoAvLEdQH46dJq64f6f2NOcamshM3OdsgNo3yxwRYeUgn3t9oQZ7FDuTEbq+gDMRO4ZWtgaeC9+yAgLW3/d7NVO4CgmUlvgPXxH8JM6Ko7cYLe695hCv2f/bzufnZTPX6FGBY08dtAyQnZexOl94UCexiSuC/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Q1fBv0in; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Q1fBv0in"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=2RKWqivUTiCTAgm0apYM2cpY/LqWNwRXuOHoeen2znU=; t=1724656104;
+	x=1725088104; b=Q1fBv0inXgag68KTb+h3mGRuY0/6oWyjwqYTlAh3ZBS+eT59mO/v0k6LsGhUN
+	m2EnB583lavmFc36gyyR/iQ5UFQxfGd4lIFm1e3vgmlje6BPiim9AkxdDic+l+zRaxLIi2BUdixm0
+	nGeqACTChtlepXNc+z3i17jzaMqyLu9STi0tGm2KeM1CV7z+BIlwOijcXy7e3ffWL7jVxln41273W
+	LrpbfxMNlBDysn4ph/QQAuKRkpbaq1vr7Pb1yPY8d3Hk9dGpb9UWBK3KSNZ0urlK7hPTQFC3cY3tC
+	gYyPPy/3JQ5sLKetzIWTvbt3kWuOi9YnNbGCedbnP3GGqsoQ8A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1siTpp-0000oy-5n; Mon, 26 Aug 2024 09:08:17 +0200
+Message-ID: <f464a66e-6ce6-45ce-bfcb-e9998ab11814@leemhuis.info>
+Date: Mon, 26 Aug 2024 09:08:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Sonic-CAuth: UmFuZG9tSVY9qXQA6gjyYUCqwUmjO34eOG5cOZDxGNJeFM6iyDDoSYbBnejS/v8rXX07lYcnqaR51DkoDWkqyM2hSy5c7rnM
-X-Sonic-ID: C;/qwxfDlj7xGgZa5Sr7edkQ== M;nHZCfDlj7xGgZa5Sr7edkQ==
-X-Spam-Flag: No
-X-Sonic-Spam-Details: -0.0/5.0 by cerberusd
-
-#regzbot introduced: e3786b29c54c
-
-Dear maintainers,
-
-Recent kernel release candidates have a cifs regression that produces
-unexpected errors in userspace and a WARNING (with stack trace) in dmesg.
-
-I can consistently reproduce it with these commands on a mounted Samba
-share:
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724656104;0a8039bf;
+X-HE-SMSGID: 1siTpp-0000oy-5n
 
 
-$ echo hello > foo
-$ ls -l foo
--rw-r----- 1 user user 6 Aug 25 15:41 foo
-$ cat foo
-cat: foo: Invalid argument
-$ xxd foo
-00000000: 6865 6c6c 6f0a 0000 0000 0000 0000 0000  hello...........
-00000010: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-(...more null bytes...)
-00001fe0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-00001ff0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
-xxd: No data available
 
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The xxd command above also triggers these kernel log messages...
+#regzbot report:
+https://lore.kernel.org/all/AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM/
+#regzbot introduced: v6.1.87..v6.1.97
+#regzbot summary: net: ice: page faults
 
-  Subreq overread: R3[1] 312 > 8192 - 7956
-  WARNING: CPU: 30 PID: 421 at fs/netfs/io.c:495
-
-...followed by the usual module list and stack trace.
-
-
-The bug is present in kernel v6.11-rc5, but not the 6.10 series.
-
-Git bisect says:
-
-e3786b29c54cdae3490b07180a54e2461f42144c is the first bad commit
-commit e3786b29c54cdae3490b07180a54e2461f42144c
-Author: Dominique Martinet <asmadeus@codewreck.org>
-Date:   Thu Aug 8 14:29:38 2024 +0100
-    9p: Fix DIO read through netfs
-
-
-Here's the full dmesg output when I run xxd on kernel v6.11-rc5:
-
-[   48.137018] ------------[ cut here ]------------
-[   48.137021] Subreq overread: R3[1] 312 > 8192 - 7956
-[   48.137029] WARNING: CPU: 30 PID: 421 at fs/netfs/io.c:495 netfs_subreq_terminated+0x276/0x2d0 [netfs]
-[   48.137046] Modules linked in: rfcomm algif_hash algif_skcipher af_alg cmac nls_utf8 cifs cifs_arc4 nls_ucs2_utils cifs_md4 dns_resolver netfs nft_masq nft_chain_nat nf_nat
-nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 bridge stp llc nf_tables nfnetlink nvme_fabrics essiv authenc crypto_null snd_seq_dummy snd_hrtimer snd_seq snd_seq_device qrtr zstd
-zram bnep binfmt_misc nls_ascii nls_cp437 vfat fat mt7921e snd_hda_codec_realtek mt7921_common snd_hda_codec_generic mt792x_lib snd_hda_scodec_component mt76_connac_lib
-snd_hda_codec_hdmi mt76 btusb snd_hda_intel amd_atl btrtl intel_rapl_msr snd_intel_dspcfg intel_rapl_common snd_intel_sdw_acpi btintel amd64_edac edac_mce_amd mac80211 btbcm
-snd_hda_codec asus_nb_wmi eeepc_wmi btmtk asus_wmi kvm_amd snd_hda_core sparse_keymap bluetooth libarc4 snd_hwdep platform_profile kvm cfg80211 snd_pcm battery wmi_bmof rapl
-snd_timer sp5100_tco ccp pcspkr watchdog snd k10temp rfkill soundcore joydev sg evdev nct6775 nct6775_core hwmon_vid msr parport_pc ppdev lp parport loop efi_pstore
-[   48.137103]  configfs ip_tables x_tables autofs4 ext4 mbcache jbd2 btrfs dm_crypt dm_mod efivarfs raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx
-xor raid6_pq libcrc32c crc32c_generic raid1 raid0 md_mod hid_generic usbhid hid amdgpu amdxcp drm_exec gpu_sched drm_buddy i2c_algo_bit drm_suballoc_helper drm_display_helper
-sd_mod cec crct10dif_pclmul rc_core crc32_pclmul xhci_pci drm_ttm_helper crc32c_intel ttm ahci xhci_hcd drm_kms_helper libahci r8169 ghash_clmulni_intel libata sha512_ssse3
-realtek nvme mdio_devres sha256_ssse3 drm usbcore scsi_mod sha1_ssse3 i2c_piix4 libphy video nvme_core i2c_smbus usb_common scsi_common crc16 wmi gpio_amdpt gpio_generic button
-aesni_intel gf128mul crypto_simd cryptd
-[   48.137148] CPU: 30 UID: 0 PID: 421 Comm: kworker/30:1 Not tainted 6.11.0-rc5 #3
-[   48.137150] Hardware name: ASUS System XXXXXXXXXX
-[   48.137151] Workqueue: cifsiod smb2_readv_worker [cifs]
-[   48.137176] RIP: 0010:netfs_subreq_terminated+0x276/0x2d0 [netfs]
-[   48.137182] Code: 66 ff ff ff 0f 1f 44 00 00 e9 5c ff ff ff 48 89 f1 0f b7 93 86 00 00 00 8b b5 ac 01 00 00 48 c7 c7 78 81 7a c2 e8 ba 68 2f da <0f> 0b 48 8b 43 70 31 d2 4c
-8d ab 98 00 00 00 66 89 93 84 00 00 00
-[   48.137183] RSP: 0018:ffffad8942637e58 EFLAGS: 00010282
-[   48.137185] RAX: 0000000000000000 RBX: ffff9d09639a7200 RCX: 0000000000000027
-[   48.137186] RDX: ffff9d107e721788 RSI: 0000000000000001 RDI: ffff9d107e721780
-[   48.137187] RBP: ffff9d094bf38a00 R08: 0000000000000000 R09: 0000000000000003
-[   48.137187] R10: ffffad8942637ce8 R11: ffff9d109de3cfe8 R12: 0000000000000001
-[   48.137188] R13: ffff9d095fcf6000 R14: ffff9d09639a7208 R15: 0000000000000000
-[   48.137189] FS:  0000000000000000(0000) GS:ffff9d107e700000(0000) knlGS:0000000000000000
-[   48.137190] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   48.137191] CR2: 000055d1a3402760 CR3: 00000006b0222000 CR4: 0000000000750ef0
-[   48.137192] PKRU: 55555554
-[   48.137193] Call Trace:
-[   48.137194]  <TASK>
-[   48.137197]  ? __warn+0x80/0x120
-[   48.137201]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
-[   48.137207]  ? report_bug+0x164/0x190
-[   48.137210]  ? prb_read_valid+0x1b/0x30
-[   48.137213]  ? handle_bug+0x41/0x70
-[   48.137215]  ? exc_invalid_op+0x17/0x70
-[   48.137216]  ? asm_exc_invalid_op+0x1a/0x20
-[   48.137220]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
-[   48.137225]  ? netfs_subreq_terminated+0x276/0x2d0 [netfs]
-[   48.137230]  process_one_work+0x179/0x390
-[   48.137233]  worker_thread+0x249/0x350
-[   48.137235]  ? __pfx_worker_thread+0x10/0x10
-[   48.137237]  kthread+0xcf/0x100
-[   48.137240]  ? __pfx_kthread+0x10/0x10
-[   48.137242]  ret_from_fork+0x31/0x50
-[   48.137244]  ? __pfx_kthread+0x10/0x10
-[   48.137246]  ret_from_fork_asm+0x1a/0x30
-[   48.137250]  </TASK>
-[   48.137251] ---[ end trace 0000000000000000 ]---
+#regzbot report:
+https://lore.kernel.org/linux-iommu/20240814162726.5efe1a6e.alex.williamson@redhat.com/
+#regzbot introduced: f90584f4beb8
+#regzbot summary: iommu/vt-d: device assignment broken
+#regzbot fix: iommu/vt-d: Fix incorrect domain ID in context flush helper
+#regzbot monitor:
+https://lore.kernel.org/all/20240815124857.70038-1-baolu.lu@linux.intel.com/
