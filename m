@@ -1,158 +1,88 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4F5824BB;
-	Mon, 26 Aug 2024 20:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D730819CCE8
+	for <regressions@lists.linux.dev>; Mon, 26 Aug 2024 21:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724702896; cv=none; b=j2YXxmg3GnLBv1zfsWBPAYh9SCmKqi9mHYO+tr4vtEO6Tj8bNie5VNIX4KRFRBTQm/aRc7NZAR6JlltDx5m27f2lbrlUnKlPw8xLN1IBX0sH4zvXJUC3Wj3BT0ye501hoMAfNHYZh3fIrL42dEOVWLe4KLCQxaRl3qXSEyVBtA4=
+	t=1724708150; cv=none; b=nzViuQBLH8t/KN1h0laeCrzOiMXDCv+RXy9kivH4IIx2OyxtUVUo9+fpigMGB8oikyieegkxs0dV2R6N7v2ZULIAWhZxosogwRNLDMSBxijW6JuzxDln6/jQtYOeEXlVFZVcBj4gZhoLJsFXsrKsBiiyrOH0f74zOWUfa5ljyzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724702896; c=relaxed/simple;
-	bh=fUos6GFFOCBysbGE7iuG8e2MDbRQwYqBMZokGY4eDcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ffGSQbkcNQ2HRjHMpLUfsq3JkJRx4KI9AYj0QoawH33r3bZnylBgikp/M/L1TuWYI7UQ0K5l7OgfppVvnoUxSpcgDoHkfZ/117fl96BBcCCF8k9BinK/soHnaeyw56Qz7ADMrBccpKWUBTxIpNCfFKkX3jbiV1CkA5QB254hYjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=i2NTX8rS; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1724708150; c=relaxed/simple;
+	bh=KWFanSE7a5YD1qySSVxDMrsb9vLrSW3D7bdJrpj+tcE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KjzoXx0/sXuEhv59KH/znBtqPVTvp6Dc7Ik9/zuUGYJR9d+jk3wcwsKu1FxOF9akuHYFDJtQV2uNeA1CPhAFjRPGWrrsVbETg2nq0d1NpGWAizNUQxYCc6kOkObXtI1gtVT2pnZgO/dbYzTsE1ZLJdVePKyMmSE+lsLXW77PUvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=GlHIqnnH; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="i2NTX8rS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=yQZq+wWJI34kvGZwqwBDuoRZgkh9whbk7qwYwReZVYg=; b=i2NTX8rS24h5zJqmdFwWhpt9J9
-	eDoR1HNp9qZGT60SPFbmRQhjoM7jb1ONYdIrypUbz/BRp2c66MkR8Jq8sqLnSbSy7VpZ6zv7cKu/2
-	UkxyT1wtLFNJoGUewIeZSApd5m6b9ANYDPWKGnon7vZ9XPCbonkte2MrXFGKqXcfANjn/bZoFINoS
-	1rDAHSF66kHYz/BBFUOi67nxWInSzvSRJzXcVWgvcU/WyuyhNW9vaFrPoTshfCpRP9sS0X/HfXrSi
-	IxSfnbj7xNGQlCqhrwRFbPZOB52IWeq6b+903O0XJJ6XO4V/QO2p6u4B9JG7O5MeSze2rOFCQjLKd
-	5L/CHyiQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1sig0H-00BKGx-Qr; Mon, 26 Aug 2024 20:07:53 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id AFA47BE2EE7; Mon, 26 Aug 2024 22:07:50 +0200 (CEST)
-Date: Mon, 26 Aug 2024 22:07:50 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Vitaly Chikunov <vt@altlinux.org>,
-	Christian Heusel <christian@heusel.eu>,
-	Adrian Vladu <avladu@cloudbasesolutions.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	"alexander.duyck@gmail.com" <alexander.duyck@gmail.com>,
-	"arefev@swemel.ru" <arefev@swemel.ru>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"jasowang@redhat.com" <jasowang@redhat.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"willemb@google.com" <willemb@google.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	David =?iso-8859-1?Q?Pr=E9vot?= <taffit@debian.org>
-Subject: Re: [PATCH net] net: drop bad gso csum_start and offset in
- virtio_net_hdr
-Message-ID: <ZszgliPW3QEodr5G@eldamar.lan>
-References: <60bc20c5-7512-44f7-88cb-abc540437ae1@heusel.eu>
- <0d897b58-f4b8-4814-b3f9-5dce0540c81d@heusel.eu>
- <20240814055408-mutt-send-email-mst@kernel.org>
- <c746a1d2-ba0d-40fe-8983-0bf1f7ce64a7@heusel.eu>
- <PR3PR09MB5411FC965DBCCC26AF850EA5B0872@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
- <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
- <zkpazbrdirbgp6xgrd54urzjv2b5o3gjfubj6hi673uf35aep3@hrqxcdd7vj5c>
- <66c5f41884850_da1e7294d2@willemb.c.googlers.com.notmuch>
- <ZsyMzW-4ee_U8NoX@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="GlHIqnnH"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DA85645CC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1724708148; bh=qqrB4CtT9Hw69RzlowOexS1vm29yAxh8AIkHouAVxWw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=GlHIqnnH1C3iLtsC6/OA+z1r0SIN9p7mNfnFygC2Kl01fqr8sB7p3kPQv5Tmt2Lss
+	 br1wTld4pXrvyie1zmphj7CaWHHMy4VBqsdPZc7sh7/wwxjFuYAlIOPtpoheohYdTk
+	 PHnf8wIohO3v8I2kK07hyCVOVWHic04ErQzjdY5NOStG6YeD3XSHBeeLOpI3dJh2iO
+	 foDwGXPpj9NnM7s2EhS3RmHq8vOmYzQeANsDRpCymy+kKkywwAhPP9nsn4NQXyFoKB
+	 AMGaVjVAACSjH/ABmXhbZi4YBaVe1ltuwYJ0+XLPjFqR6Rph4nQ8smwREyf4JDJk1V
+	 y1Gbtbcu6x9wg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id DA85645CC6;
+	Mon, 26 Aug 2024 21:35:47 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
+ =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v3] docs: bug-bisect: rewrite to better match the other
+ bisecting text
+In-Reply-To: <74dc0137dcc3e2c05648e885a7bc31ffd39a0890.1724312119.git.linux@leemhuis.info>
+References: <74dc0137dcc3e2c05648e885a7bc31ffd39a0890.1724312119.git.linux@leemhuis.info>
+Date: Mon, 26 Aug 2024 15:35:47 -0600
+Message-ID: <871q2b6k7g.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZsyMzW-4ee_U8NoX@eldamar.lan>
-X-Debian-User: carnil
+Content-Type: text/plain
 
-Hi,
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-On Mon, Aug 26, 2024 at 04:10:21PM +0200, Salvatore Bonaccorso wrote:
-> Hi,
-> 
-> On Wed, Aug 21, 2024 at 10:05:12AM -0400, Willem de Bruijn wrote:
-> > Vitaly Chikunov wrote:
-> > > Willem,
-> > > 
-> > > On Wed, Aug 14, 2024 at 09:53:58AM GMT, Willem de Bruijn wrote:
-> > > > Christian Heusel wrote:
-> > > > > On 24/08/14 10:10AM, Adrian Vladu wrote:
-> > > > > > Hello,
-> > > > > > 
-> > > > > > The 6.6.y branch has the patch already in the stable queue -> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=3e713b73c01fac163a5c8cb0953d1e300407a773, and it should be available in the 6.6.46 upcoming minor.
-> > > > > > 
-> > > > > > Thanks, Adrian.
-> > > > > 
-> > > > > Yeah it's also queued up for 6.10, which I both missed (sorry for that!).
-> > > > > If I'm able to properly backport the patch for 6.1 I'll send that one,
-> > > > > but my hopes are not too high that this will work ..
-> > > > 
-> > > > There are two conflicts.
-> > > > 
-> > > > The one in include/linux/virtio_net.h is resolved by first backporting
-> > > > commit fc8b2a6194693 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4
-> > > > validation")
-> > > > 
-> > > > We did not backport that to stable because there was some slight risk
-> > > > that applications might be affected. This has not surfaced.
-> > > > 
-> > > > The conflict in net/ipv4/udp_offload.c is not so easy to address.
-> > > > There were lots of patches between v6.1 and linus/master, with far
-> > > > fewer of these betwee v6.1 and linux-stable/linux-6.1.y.
-> > > 
-> > > BTW, we successfully cherry-picked 3 suggested[1] commits over v6.1.105 in
-> > > ALT, and there is no reported problems as of yet.
-> > > 
-> > >   89add40066f9 ("net: drop bad gso csum_start and offset in virtio_net_hdr")
-> > >   fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-> > >   9840036786d9 ("gso: fix dodgy bit handling for GSO_UDP_L4")
-> > > 
-> > > [1] https://lore.kernel.org/all/2024081147-altitude-luminous-19d1@gregkh/
-> > 
-> > That's good to hear.
-> > 
-> > These are all fine to go to 6.1 stable.
-> 
-> FWIW, as we are hit by this issue for Debian bookworm, we have testing
-> as well from David Prévot <taffit@debian.org>, cf. the report in
-> https://bugs.debian.org/1079684 .
-> 
-> He mentions that the 9840036786d9 ("gso: fix dodgy bit handling for
-> GSO_UDP_L4") patch does not apply cleanly, looks to be because of
-> 1fd54773c267 ("udp: allow header check for dodgy GSO_UDP_L4 packets.")
-> from 6.2-rc1, which are reverted in the commit.
+> Rewrite the short document on bisecting kernel bugs. The new text
+> improves .config handling, brings a mention of 'git bisect skip', and
+> explains what to do after the bisection finished -- including trying a
+> revert to verify the result. The rewrite at the same time removes the
+> unrelated and outdated section on 'Devices not appearing' and replaces
+> some sentences about bug reporting with a pointer to the document
+> covering that topic in detail.
+>
+> This overall brings the approach close to the one in the recently added
+> text Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
+> As those two texts serve a similar purpose for different audiences,
+> mention that document in the head of this one and outline when the
+> other might be the better one to follow.
+>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+> v3: (this version)
+> - incorporate a few minor changes after review feedback from Petr
+>
+> v2: https://lore.kernel.org/all/fbeae4056ae8174f454c3865bc45633281bb1b31.1723997526.git.linux@leemhuis.info/
+> - incorporate review feedback from Jonathan
+> - rename to 'Bisecting a regression'
+>
+> v1: https://lore.kernel.org/all/10a565e4ebca5e03a2e7abb7ffe1893136471bf9.1722846343.git.linux@leemhuis.info/
+> - initial version
+> ---
+>  Documentation/admin-guide/bug-bisect.rst | 208 +++++++++++++++--------
+>  MAINTAINERS                              |   1 +
+>  2 files changed, 139 insertions(+), 70 deletions(-)
 
-Just to give an additional confirmation: Applying
+I've applied this, thanks.
 
-1fd54773c267 ("udp: allow header check for dodgy GSO_UDP_L4 packets.")
-9840036786d9 ("gso: fix dodgy bit handling for GSO_UDP_L4")
-fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-89add40066f9 ("net: drop bad gso csum_start and offset in virtio_net_hdr")
-
-addresses the issue from
-
-https://bugs.debian.org/1079684
-
-matching
-
-https://bugzilla.kernel.org/show_bug.cgi?id=219129
-
-I tested it with the iperf3 based reproducers.
-
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-
-Regards,
-Salvatore
+jon
