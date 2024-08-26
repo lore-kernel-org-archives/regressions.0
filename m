@@ -1,241 +1,168 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D38E1E519;
-	Mon, 26 Aug 2024 13:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724678040; cv=fail; b=lrptii4oLdefEkCXmCuVTOx8XOHzyXwMg4JO7u1PtDhLgbBfngcSUwyQsbH6zHY+zc4EOlgcYFyjLgA/cj8G/FLTpv8qe1gkH3P6xjz+4Gf95HLf/pc6nQ4ijIZ6LTyPA3ltC2cN6rGgQfg+h0UZx+EHle64SlTORLmwJE3Es78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724678040; c=relaxed/simple;
-	bh=AcYTrnEQ6rEmwT1vaGyuY4nZx/1v2qAyODP40cMMc1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PqGJhecYF2Pj8YiEwCAtePvXLCpkoo6alE2jdamezEb0gtoHlUafA6LBE5Qv07Dwuy6Gxyg/IeSNu/f6b9VdSYNVzEcQ4nd9wBWvKhikg1Ts9j0R5zRnr0P3xjqhwHew1k2MYLcdn2P29jlUTQe3WbWsjyBTUQ7Nl5koh5vLx6k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DE6XCHhH; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cE0bxivs; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7034B17C98A
+	for <regressions@lists.linux.dev>; Mon, 26 Aug 2024 13:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724678452; cv=none; b=Uc8c7LaI9spkG3aIz5uumUAqXPuaxacNNXV6GF2YKl/L47NQZF9y4vtWtS5PEjli67ATwmUNfw3XqewTFtssCkY0B9cr3OXgvl/64mHjKxEJQUcfHbqVeAaWdz0ZnyHfffDxrNPt26XBNEOllofDSI/l/dKeufX86hYsSphMgcw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724678452; c=relaxed/simple;
+	bh=yDo35u0eByMPHO8M0n5dtlK30SfHuw3kMzMtDu2kQpA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hR/8CqBMSBmjoAREkiOj6N+2nSWkU8GbCzYXlwG1e8xbRHZOh3/JiZpNos6X3yPp36JqepTPPo3ub4X5vo6ozHwSyKnMsjBuop8QxClfmxb/XYAZNXDSdQQZn2rgCwJzWgrH8ts9TQh44t9emRuJ/6IRuQ7An3bDcsS580Mfig4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=isA03uDV; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DE6XCHhH";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cE0bxivs"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47Q7fZjK025643;
-	Mon, 26 Aug 2024 13:13:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=yq8sBJ1D+e/CWN2
-	bkGtVufWWFUjT9bATABVWMKGNjtg=; b=DE6XCHhHsFBGfd8LUqHz317LZFai6s4
-	hRCU4T6EfJwZeG7Q38P60wExKDFY7pSRFg6UU5LbQgfwnxyehbBHLtUHQ7GWsH2r
-	wPbOz1hBKwFq29GesDC7itcngRkUas84uQa5FoV8guVDKlqbk1kkF3dvhKSct1KJ
-	rl3qghrg7UiN7VP7aOvEgrxgOUUqqg7haIqOHFpisp1uW9IZS4v2ym55uP1ZbV5H
-	PR5wVaMPzO8jtScyxv0LkHIAgUdQRphONa8zmhUfvIrRCblsZmlsrGHOBFd/N+4F
-	ysqpI07kBJOeepP+U8rbXRZMMnSheXb9/nbYK27zAf6NVi+aJxuzWIA==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4177nw320q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Aug 2024 13:13:48 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47QBvQRE016849;
-	Mon, 26 Aug 2024 13:13:47 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 418a5qyf4m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Aug 2024 13:13:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rh2FN65+pgbpUbHnuXdiyhRNDb3D9c1LhNO1b0aTn6OwO7WDLkeg+XJ1XZS0bNKtaPws1EyW80OImiqECsPIlw2gYEeGUVgYCojK3Ib5Ww8tHcMweBOTMWx0bXPJX8xSquj0/Qgy2G0Fut+1d0ZpHexWvfjkCFvj+L57tvJSW1AhSCN+QZ202fgKQK71BMUP/0hCv6m18g4CdIeIzFauDed7yiqusf6hBmswpM0sQHBzz5Ovo1fqvSsUo3nECpKUSukbUJ1d3PlyKrbav/ZBP/OaM7bllSBNhFihnkd8b3XvSJD/kzQ6QMlnlq2Ld/bMoo4rEtSi50TwIqwEoicIwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yq8sBJ1D+e/CWN2bkGtVufWWFUjT9bATABVWMKGNjtg=;
- b=q+EV23xyVGnuFRu1xdixkP7pFspuBUX34lvdkvdYZmj8PEItXjkk8bpUs2LuZUu7qTz4+sv22wPhbVjTxniMYJ4arA7+nVQ2NApDv7A4ZTHM+fpTdSZa8hroFiP1iLGSrcJfpQ0gOc6qAksWbtZOb0b56RWL4i72/5/1UhVAqylC0LRMhKn4zEiN0iuTwX1d7V5nr75IkvZJWS/8QFQCuDBUUkqgdXDyZU8AdguDACCqBOAVP8c3AIoSjSDoO80q7Djr9Pfd9IEBRQGhSd1rlQdxsvOCQuVlE7XTKFKmHoJWvaxecekGIZdP9wzsO143kMXy0A1k5kytDEm0OEgtHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="isA03uDV"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4fd0d7fe6f6so1424110e0c.2
+        for <regressions@lists.linux.dev>; Mon, 26 Aug 2024 06:20:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yq8sBJ1D+e/CWN2bkGtVufWWFUjT9bATABVWMKGNjtg=;
- b=cE0bxivsaj2cPfk7yfP67OD8hnRz4mYb5XMLFwgwoevzAlmdxcv+qewrWP/ztXQM+9dJwc6DC+Xxywld7zzWbbPmm+zbRv0O6B7tV4Nw0mwb1jqJIAYRhBagst+iIK0n+12jIyeA+HnSPFl52r9y16kGvcXaVBp9t4tWVFCmkEM=
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
- by IA1PR10MB7446.namprd10.prod.outlook.com (2603:10b6:208:447::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.14; Mon, 26 Aug
- 2024 13:13:10 +0000
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e%5]) with mapi id 15.20.7918.012; Mon, 26 Aug 2024
- 13:13:10 +0000
-Date: Mon, 26 Aug 2024 14:13:05 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-mm <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
-        Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: next-20240826: arm: tinyconfig: mm/vma.h:184:26: error:
- 'USER_PGTABLES_CEILING' undeclared (first use in this function)
-Message-ID: <5697d788-1206-421b-9c9a-3887c90e1c6d@lucifer.local>
-References: <CA+G9fYuTLbZ+UiONYVQbtREuOZXc3oWP5=x-qqDhmFRmFfPtHA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYuTLbZ+UiONYVQbtREuOZXc3oWP5=x-qqDhmFRmFfPtHA@mail.gmail.com>
-X-ClientProxiedBy: LO2P265CA0130.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::22) To SJ0PR10MB5613.namprd10.prod.outlook.com
- (2603:10b6:a03:3d0::5)
+        d=linaro.org; s=google; t=1724678449; x=1725283249; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eD175XUZ/ITy7ZdWAydNT67+uOxIgoWBm9/vtDXzUTA=;
+        b=isA03uDV8dXX/HCYm6KtXKsea1sVfrSqbkcWb51iV+KFSXgElQ0hcPwU5R0QlxRjSa
+         tCaEKnJUHfLwh/6hEL6KmCZUd+svcyM9B15q9LRh8vN1aE4u/q1g0cKC/ehoNKxJvRnY
+         XaiwaoJ6ZQ+r8N0F0TO3omdjbQufSDwrKciZ/ejxnbI8YHlrvlnycsSl9ahOOT7tdJwc
+         4RdEy7x28qk7aA40GmCTPhcidsjudpP6dwAFcWkr9omq5VRZ9pg2TZNHw9nqhEU+eKEG
+         0oEsskuk1UH9qhSLDD7brfwNXRMHKojsntOi4ffvm11R1ZDcZd4/PDfyTdGx83MkEkk5
+         A8dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724678449; x=1725283249;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eD175XUZ/ITy7ZdWAydNT67+uOxIgoWBm9/vtDXzUTA=;
+        b=mLrsOO0TTZUHpdVOLFBFLjvy7Fd++PVfvP1VsyBT01NINcCH6Gxn2R+bl4jGzq+zmV
+         2EkIIkUoWJXQ/ejc8iTjZEUQ3Otrs3dbHSS+cMqPRkjh4ts6unejR1zIUhInNSqCre9O
+         8fVJNq9UwezQHYgUvaX5hKITUSrzi/qi8wmUonl2uihUzZJY2zKLCoF67hQMTwlIy904
+         nZAP0gPs+ALaYUtpIhvUSL0ziO9UGi8MQOQgGnnnirYOSaoeTs8/Ah0EWFhRNDZTckjE
+         9BsCKuZxR3J8YhWKcYLmp1g47Qd9CxiKBu+UokR+VS4zlAga3ya+MqryO2Amt4qW6Nob
+         UzJA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4FCAi1EDFSOVdbRjoTi9PmivyJ+mFwUtEHwZzz+c7Ru5z48I4HkJYTA6dNfnZwvXfZxcOauREtCc4WA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxhu/eHReUN//oZP96D01qEhtr3XgG/Y1FTRoocZJjmzi7SgWuu
+	VG7va64K0szs7gJ78aIIU7q0iMu9ft1N4UNJ2ZCeq2CX4HVx26yBdQGhFMt0W5fsLxauaKlUg/7
+	bI4X+BsZfhDq69pgVQbmEDtSAT6gkDsTr/VdrpA==
+X-Google-Smtp-Source: AGHT+IHfLYQXJQalFGVZVOgOn/tn6bOUOwnoI9D+YmaRkON0wOcbu81fZMRkrl/+m2cVQflgktyC19x+8RBVqWzPqMk=
+X-Received: by 2002:a05:6122:3d08:b0:4f5:28e3:5a5a with SMTP id
+ 71dfb90a1353d-4fd1a522b94mr12978602e0c.4.1724678449179; Mon, 26 Aug 2024
+ 06:20:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|IA1PR10MB7446:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0dd4309-6e3a-4728-4cfb-08dcc5d0d526
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1uswW9Ng/fPK3tABjh8ObMFvhXEIewUH/LMkI373YMc/y4xBUn7OoyimQl9r?=
- =?us-ascii?Q?ZwMNioE8B88164er0sbRd4Xv2B++F+BK5+LPPDQ49cemjUP3Upq5lEplbkwp?=
- =?us-ascii?Q?ifdyJNzKwvjsLFh1p7XQ0FKg8irKXbL7hIW3MV283M1jGRnCxDxepk03klmj?=
- =?us-ascii?Q?VNM8wPzqstU78Qv+q+EP4rT4G2jQNKX7rhrG5OKiQqlSN8qdGZI/7qYtLY/H?=
- =?us-ascii?Q?aWzAxp5eZoi0p/vlwO8oJmLuT1y5hi6Id7WQQuiRjo7k8Bn+FNkFLf6DKDPS?=
- =?us-ascii?Q?mVz9QWvUPs7IdANbvr/KyiQyW9jIxeuY25CT6+uDpbUGxRJv+irRgKAqVu8o?=
- =?us-ascii?Q?6ccmB3O4F+qbhY6rYAp21+hjgb5i4BQ2aWlPEke3VK3+55zMrtwC9U0AWONV?=
- =?us-ascii?Q?UapbltszNrtzJ56FRNuoAF5HfenQe0eFM4jzNe6oBO6ERuHcxzmsW7hJCZ8Y?=
- =?us-ascii?Q?3JnfTM6cZZv4uxsY8xxeAn/aCn2JKKcGGIBPHkZ1mcygIYTkm3UmAa4IXKqF?=
- =?us-ascii?Q?sJ79XcEr/1L8q+PzaQadqIEik78Xuw9eSIwGEUqKG0uWqvLEkc52oTuAET2p?=
- =?us-ascii?Q?FVKGeBRaYfdWiorgTCoAKC7fyAzREPjV4cmstZSD7uGcMyiHpjfGKoPhLzUJ?=
- =?us-ascii?Q?O202TTYlI9MF0+H2wEbonHT0TdXMVq8M+PGZ2Z++aCg9mXbUH6fDAZe+nuv8?=
- =?us-ascii?Q?68+kqQRmPB/i9lr7D8kbEJvCdPLFo1Jr+6qFlWJPRIV2VQM+dDlpaZihJ9RK?=
- =?us-ascii?Q?49TJxkY2tHF7l/lHuM2yZmRNxWlR23hPFC6OoxDRUrngifKoiIOd/qJNxNB0?=
- =?us-ascii?Q?0IUHsAPWvVk091cGPyuuc9Mi3HSWP6QJGtvihCvB0L9A+6F/kYeUKNA2KcaX?=
- =?us-ascii?Q?08aBOSfdkwa4tFan2FvFfpSCbXBmD1he20yATggyxctrivZtcdG8hIlFfXtf?=
- =?us-ascii?Q?GpumuX7BoMDM1I7/u1NNfKMOAlM8VvD7qSMsElFk9QVls/d2cVQp+HmPj3mF?=
- =?us-ascii?Q?mxjo5uu/qojjuPE7KwD4aa/Cpw87d+Awj7sbWagOFs0N1oVisBPTTCiO9mX2?=
- =?us-ascii?Q?FJZ1/X4ch+otfV29aKHFW+94eYgQ9mfC5RlnrGLuopBDsGOlnS627mtozSxl?=
- =?us-ascii?Q?YCYptDzpOl/KVrsfTrcrj0MJy+CIXZT3ZQfmd19Fvw0zdVkBkj5Ikzc2ELRw?=
- =?us-ascii?Q?peoNlHHoKDRa698Rp5wd0/4sd/X1oCjCCmdYq9dWElsjqaaOM4nHObJ6OJjV?=
- =?us-ascii?Q?W9L60q2L3kCaTP3AI2xCShScEnR4b3EoWeeuFnlyubbgL7yzebsPhAIPCxqQ?=
- =?us-ascii?Q?F44=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tWOF+fOxRHS80RKitcxCK/LXrgMwaZdTHok2xqXoLvBdswA+c1OxPqCP3Uk6?=
- =?us-ascii?Q?v2djvU3FYkMmozIc/02AzQsDjoUM+mOB17myUsuIahsiqnzUN20IoiBqEpCO?=
- =?us-ascii?Q?PtN9HXIZs2Tk3C0rnVoq1sgTzcv1mTk1V8GApfTvKJzR7mngLM4TNeIXM01y?=
- =?us-ascii?Q?GDA++SmManEYYE3uBgdg0me3TcUx7i64nXgtby5dEvM7nGALEl9TNKWC5RAb?=
- =?us-ascii?Q?4Cn5SjuJCEAFmsFrnsYlfcbPQ0QF9iLEURwIIimGbb8rUSFU9J1cv3X2v8lN?=
- =?us-ascii?Q?mplerBJgrWh4Zi9wIVZpcp08sY7N8aIFvSFl2YDfVKm6dHWVux546WB89maX?=
- =?us-ascii?Q?6vye1qlDv8zzU1+FGy8GbdjpfUHwNPm61GEBmio+yIMN1lUPKd+ipsG3VXiO?=
- =?us-ascii?Q?8FF3rK78TOBJfz/Z439643s0jrUgKAz/o1icIpP3FALVpw5c4d1Ad19uYO0d?=
- =?us-ascii?Q?0dnqdVT5gsWBx67FO+C2mZPvMecqJcVtI3K/3JRAtjZCoD1CZgmo38ncbfQS?=
- =?us-ascii?Q?slTC5rphtWZ/B5PqfV2vO3r48uTXpqOSRdZqoHZIVKf2yVui6bIU24mBXX6F?=
- =?us-ascii?Q?RZkyHE/Okq6CypEdOGuoTqaFqMBdItD/o26oKfTrstEyWIP//6LYX/19Rui8?=
- =?us-ascii?Q?7UKpRtwoH5qCds25Z1ZPu2L8Xve8/w21Up2wh6VY3MNftUIv6hG0NS2fZKOB?=
- =?us-ascii?Q?nN5GUmAJAiCb0M93jy4X92V+nPzmh/dGtj5dborubc85DEDKQe5euvReRKmO?=
- =?us-ascii?Q?a7ZBt6LVAs92iSYKHzx/UcUl/fLPlsYkQvUVH4ohk4f3FvZ8e0y3m+Iu50Vh?=
- =?us-ascii?Q?bOFYLiovRudffGWeiyaOIrN7jXMNpFfxk0BVEZ/ZIpJl4uXBA+YztCxL/HYo?=
- =?us-ascii?Q?sCswHa17gAAd6JDSteOPCFrgh3vJSVbcnuz3v6acN9XQQjyBmedzdxydNaNg?=
- =?us-ascii?Q?k/Q1HG90m5/VfHd68IT+dyy6DO6i3zdzcmejh9Qg76RDmIdYdw2ctt/lAb0R?=
- =?us-ascii?Q?R73xF0UT14VWv99LvrNgDRGHUsgYS+qNu1ZqDr4iLrj03nBTHrg7W4DM+MDV?=
- =?us-ascii?Q?oFAEEqvcX4K+bs41Xi7MvQ8/Acblu6cXuLZt1SaxoxIb2b+dtYiI6XzK4AOY?=
- =?us-ascii?Q?jexI6w7v8pDg+N/96/njQIr9ZvzNa7v2B3w1/oWMNFzIgiBzWdl4ioiwAC23?=
- =?us-ascii?Q?fate034BXtB5ZrzFwG5enE5mzHXAZm0QJrTmBXzNGo0wClb4bR/7oLo8wtUQ?=
- =?us-ascii?Q?apJEarvt+BN8RCQV573j8gkMZ08DZndIvhFXApGttaw1TZPOVzvU4pvNVtUW?=
- =?us-ascii?Q?L53RxVgQHiW84GEqu6IgBzJowGShTSj5wjMJhY+H/G5E2QdmvH/8/X8UN6jE?=
- =?us-ascii?Q?Tz3czTINJGggwqUy2Gdx5BWDupdQZ+ll11sb2JD0y0Q73l09fx1qtQVQABp8?=
- =?us-ascii?Q?TFnMUT7X9vk/4utvIf5ALhflhKXDi1/gwgVjP8lABSF9m4C8OzjAGmiZbzEh?=
- =?us-ascii?Q?Kguvmo3RJ3DoP32RPLQY62gYkc5Rz5E5vEVVa/g0ZDNRhmPFDnZYRO/ZLyGF?=
- =?us-ascii?Q?Us1C2zcZr8srVenrczaopn9q7Bj1ZG4IPityBvM2egv3Pt8F1k7+8xzBQNju?=
- =?us-ascii?Q?IQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	8rwbXHxL5acNo4Gv6y5PEYd+5QuvoTXsOO4YcEZlUZcpeukDzIctFeKyqrRRHzUhxV+M9cOKrR9jFW+Z0LDqRhESDeXSN4+A0L2PO5mJgM1bDx7uBoWCwN5sAHRQYLMmEJMjr/Li76gxuvwPEfcO/6C7FF5aSAU3XpLAciAQwn5hLaZmB/trsmdnUZkoqiGuvc4rEHS1LOy7+PFe7mJejhM71j6RJ0FEQlBLrh4SRg7KKkuPXXRCv8R4Krsgd3JGx0fxpFQmvbhB2+uFdhj8gcmV8GJv8+Bg8FzhAXwNHwLyKwKYuRXddj7S4rZgQ7WYFwvoT3ftjeH9q0PBPva4nPhFXfyfSi3ELOMEvwYOCtgt+jG2DOuRRw9y0fMNcue9MfUQ5h8HCdda5aeED6QkXZ05NxSjW1TI4l9Rxf0yBY747A+H5sjmZ63EW/DzL/zwPR6wLs8xrDGKWWS34QdNaKt7C70e78lWRjG5t5OTkHLsXKeTtTBjwue1gxpl/zcNE1jlmd3aXiiz5rdOgyb8ybPtfTgrkodVdTJZA8JjAOfFjfVzkJDTCAH/19e6oqZFowovZ9jSM6/GNbgEejYGSekNnlMwggebcSftXT60Zpw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0dd4309-6e3a-4728-4cfb-08dcc5d0d526
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2024 13:13:10.0500
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mQo31b+AVLhXdewj1ncvToTcDz3+4IVkiuYG286dn83Z+ElFZ6o/Gj0kZRqE1MxpbNmduYnnjrQqEBreLUDDIJpgH2/vqOpdNLnI5ifnWTQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7446
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-26_10,2024-08-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408260103
-X-Proofpoint-GUID: CetQykK8xf1SkAzPmyGcRnaEtk6zEBWp
-X-Proofpoint-ORIG-GUID: CetQykK8xf1SkAzPmyGcRnaEtk6zEBWp
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 26 Aug 2024 18:50:37 +0530
+Message-ID: <CA+G9fYvcBvbabg+m7brKfpGCGZUcK+KHHTFX7hFvW6GmN2XF0g@mail.gmail.com>
+Subject: selftests: core: unshare_test: WARNING: at mm/util.c:671 __kvmalloc_node_noprof
+To: open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, LTP List <ltp@lists.linux.it>
+Cc: Shuah Khan <shuah@kernel.org>, David Gow <davidgow@google.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Barry Song <baohua@kernel.org>, 
+	Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Aug 26, 2024 at 06:06:59PM GMT, Naresh Kamboju wrote:
-> The arm tinyconfig and allnoconfig builds failed on today's Linux next-20240826
-> due to following build warnings / errors.
+The following kernel warning is noticed on all arch and all devices while
+running selftests: core: unshare_test on Linux next-20240823 and next-20240826.
 
-This was resolved in the fixpatch sent in [0] which should hopefully go to
-mm-unstable and thus -next soon.
+First seen on next-20240823.
+  Good: next-20240822
+  BAD:  next-20240823 and next-20240826
 
-[0]: https://lore.kernel.org/all/7d0ea994-f750-49c5-b392-ae7117369cf3@lucifer.local/
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-P.S. this message doesn't seem (at least yet) to have hit the linux-mm
-mailing list, don't know why.
+Crash log:
+--------
+# selftests: core: unshare_test
+<4>[   61.084149] ------------[ cut here ]------------
+<4>[ 61.085175] WARNING: CPU: 0 PID: 477 at mm/util.c:671
+__kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+<4>[   61.088958] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
+sha512_ce sha512_arm64 drm fuse backlight dm_mod ip_tables x_tables
+<4>[   61.093141] CPU: 0 UID: 0 PID: 477 Comm: unshare_test Not
+tainted 6.11.0-rc5-next-20240826 #1
+<4>[   61.094558] Hardware name: linux,dummy-virt (DT)
+<4>[   61.096763] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=--)
+<4>[ 61.097841] pc : __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+<4>[ 61.099701] lr : __kvmalloc_node_noprof (mm/util.c:661)
+<4>[   61.100448] sp : ffff800080abbce0
+<4>[   61.100819] x29: ffff800080abbcf0 x28: fff0000004549280 x27:
+0000000000000000
+<4>[   61.101744] x26: 0000000000000000 x25: 0000000000000000 x24:
+fff0000003615e40
+<4>[   61.102512] x23: fff0000003615ec0 x22: bfafa45863b285c8 x21:
+0000000200002000
+<4>[   61.103232] x20: 00000000ffffffff x19: 0000000000400cc0 x18:
+0000000000000000
+<4>[   61.104053] x17: 0000000000000000 x16: 0000000000000000 x15:
+0000000000000000
+<4>[   61.104927] x14: 0000000000000000 x13: 0000000000000000 x12:
+0000000000000000
+<4>[   61.105752] x11: 0000000000000000 x10: 0000000000000000 x9 :
+0000000000000000
+<4>[   61.106606] x8 : 0000000000000001 x7 : 0000000000000001 x6 :
+0000000000000005
+<4>[   61.107377] x5 : 0000000000000000 x4 : fff0000004549280 x3 :
+0000000000000000
+<4>[   61.108207] x2 : 0000000000000000 x1 : 000000007fffffff x0 :
+0000000000000000
+<4>[   61.109262] Call trace:
+<4>[ 61.109619] __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+<4>[ 61.110248] alloc_fdtable (fs/file.c:133)
+<4>[ 61.110751] expand_files
+(include/linux/atomic/atomic-arch-fallback.h:457
+include/linux/atomic/atomic-instrumented.h:33 fs/file.c:177
+fs/file.c:238)
+<4>[ 61.111171] ksys_dup3 (fs/file.c:1337)
+<4>[ 61.111596] __arm64_sys_dup3 (fs/file.c:1355)
+<4>[ 61.112006] invoke_syscall (arch/arm64/include/asm/current.h:19
+arch/arm64/kernel/syscall.c:54)
+<4>[ 61.112480] el0_svc_common.constprop.0
+(include/linux/thread_info.h:127 (discriminator 2)
+arch/arm64/kernel/syscall.c:140 (discriminator 2))
+<4>[ 61.112955] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+<4>[ 61.113384] el0_svc (arch/arm64/include/asm/irqflags.h:55
+arch/arm64/include/asm/irqflags.h:76
+arch/arm64/kernel/entry-common.c:165
+arch/arm64/kernel/entry-common.c:178
+arch/arm64/kernel/entry-common.c:713)
+<4>[ 61.113742] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:731)
+<4>[ 61.115181] el0t_64_sync (arch/arm64/kernel/entry.S:598)
+<4>[   61.115709] ---[ end trace 0000000000000000 ]---
 
->
-> first seen on next-20240826.
->   Good: next-20240823
->   BAD:  next-20240826
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> build log:
-> --------
->
-> In file included from mm/internal.h:22,
->                  from mm/filemap.c:52:
-> mm/vma.h: In function 'init_vma_munmap':
-> mm/vma.h:184:26: error: 'USER_PGTABLES_CEILING' undeclared (first use
-> in this function)
->   184 |         vms->unmap_end = USER_PGTABLES_CEILING;
->       |                          ^~~~~~~~~~~~~~~~~~~~~
-> mm/vma.h:184:26: note: each undeclared identifier is reported only
-> once for each function it appears in
-> make[4]: *** [scripts/Makefile.build:244: mm/filemap.o] Error 1
-> In file included from mm/internal.h:22,
->                  from mm/oom_kill.c:50:
-> mm/vma.h: In function 'init_vma_munmap':
-> mm/vma.h:184:26: error: 'USER_PGTABLES_CEILING' undeclared (first use
-> in this function)
->   184 |         vms->unmap_end = USER_PGTABLES_CEILING;
->       |                          ^~~~~~~~~~~~~~~~~~~~~
->
-> Build Log links,
-> --------
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24951924/suite/build/test/gcc-13-tinyconfig/log
->
-> Build failed comparison:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24951940/suite/build/test/clang-18-tinyconfig/history/
->
-> metadata:
-> ----
->   git describe: next-20240826
->   git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   git sha: 1ca4237ad9ce29b0c66fe87862f1da54ac56a1e8
->   kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2lC5HukjOlVYM52f7n4rm8EXOLG/config
->   build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2lC5HukjOlVYM52f7n4rm8EXOLG/
->   toolchain: clang-18 and gcc-13
->   config: tinyconfig and allnoconfig
->
-> Steps to reproduce:
-> ---------
->  - tuxmake --runtime podman --target-arch arm --toolchain gcc-13
-> --kconfig tinyconfig
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+
+Crash Log links,
+--------
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/log
+
+Crash failed comparison:
+----------
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/history/
+
+metadata:
+----
+  git describe: next-20240823 and next-20240826
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git sha: c79c85875f1af04040fe4492ed94ce37ad729c4d
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2l2pZRzhgRkPgXIKLJCI7vwVd6t/config
+  artifact location:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2l2pZRzhgRkPgXIKLJCI7vwVd6t/
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2l2pZRzhgRkPgXIKLJCI7vwVd6t/
+  toolchain: clang-18 and gcc-13
+
+Steps to reproduce:
+---------
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2l2paZVYTloIDBYnua1s12DeIic/reproducer
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2l2paZVYTloIDBYnua1s12DeIic/tux_plan
+
+Please let me know if you need more information.
+
+--
+Linaro LKFT
+https://lkft.linaro.org
