@@ -1,137 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787F919CCE6;
-	Tue, 27 Aug 2024 13:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018F61BD013
+	for <regressions@lists.linux.dev>; Tue, 27 Aug 2024 13:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724764619; cv=none; b=CJIMIZYYFzLlAvqDONfk9R3Aqg0O1CpaTSdX8VFfqd1I9ueM7mSu/zHFCRiLEhUmPaYUlf0XJBDKbu38q35swlOjJke5/tkPjrije+qyHBwpHtqk+HhIvM1EwZyoi+cyhXHIaT9f8d43TPgQn9ngZzX298SvJafkEbgfrTDVY9Y=
+	t=1724764992; cv=none; b=orF4utPohrEG6B+0YYwUcTlaoT29NpIfEr4s8bq7dA3VN/JaZEXAmuZkzNaO7o3wXL9VjP7PAasWMaw+IMOO5Q/SKxxjQRreDfLznQv6t97jcmZ06U/u9PfzJt6ms9eyMoKTgwELCiFxbRfYOX2tXVBcyaRSMWXUIbMfCgztPEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724764619; c=relaxed/simple;
-	bh=aY1aAhJeV+p1s0ZXDxOzamYB2/VzqxrNQdK/2AxCnA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUOejLlHXibgr/XI6CxIY+DXBoOQsBHqRmSYRYYYJEUQnl8TJkwKwEqSGsl+rXYVkBFo14qh2uhR1hXSX9Uhv1Ez0XkvJNdOe5zeBWUlR42mgjFqOUTMm4QEBGCunAgaiCZoXy+9gzVyXyt0tdSLHPbUHau9oPbZX4U+TnPitAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hfo0hLUJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724764992; c=relaxed/simple;
+	bh=/XHD34zdbgNKnwIhTxPsqd8L8PA1QTTE3R3kDc/VBow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HNQ1a9pNAF3qvnYX+N06+PHMDFiS2dYsbL1GWqvYn3p+015JQZYSM7/chjy8JY2mmyIhjl6+L5KZIsvv7owdAJLffmKMi7Jky6z2ROCvAsWMrDlgKIIJ0+BcwA1fhwo2+Xr7U+KIsOuvG9I05kachfo+9b5nI8mqaKDv/YDEvyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QQlpP6m2; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hfo0hLUJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DE7C61042;
-	Tue, 27 Aug 2024 13:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1724764619;
-	bh=aY1aAhJeV+p1s0ZXDxOzamYB2/VzqxrNQdK/2AxCnA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hfo0hLUJm2TVm8Wk1IVsJXYXYhbdDIPa3D5IUb8YRE+4yRY6nWHvBsQdx1FNqxBhd
-	 yTwHBD+B02gEbU5ItUdPJyXWvA/9hhlNNwqSOC/+rCt/D0Jbzmd1HwkAOn/PMdqqQD
-	 c5SNnz7du7gjz8iFT4bwaXjIVK8f8VRyodLHSvuQ=
-Date: Tue, 27 Aug 2024 15:16:50 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Vitaly Chikunov <vt@altlinux.org>,
-	Christian Heusel <christian@heusel.eu>,
-	Adrian Vladu <avladu@cloudbasesolutions.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	"alexander.duyck@gmail.com" <alexander.duyck@gmail.com>,
-	"arefev@swemel.ru" <arefev@swemel.ru>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"jasowang@redhat.com" <jasowang@redhat.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"willemb@google.com" <willemb@google.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	David =?iso-8859-1?Q?Pr=E9vot?= <taffit@debian.org>
-Subject: Re: [PATCH net] net: drop bad gso csum_start and offset in
- virtio_net_hdr
-Message-ID: <2024082741-crease-mug-f658@gregkh>
-References: <0d897b58-f4b8-4814-b3f9-5dce0540c81d@heusel.eu>
- <20240814055408-mutt-send-email-mst@kernel.org>
- <c746a1d2-ba0d-40fe-8983-0bf1f7ce64a7@heusel.eu>
- <PR3PR09MB5411FC965DBCCC26AF850EA5B0872@PR3PR09MB5411.eurprd09.prod.outlook.com>
- <ad4d96b7-d033-4292-86df-91b8d7b427c4@heusel.eu>
- <66bcb6f68172f_adbf529471@willemb.c.googlers.com.notmuch>
- <zkpazbrdirbgp6xgrd54urzjv2b5o3gjfubj6hi673uf35aep3@hrqxcdd7vj5c>
- <66c5f41884850_da1e7294d2@willemb.c.googlers.com.notmuch>
- <ZsyMzW-4ee_U8NoX@eldamar.lan>
- <ZszgliPW3QEodr5G@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QQlpP6m2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724764991; x=1756300991;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/XHD34zdbgNKnwIhTxPsqd8L8PA1QTTE3R3kDc/VBow=;
+  b=QQlpP6m2JV10r+2s7r1aK3ah12qq3tGDvdrjxiUkZ71kvRn4sTnl71NZ
+   8zWJY+Fr019dul5Sb+xa0tmA1147gMnrA2hSRZzEpl4TZpryW+3Owkf4I
+   9/o0/5/bqY1bGY+E/9/vmtqHrRVjDMfp8d9DSkDseiDeZ7jlV8W0ZCBWl
+   MBfrhtLesDnGmG2lUMPSl9AT38bi3ewh+BjI3zDjT5w+cVWAKRW7VYdQS
+   OQk3Zos31P4TynsZR2evNxg79lsR/zSZYVX5PLNKhDQcJjkrXGv+BVg8i
+   CsKQg21+WvIRiM0azjAZEd9z7EM733DdrhMF3SsoU7werFz/CzvvM6OM+
+   Q==;
+X-CSE-ConnectionGUID: 4XGi7hVhTfWIb4ploHPYcg==
+X-CSE-MsgGUID: OYhhZ0KjRlCjSLKizAJGEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="27007647"
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="27007647"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 06:23:10 -0700
+X-CSE-ConnectionGUID: 2+kkYFxRTWWEScD1jnqVfA==
+X-CSE-MsgGUID: 9TZQOzOmRoipbcWlZN9pvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="63032821"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 06:23:07 -0700
+Message-ID: <1e9cd9d1-17c8-4603-ab95-d6996c5b4eca@linux.intel.com>
+Date: Tue, 27 Aug 2024 15:23:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for stable 0/2] ASoC: topology: Fix loading topology issue
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>, tiwai@suse.com,
+ perex@perex.cz, lgirdwood@gmail.com,
+ =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Vitaly Chikunov <vt@altlinux.org>, Mark Brown <broonie@kernel.org>
+References: <20240814140657.2369433-1-amadeuszx.slawinski@linux.intel.com>
+ <2024082729-subatomic-anemia-003d@gregkh>
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <2024082729-subatomic-anemia-003d@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZszgliPW3QEodr5G@eldamar.lan>
 
-On Mon, Aug 26, 2024 at 10:07:50PM +0200, Salvatore Bonaccorso wrote:
-> Hi,
+On 8/27/2024 3:11 PM, Greg Kroah-Hartman wrote:
+> On Wed, Aug 14, 2024 at 04:06:55PM +0200, Amadeusz Sławiński wrote:
+>> Commit 97ab304ecd95 ("ASoC: topology: Fix references to freed memory")
+>> is a problematic fix for issue in topology loading code, which was
+>> cherry-picked to stable. It was later corrected in
+>> 0298f51652be ("ASoC: topology: Fix route memory corruption"), however to
+>> apply cleanly e0e7bc2cbee9 ("ASoC: topology: Clean up route loading")
+>> also needs to be applied.
+>>
+>> Link: https://lore.kernel.org/linux-sound/ZrwUCnrtKQ61LWFS@sashalap/T/#mbfd273adf86fe93b208721f1437d36e5d2a9aa19
 > 
-> On Mon, Aug 26, 2024 at 04:10:21PM +0200, Salvatore Bonaccorso wrote:
-> > Hi,
-> > 
-> > On Wed, Aug 21, 2024 at 10:05:12AM -0400, Willem de Bruijn wrote:
-> > > Vitaly Chikunov wrote:
-> > > > Willem,
-> > > > 
-> > > > On Wed, Aug 14, 2024 at 09:53:58AM GMT, Willem de Bruijn wrote:
-> > > > > Christian Heusel wrote:
-> > > > > > On 24/08/14 10:10AM, Adrian Vladu wrote:
-> > > > > > > Hello,
-> > > > > > > 
-> > > > > > > The 6.6.y branch has the patch already in the stable queue -> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=3e713b73c01fac163a5c8cb0953d1e300407a773, and it should be available in the 6.6.46 upcoming minor.
-> > > > > > > 
-> > > > > > > Thanks, Adrian.
-> > > > > > 
-> > > > > > Yeah it's also queued up for 6.10, which I both missed (sorry for that!).
-> > > > > > If I'm able to properly backport the patch for 6.1 I'll send that one,
-> > > > > > but my hopes are not too high that this will work ..
-> > > > > 
-> > > > > There are two conflicts.
-> > > > > 
-> > > > > The one in include/linux/virtio_net.h is resolved by first backporting
-> > > > > commit fc8b2a6194693 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4
-> > > > > validation")
-> > > > > 
-> > > > > We did not backport that to stable because there was some slight risk
-> > > > > that applications might be affected. This has not surfaced.
-> > > > > 
-> > > > > The conflict in net/ipv4/udp_offload.c is not so easy to address.
-> > > > > There were lots of patches between v6.1 and linus/master, with far
-> > > > > fewer of these betwee v6.1 and linux-stable/linux-6.1.y.
-> > > > 
-> > > > BTW, we successfully cherry-picked 3 suggested[1] commits over v6.1.105 in
-> > > > ALT, and there is no reported problems as of yet.
-> > > > 
-> > > >   89add40066f9 ("net: drop bad gso csum_start and offset in virtio_net_hdr")
-> > > >   fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-> > > >   9840036786d9 ("gso: fix dodgy bit handling for GSO_UDP_L4")
-> > > > 
-> > > > [1] https://lore.kernel.org/all/2024081147-altitude-luminous-19d1@gregkh/
-> > > 
-> > > That's good to hear.
-> > > 
-> > > These are all fine to go to 6.1 stable.
-> > 
-> > FWIW, as we are hit by this issue for Debian bookworm, we have testing
-> > as well from David Pr�vot <taffit@debian.org>, cf. the report in
-> > https://bugs.debian.org/1079684 .
-> > 
-> > He mentions that the 9840036786d9 ("gso: fix dodgy bit handling for
-> > GSO_UDP_L4") patch does not apply cleanly, looks to be because of
-> > 1fd54773c267 ("udp: allow header check for dodgy GSO_UDP_L4 packets.")
-> > from 6.2-rc1, which are reverted in the commit.
+> You need to put the git ids in the patches directly do we have a clue
+> what to do.
 > 
-> Just to give an additional confirmation: Applying
+> Also, what tree(s) do you need/want these in?
 > 
-> 1fd54773c267 ("udp: allow header check for dodgy GSO_UDP_L4 packets.")
-> 9840036786d9 ("gso: fix dodgy bit handling for GSO_UDP_L4")
-> fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-> 89add40066f9 ("net: drop bad gso csum_start and offset in virtio_net_hdr")
+> Please fix up and resend.
+> 
 
-Ah, that works, thanks!
+I've already send v2 and as far as I know it was merged.
 
-greg k-h
+Here is link to v2:
+https://lore.kernel.org/linux-sound/2024081442-thimble-widget-e370@gregkh/T/#t
