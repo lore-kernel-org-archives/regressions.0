@@ -1,109 +1,309 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDDD1D3194
-	for <regressions@lists.linux.dev>; Tue, 27 Aug 2024 18:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BCC481CD;
+	Tue, 27 Aug 2024 21:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724784540; cv=none; b=UfC3WD3vhWxjx7t6QQGQWfStl1TkN6d3+rdfpa0cKV4jLvhB4qYEQp84kn+Si9ggKltsDbRrnxlTAdRAnGWXqBuMrPhS1xvMWt1eW99SQ654i6n/qy0XcVp6qdI9cLVmZSg/jHBhYHnjr6nYpJv3xzDkarrTbNDOU3Pn7pKuzyw=
+	t=1724793254; cv=none; b=JKlVuT7hQRFF60ASCJavmoxpWAIXo6OurUPVD1jL8wcOzmS5RusrIqBz0ot/N9ob1xpcau4CB2ZA644HHlg+OjSsNKP+Cgfc3Sq9WPqRaSakotItiQJGb0iXsK5xB+dGtv2kkMOPQu4ZN4uY5v1tYnlYe0UboO7hUq9GvV2d8mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724784540; c=relaxed/simple;
-	bh=+fM/Qyk8h6+mYsjYQvSSfjnNJ8uLvU2/CLFvC7f9D3Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I7Qt4dF5TliYhx8JPmjPiVGsA7DXlNOy2Cx60i1UkAedRg6BmsR8v4YE69frD5y16bb4ISseUxxIGu9veRIzfIiOpSX2PmDSXoQIaM6+akLzfdH4As0YMw1VzjCAily9ZCX/P25dSyc0YXb91A0yVXqeWsbwUbGDw39iqfasrQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVtnlfUB; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724793254; c=relaxed/simple;
+	bh=ZSeBlgEKcx4s8dxVDlf3apmWDUm3zykf2lb3uVvl6iQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TloEAF/J4C6qNP01TWkQpSMCo1lhMUVX61z5zLt4eYjVMIbuYcxW6BRFLBukKVPl4/xvVkHxNXr8/VYkRHDmtblOBktHl7hQYuRXi5H2Hsr11CUFUAlJdEU+cg7cJRi85GbDLvz5zmpmeNUPhPFBFkxFTJno/zMc8Bhvi1xWCeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=PnSPCpc5; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVtnlfUB"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a7a843bef98so569726866b.2
-        for <regressions@lists.linux.dev>; Tue, 27 Aug 2024 11:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724784537; x=1725389337; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+fM/Qyk8h6+mYsjYQvSSfjnNJ8uLvU2/CLFvC7f9D3Q=;
-        b=VVtnlfUBcJsA4KKh5RPTFHNSPtj7EjZJigoaViXBGuWHcXRRbx9arOMHOUxASSJRu2
-         V9Vv2ZPMdS6Ss6V78NTSoai/rRVqFglsJDBoQOJwE1JnU/ikhPvGrLK7/ntxnqdewRrB
-         iLmBaTIj8LlZ/GlbwY9P+qvn8EuFmC0tRYPvWWXzNJuWsD0ZOYZYtfwz+/l1TrqBxQwW
-         U1IreXYQNCtRxaNax9iC4MX6v2bWFeFX1CzyJmCizjbgax0tWl2wJMP4ZNseJSDdn7x7
-         JTOSxnewlYtCFk396ESwG7MKHbp5X5CzHXaTfBIsjPH/49JK790BZIZXB2wZSgvtqtkX
-         44lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724784537; x=1725389337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+fM/Qyk8h6+mYsjYQvSSfjnNJ8uLvU2/CLFvC7f9D3Q=;
-        b=IxxUlKmrF6mfz0c6hJS70Wj0c5Ggms5lIHobggzLah1v9IE3kNjStdzJv/4TYN/DhS
-         it59CJevz+ZMccSUVm1ZFkR07PRviMGJfm27FE+y1JruRMmFw3ZtTJsI5U1fSkdzZv7E
-         wb66FJCMPFsR/RQ2Q1JPRHtMKCofespfI+D2f8HwUa7RwLPS+YxTIRdlF5jFuC8+LGT5
-         SLEgOQ7FonPsdiutAgux9bVgAmKOguU8EspTri4PN1voyXLqq+mW5ZNGLIx4FxknZkax
-         Ffw6cDM04PE+u1x/dKFu+HYOLAQd9667UKmPa5IqzXVCESWR5JloCCwLNqfJHVr7OEvb
-         sUew==
-X-Forwarded-Encrypted: i=1; AJvYcCW0c/sbaGuF5GJMOULnDQFCKKzh+RCHXSshrcWW2MQREFU/wumRoLy8BlgW/Zf9tFTXybUX/RRKICofwA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwR0NNzDjCCPPfrgNH/mLn+WKytd7Y4V6wf846rOez8aaXRUjag
-	IXpWr5zTVUHFm7akJ0pVs94JCbWoZATuH+Lwg7OnziBnR/7xJVtVkLgjQAKIWhRSLO3D7vLir0D
-	z6U4eZwDglcgwOi4lOIzI9eq8OxBmrYL0TcOy
-X-Google-Smtp-Source: AGHT+IEDE84HW8WhltURoZPE6AnT1p3yEylLwiUEf8EfZjo6o3kJOFM23s7uhP84XseafK+WQn8SInwK5adVNDb6Bys=
-X-Received: by 2002:a17:906:c14d:b0:a86:90b8:9ac9 with SMTP id
- a640c23a62f3a-a86a52cc979mr1096924066b.39.1724784536549; Tue, 27 Aug 2024
- 11:48:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="PnSPCpc5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1724793192; x=1725397992; i=spasswolf@web.de;
+	bh=xfqXOZc+766507kklCUwhhyqL2MZM2kjb/gAvpx7HV4=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PnSPCpc5vFdtsbHk92t3rVA0tHpEvIh0ymfBnmtJKNImgWoTZJxgEzSWqz5s2Bo+
+	 ZiR4ry2evesxZwKf9Vj5hjOyNCvjSeD3wVkcxOUaQvsHNPBXRRJYgzm/VQCgbVVlI
+	 H10LlUoAkV4pOU/8hE7RZyetwIv0iYrQZdIcmRzJX+Ln3EETQ3ewx4my/S/wsullq
+	 lvC7QJHzTTyRvGitxpM2Kp5WjoahXbLIrFozmF5BoOP45iZFQrDEdcXf/fdLa1J1H
+	 FsP6z4buQn1JB6I2DOlevarm91V3rnFYHJEUzoU2pjEe80CLHp6VApqfhZHeyOoon
+	 +VFco17WQc0WWtiSiA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([84.119.92.193]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2SL5-1rxbJ244fH-012twG; Tue, 27
+ Aug 2024 23:13:12 +0200
+Message-ID: <51e80bde6e3f3256ecdea2e5260463341e65578e.camel@web.de>
+Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
+ mt792x_mac_link_bss_remove
+From: Bert Karwatzki <spasswolf@web.de>
+To: Mike Lothian <mike@fireburn.co.uk>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com, 
+	sean.wang@mediatek.com, deren.wu@mediatek.com, mingyen.hsieh@mediatek.com, 
+	linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	spasswolf@web.de
+Date: Tue, 27 Aug 2024 23:13:10 +0200
+In-Reply-To: <CAHbf0-EBHERbxPGakY4-1jTQWqGqua3F0OYZjxcakdemJ5Soqw@mail.gmail.com>
+References: <20240718234633.12737-1-sean.wang@kernel.org>
+	 <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
+	 <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
+	 <f7197c55d059cc8ddbf6c3def16dc414c5ec0b42.camel@web.de>
+	 <CAHbf0-EBHERbxPGakY4-1jTQWqGqua3F0OYZjxcakdemJ5Soqw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com> <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
- <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com> <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
- <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com>
-In-Reply-To: <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 27 Aug 2024 11:48:19 -0700
-Message-ID: <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kqpKExKkptcgwCeoH0RfHXQVHBIgSoraFMqhlrftXDuJxwCi6p2
+ QxcVUgX+JOqboen9F0mJQ6mfr4XrICbPczwJLxZ5tzVh2FA6K3FAJj30UfAJLV8xC1bJRb6
+ 1kGpZCq3h1HjKq99N3F3O/Ewde4NpVXyJB6FoBEab+UykZjCiLeA12XlxPqYPuAkDJzmEb/
+ ualTiaHRtu6JEtSlr8zMg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:itHwOWHJ/RQ=;Bul3gZQlJXvufanW94AO28rOGQA
+ f4+MZWkUx5YdZoYifN3KwOvTtNCyKtSYLi7eRR2DNvixcWRwxT2eFOzp1OIljC0Ueyxh/d4hb
+ nsNtkuRj/dhYyt8FqfWjuBmHChz8ybHS3CFniRAG0G6UAsb/YAtpB8SPRhD5Fco5I9CS1Js0e
+ +1KF0pO1MBtWfYQN5jkghSdUgYUGNHaILcE73qEXwTavMzbbNs6e58wiQbGz+s5d+Conhwo91
+ kWijMyD5EmDm2ItI6gkXxOkqFlTVSk0hKqVZWVOpM35x5+NY762Q4feYQvAgqDde5K5lTOy9e
+ or2EMExz9C3JCND6ZBM73ytukgusc7J7j31fXk3pJe0X/1PyA4ZDpzLlLxPsbtBh4ni2GFiNW
+ TqMRdX9jh86J72C0k4JxLddddZybACpYim0lgWqymg8KMl+NuEO/DxNO15AjXhoMVKHV7bSpg
+ CALpuvnG+cibn7VCpgfl/t7B1B9RxovqQ4zl0VCuG0Xt/BYxo5vLRFFtCyNeAGonAEMor9jn2
+ wwLh4cRllKHW5VNifEaIXKndHXHeTnOmEIVK9BeQxy+RpjJNmcIy6ALE8nYAbjOHPb02B7vZh
+ 9p1UEIbL+gpRyGCFL1pJs5YQesgwX6mh36djIzAWdn2a4WzIgxS35Y158cER+Af6HtpUrm7EV
+ mslRJnMAAzSPXgZw7qZ9NBH7nrW7sP+OpzKVR+fSywiMS6moZqEmDNNpgfd+BgHW0coEWxjoF
+ S/WIuDGTXXH+PGvo2A3P6YViE7IpN3leKnGx3eIebV7N6Hj8WqOwg/+f/7PGwFvCC+ONsLUPS
+ TowuWs+SYBUx6edF/HQl2klg==
 
-On Sun, Aug 25, 2024 at 9:24=E2=80=AFAM Piotr Oniszczuk
-<piotr.oniszczuk@gmail.com> wrote:
+Am Dienstag, dem 27.08.2024 um 17:30 +0100 schrieb Mike Lothian:
+> Hi
 >
+> This fix hasn't made it upstream yet, has it fallen through the cracks?
 >
+> Cheers
 >
-> > Wiadomo=C5=9B=C4=87 napisana przez Pedro Falcato <pedro.falcato@gmail.c=
-om> w dniu 25.08.2024, o godz. 17:05:
+> Mike
+>
+> On Thu, 1 Aug 2024 at 17:58, Bert Karwatzki <spasswolf@web.de> wrote:
 > >
-> > Also, could you try a memtest86 on your machine, to shake out potential=
- hardware problems?
->
->
-> I found less time consuming way to trigger issue: 12c24t cross compile of=
- llvm with =E2=80=9Eonly 16G=E2=80=9D of ram - as this triggers many heavy =
-swappings (top swap usage gets 8-9G out of 16G swap part)
->
-> With such setup - on 6.9.12 - i=E2=80=99m getting not available system (d=
-ue cpu soft lockup) just in 1..3h
-> (usually first or second compile iteration; i wrote simple scrip compilin=
-g in loop + counting interations)
+> > Am Donnerstag, dem 01.08.2024 um 13:38 +0100 schrieb Mike Lothian:
+> > > I also saw the following after I restarted my router on two machines=
+ -
+> > > they both have this fix applied already:
+> > >
+> > > Aug 01 08:59:33 quark kernel: BUG: kernel NULL pointer dereference,
+> > > address: 0000000000000008
+> > > Aug 01 08:59:33 quark kernel: #PF: supervisor read access in kernel =
+mode
+> > > Aug 01 08:59:33 quark kernel: #PF: error_code(0x0000) - not-present =
+page
+> > > Aug 01 08:59:33 quark kernel: PGD 0 P4D 0
+> > > Aug 01 08:59:33 quark kernel: Oops: Oops: 0000 [#1] PREEMPT SMP
+> > > Aug 01 08:59:33 quark kernel: CPU: 13 UID: 0 PID: 468 Comm:
+> > > NetworkManager Not tainted 6.11.0-rc1-tip+ #3200
+> > > 9c927d6f3c59d826d15d8e39c195392d1d16b8a8
+> > > Aug 01 08:59:33 quark kernel: Hardware name: Micro Computer (HK) Tec=
+h
+> > > Limited EliteMini Series/HPBSD, BIOS 1.02 03/28/2024
+> > > Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+> > > Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+> > > 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+> > > 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 =
+00
+> > > c6 44 24 07 00 66 c7
+> > > Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 000=
+10282
+> > > Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+> > > ffff888106740920 RCX: 0000000000000000
+> > > Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+> > > ffff88810bb35ca0 RDI: ffff888106854a68
+> > > Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+> > > 0000000000000000 R09: ffff888104c98200
+> > > Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+> > > 0000000000000020 R12: 0000000000000002
+> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> > > ffff888106854800 R15: ffff888106854a68
+> > > Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+> > > GS:ffff888c2df40000(0000) knlGS:0000000000000000
+> > > Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000=
+00080050033
+> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+> > > 0000000117250000 CR4: 0000000000350ef0
+> > > Aug 01 08:59:33 quark kernel: Call Trace:
+> > > Aug 01 08:59:33 quark kernel:  <TASK>
+> > > Aug 01 08:59:33 quark kernel:  ? __die_body+0x66/0xb0
+> > > Aug 01 08:59:33 quark kernel:  ? page_fault_oops+0x39a/0x410
+> > > Aug 01 08:59:33 quark kernel:  ? exc_page_fault+0x59/0xa0
+> > > Aug 01 08:59:33 quark kernel:  ? asm_exc_page_fault+0x22/0x30
+> > > Aug 01 08:59:33 quark kernel:  ? mt7921_ipv6_addr_change
+> > > Aug 01 08:59:33 quark kernel:  ? __try_to_del_timer_sync
+> > > Aug 01 08:59:33 quark kernel:  ieee80211_ifa6_changed+0x68/0x120
+> > > Aug 01 08:59:33 quark kernel:  atomic_notifier_call_chain+0x45/0xc0
+> > > Aug 01 08:59:33 quark kernel:  addrconf_ifdown+0x521/0x7d0
+> > > Aug 01 08:59:33 quark kernel:  addrconf_notify+0x1ed/0x4a0
+> > > Aug 01 08:59:33 quark kernel:  raw_notifier_call_chain+0x45/0xb0
+> > > Aug 01 08:59:33 quark kernel:  __dev_notify_flags+0xf4/0x200
+> > > Aug 01 08:59:33 quark kernel:  dev_change_flags+0x49/0x50
+> > > Aug 01 08:59:33 quark kernel:  do_setlink+0x49b/0x1300
+> > > Aug 01 08:59:33 quark kernel:  ? terminate_walk+0x6b/0x100
+> > > Aug 01 08:59:33 quark kernel:  ? __nla_validate_parse
+> > > Aug 01 08:59:33 quark kernel:  ? filename_lookup+0xc7/0x1b0
+> > > Aug 01 08:59:33 quark kernel:  rtnl_newlink+0xb6a/0xde0
+> > > Aug 01 08:59:33 quark kernel:  ? __wake_up_sync_key+0x51/0x80
+> > > Aug 01 08:59:33 quark kernel:  ? scm_destroy+0xc/0x30
+> > > Aug 01 08:59:33 quark kernel:  ? security_capable+0x38/0x50
+> > > Aug 01 08:59:33 quark kernel:  rtnetlink_rcv_msg+0x2dd/0x330
+> > > Aug 01 08:59:33 quark kernel:  ? select_task_rq_fair
+> > > Aug 01 08:59:33 quark kernel:  ? rtnetlink_bind+0x30/0x30
+> > > Aug 01 08:59:33 quark kernel:  netlink_rcv_skb+0xb5/0xf0
+> > > Aug 01 08:59:33 quark kernel:  netlink_unicast+0x230/0x330
+> > > Aug 01 08:59:33 quark kernel:  netlink_sendmsg+0x3b1/0x460
+> > > Aug 01 08:59:33 quark kernel:  ____sys_sendmsg
+> > > Aug 01 08:59:33 quark kernel:  ? chacha_block_generic+0x6a/0x130
+> > > Aug 01 08:59:33 quark kernel:  ___sys_sendmsg+0x282/0x2a0
+> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> > > Aug 01 08:59:33 quark kernel:  __se_sys_sendmsg+0xf4/0x120
+> > > Aug 01 08:59:33 quark kernel:  do_syscall_64+0x7e/0x130
+> > > Aug 01 08:59:33 quark kernel:  ? pollwake+0x52/0x60
+> > > Aug 01 08:59:33 quark kernel:  ? do_task_dead+0x50/0x50
+> > > Aug 01 08:59:33 quark kernel:  ? __wake_up_locked_key+0x48/0x70
+> > > Aug 01 08:59:33 quark kernel:  ? eventfd_write+0x193/0x1b0
+> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> > > Aug 01 08:59:33 quark kernel:  ? vfs_write+0xfa/0x3d0
+> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
+> > > Aug 01 08:59:33 quark kernel:  ? ksys_write+0x8f/0xb0
+> > > Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11=
+/0x50
+> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
+> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
+> > > Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11=
+/0x50
+> > > Aug 01 08:59:33 quark kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0=
+x53
+> > > Aug 01 08:59:33 quark kernel: RIP: 0033:0x7f4264d31fae
+> > > Aug 01 08:59:33 quark kernel: Code: 20 89 54 24 1c 48 89 74 24 10 89
+> > > 7c 24 08 e8 a9 75 f7 ff 41 89 c0 8b 54 24 1c 48 8b 74 24 10 b8 2e 00
+> > > 00 00 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 3a 44 89 c7 48 89 44 =
+24
+> > > 08 e8 fd 75 f7 ff 48
+> > > Aug 01 08:59:33 quark kernel: RSP: 002b:00007ffff4b1afa0 EFLAGS:
+> > > 00000293 ORIG_RAX: 000000000000002e
+> > > Aug 01 08:59:33 quark kernel: RAX: ffffffffffffffda RBX:
+> > > 000055c35260c570 RCX: 00007f4264d31fae
+> > > Aug 01 08:59:33 quark kernel: RDX: 0000000000000000 RSI:
+> > > 00007ffff4b1afe0 RDI: 000000000000000d
+> > > Aug 01 08:59:33 quark kernel: RBP: 00007ffff4b1b050 R08:
+> > > 0000000000000000 R09: 0000000000000000
+> > > Aug 01 08:59:33 quark kernel: R10: 000000000000009d R11:
+> > > 0000000000000293 R12: 0000000000000004
+> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> > > 0000000000000000 R15: 0000000000000000
+> > > Aug 01 08:59:33 quark kernel:  </TASK>
+> > > Aug 01 08:59:33 quark kernel: Modules linked in:
+> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008
+> > > Aug 01 08:59:33 quark kernel: ---[ end trace 0000000000000000 ]---
+> > > Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
+> > > Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
+> > > 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
+> > > 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 =
+00
+> > > c6 44 24 07 00 66 c7
+> > > Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 000=
+10282
+> > > Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
+> > > ffff888106740920 RCX: 0000000000000000
+> > > Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
+> > > ffff88810bb35ca0 RDI: ffff888106854a68
+> > > Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
+> > > 0000000000000000 R09: ffff888104c98200
+> > > Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
+> > > 0000000000000020 R12: 0000000000000002
+> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
+> > > ffff888106854800 R15: ffff888106854a68
+> > > Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
+> > > GS:ffff888c2df40000(0000) knlGS:0000000000000000
+> > > Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000=
+00080050033
+> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
+> > > 0000000117250000 CR4: 0000000000350ef0
+> > >
+> > > On Wed, 24 Jul 2024 at 10:36, Linux regression tracking (Thorsten
+> > > Leemhuis) <regressions@leemhuis.info> wrote:
+> > > >
+> > > >
+> > > >
+> > > > On 19.07.24 01:46, sean.wang@kernel.org wrote:
+> > > > > From: Sean Wang <sean.wang@mediatek.com>
+> > > > >
+> > > > > Fix null pointer access in mt792x_mac_link_bss_remove.
+> > > > >
+> > > > > To prevent null pointer access, we should assign the vif to bss_=
+conf in
+> > > > > mt7921_add_interface. This ensures that subsequent operations on=
+ the BSS
+> > > > > can properly reference the correct vif.
+> > > > >
+> > > > > [...]
+> > > > > > Fixes: 1541d63c5fe2 ("wifi: mt76: mt7925: add
+> > > > mt7925_mac_link_bss_remove to remove per-link BSS")
+> > > > > Reported-by: Bert Karwatzki <spasswolf@web.de>
+> > > > > Closes: https://lore.kernel.org/linux-wireless/2fee61f8c903d02a9=
+00ca3188c3742c7effd102e.camel@web.de/#b
+> > > > > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > > >
+> > > > TWIMC, Mike (now CCed) ran into the problem and on bugzilla confir=
+med
+> > > > that this fixes the problem:
+> > > >
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219084
+> > > > https://lore.kernel.org/all/CAHbf0-HOS-jdRGvJOBmEgaaox3PDbDSTgnnZk=
+ZF9pz37Bmh2iw@mail.gmail.com/
+> > > >
+> > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker=
+' hat)
+> > > > --
+> > > > Everything you wanna know about Linux kernel regression tracking:d
+> > > > https://linux-regtracking.leemhuis.info/about/#tldr
+> > > > If I did something stupid, please tell me, as explained on that pa=
+ge.
+> >
+> > The fix to this issue has been posted here by Felix Fietkau:
+> > > Am Mittwoch, dem 17.07.2024 um 17:25 +0200 schrieb Felix Fietkau:
+> > >
+> > > This change should fix it: https://nbd.name/p/0747f54f
+> > > Please test.
+> > >
+> > > Thanks,
+> > >
+> > > - Felix
+> >
+> > Bert Karwatzki
 
-Are we sure that the soft lockup problem is related to the originally
-reported problem? It seems like in v6.10 you hit a BUG in zswap
-(corruption?), and in v6.9 you hit a soft lockup with a zswap lock
-showing up in the splat. Not sure how they are relevant.
+It's in linux-6.11-rc4 and later:
 
-Is the soft lockup reproducible in v6.10 as well?
+commit 479ffee68d59c599f8aed8fa2dcc8e13e7bd13c3
+Author: Bert Karwatzki <spasswolf@web.de>
+Date:   Mon Aug 12 12:45:41 2024 +0200
 
-Since you have a narrow window (6.8.2 to 6.9) and a reproducer for the
-soft lockup problem, can you try bisecting?
+    wifi: mt76: mt7921: fix NULL pointer access in mt7921_ipv6_addr_change
 
-Thanks!
+    When disabling wifi mt7921_ipv6_addr_change() is called as a notifier.
+    At this point mvif->phy is already NULL so we cannot use it here.
+
+    Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+    Signed-off-by: Felix Fietkau <nbd@nbd.name>
+    Signed-off-by: Kalle Valo <kvalo@kernel.org>
+    Link: https://patch.msgid.link/20240812104542.80760-1-spasswolf@web.de
+
+
+Bert Karwatzki
+
+
