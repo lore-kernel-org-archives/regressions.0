@@ -1,137 +1,120 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C9215B966;
-	Wed, 28 Aug 2024 08:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DAE15B122;
+	Wed, 28 Aug 2024 10:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724833065; cv=none; b=RjpO6Fz3sp/fl4NY4o2ICproFpoRYupttey70OXCU961FUE2PvHq/MW2GX775DQU1rH/Yg0q0XyV6D9zREyLD/4BNSzi/cIH6kfY2sDd9Y1LFbRMrWsSv5QcxDCiTxmU/tBuVEq3axtC5kkw54WGhsa7fwqVO8VdIjuW0TGPTh0=
+	t=1724840866; cv=none; b=L+/hGnkzk27AOzYd1V3YIwToHcBc+K8S0P2MkXm0z/Cc/82Fk3GVP6XKAJdzS/Qh1OYst+NJFiDWuHrfQuyr1wNHveRmMeiENfbx7m7CYHiN2EA1814IkTxcyfeRg2UQrvsK2GSN8GZ6wIMIOsVXL473uB8RFzbouXadnwhYDI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724833065; c=relaxed/simple;
-	bh=g8G3n2oC9BGSDr5dj4Ln70/JKkFb0GSJhpHopVzdlu0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UggavNw61R0RaXLcTZ2cxx0FJtHlhpaVzv+0EJ5EK3VXV5m9jpuKUySHdGwI9omlOvfWJ1asd0Gg2WEv//lPF6VaSZDo4wF6KeNQtFyhy5SFesq4/idP4UfsfEWnp7l+3/YId78SgXvTdVBep9c/RZZeCNbR3YgaciCxYY+SxM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=eJZPsx1R; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1724840866; c=relaxed/simple;
+	bh=InwyAHiphiLoauN/TOlOZopB6HciWGjJ5V3qgG694Z4=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=X8wpfl7NUukqIlEX0QdST7ykQiJTrCKFD9yFLxU5ZA25nyp0xH7TrM19yFpCemL/V847VUueY/1387UgzW9SM5xYtGcqtIZzYW4aA0apywT3F9GtRdPASu1CFkOcD/DNgARkRl8V20MElp7KODEEtteSRAf30Q/n4gtTpmCKfWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vc5BhOSg; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="eJZPsx1R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1724833043; x=1725437843; i=spasswolf@web.de;
-	bh=HJ9gN2dyG0tELFDyIaVWwxco35Ny0zFkmQvcfIA5lIw=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=eJZPsx1RySSUEgyds5+XOD9GkIHMzH6AYc4WK5/9l8p7j2cF/hzP1qw9xgOticWr
-	 CyVT5dUiVAPT1tASK3b7RszrWNCbIhdZdnm/RZOefeRR25bcs4ZTJK3WtOO9pj3PQ
-	 fHGP9o+0V5ZqLn58ztF3m1QIkkSDlfKX962aaUz+3R+gk0hvv24V9x9N+Ltw3+BBF
-	 3uvZyHbFtM5fp/TR3H5rd0b1OMZ9a2F0/fqGvyVTgxxx6ug5dPIaiPh49N+rDxfMq
-	 Ooa/Snb2/6dEvWqC4GYvevwl1YsahaNDencN9yvAg/Frh3zKsALI8q0ZgmhbIP08T
-	 uproA0TRoHJ2Avp1lQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([84.119.92.193]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9cLR-1s4bg73m1F-00wkGg; Wed, 28
- Aug 2024 10:17:22 +0200
-Message-ID: <980698e0d6dfa1e0043edfed6e174ff17705e053.camel@web.de>
-Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
- mt792x_mac_link_bss_remove
-From: Bert Karwatzki <spasswolf@web.de>
-To: Mike Lothian <mike@fireburn.co.uk>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	sean.wang@kernel.org, nbd@nbd.name, lorenzo.bianconi@redhat.com, 
-	sean.wang@mediatek.com, deren.wu@mediatek.com, mingyen.hsieh@mediatek.com, 
-	linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	spasswolf@web.de
-Date: Wed, 28 Aug 2024 10:17:20 +0200
-In-Reply-To: <CAHbf0-HYi=x11bc-sMJFbZ4cbkdphMYQ_hjzD_wrPvJevVwyYg@mail.gmail.com>
-References: <20240718234633.12737-1-sean.wang@kernel.org>
-	 <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
-	 <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
-	 <f7197c55d059cc8ddbf6c3def16dc414c5ec0b42.camel@web.de>
-	 <CAHbf0-EBHERbxPGakY4-1jTQWqGqua3F0OYZjxcakdemJ5Soqw@mail.gmail.com>
-	 <51e80bde6e3f3256ecdea2e5260463341e65578e.camel@web.de>
-	 <CAHbf0-HYi=x11bc-sMJFbZ4cbkdphMYQ_hjzD_wrPvJevVwyYg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.53.2-1 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vc5BhOSg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=NhvfR4j9bveSdtIcTWCvoQaitcmCKHIR8EyUnxLaags=; t=1724840864;
+	x=1725272864; b=vc5BhOSgHL1zB/Y4MCSUbq4V5MJVRoqWyBdq8pg026A/qVfgL+8CWa28aOCsf
+	Atpzy3yh3NsIjZ79OT+zPvga25l4XHg4L26ySObgTtIpNXcIwIHbtok1+f/DgdhxUaaVwh/TnwTIi
+	LQq6A07QayGBuFYLcI/S3BWzUX6NdwP7ad/pnwys8RbP99pTb9YAgQfQ4cT/cGR/t34tZoyhOKSjn
+	+z1ODhMsCMArRW67JPpWlNMLVnXu1GyGrnyjhR+Dsdz+CVYeOPV43CKMJOzGSxESfwKOgiShLPNVO
+	tz0vRCPBr1Gq1Qoi7U3NliFTR6/2//ZFkTgo+fi/dq5yIKM6nA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sjFtk-0005PF-13; Wed, 28 Aug 2024 12:27:32 +0200
+Message-ID: <c844faa0-343a-46f4-a54f-0fd65f4d4679@leemhuis.info>
+Date: Wed, 28 Aug 2024 12:27:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6oZ+XXROi7lRrCqTGJQrAaf7+UZos3uRqJi6w9SfVRwy3Ai+6+X
- VzH1v1dTV1y4A0Cl5+yWA5cmtgmRpW2t5ytde1rRiTN9cNqTtss/hmQucySD9gu+k15mH3a
- BZfb7GJYdp3aB8FgVb/GySZpvBBrCMi73kG/vIIt3bxxzHK1Y0Qn8yi4Ezt+szteelBQZOg
- mtdxWhT5F6uPFlxVtsD4Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:O3/Xpm7KHVc=;ysiL236UkqiGFos3wisn3TRiVc6
- GhTDxBq0Djzm9fPbS0xNeJwtQrVvhB+vRwQNb6+N/fdcROdszFTxugwasFNfn4gQAvpDHIcJL
- aoIzqHw/2Iq71Da21fBh6DQbs425oHcSYLxsSomUFn5nEA35tVwQalsycTkTRastmIYw7GzTs
- sQPwQvFdXoyGKmCeLhg2+Uw1kQkeQhh6l5uwiJ6zZ97VZikxqjvpQlBFFJlwg67rg4rTdUVaM
- 8unT1Dmg/w2jMtpii8YDXpSttgDPAu5YqTsFlwtNEBKScvCRPqnU9iP7HKyUlX9sOQW2W8rd5
- 7M6+408V9i6vBIE2doqJnqhkh72gpvX7VsCQ2btld3Ei+OLoYggLWXUnoG51YgyUpOWCGaHIn
- PnzdQV78WJP0kUM6KKirPCW3WGGDvenxBpBxLHzDhXFSE1a7ILHjh5O7U52Twda60xTB5Hr47
- AdNaNlsOGbHGzPzbY67EGUs4JVY2QVd3FIU9ygMCgFPOejMpZZuc1ZH21sfRGcLQUV6P4Dr0p
- Ocx4qBHM9KS/scxnIWNGOXufot7PegDlWDe5MgealQf1EHwUD1oYliMNBencoiFllqqyCZ5yj
- uKj7Y4JRXiImOu8ydcWY1K/YqCaR947FgBTy3L7r2RRp0wJSdojLTqJQ7Q/Z3LsVwuHXoRmbV
- 80kcM4n6eCWWWvCsCjObQCKlPCoynUMTefRV9q9cFgMhhao6j/vaagnCDFNwHO/BhWl6Lq0cO
- d1Cx5UbRetKYW2fFL297XAm8D8/dHzu9XK9WHk8gPRq9B+zqBlN2rBi9Zb339xR/CLsSLjSrC
- edKkU4Y2rApJYpGJ4b35RZwg==
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Will Deacon <will@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Joerg Roedel <joro@8bytes.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Adam Williamson <awilliam@redhat.com>, Markus Rathgeb <maggu2810@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] usb and thunderbould are misbehaving or broken due to
+ iommu/vt-d change
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1724840864;ad37042d;
+X-HE-SMSGID: 1sjFtk-0005PF-13
 
-Am Mittwoch, dem 28.08.2024 um 00:38 +0100 schrieb Mike Lothian:
-> But not the follow on fix which fixes suspend...
->
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> index 2e6268cb06c0..a85c19da77e5 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> @@ -1182,7 +1182,7 @@ static void mt7921_ipv6_addr_change(struct
-> ieee80211_hw *hw,
->       struct inet6_dev *idev)
->  {
->   struct mt792x_vif *mvif =3D (struct mt792x_vif *)vif->drv_priv;
-> - struct mt792x_dev *dev =3D mvif->phy->dev;
-> + struct mt792x_dev *dev =3D mt792x_hw_dev(hw);
->   struct inet6_ifaddr *ifa;
->   struct in6_addr ns_addrs[IEEE80211_BSS_ARP_ADDR_LIST_LEN];
->   struct sk_buff *skb;
-> @@ -1205,6 +1205,9 @@ static void mt7921_ipv6_addr_change(struct
-> ieee80211_hw *hw,
->   },
->   };
->
-> + if (!mvif->phy)
-> + return;
-> +
->   read_lock_bh(&idev->lock);
->   list_for_each_entry(ifa, &idev->addr_list, if_list) {
->   if (ifa->flags & IFA_F_TENTATIVE)
->
-> > > >
-> >
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-That is interesting (or odd) because suspend (s2idle) works for me in next=
--
-20240827 on this hardware:
+Lu Baolu, I noticed a report about a regression in bugzilla.kernel.org
+that appears to be caused by a change of yours:
 
-04:00.0 Network controller [0280]: MEDIATEK Corp. MT7921K (RZ608) Wi-Fi 6E=
- 80MHz
-[14c3:0608]
+2b989ab9bc89b2 ("iommu/vt-d: Add helper to allocate paging domain")
+[v6.11-rc1]
 
-are you using a different model?
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to forward it with this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219198 :
 
-[  272.780054] [    T848] wlp4s0: deauthenticating from 54:67:51:3d:a2:d2 =
-by
-local choice (Reason: 3=3DDEAUTH_LEAVING)
-[  273.067438] [   T3437] PM: suspend entry (s2idle)
-[  273.151140] [   T3437] Filesystems sync: 0.083 seconds
-[  273.157029] [   T3437] Freezing user space processes
+> USB is working on my Dell WD19TB Thunderbolt Dock with Fedora kernel build 6.10.0-64.fc41.x86_64
+> 
+> It does not work with 6.11.0-0.rc4.38.fc41.x86_64 anymore.
 
-Can your the post the backtrace of your error (when commit 479ffee68d59c59=
-9f is
-applied)?
+The user later bisected the problem with a vanilla kernel to the commit
+of yours. There are various error messages in comments to that ticket.
+Some of them:
 
-Bert Karwatzki
+> Aug 27 11:51:07 b0v9by3 kernel: DMAR: DRHD: handling fault status reg 2
+> Aug 27 11:51:07 b0v9by3 kernel: DMAR: [DMA Read NO_PASID] Request device [04:00.0] fault addr 0xffffe000 [fault reason 0x0c] non-zero reserved fields in PTE
+and
+
+> Aug 26 10:33:49 foobar kernel: xhci_hcd 0000:04:00.0: Abort failed to stop command ring: -110
+> Aug 26 10:33:49 foobar kernel: xhci_hcd 0000:04:00.0: xHCI host controller not responding, assume dead
+> Aug 26 10:33:49 foobar kernel: xhci_hcd 0000:04:00.0: HC died; cleaning up
+> Aug 26 10:33:49 foobar kernel: xhci_hcd 0000:04:00.0: Error while assigning device slot ID: Command Aborted
+> Aug 26 10:33:49 foobar kernel: xhci_hcd 0000:04:00.0: Max number of devices this xHCI host supports is 64.
+> Aug 26 10:33:49 foobar kernel: usb usb5-port2: couldn't allocate usb_device
+> Aug 26 10:33:49 foobar kernel: usb usb6-port2: couldn't allocate usb_device
+> Aug 26 10:33:57 foobar kernel: usb usb2-port1: unable to enumerate USB device
+
+See the ticket for way more details.
+
+The initial report is from Markus Rathgeb, who is CCed. Adam Williamson
+(also CCed) deal with similar symptoms on another machine. Both are from
+Dell. In both cases Thunderbolt is involved, too.
+
+There is also another report with somewhat similar errors messages, also
+from a Dell machine:
+https://lore.kernel.org/all/3b42a3cc-2f76-4d42-abe2-5f4e8ffe10e4@molgen.mpg.de/
+
+Not sure if that's the the same problem, hence did not CC that reporter.
+Will send a heads-up to that thread and point to this thread and the ticket.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1]
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: f90584f4beb84211c
+#regzbot title: iommu/vt-d: usb and thunderbould are misbehaving/broken
+#regzbot from: Markus Rathgeb <maggu2810@gmail.com>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219198
+#regzbot ignore-activity
