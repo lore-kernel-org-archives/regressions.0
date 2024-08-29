@@ -1,71 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6875647
-	for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 06:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2920C14600C;
+	Thu, 29 Aug 2024 07:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724913796; cv=none; b=s3UHhviO3wZzPqIonnYXyeWZ0qPwHQVWOg1/KGslOhICc/P33eFTRx8zKwOP0kTzM9mDr8vYuDn4I6o/UtLNMChA/hQIbcf6MIbZvF40YUZ3VIiwFJSL9tkHH+t+B5ZEBh0RkO1ozWA4hpk+7IY8AzR4OTtFfe6NbqHxQosxc3U=
+	t=1724915313; cv=none; b=Ivn56OlYUr+0zt+0iMef/JE83oaaL4eo40XjqwQT1udypgZrAHllkysMewdOKVQEY4LMi9aWw+9kZtlRCDrjj7iuATLqg+JXdbRayTojU+GDYXVNDE9lRpgEvCc/GIf3O/C+HgnWRerGPhreB67LFDSCpmMkkVPfQ0ruXV8sU+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724913796; c=relaxed/simple;
-	bh=oA+wBhESLMyFMtNAP7JY/AA6NWei4y8/eR8f/ozgY5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFrBZmEnLeu/87Nan48FEFNK3QYRTwpscDpL0CuuJBf5136C4nMDyxXoVWNfsOXaWv7QctIFKO7X0JPzliFf9oqqEU/NTq/+NbLhEZjOLb58cWdgOc9u3eX4scjIg0Y00OHt3gC9XT+mRVawvmCNYWHczwuNbLK/W8q2rxmmkXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=o7OzsBVY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724915313; c=relaxed/simple;
+	bh=IyAuhBUMpYrYzg9Rg/bUmtSrNRyiuw2WIh1lFBFmEwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SGRoaPiE9awtG5/9ba2xTI6dfH4KxSX+9YlvUKszSPy2xESPc6ENPKy5L94Aygg+qp/AErQrPgvQuNoAlXW8s9C4oL88roMg2eakSgDfpUB4gpUp1uuHNZRFeh5TczDds2NhhLwA6/yNv6ndh9iFFPkpraKmtKE7qkb+tIRod9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lpaX9S+X; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="o7OzsBVY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7180C4CEC1;
-	Thu, 29 Aug 2024 06:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1724913796;
-	bh=oA+wBhESLMyFMtNAP7JY/AA6NWei4y8/eR8f/ozgY5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o7OzsBVYWd4tRZZ33izwQkIyVEGXzbVQr4fhhckQqDasI8GfumlpcO/2nVCVRytvr
-	 Id/EV52yQX2JdOas+VxUdhV18+jQuyJ0eNY8I01tu64Sn1GUT8KnBxAKFuanubZjsx
-	 6P1zgoEH/SHkx/59fmxxIzZpLajOlp4X4o9LSyuE=
-Date: Thu, 29 Aug 2024 08:43:08 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: denalimoose <denalimoose@proton.me>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] console scrollback
-Message-ID: <2024082910-magenta-hatching-04d7@gregkh>
-References: <LAnGXs-kzVpOpp-r_RfFvWOeG6OGCf5zILdCmBVOBg9J-nJnRPLWKRxzusRGjj3C3Z7r5Tt1udZCQYtE6F9bkjYnY02LmV_pEabm4valGJo=@proton.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpaX9S+X"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6b3afc6cd01so11785327b3.1;
+        Thu, 29 Aug 2024 00:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724915311; x=1725520111; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyAuhBUMpYrYzg9Rg/bUmtSrNRyiuw2WIh1lFBFmEwg=;
+        b=lpaX9S+X3VlkK+8l0+brcs33cfOJtUDBD/pN1UUBSY6YoHV3nr+yFmLzXsdDH8e4Gh
+         cwVkbaCyi/2uobkwDzQyFZXZ07INFKEL4ms5+rg8lD+P7gT0GXOWa421J8imy5BACUw7
+         zfvsppaxN7tWSY2WfpbHD/ZLvNAoRxtS5yhrPXYiEbdigT4/1X/Ru0zuIAjWb3ur7Yl6
+         3sAOLjnrTHoMMHyPEXGIuMav1CrWHnXQavSeGmZ0UcXOW4INtpzz4XfyIdZeRg6YhvB7
+         dp9NPcaHeCb8tFXifIc4cXRiW4XMD1vhUpWutUJqoB1TJ9YQ3qjz3sNI6Lf/puCuSgfu
+         poqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724915311; x=1725520111;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IyAuhBUMpYrYzg9Rg/bUmtSrNRyiuw2WIh1lFBFmEwg=;
+        b=Q7BnK92FM9Ln4s/HAvsiqxVB6TAch4xJ56mTAbttvq52pkSdVDyCVrjQd+8XdNxY2t
+         +zyFRthNRKzgyjziNKKpXsSDIc2DS+zmqgb18HrE0u/+tx3JUXVIReCD9DERJeqmHhtx
+         How/co1ENCdPZ/R33jJUURY1VP7IjteDe+B61MY5J7ii8ar7F1n6sHXQlo2Kzc1A6Kzk
+         pYVyCuhMxZvCrrL8Iqj6chGfv2TLgdMGAfE8jWFOv9SEyf+EY+bfVKdir/Z8NOivcGul
+         +gGBT9mGi5L2xI9uWdqFxNALEPxdOLVRnaq1a5jWFbyt4k/FXySuWRbYKs421fiQvncE
+         zH2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4rJVEWlx3uzrwUoC7F4f5oFZMOpkzFEz0NZKUBjFbUwYJopZNHTVBfnmOb6qyHEAcZ9PyDQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxElNjJolLVN0ghh2AXluNa02nJ2hURQe9Sp+6+zRMhi1WGFo+d
+	MmLpQtOK/2xVpAFuMvVhoR1yW/5/tSYeORvMHZjjBTtiPrHEvshaAe3zWFq9H473NhvmL/8VCkA
+	y4oDmI5BZvKEfzhOfYKMWKeBhE+M=
+X-Google-Smtp-Source: AGHT+IHBG54kcyJNao2S8e3RZf5s1k+UvHDbQfTQZBYaZtFW8uvd8xnYVaG4KN2Krr/p0slYw316fyXauQdT/GHO33s=
+X-Received: by 2002:a05:690c:d83:b0:640:aec2:101c with SMTP id
+ 00721157ae682-6d2ed2992b6mr3916147b3.2.1724915310875; Thu, 29 Aug 2024
+ 00:08:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <LAnGXs-kzVpOpp-r_RfFvWOeG6OGCf5zILdCmBVOBg9J-nJnRPLWKRxzusRGjj3C3Z7r5Tt1udZCQYtE6F9bkjYnY02LmV_pEabm4valGJo=@proton.me>
+References: <c844faa0-343a-46f4-a54f-0fd65f4d4679@leemhuis.info>
+ <BN9PR11MB5276CA2E1922D9FD6B9F2ECF8C962@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <CAOcK=CN3-v=dgMC9XTbh-h0zaD01uatOZKjvSF7ocofTCOGp7Q@mail.gmail.com>
+In-Reply-To: <CAOcK=CN3-v=dgMC9XTbh-h0zaD01uatOZKjvSF7ocofTCOGp7Q@mail.gmail.com>
+From: Markus Rathgeb <maggu2810@gmail.com>
+Date: Thu, 29 Aug 2024 09:08:18 +0200
+Message-ID: <CAOcK=CPi1TokgySF77X+zuQ10kxfsfCXekYVanPhF51+Ow1XRg@mail.gmail.com>
+Subject: Re: [regression] usb and thunderbould are misbehaving or broken due
+ to iommu/vt-d change
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	Will Deacon <will@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>, 
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
+	Jacob Pan <jacob.jun.pan@linux.intel.com>, Adam Williamson <awilliam@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 29, 2024 at 05:33:43AM +0000, denalimoose wrote:
-> 2 patches were made in 2020 that have unknowingly been causing many people some headaches.
-> 
-> fbcon: remove soft scrollback code
-> commit 50145474f6ef4a9c19205b173da6264a644c7489
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=50145474f6ef4a9c19205b173da6264a644c7489
-> 
-> vgacon: remove software scrollback support
-> commit 973c096f6a85e5b5f2a295126ba6928d9a6afd45
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=973c096f6a85e5b5f2a295126ba6928d9a6afd45
-> 
-> I'm sorry, I'm not a developer and I don't know how to properly report this. But our team (that works with consoles all day, everyday) have been wondering why scrollback has been broken for years. We only recently became aware that it was removed on purpose.
-> 
-> No, piping to less or something else is not a replacement for what was there and working great for a long time.
-> 
-> The reasons cited in these patches are narrow, shortsighted and not at all inclusive of people that work with consoles.
+I did a git reset to 2b989ab9bc89b29dd4b5509408b8fa42337eda56
+Build and tested the kernel.
 
-But the reasons there are real.  No one is there to maintain the code
-and it is full of bugs that were exploitable.
+This seems to be a good commit.
 
-If this code is being used, wonderful, please take it over and revert
-the change and submit patches to fix it all up properly, we will gladly
-accept that!
-
-Can you do that?
-
-thanks,
-
-greg k-h
+So, the first bad commit on my side seems to be
+f90584f4beb84211c4d21b319cc13f391fe9f3c2
