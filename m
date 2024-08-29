@@ -1,70 +1,84 @@
-Received: from mail-4321.protonmail.ch (mail-4321.protonmail.ch [185.70.43.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED45EAD5
-	for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 05:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9C214B949;
+	Thu, 29 Aug 2024 06:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724910143; cv=none; b=VXvX/HnfmaR4ZURH4GdzdMFCPirqDEhhJK1JVBEcITBTNB1lxDXMteFdkNKXETRv8bmuz22bHa9lvR4U5l24jzuHZ/5TJpwys/cucbICR0s37ZmycwhFuRWVHcatXu/FkVFNJHYbXS4iFG/zCZh6k9wOJ216L5J6sMEcL5sUSyM=
+	t=1724912494; cv=none; b=DrOzx71u8S059cx+V+RNcGo/2sePiXKWW8aA084KvS/uK9dVDhhhIpMYWmaifnEIPQiFpwSBytPPNZuM6IY0tqPXi3T+HQk5faxpPXHGzi3jD/v/PtsvR0+LYBAvdT+DRjDWeU3xUlFb7Kcn+/YHsyh+MzfLWIV9xt7k3v3hi4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724910143; c=relaxed/simple;
-	bh=e21W/usF6gaD9SQSsXsIv7HHbzOvHTu7frrvrrCJokc=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=F2/C+tHHBGEwd1G4OYINcP4xhM8TCcOSAUJ/wRXOppmXOaumadyxNf31kOjX2kqsTb2ZLTrtiylsWjoO5jul6boL2DehzCRDdrNbk2cL7sZP9hhyJR3av2/CyRp4rjMqaELQ6sBp0wA0rCH39szhZj5IoF1dzsVDOCFLY+/lRBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DYppk5f0; arc=none smtp.client-ip=185.70.43.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1724912494; c=relaxed/simple;
+	bh=4m+yGSdBhixhxvtmH1e1egnd1m06G0SnfHvjAyZhdsc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZWjFassIY4ueL1vkjEf/oR/XHFNnMc4iSOc+d4ouLfxFNTEjLYBVYjH5189FmuvEoLk+7T+eVRq43a9t1KWl4hZfaozeBJbdzX6omLntwIotBpbcPonmXtFpkcdBn4U8Rt9zGZlVnkh8x+y1vcgOkZ5wG4GKCMhxgjOUDCa0uaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiVOVFUr; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DYppk5f0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1724909640; x=1725168840;
-	bh=e21W/usF6gaD9SQSsXsIv7HHbzOvHTu7frrvrrCJokc=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=DYppk5f08YSwe9y2wfn1eLl3bkz14HrJD2ihIZzYs/26dSGhB+IkS9CIbxM4WbfBt
-	 Q7jpHxPBrjIXUlK5ew/Xcq8qXhE2tNfAXXLXOJL8tSVrfNXu0X8ysOTwYo0dLkIaGY
-	 p5kLGgtmCZSCSgtu1wcp7sGfRX36lQhQeW354BrC84omyYCaLhGY+n8snVJBbAhTbJ
-	 898qIkIr/HsKcoiLem3gQK7tRTkwLccI6KTf1Y9agHA9msCQ/8rEy/zAjZk01a9k/s
-	 1mFOmhnvkk8Rc/DYZ7Anpm0Xp4aIdhPi10pix+uXwyoxAjE8IcKWgiYDCGHryjciGk
-	 JJrRzHqRU9RwQ==
-Date: Thu, 29 Aug 2024 05:33:43 +0000
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: denalimoose <denalimoose@proton.me>
-Subject: [REGRESSION] console scrollback
-Message-ID: <LAnGXs-kzVpOpp-r_RfFvWOeG6OGCf5zILdCmBVOBg9J-nJnRPLWKRxzusRGjj3C3Z7r5Tt1udZCQYtE6F9bkjYnY02LmV_pEabm4valGJo=@proton.me>
-Feedback-ID: 101141598:user:proton
-X-Pm-Message-ID: 46955c5c3d1e41acd569c65ec5ca1a15130a84ae
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiVOVFUr"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6c32daf0797so3029267b3.0;
+        Wed, 28 Aug 2024 23:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724912492; x=1725517292; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4m+yGSdBhixhxvtmH1e1egnd1m06G0SnfHvjAyZhdsc=;
+        b=RiVOVFUrXPJiIrJLz0/SM+HkMMQ/wK2cI4xRiT+R6GPTSP1WRljVLjp5zq/gXzGlQL
+         9RtkdFhg560BC+jEQbADLPwae4i86uYa1BnivzU0EHpd3DVAwVKJxgt0vCAd9Nudp3dC
+         IpfUS6qPrRXwD7EK8OZtJ+pkeLrqI+axobU1ck56CgNFHHDue/IkSKsrKaYq1566tFY/
+         R+GRHNUAE/XRlV1nLBUtDd3RZZcjoscwXSzrkCy7XHFxbqrHrJtbsaR9O7u5IR4XpZtA
+         ViAnOCp65gJqMKhH7/idn4kqRlKhA45TErgztn/9NiXpZaQLcoqpFmEclqrERsj6qZ/E
+         YxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724912492; x=1725517292;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4m+yGSdBhixhxvtmH1e1egnd1m06G0SnfHvjAyZhdsc=;
+        b=Vh/BfBMk7GtUToBq3++VeJjeyOow5TORE6v3yFhDerZtA9VogCU74CPO0K3AJUCLr/
+         6EwIYSdOXMxo37k+uFP9/p0h6CX8HXvFAbcFz+UjHYHs1EKq51L15xLMaNpjLwN/5UNb
+         9Yj29WfqxHfN9y1t6bkfZ35IG5odFH+ulKbtOCaOpRc9ImWk8Q1eu575vjvUAktwZkEi
+         wD5XZA/jC+dv0PZnEYBDhzRwHxdeYG9FLFCecXxB3fIvo86JASVKYNzhmMOqoYa/9lyo
+         5hzXzgVwP2vmHeznh+BMlXaujKXLWxYQTqxApxiof3IfwMJ8e7k9SndivrRZbiICpYzv
+         0krw==
+X-Forwarded-Encrypted: i=1; AJvYcCUho34zclj2b8Ybwgz/gENUBB1W4x1f4fLp6LMj1qIgH42kz4vFkDt17PjJTEPau1QMq0mtFg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxSZygvZeFKsiLLQzCNoScjwxDwpKmAYxb1HT9nWp4i1bKbV2N2
+	CTayrFtBevExkWX7ktS5ykrZpcCyegRXxr7Iv0GPY+USrcHST1p8dCjwa9x07/aETTTOTc0xA9R
+	Uwg4s8D1ZR3612cbhsFo6ALADm9g=
+X-Google-Smtp-Source: AGHT+IHMLEKsLhvNrpFB2co1aHPpoSBzoSmaC8bal4WcNj5PJZQOLOS3kwAZjR3oI8mxlBYACeDUFi9uQ35Ii9qQaX0=
+X-Received: by 2002:a05:690c:38b:b0:61b:342e:91ae with SMTP id
+ 00721157ae682-6d277778e64mr16682037b3.36.1724912492142; Wed, 28 Aug 2024
+ 23:21:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <c844faa0-343a-46f4-a54f-0fd65f4d4679@leemhuis.info> <BN9PR11MB5276CA2E1922D9FD6B9F2ECF8C962@BN9PR11MB5276.namprd11.prod.outlook.com>
+In-Reply-To: <BN9PR11MB5276CA2E1922D9FD6B9F2ECF8C962@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Markus Rathgeb <maggu2810@gmail.com>
+Date: Thu, 29 Aug 2024 08:21:20 +0200
+Message-ID: <CAOcK=CN3-v=dgMC9XTbh-h0zaD01uatOZKjvSF7ocofTCOGp7Q@mail.gmail.com>
+Subject: Re: [regression] usb and thunderbould are misbehaving or broken due
+ to iommu/vt-d change
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	Will Deacon <will@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>, 
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
+	Jacob Pan <jacob.jun.pan@linux.intel.com>, Adam Williamson <awilliam@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-2 patches were made in 2020 that have unknowingly been causing many people =
-some headaches.
+> Probably f90584f4beb8 ("iommu/vt-d: Add helper to flush caches
+> for context change") is more relevant. There was a bug reported
+> against it and fixed a few days ago:
 
-fbcon: remove soft scrollback code
-commit 50145474f6ef4a9c19205b173da6264a644c7489
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D50145474f6ef4a9c19205b173da6264a644c7489
+I added a comment on bugzilla, too.
+While adding additional logs to the bugzilla entry I realized that one
+commit has not been tested.
 
-vgacon: remove software scrollback support
-commit 973c096f6a85e5b5f2a295126ba6928d9a6afd45
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D973c096f6a85e5b5f2a295126ba6928d9a6afd45
+good: 804f98e224e41c16e3b70f97790f84894745a392
+untested: 2b989ab9bc89b29dd4b5509408b8fa42337eda56
+bad: f90584f4beb84211c4d21b319cc13f391fe9f3c2
 
-I'm sorry, I'm not a developer and I don't know how to properly report this=
-. But our team (that works with consoles all day, everyday) have been wonde=
-ring why scrollback has been broken for years. We only recently became awar=
-e that it was removed on purpose.
-
-No, piping to less or something else is not a replacement for what was ther=
-e and working great for a long time.
-
-The reasons cited in these patches are narrow, shortsighted and not at all =
-inclusive of people that work with consoles.
-
-Please rollback these 2 changes as soon as possible so we can bring back ou=
-r productivity and sanity.
+I do not understand why git bisect told me there is no remaining commit to test.
