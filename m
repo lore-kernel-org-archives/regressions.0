@@ -1,301 +1,174 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767D31B5837
-	for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 16:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB2718B460
+	for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 21:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724950370; cv=none; b=QmgJ9wVvj0mYcrXIMVOyjd4lwuuYBwq6aXU2IVVNDWa+QPJx6NZR4QCnxpGcrcCBBxVhavXPSAWQ9PoZ43ZQ8QkZjezXT2PVKT4kxryIUKhiq5qi6bEEKGJjEKAzl4LZeQ5+scG0nxp0M9BpphXmuAlsfdtw0MxyaaQFexHJqC4=
+	t=1724968505; cv=none; b=YRviGGEyZ8oqql+jTJ7g/pgkOB3CsNWt5H2h7kKGtVRfNJdVff83kxhiTbkhzRATCtFdFfxf82GiDsNGegCHG5dbrkVmRt0lSREQ3BFeb1vMeaCIpvNItncDPTv57XR0kWSuWrT56anZjBMzhxQOoBie2K4K3NMv72L+hO9079M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724950370; c=relaxed/simple;
-	bh=ZOhvN7NyIIeZenRw4o6YIzMum8gq8S6U+691+DG9vYc=;
+	s=arc-20240116; t=1724968505; c=relaxed/simple;
+	bh=X2J1Zruavdx6XZtyjF3WfuYLy3+4x0oPlle13EcoFtA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K7UupzTUthQlauWKuSSq9ygMV7kmZem7EliNfDhHjNzNlpag68ZpVMf0RZH1KGs5JrVwukp9KxSqTZKMNN3ZpGzOZ4fnkhrRFlINL+8dSCKUworC++xlBXE8ZQRug/eEjN+bNHIcQebTI7Mu+OzgYE/W12lCSErri3jeU6UMxtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk; spf=none smtp.mailfrom=fireburn.co.uk; dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b=2OY9799n; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fireburn.co.uk
+	 To:Cc:Content-Type; b=V+OzvOpvgK0jaPM8z6rFAc6CdjD2L9Sgs3DowZpQ4JaVnTWyGkQDSdWPPGA6KhBS8MuisI+Gs0tZgXbdw9JLQ9yDDyoBeaHFald5bZzhBwl83ygv9vZdRGdkAgZVO5Fb6ZXVIdHVO0Pf8QZOwP+KHtjGVq2Qp0RyjABjEYLe64s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=elSsM+5e; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b="2OY9799n"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2d69e2a88e8so647649a91.2
-        for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 09:52:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="elSsM+5e"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5bec4fc82b0so3839129a12.1
+        for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 14:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20230601.gappssmtp.com; s=20230601; t=1724950368; x=1725555168; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XGOM3U5O1g4KdTv3KdgR+oU9mQf5lF/fWePHpak/t9E=;
-        b=2OY9799ntNEIahNE0SVPnWRW4VL6bwcqygt89KsbkqwVQgyP1Qj8EZi1UJhX7D314z
-         5wDD0mZurQ0QL50wTZ+aP/UYcYSlUDzWKHEi2bz97moO7t5DjTwuEgh6OkA/SfD1YWJN
-         7zbQ/42KWYfWXqp/jca89PWdAg8AF4XCyinHZoQ2ttakeABHAwkw8Z30jS1qw5ucv3on
-         2GdreVcpBnktG9lol++V3KctajKEfUCXYAj7RWlPud+Jznb6g0wZAU5Q7Q4XLvVrEbIv
-         NsipMK16JPTXAjGBuQwHG1654ie/uOJa+aatPsEJLc3/Ucc20mBB7MtOF3jPa9qT+XcG
-         f0wQ==
+        d=google.com; s=20230601; t=1724968502; x=1725573302; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X2J1Zruavdx6XZtyjF3WfuYLy3+4x0oPlle13EcoFtA=;
+        b=elSsM+5edTLXyqwPcYRApoWIybx1JuDqj+Rhrue5NGhHA2Vag4O1D6p0fLc5C3y/RI
+         XZe5hGEjRG7MzcDSICAM6agtznFvpb1KimLNRPoGiN2VXQjPE8vEpN/1UXNT0n//3gkj
+         HAADHqnFTsNOmAVgjhAxvbFxOcc+svIUOes8EtM30WA7R6owd7VQH2x4UvQsoYj3dA9t
+         GVqffz5jQLJeUXBd2d1bqamvrRp/mcWDsp7oHdUD8MHo0DcC3FTyRjERtbMfn5Ty+DKn
+         ma4SmFra+zOLCu8TnwvLsO/3fsCCaEOzeIBpLF8chAHUVAcmsgjPs6rET2WROeUP/PA1
+         S05A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724950368; x=1725555168;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XGOM3U5O1g4KdTv3KdgR+oU9mQf5lF/fWePHpak/t9E=;
-        b=ljJLJ6JNOEQOVXb1Xc0KXS/sXShMrXvmjY+ivT8Ray5TMZ8VPLgnSlzg6f7KbsS5I5
-         us772B7iULFuCTiM0V4ySFTWirklKmzRPl290rW7KXKRPl1RUNGIMoF/nCYPGTcPIaB/
-         UFjmmI3O1oZkc4mojUifoWYi/zVl3e9i+09SKUfU7LOfGqL4pURgDV7DDVGYAGVG/mvt
-         Muyt81JZPA4QknjKNVcG+JMs3C+71ogL5GzNLp+J36IOHwuWlrj/NEKI2lxrZjWj7hh4
-         ePzYRyAWvDkDyQY0ega8STf5E5HAxTV9HKJM0JfUKVKd1ovWWJZX1lnt1ic5lPqae266
-         z6uw==
-X-Gm-Message-State: AOJu0YwnrDn+SeeckbnoOpsE8T6TDw0H5G0eX35MVdNoRs4JMVGqhD2S
-	14YR7wV/gnHmU3hf0zcecujCp0hwOHGAT6NuxhcekQ8WCZgO9237RoT/85jbKPYy0dLZrBl1ilQ
-	OUe4L75bpQSEGSrW8fx+jwVslmhMuaE5hUH1r
-X-Google-Smtp-Source: AGHT+IHVyBek53xkPsDhWWzfjtpc2erbKh2j75S4Ik74h4vvPRJKCZALMbL9xuKi1cjTHssxVl6ywZb4YFfNhNRESkk=
-X-Received: by 2002:a17:90a:6fc5:b0:2cf:c9ab:e727 with SMTP id
- 98e67ed59e1d1-2d85638b540mr3347454a91.31.1724950367495; Thu, 29 Aug 2024
- 09:52:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724968502; x=1725573302;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X2J1Zruavdx6XZtyjF3WfuYLy3+4x0oPlle13EcoFtA=;
+        b=HMJKVUz3kYMDMmgMugLXEsSXPyZK36S60SGQ3kgbJ/4nreo/qd9Sl2J6DIpSaPcPkb
+         Zv3XT6bKDolwjxUMZJxjK4SlJhkv82rW0u1EsYp7VDlUbppBT6wBKp+s2zRmiR0JcjcX
+         KfUVecwnxC3R6fVGlJDwJZbhuIJ1cttlIzO50/ROU8tK2NLdKp/Fz0qOzS3zjAt86YUP
+         UqoMRjAil53DT0cDQOVNoEkplQtv3gpvMWMbhqfn9NM2qeU0WAdq2yiQGiviUiFhaDNV
+         5RP+bNn2UJXRX/V0IKEDMI6lBhqHj4jyJvcQZMGJIe9sQeg3LsHxrll86w6eJY3vozhI
+         VCgg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9WTBGvCubNTl8pI5aOXHFlJulYceEMssqjZV22hKTrfoV+DmnWlDGUo4yOatuKxcjD5akkO7XazkE7w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx+USvDDlesytWKCIpdu7+4TUuOrqsbX4FlixUSsvKIwLE9qIN+
+	MhNsvubaAmzqxBoHZoFzkySrV4BJl918o6xE86N/Tc7h6TI4UoYiw4wiEhyTcrmBx6PErd9220O
+	XszHsWjl6G+KfA9aCmgi7GGalsCg2/QHyHJqK
+X-Google-Smtp-Source: AGHT+IH4ZiYY7Gh1I4yhkeVflwkseKNXmSds8HXCeIwpuTOHYtBHBjH+rd6088PWHQ/1mRdQhrMjnIDBUnNE0bVXLxU=
+X-Received: by 2002:a17:906:f5aa:b0:a86:96da:afb with SMTP id
+ a640c23a62f3a-a89a2584293mr20082666b.10.1724968501505; Thu, 29 Aug 2024
+ 14:55:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240718234633.12737-1-sean.wang@kernel.org> <0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
- <CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
- <f7197c55d059cc8ddbf6c3def16dc414c5ec0b42.camel@web.de> <CAHbf0-EBHERbxPGakY4-1jTQWqGqua3F0OYZjxcakdemJ5Soqw@mail.gmail.com>
- <51e80bde6e3f3256ecdea2e5260463341e65578e.camel@web.de> <CAHbf0-HYi=x11bc-sMJFbZ4cbkdphMYQ_hjzD_wrPvJevVwyYg@mail.gmail.com>
- <980698e0d6dfa1e0043edfed6e174ff17705e053.camel@web.de> <CAHbf0-FfAQhuu1TgQ_jVcxPqLsF-ON8vC1QJ=mNhis44dYWufw@mail.gmail.com>
- <d657110b726646efa972c5e83bfce6c6b1627626.camel@web.de> <CAHbf0-ETMTYs+T=qkLd=Y-W1ssQq1ZMDkxqHCJPSYA9U9CCgHw@mail.gmail.com>
-In-Reply-To: <CAHbf0-ETMTYs+T=qkLd=Y-W1ssQq1ZMDkxqHCJPSYA9U9CCgHw@mail.gmail.com>
-From: Mike Lothian <mike@fireburn.co.uk>
-Date: Thu, 29 Aug 2024 17:52:36 +0100
-Message-ID: <CAHbf0-HbLRRhtUEj1TDzemePoaLo71sxMFDN526HPEB_zO+4ow@mail.gmail.com>
-Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in mt792x_mac_link_bss_remove
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, sean.wang@kernel.org, nbd@nbd.name, 
-	lorenzo.bianconi@redhat.com, sean.wang@mediatek.com, deren.wu@mediatek.com, 
-	mingyen.hsieh@mediatek.com, linux-wireless@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
+References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
+ <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
+ <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com> <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
+ <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com> <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
+ <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com> <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
+ <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com>
+In-Reply-To: <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 29 Aug 2024 14:54:25 -0700
+Message-ID: <CAJD7tkZ01PPYMzcTyX_cwr836jGonJT=fwT3ovc4ixW44keRgg@mail.gmail.com>
+Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
+ mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Cc: Pedro Falcato <pedro.falcato@gmail.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Matthew Wilcox <willy@infradead.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Linux-MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Aug 2024 at 17:35, Mike Lothian <mike@fireburn.co.uk> wrote:
+On Thu, Aug 29, 2024 at 8:51=E2=80=AFAM Piotr Oniszczuk
+<piotr.oniszczuk@gmail.com> wrote:
 >
-> On Wed, 28 Aug 2024 at 18:05, Bert Karwatzki <spasswolf@web.de> wrote:
-> >
-> > Am Mittwoch, dem 28.08.2024 um 16:20 +0100 schrieb Mike Lothian:
-> > > On Wed, 28 Aug 2024 at 09:17, Bert Karwatzki <spasswolf@web.de> wrote:
-> > > >
-> > > > Am Mittwoch, dem 28.08.2024 um 00:38 +0100 schrieb Mike Lothian:
-> > > > > But not the follow on fix which fixes suspend...
-> > > > >
-> > > > > diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> > > > > b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> > > > > index 2e6268cb06c0..a85c19da77e5 100644
-> > > > > --- a/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> > > > > +++ b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
-> > > > > @@ -1182,7 +1182,7 @@ static void mt7921_ipv6_addr_change(struct
-> > > > > ieee80211_hw *hw,
-> > > > >       struct inet6_dev *idev)
-> > > > >  {
-> > > > >   struct mt792x_vif *mvif = (struct mt792x_vif *)vif->drv_priv;
-> > > > > - struct mt792x_dev *dev = mvif->phy->dev;
-> > > > > + struct mt792x_dev *dev = mt792x_hw_dev(hw);
-> > > > >   struct inet6_ifaddr *ifa;
-> > > > >   struct in6_addr ns_addrs[IEEE80211_BSS_ARP_ADDR_LIST_LEN];
-> > > > >   struct sk_buff *skb;
-> > > > > @@ -1205,6 +1205,9 @@ static void mt7921_ipv6_addr_change(struct
-> > > > > ieee80211_hw *hw,
-> > > > >   },
-> > > > >   };
-> > > > >
-> > > > > + if (!mvif->phy)
-> > > > > + return;
-> > > > > +
-> > > > >   read_lock_bh(&idev->lock);
-> > > > >   list_for_each_entry(ifa, &idev->addr_list, if_list) {
-> > > > >   if (ifa->flags & IFA_F_TENTATIVE)
-> > > > >
-> > > > > > > >
-> > > > > >
-> > > >
-> > > > That is interesting (or odd) because suspend (s2idle) works for me in next-
-> > > > 20240827 on this hardware:
-> > > >
-> > > > 04:00.0 Network controller [0280]: MEDIATEK Corp. MT7921K (RZ608) Wi-Fi 6E 80MHz
-> > > > [14c3:0608]
-> > > >
-> > > > are you using a different model?
-> > > >
-> > > > [  272.780054] [    T848] wlp4s0: deauthenticating from 54:67:51:3d:a2:d2 by
-> > > > local choice (Reason: 3=DEAUTH_LEAVING)
-> > > > [  273.067438] [   T3437] PM: suspend entry (s2idle)
-> > > > [  273.151140] [   T3437] Filesystems sync: 0.083 seconds
-> > > > [  273.157029] [   T3437] Freezing user space processes
-> > > >
-> > > > Can your the post the backtrace of your error (when commit 479ffee68d59c599f is
-> > > > applied)?
-> > > >
-> > > > Bert Karwatzki
-> > >
-> > > Apologies, it wasn't a suspend issue, it was when the router was restarted
-> > >
-> > > The error I saw was previously in this thread and someone pointed me
-> > > to the patch that fixed it - but that hasn't made it upstream yet
-> > >
-> > > Aug 01 08:59:33 quark kernel: BUG: kernel NULL pointer dereference,
-> > > address: 0000000000000008
-> > > Aug 01 08:59:33 quark kernel: #PF: supervisor read access in kernel mode
-> > > Aug 01 08:59:33 quark kernel: #PF: error_code(0x0000) - not-present page
-> > > Aug 01 08:59:33 quark kernel: PGD 0 P4D 0
-> > > Aug 01 08:59:33 quark kernel: Oops: Oops: 0000 [#1] PREEMPT SMP
-> > > Aug 01 08:59:33 quark kernel: CPU: 13 UID: 0 PID: 468 Comm:
-> > > NetworkManager Not tainted 6.11.0-rc1-tip+ #3200
-> > > 9c927d6f3c59d826d15d8e39c195392d1d16b8a8
-> > > Aug 01 08:59:33 quark kernel: Hardware name: Micro Computer (HK) Tech
-> > > Limited EliteMini Series/HPBSD, BIOS 1.02 03/28/2024
-> > > Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
-> > > Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
-> > > 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
-> > > 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
-> > > c6 44 24 07 00 66 c7
-> > > Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 00010282
-> > > Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
-> > > ffff888106740920 RCX: 0000000000000000
-> > > Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
-> > > ffff88810bb35ca0 RDI: ffff888106854a68
-> > > Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
-> > > 0000000000000000 R09: ffff888104c98200
-> > > Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
-> > > 0000000000000020 R12: 0000000000000002
-> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
-> > > ffff888106854800 R15: ffff888106854a68
-> > > Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
-> > > GS:ffff888c2df40000(0000) knlGS:0000000000000000
-> > > Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
-> > > 0000000117250000 CR4: 0000000000350ef0
-> > > Aug 01 08:59:33 quark kernel: Call Trace:
-> > > Aug 01 08:59:33 quark kernel:  <TASK>
-> > > Aug 01 08:59:33 quark kernel:  ? __die_body+0x66/0xb0
-> > > Aug 01 08:59:33 quark kernel:  ? page_fault_oops+0x39a/0x410
-> > > Aug 01 08:59:33 quark kernel:  ? exc_page_fault+0x59/0xa0
-> > > Aug 01 08:59:33 quark kernel:  ? asm_exc_page_fault+0x22/0x30
-> > > Aug 01 08:59:33 quark kernel:  ? mt7921_ipv6_addr_change
-> > > Aug 01 08:59:33 quark kernel:  ? __try_to_del_timer_sync
-> > > Aug 01 08:59:33 quark kernel:  ieee80211_ifa6_changed+0x68/0x120
-> > > Aug 01 08:59:33 quark kernel:  atomic_notifier_call_chain+0x45/0xc0
-> > > Aug 01 08:59:33 quark kernel:  addrconf_ifdown+0x521/0x7d0
-> > > Aug 01 08:59:33 quark kernel:  addrconf_notify+0x1ed/0x4a0
-> > > Aug 01 08:59:33 quark kernel:  raw_notifier_call_chain+0x45/0xb0
-> > > Aug 01 08:59:33 quark kernel:  __dev_notify_flags+0xf4/0x200
-> > > Aug 01 08:59:33 quark kernel:  dev_change_flags+0x49/0x50
-> > > Aug 01 08:59:33 quark kernel:  do_setlink+0x49b/0x1300
-> > > Aug 01 08:59:33 quark kernel:  ? terminate_walk+0x6b/0x100
-> > > Aug 01 08:59:33 quark kernel:  ? __nla_validate_parse
-> > > Aug 01 08:59:33 quark kernel:  ? filename_lookup+0xc7/0x1b0
-> > > Aug 01 08:59:33 quark kernel:  rtnl_newlink+0xb6a/0xde0
-> > > Aug 01 08:59:33 quark kernel:  ? __wake_up_sync_key+0x51/0x80
-> > > Aug 01 08:59:33 quark kernel:  ? scm_destroy+0xc/0x30
-> > > Aug 01 08:59:33 quark kernel:  ? security_capable+0x38/0x50
-> > > Aug 01 08:59:33 quark kernel:  rtnetlink_rcv_msg+0x2dd/0x330
-> > > Aug 01 08:59:33 quark kernel:  ? select_task_rq_fair
-> > > Aug 01 08:59:33 quark kernel:  ? rtnetlink_bind+0x30/0x30
-> > > Aug 01 08:59:33 quark kernel:  netlink_rcv_skb+0xb5/0xf0
-> > > Aug 01 08:59:33 quark kernel:  netlink_unicast+0x230/0x330
-> > > Aug 01 08:59:33 quark kernel:  netlink_sendmsg+0x3b1/0x460
-> > > Aug 01 08:59:33 quark kernel:  ____sys_sendmsg
-> > > Aug 01 08:59:33 quark kernel:  ? chacha_block_generic+0x6a/0x130
-> > > Aug 01 08:59:33 quark kernel:  ___sys_sendmsg+0x282/0x2a0
-> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
-> > > Aug 01 08:59:33 quark kernel:  __se_sys_sendmsg+0xf4/0x120
-> > > Aug 01 08:59:33 quark kernel:  do_syscall_64+0x7e/0x130
-> > > Aug 01 08:59:33 quark kernel:  ? pollwake+0x52/0x60
-> > > Aug 01 08:59:33 quark kernel:  ? do_task_dead+0x50/0x50
-> > > Aug 01 08:59:33 quark kernel:  ? __wake_up_locked_key+0x48/0x70
-> > > Aug 01 08:59:33 quark kernel:  ? eventfd_write+0x193/0x1b0
-> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
-> > > Aug 01 08:59:33 quark kernel:  ? vfs_write+0xfa/0x3d0
-> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
-> > > Aug 01 08:59:33 quark kernel:  ? __fget_files+0x95/0xb0
-> > > Aug 01 08:59:33 quark kernel:  ? ksys_write+0x8f/0xb0
-> > > Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x50
-> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
-> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
-> > > Aug 01 08:59:33 quark kernel:  ? syscall_exit_to_user_mode+0x93/0xc0
-> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
-> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
-> > > Aug 01 08:59:33 quark kernel:  ? do_syscall_64+0x8a/0x130
-> > > Aug 01 08:59:33 quark kernel:  ? arch_exit_to_user_mode_prepare+0x11/0x50
-> > > Aug 01 08:59:33 quark kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> > > Aug 01 08:59:33 quark kernel: RIP: 0033:0x7f4264d31fae
-> > > Aug 01 08:59:33 quark kernel: Code: 20 89 54 24 1c 48 89 74 24 10 89
-> > > 7c 24 08 e8 a9 75 f7 ff 41 89 c0 8b 54 24 1c 48 8b 74 24 10 b8 2e 00
-> > > 00 00 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 3a 44 89 c7 48 89 44 24
-> > > 08 e8 fd 75 f7 ff 48
-> > > Aug 01 08:59:33 quark kernel: RSP: 002b:00007ffff4b1afa0 EFLAGS:
-> > > 00000293 ORIG_RAX: 000000000000002e
-> > > Aug 01 08:59:33 quark kernel: RAX: ffffffffffffffda RBX:
-> > > 000055c35260c570 RCX: 00007f4264d31fae
-> > > Aug 01 08:59:33 quark kernel: RDX: 0000000000000000 RSI:
-> > > 00007ffff4b1afe0 RDI: 000000000000000d
-> > > Aug 01 08:59:33 quark kernel: RBP: 00007ffff4b1b050 R08:
-> > > 0000000000000000 R09: 0000000000000000
-> > > Aug 01 08:59:33 quark kernel: R10: 000000000000009d R11:
-> > > 0000000000000293 R12: 0000000000000004
-> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
-> > > 0000000000000000 R15: 0000000000000000
-> > > Aug 01 08:59:33 quark kernel:  </TASK>
-> > > Aug 01 08:59:33 quark kernel: Modules linked in:
-> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008
-> > > Aug 01 08:59:33 quark kernel: ---[ end trace 0000000000000000 ]---
-> > > Aug 01 08:59:33 quark kernel: RIP: 0010:mt7921_ipv6_addr_change
-> > > Aug 01 08:59:33 quark kernel: Code: 41 57 41 56 41 54 53 48 83 e4 f0
-> > > 48 83 ec 50 48 8b 86 70 09 00 00 0f b6 8e 90 04 00 00 4c 8d ba 68 02
-> > > 00 00 49 89 d6 4c 89 ff <48> 8b 58 08 88 4c 24 04 66 c7 44 24 05 00 00
-> > > c6 44 24 07 00 66 c7
-> > > Aug 01 08:59:33 quark kernel: RSP: 0018:ffffc900069373b0 EFLAGS: 00010282
-> > > Aug 01 08:59:33 quark kernel: RAX: 0000000000000000 RBX:
-> > > ffff888106740920 RCX: 0000000000000000
-> > > Aug 01 08:59:33 quark kernel: RDX: ffff888106854800 RSI:
-> > > ffff88810bb35ca0 RDI: ffff888106854a68
-> > > Aug 01 08:59:33 quark kernel: RBP: ffffc90006937420 R08:
-> > > 0000000000000000 R09: ffff888104c98200
-> > > Aug 01 08:59:33 quark kernel: R10: ffffffff7fff0000 R11:
-> > > 0000000000000020 R12: 0000000000000002
-> > > Aug 01 08:59:33 quark kernel: R13: 0000000000000000 R14:
-> > > ffff888106854800 R15: ffff888106854a68
-> > > Aug 01 08:59:33 quark kernel: FS:  00007f4265049400(0000)
-> > > GS:ffff888c2df40000(0000) knlGS:0000000000000000
-> > > Aug 01 08:59:33 quark kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > Aug 01 08:59:33 quark kernel: CR2: 0000000000000008 CR3:
-> > > 0000000117250000 CR4: 0000000000350ef0
-> >
-> >
-> > this seems to be exactly the same error as I had (It can also be actively
-> > provoked by "nmcli radio wifi off"), but in my case commit 479ffee68d59c599 is
-> > enough to fix the issue. Can you please double check that your faulty kernel
-> > does not include this commit. If it does and you still get the error I can post
-> > the fix to the list.
-> >
-> > Bert Karwatzki
 >
-> 479ffee68d59c599 isn't enough to fix it here, I've been applying the
-> second patch since it was pointed out
+>
+> > Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.com> =
+w dniu 27.08.2024, o godz. 20:48:
+> >
+> > On Sun, Aug 25, 2024 at 9:24=E2=80=AFAM Piotr Oniszczuk
+> > <piotr.oniszczuk@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >>> Wiadomo=C5=9B=C4=87 napisana przez Pedro Falcato <pedro.falcato@gmail=
+.com> w dniu 25.08.2024, o godz. 17:05:
+> >>>
+> >>> Also, could you try a memtest86 on your machine, to shake out potenti=
+al hardware problems?
+> >>
+> >>
+> >> I found less time consuming way to trigger issue: 12c24t cross compile=
+ of llvm with =E2=80=9Eonly 16G=E2=80=9D of ram - as this triggers many hea=
+vy swappings (top swap usage gets 8-9G out of 16G swap part)
+> >>
+> >> With such setup - on 6.9.12 - i=E2=80=99m getting not available system=
+ (due cpu soft lockup) just in 1..3h
+> >> (usually first or second compile iteration; i wrote simple scrip compi=
+ling in loop + counting interations)
+> >
+> > Are we sure that the soft lockup problem is related to the originally
+> > reported problem? It seems like in v6.10 you hit a BUG in zswap
+> > (corruption?), and in v6.9 you hit a soft lockup with a zswap lock
+> > showing up in the splat. Not sure how they are relevant.
+>
+> If so then i=E2=80=99m interpreting this as:
+>
+> a\ 2 different bugs
+>
+> or
+>
+> b\ 6.10 issue is result of 6.9 bug
+>
+> In such case i think we may:
+>
+> 1. fix 6.9 first (=3Dget it stable for let say 30h continuous compil.)
+> 2. apply fix to 6.10 then test stability on 6.10
+>
+> >
+> > Is the soft lockup reproducible in v6.10 as well?
+> >
+> > Since you have a narrow window (6.8.2 to 6.9) and a reproducer for the
+> > soft lockup problem, can you try bisecting?
+> >
+> > Thanks!
+>
+>
+>
+> May you pls help me with reducing amount of work here?
+>
+> 1. by narrowing # of bisect iternations?
 
-Sorry I've gotten myself confused as the patches changed
+My information about the good (v6.8) and bad (v6.9) versions come from
+your report. I am not sure how I can help narrow down the number of
+bisect iterations. Do you mind elaborating?
 
-My kernel with
-6557a28f3e3a54cff4f0dcdd1dfa649b26557ab3
-479ffee68d59c599f8aed8fa2dcc8e13e7bd13c3
+> On my side each iteration is like
+> -build arch pkg
+> -install on builder
+> -compile till first hang (2..3h probably for bad) or 20h (for good)
+> this means days and i=E2=80=99m a bit short with time as all this is my h=
+obby (so competes with all rest of my life...)
+>
+> or
+>
+> 2. Ideally will be to have list of revert 6.9 commit candidates (starting=
+ from most probable falling commit)
+> i=E2=80=99ll revert and test
 
-Is enough to fix things
+Looking at the zswap commits between 6.8 and 6.9, ignoring cleanups
+and seemingly irrelevant patches (e.g. swapoff fixups), I think the
+some likely candidates could be the following, but this is not really
+based on any scientific methodology:
 
-I've been applying  the old fix on top which was only applying
+44c7c734a5132 mm/zswap: split zswap rb-tree
+c2e2ba770200b mm/zswap: only support zswap_exclusive_loads_enabled
+a230c20e63efe mm/zswap: zswap entry doesn't need refcount anymore
+8409a385a6b41 mm/zswap: improve with alloc_workqueue() call
+0827a1fb143fa mm/zswap: invalidate zswap entry when swap entry free
 
-@@ -1206,6 +1206,9 @@ static void mt7921_ipv6_addr_change(struct
-ieee80211_hw *hw,
-               },
-       };
+I also noticed that you are using z3fold as the zpool. Is the problem
+reproducible with zsmalloc? I wouldn't be surprised if there's a
+z3fold bug somewhere.
 
-+       if (!mvif->phy)
-+               return;
-+
-       read_lock_bh(&idev->lock);
-       list_for_each_entry(ifa, &idev->addr_list, if_list) {
-               if (ifa->flags & IFA_F_TENTATIVE)
-
-Casing it to be rebuilt each time
+>
+> i=E2=80=99ll really appreciate help here=E2=80=A6.
+>
