@@ -1,157 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AAD1AF4F0;
-	Fri, 30 Aug 2024 13:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4A1135417;
+	Fri, 30 Aug 2024 16:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725026148; cv=none; b=TdYqi74TOmRiB0O91oCAXnWMU09JgkEaQNQyy5eMws6guuZRZATPRS3g8ZV/fTNOcY5Z/eUQs++bTDEkko2oW7UEbB1Sq8PTEr6bPm17tWcGKIr2LABVXlt2uAYOX3X0x/dN4c2QvKWvYMUXWtCGQbtNhinbPDaxaMWNK/gToJM=
+	t=1725036431; cv=none; b=TtQJhMCXIUbAbfE45dy53vKnAC9/2N5SJ/TCchN1bNwCIu1ZPBOcfpUz2OyyP0nycV3ZmTWdUWDuAD8C096YlZIMpaQ5+amuZiT2DYqGPf5YB6ASictz7Lyxp4hLhuuZhFb7HbIIfwgn+GBAJuZd2fGsdnFmqmmLTtxsuFE8oOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725026148; c=relaxed/simple;
-	bh=R3wAHtlfT8KFaILLRqz1y1wT9mdP442l/JWdmVOnTaI=;
+	s=arc-20240116; t=1725036431; c=relaxed/simple;
+	bh=SQ9lisFf3o2BYvsuSUZxqA756vneQkERg1IHs9y7+2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWKZCYzLzZvn37+hwGtR3y/994Rz66gMOf1DNW85YtiR23Kf6YF5jusJnldz8AUtAONvnCpl55jh2mricRWTBDNeDodd63E40JDjJKrnNj48X4yPMfJrU6OftlKq3RL7uJrAGpWisiLD2J6UwYnzr0ycXeJkSgrai4IR2Ld93oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SNYhTBDy; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q25TmDs9nnk3XnXOZ26BG9O40rOx/2qrB/7kMCoTTracjAMVpI51Betp4IzIfcXdzuBvPmNXNO21OMzftTd71q/ueTGn+4hARR3nMWANkqIWO9SluU42tkouIOvEuxdtniGeC5hLhrnGWTByOnfOEZtP0gocBbfySaMxpyRvbGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJH3CHZ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SNYhTBDy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1725026144;
-	bh=R3wAHtlfT8KFaILLRqz1y1wT9mdP442l/JWdmVOnTaI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJH3CHZ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6259CC4CEC2;
+	Fri, 30 Aug 2024 16:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725036431;
+	bh=SQ9lisFf3o2BYvsuSUZxqA756vneQkERg1IHs9y7+2U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SNYhTBDyuS+8t6UKhFeHUgS5dRK2aa1vij2rxuhiC/o1Jh259p1K87AAWcJGCytVd
-	 7dBWl+qE7R6SpWXkIpd9IFrV2wTLZaCXoXe92nEcyh5LT9r+rv0TOnMiYpMkFKAHct
-	 9PiFiXrXDw1ov/IvgzUninazSonCyyHfnqbI5IhS1UT1ZkTxNDcc0RvOzBM9TU4k8k
-	 FgX363YP8E6VhdS5Kz0sksmeePw5Wlwzy5rz9CRtp7Au30dLx0B8jNZfCO3dieDwx1
-	 noZ3aHklR+3qjnqwqMzZVjnMJs+seW93iRl8OZLi7V126iEP03s1IngnosvGnuGPBK
-	 V/PqTnwyAqR+w==
-Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 399EF17E1047;
-	Fri, 30 Aug 2024 15:55:43 +0200 (CEST)
-Date: Fri, 30 Aug 2024 09:55:41 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
-	regressions@lists.linux.dev, kernelci@lists.linux.dev,
-	kernel@collabora.com
-Subject: Re: [PATCH v3 00/14] thermal: Rework binding cooling devices to trip
- points
-Message-ID: <42f62311-b541-4b0f-8b90-ca1a5dfe1e6c@notapiano>
-References: <2205737.irdbgypaU6@rjwysocki.net>
- <ff528ebb-2c09-4b03-a641-4a306b31ff62@notapiano>
- <CAJZ5v0gjt3ptZ8=qJcXagZfXrJbpcz7nDwZxRvg50PytdNScRQ@mail.gmail.com>
+	b=tJH3CHZ5gvbxgDXWGNcfzdnvIvn8SjQVjbZCguHKlh7jlJEWllIn2YJ0z6MkikHoO
+	 1LCaCYw4Us647LL95BmKualhQ9e7L7zfD1MIijQegb2T8R70/Dvz5pl5DJ6HwHivmn
+	 saeq9Hsaj9k5f0cvorRJxsJRaTQXqA2ByduO/L0Kt3SS06DyOM7H5t4o7kDepaFsK0
+	 fQghHCtIcO9hnUjmFZNI907G0Mk+qonm5jg7RnP9FsKFdY3gRoOeO8cTjdKih/+OHq
+	 xFLbRU/9s8Arpi5e7UVLS+JKydUnvZNVp9EV50SrgT1TNJ+pbl44qiJXcjqLp1riBn
+	 Z+021KZnlApcw==
+Date: Fri, 30 Aug 2024 17:47:06 +0100
+From: Simon Horman <horms@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: clang-built-linux <llvm@lists.linux.dev>,
+	Netdev <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Florian Westphal <fw@strlen.de>,
+	Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: net/xfrm/xfrm_policy.c:1286:8: error: variable 'dir' is
+ uninitialized when used here [-Werror,-Wuninitialized]
+Message-ID: <20240830164706.GW1368797@kernel.org>
+References: <CA+G9fYtemFfuhc7=eNyP3TezM9Euc8sFtHe4GDR4Z9XdHzXSJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gjt3ptZ8=qJcXagZfXrJbpcz7nDwZxRvg50PytdNScRQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYtemFfuhc7=eNyP3TezM9Euc8sFtHe4GDR4Z9XdHzXSJA@mail.gmail.com>
 
-On Mon, Aug 26, 2024 at 11:58:12AM +0200, Rafael J. Wysocki wrote:
-> On Sat, Aug 24, 2024 at 8:45 PM Nícolas F. R. A. Prado
-> <nfraprado@collabora.com> wrote:
-> >
-> > On Mon, Aug 19, 2024 at 05:49:07PM +0200, Rafael J. Wysocki wrote:
-> > > Hi Everyone,
-> > >
-> > > This is one more update of
-> > >
-> > > https://lore.kernel.org/linux-pm/3134863.CbtlEUcBR6@rjwysocki.net/#r
-> > >
-> > > the cover letter of which was sent separately by mistake:
-> > >
-> > > https://lore.kernel.org/linux-pm/CAJZ5v0jo5vh2uD5t4GqBnN0qukMBG_ty33PB=NiEqigqxzBcsw@mail.gmail.com/
-> > >
-> > > and it has been updated once already:
-> > >
-> > > https://lore.kernel.org/linux-pm/114901234.nniJfEyVGO@rjwysocki.net/
-> > >
-> > > Relative to the v2 above it drops 3 patches, one because it was broken ([04/17
-> > > in the v2), and two more that would need to be rebased significantly, either
-> > > because of dropping the other broken patch or because of the recent Bang-bang
-> > > governor fixes:
-> > >
-> > > https://lore.kernel.org/linux-pm/1903691.tdWV9SEqCh@rjwysocki.net/
-> > >
-> > > The remaining 14 patches, 2 of which have been slightly rebased and the rest
-> > > is mostly unchanged (except for some very minor subject and changelog fixes),
-> > > is not expected to be controversial and are targeting 6.12, on top of the
-> > > current linux-next material.
-> > >
-> > > The original motivation for this series quoted below has not changed:
-> > >
-> > >  The code for binding cooling devices to trip points (and unbinding them from
-> > >  trip point) is one of the murkiest pieces of the thermal subsystem.  It is
-> > >  convoluted, bloated with unnecessary code doing questionable things, and it
-> > >  works backwards.
-> > >
-> > >  The idea is to bind cooling devices to trip points in accordance with some
-> > >  information known to the thermal zone owner (thermal driver).  This information
-> > >  is not known to the thermal core when the thermal zone is registered, so the
-> > >  driver needs to be involved, but instead of just asking the driver whether
-> > >  or not the given cooling device should be bound to a given trip point, the
-> > >  thermal core expects the driver to carry out all of the binding process
-> > >  including calling functions specifically provided by the core for this
-> > >  purpose which is cumbersome and counter-intuitive.
-> > >
-> > >  Because the driver has no information regarding the representation of the trip
-> > >  points at the core level, it is forced to walk them (and it has to avoid some
-> > >  locking traps while doing this), or it needs to make questionable assumptions
-> > >  regarding the ordering of the trips in the core.  There are drivers doing both
-> > >  these things.
-> > >
-> > > The first 5 patches in the series are preliminary.
-> > >
-> > > Patch [06/14] introduces a new .should_bind() callback for thermal zones and
-> > > patches [07,09-12/14] modifies drivers to use it instead of the .bind() and
-> > > .unbind() callbacks which allows them to be simplified quite a bit.
-> > >
-> > > The other patches [08,13-14/14] get rid of code that becomes unused after the
-> > > previous changes and do some cleanups on top of that.
-> > >
-> > > The entire series along with 2 patches on top of it (that were present in the
-> > > v2 of this set of patches) is available in the thermal-core-testing git branch:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=thermal-core-testing
-> > >
-> > > (note that this branch is going to be rebased shortly on top of 6.11-rc4
-> > > and the thermal control material in linux-next).
-> > >
-> > > Thanks!
-> >
-> > Hi,
-> >
-> > KernelCI has identified a boot regression originating from this series. I've
-> > verified that reverting the series fixes the issue.
-> 
-> Thanks for the report!
-> 
-> There was a bug in the original patch [12/14] that would cause
-> symptoms like what you are observing to appear, which was reported on
-> Friday and has since been fixed in the tree.  Please see:
-> 
-> https://lore.kernel.org/linux-pm/CAJZ5v0iw7uXE_cfU5VXOjFDg9GM8Hu0+hKxqfzU3v0OM5KK9oQ@mail.gmail.com/
-> 
-> You probably have not tested the fixed tree yet, so please let
-> kernelci run again on it and if the issue is still there, please let
-> me know.
++ Florian, Steffen
 
-Indeed it has been fixed.
+On Fri, Aug 30, 2024 at 12:15:10PM +0530, Naresh Kamboju wrote:
+> The x86_64 defconfig builds failed on today's Linux next-20240829
+> due to following build warnings / errors.
+> 
+> Regressions:
+> * i386, build
+>   - clang-18-defconfig
+>   - clang-nightly-defconfig
+> 
+> * x86_64, build
+>   - clang-18-lkftconfig
+>   - clang-18-lkftconfig-compat
+>   - clang-18-lkftconfig-kcsan
+>   - clang-18-lkftconfig-no-kselftest-frag
+>   - clang-18-x86_64_defconfig
+>   - clang-nightly-lkftconfig
+>   - clang-nightly-lkftconfig-kselftest
+>   - clang-nightly-x86_64_defconfig
+>   - rustclang-nightly-lkftconfig-kselftest
+> 
+> first seen on next-20240829.
+>   Good: next-20240828
+>   BAD:  next-20240829
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> build log:
+> --------
+> net/xfrm/xfrm_policy.c:1286:8: error: variable 'dir' is uninitialized
+> when used here [-Werror,-Wuninitialized]
+>  1286 |                 if ((dir & XFRM_POLICY_MASK) == XFRM_POLICY_OUT) {
+>       |                      ^~~
+> net/xfrm/xfrm_policy.c:1257:9: note: initialize the variable 'dir' to
+> silence this warning
+>  1257 |         int dir;
+>       |                ^
+>       |                 = 0
+> 1 error generated.
 
-#regzbot fix: 'thermal/of: Use the .should_bind() thermal zone callback'
+I believe that is due to
+commit 08c2182cf0b4 ("xfrm: policy: use recently added helper in more places")
 
-Thanks,
-Nícolas
+I will work on a fix to initialise dir in the loop where it is used.
