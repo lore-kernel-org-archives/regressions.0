@@ -1,132 +1,86 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8E714A60D
-	for <regressions@lists.linux.dev>; Fri, 30 Aug 2024 06:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C36170A30
+	for <regressions@lists.linux.dev>; Fri, 30 Aug 2024 09:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725000324; cv=none; b=tp0FdRWUfMXJBbwbHDiczv5GBzjhl46+D0hVgtXJnn9pyf2tfy9Mu8X6DyTlDzvBXzMsgsPRuIAsEPmGudgXm6DJjFkQbOwi0zP0zI/ZnAIoH099ZlpkaFLWJFVMEjP0Xe1WSyXDFGEYV97OFR06VqRBjOvOFOTI1rOme4L8TXU=
+	t=1725011955; cv=none; b=Sbi3GxEA+GBESqQU4PWYiH2vSOu/4yhDzXyXw74JXU/lm6EmPW9u0AQ5dlH/iKtwuMC/ARh7yO/Bt/U+0XPeCVtPN6QR//3TC0U5O/rewCV6MGfDS7biRfQt1In68Zh/qWraxdU7Dt5JgObElNx9rP6y8gyYfq99iWTdt4kBkTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725000324; c=relaxed/simple;
-	bh=z2tMGYCX6QIF8USqnak/joMuhfj1TNUKUkBSSXPLdCM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hhu3obWsCgQV88E1ZmiqEjyinDgI8mEkS7UZd227OOvXKjSDTwsj0TQPeUg4Bh89qJETPixbmzJ895AuxfKqx8KQ4bAqELW75bX0/IoGXlkRhb0n9GTefaLS95GxUlM8C7pSdo/F5OZTP5ARvyayzLOv5vgfeGXeKmImJKPRNW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FDe9Ang4; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1725011955; c=relaxed/simple;
+	bh=GhUkPtGh4hCWF95Vf3OZ6WpLBQi9q6Zbp7kFoMZxVM0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=MHZMAV8oSdwTuRYcoB8sxK8y7sLfLp2Z41iBjkhQk7kWqfq4JFQWT1LqHvd0rWwvqSRQJ1Btwg5CXJVYcAJINCILj8rkXws2OTCafTb9a3DyFss9rqQAsGxyOezXFoHrNrW74puHUZ37/9WUVvbpQP81CZtcBsRAlrkswpcZN7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Fz+a5W+4; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDe9Ang4"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-498d0c68a14so506114137.0
-        for <regressions@lists.linux.dev>; Thu, 29 Aug 2024 23:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725000322; x=1725605122; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rbpFfZAAGy+MvWzUwDXlPYpxkRy+IDxVTjCRFwW+Hxg=;
-        b=FDe9Ang4AlU1ZQry/RdZ30cYG4JOlN/G5PQmCvByuRyj+Pd7PBS1k3X/kxcZBDeHjs
-         7Wu/uPx4RFBOzEn8f8nsYv4U2Gaj2k05xbsmdjM4126Zh1yYiOx3cFA9k+eKyX+vAjKi
-         sR4CRZY9YS0tp/DjNpK5SqYTG6Ir1Nd1zuhGUv4GWECQL1sv56/8I7WNQ44nivAgnOtp
-         MIIiBHCcMFsSrKh0dtOapmm5D2ElHsAsOGo4qa0J6GYPOi/LO/SWKmL7hYaapYv66aJW
-         /mgBH+2jmWhXJZR4HV0J3xoQ/giaEoi4ux1MF2kCj/3/+xEJO09R/2CZTvOAMnrbPd9a
-         q+Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725000322; x=1725605122;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rbpFfZAAGy+MvWzUwDXlPYpxkRy+IDxVTjCRFwW+Hxg=;
-        b=GMIs+czy/y1H6kQJhTlFqHLFGAU9gDSGk+gTz4jlhnOpmN7m9b/CPu6cp8gWkZ441A
-         r5a9qTgubxwnU7nPp/lPUz0GMyT3QGSuW0Oux5pZhi/AKi5C17vTTlxHeCBOO3Vq/nV+
-         j421/1cDVM9TRsqA+uLKjFhqMBrt3K17CVWwmOLCA+XgrrK5RpZ/KHqDr2dA64ZbmoF5
-         JK/58zgMNXUzFgt9D8LuNwMfcbCJq4lG7pAUYXB9bZduBNaQ7LsyeV0xCIbzlVBdueaR
-         YA93rVhuAU9fRNFBMUlESsywHtqYl5aH0ogCpYSzx3TxThSbbM2rz2sWIgA6fNlaAwN1
-         1HNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPqb8/T1AXr5Sqo8hRzL0PoSd+1LXC26rcLpDJHl75zjnGW10SQ0HLEXoytAFmrEZeGwcm9o+XFjkYPQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzsQez1+GIOK50NNRw19wdvq5HqUrGv6OMP/uInXI6xUanp/wLR
-	LIB2IGAqV+GBOCDDsFjXtJ6F9qeeWAAje/K7vASCVxpsvlodqnFmnWPboJnASuua4Pa6nagNPmq
-	AdGfEn09p9TR2lXi4oJF0R+277cMun2ESDkyswg==
-X-Google-Smtp-Source: AGHT+IGjtT+iRsWBRGw877rPBsoWnB7aehlawvTFpCsFP81H03YlByPMlEYvHuWNIHaoPnc0CqKmfajXR5onhPoZMMU=
-X-Received: by 2002:a05:6102:3754:b0:498:ccd9:5b1e with SMTP id
- ada2fe7eead31-49a5b017424mr6994044137.4.1725000321654; Thu, 29 Aug 2024
- 23:45:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Fz+a5W+4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=GhUkPtGh4hCWF95Vf3OZ6WpLBQi9q6Zbp7kFoMZxVM0=; t=1725011953;
+	x=1725443953; b=Fz+a5W+4D9j2PzYDOeBvs5sJSTr+jLrzn8YTt5LyApkX67m3Ki3xkYYZ1w64b
+	SnxeV2wQdCsFPB4i13JJCd79j0vm6R0yw8tNrC6l/JOLiZnZsYcEvuQ+16tSR+bqCnp+4V6gaTxzu
+	R2XHkKrZrENMWEsa9gGTFu/do9knLZOCHs8k4vKxj4kpW+/gZOKOwaV71Ljg5WA6dvqwsLR8hM3U/
+	VSbGaYO/ilB02c0Hf05agifqKU7yWW+e4Ao8JbXI6u1pRPXnFZ9LZMSOyn2MIgcUwwJGtVvRjgwk0
+	RXjkfT3Rvs9PH/rbhkmZO8LJvi5M3yIBoIJiwEWOktkQMa1DuQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sjyPP-00046d-4i; Fri, 30 Aug 2024 11:59:11 +0200
+Message-ID: <7b8cb62f-78fd-43c8-b6c5-683927b62757@leemhuis.info>
+Date: Fri, 30 Aug 2024 11:59:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 30 Aug 2024 12:15:10 +0530
-Message-ID: <CA+G9fYtemFfuhc7=eNyP3TezM9Euc8sFtHe4GDR4Z9XdHzXSJA@mail.gmail.com>
-Subject: net/xfrm/xfrm_policy.c:1286:8: error: variable 'dir' is uninitialized
- when used here [-Werror,-Wuninitialized]
-To: clang-built-linux <llvm@lists.linux.dev>, Netdev <netdev@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725011953;3af56bb0;
+X-HE-SMSGID: 1sjyPP-00046d-4i
 
-The x86_64 defconfig builds failed on today's Linux next-20240829
-due to following build warnings / errors.
 
-Regressions:
-* i386, build
-  - clang-18-defconfig
-  - clang-nightly-defconfig
 
-* x86_64, build
-  - clang-18-lkftconfig
-  - clang-18-lkftconfig-compat
-  - clang-18-lkftconfig-kcsan
-  - clang-18-lkftconfig-no-kselftest-frag
-  - clang-18-x86_64_defconfig
-  - clang-nightly-lkftconfig
-  - clang-nightly-lkftconfig-kselftest
-  - clang-nightly-x86_64_defconfig
-  - rustclang-nightly-lkftconfig-kselftest
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-first seen on next-20240829.
-  Good: next-20240828
-  BAD:  next-20240829
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219193
+#regzbot introduced: 1965dbd535eec6
+#regzbot summary: drm/i915/bios: HDMI pass through broke
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+#regzbot report:
+https://lore.kernel.org/all/20240621010713.cyai3pkucbp7v7r5@master/
+#regzbot introduced: 721f4a6526da
+#regzbot summary: microblaze: qemu images fail to boot
+#regzbot fix: microblaze: don't treat zero reserved memory regions as error
+#regzbot monitor:
+https://lore.kernel.org/all/20240729053327.4091459-1-rppt@kernel.org/
 
-build log:
---------
-net/xfrm/xfrm_policy.c:1286:8: error: variable 'dir' is uninitialized
-when used here [-Werror,-Wuninitialized]
- 1286 |                 if ((dir & XFRM_POLICY_MASK) == XFRM_POLICY_OUT) {
-      |                      ^~~
-net/xfrm/xfrm_policy.c:1257:9: note: initialize the variable 'dir' to
-silence this warning
- 1257 |         int dir;
-      |                ^
-      |                 = 0
-1 error generated.
+#regzbot report:
+https://lore.kernel.org/all/314ee964-fe3f-4b4a-b83f-76ed6e6e16dd@roeck-us.net/
+#regzbot link:
+https://lore.kernel.org/all/b2214bff-aeae-44f9-9b14-4ddaec1456bc@roeck-us.net/
+#regzbot fix: Revert "MIPS: csrc-r4k: Apply verification clocksource flags"
 
-Build Log links,
---------
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240829/testrun/24977652/suite/build/test/clang-18-lkftconfig/log
-
-Build failed comparison:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240829/testrun/24977652/suite/build/test/clang-18-lkftconfig/history/
-
-metadata:
-----
-  git describe: next-20240829
-  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git sha: b18bbfc14a38b5234e09c2adcf713e38063a7e6e
-  kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2lKF49FRX1FB3IVv46cfZc30s9y/config
-  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2lKF49FRX1FB3IVv46cfZc30s9y/
-  toolchain: clang-18 and clang-nightly
-  config: defconfig
-
-Steps to reproduce:
----------
- - tuxmake --runtime podman --target-arch x86_64 --toolchain clang-18
---kconfig defconfig LLVM=1 LLVM_IAS=1
-
---
-Linaro LKFT
-https://lkft.linaro.org
+#regzbot report:
+https://lore.kernel.org/all/20240808155931.1290349-1-linux@roeck-us.net/
+#regzbot introduced: 4d944bcd4e73
+#regzbot link:
+https://lore.kernel.org/all/b2214bff-aeae-44f9-9b14-4ddaec1456bc@roeck-us.net/
+#regzbot summary: apparmor: policy_unpack_test fails on big endian systems
+#regzbot fix: apparmor: fix policy_unpack_test on big endian systems
