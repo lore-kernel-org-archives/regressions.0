@@ -1,114 +1,98 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BFA3611B
-	for <regressions@lists.linux.dev>; Sat, 31 Aug 2024 17:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB04A1B;
+	Sun,  1 Sep 2024 09:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725125056; cv=none; b=EcQgAPLso9Pta+8hINj44jD8RQ9Hm20/njo4ztLm3YLAqNzLTMLpdsBx1V/BGhGoDN0xmzA4vutJ9dZHYHaH5s0j6Yp/HM12Hp8qrUfDTAoqm8WgimaQr9sYLKMmhqiIwVLRIbbiITrNyG3ERcGe6Ofllq9KLTYjayNVZDqbYYY=
+	t=1725181939; cv=none; b=V0wkBXRTRckpO/yVurQFWFuBYLLdyhDD61f1+9izcJgnw/QTO4e68MP5i9BEu9KKWbRZUQNzWHk8g/TD8XaJ9ja5IZ1YN2dOKe4aV+AnIXuF5cCiiK3k0REcXG2n9kE8gRB46jqSQhd2I4mR6NxSboljWegLbWostvq/Zuzj0Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725125056; c=relaxed/simple;
-	bh=tJ0q3A8yy2y2YLXIJl/X+ha9pJWcwR/K2EInEsg7cEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NgXYrKNyhSwzwXFWwAqcpUE4Vlc8/G5+54dW62auhfe0eTvBQLvdKKqV11YvkbPjKxxtb0/Ie83mFqx236dhAurAXiN1zWbHKJHCjMMoyFm/5Zr83HLYn72hqck8n+7Bi4lrviAYHtf+GsCcPJxP6W5D/t6GoT0waWwaO0yVtGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A72/Vn/s; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725181939; c=relaxed/simple;
+	bh=vhbxosuo5ppzs+Cd1QVJhsR1FrFtWypTTMALXVWUgLQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=smogtzTczgSW6HofVf0scSqnVCU9W9LuhfA5KOlrfek8jSS05Hgi6m56bsdp2KrNdCYSRmOp28PmcvKkcoMo0eEWivUasaaU9l2l/NEfIjPLA12PmSWoFmhybDyHGOLv9nVTB6PcXXj4+MO7uAmQhjjsNdH2MceJ5jBmV20iPkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbvmsaGp; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A72/Vn/s"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-533488ffaddso3600392e87.1
-        for <regressions@lists.linux.dev>; Sat, 31 Aug 2024 10:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725125053; x=1725729853; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tJ0q3A8yy2y2YLXIJl/X+ha9pJWcwR/K2EInEsg7cEc=;
-        b=A72/Vn/sThAgRBP8I6fzEzTyKnsJewfpUxqVTmuh12XqHQx2M/ENYJBXrM00y5NZrO
-         fUjXeLYR96RCjYTdum0WviicgRXMbQDdIUVibQ26AuDyfVGGQUL5AH26cneBHVdffZpG
-         6SmJAdNBG4f7KwUI2o3XO/g4W5sIQmnTcuFoc+L23GaGhfTAm4O28ZQDDo31wRq4qNkc
-         wSQ71V43i6T1bwWko8Ohk72qnJSXDLMltsxrryrRZo6cT65Tx9TSf1+nE5vUCLAbwG7P
-         LnXWFANY/RGmyYm3IkE5p2+I11GSDSKRCo5wVJQw3KEYeCEhx99jBj13F+CtieNsgoZ8
-         0f9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725125053; x=1725729853;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tJ0q3A8yy2y2YLXIJl/X+ha9pJWcwR/K2EInEsg7cEc=;
-        b=jl9FauM7FfV8QW4I1WU9rv3lhDEzUfT605N/EiaiFYCRz5LJSUg50KqJnqJEFP/Wk6
-         w7DlCh1Nf3VuQWcKzlVXAGFi2HN9VEFCpn3bS9aoreZ9gPJeNVzZ/wZw+tfNNjCqvN+X
-         dJIViop3a0AxoMDJnfEd2D1EIMOIkE+gzXZgr40gl2dX7Cd2O9xIrxdk4ZebKvPpCs3a
-         YnW5DWd+H86Pvswboccz9hlKXvspzCoxvXp3ITlR+zIyG702H4malfgUpp6bGCEOf2P+
-         76KVTrtmQuCKkRDw/8Wy4DpNSLmQqWkHM7igrz4zmqjOoyXGEFwfOQ6N/W7KCMI/lpnD
-         Cgnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVp+HW3crjDFQt+hlIPXnNNpH6V3r+va+ojaRT9y6WMKZTdBk4xiIE7sMbXWMZk68Rk6SyiAcQrJAyMNQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz9qwFuOVWEzmGGZZtQm9/wes//V7CZd3+MtCJ7XQaCPikzH8ln
-	YGM7UEeftDumxePdnhuc6KSmwOXAdlDCOnHd5O/zseIBIuTpPgBBCj/mFsKrYSkUES6pHWQBPaO
-	pYQZ+2l0jt+8zvJYk0dVCMZFWha+KYtPUVieQ
-X-Google-Smtp-Source: AGHT+IENOBv8ACP6pLwuBirQULXM9TviCCKNyK0x9JmgMxPue2KVMRZODUSGaPP7Lrc4yxsEDKLzCVwVf/Ky6/MHkV0=
-X-Received: by 2002:a05:6512:b9b:b0:52f:cdf3:2934 with SMTP id
- 2adb3069b0e04-53546afa392mr4822016e87.8.1725125052523; Sat, 31 Aug 2024
- 10:24:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbvmsaGp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725181938; x=1756717938;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vhbxosuo5ppzs+Cd1QVJhsR1FrFtWypTTMALXVWUgLQ=;
+  b=RbvmsaGp1Bnho58b3b+RPQKwnPc0XlyofsA5VYeZfi9Qvw4lN0fnx3P1
+   SwY9OqbvaxCRoHMksHq+kRxqD6OVICiACsbMM/cYCXv28Twawmxb5MHfv
+   79OQ+2aAzh9IZkJee5tJJ1EjmfZJk1vmSU1+kim7cWwX80UNowJKLrDJs
+   VGV5qC9suj/qsYn8CqyrirTATUZb+O4X/q1VF+YfEujUUkCuR1FliG5ft
+   4NkeXsSSORDYtH+/nQNWKa22rJU3PK0ftKVHdZLe9Z+ZZ7Hu0KGniYKrR
+   EACo9ek+4g/GaMl0JoLJ7msUunsyROXp52Inc5UkrVU1ASgwZFena8J/i
+   g==;
+X-CSE-ConnectionGUID: PDklBp9WRn69wGjmh9cQGw==
+X-CSE-MsgGUID: uZkMRB1VQeep8N3PHjp2Pg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11181"; a="41255345"
+X-IronPort-AV: E=Sophos;i="6.10,193,1719903600"; 
+   d="scan'208";a="41255345"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2024 02:12:17 -0700
+X-CSE-ConnectionGUID: y+ZH+4fGRbeU3GeLx6KDtg==
+X-CSE-MsgGUID: wH0QC7YrRkWPjftf2f6bZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,193,1719903600"; 
+   d="scan'208";a="87554229"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.240.228]) ([10.124.240.228])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2024 02:12:15 -0700
+Message-ID: <b909bc01-327a-427b-9900-8f324a229770@linux.intel.com>
+Date: Sun, 1 Sep 2024 17:12:12 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com> <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
- <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com> <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
- <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com> <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
- <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com> <CAJD7tkZ01PPYMzcTyX_cwr836jGonJT=fwT3ovc4ixW44keRgg@mail.gmail.com>
- <277CDE7C-7ED8-4840-9C30-533C9327B028@gmail.com>
-In-Reply-To: <277CDE7C-7ED8-4840-9C30-533C9327B028@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Sat, 31 Aug 2024 10:23:36 -0700
-Message-ID: <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Will Deacon <will@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Joerg Roedel <joro@8bytes.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Adam Williamson <awilliam@redhat.com>
+Subject: Re: [regression] usb and thunderbould are misbehaving or broken due
+ to iommu/vt-d change
+To: "Tian, Kevin" <kevin.tian@intel.com>, Markus Rathgeb <maggu2810@gmail.com>
+References: <c844faa0-343a-46f4-a54f-0fd65f4d4679@leemhuis.info>
+ <BN9PR11MB5276CA2E1922D9FD6B9F2ECF8C962@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <CAOcK=CN3-v=dgMC9XTbh-h0zaD01uatOZKjvSF7ocofTCOGp7Q@mail.gmail.com>
+ <CAOcK=CPi1TokgySF77X+zuQ10kxfsfCXekYVanPhF51+Ow1XRg@mail.gmail.com>
+ <CAOcK=CM4Poawy2AN3f6C2ooPdoT=dg4J9Bg1Fu=gsFjvkrBpQw@mail.gmail.com>
+ <CAOcK=COEd0njBPGhJ8idaLbaqvATr_zSB1O9dyzwi+fbU8GhqA@mail.gmail.com>
+ <BN9PR11MB5276F533DC882B182F1A4C268C972@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276F533DC882B182F1A4C268C972@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 31, 2024 at 2:41=E2=80=AFAM Piotr Oniszczuk
-<piotr.oniszczuk@gmail.com> wrote:
->
->
->
-> > Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.com> =
-w dniu 29.08.2024, o godz. 23:54:
-> >
-> > I also noticed that you are using z3fold as the zpool. Is the problem
-> > reproducible with zsmalloc? I wouldn't be surprised if there's a
-> > z3fold bug somewhere.
-> >
->
-> Hmm - yesterday i recompiled 6.9.12 with zsmalloc and =E2=80=A6. after 16=
-h of continuous tests I can=E2=80=99t reproduce issue.
-> With zsmalloc 6.9.12 looks to me like stable.
+On 2024/8/30 8:29, Tian, Kevin wrote:
+>> From: Markus Rathgeb<maggu2810@gmail.com>
+>> Sent: Thursday, August 29, 2024 4:34 PM
+>>
+>> With respect to my previous comment I tested to fix it myself (I am
+>> not a kernel hacker and do not know anything about iommu etc.).
+>>
+>> After applying the following change to the v6.11-rc5 it seems to fix my
+>> problem.
+>> I can connect, disconnect and connect the dock and USB is working and
+>> no DMAR error.
+>>
+> as said there was already a fix posted which is similar to below:
+> 
+> https://lore.kernel.org/linux-iommu/20240815124857.70038-1-baolu.lu@linux.intel.com/
 
-Interesting, and a little bit what I hoped for tbh.
+Above patch has been merged in v6.11-rc6. Please try the latest kernel
+version.
 
->
-> With this - what will be your advice to move forward?
-
-Well, it's possible that some zswap change was not fully compatible
-with z3fold, or surfaced a dormant bug in z3fold. Either way, my
-recommendation is to use zsmalloc. I have been trying to deprecate
-z3fold, and honestly you are the only person I have seen use z3fold in
-a while -- which is probably why no one else reported such a problem.
-
-> Is there any possibility/way to avoid bisecting? (due limited time from m=
-y side)
-
-So unless you have a reason to specifically use z3fold or avoid
-zsmalloc, please use zsmalloc. It should be better for you anyway. I
-doubt that you (or anyone) wants to spend time debugging a z3fold
-problem :)
+Thanks,
+baolu
