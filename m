@@ -1,159 +1,240 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F378186E36
-	for <regressions@lists.linux.dev>; Mon,  2 Sep 2024 08:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893B0181B80;
+	Mon,  2 Sep 2024 12:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725267489; cv=none; b=oOrcbanPojDFP1RmnAgSHH2HxBv5iQ9ib9V57nu5EwOY7iRU6pRr46KlTfarEaTwIiLJTtvZF50t3WAlS/rLgfT/s9ljf9wRolnFj1y4smviV9oedaSGM89vx2lEl4EWoa0VOy0ue9jNk0HrIQ09jckYmgJ3fvzOi4s+mxpPJFE=
+	t=1725281651; cv=none; b=tN/7Xfp7b8adgo/lVxUhSniiaISYI0PQpK3I96xXJAaF0gwBB81KPRAiskWbNpS1dkqHPZYOnjy6sR9KMLhh4bEb7DMBJK9wt6pDelTZ9K75jQ+vRL/HLVeuZJBAiVBjgVSASvYsoH1YBiZWm3rx9iTm6LksvQKo5qO2CxhpIXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725267489; c=relaxed/simple;
-	bh=d2AZu0FgOe8i1cQYkiWwnvAeNAInMNJYhUwoL8TEgHk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Hzb7KJmnAhj5vTsuyY0pi2LYXc7hu1lSIs3FQWHMZb24eNf/rDvoGweugQQH4OIMnb+aigW10hcfjb1zQhkQcP19zx43dh8CtUOIK++e+EiWY11WHMZ6vGbxaasQQCV016UXLeCzBsS97jFgBB1MaPIxDyOdtF5ppHb6w98EfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgYvtOvi; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725281651; c=relaxed/simple;
+	bh=rFQOK6VJteuZXKwiLuPjVYiP9/LxQxEj94oSEVurGjY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g7izKGkGJH/E4krGHl/T2L8nH02bmcuvobWuAUMXACtC3dJA/AVVCEgMSUcEvUjT2ThNzRJJZzVAitPB/WUY2euYD1zGHJ2bIrVErMiC/2d1nRHQS6sji2GEZTl4/jU+4srkctAOTjzgvWAWNeYUvB7ySE+Al42LQ43tUFrtR2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=L/J73pKE; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgYvtOvi"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5334a8a1b07so4793473e87.1
-        for <regressions@lists.linux.dev>; Mon, 02 Sep 2024 01:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725267486; x=1725872286; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d2AZu0FgOe8i1cQYkiWwnvAeNAInMNJYhUwoL8TEgHk=;
-        b=PgYvtOvieWjP/QfWPfXF5a26Q1baJ3YPcOFP7Xb8XKNOBVoUITipoJeDTLt1HMLAhm
-         VZoZdxsWlgciGCYjZaB5GvZjLVfFDwTv/lqpitYybGL2AjkYzZaW1LADcZsVXILBXTjA
-         F38r/9NFDZGnp5I0QoZziCLTswgiAcu+usmhtYpMhkvcbyy+AQcxvRKLxTyRf3/2dn4/
-         OSJfrYIFhByY3K+Co7XOGjwpbB20TZrOt3Z+F+tDdDVTSgL4vB3jwm7LuMIQNN/K6xJd
-         xMwo4aFbdH2wKMB8kJdCYCfDFeDflmLlJE0aobnCfymtiKKo38NuiCm36rVQ8VSJZA9N
-         YLVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725267486; x=1725872286;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d2AZu0FgOe8i1cQYkiWwnvAeNAInMNJYhUwoL8TEgHk=;
-        b=mtzT0XxurglcrDsE06Jyv04WAiNBvTXDl9eqsJoRM82btAS0V6o6VT/WQZgJDx4gTW
-         3VTYkBG5UvnJfFY+D+6914P6Eo2D3k0AXzcHodHucub8ApyS3fost6+nLDnQtfePuhAI
-         zaeYQg3/SjUT9sCqObgiFdPfyH2pFeVg2GQkAm8fSFJJq3efr9Y1MAo1m/4NgM4bkx/Z
-         CemBQjnWjd7TQyx6DkYKZRwyLmGd5SX+Uz1NxRytFKKIAG2GB9PFVsmt+p7xele0PyHA
-         fgCws0TZgce51xm4r20NL0QrdbU6NOBHxqOCIbhpvXWu6UDovKdZqOrxqg9mpe1hBw1C
-         L98w==
-X-Forwarded-Encrypted: i=1; AJvYcCUiHlqW3kLDyPJLD8peJtNljt2f7tea5GJKbQVVPZw6L2LG8j2XiB/nmP4V8cit+KpWnaqWmoFD2xPE2w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnmTh2ffBSvY7uQYUmzKeSDd+WV6BnHV/9qOI6KC3NVYaJim0F
-	TQp2g2UwLrXNBW11KPeQ2IqSfCp0xOwbB/sOKYtCdywE+wNRTOl4
-X-Google-Smtp-Source: AGHT+IFwfYZR2luHOQ+GPhBWgJFUVzn4OSgxSLuQwNZCqivU7rhn+pZVHQZIOy9FQRYEstjwFCb45A==
-X-Received: by 2002:a05:6512:3f11:b0:533:4652:983a with SMTP id 2adb3069b0e04-53546b49f56mr7622865e87.35.1725267486026;
-        Mon, 02 Sep 2024 01:58:06 -0700 (PDT)
-Received: from smtpclient.apple (89-73-96-21.dynamic.chello.pl. [89.73.96.21])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5354084de30sm1524371e87.243.2024.09.02.01.58.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2024 01:58:05 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="L/J73pKE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=SSKrWHfr3RQQxlj73LfGosa+rJRjxqlAnWYQ+2sQHwM=;
+	t=1725281649; x=1725713649; b=L/J73pKEMTny+tWvvZ5T4k0PwUtlJ1YkrVHMW/D1p/8H7qY
+	eatahSeZQl8GNUcNOUL4ACRtuIvqv4S8rGWYI5Jodg1yxHGOFSmYhO5+g8NJp5zz+Ts0rbDYJfZOv
+	cuEXN8TNZnbDuw/F44gH2tkn6Z06VvtnvesgM4fVqC+zLP9golVfY3L7NgbnfkKc2k6XPbQMJgtv2
+	syrsdT9rGKkWJq2QTo9snvYUqmZeNIXoNvYOHCtSy1xbQ45oYpGZoNtxEhsyzrPyZhb3l1BHWZ6Z4
+	sPYbEqsbddN3yAP/i1hDmD9u7RG7zDOgCqxPHIXm2hOSnP6s2ttXdo88PiIzKNPQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sl6ZA-0000Ot-MO; Mon, 02 Sep 2024 14:53:56 +0200
+Message-ID: <56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info>
+Date: Mon, 2 Sep 2024 14:53:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
-Date: Mon, 2 Sep 2024 10:57:50 +0200
-Cc: Pedro Falcato <pedro.falcato@gmail.com>,
- Nhat Pham <nphamcs@gmail.com>,
- Matthew Wilcox <willy@infradead.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Linux-MM <linux-mm@kvack.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmail.com>
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info>
- <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com>
- <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
- <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com>
- <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
- <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com>
- <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
- <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com>
- <CAJD7tkZ01PPYMzcTyX_cwr836jGonJT=fwT3ovc4ixW44keRgg@mail.gmail.com>
- <277CDE7C-7ED8-4840-9C30-533C9327B028@gmail.com>
- <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
-To: Yosry Ahmed <yosryahmed@google.com>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] mm/gup: Clear the LRU flag of a page before adding to
+ LRU batch
+To: Chris Li <chrisl@kernel.org>, Kairui Song <ryncsn@gmail.com>
+Cc: Ge Yang <yangge1116@126.com>, Yu Zhao <yuzhao@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+ Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>,
+ baolin.wang@linux.alibaba.com, liuzixing@hygon.cn,
+ Hugh Dickins <hughd@google.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <1719038884-1903-1-git-send-email-yangge1116@126.com>
+ <CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com>
+ <0f9f7a2e-23c3-43fe-b5c1-dab3a7b31c2d@126.com>
+ <CACePvbXU8K4wxECroEPr5T3iAsG6cCDLa12WmrvEBMskcNmOuQ@mail.gmail.com>
+ <b5f5b215-fdf2-4287-96a9-230a87662194@126.com>
+ <CACePvbV4L-gRN9UKKuUnksfVJjOTq_5Sti2-e=pb_w51kucLKQ@mail.gmail.com>
+ <00a27e2b-0fc2-4980-bc4e-b383f15d3ad9@126.com>
+ <CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-MZUmErNAXoXmw@mail.gmail.com>
+ <CAMgjq7CLObfnEcPgrPSHtRw0RtTXLjiS=wjGnOT+xv1BhdCRHg@mail.gmail.com>
+ <CAMgjq7DLGczt=_yWNe-CY=U8rW+RBrx+9VVi4AJU3HYr-BdLnQ@mail.gmail.com>
+ <CACePvbXJKskfo-bd5jr2GfagaFDoYz__dbQTKmq2=rqOpJzqYQ@mail.gmail.com>
+ <CACePvbWTALuB7-jH5ZxCDAy_Dxeh70Y4=eYE5Mixr2qW+Z9sVA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CACePvbWTALuB7-jH5ZxCDAy_Dxeh70Y4=eYE5Mixr2qW+Z9sVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725281649;ebc597c7;
+X-HE-SMSGID: 1sl6ZA-0000Ot-MO
 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
+Chris et. al., was that fix from Yu ever submitted? From here it looks
+like fixing this regression fell through the cracks; but at the same
+time I have this strange feeling that I'm missing something obvious here
+and will look stupid by writing this mail... If that's the case: sorry
+for the noise.
 
-> Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.com> =
-w dniu 31.08.2024, o godz. 19:23:
->=20
-> On Sat, Aug 31, 2024 at 2:41=E2=80=AFAM Piotr Oniszczuk
-> <piotr.oniszczuk@gmail.com> wrote:
->>=20
->>=20
->>=20
->>> Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed =
-<yosryahmed@google.com> w dniu 29.08.2024, o godz. 23:54:
->>>=20
->>> I also noticed that you are using z3fold as the zpool. Is the =
-problem
->>> reproducible with zsmalloc? I wouldn't be surprised if there's a
->>> z3fold bug somewhere.
->>>=20
->>=20
->> Hmm - yesterday i recompiled 6.9.12 with zsmalloc and =E2=80=A6. =
-after 16h of continuous tests I can=E2=80=99t reproduce issue.
->> With zsmalloc 6.9.12 looks to me like stable.
->=20
-> Interesting, and a little bit what I hoped for tbh.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-:-)
+On 04.08.24 21:11, Chris Li wrote:
+> On Sun, Aug 4, 2024 at 10:51 AM Chris Li <chrisl@kernel.org> wrote:
+>> On Sun, Aug 4, 2024 at 5:22 AM Kairui Song <ryncsn@gmail.com> wrote:
+>
+>>>> Hi Yu, I tested your patch, on my system, the OOM still exists (96
+>>>> core and 256G RAM), test memcg is limited to 512M and 32 thread ().
+>>>>
+>>>> And I found the OOM seems irrelevant to either your patch or Ge's
+>>>> patch. (it may changed the OOM chance slight though)
+>>>>
+>>>> After the very quick OOM (it failed to untar the linux source code),
+>>>> checking lru_gen_full:
+>>>> memcg    47 /build-kernel-tmpfs
+>>>>  node     0
+>>>>         442       1691      29405           0
+>>>>                      0          0r          0e          0p         57r
+>>>>        617e          0p
+>>>>                      1          0r          0e          0p          0r
+>>>>          4e          0p
+>>>>                      2          0r          0e          0p          0r
+>>>>          0e          0p
+>>>>                      3          0r          0e          0p          0r
+>>>>          0e          0p
+>>>>                                 0           0           0           0
+>>>>          0           0
+>>>>         443       1683      57748         832
+>>>>                      0          0           0           0           0
+>>>>          0           0
+>>>>                      1          0           0           0           0
+>>>>          0           0
+>>>>                      2          0           0           0           0
+>>>>          0           0
+>>>>                      3          0           0           0           0
+>>>>          0           0
+>>>>                                 0           0           0           0
+>>>>          0           0
+>>>>         444       1670      30207         133
+>>>>                      0          0           0           0           0
+>>>>          0           0
+>>>>                      1          0           0           0           0
+>>>>          0           0
+>>>>                      2          0           0           0           0
+>>>>          0           0
+>>>>                      3          0           0           0           0
+>>>>          0           0
+>>>>                                 0           0           0           0
+>>>>          0           0
+>>>>         445       1662          0           0
+>>>>                      0          0R         34T          0          57R
+>>>>        238T          0
+>>>>                      1          0R          0T          0           0R
+>>>>          0T          0
+>>>>                      2          0R          0T          0           0R
+>>>>          0T          0
+>>>>                      3          0R          0T          0           0R
+>>>>         81T          0
+>>>>                             13807L        324O        867Y       2538N
+>>>>         63F         18A
+>>>>
+>>>> If I repeat the test many times, it may succeed by chance, but the
+>>>> untar process is very slow and generates about 7000 generations.
+>>>>
+>>>> But if I change the untar cmdline to:
+>>>> python -c "import sys; sys.stdout.buffer.write(open('$linux_src',
+>>>> mode='rb').read())" | tar zx
+>>>>
+>>>> Then the problem is gone, it can untar the file successfully and very fast.
+>>>>
+>>>> This might be a different issue reported by Chris, I'm not sure.
+>>>
+>>> After more testing, I think these are two problems (note I changed the
+>>> memcg limit to 600m later so the compile test can run smoothly).
+>>>
+>>> 1. OOM during the untar progress (can be workarounded by the untar
+>>> cmdline I mentioned above).
+>>
+>> There are two different issues here.
+>> My recent test script has moved the untar phase out of memcg limit
+>> (mostly I want to multithreading untar) so the bisect I did is only
+>> catch the second one.
+>> The untar issue might not be a regression from this patch.
+>>
+>>> 2. OOM during the compile progress (this should be the one Chris encountered).
+>>>
+>>> Both 1 and 2 only exist for MGLRU.
+>>> 1 can be workarounded using the cmdline I mentioned above.
+>>> 2 is caused by Ge's patch, and 1 is not.
+>>>
+>>> I can confirm Yu's patch fixed 2 on my system, but the 1 seems still a
+>>> problem, it's not related to this patch, maybe can be discussed
+>>> elsewhere.
+>>
+>> I will do a test run now with Yu's patch and report back.
+> 
+> Confirm Yu's patch fixes the regression for me. Now it can sustain
+> 470M pressure without causing OOM kill.
+> 
+> Yu, please submit your patch.  This regression has merged into Linus'
+> tree already.
+> 
+> Feel free to add:
+> 
+> Tested-by: Chris Li <chrisl@kernel.org>
+> 
+> Chris
+> 
 
-I tested mainline 6.10.7 with 26h test and also it is stable with =
-zsmalloc=20
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
->=20
->>=20
->> With this - what will be your advice to move forward?
->=20
-> Well, it's possible that some zswap change was not fully compatible
-> with z3fold, or surfaced a dormant bug in z3fold. Either way, my
-> recommendation is to use zsmalloc.
-> I have been trying to deprecate
-
-IMHO - isn=E2=80=99t bug in this report + difficulties to reproduce->fix =
-enough to depreciate z3fold? =20
-
-> z3fold, and honestly you are the only person I have seen use z3fold in
-> a while -- which is probably why no one else reported such a problem.
-
-Well - in fact this is ArchLinux - not me.
-I=E2=80=99m using Arch and kernel in builder machine with ArchLinux =
-config + packaging
-
->=20
->> Is there any possibility/way to avoid bisecting? (due limited time =
-from my side)
->=20
-> So unless you have a reason to specifically use z3fold or avoid
-> zsmalloc, please use zsmalloc. It should be better for you anyway. I
-
-I see benefits already: on very memory demanding qtwebkit compile:
-z3fold: swap frequently gets 6..8G from 16G available
-zsmalloc: can=E2=80=99t see more than 1..2G
- =20
-> doubt that you (or anyone) wants to spend time debugging a z3fold
-> problem :)
-
-lets depreciate it!
-
-
-
+#regzbot poke
