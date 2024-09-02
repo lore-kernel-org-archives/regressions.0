@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893B0181B80;
-	Mon,  2 Sep 2024 12:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3F1185934;
+	Mon,  2 Sep 2024 12:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725281651; cv=none; b=tN/7Xfp7b8adgo/lVxUhSniiaISYI0PQpK3I96xXJAaF0gwBB81KPRAiskWbNpS1dkqHPZYOnjy6sR9KMLhh4bEb7DMBJK9wt6pDelTZ9K75jQ+vRL/HLVeuZJBAiVBjgVSASvYsoH1YBiZWm3rx9iTm6LksvQKo5qO2CxhpIXA=
+	t=1725281961; cv=none; b=jayv97X43CW/LtaGG1fRaWcEpiCSc+GgiM4BexZMfSUPlDnMknZz2XuzjCJG+Ic15eaFt/yIaCgz0sxhLVwOuevs3mFN3FhhnAFtJmjfRQUW8CPlFH4kTA1lyV67fqiql2YnwoiPulyuPQy5Hpt51PufNrz5PzMKnfZrX+DXCG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725281651; c=relaxed/simple;
-	bh=rFQOK6VJteuZXKwiLuPjVYiP9/LxQxEj94oSEVurGjY=;
+	s=arc-20240116; t=1725281961; c=relaxed/simple;
+	bh=YJ7VIZEmz46M5dRUv7t5f4g1qetvGq1UdlVmjCDQYqw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g7izKGkGJH/E4krGHl/T2L8nH02bmcuvobWuAUMXACtC3dJA/AVVCEgMSUcEvUjT2ThNzRJJZzVAitPB/WUY2euYD1zGHJ2bIrVErMiC/2d1nRHQS6sji2GEZTl4/jU+4srkctAOTjzgvWAWNeYUvB7ySE+Al42LQ43tUFrtR2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=L/J73pKE; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=uabC4Pd1Zm/kSv/AEG+VtD74XHh6Fay5ZF5Bidba3w/6weUoGw7DvyHfZ8UaG1uuXWqWdLgyQMwRpQ5DvdDSJUjPqRppawUN/R9F3e8+2laRFR9WFXb0+XRUp47yOcc3hXRtWzb3Bj4fEL98Wx0Cu/5ekpdMVNkWQoEerc2EBFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mNJ/SgiZ; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="L/J73pKE"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mNJ/SgiZ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=SSKrWHfr3RQQxlj73LfGosa+rJRjxqlAnWYQ+2sQHwM=;
-	t=1725281649; x=1725713649; b=L/J73pKEMTny+tWvvZ5T4k0PwUtlJ1YkrVHMW/D1p/8H7qY
-	eatahSeZQl8GNUcNOUL4ACRtuIvqv4S8rGWYI5Jodg1yxHGOFSmYhO5+g8NJp5zz+Ts0rbDYJfZOv
-	cuEXN8TNZnbDuw/F44gH2tkn6Z06VvtnvesgM4fVqC+zLP9golVfY3L7NgbnfkKc2k6XPbQMJgtv2
-	syrsdT9rGKkWJq2QTo9snvYUqmZeNIXoNvYOHCtSy1xbQ45oYpGZoNtxEhsyzrPyZhb3l1BHWZ6Z4
-	sPYbEqsbddN3yAP/i1hDmD9u7RG7zDOgCqxPHIXm2hOSnP6s2ttXdo88PiIzKNPQ==;
+	In-Reply-To:References; bh=GTtbMh95g6gOixyB54pDlDSPHQiJhJS+ldBl3pUr+Kk=;
+	t=1725281958; x=1725713958; b=mNJ/SgiZCy9jUliRniw0j3n4yLwdlI6v4+ZwZ0P0wPPcXLn
+	XnU6XMrP+HZgKQ2vlypFDo2EcXxU4Csy+WA+w2z6g8xLc6S6edHDwpvSQfPeOZ7aS1LyOBf2jp+Ya
+	yrhLN1c4yi3NWmM53VA3fEVRikJfO9SqcVTqP2fDuIv//mr3sVFbrqVvh4qLlh6mjuI51dGix3gTc
+	L/db1LfV9wblczgpCPmWgUXXbXauI9QOYa5Lgxp9mcUpV1kjAl2RHDBPWwkRw//M1FaHGPKsDIf9I
+	wQ6zoCrOb95w1P9+bLjRkjucsGDQpvfMczevccbITkaMg35xqpKsjN4fbK936aig==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sl6ZA-0000Ot-MO; Mon, 02 Sep 2024 14:53:56 +0200
-Message-ID: <56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info>
-Date: Mon, 2 Sep 2024 14:53:55 +0200
+	id 1sl6eI-0001T4-Ra; Mon, 02 Sep 2024 14:59:14 +0200
+Message-ID: <57d28bcf-8f2b-4755-bf2a-7c9d316e6823@leemhuis.info>
+Date: Mon, 2 Sep 2024 14:59:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,28 +39,15 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: Chris Li <chrisl@kernel.org>, Kairui Song <ryncsn@gmail.com>
-Cc: Ge Yang <yangge1116@126.com>, Yu Zhao <yuzhao@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>,
- LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
- Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>,
- baolin.wang@linux.alibaba.com, liuzixing@hygon.cn,
- Hugh Dickins <hughd@google.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <1719038884-1903-1-git-send-email-yangge1116@126.com>
- <CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com>
- <0f9f7a2e-23c3-43fe-b5c1-dab3a7b31c2d@126.com>
- <CACePvbXU8K4wxECroEPr5T3iAsG6cCDLa12WmrvEBMskcNmOuQ@mail.gmail.com>
- <b5f5b215-fdf2-4287-96a9-230a87662194@126.com>
- <CACePvbV4L-gRN9UKKuUnksfVJjOTq_5Sti2-e=pb_w51kucLKQ@mail.gmail.com>
- <00a27e2b-0fc2-4980-bc4e-b383f15d3ad9@126.com>
- <CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-MZUmErNAXoXmw@mail.gmail.com>
- <CAMgjq7CLObfnEcPgrPSHtRw0RtTXLjiS=wjGnOT+xv1BhdCRHg@mail.gmail.com>
- <CAMgjq7DLGczt=_yWNe-CY=U8rW+RBrx+9VVi4AJU3HYr-BdLnQ@mail.gmail.com>
- <CACePvbXJKskfo-bd5jr2GfagaFDoYz__dbQTKmq2=rqOpJzqYQ@mail.gmail.com>
- <CACePvbWTALuB7-jH5ZxCDAy_Dxeh70Y4=eYE5Mixr2qW+Z9sVA@mail.gmail.com>
+Subject: Re: [PATCH 06/20] wifi: iwlwifi: mvm: handle TPE advertised by AP
+To: Rory Little <rory@candelatech.com>
+Cc: linux-wireless@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+ Mukesh Sisodiya <mukesh.sisodiya@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>, johannes@sipsolutions.net
+References: <20240527160615.1549563-1-miriam.rachel.korenblit@intel.com>
+ <20240527190228.32f1e2e1447c.I58ac91c38585362aa42bb4a8a59c7d88e67bc40b@changeid>
+ <ea1eeb13-c568-4381-812a-dec4246a440e@candelatech.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
@@ -108,128 +95,183 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
  ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CACePvbWTALuB7-jH5ZxCDAy_Dxeh70Y4=eYE5Mixr2qW+Z9sVA@mail.gmail.com>
+In-Reply-To: <ea1eeb13-c568-4381-812a-dec4246a440e@candelatech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725281649;ebc597c7;
-X-HE-SMSGID: 1sl6ZA-0000Ot-MO
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725281958;ec4f666d;
+X-HE-SMSGID: 1sl6eI-0001T4-Ra
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+On 09.08.24 20:25, Rory Little wrote:
+>
+> We noticed that our transmit throughput dropped by ~20-30% and bisected
+> the issue to this patch. We will dig around a bit more to investigate
+> why this seems to be happening...
 
-Chris et. al., was that fix from Yu ever submitted? From here it looks
-like fixing this regression fell through the cracks; but at the same
-time I have this strange feeling that I'm missing something obvious here
-and will look stupid by writing this mail... If that's the case: sorry
-for the noise.
+Rory Little: was this ever resolved? I noticed the patch you send to
+which Johannes replied to stating a similar fix is already in -rc1. But
+you reported this a few days after -rc1 was out, which makes me wonder
+if this really is resolved.
+
+If it is: apologies for the noise in advance.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-On 04.08.24 21:11, Chris Li wrote:
-> On Sun, Aug 4, 2024 at 10:51 AM Chris Li <chrisl@kernel.org> wrote:
->> On Sun, Aug 4, 2024 at 5:22 AM Kairui Song <ryncsn@gmail.com> wrote:
->
->>>> Hi Yu, I tested your patch, on my system, the OOM still exists (96
->>>> core and 256G RAM), test memcg is limited to 512M and 32 thread ().
->>>>
->>>> And I found the OOM seems irrelevant to either your patch or Ge's
->>>> patch. (it may changed the OOM chance slight though)
->>>>
->>>> After the very quick OOM (it failed to untar the linux source code),
->>>> checking lru_gen_full:
->>>> memcg    47 /build-kernel-tmpfs
->>>>  node     0
->>>>         442       1691      29405           0
->>>>                      0          0r          0e          0p         57r
->>>>        617e          0p
->>>>                      1          0r          0e          0p          0r
->>>>          4e          0p
->>>>                      2          0r          0e          0p          0r
->>>>          0e          0p
->>>>                      3          0r          0e          0p          0r
->>>>          0e          0p
->>>>                                 0           0           0           0
->>>>          0           0
->>>>         443       1683      57748         832
->>>>                      0          0           0           0           0
->>>>          0           0
->>>>                      1          0           0           0           0
->>>>          0           0
->>>>                      2          0           0           0           0
->>>>          0           0
->>>>                      3          0           0           0           0
->>>>          0           0
->>>>                                 0           0           0           0
->>>>          0           0
->>>>         444       1670      30207         133
->>>>                      0          0           0           0           0
->>>>          0           0
->>>>                      1          0           0           0           0
->>>>          0           0
->>>>                      2          0           0           0           0
->>>>          0           0
->>>>                      3          0           0           0           0
->>>>          0           0
->>>>                                 0           0           0           0
->>>>          0           0
->>>>         445       1662          0           0
->>>>                      0          0R         34T          0          57R
->>>>        238T          0
->>>>                      1          0R          0T          0           0R
->>>>          0T          0
->>>>                      2          0R          0T          0           0R
->>>>          0T          0
->>>>                      3          0R          0T          0           0R
->>>>         81T          0
->>>>                             13807L        324O        867Y       2538N
->>>>         63F         18A
->>>>
->>>> If I repeat the test many times, it may succeed by chance, but the
->>>> untar process is very slow and generates about 7000 generations.
->>>>
->>>> But if I change the untar cmdline to:
->>>> python -c "import sys; sys.stdout.buffer.write(open('$linux_src',
->>>> mode='rb').read())" | tar zx
->>>>
->>>> Then the problem is gone, it can untar the file successfully and very fast.
->>>>
->>>> This might be a different issue reported by Chris, I'm not sure.
->>>
->>> After more testing, I think these are two problems (note I changed the
->>> memcg limit to 600m later so the compile test can run smoothly).
->>>
->>> 1. OOM during the untar progress (can be workarounded by the untar
->>> cmdline I mentioned above).
+> On 5/27/24 09:06, Miri Korenblit wrote:
+>> From: Johannes Berg <johannes.berg@intel.com>
 >>
->> There are two different issues here.
->> My recent test script has moved the untar phase out of memcg limit
->> (mostly I want to multithreading untar) so the bisect I did is only
->> catch the second one.
->> The untar issue might not be a regression from this patch.
+>> 6 GHz BSS SP client shall respect TX power limits advertised
+>> by the AP in TPE elements, send the data to the firmware using
+>> the AP_TX_POWER_CONSTRAINTS_CMD command, so do that.
 >>
->>> 2. OOM during the compile progress (this should be the one Chris encountered).
->>>
->>> Both 1 and 2 only exist for MGLRU.
->>> 1 can be workarounded using the cmdline I mentioned above.
->>> 2 is caused by Ge's patch, and 1 is not.
->>>
->>> I can confirm Yu's patch fixed 2 on my system, but the 1 seems still a
->>> problem, it's not related to this patch, maybe can be discussed
->>> elsewhere.
+>> Co-developed-by: Mukesh Sisodiya <mukesh.sisodiya@intel.com>
+>> Signed-off-by: Mukesh Sisodiya <mukesh.sisodiya@intel.com>
+>> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>> Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+>> ---
+>>   .../net/wireless/intel/iwlwifi/mvm/mac80211.c | 11 ++++
+>>   .../wireless/intel/iwlwifi/mvm/mld-mac80211.c | 55 ++++++++++++++++---
+>>   drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  6 ++
+>>   3 files changed, 63 insertions(+), 9 deletions(-)
 >>
->> I will do a test run now with Yu's patch and report back.
-> 
-> Confirm Yu's patch fixes the regression for me. Now it can sustain
-> 470M pressure without causing OOM kill.
-> 
-> Yu, please submit your patch.  This regression has merged into Linus'
-> tree already.
-> 
-> Feel free to add:
-> 
-> Tested-by: Chris Li <chrisl@kernel.org>
-> 
-> Chris
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+>> b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+>> index 752fdb6a783f..88bc0baabf7e 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+>> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+>> @@ -2768,6 +2768,13 @@ iwl_mvm_bss_info_changed_station_common(struct
+>> iwl_mvm *mvm,
+>>         if (changes & BSS_CHANGED_BANDWIDTH)
+>>           iwl_mvm_update_link_smps(vif, link_conf);
+>> +
+>> +    if (changes & BSS_CHANGED_TPE) {
+>> +        IWL_DEBUG_CALIB(mvm, "Changing TPE\n");
+>> +        iwl_mvm_send_ap_tx_power_constraint_cmd(mvm, vif,
+>> +                            link_conf,
+>> +                            false);
+>> +    }
+>>   }
+>>     static void iwl_mvm_bss_info_changed_station(struct iwl_mvm *mvm,
+>> @@ -5122,6 +5129,10 @@ static int __iwl_mvm_assign_vif_chanctx(struct
+>> iwl_mvm *mvm,
+>>           }
+>>             iwl_mvm_update_quotas(mvm, false, NULL);
+>> +
+>> +        iwl_mvm_send_ap_tx_power_constraint_cmd(mvm, vif,
+>> +                            link_conf,
+>> +                            false);
+>>       }
+>>         goto out;
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac80211.c
+>> b/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac80211.c
+>> index 00433d1c8564..b2b6dbdcc44f 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac80211.c
+>> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/mld-mac80211.c
+>> @@ -345,6 +345,11 @@ __iwl_mvm_mld_assign_vif_chanctx(struct iwl_mvm
+>> *mvm,
+>>           rcu_read_unlock();
+>>       }
+>>   +    if (vif->type == NL80211_IFTYPE_STATION)
+>> +        iwl_mvm_send_ap_tx_power_constraint_cmd(mvm, vif,
+>> +                            link_conf,
+>> +                            false);
+>> +
+>>       /* then activate */
+>>       ret = iwl_mvm_link_changed(mvm, vif, link_conf,
+>>                      LINK_CONTEXT_MODIFY_ACTIVE |
+>> @@ -524,9 +529,37 @@ static void
+>> iwl_mvm_mld_unassign_vif_chanctx(struct ieee80211_hw *hw,
+>>   }
+>>     static void
+>> +iwl_mvm_tpe_sta_cmd_data(struct iwl_txpower_constraints_cmd *cmd,
+>> +             const struct ieee80211_bss_conf *bss_info)
+>> +{
+>> +    u8 i;
+>> +
+>> +    /*
+>> +     * NOTE: the 0 here is IEEE80211_TPE_CAT_6GHZ_DEFAULT,
+>> +     * we fully ignore IEEE80211_TPE_CAT_6GHZ_SUBORDINATE
+>> +     */
+>> +
+>> +    BUILD_BUG_ON(ARRAY_SIZE(cmd->psd_pwr) !=
+>> +             ARRAY_SIZE(bss_info->tpe.psd_local[0].power));
+>> +
+>> +    /* if not valid, mac80211 puts default (max value) */
+>> +    for (i = 0; i < ARRAY_SIZE(cmd->psd_pwr); i++)
+>> +        cmd->psd_pwr[i] = min(bss_info->tpe.psd_local[0].power[i],
+>> +                      bss_info->tpe.psd_reg_client[0].power[i]);
+>> +
+>> +    BUILD_BUG_ON(ARRAY_SIZE(cmd->eirp_pwr) !=
+>> +             ARRAY_SIZE(bss_info->tpe.max_local[0].power));
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(cmd->eirp_pwr); i++)
+>> +        cmd->eirp_pwr[i] = min(bss_info->tpe.max_local[0].power[i],
+>> +                       bss_info->tpe.max_reg_client[0].power[i]);
+>> +}
+>> +
+>> +void
+>>   iwl_mvm_send_ap_tx_power_constraint_cmd(struct iwl_mvm *mvm,
+>>                       struct ieee80211_vif *vif,
+>> -                    struct ieee80211_bss_conf *bss_conf)
+>> +                    struct ieee80211_bss_conf *bss_conf,
+>> +                    bool is_ap)
+>>   {
+>>       struct iwl_txpower_constraints_cmd cmd = {};
+>>       struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+>> @@ -546,19 +579,22 @@ iwl_mvm_send_ap_tx_power_constraint_cmd(struct
+>> iwl_mvm *mvm,
+>>           link_info->fw_link_id == IWL_MVM_FW_LINK_ID_INVALID)
+>>           return;
+>>   -    if (bss_conf->chanreq.oper.chan->band != NL80211_BAND_6GHZ ||
+>> -        bss_conf->chanreq.oper.chan->flags &
+>> -            IEEE80211_CHAN_NO_6GHZ_VLP_CLIENT)
+>> +    if (bss_conf->chanreq.oper.chan->band != NL80211_BAND_6GHZ)
+>>           return;
+>>         cmd.link_id = cpu_to_le16(link_info->fw_link_id);
+>> -    /*
+>> -     * Currently supporting VLP Soft AP only.
+>> -     */
+>> -    cmd.ap_type = cpu_to_le16(IWL_6GHZ_AP_TYPE_VLP);
+>>       memset(cmd.psd_pwr, DEFAULT_TPE_TX_POWER, sizeof(cmd.psd_pwr));
+>>       memset(cmd.eirp_pwr, DEFAULT_TPE_TX_POWER, sizeof(cmd.eirp_pwr));
+>>   +    if (is_ap) {
+>> +        cmd.ap_type = cpu_to_le16(IWL_6GHZ_AP_TYPE_VLP);
+>> +    } else if (bss_conf->power_type == IEEE80211_REG_UNSET_AP) {
+>> +        return;
+>> +    } else {
+>> +        cmd.ap_type = cpu_to_le16(bss_conf->power_type - 1);
+>> +        iwl_mvm_tpe_sta_cmd_data(&cmd, bss_conf);
+>> +    }
+>> +
+>>       ret = iwl_mvm_send_cmd_pdu(mvm,
+>>                      WIDE_ID(PHY_OPS_GROUP,
+>>                          AP_TX_POWER_CONSTRAINTS_CMD),
+>> @@ -580,7 +616,8 @@ static int iwl_mvm_mld_start_ap_ibss(struct
+>> ieee80211_hw *hw,
+>>       guard(mvm)(mvm);
+>>         if (vif->type == NL80211_IFTYPE_AP)
+>> -        iwl_mvm_send_ap_tx_power_constraint_cmd(mvm, vif, link_conf);
+>> +        iwl_mvm_send_ap_tx_power_constraint_cmd(mvm, vif,
+>> +                            link_conf, true);
+>>         /* Send the beacon template */
+>>       ret = iwl_mvm_mac_ctxt_beacon_changed(mvm, vif, link_conf);
+>> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+>> b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+>> index f3d9b8355c6b..9b939225990a 100644
+>> --- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+>> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+>> @@ -2962,4 +2962,10 @@ iwl_mvm_bt_coex_calculate_esr_mode(struct
+>> iwl_mvm *mvm,
+>>                      bool primary);
+>>   int iwl_mvm_esr_non_bss_link(struct iwl_mvm *mvm, struct
+>> ieee80211_vif *vif,
+>>                    unsigned int link_id, bool active);
+>> +
+>> +void
+>> +iwl_mvm_send_ap_tx_power_constraint_cmd(struct iwl_mvm *mvm,
+>> +                    struct ieee80211_vif *vif,
+>> +                    struct ieee80211_bss_conf *bss_conf,
+>> +                    bool is_ap);
+>>   #endif /* __IWL_MVM_H__ */
 > 
 
 --
