@@ -1,96 +1,62 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.theune.cc (mail.theune.cc [212.122.41.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA4F1D54CC
-	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 06:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2585C1A2621
+	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 07:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725345364; cv=none; b=p3pe8cTpZdwlkZ9/PSUlf/otmvPh0kp9gY32yZAyl2USTp33pHrjGqb3u/AHoGDUe5pmA8RRDmKpdjzST18ZmVtG7T48GX5wjvp+G2ES8DWhS0IzcMySfnYjFiz16eN8LQWOOhjhbKGanPIanN7Ojs//94M2UoTZIU7CNsKhyOY=
+	t=1725349559; cv=none; b=eTudpX2gqGg/c1w8tubzhkWxy9TjVVQFBU9FUPxJiJCZvsRG4fE5sx/Q6Dv//3pwKZsZges5x0HzJ2WULI61eNmgEJWzurH6LWYe4/K6d4igvcGBX6Y/NrYSxSUCnDu4dY6FzAC1Jrgkn9VbSOJHT0DUxj64yx8aKimLyXRfkeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725345364; c=relaxed/simple;
-	bh=VPZudvRVHbus4LXrbfoMkcg6cOhLHcVHXr99PO6hzJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=r3DdzTsTa5E9viu8PxxxOEp1SQcWUhTkw2Fa9Thu4kj2NK88qLz+GskcexRALgZYrS+xMDNQp75fIxhPiO/Xn/KJWyTnQogZ19lJ6kJn8m+uis6+/59+emVxfsX7QELUJD+e/oTR2mXPcuC9anoAEZNA2ep5hOukJimcaNeIpYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kz75VBOB; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725349559; c=relaxed/simple;
+	bh=UQbVf6OKRCtWOwlejkZMkhRvD/SZFgavXNfB/+1B94g=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=JgkobMFxmq4kw0qw0PFdLE64t7btvvMFGqh8+MrC46D3A84dnR7Q1P7Z4U24luIEEjd/IsEthhFMbtgU9JIZrQk9i8wpIhvcFj4Yoja7mm2yJjyrCSuEBQMScfyH9UQlkDUgRviZ2co5WjNsvyLShWya4/h2+3VJXiv8dLjim8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc; spf=pass smtp.mailfrom=theune.cc; dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b=9RS35FQe; arc=none smtp.client-ip=212.122.41.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theune.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kz75VBOB"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e0875f1e9edso4793444276.1
-        for <regressions@lists.linux.dev>; Mon, 02 Sep 2024 23:36:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725345362; x=1725950162; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VPZudvRVHbus4LXrbfoMkcg6cOhLHcVHXr99PO6hzJo=;
-        b=kz75VBOBPFiPz6AOWYnH5gfM73JZJl7AzqG6f90wAnqnzdfrLiT4o48qPDbxcYjYHT
-         FWmOXU4RD3SC/Jz7YDJHcuLeiK0MseSywrTa7jXP8qEVueQklX8cHscqP8RKlLvCJrUI
-         4o1rehhnNw63+bG1AgbWcvSarw1oxrToHgganfPxONmoOZjaTmxB010B1OaKYCW7h0Yw
-         CYRRzRvBuXxfD97Q4u8pQm757L+ahdQ20huwzUmK/igIjKUmB9dyYMLuIjwGQyr4sLUs
-         DcOWCOYv2+U0kgZNjgO4NU/fAMEIwBWxDeXBShwMXa6lWkwJAeZXsOuJoB6zETEjhX0o
-         3yJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725345362; x=1725950162;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VPZudvRVHbus4LXrbfoMkcg6cOhLHcVHXr99PO6hzJo=;
-        b=VuZu1W3EgiW/49kjoTZO2k9YWeV3P8ZnRFiP04bZu1F31iYJLR0imV5uKVBL19PYRn
-         Pbvm9bHHOkKcVN4XK0bPGpg4L4+4Jpr6WEt3HQrjcSJx3wBwtTbevE3YJv+XxNPdHsBb
-         TmVzTuaXul7QmB95k0FT+lwD/8kpZRGIjbiNR81hdYkdbTudlBEYAX2JIrIWKxkejXmD
-         yvcdxUMksEVEK+QC5yzLCm/6/0IrWdCQUB5Sw0iHt+Vgprs2ZkSW0GTLIZ++y1ql3+Ut
-         kuY1lqAABAb2EFEpDmrAfU5AKv611fQs05KjfUcqjugbnNPpbZpf1xIUkNN9m9PRaC03
-         9iww==
-X-Forwarded-Encrypted: i=1; AJvYcCW4hgBH2MbbtQuKCs8lOUkmsjhiM4HTQmwbC4tCRLGZpZmfeNpKk1vHRhY9iQqlGARonfitKvm069MP2Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyTQ9RMyvkPyn6NJ+v58p9QdOv0dbsv5kmmt/4dTFN9NfJEyp5J
-	OhCDce6SEjtsNvuujkkWt1Ggf27QBZgqzpaM3nBOkD4Wdd+yOLHKG1TVMy+26D+9rsWch5TXWuy
-	HGqygdV1pR2o5o8KLyxmc4OJhQyM=
-X-Google-Smtp-Source: AGHT+IHR8tpiw3igY6qGfaRdI1dxqyE9jFzmjN8jYW30VTbpCYodS9kwBwFF3bZihMwsgZEMvLsrfMZBR6/T790BhzE=
-X-Received: by 2002:a05:6902:2313:b0:e0b:ba20:7f87 with SMTP id
- 3f1490d57ef6-e1a79ffa00amr10498144276.25.1725345361902; Mon, 02 Sep 2024
- 23:36:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b="9RS35FQe"
+From: Christian Theune <christian@theune.cc>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theune.cc; s=mail;
+	t=1725349071; bh=UQbVf6OKRCtWOwlejkZMkhRvD/SZFgavXNfB/+1B94g=;
+	h=From:Subject:Date:Cc:To;
+	b=9RS35FQe8yhCh1MeaHbIsWvYfhvtJjJYdy1rH5cMMCnCd4B6eizhnx12ko82U37ro
+	 SJsuea6OoSCMypFk+dV+NZ3uCu9bpNmLWTL5Zmh91SeXSWC30DGy+RGATA6GC4+OpG
+	 7W7nKOZB2arrpm0UVCpzqBYGrTwtBL4PiGfic28c=
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
- <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
-In-Reply-To: <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 3 Sep 2024 11:35:51 +0500
-Message-ID: <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
-Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
- some RenPy games causes computer hang
-To: Leo Li <sunpeng.li@amd.com>, Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com, 
-	pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Follow-up to "net: drop bad gso csum_start and offset in
+ virtio_net_hdr" - backport for 5.15 needed
+Message-Id: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
+Date: Tue, 3 Sep 2024 09:37:30 +0200
+Cc: stable@vger.kernel.org,
+ netdev@vger.kernel.org
+To: regressions@lists.linux.dev
 
-On Sun, Aug 25, 2024 at 2:12=E2=80=AFAM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> Hi,
-> Is anyone trying to look into it?
-> I continue to reproduce this issue on fresh kernel builds 6.11-rc4+.
-> In addition to the RenPy engine, the problem also reproduces on games
-> from Ubisoft, such as Far Cry 4.
-> A very important note that I missed in the first message.
-> To reproduce the problem, you need to enable scaling in Gnome for
-> HiDPI monitors.
-> I am using 4K resolution with 200% of fractional scaling.
+Hi,
 
-Sorry for persistence, but I'm afraid there's no time left to fix this
-regression.
-There's a week left until the release.
-A month later, no one has looked at what the problem is.
+the issue was so far handled in =
+https://lore.kernel.org/regressions/ZsyMzW-4ee_U8NoX@eldamar.lan/T/#m390d6=
+ef7b733149949fb329ae1abffec5cefb99b and =
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219129
 
---=20
-Best Regards,
-Mike Gavrilov.
+I haven=E2=80=99t seen any communication whether a backport for 5.15 is =
+already in progress, so I thought I=E2=80=99d follow up here.=20
+
+Today we rolled out 5.15.165 and immediately ran into the same issue. =
+There=E2=80=99s at least one other person asking for a 5.15 backport in =
+Bugzilla.
+
+Hugs,
+Christian
+
+-- =20
+Christian Theune - A97C62CE - 0179 7808366
+@theuni - christian@theune.cc
+
