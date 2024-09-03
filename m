@@ -1,62 +1,57 @@
-Received: from mail.theune.cc (mail.theune.cc [212.122.41.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2585C1A2621
-	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 07:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2E31D6786;
+	Tue,  3 Sep 2024 08:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725349559; cv=none; b=eTudpX2gqGg/c1w8tubzhkWxy9TjVVQFBU9FUPxJiJCZvsRG4fE5sx/Q6Dv//3pwKZsZges5x0HzJ2WULI61eNmgEJWzurH6LWYe4/K6d4igvcGBX6Y/NrYSxSUCnDu4dY6FzAC1Jrgkn9VbSOJHT0DUxj64yx8aKimLyXRfkeg=
+	t=1725350570; cv=none; b=P7I4Df07dBs6MuE5Kqy72ZSRyd5lDQvQ3IdHUqpz0nuy9HrZHs9kJDehMGulypsdEmlxNrbYBDlq9W0IuiVPqUp55e6Z7tDKmwSJkN/1njG3LhUAtupUSQoG4FEw5rz2GDdNj83QCDlanDSijcgXc3YXwJ5/Cl4FK/425IZb8A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725349559; c=relaxed/simple;
-	bh=UQbVf6OKRCtWOwlejkZMkhRvD/SZFgavXNfB/+1B94g=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=JgkobMFxmq4kw0qw0PFdLE64t7btvvMFGqh8+MrC46D3A84dnR7Q1P7Z4U24luIEEjd/IsEthhFMbtgU9JIZrQk9i8wpIhvcFj4Yoja7mm2yJjyrCSuEBQMScfyH9UQlkDUgRviZ2co5WjNsvyLShWya4/h2+3VJXiv8dLjim8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc; spf=pass smtp.mailfrom=theune.cc; dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b=9RS35FQe; arc=none smtp.client-ip=212.122.41.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theune.cc
+	s=arc-20240116; t=1725350570; c=relaxed/simple;
+	bh=pm9Avb8uhuiXPRpvp4WqLHOHFrE0CihtSyTLR0RrJH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqMsHyEu0a0foQnXJrgtWyN5wz1gfd5PVEPgnyK8uklPqpG6J5M/GtXKuVE21vNpKmRTNInLL0f2s/PZjNeVYSTWTpCTDdLL22lywqbUthjNEEB/k6d0EBCKDioyHPJqUQfUzftAZBjyyMtd6EH+3T8cYXy1rSlqWyLFCe15+to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wXr4BUqS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b="9RS35FQe"
-From: Christian Theune <christian@theune.cc>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theune.cc; s=mail;
-	t=1725349071; bh=UQbVf6OKRCtWOwlejkZMkhRvD/SZFgavXNfB/+1B94g=;
-	h=From:Subject:Date:Cc:To;
-	b=9RS35FQe8yhCh1MeaHbIsWvYfhvtJjJYdy1rH5cMMCnCd4B6eizhnx12ko82U37ro
-	 SJsuea6OoSCMypFk+dV+NZ3uCu9bpNmLWTL5Zmh91SeXSWC30DGy+RGATA6GC4+OpG
-	 7W7nKOZB2arrpm0UVCpzqBYGrTwtBL4PiGfic28c=
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wXr4BUqS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F805C4CEC5;
+	Tue,  3 Sep 2024 08:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1725350570;
+	bh=pm9Avb8uhuiXPRpvp4WqLHOHFrE0CihtSyTLR0RrJH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wXr4BUqSP6hc4FYCcGE6oWbnQX0oj1M6w7Ay4+jdG/iqi/ai6S8fku3fbA5/BfWYl
+	 JdoSAgvuAvjEMgH2mvSlFeJKEoLONT4PpdB5IxQ5k1lrceRUKwqcxfqeGM/0Lkt3PO
+	 0+fWoLcs2Rm/XL6OyXFk/CJ7p3rQGfPcVS2i7Aao=
+Date: Tue, 3 Sep 2024 10:02:46 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Christian Theune <christian@theune.cc>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: Follow-up to "net: drop bad gso csum_start and offset in
+ virtio_net_hdr" - backport for 5.15 needed
+Message-ID: <2024090309-affair-smitten-1e62@gregkh>
+References: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Follow-up to "net: drop bad gso csum_start and offset in
- virtio_net_hdr" - backport for 5.15 needed
-Message-Id: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
-Date: Tue, 3 Sep 2024 09:37:30 +0200
-Cc: stable@vger.kernel.org,
- netdev@vger.kernel.org
-To: regressions@lists.linux.dev
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
 
-Hi,
+On Tue, Sep 03, 2024 at 09:37:30AM +0200, Christian Theune wrote:
+> Hi,
+> 
+> the issue was so far handled in https://lore.kernel.org/regressions/ZsyMzW-4ee_U8NoX@eldamar.lan/T/#m390d6ef7b733149949fb329ae1abffec5cefb99b and https://bugzilla.kernel.org/show_bug.cgi?id=219129
+> 
+> I haven’t seen any communication whether a backport for 5.15 is already in progress, so I thought I’d follow up here. 
 
-the issue was so far handled in =
-https://lore.kernel.org/regressions/ZsyMzW-4ee_U8NoX@eldamar.lan/T/#m390d6=
-ef7b733149949fb329ae1abffec5cefb99b and =
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219129
+Someone needs to send a working set of patches to apply.
 
-I haven=E2=80=99t seen any communication whether a backport for 5.15 is =
-already in progress, so I thought I=E2=80=99d follow up here.=20
+thanks,
 
-Today we rolled out 5.15.165 and immediately ran into the same issue. =
-There=E2=80=99s at least one other person asking for a 5.15 backport in =
-Bugzilla.
-
-Hugs,
-Christian
-
--- =20
-Christian Theune - A97C62CE - 0179 7808366
-@theuni - christian@theune.cc
-
+greg k-h
