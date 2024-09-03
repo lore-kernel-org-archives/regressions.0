@@ -1,188 +1,206 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB011D7986
-	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 22:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725403437; cv=none; b=KAj+XZ9oBUV2ds0n6z+OZmai3kkTgorrruwyC16IRPpe0Q3D6wtJwhrJWCGbEDy+bK07VdOOvhqbz6A9ZxcwhTST0qrEMUhnkoFse1XWiZZfg5WHqHMEtsaLjWixSbYXaTghR/Mf2hV7A62p/I13lnDzp+W1dkGK/V3iwnslArg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725403437; c=relaxed/simple;
-	bh=8FiFXXA/l3FkeAr8G3sWENhyWD2nRnjVPnBxOLfEYnc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T/NjPHNFFoSZqVn7VnTpb+Q42ascsMoVR4wYm4kjhGPuhv2JXNg11vL5/joTNbC70cJltaO4325pNvmHMHoQs9HAN9IqE06IY/YLSYoG5ce3+xoXHIpquNgDFxYL/7lDtSFSqR4IyGm+VwXXr2InxXPJGPo3j6iOqZ1hqsuUagE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dw1nniEX; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8C8126C07
+	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 23:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725405335; cv=fail; b=AShDPfZocFmOJDl7K+6gGBy93spPIVdt16AnH1SblyxBkAnGWe1Qp4IKonycpk6Ag8pPVEHR1nWg+Q+a5mH/prC0U1erJRI26coOkliXZXXVQRMQ5tQzag/yY14RaG/sK8N+ceIA9wMDjDgvFRB0AOYZdgA/wDhgC/VEhIa9tTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725405335; c=relaxed/simple;
+	bh=xEK8nem/QeAyUWlqeaQAHpN3x5+pT0d+ckS0uOumsjk=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rVfkR0qbBbetMp8Kt9wY3QbO1hFojn3DpXUXZFS9xgI4ElLr3MskvIp/O/3BCxTqF4kMik/foNjl05KWh5fCN+AkI5TBAlnu7SU53xel2R4BPHEst5N/EpiyWGDW/ThYipKwsk9eN6Db8exQ/VBsneheqtSTVwjQrpcXVhOhhj4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wkU249GA; arc=fail smtp.client-ip=40.107.223.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw1nniEX"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4fead6effe9so1638609e0c.2
-        for <regressions@lists.linux.dev>; Tue, 03 Sep 2024 15:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725403435; x=1726008235; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8FiFXXA/l3FkeAr8G3sWENhyWD2nRnjVPnBxOLfEYnc=;
-        b=dw1nniEX4LxlWxfgFaxFx4hiBLrO9JF9imf78nEUn8o3F2YfMw4feagVSi/UUza/6f
-         ws8gflvZDCfDnvwX/Uj4YMyMt4nCpQ6hI2VzcHYzcJboWKglabgBDTg22XE/NrqERiH+
-         HizaKoFnBKvrke/tO1rfZBZBysDoPsPortdmwwky0pSsmCBLObvNUFaglSOQEST62v2s
-         sqpaOeaXWDFIxpl2fQRx3GDEHkbSKEgXeqYGezNEl4pkFEOpzJVSgVB/PCyQMc3ngoSV
-         rbSK5zlh+FaR+0WtQy9ljl4yxp7/Xl3alDxQsnFPaxPfEDxfquVIZlt2pK3Vh59EEIZZ
-         AYIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725403435; x=1726008235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8FiFXXA/l3FkeAr8G3sWENhyWD2nRnjVPnBxOLfEYnc=;
-        b=R1AFROWXQraftYU5wL29tMDlLj3qw8kxr33uKcvlWOO+6pNCEdSWV20Ff3UjzHlnka
-         qM0DqQ17+T6Ax/QzsR7Q7CdpC5OQOSceMKlh6mmJZurq+WLSsJC6f3sl+hHkWJ/SEPzH
-         LBnOpwrFDicLINwOQ8bSNDgrNGqKkufBag7I8Q6BZtDo6j0YiJW8Cscq7xCkeD40ycK3
-         q0ECtNtbudiTTJcQqPjHbI+a/vwzpBwjzdqNVGX0tY5mm+fPQXYUTy7ohK5f3ubCZRVC
-         mEukW5mXDT3j4XmQgEfcIAZiu3nf1CoCie1NItyD+bwxUM3L2HRY+EsNEjzVES0eMTcY
-         K54g==
-X-Forwarded-Encrypted: i=1; AJvYcCVORv10DwaGFSU1VzV4NZHCr6ki3tWOvbSH6nkCDXalC6yXlbgN5yvc24z2ErtqIFpQiPU0s3oVbA9jSw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxFOXP0odmHd0SuBrww0uBin15712Px9y06MET3HMRiV0Up2kAh
-	qBEntaAfvY96wvcDx2ADtSl7u3FXTs1enTieTgLfft8bqzqrDiq39FXOufOHAaFZHemV/1nmYcu
-	lgX+VTx+n7FvaYYFrlscszkxZGPk=
-X-Google-Smtp-Source: AGHT+IENyUbCLbadEWFLpOh2q/6waOSadl+medXd1iZVdEMn6jiqqDqBGZRw1xe7jx6KhhamVY4Jg5rPOa45zS2xjGA=
-X-Received: by 2002:a05:6122:3115:b0:4f6:aa3e:aa4c with SMTP id
- 71dfb90a1353d-5009b1b6015mr10311639e0c.3.1725403434612; Tue, 03 Sep 2024
- 15:43:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wkU249GA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UyqfA0WOtRzwUZLukDYrQ2V4ZVUw9gOMb31TulGYP3M1y1Kq6ocTyZsb75kKokhnNpD5hpnQDGbIOmZu2rhM+c2xEOMdRuJ7wFmE49LsIA1vRMbwaRUiOzNXMLRTCwuuuyC0c55vQu186K+TiWnHSCVF+z+7APJI3VHmo2CX1TiA73kcK68TpH9QYvAEAsXJ8wPWZf3lPABN86FxeJfnBS4OgwuieaMAotkIT0ipqXm4f3qGa77DaHeIjXDzk2e8O+r83OkWij8ePZRN2LTc/ajblOumo+dvAdoOaIevP2YWc323froZRGa0kHKk4bVkLUvCH9YAhIxG/U6XCGfuQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+qrJUJVkIJKV6C1Ebp+MTAiBBfiwzvDBoyH2atPuYws=;
+ b=JzRpZWgDSYh/qIC6srXsRjp8/gwpPC2MdSgsw5lQ+I2QTTMAC0z+lActsPtfwYLTnH9DZPE2aFKxEX7EhhgIgtJ/6C5k4AMb0BAXTiblekqD5jOSwX8Cj6K8MO4/KfFWSww43R3eAG9QwqgAbNrJpgHUi4nk7GkVklhNzLuqadsKKNpiXwdIQtb5KOiY/mWKpELRfJsDRo6SdOdrMM+lnTPSS6rMqA8gRPBt+msR/xZEwfqsQFeaW0UZcTa8aLPRWNwVNwcg5uS2333ZmNSg/nidmSgbRiTK8ear82mLiWS8ROjjIf7882nq/JYz1unfSIsLKa/fbF4TXaF5mT1McQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+qrJUJVkIJKV6C1Ebp+MTAiBBfiwzvDBoyH2atPuYws=;
+ b=wkU249GAiKTbWuvkVvTG0jc4aP4c5WwucnccpbV7q9gBci7najJSrsKY3P56aVEF27yVTVOeHFwPuaS94mVttB1ijQpbT1k/PCtjpxW9WqzsG9OXEGpM01lnNl3yh25wdc/AMV1Fzzly7kY81BXzLeAcMDZ/D6VmQrYx4VovzL8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
+ SA1PR12MB7246.namprd12.prod.outlook.com (2603:10b6:806:2bc::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Tue, 3 Sep
+ 2024 23:15:30 +0000
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b]) by DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b%4]) with mapi id 15.20.7918.024; Tue, 3 Sep 2024
+ 23:15:30 +0000
+Message-ID: <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com>
+Date: Tue, 3 Sep 2024 19:15:27 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
+ some RenPy games causes computer hang
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com,
+ pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>,
+ "Deucher, Alexander" <alexander.deucher@amd.com>,
+ amd-gfx list <amd-gfx@lists.freedesktop.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
+ <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
+ <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
+Content-Language: en-US
+From: Leo Li <sunpeng.li@amd.com>
+In-Reply-To: <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0054.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::31) To DM4PR12MB5311.namprd12.prod.outlook.com
+ (2603:10b6:5:39f::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com> <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
- <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com> <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
- <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com> <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
- <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com> <CAJD7tkZ01PPYMzcTyX_cwr836jGonJT=fwT3ovc4ixW44keRgg@mail.gmail.com>
- <277CDE7C-7ED8-4840-9C30-533C9327B028@gmail.com> <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
- <EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmail.com> <CAJD7tkZi8Wg+ZCWMy=2YKZ3hLZZ7JYQaCG+w7y=3Tb8wmHC48g@mail.gmail.com>
-In-Reply-To: <CAJD7tkZi8Wg+ZCWMy=2YKZ3hLZZ7JYQaCG+w7y=3Tb8wmHC48g@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 3 Sep 2024 15:43:43 -0700
-Message-ID: <CAKEwX=PiyvV7AxKESk5zc9TN1n5b0uFR0pr_HGxKsUFUgk0q+Q@mail.gmail.com>
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, Pedro Falcato <pedro.falcato@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|SA1PR12MB7246:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08fc01da-32a4-4167-a751-08dccc6e4d70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TEs3NTRZSU9nNHhYc0JXd3ZpOENuYnVJRGdwZUZaa2tBY0xSUHAwK2ptUTdO?=
+ =?utf-8?B?WGRSVnpGemJ3cXZTT3J4cUVGVzF3RjdHbHRjNGx3dTYrMGYvOWJRWTFMN0xn?=
+ =?utf-8?B?dGc5c0J3dUJjNzZaOEVjRVVYUVFyMG91WFI1NWRsRkRyL3lkWWhycGtCbU1z?=
+ =?utf-8?B?RDlwN01zaThEckVBRFlsQVc0ZjJWUGQ2TkcydWVWMVFVaFlZakYyUitqdTJK?=
+ =?utf-8?B?aDBRMVhva1JPTG91MytxaForMXh1ZU84b3BzUUdIOUZ2TnRROWk0Y2QyeXh3?=
+ =?utf-8?B?eCtHVTJqOGs0YTdlbTB1Tmw3L0VYaitZMTBSNEdRTGoxMzhLRUZzZFJFOCs5?=
+ =?utf-8?B?VE5Oc1J2ZDdTTGhyQktaWUgxV3dDdzNZd3pwZVY3ZGtoZkJyTHU2YllhdXZv?=
+ =?utf-8?B?TWlPWUQyUElIN2x6Y2YyUUJydVBVV1lhazYrSEdwd25OS0NpWFJJZUpyNExP?=
+ =?utf-8?B?WHFTRm9DT29MWXUrOUFJRStnSVpIbEV4WnBlL240VnB3ZXZiaHRnNVkxR2ls?=
+ =?utf-8?B?VTFjb1gyWTVTUktWRzBUZnRlSnYvKytqbTZiM0sxbEhOQzNBdEorL25XSkJa?=
+ =?utf-8?B?VTR5bkE5ektjanhtdUFtSWMvNjR0MlNWUlBVTEx5bk1BT2ZyWkd2clBYZEJ6?=
+ =?utf-8?B?UmhFbHowWXROdUhVMzZuRzIrZjE4VEo3U3JmalRRRjBub2xTQnUvbmp1bG5E?=
+ =?utf-8?B?WWxnK01oYndTQzJiT09FZWJCOUlBVlhZWHloak05Tm90VldqM3hlU3ozMjMz?=
+ =?utf-8?B?Q3lyUDJ5WmRyV2RIcE16dElkeVZxK2xPNWN4U0RONFk1cEZhVy9udmZQNnRT?=
+ =?utf-8?B?dnJORFdTY1F0OEZ3WVluRFZnNVgwekc5Y0lzb3VGZG5YbTVBNUxQU0wvVFpz?=
+ =?utf-8?B?V2RLaG01R2RTWHRLcHlWS3AvVkJDODdFQnFoNEE5dHhNUVBxR0VKYkJIaytI?=
+ =?utf-8?B?VnR3U2NGUE81SGNRQlRCTk9TYmtrSUlKTnp1MUdLUTZlWWw4a0JhL2V0aVRC?=
+ =?utf-8?B?UG1mZmgxQ0cyTjd6OERSNGdKLy9hcHFFTDU0Skc1OVhhczQ2LytQN3VscE9Q?=
+ =?utf-8?B?K1g3VlE0MnlEZmhSWmFQNzJ3a3dnUlB6MXIwZmFuWVVYSHRqQ1l2QUZsZi9T?=
+ =?utf-8?B?OGFHN2ZoVXNkcWNjOFhSODV1ZkhSNitRS0tCZiszemJQTXpTcDhybjU0UU8r?=
+ =?utf-8?B?UDVFTDZNUHpvaTdCY25CemNZR0MwNlN0Qk5neDFMR1hkS0FxU1U4TjdQaW9M?=
+ =?utf-8?B?d2taNnRhK1M2QlMvckc3dDZPUVRRQmtsdzFwRS8wdTk5eDkyQTUyTWJnM2Vj?=
+ =?utf-8?B?b21FMkJWaHFPNzlsSUw2OVJFQU9STEM2ajJKUFpWMU5yUTcybUhQRmxHN0Jm?=
+ =?utf-8?B?TGRCQUc0ODFjaTJwQWFjWkdOTVBDbnVQZ0s2bGRDNzJkdEZFOGpQeGlyV1BO?=
+ =?utf-8?B?QXE0cVFIaTV5RFc3cmpxbVJTMmU1YnllR0E3NG1KekdDNG94QTlKamg2b0th?=
+ =?utf-8?B?c25la2lVTTZVcUVCWlcva2h6Vm5TMCtjWDJveDRrNXB4NE9tVFNxVjdWSnFh?=
+ =?utf-8?B?dEUzVU9NOVA1bDJRZkxVMnlYR3hkV3BnWEFyc0JERlFrQjhWZkt0Tld4ZWR4?=
+ =?utf-8?B?d1E5VCs1MGxDTE9CdHpYWjdQbmZ3ZXZPQUJqb25ZSXVNRXdVUlZBOU5FZ0hR?=
+ =?utf-8?B?TzhHNkgyTEV0aExuRkYwK1gzVktGUVZPOFZRVm9DSTRDR05zbmlKeXY5K3VF?=
+ =?utf-8?B?RTd4d0d0eVhBL1dZNU4vcmJkbjh1eVJjd1N0RDRneXB1bi9CWTF4cEdnUWxl?=
+ =?utf-8?Q?/1nL3Y50ksVVME8H4tL6ahesDCH1M69CzMq84=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VjdrVHoxV3hFK3NEemExU0QzRDBGWGk1Qm96RkVCMnRpQkJsZDVBWFBFc0Zr?=
+ =?utf-8?B?dmJsU3R4WEVsdWpqYTFJb0l3azMzS2JNT1hQQnBlRm9NaWtQaXFLS1VBb1Fm?=
+ =?utf-8?B?OHlLWmYvUnJUV2hFZFNoZHJRalJoMXhZVEdwMlBtKzRRSU5DU0hxQXgzS1Mv?=
+ =?utf-8?B?YWRNK0RkcmxMMkRTY2M0OUdONjFOSVNOVXFQZTg1WUFEd2w1cTdId0dNa05n?=
+ =?utf-8?B?L2hOeHJ5K0UyeTJac1FhMFNhVXdvN1JoTTlhVGhKRkEzK0pmWDUrWTcwYmpy?=
+ =?utf-8?B?VHlTWG5TT3d6dkpzWE13S3o3VytmZkoxVkpZT3F1dDJCOVR4S01IYXdxZHhG?=
+ =?utf-8?B?eUF0dU1ma1NSM2xiSy9ZT1Y5NngrNFFxcHBVT3VPb3ljSXc1WFBjeE1RNkJs?=
+ =?utf-8?B?ZTJaR0VmZ2dicmZtbzg3V0NOcUF0YXdKcUxFdENybWtydDkvOG94MUFkY1cw?=
+ =?utf-8?B?eFlhSnoxcWNUNnExU0dnSjlDVFBIYnRWRDU4R0k1OEpLcVBFeHo0MlF1WDhp?=
+ =?utf-8?B?VFdJR0FrZmF5N3l2UEhyd0paVFhueGJHN0VwNDRrV0NQbHV3YVI0UWpXODVp?=
+ =?utf-8?B?dVZxMitCUjBPMXg0cVFqM3E3MmhZNVlvcjJhOHJLVTE4U3R4VzFiMDdwb1A4?=
+ =?utf-8?B?Q2wzTXdLcW01aVlzQU50ekJYR0Jva3JpM2lSMy9tdzZOWFAvc0krTWV4YVJn?=
+ =?utf-8?B?SE8rZk9mNHZXajZHOEp0NjNmUnpPZXUrSmZGWHp5d2IvTkNtR1RDbWsvNms0?=
+ =?utf-8?B?bElvTElwRnBENkNqR1M1UmYwaFl1M3B2d2NFQS8wRHEwOEU3MVBlMzV5Nmg0?=
+ =?utf-8?B?TDhjdHZQOE5zaktadWI5eFF4T1BEQUIyRGc0aUhheWYyTUFKWHhyOVYxZGN4?=
+ =?utf-8?B?ZWZlMGIxQ0hFM3FFeHVQZkdBZU5wZTBiUFB5K3RNeCsrOERJWEE1b3NpcjdU?=
+ =?utf-8?B?ZTRKTnJWejVLRG93VWtkQ1NiM2VaR1RoWStmTnhORTUycDhrNHVkV0xISDND?=
+ =?utf-8?B?RlZkekZlK1dHVGRDZXpNczZJYWVydEF2eHNIS3o5VDZFODJ2ZjM0Vk5WdnBN?=
+ =?utf-8?B?d0E2dTk5MTNwUDd5U2lLc0hhZGlHNkJITTQ5eko2K1FYcEZta0JvQXhRdGg1?=
+ =?utf-8?B?OGs1Q3kwVHpWd0JENUNNSVRQeFpoMlFRM2ZSZGV6L2NCQXVpSFNmTnNjSmhS?=
+ =?utf-8?B?OTNiY0lSWWtId2g2UVljdjFzT1RYS2hiazJ4V1piRndBRHlseGVTZHNKSXp1?=
+ =?utf-8?B?azlxdGZCT3o0YWdsbVc4Y1VmNUdTZ1FkOFpqSkV5cSs2Wm1pOUU3VGF4U0dp?=
+ =?utf-8?B?Qkw2cHRsLzQvcm1vTUM1eEZzdGhyRjFXczJyUy9zWGY0S0VLYklsMmp6aW1N?=
+ =?utf-8?B?bWJEdVBLWGJBQW1yRC9EU0pYQVk2bDVkeFlEWUE5cTRwMmZWYUZaR2F5QUlk?=
+ =?utf-8?B?WTcrR21PMnFxVzJFNWNoSGFZbnV6OE52dm5jd21iVUJ1T2FydmxVLzNMU05W?=
+ =?utf-8?B?ZDkwcFl1YzVaUlA2WEphVGVvQStqUUdDZ2VrTTlGTmJCVFpxTVpTdHRRcUJG?=
+ =?utf-8?B?V2pNcFNlN0U1ZXcxTGltajlZV0FTZ0hLQmZEaUdIbUZEWjBZWWlxamo1WjNE?=
+ =?utf-8?B?eTdqN2xUNldJbzVmdnIraXhCSnNjS3VFVzloTXlJa0M1TFZGZlZJVG5rOHcr?=
+ =?utf-8?B?SXMybk1qZzkyZ3BaQzhwb1NxMjIwVng3d0tvRHVlYWhBaUQzeGpma2wvNThJ?=
+ =?utf-8?B?RFNXeHRLR25CZ2FUUTlzNCt4Q0NuSWJVQ3padXpqWG1aSnRnbUUra2xiUmsz?=
+ =?utf-8?B?R2diOEZVYnpRMWpFSmU5N0E3endOTjJudlV4LzduZm1yVUlPU2R1bFcyMmZD?=
+ =?utf-8?B?Nnp3U21yUEh2V2toMWlVZVFvRjdqVVgzVW13ck5zZ1ZZODM2VmlqOVJLZlR6?=
+ =?utf-8?B?UVVUOGoxVkZDU2lCK3ZhNHVKblF0bnpMVVZMazljajkxU2FLSllLMEp6ZkNm?=
+ =?utf-8?B?T0dvQ1o0Y2lnaG40M3lkeWVobWFuOFNRak5xSWVtOUJ4UUhGK0dvc2c0MFpY?=
+ =?utf-8?B?NU54cWVMcitwb3F5NjF2bWdlNHloWUVFNTJRd0crek1MTjdzTTI4UWdRMTNZ?=
+ =?utf-8?Q?Rt1pl8OADhSvKvsVB7iiKTtHU?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08fc01da-32a4-4167-a751-08dccc6e4d70
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 23:15:30.1316
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2KrM29wbzqoxyw/7sWTcTkRzgne/uB8PvHMNxebZgOPKtpCzmXK7GX4CJtue5862
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7246
 
-On Tue, Sep 3, 2024 at 10:49=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> On Mon, Sep 2, 2024 at 1:58=E2=80=AFAM Piotr Oniszczuk
-> <piotr.oniszczuk@gmail.com> wrote:
-> >
-> >
-> >
-> > > Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.com=
-> w dniu 31.08.2024, o godz. 19:23:
-> > >
-> > > On Sat, Aug 31, 2024 at 2:41=E2=80=AFAM Piotr Oniszczuk
-> > > <piotr.oniszczuk@gmail.com> wrote:
-> > >>
-> > >>
-> > >>
-> > >>> Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.c=
-om> w dniu 29.08.2024, o godz. 23:54:
-> > >>>
-> > >>> I also noticed that you are using z3fold as the zpool. Is the probl=
-em
-> > >>> reproducible with zsmalloc? I wouldn't be surprised if there's a
-> > >>> z3fold bug somewhere.
-> > >>>
-> > >>
-> > >> Hmm - yesterday i recompiled 6.9.12 with zsmalloc and =E2=80=A6. aft=
-er 16h of continuous tests I can=E2=80=99t reproduce issue.
-> > >> With zsmalloc 6.9.12 looks to me like stable.
-> > >
-> > > Interesting, and a little bit what I hoped for tbh.
-> >
-> > :-)
-> >
-> > I tested mainline 6.10.7 with 26h test and also it is stable with zsmal=
-loc
-> >
-> > >
-> > >>
-> > >> With this - what will be your advice to move forward?
-> > >
-> > > Well, it's possible that some zswap change was not fully compatible
-> > > with z3fold, or surfaced a dormant bug in z3fold. Either way, my
-> > > recommendation is to use zsmalloc.
-> > > I have been trying to deprecate
-> >
-> > IMHO - isn=E2=80=99t bug in this report + difficulties to reproduce->fi=
-x enough to depreciate z3fold?
->
-> I would say this bug report is yet another reason why we should deprecate=
- it.
 
-+100000.
 
-This is precisely why I was asking which allocator was being used
-here. We have also accidentally selected z3fold internally a couple
-times in the past, which had bitten us as well.
 
->
-> >
-> > > z3fold, and honestly you are the only person I have seen use z3fold i=
-n
-> > > a while -- which is probably why no one else reported such a problem.
-> >
-> > Well - in fact this is ArchLinux - not me.
-> > I=E2=80=99m using Arch and kernel in builder machine with ArchLinux con=
-fig + packaging
->
-> According to [1], zsmalloc should be the default allocator for zswap
-> on ArchLinux. Anyway, I initially thought that no one was using z3fold
-> and it was bitrot, but apparently some people are using it and it's
-> actively harming them.
->
-> [1]https://wiki.archlinux.org/title/Zswap
->
-> >
-> > >
-> >
-> > I see benefits already: on very memory demanding qtwebkit compile:
-> > z3fold: swap frequently gets 6..8G from 16G available
-> > zsmalloc: can=E2=80=99t see more than 1..2G
+On 2024-09-03 02:35, Mikhail Gavrilov wrote:
+> On Sun, Aug 25, 2024 at 2:12 AM Mikhail Gavrilov
+> <mikhail.v.gavrilov@gmail.com> wrote:
+>>
+>> Hi,
+>> Is anyone trying to look into it?
+>> I continue to reproduce this issue on fresh kernel builds 6.11-rc4+.
+>> In addition to the RenPy engine, the problem also reproduces on games
+>> from Ubisoft, such as Far Cry 4.
+>> A very important note that I missed in the first message.
+>> To reproduce the problem, you need to enable scaling in Gnome for
+>> HiDPI monitors.
+>> I am using 4K resolution with 200% of fractional scaling.
+> 
+> Sorry for persistence, but I'm afraid there's no time left to fix this
+> regression.
+> There's a week left until the release.
+> A month later, no one has looked at what the problem is.
+> 
 
-Exactly :) zsmalloc is better than z3fold in a lot of workloads that I
-have observed.
+Hi Mike,
 
-> >
-> > > doubt that you (or anyone) wants to spend time debugging a z3fold
-> > > problem :)
-> >
-> > lets depreciate it!
->
-> I tried deprecating it before [2] and performed some analysis [3], but
-> there was some.. resistance. Maybe I will try again and use this bug
-> report as yet another argument for deprecating z3fold :)
->
-> [2] https://lore.kernel.org/linux-mm/20240112193103.3798287-1-yosryahmed@=
-google.com/
-> [3] https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=3D2Ww13sCj4S3i=
-4bNndqF+3+_Vg@mail.gmail.com/
+Super sorry for the ridiculous wait. Your first two emails slipped by my inbox,
+which is really silly, given I'm first in the to field...
 
-I don't wanna sound like a broken record. But this has been the nth
-time we need to spend extra engineering time and effort unnecessarily
-because we have not deprecated z3fold.
+Thanks for bisecting and finding a free game to reproduce it on. I did not have
+luck reproducing this today, but I am on sway and not gnome. While I get gnome
+set up, will you be able to test which one of these reverts fixes the hang for
+you? Whether just 1/2 is enough, or both 1/2 and 2/2 is required?
 
-If you need more datapoint - here's our last conversation where z3fold
-was a problem:
+I applied them on top of Linus's v6.11-rc6 tag, so hopefully they'll git am
+cleanly for you:
 
-https://lore.kernel.org/lkml/CAKEwX=3DMo+EaaxBYcLMTHYADB4WhqC3QmWV3WQ0h2KM4=
-91FRuQA@mail.gmail.com/
+1/2:
+https://gist.github.com/leeonadoh/69147b5fa8d815b39c5f4c3e005cca28#file-0001-revert-drm-amd-display-move-primary-plane-zpos-highe-patch
+2/2:
+https://gist.github.com/leeonadoh/69147b5fa8d815b39c5f4c3e005cca28#file-0002-revert-drm-amd-display-introduce-overlay-cursor-mode-patch
+
+Thanks,
+Leo
