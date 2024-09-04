@@ -1,206 +1,173 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8C8126C07
-	for <regressions@lists.linux.dev>; Tue,  3 Sep 2024 23:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725405335; cv=fail; b=AShDPfZocFmOJDl7K+6gGBy93spPIVdt16AnH1SblyxBkAnGWe1Qp4IKonycpk6Ag8pPVEHR1nWg+Q+a5mH/prC0U1erJRI26coOkliXZXXVQRMQ5tQzag/yY14RaG/sK8N+ceIA9wMDjDgvFRB0AOYZdgA/wDhgC/VEhIa9tTY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725405335; c=relaxed/simple;
-	bh=xEK8nem/QeAyUWlqeaQAHpN3x5+pT0d+ckS0uOumsjk=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rVfkR0qbBbetMp8Kt9wY3QbO1hFojn3DpXUXZFS9xgI4ElLr3MskvIp/O/3BCxTqF4kMik/foNjl05KWh5fCN+AkI5TBAlnu7SU53xel2R4BPHEst5N/EpiyWGDW/ThYipKwsk9eN6Db8exQ/VBsneheqtSTVwjQrpcXVhOhhj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wkU249GA; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1621D6DDE
+	for <regressions@lists.linux.dev>; Wed,  4 Sep 2024 12:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725451598; cv=none; b=QUoGxuatg+Ften2M+9zuiw0niCCKetorWwUbkimwnj7cDI4fp5gbxFKS/oOdo7JYD5NL0g74GYaP7iJRE+FZCYHifBEMkec6xbwFy4UzMzBKrPkAd2u5BaPiXsiDSryXRci7z+Ywsjka+TzA2RMEkkjgJevOubXsYjppSQL0Y7g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725451598; c=relaxed/simple;
+	bh=uzBIlylmDxRXgGFzT0bGOfS65mm+1zh0xnYHpNKBl1o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QrM/CFWxWhXfgXmVQTZ27541ScjzjhSsRGrDLwdAQYAD8DRIGeRLVDS2TxpCKMGeazoYO00iIr7F+SH4cUVdYqjBYBaYKh51UyxLhAEcT3iWYltxRV0KTDfCexCJTZ/oTmBM2fanHeDGz9R1FAndPijtqVf5CyqnaYUaJ7wcCkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qLzk6nU8; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wkU249GA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UyqfA0WOtRzwUZLukDYrQ2V4ZVUw9gOMb31TulGYP3M1y1Kq6ocTyZsb75kKokhnNpD5hpnQDGbIOmZu2rhM+c2xEOMdRuJ7wFmE49LsIA1vRMbwaRUiOzNXMLRTCwuuuyC0c55vQu186K+TiWnHSCVF+z+7APJI3VHmo2CX1TiA73kcK68TpH9QYvAEAsXJ8wPWZf3lPABN86FxeJfnBS4OgwuieaMAotkIT0ipqXm4f3qGa77DaHeIjXDzk2e8O+r83OkWij8ePZRN2LTc/ajblOumo+dvAdoOaIevP2YWc323froZRGa0kHKk4bVkLUvCH9YAhIxG/U6XCGfuQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+qrJUJVkIJKV6C1Ebp+MTAiBBfiwzvDBoyH2atPuYws=;
- b=JzRpZWgDSYh/qIC6srXsRjp8/gwpPC2MdSgsw5lQ+I2QTTMAC0z+lActsPtfwYLTnH9DZPE2aFKxEX7EhhgIgtJ/6C5k4AMb0BAXTiblekqD5jOSwX8Cj6K8MO4/KfFWSww43R3eAG9QwqgAbNrJpgHUi4nk7GkVklhNzLuqadsKKNpiXwdIQtb5KOiY/mWKpELRfJsDRo6SdOdrMM+lnTPSS6rMqA8gRPBt+msR/xZEwfqsQFeaW0UZcTa8aLPRWNwVNwcg5uS2333ZmNSg/nidmSgbRiTK8ear82mLiWS8ROjjIf7882nq/JYz1unfSIsLKa/fbF4TXaF5mT1McQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+qrJUJVkIJKV6C1Ebp+MTAiBBfiwzvDBoyH2atPuYws=;
- b=wkU249GAiKTbWuvkVvTG0jc4aP4c5WwucnccpbV7q9gBci7najJSrsKY3P56aVEF27yVTVOeHFwPuaS94mVttB1ijQpbT1k/PCtjpxW9WqzsG9OXEGpM01lnNl3yh25wdc/AMV1Fzzly7kY81BXzLeAcMDZ/D6VmQrYx4VovzL8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
- SA1PR12MB7246.namprd12.prod.outlook.com (2603:10b6:806:2bc::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Tue, 3 Sep
- 2024 23:15:30 +0000
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::a846:49eb:e660:1b5b]) by DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::a846:49eb:e660:1b5b%4]) with mapi id 15.20.7918.024; Tue, 3 Sep 2024
- 23:15:30 +0000
-Message-ID: <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com>
-Date: Tue, 3 Sep 2024 19:15:27 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
- some RenPy games causes computer hang
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com,
- pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>,
- "Deucher, Alexander" <alexander.deucher@amd.com>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
- <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
- <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
-Content-Language: en-US
-From: Leo Li <sunpeng.li@amd.com>
-In-Reply-To: <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQBPR0101CA0054.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:1::31) To DM4PR12MB5311.namprd12.prod.outlook.com
- (2603:10b6:5:39f::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qLzk6nU8"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3dd16257b7bso2470503b6e.1
+        for <regressions@lists.linux.dev>; Wed, 04 Sep 2024 05:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725451595; x=1726056395; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ncjbY78o2dy+2oTujZ9Kjw0Cl9c+zoMUYTRCjzOr+9s=;
+        b=qLzk6nU8c+qFCK4LTaNY2ODMD83+w8Wu2q2OOU+JDGjYIBQ/i9f3VtF1il7EZKbqWY
+         E56NmGkH8o+QO/s01CAddM5b5SM9GRqbaTq2WBBS2oReA5fa1ONN+20Y25/LJ7A/kusT
+         TnwzNqpKY93LYE3bmLVzjbyN87kf2yCSrIf1XpJ32jiRvCzBNBW+dsTy9luiD/x/YY28
+         BaiaX+YSGKeu+KRBv8tEecWeEQ848be4r9vRIeqNjZTpF3wnYjReDwanLbP0sdRwjYEc
+         wIOBTwRyqEXtipvF7XMKz3cTndwdep8K5Dr/JQPJILs/MZ9Wj7GYLdA3sgYHqBFkE4Jc
+         o/lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725451595; x=1726056395;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ncjbY78o2dy+2oTujZ9Kjw0Cl9c+zoMUYTRCjzOr+9s=;
+        b=R+9lZUhMgKQ4EC75+Aho0BobQ5/hSMo16bs8xkYulgxJhfe/OCgx9s0g1vsqo+6jCZ
+         o8x+lc4vD5yMs9VcYssR73XzmhG0JfDBpdDdTSoYl7KlKTloPmSjXdcDsQP+SRrd1Jwm
+         4o+c8H3N1SlIpAZ0IR6YkoUZazczQdxnVPGcmwm7G1M9o5KWcoEBBSnrxUlq3PO+UqPi
+         Ffdsd5Zc2oVseJ4N9R4qKlY4n/p4y+JJTo44Zg9QK6h63LWRmYAqELkwO+R+Jlh8Vwn+
+         uzc5KP3UFTkFpwn9jO3aR/YotYyLbys0H4S8AfyQbWEKJZBDXUldKrMaTmRzrw6bLK9m
+         6unQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKo9uHvGwqqzqA0HeXxmAO5qdK5JVRks9O9oUDqD3CPpWofBZrF2o8mZTCArlLbU4Id7U32e0VYxWdXw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxE3ffn2Ylkfzq4Hn0f6T7CfiTEThBXYWwxAnW1jCt6Is1IhuZ+
+	8iMta3kf7eBkMkHmjcSDTSNzlLMWdmbhzzXDHyPFA5sVs4wJ1fO2nQEGutbw/3pwLBX1f1x21bZ
+	OQqmooBiA0Vh+UNMdIhwLmTvmA+M8MtSmrK9R0w==
+X-Google-Smtp-Source: AGHT+IFwsdX/Q/Zp6aR6mbWRW7zx6fkPuH/EEWv8mPrWmqx+SJ6CSLticxCtQao0gbQdlc/DJv5LQVWCyndHO+2CPRg=
+X-Received: by 2002:a05:6808:218a:b0:3df:7527:5e8a with SMTP id
+ 5614622812f47-3df752760e7mr11528917b6e.25.1725451595527; Wed, 04 Sep 2024
+ 05:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|SA1PR12MB7246:EE_
-X-MS-Office365-Filtering-Correlation-Id: 08fc01da-32a4-4167-a751-08dccc6e4d70
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TEs3NTRZSU9nNHhYc0JXd3ZpOENuYnVJRGdwZUZaa2tBY0xSUHAwK2ptUTdO?=
- =?utf-8?B?WGRSVnpGemJ3cXZTT3J4cUVGVzF3RjdHbHRjNGx3dTYrMGYvOWJRWTFMN0xn?=
- =?utf-8?B?dGc5c0J3dUJjNzZaOEVjRVVYUVFyMG91WFI1NWRsRkRyL3lkWWhycGtCbU1z?=
- =?utf-8?B?RDlwN01zaThEckVBRFlsQVc0ZjJWUGQ2TkcydWVWMVFVaFlZakYyUitqdTJK?=
- =?utf-8?B?aDBRMVhva1JPTG91MytxaForMXh1ZU84b3BzUUdIOUZ2TnRROWk0Y2QyeXh3?=
- =?utf-8?B?eCtHVTJqOGs0YTdlbTB1Tmw3L0VYaitZMTBSNEdRTGoxMzhLRUZzZFJFOCs5?=
- =?utf-8?B?VE5Oc1J2ZDdTTGhyQktaWUgxV3dDdzNZd3pwZVY3ZGtoZkJyTHU2YllhdXZv?=
- =?utf-8?B?TWlPWUQyUElIN2x6Y2YyUUJydVBVV1lhazYrSEdwd25OS0NpWFJJZUpyNExP?=
- =?utf-8?B?WHFTRm9DT29MWXUrOUFJRStnSVpIbEV4WnBlL240VnB3ZXZiaHRnNVkxR2ls?=
- =?utf-8?B?VTFjb1gyWTVTUktWRzBUZnRlSnYvKytqbTZiM0sxbEhOQzNBdEorL25XSkJa?=
- =?utf-8?B?VTR5bkE5ektjanhtdUFtSWMvNjR0MlNWUlBVTEx5bk1BT2ZyWkd2clBYZEJ6?=
- =?utf-8?B?UmhFbHowWXROdUhVMzZuRzIrZjE4VEo3U3JmalRRRjBub2xTQnUvbmp1bG5E?=
- =?utf-8?B?WWxnK01oYndTQzJiT09FZWJCOUlBVlhZWHloak05Tm90VldqM3hlU3ozMjMz?=
- =?utf-8?B?Q3lyUDJ5WmRyV2RIcE16dElkeVZxK2xPNWN4U0RONFk1cEZhVy9udmZQNnRT?=
- =?utf-8?B?dnJORFdTY1F0OEZ3WVluRFZnNVgwekc5Y0lzb3VGZG5YbTVBNUxQU0wvVFpz?=
- =?utf-8?B?V2RLaG01R2RTWHRLcHlWS3AvVkJDODdFQnFoNEE5dHhNUVBxR0VKYkJIaytI?=
- =?utf-8?B?VnR3U2NGUE81SGNRQlRCTk9TYmtrSUlKTnp1MUdLUTZlWWw4a0JhL2V0aVRC?=
- =?utf-8?B?UG1mZmgxQ0cyTjd6OERSNGdKLy9hcHFFTDU0Skc1OVhhczQ2LytQN3VscE9Q?=
- =?utf-8?B?K1g3VlE0MnlEZmhSWmFQNzJ3a3dnUlB6MXIwZmFuWVVYSHRqQ1l2QUZsZi9T?=
- =?utf-8?B?OGFHN2ZoVXNkcWNjOFhSODV1ZkhSNitRS0tCZiszemJQTXpTcDhybjU0UU8r?=
- =?utf-8?B?UDVFTDZNUHpvaTdCY25CemNZR0MwNlN0Qk5neDFMR1hkS0FxU1U4TjdQaW9M?=
- =?utf-8?B?d2taNnRhK1M2QlMvckc3dDZPUVRRQmtsdzFwRS8wdTk5eDkyQTUyTWJnM2Vj?=
- =?utf-8?B?b21FMkJWaHFPNzlsSUw2OVJFQU9STEM2ajJKUFpWMU5yUTcybUhQRmxHN0Jm?=
- =?utf-8?B?TGRCQUc0ODFjaTJwQWFjWkdOTVBDbnVQZ0s2bGRDNzJkdEZFOGpQeGlyV1BO?=
- =?utf-8?B?QXE0cVFIaTV5RFc3cmpxbVJTMmU1YnllR0E3NG1KekdDNG94QTlKamg2b0th?=
- =?utf-8?B?c25la2lVTTZVcUVCWlcva2h6Vm5TMCtjWDJveDRrNXB4NE9tVFNxVjdWSnFh?=
- =?utf-8?B?dEUzVU9NOVA1bDJRZkxVMnlYR3hkV3BnWEFyc0JERlFrQjhWZkt0Tld4ZWR4?=
- =?utf-8?B?d1E5VCs1MGxDTE9CdHpYWjdQbmZ3ZXZPQUJqb25ZSXVNRXdVUlZBOU5FZ0hR?=
- =?utf-8?B?TzhHNkgyTEV0aExuRkYwK1gzVktGUVZPOFZRVm9DSTRDR05zbmlKeXY5K3VF?=
- =?utf-8?B?RTd4d0d0eVhBL1dZNU4vcmJkbjh1eVJjd1N0RDRneXB1bi9CWTF4cEdnUWxl?=
- =?utf-8?Q?/1nL3Y50ksVVME8H4tL6ahesDCH1M69CzMq84=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjdrVHoxV3hFK3NEemExU0QzRDBGWGk1Qm96RkVCMnRpQkJsZDVBWFBFc0Zr?=
- =?utf-8?B?dmJsU3R4WEVsdWpqYTFJb0l3azMzS2JNT1hQQnBlRm9NaWtQaXFLS1VBb1Fm?=
- =?utf-8?B?OHlLWmYvUnJUV2hFZFNoZHJRalJoMXhZVEdwMlBtKzRRSU5DU0hxQXgzS1Mv?=
- =?utf-8?B?YWRNK0RkcmxMMkRTY2M0OUdONjFOSVNOVXFQZTg1WUFEd2w1cTdId0dNa05n?=
- =?utf-8?B?L2hOeHJ5K0UyeTJac1FhMFNhVXdvN1JoTTlhVGhKRkEzK0pmWDUrWTcwYmpy?=
- =?utf-8?B?VHlTWG5TT3d6dkpzWE13S3o3VytmZkoxVkpZT3F1dDJCOVR4S01IYXdxZHhG?=
- =?utf-8?B?eUF0dU1ma1NSM2xiSy9ZT1Y5NngrNFFxcHBVT3VPb3ljSXc1WFBjeE1RNkJs?=
- =?utf-8?B?ZTJaR0VmZ2dicmZtbzg3V0NOcUF0YXdKcUxFdENybWtydDkvOG94MUFkY1cw?=
- =?utf-8?B?eFlhSnoxcWNUNnExU0dnSjlDVFBIYnRWRDU4R0k1OEpLcVBFeHo0MlF1WDhp?=
- =?utf-8?B?VFdJR0FrZmF5N3l2UEhyd0paVFhueGJHN0VwNDRrV0NQbHV3YVI0UWpXODVp?=
- =?utf-8?B?dVZxMitCUjBPMXg0cVFqM3E3MmhZNVlvcjJhOHJLVTE4U3R4VzFiMDdwb1A4?=
- =?utf-8?B?Q2wzTXdLcW01aVlzQU50ekJYR0Jva3JpM2lSMy9tdzZOWFAvc0krTWV4YVJn?=
- =?utf-8?B?SE8rZk9mNHZXajZHOEp0NjNmUnpPZXUrSmZGWHp5d2IvTkNtR1RDbWsvNms0?=
- =?utf-8?B?bElvTElwRnBENkNqR1M1UmYwaFl1M3B2d2NFQS8wRHEwOEU3MVBlMzV5Nmg0?=
- =?utf-8?B?TDhjdHZQOE5zaktadWI5eFF4T1BEQUIyRGc0aUhheWYyTUFKWHhyOVYxZGN4?=
- =?utf-8?B?ZWZlMGIxQ0hFM3FFeHVQZkdBZU5wZTBiUFB5K3RNeCsrOERJWEE1b3NpcjdU?=
- =?utf-8?B?ZTRKTnJWejVLRG93VWtkQ1NiM2VaR1RoWStmTnhORTUycDhrNHVkV0xISDND?=
- =?utf-8?B?RlZkekZlK1dHVGRDZXpNczZJYWVydEF2eHNIS3o5VDZFODJ2ZjM0Vk5WdnBN?=
- =?utf-8?B?d0E2dTk5MTNwUDd5U2lLc0hhZGlHNkJITTQ5eko2K1FYcEZta0JvQXhRdGg1?=
- =?utf-8?B?OGs1Q3kwVHpWd0JENUNNSVRQeFpoMlFRM2ZSZGV6L2NCQXVpSFNmTnNjSmhS?=
- =?utf-8?B?OTNiY0lSWWtId2g2UVljdjFzT1RYS2hiazJ4V1piRndBRHlseGVTZHNKSXp1?=
- =?utf-8?B?azlxdGZCT3o0YWdsbVc4Y1VmNUdTZ1FkOFpqSkV5cSs2Wm1pOUU3VGF4U0dp?=
- =?utf-8?B?Qkw2cHRsLzQvcm1vTUM1eEZzdGhyRjFXczJyUy9zWGY0S0VLYklsMmp6aW1N?=
- =?utf-8?B?bWJEdVBLWGJBQW1yRC9EU0pYQVk2bDVkeFlEWUE5cTRwMmZWYUZaR2F5QUlk?=
- =?utf-8?B?WTcrR21PMnFxVzJFNWNoSGFZbnV6OE52dm5jd21iVUJ1T2FydmxVLzNMU05W?=
- =?utf-8?B?ZDkwcFl1YzVaUlA2WEphVGVvQStqUUdDZ2VrTTlGTmJCVFpxTVpTdHRRcUJG?=
- =?utf-8?B?V2pNcFNlN0U1ZXcxTGltajlZV0FTZ0hLQmZEaUdIbUZEWjBZWWlxamo1WjNE?=
- =?utf-8?B?eTdqN2xUNldJbzVmdnIraXhCSnNjS3VFVzloTXlJa0M1TFZGZlZJVG5rOHcr?=
- =?utf-8?B?SXMybk1qZzkyZ3BaQzhwb1NxMjIwVng3d0tvRHVlYWhBaUQzeGpma2wvNThJ?=
- =?utf-8?B?RFNXeHRLR25CZ2FUUTlzNCt4Q0NuSWJVQ3padXpqWG1aSnRnbUUra2xiUmsz?=
- =?utf-8?B?R2diOEZVYnpRMWpFSmU5N0E3endOTjJudlV4LzduZm1yVUlPU2R1bFcyMmZD?=
- =?utf-8?B?Nnp3U21yUEh2V2toMWlVZVFvRjdqVVgzVW13ck5zZ1ZZODM2VmlqOVJLZlR6?=
- =?utf-8?B?UVVUOGoxVkZDU2lCK3ZhNHVKblF0bnpMVVZMazljajkxU2FLSllLMEp6ZkNm?=
- =?utf-8?B?T0dvQ1o0Y2lnaG40M3lkeWVobWFuOFNRak5xSWVtOUJ4UUhGK0dvc2c0MFpY?=
- =?utf-8?B?NU54cWVMcitwb3F5NjF2bWdlNHloWUVFNTJRd0crek1MTjdzTTI4UWdRMTNZ?=
- =?utf-8?Q?Rt1pl8OADhSvKvsVB7iiKTtHU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08fc01da-32a4-4167-a751-08dccc6e4d70
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 23:15:30.1316
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2KrM29wbzqoxyw/7sWTcTkRzgne/uB8PvHMNxebZgOPKtpCzmXK7GX4CJtue5862
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7246
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 4 Sep 2024 17:36:24 +0530
+Message-ID: <CA+G9fYv=v713xAFCKvkwr_0qyaQWkmfeDC2=bO7KKkui+p+ZeQ@mail.gmail.com>
+Subject: next: rcu_preempt self-detected stall on CPU - queued_spin_lock_slowpath
+To: open list <linux-kernel@vger.kernel.org>, rcu <rcu@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: yangyun50@huawei.com, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Zhen Lei <thunder.leizhen@huawei.com>, Miklos Szeredi <mszeredi@redhat.com>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+The following kernel rcu info generated while running the test case
+selftests: memfd: run_fuse_test.sh on qemu-arm64 running Linux
+next-20240902. The qemu-arm64 did not recover.
 
+This build was created with kselftest merge configs.
 
+Anders bisected this to,
+  # first bad commit:
+    [5fb9c98e9d8ddf2abc645e2dcd9eb6703f77fdab]
+    fuse: add support for no forget requests
 
-On 2024-09-03 02:35, Mikhail Gavrilov wrote:
-> On Sun, Aug 25, 2024 at 2:12 AM Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
->>
->> Hi,
->> Is anyone trying to look into it?
->> I continue to reproduce this issue on fresh kernel builds 6.11-rc4+.
->> In addition to the RenPy engine, the problem also reproduces on games
->> from Ubisoft, such as Far Cry 4.
->> A very important note that I missed in the first message.
->> To reproduce the problem, you need to enable scaling in Gnome for
->> HiDPI monitors.
->> I am using 4K resolution with 200% of fractional scaling.
-> 
-> Sorry for persistence, but I'm afraid there's no time left to fix this
-> regression.
-> There's a week left until the release.
-> A month later, no one has looked at what the problem is.
-> 
+Crash log:
+----------
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x000f0510]
+[    0.000000] Linux version 6.11.0-rc6-next-20240902
+(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 13.3.0-5) 13.3.0, GNU
+ld (GNU Binutils for Debian) 2.43) #1 SMP PREEMPT @1725295942
+[    0.000000] KASLR enabled
+[    0.000000] random: crng init done
+[    0.000000] Machine model: linux,dummy-virt
+..
+# selftests: memfd: run_fuse_test.sh
+<3>[  107.408167] rcu: INFO: rcu_preempt self-detected stall on CPU
+<3>[  107.409195] rcu: 1-....: (5249 ticks this GP)
+idle=4d34/1/0x4000000000000000 softirq=10271/10271 fqs=2623
+<3>[  107.410438] rcu: (t=5250 jiffies g=20109 q=58 ncpus=2)
+<4>[  107.411776] CPU: 1 UID: 0 PID: 386 Comm: fuse_mnt Not tainted
+6.11.0-rc6-next-20240902 #1
+<4>[  107.412663] Hardware name: linux,dummy-virt (DT)
+<4>[  107.413680] pstate: 03400009 (nzcv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=--)
+<4>[  107.414341] pc : queued_spin_lock_slowpath+0x5c/0x440
+<4>[  107.415481] lr : _raw_spin_lock+0x74/0x90
+<4>[  107.415974] sp : ffff800080993ad0
+<4>[  107.419229] x29: ffff800080993ad0 x28: 0000000000000008 x27:
+fff000000635b800
+<4>[  107.421148] x26: 0000000000000000 x25: 0000000000000000 x24:
+ffff800080993ba0
+<4>[  107.422099] x23: ffffa8c953aa02c8 x22: ffffa8c953aa02a0 x21:
+0000000000000000
+<4>[  107.423060] x20: fff0000005088330 x19: fff0000005088330 x18:
+0000000000000000
+<4>[  107.424145] x17: fff057375aeca000 x16: ffffa8c9a382f930 x15:
+0000000000000000
+<4>[  107.425097] x14: 0000000000000000 x13: 00000000000000d0 x12:
+0000000000000000
+<4>[  107.425990] x11: 0000000000000000 x10: fff00000ff7fb7b0 x9 :
+ffffa8c9a382f9a4
+<4>[  107.426955] x8 : ffff800080993a38 x7 : 0000000000000000 x6 :
+0000000000000001
+<4>[  107.427836] x5 : ffffa8c9a490a000 x4 : ffffa8c9a490a5c0 x3 :
+0000000000000000
+<4>[  107.428777] x2 : 0000000000000002 x1 : 0000000000000000 x0 :
+0000000000000001
+<4>[  107.430091] Call trace:
+<4>[  107.430421]  queued_spin_lock_slowpath+0x5c/0x440
+<4>[  107.431226]  _raw_spin_lock+0x74/0x90
+<4>[  107.431841]  fuse_iget+0x1a0/0x2b8 [fuse]
+<4>[  107.433439]  fuse_fill_super_common+0x344/0x468 [fuse]
+<4>[  107.434320]  fuse_fill_super+0x6c/0xc8 [fuse]
+<4>[  107.435044]  get_tree_nodev+0x78/0xc8
+<4>[  107.435656]  fuse_get_tree+0xc8/0x1a0 [fuse]
+<4>[  107.436133]  vfs_get_tree+0x30/0x100
+<4>[  107.436927]  path_mount+0x3f4/0xa70
+<4>[  107.437515]  __arm64_sys_mount+0x1e0/0x2a8
+<4>[  107.438148]  invoke_syscall+0x50/0x120
+<4>[  107.438760]  el0_svc_common.constprop.0+0x48/0xf0
+<4>[  107.439484]  do_el0_svc+0x24/0x38
+<4>[  107.440251]  el0_svc+0x3c/0x108
+<4>[  107.440574]  el0t_64_sync_handler+0x120/0x130
+<4>[  107.440978]  el0t_64_sync+0x190/0x198
+<3>[  170.451886] rcu: INFO: rcu_preempt self-detected stall on CPU
+<3>[  170.452546] rcu: 1-....: (21001 ticks this GP)
+idle=4d34/1/0x4000000000000000 softirq=10271/10271 fqs=10494
+<3>[  170.453323] rcu: (t=21011 jiffies g=20109 q=83 ncpus=2)
+<4>[  170.454283] CPU: 1 UID: 0 PID: 386 Comm: fuse_mnt Not tainted
+6.11.0-rc6-next-20240902 #1
+<4>[  170.454966] Hardware name: linux,dummy-virt (DT)
+<4>[  170.455736] pstate: 03400009 (nzcv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=--)
+<4>[  170.456697] pc : queued_spin_lock_slowpath+0x5c/0x440
+<4>[  170.457179] lr : _raw_spin_lock+0x74/0x90
 
-Hi Mike,
+boot Log links,
+--------
+ - https://storage.tuxsuite.com/public/linaro/lkft/tests/2lWV52ERJsLvYqFnGkWoPm2Wm9O/logs.txt
+ - https://storage.tuxsuite.com/public/linaro/lkft/tests/2lWV52ERJsLvYqFnGkWoPm2Wm9O/logs.html
 
-Super sorry for the ridiculous wait. Your first two emails slipped by my inbox,
-which is really silly, given I'm first in the to field...
+metadata:
+----
+  git describe: next-20240902
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git sha: ecc768a84f0b8e631986f9ade3118fa37852fef0
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2lWV3S20oiROqoJeQxul8mzi4Lo/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2lWV3S20oiROqoJeQxul8mzi4Lo/
+  toolchain: gcc-13
 
-Thanks for bisecting and finding a free game to reproduce it on. I did not have
-luck reproducing this today, but I am on sway and not gnome. While I get gnome
-set up, will you be able to test which one of these reverts fixes the hang for
-you? Whether just 1/2 is enough, or both 1/2 and 2/2 is required?
+Steps to reproduce:
+---------
+ - https://storage.tuxsuite.com/public/linaro/lkft/tests/2lWV52ERJsLvYqFnGkWoPm2Wm9O/
+ - https://storage.tuxsuite.com/public/linaro/lkft/tests/2lWV52ERJsLvYqFnGkWoPm2Wm9O/tuxrun_reproducer.sh
 
-I applied them on top of Linus's v6.11-rc6 tag, so hopefully they'll git am
-cleanly for you:
-
-1/2:
-https://gist.github.com/leeonadoh/69147b5fa8d815b39c5f4c3e005cca28#file-0001-revert-drm-amd-display-move-primary-plane-zpos-highe-patch
-2/2:
-https://gist.github.com/leeonadoh/69147b5fa8d815b39c5f4c3e005cca28#file-0002-revert-drm-amd-display-introduce-overlay-cursor-mode-patch
-
-Thanks,
-Leo
+--
+Linaro LKFT
+https://lkft.linaro.org
