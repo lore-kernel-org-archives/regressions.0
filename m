@@ -1,114 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C43B18951C
-	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 08:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CE319A28F
+	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 12:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725524410; cv=none; b=SSsgicK8Cv85Qw+BZ0moWWmzKiKEOAU6Epc0PhDX2FtDCMfjLBzFxuWc9ZVmMdRK1gkJ4rT7Q6Hah3s7pJc4Uze6RHMAEsixiytEw7hS+ZCiY9eCAwH6sfbj2xuvusYkbNvDNyzUsJypP48wWUs47OAjVff0PlM89p9id7RtjNQ=
+	t=1725540351; cv=none; b=AQmOAPqN4dT0S8/CtK2k/TgTaCloA0+GA7rF1DWRml0e4vUFcYwqjVkujtabJqYCt28+3dyePYlCklzraSE3olXxQtfEj+T0FwrTvrmMICJ0brg3llGjawUqKxhXHb9IVMTzoSbY1wrxbgFAzM/Claki9V44UKd2btlIjXGb60E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725524410; c=relaxed/simple;
-	bh=hNS1xguVDWQNKTijPRMZFqq16vpbFfxwaPirgEgkMfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iOLeRKbQHtZ7YMpmJj0AZXZHnfdK/fZ2xpQDpUiS0vt8UD3YGGCWfzi61sKRVxNRILBe0ei+cWGfIaCDjY2Cwnh2UMb/UMqdFppdK+iUxbZVq0g0jka1Q85zJZ7b+patObNalCqmxCUA1p0AstN+uNlG6onBbql3Hvef8YqwH6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLDBEKj8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725540351; c=relaxed/simple;
+	bh=Xcx2MgBffnf+eg8qcGrHCeYQXmXfQC8m+rxT1FnNVew=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ppQta+VRnKyi4i7g2ktU+U1tx4r6zLCsAwAIp/CVpNZMOsmMr8hA146k5M+RFdzeOukX9lrtztC2cFnfukrIimBUpo9qgGOj9D2Cx98yuZ52OIIkRqw/Tki32Pe3R9x/lY70agzuNt2Objl3F+uGcCgtLau+fxj5q+nE9TBJwJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rx9NF7RH; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLDBEKj8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FA5C4CED0
-	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 08:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725524409;
-	bh=hNS1xguVDWQNKTijPRMZFqq16vpbFfxwaPirgEgkMfU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mLDBEKj8DjmR0uwBepN3z0CvvV0bP5kGO7Bdg3m4mq7lu9BtdXYc/JybNf6kjFR05
-	 UTMJxmSt+B8F8pKOHUZPKpMYv6rDaPheJkzV5C3CC4xfyxjj7LH9tbxYS3KvlEykCy
-	 7nDRAedWeANwjXoggI5uUFGwsr62NvMoME0s1I9VFiFbvmDoFY+cK+NUU+4Cn7Bwy7
-	 QnjokF7D50+76sov9Rho6uDo8b21Xnqlfybd/GD4YcflV4Cpiu+EreOWjLDRyjx7DJ
-	 8wq6aWky3xaHwAiIUtr5WVA1BLdijowgx0t93ZQMhLATt+S4P0x5iGd3uHkCSFYXST
-	 T49iwcpP6M5Lg==
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6d4f1d9951fso4136927b3.1
-        for <regressions@lists.linux.dev>; Thu, 05 Sep 2024 01:20:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWe/t8HOmuVyLpyNXDeEk7Br9b27C9d6TRAKaHqC/q4Qx6i6VAaLwjCU1j5ItjGXP62a59FJEO148IW7A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxcF8yqNd1a3kmEqsOyTZQ0L8HK8ZcGBPi/NU7LHjg/fZiUiylT
-	ySevVHBP5V//621S85lx3Y6/U4JP02RLLwzMBx6CgQ3HE2bqnbmt1/H23itNvYZSNZ81E+0pZrx
-	14F1jXH/9R5285aRJjyJJbPwOJ6V227AlON8nqA==
-X-Google-Smtp-Source: AGHT+IFXtwS0nG9o30m6bnG6CPrX+SPf8hVqmtejLkuUgeL2gu2BYQwyAbAfe5vGtSdSEIo1Ada6GvWoqN183ETy2Ds=
-X-Received: by 2002:a05:690c:fd4:b0:6ac:f8ac:7296 with SMTP id
- 00721157ae682-6daf484a7f7mr100310507b3.1.1725524408953; Thu, 05 Sep 2024
- 01:20:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rx9NF7RH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Xcx2MgBffnf+eg8qcGrHCeYQXmXfQC8m+rxT1FnNVew=; t=1725540349;
+	x=1725972349; b=rx9NF7RHbBLSgJFbuhTovU6BXQ7TjrdOEZmuTFxbH6GK6Xh2NNhhwhbz5cQbv
+	bTERmY95dshSlo9dx+P8I3PCdYWst/sy2C5f+bLYvHCYVTUBABTakEoNj6fIMOkSZ1CJj4TBwzaAN
+	p2LTppjsZMElPM0niGYLI3TX1w7SqWNrnkgFL1kU/9xxihgQdfCi94TjedWy80YaoI2escqUoCbcS
+	X0aicR70v4KIpX54fra4YTlYVY9/+0WeqQ+f/h3bv2T3jTC/RHH6Uq3SoZwPjnEMx42yZk9FLpP2K
+	kxprp/Fbcv6wtPtH+rHSXVBW3FwEbiRT7PjOzJi7s8ZRvhFc4A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1smBrv-0005Wv-6b; Thu, 05 Sep 2024 14:45:47 +0200
+Message-ID: <b3e15820-1457-49fb-9579-27f674377a28@leemhuis.info>
+Date: Thu, 5 Sep 2024 14:45:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240904-lru-flag-v1-1-36638d6a524c@kernel.org>
- <CAOUHufadyZBOifC8-ompzy4idEO9g-zipsSBrkWaoc=sWrk+Uw@mail.gmail.com> <d69cc5a5-ac69-4b43-82fa-391eb7a17cbd@leemhuis.info>
-In-Reply-To: <d69cc5a5-ac69-4b43-82fa-391eb7a17cbd@leemhuis.info>
-From: Chris Li <chrisl@kernel.org>
-Date: Thu, 5 Sep 2024 01:19:58 -0700
-X-Gmail-Original-Message-ID: <CACePvbXpE8y09kACY+8PbzxMOStf2mVfEOFJ=LOa=CyXGwRDWg@mail.gmail.com>
-Message-ID: <CACePvbXpE8y09kACY+8PbzxMOStf2mVfEOFJ=LOa=CyXGwRDWg@mail.gmail.com>
-Subject: Re: [PATCH] mm: vmscan.c: fix OOM on swap stress test
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Yu Zhao <yuzhao@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	yangge <yangge1116@126.com>, David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, 
-	baolin.wang@linux.alibaba.com, Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725540349;d2f4e302;
+X-HE-SMSGID: 1smBrv-0005Wv-6b
 
-On Wed, Sep 4, 2024 at 11:54=E2=80=AFPM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
->
->
-> On 05.09.24 08:42, Yu Zhao wrote:
-> > On Thu, Sep 5, 2024 at 12:21=E2=80=AFAM Chris Li <chrisl@kernel.org> wr=
-ote:
-> >>
-> >> I found a regression on mm-unstable during my swap stress test,
-> >> using tmpfs to compile linux. The test OOM very soon after
-> >> the make spawns many cc processes.
-> >>
-> >> It bisects down to this change: 33dfe9204f29b415bbc0abb1a50642d1ba94f5=
-e9
-> >> (mm/gup: clear the LRU flag of a page before adding to LRU batch)
-> >>
-> >> Yu Zhao propose the fix: "I think this is one of the potential side
-> >> effects -- Huge mentioned earlier about isolate_lru_folios():"
-> >>
-> >> I test that with it the swap stress test no longer OOM.
-> >>
-> >> Link: https://lore.kernel.org/r/CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-=
-MZUmErNAXoXmw@mail.gmail.com/
-> >> Fixes: 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before addi=
-ng to LRU batch")
-> >> Suggested-by: Yu Zhao <yuzhao@google.com>
-> >> Suggested-by: Hugh Dickins <hughd@google.com>
-> >> Tested-by: Chris Li <chrisl@kernel.org>
-> >> Signed-off-by: Chris Li <chrisl@kernel.org>
->
-> Thx for taking care of this, Chris!
->
-> > Closes: https://lore.kernel.org/56651be8-1466-475f-b1c5-4087995cc5ae@le=
-emhuis.info/
->
-> FWIW, no big deal, but that ideally should be (in general and for
-> regression tracking) the following instead, as that link above is just
-> at the end of the thread with the report, but not the report itself --
-> and that is what often needed when someone needs to look up the
-> backstory of this chance sooner or later:
->
-> Closes:
-> https://lore.kernel.org/all/CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9Ji=
-D9W_KA@mail.gmail.com/
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks you Yu and Thorsten,
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219193
+#regzbot dup: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/12106
 
-I just submitted the V2 to include the Closes tag. Technically it
-passes midnight here so it is another day I can submit another version
-:-).
+#regzbot report:
+https://lore.kernel.org/all/AS8PR05MB84851190CC1941157ED33D7D909C2@AS8PR05MB8485.eurprd05.prod.outlook.com/
+#regzbot introduced: ec6ce7075ef879b
+#regzbot summary: sb: gadget: composite: WinUSB driver install using OS
+descriptors broken
+#regzbot fix: Revert "usb: gadget: composite: fix OS descriptors w_value"
 
-Chris
+#regzbot report:
+https://lore.kernel.org/all/d6392b1af4ab459195a1954e4e5ad87e@viasat.com/
+#regzbot introduced: 738d7d03571c7e
+#regzbot summary: cpufreq/amd-pstate: ~35% performance regression
+
+#regzbot report:
+https://lore.kernel.org/all/85bef384-4aef-4294-b604-83508e2fc350@proxmox.com/
+#regzbot summary: cephfs: file corruption when reading content via
+in-kernel ceph client
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219237
