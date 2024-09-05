@@ -1,104 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9C519DF5B;
-	Thu,  5 Sep 2024 13:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B4319CCE2
+	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 14:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725543209; cv=none; b=KZ/3/3CeQ0ckX2laEEU0j8eS9QrgED1AZgz0sVh/qDp8fqpKXmDtzqJBAaUPu8aBjV7rU/9WJtrObFCQJ7z3xeiMXmTFKSKGQuFaGGLmDf0ZWdq844Dv7CaYEKlFbzKoV+XQiBp7G8J4oS1qSvoGj6DBTwslGeTNZqgpkH64Kzg=
+	t=1725545113; cv=none; b=A8FVJ9DzzTbBu53XSkAZ3qMJl0WxqCekSyUjRZzSGTS7ydBGyaRtk7DrQDh9sopAknx9MrA2g5kZ61KJ7tW7lv/pVehDgg0iqW/ge3/Yf86ZhwnCSWkhMWt9KXt020Gmc7TDj2W+fb7jffNzOak5weqv9qQje+fffhKnNCGwei0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725543209; c=relaxed/simple;
-	bh=bnAS4E/vDjLHG8xkgTnr6zM6XR0xaTXlpGLRZPgH52g=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=LjFcQ8MC5x4HH34M12FWNRfi/+UrAiLiUtDumw4XJVJNgZvOCm56NuoaUxqQ1fXp3SQP2DwlWoaPmBNgGYfoIDT7pFS4vevymSA/7eajJUfFMjMBkQ9Gogtb3+AYylqF/iO5PfX5tq+AJABK85F9qCKBChyvcBZTjW2azhBtV0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPtZHFRW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725545113; c=relaxed/simple;
+	bh=/sXUD7yFY7s6D9vfcEo4Soc8XPWm2ouH+IdHPfdX5VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B349AeEeNZTktSuguEX0/3jwBKmElPhKDOYVvTbFq9gJjC4zmTlQBI6aJOaX34NhB+uFnO03OciAgr/0qcIu6cDROjwPaD7t8TaXvxXF0lkipUf3dzj6OLCvbuzzjibiDlUeXuKWmHRJnK6/qcVipdB/sZKYXalGypFgZbH0P9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LpkF0uFE reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPtZHFRW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66002C4CEC4;
-	Thu,  5 Sep 2024 13:33:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725543208;
-	bh=bnAS4E/vDjLHG8xkgTnr6zM6XR0xaTXlpGLRZPgH52g=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=EPtZHFRW8llmK6Z6OVTsRpJ+4eQesF7cbGV3cffdTTduiP8DBxzH6kgfFtLWMqyh+
-	 cPWIUMczr4JeZd/3P1zpsXPKCqbIcKXB1o6K/8NmSdrhy+SNdQNv3AiZyiSO4VZJio
-	 UzVf2/99ht0fcJ0m8x/ZoZvIYbDEn+QTuraZaK3s3lNn2dUHCRUZ7fCBADyx8cp/Ur
-	 wnXIQhZHgmyKpKSgiUHTq7oSDM9m90AgoZo0yWZCxS/yKngy+PsBnM/uMRzHV4JPr7
-	 fwR6SIEF4GDs7UzJgMidLwgUbkZTNB6YewSBtbxy3ZE0UOrBh+OqX+4c8ioUc3IuCU
-	 C4CQi5fFHDYew==
-From: Kalle Valo <kvalo@kernel.org>
-To: Mike Lothian <mike@fireburn.co.uk>
-Cc: Bert Karwatzki <spasswolf@web.de>,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  sean.wang@kernel.org,  nbd@nbd.name,
-  lorenzo.bianconi@redhat.com,  sean.wang@mediatek.com,
-  deren.wu@mediatek.com,  mingyen.hsieh@mediatek.com,
-  linux-wireless@vger.kernel.org,  linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] wifi: mt76: mt7921: fix null pointer access in
- mt792x_mac_link_bss_remove
-References: <20240718234633.12737-1-sean.wang@kernel.org>
-	<0124ff39-7d63-49f8-bacd-3a40ce37ec4d@leemhuis.info>
-	<CAHbf0-Hn=ZyYpk7bS1yLK7K3ZpfWKgt3-t=c9Nhdj3Ov3H84mQ@mail.gmail.com>
-	<f7197c55d059cc8ddbf6c3def16dc414c5ec0b42.camel@web.de>
-	<CAHbf0-EBHERbxPGakY4-1jTQWqGqua3F0OYZjxcakdemJ5Soqw@mail.gmail.com>
-	<51e80bde6e3f3256ecdea2e5260463341e65578e.camel@web.de>
-	<CAHbf0-HYi=x11bc-sMJFbZ4cbkdphMYQ_hjzD_wrPvJevVwyYg@mail.gmail.com>
-	<980698e0d6dfa1e0043edfed6e174ff17705e053.camel@web.de>
-	<CAHbf0-FfAQhuu1TgQ_jVcxPqLsF-ON8vC1QJ=mNhis44dYWufw@mail.gmail.com>
-	<d657110b726646efa972c5e83bfce6c6b1627626.camel@web.de>
-	<CAHbf0-ETMTYs+T=qkLd=Y-W1ssQq1ZMDkxqHCJPSYA9U9CCgHw@mail.gmail.com>
-	<CAHbf0-HbLRRhtUEj1TDzemePoaLo71sxMFDN526HPEB_zO+4ow@mail.gmail.com>
-Date: Thu, 05 Sep 2024 16:33:24 +0300
-In-Reply-To: <CAHbf0-HbLRRhtUEj1TDzemePoaLo71sxMFDN526HPEB_zO+4ow@mail.gmail.com>
-	(Mike Lothian's message of "Thu, 29 Aug 2024 17:52:36 +0100")
-Message-ID: <8734mecjiz.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LpkF0uFE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5726440E0275;
+	Thu,  5 Sep 2024 14:05:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SLOxHCcBzqJL; Thu,  5 Sep 2024 14:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1725545103; bh=AjpM1WDrHJ+dslP31d1g1yEHl2ZRFYCbBBP91Y/KEmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LpkF0uFEdl9QhLarTVRfM5iRGkJzVOKPfEkrnty78USxkif7YieJ/XEl88lzTEHLw
+	 swkFokyaq19m/YJCEZ84Rr2ARLAfQjCPkO+TeQgWY05pJ0LfnVQJvAaYra7/o6BB+B
+	 Qxach3jdIvkkJLqFt9LgeKAeXpRATzRFO6epzPANKstltleR7N3zXgekS1/vX73Hya
+	 va4PEuvBVG6DxUo0bVFvQcvU3cyt8umcXqqRYpqbNRkC9PytJeWVGfWUuFPsVX68/a
+	 Dyi0BP/fln7CU+ZfPg097mSV8cGSD7+HsHdhgfyw7r3JGcb5XGW+WZlrnlbRCDufAK
+	 /a2hn3bFNnkndRHfVHnhmfrp0VeUhRVS164aHdnJOcxYPofJRroW+mqjbMDTtgfxJf
+	 k+DD4mS3NWjRCRKVCvF9HsW+IOebz/8Axt0Bw7qJeetq0dn4Ok0OCLCwYAhQR/ZI/V
+	 UfaGpebspXv+yzrjerD5BzB4TbJr6IHailPp9pL/C8w5xHcQB81IKqJA2u7WOyNV0v
+	 xr9KF1jbeMYC/+mbhFBO5oEmYNazBPQ81OBKRjnvRjEQFPlW2EDMrqu1Ft2wcJp1vF
+	 iWFj/Lwd/2BTiQsaVby0x6JARZChEd2fN2prGR1YANyfBR86WG8bfsfmR+Wd9hVnsv
+	 HKxUv2/Dea8jvJzdP+a97JJ0=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F30E740E01A2;
+	Thu,  5 Sep 2024 14:04:52 +0000 (UTC)
+Date: Thu, 5 Sep 2024 16:04:46 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob <rob@durendal.co.uk>,
+	regressions@lists.linux.dev, x86@kernel.org,
+	Joerg Roedel <joro@8bytes.org>, Tony Luck <tony.luck@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>, Lyude Paul <lyude@redhat.com>
+Subject: Re: [PATCH] x86/apic: Remove logical destination mode for 64-bit
+Message-ID: <20240905140446.GCZtm6fu_H5JH_aP-D@fat_crate.local>
+References: <ZqQSmw51ihns03ob@vendhya2>
+ <ZqQl79UhhSQ5IobX@vendhya2>
+ <8734nvuvrs.ffs@tglx>
+ <ZqTufKvJKvotC-o_@vendhya2>
+ <87cymyua9j.ffs@tglx>
+ <877cd5u671.ffs@tglx>
+ <ZqZ3Kp2NVctgstxs@vendhya2>
+ <c7b68723-6ecb-42be-a9f8-14d64c696283@heusel.eu>
+ <87jzgpubxj.ffs@tglx>
+ <d9cbe524-ad83-4c48-b6f4-3376ff3172d4@heusel.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d9cbe524-ad83-4c48-b6f4-3376ff3172d4@heusel.eu>
+Content-Transfer-Encoding: quoted-printable
 
-Mike Lothian <mike@fireburn.co.uk> writes:
+On Thu, Sep 05, 2024 at 03:28:47PM +0200, Christian Heusel wrote:
+> Now since it's summer people are maybe on vacation and I hope it got
+> stuck there because of cocktails on the beach and so on =F0=9F=98=86=F0=
+=9F=8D=B9
 
->> > this seems to be exactly the same error as I had (It can also be actively
->> > provoked by "nmcli radio wifi off"), but in my case commit 479ffee68d59c599 is
->> > enough to fix the issue. Can you please double check that your faulty kernel
->> > does not include this commit. If it does and you still get the error I can post
->> > the fix to the list.
->>
->> 479ffee68d59c599 isn't enough to fix it here, I've been applying the
->> second patch since it was pointed out
->
-> Sorry I've gotten myself confused as the patches changed
->
-> My kernel with
-> 6557a28f3e3a54cff4f0dcdd1dfa649b26557ab3
-> 479ffee68d59c599f8aed8fa2dcc8e13e7bd13c3
->
-> Is enough to fix things
->
-> I've been applying  the old fix on top which was only applying
->
-> @@ -1206,6 +1206,9 @@ static void mt7921_ipv6_addr_change(struct
-> ieee80211_hw *hw,
->                },
->        };
->
-> +       if (!mvif->phy)
-> +               return;
-> +
->        read_lock_bh(&idev->lock);
->        list_for_each_entry(ifa, &idev->addr_list, if_list) {
->                if (ifa->flags & IFA_F_TENTATIVE)
->
-> Casing it to be rebuilt each time
+Yep, check. :)
 
-So just to confirm: all fixes are now applied to the tree and we don't
-have any missing fixes?
+The patch is on its way to 6.12:
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=3Dx=
+86/apic&id=3D838ba7733e4e3a94a928e8d0a058de1811a58621
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
