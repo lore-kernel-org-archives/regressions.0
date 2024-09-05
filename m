@@ -1,79 +1,149 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CE319A28F
-	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 12:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D129119D071;
+	Thu,  5 Sep 2024 13:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725540351; cv=none; b=AQmOAPqN4dT0S8/CtK2k/TgTaCloA0+GA7rF1DWRml0e4vUFcYwqjVkujtabJqYCt28+3dyePYlCklzraSE3olXxQtfEj+T0FwrTvrmMICJ0brg3llGjawUqKxhXHb9IVMTzoSbY1wrxbgFAzM/Claki9V44UKd2btlIjXGb60E=
+	t=1725542980; cv=none; b=pawE87ocdTRoQrJKFl9lZKfqSN+IbN+Lyq8iwWQmz4tLdLR2UbijSIOfGtLzbWkh1XTtN4bed1j6wFqzH00qCIJC5GP+orHdmgIoVXRYppx18EwQDobKao8Y3a9PRJiOgNEdA5c/VH+V8VVs7mraLVP6nEMaX2zAvUthboSIL7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725540351; c=relaxed/simple;
-	bh=Xcx2MgBffnf+eg8qcGrHCeYQXmXfQC8m+rxT1FnNVew=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=ppQta+VRnKyi4i7g2ktU+U1tx4r6zLCsAwAIp/CVpNZMOsmMr8hA146k5M+RFdzeOukX9lrtztC2cFnfukrIimBUpo9qgGOj9D2Cx98yuZ52OIIkRqw/Tki32Pe3R9x/lY70agzuNt2Objl3F+uGcCgtLau+fxj5q+nE9TBJwJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rx9NF7RH; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1725542980; c=relaxed/simple;
+	bh=nAJEZl5O5HMkGChBesBIUXkkrxjC8ZCN9hQwnaV/sIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZ4ZUI8V2naYcch0104d2kaxOhByytdw+LenwPGSoMBItmKQ/gW7b5LD3yBgmQXZCIvq2jFl7ZVqA4dbqjH/RxGLuszfN7DWH243AoLo9vuW8+N1XAOpaKSEAK+dzGqbbjGd3ltG5/kZeK3sDALRh9fPw4IcnqeErOxjvtAJlgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=HPa/VX+6; arc=none smtp.client-ip=212.227.126.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rx9NF7RH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=Xcx2MgBffnf+eg8qcGrHCeYQXmXfQC8m+rxT1FnNVew=; t=1725540349;
-	x=1725972349; b=rx9NF7RHbBLSgJFbuhTovU6BXQ7TjrdOEZmuTFxbH6GK6Xh2NNhhwhbz5cQbv
-	bTERmY95dshSlo9dx+P8I3PCdYWst/sy2C5f+bLYvHCYVTUBABTakEoNj6fIMOkSZ1CJj4TBwzaAN
-	p2LTppjsZMElPM0niGYLI3TX1w7SqWNrnkgFL1kU/9xxihgQdfCi94TjedWy80YaoI2escqUoCbcS
-	X0aicR70v4KIpX54fra4YTlYVY9/+0WeqQ+f/h3bv2T3jTC/RHH6Uq3SoZwPjnEMx42yZk9FLpP2K
-	kxprp/Fbcv6wtPtH+rHSXVBW3FwEbiRT7PjOzJi7s8ZRvhFc4A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1smBrv-0005Wv-6b; Thu, 05 Sep 2024 14:45:47 +0200
-Message-ID: <b3e15820-1457-49fb-9579-27f674377a28@leemhuis.info>
-Date: Thu, 5 Sep 2024 14:45:46 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="HPa/VX+6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1725542931; x=1726147731; i=christian@heusel.eu;
+	bh=ltEfOBgyjmfFU+sjw4qaKjqJ7Vpk4OnL6zQfxu27USI=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HPa/VX+6kD8FvWLNjz/73BBZbqiQe20s0K5ZxnwuF1aNb8mZyTZKB3Zoidu+EjXo
+	 0VZBTWShDHxoiBbLWx2A7g5R/QJFtdywh6IQmGZgU3T4hMmeyubjqgHsH8Ts1xvcn
+	 XNTnR1Q7emYm9b89dZIEzxKezE+02S58eBmArKF0HSy3oASiHol9Cn5Ls5K2+mpBg
+	 Sm18nyWWpOOcB7pln/56AE9hO3ePx425Ddy3b66Vhjk7l+WUCUKQCCOnLpZQOY9qh
+	 z6t9e/+xxQvGfeMw44xXFanXJbsOZYTQuGc+RRVrV/kqHG+NOnkG3euTj/ZFI4iPW
+	 GscnkMYKcCU79U0swg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([93.196.138.43]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MlNgz-1sKGr946yj-00f0Eb; Thu, 05 Sep 2024 15:28:51 +0200
+Date: Thu, 5 Sep 2024 15:28:47 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rob <rob@durendal.co.uk>, Borislav Petkov <bp@alien8.de>, 
+	regressions@lists.linux.dev, x86@kernel.org, Joerg Roedel <joro@8bytes.org>, 
+	Tony Luck <tony.luck@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, Lyude Paul <lyude@redhat.com>
+Subject: Re: [PATCH] x86/apic: Remove logical destination mode for 64-bit
+Message-ID: <d9cbe524-ad83-4c48-b6f4-3376ff3172d4@heusel.eu>
+References: <87a5i4whoz.ffs@tglx>
+ <ZqQSmw51ihns03ob@vendhya2>
+ <ZqQl79UhhSQ5IobX@vendhya2>
+ <8734nvuvrs.ffs@tglx>
+ <ZqTufKvJKvotC-o_@vendhya2>
+ <87cymyua9j.ffs@tglx>
+ <877cd5u671.ffs@tglx>
+ <ZqZ3Kp2NVctgstxs@vendhya2>
+ <c7b68723-6ecb-42be-a9f8-14d64c696283@heusel.eu>
+ <87jzgpubxj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725540349;d2f4e302;
-X-HE-SMSGID: 1smBrv-0005Wv-6b
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bfqpdzedzbu2pe7h"
+Content-Disposition: inline
+In-Reply-To: <87jzgpubxj.ffs@tglx>
+X-Provags-ID: V03:K1:jo84XfmlfhbhtUDby/o7e8Otrjh/iw2fuZCImL0pcrvoM9Kt8KQ
+ PrblHavKOARyEUFGQYtRg3U9XuRELba933ipz1uU4vh8QoMg7HhWrtiLtv4GsFQttMUtL9V
+ uPa808RVxJJ/xvrful2NZWBlFZeEiCUee6PAH7J6EPXJnUNSHzP4xhg4DETsR/1Fmecsd7u
+ odqmJGeYNUzjy/Kjmy3EQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:LzV54rweJ6Q=;qLjdUFVmjk16SpszX5FVB6MoFLM
+ XY7mwW2TBndiZWuTUg1t7GscOvcXYLswTmCf/tY/mDEa9VllkGXoMgE9H+JY+lMgYxOapOGuf
+ nwt/bsOAwL5KmV7r08po0Be4d4jUKosSXp9ifL6C9/rTAW/iqUL00aIU13cby34m7XMaIayhN
+ gF47sA837AnIfFa8goxhFdICjO2RInWyBuMUCWuzge//haMZVRWF5EhpJP43Y1RGB0XzZOZua
+ Q3OEJZ5E0JE8/ePGjFpwVxmWGVrSmtwoh24U3KpMFQnsMIFNh3p5mtOkRkldZwFeNX9/XHOqA
+ AmHJDleBL+guNYvHAnAXNAGZIMQgdzjav3It8LCpMrS+t/IDkYXIIwSnMJDhvs6IxAb4KL0L+
+ ughLTMcea+UZDtVXZ7snJNuPOnBfM78V7xT4SpY15K6S+OSNh//Kx8vxo8/vgxEcamJwkjk5r
+ Zuw1iUKaOpW4T3yr14E40BhpyAF0DLWJx0vryeh5qU4tiN7yfrD3yCyW9faspjG1z6CikO4us
+ E28mXrIpaHj6Fo4Xp4QlJ8/8KsSt4DAUDP4PdGlHIVMQwWC1v7Rc+nncwBw3hLHzgl8oFw6Ku
+ FY/lH+S5kwEpngt1G080FdNdrQQZ6uQwZikfFrAiLNWsL4K4JDig4VhEURYCcnFHgf0Pdq30r
+ GtHo9pZGyvRGH1kw7+EXcvmOB3/u8hQSRfoietNZ3GCsOF9oEI/XOpS9eGKZ8V4BaMSUinc1R
+ kwG9yuXc31WKuJ6KKpoR+hMKnXc4Np6GQ==
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219193
-#regzbot dup: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/12106
+--bfqpdzedzbu2pe7h
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#regzbot report:
-https://lore.kernel.org/all/AS8PR05MB84851190CC1941157ED33D7D909C2@AS8PR05MB8485.eurprd05.prod.outlook.com/
-#regzbot introduced: ec6ce7075ef879b
-#regzbot summary: sb: gadget: composite: WinUSB driver install using OS
-descriptors broken
-#regzbot fix: Revert "usb: gadget: composite: fix OS descriptors w_value"
+On 24/08/09 02:18PM, Thomas Gleixner wrote:
+> On Fri, Aug 09 2024 at 11:37, Christian Heusel wrote:
+> > On 24/07/28 05:51PM, Rob wrote:
+> >> * Thomas Gleixner (tglx@linutronix.de) wrote:
+> >> > As the number of CPUs keeps increasing, logical destination mode bec=
+omes a
+> >> > less used code path so there is no real good reason to keep it aroun=
+d.
+> >> >=20
+> >> > Therefore remove logical destination mode support for 64-bit and def=
+ault to
+> >> > physical destination mode.
+> >>=20
+> >> Thanks Chris for applying the patch for me.
+> >>=20
+> >> Thomas - The patched kernel boots successfully.  I held off updating t=
+he
+> >> BIOS so there can be no ambiguity.
+> >>=20
+> >> Thanks,
+> >>=20
+> >> Rob
+> >
+> > As far as I can tell this patch did not get applied anywhere so far,
+> > right? Or did I miss anything?
+>=20
+> I forgot about it. Let me find it again and stick it into the tip tree.
 
-#regzbot report:
-https://lore.kernel.org/all/d6392b1af4ab459195a1954e4e5ad87e@viasat.com/
-#regzbot introduced: 738d7d03571c7e
-#regzbot summary: cpufreq/amd-pstate: ~35% performance regression
+I think the patch did not make it past the tip tree after that if I
+checked correctly.
 
-#regzbot report:
-https://lore.kernel.org/all/85bef384-4aef-4294-b604-83508e2fc350@proxmox.com/
-#regzbot summary: cephfs: file corruption when reading content via
-in-kernel ceph client
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219237
+Now since it's summer people are maybe on vacation and I hope it got
+stuck there because of cocktails on the beach and so on =F0=9F=98=86=F0=9F=
+=8D=B9
+
+In any case I wanted to send a reminder about it ..
+
+Cheers,
+Chris
+
+--bfqpdzedzbu2pe7h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmbZsg8ACgkQwEfU8yi1
+JYXclg/+OIRJcNL46KOCd4XEnmkRWWby4BYwKDybZRvvJ/ZiVWx9O4fk94dyU5ul
+jwGDKM9pAparUHHpVrhewXX6W3fJH8sJI0ahRDVxZCNZ2v6p3zyqRdu7MdI3O1XN
+hPucXItzNQCEaXqDZRfxkskf+4qHG/I46CVx+wn1exh/OQ+OsRO0vJZV7suxJSRy
+7GIk0rBKHV5wLhDMYAdM2Yhp2EO7249HwbVmfkJI+pW8jE7CIrSrdN60aJPHJjij
+IxIY5r1n1WqLDTHckLlvRk0xUIkeZVrSRLvzif9JmUz2E5b8jbcbPr6VUPBgM2z8
+8foVPh5NiDXrOhaqjcsEY4rBFNvG07xMXFgvknGx5yh22HaG/hDAm3qTRnvcaYTw
+yHnLS48hZVdcw7B16K3HfF/w4vRVj2IL200o2snmdtIPURKHrnhos/3LYocg3WeV
+Z34Phf9HTJH9JrIOsn5HvnTnzoxflkh+rxlF+L4avGSLzQ1Ph+nSdFLzfDDji1Gv
+JKKKSPxDovXpSiP27Ru5UnzOiXIoF6uBiSmKilbEk/AcJIFIcG7AagAujFiGNgSZ
+P8N0JUnSDm8/tB6vb/gs7l05NCg7WzAumE8b4opw+Cqip4Oau+EdLMhDXCDBl+bh
+Dk5JzoSJu2/RHJcllczc58QbY0eH9hnncffy5WvCCm3/Izd1L+0=
+=Qoy9
+-----END PGP SIGNATURE-----
+
+--bfqpdzedzbu2pe7h--
