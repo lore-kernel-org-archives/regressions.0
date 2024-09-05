@@ -1,97 +1,64 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from c.mail.sonic.net (c.mail.sonic.net [64.142.111.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4671313D2A9;
-	Thu,  5 Sep 2024 07:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00E5158D9C
+	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 07:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725521213; cv=none; b=iiHdEZQ+Q7usdQIVMjCTI+QEKvAFJGH5Sb1ajbGcOOwv9enAes9wy/n5Mip5owjhnt7tlenezBdBuGMPYwg5Qx2BztqjuSgCV5Mz7EeBiEFbVbESIM/LHj9UiAHva7G4Z4JIKlDTxPKGiUoYgJzW2G6cyry+YJYmAWgSP8uXci0=
+	t=1725521561; cv=none; b=lOIYwFJZ3+R4aPqm+p8FUokhOEXiiUWZCpB1j+B0r88vsZlf/sfgCeZLkV6STWUDkpvyCKjEVITvFlUU6XoOWme2Cm8uNndhRFV3wQj7wEY8wPfnmfhwlVRWOQj7W4NkAryEWj5tHHqyTroqIy1noEf9RHOj7RkzNtDUIbMP+Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725521213; c=relaxed/simple;
-	bh=J3h/pEXhWnamMRH/2xCgvLm05jD815BjkrZDVdDIF/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MulYAD5EG6nCT/Lb8j1n1FEHRTg5v73wmu9R6rMs0snaJmJBrzVfxCPVCFUaMVxa27ESrncz39mtjLdS8ei/7Op4LPKNbmP8eFUFfKgf7RPp6TlqKHzBeiTz8j/x8Sq8bS0VNE5dxc5wsex1O4h5f0K6LJCpYrV8fLYCS9lc33A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=00UeHK9S; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="00UeHK9S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=J3h/pEXhWnamMRH/2xCgvLm05jD815BjkrZDVdDIF/Q=; t=1725521211;
-	x=1725953211; b=00UeHK9S67E3/dNl16dOs47NX2z6Kfa8G0Ur4b3GDxbl5J8v0FPPkAaF51tG1
-	+vig3yScC62a5jAsT+qDtpcHmKjFwA3XKfmoEuS55xOnl/eGHmVBjpXH/vWRFNfOKg2LrLo9Xcb75
-	jya9c9qwYaDJOKQ0NGiWXblPHdTHAt4bDCf7QJWHvPv14h3gXOMamOYvMJknlXMLF/oXgix+GXV23
-	oZmfri+1NVnTBzGtvCE/M2pqFlgj6nN8hiPDT5jPdaBL8pIAM1J2/ZINmcZA6diMfQTmmdyc+1LYp
-	GIHUjwX0SP4YFMwuAz1Uuf8XNvFC2KsdcyhFCITzoIvklEmmsg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sm6NQ-000111-FH; Thu, 05 Sep 2024 08:53:56 +0200
-Message-ID: <d69cc5a5-ac69-4b43-82fa-391eb7a17cbd@leemhuis.info>
-Date: Thu, 5 Sep 2024 08:53:55 +0200
+	s=arc-20240116; t=1725521561; c=relaxed/simple;
+	bh=o3QfTXtx+QwlMAQ/BMqmMMnCRNn91qiNcjn0vQfY8QA=;
+	h=From:To:Cc:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=XHLoFbafkheqbIMco4OApCZkozt4/pvrovWNn8xaP+Y9H/8swz0btz/ChKKMjgB61lIaPZl4Ula/mmhSMgKDO3BQ8tlmTDKyqk6GQJ0TzcfwObD60YyAGFFPQTIFeJF36cVpd7VZr9mQRT2N+ZJlMuRQSwn7FlmJej/5NGRy1XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one; spf=pass smtp.mailfrom=nom.one; arc=none smtp.client-ip=64.142.111.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nom.one
+Received: from 192-184-189-150.static.sonic.net (192-184-189-150.static.sonic.net [192.184.189.150])
+	(authenticated bits=0)
+	by c.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 4857WbwI023364;
+	Thu, 5 Sep 2024 00:32:37 -0700
+From: Forest <forestix@nom.one>
+To: David Howells <dhowells@redhat.com>, Steve French <sfrench@samba.org>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Rohith Surabattula <rohiths.msft@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc: linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] cifs: triggers bad flatpak & ostree signatures, corrupts ffmpeg & mkvmerge outputs
+Date: Thu, 05 Sep 2024 00:32:37 -0700
+Message-ID: <6jnidjladjose5gvv7nmofs008dlrd4cn3@sonic.net>
+References: <1dihdj9avrsvritngbtie92i5udsf28168@sonic.net> <pv2lcjhveti4sfua95o0u6r4i73r39srra@sonic.net> <2450249.1725487311@warthog.procyon.org.uk>
+In-Reply-To: <2450249.1725487311@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: vmscan.c: fix OOM on swap stress test
-To: Yu Zhao <yuzhao@google.com>, Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, yangge <yangge1116@126.com>,
- David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
- baolin.wang@linux.alibaba.com, Kairui Song <ryncsn@gmail.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240904-lru-flag-v1-1-36638d6a524c@kernel.org>
- <CAOUHufadyZBOifC8-ompzy4idEO9g-zipsSBrkWaoc=sWrk+Uw@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <CAOUHufadyZBOifC8-ompzy4idEO9g-zipsSBrkWaoc=sWrk+Uw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725521211;96b34f3e;
-X-HE-SMSGID: 1sm6NQ-000111-FH
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Sonic-CAuth: UmFuZG9tSVbvGf0QMMU2+heqAt9XXWwBTS5z4XYZxovm2+6kZYki/pAW4WyerkjOMMmI5x7lyt+q2EGN3oFQ+jiklWoCbC25
+X-Sonic-ID: C;NPMwBllr7xGxjc+N3bHVhw== M;gIdGBllr7xGxjc+N3bHVhw==
+X-Spam-Flag: No
+X-Sonic-Spam-Details: -0.0/5.0 by cerberusd
+
+On Wed, 04 Sep 2024 23:01:51 +0100, David Howells wrote:
+
+>Forest <forestix@nom.one> wrote:
+>
+>> Write corruption still exists in 6.11.0-rc6.
+>
+>Can you try adding this:
+>
+>	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c26096ee0278c5e765009c5eee427bbafe6dc090
 
 
+That patch looks promising. With it, I've run my tests 2-3 times more than
+usual, and there has been no sign of the corrupt writes so far. Thank you!
 
-On 05.09.24 08:42, Yu Zhao wrote:
-> On Thu, Sep 5, 2024 at 12:21 AM Chris Li <chrisl@kernel.org> wrote:
->>
->> I found a regression on mm-unstable during my swap stress test,
->> using tmpfs to compile linux. The test OOM very soon after
->> the make spawns many cc processes.
->>
->> It bisects down to this change: 33dfe9204f29b415bbc0abb1a50642d1ba94f5e9
->> (mm/gup: clear the LRU flag of a page before adding to LRU batch)
->>
->> Yu Zhao propose the fix: "I think this is one of the potential side
->> effects -- Huge mentioned earlier about isolate_lru_folios():"
->>
->> I test that with it the swap stress test no longer OOM.
->>
->> Link: https://lore.kernel.org/r/CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-MZUmErNAXoXmw@mail.gmail.com/
->> Fixes: 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before adding to LRU batch")
->> Suggested-by: Yu Zhao <yuzhao@google.com>
->> Suggested-by: Hugh Dickins <hughd@google.com>
->> Tested-by: Chris Li <chrisl@kernel.org>
->> Signed-off-by: Chris Li <chrisl@kernel.org>
+>Unfortunately, it managed to miss -rc6 because Linus released early before the
+>PR could be sent to him.
 
-Thx for taking care of this, Chris!
-
-> Closes: https://lore.kernel.org/56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info/
-
-FWIW, no big deal, but that ideally should be (in general and for
-regression tracking) the following instead, as that link above is just
-at the end of the thread with the report, but not the report itself --
-and that is what often needed when someone needs to look up the
-backstory of this chance sooner or later:
-
-Closes:
-https://lore.kernel.org/all/CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com/
-
-Ciao, Thorsten
-
+Will these fixes be applied to the 6.10 series as well?
