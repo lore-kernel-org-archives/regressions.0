@@ -1,196 +1,94 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73F014D2A7
-	for <regressions@lists.linux.dev>; Wed,  4 Sep 2024 23:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B63C158862
+	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 05:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725493027; cv=none; b=n4ZUKiYK52JfYPFj5r0b64WZue9RLDnEXpiSPBvCB8daDv+l9GiQ8OPlpH+LcuMh0LvPxntPihOE7idRMKxXdqJ6F8UEG0v3Qa76ixKSMPmhOm3pCBTCfirHmouO3SY9+UnU4JjBzfazC69lBK0EHsy6fyjI3gpIA5jroTI/P6M=
+	t=1725512458; cv=none; b=BUWF6d4/N8AU7En/vylt+30BY2JfwoXqcpr5rpTIRIHEkMdKQxZmkZA3kWZafR4Q+Cn51Y16VHv/MAp80/ZNiHR+ce87I17XsaHVI8qTHps3LnOkjHGwKNBom6jqFooHMTDGrmUXPlWEhrCHwvAo7Qod82kZ5NwBvwCI00kqJaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725493027; c=relaxed/simple;
-	bh=2i7jdujG8eIGFsZ+R4bmgK7Z9BWm3NOZw8YsCrlObMA=;
+	s=arc-20240116; t=1725512458; c=relaxed/simple;
+	bh=Wv5Kk0LeNTuRHeczRYjQUdmtIoAX70LujmlvEI/jIF0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K5tLaQEbUjSBQQpqnutSzMnKAAU7GFI/1olt9rhV7SBEWgAtvZk2GxtX8z/uY+m/gER169f7DjcfkPiGIoUKhmmUySXDdPzS6Ur7ki59V1uafheMFbDZXknVqA38095X8zTI25VvDzMLRxRWZTDCsqoxTQu+RB17fuQ7BsqP+lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xpthfYNg; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=u8fXra8Omxn06BeJ0S3htu6shxTqdyMWl2syqy8VHZgNMM02Oann9CIdxBE1dsRrGqgZkknSZN97u3mbsZJe1M88Lz17WQqMCgMXN2fF+n/syqLIJ7G0s5QSjW1V8qFjr2MFy3S3seqPBX8Khv55R65q+GZHsss5GIDxeIFYEjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXmgNl9f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xpthfYNg"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5356aa9a0afso165717e87.2
-        for <regressions@lists.linux.dev>; Wed, 04 Sep 2024 16:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725493024; x=1726097824; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2i7jdujG8eIGFsZ+R4bmgK7Z9BWm3NOZw8YsCrlObMA=;
-        b=xpthfYNgeFHe3pZxKc/AEd4hpfY57KLAfY9XMO5VdV8Y0A1qYqWhJeM990pwDeyA7X
-         UcVw9ecv7oCJnyVTkzBApr/4/T1EN3HeLg2FjPNkcrnEh/Np2Vz5J8rRh5XzK05O4LEn
-         EE7vkkLswZ48QNj/+CRLJGnxmJlfv0aiBQQfKiIgUBjqULOyBdcNt9cZCimfg1TYTCZS
-         iNhOGOPK1P4zAn/uhI+XoHbLVmzGBu7Ia+uwFb94dfme9ks3VYT/frk6Zw7RYzoit0hM
-         +2I19HeABHP5ipiE2fSjQwrH159szbf4P3IeHrbUcciEzCli13EMz2Xm9lZB8njx6mjP
-         pC9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725493024; x=1726097824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2i7jdujG8eIGFsZ+R4bmgK7Z9BWm3NOZw8YsCrlObMA=;
-        b=wXoPrMrYu13C3I3dltdZanODqSR+nMkrtqwaLYdohyouKd9XznNjfTPYCAr7zZWT51
-         CnBH/kkA+lp06ffCTw4JQU8K8xpsJ4CldLFcG9Y0JPseKK7FTa2RWspdIqq3/w51es2b
-         NfbnNuBT47mXOZQ0I1VSA5ZDLWwPtEQ/ZqNkOUq46XWFthRRFBC9NPnAycPZ/BEve5x7
-         b/lPYMisfqVqyLoe900S4BgPDKLb3V1jze1RoUNDns6hiwpcZEBsIjldl/eQDtZ6e+W4
-         33jW0XaxkTCEdp9kWbA9K3vyxh3CQ7P1/v9ecFImUC0RrQfu5bHTU64aqGAyTnskIRcU
-         wdVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ2T4MqXhL9T2Qbbzodwxyp9uqGBl/Jm8HaHlf3wpXYabQ+5h1yVLSwrcvItLVyqbIsgOn/zEcoqEsrw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZGo4jiLKi3/rN1836H2C9t2c8A13FRy9/GIN/CbevjZgYFBX+
-	QPoL2avu7O/IhG94RKYAVQFCUhllBzfKDQ3gk9sh0TBHVkxYHzwDCCDHGK+mHhRqleckkKkLvVg
-	KMK0c3XVBI7MblPgrHXrKjHE3H1x/oQ6vMUE2
-X-Google-Smtp-Source: AGHT+IFqfOcvoCbUS5vOqB2O1EnmAuLB1CPavvPvZTFX9sDAQaTS7Ezm3gmoT4QSh8MVYb0iQpBoMJ7C62D7EK12AuY=
-X-Received: by 2002:a05:6512:3a94:b0:52e:936e:a237 with SMTP id
- 2adb3069b0e04-53546b345a1mr17100135e87.16.1725493023268; Wed, 04 Sep 2024
- 16:37:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXmgNl9f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD80BC4CED2
+	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 05:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725512457;
+	bh=Wv5Kk0LeNTuRHeczRYjQUdmtIoAX70LujmlvEI/jIF0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rXmgNl9f6iJjZ+SOPkuMIMhsquSfq2OblwnsdEKhAoUQ8/n/quJ4I38tVwcHKZb9P
+	 M/ETZzwT+/YB6Q7vWOQGCUHRGbstEElhz81Dl2brSNrLhYqculnLDSWgo6lBVW8DVs
+	 PTofTgicUnWa4KFQQvpjgnVr2tVZiKbNcRZ5TnUpqX+hJLopImNYtZzs0/A3Ur3ylB
+	 urqapjvczCAfpn+QXBlCZKG/Mq+h6bqanPi2ujDqqq6+I008W262jga/cDRKFO4MRp
+	 aSkYeSl4nXe1fxg1NO/n8zALdm3hDajMTseuWnFVRdFh684/RsB54SXQRTKf+bNPdh
+	 Njjmmg/1wGiMA==
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a045f08fd6so108665ab.0
+        for <regressions@lists.linux.dev>; Wed, 04 Sep 2024 22:00:57 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwqhPVbJSu2MSjkW965DppytDAEgWgz0FeuSRQlfJq0AMYEyBrj
+	feftRd2NAwjItU8u5izddds5CZJ7g4kTU/tDJMaBOk1kmLF1Q4eTJnLWV0OyO8VyHWtpeHLwRo/
+	5DW9M4V1+adK8IbpdMUHKIAgOwPSeYqHu4QcV
+X-Google-Smtp-Source: AGHT+IFDBoIur5pix1vcCpgWhNewDPqGPR9thFq+HmC1zuxlXLSxQ4sUpDhQbT3jHAsSOYV9mgX/x3Y0D1FcdjsyApY=
+X-Received: by 2002:a05:6e02:1605:b0:381:aa0b:3ccf with SMTP id
+ e9e14a558f8ab-3a0475c88e0mr2417985ab.26.1725512456844; Wed, 04 Sep 2024
+ 22:00:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <BD22A15A-9216-4FA0-82DF-C7BBF8EE642E@gmail.com>
- <6f65e3a6-5f1a-4fda-b406-17598f4a72d5@leemhuis.info> <ZsiLElTykamcYZ6J@casper.infradead.org>
- <02D2DA66-4A91-4033-8B98-ED25FC2E0CD6@gmail.com> <CAKEwX=N-10A=C_Cp_m8yxfeTigvmZp1v7TrphcrHuRkHJ8837g@mail.gmail.com>
- <A512FD59-63DF-48D3-BCB3-83DF8505E7E0@gmail.com> <oophwj3aj2fnfi57ebzjuc536iltilmcpoucyms6nfk2alwvtr@pdj4cn4rvpdn>
- <3D1B8F1F-2C41-4CCD-A5D7-41CF412F99DE@gmail.com> <CAJD7tkbF2Cx4uRCJAN=EKDLkVC=CApiLAsYt4ZN9YcVUJZp_5g@mail.gmail.com>
- <EE83D424-A546-410D-B5ED-6E9631746ACF@gmail.com> <CAJD7tkZ01PPYMzcTyX_cwr836jGonJT=fwT3ovc4ixW44keRgg@mail.gmail.com>
- <277CDE7C-7ED8-4840-9C30-533C9327B028@gmail.com> <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
- <EF0ABD3E-A239-4111-A8AB-5C442E759CF3@gmail.com> <CAJD7tkZi8Wg+ZCWMy=2YKZ3hLZZ7JYQaCG+w7y=3Tb8wmHC48g@mail.gmail.com>
- <CAKEwX=PiyvV7AxKESk5zc9TN1n5b0uFR0pr_HGxKsUFUgk0q+Q@mail.gmail.com>
-In-Reply-To: <CAKEwX=PiyvV7AxKESk5zc9TN1n5b0uFR0pr_HGxKsUFUgk0q+Q@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 4 Sep 2024 16:36:27 -0700
-Message-ID: <CAJD7tkZrf_RVT1+LtBMrpL0T==1757WSjHiSOHp7Pio0T-F5OQ@mail.gmail.com>
-Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
- mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, Pedro Falcato <pedro.falcato@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Linux-MM <linux-mm@kvack.org>
+References: <1719038884-1903-1-git-send-email-yangge1116@126.com>
+ <CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com>
+ <0f9f7a2e-23c3-43fe-b5c1-dab3a7b31c2d@126.com> <CACePvbXU8K4wxECroEPr5T3iAsG6cCDLa12WmrvEBMskcNmOuQ@mail.gmail.com>
+ <b5f5b215-fdf2-4287-96a9-230a87662194@126.com> <CACePvbV4L-gRN9UKKuUnksfVJjOTq_5Sti2-e=pb_w51kucLKQ@mail.gmail.com>
+ <00a27e2b-0fc2-4980-bc4e-b383f15d3ad9@126.com> <CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-MZUmErNAXoXmw@mail.gmail.com>
+ <CAMgjq7CLObfnEcPgrPSHtRw0RtTXLjiS=wjGnOT+xv1BhdCRHg@mail.gmail.com>
+ <CAMgjq7DLGczt=_yWNe-CY=U8rW+RBrx+9VVi4AJU3HYr-BdLnQ@mail.gmail.com>
+ <CACePvbXJKskfo-bd5jr2GfagaFDoYz__dbQTKmq2=rqOpJzqYQ@mail.gmail.com>
+ <CACePvbWTALuB7-jH5ZxCDAy_Dxeh70Y4=eYE5Mixr2qW+Z9sVA@mail.gmail.com> <56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info>
+In-Reply-To: <56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 4 Sep 2024 22:00:44 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuMBMJCdmjwwPxWn44CDMSngB+uqNYERDU=xPAQYNPrbNQ@mail.gmail.com>
+Message-ID: <CAF8kJuMBMJCdmjwwPxWn44CDMSngB+uqNYERDU=xPAQYNPrbNQ@mail.gmail.com>
+Subject: Re: [PATCH V2] mm/gup: Clear the LRU flag of a page before adding to
+ LRU batch
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Kairui Song <ryncsn@gmail.com>, Ge Yang <yangge1116@126.com>, Yu Zhao <yuzhao@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, 
+	Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>, baolin.wang@linux.alibaba.com, 
+	liuzixing@hygon.cn, Hugh Dickins <hughd@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 3, 2024 at 3:43=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote:
->
-> On Tue, Sep 3, 2024 at 10:49=E2=80=AFAM Yosry Ahmed <yosryahmed@google.co=
-m> wrote:
-> >
-> > On Mon, Sep 2, 2024 at 1:58=E2=80=AFAM Piotr Oniszczuk
-> > <piotr.oniszczuk@gmail.com> wrote:
-> > >
-> > >
-> > >
-> > > > Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google.c=
-om> w dniu 31.08.2024, o godz. 19:23:
-> > > >
-> > > > On Sat, Aug 31, 2024 at 2:41=E2=80=AFAM Piotr Oniszczuk
-> > > > <piotr.oniszczuk@gmail.com> wrote:
-> > > >>
-> > > >>
-> > > >>
-> > > >>> Wiadomo=C5=9B=C4=87 napisana przez Yosry Ahmed <yosryahmed@google=
-.com> w dniu 29.08.2024, o godz. 23:54:
-> > > >>>
-> > > >>> I also noticed that you are using z3fold as the zpool. Is the pro=
-blem
-> > > >>> reproducible with zsmalloc? I wouldn't be surprised if there's a
-> > > >>> z3fold bug somewhere.
-> > > >>>
-> > > >>
-> > > >> Hmm - yesterday i recompiled 6.9.12 with zsmalloc and =E2=80=A6. a=
-fter 16h of continuous tests I can=E2=80=99t reproduce issue.
-> > > >> With zsmalloc 6.9.12 looks to me like stable.
-> > > >
-> > > > Interesting, and a little bit what I hoped for tbh.
-> > >
-> > > :-)
-> > >
-> > > I tested mainline 6.10.7 with 26h test and also it is stable with zsm=
-alloc
-> > >
-> > > >
-> > > >>
-> > > >> With this - what will be your advice to move forward?
-> > > >
-> > > > Well, it's possible that some zswap change was not fully compatible
-> > > > with z3fold, or surfaced a dormant bug in z3fold. Either way, my
-> > > > recommendation is to use zsmalloc.
-> > > > I have been trying to deprecate
-> > >
-> > > IMHO - isn=E2=80=99t bug in this report + difficulties to reproduce->=
-fix enough to depreciate z3fold?
-> >
-> > I would say this bug report is yet another reason why we should depreca=
-te it.
->
-> +100000.
->
-> This is precisely why I was asking which allocator was being used
-> here. We have also accidentally selected z3fold internally a couple
-> times in the past, which had bitten us as well.
->
-> >
-> > >
-> > > > z3fold, and honestly you are the only person I have seen use z3fold=
- in
-> > > > a while -- which is probably why no one else reported such a proble=
-m.
-> > >
-> > > Well - in fact this is ArchLinux - not me.
-> > > I=E2=80=99m using Arch and kernel in builder machine with ArchLinux c=
-onfig + packaging
-> >
-> > According to [1], zsmalloc should be the default allocator for zswap
-> > on ArchLinux. Anyway, I initially thought that no one was using z3fold
-> > and it was bitrot, but apparently some people are using it and it's
-> > actively harming them.
-> >
-> > [1]https://wiki.archlinux.org/title/Zswap
-> >
-> > >
-> > > >
-> > >
-> > > I see benefits already: on very memory demanding qtwebkit compile:
-> > > z3fold: swap frequently gets 6..8G from 16G available
-> > > zsmalloc: can=E2=80=99t see more than 1..2G
->
-> Exactly :) zsmalloc is better than z3fold in a lot of workloads that I
-> have observed.
->
-> > >
-> > > > doubt that you (or anyone) wants to spend time debugging a z3fold
-> > > > problem :)
-> > >
-> > > lets depreciate it!
-> >
-> > I tried deprecating it before [2] and performed some analysis [3], but
-> > there was some.. resistance. Maybe I will try again and use this bug
-> > report as yet another argument for deprecating z3fold :)
-> >
-> > [2] https://lore.kernel.org/linux-mm/20240112193103.3798287-1-yosryahme=
-d@google.com/
-> > [3] https://lore.kernel.org/lkml/CAJD7tkbRF6od-2x_L8-A1QL3=3D2Ww13sCj4S=
-3i4bNndqF+3+_Vg@mail.gmail.com/
->
-> I don't wanna sound like a broken record. But this has been the nth
-> time we need to spend extra engineering time and effort unnecessarily
-> because we have not deprecated z3fold.
->
-> If you need more datapoint - here's our last conversation where z3fold
-> was a problem:
->
-> https://lore.kernel.org/lkml/CAKEwX=3DMo+EaaxBYcLMTHYADB4WhqC3QmWV3WQ0h2K=
-M491FRuQA@mail.gmail.com/
+Hi Thorsten,
 
-I sent a v2 of the z3fold deprecation attempt:
-https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/=
-.
+On Mon, Sep 2, 2024 at 5:54=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Chris et. al., was that fix from Yu ever submitted? From here it looks
+
+Not yet. Let me make a proper patch and add "suggested-by" Yu.
+
+It is one patch I have to apply to the mm-unstable before stress
+testing the swapping code. I even have a script performing the bisect
+after applying this one line fix, so that I can hunt down the other
+swap unstable patch.
+
+> like fixing this regression fell through the cracks; but at the same
+> time I have this strange feeling that I'm missing something obvious here
+> and will look stupid by writing this mail... If that's the case: sorry
+> for the noise.
+
+Not at all. You did the right thing. Thanks for the reminder. I also
+want to get rid of my one off private patch fix as well.
+
+Chris
