@@ -1,94 +1,97 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209F138B
-	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 06:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4671313D2A9;
+	Thu,  5 Sep 2024 07:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725516425; cv=none; b=d6jHQAIGboEJwpxezJE7a9Iy1hqEO8HvJq70OnJaTe/2/DMvl3GYOT4036g7Gcm+XNf1vLqDeyBRCPqj6PJt4ZIlroOPEd7Ra5HEDLjZU4BHq/7J965xIjhxgaTwzxjdXUZIXf8D0oUYpae+X9x3RxoE/yAf0pZH3msjjDK9oFg=
+	t=1725521213; cv=none; b=iiHdEZQ+Q7usdQIVMjCTI+QEKvAFJGH5Sb1ajbGcOOwv9enAes9wy/n5Mip5owjhnt7tlenezBdBuGMPYwg5Qx2BztqjuSgCV5Mz7EeBiEFbVbESIM/LHj9UiAHva7G4Z4JIKlDTxPKGiUoYgJzW2G6cyry+YJYmAWgSP8uXci0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725516425; c=relaxed/simple;
-	bh=5LG1d3avN5co6G6gzC32VQF9Lut496WAZe399A99cSk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4Kntc/1kS+zhjcjYp/F4NceyETqMpEs1O+FMNbq/AQtzabC7Ed7Djv2e3VnnPyp3SRyB9WdNutlQFMWYRWs83avZVuouYg5+Q1G/Ig7gSpJ+aGSyHMZWggap9XKyyOo8i/ofeTH4K7OE4lXlaf7V6sJa4MPWeQNZgDgXAitZeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgAGGe2l; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725521213; c=relaxed/simple;
+	bh=J3h/pEXhWnamMRH/2xCgvLm05jD815BjkrZDVdDIF/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MulYAD5EG6nCT/Lb8j1n1FEHRTg5v73wmu9R6rMs0snaJmJBrzVfxCPVCFUaMVxa27ESrncz39mtjLdS8ei/7Op4LPKNbmP8eFUFfKgf7RPp6TlqKHzBeiTz8j/x8Sq8bS0VNE5dxc5wsex1O4h5f0K6LJCpYrV8fLYCS9lc33A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=00UeHK9S; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgAGGe2l"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6bd6f2c9d52so2165006d6.3
-        for <regressions@lists.linux.dev>; Wed, 04 Sep 2024 23:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725516423; x=1726121223; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5LG1d3avN5co6G6gzC32VQF9Lut496WAZe399A99cSk=;
-        b=JgAGGe2lsl3UR5MqlCEA8u0oz9sispUE8u5heWyax65vjL6i84gQtuI7AQPy0CGaPf
-         +CI95VAfqlinPOG9u6Xm0s4V669N4sIwj4zHYVEjpNYep6mz1uT0OwslB9SrTMt7DLtR
-         TMHlPkO5w4yLsn7h1ziMsL1tgqaK/UAqa0J6pXrYtYt1hLHU0yPOGuu/v1r1ycNZ0r9z
-         iDT1t80wSpVVKD9I9trvFbkS7pRM+e9eLqJmR6ieuzVYH9rSbBgYbRxHKbUTukByLW0g
-         tWftou4Bj9At69967KEQzmXbTrY+Nq6YsvufrvFS4eD1yohZ3VGOhYFZvY+GJpa9ESZO
-         vE2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725516423; x=1726121223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5LG1d3avN5co6G6gzC32VQF9Lut496WAZe399A99cSk=;
-        b=VEcQGhwIGGr1WNYINhq0kvNk+DEkvo6uT0im+J6BXqYKSVen38HEfLM1hojZs5+hjf
-         ZhrSZ5FZjfoSpT02KK4rvuxiOf1YN3rj2sNIze9til6/EBZTuhSKkK1Bnvz79XWUv072
-         cvsJloYqAWRe1jYxUvsnf1MlGw9yKWZjTe6I56Iee9oslpqpofTHqu2QC4ElBsQk1SZW
-         dmGuh1AoavNAsZGyLaaZToNqOyo/HifMtaIwV0PfkwXDlWdHeV7tYihOoUIvS47JHVP1
-         0h69ii+RcapjhqdCtnDtOjaoeSrh1E75pILLQzIAMdYTgGP4vCh5JYli0nbSYFxgEpfO
-         YPrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXj03XvNTcDIwaliJJn+c6yB7lwOMfsM2arb1IE38kjaH5FL4BXuOwQT9Oxaz4OgunZGuE87YvUmmFH1Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/e5biKXMTdtA7RubmGM30P8zS6tBGFsroDmvsYMGYKeCw3PmW
-	OqKr+Pux89eeumlBRaQbWx8H+z5yB4bykRmI3HCxIu7FObbvDHhvduADS2St4VFx25xsMc9I0hW
-	ICESrEJUPGAKwo9NapNf6YatvB2AJRJLDoxECIwSPW+M=
-X-Google-Smtp-Source: AGHT+IGB8ymXCte18l4OE7yiIbhXNCU7V0Ne5O+JMA0juqCKhfd8whLL2b7mgE/CSWSFgutJc0fE9TPCp01kmop852o=
-X-Received: by 2002:a05:6214:5982:b0:6c5:12b9:d5ce with SMTP id
- 6a1803df08f44-6c512b9d761mr74759286d6.4.1725516422860; Wed, 04 Sep 2024
- 23:07:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="00UeHK9S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=J3h/pEXhWnamMRH/2xCgvLm05jD815BjkrZDVdDIF/Q=; t=1725521211;
+	x=1725953211; b=00UeHK9S67E3/dNl16dOs47NX2z6Kfa8G0Ur4b3GDxbl5J8v0FPPkAaF51tG1
+	+vig3yScC62a5jAsT+qDtpcHmKjFwA3XKfmoEuS55xOnl/eGHmVBjpXH/vWRFNfOKg2LrLo9Xcb75
+	jya9c9qwYaDJOKQ0NGiWXblPHdTHAt4bDCf7QJWHvPv14h3gXOMamOYvMJknlXMLF/oXgix+GXV23
+	oZmfri+1NVnTBzGtvCE/M2pqFlgj6nN8hiPDT5jPdaBL8pIAM1J2/ZINmcZA6diMfQTmmdyc+1LYp
+	GIHUjwX0SP4YFMwuAz1Uuf8XNvFC2KsdcyhFCITzoIvklEmmsg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sm6NQ-000111-FH; Thu, 05 Sep 2024 08:53:56 +0200
+Message-ID: <d69cc5a5-ac69-4b43-82fa-391eb7a17cbd@leemhuis.info>
+Date: Thu, 5 Sep 2024 08:53:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
- <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
- <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
- <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com> <CABXGCsOoL5vD0+FRALFQFr3ZBpb2z5mpGKzAD5RHoW9_sb5yaQ@mail.gmail.com>
- <f68020a3-c413-482d-beb2-5432d98a1d3e@amd.com>
-In-Reply-To: <f68020a3-c413-482d-beb2-5432d98a1d3e@amd.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Thu, 5 Sep 2024 11:06:52 +0500
-Message-ID: <CABXGCsMSTsBFW=OirDszPFVOiNgyOBSh3qyzAw-Coi-McnicAQ@mail.gmail.com>
-Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
- some RenPy games causes computer hang
-To: Leo Li <sunpeng.li@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com, 
-	pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: vmscan.c: fix OOM on swap stress test
+To: Yu Zhao <yuzhao@google.com>, Chris Li <chrisl@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, yangge <yangge1116@126.com>,
+ David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
+ baolin.wang@linux.alibaba.com, Kairui Song <ryncsn@gmail.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240904-lru-flag-v1-1-36638d6a524c@kernel.org>
+ <CAOUHufadyZBOifC8-ompzy4idEO9g-zipsSBrkWaoc=sWrk+Uw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <CAOUHufadyZBOifC8-ompzy4idEO9g-zipsSBrkWaoc=sWrk+Uw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725521211;96b34f3e;
+X-HE-SMSGID: 1sm6NQ-000111-FH
 
-On Thu, Sep 5, 2024 at 4:06=E2=80=AFAM Leo Li <sunpeng.li@amd.com> wrote:
->
-> Can you delete ", new_cursor_state" on that line and try again? Seems to =
-be a
-> unused variable warning being elevated to an error.
->
 
-Thanks, I applied both patches and can confirm that this solved the issue.
-The first patch was definitely not enough.
 
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+On 05.09.24 08:42, Yu Zhao wrote:
+> On Thu, Sep 5, 2024 at 12:21 AM Chris Li <chrisl@kernel.org> wrote:
+>>
+>> I found a regression on mm-unstable during my swap stress test,
+>> using tmpfs to compile linux. The test OOM very soon after
+>> the make spawns many cc processes.
+>>
+>> It bisects down to this change: 33dfe9204f29b415bbc0abb1a50642d1ba94f5e9
+>> (mm/gup: clear the LRU flag of a page before adding to LRU batch)
+>>
+>> Yu Zhao propose the fix: "I think this is one of the potential side
+>> effects -- Huge mentioned earlier about isolate_lru_folios():"
+>>
+>> I test that with it the swap stress test no longer OOM.
+>>
+>> Link: https://lore.kernel.org/r/CAOUHufYi9h0kz5uW3LHHS3ZrVwEq-kKp8S6N-MZUmErNAXoXmw@mail.gmail.com/
+>> Fixes: 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before adding to LRU batch")
+>> Suggested-by: Yu Zhao <yuzhao@google.com>
+>> Suggested-by: Hugh Dickins <hughd@google.com>
+>> Tested-by: Chris Li <chrisl@kernel.org>
+>> Signed-off-by: Chris Li <chrisl@kernel.org>
 
---=20
-Best Regards,
-Mike Gavrilov.
+Thx for taking care of this, Chris!
+
+> Closes: https://lore.kernel.org/56651be8-1466-475f-b1c5-4087995cc5ae@leemhuis.info/
+
+FWIW, no big deal, but that ideally should be (in general and for
+regression tracking) the following instead, as that link above is just
+at the end of the thread with the report, but not the report itself --
+and that is what often needed when someone needs to look up the
+backstory of this chance sooner or later:
+
+Closes:
+https://lore.kernel.org/all/CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com/
+
+Ciao, Thorsten
+
