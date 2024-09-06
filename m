@@ -1,288 +1,110 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54AA193088
-	for <regressions@lists.linux.dev>; Thu,  5 Sep 2024 21:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725570874; cv=fail; b=A3Ydd7UKEZW/Ean0BeK4fY2iC8sDKK/whomt8kEruYHUtlcENxsBu4kajJJTmzqFas3kuLdM2BWupqyuASr2XTVT5Urp8BUlQ65cOjFBpVF1Vxi+Ba2dHNUjmQnFwuN0yOFDIu4d43l/Eo/xK/fBbUjY0uaIBkbpWwvjXogp7UI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725570874; c=relaxed/simple;
-	bh=TpVYGzflAHQttFJr+5LHrx58iMYRTtFkzVuycCpZ/BY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TwgqLmz/RJqMHlDSuh3O2VZT9/IKHEGsAMrzJdL+seaCS7XE5/7eT/Ptz60+nlSURco5e6DBRETF32QPGSba3nPSKv/MeZXSXVozRwTXYzsfXzLggfFYBJplKQgikOgdFOE3rdi3YkvoFugvIOAEyqQm+egpMmDrirlD9wyItGE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WsvKZLnt; arc=fail smtp.client-ip=40.107.100.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69E5175AD;
+	Fri,  6 Sep 2024 00:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725583615; cv=none; b=lQJJ4tKtSudRHwYgdaUDkG0Yu1WzIatabNfHP/8ZDOE60MKg/7vel09WEAtCMu8vAbSBx1ZcfaWQbzpjo8yA+svnFLMPd0gf/hT3DjmLSPnq7qjIF5o5qVnERL2FhviiuILmJcyOGwDuMFf5k8goWXp88PKccDCyowe6hByLePw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725583615; c=relaxed/simple;
+	bh=wraag6XcvA/xrmjSnurt8z/qaMokfuBHSFiv3OYVrrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GH4zA5AYmnnedcWIgdOz/YeIrSgC9OjPaEafo99R97hcNSfeksAUdn9r+WsihggFay0qAIFoRC5iRkUm9LBCXgM6+TfiOweVfnh7YBcuOXz4/BqESAeKzIy/4xAezkYkNzPa2AeC/hPpFg1zkgUMOEpVTbJpFHogbh4tZnTbLMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6cGrFZf; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WsvKZLnt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WTlO69fbXJZg6OZZi7bMIY/3er8W40EDMPm+FQCYv8IkdPj15xwMD6Omsv/qMBcO+vyS9oSkp80tF/MpOZJ/vRekqvArZSvUDAwcMrjeHT+2Mb8tINHrd8uHAwpwAR3Y7S4cd3Ba45InJNk8YsKxm2AEEe8GQC7y7Z06g87xxiHYXmxsIOzy0aDZ3tGVAsbTBG/9ltoeaG0rXcd0T0eopIrHWxiUsbLKysoSXN/W7cWcKH45qPtnfgIDVQRSpP1KIila2x4HdOVi1HRjJNselmQWl8SlIjTiTwizB5tpLIxDDiO5LLcAgNdx/SKfp4dmP8tWUrU7UIVZ1tLlheZOlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ez1ZU456IITWhUKH+MSTFDh1+Qn0sPmfcHg7ORsYlIs=;
- b=Zkq6/DYL0jsD3fT798pJsZqHPJBv6YyYq6jXzFMPdwIGnZ2tPVrCT0XszLdHV+NgvL7Tkiq4yJs72IEUZejErDudX5OjWG7YbrwURW2d0P3XpjfknmcT1anEfTm8gx3Fq3s47ecMTLSjqEyadjt/hdGowgcRzjRhu3C6tSwCgMwzbimyBZf3SI+OfUsg7t1cP61vS+wbPqkX2gF424RDE3SRPCmFcycoAXWGEhQ2c4VThtJDmXPcIopQk0W+AUV42oG0EfGXu36JBEpYi/tDdLmGrtcMOYr8cIZ2Eq2stPm8P3xGZpDoqxkUnUjkLhZKX4ifN1yw/0xiDeQa7nBmtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ez1ZU456IITWhUKH+MSTFDh1+Qn0sPmfcHg7ORsYlIs=;
- b=WsvKZLnt51Kzlva+oQS0m1CaKyOWQq9M7HF49Y1UxHXmE5f7NVJvl3bbskf8Tzur80oLZWDMjCKTCAa0EEPHSC+dvxipUxMbzsaadHvRiB6iKAyNxgmNB+yY6TlNAVDMU0BPv5deQiGqwEVSu5t5j6jG+RZWygbKrnS+Y1Fx1Sg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS0PR12MB7770.namprd12.prod.outlook.com (2603:10b6:8:138::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Thu, 5 Sep
- 2024 21:14:29 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7918.024; Thu, 5 Sep 2024
- 21:14:29 +0000
-Message-ID: <be2d96b0-63a6-42ea-a13b-1b9cf7f04694@amd.com>
-Date: Thu, 5 Sep 2024 16:14:26 -0500
-User-Agent: Mozilla Thunderbird
-Subject: linux-6.6.y regression on amd-pstate
-To: "Jones, Morgan" <Morgan.Jones@viasat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- David Arcari <darcari@redhat.com>,
- Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- "rafael@kernel.org" <rafael@kernel.org>,
- "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
- "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
- "perry.yuan@amd.com" <perry.yuan@amd.com>,
- "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
- "li.meng@amd.com" <li.meng@amd.com>, "ray.huang@amd.com"
- <ray.huang@amd.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240702081413.5688-1-Dhananjay.Ugwekar@amd.com>
- <20240702081413.5688-3-Dhananjay.Ugwekar@amd.com>
- <bb09e7e8-5824-4bc1-9697-1929a4cf717e@amd.com>
- <d6392b1af4ab459195a1954e4e5ad87e@viasat.com>
- <bb49cd31-a02f-46f9-8757-554bd7783261@amd.com>
- <66f08ce529d246bd8315c87fe0f880e6@viasat.com>
- <645f2e77-336b-4a9c-b33e-06043010028b@amd.com>
- <2e36ee28-d3b8-4cdb-9d64-3d26ef0a9180@amd.com>
- <d6477bd059df414d85cd825ac8a5350d@viasat.com>
- <d6808d8e-acaf-46ac-812a-0a3e1df75b09@amd.com>
- <7f50abf9-e11a-4630-9970-f894c9caee52@amd.com>
- <f9085ef60f4b42c89b72c650a14db29c@viasat.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <f9085ef60f4b42c89b72c650a14db29c@viasat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR04CA0105.namprd04.prod.outlook.com
- (2603:10b6:805:f2::46) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6cGrFZf"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52f01b8738dso1014968e87.1;
+        Thu, 05 Sep 2024 17:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725583612; x=1726188412; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tjzXiDfPjHYS2m3qWrFYZULU3Lh4847YGs1rex0AjD8=;
+        b=R6cGrFZfoKF3PSUSeaC4shXKMcm2sfiGPurnN9rN9CPD931MEPsy2TxFTUNTM3TiB4
+         91DL96KCciA1+B70b5Ist1tcpjqW3L0OnvU9CSb3Farb7T6QCJFza4pxGRdyxw/kx7JG
+         4xpQ9HvA0IB74Um5doOAcgP6voj7EioA18fVQrHu/PScCFZE1LgBgCPiyQKvVS2TpMEF
+         RpJOb3B5ou5FVWKfNSzOBqHFq4DjA0/+MqHjiEm+KG6gdm/0qbDOGeJPvHcHeWiD5zk9
+         +9GVXYmzMC/Xn704bT143Xtyin8XQD0TDdOTL3VFp9Zez1chHHauF9fTCcmQRHa05/b/
+         BTSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725583612; x=1726188412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tjzXiDfPjHYS2m3qWrFYZULU3Lh4847YGs1rex0AjD8=;
+        b=k6h3natnTe1iai4lmCxuGRvl1678uAMsFdatUfPEWPRqDaE3gGizOT8DDB8SRdVhnA
+         xbKdH/gaCNk82ODqBJwFSpEZnxUI8bUkMaU/NBW7BSIqxxHyzCXYE7aWmx347GE+AoFb
+         XhYsOefJKNo9sQVHzBjWaQyZwgv8+lorz799oxxXdxhnYsARJkI+WaXb93Q/zfOgX89p
+         VJidovCAj2MWBDZYi+Y3ghabrX847iC8iFjR7udTtKn7OIt6uXzBMvfV/oMLtGuvbCOi
+         5UJ+SFRy+yKJM3bfCEHpf3KaS6lT3a5eigToPAIvIervAk/yVfvsdAnQihuHzHoXtjPA
+         lrWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNjagA5zKNRqJqZnuO1qZhvV8yj32g7c4t4Zu8hytsbz+xPO3wRCRbe+OxtN5WPH5NSWYoZazwicZC8h4=@lists.linux.dev, AJvYcCVpkTkby57T+QAYCpUlQ4X558oQ+GII43cZDxneI6BbqOwn09VVeHMPIzrXCYRiRSnCPHFiyQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyxC4N1aXfTLbUS7uPgqYSIneNKw/2eAah0CtHRBtAnH1Vltik6
+	WOhWjM/foIqIJnWTv1pLT8/iB5apfSr6c78gd38ZYBU96+FY7sd7MdVpgAV7RkHN+hZcxCV6Us4
+	bZCYv/MgsKY1AskjGegT8cFt9kAA=
+X-Google-Smtp-Source: AGHT+IEqxH77xXmK7syoAkYdIL6i1q/zug9U1ZFp27ffeFb72Ar8f0dZqbEwFB1SbaA5SwPNImYC6xhXy2zChgDKHnM=
+X-Received: by 2002:a05:6512:ea6:b0:52e:9c69:b25b with SMTP id
+ 2adb3069b0e04-536587b4390mr331788e87.28.1725583611619; Thu, 05 Sep 2024
+ 17:46:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB7770:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e340b05-95c9-41c8-94a8-08dccdefbab0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aWlRMlc3bXp1L0dXZFo5NTNmSUFCOUhXMEpFREEzZUpIeTZuZFFBY0hxVDdi?=
- =?utf-8?B?TE1XZk9EWUpCSXZWU0g3Tkd2dXdzaWdZSXgrRU55clN2dmFIVVZBdytJV3Nv?=
- =?utf-8?B?bnBBSlZrc2VHT2JMbnFCTVFscmxlbjBJMGJ1WmRQcWEyOVc4anlsaUhHOUha?=
- =?utf-8?B?dHlCdlM2RUk1Y2pIemZ1QkRiamRIVS9yUEpTVmcydlhTdjlQYmFCejF2WVRQ?=
- =?utf-8?B?d0J3OHRNaHV2a3M3NDQrT2tFNWY5TWR1bVVvYTBrVGxFK1B5VEYxOHZRMVlt?=
- =?utf-8?B?WkJQRlB2TlNvNS9nRlJzTTkybDdNQ05aZFl4STNHdWJIeXVGQnRRZGJEZlhz?=
- =?utf-8?B?cTczb0JhVVlKb1dnc1BUVjFXOFRCOHJONE1VSTRvaUIzRFRDRzBOTGliMXFs?=
- =?utf-8?B?OUJpSDBCL3E2TEdKYjd1VGlTZW9mS1FlbU1kUmJMNGhhRHFmbExyQk1pd0J1?=
- =?utf-8?B?NXpUenRhZm9vWVdkTldPVHdDK3hSRmRQSkZWb204ZnVONWZoTEtIYnBqWW5G?=
- =?utf-8?B?T2RSNFVVNFpsZFpldzNnd1FRM2p5YkZ2TmVIV3NuRHMwaVlNWGt3d2kyRktH?=
- =?utf-8?B?RFBiNmMzWkZ4aDFXUlIzYXVYblV3RUlpRG5LbW5ocW1oY2xrL09YY1NOWjd2?=
- =?utf-8?B?ZmZDaHRoOEpFZTRMdVNiKzdvUlpxakFFc082cXdlcHRNK0RSbU1XdTJDM29L?=
- =?utf-8?B?bEUvTGZqSWVUMGZ6MjFsbmF4ZE9LUXVXOE5LMTY0UEpaMHdPaFhGU1VCNThv?=
- =?utf-8?B?Q1dYMGZDdE1JSXpiaFVVeDNrbVNHYnZYYUdpb1BtaWRUWGIyaEgwU2NVSHcw?=
- =?utf-8?B?NkoxTzZIN0pJSGhKUU8xdUxRdlAzNFhpdmNVVlNENWRMQm8rUVBuTENuMnJn?=
- =?utf-8?B?VjV5c0cxK3JPQmVpam9aZVdMVGJnR1FrNXBNRk1rYlZRVFBUOWdJVlRsSkkv?=
- =?utf-8?B?cjRvTU1GNmRKZ0h4L21BZHBGRU1kOXZTYmlKRmdqdjBDa2QwRWxHV256RmYz?=
- =?utf-8?B?Y0xvdFBlTGlrREhQUmNyQzdLeUQ2N283bG41d2RhSm9HcFJqTERHMGkvUVh6?=
- =?utf-8?B?RFZoUmJWZmRGNm12OGZDMkdkYzhVMkgwZndkR3NMZ29LNW84OFlJR09acEY5?=
- =?utf-8?B?aVcyUmIyYnlyUU5oRWZNa1RoV1RmUTdKWW82RkUxRFVOYm9LUHByYUJFdzZS?=
- =?utf-8?B?bGZ4cW9obU1RVnhrY0VWUjIrSUFJSStGckdrNzRjbnZEemZiVlhzRlZrcWtO?=
- =?utf-8?B?V1d3bVNsTUtqSmF1cU4yaDhvd1FuMzRSSHZNRXZJb3VodEh4UGpMajg4aHdT?=
- =?utf-8?B?TmZMQllYR3BRUFdYR2N5bHFZOFVaU0NaMDZYblR6dW9IOEllQWQybHAxRlBw?=
- =?utf-8?B?SDlmNnBhS1BBdGFIVmdrWG11cTFmbU5qeDhZaFpXOU4wN3R4Uld4ZzZEMGQ1?=
- =?utf-8?B?SDFoQnBFejljaGRmNzVCMmJTTjV2emZJWUtLWjFidTBVZmZYOVBHcjdmWml3?=
- =?utf-8?B?M2tLN3lvY09PaUlmVDV2eW9TQW92RkpBb0l6ZC9TdFdjbjlBYWdJNWw3R0F5?=
- =?utf-8?B?UTFaYUhpSi9TS0dUZ2xCUStsVXZjcndUbHlPaC9VVnRJeHFJajB6TS8zaHRr?=
- =?utf-8?B?TFdWRy9HK0NDcFo3Ynl4QVBnVE1UQ0dmRkVjQUhleVNzNjNvQUk5N0o0VGp1?=
- =?utf-8?B?SmN3MmMrS21kT3Z0VXNNUlpxdVVqV3hjOWNpUTV4RzhWVzdmNS9neEthRzJZ?=
- =?utf-8?Q?LmMGcuhMCl6jawbgxs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U0R0TmhMc1hKZUx3UXMyZnRhbWFWb1pjcE9aNHUvWktBY0h0V05RRDNVUzNi?=
- =?utf-8?B?QXJNRnN3Q2J6WncrSnpVMkdsZjVjVFhHbnpPYkZDZVp4aFdqYlNUSVVQU3Vp?=
- =?utf-8?B?aDRKbEtNWXg5U3lER21VZzNDSm5UM0dRMFRHQlZNM1liM0JOVVUwZk9aNXRM?=
- =?utf-8?B?d3FGblFKeUx3YnoxcjdwYW91SjlickxhampjY3U3SmZPcG5kc0t3ZndLNzRL?=
- =?utf-8?B?UUJLTHFPdlEvbUxVQit6dHhaZmRmRW1DVWxFK2ZxNkFtS0NLeGxCQXRLS0VY?=
- =?utf-8?B?UEd0TlB6VUpGSm9aWTE5alNqMDZFbGtXMkhYTVB1cGdIYnA0VU5kQlJUclNq?=
- =?utf-8?B?WGlFYUtGYk96YmZzMnNyMjh5dWYyYzBNenFkN1ZmZHFJZ0RYNThQb2xibXN0?=
- =?utf-8?B?Q1VITjZyaWtGd1JXeUpQWVBYK0R3eWdKVXFUZk9BV01SQjJtN2J3WklwL1oz?=
- =?utf-8?B?QmdkbXRDcHcxNjRhcUVDOGVXK1BwdS9ydFJOR0FWend3eE1Da3B5SXNncDhm?=
- =?utf-8?B?VXJobDRyTWdGU3FGc1YvM0dpaXV1TCtMMDdldk9WM2RMOVYrcDJhTlVPUWly?=
- =?utf-8?B?aXFXOTJ1OStkbmpUa25SdjY1dVdWQWtrSG5zSk1ETHEzVE9TcUpUNUUwY25P?=
- =?utf-8?B?aEpxeGVTY252N3dzWnFITGNmQjR2bmdnYmg1UE5mcVVCMzZObTdIM0RqajRZ?=
- =?utf-8?B?Tzk2TVJxZm9oZ1YxbFpDU0ZlZTlXTitIMUFZQ3BsdFNmS05FbnZ5RDFSclJI?=
- =?utf-8?B?SkQwdE5nb0NLS0Q0Q2ZlWng3RHNNOVpHeXFCaWxZcW1DYWMvTVFjaC9rY3E3?=
- =?utf-8?B?aml1K0ZGSEVkbXdhblQ3Mld5M3ljbzlFN0xvaVRjTXpzb3pEV2JncHA2ZmZB?=
- =?utf-8?B?ZDgwN2dEME5EU0h6Q0FmZVR6Syt4ZldpbkhlMnNnYlhjTHpvSC9uc3orcnlH?=
- =?utf-8?B?V1Zlc0FRWGVGY2dKZG5pNTh6emVFcDFYVnc1QldEUGJQd2kwQnFIcW1kZnJV?=
- =?utf-8?B?NCtHNVBKZHQ3c2JDZklOWGRwS1lOdStSQmtYWE5ya0x1S0U3TEV5YjR0Zmor?=
- =?utf-8?B?d3hzRmhUMndPQUF6cis3UmJ3Z0ZPS2dndjgrOHhqL3JMYjJXZFZjVFhRZXNn?=
- =?utf-8?B?QS90c0JxSnZPYVJVditEUDJ0M2hod2JKZzZmTmlyOWVHRFk2eW5aUlE3ZkdK?=
- =?utf-8?B?Q1NhWldTWEl5L2x0UDVLZUNnK1FBSzlzQWtMeVJYdGRnd3M4K1p0cjFQcVps?=
- =?utf-8?B?ek94Rm9jeHhra1NMOWlxRUE2bGlQOGxmdCttL21VcWpHYkVVZ1pBb0tBQUUx?=
- =?utf-8?B?UFRCL3dxRnNRTmNwbUJud0d3dTRLaHcrOTlRUnNGemJ0WkhaeitYdFpEbGkw?=
- =?utf-8?B?WlByOTdkT2N0UTY3L1dZdWJpWXJiQkVuc0oxWFREL2lBNWNhWHJ2WCs4L2ZE?=
- =?utf-8?B?M1FGbzFXVmEwdk9id1l6Q0djalpXbjBhMkg1WVUvTitDZ3NNTEZUanlZcVMz?=
- =?utf-8?B?TTNzWWNVYVV5dGxTV3BGSExIYmMxR1pQL3ZWTC9tLy92T0oxRG9ubWhyM21y?=
- =?utf-8?B?aVM3Y2R6cCsySm1JVWdPV2JURnhKelo4Q3B1emxQTzY2UEJEbEl0YU5GT0VI?=
- =?utf-8?B?RTJKcWs5TjkwdzNRUHk0bk9pM3IvNDd0M2wreFR3L0hHY3hNclE1TUhxbm1H?=
- =?utf-8?B?NllML01RYWprOWhPT3M0R0IveGZ1Wmh2MkRhVFpWVHBwSVpFMERlcXNscG5K?=
- =?utf-8?B?M0VDVCtLdi9BRitkdXhwWUtkTjFwZEplS2RqYW94RFhIaUVDSmI0Vlczbi9n?=
- =?utf-8?B?OHVDQm91Q3Jremlzdzh4UmJjWUZId2VKcGxhak9OUU9YWnFRSnptYkRCa3BH?=
- =?utf-8?B?NjNtLy9BS01TenNsZGJPN3JQQjFjVDFYTHZiMjZrS3FyQUxiaDR4NEF2UUIr?=
- =?utf-8?B?OSt5VFp5ME5aR3l6REJ0SzkrVUNiSjlEcG9pWnVxeVRyU1pvcWR5Q2tqeVV1?=
- =?utf-8?B?bFhKaGdtakMwb0E2WUgrRkZrZ3drVDBqeTdaS3BDMkcvdEE4VlhPMyswTVFl?=
- =?utf-8?B?YWY5dU5Ua1FpNTUwaHhLMTF2SUhnN21ZdVViMzZGYXdyN1lJeWk2NldHZVl3?=
- =?utf-8?Q?DCN3WR1eSWidlEtU8rNmxiXJe?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e340b05-95c9-41c8-94a8-08dccdefbab0
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2024 21:14:29.4353
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bXEiaisDxeE0yr5OhLWRDABS8xmLtedsBw6PXvT8kk2WU7UW6Pn/41EV4VhuzwUmsla9kJvQxsIfqX8mOw9wCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7770
+References: <1dihdj9avrsvritngbtie92i5udsf28168@sonic.net> <pv2lcjhveti4sfua95o0u6r4i73r39srra@sonic.net>
+ <2450249.1725487311@warthog.procyon.org.uk> <6jnidjladjose5gvv7nmofs008dlrd4cn3@sonic.net>
+In-Reply-To: <6jnidjladjose5gvv7nmofs008dlrd4cn3@sonic.net>
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 5 Sep 2024 19:46:40 -0500
+Message-ID: <CAH2r5muWjARBd67oXMCgZAkOekEd=naX6x_4aDhb8YXYBMm5Cw@mail.gmail.com>
+Subject: Re: [REGRESSION] cifs: triggers bad flatpak & ostree signatures,
+ corrupts ffmpeg & mkvmerge outputs
+To: Forest <forestix@nom.one>
+Cc: David Howells <dhowells@redhat.com>, Steve French <sfrench@samba.org>, 
+	Shyam Prasad N <nspmangalore@gmail.com>, Rohith Surabattula <rohiths.msft@gmail.com>, 
+	Jeff Layton <jlayton@kernel.org>, linux-cifs@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+ stable
-+ regressions
-New subject
+On Thu, Sep 5, 2024 at 2:32=E2=80=AFAM Forest <forestix@nom.one> wrote:
+>
+> On Wed, 04 Sep 2024 23:01:51 +0100, David Howells wrote:
+>
+> >Forest <forestix@nom.one> wrote:
+> >
+> >> Write corruption still exists in 6.11.0-rc6.
+> >
+> >Can you try adding this:
+> >
+> >       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t/commit/?id=3Dc26096ee0278c5e765009c5eee427bbafe6dc090
+>
+>
+> That patch looks promising. With it, I've run my tests 2-3 times more tha=
+n
+> usual, and there has been no sign of the corrupt writes so far. Thank you=
+!
+>
+> >Unfortunately, it managed to miss -rc6 because Linus released early befo=
+re the
+> >PR could be sent to him.
+>
+> Will these fixes be applied to the 6.10 series as well?
 
-Great news.
+It is queued for 6.10 stable based on recent email from Greg KH - see
+email titled:
 
-Greg, Sasha,
+[PATCH 6.10 181/184] mm: Fix filemap_invalidate_inode() to use
+invalidate_inode_pages2_range()
 
-Can you please pull in these 3 commits specifically to 6.6.y to fix a 
-regression that was reported by Morgan in 6.6.y:
+--=20
+Thanks,
 
-commit 12753d71e8c5 ("ACPI: CPPC: Add helper to get the highest 
-performance value")
-commit ed429c686b79 ("cpufreq: amd-pstate: Enable amd-pstate preferred 
-core support")
-commit 3d291fe47fe1 ("cpufreq: amd-pstate: fix the highest frequency 
-issue which limits performance")
-
-Further details are below.
-
-Thanks!
-
-On 9/5/2024 16:09, Jones, Morgan wrote:
-> Mario,
-> 
-> Confirmed. Thank you for the help! Slightly different refs on my end:
-> 
-> Remotes:
-> 
-> next    https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git (fetch)
-> next    https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git (push)
-> origin  git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git (fetch)
-> origin  git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git (push)
-> superm1 https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/ (fetch)
-> superm1 https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/ (push)
-> torvalds        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (fetch)
-> torvalds        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git (push)
-> 
-> Patches:
-> 
-> git format-patch 12753d71e8c5^..12753d71e8c5
-> git format-patch f3a052391822b772b4e27f2594526cf1eb103cab^..f3a052391822b772b4e27f2594526cf1eb103cab
-> git format-patch bf202e654bfa57fb8cf9d93d4c6855890b70b9c4^..bf202e654bfa57fb8cf9d93d4c6855890b70b9c4
-> 
-> Results:
-> 
-> Linux redact 6.6.48 #1-NixOS SMP PREEMPT_DYNAMIC Tue Jan  1 00:00:00 UTC 1980 x86_64 GNU/Linux
-> 
-> analyzing CPU 56:
->    driver: amd-pstate-epp
->    CPUs which run at the same hardware frequency: 56
->    CPUs which need to have their frequency coordinated by software: 56
->    maximum transition latency:  Cannot determine or is not supported.
->    hardware limits: 400 MHz - 3.35 GHz
->    available cpufreq governors: performance powersave
->    current policy: frequency should be within 400 MHz and 3.35 GHz.
->                    The governor "performance" may decide which speed to use
->                    within this range.
->    current CPU frequency: Unable to call hardware
->    current CPU frequency: 2.09 GHz (asserted by call to kernel)
->    boost state support:
->      Supported: yes
->      Active: yes
->      AMD PSTATE Highest Performance: 255. Maximum Frequency: 3.35 GHz.
->      AMD PSTATE Nominal Performance: 152. Nominal Frequency: 2.00 GHz.
->      AMD PSTATE Lowest Non-linear Performance: 115. Lowest Non-linear Frequency: 1.51 GHz.
->      AMD PSTATE Lowest Performance: 31. Lowest Frequency: 400 MHz.
-> 
-> And our builds are back to being fast with `amd_pstate=active amd_prefcore=enable amd_pstate.shared_mem=1`.
-> 
-> Morgan
-> 
-> -----Original Message-----
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> Sent: Thursday, September 5, 2024 8:12 AM
-> To: Jones, Morgan <Morgan.Jones@viasat.com>
-> Cc: linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org; David Arcari <darcari@redhat.com>; Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>; rafael@kernel.org; viresh.kumar@linaro.org; gautham.shenoy@amd.com; perry.yuan@amd.com; skhan@linuxfoundation.org; li.meng@amd.com; ray.huang@amd.com
-> Subject: Re: [EXTERNAL] Re: [PATCH v2 2/2] cpufreq/amd-pstate: Fix the scaling_max_freq setting on shared memory CPPC systems
-> 
-> Hi Morgan,
-> 
-> Please apply these 3 commits:
-> 
-> commit 12753d71e8c5 ("ACPI: CPPC: Add helper to get the highest performance value") commit ed429c686b79 ("cpufreq: amd-pstate: Enable amd-pstate preferred core support") commit 3d291fe47fe1 ("cpufreq: amd-pstate: fix the highest frequency issue which limits performance")
-> 
-> The first two should help your system, the third will prevent introducing a regression on a different one.
-> 
-> Assuming that works we should ask @stable to pull all 3 in to fix this regression.
-> 
-> Thanks,
-> 
-> On 9/4/2024 08:57, Mario Limonciello wrote:
->> Morgan,
->>
->> I was referring specfiically to the version that landed in Linus' tree:
->> https://urldefense.us/v3/__https://git.kernel.org/torvalds/c/8164f7433
->> 264__;!!C5Asm8uRnZQmlRln!aIZEDEbIUKD7OrxN0b0KjoqKYDL2yMkwk4EK7x_oSnyHQ
->> 6MEq7yt6JHjd0TD9DgEYEWDcF58OKL8c7G11bT3dSqL8eM$
->>
->> But yeah it's effectively the same thing.  In any case, it's not the
->> solution.
->>
->> We had some internal discussion and suspect this is due to missing
->> prefcore patches in 6.6 as that feature landed in 6.9.  We'll try to
->> reproduce this on a Rome system and come back with our findings and
->> suggestions what to do.
->>
->> Thanks,
->>
-> 
-
+Steve
