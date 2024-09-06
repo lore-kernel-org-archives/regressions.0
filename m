@@ -1,64 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA321C9EB9
-	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 11:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04931A2C39;
+	Fri,  6 Sep 2024 11:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725620986; cv=none; b=Em6rnONnnrKsAFz0jmKcK4jnlt5mfBXpoYFPMSjzRMMoKz70WSGpfW9TDESjp1icmFK0tgn3BFzy4KCiowFJavSc9kt0Zmj32EvcudzdsijAV4Yz6IO90eEyoDTiAo1uNp/bt2jL1+R891W1MHUtbxrsS8IIgJNXI61wPLolEvQ=
+	t=1725621951; cv=none; b=D6lJNCoFhETyFnTFZbdgnJ6XcIROp8ZAJwb+DAwOuPM7SCyQAsFRA4rovpgf28UDjpY0iD/V5FiI5Dz1LWbHO/nong+AMf+FHthFiEF1Z4VyNIB3hbwByfC7cNXhQzwyq3o9+0AFxvmBNUOtwc1iOekGbSueaFBLqsUsCLedrt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725620986; c=relaxed/simple;
-	bh=Usa+xeryk/kCno/gay7xkzlhyEYNjyOplnylfEzdJWs=;
+	s=arc-20240116; t=1725621951; c=relaxed/simple;
+	bh=DmaEKJ8/NLpkXcaL6Xw0J9LfpkVpr/GixbnI3HWELqw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WF5rWAUjScQS9hSmWkpdU1RYfHK3nOyp5At+mLHn0Rs5Myw07DoTfguGaJPugvoHq3uQ35GdU3PNuRopbt3lti9M5SnIlBJSwrcM67DjY3YkjxM3EzO/P5hY6UITVWpnHK3umJMbU4WylNcvQy6QerKdi29NXEhbcWRXQYyH0Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RdUd36sJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=hTYYiF6yPi8vobbc8bI2vIh718R/2TBybY04fxJbeGlQgF426I75Q5w/d+RW8d1RhsBNxaIJCXU5SRI0o4cLoWy9roNAw28KJzC82ISZvnMtJ5Z6HT+Eh+wUvd07iXB+ZzzSijUSWsDKMXeigwsayyFazcJtO1lxaVyr5LexHTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fCyj2f4n; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RdUd36sJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725620983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5lyE9fqrgEMZ+2heBiLKo8myouuHThPfR4uCDSQ64CE=;
-	b=RdUd36sJt2oXDUp/fx1YYbuq+5VdS45J/qdokkgcibD42oyJXaDo63FKFgLqfMDmWXZTKn
-	MRahk0mDPbusuK4fh34DeNtitmjMyGv961QnaYY5/C67ZU9GoIVCZwdCcdjxnk6LF1qWGD
-	pP0JJCoMlHBq6F+1LSdGzk3EqXmk4ZY=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-K4Row-ykP5-okp2Bepw43A-1; Fri, 06 Sep 2024 07:09:42 -0400
-X-MC-Unique: K4Row-ykP5-okp2Bepw43A-1
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3df1e4129fdso2412112b6e.3
-        for <regressions@lists.linux.dev>; Fri, 06 Sep 2024 04:09:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725620982; x=1726225782;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5lyE9fqrgEMZ+2heBiLKo8myouuHThPfR4uCDSQ64CE=;
-        b=f1d5XrHiSdx6DmoXvsBolpiUEUGjXJTsFXXWYlJ6tfRRaSGII/rOJusxqQfZzupJH8
-         vkoVbFAyKXF4dj0agKyyQU8NLGg4o9gOzXwFGOSCF9IT/0qtFcVEOOZQGKenm1FnJpvz
-         uG89DScpzW4nrCZVTzGHxPJdPFM3X5vYpg7d4JIL3jaarC3DEZw4NV5cIK1utdq3Q9Qu
-         EwJLXsrbSXNz6dg9Uyf4NcK8KY0UjaQOjCy2GHbXrp9fdRFVyWmvqpG66h3wCPhZ0QGd
-         AFnL1nlDdrJnOr64V85a2lp2ieNubtUDC9/PsHskexFnQ7Y8VP2nZpBGxH/SakOOxG+8
-         mZXA==
-X-Gm-Message-State: AOJu0Yxr7NEzFuL3ReabCJfN1aucVtK2WMkNgI1LaktDIT1tTtlb/Ufh
-	9vR3gZ0PFHYC+Xgnt812tRUMsgErG8GFNpRcExNOK+j9/CO5rvn4merXgO8YBIFxUrW3f7t5irf
-	6JpH87qhm7K2Gh2h5fzzS/ZtKIzRLGfD0YSoz7bURTge7LsJPuyVLbHrIwBK7
-X-Received: by 2002:a05:6808:2214:b0:3d5:64d6:9f1e with SMTP id 5614622812f47-3e02a0249admr2571013b6e.36.1725620982021;
-        Fri, 06 Sep 2024 04:09:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1yR7XNXwmmNFoz6dlGTf6VjHpVNiJOBP1k2/Z6Rbnc/lLnAZu24E/xgHVXfe+wTzmbtACuw==
-X-Received: by 2002:a05:6808:2214:b0:3d5:64d6:9f1e with SMTP id 5614622812f47-3e02a0249admr2570992b6e.36.1725620981701;
-        Fri, 06 Sep 2024 04:09:41 -0700 (PDT)
-Received: from [10.72.116.139] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd859ffsm4775069a12.16.2024.09.06.04.09.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2024 04:09:41 -0700 (PDT)
-Message-ID: <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
-Date: Fri, 6 Sep 2024 19:09:36 +0800
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fCyj2f4n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=TaGZSCH2FvEl+U3DsaRvbmj+4eIMbIhuHXZKV7y/t4c=;
+	t=1725621949; x=1726053949; b=fCyj2f4nltQV+bRiY5m4WG/adQrs59mV7Wgc2bBi2lgkGNo
+	QYSJt5gmQ3mQnOeNFTHNSUnbpib0hrSKf3mk8Sf76qCPUpK3LiA+QMZ9L45EiSVOxkyY7eYm2vwyc
+	SxGhV9fu2qOtECcaN/31nileItTKcnvdNnaCGMmPJ/3ROcXBIJuDyR/tkpOAFbJH18J9VR61MbA8/
+	wt/NY3r/UbnrUlImnShZpBey6w99or083DEYbHn8++rGcaONqNF9+XNJlxP2tFAweyybSwG+jEjaC
+	ual9wI+XMprcSagUdabZv/EA6vtma053Mb3Z7VxZj7V8y8GQ+gt3IM/fJtxT/INg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1smX5y-0006it-UN; Fri, 06 Sep 2024 13:25:42 +0200
+Message-ID: <8bce309d-f7ef-4929-bfad-6f0b5c55cfff@leemhuis.info>
+Date: Fri, 6 Sep 2024 13:25:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -68,46 +41,51 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION]: cephfs: file corruption when reading content via
  in-kernel ceph client
-To: Christian Ebner <c.ebner@proxmox.com>, David Howells
- <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+To: Xiubo Li <xiubli@redhat.com>, Christian Ebner <c.ebner@proxmox.com>,
+ David Howells <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>,
  Ilya Dryomov <idryomov@gmail.com>
 Cc: regressions@lists.linux.dev, ceph-devel@vger.kernel.org,
  stable@vger.kernel.org
 References: <85bef384-4aef-4294-b604-83508e2fc350@proxmox.com>
  <0e60c3b8-f9af-489a-ba6f-968cb12b55dd@redhat.com>
  <1679397305.24654.1725606946541@webmail.proxmox.com>
-From: Xiubo Li <xiubli@redhat.com>
-In-Reply-To: <1679397305.24654.1725606946541@webmail.proxmox.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725621949;8f53e1ec;
+X-HE-SMSGID: 1smX5y-0006it-UN
 
+On 06.09.24 13:09, Xiubo Li wrote:
+> On 9/6/24 15:15, Christian Ebner wrote:
+>>> On 06.09.2024 03:01 CEST Xiubo Li <xiubli@redhat.com> wrote:
+>>>
+>>> Thanks for reporting this.
+>>>
+>>> Let me have a look and how to fix this.
+>>>
+>> Thanks for looking into it, please do not hesitate to contact me if I
+>> can be of help regarding debugging or testing a possible fix.
+> 
+> Sure, thanks in advance.
+> 
+> I will work on this next week or later because I am occupied by some
+> other stuff recently.
 
-On 9/6/24 15:15, Christian Ebner wrote:
->> On 06.09.2024 03:01 CEST Xiubo Li <xiubli@redhat.com> wrote:
->>
->>   
->> Hi Christian,
->>
->> Thanks for reporting this.
->>
->> Let me have a look and how to fix this.
->>
->> - Xiubo
->>
-> Thanks for looking into it, please do not hesitate to contact me if I can be of help regarding debugging or testing a possible fix.
+Thx. FWIW, there were some other corruption bugs related to netfs, one
+of them [1] was recently solved by c26096ee0278c5 ("mm: Fix
+filemap_invalidate_inode() to use invalidate_inode_pages2_range()");
+this is a v6.11-rc6-post commit. Makes me wonder if retesting with
+latest mainline might be wise; OTOH I assume David might have mentioned
+this if he suspects it might be related, so maybe I'm just confusing
+everything with this message. Sending it nevertheless, but if that's
+turns out to be the case: sorry!
 
-Sure, thanks in advance.
+Ciao, Thorsten
 
-I will work on this next week or later because I am occupied by some 
-other stuff recently.
-
-- Xiubo
-
-
-> Regards,
-> Christian Ebner
->
-
+[1] like this
+https://lore.kernel.org/all/pv2lcjhveti4sfua95o0u6r4i73r39srra@sonic.net/
