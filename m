@@ -1,99 +1,72 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7E71CBE8C
-	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 13:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5602D045
+	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 16:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725631164; cv=none; b=FngSBPzb67nIZOmV+qGpI3UyA3o0Mc31JwjcRNGk3b4KwOP+/h/wXwJuSnvXMl4f5aUXGh9h12rjLNMGkSvGk583SfB2rYozlMTQUU54jpxJNoLHuUV6UY9PTGFmdqFZF8qHEmro42/CGm4pLD9dM/EZgo62ga5l1N/UNcPClqM=
+	t=1725639369; cv=none; b=uAcFhN+a4r/QcI5gk18B4k+0cZPoEOm/tqlg8xAPYOcL/wwOeij1PBIYuC5/BBcgA0GVHsZz57IAN5afdjRTlQAnrxE+9pi6o4S9tVZlDxdFuJYrTtADDS+mmv/+v013Y2qG103mp5m/kSZJL4A1l95OHjLi8kwzwHheF8KGkqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725631164; c=relaxed/simple;
-	bh=lyjxRPPBxg+6WCyuIPBD2310UtmLXMiHJgpOFX+F/jI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HyXdh4ArWszgQoHUZ2PwzvT7YOj4a3XTzd4+UdW9wxSD+dhUdnFWspbuu4QeyMDs2CgDleCzlnXJG3rYeb/JFL41I67NfiH++9ZpFg+QnOUaxbRT71AH15nZH5pvmfgzut4cT2DkbTDThcs43mDpsolINJISyDQdGCl5VsGI3Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=04p4uxbb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TGNZtEcQ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1725639369; c=relaxed/simple;
+	bh=PvmzJI3nK+G+EL0TaECFfoHl+gtIXruBJAfwmImHKlI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=sBMXgTj+mvYyNtKqlhYSM8UDzWvGv7TW8F4PGU5gzt00//2gBfYT2dI7QiQdbi9scMffIUcmqwghx8mleIg6waTxo0TmA3ZOqkZuTqSThTtuNdUaTQV1csYWIyBHxu4xzw/ZKxAWyN8mKjj8OSYEl7YG2j3Nhj0ORGQ6VqHqz24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yztERvFe; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="04p4uxbb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TGNZtEcQ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1725631160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3pzWBpUMgwR7S025lXojyYJPjbzgL5E0fNEF+GNLZ9s=;
-	b=04p4uxbb3ErlCxtNPcu+a3ZuCKEoTZ4kck7ktCE1n3lMp99pSh7RjE0AUhTC5p9knam6+0
-	Y23lTwc0vQH62DUIzK7qLlCcwNS1Uh5trSrXC56T94rQfRZobvJMhWIx+H6R9QziVMfaQC
-	MvX9aUEUyJt3+Q8/Ikc5wc/NF4HaOH1UEASKP7Kyd+lF2fXSI0hMXfy/BzTSFhvfVikesT
-	MJKCK33Dserm7GiF7NEEZuCf6iaTrhstUwEa5loa3WBlqdmZNrHqzPl2u9d9gRHn1pkXmW
-	4uXQYm3oRFC7/2iVult+z6F++wL2D6fcuDhNmpbuUfrDiehCPNpRPFWNLlAqJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1725631160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3pzWBpUMgwR7S025lXojyYJPjbzgL5E0fNEF+GNLZ9s=;
-	b=TGNZtEcQaQrxgUrV8xXqBtSu1ut6sGlauhKUkE8mTezly1S757kNuqMTf2YdFPZi/DZkhQ
-	XTm51PCTkz/jaoCw==
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Borislav Petkov <bp@alien8.de>, Christian
- Heusel <christian@heusel.eu>
-Cc: Rob <rob@durendal.co.uk>, regressions@lists.linux.dev, x86@kernel.org,
- Joerg Roedel <joro@8bytes.org>, Tony Luck <tony.luck@intel.com>, LKML
- <linux-kernel@vger.kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, Lyude
- Paul <lyude@redhat.com>
-Subject: Re: [PATCH] x86/apic: Remove logical destination mode for 64-bit
-In-Reply-To: <fb5d23fc-2d47-4142-be88-701c4209fc7a@leemhuis.info>
-References: <ZqQSmw51ihns03ob@vendhya2> <ZqQl79UhhSQ5IobX@vendhya2>
- <8734nvuvrs.ffs@tglx> <ZqTufKvJKvotC-o_@vendhya2> <87cymyua9j.ffs@tglx>
- <877cd5u671.ffs@tglx> <ZqZ3Kp2NVctgstxs@vendhya2>
- <c7b68723-6ecb-42be-a9f8-14d64c696283@heusel.eu> <87jzgpubxj.ffs@tglx>
- <d9cbe524-ad83-4c48-b6f4-3376ff3172d4@heusel.eu>
- <20240905140446.GCZtm6fu_H5JH_aP-D@fat_crate.local>
- <fb5d23fc-2d47-4142-be88-701c4209fc7a@leemhuis.info>
-Date: Fri, 06 Sep 2024 15:59:20 +0200
-Message-ID: <87h6asevd3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yztERvFe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=PvmzJI3nK+G+EL0TaECFfoHl+gtIXruBJAfwmImHKlI=; t=1725639367;
+	x=1726071367; b=yztERvFeC3Kvq4ZLuqF9Cc5F+/fmUPXkGKlBAnNCAwWKLRTjcZTreeGYQQXY7
+	5BfBI2PDB6pEOLXKbA8xgHjy0MefRgm2HpIS2jeamvT6voB3Q9baAot3XFU6RL08VC1/Sc7L5gQdP
+	YZVAtbjvp/Mlx+S29u81EGBpaD6EYzK1kWSsAvEz2j1vcaTT/Y+zZpbA8iz0IW09H9MgU7D3qnP25
+	/aSDs7I6U9mh9/ifZInAXHV0xCQkwJ77kQNmLIh24jVnHlLiogZogn7vuJGO0ihYBjSsK+ac3xoD5
+	llwHaIviOuW+X8G0REQHWFdu+UxO8JBq3aEEHWDGGVCRT2wEEQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1smbcz-00022X-92; Fri, 06 Sep 2024 18:16:05 +0200
+Message-ID: <df091f3c-05c0-46a4-915a-28cffebfd339@leemhuis.info>
+Date: Fri, 6 Sep 2024 18:16:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725639367;6c7da1bf;
+X-HE-SMSGID: 1smbcz-00022X-92
 
-On Fri, Sep 06 2024 at 10:34, Linux regression tracking wrote:
-> On 05.09.24 16:04, Borislav Petkov wrote:
->> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/apic&id=838ba7733e4e3a94a928e8d0a058de1811a58621
->
-> Hmmm. Please help me out here: why was that fix queued for -next and not
-> for this cycle?
->
-> Was that patch when it was committed considered too dangerous for
-> mainlining this cycle (at this point of the cycle I guess it might)?
 
-Yes.
 
-> I mean, it's afaics (not totally sure here, the change is missing a Fixes:
-> tag as well as Closes: tags pointing to the report) fixing a regression
-> with f0551af02130 that Christian reported (see start of this thread, e.g.,
-> https://lore.kernel.org/all/12df8b45-6100-4c8b-b82a-a6a75bed2e05@heusel.eu/
-> ). And f0551af02130 is from v6.9-rc1, so given what Linus wrote in
-> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-> that fix should likely have been (or still should be?) merged in this
-> cycle, unless it's really dangerous.
->
-> Or did I misunderstood something here?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I really wanted to cook it first. Aside of that f0551af02130 unearthed a
-firmware bug as the reporters confirmed. So I didn't see an immediate
-reason to send it to Linus.
+#regzbot report:
+https://lore.kernel.org/lkml/2a15105f-67e2-42f6-b624-562485b0bee2@kernel.org/
+#regzbot summary: arm64: dts: qcom: msm8939: boot broken on msm8939
+platforms
+#regzbot from: Fabien Parent
+#regzbot fix: arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM
 
-My rationale for writing the patch was to avoid this issue in the future
-for those who can't update firmware and have it in the next LTS release,
-which is what distros will ship in their stable offerings.
-
-Thanks,
-
-        tglx
+#regzbot report:
+https://lore.kernel.org/lkml/202408041602.caa0372-oliver.sang@intel.com/
+#regzbot summary: mm: -4.4% regression of
+stress-ng.pagemove.page_remaps_per_sec
