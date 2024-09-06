@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCE914A4D1;
-	Fri,  6 Sep 2024 09:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D841C8FAB
+	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 10:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725616719; cv=none; b=ohJl+hcghX7fvGfAaZBpcgwP5VxciqwwFDhlkBBlEJ017tKQP3EFRkSBiJbbusF/qUffaONsor1EDCh7gWcdtRkYD7Io8O4D5DKHjSIoukTzVtB89w5YLH+nnR/7f/2WdNSx3xdttdObNZQwXx7YFD8SCWHEh9GSnPf4/dPGJgY=
+	t=1725618610; cv=none; b=U0i/wcEDky3OrfO2xEYRl2/wu/kR7bLutSt4w/wbVtSYqytOr2+yzKkoTrUngjSTC7t3ONPQOlkEvr7ykXgKTq2POz+MRiCddwWRl9KghB4sHbYJp/+8nqXkHWJgah7M0Zj4fVi4lI76bAlRVnYM/mrCdIUGcrDaCBZHcJIsgYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725616719; c=relaxed/simple;
-	bh=pkfdsTgkvv4tXO1TfR6+gcAqhnJ3ADjtsWbFms3Lvso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=iEwEom0UALNXRFPT1RndPl7ss0RACYwezNET+nEeVhZqEPgOZ/kJfJVUNqO3PDPSCreZLXhPd32avnNx3z8451oHphRMM4qIjOi7VGIjrJzsDvYSuy80KPYenMyoecjbI8jZuEWAKl748Yc2hAp3wra9jR8ActCR/SLgYEX3hok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yhkfLe9y; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1725618610; c=relaxed/simple;
+	bh=h/QRYrmsB+5fzz2RK33yDGOuO+IUNQIx103HMiOQx3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KfvIGahEDoDLYbz8mhJ7TkbLQUzy9nZe2M0vurDinGPNTuYq+PvQm9SpmY+1zHpVUbhptNmHxf7YVTlRXMi7sRJZ6HKWvIoDR37cAyO2bD6Vy6MR1A7TsZcf5+SrqN2+z1l14WjCEjc5YxIHHb3SfJAdpjdH1trf9F/1euN9fxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XRGNJTKO; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yhkfLe9y"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XRGNJTKO"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=cq+Cch7RvCk1agbbS8wAdkX/0bjz2vaJKfFBaydkM/4=;
-	t=1725616717; x=1726048717; b=yhkfLe9y8UDXq1EupEo7cVialSKa2DL6h8dTcXsO3zMl6yC
-	++n146dhputIgkfl8JA+DRSbX58zawCQSBsMHCUewr1SfsJUyviEF2iZbPRUkmT3JHmRyAhYt0nmI
-	3ey3aVRlkRlj0jdXjE0WM6gPYoxNWTgYzkQ7r/D2BvDiKlzYU5BYqKenVh636rRYig2lnU/ck1D1v
-	0hXtZh7QeDEX/v0dD0mNVkVACwWYuHGgvoPk2GWWoG854bJ8ElObcArBPRjLgP6w0WTkj+SA3+KQu
-	8O5pxg0I6y0+XwAjtq+bMyT/rtQrALVdeAStj2MHRjLWOTFLvoUe6rn5d3KQ8a7g==;
+	In-Reply-To:References; bh=4zxx/jMsknAIv2RVTchdYDbtVepf8NTr2Pp5F/21wVY=;
+	t=1725618608; x=1726050608; b=XRGNJTKOY2JCjxrml3PHHaY/56LG/3PTjnYMEHJTE73pf/8
+	HJ8GmMyUZtAdtVSq4nl6jRziOBWwQKOgcdMPvAEt1k3e7LhHivSS5EUDO81mk9edcxj+Ap+8v49uz
+	c/R9VcW2XwzlWTymMZqaglo/vSZI+xYdPyizp840di8RR/yfnFdw80kqiyTJzzHqmzCln3Gx+OkWp
+	qXySPWB9eoVtrUya/psxuoCY5BYXJ74KeaGfKt3hAgbzYfJsn3UhgqX+JbCusY1rsvHcToLh7CPEU
+	bjCqiFQSzbLl4aNz4Tu6AyBhYsvgN0Em7lgEHKVz2S7aIDKOZHABpv3lzuOE0Osg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1smVjf-0000ag-4p; Fri, 06 Sep 2024 11:58:35 +0200
-Message-ID: <7d44b79b-5d60-4fa6-8b52-a276e2baf15a@leemhuis.info>
-Date: Fri, 6 Sep 2024 11:58:34 +0200
+	id 1smWE7-0006ib-OL; Fri, 06 Sep 2024 12:30:03 +0200
+Message-ID: <8e3afa4a-aca2-4803-886d-e162eb5e0478@leemhuis.info>
+Date: Fri, 6 Sep 2024 12:30:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,75 +39,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Problems with suspend hanging laptop on 6.11-rc1
-To: Mike Galbraith <efault@gmx.de>, Steve French <smfrench@gmail.com>,
- LKML <linux-kernel@vger.kernel.org>
-References: <CAH2r5mtNqn0i5NQSQvMvbHDdRDJxcNQh7iTj76L=90kEhDA7iw@mail.gmail.com>
- <f3d4b89c752df94407f7becd37b45a3e418d590e.camel@gmx.de>
-Content-Language: en-US, de-DE
+Subject: Re: [REGRESSION] kernel NULL pointer dereference in xen-balloon with
+ mem hotplug
+To: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>, xen-devel <xen-devel@lists.xenproject.org>
+Cc: Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ regressions@lists.linux.dev
+References: <ZrSecpuTN9zgtqYu@mail-itl>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <f3d4b89c752df94407f7becd37b45a3e418d590e.camel@gmx.de>
+Content-Language: en-US, de-DE
+In-Reply-To: <ZrSecpuTN9zgtqYu@mail-itl>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725616717;0f49c314;
-X-HE-SMSGID: 1smVjf-0000ag-4p
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725618608;e174ce84;
+X-HE-SMSGID: 1smWE7-0006ib-OL
 
-On 01.08.24 16:50, Mike Galbraith wrote:
-> On Tue, 2024-07-30 at 10:11 -0500, Steve French wrote:
->> Has anyone else noticed suspend on 6.11-rc1 hanging the system?
+On 08.08.24 12:31, Marek Marczykowski-Górecki wrote:
 > 
-> Yup, my Nvidia GM204 infested desktop box (using nouveau) has it too.
-> Bisection wandered off into lala-land unfortunately.  I'll try that
-> again when I find a round-tuit.
+> When testing Linux 6.11-rc2, I've got the crash like below. It's a PVH
+> guest started with 400MB memory, and then extended via mem hotplug (I
+> don't know to what exact size it was at this time, but up to 4GB), it
+> was quite early in the domU boot process, I suspect it could be the
+> first mem hotplug even happening there.
+> Unfortunately I don't have reliable reproducer, it crashed only once
+> over several test runs. I don't remember seeing such crash before, so it
+> looks like a regression in 6.11. I'm not sure if that matters, but it's
+> on ADL, very similar to the qubes-hw2 gitlab runner.
 
-Hey you two, there were no further messages about this. I assume those
-issues vanished?
+Marek, did this happen again or do things appear to be resolved? Asking
+because I'm tracking this as a regression.
 
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
 
