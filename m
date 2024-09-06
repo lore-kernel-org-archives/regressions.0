@@ -1,99 +1,129 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8254D1C8FA6
-	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 12:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68811E49B
+	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 13:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725625328; cv=none; b=MNRodr69ncUcG96pUma3/agVMpW9sW2EnbRjejKL+vGojEF26LEuT3HvYrjODoTN/yzO+FcxHFmlRBRlrRUndnlfbzyMn9ZNa3i56TlMzQywWaWfL3wkLdNVN+fD9B+rbjRYIyzkpeCudTSgk0kfpu+nFzjs06Akws4LwQirUlk=
+	t=1725628369; cv=none; b=tKEoTNjdb03ynQmF61ZkAvUii74U3E9oI8JlAT9gAusV7QZWz6/FIq8S7oHkxYrvm7Y0MolNODaWiHWrJGprfQ3JcG5fPnyp4ipY7DQSO64calo48kqSITh6vpSjTsUXktvMMFQLh+cIfnI5QtbMBxsuesbaXOWQM5Q7zBg4thU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725625328; c=relaxed/simple;
-	bh=jWyIwkhjUDCcaQ6XqpX3w43pxgDmfx+DO2s/yqjBrMk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Ry/ijRBjL8yV0Yn22fkqWSIiAdRh7CK5LhfUj+dbi0cENBwpTsHoZiNmqJf9ufg6rFAHPHWpQVCtJv9NCtDzQfiULs0xaU0M/eH5cu8COSmfPbEoJbldb+/nV+0q90JyMiz634B3PIwcPv/aDMmux+cvWc/iPyMqEaWDr4O2fG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=o5ZE6nym; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1725628369; c=relaxed/simple;
+	bh=XqhYopJ5NvACmJpib0oHM8IjOYOYp2KGtxKLqFBw8LY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O690BuQLQNRiq1xPq8O7A0NT5fzZsmsEIb1hXl/X/Ukax2EoumW76GQE588/PWfrmDaM9orMK0VnJuZjeYSffKOIyI8+SoouX7IEG4DkFwslDd+muvN9n70gSIPOGzYuXC1p8Bsb5d9xF/FtcJ3cGJcxCV0OIiZcfooQoOOxxXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=jjxmQlka; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="o5ZE6nym"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=jWyIwkhjUDCcaQ6XqpX3w43pxgDmfx+DO2s/yqjBrMk=; t=1725625326;
-	x=1726057326; b=o5ZE6nymr8nUBkoocNxM+mo5Lbpvmhv059BtpZ2ydQ7kkF4g0+FJ0ygXweq6y
-	qJR4Izxq8oRqjkWDonxZE8sdLLxEVkGBbW2XHPBf5uPUtDph2YnMv+RVs3kvKKcozGZhytAywUCPJ
-	6oaHh6igdliAoKP6M9aXbbnWnT29k1iqKnc0A13sCuAm2Jcn/U4RN1VE2NpIJHAIp21beflwWWTkl
-	OeeSXEhWCb/WJZyI8906Srn7lvP+NehRn1BGz4PzDY/GenmeR81qbCM8Q0GnMBQY/hmuWX5YVXynB
-	dnDfnhBzjMl9PG7CZV7oatqmCBkXtBgeU3Yx0T141XIlHoERvA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1smXyW-0001TA-Nq; Fri, 06 Sep 2024 14:22:04 +0200
-Message-ID: <2695f022-5878-4166-ad3e-5b73d5030eb5@leemhuis.info>
-Date: Fri, 6 Sep 2024 14:22:04 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="jjxmQlka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1725628356; x=1726233156; i=christian@heusel.eu;
+	bh=XqhYopJ5NvACmJpib0oHM8IjOYOYp2KGtxKLqFBw8LY=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=jjxmQlkauAH6+85KG+OxSiKNcVNb5TG/eJl28ktvriYwFr4uBO4RBWzs94m2tcUp
+	 /h0sQIBUPBIPAwo15LPqbHoQrXtAmdsVjA3TbdoYzOrHCKTxbnEzs+uQxZ+8U8V4W
+	 HKkPxZMkOdHls3rIyUYQMOwrdUYVYBniYfADtnRv7g9NBDSWWlpbACJREzGuKrkim
+	 q09JBSGcpyjyQER+q5TDGY9atA6bjlQm40TWrfqpppUcx2phD5ZkVX3w/m5SYY9Pt
+	 If8SNThQK/imCGHxYlM0o/cQtm/g+zP0/KZxR+Mu7KvUR83hR6qCBHd36CfLLnf/4
+	 0hcX9HA0qBYKBYQU7w==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([84.170.95.40]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N0Fh1-1rrxNE3mLP-00yfSB; Fri, 06 Sep 2024 15:12:35 +0200
+Date: Fri, 6 Sep 2024 15:12:35 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Message-ID: <1a7da95c-1d0a-4d76-9f46-6085b456dd30@heusel.eu>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xg3m3gp4ofi7cgrm"
+Content-Disposition: inline
 In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725625326;bb22c4ac;
-X-HE-SMSGID: 1smXyW-0001TA-Nq
+X-Provags-ID: V03:K1:kC4jsjzQ5hlJ6ifHLAbPzGFQJu7kDyZBk1JlMYZDZPJBuzgMvcg
+ Dk9OwaFLzVDVEjdONVtXEVHpL+nBh0a/EHPanpq5rkuSTLGzFzF5/i6f5JFYUT/yvPOaPJC
+ 5kYNuTQ9X/CrKGxN4SMkIpXs3OXe+xp2/36gSZmH0HwAQ54/X6VyEvwpNlBZKZIg8/CMTH6
+ +w7F/aLss9NUt4x8JuQoQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7mX2o35JWpM=;CYBKai+X3stVS1IrmZ3XY8xrez+
+ ivMbS083tr2yRvWAvnF+dHXA3wMNKk1AJwsDZqX9nMeRndxKXgQodi90VX6YWFztszXYFxOWu
+ 2YVL2qArakz/rP7XO431HCw060kh+19B246sLadTzPvbxERbViyvnKWemIj5E4O5E6HCIigNE
+ hWdZSxxbUN2lHuMsXMf6njxqpdlVrm8HUxfiqjd4oEBmdzmlg5yMgoY3L7K1XmXFIXyVe0PoY
+ WaaVbn8XhL6xMy4JJ3OOVQQGUyofH7bBEYkkcivYl0lp6MLRN5iHPXDitqpBdmE7jzQEZn3Cs
+ ipWJcDREDdEkA46aJI+0AxTIA6ZtbjPGy/CNZXlTuKV8lHwvxtEDIFzHRAh46ucw7Oc5LuNdJ
+ 62YlxfK/+UPBipzfDdcKEiQLXNHSTfoIGTfB7O9Nshew0Y3mEvoahOeRD/NdLVb0KWvNhG1j0
+ Jai2KeULHUH7nqlUVM3KaG28nWyXEO08OcIGhRAClgJcQ9uKch1jNfOnbQf1xpQWjrbNX6OBc
+ 4sOtgaIEeliVcaEzdDMCfeSkG7tNAJvMJjG3y+Gj7KomwsVwUMXT1z+G/SPiR0hth1VqPVPF9
+ txI8yyrKrRq3dJFazAtIvXKHlDLuB+lHEx/P+bXC0ut0H4TlpxbABbVUW3daocdemhiEr7Jv0
+ osaHhP/miyI+Sgths1gEWCcAzi045P3bdDMZGbQHSV/ghfPq8l0zHJP/6uaZJy+fPjfQNFWMT
+ N6GZvyb4xvmOUtgEbmMWxitDbbgZFOlgg==
 
 
+--xg3m3gp4ofi7cgrm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
+On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
 > Hi! This is the start of a thread I'll use for updating minor properties
 > of regressions tracked by regzbot. Consider telling your mailer to
 > ignore this thread, the replies are unlikely to be of relevance for you,
 > but done here to ensure a public paper trail.
+>=20
+> Interacting with regzbot from arbitrary places is a recently added
+> feature of regzbot usable via the new '#regzbot report <url>' command.
+> The indented use of this feature is for updating minor aspect of
+> regressions already tracked, e.g. "change the title" or "tell regzbot
+> about a related discussion". Such things until now had to be done using
+> regzbot commands in a direct or indirect reply to report -- but there
+> they would mainly be noise for most others and just add to the huge
+> amount of mail people already get. It's also takes a more time to send a
+> lot of individual mails instead of preparing just one.
+>=20
+> The new command will be documented on
+> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
+>=20
+> Ciao, Thorsten
+>=20
 
-#regzbot report:
-https://lore.kernel.org/lkml/d6392b1af4ab459195a1954e4e5ad87e@viasat.com/
-#regzbot introduced: 13a71384ae6a8779da809b00c6f378dcead10427
-#regzbot fix: cpufreq: amd-pstate: Enable amd-pstate preferred core support
+#regzbot report: https://lore.kernel.org/all/b6c75eee-761d-44c8-8413-2a5b34=
+ee2f98@linux.intel.com/
+#regzbot title: soundwire: audio broken for Meteor Lake-P HD Audio Controll=
+ers
+#regzbot introduced: ab8d66d132bc8f1992d3eb6cab8d32dda6733c84
+#regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/li=
+nux/-/issues/76
+#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=3D299158
 
-#regzbot report:
-https://lore.kernel.org/all/CAH2r5mtNqn0i5NQSQvMvbHDdRDJxcNQh7iTj76L=90kEhDA7iw@mail.gmail.com/
-#regzbot fix: 27ce65f65258
+--xg3m3gp4ofi7cgrm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-#regzbot report:
-https://lore.kernel.org/all/pv2lcjhveti4sfua95o0u6r4i73r39srra@sonic.net/
-#regzbot fix: c26096ee0278c5
+-----BEGIN PGP SIGNATURE-----
 
-#regzbot report:
-https://lore.kernel.org/lkml/CAMi1Hd1KQBE4kKUdAn8E5FV%2BBiKzuv%2B8FoyWQrrTHPDoYTuhgA@mail.gmail.com/
-#regzbot fix: clk: qcom: gcc-sm8550: Don't park the USB RCG at
-registration time
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmba/8IACgkQwEfU8yi1
+JYWXpA/9ETFvZuTybFlPfCbC6tVKgZ8lcMGCCsX8oK7aEtGinB6wrbo939caYIKd
+FVxI1xffyFPBFm/JLmuVLMCODIseHn/1HOx6s1pKskcjQpcqFPZkNsEH291e/3D5
+tf7eVKOOOBq7NXf1GMndLuDZJulb61DvVkc8XN17lHPtlVUpqnq7kUeyhw8XC7w4
+MfrlQUV80umLJ7sTsP0pOh/lNfOzme6+18TRGG4x4wmJHleyo+eB8eX/gY6ZRwrd
+ekLIpDINj7RIUe0eDCyy0DkN1CxqYrFyRj0UfvvltThGuoL+ytxRqpovdz6eijIa
+0BZgQHfBATWZZtFbdkjUO0OSKeznN4QteUEbDu9yTCybcugc74joOCeNf28cj5Ae
+bCPaFsRkDL0TZR0q3q0y35vazZlCuXPxCKKOxexh7BWaIIJMVmIYOBn/OCoPQJd/
+FFygO/nTp5GjXdzT+Rg+cmk3Pai3VB0vC3M2N5cv8adXSWO2muwLo/XFlmKPfqG9
+w366pHTw7vgw+tQLnDhT4j10PrDM+k1gw2lKbP+j/3ao65L8cOYtqMvLt18QImny
+EwPKpRFAKaTVxgvRAwnU2wMGwE2tDmHXlIaggG2PTEXBv6I8BFi2OaUcMnAczB59
+osrtwLJpjaTnVz5o55O8qAuyHlDJEHIvYGlQNDgozDtIl6/hCSc=
+=iw1l
+-----END PGP SIGNATURE-----
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3603
-#regzbot introduced: v6.10..v6.11-rc1
-#regzbot summary: drm: amdgpu: screen flickering in games
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3569
-#regzbot introduced: 38e0c3df6dbd36e69d38f67853cdd1bb6110
-#regzbot summary: drm: amdgpu: certain operations are much slower
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3519
-#regzbot introduced: b7a1a0ef12b81957584fef
-#regzbot summary: drm: amdgpu: massive stuttering when GPU is almost
-100% load
-
-#regzbot report:
-https://lore.kernel.org/stable/d74a7768e957e6ce88c27a5bece0c64dff132e24@holm.dev/
-#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/issues/3513
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3588
-#regzbot introduced: 8bd82363e2ee
-#regzbot summary: drm: amdgpu: ASUS TUF A16: RX 7600S falls off the bus
+--xg3m3gp4ofi7cgrm--
