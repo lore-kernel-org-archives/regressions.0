@@ -1,91 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04931A2C39;
-	Fri,  6 Sep 2024 11:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4321C9DF7
+	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 11:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725621951; cv=none; b=D6lJNCoFhETyFnTFZbdgnJ6XcIROp8ZAJwb+DAwOuPM7SCyQAsFRA4rovpgf28UDjpY0iD/V5FiI5Dz1LWbHO/nong+AMf+FHthFiEF1Z4VyNIB3hbwByfC7cNXhQzwyq3o9+0AFxvmBNUOtwc1iOekGbSueaFBLqsUsCLedrt4=
+	t=1725622409; cv=none; b=gitRxNrjRow6eftQTApg+oov0vcTboYbJ6IO7MKz/iNnuCzhHvnXqaBzS/R/bnDS+A9aKZgg2HDrYbPYyQsWqKunjPbPJ45VKADU/xOJHGpEf1TPTQgW9j36plRAeWAxBuduOnvLq4fHY2jjFWgGNafIXy0XkoqToeEJkSfn3Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725621951; c=relaxed/simple;
-	bh=DmaEKJ8/NLpkXcaL6Xw0J9LfpkVpr/GixbnI3HWELqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hTYYiF6yPi8vobbc8bI2vIh718R/2TBybY04fxJbeGlQgF426I75Q5w/d+RW8d1RhsBNxaIJCXU5SRI0o4cLoWy9roNAw28KJzC82ISZvnMtJ5Z6HT+Eh+wUvd07iXB+ZzzSijUSWsDKMXeigwsayyFazcJtO1lxaVyr5LexHTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fCyj2f4n; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1725622409; c=relaxed/simple;
+	bh=a1oiwHXhTP5k1qDN8Kz5shKpgHS7gkdYtvq/dlluG9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ijmBzBGrryZv5rVyw+5kq9gUx2f6UW2gITsYSDeh/I+ZUijBxIz74GhcAtI16eBD6o18LdgyQbJId5kZL2pBRlT4HGsrN3rcLlUrAIACeFXhrjoowxnzxm2vzuShLxovD1Ht/EoNelf8P5Hu4LHW3eQl6MS+rarBpibcJwAo/Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hHuKyVW7; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fCyj2f4n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=TaGZSCH2FvEl+U3DsaRvbmj+4eIMbIhuHXZKV7y/t4c=;
-	t=1725621949; x=1726053949; b=fCyj2f4nltQV+bRiY5m4WG/adQrs59mV7Wgc2bBi2lgkGNo
-	QYSJt5gmQ3mQnOeNFTHNSUnbpib0hrSKf3mk8Sf76qCPUpK3LiA+QMZ9L45EiSVOxkyY7eYm2vwyc
-	SxGhV9fu2qOtECcaN/31nileItTKcnvdNnaCGMmPJ/3ROcXBIJuDyR/tkpOAFbJH18J9VR61MbA8/
-	wt/NY3r/UbnrUlImnShZpBey6w99or083DEYbHn8++rGcaONqNF9+XNJlxP2tFAweyybSwG+jEjaC
-	ual9wI+XMprcSagUdabZv/EA6vtma053Mb3Z7VxZj7V8y8GQ+gt3IM/fJtxT/INg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1smX5y-0006it-UN; Fri, 06 Sep 2024 13:25:42 +0200
-Message-ID: <8bce309d-f7ef-4929-bfad-6f0b5c55cfff@leemhuis.info>
-Date: Fri, 6 Sep 2024 13:25:42 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hHuKyVW7"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6db20e22c85so18198557b3.0
+        for <regressions@lists.linux.dev>; Fri, 06 Sep 2024 04:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725622406; x=1726227206; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=a1oiwHXhTP5k1qDN8Kz5shKpgHS7gkdYtvq/dlluG9A=;
+        b=hHuKyVW7zyj3oN8OZKQdzjuzT8M2DS2ND85Ca9T1wV62jclBfaIxYWwbRe3kU54Seb
+         FtI9uuSo71JZsxUnsL1S1/aXwikaN9gnQym+FXuRO6W8YzJMJiEYff7WA8Th7Jvi0aSy
+         U9QUaS3e654MvI0Gto9t/4CjsmQqI+O0dRZh3hLwNhteYBy8PGqOyhNdc20AEgQw3Mse
+         FIv/WauTSHI+V4vjGX7ZMXY+RnDO7dObPNKYC7IGt/Pj6mMLyUFTAmUpmB23uC5hyDmw
+         Wc5EY0yTC20NWCG5DKPJPRGW+Ji+ieTcwwYzrT5CLrArqpgG//P7ZlqdI6fZd6trN8WU
+         C51Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725622406; x=1726227206;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a1oiwHXhTP5k1qDN8Kz5shKpgHS7gkdYtvq/dlluG9A=;
+        b=UOG4NErAnyOU4WQi5T+4x8R1bRxn0NPlcBMbSlN+g/pT8oFbR5O/I7gcRbF6fyNDpx
+         etZB3nxbXE1q2Hk/3dDVqeLgITNsfxUnnf3dBZRJj8Ys31UdyfiveiMdME+jQdo28aSF
+         E13gMcSelTtIEHo8RlnKEKWrZ20ISCu8prPy8pWqr+o2K64K+KA9l8MCmgbrKn0L5RKO
+         6qVT+LXI7ya64D9FtgttJqgjfVPcOXW0aHDQGKBsISolMni+gJRKA7Md1zu8R3LMcFjd
+         zxib8MtIwte/imwXHZlr4FVnnujonHwFmmkA6Vd1UuUU2VIogy+3XMIugElCnJ+Jyu/Z
+         dLSQ==
+X-Gm-Message-State: AOJu0Yw8p/Jt6jPCHV2zXTXNPkrqA8O3ifr4uxLPvoxQV8T3vTyjdAAC
+	EB/5DRlgh9mWzDpAGygryMZvlvykLeCic3ewSvA4sntrCJPKlF6//3ZFrtw6cgxAc/0vN+IukfP
+	1yRm1GFwe1/ixnkbmCXZgMmTmNhOggpS3LsAL7A==
+X-Google-Smtp-Source: AGHT+IGkcx0LnZHoHukMiwPH2fOzPIp/adODmKyPix5sHHzkQiP21pFZVgYcCTOOmpTmXp2A5oULIb0ksyDmO2p8kGw=
+X-Received: by 2002:a05:690c:6384:b0:6af:125a:1c6a with SMTP id
+ 00721157ae682-6db452d6a58mr25663227b3.41.1725622406397; Fri, 06 Sep 2024
+ 04:33:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION]: cephfs: file corruption when reading content via
- in-kernel ceph client
-To: Xiubo Li <xiubli@redhat.com>, Christian Ebner <c.ebner@proxmox.com>,
- David Howells <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>,
- Ilya Dryomov <idryomov@gmail.com>
-Cc: regressions@lists.linux.dev, ceph-devel@vger.kernel.org,
- stable@vger.kernel.org
-References: <85bef384-4aef-4294-b604-83508e2fc350@proxmox.com>
- <0e60c3b8-f9af-489a-ba6f-968cb12b55dd@redhat.com>
- <1679397305.24654.1725606946541@webmail.proxmox.com>
- <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725621949;8f53e1ec;
-X-HE-SMSGID: 1smX5y-0006it-UN
+References: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
+In-Reply-To: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 6 Sep 2024 13:33:15 +0200
+Message-ID: <CACMJSes4cnCNUHiZUr4CF-K2c8-1VYzuh=T8JDi_erqfShkuZA@mail.gmail.com>
+Subject: Re: [REGRESSION] firmware: qcom: scm: smc: switch to using the SCM allocator
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: regressions@lists.linux.dev, brgl@bgdev.pl, andersson@kernel.org, 
+	konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, robimarko@gmail.com, quic_gurus@quicinc.com, 
+	luzmaximilian@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	srinivas.kandagatla@linaro.org, arnd@arndb.de, quic_eberman@quicinc.com, 
+	elder@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@quicinc.com, ahalaney@redhat.com, quic_djaggi@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 06.09.24 13:09, Xiubo Li wrote:
-> On 9/6/24 15:15, Christian Ebner wrote:
->>> On 06.09.2024 03:01 CEST Xiubo Li <xiubli@redhat.com> wrote:
->>>
->>> Thanks for reporting this.
->>>
->>> Let me have a look and how to fix this.
->>>
->> Thanks for looking into it, please do not hesitate to contact me if I
->> can be of help regarding debugging or testing a possible fix.
-> 
-> Sure, thanks in advance.
-> 
-> I will work on this next week or later because I am occupied by some
-> other stuff recently.
+On Sun, 25 Aug 2024 at 08:51, Rudraksha Gupta <guptarud@gmail.com> wrote:
+>
+> Hello all,
+>
+>
+> Found a regression with a platform that has the msm8960 SoC. Was hoping
+> to code up a fix myself, but I'm not adept in ARM architecture or the
+> Linux kernel, so I'm just reporting it here. Reverting this commit seems
+> to fix it as well. Please let me know if there is anything else I should
+> provide for this regression report.
+>
+> #regzbot introduced 449d0d84bcd8246b508d07995326d13c54488b8c
+>
+> Error: https://pastebin.com/SDRENUGk
+>
+> Defconfig: https://pastebin.com/CRDjC39a
+>
 
-Thx. FWIW, there were some other corruption bugs related to netfs, one
-of them [1] was recently solved by c26096ee0278c5 ("mm: Fix
-filemap_invalidate_inode() to use invalidate_inode_pages2_range()");
-this is a v6.11-rc6-post commit. Makes me wonder if retesting with
-latest mainline might be wise; OTOH I assume David might have mentioned
-this if he suspects it might be related, so maybe I'm just confusing
-everything with this message. Sending it nevertheless, but if that's
-turns out to be the case: sorry!
+Looks like qcom_scm_get_tzmem_pool() returns NULL. Not sure how this
+happens. Can you confirm that the QCom SCM driver probed correctly?
 
-Ciao, Thorsten
+Bart
 
-[1] like this
-https://lore.kernel.org/all/pv2lcjhveti4sfua95o0u6r4i73r39srra@sonic.net/
+> Platform:
+> https://wiki.postmarketos.org/wiki/Samsung_Galaxy_Express_SGH-I437_(samsung-expressatt)
+>
+>
+> Thanks,
+> Rudraksha
+>
