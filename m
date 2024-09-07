@@ -1,206 +1,275 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB701B85E9
-	for <regressions@lists.linux.dev>; Fri,  6 Sep 2024 19:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725652023; cv=fail; b=RNu1p1qzMrqJj2rnZOH9TEaq7Uz2vGEQinW8R4JK96U6mSWX7DY/XXOYq0Ezzb2LoJ+YjoQr/H+d7/4xMfLARiW+8XHqjab9STYW81forVuD1y5zqUFEPpbKTtYOqkOD0j/DNBxVOTeUVeUTkbyaP7GMPPjuAA+eqI2DOIOSuig=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725652023; c=relaxed/simple;
-	bh=9J59WB4zjSFa23CbowVcc5u+DDQYOhk99XEB0yl4GMs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SYh08/c7979qIO55CUz+iEyd+Mp79YkRVxI599IXnyGIuqNz4xoS6CX/dmUeExVZnHNXLRfmLHp9/yTFxfw1//Cj0Hgcb22dWhaM5qmgX/d707BSlYSxaB/IpekPXYFCnfcwOMgI8ic+nRyvY6tBEKJSKZMOZwRxL72Vm8bQ2zY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sLze2iWS; arc=fail smtp.client-ip=40.107.102.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB88D4C66
+	for <regressions@lists.linux.dev>; Sat,  7 Sep 2024 08:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725697729; cv=none; b=srE35ogf7jALKRwTEsTiOH+P3i2QKAl2J8s6F95WDtrELMIX9J4FdFcBVLRYtd0E44psDHUhW3nfInuM56Y1q01RmibOJMI8wfbusyJBUnpQofMck0lWiJQ2lON/SfF9yDFyB9PjbvDBEpIP1m+jBwUXUP4cYXMC/XRtGi/hV4I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725697729; c=relaxed/simple;
+	bh=wPbkfIwPLOV0MW2xQrEYs0lVwJi3rAosroYiYzxHsUE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P7jCUgR4GOs/1UgvTUM2LRFpYwTf6zeAKM4wtBarPwLcYCzAQ8IQWKN6mRLc/njA+rlCIC4yvA6uimQBo23ZbGTMp8sAq54KXs/vUhW6dmFgkQxGAY3A3oTMRQit/vUqQ1zua8GoqiJyKVKzqeyIh7clC/MzfFw21H1K+5A2cuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ML2beQ2D; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sLze2iWS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ki0IeeWNkv6n2MIbJvCRGWCh8YSE25bdNa/pTiPDRsU6khoUKWrKiMLpHb49MqjbbIytq5FuCeAzvMxWLPa9tQOJBI0cmJ3VFJ3700sC1CfY1T1SAs2THw/Z60/q8rElz1nQimtkdffaaVhVWD+onOycJt1RivXtmKV/FaXBOJWjiIgjJEtDBqCr81VaI0C0OFurr0S5bnuBdWlMHpduIxNfyfznzpf1d1QA1eASr96qLhU79ou6G3tppshBDqlEAUcQOGqAG/dQyaeWb4B6ABxAJuKWcayKXIUq+dcXX+kxd5b2XsunMs6QCdsQUoJdWRTetc9XPkLHBE441bKhtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sX6gHiH7tP5GbkHJ7eVxYQTLwTsuh1Fd0bfZcCmvOp4=;
- b=bWVSa0FSAexrVDN2uBsg/8b6LNJWHTF4q9l5s6PoZzPpHlUe/3sSQPdkbhbHp4e/ufpM23UZ3anZht8upUKNyZPLuabQy9MQCXu4rr+UmfoO+ToAyNrgAUpiT70xtM8kCaGmY02cVBcAkAWZqe4qkmrysuVQA2/J524QjJVO20BnVMmenvvzJMtBwqiug5S536JBJaAteteuNM0rrQgwMf5C5iqV9EVFUAH9i7w8dAWVGPXTM3qsTuMjgKPcXoK+jBlZoR2pToFMDXNnYMp7rsleXnHpZXw9+l3OLZot1NIJc/C5funx8cQ5TKL4I8px4wFY8hzu3BkFrkTI+2DHvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sX6gHiH7tP5GbkHJ7eVxYQTLwTsuh1Fd0bfZcCmvOp4=;
- b=sLze2iWSoWuc76ZozOaXVx84EXXNNl38+15t7HA/rYS14tCKAjIk9OkOAf5oTHEnOJXNOo4nxSizvs49EX9hXILHFKvXMmgdm9ApV97xPXw56ZRb/NDmo6NgrNIoRTmKuYeNYRqSU1HYpvMajsRX5R8ivX2sD+VuhS3MKwNOYMM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
- SJ2PR12MB9243.namprd12.prod.outlook.com (2603:10b6:a03:578::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7918.25; Fri, 6 Sep 2024 19:46:58 +0000
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::a846:49eb:e660:1b5b]) by DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::a846:49eb:e660:1b5b%4]) with mapi id 15.20.7918.024; Fri, 6 Sep 2024
- 19:46:58 +0000
-Message-ID: <04d3755d-f295-46d7-b35d-008b888b39ae@amd.com>
-Date: Fri, 6 Sep 2024 15:46:56 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
- some RenPy games causes computer hang
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com,
- pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>,
- "Deucher, Alexander" <alexander.deucher@amd.com>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
- <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
- <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
- <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com>
- <CABXGCsOoL5vD0+FRALFQFr3ZBpb2z5mpGKzAD5RHoW9_sb5yaQ@mail.gmail.com>
- <f68020a3-c413-482d-beb2-5432d98a1d3e@amd.com>
- <CABXGCsMSTsBFW=OirDszPFVOiNgyOBSh3qyzAw-Coi-McnicAQ@mail.gmail.com>
-Content-Language: en-US
-From: Leo Li <sunpeng.li@amd.com>
-In-Reply-To: <CABXGCsMSTsBFW=OirDszPFVOiNgyOBSh3qyzAw-Coi-McnicAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YT4PR01CA0049.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:111::14) To DM4PR12MB5311.namprd12.prod.outlook.com
- (2603:10b6:5:39f::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ML2beQ2D"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20551e2f1f8so27672105ad.2
+        for <regressions@lists.linux.dev>; Sat, 07 Sep 2024 01:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725697727; x=1726302527; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JRci6lZocDkfiXfuNljK642xJixMM1VmW57dm231R6g=;
+        b=ML2beQ2DUgA24T8Jh4xZ/3972hLdaosXdx4SOGFzU2gDEM4pXumv0MQdEO1i7BZHtY
+         DaBZKZHVJVXSUE9PoSgigV0QSjfjBf51T6+oM0e7C37PHJAYT5N5B2XXq/mZokN5N2tc
+         Wscl/QrzIebPylSw7aAnpuKkSheDWjF0QHPF6OCps1hYujCambTGT18HVsFKY6q1W2Pd
+         vHQNE6ojNJWjdqoShKyOQfDXOF4bAn5vdBUhlcUKMT5FQS4CHturNbq5WdwpTfdLN/AR
+         vTmSjX+Kx9RlvwV+QrhdhzTPIkMqpP6DK/2jd905rwaCz40jsXlHDVkeuPAzCsJXdXqW
+         pEdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725697727; x=1726302527;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRci6lZocDkfiXfuNljK642xJixMM1VmW57dm231R6g=;
+        b=RHU37k5kpXJD5AQTm2HxtZ8J10UFNXR0PKlwAeMZZmPziqGBRLQKn4/RXdBtGcWNpw
+         GAu35XeSxqCgVlyQ9GQLFWYipnB0qMAf3asr13eXVDyTKbg4205a4jz1X1UMmPYfv5Ib
+         RnOVee+vNBfjuNdx23nxMRafsLMVkadvTnHscONQ59O6jVJ1QDOOFsa/ymKIzszqCK3p
+         OpV4DrHEXVioC7bOVltBlK0CSj3qCao0y8Qd2rjnJXJZRQ/YyBJW0punThJMcKWyZsHu
+         JGmupSUasjsnf4eBTpmhuSAh5Bcg18M2aXpaCUJq3PHDqfW0Vw29Ytj6lKfu2areO1jm
+         dG6g==
+X-Gm-Message-State: AOJu0YwxQTD4IKzlo8RxbjWaAbOpRKb0qQZaI4K1P3atgPlRsKLdatFq
+	arPI2YSifYFR9eJWgivXj7ckpc/B7DxmpffmRGOF+hvKBBBg9N/gx/Ql86NM+sNnjA==
+X-Google-Smtp-Source: AGHT+IE3DWhZ42RAObg2bNYIGwyg0bLzVvemrIvMyawn9Z9eq1z7lpW1+/rfS1zV1yutlpY9F1HMHQ==
+X-Received: by 2002:a17:902:db0d:b0:205:4885:235e with SMTP id d9443c01a7336-206f05b1527mr55758915ad.39.1725697726542;
+        Sat, 07 Sep 2024 01:28:46 -0700 (PDT)
+Received: from ?IPV6:2601:644:8502:9460:d6be:d9ff:fe52:7e82? ([2601:644:8502:9460:d6be:d9ff:fe52:7e82])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20716200c41sm3071115ad.126.2024.09.07.01.28.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Sep 2024 01:28:46 -0700 (PDT)
+Message-ID: <233ff5d0-ca8a-4526-8aac-c95e5f2de221@gmail.com>
+Date: Sat, 7 Sep 2024 01:28:43 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|SJ2PR12MB9243:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf8e9afc-91e3-47ec-776c-08dcceacab0f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bWl6aGtCeE53bnNiclFXaGQwaWZVRDRONHFGLy84K2xxa3BLOFVNVUlsU3J4?=
- =?utf-8?B?c0lHV1g0aFBKQ2VvZGIwWWg3WVdOeUR4a2RzbXMyR0loK05SOFpUL0VvTDJQ?=
- =?utf-8?B?MWRvMjBZaURtVnpPQWhwdFF3dFRBd1UwTDBtUGpXelJtNVhMWUhrUzNjTk5y?=
- =?utf-8?B?UHpxc1ZNYnlrT2ZEVHR3anhQRFRDYTh5YnJWeEY3QjFieU1xSTMrSUl2Unlq?=
- =?utf-8?B?UGwwS3hFQ2YxY01JRGJ0NDBrODVzZ0R3YmhTdW53YjZnak14bk96ODNxUCtL?=
- =?utf-8?B?RERvNzhCa0ZaQm5QV0hEQndscEMxV3Uwbmh4QTVTQ200azYxN2FUOVZqa1RT?=
- =?utf-8?B?cmhNWGplb3RVTUgzbjV0ZUwxYVRCYlZlZGlkTjdQRVV1WTk1bUV1VHRLb0ZZ?=
- =?utf-8?B?NGdlYzZrRVdzd2tJWnQwVzJWNk10TFp0MDh0OFFQOUk5WHY1aVoxUzVqWTg0?=
- =?utf-8?B?cXlDMkFCaEk1YW5md3ZORjVuR1ZjbTVtNDY0K2h3Z0NkK2JwOGtnTnA4ZjZU?=
- =?utf-8?B?SDlHQUs5ZGZsSGVkdUJWbXY5S1NDY0U4WEtPbzFSWnRpcUNuUGRPa3M3NGFv?=
- =?utf-8?B?c1FyaDFyMEkwczhuTUl6U082T3ljZHorNllQZEJTUElZL21XQk1vMVl6a3A5?=
- =?utf-8?B?ZStXRXM4T1doUTU3MldNRzN4N3hjZ3FjNkU2bEo4NFJQVjQ0NGlNVjN3SHQr?=
- =?utf-8?B?d3lRNzBWcHBxOXNpMVpnN2g0YVAvNXlUb3Y3YVpLSVpsai9QMGVrQnlFMU11?=
- =?utf-8?B?ZjFyRkJKSWRLbURTYTVEY2FLV0NDVHhkT1FZRWZBbk5kUnpCTTJvSlhNS3BL?=
- =?utf-8?B?SS9zaFNuekFvQWtyMGd2WFdLaFhiWThJV0ZLZm5zaGtMWVpubzVYaDhublMx?=
- =?utf-8?B?ZUtZOGJFWlRtNEgvYXB2c3JuY0pJS1pCaStMVUtOTTNKaFAzVXVod0xXbTVn?=
- =?utf-8?B?Z1hwc0FWOENrYlpqNmhwaGF6YlpHVGgvRXBaTnlWNm5MWUpoNDJVTlRBZ3R3?=
- =?utf-8?B?TDNNNmIyR1o5Q25KK3pXUVRlVmRVV0RWWllyKytzSHBqVWk4TE01aDhGaXpC?=
- =?utf-8?B?TzVkVGRIWXNjdmZJTno5U0R6aW9BYUc4ZzM2eDdLdjdkOU0vUTdNTkhKZ1pW?=
- =?utf-8?B?UDIvSnpiS2lVLzE4YmNhNENuZHFrb2I5MmNSN0pQN1N3NlFueGVaNzkrL21G?=
- =?utf-8?B?OXU3emZVRTYreGo0aDRIY0NST0JKcXJEYVAzQzByaWtPc1NNNG1KbmFjRUdM?=
- =?utf-8?B?Um94eXpqZ0VWbFlaQ3hCR2FPNDlSSkFFbWQwNTRnRm9PUVYvSVZSWERhOFZj?=
- =?utf-8?B?bUtlVTFEY3NUaE1lcWpBdDhkZldtZHFiandOeVFwTnNGVmtmb0Zxb0xaeUY1?=
- =?utf-8?B?a2ZhVlJyajlSTlNHVTlJdFkzVk4vblBCbFhITVVLRHRSdHpqZHNZLzhrQUVF?=
- =?utf-8?B?QXI5cWRYYjl0eGN4aUlpek5QemtqOWdEbVpYb1VnckxnNXNHcGpuVWc2Z2tW?=
- =?utf-8?B?NGRHdTJHc3dNVUtQV1hmdXJ6cjA1a2VxdlpZQXh5eXVkL3BIWkY2LzJzbTBT?=
- =?utf-8?B?WEtxYitVQ1pVellHZ3g1dFg5Uno2RFJoZkxHVVFYL3loeUJEZ05vL0NRWExL?=
- =?utf-8?B?QWJSV2xWS3hCU2FjMjljemdiaUxOWWxEVzlZd0s2cVZwRW96dlJyd2dMLytO?=
- =?utf-8?B?YnpuM0wxemZ1SVdSOGVCMDRBYnNIVzBNVHRud3A0Z3JXREJOTHFFYjZNK05R?=
- =?utf-8?Q?/q/ZPwQPP9+94hC9wg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T29rbDJnN053b01qcmx3Z1ZDQ0ZMMVkxTVRHQXpWNXp2N3dYK2g5dU1VY0VL?=
- =?utf-8?B?cE84VEUxQUU3VXBtMEFhdFhnZ0d1ZDl3UVFZeVRoaW9MYnNTYnF1NUpyT3Bn?=
- =?utf-8?B?T3Y0cko0RVpWT2tKRjZxa3dsdHViaEl3bVArODFFZjdTOE1IenBvRmVvTXJO?=
- =?utf-8?B?WXhDbkxlSFlkTkF1MVBXdjJaeU5HWHNncHJZdVlYeHRvRFRlbkdxcGFUUEFZ?=
- =?utf-8?B?ZzNrUEJSWEZJNUJ6STA5MHhrbld4aXNRU1EzNTFUSzVmNFQycFZHZmxGcC8x?=
- =?utf-8?B?R0RDbWlQa2MyNkgrWXhNUXFFTldPSm92V25ZMXFLQks2d1kxOExRK3BzQUdL?=
- =?utf-8?B?QzlhZ294M3JPc2w0alJ0N1RiYTdQK3BGZ0trOVRGazlGZ08vRU1Gb1hDaUJB?=
- =?utf-8?B?QTM1VC9leU5weFlzaDNva1gyd0ZFT1NvVThZcGUxaTJIU2lXT1RBY0p3T1NS?=
- =?utf-8?B?WnpTSWdUaEN3bVc0d0c0a2Q1SUQ1UmNFbkFzZVVhWmdzUHl5S2NveGxkMGN6?=
- =?utf-8?B?clc0cXc1TzFIci9XTXlGdEVyYi9Xakp4K1lHaTg0TVdxakpwaWgvSCtkN245?=
- =?utf-8?B?QlRsSDk1MmFYSndpRi9HUG1pL25EQytnN24wSTB6Und5M0wyUGQyNlpCMFJW?=
- =?utf-8?B?eTNDTlNNemFYa0ExYWpsemlWRlRZYzBiOGtKL0pNWkdhSzVyNWV1Q1oyTVdo?=
- =?utf-8?B?d1pJMFQrVkphWXBIdHk1NjYvWlkyNzh6ZFRNRU5EWTNqd0xEWnZhTFBDOG8y?=
- =?utf-8?B?ZXhsa2wxNnBxVmowNmtUelMwWnYwTXpaT0VVUmdrNlByZWZvVzhqbU1jbEV4?=
- =?utf-8?B?b1lsM3UrRUR2MkhqZDZDUXdnNzZvdjM3RnQyTEhRY2l1S0JKTVJCWHp2aEhj?=
- =?utf-8?B?WG9hbHMyQ2tLK3dmWUZCR3VQZENINXY2eXk1a0dwWS9UR3FubGpXR1N3cWt1?=
- =?utf-8?B?cEhwVSsyY1AyK2dKWnRHcWcwc2NIWStVODVSQU9GUmFaaXVBUjNTblJUVS9q?=
- =?utf-8?B?TTN0NXFqWEh1dUErOTRmUUZoN2psaDdPZUpONHZhTVVra04vRVR1WDBFdWZL?=
- =?utf-8?B?ajU3MENQQVJvRzgrZXh6bmZIK2FnQW1qd1crQXZFQS9paHlNQ21jTEtOdHgv?=
- =?utf-8?B?MDdSUWp2ckdyVHhSRFBCRGxxNSs3dHE3NTdlNi9NWVZhZHdMdkZ3TllINGpN?=
- =?utf-8?B?bi9rRGVicjBvVWV0dUUxTTZMak5ydDlXVExpRldXNWNpSnVqM0YwR3FWV2xO?=
- =?utf-8?B?ZHFaT3JkSDJEOE1nVUUrOGV5RnNTMkthdjAvSHpkOWt1eDhPRjZPeUpsL3cy?=
- =?utf-8?B?K1BQM2YycUE5ZnU3RWlRYkdEUGttYmVGdkVlUHNkdmdiRmhrRXJhREhMbnBj?=
- =?utf-8?B?ZE1uRFhMVFlPdUtYTzBTOVh4aTBuMmZ5cnVKOS9MK0ZteS9vcklmamg4Zmk5?=
- =?utf-8?B?ZHI4QUFsZ1FKV28yK21HaGk1L2RGOGR3aGhxTG5YRnpRbytpREhMTGJhVjIx?=
- =?utf-8?B?a1pXOFdJSStxVlF0bmU3QWFZTDZzTjM1dUxUZlVUVGVBbjhIRDZyRUQxWFBj?=
- =?utf-8?B?WmVsalVCNW9JbFZua0dOUnlxenZIUnJ2N1ljVW9MeHpqek8zbWIwSnhWanQ5?=
- =?utf-8?B?Z2pkVUZUSXdmWFo3a1FuS1dXTzBVOTFFNDZkeVc0My9hY0RmOWx2aFo1ZDk1?=
- =?utf-8?B?N0JjY3hEenNWYVpqbmFvL05BbWx1SllTV0RmZWVNYlBsdnVlczc2Y0V5czhS?=
- =?utf-8?B?U1l4eFVVSWhZQm5JcGd6QmRoek5iRWxNNnhDYzNDRk9NbmpYbGpKelJzdWQz?=
- =?utf-8?B?ekY5VlM2N1ZicDFwaGJMVktFUXlLUlR2NUZIb1htRVZ5dWNXTWlIOFp1V0xG?=
- =?utf-8?B?ZmptcWRXeEFEQ1Jjd3BQZ0Fmc3hLVjlnWmFhVjIwTGUxcDhHYVhwRXZGVmFi?=
- =?utf-8?B?aGRBWkRZRnhYK3BUNkNVaEdKTWNQTFBRck5oNnI4bEhIZ2NtM1pDc2RKWjB4?=
- =?utf-8?B?VVlpU2txNHlXcVA3SFFidUtjZmQvdzNJa2lER0E2ZUR4QnUwdVdCdEJmc28r?=
- =?utf-8?B?MG90N0I1MUFyNEJiYko3bU42VU5USkNHbWJkY0pnYTVVQnVoZ2hXMU1VZnd2?=
- =?utf-8?Q?h8LtFSUh71haJAKn2eM4/lpXK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf8e9afc-91e3-47ec-776c-08dcceacab0f
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 19:46:58.1694
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9aP/c5L4fUbDRdWP5LREJJgcNSxQVpVBk2kDt7rPeVtVCGzq+FYzWYrh1ovd16l/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9243
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] firmware: qcom: scm: smc: switch to using the SCM
+ allocator
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ bartosz.golaszewski@linaro.org, andersson@kernel.org
+Cc: brgl@bgdev.pl, konrad.dybcio@linaro.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, robimarko@gmail.com,
+ quic_gurus@quicinc.com, luzmaximilian@gmail.com, catalin.marinas@arm.com,
+ will@kernel.org, srinivas.kandagatla@linaro.org, arnd@arndb.de,
+ quic_eberman@quicinc.com, elder@kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@quicinc.com,
+ ahalaney@redhat.com, quic_djaggi@quicinc.com
+References: <692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com>
+ <48b20ca3-37f5-4d9c-b36f-1d05a2ee4f5c@leemhuis.info>
+ <dede22a9-e432-46e6-b4fc-ce67f6439710@gmail.com>
+ <d3f437d1-fcb5-411e-9b2f-4a6fbed8c888@leemhuis.info>
+Content-Language: en-US
+From: Rudraksha Gupta <guptarud@gmail.com>
+In-Reply-To: <d3f437d1-fcb5-411e-9b2f-4a6fbed8c888@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+> Hmm, from the outside it looks like nobody looked into below regression
+> report (reminder: culprit authored by Bartosz Golaszewski and commited
+> by Bjorn Andersson). Wonder why. Did it fall through the cracks or did I
+> miss anything?
+>
+> Rudraksha Gupta: I assume the issue still happens?
+Thanks for poking this. Wasn't sure how fast this is supposed to be 
+reverted/patched. And yep! Pasted below:
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 6.11.0-rc6-msm8960+ (user@localhost) 
+(Alpine clang version 18.1.8, LLD 18.1.8) #2 SMP Sat Sep  7 01:22:22 PDT 
+2024
+[    0.000000] CPU: ARMv7 Processor [511f04d4] revision 4 (ARMv7), 
+cr=10c5787d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction 
+cache
+[    0.000000] OF: fdt: Machine model: Samsung Galaxy Express SGH-I437
+[    0.000000] earlycon: msm_serial_dm0 at MMIO 0x16440000 (options 
+'115200n8')
+[    0.000000] printk: legacy bootconsole [msm_serial_dm0] enabled
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080200000-0x00000000afffffff]
+[    0.000000]   HighMem  [mem 0x00000000b0000000-0x00000000bfffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080200000-0x0000000088cfffff]
+[    0.000000]   node   0: [mem 0x0000000090000000-0x00000000bfffffff]
+[    0.000000] Initmem setup node 0 [mem 
+0x0000000080200000-0x00000000bfffffff]
+[    0.000000] On node 0, zone Normal: 512 pages in unavailable ranges
+[    0.000000] On node 0, zone Normal: 768 pages in unavailable ranges
+[    0.000000] percpu: Embedded 19 pages/cpu s45144 r8192 d24488 u77824
+[    0.000000] Kernel command line: earlycon clk_ignore_unused 
+PMOS_NO_OUTPUT_REDIRECT console=ttyMSM0,115200
+[    0.000000] Unknown kernel command line parameters 
+"PMOS_NO_OUTPUT_REDIRECT", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 
+bytes, linear)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 
+bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 232192
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.000000] ftrace: allocating 38347 entries in 75 pages
+[    0.000000] ftrace: allocated 75 pages with 4 groups
+[    0.000000] trace event string verifier disabled
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu:     RCU event tracing is enabled.
+[    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=2.
+[    0.000000]  Rude variant of Tasks RCU enabled.
+[    0.000000]  Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay 
+is 10 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000] RCU Tasks Rude: Setting shift to 1 and lim to 1 
+rcu_task_cb_adjust=1.
+[    0.000000] RCU Tasks Trace: Setting shift to 1 and lim to 1 
+rcu_task_cb_adjust=1.
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on 
+contention.
+[    0.000000] clocksource: dg_timer: mask: 0xffffffff max_cycles: 
+0xffffffff, max_idle_ns: 283149695806 ns
+[    0.000002] sched_clock: 32 bits at 7MHz, resolution 148ns, wraps 
+every 318145725365ns
+[    0.009532] Switching to timer-based delay loop, resolution 148ns
+[    0.017997] Console: colour dummy device 80x30
+[    0.023311] Calibrating delay loop (skipped), value calculated using 
+timer frequency.. 13.50 BogoMIPS (lpj=67500)
+[    0.027572] CPU: Testing write buffer coherency: ok
+[    0.037875] pid_max: default: 32768 minimum: 301
+[    0.042565] LSM: initializing lsm=capability
+[    0.047408] Mount-cache hash table entries: 2048 (order: 1, 8192 
+bytes, linear)
+[    0.051555] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 
+bytes, linear)
+[    0.060527] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.066424] 8<--- cut here ---
+[    0.071895] Unable to handle kernel NULL pointer dereference at 
+virtual address 00000090 when read
+[    0.074743] [00000090] *pgd=00000000
+[    0.083659] Internal error: Oops: 5 [#1] SMP ARM
+[    0.087283] Modules linked in:
+[    0.091834] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
+6.11.0-rc6-msm8960+ #2
+[    0.094674] Hardware name: Generic DT based system
+[    0.102146] PC is at qcom_scm_get_tzmem_pool+0x1c/0x24
+[    0.106956] LR is at __scm_smc_call+0x30/0x2d4
+[    0.112025] pc : [<c08944b4>]    lr : [<c0896fd0>] psr: 60000013
+[    0.116411] sp : f0815d78  ip : f0815e98  fp : f0815d78
+[    0.122510] r10: 00000002  r9 : f0815e18  r8 : 00000001
+[    0.127666] r7 : c1106694  r6 : f0815e30  r5 : c1270038  r4 : 00000001
+[    0.132824] r3 : f0815e18  r2 : 00000002  r1 : f0815e30  r0 : 00000000
+[    0.139354] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM 
+Segment none
+[    0.145803] Control: 10c5787d  Table: 8000406a  DAC: 00000051
+[    0.152929] Register r0 information: NULL pointer
+[    0.158597] Register r1 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.163248] Register r2 information: non-paged memory
+[    0.173721] Register r3 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.178887] Register r4 information: non-paged memory
+[    0.189361] Register r5 information: non-slab/vmalloc memory
+[    0.194518] Register r6 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.200197] Register r7 information: non-slab/vmalloc memory
+[    0.210585] Register r8 information: non-paged memory
+[    0.216427] Register r9 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.221335] Register r10 information: non-paged memory
+[    0.231807] Register r11 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.236973] Register r12 information: 2-page vmalloc region starting 
+at 0xf0814000 allocated at copy_process+0x16c/0xdd8
+[    0.247888] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+[    0.258619] Stack: (0xf0815d78 to 0xf0816000)
+[    0.264548] 
+5d60:                                                       f0815e08 
+c0896fd0
+[    0.268771] 5d80: f0815d9c c0193bfc c1117d70 c1124000 00000036 
+00000000 c1117d70 f0815da8
+[    0.276848] 5da0: c12589bc 00000800 00000035 00000000 039b929b 
+00000000 c2000030 c0a68a64
+[    0.284925] 5dc0: f0815dd8 c0193bfc c1117d70 c1124000 00000036 
+00000000 c1117d70 00000000
+[    0.293002] 5de0: f0815e18 c0193bfc c078b204 00000001 c1270038 
+00000000 c1106694 00000001
+[    0.301078] 5e00: f0815ef0 00000000 f0815eb0 c0896624 00000001 
+c0194138 f0815e78 c0194138
+[    0.309155] 5e20: f0815e48 00000000 f0815ebf f0815e4c 00000006 
+00000001 00000001 00000000
+[    0.317232] 5e40: 02000601 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.325308] 5e60: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.333387] 5e80: 00000000 00000000 00000000 00000000 00000002 
+00000000 f0815ebf c078b204
+[    0.341464] 5ea0: 00000000 f0815ee0 00000000 00000000 f0815ed0 
+c08947e8 f0815ec8 00a9b284
+[    0.349541] 5ec0: f0815ef8 c0b8d6b7 00000001 00000000 f0815f68 
+c08946c8 00000001 c01012a0
+[    0.357618] 5ee0: 00000001 00000001 00000002 00000000 00000001 
+00000000 801012a0 00000000
+[    0.365693] 5f00: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.373771] 5f20: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.381848] 5f40: 00000002 00000000 c078b204 c14ff100 00000001 
+c1568000 00000000 00000000
+[    0.389926] 5f60: 00000000 00000000 f0815f80 c100be5c c14ff100 
+00000001 c1568000 00000000
+[    0.398003] 5f80: f0815f98 c1001538 00000000 c0a96fa8 00000000 
+00000000 f0815fa8 c0a96fc8
+[    0.406079] 5fa0: 00000000 00000000 00000000 c010014c 00000000 
+00000000 00000000 00000000
+[    0.414157] 5fc0: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.422233] 5fe0: 00000000 00000000 00000000 00000000 00000013 
+00000000 00000000 00000000
+[    0.430303] Call trace:
+[    0.430327]  qcom_scm_get_tzmem_pool from __scm_smc_call+0x30/0x2d4
+[    0.440957]  __scm_smc_call from __get_convention+0xac/0x128
+[    0.446885]  __get_convention from qcom_scm_call_atomic+0x24/0x90
+[    0.452729]  qcom_scm_call_atomic from qcom_scm_set_boot_addr+0xe4/0x100
+[    0.458658]  qcom_scm_set_boot_addr from qcom_smp_prepare_cpus+0x1c/0x94
+[    0.465362]  qcom_smp_prepare_cpus from kernel_init_freeable+0xcc/0x140
+[    0.471977]  kernel_init_freeable from kernel_init+0x20/0x144
+[    0.478250]  kernel_init from ret_from_fork+0x14/0x28
+[    0.484086] Exception stack(0xf0815fb0 to 0xf0815ff8)
+[    0.489073] 5fa0:                                     00000000 
+00000000 00000000 00000000
+[    0.494068] 5fc0: 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000
+[    0.502143] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    0.510224] Code: e28dd004 e300003c e34c0127 e5900000 (e5900090)
+[    0.516642] ---[ end trace 0000000000000000 ]---
+[    0.522765] Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b
+[    0.527406] ---[ end Kernel panic - not syncing: Attempted to kill 
+init! exitcode=0x0000000b ]---
 
 
-Hi Mikhail,
+> /me considered bringing in Linus, but decided to wait a bit
 
-I've tried to align my system with yours as best as I can, but so far, I've had
-no luck reproducing the hang. A video of what I'm doing:
-https://youtu.be/VeD-LPCnfWM?si=b2baF8MyDBuU4jRH
-(Under the hood, the W7900 and 7900xt should be the same)
+Big fan of his and everyone's work! :)
 
-I have a few suggestions:
 
-First, can you also open an issue on the amd gitlab tracker? It gives more
-visibility to others, and makes working together a bit easier:
-https://gitlab.freedesktop.org/drm/amd/-/issues
-
-Second, can you try adding "amdgpu.dcdebugmask=0x40" to your kernel cmdline at
-boot, and see if you can still repro the hang?
-
-This setting disables hw planes. If it resolves the hang, then it's quite
-interesting, because it suggests that gnome may be using direct-scanout via hw
-planes. We may need to align our gnome configuration in that case, since I don't
-see any additional hw planes being used on my setup.
-
-Third, in case these two issues are related, can you give the attached patch on
-this issue thread a try as well?
-https://gitlab.freedesktop.org/drm/amd/-/issues/3569#note_2558359
-
-Thanks,
-Leo
-
-On 2024-09-05 02:06, Mikhail Gavrilov wrote:
-> On Thu, Sep 5, 2024 at 4:06 AM Leo Li <sunpeng.li@amd.com> wrote:
->>
->> Can you delete ", new_cursor_state" on that line and try again? Seems to be a
->> unused variable warning being elevated to an error.
->>
-> 
-> Thanks, I applied both patches and can confirm that this solved the issue.
-> The first patch was definitely not enough.
-> 
-> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> 
