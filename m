@@ -1,95 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF251531E6;
-	Mon,  9 Sep 2024 17:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A41282E2
+	for <regressions@lists.linux.dev>; Mon,  9 Sep 2024 17:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725901412; cv=none; b=sRpyPBU1L6eYlghieHoukv0qZgb7vwehXXK2DdXkS01wrLIe3RTEsMOmgeAaBmlx2+nSs3IC/Z43JFJkix2DdkrtZOcQM9WRUeDkOs058mWNtoHSsM/vejS9jtDmib6gmlUZJEGnqWTikD9f45sJqbDV1mp/UFRACeq4IwiNVcQ=
+	t=1725902278; cv=none; b=WBesGlq7Y95Vs2EsbfEo4kDAWfP7zymgBB0dLGFkWnrmHBUr3l+9QUPPjOmDSQMZS8i0mNSk0llK02z1y5Tj/axG3i4Ft5iD/Tl9Ip8RmuxzSJq3rwF/rIeju3G7X72JVPW3f/BP6BpawWLzZEKd2Tcou/j7rGXWeZKhAUJBKCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725901412; c=relaxed/simple;
-	bh=4Y9tPEx+yB14FgRlzZ2Xln0OiRO09Ye7shaG5K4o88E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKQe0IT5tIIcJfGh/n3NA75vjWzf+kKaVxufXvYzTvV1NIXdPjPUhNbC4WnbxH9pYRZTerUtZNVJoAMBy4A1MbggRQg7XTUArQbYu1joKPJSK4h/UpFGOE1vsZJwGVviQU3Jv/+knJoJcdy2q/PtQwnjmcMXv/LtqdD28K8u/GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MIOI5lWi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725902278; c=relaxed/simple;
+	bh=Y17mXArozFY9rWioq4Urlg1G/JSv5MjMDYau0V3jl8A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=BwO2hiri9+YUiDxtBtH8QRmpetH0+e5Gu4qPnhJBLk1IcLOlPiM57baJGPzqCbnbKT4F2ehdjlB0KhQFgHPlcSyYncawYiX7fWK7fO7rClY9nYz3JotZmCtOFQzc9ZBiro3pDo3XFWL1jZ/6IEjs6B5/TAuT0dqyB0IFJXT8PAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vLa4ObRJ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MIOI5lWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC19C4CEC5;
-	Mon,  9 Sep 2024 17:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725901410;
-	bh=4Y9tPEx+yB14FgRlzZ2Xln0OiRO09Ye7shaG5K4o88E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MIOI5lWiYSpudvwBTsdWRd/SBLdkEmUkNfmpD84viKWgLFZ8kpROBVqGGdJejb3Bz
-	 EzzA8r2HomI4iZUkSr9Eg89tpZwUf9q5Kk0QH8giOI2XJkeaavQEK16SEzzOsIfQII
-	 8sAN608R+GjTTbCgW/hx7AwPjmudTsK+nzHUaAhw=
-Date: Mon, 9 Sep 2024 19:03:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Willem de Bruijn <willemb@google.com>
-Cc: Christian Theune <christian@theune.cc>, regressions@lists.linux.dev,
-	stable@vger.kernel.org, netdev@vger.kernel.org,
-	mathieu.tortuyaux@gmail.com,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: Follow-up to "net: drop bad gso csum_start and offset in
- virtio_net_hdr" - backport for 5.15 needed
-Message-ID: <2024090952-grope-carol-537b@gregkh>
-References: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
- <2024090309-affair-smitten-1e62@gregkh>
- <CA+FuTSdqnNq1sPMOUZAtH+zZy+Fx-z3pL-DUBcVbhc0DZmRWGQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vLa4ObRJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Y17mXArozFY9rWioq4Urlg1G/JSv5MjMDYau0V3jl8A=; t=1725902276;
+	x=1726334276; b=vLa4ObRJQiqOBTeSgOmQl8fC5W52VSoavRyKtPlxJmD9pidr8FahyV2wKNQeX
+	0CCvy6rnaISuDwUhv2llQU2vmPi9QT0SZC1D33vuvRs9QnMkUJylg0oX9tw50HavsNOfPFSCfrrJo
+	8qAIKUqHqd8sWWkL9lJo1cXVa1qCqlMUr/sBYp2aNJCqa6KlNueCEv5njJ1CnoAOjHCCq20keOnpv
+	8KRX8b7DUgAPrpjbYgvzd/o6+ftQ+8fEkF3nEWud2h3f+nURRQt2yo3yNBk1mg0JTjbGjkYBOG7Vg
+	GRbYCflY6AOdXry7Tp8E6Wc+t0LsjH3JEQZbhmrFlNy4w91tVQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sni1N-0008KQ-5i; Mon, 09 Sep 2024 19:17:49 +0200
+Message-ID: <fb38823b-9fe0-4b78-a058-a81d2f5ea1c0@leemhuis.info>
+Date: Mon, 9 Sep 2024 19:17:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+FuTSdqnNq1sPMOUZAtH+zZy+Fx-z3pL-DUBcVbhc0DZmRWGQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725902276;a230c30c;
+X-HE-SMSGID: 1sni1N-0008KQ-5i
 
-On Mon, Sep 09, 2024 at 12:05:17AM -0400, Willem de Bruijn wrote:
-> On Tue, Sep 3, 2024 at 4:03 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Sep 03, 2024 at 09:37:30AM +0200, Christian Theune wrote:
-> > > Hi,
-> > >
-> > > the issue was so far handled in https://lore.kernel.org/regressions/ZsyMzW-4ee_U8NoX@eldamar.lan/T/#m390d6ef7b733149949fb329ae1abffec5cefb99b and https://bugzilla.kernel.org/show_bug.cgi?id=219129
-> > >
-> > > I haven’t seen any communication whether a backport for 5.15 is already in progress, so I thought I’d follow up here.
-> >
-> > Someone needs to send a working set of patches to apply.
-> 
-> The following stack of patches applies cleanly to 5.15.166
-> (original SHA1s, git log order, so inverse of order to apply):
-> 
-> 89add40066f9e net: drop bad gso csum_start and offset in virtio_net_hdr
-> 9840036786d9 gso: fix dodgy bit handling for GSO_UDP_L4
-> fc8b2a619469 net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation
-> 
-> All three are already present in 6.1.109
-> 
-> Please let me know if I should send that stack using git send-email,
-> or whether this is sufficient into to backport.
 
-I just tried it, they do not apply cleanly here for me at all :(
 
-> The third commit has one Fixes referencing them:
-> 
-> 1382e3b6a350 net: change maximum number of UDP segments to 128
-> 
-> This simple -2/+2 line patch unfortunately cannot be backported
-> without conflicts without backporting non-stable feature changes.
-> There is a backport to 6.1.y, but that also won't apply cleanly to
-> 5.15.166 without backporting a feature (e2a4392b61f6 "udp: introduce
-> udp->udp_flags"), which itself does not apply cleanly.
-> 
-> So simplest is probably to fix up this commit and send it using git
-> send-email. I can do that as part of the stack with the above 3
-> patches, or stand-alone if the above can be cherry-picked by SHA1.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Please send me a set of working, and tested, patches and we will be glad
-to consider it.
+#regzbot report:
+https://lore.kernel.org/all/20240908144414.82887-1-hdegoede@redhat.com/
+#regzbot introduced: be6299c6e55e
+#regzbot summary: power: supply: sysfs: permissions wrong
+#regzbot fix: power: supply: sysfs: Revert use
+power_supply_property_is_writeable()
 
-thanks,
-
-greg k-h
+#regzbot report:
+https://lore.kernel.org/all/b6c75eee-761d-44c8-8413-2a5b34ee2f98@linux.intel.com/
+#regzbot fix: soundwire: stream: Revert "soundwire: stream: fix
+programming slave ports for non-continous port maps"
+#regzbot monitor:
+https://lore.kernel.org/all/20240904145228.289891-1-krzysztof.kozlowski@linaro.org/
