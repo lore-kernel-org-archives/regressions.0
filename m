@@ -1,116 +1,70 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192EA14F135
-	for <regressions@lists.linux.dev>; Mon,  9 Sep 2024 04:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E83136A;
+	Mon,  9 Sep 2024 04:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725854757; cv=none; b=lx2lmeq/ud1CLMaQm/kzvlI7ofJuGsExTgT470bJ0pAqe66XxYgwBT4cIG8s3y1LsOxc/ronzWGgPbXPwJIqEtq4LxeB0QO557GREgFZm+ECjHqLJdy9QyF33JXkzQxC6O9K67Qx6t1AFgLEBjWW6s6gLHepAHSU6dnEwkvHz/8=
+	t=1725857298; cv=none; b=GKeaaXXi4tYdjBelMYPLgV1O8Y7tn1GWRigb+t16apo+OLQsvBj/z+mdtNnYwcvvgy8LXOvRPGFnwgqtNfZ7NMLN7c6R5KwjviBaV4i36+q8nJPusF8faauO9fuFd9xoG+toj4Ias6NcrMEwjGDE3dl0jJv9xBlG2pgemQTxSBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725854757; c=relaxed/simple;
-	bh=7CambRdxJl72z45osL7W3fqqVzpgMRyRPNU6hNJpNIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UJRqNBvjz0jEnDPHtA8w7pF4zGrRJOifUO7Jxi4OlqhnRT8AJYZCyrdtLMujQW1oVO99x78a0RyrTXDWJ9AS6pEgLHdwroNxgujxs6shDXRkqfzYtM1unTJu7A1dr0eiIeebKfSHEfaIEx9px8Td05N8NE4HThZ6O6A/ucv43nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5dvLl1D; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725857298; c=relaxed/simple;
+	bh=JdC2s9reCpdh5GCXboPwMMIj7X0SAwyOF7XGfxe2r5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=NAAlbvM+DAPkoXUranVzMGUU+pDdW2l+ZQAG+Ia2HLdphQEz57i/SnL5WVMyNaCUG4C2XRXJzg6l570Z/6L8CCkok0gOsn0IlqU4P0cOI29XKveVKbT7RaRbqhGQ+OamfGj3Gh2N7gLdxJQbOHnGL2tp38MWfDLY1Gep/vn3GLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bN8OB00/; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5dvLl1D"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e1a7c25e350so3708644276.3
-        for <regressions@lists.linux.dev>; Sun, 08 Sep 2024 21:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725854755; x=1726459555; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Y2XZicmIZualwCUhlDFNpSmFy2HjzR6Yh2gdcKw5gw=;
-        b=Z5dvLl1DyfIcOgxbnPJgwS2IYYT0IEowhfeCW+if1MPihAdlZyA9J8jzi+u/KdWxlZ
-         IOTysq6PS6pguiRqMR3hdbT6dKIkChWkmdR7640X2SCRsJ7paWw340/IoIMUDqSYLyCB
-         JXxe+oBqHJTxvqzJDBMeH0NwLHEuBcVxUQaiNOl0gbcQUMmD5WboZc1yIEIBe7Z6M6FX
-         q+HOxLe//X/PuIV3GoEvqNuftYTLETsOm609ydthyriNvcb4HyfkzjncGDY+VoC1tOpM
-         vk15N0V9hrFTth1/VpAjHIJ+LuHci4hV2fxOHlhslyzYsZlLOPAB847t+s8VUXz/OpKq
-         BzzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725854755; x=1726459555;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Y2XZicmIZualwCUhlDFNpSmFy2HjzR6Yh2gdcKw5gw=;
-        b=JvcN5dCIIMOsjgSRF4vUXvgYcuQDFQle+RvLYw6n0GlQRnKhJtaOaouGs3TY1r9mu5
-         et1a+CkJitRe3xchNdQab25cYCssnyQzvfWlVHNAdsYWEACL7fY8Km3/qIvqpsPKEPRt
-         +5JP5vmBmcxs2t4pfPsxllaRpkWxRbcGBgJc0y8agEYCmqRdriryj6xTMocBH/5oFvx1
-         OvR480Brq/LFdn/uEALoZxMlmRJIWbMpsrP/UVEsl3AlkWxV3zaLDxDY2I3RkfuS/II6
-         Y6DDbzM71D46X53we3uobRN9DyHGSu4uB5S2mHmYB/w0KzufeUciJP1IbiELkYE01fUM
-         /qfA==
-X-Forwarded-Encrypted: i=1; AJvYcCW36ZeXkewBNA634vCawFG9CU/d5e2gjYIviZr4mNcI2u8dSiwIwPrwLs9q4hb6ZmsH3SxSa9N7bnYK/w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyV8HUHl1LMnRHswH6LlSDhHK4XR+bNS2QfEl1o5d6vyv0FxD+0
-	/ulSxlJsmWtv7OP0KdUnZyXSE8UVlwPdQG9M8foWnuW0mj1muUadIDWEdahulqacFFvNhblIkxl
-	uDfW35Durfl5I3B7oDdrVvJpCgquGdVvlNWj8
-X-Google-Smtp-Source: AGHT+IEaDecNSAZTuzUTKcjIfed8c+2zGuiy9Snz3OkvQ9Wfl/mmUdiCogvvHJc2dP7/xkD/6w5lUbKgCgjZaSjV9BU=
-X-Received: by 2002:a05:690c:5203:b0:6be:2044:9367 with SMTP id
- 00721157ae682-6db44dc6b5fmr77199477b3.15.1725854754798; Sun, 08 Sep 2024
- 21:05:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bN8OB00/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Cc:From:References:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=qwEkeTcVc7zpbCn2RYLTfGsdfSlZzqQCcwvEwhFQqjg=;
+	t=1725857296; x=1726289296; b=bN8OB00/yKYbFoPSz//AhCgJVai+mI//aD7C9WavvdhMUI+
+	71eMSIHKocBvLTd6vkxR49qZocu01of98WEcgHATvgSOjJJhVlt8ooo4+POdVPob2Jr8r5UVefu54
+	zBb/Oo5KyXqkdZGKQg6iRYAR2vcnWrv5whUs/ZGCGoUFDx/LJ40x+IBz2dLJzs+6KCngxKHUsk45t
+	HD3jMjd14zxM3gl+D2Rf2C+8frD+JNjOoq9WDcJhokOxHNnuXGgIzMZkfNJtAnwpCB3JFC+qWcBqp
+	HYDzWYGtwc6wDnS45WpsNU3eQajvONnP1+ctBPLGDUJ41q6s59RRQERb9iHxyMGg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1snWJy-0000ch-7S; Mon, 09 Sep 2024 06:48:14 +0200
+Message-ID: <67481fc6-7eab-470b-8d5c-1d7a50782f66@leemhuis.info>
+Date: Mon, 9 Sep 2024 06:48:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc> <2024090309-affair-smitten-1e62@gregkh>
-In-Reply-To: <2024090309-affair-smitten-1e62@gregkh>
-From: Willem de Bruijn <willemb@google.com>
-Date: Mon, 9 Sep 2024 00:05:17 -0400
-Message-ID: <CA+FuTSdqnNq1sPMOUZAtH+zZy+Fx-z3pL-DUBcVbhc0DZmRWGQ@mail.gmail.com>
-Subject: Re: Follow-up to "net: drop bad gso csum_start and offset in
- virtio_net_hdr" - backport for 5.15 needed
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Christian Theune <christian@theune.cc>, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, netdev@vger.kernel.org, mathieu.tortuyaux@gmail.com, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Can we get a bootable 6.11-rc kernel?
+To: Bob Gill <gillb5@telus.net>
+References: <96030dde-6c02-4308-b41b-48aeeba670f3@telus.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <96030dde-6c02-4308-b41b-48aeeba670f3@telus.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725857296;d657008a;
+X-HE-SMSGID: 1snWJy-0000ch-7S
 
-On Tue, Sep 3, 2024 at 4:03=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Tue, Sep 03, 2024 at 09:37:30AM +0200, Christian Theune wrote:
-> > Hi,
-> >
-> > the issue was so far handled in https://lore.kernel.org/regressions/Zsy=
-MzW-4ee_U8NoX@eldamar.lan/T/#m390d6ef7b733149949fb329ae1abffec5cefb99b and =
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219129
-> >
-> > I haven=E2=80=99t seen any communication whether a backport for 5.15 is=
- already in progress, so I thought I=E2=80=99d follow up here.
->
-> Someone needs to send a working set of patches to apply.
+On 09.09.24 06:04, Bob Gill wrote:
+> Hi.  It would be nice to have a 6.11-rc kernel that doesn't crash.  I
+> have an AMD video card.  I can boot into recovery, but any time I try to
+> run "service lightdm start" or startx, I get a nice black screen, and a
+> within a second or 2 my keyboard doesn't even let me type the caps-lock
+> key.
+> 
+> My hardware: (taken from kernel 6.10.0)
 
-The following stack of patches applies cleanly to 5.15.166
-(original SHA1s, git log order, so inverse of order to apply):
+So 6.10.y worked for you, but 6.11 did not? Can you please share the
+dmesg output for both these kernels? FWIW, you might want to compare
+them yourself, if you are luck that will already tell you what's wrong.
 
-89add40066f9e net: drop bad gso csum_start and offset in virtio_net_hdr
-9840036786d9 gso: fix dodgy bit handling for GSO_UDP_L4
-fc8b2a619469 net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation
-
-All three are already present in 6.1.109
-
-Please let me know if I should send that stack using git send-email,
-or whether this is sufficient into to backport.
-
-The third commit has one Fixes referencing them:
-
-1382e3b6a350 net: change maximum number of UDP segments to 128
-
-This simple -2/+2 line patch unfortunately cannot be backported
-without conflicts without backporting non-stable feature changes.
-There is a backport to 6.1.y, but that also won't apply cleanly to
-5.15.166 without backporting a feature (e2a4392b61f6 "udp: introduce
-udp->udp_flags"), which itself does not apply cleanly.
-
-So simplest is probably to fix up this commit and send it using git
-send-email. I can do that as part of the stack with the above 3
-patches, or stand-alone if the above can be cherry-picked by SHA1.
-
-Thanks,
-
-    Willem
+Ciao, Thorsten
