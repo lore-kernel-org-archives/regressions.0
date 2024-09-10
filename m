@@ -1,122 +1,88 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CA516F27E
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 09:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36FC46444
+	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 09:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725959136; cv=none; b=WmLrmQkKJA07Jg1LDmAptDsjttI5ZDfLphcqPg2H/bwq2s1+Flzj5PEJF4ztvZWpUvusD42KAg7XgV0qz+7NCRnQt1MxSGUiXInmYomlgBFsoXJWvtSiubENQwhDvHzL8TYjl2kg4b0J1o/Qq78Xf2L1/wnDw454jSFcbi3hVRE=
+	t=1725960217; cv=none; b=gMBKgdaIp3Zzdwzs8D8yt2b4cVzX7kZOYY0MJH90IXHvmHGoRVta4pCWyhnIQ2FcIC2qdluwckW8iu4FccmYBVb5g3mbBaeYHqwms7zKWu9PgJX1WTj8i/lTNTPzJUc3xH7bbUdG5Ygxt7oCXF1mVBxegpKMhdtBEpNk0JGFRqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725959136; c=relaxed/simple;
-	bh=ME5ZSrMnAqqvaRqAbtgEZO0yBtF+Og84eHKlHTZAUAA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qm2CNPx4iBrEmBNX+EA9xRFP4OqKMmI0MmIemiY4I8Uw6TZmEFtUS6ganUrRnfXp8//g5h5IJD1V7Le7iEgzR4eCrv+CyHvJ2XhSK6XzBsln9J0zeTJOhHimQmUHlu+uCQnS7lrTPMRUewyQq8H2qzCSpr7jP5fcg/i/ZYSWwuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4X2y376DNhz9v7Hq
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 16:45:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 028A6140133
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 17:05:18 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwAXqC_DC+Bm7ZKiAA--.51699S2;
-	Tue, 10 Sep 2024 10:05:16 +0100 (CET)
-Message-ID: <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, James
- Bottomley <James.Bottomley@HansenPartnership.com>, Jarkko Sakkinen
- <jarkko@kernel.org>
-Cc: keyrings@vger.kernel.org, "linux-integrity@vger.kernel.org"
-	 <linux-integrity@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Pengyu Ma <mapengyu@gmail.com>
-Date: Tue, 10 Sep 2024 11:05:04 +0200
-In-Reply-To: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1725960217; c=relaxed/simple;
+	bh=RHKfWvlyDATplkCyalLpaVoYdWyYE4JsNzmkEjE+L0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sJGgHtbbK/S+EgwUpEThXOFkIm49g9dKez0zftnaNvmV2/JAtsbowcAgGtXkgDEdALthFQ197iin3o2eLRKh5fsKpkzW+ZpbO66SgkgOlEytPL/UX1u3s226IrWhZC9DmJ2m9V6QwFxyI7UawamGPxIhOIS1IPLpBsPUy/x7nnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxsCayq7; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxsCayq7"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e1a989bd17aso5598808276.1
+        for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 02:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725960215; x=1726565015; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHKfWvlyDATplkCyalLpaVoYdWyYE4JsNzmkEjE+L0s=;
+        b=dxsCayq7N/JgZ3sUYLg4pdeOq+SqhZM2R5g+Ljhho/KlEbdvz1KpjXLS57t4ZGPksQ
+         MLjbaMwgMhlGG1ipfQqRHgP33zOjqKdidk3zJmtYa0R6CuV67EBSZ7oEcAZUYlgbI2N1
+         RDLSfQNkWkIqbrVxn3jnGgHBVyYq2NB3oXiWv+lEvb6bAr0NpdIjWs7NrLjI7Hgl3/mb
+         vogFVNymLUi9pCsJAigXBxbO3WGYE//7fnwcWCzOX/NbUcF3Dsm4vyXOE8l80oNSut6o
+         jJ7PkNN33jTtHizldEpOk1ojidYrYLAuwY9tGat7cXIAEk+9nHNeHOCnzVtkDisod2/9
+         ySGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725960215; x=1726565015;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RHKfWvlyDATplkCyalLpaVoYdWyYE4JsNzmkEjE+L0s=;
+        b=j0ZyQQCViKqJ21OCfuwQmzweRm7Zi8pWj5CkAtPDx7tf5OgKp2TysnC0JoET0R4U/k
+         tVzvYujlWX3bdbzCQTIdk8fdMXVjSjXXZuXaV2VVssVUtCU6Y/nKFlSZeIK9x5Ty+UH/
+         zsi6xnS4IVys2uuAJTPg3bX4DjD2HGdBR6meIg31sYbsEJGGZGzijepn9XBBF9nM2BgR
+         x9OshqYIKthou5iCPouu/dTfjvDo4O5VRQwyzNqShL793zcsaLix2N9xFDtkP2HIzroR
+         HbU4F1spGElQn2gyXds/1S2ZxImZ9iFzEJJoCPdNhgbVvkdj2IZ/IqRQuI7PCM0Rms4Y
+         5d+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUcnS0uU87qZ56j0+5GR8Q+WfngfMTWoh6ZDVyvlwOKJLyWM6qigVgNlhvuxKn4ocqxyrIShLtWPb8qyA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyCUc1tNejPDjKJQsTHrw8roW9dxzpX5dUnGZo2812M24k519j2
+	BQpIl9Bbf29qD1Wc/zqB+0DmQzjQrl+1F8sfPMZUKh4OY/ZdhxeNCsAmEr3OdLg8qzYC32vqpHe
+	1COj0jGCXDYVVfP3WUwvrXaWagUA=
+X-Google-Smtp-Source: AGHT+IFa61QRgfsiOf9BDA5CrcYUn1VdOL7jl6IcZS0vPsKkLHHtnQKOh4PPaSk6RPhOu5rvr7HTs/mJnSuELrHplxE=
+X-Received: by 2002:a05:6902:230d:b0:e1a:90f4:c1f6 with SMTP id
+ 3f1490d57ef6-e1d34899313mr14831493276.27.1725960214744; Tue, 10 Sep 2024
+ 02:23:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwAXqC_DC+Bm7ZKiAA--.51699S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1fXry3Kr15AF48AF1rXrb_yoW8Zw13pa
-	y8Kw4rKryvq3WIka1kAw109FWqy395JryYkwn8G34rAa43Za4kZw1S9r4YgFyjvrykGa1F
-	vFsF9r1qk3s5AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2NtUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQACBGbfqvQF9wAAsS
+References: <CAP-bSRbMbZe9LCE15SCbYNTGZjE_xiAm29qzO_WNVjHsJ6oyyg@mail.gmail.com>
+ <9ada34661b93fa5dfe3b0c66816a62c1a27f22a3.camel@intel.com> <CAP-bSRZm4CyxY1VdtWvZRcfLMwc3njd3OTSd446Q5dcSfjJY=Q@mail.gmail.com>
+In-Reply-To: <CAP-bSRZm4CyxY1VdtWvZRcfLMwc3njd3OTSd446Q5dcSfjJY=Q@mail.gmail.com>
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Tue, 10 Sep 2024 10:23:23 +0100
+Message-ID: <CAP-bSRbon4O=DCLHvOZHm452Svc3-gsZ133Jn7-TFt8f_Y1CFA@mail.gmail.com>
+Subject: Re: [REGRESSION] iwlwifi resume error, bisected
+To: "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "kvalo@kernel.org" <kvalo@kernel.org>, 
+	"Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>, 
+	"Berg, Johannes" <johannes.berg@intel.com>, 
+	"benjamin@sipsolutions.net" <benjamin@sipsolutions.net>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2024-09-10 at 11:01 +0200, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> James, Jarkoo, I noticed a report about a regression in
-> bugzilla.kernel.org that appears to be caused by this change of yours:
->=20
-> 6519fea6fd372b ("tpm: add hmac checks to tpm2_pcr_extend()") [v6.10-rc1]
->=20
-> As many (most?) kernel developers don't keep an eye on the bug tracker,
-> I decided to forward it by mail. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D219229 :
->=20
-> > When secureboot is enabled,
-> > the kernel boot time is ~20 seconds after 6.10 kernel.
-> > it's ~7 seconds on 6.8 kernel version.
-> >=20
-> > When secureboot is disabled,
-> > the boot time is ~7 seconds too.
-> >=20
-> > Reproduced on both AMD and Intel platform on ThinkPad X1 and T14.
-> >=20
-> > It probably caused autologin failure and micmute led not loaded on AMD =
-platform.
->=20
-> It was later bisected to the change mentioned above. See the ticket for
-> more details.
+On Sat, 7 Sept 2024 at 22:21, Chris Bainbridge
+<chris.bainbridge@gmail.com> wrote:
+>
+> It's possible that the
+> HP BIOS turns off the wifi when suspended on battery power
 
-Hi
+This is not the case. Suspending while on battery power and then
+resuming (still on battery power) works without error.
 
-I suspect I encountered the same problem:
-
-https://lore.kernel.org/linux-integrity/b8a7b3566e6014ba102ab98e10ede0d574d=
-8930e.camel@huaweicloud.com/
-
-Going to provide more info there.
-
-Roberto
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
-> [1] because bugzilla.kernel.org tells users upon registration their
-> "email address will never be displayed to logged out users"
->=20
-> P.S.: let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
->=20
-> #regzbot introduced: 6519fea6fd372b
-> #regzbot from: Pengyu Ma <mapengyu@gmail.com>
-> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=3D219229
-> #regzbot title: tpm: significant delays when secureboot is enabled
-> #regzbot ignore-activity
-
+If the laptop is docked, and powered via both the dock USB-C *and* a
+mains PSU on the separate PSU connector, then suspended, then either
+the dock or the PSU are disconnected, then the error happens on
+resume, even though the laptop is continuously mains powered via the
+other power supply. It appears there's something about a powered
+dock/PSU unplug event while suspended that causes the error, as
+opposed to just being suspended while running on battery.
