@@ -1,76 +1,99 @@
-Received: from mail.theune.cc (mail.theune.cc [212.122.41.141])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8AF136358
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 06:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2B0187357;
+	Tue, 10 Sep 2024 09:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725949987; cv=none; b=tH3NMY6NGtcPtnpe0n5q5sVgMW1zSy+Q7Ehvk9g9sW74m7bH0v6CEqNP7/CtyV+hrn7WkZmzGOWwUQCXWnfd1CT/5cW6Wn51bkgadHHqI4Tkl5AKMYPai4C9+d7k+cUkP/Xbcmo4J8+6RtODKLJ9x8AUAd+nnIwUwz6+ClBbqg4=
+	t=1725958889; cv=none; b=WPB2UH5CnsKwDGNiAanzaniy/S06IQvhL61CLR8UhzjRpd94ZCuy68MQMu6sNix6aU2qCtsewpk84HJKgBlMWixPIbBX0y/Bykmf5AYIvnoNZB/PeVhF6rADnccIgALoIAeXA2+fptcgGBJIlNfjV8oi0mHmgVxQCFRAmB9e/Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725949987; c=relaxed/simple;
-	bh=JjY69W8Ant6AxwIhWcvkeaHDnbwAevcS9ooCv5+tFak=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=HfRjoXOiu5AXCXk8i83nRlWMEXaHRjGW2IPinJcXText+bvuS2+VAeL3xViEo8aUZCSeDiEbsS7iCSUGVfoasJs7PEn0GcH4n39JDNhRJUUaQdAnyimoDqG8pWTMasqQ4nq6UV05W6eQH4BTpMSyyqKYUzmbUAbL3w3gJzDKzz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc; spf=pass smtp.mailfrom=theune.cc; dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b=v9BsMLbd; arc=none smtp.client-ip=212.122.41.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=theune.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theune.cc
+	s=arc-20240116; t=1725958889; c=relaxed/simple;
+	bh=4x+QL41ns1QPmGRucqQPte1Nmt5UGtBC/ZuB8yTgeb0=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=axLN84VrtAtEE/vrGeihqHxYuIOFK/wmTp081sExZ892tDaWYZBea/k1FpbYOzf3cfKAgTp4LmKP+4XrSfiuV8c97HsW/JCxBWNqpJN1InmUM3UYRmOpJ9vlSLM4vmUWsmFOAT3t79fwUfJLm7Mgku6k20bfuqTkDgarKM3Ixdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=26Mja9Lo; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=theune.cc header.i=@theune.cc header.b="v9BsMLbd"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theune.cc; s=mail;
-	t=1725949979; bh=JjY69W8Ant6AxwIhWcvkeaHDnbwAevcS9ooCv5+tFak=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=v9BsMLbduWWWKYlzuzVSKQ/eyj5ynKOKIKECE9eE42//4bhQxDWUjsqSpNdzTMBvb
-	 BdgsNexPh3pbWQs10fXwdqHDOf6TM1+f3Cf6EaPJzYF8/tMbtG8Zp8izzBK62w7ChC
-	 uRi8NF4Z+L5uOY3HFNEolO8cSgSpURCG725h8Pws=
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="26Mja9Lo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=KACh0iP/ZRcc8FerQkJVRSzMtk4GzsY5xUMh0/fAg5k=; t=1725958887;
+	x=1726390887; b=26Mja9Lob/3o6ON/ICV8vTVJmcYcKbHkcETuegmhlohuBd0qizORGamHfzklW
+	VDp9GRuF2dU7pKZsbwhFBK1NopgtRBr1ODivZY4xcVPmvzhDCW4zQVTDDVLahyi8f6prlOG2kKahN
+	i3gC/+/p1Yg/hLnVc0mQr9RVwS+HCVCFLzbaxiRhRBkRZL/dnMogpzu/dcl6PA5SM51qWq8l+Kzdc
+	DemMfAV5U8rRe7Zvf5FDUwX5nh7jH4FJuBdJ3tawFdFFSACDElC8HnOUQOaStdBZCnz+LE77pa3P/
+	YK28Vqyz4kOo6g2s8kJ5CIrysbjCHgIkYPIhn7aI+FRxGd6+6Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1snwkW-0005xO-U0; Tue, 10 Sep 2024 11:01:24 +0200
+Message-ID: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+Date: Tue, 10 Sep 2024 11:01:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: Follow-up to "net: drop bad gso csum_start and offset in
- virtio_net_hdr" - backport for 5.15 needed
-From: Christian Theune <christian@theune.cc>
-In-Reply-To: <66df5b684b1ea_7296f29460@willemb.c.googlers.com.notmuch>
-Date: Tue, 10 Sep 2024 08:32:38 +0200
-Cc: Greg KH <gregkh@linuxfoundation.org>,
- Willem de Bruijn <willemb@google.com>,
- regressions@lists.linux.dev,
- stable@vger.kernel.org,
- netdev@vger.kernel.org,
- mathieu.tortuyaux@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8348AEDD-236F-49E3-B2E3-FFD81F757DD9@theune.cc>
-References: <89503333-86C5-4E1E-8CD8-3B882864334A@theune.cc>
- <2024090309-affair-smitten-1e62@gregkh>
- <CA+FuTSdqnNq1sPMOUZAtH+zZy+Fx-z3pL-DUBcVbhc0DZmRWGQ@mail.gmail.com>
- <2024090952-grope-carol-537b@gregkh>
- <66df3fb5a228e_3d03029498@willemb.c.googlers.com.notmuch>
- <0B75F6BF-0E0E-4BCC-8557-95A5D8D80038@theune.cc>
- <66df5b684b1ea_7296f29460@willemb.c.googlers.com.notmuch>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>
+Cc: keyrings@vger.kernel.org,
+ "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Pengyu Ma <mapengyu@gmail.com>
+Subject: [regression] significant delays when secureboot is enabled since 6.10
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1725958887;3b747881;
+X-HE-SMSGID: 1snwkW-0005xO-U0
 
-Happy to do that. I=E2=80=99ve blocked time tomorrow morning.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-> On 9. Sep 2024, at 22:32, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->=20
-> Christian Theune wrote:
->> I can contribute live testing and can quickly reproduce the issue.
->>=20
->> If anything is there that should be tested for apart from verifying =
-the fix, I=E2=80=99d be happy to try.
->=20
-> If you perform the repro steps and verify that this solves the issue,
-> that would be helpful, thanks.
+James, Jarkoo, I noticed a report about a regression in
+bugzilla.kernel.org that appears to be caused by this change of yours:
 
+6519fea6fd372b ("tpm: add hmac checks to tpm2_pcr_extend()") [v6.10-rc1]
 
-Liebe Gr=C3=BC=C3=9Fe,
-Christian
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to forward it by mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219229 :
 
--- =20
-Christian Theune - A97C62CE - 0179 7808366
-@theuni - christian@theune.cc
+> When secureboot is enabled,
+> the kernel boot time is ~20 seconds after 6.10 kernel.
+> it's ~7 seconds on 6.8 kernel version.
+> 
+> When secureboot is disabled,
+> the boot time is ~7 seconds too.
+> 
+> Reproduced on both AMD and Intel platform on ThinkPad X1 and T14.
+> 
+> It probably caused autologin failure and micmute led not loaded on AMD platform.
 
+It was later bisected to the change mentioned above. See the ticket for
+more details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 6519fea6fd372b
+#regzbot from: Pengyu Ma <mapengyu@gmail.com>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219229
+#regzbot title: tpm: significant delays when secureboot is enabled
+#regzbot ignore-activity
