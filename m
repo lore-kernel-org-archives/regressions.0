@@ -1,159 +1,101 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60E018FDC5
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 17:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AEC17ADE9;
+	Tue, 10 Sep 2024 18:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725990552; cv=none; b=doztA8OWoosnCrfg+hqw67Nz7egCAEyhIt79m6smfizQq/JKqIv3Cn6ioGjbBxPv3lJ39ck+7a0ciZFfx3br/MyRtPaZKIbE4b8rwCh5b+gLab6LHxht1kLYDMVUI5oATYaz5ijn5vaXe8miox8G6lEZ8NSDsXENW/MAsby0gdM=
+	t=1725994109; cv=none; b=Hq3PgDqdI0jegV++qvfPXaSY39ZEJ2Lm5M5xAAq5xYWlniYWdVqaH4tAHIiGAajboAimHDFD8Mp4c9YeOy4gAininN350MhsQd6bYTifd7nXvDv5rxt+Hwvo4u1mV6FJrTbOIAUuJK/SMOCkqHDt//QXfSkF58d+xO3rQoymuD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725990552; c=relaxed/simple;
-	bh=8r6/Z7cYCZt0C2pPNRt5red4H6C/cN0pEDVkXGwQVxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPweYGxC9ndp/ReaN8E5RwdM5feq/ym/tibbynqwzfrrhGZtq5Uj4ZRheUB9EAHIRxz5n6jmW7bHMSEGT9mr4JREd+5HxEioAJMCI9YfmV13kWQVX+v61ZX0PJzR+xro7o9ceSUzzKtPHoq7TBFqHMj75LIW7Ojy4vaS6+wuvWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DXWRsVZl; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1725994109; c=relaxed/simple;
+	bh=d/xjSlwYNHaCmAEJ52/LetuJr/79SrxTHSb7l1iYHbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JSnxkMKUFit29988xmBJ0YH5UBJXI9h2FU3zZBBajPzqQSKMsJDBRHVzEcul5VOiZd4tp7+mWgQKuV1mW57binE0mZx6w+h4rgH3Wa+06CQP/KJOOBO3e6NKprHYV61bpqxaZzNNpvqfNYWpm1BUabLdVxZp6aYGCKQHEQwZgx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHq1c+OK; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DXWRsVZl"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-717934728adso4230849b3a.2
-        for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 10:49:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHq1c+OK"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6d49cec2a5dso54860667b3.3;
+        Tue, 10 Sep 2024 11:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1725990549; x=1726595349; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjTGqVxL/lXZ4Xq5oA9wMyb/w66vC8I8vd+hq2N9dLc=;
-        b=DXWRsVZli6jZTn3l79l/HpUKxdRsBltvT7iAnEWsxA675Aztl6Ewciv+JcdfhPyOhd
-         GCyeWi4goX71ylMzV98sqqZCbBkL9fHD68z0rA4XCfGCv7lMTVKb3Sf3Gdn2hB65wpzH
-         JsGLmZy8AAH8AYvirrWzj9/q7yd0R2WxKYk80=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725990549; x=1726595349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1725994107; x=1726598907; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XjTGqVxL/lXZ4Xq5oA9wMyb/w66vC8I8vd+hq2N9dLc=;
-        b=QKgAA8leQ7cFI91Qm3I17f9AuBgYM9jBCPRKEZo3lCYQN/vy8nx4ooUh0f2N+ZfkXs
-         9ZPBnRgCxm0FuVMPzr+wXZBWgY86NjNXDhlDt87B4bQe7zKrdK8VlG6i+RbH/bdpe6eP
-         VgENk61lVK5318AgjGREvBsJaRgQlA18e6+F1Fc/RrL1AQHV23CMn2WIArk8lA+gn+Vy
-         /FjcKzYNdH7C+rdFNHm1U0Aqj3qo6/pJEerHTFdc7JixWin8AktgobWn5so2YANHmWgY
-         lmEPsByjAfQOFHBh5fsus3qh2n697Ia4A06vAcs5aY7I9ScqNttr1LGepE6AgYdKUYvT
-         wOdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSu+Aya+7jxaE6LPw6lTkzmPNgy0sIaog3hOFEvREZnoztPSLOBTOxavf+f5lDU7QIbTAOPrKmJfitiA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxj7tYbdibzDzYGozvhbO7uVhVjPNz6dtEl+fyApocppqX7dbpk
-	oWwfo0C0VkcUB0/rH2GLEzQQzfIpH3DI1IL3ezqUpqcI+K5xU9zlZBslaYy5IA==
-X-Google-Smtp-Source: AGHT+IH7ewLbjt6vpK16Q9MSvs4t2UHHLsqVCiuJv68f8tihw1AECgjvOqgbtRKJbxklGND7j0FnJg==
-X-Received: by 2002:a05:6a21:6481:b0:1cf:37bd:b553 with SMTP id adf61e73a8af0-1cf5e1ab920mr1717836637.46.1725990549167;
-        Tue, 10 Sep 2024 10:49:09 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:a9f8:b780:a61c:6acb])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-20710f3229esm51179035ad.268.2024.09.10.10.49.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2024 10:49:08 -0700 (PDT)
-Date: Tue, 10 Sep 2024 10:49:06 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Hugues Bruant <hugues.bruant@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Tony Luck <tony.luck@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Julius Werner <jwerner@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [NOT A REGRESSION] firmware: framebuffer-coreboot: duplicate device
- name "simple-framebuffer.0"
-Message-ID: <ZuCGkjoxKxpnhEh6@google.com>
-References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
- <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local>
+        bh=d/xjSlwYNHaCmAEJ52/LetuJr/79SrxTHSb7l1iYHbQ=;
+        b=eHq1c+OK6TYRN+6+4b59DpRPIKf1C6lisqY+bqL8F48UNw9jsCro3QcBDT5VxysYxp
+         V5HqP6fwAQDpSveNVxobX+B6RvzqmmF71nCXUB6S1vRo5QUx3a3nK5gb0A2EdBlr5UDB
+         nSSx70FvDJRypsjBkkPj62BlWHxAM6AJDjhuYlk22NwjRTnO3VkLnsSId02fyEUlGn2x
+         ONhUZkSVVO12G9lstuvP3AM9nUyPvyCB8oSFvjtxi+H1gsLe4q6z6w0ztHxgrCt80pNN
+         vhls3zjrYVNF8Rfq35vnXcAG0bYdfM1YMS+2TF4QI/VOTqMveswpcWPvQrO00/wHdyyp
+         vn5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725994107; x=1726598907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d/xjSlwYNHaCmAEJ52/LetuJr/79SrxTHSb7l1iYHbQ=;
+        b=sk9Ih12aTvNW6YjAp2dWmkeVwLBx/M8a9c+SJm+SSVz8YC1yy6cfiYVsCkVxc+Bxal
+         zRgZ4oUmE9wm2HiQymCMCCOpDlHLVhmHSn1i1bEh0MD+lXvX8fr/AQGNJtZIDHGDaZTp
+         LluU2293VkNztboe7MZOYU+EAyVAzT/FT0A27imA9O709GmoyeXOEHOs0/u0zMb7GlUr
+         ogI/Mxm43h3hMRBzAf0zZ3/CMvUGFHeQYTNeijrDO/9PZ8UjIZF07F45zmZOWuctq2nt
+         4AFMnxmV0CeRPbBf/eBAoX3wCr9/m0pmVwb1fmd4q5j1JxGokQmC+IB8z7VwgRlDukjc
+         dWJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyF4i7rY7BFxp9wfeIxA6l1RQaN2Adi6pWVelB524UhNfPmh38P27Wh/lx9HW+X9ts0K1w9PVfsOJX/+0=@lists.linux.dev, AJvYcCXPZjRH8wev6vxQsuMjDBonG790TM2cPZkG+nSSGxCX89/VLCMPq5bbx18JcceC/N5oLMvNpFRmJOo2b9h9EzM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxEw3PyyYhLhQ2NBvRLfxjxjSHTPSeNHv+qK9kXT59Gh6IZYk5X
+	vgeJOXoNTwVkbSmBj8ConeTpzYXMeiQ6qC3lpEYqwTmSv90e3Zg9xFeuYEJcRBqrE7EQGZoY93u
+	q3/7wQjfmJLJNs8uqdFPzo+bukes=
+X-Google-Smtp-Source: AGHT+IFAr+8UZL5HRuL9rkDVnK7n4fTwY7nIMZfqU/kfjldcZ7+fHI5Jwzd1hLqSNjwRpN6xh0YAP7kz2ZQjZ4kX+4A=
+X-Received: by 2002:a05:690c:dc6:b0:6b0:52a6:6515 with SMTP id
+ 00721157ae682-6db44d6c4a8mr192458857b3.6.1725994106631; Tue, 10 Sep 2024
+ 11:48:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local>
+References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
+ <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local> <SJ1PR11MB60831AF34B75030EBA3D5721FC992@SJ1PR11MB6083.namprd11.prod.outlook.com>
+In-Reply-To: <SJ1PR11MB60831AF34B75030EBA3D5721FC992@SJ1PR11MB6083.namprd11.prod.outlook.com>
+From: Hugues Bruant <hugues.bruant@gmail.com>
+Date: Tue, 10 Sep 2024 11:48:15 -0700
+Message-ID: <CALvjV28edz1zzFeduytOMoVDyeXOKoxPiwcFp6Mbxz1ODSq17g@mail.gmail.com>
+Subject: Re: [REGRESSION] soft lockup on boot starting with kernel 6.10 /
+ commit 5186ba33234c9a90833f7c93ce7de80e25fac6f5
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yu, Fenghua" <fenghua.yu@intel.com>, 
+	"Chatre, Reinette" <reinette.chatre@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Brian Norris <briannorris@chromium.org>, Julius Werner <jwerner@chromium.org>, 
+	"chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, 
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(Tweaking subject; this indeed isn't related to the regression at all)
-
-Hi,
-
-On Mon, Sep 09, 2024 at 10:02:00AM +0200, Borislav Petkov wrote:
-> Looking at your log, the first warn is in framebuffer_coreboot. Some mess in
-> the sysfs platform devices registration.
-> 
-> Adding the relevant people for that:
-> 
-> Aug 20 20:29:36 luna kernel: sysfs: cannot create duplicate filename '/bus/platform/devices/simple-framebuffer.0'
-> Aug 20 20:29:36 luna kernel: CPU: 5 PID: 571 Comm: (udev-worker) Tainted: G           OE      6.10.6-arch1-1 #1 703d152c24f1971e36f16e505405e456fc9e23f8
-> Aug 20 20:29:36 luna kernel: Hardware name: Purism Librem 14/Librem 14, BIOS 4.14-Purism-1 06/18/2021
-> Aug 20 20:29:36 luna kernel: Call Trace:
-> Aug 20 20:29:36 luna kernel:  <TASK>
-> Aug 20 20:29:36 luna kernel:  dump_stack_lvl+0x5d/0x80
-> Aug 20 20:29:36 luna kernel:  sysfs_warn_dup.cold+0x17/0x23
-> Aug 20 20:29:36 luna kernel:  sysfs_do_create_link_sd+0xcf/0xe0
-> Aug 20 20:29:36 luna kernel:  bus_add_device+0x6b/0x130
-> Aug 20 20:29:36 luna kernel:  device_add+0x3b3/0x870
-> Aug 20 20:29:36 luna kernel:  platform_device_add+0xed/0x250
-> Aug 20 20:29:36 luna kernel:  platform_device_register_full+0xbb/0x140
-> Aug 20 20:29:36 luna kernel:  platform_device_register_resndata.constprop.0+0x54/0x80 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
-> Aug 20 20:29:36 luna kernel:  framebuffer_probe+0x165/0x1b0 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
-> Aug 20 20:29:36 luna kernel:  really_probe+0xdb/0x340
-> Aug 20 20:29:36 luna kernel:  ? pm_runtime_barrier+0x54/0x90
-> Aug 20 20:29:36 luna kernel:  ? __pfx___driver_attach+0x10/0x10
-> Aug 20 20:29:36 luna kernel:  __driver_probe_device+0x78/0x110
-> Aug 20 20:29:36 luna kernel:  driver_probe_device+0x1f/0xa0
-> Aug 20 20:29:36 luna kernel:  __driver_attach+0xba/0x1c0
-> Aug 20 20:29:36 luna kernel:  bus_for_each_dev+0x8c/0xe0
-> Aug 20 20:29:36 luna kernel:  bus_add_driver+0x112/0x1f0
-> Aug 20 20:29:36 luna kernel:  driver_register+0x72/0xd0
-> Aug 20 20:29:36 luna kernel:  ? __pfx_framebuffer_driver_init+0x10/0x10 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
-> Aug 20 20:29:36 luna kernel:  do_one_initcall+0x58/0x310
-> Aug 20 20:29:36 luna kernel:  do_init_module+0x60/0x220
-> Aug 20 20:29:36 luna kernel:  init_module_from_file+0x89/0xe0
-> Aug 20 20:29:36 luna kernel:  idempotent_init_module+0x121/0x320
-> Aug 20 20:29:36 luna kernel:  __x64_sys_finit_module+0x5e/0xb0
-> Aug 20 20:29:36 luna kernel:  do_syscall_64+0x82/0x190
-> Aug 20 20:29:36 luna kernel:  ? __do_sys_newfstatat+0x3c/0x80
-> Aug 20 20:29:36 luna kernel:  ? syscall_exit_to_user_mode+0x72/0x200
-> Aug 20 20:29:36 luna kernel:  ? do_syscall_64+0x8e/0x190
-> Aug 20 20:29:36 luna kernel:  ? do_sys_openat2+0x9c/0xe0
-> Aug 20 20:29:36 luna kernel:  ? syscall_exit_to_user_mode+0x72/0x200
-> Aug 20 20:29:36 luna kernel:  ? do_syscall_64+0x8e/0x190
-> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
-> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
-> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
-> Aug 20 20:29:36 luna kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> Aug 20 20:29:36 luna kernel: RIP: 0033:0x7b1bee2f81fd
-
-Looks like it might be a conflict with
-drivers/firmware/sysfb_simplefb.c, which also uses the
-"simple-framebuffer" name with a constant ID of 0. It's possible both
-drivers should be switched to use PLATFORM_DEVID_AUTO? Or at least one
-of them. Or they should use different base names.
-
-I'm not really sure what the best option is (does anyone rely on or care
-about the device naming?), and I don't actually use this driver. But
-here's an untested diff to try if you'd really like. If you test it,
-feel free to submit as a proper patch with my:
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-
-diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/google/framebuffer-coreboot.c
-index daadd71d8ddd..3f1b8f664c3f 100644
---- a/drivers/firmware/google/framebuffer-coreboot.c
-+++ b/drivers/firmware/google/framebuffer-coreboot.c
-@@ -62,7 +62,8 @@ static int framebuffer_probe(struct coreboot_device *dev)
- 		return -EINVAL;
- 
- 	pdev = platform_device_register_resndata(&dev->dev,
--						 "simple-framebuffer", 0,
-+						 "simple-framebuffer",
-+						 PLATFORM_DEVID_AUTO,
- 						 &res, 1, &pdata,
- 						 sizeof(pdata));
- 	if (IS_ERR(pdev))
+On Mon, Sep 9, 2024 at 9:10=E2=80=AFAM Luck, Tony <tony.luck@intel.com> wro=
+te:
+>
+> > I have discovered a 100% reliable soft lockup on boot on my laptop:
+> > Purism Librem 14, Intel Core i7-10710U, 48Gb RAM, Samsung Evo Plus 970
+> > SSD, CoreBoot BIOS, grub bootloader, Arch Linux.
+> >
+> > The last working release is kernel 6.9.10, every release from 6.10
+> > onwards reliably exhibit the issue, which, based on journalctl logs,
+> > seems to be triggered somewhere in systemd-udev:
+> > https://gitlab.archlinux.org/-/project/42594/uploads/04583baf22189a0a8b=
+b2f8773096e013/lockup.log
+> >
+> > Bisect points to commit 5186ba33234c9a90833f7c93ce7de80e25fac6f5
+>
+> Does that Intel Core i7-10710U even execute the RDT code? Most client par=
+ts
+> don't support RDT. You can check if yours does by looking for "rdt_a" in
+> /proc/cpuinfo.
+Thanks for the suggestion. You're right, I do not see `rdt_a` in `/proc/cpu=
+info`
