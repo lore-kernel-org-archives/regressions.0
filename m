@@ -1,137 +1,61 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19311ABEDC
-	for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 22:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED6B1A76BE;
+	Tue, 10 Sep 2024 22:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726006579; cv=none; b=I+UOEOrWvxbWJ2FLwsKizYLgPweP0w58BKhr594WoyUf87foksJcUBBI7IfIV1q2I5xnj8C8+TQ4zIN39YXw4Tb0qVopXD40oAmtAbVUPI3/8mO0KwVKXT305nT8EzBRsNe5fjLBySaXdEbtyvGSyupSbL4+mBzNtQxcIxwlJzA=
+	t=1726008062; cv=none; b=awzAqfbo4jqZ8JgOWx3wxsIQZdIrwFF1c2BQB9i8CGFGYZvEPzQm5k6zPlu/pYOtNeGfDcAW4njGkku83J2rSzU0fTobwYL8lP7sPN/B5Fp03gmJREdgQe8mdKPf5ke2bMgqO1tzqlpQtOh8JaKq8sW97O2GScjs+bTVuCk90/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726006579; c=relaxed/simple;
-	bh=hHIg8i0gS3Bf6sinh0WN3XoEPUmj8P+7fJP2LdbCtG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UFyXtatTiNp/LLpnVOo8qWnnoDYRaIbUSpwQpAXuAbEkvxnkqx5D/mkAsOkQw6x6YnMaxAo4bKIjmd4orYU/zPFCItHaHfqYqdA0I2LNormO8WomrT7GegSK3VP0ON5e5LJaVD+yF8vKGtx3QHLf++4cUyvvr5GugZQ/8aXikk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hapmNZym; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726008062; c=relaxed/simple;
+	bh=ewHx+sqMlVODPcD8RjZ430z/omXn0nvn/987s1r2yaQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=sfFDB0O2S92HfA05LJ7K9sFCQuD0qcI9jmAZ6UWarFZlvcCNILicu+xJjUkt1/LYdmB0WnkNbXddzGQ3Ybd0nrGlU/4Jy4KVo/z7yQm4V+eqz6puJwMFZWb6Fbs7gD0xRiVz5bcAKePMyAStOaZ/2AbSpvNCTNITkvXSzI4sftI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2xaRTUi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hapmNZym"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7a9ae8fc076so282097285a.2
-        for <regressions@lists.linux.dev>; Tue, 10 Sep 2024 15:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726006576; x=1726611376; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hHIg8i0gS3Bf6sinh0WN3XoEPUmj8P+7fJP2LdbCtG0=;
-        b=hapmNZymqD0PsCgDUx+wYrvbsbQfauN2GGPrR17z8JQip/J3hFsrKW0WpvkX/jVC48
-         iimnVIkw159iZe3hCyOyG2aMEOstFt+hxqAQg7g6k+ooel4P811CAG9UkOrM7t0vdnfB
-         qGoLqLA0xeE5F3htjXYi7rmEe37HITWYSdZ+Xv8PMajSMs2ODbZIQzdTySRFUQeyULvY
-         UTzOR/OPlFcc5Xr2p+W5KAD33Ybecc4mu9QyiAcMRA3sUM1lxhvF3KqAEG34VxsScrNe
-         a0rmZLfu82RquUSNUTq3ue8X/qohP0rVIS84JHmJM23iawH/KVm3QlDzevok9tIRff95
-         pzEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726006576; x=1726611376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hHIg8i0gS3Bf6sinh0WN3XoEPUmj8P+7fJP2LdbCtG0=;
-        b=O/BnrvnIUaRbTOTV61aCDbIhLmMgRpaRC70rTE5uatoD3IPYckQOrzoPQBoJQyoICJ
-         QGyIyCZ3vl59j2RJ7QOFaoo0Y0UA9V3uPoD5MU3ZG6kdaTz/PFM99ulGiWINWMIhaTk/
-         D6/OSsW1+TVjiXiPGhkhWeMpJGoZYuMfbNg4oJ5tg2L79fVy32enguaLGRFW8jT+9mFp
-         grxO2zYvtcKLzRvI7ejsb+92cEnwx6qQUzOZGerU+Bj5KEE2IzftewExd+7sr8FetS4c
-         Vkm57NSMG7msD+jkuM5oNPOHTWjVIq8qrdD0k5J9yHZqHACbhbKhetRDs7GSlSo2eIde
-         n8fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtyxXvcEoPplDBfBGi5CBMLleGMX4RKfISwrwMyuU76oTQjuj+JR9tEOHuyHvJfLMEiM8bw+itu8O+bw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzX282pRKWfSz0sldNzu2s7R8AgQWDzzLJWm8uqAbJEA/UmYPMT
-	sZsinFjNqaJnroKW+cXE1ZuI/4VvVqcr5PtDE7FXoQdhG3+Oln2U2NW3Gj8vyuzWx5g9inHqZAe
-	35yALV23s8QRFm2puK/zfgQBwV6U=
-X-Google-Smtp-Source: AGHT+IH6j1CjcbCzXOH1/LDwJczOXPOc2Hu+rc7nUbxX9+q+uyt7yEQs7pN/cUoLVtxP6duCgszTtKHpKX9DYMGhazM=
-X-Received: by 2002:a05:6214:3d08:b0:6c1:6b4c:6ba4 with SMTP id
- 6a1803df08f44-6c5282fd494mr199592026d6.8.1726006576325; Tue, 10 Sep 2024
- 15:16:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2xaRTUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB512C4CEC3;
+	Tue, 10 Sep 2024 22:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726008061;
+	bh=ewHx+sqMlVODPcD8RjZ430z/omXn0nvn/987s1r2yaQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=g2xaRTUiMfwqZw5v2BfwEka1lG4rqdJHbfqPlziBpWZcTIgTi8nFHx1aMg0qzsufP
+	 4butw248eu/wQFN+eo0ifoeXpqV1jU15kp1FbZQxbDlf2n6eLoCJY8RZAmqbjsbttQ
+	 rfBLidb/QNB6ukD4Fej+zt/sq5X2NoCF7L5Qp7FO+NPyp9X7OTprcIyeAQmYU2DzDl
+	 ZjojZ8XPX/K2RN4+p8u8qxUga/TcTL/rC9MF/o1expFJ/tEhTbD4L4gJ1yui54wOnQ
+	 RLx/r2MR3ixLQhRG/oxuIwfxCQJZBCDSDZFFVm3byP0yMBk/JGOtEvq1EsIZvEEp14
+	 CelKkwbsCJFtQ==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
- <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
- <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
- <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com> <CABXGCsOoL5vD0+FRALFQFr3ZBpb2z5mpGKzAD5RHoW9_sb5yaQ@mail.gmail.com>
- <f68020a3-c413-482d-beb2-5432d98a1d3e@amd.com> <CABXGCsMSTsBFW=OirDszPFVOiNgyOBSh3qyzAw-Coi-McnicAQ@mail.gmail.com>
- <04d3755d-f295-46d7-b35d-008b888b39ae@amd.com> <CABXGCsMDk59-P0Nr1v7KajKsoQh2966mykLPWQxajPtq=OGgXg@mail.gmail.com>
- <eeab54b4-c055-4992-9ca4-f9e382db68c4@amd.com> <6db472e4-cd90-4ba6-8368-725b10ba5b4a@amd.com>
-In-Reply-To: <6db472e4-cd90-4ba6-8368-725b10ba5b4a@amd.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Wed, 11 Sep 2024 03:16:05 +0500
-Message-ID: <CABXGCsMaXUjHyySQqw7fPmoyDHSJ0yc0f6NPfOU2BRd_Hvj8TA@mail.gmail.com>
-Subject: Re: 6.11/regression/bisected - after commit 1b04dcca4fb1, launching
- some RenPy games causes computer hang
-To: Leo Li <sunpeng.li@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com, 
-	pekka.paalanen@collabora.com, "Wheeler, Daniel" <daniel.wheeler@amd.com>, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 11 Sep 2024 01:40:56 +0300
+Message-Id: <D42YSIV15N2O.2JNV0VVFUT8S5@kernel.org>
+Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Pengyu Ma" <mapengyu@gmail.com>, "Roberto Sassu"
+ <roberto.sassu@huaweicloud.com>
+Subject: Re: [regression] significant delays when secureboot is enabled
+ since 6.10
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>
+X-Mailer: aerc 0.17.0
+References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+ <db275ab4fb73fc089c66738ffbcab23557e53055.camel@HansenPartnership.com>
+ <1de8359d-f231-452c-bf5c-9fc01f0ec800@leemhuis.info>
+In-Reply-To: <1de8359d-f231-452c-bf5c-9fc01f0ec800@leemhuis.info>
 
-On Tue, Sep 10, 2024 at 8:47=E2=80=AFPM Leo Li <sunpeng.li@amd.com> wrote:
->
-> Thanks Mikhail, I think I know what's going on now.
->
-> The `scale-monitor-framebuffer` experimental setting is what puts us down=
- the
-> bad code path. It seems VRR has nothing to do with this issue, just setti=
-ng
-> `scale-monitor-framebuffer` is enough to reproduce.
+On Tue Sep 10, 2024 at 3:41 PM EEST, Linux regression tracking (Thorsten Le=
+emhuis) wrote:
+> FWIW (mainly for others that later find this thread on lore), I's pretty
+> sure James meant CONFIG_TCG_TPM2_HMAC.
 
-I ran some additional tests:
+Yeah, exactly.
 
-1)
-$ gsettings set org.gnome.mutter experimental-features
-"['variable-refresh-rate']"
-Symptoms: No
-
-2)
-$ gsettings set org.gnome.mutter experimental-features
-"['scale-monitor-framebuffer']"
-Symptoms: Screen flickers happening when moving cursor.
-
-3)
-$ gsettings set org.gnome.mutter experimental-features
-"['variable-refresh-rate', 'scale-monitor-framebuffer']"
-But Variable Refresh Rate is disabled in the display settings.
-Symptoms: As previous - Screen flickers happening when moving cursor.
-
-4)
-$ gsettings set org.gnome.mutter experimental-features
-"['variable-refresh-rate', 'scale-monitor-framebuffer']"
-And Variable Refresh Rate is enabled in the display settings.
-Symptoms: On Radeon 7900XTX hardware computer completely hangs without
-any messages in kernel logs.
-
-On Wed, Sep 11, 2024 at 2:11=E2=80=AFAM Leo Li <sunpeng.li@amd.com> wrote:
->
-> Hi Mikhail,
->
-> Can you give this patch a try to see if it helps?
-> https://gist.github.com/leeonadoh/3271e90ec95d768424c572c970ada743
->
-
-Thanks, with this patch, the issue is not reproduced anymore.
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-
-The only thing that worries me is the thought that the problem with
-hang is now hidden.
-It's one thing when the GPU hangs but the system continues to work,
-another thing when the system hangs completely and even
-Alt+SysRq+REISUB does not help to reboot the system. It shouldn't be
-like this...
-
---=20
-Best Regards,
-Mike Gavrilov.
+BR, Jarkko
