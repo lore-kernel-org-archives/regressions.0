@@ -1,197 +1,87 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC113CFA1;
-	Wed, 11 Sep 2024 07:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBE7153820;
+	Wed, 11 Sep 2024 08:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726041313; cv=none; b=VbFJYfvKYCd+HIG5S7bsginiQx0aUSpwciZok/aSUmnRtA/6AEpsUA9uFqRSyartcVKxi0Q6Ll1n3+Q4tTYXGzWzzkS0pMXP3GuslqC4A60bOUrFCEodyRNaJoCjsondCM30yeTexBGPyfYIQAh2tOblvKU/iJv82d7fhx/KkPU=
+	t=1726041892; cv=none; b=az1kbAxbFiu3zxYlFF/dd3axx2+okByuf2wHnT0KzIsL5/BrszpUqIM0nR2jt7qVljObhPvxlaqLAWTdyii8bxsFIMUBDgQ15uXaEwkKRkUOrwJmFQKq9h28emphhTBrEIAYc1zOHt7Ssv6xE17XPmrYN9n6EyNEuD2WLo0TM7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726041313; c=relaxed/simple;
-	bh=EA2tEPCTXn6CLL+yTzdOoB+ZdBX9EA2j8pmKlZ6sF5c=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Cc:Content-Type; b=DP7mph7Ta/OFjvq8BhlG8ptN2uOFXJ+vmOZP741K3VvIDn15umyaezvCh+j8/0Ea85zTx9U4lSqdxuL06czD4vFTOTOM2MWUTIl7CPSa3NFyCA2v+612igzOL+5W4ppK03S0+B4Ui1KUg+lznjxHl4zFbdJi4CHc94bDxyGyMVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SsYm+jLk; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SsYm+jLk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Cc:
-	Subject:Reply-To:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
-	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=fV7E5LQGvZ58qV7zl++1wTRM8EAH4UQbWhnGhcyslZw=; t=1726041311;
-	x=1726473311; b=SsYm+jLkKj9sbF44XD1kH/M4WsDSGW7Dg0G6JMeF9LrFxd4uJ6THLDRO/hHw9
-	auy/McHCDfzcs7a/N4YociK29sdweHkweMbzPWX1Z6RmPTiMSo8yArTY8Mm9YleblBIwwke7C/imE
-	D+Lj7DZ6uro0gEUMckwNjnO/1xdeTWQvTvCRFJCC2NHcSMr+wYRvJcHz3uWGahtJ5qywIAqgoZe/2
-	N60gbMqRoOSnTKrKv0mutnyXvbqjUA2M2znz/6vyMLNWh08yawapEily/EKOSZLlLwtAO/nzNUcgg
-	OV4ACW8ZkPuIfXj/N8Z1ibT7Cl9US3IFcz9+jo6rP3PMIzfkQg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1soIBr-0004CD-UF; Wed, 11 Sep 2024 09:55:04 +0200
-Message-ID: <3724e8e8-ab71-4f64-8ba1-c5c9a617632f@leemhuis.info>
-Date: Wed, 11 Sep 2024 09:55:03 +0200
+	s=arc-20240116; t=1726041892; c=relaxed/simple;
+	bh=/CSb5i4eKb9gqo1hmpGIH5jyrntUD/keY6VmktfO7S0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwslzb0TKAGp4JkwOMkbPgSNYit9Z5VHimHmkjeol3i7z/JnIHbyg6CBQyGYQAkFnDYhQ5tcGmqQVWMhJ6gCm616vlMw8sLNgaknYBrxHTlJ716DOgU/VuprwF2TwJrqjrOXgAa+ZzGZXlzPdLkHtuO5SYqn7rYU7EvbxsiREz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 25B37227AB5; Wed, 11 Sep 2024 10:04:46 +0200 (CEST)
+Date: Wed, 11 Sep 2024 10:04:45 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	regressions@lists.linux.dev, kernelci@lists.linux.dev,
+	kernel@collabora.com
+Subject: Re: [PATCH v4 2/2] dma: add IOMMU static calls with clear default
+ ops
+Message-ID: <20240911080445.GA5950@lst.de>
+References: <cover.1721818168.git.leon@kernel.org> <c3179690b16d790d5bfd7d0afabac9b90922ec28.1721818168.git.leon@kernel.org> <181e06ff-35a3-434f-b505-672f430bd1cb@notapiano> <20240911064305.GD4026@unreal>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dan Williams <dan.j.williams@intel.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] frozen usb mouse pointer at boot
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726041311;adc16418;
-X-HE-SMSGID: 1soIBr-0004CD-UF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240911064305.GD4026@unreal>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On Wed, Sep 11, 2024 at 09:43:05AM +0300, Leon Romanovsky wrote:
+> Thanks for the report, I'm looking into it. However, it is unclear to me
+> why my patch is causing this issue. The change in dma_supported() should
+> produce WARN_ON [1] if new path is taken, otherwise, we return to
+> previous behavior.
 
-I noticed a report about a linux-6.6.y regression in bugzilla.kernel.org
-that appears to be caused by this commit from Dan applied by Greg:
+dma-iommu never implemented .dma_supported and thus claims to support
+all dma masks.  To restore that behavior we'd need something like the
+patch below:
 
-15fffc6a5624b1 ("driver core: Fix uevent_show() vs driver detach race")
-[v6.11-rc3, v6.10.5, v6.6.46, v6.1.105, v5.15.165, v5.10.224, v5.4.282,
-v4.19.320]
-
-The reporter did not check yet if mainline is affected; decided to
-forward the report by mail nevertheless, as the maintainer for the
-subsystem is also the maintainer for the stable tree. ;-)
-
-To quote from https://bugzilla.kernel.org/show_bug.cgi?id=219244 :
-
-> The symptoms of this bug are as follows:
-> 
-> - After booting (to the graphical login screen) the mouse pointer
-> would frozen and only after unplugging and plugging-in again the usb
-> plug of the mouse would the mouse be working as expected.
-> - If one would log in without fixing the mouse issue, the mouse
-> pointer would still be frozen after login.
-> - The usb keyboard usually is not affected even though plugged into
-> the same usb-hub - thus logging in is possible.
-> - The mouse pointer is also frozen if the usb connector is plugged
-> into a different usb-port (different from the usb-hub)
-> - The pointer is moveable via the inbuilt synaptics trackpad
-> 
-> 
-> The kernel log shows almost the same messages (not sure if the
-> differences mean anything in regards to this bug) for the initial
-> recognizing the mouse (frozen mouse pointer) and the re-plugged-in mouse
-> (and subsequently moveable mouse pointer):
-> 
-> [kernel] [    8.763158] usb 1-2.2.1.2: new low-speed USB device number 10 using xhci_hcd
-> [kernel] [    8.956028] usb 1-2.2.1.2: New USB device found, idVendor=045e, idProduct=00cb, bcdDevice= 1.04
-> [kernel] [    8.956036] usb 1-2.2.1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-> [kernel] [    8.956039] usb 1-2.2.1.2: Product: Microsoft Basic Optical Mouse v2.0 
-> [kernel] [    8.956041] usb 1-2.2.1.2: Manufacturer: Microsoft 
-> [kernel] [    8.963554] input: Microsoft  Microsoft Basic Optical Mouse v2.0  as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.2/1-2.2.1/1-2.2.1.2/1-2.2.1.2:1.0/0003:045E:00CB.0002/input/input18
-> [kernel] [    8.964417] hid-generic 0003:045E:00CB.0002: input,hidraw1: USB HID v1.11 Mouse [Microsoft  Microsoft Basic Optical Mouse v2.0 ] on usb-0000:00:14.0-2.2.1.2/input0
-> 
-> [kernel] [   31.258381] usb 1-2.2.1.2: USB disconnect, device number 10
-> [kernel] [   31.595051] usb 1-2.2.1.2: new low-speed USB device number 16 using xhci_hcd
-> [kernel] [   31.804002] usb 1-2.2.1.2: New USB device found, idVendor=045e, idProduct=00cb, bcdDevice= 1.04
-> [kernel] [   31.804010] usb 1-2.2.1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-> [kernel] [   31.804013] usb 1-2.2.1.2: Product: Microsoft Basic Optical Mouse v2.0 
-> [kernel] [   31.804016] usb 1-2.2.1.2: Manufacturer: Microsoft 
-> [kernel] [   31.812933] input: Microsoft  Microsoft Basic Optical Mouse v2.0  as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2.2/1-2.2.1/1-2.2.1.2/1-2.2.1.2:1.0/0003:045E:00CB.0004/input/input20
-> [kernel] [   31.814028] hid-generic 0003:045E:00CB.0004: input,hidraw1: USB HID v1.11 Mouse [Microsoft  Microsoft Basic Optical Mouse v2.0 ] on usb-0000:00:14.0-2.2.1.2/input0
-> 
-> Differences:
-> 
-> ../0003:045E:00CB.0002/input/input18 vs ../0003:045E:00CB.0004/input/input20
-> 
-> and
-> 
-> hid-generic 0003:045E:00CB.0002 vs hid-generic 0003:045E:00CB.0004
-> 
-> 
-> The connector / usb-port was not changed in this case!
-> 
-> 
-> The symptoms of this bug have been present at one point in the
-> recent
-> past, but with kernel v6.6.45 (or maybe even some version before that)
-> it was fine. But with 6.6.45 it seems to be definitely fine.
-> 
-> But with v6.6.46 the symptoms returned. That's the reason I
-> suspected
-> the kernel to be the cause of this issue. So I did some bisecting -
-> which wasn't easy because that bug would often times not appear if the
-> system was simply rebooted into the test kernel.
-> As the bug would definitely appear on the affected kernels (v6.6.46
-> ff) after shutting down the system for the night and booting the next
-> day, I resorted to simulating the over-night powering-off by shutting
-> the system down, unplugging the power and pressing the power button to
-> get rid of residual voltage. But even then a few times the bug would
-> only appear if I repeated this procedure before booting the system again
-> with the respective kernel.
-> 
-> This is on a Thinkpad with Kaby Lake and integrated Intel graphics. 
-> Even though it is a laptop, it is used as a desktop device, and the
-> internal battery is disconnected, the removable battery is removed as
-> the system is plugged-in via the power cord at all times (when in use)!
-> Also, the system has no power (except for the bios battery, of
-> course)
-> over night as the power outlet is switched off if the device is not in use.
-> 
-> Not sure if this affects the issue - or how it does. But for
-> successful bisecting I had to resort to the above procedure.
-> 
-> Bisecting the issue (between the release commits of v6.6.45 and
-> v6.6.46) resulted in this commit [1] being the probable culprit.
-> 
-> I then tested kernel v6.6.49. It still produced the bug for me. So I
-> reverted the changes of the assumed "bad commit" and re-compiled kernel
-> v6.6.49. With this modified kernel the bug seems to be gone.
-> 
-> Now, I assume the commit has a reason for being introduced, but
-> maybe
-> needs some adjusting in order to avoid this bug I'm experiencing on my
-> system.
-> Also, I can't say why the issue appeared in the past even without
-> this
-> commit being present, as I haven't bisected any kernel version before
-> v6.6.45.
-> 
-> 
-> [1]:
-> 
-> 4d035c743c3e391728a6f81cbf0f7f9ca700cf62 is the first bad commit
-> commit 4d035c743c3e391728a6f81cbf0f7f9ca700cf62
-> Author: Dan Williams <dan.j.williams@intel.com>
-> Date:   Fri Jul 12 12:42:09 2024 -0700
-> 
->     driver core: Fix uevent_show() vs driver detach race
->     
->     commit 15fffc6a5624b13b428bb1c6e9088e32a55eb82c upstream.
->     
->     uevent_show() wants to de-reference dev->driver->name. There is no clean
-
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 4d035c743c3e391728a6f81cbf0f7f9ca700cf62
-#regzbot from: brmails+k
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219244
-#regzbot title: driver core: frozen usb mouse pointer at boot
-#regzbot ignore-activity
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 7550b5dc5e55df..d23a4d5a6b31a1 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -841,17 +841,19 @@ static int dma_supported(struct device *dev, u64 mask)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (WARN_ON(ops && use_dma_iommu(dev)))
+-		return false;
+ 	/*
+ 	 * ->dma_supported sets the bypass flag, so we must always call
+ 	 * into the method here unless the device is truly direct mapped.
+ 	 */
+-	if (!ops)
+-		return dma_direct_supported(dev, mask);
+-	if (!ops->dma_supported)
+-		return 1;
+-	return ops->dma_supported(dev, mask);
++	if (ops) {
++		if (!ops->dma_supported)
++			return 1;
++		return ops->dma_supported(dev, mask);
++	}
++
++	if (use_dma_iommu(dev))
++		return true;
++	return dma_direct_supported(dev, mask);
+ }
+ 
+ bool dma_pci_p2pdma_supported(struct device *dev)
