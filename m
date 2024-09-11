@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA55014D2A6
-	for <regressions@lists.linux.dev>; Wed, 11 Sep 2024 09:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA414A606
+	for <regressions@lists.linux.dev>; Wed, 11 Sep 2024 10:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726048066; cv=none; b=mCIpKE5p3BOBXKPTQmw4g5n/eaEhLgnowRQ7toEKVocUHMtKvHyBVmP+dXIVmRDqEswzSN7bWMnDw0/9vIALIWCRl8SFg72jsuklvgQXGfY3zBJeJn8INMak+dY2o8JSTL5NRAjrvgWmci5H6IErrndXo7uKLFF6XIgGqqBm0DA=
+	t=1726050428; cv=none; b=g7oSJeEagofwF1Xiyqk9OIVzSl8GfMF4xoytfp08Hr9REjqKAChSL0EDSf5pyjGo491c8HLLJ1SqBn5+7whu6trpCyndCNu5WCrb08AjbfrVNV62qIIlxZcJSdOLpBpqJDX+8HkPvjRYtpRkqXo5qK1foc40aXbMUzTXFef28hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726048066; c=relaxed/simple;
-	bh=elV+Z9VkIBqtVgMjNTx9IjRxR8m+UHa1hNXTkXC7a/k=;
+	s=arc-20240116; t=1726050428; c=relaxed/simple;
+	bh=z3wWS+Wn7S/LvcrpVh3W6PL5vcl4MIkE/BAo6m/hYHM=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=NxqmM8RuTkeozen2Mhd+l6PBgQPnZ8cWdntSi0ZSxBcl2vE7GmZI3dW6U6VjYIMQJz/nZEadfVCm0Axw7GEXz18dJ9GxM1a3fDkkG4mUH0mW+Q7oxs+WvpL6/LrQ2ncMUAWBvJRd93LmA90P6oiA1r9pfgoN3a2jt+Eb4pW9yt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=l+D0GBsv; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=XYyQ2FeDKBh5FZMVuL+WyCa/SEpeqXxeOQiHOm2/IdLQSnDpma2Sxmt8aS3aV9o4pgF4RtLKW3/ymMATL6YqMCcpUOGE3luA8igGKh9jcvsLydY/iIn2cnrT4j/4s+dq51P7JTyROiRpVqLhdy/dBUqFPbwhElcrPVExcS57b+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RO3Zo3md; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="l+D0GBsv"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RO3Zo3md"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=elV+Z9VkIBqtVgMjNTx9IjRxR8m+UHa1hNXTkXC7a/k=; t=1726048064;
-	x=1726480064; b=l+D0GBsvA7T+3a62BZQSAcHsd24oKSoIY4gyQEzZ++xepLS3B3NdGUjGS2e28
-	2uHMnD7etoIsa7KrK2DKn0lEQf+IKXKHSr0mAHti1h7WfqrofkkGcQ2iYzK8QDAgrKFLTgEOvmLp4
-	I9uAH0UAx5SF+fG+es1yxRuKLeLlErFv7/Ard8GRN/EcB3zNAt6X61c99mNFGDjbMDLq0mzsbf2UU
-	oGhbI2t3A0TpgzBNKaMs2O9rnQf5fyPFPRMzQ6hkS589/oGdhQkHal4ZP/fPnX7C++JgW7GE5eWvT
-	nDrYRxLhkWGZiPnWoECGkJWXEn0s3DGTbnellggnTc5kgkm80g==;
+	References; bh=z3wWS+Wn7S/LvcrpVh3W6PL5vcl4MIkE/BAo6m/hYHM=; t=1726050426;
+	x=1726482426; b=RO3Zo3mdLSiAiLi2xYmoQTo0nUAnhTyK6WJ5HpvQYVYLfIsfroaem8gKuFnP8
+	mIg7MZqXwbdbRkpHeWVORsCPAtXhgHyJ4dFx1p9F6q7PITi2/iECv2CXDBWy+0iCdH4vWrFbMfhnu
+	w2wjrQK0qcaGP6mdeOla9rtDqdGBnvhHPon1SmtYNqRyQc/VUBTe0ZzKMsks9Xqpq268YfiC034du
+	AoHKZXjUL8QTFFmpLA5kfOGRbYL2+hGzJrXliZOb0RjMK/Ovbfovgts5DSY95PUUhUlSG2wfGKDkn
+	PLteOMuHw1HP9Snpe/hohr5T94HzkiNDgMYh5dxOvMzTmenjfg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1soJws-0004VN-Te; Wed, 11 Sep 2024 11:47:42 +0200
-Message-ID: <32b9a23e-7692-45f9-9345-01d76cbff247@leemhuis.info>
-Date: Wed, 11 Sep 2024 11:47:42 +0200
+	id 1soKYy-00063N-6W; Wed, 11 Sep 2024 12:27:04 +0200
+Message-ID: <dad3b482-1074-49ab-9245-803cba044114@leemhuis.info>
+Date: Wed, 11 Sep 2024 12:27:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,8 +48,8 @@ Content-Language: en-US, de-DE
 In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726048064;faadf91b;
-X-HE-SMSGID: 1soJws-0004VN-Te
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726050426;98f0ffba;
+X-HE-SMSGID: 1soKYy-00063N-6W
 
 
 
@@ -60,19 +60,13 @@ On 09.03.24 11:18, Thorsten Leemhuis wrote:
 > but done here to ensure a public paper trail.
 
 #regzbot report:
-https://lore.kernel.org/lkml/20240607151439.175035-1-laura.nao@collabora.com/
-#regzbot resolved: patch was dropped
+https://lore.kernel.org/all/CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com/
+#regzbot introduced: 5186ba33234c9a90833f7c93ce7de80e25fac6f5
+#regzbot summary: x86 cache: soft lockups on boot
 
 #regzbot report:
-https://lore.kernel.org/linux-wireless/ea1eeb13-c568-4381-812a-dec4246a440e@candelatech.com/
-#regzbot resolved: inconclusive: reporter MIA, but looks like this was
-resolved
+https://lore.kernel.org/all/191d810a4e3.fcc6066c765804.973611676137075390@collabora.com/
+#regzbot introduced: da9619a30e73b
+#regzbot summary: dmapool: occasional fs corruption seen on 64GB NVME
+devices
 
-#regzbot report:
-https://lore.kernel.org/linux-bluetooth/ZsTh7Jyug7MbZsLE@mdpsys.co.uk/
-#regzbot monitor: https://lore.kernel.org/all/ZuB3omUkdUHLggYu@mdpsys.co.uk/
-
-#regzbot report:
-https://lore.kernel.org/all/AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM/
-#regzbot introduced: a62c50545b4d
-#regzbot summary: ice: hard kernel faults when shutting down applications
