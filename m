@@ -1,244 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7019F18BBBD
-	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 11:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0921AB6DC;
+	Thu, 12 Sep 2024 13:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726140954; cv=none; b=hEq2hrZjavppFPwMXqZiDq3b28VLiCg2wguXaXbtmYX84wIIhaZhzfYUTsBxk3qQ0DB4eFNciWiXRIOhS8ImY9v7lGv3hdxXTp9Nk0vOoI109vlUbw7ltEvEaAwZdg2BhNmdZeDKIWc1S4rgpXQhbKoNaH3q+lSCUOUvUB4ow0Y=
+	t=1726146219; cv=none; b=YN9/mZfbeMee5cJSDtncg0l7w6TmHA1ma63ySwfyHAMN3/nMY7FhKcUV6CJJqAAi9zStQ9fI14LTWN+J89NDtkmRDgsPAG3W+hhQuVZDVUeAw1yDWA46BitQQPvg7K9BOSLaN0ExI8xqKcMJA0uoGgR/jY9YL0et/ZKq/fxVYZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726140954; c=relaxed/simple;
-	bh=Mh1k1rMwpZPEn8mwNjSNmhWqLkYKVzI0gnLuz0Jfu6U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Nxd7Gz3+zerJk6SaJK1S/Wh6HhkGVoh2ELEILcOUbhURoEjD39ot+HZlUloSwDqFqkagFRkfsRwD+bwDQw7oGQ7pchABr1IdBc6i4i/Yp2TB7UHQw7BhM7xJpb6Uq0Y0EG/pDyhPlhkjQdJ1rem+NFMFolNfEaHICzMhj7YuejQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RbV6sVf+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726146219; c=relaxed/simple;
+	bh=0wVaLAj1LkuDQ1eAUwHk5RJUlLtMjsDvq/kB7dZwzs8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=OuriFwKxA0mtuQa5157pY2l6zInkDCZVOj8m9aEDk+jaB5PRTg11r6EeiPiXAvFg7QDUmah5rczDRnKksgw71snBPJVqyumZAg2RV0OCclCwXikNX/078MCWzrMjvSKjmLNifU9R4egsld3bT8dKmQD5M3Y325sRE2iYdP/FCuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gM6wwWaj; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RbV6sVf+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726140951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IYaaq+dX0/7DEojW1l9AFpFIChJdEY2bBK1F9k5BgD0=;
-	b=RbV6sVf+4F8Jb9xKXS6d/m0T6SHPJdHYQdrCtvekXILAZl1B70+DB6QY6CjOBYeUxb715C
-	EOE8xgStkUjCl0Dk+Z1M4GR7AnhpwdKZDAecashU64gi1ocQtUoEflCbTaeQL97vezv8SM
-	5ZkY465XuG1j4Pf+l47A5q2rSRe986c=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-MPO1JvpWNm-ODzWcm98PKQ-1; Thu, 12 Sep 2024 07:35:50 -0400
-X-MC-Unique: MPO1JvpWNm-ODzWcm98PKQ-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-53660eb17b8so779258e87.0
-        for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 04:35:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726140949; x=1726745749;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IYaaq+dX0/7DEojW1l9AFpFIChJdEY2bBK1F9k5BgD0=;
-        b=kPoHuDNOKHhVQDPmandO7MW93bvNd16GWEWqmoSivLFTDRtbd+KZm4d3TrAJVvTeMt
-         sJpgyBGobqmuQkFqyTwC2WF7agiJ/TIgzthsYqEjqsEtWB+sZ/rLHgd3LxwJfNZROd+E
-         oanqCZdJQvqPdMoG/r80IfGfaQ3ZjeGNoTDX2MC9b4gO5j5xG5/H7D+GZmTN5dPN55Yf
-         HXdC5Ki24hc6of/l3KLThRtu9ZJ8Cj7krbskkKHyjKRjXj/4qDQtJhVGsFZqXPTDSznq
-         ZwdGzkjSyanFtoQOxZ3BvtjIf8ObL+Nth9ceJAK3dzz0SR1ViAfLwbuCbDP6h5FLouOM
-         OF0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWIasHWfHY+AAClzMnzv6vr38OEWu9u6g20T/HP2axQOUpChhbzhgA2fNg3ylhcP4agVVEV0xPKaC/opg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzjNldhkVuakR1jAjxdUHN2AE2+R8DaityqKdMP/dJ3RjZ2VnlM
-	nXXEBDPn6tbvr4aSKd6yZZNsJRoBbnP53aT5ocKUMFkSItWUqkEolFIx4JEVtRA5fONEYe3cuWV
-	oVQsxMsJuNmu0HSwT+14HKqDgXvsTYEHfPILaF/JvUhmHE+yK6Y1yEDXsDZgM
-X-Received: by 2002:a05:6512:4017:b0:533:4785:82a7 with SMTP id 2adb3069b0e04-53678fc8586mr1605072e87.28.1726140948561;
-        Thu, 12 Sep 2024 04:35:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBna+5EinCwR/Lij9CpfGsghHsYmmA3HZg2qxflQ5JJykqP5bH1I+Yy9IcXwnu0/KGf+lDXw==
-X-Received: by 2002:a05:6512:4017:b0:533:4785:82a7 with SMTP id 2adb3069b0e04-53678fc8586mr1605032e87.28.1726140947816;
-        Thu, 12 Sep 2024 04:35:47 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cb179f8e3sm162451165e9.43.2024.09.12.04.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2024 04:35:47 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Brian Norris <briannorris@chromium.org>, Borislav Petkov <bp@alien8.de>
-Cc: Hugues Bruant <hugues.bruant@gmail.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org, Fenghua Yu
- <fenghua.yu@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Tony
- Luck <tony.luck@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>, Julius
- Werner <jwerner@chromium.org>, chrome-platform@lists.linux.dev, Jani
- Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [NOT A REGRESSION] firmware: framebuffer-coreboot: duplicate
- device name "simple-framebuffer.0"
-In-Reply-To: <ZuCGkjoxKxpnhEh6@google.com>
-References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
- <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local>
- <ZuCGkjoxKxpnhEh6@google.com>
-Date: Thu, 12 Sep 2024 13:35:46 +0200
-Message-ID: <87jzfhayul.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gM6wwWaj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Cc:To:
+	Subject:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=9gMPRE3dusYnLgHmnQkJgE3ee3DErva04V0juSuoAfU=; t=1726146216; x=1726578216;
+	 b=gM6wwWajJstePQ4WW50eNJEGeNTQBczw8cxXT0eMUygTuOKCVkXZ7kiFWMylJm7bzOpz3X+eyz
+	jMF0mstyY5WhIjwGsQ9OY+udahZtwHSeTTtCj1ywoLfflBFE77J0CoAgNACeCK0qgX4LbSgOTUXx6
+	ubW+tkWjk+C0uGA6wykJN5b5ju8jBFroCaAbEnoxAD2um8iv7fDdp1Hlfys5qm1FfhEnWYH4BFNAG
+	S9s2O03qltReWaLHzeC42lmg+5WhCC+sv7NIv4S8eypPiH/h1GZVqOIn9SdfQC7Wfe9oqn8lh280E
+	nJmyvSbBEdiuavjJ2JA1IasoBsYy2mXzWt77g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sojTt-0003y2-Ac; Thu, 12 Sep 2024 15:03:29 +0200
+Message-ID: <97802bf0-d090-4063-91e8-74724c3b096c@leemhuis.info>
+Date: Thu, 12 Sep 2024 15:03:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Subject: Linux regressions report for mainline [2024-09-12]
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726146216;8d5671d4;
+X-HE-SMSGID: 1sojTt-0003y2-Ac
 
-Brian Norris <briannorris@chromium.org> writes:
+Hi Linus! Due to the pending 6.11 release a quick and brief extra
+report about regressions from this cycle. For more details and a
+few regressions I did not find noteworthy, see:
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
 
-Hello Brian,
-
-> (Tweaking subject; this indeed isn't related to the regression at all)
->
-> Hi,
->
-> On Mon, Sep 09, 2024 at 10:02:00AM +0200, Borislav Petkov wrote:
->> Looking at your log, the first warn is in framebuffer_coreboot. Some mess in
->> the sysfs platform devices registration.
->> 
->> Adding the relevant people for that:
->> 
->> Aug 20 20:29:36 luna kernel: sysfs: cannot create duplicate filename '/bus/platform/devices/simple-framebuffer.0'
->> Aug 20 20:29:36 luna kernel: CPU: 5 PID: 571 Comm: (udev-worker) Tainted: G           OE      6.10.6-arch1-1 #1 703d152c24f1971e36f16e505405e456fc9e23f8
->> Aug 20 20:29:36 luna kernel: Hardware name: Purism Librem 14/Librem 14, BIOS 4.14-Purism-1 06/18/2021
->> Aug 20 20:29:36 luna kernel: Call Trace:
->> Aug 20 20:29:36 luna kernel:  <TASK>
->> Aug 20 20:29:36 luna kernel:  dump_stack_lvl+0x5d/0x80
->> Aug 20 20:29:36 luna kernel:  sysfs_warn_dup.cold+0x17/0x23
->> Aug 20 20:29:36 luna kernel:  sysfs_do_create_link_sd+0xcf/0xe0
->> Aug 20 20:29:36 luna kernel:  bus_add_device+0x6b/0x130
->> Aug 20 20:29:36 luna kernel:  device_add+0x3b3/0x870
->> Aug 20 20:29:36 luna kernel:  platform_device_add+0xed/0x250
->> Aug 20 20:29:36 luna kernel:  platform_device_register_full+0xbb/0x140
->> Aug 20 20:29:36 luna kernel:  platform_device_register_resndata.constprop.0+0x54/0x80 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
->> Aug 20 20:29:36 luna kernel:  framebuffer_probe+0x165/0x1b0 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
->> Aug 20 20:29:36 luna kernel:  really_probe+0xdb/0x340
->> Aug 20 20:29:36 luna kernel:  ? pm_runtime_barrier+0x54/0x90
->> Aug 20 20:29:36 luna kernel:  ? __pfx___driver_attach+0x10/0x10
->> Aug 20 20:29:36 luna kernel:  __driver_probe_device+0x78/0x110
->> Aug 20 20:29:36 luna kernel:  driver_probe_device+0x1f/0xa0
->> Aug 20 20:29:36 luna kernel:  __driver_attach+0xba/0x1c0
->> Aug 20 20:29:36 luna kernel:  bus_for_each_dev+0x8c/0xe0
->> Aug 20 20:29:36 luna kernel:  bus_add_driver+0x112/0x1f0
->> Aug 20 20:29:36 luna kernel:  driver_register+0x72/0xd0
->> Aug 20 20:29:36 luna kernel:  ? __pfx_framebuffer_driver_init+0x10/0x10 [framebuffer_coreboot a587d2fc243ebaa0205c3badd33442a004d284e0]
->> Aug 20 20:29:36 luna kernel:  do_one_initcall+0x58/0x310
->> Aug 20 20:29:36 luna kernel:  do_init_module+0x60/0x220
->> Aug 20 20:29:36 luna kernel:  init_module_from_file+0x89/0xe0
->> Aug 20 20:29:36 luna kernel:  idempotent_init_module+0x121/0x320
->> Aug 20 20:29:36 luna kernel:  __x64_sys_finit_module+0x5e/0xb0
->> Aug 20 20:29:36 luna kernel:  do_syscall_64+0x82/0x190
->> Aug 20 20:29:36 luna kernel:  ? __do_sys_newfstatat+0x3c/0x80
->> Aug 20 20:29:36 luna kernel:  ? syscall_exit_to_user_mode+0x72/0x200
->> Aug 20 20:29:36 luna kernel:  ? do_syscall_64+0x8e/0x190
->> Aug 20 20:29:36 luna kernel:  ? do_sys_openat2+0x9c/0xe0
->> Aug 20 20:29:36 luna kernel:  ? syscall_exit_to_user_mode+0x72/0x200
->> Aug 20 20:29:36 luna kernel:  ? do_syscall_64+0x8e/0x190
->> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
->> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
->> Aug 20 20:29:36 luna kernel:  ? clear_bhb_loop+0x25/0x80
->> Aug 20 20:29:36 luna kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->> Aug 20 20:29:36 luna kernel: RIP: 0033:0x7b1bee2f81fd
->
-> Looks like it might be a conflict with
-> drivers/firmware/sysfb_simplefb.c, which also uses the
-> "simple-framebuffer" name with a constant ID of 0. It's possible both
-> drivers should be switched to use PLATFORM_DEVID_AUTO? Or at least one
-> of them. Or they should use different base names.
->
-
-I'm unsure about PLATFORM_DEVID_AUTO because I don't know if there are
-user-space programs that assume this to always be "simple-framebuffer.0".
-
-> I'm not really sure what the best option is (does anyone rely on or care
-> about the device naming?), and I don't actually use this driver. But
-> here's an untested diff to try if you'd really like. If you test it,
-> feel free to submit as a proper patch with my:
->
+Ciao, Thorsten
 
 
-I've discussed this with Thomas Zimmermann (simpledrm maintainer) and
-he suggests that the problem is the system framebuffer information to
-be provided in both Coreboot table entry (AFAIU is LB_TAG_FRAMEBUFFER)
-and in the boot_params, which leads to struct screen_info to be filled.
+6.11-rc regressions with available fixes in -next that will likely make it to you 
+=================================================================================
 
-We had the same problem for EFI systems that passed DTB to the kernel
-instead of ACPI, in those cases both a "simple-framebuffer" DT node and
-an EFI-GOP table could be provided.
+* reported 7 weeks ago: mm: swap stress test now runs into OOM
+https://lore.kernel.org/lkml/CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com/
 
-Commit 3310288f6135 "(of/platform: Disable sysfb if a simple-framebuffer
-node is found") solved that issue. I've typed the same for Coreboot to
-handle in the same way. Please let me know what you think:
+Fix: 0885ef47056079 ("mm: vmscan.c: fix OOM on swap stress test")
+[next-20240912 (pending-fixes)]
 
-From 6955149fb13af1c0cba2e5c1fbb1ac9367a09ae2 Mon Sep 17 00:00:00 2001
-From: Javier Martinez Canillas <javierm@redhat.com>
-Date: Thu, 12 Sep 2024 12:55:29 +0200
-Subject: [RFC PATCH] firmware: coreboot: Disable sysfb if Coreboot already
- provides a FB
+* reported 27 days ago: block: hang when when setting echo noop > /sys/
+block/sda/queue/scheduler
+https://bugzilla.kernel.org/show_bug.cgi?id=219166 and   
+  https://lore.kernel.org/all/0a43155c-b56d-4f85-bb46-dce2a4e5af59@kernel.org/
 
-On Coreboot platforms, a system framebuffer may be provided to the Linux
-kernel by filling a LB_TAG_FRAMEBUFFER entry in the Coreboot table. But
-it seems SeaBIOS payload can also provide a VGA mode in the boot params.
+Fix: https://lore.kernel.org/all/20240908000704.414538-1-dlemoal@kernel.org/
+[the fix was in -next but is gone now, but I'm pretty sure Jens will
+sent it straight to you before Sunday]
 
-If that the case, early arch x86 boot code will fill the global struct
-screen_info data.
+* reported 24 days ago: drm: amdgpu: certain operations are much slower
+https://gitlab.freedesktop.org/drm/amd/-/issues/3569
 
-The data is used by the Generic System Framebuffers (sysfb) framework to
-add a platform device with platform data about the system framebuffer.
+Fix: 578aab4ecc7347 ("drm/amd/display: Do not reset planes based on crtc zpos_changed") [next-20240911]
 
-But if there is information about the system framebuffer in the Coreboot
-table as well, the framebuffer_coreboot driver will also try to do the
-same and add another device for the system framebuffer. This will fail
-though because there's already a simple-framebuffer.0 device registered:
+* reported 9 days ago [affects stable, too]: soundwire: audio broken for
+Meteor Lake-P HD Audio Controllers
+https://lore.kernel.org/lkml/b6c75eee-761d-44c8-8413-2a5b34ee2f98@linux.intel.com/
 
-    sysfs: cannot create duplicate filename '/bus/platform/devices/simple-framebuffer.0'
-    ...
-    coreboot: could not register framebuffer
-    framebuffer coreboot8: probe with driver framebuffer failed with error -17
+Fix: 233a95fd574fde ("soundwire: stream: Revert "soundwire: stream: fix
+programming slave ports for non-continous port maps"") [next-20240912 (pending-fixes)]
 
-To prevent the issue, make the framebuffer_core driver to disable sysfb
-if there is system framebuffer data in the Coreboot table. That way only
-this driver will register a device and sysfb would not attempt to do it
-(or remove its registered device if was already executed before).
 
-Reported-by: Brian Norris <briannorris@chromium.org>
-Link: https://lore.kernel.org/all/ZuCG-DggNThuF4pj@b20ea791c01f/T/#ma7fb65acbc1a56042258adac910992bb225a20d2
-Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
----
- drivers/firmware/google/framebuffer-coreboot.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+6.11-rc regressions with available fixes in -next 
+=================================================
 
-diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/google/framebuffer-coreboot.c
-index daadd71d8ddd..0a28aa5b17dc 100644
---- a/drivers/firmware/google/framebuffer-coreboot.c
-+++ b/drivers/firmware/google/framebuffer-coreboot.c
-@@ -61,6 +61,19 @@ static int framebuffer_probe(struct coreboot_device *dev)
- 	if (res.end <= res.start)
- 		return -EINVAL;
- 
-+	/*
-+	 * Since a "simple-framebuffer" device is already added
-+	 * here, disable the Generic System Framebuffers (sysfb)
-+	 * to prevent it from registering another device for the
-+	 * system framebuffer later (e.g: using the screen_info
-+	 * data that may had been filled as well).
-+	 *
-+	 * This can happen for example on Coreboot systems, that
-+	 * advertise a LB_TAG_FRAMEBUFFER entry in their Coreboot
-+	 * table and also a VESA mode by the BIOS used as payload.
-+	 */
-+	sysfb_disable();
-+
- 	pdev = platform_device_register_resndata(&dev->dev,
- 						 "simple-framebuffer", 0,
- 						 &res, 1, &pdata,
--- 
- 
-Best regards,
+* reported 7 days ago: arm64: dts: qcom: msm8939: boot broken on msm8939
+platforms 
+https://lore.kernel.org/lkml/2a15105f-67e2-42f6-b624-562485b0bee2@kernel.org/
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+Fix: d92e9ea2f0f918 ("arm64: dts: qcom: msm8939: revert use of APCS mbox
+for RPM") [next-20240912]
 
+
+6.11-rc regressions with available fixes up for review:
+=====================================================
+
+* reported 18 days ago: firmware: qcom: scm: smc: msm8960 SoC fails to
+boot
+https://lore.kernel.org/lkml/692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com/
+
+Fix: https://lore.kernel.org/all/20240911-tzmem-null-ptr-v2-0-7c61b1a1b463@linaro.org/
+
+* reported 4 days ago: power: supply: sysfs: permissions wrong
+https://lore.kernel.org/linux-pm/20240908144414.82887-1-hdegoede@redhat.com/
+
+Fix: https://lore.kernel.org/all/20240908185337.103696-1-hdegoede@redhat.com/
+
+
+6.11-rc regressions without any fixes I'm aware of
+==================================================
+
+* reported 5 weeks ago: amdgpu: launching some RenPy games causes hangs 
+https://lore.kernel.org/lkml/CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com/
+
+* reported 23 days ago: btusb: driver fails to initialize MT7921AUN on
+v6.11-rc4
+https://lore.kernel.org/lkml/ZsTh7Jyug7MbZsLE@mdpsys.co.uk/
+
+* reported 13 days ago: KVM: VMX: wayland starting and failing right away
+https://lore.kernel.org/lkml/877cbyuzdn.fsf@redhat.com/
+
+* reported 11 days ago [affects stable, too]:video/aperture: suddenly
+two displays appear as connected, but only one display is connected
+https://bugzilla.kernel.org/show_bug.cgi?id=219217
+https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/12160
+
+* reported 6 days ago: net: booting from nfs root on an arm64 fvp model
+broke
+https://lore.kernel.org/netdev/ZtsTGp9FounnxZaN@arm.com/
+
+* reported 5 days ago: iwlwifi: resume error
+https://lore.kernel.org/linux-wireless/CAP-bSRbMbZe9LCE15SCbYNTGZjE_xiAm29qzO_WNVjHsJ6oyyg@mail.gmail.com/
