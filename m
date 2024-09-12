@@ -1,140 +1,266 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0921AB6DC;
-	Thu, 12 Sep 2024 13:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937CE11712;
+	Thu, 12 Sep 2024 13:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726146219; cv=none; b=YN9/mZfbeMee5cJSDtncg0l7w6TmHA1ma63ySwfyHAMN3/nMY7FhKcUV6CJJqAAi9zStQ9fI14LTWN+J89NDtkmRDgsPAG3W+hhQuVZDVUeAw1yDWA46BitQQPvg7K9BOSLaN0ExI8xqKcMJA0uoGgR/jY9YL0et/ZKq/fxVYZI=
+	t=1726146980; cv=none; b=ZeVPdXFSeJ+Kv+UugPpynNoNt78pU5OWa2Hk9zRdHOLHNaa/osXd5aUpjoAH+d01W4sDU3GnNK6oIXcTCG83guMRUSzudb4gAyHsoLPPHRuORVVAxdrl43uOnHVPT3qgGqRTPwq+LSMR15A4we4493grXaDpAxFZ4AebF+nTrUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726146219; c=relaxed/simple;
-	bh=0wVaLAj1LkuDQ1eAUwHk5RJUlLtMjsDvq/kB7dZwzs8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=OuriFwKxA0mtuQa5157pY2l6zInkDCZVOj8m9aEDk+jaB5PRTg11r6EeiPiXAvFg7QDUmah5rczDRnKksgw71snBPJVqyumZAg2RV0OCclCwXikNX/078MCWzrMjvSKjmLNifU9R4egsld3bT8dKmQD5M3Y325sRE2iYdP/FCuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gM6wwWaj; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1726146980; c=relaxed/simple;
+	bh=+sk5lvVZkq66zk2Uc0Zu/K0bHgXgjF+VpL5jtSIItjM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=he/KDiMjxkofLEcqU3tkjq1x8BtII4n8cbLonEhNgsEt3NBdvglAifqeyXE1d0P5dMNcYLNrHWh5vG32a92CVNCaS7peI/S28GIvusX4KphJAvIr6yxN8+FtU8emEdYOCNN9VR/Ew+wLJ1OU9HkSRQIATJLoYWDmAx9MFxeWCcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4DBR8dy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gM6wwWaj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Cc:To:
-	Subject:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=9gMPRE3dusYnLgHmnQkJgE3ee3DErva04V0juSuoAfU=; t=1726146216; x=1726578216;
-	 b=gM6wwWajJstePQ4WW50eNJEGeNTQBczw8cxXT0eMUygTuOKCVkXZ7kiFWMylJm7bzOpz3X+eyz
-	jMF0mstyY5WhIjwGsQ9OY+udahZtwHSeTTtCj1ywoLfflBFE77J0CoAgNACeCK0qgX4LbSgOTUXx6
-	ubW+tkWjk+C0uGA6wykJN5b5ju8jBFroCaAbEnoxAD2um8iv7fDdp1Hlfys5qm1FfhEnWYH4BFNAG
-	S9s2O03qltReWaLHzeC42lmg+5WhCC+sv7NIv4S8eypPiH/h1GZVqOIn9SdfQC7Wfe9oqn8lh280E
-	nJmyvSbBEdiuavjJ2JA1IasoBsYy2mXzWt77g==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sojTt-0003y2-Ac; Thu, 12 Sep 2024 15:03:29 +0200
-Message-ID: <97802bf0-d090-4063-91e8-74724c3b096c@leemhuis.info>
-Date: Thu, 12 Sep 2024 15:03:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4DBR8dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF93C4CECC;
+	Thu, 12 Sep 2024 13:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726146980;
+	bh=+sk5lvVZkq66zk2Uc0Zu/K0bHgXgjF+VpL5jtSIItjM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=e4DBR8dyQczZab6/OFMIvlpgdAhUs9l/pSE+ETBwlwumudKB+1mcZKTMKqi8101AU
+	 eHxix3C/x4WPPKBDBsHkzVljGZ5OHu19UfuIe5xdnKe0zy7im5DULRx2i2KjBIqdgY
+	 lwZ+RVf/T4Sq/yjhZsJTdsqA7N9SaA5ew/KWUdHa87I0zyrMq8QIgYZRTcm1SzAENl
+	 KvvsO73KdsIkNXCYHm63Pn6YjzLjXCfIjh9jjprlSpmkzAdFQul22kyH+tcym3H2Fm
+	 QVfokHRAroOwR4bhzFpFOHj5qUlgPcz6f+8MZLyiTbWvMV6dNLffwQJ7bOgtXSgLC9
+	 1k9JEwwmeNmwg==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Subject: Linux regressions report for mainline [2024-09-12]
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726146216;8d5671d4;
-X-HE-SMSGID: 1sojTt-0003y2-Ac
+Date: Thu, 12 Sep 2024 16:16:16 +0300
+Message-Id: <D44C19QB8IK1.OMUJP7N91HRN@kernel.org>
+Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Pengyu Ma" <mapengyu@gmail.com>
+Subject: Re: [regression] significant delays when secureboot is enabled
+ since 6.10
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Roberto
+ Sassu" <roberto.sassu@huaweicloud.com>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>
+X-Mailer: aerc 0.18.2
+References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+ <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
+ <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
+ <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
+ <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
+ <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
+ <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
+ <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
+In-Reply-To: <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
 
-Hi Linus! Due to the pending 6.11 release a quick and brief extra
-report about regressions from this cycle. For more details and a
-few regressions I did not find noteworthy, see:
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+On Wed Sep 11, 2024 at 3:21 PM EEST, James Bottomley wrote:
+> On Wed, 2024-09-11 at 10:53 +0200, Roberto Sassu wrote:
+> > On Tue, 2024-09-10 at 16:28 +0300, Jarkko Sakkinen wrote:
+> > > On Tue Sep 10, 2024 at 3:57 PM EEST, James Bottomley wrote:
+> > > > On Tue, 2024-09-10 at 15:48 +0300, Jarkko Sakkinen wrote:
+> > > > > On Tue Sep 10, 2024 at 3:39 PM EEST, Jarkko Sakkinen wrote:
+> > > > > > On Tue Sep 10, 2024 at 12:05 PM EEST, Roberto Sassu wrote:
+> > > > > > > On Tue, 2024-09-10 at 11:01 +0200, Linux regression
+> > > > > > > tracking
+> > > > > > > (Thorsten
+> > > > > > > Leemhuis) wrote:
+> > > > > > > > Hi, Thorsten here, the Linux kernel's regression tracker.
+> > > > > > > >=20
+> > > > > > > > James, Jarkoo, I noticed a report about a regression in
+> > > > > > > > bugzilla.kernel.org that appears to be caused by this
+> > > > > > > > change of
+> > > > > > > > yours:
+> > > > > > > >=20
+> > > > > > > > 6519fea6fd372b ("tpm: add hmac checks to
+> > > > > > > > tpm2_pcr_extend()")
+> > > > > > > > [v6.10-rc1]
+> > > > > > > >=20
+> > > > > > > > As many (most?) kernel developers don't keep an eye on
+> > > > > > > > the bug
+> > > > > > > > tracker,
+> > > > > > > > I decided to forward it by mail. To quote from
+> > > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219229=C2=A0:
+> > > > > > > >=20
+> > > > > > > > > When secureboot is enabled,
+> > > > > > > > > the kernel boot time is ~20 seconds after 6.10 kernel.
+> > > > > > > > > it's ~7 seconds on 6.8 kernel version.
+> > > > > > > > >=20
+> > > > > > > > > When secureboot is disabled,
+> > > > > > > > > the boot time is ~7 seconds too.
+> > > > > > > > >=20
+> > > > > > > > > Reproduced on both AMD and Intel platform on ThinkPad
+> > > > > > > > > X1 and
+> > > > > > > > > T14.
+> > > > > > > > >=20
+> > > > > > > > > It probably caused autologin failure and micmute led
+> > > > > > > > > not
+> > > > > > > > > loaded on AMD platform.
+> > > > > > > >=20
+> > > > > > > > It was later bisected to the change mentioned above. See
+> > > > > > > > the
+> > > > > > > > ticket for
+> > > > > > > > more details.
+> > > > > > >=20
+> > > > > > > Hi
+> > > > > > >=20
+> > > > > > > I suspect I encountered the same problem:
+> > > > > > >=20
+> > > > > > > https://lore.kernel.org/linux-integrity/b8a7b3566e6014ba102ab=
+98e10ede0d574d8930e.camel@huaweicloud.com/
+> > > > > > >=20
+> > > > > > > Going to provide more info there.
+> > > > > >=20
+> > > > > > I suppose you are going try to acquire the tracing data I
+> > > > > > asked?
+> > > > > > That would be awesome, thanks for taking the troube.=C2=A0 Let'=
+s
+> > > > > > look
+> > > > > > at the data and draw conclusions based on that.
+> > > > > >=20
+> > > > > > Workaround is pretty simple: CONFIG_TCG_TPM2_HMAC=3Dn to the
+> > > > > > kernel
+> > > > > > configuration disables the feature.
+> > > > > >=20
+> > > > > > For making decisions what to do with the=C2=A0 we are talking
+> > > > > > about ~2
+> > > > > > week window estimated, given the Vienna conference slows
+> > > > > > things
+> > > > > > down, so I hope my workaround is good enough before that.
+> > > > >=20
+> > > > > I can enumerate three most likely ways to address the issue:
+> > > > >=20
+> > > > > 1. Strongest: drop from defconfig.
+> > > > > 2. Medium: leave to defconfig but add an opt-in kernel command-
+> > > > > line
+> > > > > =C2=A0=C2=A0 parameter.
+> > > > > 3. Lightest: if we can based on tracing data nail the
+> > > > > regression in
+> > > > > =C2=A0=C2=A0 sustainable schedule, fix it.
+> > > >=20
+> > > > Actually, there's a fourth: not use sessions for the PCR extend
+> > > > (if
+> > > > we'd got the timings when I asked, this was going to be my
+> > > > suggestion
+> > > > if they came back problematic).=C2=A0 This seems only to be a probl=
+em
+> > > > for
+> > > > IMA measured boot (because it does lots of extends).=C2=A0 If
+> > > > necessary this
+> > > > could even be wrapped in a separate config or boot option that
+> > > > only
+> > > > disables HMAC on extend if IMA (so we still get security for
+> > > > things
+> > > > like sd-boot)
+> > >=20
+> > > I can buy that but with a twist that make it an opt-in kernel
+> > > command
+> > > line option. We don't want to take already existing functionality
+> > > away
+> > > from those who might want to use it (given e.g. hardening
+> > > requirements),
+> > > and with that basis opt-in (by default disabled) would be more
+> > > balanced
+> > > way to address the issue.
+> > >=20
+> > > Please do a send a patch!
+> >=20
+> > I made few measurements. I have a Fedora 38 VM with TPM passthrough.
+> >=20
+> > Kernels: 6.11-rc2+ (guest), 6.5.0-45-generic (host)
+> >=20
+> > QEMU:
+> >=20
+> > rc=C2=A0 qemu-kvm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1:4.2-
+> > 3ubuntu6.27
+> > ii=C2=A0 qemu-system-x86=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1:6.2+dfsg-
+> > 2ubuntu6.22
+> >=20
+> >=20
+> > TPM2_PT_MANUFACTURER:
+> > =C2=A0 raw: 0x49465800
+> > =C2=A0 value: "IFX"
+> > TPM2_PT_VENDOR_STRING_1:
+> > =C2=A0 raw: 0x534C4239
+> > =C2=A0 value: "SLB9"
+> > TPM2_PT_VENDOR_STRING_2:
+> > =C2=A0 raw: 0x36373000
+> > =C2=A0 value: "670"
+> >=20
+> >=20
+> > No HMAC:
+> >=20
+> > # tracer: function_graph
+> > #
+> > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > =C2=A00)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > =C2=A00)=C2=A0=C2=A0 1.112 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_append_hmac_session();
+> > =C2=A00) # 6360.029 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > =C2=A00) # 6415.012 us |=C2=A0 }
+> >=20
+> >=20
+> > HMAC:
+> >=20
+> > # tracer: function_graph
+> > #
+> > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm2_start_auth_session() {
+> > =C2=A01) * 36976.99 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) * 84746.51 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) # 3195.083 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) @ 126795.1 us |=C2=A0=C2=A0=C2=A0 }
+> > =C2=A01)=C2=A0=C2=A0 2.254 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_append_hmac_session();
+> > =C2=A01)=C2=A0=C2=A0 3.546 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_fill_hmac_session();
+> > =C2=A01) * 24356.46 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > =C2=A01)=C2=A0=C2=A0 3.496 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_check_hmac_response();
+> > =C2=A01) @ 151171.0 us |=C2=A0 }
+>
+> Well, unfortunately, that tells us that it's the TPM itself that's
+> taking the time processing the security overhead.  The ordering of the
+> commands in tpm2_start_auth_session() shows
+>
+>  37ms for context restore of null key
+>  85ms for start session with encrypted salt
+>   3ms to flush null key
+> -----
+> 125ms
+>
+> If we context save the session, we'd likely only bear a single 37ms
+> cost to restore it (replacing the total 125ms).  However, there's
+> nothing we can do about the extend execution going from 6ms to 24ms, so
+> I could halve your current boot time with security enabled (it's
+> currently 149ms, it would go to 61ms, but it's still 10x slower than
+> the unsecured extend at 6ms)
+>
+> James
 
-Ciao, Thorsten
+I'll hold for better benchmarks.
 
-
-6.11-rc regressions with available fixes in -next that will likely make it to you 
-=================================================================================
-
-* reported 7 weeks ago: mm: swap stress test now runs into OOM
-https://lore.kernel.org/lkml/CAF8kJuNP5iTj2p07QgHSGOJsiUfYpJ2f4R1Q5-3BN9JiD9W_KA@mail.gmail.com/
-
-Fix: 0885ef47056079 ("mm: vmscan.c: fix OOM on swap stress test")
-[next-20240912 (pending-fixes)]
-
-* reported 27 days ago: block: hang when when setting echo noop > /sys/
-block/sda/queue/scheduler
-https://bugzilla.kernel.org/show_bug.cgi?id=219166 and   
-  https://lore.kernel.org/all/0a43155c-b56d-4f85-bb46-dce2a4e5af59@kernel.org/
-
-Fix: https://lore.kernel.org/all/20240908000704.414538-1-dlemoal@kernel.org/
-[the fix was in -next but is gone now, but I'm pretty sure Jens will
-sent it straight to you before Sunday]
-
-* reported 24 days ago: drm: amdgpu: certain operations are much slower
-https://gitlab.freedesktop.org/drm/amd/-/issues/3569
-
-Fix: 578aab4ecc7347 ("drm/amd/display: Do not reset planes based on crtc zpos_changed") [next-20240911]
-
-* reported 9 days ago [affects stable, too]: soundwire: audio broken for
-Meteor Lake-P HD Audio Controllers
-https://lore.kernel.org/lkml/b6c75eee-761d-44c8-8413-2a5b34ee2f98@linux.intel.com/
-
-Fix: 233a95fd574fde ("soundwire: stream: Revert "soundwire: stream: fix
-programming slave ports for non-continous port maps"") [next-20240912 (pending-fixes)]
-
-
-6.11-rc regressions with available fixes in -next 
-=================================================
-
-* reported 7 days ago: arm64: dts: qcom: msm8939: boot broken on msm8939
-platforms 
-https://lore.kernel.org/lkml/2a15105f-67e2-42f6-b624-562485b0bee2@kernel.org/
-
-Fix: d92e9ea2f0f918 ("arm64: dts: qcom: msm8939: revert use of APCS mbox
-for RPM") [next-20240912]
-
-
-6.11-rc regressions with available fixes up for review:
-=====================================================
-
-* reported 18 days ago: firmware: qcom: scm: smc: msm8960 SoC fails to
-boot
-https://lore.kernel.org/lkml/692cfe9a-8c05-4ce4-813e-82b3f310019a@gmail.com/
-
-Fix: https://lore.kernel.org/all/20240911-tzmem-null-ptr-v2-0-7c61b1a1b463@linaro.org/
-
-* reported 4 days ago: power: supply: sysfs: permissions wrong
-https://lore.kernel.org/linux-pm/20240908144414.82887-1-hdegoede@redhat.com/
-
-Fix: https://lore.kernel.org/all/20240908185337.103696-1-hdegoede@redhat.com/
-
-
-6.11-rc regressions without any fixes I'm aware of
-==================================================
-
-* reported 5 weeks ago: amdgpu: launching some RenPy games causes hangs 
-https://lore.kernel.org/lkml/CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com/
-
-* reported 23 days ago: btusb: driver fails to initialize MT7921AUN on
-v6.11-rc4
-https://lore.kernel.org/lkml/ZsTh7Jyug7MbZsLE@mdpsys.co.uk/
-
-* reported 13 days ago: KVM: VMX: wayland starting and failing right away
-https://lore.kernel.org/lkml/877cbyuzdn.fsf@redhat.com/
-
-* reported 11 days ago [affects stable, too]:video/aperture: suddenly
-two displays appear as connected, but only one display is connected
-https://bugzilla.kernel.org/show_bug.cgi?id=219217
-https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/12160
-
-* reported 6 days ago: net: booting from nfs root on an arm64 fvp model
-broke
-https://lore.kernel.org/netdev/ZtsTGp9FounnxZaN@arm.com/
-
-* reported 5 days ago: iwlwifi: resume error
-https://lore.kernel.org/linux-wireless/CAP-bSRbMbZe9LCE15SCbYNTGZjE_xiAm29qzO_WNVjHsJ6oyyg@mail.gmail.com/
+BR, Jarkko
