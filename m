@@ -1,60 +1,40 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065001AD265
-	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 13:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B938719FA91
+	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 13:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726147566; cv=none; b=XlGmQLebxOgGpMcNt2wk1OMplUIo/raCmQtlo4wkkKmlcmJunl4lmmcIRfZPTJcoJ72kQ7+EqG+G42pSfSQBHJ4QhtBO8hLsmcGB5lz3fHrA6zn6FV2CNZupgqsJ+PLogUIdlx5C4/zzGDHDnbfITtu0+QHxHsCyNTjfQ+VjLcE=
+	t=1726148191; cv=none; b=HoppXlx73FrSPRrOBghtj2caibT1Qtdl6YV3Tsu1ZX/7OePGKUPNzhNJkYM3m3Cs3xBi0UUxh/Hk5asaap+KicioSVj9eKf2YgwKkrNXGb7fuJd073YtT10Vh5Gr+M+ZxM++OMwhDCZdSgBnppezlV7GlBQzpw6UTi5uTJ8fmUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726147566; c=relaxed/simple;
-	bh=kwRh1esz7VeQ7gbJNWGtqcN88SglDE5yRSb/KPxUqBY=;
+	s=arc-20240116; t=1726148191; c=relaxed/simple;
+	bh=RjsoJk0fz0GT0pGzrOF7avM7SGiSZ+cDXayYZl1cJpM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FaUWA4PZn+4eMZeq43y18+ebaqZse8AbGmzliqyVdwBHycCm/AFPJqYj2zVmcSUPcnJtKOaE1YB4Gv8H59BEYq3QnlMFwXxXygP1QkQkZ0t7jgvhiC0QhFxViXp28Evem4QUZHjaDQY1DBkA7IhVRVB8KmcuIc71gPktPZWOU3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=F7l0i4qe; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=F7l0i4qe; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="F7l0i4qe";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="F7l0i4qe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1726147563;
-	bh=kwRh1esz7VeQ7gbJNWGtqcN88SglDE5yRSb/KPxUqBY=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=F7l0i4qeFlQoFFpSdEaf2wx4dj7Uw+zt2i3F9XiAx4DmChSlOpdAipb+WzT2VVCTF
-	 uJSQM1Tfp+g+8E9AjENkZdrtRfHZRKdf6YEamNKr7a6n4mAzoOvyIjBuvcMdjX32YK
-	 xNperrr8aK6M27LU9imXDek8KhRzv6GA2sqZ5a04=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 621681286B75;
-	Thu, 12 Sep 2024 09:26:03 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id nk-URM0lINK2; Thu, 12 Sep 2024 09:26:03 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1726147563;
-	bh=kwRh1esz7VeQ7gbJNWGtqcN88SglDE5yRSb/KPxUqBY=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=F7l0i4qeFlQoFFpSdEaf2wx4dj7Uw+zt2i3F9XiAx4DmChSlOpdAipb+WzT2VVCTF
-	 uJSQM1Tfp+g+8E9AjENkZdrtRfHZRKdf6YEamNKr7a6n4mAzoOvyIjBuvcMdjX32YK
-	 xNperrr8aK6M27LU9imXDek8KhRzv6GA2sqZ5a04=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 782B212869D8;
-	Thu, 12 Sep 2024 09:26:02 -0400 (EDT)
-Message-ID: <c47b129aeb95094aace5b174fc6d81bf0a7ecfbf.camel@HansenPartnership.com>
+	 Content-Type:MIME-Version; b=C3aCIYGjSKrVjVlRwM2jlo+r3+9e+eLToGpkqMwhCW7TnoTWA14/mpxjUEi83qpyiWJhNrXLTE/F3JzBO0iQwBsqxuS+tIWvmAxer9g614N6i4TXGORejPIRbjPf9yslI1B6wxOX/4HOAp71Dkr+jerZahwJDdKs56jJTklAiDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4X4Hyr1F7kz9v7NJ
+	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 21:16:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 6D8051400D7
+	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 21:36:15 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwDnlsdI7uJmEIfIAA--.3419S2;
+	Thu, 12 Sep 2024 14:36:15 +0100 (CET)
+Message-ID: <155190f0eb0974e223538f10afaa7860c5a61cf5.camel@huaweicloud.com>
 Subject: Re: [regression] significant delays when secureboot is enabled
  since 6.10
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Roberto Sassu
-	 <roberto.sassu@huaweicloud.com>, Linux regressions mailing list
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, Jarkko Sakkinen
+	 <jarkko@kernel.org>, Linux regressions mailing list
 	 <regressions@lists.linux.dev>
 Cc: keyrings@vger.kernel.org, "linux-integrity@vger.kernel.org"
 	 <linux-integrity@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	Pengyu Ma <mapengyu@gmail.com>
-Date: Thu, 12 Sep 2024 09:26:01 -0400
-In-Reply-To: <D44C19QB8IK1.OMUJP7N91HRN@kernel.org>
+Date: Thu, 12 Sep 2024 15:36:04 +0200
+In-Reply-To: <c47b129aeb95094aace5b174fc6d81bf0a7ecfbf.camel@HansenPartnership.com>
 References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
 	 <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
 	 <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
@@ -64,104 +44,151 @@ References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
 	 <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
 	 <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
 	 <D44C19QB8IK1.OMUJP7N91HRN@kernel.org>
+	 <c47b129aeb95094aace5b174fc6d81bf0a7ecfbf.camel@HansenPartnership.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwDnlsdI7uJmEIfIAA--.3419S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr4fWr4fCFyrZF4ktFyDGFg_yoWrJFWfpr
+	48JFyUGry5Gr1rtr1DKr4Utryjyr1UJw1UXrn8JF1kAF4Dtr1Ygr15Xr4Ygr1DZr4fJr1Y
+	qr1UJrnxur1UGr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAEBGbiTfQJHwADsp
 
-On Thu, 2024-09-12 at 16:16 +0300, Jarkko Sakkinen wrote:
-> On Wed Sep 11, 2024 at 3:21 PM EEST, James Bottomley wrote:
-> > On Wed, 2024-09-11 at 10:53 +0200, Roberto Sassu wrote:
-[...]
-> > > I made few measurements. I have a Fedora 38 VM with TPM
-> > > passthrough.
-> > > 
-> > > Kernels: 6.11-rc2+ (guest), 6.5.0-45-generic (host)
-> > > 
-> > > QEMU:
-> > > 
-> > > rc  qemu-kvm                                          1:4.2-
-> > > 3ubuntu6.27
-> > > ii  qemu-system-x86                                   1:6.2+dfsg-
-> > > 2ubuntu6.22
-> > > 
-> > > 
-> > > TPM2_PT_MANUFACTURER:
-> > >   raw: 0x49465800
-> > >   value: "IFX"
-> > > TPM2_PT_VENDOR_STRING_1:
-> > >   raw: 0x534C4239
-> > >   value: "SLB9"
-> > > TPM2_PT_VENDOR_STRING_2:
-> > >   raw: 0x36373000
-> > >   value: "670"
-> > > 
-> > > 
-> > > No HMAC:
-> > > 
-> > > # tracer: function_graph
-> > > #
-> > > # CPU  DURATION                  FUNCTION CALLS
-> > > # |     |   |                     |   |   |   |
-> > >  0)               |  tpm2_pcr_extend() {
-> > >  0)   1.112 us    |    tpm_buf_append_hmac_session();
-> > >  0) # 6360.029 us |    tpm_transmit_cmd();
-> > >  0) # 6415.012 us |  }
-> > > 
-> > > 
-> > > HMAC:
-> > > 
-> > > # tracer: function_graph
-> > > #
-> > > # CPU  DURATION                  FUNCTION CALLS
-> > > # |     |   |                     |   |   |   |
-> > >  1)               |  tpm2_pcr_extend() {
-> > >  1)               |    tpm2_start_auth_session() {
-> > >  1) * 36976.99 us |      tpm_transmit_cmd();
-> > >  1) * 84746.51 us |      tpm_transmit_cmd();
-> > >  1) # 3195.083 us |      tpm_transmit_cmd();
-> > >  1) @ 126795.1 us |    }
-> > >  1)   2.254 us    |    tpm_buf_append_hmac_session();
-> > >  1)   3.546 us    |    tpm_buf_fill_hmac_session();
-> > >  1) * 24356.46 us |    tpm_transmit_cmd();
-> > >  1)   3.496 us    |    tpm_buf_check_hmac_response();
-> > >  1) @ 151171.0 us |  }
-> > 
-> > Well, unfortunately, that tells us that it's the TPM itself that's
-> > taking the time processing the security overhead.  The ordering of
-> > the commands in tpm2_start_auth_session() shows
-> > 
-> >  37ms for context restore of null key
-> >  85ms for start session with encrypted salt
-> >   3ms to flush null key
-> > -----
-> > 125ms
-> > 
-> > If we context save the session, we'd likely only bear a single 37ms
-> > cost to restore it (replacing the total 125ms).  However, there's
-> > nothing we can do about the extend execution going from 6ms to
-> > 24ms, so I could halve your current boot time with security enabled
-> > (it's currently 149ms, it would go to 61ms, but it's still 10x
-> > slower than the unsecured extend at 6ms)
-> > 
-> > James
-> 
-> I'll hold for better benchmarks.
+On Thu, 2024-09-12 at 09:26 -0400, James Bottomley wrote:
+> On Thu, 2024-09-12 at 16:16 +0300, Jarkko Sakkinen wrote:
+> > On Wed Sep 11, 2024 at 3:21 PM EEST, James Bottomley wrote:
+> > > On Wed, 2024-09-11 at 10:53 +0200, Roberto Sassu wrote:
+> [...]
+> > > > I made few measurements. I have a Fedora 38 VM with TPM
+> > > > passthrough.
+> > > >=20
+> > > > Kernels: 6.11-rc2+ (guest), 6.5.0-45-generic (host)
+> > > >=20
+> > > > QEMU:
+> > > >=20
+> > > > rc=C2=A0 qemu-kvm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1:4.2-
+> > > > 3ubuntu6.27
+> > > > ii=C2=A0 qemu-system-x86=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 1:6.2+dfsg-
+> > > > 2ubuntu6.22
+> > > >=20
+> > > >=20
+> > > > TPM2_PT_MANUFACTURER:
+> > > > =C2=A0 raw: 0x49465800
+> > > > =C2=A0 value: "IFX"
+> > > > TPM2_PT_VENDOR_STRING_1:
+> > > > =C2=A0 raw: 0x534C4239
+> > > > =C2=A0 value: "SLB9"
+> > > > TPM2_PT_VENDOR_STRING_2:
+> > > > =C2=A0 raw: 0x36373000
+> > > > =C2=A0 value: "670"
+> > > >=20
+> > > >=20
+> > > > No HMAC:
+> > > >=20
+> > > > # tracer: function_graph
+> > > > #
+> > > > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > > > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > > > =C2=A00)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > > > =C2=A00)=C2=A0=C2=A0 1.112 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+ tpm_buf_append_hmac_session();
+> > > > =C2=A00) # 6360.029 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > > > =C2=A00) # 6415.012 us |=C2=A0 }
+> > > >=20
+> > > >=20
+> > > > HMAC:
+> > > >=20
+> > > > # tracer: function_graph
+> > > > #
+> > > > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > > > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > > > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > > > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm2_start_auth_session() {
+> > > > =C2=A01) * 36976.99 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit=
+_cmd();
+> > > > =C2=A01) * 84746.51 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit=
+_cmd();
+> > > > =C2=A01) # 3195.083 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit=
+_cmd();
+> > > > =C2=A01) @ 126795.1 us |=C2=A0=C2=A0=C2=A0 }
+> > > > =C2=A01)=C2=A0=C2=A0 2.254 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+ tpm_buf_append_hmac_session();
+> > > > =C2=A01)=C2=A0=C2=A0 3.546 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+ tpm_buf_fill_hmac_session();
+> > > > =C2=A01) * 24356.46 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > > > =C2=A01)=C2=A0=C2=A0 3.496 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+ tpm_buf_check_hmac_response();
+> > > > =C2=A01) @ 151171.0 us |=C2=A0 }
+> > >=20
+> > > Well, unfortunately, that tells us that it's the TPM itself that's
+> > > taking the time processing the security overhead.=C2=A0 The ordering =
+of
+> > > the commands in tpm2_start_auth_session() shows
+> > >=20
+> > > =C2=A037ms for context restore of null key
+> > > =C2=A085ms for start session with encrypted salt
+> > > =C2=A0 3ms to flush null key
+> > > -----
+> > > 125ms
+> > >=20
+> > > If we context save the session, we'd likely only bear a single 37ms
+> > > cost to restore it (replacing the total 125ms).=C2=A0 However, there'=
+s
+> > > nothing we can do about the extend execution going from 6ms to
+> > > 24ms, so I could halve your current boot time with security enabled
+> > > (it's currently 149ms, it would go to 61ms, but it's still 10x
+> > > slower than the unsecured extend at 6ms)
+> > >=20
+> > > James
+> >=20
+> > I'll hold for better benchmarks.
+>=20
+> Well, yes, I'd like to see this for a variety of TPMs.
+>=20
+> This one clearly shows it's the real time wait for the TPM (since it
+> dwarfs the CPU time calculation there's not much optimization we can do
+> on the kernel end).  The one thing that's missing in all of this is
+> what was the TPM?  but even if it's an outlier that's really bad at
+> crypto what should we do?  We could have a blacklist that turns off the
+> extend hmac (or a whitelist that turns it on), but we can't simply say
+> too bad you need a better TPM.
 
-Well, yes, I'd like to see this for a variety of TPMs.
+Ops, sorry. I pasted the TPM properties. Was not that clear:
 
-This one clearly shows it's the real time wait for the TPM (since it
-dwarfs the CPU time calculation there's not much optimization we can do
-on the kernel end).  The one thing that's missing in all of this is
-what was the TPM?  but even if it's an outlier that's really bad at
-crypto what should we do?  We could have a blacklist that turns off the
-extend hmac (or a whitelist that turns it on), but we can't simply say
-too bad you need a better TPM.
+Infineon Optiga SLB9670 (interpreting the properties).
 
-James
+Roberto
 
