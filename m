@@ -1,274 +1,100 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE251B9820
-	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 14:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2759C126BEC
+	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 16:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726152785; cv=none; b=aYNcC4+rKMJAR06XWR/MfFVFsPr5J/NzyQvx3kqU0UcTNFPSLROgwuxlij/r3G5LrtKzYqbWT99Zxs3P8tlhgUdadgnCllP8K/DVjKokh+3l3sjj29FcoB1zoQ5jsLkVN/vNy4LBmoEUs4oiiD5gwc+PCwb8HizbrBoNdDQ+rA4=
+	t=1726157033; cv=none; b=uFluw4nm5sGsUeN2TfludegQttrleF4RU8BxlBeYwIK2k7FZKAqtY76f9Sy0RhqrTOCtcqbC619d7YTvM8zS0zBwBQTsmbhdYiXo0WXEIy3DNqWLc+hUERIaar+vd1OieJdHYxPHNB4Fzt55WofbXQhxjW1h1shncZ93iSeiRP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726152785; c=relaxed/simple;
-	bh=jJRKHuyFhRwIGFXt36hK6RLoLWePKd0LtKVg67zuh5s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D7hHy3OgTy99nAf2+iH2dhrTl3hrKCBl+JKB0NuGgDR0L4vmrua48xnM0vs5K3tHY2qKlF9KZuOXkBWdxiBO7pi/VriRKFMNie30uQSnMAcEYqLNNvDuIvfzIGdqPkTPx9SW30kCt+al1VXhBSdZpX1T4I/rFn+8gxRs4VT/Tcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4X4KXd27Pxz9v7JW
-	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 22:27:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id A3FC3140203
-	for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 22:52:53 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwDndy88AONmTKPHAA--.2627S2;
-	Thu, 12 Sep 2024 15:52:52 +0100 (CET)
-Message-ID: <0cd01bd94b6e29b4db2f071a32e5d543df02eb21.camel@huaweicloud.com>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>, Jarkko Sakkinen
-	 <jarkko@kernel.org>, Linux regressions mailing list
-	 <regressions@lists.linux.dev>
-Cc: keyrings@vger.kernel.org, "linux-integrity@vger.kernel.org"
-	 <linux-integrity@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Pengyu Ma <mapengyu@gmail.com>
-Date: Thu, 12 Sep 2024 16:52:40 +0200
-In-Reply-To: <e3d0947a45f7a6fea0dca345deaa52baf9ffaaf6.camel@HansenPartnership.com>
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
-	 <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
-	 <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
-	 <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
-	 <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
-	 <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
-	 <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
-	 <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
-	 <D44C19QB8IK1.OMUJP7N91HRN@kernel.org>
-	 <c47b129aeb95094aace5b174fc6d81bf0a7ecfbf.camel@HansenPartnership.com>
-	 <155190f0eb0974e223538f10afaa7860c5a61cf5.camel@huaweicloud.com>
-	 <e3d0947a45f7a6fea0dca345deaa52baf9ffaaf6.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1726157033; c=relaxed/simple;
+	bh=CrCjW0ic6Db+J3kjsTPKwgfDJbBARSVIXo7Ekp4qkxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iuM85qdyqTWjgR3oRWPF9qpio25phP5dUPaMnm0Te2E9+1wJ3/8Wh1Skf39fT6PdrGnDOhK/Qhd79iX0d7sPM5hbh3iWg3VeGD7idkag9yDWLfBqvHhwQvb8Ycnj+ec14t5hgLlnZebPa+uOXIeRiwaY8BwozWAlpdkhH8P/Bzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H+sKgj8u; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+sKgj8u"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4582b71df40so273671cf.1
+        for <regressions@lists.linux.dev>; Thu, 12 Sep 2024 09:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1726157031; x=1726761831; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CrCjW0ic6Db+J3kjsTPKwgfDJbBARSVIXo7Ekp4qkxU=;
+        b=H+sKgj8unx4DlM1gnvxPLIrlUH0T/L6j9dHDmlS8aVORU2N7QkwvjgfvyYZ+CLih5W
+         n4n1feWCEDeSgs0f2JXPtQIFQrlM9iCMhsDoueetXMB3ZSKD0nVyFID9fUi6da0Q9T8/
+         QabOjRSKYqEqhoccwmiNn+rP45TdxjI1imSE8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726157031; x=1726761831;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CrCjW0ic6Db+J3kjsTPKwgfDJbBARSVIXo7Ekp4qkxU=;
+        b=xED4BsvmJDV8gqmrSqntipwPVmrk8XRvuR5PgdwXfUCWq5AvtrhXYo7k82Hr7htrW0
+         9KAc6OaNMY2tBdSD1z3SS1A3eNqlufwIB/sspOraMhplqT/hMtVeoc3p7DF+q/wPbM5U
+         gEzOB0wYySirIjVTljJ540NKcomInxAo5IMKjAIcVO48WNkKxWNaidjlZJWbwO8IQ2Ug
+         ItdoFqo+FZCDG9PxLyT/2CeGWZiLOGJHZ3uwHjsPjwaEwmO9jyKMhoXr73rBXY/WRDyz
+         gXA7cCJGkClwvI0xVFTbv08m7CJjDlv0/IyoUvVBvK5RLTQ2fH3JhGUW4xibFiETS4Ff
+         mSIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcFP7o8wkGC+y029FudPEJtrYerxBJupy/LAIrwRsuU5Z2JTxmqdfUSWaF+WoGGm9z+lncEcVBKnXWfg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxkMNl1RCry+E3Aobl+bs2YbWHipxKBI41YlxJV6C26w/rg7T+T
+	BDl72n8Y1xZGi2tkZSnm8pPp69R2OSN1RR/X323WlBirmpRTf9rtL3RBWCrvuLgydfgH7kwnIot
+	iO9oG6tK4dRHjzCCwIEkMD521NMw6MmIrNJla
+X-Google-Smtp-Source: AGHT+IFQu3yAL5DEk7oQCeXw0JvR4PFs6pcDDf5vf1OMase0DRLjYTPZIp+SdT/fDhzrb2YiYvR+LjfvMad1ROIciKA=
+X-Received: by 2002:ac8:5845:0:b0:453:5f2f:d5d2 with SMTP id
+ d75a77b69052e-45864403792mr2236481cf.1.1726157030402; Thu, 12 Sep 2024
+ 09:03:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwDndy88AONmTKPHAA--.2627S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFWrGF4kXw1DZw18Jr43Wrg_yoWxGw4xpw
-	48JFyUGr95Jr1rtr1vyr1Dtry2y34UJw1UXrn5JF1kAF1DKr1Ygr15Xr1Y9r1DXr4xJr15
-	tr1UJr13ur1UJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAEBGbiTfQKWAAAsu
+References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
+ <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local> <ZuCGkjoxKxpnhEh6@google.com>
+ <87jzfhayul.fsf@minerva.mail-host-address-is-not-set>
+In-Reply-To: <87jzfhayul.fsf@minerva.mail-host-address-is-not-set>
+From: Julius Werner <jwerner@chromium.org>
+Date: Thu, 12 Sep 2024 09:03:34 -0700
+Message-ID: <CAODwPW8P+jcF0erUph5XyWoyQgLFbZWxEM6Ygi_LFCCTLmH89Q@mail.gmail.com>
+Subject: Re: [NOT A REGRESSION] firmware: framebuffer-coreboot: duplicate
+ device name "simple-framebuffer.0"
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Brian Norris <briannorris@chromium.org>, Borislav Petkov <bp@alien8.de>, 
+	Hugues Bruant <hugues.bruant@gmail.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Fenghua Yu <fenghua.yu@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Julius Werner <jwerner@chromium.org>, chrome-platform@lists.linux.dev, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2024-09-12 at 10:13 -0400, James Bottomley wrote:
-> On Thu, 2024-09-12 at 15:36 +0200, Roberto Sassu wrote:
-> > On Thu, 2024-09-12 at 09:26 -0400, James Bottomley wrote:
-> > > On Thu, 2024-09-12 at 16:16 +0300, Jarkko Sakkinen wrote:
-> > > > On Wed Sep 11, 2024 at 3:21 PM EEST, James Bottomley wrote:
-> > > > > On Wed, 2024-09-11 at 10:53 +0200, Roberto Sassu wrote:
-> > > [...]
-> > > > > > I made few measurements. I have a Fedora 38 VM with TPM
-> > > > > > passthrough.
-> > > > > >=20
-> > > > > > Kernels: 6.11-rc2+ (guest), 6.5.0-45-generic (host)
-> > > > > >=20
-> > > > > > QEMU:
-> > > > > >=20
-> > > > > > rc=C2=A0 qemu-kvm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1:4.2-
-> > > > > > 3ubuntu6.27
-> > > > > > ii=C2=A0 qemu-system-x86=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0
-> > > > > > 1:6.2+dfsg-
-> > > > > > 2ubuntu6.22
-> > > > > >=20
-> > > > > >=20
-> > > > > > TPM2_PT_MANUFACTURER:
-> > > > > > =C2=A0 raw: 0x49465800
-> > > > > > =C2=A0 value: "IFX"
-> > > > > > TPM2_PT_VENDOR_STRING_1:
-> > > > > > =C2=A0 raw: 0x534C4239
-> > > > > > =C2=A0 value: "SLB9"
-> > > > > > TPM2_PT_VENDOR_STRING_2:
-> > > > > > =C2=A0 raw: 0x36373000
-> > > > > > =C2=A0 value: "670"
-> > > > > >=20
-> > > > > >=20
-> > > > > > No HMAC:
-> > > > > >=20
-> > > > > > # tracer: function_graph
-> > > > > > #
-> > > > > > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
-> > > > > > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
-> > > > > > =C2=A00)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
-> > > > > > =C2=A00)=C2=A0=C2=A0 1.112 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
-=C2=A0 tpm_buf_append_hmac_session();
-> > > > > > =C2=A00) # 6360.029 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
-> > > > > > =C2=A00) # 6415.012 us |=C2=A0 }
-> > > > > >=20
-> > > > > >=20
-> > > > > > HMAC:
-> > > > > >=20
-> > > > > > # tracer: function_graph
-> > > > > > #
-> > > > > > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
-> > > > > > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
-> > > > > > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
-> > > > > > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm2_start_auth_session(=
-) {
-> > > > > > =C2=A01) * 36976.99 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_tran=
-smit_cmd();
-> > > > > > =C2=A01) * 84746.51 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_tran=
-smit_cmd();
-> > > > > > =C2=A01) # 3195.083 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_tran=
-smit_cmd();
-> > > > > > =C2=A01) @ 126795.1 us |=C2=A0=C2=A0=C2=A0 }
-> > > > > > =C2=A01)=C2=A0=C2=A0 2.254 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
-=C2=A0 tpm_buf_append_hmac_session();
-> > > > > > =C2=A01)=C2=A0=C2=A0 3.546 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
-=C2=A0 tpm_buf_fill_hmac_session();
-> > > > > > =C2=A01) * 24356.46 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
-> > > > > > =C2=A01)=C2=A0=C2=A0 3.496 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
-=C2=A0 tpm_buf_check_hmac_response();
-> > > > > > =C2=A01) @ 151171.0 us |=C2=A0 }
-> > > > >=20
-> > > > > Well, unfortunately, that tells us that it's the TPM itself
-> > > > > that's
-> > > > > taking the time processing the security overhead.=C2=A0 The order=
-ing
-> > > > > of
-> > > > > the commands in tpm2_start_auth_session() shows
-> > > > >=20
-> > > > > =C2=A037ms for context restore of null key
-> > > > > =C2=A085ms for start session with encrypted salt
-> > > > > =C2=A0 3ms to flush null key
-> > > > > -----
-> > > > > 125ms
-> > > > >=20
-> > > > > If we context save the session, we'd likely only bear a single
-> > > > > 37ms
-> > > > > cost to restore it (replacing the total 125ms).=C2=A0 However,
-> > > > > there's
-> > > > > nothing we can do about the extend execution going from 6ms to
-> > > > > 24ms, so I could halve your current boot time with security
-> > > > > enabled
-> > > > > (it's currently 149ms, it would go to 61ms, but it's still 10x
-> > > > > slower than the unsecured extend at 6ms)
-> > > > >=20
-> > > > > James
-> > > >=20
-> > > > I'll hold for better benchmarks.
-> > >=20
-> > > Well, yes, I'd like to see this for a variety of TPMs.
-> > >=20
-> > > This one clearly shows it's the real time wait for the TPM (since
-> > > it dwarfs the CPU time calculation there's not much optimization we
-> > > can do on the kernel end).=C2=A0 The one thing that's missing in all =
-of
-> > > this is what was the TPM?=C2=A0 but even if it's an outlier that's
-> > > really bad at crypto what should we do?=C2=A0 We could have a blackli=
-st
-> > > that turns off the extend hmac (or a whitelist that turns it on),
-> > > but we can't simply say too bad you need a better TPM.
-> >=20
-> > Ops, sorry. I pasted the TPM properties. Was not that clear:
-> >=20
-> > Infineon Optiga SLB9670 (interpreting the properties).
->=20
-> OK, that's reasonably modern and common:
->=20
-> https://www.infineon.com/cms/en/product/security-smart-card-solutions/opt=
-iga-embedded-security-solutions/optiga-tpm/
->=20
-> I assume it's one of the Q20 (otherwise it would be a TPM 1.2) but what
-> firmware version (as in could it be upgraded and the tests re-run to
-> see if that makes a difference).
->=20
-> I also need the IMA community to start thinking about what they're
-> willing to accept in terms of performance for the added security hmac
-> brings to TPM extends.
+> On Coreboot platforms, a system framebuffer may be provided to the Linux
+> kernel by filling a LB_TAG_FRAMEBUFFER entry in the Coreboot table. But
+> it seems SeaBIOS payload can also provide a VGA mode in the boot params.
+>
+> [...]
+>
+> To prevent the issue, make the framebuffer_core driver to disable sysfb
+> if there is system framebuffer data in the Coreboot table. That way only
+> this driver will register a device and sysfb would not attempt to do it
+> (or remove its registered device if was already executed before).
 
-Just for curiosity, I made a comparison of the boot time of Fedora 38
-(minimal installation) without and with HMAC enabled, without and with
-the Integrity Digest Cache [1], which I originally designed exactly for
-this purpose (one measurement per package):
-
-
-Without HMAC:
-Without Integrity Digest Cache:
-
-[root@fedora ~]# systemd-analyze=20
-Startup finished in 2.486s (kernel) + 3.594s (initrd) + 11.613s (userspace)=
- =3D 17.694s=20
-multi-user.target reached after 11.559s in userspace.
-[root@fedora ~]# cat /sys/kernel/security/ima/ascii_runtime_measurements|wc=
- -l
-444
-
-With Integrity Digest Cache:
-
-[root@fedora ~]# systemd-analyze=20
-Startup finished in 2.381s (kernel) + 3.469s (initrd) + 11.794s (userspace)=
- =3D 17.644s=20
-multi-user.target reached after 11.750s in userspace.
-[root@fedora ~]# cat /sys/kernel/security/ima/ascii_runtime_measurements|wc=
- -l
-218
-
-
-
-With HMAC:
-Without Integrity Digest Cache:
-
-[root@fedora ~]# systemd-analyze=20
-Startup finished in 2.911s (kernel) + 3.453s (initrd) + 1min 5.754s (usersp=
-ace) =3D 1min 12.119s=20
-multi-user.target reached after 1min 5.707s in userspace.
-[root@fedora ~]# cat /sys/kernel/security/ima/ascii_runtime_measurements|wc=
- -l
-444
-
-
-With Integrity Digest Cache:
-
-[root@fedora ~]# systemd-analyze=20
-Startup finished in 2.990s (kernel) + 3.462s (initrd) + 37.038s (userspace)=
- =3D 43.491s=20
-multi-user.target reached after 36.997s in userspace.
-[root@fedora ~]# cat /sys/kernel/security/ima/ascii_runtime_measurements|wc=
- -l
-218
-
-
-[1]: https://lore.kernel.org/linux-integrity/20240905150543.3766895-1-rober=
-to.sassu@huaweicloud.com/
-
-Roberto
-
+I wonder if the priority should be the other way around? coreboot's
+framebuffer is generally only valid when coreboot exits to the payload
+(e.g. SeaBIOS). Only if the payload doesn't touch the display
+controller or if there is no payload and coreboot directly hands off
+to a kernel does the kernel driver for LB_TAG_FRAMEBUFFER make sense.
+But if there is some other framebuffer information passed to the
+kernel from a firmware component running after coreboot, most likely
+that one is more up to date and the framebuffer described by the
+coreboot table doesn't work anymore (because the payload usually
+doesn't modify the coreboot tables again, even if it changes hardware
+state). So if there are two drivers fighting over which firmware
+framebuffer description is the correct one, the coreboot driver should
+probably give way.
