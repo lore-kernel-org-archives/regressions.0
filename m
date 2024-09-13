@@ -1,77 +1,55 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FE5839E4
-	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 17:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C9083A17;
+	Fri, 13 Sep 2024 18:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726249680; cv=none; b=srdd3ikvybS7FzQlg0FKoNRiMW4idtYSebAotI7l1Lcaya5k70Wq+KTlufeMG0qntclnIPdRuA7wVdnDrHNN7KM9q/mZf4xL1uxz9k6ROz/eTY9NFFNjf5CVQsGgFe9pw/6rG+8c1BXWzwsp3ru4OQ3TM53H42qLtFgMDqNOhbA=
+	t=1726251340; cv=none; b=fcvTqrAJdG0g3DyDgTluO2+XSdOOZJgNvBnLyeOcjSvYODM1lS9W6vYS30llYjQ0TJZwEFfyO0qtidE9VnVve+db7b45JJLPKRomesUxiQeQClL9p4FHUYITR+hZr4AmK2SvvUA9E1j/7WxJIQx5BWozRtvKdCm167itVWy/PHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726249680; c=relaxed/simple;
-	bh=gd4U6lhjfa5SiS/0ILHhYNor4QZLTvpx0IBnAFnuPc8=;
+	s=arc-20240116; t=1726251340; c=relaxed/simple;
+	bh=NlK4dbEW2AvqUqV7RdrHsjrhW7yTPUe9VucDl4PrIzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVDuz3kau027zrtSYx4+XFZvIblHpZbIqmlVy8LtBLNrtClqVzK7tJ2jy7CVgaD4DdNry2zVJh3gIoT2dyWVj8ATUsGaavSGH79M+2aav5lRQ031jRyk6OxZKtVClhlFk9N3R1QFhzmhErk9dC0YmiPEnZjbFU2WMOU6pOLHTJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l7fZqUEh; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTjLL/wnShIGKkcGI66n+kacaBulmK25x9tHhO+r/bsXxTBTKpYrpM+iJJ/16k9Yv5jGc0xmfyPgwm836KhuMUbKCgxshp/7zRD887iAF8h7sDi9384kCY8IsY3b+HIckPxPfpmVrb2rb1MmVut/tKnJod9hIgT+utnDA3ocbEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R5ag1CbF; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l7fZqUEh"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-201d5af11a4so27486735ad.3
-        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 10:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1726249678; x=1726854478; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8IH/fKZ7WlUWd6MAHGKHHDTF08xKH8CLIu/uq2juW/g=;
-        b=l7fZqUEh42RwU0D+bhfUhyJvLadiOi2NyRKlePBrjsoas3GtFZfnC/dbawBCO03oBo
-         EZM4ONcKSvRZksjZ5Rgd0pxX9SLhvprs6dl3qcycJQkPoXUXbd41vShm5J4otpVo9WV1
-         I3ifRML/5r/7s5kidzKXMpcAcPK3crm922IBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726249678; x=1726854478;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8IH/fKZ7WlUWd6MAHGKHHDTF08xKH8CLIu/uq2juW/g=;
-        b=MydRGLxvTPNh8ZnkcAW/ZqpQB7Vji4GouB6uhuW3nf7TO/1r9aP0N1eUA1jy42OgOE
-         t68XZeHg7XFotYvVuArGT0CrFmKL2TUNZYF5k1sbzqG5bkDGWzPjJIBBvohkRpgAg/HY
-         EJGnqKYmV/2i/ZozlD4hN1WY60BAvlSNy9E0iM6MXHan52LU7r06aPvAy1iX3xPPkR0j
-         dfYzIix4PojlhOKbGSsHZ6qXmB/gF8j7mnnXRaMisoAh2/uRtV6hobuA9+3efBGAbyIj
-         vE8ngfzfW7hg1Fccqa+rOi8F+gaU9Vqt3tXace1EmFqWRr2y1A/4oF/1uPZcsQ6iMQ/r
-         8vOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWB7vpB9vAV4xjZb46t08bhZ2XzkE6kjzumnXC435X7VRPBI5JbxUoQ4MfyqNxORomEbiyl+CFtfe8zvg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwXUGpqx0hehIiQAoYEUzi2wLRfeKtJzN30cHJdGSuaIC9kTpxZ
-	FnhAa4daUkL/9EvUsCUsirh7Z1OySZMyvVzFIYUd191l0MeeonI8waPraSfKWg==
-X-Google-Smtp-Source: AGHT+IF/Z83uZ5DKsWYI6BIBnszLvyBcxjjxnEpt4x8DvN82ruG8ZaQekEMAasgPQ7k4gkSjUIiGcg==
-X-Received: by 2002:a17:902:c946:b0:207:850c:2548 with SMTP id d9443c01a7336-207850c26e1mr44249585ad.22.1726249677812;
-        Fri, 13 Sep 2024 10:47:57 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:8bb7:9bdd:6697:b2f7])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2076b01a742sm30385035ad.259.2024.09.13.10.47.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Sep 2024 10:47:57 -0700 (PDT)
-Date: Fri, 13 Sep 2024 10:47:54 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: Julius Werner <jwerner@chromium.org>, Borislav Petkov <bp@alien8.de>,
-	Hugues Bruant <hugues.bruant@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Tony Luck <tony.luck@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	chrome-platform@lists.linux.dev,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [NOT A REGRESSION] firmware: framebuffer-coreboot: duplicate
- device name "simple-framebuffer.0"
-Message-ID: <ZuR6yvqpCiV4Cjqf@google.com>
-References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
- <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local>
- <ZuCGkjoxKxpnhEh6@google.com>
- <87jzfhayul.fsf@minerva.mail-host-address-is-not-set>
- <CAODwPW8P+jcF0erUph5XyWoyQgLFbZWxEM6Ygi_LFCCTLmH89Q@mail.gmail.com>
- <87mskczv9l.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R5ag1CbF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5Bq1Gea88A+B6NeDYaKCfbevhpShpf8ZKdFAOPfCVxM=; b=R5ag1CbFUgKYRrgPv9hvd9N0st
+	gv2RQcEDGnDMhGm6FfWCwcueEoDgTilPTHewhvzTanyDdOCZznNjtw/jsemjq+dD8HqBCkyVwksVd
+	EjGmaTHUIXSggDU0i0iNOzSsDvLkpUXLcSm2awbf/UCZCtUdki2H78F+9KMHmtXcK1xnXKHutcIkO
+	WqCpHlXilpccexdKKRW6vWl5SO2H/it8zE0uaDWiSLPbNchT2O6Sb6C6cOiFjfMJNLC9p2hEuGmWN
+	30EVL8uwd2J9lqJYlLARlV17iMI4KbfRLKrCiKc0j0HtO2BmSp5jQJj93n6Pa/bAOqfqQsOQWLcHI
+	zLWTbeCg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1spApL-0000000GrP9-0pZr;
+	Fri, 13 Sep 2024 18:15:27 +0000
+Date: Fri, 13 Sep 2024 19:15:26 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Christian Theune <ct@flyingcircus.io>,
+	linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>,
+	Dave Chinner <david@fromorbit.com>, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <ZuSBPrN2CbWMlr3f@casper.infradead.org>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <d4a1cca4-96b8-4692-81f0-81c512f55ccf@meta.com>
+ <ZuRfjGhAtXizA7Hu@casper.infradead.org>
+ <b40b2b1c-3ed5-4943-b8d0-316e04cb1dab@meta.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -80,131 +58,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87mskczv9l.fsf@minerva.mail-host-address-is-not-set>
+In-Reply-To: <b40b2b1c-3ed5-4943-b8d0-316e04cb1dab@meta.com>
 
-Hi Javier,
-
-On Thu, Sep 12, 2024 at 06:33:58PM +0200, Javier Martinez Canillas wrote:
-> That's a very good point. I'm actually not familiar with Coreboot and I
-> used an educated guess (in the case of DT for example, that's the main
-> source of truth and I didn't know if a Core table was in a similar vein).
+On Fri, Sep 13, 2024 at 12:33:49PM -0400, Chris Mason wrote:
+> > If you could get the precise index numbers, that would be an important
+> > clue.  It would be interesting to know the index number in the xarray
+> > where the folio was found rather than folio->index (as I suspect that
+> > folio->index is completely bogus because folio->mapping is wrong).
+> > But gathering that info is going to be hard.
 > 
-> Maybe something like the following (untested) patch then?
-
-Julius is more familiar with the Coreboot + payload ecosystem than me,
-but his explanations make sense to me, as does this patch.
-
-> From de1c32017006f4671d91b695f4d6b4e99c073ab2 Mon Sep 17 00:00:00 2001
-> From: Javier Martinez Canillas <javierm@redhat.com>
-> Date: Thu, 12 Sep 2024 18:31:55 +0200
-> Subject: [PATCH] firmware: coreboot: Don't register a pdev if screen_info data
->  is available
+> This particular debug session was late at night while we were urgently
+> trying to roll out some NFS features.  I didn't really save many of the
+> details because my plan was to reproduce it and make a full bug report.
 > 
-> On Coreboot platforms, a system framebuffer may be provided to the Linux
-> kernel by filling a LB_TAG_FRAMEBUFFER entry in the Coreboot table. But
-> a Coreboot payload (e.g: SeaBIOS) could also provide this information to
-> the Linux kernel.
+> Also, I was explaining the details to people in workplace chat, which is
+> wildly bad at rendering long lines of structured text, especially when
+> half the people in the chat are on a mobile device.
 > 
-> If that the case, early arch x86 boot code will fill the global struct
-> screen_info data and that data used by the Generic System Framebuffers
-> (sysfb) framework to add a platform device with platform data about the
-> system framebuffer.
-
-Normally, these sorts of "early" and "later" ordering descriptions would
-set alarm bells when talking about independent drivers. But I suppose
-the "early arch" code has better ordering guaranteeds than drivers, so
-this should be fine.
-
-> But later then the framebuffer_coreboot driver will try to do the same
-> framebuffer (using the information from the Coreboot table), which will
-> lead to an error due a simple-framebuffer.0 device already registered:
+> You're probably wondering why all of that is important...what I'm really
+> trying to say is that I've attached a screenshot of the debugging output.
 > 
->     sysfs: cannot create duplicate filename '/bus/platform/devices/simple-framebuffer.0'
->     ...
->     coreboot: could not register framebuffer
->     framebuffer coreboot8: probe with driver framebuffer failed with error -17
-> 
-> To prevent the issue, make the framebuffer_core driver to not register a
-> platform device if the global struct screen_info data has been filled.
-> 
-> Reported-by: Brian Norris <briannorris@chromium.org>
-> Link: https://lore.kernel.org/all/ZuCG-DggNThuF4pj@b20ea791c01f/T/#ma7fb65acbc1a56042258adac910992bb225a20d2
-> Suggested-by: Julius Werner <jwerner@chromium.org>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> ---
->  drivers/firmware/google/framebuffer-coreboot.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/google/framebuffer-coreboot.c
-> index daadd71d8ddd..4e50da17cd7e 100644
-> --- a/drivers/firmware/google/framebuffer-coreboot.c
-> +++ b/drivers/firmware/google/framebuffer-coreboot.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_data/simplefb.h>
->  #include <linux/platform_device.h>
-> +#include <linux/screen_info.h>
->  
->  #include "coreboot_table.h"
->  
-> @@ -27,6 +28,7 @@ static int framebuffer_probe(struct coreboot_device *dev)
->  	int i;
->  	u32 length;
->  	struct lb_framebuffer *fb = &dev->framebuffer;
-> +	struct screen_info *si = &screen_info;
->  	struct platform_device *pdev;
->  	struct resource res;
->  	struct simplefb_platform_data pdata = {
-> @@ -36,6 +38,20 @@ static int framebuffer_probe(struct coreboot_device *dev)
->  		.format = NULL,
->  	};
->  
-> +	/*
-> +	 * If the global screen_info data has been filled, the Generic
-> +	 * System Framebuffers (sysfb) will already register a platform
+> It came from a older drgn script, where I'm still clinging to "radix",
+> and you probably can't trust the string representation of the page flags
+> because I wasn't yet using Omar's helpers and may have hard coded them
+> from an older kernel.
 
-Did you mean 'platform_device'?
+That's all _fine_.  This is enormously helpful.
 
-> +	 * and pass the screen_info as platform_data to a driver that
-> +	 * could scan-out using the system provided framebuffer.
-> +	 *
-> +	 * On Coreboot systems, the advertise LB_TAG_FRAMEBUFFER entry
+First, we see the same folio appear three times.  I think that's
+particularly significant.  Modulo 64 (number of entries/node), the indices
+the bad folio are found at is 16, 32 and 48.  So I think the _current_
+order of folio is 4, but at the time the folio was put in the xarray,
+it was order 6.  Except ... at order-6 we elide a level of the xarray.
+So we shouldn't be able to see this.  Hm.
 
-s/advertise/advertised/ ?
+Oh!  I think split is the key.  Let's say we have an order-6 (or
+larger) folio.  And we call split_huge_page() (whatever it's called
+in your kernel version).  That calls xas_split_alloc() followed
+by xas_split().  xas_split_alloc() puts entry in node->slots[0] and
+initialises node->slots[1..XA_CHUNK_SIZE] to a sibling entry.
 
-> +	 * in the Coreboot table should only be used if the payload did
-> +	 * not set video mode info and passed it to the Linux kernel.
+Now, if we do allocate those node in xas_split_alloc(), we're supposed to
+free them with radix_tree_node_rcu_free() which zeroes all the slots.
+But what if we don't, somehow?  (this is my best current theory).
+Then we allocate the node to a different tree, but any time we try to
+look something up, unless it's the index for which we allocated the node,
+we find a sibling entry and it points to a stale pointer.
 
-s/passed/pass/
-
-> +	 */
-> +	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB ||
-> +            si->orig_video_isVGA == VIDEO_TYPE_EFI)
-
-This line is using spaces for indentation. It should use a tab, and then
-spaces for alignment. But presumably this will change based on Thomas's
-suggestions anyway.
-
-> +		return -EINVAL;
-
-Is EINVAL right? IIUC, that will print a noisier error to the logs. I
-believe the "expected" sorts of return codes are ENODEV or ENXIO. (See
-call_driver_probe().) ENODEV seems like a fine choice, similar to
-several of the other return codes already used here.
-
-Anyway, this seems along the right track. Thanks for tackling, and feel
-free to carry a:
-
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-
-> +
->  	if (!fb->physical_address)
->  		return -ENODEV;
->  
-> -- 
-> Best regards,
-> 
-> Javier Martinez Canillas
-> Core Platforms
-> Red Hat
-> 
+I'm going to think on this a bit more, but so far this is all good
+evidence for my leading theory.
