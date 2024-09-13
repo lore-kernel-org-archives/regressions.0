@@ -1,187 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76ADA1B9831
-	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 07:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A001BC088;
+	Fri, 13 Sep 2024 08:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726211160; cv=none; b=tbbxK3l44vEZJRLjOypmlkz85sFada78EjMp9DIjX+BCTq+n9ZYoN3zg34Pb0zXSp2eYfKR+fr0gc8JGyzZnf5w83lfivhB6vxfZ/XLb33idO5ztaqkGRhGrsZIunLS6KkdIZPiTsiCqTg3MlztHF4zoHAjOGBjDNGR88IircRA=
+	t=1726216022; cv=none; b=TX7mACHUvxpXq7w5tjEikbxXjR11IBHLj/T/nnB4gOvEooxm/KB71bqmClcVUAbgJs8eNwMbyuEFx9qEDvYwwybxUFi6fITovintekGpjc6jLvkXa/vqYQbs5dIG2hK9+no10inXndrEU7yc0lMqBVFJCnAHnkWK3ISEy43/4dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726211160; c=relaxed/simple;
-	bh=3+bzYuJJdSK+3aHoFavGxC3ix3u6G0o/u+gZva5HlmY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NK2WqmN5RRSIs7mPNAvv50hD6PFUTKwaAaXSJ/Lsi01MtAPmqYe8OqYrP3whyCG2EkWQ8PZV4OdilEjsU30ib5zYD3qhOoJrubgKeWVR11vinAur4OjY3fDAqemdsLqrNXjFoOaCUt0ZhDvoKUmmJ6T4hsOAg6pOpWL3PIOUCO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iYtVYiPF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726216022; c=relaxed/simple;
+	bh=fnSrls3l/5EOexa1izdk7EpoTGDFHvsswO2kA6/ol9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=Bw2KjgG+vyD/m1nqmtzwZBLnvCRCJ56alYURHiIyRfUSMc/ilenzKqXaWPD7zEqsf6MoxjErmLEo70rqYAReSnUUdDPDoiGQaZ6CGJgwJy0GaQKTYfsWYgLQPXREF7VT7jmMpf5JvO/EWzOTgecH6Humzyriu6p21yzHq9aJaMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UcnAZypW; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYtVYiPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726211157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JUxInk0S7cxq8bV5NiblehkhBP73tYJxMaYlFtxjxPg=;
-	b=iYtVYiPF9uMOm77EGJcIB5gEXPIi/PE6fLK99xfp+SIilWrvPxVSi8Hdx07z7uPD44QpWN
-	6feAjg4Bb/FgBkrC2TIQeUFwc32YJUgTtkuYa7wv22lp0RaLD9eOefzo5X25fyPTcBNvKt
-	fUrBCyBUbu08oJatwAOXkugNjzR5cK4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-Dfhz1wMFNYCWH06tA8NapA-1; Fri, 13 Sep 2024 03:05:54 -0400
-X-MC-Unique: Dfhz1wMFNYCWH06tA8NapA-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42ca8037d9aso4106185e9.3
-        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 00:05:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726211153; x=1726815953;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JUxInk0S7cxq8bV5NiblehkhBP73tYJxMaYlFtxjxPg=;
-        b=SQ3533tXAKmEt6PahK2uW1KnlfOOnInZ4LcHGmFf8+pzi7OA8c572EOqvOWWEGSQDK
-         7Q+4akBeL6qX4tmhxWQj8WYCM4Y6Teu9hmnLLtG7LQBwYkwjh3J2txdjbKgA3DhbAvE1
-         0Su/s16u/ioopstO8ookvm+ENOo54ipbCgu05xp/b9M0lfGCn7wDnx4FXImuHDxO7xfj
-         LhJQHWfkILKOzPmzl2lzayMCCCSSrZXM4LGq4JjCuzjFK1NX1OaRXP1hgEQopsDkHs7P
-         odcc7GngSvBUkqIKsaGpGHrYu+uxmwAETjZ/LLFrjWXxufXH3IUr5Vdhcprmz8ttsC+3
-         iJcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCSUrQ4wg4dmgzx3qLX8dxNwYkfP7uFtjNiC+CWGIlEAn8gmVm5j78FKHGg4Qi6hPVyUMPc4oifdDTCA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHxKq+X7+b98kmT8/WjXw5eYfQ2P4OAR2ia8Kc+gGt+nqegbbd
-	OuSbRFMviO7pLizmnazuoYGv4mUNWmCRMQDv7oI+eiqDUBfWVHpCbM9juA77BoCO3m48ehL/3HU
-	85bnyndkJc4pX2CU3seuxt0H5xixgN/yW6Ir4Cu62m93bc8oXHpbliDIxWU/Q
-X-Received: by 2002:a05:600c:3490:b0:42c:cd88:d0f7 with SMTP id 5b1f17b1804b1-42d9072211bmr12409515e9.10.1726211152893;
-        Fri, 13 Sep 2024 00:05:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF7ixvDig6mKPxUj06bVVHzX7pqCmSzpaF/KDzUc+5ujBIqwcPkJ/QygFJDl0Ehw9m+hB1r+A==
-X-Received: by 2002:a05:600c:3490:b0:42c:cd88:d0f7 with SMTP id 5b1f17b1804b1-42d9072211bmr12409095e9.10.1726211152304;
-        Fri, 13 Sep 2024 00:05:52 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378956d37a1sm15945167f8f.77.2024.09.13.00.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 00:05:51 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Julius Werner
- <jwerner@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>, Borislav Petkov <bp@alien8.de>,
- Hugues Bruant <hugues.bruant@gmail.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org, Fenghua Yu
- <fenghua.yu@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Tony
- Luck <tony.luck@intel.com>, Tzung-Bi Shih <tzungbi@kernel.org>,
- chrome-platform@lists.linux.dev, Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [NOT A REGRESSION] firmware: framebuffer-coreboot: duplicate
- device name "simple-framebuffer.0"
-In-Reply-To: <6bf656e0-e0b6-4b97-b7a2-ff0bdc86b098@suse.de>
-References: <CALvjV29jozswRtmYxDur2TuEQ=1JSDrM+uWVHmghW3hG5Y9F+w@mail.gmail.com>
- <20240909080200.GAZt6reI9c98c9S_Xc@fat_crate.local>
- <ZuCGkjoxKxpnhEh6@google.com>
- <87jzfhayul.fsf@minerva.mail-host-address-is-not-set>
- <CAODwPW8P+jcF0erUph5XyWoyQgLFbZWxEM6Ygi_LFCCTLmH89Q@mail.gmail.com>
- <87mskczv9l.fsf@minerva.mail-host-address-is-not-set>
- <6bf656e0-e0b6-4b97-b7a2-ff0bdc86b098@suse.de>
-Date: Fri, 13 Sep 2024 09:05:50 +0200
-Message-ID: <87jzfgyqwh.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UcnAZypW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=wJgLvJRFhROt60AJU+va3LMzdG34mC6iRwieSzZxFk0=;
+	t=1726216020; x=1726648020; b=UcnAZypWIe9gyhCwOFvCgFbAXr+cJ5vwUjFKu62NYg3YQst
+	bBolOL9y5px/QsxhJmj8f+KbHyP8EBvRWIOtiZfQperwj3W1DFNAPOwAoTOZktP0iyvqzHcfuz1Mo
+	nkPCMh3YKBev0A6RYtGXjVZHbhHvlpeaDaQVyL9z6noGTarwm8vrtXgSCOrwDuMeIRxyP1LWP5EKm
+	TZFMy3Fd6fsLRTfTmi36xuh5Go31/cFu4xGTeQ7K2M1AVqSWaZjEa2svwdSyKSuGiVPyEJQIUT6N6
+	w6qj2p0IHaUd0RCVuna0YxHeDpofi56Qyb1826hgdDP+MEmBS08kTwFk/qh5xvVg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sp1dq-0005Ki-Fn; Fri, 13 Sep 2024 10:26:58 +0200
+Message-ID: <422f35b3-7834-4df7-bcea-e3be12707aef@leemhuis.info>
+Date: Fri, 13 Sep 2024 10:26:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net] with 6.10.7 and
+ packed virtqueues
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>
+References: <CAK8fFZ6qVutPWxquHg7NEvFqYqDP5BwEdO81hqW8iMFxJFuLSQ@mail.gmail.com>
+ <CAK8fFZ5N7EbU=uLbfyeSkQ273NSm+GELWUu1O1OBCpaSwjv6FA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ virtualization@lists.linux.dev
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAK8fFZ5N7EbU=uLbfyeSkQ273NSm+GELWUu1O1OBCpaSwjv6FA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726216020;eb48507e;
+X-HE-SMSGID: 1sp1dq-0005Ki-Fn
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+[CCing a few people that know more about this stuff than I do]
 
-Hello Thomas,
+On 13.09.24 09:50, Jaroslav Pulchart wrote:
+> 
+> actually I'm getting random memory corruption related crashes after
+> updating to 6.10.y. My expectation is that it relates to this issue:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219154
+> It looks like it is almost 1 month ago
 
-> Hi Javier,
->
-> thanks for the patch.
->
+A lot of developer ignore bugzilla.
 
-Thanks for your feedback.
+> already from the last comment
+> there, However the patches fixing the regression are not reverted from
+> the 6.10.y tree which surprises me.
+> 
+> I will try to revert them from our builds and see if it helps to avoid
+> random daily happening crashes.
 
-> Am 12.09.24 um 18:33 schrieb Javier Martinez Canillas:
->> Julius Werner <jwerner@chromium.org> writes:
+Not my area of expertise, but to me it sounds like the problem will be
+resolved my "Revert "virtio_net: rx enable premapped mode by default"":
+https://lore.kernel.org/all/20240820071913.68004-1-xuanzhuo@linux.alibaba.com/
 
-[...]
+That set just landed in mainline. It's likely to be backported to 6.10.y
+within a week or two, but it's not ensured due to the lack of a stable
+tag. So you might keep an eye on it.
 
->> ---
->>   drivers/firmware/google/framebuffer-coreboot.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
+Ciao, Thorsten
+
+> pá 6. 9. 2024 v 8:20 odesílatel Jaroslav Pulchart
+> <jaroslav.pulchart@gooddata.com> napsal:
 >>
->> diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/google/framebuffer-coreboot.c
->> index daadd71d8ddd..4e50da17cd7e 100644
->> --- a/drivers/firmware/google/framebuffer-coreboot.c
->> +++ b/drivers/firmware/google/framebuffer-coreboot.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/module.h>
->>   #include <linux/platform_data/simplefb.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/screen_info.h>
->>   
->>   #include "coreboot_table.h"
->>   
->> @@ -27,6 +28,7 @@ static int framebuffer_probe(struct coreboot_device *dev)
->>   	int i;
->>   	u32 length;
->>   	struct lb_framebuffer *fb = &dev->framebuffer;
->> +	struct screen_info *si = &screen_info;
->
-> Probably 'const'.
->
-
-Ok.
-
->>   	struct platform_device *pdev;
->>   	struct resource res;
->>   	struct simplefb_platform_data pdata = {
->> @@ -36,6 +38,20 @@ static int framebuffer_probe(struct coreboot_device *dev)
->>   		.format = NULL,
->>   	};
->>   
->> +	/*
->> +	 * If the global screen_info data has been filled, the Generic
->> +	 * System Framebuffers (sysfb) will already register a platform
->> +	 * and pass the screen_info as platform_data to a driver that
->> +	 * could scan-out using the system provided framebuffer.
->> +	 *
->> +	 * On Coreboot systems, the advertise LB_TAG_FRAMEBUFFER entry
->> +	 * in the Coreboot table should only be used if the payload did
->> +	 * not set video mode info and passed it to the Linux kernel.
->> +	 */
->> +	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB ||
->> +            si->orig_video_isVGA == VIDEO_TYPE_EFI)
->
-> Rather call screen_info_video_type(si) [1] to get the type. If it
-
-Indeed. I missed that helper, I'll change it.
-
-> returns 0, the screen_info is unset and the corebios code can handle the 
-> framebuffer. In any other case, the framebuffer went through a 
-> bootloader, which might have modified it. This also handles awkward 
-> cases, such as if the bootloader programs a VGA text mode.
->
-> [1] 
-> https://elixir.bootlin.com/linux/v6.10.10/source/include/linux/screen_info.h#L92
->
-> With these changes:
->
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->
-
-Thanks. I'll wait for others in this thread to comment and if all agree
-with the solution, I'll post a proper patch (addressing your comments).
-
-> Best regards
-> Thomas
->
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+>> Hello,
+>>
+>> My virtual machine crashed with the message
+>> "0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net]". See the full log
+>> below.
+>>
+>> I did two changes:
+>> * Updated my VM packages (kernel from 6.9.5 to 6.10.7) on the VM
+>> * enabled "packed virtqueues" by libvirt on host
+>> and it happens after a few hours of uptime.
+>>
+>> Any hint how to prevent it or fix this issue?
+>>
+>> [52890.265362] BUG: unable to handle page fault for address: ffff9b94c480000c
+>> [52890.266264] #PF: supervisor write access in kernel mode
+>> [52890.266814] #PF: error_code(0x000b) - reserved bit violation
+>> [52890.267299] PGD 4c3c01067 P4D 4c3c01067 PUD 103be6063 PMD 7849cc063
+>> PTE 7a1dd28f4e77cee7
+>> [52890.267926] Oops: Oops: 000b [#1] PREEMPT SMP NOPTI
+>> [52890.268372] CPU: 14 PID: 0 Comm: swapper/14 Tainted: G            E
+>>      6.10.7-1.gdc.el9.x86_64 #1
+>> [52890.269007] Hardware name: RDO OpenStack Compute/RHEL, BIOS
+>> edk2-20240524-1.el9 05/24/2024
+>> [52890.269853] RIP: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net]
+>> [52890.270349] Code: e7 e8 85 ef ff ff 49 c7 84 24 80 05 00 00 00 00
+>> 00 00 41 0f b7 84 24 ac 02 00 00 48 8d 73 10 45 31 c0 b9 02 00 00 00
+>> 8d 50 f0 <66> 89 53 0c 49 8b 3c 24 0f b7 d2 e8 f1 04 9d cb 49 8b 3c 24
+>> 48 89
+>> [52890.272173] RSP: 0018:ffffb5dac64f0d60 EFLAGS: 00010246
+>> [52890.272637] RAX: 0000000000001000 RBX: ffff9b94c4800000 RCX: 0000000000000002
+>> [52890.273209] RDX: 0000000000000ff0 RSI: ffff9b94c4800010 RDI: ffffe06380000000
+>> [52890.273772] RBP: 0000000000001000 R08: 0000000000000000 R09: ffffe0639e120008
+>> [52890.274341] R10: 0000000000000000 R11: 00000000000096d0 R12: ffff9b8ebe621800
+>> [52890.274898] R13: ffff9b8ebe621800 R14: 0000000000001000 R15: 0000000000000000
+>> [52890.275476] FS:  0000000000000000(0000) GS:ffff9b9ba3d00000(0000)
+>> knlGS:0000000000000000
+>> [52890.276087] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [52890.276592] CR2: ffff9b94c480000c CR3: 00000004c3b1c006 CR4: 0000000000770ef0
+>> [52890.277167] PKRU: 55555554
+>> [52890.277524] Call Trace:
+>> [52890.277869]  <IRQ>
+>> [52890.278198]  ? __die+0x20/0x70
+>> [52890.278580]  ? page_fault_oops+0x75/0x170
+>> [52890.279009]  ? exc_page_fault+0xbe/0x160
+>> [52890.279441]  ? asm_exc_page_fault+0x22/0x30
+>> [52890.279881]  ? virtnet_rq_alloc+0x8f/0x1b0 [virtio_net]
+>> [52890.280377]  try_fill_recv+0x22c/0x440 [virtio_net]
+>> [52890.280848]  virtnet_receive+0x1ce/0x230 [virtio_net]
+>> [52890.281334]  virtnet_poll+0x179/0x3a0 [virtio_net]
+>> [52890.281804]  __napi_poll+0x29/0x1b0
+>> [52890.282222]  net_rx_action+0x2b5/0x390
+>> [52890.282641]  ? _raw_spin_unlock_irqrestore+0xa/0x30
+>> [52890.283118]  handle_softirqs+0xd3/0x2b0
+>> [52890.283550]  __irq_exit_rcu+0x9b/0xc0
+>> [52890.283970]  common_interrupt+0x7f/0xa0
+>> [52890.284409]  </IRQ>
+>> [52890.284749]  <TASK>
+>> [52890.285084]  asm_common_interrupt+0x22/0x40
+>> [52890.285526] RIP: 0010:default_idle+0xb/0x20
+>> [52890.285953] Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 90
+>> 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 eb 07 0f 00 2d c3 92 30
+>> 00 fb f4 <fa> c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
+>> 00 90
+>> [52890.287332] RSP: 0018:ffffb5dac436fec0 EFLAGS: 00000206
+>> [52890.287814] RAX: 000000000000000e RBX: ffff9b94c320ce00 RCX: 0000000103227730
+>> [52890.288395] RDX: 000000000000000e RSI: 0000000000000082 RDI: 000000002f3198a4
+>> [52890.288962] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
+>> [52890.289533] R10: 00000000000002cd R11: 0000000000000000 R12: 0000000000000000
+>> [52890.290092] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>> [52890.290657]  default_idle_call+0x2c/0xf0
+>> [52890.291053]  cpuidle_idle_call+0x109/0x120
+>> [52890.291464]  do_idle+0x76/0xb0
+>> [52890.291813]  cpu_startup_entry+0x25/0x30
+>> [52890.292269]  start_secondary+0x113/0x130
+>> [52890.292812]  common_startup_64+0x13e/0x141
+>> [52890.293279]  </TASK>
+>> [52890.293615] Modules linked in: mptcp_diag(E) xsk_diag(E)
+>> raw_diag(E) unix_diag(E) af_packet_diag(E) netlink_diag(E) tcp_diag(E)
+>> udp_diag(E) inet_diag(E) nf_conntrack(E) nf_defrag_ipv6(E)
+>> nf_defrag_ipv4(E) binfmt_misc(E) zram(E) tls(E) isofs(E) vfat(E)
+>> fat(E) intel_rapl_msr(E) intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E)
+>> i2c_i801(E) virtio_net(E) net_failover(E) failover(E) virtio_gpu(E)
+>> i2c_smbus(E) dimlib(E) virtio_balloon(E) virtio_dma_buf(E) fuse(E)
+>> ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E)
+>> crct10dif_pclmul(E) libahci(E) crc32_pclmul(E) polyval_clmulni(E)
+>> polyval_generic(E) libata(E) ghash_clmulni_intel(E) sha512_ssse3(E)
+>> virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E)
+>> raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E)
+>> dm_region_hash(E) dm_log(E) dm_mod(E)
+>> [52890.293657] Unloaded tainted modules: edac_mce_amd(E):1
+>> amd_atl(E):2 padlock_aes(E):3
+>> [52890.299716] CR2: ffff9b94c480000c
+>> [52890.300092] ---[ end trace 0000000000000000 ]---
+>> [52890.300101] Oops: general protection fault, probably for
+>> non-canonical address 0x86304c8ed4b709b3: 0000 [#2] PREEMPT SMP NOPTI
+>> [52890.300336] RIP: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net]
+>> [52890.301177] CPU: 10 PID: 51 Comm: ksoftirqd/10 Tainted: G      D
+>>  E      6.10.7-1.gdc.el9.x86_64 #1
+>> [52890.301472] Code: e7 e8 85 ef ff ff 49 c7 84 24 80 05 00 00 00 00
+>> 00 00 41 0f b7 84 24 ac 02 00 00 48 8d 73 10 45 31 c0 b9 02 00 00 00
+>> 8d 50 f0 <66> 89 53 0c 49 8b 3c 24 0f b7 d2 e8 f1 04 9d cb 49 8b 3c 24
+>> 48 89
+>> [52890.302137] Hardware name: RDO OpenStack Compute/RHEL, BIOS
+>> edk2-20240524-1.el9 05/24/2024
+>> [52890.303074] RSP: 0018:ffffb5dac64f0d60 EFLAGS: 00010246
+>> [52890.303689] RIP: 0010:put_cpu_partial+0x15/0x70
+>> [52890.303895]
+>> [52890.304291] Code: 00 00 00 66 90 90 90 90 90 90 90 90 90 90 90 90
+>> 90 90 90 90 90 0f 1f 44 00 00 9c 59 fa 48 8b 07 65 4c 8b 40 18 4d 85
+>> c0 74 54 <41> 8b 40 18 85 d2 75 22 83 c0 01 89 46 18 4c 89 46 10 48 8b
+>> 07 65
+>> [52890.304556] RAX: 0000000000001000 RBX: ffff9b94c4800000 RCX: 0000000000000002
+>> [52890.304680] RSP: 0018:ffffb5dac6473d48 EFLAGS: 00010082
+>> [52890.305597] RDX: 0000000000000ff0 RSI: ffff9b94c4800010 RDI: ffffe06380000000
+>> [52890.306115]
+>> [52890.306384] RBP: 0000000000001000 R08: 0000000000000000 R09: ffffe0639e120008
+>> [52890.306910] RAX: 00003a3f1c003ff0 RBX: ffff9b99322a16d0 RCX: 0000000000000246
+>> [52890.307010] R10: 0000000000000000 R11: 00000000000096d0 R12: ffff9b8ebe621800
+>> [52890.307574] RDX: 0000000000000001 RSI: ffffe063afc8a800 RDI: ffff9b94cc48fc00
+>> [52890.307927] R13: ffff9b8ebe621800 R14: 0000000000001000 R15: 0000000000000000
+>> [52890.308450] RBP: ffffb5dac6473da0 R08: 86304c8ed4b7099b R09: 00000000001c001b
+>> [52890.309006] FS:  0000000000000000(0000) GS:ffff9b9ba3d00000(0000)
+>> knlGS:0000000000000000
+>> [52890.309543] R10: 0000000000040000 R11: 0000000000000001 R12: ffffe063afc8a840
+>> [52890.310127] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [52890.310722] R13: ffffe063afc8a800 R14: ffff9b94cc48fc00 R15: ffff9b9ba3b36100
+>> [52890.311314] CR2: ffff9b94c480000c CR3: 00000004c3b1c006 CR4: 0000000000770ef0
+>> [52890.311735] FS:  0000000000000000(0000) GS:ffff9b9ba3b00000(0000)
+>> knlGS:0000000000000000
+>> [52890.312333] PKRU: 55555554
+>> [52890.312850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [52890.313298] Kernel panic - not syncing: Fatal exception in interrupt
+>> [52891.350776] Shutting down cpus with NMI
+>> [52891.358926] Kernel Offset: 0xae00000 from 0xffffffff81000000
+>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+>> [52891.359713] ---[ end Kernel panic - not syncing: Fatal exception in
+>> interrupt ]---
+>>
+>> Best,
+>> Jaroslav Pulchart
+> 
+> 
+> 
 
