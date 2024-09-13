@@ -1,128 +1,115 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D60234CD8
-	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 20:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726260637; cv=pass; b=ZOAculWvAIBub2yMfpA9tANHY7O5Nqv6QOID5ydA8JQq1lt3mSUHaoL918MGTYLK9oro7VALPyijBHmwU/wOqZRi8+Bpa6sUmPZyPNQXp1rtKPntMVzzW/7+H2vAe+zDfAM7bWLEmU4Ui0P6rghZ3tcx1/k8uKevh1Z3L0IK6R0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726260637; c=relaxed/simple;
-	bh=IyHwq3gLv93dYm4dDVxpET0KKx/gYmYIpij+l71ZSgk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=rucmliWrdZ/A8jSAqvAtw/NUCHLJP4XUhsFR5vo/wnSiSyp8XCRqiYCqe3uYHsHNrvrl3GC92uvi8MuUdelnZCfhXt+MFqvrq5Y0e0s1wP7EldXQ41vJpA4Y3G+Nf0q8OZtYVty2Wm0Q/Y0MAeLLf2AIJ3Dwa/DkvZnqdwgJsMs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=l4tNLFek; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47289149C64
+	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 21:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726262668; cv=none; b=TqoIqVu8HeHrw++B6dP++6ATVEfQ2+Na9IcZsWzmVOSCWtneENDwSHqJvBe0jghKljXgO0gG2oBmf6XM02XCCsnRikE9jYn/qAVU1KyNEOMkZCMuBstzfE6yjtKZPh4YhKKeQfeqULdCX+2yM78C+o8dvyoYgiCzID4TD362soY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726262668; c=relaxed/simple;
+	bh=ZYhLlCfJubXl2lpFJkootrsMtKBVHk6xopFryr344Jw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fz5LbknfoFdrvlbDHMGvxhtC3sPkGJc99bVwRNcHhE1JFLlcYvX4F66kD7p5uOFrb6Hj14ngMtwPbhgzj7YH43BMr03sJncWxqHgqY0XGbOQ8pi29eDjWnI+4zBtOpseZWfB3KeaRLkw6R7rmLpSRn+NIuRGw5Wo2uJcVlWx75k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UBjCNjkq; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="l4tNLFek"
-Received: from localhost (83-245-197-106.elisa-laajakaista.fi [83.245.197.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sakkinen)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4X55zk1W3lz49Q33;
-	Fri, 13 Sep 2024 23:50:26 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1726260626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IyHwq3gLv93dYm4dDVxpET0KKx/gYmYIpij+l71ZSgk=;
-	b=l4tNLFek/TDFwZBOxa+fufpxVTS+FaVSZS33KwbLImz/KcR4/yPUbBM+N9mBLBmCVJp2zn
-	lcAkmPGVA34ADF8ARM2q+fvXoa5CSxGA2o9JIJpFkqZEwJK9Mw6KFvY9ApCHdfjfITi5Qy
-	N6dV9tb+HK9pv9CEEwY02m5yrIyrAB0Nm/6fPhUz4j/+C2vsTqSwabdrm+BjlbqDWNkSEE
-	CyO+hLGlJ6+yvbQGKOvWg4lnJAZK6sY8CF6fT7pkdyqwv34BaOH8lhL/b0IsZsKoGq4bUP
-	e4LumVA1oJNkj+rVGvEheQTwClDtgOo6RIviy8keZClra+arl1qUE3UcBA0pRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1726260626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IyHwq3gLv93dYm4dDVxpET0KKx/gYmYIpij+l71ZSgk=;
-	b=tq6KLSnUXAW1zeEzBJT5ak+sbn2fl9eh3+XRND730ZPBak+kO3yCAVJ/LJzMcZoXBPFr6k
-	9h7ag0Fr107V2BYG5QODKqXy/MwSXVqFQiL1H+ugjtD0ExQxW7YB8nRlD9GerDtP+z/ru4
-	bEe5SVHORRcOAbSoTl8M2rgQxfB/qdR5VCSnr6BMdrD5w+GZ3Vlo5J9H9L0/WycErZxCmT
-	4JK808o8/4IC4YO7HiuOxWWgA23KWLTgXsRM/qh1zH+pDf6YtvV6vlOupxjujDQlb+M6+b
-	zrCts5dXDqiwl1SQEaOSzZ3nmILXBN3odFX76NhMzbuC14d+bE18+m/k6qY32g==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1726260626; a=rsa-sha256;
-	cv=none;
-	b=pG0r/+T06biVOJqOTx9dZx9owVgyiCBY71em/k7Jqt0XexY9dhdCJESOjNgZbpUT6qN2Zh
-	9/p9eUZtENLEXI6P33uHs3B4epwcUnTtmyIYJo3o90Vhz3nB8p5XeRhBkwpFhaKM0tpSIy
-	2CMvpQ/FLzeqUZHud1MIeUEfk99BV09pU5J1Flb1/dcX5QxEMFvnToA3kVs0o3bp1LT6vF
-	3VKz1bDaPI8o5SEQMTzYjwiWG3TD7F1DXq1hDhGyuC2gJZVkT2EcAscOPiQATcE2p/gEmE
-	QeSHYKK34qyu0753tG42ueBslcgp5XT9ril+fud9t8B4DBbZmB1zvb69lcj/Dg==
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UBjCNjkq"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f75c6ed397so29530421fa.2
+        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 14:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1726262663; x=1726867463; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xRuFfVQTrS2LaFQHsAbqiDg4XIXZJlnGtDFvh2VKrJg=;
+        b=UBjCNjkq4HHl2IVWDi5TykupDGaskTd0KxQPX3lZPVy/RZPcqczTdI22FJhSTmzgMv
+         PICMHFTa0Wa9cGsmIUID438absczhaqoWQ8Imi29x//XToYxhhtMDKbQIgQkDbVyg2vL
+         hhDVkVjvjsVcolweflwt3cy0fWTLxmEwrwD20=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726262663; x=1726867463;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xRuFfVQTrS2LaFQHsAbqiDg4XIXZJlnGtDFvh2VKrJg=;
+        b=V1OLCT4MegjUaIm72dFn7Kljm1k76HRM1eKx7mhxI+FR4+oCp40rxvjZTiv6Nz+vlz
+         yPIGAcNG0n0PF3svqXzEUgDRp3VH/iW21urpIEFVkbfaRpV5jv8+31p6oWt2sPLw9UAq
+         0g47ol20kp75c81+BnK2RWLXC3JfZ0yPQKpYq8HH6f5XMnmD0zgUtLmkbqLts+XvQhpD
+         WTUIwXaeP756kAt2R6C/00dgGS0grS0rWHd/NDFkB9dEUR0tYxGXDOwVD+Ez479Yo6QK
+         uSLu7GKkZa+lxPpVZhJG0zjNXEihP3OAPrGALmtpSKhSnjswojmvvjH9m2/gSufKr/bd
+         yCFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWf03dWIcDdNXziQIRJOoPey06UCIjp+SKEu6li0c1CF529OmwXoDJiBg0RQE7CNNXE9pO0vr26wRiyTw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzuaeuw7SG3oN3c7hKzxHNOCQyl5toel5DZCangfB2O96Fvc5Nn
+	4sO7QXRhAEAMhJ966XqR9jRpSdDnQgVH48Sa4X7tJ7uXkay6wRdTKPzgVLEGnE0V//k6RcgyTu7
+	QLfA=
+X-Google-Smtp-Source: AGHT+IEIvmopB0Scla696lDDDPrWcpLmZFHKtr/XEfYlogBuZ72vmMoAAP/6czDtqbaGT7bSxh8tHg==
+X-Received: by 2002:a2e:4612:0:b0:2f7:5dad:1433 with SMTP id 38308e7fff4ca-2f787db928fmr36891751fa.11.1726262662574;
+        Fri, 13 Sep 2024 14:24:22 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f79d37f77bsm200241fa.87.2024.09.13.14.24.20
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Sep 2024 14:24:20 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f66423686bso25598301fa.3
+        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 14:24:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWs6Eb7sU1KVvY20wwAcwciLfLnnsPpjP6r89vl/eLS8B5Lf2nDrdbbPa4c96tmkh02cA7FfdodNpi/4g==@lists.linux.dev
+X-Received: by 2002:a2e:7c0d:0:b0:2f5:11f6:1b24 with SMTP id
+ 38308e7fff4ca-2f787dd0941mr36494131fa.18.1726262659861; Fri, 13 Sep 2024
+ 14:24:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 13 Sep 2024 23:50:24 +0300
-Message-Id: <D45GBJ51SBNP.1WR34VCVNSN52@iki.fi>
-Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
- "Pengyu Ma" <mapengyu@gmail.com>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-From: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>
-To: "Roberto Sassu" <roberto.sassu@huaweicloud.com>, "Jarkko Sakkinen"
- <jarkko@kernel.org>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-X-Mailer: aerc 0.18.2
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
- <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
- <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
- <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
- <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
- <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
- <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
- <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
- <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
-In-Reply-To: <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
+MIME-Version: 1.0
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org> <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <d4a1cca4-96b8-4692-81f0-81c512f55ccf@meta.com> <ZuRfjGhAtXizA7Hu@casper.infradead.org>
+ <b40b2b1c-3ed5-4943-b8d0-316e04cb1dab@meta.com> <ZuSBPrN2CbWMlr3f@casper.infradead.org>
+In-Reply-To: <ZuSBPrN2CbWMlr3f@casper.infradead.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 13 Sep 2024 14:24:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh=_n1jfSRw2tyS0w85JpHZvG9wNynOB_141C19=RuJvQ@mail.gmail.com>
+Message-ID: <CAHk-=wh=_n1jfSRw2tyS0w85JpHZvG9wNynOB_141C19=RuJvQ@mail.gmail.com>
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Chris Mason <clm@meta.com>, Jens Axboe <axboe@kernel.dk>, Christian Theune <ct@flyingcircus.io>, 
+	linux-mm@kvack.org, "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Dao <dqminh@cloudflare.com>, Dave Chinner <david@fromorbit.com>, regressions@lists.linux.dev, 
+	regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu Sep 12, 2024 at 11:13 AM EEST, Roberto Sassu wrote:
-> On Wed, 2024-09-11 at 18:14 +0300, Jarkko Sakkinen wrote:
-> > On Wed Sep 11, 2024 at 11:53 AM EEST, Roberto Sassu wrote:
-> > > I made few measurements. I have a Fedora 38 VM with TPM passthrough.
-> >=20
-> > I was thinking more like
-> >=20
-> > sudo bpftrace -e 'k:tpm_transmit { @start[tid] =3D nsecs; } kr:tpm_tran=
-smit { @[kstack, ustack, comm] =3D sum(nsecs - @start[tid]); delete(@start[=
-tid]); } END { clear(@start); }'
-> >=20
-> > For example when running "tpm2_createprimary --hierarchy o -G rsa2048 -=
-c owner.txt", I get:
+On Fri, 13 Sept 2024 at 11:15, Matthew Wilcox <willy@infradead.org> wrote:
 >
-> Sure:
+> Oh!  I think split is the key.  Let's say we have an order-6 (or
+> larger) folio.  And we call split_huge_page() (whatever it's called
+> in your kernel version).  That calls xas_split_alloc() followed
+> by xas_split().  xas_split_alloc() puts entry in node->slots[0] and
+> initialises node->slots[1..XA_CHUNK_SIZE] to a sibling entry.
 
-Took couple of days to upgrade my BuildRoot environment to have bcc and
-bpftrace [1] but finally got similar figures (not the same test but doing
-extends).
+Hmm. The splitting does seem to be not just indicated by the debug
+logs, but it ends up being a fairly complicated case. *The* most
+complicated case of adding a new folio by far, I'd say.
 
-Summarizing your results looking at call before tpm_transmit:
+And I wonder if it's even necessary?
 
-- HMAC management: 124 ms
-- extend with HMAC: 25 ms
-- extend without HMAC: 5.2 ms=20
+Because I think the *common* case is through filemap_add_folio(),
+isn't it? And that code path really doesn't care what the size of the
+folio is.
 
-I'd see the only possible way to fix this would be refactor the HMAC
-implementation by making the caller always the orchestrator and thus
-allowing to use continueSession flag for TPM2_StartAuthSession to be
-used.
+So instead of splitting, that code path would seem to be perfectly
+happy with instead erroring out, and simply re-doing the new folio
+allocation using the same size that the old conflicting folio had (at
+which point it won't be conflicting any more).
 
-For example if you do multiple extends there should not be good reason
-to setup and rollback session for each call separately right?
+No?
 
-[1] https://codeberg.org/jarkko/linux-tpmdd-test
+It's possible that I'm entirely missing something, but at least the
+filemap_add_folio() case looks like it really would actually be
+happier with a "oh, that size conflicts with an existing entry, let's
+just allocate a smaller size then"
 
-BR, Jarkko
+                Linus
