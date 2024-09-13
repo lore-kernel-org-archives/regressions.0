@@ -1,195 +1,206 @@
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4F347A6A
-	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 16:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.153.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726245502; cv=fail; b=R/muBiMZpHjVIQkXgpBKM95nfscqozZuL/2X4i38D/t4JmjAFVuh3dHPNQK1ULo8DWnwCvFsqOcGeogY4YUK5Mj7JmEE+DuncfyQQbFpk+3YIYLYJvNc9TpSmCgcmXIkPKng+qm61EP6DtigM6MQfpzAiOEZnv6AiQnH+g/xfcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726245502; c=relaxed/simple;
-	bh=oKT7GpW/qAvMSAC8i+DB+Qeqw+sGy2Qcg0zxxP6AJk8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eNXycpWAy6PsJPTmJ3IZnw1Ts747i29vFvKHSEfjuL6emm8KoEkDAFV8K9uuUod/XYE2hSnK8c5OJDSJxWkXWU/YgjqfdEHB+R1HElb+1Xzv0S0/15uVyyL9Qhhy9xSF7sr9rQjN3upJjm0W1rOz/bqH/H4reKRDc3NQJnL9Wk8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=N4vcAlfG; arc=fail smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480F484A4D
+	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 17:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726249236; cv=none; b=WBypDZO95YvbSy2rRD/5TrgRSSoa7ddUCYcBzUhgH18iszHJRlyy8TUs6LRTVqLxwhzGGQdoCYU54WS4k5fnysV6xR+fktmRanFkVBaDCJt+PyFNk+DgRPayLqQpcentLZjqKZsu1YucrGWlmbvnsOxlZMpnVy230vXTN6zQLnU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726249236; c=relaxed/simple;
+	bh=/2Ohq0NMyGeL3WSa8dFttARPWMpEABhBJB3xllDYmYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=En0J7+6vKmn0DHtgTDmVQOFs3jCXR0idMIYx8Jk59ZnYRs8iE+pCnZklvmKCFurwGUGKT4ylmtyf1KzxgQiJLLBgtqbyec8iiia8xyyElB3Hyki6Zz/AbLxSJmIRfFU5IHEjQ7hgwcruIEjmMQtGZKSA8inCJJXiuRTJfIewwXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hMUTsqWW; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="N4vcAlfG"
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DG4vew024253;
-	Fri, 13 Sep 2024 09:38:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	s2048-2021-q4; bh=6g4TNDvmemXLZWvUNjI9qQhr/3gV8bTsX2R9B3qhZsY=; b=
-	N4vcAlfGuFOeq9w52p/OuE4Uct1Ofgla/xOUsKQAq6TygbDnheazLZtfWUy72rSJ
-	7YvQqdkE8aZFf+HhXXYxC0KgzpNPxyZ0HIXVW6ZI+Sz5rqBicjBW4k0hYLs20B4/
-	YxcEjGZZ/31uInepDyZOtztvKyUoABt5PDGc1zodFC+yokN+XR6sHHNUy4C+JxVa
-	g3U+giuqShXKVmHjF+p19ND3gIsVjHnOWhEFlYgGzJEk8rSHNCit5gOXl0ECJR+B
-	dsijI8JfU8++gLO8fxOJ4jqOUj/hZtKSgrqjTYpaIKXToJRmlQ7l3u5t8uwb8hby
-	oPBxe82fe99sH87OiSd/sg==
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2040.outbound.protection.outlook.com [104.47.57.40])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 41mgk3jq9v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Sep 2024 09:38:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VYrJ+Tc/jrndZP9KOHFrnQfpGQU9gHlDO5UdCfbr7dXGv+n3VjJ198ujO4A+SHK+YAaM/xlx9phNWWAhLEo0kIQCGybYHPQK8tSRM9C5iq6z+Rplt5h568d5f8r9AynNGhP8CtoY3X6TFglPxH/Yy1RCHfzO73vmAMGek4qbIIMqfXzcVa42zh9j3KMPPVPMLEmHfsjc/FE5E5/rY9BCqztFVGQ1iHwl40Dtl9LniNlXug34pkgFFGlwVvanj1IAebC4jPD8QXApMNp6Ll6D3/PsJQiSLI+w3gPRTWUyRbHgvet+rFoyd/+o6tHvLilqBljxz8r+vsAzormtP3iLEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6g4TNDvmemXLZWvUNjI9qQhr/3gV8bTsX2R9B3qhZsY=;
- b=CR8zBcHuZDMCqUeXqwOz6cduJRxuI+w7obu4cJZygEIn8XaOdBb0IWC3ov/RL6/7xxue8wc3ijECslRyV1KhK1OZt5QlOIEIB+8iNp+5k1bU4FqWuWSbs5183gzWi4RkRS0VzUgZuI5D1nza3AvaWvA/ULOePlSSImVwQ5jaKvme8P/wy2DlpocR0jVfSnaGCK6sr/KyBygKTIMN6dg+DKGBkNw4w21BexONW7aR/PvOxYX6MgY0+z1VChiAS4RvLrWmpFP0nDiDtjvTLhIsH4JVhFCIrk8QFqWC7n+yNQLSrTztEFTZvMsfGniSKCLoqXkOW+zjdDYBZiyVsNxQow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
- by BY3PR15MB4819.namprd15.prod.outlook.com (2603:10b6:a03:3b6::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.18; Fri, 13 Sep
- 2024 16:37:59 +0000
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::740a:ec4a:6e81:cf28]) by LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::740a:ec4a:6e81:cf28%7]) with mapi id 15.20.7939.017; Fri, 13 Sep 2024
- 16:37:59 +0000
-Message-ID: <9e8f8872-f51b-4a09-a92c-49218748dd62@meta.com>
-Date: Fri, 13 Sep 2024 12:37:49 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-To: David Howells <dhowells@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Matthew Wilcox <willy@infradead.org>,
-        Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Dao <dqminh@cloudflare.com>, Dave Chinner <david@fromorbit.com>,
-        regressions@lists.linux.dev, regressions@leemhuis.info
-References: <d4a1cca4-96b8-4692-81f0-81c512f55ccf@meta.com>
- <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
- <ZuNjNNmrDPVsVK03@casper.infradead.org>
- <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
- <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <1368975.1726243446@warthog.procyon.org.uk>
-Content-Language: en-US
-From: Chris Mason <clm@meta.com>
-In-Reply-To: <1368975.1726243446@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR06CA0010.namprd06.prod.outlook.com
- (2603:10b6:208:23d::15) To LV3PR15MB6455.namprd15.prod.outlook.com
- (2603:10b6:408:1ad::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMUTsqWW"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42bb7298bdeso15896345e9.1
+        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 10:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726249232; x=1726854032; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MV//vMadBXNAeDxNpKJbhQVJOpXHshAUgJME6e2RQz4=;
+        b=hMUTsqWWtgtUckkUozeOZQy25VJzerSJzqDLKkIR16Nfba/U0HpCHN79hITwCi1XFd
+         qcqSHWH3VPnAq2RieRtWqadTNuHb2qycCPX0b7rcYesPYzAMVMov7exRgWn9ZZMCjVcm
+         i5DP6sKLbkvdRj1mBmeMej84EvJ7n17PFNhphwaApKpl7uSE9IKLZS1NQ1S5FmaCaRXu
+         cHwrbU/Heaz3n16bjCweEY11aNoj687DToZyqxc9nsyLxMMlA9I96dgSnIWj20LcqThQ
+         CdmDUke7uwrXJIdOiIjlJsKpKtrsOxLGMvkwjfJlUG57my4t0GtYUf6MHe6IbLSHLd6l
+         TH8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726249232; x=1726854032;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MV//vMadBXNAeDxNpKJbhQVJOpXHshAUgJME6e2RQz4=;
+        b=sRCaqPOCs6eg19YeMt41q37uZTCHu/I6sQ6qDiiugQkA3JPxK34Dz9MHIYNNtglzB3
+         MMHI7ORZ2Npi1j24ibHHsRRJS2J96pNVpEGSNAI1KXOznOUOuJ+GDvr8oQIdQR88toYk
+         sShpct1debV6UQCJvk6QhSuLr45543NNwibcZtxQsRzAisuelzE35uLkCd5lK0T5/HE5
+         wMqqwu4xyh5O5SHAF7Tor8+kWfRHAasI6Dtf+/wRPcAU+qTEDKFpXcwylXTmVsqTOlYl
+         UFOVt3caz6b9hL3yoKQs+by1nWF8+KrO5auNUD1EZDdmuhgZIqiQvZTpmbu0Txr+jAfp
+         hsCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtmlCcwRCQY7ws6ibM/k6c5qVHonpkKjuunrJjpRJ3f/IOKOnBlBc561CmI/VrZ7UQJYgWynPSppPzvQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwAPPr+IHAKX39LaSz/k8K+LJ+NO4jep2vtQ9NwNTaioIF/QX0H
+	ybq6p6Z0F37gRbUUFFeEMPIf4mVDVOlvfOv70iQEa6gEo3QhtKJmez9qN2EEz4rBRZ4CpimY4TA
+	Ki7Zl35COzLTHqcLVFVrKOY6mGAGZES0fQjmp
+X-Google-Smtp-Source: AGHT+IFIyujRzAe4WlemD4EfCBpbqNG9oq0567HHDveKlpdCWunt+0ofHO0jr8IHidqrsP7gfOEuMszgh2JULwWn3vs=
+X-Received: by 2002:a5d:550d:0:b0:374:c69b:5a24 with SMTP id
+ ffacd0b85a97d-378d6243ba0mr3009632f8f.51.1726249231412; Fri, 13 Sep 2024
+ 10:40:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|BY3PR15MB4819:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc4bbd90-639e-4615-baf9-08dcd4126dc1
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U2F6cWtiUjBWS2hVMDhjZnhOZWRPTy9qNlFabVY0Z1FNYkVrM2VNMTVVOHdX?=
- =?utf-8?B?dTlXNll1VitISElsWmV0dGFXcjFsdmIxcmJSMUV0TEpxQkFNSG4ydThrRk1N?=
- =?utf-8?B?d1Erd2YvcVoxbXFSbFhZSTExWlZwbFZ5ZEtady9hVURoNlZ4dXdxMk14cjJm?=
- =?utf-8?B?QWdmcGgyaGJMRWo1dVVmaGQyU2xoRStwcWZIM0tzcmlQL2ZRQW1FaWo2T1VK?=
- =?utf-8?B?cjZYU04vSnd5T3pydmlTaFhHelM2N0NvS1h5T2JvUHJpR3Z1UzVjclRqUXV6?=
- =?utf-8?B?aFVSaU9oM2R3aVpheFd3aVVPdUdlTjNEL1BDdzd0VEZxZTV0ZWIrOEVPSVdp?=
- =?utf-8?B?N050OW10VEd3RDEremlwQkd1djd6b00zbkJnT0ZwMjRHOEVUVzVaTXc1alZt?=
- =?utf-8?B?RUlhZDliSFlhNFM2RUY4RjJ6aFNObFVTV0lrajFSRnBCZE1va240TmplekxX?=
- =?utf-8?B?eWMwblFZcmRMTmtkQ1pVQWFlaTBLalh0REY3MWVnblhlN2ZsdXplSUo4Y1l3?=
- =?utf-8?B?ZUNrQnRRK2NkTnFzTjdIa0cwQ3hzRnJIMkYzN3JVUUJhaXlhc3hKQzRlNzMz?=
- =?utf-8?B?NXJianR3OGh1alFrSm80dmUrTHZvbDB2d2F1TnNMVUZVdDBEZmt3dmU0dGRX?=
- =?utf-8?B?d2NSZ2x0UmxXSGo1SURpOS9ScnNYTTJSa0lVZGZUVGczWEpTeXNRNDJ3b1hO?=
- =?utf-8?B?UE5ENzVueEJrLzZCaDdZbzdtMTJnSERKYzRNVm9vMEJOcDRUaWhkKzJmVWdU?=
- =?utf-8?B?MWkyR1dQaU42djUzWm1NVW1kSDZ5QzhSNEJRMkJZRjVFT2FFM0ttRWJETTJU?=
- =?utf-8?B?cjIxdnA5aG9nV3E0S2IxdkhTbzJTQXZZMUtQSG5BS1h4SkJQWDVHYU5BN0R1?=
- =?utf-8?B?dTlCeWFFWGNWZGlQMTRyakZ3VWM5L3pBaDdDRUFTNHl0ZDlSbU5tVUIvSThO?=
- =?utf-8?B?R3dZOUpYNkN2MzVMWkVLOS94MEVYcXNhSXZXU09WOUFQWEhKQlczV0tDbjVa?=
- =?utf-8?B?Z1hEd3g3V2VLZkxKREI1U1JtdnVKTWk4QXIwM3dBOTBqREY4bTR1a0I0VGZV?=
- =?utf-8?B?ODZDVklveDlkTC9mUVBla2pMUmdpWTl4ZnBOeSttUkF1cTh1WWhxRXUrNUk1?=
- =?utf-8?B?c242ak9lQytDekNNQndrai9XeDdSUDdhMnJIZUtuWU4rNFZvb2xoRkozSXBI?=
- =?utf-8?B?Vm5ZbGJjM1hrVEdOODhLWlphQ0oyNGo3ZWlQMzd0SzF4c2FJLzJwQ016OGwv?=
- =?utf-8?B?ZHBUeXpMdGZ5cUZOclBRZXFUaTJIZDV4SVZmcmplbzhkVXB4YWdSS2gxaHVz?=
- =?utf-8?B?blRHeUV0bGlyV3ltcXc0V0ZMcnFVM1U0VXV2ei9YdDhDay96YUNhWnRraWJv?=
- =?utf-8?B?SDVENXc1bk54NDZtMFBPRExGQUowMlpINHc1elYyNUxpSGgyMWpxaHBMZ0tU?=
- =?utf-8?B?N3BVeHVrRzRxUk5MdzEwQnBGVDlEUGM5VFdWOGx0bWJ6anVvN2FPNnRoalk4?=
- =?utf-8?B?K1NxeiswR09EbkFnYUlaNjlMN2FwcUVBVXpxcS92aVpuWVFjc1ZobkhhdzRv?=
- =?utf-8?B?NVp1UlBWbW9oVHhBdFluMnVCeGtLM1k0azI5elNLTUVibjR6RlJyTlhleWQy?=
- =?utf-8?B?R1R0c3dEZWM0dlhKS2REODJGc1FSejVvT1NibjN5VHREK3N3MDBzRVFFY2RU?=
- =?utf-8?B?YTFaTTN2b0VmMFBJV1VzYmU2Rm1yU1hSYTZKWXFHR05lR2VJeFBXQXRIMlBv?=
- =?utf-8?B?N3dQOFZJRXdhYm9BZ0s2djdTVjZCOE1zQkdEZ3Y2ZEx5M3BlcjRXQ1NZd3J2?=
- =?utf-8?B?cUtLSk5kZ1lEKzQrTm1FUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WW80ZFYyb0I3NDVHU3VmUUdWVnE0YTNSWGs1blptaGxWNWZLSFg3dGNKNmJU?=
- =?utf-8?B?TGF1am91RFZuMzhaaTlZKzZ0M3dYR3psZkozMGovT1Q1M3pzSzR6amlJajkw?=
- =?utf-8?B?ZFY3dEVtNmN0ZlhyMU1aT1RPbWYxa3FzaXM1ZFE0alNXeWE5aDgzcHlIVzhQ?=
- =?utf-8?B?NExVUkt5b3UrSXhldENzM2dCU2kzTTAvTEwzN3Z1YlNJeVNXdFJ0dkUzeitV?=
- =?utf-8?B?VDdtWCt1Zk0rSy9RN3VHbE5xMUg3M1lzODFtVThGYlJSM2tqdDZ4RjREalhT?=
- =?utf-8?B?M2RhbVZxaW55ZUphQ2V4VmFqNnl2NUR2NXZLVWpSSTR4ZnZwRXhzVTJ1SWhw?=
- =?utf-8?B?Z3JCQ2hGWE9mU25mNVpoVGVXcGQxVys0b0R1SDlsRjJHcmxwMmRnTmpLWHpQ?=
- =?utf-8?B?YVdRMnNhZk0yaEVET241TFQzSHhUTEdzeDZsa1BndEZGd3hvR0tDUk4yQXRM?=
- =?utf-8?B?RS9DeGhwZFRtdGhhRFcxeElRYzJRSld1NGxtS2hRU1RITFFiMFRYampCdGpJ?=
- =?utf-8?B?cWZkMldSd2xwTmE0ZmhYU21rT3FXYndXeG01eVRFMkFPZ01GMUM2ZmtiV3lK?=
- =?utf-8?B?TGFEeGxHblpnNkNwWXZ5Z3BJSHFnN3pubWVkUGU1NXZxNFJlY2krKzVpQ2Nx?=
- =?utf-8?B?ZjZiV2FURythM0hjNlNhcm12OCt3QXNucUZzTThWelNURHh2bHBRNHZMdFR6?=
- =?utf-8?B?SUVKWTl1QXM2Q1JmaFVwQ3dXbHBrVlZXSGs3RkI5aWhrUmg2R0lJekRpZTNu?=
- =?utf-8?B?Z3ZEU3RJOGRGYXpwSEYwMkRwL2tBUnZCbmFBSTdnaTgrd1EvQmlyc3JSNEhr?=
- =?utf-8?B?dENBN1RTRHdQK0RwSTB1V21DMjNDQVJJckk2RWF3ZGhWNFA3VlduTEhMT1pU?=
- =?utf-8?B?WVUrMjFXdGlLOXgybTYyYUl6elZnZDhsOXVxSXBDM2Z1RHlHbFNZYXduSGxy?=
- =?utf-8?B?VFZ2QU1LR0lNMnJNdFIra2QyQmsyb1YzbW94R2plU0ZvMEFDRVEvS2dNY1Jz?=
- =?utf-8?B?V21ja3MwWFZrdDBONU9RYjZGTlRoZE5rL3d4RXM0ek9xVHdhMk1waGZyS01R?=
- =?utf-8?B?VDU0RDVxYTNONjF1bFpjdHFlK1ZNelRxbEhQbGJTZnJGRTZoSHA4QmpKZGhx?=
- =?utf-8?B?VW9qNFRuMFowWS9tWStHbnBVdFBpY2c1MWJMd2plN3BoVVp2QU5YNlEyNVAr?=
- =?utf-8?B?UFl5RkI4aWVDZk9sb2IrREcrcUVweHNxcStwR2JKT3JvSzJzQWtQeFNyL2Rw?=
- =?utf-8?B?ZVJGby8rOGZabFgzWG5qeVZrWERsY0VEaXdDT05MWllvWnV1YXB4NEhocWRu?=
- =?utf-8?B?RlFuekNuanNNQzFUOHZldEdTQ1lEUm81VGQ2em0yT01DL1NBaFhjMmhaeVk0?=
- =?utf-8?B?REZ2YytiU2hoTUVmT2VxT0xVWktackpTQVpNNmE5WFhRZDBiUS9YdHZMUG4w?=
- =?utf-8?B?cEFIajFKV0xwTm1DSWRtRGtLRnJtTzRPSVVDZnVNUVZMcElZWHZ6UGpIeUNT?=
- =?utf-8?B?QnlDMjYrS25FWklGRDFxRno0TnNiM2FoT1lpVWpUWU5vRXFkRzJ6VE5Ncitq?=
- =?utf-8?B?Rnl4NmhUSWtQbGl5SUdDV2ErNUNTdHliK0VTR21MeVFndkRZZW5uUjN4cjN5?=
- =?utf-8?B?UWIwa1NCaExDZDg2cUlHTHlBVnUzRkN2TlVsMDhaaVFGVm1nYXZXWkJpLzEz?=
- =?utf-8?B?b1VIcDh0Vnc0TnFYbVVaU3FZc0Q3ajlxWVBwalFpZVNlb2NHR3UyNE9xYWpV?=
- =?utf-8?B?Y0tXeGhqT0pGT092WlZjZVRPcGdBa0o0d2h5SHBvSkRidHRIYzZvY1V6ZXVM?=
- =?utf-8?B?MkxvRkdjRElsenNjT3pqaVVvdGNwKzhHNXAvclVCbmJtcnlmQWpVY2ZIYi9U?=
- =?utf-8?B?VHIxYmVML2UwWVRFWjF0N21TLzhaaVpOalIzRlMvbkkydkJ1UmhCbzZDVVBM?=
- =?utf-8?B?MjFwK2E0L0ZWMkNUY3pMVVdqb2lzTWl2c2hKK0E1U3lQUzk2NWgyM29vMFpy?=
- =?utf-8?B?MDNDUldzeFFWY2pZYUpKUzdHYUl3YWlBVnNya1cvN2tUcUtlMzZOTVhPMnps?=
- =?utf-8?B?b2lQQ25jNklCU2pNQkN2NUlNR3hEVkdERVJRZEJVdERxYWtzOVl5ZFVoQ1lH?=
- =?utf-8?Q?qw08=3D?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc4bbd90-639e-4615-baf9-08dcd4126dc1
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2024 16:37:59.6721
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2gbwizDTKn3Og0rjhZA36Flzeh+uEN1nnpBq8ViJYNQ02A9ahTDPjnplxF41Wqnk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR15MB4819
-X-Proofpoint-ORIG-GUID: hbb5Rda7b8UggOLD7NNt4e9CCuWBRZ7L
-X-Proofpoint-GUID: hbb5Rda7b8UggOLD7NNt4e9CCuWBRZ7L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
+References: <CAJD7tkaTcnuCFW+dWTzSAuLKBqkkGv9s5uByYm9DaJC=Cp-Xqg@mail.gmail.com>
+ <2272920.vFx2qVVIhK@electra>
+In-Reply-To: <2272920.vFx2qVVIhK@electra>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Fri, 13 Sep 2024 10:39:55 -0700
+Message-ID: <CAJD7tkaPjJWr28CzGoTK3e-4e4eP2gLSojaEH3U9X9E0KgBs8g@mail.gmail.com>
+Subject: Re: [regression] oops on heavy compilations ("kernel BUG at
+ mm/zswap.c:1005!" and "Oops: invalid opcode: 0000")
+To: =?UTF-8?B?VG9tw6HFoSBUcm5rYQ==?= <trnka@scm.com>
+Cc: hannes@cmpxchg.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	nphamcs@gmail.com, pedro.falcato@gmail.com, piotr.oniszczuk@gmail.com, 
+	regressions@lists.linux.dev, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/13/24 12:04 PM, David Howells wrote:
-> Chris Mason <clm@meta.com> wrote:
-> 
->> I've mentioned this in the past to both Willy and Dave Chinner, but so
->> far all of my attempts to reproduce it on purpose have failed.
-> 
-> Could it be a splice bug?
+On Fri, Sep 13, 2024 at 2:03=E2=80=AFAM Tom=C3=A1=C5=A1 Trnka <trnka@scm.co=
+m> wrote:
+>
+> > Well, it's possible that some zswap change was not fully compatible
+> > with z3fold, or surfaced a dormant bug in z3fold. Either way, my
+> > recommendation is to use zsmalloc. I have been trying to deprecate
+> > z3fold, and honestly you are the only person I have seen use z3fold in
+> > a while -- which is probably why no one else reported such a problem.
+>
+> FWIW, I have repeatedly hit this exact BUG (mm/zswap.c:1005) on two of my
+> machines on 6.10.x (possibly 6.9.x as well, but I don't have the logs at =
+hand
+> to confirm). In both cases, this was also using z3fold under moderate mem=
+ory
+> pressure. I think this fairly conclusively rules out a HW issue.
+>
+> Additionally, I have hit the following BUG on 6.10.8, which is potentiall=
+y
+> related (note __z3fold_alloc in there):
+>
+> list_del corruption, ffff977c17128000->next is NULL
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:52!
+> Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> CPU: 3 PID: 248608 Comm: kworker/u32:3 Tainted: G        W
+> 6.10.8-100.fc39.x86_64 #1
+> Hardware name: HP HP EliteBook 850 G6/8549, BIOS R70 Ver. 01.28.00 04/12/=
+2024
+> Workqueue: zswap12 compact_page_work
+> RIP: 0010:__list_del_entry_valid_or_report+0x5d/0xc0
+> Code: 48 8b 01 48 39 f8 75 5a 48 8b 72 08 48 39 f0 75 65 b8 01 00 00 00 c=
+3 cc
+> cc cc cc 48 89 fe 48 c7 c7 f0 89 ba ad e8 73 34 8f ff <0f> 0b 48 89 fe 48=
+ c7
+> c7 20 8a ba ad e8 62 34 8f ff 0f 0b 48 89 fe
+> RSP: 0018:ffffac7299f5bdb0 EFLAGS: 00010246
+> RAX: 0000000000000033 RBX: ffff977c0afd0b08 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffff977f2d5a18c0 RDI: ffff977f2d5a18c0
+> RBP: ffff977c0afd0b00 R08: 0000000000000000 R09: 4e20736920747865
+> R10: 7478656e3e2d3030 R11: 4c4c554e20736920 R12: ffff977c17128010
+> R13: 000000000000000a R14: 00000000000000a0 R15: ffff977c17128000
+> FS:  0000000000000000(0000) GS:ffff977f2d580000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f063638a000 CR3: 0000000179428002 CR4: 00000000003706f0
+> Call Trace:
+>  <TASK>
+>  ? die+0x36/0x90
+>  ? do_trap+0xdd/0x100
+>  ? __list_del_entry_valid_or_report+0x5d/0xc0
+>  ? do_error_trap+0x6a/0x90
+>  ? __list_del_entry_valid_or_report+0x5d/0xc0
+>  ? exc_invalid_op+0x50/0x70
+>  ? __list_del_entry_valid_or_report+0x5d/0xc0
+>  ? asm_exc_invalid_op+0x1a/0x20
+>  ? __list_del_entry_valid_or_report+0x5d/0xc0
+>  __z3fold_alloc+0x4e/0x4b0
+>  do_compact_page+0x20e/0xa60
+>  process_one_work+0x17b/0x390
+>  worker_thread+0x265/0x380
+>  ? __pfx_worker_thread+0x10/0x10
+>  kthread+0xcf/0x100
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork+0x31/0x50
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+> Modules linked in: nf_conntrack_netbios_ns nf_conntrack_broadcast lp parp=
+ort
+> ti_usb_3410_5052 hid_logitech_hidpp snd_usb_audio snd_usbmidi_lib snd_ump
+> snd_rawmidi hid_logitech_dj r8153_ecm cdc_ether usbnet r8152 mii ib_core
+> dimlib tls >
+>  snd_hda_codec_realtek snd_hda_codec_generic snd_hda_scodec_component
+> snd_soc_dmic snd_sof_pci_intel_cnl snd_sof_intel_hda_generic soundwire_in=
+tel
+> soundwire_cadence snd_sof_intel_hda_common snd_sof_intel_hda_mlink
+> snd_sof_intel_hda snd>
+>  processor_thermal_device_pci_legacy intel_cstate hp_wmi
+> processor_thermal_device snd_timer sparse_keymap processor_thermal_wt_hin=
+t
+> intel_uncore intel_wmi_thunderbolt thunderbolt wmi_bmof cfg80211 snd
+> processor_thermal_rfim i2c_i801 sp>
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__list_del_entry_valid_or_report+0x5d/0xc0
+> Code: 48 8b 01 48 39 f8 75 5a 48 8b 72 08 48 39 f0 75 65 b8 01 00 00 00 c=
+3 cc
+> cc cc cc 48 89 fe 48 c7 c7 f0 89 ba ad e8 73 34 8f ff <0f> 0b 48 89 fe 48=
+ c7
+> c7 20 8a ba ad e8 62 34 8f ff 0f 0b 48 89 fe
+> RSP: 0018:ffffac7299f5bdb0 EFLAGS: 00010246
+> RAX: 0000000000000033 RBX: ffff977c0afd0b08 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffff977f2d5a18c0 RDI: ffff977f2d5a18c0
+> RBP: ffff977c0afd0b00 R08: 0000000000000000 R09: 4e20736920747865
+> R10: 7478656e3e2d3030 R11: 4c4c554e20736920 R12: ffff977c17128010
+> R13: 000000000000000a R14: 00000000000000a0 R15: ffff977c17128000
+> FS:  0000000000000000(0000) GS:ffff977f2d580000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f063638a000 CR3: 0000000179428002 CR4: 00000000003706f0
+> note: kworker/u32:3[248608] exited with preempt_count 3
+>
+> > > Is there any possibility/way to avoid bisecting? (due limited time fr=
+om my
+> > > side)>
+> > So unless you have a reason to specifically use z3fold or avoid
+> > zsmalloc, please use zsmalloc. It should be better for you anyway. I
+> > doubt that you (or anyone) wants to spend time debugging a z3fold
+> > problem :)
+>
+> I could conceivably try to bisect this, but since I don't have a quick
+> reproducer, it would likely take weeks to finish. I'm wondering whether i=
+t's
+> worth trying or if z3fold is going out of the door anyway. I don't think =
+it's
+> hardware-related so it should be possible to test this in a VM, but that =
+still
+> takes some effort to set up.
 
-I really wanted it to be a splice bug, but I believe the 6.9 workload I
-mentioned isn't using splice.  I didn't 100% verify though.
+z3fold is going out of the door anyway, I already sent a patch to deprecate=
+ it:
+https://lore.kernel.org/lkml/20240904233343.933462-1-yosryahmed@google.com/
 
--chris
+I will send a new version after the merge window, and I will include
+your bug report in the list of problems in the commit log :) Thanks
+for the report, please don't waste time debugging this and use
+zsmalloc!
+
+>
+> Best regards,
+>
+> Tom=C3=A1=C5=A1 Trnka
+>
+>
