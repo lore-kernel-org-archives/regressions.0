@@ -1,250 +1,255 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A831C2BF
-	for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 14:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726238341; cv=none; b=ODIkzKacVqsg+sDh1Wfjh/EvIp+hgGcgqIl6XB5QOPvIdXgxRcttt5pr+awb79O9Ab9QYkrjxCG7KUd3R5d5jqtutbX/tmKTMq9upifevnEeacjdngnG3Mrlrgfbiwoch+9D/93bJKi6yJ4bcUqil/834Wqlnqaik8Xx3KV0Jjo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726238341; c=relaxed/simple;
-	bh=lBj0YActRmEynLy/fGzrx5Z0od+lfhF1gxPZ5WpaYZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=Lk5T+yPN4RIMINk3FDVE+VYNfL2DGl4QysuxStefcPhGvjsLiViqH643GlPZfVRKRjtqWLKWgONQXvrveFlpKC46FLALQLzu2VWayrLH9ER5MuLbKSQHZ5w6OitBVi1hAMAUspuxweWElmFNX8QcOSy30HCZ4zrrjd25Tr5RQFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AeLUnrZt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12822D502;
+	Fri, 13 Sep 2024 15:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726241482; cv=fail; b=GVrsqTpYvZ7SShOQ2ZqOyc9E5yQJRHOtvEc+tMDlk1T6xUm0LjpGAtE6i8+QgPtxCP/kSnGZcgMmxIlgxSaUAcACst1YWhvryINqh5iK+vpgTwikwMxZYYFTaoT4XvqwKsm+Gb136NLKEoQe+yeTk3fSU8nNcYUefSaNQAkku4k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726241482; c=relaxed/simple;
+	bh=wT1+phQPJz0lkzghseP4fVkEBWUiYRf8TNN2sVQuzas=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=seAju00FiXjqEvLHdvhXbU14mJhGcMtDBC6oH7cBgV9Jqdrt2zZ8IXHX4lLYOW8pSmYR2dY6wdeAF35ifr3chbm4SzoC760nZuYjsnFab3XQZYtHK4U0DeCjyEXAB21Pr7NxKmsfkJJm0wuwwWPzALJBlgPHquhCE5jjruhUa/8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=eVE+lz1H; arc=fail smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AeLUnrZt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726238337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I0yqbY/OCO9wLgd1HoYr5nBxWhzZs/QuYlUDgnwW+sU=;
-	b=AeLUnrZtJGY9kKsXUxhuSU/J+CGgKA5NvMEasSyc/B2cMK+QfXxCV2IA2jJyTVvrvv+aGo
-	LpmHhjXhMWURn8nilYtSN3nk38NOEWoGSSOmDl/QuT4QJzNq4ZcivWJYf49Zi7B1TQxnas
-	v2TO13tKHvdISOPKCBAEnCTez/B+llg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-79-KZzuyYq8P-iFXuETePx5DQ-1; Fri, 13 Sep 2024 10:38:55 -0400
-X-MC-Unique: KZzuyYq8P-iFXuETePx5DQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42ac185e26cso16743815e9.3
-        for <regressions@lists.linux.dev>; Fri, 13 Sep 2024 07:38:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726238334; x=1726843134;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I0yqbY/OCO9wLgd1HoYr5nBxWhzZs/QuYlUDgnwW+sU=;
-        b=oEeB0wTzZd5/vXgivli4QcmjFfXaTI9JRCLPXD9glULmTNpAyCdBSRnE/Hoaks+5SY
-         X21wlgz3x6AzYYksi22rj+L+S+F+ky/d9wj4PxeoFTzykXUSGOfO8c1MQmW9tGR2zfAY
-         XjdUbhHNXz3ieU5P6emTIYQJAKUBJMsn1MDuFbBS3KHuCAHDxeCve+wDuz7b5ujcaANW
-         2iX6lsEQU2Cc8Mw2+ubDHU07KOlZbRrYR2j1Gi588/TrJs01rW6lPcIhHTBiu2EuaN43
-         w7LH9Z8lEnris3GRWUjlSDms2B4LAIcFjCPzMt0PyW7IVGXz11x1JtdwSOPmiln8Q5Vp
-         cD2g==
-X-Gm-Message-State: AOJu0YwReVVut93x/YfHdLScX57iMIVflPNb1oyukJAD2Sg1GWyXPaGC
-	GLwwVBJyPf2m9UCWDRjkXbSBeKamaBR3mQ0rjolKZT9uYfc+MOnyCJHTGIK7egvmyG0OZZFNdvp
-	pNq/ElbH/GQye0/WkJN9XWG8UQ3gvXzh+GKer4XzeZrXGLuBMXubnUB4ZZhr7
-X-Received: by 2002:a05:600c:474d:b0:42b:8a35:1acf with SMTP id 5b1f17b1804b1-42cdb586f4cmr57656905e9.25.1726238333701;
-        Fri, 13 Sep 2024 07:38:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0wLM2XCe6EYIlhXthu0A0w06hU52pDmnPJjKD55axxzMVLC1lHSc3Rf+thDcnJZi7N8BSNg==
-X-Received: by 2002:a05:600c:474d:b0:42b:8a35:1acf with SMTP id 5b1f17b1804b1-42cdb586f4cmr57656275e9.25.1726238332596;
-        Fri, 13 Sep 2024 07:38:52 -0700 (PDT)
-Received: from redhat.com ([2a02:14f:1ed:ea77:491e:7d20:ef52:7bc4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42d9b05da47sm29172935e9.17.2024.09.13.07.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 07:38:51 -0700 (PDT)
-Date: Fri, 13 Sep 2024 10:38:49 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	virtualization@lists.linux.dev
-Subject: Re: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net] with 6.10.7 and
- packed virtqueues
-Message-ID: <20240913103753-mutt-send-email-mst@kernel.org>
-References: <CAK8fFZ6qVutPWxquHg7NEvFqYqDP5BwEdO81hqW8iMFxJFuLSQ@mail.gmail.com>
- <CAK8fFZ5N7EbU=uLbfyeSkQ273NSm+GELWUu1O1OBCpaSwjv6FA@mail.gmail.com>
- <422f35b3-7834-4df7-bcea-e3be12707aef@leemhuis.info>
- <1726216954.7439098-1-xuanzhuo@linux.alibaba.com>
- <565a9204-362d-458d-8b8e-11c5aada7b98@leemhuis.info>
- <CAK8fFZ6W2ZfwTa4nYz8ORTgb0mOTysg89LEEz7cHGtdqwpsvmA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="eVE+lz1H"
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48DCTOZq002869;
+	Fri, 13 Sep 2024 08:30:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	s2048-2021-q4; bh=Cr49Om7Nm/q77lFKcYMu6DvcskxYMtja5TFNuy+5jYs=; b=
+	eVE+lz1HSoRUuC2hmpHCggtee6cegs/cox/vR6IZTdyPVeU2Ef3bOl3TPG6rqQCB
+	nisFhB7b36n9LxLcADLrES0OrgB/HF3QqW3E75+9nntx2jq4D8ng+d5dM2s6E/eC
+	eJTTK7AlOHxeXzFRSHHvfxrToYervDNDjpBv0Yz64QikQFhUyvWVU6AEDalk5suD
+	OFTZlA+l0jEepogSC9eFFH4IkmmSDGluU7v+o88TUrLDrTP1HqSXCfF/9pOd2nYB
+	pg8pYyveufJ0dtOkBuHi4yJmZf180hnLvidqLC/pRIBC3b3OWubO3kZ1om9jShZT
+	sS5yCmgCAlEECVpm0w5/aA==
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 41mneds1mn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Sep 2024 08:30:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oM9LhFYBjXHs3HSwQ4MTM+6wEzXijq1JMhrstsAF31xY1xqAPNmiW25XeNkNkW/giRivGH9+oCNneRpMDa0D/WI18RRJnSiSuF659ShNaEThleQ5GXoHPbqVfENqLWKycbYVGTGXXb5NSLr4vfpRTWobj3IVZfxLXOOucmQFUY61vEbarME2GYHout21j6hAkXP3Sc1HCDZfFnoeMhtMhOi0usU3JFr1hIemD7FMzlpwfIqKkPBMd7wcL/0+OxbHus5xhiORPwDRBhB5Xi0EXl4nIhgLBVJnmy0VRReXjNzc9VLrU+hkLKLfeBG31KKF8IoaeeA+XQ6QZEZJn5Z/ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cr49Om7Nm/q77lFKcYMu6DvcskxYMtja5TFNuy+5jYs=;
+ b=hbTitZhjQpsIFYaGv9hW4bd5lB13lLu6tPXST+Xe9z9/9dvyjw0p39BdqSSTS8uy1hU8OHajmPzNZfAIuWPb5hgsIoZ0iqtdoe/mmy2NFMTraCFC3BLMMPRn+88lKad6qK/vpOOytCqzSEE1mkrG7nySbAThGZYj5bceISElLw2PIggaSWvtlonb4RqjaePbhkZqANr8rmzOS9xCJ2cZBe1//iQCwb8EvDDjDctKzqaAYATq9fOG2gxBr8U4fh8Eo+fpzHCjiCPU4Vbfcv+Q+qt3fDPgE3lFxpYumllvagiWm5PqDc+NVrvT9N+2NccbA7FLdIwXqLbc39r1lvXbaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
+ by LV3PR15MB6660.namprd15.prod.outlook.com (2603:10b6:408:26f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.20; Fri, 13 Sep
+ 2024 15:30:50 +0000
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::740a:ec4a:6e81:cf28]) by LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::740a:ec4a:6e81:cf28%7]) with mapi id 15.20.7939.017; Fri, 13 Sep 2024
+ 15:30:50 +0000
+Message-ID: <d4a1cca4-96b8-4692-81f0-81c512f55ccf@meta.com>
+Date: Fri, 13 Sep 2024 11:30:41 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc: Matthew Wilcox <willy@infradead.org>,
+        Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Dao <dqminh@cloudflare.com>, Dave Chinner <david@fromorbit.com>,
+        regressions@lists.linux.dev, regressions@leemhuis.info
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+From: Chris Mason <clm@meta.com>
+Content-Language: en-US
+In-Reply-To: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN9PR03CA0918.namprd03.prod.outlook.com
+ (2603:10b6:408:107::23) To LV3PR15MB6455.namprd15.prod.outlook.com
+ (2603:10b6:408:1ad::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAK8fFZ6W2ZfwTa4nYz8ORTgb0mOTysg89LEEz7cHGtdqwpsvmA@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|LV3PR15MB6660:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97aa111a-74c3-4ebb-8e1f-08dcd4090c01
+X-FB-Source: Internal
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VzFFVkEwMkcvejNpSTNrMHU2b2lscDdVck4xbnB3blZlN0NZNGZpblcwSGc3?=
+ =?utf-8?B?UGQzQkhCSTVmNnl3WXdjY2pTWXpwdEFNeW1qYWRMdTFET09kMk1vV0xMeG5I?=
+ =?utf-8?B?ZFQ0cC9iNkUzMWhlOHJic3FxUlFwWklWUEhTZVNNdU4wSUZGSlEwakRFd2M5?=
+ =?utf-8?B?NkUzRERCN2RId2RCZm9UUGZKN0UydEZ1U01kZ0ZRMUVsSTJlak1aM29NZWgx?=
+ =?utf-8?B?MVVuaTNaREIzaVZ4UjA1eDJoeDFYekRGam1vcjdaUlNhaWZDWUlNeXA3S1NO?=
+ =?utf-8?B?TVVyWHRFRUVreEtTYzNlWit0c1EycWVQckZYb2dxYTd5WjZScEFFSktkeWZ5?=
+ =?utf-8?B?dG1rTFBiRWIrSUZHVjVyS2lhVTFnZXZVWDJaOXdzMUZQWjRrUVFPZlc1Nzcz?=
+ =?utf-8?B?UHl4YmRVVlJRN0RtUkhabG0yZmIxUXlZU096ZGoxb2loWU5PYWlhMWp0VzRV?=
+ =?utf-8?B?d1NPSHZ3Q3F4Nm5xWENIaXhndG5xSTdUcnhheWxYOG1wOWZSTnhwdWdRKzl4?=
+ =?utf-8?B?ZW43OVlJVW8rMXZ4TldndERLRW1RM0JaM2l0Q3ZVUDFQSEpaK0NLdDRLVVlm?=
+ =?utf-8?B?b3NvSjYrOVF4WERlbUU0R1FFK3J6bUFqMzR2SWRhMFpLeE1TRVZLSVRGQVlp?=
+ =?utf-8?B?ZElrK3dzMEhneGpFaUlsSVdGRU9kazgxQ3RKQUxnRXRwUGY2U2hvWTlWMS8x?=
+ =?utf-8?B?aUlFMVUwdEdXOW16UVNSVklHemlYWWtSK0N2enA0emgxUWpTUm1UZUt0eFRE?=
+ =?utf-8?B?bVdFVloxbHlpOUhEM1Z5V0Zmek52RUY0cE0vdXRJSzEwRkloUEU3RHBmY0U2?=
+ =?utf-8?B?U1ZyaldKVXorcFNYbldvanBROFN0VnEvWmZiOGJJVVJ3L2tvMXlyV2pMdUVL?=
+ =?utf-8?B?THVia2xESG5MYlpUS3RsZ08rS0pjZkFSS0ZwU3Zsd2srdnlXRk1LVjMvVWV3?=
+ =?utf-8?B?NEtZZ29oaWRCZktFb2E2S05HUzRIcGx3QzBvKzU5SHJNdzEzMG5kZWlubDl1?=
+ =?utf-8?B?WFBHd0tsRk5MM3RENlN1U2o1ajVvQ2ZUNUMySVVEMm9TZkJZNjVXSktSd21q?=
+ =?utf-8?B?M0ZIcHBUZENsUTJmVkRwZW1hWnNtWXQrNzhPUGRmZ2ZFV0hZK2RIWEtvV3Nw?=
+ =?utf-8?B?b0JEb0l1SUhrWVRHdnArWDN6cGZaK0RqeXFEWkFERTZPNi9RRHZJMnhjWmhB?=
+ =?utf-8?B?dmdTRUVJZ3RkSWFuL3hVK1MrR1FUSTJXRTkyMG5KTXBTNnJ1OHR4M1RndE5M?=
+ =?utf-8?B?dE9aeW9HSlZnOEJiWDdIK09KZStPb0ozcVJQSDhqUjVKOXNCZEJ6YWM0SGVV?=
+ =?utf-8?B?MFF6NEdrRDhvWXh0Uk5SZi92ZTBodVJaNGdMM1RGWjhxclJ1cW5VeERZNHZL?=
+ =?utf-8?B?cjJtRFBhZUJXU3NUWFBaVU1sNTNXcUo3Wm05TjVMTXdYOGt5cm02bXpmcVQy?=
+ =?utf-8?B?T1FLZUQ4dGdlZ2hHT3I2RkE5MFFOUjVLQUQ5eHkvUDdUOUNGbzhubmZFaFQ1?=
+ =?utf-8?B?UkJzRkVReCtMaE5nTjljREMvN0t2dWV5ZDFvRzEwVDhObTNnMTVGcmNQRmw2?=
+ =?utf-8?B?ekNrVm84VmNJNTBuYmMweDhTaXBlZXl5SEdDTEIybHNHcklSOHorOUc5Q292?=
+ =?utf-8?B?bG1Ja2IwQWRUNmZzNDNPMUNzSlAvcjlKWHZEZW0vcnhPQnNrcnR2OHozK3U0?=
+ =?utf-8?B?TkFxQ2ZsbktmZGdPbVJaQUJXQkhOMENJaFBRWC9YUkJUdi8wL2lLZUNIK1Rs?=
+ =?utf-8?B?a0lKdmRFVjdzTGUvcHdXbWhlNjg0THVQcGFEL2pHcGNJeCtRWGttZEl6RVZT?=
+ =?utf-8?B?K0RnTGl6dHRkaW91cThiZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NElWTnNEY0xmdEg3TUNjWEpsWFJDeVNPdllEbDV4azRrMVVtWXJXWDNnWkFY?=
+ =?utf-8?B?T3pOT2NkN2UwVXRnRG5wd0pQQVdQM3pDSlBYTzZReFFuUEhpemxMdVBiSTNZ?=
+ =?utf-8?B?MEdHTi8yRFhiS3FmUHpoT21RM2NaNlpyQXNGZUhMZEgvLzRKakFWNWtUY1g4?=
+ =?utf-8?B?UUpZb283YVU0N2NKYURPWXBhUUszQk50eDhhS2ZQNk5TQzFESmpjSWxzbzN1?=
+ =?utf-8?B?S2JQajR5NTZlMkVabkdkSittRGp4TlBzaVRZVFVTL01kOTREY2VLVkNhMEcw?=
+ =?utf-8?B?dFpXNTV1Qk94L1RrVmtOUlVWZ2RhQ3JncGdQTmR4eGFVbWR3azVnMGl0cEpa?=
+ =?utf-8?B?bDNhekpLb3pud2tIREd0ZHdZVlFqV0t6UW1rU1J3RUlNQWN0L0FYMlhlWkVT?=
+ =?utf-8?B?cWw3eFd4QThzZTRBK3dZTXZJY29pUitTU3E1T0dsenN3YnBsUzUra1lrYkw5?=
+ =?utf-8?B?RFVnUXdNRFpJNisyWFk1aWRIbmd6TFBqM1d0Q09sK214UFhNOEIyS01GbXNY?=
+ =?utf-8?B?cDMzYU01Y0luS2JURHR1dWpwQ2VRdkdRa1V2dVpvM1daWmxJZDlZSEUzdFBO?=
+ =?utf-8?B?Z3FJc043V0FPYTBHRFpXNjIxRSsrTlB3MWZ6cXMxZ2tZRDhCMVEwYm1iNUJm?=
+ =?utf-8?B?RzFtN2JtUUVTMWYwMS9XdFdpemRGemJvRnYxUmhiWnVaNWtRMXZ1Nk9WeDhM?=
+ =?utf-8?B?eU42R3JxUUpicTdtTWthcjFFWUpiczB1Z2I1aHlxUlVHVU5wb2FUWFhPZG44?=
+ =?utf-8?B?ZHExMlIyV2N5TG1VRnFNLzFzUE8yV3dTMzJTSmhkamZ0TjFpN2pYeHlXd3ps?=
+ =?utf-8?B?Mkx5Yy9kL2Q5Y0N3VmY4aWJnZTdwV3B4NWdzQWVlUUZiUmlSUldRRmZKcThy?=
+ =?utf-8?B?QnFqcHJEYUxMYWt2TldDMnZnUjVmRUZ0dmdzYU1sZFB0dzduSG45QzdsWmIy?=
+ =?utf-8?B?MTJSZW02VHhILzZnRWQwSnNEYkNQNnBWMzlxbkFJdXVSaC9kajJqYnFIRTdZ?=
+ =?utf-8?B?ZzVsNlp2ZDVBQThzQUZ3b0xEK2x5TGpkY3dNOE4rRGhvcVdMMlZ0b0kvM2Qy?=
+ =?utf-8?B?NUJHNmgxeEFEa2NQWmhMdlkvQVArdUZQTEcxajIreWMwbjlld3dwZTBUYzUw?=
+ =?utf-8?B?dG4yTjZRYUFTNSttZDFGSGJQeTI4Sk52UU1GejY4SVE5VEpmaS9GR3QrUXdm?=
+ =?utf-8?B?cDkzNHNENzBFYmgwUkQvVmk4dGYxUm1ISGx1L2ViQ25ZNW5XcUI5OVJRYnI5?=
+ =?utf-8?B?TDJZejdkNzh4NHBXYnRQSVBma0ozM1dQbXQxOEhyYWNlSHZrY0NXajc1Tndh?=
+ =?utf-8?B?Z0dNOWYzVDE2a1R5N2MzV2tOVDdoR05sbkZHTGtVVENtWnduZlpvNGFWT3ox?=
+ =?utf-8?B?VEJCMHBwUnU0bUJUcnhucWQ4ZjBTOFl1czlGTVhjR05CUU5iL2lyUDMvODJ6?=
+ =?utf-8?B?RG5jZVdLZHRpckpGM3NFaWY3NHE3dGJBMHJjWDlGYVN2Wnk0U0FVS2x0VGg2?=
+ =?utf-8?B?QkhXTSthMU5VNExkRXViRHB6aWduV1p4akRFMlZwVnc5QzdtS1hMSys2alBV?=
+ =?utf-8?B?dlAwNGV1VlQ2SS8rNFFVbWxWelc1ZEo3TTJNTFVMY1REWlpEVTMvZUxlNmNw?=
+ =?utf-8?B?OStESUlJOW1pK0liUEtIcUNRVU9ibmlObjVaVW5XTHVXamFUaGJ0emVTVVJH?=
+ =?utf-8?B?eU1DRjJvNGdSVDJXV0hCeU5SNVZxNEZ3cEVjZWVOR20wUGhRVEkxQm5mejdN?=
+ =?utf-8?B?SVpPaytJdkFkdjhxVkZXdU9mdko1d1NpMCttdTRwRXVxNllweEhjN3FsNTgv?=
+ =?utf-8?B?Nkl3RDRYNTNWTHlDL2s5bFNmVHIxbjNuQ2gvYUxLUkpZNmh2U21wa0pvSGxK?=
+ =?utf-8?B?ZVRQa3htLzVoYWpoay95NUdoVVRyd2dEOGd3TnR5WHdOOC93eVk3dTRSOXR6?=
+ =?utf-8?B?NmlxTnJEMHFpK3htdHVNTUt2Nlh3M0lyYUFhRXdGa2xQZU5ieklHQ2NJaVV1?=
+ =?utf-8?B?T014MjJ6Vmk1YnQ5bEcvdHI5MXlsQ2N2VFJwdWEzZ2o2MGg0NHBKR3l0UWdE?=
+ =?utf-8?B?M2o5RWhqbUdrNS85ZGpGN2ZERll2clNIenZBc00xcFgzR0pSRi9aUm0xdWxo?=
+ =?utf-8?Q?gK4k=3D?=
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97aa111a-74c3-4ebb-8e1f-08dcd4090c01
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2024 15:30:50.2020
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BQs+sWuv1/Rsi/6S2iRyLFIjfYASKPblhCnaSvWT/vRM1PC4jUPkDrkeT06Ty28v
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR15MB6660
+X-Proofpoint-ORIG-GUID: SuwVA-1tEtNygELp76Sm1Wsu3rpHo5Ar
+X-Proofpoint-GUID: SuwVA-1tEtNygELp76Sm1Wsu3rpHo5Ar
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
 
-On Fri, Sep 13, 2024 at 11:21:11AM +0200, Jaroslav Pulchart wrote:
-> So far:
+
+
+On 9/12/24 6:25 PM, Linus Torvalds wrote:
+> On Thu, 12 Sept 2024 at 15:12, Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> When I saw Christian's report, I seemed to recall that we ran into this
+>> at Meta too. And we did, and hence have been reverting it since our 5.19
+>> release (and hence 6.4, 6.9, and 6.11 next). We should not be shipping
+>> things that are known broken.
 > 
-> 1/ I was able to "do a reproducer" and hit the "random memory
-> corruption" issue with vanila 6.10.10 in our setup in ~28m of uptime
-> see attached 6.10.10-1.gdc.el9.x86_64.log.
-> 2/ I reverted these commits
-> "virtio_net: rx remove premapped failover code":
-> defd28aa5acb0fd7c15adc6bc40a8ac277d04dea
-> "virtio_net: big mode skip the unmap check":
-> a377ae542d8d0a20a3173da3bbba72e045bea7a9
-> "virtio_ring: enable premapped mode whatever use_dma_api":
-> f9dac92ba9081062a6477ee015bd3b8c5914efc4
-> in our next build and so far the environment is stable and not
-> crashing under same conditions like the previous crash.
+> I do think that if we have big sites just reverting it as known broken
+> and can't figure out why, we should do so upstream too.
 
+I've mentioned this in the past to both Willy and Dave Chinner, but so
+far all of my attempts to reproduce it on purpose have failed.  It's
+awkward because I don't like to send bug reports that I haven't
+reproduced on a non-facebook kernel, but I'm pretty confident this bug
+isn't specific to us.
 
-Automated backport failed:
+I'll double down on repros again during plumbers and hopefully come up
+with a recipe for explosions.  On other important datapoint is that we
+also enable huge folios via tmpfs mount -o huge=within_size.
 
-http://lore.kernel.org/all/2024091336-family-daffodil-541d@gregkh
+That hasn't hit problems, and we've been doing it for years, but of
+course the tmpfs usage is pretty different from iomap/xfs.
 
-Since you have done the revert, and actually tested it, feel free
-to post, I will ack.
+We have two workloads that have reliably seen large folios bugs in prod.
+ This is all on bare metal systems, some are two socket, some single,
+nothing really exotic.
 
+1) On 5.19 kernels, knfsd reading and writing to XFS.  We needed
+O(hundreds) of knfsd servers running for about 8 hours to see one hit.
 
+The issue looked similar to Christian Theune's rcu stalls, but since it
+was just one CPU spinning away, I was able to perf probe and drgn my way
+to some details.  The xarray for the file had a series of large folios:
 
+[ index 0 large folio from the correct file ]
+[ index 1: large folio from the correct file ]
+...
+[ index N: large folio from a completely different file ]
+[ index N+1: large folio from the correct file ]
 
-> 
-> pá 13. 9. 2024 v 10:51 odesílatel Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> napsal:
-> >
-> > On 13.09.24 10:42, Xuan Zhuo wrote:
-> > > On Fri, 13 Sep 2024 10:26:57 +0200, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
-> > >> [CCing a few people that know more about this stuff than I do]
-> > >>
-> > >> On 13.09.24 09:50, Jaroslav Pulchart wrote:
-> > >>>
-> > >>> actually I'm getting random memory corruption related crashes after
-> > >>> updating to 6.10.y. My expectation is that it relates to this issue:
-> > >>> https://bugzilla.kernel.org/show_bug.cgi?id=219154
-> > >>> It looks like it is almost 1 month ago
-> > >>
-> > >> A lot of developer ignore bugzilla.
-> > >>
-> > >>> already from the last comment
-> > >>> there, However the patches fixing the regression are not reverted from
-> > >>> the 6.10.y tree which surprises me.
-> > >>>
-> > >>> I will try to revert them from our builds and see if it helps to avoid
-> > >>> random daily happening crashes.
-> > >>
-> > >> Not my area of expertise, but to me it sounds like the problem will be
-> > >> resolved my "Revert "virtio_net: rx enable premapped mode by default"":
-> > >> https://lore.kernel.org/all/20240820071913.68004-1-xuanzhuo@linux.alibaba.com/
-> > >
-> > > YES. That is merged into net.
-> >
-> > Well, yes, but TWIMC to avoid confusion, it's already one step further,
-> > as mentioned:
-> >
-> > >> That set just landed in mainline.
-> >
-> > See
-> > https://git.kernel.org/torvalds/c/48aa361c5db0b380c2b75c24984c0d3e7c1e8c09
-> > or
-> > https://git.kernel.org/torvalds/c/111fc9f517cb293c4213673733b980123c3b0209
-> >
-> > Ciao, Thorsten
-> 
-> 
-> 
-> -- 
-> Jaroslav Pulchart
-> Sr. Principal SW Engineer
-> GoodData
+I'm being sloppy with index numbers, but the important part is that
+we've got a large folio from the wrong file in the middle of the bunch.
 
-> [ 2224.743780] Oops: stack segment: 0000 [#1] PREEMPT SMP NOPTI
-> [ 2224.744605] CPU: 1 PID: 52 Comm: kswapd0 Tainted: G            E      6.10.10-1.gdc.el9.x86_64 #1
-> [ 2224.745375] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20240524-1.el9 05/24/2024
-> [ 2224.746094] RIP: 0010:refill_obj_stock+0x40/0x170
-> [ 2224.746629] Code: 5c fa 65 48 8b 05 c8 c4 bd 77 4c 8d b8 60 12 03 00 49 8b 47 10 48 39 f8 74 5d 4c 89 ff e8 78 ed ff ff 49 89 c6 e8 f0 34 d7 ff <48> 8b 45 00 a8 03 0f 85 ca 00 00 00 65 48 ff 00 e8 ab 74 d7 ff 49
-> [ 2224.748241] RSP: 0018:ffffa5024010ce10 EFLAGS: 00010002
-> [ 2224.748803] RAX: 0000000000000002 RBX: 00000000000000c8 RCX: 00002d82d4038240
-> [ 2224.749449] RDX: ffff977b00aa9a00 RSI: 0000000000000001 RDI: ffff977b00aa9a00
-> [ 2224.750082] RBP: a91ef76620614d85 R08: 0000000000000001 R09: ffffffff881b9077
-> [ 2224.750720] R10: 0000000000040000 R11: 0000000000000000 R12: 0000000000000282
-> [ 2224.751359] R13: ffff977b00235c00 R14: ffff977baa14e280 R15: ffff977f6bd31260
-> [ 2224.752183] FS:  0000000000000000(0000) GS:ffff977f6bd00000(0000) knlGS:0000000000000000
-> [ 2224.752952] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2224.753593] CR2: 00007f2d7e5dc000 CR3: 0000000222340005 CR4: 0000000000770ef0
-> [ 2224.754271] PKRU: 55555554
-> [ 2224.754697] Call Trace:
-> [ 2224.755112]  <IRQ>
-> [ 2224.755509]  ? die+0x33/0x90
-> [ 2224.755949]  ? do_trap+0xd9/0x100
-> [ 2224.756418]  ? do_error_trap+0x65/0x80
-> [ 2224.756903]  ? exc_stack_segment+0x35/0x50
-> [ 2224.757417]  ? asm_exc_stack_segment+0x22/0x30
-> [ 2224.757999]  ? rcu_do_batch+0x1a7/0x530
-> [ 2224.758549]  ? refill_obj_stock+0x40/0x170
-> [ 2224.759125]  __memcg_slab_free_hook+0xb0/0x140
-> [ 2224.759723]  kmem_cache_free+0x3b2/0x3e0
-> [ 2224.760292]  ? rcu_do_batch+0x1a7/0x530
-> [ 2224.760845]  rcu_do_batch+0x1a7/0x530
-> [ 2224.761399]  ? rcu_do_batch+0x13b/0x530
-> [ 2224.761950]  rcu_core+0x256/0x420
-> [ 2224.762475]  ? ktime_get+0x34/0xc0
-> [ 2224.763010]  handle_softirqs+0xd3/0x2b0
-> [ 2224.763573]  __irq_exit_rcu+0x9b/0xc0
-> [ 2224.764118]  sysvec_apic_timer_interrupt+0x71/0x90
-> [ 2224.764738]  </IRQ>
-> [ 2224.765159]  <TASK>
-> [ 2224.765594]  asm_sysvec_apic_timer_interrupt+0x16/0x20
-> [ 2224.766163] RIP: 0010:mem_cgroup_from_slab_obj+0x51/0x130
-> [ 2224.766750] Code: 01 c8 48 8b 35 58 9d 28 01 48 c1 e8 0c 48 c1 e0 06 48 01 f0 48 8b 78 08 48 89 c1 40 f6 c7 01 0f 85 cd 00 00 00 66 90 8b 41 30 <25> 00 10 00 f0 3d 00 00 00 f0 74 45 48 8b 51 38 f6 c2 01 75 15 48
-> [ 2224.768355] RSP: 0018:ffffa502403cfa70 EFLAGS: 00000202
-> [ 2224.768994] RAX: 00000000ffffefff RBX: ffff977b9fbb7000 RCX: ffffc69214c0b500
-> [ 2224.769747] RDX: ffff977f302d6a40 RSI: ffffc69200000000 RDI: ffffc69214c0b501
-> [ 2224.770504] RBP: ffff977f302d6a40 R08: ffff977f300e58c8 R09: ffff977f300e58c8
-> [ 2224.771246] R10: 0000000000000000 R11: ffffa502403cf900 R12: ffff977b9fbb7498
-> [ 2224.771974] R13: 0000000000000000 R14: ffff977b9fbb7070 R15: 0000000000000000
-> [ 2224.772678]  list_lru_add_obj+0x6b/0xa0
-> [ 2224.773158]  iput+0x1f1/0x210
-> [ 2224.773596]  __dentry_kill+0x71/0x170
-> [ 2224.774055]  shrink_dentry_list+0x67/0xe0
-> [ 2224.774542]  prune_dcache_sb+0x54/0x80
-> [ 2224.774996]  super_cache_scan+0x120/0x1c0
-> [ 2224.775470]  do_shrink_slab+0x134/0x350
-> [ 2224.775916]  shrink_slab_memcg+0x199/0x2c0
-> [ 2224.776387]  shrink_one+0x118/0x1b0
-> [ 2224.776845]  shrink_many+0x127/0x2a0
-> [ 2224.777314]  shrink_node+0x3d7/0x430
-> [ 2224.777765]  ? pick_next_task+0x5a/0xae0
-> [ 2224.778250]  balance_pgdat+0x29c/0x730
-> [ 2224.778704]  ? __try_to_del_timer_sync+0x62/0xa0
-> [ 2224.779227]  ? __pfx_kswapd+0x10/0x10
-> [ 2224.779674]  kswapd+0xf7/0x180
-> [ 2224.780082]  kthread+0xcc/0x100
-> [ 2224.780483]  ? __pfx_kthread+0x10/0x10
-> [ 2224.780887]  ret_from_fork+0x2d/0x50
-> [ 2224.781297]  ? __pfx_kthread+0x10/0x10
-> [ 2224.781703]  ret_from_fork_asm+0x1a/0x30
-> [ 2224.782118]  </TASK>
-> [ 2224.782451] Modules linked in: udp_diag(E) tcp_diag(E) inet_diag(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) binfmt_misc(E) zram(E) tls(E) isofs(E) intel_rapl_msr(E) intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E) virtio_gpu(E) virtio_net(E) i2c_i801(E) i2c_smbus(E) net_failover(E) failover(E) dimlib(E) virtio_dma_buf(E) virtio_balloon(E) vfat(E) fat(E) fuse(E) ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E) libata(E) crct10dif_pclmul(E) crc32_pclmul(E) polyval_clmulni(E) polyval_generic(E) ghash_clmulni_intel(E) sha512_ssse3(E) virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E) raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E) dm_region_hash(E) dm_log(E) dm_mod(E)
-> [ 2224.782487] Unloaded tainted modules: amd_atl(E):2 edac_mce_amd(E):1 padlock_aes(E):3
-> [ 2224.787698] ---[ end trace 0000000000000000 ]---
-> [ 2224.788286] RIP: 0010:refill_obj_stock+0x40/0x170
-> [ 2224.788860] Code: 5c fa 65 48 8b 05 c8 c4 bd 77 4c 8d b8 60 12 03 00 49 8b 47 10 48 39 f8 74 5d 4c 89 ff e8 78 ed ff ff 49 89 c6 e8 f0 34 d7 ff <48> 8b 45 00 a8 03 0f 85 ca 00 00 00 65 48 ff 00 e8 ab 74 d7 ff 49
-> [ 2224.790600] RSP: 0018:ffffa5024010ce10 EFLAGS: 00010002
-> [ 2224.791230] RAX: 0000000000000002 RBX: 00000000000000c8 RCX: 00002d82d4038240
-> [ 2224.791924] RDX: ffff977b00aa9a00 RSI: 0000000000000001 RDI: ffff977b00aa9a00
-> [ 2224.792610] RBP: a91ef76620614d85 R08: 0000000000000001 R09: ffffffff881b9077
-> [ 2224.793303] R10: 0000000000040000 R11: 0000000000000000 R12: 0000000000000282
-> [ 2224.793985] R13: ffff977b00235c00 R14: ffff977baa14e280 R15: ffff977f6bd31260
-> [ 2224.794681] FS:  0000000000000000(0000) GS:ffff977f6bd00000(0000) knlGS:0000000000000000
-> [ 2224.795439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2224.796117] CR2: 00007f2d7e5dc000 CR3: 0000000222340005 CR4: 0000000000770ef0
-> [ 2224.796887] PKRU: 55555554
-> [ 2224.797384] Kernel panic - not syncing: Fatal exception in interrupt
-> [ 2224.798304] Kernel Offset: 0x7000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [ 2224.799190] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-> 
+filemap_read() iterates over batches of folios from the xarray, but if
+one of the folios in the batch has folio->offset out of order with the
+rest, the whole thing turns into a infinite loop.  It's not really a
+filemap_read() bug, the batch coming back from the xarray is just incorrect.
 
+2) On 6.9 kernels, we saw a BUG_ON() during inode eviction because
+mapping->nrpages was non-zero.  I'm assuming it's really just a
+different window into the same bug.  Crash dump analysis was less
+conclusive because the xarray itself was always empty, but turning off
+large folios made the problem go away.
+
+This happened ~5-10 times a day, and the service had a few thousand
+machines running 6.9.  If I can't make an artificial repro, I'll try and
+talk the service owners into setting up a production shadow to hammer on
+it with additional debugging.
+
+We also disabled large folios for our 6.4 kernel, but Stefan actually
+tracked that bug down:
+
+commit a48d5bdc877b85201e42cef9c2fdf5378164c23a
+Author: Stefan Roesch <shr@devkernel.io>
+Date:   Mon Nov 6 10:19:18 2023 -0800
+
+    mm: fix for negative counter: nr_file_hugepages
+
+We didn't have time to revalidate with large folios back on afterwards.
+
+-chris
