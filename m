@@ -1,95 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612FA1E884;
-	Fri, 13 Sep 2024 21:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D402F860;
+	Fri, 13 Sep 2024 22:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726263024; cv=none; b=AAWdUFMEusM3pAbz0/s2oUD60s6BvXY3/83IbF6ZOwZsd3X1tDr0YGLYGE0epf/AZtzGx3BDxEZmrI+RY5hMu0Jm88LzFj8ekUIqcDb9ru+z7vP/AFA81nggUp62NJMbjmMJYGGlcX87wNr32wZirEeECngchzPJbsqalvRpNzM=
+	t=1726265193; cv=none; b=LN2JIbTVgsB+6Xn0kWifHVvMEOr+ms3OjBnETz0CKD3/dcR6eeXkswJxJYjv25uX1vzYNsQ2fY+Xflmn7wtAeKV/C6gSU9bWD0QyyNcsdsyZgKbY3NGBXdHgj6cJhCJgDcMDr+7WQMMnDm7IRDu2UEIlfwUFvytRFXrdLf75FcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726263024; c=relaxed/simple;
-	bh=+k6ZxvwrVNCbKN2u3wk5AlFx1/04DtTREo4MFxRD448=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0t5BiLvVVwzTdYSPxpQzpxCuxd2h0IWS5g+/2m8OHagdxqtoD+44xLsPXNSXiUFtFefq/4PenKisX/ZbBKbFwIX/3feQQ6KuztPtceVVRK0wmyXykwCCXRHcXzZuwWfYwynBaJy1f/tPyVGeyLqhPvfUznxDafoCubjaIBR9g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D2MX1hXV; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1726265193; c=relaxed/simple;
+	bh=OIOoMQzoCgZxzo2kXHIadr8YEc/Wuuwq+XO3aobvV+g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=vBHZhPzdfUszSGcOX9M7qa4C97LSWmwt34r/T9/5OdDZkWzpJ8eNR8gmdvVhY7g/EQztN3t5WBeHHLfGO3yl8elY0ntmL7sw5CixEDgHPEgT1nOBkpqNk78OEx7gLUIwfi+MQ6qv45HCX4tipCLyJqixKmZmkDAkgrPVAzj+3Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzGDzkUi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D2MX1hXV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yZFmPPNNPyPVHwqQRbgbAhRYsxST8nX90G2qtvqpxNQ=; b=D2MX1hXVqxM+b2Tq+Hvw4tocOz
-	DLg4I0ge4lCMRtXGKFXcDCDoqiHz5uV1jey6HcaRGdhqNsDq9kaCOD5GMwYGdJKL8u8nr7RPusfWP
-	eCqHGxooSUSBS+L++H6Yi3XWDxfxioPGIdJLfAENLQC0MQVFfRTUrqaSYUvpEVihXoTDulMulQq2t
-	AljQWD4jAGxQX52sidyhG1KiJU49IgAxxXi3tze/1mhSFUpP5OOOkq+1AkFxkE9jRQuMTf3hPJoY+
-	LEAIYHHmZC4S0va6eJosOkNqz1Tx9qQNupkHhQ8tllOPDy7Knx+PzDsSMEV80kR0i79uQHlx40Gpx
-	+cWxG3ig==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1spDrr-0000000H0er-3mFV;
-	Fri, 13 Sep 2024 21:30:16 +0000
-Date: Fri, 13 Sep 2024 22:30:15 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Chris Mason <clm@meta.com>, Jens Axboe <axboe@kernel.dk>,
-	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Dao <dqminh@cloudflare.com>,
-	Dave Chinner <david@fromorbit.com>, regressions@lists.linux.dev,
-	regressions@leemhuis.info
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-Message-ID: <ZuSu51iMWr3PZ7ZW@casper.infradead.org>
-References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
- <ZuNjNNmrDPVsVK03@casper.infradead.org>
- <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
- <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <d4a1cca4-96b8-4692-81f0-81c512f55ccf@meta.com>
- <ZuRfjGhAtXizA7Hu@casper.infradead.org>
- <b40b2b1c-3ed5-4943-b8d0-316e04cb1dab@meta.com>
- <ZuSBPrN2CbWMlr3f@casper.infradead.org>
- <CAHk-=wh=_n1jfSRw2tyS0w85JpHZvG9wNynOB_141C19=RuJvQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzGDzkUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7C5C4CEC0;
+	Fri, 13 Sep 2024 22:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726265192;
+	bh=OIOoMQzoCgZxzo2kXHIadr8YEc/Wuuwq+XO3aobvV+g=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=WzGDzkUipADF6QvZNhGYsdfqcigisuYp2A/fTb+XXD4d3uUF2gyaeEB5aT0zgSM0J
+	 HizPtwhsaHE+dqutdWdZUdelF75rgs+xcL1kNMDl/QZyuJmXR8CbBFTQPhE5cCelZ1
+	 2SUvRit55lwhuTrRRY7fIyLA5FsVIVuFY4owYhelOzrVyEjOllIMinmGXkOJNetIfY
+	 2lLUfGJ582v6PY+hb2t+s+FtjOA9Ee5OKf2pzPIyY5Ihu97n3KoymPcIRxmhTFHKFE
+	 dtrMHm1CtdjAjhEfNsLsIPhCOh7PxKZsRNz3RtJM8jrzZ/8QgEGNmsDecJRDm7BLBD
+	 GStQn80AcXIbw==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh=_n1jfSRw2tyS0w85JpHZvG9wNynOB_141C19=RuJvQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 14 Sep 2024 01:06:28 +0300
+Message-Id: <D45HXRJ0LTFC.3VVF6QI3NGVXV@kernel.org>
+Subject: Re: [regression] significant delays when secureboot is enabled
+ since 6.10
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>, "Roberto Sassu"
+ <roberto.sassu@huaweicloud.com>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>
+Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Pengyu Ma" <mapengyu@gmail.com>
+X-Mailer: aerc 0.17.0
+References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+ <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
+ <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
+ <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
+ <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
+ <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
+ <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
+ <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
+ <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
+ <D45GBJ51SBNP.1WR34VCVNSN52@iki.fi>
+In-Reply-To: <D45GBJ51SBNP.1WR34VCVNSN52@iki.fi>
 
-On Fri, Sep 13, 2024 at 02:24:02PM -0700, Linus Torvalds wrote:
-> On Fri, 13 Sept 2024 at 11:15, Matthew Wilcox <willy@infradead.org> wrote:
+On Fri Sep 13, 2024 at 11:50 PM EEST, Jarkko Sakkinen wrote:
+> On Thu Sep 12, 2024 at 11:13 AM EEST, Roberto Sassu wrote:
+> > On Wed, 2024-09-11 at 18:14 +0300, Jarkko Sakkinen wrote:
+> > > On Wed Sep 11, 2024 at 11:53 AM EEST, Roberto Sassu wrote:
+> > > > I made few measurements. I have a Fedora 38 VM with TPM passthrough=
+.
+> > >=20
+> > > I was thinking more like
+> > >=20
+> > > sudo bpftrace -e 'k:tpm_transmit { @start[tid] =3D nsecs; } kr:tpm_tr=
+ansmit { @[kstack, ustack, comm] =3D sum(nsecs - @start[tid]); delete(@star=
+t[tid]); } END { clear(@start); }'
+> > >=20
+> > > For example when running "tpm2_createprimary --hierarchy o -G rsa2048=
+ -c owner.txt", I get:
 > >
-> > Oh!  I think split is the key.  Let's say we have an order-6 (or
-> > larger) folio.  And we call split_huge_page() (whatever it's called
-> > in your kernel version).  That calls xas_split_alloc() followed
-> > by xas_split().  xas_split_alloc() puts entry in node->slots[0] and
-> > initialises node->slots[1..XA_CHUNK_SIZE] to a sibling entry.
-> 
-> Hmm. The splitting does seem to be not just indicated by the debug
-> logs, but it ends up being a fairly complicated case. *The* most
-> complicated case of adding a new folio by far, I'd say.
-> 
-> And I wonder if it's even necessary?
+> > Sure:
+>
+> Took couple of days to upgrade my BuildRoot environment to have bcc and
+> bpftrace [1] but finally got similar figures (not the same test but doing
+> extends).
+>
+> Summarizing your results looking at call before tpm_transmit:
+>
+> - HMAC management: 124 ms
+> - extend with HMAC: 25 ms
+> - extend without HMAC: 5.2 ms=20
+>
+> I'd see the only possible way to fix this would be refactor the HMAC
+> implementation by making the caller always the orchestrator and thus
+> allowing to use continueSession flag for TPM2_StartAuthSession to be
+> used.
+>
+> For example if you do multiple extends there should not be good reason
+> to setup and rollback session for each call separately right?
+>
+> [1] https://codeberg.org/jarkko/linux-tpmdd-test
 
-Unfortunately, we need to handle things like "we are truncating a file
-which has a folio which now extends many pages beyond the end of the
-file" and so we have to split the folio which now crosses EOF.  Or we
-could write it back and drop it, but that has its own problems.
+Note that the timings are accumulated (not averaged). It would be easy
+to fix this tho.
 
-Part of the "large block size" patches sitting in Christian's tree is
-solving these problems for folios which can't be split down to order-0,
-so there may be ways we can handle this better now, but if we don't
-split we might end up wasting a lot of memory in file tails.
+BR, Jarkko
 
-> It's possible that I'm entirely missing something, but at least the
-> filemap_add_folio() case looks like it really would actually be
-> happier with a "oh, that size conflicts with an existing entry, let's
-> just allocate a smaller size then"
-
-Pretty sure we already do that; it's mostly handled through the
-readahead path which checks for conflicting folios already in the cache.
