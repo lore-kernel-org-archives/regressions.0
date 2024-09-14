@@ -1,75 +1,292 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AE63D62;
-	Sat, 14 Sep 2024 07:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61671CDA1E;
+	Sat, 14 Sep 2024 10:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726297795; cv=none; b=Rfa0ku2Z37El80E5ON+EOosOZ55SVBqYVUfCQFWd0lubmwajo8gSFeO7nn7gayfMaZW0yZeUHMFn4t36Ad4SJFenRpA54lJEygqYzUeg1MfDthd+ldn9XX0XiL/ml27kDRg8Ln7nNaEd7BXS7ASARplNRSV4kaB+oYx4cbywTRQ=
+	t=1726310542; cv=none; b=DErjJbJIlvesbGeY+rWQPQVQ7r1+0DQDsbX0Str/8T6HhSnniYHXeQ2UzsjU8bIJn5Xc4vCZjAfNKglH53JTGYEPhDzUnaa0/db87M4lXerU2U+BLoU2VZu8i/YO9pSKrrWmUHpAWPXJ2UcK3eKI39rAuGIj+RR072vUDKnUJCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726297795; c=relaxed/simple;
-	bh=jFC0cHMwcLTSAMH6eRj34U0dZYRZF81EyCtQTqYQKVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bym9zTMFzH8ETCxmyfez07DpS001H5xsXgJxh+h37QSWbUoQvHv6xbCGXMn4+u1gELbJy+a3jT1SfRzkuInSJuDkl4pFHYgy3td0GBPOMJRyUMu62a1EAzDL3Ppxbx+0T0pZhrIoloyttvo120VVZVHAXGCKxD378TiH1WewC7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T+JTaSxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726310542; c=relaxed/simple;
+	bh=aWMHIiSHiMRxPm0F/dSWHOU3B9Te3WROyoHtHtUHIA8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Deqgq9cd39s0N7yRckuORMMHGD37zhF0QTN6Q2EzoDVzBg4886KKCfrf8UmkzdZm6xM07hjQh4NZ4nwT+EtIVetjWuZkdvzlsxO3/B2GFX5FhHd2/W7cwkIe8RweUK8sQCjGADP7MpuxrUov09fG7sTaMQrdosiTmxzDL8x3Sdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sd6HR18M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T+JTaSxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360CEC4CEC0;
-	Sat, 14 Sep 2024 07:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1726297794;
-	bh=jFC0cHMwcLTSAMH6eRj34U0dZYRZF81EyCtQTqYQKVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T+JTaSxZfebUJ6wOe14pqhtfnt1iiiAkeSKihdwn+M11cYhjFDisL3+M2tEgiSkU+
-	 SeY4wCVsAZT3HX6ZXh4ntdr7CCt/GMg1G2O7BMaM4gb0H6i8mNtdi3XNAQhYyqqjeu
-	 BUqF71EA4xyyKujg9enkhQ4GAJmFULNiAaV4jQxo=
-Date: Sat, 14 Sep 2024 09:09:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Sasha Levin <sashal@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Bug 219269 - v6.10.10 kernel fails to build when CONFIG_MODULES
- is disabled
-Message-ID: <2024091428-unison-relocate-4c2b@gregkh>
-References: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sd6HR18M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6126C4CEC0;
+	Sat, 14 Sep 2024 10:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726310542;
+	bh=aWMHIiSHiMRxPm0F/dSWHOU3B9Te3WROyoHtHtUHIA8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=sd6HR18MNpAp99VPF6PDngPx3Wo4xHueOBZFNVpFtq06CiriLkvzDDDPovjsjUqwP
+	 gTbrW0OW92VP5zzeY5jui+HVkSVR6ZkDNUHTgpOF25tL5g2YzxJeog/Wh1HjFBUnQW
+	 AAZxNWxMTm2RLkChUrIpfJBztJ1L3NxrBudc2/mEcnPEF+nz4outlHlI5y9nUsy1sg
+	 qs6A2nnlO6nMvXh+8X5/gTU9QhxbombTCWqjEzArXJPAwZ9LDnJ5RL6yVn5wNWt5UN
+	 dADf8GtvssnrQ5rls9Dovbm0fsY44QJ6PchJPvkOay3eue2TmbGyevy34A5sFtA3by
+	 gGdbK1TO8CWkw==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 14 Sep 2024 13:42:18 +0300
+Message-Id: <D45Y0H3JRIJE.3LIRI1PEDTJE3@kernel.org>
+Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Pengyu Ma" <mapengyu@gmail.com>
+Subject: Re: [regression] significant delays when secureboot is enabled
+ since 6.10
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Roberto
+ Sassu" <roberto.sassu@huaweicloud.com>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>
+X-Mailer: aerc 0.18.2
+References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+ <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
+ <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
+ <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
+ <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
+ <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
+ <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
+ <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
+In-Reply-To: <10ae7b8592af7bacef87e493e6d628a027641b8d.camel@HansenPartnership.com>
 
-On Sat, Sep 14, 2024 at 07:02:26AM +0200, Thorsten Leemhuis wrote:
-> Hi Greg! I noticed a bug report in bz:
-> https://bugzilla.kernel.org/show_bug.cgi?id=219269
-> 
-> > Fair enough, you get a compiler warning:
-> > 
-> > kernel/trace/trace_kprobe.c: In function ‘validate_probe_symbol’:
-> > kernel/trace/trace_kprobe.c:810:23: error: implicit declaration of function ‘find_module’; did you mean init_module’? [-Wimplicit-function-declaration]
-> >   810 |                 mod = find_module(modname);
-> >       |                       ^~~~~~~~~~~
-> >       |                       init_module
-> > kernel/trace/trace_kprobe.c:810:21: error: assignment to ‘struct module *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
-> >   810 |                 mod = find_module(modname);
-> >       |    
-> > 
-> > but there is no find_module symbol when CONFIG_MODULES is disabled.
-> 
-> I *very briefly* looked into this. I might be wrong, but looked a bit
-> like "tracing/kprobes: Add symbol counting check when module loads"
-> caused this and backporting b10545b6b86b7a ("tracing/kprobes: Fix build
-> error when find_module() is not available") [v6.11-rc1] would fix this
-> (which applies cleanly).
-> 
-> Shall I ask the reporter to confirm or is that already enough for you?
+On Wed Sep 11, 2024 at 3:21 PM EEST, James Bottomley wrote:
+> On Wed, 2024-09-11 at 10:53 +0200, Roberto Sassu wrote:
+> > On Tue, 2024-09-10 at 16:28 +0300, Jarkko Sakkinen wrote:
+> > > On Tue Sep 10, 2024 at 3:57 PM EEST, James Bottomley wrote:
+> > > > On Tue, 2024-09-10 at 15:48 +0300, Jarkko Sakkinen wrote:
+> > > > > On Tue Sep 10, 2024 at 3:39 PM EEST, Jarkko Sakkinen wrote:
+> > > > > > On Tue Sep 10, 2024 at 12:05 PM EEST, Roberto Sassu wrote:
+> > > > > > > On Tue, 2024-09-10 at 11:01 +0200, Linux regression
+> > > > > > > tracking
+> > > > > > > (Thorsten
+> > > > > > > Leemhuis) wrote:
+> > > > > > > > Hi, Thorsten here, the Linux kernel's regression tracker.
+> > > > > > > >=20
+> > > > > > > > James, Jarkoo, I noticed a report about a regression in
+> > > > > > > > bugzilla.kernel.org that appears to be caused by this
+> > > > > > > > change of
+> > > > > > > > yours:
+> > > > > > > >=20
+> > > > > > > > 6519fea6fd372b ("tpm: add hmac checks to
+> > > > > > > > tpm2_pcr_extend()")
+> > > > > > > > [v6.10-rc1]
+> > > > > > > >=20
+> > > > > > > > As many (most?) kernel developers don't keep an eye on
+> > > > > > > > the bug
+> > > > > > > > tracker,
+> > > > > > > > I decided to forward it by mail. To quote from
+> > > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219229=C2=A0:
+> > > > > > > >=20
+> > > > > > > > > When secureboot is enabled,
+> > > > > > > > > the kernel boot time is ~20 seconds after 6.10 kernel.
+> > > > > > > > > it's ~7 seconds on 6.8 kernel version.
+> > > > > > > > >=20
+> > > > > > > > > When secureboot is disabled,
+> > > > > > > > > the boot time is ~7 seconds too.
+> > > > > > > > >=20
+> > > > > > > > > Reproduced on both AMD and Intel platform on ThinkPad
+> > > > > > > > > X1 and
+> > > > > > > > > T14.
+> > > > > > > > >=20
+> > > > > > > > > It probably caused autologin failure and micmute led
+> > > > > > > > > not
+> > > > > > > > > loaded on AMD platform.
+> > > > > > > >=20
+> > > > > > > > It was later bisected to the change mentioned above. See
+> > > > > > > > the
+> > > > > > > > ticket for
+> > > > > > > > more details.
+> > > > > > >=20
+> > > > > > > Hi
+> > > > > > >=20
+> > > > > > > I suspect I encountered the same problem:
+> > > > > > >=20
+> > > > > > > https://lore.kernel.org/linux-integrity/b8a7b3566e6014ba102ab=
+98e10ede0d574d8930e.camel@huaweicloud.com/
+> > > > > > >=20
+> > > > > > > Going to provide more info there.
+> > > > > >=20
+> > > > > > I suppose you are going try to acquire the tracing data I
+> > > > > > asked?
+> > > > > > That would be awesome, thanks for taking the troube.=C2=A0 Let'=
+s
+> > > > > > look
+> > > > > > at the data and draw conclusions based on that.
+> > > > > >=20
+> > > > > > Workaround is pretty simple: CONFIG_TCG_TPM2_HMAC=3Dn to the
+> > > > > > kernel
+> > > > > > configuration disables the feature.
+> > > > > >=20
+> > > > > > For making decisions what to do with the=C2=A0 we are talking
+> > > > > > about ~2
+> > > > > > week window estimated, given the Vienna conference slows
+> > > > > > things
+> > > > > > down, so I hope my workaround is good enough before that.
+> > > > >=20
+> > > > > I can enumerate three most likely ways to address the issue:
+> > > > >=20
+> > > > > 1. Strongest: drop from defconfig.
+> > > > > 2. Medium: leave to defconfig but add an opt-in kernel command-
+> > > > > line
+> > > > > =C2=A0=C2=A0 parameter.
+> > > > > 3. Lightest: if we can based on tracing data nail the
+> > > > > regression in
+> > > > > =C2=A0=C2=A0 sustainable schedule, fix it.
+> > > >=20
+> > > > Actually, there's a fourth: not use sessions for the PCR extend
+> > > > (if
+> > > > we'd got the timings when I asked, this was going to be my
+> > > > suggestion
+> > > > if they came back problematic).=C2=A0 This seems only to be a probl=
+em
+> > > > for
+> > > > IMA measured boot (because it does lots of extends).=C2=A0 If
+> > > > necessary this
+> > > > could even be wrapped in a separate config or boot option that
+> > > > only
+> > > > disables HMAC on extend if IMA (so we still get security for
+> > > > things
+> > > > like sd-boot)
+> > >=20
+> > > I can buy that but with a twist that make it an opt-in kernel
+> > > command
+> > > line option. We don't want to take already existing functionality
+> > > away
+> > > from those who might want to use it (given e.g. hardening
+> > > requirements),
+> > > and with that basis opt-in (by default disabled) would be more
+> > > balanced
+> > > way to address the issue.
+> > >=20
+> > > Please do a send a patch!
+> >=20
+> > I made few measurements. I have a Fedora 38 VM with TPM passthrough.
+> >=20
+> > Kernels: 6.11-rc2+ (guest), 6.5.0-45-generic (host)
+> >=20
+> > QEMU:
+> >=20
+> > rc=C2=A0 qemu-kvm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1:4.2-
+> > 3ubuntu6.27
+> > ii=C2=A0 qemu-system-x86=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1:6.2+dfsg-
+> > 2ubuntu6.22
+> >=20
+> >=20
+> > TPM2_PT_MANUFACTURER:
+> > =C2=A0 raw: 0x49465800
+> > =C2=A0 value: "IFX"
+> > TPM2_PT_VENDOR_STRING_1:
+> > =C2=A0 raw: 0x534C4239
+> > =C2=A0 value: "SLB9"
+> > TPM2_PT_VENDOR_STRING_2:
+> > =C2=A0 raw: 0x36373000
+> > =C2=A0 value: "670"
+> >=20
+> >=20
+> > No HMAC:
+> >=20
+> > # tracer: function_graph
+> > #
+> > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > =C2=A00)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > =C2=A00)=C2=A0=C2=A0 1.112 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_append_hmac_session();
+> > =C2=A00) # 6360.029 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > =C2=A00) # 6415.012 us |=C2=A0 }
+> >=20
+> >=20
+> > HMAC:
+> >=20
+> > # tracer: function_graph
+> > #
+> > # CPU=C2=A0 DURATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FUNCTION CALLS
+> > # |=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |=C2=A0=C2=A0 |
+> > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 tpm2_pcr_extend() {
+> > =C2=A01)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm2_start_auth_session() {
+> > =C2=A01) * 36976.99 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) * 84746.51 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) # 3195.083 us |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd=
+();
+> > =C2=A01) @ 126795.1 us |=C2=A0=C2=A0=C2=A0 }
+> > =C2=A01)=C2=A0=C2=A0 2.254 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_append_hmac_session();
+> > =C2=A01)=C2=A0=C2=A0 3.546 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_fill_hmac_session();
+> > =C2=A01) * 24356.46 us |=C2=A0=C2=A0=C2=A0 tpm_transmit_cmd();
+> > =C2=A01)=C2=A0=C2=A0 3.496 us=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 tpm=
+_buf_check_hmac_response();
+> > =C2=A01) @ 151171.0 us |=C2=A0 }
+>
+> Well, unfortunately, that tells us that it's the TPM itself that's
+> taking the time processing the security overhead.  The ordering of the
+> commands in tpm2_start_auth_session() shows
+>
+>  37ms for context restore of null key
+>  85ms for start session with encrypted salt
+>   3ms to flush null key
+> -----
+> 125ms
+>
+> If we context save the session, we'd likely only bear a single 37ms
+> cost to restore it (replacing the total 125ms).  However, there's
+> nothing we can do about the extend execution going from 6ms to 24ms, so
+> I could halve your current boot time with security enabled (it's
+> currently 149ms, it would go to 61ms, but it's still 10x slower than
+> the unsecured extend at 6ms)
 
-This is enough, now queued up, thanks.
+Please address how this discussion is related to https://bugzilla.kernel.or=
+g/show_bug.cgi?id=3D219229
 
-greg k-h
+I just read the bug report nothing about IMA or PCR extend.
+
+There's now tons of spam about performance issue in a patch set that is
+not in the mainline and barely nothing about the original issue:
+
+"
+When secureboot is enabled,
+the kernel boot time is ~20 seconds after 6.10 kernel.
+it's ~7 seconds on 6.8 kernel version.
+
+When secureboot is disabled,
+the boot time is ~7 seconds too.
+
+Reproduced on both AMD and Intel platform on ThinkPad X1 and T14.
+
+It probably caused autologin failure and micmute led not loaded on AMD plat=
+form.
+
+6.9 kernel version is not tested since not signed kernel found.
+6.8, 6.10, 6.11 are tested, the first bad version is 6.10.
+"
+
+How is this going to help to fix this one?
+
+I say this once and one: I zero care fixing code that is in the
+mainline.
+
+BR, Jarkko
