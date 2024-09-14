@@ -1,78 +1,75 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3BB17BA7;
-	Sat, 14 Sep 2024 05:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AE63D62;
+	Sat, 14 Sep 2024 07:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726290157; cv=none; b=KDKsOM0mGzGnn4M7BHHtGhASfWKjPdVffseQAa3nKqCvke5RO8HCKRxzQZgDVC7BRACm6NPQvjSVNOcDaE1xlR8ix1KoCwHfDXhqZL3IYZ4dC8Zd3FalaqZBFEENfR0PbgqYiA6KyU7bQtv/LyxQEuyZlJkW5eKpPlZgowz3ytk=
+	t=1726297795; cv=none; b=Rfa0ku2Z37El80E5ON+EOosOZ55SVBqYVUfCQFWd0lubmwajo8gSFeO7nn7gayfMaZW0yZeUHMFn4t36Ad4SJFenRpA54lJEygqYzUeg1MfDthd+ldn9XX0XiL/ml27kDRg8Ln7nNaEd7BXS7ASARplNRSV4kaB+oYx4cbywTRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726290157; c=relaxed/simple;
-	bh=SxC01V8/TmXQtXBzz/ZQO3nY/ChKsbJJ5/Wc7rTvnCc=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=lo+uh7To8NIYDp4vR5HZCjAMcRDfqwxKossjPlfY8/i0O30wJzIzy4kRQHTSPfr9GDoju/87VzQBVaoXjV+RFiNdkp26ssBoQ6A89SLNK5uQdZrrt6+CmIKCWTksCXsrKr9Dtv0IUOvHCSRXSjq+rkRQW9v3Tadwz9xFHozvTyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3U5qM59Y; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1726297795; c=relaxed/simple;
+	bh=jFC0cHMwcLTSAMH6eRj34U0dZYRZF81EyCtQTqYQKVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bym9zTMFzH8ETCxmyfez07DpS001H5xsXgJxh+h37QSWbUoQvHv6xbCGXMn4+u1gELbJy+a3jT1SfRzkuInSJuDkl4pFHYgy3td0GBPOMJRyUMu62a1EAzDL3Ppxbx+0T0pZhrIoloyttvo120VVZVHAXGCKxD378TiH1WewC7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T+JTaSxZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3U5qM59Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=OLPaw2HIKIKnEngBpBW8Aq/vfCrhV9yI1WiUx6mDo/Q=; t=1726290155; x=1726722155;
-	 b=3U5qM59YdqngpdJpYbGsu6HQY3/NuwjLmyafNpNb5g2oMcl9zpuZBMewcs2T66Jp2LfyhOrK4M
-	sDhBhsByzQbN88Z6d005NaUdJr9BF/gJ71JIz7l/2U5yYdHUuckBlNjl9ASmJNMceCIiW0J7zSYpo
-	6u0W9TI7aOFa4yWrfkAxG7g2xqWXLIstZbhI/1b/Q9lbraeJMfOItXVMsVWQxxUED++XOygFujnQo
-	uzpGd6JDvUTABSfFwzRDdKbrOLGcWmQ0dPe7vV4172Ny2P4uiilgMqNv3+FNa1ualjAtfyp8UZvil
-	BXxlpsvQ0kC2KUddM2pxJVTE3Y8LYydIUy5tQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1spKvT-0005lu-EJ; Sat, 14 Sep 2024 07:02:27 +0200
-Message-ID: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
-Date: Sat, 14 Sep 2024 07:02:26 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T+JTaSxZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360CEC4CEC0;
+	Sat, 14 Sep 2024 07:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1726297794;
+	bh=jFC0cHMwcLTSAMH6eRj34U0dZYRZF81EyCtQTqYQKVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T+JTaSxZfebUJ6wOe14pqhtfnt1iiiAkeSKihdwn+M11cYhjFDisL3+M2tEgiSkU+
+	 SeY4wCVsAZT3HX6ZXh4ntdr7CCt/GMg1G2O7BMaM4gb0H6i8mNtdi3XNAQhYyqqjeu
+	 BUqF71EA4xyyKujg9enkhQ4GAJmFULNiAaV4jQxo=
+Date: Sat, 14 Sep 2024 09:09:51 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Sasha Levin <sashal@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Bug 219269 - v6.10.10 kernel fails to build when CONFIG_MODULES
+ is disabled
+Message-ID: <2024091428-unison-relocate-4c2b@gregkh>
+References: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Sasha Levin <sashal@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Bug 219269 - v6.10.10 kernel fails to build when CONFIG_MODULES is
- disabled
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726290155;9f318e45;
-X-HE-SMSGID: 1spKvT-0005lu-EJ
+In-Reply-To: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
 
-Hi Greg! I noticed a bug report in bz:
-https://bugzilla.kernel.org/show_bug.cgi?id=219269
-
-> Fair enough, you get a compiler warning:
+On Sat, Sep 14, 2024 at 07:02:26AM +0200, Thorsten Leemhuis wrote:
+> Hi Greg! I noticed a bug report in bz:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219269
 > 
-> kernel/trace/trace_kprobe.c: In function ‘validate_probe_symbol’:
-> kernel/trace/trace_kprobe.c:810:23: error: implicit declaration of function ‘find_module’; did you mean init_module’? [-Wimplicit-function-declaration]
->   810 |                 mod = find_module(modname);
->       |                       ^~~~~~~~~~~
->       |                       init_module
-> kernel/trace/trace_kprobe.c:810:21: error: assignment to ‘struct module *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
->   810 |                 mod = find_module(modname);
->       |    
+> > Fair enough, you get a compiler warning:
+> > 
+> > kernel/trace/trace_kprobe.c: In function ‘validate_probe_symbol’:
+> > kernel/trace/trace_kprobe.c:810:23: error: implicit declaration of function ‘find_module’; did you mean init_module’? [-Wimplicit-function-declaration]
+> >   810 |                 mod = find_module(modname);
+> >       |                       ^~~~~~~~~~~
+> >       |                       init_module
+> > kernel/trace/trace_kprobe.c:810:21: error: assignment to ‘struct module *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+> >   810 |                 mod = find_module(modname);
+> >       |    
+> > 
+> > but there is no find_module symbol when CONFIG_MODULES is disabled.
 > 
-> but there is no find_module symbol when CONFIG_MODULES is disabled.
+> I *very briefly* looked into this. I might be wrong, but looked a bit
+> like "tracing/kprobes: Add symbol counting check when module loads"
+> caused this and backporting b10545b6b86b7a ("tracing/kprobes: Fix build
+> error when find_module() is not available") [v6.11-rc1] would fix this
+> (which applies cleanly).
+> 
+> Shall I ask the reporter to confirm or is that already enough for you?
 
-I *very briefly* looked into this. I might be wrong, but looked a bit
-like "tracing/kprobes: Add symbol counting check when module loads"
-caused this and backporting b10545b6b86b7a ("tracing/kprobes: Fix build
-error when find_module() is not available") [v6.11-rc1] would fix this
-(which applies cleanly).
+This is enough, now queued up, thanks.
 
-Shall I ask the reporter to confirm or is that already enough for you?
-
-Ciao, Thorsten
+greg k-h
