@@ -1,104 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D402F860;
-	Fri, 13 Sep 2024 22:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3BB17BA7;
+	Sat, 14 Sep 2024 05:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726265193; cv=none; b=LN2JIbTVgsB+6Xn0kWifHVvMEOr+ms3OjBnETz0CKD3/dcR6eeXkswJxJYjv25uX1vzYNsQ2fY+Xflmn7wtAeKV/C6gSU9bWD0QyyNcsdsyZgKbY3NGBXdHgj6cJhCJgDcMDr+7WQMMnDm7IRDu2UEIlfwUFvytRFXrdLf75FcY=
+	t=1726290157; cv=none; b=KDKsOM0mGzGnn4M7BHHtGhASfWKjPdVffseQAa3nKqCvke5RO8HCKRxzQZgDVC7BRACm6NPQvjSVNOcDaE1xlR8ix1KoCwHfDXhqZL3IYZ4dC8Zd3FalaqZBFEENfR0PbgqYiA6KyU7bQtv/LyxQEuyZlJkW5eKpPlZgowz3ytk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726265193; c=relaxed/simple;
-	bh=OIOoMQzoCgZxzo2kXHIadr8YEc/Wuuwq+XO3aobvV+g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=vBHZhPzdfUszSGcOX9M7qa4C97LSWmwt34r/T9/5OdDZkWzpJ8eNR8gmdvVhY7g/EQztN3t5WBeHHLfGO3yl8elY0ntmL7sw5CixEDgHPEgT1nOBkpqNk78OEx7gLUIwfi+MQ6qv45HCX4tipCLyJqixKmZmkDAkgrPVAzj+3Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzGDzkUi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726290157; c=relaxed/simple;
+	bh=SxC01V8/TmXQtXBzz/ZQO3nY/ChKsbJJ5/Wc7rTvnCc=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=lo+uh7To8NIYDp4vR5HZCjAMcRDfqwxKossjPlfY8/i0O30wJzIzy4kRQHTSPfr9GDoju/87VzQBVaoXjV+RFiNdkp26ssBoQ6A89SLNK5uQdZrrt6+CmIKCWTksCXsrKr9Dtv0IUOvHCSRXSjq+rkRQW9v3Tadwz9xFHozvTyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3U5qM59Y; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzGDzkUi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7C5C4CEC0;
-	Fri, 13 Sep 2024 22:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726265192;
-	bh=OIOoMQzoCgZxzo2kXHIadr8YEc/Wuuwq+XO3aobvV+g=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=WzGDzkUipADF6QvZNhGYsdfqcigisuYp2A/fTb+XXD4d3uUF2gyaeEB5aT0zgSM0J
-	 HizPtwhsaHE+dqutdWdZUdelF75rgs+xcL1kNMDl/QZyuJmXR8CbBFTQPhE5cCelZ1
-	 2SUvRit55lwhuTrRRY7fIyLA5FsVIVuFY4owYhelOzrVyEjOllIMinmGXkOJNetIfY
-	 2lLUfGJ582v6PY+hb2t+s+FtjOA9Ee5OKf2pzPIyY5Ihu97n3KoymPcIRxmhTFHKFE
-	 dtrMHm1CtdjAjhEfNsLsIPhCOh7PxKZsRNz3RtJM8jrzZ/8QgEGNmsDecJRDm7BLBD
-	 GStQn80AcXIbw==
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3U5qM59Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=OLPaw2HIKIKnEngBpBW8Aq/vfCrhV9yI1WiUx6mDo/Q=; t=1726290155; x=1726722155;
+	 b=3U5qM59YdqngpdJpYbGsu6HQY3/NuwjLmyafNpNb5g2oMcl9zpuZBMewcs2T66Jp2LfyhOrK4M
+	sDhBhsByzQbN88Z6d005NaUdJr9BF/gJ71JIz7l/2U5yYdHUuckBlNjl9ASmJNMceCIiW0J7zSYpo
+	6u0W9TI7aOFa4yWrfkAxG7g2xqWXLIstZbhI/1b/Q9lbraeJMfOItXVMsVWQxxUED++XOygFujnQo
+	uzpGd6JDvUTABSfFwzRDdKbrOLGcWmQ0dPe7vV4172Ny2P4uiilgMqNv3+FNa1ualjAtfyp8UZvil
+	BXxlpsvQ0kC2KUddM2pxJVTE3Y8LYydIUy5tQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1spKvT-0005lu-EJ; Sat, 14 Sep 2024 07:02:27 +0200
+Message-ID: <bd49aa81-338f-4776-8c45-7c79945c0a81@leemhuis.info>
+Date: Sat, 14 Sep 2024 07:02:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Sasha Levin <sashal@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Bug 219269 - v6.10.10 kernel fails to build when CONFIG_MODULES is
+ disabled
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Sep 2024 01:06:28 +0300
-Message-Id: <D45HXRJ0LTFC.3VVF6QI3NGVXV@kernel.org>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>, "Roberto Sassu"
- <roberto.sassu@huaweicloud.com>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
- "Pengyu Ma" <mapengyu@gmail.com>
-X-Mailer: aerc 0.17.0
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
- <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
- <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
- <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
- <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
- <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
- <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
- <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
- <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
- <D45GBJ51SBNP.1WR34VCVNSN52@iki.fi>
-In-Reply-To: <D45GBJ51SBNP.1WR34VCVNSN52@iki.fi>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726290155;9f318e45;
+X-HE-SMSGID: 1spKvT-0005lu-EJ
 
-On Fri Sep 13, 2024 at 11:50 PM EEST, Jarkko Sakkinen wrote:
-> On Thu Sep 12, 2024 at 11:13 AM EEST, Roberto Sassu wrote:
-> > On Wed, 2024-09-11 at 18:14 +0300, Jarkko Sakkinen wrote:
-> > > On Wed Sep 11, 2024 at 11:53 AM EEST, Roberto Sassu wrote:
-> > > > I made few measurements. I have a Fedora 38 VM with TPM passthrough=
-.
-> > >=20
-> > > I was thinking more like
-> > >=20
-> > > sudo bpftrace -e 'k:tpm_transmit { @start[tid] =3D nsecs; } kr:tpm_tr=
-ansmit { @[kstack, ustack, comm] =3D sum(nsecs - @start[tid]); delete(@star=
-t[tid]); } END { clear(@start); }'
-> > >=20
-> > > For example when running "tpm2_createprimary --hierarchy o -G rsa2048=
- -c owner.txt", I get:
-> >
-> > Sure:
->
-> Took couple of days to upgrade my BuildRoot environment to have bcc and
-> bpftrace [1] but finally got similar figures (not the same test but doing
-> extends).
->
-> Summarizing your results looking at call before tpm_transmit:
->
-> - HMAC management: 124 ms
-> - extend with HMAC: 25 ms
-> - extend without HMAC: 5.2 ms=20
->
-> I'd see the only possible way to fix this would be refactor the HMAC
-> implementation by making the caller always the orchestrator and thus
-> allowing to use continueSession flag for TPM2_StartAuthSession to be
-> used.
->
-> For example if you do multiple extends there should not be good reason
-> to setup and rollback session for each call separately right?
->
-> [1] https://codeberg.org/jarkko/linux-tpmdd-test
+Hi Greg! I noticed a bug report in bz:
+https://bugzilla.kernel.org/show_bug.cgi?id=219269
 
-Note that the timings are accumulated (not averaged). It would be easy
-to fix this tho.
+> Fair enough, you get a compiler warning:
+> 
+> kernel/trace/trace_kprobe.c: In function ‘validate_probe_symbol’:
+> kernel/trace/trace_kprobe.c:810:23: error: implicit declaration of function ‘find_module’; did you mean init_module’? [-Wimplicit-function-declaration]
+>   810 |                 mod = find_module(modname);
+>       |                       ^~~~~~~~~~~
+>       |                       init_module
+> kernel/trace/trace_kprobe.c:810:21: error: assignment to ‘struct module *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+>   810 |                 mod = find_module(modname);
+>       |    
+> 
+> but there is no find_module symbol when CONFIG_MODULES is disabled.
 
-BR, Jarkko
+I *very briefly* looked into this. I might be wrong, but looked a bit
+like "tracing/kprobes: Add symbol counting check when module loads"
+caused this and backporting b10545b6b86b7a ("tracing/kprobes: Fix build
+error when find_module() is not available") [v6.11-rc1] would fix this
+(which applies cleanly).
 
+Shall I ask the reporter to confirm or is that already enough for you?
+
+Ciao, Thorsten
