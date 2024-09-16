@@ -1,83 +1,78 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7D175AD;
-	Mon, 16 Sep 2024 12:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF1EA95E;
+	Mon, 16 Sep 2024 13:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726491214; cv=none; b=IGx0xrUyi1/q+s0InfMAI5FwNAb1qBaYcdsd6QjUhWSmHBQkq668gBQzT1H7mHigz/zvWbFm+fFU9NYBVVkCplHYiyXMlff0QythyX/ajAaDwhz/whbNKVOCMwgCaLEjyr1F0Pny6mVoODAB3NbbbQ36laPv6G3Ce7/d4I/xu5k=
+	t=1726493399; cv=none; b=lHloRflUsSDytShkpdjIwCCjDhdq9EknbNv3pqU6rS/nH0MCfgYayPerq7Qwib67e9hRxgiWC4yMdNBRtsfg1HYFHlenqnLyklfjxFMafXc5AtRiBYiFyh03+IwoD080B0KL6kbEQSuZ5/oZPsKQ8TVPK+uNmqKSb0RaWczlPkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726491214; c=relaxed/simple;
-	bh=HLymNuqFjZnzeoeHsrCrtSxnI2YrAArO6Tsir3ExCnY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EN75Pv874B32LM5M4dPGiM981/8v11YlEWIs7QKsv6T0rt1FDJaCW4rpLyDIcvlJL4GM1Cw6klr+grjrS41MBAztcof3fIWg5I4hnvt7QLrT8QcOfn7pPMg5roE/Gr5BEtvaNVJMXORvw2VESuzSHDc95nw0sekUa3/YkvtKsOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BjqVUNxJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1726493399; c=relaxed/simple;
+	bh=5358DHb00/riUqxFwGC1LquJns98OBanNtye9TBg7Vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZK8UWWgmRUS4FmwIE+RF9JmLFNE4AYg+lKC1nUO5q7xrZtsu3NuE6jqibIGfHIbDnU+5Wico1sn8G4exM7RMZTQsrXmCi7cNgAGuZfKw2PfabYjLzSOcM824u+q2JRBCBAs+tCpp/B4ACYXmlkcIFb30B+t6So0xh4hnyMlMuqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gNjxOfWA; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BjqVUNxJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gNjxOfWA"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=tMiUCsbSqV0wJLr8aEI7gjZHztOn8RrLSIUojGSjbP4=;
-	t=1726491212; x=1726923212; b=BjqVUNxJSuzvWtiUXwFVxGQiKKTMd5drK2SDh8vXdx5v5DF
-	e1jof6x60TsYMeZiF5z0g/NbCwAlSuGB3MyTl8Y0y2ef0QmdjchuDyZuftVh9ckbToyh7f6zzmfVe
-	rBdBhRXa6qUiX6IqP7YyErxhyEWkuE2g3wFo+8rVHHzV8MLKBZp439TjksYt1sFTyyD+yaYoJzbjL
-	9/5PRdxara4+dltXqZveF3gHT8p7yoU50MHfjxnN57fLyb1QlnNO8Gu4Qh28nf/WqeSsnOXydjv81
-	eq+eVbGZ11IloLCBqvIfSIQHWZNPDqrkIfHCYD/nY73GFLDmDFTkOppUSNRgcDfA==;
-Received: from [88.128.88.10] (helo=[10.226.192.63]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sqBEG-0003cI-Ux; Mon, 16 Sep 2024 14:53:22 +0200
-Message-ID: <a6ea491c-f238-4c84-a51a-3304f6781468@leemhuis.info>
-Date: Mon, 16 Sep 2024 14:53:06 +0200
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qq8tYo1JEcSLEHueBFlP6ppnnitpWT6xJFK+HA9N1s0=; b=gNjxOfWAvf+YsKYoElIQn4rni0
+	6N+tyQGjTWwWB1p4IFbKCksWfwTK7CmArJcHKg5rz91aJxEPAVWecr0Y9M9vejYbwmAoWA2aJCLLB
+	J/uks525IrO4RGWjZAAcuRThdIQ5IHwN8CQFqNDhHmBBqa1uUqK/5D0v7n67gjqh5zI6h/bAT1Mz/
+	aVUqdsdNInRz+TbFlT0DbUG+6fkXcsQgFiBLTKJ8Z/sJtwJ3JLiZyvP49i+O7mGt1GR9TzYC34oC5
+	PnSMfQrrNW7qF101SjvfsAZkqcmm2IFYQjVwK9Fb3qIhkBCaTJyXJH+a4dMbUAEVJbMABK9nUyULh
+	HhCf5eYw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1sqBna-00000001zL5-0aWo;
+	Mon, 16 Sep 2024 13:29:50 +0000
+Date: Mon, 16 Sep 2024 14:29:49 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Luis Chamberlain <mcgrof@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>,
+	Dave Chinner <david@fromorbit.com>, clm@meta.com,
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <ZugyzR8Ak6hJNlXF@casper.infradead.org>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <20240913-ortsausgang-baustart-1dae9a18254d@brauner>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Update of linux-firmware breaks wifi on Thinkpad T14
-To: Christian Heusel <christian@heusel.eu>, linux-firmware@kernel.org,
- Kalle Valo <kvalo@qca.qualcomm.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <44ae68d2-24b6-49d2-a4f9-ae9cbf6f9950@heusel.eu>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <44ae68d2-24b6-49d2-a4f9-ae9cbf6f9950@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726491212;44e6644d;
-X-HE-SMSGID: 1sqBEG-0003cI-Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240913-ortsausgang-baustart-1dae9a18254d@brauner>
 
-On 16.09.24 12:49, Christian Heusel wrote:
+On Fri, Sep 13, 2024 at 02:11:22PM +0200, Christian Brauner wrote:
+> So this issue it new to me as well. One of the items this cycle is the
+> work to enable support for block sizes that are larger than page sizes
+> via the large block size (LBS) series that's been sitting in -next for a
+> long time. That work specifically targets xfs and builds on top of the
+> large folio support.
 > 
-> the commit 82318c96 ("ath12k: WCN7850 hw2.0: update board-2.bin") in the
-> linux firmware repository apparently breaks card recognition in Thinkpad
-> T14 laptops with the following journal entries:
+> If the support for large folios is going to be reverted in xfs then I
+> see no point to merge the LBS work now. So I'm holding off on sending
+> that pull request until a decision is made (for xfs). As far as I
+> understand, supporting larger block sizes will not be meaningful without
+> large folio support.
 
-TWIMC, another report (that is 5 minutes older :-D ) about this can be
-found here: https://lore.kernel.org/all/87bk0nc1yb.wl-tiwai%40suse.de
-
-Ciao, Thorsten
-
->     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: failed to fetch board data for bus=pci,vendor=17cb,device=1107,subsystem-vendor=17aa,subsystem>
->     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: failed to fetch board.bin from WCN7850/hw2.0
->     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: qmi failed to load bdf:
->     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: qmi failed to load board data file:-2
-> 
-> Is there any more information you would need to debug this issue or does
-> the above already tell you enough?
-> 
-> This issue was discovered by Arch Linux Forum user "Mezzy12" with
-> debugging help from user "loqs" and me.
-> 
-> Regards,
-> Chris
-> 
-> [0]: https://bbs.archlinux.org/viewtopic.php?id=299286
-
+This is unwarranted; please send this pull request.  We're not going to
+rip out all of the infrastructure although we might end up disabling it
+by default.  There's a bunch of other work queued up behind that, and not
+having it in Linus' tree is just going to make everything more painful.
