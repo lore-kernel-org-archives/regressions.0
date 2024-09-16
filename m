@@ -1,66 +1,83 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B827613B79F;
-	Mon, 16 Sep 2024 12:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7D175AD;
+	Mon, 16 Sep 2024 12:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726488999; cv=none; b=IzzHfhK7jSHyXFA7NpDwWy3gsye9OiqgKraIHC0MDnF7XBsYUdxQrckw1ThC4cNpQiqu2+e5Dqc9Wv1gpq8cOJjKfpNX2Ott1pi6LJN6CNIg9dg3Iu0eA7ypJDmsMfjUhfBmO1NhBNbgHOwOr5wrqa3jtkNXlv7oMahhq9regxE=
+	t=1726491214; cv=none; b=IGx0xrUyi1/q+s0InfMAI5FwNAb1qBaYcdsd6QjUhWSmHBQkq668gBQzT1H7mHigz/zvWbFm+fFU9NYBVVkCplHYiyXMlff0QythyX/ajAaDwhz/whbNKVOCMwgCaLEjyr1F0Pny6mVoODAB3NbbbQ36laPv6G3Ce7/d4I/xu5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726488999; c=relaxed/simple;
-	bh=O8sjaISbl65n+BzqV+pJwtzwzFEpUSGLHm3v6urMSRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hGjCqEkxThttKsl1ijQK5kUq26jMIWVoc+G5UIwJ+QoY9dKG2Ve1UU6uTp0cvtfobs3LB7vHvpEq871LUueuxO+vKW+2YYFI3a/48q1FqhePGTB3szY+kvZyJHp7v0Mn5nlPDYnpF7ZS0GOCXOcavEDrlkcWo/m4e2xuRWHQxd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sgmvMot3; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1726491214; c=relaxed/simple;
+	bh=HLymNuqFjZnzeoeHsrCrtSxnI2YrAArO6Tsir3ExCnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EN75Pv874B32LM5M4dPGiM981/8v11YlEWIs7QKsv6T0rt1FDJaCW4rpLyDIcvlJL4GM1Cw6klr+grjrS41MBAztcof3fIWg5I4hnvt7QLrT8QcOfn7pPMg5roE/Gr5BEtvaNVJMXORvw2VESuzSHDc95nw0sekUa3/YkvtKsOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BjqVUNxJ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sgmvMot3"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BjqVUNxJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=5+42I91UHYKbpgVx0xLKFPyOFyQqdWJW5R7685LO37w=; b=sgmvMot3ZHHizrleAhYxMOo3G6
-	JlAD+NDucC/p5agSkNDRl2mQXxvpv5fBLBVQ8EGVJLX6DLez6TuyhUbUDGn8A00GvBk2wDG3D3wdC
-	mvzQHO9okA7q74Uc49t+p5E7fuyA/0pSlgPngtoNq8mkPrUy4vsdDWLBbFsnMDdCcV6Rw+eUt4Lvi
-	fraBqrrLdHsiXgJAp8va1X9SVk3FlKZYDzuh5AL5791nHt/obNV4Yit6AuVi2OcTv0D1tS/PINixh
-	mtm/bRp4ZRrCLEMJaM5wakM3oxu0wIUjzRVZX2zqMyLTSv9OcSHDFDz9575ooyf8hS9tEwJf8/EwM
-	qY5H9Y8w==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqAeW-00000001vRN-3pyw;
-	Mon, 16 Sep 2024 12:16:25 +0000
-Date: Mon, 16 Sep 2024 13:16:24 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Dave Chinner <david@fromorbit.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Dao <dqminh@cloudflare.com>, clm@meta.com,
-	regressions@lists.linux.dev, regressions@leemhuis.info
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-Message-ID: <ZughmB3uLbFAWnOa@casper.infradead.org>
-References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
- <ZuNjNNmrDPVsVK03@casper.infradead.org>
- <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
- <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <Zud1EhTnoWIRFPa/@dread.disaster.area>
- <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=tMiUCsbSqV0wJLr8aEI7gjZHztOn8RrLSIUojGSjbP4=;
+	t=1726491212; x=1726923212; b=BjqVUNxJSuzvWtiUXwFVxGQiKKTMd5drK2SDh8vXdx5v5DF
+	e1jof6x60TsYMeZiF5z0g/NbCwAlSuGB3MyTl8Y0y2ef0QmdjchuDyZuftVh9ckbToyh7f6zzmfVe
+	rBdBhRXa6qUiX6IqP7YyErxhyEWkuE2g3wFo+8rVHHzV8MLKBZp439TjksYt1sFTyyD+yaYoJzbjL
+	9/5PRdxara4+dltXqZveF3gHT8p7yoU50MHfjxnN57fLyb1QlnNO8Gu4Qh28nf/WqeSsnOXydjv81
+	eq+eVbGZ11IloLCBqvIfSIQHWZNPDqrkIfHCYD/nY73GFLDmDFTkOppUSNRgcDfA==;
+Received: from [88.128.88.10] (helo=[10.226.192.63]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sqBEG-0003cI-Ux; Mon, 16 Sep 2024 14:53:22 +0200
+Message-ID: <a6ea491c-f238-4c84-a51a-3304f6781468@leemhuis.info>
+Date: Mon, 16 Sep 2024 14:53:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Update of linux-firmware breaks wifi on Thinkpad T14
+To: Christian Heusel <christian@heusel.eu>, linux-firmware@kernel.org,
+ Kalle Valo <kvalo@qca.qualcomm.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <44ae68d2-24b6-49d2-a4f9-ae9cbf6f9950@heusel.eu>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <44ae68d2-24b6-49d2-a4f9-ae9cbf6f9950@heusel.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1726491212;44e6644d;
+X-HE-SMSGID: 1sqBEG-0003cI-Ux
 
-On Mon, Sep 16, 2024 at 09:14:45AM +0200, Christian Theune wrote:
-> Also, I’m still puzzled about the one variation that seems to involve page faults and not XFS. That’s something I haven’t seen a response to yet whether this IS in fact interesting or not. 
+On 16.09.24 12:49, Christian Heusel wrote:
+> 
+> the commit 82318c96 ("ath12k: WCN7850 hw2.0: update board-2.bin") in the
+> linux firmware repository apparently breaks card recognition in Thinkpad
+> T14 laptops with the following journal entries:
 
-It's not; once the page cache is corrupted, it doesn't matter whether
-we go through the filesystem to get the page or not.
+TWIMC, another report (that is 5 minutes older :-D ) about this can be
+found here: https://lore.kernel.org/all/87bk0nc1yb.wl-tiwai%40suse.de
+
+Ciao, Thorsten
+
+>     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: failed to fetch board data for bus=pci,vendor=17cb,device=1107,subsystem-vendor=17aa,subsystem>
+>     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: failed to fetch board.bin from WCN7850/hw2.0
+>     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: qmi failed to load bdf:
+>     Sep 10 12:34:01 gdb-arch-t14-5 kernel: ath12k_pci 0000:02:00.0: qmi failed to load board data file:-2
+> 
+> Is there any more information you would need to debug this issue or does
+> the above already tell you enough?
+> 
+> This issue was discovered by Arch Linux Forum user "Mezzy12" with
+> debugging help from user "loqs" and me.
+> 
+> Regards,
+> Chris
+> 
+> [0]: https://bbs.archlinux.org/viewtopic.php?id=299286
+
