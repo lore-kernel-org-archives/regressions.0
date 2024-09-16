@@ -1,119 +1,148 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1269AD512
-	for <regressions@lists.linux.dev>; Mon, 16 Sep 2024 04:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E21C13BC1E
+	for <regressions@lists.linux.dev>; Mon, 16 Sep 2024 07:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726460464; cv=none; b=ELZ/kv1zmgeLmVqpRNhzDymauWji6r1F/zEWkXbYRTQNNcn3ASd+a3cxEoSmisdV812y9e4P5FN3peVouAQ0x8yFbm5yAG45FqmulkwR5OS5RXzbs05tJsBmWID8jjzBqQ2wmTDHWEttOsZ84I6CwIoj3xkrmFCqOWkgJFiVQls=
+	t=1726470922; cv=none; b=Cytw4EEw7cIC6JMGHZJd/qSI6jrGXLIo6UOQBLqBjKfoqYSvYX72zs6P1vUBoXWBXm2fc3Q+PepeEY5RxlnctuXY/M5kLBu8kKZ+Pj/mdzjxK5YsTGHqq9lcCIltbtMIrsk5ZyTveX0mBuUotDAOfq8mJPhFUsZgXx6ljocav3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726460464; c=relaxed/simple;
-	bh=OTJ/oKsnoisoc9GbqLHkeCIc2BFxmDrQOsJxcfR3nk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lk2esaf1eeg3bsUU0w3Sex0OZlLPe8fp3ZhAu+049e7MvXEr/41bSU8v1WdrqDTPQAWkf+VyjAo3suPO0lDZvsbel5NPBw+o7uPlSlr7VDSUxIUYVQu6xNZlFEmjisESAtOo27JXJvlKsmlaI+MBwrfrKhGvFXx36RGfQos3adQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VG2UDOI6; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1726470922; c=relaxed/simple;
+	bh=RBngxJaZL4GTM0BgQCbsFFJ3NPAyFTCVteDqTkYdZFE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mfz63E4FtoZbDyEBGlBb3hulLLbcFa9B4zNzv/DJYRZryRgmDBVprRzeFmagyzHA10AJt9rS9IVGkpG9BBnZf8Lz7wotre9U4sR9B4zvoqEGqQAS+GO2Ngrj7CUYbBjNW3+14EbdfPW4KHo6u6xF/M0EElkoOD/HcU1/iKpIrR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=E9epe5D3; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VG2UDOI6"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c3ed267a7bso5060036a12.3
-        for <regressions@lists.linux.dev>; Sun, 15 Sep 2024 21:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1726460460; x=1727065260; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jwnw+7buV/Co6cDy6nKRIoLyua67GCD7ZNv0sYBhUOM=;
-        b=VG2UDOI6GaxQZEyNWJtiXjQJxe6kPmwT7k2zlnEL9RCRgfbyQM4InJNct/4pQlF8uw
-         UkzgOCz3ZoimzMmlmoQqz5wRgrwvniomA0amaTDETahv9f6X/UKBrDSfHI08uwltfkCh
-         OwdrHkwKrIFT3Opf7P3JtSs6YOJeLSKuLg2AA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726460460; x=1727065260;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jwnw+7buV/Co6cDy6nKRIoLyua67GCD7ZNv0sYBhUOM=;
-        b=JTLspOGjuQe2Mi00/YnXO4c/JCi4TCkhoR46Qr00sH5AR6uJxDTbmAvodQPvXK2FQS
-         cCf+1F+bn+U4dz3Hmy3PX9o63odrw+h+rrrgbe67F3byva5wWdw5HNl6cQQQ/ofzF2NS
-         2UpD7AyTtExt+MaeDnT2YKpkRA4xQd/KeiXL/pCBx1tLHIUhhETarl+vTU0SAcXo+8gV
-         16fL/nXI/XEOq5kPPF0G5MwXrWqYuCGdi5GGErIajl2/m86MQhr1ijgqLUSVO4kLzEQS
-         Fwx/OedI2vpzC06BNKMvENQYbub2jyfwx0Fg7BSCGQwJ5QNzC9AcZIRo9PosBfLqg6+/
-         42+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVzA3DUYjosToy8N0h9tQvA+HSwA78yoEGTNqIUt9tiwc/fUxcqfbM5YmCZvpV8sxxBPmsYb/byffT33Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwE37uzLDD/02TQWadOOjIzYhz6vyrRHPTSCeVId0A93d/m+Zuc
-	TgVb0+B9oUJALPbogMO20oN9Aj9DKYCxrT97GBqwuSqhD3/HkyoO0eG6Rx7X8Uevfx3RiHrggFC
-	jHuhCIA==
-X-Google-Smtp-Source: AGHT+IF9/yyzPw9dimjks0g+RrgxLRbQphrq2zV6aLXcnf7qeavmJXn/QmL32M3q3rYVqZasNOA2YQ==
-X-Received: by 2002:a05:6402:17c4:b0:5be:e01c:6b5f with SMTP id 4fb4d7f45d1cf-5c413e541c8mr9660293a12.33.1726460459968;
-        Sun, 15 Sep 2024 21:20:59 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c42bb89d44sm2155894a12.70.2024.09.15.21.20.58
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2024 21:20:59 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c4226a56a8so3082530a12.2
-        for <regressions@lists.linux.dev>; Sun, 15 Sep 2024 21:20:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWTxUHwfxjj7byOVz2KCIf5ctVrhNDo6HgRkc+aTxsLG1ShlI4rcB6uwirGfw/fOyUdqgJMjvAWamU75Q==@lists.linux.dev
-X-Received: by 2002:a05:6402:2107:b0:5c4:367e:c874 with SMTP id
- 4fb4d7f45d1cf-5c4367ec9dfmr3443219a12.11.1726460457889; Sun, 15 Sep 2024
- 21:20:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="E9epe5D3"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1726470908;
+	bh=t9TGglCebkVwz3Xfy8T8OgJ7gnTHiWWWEXfL6kuEj/E=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=E9epe5D3D1j+Q+sICOdAlUUKkZN6QetDxnUXPHefyIa63ZlqWP1lclUkb+7l8cWEf
+	 rsaAiCHiWmruiNdTaYBVwekXCY0u0mcMUF5vAWHLDxbPL2nuIattrWFD2EJ6Z3IXw9
+	 N9n65hNnyi+a/Ys2GeVYLfnN3+1xaQrrJtvsJpJg=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
- <ZuNjNNmrDPVsVK03@casper.infradead.org> <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
- <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com> <Zud1EhTnoWIRFPa/@dread.disaster.area>
-In-Reply-To: <Zud1EhTnoWIRFPa/@dread.disaster.area>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 16 Sep 2024 06:20:40 +0200
-X-Gmail-Original-Message-ID: <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
-Message-ID: <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
 Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
  folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <Zud1EhTnoWIRFPa/@dread.disaster.area>
+Date: Mon, 16 Sep 2024 09:14:45 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ Matthew Wilcox <willy@infradead.org>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ clm@meta.com,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
 To: Dave Chinner <david@fromorbit.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Matthew Wilcox <willy@infradead.org>, 
-	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, clm@meta.com, 
-	regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 16 Sept 2024 at 02:00, Dave Chinner <david@fromorbit.com> wrote:
->
+
+> On 16. Sep 2024, at 02:00, Dave Chinner <david@fromorbit.com> wrote:
+>=20
+> On Thu, Sep 12, 2024 at 03:25:50PM -0700, Linus Torvalds wrote:
+>> On Thu, 12 Sept 2024 at 15:12, Jens Axboe <axboe@kernel.dk> wrote:
+>> Honestly, the fact that it hasn't been reverted after apparently
+>> people knowing about it for months is a bit shocking to me. =
+Filesystem
+>> people tend to take unknown corruption issues as a big deal. What
+>> makes this so special? Is it because the XFS people don't consider it
+>> an XFS issue, so...
+>=20
 > I don't think this is a data corruption/loss problem - it certainly
 > hasn't ever appeared that way to me.  The "data loss" appeared to be
 > in incomplete postgres dump files after the system was rebooted and
 > this is exactly what would happen when you randomly crash the
-> system.
-
-Ok, that sounds better, indeed.
-
-Of course, "hang due to internal xarray corruption" isn't _much_
-better, but still..
-
+> system. i.e. dirty data in memory is lost, and application data
+> being written at the time is in an inconsistent state after the
+> system recovers. IOWs, there was no clear evidence of actual data
+> corruption occuring, and data loss is definitely expected when the
+> page cache iteration hangs and the system is forcibly rebooted
+> without being able to sync or unmount the filesystems=E2=80=A6
 > All the hangs seem to be caused by folio lookup getting stuck
 > on a rogue xarray entry in truncate or readahead. If we find an
 > invalid entry or a folio from a different mapping or with a
-> unexpected index, we skip it and try again.
+> unexpected index, we skip it and try again.  Hence this does not
+> appear to be a data corruption vector, either - it results in a
+> livelock from endless retry because of the bad entry in the xarray.
+> This endless retry livelock appears to be what is being reported.
+>=20
+> IOWs, there is no evidence of real runtime data corruption or loss
+> from this pagecache livelock bug.  We also haven't heard of any
+> random file data corruption events since we've enabled large folios
+> on XFS. Hence there really is no evidence to indicate that there is
+> a large folio xarray lookup bug that results in data corruption in
+> the existing code, and therefore there is no obvious reason for
+> turning off the functionality we are already building significant
+> new functionality on top of.
 
-We *could* perhaps change the "retry the optimistic lookup forever" to
-be a "retry and take lock after optimistic failure". At least in the
-common paths.
+Right, understood.=20
 
-That's what we do with some dcache locking, because the "retry on
-race" caused some potential latency issues under ridiculous loads.
+However, the timeline of one of the encounters with PostgreSQL (the =
+first comment in Bugzilla) involved still makes me feel uneasy:
+=20
+T0                   : one postgresql process blocked with a different =
+trace (not involving xas_load)
+T+a few minutes      : another process stuck with the relevant =
+xas_load/descend trace
+T+a few more minutes : other processes blocked in xas_load (this time =
+the systemd journal)
+T+14m                : the journal gets coredumped, likely due to some =
+watchdog=20
 
-And if we retry with the lock, at that point we can actually notice
-corruption, because at that point we can say "we have the lock, and we
-see a bad folio with the wrong mapping pointer, and now it's not some
-possible race condition due to RCU".
+Things go back to normal.
 
-That, in turn, might then result in better bug reports. Which would at
-least be forward progress rather than "we have this bug".
+T+14h                : another postgres process gets fully stuck on the =
+xas_load/descend trace
 
-Let me think about it. Unless somebody else gets to it before I do
-(hint hint to anybody who is comfy with that filemap_read() path etc).
 
-                 Linus
+I agree with your analysis if the process gets stuck in an infinite =
+loop, but I=E2=80=99ve seen at least one instance where it appears to =
+have left the loop at some point and IMHO that would be a condition that =
+would allow data corruption.
+
+> It's been 10 months since I asked Christain to help isolate a
+> reproducer so we can track this down. Nothing came from that, so
+> we're still at exactly where we were at back in november 2023 -
+> waiting for information on a way to reproduce this issue more
+> reliably.
+
+Sorry for dropping the ball from my side as well - I=E2=80=99ve learned =
+my lesson from trying to go through Bugzilla here. ;)
+
+You mentioned above that this might involve read-ahead code and that=E2=80=
+=99s something I noticed before: the machines that carry databases do =
+run with a higher read-ahead setting (1MiB vs. 128k elsewhere).
+
+Also, I=E2=80=99m still puzzled about the one variation that seems to =
+involve page faults and not XFS. That=E2=80=99s something I haven=E2=80=99=
+t seen a response to yet whether this IS in fact interesting or not.=20
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
