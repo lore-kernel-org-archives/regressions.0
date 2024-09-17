@@ -1,114 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B37A923;
-	Tue, 17 Sep 2024 06:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B921C1494C2
+	for <regressions@lists.linux.dev>; Tue, 17 Sep 2024 07:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726553846; cv=none; b=eIDKQhh6at1vIAMorR0xg52ESNRXUfJccSPUttHzNDv+6Kd/um9S6oPHJhrKwn/Udutp8KOk6YrIrrOVwD54ox7VtmE9dwSp39yGPmoua/Sj1Za26s6qMIEC3sYeiKhqXq3w8jEVVCNgctZ3GO/XIBkk4PdJGPIzGuWyq8D1Hxo=
+	t=1726559129; cv=none; b=Ud2k2L7tCicrptNHjiyeiEgUzUlQkDj+JWIc0g+JF0VjEk7Zw2y8Z8Y25WjhwHPMdOqsiMn2qEzBTfPaOaUF4Qui/WtkLnJ+G4eXIC5RGfwsWA9sU7rIxIuvX7NyU0rvoruk+m8YpuTEGb+DA7DR9gmYJ1yqbTuL+bF6zbIxNsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726553846; c=relaxed/simple;
-	bh=CB4t/+5moG0/28K8fc5AivaacXB2UZMNsXSP/NqIUrA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=a+2RQNxHm+wim42DbQgLYDykUlD980bcCMOPAyWVHP67sLE82ZVjZFOh5IpmcqS+JbrW/hPWzRRYfktMIQbiyjt83GOWdtPpvS8HJIuy73lBx3j4+aRVMH92LM/cgu1qDAXE1WrTizPCRu6qXd+5shwGHBXo1TSRECZRGZdtdpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okamibA8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726559129; c=relaxed/simple;
+	bh=h+3PzGTABqpaxtOHDAbZ8agKjW9SrxWhNuFXDsKyIns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n+xy7evq7smU6JbJuSEi9+KY2NbgSo5/Q7BbHu3T/UnX32/qUGyF8NRws06xGYEpewfcSlcfQ/aBd6MspwAaqOtiPa4QGID7d2qslWrjXj3zhqDuuh0OVn/UD0b5543IODw0atNv0weYLLn0ULbLGaixVIk0ERNryaTXIbogGI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bn/rzYnn; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okamibA8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7298C4CEC6;
-	Tue, 17 Sep 2024 06:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726553846;
-	bh=CB4t/+5moG0/28K8fc5AivaacXB2UZMNsXSP/NqIUrA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=okamibA89T+tS2KYSFAwVrMBm6dqR2AErTJMj4IQZ6f9YXr0OX2iihrJjdXKkStyV
-	 qUqVD8pAe3kgju5SQWuZEqiVCKKHGlWaNnvLJPHGQ9xv41IfGKjsdMkDcbQgsz4bjo
-	 UhQtYqTGX4B1FocupsBBx3m8w8EWGMia6m97OvZR75XNCi3zC2cedktZrDpDeQOGN7
-	 SJJrOzn9Ibyb7Kj7xHWV08/eKpvTWHbNPss8E0+QftSdQhif/VVU/bVCYYrZJYzTDD
-	 T151cGYeYe6/VMUiTdqKT4c2YyuIrhiF7pYkkK8SFD1/4EtX1QOO1Y14qml61S8Snk
-	 0zAvdCZQa+45A==
-From: Kalle Valo <kvalo@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-  linux-mediatek@lists.infradead.org,  linux-wireless@vger.kernel.org,
-  Felix Fietkau <nbd@nbd.name>,  Ryder Lee <ryder.lee@mediatek.com>,
-  Shayne Chen <shayne.chen@mediatek.com>,  Sean Wang
- <sean.wang@mediatek.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
-  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-  Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,  Deren Wu
- <deren.wu@mediatek.com>,  linux-kernel@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  Ma Ke <make24@iscas.ac.cn>,
-    regressions@lists.linux.dev
-Subject: Re: BUG and WARNINGs from mt7921s on next-20240916
-References: <144fbf79-950c-4cd1-bc68-4e00b47b03e9@gmail.com>
-	<ZujCwvd4XiwljDyv@lore-desk>
-Date: Tue, 17 Sep 2024 09:17:20 +0300
-In-Reply-To: <ZujCwvd4XiwljDyv@lore-desk> (Lorenzo Bianconi's message of "Tue,
-	17 Sep 2024 01:44:02 +0200")
-Message-ID: <87ldzqdcsv.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bn/rzYnn"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-49bd27b3507so1649150137.2
+        for <regressions@lists.linux.dev>; Tue, 17 Sep 2024 00:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726559125; x=1727163925; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sea0zO9yqXzOHNC2U7vb09vPtmzyWkSBwbgBJxMPL7U=;
+        b=Bn/rzYnnKnv4Fm139sddLVTP/2b7YYnqJbAGri99MMH8AmfCwS8FOg/x3BNlKoUos2
+         7HXxRo8FwGkm9M9HuYh3XJTELTX6kMi60lgvmgWIRP8fK89+U9FJj8pikqkeD/fDDqjc
+         RfUBQEvTQUSXeiWtubnC+X+Lhclgsnh1ezO83GXL55PRCvfiQABhVJHVOKEHAJesfSE4
+         5KnNCsFFCBPn+FQpApkJj+/dmf19qSuaXTrHDw1M0jtx6qpUBD0CTTjUpErpGqpHCKXk
+         yy8DsHP+iWWRUiDnXL3QaeaaGKf8T1TBLyk+sDNJQkpQQ2Zk0Z504v6LQkUlOW+uL197
+         KYXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726559125; x=1727163925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sea0zO9yqXzOHNC2U7vb09vPtmzyWkSBwbgBJxMPL7U=;
+        b=FCGDJnblztfQiAnP85pIO5BKQ0GeR2zdNbA1qb2KEgO+09u0wzu9AHsUHRkayEf3sK
+         nBvDaWbFtfbAjiG6OwpbRbyDiQ026x8koLWaa5/4bX6eMcEoEoBIrOuR/pKgkHPmI30b
+         62KcaOjuC2wu9m/Q7B0RufrMT/fIfByX6g41Bo9PggRcYQrPmqK2tEE/aXX2eMqlBr/R
+         pUuklEz4Ylg0VUWom2L8RDWwEcgMjYquGmOegRATvekV1eyGeSIMwXF16EruNcfYDX4y
+         ol1kA1hJ+Q0ed2K6XkmcEG+jirAxxBdmBc+E3gR40BuBqWfINfxtVOv2/AzXSbDfo7G0
+         ETpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/2q+ukFjpjv9omtkYPjlwlq7YeO1oRDnfSVAl5ZwmPhs30SBmoHn+ZlfTTFWxpwVAjhnQfoIx4co42Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2aCQzAfKnyCUP46UMDb2cP9QlIpfJsWIEt96baHqrIXrKXyfo
+	5x8DJ+qGNwtc8ToW18+bhnBdeVLA2RCy/SfVrfJfSITTZ/WTJG8QFEI0L1xsNjlvcIH/uJJ5y3j
+	+DDhEIJbQkEzpdNIk23UgHMCYH3clRRLhmgDlLg==
+X-Google-Smtp-Source: AGHT+IEX9Fn8uP/lq3FtGxXPDYuASA4m6x9TeKuoaF5tVL8V7HXahk8wjLcJnvuYVKRilqNKDgiamUD2b/2xSH5KiPs=
+X-Received: by 2002:a05:6102:290b:b0:48f:db40:99e9 with SMTP id
+ ada2fe7eead31-49d41336d28mr14012209137.0.1726559124782; Tue, 17 Sep 2024
+ 00:45:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CA+G9fYuaDUCxseqCW8BO0KhLKn6F0VHYaAhu-T9v-MJHzJebcQ@mail.gmail.com>
+ <CANiq72kaAd5v+c+A3GHWp9riDtGTrKcCb3kraw2EaZLyp8asSg@mail.gmail.com>
+In-Reply-To: <CANiq72kaAd5v+c+A3GHWp9riDtGTrKcCb3kraw2EaZLyp8asSg@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 17 Sep 2024 13:15:13 +0530
+Message-ID: <CA+G9fYtghCMk_DiGJ=7pHoLhb=LUS1hXe0F0P5YFYJ-K+aUtcg@mail.gmail.com>
+Subject: Re: rustgcc-kselftest: error: unknown unstable option: `patchable-function-entry`
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Miguel Ojeda <ojeda@kernel.org>, aliceryhl@google.com, 
+	Shuah Khan <shuah@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Lorenzo Bianconi <lorenzo@kernel.org> writes:
+On Tue, 17 Sept 2024 at 00:53, Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Hi Naresh,
+>
+> On Mon, Sep 16, 2024 at 9:17=E2=80=AFPM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > The x86 rust gcc builds failed on the Linux next-20240917 due to follow=
+ing build
+> > warnings / errors with rustgcc for selftests rust builds.
+> >
+> > First seen on next-20240917
+> >   Good: next-20240913
+> >   BAD:  next-20240917
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Thanks for the report -- this should be already fixed in `rust-next`
+> for tomorrow (requirement changed from `!FINEIBT` to `!CALL_PADDING`),
+> please see https://lore.kernel.org/rust-for-linux/CANiq72=3DB9NmC=3D1eSaO=
+rg7XutjueQsSXGcBQb7dQFPuL0SFjPsA@mail.gmail.com/
+>
+> If you can confirm it is, that would be great, thanks! i.e. you will
+> need either to disable `CALL_PADDING` or use a newer Rust compiler
+> version.
 
->> Hi,
->> 
->> I ran into some bug messages while testing linux-next on a MT8186
->> Magneton Chromebook (mt8186-corsola-magneton-sku393218). It boots 
->> to the OS, but at least Wi-Fi and Bluetooth are unavailable.
->> 
->> As a start, I tried reverting commit abbd838c579e ("Merge tag 
->> 'mt76-for-kvalo-2024-09-06' of https://github.com/nbd168/wireless")
->> and it works fine after that. Didn't have time to do a full bisect, 
->> but will try if nobody has any immediate opinions.
->> 
->> There are a few traces, here's some select lines to catch your attention,
->> not sure how informational they are:
->> 
->> [   16.040525] kernel BUG at net/core/skbuff.c:2268!
->> [   16.040531] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
->> [ 16.040803] CPU: 3 UID: 0 PID: 526 Comm: mt76-sdio-txrx Not tainted
->> 6.11.0-next-20240916-deb-00002-g7b544e01c649 #1
->> [   16.040897] Call trace:
->> [   16.040899]  pskb_expand_head+0x2b0/0x3c0
->> [   16.040905]  mt76s_tx_run_queue+0x274/0x410 [mt76_sdio]
->> [   16.040909]  mt76s_txrx_worker+0xe4/0xac8 [mt76_sdio]
->> [   16.040914]  mt7921s_txrx_worker+0x98/0x1e0 [mt7921s]
->> [   16.040924]  __mt76_worker_fn+0x80/0x128 [mt76]
->> [   16.040934]  kthread+0xe8/0xf8
->> [   16.040940]  ret_from_fork+0x10/0x20
->
-> Hi,
->
-> I guess this issue has been introduced by the following commit:
->
-> commit 3688c18b65aeb2a1f2fde108400afbab129a8cc1
-> Author: Felix Fietkau <nbd@nbd.name>
-> Date:   Tue Aug 27 11:30:01 2024 +0200                  
->
->     wifi: mt76: mt7915: retry mcu messages                                            
->                         
->     In some cases MCU messages can get lost. Instead of failing completely,
->     attempt to recover by re-sending them.
->      
->     Link: https://patch.msgid.link/20240827093011.18621-14-nbd@nbd.name
->     Signed-off-by: Felix Fietkau <nbd@nbd.name>
->
->
-> In particular, skb_get() in mt76_mcu_skb_send_and_get_msg() is bumping skb users
-> refcount (making the skb shared) and pskb_expand_head() (run by __skb_grow() in
-> mt76s_tx_run_queue()) does not like shared skbs.
->
-> @Felix: any input on it?
+I will try to use the newer Rust Compiler.
 
-Adding regressions list to Cc.
+>
+> By the way, I think you meant next-202409176, not next-20240917?
+ Right, I mean next-20240916.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+- Naresh
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>
+> Cheers,
+> Miguel
