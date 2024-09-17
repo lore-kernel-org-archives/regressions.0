@@ -1,170 +1,138 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13EF15B108;
-	Tue, 17 Sep 2024 09:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A10150990;
+	Tue, 17 Sep 2024 09:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726564559; cv=none; b=n11AMjHCNkFMVOpuQne0od19AYLQ46891K+HMHpQlPvRj86s8mSMlYGbYX6AVlWL252QOhofeSjDwwwUMzVZkv4vf9/vo2JaZ5noujUDEWq6eCtFNVitrlVIQG8Yg9Rt5R/WS4DPs84Q/NhUALTrjo0I0dSM8c16RAy5PYu6Y4k=
+	t=1726565534; cv=none; b=b1UWzkUtz1zSWU2kIOlYhBDRKUZnztyB9nkOO+xLXaXzTUSWWpCZ6m7JEqgHDh7LnzsVBeWV4ObKfry2anQo72dBC/kyBkMe118KsuLHwEoYEfyJZ7lnGseOCX7A7xx9urwCXNeUbkqddsFTdG5AnJny6ojftLWdUCUp1dsRxag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726564559; c=relaxed/simple;
-	bh=6N2/0DkebARjMPg4Uv5JRX6jrxdo3qIResVWFCwiUeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PHFMb2R3T2Hxzu8sQvma9sWNCHKl1+AOJSJ0gZlIVGjl3yzBpqnbJTg26CZcfnw+bzKf7PbQvBT5Bsjh87uM3nKATmsRUU/XWtilo2HFI/TOn6jRWUqF1GavuuKtNa3FgSgBItKhiBEV5K/LBbuphCXXWmfUfgi5RXWBebOp//o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=Qnt0MWAh; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	s=arc-20240116; t=1726565534; c=relaxed/simple;
+	bh=bYcVc+PqeHmqPJzhSjc2SvfecRr25R0jHytk8paNgsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kc1bJTCEQL8CnOx05X/oHmTP7zqFvxC2nLtW+leG3FqIDCMamvO86nRbplLNtT8q8xSHAwbDQVr8+4jZjzMx39tHbKUB/dBvFhVQ2OhHPlvIWYBfZK1sQPCYT9clv19ZvuJn0Y+KYguIxhqdM4BX3dWzniccWh5FQeQIrlzWK/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hiAllB/c; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="Qnt0MWAh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HST9OpIy3x68Lk4v6EQj7GCYN2CImIYndaq80kHZXJM=; b=Qnt0MWAhTxV2cyna1zORX+ShPB
-	8W5L8IOtlxaZF7Qfq8S3Uv8HQoNv1C12spp+hG2TfEDtwPj+0LA3DIdNrsQ4u10nNv1x2epemyTY2
-	dj5Cm6XN73Z3QesBTYYuJw+5U1i+IWGqv9g8ZlnF3JUndZbkyOtdT+S5vCBJba1s0xfg=;
-Received: from p4ff1376f.dip0.t-ipconnect.de ([79.241.55.111] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1sqUJA-00EK9i-08;
-	Tue, 17 Sep 2024 11:15:40 +0200
-Message-ID: <b8e11bbc-c718-4acf-acc0-6b31f25fae27@nbd.name>
-Date: Tue, 17 Sep 2024 11:15:38 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hiAllB/c"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AqxKUzFGQdmgzjFQB7tJnhZLtky0WoPwa3ZP0bwa7kw=; b=hiAllB/ciABy+VhhuHSacSE+Oa
+	SkkEdCai+UpuhIa9Yf1t+vo02bnbfsGYxVDgljWR3ImyeE7KwLUBF1VNYMhKx4oAl16yvn/pQ6OPQ
+	H3m2XoG5UiYzmqwMb5tuuRdps/hVoLjPG4pohXphNPaX2soLEzxWxfUcY+BYEFrXFfVvJSoYdsG02
+	2Pyl5awELZWuUbbvhKTT6oxktKMcKpioP2G61vO7hgxyRoK9+bZXzQBt7Fmf/M7fihX6s6K9fAlbG
+	9wzarVZDbmH1YOOtLKXK07Ymuk7V/UT48FXq1KB2oVwYg0M6i2v4+MLsQVIiw6agHfahLFV47FNAC
+	s9XTgnRA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1sqUZ2-00000002zBP-3zLK;
+	Tue, 17 Sep 2024 09:32:04 +0000
+Date: Tue, 17 Sep 2024 10:32:04 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Dave Chinner <david@fromorbit.com>, Jens Axboe <axboe@kernel.dk>,
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <ZulMlPFKiiRe3iFd@casper.infradead.org>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: BUG and WARNINGs from mt7921s on next-20240916
-To: Kalle Valo <kvalo@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Alper Nebi Yasak <alpernebiyasak@gmail.com>,
- linux-mediatek@lists.infradead.org, linux-wireless@vger.kernel.org,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Ming Yen Hsieh <mingyen.hsieh@mediatek.com>, Deren Wu
- <deren.wu@mediatek.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Ma Ke <make24@iscas.ac.cn>,
- regressions@lists.linux.dev
-References: <144fbf79-950c-4cd1-bc68-4e00b47b03e9@gmail.com>
- <ZujCwvd4XiwljDyv@lore-desk> <87ldzqdcsv.fsf@kernel.org>
-From: Felix Fietkau <nbd@nbd.name>
-Content-Language: en-US
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <87ldzqdcsv.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
 
-On 17.09.24 08:17, Kalle Valo wrote:
-> Lorenzo Bianconi <lorenzo@kernel.org> writes:
-> 
->>> Hi,
->>> 
->>> I ran into some bug messages while testing linux-next on a MT8186
->>> Magneton Chromebook (mt8186-corsola-magneton-sku393218). It boots 
->>> to the OS, but at least Wi-Fi and Bluetooth are unavailable.
->>> 
->>> As a start, I tried reverting commit abbd838c579e ("Merge tag 
->>> 'mt76-for-kvalo-2024-09-06' of https://github.com/nbd168/wireless")
->>> and it works fine after that. Didn't have time to do a full bisect, 
->>> but will try if nobody has any immediate opinions.
->>> 
->>> There are a few traces, here's some select lines to catch your attention,
->>> not sure how informational they are:
->>> 
->>> [   16.040525] kernel BUG at net/core/skbuff.c:2268!
->>> [   16.040531] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
->>> [ 16.040803] CPU: 3 UID: 0 PID: 526 Comm: mt76-sdio-txrx Not tainted
->>> 6.11.0-next-20240916-deb-00002-g7b544e01c649 #1
->>> [   16.040897] Call trace:
->>> [   16.040899]  pskb_expand_head+0x2b0/0x3c0
->>> [   16.040905]  mt76s_tx_run_queue+0x274/0x410 [mt76_sdio]
->>> [   16.040909]  mt76s_txrx_worker+0xe4/0xac8 [mt76_sdio]
->>> [   16.040914]  mt7921s_txrx_worker+0x98/0x1e0 [mt7921s]
->>> [   16.040924]  __mt76_worker_fn+0x80/0x128 [mt76]
->>> [   16.040934]  kthread+0xe8/0xf8
->>> [   16.040940]  ret_from_fork+0x10/0x20
->>
->> Hi,
->>
->> I guess this issue has been introduced by the following commit:
->>
->> commit 3688c18b65aeb2a1f2fde108400afbab129a8cc1
->> Author: Felix Fietkau <nbd@nbd.name>
->> Date:   Tue Aug 27 11:30:01 2024 +0200                  
->>
->>     wifi: mt76: mt7915: retry mcu messages                                            
->>                         
->>     In some cases MCU messages can get lost. Instead of failing completely,
->>     attempt to recover by re-sending them.
->>      
->>     Link: https://patch.msgid.link/20240827093011.18621-14-nbd@nbd.name
->>     Signed-off-by: Felix Fietkau <nbd@nbd.name>
->>
->>
->> In particular, skb_get() in mt76_mcu_skb_send_and_get_msg() is bumping skb users
->> refcount (making the skb shared) and pskb_expand_head() (run by __skb_grow() in
->> mt76s_tx_run_queue()) does not like shared skbs.
->>
->> @Felix: any input on it?
+On Mon, Sep 16, 2024 at 10:47:10AM +0200, Chris Mason wrote:
+> I've got a bunch of assertions around incorrect folio->mapping and I'm
+> trying to bash on the ENOMEM for readahead case.  There's a GFP_NOWARN
+> on those, and our systems do run pretty short on ram, so it feels right
+> at least.  We'll see.
 
-Sorry about that. Please try this patch, it should probably resolve this issue:
+I've been running with some variant of this patch the whole way across
+the Atlantic, and not hit any problems.  But maybe with the right
+workload ...?
 
----
---- a/drivers/net/wireless/mediatek/mt76/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mcu.c
-@@ -84,13 +84,15 @@ int mt76_mcu_skb_send_and_get_msg(struct mt76_dev *dev, struct sk_buff *skb,
-  	mutex_lock(&dev->mcu.mutex);
-  
-  	if (dev->mcu_ops->mcu_skb_prepare_msg) {
-+		orig_skb = skb;
-  		ret = dev->mcu_ops->mcu_skb_prepare_msg(dev, skb, cmd, &seq);
-  		if (ret < 0)
-  			goto out;
-  	}
-  
-  retry:
--	orig_skb = skb_get(skb);
-+	if (orig_skb)
-+		skb_get(orig_skb);
-  	ret = dev->mcu_ops->mcu_skb_send_msg(dev, skb, cmd, &seq);
-  	if (ret < 0)
-  		goto out;
-@@ -105,7 +107,7 @@ int mt76_mcu_skb_send_and_get_msg(struct mt76_dev *dev, struct sk_buff *skb,
-  	do {
-  		skb = mt76_mcu_get_response(dev, expires);
-  		if (!skb && !test_bit(MT76_MCU_RESET, &dev->phy.state) &&
--		    retry++ < dev->mcu_ops->max_retry) {
-+		    orig_skb && retry++ < dev->mcu_ops->max_retry) {
-  			dev_err(dev->dev, "Retry message %08x (seq %d)\n",
-  				cmd, seq);
-  			skb = orig_skb;
+There are two things being tested here.  One is whether we have a
+cross-linked node (ie a node that's in two trees at the same time).
+The other is whether the slab allocator is giving us a node that already
+contains non-NULL entries.
 
+If you could throw this on top of your kernel, we might stand a chance
+of catching the problem sooner.  If it is one of these problems and not
+something weirder.
+
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index 0b618ec04115..006556605eb3 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -1179,6 +1179,8 @@ struct xa_node {
+ 
+ void xa_dump(const struct xarray *);
+ void xa_dump_node(const struct xa_node *);
++void xa_dump_index(unsigned long index, unsigned int shift);
++void xa_dump_entry(const void *entry, unsigned long index, unsigned long shift);
+ 
+ #ifdef XA_DEBUG
+ #define XA_BUG_ON(xa, x) do {					\
+diff --git a/lib/xarray.c b/lib/xarray.c
+index 32d4bac8c94c..6bb35bdca30e 100644
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -6,6 +6,8 @@
+  * Author: Matthew Wilcox <willy@infradead.org>
+  */
+ 
++#define XA_DEBUG
++
+ #include <linux/bitmap.h>
+ #include <linux/export.h>
+ #include <linux/list.h>
+@@ -206,6 +208,7 @@ static __always_inline void *xas_descend(struct xa_state *xas,
+ 	unsigned int offset = get_offset(xas->xa_index, node);
+ 	void *entry = xa_entry(xas->xa, node, offset);
+ 
++	XA_NODE_BUG_ON(node, node->array != xas->xa);
+ 	xas->xa_node = node;
+ 	while (xa_is_sibling(entry)) {
+ 		offset = xa_to_sibling(entry);
+@@ -309,6 +312,7 @@ bool xas_nomem(struct xa_state *xas, gfp_t gfp)
+ 		return false;
+ 	xas->xa_alloc->parent = NULL;
+ 	XA_NODE_BUG_ON(xas->xa_alloc, !list_empty(&xas->xa_alloc->private_list));
++	XA_NODE_BUG_ON(xas->xa_alloc, memchr_inv(&xas->xa_alloc->slots, 0, sizeof(void *) * XA_CHUNK_SIZE));
+ 	xas->xa_node = XAS_RESTART;
+ 	return true;
+ }
+@@ -345,6 +349,7 @@ static bool __xas_nomem(struct xa_state *xas, gfp_t gfp)
+ 		return false;
+ 	xas->xa_alloc->parent = NULL;
+ 	XA_NODE_BUG_ON(xas->xa_alloc, !list_empty(&xas->xa_alloc->private_list));
++	XA_NODE_BUG_ON(xas->xa_alloc, memchr_inv(&xas->xa_alloc->slots, 0, sizeof(void *) * XA_CHUNK_SIZE));
+ 	xas->xa_node = XAS_RESTART;
+ 	return true;
+ }
+@@ -388,6 +393,7 @@ static void *xas_alloc(struct xa_state *xas, unsigned int shift)
+ 	}
+ 	XA_NODE_BUG_ON(node, shift > BITS_PER_LONG);
+ 	XA_NODE_BUG_ON(node, !list_empty(&node->private_list));
++	XA_NODE_BUG_ON(node, memchr_inv(&node->slots, 0, sizeof(void *) * XA_CHUNK_SIZE));
+ 	node->shift = shift;
+ 	node->count = 0;
+ 	node->nr_values = 0;
