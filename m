@@ -1,116 +1,81 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5368175B
-	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 08:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1405A178376;
+	Wed, 18 Sep 2024 09:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726648298; cv=none; b=ZICOavf9tTZTibQpHfuuDS2WJxzSZlFAmWTfrLBhIuhk682+15VAB+l9syFrVeONw0/OUUXw3FDS+H9yyOTBbQkSvKUSM031Ke28z6NxmCIl80sTZuoJq9lWYntV2LAiS+Q+5shuFOEE6F0rbFCw9i+YeO6oRXPvGpUwKlBzML0=
+	t=1726650013; cv=none; b=TldVZCU8ycVdhUdv7R9J2By5n7l/OBBSCeTi4shED2QGVemWBtKwaiBsV3KDlcQQdc0VSf4Y7ncjt2FDqpBSq3vZXpshxAKmOkjJs31pvV8qzLFu2SA5b1MvU6CXet9AxYMUBggqDb++C6BpDDu1Ew6U2xrKF4V/NgUd4mxAUT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726648298; c=relaxed/simple;
-	bh=Fzn1aEdw/yxhbLMFY9G3xd1Gy61G7ncfaBdVHUMisvY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=CHx3ziIlmoX3a1vU8eSeNrCIC5PyBDCXVqhGUjiEeB7jH1Cm+dy4yKtV59uLRGtrr0dZ7TkQr+SxJKANYYukzYF34WK76smwdL3ud6iAdF1BIf64XwQ4YoS+VKSbQbeduZ7hzck4CJ+P6zFpCj50Hos7XGMDAQYL9tg6Axe1VaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=Rd5vvMao; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1726650013; c=relaxed/simple;
+	bh=zpWsjuIBWVAiCqX8yerATDfj5psK97U5Z6dT4Yxw4Tw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gj/b6MZZFJ4E0yUhY3uj0bvcrQ/NOQTRSAUGmq3XdCZjzc470IK+FQpgKGTFrx+RY0pgS7XrVduv3aGjFIquxhDpHwzX6ZUR9plgbDYagRtSMA8UP0EeJBYaAFpXcC0JaokkTjWXRheS9V388D16kZgYIsBm9nE1mdY5Kl1ltAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=L+F+53r/; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="Rd5vvMao"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1726648291;
-	bh=me6yhkQ1Qf7Nz+9dw5lt1yO15V7nP5XWT/aS4UjahWA=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=Rd5vvMaolEmrl1l2z1ggs+5be2/6j4K964x7uMBLhVcPO2gEU/eYonbL1WLMHsp2+
-	 QT8qbQk0uFrMQew4heoH4gNpduUY/4ziQ8d6f9V2MVqoQat69ad6Vx9Eghq6wD66pw
-	 LS293864SUaoed/IsnRGnQ8RKO7SFKGBlbrR9QzE=
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="L+F+53r/"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 48I904cD41868928, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1726650005; bh=zpWsjuIBWVAiCqX8yerATDfj5psK97U5Z6dT4Yxw4Tw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=L+F+53r/PLprrq9jPOE4sNVVK0XsuTCcXfvVkCi9TFADZ+aOtg0wFcs0vrhoYbL3q
+	 ckr+N+bGpe/Jq3yePY2wF9HSOQWyIKU+nHEM+2IwnBlezMuztHwvgSjOGX0k/ZK9rk
+	 EFWUITonQXwtuThYFrb08DwF8ef+Kozi1HNIRGM5PlpMTNtblhQW33mHR7Z0X61wZi
+	 BiP5KBGYjR9Inw9XZuwrt5WoDArfRYRmWntPsrOP8V90yBQ/bH9Oapb3qWTFv/64hL
+	 Pj5l6Oktwv8UvPjg+mNg5yI3PbCM6FcNi7DnKwjkhNg4CD63wJXSvi/43C8WMLAJHZ
+	 SSS3Je5pSmSvA==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.05/5.92) with ESMTPS id 48I904cD41868928
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Sep 2024 17:00:05 +0800
+Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 18 Sep 2024 17:00:05 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 18 Sep 2024 17:00:04 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::2882:4142:db9:db1f]) by
+ RTEXMBS04.realtek.com.tw ([fe80::2882:4142:db9:db1f%11]) with mapi id
+ 15.01.2507.035; Wed, 18 Sep 2024 17:00:04 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: =?utf-8?B?TWFyY2VsIFdlacOfZW5iYWNo?= <mweissenbach@ignaz.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: RTL8852BE wifi no longer working after 6.11 upgrade
+Thread-Topic: RTL8852BE wifi no longer working after 6.11 upgrade
+Thread-Index: AQHbCMemb6H6HxFviUGmiPt2/8qxPLJdDI+A//+Vo4CAAJ3wIA==
+Date: Wed, 18 Sep 2024 09:00:04 +0000
+Message-ID: <63a3ef5acd70454e9f8db114204e2e2d@realtek.com>
+References: <f755bbeb5bbb479f9142bf223e71102c@realtek.com>
+ <20240918073237.Horde.VLueh0_KaiDw-9asEEcdM84@ignaz.org>
+In-Reply-To: <20240918073237.Horde.VLueh0_KaiDw-9asEEcdM84@ignaz.org>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
-Date: Wed, 18 Sep 2024 10:31:09 +0200
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>,
- Matthew Wilcox <willy@infradead.org>,
- linux-mm@kvack.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Daniel Dao <dqminh@cloudflare.com>,
- clm@meta.com,
- regressions@lists.linux.dev,
- regressions@leemhuis.info
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0C392D79-DAB1-4730-B2AB-B2B8CF100F11@flyingcircus.io>
-References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
- <ZuNjNNmrDPVsVK03@casper.infradead.org>
- <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
- <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <Zud1EhTnoWIRFPa/@dread.disaster.area>
- <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
-To: Dave Chinner <david@fromorbit.com>
+MIME-Version: 1.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-
-
-> On 16. Sep 2024, at 09:14, Christian Theune <ct@flyingcircus.io> =
-wrote:
->=20
->>=20
->> On 16. Sep 2024, at 02:00, Dave Chinner <david@fromorbit.com> wrote:
->>=20
->> I don't think this is a data corruption/loss problem - it certainly
->> hasn't ever appeared that way to me.  The "data loss" appeared to be
->> in incomplete postgres dump files after the system was rebooted and
->> this is exactly what would happen when you randomly crash the
->> system. i.e. dirty data in memory is lost, and application data
->> being written at the time is in an inconsistent state after the
->> system recovers. IOWs, there was no clear evidence of actual data
->> corruption occuring, and data loss is definitely expected when the
->> page cache iteration hangs and the system is forcibly rebooted
->> without being able to sync or unmount the filesystems=E2=80=A6
->> All the hangs seem to be caused by folio lookup getting stuck
->> on a rogue xarray entry in truncate or readahead. If we find an
->> invalid entry or a folio from a different mapping or with a
->> unexpected index, we skip it and try again.  Hence this does not
->> appear to be a data corruption vector, either - it results in a
->> livelock from endless retry because of the bad entry in the xarray.
->> This endless retry livelock appears to be what is being reported.
->>=20
->> IOWs, there is no evidence of real runtime data corruption or loss
->> from this pagecache livelock bug.  We also haven't heard of any
->> random file data corruption events since we've enabled large folios
->> on XFS. Hence there really is no evidence to indicate that there is
->> a large folio xarray lookup bug that results in data corruption in
->> the existing code, and therefore there is no obvious reason for
->> turning off the functionality we are already building significant
->> new functionality on top of.
-
-I=E2=80=99ve been chewing more on this and reviewed the tickets I have. =
-We did see a PostgreSQL database ending up reporting "ERROR: invalid =
-page in block 30896 of relation base/16389/103292=E2=80=9D.=20
-
-My understanding of the argument that this bug does not corrupt data is =
-that the error would only lead to a crash-consistent state. So =
-applications that can properly recover from a crash-consistent state =
-would only experience data loss to the point of the crash (which is fine =
-and expected) but should not end up in a further corrupted state.
-
-PostgreSQL reporting this error indicates - to my knowledge - that it =
-did not see a crash consistent state of the file system.
-
-Christian
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+TWFyY2VsIFdlacOfZW5iYWNoIDxtd2Vpc3NlbmJhY2hAaWduYXoub3JnPiB3cm90ZToNCj4gU2V0
+dGluZyByZXQgdG8gLTEgZGlkIHRoZSBqb2IsIHdpZmkgd29ya3MgYWdhaW4gYXMgZXhwZWN0ZWQu
+DQo+IA0KPiBIZXJlIGlzIHRoZSBvdXRwdXQgb2YgZG1pZGVjb2RlDQo+IGh0dHBzOi8vaWduYXou
+b3JnL25leHRjbG91ZC9pbmRleC5waHAvcy90WmRqWVlkeWVXcEhQSDQNCj4gDQoNCkkgd3JvdGUg
+YSBxdWlyayBhY2NvcmRpbmcgdG8geW91ciBkbWlkZWNvZGUgWzFdLiBQbGVhc2UgdHJ5IGlmIHRo
+aXMgY2FuDQpzdGlsbCB3b3JrIHRvIHlvdS4gSWYgeWVzLCBwbGVhc2UgaGVscCB0byByZXBseSBh
+IFRlc3RlZC1ieSB0YWcgdGhlcmUuDQpUaGFua3MuIA0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvbGludXgtd2lyZWxlc3MvMjAyNDA5MTgwODU1NTEuNTQ2MTEtMS1wa3NoaWhAcmVhbHRl
+ay5jb20vVC8jdQ0KDQoNCg==
