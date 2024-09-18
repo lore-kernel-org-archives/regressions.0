@@ -1,76 +1,186 @@
-Received: from IgnazServer.ignaz.org (IgnazServer.ignaz.org [37.252.120.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CAB73501
-	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 07:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.252.120.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F6E15853D
+	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 08:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726644768; cv=none; b=JZZ+vQJgctLoEyMyOnDGBL6OiI/JO8QBxM3mS4v+vPcbycec8LvUwujnnoger+qqd7JToB8/LPq4jbzEwkQ9W17HBD5oTMxCqpWEdFVzeyEJM3TQxVQ6R0PM9oKXpmZH9zO573938MlxRHVoY1Z+EDzAZpgzYAaPZ9+v+d5eGnE=
+	t=1726646721; cv=none; b=UIM+QRwdGQgydDT6TvozC8wcHFQIk+nB54Ld0B13t9LkBppWLW1JkjOGS8lMfqG6vEUtT2/C7FHZ5ZsGlKNAybW7Ll5yafgqnDs/tMBao0qF9PthgwatjM1Gedaz2aV73BhcxCjVK+cp2dLY5Wqz9aBxzQdy1v/tweNOBGuu8cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726644768; c=relaxed/simple;
-	bh=CR11bOxKhVYIH7UYtKrY4JU3oySaM9UVFwyhDOyz7Mw=;
-	h=From:To:Cc:Subject:References:In-Reply-To:Message-ID:Date:
-	 Content-Type:MIME-Version; b=QAjZKvTi6C5OhQ8bJLn/1ACG98ZERMnKCphKKswRf1CuQNDcGPJbYFfxUhXE2MkGYr437Fcoj7a1sT/uF1gw9OyEhJtlLELy9FxlfZKau6pE6Nlycd7bb5iC6WQdGSNfqlwa55mzkDPkJHfykHpT8d4CONPL4d3hA0IfQz5njP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ignaz.org; spf=pass smtp.mailfrom=ignaz.org; arc=none smtp.client-ip=37.252.120.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ignaz.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ignaz.org
-Received: from ignaz.org (localhost.localdomain [127.0.0.1])
-	by IgnazServer.ignaz.org (IgnazServer) with ESMTPSA id 0709541088;
-	Wed, 18 Sep 2024 09:32:38 +0200 (CEST)
-From: Marcel =?utf-8?b?V2Vpw59lbmJhY2g=?= <mweissenbach@ignaz.org>
-To: stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>
-Cc: regressions@lists.linux.dev, linux-wireless@vger.kernel.org
-Subject: RE: RTL8852BE wifi no longer working after 6.11 upgrade
-References: <f755bbeb5bbb479f9142bf223e71102c@realtek.com>
-In-Reply-To: <f755bbeb5bbb479f9142bf223e71102c@realtek.com>
-Message-ID: <20240918073237.Horde.VLueh0_KaiDw-9asEEcdM84@ignaz.org>
-User-Agent: Horde Application Framework 5
-Date: Wed, 18 Sep 2024 07:32:37 +0000
-Content-Type: text/plain; charset=utf-8
+	s=arc-20240116; t=1726646721; c=relaxed/simple;
+	bh=hMFeXQZRHn8UB2b48vO/INvfoZ45GI6TKEEB4599HkA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hbsa/Dzh+bSpTG+bg54FZlRbN1gCOviYlNq5JXN4O3nhxcjheZZBBYrJjm8eFat68wDOWriz/BEVbhhycmFOBsEOF3/FYXdNtATbTrBCdrgTNygVr8Kydg0g5as/muEkQUmPItzXJ9/Bs9GXK79O9GChdChbjIYhU97f2BWsMnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hwObczKK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aKyjuGee; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cK5ofELI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/sz8tx6+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hwObczKK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aKyjuGee";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cK5ofELI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/sz8tx6+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EFDA21FBB5;
+	Wed, 18 Sep 2024 08:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726646712; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iRb6bhUWnfap7Hi0tQE7Q46cU6rKKKEkL1LdvSyKE34=;
+	b=hwObczKKsvudn5VmkoySwCfL+3jwY5o4EW2Kkxv5nQpTftRCbnvVoyC3hBObBZTSjfKwVK
+	oRDv18Wt1Q1zymP5pY/RyqKnbIgJxnB4K3cvyP5sqj8MhIFBXPl0uabESsEDk4pFhLv5+2
+	9p47QyS4XPdXn1HBpMJc3IMBA+1e06U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726646712;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iRb6bhUWnfap7Hi0tQE7Q46cU6rKKKEkL1LdvSyKE34=;
+	b=aKyjuGeeWte7+hYVvmhDGlJJPU9wmYUr03NAD8+wG71U+doC4rPFwErOgSWDYN9vGnCQfs
+	Kg6xW9w4nG6x+RCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cK5ofELI;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/sz8tx6+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1726646710; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iRb6bhUWnfap7Hi0tQE7Q46cU6rKKKEkL1LdvSyKE34=;
+	b=cK5ofELIJK/qJAmUPiFdayjaLFQt255Uo12uNmfeXonSuvCrOoJEoF2IebF+nxMxyBArYO
+	dbVh/Lrg+z46JOqJf95359QB2QwFIBGDP8TBjsBk9M03GA3IVaYDL/VeoEqAoiwQd+moLS
+	JOiDCN1kp0uYA03pL52FrsP+/h5YPOo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1726646710;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iRb6bhUWnfap7Hi0tQE7Q46cU6rKKKEkL1LdvSyKE34=;
+	b=/sz8tx6+f/4xxKdpoLp8G3VXfdSqp2Lc+f3OkludsFrOD2LefO/zPFUezBj0esfSaDYhfa
+	TYlRwm1fgtkZQ9Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AF33613A57;
+	Wed, 18 Sep 2024 08:05:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fq93KbaJ6mazVQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 18 Sep 2024 08:05:10 +0000
+Date: Wed, 18 Sep 2024 10:06:01 +0200
+Message-ID: <87setxe68m.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jerry Luo <jerryluo225@gmail.com>
+Cc: Christoffer Sandberg <cs@tuxedo.de>,
+	Christian Heusel <christian@heusel.eu>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.de>
+Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
+In-Reply-To: <1fbba03e-56b8-4e74-adf6-998e3a2d9dac@gmail.com>
+References: <c930b6a6-64e5-498f-b65a-1cd5e0a1d733@heusel.eu>
+	<87jzfbh5tu.wl-tiwai@suse.de>
+	<66dfd536-ae17-4d75-b514-7931a3734e54@gmail.com>
+	<20f70c0a92a27db29f188e05c33ba82c@tuxedo.de>
+	<1fbba03e-56b8-4e74-adf6-998e3a2d9dac@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: EFDA21FBB5
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -5.51
+X-Spam-Flag: NO
 
-Setting ret to -1 did the job, wifi works again as expected.
-¬†
-Here is the output of dmidecode
-https://ignaz.org/nextcloud/index.php/s/tZdjYYdyeWpHPH4
-¬†
-Thanks a lot
-¬†
-"Ping-Ke Shih" pkshih@realtek.com ‚Äì 2024Âπ¥9Êúà18Êó• 15:02
-> Marcel Wei√üenbach <mweissenbach@ignaz.org> wrote:
-> >¬†
-> > Hi there,
-> >¬†
-> > i upgraded my Archlinux testing setup from 6.10.9 to 6.11 and noticed that my wifi is no longer working.
->¬†
-> Checking the commits between 6.10.9 and 6.11, I feel the cause is
-> 1fd4b3fe52ef ("wifi: rtw89: pci: support 36-bit PCI DMA address")
->¬†
-> Seemingly there is 36-bit PCI DMA interoperability on RTL8852BE.
-> Could you please try below to comment out the function?¬†
->¬†
-> diff --git a/drivers/net/wireless/realtek/rtw89/pci.c b/drivers/net/wireless/realtek/rtw89/pci.c
-> index 02afeb3acce4..039fc329c6f7 100644
-> --- a/drivers/net/wireless/realtek/rtw89/pci.c
-> +++ b/drivers/net/wireless/realtek/rtw89/pci.c
-> @@ -3061,7 +3061,7 @@ static int rtw89_pci_setup_mapping(struct rtw89_dev *rtwdev,
-> goto err;
-> }
->¬†
-> - ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(36));
-> + ret = -1;//dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(36));
-> if (!ret) {
-> rtwpci->enable_dac = true;
-> rtw89_pci_cfg_dac(rtwdev);
->¬†
->¬†
-> If this helps, please provide your DMI info by 'sudo dmidecode'. I will build
-> a quirk table for it since I don't know what the exact settings affect this.
->¬†
->
+On Tue, 17 Sep 2024 23:16:08 +0200,
+Jerry Luo wrote:
+> 
+> On 9/17/24 5:50 AM, Christoffer Sandberg wrote:
+> 
+> > From the dmesg logs it does look like the quirk is applied. Assuming
+> > the pci ids collide between these models (or the model param is used)
+> > which would explain why it gets applied:
+> > 
+> > 1. Does the device have dual speaker pairs? If so (or if in doubt),
+> > †† check alsamixer for the codec and play around with the volume knobs
+> > †† to see if the controls affect the individual speaker pairs. Or try
+> > †† this https://github.com/alsa-project/alsa-ucm-conf/pull/410 to control
+> > †† both with the system volume control
+> > 2. If the device does not have dual speakers the quirk application
+> > probably
+> > †† needs to be extended with DMI specific info to limit it more.
+> > 
+> > Let me know how it works,
+> > 
+> > Christoffer
+> 
+> From what I am can tell, and as mentioned in the tech specs, the
+> laptop only have two speakers, unlike the Sirius series.
+> 
+> In case I didn't make it clear enough, the audio volume is normal now
+> for some unknown reasons. And no matter which kernel I change to, the
+> issue doesn't reappear.
+> 
+> If you want a dmesg log from the kernel that used to not work, or any
+> other info, please let me know.
+
+I don't see any relevant about the incorrect volumes by the suggested
+commit, but at least we should avoid applying the quirk for a
+non-existing speaker pin.
+
+Jerry, yours is with CX11970 (codec id 0x14f120d0), right?
+
+Werner, how about your Sirius models?  Are they also with the same
+codec chip?  If they are different, we can have the additional checks
+for judging whether to apply the pincfg fix or not.
+
+
+thanks,
+
+Takashi
