@@ -1,182 +1,116 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274AF17332C
-	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 08:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5368175B
+	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 08:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726646905; cv=none; b=ApnR+moTHiAgE4ICfV/LSm58aW71/YOs6E7aDKxhwL1e1eW759zqnS1G89a2p3lSycAaIlsIGaeEnz06XqEPky2PseUEwIH1a6W6VyDFBjtlYkLPyHsK1bswcMqDFmA+JrT4vdDK/GQ2jqfbSezIRxJjo/cjMn2pUk2m6MAFdN0=
+	t=1726648298; cv=none; b=ZICOavf9tTZTibQpHfuuDS2WJxzSZlFAmWTfrLBhIuhk682+15VAB+l9syFrVeONw0/OUUXw3FDS+H9yyOTBbQkSvKUSM031Ke28z6NxmCIl80sTZuoJq9lWYntV2LAiS+Q+5shuFOEE6F0rbFCw9i+YeO6oRXPvGpUwKlBzML0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726646905; c=relaxed/simple;
-	bh=mdLJ7ZLU9vxZx51pje0sV6Xwgy1GiyxiDE2P8wEYh7k=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sl1C5EbdHvPSGkIOFRAatwEOG5MVxShY0NY7A2RzSikkMynMou1DlkNLHGiTIsYH2zVnhDABHVAmJ9YY2cuuEOn655wnJ0KgKfRk+Nd5LuTu6XIpW1WoxpY7jIa4ayZxZ/9y9rZbnIq4SlhrozTZ6uuSBmO5VJQWHHohxYj3VMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R1YJ/qhR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Wgm78cXi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=miBSuaYS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gPNtlZnn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1726648298; c=relaxed/simple;
+	bh=Fzn1aEdw/yxhbLMFY9G3xd1Gy61G7ncfaBdVHUMisvY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=CHx3ziIlmoX3a1vU8eSeNrCIC5PyBDCXVqhGUjiEeB7jH1Cm+dy4yKtV59uLRGtrr0dZ7TkQr+SxJKANYYukzYF34WK76smwdL3ud6iAdF1BIf64XwQ4YoS+VKSbQbeduZ7hzck4CJ+P6zFpCj50Hos7XGMDAQYL9tg6Axe1VaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=Rd5vvMao; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R1YJ/qhR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Wgm78cXi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="miBSuaYS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gPNtlZnn"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3CD741FBB5;
-	Wed, 18 Sep 2024 08:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1726646900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pxliENHXGWSgt3jZX5k5O8yPdk+geuL+rXsuaHaClHU=;
-	b=R1YJ/qhRIwDSUSiuc2lFxrtW5DYfD0JlX3EFG4wdTqOXHXlktBZAwr4OBrsbjCBrDIBfhr
-	aegDSPg26dlVfiCEz268H7HNYOEDxWhbCEb3svD1bkhYEURZ7Hs9Ib7g2XqwuIwbWrVMrF
-	XuwxpZ8kyKV9SqsI7oqBDJJGjiIzs8M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1726646900;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pxliENHXGWSgt3jZX5k5O8yPdk+geuL+rXsuaHaClHU=;
-	b=Wgm78cXiduQBY5g4wDcr18J8YcMeVfFnE/hELdS4tCXMVk0mSVxh99WXkxJCGh4f2o7Whg
-	xNdOYrjoOWkDOmDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1726646899; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pxliENHXGWSgt3jZX5k5O8yPdk+geuL+rXsuaHaClHU=;
-	b=miBSuaYSE/Ug+JV3btTex5c9+LbKS1aNBYDB5v85v7JEt/hbAtXWPcF0LmkNhgtCpAjrw2
-	o208EzG1ONOQU0Uqu5NZ41IgBNmW/wI/QTVk+Qy+1C9idzAkYqIzWGtc6V9t9lwyw0yvYn
-	iAwn4ctkMmoYr2oDgEftLZdSNXDbVOc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1726646899;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pxliENHXGWSgt3jZX5k5O8yPdk+geuL+rXsuaHaClHU=;
-	b=gPNtlZnnwBJfiVP47XjAH5IaZ2oZ74b7Qh4o4ocqDaJVGEZ9Xt6cLpTgEmt4rIfgztRAWS
-	CjzTTC8vVcLDVHBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA5D613A57;
-	Wed, 18 Sep 2024 08:08:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 881zN3KK6maNVgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 18 Sep 2024 08:08:18 +0000
-Date: Wed, 18 Sep 2024 10:09:09 +0200
-Message-ID: <87r09he63e.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Jerry Luo <jerryluo225@gmail.com>,
-	Christoffer Sandberg <cs@tuxedo.de>,
-	Christian Heusel <christian@heusel.eu>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Jaroslav Kysela <perex@perex.cz>
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-In-Reply-To: <87setxe68m.wl-tiwai@suse.de>
-References: <c930b6a6-64e5-498f-b65a-1cd5e0a1d733@heusel.eu>
-	<87jzfbh5tu.wl-tiwai@suse.de>
-	<66dfd536-ae17-4d75-b514-7931a3734e54@gmail.com>
-	<20f70c0a92a27db29f188e05c33ba82c@tuxedo.de>
-	<1fbba03e-56b8-4e74-adf6-998e3a2d9dac@gmail.com>
-	<87setxe68m.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="Rd5vvMao"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1726648291;
+	bh=me6yhkQ1Qf7Nz+9dw5lt1yO15V7nP5XWT/aS4UjahWA=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=Rd5vvMaolEmrl1l2z1ggs+5be2/6j4K964x7uMBLhVcPO2gEU/eYonbL1WLMHsp2+
+	 QT8qbQk0uFrMQew4heoH4gNpduUY/4ziQ8d6f9V2MVqoQat69ad6Vx9Eghq6wD66pw
+	 LS293864SUaoed/IsnRGnQ8RKO7SFKGBlbrR9QzE=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,tuxedo.de,heusel.eu,tuxedocomputers.com,lists.linux.dev,vger.kernel.org,perex.cz];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-On Wed, 18 Sep 2024 10:06:01 +0200,
-Takashi Iwai wrote:
-> 
-> On Tue, 17 Sep 2024 23:16:08 +0200,
-> Jerry Luo wrote:
-> > 
-> > On 9/17/24 5:50 AM, Christoffer Sandberg wrote:
-> > 
-> > > From the dmesg logs it does look like the quirk is applied. Assuming
-> > > the pci ids collide between these models (or the model param is used)
-> > > which would explain why it gets applied:
-> > > 
-> > > 1. Does the device have dual speaker pairs? If so (or if in doubt),
-> > >    check alsamixer for the codec and play around with the volume knobs
-> > >    to see if the controls affect the individual speaker pairs. Or try
-> > >    this https://github.com/alsa-project/alsa-ucm-conf/pull/410 to control
-> > >    both with the system volume control
-> > > 2. If the device does not have dual speakers the quirk application
-> > > probably
-> > >    needs to be extended with DMI specific info to limit it more.
-> > > 
-> > > Let me know how it works,
-> > > 
-> > > Christoffer
-> > 
-> > From what I am can tell, and as mentioned in the tech specs, the
-> > laptop only have two speakers, unlike the Sirius series.
-> > 
-> > In case I didn't make it clear enough, the audio volume is normal now
-> > for some unknown reasons. And no matter which kernel I change to, the
-> > issue doesn't reappear.
-> > 
-> > If you want a dmesg log from the kernel that used to not work, or any
-> > other info, please let me know.
-> 
-> I don't see any relevant about the incorrect volumes by the suggested
-> commit, but at least we should avoid applying the quirk for a
-> non-existing speaker pin.
-> 
-> Jerry, yours is with CX11970 (codec id 0x14f120d0), right?
-> 
-> Werner, how about your Sirius models?  Are they also with the same
-> codec chip?
-> If they are different, we can have the additional checks
-> for judging whether to apply the pincfg fix or not.
-
-Or it's a question to Christoffer.  Doesn't matter, if anyone can give
-a info :)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
+Date: Wed, 18 Sep 2024 10:31:09 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ Matthew Wilcox <willy@infradead.org>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ clm@meta.com,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0C392D79-DAB1-4730-B2AB-B2B8CF100F11@flyingcircus.io>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <686D222E-3CA3-49BE-A9E5-E5E2F5AFD5DA@flyingcircus.io>
+To: Dave Chinner <david@fromorbit.com>
 
 
-thanks,
 
-Takashi
+> On 16. Sep 2024, at 09:14, Christian Theune <ct@flyingcircus.io> =
+wrote:
+>=20
+>>=20
+>> On 16. Sep 2024, at 02:00, Dave Chinner <david@fromorbit.com> wrote:
+>>=20
+>> I don't think this is a data corruption/loss problem - it certainly
+>> hasn't ever appeared that way to me.  The "data loss" appeared to be
+>> in incomplete postgres dump files after the system was rebooted and
+>> this is exactly what would happen when you randomly crash the
+>> system. i.e. dirty data in memory is lost, and application data
+>> being written at the time is in an inconsistent state after the
+>> system recovers. IOWs, there was no clear evidence of actual data
+>> corruption occuring, and data loss is definitely expected when the
+>> page cache iteration hangs and the system is forcibly rebooted
+>> without being able to sync or unmount the filesystems=E2=80=A6
+>> All the hangs seem to be caused by folio lookup getting stuck
+>> on a rogue xarray entry in truncate or readahead. If we find an
+>> invalid entry or a folio from a different mapping or with a
+>> unexpected index, we skip it and try again.  Hence this does not
+>> appear to be a data corruption vector, either - it results in a
+>> livelock from endless retry because of the bad entry in the xarray.
+>> This endless retry livelock appears to be what is being reported.
+>>=20
+>> IOWs, there is no evidence of real runtime data corruption or loss
+>> from this pagecache livelock bug.  We also haven't heard of any
+>> random file data corruption events since we've enabled large folios
+>> on XFS. Hence there really is no evidence to indicate that there is
+>> a large folio xarray lookup bug that results in data corruption in
+>> the existing code, and therefore there is no obvious reason for
+>> turning off the functionality we are already building significant
+>> new functionality on top of.
+
+I=E2=80=99ve been chewing more on this and reviewed the tickets I have. =
+We did see a PostgreSQL database ending up reporting "ERROR: invalid =
+page in block 30896 of relation base/16389/103292=E2=80=9D.=20
+
+My understanding of the argument that this bug does not corrupt data is =
+that the error would only lead to a crash-consistent state. So =
+applications that can properly recover from a crash-consistent state =
+would only experience data loss to the point of the crash (which is fine =
+and expected) but should not end up in a further corrupted state.
+
+PostgreSQL reporting this error indicates - to my knowledge - that it =
+did not see a crash consistent state of the file system.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
