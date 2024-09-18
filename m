@@ -1,111 +1,88 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893331898F1
-	for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 14:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F106F9CB;
+	Wed, 18 Sep 2024 14:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726668607; cv=none; b=fdAd9y4f45ZDEKLJH+Xr8epqBLImrVNBvOJXW9ohB/lDbONjt8gqpCTpOxq1+RipRK3K0a37JY7gJ+l8pGu1sSgcfJEvuUGeKec8wxgC4Sty2J0T57X6GG/PLmwnlU5qRe/6vYA/ACNefLJQHPLQif8PlyQUNiA4JGrjc+mX9/U=
+	t=1726668759; cv=none; b=hb3wxdFPXXwKgjefU7oansjuMsYOPaCntp4iSvQNJE25R9duYpH42HHDDMtxEqARrhy1EXjz0Xzqf3mjy2UfRYJ44wORPWIlOPuNm1/NzBjA4Lsk7rXT+iuSi8zG/PKeMxhjvDQ5W76ekYSxgzJ1xHpr10mdJnaHXY9jQqyD/tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726668607; c=relaxed/simple;
-	bh=13VMKhIv2lXRTCy5STsEsl6Vx30Qfx8Efz6mgtaPZwo=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=otspe0VZ7coO/Z35VA+K0i1rYdKplMzjuO8jP08aKh83gIF6wo5JdwOTMvEM4QeaIs+QTOVtkRr3GTC7HL0D3vxa/tvPAbQfk8PWT2R/Nt+PSUipUpG7YrCFa4+5xkMJMLz+gEx5qkkyHT73aWwehF+fCi62+GrVIdwJuYA5eBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuxedo.de; spf=pass smtp.mailfrom=tuxedo.de; dkim=pass (2048-bit key) header.d=tuxedo.de header.i=@tuxedo.de header.b=bPNd6doL; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuxedo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedo.de
+	s=arc-20240116; t=1726668759; c=relaxed/simple;
+	bh=6NlMDn6G8FUuzCdG6WBURoTQNIUtKbtdI6OB1EeRH+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NHOzfZts4/L2f7mKTj7FSkDIMDyzATx3dpOeMMSzsG+YaNJrKyLt6EJ7zLyYkaSydAvodUAOeH6uFB6zgbN0+wXe2Tb+WcbYmhDF+BkIdkC6UTcRWUq7C/Ug4cK2hy9cOcVAXyPoI7M5x/JOfXZFImfq4/gMlmGUD0vqi3jq2IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HNeVUv6i; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxedo.de header.i=@tuxedo.de header.b="bPNd6doL"
-Received: from mail.tuxedocomputers.com (localhost [IPv6:::1])
-	(Authenticated sender: cs@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1B98E2FC0173;
-	Wed, 18 Sep 2024 16:10:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedo.de; s=default;
-	t=1726668600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0n5gawmEzxr38cZdSrO5pp3uPMCaZrV3zJ4YL6eIaL4=;
-	b=bPNd6doLl6+drAkUVWagvecGNXjYiBWcFeoNu1sBezyUoG0Nz4F2jl8cZU8vM30tWG5VnZ
-	QeWO1PCIM986b9W3JH/GW77XX+QBV6NbNWwVkodd6tFh/lekcTOYf46piaYlm0cQ4waXN5
-	AvyWy9wyWeqxzpTamPxE3E+gxGUkqiOIApf1OzO3S7xzXZXfS6Oa9jrPXKwF3YEMCrG30m
-	wVrNUqOuxDaFsUELTtMWc2EaRr3wAtVuuMUbWEPjb+g0WwSdTequTzl9N3TlxmbRfA2S/U
-	mUkcilxp97v2KVeLs4oK96ikoeI+p/DLNe0pLBK9cR6mxqQ7LF6Nd+3CiocVYw==
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HNeVUv6i"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ni/akaMESxhEbLiyAWV6aj2aPhfND/QItwuWAkzArog=; b=HNeVUv6iwFCo/iQBMWywvV3X+F
+	3k8CBU7k+sHoZOahkAZyNNbUcNMseYbno1kbdALrlcNhSr/fCjzk3TsjYfdRIPDxo27yzb0MQkU8/
+	wp6Owt6JTPKWq/29Bq043kYpK2LYzWP5Fnhkjo6IDmh5F8mxnzc8Rx/7oFcblMJyoThQbntw9OzFm
+	vOaHlGQ3WX3a2FFku+S2m8JTnFl72JNv1dYquzJE/weqFVE3iymBho4wx0cCrugR+pTvMrY0km8m6
+	85Jdk2A4+J/L+RznjV0ud0aPOudzZfKoiLAA9BzrHCZuV/CggzefYbZaEETK2RWCWygnhfDfVJlmO
+	sYLL9rOQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1sqvQ0-00000005cxD-0wKA;
+	Wed, 18 Sep 2024 14:12:32 +0000
+Date: Wed, 18 Sep 2024 15:12:31 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Chris Mason <clm@meta.com>, Jens Axboe <axboe@kernel.dk>,
+	Dave Chinner <david@fromorbit.com>,
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <Zurfz7CNeyxGrfRr@casper.infradead.org>
+References: <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <CAHk-=wjix8S7_049hd=+9NjiYr90TnT0LLt-HiYvwf6XMPQq6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 18 Sep 2024 16:10:00 +0200
-From: Christoffer Sandberg <cs@tuxedo.de>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Werner Sembach <wse@tuxedocomputers.com>, Jerry Luo
- <jerryluo225@gmail.com>, Christian Heusel <christian@heusel.eu>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-In-Reply-To: <87r09hcbr0.wl-tiwai@suse.de>
-References: <c930b6a6-64e5-498f-b65a-1cd5e0a1d733@heusel.eu>
- <87jzfbh5tu.wl-tiwai@suse.de>
- <66dfd536-ae17-4d75-b514-7931a3734e54@gmail.com>
- <20f70c0a92a27db29f188e05c33ba82c@tuxedo.de>
- <1fbba03e-56b8-4e74-adf6-998e3a2d9dac@gmail.com>
- <87setxe68m.wl-tiwai@suse.de> <87r09he63e.wl-tiwai@suse.de>
- <dfb141e8-6afa-4d21-8cd4-f9a53e8a192e@tuxedocomputers.com>
- <87r09hcbr0.wl-tiwai@suse.de>
-User-Agent: Roundcube Webmail/1.4.15
-Message-ID: <cedb8758bb506bf9454b90eebcaaea24@tuxedo.de>
-X-Sender: cs@tuxedo.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjix8S7_049hd=+9NjiYr90TnT0LLt-HiYvwf6XMPQq6Q@mail.gmail.com>
 
-
-
-On 18.9.2024 15:49, Takashi Iwai wrote:
-> On Wed, 18 Sep 2024 15:39:28 +0200,
-> Werner Sembach wrote:
->> 
->> Hi
->> 
->> Am 18.09.24 um 10:09 schrieb Takashi Iwai:
->> > On Wed, 18 Sep 2024 10:06:01 +0200,
->> > Takashi Iwai wrote:
->> >> [...]
->> >> I don't see any relevant about the incorrect volumes by the suggested
->> >> commit, but at least we should avoid applying the quirk for a
->> >> non-existing speaker pin.
->> >>
->> >> Jerry, yours is with CX11970 (codec id 0x14f120d0), right?
->> 
->> Yes, at least for the preproduction sample of the Sirius Gen1 I have
->> at hand atm.
->> 
->> pciid is 2782:12c3
->> 
->> @Christoffer: I guess 2782:12c5 is for the Gen2?
-
-Yes the other is for Sirius Gen2
-
+On Wed, Sep 18, 2024 at 03:51:39PM +0200, Linus Torvalds wrote:
+> On Wed, 18 Sept 2024 at 15:35, Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > Oh god, that's it.
+> >
+> > there should have been an xas_reset() after calling xas_split_alloc().
 > 
-> Hm, and one of those PCI SSID conflicts with System76 Pangolin
-> (pang14)?  All seem to have the very same codec CX11970.
-
-I don't think I saw the pci id explicitly listed, but that was the 
-assumption.
-
+> I think it is worse than that.
 > 
-> If they really conflict in both PCI and HD-audio codec IDs, the only
-> way would be to check DMI string, I'm afraid.
-> 
+> Even *without* an xas_split_alloc(), I think the old code was wrong,
+> because it drops the xas lock without doing the xas_reset.
 
-I asked about the volumes since it could be a hint that a second speaker 
-is activated but stuck on a fixed volume. This would make a low general 
-volume setting sound louder but still somewhat adjustable.
+That's actually OK.  The first time around the loop, we haven't walked the
+tree, so we start from the top as you'd expect.  The only other reason to
+go around the loop again is that memory allocation failed for a node, and
+in that case we call xas_nomem() and that (effectively) calls xas_reset().
 
-However, if we can not verify second speaker pair, then I agree, DMI 
-limit would be the safe choice.
+So in terms of the expected API for xa_state users, it would be consistent
+for xas_split_alloc() to call xas_reset().
 
-Christoffer
+You might argue that this API is too subtle, but it was intended to
+be easy to use.  The problem was that xas_split_alloc() got added much
+later and I forgot to maintain the invariant that makes it work as well
+as be easy to use.
