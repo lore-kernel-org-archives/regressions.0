@@ -1,72 +1,105 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434821386D7
-	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 05:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C966754658
+	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726725520; cv=none; b=t5Ylc3+HTCTCYGSCMBCkGdljtmdjP6V4ZtK5sSg6x+5nlf64Is8UWnemmDxKv6LeXdXcNA18pIt9DKlc/0zElRDd2MU+uowM59b3mpAt5lG9GDHPPxu1Ik++VW2AtSLxDdHfyCROO264bOfT17DwGLtEAaKaqcvSZ8pYstFZ5t8=
+	t=1726727712; cv=none; b=c9SmXwEZ+sbJhinDIUfUFnShtYFRUJlAox215m6G+1Jv4NVZ9TVqyvOseHBgLN36j8kyvUTWmMIxYmyJrlbQbXNYIeB9rByAgEii9zNS1MWpQfOnVkZds/mNA/+lucN7B+rLlzBJ0j8runT4ufWy2thQFyfSB0axW/s4155s3Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726725520; c=relaxed/simple;
-	bh=sL2pBfwgQPrKUSSEW/3Sc/p/OmOc7fQfQ8tcs7jMfR0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Kl83OoyY76IcoDMGExV/NceltNcm+4aa+OeqjfAW+L3kUQ7pp7VCAPUgP+UYDclzbj/psN+1oXRtAeyjKxLRDYTU11eMpDS1Qbe2aIDxDgSq+eacQo0VAW8JHQ5974yNCPThCgZbvvXswrnF1c8YIW1uwqvck/PxL7NZ8dV/C5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [172.30.4.124] (unknown [193.158.90.91])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8D39361DFA93D;
-	Thu, 19 Sep 2024 07:51:06 +0200 (CEST)
-Message-ID: <18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de>
-Date: Thu, 19 Sep 2024 07:51:05 +0200
+	s=arc-20240116; t=1726727712; c=relaxed/simple;
+	bh=VRmJB0TDLwZhilpn0qW35CwpUJuZSIY3BltKr4ca9cU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=V1eFxi9v7/+kXP+gxI77UVMDbtIuub3Pv23Jr0nzzP279x7k2ObcXzFi7IWJB5Y2dZ09RuXiCtTdRVuQ4LELv16blzXXLlOrSwPO2VM3J8LwUKwMI0HSYEDc5sDDWeQ+UHROvVI2lu2VR+2ux0lTRwHEKCDevR+mmFqLhn1tYzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=ffStb6s8; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="ffStb6s8"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1726727698;
+	bh=VRmJB0TDLwZhilpn0qW35CwpUJuZSIY3BltKr4ca9cU=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=ffStb6s8HBuWmwvQNys8HfkponNZskM8Va7mK4b5PD+RrjW/eX0uaZKkWUvFVvEPv
+	 JBdPaenuRjtZzTY8rHH4hzds6EBghd/8neuhuBb9/7fboUmtwNBWT4R0Tov1iDZCnZ
+	 9dLt/GxPJ2WN2iScG890VJaEkwzZo8/UgmT9/o4A=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-pm@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, regressions@lists.linux.dev,
- Petr Mladek <pmladek@suse.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Fails to ACPI S3 supend on Dell XPS 13 9630
- (6.11.0-04557-g2f27fce67173)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Linux folks,
-
-
-On the Intel Kaby Lake laptop Dell XPS 13, Linux 
-6.11.0-04557-g2f27fce67173 (“6.12-rc0”) fails to ACPI S3 suspend the 
-system. The screen turns black (as expected) and the power button LED 
-stays on.
-
-Doing
-
-     echo N | sudo tee /sys/module/printk/parameters/console_suspend
-
-and on tty2
-
-     sudo systemctl stop gdm3
-     sudo systemctl start getty@tty1.service
-
-and then on tty1
-
-     sudo systemctl suspend
-
-I see some panic messages and traces containing ktime_get or so, but I 
-failed to save the messages. (Hints very much appreciated.)
-
-I try to test the printk changes, but otherwise bisecting is not 
-feasible, as it’s my production machine.
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+Date: Thu, 19 Sep 2024 08:34:37 +0200
+Cc: Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Chris Mason <clm@meta.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
 
 
-Kind regards,
+> On 19. Sep 2024, at 05:12, Linus Torvalds =
+<torvalds@linux-foundation.org> wrote:
+>=20
+> On Thu, 19 Sept 2024 at 05:03, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>=20
+>> I think we should just do the simple one-liner of adding a
+>> "xas_reset()" to after doing xas_split_alloc() (or do it inside the
+>> xas_split_alloc()).
+>=20
+> .. and obviously that should be actually *verified* to fix the issue
+> not just with the test-case that Chris and Jens have been using, but
+> on Christian's real PostgreSQL load.
+>=20
+> Christian?
 
-Paul
+Happy to! I see there=E2=80=99s still some back and forth on the =
+specific patches. Let me know which kernel version and which patches I =
+should start trying out. I=E2=80=99m loosing track while following the =
+discussion.=20
+
+In preparation: I=E2=80=99m wondering whether the known reproducer gives =
+insight how I might force my load to trigger it more easily? Would =
+running the reproducer above and combining that with a running =
+PostgreSQL benchmark make sense?=20
+
+Otherwise we=E2=80=99d likely only be getting insight after weeks of not =
+seeing crashes =E2=80=A6=20
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
