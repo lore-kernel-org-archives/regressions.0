@@ -1,98 +1,109 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C214C6D;
-	Thu, 19 Sep 2024 00:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBBE12E48
+	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 01:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726705303; cv=none; b=i9yJ1senkj4ztS/INxoY+hBoV412tR5dJVe8KdqdvhCChQ818kl3CU/nC8pvlsRxMO9q7sGi8vPfxpt4HnwcpR9sDbUokUrmuoogJbtnT7LJPvNc6fldN9aXJ3OQOgp2WmmasmXreo+O7g/R0UWxnPyGb4yjieVJ7/FQTuIu4Kk=
+	t=1726710200; cv=none; b=ZOMamVLX9yyvy7Z05dmNF4OwelP/+U3QPAOjBVAQlUQa/pAfp6+exza1KtwC4tdmZA2dYLiHdNHRj6fefEmsL1cIWZ5E1SaowL0MVLwAXrvUR4b57DHI8vnO+v+uY1+Dltfe6tAHavvpUltPMOyC8cX3N7cw1KZR8OHRD0D61TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726705303; c=relaxed/simple;
-	bh=vAzsZy/aeWmSds6WWiyXTHlHBVDsJdZPcWK8gvCwvaM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=U+vL9/8gaTtGmjCXGHTQht4zTHNaLvwt8vWuR1hBfrPp+wq18vUXg4KTlQgZ2s/72nFuSc+X7cfScFUwCecAPMuq4UFzWhzdh0Ai5QNnLAmrxrpi0PM9q4Ft22naB2r0Mf0hwSNTwAMLFflPoCO+uqg2pjtw61IC6KMKcvh2w9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=gAPO72jZ; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1726710200; c=relaxed/simple;
+	bh=oNXPqtyDgLu9Kh2ue6NBD6CfWTrY2WHFnxBQrLR39sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=av7xSP3zGwD17hW+ECugot2v1IJJhi4yMzLnYFS+k0rWzaLBzTLu+zQ403HtsypFwiqkTpnrmt5IqO3nmWLU+PlysFbMZTFFWUCMST8Bz5lR1NKxcqxBjy7jj4b2p599r7jpWOnDHoYsuUeYiLE7ctqVOtFBwmj8ijJwXD3kBhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=rVuhPXZM; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="gAPO72jZ"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 48J0LWXe82907218, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1726705292; bh=vAzsZy/aeWmSds6WWiyXTHlHBVDsJdZPcWK8gvCwvaM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=gAPO72jZy/Ch4fP2O6DXQjHQNNl8MH4MPkcNP1R767oe0fX4tvxqcLOVyAs/fe0Jo
-	 2cXA+8lWbvg+3lt6kcsreuMZUIvBHyp039LFo7kk7w8ygmDq2aVJ2hoWUGDpkpZ12e
-	 5JC20HnFqbu7aQ/oUgXtiSHqT9OieSD0BeUEl0lGZ3Uzw9OabD0xldDw4UYo+w6Ew7
-	 HkzRnR9Es7VnTZye6n4j7Cb3l4N1sK4JBf5lPp3p1Go1C9hWQEudBfsZVKlSJ+l0vt
-	 6jJSxVa5yQ+6cxw2w1ulcXckFmwhxD23W9qztc15yIIGK6iFZBQMeTR2N5NPZmOZYx
-	 f1pe/VYsF6dvg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.05/5.92) with ESMTPS id 48J0LWXe82907218
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Sep 2024 08:21:32 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 19 Sep 2024 08:21:33 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 19 Sep 2024 08:21:32 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::2882:4142:db9:db1f]) by
- RTEXMBS04.realtek.com.tw ([fe80::2882:4142:db9:db1f%11]) with mapi id
- 15.01.2507.035; Thu, 19 Sep 2024 08:21:32 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: =?utf-8?B?TWFyY2VsIFdlacOfZW5iYWNo?= <mweissenbach@ignaz.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: RE: RTL8852BE wifi no longer working after 6.11 upgrade
-Thread-Topic: RTL8852BE wifi no longer working after 6.11 upgrade
-Thread-Index: AQHbCMemb6H6HxFviUGmiPt2/8qxPLJdDI+A//+Vo4CAAJ3wIP//qTkAgAFYScA=
-Date: Thu, 19 Sep 2024 00:21:32 +0000
-Message-ID: <72a320c056364e98b2fa338766fc11f2@realtek.com>
-References: <63a3ef5acd70454e9f8db114204e2e2d@realtek.com>
- <20240918114718.Horde.TpiB1MVH0uadLCQXUbR5WtB@ignaz.org>
-In-Reply-To: <20240918114718.Horde.TpiB1MVH0uadLCQXUbR5WtB@ignaz.org>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="rVuhPXZM"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71971d2099cso227979b3a.2
+        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 18:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1726710198; x=1727314998; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+jwxQJbxpwl4voWuXzYITDQeat0ESjsMo2U9Mc7bSDY=;
+        b=rVuhPXZMFIJYvG+O2FnJBbhlUGJjN92d4yx/JTiMLhLGzas54RO05q+1hcN77busbA
+         h/NeF6JwWxahPWZydYiv+P3uqM4BPB13sqmYtrPcMYE27mfNhKGBSsgjxGf1+jGNSCFO
+         2Vx6qVkuZmpb3lKRBFXRb74YAqyMLaHiiGiAANjSZCgOtcNDlCGjbFLmY3cVQrXkd500
+         eUEXu7bwPSBMJvQQysyttEiP9G4Q4hkXJnorSavwX9fq3F0o18JcpaiD/miDqmg1lHGe
+         b/skfcW3Bj8D8IHNUyiB4Mx2fYIGywMAoJ+hto1LZyTL+ecKov7nXEKlJMRTRkNYbzem
+         z65w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726710198; x=1727314998;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+jwxQJbxpwl4voWuXzYITDQeat0ESjsMo2U9Mc7bSDY=;
+        b=Iq2ftlfM2WlBPO4Dc8lzDFDi1zgtwjl0jRyyjYnk5w5ZziZTLGfT8QpATnoO74fdGQ
+         6dTBUqTIWcPHaVn9P3mR7K5w+Dyba0zAmCeCnwgVymw4jOpHJLbMl916gbRoNVvI28lb
+         9zVAl+YtPOF5BKF1mjhPJ/HWrxxqgt26GKf/0aw23HmJ+PiA9NVbKpPn/Np/qs3KN8pB
+         Tyfky96QNXvQuNtcPXHgVJ2JdsXj2eV4b5ZG3NmpOXz/ba+gNEfARTgOnZquCLVyyc22
+         n8qpxsORl8lvoaNj8b3yqBFXQATQJziowRx6u5S1pK4LY+AOyYTyVolEbGfaLd99B7C5
+         qs7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVbqmaViafVLy2T/iV9WZzKsE1HalGaoi69S/Z8qkjqUteZdkRBwlyn9LwgDcGkucRUDxru6QKxZhpYxQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjR/ToDA43zxfiuFIfpBCSkQ8qan3Pj102xaIWw3jxDnIBb6R4
+	IUrLr8Sjk0OqC60yI+gC/Ftwwc/J+fQZogIGPOsIMw25hdSvaSheOXY0R2AGzUA=
+X-Google-Smtp-Source: AGHT+IHP3QnTzJJQUGix1BZtfPAN61RzG3kG6wmczzL7AUu1v04MsD1wNi6JBs9VM4Ciz1/aEAynVA==
+X-Received: by 2002:a05:6a21:3942:b0:1d2:bb49:908b with SMTP id adf61e73a8af0-1d2bb499130mr25408416637.18.1726710198379;
+        Wed, 18 Sep 2024 18:43:18 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-78-197.pa.nsw.optusnet.com.au. [49.179.78.197])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-719918df7ccsm150940b3a.40.2024.09.18.18.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2024 18:43:17 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sr6CR-0072c8-0x;
+	Thu, 19 Sep 2024 11:43:15 +1000
+Date: Thu, 19 Sep 2024 11:43:15 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Chris Mason <clm@meta.com>, Jens Axboe <axboe@kernel.dk>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <ZuuBs762OrOk58zQ@dread.disaster.area>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZurXAco1BKqf8I2E@casper.infradead.org>
 
-TWFyY2VsIFdlacOfZW5iYWNoIDxtd2Vpc3NlbmJhY2hAaWduYXoub3JnPiB3cm90ZToNCj4gRmly
-c3Qgb2YgYWxsLCB0aGFuayB5b3Ugc28gbXVjaCBmb3IgeW91ciB0aW1lIGFuZCB3b3JrIQ0KPiAN
-Cj4gSSBob3BlIGkgZG9uJ3QgY2F1c2UgYW55IGNvbmZ1c2lvbiBhbmQgdGhpcyBxdWVzdGlvbiBt
-YXkgYmUgYmFzZWQgb24gbXkgbGFjayBvZiAgdW5kZXJzdGFuZGluZyB0aGUgcGF0Y2gsDQo+IGkg
-YWxtb3N0IGRvbid0IGRhcmUgdG8gYXNrLCBidXQgZG9lcyB0aGlzIHF1aXJrIG9ubHkgZ2V0cyBp
-bnRvIGFmZmVjdCwgd2hlbiBzb21lb25lIHVzZXMgdGhlIHNhbWUgbWFpbmJvYXJkDQo+IGkgdXNl
-PyBJcyB0aGlzIGFuIHJhdGhlciByYXJlIGNhc2UgdGhhdCBwcm9iYWJseSB3b24ndCBlZmZlY3Qg
-b3RoZXIgcGVvcGxlPw0KPiANCj4gSSBjYW4ndCBqdWRnZSB0aGF0IHNvIHBsZWFzZSBkb24ndCBn
-ZXQgbWUgd3JvbmcsIGJ1dCBpIGZlZWwgYSBiaXQgdW5lYXN5IGFib3V0IHRoaXMuIEkgYXNzdW1l
-IHRoYXQgbW9zdA0KPiBmaXN0IHRpbWUgTGludXggdXNlcnMgdGhhdCBoYXZlIHNpbWlsYXIgKGJ1
-dCBub3QgdGhlIHNhbWUpIHBsYXRmb3JtLCB3aGVyZSB0aGlzIHF1aXJrIHdpbGwgbm90IGdldCBh
-cHBsaWVkDQo+IGFuZCB0aGV5IGVuZCB1cCB3aXRoIG5vbi13b3JraW5nIHdpZmksIGp1c3Qgbm90
-aWNlIHRoYXQgd2lmaSBkb2Vzbid0IHdvcmsgYW5kIGdpdmUgdXAgb24gTGludXggYW5kIHJlbWVt
-YmVyDQo+IGl0IGFzICJNeSBXaWZpIGV2ZW4gZGlkbid0IHdvcmsgdGhlcmUiLg0KPiANCj4gQXMg
-YSBsb25nIHRpbWUgR2VudG9vIHVzZXIsIGkgaGF2ZSB0aGUgY2FwYWJpbGl0eSB0byBidWlsZCBt
-eSBvd24ga2VybmVsIGFuZCBwcm92aWRlIGZlZWRiYWNrIHRoYXQgY2FuIGhlbHANCj4gZml4IHRo
-aXMgaXNzdWUsIGJ1dCBpIGFzc3VtZSBtb3N0IHVzZXJzIGRvbid0LiBJIHdvdWxkIGFzc3VtZSBh
-biBVYnVudHUgdXNlcnMgd2lsbCBqdXN0IHJlbW92ZSB0aGUgVWJ1bnR1DQo+IHBhcnRpdGlvbiBh
-bmQgY2FsbHMgaXQgYSBkYXkgY29udGludWluZyB1c2luZyBXaW5kb3dzLiBJIGFtIGEgYml0IHdv
-cnJpZWQgYW5kIHdvbmRlciwgaWYgdGhlcmUgbWF5YmUgYSB3YXkNCj4gdG8gZml4IHRoYXQsIHRo
-YXQgaXMgaW5kZXBlbmRlbnQgb24gbXkgc3BlY2lmaWMgaGFyZHdhcmUvbWFpbmJvYXJkLg0KPiAN
-Cj4gT2YgY291cnNlLCBmZWVsIGZyZWUgdG8gY29ycmVjdCBtZSBpZiBpIGFtIGdldHRpbmcgc29t
-ZXRoaW5nIHdyb25nIGhlcmUsIGltIG5laXRoZXIgYW4gS2VybmVsIG5vciBDIGV4cGVydA0KPiBh
-bmQgdGhhbmsgeW91IGZvciB5b3VyIHRpbWUgYWdhaW4uDQo+IA0KDQpZb3UgYXJlIHJpZ2h0LiBJ
-IHdhcyBub3QgYXdhcmUgb2YgdGhhdC4gSSB3aWxsIGRpc2N1c3MgcGVvcGxlIGludGVybmFsbHkg
-YW5kIHJlY29uc2lkZXIgdGhlIHNvbHV0aW9uLiANCg0K
+On Wed, Sep 18, 2024 at 02:34:57PM +0100, Matthew Wilcox wrote:
+> On Wed, Sep 18, 2024 at 11:28:52AM +0200, Chris Mason wrote:
+> > I think the bug was in __filemap_add_folio()'s usage of xarray_split_alloc()
+> > and the tree changing before taking the lock.  It's just a guess, but that
+> > was always my biggest suspect.
+> 
+> Oh god, that's it.
+> 
+> there should have been an xas_reset() after calling xas_split_alloc().
+> 
+> and 6758c1128ceb calls xas_reset() after calling xas_split_alloc().
+
+Should we be asking for 6758c1128ceb to be backported to all
+stable kernels then?
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
