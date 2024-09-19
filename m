@@ -1,109 +1,392 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2B2943F
-	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 04:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0237B28E37
+	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 05:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726721229; cv=none; b=kHMjFZYUyMbmCiGJ0jjYRgWW1F6gM6fbKBw0i/Hoy+OdzHa0FhI8bdfhgKHqsttcCzbrdO/hUxoUVDFKhdtjReezb27Oj4YKUTKOsxaaDWX/SSNBeJNgsRpoJt+TMjGp+P+wfGatmLYatWjhdvvHWo84GNDhe9fOuGWTfDRPyMY=
+	t=1726723242; cv=none; b=bhIuPlCt3euZOhCxKjBBlkr2aQ7UULOhbGnL65skFozCVTN8S08ZHVbvHE5iBewQhZIJ4j2S0cTNp4m9KERvDsIhwEaMW804CTvDjTqacnYhWLn8R/cmE6MEjkFkYISTdlM1xdb8I7vSFwtnA545Ja0IxGc94XrvIUgf9SjcVQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726721229; c=relaxed/simple;
-	bh=0x90BrRaLqj/i8vH0YC0E0hwcTLNOAmqTSYD3JcCxfY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BotdnvTsecpA8ZwYw/gGk2c1LfUAw+xzQUhYXE8+hBO+Kt0u75L5Ic9bRRnR+Fx21GWm59L38DQk3TAfK7aWYRjSSDLrDSY7dFmy2kfhdyjlHPRNSp7eW9F1J3+u2MXIjW61ckgfmTm3hN9NCIOeJlV3Qoo8+nluiezOmeneZxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C0wiztOi; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1726723242; c=relaxed/simple;
+	bh=9EvgljSxbQCh448pMLmS2r8C54ZrhqrGmu+XF9otYgc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jCXXru21D/6EX6idCHvcuPjikqrieH+HX3FW0M82T/Un2NmrV87mlYcxBLz4tkk/b3nisoaIStcU40BsClWYb1jxtsz1togt2c/7wzEDLOwcZrTt9ARJ3Q82W7aZksv8hHIhRdr58h5+SjeIN7DaReYsCA/sji4HOeF8obWzq4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=irBE7FOM; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C0wiztOi"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a8d4093722bso52696366b.0
-        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 21:47:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="irBE7FOM"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9018103214so49639266b.3
+        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 22:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1726721226; x=1727326026; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5K6WdNxpXbbHrFkTCJEcTGagR1i25Nnb2d6KDOnxQ4=;
-        b=C0wiztOilNcb5SU8TBsNfPbtOrLpnYk19f1OWkfw/E5Gm+QiW138OxrH7DqGrJiMPx
-         6ioiWYZx+ZBgUn4JPhArgBODMJx5EuE7xOTpHUyGyRUyufYIsZhopUEgQEHL9Wdd27vq
-         gZcz6BpLVY3PkHkSYzaUCVqKeEsk1zlXGmP9c=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1726723237; x=1727328037; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IzPONe7Hl8hATuXT+GEoDEy0vE4mDwVH0cNH7cNT9Uo=;
+        b=irBE7FOMafQwY+uLmNK9JRcjynxWp4LxykXxl3SejrogALofPI86oCgCI4sQ8TRc7l
+         AG78hcpWqEmTq/PbRJ4nyCXWZ2MctLn8igdmsX9bz6p6m4sfmcoqUKZESj+AZcHF5Fgt
+         wAE0NCB/QsTxUStEteMC2w9/Cen2J3J1DMOmLKBcbmDNqzL2/mD6YkqUmcX7e6jJS9fh
+         UjX3nbyoYnVYMnFvyS5qeQtDuxF0LIVsq82J+t2RAa8ofjBgfM6HpZg/y9M8IZyJoN5J
+         Rk/jMmKo1keLivl6nUa40Kk3esa+aqlzSsAfRMNroljYbcgx0ib7qpdI7XY0BOLSr0d/
+         z30A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726721226; x=1727326026;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v5K6WdNxpXbbHrFkTCJEcTGagR1i25Nnb2d6KDOnxQ4=;
-        b=sPQ3wY6af+Ycd3XIiboriMV1HQeiayRoW+EkX7u3506CKtjalh4sGF+NAtH8NcoC9S
-         stq+4gl7pytmHNrsfAoKSwedr26U7bF2iJl+E/zyMQklSLHfQyvqFh4FQ+701wdFq9tW
-         XO14RVO+3bGHqyy02encmpQMpWXM03/pWx6nW28Pcay4jVnZkE9IxBPB8SZtIgy9LxgE
-         6aKuZjwGxFolL7lxy3gEAtbmSO3VwnPVLpwD89n4z106DD/yMcW8Yj04hE24U9lKF+LS
-         zc2hyRAXlJqJOATPmL221iA++ZsGuPY98sqQ0GDT7yfgmgf/fr1ZNpwqgsoetIe9zHVv
-         WzPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4MoNGHWrX8nU0v00Fg0jJZJ4Nl79Cp2DJzcFbCW2PUjLZHCTdq1T1rPbbS9YzbL0/9l4U6qjPeqz+Sg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwI9J9dJlfmwfePbZP09qwSvqDkNhpsglySVH7z0rCp87JQDLOW
-	hHohUR7jknqOSTzrGG9F+HtJJROwytBtEDyNqyRWJ75vCapetYnywveX5IG+/qVDh9OIMFbX1sr
-	Fl09Nxw==
-X-Google-Smtp-Source: AGHT+IHbqxn6MbE9avznaW1042ajf7n5zL55C7wFScSXaikB7EICyHn5g+pVCOpNugyMJnuzVbckGQ==
-X-Received: by 2002:a17:907:d3c7:b0:a7a:bb54:c858 with SMTP id a640c23a62f3a-a902944fd6cmr2526538566b.26.1726721225732;
-        Wed, 18 Sep 2024 21:47:05 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610f453asm667995066b.88.2024.09.18.21.47.03
-        for <regressions@lists.linux.dev>
+        d=1e100.net; s=20230601; t=1726723237; x=1727328037;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzPONe7Hl8hATuXT+GEoDEy0vE4mDwVH0cNH7cNT9Uo=;
+        b=Y3Jt6s7jEa+SstEfQc95KGJhthuBH8aRxR4tq4Zr9TDSBhuZunSOuSXZR+mcVukzg7
+         rMpJyPy+FBq1ZeC/gFIKht9fCS8Mxb9VxY77ZYVYgdhYD1FxZq+X0kGS9ZN5BOESdGJ4
+         ax2W7WEje3IVjQtua5qAS68cdrdgQ8i6ej2iXN/j/zIApfJ2XmS3XYMEtdXZBTGlwxOX
+         MkBJAfOk0s1cgYuRUpek3Q2cnL8b+2gBMd2KgTixXAHCiJ2IACrSw0l7Uh5QmA8GV1Rg
+         E2BWabLVTUHgqtKc7UV1vdeWCEZOtT7dgqhn2COwEN9XjqzSNCkljygnVrjQpvJ7/aua
+         Pqxw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+BqMXXAAubRLPdbVp8+CWtELp4PcUYG8Xz4sji2JbTbcewvXlcGdzQGnPUWWWgaMfuo66FMFf23zWnw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwBmUd7ANusUu3+NWJx1kdKFGpZzd6pZ3/j0kfeB5C+wiUAaVUy
+	6zNJ0tVfUT3bwlmhpho0ubaFlSPJsc++lYU8GEc+rLD2Cgc5RkZP+i0fbNM3C/c=
+X-Google-Smtp-Source: AGHT+IHju4oboqyEQSy4+Om/ISByeho+FWCyfDVzSygtpfXVDtV4IFkyl8yrfHmySRRFv+5nrUuHiw==
+X-Received: by 2002:a17:906:bc26:b0:a8d:2ec3:94f4 with SMTP id a640c23a62f3a-a902964d007mr2102225766b.54.1726723237206;
+        Wed, 18 Sep 2024 22:20:37 -0700 (PDT)
+Received: from [192.168.0.216] ([185.44.53.103])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610967a5sm675990066b.21.2024.09.18.22.20.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2024 21:47:04 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a8d0d82e76aso46657566b.3
-        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 21:47:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUu4UjXXYH+6U7g/kcGr4/AEF9W2MHDSLRMe6QynFIggPsdNMG4TpHAYdiA55kCXt6EhCjPpxB5uyE+DA==@lists.linux.dev
-X-Received: by 2002:a17:907:efc6:b0:a86:9c71:ec93 with SMTP id
- a640c23a62f3a-a9029438edemr2426724866b.24.1726721223112; Wed, 18 Sep 2024
- 21:47:03 -0700 (PDT)
+        Wed, 18 Sep 2024 22:20:35 -0700 (PDT)
+Message-ID: <6839133c-56ca-45dc-8115-2fbcc907938e@kernel.dk>
+Date: Wed, 18 Sep 2024 23:20:33 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZulMlPFKiiRe3iFd@casper.infradead.org> <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org> <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com> <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area> <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk> <ZuuqPEtIliUJejvw@casper.infradead.org>
-In-Reply-To: <ZuuqPEtIliUJejvw@casper.infradead.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 19 Sep 2024 06:46:46 +0200
-X-Gmail-Original-Message-ID: <CAHk-=whPYGhCWOD-K2zCTwDrCK27Y0GST-nt+cb9QPzxO-iSHw@mail.gmail.com>
-Message-ID: <CAHk-=whPYGhCWOD-K2zCTwDrCK27Y0GST-nt+cb9QPzxO-iSHw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
  folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Jens Axboe <axboe@kernel.dk>
 To: Matthew Wilcox <willy@infradead.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>, 
-	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
-	regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>,
+ Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+References: <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk>
+ <ZuuqPEtIliUJejvw@casper.infradead.org>
+ <9e62898f-907e-439f-96f3-de2e29f57e37@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <9e62898f-907e-439f-96f3-de2e29f57e37@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 19 Sept 2024 at 06:36, Matthew Wilcox <willy@infradead.org> wrote:
->
-> Probably xas_split_alloc() needs to just do the alloc, like the name
-> says, and drop the 'entry' argument.  ICBW, but I think it explains
-> what you're seeing?  Maybe it doesn't?
+On 9/18/24 10:46 PM, Jens Axboe wrote:
+> On 9/18/24 10:36 PM, Matthew Wilcox wrote:
+>> On Wed, Sep 18, 2024 at 09:38:41PM -0600, Jens Axboe wrote:
+>>> On 9/18/24 9:12 PM, Linus Torvalds wrote:
+>>>> On Thu, 19 Sept 2024 at 05:03, Linus Torvalds
+>>>> <torvalds@linux-foundation.org> wrote:
+>>>>>
+>>>>> I think we should just do the simple one-liner of adding a
+>>>>> "xas_reset()" to after doing xas_split_alloc() (or do it inside the
+>>>>> xas_split_alloc()).
+>>>>
+>>>> .. and obviously that should be actually *verified* to fix the issue
+>>>> not just with the test-case that Chris and Jens have been using, but
+>>>> on Christian's real PostgreSQL load.
+>>>>
+>>>> Christian?
+>>>>
+>>>> Note that the xas_reset() needs to be done after the check for errors
+>>>> - or like Willy suggested, xas_split_alloc() needs to be re-organized.
+>>>>
+>>>> So the simplest fix is probably to just add a
+>>>>
+>>>>                         if (xas_error(&xas))
+>>>>                                 goto error;
+>>>>                 }
+>>>> +               xas_reset(&xas);
+>>>>                 xas_lock_irq(&xas);
+>>>>                 xas_for_each_conflict(&xas, entry) {
+>>>>                         old = entry;
+>>>>
+>>>> in __filemap_add_folio() in mm/filemap.c
+>>>>
+>>>> (The above is obviously a whitespace-damaged pseudo-patch for the
+>>>> pre-6758c1128ceb state. I don't actually carry a stable tree around on
+>>>> my laptop, but I hope it's clear enough what I'm rambling about)
+>>>
+>>> I kicked off a quick run with this on 6.9 with my debug patch as well,
+>>> and it still fails for me... I'll double check everything is sane. For
+>>> reference, below is the 6.9 filemap patch.
+>>>
+>>> diff --git a/mm/filemap.c b/mm/filemap.c
+>>> index 30de18c4fd28..88093e2b7256 100644
+>>> --- a/mm/filemap.c
+>>> +++ b/mm/filemap.c
+>>> @@ -883,6 +883,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+>>>  		if (order > folio_order(folio))
+>>>  			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
+>>>  					order, gfp);
+>>> +		xas_reset(&xas);
+>>>  		xas_lock_irq(&xas);
+>>>  		xas_for_each_conflict(&xas, entry) {
+>>>  			old = entry;
+>>
+>> My brain is still mushy, but I think there is still a problem (both with
+>> the simple fix for 6.9 and indeed with 6.10).
+>>
+>> For splitting a folio, we have the folio locked, so we know it's not
+>> going anywhere.  The tree may get rearranged around it while we don't
+>> have the xa_lock, but we're somewhat protected.
+>>
+>> In this case we're splitting something that was, at one point, a shadow
+>> entry.  There's no struct there to lock.  So I think we can have a
+>> situation where we replicate 'old' (in 6.10) or xa_load() (in 6.9)
+>> into the nodes we allocate in xas_split_alloc().  In 6.10, that's at
+>> least guaranteed to be a shadow entry, but in 6.9, it might already be a
+>> folio by this point because we've raced with something else also doing a
+>> split.
+>>
+>> Probably xas_split_alloc() needs to just do the alloc, like the name
+>> says, and drop the 'entry' argument.  ICBW, but I think it explains
+>> what you're seeing?  Maybe it doesn't?
+> 
+> Since I can hit it pretty reliably and quickly, I'm happy to test
+> whatever you want on top of 6.9. From the other email, I backported:
+> 
+> a4864671ca0b ("lib/xarray: introduce a new helper xas_get_order")
+> 6758c1128ceb ("mm/filemap: optimize filemap folio adding")
+> 
+> to 6.9 and kicked off a test with that 5 min ago, and it's still going.
+> I'd say with 90% confidence that it should've hit already, but let's
+> leave it churning for an hour and see what pops out the other end.
 
-.. or we make the rule be that you have to re-check that the order and
-the entry still matches when you do the actual xas_split()..
+45 min later, I think I can conclusively call the backport of those two
+on top of 6.9 good.
 
-Like commit 6758c1128ceb does, in this case.
+Below is what I'm running, which is those two commits (modulo the test
+bits, for clarify). Rather than attempt to fix this differently for 6.9,
+perhaps not a bad idea to just get those two into stable? It's not a lot
+of churn, and at least that keeps it consistent rather than doing
+something differently for stable.
 
-We do have another xas_split_alloc() - in the hugepage case - but
-there we do have
+I'll try and do a patch that just ensures the order is consistent across
+lock cycles as Linus suggested, just to verify that this is indeed the
+main issue. Will keep the xas_reset() as well.
 
-                xas_lock(&xas);
-                xas_reset(&xas);
-                if (xas_load(&xas) != folio)
-                        goto fail;
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index cb571dfcf4b1..da2f5bba7944 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -1548,6 +1551,7 @@ void xas_create_range(struct xa_state *);
+ 
+ #ifdef CONFIG_XARRAY_MULTI
+ int xa_get_order(struct xarray *, unsigned long index);
++int xas_get_order(struct xa_state *xas);
+ void xas_split(struct xa_state *, void *entry, unsigned int order);
+ void xas_split_alloc(struct xa_state *, void *entry, unsigned int order, gfp_t);
+ #else
+@@ -1556,6 +1560,11 @@ static inline int xa_get_order(struct xarray *xa, unsigned long index)
+ 	return 0;
+ }
+ 
++static inline int xas_get_order(struct xa_state *xas)
++{
++	return 0;
++}
++
+ static inline void xas_split(struct xa_state *xas, void *entry,
+ 		unsigned int order)
+ {
+diff --git a/lib/xarray.c b/lib/xarray.c
+index 5e7d6334d70d..c0514fb16d33 100644
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -1765,39 +1780,52 @@ void *xa_store_range(struct xarray *xa, unsigned long first,
+ EXPORT_SYMBOL(xa_store_range);
+ 
+ /**
+- * xa_get_order() - Get the order of an entry.
+- * @xa: XArray.
+- * @index: Index of the entry.
++ * xas_get_order() - Get the order of an entry.
++ * @xas: XArray operation state.
++ *
++ * Called after xas_load, the xas should not be in an error state.
+  *
+  * Return: A number between 0 and 63 indicating the order of the entry.
+  */
+-int xa_get_order(struct xarray *xa, unsigned long index)
++int xas_get_order(struct xa_state *xas)
+ {
+-	XA_STATE(xas, xa, index);
+-	void *entry;
+ 	int order = 0;
+ 
+-	rcu_read_lock();
+-	entry = xas_load(&xas);
+-
+-	if (!entry)
+-		goto unlock;
+-
+-	if (!xas.xa_node)
+-		goto unlock;
++	if (!xas->xa_node)
++		return 0;
+ 
+ 	for (;;) {
+-		unsigned int slot = xas.xa_offset + (1 << order);
++		unsigned int slot = xas->xa_offset + (1 << order);
+ 
+ 		if (slot >= XA_CHUNK_SIZE)
+ 			break;
+-		if (!xa_is_sibling(xas.xa_node->slots[slot]))
++		if (!xa_is_sibling(xa_entry(xas->xa, xas->xa_node, slot)))
+ 			break;
+ 		order++;
+ 	}
+ 
+-	order += xas.xa_node->shift;
+-unlock:
++	order += xas->xa_node->shift;
++	return order;
++}
++EXPORT_SYMBOL_GPL(xas_get_order);
++
++/**
++ * xa_get_order() - Get the order of an entry.
++ * @xa: XArray.
++ * @index: Index of the entry.
++ *
++ * Return: A number between 0 and 63 indicating the order of the entry.
++ */
++int xa_get_order(struct xarray *xa, unsigned long index)
++{
++	XA_STATE(xas, xa, index);
++	int order = 0;
++	void *entry;
++
++	rcu_read_lock();
++	entry = xas_load(&xas);
++	if (entry)
++		order = xas_get_order(&xas);
+ 	rcu_read_unlock();
+ 
+ 	return order;
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 30de18c4fd28..b8d525825d3f 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -852,7 +852,9 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+ 		struct folio *folio, pgoff_t index, gfp_t gfp, void **shadowp)
+ {
+ 	XA_STATE(xas, &mapping->i_pages, index);
+-	bool huge = folio_test_hugetlb(folio);
++	void *alloced_shadow = NULL;
++	int alloced_order = 0;
++	bool huge;
+ 	bool charged = false;
+ 	long nr = 1;
+ 
+@@ -869,6 +871,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+ 
+ 	VM_BUG_ON_FOLIO(index & (folio_nr_pages(folio) - 1), folio);
+ 	xas_set_order(&xas, index, folio_order(folio));
++	huge = folio_test_hugetlb(folio);
+ 	nr = folio_nr_pages(folio);
+ 
+ 	gfp &= GFP_RECLAIM_MASK;
+@@ -876,13 +879,10 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+ 	folio->mapping = mapping;
+ 	folio->index = xas.xa_index;
+ 
+-	do {
+-		unsigned int order = xa_get_order(xas.xa, xas.xa_index);
++	for (;;) {
++		int order = -1, split_order = 0;
+ 		void *entry, *old = NULL;
+ 
+-		if (order > folio_order(folio))
+-			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
+-					order, gfp);
+ 		xas_lock_irq(&xas);
+ 		xas_for_each_conflict(&xas, entry) {
+ 			old = entry;
+@@ -890,19 +890,33 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+ 				xas_set_err(&xas, -EEXIST);
+ 				goto unlock;
+ 			}
++			/*
++			 * If a larger entry exists,
++			 * it will be the first and only entry iterated.
++			 */
++			if (order == -1)
++				order = xas_get_order(&xas);
++		}
++
++		/* entry may have changed before we re-acquire the lock */
++		if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
++			xas_destroy(&xas);
++			alloced_order = 0;
+ 		}
+ 
+ 		if (old) {
+-			if (shadowp)
+-				*shadowp = old;
+-			/* entry may have been split before we acquired lock */
+-			order = xa_get_order(xas.xa, xas.xa_index);
+-			if (order > folio_order(folio)) {
++			if (order > 0 && order > folio_order(folio)) {
+ 				/* How to handle large swap entries? */
+ 				BUG_ON(shmem_mapping(mapping));
++				if (!alloced_order) {
++					split_order = order;
++					goto unlock;
++				}
+ 				xas_split(&xas, old, order);
+ 				xas_reset(&xas);
+ 			}
++			if (shadowp)
++				*shadowp = old;
+ 		}
+ 
+ 		xas_store(&xas, folio);
+@@ -918,9 +932,24 @@ noinline int __filemap_add_folio(struct address_space *mapping,
+ 				__lruvec_stat_mod_folio(folio,
+ 						NR_FILE_THPS, nr);
+ 		}
++
+ unlock:
+ 		xas_unlock_irq(&xas);
+-	} while (xas_nomem(&xas, gfp));
++
++		/* split needed, alloc here and retry. */
++		if (split_order) {
++			xas_split_alloc(&xas, old, split_order, gfp);
++			if (xas_error(&xas))
++				goto error;
++			alloced_shadow = old;
++			alloced_order = split_order;
++			xas_reset(&xas);
++			continue;
++		}
++
++		if (!xas_nomem(&xas, gfp))
++			break;
++	}
+ 
+ 	if (xas_error(&xas))
+ 		goto error;
 
-and the folio is locked over the whole sequence, so I think that code
-is probably safe and guarantees that we're splitting with the same
-details we alloc'ed.
-
-                Linus
+-- 
+Jens Axboe
