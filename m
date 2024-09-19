@@ -1,130 +1,131 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41C419DF87
-	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 09:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D612168C7
+	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 10:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726739122; cv=none; b=sYZNp0ZFVfDoE0lQ/CghNrDlzJLvznOrCDIWjvn07YeusmJqL6Zjsk4UFBiEounW9KGq58Iyjnbrt5K6TqG+jrAS4nyuQc4dc6nFd6E3F29wwLTSKWTRCJRGQihMSBq69O2+/SFRKjI1q3Ch+XTmb4nW095u7v4WSbfl5ir+UBE=
+	t=1726741189; cv=none; b=XJh8qN+O6sRjICs5KJKSwnpcU1KGTpYKeMPwz7jCt5q11uh8u6PvaE1EkbaIdVbc2t6mA1zFY7hpHpTJ76sNcA14b3XiZv3WFnz72t6MEp30dvbd4vDfT68+3sIZc38FCed/uM1FYUVgmTFoIT6eW8UhQovfN3XnkuLLa2wSTAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726739122; c=relaxed/simple;
-	bh=k5xmfyVdyCvrB2WJTpIJB9/AIvpppvVVztmANlpPdJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HT2/cIQodHkHVpueIhUa5bPz9EB4ECbYY+goi2FzwEwEgRJ5ebjz9OmFVtGTSowlrIcWUi4UrIYGKOFFCn/Dif7lVZQ4NTnx4iJ8/5qgI+V7yUcwHW/t7AcHICfs4xKpqBityccXxkQBYA6Y3WXX/kRpG17al/EkbW9/knoaHDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=co309K1B; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1726741189; c=relaxed/simple;
+	bh=yPvEhilC8o+QAD2dAw0R/Y7FjbORjvrTTvmE1gFLzow=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Uvoky0nuP1qj7FSQzFoEB2uqcgzxWiIXuIBJh6iFekV2SBle+fZyXzdPhWp1SF9pyAK+9wPLB8uSLF8iTvPVg3ONkGZ6n9K261L3mIgigd+TahHdVNI6h5k/11ScfIPncxxwzAE9ssudWppXg0h1zCj+1eS3+iCP4vyCZ9a/IWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=MdW/JwzL; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="co309K1B"
-Received: from [192.168.42.96] (pd9e59da1.dip0.t-ipconnect.de [217.229.157.161])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 1A8972FC005B;
-	Thu, 19 Sep 2024 11:45:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1726739115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PLzXgz6POjQZOmuww2M/f0naB3HRg4Ck33Y/3loj2wc=;
-	b=co309K1BJB3wHgyqw+qF5NSFtlvoxwq10nHPmLP59q7XpFGSEz3tNBruYdgk08oS/W9sZ5
-	JG6xvqP5pAfDSMMCjfRF3HDhoFtvzBxcWK3kNd+cJ4EdH55t7nLPb4p09ovw3HefZ6MUYt
-	ir2/Tlr9DmqyK3pTI4BlbuTG1r9eWF0=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <0593dc74-0a8c-4147-822d-0785c9d5aec3@tuxedocomputers.com>
-Date: Thu, 19 Sep 2024 11:45:14 +0200
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="MdW/JwzL"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1726741181;
+	bh=C8urjnOua0GCJAjrYNro+A9+djxFaRIrbs95gdqoxeU=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=MdW/JwzLtG7jvM2lKNp19UNEGkA++Q85uQ+qZjR6Gwdt1C7rGaR7xP/GOO7e/Ff73
+	 yCRvERCX/lQ8dqkMhIY+NBCdHUAnPm+OuxhsFXaaIWt08iCDrjc450JYCSLAU7m66F
+	 Tj4x6f9YQRiT1AWs3G2qXIx+1o4QNalFGYcwxG2g=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-To: Takashi Iwai <tiwai@suse.de>, Christoffer Sandberg <cs@tuxedo.de>
-Cc: Jerry Luo <jerryluo225@gmail.com>, Christian Heusel
- <christian@heusel.eu>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- Jaroslav Kysela <perex@perex.cz>
-References: <c930b6a6-64e5-498f-b65a-1cd5e0a1d733@heusel.eu>
- <87jzfbh5tu.wl-tiwai@suse.de>
- <66dfd536-ae17-4d75-b514-7931a3734e54@gmail.com>
- <20f70c0a92a27db29f188e05c33ba82c@tuxedo.de>
- <1fbba03e-56b8-4e74-adf6-998e3a2d9dac@gmail.com>
- <87setxe68m.wl-tiwai@suse.de> <87r09he63e.wl-tiwai@suse.de>
- <dfb141e8-6afa-4d21-8cd4-f9a53e8a192e@tuxedocomputers.com>
- <87r09hcbr0.wl-tiwai@suse.de> <cedb8758bb506bf9454b90eebcaaea24@tuxedo.de>
- <874j6cc96f.wl-tiwai@suse.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <874j6cc96f.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+Date: Thu, 19 Sep 2024 12:19:19 +0200
+Cc: Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Chris Mason <clm@meta.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+ <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Takashi,
 
-Am 19.09.24 um 10:57 schrieb Takashi Iwai:
-> On Wed, 18 Sep 2024 16:10:00 +0200,
-> Christoffer Sandberg wrote:
->>
->>
->> On 18.9.2024 15:49, Takashi Iwai wrote:
->>> On Wed, 18 Sep 2024 15:39:28 +0200,
->>> Werner Sembach wrote:
->>>> Hi
->>>>
->>>> Am 18.09.24 um 10:09 schrieb Takashi Iwai:
->>>>> On Wed, 18 Sep 2024 10:06:01 +0200,
->>>>> Takashi Iwai wrote:
->>>>>> [...]
->>>>>> I don't see any relevant about the incorrect volumes by the suggested
->>>>>> commit, but at least we should avoid applying the quirk for a
->>>>>> non-existing speaker pin.
->>>>>>
->>>>>> Jerry, yours is with CX11970 (codec id 0x14f120d0), right?
->>>> Yes, at least for the preproduction sample of the Sirius Gen1 I have
->>>> at hand atm.
->>>>
->>>> pciid is 2782:12c3
->>>>
->>>> @Christoffer: I guess 2782:12c5 is for the Gen2?
->> Yes the other is for Sirius Gen2
->>
->>> Hm, and one of those PCI SSID conflicts with System76 Pangolin
->>> (pang14)?  All seem to have the very same codec CX11970.
->> I don't think I saw the pci id explicitly listed, but that was the
->> assumption.
->>
->>> If they really conflict in both PCI and HD-audio codec IDs, the only
->>> way would be to check DMI string, I'm afraid.
->>>
->> I asked about the volumes since it could be a hint that a second
->> speaker is activated but stuck on a fixed volume. This would make a
->> low general volume setting sound louder but still somewhat adjustable.
->>
->> However, if we can not verify second speaker pair, then I agree, DMI
->> limit would be the safe choice.
-> So, just to make clear: the device reported for a regression and the
-> device you tried to tweak are different models?  The former is
-> Pangolin and the latter Sirius Gen 2.  I'm confused by models.
 
-Yes, the regression report is for the Pangolin, which seems to be affected by a 
-patch that should only affect the Sirius 16 Gen1 & Gen2.
+> On 19. Sep 2024, at 08:57, Linus Torvalds =
+<torvalds@linux-foundation.org> wrote:
+>=20
+> Yeah, right now Jens is still going to run some more testing, but I
+> think the plan is to just backport
+>=20
+>  a4864671ca0b ("lib/xarray: introduce a new helper xas_get_order")
+>  6758c1128ceb ("mm/filemap: optimize filemap folio adding")
+>=20
+> and I think we're at the point where you might as well start testing
+> that if you have the cycles for it. Jens is mostly trying to confirm
+> the root cause, but even without that, I think you running your load
+> with those two changes back-ported is worth it.
+>=20
+> (Or even just try running it on plain 6.10 or 6.11, both of which
+> already has those commits)
 
->
-> With the quirk, you'll get an individual mixer element controlling the
-> top speaker volume?
-Yes (for the Sirius devices at least, we ofc don't have a Pangolin laying around 
-we could test), unless you use this 
-https://github.com/alsa-project/alsa-ucm-conf/pull/410 alsa patch Christoffer 
-wrote for TUXEDO_OS and sent to upstream which merges them down into one 
-controlling both speaker pairs.
->
->
-> Takashi
+I=E2=80=99ve discussed this with my team and we=E2=80=99re preparing to =
+switch all our=20
+non-prod machines as well as those production machines that have shown
+the error before.
 
-Kind regards,
+This will require a bit of user communication and reboot scheduling.
+Our release prep will be able to roll this out starting early next week
+and the production machines in question around Sept 30.
 
-Werner
+We would run with 6.11 as our understanding so far is that running the
+most current kernel would generate the most insight and is easier to
+work with for you all?
+
+(Generally we run the mostly vanilla LTS that has surpassed x.y.50+ so
+we might later downgrade to 6.6 when this is fixed.)
+
+> So considering how well the reproducer works for Jens and Chris, my
+> main worry is whether your load might have some _additional_ issue.
+>=20
+> Unlikely, but still .. The two commits fix the repproducer, so I think
+> the important thing to make sure is that it really fixes the original
+> issue too.
+>=20
+> And yeah, I'd be surprised if it doesn't, but at the same time I would
+> _not_ suggest you try to make your load look more like the case we
+> already know gets fixed.
+>=20
+> So yes, it will be "weeks of not seeing crashes" until we'd be
+> _really_ confident it's all the same thing, but I'd rather still have
+> you test that, than test something else than what caused issues
+> originally, if you see what I mean.
+
+Agreed, I=E2=80=99m all onboard with that.
+
+Liebe Gr=C3=BC=C3=9Fe,
+Christian Theune
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
