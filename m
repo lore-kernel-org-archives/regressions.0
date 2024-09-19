@@ -1,173 +1,109 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF36B1CD15
-	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 04:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2B2943F
+	for <regressions@lists.linux.dev>; Thu, 19 Sep 2024 04:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726721172; cv=none; b=LtYTw33oqqeUkT46MvU0VlpWcQsXpHbI4ktnUq1vMfQiKP9313IcYjpp504t1/ISbGyIQmvDJev46/sVEIje2nS6fpmOyPCtjQJjKVkNZK1L817zq5y6X1bdsImmUnHk3i9XPQuI5EBnXUOYDJHWTSrQAy0MjtHmOQSno/KRMzs=
+	t=1726721229; cv=none; b=kHMjFZYUyMbmCiGJ0jjYRgWW1F6gM6fbKBw0i/Hoy+OdzHa0FhI8bdfhgKHqsttcCzbrdO/hUxoUVDFKhdtjReezb27Oj4YKUTKOsxaaDWX/SSNBeJNgsRpoJt+TMjGp+P+wfGatmLYatWjhdvvHWo84GNDhe9fOuGWTfDRPyMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726721172; c=relaxed/simple;
-	bh=WMbmOVlDj4J4YNccxGu39IJJ/C4FQWTMH+hmZ5SW1LU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N01WYofwojIQIiLw2dEi8shBoMqxjfDQkKwXHL5ngPkcNPGiYSj+zz7EWdRX4WZdvOMIYQJ9NXTB9VfShXvx1PffkMRQAL2m5Fpe54pcvUhCsxGMUIYe8vevS+DRw1XkqnZ0PusaT6aLhwfvWo46WjzVRPqcUxXawY4tgQWaZK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=sYkqcoDB; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1726721229; c=relaxed/simple;
+	bh=0x90BrRaLqj/i8vH0YC0E0hwcTLNOAmqTSYD3JcCxfY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BotdnvTsecpA8ZwYw/gGk2c1LfUAw+xzQUhYXE8+hBO+Kt0u75L5Ic9bRRnR+Fx21GWm59L38DQk3TAfK7aWYRjSSDLrDSY7dFmy2kfhdyjlHPRNSp7eW9F1J3+u2MXIjW61ckgfmTm3hN9NCIOeJlV3Qoo8+nluiezOmeneZxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C0wiztOi; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="sYkqcoDB"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42cbc38a997so2317905e9.1
-        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 21:46:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C0wiztOi"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a8d4093722bso52696366b.0
+        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 21:47:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1726721169; x=1727325969; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VKK0K7oF92qoXvqUn1Ads4k++5P61ZhpT/0tIxiVX/Q=;
-        b=sYkqcoDBTreZ+835PqHDxtJNe+C7oFNuT9RMni0x/9rglzQJtHmF8bCllKUflFkuc9
-         xbXh2rsD43APojZZQcHYXGJS3mdhYAFTJEIQdi2NM+MaittFvfWZlgmw9z0Lh2W+L9bD
-         JFbbjSxg9tcmEkdrZ3ufRcIE7A5qagZ7CA+hjphrLE5+XGJkAkbDW3tFwlBEO9Jn/BrB
-         iOzzsii08qG0qsaRv/X41DdtiY8NHh6n1XivKuVidMi8++ZTP4m2mWfZLiHr5UGS8APe
-         RRpNryx6B4M2q+P80/TvXBQUH6IVIhdT8N79CJPqSinNcQ/IckcCWXncDRHvCbVD/kmD
-         XiYQ==
+        d=linux-foundation.org; s=google; t=1726721226; x=1727326026; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5K6WdNxpXbbHrFkTCJEcTGagR1i25Nnb2d6KDOnxQ4=;
+        b=C0wiztOilNcb5SU8TBsNfPbtOrLpnYk19f1OWkfw/E5Gm+QiW138OxrH7DqGrJiMPx
+         6ioiWYZx+ZBgUn4JPhArgBODMJx5EuE7xOTpHUyGyRUyufYIsZhopUEgQEHL9Wdd27vq
+         gZcz6BpLVY3PkHkSYzaUCVqKeEsk1zlXGmP9c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726721169; x=1727325969;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VKK0K7oF92qoXvqUn1Ads4k++5P61ZhpT/0tIxiVX/Q=;
-        b=O4zUq/Op0uNJ9edjNOtBPM7fSH5YvBEaBqc6c/HFV40nOkkEqG2Taz+SL/er/Yol62
-         RYCaom5+p8sL7DQweEekaNShXLwTtrzmUz2glikFlC0EMzP4sEFZ9suo3qj32sfKK8Y4
-         S0z1kUWKtrNNoH8dsITp/h5FvV3E7GULppFr2kdOdyv3QueURFFZLk5Kk3e9feItv35G
-         /RcaOeu//eP/70EhX447AIV+s71CfZsJBB7P1ldSdNcQXydj7ExJmlkw56w3BJ3BA8pS
-         a1so86DiOzJDrtJzWPbP+K+NMChH7SoktNZAAUTUiLXzYnGrkd8uADJH8UeuDROCo7/G
-         bLfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHaOaQnrY6NdHD4R49sSQm5wxoE6V2teQz+bo+ovxUj9rl2BPhO/4PK0eE/BVaqHv6E1SIZYo1EqySnw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzVVq1GO4J9Wo+ZM6qZD9xj7E2rtpj38wWyaQnTcedUeFJ7yJ+M
-	KYfzB5qGd+paHF6tiZ1Ipdl9GKWwu7noUqoEl2E5WnKHF77/Cf0RuNhMh39PUek=
-X-Google-Smtp-Source: AGHT+IGHHVaBDfu7IHVrU1p7r2GdHKFQUmAh5YFVoOfSzfC5RVAziHBMEMJBUvybKuiAcnw/DiY4EA==
-X-Received: by 2002:a05:600c:1d02:b0:42c:b68f:38fb with SMTP id 5b1f17b1804b1-42e74417444mr9041015e9.7.1726721169038;
-        Wed, 18 Sep 2024 21:46:09 -0700 (PDT)
-Received: from [192.168.0.216] ([185.44.53.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e75445a98sm10823905e9.28.2024.09.18.21.46.06
+        d=1e100.net; s=20230601; t=1726721226; x=1727326026;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v5K6WdNxpXbbHrFkTCJEcTGagR1i25Nnb2d6KDOnxQ4=;
+        b=sPQ3wY6af+Ycd3XIiboriMV1HQeiayRoW+EkX7u3506CKtjalh4sGF+NAtH8NcoC9S
+         stq+4gl7pytmHNrsfAoKSwedr26U7bF2iJl+E/zyMQklSLHfQyvqFh4FQ+701wdFq9tW
+         XO14RVO+3bGHqyy02encmpQMpWXM03/pWx6nW28Pcay4jVnZkE9IxBPB8SZtIgy9LxgE
+         6aKuZjwGxFolL7lxy3gEAtbmSO3VwnPVLpwD89n4z106DD/yMcW8Yj04hE24U9lKF+LS
+         zc2hyRAXlJqJOATPmL221iA++ZsGuPY98sqQ0GDT7yfgmgf/fr1ZNpwqgsoetIe9zHVv
+         WzPw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4MoNGHWrX8nU0v00Fg0jJZJ4Nl79Cp2DJzcFbCW2PUjLZHCTdq1T1rPbbS9YzbL0/9l4U6qjPeqz+Sg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwI9J9dJlfmwfePbZP09qwSvqDkNhpsglySVH7z0rCp87JQDLOW
+	hHohUR7jknqOSTzrGG9F+HtJJROwytBtEDyNqyRWJ75vCapetYnywveX5IG+/qVDh9OIMFbX1sr
+	Fl09Nxw==
+X-Google-Smtp-Source: AGHT+IHbqxn6MbE9avznaW1042ajf7n5zL55C7wFScSXaikB7EICyHn5g+pVCOpNugyMJnuzVbckGQ==
+X-Received: by 2002:a17:907:d3c7:b0:a7a:bb54:c858 with SMTP id a640c23a62f3a-a902944fd6cmr2526538566b.26.1726721225732;
+        Wed, 18 Sep 2024 21:47:05 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610f453asm667995066b.88.2024.09.18.21.47.03
+        for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2024 21:46:07 -0700 (PDT)
-Message-ID: <9e62898f-907e-439f-96f3-de2e29f57e37@kernel.dk>
-Date: Wed, 18 Sep 2024 22:46:06 -0600
+        Wed, 18 Sep 2024 21:47:04 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a8d0d82e76aso46657566b.3
+        for <regressions@lists.linux.dev>; Wed, 18 Sep 2024 21:47:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUu4UjXXYH+6U7g/kcGr4/AEF9W2MHDSLRMe6QynFIggPsdNMG4TpHAYdiA55kCXt6EhCjPpxB5uyE+DA==@lists.linux.dev
+X-Received: by 2002:a17:907:efc6:b0:a86:9c71:ec93 with SMTP id
+ a640c23a62f3a-a9029438edemr2426724866b.24.1726721223112; Wed, 18 Sep 2024
+ 21:47:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <ZulMlPFKiiRe3iFd@casper.infradead.org> <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org> <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com> <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area> <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk> <ZuuqPEtIliUJejvw@casper.infradead.org>
+In-Reply-To: <ZuuqPEtIliUJejvw@casper.infradead.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 19 Sep 2024 06:46:46 +0200
+X-Gmail-Original-Message-ID: <CAHk-=whPYGhCWOD-K2zCTwDrCK27Y0GST-nt+cb9QPzxO-iSHw@mail.gmail.com>
+Message-ID: <CAHk-=whPYGhCWOD-K2zCTwDrCK27Y0GST-nt+cb9QPzxO-iSHw@mail.gmail.com>
 Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
  folios since Dec 2021 (any kernel from 6.1 upwards)
 To: Matthew Wilcox <willy@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>,
- Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
- regressions@leemhuis.info
-References: <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk>
- <ZuuqPEtIliUJejvw@casper.infradead.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <ZuuqPEtIliUJejvw@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: Jens Axboe <axboe@kernel.dk>, Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>, 
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/18/24 10:36 PM, Matthew Wilcox wrote:
-> On Wed, Sep 18, 2024 at 09:38:41PM -0600, Jens Axboe wrote:
->> On 9/18/24 9:12 PM, Linus Torvalds wrote:
->>> On Thu, 19 Sept 2024 at 05:03, Linus Torvalds
->>> <torvalds@linux-foundation.org> wrote:
->>>>
->>>> I think we should just do the simple one-liner of adding a
->>>> "xas_reset()" to after doing xas_split_alloc() (or do it inside the
->>>> xas_split_alloc()).
->>>
->>> .. and obviously that should be actually *verified* to fix the issue
->>> not just with the test-case that Chris and Jens have been using, but
->>> on Christian's real PostgreSQL load.
->>>
->>> Christian?
->>>
->>> Note that the xas_reset() needs to be done after the check for errors
->>> - or like Willy suggested, xas_split_alloc() needs to be re-organized.
->>>
->>> So the simplest fix is probably to just add a
->>>
->>>                         if (xas_error(&xas))
->>>                                 goto error;
->>>                 }
->>> +               xas_reset(&xas);
->>>                 xas_lock_irq(&xas);
->>>                 xas_for_each_conflict(&xas, entry) {
->>>                         old = entry;
->>>
->>> in __filemap_add_folio() in mm/filemap.c
->>>
->>> (The above is obviously a whitespace-damaged pseudo-patch for the
->>> pre-6758c1128ceb state. I don't actually carry a stable tree around on
->>> my laptop, but I hope it's clear enough what I'm rambling about)
->>
->> I kicked off a quick run with this on 6.9 with my debug patch as well,
->> and it still fails for me... I'll double check everything is sane. For
->> reference, below is the 6.9 filemap patch.
->>
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index 30de18c4fd28..88093e2b7256 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -883,6 +883,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
->>  		if (order > folio_order(folio))
->>  			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
->>  					order, gfp);
->> +		xas_reset(&xas);
->>  		xas_lock_irq(&xas);
->>  		xas_for_each_conflict(&xas, entry) {
->>  			old = entry;
-> 
-> My brain is still mushy, but I think there is still a problem (both with
-> the simple fix for 6.9 and indeed with 6.10).
-> 
-> For splitting a folio, we have the folio locked, so we know it's not
-> going anywhere.  The tree may get rearranged around it while we don't
-> have the xa_lock, but we're somewhat protected.
-> 
-> In this case we're splitting something that was, at one point, a shadow
-> entry.  There's no struct there to lock.  So I think we can have a
-> situation where we replicate 'old' (in 6.10) or xa_load() (in 6.9)
-> into the nodes we allocate in xas_split_alloc().  In 6.10, that's at
-> least guaranteed to be a shadow entry, but in 6.9, it might already be a
-> folio by this point because we've raced with something else also doing a
-> split.
-> 
+On Thu, 19 Sept 2024 at 06:36, Matthew Wilcox <willy@infradead.org> wrote:
+>
 > Probably xas_split_alloc() needs to just do the alloc, like the name
 > says, and drop the 'entry' argument.  ICBW, but I think it explains
 > what you're seeing?  Maybe it doesn't?
 
-Since I can hit it pretty reliably and quickly, I'm happy to test
-whatever you want on top of 6.9. From the other email, I backported:
+.. or we make the rule be that you have to re-check that the order and
+the entry still matches when you do the actual xas_split()..
 
-a4864671ca0b ("lib/xarray: introduce a new helper xas_get_order")
-6758c1128ceb ("mm/filemap: optimize filemap folio adding")
+Like commit 6758c1128ceb does, in this case.
 
-to 6.9 and kicked off a test with that 5 min ago, and it's still going.
-I'd say with 90% confidence that it should've hit already, but let's
-leave it churning for an hour and see what pops out the other end.
+We do have another xas_split_alloc() - in the hugepage case - but
+there we do have
 
--- 
-Jens Axboe
+                xas_lock(&xas);
+                xas_reset(&xas);
+                if (xas_load(&xas) != folio)
+                        goto fail;
+
+and the folio is locked over the whole sequence, so I think that code
+is probably safe and guarantees that we're splitting with the same
+details we alloc'ed.
+
+                Linus
