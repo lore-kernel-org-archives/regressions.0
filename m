@@ -1,269 +1,271 @@
 Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17864181B82
-	for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 20:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E31A3BBC9
+	for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 21:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726862892; cv=none; b=u2h/2p04jfLxcmmKXtFoSt5wmq/aYrJUtBzi8jgDe+gkjxgwHePQBp8TiBm878bn6OjyyVaYZJiKjcTQ1vuXV2DT8umypm1gfeWfH+ggTl+VMXnm50mgH0j0Q1E3/BHSxlMR50gHHk8Beo8HS3wIwncQZUbka/X0pblzI5gDeT8=
+	t=1726868029; cv=none; b=C0nszhjiO+AA5nrAuhVc7uDWye+AbfOZQ7TqzK22aRhQfoAXMhbtJyswbSFqitEOChwF/5DBWn1d06YELYA1wTO71zX/cl7eA7ZbDN0obz8a/Ep3o2uEK0N6SVR1/QQVqwNj1RANGIrNZSBiNbSOALNY4AXCoM30CtcADkciGWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726862892; c=relaxed/simple;
-	bh=FyCY36yI5w0lTSq34HxZmH4EPDjzQfp2huhYuiHkwRA=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=lClN/U9l9fMJbdRg8xZ9TXe/OplwTHYtNaNlkaTbJMTkGa0KQUIkksT/dcGVI1ClEv+rq2fncQHXd93cnd1bWV81UBh//UrzNnXbYksMSZn7Hg0oVpSG4Mq+LBOfhDQSlcWtDS+oODv3ShyutXOZmBo9IBfdrS4PJtirzP/DlOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca47Jvik; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726868029; c=relaxed/simple;
+	bh=N5xHjDMfogJvgvGbcrVM2UHL/wrfDjKYGHhGaWQdfAQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Fxd+VM+0kwixszHSbk/XEc5BwMFHC6h8LA7UYosxBnIHkk1iV7Y0Bc3XEADzBWo7uBY5DCYJMv+OMzOpiQyh+TV2wTNdNzbvNmvlJ7dY1rhrGUrcmM2Qw05LgBpRRbVXTQx25SlTsJNaWD6yZvHXpBviQKGM32TotIVHMe2PP5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=DrOUk4nR; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca47Jvik"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-718816be6cbso1923455b3a.1
-        for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 13:08:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="DrOUk4nR"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-718ebb01fd2so417138b3a.2
+        for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 14:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726862890; x=1727467690; darn=lists.linux.dev;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jqXxksIhdYu3U6EyI/SaQCdXTyiEORhvEkCurrA15Ic=;
-        b=Ca47JvikV8rxNwAXEnFNR1IXj/eRQw6AWumTum8FtZ+Diq/7v/y9kHfa4JzT8OtLzA
-         Jne8IJYGGceb0UGNJj9hTmk4woNxlhsn1lRL6Gs0QcW9kWjo3UUCsN3fis3dHKd51VYq
-         n5x8c6Fgc8quzglpaT7olui40gSR7L5BdxBLCMpAfDUrfR0sn7A+HTQPghNmmx57oT/x
-         DDhnD94mcimwGAC0TLBxJJOgr4qY/eyIc13aggtpCtlBe/KcCvVVyx0D1heetkR8cIJu
-         RVec6NVUfoG4xQc1C3LpJXCzYRkZ+HjTtemJGFHSZl2JNoDmMKiQO/uBWA3LcpySy6xt
-         EyNQ==
+        d=telus.net; s=google; t=1726868027; x=1727472827; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cQjDKsSkVR2nTxnOrcaZ6/YsVGVO5vKqyOAyBxgc5iA=;
+        b=DrOUk4nRnc/FgW+1WmzIaAjF4T/cglCrggofNOKYNFvE6okHh9JsXny+ikCmK28AA0
+         VUTXYIAJ1VRmsosi7lqdX0UNrjfU1WuEoO+EQdFJq4piNJj96q6tTEp3vGWb5L5iLhgm
+         Cjk1Rvzr6Z67eRD8qiScgV3TMKewei76Yv1Ow2Mj6ayAeFhpScutyMkdzCCr50pFmMMu
+         GJ5iFjbVuQinOSkVr1vAiwRSmFeLH8LM7WvJQQ6ZgCtOF2lUV6ZKAde85ezeWg1nq46V
+         n8FSXzIJ/yo6o9bBKfsyl7EH5O9TimL4GW7ququX6Nc9r2Z3gaJeNfGGeQc8TnbhcnbJ
+         pJTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726862890; x=1727467690;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jqXxksIhdYu3U6EyI/SaQCdXTyiEORhvEkCurrA15Ic=;
-        b=qOWHZKvbFebQVGuUldz1tET+9YUlskysx1Cv/1NArc4kD5kQaXEPIK4eOxtQPHViuU
-         Ul6CgQTKIMm7jKgJRsLCADMvO9CsaFSXANttb8u044FIiyakmERwPyazgQFrtY1x/BVI
-         og6KwwVy1GRvSaIyCJCD8GO0cx7iqlSbb7EX4dWfGAo+sfHLbIqS6MXPqtInk2UPm9xn
-         +Gstgc2mXJKyxFmyTvQZ0H1kjYlFKbaVxTaxfUSr7ErjyZAePuY5j9M+TbU57fTrxJFs
-         OdFbdJuxqrkciqO9cDeKUQeDEhQ/Pb+NUYqiEvImhwTljDH2gwsFQFSKJ+iB9+hJiYHn
-         mLoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNqVJcBvzJUGydzZFhe2+V1mwwGk/WCCSQzcprhmtXKevpQvAptZ5ZSdOHsQMhEm4s+tQYTYIx7sJjiQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxLUtGiauT/H3II58P9oUcZqlwcJV6SF+OM+kZIh1e++DKXObYY
-	RztiR4J0YPLruFkCjtqd7HIt8Zc5/0bSsKYxPxJKX7HSHn4lgeAl
-X-Google-Smtp-Source: AGHT+IFnZTuVUXfi09IMvJbRV9nzRJbWPXCtMyEyTm2x1nnbKFEaAJF7P+WRaiwkpd1Vvtm+qwMHRA==
-X-Received: by 2002:a05:6a20:b68a:b0:1d0:2533:1a42 with SMTP id adf61e73a8af0-1d30a8ecf33mr4553539637.9.1726862890221;
-        Fri, 20 Sep 2024 13:08:10 -0700 (PDT)
-Received: from smtpclient.apple ([2601:645:c600:8760:2cea:7b3a:57f3:3330])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7db4998ff14sm11207518a12.66.2024.09.20.13.08.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Sep 2024 13:08:09 -0700 (PDT)
-From: James Young <pronoiac@gmail.com>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        d=1e100.net; s=20230601; t=1726868027; x=1727472827;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cQjDKsSkVR2nTxnOrcaZ6/YsVGVO5vKqyOAyBxgc5iA=;
+        b=P6DWNvCzRgGFLRfG+wY894Tf0teBEPWpPjCpd+EYmlgh+hCYYB2256baGbhPnwPU2r
+         m0uKuZPNs+g4OFKwoX1Sg2+nUhgHqWesQVug4eOJoYtvgW0ONRiynBi9lGOlOi4vpQUV
+         nF5s+LO+QLvQ0upOkecvePOaAKG5VdmWHFA2w9FlnPXJLppTzVMdkuziWVmLgjrVtWCj
+         q4388KILOatEG00xrdNHjrIfkv619FK4XAvFJH9IKaRHL4qhg3oF2/ioszE5M1kpYus9
+         BtsUYs0nIaSdbYgZlcVYsNpDBhCG7x0ocBMkHKXVPwqihd1EGg7b4x0HzCB/e6sNn40z
+         fsgg==
+X-Gm-Message-State: AOJu0YzZUhykZ7M8/DE1xseAcn10zB2JURH67JV7FosUUSIllMcrnFM+
+	j6OossZnbPdUbZvojuJzR2kA0ymBXKCR8G+T4zf2tGu+x5nIcA77qV4ikDkwhAQ=
+X-Google-Smtp-Source: AGHT+IGy/w+NfVyN226ycapxQodd0y5Al5Vm/2r80z4ckzuv0rU5J8HxBWM+RoKQa/+kkoHRPQ6MgA==
+X-Received: by 2002:a05:6a00:2d22:b0:70b:705f:8c5d with SMTP id d2e1a72fcca58-7199c9f4f2dmr2676807b3a.4.1726868026609;
+        Fri, 20 Sep 2024 14:33:46 -0700 (PDT)
+Received: from ?IPV6:2001:56a:f979:1f00:3f32:90e7:d647:b08f? ([2001:56a:f979:1f00:3f32:90e7:d647:b08f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71944a973bbsm10232717b3a.27.2024.09.20.14.33.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Sep 2024 14:33:46 -0700 (PDT)
+Message-ID: <c21b734a-1d3d-4286-a3c5-a6ae9b69d847@telus.net>
+Date: Fri, 20 Sep 2024 15:33:44 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: [REGRESSION] Corruption on cifs / smb write on ARM, kernels 6.3-6.9
-Message-Id: <DFC1DAC5-5C6C-4DC2-807A-DAF12E4B7882@gmail.com>
-Date: Fri, 20 Sep 2024 13:07:58 -0700
-Cc: stable@vger.kernel.org,
- regressions@lists.linux.dev,
- linux-cifs@vger.kernel.org,
- David Howells <dhowells@redhat.com>,
- linux-kernel@vger.kernel.org,
- Steve French <sfrench@samba.org>
-To: pronoiac+kernel@gmail.com
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+Content-Language: en-US
+Cc: regressions@lists.linux.dev
+From: Bob Gill <gillb5@telus.net>
+Subject: 6.11.0 crash, 6.10.0 git bisect log
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I was benchmarking some compressors, piping to and from a network share =
-on a NAS, and some consistently wrote corrupted data.
+Hello.  Kernel 6.11.0 crashes.  6.10.0 builds.  Al Viro and Dr. David 
+Alan Gilbert have been helpful, and asked that I
+
+post a git bisect log.  The last log step seems odd, but the second last 
+step "Remove useless function call" might be what broke.
+
+My hardware is old corei7 quad core/8 thread Tylersberg/Nehalem with an 
+AMD RX 6500XT.  That's the odd combination.
+
+Thanks in advance,
+
+Bob
+
+Config:  (.config)
+/data/kernel/bobtest6.10-64
+
+Build line: (last command tells me the job is finished)
+make menuconfig && make -j $(nproc) && make modules && make 
+modules_install && make install && /data/music/pl.sh
+
+Rule 1: Do not modify ANYTHING in the source tree
+
+git bisect start
+git bisect bad
+git bisect good v6.10
+
+Bisecting: 11273 revisions left to test after this (roughly 14 steps)
+[2c9b3512402ed192d1f43f4531fb5da947e72bd0] Merge tag 'for-linus' of 
+git://git.kernel.org/pub/scm/virt/kvm/kvm
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0+
+
+RESULT:  boot 6.10.0+ fails
+          screen black for more than 2 minutes,
+          (caps lock key unresponsive, reset, power
+          buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 5677 revisions left to test after this (roughly 13 steps)
+[280e36f0d5b997173d014c07484c03a7f7750668] nsfs: use cleanup guard
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0+
+
+RESULT: boot 6.10.0+ successful
+tree: git bisect good
+Bisecting: 2855 revisions left to test after this (roughly 12 steps)
+[dde1a0e1625c08cf4f958348a83434b2ddecf449] Merge tag 
+'x86-percpu-2024-07-17' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0+
+
+RESULT: boot 6.10.0+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 1478 revisions left to test after this (roughly 11 steps)
+[32a120f52a4c0121bca8f2328d4680d283693d60] drm/i915/mtl: Skip PLL state 
+verification in TBT mode
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ successful
+tree: git bisect good
+Bisecting: 739 revisions left to test after this (roughly 10 steps)
+[b6a343df46d69070a7073405e470e6348180ea34] drm/amdgpu: initialize GC IP 
+v11.5.2
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 369 revisions left to test after this (roughly 9 steps)
+[cf1d06ac53a15b83c0a63225606cfe175e33a8a0] accel/ivpu: Increase 
+autosuspend delay to 100ms on 40xx
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc1+
+
+RESULT: boot 6.10.0-rc1+ successful
+tree: git bisect good
+Bisecting: 184 revisions left to test after this (roughly 8 steps)
+[0ca9f757a0e27a076395ec1b2002661bcf5c25e8] drm/amd/pm: powerplay: Add 
+`__counted_by` attribute for flexible arrays
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.9.0-rc5+
+
+RESULT: boot 6.9.0-rc5+ successful
+tree: git bisect good
+Bisecting: 92 revisions left to test after this (roughly 7 steps)
+[9862ef7bae47b9292a38a0a1b30bff7f56d7815b] drm/amd/display: Use periodic 
+detection for ipx/headless
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 44 revisions left to test after this (roughly 6 steps)
+[a78313bb206e0c456a989f380c4cbd8af8af7c76] Merge tag 
+'drm-intel-gt-next-2024-06-12' of 
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ successful
+tree: git bisect good
+Bisecting: 22 revisions left to test after this (roughly 5 steps)
+[51dbe0239b1fc7c435867ce28e5eb4394b6641e1] drm/amd/display: Fix cursor 
+size issues
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ successful
+tree: git bisect good
+Bisecting: 11 revisions left to test after this (roughly 4 steps)
+[871512e36f9c1c2cb4e62eb860ca0438800e4d63] drm/amd/display: Add 
+workaround to restrict max frac urgent for DPM0
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 5 revisions left to test after this (roughly 3 steps)
+[5d93060d430b359e16e7c555c8f151ead1ac614b] drm/amd/display: Check HDCP 
+returned status
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+Bisecting: 2 revisions left to test after this (roughly 1 step)
+[e094992bd1caa1fbd42221c7c305fc3b54172b5c] drm/amd/display: Remove 
+useless function call
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ successful
+
+tree: git bisect good
+[2c2ee1d1329881d8e6bb23c3b9f3b41df8a8055c] drm/amd/display: Check and 
+log for function error codes
+
+latest kernel:
+ls -alt /lib/modules | head -2 | tail -1 | tr -s " " | cut -d' ' -f9
+6.10.0-rc3+
+
+RESULT: boot 6.10.0-rc3+ fails
+         screen black for more than 2 minutes,
+         (caps lock key unresponsive, reset, power
+         buttons on computer case do nothing).  Reset with power bar.
+
+tree: git bisect bad
+[a171cce57792b0a6206d532050179a381ad74f8f] drm/amd/display: Check and 
+log for function error codes
 
 
-First, apologies in advance:
-* if I'm not in the right place. I tried to follow the directions from =
-the Regressions guide - =
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions.h=
-tml
-* I know there's a ton of context I don't know
-* I=E2=80=99m trying a different mail app, because the first one looked =
-concussed with plain text. This might be worse.
 
 
-The detailed description:
-I was benchmarking some compressors on Debian on a Raspberry Pi, piping =
-to and from a network share on a NAS, and found that some consistently =
-had issues writing to my NAS. Specifically:
-* lzop
-* pigz - parallel gzip
-* pbzip2 - parallel bzip2
-
-This is dependent on kernel version. I've done a survey, below.
-
-While I tripped over the issue on a Debian port (Debian 12, bookworm, =
-kernel v6.6), I compiled my own vanilla / mainline kernels for testing =
-and reporting this.
-
-
-Even more details:
-The Pi and the Synology NAS are directly connected by Gigabit Ethernet. =
-Both sides are using self-assigned IP addresses. I'll note that at boot, =
-getting the Pi to see the NAS requires some nudging of avahi-autoipd; =
-while I think it's stable before testing, I'm not positive, and =
-reconnection issues might be in play.
-
-The files in question are tars of sparse file systems, about 270 gig, =
-compressing down to 10-30 gig.
-
-Compression seems to work, without complaint; decompression crashes the =
-process, usually within the first gig of the compressed file. The output =
-of the stream doesn't match what ends up written to disk.
-
-Trying decompression during compression gets further along than it does =
-after compression finishes; this might point toward something with =
-writes and caches.
-
-A previous attempt involved rpi-update, which:
-* good: let me install kernels without building myself
-* bad: updated the bootloader and firmware, to bleeding edge, with =
-possible regressions; it definitely muddied the results of my tests
-I started over with a fresh install, and no results involving rpi-update =
-are included in this email.
-
-
-A survey of major branches:
-* 5.15.167, LTS - good
-* 6.1.109, LTS - good
-* 6.2.16 - good
-* 6.3.13 - bad
-* 6.4.16 - bad
-* 6.5.13 - bad
-* 6.6.50, LTS - bad
-* 6.7.12 - bad
-* 6.8.12 - bad
-* 6.9.12 - bad
-* 6.10.9 - good
-* 6.11.0 - good
-
-I tried, but couldn't fully build 4.19.322 or 6.0.19, due to issues with =
-modules.
-
-
-Important commits:
-It looked like both the breakage and the fix came in during rc1 =
-releases.
-
-Breakage, v6.3-rc1:
-I manually bisected commits in fs/smb* and fs/cifs.
-
-3d78fe73fa12 cifs: Build the RDMA SGE list directly from an iterator
-> lzop and pigz worked. last working. test in progress: pbzip2
-
-607aea3cc2a8 cifs: Remove unused code
-> lzop didn't work. first broken
-
-
-Fix, v6.10-rc1:
-I manually bisected commits in fs/smb.
-
-69c3c023af25 cifs: Implement netfslib hooks
-> lzop didn't work. last broken one
-
-3ee1a1fc3981 cifs: Cut over to using netfslib
-> lzop, pigz, pbzip2, all worked. first fixed one
-
-
-To test / reproduce:
-It looks like this, on a mounted network share, with extra pv for =
-progress meters:
-
-cat 1tb-rust-ext4.img.tar.gz | \
-  gzip -d | \
-  lzop -1 > \
-  1tb-rust-ext4.img.tar.lzop
-  # wait 40 minutes
-
-cat 1tb-rust-ext4.img.tar.lzop | \
-  lzop -d | \
-  sha1sum
-  # either it works, and shows the right checksum
-  # or it crashes early, due to a corrupt file, and shows an incorrect =
-checksum
-
-As I re-read this, I realize it might look like the compressor behaves =
-differently. I added a "tee $output | sha1sum; sha1sum $output" and ran =
-it on a broken version. The checksums from the pipe and for the file on =
-disk are different.
-
-
-Assorted info:
-This is a Raspberry Pi 4, with 4 GiB RAM, running Debian 12, bookworm, =
-or a port.
-
-mount.cifs version: 7.0
-
-# cat /proc/sys/kernel/tainted
-1024
-
-# cat /proc/version
-Linux version 6.2.0-3d78fe73f-v8-pronoiac+ (pronoiac@bisect) (gcc =
-(Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #21 =
-SMP PREEMPT Thu Sep 19 16:51:22 PDT 2024
-
-
-DebugData:=20
-/proc/fs/cifs/DebugData
-Display Internal CIFS Data Structures for Debugging
----------------------------------------------------
-CIFS Version 2.41
-Features: =
-DFS,FSCACHE,STATS2,DEBUG,ALLOW_INSECURE_LEGACY,CIFS_POSIX,UPCALL(SPNEGO),X=
-ATTR,ACL
-CIFSMaxBufSize: 16384
-Active VFS Requests: 1
-
-Servers:
-1) ConnectionId: 0x1 Hostname: drums.local
-Number of credits: 8062 Dialect 0x300
-TCP status: 1 Instance: 1
-Local Users To Server: 1 SecMode: 0x1 Req On Wire: 2
-In Send: 1 In MaxReq Wait: 0
-
-        Sessions:
-        1) Address: 169.254.132.219 Uses: 1 Capability: 0x300047        =
-Session Status: 1
-        Security type: RawNTLMSSP  SessionId: 0x4969841e
-        User: 1000 Cred User: 0
-
-        Shares:
-        0) IPC: \\drums.local\IPC$ Mounts: 1 DevInfo: 0x0 Attributes: =
-0x0
-        PathComponentMax: 0 Status: 1 type: 0 Serial Number: 0x0
-        Share Capabilities: None        Share Flags: 0x0
-        tid: 0xeb093f0b Maximal Access: 0x1f00a9
-
-        1) \\drums.local\billions Mounts: 1 DevInfo: 0x20 Attributes: =
-0x5007f
-        PathComponentMax: 255 Status: 1 type: DISK Serial Number: =
-0x735a9af5
-        Share Capabilities: None Aligned, Partition Aligned,    Share =
-Flags: 0x0
-        tid: 0x5e6832e6 Optimal sector size: 0x200      Maximal Access: =
-0x1f01ff
-
-
-        MIDs:
-        State: 2 com: 9 pid: 3117 cbdata: 00000000e003293e mid 962892
-
-        State: 2 com: 9 pid: 3117 cbdata: 000000002610602a mid 962956
-
---
-
-
-
-Let me know how I can help.
-The process of iterating can take hours, and it's not automated, so my =
-resources are limited.
-
-#regzbot introduced: 607aea3cc2a8
-#regzbot fix: 3ee1a1fc3981
-
--James
 
