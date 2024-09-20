@@ -1,298 +1,269 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E5F57CB6;
-	Fri, 20 Sep 2024 13:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726840543; cv=fail; b=KKd5Hu5Z+nxNTk4zPcBrKHwTzAzsOrTaEPy6qhDdhsBT3S7PBpBeJTpkut5PO44CVsmTgMt8m07FNRvAL1XNJcD+btJNl1xkdzwWpyGVGoZuTD9aqWmsLw00SMmDxXfDPu9PxuKCNw7XkJuRkAoluXhCM5dAJ58qTjUyoZscYwE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726840543; c=relaxed/simple;
-	bh=gG4OagSGjIgMPyFQeL9T+D6Y4fQL2GQXmiMSj2c4h3c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mlN1rAsCcagSJ6bQrJRdn1p8++n0wtKg90/LAnIOXbiqGiEILIMAZetjvyD6wn/illDLhohVNkaoiBASX8oZPs7AQZN0zRHqzJHFAub9wT/4lPlUHD7Tt8apcFxJmtsUdlzlu8x4rrMJ1hILIjYNXGbLlopZc9CXqlEmvHpfmVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=QIjgkAdN; arc=fail smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17864181B82
+	for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 20:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726862892; cv=none; b=u2h/2p04jfLxcmmKXtFoSt5wmq/aYrJUtBzi8jgDe+gkjxgwHePQBp8TiBm878bn6OjyyVaYZJiKjcTQ1vuXV2DT8umypm1gfeWfH+ggTl+VMXnm50mgH0j0Q1E3/BHSxlMR50gHHk8Beo8HS3wIwncQZUbka/X0pblzI5gDeT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726862892; c=relaxed/simple;
+	bh=FyCY36yI5w0lTSq34HxZmH4EPDjzQfp2huhYuiHkwRA=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=lClN/U9l9fMJbdRg8xZ9TXe/OplwTHYtNaNlkaTbJMTkGa0KQUIkksT/dcGVI1ClEv+rq2fncQHXd93cnd1bWV81UBh//UrzNnXbYksMSZn7Hg0oVpSG4Mq+LBOfhDQSlcWtDS+oODv3ShyutXOZmBo9IBfdrS4PJtirzP/DlOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca47Jvik; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="QIjgkAdN"
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48KCqXxf007768;
-	Fri, 20 Sep 2024 06:55:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	s2048-2021-q4; bh=NOiCfkFwp4AbkT1ASINPtLimSZFHsm5kL+XNMeabn9Q=; b=
-	QIjgkAdN0rYDs5zSbPZz8FbY1kF95/IqitvpnoH6jus6BXtzPK9dNtnXkR3e2t9d
-	QcSsujMfZxv1kkV+qkRob+IyCsxUKXYRcn7cHfnIqIs795P2+YBTLwJ2G+Q0QZix
-	5TyxpkIQfh+CT0YChC2HoOJdJM+VS8C3iK/qj5ZYHogDHaxbWrIjcdobG9Pojk/q
-	DDNvXBBrIb7Jjsm6UyUPKrJ2hIsmdKQp7/19icgnmqvGNVshtm9IH9IQbFozDXu+
-	flUpHj922NERCrqCSSAAe9UGoyfsgcsEgPowBLvOvqxir0Edbo1ESmPjSzTiae3L
-	gSN4aXIS55BYQz7RSqMf3A==
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 41rsvtn918-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Sep 2024 06:55:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uQlaaIkve6QNsppMVXJqCZxUjiMjNWDu3v3wH1AJE3Fl4+UdN26HulABFaCV7aqLNMhveV2xUjcjAfOJ5wMHSpDpMnnbSZwUw4f1/Dr+CN+scyu2jVyodRpODqZexjjEZSiliiBelB59T0dRACQxgpqSVERXYVI9vKH4TA/AhvdF9n0QhsD1Lklu4Su0RRZCvhbruY9vlCo5PL3QO9fzXgaQ5wJXhJfzSc1Fj/GzTaDBNvOdEVXXkeAtDsyO9s7ewppA4ba7IoK0HB3pQde5rn7jKrK75a9XrztMkNuGdxPToh/kjCesclXsY19iuv1OH2JcT3BUi6rfIlmfwJ3Svg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NOiCfkFwp4AbkT1ASINPtLimSZFHsm5kL+XNMeabn9Q=;
- b=eXZESKMHbw8oLZ5fSG6HYWlSgtWa7dwT7TYu4teeO+SRmaJn5pcvo4iP7AmZRPtYOK8lAagRmU4F0r1XVgcFFN6EdP19RFQg3mgmrr4TqM8PwCK9ay9nuy9HN5WFdQfBdDraNPWDqMKe6GIduwseM2E0p44KFJIxiZyH/MI+LxUr7mr/LgP3MkH4z/oaADrMHmPYBkxsEex49+vby6YiFebkxkJ8hFzaiMxhatk7cpd6Ps9IgtFsGF50TB1zS3UgACmSZbBmb3MzkKuWB6BXluNarySHdTiGmWfyWlFbNQv6osvH2wtmroI1K6e7EdX8ei+zZKA3UbW0eb1ewVsCYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
- by SJ0PR15MB4328.namprd15.prod.outlook.com (2603:10b6:a03:359::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.22; Fri, 20 Sep
- 2024 13:55:15 +0000
-Received: from LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::740a:ec4a:6e81:cf28]) by LV3PR15MB6455.namprd15.prod.outlook.com
- ([fe80::740a:ec4a:6e81:cf28%7]) with mapi id 15.20.7982.018; Fri, 20 Sep 2024
- 13:55:15 +0000
-Message-ID: <0a3b09db-23e8-4a06-85f8-a0d7bbc3228b@meta.com>
-Date: Fri, 20 Sep 2024 15:54:55 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-To: Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
-        regressions@leemhuis.info
-References: <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk>
- <ZuuqPEtIliUJejvw@casper.infradead.org>
-Content-Language: en-US
-From: Chris Mason <clm@meta.com>
-In-Reply-To: <ZuuqPEtIliUJejvw@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0197.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:44::8) To LV3PR15MB6455.namprd15.prod.outlook.com
- (2603:10b6:408:1ad::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca47Jvik"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-718816be6cbso1923455b3a.1
+        for <regressions@lists.linux.dev>; Fri, 20 Sep 2024 13:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726862890; x=1727467690; darn=lists.linux.dev;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jqXxksIhdYu3U6EyI/SaQCdXTyiEORhvEkCurrA15Ic=;
+        b=Ca47JvikV8rxNwAXEnFNR1IXj/eRQw6AWumTum8FtZ+Diq/7v/y9kHfa4JzT8OtLzA
+         Jne8IJYGGceb0UGNJj9hTmk4woNxlhsn1lRL6Gs0QcW9kWjo3UUCsN3fis3dHKd51VYq
+         n5x8c6Fgc8quzglpaT7olui40gSR7L5BdxBLCMpAfDUrfR0sn7A+HTQPghNmmx57oT/x
+         DDhnD94mcimwGAC0TLBxJJOgr4qY/eyIc13aggtpCtlBe/KcCvVVyx0D1heetkR8cIJu
+         RVec6NVUfoG4xQc1C3LpJXCzYRkZ+HjTtemJGFHSZl2JNoDmMKiQO/uBWA3LcpySy6xt
+         EyNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726862890; x=1727467690;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jqXxksIhdYu3U6EyI/SaQCdXTyiEORhvEkCurrA15Ic=;
+        b=qOWHZKvbFebQVGuUldz1tET+9YUlskysx1Cv/1NArc4kD5kQaXEPIK4eOxtQPHViuU
+         Ul6CgQTKIMm7jKgJRsLCADMvO9CsaFSXANttb8u044FIiyakmERwPyazgQFrtY1x/BVI
+         og6KwwVy1GRvSaIyCJCD8GO0cx7iqlSbb7EX4dWfGAo+sfHLbIqS6MXPqtInk2UPm9xn
+         +Gstgc2mXJKyxFmyTvQZ0H1kjYlFKbaVxTaxfUSr7ErjyZAePuY5j9M+TbU57fTrxJFs
+         OdFbdJuxqrkciqO9cDeKUQeDEhQ/Pb+NUYqiEvImhwTljDH2gwsFQFSKJ+iB9+hJiYHn
+         mLoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNqVJcBvzJUGydzZFhe2+V1mwwGk/WCCSQzcprhmtXKevpQvAptZ5ZSdOHsQMhEm4s+tQYTYIx7sJjiQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxLUtGiauT/H3II58P9oUcZqlwcJV6SF+OM+kZIh1e++DKXObYY
+	RztiR4J0YPLruFkCjtqd7HIt8Zc5/0bSsKYxPxJKX7HSHn4lgeAl
+X-Google-Smtp-Source: AGHT+IFnZTuVUXfi09IMvJbRV9nzRJbWPXCtMyEyTm2x1nnbKFEaAJF7P+WRaiwkpd1Vvtm+qwMHRA==
+X-Received: by 2002:a05:6a20:b68a:b0:1d0:2533:1a42 with SMTP id adf61e73a8af0-1d30a8ecf33mr4553539637.9.1726862890221;
+        Fri, 20 Sep 2024 13:08:10 -0700 (PDT)
+Received: from smtpclient.apple ([2601:645:c600:8760:2cea:7b3a:57f3:3330])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7db4998ff14sm11207518a12.66.2024.09.20.13.08.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Sep 2024 13:08:09 -0700 (PDT)
+From: James Young <pronoiac@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|SJ0PR15MB4328:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0abfa4a-ecd0-406d-f7df-08dcd97bda75
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ck5vbHRZYXA5NWRmNGd2Y1FoQm4yZW5haG1YcmJvSHE1SlB1K291STdNcHZu?=
- =?utf-8?B?TDFTdlI0UjVUN1JRNlU1VkhWTmRsbUJFOUt4eEVScHc4NFY1Q2NNQ0Q4NTFr?=
- =?utf-8?B?Mm5zbU9wNEdKRHA0blRiSjE5emI3SCtZQmVWQ1VBd2lHbHhZMVJ6b0ZhR1RK?=
- =?utf-8?B?MWJSUmpzVXdNUmJlb1YwMzRMK0U2VlJPOExlemR4NURrMWdPK0NDajdRZlVk?=
- =?utf-8?B?bVlNTDNzZ2RNZW1NaXlreDd3b2xERVJYbVd2cHEwVEY0WFoxY0RraUNrSGln?=
- =?utf-8?B?UWZ1Nmxza2lLd29DUTh1R21ETkpmYjl4cTRneFJ1dWwrbWovUFdDZUlVV2lq?=
- =?utf-8?B?MmRPeWxwelNhSW8wVU9hRUdUa0dTdlkvcDJYaEp2M3N0Z2JxYjc4cEdiL1Ri?=
- =?utf-8?B?cFBXYjJxdXNIQlpwczUwR2ZIcmVZZGJaNjlXZ3pTTUxwWHZILzh6L2pSTzE4?=
- =?utf-8?B?NE1paU5GdGFUUTgyMVJHTlRnNXhQbTNOejcyNVFSeHJGUTBiK1NyTTl4MUZj?=
- =?utf-8?B?ZmVJc21BU2UvZURJNE9KTXBiT20vWkhrNmxMQ0pLUGFvYTVhVE00a3JuS3FM?=
- =?utf-8?B?NmkvbnVwRmp4ODM1TFMwZnB3dTBEMXd1TFNwVTAyeVlZbGJWM3hoRFFGejVZ?=
- =?utf-8?B?bkdmVWdmY2I0NGMyeW9RcS9HaFJJZ3ZPaHJKYWdaWTVwZmdKUXNEU0dVZzUv?=
- =?utf-8?B?cHN6M1Rhc3BLREtSWEFPT2hUQ2tQMkhYZFZ6dFBSanlUWmVrQjBnR3NpeUxN?=
- =?utf-8?B?cnE3WldyRk5RQnJiWThEWEpiU2FhVGJmdmtyajR0TTNEOFJzeWdxQ01QSFFG?=
- =?utf-8?B?QmUyOXlPTCtNTUV4eVRyaWtkQ2hidmYvQVBKd0NKdDd2aU1Gc3RIczVwOXE3?=
- =?utf-8?B?czZJZWFNdEdDcjFIbzZtS2NQSkV1VGpsTnl3ZWFJTnc0MUkxOFI5UnhhNU5V?=
- =?utf-8?B?RFlJaFYrakV3clNSUHRCaGg2ZDZIb0lFVmVPajlZUHh2ajVkdHpHNmNBd0dZ?=
- =?utf-8?B?d08yb3pJQ2NjSTIyWXFkMnE4YytQbmdCa0Q3SHVzSFRmT1FsekhSUGs2SzU4?=
- =?utf-8?B?NkVrY0x1cUpqYW9EMUZCdGhwekdsM2xnZU1YaWU3NzhSa21HMHlUSERNOGFD?=
- =?utf-8?B?OW02ODVONHZ2eE94YXdTWmNaOFlheVluL2ErSGtzWVpEOGprSDVWOW5Ea25R?=
- =?utf-8?B?UUd5RWMvc1IrcmFoMyt5NEdZQnNTTXNoTDYyR1F4Y1hKaEdPcE5Jd2phNW52?=
- =?utf-8?B?cGhWRGV1ZzI3dTdIODladmR6SzJ3VUgwNWdrVnpTQlZMVGphcUwvZk5Sbi9R?=
- =?utf-8?B?ZkJOM2ZuR25WdU5TRjRvVHNHd3pHK1h1ZXBFbStEUUtKZWZ1anlKTUJ1cjNo?=
- =?utf-8?B?K0UvQ1U4dTJFZmh4NUgvUkFlVDFoUXNrRUwvbFV3dkI1cUZHVHdEa1FMWDRB?=
- =?utf-8?B?cmRpNFJ3Q0FqK1NkNmJvdkVPZGg1YURqVmtVTU8wQ1AvT0orVjVRY2ZzVFhn?=
- =?utf-8?B?RHBOOEFOMmdDQ0lUOU5lbEUvNTY4N0JDWHFKdnpmWXpsRjcyUEhCSFUycFFI?=
- =?utf-8?B?Zm02V0xrUWkyVWN0dnlXY1lwYnVHWjdZTnJJUk9hcEZmN3o2dUtHWVd5aGlE?=
- =?utf-8?Q?TZzcWy1z/l6AVKJINGYCcABnpPEANkz3zyupGG271x/U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RVNaRGYrTi9lL3NLZWVickZyd3YrZkRtdmc0c0pYdXUrVTZVZ1p0bkQvZ2Ux?=
- =?utf-8?B?amtrMHdveGNuaDhQNWlSRWRxK2N4TStCRkxBb1g4cm5rL2VOcEZUSEVmYzdj?=
- =?utf-8?B?Tk9sMlFBNzRVVlVmbFJ2cmZ0Zit2VHlOQ2NFZUFTa1B0RFRKa2Fud3lqWFJ1?=
- =?utf-8?B?MjZmbXhFaDUyTmpUQmJJNWUrNC9GMlF0N0tSVllTOHFnY2ovallUS1NhM0NE?=
- =?utf-8?B?RG1heXUvT0RZdGxtMWRINVZzOW9Ja1BmQzRGYkdEWTlJUm8wYzByTllkSUpa?=
- =?utf-8?B?UXRsNlJFY3FHb3krWWhvb2p1eWFPR1FsNWIvaFFDb3RaV3RJbU9aMmRnMk1Q?=
- =?utf-8?B?dlE3TGN3RG1wdVFTclBZb2xtWVlJTGlqT1JkaXVHQnMwQjBuUzVLZVBQYUdL?=
- =?utf-8?B?aEhyTFZqaEI3emR3YlVVVGFxc3dyKzJaeGt4YUdqa2lYMjdncm1oRkFxR2hq?=
- =?utf-8?B?SHZvamV0Z25WN01SdUR5aklOVkpWL3JJWUVJZkFrRnhuYVFiSnJiYThiWVkw?=
- =?utf-8?B?Z1p0WGkwUEtKRjAwbVVXeSswK2lmaVQvZ01wT05HaVJaa0NhWUpZK2VldHhN?=
- =?utf-8?B?U3I2MXVVMXdiZTJuYTZuLzlrNERiRVU2aTlZUWZJNzZyQ1lzZlU4bTl5ZjRt?=
- =?utf-8?B?WVlKK21DSVVrZWRJTURZSmNDZDE5VHk3N2ZKcVNpbHZPakJhNW00WWx2SGVr?=
- =?utf-8?B?aUpCUFpyS1d5WDZHOVZkR1R5NER6SVJmRjNQNVBPZzhPeS9rYmJsbVloaHc3?=
- =?utf-8?B?MzdpMkJIcGt5eEJHaEQwQklKSVVMWW40NkQzcTdkNXlBNGRFZjVWZDl6aXp2?=
- =?utf-8?B?VVlNakxxazRURGNXb3pUKzNrRUN1Zm1UdHFiTHVOT0Y1c2s5aHUrQnlUTis2?=
- =?utf-8?B?NkZaWThwa21ia2dPNlorNG9DOHhlQ1ZjOVJ6a0c2TVFYdlIzbmRsMEMvRmhm?=
- =?utf-8?B?Tis3N25vYkhwclgwMWoxdUU2dnNFRG9KZ2dHNlRFUGJ2TGVsRzBhYUxGVjlq?=
- =?utf-8?B?UEl6OXp1V0pnN05JcTFZaFF1U3RrZnNhM0xVeHR4ckJUN1hIbWZmSENPc21H?=
- =?utf-8?B?c1JjZG9yZUNaZk9yZjZlUkEyYW94YkdLcG1mbjVsNTBSRlk3K2cwYnh4RURR?=
- =?utf-8?B?ZE1wOXFIQjNIN3NCSzJrV0xqQnBwQmpWRFdFWU9JU0hZZlp3ZndZbTlpY0Vn?=
- =?utf-8?B?OEUzM0RGVGpVK01qNjdZcXRSWkU1anI1b1lXaFFBcjN6R0NtSE5zS1VFNjdH?=
- =?utf-8?B?OTBqdVMrVHdpQTRIUi9lRTF4R0l1ZlJNNk1sbFBhd1NObmlmazVGaU5TcGt0?=
- =?utf-8?B?UUxaTEVhMlZrcTlEbTZVNHBSRWZuS0htRFdUcUl2cUp3Y2ZucjdxcG5URjdJ?=
- =?utf-8?B?SVRoQktMTHFSdTdRNElIbUpHTVpPSWUrUERSSjJVR0NmUVMzUkg2VERwOXlm?=
- =?utf-8?B?dXZUY2pxUkZtT0JnNTBVS0dLWDFWdnp1eFNRemlJMWExaDlRTk43TTBlNDd4?=
- =?utf-8?B?TW9nS2ZXOHVRcHducDBkbkhlb3JURlRnREtQdU5Cbk5yaXBPUXIzZHMzdXFO?=
- =?utf-8?B?M0NFWkF0NFYxRU5ja1JId1h1czJVaEJoblIxenh1QjMwTXc2aVU3eXhQSGpk?=
- =?utf-8?B?RGZRV1pBMk9ydnZDY1gvcGl5Qkxyd2xtRmRmbXJFdE9xcG5RdTI0UnRTWlZL?=
- =?utf-8?B?VWlIakpobmZFMTYyQWZkQUEyTm40SDhKQUhqNjJpTzhvbWE0S1Y2TmxPVi9R?=
- =?utf-8?B?Wk5CNkNPeEc0WXd3MzFKR2tVSEkzaVZqT0FLV2Mvc3FhRHpkNGZlWUNua1ha?=
- =?utf-8?B?M2tvVmRTR2twTVkrYTJLVXYvS1ZwVGVrUzV1Z1k3Wk5KQzJrT3NHWmhmejdD?=
- =?utf-8?B?eDM3YVhFYXdPTDRXanhqazA0WkYzMkRTYnhhc1JYb09TUVlVWkhDYU51Z3N2?=
- =?utf-8?B?YTdPemVrUVJUNVlMQkRzMHFoajd5cTZ5c2NDZExaNkxDaTJtelBiYVUzQXRa?=
- =?utf-8?B?c1JSYU5PTy8rQi90WlBOM21UVXIyeEdGV0VFV3hjNGt0ZUNSY1R4SkFDQlZE?=
- =?utf-8?B?Y3Z2cjgwS1VsTytvSEtIMlBBaHluTkQrNllYVk8vcGk1QkFKYkNvL1YzMDlw?=
- =?utf-8?Q?G6Ck=3D?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0abfa4a-ecd0-406d-f7df-08dcd97bda75
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2024 13:55:15.1138
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aRGWlG1FxREjGmj5tWx92GY4mhHr3X6kh/Z3NOobSaBfWcpPIQ0jPLUYoGtwFF6J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR15MB4328
-X-Proofpoint-ORIG-GUID: qEheREv6YFr9ZLLsQ3if4LUbp9EOP_M-
-X-Proofpoint-GUID: qEheREv6YFr9ZLLsQ3if4LUbp9EOP_M-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-20_06,2024-09-19_01,2024-09-02_01
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: [REGRESSION] Corruption on cifs / smb write on ARM, kernels 6.3-6.9
+Message-Id: <DFC1DAC5-5C6C-4DC2-807A-DAF12E4B7882@gmail.com>
+Date: Fri, 20 Sep 2024 13:07:58 -0700
+Cc: stable@vger.kernel.org,
+ regressions@lists.linux.dev,
+ linux-cifs@vger.kernel.org,
+ David Howells <dhowells@redhat.com>,
+ linux-kernel@vger.kernel.org,
+ Steve French <sfrench@samba.org>
+To: pronoiac+kernel@gmail.com
+X-Mailer: Apple Mail (2.3776.700.51)
 
-On 9/19/24 12:36 AM, Matthew Wilcox wrote:
-> On Wed, Sep 18, 2024 at 09:38:41PM -0600, Jens Axboe wrote:
->> On 9/18/24 9:12 PM, Linus Torvalds wrote:
->>> On Thu, 19 Sept 2024 at 05:03, Linus Torvalds
->>> <torvalds@linux-foundation.org> wrote:
->>>>
->>>> I think we should just do the simple one-liner of adding a
->>>> "xas_reset()" to after doing xas_split_alloc() (or do it inside the
->>>> xas_split_alloc()).
->>>
->>> .. and obviously that should be actually *verified* to fix the issue
->>> not just with the test-case that Chris and Jens have been using, but
->>> on Christian's real PostgreSQL load.
->>>
->>> Christian?
->>>
->>> Note that the xas_reset() needs to be done after the check for errors
->>> - or like Willy suggested, xas_split_alloc() needs to be re-organized.
->>>
->>> So the simplest fix is probably to just add a
->>>
->>>                         if (xas_error(&xas))
->>>                                 goto error;
->>>                 }
->>> +               xas_reset(&xas);
->>>                 xas_lock_irq(&xas);
->>>                 xas_for_each_conflict(&xas, entry) {
->>>                         old = entry;
->>>
->>> in __filemap_add_folio() in mm/filemap.c
->>>
->>> (The above is obviously a whitespace-damaged pseudo-patch for the
->>> pre-6758c1128ceb state. I don't actually carry a stable tree around on
->>> my laptop, but I hope it's clear enough what I'm rambling about)
->>
->> I kicked off a quick run with this on 6.9 with my debug patch as well,
->> and it still fails for me... I'll double check everything is sane. For
->> reference, below is the 6.9 filemap patch.
->>
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index 30de18c4fd28..88093e2b7256 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -883,6 +883,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
->>  		if (order > folio_order(folio))
->>  			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
->>  					order, gfp);
->> +		xas_reset(&xas);
->>  		xas_lock_irq(&xas);
->>  		xas_for_each_conflict(&xas, entry) {
->>  			old = entry;
-> 
-> My brain is still mushy, but I think there is still a problem (both with
-> the simple fix for 6.9 and indeed with 6.10).
-> 
-> For splitting a folio, we have the folio locked, so we know it's not
-> going anywhere.  The tree may get rearranged around it while we don't
-> have the xa_lock, but we're somewhat protected.
-> 
-> In this case we're splitting something that was, at one point, a shadow
-> entry.  There's no struct there to lock.  So I think we can have a
-> situation where we replicate 'old' (in 6.10) or xa_load() (in 6.9)
-> into the nodes we allocate in xas_split_alloc().  In 6.10, that's at
-> least guaranteed to be a shadow entry, but in 6.9, it might already be a
-> folio by this point because we've raced with something else also doing a
-> split.
-> 
-> Probably xas_split_alloc() needs to just do the alloc, like the name
-> says, and drop the 'entry' argument.  ICBW, but I think it explains
-> what you're seeing?  Maybe it doesn't?
+I was benchmarking some compressors, piping to and from a network share =
+on a NAS, and some consistently wrote corrupted data.
 
-Jens and I went through a lot of iterations making the repro more
-reliable, and we were able to pretty consistently show a UAF with
-the debug code that Willy suggested:
 
-XA_NODE_BUG_ON(xas->xa_alloc, memchr_inv(&xas->xa_alloc->slots, 0, sizeof(void *) * XA_CHUNK_SIZE));
+First, apologies in advance:
+* if I'm not in the right place. I tried to follow the directions from =
+the Regressions guide - =
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions.h=
+tml
+* I know there's a ton of context I don't know
+* I=E2=80=99m trying a different mail app, because the first one looked =
+concussed with plain text. This might be worse.
 
-But, I didn't really catch what Willy was saying about xas_split_alloc()
-until this morning.
 
-xas_split_alloc() does the allocation and also shoves an entry into some of
-the slots.  When the tree changes, the entry we've stored is wildly 
-wrong, but xas_reset() doesn't undo any of that.  So when we actually
-use the xas->xa_alloc nodes we've setup, they are pointing to the
-wrong things.
+The detailed description:
+I was benchmarking some compressors on Debian on a Raspberry Pi, piping =
+to and from a network share on a NAS, and found that some consistently =
+had issues writing to my NAS. Specifically:
+* lzop
+* pigz - parallel gzip
+* pbzip2 - parallel bzip2
 
-Which is probably why the commits in 6.10 added this:
+This is dependent on kernel version. I've done a survey, below.
 
-/* entry may have changed before we re-acquire the lock */
-if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
-	xas_destroy(&xas);
-        alloced_order = 0;
-}
+While I tripped over the issue on a Debian port (Debian 12, bookworm, =
+kernel v6.6), I compiled my own vanilla / mainline kernels for testing =
+and reporting this.
 
-The only way to undo the work done by xas_split_alloc() is to call
-xas_destroy().
 
-To prove this theory, I tried making a minimal version that also
-called destroy, but it all ended up less minimal than the code
-that's actually in 6.10.  I've got a long test going now with
-an extra cond_resched() to make the race bigger, and a printk of victory.
+Even more details:
+The Pi and the Synology NAS are directly connected by Gigabit Ethernet. =
+Both sides are using self-assigned IP addresses. I'll note that at boot, =
+getting the Pi to see the NAS requires some nudging of avahi-autoipd; =
+while I think it's stable before testing, I'm not positive, and =
+reconnection issues might be in play.
 
-It hasn't fired yet, and I need to hop on an airplane, so I'll just leave
-it running for now.  But long story short, I think we should probably
-just tag all of these for stable:
+The files in question are tars of sparse file systems, about 270 gig, =
+compressing down to 10-30 gig.
 
-https://lore.kernel.org/all/20240415171857.19244-2-ryncsn@gmail.com/T/#mdb85922624c39ea7efb775a044af4731890ff776
+Compression seems to work, without complaint; decompression crashes the =
+process, usually within the first gig of the compressed file. The output =
+of the stream doesn't match what ends up written to disk.
 
-Also, Willy's proposed changes to xas_split_alloc() seem like a good
-idea.
+Trying decompression during compression gets further along than it does =
+after compression finishes; this might point toward something with =
+writes and caches.
 
--chris
+A previous attempt involved rpi-update, which:
+* good: let me install kernels without building myself
+* bad: updated the bootloader and firmware, to bleeding edge, with =
+possible regressions; it definitely muddied the results of my tests
+I started over with a fresh install, and no results involving rpi-update =
+are included in this email.
+
+
+A survey of major branches:
+* 5.15.167, LTS - good
+* 6.1.109, LTS - good
+* 6.2.16 - good
+* 6.3.13 - bad
+* 6.4.16 - bad
+* 6.5.13 - bad
+* 6.6.50, LTS - bad
+* 6.7.12 - bad
+* 6.8.12 - bad
+* 6.9.12 - bad
+* 6.10.9 - good
+* 6.11.0 - good
+
+I tried, but couldn't fully build 4.19.322 or 6.0.19, due to issues with =
+modules.
+
+
+Important commits:
+It looked like both the breakage and the fix came in during rc1 =
+releases.
+
+Breakage, v6.3-rc1:
+I manually bisected commits in fs/smb* and fs/cifs.
+
+3d78fe73fa12 cifs: Build the RDMA SGE list directly from an iterator
+> lzop and pigz worked. last working. test in progress: pbzip2
+
+607aea3cc2a8 cifs: Remove unused code
+> lzop didn't work. first broken
+
+
+Fix, v6.10-rc1:
+I manually bisected commits in fs/smb.
+
+69c3c023af25 cifs: Implement netfslib hooks
+> lzop didn't work. last broken one
+
+3ee1a1fc3981 cifs: Cut over to using netfslib
+> lzop, pigz, pbzip2, all worked. first fixed one
+
+
+To test / reproduce:
+It looks like this, on a mounted network share, with extra pv for =
+progress meters:
+
+cat 1tb-rust-ext4.img.tar.gz | \
+  gzip -d | \
+  lzop -1 > \
+  1tb-rust-ext4.img.tar.lzop
+  # wait 40 minutes
+
+cat 1tb-rust-ext4.img.tar.lzop | \
+  lzop -d | \
+  sha1sum
+  # either it works, and shows the right checksum
+  # or it crashes early, due to a corrupt file, and shows an incorrect =
+checksum
+
+As I re-read this, I realize it might look like the compressor behaves =
+differently. I added a "tee $output | sha1sum; sha1sum $output" and ran =
+it on a broken version. The checksums from the pipe and for the file on =
+disk are different.
+
+
+Assorted info:
+This is a Raspberry Pi 4, with 4 GiB RAM, running Debian 12, bookworm, =
+or a port.
+
+mount.cifs version: 7.0
+
+# cat /proc/sys/kernel/tainted
+1024
+
+# cat /proc/version
+Linux version 6.2.0-3d78fe73f-v8-pronoiac+ (pronoiac@bisect) (gcc =
+(Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #21 =
+SMP PREEMPT Thu Sep 19 16:51:22 PDT 2024
+
+
+DebugData:=20
+/proc/fs/cifs/DebugData
+Display Internal CIFS Data Structures for Debugging
+---------------------------------------------------
+CIFS Version 2.41
+Features: =
+DFS,FSCACHE,STATS2,DEBUG,ALLOW_INSECURE_LEGACY,CIFS_POSIX,UPCALL(SPNEGO),X=
+ATTR,ACL
+CIFSMaxBufSize: 16384
+Active VFS Requests: 1
+
+Servers:
+1) ConnectionId: 0x1 Hostname: drums.local
+Number of credits: 8062 Dialect 0x300
+TCP status: 1 Instance: 1
+Local Users To Server: 1 SecMode: 0x1 Req On Wire: 2
+In Send: 1 In MaxReq Wait: 0
+
+        Sessions:
+        1) Address: 169.254.132.219 Uses: 1 Capability: 0x300047        =
+Session Status: 1
+        Security type: RawNTLMSSP  SessionId: 0x4969841e
+        User: 1000 Cred User: 0
+
+        Shares:
+        0) IPC: \\drums.local\IPC$ Mounts: 1 DevInfo: 0x0 Attributes: =
+0x0
+        PathComponentMax: 0 Status: 1 type: 0 Serial Number: 0x0
+        Share Capabilities: None        Share Flags: 0x0
+        tid: 0xeb093f0b Maximal Access: 0x1f00a9
+
+        1) \\drums.local\billions Mounts: 1 DevInfo: 0x20 Attributes: =
+0x5007f
+        PathComponentMax: 255 Status: 1 type: DISK Serial Number: =
+0x735a9af5
+        Share Capabilities: None Aligned, Partition Aligned,    Share =
+Flags: 0x0
+        tid: 0x5e6832e6 Optimal sector size: 0x200      Maximal Access: =
+0x1f01ff
+
+
+        MIDs:
+        State: 2 com: 9 pid: 3117 cbdata: 00000000e003293e mid 962892
+
+        State: 2 com: 9 pid: 3117 cbdata: 000000002610602a mid 962956
+
+--
+
+
+
+Let me know how I can help.
+The process of iterating can take hours, and it's not automated, so my =
+resources are limited.
+
+#regzbot introduced: 607aea3cc2a8
+#regzbot fix: 3ee1a1fc3981
+
+-James
 
