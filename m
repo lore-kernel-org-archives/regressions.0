@@ -1,118 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDE326AC1;
-	Sat, 21 Sep 2024 15:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A231520DF4
+	for <regressions@lists.linux.dev>; Sat, 21 Sep 2024 17:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726933216; cv=none; b=r/rnQMAZ7JeVa4xyipwUZtlDGC1bRgwRFBjiwOVtFB/VzZwid80y8TbCwT6I/viRF0oVki+8QhZuK1afpPDXHXjo0Bdggur1/Pbwf1qn59p/TdbkkvdC0f5vmidS98YWeBYLzVEOEVMBgQeAAeCBSuyD6HF2ZcdOUbeDQrtZkmQ=
+	t=1726940548; cv=none; b=tPL2zEJPTcpsMK9HO+WSr6/bevsrPjSyhdBpP8OBfS4/LhSynRTSdeYoP+gPSPFdXoMXjzXVFjCzGCL1jXnFPTuX0TFuVLMN5tBblUyCVYuBx1hHI5F4XZhmm8xivtLN7I8v17bfdbyaZDm5XjWMIy2dltrbKU4brBWtvHa/db4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726933216; c=relaxed/simple;
-	bh=4CxDI76mPU+av0PlDueKI0ZftQmM4Hg/wO91AfGb+BA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=PtlP3vk+um/EU/6DVebNEGjGeYMOvmnqVBncZnnUjh14rEP1pvQXSjC5e6honFtHVy5epkmuT0QfeMq/lRwjylu4t5cyXBnwXand1TVw+jKP+NiMo3S9+cDHWhHtb7U1yfvilIg2qmgVObQc1FPF5cFQdpdHhzkK8XtyMso/q/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lG9mNQC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726940548; c=relaxed/simple;
+	bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=k9JA0mAspV23vng7y44L/oXwjlmmgrjMwNjyFRXX5NwXFyas4rr0d2wx7nthu3UtdOk3Aoz1zpS8zsBuIgEOhfYh71q7IlXxnkEmMiO0o5pHF90c5MHmah6MQDrnwl5klehFFavW6dvZPd++/VSTitXwmd+S8W7Iij3oH1ZxRjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYPOApGw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lG9mNQC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0FAC4CEC2;
-	Sat, 21 Sep 2024 15:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726933216;
-	bh=4CxDI76mPU+av0PlDueKI0ZftQmM4Hg/wO91AfGb+BA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lG9mNQC7KEW0nXIn7zBz5m8fkpiHVe3caQ+vTqDQ94XVbQ/227S55P+MKY20GpX5H
-	 4KU0o3f7qzva6l/UwbINxrjW5n1l5SrmdIDrv59UyVxsxuQWkvJ0Hh9Wbv+8mvn262
-	 lntcnMyG4rNTn85JvYEliF9w8Qb4bCABaP2LOGEJZFdqPBJYulocBOBVVNYttNKIkP
-	 /Fe8mTztkd0KlQcnpwaC186EHifE2hVJpWg9Ben3t+BAaWaHM94zeWFVf6ICM7gZ7j
-	 xU+In4yGI/PJ/pGC9NJRpTMfhfQ1DuXi+qGSERgGBbCImYeJO/sidvktarMkrJHPZL
-	 I5+N4x5jDYB4A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYPOApGw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726940545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
+	b=QYPOApGwCI/ug6D54DcTBCVV8+HgUzFrPoJc/lEvb4ys1xEDGusbpVuzvPaWjuM/egY37P
+	zJW4gKLWW3pPsdh5PfVPS+Fgh03Q0KeSCXtvPcpX89Bgc5cZ5L2M7qG/smLBkHfpM/qc+s
+	j9AY9uEZV2Y7Qd5nG/s+ObIu5ECGTF8=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-OV-hIj_yODSGPZYktNB7Lw-1; Sat, 21 Sep 2024 13:42:24 -0400
+X-MC-Unique: OV-hIj_yODSGPZYktNB7Lw-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2d8ce69ed4cso3084745a91.0
+        for <regressions@lists.linux.dev>; Sat, 21 Sep 2024 10:42:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726940543; x=1727545343;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JgrYoAupbc8OvNFMx54RNgfQybMF51dGHAZ6mKbefj0=;
+        b=ru+yqBzBQmlSvb2PD7+C1w5qRIUusrou+QT6YV+VHQvkZWlJO1hHPfyCJhlRN6GLLW
+         3i/SmhK587RUp0VWOzboN08szO9zU5KWGV8MfpOBSGq/Y/Rn+L9avkpw+A7eq/XBCEi1
+         K5sOhTnF97mwQGXR6rTCrHbUXUBIaRYfg4ibBJJH2oDkSW4ajqjL+NyBH4inRny2Ejy4
+         snaFi+t5TIz0C7w5L2LAMqeDaWIYqKYFsMpQ7PVpMGAO8VLE4Jb1QDgR4xjy0HfWwXUy
+         yM9KhVhcEjs7qzn1iqBSxIeHIKjOE8jccmzu6hH/6nyhWT74JB1hMP2FfFF1nHZrkWcL
+         cwsw==
+X-Gm-Message-State: AOJu0YzjnpiSq7SF33YrmZeDdRovn+EGGPdKjC3v+AX2XKmWB360o+xg
+	zevOzdE3kHCI/2BU3wXZIvoX0GN04X0qWYV2u5vg1kTa5gW3WapU7UjsVRc+8HYGBBPJ2qJ7kur
+	7bDZFcLq5L8zwEXGo0xDSCJMecusaGS/qUjcep51Y94AiN2xW8AxB4qGfFhveABTps2GHLZmstZ
+	w60NbqJHELg61BuprcxHpPTX3DEWd3PlPhYYk=
+X-Received: by 2002:a17:902:e54b:b0:202:13ca:d73e with SMTP id d9443c01a7336-208d83b93fbmr96970205ad.28.1726940543362;
+        Sat, 21 Sep 2024 10:42:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGwKUefUGhW4P9+SPQMWxP6OdoTY4qumCwbgll/jbfjtlKNhI1zFL0C4CRiW+QJV0IQYuCYE57e7UXcnCMnUK8=
+X-Received: by 2002:a17:902:e54b:b0:202:13ca:d73e with SMTP id
+ d9443c01a7336-208d83b93fbmr96970035ad.28.1726940543063; Sat, 21 Sep 2024
+ 10:42:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 21 Sep 2024 18:40:12 +0300
-Message-Id: <D4C2QDK9WGUH.KQCJ19C43ONW@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Roberto Sassu"
- <roberto.sassu@huaweicloud.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
- "Pengyu Ma" <mapengyu@gmail.com>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-X-Mailer: aerc 0.18.2
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
- <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
- <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
- <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
- <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
- <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
- <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
- <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
- <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
- <D46RE2BWMGJ4.25VA7IVYTJ8MO@kernel.org>
- <D46RWPQ211ZS.12EYKZY053BH@kernel.org>
- <0b22c2c4b4a998fb44bb08be60a359acb9ecb8da.camel@HansenPartnership.com>
- <D46XX6HNU686.50X57ZWI2GUX@kernel.org>
- <7586c7e6e6028a734a8cac3d4b1a8504e6cd4b21.camel@HansenPartnership.com>
- <D46ZV5RXW7Z9.26N1IRXNRLV9X@kernel.org>
-In-Reply-To: <D46ZV5RXW7Z9.26N1IRXNRLV9X@kernel.org>
+MIME-Version: 1.0
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Sat, 21 Sep 2024 13:42:11 -0400
+Message-ID: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
+Subject: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with FORTIFY_SOURCE enabled
+To: linux-hardening@vger.kernel.org
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, kees@kernel.org, 
+	linux-riscv@lists.infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun Sep 15, 2024 at 7:22 PM EEST, Jarkko Sakkinen wrote:
-> On Sun Sep 15, 2024 at 6:00 PM EEST, James Bottomley wrote:
-> > On Sun, 2024-09-15 at 17:50 +0300, Jarkko Sakkinen wrote:
-> > > On Sun Sep 15, 2024 at 4:59 PM EEST, James Bottomley wrote:
-> > > > On Sun, 2024-09-15 at 13:07 +0300, Jarkko Sakkinen wrote:
-> > > > > On Sun Sep 15, 2024 at 12:43 PM EEST, Jarkko Sakkinen wrote:
-> > > > > > When it comes to boot we should aim for one single
-> > > > > > start_auth_session during boot, i.e. different phases would
-> > > > > > leave that session open so that we don't have to load the
-> > > > > > context every single time.=C2=A0 I think it should be doable.
-> > > > >=20
-> > > > > The best possible idea how to improve performance here would be
-> > > > > to transfer the cost from time to space. This can be achieved by
-> > > > > keeping null key permanently in the TPM memory during power
-> > > > > cycle.
-> > > >=20
-> > > > No it's not at all.=C2=A0 If you look at it, the NULL key is only u=
-sed
-> > > > to encrypt the salt for the start session and that's the operating
-> > > > taking a lot of time.=C2=A0 That's why the cleanest mitigation woul=
-d be
-> > > > to save and restore the session.=C2=A0 Unfortunately the timings yo=
-u
-> > > > already complain about still show this would be about 10x longer
-> > > > than a no-hmac extend so I'm still waiting to see if IMA people
-> > > > consider that an acceptable tradeoff.
-> > >=20
-> > > The bug report does not say anything about IMA issues. Please read
-> > > the bug reports before commenting ;-) I will ignore your comment
-> > > because it is plain misleading information.
-> > >=20
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219229
-> >
-> > Well, given that the kernel does no measured boot extends after the EFI
-> > boot stub (which isn't session protected) finishes, what's your theory
-> > for the root cause?
->
-> I don't think there is a silver bullet. Based on benchmark which showed
-> 80% overhead from throttling the context reducing number of loads and
-> saves will cut a slice of the fat.
->
-> Since it is the low-hanging fruit I'll start with that. In other words,
-> I'm not going touch session loading and saving. I'll start with null
-> key loading and saving.
+Starting with 6.11-rc1 I can no longer boot the Lichee Pi 4A with
+FORTIFY_SOURCE enabled. This works on 6.10 up to at least 6.10.11.
+However, with 6.11 I get no output at all from the kernel on the
+serial console with FORTIFY_SOURCE enabled and the system never comes
+online on network or otherwise as far as I can tell.
 
-"my theory" worked pretty well. It brought the boot time back to 8.7s,
-which can be explained with encryption overhead pretty well.
+I did a bisect which led to:
+2003e483a81cc235e29f77da3f6b256cb4b348e7
+fortify: Do not special-case 0-sized destinations
 
-I'd suggest reading the bug report next time before solving a problem
-that did not exist. We care about users, not unfinished patch sets.
+If I revert this commit I can once again boot the Lichee Pi 4A with
+FORTIFY_SOURCE enabled.
 
-BR, Jarkko
+Thank you,
+Jason Montleon
+
