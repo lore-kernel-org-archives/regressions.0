@@ -1,130 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883AD6AA7;
-	Sun, 22 Sep 2024 14:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AE7B64A
+	for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 15:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727014311; cv=none; b=OBOmL0zahPjuoN/JgA4uE81nhzUhVsON8onzd6P4eB0RuuyCpuaZ673JAZJF1RSq1FKSUdNTh7Fex0YqLCbnP5glWv3y6ZsvEfA20UZgrb7T4Ysp6wGXWAPYFgENnw9S8y7AN+dUx5BZA0jSGjn+hZr82TCtHYbuVbIP2IJWZUU=
+	t=1727019942; cv=none; b=Oc6u9RbKld8KjqxK/7mnDW1kUxLbggdZsYXyrZV7F93iIiKSTHVH4t93Md703FkhE+RBlcWwdzj6Lk0EahsJS0sY+QqIDSkeLuj2rpELeJZZXbfG8W5J9p2sYNDiu2/gXVvAkTDp+HW0hLdsCyyZnn2Njy4HoG/Tf4O3tHa97/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727014311; c=relaxed/simple;
-	bh=eAl4S/A2F523Lk30gj01p6kIx9RPCnKoBrw0sy16eR8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=RIdfcGOCdVcdIVRKZDcVYHJjdFKfL6hDKOIkOUjnpgQ2mFOj0sPNQTmUJqcIyl8ErvhdaBwVMi1/pKfOGiFO1DTsGTPx48lL/Zi5x1hR4D8fNryVFng4mhtP3QaNa9mfY2LgAjMOHOqSfcPdjG8CYSeWHpyjPruSiyKKWzr/XKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGX55nuY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727019942; c=relaxed/simple;
+	bh=5cm00P7/duSL5FVyVdO+2yozFQLDsetKduqrGv58/Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFxJWUSlPGtjyqUUEy59+Q43dz6SR0uS+xAMFESyNQ/TfPpmi7YADV7ilxstJRn8LyiutOb/xyXRrxQEqM2EDE0x/ygnW7WSwga577rfgtNX3tct13C2Yil2F0SBm8bZxJt0NnUFkf0VNPBv5jLAI2dpn808MT+uemgVWO8FNMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlXPn2NF; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGX55nuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CDDC4CEC3;
-	Sun, 22 Sep 2024 14:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727014311;
-	bh=eAl4S/A2F523Lk30gj01p6kIx9RPCnKoBrw0sy16eR8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=dGX55nuYwOpXmSgGc/M+A+BYil5kvv5RKbuwtkoig0D2BebjPYcgEzmCvYQGV0J5A
-	 rQ8YsmlSRbOru6gL+nfL8Wn32ECKXMRk9QBT+0zRNSAbBAccGjVLJmdKhKLQ7xtkxw
-	 Klt42SmrSUfXZdJkGdaaqiElFtqOzWM7vpAWqIuYgrYh8tDaJnHfDQrc/FynlrUxxf
-	 fZvIpuKWDjvX2vCKta0vLuQYonfo0ORigUCzne+FHyyOtzgzWVeC7xJLUWuF7IsC6d
-	 5Z+XNbFlh7gX6xftfxhpLaSfsSPoXidLix33iBPft+nM2NpQeHM37D81qkCb5duB02
-	 JvFZf4tOqa2fw==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlXPn2NF"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d24f98215so468452366b.1
+        for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 08:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727019939; x=1727624739; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cqw6BNVWvQvc7Ot8kytEoiRSWngnKP58LN6xDZxWNDA=;
+        b=KlXPn2NFQI5J5f7eK26P9dZz/WyzjeF86ceTVX4Lx2UlwpyBn0ejrkAExTcvQ4oE+3
+         p6sfOKNhPNz7GSpuGWhMj8JRfpJAqBI6YyCCuhRVRRvXQIqcdlft60wugvnxvfmJsJoj
+         AE0NpQVoIENlR+hoNMdU7fsBIc7IN7yIGwE/mopxBZ6uYEh6O1Rh7744B3YbTdytRgq2
+         62DpR9+6s5iILgYD6EQ+9ERDRN4UiSlWnqwQgvYUft/rhOvzosV9GGzx8vuiC/Ad4cYg
+         EeemZRL/gD7aoeyGmbWn3UawTXOjpPCyiPU8v+Qxm1X+SNKfGEhM3v76KhVH44dKGsnT
+         MhQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727019939; x=1727624739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cqw6BNVWvQvc7Ot8kytEoiRSWngnKP58LN6xDZxWNDA=;
+        b=Av2Law6TxgMD2alVbA1mZZdYOokizkD+wQbNGMMQrnuo6zr+djdUOt2cV2rjKl2oll
+         L497b2xVCUwnYXGnTL6H7ZhP3L0zX3UcJSI52Ky7PKaYmJxeC9FqgQ+4QXQT+icaDaZA
+         ph2IOeQe0NHIAuoIW1Ss12OO8Pmc+x5ZsZ3Rw6wYIHAAlrrEGB/b24fu3XUTzA2nJDgx
+         us7gahn/ZV30/+Y63jdrFLyKPZMhWtXoz2eWTI20EmQE43mEET898RL03Qh5Mo8EPMvs
+         5a72sxR25ZMoCt/mtg64d6VXOjcsvsOlUcnhzuE8E4IT1tIX5HF+xtaVrg8BCeqIiNyU
+         WqYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOTzrkfsrcuHl/d88ejF7RA17hqSnDDKzG3W17y3cLJ1aLka5Yl2ajJBY5WFmSfwBxHI9jIK5rqaebwA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz22UvLth/hdgPINb7lAE36ff96FqrTYXoBzDL8rTE6MHHDON9i
+	lzsfq6jAnFJjNY/9DsmJ3s9McciBHCG1Rs0VSD2z26yQfhYQ4kAP
+X-Google-Smtp-Source: AGHT+IEZ1mrt+u2uEuHyatCd9rqHewYXgMoORyuyZ9Y4CUaDm0YCEh1Lmi0FQiTXW0q4Tr7xri3XbA==
+X-Received: by 2002:a17:907:7e8b:b0:a86:789f:c756 with SMTP id a640c23a62f3a-a90d50fd4aamr984027566b.53.1727019938615;
+        Sun, 22 Sep 2024 08:45:38 -0700 (PDT)
+Received: from debian.local ([2a0a:ef40:c56:fd01:3715:1975:8d7:6033])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90612b3833sm1098163166b.128.2024.09.22.08.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2024 08:45:38 -0700 (PDT)
+Date: Sun, 22 Sep 2024 16:45:35 +0100
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, bsegall@google.com,
+	dietmar.eggemann@arm.com, efault@gmx.de, juri.lelli@redhat.com,
+	kprateek.nayak@amd.com, mgorman@suse.de, mingo@redhat.com,
+	rostedt@goodmis.org, tglx@linutronix.de, vincent.guittot@linaro.org,
+	vschneid@redhat.com, wuyun.abel@bytedance.com,
+	youssefesmat@chromium.org, spasswolf@web.de,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] Re: [PATCH 17/24] sched/fair: Implement delayed dequeue
+Message-ID: <ZvA7n9GNoD-ipjkj@debian.local>
+References: <20240830123458.3557-1-spasswolf@web.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Sep 2024 17:11:46 +0300
-Message-Id: <D4CVH7UEBRUO.16AEE90SXCN3@kernel.org>
-Subject: Re: [regression] significant delays when secureboot is enabled
- since 6.10
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Roberto Sassu"
- <roberto.sassu@huaweicloud.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
- <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
- "Pengyu Ma" <mapengyu@gmail.com>
-X-Mailer: aerc 0.18.2
-References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
- <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
- <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
- <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
- <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
- <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
- <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
- <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
- <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
- <D46RE2BWMGJ4.25VA7IVYTJ8MO@kernel.org>
- <D46RWPQ211ZS.12EYKZY053BH@kernel.org>
- <0b22c2c4b4a998fb44bb08be60a359acb9ecb8da.camel@HansenPartnership.com>
- <D46XX6HNU686.50X57ZWI2GUX@kernel.org>
- <7586c7e6e6028a734a8cac3d4b1a8504e6cd4b21.camel@HansenPartnership.com>
- <D46ZV5RXW7Z9.26N1IRXNRLV9X@kernel.org>
- <D4C2QDK9WGUH.KQCJ19C43ONW@kernel.org>
-In-Reply-To: <D4C2QDK9WGUH.KQCJ19C43ONW@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240830123458.3557-1-spasswolf@web.de>
 
-On Sat Sep 21, 2024 at 6:40 PM EEST, Jarkko Sakkinen wrote:
-> On Sun Sep 15, 2024 at 7:22 PM EEST, Jarkko Sakkinen wrote:
-> > On Sun Sep 15, 2024 at 6:00 PM EEST, James Bottomley wrote:
-> > > On Sun, 2024-09-15 at 17:50 +0300, Jarkko Sakkinen wrote:
-> > > > On Sun Sep 15, 2024 at 4:59 PM EEST, James Bottomley wrote:
-> > > > > On Sun, 2024-09-15 at 13:07 +0300, Jarkko Sakkinen wrote:
-> > > > > > On Sun Sep 15, 2024 at 12:43 PM EEST, Jarkko Sakkinen wrote:
-> > > > > > > When it comes to boot we should aim for one single
-> > > > > > > start_auth_session during boot, i.e. different phases would
-> > > > > > > leave that session open so that we don't have to load the
-> > > > > > > context every single time.=C2=A0 I think it should be doable.
-> > > > > >=20
-> > > > > > The best possible idea how to improve performance here would be
-> > > > > > to transfer the cost from time to space. This can be achieved b=
-y
-> > > > > > keeping null key permanently in the TPM memory during power
-> > > > > > cycle.
-> > > > >=20
-> > > > > No it's not at all.=C2=A0 If you look at it, the NULL key is only=
- used
-> > > > > to encrypt the salt for the start session and that's the operatin=
-g
-> > > > > taking a lot of time.=C2=A0 That's why the cleanest mitigation wo=
-uld be
-> > > > > to save and restore the session.=C2=A0 Unfortunately the timings =
-you
-> > > > > already complain about still show this would be about 10x longer
-> > > > > than a no-hmac extend so I'm still waiting to see if IMA people
-> > > > > consider that an acceptable tradeoff.
-> > > >=20
-> > > > The bug report does not say anything about IMA issues. Please read
-> > > > the bug reports before commenting ;-) I will ignore your comment
-> > > > because it is plain misleading information.
-> > > >=20
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219229
-> > >
-> > > Well, given that the kernel does no measured boot extends after the E=
-FI
-> > > boot stub (which isn't session protected) finishes, what's your theor=
-y
-> > > for the root cause?
-> >
-> > I don't think there is a silver bullet. Based on benchmark which showed
-> > 80% overhead from throttling the context reducing number of loads and
-> > saves will cut a slice of the fat.
-> >
-> > Since it is the low-hanging fruit I'll start with that. In other words,
-> > I'm not going touch session loading and saving. I'll start with null
-> > key loading and saving.
->
-> "my theory" worked pretty well. It brought the boot time back to 8.7s,
-> which can be explained with encryption overhead pretty well.
->
-> I'd suggest reading the bug report next time before solving a problem
-> that did not exist. We care about users, not unfinished patch sets.
+On Fri, Aug 30, 2024 at 02:34:56PM +0200, Bert Karwatzki wrote:
+> Since linux next-20240820 the following messages appears when booting:
+> 
+> [    T1] smp: Bringing up secondary CPUs ...
+> [    T1] smpboot: x86: Booting SMP configuration:
+> [    T1] .... node  #0, CPUs:        #2  #4  #6  #8 #10 #12 #14  #1
+> This is the line I'm concerend about:
+> [    T1] psi: inconsistent task state! task=61:cpuhp/3 cpu=0 psi_flags=4 clear=0 set=4
+> [    T1]   #3  #5  #7  #9 #11 #13 #15
+> [    T1] Spectre V2 : Update user space SMT mitigation: STIBP always-on
+> [    T1] smp: Brought up 1 node, 16 CPUs
+> [    T1] smpboot: Total of 16 processors activated (102216.16 BogoMIPS)
+> 
+> I bisected this to commit 152e11f6df29 ("sched/fair: Implement delayed dequeue").
+> Is this normal or is this something I should worry about?
+> 
+> Bert Karwatzki
 
-I'd also expect to review a patch set that fixes a performance issue
-caused by a feature that you implemented less than a one week. One that
-doubles the boot time on AMD CPU's.
+I am also getting a similar error on boot, and bisected it to the same commit:
 
-This is ridiculous tbh.
+[    0.342931] psi: inconsistent task state! task=15:rcu_tasks_trace cpu=0 psi_flags=4 clear=0 set=4
 
-BR, Jarkko
+#regzbot introduced: 152e11f6df293e816a6a37c69757033cdc72667d
