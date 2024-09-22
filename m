@@ -1,144 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out198-181.us.a.mail.aliyun.com (out198-181.us.a.mail.aliyun.com [47.90.198.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50637E1;
-	Sun, 22 Sep 2024 22:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A847C624
+	for <regressions@lists.linux.dev>; Mon, 23 Sep 2024 00:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727044678; cv=none; b=tov1T/Pg6HafLjwvvWd2RT8S84s7kTFBXwsrQUjFz5j1/m2iX0UVrmumOLD8ZOY/Umkbe4hoBJW42x4vIJzQPPJOvzDc+HCMng+9ZN4uhjDhUWFkoIDUQNH5l0Z4FH8PlqRicys0JAZuePxaDsSrto/d1BrCIqtT5aE2ewZl4XY=
+	t=1727049670; cv=none; b=ihrHAvVkmY2bE31qVWyYLBuHkx3EBWZaipReNRjAFQ5eNDVcVp1AQTNQGhv+lum7cev1/fVO5zrtzqZqdktnwCt8lQnUvF/wHR8+a9e/epramrkfYLVKMLAo2+7fMKoWnN/KQEQgAgZbYlGqgO8iKZyaCtVqJBYb6CZiGsbT9Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727044678; c=relaxed/simple;
-	bh=4IWXfehvkd6g9rLG1j1cad/y+btEFVhO05pVNfTAi3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QV4WlNQMkVwTlhumDruQfukKak8YMdp6yNq4r9gMd9fuCNCibdB9p4RRJ5CTZiQsC5f9ovki86BcP7CJOc3qrOGh6pUL3Tx+E5E5BqzeJLH+mFmemWAbbD+7VCdyCqZGOetJQlaIiVPoahnK3vTuHaJM4sHg2HoJqaH10wAPyHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9qDGn0O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9qDGn0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274D4C4CEC3;
-	Sun, 22 Sep 2024 22:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727044678;
-	bh=4IWXfehvkd6g9rLG1j1cad/y+btEFVhO05pVNfTAi3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d9qDGn0OfprDM5k76Ofdp1z2t4i5njPK0D01NvWyvex0YnTUKeYBDAyykOUVfJZUI
-	 Hvg9yqiiTmUv7QQMBeYamO2QdFH0QFT5YVFTrNXO0H6BJaMxiAxGdwmX5wcrhZ12DE
-	 bxtSp29u2x1+JVh/8qwEtwZWkxeryO1kIPUxoyUSP4WZT4xzpVf0UbKa6IP9MY72EG
-	 OtCT01MGPn1iKCYwFwui6+Evm1xW7YHISOrr281UsTEUW2cdL6ZEHNR+0Znfju1FMM
-	 YhDj7b1K8xcyjmc23tVmtwHzDyEQQKfIImhf56xWfnkkwEcL+Yj/97xzQdnV4UD3O2
-	 Naz0TrQuZVI1g==
-Date: Sun, 22 Sep 2024 15:37:57 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jason Montleon <jmontleo@redhat.com>
-Cc: linux-hardening@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-riscv@lists.infradead.org
-Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
- FORTIFY_SOURCE enabled
-Message-ID: <202409221511.9AF49BD@keescook>
-References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
- <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
- <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+	s=arc-20240116; t=1727049670; c=relaxed/simple;
+	bh=V6gp0Uk7RbpnyDUOqVK5X6HdHQDAce7AF24wSEJbj+M=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:Message-Id:
+	 MIME-Version:Content-Type; b=Fi5A1SqE1RiUY8uNar5ZRkzQpR/knnD7YjxYUhZH7XXjvs0FAiX6ndbHUEvYBQM96W/Xcl/Q/lFLkWlotlEoeDN8AL+700RttH+lfSWRhB0vccHFCzmee9s3qyGJHbI53RfedafFVyCI3mTrn0cyf4685H3DupfUvQCP2tseUFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com; spf=pass smtp.mailfrom=e16-tech.com; arc=none smtp.client-ip=47.90.198.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=e16-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=e16-tech.com
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.ZQEkZnP_1727049328)
+          by smtp.aliyun-inc.com;
+          Mon, 23 Sep 2024 07:55:29 +0800
+Date: Mon, 23 Sep 2024 07:55:29 +0800
+From: Wang Yugui <wangyugui@e16-tech.com>
+To: James Young <pronoiac@gmail.com>
+Subject: Re: [REGRESSION] Corruption on cifs / smb write on ARM, kernels 6.3-6.9
+Cc: pronoiac+kernel@gmail.com,
+ stable@vger.kernel.org,
+ regressions@lists.linux.dev,
+ linux-cifs@vger.kernel.org,
+ David Howells <dhowells@redhat.com>,
+ linux-kernel@vger.kernel.org,
+ Steve French <sfrench@samba.org>
+In-Reply-To: <DFC1DAC5-5C6C-4DC2-807A-DAF12E4B7882@gmail.com>
+References: <DFC1DAC5-5C6C-4DC2-807A-DAF12E4B7882@gmail.com>
+Message-Id: <20240923075527.3B9A.409509F4@e16-tech.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+Content-Type: text/plain; charset="GB2312"
+Content-Transfer-Encoding: 8bit
+X-Mailer: Becky! ver. 2.81.07 [en]
 
-On Sun, Sep 22, 2024 at 04:18:39PM -0400, Jason Montleon wrote:
-> Thank you for the quick reply! I am using the Fedora 40 packaged
-> version of gcc, gcc-14.1.1-1.fc40.riscv64.
+Hi,
 
-Great! Thanks for the details.
-
-> I originally noticed this while testing a build of the Fedora RISC-V
-> .config on Fedora 40.
-> http://fedora.riscv.rocks:3000/rpms/kernel/src/branch/main-riscv64/kernel-riscv64-fedora.config
+> I was benchmarking some compressors, piping to and from a network share on a NAS, and some consistently wrote corrupted data.
 > 
-> When I noticed I could not boot this on the lpi4a I tried the
-> defconfig(arch/riscv/configs/defconfig), which worked. After merging
-> the configs a bit at a time I narrowed it down to FORTIFY_SOURCE=y
-
-I'm trying to imagine how the boot would get stopped with 2003e483a81c
-("fortify: Do not special-case 0-sized destinations") applied, since
-that portion of the fortify checking is only supposed to warn (i.e. not
-bug or panic) and then continue without blocking anything. I don't see
-CONFIG_PANIC_ON_OOPS set in this config, so that's not it.
-
-> To do the bisect I used the riscv defconfig, running make menuconfig
-> to turn on FORTIFY_SOURCE, and saving.
-> https://gist.github.com/jmontleon/9cdc778e9c9139296924d3f71b48067b
 > 
-> As far as logs, I am having a hard time gathering anything useful
-> because the boot fails so early. Normally with FORTIFY_SOURCE turned
-> on I get no output from the kernel at all.
-> https://gist.github.com/jmontleon/42167a7b6d71bb4db8b7ca7114893b86
+> First, apologies in advance:
+> * if I'm not in the right place. I tried to follow the directions from the Regressions guide - https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions.html
+> * I know there's a ton of context I don't know
+> * I¡¯m trying a different mail app, because the first one looked concussed with plain text. This might be worse.
 > 
-> With a config closer to the Fedora debug kernel config I got a bit
-> more, but it stopped booting here and doesn't seem much more useful.
-> https://gist.github.com/jmontleon/00426b3bff2c85a68370ca1fb5f968c7
+> 
+> The detailed description:
+> I was benchmarking some compressors on Debian on a Raspberry Pi, piping to and from a network share on a NAS, and found that some consistently had issues writing to my NAS. Specifically:
+> * lzop
+> * pigz - parallel gzip
+> * pbzip2 - parallel bzip2
+> 
+> This is dependent on kernel version. I've done a survey, below.
+> 
+> While I tripped over the issue on a Debian port (Debian 12, bookworm, kernel v6.6), I compiled my own vanilla / mainline kernels for testing and reporting this.
+> 
+> 
+> Even more details:
+> The Pi and the Synology NAS are directly connected by Gigabit Ethernet. Both sides are using self-assigned IP addresses. I'll note that at boot, getting the Pi to see the NAS requires some nudging of avahi-autoipd; while I think it's stable before testing, I'm not positive, and reconnection issues might be in play.
+> 
+> The files in question are tars of sparse file systems, about 270 gig, compressing down to 10-30 gig.
+> 
+> Compression seems to work, without complaint; decompression crashes the process, usually within the first gig of the compressed file. The output of the stream doesn't match what ends up written to disk.
+> 
+> Trying decompression during compression gets further along than it does after compression finishes; this might point toward something with writes and caches.
+> 
+> A previous attempt involved rpi-update, which:
+> * good: let me install kernels without building myself
+> * bad: updated the bootloader and firmware, to bleeding edge, with possible regressions; it definitely muddied the results of my tests
+> I started over with a fresh install, and no results involving rpi-update are included in this email.
+> 
+> 
+> A survey of major branches:
+> * 5.15.167, LTS - good
+> * 6.1.109, LTS - good
+> * 6.2.16 - good
+> * 6.3.13 - bad
+> * 6.4.16 - bad
+> * 6.5.13 - bad
+> * 6.6.50, LTS - bad
+> * 6.7.12 - bad
+> * 6.8.12 - bad
+> * 6.9.12 - bad
+> * 6.10.9 - good
+> * 6.11.0 - good
+> 
+> I tried, but couldn't fully build 4.19.322 or 6.0.19, due to issues with modules.
+> 
+> 
+> Important commits:
+> It looked like both the breakage and the fix came in during rc1 releases.
+> 
+> Breakage, v6.3-rc1:
+> I manually bisected commits in fs/smb* and fs/cifs.
+> 
+> 3d78fe73fa12 cifs: Build the RDMA SGE list directly from an iterator
+> > lzop and pigz worked. last working. test in progress: pbzip2
+> 
+> 607aea3cc2a8 cifs: Remove unused code
+> > lzop didn't work. first broken
+> 
+> 
+> Fix, v6.10-rc1:
+> I manually bisected commits in fs/smb.
+> 
+> 69c3c023af25 cifs: Implement netfslib hooks
+> > lzop didn't work. last broken one
+> 
+> 3ee1a1fc3981 cifs: Cut over to using netfslib
+> > lzop, pigz, pbzip2, all worked. first fixed one
+> 
+> 
+> To test / reproduce:
+> It looks like this, on a mounted network share, with extra pv for progress meters:
+> 
+> cat 1tb-rust-ext4.img.tar.gz | \
+>   gzip -d | \
+>   lzop -1 > \
+>   1tb-rust-ext4.img.tar.lzop
+>   # wait 40 minutes
+> 
+> cat 1tb-rust-ext4.img.tar.lzop | \
+>   lzop -d | \
+>   sha1sum
+>   # either it works, and shows the right checksum
+>   # or it crashes early, due to a corrupt file, and shows an incorrect checksum
+> 
+> As I re-read this, I realize it might look like the compressor behaves differently. I added a "tee $output | sha1sum; sha1sum $output" and ran it on a broken version. The checksums from the pipe and for the file on disk are different.
+> 
+> 
+> Assorted info:
+> This is a Raspberry Pi 4, with 4 GiB RAM, running Debian 12, bookworm, or a port.
+> 
+> mount.cifs version: 7.0
+> 
+> # cat /proc/sys/kernel/tainted
+> 1024
+> 
+> # cat /proc/version
+> Linux version 6.2.0-3d78fe73f-v8-pronoiac+ (pronoiac@bisect) (gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #21 SMP PREEMPT Thu Sep 19 16:51:22 PDT 2024
+> 
+> 
+> DebugData: 
+> /proc/fs/cifs/DebugData
+> Display Internal CIFS Data Structures for Debugging
+> ---------------------------------------------------
+> CIFS Version 2.41
+> Features: DFS,FSCACHE,STATS2,DEBUG,ALLOW_INSECURE_LEGACY,CIFS_POSIX,UPCALL(SPNEGO),XATTR,ACL
+> CIFSMaxBufSize: 16384
+> Active VFS Requests: 1
+> 
+> Servers:
+> 1) ConnectionId: 0x1 Hostname: drums.local
+> Number of credits: 8062 Dialect 0x300
+> TCP status: 1 Instance: 1
+> Local Users To Server: 1 SecMode: 0x1 Req On Wire: 2
+> In Send: 1 In MaxReq Wait: 0
+> 
+>         Sessions:
+>         1) Address: 169.254.132.219 Uses: 1 Capability: 0x300047        Session Status: 1
+>         Security type: RawNTLMSSP  SessionId: 0x4969841e
+>         User: 1000 Cred User: 0
+> 
+>         Shares:
+>         0) IPC: \\drums.local\IPC$ Mounts: 1 DevInfo: 0x0 Attributes: 0x0
+>         PathComponentMax: 0 Status: 1 type: 0 Serial Number: 0x0
+>         Share Capabilities: None        Share Flags: 0x0
+>         tid: 0xeb093f0b Maximal Access: 0x1f00a9
+> 
+>         1) \\drums.local\billions Mounts: 1 DevInfo: 0x20 Attributes: 0x5007f
+>         PathComponentMax: 255 Status: 1 type: DISK Serial Number: 0x735a9af5
+>         Share Capabilities: None Aligned, Partition Aligned,    Share Flags: 0x0
+>         tid: 0x5e6832e6 Optimal sector size: 0x200      Maximal Access: 0x1f01ff
+> 
+> 
+>         MIDs:
+>         State: 2 com: 9 pid: 3117 cbdata: 00000000e003293e mid 962892
+> 
+>         State: 2 com: 9 pid: 3117 cbdata: 000000002610602a mid 962956
+> 
+> --
+> 
+> 
+> 
+> Let me know how I can help.
+> The process of iterating can take hours, and it's not automated, so my resources are limited.
+> 
+> #regzbot introduced: 607aea3cc2a8
+> #regzbot fix: 3ee1a1fc3981
 
-I don't see a panic_on_warn on the boot command line either:
-
-  Kernel command line: console=ttyS0,115200 root=PARTUUID=c44914cf-1285-4aec-b5df-0224434d3e12 rootfstype=ext4 rw clk_ignore_unused earlycon=sbi loglevel=7 debug=console
-
-> If you have suggestions for getting more meaningful output I am happy to try.
-
-Can you try this patch? It should avoid using the "WARN" infrastructure
-(if that is the source of blocking boot), but should still provide some
-detail about what tripped it up (via the "regular" pr_*() logging). And
-if it boots, can you look at the log to find what it reports for the
-"Wanted to write ..." line(s)?
-
-Thanks!
-
--Kees
+I checked 607aea3cc2a8, it just removed some code in #if 0 ... #endif.
+so this regression is not introduced in 607aea3cc2a8,  but the reproduce
+frequency is changed here.
 
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 0d99bf11d260..469a3439959d 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
- 					 const size_t q_size,
- 					 const size_t p_size_field,
- 					 const size_t q_size_field,
--					 const u8 func)
-+					 const u8 func,
-+					 const char *field)
- {
- 	if (__builtin_constant_p(size)) {
- 		/*
-@@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
- 	 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
- 	 */
- 	if (p_size_field != SIZE_MAX &&
--	    p_size != p_size_field && p_size_field < size)
--		return true;
-+	    p_size != p_size_field && p_size_field < size) {
-+		if (p_size_field == 0)
-+			pr_warn("Wanted to write %zu to a 0-sized destination: %s\n",
-+				size, field);
-+		else
-+			return true;
-+	}
- 
- 	return false;
- }
-@@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
- 	const size_t __q_size_field = (q_size_field);			\
- 	fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,	\
- 				     __q_size, __p_size_field,		\
--				     __q_size_field, FORTIFY_FUNC_ ##op), \
-+				     __q_size_field, FORTIFY_FUNC_ ##op,\
-+				     #p " at " FILE_LINE), \
- 		  #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
- 		  __fortify_size,					\
- 		  "field \"" #p "\" at " FILE_LINE,			\
+Another issue in 6.6.y maybe related
+https://lore.kernel.org/linux-fsdevel/9e8f8872-f51b-4a09-a92c-49218748dd62@meta.com/T/
+
+Do this regression still happen after the following patches are applied?
+
+a60cc288a1a2 :Luis Chamberlain: test_xarray: add tests for advanced multi-index use
+a08c7193e4f1 :Sidhartha Kumar: mm/filemap: remove hugetlb special casing in filemap.c
+6212eb4d7a63 :Hongbo Li: mm/filemap: avoid type conversion
+
+de60fd8ddeda :Kairui Song: mm/filemap: return early if failed to allocate memory for split
+b2ebcf9d3d5a :Kairui Song: mm/filemap: clean up hugetlb exclusion code
+a4864671ca0b :Kairui Song: lib/xarray: introduce a new helper xas_get_order
+6758c1128ceb :Kairui Song: mm/filemap: optimize filemap folio adding
 
 
--- 
-Kees Cook
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2024/09/23
+
