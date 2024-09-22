@@ -1,111 +1,154 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3835AE56C;
-	Sun, 22 Sep 2024 16:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA13D219E4
+	for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 20:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727020909; cv=none; b=ZZmpb3cDW3mRAmbwdlSfKNueUGCT2xrX2YF4Mf+j9B1UUTqSDx7tuNZauEgjNFrBqKfU3+m0O/txK8CAcRxbZFL72rbWBg0KuVwvMfHaAndrnbdZlgo024cILdoQWqei2sxgYWH+k32CgcvfU7uL5TZbZCU6noyQzMAjcbjJ2NY=
+	t=1727036337; cv=none; b=RLO94Kxn+oZOGHhK9v2N6qZR31F7buArM3koTpifmZcUEeyCbFphzzEfFx9spPV1qggmjKnrCw+pIIdf+0QsbhV/Y6gxb/CB63QzSUyVQ9IbuqwaYQsXdtYUPrcSe53Y8Lr88TuGPSqVb+E4348LRECydKIGJ0xUT9+szM4ntDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727020909; c=relaxed/simple;
-	bh=+G4l5pI49KQF0rw4G2AySq/nAwCn3T80unuyujusP4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c0TlE0fZkqRtPSfUGNjgzunzpXlXJ3pv5+bfK3EvAAPIfAMQ4rV1+CMVq4DgkmZPMrhXzKeeUmUWgOD/s4za6A9GbR1mBStIBcTOxEeNbbDJFTmGXgPaujoXF22fU1etRm2DpPlKDnLZ7fHDykJqLph0gKcPiHSBxSx+3fS5Y5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=0jZovbWR; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727036337; c=relaxed/simple;
+	bh=JQF2wHEOy39gPJQyE4jaQPvgH2PM4Ztu8cMFG4wT1eE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F57a81lR9z8ejamGL7x6mJwC2j6r0BAlmkPz0Sow0MsB9xpyRBUo1A/ZjDoFPhj4Cfc62eOnHblcKe+A4v0ATsn6pdXDHTOhP8QyTKZEYKZ2/pTHICBaxGW9VZZ3xPQe84cKIKlMsfQaTLfQtLtoZE83YkQB3osG5jaxYcEZOkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MLqdVf1V; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="0jZovbWR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=2CO9ZxHeft+k4AuGToVXQRkA7JnlRj6/9HkeBeVpYgU=;
-	t=1727020907; x=1727452907; b=0jZovbWRixMakIJYgQt/CimGSJd1M1tAtjz2JTH+43yiTow
-	nIYmrN7o7J9gcP3eJMya42ZozH5JKb/UAxeN3FziXW0jHwHhJiWGP5rKZ3jTZaBPDDV/IL94V5hmc
-	AWa6VVJtX9PETh5OHNHjjFp+2/CEvBkNBhXyt8sqLVp+hjmqhe0V+xN+idwR5FnicMO4zCZnlcgMZ
-	pTCan7DIBIomEuQ+RrJN9Tw7XMFmFgt3nKE5OJ9rbp97Yjuesm+gNTZZp54dBpmeUiqHR3f/HhcKo
-	ZXue/xpKoHnt/gOElK/GER2LyXRX/dT0yIA8Ws6VWPEuhCrqpsxiW7iRBmidu/lw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ssP1e-00044v-Ue; Sun, 22 Sep 2024 18:01:31 +0200
-Message-ID: <9adb9245-612e-4bd9-b4bc-7eb3ec42624c@leemhuis.info>
-Date: Sun, 22 Sep 2024 18:01:29 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MLqdVf1V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727036334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JQF2wHEOy39gPJQyE4jaQPvgH2PM4Ztu8cMFG4wT1eE=;
+	b=MLqdVf1VXNX0Yi/EcN4WghbNT/73UubMsL2HW4yuKooHW66HF+/rbPN7s8dYujN9rJ5lUU
+	9zYloFrmKZWwciyOB4P9JlBaZj/fzNFzFFn6W7GkLiNf/2EMgdlgY6CTczbcXJsEND6RDs
+	CDukqcxnA2yumBlu9ebeV4FxD1moZYo=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-112-z4jO26SfPGuLJlfD5sTN-g-1; Sun, 22 Sep 2024 16:18:53 -0400
+X-MC-Unique: z4jO26SfPGuLJlfD5sTN-g-1
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-209dc9354c3so7923145ad.0
+        for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 13:18:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727036331; x=1727641131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JQF2wHEOy39gPJQyE4jaQPvgH2PM4Ztu8cMFG4wT1eE=;
+        b=kc7mKF8XEVUSG5NrwsyuT9PDmrDMAoeStGzOfO078yfmCUI8ELhQpZfCnSiGikluhe
+         veyOkQk3nM9mwZEzVI8lIlsreiZac2UdQrGnmop6pnd27addW7Y0YvSRBnr6OC9wS/C1
+         gJbQOtN3lDNffZzBP2Y55y5ewBN72Q7GiMToGIQpJatQpwEGXznlQWXprwCrANlzSMYa
+         3u0FKWjDLgSvbzJFdZRPhwDgl8+Osh532KWdAK/zGAJaFh6bxku8hpTfW0VdBSIURzSj
+         m1NsbtTHPgOTNcZyIZkv9dBhgy7sDQfykkb6ow+C3qHBQmIQT7GRNUvguK/JD8q5iZor
+         wtiA==
+X-Forwarded-Encrypted: i=1; AJvYcCU29bxbM3Kiqd9qNJ19cIUW28Cl2+3Rpt5l/NGqw2FtW2Rli3xAlEuQVXIWqFm/4w5qUhH5nxM1ySHuNQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxwTu0MSV8zHtxwnALi1j5IykDMCRXaTg9wVp/rsh/Zsa1CyTbD
+	Qkuk8QkkI1MFnKq08Q2i/n2HK6gRlqirQ5VCoUtLmxf0osMqJhl4M1sM+FFnB/xlvI+esbxQW0S
+	vWQk1rWNSrpwmSOdWO2G2B22vZKHrV1yxnBouH5EdC1g7r0JeFakye8gakIPuPraYWMg3aUDe3D
+	mdYhawkJ0tiCzmZPxN4m0ch+kl0ZHgiKdKyFA=
+X-Received: by 2002:a17:902:d549:b0:205:5284:e510 with SMTP id d9443c01a7336-208d756dc07mr148771915ad.1.1727036331389;
+        Sun, 22 Sep 2024 13:18:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1/PhP8j7+j+MFBqwrJbSHRpRkk2jJTg3qLJwZrq/UPGBOPF6lufpAIxxmQ25p1qB/PrYpl8YbaxClD0c9gxY=
+X-Received: by 2002:a17:902:d549:b0:205:5284:e510 with SMTP id
+ d9443c01a7336-208d756dc07mr148771705ad.1.1727036330952; Sun, 22 Sep 2024
+ 13:18:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH 17/24] sched/fair: Implement delayed
- dequeue
-To: Chris Bainbridge <chris.bainbridge@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, bsegall@google.com,
- dietmar.eggemann@arm.com, efault@gmx.de, juri.lelli@redhat.com,
- kprateek.nayak@amd.com, mgorman@suse.de, mingo@redhat.com,
- rostedt@goodmis.org, tglx@linutronix.de, vincent.guittot@linaro.org,
- vschneid@redhat.com, wuyun.abel@bytedance.com, youssefesmat@chromium.org,
- spasswolf@web.de, regressions@lists.linux.dev,
- Johannes Weiner <hannes@cmpxchg.org>
-References: <20240830123458.3557-1-spasswolf@web.de>
- <ZvA7n9GNoD-ipjkj@debian.local>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZvA7n9GNoD-ipjkj@debian.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727020907;87b48cda;
-X-HE-SMSGID: 1ssP1e-00044v-Ue
+References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
+ <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
+In-Reply-To: <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Sun, 22 Sep 2024 16:18:39 -0400
+Message-ID: <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
+ FORTIFY_SOURCE enabled
+To: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-riscv@lists.infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22.09.24 17:45, Chris Bainbridge wrote:
-> On Fri, Aug 30, 2024 at 02:34:56PM +0200, Bert Karwatzki wrote:
->> Since linux next-20240820 the following messages appears when booting:
->>
->> [    T1] smp: Bringing up secondary CPUs ...
->> [    T1] smpboot: x86: Booting SMP configuration:
->> [    T1] .... node  #0, CPUs:        #2  #4  #6  #8 #10 #12 #14  #1
->> This is the line I'm concerend about:
->> [    T1] psi: inconsistent task state! task=61:cpuhp/3 cpu=0 psi_flags=4 clear=0 set=4
->> [    T1]   #3  #5  #7  #9 #11 #13 #15
->> [    T1] Spectre V2 : Update user space SMT mitigation: STIBP always-on
->> [    T1] smp: Brought up 1 node, 16 CPUs
->> [    T1] smpboot: Total of 16 processors activated (102216.16 BogoMIPS)
->>
->> I bisected this to commit 152e11f6df29 ("sched/fair: Implement delayed dequeue").
->> Is this normal or is this something I should worry about?
->>
-> I am also getting a similar error on boot, and bisected it to the same commit:
-> 
-> [    0.342931] psi: inconsistent task state! task=15:rcu_tasks_trace cpu=0 psi_flags=4 clear=0 set=4
-> 
-> #regzbot introduced: 152e11f6df293e816a6a37c69757033cdc72667d
+On Sat, Sep 21, 2024 at 10:42=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+>
+>
+> On September 21, 2024 10:42:11 AM PDT, Jason Montleon <jmontleo@redhat.co=
+m> wrote:
+> >Starting with 6.11-rc1 I can no longer boot the Lichee Pi 4A with
+> >FORTIFY_SOURCE enabled. This works on 6.10 up to at least 6.10.11.
+> >However, with 6.11 I get no output at all from the kernel on the
+> >serial console with FORTIFY_SOURCE enabled and the system never comes
+> >online on network or otherwise as far as I can tell.
+> >
+> >I did a bisect which led to:
+> >2003e483a81cc235e29f77da3f6b256cb4b348e7
+> >fortify: Do not special-case 0-sized destinations
+> >
+> >If I revert this commit I can once again boot the Lichee Pi 4A with
+> >FORTIFY_SOURCE enabled.
+> >
+>
+> Thanks for the report! Are you able to catch what the error log shows? Th=
+ere must be some 0-sized array that snuck by.
+>
+> Can you share your .config and compiler version?
+>
+Hi Kees,
+Thank you for the quick reply! I am using the Fedora 40 packaged
+version of gcc, gcc-14.1.1-1.fc40.riscv64.
 
-thx for CCing the regressions list.
+I originally noticed this while testing a build of the Fedora RISC-V
+.config on Fedora 40.
+http://fedora.riscv.rocks:3000/rpms/kernel/src/branch/main-riscv64/kernel-r=
+iscv64-fedora.config
 
-Paul also reported this earlier today:
+When I noticed I could not boot this on the lpi4a I tried the
+defconfig(arch/riscv/configs/defconfig), which worked. After merging
+the configs a bit at a time I narrowed it down to FORTIFY_SOURCE=3Dy
 
-https://lore.kernel.org/all/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
+To do the bisect I used the riscv defconfig, running make menuconfig
+to turn on FORTIFY_SOURCE, and saving.
+https://gist.github.com/jmontleon/9cdc778e9c9139296924d3f71b48067b
 
-Hannes [CCed] replied there and has some idea what might be wrong:
+As far as logs, I am having a hard time gathering anything useful
+because the boot fails so early. Normally with FORTIFY_SOURCE turned
+on I get no output from the kernel at all.
+https://gist.github.com/jmontleon/42167a7b6d71bb4db8b7ca7114893b86
 
-https://lore.kernel.org/all/20240922102047.GA437832@cmpxchg.org/
+With a config closer to the Fedora debug kernel config I got a bit
+more, but it stopped booting here and doesn't seem much more useful.
+https://gist.github.com/jmontleon/00426b3bff2c85a68370ca1fb5f968c7
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+If you have suggestions for getting more meaningful output I am happy to tr=
+y.
 
-P.S.:
+The Fedora kernel config boots fine on the VisionFive 2, so I think it
+is more specific to the hardware than RISC-V, maybe something T-Head
+related if not specific to the Lichee Pi 4A. I was thinking because it
+seems pretty hardware specific and failure is so early maybe it is due
+to something in one of the THEAD errata or the patch function.
 
-#regzbot dup:
-https://lore.kernel.org/all/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
+While trying some more things today I noticed if FORTIFY_SOURCE is
+left unset and I also unset ERRATA_THEAD_MAE it similarly fails to
+boot without output, so I think my idea is possible though I don't
+have anything more concrete than that to back it up at the moment.
 
-#regzbot report:
-https://lore.kernel.org/all/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
-#regzbot introduced: 152e11f6df293e816a6a37c69757033cdc72667d
+Thank you,
+- Jason
+
+> -Kees
+>
+> --
+> Kees Cook
+>
+
