@@ -1,107 +1,130 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E3F13A260
-	for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 10:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883AD6AA7;
+	Sun, 22 Sep 2024 14:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727000458; cv=none; b=Dgithvu5ObCyAW/jyA9kqvGJKwqXiAh0wZo6y5Ir031IDepnyS+iAa7xdDgnc5w4cXwJD8B4fbY/dxHUx+zwAyKBxdXEboNw65nsBve+ouH3C9BYfpKAaRRZTC/CbsBKVmGrnuXQX2Ffm5R4r3gU2Ew7Nvmjrqd1h7a+nv7GqIM=
+	t=1727014311; cv=none; b=OBOmL0zahPjuoN/JgA4uE81nhzUhVsON8onzd6P4eB0RuuyCpuaZ673JAZJF1RSq1FKSUdNTh7Fex0YqLCbnP5glWv3y6ZsvEfA20UZgrb7T4Ysp6wGXWAPYFgENnw9S8y7AN+dUx5BZA0jSGjn+hZr82TCtHYbuVbIP2IJWZUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727000458; c=relaxed/simple;
-	bh=pm8dHJrsGf7Il9p55Q7LINTzOlFn/8nsA6d/5jUfSgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7zB2u7yNPbF+VVtqemw7lfKoN1BD+6YVA7bnQwK4czXdLj2xrGLJSaYyLiaQzL0f9pNuZ7MAqwcZxiMgFnwMDeNqE237QjPM2rJbpEOioQIhY1TIIzFs2Q1QMExty9P08DARmxtkm32wTuSLWOSAykrTXoFg/pUjh/A04YEBcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PQY0yGCt; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1727014311; c=relaxed/simple;
+	bh=eAl4S/A2F523Lk30gj01p6kIx9RPCnKoBrw0sy16eR8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=RIdfcGOCdVcdIVRKZDcVYHJjdFKfL6hDKOIkOUjnpgQ2mFOj0sPNQTmUJqcIyl8ErvhdaBwVMi1/pKfOGiFO1DTsGTPx48lL/Zi5x1hR4D8fNryVFng4mhtP3QaNa9mfY2LgAjMOHOqSfcPdjG8CYSeWHpyjPruSiyKKWzr/XKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGX55nuY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PQY0yGCt"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4582fb3822eso25458841cf.1
-        for <regressions@lists.linux.dev>; Sun, 22 Sep 2024 03:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1727000453; x=1727605253; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8/4SWBzBRsRFoXrz0ENhRuWuJUVz2So0jJkLzHcuiZk=;
-        b=PQY0yGCtPS7Py1aJSlhL6eJsVycHGS0QGcmvDskjzT7G5n4k5xQxcv5/W9wPjJzSY5
-         wTWBinxqf+biuqB09MnII0QBDnnXZVDLWOP3LZ2s4ZG4jD4DWaJhSYvEl6Id+tvcLSIS
-         cYCrvVgHoFwHlyWcGvC3YOihY73IRkFEFgbYf/xXNt08AHYjNfU6Awaxe+nXte2JSAyu
-         yENF/C9Ha6p6227dsJupCA5Z5UtiSBiWWbkC22WR63p+ZUQCTRdGnPjRs1EXkLad/HQq
-         rhg4MWHzK5yqb8QNvYKuCDixhcGum3E2MXlWmDoZVFtkysxOnddVyUX3atWtGQm1R7iP
-         VEvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727000453; x=1727605253;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8/4SWBzBRsRFoXrz0ENhRuWuJUVz2So0jJkLzHcuiZk=;
-        b=WKbTI36ZfUBHbOy73trNzCXuhcQOyqzMzn+0e5kBlb6J7VF0QsrY1JSc07ukg+LDlz
-         e5I16dRAQFAQJYK5WN5xTvwIsV2k4SdpBSUY7cHFOOch5VFOYuqAFaCwJ0cot2OPmJ5f
-         8Swj3BxTzqTeaRb5DM/o8JWT/dPMN1memaRSvlqtWYvMjKbffzlVuKoKTeZh4bt9sXM6
-         mOc7FIygBxN0QHH9mXzfqCOflEux1Xr9+1GgZGYDTn3FaAe2TunE1dFCdbUZAB0lFmGQ
-         O+A5xyS9GQLMbgxT6OBxFml+HNMZLmbl+b6vj1PQYG/470eK6Yc0hxIThw+Y5/NMPpJS
-         bElg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPfbhgfAEc7XkJ5vbemaYWEN3haChReUb0Wy2QqQpMYkUbgQNabsqqCb9bn2LJdk2qyyni7/RQjIY7bw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8GE0mK13It8riWOVHibD0yaoHA9WgdSiCvE5UF6YTwWFMHhmz
-	pQLQsah+HcEPl8RIY89mD6cA/NbDP3ZCZVUd5afOnnWE5ymXazaL4B1XPFwPIl0=
-X-Google-Smtp-Source: AGHT+IFjZiKh0O4Hjrg2ghYZK1LOtr5fLh5RrB8KD0gWAtgtR2Dj9yb3WBwXo5/FEiuyo9gA0F7Thg==
-X-Received: by 2002:a05:622a:14c:b0:458:4dc5:b7ef with SMTP id d75a77b69052e-45b2057e770mr127555161cf.55.1727000453197;
-        Sun, 22 Sep 2024 03:20:53 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45b1788c181sm35890941cf.52.2024.09.22.03.20.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2024 03:20:52 -0700 (PDT)
-Date: Sun, 22 Sep 2024 06:20:47 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: Error: psi: inconsistent task state! task=1:swapper/0 cpu=0
- psi_flags=4 clear=0 set=4
-Message-ID: <20240922102047.GA437832@cmpxchg.org>
-References: <cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de>
- <0bfb1dfc-bab0-45c1-9fc0-7e91266ef52a@molgen.mpg.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGX55nuY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CDDC4CEC3;
+	Sun, 22 Sep 2024 14:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727014311;
+	bh=eAl4S/A2F523Lk30gj01p6kIx9RPCnKoBrw0sy16eR8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=dGX55nuYwOpXmSgGc/M+A+BYil5kvv5RKbuwtkoig0D2BebjPYcgEzmCvYQGV0J5A
+	 rQ8YsmlSRbOru6gL+nfL8Wn32ECKXMRk9QBT+0zRNSAbBAccGjVLJmdKhKLQ7xtkxw
+	 Klt42SmrSUfXZdJkGdaaqiElFtqOzWM7vpAWqIuYgrYh8tDaJnHfDQrc/FynlrUxxf
+	 fZvIpuKWDjvX2vCKta0vLuQYonfo0ORigUCzne+FHyyOtzgzWVeC7xJLUWuF7IsC6d
+	 5Z+XNbFlh7gX6xftfxhpLaSfsSPoXidLix33iBPft+nM2NpQeHM37D81qkCb5duB02
+	 JvFZf4tOqa2fw==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0bfb1dfc-bab0-45c1-9fc0-7e91266ef52a@molgen.mpg.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Sep 2024 17:11:46 +0300
+Message-Id: <D4CVH7UEBRUO.16AEE90SXCN3@kernel.org>
+Subject: Re: [regression] significant delays when secureboot is enabled
+ since 6.10
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Roberto Sassu"
+ <roberto.sassu@huaweicloud.com>, "Linux regressions mailing list"
+ <regressions@lists.linux.dev>
+Cc: <keyrings@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>,
+ "Pengyu Ma" <mapengyu@gmail.com>
+X-Mailer: aerc 0.18.2
+References: <0b4a5a86-a9f6-42d1-a9ba-ec565b336d3a@leemhuis.info>
+ <92fbcc4c252ec9070d71a6c7d4f1d196ec67eeb0.camel@huaweicloud.com>
+ <D42LZPLE8HR3.2UTNOI9CYZPIR@kernel.org>
+ <D42M6OE94RLT.6EZSZLBTX437@kernel.org>
+ <663d272617d1aead08077ad2b72929cbc226372a.camel@HansenPartnership.com>
+ <D42N17MFTEDM.3E6IK034S26UT@kernel.org>
+ <f554031343039883068145f9f4777277e490dc05.camel@huaweicloud.com>
+ <D43JXBFOOB2O.3U6ZQ7DASR1ZW@kernel.org>
+ <7e47f97aede88b87fbb9c9284db2005764bfbedd.camel@huaweicloud.com>
+ <D46RE2BWMGJ4.25VA7IVYTJ8MO@kernel.org>
+ <D46RWPQ211ZS.12EYKZY053BH@kernel.org>
+ <0b22c2c4b4a998fb44bb08be60a359acb9ecb8da.camel@HansenPartnership.com>
+ <D46XX6HNU686.50X57ZWI2GUX@kernel.org>
+ <7586c7e6e6028a734a8cac3d4b1a8504e6cd4b21.camel@HansenPartnership.com>
+ <D46ZV5RXW7Z9.26N1IRXNRLV9X@kernel.org>
+ <D4C2QDK9WGUH.KQCJ19C43ONW@kernel.org>
+In-Reply-To: <D4C2QDK9WGUH.KQCJ19C43ONW@kernel.org>
 
-On Sun, Sep 22, 2024 at 08:53:37AM +0200, Paul Menzel wrote:
-> [Cc: +PSI maintainers]
-> 
-> Am 22.09.24 um 00:50 schrieb Paul Menzel:
-> > #regzbot introduced: 2e0199df252a..54a58a787791
-> > 
-> > Dear Peter,
-> > 
-> > 
-> > With merge commit 2004cef11ea0 (Merge tag 'sched-core-2024-09-19' of 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip) I see the warning 
-> > below on the Intel Kaby Lake laptop Dell XPS 13 9360 and with QEMU.
-> > 
-> > Dell XPS 13 9360:
-> > 
-> >      psi: inconsistent task state! task=1:swapper/0 cpu=0 psi_flags=4 clear=0 set=4
+On Sat Sep 21, 2024 at 6:40 PM EEST, Jarkko Sakkinen wrote:
+> On Sun Sep 15, 2024 at 7:22 PM EEST, Jarkko Sakkinen wrote:
+> > On Sun Sep 15, 2024 at 6:00 PM EEST, James Bottomley wrote:
+> > > On Sun, 2024-09-15 at 17:50 +0300, Jarkko Sakkinen wrote:
+> > > > On Sun Sep 15, 2024 at 4:59 PM EEST, James Bottomley wrote:
+> > > > > On Sun, 2024-09-15 at 13:07 +0300, Jarkko Sakkinen wrote:
+> > > > > > On Sun Sep 15, 2024 at 12:43 PM EEST, Jarkko Sakkinen wrote:
+> > > > > > > When it comes to boot we should aim for one single
+> > > > > > > start_auth_session during boot, i.e. different phases would
+> > > > > > > leave that session open so that we don't have to load the
+> > > > > > > context every single time.=C2=A0 I think it should be doable.
+> > > > > >=20
+> > > > > > The best possible idea how to improve performance here would be
+> > > > > > to transfer the cost from time to space. This can be achieved b=
+y
+> > > > > > keeping null key permanently in the TPM memory during power
+> > > > > > cycle.
+> > > > >=20
+> > > > > No it's not at all.=C2=A0 If you look at it, the NULL key is only=
+ used
+> > > > > to encrypt the salt for the start session and that's the operatin=
+g
+> > > > > taking a lot of time.=C2=A0 That's why the cleanest mitigation wo=
+uld be
+> > > > > to save and restore the session.=C2=A0 Unfortunately the timings =
+you
+> > > > > already complain about still show this would be about 10x longer
+> > > > > than a no-hmac extend so I'm still waiting to see if IMA people
+> > > > > consider that an acceptable tradeoff.
+> > > >=20
+> > > > The bug report does not say anything about IMA issues. Please read
+> > > > the bug reports before commenting ;-) I will ignore your comment
+> > > > because it is plain misleading information.
+> > > >=20
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D219229
+> > >
+> > > Well, given that the kernel does no measured boot extends after the E=
+FI
+> > > boot stub (which isn't session protected) finishes, what's your theor=
+y
+> > > for the root cause?
+> >
+> > I don't think there is a silver bullet. Based on benchmark which showed
+> > 80% overhead from throttling the context reducing number of loads and
+> > saves will cut a slice of the fat.
+> >
+> > Since it is the low-hanging fruit I'll start with that. In other words,
+> > I'm not going touch session loading and saving. I'll start with null
+> > key loading and saving.
+>
+> "my theory" worked pretty well. It brought the boot time back to 8.7s,
+> which can be explained with encryption overhead pretty well.
+>
+> I'd suggest reading the bug report next time before solving a problem
+> that did not exist. We care about users, not unfinished patch sets.
 
-Oh, double enqueue.
+I'd also expect to review a patch set that fixes a performance issue
+caused by a feature that you implemented less than a one week. One that
+doubles the boot time on AMD CPU's.
 
-It looks like the psi enqueue/dequeue callbacks need the same
-treatment as the uclamp and sched_core ones for ignoring delayed
-tasks. [1][2]
+This is ridiculous tbh.
 
-Do we need to reorder psi_enqueue() after ->enqueue_task() as well? I
-can't quite work out why uclamp needed it, but sched_core didn't.
-
-[1] dfa0a574cbc47bfd5f8985f74c8ea003a37fa078
-[2] c662e2b1e8cfc3b6329704dab06051f8c3ec2993
+BR, Jarkko
