@@ -1,72 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB0479E1;
-	Mon, 23 Sep 2024 06:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ECF1885BD
+	for <regressions@lists.linux.dev>; Mon, 23 Sep 2024 08:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727073914; cv=none; b=h7KV84ITKmw78KqHsb45Qul4lZaxtOHt/e4/UCAhsiHhhJrZqg1V7Ly2nLJ1qPt4o12ZDHlMT+1pIlKOlQRUk8wm+CInnZvwwXUqKg7nRXZg8XtPNpbE7PQEQ+A5R4KUR0fB+N7sgwapJX9X3xUc/S09zWDQoLwD65eGsDb6z58=
+	t=1727079284; cv=none; b=Qtd62wJLjr+VBH0LHswbcht3CgyecstLsAR0oeavzBQcVbgwbRE3v94OCuZkhuF/pcCT9oDo7CsMDCQ0YS2682JHeAqzHG9xzK3ZXHXIvCRjgCPDXvAhvcSpjkW5JzdzoMDAU/cNtqVjJsobK+zGUo2A4JvCgQj675wUCZf8uGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727073914; c=relaxed/simple;
-	bh=C8xxTFY5vBhvSGx1onfQ86a5vc9rr46CcQqRUnx/07I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lXTZnU7B0XD4+tg1UoQlw+wVrAnqeRRRtUAplVFeYkgsHeaAncYcVOCZZEiGvim2Z36xzMdec355Qm/UGD7qIptQXJWzN1dpqFcHd6dj5HgPj5vk3CMNUTysuVNrfn7vhou5EXoVlCBU/vu4Y5++YbKaPIp9X+hE/5+OR2CYojI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cwiD89Pb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cwiD89Pb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 898ADC4CEC4;
-	Mon, 23 Sep 2024 06:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727073913;
-	bh=C8xxTFY5vBhvSGx1onfQ86a5vc9rr46CcQqRUnx/07I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cwiD89PbtGFjfZumScTsE1bUIEuYYgZytGQyEFIexdgBd3wYyKTg44plUDKzVZRyr
-	 0UyVr6h5iIIW1n/muqWlfLF0E1CYyG0tgWvs6erYiNI7ylOegWBAqbxAgBnHjZUiM8
-	 ZR3OaOuz6m73uNQzXKuoHh5lnJbpsQX/uIDS4X+I=
-Date: Mon, 23 Sep 2024 08:45:12 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Fabian =?iso-8859-1?Q?St=E4ber?= <fabian@fstab.de>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-usb@vger.kernel.org
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-Message-ID: <2024092318-pregnancy-handwoven-3458@gregkh>
-References: <CAPX310gmJeYhE2C6-==rKSDh6wAmoR8R5-pjEOgYD3AP+Si+0w@mail.gmail.com>
+	s=arc-20240116; t=1727079284; c=relaxed/simple;
+	bh=mZrSmMEhLS54H+lIyWQEQCE/6YN/Jq3+SronXI1rado=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nxZKjUmmtYT+hefSIUv7tDACNzPKU22uj4/S+OS2T8qqh3ETM1cIrXHMurQwAYNnu/ZPZea3sW/4ikEp2cCPeBUm86mdoIkxQhepYABWPo41rfQMIiYZS0/mHaEiRVUnuwasQgXU5RY0tpToVdNXUa81r/O40j6qRczEde62kFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 99809481F5;
+	Mon, 23 Sep 2024 10:06:36 +0200 (CEST)
+Message-ID: <1690e7d0-6119-4fe3-a53b-d4977e7042a2@proxmox.com>
+Date: Mon, 23 Sep 2024 10:06:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPX310gmJeYhE2C6-==rKSDh6wAmoR8R5-pjEOgYD3AP+Si+0w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION]: cephfs: file corruption when reading content via
+ in-kernel ceph client
+To: Xiubo Li <xiubli@redhat.com>, David Howells <dhowells@redhat.com>,
+ Jeff Layton <jlayton@kernel.org>, Ilya Dryomov <idryomov@gmail.com>
+Cc: regressions@lists.linux.dev, ceph-devel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <85bef384-4aef-4294-b604-83508e2fc350@proxmox.com>
+ <0e60c3b8-f9af-489a-ba6f-968cb12b55dd@redhat.com>
+ <1679397305.24654.1725606946541@webmail.proxmox.com>
+ <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
+Content-Language: en-US, de-DE
+From: Christian Ebner <c.ebner@proxmox.com>
+In-Reply-To: <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 23, 2024 at 08:34:23AM +0200, Fabian Stäber wrote:
-> Hi,
-
-Adding the linux-usb list.
-
-> I got a Dell WD19TBS Thunderbolt Dock, and it has been working with
-> Linux for years without issues. However, updating to
-> linux-lts-6.6.29-1 or newer breaks the USB ports on my Dock. Using the
-> latest non-LTS kernel doesn't help, it also breaks the USB ports.
+On 9/6/24 13:09, Xiubo Li wrote:
 > 
-> Downgrading the kernel to linux-lts-6.6.28-1 works. This is the last
-> working version.
+> Sure, thanks in advance.
 > 
-> I opened a thread on the Arch Linux forum
-> https://bbs.archlinux.org/viewtopic.php?id=299604 with some dmesg
-> output. However, it sounds like this is a regression in the Linux
-> kernel, so I'm posting this here as well.
+> I will work on this next week or later because I am occupied by some 
+> other stuff recently.
 > 
-> Let me know if you need any more info.
 
-Is there any way you can use 'git bisect' to test inbetween kernel
-versions/commits to find the offending change?
+There is some further information I can provide regarding this:
+Further testing with the reproducer and the current mainline kernel 
+shows that the issue might be fixed.
 
-Does the non-lts arch kernel work properly?
+Bisection of the possible fix points to ee4cdf7b ("netfs: Speed up 
+buffered reading").
 
-thanks,
+Could this additional information help to boil down the part that fixes 
+the cephfs issues so that the fix can be backported to current stable?
 
-greg k-h
+Regards,
+Christian Ebner
+
