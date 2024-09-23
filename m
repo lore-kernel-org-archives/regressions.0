@@ -1,65 +1,75 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ECF1885BD
-	for <regressions@lists.linux.dev>; Mon, 23 Sep 2024 08:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8884F602
+	for <regressions@lists.linux.dev>; Mon, 23 Sep 2024 08:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727079284; cv=none; b=Qtd62wJLjr+VBH0LHswbcht3CgyecstLsAR0oeavzBQcVbgwbRE3v94OCuZkhuF/pcCT9oDo7CsMDCQ0YS2682JHeAqzHG9xzK3ZXHXIvCRjgCPDXvAhvcSpjkW5JzdzoMDAU/cNtqVjJsobK+zGUo2A4JvCgQj675wUCZf8uGE=
+	t=1727081206; cv=none; b=IpEPEtUrFNVoC1kbLZiDfRE4S6UhZH14trww5VurDMTfStwjEkFkUZm+8Izb7VL5DqPfxOmNd1hMjNcflRFiaq1kpuuDR8Jl1E2IqIFvO8w+arO9kW761Jv64/ExZ2LXAQ83y8QlP47jl9C7hFb2sfIQifD1XLes2hqO84pgupw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727079284; c=relaxed/simple;
-	bh=mZrSmMEhLS54H+lIyWQEQCE/6YN/Jq3+SronXI1rado=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nxZKjUmmtYT+hefSIUv7tDACNzPKU22uj4/S+OS2T8qqh3ETM1cIrXHMurQwAYNnu/ZPZea3sW/4ikEp2cCPeBUm86mdoIkxQhepYABWPo41rfQMIiYZS0/mHaEiRVUnuwasQgXU5RY0tpToVdNXUa81r/O40j6qRczEde62kFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 99809481F5;
-	Mon, 23 Sep 2024 10:06:36 +0200 (CEST)
-Message-ID: <1690e7d0-6119-4fe3-a53b-d4977e7042a2@proxmox.com>
-Date: Mon, 23 Sep 2024 10:06:35 +0200
+	s=arc-20240116; t=1727081206; c=relaxed/simple;
+	bh=OTVU63kmTALPHa0CGgMy4lcPFTwPRxc9jxos8ssUmNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZjSeTJRss9RkiHwmBzfQCuWDkW6QG62ZdZwbSrFf2nSfdUmCPZRu2RqOV+2e1CWFc4iWvflRm1F6IhdS7ClKQ/Y9RIEzrPRsBU05qX7TYUqSfX+w3YQzlWtGgvn0BmZBZtPb3NbH2YkJ6QW7Ihf2ldANgsIbnB7mP9GolDeETc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 7I2T2olQSjGWFVI+SU6Ziw==
+X-CSE-MsgGUID: 6ulAxIbYRQSyhng5qOWSQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="36683217"
+X-IronPort-AV: E=Sophos;i="6.10,250,1719903600"; 
+   d="scan'208";a="36683217"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 01:46:44 -0700
+X-CSE-ConnectionGUID: JVFVxTx3Rb2utcz+0+/BwQ==
+X-CSE-MsgGUID: xtrwNKjUQx+/2G5ukxXURg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,250,1719903600"; 
+   d="scan'208";a="75376941"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 01:46:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1sseiN-0000000Btkl-3rOj;
+	Mon, 23 Sep 2024 11:46:39 +0300
+Date: Mon, 23 Sep 2024 11:46:39 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+	regressions@lists.linux.dev, Paul Menzel <pmenzel@molgen.mpg.de>,
+	Marek Maslanka <mmaslanka@google.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Leave ACPI PM Timer alone when
+ using S3 suspend
+Message-ID: <ZvEq78hWn367CJV5@smile.fi.intel.com>
+References: <20240919165349.235777-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION]: cephfs: file corruption when reading content via
- in-kernel ceph client
-To: Xiubo Li <xiubli@redhat.com>, David Howells <dhowells@redhat.com>,
- Jeff Layton <jlayton@kernel.org>, Ilya Dryomov <idryomov@gmail.com>
-Cc: regressions@lists.linux.dev, ceph-devel@vger.kernel.org,
- stable@vger.kernel.org
-References: <85bef384-4aef-4294-b604-83508e2fc350@proxmox.com>
- <0e60c3b8-f9af-489a-ba6f-968cb12b55dd@redhat.com>
- <1679397305.24654.1725606946541@webmail.proxmox.com>
- <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
-Content-Language: en-US, de-DE
-From: Christian Ebner <c.ebner@proxmox.com>
-In-Reply-To: <5335cdb5-7735-463e-907b-617774d6f01a@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240919165349.235777-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 9/6/24 13:09, Xiubo Li wrote:
+On Thu, Sep 19, 2024 at 06:53:49PM +0200, Hans de Goede wrote:
+> Disabling the ACPI PM timer causes suspend to no longer work on
+> a Intel Kaby Lake Dell XPS 13 using deep / S3 suspend.
 > 
-> Sure, thanks in advance.
+> The power-savings from disabling the pm-timer are mostly relevant for
+> s0ix suspend. If regular S3 suspend is used the firmware is in control of
+> the suspend and if necessary it should disable the timer if necessary.
 > 
-> I will work on this next week or later because I am occupied by some 
-> other stuff recently.
-> 
+> Limit the disabling of the ACPI PM Timer on suspend to when using
+> S0ix (so not firmware, but OS handled) suspend to fix this.
 
-There is some further information I can provide regarding this:
-Further testing with the reproducer and the current mainline kernel 
-shows that the issue might be fixed.
+Acked-by: Andy Shevchenko <andy@kernel.org>
 
-Bisection of the possible fix points to ee4cdf7b ("netfs: Speed up 
-buffered reading").
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Could this additional information help to boil down the part that fixes 
-the cephfs issues so that the fix can be backported to current stable?
-
-Regards,
-Christian Ebner
 
