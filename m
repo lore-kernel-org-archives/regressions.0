@@ -1,168 +1,161 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B0E178364
-	for <regressions@lists.linux.dev>; Tue, 24 Sep 2024 10:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EA427735;
+	Tue, 24 Sep 2024 15:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727174542; cv=none; b=Qxzgae3DPtcor81Os1i/RNHHmto5BsDysjMQQ7iQNEfUwPVppaeMn1yZl2zN449pX0a2oFp6CcLXgYFj2qPP0oG9qense67ZH1ljRcxkyj6U71ybXiIkik1ByRBhPPyO0hLrLfZBOUJ55AlFv/nQD0IvRLsHZL9DKWSynlpnstE=
+	t=1727193525; cv=none; b=n9qExCwrgy4cjgqklxQzqNbGAn79eajg0IYSaBWKuHWRpF1E1YMv8MuHtC8CHeF9aQD/z0mX9qe4VMSSdc82rCrpb2jSLjpBFIzWtHhdnqSt5zfttdLEeHAli+7wsMgY1LrKXvB2XWW9cHWdb+6WvzkO+f9tIdqv26Aw5iDflKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727174542; c=relaxed/simple;
-	bh=gNiD6RLu1udb2gce4oMZpCu+Uu4vn9C8ETKra82Zijc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sj2WL0YyOGRErFGY6tLCYhHGQddwEI34qvnIjxrR3KO1er/J3equpvSVmhYa0MT4BMchl8svwnTHzXTNf2s4ocMGrNPHUJg7sJ6+zquAYxJKEox56ytZB69/6y373GjMQnul9EWX8n+OkNCtCL9GeJ1QSiyUEJXYN5r2pYO1rl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bb3yUMQ+; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727193525; c=relaxed/simple;
+	bh=RQYoFQKbn7eT1j543PysaUj4crr0F3CY17BnjvpHBhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XA4XdF+UlmwDPAmAHi5Axuh+yUgzJsFh/UVmuEHA9HV0hiYgxPeZtW7d4crVNxLQvJpuguG/EKPbbD8d7dMOoHZTSxgK9FV5EST2+9q2UspWj14S2Dkn9HuDnTgmnu7+e1i4il6zmKOfZFSNoBUN16ZvDPq96nB92GtgyeGg7X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tcg08JrS; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bb3yUMQ+"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c42e7adbe0so6224019a12.2
-        for <regressions@lists.linux.dev>; Tue, 24 Sep 2024 03:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727174539; x=1727779339; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2YPfsEe5Gz4fZvfLrXom6jdcA+WUr3fEVrXW3twv6Dg=;
-        b=bb3yUMQ+AmgOQAOiHROY9VqS6kwzSl5iVveODiIs4b0xwZdZSESX6VYap1MF3+0f2l
-         eSuemOrIOX0lj87NoYXdc63WXYzCBsbc0rDuANsbIORb3+PA8TAO0wwazRmbgWX3WbN7
-         OZ0lyJD3fhBOtMVJWaW9sFVTxXXrtJ6R0hfYxc1lKPlghgVh7JFZuzv1CEwPW0boHztb
-         y2U3CVDAxrqKV5Mzl7LXJ5G5l46By/V18bc9J1UloBYsn4Xz6c3qKY3sE9qz1AY111tF
-         ihmI7eOJ0izNeOqeAaFk8c5P3cq1xSxaOTvZy6pKtMhjd+k1vux9z+GCqWk/5t9hBhFR
-         QPeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727174539; x=1727779339;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2YPfsEe5Gz4fZvfLrXom6jdcA+WUr3fEVrXW3twv6Dg=;
-        b=kYFEHrTKPrE58j2JumjHLd6DFrWTHbTrXUsuVAeereI7iJ9GI5i9tTdPJe1JtaGnwH
-         HcyUPipHK0xxLCWy2SEzbGk/+TQUrVkqxjRMBaAj7A9+Ncu3vYEAF5nRaljcs5VutY/a
-         ofJN7xS1ie+dLZTvZaQvuhPioQ4zzyQ7ipF3t+YOldx0siIkClDrr9ECmgiGpMMSUssK
-         wnCdSPNdQ0kb/F81olyZLYHd1RQ3Ljj0QS+6uVCSHO4Pgo37AULBnCwqxKaJnT8Jx2OZ
-         rgYEFC4irRgqVV0tU7Ayg1JQqMr1a6Bdmpi/IHGnErIcq1JHhCA1FSJKi/oIaCbhgEk/
-         mTBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhzRfpcfiOOp0yAYYEFDoBs0NX4D+gQEa64x6EOgpZ0gznPx8BqYNmSLbV3/siavFaiZhnGqmMg11mjg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YydDE1uNplzS6XNeXW4v4WuIlwCZllfZ+zyXAn2QSbUAbWCw30O
-	wLDmwu/5+Huhfvdm7cuk5x7cQi7aVyBziKVhVqe1AY4AHQieQz/I
-X-Google-Smtp-Source: AGHT+IGDTNsufgUNEyj6IFdnJ8uN6sQZGuWyKHa5urVmmKCJM+STKaOPFvBlEfsBtkrRMmNozCaZJA==
-X-Received: by 2002:a05:6402:510e:b0:5c4:6568:735b with SMTP id 4fb4d7f45d1cf-5c4656873a5mr10559030a12.11.1727174539079;
-        Tue, 24 Sep 2024 03:42:19 -0700 (PDT)
-Received: from [192.168.1.64] ([91.231.32.85])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf4d7926sm601482a12.93.2024.09.24.03.42.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Sep 2024 03:42:18 -0700 (PDT)
-Message-ID: <a0c34406-3bb3-4880-9513-0876aacd4de6@gmail.com>
-Date: Tue, 24 Sep 2024 12:42:10 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tcg08JrS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=V69cTC5cWm2Olzjm4Q+Ede0enQBKS02QbXSespSzrzY=; b=tcg08JrSLY1o3obB4H1iG+ojAy
+	iXS15zRyD0BwojJQARr5sOSMoLAsLnuu3awYoANJG4P8Rk2JJ83IqsOQWDzRjCilXHNGMDNljYpg2
+	jVAFl3fpvBJAaRkvvcOVVK8D2vcShv4Ovl+yID12YPswZjmjCHfGNpCFiFxHDJoblKqRShwMzF1LT
+	UIwVvqR/PI3ZFJf1GTju1QuHltJrb8CMZ332HeqsV+18ZFHE8QrucO0iBlDfqsiCALP86WKmJM0E6
+	ZD8p34HmPcexSmz6U843J2MpvAjddsBjQ1ewfuywYxMC+NPIppd4XKYZrc7GDv6wCozeR5GbKPqDY
+	11A2/R1w==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1st7vw-00000001uiM-445t;
+	Tue, 24 Sep 2024 15:58:36 +0000
+Date: Tue, 24 Sep 2024 16:58:36 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Dave Chinner <david@fromorbit.com>,
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <ZvLhrF5lj3x596Qm@casper.infradead.org>
+References: <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <8697e349-d22f-43a0-8469-beb857eb44a1@kernel.dk>
+ <ZuuqPEtIliUJejvw@casper.infradead.org>
+ <0a3b09db-23e8-4a06-85f8-a0d7bbc3228b@meta.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: libahci driver and power switching HDD on newer kernels
-Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-ide@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
-References: <7882faa8-d5ec-4868-b158-0b942b669cc0@gmail.com>
- <c4f1c690-6e97-44de-985f-dc9eadd18d23@leemhuis.info>
- <c7880a6f-04d4-4572-9255-1575f6668b4e@kernel.org>
-From: W <linuxcdeveloper@gmail.com>
-In-Reply-To: <c7880a6f-04d4-4572-9255-1575f6668b4e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a3b09db-23e8-4a06-85f8-a0d7bbc3228b@meta.com>
 
-W dniu 24.09.2024 o 9:31 AM, Damien Le Moal pisze:
-> On 2024/09/24 7:20, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hi!
-
-Hi
->> On 15.09.24 14:44, W wrote:
->>>
->>> I've got some problems with newer kernels during hibernation and
->>> waking up from hibernation.
->>> The symptom of the issue is that there is HDD power switching executed
->>> after I run pm-hibernate command and the same HDD power switching
->>> during the wake up process from hibernation.
->>
->> Thx for the report. I CCed Damien and Niklas (and the regressions list),
->> maybe they have an idea. If they do not reply you most likely need to
->> perform a bisection to raise interest in your report.
+On Fri, Sep 20, 2024 at 03:54:55PM +0200, Chris Mason wrote:
+> On 9/19/24 12:36 AM, Matthew Wilcox wrote:
+> > My brain is still mushy, but I think there is still a problem (both with
+> > the simple fix for 6.9 and indeed with 6.10).
+> > 
+> > For splitting a folio, we have the folio locked, so we know it's not
+> > going anywhere.  The tree may get rearranged around it while we don't
+> > have the xa_lock, but we're somewhat protected.
+> > 
+> > In this case we're splitting something that was, at one point, a shadow
+> > entry.  There's no struct there to lock.  So I think we can have a
+> > situation where we replicate 'old' (in 6.10) or xa_load() (in 6.9)
+> > into the nodes we allocate in xas_split_alloc().  In 6.10, that's at
+> > least guaranteed to be a shadow entry, but in 6.9, it might already be a
+> > folio by this point because we've raced with something else also doing a
+> > split.
+> > 
+> > Probably xas_split_alloc() needs to just do the alloc, like the name
+> > says, and drop the 'entry' argument.  ICBW, but I think it explains
+> > what you're seeing?  Maybe it doesn't?
 > 
-> Thanks for that. Niklas and I will look at this (I thought we already had fixed
-> that issue...). However, this week may be difficult as Niklas and I are
-> attending a conference and we may not have time to do much. But this will be our
-> highest priority next week.
+> Jens and I went through a lot of iterations making the repro more
+> reliable, and we were able to pretty consistently show a UAF with
+> the debug code that Willy suggested:
 > 
->>
->> And FWIW, there is one important info that afaics is missing from your
->> report: If the latest mainline kernel (e.g. 6.11) still affected?
+> XA_NODE_BUG_ON(xas->xa_alloc, memchr_inv(&xas->xa_alloc->slots, 0, sizeof(void *) * XA_CHUNK_SIZE));
 > 
-> Yes, please check that.
-
-I've already reported the issue here:
-https://bugzilla.kernel.org/show_bug.cgi?id=219296
-and unfortunately the issue exists also on 6.11.
-
->>> 4. system is ready to use and working fine
->>>
->>> So to sum up - in both processes described above the problematic step
->>> is the step 3.
->>>
->>> I noticed this issue when I switched kernel 6.4.12 to 6.7.5. So far I
->>> haven't used git bisect yet to find the exact offending commit so the
->>> change might be introduced somewhere between 6.4.12 and 6.7.5.
+> But, I didn't really catch what Willy was saying about xas_split_alloc()
+> until this morning.
 > 
-> It would really be helpful if you could bisect this !
-
-I did it and placed the log from bisect in my bugzilla report: 
-https://bugzilla.kernel.org/show_bug.cgi?id=219296
-
->>> In 6.4.12 I have not such an issues with HDD power switching. The
->>> issues exist in 6.7.5 and newer ones and probably somewhere between
->>> 6.4.12 and 6.7.5.
->>>
->>> I noticed some errors in dmesg coming from ahci driver like these:
->>> Sep 11 15:49:30 localhost kernel: ahci 0000:00:17.0: port does not
->>> support device sleep
+> xas_split_alloc() does the allocation and also shoves an entry into some of
+> the slots.  When the tree changes, the entry we've stored is wildly 
+> wrong, but xas_reset() doesn't undo any of that.  So when we actually
+> use the xas->xa_alloc nodes we've setup, they are pointing to the
+> wrong things.
 > 
-> This is relevant. This is not really an error but rather a statement that your
-> device does not support sleep. This could be the reason for the behavior. (hence
-> my request that if you could test with a different device, it would be help).
+> Which is probably why the commits in 6.10 added this:
 > 
->>> and ACPI BIOS errors like these:
->>> Sep 11 15:49:30 localhost kernel: ACPI BIOS Error (bug): Could not
->>> resolve symbol [\_SB.PCI0.SAT0.PRT0._GTF.DSSP], AE_NOT_FOUND
->>> (20240322/psargs-330)
+> /* entry may have changed before we re-acquire the lock */
+> if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
+> 	xas_destroy(&xas);
+>         alloced_order = 0;
+> }
 > 
-> Yeah... I see these all the time on different machines. That comes from the BIOS
-> not being great :) Not sure if that one relates to SATA though ?
+> The only way to undo the work done by xas_split_alloc() is to call
+> xas_destroy().
 
-I was trying to report this issue to American Megatrends Inc. as the 
-BIOS maintainer but their website form didn't accept any of my emails :) 
-So eventually I couldn't let them know about these issues.
+I hadn't fully understood this until today.  Here's what the code in 6.9
+did (grossly simplified):
 
->>> Please take a look at included dmesg in the attachment.
->>>
->>> The mainboard I use is: Gigabyte Z370 HD3P with the newest available
->>> BIOS update.
->>>
->>> I'd like to ask if this is known issue and if yes how could I fix it?
->>> I'm not quite sure where exactly is the issue: in kernel or in my
->>> Gigabyte BIOS?
-> 
-> Given that you had 6.4.12 working OK, it is likely some commit that introduced a
-> regression. If you can git bisect it, we will have a better idea how to remove
-> the regression.
+        do {
+                unsigned int order = xa_get_order(xas.xa, xas.xa_index);
+                if (order > folio_order(folio))
+                        xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
+                                        order, gfp);
+                xas_lock_irq(&xas);
+                if (old) {
+                        order = xa_get_order(xas.xa, xas.xa_index);
+                        if (order > folio_order(folio)) {
+                                xas_split(&xas, old, order);
+                        }
+                }
+                xas_store(&xas, folio);
+                xas_unlock_irq(&xas);
+        } while (xas_nomem(&xas, gfp));
 
-Please take a look at bugzilla report: 
-https://bugzilla.kernel.org/show_bug.cgi?id=219296 - there are the details.
+The intent was that xas_store() would use the node allocated by
+xas_nomem() and xas_split() would use the nodes allocated by
+xas_split_alloc().  That doesn't end up happening if the split already
+happened before getting the lock.  So if we were looking for a minimal
+fix for pre-6.10, calling xas_destroy if we don't call xas_split()
+would fix the problem.  But I think we're better off backporting the
+6.10 patches.
 
-I'm wondering what is the better way for communication - here on mailing 
-list or put the comments in bugzilla ticket?
-Probably here will be better idea...
+For 6.12, I'm going to put this in -next:
 
-W
+http://git.infradead.org/?p=users/willy/xarray.git;a=commitdiff;h=6684aba0780da9f505c202f27e68ee6d18c0aa66
 
+and then send it to Linus in a couple of weeks as an "obviously correct"
+bit of hardening.  We really should have called xas_reset() before
+retaking the lock.
+
+Beyond that, I really want to revisit how, when and what we split.
+A few months ago we came to the realisation that splitting order-9
+folios to 512 order-0 folios was just legacy thinking.  What each user
+really wants is to specify a precise page and say "I want this page to
+end up in a folio that is of order N" (where N is smaller than the order
+of the folio that it's currently in).  That is, if we truncate a file
+which is currently a multiple of 2MB in size to one which has a tail of,
+say, 13377ea bytes, we'd want to create a 1MB folio which we leave at
+the end of the file, then a 512kB folio which we free, then a 256kB
+folio which we keep, a 128kB folio which we discard, a 64kB folio which
+we discard, ...
+
+So we need to do that first, then all this code becomes way easier and
+xas_split_alloc() no longer needs to fill in the node at the wrong time.
