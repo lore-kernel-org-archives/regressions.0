@@ -1,101 +1,98 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B419137776
-	for <regressions@lists.linux.dev>; Wed, 25 Sep 2024 09:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F24C77107;
+	Wed, 25 Sep 2024 10:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727257564; cv=none; b=BGtkSKAMXwrjxCh7FgI8dtfEUIFTUhjD98+eYzHrPhSX6md3/ynJwifs0JqFqFHyQ3fhHyCrvnhPKgtVbot2wmJ94lXMIMs/3DQOX3bx+DgPc25ZQRV2WXNR5h9nU4hWoIvM2I2FePBXUuU2LR42B5zRoqnOPIfg56VnbNryaM0=
+	t=1727261198; cv=none; b=WbamCzFRL6ecabKQ6nOvz3T1/ev8unxvgqmuDB4rJavKgTy7qKwApX6PlWNsqoAosLPDo2ISX59LvyAOThtO0e/UaFiZp/Pzfd8a51fxMveUshcGHgXfNShucpKs4nudP7OItcHLPP45w3C7u1vQv/5p/NAR/bpY8Nqt5XWf3Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727257564; c=relaxed/simple;
-	bh=NgD5S9pyeEL0whX5CofWYtse3Eype5qITL1jwQePx/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n+AIXD8F9nX0csDQdDPoX3tUI4mxfySZOtJy4g14KNKvYee6TsQy5fVYl6F4Ez4FpnmtVRteizQyRk+v/FzSjM0d33s3Ms14X4cgsS739h8m/8HQykg1NkZGhkA0boaY+M3f6rLaSyaFljJA4WJagldEFxGmz/lEc/2GPec/yzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Qpn910rp; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1727261198; c=relaxed/simple;
+	bh=SWqWWzBjCprqZ1fW0k2ZoOqt9RUXMUE/R/y7EdPVlUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d3IpkWoV1G/vfyCO5SBvHlrBiXT0K4e7U+AIu95JWsCSWP+XsM4nnkIpipWpsJi7aVSs5XZANrfYC3AonkaUAeXLh0lLX0UB8Tgx93QmxKV+69+MR81LwGiPhNGrToo2J6nSc2IhMG8OHotLRaPOtDXguAEZ0sC2jAPi+6fspS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=sYqJeciW; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Qpn910rp"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53654e2ed93so7734897e87.0
-        for <regressions@lists.linux.dev>; Wed, 25 Sep 2024 02:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727257561; x=1727862361; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NgD5S9pyeEL0whX5CofWYtse3Eype5qITL1jwQePx/4=;
-        b=Qpn910rpycyCLgxvVvDaH6Fos8wmrXfOU4ceWDRM52Iv0b1ouMtFfN4ix9FNKQF4Li
-         sz3iGDsoW4phbhsMWQMC7MmYw8+WVywmciH4OpzfXsZOOtTuqKy7W/K7hSUv5OAhYUAj
-         8vaDwvZRCkNzjsp1wZ91R8Mx9WcRF1ERWUN9JrjlGhz7C9mOgCBbzLESlJbcbKAFxK+U
-         ta9xyyYB4Vw6YtxhZnq7k/nFxGvEjbChkzWK9QbZlKTVU98LLwj5B0h2v04yAKGN9s2/
-         bpOBOCk4x+6iZNzzwb0FXw7VB1MRkYJkGwCxopf677sUmdG9yzpmfohWg2/YGRtwaRpC
-         1wcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727257561; x=1727862361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NgD5S9pyeEL0whX5CofWYtse3Eype5qITL1jwQePx/4=;
-        b=stqtktD/KBZo+iQUSCEusXNcuNCA9lLn/mbkL0TnqtXWHX7nY+uFCB5N6CLicCd/WO
-         uuHJ7g69hjqnXmmv2xW9K8YH6j6k+zUfcUbqPA5lvLmZl/XmyaJUZVrEPBTbFlSHL7EH
-         2M3J9aEr3kOx0J6FH+47gZb0+iGifxyExTLo9ZvXi0psc9zs4icFN+1ARFWgqor+wj4d
-         oFogcBSl2JEKG7ixtRL/ywJzgA9CGrJbAHYB1QocB+MiHNpCZ+xtjImdBSIpEN9H4YQ4
-         k38l4HJ11WGhIHgUEY3UfznTXeE7XOOT3vpaFo5JtNmugBr8rc8lTuKJuv+WCmqUxzMv
-         VXEA==
-X-Gm-Message-State: AOJu0YxFYSYf/vNmyBOp7KViKqG6B15fJ/KIKf6UwM1Vj87Up2jkXlYj
-	NJRh1rLDHwtbw14MedJjUPgK0+XHCKNaoEdNTk4bRxTxRKvojNA0X94whV42lxBrasLbhhuPryW
-	HACCfucqGgRQuihiKZkkBUkrbrMOOlhTNDwN6rsSicbpKldWz
-X-Google-Smtp-Source: AGHT+IGpIsWwcArxaXl2nN/jmHZ9mZk4PS6iOVoWxDnyGMawf9jGJkP8UCfY9YHJq1XUYoIoHK/PxmvoTaQAXkJyg9w=
-X-Received: by 2002:a05:6512:1384:b0:535:3c94:70c2 with SMTP id
- 2adb3069b0e04-538704979e7mr1306012e87.19.1727257560704; Wed, 25 Sep 2024
- 02:46:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="sYqJeciW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=0OVXVlpvXCgQ9uuKa1lTkdFYJh3tlujOpkrdEUoBgsE=; t=1727261196;
+	x=1727693196; b=sYqJeciWknAsE5Q2mEVqqADgY8OyCchwpW6Lx134KcXt2BZeCmieUUfal0ZDl
+	5X0m7R4f7rNIbNNKf7237toG7IBxLhxwEtDFwE7wGiJUKtRxxIFvFnE/HVIWHy0Okh/Nyogz25Mjq
+	ZihywvdHCZIzakCjBQ+OxDIq3xoytK+qUiq3O4RJMMtzliZVzxk706lukoXxOq79h6D5OzZ2wEriq
+	EZ0XcFSh6HwmI9F0bzpJk83f4osIwMa/JR8Wq4zI0mP3CPKMCHhKNKFlXvPdnM/Ur2SZmsEuxQK84
+	ZHsoJyLFr1Nqcj1sW4NhOFS1b1jhrqBxb80S4fFFzCs9eHTDFw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1stPXR-0000rL-Ny; Wed, 25 Sep 2024 12:46:29 +0200
+Message-ID: <f037f25b-153d-4fb7-92fd-e3900c9488f6@leemhuis.info>
+Date: Wed, 25 Sep 2024 12:46:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240911-tzmem-null-ptr-v2-0-7c61b1a1b463@linaro.org> <e1089f44-5415-4a46-a8fb-9711f122a6bd@leemhuis.info>
-In-Reply-To: <e1089f44-5415-4a46-a8fb-9711f122a6bd@leemhuis.info>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 25 Sep 2024 11:45:49 +0200
-Message-ID: <CAMRc=MdmZ7_oHv_7Ja9E0pfuoF5wWeGz_1=Yq=G-gE_cpsBGSA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] firmware: qcom: scm: fix SMC calls on ARM32
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Andrew Halaney <ahalaney@redhat.com>, Elliot Berman <quic_eberman@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Rudraksha Gupta <guptarud@gmail.com>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux fails to ACPI S3 supend on Dell XPS 13 9630
+ (6.11.0-04557-g2f27fce67173)
+To: Hans de Goede <hdegoede@redhat.com>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Marek Maslanka <mmaslanka@google.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+ regressions@lists.linux.dev, Petr Mladek <pmladek@suse.com>
+References: <18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de>
+ <154114fb-276f-45f6-bba0-98133c7c5d4d@molgen.mpg.de>
+ <3b600845-77d5-42d3-8556-53cc0b2eab25@molgen.mpg.de>
+ <1c10c0c4-f4d7-490f-85d2-0278c062fb87@molgen.mpg.de>
+ <aa60da75-7931-462d-addd-49adfbd9893b@redhat.com>
+ <b3cc0791-6334-4143-90bc-d3ae04aae0de@molgen.mpg.de>
+ <10f1c736-33e9-4e04-a31e-0f095cdd08d2@redhat.com>
+ <28bef0a7-bc6c-47b8-9545-e6d867922e14@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <28bef0a7-bc6c-47b8-9545-e6d867922e14@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727261196;5058bb2c;
+X-HE-SMSGID: 1stPXR-0000rL-Ny
 
-On Wed, Sep 25, 2024 at 11:35=E2=80=AFAM Linux regression tracking (Thorste=
-n
-Leemhuis) <regressions@leemhuis.info> wrote:
+On 19.09.24 18:55, Hans de Goede wrote:
+> On 19-Sep-24 6:53 PM, Hans de Goede wrote:
+>> On 19-Sep-24 4:03 PM, Paul Menzel wrote:
+>>> Am 19.09.24 um 13:57 schrieb Hans de Goede:
+>>>> On 19-Sep-24 1:03 PM, Paul Menzel wrote:
+>>>>> Am 19.09.24 um 10:17 schrieb Paul Menzel:
+>>>>>> Am 19.09.24 um 07:51 schrieb Paul Menzel:
+>>>>>>> Am 19.09.24 um 07:51 schrieb Paul Menzel:
 >
-> On 11.09.24 11:07, Bartosz Golaszewski wrote:
-> > The new TZ Mem allocator assumes the SCM driver is always probed which
-> > apparently isn't the case on older platforms. Add a proper workaround.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> > Changes in v2:
-> > - use likely() for the more likely branch in smc_args_free()
-> > - Link to v1: https://lore.kernel.org/r/20240909-tzmem-null-ptr-v1-0-96=
-526c421bac@linaro.org
+>>>> So I think we can fix this by limiting the new handling to s0ix suspend.
+>>>> Can you please give the attached patch a try?
+>>> Thank you so much for the instant reaction. Indeed, your patch makes ACPI S3 suspend work.
+>>> Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
 >
-> Thx for working on this. This afaics is fixing a regression from the
-> 6.11 cycle; we already missed fixing this for 6.11[1], but please allow
-> me to ask: is that something that bothers many people and thus should
-> maybe be fixed rather sooner than later? No pressure, just wondering, as
-> it seems the review is making slow progress.
->
-> Ciao, Thorsten
->
+>> Thank you for testing. I've submitted this upstream now.
+>>
+>> I'll include this in the first pdx86 fixes pull-request over 6.11-rc1 is out.
+> 
+> That should be 6.12-rc1 of course.
 
-Bjorn should pick up patch 1/2 from this series into the QCom branch.
-If it doesn't happen by the end of the merge window, I'll resend it
-separately on Monday.
+Out of curiosity: why not send the fix to Linus this week to get it into
+6.12-rc1 (and thus on track for stable backporting too, assuming Greg
+will pick it up)? Just asking, as I have seen some developers wrongly
+assuming it's not okay to queue fixes due to our "no newly developed
+patches should be merged to -next or mainlined during the merge window"
+rule.
 
-Bart
+Or did I misunderstood you plan or missing another reason why waiting
+might be wise? If so: sorry!
+
+Ciao, Thorsten
