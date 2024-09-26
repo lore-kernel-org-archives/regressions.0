@@ -1,242 +1,272 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4743913BAFA
-	for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 14:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83962EAD5
+	for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 15:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727362424; cv=none; b=ZO5yEB+msvbu8CCL0egbrVpI/khTS9FhTXEWELzzGDyHcnz2pnJWjiGUlFfcZodNDzRV1K3AIA/TLn/xbRx86uCsyDdhhp6LOadZiqhgMuBz10oplNKA5wPLdba/9m3Tt0H5pZiplzg5F5krMfWnRT6CTLR5daWXjQnlSoSDNg0=
+	t=1727363685; cv=none; b=qAqUBStH2tL/LfzqqpptrWk1wfGYeGBY1rYc/TwVW+l0Z8ksCp48H29BIYNgtEgkcHl5w6qE0FNO4hN8J6vgLXgyDKJU7wfHiSkJam0urldJlL1UoUlkmZ8NKqhvLYjfkVbijt+Fk9nyLh7guqxmvZZd5BgkzmwP8gT4MF4slFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727362424; c=relaxed/simple;
-	bh=79CUvXXQEzLWmy7aBoCjyG05MpLOBJWsk6PgttOBDIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+Io820iFBMyMxm3YMqrZB0Qdc+TBb4xJrz00y7KJiFWXpyg5pd0uvqceYuVPflmIQOQ5lUf5oCJzqwvYzyKPXMxLYrVtFnatM9WTFmjdJqQBiLnEM890fJt+j+SQKnrCno7H0Urk5aXN3WX1m6MJ0lcBOBHLTv0FOUnzYXRwDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P08woj8s; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727363685; c=relaxed/simple;
+	bh=oD0KetFqzImm6YqyQK7j6erfD0j6+NQYDgJBUTSSa/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BlblLzSduxi9k993bw9nDBugv2e9U9pBw67i3748GeQb6nzkMicJ1oFkHVmHXxC+VeArajcqkVwBESRXb81GLCI4fWBfIf0pP9XRC6Euxg+HFmsryKAfZaozX6+mbAgJjiWnWRSJFpJ2UlTC+5kzXT0oIBUE1gqJ1U7oDz4ZHqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=q+y2XI0t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OIb4ly90; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P08woj8s"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f75c6ed428so12269321fa.0
-        for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 07:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727362420; x=1727967220; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y91NulC7QRTVnN0dh/5ze7SVsOzL+3TRyL00hZ92QIY=;
-        b=P08woj8sB0YEzy61ACtSiHRNOweOPe9g8eL2mSpboSw4ybKiZsrgvtYqz3wGUsC6fW
-         YmXRJ2LuVS8b7G7/YI0gSU0fKHhrxvbqSHdwKGiyQMY4PaWLKCCMlzOQ7A3fRwW9fYZ0
-         k/q+DA5aXm3h/o57nmP9lHWBbPyZDR8/oAmhTl7aY1JETPsrVBXX+JNvKVqnOTBUu3u+
-         KHVGNqBbf2Lxk5fBRTbLD6zJ9fyH3rNrllT22vX5Wl7eZzqExUp0T1rSWiJyyQm5G/N1
-         ssidGAXCc+/p3pGzyaZ0qVhNtuWjvr2qKckQix//SAH12/257bmxLadkEJexOAkdoUqo
-         j80g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727362420; x=1727967220;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y91NulC7QRTVnN0dh/5ze7SVsOzL+3TRyL00hZ92QIY=;
-        b=i2bZUqmd5NcSiJk5Npv2tm5ZGOcO2U88RfJQkk/SgWdXSEwkkvt0+BWB+lqrkFVBdI
-         R/rJIhOEtAijVqZfzLgBoBsim7Psp5zQgZN7z6hL9mcJuHTg+XrhpmCV338FbHnpTJpk
-         oUE6kZUUUH0xMoH49QZ1W8rZy+hu2aoesTBxBKGif6wwQft9BXJiTaIUUuV3ZaC3dp33
-         KJ+SbIrxdAEZ5o3ZHCxCCGg2wnDPN6lb/P6DIrd2PmbtXLfoqLeX0tUgUbbWlTNHvWGa
-         QpbjBDaYMoLzHLKUJs1thi4XQUzGV0zolMH7lkrwUPzk0i2VNk4/XmWXos7J1MeF2QCp
-         SiiQ==
-X-Gm-Message-State: AOJu0YxUuhDHi9r4UEuOEjM0PonkttbYmZZIU4u+hsMeRhTiRkxfk4AR
-	z8uL0nXlGqrI/hiLtVHRQAoNZjFNVAaE2s7uGPuz+JyjcU/7A1eTaCGs5MYGkE16/kHDoq1AKcC
-	cWx61JZy6PGyi/7DytG22URWwk3f7BmNd
-X-Google-Smtp-Source: AGHT+IHIhnSg+cP/Fqowz2wiTX8W2FNsq9NPxmOou+y2u/0ClSyfAk7eRkkPc3SAVV0hkmaWQ8Vp02r7gGsp1lCf0to=
-X-Received: by 2002:a2e:be8e:0:b0:2f7:64b9:ff90 with SMTP id
- 38308e7fff4ca-2f915fc366bmr46845491fa.9.1727362419364; Thu, 26 Sep 2024
- 07:53:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="q+y2XI0t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OIb4ly90"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id A97DB1380128;
+	Thu, 26 Sep 2024 11:14:42 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Thu, 26 Sep 2024 11:14:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1727363682; x=1727450082; bh=ku6sIPz5PeT7EPPJmtdRdU16MTUqX82X
+	ZDEq364bwbI=; b=q+y2XI0tpmpc+7eTiBqvEaZu634GjJJIE3CCJp8Cx8ue1QPn
+	aXqLl/a+bgXaDTArQwEWZ5ziTU9rQK2o9ZZukcfCV/e6Sxlb2cEaeUWlMS7sfw9j
+	Y14bY8KXt3kn07Dztys9I8F2AFL6QITL++93Fk3BnYxFE10uSWSGxFCGWWZj8mLx
+	dnOLO+uYE0UCsPQt0/JxqVzeA6cGae4niziY8nmRItdOTWq6juqVXZJcAoz2qrnC
+	0sj0gm86EGDo6OwD6pk3a9VQiGmgRQ/RssZjOcVzvaui/5W5Dosj6SdXk3pJ0mno
+	YAGRCwsa7S410AmcYiYMzFKv4E0MqLQSUZIidg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1727363682; x=1727450082; bh=ku6sIPz5PeT7EPPJmtdRdU16MTUqX82XZDE
+	q364bwbI=; b=OIb4ly90ypp3UMO8CPZ3BFk19/d0EHxrnf0rG3VJR8nWxruiV1u
+	4xi0XR/em+S7Bk4WE1L2m8EXyW0ok8ndM1Jb/PeTGvfuIPtg+9+YhullbLLTh2Zl
+	Ti2b3hnM9EMjG04bLDNhzZnivIxbLWqY/hKhmPMGlsBcCmAGVYVL/X1zzZMPgXHk
+	l7JkaL7vqn5hs4L4hwfXYo0JGy+9mB/20PbZ1eKyTZ39BfeiOjQKGLs7smt16Jpd
+	1/wgRhxhz9MGZH941ccVd3HMkBJTpCllwd24eTN2HpIAx9ruKhs9wt+TfcUpj3yO
+	rBk+uQahq/EpBcvItdxPHZprLXUSDwaqJ/A==
+X-ME-Sender: <xms:Ynr1Zo9MzdWnHuEZ_2rk9YvSnkjC-9RWs1YKj2szveROXHY2B8KxZw>
+    <xme:Ynr1Zgsv_FhmRpIGWX6TltdDjGr_eqaqbzcTnx29wogkcSEwCudkg_rV29WiUMxZw
+    cfSVypjjBSUP3aCU6A>
+X-ME-Received: <xmr:Ynr1ZuBBKFWUxdwP1EwRlxEmOX5OYVVSlOAO1nCTryt6wkJsrIZCLtqQWclQdu48JLU3bfwaxfRH8HZc6c6UFCY3Ri_8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtjedgkeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlud
+    ehmdenucfjughrpeffhffvvefukfggtggusehttdertddttddvnecuhfhrohhmpeflrghn
+    ucfjvghnughrihhkucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtf
+    frrghtthgvrhhnpefhleffuedvueekgeetgedukeeiheejtdfhfeefveeukedugfefjeet
+    udejgefgkeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgt
+    tgdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkh
+    gvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphhtthhopehthhho
+    rhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehrvghgrhgvsh
+    hsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
+    sggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:Ynr1Zoe4tqymgUvVpHXcvoswfv0dzMgeWWHvMi0jnn35YWusGWsjCg>
+    <xmx:Ynr1ZtOfTR47i5UxrqBdUtlur7q_udAkOYcvqtvzyKOSIXU2xtWl6g>
+    <xmx:Ynr1Zik7D3a-7GV66fLE4RwSndm-X1JjZ5tq2WfXGcsmMDWkKtz2nw>
+    <xmx:Ynr1ZvuXDH4yozW0W-yoSeo4pX7K7UPfO1aG29hkFn6yTEwEn_hyLw>
+    <xmx:Ynr1ZpDz8t-pw1c8V6dnQyGLa0WpUGwMYATgTip5YTZaKR6ndde19gkv>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Sep 2024 11:14:41 -0400 (EDT)
+Date: Thu, 26 Sep 2024 17:14:39 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: kent.overstreet@linux.dev
+Cc: thorsten.blum@toblux.com, regressions@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZvV6X5FPBBW7CO1f@archlinux>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <af319b4c-2417-4f2f-85d0-e72d1c4fb2ac@leemhuis.info>
-In-Reply-To: <af319b4c-2417-4f2f-85d0-e72d1c4fb2ac@leemhuis.info>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 26 Sep 2024 10:53:26 -0400
-Message-ID: <CABBYNZJJ+28EvyEvDsVzZv6ZbZLhSkZ-tuDckAvNfR_=qCKVMw@mail.gmail.com>
-Subject: Re: [regression] NULL dereference pointer in Bluetooth at boot
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Marcel Holtmann <marcel@holtmann.org>, 
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Christian Casteyde <casteyde.christian@free.fr>, Chris Lu <chris.lu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Hi Kent,
 
-On Thu, Sep 26, 2024 at 5:16=E2=80=AFAM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->
-> I noticed a report about a regression in bugzilla.kernel.org apparently
-> related to the bluetooth code. As many (most?) kernel developers don't
-> keep an eye on the bug tracker, I decided to write this mail. To quote
-> from https://bugzilla.kernel.org/show_bug.cgi?id=3D219294 :
->
-> > Since Kernel 6.11 compiled from vanilla source, I get occasionnaly an O=
-ops at boot on my Lenovo Slim 5.
-> > This is a regression.
-> >
-> > Kernel 6.11 / Slackware 64 (Slackware 15 + recent Mesa).
-> > AMD 7840HS 16Go
-> > When the problem occurs, the boot doesn't finish, but I got the followi=
-ng in syslog:
-> > Sep 19 19:57:15 latile dnsmasq[924]: no servers found in /etc/dnsmasq.d=
-/dnsmasq-resolv.conf, will retry
-> > Sep 20 22:22:29 latile kernel: ACPI BIOS Error (bug): Could not resolve=
- symbol [\_SB.PCI0.GP18.SATA], AE_NOT_FOUND (20240322/dswload2-162)
-> > Sep 20 22:22:29 latile kernel: ACPI Error: AE_NOT_FOUND, During name lo=
-okup/catalog (20240322/psobject-220)
-> > Sep 20 22:22:29 latile kernel: ACPI BIOS Error (bug): Failure creating =
-named object [\_SB.PCI0.GPP6.WLAN._S0W], AE_ALREADY_EXISTS (20240322/dswloa=
-d2-32
-> > 6)
-> > Sep 20 22:22:29 latile kernel: ACPI Error: AE_ALREADY_EXISTS, During na=
-me lookup/catalog (20240322/psobject-220)
-> > Sep 20 22:22:31 latile kernel: i8042: PNP: PS/2 appears to have AUX por=
-t disabled, if this is incorrect please boot with i8042.nopnp
-> > Sep 20 22:22:34 latile kernel: Bluetooth: hci0: HCI Enhanced Setup Sync=
-hronous Connection command is advertised, but not supported.
-> > Sep 20 22:22:37 latile kernel: BUG: kernel NULL pointer dereference, ad=
-dress: 0000000000000000
-> > Sep 20 22:22:37 latile kernel: #PF: supervisor read access in kernel mo=
-de
-> > Sep 20 22:22:37 latile kernel: #PF: error_code(0x0000) - not-present pa=
-ge
-> > Sep 20 22:22:37 latile kernel: Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > Sep 20 22:22:37 latile kernel: CPU: 2 UID: 0 PID: 153 Comm: kworker/2:1=
- Not tainted 6.11.0 #1
-> > Sep 20 22:22:37 latile kernel: Hardware name: LENOVO 82Y9/LNVNB161216, =
-BIOS M3CN42WW 01/11/2024
-> > Sep 20 22:22:37 latile kernel: Workqueue: pm pm_runtime_work
-> > Sep 20 22:22:37 latile kernel: RIP: 0010:btusb_suspend+0x14/0x1b0
-> > Sep 20 22:22:37 latile kernel: Code: e4 10 00 83 80 d4 0a 00 00 01 eb d=
-b 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 0f 1f 44 00 00 41 54 55 53 48 8=
-b 9f
-> > c8 00 00 00 <48> 8b 13 8b 82 bc 09 00 00 03 82 b8 09 00 00 03 82 c4 09 =
-00 00 03
-> > Sep 20 22:22:37 latile kernel: RSP: 0018:ffffbf1280b67ca0 EFLAGS: 00010=
-206
-> > Sep 20 22:22:37 latile kernel: RAX: ffffffffa62de3b0 RBX: 0000000000000=
-000 RCX: 0000000000000002
-> > Sep 20 22:22:37 latile kernel: RDX: 0000000000000003 RSI: 0000000000000=
-402 RDI: ffff9bcc85e17000
-> > Sep 20 22:22:37 latile kernel: RBP: ffff9bcc85e17000 R08: ffff9bcc8930e=
-800 R09: ffff9bcc85e174b0
-> > Sep 20 22:22:37 latile kernel: R10: 0000000000000003 R11: 0000000000000=
-063 R12: 0000000000000402
-> > Sep 20 22:22:37 latile kernel: R13: 0000000000000003 R14: 0000000000000=
-000 R15: ffff9bcc8930e800
-> > Sep 20 22:22:37 latile kernel: FS:  0000000000000000(0000) GS:ffff9bcfa=
-e480000(0000) knlGS:0000000000000000
-> > Sep 20 22:22:37 latile kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000=
-080050033
-> > Sep 20 22:22:37 latile kernel: CR2: 0000000000000000 CR3: 000000035f82a=
-000 CR4: 0000000000750ef0
-> > Sep 20 22:22:37 latile kernel: PKRU: 55555554
-> > Sep 20 22:22:37 latile kernel: Call Trace:
-> > Sep 20 22:22:37 latile kernel:  <TASK>
-> > Sep 20 22:22:37 latile kernel:  ? __die+0x23/0x70
-> > Sep 20 22:22:37 latile kernel:  ? page_fault_oops+0x159/0x520
-> > Sep 20 22:22:37 latile kernel:  ? exc_page_fault+0x404/0x740
-> > Sep 20 22:22:37 latile kernel:  ? asm_exc_page_fault+0x26/0x30
-> > Sep 20 22:22:37 latile kernel:  ? btusb_isoc_tx_complete+0x60/0x60
-> > Sep 20 22:22:37 latile kernel:  ? btusb_suspend+0x14/0x1b0
-> > Sep 20 22:22:37 latile kernel:  usb_suspend_both+0x94/0x280
-> > Sep 20 22:22:37 latile kernel:  usb_runtime_suspend+0x2e/0x70
-> > Sep 20 22:22:37 latile kernel:  ? usb_autoresume_device+0x50/0x50
-> > Sep 20 22:22:37 latile kernel:  __rpm_callback+0x41/0x170
-> > Sep 20 22:22:37 latile kernel:  ? usb_autoresume_device+0x50/0x50
-> > Sep 20 22:22:37 latile kernel:  rpm_callback+0x55/0x60
-> > Sep 20 22:22:37 latile kernel:  ? usb_autoresume_device+0x50/0x50
-> > Sep 20 22:22:37 latile kernel:  rpm_suspend+0xe8/0x5e0
-> > Sep 20 22:22:37 latile kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
-> > Sep 20 22:22:37 latile last message buffered 1 times
-> > Sep 20 22:22:37 latile kernel:  ? finish_task_switch.isra.0+0x96/0x2a0
-> > Sep 20 22:22:37 latile kernel:  __pm_runtime_suspend+0x3c/0xd0
-> > Sep 20 22:22:37 latile kernel:  ? usb_runtime_resume+0x20/0x20
-> > Sep 20 22:22:37 latile kernel:  usb_runtime_idle+0x35/0x40
-> > Sep 20 22:22:37 latile kernel:  rpm_idle+0xbd/0x270
-> > Sep 20 22:22:37 latile kernel:  pm_runtime_work+0x84/0xb0
-> > Sep 20 22:22:37 latile kernel:  process_one_work+0x16d/0x380
-> > Sep 20 22:22:37 latile kernel:  worker_thread+0x2cb/0x3e0
-> > Sep 20 22:22:37 latile kernel:  ? _raw_spin_lock_irqsave+0x1b/0x50
-> > Sep 20 22:22:37 latile kernel:  ? cancel_delayed_work_sync+0x80/0x80
-> > Sep 20 22:22:37 latile kernel:  kthread+0xde/0x110
-> > Sep 20 22:22:37 latile kernel:  ? kthread_park+0x90/0x90
-> > Sep 20 22:22:37 latile kernel:  ret_from_fork+0x31/0x50
-> > Sep 20 22:22:37 latile kernel:  ? kthread_park+0x90/0x90
-> > Sep 20 22:22:37 latile kernel:  ret_from_fork_asm+0x11/0x20
-> > Sep 20 22:22:37 latile kernel:  </TASK>
-> > Sep 20 22:22:37 latile kernel: Modules linked in:
-> > Sep 20 22:22:37 latile kernel: CR2: 0000000000000000
-> > Sep 20 22:22:37 latile kernel: ---[ end trace 0000000000000000 ]---
-> > Sep 20 22:22:37 latile kernel: RIP: 0010:btusb_suspend+0x14/0x1b0
-> > Sep 20 22:22:37 latile kernel: Code: e4 10 00 83 80 d4 0a 00 00 01 eb d=
-b 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 0f 1f 44 00 00 41 54 55 53 48 8=
-b 9f c8 00 00 00 <48> 8b 13 8b 82 bc 09 00 00 03 82 b8 09 00 00 03 82 c4 09=
- 00 00 03
-> > Sep 20 22:22:37 latile kernel: RSP: 0018:ffffbf1280b67ca0 EFLAGS: 00010=
-206
-> > Sep 20 22:22:37 latile kernel: RAX: ffffffffa62de3b0 RBX: 0000000000000=
-000 RCX: 0000000000000002
-> > Sep 20 22:22:37 latile kernel: RDX: 0000000000000003 RSI: 0000000000000=
-402 RDI: ffff9bcc85e17000
-> > Sep 20 22:22:37 latile kernel: RBP: ffff9bcc85e17000 R08: ffff9bcc8930e=
-800 R09: ffff9bcc85e174b0
-> > Sep 20 22:22:37 latile kernel: R10: 0000000000000003 R11: 0000000000000=
-063 R12: 0000000000000402
-> > Sep 20 22:22:37 latile kernel: R13: 0000000000000003 R14: 0000000000000=
-000 R15: ffff9bcc8930e800
-> > Sep 20 22:22:37 latile kernel: FS:  0000000000000000(0000) GS:ffff9bcfa=
-e480000(0000) knlGS:0000000000000000
-> > Sep 20 22:22:37 latile kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000=
-080050033
-> > Sep 20 22:22:37 latile kernel: CR2: 0000000000000000 CR3: 000000035f82a=
-000 CR4: 0000000000750ef0
-> > Sep 20 22:22:37 latile kernel: PKRU: 55555554
-> > [...]
+found a strange regression in the patch set for 6.12.
 
-I suspect this has been fixed recently:
+First bad commit is: 86e92eeeb23741a072fe7532db663250ff2e726a
+bcachefs: Annotate struct bch_xattr with __counted_by()
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.gi=
-t/commit/?id=3D6f3f7e9414834fc4210a2d11ff6172031e98d9ff
+When compiling with clang 18.1.8 (also with latest llvm main branch) and
+CONFIG_FORTIFY_SOURCE=y my rootfs does not mount because there is an erroneous
+detection of a buffer overflow.
 
-@Chris Lu perhaps you want to check since it seem to be hitting
-something else related to btmtk code:
+The __counted_by attribute is supposed to be supported starting with gcc 15,
+not sure if it is implemented yet so I haven't tested with gcc trunk yet.
 
-Sep 17 21:53:23 latile kernel: Bluetooth: hci0: Execution of wmt
-command timed out
-Sep 17 21:53:23 latile kernel: Bluetooth: hci0: Failed to send wmt
-func ctrl (-110)
+Here's the relevant section of dmesg:
+
+[    6.248736] bcachefs (nvme1n1p2): starting version 1.12: rebalance_work_acct_fix
+[    6.248744] bcachefs (nvme1n1p2): recovering from clean shutdown, journal seq 1305969
+[    6.252374] ------------[ cut here ]------------
+[    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
+[    6.252379] WARNING: CPU: 18 PID: 511 at lib/string_helpers.c:1033 __fortify_report+0x45/0x50
+[    6.252383] Modules linked in: bcachefs lz4hc_compress lz4_compress hid_generic usbhid btrfs crct10dif_pclmul libcrc32c crc32_pclmul crc32c_generic polyval_clmulni crc32c_intel polyval_generic raid6_pq ghash_clmulni_intel xor sha512_ssse3 sha256_ssse3 sha1_ssse3 aesni_intel gf128mul nvme crypto_simd ccp xhci_pci cryptd sp5100_tco xhci_pci_renesas nvme_core nvme_auth video wmi ip6_tables ip_tables x_tables i2c_dev
+[    6.252404] CPU: 18 UID: 0 PID: 511 Comm: mount Not tainted 6.11.0-10065-g6fa6588e5964 #98 d8e0beb515d91b387aa60970de7203f35ddd182c
+[    6.252406] Hardware name: Micro-Star International Co., Ltd. MS-7D78/PRO B650-P WIFI (MS-7D78), BIOS 1.C0 02/06/2024
+[    6.252407] RIP: 0010:__fortify_report+0x45/0x50
+[    6.252409] Code: 48 8b 34 c5 30 92 21 87 40 f6 c7 01 48 c7 c0 75 1b 0a 87 48 c7 c1 e1 93 07 87 48 0f 44 c8 48 c7 c7 ef 03 10 87 e8 0b c2 9b ff <0f> 0b e9 cf 5d 9e 00 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90
+[    6.252410] RSP: 0018:ffffbb3d03aff350 EFLAGS: 00010246
+[    6.252412] RAX: 4ce590fb7c372800 RBX: ffff98d559a400e8 RCX: 0000000000000027
+[    6.252413] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: ffff98e43db21a08
+[    6.252414] RBP: ffff98d559a400d0 R08: 0000000000001fff R09: ffff98e47ddcd000
+[    6.252415] R10: 0000000000005ffd R11: 0000000000000004 R12: ffff98d559a40000
+[    6.252416] R13: ffff98d54abf1320 R14: ffffbb3d03aff430 R15: 0000000000000000
+[    6.252417] FS:  00007efc82117800(0000) GS:ffff98e43db00000(0000) knlGS:0000000000000000
+[    6.252418] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.252419] CR2: 000055d96658ea80 CR3: 000000010a12c000 CR4: 0000000000f50ef0
+[    6.252420] PKRU: 55555554
+[    6.252421] Call Trace:
+[    6.252423]  <TASK>
+[    6.252425]  ? __warn+0xd5/0x1d0
+[    6.252427]  ? __fortify_report+0x45/0x50
+[    6.252429]  ? report_bug+0x144/0x1f0
+[    6.252431]  ? __fortify_report+0x45/0x50
+[    6.252433]  ? handle_bug+0x6a/0x90
+[    6.252435]  ? exc_invalid_op+0x1a/0x50
+[    6.252436]  ? asm_exc_invalid_op+0x1a/0x20
+[    6.252440]  ? __fortify_report+0x45/0x50
+[    6.252441]  __fortify_panic+0x9/0x10
+[    6.252443]  bch2_xattr_validate+0x13b/0x140 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252463]  bch2_btree_node_read_done+0x125a/0x17a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252482]  btree_node_read_work+0x202/0x4a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252499]  bch2_btree_node_read+0xa8d/0xb20 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+[    6.252514]  ? srso_alias_return_thunk+0x5/0xfbef5
+[    6.252515]  ? pcpu_alloc_noprof+0x741/0xb50
+[    6.252517]  ? srso_alias_return_thunk+0x5/0xfbef5
+[    6.252519]  ? time_stats_update_one+0x75/0x1f0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+
+...
 
 
-> See the ticket for more details and another oops. Reporter is CCed.
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> P.S.: let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
->
-> #regzbot introduced: v6.10..v6.11
-> #regzbot from: Christian Casteyde <casteyde.christian@free.fr>
-> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=3D219294
-> #regzbot title: net: bluetooth: NULL dereference pointer in Bluetooth at
-> boot
-> #regzbot ignore-activity
+The memchr in question is at:
+https://github.com/torvalds/linux/blob/11a299a7933e03c83818b431e6a1c53ad387423d/fs/bcachefs/xattr.c#L99
+
+There is not actually a buffer overflow here, I checked with gdb that
+xattr.v->x_name does actually contain a string of the correct length and
+xattr.v->x_name_len contains the correct length and should be used to determine
+the length when memchr uses __struct_size for bounds-checking due to the
+__counted_by annotation.
+
+I'm at the point where I think this is probably a bug in clang. I have a patch
+that does fix (more like bandaid) the problem and adds some print statements:
+
+--
+diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+index 56c8d3fe55a4..8d7e749b7dda 100644
+--- a/fs/bcachefs/xattr.c
++++ b/fs/bcachefs/xattr.c
+@@ -74,6 +74,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+ 		       enum bch_validate_flags flags)
+ {
+ 	struct bkey_s_c_xattr xattr = bkey_s_c_to_xattr(k);
++	const struct bch_xattr *v = (void *)k.v;
+ 	unsigned val_u64s = xattr_val_u64s(xattr.v->x_name_len,
+ 					   le16_to_cpu(xattr.v->x_val_len));
+ 	int ret = 0;
+@@ -94,9 +95,12 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+ 
+ 	bkey_fsck_err_on(!bch2_xattr_type_to_handler(xattr.v->x_type),
+ 			 c, xattr_invalid_type,
+-			 "invalid type (%u)", xattr.v->x_type);
++			 "invalid type (%u)", v->x_type);
+ 
+-	bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
++	pr_info("x_name_len: %d", v->x_name_len);
++	pr_info("__struct_size(x_name): %ld", __struct_size(v->x_name));
++	pr_info("__struct_size(x_name): %ld", __struct_size(xattr.v->x_name));
++	bkey_fsck_err_on(memchr(v->x_name, '\0', v->x_name_len),
+ 			 c, xattr_name_invalid_chars,
+ 			 "xattr name has invalid characters");
+ fsck_err:
+ --
+
+
+Making memchr access via a pointer created with
+const struct bch_xattr *v = (void *)k.v fixes it. From the print statements I
+can see that __struct_size(xattr.v->x_name) incorrectly returns 0, while
+__struct_size(v->x_name) correctly returns 10 in this case (the value of
+x_name_len).
+
+The generated assembly illustrates what is going wrong. Below is an excerpt
+of the assembly clang generated for the bch2_xattr_validate function:
+
+	mov	r13d, ecx
+	mov	r15, rdi
+	mov	r14, rsi
+	mov	rdi, offset .L.str.3
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	mov	rbx, rdx
+	mov	edx, eax
+	call	_printk
+	movzx	edx, byte ptr [rbx + 1]
+	mov	rdi, offset .L.str.4
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	call	_printk
+	movzx	edx, bh
+	mov	rdi, offset .L.str.4
+	mov	rsi, offset .L__func__.bch2_xattr_validate
+	call	_printk
+	lea	rdi, [rbx + 4]
+	mov	r12, rbx
+	movzx	edx, byte ptr [rbx + 1]
+	xor	ebx, ebx
+	xor	esi, esi
+	call	memchr
+
+At the start of this rdx contains k.v (and is moved into rbx). The three calls
+to printk are the ones you can see in my patch. You can see that for the
+print that uses __struct_size(v->x_name) the compiler correctly uses
+	movzx	edx, byte ptr [rbx + 1]
+to load x_name_len into edx.
+
+For the printk call that uses __struct_size(xattr.v->x_name) however the
+compiler uses
+	movzx	edx, bh
+So it will print the high 8 bits of the lower 16 bits (second least
+significant byte) of the memory address of xattr.v->x_type. This is obviously
+completely wrong.
+
+It is then doing the correct call of memchr because this is using my patch.
+Without my patch it would be doing the same thing for the call to memchr where
+it uses the second least significant byte of the memory address of x_type as the
+length used for the bounds-check.
 
 
 
---=20
-Luiz Augusto von Dentz
+The LLVM IR also shows the same problem:
+
+define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+  [...]
+  %51 = ptrtoint ptr %2 to i64
+  %52 = lshr i64 %51, 8
+  %53 = and i64 %52, 255
+
+This is the IR for the incorrect behavior. It simply converts the pointer to an
+int, shifts right by 8 bits, then and with 0xFF. If it did a load (to i64)
+instead of ptrtoint this would actually work, as the second least significant
+bit of an i64 loaded from that memory address does contain the value of
+x_name_len. It's as if clang forgot to dereference a pointer here.
+
+Correct IR does this (for the other printk invocation):
+
+define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+  [...]
+  %4 = getelementptr inbounds %struct.bch_xattr, ptr %1, i64 0, i32 1
+  %5 = load i8, ptr %4, align 8
+  [...]
+  %48 = load i8, ptr %5, align 4
+  %49 = zext i8 %48 to i64
+
+Best Regards
+Jan
+
