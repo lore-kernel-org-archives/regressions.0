@@ -1,141 +1,438 @@
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC1213B2A5;
-	Thu, 26 Sep 2024 20:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A5E18A6DF
+	for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 22:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727383094; cv=none; b=DWfK7ZdHG1qgL9gSuWIal6P28BS2I3uWn+VJx11KIeIduQQtQGOAt0BLCBCwjXvqi9If4d6eci4Lvs3hrOisH35+PJI0L1F34Ov8OjnJGVZ+oHz7rIfPTk7UZJRqH61PH1eh8YKhIebWVGEsd3nstiWhb1gyfBrr7j2Y4ljjnQE=
+	t=1727389114; cv=none; b=b8QZEgtNZHxBTAcMWln1LWvetODPzgIagyFHcNXVZdDkYcus7myZ/C8fWIXn+34KLifNVk0L9Dl12UGzTIwZvKoxA/Nige6E6hGJkpfZZzgOinj3f2Sp/bO3e61X5hEMeL8/q5nUJSe4x8KGtF2/WijLh2lRfeMhzsE7tOE0Ij4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727383094; c=relaxed/simple;
-	bh=ZmO9mvtQiOwOBdBfEIKsnB6Lc6J9K0yLRi5zWeoS+Lg=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=JNK0MoF/ghD7gm61VNCE8aiY3j+rziBwtEBz6dIS1m6KVmg4pEnK6WDE14+n1Ry+v3LSNtkMUIhtP1KA5QbdeSOO9X6BoRBt6a0SCr5M8VZfqpyBtYObQHNjx7MyhrYk332IW8mlNpgmWn3LAjxPqyI2NVijfCCEt6z7IqG9awY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in01.mta.xmission.com ([166.70.13.51]:53332)
-	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1stvFV-009Mja-7V; Thu, 26 Sep 2024 14:38:05 -0600
-Received: from ip68-227-165-127.om.om.cox.net ([68.227.165.127]:50320 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1stvFU-0088nz-8s; Thu, 26 Sep 2024 14:38:04 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>,  Kees Cook <kees@kernel.org>,
-  linux-kernel@vger.kernel.org,  Allen Pais <apais@linux.microsoft.com>,
-  Brian Mak <makb@juniper.net>,  Jeff Xu <jeffxu@chromium.org>,  Roman
- Kisel <romank@linux.microsoft.com>,  regressions@lists.linux.dev
-References: <202409160138.7E27F1A55@keescook>
-	<d122ece6-3606-49de-ae4d-8da88846bef2@oracle.com>
-	<CAHk-=wiJiePHNw3Whxm9n==h3-JwXojefAN3OiDzT89BO3jDew@mail.gmail.com>
-	<874j625j1a.fsf@email.froward.int.ebiederm.org>
-	<CAHk-=wg==rBvM9G4kkT3q5GQN2Pq3M7Vyu1VG+QS7XWmpshGYw@mail.gmail.com>
-Date: Thu, 26 Sep 2024 15:37:57 -0500
-In-Reply-To: <CAHk-=wg==rBvM9G4kkT3q5GQN2Pq3M7Vyu1VG+QS7XWmpshGYw@mail.gmail.com>
-	(Linus Torvalds's message of "Thu, 26 Sep 2024 12:17:58 -0700")
-Message-ID: <87ldze2lsq.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1727389114; c=relaxed/simple;
+	bh=3r09Dih5T0ytfcvEwFadweD7t20yr9F1Y+awQB8GP3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YqtL3RVwezz80pIfpXB+f0c9Qz+1heQcYMi6GUiMlLuIdDmvlHHvfMscmpz0M/rk9hDCSaAKjW2oOWk49LhGF47B9WnVrAofNudGO/nZcZ75sOqqHUrRQixToDoe1EMz++7lrKCo5yA4f713PJg9SBxz9gof0xyQ0N3+zi3X7Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SkpbxmhQ; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SkpbxmhQ"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5356aa9a0afso2378259e87.2
+        for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 15:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727389111; x=1727993911; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4UCl+uWy8nsfmy4BXRVymw9lD+6K7iWgD6U9RalzAQk=;
+        b=SkpbxmhQaHGrmk6CFLNLesgTvkaDatyoxwz37mG0YqyUpbgoWNiUErnxb+q+DlWFCo
+         O90gznMRrJx8yZzOtSnbuJGPqyr2D4fbh9zuCWCtyrQs17vl5f1uza2zFGM8VtgPtp4j
+         58WG4eRrEga3YSuRNfRcmQkWkJTi83un+4bTUcZyDEHw4aLgpLo5DzMEjl6PZPEMJ+vN
+         ptd2e7AFCbKALn+tiJvIOwPUfTRaSJ9IK+0m+V4I1L6D++IFR3iZShWiRquBOVJkwOqf
+         NRH/GPfYKVCgl9rcUu7iIk1eZad4Ms6fN8zlUPKwh8BSdd27+ZOdhldhNmxhwB9BZjMP
+         sXwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727389111; x=1727993911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4UCl+uWy8nsfmy4BXRVymw9lD+6K7iWgD6U9RalzAQk=;
+        b=UO9c8hX8mBdpdsAKSSc52Sxgrb7q47xhDs9kUkgBUmbYHNpBQjSTjMKwE+ulW9UdM1
+         FltVXlrsa0qGc2Vl9yMfO7K1FMuXcJjpOjR1DRyN4HDAkMRhsFrpwydw+F0xrXI8L9ta
+         ahl9B/o3WFbu2hmgh0WXYFRZrC3gtF3KUVI3rqNyRgX20kLQwm248tZHZ9vV5WvuRxTw
+         cwR0X7N6YTTHnpirT6xpJQ8VX6+Dt+ChgSKE9yiU2wdqgZlD7YhSVcyva8yF8PZAdkU5
+         lIpNiAQL2JUVgSs2JSAuzWlRDTIO7FgQsJTBS9I9xr6UqlG4r0AvzcgV6bTMSwNmRA3L
+         W8uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmKOmxROwdZFMmKZ8i6glVSwEShzclS65CLganq3QG/VVFoLs/41FSaFALuYnc9agLPo0p4pv5USdhaQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzGhcuEV9b3iAokzqPo0OTtqghkLALboVcAf9G0qzefUp76qsBB
+	Tko/3SVczXdq496OT6WefIri9OpDkU3LmdIH3C7z6pyvipooGYKi6oeeiDVWMg0zLGFTasqPsyO
+	+mtOSQjcybaJFFTpVix+RXBZuw//r0amZ9fI=
+X-Google-Smtp-Source: AGHT+IHxsc/TTJb/YbObEDpcBwS08fhpE2e87VBW4nuuZRdcHz6UgyPx2oE26iacTGr8W87HUwL0jpxf5Nscv/CTewU=
+X-Received: by 2002:a05:6512:acd:b0:52c:8342:6699 with SMTP id
+ 2adb3069b0e04-5389fca3accmr1068861e87.55.1727389110426; Thu, 26 Sep 2024
+ 15:18:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1stvFU-0088nz-8s;;;mid=<87ldze2lsq.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.165.127;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX197w9cMvDMmM/mW2YfRpnWpDiFiY5OEfpE=
-X-Spam-Level: **
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4995]
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa08 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-	*  1.0 XMSubMetaSx_00 1+ Sexy Words
-	*  1.2 XMSubMetaSxObfu_03 Obfuscated Sexy Noun-People
-X-Spam-DCC: XMission; sa08 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: **;Linus Torvalds <torvalds@linux-foundation.org>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 390 ms - load_scoreonly_sql: 0.06 (0.0%),
-	signal_user_changed: 15 (3.9%), b_tie_ro: 13 (3.3%), parse: 1.17
-	(0.3%), extract_message_metadata: 19 (4.8%), get_uri_detail_list: 2.7
-	(0.7%), tests_pri_-2000: 14 (3.6%), tests_pri_-1000: 2.4 (0.6%),
-	tests_pri_-950: 1.51 (0.4%), tests_pri_-900: 1.17 (0.3%),
-	tests_pri_-90: 78 (20.1%), check_bayes: 76 (19.6%), b_tokenize: 7
-	(1.8%), b_tok_get_all: 10 (2.5%), b_comp_prob: 3.2 (0.8%),
-	b_tok_touch_all: 51 (13.0%), b_finish: 1.27 (0.3%), tests_pri_0: 240
-	(61.7%), check_dkim_signature: 0.52 (0.1%), check_dkim_adsp: 3.6
-	(0.9%), poll_dns_idle: 1.93 (0.5%), tests_pri_10: 3.5 (0.9%),
-	tests_pri_500: 10 (2.6%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [GIT PULL] execve updates for v6.12-rc1
-X-SA-Exim-Connect-IP: 166.70.13.51
-X-SA-Exim-Rcpt-To: regressions@lists.linux.dev, romank@linux.microsoft.com, jeffxu@chromium.org, makb@juniper.net, apais@linux.microsoft.com, linux-kernel@vger.kernel.org, kees@kernel.org, vegard.nossum@oracle.com, torvalds@linux-foundation.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out02.mta.xmission.com); SAEximRunCond expanded to false
+References: <ZvV6X5FPBBW7CO1f@archlinux> <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <ZvWTXaqkmxP2E2dc@archlinux>
+ <ZvWd0aK7p_1rkb7E@archlinux> <CAMj1kXFV+Jck9Yf4w18rOzHckXvpXkhPhL-KrpBC8hqgXusw2g@mail.gmail.com>
+In-Reply-To: <CAMj1kXFV+Jck9Yf4w18rOzHckXvpXkhPhL-KrpBC8hqgXusw2g@mail.gmail.com>
+From: Bill Wendling <morbo@google.com>
+Date: Thu, 26 Sep 2024 15:18:12 -0700
+Message-ID: <CAGG=3QXG+Vsm7mjLV42Q-uA-EvgfOehSUeNQjKA3QQbw8vqSCg@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Kees Cook <kees@kernel.org>, 
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Thu, 26 Sept 2024 at 12:10, Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> One of the common causes for coredump truncation is weird interactions
->> between io_uring and the coredump code.  (AKA kernel bugs).
->>
->> That is something you can't ask your debugger to tell you.
->>
->> So from 10,000 feet I think the idea is sane.
+On Thu, Sep 26, 2024 at 12:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> w=
+rote:
 >
-> What? No. Adding printk's to chase kernel bugs is certainly a
-> time-honored tradition. But we don't leave them in the kernel sources
-> for posterity.
+> (cc Kees and Bill)
+>
+> On Thu, 26 Sept 2024 at 19:46, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> >
+> > On 26 19:01:20, Jan Hendrik Farr wrote:
+> > > On 26 18:09:57, Thorsten Blum wrote:
+> > > > On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com>=
+ wrote:
+> > > > > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wro=
+te:
+> > > > >>
+> > > > >> Hi Kent,
+> > > > >>
+> > > > >> found a strange regression in the patch set for 6.12.
+> > > > >>
+> > > > >> First bad commit is: 86e92eeeb23741a072fe7532db663250ff2e726a
+> > > > >> bcachefs: Annotate struct bch_xattr with __counted_by()
+> > > > >>
+> > > > >> When compiling with clang 18.1.8 (also with latest llvm main bra=
+nch) and
+> > > > >> CONFIG_FORTIFY_SOURCE=3Dy my rootfs does not mount because there=
+ is an erroneous
+> > > > >> detection of a buffer overflow.
+> > > > >>
+> > > > >> The __counted_by attribute is supposed to be supported starting =
+with gcc 15,
+> > > > >> not sure if it is implemented yet so I haven't tested with gcc t=
+runk yet.
+> > > > >>
+> > > > >> Here's the relevant section of dmesg:
+> > > > >>
+> > > > >> [    6.248736] bcachefs (nvme1n1p2): starting version 1.12: reba=
+lance_work_acct_fix
+> > > > >> [    6.248744] bcachefs (nvme1n1p2): recovering from clean shutd=
+own, journal seq 1305969
+> > > > >> [    6.252374] ------------[ cut here ]------------
+> > > > >> [    6.252375] memchr: detected buffer overflow: 12 byte read of=
+ buffer size 0
+> > > > >> [    6.252379] WARNING: CPU: 18 PID: 511 at lib/string_helpers.c=
+:1033 __fortify_report+0x45/0x50
+> > > > >> [    6.252383] Modules linked in: bcachefs lz4hc_compress lz4_co=
+mpress hid_generic usbhid btrfs crct10dif_pclmul libcrc32c crc32_pclmul crc=
+32c_generic polyval_clmulni crc32c_intel polyval_generic raid6_pq ghash_clm=
+ulni_intel xor sha512_ssse3 sha256_ssse3 sha1_ssse3 aesni_intel gf128mul nv=
+me crypto_simd ccp xhci_pci cryptd sp5100_tco xhci_pci_renesas nvme_core nv=
+me_auth video wmi ip6_tables ip_tables x_tables i2c_dev
+> > > > >> [    6.252404] CPU: 18 UID: 0 PID: 511 Comm: mount Not tainted 6=
+.11.0-10065-g6fa6588e5964 #98 d8e0beb515d91b387aa60970de7203f35ddd182c
+> > > > >> [    6.252406] Hardware name: Micro-Star International Co., Ltd.=
+ MS-7D78/PRO B650-P WIFI (MS-7D78), BIOS 1.C0 02/06/2024
+> > > > >> [    6.252407] RIP: 0010:__fortify_report+0x45/0x50
+> > > > >> [    6.252409] Code: 48 8b 34 c5 30 92 21 87 40 f6 c7 01 48 c7 c=
+0 75 1b 0a 87 48 c7 c1 e1 93 07 87 48 0f 44 c8 48 c7 c7 ef 03 10 87 e8 0b c=
+2 9b ff <0f> 0b e9 cf 5d 9e 00 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90
+> > > > >> [    6.252410] RSP: 0018:ffffbb3d03aff350 EFLAGS: 00010246
+> > > > >> [    6.252412] RAX: 4ce590fb7c372800 RBX: ffff98d559a400e8 RCX: =
+0000000000000027
+> > > > >> [    6.252413] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: =
+ffff98e43db21a08
+> > > > >> [    6.252414] RBP: ffff98d559a400d0 R08: 0000000000001fff R09: =
+ffff98e47ddcd000
+> > > > >> [    6.252415] R10: 0000000000005ffd R11: 0000000000000004 R12: =
+ffff98d559a40000
+> > > > >> [    6.252416] R13: ffff98d54abf1320 R14: ffffbb3d03aff430 R15: =
+0000000000000000
+> > > > >> [    6.252417] FS:  00007efc82117800(0000) GS:ffff98e43db00000(0=
+000) knlGS:0000000000000000
+> > > > >> [    6.252418] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > >> [    6.252419] CR2: 000055d96658ea80 CR3: 000000010a12c000 CR4: =
+0000000000f50ef0
+> > > > >> [    6.252420] PKRU: 55555554
+> > > > >> [    6.252421] Call Trace:
+> > > > >> [    6.252423]  <TASK>
+> > > > >> [    6.252425]  ? __warn+0xd5/0x1d0
+> > > > >> [    6.252427]  ? __fortify_report+0x45/0x50
+> > > > >> [    6.252429]  ? report_bug+0x144/0x1f0
+> > > > >> [    6.252431]  ? __fortify_report+0x45/0x50
+> > > > >> [    6.252433]  ? handle_bug+0x6a/0x90
+> > > > >> [    6.252435]  ? exc_invalid_op+0x1a/0x50
+> > > > >> [    6.252436]  ? asm_exc_invalid_op+0x1a/0x20
+> > > > >> [    6.252440]  ? __fortify_report+0x45/0x50
+> > > > >> [    6.252441]  __fortify_panic+0x9/0x10
+> > > > >> [    6.252443]  bch2_xattr_validate+0x13b/0x140 [bcachefs 836117=
+9bbfcc59e669df38aec976f02d7211a659]
+> > > > >> [    6.252463]  bch2_btree_node_read_done+0x125a/0x17a0 [bcachef=
+s 8361179bbfcc59e669df38aec976f02d7211a659]
+> > > > >> [    6.252482]  btree_node_read_work+0x202/0x4a0 [bcachefs 83611=
+79bbfcc59e669df38aec976f02d7211a659]
+> > > > >> [    6.252499]  bch2_btree_node_read+0xa8d/0xb20 [bcachefs 83611=
+79bbfcc59e669df38aec976f02d7211a659]
+> > > > >> [    6.252514]  ? srso_alias_return_thunk+0x5/0xfbef5
+> > > > >> [    6.252515]  ? pcpu_alloc_noprof+0x741/0xb50
+> > > > >> [    6.252517]  ? srso_alias_return_thunk+0x5/0xfbef5
+> > > > >> [    6.252519]  ? time_stats_update_one+0x75/0x1f0 [bcachefs 836=
+1179bbfcc59e669df38aec976f02d7211a659]
+> > > > >>
+> > > > >> ...
+> > > > >>
+> > > > >>
+> > > > >> The memchr in question is at:
+> > > > >> https://github.com/torvalds/linux/blob/11a299a7933e03c83818b431e=
+6a1c53ad387423d/fs/bcachefs/xattr.c#L99
+> > > > >>
+> > > > >> There is not actually a buffer overflow here, I checked with gdb=
+ that
+> > > > >> xattr.v->x_name does actually contain a string of the correct le=
+ngth and
+> > > > >> xattr.v->x_name_len contains the correct length and should be us=
+ed to determine
+> > > > >> the length when memchr uses __struct_size for bounds-checking du=
+e to the
+> > > > >> __counted_by annotation.
+> > > > >>
+> > > > >> I'm at the point where I think this is probably a bug in clang. =
+I have a patch
+> > > > >> that does fix (more like bandaid) the problem and adds some prin=
+t statements:
+> > > > >>
+> > > > >> --
+> > > > >> diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+> > > > >> index 56c8d3fe55a4..8d7e749b7dda 100644
+> > > > >> --- a/fs/bcachefs/xattr.c
+> > > > >> +++ b/fs/bcachefs/xattr.c
+> > > > >> @@ -74,6 +74,7 @@ int bch2_xattr_validate(struct bch_fs *c, stru=
+ct bkey_s_c k,
+> > > > >>      enum bch_validate_flags flags)
+> > > > >> {
+> > > > >> struct bkey_s_c_xattr xattr =3D bkey_s_c_to_xattr(k);
+> > > > >> + const struct bch_xattr *v =3D (void *)k.v;
+> > > > >> unsigned val_u64s =3D xattr_val_u64s(xattr.v->x_name_len,
+> > > > >>  le16_to_cpu(xattr.v->x_val_len));
+> > > > >> int ret =3D 0;
+> > > > >> @@ -94,9 +95,12 @@ int bch2_xattr_validate(struct bch_fs *c, str=
+uct bkey_s_c k,
+> > > > >>
+> > > > >> bkey_fsck_err_on(!bch2_xattr_type_to_handler(xattr.v->x_type),
+> > > > >> c, xattr_invalid_type,
+> > > > >> - "invalid type (%u)", xattr.v->x_type);
+> > > > >> + "invalid type (%u)", v->x_type);
+> > > > >>
+> > > > >> - bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name=
+_len),
+> > > > >> + pr_info("x_name_len: %d", v->x_name_len);
+> > > > >> + pr_info("__struct_size(x_name): %ld", __struct_size(v->x_name)=
+);
+> > > > >> + pr_info("__struct_size(x_name): %ld", __struct_size(xattr.v->x=
+_name));
+> > > > >> + bkey_fsck_err_on(memchr(v->x_name, '\0', v->x_name_len),
+> > > > >> c, xattr_name_invalid_chars,
+> > > > >> "xattr name has invalid characters");
+> > > > >> fsck_err:
+> > > > >> --
+> > > > >>
+> > > > >>
+> > > > >> Making memchr access via a pointer created with
+> > > > >> const struct bch_xattr *v =3D (void *)k.v fixes it. From the pri=
+nt statements I
+> > > > >> can see that __struct_size(xattr.v->x_name) incorrectly returns =
+0, while
+> > > > >> __struct_size(v->x_name) correctly returns 10 in this case (the =
+value of
+> > > > >> x_name_len).
+> > > > >>
+> > > > >> The generated assembly illustrates what is going wrong. Below is=
+ an excerpt
+> > > > >> of the assembly clang generated for the bch2_xattr_validate func=
+tion:
+> > > > >>
+> > > > >> mov r13d, ecx
+> > > > >> mov r15, rdi
+> > > > >> mov r14, rsi
+> > > > >> mov rdi, offset .L.str.3
+> > > > >> mov rsi, offset .L__func__.bch2_xattr_validate
+> > > > >> mov rbx, rdx
+> > > > >> mov edx, eax
+> > > > >> call _printk
+> > > > >> movzx edx, byte ptr [rbx + 1]
+> > > > >> mov rdi, offset .L.str.4
+> > > > >> mov rsi, offset .L__func__.bch2_xattr_validate
+> > > > >> call _printk
+> > > > >> movzx edx, bh
+> > > > >> mov rdi, offset .L.str.4
+> > > > >> mov rsi, offset .L__func__.bch2_xattr_validate
+> > > > >> call _printk
+> > > > >> lea rdi, [rbx + 4]
+> > > > >> mov r12, rbx
+> > > > >> movzx edx, byte ptr [rbx + 1]
+> > > > >> xor ebx, ebx
+> > > > >> xor esi, esi
+> > > > >> call memchr
+> > > > >>
+> > > > >> At the start of this rdx contains k.v (and is moved into rbx). T=
+he three calls
+> > > > >> to printk are the ones you can see in my patch. You can see that=
+ for the
+> > > > >> print that uses __struct_size(v->x_name) the compiler correctly =
+uses
+> > > > >> movzx edx, byte ptr [rbx + 1]
+> > > > >> to load x_name_len into edx.
+> > > > >>
+> > > > >> For the printk call that uses __struct_size(xattr.v->x_name) how=
+ever the
+> > > > >> compiler uses
+> > > > >> movzx edx, bh
+> > > > >> So it will print the high 8 bits of the lower 16 bits (second le=
+ast
+> > > > >> significant byte) of the memory address of xattr.v->x_type. This=
+ is obviously
+> > > > >> completely wrong.
+> > > > >>
+> > > > >> It is then doing the correct call of memchr because this is usin=
+g my patch.
+> > > > >> Without my patch it would be doing the same thing for the call t=
+o memchr where
+> > > > >> it uses the second least significant byte of the memory address =
+of x_type as the
+> > > > >> length used for the bounds-check.
+> > > > >>
+> > > > >>
+> > > > >>
+> > > > >> The LLVM IR also shows the same problem:
+> > > > >>
+> > > > >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone=
+ %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> > > > >> [...]
+> > > > >> %51 =3D ptrtoint ptr %2 to i64
+> > > > >> %52 =3D lshr i64 %51, 8
+> > > > >> %53 =3D and i64 %52, 255
+> > > > >>
+> > > > >> This is the IR for the incorrect behavior. It simply converts th=
+e pointer to an
+> > > > >> int, shifts right by 8 bits, then and with 0xFF. If it did a loa=
+d (to i64)
+> > > > >> instead of ptrtoint this would actually work, as the second leas=
+t significant
+> > > > >> bit of an i64 loaded from that memory address does contain the v=
+alue of
+> > > > >> x_name_len. It's as if clang forgot to dereference a pointer her=
+e.
+> > > > >>
+> > > > >> Correct IR does this (for the other printk invocation):
+> > > > >>
+> > > > >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone=
+ %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> > > > >> [...]
+> > > > >> %4 =3D getelementptr inbounds %struct.bch_xattr, ptr %1, i64 0, =
+i32 1
+> > > > >> %5 =3D load i8, ptr %4, align 8
+> > > > >> [...]
+> > > > >> %48 =3D load i8, ptr %5, align 4
+> > > > >> %49 =3D zext i8 %48 to i64
+> > > > >>
+> > > > >> Best Regards
+> > > > >> Jan
+> > > > >
+> > > > > I suspect it's the same Clang __bdos() "bug" as in [1] and [2].
+> > > > >
+> > > > > [1] https://lore.kernel.org/linux-kernel/3D0816D1-0807-4D37-8D5F-=
+3C55CA910FAA@linux.dev/
+> > > > > [2] https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3=
+990X/
+> > > >
+> > > > Could you try this and see if it resolves the problem?
+> > > >
+> > > > diff --git a/include/linux/compiler_types.h b/include/linux/compile=
+r_types.h
+> > > > index 1a957ea2f4fe..b09759f31789 100644
+> > > > --- a/include/linux/compiler_types.h
+> > > > +++ b/include/linux/compiler_types.h
+> > > > @@ -413,7 +413,7 @@ struct ftrace_likely_data {
+> > > >   * When the size of an allocated object is needed, use the best av=
+ailable
+> > > >   * mechanism to find it. (For cases where sizeof() cannot be used.=
+)
+> > > >   */
+> > > > -#if __has_builtin(__builtin_dynamic_object_size)
+> > > > +#if __has_builtin(__builtin_dynamic_object_size) && !defined(__cla=
+ng__)
+> > > >  #define __struct_size(p)   __builtin_dynamic_object_size(p, 0)
+> > > >  #define __member_size(p)   __builtin_dynamic_object_size(p, 1)
+> > > >  #else
+> > > >
+> > >
+> > > Alright after looking at it in the debugger the code it generates now=
+ is
+> > > just wild.
+> > >
+> > > I added one more printk before the call to memchr like so:
+> > >
+> > > diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+> > > index 56c8d3fe55a4..3c7c479ea3a8 100644
+> > > --- a/fs/bcachefs/xattr.c
+> > > +++ b/fs/bcachefs/xattr.c
+> > > @@ -96,6 +96,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bk=
+ey_s_c k,
+> > >                        c, xattr_invalid_type,
+> > >                        "invalid type (%u)", xattr.v->x_type);
+> > >
+> > > +     pr_info("__struct_size(x_name): %lu", __struct_size(xattr.v->x_=
+name));
+> > >       bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_=
+len),
+> > >                        c, xattr_name_invalid_chars,
+> > >                        "xattr name has invalid characters");
+> > > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_=
+types.h
+> > > index f14c275950b5..43ac0bca485d 100644
+> > > --- a/include/linux/compiler_types.h
+> > > +++ b/include/linux/compiler_types.h
+> > > @@ -413,7 +413,7 @@ struct ftrace_likely_data {
+> > >   * When the size of an allocated object is needed, use the best avai=
+lable
+> > >   * mechanism to find it. (For cases where sizeof() cannot be used.)
+> > >   */
+> > > -#if __has_builtin(__builtin_dynamic_object_size)
+> > > +#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang=
+__)
+> > >  #define __struct_size(p)     __builtin_dynamic_object_size(p, 0)
+> > >  #define __member_size(p)     __builtin_dynamic_object_size(p, 1)
+> > >  #else
+> > >
+> > >
+> > > Here's the generated assembly for this:
+> > >
+> > >       mov     rdi, offset .L.str.3
+> > >       mov     rsi, offset .L__func__.bch2_xattr_validate
+> > >       mov     r12, rdx
+> > >       mov     rdx, -1
+> > >       call    _printk
+> > >       mov     rax, r12
+> > >       movzx   esi, ah
+> > >       movzx   edx, byte ptr [r12 + 1]
+> > >       cmp     rsi, rdx
+> > >       jb      .LBB4_15
+> > > # %bb.11:
+> > >       lea     rdi, [rax + 4]
+> > >       xor     ebx, ebx
+> > >       xor     esi, esi
+> > >       call    memchr
+> > >
+> > > So for the printk it hardcoded -1 (aka 0xFFFFF... 64 bit long int max=
+)
+> > > as the result of __struct_size. But then for before call to memchr it=
+ does
+> > > the same stuff again and puts the second least significant byte of th=
+e memory
+> > > address of x_type in esi, only to then load the correct value of x_na=
+me_len
+> > > into edx and compares them for the bounds-check.
+> > >
+> >
+> >
+> > __builtin_object_size should only ever be compile time known, right? So
+> > it looks like this is pretty broken atm.
+> >
+> > I think until this stuff is fixed in clang the only real option is:
+> >
+There seems to be an issue with how the offset to the flexible array
+member is calculated internally. I'm looking into it now.
 
-No argument from me there.  We certainly don't leave them enabled by
-default.  Although in truth most of the failures the coredump code
-can experience are cases that should never happen in normal operation.
-
-> And none of the coredumpo failure reports had anything to do with
-> io_uring bugs anyway. They were literally "print out when disk filled
-> up or core dumps weren't enabled".
-
-dump_interrupted was instrumented.  That is what io_uring was
-triggering.  In fact dump_interrupted still has problems with I think
-dumping to a pipe.
-
-> If you didn't get a core dump because the kernel didn't have core
-> dumps configured, we shouldn't print out some babying kernel message
-> about that.
-
-Some of them are certainly silly, or excessive.
-
-> None of this has anything to do with io_uring or kernel bugs.
-
-I respectfully disagree.
-
-A huge part of the problem is that when io_uring triggers
-dump_interrupted it is so subtle people don't have a clue what is going
-on.  Not that I am saying it is necessarily io_uring that is just the
-one I have debugged and tried to sort out.  Other kernel subsystems
-could have similar weird interactions, but io_uring where it plays with
-TIF_NOTIFY_SIGNAL has caused problems in the past.
-
-I don't vouch for this implementation or think it is necessarily
-the right way to get better information out, but the coredump code
-is very much a black box that is quite difficult for people to work
-with.
-
-What I know is that recently truncated core dumps have been on peoples
-radar enough that we received two separate patches from two different
-organizations to do something about them.  That says to me that this an
-actual problem that people are experiencing, not some theoretical thing.
-
-I am all for reverting code that doesn't work, and for looking for
-better solutions, but simply saying to people their pain is not a real
-problem.  That seems terribly wrong.
-
-Eric
+-bw
