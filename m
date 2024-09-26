@@ -1,107 +1,103 @@
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553761D5AC5;
-	Thu, 26 Sep 2024 19:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B0A175D2C
+	for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 19:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727377808; cv=none; b=FU0RgyNAMO0JPWFCpIUd//qgJIrBhmqA8cI+ksqlG+rsumluuv0OQgxCnQcjrpc+Tr5EbWW1lFolch9Ndiu/M+HgC7F35MLIkMseizpBEEGx0L0BAEC5PCeTX05aL/MDS4U9nvZRovJ7piq4tZXMibA+xOgfsm8FNHKNufiXkrs=
+	t=1727378300; cv=none; b=iP5b6eyT4N8jKStts1imruQLtwNLBO3+i4NAnXCAunM351/FjtwwPVyteANxqpfoeJU1Uo6WKInMHbkgdxvxppEQw1TbDlRbuOHNBbhFNcM8Z1Hm0h3Xa5SX6/qsf1q4PjHxSmp7wVpBjMcqdmYWE6tEinh7yyGo6XodtJKc46M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727377808; c=relaxed/simple;
-	bh=ZtuoSr9+AcXFNWqNVKenoqBbJvNgqAXYmZYFVmzCG0E=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=YMr228E1F6WP+mVD77akJX6d2bD9K7KTUTAO0mFy2xtIN19NoEq57ZglVMdx3/V+3SMb61zm2F7eJHRr1PPPjBtg2JRIjiiY8xL/hsuZvh1AW8FKHMwD9HVdqxWR4rR8jH0CiQDVOLU3LfV6w/SSGZuCVwx9/f54Tnq4X3e4rDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:58936)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1sttsL-0037Ht-DA; Thu, 26 Sep 2024 13:10:05 -0600
-Received: from ip68-227-165-127.om.om.cox.net ([68.227.165.127]:44600 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1sttsK-00AixJ-HD; Thu, 26 Sep 2024 13:10:05 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>,  Kees Cook <kees@kernel.org>,
-  linux-kernel@vger.kernel.org,  Allen Pais <apais@linux.microsoft.com>,
-  Brian Mak <makb@juniper.net>,  Jeff Xu <jeffxu@chromium.org>,  Roman
- Kisel <romank@linux.microsoft.com>,  regressions@lists.linux.dev
-References: <202409160138.7E27F1A55@keescook>
-	<d122ece6-3606-49de-ae4d-8da88846bef2@oracle.com>
-	<CAHk-=wiJiePHNw3Whxm9n==h3-JwXojefAN3OiDzT89BO3jDew@mail.gmail.com>
-Date: Thu, 26 Sep 2024 14:09:21 -0500
-In-Reply-To: <CAHk-=wiJiePHNw3Whxm9n==h3-JwXojefAN3OiDzT89BO3jDew@mail.gmail.com>
-	(Linus Torvalds's message of "Thu, 26 Sep 2024 11:43:22 -0700")
-Message-ID: <874j625j1a.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1727378300; c=relaxed/simple;
+	bh=v/LMChHIPdULBRffOUhtGPYw1P7XkINjKSQB0P3NvXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PqjsxJugBkZLRvEZDoe8n/r6Yq+GMQJCLouzYaJ0MY+m4tcT/4tXKuSDUCfwzx0BUW67y/8AzNnmPbSAKVLD7d+JegozNhL7kl9WKODRyLw3JfWOkY5Vb7Zz3BfD6A3eLwz2Cl4ZZzq8BwB6qAHfCzyWh3PVcYKA8jCivGJkIdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Q9zsnwGG; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Q9zsnwGG"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c881aa669fso531295a12.0
+        for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 12:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1727378296; x=1727983096; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9L9OKN5fpu686IqPoFFWg+m2KoaIpCSuh7PJeN+XmFw=;
+        b=Q9zsnwGGM0VaeJMl58GRV3awjMFUWgfzj5Ae7K1SrB3ZmdxxlMQYuO5wvbnPhYjU72
+         17p/eokpOULgvo7L0JYFICygQoc8UwzELyuC55jKVixwYLIbVSPQxwLEvYX9bXNV+0y2
+         1x2Hl+ZL6tH+BodJUK4jbvsHhLG87HS9ni/DU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727378296; x=1727983096;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9L9OKN5fpu686IqPoFFWg+m2KoaIpCSuh7PJeN+XmFw=;
+        b=Z1DmaMWsvh9i4LTDHWeR/YdWm5sDLM7AYmh6kzDq69W0WhdFV9e6YRZnRS6dQOCWoQ
+         fQp/OtJ0vGjPdWo+Y4izuDp5OWVDC2SeSPLMZfZDM/ArzFlr7Eq0jvZ0tZOTno0Gve6b
+         aiSCz+ErXzh+glNn5F3SaEOQT9wpzsx1i3mgpHXCkvpDrUX5TntmTHapAsthgzlrmbih
+         yhOIHfESYryPzO37bn6/cttuKqx0eGub1CYjHvu5tNx2+M5vU2sLRZjmA57Ubk8t0dR6
+         ZoRyKw32W/583qRIMX42P4bnA3SWmAKLi8jNnfoosqQTC4spYsDZp3BNg0F+KrTy5JU6
+         5XvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlBoOSrhG3T9pPuU23VwuA1hSOvf/rnBGeN/27dxoJPHdhAXORZO5MswmkcDO5jn3y6/OxXC6vrGTEhw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzICIPjUjmHVJXUQIC9qT+I9ml7Bkda8QtuNg7PiucPF0hV7W0H
+	3WVtZMaTDE6WAfRwzc6XFX2gvZt1L7L2mx6GUCckFQBL6ADN+reg1KNWZL+y1YikDvSHSzr+ahq
+	gMVg9ug==
+X-Google-Smtp-Source: AGHT+IGpZDlWCqNaI1yhFbOfvzzjzZcw9CUP4GzcXD4Qm6huXKtHgR9IuiWjkDjaoFLQZXWh45VeWA==
+X-Received: by 2002:a17:907:3da7:b0:a90:3492:9ad8 with SMTP id a640c23a62f3a-a93c4ab1862mr56001266b.65.1727378296148;
+        Thu, 26 Sep 2024 12:18:16 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93c27c5dfbsm30004266b.60.2024.09.26.12.18.15
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2024 12:18:15 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a8a7b1c2f2bso197254166b.0
+        for <regressions@lists.linux.dev>; Thu, 26 Sep 2024 12:18:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUx75RuexFksueSCx/jafbN0DdB9Et849NChZ3tGtF6RZ5FwL9fM3rQuCUux+9CMQGV1lKhGnhpDXaXSw==@lists.linux.dev
+X-Received: by 2002:a17:907:3f18:b0:a8d:2c3e:7ed3 with SMTP id
+ a640c23a62f3a-a93c492a738mr48686466b.35.1727378295065; Thu, 26 Sep 2024
+ 12:18:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1sttsK-00AixJ-HD;;;mid=<874j625j1a.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.165.127;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+6Y7As3H8gP8wwbRtjmJCtv27Hx7/LaTY=
-X-Spam-Level: **
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4983]
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa04 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-	*  1.0 XMSubMetaSx_00 1+ Sexy Words
-	*  1.2 XMSubMetaSxObfu_03 Obfuscated Sexy Noun-People
-X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: **;Linus Torvalds <torvalds@linux-foundation.org>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 307 ms - load_scoreonly_sql: 0.04 (0.0%),
-	signal_user_changed: 8 (2.7%), b_tie_ro: 7 (2.3%), parse: 0.82 (0.3%),
-	extract_message_metadata: 11 (3.5%), get_uri_detail_list: 0.93 (0.3%),
-	tests_pri_-2000: 14 (4.4%), tests_pri_-1000: 2.5 (0.8%),
-	tests_pri_-950: 1.19 (0.4%), tests_pri_-900: 0.95 (0.3%),
-	tests_pri_-90: 95 (31.0%), check_bayes: 94 (30.5%), b_tokenize: 5
-	(1.8%), b_tok_get_all: 4.8 (1.6%), b_comp_prob: 2.0 (0.7%),
-	b_tok_touch_all: 78 (25.5%), b_finish: 0.82 (0.3%), tests_pri_0: 161
-	(52.4%), check_dkim_signature: 0.71 (0.2%), check_dkim_adsp: 2.8
-	(0.9%), poll_dns_idle: 0.90 (0.3%), tests_pri_10: 2.1 (0.7%),
-	tests_pri_500: 8 (2.5%), rewrite_mail: 0.00 (0.0%)
+References: <202409160138.7E27F1A55@keescook> <d122ece6-3606-49de-ae4d-8da88846bef2@oracle.com>
+ <CAHk-=wiJiePHNw3Whxm9n==h3-JwXojefAN3OiDzT89BO3jDew@mail.gmail.com> <874j625j1a.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <874j625j1a.fsf@email.froward.int.ebiederm.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 26 Sep 2024 12:17:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg==rBvM9G4kkT3q5GQN2Pq3M7Vyu1VG+QS7XWmpshGYw@mail.gmail.com>
+Message-ID: <CAHk-=wg==rBvM9G4kkT3q5GQN2Pq3M7Vyu1VG+QS7XWmpshGYw@mail.gmail.com>
 Subject: Re: [GIT PULL] execve updates for v6.12-rc1
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: regressions@lists.linux.dev, romank@linux.microsoft.com, jeffxu@chromium.org, makb@juniper.net, apais@linux.microsoft.com, linux-kernel@vger.kernel.org, kees@kernel.org, vegard.nossum@oracle.com, torvalds@linux-foundation.org
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, 
+	linux-kernel@vger.kernel.org, Allen Pais <apais@linux.microsoft.com>, 
+	Brian Mak <makb@juniper.net>, Jeff Xu <jeffxu@chromium.org>, 
+	Roman Kisel <romank@linux.microsoft.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Thu, 26 Sept 2024 at 11:29, Vegard Nossum <vegard.nossum@oracle.com> wrote:
->>
->> # first bad commit: [fb97d2eb542faf19a8725afbd75cbc2518903210]
->> binfmt_elf, coredump: Log the reason of the failed core dumps
->>
->> I have to admit I don't immediately see what's wrong with the patch.
+On Thu, 26 Sept 2024 at 12:10, Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> That commit looks entirely broken.
+> One of the common causes for coredump truncation is weird interactions
+> between io_uring and the coredump code.  (AKA kernel bugs).
 >
-> I *suspect* that the problem is the crazy "get_task_comm()" in that
-> takes the task lock inside coredump_report_failure().
+> That is something you can't ask your debugger to tell you.
 >
-> But honestly, I'm not going to bother even trying to debug this. The
-> whole notion was broken. People who have problems with truncated
-> core-files should be looking at their debuggers, not asking the kernel
-> for help.
+> So from 10,000 feet I think the idea is sane.
 
-One of the common causes for coredump truncation is weird interactions
-between io_uring and the coredump code.  (AKA kernel bugs).
+What? No. Adding printk's to chase kernel bugs is certainly a
+time-honored tradition. But we don't leave them in the kernel sources
+for posterity.
 
-That is something you can't ask your debugger to tell you.
+And none of the coredumpo failure reports had anything to do with
+io_uring bugs anyway. They were literally "print out when disk filled
+up or core dumps weren't enabled".
 
-So from 10,000 feet I think the idea is sane.
+If you didn't get a core dump because the kernel didn't have core
+dumps configured, we shouldn't print out some babying kernel message
+about that.
 
-Eric
+None of this has anything to do with io_uring or kernel bugs.
+
+                  Linus
