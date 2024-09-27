@@ -1,105 +1,106 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E01BA2D
-	for <regressions@lists.linux.dev>; Fri, 27 Sep 2024 13:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DEA1386D1
+	for <regressions@lists.linux.dev>; Fri, 27 Sep 2024 14:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727443221; cv=none; b=VFVeS6d4dnqbz4m5XX2Oyb5qMJZWb78oD3HiUJyB85mKN8QmCKeVup2KxXPa2QtMc3jmzi3SLL/at1Kh2JiKooQodJOtHHDlnIMHR7YvNfNwBEMaRDGpAQ4GVJQ3H3ZVuPv3UVvvZfv2KAUR66vaJdrCN7ZgsxO9c6hFxo8E4wQ=
+	t=1727446578; cv=none; b=qhJy4p3hUm8CUQMEteu63sqtIRSWAGVNDnIrug6pLQ1elAciyk4p7rp+gKtpVhbRcd9USy6H2ED3/m9/L7nxcySIFTCZhgd2pmh3kSqHJtVN7aWyQ2BHaE9Y6PXumKljeoWhhSGSPrrxTEfWofqx39f93jw6jgviYB3Pg9HvjQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727443221; c=relaxed/simple;
-	bh=XLEq1M/49fUMTjfhqFfpf7ALhKCShm0WYNc+42j6yLw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=U0qAodK4y2NK4RpMKrKzjs9W40XXby56llz2fsdhLioKrXeUQndjQfh2heW2SoboVR6NZzUzE8jFD+CgaOr/h/VT+zNoVwWokQ94nazkcTY2HA1DjJdrrg70ghD7RzZF2u+3qwU7vXCE0tKT2vDzevzd1iYcQb+5+xWVTV8r7dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQjIx1pA; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727446578; c=relaxed/simple;
+	bh=nFOjVQ+Q6pI+KtmxTBhIGG74BM7aRQGhqhPG57v7/cM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ns2n+gNacm2Z0dqx2SCKqbTlZ7bx5Jut8t7wKyqam174oAE5riGwIq6Rp1NvGeLvHyuUUnWUXOX47kdmNeg9afXIqz7ABagIotWMC+JUG82DeIaJKxWyQ6a8h0VGv5nry9WV9rCkBBLuc0AjrtotB1xvOlLLmKDNZCny+tmIqO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iIh7QEF3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQjIx1pA"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f763e9e759so25000701fa.3
-        for <regressions@lists.linux.dev>; Fri, 27 Sep 2024 06:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727443218; x=1728048018; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FDLCOPi5QpNo5CUL/g9mtdJyv1l5jh4HEp5d5eTLWQQ=;
-        b=NQjIx1pAugYM/InhG+hh11wOBZnfdIAUMstz7aO/zPudT91TGjIgFx+Fp6umGO4fkb
-         Bm3V18Yt5c+uDJe5PME92E+fL8uOJbvEl8rCvjlOPRwHZbjaflSxbjbgPsg+kSL7bGym
-         oAduqFL01tC2pNGSUmanGMmxmF2+2pizl0euVI0IIbTf2SSLN757iCQbIHQAfqjkB/pL
-         agxNF6jXhXhZf06My8Z0V033lhh4TlPvAQWBPrwiq2eNwR1dRArzAxV1U++ojUfVnOjk
-         D/Ch+xed92+xsdqrgkxavfl7kHZIC4VRq3UXX/DGpBgHBzGywjSkuQk8tuPJYySmTxuZ
-         ZXaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727443218; x=1728048018;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FDLCOPi5QpNo5CUL/g9mtdJyv1l5jh4HEp5d5eTLWQQ=;
-        b=b0WmSOszqoz7fKLACIrtcAE+TgNb/vJncEsO0/VJiKkYgnPsL+Ls2TFgaHACBctwcv
-         /hgqArCPc+Z85nsFvB1JCEq3r4LK6AwZhGI/1b4A2cN1VNFls9Mh5xsJrn8zrphv5iwC
-         oQDfu19J4wVhyK6UaK+2V17zfvqcs0RNDu3XSa+fRMyCNN7tiyB4bTT1Za9ckn0/FpRI
-         NExHp/LGgZy2INW19J9i2ijx/1bv8ic9JZfX8saMfgcWWXYOmmgUDsfdQhl2eZowjGqF
-         ajv9TqpsblhNQGr7o03FgRM/lKaSubG6CrjcOVpktAjESH5ReZAGZYhwMTtNq1deIgYn
-         ANkw==
-X-Gm-Message-State: AOJu0YwltvBiYWmEb4CE/1ixpnz0nJLEQzdctzroKVYNHXfOeJmY74C3
-	TevTR2jVM38zc+vByP11GVWO3qhn4ZBAfkaQ/vSUZeGp5b5kSxNY41df6hIa1fu8vUTjl+OVlwD
-	/qkYZNU+jpCdKU1ivWtWIexdF1tczuhhZ
-X-Google-Smtp-Source: AGHT+IEUHQwZRK7jrAp9Ut+mkqO3YlI8KASsn2Gfd6yMLa0Dxv5U5m/LgKll+4N2LhE3PMxqHzUwm/udd+k9TeVx/+A=
-X-Received: by 2002:a2e:a541:0:b0:2f7:cba9:6098 with SMTP id
- 38308e7fff4ca-2f9d3e78d0bmr23175501fa.19.1727443217855; Fri, 27 Sep 2024
- 06:20:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iIh7QEF3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727446575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TFW1BIJrUCI5UKgWkQUSCNzAomMKqYJA8V/kv/ybMls=;
+	b=iIh7QEF3erhshIF9GZ5k0pvcj6P92gDaBzIpECxCykXrIxRalQzfXbewlTTxVT1RwsP2/n
+	6O719Mr7jSsTJFI5ImyotJAQEaqwt9qGJnYRUQdSe/7yO360SW+C36XkVIzipngufH5BXo
+	sKqHY/HBC/P4wz8r+QsPZefKpha2oHw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-355-qLzXGBzjNPyoLCA1zTA_vw-1; Fri,
+ 27 Sep 2024 10:16:12 -0400
+X-MC-Unique: qLzXGBzjNPyoLCA1zTA_vw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1E5B18F36B2;
+	Fri, 27 Sep 2024 14:16:09 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.213])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7EC843003E4D;
+	Fri, 27 Sep 2024 14:16:07 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ben Mayo <benny1091@gmail.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Tamim Khan <tamim@fusetak.com>,
+	linux-acpi@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH 1/4] ACPI: resource: Remove duplicate Asus E1504GAB IRQ override
+Date: Fri, 27 Sep 2024 16:16:03 +0200
+Message-ID: <20240927141606.66826-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Sim Brahmi <sh4224hs@gmail.com>
-Date: Fri, 27 Sep 2024 15:20:06 +0200
-Message-ID: <CAMZnB+fOn6YWNx5U8PYkF=wLgE-E4mcixJJQkysK=CM6JYbE7A@mail.gmail.com>
-Subject: self-debug using ptrace bad behavior?
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hello,
+Commit d2aaf1996504 ("ACPI: resource: Add DMI quirks for ASUS Vivobook
+E1504GA and E1504GAB") does exactly what the subject says, adding DMI
+matches for both the E1504GA and E1504GAB. But DMI_MATCH() does a substring
+match, so checking for E1504GA will also match E1504GAB.
 
-I am unsure if this is the 'correct' behavior for ptrace.
+Drop the unnecessary E1504GAB entry since that is covered already by
+the E1504GA entry.
 
-If you run ptrace_traceme followed by ptrace_attach, then the process
-attaches its own parent to itself and cannot be attached by another
-thing. The attach call errors out, but GDB does report something
-attached to it.  I am unsure if Bash does this itself perhaps.
+Fixes: d2aaf1996504 ("ACPI: resource: Add DMI quirks for ASUS Vivobook E1504GA and E1504GAB")
+Cc: Ben Mayo <benny1091@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/resource.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-It's a bit hard for me to reason about because my debugging skills are
-bad and trying 'strace' with bash -c ./thing, or just on the thing
-itself gives -1 on both ptrace calls as strace attaches to it.
-similarly with GDB. Unsure how to debug this.
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 8a4726e2eb69..1ff251fd1901 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -511,19 +511,12 @@ static const struct dmi_system_id irq1_level_low_skip_override[] = {
+ 		},
+ 	},
+ 	{
+-		/* Asus Vivobook E1504GA */
++		/* Asus Vivobook E1504GA* */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_BOARD_NAME, "E1504GA"),
+ 		},
+ 	},
+-	{
+-		/* Asus Vivobook E1504GAB */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_BOARD_NAME, "E1504GAB"),
+-		},
+-	},
+ 	{
+ 		/* Asus Vivobook Pro N6506MV */
+ 		.matches = {
+-- 
+2.46.0
 
-https://gist.github.com/x64-elf-sh42/83393e319ad8280b8704fbe3f499e381
-to compile simply:
-gcc test.c -o thingy
-
-This code works on my machine which is:
-Linux 6.1.0-25-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.106-3
-(2024-08-26) x86_64 GNU/Linux
-
-GDB -p on the pid reports that another pid is attached and the
-operation is illegal. That other pid is the bash shell that i spawned
-this binary from (code in gist).
-
-it's useful for anti-debugging, but it seems odd it will attach it's
-parent to the process since that's not actually doing the attach call.
-If anything i'd expect the pid attached to itself, rather than the
-parent getting attached.
-
-The first call to ptrace (traceme) gets return value 0. The second
-call  (attach) gets return value -1. That does seem correct, but yet
-there is something 'attached' when i try to use GDB.
-
-If I only do the traceme call, it does not get attached by Bash, so it
-looks totally like the 'attach' call has a side effect of attaching
-the parent, rather than just only failing.
-
-
-Kind regards,
-
-~sh42
