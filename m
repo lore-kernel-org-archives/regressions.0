@@ -1,95 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC8D176231;
-	Fri, 27 Sep 2024 10:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E48939AD6;
+	Fri, 27 Sep 2024 11:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727434593; cv=none; b=q/qcNuIdQ1GCreaX3Gtn3mrWNayd7r6CsRj4nn20EyY1vNb71RTojDsVHyw1zSiRzd9dZaXDvYGv/sSkuYO7fl1JSHuJFakKqZD6OL6dglE5a/fEQJ6/gYMQbDNQRS3h6ofUTXnmotgKeoWQipuradiV+V95YmTbY10cdsb1c1s=
+	t=1727435048; cv=none; b=n6zEw32TEaJVKcRUvzzS3blD0ttDFGrvGaBk7DSyp2iLEH7FZegyYehbqQCiWy4qKAwgczbUfOMjO796APbAUcVodXm5IoL7ouw4W8/Ntr4f9DfnnpuGBkTRrlLKEyxO2rr8KIE3IFbGZXB90GnLdSx77uPspuDVISZHlbO4mVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727434593; c=relaxed/simple;
-	bh=EFuzS/7penP/8DikVwd3I9P1HIGUllWDy+0Pu1nsKC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+GZl12n3OLhqOOvroI+DfxS9v4TFiGBchJUtnjS+y5dTZzadPmPxUsVUeFg+ZiVc1wt7G6s//eXAYnqhrXFSrOkJBtUaQ6bdG/mkIYP9mEiQrI336ehf8V3F3NF6CVQrS9lvxWINm8ELBkgJjdKqsEPSQMPPL0lI/Z90uPFmyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VdcNwFqk; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VdcNwFqk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=XlItckOsmTBXG7EYIPU02ZIPvmvGMSn1RQlpeMUpnPo=;
-	t=1727434591; x=1727866591; b=VdcNwFqkjlnzUJccOR9x55UsJZEfL6vU/ZDb5BLwl8Ed2jZ
-	Xuu8AZ4vOc/g3XEJGVBlhf4xGTkbF3Yl7GpCSGNQd1Y0dWcl1HanI04EBeUpYHkmzeqixDZCwCx8X
-	6WhXRYCDjri9mgrXXIRKAjkZaYV5edgWcVCYVK0VPoMDR3AmqogYnQF8wqO24JpUNK/soJWHAHIHJ
-	jWUUdx9lZUtbSZwsvi4cjGDB49V2AfaSUxxjaaQ9sojJFMTAoDHVhhIDyW6w089VqztmsNW5ja+KY
-	Fj93Rbv1IldrarCZgG0L3mT844zgy+Cs5Lx9QfLk9Y1xJcdExiBqbxPPFx3M31Uw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1su8e6-0003fO-Da; Fri, 27 Sep 2024 12:56:22 +0200
-Message-ID: <fb4c481d-91ba-46b8-b11a-534597a2b467@leemhuis.info>
-Date: Fri, 27 Sep 2024 12:56:21 +0200
+	s=arc-20240116; t=1727435048; c=relaxed/simple;
+	bh=Y4rcvCDAdeYvUPe4nn9t94GcJUqUTEe/gAfLrq1/GM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPOP1dm2OAWrMOKxVdYdGL3R0/kShQnNFEUUohjsERX0xo+bLsn0Cl+fclRua44DJ1hFaQ1Pab8pH8F838Fiv4LjStcYHO7Lu9g0I6fWrAdLWN0Y1wOQqi/OjiG17mzEhIaMQDkv8uBA02n/wZzGffN3cKLAxxSh0ntt5N35bRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1BFFC4CEC4;
+	Fri, 27 Sep 2024 11:04:06 +0000 (UTC)
+Date: Fri, 27 Sep 2024 12:04:04 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	LKML <linux-kernel@vger.kernel.org>, Andrew <quark@disroot.org>
+Subject: Re: [regression] segfault in Qt apps running on Linux kernel 6.10.8
+ ARM with LPAE
+Message-ID: <ZvaRJK8GQR7GYHnZ@arm.com>
+References: <bf8288c9-13a1-47f0-9842-3b8eff37ef65@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
- stable/linux-6.1.y breaks cifs client failover to another server in DFS
- namespace
-To: Andrew Paniakin <apanyaki@amazon.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Christian Heusel <christian@heusel.eu>, pc@cjr.nz,
- stfrench@microsoft.com, sashal@kernel.org, pc@manguebit.com,
- stable@vger.kernel.org, linux-cifs@vger.kernel.org, abuehaze@amazon.com,
- simbarb@amazon.com, benh@amazon.com, gregkh@linuxfoundation.org
-References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
- <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
- <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
- <ZnyRlEUqgZ_m_pu-@3c06303d853a>
- <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
- <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
- <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
- <Zp7-gl5mMFCb4UWa@3c06303d853a.ant.amazon.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zp7-gl5mMFCb4UWa@3c06303d853a.ant.amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727434591;708cab26;
-X-HE-SMSGID: 1su8e6-0003fO-Da
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf8288c9-13a1-47f0-9842-3b8eff37ef65@leemhuis.info>
 
-On 23.07.24 02:51, Andrew Paniakin wrote:
-> On 12/07/2024, Andrew Paniakin wrote:
->> On 11/07/2024, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 27.06.24 22:16, Christian Heusel wrote:
->>>> On 24/06/26 03:09PM, Andrew Paniakin wrote:
->>>>> On 25/06/2024, Christian Heusel wrote:
->>>>>> On 24/06/24 10:59AM, Andrew Paniakin wrote:
->>>>>>> On 19/06/2024, Andrew Paniakin wrote:
->>>>>>>> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
->>
->>> Hmmm, unless I'm missing something it seems nobody did so. Andrew, could
->>> you take care of that to get this properly fixed to prevent others from
->>> running into the same problem?
->>
->> We got the confirmation from requesters that the kernel with this patch
->> works properly, our regression tests also passed, so I submitted
->> backport request:
->> https://lore.kernel.org/stable/20240713031147.20332-1-apanyaki@amazon.com/
+On Wed, Sep 25, 2024 at 02:23:35PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Catalin, Linus, I noticed a report about a regression in
+> bugzilla.kernel.org that appears to be caused by a change of yours:
 > 
-> There was an issue with backporting the follow-up fix for this patch:
-> https://lore.kernel.org/all/20240716152749.667492414@linuxfoundation.org/
-> I'll work on fixing this issue and send new patches again for the next cycle.
+> 7af5b901e84743 ("ARM: 9358/2: Implement PAN for LPAE by TTBR0 page table
+> walks disablement") [v6.10-rc1]
+> 
+> As many (most?) kernel developers don't keep an eye on the bug tracker,
+> I decided to write this mail. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=219247 :
+> 
+> > Trying to run LxQt on a Chromebook XE303C12 with Devuan 4 and Linux
+> > kernel 6.10.8 results in a segmentation fault (for LxQt). There are
+> > no such problems with Linux kernel 6.9.12 or earlier. With Linux
+> > kernel 6.10.8 it is possible to run Xfce4, but trying to run for
+> > example Kate ends in a segmentation fault. Mesa 20.3.5, patched for
+> > partial hardware acceleration, preserves this acceleration in Xfce4.
+> > The mpv works using acceleration regardless of the Linux kernel
+> > version. dmesg does not give anything significantly new compared to
+> > previous kernel version.
+> 
+> See the ticket for more details and the bisection log. The reporter is CCed.
 
-Andrew, was there any progress? From here it looks like this fell
-through the cracks, but I might be missing something.
+I had a quick look and the fault seems to be a level 2 translation fault
+while in user space (code 0x206). I can't tell whether the fault address
+is valid and we just messed up the pairing of user access enable/disable
+or something else happened. Having TTBCR.PD0 == 1 does lead to
+translation faults, though not sure what the DFSR register says. Anyway,
+normally I'd expect do_page_fault() to get stuck in a continuous fault
+loop if the vma was valid rather than end up with SIGSEGV.
 
-Ciao, Thorsten
+Andrew, could you please share the .config file you have, maybe attach
+it to the bugzilla report? Also, could you try the kernel with
+CONFIG_CPU_TTBR0_PAN disabled without any patches reverted?
+
+Another thing to try is invalidate the TLBs before returning to user,
+just in case those TTBCR bits are cached in the TLB in a way we did not
+envisage. Untested diff below:
+
+----------------8<--------------------------------
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+index 4bccd895d954..c00b400b7f4d 100644
+--- a/arch/arm/include/asm/uaccess-asm.h
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -91,6 +91,9 @@
+ 	bic	\tmp, \tmp, #TTBCR_EPD0 | TTBCR_T0SZ_MASK
+ 	bic	\tmp, \tmp, #TTBCR_A1
+ 	mcr	p15, 0, \tmp, c2, c0, 2		@ write TTBCR
++	isb
++	mcr	p15, 0, \tmp, c8, c7, 0		@ invalidate TLBs
++	dsb
+ 	.if	\isb
+ 	instr_sync
+ 	.endif
+----------------8<--------------------------------
+
+Thanks.
+
+-- 
+Catalin
