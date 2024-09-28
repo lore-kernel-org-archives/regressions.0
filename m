@@ -1,274 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2F7158DDF
-	for <regressions@lists.linux.dev>; Fri, 27 Sep 2024 20:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727470364; cv=fail; b=msW39eOmw8szgklX5U85D+dfcC/d2qpAZvbgUxLl3Wll/TKvUnu0dp9CBRzNlO+S3anTXI+1/FZYkCgKvd0HiyXOl78ik1p4KYMm/jRc/bM46DixvF04dU+JA+h9nqyf1uBMvxQIeMQ972rHNZAbMDCeG6M9YQbx+b5O6GKQEQY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727470364; c=relaxed/simple;
-	bh=5ywvQj7rH+aLzvOZl+v3MgF/YDKObjDHTR76jCvVEsw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qxNs1W4iZn/sDsyygxxYRTWj9qHs6IRx6B9PU8svkm3cymhcu8BpGi+WQpHCZ42O5uglShie+8msC+f1vHnLlwZscFmYi+2/21q4qsfgZnMFzDRCz3XFvSi9UtQR83mQQH8zW8eKqnXQj1plbWd/oj3xIi4guOl3+GScTMNT9VE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aDol2Rad; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612C31E520
+	for <regressions@lists.linux.dev>; Sat, 28 Sep 2024 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727529595; cv=none; b=q2D2Qsh4Nxu1yDnzG1lfiNbYf51sNWOCYc7PL/fUSi3M4VVdMbhqnyKSNFRcwLLwW/e80494zP6SnC+IEjvY9hQgYTS7Bq9H3F9XpgyHXAhPo+veyrjDczTwoeDY4TPt526jTeZ/zDVpykqAah7toqbdpu/7FsU3noEuugt3efU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727529595; c=relaxed/simple;
+	bh=FTxgGV0fndARRaInbJBSomb7m073sgDRktv/COxeuhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=earfTHPIKGMnK5dEOCah2WEj/7O/+CstCeXVePrWVF/qIFXA4Z+1kM0oowBgVf9fCmYwGvrM/XJUbNojyq03us8ijIhsdQvbyIj3rVgDrj0ONt37FAhbFHbKWJM4k5SVCIRl1e2W4WJaQ3ZpnTjz6KB9P2p/bNGjBeOGgYomXHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=im6gKqcQ; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aDol2Rad"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727470363; x=1759006363;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=5ywvQj7rH+aLzvOZl+v3MgF/YDKObjDHTR76jCvVEsw=;
-  b=aDol2RaduzTFPUEO5B5CcKaLRb6TEFElQ7pnv7ayi6CfdjIVVLvtoquM
-   Cl10aQ6BhTKG3j9cz3b4c2pKURvMQuEFpNLpeenJ0iU3+jm3XTfYyJLYt
-   mhCdIPsIxCmOp2IMbCnfrzLi1sgXgRreRqX5LPDASUk2gpZQqoCEoel+3
-   6ZomGvedIZm2dbpoR1gi5IS0fBfWvAKxbd5wU9I3lBGh5bFQoU51rxZ2x
-   blWS63lmIKJg9dhUdEBGp/2m/nKYDLT+LEQ+Ncz94xJzcNSJk01o+JP0O
-   87cGCEdanoAbA9EwAyNk7SMJlziR363dheP6pWjbEIsTDqreq5bY4R7Ov
-   g==;
-X-CSE-ConnectionGUID: KdbV0OTMTPi0/e6bBcuOHQ==
-X-CSE-MsgGUID: NXfckEugScaUZnwvXiEXbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11208"; a="26759888"
-X-IronPort-AV: E=Sophos;i="6.11,159,1725346800"; 
-   d="scan'208";a="26759888"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 13:52:43 -0700
-X-CSE-ConnectionGUID: MyaqfEtkRE+BExgNYngDJw==
-X-CSE-MsgGUID: /DAowAMkSD+ce8HvlBiW5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,159,1725346800"; 
-   d="scan'208";a="72324653"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Sep 2024 13:52:43 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 27 Sep 2024 13:52:42 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 27 Sep 2024 13:52:41 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 27 Sep 2024 13:52:41 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 27 Sep 2024 13:52:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dX7RHhyCnLlbnhzZLNqeihYEcWypj08Jpao+9YIV3EEL/PiOnQVJLvOpQ/VrnG1UZJi9JD5unRRPrXjewxqymvy5G3T9NK/rC126yxO4SmEmo6t9+V80ixi8TZ6v5Sni85fDV+wLIRQwd/1neckVv0N32Ti/hDzmy9zSwK3H5zW/vH76AhyKDbDRrDyCnnh2yxWH3h+NFd5P9tRE2oL6DlPx6dcblJYei81PmcM5odE9BBeIxbKoqWIj5Fxx73PC8mflemdJnBxBnHaTo/fsmlniZ2x9spqhNugowV636BdDS0WoUmkwa3AM1MYWFmJoriUNTsoFzq0hMABt5umMqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O9BskF0fyDWA1a14eyuKcaPYZN8AjfBlu6nqhlZ2+tI=;
- b=ItXvKtIqGkfmt4GJlh1EV1YKc6/3s/ki+mL/Hut4/L+fNd6l6oUVkmjlzyAng9M1YvJOoJX82gBRUDgKub7cxkpT/m8K+MXR9q2hiQdMGw5D3pS1sib2SHXjApVxOHPcJ6dIU+qRU4h8Z9p192B43doZkAHlZS3dCrXVDxNB2FBI2RCSlEJN42uvPyctXe1a0GqoKjhfhCIij/Z7JHnHpSfSZRAynMRMEQEpSwkkPPhfrOhwCX9LoQKyMLW9oKHOljNX7plWM01gQEPHn6DOUyNjdfNyc5da6B4wkFMsuI4CuaHdDIE7y062pnG7n3ztkZFNf4a4pXTLRsnC7PwnnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by LV2PR11MB6024.namprd11.prod.outlook.com (2603:10b6:408:17a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.27; Fri, 27 Sep
- 2024 20:52:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%7]) with mapi id 15.20.7982.022; Fri, 27 Sep 2024
- 20:52:39 +0000
-Date: Fri, 27 Sep 2024 13:52:36 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Linux regression tracking (Thorsten Leemhuis)"
-	<regressions@leemhuis.info>, Dan Williams <dan.j.williams@intel.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Linux regressions mailing list
-	<regressions@lists.linux.dev>
-CC: LKML <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, <tools@kernel.org>
-Subject: Re: [regression] frozen usb mouse pointer at boot
-Message-ID: <66f71b1452d7a_964f22940@dwillia2-xfh.jf.intel.com.notmuch>
-References: <3724e8e8-ab71-4f64-8ba1-c5c9a617632f@leemhuis.info>
- <2024091128-imperial-purchase-f5e7@gregkh>
- <66ef853de5f16_10a0a2946e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <66f229fc4daa9_2a86294ec@dwillia2-xfh.jf.intel.com.notmuch>
- <38620c47-62ea-40b6-a7b3-afee9a3238a3@leemhuis.info>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <38620c47-62ea-40b6-a7b3-afee9a3238a3@leemhuis.info>
-X-ClientProxiedBy: MW2PR16CA0010.namprd16.prod.outlook.com (2603:10b6:907::23)
- To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im6gKqcQ"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5c40aea5c40so5407476a12.0
+        for <regressions@lists.linux.dev>; Sat, 28 Sep 2024 06:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727529592; x=1728134392; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=QEHG4Y/lL09GG1v2gI8iZvDJa9no7rllEAszsGzy6GU=;
+        b=im6gKqcQyBh5w3u2WN/E1uZEmNnTd4RX6dSvuTJrHA01ZGb1aXGtK6IaHAruDZCyY3
+         MQrtgMz+rMFUpVlsqbWJhZ0NAykokprMtZfHjl+1ogrC38socirsEdMMxwWPc0IEAVqe
+         v//XPeWi9H2jDmVxP6bI3bEAXWSS468U0Un4ydQIJHES134ZnUr/Q9O3lZ8MqXpxY8RD
+         c0AZbi/SdOJtQtwY69khT2hqMNOWXmlAQhW9NSjMIKyoGdIj8PzGRNyZe4oyeL9xi8/D
+         j9SO4aZ5gFt/U5Bqhla1cMBDOfN0AiXeuATDrIsaKs5ocYbuBePnVnqYVSEDPJ8VDA9+
+         r8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727529592; x=1728134392;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QEHG4Y/lL09GG1v2gI8iZvDJa9no7rllEAszsGzy6GU=;
+        b=gIRSqWOOgZNx4xzJRUk4yT7J/2zbhKVR0Pn14Kz0YeSpYvMx1t3NzBKDi7woi9491S
+         hZJHKf7zo5EgcatpJpB2jUkDkmKJg9uAGvtMs9arJrYjv2mP9v3GQ8pxsd5gBzbkdEIZ
+         n/Gzu+HfzKyi6q9X1+8R0UMa1+QgJ7ji9PNOwLYomZRxkYtlwhOjc9Qv51dYHd4+JuKx
+         Rc5QWIHhF8VWu0MOcrJNrh85XY+Q9nkIZ3Y0jj8HqFMZ1x/mTsfASZM7YbNcvORvgNkV
+         E4QSKGAReQxhzMoBT3qM55xLWkju7r3zOhXi5D8BLbbPstemd1EYP14dvI1jvlaFMCPC
+         t4Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVk/wsWisQgILKEfaqp5Bxs60jstw9H5uoWIvgIWYzEpJ6NoggSkhRzDbG92+iSWG9i8BXbkvbFRtz5zQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzEHvODUX4tXgyy5L8qe0Xtfscfc5FsiIkoV9imQGQmy1Bn9U+w
+	Gh75Xr97MEaGXqgzW1Lm3CEl3uDm04h7dt8T9rLbpoxQj3IHVR9n
+X-Google-Smtp-Source: AGHT+IHbW7D+GnxBZsSdqkqhplAXMnTaQ9xufE4rC3XiSWGLDgQLRazAH0M/yYKlYU6i2+CXttb1Kw==
+X-Received: by 2002:a05:6402:254d:b0:5c8:8844:9942 with SMTP id 4fb4d7f45d1cf-5c888449972mr3305438a12.2.1727529591422;
+        Sat, 28 Sep 2024 06:19:51 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c88248c672sm2281445a12.60.2024.09.28.06.19.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Sep 2024 06:19:50 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 36E93BE2EE7; Sat, 28 Sep 2024 15:19:49 +0200 (CEST)
+Date: Sat, 28 Sep 2024 15:19:49 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org
+Cc: Eric Degenetais <eric.4.debian@grabatoulnz.fr>,
+	linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+	regressions@lists.linux.dev, Sasha Levin <sashal@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [regression] Regular "cracks" in HDMI sound during playback since
+ backport to 6.1.y for 92afcc310038 ("ALSA: hda: Conditionally use snooping
+ for AMD HDMI")
+Message-ID: <ZvgCdYfKgwHpJXGE@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV2PR11MB6024:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9b610b3-4aa1-4969-22b9-08dcdf3652ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bDJYVytla3daWGRVTk1iSmcwRVRkcG1NUGZEM3dxcmtIOHNjdWVwV2NyVGVk?=
- =?utf-8?B?cFNSbzd3R1BoZ1E2Unhjbm5qRFZySzdXQStrSmY5d2IrWExmdFhvamhrMVJ3?=
- =?utf-8?B?cTJZM2hrcm9CdlJkUVRCMlMxMys3NmE5dXlsdjVUYjFXTkFQRHdaL1k5cUlO?=
- =?utf-8?B?d2FTbVBraGcxc3BlMk5nSDJ0Y0lHN3M4SUwzUFNyckV3UVJUcHdDaUl3ZEdl?=
- =?utf-8?B?aHNKYWdnY21vUzc2Mks5OUFvVnBSSWI1dVNNaG82K0wzenZ2OVE1R00rdGQ4?=
- =?utf-8?B?amRkQUg4Ry8ySWlYa0xvSjdCdEhUY0RnTHBTdm4zcGsvaEFPYlJxelFOUG9n?=
- =?utf-8?B?Q1lSQTFFN2laYjladnJqT3hSUDlSYkpDK2pHSmhlWTFLbXYzSlRVWTY5elNn?=
- =?utf-8?B?UEFOdGFqVGNGbnBYQi9FUTVBNlFwYUJpbmZQN3k4aFlyVk8zam1lVkE2SDVI?=
- =?utf-8?B?S3pIUm1WUnJ2aHZHWGMxcEtsQnk0YXd3Nm1kaFp2RHdFTVVTcGN4Wm5HWWVo?=
- =?utf-8?B?VHBqZlhYZWV3eUhWdzhidFFWL21BZ0JsODlGVDE1MzNPVm1SSFI3MlYzK0JZ?=
- =?utf-8?B?cGxUZ2NvM0RQbzFiUFFKbU82dEZUazZmSjNBazlnTWxiR215VjZxMnBDNzhi?=
- =?utf-8?B?NkJ4NVJCYnJiTWtnUDZkaC9uQ3JLWEI4U0lWa1hhamdsWWp6MCt4SFd0RHlo?=
- =?utf-8?B?ZGxJTnlsZGU3SlQ2TUhhMnY0Z2QvalZFRGRJcmtpRWJNVURyNWdQb2pjQXpl?=
- =?utf-8?B?YzZ2dWtKTGgrTXpxSXF5M05mdGZvVktGSk1UZ25GWERaeUJlc0Fwd3FoeUF6?=
- =?utf-8?B?RDdWU044a3VaazE5MENtazdPOWRqemthQjBTQndySnVtTlFnd2t6aERFZU9P?=
- =?utf-8?B?akNqY3FqNTM4L1NEcmFKLzV4aGRreHdTMVFmU0xkUjQ3MXNCZVh3U0EwSFRw?=
- =?utf-8?B?WjNWQXJNYU1vUTI5aUdyeW9LZDMwZmRVdzRJSExjblZRdVB4Mld0MUdUYVoz?=
- =?utf-8?B?cWZjamZCRzVOcjFmSVVaeGgrUGUyQ1Z1ckpBZFBrMWpCTTJHTXhON0I4cnBF?=
- =?utf-8?B?bzhGYjBGWjBqT0xpR05CNjVzcW96NHIwVjdRdGd1Z3hTYWZGQ0ZRdWRrcStX?=
- =?utf-8?B?VjdvdnNORWMxQXhHSmdDaG5uUlVmWkpaZ3l5Z3AwVER4UndSeTU0VWRRaHVC?=
- =?utf-8?B?bFhzdlB3b3BjSE9QMGxieXYvcmg0MEV0MWhJbTNiMzJvVnF4S2V6V2NhODg0?=
- =?utf-8?B?TnNYajZmWU9IQSt5OGdDcVoxbjltcm5KWmMzNXRTUHp4VFdOVkZWSXhtdVdJ?=
- =?utf-8?B?Q2QzVW9uTm4zSVFSNGczTWdXcnNjU1hxNERxN3NnQWZNRUFrYXEzcFVjSncy?=
- =?utf-8?B?dzJ1NlVBSlJNdHREczhaZ1hDL3g1eS9GNGw4Z09kR1EzSERmOXJKZ01wRHlr?=
- =?utf-8?B?NnhodGVEakFHbGREd2ZhSzhGRUxLTVN4RnBzQ0hQNy85Tk5XKzMxZTJML25l?=
- =?utf-8?B?YzEwK0xMenQ4RittZWMvWDczM2tTQ1RHWWFGSUkxWWZOOUsrbGY4aHgrZSta?=
- =?utf-8?B?WDZ2dXdsa1Y4SjByNDJoL2NwYVMrVWJ6MDJnd0pyQ0pJT3dlWVhzaGtqSGNa?=
- =?utf-8?B?TkpmUXluL1NkZlZyRFJlVXgyODhjb044SnFhalVkYnlOcURoV0IvQm5jeWFl?=
- =?utf-8?B?ZFJYT1Z6TkQyYUtGdUVnUnBTYnhFSENiU0pWS1pOU2VvemdkR3lOaitnPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NHVldDRpVGVIb2hGalVRZDVXTGNzeVozYXQzY3BYTExJaEhMOFlydnc5YmJI?=
- =?utf-8?B?NDh5YU5WYTF2SEZ5ME1QQURBUi9wWm1kWWZDYXFhRyt6aXk1QVV6NXdOeHNr?=
- =?utf-8?B?R3VKTHh5NXp4K24yS1pnUVpvOHBVUVVEcXdsL0U4ZXBhbVZNNjFpYXpCT1Zy?=
- =?utf-8?B?VlZTbHNVQ1NDTzlsb0F4QmpZeU03MG9GSXJxcVBRV0JWdVhzcHdoTWZQa0dl?=
- =?utf-8?B?bG0wNkM0TlpsWWdPWFNkVGpJNzJKYmoydUc3djkxUHJHbW9VN0JvOURrcUNU?=
- =?utf-8?B?YVVlRjlkSmtqU1FUSWZZOXc3V3laRythTFZrRVNLb1BEclF4YTh4dW5idUVW?=
- =?utf-8?B?NnBCM0ZqZW1HOEFWVXRBNnFFdExGellPRTJSK2xZaHBaY2hXSFZKdGE0UzNU?=
- =?utf-8?B?REJtNW90NnBBQ2hlT0xIT2t3U05sRXA3TzBzWjZ1UnlOdkJGUTJjcVNLWGw2?=
- =?utf-8?B?b0hibkg0M29XTDdNLzNwcmlmOE9aNWdrSzIxdnRqeE1VSmlZbHZ0U2JjdTFY?=
- =?utf-8?B?bjQ0N3hCYkFOUlJaNjc5SXZmNVRsdXdvaTU5eDhzUlg1ME1Wb0ZpNytYdzda?=
- =?utf-8?B?Wm9HUk0wUndhWUw2cjZrOHhESjhiZmpYZTdyQUk1TFNDdWV1RjcrSlUrcUpu?=
- =?utf-8?B?eDBYeXpnNnN2SWMxeFpLOGxTcEtIUUpmMnJJcjFVeWJnSWZUUmhhUlByYXJn?=
- =?utf-8?B?Znh0blVlUTg5bjRrb29hZ2pWeXJNYU9TbnVjRFFieUJWbmZId2hWcHVOUm9r?=
- =?utf-8?B?K3Mvd3dueVI5U0szeklaeGFlL0hqTnkwbVdhOTZtYXVJdmEzMmc0bnkrcGx1?=
- =?utf-8?B?MUpTNGpaUzJlZkQ4Nmo3S2c0amZpVzQ4SU1wTW4ybi9pY1FPdHRjZmM0ayt3?=
- =?utf-8?B?SXdIN0ZiTzZTcUtqMWIza2tyODdTNjVCRXlLbmhQR2FJdzhKZ3A0WDFxQUdZ?=
- =?utf-8?B?YkJMa05HRURiSU9NdDFrdzc3WjdTYmhvdS9RN0ZkZVpwTElqVDhDc0hlNnJT?=
- =?utf-8?B?MlVOZVl1bzJrRzVyQnJJUWlET0NxN2UxejJNTnZMU09ySC9JUWkzVnRCMEpO?=
- =?utf-8?B?bUhlSElKY2ExY3pFM3FLNGZzYm9kZVFydnd3Z3R3WFhLZWNGYUp4SUFTaEZX?=
- =?utf-8?B?MjJHZFBFVVFRcFMrdUllaVhJdmZRUFR1TUZVZFhuYlhvaHhxT0xrTjlkS1pD?=
- =?utf-8?B?eVlIdzlMNmRTQmNaWm9GbXMwNTh3bEpQVVpCZklWQ3U5YUg0d0E0QmxtbDBG?=
- =?utf-8?B?UUJnMHdPL200bWRTejdHVmZmK1N1TklnM0ZTR2ZxOExJM0drdkJIMzhZRXlu?=
- =?utf-8?B?VW43aE5nTldhb3IrOTkvWUFVaE8yb2ZhOTEwbVkvd0lOdDJCcUJpZEk2Rm5s?=
- =?utf-8?B?b2MzdU1KdjdNc1EyZlBhNHB4MHBqS0ZyTDRiOVVJeldSZnVDZ2FPU09sSUx5?=
- =?utf-8?B?b08za2NCdi9xem1UREZQczV6NEc5R1poTE1vM0FhcVNmY3dKRWd5TUdMaytG?=
- =?utf-8?B?ME54eFVvdjUzdXI3V0NkeGg4K2xRVlBEZHZ0aE1JYUpVUExISTVoUFFJZ09T?=
- =?utf-8?B?dFF1bGFqNVdBTGhFMnpDUWhvT2Jic1NtNDlEVTBpZmYrTXFYcTI5NFlkZ0dH?=
- =?utf-8?B?OUliWjA2ZTk5WlJCTm4wTGlrM3RFQnJOS0J6S1RaeERnQlJBdjgvQXc3cjhh?=
- =?utf-8?B?Z2Foc2QyVlRhckE1VWEvVzhuTURpa1hRRHZXemJ0V1FjK0s3SkNnUE05bkc5?=
- =?utf-8?B?KzBHZDFIY05xRCtJcjZoRjVCMUV3WFNlZ0xuRmpjMHJtUTQ0L0RhRTdubVU0?=
- =?utf-8?B?ajhGdTMyOTBsMFlOYVRUMDR1cGx5QU9GY0lnNERDZmFPdWw1RDFxTUVETXFq?=
- =?utf-8?B?MXJjbFhQeUIwWUhaMk9hNmwxdTNIWlBTa09hRzNrQXMyYU10UEdjZkw5U2tn?=
- =?utf-8?B?QzM3ZVhqa09LUVVEYUJuME0wbk9nZEhzSXl6UTFSVlc4YUhPdGpxRU91TzJv?=
- =?utf-8?B?Z1FQZmlySDNNZ0cwbDd6TEhqSEJtMUlOaTdtUU8vaGdESG5hQkdaZ3JVejRo?=
- =?utf-8?B?cHJoYThOSGhGczJBNE5XSFYzdnpqTFU2UHRhendJVFVqUWxZZXVDR3g3cHMy?=
- =?utf-8?B?U3lDRk9qd0hPWkZJYWc2U3ltSkVYOUxibDQ5NWQ3NTljSldMUVVLMzJkVHA1?=
- =?utf-8?B?dGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9b610b3-4aa1-4969-22b9-08dcdf3652ae
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2024 20:52:38.9696
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S3xrqBnjikZNVkV2C4y2SNoPGTli0XgIZBRMJFKjySEBFTMB62zuu12UIGCzWGLn2TQN/39pgBFb+QKEHGqXA7XoDmn3B3EVBCXpd/dL2jE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6024
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[ add tools@kernel.org for bugzilla bridge mention ]
+Hi
 
-Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 24.09.24 04:54, Dan Williams wrote:
-> > Dan Williams wrote:
-> >> Greg Kroah-Hartman wrote:
-> >> [..]
-> >>>
-> >>> This is odd.
-> >>>
-> >>> Does the latest 6.10.y release also show this problem?
-> >>>
-> >>> I can't duplicate this here, and it's the first I've heard of it (given
-> >>> that USB mice are pretty popular, I would suspect others would have hit
-> >>> it as well...)
-> >>
-> >> Sorry for missing this earlier. One thought is that userspace has a
-> >> dependency on uevent_show() flushing device probing. In other words the
-> >> side effect of taking the device_lock() in uevent_show() is that udev
-> >> might enjoy some occasions where the reading the uevent flushes probing
-> >> before the udev rule runs. With this change, uevent_show() no longer
-> >> waits for any inflight probes to complete.
-> >>
-> >> One idea to fix this problem is to create a special case sysfs attribute
-> >> type that takes the device_lock() before kernfs_get_active() to avoid
-> >> the deadlock on attribute teardown.
-> >>
-> >> I'll take a look. Thanks for forwarding the report Thorsten!
-> > 
-> > Ok, the following boots and passes the CXL unit tests, would appreciate
-> > if the reporter can give this a try:
-> 
-> Somehow I apparently became a "bugzilla-man-in-the-middle interface" yet
-> again... But whatever! ¯\_(ツ)_/¯
+In downstream Debian we got a report from  Eric Degenetais, in
+https://bugs.debian.org/1081833 that after the update to the 6.1.106
+based version, there were regular cracks in HDMI sound during
+playback.
 
-Oh, sorry about that Thorsten, for some reason I thought we were living
-in this new world that Konstantin mentions where mailing-list to
-bugzilla communication is automated. Hopefully that arrives soon.
+Eric was able to bisec the issue down to
+92afcc310038ebe5d66c689bb0bf418f5451201c in the v6.1.y series which
+got applied in 6.1.104.
 
-I very much appreciate the help here and thank you for the hard work
-you put into taking care of regressions!
+Cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1081833#47
 
-> 
-> To forward the latest comment from the ticket:
-> 
-> """
-> --- Comment #11 from brmails+k@disroot.org ---
-> Good news!
-> 
-> I think the proposed patch by Dan Williams fixes the issue.
-> 
-> I have tested it with v6.6.52 and v6.10.11. I haven't been able to
-> recreate the
-> issue with those modified kernels even once.
-> 
-> The patch can be applied to v6.11.0 and v6.10.11 out of the box. For
-> v6.6.52 I
-> had to slightly modify it as the line
-> 
-> #define SYSFS_GROUP_INVISIBLE   020000
-> 
-> doesn't exist in /include/linux/sysfs.h in v6.6.52 hence the patch
-> looking for
-> that line fails on that file.
-> But after adjusting the patch accordingly, the patch works fine on
-> v6.6.52 and
-> the issue is gone with the patched version of v6.6.52, just like 6.10.11.
-> 
-> So, I assume that the fix / patch proposed by Dan Williams works as intended
-> resolving the issue I had.
-> 
-> Thanks again for forwarding the bug report and for the quick fix!
-> """
+#regzbot introduced: 92afcc310038ebe5d66c689bb0bf418f5451201c
+#regzbot link: https://bugs.debian.org/1081833
 
-Great news, I'll revise the patch a bit to add some clarifying
-documentation. Specifically, that the new DEVICE_ATTR_RW_LOCKED() is
-only for exceptional corner cases like uevent_show(), and that most
-usages of "dev->driver" in a sysfs attribute are best served by being
-declared as part of "drv_groups".
+It should be noted that Eric as well tried more recent stable series
+as well, in particular did test as well 6.10.6 based version back on
+20th september, and the issue was reproducible there as well.
+
+Is there anything else we can try to provide?
+
+Regards,
+Salvatore
