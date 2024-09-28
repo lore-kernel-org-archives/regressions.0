@@ -1,198 +1,349 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6EB3C6BA
-	for <regressions@lists.linux.dev>; Sat, 28 Sep 2024 16:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98260225DA
+	for <regressions@lists.linux.dev>; Sat, 28 Sep 2024 17:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727541439; cv=none; b=imXmnbMwzDJxNI25U+b6QEgW+K/HHce/ZeUV4PPfRBi8pqf2Lnfbu8WOaIKAFvFNg4bMfMQd4nJQYweWLnD71xQWLP/IQ6JF8ZhHuzOfh7m0IC7XO6nsiYtvCaB8MF7EyWnOPnaVIUESFElniml0J/5KyhupgvL09MOLJvgfAcU=
+	t=1727544992; cv=none; b=tHeJMyts8AL/MjOUNuWMqzdSqzhU4x/Kqp8Ko2kb46SUhSnvJetLFrURxO79ROfzTpa9Fl52Fp0Po7yYX+6ZNa4hLSdIx2iwr3J7CcF+5uHVugr71LZP82vUs2alTXGgQeICYFhbAaEOJFwkcKfgzF6Bef6y7REU/yZUQ+3aPLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727541439; c=relaxed/simple;
-	bh=koVz/ln5F1wiPscG190/9l2/xOw7jSM7KVoWY1j5LXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBuRSNiw+1hn7Bola7r72xFzfbV+DyHngE4JbQayg/TI+9Zf3IAwT5G9C4aOArru0Qf+zqBm4SZh57lQPpkRc/7lv5BLap1OAQnOu1uJuiKDgEFHgyqnwb4mMg2fhnQC2vkuB6geU0dtU8YGLvZ1PXO75XU6kuXE/8/ruP5uhKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDh1gj6p; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727544992; c=relaxed/simple;
+	bh=HXGhUK8FrKk0WuWa4qJqST0XST+En12lPnXxvx8pW74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcSvJgYDwALU15qQW2P4qijROxHdw+V2OB0X5l/UWtvaD1jGkZQoL2xwm2FPtSWk51MJA9MQRwNDoXyr4Nm8at+GDAaJibhtLu3E4Zxn9PrJQKXaV5ovDyOV6PmxXW26neDAqD3m+McIbLDEaaTLagykIKz9X6f8aQf7oZHglAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=FFTUc8tW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FFnNkRbP; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDh1gj6p"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e25d15846baso2520712276.3
-        for <regressions@lists.linux.dev>; Sat, 28 Sep 2024 09:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727541436; x=1728146236; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1nl9bgLuzs+y5Hwfh6ZezhQ59+LSYEnB9kHBKOLaIBc=;
-        b=QDh1gj6pvj9MqSf7p61tAAhDnc1/ugwLR2QfBRLMNLpBGBwX3xRDoPcDJrZKMFS/Yc
-         1v3SyOQNxzmH1pzXV1XFuOYkzkC1yCqFfiGrFwXLTIWpDYzddAPc6pEfBysdOQOow/XV
-         pJb/0LyHUtzhoPOC0YtPfm6KYdtzSTRjcw7uOAsEHGUTB+5KwEmXD9J62nVgtY60knTK
-         eWEZW7Wx4ANG7MImFtEfhDSg2siCwnUauqPh51Gy2bOgTCrHgWjAgWgjtj8jVqq3GKS8
-         aYzX4zUpCmKbJIGeB6bcmUqpfj/MkGIuc1k9nY0Y02UC6hHrXt/6qU4bbtqtRR5yndhV
-         sJ0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727541436; x=1728146236;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1nl9bgLuzs+y5Hwfh6ZezhQ59+LSYEnB9kHBKOLaIBc=;
-        b=bDbqxkBO3SBPkb10R1r3aaFJlYF2Fz1Ug/4GtNgflC0INuFCGe+Ryns5w4NAtBqbRg
-         hS0niGhk0d6yyqk/NHo8pFQB3Anw155XLs2CeF0I6mBx7DS/kSoew/CyNV+IIk1EGyrC
-         0zAvrzM/UslA6X/rs44+0wj8ZMSFDMTs1HVqitsDaCJGQLOMOZVTcdVgj5ReDXJiiV0V
-         Gfo4jLz9MIzMRUURKLA4VdfwSWrc/4LEfc+IeEyGReg26RP+Jn9aXa0Dl1fqbi5lHA8N
-         XdOQg/ab0CDZVP/CZPksJxCe+Shmj+lLJz5lMb42gxf00mqnUkeHHoNQ71RMrkBHrACJ
-         wyqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSQ9Q2wUGM0ykZ0AqgxvQXvTi+vqbZLN/UUcwbztOicTb0oqv4Tgt8N4E/kVvEIXjj0YN1YE13q/Xj2w==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy9mKG/gxaMgSv+6VxNui2wIqFLa8C/VI0MXK0ek5M9du54Xb8e
-	WMgA9I1BFEZfn+acdlsyipd0YqTjQJHt/QNWr3EHG2Qv7Dn+89qssEXblv+JH8kbGTfOdiXYHVz
-	MopBGHrOY20nBm3IWur0aGU1Krmo=
-X-Google-Smtp-Source: AGHT+IFqQ7hE0yBezED2+Hc1PgATK5XbX30GW43woqeLiKk3Uuz+M/WZ1ZUUSvfXvI4HMUvTVPcV1g+l4UMjKSLbbpI=
-X-Received: by 2002:a05:6902:cca:b0:e24:9eba:aad0 with SMTP id
- 3f1490d57ef6-e2604b3e6c3mr5956491276.14.1727541436360; Sat, 28 Sep 2024
- 09:37:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="FFTUc8tW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFnNkRbP"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C646811400F8;
+	Sat, 28 Sep 2024 13:36:27 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Sat, 28 Sep 2024 13:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1727544987; x=1727631387; bh=JnumIukBSe
+	ev0nlJ/SGcgw51UJmk81utBDPPldgQUR0=; b=FFTUc8tWqjfaNyYE6D4arxZoTD
+	wisZzlR7FPBGCXWzKueXHoLfoKxtFFsW3oth2fDO5uupss1ELZ2VMuM0gQsFQGTK
+	enbn91eElhb0ukYxqzleUPRMsXR+GrGftmA5J8gbVIrw9LWVpOSNFIhTF5idKM/u
+	DheFdNis1/CmK2sGfhE8sikSB6Hog87jjeyB26d5ARxLFTfZ+empoNlB/oVpSo8i
+	JvL0/K4TmiPduaAfiCH39BTXW6s8WTrzBiGMGphta4YDBnSGzotbDYx36/woBjNc
+	G5ByIUGjjXzOgJeIlm1fNhz6ArVJthINn88iXfHGb+yFvUTdQHOlI1d8/uyw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1727544987; x=1727631387; bh=JnumIukBSeev0nlJ/SGcgw51UJmk
+	81utBDPPldgQUR0=; b=FFnNkRbP31a65+B5mdSUHfqfkz6BxwH2nXuHcUvopJDo
+	GxTFtsLWKkvTGTomfn4JyPNtqpHLC4ME63rLpRzFY9iKAiGHgcmYZXmCnU5cxJCf
+	EgdXYJjJQkKWBE91ivfUiO9AfkAtHmdhvwXg9oU/Ms8mm1BPD7y6DlByXdTPDIOZ
+	12PgAlU6sgghr8gOp35EVVO6GvMLYn3r0YXJvTyVWzkq5930y7srE8PRyHNBR5l8
+	6ZXxSt25Rk+QyfJbSKcwAzxKeqhnL1wJLIlT0DXclHJCwI/djlJTzgyFLW4V0qHt
+	NGxAjOj2p7qdy1cFFcrGIkobNiLmKgVMIRosZbeAdA==
+X-ME-Sender: <xms:mz74ZhOUOfoeagD1XC-Y8abx4Zsm-y_FLVeIrU60x3m_scG0hwofCg>
+    <xme:mz74Zj86B4nupxGZgDgt0vr2_4FdksN90BYK7q6UqQJeXnguLTH2vy3CsMLW2LJQS
+    VWVxQbuKqcLiVdyEOE>
+X-ME-Received: <xmr:mz74ZgS_3CH-YO7NY-3FxgQ9pULaALswU1s6trD6wZ07Yq23tUPkcTd_NuJCsR_68TwFJb3mlCzmIoBJV9Vlfmr_LGvp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduuddgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeffudettdei
+    udduteejgeejueejgeejueehtedtteeivedvveffkeejjeeuheeghfenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpd
+    hnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehthhho
+    rhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdroh
+    hvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhi
+    ohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstg
+    grtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    khgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:mz74ZttYLpOf5GxB9Lph7ToXdH6_DJ6p0oj6cSAFFucVYa-2qyjkug>
+    <xmx:mz74ZpdbuF7m5enR3JqZhWOHckuTavGEy0_Wiekz8VzTCvhTQBJz3A>
+    <xmx:mz74Zp1F49gdMfn1a0BajruwTcrKYrpZxdyK6tirP_e1YYYXtezJSw>
+    <xmx:mz74Zl9DqU7vXEIJFyK6RkhdHLUD-5XesH3DE5M1idrrVHVet2zHpw>
+    <xmx:mz74Zl5mxztye5GycLtfSZaNFUCvA4ojJz_p4NX2eGNYds2_ES0pztRK>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 28 Sep 2024 13:36:25 -0400 (EDT)
+Date: Sat, 28 Sep 2024 19:36:24 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: kent.overstreet@linux.dev, regressions@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kees@kernel.org, ardb@kernel.org,
+	morbo@google.com
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <Zvg-mDsvvOueGpzs@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <DFC1DAC5-5C6C-4DC2-807A-DAF12E4B7882@gmail.com>
- <20240923075527.3B9A.409509F4@e16-tech.com> <CABaPp_iqgUw3TffQHrVYUoVoh03Rx0UjvrNw0ALStF8FxufFrg@mail.gmail.com>
- <CABaPp_hf8haF20YCipL0cdB6NQPMHue45n1fmEUvo_BL_Wuyfg@mail.gmail.com>
-In-Reply-To: <CABaPp_hf8haF20YCipL0cdB6NQPMHue45n1fmEUvo_BL_Wuyfg@mail.gmail.com>
-From: james young <pronoiac@gmail.com>
-Date: Sat, 28 Sep 2024 09:37:04 -0700
-Message-ID: <CABaPp_iLCoCAW=2jHEvgM15UJiwWXq5BXh0rCXtu-80tk6Zuvw@mail.gmail.com>
-Subject: Re: [REGRESSION] Corruption on cifs / smb write on ARM, kernels 6.3-6.9
-To: Wang Yugui <wangyugui@e16-tech.com>
-Cc: pronoiac+kernel@gmail.com, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-cifs@vger.kernel.org, 
-	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org, 
-	Steve French <sfrench@samba.org>, smfrench@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
 
-I retraced my steps:
-* looking for the breaking commit, between 6.2 and 6.3-rc1
-* I switched to checksumming the stream and the written file; this can
-save time, compared to decompression
-* I checked for lzop, pigz, and pbzip2
+On 26 18:09:57, Thorsten Blum wrote:
+> On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com> wrote:
+> > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> >> 
+> >> Hi Kent,
+> >> 
+> >> found a strange regression in the patch set for 6.12.
+> >> 
+> >> First bad commit is: 86e92eeeb23741a072fe7532db663250ff2e726a
+> >> bcachefs: Annotate struct bch_xattr with __counted_by()
+> >> 
+> >> When compiling with clang 18.1.8 (also with latest llvm main branch) and
+> >> CONFIG_FORTIFY_SOURCE=y my rootfs does not mount because there is an erroneous
+> >> detection of a buffer overflow.
+> >> 
+> >> The __counted_by attribute is supposed to be supported starting with gcc 15,
+> >> not sure if it is implemented yet so I haven't tested with gcc trunk yet.
+> >> 
+> >> Here's the relevant section of dmesg:
+> >> 
+> >> [    6.248736] bcachefs (nvme1n1p2): starting version 1.12: rebalance_work_acct_fix
+> >> [    6.248744] bcachefs (nvme1n1p2): recovering from clean shutdown, journal seq 1305969
+> >> [    6.252374] ------------[ cut here ]------------
+> >> [    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
+> >> [    6.252379] WARNING: CPU: 18 PID: 511 at lib/string_helpers.c:1033 __fortify_report+0x45/0x50
+> >> [    6.252383] Modules linked in: bcachefs lz4hc_compress lz4_compress hid_generic usbhid btrfs crct10dif_pclmul libcrc32c crc32_pclmul crc32c_generic polyval_clmulni crc32c_intel polyval_generic raid6_pq ghash_clmulni_intel xor sha512_ssse3 sha256_ssse3 sha1_ssse3 aesni_intel gf128mul nvme crypto_simd ccp xhci_pci cryptd sp5100_tco xhci_pci_renesas nvme_core nvme_auth video wmi ip6_tables ip_tables x_tables i2c_dev
+> >> [    6.252404] CPU: 18 UID: 0 PID: 511 Comm: mount Not tainted 6.11.0-10065-g6fa6588e5964 #98 d8e0beb515d91b387aa60970de7203f35ddd182c
+> >> [    6.252406] Hardware name: Micro-Star International Co., Ltd. MS-7D78/PRO B650-P WIFI (MS-7D78), BIOS 1.C0 02/06/2024
+> >> [    6.252407] RIP: 0010:__fortify_report+0x45/0x50
+> >> [    6.252409] Code: 48 8b 34 c5 30 92 21 87 40 f6 c7 01 48 c7 c0 75 1b 0a 87 48 c7 c1 e1 93 07 87 48 0f 44 c8 48 c7 c7 ef 03 10 87 e8 0b c2 9b ff <0f> 0b e9 cf 5d 9e 00 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90
+> >> [    6.252410] RSP: 0018:ffffbb3d03aff350 EFLAGS: 00010246
+> >> [    6.252412] RAX: 4ce590fb7c372800 RBX: ffff98d559a400e8 RCX: 0000000000000027
+> >> [    6.252413] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: ffff98e43db21a08
+> >> [    6.252414] RBP: ffff98d559a400d0 R08: 0000000000001fff R09: ffff98e47ddcd000
+> >> [    6.252415] R10: 0000000000005ffd R11: 0000000000000004 R12: ffff98d559a40000
+> >> [    6.252416] R13: ffff98d54abf1320 R14: ffffbb3d03aff430 R15: 0000000000000000
+> >> [    6.252417] FS:  00007efc82117800(0000) GS:ffff98e43db00000(0000) knlGS:0000000000000000
+> >> [    6.252418] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [    6.252419] CR2: 000055d96658ea80 CR3: 000000010a12c000 CR4: 0000000000f50ef0
+> >> [    6.252420] PKRU: 55555554
+> >> [    6.252421] Call Trace:
+> >> [    6.252423]  <TASK>
+> >> [    6.252425]  ? __warn+0xd5/0x1d0
+> >> [    6.252427]  ? __fortify_report+0x45/0x50
+> >> [    6.252429]  ? report_bug+0x144/0x1f0
+> >> [    6.252431]  ? __fortify_report+0x45/0x50
+> >> [    6.252433]  ? handle_bug+0x6a/0x90
+> >> [    6.252435]  ? exc_invalid_op+0x1a/0x50
+> >> [    6.252436]  ? asm_exc_invalid_op+0x1a/0x20
+> >> [    6.252440]  ? __fortify_report+0x45/0x50
+> >> [    6.252441]  __fortify_panic+0x9/0x10
+> >> [    6.252443]  bch2_xattr_validate+0x13b/0x140 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252463]  bch2_btree_node_read_done+0x125a/0x17a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252482]  btree_node_read_work+0x202/0x4a0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252499]  bch2_btree_node_read+0xa8d/0xb20 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> [    6.252514]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >> [    6.252515]  ? pcpu_alloc_noprof+0x741/0xb50
+> >> [    6.252517]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >> [    6.252519]  ? time_stats_update_one+0x75/0x1f0 [bcachefs 8361179bbfcc59e669df38aec976f02d7211a659]
+> >> 
+> >> ...
+> >> 
+> >> 
+> >> The memchr in question is at:
+> >> https://github.com/torvalds/linux/blob/11a299a7933e03c83818b431e6a1c53ad387423d/fs/bcachefs/xattr.c#L99
+> >> 
+> >> There is not actually a buffer overflow here, I checked with gdb that
+> >> xattr.v->x_name does actually contain a string of the correct length and
+> >> xattr.v->x_name_len contains the correct length and should be used to determine
+> >> the length when memchr uses __struct_size for bounds-checking due to the
+> >> __counted_by annotation.
+> >> 
+> >> I'm at the point where I think this is probably a bug in clang. I have a patch
+> >> that does fix (more like bandaid) the problem and adds some print statements:
+> >> 
+> >> --
+> >> diff --git a/fs/bcachefs/xattr.c b/fs/bcachefs/xattr.c
+> >> index 56c8d3fe55a4..8d7e749b7dda 100644
+> >> --- a/fs/bcachefs/xattr.c
+> >> +++ b/fs/bcachefs/xattr.c @@ -74,6 +74,7 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+> >>      enum bch_validate_flags flags)
+> >> {
+> >> struct bkey_s_c_xattr xattr = bkey_s_c_to_xattr(k);
+> >> + const struct bch_xattr *v = (void *)k.v;
+> >> unsigned val_u64s = xattr_val_u64s(xattr.v->x_name_len,
+> >>  le16_to_cpu(xattr.v->x_val_len));
+> >> int ret = 0;
+> >> @@ -94,9 +95,12 @@ int bch2_xattr_validate(struct bch_fs *c, struct bkey_s_c k,
+> >> 
+> >> bkey_fsck_err_on(!bch2_xattr_type_to_handler(xattr.v->x_type),
+> >> c, xattr_invalid_type,
+> >> - "invalid type (%u)", xattr.v->x_type);
+> >> + "invalid type (%u)", v->x_type);
+> >> 
+> >> - bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
+> >> + pr_info("x_name_len: %d", v->x_name_len);
+> >> + pr_info("__struct_size(x_name): %ld", __struct_size(v->x_name));
+> >> + pr_info("__struct_size(x_name): %ld", __struct_size(xattr.v->x_name));
+> >> + bkey_fsck_err_on(memchr(v->x_name, '\0', v->x_name_len),
+> >> c, xattr_name_invalid_chars,
+> >> "xattr name has invalid characters");
+> >> fsck_err:
+> >> --
+> >> 
+> >> 
+> >> Making memchr access via a pointer created with
+> >> const struct bch_xattr *v = (void *)k.v fixes it. From the print statements I
+> >> can see that __struct_size(xattr.v->x_name) incorrectly returns 0, while
+> >> __struct_size(v->x_name) correctly returns 10 in this case (the value of
+> >> x_name_len).
+> >> 
+> >> The generated assembly illustrates what is going wrong. Below is an excerpt
+> >> of the assembly clang generated for the bch2_xattr_validate function:
+> >> 
+> >> mov r13d, ecx
+> >> mov r15, rdi
+> >> mov r14, rsi
+> >> mov rdi, offset .L.str.3
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> mov rbx, rdx
+> >> mov edx, eax
+> >> call _printk
+> >> movzx edx, byte ptr [rbx + 1]
+> >> mov rdi, offset .L.str.4
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> call _printk
+> >> movzx edx, bh
+> >> mov rdi, offset .L.str.4
+> >> mov rsi, offset .L__func__.bch2_xattr_validate
+> >> call _printk
+> >> lea rdi, [rbx + 4]
+> >> mov r12, rbx
+> >> movzx edx, byte ptr [rbx + 1]
+> >> xor ebx, ebx
+> >> xor esi, esi
+> >> call memchr
+> >> 
+> >> At the start of this rdx contains k.v (and is moved into rbx). The three calls
+> >> to printk are the ones you can see in my patch. You can see that for the
+> >> print that uses __struct_size(v->x_name) the compiler correctly uses
+> >> movzx edx, byte ptr [rbx + 1]
+> >> to load x_name_len into edx.
+> >> 
+> >> For the printk call that uses __struct_size(xattr.v->x_name) however the
+> >> compiler uses
+> >> movzx edx, bh
+> >> So it will print the high 8 bits of the lower 16 bits (second least
+> >> significant byte) of the memory address of xattr.v->x_type. This is obviously
+> >> completely wrong.
+> >> 
+> >> It is then doing the correct call of memchr because this is using my patch.
+> >> Without my patch it would be doing the same thing for the call to memchr where
+> >> it uses the second least significant byte of the memory address of x_type as the
+> >> length used for the bounds-check.
+> >> 
+> >> 
+> >> 
+> >> The LLVM IR also shows the same problem:
+> >> 
+> >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> >> [...]
+> >> %51 = ptrtoint ptr %2 to i64
+> >> %52 = lshr i64 %51, 8
+> >> %53 = and i64 %52, 255
+> >> 
+> >> This is the IR for the incorrect behavior. It simply converts the pointer to an
+> >> int, shifts right by 8 bits, then and with 0xFF. If it did a load (to i64)
+> >> instead of ptrtoint this would actually work, as the second least significant
+> >> bit of an i64 loaded from that memory address does contain the value of
+> >> x_name_len. It's as if clang forgot to dereference a pointer here.
+> >> 
+> >> Correct IR does this (for the other printk invocation):
+> >> 
+> >> define internal zeroext i1 @xattr_cmp_key(ptr nocapture readnone %0, ptr %1, ptr nocapture noundef readonly %2) #0 align 16 {
+> >> [...]
+> >> %4 = getelementptr inbounds %struct.bch_xattr, ptr %1, i64 0, i32 1
+> >> %5 = load i8, ptr %4, align 8
+> >> [...]
+> >> %48 = load i8, ptr %5, align 4
+> >> %49 = zext i8 %48 to i64
+> >> 
+> >> Best Regards
+> >> Jan
+> > 
+> > I suspect it's the same Clang __bdos() "bug" as in [1] and [2].
+> > 
+> > [1] https://lore.kernel.org/linux-kernel/3D0816D1-0807-4D37-8D5F-3C55CA910FAA@linux.dev/
+> > [2] https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
+> 
+> Could you try this and see if it resolves the problem?
+> 
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 1a957ea2f4fe..b09759f31789 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -413,7 +413,7 @@ struct ftrace_likely_data {
+>   * When the size of an allocated object is needed, use the best available
+>   * mechanism to find it. (For cases where sizeof() cannot be used.)
+>   */
+> -#if __has_builtin(__builtin_dynamic_object_size)
+> +#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+>  #define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+>  #define __member_size(p)	__builtin_dynamic_object_size(p, 1)
+>  #else
 
-So, breakage. I landed on different commits:
-last working commit. ok: lzop, pigz, pbzip2.
-16541195c6d9 cifs: Add a function to read into an iter from a socket
 
-first broken commit. lzop failed.
-d08089f649a0 cifs: Change the I/O paths to use an iterator rather than
-a page list
+Alright, figured out why this fix doesn't work. The function signature
+of memchr is:
 
-That broken commit is right before my previous "last good" and "break".
+void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
 
-I'm seeing some inconsistencies. I'd *thought* I was careful with dtb
-files and .config; I might have dropped the ball occasionally, or
-there's something else, I don't know what, that I'm stumbling over.
+The POS0 is the culprit. It's defined as __pass_object_size(0), which
+leads to the call to __builtin_object_size being upgraded to
+__builtin_dynamic_object_size.
 
-To check for marginal hardware, I tried another Raspberry Pi 4. I
-verified baseline 6.6.52 didn't work there, and stopped there. It
-doesn't have any cooling; it *almost certainly* would throttle for
-thermal reasons, but I didn't want to push it.
+So to make this work the POS0 definition needs the same
+!defined(__clang__) on it. There's also two more
+__has_builtin(__builtin_dynamic_object_size) checks in
+lib/fortify_kunit.c. But they have no impact.
 
--James
+Now the fix works:
 
 
-On Tue, Sep 24, 2024 at 9:35=E2=80=AFPM james young <pronoiac@gmail.com> wr=
-ote:
->
-> On request:
-> * adding another cc for Steven
-> * I tested 6.6.52, without any extra commits: it was bad.
->
-> -James
->
-> On Mon, Sep 23, 2024 at 12:36=E2=80=AFPM james young <pronoiac@gmail.com>=
- wrote:
-> >
-> > Hey there -
-> >
-> > On Sun, Sep 22, 2024 at 4:55=E2=80=AFPM Wang Yugui <wangyugui@e16-tech.=
-com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > > I was benchmarking some compressors, piping to and from a network s=
-hare on a NAS, and some consistently wrote corrupted data.
-> >
-> > > > Important commits:
-> > > > It looked like both the breakage and the fix came in during rc1 rel=
-eases.
-> > > >
-> > > > Breakage, v6.3-rc1:
-> > > > I manually bisected commits in fs/smb* and fs/cifs.
-> > > >
-> > > > 3d78fe73fa12 cifs: Build the RDMA SGE list directly from an iterato=
-r
-> > > > > lzop and pigz worked. last working. test in progress: pbzip2
-> >
-> > This is a first for me: lzop was fine, but pbzip2 still had issues,
-> > roughly a clock hour into compression. (When lzop has issues, it's
-> > usually within a minute or two.)
-> >
-> >
-> > > > 607aea3cc2a8 cifs: Remove unused code
-> > > > > lzop didn't work. first broken
-> > > >
-> > > >
-> > > > Fix, v6.10-rc1:
-> > > > I manually bisected commits in fs/smb.
-> > > >
-> > > > 69c3c023af25 cifs: Implement netfslib hooks
-> > > > > lzop didn't work. last broken one
-> > > >
-> > > > 3ee1a1fc3981 cifs: Cut over to using netfslib
-> > > > > lzop, pigz, pbzip2, all worked. first fixed one
-> >
-> > > I checked 607aea3cc2a8, it just removed some code in #if 0 ... #endif=
-.
-> > > so this regression is not introduced in 607aea3cc2a8,  but the reprod=
-uce
-> > > frequency is changed here.
-> >
-> > I agree. The pbzip2 results above, regarding the break bisection I
-> > landed on: they mark when it became more of an issue, but not when it
-> > started.
-> >
-> > I could re-run tests and dig into possible false negatives. It'll be
-> > slower going, though.
-> >
-> >
-> > > Another issue in 6.6.y maybe related
-> > > https://lore.kernel.org/linux-fsdevel/9e8f8872-f51b-4a09-a92c-4921874=
-8dd62@meta.com/T/
-> >
-> > In comparison: I'm relieved that my issue is something that can be
-> > tested within hours, on one device.
-> >
-> >
-> > > Do this regression still happen after the following patches are appli=
-ed?
-> > >
-> > > a60cc288a1a2 :Luis Chamberlain: test_xarray: add tests for advanced m=
-ulti-index use
-> > > a08c7193e4f1 :Sidhartha Kumar: mm/filemap: remove hugetlb special cas=
-ing in filemap.c
-> > > 6212eb4d7a63 :Hongbo Li: mm/filemap: avoid type conversion
-> > >
-> > > de60fd8ddeda :Kairui Song: mm/filemap: return early if failed to allo=
-cate memory for split
-> > > b2ebcf9d3d5a :Kairui Song: mm/filemap: clean up hugetlb exclusion cod=
-e
-> > > a4864671ca0b :Kairui Song: lib/xarray: introduce a new helper xas_get=
-_order
-> > > 6758c1128ceb :Kairui Song: mm/filemap: optimize filemap folio adding
-> >
-> > No luck: I cherry-picked those commits into 6.6.52, and upon testing
-> > lzop, the file didn't match the stream, and decompression failed.
-> >
-> > Thank you for investigating, and giving me something to try!
-> >
-> > -James
+--
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index f14c275950b5..43ac0bca485d 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -413,7 +413,7 @@ struct ftrace_likely_data {
+  * When the size of an allocated object is needed, use the best available
+  * mechanism to find it. (For cases where sizeof() cannot be used.)
+  */
+-#if __has_builtin(__builtin_dynamic_object_size)
++#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+ #define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+ #define __member_size(p)	__builtin_dynamic_object_size(p, 1)
+ #else
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 0d99bf11d260..7235655d9b80 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -148,7 +148,7 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+  * size, rather than struct size), but there remain some stragglers using
+  * type 0 that will be converted in the future.
+  */
+-#if __has_builtin(__builtin_dynamic_object_size)
++#if __has_builtin(__builtin_dynamic_object_size) && !defined(__clang__)
+ #define POS			__pass_dynamic_object_size(1)
+ #define POS0			__pass_dynamic_object_size(0)
+ #else
