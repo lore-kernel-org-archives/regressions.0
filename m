@@ -1,149 +1,114 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.vapourmail.eu (mail.vapourmail.eu [5.75.183.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853A214A611
-	for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 18:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EB3192D7F
+	for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 18:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.183.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727722014; cv=none; b=LTkxsGSHoH2dddd0k6ULJbuLL8VcmjmUBqSSbsQs2G1dcGPOswGs8wi/FCtZWVQXxqAB88aFqSfYiFCx1GQkMlQwgW5jUcRFpQhs06JFA8Jaelui7QXbU3QjTM2rVNuWNF8vyQwoTseXWzQTceDzOa7JS0wc4R154S1p0SZddOw=
+	t=1727722302; cv=none; b=aQcbUmx0DpNZ7YC4CXswdK3XM3RdtO7NOypH9H8aDGTvpXiZOdgYZexg8jjN/QNi+m0ZX5OX3sEIIq6DLLPcUT3w+VwlJZz3M1JZpUb/H1Wu8fE4nvWFqzquighQk0jP2Dwq3KCwh2XuedzCt0iG/omrNxyNFJmPX/v/6ru3/DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727722014; c=relaxed/simple;
-	bh=LJBd2XzWsHz164n1fTuK+B4D3XarcsLPTUGiEDLMWG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dm7cdO63aIyganrsV12nlEJoznBhl/U7AIUfL52XVucn+vgG/sUtQ++qh/edOMPM/Bj9vUNMrCsobk76dLLu5WLSJYuZQarI/Oxue7CktQrQxiiKctVsbCdRwyP4mZdPeWm0u+pRTdWY+RA+HDYJtNq7avQE9/2yYMzcB6nPDV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MWJb4+WD; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1727722302; c=relaxed/simple;
+	bh=3iYQXYITiewgUQ/I3eZjRzKQC/XS2JvSxg8C002fJOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RVLFHQ2SYqxihSju5ROb1htjfNvB5PaN+rCGfhCLTINLSme3sx+1QcasiP1Pw/A5IZw7wztFWad/iJqudlpfiUL/RLlAfV5sF6ha8jmSXPe8K2pj5mu405PXK9D/+Po+nqiD6XVOBFmzB7OGUvuqaj15StKm2MlTP25Q5gpT3kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me; spf=pass smtp.mailfrom=johnrowley.me; dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b=ok/PIb7F; arc=none smtp.client-ip=5.75.183.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=johnrowley.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MWJb4+WD"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5389917ef34so5392709e87.2
-        for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 11:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1727722010; x=1728326810; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZxtY/yExLakikPIWimGxq8rXeYi1ZRab5obj2wCNkU=;
-        b=MWJb4+WDeKgcukUx8oNenv1eFPYpHxGZ2hkBnqiy8jd3bElREDo0NpPp+0Ixgxb6Jd
-         JXcOwbN5xlFMcO/02niP+YYuxQ1NT1TMsWVanVQTmZipuZwLnlo3cJoiGGSuxmuDdB9j
-         ZnUvHUXfr3fkerz6mSmHzA8z29IMpVvsQK5s8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727722010; x=1728326810;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ZxtY/yExLakikPIWimGxq8rXeYi1ZRab5obj2wCNkU=;
-        b=i/a9/smBeQjgnE2ixuERhpAB5BffXbEb3Qy7ifqoxfhu4e5E//F3/iD1yoKdcPMjIe
-         +eMGobZCJcaiQVpnQuP7ZoIc8tBKuLBk/qpIRUOTsfsXsMbenVfhHrOWM0o9QLJL7VDQ
-         Xv01C1+yjE8OQb+oDmrBHyRmQSwCMK7z68YhxS9P4wjZKl1uEC2jm7ukkEGhLPs/wad3
-         GlIyGYFiqfDtMtvm2ZrHUz2CjV1Olrskayzw6rCFayNkw4ZbTROpR2dqYnm8RfEaUhFV
-         2pYEJmb1zqFuAVIOUif3GBJm1OjufPvbRsFKoljV3COCTExz8bv9wrkQHjpcFZQWcbHL
-         GA4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUEn8zoYxEO234FyJeWOfF9/vKPqTx5dulg5Mts6jxySPrAIE69VQHEfdjwWMf3ywhghTVIuAx/baNo0Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4fm8lLFWvddWWuKg1YnAtiJvMP6ySSsCeZYou/a8gyLOt1/GY
-	sTz1eV5R4Bc1/Zh8Ai0AzzIHs3miwhNPsGLCTcJdOCowD7MVbd2Oz/VcUhMN/uNWy7ezB4YQDCb
-	qKFAJOg==
-X-Google-Smtp-Source: AGHT+IE3iIip4ZvZ8bN7oJ9JxoK3te3gPfqh2W5uRNt44oxBCJHrta3aFZSXbIUbZJ8v3zg98ryUtg==
-X-Received: by 2002:a05:6512:1396:b0:536:a4da:8d86 with SMTP id 2adb3069b0e04-5389fc35caamr6697373e87.15.1727722010140;
-        Mon, 30 Sep 2024 11:46:50 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-538a044091dsm1316509e87.243.2024.09.30.11.46.48
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2024 11:46:49 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fad784e304so5010741fa.2
-        for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 11:46:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWnF8juHdOwlQXXSNsU83TE/HeRiaIt1PSCUebriGjC0l9yFG8L823vZMb5aj0y95IPFt5FcABndQ047A==@lists.linux.dev
-X-Received: by 2002:a05:6512:ad2:b0:537:a824:7e5 with SMTP id
- 2adb3069b0e04-5389fc361dfmr6504852e87.18.1727722007490; Mon, 30 Sep 2024
- 11:46:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b="ok/PIb7F"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0D2A1C3708;
+	Mon, 30 Sep 2024 19:42:19 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=johnrowley.me;
+	s=dkim; t=1727721740;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=kXukeREP5YjU1M8TyWRlqMIy+xi4z0bgResEj99638s=;
+	b=ok/PIb7FJCCrznpTWTS1U0c4efTff+XNaxwJHK1kNRoWCvFGYdADVlEvJaCZuseJ82ptgS
+	iBidDC4MxvYE+zJW/VKBfWvs7t3Mu91iiBX0CHZR+5DcFAJ/UxZSdN1TDDaI4CjWkcGQkq
+	YNimw7GwR3EjjTeEsSBnqlR2Uq8xI4wEvgd9mrQabGV40FeEewdhcoPuN+4sWOnuZcADxv
+	kNvrICJKhVrwPj4EmL8TKEs/CIKM8L76kypis7aiQYR5RjyZ1g9FXx3FZNARbysxmo+R9v
+	RnPyy5VrcuJT4BPWy3ogkd2zqhyz4/Jgtr4JL1H/O/iu0e9HaE1SXpcF1o7q1A==
+Message-ID: <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+Date: Mon, 30 Sep 2024 19:42:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <Zud1EhTnoWIRFPa/@dread.disaster.area> <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
- <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com> <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com> <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk> <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org> <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io> <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
- <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io> <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
-In-Reply-To: <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 30 Sep 2024 11:46:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj6YRm2fpYHjZxNfKCC_N+X=T=ay+69g7tJ2cnziYT8=g@mail.gmail.com>
-Message-ID: <CAHk-=wj6YRm2fpYHjZxNfKCC_N+X=T=ay+69g7tJ2cnziYT8=g@mail.gmail.com>
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Dave Chinner <david@fromorbit.com>, Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@meta.com>, 
-	Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
-	regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+To: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, amd-gfx@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+Content-Language: en-US
+From: John Rowley <lkml@johnrowley.me>
+In-Reply-To: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, 30 Sept 2024 at 10:35, Christian Theune <ct@flyingcircus.io> wrote:
+Oops, forgot to mention that I'm using the AMD variant of the Framework 13 laptop, which uses AMD Ryzen 7 7840U w/ Radeon 780M Graphics.
+
+Thanks.
+
+#regzbot introduced: 58a261bfc967
+
+On 30/09/2024 19:10, John Rowley wrote:
+> Hi,
 >
-> Sep 27 00:51:20 <redactedhostname>13 kernel:  folio_wait_bit_common+0x13f/0x340
-> Sep 27 00:51:20 <redactedhostname>13 kernel:  folio_wait_writeback+0x2b/0x80
-
-Gaah. Every single case you point to is that folio_wait_writeback() case.
-
-And this might be an old old annoyance.
-
-folio_wait_writeback() is insane. It does
-
-        while (folio_test_writeback(folio)) {
-                trace_folio_wait_writeback(folio, folio_mapping(folio));
-                folio_wait_bit(folio, PG_writeback);
-        }
-
-and the reason that is insane is that PG_writeback isn't some kind of
-exclusive state. So folio_wait_bit() will return once somebody has
-ended writeback, but *new* writeback can easily have been started
-afterwards. So then we go back to wait...
-
-And even after it eventually returns (possibly after having waited for
-hundreds of other processes writing back that folio - imagine lots of
-other threads doing writes to it and 'fdatasync()' or whatever) the
-caller *still* can't actually assume that the writeback bit is clear,
-because somebody else might have started writeback again.
-
-Anyway, it's insane, but it's insane for a *reason*. We've tried to
-fix this before, long before it was a folio op. See commit
-c2407cf7d22d ("mm: make wait_on_page_writeback() wait for multiple
-pending writebacks").
-
-IOW, this code is known-broken and might have extreme unfairness
-issues (although I had blissfully forgotten about it), because while
-the actual writeback *bit* itself is set and cleared atomically, the
-wakeup for the bit is asynchronous and can be delayed almost
-arbitrarily, so you can get basically spurious wakeups that were from
-a previous bit clear.
-
-So the "wait many times" is crazy, but it's sadly a necessary crazy as
-things are right now.
-
-Now, many callers hold the page lock while doing this, and in that
-case new writeback cases shouldn't happen, and so repeating the loop
-should be extremely limited.
-
-But "many" is not "all". For example, __filemap_fdatawait_range() very
-much doesn't hold the lock on the pages it waits for, so afaik this
-can cause that unfairness and starvation issue.
-
-That said, while every one of your traces are for that
-folio_wait_writeback(), the last one is for the truncate case, and
-that one *does* hold the page lock and so shouldn't see this potential
-unfairness issue.
-
-So the code here is questionable, and might cause some issues, but the
-starvation of folio_wait_writeback() can't explain _all_ the cases you
-see.
-
-                  Linus
+> Since 58a261bfc967, I'm experiencing choppy display performance on my Framework 13 laptop. I ran a git bisect and narrowed it down to:
+>
+>     commit 58a261bfc96763a851cb48b203ed57da37e157b8
+>     Author: Hamza Mahfooz <hamza.mahfooz@amd.com>
+>     Date:   Thu Aug 22 11:58:22 2024 -0400
+>
+>         drm/amd/display: use a more lax vblank enable policy for older ASICs
+>
+> Reverting this commit on top of the current mainline 6.12-rc1 (9852d85ec9d4) fixes the problem and GPU performance is back to normal.
+>
+> Without the revert I get sluggish and janky animations in both GNOME 47 and Sway 1.9 on Chimera Linux, along with slight input delay when typing into text fields, etc.
+>
+> Nothing else is different between this commit and previous working versions (6.11) of the kernel, i.e. same config, desktop setup.
+>
+> Please let me know if there's anything I can do to help debug/test. :)
+>
+> Regards.
+>
+> Bisect log:
+>
+> # bad: [9852d85ec9d492ebef56dc5f229416c925758edc] Linux 6.12-rc1
+> # good: [98f7e32f20d28ec452afb208f9cffc08448a2652] Linux 6.11
+> git bisect start 'v6.12-rc1' 'v6.11'
+> # good: [176000734ee2978121fde22a954eb1eabb204329] Merge tag 'ata-6.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
+> git bisect good 176000734ee2978121fde22a954eb1eabb204329
+> # bad: [d0359e4ca0f26aaf3118124dfb562e3b3dca1c06] Merge tag 'fs_for_v6.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs
+> git bisect bad d0359e4ca0f26aaf3118124dfb562e3b3dca1c06
+> # bad: [171754c3808214d4fd8843eab584599a429deb52] Merge tag 'vfs-6.12.blocksize' of gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs
+> git bisect bad 171754c3808214d4fd8843eab584599a429deb52
+> # good: [e55ef65510a401862b902dc979441ea10ae25c61] Merge tag 'amd-drm-next-6.12-2024-08-26' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
+> git bisect good e55ef65510a401862b902dc979441ea10ae25c61
+> # bad: [32bd3eb5fbab954e68adba8c0b6a43cf03605c93] Merge tag 'drm-intel-gt-next-2024-09-06' of https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+> git bisect bad 32bd3eb5fbab954e68adba8c0b6a43cf03605c93
+> # bad: [8bdb468dd7a5d17f8556afdd4c8d046939ff965f] Merge tag 'drm-xe-next-2024-08-28' of https://gitlab.freedesktop.org/drm/xe/kernel into drm-next
+> git bisect bad 8bdb468dd7a5d17f8556afdd4c8d046939ff965f
+> # good: [77cc3f6c58b1b28cee73904946c46a1415187d04] drm/xe: Invalidate media_gt TLBs
+> git bisect good 77cc3f6c58b1b28cee73904946c46a1415187d04
+> # bad: [42e08287a3185409a7a1923374a557e04fc36e48] drm/ipuv3/parallel: convert to struct drm_edid
+> git bisect bad 42e08287a3185409a7a1923374a557e04fc36e48
+> # bad: [071d583e01c88272f6ff216d4f867f8f35e94d7d] drm: Expand max DRM device number to full MINORBITS
+> git bisect bad 071d583e01c88272f6ff216d4f867f8f35e94d7d
+> # bad: [e794b7b9b92977365c693760a259f8eef940c536] drm: omapdrm: Add missing check for alloc_ordered_workqueue
+> git bisect bad e794b7b9b92977365c693760a259f8eef940c536
+> # good: [cb5164ac43d0fc37ac6b45cabbc4d244068289ef] drm/panic: Add a QR code panic screen
+> git bisect good cb5164ac43d0fc37ac6b45cabbc4d244068289ef
+> # good: [e45b6716de4bf06b628a9f3559f7fc8dd5e94d58] drm/amd/display: use a more lax vblank enable policy for DCN35+
+> git bisect good e45b6716de4bf06b628a9f3559f7fc8dd5e94d58
+> # bad: [6729c73103bd7a0e60b0c980b51b5434010b4502] drm/ttm: fix kernel-doc typo for @trylock_only
+> git bisect bad 6729c73103bd7a0e60b0c980b51b5434010b4502
+> # bad: [58a261bfc96763a851cb48b203ed57da37e157b8] drm/amd/display: use a more lax vblank enable policy for older ASICs
+> git bisect bad 58a261bfc96763a851cb48b203ed57da37e157b8
+> # first bad commit: [58a261bfc96763a851cb48b203ed57da37e157b8] drm/amd/display: use a more lax vblank enable policy for older ASICs
+>
