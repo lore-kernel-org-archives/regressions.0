@@ -1,191 +1,153 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753018F6D
-	for <regressions@lists.linux.dev>; Sun, 29 Sep 2024 19:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFA915D5D9
+	for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 07:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727639973; cv=none; b=PlZzcFoQvg/HsFBKnKyQWrSFdK+u3P7TFlqaRBOSusykT5eZoKegQmWq54Vb7/qMxU2rqKBsmlGCJTdxCvJaufGaQoUUk2e0q6vchtt3WODth2B9zoJlIjAT+pJ2g2b2WBVcrVMco4f+IOkSgvEsUtXtcYL1XVIBN8X7xNxguYw=
+	t=1727682234; cv=none; b=FJDVJtdQu6Ct6TynJVPi53AWiSP5A82iCuRtgwyFo4cEzCy6UKWZyMM2FnhHXIa1Q4HDVVUghBON7D25t+6RPrWl+au1ssq4TWo9jX7P+j8lH+FP+1s6O6Yt5KNtk680Ez30HpakR7xm9XH2bqK9QekoTb09Gv3SzJdJ02LM1d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727639973; c=relaxed/simple;
-	bh=ZEiw6Vdio/TP2WrUL+Vf/mhXL1ax469ODYxcNdnlWC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2URBI/c98gss3TbHZ2ctwTk0IfBcYd5MsZjWPT9D81MtD9XFe8vo5lrrqhZ1SEIq1/gBu1bTL4tZOe98qE7LkHzJrq8iC0nIcL7jWU9m5uJKPZzMskon/PwYmX6fAP7n/yBl80uO4SOQ0EeWwJ8yaZf0qDNFgZSrW1KUf1QqN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=zLO1xvhU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SUqLrlSG; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1727682234; c=relaxed/simple;
+	bh=0Xi/J+biURecEooD0Ouc5gh2xxZbpfjhNiXBp3KUPQE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TItM0h9sZolRs5XqzRT/2E0Udmj8vbFdyERztf9w6gU5h7/C/aHcWv7nQPw3ojv4+/4wPD2N32AJEPSHTcsbIApt/n2BCyIL1tYEu1CKaK++baQ+jrrXOvgglKHQEEKDlqUt6iidmibpNU+mgkUwnxbhZdr5PRVuBh4yCULsUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z+d3SBRt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmChkpow; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z+d3SBRt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qmChkpow; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="zLO1xvhU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SUqLrlSG"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 8C3A8138025B;
-	Sun, 29 Sep 2024 15:59:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Sun, 29 Sep 2024 15:59:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1727639969;
-	 x=1727726369; bh=wjelk38W9mGSPjR1nvLcSCdYm0WK8pYBKRnjg05bhwE=; b=
-	zLO1xvhUNtnuTskHs4uOir8G6dEbx5fsn4gxqD6rvf4GKH8r+vsrmwY/eiM/kync
-	BgV3oztllypRlAUzpDaxtFGsTsID9xNM4kgHMZtHD9rpSIefylUlWF3MFs3sHGeU
-	N7yNn/Jr/ZzR71uYcgrdcCi/4otvAwlBMLF1lGiKgUg8PaZrXW5s9aLANRvk0Ytv
-	ZiGp6yURW77t7EX893gYsH3B0lihri8oRDvVx6lQI6NxWVBzOLI3cEMJKU7bhY5Z
-	wLywFNbOA0Mj5gvXk9kMWdQvSCYW8pnjoPLX6WIlq6vAwDbX7PJo3gu9XV3Ykvdg
-	5l2dtPuxVCmsp7StUONKPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727639969; x=
-	1727726369; bh=wjelk38W9mGSPjR1nvLcSCdYm0WK8pYBKRnjg05bhwE=; b=S
-	UqLrlSGqUSSppwfVYPyb0sLAaYSr16qH8ASkKYZG3USwVfkvQND8AHiXdQZqhDJh
-	2I80BdgDND2JXs/7rIloFk0W2Q7hgZJL5fJvH04+BNOnvhy4kNTSwZr6dE1Z3kai
-	4L/p6uv22jf/QGrGW6AxDG5TQuPmh28yPSB/LYb5yoDnWV4iR9UOrCJevz00JOi/
-	xWwHBMD1l4a2e9t2nK2YV+FbAjK9MnWH+EriFgp4PTGyr+FPpV+BhQo9dOqvipUg
-	JE2bEfO3u2VLu/Lh5rJ4UVpCgvTTQ8WOj4tuWsEZXkSzxI1+lh8Rq3GljV89MSmf
-	LY1rBUhgV3zB6hnevriMQ==
-X-ME-Sender: <xms:obH5ZncGYFwsveKawsM78ViPH6JfgId4eMEmBZYrCOiQlZCGLydozw>
-    <xme:obH5ZtPGWwrg165XAdOEOKMiFpcJehegDSAOJ82PQ8njgnnl3UXOBoXvKALV8bzZa
-    NxJNbFhf_fQOGBGTL4>
-X-ME-Received: <xmr:obH5ZgiSmRkdSgJjtSNdKHK4tEg4hkible3M4a45ijNym1jqTJ27tduZFcNECyWDWgcwaZCl4SeIvsd9XOdPtQn9EHT7>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddufedgudegiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenfghrlhcuvffnffculddutddmnecujfgurhepfffhvfevuffk
-    fhggtggugfgjsehtkeortddttdejnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrg
-    hrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeetjeej
-    udefveetgeehgfetleduudfhieegleetjeffudehkeeukeeigffffeeuffenucffohhmrg
-    hinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtg
-    gtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehk
-    vggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrd
-    gtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeht
-    hhhorhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnth
-    drohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghs
-    shhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqd
-    gstggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:obH5Zo_J2bN6ZDT_QjZLHe0tV1PBChCnX9RvagpE0YQBCI_dw5IEKA>
-    <xmx:obH5ZjsQ6UxCA3TG2LqiAJHhTuPwouIpxY7d3REw0va0FdGp_UOnDA>
-    <xmx:obH5ZnGHG8Utf5lRr7LwHSRFMxC9ei0kT46jQMS_fCT5zMk5yYJO0Q>
-    <xmx:obH5ZqPCMfVdVjsbvlnaFCdWrxem_tgGk-U3-BMIpomliV-nEbMJNg>
-    <xmx:obH5ZhJswG8A-TuWonqtoZRfoRAkni790OVx25gFhrEZoqjGyM_T0m-7>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 29 Sep 2024 15:59:28 -0400 (EDT)
-Date: Sun, 29 Sep 2024 21:59:26 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZvmxntpAHrAwcKaH@archlinux>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <ZvWTXaqkmxP2E2dc@archlinux>
- <ZvWd0aK7p_1rkb7E@archlinux>
- <CAMj1kXFV+Jck9Yf4w18rOzHckXvpXkhPhL-KrpBC8hqgXusw2g@mail.gmail.com>
- <CAGG=3QXG+Vsm7mjLV42Q-uA-EvgfOehSUeNQjKA3QQbw8vqSCg@mail.gmail.com>
- <CAGG=3QVWCQB-3sM=iwgTmX8zrU81H+F_A1icJwROvW_DSvsBeA@mail.gmail.com>
- <202409281335.5EE231B9C7@keescook>
- <ZviSURL7kaxZPkSN@archlinux>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z+d3SBRt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmChkpow";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z+d3SBRt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qmChkpow"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B14B11F7F9;
+	Mon, 30 Sep 2024 07:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727682230; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gbq8Cjj5vR0lbkP7gRM0LJLGr8qpZhZuXpMTxTEBIGU=;
+	b=z+d3SBRtINqU/GfAFFW+vWR24CdzKZ8Fh1wra7l+2T1YG5Qjfmx9qVRHlSI3MgRdU64xUN
+	cAZmDqCeeX0e1w+6SsEFwNv+H+kRm+BXyKQPXVTAbksNp3e1rN2LE/BqZlGf3LR66Gpqv7
+	YlyslTp8s61OJogAdvPhraIYMfR/Jl8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727682230;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gbq8Cjj5vR0lbkP7gRM0LJLGr8qpZhZuXpMTxTEBIGU=;
+	b=qmChkpowJdYlvPI76nKgSeP7R7GclCj8CTGjnBCWXoS2nJ/qFXHGCOvRhyM8tgYBiyjP7O
+	MQLx6zTEWnimWVAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=z+d3SBRt;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=qmChkpow
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727682230; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gbq8Cjj5vR0lbkP7gRM0LJLGr8qpZhZuXpMTxTEBIGU=;
+	b=z+d3SBRtINqU/GfAFFW+vWR24CdzKZ8Fh1wra7l+2T1YG5Qjfmx9qVRHlSI3MgRdU64xUN
+	cAZmDqCeeX0e1w+6SsEFwNv+H+kRm+BXyKQPXVTAbksNp3e1rN2LE/BqZlGf3LR66Gpqv7
+	YlyslTp8s61OJogAdvPhraIYMfR/Jl8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727682230;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gbq8Cjj5vR0lbkP7gRM0LJLGr8qpZhZuXpMTxTEBIGU=;
+	b=qmChkpowJdYlvPI76nKgSeP7R7GclCj8CTGjnBCWXoS2nJ/qFXHGCOvRhyM8tgYBiyjP7O
+	MQLx6zTEWnimWVAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 67D35136CB;
+	Mon, 30 Sep 2024 07:43:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aW8TGLZW+maUDAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 30 Sep 2024 07:43:50 +0000
+Date: Mon, 30 Sep 2024 09:44:43 +0200
+Message-ID: <87jzetk2l0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jerry Luo <jerryluo225@gmail.com>
+Cc: tiwai@suse.de,
+	christian@heusel.eu,
+	cs@tuxedo.de,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	regressions@lists.linux.dev,
+	wse@tuxedocomputers.com
+Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
+In-Reply-To: <ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
+References: <87jzfbh5tu.wl-tiwai@suse.de>
+	<ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZviSURL7kaxZPkSN@archlinux>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: B14B11F7F9
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-On 29 01:33:40, Jan Hendrik Farr wrote:
-> On 28 13:50:12, Kees Cook wrote:
-> > On Thu, Sep 26, 2024 at 06:30:15PM -0700, Bill Wendling wrote:
-> > > On Thu, Sep 26, 2024 at 3:18 PM Bill Wendling <morbo@google.com> wrote:
-> > > >
-> > > > On Thu, Sep 26, 2024 at 12:58 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > (cc Kees and Bill)
-> > > > >
-> > > > > On Thu, 26 Sept 2024 at 19:46, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > > > >
-> > > > > > On 26 19:01:20, Jan Hendrik Farr wrote:
-> > > > > > > On 26 18:09:57, Thorsten Blum wrote:
-> > > > > > > > On 26. Sep 2024, at 17:28, Thorsten Blum <thorsten.blum@toblux.com> wrote:
-> > > > > > > > > On 26. Sep 2024, at 17:14, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > [...]
-> > > > > > > > >> [    6.252375] memchr: detected buffer overflow: 12 byte read of buffer size 0
-> > > [...]
-> > > > > > >       bkey_fsck_err_on(memchr(xattr.v->x_name, '\0', xattr.v->x_name_len),
-> > > > > > >                        c, xattr_name_invalid_chars,
-> > > > > > >                        "xattr name has invalid characters");
-> > > [...]
-> > 
-> > The thing going wrong is that __bdos(xattr.v->x_name, 0) is returning 0.
-> > This looks exactly like the bug I minimized here:
-> > https://lore.kernel.org/all/202409170436.C3C6E7F7A@keescook/
-> > 
-> > Since there wasn't an LLVM open bug yet, I've created:
-> > https://github.com/llvm/llvm-project/issues/110385
-> > 
-> > -Kees
-> > 
-> I found a fix for the issue. Fixes both the issue in this thread as well
-> as your reproducer. First thought they might not actually be the same
-> issue, but they indeed are. Haven't tested against the issue Thorsten
-> linked.
-> 
-> Havn't run the clang tests on it yet, but it does successfully compile
-> my kernel and fix the issue.
-> 
-> I'll open a PR and give more explanation tomorrow, it's getting
-> pretty late over here in CEST.
+On Mon, 23 Sep 2024 21:37:42 +0200,
+Jerry Luo wrote:
 > 
 > 
-> Here's the patch to be applied on top of
-> https://github.com/llvm/llvm-project
+> Hi Takashi,
 > 
-> --
-> diff --git a/clang/lib/CodeGen/CGExpr.cpp b/clang/lib/CodeGen/CGExpr.cpp
-> index 9166db4c7412..143dd3fcfcf8 100644
-> --- a/clang/lib/CodeGen/CGExpr.cpp
-> +++ b/clang/lib/CodeGen/CGExpr.cpp
-> @@ -1164,15 +1164,15 @@ llvm::Value *CodeGenFunction::EmitLoadOfCountedByField(
->      Res = EmitDeclRefLValue(DRE).getPointer(*this);
->      Res = Builder.CreateAlignedLoad(ConvertType(DRE->getType()), Res,
->                                      getPointerAlign(), "dre.load");
-> -  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
-> -    LValue LV = EmitMemberExpr(ME);
-> -    Address Addr = LV.getAddress();
-> -    Res = Addr.emitRawPointer(*this);
->    } else if (StructBase->getType()->isPointerType()) {
->      LValueBaseInfo BaseInfo;
->      TBAAAccessInfo TBAAInfo;
->      Address Addr = EmitPointerWithAlignment(StructBase, &BaseInfo, &TBAAInfo);
->      Res = Addr.emitRawPointer(*this);
-> +  } else if (const MemberExpr *ME = dyn_cast<MemberExpr>(StructBase)) {
-> +    LValue LV = EmitMemberExpr(ME);
-> +    Address Addr = LV.getAddress();
-> +    Res = Addr.emitRawPointer(*this);
->    } else {
->      return nullptr;
->    }
+> On Mon, 16 Sep 2024 19:22:05 +0200,
+> 
+> Takashi Iwai wrote:
+> 
+>     Could you give alsa-info.sh output from both working and non-working
+>     cases?  Run the script with --no-upload option and attach the outputs.
+> 
+>     thanks,
+>     
+>     Takashi
+>     
+> Issue now reappear, output from alsa-info.sh are attached. If they are still
+> needed.
+
+Thanks.  The obvious difference seems to be the assignment of two DACs
+0x10 and 0x11 for headphone and speaker outputs.
+
+Christoffer, how are those on your machines?
 
 
-Here's the PR: https://github.com/llvm/llvm-project/pull/110437
-
-I hope the way I added the CHECK tags in the test is good and that they if
-they don't need manual cleanup, not familiar with the llvm test system.
-
-
-Best Regards
-Jan
+Takashi
