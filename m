@@ -1,115 +1,161 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C8E15C13A;
-	Mon, 30 Sep 2024 07:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509021741D1
+	for <regressions@lists.linux.dev>; Mon, 30 Sep 2024 10:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727682292; cv=none; b=otrUBUjzZrQKB5t/3H38T4F2gZvp8oPLAB0CQZJYm2UruxzxtoA+i27MbyFSWsXlnm51Z84sqGa9LfgplFDST97c8sCpL1pUcxYrwdHNv4ht4sNpweIpvwHVAg/sjuIS3RMe+co+sGwWkyt56L1HX7HVIOyWtuyxxY8rFFH1/MM=
+	t=1727692547; cv=none; b=We+dSA2+YNkd+fTDWn27Jt0Mzzi3vMetT8gwVs7Kne45lW2nsUVE0EHYuZjwXEMUc7OC3wWovYWyeBEuWnSlXrFTiKh6/C5x/04e5UjpvV9PqgtXdP272tV5+uG7oWypysUbLZBlZEAo/ZQ8SpbVOeJUBLjAliip/khhGColvFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727682292; c=relaxed/simple;
-	bh=j7RGII9g3Po6cu1gX7o2B+tuk4vrlYYa6ySx2mjDLuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GXze2UcnjfwT6gjkLsCxvFsfNIdHWvc4O4eoTS/Vg1w9KFrzntO2/ZoGNLpo2dW9TZWllkgZED1D91gZNga9Ys3tdiicR4LydMWJbVDtW+NNv2pWKJOp5s/Dx9ldYt33T56dgbyLITD917JlVg3y++QVLl7muqv+yIamf4x5xmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1jmzJMtY; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727692547; c=relaxed/simple;
+	bh=K2KYdsOr0X5H4XjzzrhlyKfrWbeb2sW3IDbTJRqI184=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lHCgGpNzVWSpakkQA2q6bQXfrax6sO2lhRSewwZwt47ZuS4CQn5Qtv+7NPxgh52RGSbpdZQZwDZ8tCVAmsL/vsoCnTRjqDAeuYHnDBMGM53uBfNNhfHKolqNn7bxDYHp+UNC6C6cIe1Hw7JcUz0LDKg3o2gNi7j6TYeeuCh8pH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnHz5wNO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Jdctg/1/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HnHz5wNO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Jdctg/1/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1jmzJMtY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=k1U/88ZtoQLAF8tHTyw8LiGNPUA1RAE+qVtpSBnQjhg=; t=1727682290;
-	x=1728114290; b=1jmzJMtYITtqa15sn7EargiBu6f2yeuB0IKpLSm+k557merPh87mr+Afc0XMw
-	XqehCP1oGbiudEEdvpYO6S6brD1hNRgkbTFHmQn46EYb7SQjDF6n6asnDirOXpZsNblyBcuHtlYYk
-	iyL5y8ffP9zNUYYUvE8ynTwIXp9fB2rTZ74BnkQODleGVHnSzRBYRT+l4wK6qrCltLtNExAImmJU1
-	Dehhmi68B+JuM2sLIwCVABkS0cEg7vh+EwsuvjciDRSCF06qonRPNRtACQpP54+mWZDfhh10diOjF
-	QmccdH4Sq36lX3rWAjuNtYGS555uiYU46mKQ2bDk//+vTWXmIA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svB5G-0003Ng-LM; Mon, 30 Sep 2024 09:44:42 +0200
-Message-ID: <38fc4bf7-804f-449b-a9a4-a33bb7486656@leemhuis.info>
-Date: Mon, 30 Sep 2024 09:44:42 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnHz5wNO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Jdctg/1/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HnHz5wNO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Jdctg/1/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 672D01FB9C;
+	Mon, 30 Sep 2024 10:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727692543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qxx1UQrE80LFqs8p40hza8Wbc1XUKLK21rskYeGfvxI=;
+	b=HnHz5wNOEyPG0ycQ0L+fBMoy10bAEJzuvNlg80cSdMiE2C0oba8KzMXGnzxf6K2PTFK+KM
+	yZJqIt1Xl2EA8Wq+cQBGrCrt+X0LZcCmF6lnX2tB+O0zsEK94hIjdnLHs7XvWKhDg+epJA
+	HJXA52JzRKdR02CqrkxnYvuox5eHu7Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727692543;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qxx1UQrE80LFqs8p40hza8Wbc1XUKLK21rskYeGfvxI=;
+	b=Jdctg/1/e5myV/nqw5H4J0L93YcdniIxpHTLbJCuvaedjWoKrrWEd3aGLQpFM7t1u2MSHU
+	2UrfERVGyBM7mnCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HnHz5wNO;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="Jdctg/1/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1727692543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qxx1UQrE80LFqs8p40hza8Wbc1XUKLK21rskYeGfvxI=;
+	b=HnHz5wNOEyPG0ycQ0L+fBMoy10bAEJzuvNlg80cSdMiE2C0oba8KzMXGnzxf6K2PTFK+KM
+	yZJqIt1Xl2EA8Wq+cQBGrCrt+X0LZcCmF6lnX2tB+O0zsEK94hIjdnLHs7XvWKhDg+epJA
+	HJXA52JzRKdR02CqrkxnYvuox5eHu7Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1727692543;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qxx1UQrE80LFqs8p40hza8Wbc1XUKLK21rskYeGfvxI=;
+	b=Jdctg/1/e5myV/nqw5H4J0L93YcdniIxpHTLbJCuvaedjWoKrrWEd3aGLQpFM7t1u2MSHU
+	2UrfERVGyBM7mnCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2028413A8B;
+	Mon, 30 Sep 2024 10:35:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tU4tBv9++mbaQwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 30 Sep 2024 10:35:43 +0000
+Date: Mon, 30 Sep 2024 12:36:36 +0200
+Message-ID: <87ed51ig23.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
+	Eric Degenetais <eric.4.debian@grabatoulnz.fr>,
+	linux-kernel@vger.kernel.org,
+	stable <stable@vger.kernel.org>,
+	regressions@lists.linux.dev,
+	Sasha Levin <sashal@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [regression] Regular "cracks" in HDMI sound during playback since backport to 6.1.y for 92afcc310038 ("ALSA: hda: Conditionally use snooping for AMD HDMI")
+In-Reply-To: <ZvgCdYfKgwHpJXGE@eldamar.lan>
+References: <ZvgCdYfKgwHpJXGE@eldamar.lan>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: resource: Skip IRQ override on Asus Vivobook Go
- E1404GAB
-To: Hans de Goede <hdegoede@redhat.com>, Tamim Khan <tamim@fusetak.com>,
- linux-acpi@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: rafael@kernel.org, lenb@kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240903014317.38858-1-tamim@fusetak.com>
- <c73420b7-c186-4b5d-a074-961b35ed829c@leemhuis.info>
- <f79854bd-b338-458f-bc04-466376d05a65@leemhuis.info>
- <87cf24b3-5ddd-4532-b186-dd1dcc62f712@leemhuis.info>
- <c1276139-d26f-457a-8a73-7f17538dbd28@redhat.com>
- <7ce7f7cc-870f-4f7f-98c6-95eb784008ff@leemhuis.info>
- <9feac709-fbab-424a-bc5c-dedbcec40dea@redhat.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <9feac709-fbab-424a-bc5c-dedbcec40dea@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727682290;e7ea498c;
-X-HE-SMSGID: 1svB5G-0003Ng-LM
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 672D01FB9C
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 27.09.24 16:19, Hans de Goede wrote:
-> On 26-Sep-24 12:18 PM, Thorsten Leemhuis wrote:
->> On 25.09.24 16:31, Hans de Goede wrote:
->>> On 25-Sep-24 1:56 PM, Thorsten Leemhuis wrote:
->>>>> https://lore.kernel.org/all/1226760b-4699-4529-bf57-6423938157a3@wanadoo.fr/
->>> Ok, I wonder did you Cc me so that I can write / submit patches upstream
->>> for these ones?
->>
->> Not really. Of course it would be nice if you or someone else took care
->> of that one and...
->>
->>> It seems that there are 3 missing models:
->>> - E1404GA: https://bugzilla.kernel.org/show_bug.cgi?id=219224
->>> - X1704VAP https://lore.kernel.org/all/1226760b-4699-4529-bf57-6423938157a3@wanadoo.fr/
->>> - B2502CV: https://bugzilla.kernel.org/show_bug.cgi?id=217760#c12
->>>
->>> Which someone needs to submit upstream, right ?
->>
->> ...these as well -- and ideally would even be willing to act as go-to
->> person from now on in case more of these quirk entries are needed, which
->> I guess will be the case. But given the backstory (see below) I don't
->> think you or anyone else is obliged to do this, even if the current
->> situation is parlty caused by regressions and recent fixes for them.
+On Sat, 28 Sep 2024 15:19:49 +0200,
+Salvatore Bonaccorso wrote:
 > 
-> I have already done a bunch of these patches. So I would be happy to
-> submit more of these, but someone needs to bring them to my attention first.
+> Hi
+> 
+> In downstream Debian we got a report from  Eric Degenetais, in
+> https://bugs.debian.org/1081833 that after the update to the 6.1.106
+> based version, there were regular cracks in HDMI sound during
+> playback.
+> 
+> Eric was able to bisec the issue down to
+> 92afcc310038ebe5d66c689bb0bf418f5451201c in the v6.1.y series which
+> got applied in 6.1.104.
+> 
+> Cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1081833#47
+> 
+> #regzbot introduced: 92afcc310038ebe5d66c689bb0bf418f5451201c
+> #regzbot link: https://bugs.debian.org/1081833
+> 
+> It should be noted that Eric as well tried more recent stable series
+> as well, in particular did test as well 6.10.6 based version back on
+> 20th september, and the issue was reproducible there as well.
+> 
+> Is there anything else we can try to provide?
 
-Great, good to know.
+Could you check 6.12-rc1 kernel whether the problem still appears?
+If yes, check with snd_hda_intel.snoop=0 boot option. 
 
-> Also maybe Paul Menzel (added to the Cc) and Tamim Khan can help with
-> adding more quirks, when reports come in ?
+I guess we should revert the patch in anyway; for 6.12, it's no longer
+correct to check with get_dma_ops(), and if this causes a problem on
+the older releases, the assumption isn't correct, either.
 
-That would be great, but nevertheless allow me to ask:
 
-Does anyone now if kernelnewbies has some place where we could submit
-requests for creating quirk entries?
+thanks,
 
-> Either way I have submitted a set of patches to add quirks for the 3 new
-> known broken models now.
-
-Many thx!
-
->> Writing this lead to another thought: does anyone have contacts to Asus
->> and could just ask if there is some generic way to detect which of their
->> Laptops need a quirk?
-> I don't have any contacts at Asus.
-
-I asked in the fediverse, maybe someone knows somebody that can help.
-And if not: no harm done.
-
-Have a nice week everyone!
-
-Ciao, Thorsten
+Takashi
