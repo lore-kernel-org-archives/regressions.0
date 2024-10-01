@@ -1,189 +1,170 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2088.outbound.protection.outlook.com [40.107.223.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1781C6885
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 14:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727792929; cv=none; b=doSLHus88JFN37FWMCxa/pG7FoAjnmy8FBtI5s6NQz3hnKJ90db+KRvarb73Z1ZzCd7ZmRGMtzKyLllqjKBrHmNOe/IUN5j3CcSGnRbOlAc7kGW7xCigYWde8/VdpIodAiO5fswFBvEyFu5MZpBzqb0vBt6gfqWRITVg9Y69skk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727792929; c=relaxed/simple;
-	bh=F/YLFP6/0c6drwukWFfkh31m8jzGAO9Mmmtzh7lMT/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XgbJgQY97dktHlFP/zkaxUSKn88LIjKzIDylAvF9vQdDGRCBYki4P49aubFhYgoQNL9bsc8JDaByipKLP6rHD4m9iwx1tjoZ+K9FLxk3gooBGnmnty/LgQDNub5Z4DS4t+e8GzCiStJpv2Hf7YoN/MLCm03haf7nBC8iB0GP2CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8CA3E1C0003;
-	Tue,  1 Oct 2024 14:28:44 +0000 (UTC)
-Message-ID: <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
-Date: Tue, 1 Oct 2024 16:28:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E8F1CCED0
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 18:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727808548; cv=fail; b=sENpB8yROh1PjlIjUN4SBFYYq3e23Xj54CnfkXq3rNUn139K5RnE2tB0W9yNfIHgn0CigRb+xZAcbMww9S+7qes0Ybvv5Wt3nWGaw7TnSFhTYzXBvpXHcvTE0db41xmyUv+CvxlbfZUUvRwGYUUrJoyVx3hItND1Io/5RRggCAY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727808548; c=relaxed/simple;
+	bh=HFcAPbBVaR+RWhyOkCWIHVUG2GvWu/pn8gVXxpySCa4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HVea/PjzDeAcBu6Za5VZjutiS3Rx+H8AZqdQfkyg27bDuUByDR2HIR5uUIAqzrxnucyBSRGJGSWa+G3usd7UBK6Cq2CcJ/UQjU4HUVOl2LQ7NC9qxZd7p+vSp+/nCyFzx3kPnjresqZWU0PEfHpNPeXnfcAt7fd/M9+5HN+w/bk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xQoNGpfz; arc=fail smtp.client-ip=40.107.223.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xQoNGpfz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vfoBYUkOdAX25SPVzn4pCdSDlro/p4EtdnH3vpLWS2p9GggZVR3wNaKrwFmzDlxiXhGmwOaHC4nvcqjzZ1ubJFDgcjxFCIbgCcGxYYqc0f4+ueUmkWXjHPxjvBBypwrKi4fFD2JUAAZdxrX9s/T0gvvY854jeBTkieHQ2hOR/lgNmQa47tX7LS9r3lnWw6iuY6Qp9ftbiJ+jQ39fhXVtNXCsjucmC+7aiktLjrxHdX9z+y1mslgZ21X/vnxqJnsAinVFLEB3iVRARbvRGtb7m9b070s5lCAR65D7JXMKgI8z5yzvMPxj3RpSDuT/RWH1euUwmDqcjf6IIYLsU0C40w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GL0UWoFrD+ZWVjDFwDTTatWIx8DUt2AxGRNO/R+hoyQ=;
+ b=exn1dK8R0a/uv9enMzaEhM5WgJC8UKz+VgzHa3t+n2/pybuSmXDNb8epjIZBvFZAkRaF36dz9r9Mc1+A2BXiZDczOSrcNxQtsBb2+OpcFpZQeXAClI+H/6yU2rnxblVONqXo4I5FepMzzw5vHIWJnAMA6U5VW+qCG9/bwWQ8m0W5WWiAoYVC5LAKSZt9SG0CjuMqAFjsfte0L09P0sJRO9lYgvWCRI6TxkwNqNGFVY1I1JpYh0O4FPzFJ/s7DRJB2Zc/kVYB4qwMLnjrH3qMohXUqOxskOmYxPTkGiDCPCZiJjoGVIiikbf3jCV3RE2vVNqVhJVsLsbiuHQ/ZPI/hQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GL0UWoFrD+ZWVjDFwDTTatWIx8DUt2AxGRNO/R+hoyQ=;
+ b=xQoNGpfzNrV1R3Uuwjecotph8vIbIu64o5luKjN81chydbRdvqKlKfyV5jPp5ojcsRuNqN5IkuFYJPiBsSmbNvuC3HHVTWu21qGjJ6AWOorksiiKiFa/02uXRXKtx3pvcnuGTh7aOFmaki9XMky56VdqEUfP0WnEvtmA64owzqo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BL3PR12MB6593.namprd12.prod.outlook.com (2603:10b6:208:38c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.15; Tue, 1 Oct
+ 2024 18:49:03 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8005.026; Tue, 1 Oct 2024
+ 18:49:00 +0000
+Message-ID: <95c575a3-100c-4808-b451-b92f14598188@amd.com>
+Date: Tue, 1 Oct 2024 13:48:58 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+To: John Rowley <lkml@johnrowley.me>, Hamza Mahfooz <hamza.mahfooz@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, amd-gfx@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+ <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0226.namprd04.prod.outlook.com
+ (2603:10b6:806:127::21) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
- FORTIFY_SOURCE enabled
-Content-Language: en-US
-To: Jason Montleon <jmontleo@redhat.com>, Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-riscv@lists.infradead.org
-References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
- <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
- <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
- <202409221511.9AF49BD@keescook>
- <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
- <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org>
- <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL3PR12MB6593:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a5a0b25-5df4-44eb-b511-08dce249b666
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SzBFaThRUHBiQktkQitFeHYranB2ZnJUcjF3bHJmN2RwYlV1d2RtZldNbm9p?=
+ =?utf-8?B?U3V1ZHpKSXkxMmRLczlvcGhpNUN6QUh0bTF3TjFPUDhoS29mcnJOZWp2YU5y?=
+ =?utf-8?B?MWJndmxnYm9ld2t1ZDFjelo3Z1JSTm5zKy80bTJzVDJYMjdodFdlUGVQc2Mv?=
+ =?utf-8?B?UmJBZFNRSEFxWjlKcnFhWTk5QWcwc1NuT0RIMmo2Mng1azNxeDYwM1QvYWFu?=
+ =?utf-8?B?R1RVV2hzOUR3MlBoLzJLdkdVRU00TUNFcEJWblhHdnBlUVRzL0dTZzhpa1hV?=
+ =?utf-8?B?SDFBQ2tsdzlUUUorajIwYkdNdnVwaVd1UTVDdjFBQjNKTmk0bU5OMnBDdHY2?=
+ =?utf-8?B?QXI4SUtjNnhWNk5sU1VERVM1ZjdWdmQ1QlZrUUZ2bXFXQWphdUcyaFBKWWxL?=
+ =?utf-8?B?TkZKSXBKZWdUSTFPT0FMdWFjWGxXMDhLZWRYbmFVTmswcGxoeFp5RXMrVEhK?=
+ =?utf-8?B?UDYwWk40M3ZOQ1I1OFRRVzNOTC8vT1BucjluOXYrdWxZVUw4enRNUzZCa1Nt?=
+ =?utf-8?B?Uy9nOTR6L0hYYW8xbkZSaHBxaDFXelZLYlZXMGp3Vlk0Zk8xSUJreUZRS0gz?=
+ =?utf-8?B?VnpWWDNBY3o2Z05ETlhvS20zT2JLSjBjTVl4aDZ6S0g2TUJmU2NiaE9zWnps?=
+ =?utf-8?B?c3VJYXhFOTI1M25JM2piSHZYYVpvbUNObTBNMnJWc2w1eDN4dUJBcGxUeTNJ?=
+ =?utf-8?B?MzV4M1FFdkYzemxUaFQ5QjlwdENlVUZTaTlvYmdRMmVXNyt2blhoelVJb1hz?=
+ =?utf-8?B?TDZYc3BMMWJsd3Y3UFRvZUFuUGRTQlBjanVoUEdXWFBHcmtYUDZhTXg0ZFk5?=
+ =?utf-8?B?RStRQ1lsSG9LeWxtSGVlWG43eXM2UC9vT2MyUWt4aGIrOEo1UHpibVlucm5o?=
+ =?utf-8?B?RW1HVi9YSVlIakpKQWZoeDN0TnFZY05EWHFYT0t2YXZGN3JQcHA3RGdFS3do?=
+ =?utf-8?B?cU1XbEVySlFybWxRUDFBNTRKeFVCNmdOTkJtSi9oNzVrbm5DdzlNemVaVFpz?=
+ =?utf-8?B?ZUJIeHBlUDljSjdETE5PMEYyYlRlMitZK2xSRm82Z3p6ZHBkWEYra1dVY25L?=
+ =?utf-8?B?YWJDK2NVNVpoY2tmRkdFQWZ1MzlnZHRGcjFSSEx4b0ZjZ21JOFlLd0tPYldI?=
+ =?utf-8?B?aDh2UFVicVY2RGxWcGl6aEFqZUJ0bWVPRVhsTkQwSmh2d0NxNFEralpseFlT?=
+ =?utf-8?B?VHc1cThDWE1vSnJTdnhBU243RGV3amljL1pQSDdQdDZSWnhnN2doMDlVaFNt?=
+ =?utf-8?B?cDhrRFY0ZC9vTjJBNlhERUE4ekQ2aExwR1MwNEp1bHk3SHc2Ymtvb0lNbE8w?=
+ =?utf-8?B?SVE1eUdETW9qQWlHZC9sOW1BMFVDcVFNL1ZsL3VuYUFwVm5PNDdabjRZeC9O?=
+ =?utf-8?B?MU52ZXMxbVh5dTRZc2tNeWcyWHU0UzZYQ3JPK2VoWjNSdFhtS0tETjc5cWdV?=
+ =?utf-8?B?bkFYR1kxd0hNeXR4NlVqNEdkT1E3ZTlMSi8zSktjS0wzamRmQWRuZmVrOGFF?=
+ =?utf-8?B?Rnc2eWVvaUtTODJqWTVoMjhCVnJlc2Y2TTJWU3JWdENiRkk5Q2JJZHRLQVJJ?=
+ =?utf-8?B?OENpVFZ6VjdQZVV5cHBpTWplQ1JFUUlVWWU5R2hqRFlKclI5WFJRZHZjTnA4?=
+ =?utf-8?B?VWd1cVB2dGw4SUhrd2JXdTlJczczeHZTWWxEN0dnK0NwVHM3bFB5Q3h1TFBa?=
+ =?utf-8?B?VXlMWDJpUkhBaW4rY25Walc4ek91NFBFRmJLNWI5Mk1ZUUNNd3h6b3ArRFN1?=
+ =?utf-8?B?QkZLREhFYTdjVlhLd0FzeUZuY21RbTNIMEk3ZDVvQjR2N1A0bWY5OWN1enBN?=
+ =?utf-8?B?R3FSTG42UnVuNW16WUhCUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXFPRHRxMEk3RXc2Z0hoOVppaC9BK3QrZzRMUjlwR09LMlQ4RjVWZ1NnNVBh?=
+ =?utf-8?B?UlNnWHhvWklsOWNoWE9WRVdtUlF4U1VRczFkT0FXSy82VTFrZzErWExtWW5C?=
+ =?utf-8?B?bVQ5M2xYazZBSlN5RzlubFBMVWwwVkxOS01zNXhrQWtRKzJVVUIxR1NRLzQ4?=
+ =?utf-8?B?TjhEU0xubjE0aEo3MVhkdU5uQXhrVFFVYzY0QVlmOXBZNUI3bjUxQkl5OVZF?=
+ =?utf-8?B?WXI4Q2dmd1Y0N2JkTUhsRkV1N2owM3QxSktSSGxpaUl1TFJOWC80Z3VCNW9D?=
+ =?utf-8?B?S09HTnZJbGMzN2hXRnpHbFRHRjVHSEhkWGFTeVB5U0JSQ3lJeHdPSjlCRS84?=
+ =?utf-8?B?VVR2RjFpWm9CL0ZLOVFYcGJ1Tkw2RW5HWFV3L3doMURMYnVTYUJtT0N3WWk5?=
+ =?utf-8?B?SFdGMjBOV0hyS1hpMWRxZFcvU0QyZVBONHlCWGowMVcwWWRwZmNjSmRVRmZn?=
+ =?utf-8?B?V3BlWUpqaHJDWkJCdmFGK0l4aWl5WG1rOGpWZ3ZYalM1UHVndVlpQkFweVQv?=
+ =?utf-8?B?cU4rNkl1YStHZFpxYndFTlhoWFE5TVZBenFlTUphSC9YbHV3TEE3N3d1MG5z?=
+ =?utf-8?B?SndFMWEwZW1YcUJkeDhMeWx3REhWK21KQ3JDdHZMUm4vSkFoY21FVWJOSWlN?=
+ =?utf-8?B?OW9IU0NGUWkzL2MzNzRSeEFTZDBTVGd0eXZ6U3YwRDRmMzdGeEErc3RPRmFr?=
+ =?utf-8?B?N0ZGWXhjOHdlTmVPYVprV3NjSXlVc2JtbGFaZllWSE50VTAxSUxJcEN6c3N1?=
+ =?utf-8?B?NDFWdkZQZU9XaWJud3cxSHd6TUpoRHNuR2F5MTVFRU1uS3N3clJiNk9XRHhF?=
+ =?utf-8?B?Zy9QM251M1ZwbEhRUm1xSmFWcWNVczVtVnlHUjNXcHdTZk9VSWl5WklvRkxG?=
+ =?utf-8?B?M1ZlSzRUdnJybkhhc0VoOFFTeTNQbEtLb2F6Y2ZZczVOcTVCeUdNajhYaFpS?=
+ =?utf-8?B?WElYQkZkSloweThiV3BCb2s5UEJLbzVBRDlvME5kQThPSEV4SE15aW8yc0VK?=
+ =?utf-8?B?R2VKeXJ5Z0JadEdBNEFib2JEbmpNaHp0T244S1ZhM3lURWNqZmdsL09qaURF?=
+ =?utf-8?B?ZTdKMldBc25OYk5FNXpSOWZuZzliRG53cEFwazNVVFdxK0o1d2RnTkZoTlh1?=
+ =?utf-8?B?bW5SbWdUVjhhd2RoQS95bXMwSVdHMFNHU25xTmxrYjBGTEwxQW1mZFZva3ds?=
+ =?utf-8?B?cUFmWmFsNWt4UEQxOEpaaDNmQ2hoWmFqU2dLdHdHZUNrQWNLbjdiaFBoZkZE?=
+ =?utf-8?B?Nm4yYnF0akNGMzd3MDJ3R3htVmNTRjdiTVlTK0NCNHFJRnVrQ1lZaTlWZ2F3?=
+ =?utf-8?B?Qlh5d3QwOHRBYzk4ckxNSXBrT2thMmdPeG9OZW1ZWGhMUGN2YkVDZDJLc2FP?=
+ =?utf-8?B?L29abk9IR3lBdkQ1SE10K3RudWFGUmE1MzdwSkNGcm1lSUtzZHJEdU5MQ0JO?=
+ =?utf-8?B?bFVYdzVEZEFVU1l2eE1oZzlKOUhpM3NRaElwZm1DYUFRMEJEY2ZabUllOHpv?=
+ =?utf-8?B?RVFoR0hjQ254RkdVNXdnRlllRHVVcmx2eFpKUE84dlAwQ3c1L0Y5aHg1UFp4?=
+ =?utf-8?B?ZzE1UTVEbFd1Z21VRWJSVXFnR3lRUWxkbDRPS21sTm5vSDNJdjVhMkN2aE1h?=
+ =?utf-8?B?bHQrYndQNUJiY1gvTkpWRTJudk55YVB3MGhsblQySkN0VC83d1ZPMFE4UG5R?=
+ =?utf-8?B?NFV6ZDN4NkRYQjF5ZkdoT1RyNnFYU3VZbFR5QnF6L1lhTHg2MXg0d3lzMzht?=
+ =?utf-8?B?OFMzSmM5cEpzWVh0VkNwcFBsVzRLemRaRzNYcGpka0NrTTUvdFJ3TDU2K2VC?=
+ =?utf-8?B?MTBicVJmR2RZZXRvNEF6NEhLdUMzTlRGT3lFSGNXQThVeE9xNzJZUXR4VkpW?=
+ =?utf-8?B?U2Z6aDEyd2VxaXI1UHBScU1KeUMzYVRIWFRWODZRekhuR1hsbmpUS1YzSnli?=
+ =?utf-8?B?UW5wUXpzbGhPK2tSeW5YeVZ2Zlp3aUJoU2pzbFpMVUdtbHlHc2Jva2tTRHIy?=
+ =?utf-8?B?bWtheG11bmRzckRnejdmdGljNnRmTnVuTDFBcUJqMmVMbVl5cHBLbGpCNUVW?=
+ =?utf-8?B?VFNhb29VajRDUU1FcE1ieEEyaDdxZmhYWEIxbW5WbGh4UVA3VllGcTI5OFZl?=
+ =?utf-8?Q?4eo85E8eyyY3W9m7nkBkDvnvL?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a5a0b25-5df4-44eb-b511-08dce249b666
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 18:49:00.3021
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KslLd6Ab1e/WQbvbKtEuTv0SDLVm3L8rUBYLsjYMcuFz1Vk/PcbiaR+BqYkxXcwY5v+HoRRvEl5GMM5IIvoznw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6593
 
-Hi Jason,
+On 9/30/2024 13:42, John Rowley wrote:
+> Oops, forgot to mention that I'm using the AMD variant of the Framework 13 laptop, which uses AMD Ryzen 7 7840U w/ Radeon 780M Graphics.
+> 
+> Thanks.
+> 
+> #regzbot introduced: 58a261bfc967
+> 
 
-On 25/09/2024 16:32, Jason Montleon wrote:
-> On Tue, Sep 24, 2024 at 1:36 PM Kees Cook <kees@kernel.org> wrote:
->>
->>
->> On September 24, 2024 8:58:57 AM PDT, Jason Montleon <jmontleo@redhat.com> wrote:
->>> On Sun, Sep 22, 2024 at 6:38 PM Kees Cook <kees@kernel.org> wrote:
->>>> Can you try this patch? It should avoid using the "WARN" infrastructure
->>>> (if that is the source of blocking boot), but should still provide some
->>>> detail about what tripped it up (via the "regular" pr_*() logging). And
->>>> if it boots, can you look at the log to find what it reports for the
->>>> "Wanted to write ..." line(s)?
->>>>
->>>> Thanks!
->>>>
->>>> -Kees
->>>>
->>>>
->>>> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
->>>> index 0d99bf11d260..469a3439959d 100644
->>>> --- a/include/linux/fortify-string.h
->>>> +++ b/include/linux/fortify-string.h
->>>> @@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>                                           const size_t q_size,
->>>>                                           const size_t p_size_field,
->>>>                                           const size_t q_size_field,
->>>> -                                        const u8 func)
->>>> +                                        const u8 func,
->>>> +                                        const char *field)
->>>>   {
->>>>          if (__builtin_constant_p(size)) {
->>>>                  /*
->>>> @@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>           * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
->>>>           */
->>>>          if (p_size_field != SIZE_MAX &&
->>>> -           p_size != p_size_field && p_size_field < size)
->>>> -               return true;
->>>> +           p_size != p_size_field && p_size_field < size) {
->>>> +               if (p_size_field == 0)
->>>> +                       pr_warn("Wanted to write %zu to a 0-sized destination: %s\n",
->>>> +                               size, field);
->>>> +               else
->>>> +                       return true;
->>>> +       }
->>>>
->>>>          return false;
->>>>   }
->>>> @@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
->>>>          const size_t __q_size_field = (q_size_field);                   \
->>>>          fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,  \
->>>>                                       __q_size, __p_size_field,          \
->>>> -                                    __q_size_field, FORTIFY_FUNC_ ##op), \
->>>> +                                    __q_size_field, FORTIFY_FUNC_ ##op,\
->>>> +                                    #p " at " FILE_LINE), \
->>>>                    #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
->>>>                    __fortify_size,                                       \
->>>>                    "field \"" #p "\" at " FILE_LINE,                     \
->>>>
->>>>
->>>> --
->>>> Kees Cook
->>>>
->>> Hi Kees,
->>> Sorry for the delay in responding. Your patch also caused the system
->>> to hang booting, but I took it as inspiration to try some things.
->>> TL;DR I see these two print several times:
->>>
->>> Wanted to write 8 to a 0-sized destination: oldptr at
->>> arch/riscv/errata/thead/errata.c:185
->>> Wanted to write 28 to a 0-sized destination: oldptr at
->>> arch/riscv/errata/thead/errata.c:185
->>>
->>> Since I suspected CONFIG_ERRATA_THEAD_MAE which relies on
->>> CONFIG_RISCV_ALTERNATIVE_EARLY I suspected it is just too early for
->>> pr_*, etc. I tried trace_printk but that didn't produce any traces,
->>> and then I found a comment which makes me think we're too early for
->>> that too.
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/alternative.c?h=v6.11#n214
->>>
->>> I didn't want to give up so I wrote a simple module to figure out how
->>> to use sbi_ecall and then incorporated that idea into your patch,
->>> although even that was not straightforward:
->>> https://gist.github.com/jmontleon/f3536ad70dc92bed992139ad5b266d5c
->> Oh nice work! Probably something riscv-specific needs to be wired up to the printk routines to do what you have there until printk is fully available  But that's a separate issue, I guess.
->>
->>> Full output: https://gist.github.com/jmontleon/823facff38e28b717f153e38adcfd7fe
->> Does the system boot with your patch?
-> Yes. It boots fully. It also booted with trace_printk, it just didn't
-> produce a trace, which again I think is expected at that stage. It
-> seems as long as there are no 'normal' print attempts, pr_()*, etc. it
-> works.
+Just to make sure we're looking at a pure kernel bug:
 
-
-Hmmm I don't see what in your patch would fix your issue.
-
-I sent a patch 
-(https://lore.kernel.org/linux-riscv/20240829165048.49756-1-alexghiti@rivosinc.com/) 
-that was merged in v6.11-rc7 which fixes something similar, could that 
-be what fixed your problem?
-
-The problem with this early code is that the MMU is not enabled yet and 
-if your kernel is relocatable, the relocations are set "virtually" and 
-then without the MMU, a call to an external function results in a 
-trap...Which happens way too often, I have a few ideas to fix that, I 
-need to find time to tackle this though.
-
-I don't know FORTIFY_SOURCE, but I guess this could cause a call to an 
-external function and then cause the issue I describe above right? We 
-already remove all instrumentations from this early code so maybe we 
-should remove FORTIFY_SOURCE too?
-
-Thanks for digging into this,
-
-Alex
-
-
->
->> I would guess that this line at arch/riscv/errata/thead/errata.c:168:
->>
->> void *oldptr, *altptr;
->>
->> Should be:
->>
->> u8 *oldptr, *altptr;
-> I tried this, but it didn't appear to make a difference, I will try
-> some more today, though I admit to being out of my element.
->
->
->
->> But maybe __ALT_PTR needs adjustment too? Hmm. I would have expected void * to have a size of SIZE_MAX here, though, so something else might be confusing the check.
->>
->>
->> --
->> Kees Cook
->>
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+1) What version of power-profiles-daemon are you using?
+2) What mode are you in, 'balanced' or 'power-saver'?  If 'power-saver' 
+can you reproduce in 'balanced' as well?
