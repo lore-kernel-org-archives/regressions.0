@@ -1,116 +1,188 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CAA286A8
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 19:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727810133; cv=none; b=RkXgGCkQQGSnXNyKjdVDE2yn5EMBA8k9TrnIOQ5wfiLimw1ZpFYJXhnP7rAnCBbvuo7gyofRdkhTdMGBvKoGMWriwGeKmm1jbFe0fjcnGEAb6QTBdUbSZLVXO0CZm0SL4ONIC/d9r/+pS9GdmE38xSr5R9PB+hN0qYbT6md7SwI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727810133; c=relaxed/simple;
-	bh=oHX9oLhS2fcLUzguZRgRlHOmYwopH0LeGht+u7rjoVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PY5zo0dgeA2BWFmpAPC52LHJXaikPgnl0ORH4bxIUQG8WWnW8btnwBvSgX3x+PGwEWKnNLnhweXIWujmkY34nmIjSVbvyQo5zPN0YtlzNmLTUPBs5Gu4vX2hsf+yyuiLreyoXTerS/9vV4hrgm8uy7V9WGwsqCEevP421G9B7fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y62n4TIc; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F6A1CBE98
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 20:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727813233; cv=fail; b=jNcBQWe+81uX2rv6RRkqS6dv4xg84ZEsM/5ZRjgnsfrPHEFz3GT72mZrUWJWH3Sj2FI3aBY+4Og3Ww0Y3NCs0IlUnwJB85p/yN/YX87p8jfrIjOY6O5bVD5uaoNGY2Ez8l2Qvv8uAxDYWxVhbIG4Fy/Ks4abjLc/AUq00s08E+0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727813233; c=relaxed/simple;
+	bh=d2X4yMHW+k5Iah8OCKpYKswRaIZHmmvvj0H+LRnGB3k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hdvwlX7V8aXBo38bR7zK1sAPUueL51DmEnQg4Saigtvx1HIqeEIgF/d+sGmbYumFzUcPezSPwI6IE2po2N7iQY3uUTPo5Lkn1rHI50md1ZKTMKW3pVp2hbAqXjw4ijpjHCZ1gi4DZlOW7LpyOz60061RgPhl13e66A4prjxxwik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s28NruXJ; arc=fail smtp.client-ip=40.107.220.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y62n4TIc"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e09ff2d890so4974587a91.0
-        for <regressions@lists.linux.dev>; Tue, 01 Oct 2024 12:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727810130; x=1728414930; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ROw0OxXZu/qRMTETvniaDIW4ULnJVrS+jSpbp/URjhs=;
-        b=Y62n4TIcXHDwHc0QzzaCSyLRR+QgUVot+QNGIvWLDKsVTQKEWoaujeSikf4LT5xJBz
-         1LOvJJu8HD6UALk1Y2AHRBJ6wcMNMnLA2SZZ16+a+MpwchKIdm58XRWGzb/vLuT4cUe0
-         pNuyEQpq9X7ROI+D4k4Aa032g0GXv11G5i6AEHjfHDj4z6tP+Pik4hrI5UL9PFBBdEq7
-         29f3Um1ervVbv8Zl7oisWtiV3RQ9kyNPrvZpMvqWD/39zrc63Mz3OgT0xt/kDSBbVyFR
-         HJ02DjDa8AVWNBjCDonLPRJ5TN3GliiH+mwfArlvuVD5ii0KTmBj2BraJlC3o48zLLh0
-         lFgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727810130; x=1728414930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ROw0OxXZu/qRMTETvniaDIW4ULnJVrS+jSpbp/URjhs=;
-        b=K6jycaoU8H5ccTXlU1fUjYyNlsjHiLCTcvMcGRouL+m8MFFnmQ85fyZMI+IqsUI8JB
-         6HMXjuf8e5Fjnym9P+CYIpb04uBrAG4IHHiecnWOsGR31RVNO/Ex4mjHuYAO9m5aTAFr
-         K9bKpelWm6y0gOZqLKTTWgtTZy6fmA5FrMW5BnRhZ5++UOQk0MHrYD1Ytz4TujrD1HnE
-         QW7UimZ/dAviQUTVfR6ODo8cOwV7pFGt3k1t/MyHuArzk7Rzobbantc6kWDc44GnqavO
-         zBbHh0dqseYMTJJf5HnF2zEy3ozWoQcSq1JhVMTlTJRBZ0zVOFiXT36K3oz64shq5eJB
-         nsHA==
-X-Gm-Message-State: AOJu0YzNWraLLMgScXIRBzTwr/GrmCyzH0pd1+QCgYb6CKcpKax8P+th
-	Nj7YlZ5iGWMPAxC0HR4CRQqwNLQJfM0JVCqA04wp+UN+USCYspaEYzBzCzUiWSL2WlkW5ZU4Ivp
-	9FNTeksy+BCZavUJGKsFRrSIOSkD8+Ws/ytA=
-X-Google-Smtp-Source: AGHT+IEZYZ9JNe7sHu4GBFJ6hLXR9WIV/8R2Jz2qqX/MxHVuDJ0OhPAc3NQ6vGOJ6Z7qTWLgyUXL2bSD0g0wad8+krg=
-X-Received: by 2002:a17:90a:bf17:b0:2e1:89aa:65b7 with SMTP id
- 98e67ed59e1d1-2e189aa680dmr223483a91.9.1727810130020; Tue, 01 Oct 2024
- 12:15:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s28NruXJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qcQe/Ab4ytMn76SfBOeZdLaDDz2NvOxt5iNgOVM1BrjwWvBopFKVc8sPS6PPo5E9a+3km0jVitXahnP8YGxPIPBbjzWtA76ouRoMwpDnBmQuQqkApKFLaI2UvLOYHGtJLiCcDlPGEKf0kCd6+xFHcn84IYsvP5SQh0j1rnT7iPgSgWKRntwOa9q6Gw/SXZiWacLI/3Prg4P8Zt2Lq/FxeHXSBQDnXWy7OXBk4TXTOUaRGt3MUR2qjKmxcf99GwNMdRD+flCyO3JtJ+XMCRR44jnEAxyl88Jf+dNmpXIAIaD5vwnlUfjC6Eir8IUSfGUa333xNBVIDAdurHkqgML/CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2TXMXnHZts5f+ooVUqy5SY9o5BeG/OzHqmpVFCCbj5U=;
+ b=vUikHN+MN8H/H759mWLTkySfUN4mdaZaP5g10tzUuMYynreUw9qELwtrkcGL4NUy7RuXPPnCRmBMsJNtezuhFquS8/9HOyVuVNRuXT8RMDMJz/c/5fFn2HrcWatcmfoN/wt9MepBo7RBpsxj51hfaQjT+ZGQoSwEMzhIJ8dOxYqgdTmXiJX7dJ9uHph5s6RNn2tYKWnt56GkX7iIjd/adZc+Iao7bfLTJmOcz2ukSRiB5LZ0lMv4plOjoD1L5niKZ5VpKSJq3kGUdbOjGXfrCApBNyAbKR1mVfZXFuZjjmy0h/OC6ug6FrTfz9B0HBJD9WueraSSF3kTujqDoes6/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2TXMXnHZts5f+ooVUqy5SY9o5BeG/OzHqmpVFCCbj5U=;
+ b=s28NruXJJQ6f6PhSSqKhZLvkNvThl+gilEVPlGiYGvPA3UJLS/dvbvqJS9KKsUw+mFgSsXe0/UcAzQRunFl9hWwb6mAcBTMPCqefJ3G6hiDxuYVvwBNdXLnaoPOYQd6ijiAeUJj+c+qcXj9VIPjWfgrnoEkTv3ia5BfxJOJQT90=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
+ CY8PR12MB7122.namprd12.prod.outlook.com (2603:10b6:930:61::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8005.26; Tue, 1 Oct 2024 20:07:10 +0000
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b]) by DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b%4]) with mapi id 15.20.8005.026; Tue, 1 Oct 2024
+ 20:07:09 +0000
+Message-ID: <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com>
+Date: Tue, 1 Oct 2024 16:07:07 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ John Rowley <lkml@johnrowley.me>, Hamza Mahfooz <hamza.mahfooz@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, amd-gfx@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+ <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+ <95c575a3-100c-4808-b451-b92f14598188@amd.com>
+ <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me>
+ <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
+Content-Language: en-US
+From: Leo Li <sunpeng.li@amd.com>
+In-Reply-To: <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0075.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:4::8) To DM4PR12MB5311.namprd12.prod.outlook.com
+ (2603:10b6:5:39f::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <8196cf54-5783-4905-af00-45a869537f7c@leemhuis.info>
- <ZvvonHPqrAqSHhgV@casper.infradead.org> <b77aa757-4ea2-4c0a-8ba9-3685f944aa34@leemhuis.info>
-In-Reply-To: <b77aa757-4ea2-4c0a-8ba9-3685f944aa34@leemhuis.info>
-From: =?UTF-8?Q?Krzysztof_Ma=C5=82ysa?= <varqox@gmail.com>
-Date: Tue, 1 Oct 2024 21:15:04 +0200
-Message-ID: <CACw1X3iPMW1+cw8Pz_CG_9KM=Z9XycRPbzF0WDD1nxV1TDn2gQ@mail.gmail.com>
-Subject: Re: [regression] getdents() does not list entries created after
- opening the directory
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: yangerkun <yangerkun@huawei.com>, Christian Brauner <brauner@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|CY8PR12MB7122:EE_
+X-MS-Office365-Filtering-Correlation-Id: 344182ef-977d-453b-1283-08dce254a191
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q2NJLzM1RUNuU0VsbFVqU3B3UGN6WDVsYmhqaTNVc3cxS1hFSmI5MWF6QzQz?=
+ =?utf-8?B?ZEdDYkMyTVo5MWl5SCtRbDFhbjN3NVBHNldSbnNQT2dIYk0xcFRwUkcrakZ6?=
+ =?utf-8?B?ekgveXhRYVpOUFRGZjFscTkvWDdOL25iYXhzeUdHUEZaWEZTci84MTdBdi9S?=
+ =?utf-8?B?THZyMzNUcEN0OXZQMTZJVTJJMEVaVDBzZFVDNXdtVE5JdHRVeWUzMW9DMUsx?=
+ =?utf-8?B?cEdLYkxPNTlsQTkyOXpDYTBmazBvYUsvcG1pZW1rd1liNEk2SXlXdzQ0dHZK?=
+ =?utf-8?B?MmxKNXZ2aTlnSnZocEszWnVYU285M3BJUmUwS3JSVkZGaHRzc0V6amxjOFFk?=
+ =?utf-8?B?dVJWNUtMbW5BYjJWdThKNks3RmdXczhCK05vMkRJSXFCQmFnMExGay9kZmJh?=
+ =?utf-8?B?aXVGMWVwck9CTVpEWjlQbGs2Q2xUQldSUC9wMkpndDEybHJ6aEN5bWhCaEtH?=
+ =?utf-8?B?Z3ZieVpmSjJqeEhXZVluYTNud2c2WmYxSWFGRXlaRytxSm1sWUZZd3RMVGVz?=
+ =?utf-8?B?ampWeDdXNWZoREtWVXJ5QWJZSklQWmtJYTNNdUtRTThKTjJsdStYOGowWlRh?=
+ =?utf-8?B?SWVBZUY1T3JRdFdmcUhGSHErU2tCaHRYcndyV0lUT1FOajBkVkdlNkdpM0k2?=
+ =?utf-8?B?M1ZQU2pRdkVVUkcvMUxxVXIyRUlORlp2Y0NWWE84bUNjYU1yaUJyQ1Y4WE1P?=
+ =?utf-8?B?L00zd3l4bXNIYUNXMmFBcGZJcWNuL1BhRlVZbnMyY3JLMVZ6NFZmUDN4dDZw?=
+ =?utf-8?B?d0l2WWNuMmplY0FVZUQwaXYramh1R1pyOFJQRzBZMzRmV3Z2TDFFZFMzSHgv?=
+ =?utf-8?B?MXQ4OUppOHI3aEUzZTNSOEcyenNJLzZQclVheGF6MEUyaXQrN0xHUkV3V2Z5?=
+ =?utf-8?B?c05BdEY2dkZoQk50Mmw2SjYrbjhaOGJkVE45UGVqc2gya3kwOXJXcGRqN1Nx?=
+ =?utf-8?B?UTFYc0F1S25FMG82cUNhbjl6ZnoxTm53SGQ2cy96TzNtUWVqZmk0YjMxaHcy?=
+ =?utf-8?B?cldYTzQ4KzQwWjF5cElwUStCc005eTA2aFh0VHhDY3piWUxIcmh1azBYcUNv?=
+ =?utf-8?B?V0FIUXR5Rko5aEFuelZCazNxTDdrTHhxcEcxL2pHVFNkWWNDbVRYb0pnUTNB?=
+ =?utf-8?B?TTRXN29TakFkTXF1RGhHUmlCZlBBWk9oQm90WnNsTjVqb2hRNXRiTVQ2dy9q?=
+ =?utf-8?B?UnpHTTBZeU9LQW8rRnR3cFl2MmZTL051S3VXckRESE40aWptUnZRK1pIVDBX?=
+ =?utf-8?B?anhacHNTL1Z4TWpOMVkwOHpxeEFhRTVTbmNpcmhsVzdEZlpJZG5MQ0ZvMFFZ?=
+ =?utf-8?B?OFUweVZMWWJCTEZTMFRNM2ZoMVpuVUhadVZWeE5WNVNnWWR2MjBWdnFLYXVm?=
+ =?utf-8?B?OTRVUzkrdG4yVGJGaUpPd3pYdHBPNXNRTXcxbjZvSGNRN3VYQXAxdktld3d0?=
+ =?utf-8?B?UklHZWh0UEZzcC9jRzRveHI1SVhtUkJJdFg4VUF3by8rUmQ4d0Fkby8raG52?=
+ =?utf-8?B?OUJyWExIbGpXV1Y0N0ZibGxIcy9oWnlMVjdWTlA2SnJOcllISks1VkpaRFVl?=
+ =?utf-8?B?R3NaZDBMc1d6dnNzZzl1YzkyeW5xeDFzUzRFcS9HaG5WRm9RVmdSUGdVaStl?=
+ =?utf-8?B?OVlkOTNwVnMzTElsSjF5aCtLUUQ2WUl1Qm5ubUlZQzZHWDdjYnVlelp4bncx?=
+ =?utf-8?B?YlRCVW9jZDNCT2graElYMGJna01STS82K3JEYmJlT3hqczJ2L3pabTkvK2hs?=
+ =?utf-8?B?SFhZZDZXTE12MHhERjU3SE1ueGpONkhjcnRVOUxicFc2SjcyLzFUQk4rdFV2?=
+ =?utf-8?B?K2hKNUdzZ3grM1Qzay8rdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?LzhoTXVLMTV2UGdqM2RIb29XejBaN25FSVhLQXZwdEt4emw0L2pOMmpkTklJ?=
+ =?utf-8?B?bk8yMUc3V3RaU25RM2x5LzBzZWxLRklBUVpwSEVFU1gvTUluY2IvWUltcWNu?=
+ =?utf-8?B?a1liTDFZVzJCc3NnY01jOFpqeVFBaGJUM3I0UHZhR0lnaUpHTlEvbVdiVFRG?=
+ =?utf-8?B?R05hbHhGdlZIcUxJMG9ueUdyRWNWbXRxeGFyZE02Z2w0Y09rd2doUUk5K0kv?=
+ =?utf-8?B?M2tqRFNsUFNVc0g5STl5MElTcmpGZ1ZSNGdpSUJ5a1ZKaE9Qa2lhdjcxOEoz?=
+ =?utf-8?B?VnhScS9VOFVVUkpQTWpzcXVkK0hXSWNFcGxROWlMcTZBUXFpYmRFMmZwMnlo?=
+ =?utf-8?B?K1ZxVUg2Ymhxemh5c2ozL1ZkWUhvTUpxeWVtZUdhRnJzR1FaV2dybWdKYnJG?=
+ =?utf-8?B?Zk9iaDFHV0d2UkVvWjlxYklmSDlMaFYrSUxoRXNPYnI5Kzd3UnpjT0FKYjds?=
+ =?utf-8?B?bER3UFBNNWVQZHBUcUpCdVZkU085MHpYRWpKZTJLcS9uczNWNW40VE9Zdjkx?=
+ =?utf-8?B?NVQyOXRkb1JHelc4S0RjSytaQWdYQTdLelBwU1NmQ3BGSVBUaGxjT2l0cTNz?=
+ =?utf-8?B?dmFLbnRqU295RERtOEdPeWZXbStCMTU4cEg0bGhPWmdza1B0RmVleVJ6VWU3?=
+ =?utf-8?B?ZzYzWC9PcEI5VkQ2Ni9QNFpYdVl4S0Ewd0hXd2NQUmVXVnlkcUJUbjg4Y1pk?=
+ =?utf-8?B?SFJrOFcyTlYvdkxUS2tadVRhNmlHNTFQM0lSMWd4YVBYRWRjV1RMTzZ2MklP?=
+ =?utf-8?B?b2tBRUR5bW1aV3hsUGVJNXdiOVBHOVFXbXFFa2d6aWR3cVdNVjg3S3Iwa2Vn?=
+ =?utf-8?B?SmVuM25DR0p2bkRlWDVCL09jYU5rRjdQMTRNTzFEZGRSaFg1NzF4UmVscG4r?=
+ =?utf-8?B?TmZUb2xJTWFUenA5aGdCZTRKZHFqY3p2VnFoTWwyMU00WlJFOVBNdnMyZzdC?=
+ =?utf-8?B?czNwakhzR2V4NkpTK0M2cUtyb1hsVHpta1lNbndGcndqYytBdEs1ejZza2xj?=
+ =?utf-8?B?UE1pQkh5NWUyTFF5RDIzRXZRMjNGK2dDVFpIQUNudXMxdW03ZndvY0NNb2k2?=
+ =?utf-8?B?ZUNxV04xM25ic0E0KzdkYmNPMExXMXFGd3hBMHp5M3RCeG56N05LMVVKV3hs?=
+ =?utf-8?B?UUViNDZ3cFMxU1JoaHRHTEpwSlRRTlI2K05iOTVIZUc2U21lOUVvN3dXVjNy?=
+ =?utf-8?B?QTdVSkhNZGt0OEFrZ0ZuR01ORjhUMGdrSmhNVjFiRTJ3c282eDNCRGZRbTN5?=
+ =?utf-8?B?TFJYejJVcDVHTlJIVXJUVisyR2hYTHFwWm1WVHNBUjF0YjNsOUtZUmJHNTNv?=
+ =?utf-8?B?dHhyd3lNQU1oekFNSU8renkwQVdVUXpaZWFaWUp6Um95b2YyZGZCSGp4c0Nt?=
+ =?utf-8?B?bE51dExpWVZLQ0lxNWVzS3lzRHhmNUFQM21LL2MvYWFhb2l6cUVmdzFRQ0h3?=
+ =?utf-8?B?U1luZ0NXbTY5NkVtZUtHeEhvekZvdGtLbk9yRzFVMmxQWXhWM1B3cXEvdVUx?=
+ =?utf-8?B?Sms2SUdmVDcwVEVSTEZlc1E5N1NlRGdDdTBFWUtnM2phd3h2R3ZLN1VhNE01?=
+ =?utf-8?B?MXhTR250eWZqTTEzTjl6Qk5XbVpVQ1FmekkzaXRjaGkzbEZjUnIvdnNLRk91?=
+ =?utf-8?B?MmVXaVlYZk9ZUE9jZjdjNUlrNHJuTVRsUHNSazJQWVU2dHp0K09pUFl3T1lW?=
+ =?utf-8?B?M01XelJHRVRmNnVrMGliZWtTZllZNmNHd2dWeGg5cW1yQkNxTjB1TFpjVjNT?=
+ =?utf-8?B?bHpESlpTMVZDQXpCMmdUU0oyRUZ1eEQ2TGo1bVZPNFdTSG9ReWh1Q1RZNXdR?=
+ =?utf-8?B?T05yQVVoa2FRSmthMUhHZXgwRk5zU0FDSCtTN0ZVb3pIV044ekUvRXk2bXBs?=
+ =?utf-8?B?RVczUVFTNy94UHdycS9ZeXNVL3ZwVU5rMTI2T0xXeTJNdlovQURQUGt2blY1?=
+ =?utf-8?B?MWY1b1NDeWJqem9TSHorVEFCeTRtRSttZnF1T08vMkdqYmxPYnAxRmd5VnlN?=
+ =?utf-8?B?eXlHSnRIUE52L1lzN1BrSi9WQXZEb0VDcDkxdWZWWkh5RkhrbFg5SXRHaFRu?=
+ =?utf-8?B?QUdnNjV5TG1rTmJPbjhkMStVWnNBUWd3cHJtTXBTSkk4UXFQdnkvYUFtT1BP?=
+ =?utf-8?Q?kM20p3DgOdYNl5KTvQf+cXocX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 344182ef-977d-453b-1283-08dce254a191
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 20:07:09.7238
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zss6hO2iq8F721Pc1uMzFIxyGdVL1HVy0LSQEU1sH0tfNLHOL4i3H/Zt2jAVHARp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7122
 
-wt., 1 pa=C5=BA 2024 o 14:49 Linux regression tracking (Thorsten Leemhuis)
-<regressions@leemhuis.info> napisa=C5=82(a):
->
-> On 01.10.24 14:18, Matthew Wilcox wrote:
-> > On Tue, Oct 01, 2024 at 01:29:09PM +0200, Linux regression tracking (Th=
-orsten Leemhuis) wrote:
-> >>>     DIR* dir =3D opendir("/tmp/dirent-problems-test-dir");
-> >>>
-> >>>     fd =3D creat("/tmp/dirent-problems-test-dir/after", 0644);
-> >
-> > "If a file is removed from or added to the directory after the most
-> > recent call to opendir() or rewinddir(), whether a subsequent call to
-> > readdir() returns an entry for that file is unspecified."
-> >
-> > https://pubs.opengroup.org/onlinepubs/007904975/functions/readdir.html
-> >
-> > That said, if there's an easy fix here, it'd be a nice improvement to
-> > QoI to do it, but the test-case as written is incorrect.
->
-> Many thx Willy!
->
-> Which leads to a question:
->
-> Krzysztof, how did you find the problem? Was there a practical use case
-> (some software or workload) with this behavior that broke and made your
-> write that test-case? Or is that a test-program older and part of your
-> CI tests or something like that?
->
-> Ciao, Thorsten
 
-I have a unit test (
-https://github.com/varqox/sim-project/blob/889bcee60af56fa28613aaf52d27f3dd=
-2c32a079/subprojects/simlib/test/directory.cc
-) in my project=E2=80=99s test suite where I create a temporary directory,
-populate it with files and then list its contents using the handle
-obtained during creation of the directory. And it started to list the
-directory empty, since this patch was introduced.
 
-While listing the temporary dir one is using is unlikely in this case,
-we will see if any issue in other software will emerge after the 6.11
-will be released as LTS kernel.
 
-Thanks,
-Krzysztof
+On 2024-10-01 15:10, Mario Limonciello wrote:
+> On 10/1/2024 14:09, John Rowley wrote:
+>> I was using power-profiles-daemon version 0.23 in balanced mode.
+>>
+>> I also tested TLP, and vanilla kernel without any power daemons running. 
+>> Without any daemons I use the following:
+>>
+>>      energy_performance_preference: balance_power
+>>
+>>      scaling_driver: amd-pstate-epp
+>>
+>>      scaling_governor: powersave
+>>
+> 
+> Thanks as long as it can reproduce in 'balanced' mode that should exclude PPD 
+> from being the cause and it most likely a pure kernel bug.
+>  
+
+I'm curious if you have a PSR supported panel. Does setting
+amdgpu.dcdebugmask=0x10 on your kernel cmdline help? This force disables PSR.
+
+Another flag to try is amdgpu.dcdebugmask=0x800, which allows PSR but disables
+idle power optimizations. I wonder if that may be causing extra latency.
+
+- Leo
