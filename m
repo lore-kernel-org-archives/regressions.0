@@ -1,37 +1,23 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DE34A21
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 13:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1781C6885
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 14:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727789412; cv=none; b=VmpcmhV9aYTQkWi+BvdzHfALqXqiC1G5HtDzzH41WHGvwW0q9dArQrYikhYRv9/RrUi67q9jNGyvcIOVtNvTq3QFtbEJLA9+j1h1WqsoMPRKeUu8wTs9/rP8IaVYvZMq1fMzdPBWgG3dMwuabU5eOeprOqDEAX4Ohgmm+fZK+0E=
+	t=1727792929; cv=none; b=doSLHus88JFN37FWMCxa/pG7FoAjnmy8FBtI5s6NQz3hnKJ90db+KRvarb73Z1ZzCd7ZmRGMtzKyLllqjKBrHmNOe/IUN5j3CcSGnRbOlAc7kGW7xCigYWde8/VdpIodAiO5fswFBvEyFu5MZpBzqb0vBt6gfqWRITVg9Y69skk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727789412; c=relaxed/simple;
-	bh=6NNDSMnouOpo9NCmqSIn1xtU1Vq+WeWo/VtwcPlDRBY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=i7X7OwLL3iOEZfNSX/rPliVDf3GH4z8/7uvrhbFRohiNYIwtIF/qOBeIwJxUcaGNniv3exJyFphRZt2jylZLtz/bWH9ZCelDt4RvqIHMqP0qldDDJLyOcs0CuSyr3Co1ylf0167oZKpnf2daT9S0pX1qWN8OagRqoINcDKLYsZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jfsRXMpE; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jfsRXMpE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=6NNDSMnouOpo9NCmqSIn1xtU1Vq+WeWo/VtwcPlDRBY=; t=1727789410;
-	x=1728221410; b=jfsRXMpEX9PbY7EaPiyHh17mVROzLTJRkVrQVk4wWqy+mewwf/bHuVGwwVfPg
-	QKla4nFVQdO/kVryUDVzPHb1g2XKTxzZdg9CDMa3M9pyr6NMJlQ9vGDDS/9HgER1YZYJe6cK0FBRx
-	5Z8Z4tuts4FFt741OeYWdx+hnys4GlDJTZGwdsn7f3nt2pMNSlB36jRWS2ZVAbXqnMyiOqz1QoP/A
-	pqG5JffvQyQ2LWY/HAOd5tTETBtfEGezF0Umi6K0PB90JUw7jE9COlqv4DGsCu2kafotF6l6lRNQM
-	vwDz2x2pat5Uj4cJyNIZizFjKuiqokBrrcgPIr6EKGLepSveBA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svcx5-0007Kv-Ry; Tue, 01 Oct 2024 15:30:07 +0200
-Message-ID: <e450df15-55a2-4855-a1de-b7adc6c3cabe@leemhuis.info>
-Date: Tue, 1 Oct 2024 15:30:07 +0200
+	s=arc-20240116; t=1727792929; c=relaxed/simple;
+	bh=F/YLFP6/0c6drwukWFfkh31m8jzGAO9Mmmtzh7lMT/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XgbJgQY97dktHlFP/zkaxUSKn88LIjKzIDylAvF9vQdDGRCBYki4P49aubFhYgoQNL9bsc8JDaByipKLP6rHD4m9iwx1tjoZ+K9FLxk3gooBGnmnty/LgQDNub5Z4DS4t+e8GzCiStJpv2Hf7YoN/MLCm03haf7nBC8iB0GP2CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8CA3E1C0003;
+	Tue,  1 Oct 2024 14:28:44 +0000 (UTC)
+Message-ID: <eb7354f6-98bd-45c6-a616-733637848a14@ghiti.fr>
+Date: Tue, 1 Oct 2024 16:28:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,48 +25,165 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727789410;6090d2ab;
-X-HE-SMSGID: 1svcx5-0007Kv-Ry
+Subject: Re: [REGRESSION][BISECTED] Cannot boot Lichee Pi 4A with
+ FORTIFY_SOURCE enabled
+Content-Language: en-US
+To: Jason Montleon <jmontleo@redhat.com>, Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-riscv@lists.infradead.org
+References: <CAJD_bPJes4QhmXY5f63GHV9B9HFkSCoaZjk-qCT2NGS7Q9HODg@mail.gmail.com>
+ <B2A62C7F-45BA-43E1-975F-5AF0197CD2C3@kernel.org>
+ <CAJD_bP+43=XXD7p3fRfDxCbj=_YedgVLv38XO4iOAw94a+4PHg@mail.gmail.com>
+ <202409221511.9AF49BD@keescook>
+ <CAJD_bP+6qCgseo9of-cKW3+nH_UbGFwPo6WRbqqcneOZ+EEtOw@mail.gmail.com>
+ <800CC050-E858-409C-A565-A6EF430E1B25@kernel.org>
+ <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CAJD_bPKNbKo5tj4OV4MpgtSN6_FXfmQtBFgVFzZeZapCPNT6PA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
+
+Hi Jason,
+
+On 25/09/2024 16:32, Jason Montleon wrote:
+> On Tue, Sep 24, 2024 at 1:36 PM Kees Cook <kees@kernel.org> wrote:
+>>
+>>
+>> On September 24, 2024 8:58:57 AM PDT, Jason Montleon <jmontleo@redhat.com> wrote:
+>>> On Sun, Sep 22, 2024 at 6:38 PM Kees Cook <kees@kernel.org> wrote:
+>>>> Can you try this patch? It should avoid using the "WARN" infrastructure
+>>>> (if that is the source of blocking boot), but should still provide some
+>>>> detail about what tripped it up (via the "regular" pr_*() logging). And
+>>>> if it boots, can you look at the log to find what it reports for the
+>>>> "Wanted to write ..." line(s)?
+>>>>
+>>>> Thanks!
+>>>>
+>>>> -Kees
+>>>>
+>>>>
+>>>> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+>>>> index 0d99bf11d260..469a3439959d 100644
+>>>> --- a/include/linux/fortify-string.h
+>>>> +++ b/include/linux/fortify-string.h
+>>>> @@ -549,7 +549,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>                                           const size_t q_size,
+>>>>                                           const size_t p_size_field,
+>>>>                                           const size_t q_size_field,
+>>>> -                                        const u8 func)
+>>>> +                                        const u8 func,
+>>>> +                                        const char *field)
+>>>>   {
+>>>>          if (__builtin_constant_p(size)) {
+>>>>                  /*
+>>>> @@ -610,8 +611,13 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>           * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
+>>>>           */
+>>>>          if (p_size_field != SIZE_MAX &&
+>>>> -           p_size != p_size_field && p_size_field < size)
+>>>> -               return true;
+>>>> +           p_size != p_size_field && p_size_field < size) {
+>>>> +               if (p_size_field == 0)
+>>>> +                       pr_warn("Wanted to write %zu to a 0-sized destination: %s\n",
+>>>> +                               size, field);
+>>>> +               else
+>>>> +                       return true;
+>>>> +       }
+>>>>
+>>>>          return false;
+>>>>   }
+>>>> @@ -625,7 +631,8 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+>>>>          const size_t __q_size_field = (q_size_field);                   \
+>>>>          fortify_warn_once(fortify_memcpy_chk(__fortify_size, __p_size,  \
+>>>>                                       __q_size, __p_size_field,          \
+>>>> -                                    __q_size_field, FORTIFY_FUNC_ ##op), \
+>>>> +                                    __q_size_field, FORTIFY_FUNC_ ##op,\
+>>>> +                                    #p " at " FILE_LINE), \
+>>>>                    #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
+>>>>                    __fortify_size,                                       \
+>>>>                    "field \"" #p "\" at " FILE_LINE,                     \
+>>>>
+>>>>
+>>>> --
+>>>> Kees Cook
+>>>>
+>>> Hi Kees,
+>>> Sorry for the delay in responding. Your patch also caused the system
+>>> to hang booting, but I took it as inspiration to try some things.
+>>> TL;DR I see these two print several times:
+>>>
+>>> Wanted to write 8 to a 0-sized destination: oldptr at
+>>> arch/riscv/errata/thead/errata.c:185
+>>> Wanted to write 28 to a 0-sized destination: oldptr at
+>>> arch/riscv/errata/thead/errata.c:185
+>>>
+>>> Since I suspected CONFIG_ERRATA_THEAD_MAE which relies on
+>>> CONFIG_RISCV_ALTERNATIVE_EARLY I suspected it is just too early for
+>>> pr_*, etc. I tried trace_printk but that didn't produce any traces,
+>>> and then I found a comment which makes me think we're too early for
+>>> that too.
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/alternative.c?h=v6.11#n214
+>>>
+>>> I didn't want to give up so I wrote a simple module to figure out how
+>>> to use sbi_ecall and then incorporated that idea into your patch,
+>>> although even that was not straightforward:
+>>> https://gist.github.com/jmontleon/f3536ad70dc92bed992139ad5b266d5c
+>> Oh nice work! Probably something riscv-specific needs to be wired up to the printk routines to do what you have there until printk is fully available  But that's a separate issue, I guess.
+>>
+>>> Full output: https://gist.github.com/jmontleon/823facff38e28b717f153e38adcfd7fe
+>> Does the system boot with your patch?
+> Yes. It boots fully. It also booted with trace_printk, it just didn't
+> produce a trace, which again I think is expected at that stage. It
+> seems as long as there are no 'normal' print attempts, pr_()*, etc. it
+> works.
 
 
+Hmmm I don't see what in your patch would fix your issue.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I sent a patch 
+(https://lore.kernel.org/linux-riscv/20240829165048.49756-1-alexghiti@rivosinc.com/) 
+that was merged in v6.11-rc7 which fixes something similar, could that 
+be what fixed your problem?
 
-#regzbot report:
-https://lore.kernel.org/all/91194406-3fdf-4e38-9838-d334af538f74@kernel.dk/
-#regzbot introduced: 94838d230a6c8
-#regzbot summary: x86/microcode/AMD: AMD zen microcode changes break boot
+The problem with this early code is that the MMU is not enabled yet and 
+if your kernel is relocatable, the relocations are set "virtually" and 
+then without the MMU, a call to an external function results in a 
+trap...Which happens way too often, I have a few ideas to fix that, I 
+need to find time to tackle this though.
 
-#regzbot report:
-https://lore.kernel.org/all/f163bcec-e5b1-4aef-91dd-431736fd6d11@xenosoft.de/
-#regzbot introduced: 176000734ee2978121f..de848da12f752170c2ebe114
-#regzbot summary: drm: radeon: FSL P5040 board stopped booting
+I don't know FORTIFY_SOURCE, but I guess this could cause a call to an 
+external function and then cause the issue I describe above right? We 
+already remove all instrumentations from this early code so maybe we 
+should remove FORTIFY_SOURCE too?
 
-#regzbot report:
-https://lore.kernel.org/all/tbhy6xk4tjuza7rgsv55xss5woysyv4wlg46m6sxfq6y5nk7da@7hyl7cf5ehus/
-#regzbot introduced: 740ff03d723821
-#regzbot summary: Input: touchpads stopped working
+Thanks for digging into this,
 
-#regzbot report:
-https://lore.kernel.org/all/82b9c434-a0fd-4488-95be-a45b8cd4b6e6@linux.vnet.ibm.com/
-#regzbot introduced: 152e11f6df29
-#regzbot summary: sched/fair: kernel oops
-#regzbot fix: sched: Fix sched_delayed vs cfs_bandwidth
+Alex
 
-#regzbot report:
-https://lore.kernel.org/all/20240923183432.1876750-1-chantr4@gmail.com/
-#regzbot introduced: ee4cdf7ba857
-#regzbot summary: netfs: booting vms using qemu broke
+
+>
+>> I would guess that this line at arch/riscv/errata/thead/errata.c:168:
+>>
+>> void *oldptr, *altptr;
+>>
+>> Should be:
+>>
+>> u8 *oldptr, *altptr;
+> I tried this, but it didn't appear to make a difference, I will try
+> some more today, though I admit to being out of my element.
+>
+>
+>
+>> But maybe __ALT_PTR needs adjustment too? Hmm. I would have expected void * to have a size of SIZE_MAX here, though, so something else might be confusing the check.
+>>
+>>
+>> --
+>> Kees Cook
+>>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
