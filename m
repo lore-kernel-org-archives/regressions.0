@@ -1,143 +1,119 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.vapourmail.eu (mail.vapourmail.eu [5.75.183.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6561BD00A
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 21:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07400176FB0
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 21:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.183.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727817040; cv=none; b=ZYDCrhBHFi9d8TyoP1S/YoEk+HT1h+Bq/pJ/t+UltzjwIBy/QirFUmMncPoUrvY64gUjKRprZC54us/kMfbmzQEXiqfLkjeEhUsSDsnVJSPzV7Qc9SFnVCOr0WjD8ldTisYSiRY2ZFQxs7rHQLVVJHViUXeONMAPMx6cesgGBN4=
+	t=1727817278; cv=none; b=WVqnheZyLhPfxMxQyEjJ09MHvYS9IZK5t70i9X6p6yajypYZKr/4EFqaGr1U5LrHgUEM3vdNqsTiBSttU68wWlRsYHzw1O0X0RiAjwQRnsoDpPoNACs+FZYpeVyTdcfq6ER1iwk6Q3GCYf3XJQlvZF+Ke86e3il3gdUyFtvcsx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727817040; c=relaxed/simple;
-	bh=BdLPaNlX/F3gzkLxlYzljybqQgCh1CZlleMAH3/NzJA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VyEv0zt22UyABkfHXCyzY5oIknqfdRsewP23oaPtCmDkDaxFjFpGilr12uUD9PsDUEhMSZkBjeFkux19QhiDj/zY+BidKsKJQcAWPlNNdp5IHsL7VSOp25087pQAJTd25/Nb+vwe4KMkkVCgW9bCqJ2SEYo8YpFDlzqUF++mwTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGjig4jv; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727817278; c=relaxed/simple;
+	bh=hQTOuFfqdI7BbwWXmbkc3LpNQPetAK/hYcEs+XxONA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dd2c2ul9wjYRY2FU2x8eL96L/JAM5ppdRBYAvCUzrHFlMnAVFB5qdPGwNvM6H5qch8ZVPgQhCF/O8Wk2NV7ijMBZp6cTE7My3KS1Nf+7PTg5To9nj7zTREU7OmWR7J+vJJE7B628nSm0xyrENj2LtdmIL5XwJvIdl2daLcgPQdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me; spf=pass smtp.mailfrom=johnrowley.me; dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b=sRxyv1mS; arc=none smtp.client-ip=5.75.183.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=johnrowley.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGjig4jv"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fac49b17ebso25041731fa.0
-        for <regressions@lists.linux.dev>; Tue, 01 Oct 2024 14:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727817037; x=1728421837; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j5FPHhbte4Tmc4ZuPG7hVMprQvRDLf4/a9y4DExRTII=;
-        b=TGjig4jvkgQGUWP+kVmVAjsVxJFGVrbuDEIHPNshmx52Loi/VK8pOYbyF/9Rg0A7oA
-         yFus8kOSjgJ23hL39A+zbVHWprrUw0LpYVlGQzGJdySX3CFXpHOhqbpL7JbI3jFmUk7q
-         gXgKAjhmRD8AANy92r7KX6YAiidqunLfFWRBYwXZsrQRYVVmSEhq87cGZ0+YVS+pVy1Z
-         xellMFidm3YpGFIQNsPBMHdeLU75qU3b5skGkHJxT5KHyWa+shxKg6oBrG0yQLh5DPrc
-         a8KrqxDjWOBHAwVfYTYBde4OFbkAt1kMmFnqdzZMh1p8IdX4kK2RqlaOCp8DTvLWRZ4u
-         sFtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727817037; x=1728421837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j5FPHhbte4Tmc4ZuPG7hVMprQvRDLf4/a9y4DExRTII=;
-        b=CCby2eOYQdzOIc8AJbryK4kI1Ww7gq1JCLJ8INiOkvZJ3CT5mSknlhqQj6LMH1+q0+
-         hFnL3i4bpBg/fGvu45ahffE0ZZLLaWxcCBSsDLNAMpw5sRjHY21xALWwfUF3lrPJ9hPx
-         0RRBjV+xV7DVG0Y8hYKzVpiUuP4rOW8XPAXHpvXcPzGIQ2QgMUDERysb1V54CAmnYqyv
-         Zu+FdHxYxNtiK5Q8AzoBozp1DeYKFXuhBy0AgQrX9NwsCQkIPeXJDUoH/DvQn1GnMvKs
-         A8Bcu2fPl5dJY8B2AWKilcftPbta+dGp0MPdoGwYJuYxjmrrOJ8RZwK6X1cDgqtRaCRU
-         ASvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgl4ZSiJUpqX8Hja8nQn5hkZTIxwX3dydmTmgKcXYflhqxwvMNiZ0ees/80x0bDQwBKJA9/uKkDMSqtQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwX8fM7saL/I/9t/TjZQhw1RYiyXuIZCrPN7CF1CoF3DtV5U3i4
-	QYAtTTllkRwq/A0f/Ljwk6YWzLzDwIxINklvFSCA2EEG0mIMe55zfq+kD4P9s4R60KuOdn8sVPp
-	OGrKGyShG7W7o9LJPt0PqWZOVSjU=
-X-Google-Smtp-Source: AGHT+IHyH38WiVX8HHUwc+OFQWovZwKbJEqW/O3u3XocYkPNvtQCAvFmTdZx0nP6F2Y0oSa7jC6KgiPT019755iLMPg=
-X-Received: by 2002:a2e:be9e:0:b0:2f7:6e3a:7c1d with SMTP id
- 38308e7fff4ca-2fae1044cf5mr8284241fa.15.1727817036745; Tue, 01 Oct 2024
- 14:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b="sRxyv1mS"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A4F53C38D2;
+	Tue,  1 Oct 2024 22:14:31 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=johnrowley.me;
+	s=dkim; t=1727817273;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=lpLuw2sJgaRY7hkI1hlJqq/JV14pDwqtWhNwVOESN5c=;
+	b=sRxyv1mSkAFITZxgCxNKWhWNWPukzxcEvKQXumw5gKajM+6yXVJ2gRaTDEGfrEKhHeGL1r
+	T8PGWe/Ag1dC1dk6KuzetR+nRme+USQ2YpgBhtnUT/jSzI3yCOeQQoxxeF34PnmyxsI7Lp
+	Dg13HIuPsXuB1Ivx6inN+7HwCeYu0gbt9xuILd+HYrFuFIskBJV6ESero3hEkZghAWT57M
+	hzGoIt0t6h0eQUm+snlb0gHvLHGmMODrz026zc+p5LHwASPN66llaOESMrvBjuQlIJ0wc6
+	lwwPAX2vLV9urO8t3nMI1KHQmjVPxkMW/l6T/kiZIPS0WLaA//1MQT6Pkql3Kg==
+Message-ID: <3c0dfd3a-9549-4afa-94b6-80041f498436@johnrowley.me>
+Date: Tue, 1 Oct 2024 22:14:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <0a3b09db-23e8-4a06-85f8-a0d7bbc3228b@meta.com>
- <87plotvuo1.fsf@gentoo.org> <CAMgjq7A3uRcr5VzPYo-hvM91fT+01tB-D3HPvk6_wcx3pq+m+Q@mail.gmail.com>
- <87y13dtaih.fsf@gentoo.org> <0bdce668-5711-4315-ab05-1a3492cb8bf6@kernel.dk>
-In-Reply-To: <0bdce668-5711-4315-ab05-1a3492cb8bf6@kernel.dk>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 2 Oct 2024 05:10:20 +0800
-Message-ID: <CAMgjq7DMWGyXDdf86tkZ=1N6CnFQza4xzRhZXcw1j1WQXWBn=g@mail.gmail.com>
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Sam James <sam@gentoo.org>, Greg KH <gregkh@linuxfoundation.org>, stable@kernel.org, 
-	clm@meta.com, Matthew Wilcox <willy@infradead.org>, ct@flyingcircus.io, david@fromorbit.com, 
-	dqminh@cloudflare.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-xfs@vger.kernel.org, 
-	regressions@leemhuis.info, regressions@lists.linux.dev, 
-	torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+To: Mario Limonciello <mario.limonciello@amd.com>, Leo Li
+ <sunpeng.li@amd.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, amd-gfx@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+ <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+ <95c575a3-100c-4808-b451-b92f14598188@amd.com>
+ <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me>
+ <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
+ <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com>
+ <9c562132-64a0-41f5-80ad-8492d1039692@amd.com>
+Content-Language: en-US
+From: John Rowley <lkml@johnrowley.me>
+In-Reply-To: <9c562132-64a0-41f5-80ad-8492d1039692@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Sep 27, 2024 at 10:58=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote=
-:
->
-> On 9/27/24 8:51 AM, Sam James wrote:
-> > Kairui Song <ryncsn@gmail.com> writes:
-> >
-> >> On Wed, Sep 25, 2024 at 1:16?AM Sam James <sam@gentoo.org> wrote:
-> >>>
-> >>> Kairui, could you send them to the stable ML to be queued if Willy is
-> >>> fine with it?
-> >>>
-> >>
-> >> Hi Sam,
-> >
-> > Hi Kairui,
-> >
-> >>
-> >> Thanks for adding me to the discussion.
-> >>
-> >> Yes I'd like to, just not sure if people are still testing and
-> >> checking the commits.
-> >>
-> >> And I haven't sent seperate fix just for stable fix before, so can
-> >> anyone teach me, should I send only two patches for a minimal change,
-> >> or send a whole series (with some minor clean up patch as dependency)
-> >> for minimal conflicts? Or the stable team can just pick these up?
-> >
-> > Please see https://www.kernel.org/doc/html/v6.11/process/stable-kernel-=
-rules.html.
-> >
-> > If Option 2 can't work (because of conflicts), please follow Option 3
-> > (https://www.kernel.org/doc/html/v6.11/process/stable-kernel-rules.html=
-#option-3).
-> >
-> > Just explain the background and link to this thread in a cover letter
-> > and mention it's your first time. Greg didn't bite me when I fumbled my
-> > way around it :)y
-> >
-> > (greg, please correct me if I'm talking rubbish)
->
-> It needs two cherry picks, one of them won't pick cleanly. So I suggest
-> whoever submits this to stable does:
->
-> 1) Cherry pick the two commits, fixup the simple issue with one of them.
->    I forget what it was since it's been a week and a half since I did
->    it, but it's trivial to fixup.
->
->    Don't forget to add the "commit XXX upstream" to the commit message.
->
-> 2) Test that it compiles and boots and send an email to
->    stable@vger.kernel.org with the patches attached and CC the folks in
->    this thread, to help spot if there are mistakes.
->
-> and that should be it. Worst case, we'll need a few different patches
-> since this affects anything back to 5.19, and each currently maintained
-> stable kernel version will need it.
->
+Disabling PSR as per Leo's reply seems to have done the trick!
 
-Hi Sam, Jens,
+Stock 6.12-rc1 (without revert): BROKEN
 
-Thanks very much, currently maintained upstream kernels are
-6.10, 6.6, 6.1, 5.15, 5.10, 5.4, 4.19.
+    /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_state:
+    6
 
-I think only 6.6 and 6.1 need backport, I've sent a fix for these two,
-it's three checkpicks from the one 6.10 series so the conflict is
-minimal. The stable series can be applied without conflict for both.
+    /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_capability:
+    Sink support: yes [0x03]
+    Driver support: yes
+
+With amdgpu.dcdebugmask=0x800: BROKEN
+
+With amdgpu.dcdebugmask=0x10: FIXED! Performance is as it was on 6.11.
+
+    /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_state:
+    0
+
+    /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_capability:
+    Sink support: yes [0x03]
+    Driver support: no [0xffffffff]
+
+I have the older Framework 13 panel (BOE 0x0BCA, 2256x1504 @ 59.999 Hz) so I assume PSR isn't supported according to Mario, yet psr_{state,capability} above seem to indicate otherwise?
+
+Thanks.
+
+On 01/10/2024 21:16, Mario Limonciello wrote:
+> On 10/1/2024 15:07, Leo Li wrote:
+>>
+>>
+>>
+>> On 2024-10-01 15:10, Mario Limonciello wrote:
+>>> On 10/1/2024 14:09, John Rowley wrote:
+>>>> I was using power-profiles-daemon version 0.23 in balanced mode.
+>>>>
+>>>> I also tested TLP, and vanilla kernel without any power daemons running. Without any daemons I use the following:
+>>>>
+>>>>      energy_performance_preference: balance_power
+>>>>
+>>>>      scaling_driver: amd-pstate-epp
+>>>>
+>>>>      scaling_governor: powersave
+>>>>
+>>>
+>>> Thanks as long as it can reproduce in 'balanced' mode that should exclude PPD from being the cause and it most likely a pure kernel bug.
+>>>
+>>
+>> I'm curious if you have a PSR supported panel. Does setting
+>> amdgpu.dcdebugmask=0x10 on your kernel cmdline help? This force disables PSR.
+>>
+>> Another flag to try is amdgpu.dcdebugmask=0x800, which allows PSR but disables
+>> idle power optimizations. I wonder if that may be causing extra latency.
+>>
+>> - Leo
+>
+> Do you have the "new" 2.8k high res panel on your Framework 13?  If so; can you please check your logs to see if PSR is even getting enabled?
+>
+> IE it might be enabling panel replay which is new to enable again in 6.12-rc1, and if so; this could be where the issue is too.
+>
+> The lower res display shouldn't support it.
