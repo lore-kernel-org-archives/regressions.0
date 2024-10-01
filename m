@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22AC2B9B0
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 09:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443002B9B0
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 09:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727775522; cv=none; b=n2vf6YVKej+4HQ1tbLkptFSPTUTPBsSH7HDvn/kpBCJQq8Ft1F5QwjfQRL+by57+B2BHyNsOmHwnei3wpeitQmv5KWWhzwygqmy1Y3kiCyqYeT0W9x4urO9So9HUwVznYHBFXzK4eu7Cw29NMT6D5Zxe1md6cloTkWMQxbL/9xs=
+	t=1727775623; cv=none; b=n786MONEaczRqk4W6pK+Wag1mWu7bcDqp9ZMg++e5p4sss/rSWdpfdXJK32H5kADnv/GZcOIJu2FqyUWMLaeFZgZuzr1YWHw4RjDMqh19PbyifCwKvExsL4Yqd4fsWOmw7Fo19c58QENqaz5MijD/xRyZZC6eSy96Sf6BLVNxdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727775522; c=relaxed/simple;
-	bh=0pKhuxkucI42/+9FRRDIlEE3QzR9p8+wqANdvxMhR3E=;
+	s=arc-20240116; t=1727775623; c=relaxed/simple;
+	bh=BeesCYn27wgVR0Gl1qZH9lZglyGCtMiHFOuRKT9ExZA=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=EYIDQ64fMORiYnSH/4kXd7RQNpKvnjNjhLGHGUl1w6QZuKXFx5swSFyp3YUUakv2kvTLehd1ysICDUn6pIKraZ4qH+G/BVQAdH2Obc34a/Qq774hQfO95CrKN0nY+/SKCzqe0SLBcPuTy/vA394GiRZ8ZaiBxIl1Pkr/BN7eO2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OBCoidMH; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=ps8y85Mya/jEzKRbBOMfp03jHfsEouTGFZVbCYYuK3wFnOmHnPNdAyN29oGu0R0mRVk9d9dUTv5QDocYsXZTSzUBlflB4lnJQwNj7Shuh2wiknwYtA5CHJChXPIvzzCzlLCmY3PoHgXVwzOcJbyBnsEIHaR0Gbz+x67N5xo08B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C291uUnU; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OBCoidMH"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C291uUnU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=0pKhuxkucI42/+9FRRDIlEE3QzR9p8+wqANdvxMhR3E=; t=1727775520;
-	x=1728207520; b=OBCoidMHTKHrc9+aXBju+HMBmGEQbC5qfKoc+Ll+MkjfxZ7lnZ8y1S0R+dJlU
-	xCciwytuVrVUzJho3BoznRDMnUgQ3k65pS7r/kD6NPPTWjTHPQus3dtEbEcDA5gd+ZbiOynVAt4nR
-	UPWcvcjOC52L8A4k/w4ucseOqioZRidzy0C6eUH216MIoTZKJAKuFw6igwP6Vpixb7J76PKck3iss
-	792p5/+VbjkDltFjYpqkcy7aLHLDrqSAnLg7OK62wEnWf4T5B+gltsmU1W/uI7HpVYnBLgzFAGFU4
-	4Edje+8rr9nwsE5GcyzVZbFnPaPfd6xI3/Z5bCfcy3xXEMVz/A==;
+	References; bh=BeesCYn27wgVR0Gl1qZH9lZglyGCtMiHFOuRKT9ExZA=; t=1727775621;
+	x=1728207621; b=C291uUnUoGSGChbLQuj4FiuRZIYCc0mz/DZcN5qyS/unOkOZZeMvNn11bO8aA
+	zrfLhOX2K/5kEKtvFzh91t4xuFh2f/9Pva6N28Wl7+AU1XtJEaX/FKwXQ/wTrEaDsX4wMBH2ARTLv
+	c+GSV1qzEHuG6WaVOorEPANdevEI01lheR2Y9hUXnOzhh9ufNeG+SlkiSDfGGkf4wIPTZz03FkWYD
+	OWYrzwyTrTwBZuEDx8wgoo7vnqo2IaOwDC9ZgqAqrSnYUOU9j42O37xOsqSJGaLU3JC0K5bZBr9wt
+	XuKVs/c3xPcUDVxWNInl58kePFFFcN0kcRZ/aQNuqD5qlMzsug==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svZKy-0001Ul-D2; Tue, 01 Oct 2024 11:38:32 +0200
-Message-ID: <b158cbe2-e04d-48c0-b50c-de1eb662367e@leemhuis.info>
-Date: Tue, 1 Oct 2024 11:38:31 +0200
+	id 1svZMh-0001vL-AE; Tue, 01 Oct 2024 11:40:19 +0200
+Message-ID: <3c23355c-9c87-400b-8988-a3c8bc72a607@leemhuis.info>
+Date: Tue, 1 Oct 2024 11:40:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,8 +48,8 @@ Content-Language: en-US, de-DE
 In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727775520;5efaaa66;
-X-HE-SMSGID: 1svZKy-0001Ul-D2
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727775621;952456a1;
+X-HE-SMSGID: 1svZMh-0001vL-AE
 
 
 
@@ -59,22 +59,20 @@ On 09.03.24 11:18, Thorsten Leemhuis wrote:
 > ignore this thread, the replies are unlikely to be of relevance for you,
 > but done here to ensure a public paper trail.
 
-#regzbot report: c9feac08-a1fd-4e03-a708-1046793443db@panix.com
-#regzbot resolve: filed badly, marking as invalid
 
-#regzbot
-report:https://lore.kernel.org/all/c9feac08-a1fd-4e03-a708-1046793443db@panix.com/
-#regzbot introduced: v6.10.8..v6.10.9
-#regzbot summary: thunderbolt: topology changes not detected after
-coming out of suspend or hibernate
+#regzbot report: https://lore.kernel.org/all/202409281331.1F04259@keescook/
+#regzbot introduced: 86e92eeeb23741
+#regzbot summary: bcachefs: mounting rootfs broke
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219175
-#regzbot fix: drm/amdgpu/sdma5.2: limit wptr workaround to sdma 5.2.1
-
-#regzbot report:
-https://lore.kernel.org/stable/eb709d67-2a8d-412f-905d-f3777d897bfa@gmail.com/
-#regzbot fix: x86/mm: Switch to new Intel CPU model defines
+#regzbot report: https://lore.kernel.org/all/87le1sjd2e.fsf@linux.ibm.com/
+#regzbot introduced:
+#regzbot summary: workqueue: warning due to missing lock
+#rebzbot fix: workqueue: Remove incorrect
+"WARN_ON_ONCE(!list_empty(&worker->entry));" from dying worker
+#regzbot monitor:
+https://lore.kernel.org/lkml/20240725010437.694727-1-jiangshanlai@gmail.com/
 
 #regzbot report:
-https://lore.kernel.org/lkml/20240919165641.4632-1-user@am64/
-#regzbot fix: dma-mapping: report unlimited DMA addressing in IOMMU DMA path
+https://lore.kernel.org/linux-pm/20240908144414.82887-1-hdegoede@redhat.com/
+#regzbot fix: power: supply: Drop use_cnt check from
+power_supply_property_is_writeable()
