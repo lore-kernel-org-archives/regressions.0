@@ -1,63 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C10263D;
-	Tue,  1 Oct 2024 06:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF62A19306F
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 07:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727765419; cv=none; b=ZWV1v3MGSEltZs0SzezWMk9w0z2V0voEp+4S/Q+zIFeEfl+rGV3hnRgQPirStPw3JH/4zSmYil+gETkGW5oIMkloaDZzi7m/G8RQ1/ikB3SlPeEVBfb4w2/JrBcz1u7YgeAG1E//mKmtq96m4Vp8WgauEmO9JWIHNXdnRZZuCUg=
+	t=1727769325; cv=none; b=tCbCKnpTBCvPsgBo8TJAf5q6Q1jA0xmLQEn/rVK9LTtEnoNzRJ22MVTuLWTfw6erh8IuvQSJtCjttFk4KL7CmN1KqwjO2Iex0mo+8PD3f46XNJ9vtZre4vAawX+utP7fs8GyyefSkuE5m7aagtMow9pr9DpaVJoZMEWV0QF+G2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727765419; c=relaxed/simple;
-	bh=rroKJMTafwnZjbBmdmjyAoYFiIBrMNZZ2LTPZPmox5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ayfd6eTFaB2h3RYRiFxxtt2OOmsFs3oyMSUwkG+h/Q119HeCVGtfEiN9SLyQWMLtnzCqwkQXAwf5t8NCVcn3S52uPsQpg6dQ4kERbD3FBwSebBFDzr36CwMrEFWTceiDp0teHlgRXJaNitQ3IPKOpJXbOG+mLPwmKRLvW2QHnps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BgOtThIS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727769325; c=relaxed/simple;
+	bh=rdV7eBrtXZUsM0nhn5XQrAKDU6Ms4Eqz8tSiuqdk/Fk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ZzZ51WLOh551d2YHUp4dheT4nHloWQLRDrSf7feulolKmKjTZfLexVt/rOBIse7hhh4hBK2u+v+9rRTLQWL4eGns5Dbm7NIvDqgF+c2VGVcisehLckXLMO7XruTdeOC5i7Mza3NiuoPVgw2sCep3Fe9ehBzZiJCSsgQfvbGyhYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=KVDfHOGU; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BgOtThIS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610F0C4CEC6;
-	Tue,  1 Oct 2024 06:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727765418;
-	bh=rroKJMTafwnZjbBmdmjyAoYFiIBrMNZZ2LTPZPmox5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BgOtThISE4xXpNpjO04tvg2Zx4IHuKMJEoSBXi60Wi+YDVXroisIgkP0q8KZn0GbN
-	 NL/0XBlro4BOVZM3+cMUQcQfCS8X88wqvNriksk+xks6AURCm6puwZw+sTl3nzurqO
-	 XoH/MIm75Q2H1MUFMJuhGVV2EJo5KBLbOhAlSE5Y=
-Date: Tue, 1 Oct 2024 08:50:15 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: rafael.j.wysocki@intel.com, tj@kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] driver core: Fix userspace expectations of uevent_show()
- as a probe barrier
-Message-ID: <2024100130-turkey-duplicate-d670@gregkh>
-References: <172772671177.1003633.7355063154793624707.stgit@dwillia2-xfh.jf.intel.com>
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="KVDfHOGU"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1727769320;
+	bh=bwcCQFGehdFd44jFd9rXyQb/ofjdQMa0V8EahWXsa/E=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=KVDfHOGUlMTiKO4m3NQk4GcaLwiXyGEFrg49fYDCXSzMLzlvRHXYvCbd/fRU0nqXt
+	 4KLLx3Af0ukILjy1rob9w5KTh+ShXRxxUDcxgrAYVxSula9crMDzjv1myQ9bgKkv9j
+	 U2SPLFZdRD4ZGmC127pIYdA+3vWkA57kcambOVXo=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172772671177.1003633.7355063154793624707.stgit@dwillia2-xfh.jf.intel.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+Date: Tue, 1 Oct 2024 09:54:56 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E7E02C14-B037-41CB-B814-5C404731DAA2@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+ <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
+ <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+To: Chris Mason <clm@meta.com>
 
-On Mon, Sep 30, 2024 at 01:05:13PM -0700, Dan Williams wrote:
-> Commit "driver core: Fix uevent_show() vs driver detach race" [1]
-> attempted to fix a lockdep report in uevent_show() by making the lookup
-> of driver information for a given device lockless. It turns out that
-> userspace likely depends on the side-effect of uevent_show() flushing
-> device probing, as evidenced by the removal of the lock causing a
-> regression initializing USB devices [2].
-> 
-> Introduce a new "locked" type for sysfs attributes that arranges for the
-> attribute to be called under the device-lock, but without setting up a
-> reverse locking order dependency with the kernfs_get_active() lock.
 
-As this is "only" for the driver core, can you move some of the stuff in
-the global .h files to the local ones so that no one else gets the wrong
-idea they can use them?
+> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
+>=20
+> I've attached a minimal version of a script we use here to show all =
+the
+> D state processes, it might help explain things.  The only problem is
+> you have to actually ssh to the box and run it when you're stuck.
 
-thanks,
+Thanks, I=E2=80=99ll dig into this next week when I=E2=80=99m back from =
+vacation.
 
-greg k-h
+I can set up alerts when this happens and hope that I=E2=80=99ll be fast =
+enough as the situation does seem to resolve itselve at some point. =
+It=E2=80=99s happened quite a bit in the fleet so I guess I should be =
+able to catch it.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
