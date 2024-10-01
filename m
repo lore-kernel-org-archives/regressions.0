@@ -1,96 +1,80 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF62A19306F
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 07:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22AC2B9B0
+	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 09:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727769325; cv=none; b=tCbCKnpTBCvPsgBo8TJAf5q6Q1jA0xmLQEn/rVK9LTtEnoNzRJ22MVTuLWTfw6erh8IuvQSJtCjttFk4KL7CmN1KqwjO2Iex0mo+8PD3f46XNJ9vtZre4vAawX+utP7fs8GyyefSkuE5m7aagtMow9pr9DpaVJoZMEWV0QF+G2g=
+	t=1727775522; cv=none; b=n2vf6YVKej+4HQ1tbLkptFSPTUTPBsSH7HDvn/kpBCJQq8Ft1F5QwjfQRL+by57+B2BHyNsOmHwnei3wpeitQmv5KWWhzwygqmy1Y3kiCyqYeT0W9x4urO9So9HUwVznYHBFXzK4eu7Cw29NMT6D5Zxe1md6cloTkWMQxbL/9xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727769325; c=relaxed/simple;
-	bh=rdV7eBrtXZUsM0nhn5XQrAKDU6Ms4Eqz8tSiuqdk/Fk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ZzZ51WLOh551d2YHUp4dheT4nHloWQLRDrSf7feulolKmKjTZfLexVt/rOBIse7hhh4hBK2u+v+9rRTLQWL4eGns5Dbm7NIvDqgF+c2VGVcisehLckXLMO7XruTdeOC5i7Mza3NiuoPVgw2sCep3Fe9ehBzZiJCSsgQfvbGyhYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=KVDfHOGU; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1727775522; c=relaxed/simple;
+	bh=0pKhuxkucI42/+9FRRDIlEE3QzR9p8+wqANdvxMhR3E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=EYIDQ64fMORiYnSH/4kXd7RQNpKvnjNjhLGHGUl1w6QZuKXFx5swSFyp3YUUakv2kvTLehd1ysICDUn6pIKraZ4qH+G/BVQAdH2Obc34a/Qq774hQfO95CrKN0nY+/SKCzqe0SLBcPuTy/vA394GiRZ8ZaiBxIl1Pkr/BN7eO2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OBCoidMH; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="KVDfHOGU"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1727769320;
-	bh=bwcCQFGehdFd44jFd9rXyQb/ofjdQMa0V8EahWXsa/E=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=KVDfHOGUlMTiKO4m3NQk4GcaLwiXyGEFrg49fYDCXSzMLzlvRHXYvCbd/fRU0nqXt
-	 4KLLx3Af0ukILjy1rob9w5KTh+ShXRxxUDcxgrAYVxSula9crMDzjv1myQ9bgKkv9j
-	 U2SPLFZdRD4ZGmC127pIYdA+3vWkA57kcambOVXo=
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OBCoidMH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=0pKhuxkucI42/+9FRRDIlEE3QzR9p8+wqANdvxMhR3E=; t=1727775520;
+	x=1728207520; b=OBCoidMHTKHrc9+aXBju+HMBmGEQbC5qfKoc+Ll+MkjfxZ7lnZ8y1S0R+dJlU
+	xCciwytuVrVUzJho3BoznRDMnUgQ3k65pS7r/kD6NPPTWjTHPQus3dtEbEcDA5gd+ZbiOynVAt4nR
+	UPWcvcjOC52L8A4k/w4ucseOqioZRidzy0C6eUH216MIoTZKJAKuFw6igwP6Vpixb7J76PKck3iss
+	792p5/+VbjkDltFjYpqkcy7aLHLDrqSAnLg7OK62wEnWf4T5B+gltsmU1W/uI7HpVYnBLgzFAGFU4
+	4Edje+8rr9nwsE5GcyzVZbFnPaPfd6xI3/Z5bCfcy3xXEMVz/A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1svZKy-0001Ul-D2; Tue, 01 Oct 2024 11:38:32 +0200
+Message-ID: <b158cbe2-e04d-48c0-b50c-de1eb662367e@leemhuis.info>
+Date: Tue, 1 Oct 2024 11:38:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
-Date: Tue, 1 Oct 2024 09:54:56 +0200
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Dave Chinner <david@fromorbit.com>,
- Matthew Wilcox <willy@infradead.org>,
- Jens Axboe <axboe@kernel.dk>,
- linux-mm@kvack.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Daniel Dao <dqminh@cloudflare.com>,
- regressions@lists.linux.dev,
- regressions@leemhuis.info
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E7E02C14-B037-41CB-B814-5C404731DAA2@flyingcircus.io>
-References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <Zud1EhTnoWIRFPa/@dread.disaster.area>
- <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
- <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
- <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
- <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
- <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
- <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
- <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
-To: Chris Mason <clm@meta.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727775520;5efaaa66;
+X-HE-SMSGID: 1svZKy-0001Ul-D2
 
 
-> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
->=20
-> I've attached a minimal version of a script we use here to show all =
-the
-> D state processes, it might help explain things.  The only problem is
-> you have to actually ssh to the box and run it when you're stuck.
 
-Thanks, I=E2=80=99ll dig into this next week when I=E2=80=99m back from =
-vacation.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I can set up alerts when this happens and hope that I=E2=80=99ll be fast =
-enough as the situation does seem to resolve itselve at some point. =
-It=E2=80=99s happened quite a bit in the fleet so I guess I should be =
-able to catch it.
+#regzbot report: c9feac08-a1fd-4e03-a708-1046793443db@panix.com
+#regzbot resolve: filed badly, marking as invalid
 
-Christian
+#regzbot
+report:https://lore.kernel.org/all/c9feac08-a1fd-4e03-a708-1046793443db@panix.com/
+#regzbot introduced: v6.10.8..v6.10.9
+#regzbot summary: thunderbolt: topology changes not detected after
+coming out of suspend or hibernate
 
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219175
+#regzbot fix: drm/amdgpu/sdma5.2: limit wptr workaround to sdma 5.2.1
 
+#regzbot report:
+https://lore.kernel.org/stable/eb709d67-2a8d-412f-905d-f3777d897bfa@gmail.com/
+#regzbot fix: x86/mm: Switch to new Intel CPU model defines
+
+#regzbot report:
+https://lore.kernel.org/lkml/20240919165641.4632-1-user@am64/
+#regzbot fix: dma-mapping: report unlimited DMA addressing in IOMMU DMA path
