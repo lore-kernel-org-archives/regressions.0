@@ -1,170 +1,149 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2088.outbound.protection.outlook.com [40.107.223.88])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E8F1CCED0
-	for <regressions@lists.linux.dev>; Tue,  1 Oct 2024 18:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727808548; cv=fail; b=sENpB8yROh1PjlIjUN4SBFYYq3e23Xj54CnfkXq3rNUn139K5RnE2tB0W9yNfIHgn0CigRb+xZAcbMww9S+7qes0Ybvv5Wt3nWGaw7TnSFhTYzXBvpXHcvTE0db41xmyUv+CvxlbfZUUvRwGYUUrJoyVx3hItND1Io/5RRggCAY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727808548; c=relaxed/simple;
-	bh=HFcAPbBVaR+RWhyOkCWIHVUG2GvWu/pn8gVXxpySCa4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HVea/PjzDeAcBu6Za5VZjutiS3Rx+H8AZqdQfkyg27bDuUByDR2HIR5uUIAqzrxnucyBSRGJGSWa+G3usd7UBK6Cq2CcJ/UQjU4HUVOl2LQ7NC9qxZd7p+vSp+/nCyFzx3kPnjresqZWU0PEfHpNPeXnfcAt7fd/M9+5HN+w/bk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xQoNGpfz; arc=fail smtp.client-ip=40.107.223.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2BB1C2DB7;
+	Tue,  1 Oct 2024 18:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727809015; cv=none; b=CwxYamN8kD7rzL//XZGWCl14T41yKgv3fyNJR+l1WBpxDHVpZ+mHiBwGFACHS8j3FudgvDBexRkdfTZAyI4uyx+bTJiEvBWjVAMw9PK/8wrFm2X93YBjeYTxsA3FfR9a0on/CTiWIY+G9XXSgmpgw5Q0jGQQdBcepKAifM4jz3M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727809015; c=relaxed/simple;
+	bh=JwPxLrTRzoX+uJUpZ6kXpFBXJd5I6oAafFs3HtwYLtE=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QS5dEiV0HP8jAdVwRJPWqf7S7hYDx7u6r6FEXPFjRePsZVfh+9y1bgDE1ZlCJHPg/zlZlIpxXyXIj48C57O7CK2JSNijEo/7652KX5MfC+Vt9nV3RRJJ5Jlk86Z/MWU3nTxKpZxuuV1mU/Go0FQ4/BvXmcJHjYNpEC2rZ/oYWHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zfMs1f25; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xQoNGpfz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vfoBYUkOdAX25SPVzn4pCdSDlro/p4EtdnH3vpLWS2p9GggZVR3wNaKrwFmzDlxiXhGmwOaHC4nvcqjzZ1ubJFDgcjxFCIbgCcGxYYqc0f4+ueUmkWXjHPxjvBBypwrKi4fFD2JUAAZdxrX9s/T0gvvY854jeBTkieHQ2hOR/lgNmQa47tX7LS9r3lnWw6iuY6Qp9ftbiJ+jQ39fhXVtNXCsjucmC+7aiktLjrxHdX9z+y1mslgZ21X/vnxqJnsAinVFLEB3iVRARbvRGtb7m9b070s5lCAR65D7JXMKgI8z5yzvMPxj3RpSDuT/RWH1euUwmDqcjf6IIYLsU0C40w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GL0UWoFrD+ZWVjDFwDTTatWIx8DUt2AxGRNO/R+hoyQ=;
- b=exn1dK8R0a/uv9enMzaEhM5WgJC8UKz+VgzHa3t+n2/pybuSmXDNb8epjIZBvFZAkRaF36dz9r9Mc1+A2BXiZDczOSrcNxQtsBb2+OpcFpZQeXAClI+H/6yU2rnxblVONqXo4I5FepMzzw5vHIWJnAMA6U5VW+qCG9/bwWQ8m0W5WWiAoYVC5LAKSZt9SG0CjuMqAFjsfte0L09P0sJRO9lYgvWCRI6TxkwNqNGFVY1I1JpYh0O4FPzFJ/s7DRJB2Zc/kVYB4qwMLnjrH3qMohXUqOxskOmYxPTkGiDCPCZiJjoGVIiikbf3jCV3RE2vVNqVhJVsLsbiuHQ/ZPI/hQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GL0UWoFrD+ZWVjDFwDTTatWIx8DUt2AxGRNO/R+hoyQ=;
- b=xQoNGpfzNrV1R3Uuwjecotph8vIbIu64o5luKjN81chydbRdvqKlKfyV5jPp5ojcsRuNqN5IkuFYJPiBsSmbNvuC3HHVTWu21qGjJ6AWOorksiiKiFa/02uXRXKtx3pvcnuGTh7aOFmaki9XMky56VdqEUfP0WnEvtmA64owzqo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL3PR12MB6593.namprd12.prod.outlook.com (2603:10b6:208:38c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.15; Tue, 1 Oct
- 2024 18:49:03 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8005.026; Tue, 1 Oct 2024
- 18:49:00 +0000
-Message-ID: <95c575a3-100c-4808-b451-b92f14598188@amd.com>
-Date: Tue, 1 Oct 2024 13:48:58 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
-To: John Rowley <lkml@johnrowley.me>, Hamza Mahfooz <hamza.mahfooz@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, amd-gfx@lists.freedesktop.org,
- regressions@lists.linux.dev
-References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
- <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0226.namprd04.prod.outlook.com
- (2603:10b6:806:127::21) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zfMs1f25"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=B0Kn9Y2iX/UXSPXh6gUir+sw8fthLf1UT6Nq8KHhHU0=; t=1727809013;
+	x=1728241013; b=zfMs1f25fmHwQz5kHqNZLmXY/Wjcu3eCx2ByDmXAN/8+GPKrY3kYlIoHZVSDO
+	U1hHUptw4k961QOw3bgOdFteg8KzhYHf2htlOm+dSWcbqljjVBPbbOmiqlQBVo9jgkFjKt9L4yLew
+	bWA8TGTwOIeO6QLbrrxE/j7hFoUTwSwfQQv2sE1rs5TCtscyB7zAvA7FwzF/lMpBSYxnsQprM0ZN+
+	G7UVApwx9NT5N5Jo1N0hL3MjYM/4mhdnaXYW4ggfaZhYvHxHNT845VIH2TUmf0ZPpPSo9bbNJSqmR
+	/6jDPdn/noTU8BEGnG3iO7C5TtYAym5sNLpiBJmDNJN0A3pnFg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1svi3G-00087j-H4; Tue, 01 Oct 2024 20:56:50 +0200
+Message-ID: <90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info>
+Date: Tue, 1 Oct 2024 20:56:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL3PR12MB6593:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a5a0b25-5df4-44eb-b511-08dce249b666
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SzBFaThRUHBiQktkQitFeHYranB2ZnJUcjF3bHJmN2RwYlV1d2RtZldNbm9p?=
- =?utf-8?B?U3V1ZHpKSXkxMmRLczlvcGhpNUN6QUh0bTF3TjFPUDhoS29mcnJOZWp2YU5y?=
- =?utf-8?B?MWJndmxnYm9ld2t1ZDFjelo3Z1JSTm5zKy80bTJzVDJYMjdodFdlUGVQc2Mv?=
- =?utf-8?B?UmJBZFNRSEFxWjlKcnFhWTk5QWcwc1NuT0RIMmo2Mng1azNxeDYwM1QvYWFu?=
- =?utf-8?B?R1RVV2hzOUR3MlBoLzJLdkdVRU00TUNFcEJWblhHdnBlUVRzL0dTZzhpa1hV?=
- =?utf-8?B?SDFBQ2tsdzlUUUorajIwYkdNdnVwaVd1UTVDdjFBQjNKTmk0bU5OMnBDdHY2?=
- =?utf-8?B?QXI4SUtjNnhWNk5sU1VERVM1ZjdWdmQ1QlZrUUZ2bXFXQWphdUcyaFBKWWxL?=
- =?utf-8?B?TkZKSXBKZWdUSTFPT0FMdWFjWGxXMDhLZWRYbmFVTmswcGxoeFp5RXMrVEhK?=
- =?utf-8?B?UDYwWk40M3ZOQ1I1OFRRVzNOTC8vT1BucjluOXYrdWxZVUw4enRNUzZCa1Nt?=
- =?utf-8?B?Uy9nOTR6L0hYYW8xbkZSaHBxaDFXelZLYlZXMGp3Vlk0Zk8xSUJreUZRS0gz?=
- =?utf-8?B?VnpWWDNBY3o2Z05ETlhvS20zT2JLSjBjTVl4aDZ6S0g2TUJmU2NiaE9zWnps?=
- =?utf-8?B?c3VJYXhFOTI1M25JM2piSHZYYVpvbUNObTBNMnJWc2w1eDN4dUJBcGxUeTNJ?=
- =?utf-8?B?MzV4M1FFdkYzemxUaFQ5QjlwdENlVUZTaTlvYmdRMmVXNyt2blhoelVJb1hz?=
- =?utf-8?B?TDZYc3BMMWJsd3Y3UFRvZUFuUGRTQlBjanVoUEdXWFBHcmtYUDZhTXg0ZFk5?=
- =?utf-8?B?RStRQ1lsSG9LeWxtSGVlWG43eXM2UC9vT2MyUWt4aGIrOEo1UHpibVlucm5o?=
- =?utf-8?B?RW1HVi9YSVlIakpKQWZoeDN0TnFZY05EWHFYT0t2YXZGN3JQcHA3RGdFS3do?=
- =?utf-8?B?cU1XbEVySlFybWxRUDFBNTRKeFVCNmdOTkJtSi9oNzVrbm5DdzlNemVaVFpz?=
- =?utf-8?B?ZUJIeHBlUDljSjdETE5PMEYyYlRlMitZK2xSRm82Z3p6ZHBkWEYra1dVY25L?=
- =?utf-8?B?YWJDK2NVNVpoY2tmRkdFQWZ1MzlnZHRGcjFSSEx4b0ZjZ21JOFlLd0tPYldI?=
- =?utf-8?B?aDh2UFVicVY2RGxWcGl6aEFqZUJ0bWVPRVhsTkQwSmh2d0NxNFEralpseFlT?=
- =?utf-8?B?VHc1cThDWE1vSnJTdnhBU243RGV3amljL1pQSDdQdDZSWnhnN2doMDlVaFNt?=
- =?utf-8?B?cDhrRFY0ZC9vTjJBNlhERUE4ekQ2aExwR1MwNEp1bHk3SHc2Ymtvb0lNbE8w?=
- =?utf-8?B?SVE1eUdETW9qQWlHZC9sOW1BMFVDcVFNL1ZsL3VuYUFwVm5PNDdabjRZeC9O?=
- =?utf-8?B?MU52ZXMxbVh5dTRZc2tNeWcyWHU0UzZYQ3JPK2VoWjNSdFhtS0tETjc5cWdV?=
- =?utf-8?B?bkFYR1kxd0hNeXR4NlVqNEdkT1E3ZTlMSi8zSktjS0wzamRmQWRuZmVrOGFF?=
- =?utf-8?B?Rnc2eWVvaUtTODJqWTVoMjhCVnJlc2Y2TTJWU3JWdENiRkk5Q2JJZHRLQVJJ?=
- =?utf-8?B?OENpVFZ6VjdQZVV5cHBpTWplQ1JFUUlVWWU5R2hqRFlKclI5WFJRZHZjTnA4?=
- =?utf-8?B?VWd1cVB2dGw4SUhrd2JXdTlJczczeHZTWWxEN0dnK0NwVHM3bFB5Q3h1TFBa?=
- =?utf-8?B?VXlMWDJpUkhBaW4rY25Walc4ek91NFBFRmJLNWI5Mk1ZUUNNd3h6b3ArRFN1?=
- =?utf-8?B?QkZLREhFYTdjVlhLd0FzeUZuY21RbTNIMEk3ZDVvQjR2N1A0bWY5OWN1enBN?=
- =?utf-8?B?R3FSTG42UnVuNW16WUhCUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OXFPRHRxMEk3RXc2Z0hoOVppaC9BK3QrZzRMUjlwR09LMlQ4RjVWZ1NnNVBh?=
- =?utf-8?B?UlNnWHhvWklsOWNoWE9WRVdtUlF4U1VRczFkT0FXSy82VTFrZzErWExtWW5C?=
- =?utf-8?B?bVQ5M2xYazZBSlN5RzlubFBMVWwwVkxOS01zNXhrQWtRKzJVVUIxR1NRLzQ4?=
- =?utf-8?B?TjhEU0xubjE0aEo3MVhkdU5uQXhrVFFVYzY0QVlmOXBZNUI3bjUxQkl5OVZF?=
- =?utf-8?B?WXI4Q2dmd1Y0N2JkTUhsRkV1N2owM3QxSktSSGxpaUl1TFJOWC80Z3VCNW9D?=
- =?utf-8?B?S09HTnZJbGMzN2hXRnpHbFRHRjVHSEhkWGFTeVB5U0JSQ3lJeHdPSjlCRS84?=
- =?utf-8?B?VVR2RjFpWm9CL0ZLOVFYcGJ1Tkw2RW5HWFV3L3doMURMYnVTYUJtT0N3WWk5?=
- =?utf-8?B?SFdGMjBOV0hyS1hpMWRxZFcvU0QyZVBONHlCWGowMVcwWWRwZmNjSmRVRmZn?=
- =?utf-8?B?V3BlWUpqaHJDWkJCdmFGK0l4aWl5WG1rOGpWZ3ZYalM1UHVndVlpQkFweVQv?=
- =?utf-8?B?cU4rNkl1YStHZFpxYndFTlhoWFE5TVZBenFlTUphSC9YbHV3TEE3N3d1MG5z?=
- =?utf-8?B?SndFMWEwZW1YcUJkeDhMeWx3REhWK21KQ3JDdHZMUm4vSkFoY21FVWJOSWlN?=
- =?utf-8?B?OW9IU0NGUWkzL2MzNzRSeEFTZDBTVGd0eXZ6U3YwRDRmMzdGeEErc3RPRmFr?=
- =?utf-8?B?N0ZGWXhjOHdlTmVPYVprV3NjSXlVc2JtbGFaZllWSE50VTAxSUxJcEN6c3N1?=
- =?utf-8?B?NDFWdkZQZU9XaWJud3cxSHd6TUpoRHNuR2F5MTVFRU1uS3N3clJiNk9XRHhF?=
- =?utf-8?B?Zy9QM251M1ZwbEhRUm1xSmFWcWNVczVtVnlHUjNXcHdTZk9VSWl5WklvRkxG?=
- =?utf-8?B?M1ZlSzRUdnJybkhhc0VoOFFTeTNQbEtLb2F6Y2ZZczVOcTVCeUdNajhYaFpS?=
- =?utf-8?B?WElYQkZkSloweThiV3BCb2s5UEJLbzVBRDlvME5kQThPSEV4SE15aW8yc0VK?=
- =?utf-8?B?R2VKeXJ5Z0JadEdBNEFib2JEbmpNaHp0T244S1ZhM3lURWNqZmdsL09qaURF?=
- =?utf-8?B?ZTdKMldBc25OYk5FNXpSOWZuZzliRG53cEFwazNVVFdxK0o1d2RnTkZoTlh1?=
- =?utf-8?B?bW5SbWdUVjhhd2RoQS95bXMwSVdHMFNHU25xTmxrYjBGTEwxQW1mZFZva3ds?=
- =?utf-8?B?cUFmWmFsNWt4UEQxOEpaaDNmQ2hoWmFqU2dLdHdHZUNrQWNLbjdiaFBoZkZE?=
- =?utf-8?B?Nm4yYnF0akNGMzd3MDJ3R3htVmNTRjdiTVlTK0NCNHFJRnVrQ1lZaTlWZ2F3?=
- =?utf-8?B?Qlh5d3QwOHRBYzk4ckxNSXBrT2thMmdPeG9OZW1ZWGhMUGN2YkVDZDJLc2FP?=
- =?utf-8?B?L29abk9IR3lBdkQ1SE10K3RudWFGUmE1MzdwSkNGcm1lSUtzZHJEdU5MQ0JO?=
- =?utf-8?B?bFVYdzVEZEFVU1l2eE1oZzlKOUhpM3NRaElwZm1DYUFRMEJEY2ZabUllOHpv?=
- =?utf-8?B?RVFoR0hjQ254RkdVNXdnRlllRHVVcmx2eFpKUE84dlAwQ3c1L0Y5aHg1UFp4?=
- =?utf-8?B?ZzE1UTVEbFd1Z21VRWJSVXFnR3lRUWxkbDRPS21sTm5vSDNJdjVhMkN2aE1h?=
- =?utf-8?B?bHQrYndQNUJiY1gvTkpWRTJudk55YVB3MGhsblQySkN0VC83d1ZPMFE4UG5R?=
- =?utf-8?B?NFV6ZDN4NkRYQjF5ZkdoT1RyNnFYU3VZbFR5QnF6L1lhTHg2MXg0d3lzMzht?=
- =?utf-8?B?OFMzSmM5cEpzWVh0VkNwcFBsVzRLemRaRzNYcGpka0NrTTUvdFJ3TDU2K2VC?=
- =?utf-8?B?MTBicVJmR2RZZXRvNEF6NEhLdUMzTlRGT3lFSGNXQThVeE9xNzJZUXR4VkpW?=
- =?utf-8?B?U2Z6aDEyd2VxaXI1UHBScU1KeUMzYVRIWFRWODZRekhuR1hsbmpUS1YzSnli?=
- =?utf-8?B?UW5wUXpzbGhPK2tSeW5YeVZ2Zlp3aUJoU2pzbFpMVUdtbHlHc2Jva2tTRHIy?=
- =?utf-8?B?bWtheG11bmRzckRnejdmdGljNnRmTnVuTDFBcUJqMmVMbVl5cHBLbGpCNUVW?=
- =?utf-8?B?VFNhb29VajRDUU1FcE1ieEEyaDdxZmhYWEIxbW5WbGh4UVA3VllGcTI5OFZl?=
- =?utf-8?Q?4eo85E8eyyY3W9m7nkBkDvnvL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a5a0b25-5df4-44eb-b511-08dce249b666
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 18:49:00.3021
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KslLd6Ab1e/WQbvbKtEuTv0SDLVm3L8rUBYLsjYMcuFz1Vk/PcbiaR+BqYkxXcwY5v+HoRRvEl5GMM5IIvoznw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6593
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc: Jiri Kosina <jkosina@suse.com>, linux-input@vger.kernel.org,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ akshata.mukundshetty@amd.com, Chris Hixon <linux-kernel-bugs@hixontech.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Skyler <skpu@pm.me>
+Subject: [regression] AMD SFH Driver Causes Memory Errors / Page Faults /
+ btrfs going read-only
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727809013;0a383021;
+X-HE-SMSGID: 1svi3G-00087j-H4
 
-On 9/30/2024 13:42, John Rowley wrote:
-> Oops, forgot to mention that I'm using the AMD variant of the Framework 13 laptop, which uses AMD Ryzen 7 7840U w/ Radeon 780M Graphics.
-> 
-> Thanks.
-> 
-> #regzbot introduced: 58a261bfc967
-> 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Just to make sure we're looking at a pure kernel bug:
+Basavaraj Natikar, I noticed a report about a regression in
+bugzilla.kernel.org that appears to be caused by a change of yours:
 
-1) What version of power-profiles-daemon are you using?
-2) What mode are you in, 'balanced' or 'power-saver'?  If 'power-saver' 
-can you reproduce in 'balanced' as well?
+2105e8e00da467 ("HID: amd_sfh: Improve boot time when SFH is available")
+[v6.9-rc1]
+
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219331 :
+
+> I am getting bad page map errors on kernel version 6.9 or newer.
+> They always appear within a few minutes of the system being on, if
+> not immediately upon booting. My system is a Dell Inspiron 7405.
+> 
+> This occurs with kernel 6.9.x, 6.10.x and 6.11. I tested a handful
+> of versions from 6.2.x to 6.8.x as well as 5.15 and they don't have
+> the same behavior. In addition to compiling from kernel.org, I tried
+> to install some major distros (Fedora, CentOS, Debian, Mint, Ubuntu)
+> to double check that it was not a mistake I was making with
+> compilation. They were consistent with my kernel.org results.
+> 
+> Kernel version from /proc/verison of the earliest affected release I
+> could identify: Linux version 6.9.0 (skyler@nobara-pc) (gcc (GCC)
+> 14.2.1 20240912 (Red Hat 14.2.1-3), GNU ld version 2.41-37.fc40) #1
+> SMP PREEMPT_DYNAMIC Sat Sep 28 11:17:40 EDT 2024
+> 
+> Please let me know if there is any other information or testing that
+> could help debug this. This is my first time making a bug report or
+> even compiling the kernel from source so I may be missing something
+> obvious. Thank you!
+> 
+> Attached is a full dmesg log. Below I will paste a few other dmesg
+> snippets and some environment information.>
+> dmesg sample #1:
+> 
+> [   23.234632] systemd-journald[611]: File /var/log/journal/a4e3170bc5be4f52a2080fb7b9f93cf0/user-1000.journal corrupted or uncleanly shut down, renaming and replacing.
+> [   23.580724] rfkill: input handler enabled
+> [   25.652067] rfkill: input handler disabled
+> [   34.222362] pcie_mp2_amd 0000:03:00.7: Failed to discover, sensors not enabled is 0
+> [   34.222379] pcie_mp2_amd 0000:03:00.7: amd_sfh_hid_client_init failed err -95
+> [   34.680264] BUG: unable to handle page fault for address: 00000002ffffffe3
+> [   34.680272] #PF: supervisor read access in kernel mode
+> [   34.680274] #PF: error_code(0x0000) - not-present page
+> [   34.680275] PGD 0 P4D 0 
+> [   34.680278] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [   34.680280] CPU: 3 PID: 3252 Comm: Chroot Helper Not tainted 6.9.0 #1
+> [   34.680282] Hardware name: Dell Inc. Inspiron 7405 2n1/0XMJN6, BIOS 1.19.0 07/10/2024
+> [   34.680284] RIP: 0010:unlink_anon_vmas+0x97/0x1e0
+> [   34.680288] Code: 83 c0 22 49 89 47 18 e8 a7 19 02 00 48 8b 43 10 4c 8d 63 10 49 89 df 48 83 e8 10 4d 39 ec 74 48 48 89 c3 4d 8b 77 08 48 89 ef <49> 8b 2e 48 39 fd 74 12 48 85 ff 0f 85 06 01 00 00 48 8d 7d 08 e8
+> [   34.680290] RSP: 0018:ffffb41842c2f918 EFLAGS: 00010246
+> [   34.680292] RAX: 0000000080000000 RBX: ffff98528ab2cb00 RCX: 0000000000000000
+> [   34.680293] RDX: ffff98528ab2cb10 RSI: ffff98528862b008 RDI: 0000000000000000
+> [   34.680294] RBP: 0000000000000000 R08: 000000000000000f R09: 0000000000000060
+> [   34.680296] R10: 0000000000400030 R11: 0000000000000004 R12: ffff98528ab2c010
+> [   34.680297] R13: ffff98525ce97060 R14: 00000002ffffffe3 R15: ffff98528ab2c000
+> [   34.680298] FS:  0000000000000000(0000) GS:ffff98553f780000(0000) knlGS:0000000000000000
+> [   34.680300] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   34.680301] CR2: 00000002ffffffe3 CR3: 000000014c630000 CR4: 0000000000350ef0
+> [   34.680302] Call Trace:
+> [...]
+
+See the ticket for more details and the bisection result. Skyler, the
+reporter (CCed), later also added:
+
+> Occasionally I will not get the usual bad page map error, but
+> instead some BTRFS  errors followed by the file system going read-only.
+
+Note, we had and earlier regression caused by this change reported by
+Chris Hixon that maybe was not solved completely:
+https://lore.kernel.org/all/3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com/
+
+
+Chris Hixon: do you still encounter errors, or was your issue
+resolved/vanished somehow?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 2105e8e00d
+#regzbot title: HID: amd_sfh: Memory Errors / Page Faults / btrfs going
+read-only
+#regzbot from: Skyler <skpu@pm.me>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219331
+#regzbot ignore-activity
