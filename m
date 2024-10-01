@@ -1,146 +1,68 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29F01C0DE1;
-	Tue,  1 Oct 2024 11:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21531A00D1;
+	Tue,  1 Oct 2024 12:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727782155; cv=none; b=WeH+bbPeRSIZPJPMxbwjem1AdCpodzCrxPMYHGt3Cr1pgrAbfyj6LDN7Nb5p24G46YwaHFGSgM7dqsN/71LZYaPEIlDFolII1A5H3QIsEtJBSnWfocQbo7YPolIUxhEISSmxjGE6rMLnNKFKOxqm8EogsISpl1UymJlITosvjQo=
+	t=1727785127; cv=none; b=MSeaex3Ta7BNEUm8hysLYV8AOnLXaU2sZDTfv8Z2UZfzLCO9wDbHoytdN5CMgoL13GyohCBPqlSiY+V0hBgLvSlBerjMqrksdcdsyfyvYntmHTKXrFDobwL86NitClkWpCQIEjlrydyOfBm6ihgVZHYhrh735EG/GvKiRdlKqwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727782155; c=relaxed/simple;
-	bh=a8WHZ7W3EhQ9PtI7lCDoDsTRkyAHfHKrzoPIXZXeYg8=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=dX7EH9Q3xifIgTEL4tvV8l38HLrzmtPuVnw5bq7ag0K0+/wGC4u8Gx/Qct0fJe4jkoTWDs0sjEyyFyettZf9mjZ6kxjQFObwlMJMCJBFVrfqUqaT6R18TYxtFle/DLSVprcVM8sghRiBu7t0pB2SaQ+waattwqZe32HM0hhp2Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hOqxm6iV; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727785127; c=relaxed/simple;
+	bh=riO2jT8o+ij7TwxJY4+OVu/vj7GB95NJdLYYzv1iHS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2RorsiKEGtfWHRbwjZo7e6G0bIEZNo4FtFOGPsTX6xzlIXfxYg6qWh7XFNmoYU+3KeeK5KZ1r1T+cwEReirQHcEnBTob3jnLAU2MCR7EjlJSusORpkWYBAZA5zAqc35wvWqg7A+CO5Bp/+9I//izjEw8yo2Bq3sKGm2XkUfO+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lOuPq+W6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hOqxm6iV"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lOuPq+W6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=zF9uz8JVM3HISwS+6MEo57XAsK6xXE3AG8qaHZeixt4=; t=1727782153;
-	x=1728214153; b=hOqxm6iVo+ojbWG2adXOLDJ0wDk6JQwzE1u9fIzVD8t3wJiVw71ol3u90rAMo
-	dlleOVwRhEmNTVb8Zmq147RNb0bE7XOoyyraW/tTHYO5lYAVf1nCzVX1LC5B2bo0Qr3SMym2r8Aii
-	Owh3q44AYeqFINNVIm6RzwgfJaEgCtyzS0u+M1EUtA0lYnIQkIOIQQexnExgNcagzY/jYwKmJQNky
-	x5KH0mHs0DruFeAjm7PSM33JxcSYar+VcfzLi605pz/NPCFBad0yLYH8vVCRvcp33EoU9U2fpPkO/
-	6wzPpULLKsiJImAd9L+hNM4pkF0RPwLcTk4uJb75+0ixvfHA/w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svb42-00089I-8P; Tue, 01 Oct 2024 13:29:10 +0200
-Message-ID: <8196cf54-5783-4905-af00-45a869537f7c@leemhuis.info>
-Date: Tue, 1 Oct 2024 13:29:09 +0200
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cmmwHHoBxYqtL+q1QFqizof9cw/O9Pm4OMGlQQ2390k=; b=lOuPq+W6fKa2W6FTum9KllTNUJ
+	bT2nPfRWpzl4xg0eGWICDxz+AwLXzQmBi9iPsN++dfmNsCHDiqiucvHp51jKzWFE67xqiHnt7lzUR
+	Jf1Np65gW+PSSm7N5Vreb9RK59p8nmlKt9OKdj6z9bklbukJqJyF5tPMDnN+ym3bABEwvB6xbD/hS
+	vG83bwBbMZnne2AuN6iF9ANGWAQSVNXh1f2ZHgoeQhckL0J3hI/EmJACBYmdwiblfUq3DBclyZIXx
+	3tw3HI6hGZimOSi3lkd0MIsw1leFNodu+WWgqt/aiBmpZhOczxB9UrxVGZM7R8zU9yx0Rl8SrFSQ+
+	Pu9EUQBA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1svbps-00000002OCa-2POs;
+	Tue, 01 Oct 2024 12:18:36 +0000
+Date: Tue, 1 Oct 2024 13:18:36 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: yangerkun <yangerkun@huawei.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Krzysztof =?utf-8?Q?Ma=C5=82ysa?= <varqox@gmail.com>
+Subject: Re: [regression] getdents() does not list entries created after
+ opening the directory
+Message-ID: <ZvvonHPqrAqSHhgV@casper.infradead.org>
+References: <8196cf54-5783-4905-af00-45a869537f7c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: yangerkun <yangerkun@huawei.com>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Ma=C5=82ysa?=
- <varqox@gmail.com>
-Subject: [regression] getdents() does not list entries created after opening
- the directory
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727782153;5e5fb709;
-X-HE-SMSGID: 1svb42-00089I-8P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8196cf54-5783-4905-af00-45a869537f7c@leemhuis.info>
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On Tue, Oct 01, 2024 at 01:29:09PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > 	DIR* dir = opendir("/tmp/dirent-problems-test-dir");
+> > 
+> > 	fd = creat("/tmp/dirent-problems-test-dir/after", 0644);
 
-yangerkun, I noticed a report about a regression in bugzilla.kernel.org
-that appears to be caused by the following change of yours:
+"If a file is removed from or added to the directory after the most
+recent call to opendir() or rewinddir(), whether a subsequent call to
+readdir() returns an entry for that file is unspecified."
 
-64a7ce76fb901b ("libfs: fix infinite directory reads for offset dir")
-[merged via: "Merge tag 'vfs-6.11-rc4.fixes' of
-git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs"; v6.11-rc4]
+https://pubs.opengroup.org/onlinepubs/007904975/functions/readdir.html
 
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219285:
+That said, if there's an easy fix here, it'd be a nice improvement to
+QoI to do it, but the test-case as written is incorrect.
 
-> below program illustrates the problem. Expected output should include line "entry: after", actual output does not:
-> ```
-> entry: .
-> entry: ..
-> entry: before
-> ```
-> Program:
-> 
-> ```c
-> #include <unistd.h>
-> #include <dirent.h>
-> #include <stdlib.h>
-> #include <sys/stat.h>
-> #include <stdio.h>
-> #include <fcntl.h>
-> 
-> int main() {
-> 	system("rm -rf /tmp/dirent-problems-test-dir");
-> 	if (mkdir("/tmp/dirent-problems-test-dir", 0755)) {
-> 		abort();
-> 	}
-> 
-> 	int fd = creat("/tmp/dirent-problems-test-dir/before", 0644);
-> 	if (fd < 0) {
-> 		abort();
-> 	}
-> 	close(fd);
-> 
-> 	DIR* dir = opendir("/tmp/dirent-problems-test-dir");
-> 
-> 	fd = creat("/tmp/dirent-problems-test-dir/after", 0644);
-> 	if (fd < 0) {
-> 		abort();
-> 	}
-> 	close(fd);
-> 
-> 	struct dirent* entry;
-> 	while ((entry = readdir(dir))) {
-> 		printf("entry: %s\n", entry->d_name);
-> 	}
-> 
-> 	closedir(dir);
-> 	return 0;
-> }
-> ```
-> 
-> Affected kernel version: 6.10.10.
-> Filesystem: ext4.
-> Distribution: Arch Linux.
-
-> On Linux 6.6.51 it works as expected.
-
-> Regression first appeared in 6.10.7, 6.10.6 was good. I will further
-> bisect tomorrow.
-
-> 6.11 is still affected.
-
-See the ticket for more details. Reporter ist CCed. I made no judgement
-if the code provided is sane, I'm just assumed forwarding the issue was
-a good idea.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 64a7ce76fb901bf9f9c36cf5d681328fc0fd4b5a
-#regzbot title: libfs: getdents() does not list entries created after
-opening the directory
-#regzbot from: Krzysztof Małysa <varqox@gmail.com>
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219285
-#regzbot ignore-activity
