@@ -1,149 +1,163 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2BB1C2DB7;
-	Tue,  1 Oct 2024 18:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0F11A08C6;
+	Tue,  1 Oct 2024 18:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727809015; cv=none; b=CwxYamN8kD7rzL//XZGWCl14T41yKgv3fyNJR+l1WBpxDHVpZ+mHiBwGFACHS8j3FudgvDBexRkdfTZAyI4uyx+bTJiEvBWjVAMw9PK/8wrFm2X93YBjeYTxsA3FfR9a0on/CTiWIY+G9XXSgmpgw5Q0jGQQdBcepKAifM4jz3M=
+	t=1727809188; cv=none; b=ktaiaMkR3HUOJ4ZZwjHC48Q96z7rJXeQ5L4Pwu9rt+RGEWmkkbYQ/AHNSq7X+bUsa7dsCsDYlvFhNFgYH75Fp7SXAz8yGSexHr4QoCpTQz7qZYNp+OEFsyDWE16lZm6bc73+anO/iS0QO3UjFJWuX/XG93Q+7cRje2Bbxml8DFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727809015; c=relaxed/simple;
-	bh=JwPxLrTRzoX+uJUpZ6kXpFBXJd5I6oAafFs3HtwYLtE=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QS5dEiV0HP8jAdVwRJPWqf7S7hYDx7u6r6FEXPFjRePsZVfh+9y1bgDE1ZlCJHPg/zlZlIpxXyXIj48C57O7CK2JSNijEo/7652KX5MfC+Vt9nV3RRJJ5Jlk86Z/MWU3nTxKpZxuuV1mU/Go0FQ4/BvXmcJHjYNpEC2rZ/oYWHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zfMs1f25; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727809188; c=relaxed/simple;
+	bh=srQwgyYq+G97BRzwotELBbaZrcRKSuj98FoHLN6u0Ds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhN+emYqBkDUCxzeWWr5trPt3ax6fu+8GamJJeWg+QaxZwHuuWOeqs3otHX/Krq3ubZ7PDT/kAO8YvUDgbP46C5r7YNO0DMbpGCwgE2GbIH+yvJtwMDMM0TBUFbxuwHboPt4RHfFs9W62EphGj1KZ9A3wY8oKUuR6fmmhwxFtXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=a7vooxlQ; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zfMs1f25"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=B0Kn9Y2iX/UXSPXh6gUir+sw8fthLf1UT6Nq8KHhHU0=; t=1727809013;
-	x=1728241013; b=zfMs1f25fmHwQz5kHqNZLmXY/Wjcu3eCx2ByDmXAN/8+GPKrY3kYlIoHZVSDO
-	U1hHUptw4k961QOw3bgOdFteg8KzhYHf2htlOm+dSWcbqljjVBPbbOmiqlQBVo9jgkFjKt9L4yLew
-	bWA8TGTwOIeO6QLbrrxE/j7hFoUTwSwfQQv2sE1rs5TCtscyB7zAvA7FwzF/lMpBSYxnsQprM0ZN+
-	G7UVApwx9NT5N5Jo1N0hL3MjYM/4mhdnaXYW4ggfaZhYvHxHNT845VIH2TUmf0ZPpPSo9bbNJSqmR
-	/6jDPdn/noTU8BEGnG3iO7C5TtYAym5sNLpiBJmDNJN0A3pnFg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svi3G-00087j-H4; Tue, 01 Oct 2024 20:56:50 +0200
-Message-ID: <90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info>
-Date: Tue, 1 Oct 2024 20:56:49 +0200
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="a7vooxlQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1727809152; x=1728413952; i=christian@heusel.eu;
+	bh=k3WrPHh+pQgOST0TG/DsxdIM//YxJc9OTvspQubSD94=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=a7vooxlQc1UC7oVfE6hwKR/VmmLq+n7gmtt9Fspe8MpyyVgKeuH1ygRbvw9Yn/Ua
+	 M7wTLKd1P6I7KxQB3chjkDHqi0PV4raSWU4U/ZwCdS63qaZsl8H0AuuAT+DGr0o0g
+	 3/npNuk8f2zyLq7o9ay8MB2GfWm05J0xClQ1qlkbnzCK8i0OyGlnUNUhAGQGJHyE0
+	 uONACAGccXSOyo5+d8Rjyac6ULyHHoMrVafthxAS1ZqmMo+1/5sf98j8DyZAETyHC
+	 R7VJVG7EjVypjKGg7fkbbiJALaKtBxKniw8pPFeAQ5IA9DTxHgBL3t5Twp/b0yaMW
+	 3/kyuvT2OROOJWC/5A==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([93.196.158.52]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MQ8OG-1sZf041sQq-00KOdp; Tue, 01 Oct 2024 20:59:12 +0200
+Date: Tue, 1 Oct 2024 20:59:09 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Krzysztof =?utf-8?Q?Ma=C5=82ysa?= <varqox@gmail.com>, 
+	yangerkun <yangerkun@huawei.com>, Christian Brauner <brauner@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	linux-btrfs@vger.kernel.org
+Subject: Re: [regression] getdents() does not list entries created after
+ opening the directory
+Message-ID: <b8089429-cff1-41f3-a3ee-a3c345f2289a@heusel.eu>
+References: <8196cf54-5783-4905-af00-45a869537f7c@leemhuis.info>
+ <ZvvonHPqrAqSHhgV@casper.infradead.org>
+ <b77aa757-4ea2-4c0a-8ba9-3685f944aa34@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: Jiri Kosina <jkosina@suse.com>, linux-input@vger.kernel.org,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- akshata.mukundshetty@amd.com, Chris Hixon <linux-kernel-bugs@hixontech.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Skyler <skpu@pm.me>
-Subject: [regression] AMD SFH Driver Causes Memory Errors / Page Faults /
- btrfs going read-only
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727809013;0a383021;
-X-HE-SMSGID: 1svi3G-00087j-H4
-
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Basavaraj Natikar, I noticed a report about a regression in
-bugzilla.kernel.org that appears to be caused by a change of yours:
-
-2105e8e00da467 ("HID: amd_sfh: Improve boot time when SFH is available")
-[v6.9-rc1]
-
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219331 :
-
-> I am getting bad page map errors on kernel version 6.9 or newer.
-> They always appear within a few minutes of the system being on, if
-> not immediately upon booting. My system is a Dell Inspiron 7405.
-> 
-> This occurs with kernel 6.9.x, 6.10.x and 6.11. I tested a handful
-> of versions from 6.2.x to 6.8.x as well as 5.15 and they don't have
-> the same behavior. In addition to compiling from kernel.org, I tried
-> to install some major distros (Fedora, CentOS, Debian, Mint, Ubuntu)
-> to double check that it was not a mistake I was making with
-> compilation. They were consistent with my kernel.org results.
-> 
-> Kernel version from /proc/verison of the earliest affected release I
-> could identify: Linux version 6.9.0 (skyler@nobara-pc) (gcc (GCC)
-> 14.2.1 20240912 (Red Hat 14.2.1-3), GNU ld version 2.41-37.fc40) #1
-> SMP PREEMPT_DYNAMIC Sat Sep 28 11:17:40 EDT 2024
-> 
-> Please let me know if there is any other information or testing that
-> could help debug this. This is my first time making a bug report or
-> even compiling the kernel from source so I may be missing something
-> obvious. Thank you!
-> 
-> Attached is a full dmesg log. Below I will paste a few other dmesg
-> snippets and some environment information.>
-> dmesg sample #1:
-> 
-> [   23.234632] systemd-journald[611]: File /var/log/journal/a4e3170bc5be4f52a2080fb7b9f93cf0/user-1000.journal corrupted or uncleanly shut down, renaming and replacing.
-> [   23.580724] rfkill: input handler enabled
-> [   25.652067] rfkill: input handler disabled
-> [   34.222362] pcie_mp2_amd 0000:03:00.7: Failed to discover, sensors not enabled is 0
-> [   34.222379] pcie_mp2_amd 0000:03:00.7: amd_sfh_hid_client_init failed err -95
-> [   34.680264] BUG: unable to handle page fault for address: 00000002ffffffe3
-> [   34.680272] #PF: supervisor read access in kernel mode
-> [   34.680274] #PF: error_code(0x0000) - not-present page
-> [   34.680275] PGD 0 P4D 0 
-> [   34.680278] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [   34.680280] CPU: 3 PID: 3252 Comm: Chroot Helper Not tainted 6.9.0 #1
-> [   34.680282] Hardware name: Dell Inc. Inspiron 7405 2n1/0XMJN6, BIOS 1.19.0 07/10/2024
-> [   34.680284] RIP: 0010:unlink_anon_vmas+0x97/0x1e0
-> [   34.680288] Code: 83 c0 22 49 89 47 18 e8 a7 19 02 00 48 8b 43 10 4c 8d 63 10 49 89 df 48 83 e8 10 4d 39 ec 74 48 48 89 c3 4d 8b 77 08 48 89 ef <49> 8b 2e 48 39 fd 74 12 48 85 ff 0f 85 06 01 00 00 48 8d 7d 08 e8
-> [   34.680290] RSP: 0018:ffffb41842c2f918 EFLAGS: 00010246
-> [   34.680292] RAX: 0000000080000000 RBX: ffff98528ab2cb00 RCX: 0000000000000000
-> [   34.680293] RDX: ffff98528ab2cb10 RSI: ffff98528862b008 RDI: 0000000000000000
-> [   34.680294] RBP: 0000000000000000 R08: 000000000000000f R09: 0000000000000060
-> [   34.680296] R10: 0000000000400030 R11: 0000000000000004 R12: ffff98528ab2c010
-> [   34.680297] R13: ffff98525ce97060 R14: 00000002ffffffe3 R15: ffff98528ab2c000
-> [   34.680298] FS:  0000000000000000(0000) GS:ffff98553f780000(0000) knlGS:0000000000000000
-> [   34.680300] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   34.680301] CR2: 00000002ffffffe3 CR3: 000000014c630000 CR4: 0000000000350ef0
-> [   34.680302] Call Trace:
-> [...]
-
-See the ticket for more details and the bisection result. Skyler, the
-reporter (CCed), later also added:
-
-> Occasionally I will not get the usual bad page map error, but
-> instead some BTRFS  errors followed by the file system going read-only.
-
-Note, we had and earlier regression caused by this change reported by
-Chris Hixon that maybe was not solved completely:
-https://lore.kernel.org/all/3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com/
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mpz5nn36wgj3iugp"
+Content-Disposition: inline
+In-Reply-To: <b77aa757-4ea2-4c0a-8ba9-3685f944aa34@leemhuis.info>
+X-Provags-ID: V03:K1:T88c3DXPkd2HIhYeJcp9wz8+CpvNbgYL+fxcLFE+b2+653QmuyL
+ CnNEpJ8bizXbbmrIrDJ2w26gWP99wahEaMr/HUWZ3AFb7miazUAyV3ytEa0IPMtBgcsIV+X
+ jlITf2/AHEZmkzYv1rFTXfr+0s8C+ujq5kMOwCUszYYgacUWD+KRsPsSycrjrNdqSohPz+2
+ 1SpXq3+SoYJs3FD2rVU6Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lmQO8pjVS9k=;X1guPrCyMDhfoREQYE2f42iYwck
+ 9ElwZJWhVYljCu6LGX8a9tT+PlpfJMYdJ6im2jl8CKxDZy5o14PN9K8U/HELb/e7zXxHGniZr
+ wMlHe6le3lLCj3DyAfQPBdEA5LZC/uBVCednsz935MCRtTaB/S3nkI5xYnrOZffdf8yvwKMOH
+ XBtMtjBISBoiqFh7NCgJGgVyLezFKIIuNhsH5s+bg7tQQiOuMI1Dw6HJWh+zlS8ghTLrs9AFL
+ qfjm88CJdV3I2m4ynDFxdHA8WfhMLs5gh2XtFDCFt8s+62Q3ARN4HGcf/z15HhUOrlt4xhAMy
+ 1hz0l0cJAQC6CdoDqAGcIZ1hHHANavK6Itm9SOBUqjB0R3vgOJ0LHpujeoiNDwmnpDhkj4xLj
+ UV3uKTAHH3McGNXEoeFwsZGdniPOTfC373YFHpHZ2PuO1oDnOISfu7UJYuv9fGmKM29x/AAz6
+ VhnLDbVh1aJ7P63IV3etEoq0wau/hdnAXhKpQ+gD0vFV0wI4E0ag6PTYnnuHhrM3lpaGTYeN/
+ Qe6Q0jdQ6Y9FeEF6N6yHaqC5PONFKCh7bJC819OL/agpGqkTnRSz7GO0H6Cs1mnWGQLe0CNHr
+ bR5Mhq5DOnmCvkpQ0eXJKis96S2VevFlYMp6bfOqOMD7Z4GAe2BeeS30yPW+7SrKqmLwh++Lt
+ gFNk+3TLRWbtIAAMAjUDfoxXCssAJBinAsFZJ8pjhRrUX2Ycv4JolUrQgwoG/q3xk/MxDBDyr
+ AlR/sla/qrf5xpnI9DlnrQqCkLFoiEODQ==
 
 
-Chris Hixon: do you still encounter errors, or was your issue
-resolved/vanished somehow?
+--mpz5nn36wgj3iugp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+On 24/10/01 02:49PM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 01.10.24 14:18, Matthew Wilcox wrote:
+> > On Tue, Oct 01, 2024 at 01:29:09PM +0200, Linux regression tracking (Th=
+orsten Leemhuis) wrote:
+> >>> 	DIR* dir =3D opendir("/tmp/dirent-problems-test-dir");
+> >>>
+> >>> 	fd =3D creat("/tmp/dirent-problems-test-dir/after", 0644);
+> >=20
+> > "If a file is removed from or added to the directory after the most
+> > recent call to opendir() or rewinddir(), whether a subsequent call to
+> > readdir() returns an entry for that file is unspecified."
+> >=20
+> > https://pubs.opengroup.org/onlinepubs/007904975/functions/readdir.html
+> >=20
+> > That said, if there's an easy fix here, it'd be a nice improvement to
+> > QoI to do it, but the test-case as written is incorrect.
+>=20
+> Many thx Willy!
+>=20
+> Which leads to a question:
+>=20
+> Krzysztof, how did you find the problem? Was there a practical use case
+> (some software or workload) with this behavior that broke and made your
+> write that test-case? Or is that a test-program older and part of your
+> CI tests or something like that?
 
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+The above message and the mentioned patch reminded me of an [old
+issue][0] that is bothering us in the Arch Linux Infrastructure Team
+which makes files vanish if modified during an rsync transaction (which
+breaks our mirror infrastructure because it makes the package sync
+databases [go missing][1]).
 
-#regzbot introduced: 2105e8e00d
-#regzbot title: HID: amd_sfh: Memory Errors / Page Faults / btrfs going
-read-only
-#regzbot from: Skyler <skpu@pm.me>
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219331
-#regzbot ignore-activity
+The issue was previously discussed with the BTRFS developers after they
+implemented a [similar patch][2] (atleast judging from the title of
+both) for their filesystem who also pointed to the standards compliance
+after we have complained.
+
+The workload and the issue with it (and how the new behaviour breaks
+rsync for our usecase) was [nicely explained][3] by one of the BTRFS
+developers.
+
+So going back to the initial question: There could be a practical
+usecase this causes a regression for, atleast if the patch has the same
+implications as the BTRFS patch has. While we will have to sort out our
+issue separately with the BTRFS folks I thought I'd still leave this
+information in this thread.
+
+> Ciao, Thorsten
+
+Cheers,
+Chris
+
+[0]: https://lore.kernel.org/linux-btrfs/00ed09b9-d60c-4605-b3b6-f4e79bf92f=
+ca@foutras.com/
+[1]: https://gitlab.archlinux.org/archlinux/infrastructure/-/issues/585
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commi=
+t/?id=3D9b378f6ad48c
+[3]: https://lore.kernel.org/linux-btrfs/ZP8AWKMVYOY0mAwq@debian0.Home/
+
+--mpz5nn36wgj3iugp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmb8Rn0ACgkQwEfU8yi1
+JYXavBAArTSgj5qGEGfQd/DPUlTK+Wu0dcezPOB1BX47GnKWOV6FvFdOsKL9y6A2
+nqoL1Dhmhz9lz/WWMboln2HEN5ompIXJTYLe9EeCOu6lWuxwctJdszOlP9+sFdMf
+FUOrQXK6OUs56hrWn8Ew/RUAmJ0NvvdZk75l+OriGWM5QTt1qiDS4cK5zIpp7EI7
+TFulZ4kA9VO6PjWzR4bKIC5pTe2zDB1U+PNlVk9JIFo8HCDLSHSjfWh0d9Sxs3YN
+bcXyq9vrhFhbPjFUt41ZZHn469MoPC5Wi0WI5qkLzhMQRoHFs+ObX+V63X79YESA
+ckDPGZjo3LVXXsBjzlblMkMfjVuXZk2yfR3btVCrJ3U3kDBq8Wy4mQQHbXkDrs76
+00PwUjfx9arQuwyzMfAhqiHStqDY1AuIS2CenkiRSTFttfNtGSWfnqpgAVjlnWZM
+5VO7FaG4CuJNDAcFlsxMVTICrHSZjccFF5IapDC42auYOSmeFiEKVBcSa51TAy6I
+CTfWNKnN5JJxMmjC51tpDkLCNGCatTi/UL6zMj8jjqq06vulF8ZzscgneA35OTB7
+/wmzPmKgs0OrS0j0xwM86M1WyfSrzVEvXcvjCbrItXLkx8mXCXunlquGovjgR926
+Vi0UpS7HaqtNGlmlj4B/Iswbk7xRjETTNRT170aUkpjoTHsIBcg=
+=2qI0
+-----END PGP SIGNATURE-----
+
+--mpz5nn36wgj3iugp--
