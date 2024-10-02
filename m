@@ -1,156 +1,127 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.vapourmail.eu (mail.vapourmail.eu [5.75.183.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE0372;
-	Wed,  2 Oct 2024 12:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FDB1BD519
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 12:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.183.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727872211; cv=none; b=HpBFfM68gPvQlqGClzTa8Vx0KJZkUfZXN4J6RVXwwOLEooPkAD/vpP86x4FH57zsbWEcCAaYEWEYohwUnTMrPoxIsdkullSV195EXYHlZMSPdpKvsEstNZau11k/lPFk1A2aFwZGe413Mx+FXIOXlZCEmxSWRMtjvEdgrgQGwnQ=
+	t=1727872504; cv=none; b=P9hdi+oTzDCQrX6aO+NsdTmgHQnrAl7F04tOzL9os0mZdyW4EqLulxht/7EfteMaabwOCtLo4oZHpovwtWd/5x5PN8463lT4EUwaxDZFMFYJwLe0tXI4LB4va+B4jHr2YpljasVENcn7LKoWylTbVLzPDVQGxz44xRdc48Y5baU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727872211; c=relaxed/simple;
-	bh=5te1jA6MZJm94aFg74XhdSUmGAaw6U6NUmCvJZ6ELro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KTRIGkZLsrEN13VVpmKP3besQes/1l8j0IJLwP8L2eBpAvLzQ5SV3T6zOwyPpV+btdOzEXja40wGiH1EBXD7oszFg2Q0pcGGgZQXtLUDajWeOfpZPw53+dMctbuHqwvbrEvPcn1/OidV0pLV9eBU4gHrIVgcmwm8DfMKbDnI46o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kgh2kqmq; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727872504; c=relaxed/simple;
+	bh=WA3wCUNPjgEZhdS+Uchp76uA2Ad3sgauFet9X7Tip24=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=g/2ZsTg8Dv0D+3rHiWkxEKMBINw89clbCVEMJ5P4t/B/CtyS0U5jKwJDPzcF2lLijCTfhlRSflmmeYmBZ8evpSBjBbyF7aD3Acuk3UiwaAcipNsZg6YBvaOxiFLAjY2Nx/fgHk2l9iYJ0LN0cY2qQclgjd3ZqmqiTGcoPvVwt0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me; spf=pass smtp.mailfrom=johnrowley.me; dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b=GOtv1Im+; arc=none smtp.client-ip=5.75.183.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=johnrowley.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=johnrowley.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kgh2kqmq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=IykoVkNuqPqaFqRA7nQuLR7DdnoOJ5S/uNaQK0BCEko=;
-	t=1727872209; x=1728304209; b=kgh2kqmqecfUcG2dGU71kNc8ArmTEV1wYX1+vzLeMiPS21q
-	m4j+ugKlCnB5SMFbdvp//ZzKe6QjI9si2zOugFierz2fee9ueBEY0L+sCO1r4GVtSULIf9ppuVJv5
-	Yk0uBC585q43SWBpR5Fz2mzyG8enniy0YSLEya8cYoz2GjiRNTKH9lxZ8C2nn6XHulGWAsedgctep
-	z+R2Qn7LBlexsq5Il9MMqjT7UmQdFb/FFfU+IhGnpdIXQo0TxZ91n2YPHz4MLFxtaPBTDICT/t05r
-	hvudt4N84S3pbjn5xna+iRj/LxNEIh9KLMdHAy+SC/MrNFwSuP+oZQ9I6yVhBXBw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svyUS-00015H-Nb; Wed, 02 Oct 2024 14:30:00 +0200
-Message-ID: <056770ff-90e6-4140-b964-862a1503fa3b@leemhuis.info>
-Date: Wed, 2 Oct 2024 14:29:59 +0200
+	dkim=pass (2048-bit key) header.d=johnrowley.me header.i=@johnrowley.me header.b="GOtv1Im+"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E8E67C2572;
+	Wed,  2 Oct 2024 13:34:53 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=johnrowley.me;
+	s=dkim; t=1727872497;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=WA3wCUNPjgEZhdS+Uchp76uA2Ad3sgauFet9X7Tip24=;
+	b=GOtv1Im+gTM+bpEdIg8YDI/RJ1ux48D5Gj6Sg+OUNolAOgyexuryPxVxp6v8GDQsXyJkLk
+	KSsut6kh5/0nWld251k6MPqvAsHCb5CLnnYcWSRM8lhupAx4EXcwNxALSIMKfkm46WBmKS
+	/GVuccSCbs+58I7ma/nB7LeupiJosM6zPI5HTsSE3CQ5Rx9FBsEqExQP1jUGMeeDEsD2CU
+	B8xlSsnBVSE4E95Pw33C6kkTPrAh6398RDMHGEwhcumK+vvNov8RFowU8ZHo6socTEDIZf
+	ue1WsNfPlLSVPFwcnimL07iymNMZqIUO4BunPL5/l6Yjg1vDp7Eywg2to46yTg==
+Date: Wed, 2 Oct 2024 13:34:52 +0100 (GMT+01:00)
+From: John Rowley <lkml@johnrowley.me>
+To: Christopher Snowhill <chris@kode54.net>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Leo Li <sunpeng.li@amd.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+Message-ID: <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
+In-Reply-To: <D4L9LH0XT9OL.2RUPJNHCEX3O@kode54.net>
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me> <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me> <95c575a3-100c-4808-b451-b92f14598188@amd.com> <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me> <7ed81635-3872-463c-94e5-e4972da9d014@amd.com> <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com> <9c562132-64a0-41f5-80ad-8492d1039692@amd.com> <3c0dfd3a-9549-4afa-94b6-80041f498436@johnrowley.me> <25eed927-fe69-4005-8c0d-c5f3052e662e@amd.com> <92af8678-2b45-409e-82d1-f273fe907a36@johnrowley.me> <D4L9LH0XT9OL.2RUPJNHCEX3O@kode54.net>
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [regression] AMD SFH Driver Causes Memory Errors / Page Faults /
- btrfs on-disk corruption [Was: .../ btrfs going read-only]
-To: linux-kernel-bugs@hixontech.com,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: Jiri Kosina <jkosina@suse.com>, linux-input@vger.kernel.org,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- akshata.mukundshetty@amd.com, LKML <linux-kernel@vger.kernel.org>,
- Skyler <skpu@pm.me>, Richard <hobbes1069@gmail.com>,
- linux-btrfs <linux-btrfs@vger.kernel.org>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>
-References: <90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info>
- <3a9b2925-57fb-4139-8cf5-a761209c03cc@hixontech.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <3a9b2925-57fb-4139-8cf5-a761209c03cc@hixontech.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727872209;2a400154;
-X-HE-SMSGID: 1svyUS-00015H-Nb
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
+X-Last-TLS-Session-Version: TLSv1.3
 
-[CCing Richard, who apparently faces the same problem according to a
-recent comment in the bugzilla ticket mentioned earlier:
-https://bugzilla.kernel.org/show_bug.cgi?id=219331#c8
+If you're referring to the Freedesktop DRM issue then sinatosk a separate p=
+oster. I'm not involved in that thread. =F0=9F=99=82
+----------------------------------------
 
-CCing Mario, who might be interested in this and is a good contact when
-it comes to issues with AMD stuff like this.
+From: Christopher Snowhill <chris@kode54.net>
+To: John Rowley <lkml@johnrowley.me>; Mario Limonciello <mario.limonciello@=
+amd.com>; Leo Li <sunpeng.li@amd.com>; Hamza Mahfooz <hamza.mahfooz@amd.com=
+>
+CC: Harry Wentland <harry.wentland@amd.com>; Rodrigo Siqueira <Rodrigo.Siqu=
+eira@amd.com>; amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev
+Date: 2 Oct 2024 11:57:12
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
 
-CCing the Btrfs list as JFYI, as all three reporters afaics see Btrfs
-misbehavior or corruptions due to this.
-
-Considered to bring Linus in, but decided to wait a bit before doing so.]
-
-On 01.10.24 23:40, Chris Hixon wrote:
-> On 10/1/2024, 12:56:49 PM, "Linux regression tracking (Thorsten Leemhuis)" wrote:
-
->> Basavaraj Natikar, I noticed a report about a regression in
->> bugzilla.kernel.org that appears to be caused by a change of yours:
->>
->> 2105e8e00da467 ("HID: amd_sfh: Improve boot time when SFH is available")
->> [v6.9-rc1]
->>
->> As many (most?) kernel developers don't keep an eye on the bug tracker,
->> I decided to write this mail. To quote from
->> https://bugzilla.kernel.org/show_bug.cgi?id=219331 :
->>
->>> I am getting bad page map errors on kernel version 6.9 or newer.
->>> They always appear within a few minutes of the system being on, if
->>> not immediately upon booting. My system is a Dell Inspiron 7405.
-> [...]
->>> [   23.234632] systemd-journald[611]: File /var/log/journal/a4e3170bc5be4f52a2080fb7b9f93cf0/user-1000.journal corrupted or uncleanly shut down, renaming and replacing.
->>> [   23.580724] rfkill: input handler enabled
->>> [   25.652067] rfkill: input handler disabled
-> 
->>> [   34.222362] pcie_mp2_amd 0000:03:00.7: Failed to discover, sensors not enabled is 0
->>> [   34.222379] pcie_mp2_amd 0000:03:00.7: amd_sfh_hid_client_init failed err -95
-> 
-> No sensors detected - do we all have that in common?
-
-Skyler, Richard?
-
->>> [...]
->> See the ticket for more details and the bisection result. Skyler, the
->> reporter (CCed), later also added:
->>
->>> Occasionally I will not get the usual bad page map error, but
->>> instead some BTRFS  errors followed by the file system going read-only.
->>
->> Note, we had and earlier regression caused by this change reported by
->> Chris Hixon that maybe was not solved completely:
->> https://lore.kernel.org/all/3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com/
-> 
-> This looks like the same issue I reported.
-
-And sounds a lot like what Richard sees, who also sees disk corruption
-with Btrfs (see https://bugzilla.redhat.com/show_bug.cgi?id=2314331 ).
-
->> Chris Hixon: do you still encounter errors, or was your issue
->> resolved/vanished somehow?
-> 
-> I still encounter errors with every kernel/patch I've tested. I've blacklisted 
-> the amd_sfh module as a workaround, but when the module is inserted, a crash
-> similar to those reported will happen soon after the (45 second?) 
-> detection/initialization timeout. It seems to affect whatever part of the
-> kernel next becomes active. I've had disk corruption as well, when BTRFS is
-> affected by the memory corruption,
-
-Skyler, did you see btrfs disk corruption as well, just like Chris and
-Richard did?
-
-> so I've ended up testing on a USB stick I
-> can reformat if necessary. I haven't tested new patches/kernels in a while
-> though. I'll get back to you after I've tried the latest mainline. Also note
-> that I've tried Fedora Rawhide's debug kernel,
-
-From what I see it seems all three of you are using Fedora. Wonder if
-that is a coincidence.
-
-> which has a ton of debugging
-> options including KASAN, but nothing seems to point the finger at something
-> originating in amd_sfh code. Is it possible the hardware itself (the mp2/sfh
-> chip) is corrupting memory somehow after some misstep in
-> initialization/de-initialization? Also if you look at my report, you'll see I
-> have no devices/sensors detected by amd_sfh - I wonder if other reporters all
-> have this in common? (noted in dmesg output above from another user)   
-
-Given that Basavaraj Natikar never really addressed Chris earlier report
-from months ago and the severeness of the problem I'd wonder if we
-should revert the culprit to resolve this quickly, unless some proper
-fix comes into sight soon. Sadly from a quick look that would require
-multiple reverts afaics. :-/
-
-Ciao, Thorsten
+> On Tue Oct 1, 2024 at 2:32 PM PDT, John Rowley wrote:
+>> The attached patch seems to improve rendering performance a lot; animati=
+ons and desktop performance are generally smoother again.
+>>=20
+>> But it doesn't seem 100%, e.g. if I let the laptop idle for 10 secs befo=
+re interacting with the touchpad, the desktop cursor seems to stick in-plac=
+e for 100-200ms or so, before becoming responsive again.
+>>=20
+>> This 'sticking' problem doesn't seem to occur with PSR disabled.
+>>=20
+>> My testing isn't exactly scientifically sound I'm afraid, if there's a b=
+etter test or benchmark I can run, please let me know.
+>=20
+> May want to also tell the list that you mis-applied the patch on the
+> first go by misreading what it did and editing manually. I'm eager to
+> hear whether the actual patch worked out better.
+>=20
+>>=20
+>> On 01/10/2024 22:16, Mario Limonciello wrote:
+>>> On 10/1/2024 16:14, John Rowley wrote:
+>>>> Disabling PSR as per Leo's reply seems to have done the trick!
+>>>>=20
+>>>> Stock 6.12-rc1 (without revert): BROKEN
+>>>>=20
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+state:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 6
+>>>>=20
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+capability:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: yes
+>>>>=20
+>>>> With amdgpu.dcdebugmask=3D0x800: BROKEN
+>>>>=20
+>>>> With amdgpu.dcdebugmask=3D0x10: FIXED! Performance is as it was on 6.1=
+1.
+>>>>=20
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+state:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 0
+>>>>=20
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+capability:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: no [0xffffffff]
+>>>>=20
+>>>> I have the older Framework 13 panel (BOE 0x0BCA, 2256x1504 @ 59.999 Hz=
+) so I assume PSR isn't supported according to Mario, yet psr_{state,capabi=
+lity} above seem to indicate otherwise?
+>>>>=20
+>>>=20
+>>> PSR and Replay are two different things.=C2=A0 But from your above anal=
+ysis it does confirm it's a PSR issue.
+>>>=20
+>>> There's a patch that Hamza attached to https://gitlab.freedesktop.org/d=
+rm/amd/-/issues/3658.
+>>>=20
+>>> Can you try that?
+>>>=20
+>>> Thanks,
