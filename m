@@ -1,199 +1,128 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8849745F4
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 21:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727905876; cv=fail; b=n40O1Y57BCN8mFPQW5++EwpTCAC81fnyHpfLdXAV6eF5ZtuwCVPBkzaUpneVIc7n2ouoqHX/i1ftAl84YYi6LfOMYd0pIqxwzgi47fw3wgf1Bai4CNc91bao9vSDIaianHLQtlJOp0lY07SfQGL+lnpKJ3ExZKHQ5mdCUoG6nJk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727905876; c=relaxed/simple;
-	bh=8J5RssAqDN+fp4KVBXUCj8NZYWSxYr/Dpk4XScb0moA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ii6QnDgpdu+cJ2tSYS5ukVJ1ssZsQz/NSL/+L/hyUWy1uZWz/pgrBMFpVsbjBTiyyHE0Mx30h+1AzmWANLJvnhhkOPiAmq7IQdf2oz9U3KL3++Nlq/fUz1XV5ivsXQOHwvfns/f5OMWgaNAumGpc6ZGfA0twxIO9nT6Dey+kHeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OCcLz2TY; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C707819412A
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 21:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727906085; cv=none; b=lpT3e13XpDUTqmNWvhnddGlZiIqd+KJ/hGFxVg8+hEf4qAcCsJutLY6IDWSwxyGETVezzEdfP4yvVE2ru4OGlMGy/GtkFNG+aGXEE9L/kUPeXsR9t0G7rE/NfQCjkmwfSRNkrvTVWDBWK+mtIK9WqxUdYgsTUoNDqjHFvUwXnmU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727906085; c=relaxed/simple;
+	bh=MnnRePe+Fm2rFB/hQoffokLXOdZMU4MKH+96V/5PksU=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=FdQDF2qxnFGjpBcpXteQY1TxTGCuv6urBm5LEVD6f+hvVfeawzjvPCSRkPP7qSLng68n+nQOvQTlUgowQ7nzgW0WMxQsChrrBT+0+5ZICBbMMVFhXlCjwvJ0p5D/mXMXbeLlBeqjYlIl6x/MbVsIOUchraVTFOeSVC9EfubLRiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5Zms7oI; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OCcLz2TY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5Zms7oI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727905875; x=1759441875;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=8J5RssAqDN+fp4KVBXUCj8NZYWSxYr/Dpk4XScb0moA=;
-  b=OCcLz2TYNLBGCiH544gRODtj2kJvxcVRqjNRZPbEORJKkem8PJ44n0S4
-   A56nUN3vRzikOY8bTdTTRemiGfW8VZoEnhpIpf2OubbkgS4OXFCwvxQGA
-   y//vh3hwjIzf4dknZNGhfIFeF8iPe38ZmBAMEHh3NIYXr+Adib1bfCO0e
-   rsKD6ME/blCOyhrrDKOVsUJKfO0rhHXYeg9BXpYwPaGyRQM+B60kpCoCn
-   ZRidkef5QWKBDgxSqG+zwrMsarOktlu/1xjwuuRIUAN3WNgZ5TRucLOGR
-   FO7QxWGA57uISyoo2V/bB6/OS+kU6JyjpLJYHyTKBfAMh+hSlc2Pi+u91
-   A==;
-X-CSE-ConnectionGUID: 6rdUl1uDRKqlGlVBvT+Zkg==
-X-CSE-MsgGUID: /ferJlRlSWWf+1GMutweWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="37676457"
+  t=1727906084; x=1759442084;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MnnRePe+Fm2rFB/hQoffokLXOdZMU4MKH+96V/5PksU=;
+  b=K5Zms7oInUAyh7/rueE05LlYjM8n8VLrEd/WaWi5J76jW9rBFA3IaqGO
+   mIDDO+WDIo2Q6YtihMnsrRh9FBOBUiAJ1ioKGll+MY3H4yDWzqJmCvgoe
+   gDf9n3SLbbqpaKHDuZPwygAlSmRa6QM6vrct3LByPo4zmUZ5QvcsRum0i
+   HJuajA2Egf38K5RChWRkqu0I1UpqRNw7WcjjoFVO+mZSEiEL9qFQX9Atq
+   nNvdKPnDmkQno7E+OXtxetQl7YRXr9CxsGpE+TUHyCJi8RiGddRPECcnZ
+   /XknSqIc8azBN7jvvVakSE4zGkoAmhx0WPI+N6yUjKlkfy3op7afPVZHX
+   Q==;
+X-CSE-ConnectionGUID: c6R5SlEQQpmLmzy3QRcBXQ==
+X-CSE-MsgGUID: 0x0YZE6WSQakMsBHRZJ7+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="37676910"
 X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="37676457"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 14:51:14 -0700
-X-CSE-ConnectionGUID: cBeo9JqDQMqiEXxShW566g==
-X-CSE-MsgGUID: GDpBAz3KTZuADFkhjRyfkA==
+   d="scan'208";a="37676910"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 14:54:43 -0700
+X-CSE-ConnectionGUID: yzWXcxLtQYm0BScnEb5P6Q==
+X-CSE-MsgGUID: 47vgL0VLQl29/g6c7ZFXqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="97476610"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Oct 2024 14:51:14 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 2 Oct 2024 14:51:13 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 2 Oct 2024 14:51:13 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 2 Oct 2024 14:51:13 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 2 Oct 2024 14:51:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rXi5KXqPfKhFQYnrpVkdaxmIL8AsU6fuJ09nD197cbbiH/w1TJMRcRc5YJo9Ky3Wby1aWq1IsbQsXYIr2P6FIQxehENkWCsMm7a0KA37xe3mIFybdZw+0YPe9RR5G2N+FlMNM14jClF6JCIsZOEoL0pnbMceg5WXf1pjQADUFXd/LKY2jz9e09eYVnvr9kK4y/GZpVlz4bprpHnOlswbNMRZGhQWKnrJq9anB3pmo4N3UXys0tB/BcWi0mvnQTojKT5XDi87jA6gG5268yoVIksx9YJItHM0BSl70vmyDlNasJiKZEqiX2PXusEz8VYXHEw6RDbtunN+NqsfRCXX0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A6dTLGHTI8XhQMVsDmqmEKrw9bqML8zwwvYuBwud920=;
- b=Z5BqNGZh4ZxGwmNoHB4E3nJ/Q6uaqz67esTSsKMquBCPPIMGRf6H6otCrGdEm2Fw/EvdLeN8e+xEVF3Lf1eqzL9asaJxe9WjMElS0sZ48kKTmDxgX6GLkMuhMUUXqwzfGkNQ8QxMGcPCuyrfN9Pg/jukIgZXDl/IbVIUF4RnwwsUbOdOwysfaJB5vZE4fS5Q518Z41InRQ14GafkD4Z861QV8V1p3qpccjGoQz0QXB+IE0o50kL2vMrXT7be4F5PMnnllwftt5WH/jkyyzsO181bHqHEPGNb/oMAU2so4PrA6EtfmH7xopsc9vgwRwUmL1CaBG5YE5BYocNfwiW59w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA1PR11MB6807.namprd11.prod.outlook.com (2603:10b6:806:24e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Wed, 2 Oct
- 2024 21:51:11 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8026.016; Wed, 2 Oct 2024
- 21:51:11 +0000
-Date: Wed, 2 Oct 2024 14:51:08 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <rafael.j.wysocki@intel.com>, <tj@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: [PATCH] driver core: Fix userspace expectations of uevent_show()
+   d="scan'208";a="78150837"
+Received: from kinlongk-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.101])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 14:54:42 -0700
+Subject: [PATCH v2] driver core: Fix userspace expectations of uevent_show()
  as a probe barrier
-Message-ID: <66fdc04c8bdb0_964f229476@dwillia2-xfh.jf.intel.com.notmuch>
-References: <172772671177.1003633.7355063154793624707.stgit@dwillia2-xfh.jf.intel.com>
- <2024100130-turkey-duplicate-d670@gregkh>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2024100130-turkey-duplicate-d670@gregkh>
-X-ClientProxiedBy: MW4PR03CA0174.namprd03.prod.outlook.com
- (2603:10b6:303:8d::29) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+From: Dan Williams <dan.j.williams@intel.com>
+To: gregkh@linuxfoundation.org
+Cc: rafael.j.wysocki@intel.com, tj@kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Date: Wed, 02 Oct 2024 14:54:40 -0700
+Message-ID: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB6807:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0d54cca-c83f-48ab-74f2-08dce32c5416
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5/OhKKe5/SjxtDDHYgjPR39hSk4jvVyhUbpabQn/LJQc2ZDZpmLlvlcVn5ue?=
- =?us-ascii?Q?Pj6cgxFOTjJxZP663jhhlUTNbAZs+IGU8H28H/qIpnQI95WNc3CZuI6bu2+q?=
- =?us-ascii?Q?BUSNzFqYeG0cj+LEmeUwPcHMgVP32E0JpwuoiOS96DL5XkBz1od4zkuwF4Dm?=
- =?us-ascii?Q?9bqqt9AJ49BHROXa4bt4qP6jQ9KZ7WGNAwBdR0M9k6iBInpXySufN4IlM639?=
- =?us-ascii?Q?yryD45s8mMYWmbwaBRoZQz4pjZw8RxhFR31ShY1Z0Uk7K9DlJBoPktJbABUQ?=
- =?us-ascii?Q?ZgiLodT4/g2P704mKDwe679527AS6rgnZKcI1zG4f+T5Ip9vghMm+9tGqYrd?=
- =?us-ascii?Q?Ue9STHwRF1egESKqCGSx6mITok7DHvp4yvagjQwnmKOFVIV2xpwqmuX/Co1K?=
- =?us-ascii?Q?sIlvPcRMNTy1FPOEja2T4Xz4p/E10O9IWFHJvZCqQFLKkNo8GrjmIXY0yxe9?=
- =?us-ascii?Q?t3hHQfjx6blx/09DEZGmOm+ZcGjWfFMa8RTous9EtbvoSs+SXb13/jvMqw2E?=
- =?us-ascii?Q?4lSYP4KTW9amRK15rPX8m7YJwtSroJrYig4wObh0Q5mHLo49ouH1tgvzR5UO?=
- =?us-ascii?Q?+Kb4QY9jAsULrVWOo98vmqeI5FfBsWVLGnQM4vnUnwvbetJhj9pBkt6SqJq+?=
- =?us-ascii?Q?BwLlRigTiIKfxHRl65+qKxrJrZh7z6BvYZWNglos9aJsvPsiZyoODcssGB+J?=
- =?us-ascii?Q?CpZHKuPweNWHMdg36xV22K4QzmAIzl6mlJk+DoRmBkFkwVt0Yhjj9Pzn0ZaU?=
- =?us-ascii?Q?57rM2zchW2VB/RKQjabH4ZLqC3oX6asSv7Fet0TdmcLR/PENaeawhgNVIj9k?=
- =?us-ascii?Q?vc6RDiUeJItHccJd6wmsRU6GNblNYAwxzPYZhIebrPGc+PSzWymW9a0ngp/g?=
- =?us-ascii?Q?WJLWF35dNvYyUcEBIw/LnjkwwXrruzX9z6Zrm5K375eVjp4PGPQiYeEDv5ad?=
- =?us-ascii?Q?G54FHO8rcc0prU8T9HrtXl8LXij1uqiF6o8Nw+zpQNHKBAMtoGlGUvW88ap9?=
- =?us-ascii?Q?zIHAsJEbGEekRkS0uKr0Vpl69E9PsRNzDlBMYrH2E6EralmZCt4saOIhaJ01?=
- =?us-ascii?Q?OQgKRARcaGW2oMxMCVUvOOmyk7VTx8Sxtm3CpstnkwEsQFVzL1Oe4Rrn+mej?=
- =?us-ascii?Q?3UkHQHd1ee1RPhHAYrHYAPSVvAGx0whzhnTazONwm3vTZAUfz8hR6/ymBeAo?=
- =?us-ascii?Q?PRniUQj+xsFSx6sRxbQoIGfKkALifUMnn07ZRjF0f5tuBJ24Fgea6uIpDAJS?=
- =?us-ascii?Q?723B14lHycX0gqZgPKrM9yEHlZ3Z/NWRPnGEW3hagg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?F+MmhPTVwT7/03mWAGbqNhyXQmEtr2p3Up2+r9l/DZSrTs8kFoElFlOarVQF?=
- =?us-ascii?Q?qBuB555ZByN6ZLHnUP1u6Rv34VCBgLasRIwS/CBl0b35LMS4uq/e5b+ymdz/?=
- =?us-ascii?Q?N6ydcjpakBXxqhZZtigm/CXo3Ocd8qDswtNpUigx26Pf4Bsw58PQrffTJ08P?=
- =?us-ascii?Q?h8E8lrsBoKrGCct5bsKLD8Pfmefl3cetdvKz6m0IRr9OHnTSC8yQ1G2vDk0K?=
- =?us-ascii?Q?YgOgDdQI9p5UZsYbZx8YGYjIDF/NTkvXgMtprNRyvBcOkcRGhL/YtZJBGpUX?=
- =?us-ascii?Q?PxnoOc8e8/beXkZO+2dkKqZ03RjSQNISqt5coxb782PG0TQ2A83prnLLUwKr?=
- =?us-ascii?Q?TxLLKmfejpBjh6/8KZwU1g4OISIOyND3MUMg9uTCCVasqMMO+uXv5zpPsl9z?=
- =?us-ascii?Q?SK5o3gQgcVKy79YZ7SpeNf3VVmVqH6zcngrkBgubKeJF5a1hhfyq9CReJ7WF?=
- =?us-ascii?Q?gma85DIxsfZmuv7RXcbuxw/E8oScJECVefY9hmeGTkbOi8x3BPoCb4si1+cV?=
- =?us-ascii?Q?Lj4+eoOHJwDVJ3+6SkQDZd6qilXkMGUJse60iusoBVJb5OhnucKX+oxPHvZT?=
- =?us-ascii?Q?9vgukYRyVDKGk85ooMG5EX5wKnoYsSG25UobTac9ULvKXnIgrf6LVGiqSYFT?=
- =?us-ascii?Q?rwarmLFsMgldYPhRdrkQSMGnNMxSyeO3mO4t8E10WA09JUmVqxQ3szul7441?=
- =?us-ascii?Q?HrR4XqTGePec1Cb7IqkB2OYxDeyYvdaGrDHvYmHrCAm2HH76QHrJtPHLKNr2?=
- =?us-ascii?Q?A12Zp/uB2elucpL/HlW7C8AitNrbYoB6cX7jSUO6LekkC6knay/l6UNmgMYS?=
- =?us-ascii?Q?HPWwyrkNDIDUuEytkYC2Oj9JNN6wz43fL1VyFbgzbY/Zarbrt/J3E57Dfhot?=
- =?us-ascii?Q?mskoeGJv/7Hf2TG2tl9dVODPa2cIk8dJADKUTkcjI2W9w5gHuc4Paeh/FG6d?=
- =?us-ascii?Q?9zZOokuWdWUTHnCpq8cL38UObBbqpEEEKIMZVmZV4thtiNGVvRfS7yT8YGOa?=
- =?us-ascii?Q?TIsgbZF4GsXOuDYHYv5sUduy91vsnAo0kxGTNPpFsVUEz7urLE/CI5rkl2yj?=
- =?us-ascii?Q?o4MgLuLeG1uUij5FVmoErGNePbVXK6SbMI/9on4TT/Z7yhIxMCk7AdK7vpNo?=
- =?us-ascii?Q?H21EqznX337DAeCWl2qdL5TJCgJOsxwBb9Xpyeda43rSu9zfNpdc8bKtWZpW?=
- =?us-ascii?Q?UfASUq+1NoTZur9sVUBFtWzW3k5jZjuuu+GBWVIvCmCLvDtB+p446YZrDKjV?=
- =?us-ascii?Q?wLfMwSl7rz76mj9mbmUZvH9OF3/L2/THrM8vnJbn9UM1mwRkNkTyCclra5dq?=
- =?us-ascii?Q?ipP+p39rhxGrlMIRYkGNNt6u2KDHXY3+pp1w9F9sDmbBIv4oABAb3/12DI9J?=
- =?us-ascii?Q?KoUyQio6g+hqpkb2IF1ShuGDy0L+VmROwN97KItVq1ZR9GEBqXNJry1hbCD0?=
- =?us-ascii?Q?BXK97qL91EayFm6e+7F45KwJUEzQgrIIV5AK3cqzmOy29VHqX0JFkA4eNWar?=
- =?us-ascii?Q?ermBv29XTfkwdhRL64QSexgyCLkkLVHfIza8TB8yaM7wda2nMmdfmOHHAogj?=
- =?us-ascii?Q?8bAOiFofJgEUfsswSrc0deFB0EW/2aPEkfWA0/SZX3xN5FCQW3qSW2Y7KtoG?=
- =?us-ascii?Q?xg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0d54cca-c83f-48ab-74f2-08dce32c5416
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 21:51:11.0133
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S25g3yxduME3JAKcTvLPDLHxQn2GYQ+yXGUL1rt0Cp+MwZwAmCHyACeORJNJnXjdfEWEhdmZ6N+6g+KVjYaGJwfQ26XzGZhm8oaaUzq+vJo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6807
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Greg KH wrote:
-> On Mon, Sep 30, 2024 at 01:05:13PM -0700, Dan Williams wrote:
-> > Commit "driver core: Fix uevent_show() vs driver detach race" [1]
-> > attempted to fix a lockdep report in uevent_show() by making the lookup
-> > of driver information for a given device lockless. It turns out that
-> > userspace likely depends on the side-effect of uevent_show() flushing
-> > device probing, as evidenced by the removal of the lock causing a
-> > regression initializing USB devices [2].
-> > 
-> > Introduce a new "locked" type for sysfs attributes that arranges for the
-> > attribute to be called under the device-lock, but without setting up a
-> > reverse locking order dependency with the kernfs_get_active() lock.
-> 
-> As this is "only" for the driver core, can you move some of the stuff in
-> the global .h files to the local ones so that no one else gets the wrong
-> idea they can use them?
+Commit "driver core: Fix uevent_show() vs driver detach race" [1]
+attempted to fix a lockdep report in uevent_show() by making the lookup
+of driver information for a given device lockless. It turns out that
+userspace likely depends on the side-effect of uevent_show() flushing
+device probing, as evidenced by the removal of the lock causing a
+regression initializing USB devices [2].
 
-Makes sense. Moving SYSFS_LOCKED and related bits to fs/sysfs/sysfs.h
-is straightforward. It did result in the below hunk inside
-drivers/base/base.h, but let me know on the v2 posting if that's
-irksome:
+Introduce a new "locked" type for sysfs attributes that arranges for the
+attribute to be called under the device-lock, but without setting up a
+reverse locking order dependency with the kernfs_get_active() lock.
+
+This new facility holds a reference on a device while any locked-sysfs
+attribute of that device is open. It then takes the lock around sysfs
+read/write operations in the following order:
+
+    of->mutex
+    of->op_mutex <= device_lock()
+    kernfs_get_active()
+    <operation>
+
+Compare that to problematic locking order of:
+
+    of->mutex
+    kernfs_get_active()
+    <operation>
+        device_lock()
+
+...which causes potential deadlocks with kernfs_drain() that may be
+called while the device_lock() is held.
+
+Note that the synchronize_rcu() in module_remove_driver(), introduced in
+the precedubg fix, likely needs to remain since dev_uevent() is not
+always called with the device_lock held. Userspace can potentially
+trigger use after free by racing module removal against kernel
+invocations of kobject_uevent().
+
+Note2, this change effectively allows userspace to test for
+CONFIG_DEBUG_KOBJECT_RELEASE-style driver bugs as the lifetime of open
+file descriptors on the @uevent attribute keeps the device reference
+count elevated indefinitely.
+
+Reported-by: brmails+k
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219244 [2]
+Tested-by: brmails+k
+Fixes: 15fffc6a5624 ("driver core: Fix uevent_show() vs driver detach race") [1]
+Cc: stable@vger.kernel.org
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v1 [1]:
+- Move the new "locked" infrastructure to private header files to make
+  it clear it is not approved for general usage (Greg)
+
+[1]: http://lore.kernel.org/172772671177.1003633.7355063154793624707.stgit@dwillia2-xfh.jf.intel.com
+
+ drivers/base/base.h    |    9 +++++++++
+ drivers/base/core.c    |    2 +-
+ fs/kernfs/file.c       |   24 +++++++++++++++++++-----
+ fs/sysfs/file.c        |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+ fs/sysfs/group.c       |    4 ++--
+ fs/sysfs/sysfs.h       |   18 ++++++++++++++++++
+ include/linux/kernfs.h |    1 +
+ include/linux/sysfs.h  |    1 +
+ 8 files changed, 98 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/base/base.h b/drivers/base/base.h
 index 0b53593372d7..0405e7667184 100644
@@ -211,4 +140,230 @@ index 0b53593372d7..0405e7667184 100644
 +#include "../../fs/sysfs/sysfs.h"
 +
 +#define DEVICE_ATTR_LOCKED_RW(_name) \
-+       struct device_attribute dev_attr_##_name = __ATTR_LOCKED_RW(_name)
++	struct device_attribute dev_attr_##_name = __ATTR_LOCKED_RW(_name)
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 8c0733d3aad8..1fd5a18cbb62 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2772,7 +2772,7 @@ static ssize_t uevent_store(struct device *dev, struct device_attribute *attr,
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_RW(uevent);
++static DEVICE_ATTR_LOCKED_RW(uevent);
+ 
+ static ssize_t online_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+index 8502ef68459b..eb5c2167beb9 100644
+--- a/fs/kernfs/file.c
++++ b/fs/kernfs/file.c
+@@ -142,6 +142,20 @@ static void kernfs_seq_stop_active(struct seq_file *sf, void *v)
+ 	kernfs_put_active(of->kn);
+ }
+ 
++static void kernfs_open_file_lock(struct kernfs_open_file *of)
++{
++	mutex_lock(&of->mutex);
++	if (of->op_mutex)
++		mutex_lock(of->op_mutex);
++}
++
++static void kernfs_open_file_unlock(struct kernfs_open_file *of)
++{
++	if (of->op_mutex)
++		mutex_unlock(of->op_mutex);
++	mutex_unlock(&of->mutex);
++}
++
+ static void *kernfs_seq_start(struct seq_file *sf, loff_t *ppos)
+ {
+ 	struct kernfs_open_file *of = sf->private;
+@@ -151,7 +165,7 @@ static void *kernfs_seq_start(struct seq_file *sf, loff_t *ppos)
+ 	 * @of->mutex nests outside active ref and is primarily to ensure that
+ 	 * the ops aren't called concurrently for the same open file.
+ 	 */
+-	mutex_lock(&of->mutex);
++	kernfs_open_file_lock(of);
+ 	if (!kernfs_get_active(of->kn))
+ 		return ERR_PTR(-ENODEV);
+ 
+@@ -193,7 +207,7 @@ static void kernfs_seq_stop(struct seq_file *sf, void *v)
+ 
+ 	if (v != ERR_PTR(-ENODEV))
+ 		kernfs_seq_stop_active(sf, v);
+-	mutex_unlock(&of->mutex);
++	kernfs_open_file_unlock(of);
+ }
+ 
+ static int kernfs_seq_show(struct seq_file *sf, void *v)
+@@ -322,9 +336,9 @@ static ssize_t kernfs_fop_write_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 	 * @of->mutex nests outside active ref and is used both to ensure that
+ 	 * the ops aren't called concurrently for the same open file.
+ 	 */
+-	mutex_lock(&of->mutex);
++	kernfs_open_file_lock(of);
+ 	if (!kernfs_get_active(of->kn)) {
+-		mutex_unlock(&of->mutex);
++		kernfs_open_file_unlock(of);
+ 		len = -ENODEV;
+ 		goto out_free;
+ 	}
+@@ -336,7 +350,7 @@ static ssize_t kernfs_fop_write_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 		len = -EINVAL;
+ 
+ 	kernfs_put_active(of->kn);
+-	mutex_unlock(&of->mutex);
++	kernfs_open_file_unlock(of);
+ 
+ 	if (len > 0)
+ 		iocb->ki_pos += len;
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index d1995e2d6c94..1bb878efcf00 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -15,6 +15,7 @@
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/seq_file.h>
++#include <linux/device.h>
+ #include <linux/mm.h>
+ 
+ #include "sysfs.h"
+@@ -189,6 +190,26 @@ static int sysfs_kf_bin_open(struct kernfs_open_file *of)
+ 	return 0;
+ }
+ 
++/* locked attributes are always device attributes */
++static int sysfs_kf_setup_lock(struct kernfs_open_file *of)
++{
++	struct kobject *kobj = of->kn->parent->priv;
++	struct device *dev = kobj_to_dev(kobj);
++
++	get_device(dev);
++	of->op_mutex = &dev->mutex;
++
++	return 0;
++}
++
++static void sysfs_kf_free_lock(struct kernfs_open_file *of)
++{
++	struct kobject *kobj = of->kn->parent->priv;
++	struct device *dev = kobj_to_dev(kobj);
++
++	put_device(dev);
++}
++
+ void sysfs_notify(struct kobject *kobj, const char *dir, const char *attr)
+ {
+ 	struct kernfs_node *kn = kobj->sd, *tmp;
+@@ -227,6 +248,25 @@ static const struct kernfs_ops sysfs_file_kfops_rw = {
+ 	.write		= sysfs_kf_write,
+ };
+ 
++static const struct kernfs_ops sysfs_locked_kfops_ro = {
++	.seq_show	= sysfs_kf_seq_show,
++	.open		= sysfs_kf_setup_lock,
++	.release	= sysfs_kf_free_lock,
++};
++
++static const struct kernfs_ops sysfs_locked_kfops_wo = {
++	.write		= sysfs_kf_write,
++	.open		= sysfs_kf_setup_lock,
++	.release	= sysfs_kf_free_lock,
++};
++
++static const struct kernfs_ops sysfs_locked_kfops_rw = {
++	.seq_show	= sysfs_kf_seq_show,
++	.write		= sysfs_kf_write,
++	.open		= sysfs_kf_setup_lock,
++	.release	= sysfs_kf_free_lock,
++};
++
+ static const struct kernfs_ops sysfs_prealloc_kfops_ro = {
+ 	.read		= sysfs_kf_read,
+ 	.prealloc	= true,
+@@ -287,6 +327,13 @@ int sysfs_add_file_mode_ns(struct kernfs_node *parent,
+ 			ops = &sysfs_prealloc_kfops_ro;
+ 		else if (sysfs_ops->store)
+ 			ops = &sysfs_prealloc_kfops_wo;
++	} else if (mode & SYSFS_LOCKED) {
++		if (sysfs_ops->show && sysfs_ops->store)
++			ops = &sysfs_locked_kfops_rw;
++		else if (sysfs_ops->show)
++			ops = &sysfs_locked_kfops_ro;
++		else if (sysfs_ops->store)
++			ops = &sysfs_locked_kfops_wo;
+ 	} else {
+ 		if (sysfs_ops->show && sysfs_ops->store)
+ 			ops = &sysfs_file_kfops_rw;
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index d22ad67a0f32..0158367866be 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -68,11 +68,11 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 					continue;
+ 			}
+ 
+-			WARN(mode & ~(SYSFS_PREALLOC | 0664),
++			WARN(mode & ~(SYSFS_PREALLOC | SYSFS_LOCKED | 0664),
+ 			     "Attribute %s: Invalid permissions 0%o\n",
+ 			     (*attr)->name, mode);
+ 
+-			mode &= SYSFS_PREALLOC | 0664;
++			mode &= SYSFS_PREALLOC | SYSFS_LOCKED | 0664;
+ 			error = sysfs_add_file_mode_ns(parent, *attr, mode, uid,
+ 						       gid, NULL);
+ 			if (unlikely(error))
+diff --git a/fs/sysfs/sysfs.h b/fs/sysfs/sysfs.h
+index 3f28c9af5756..51d5b6af243f 100644
+--- a/fs/sysfs/sysfs.h
++++ b/fs/sysfs/sysfs.h
+@@ -40,4 +40,22 @@ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
+ int sysfs_create_link_sd(struct kernfs_node *kn, struct kobject *target,
+ 			 const char *name);
+ 
++#define SYSFS_LOCKED		040000
++
++/*
++ * uevent_show() needs this due to userspace expectations of reading
++ * that attribute flushing device probing, it is not intended to be a
++ * general semantic for other device sysfs attributes. It is broken to
++ * use this with non-device / pure-kobject sysfs attributes, see
++ * sysfs_kf_setup_lock().
++ */
++#define __ATTR_LOCKED(_name, _mode, _show, _store) {			\
++	.attr = {.name = __stringify(_name),				\
++		 .mode = SYSFS_LOCKED | VERIFY_OCTAL_PERMISSIONS(_mode) },\
++	.show	= _show,						\
++	.store	= _store,						\
++}
++
++#define __ATTR_LOCKED_RW(_name) __ATTR_LOCKED(_name, 0644, _name##_show, _name##_store)
++
+ #endif	/* __SYSFS_INTERNAL_H */
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index 87c79d076d6d..df6828a7cd3e 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -257,6 +257,7 @@ struct kernfs_open_file {
+ 
+ 	/* private fields, do not use outside kernfs proper */
+ 	struct mutex		mutex;
++	struct mutex		*op_mutex;
+ 	struct mutex		prealloc_mutex;
+ 	int			event;
+ 	struct list_head	list;
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index c4e64dc11206..dd28c6238b64 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -103,6 +103,7 @@ struct attribute_group {
+ 
+ #define SYSFS_PREALLOC		010000
+ #define SYSFS_GROUP_INVISIBLE	020000
++/* see fs/sysfs/sysfs.h for private mode-flags */
+ 
+ /*
+  * DEFINE_SYSFS_GROUP_VISIBLE(name):
+
