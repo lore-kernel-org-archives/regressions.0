@@ -1,110 +1,134 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255001D1731
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 20:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7B2141D6;
+	Wed,  2 Oct 2024 21:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727901936; cv=none; b=rhduLyg6yXrUR1baagzG5rTn+ik6RLrUG0xHyj/jCVcL06tBJQzosa1e/Xvs9/Lot2RIfahY/felwJD4csBAfysIHh0Zw5bVdiTz6PTKwL13uS6vBgodU9R7Ik1LuUxVZkw6SxQL5PL4b8i5dlyCoLtQb/oL2RDayeZRfiB62Xw=
+	t=1727904053; cv=none; b=hzTicpu3SBwQh1B83sCYGw+kx8ZzWS+i+Og2nJ0Fb6S3zql8yHe+jC6D11Pub9rB1qvyQPxpoP60fqVO9gawbc9nN3Nfe68GvrVsQMqTH2TRaQiNmq4PrXwfwbY9xsdRh9tJ415TRvxqdJ/MGwhaI1urZFa8omTgNANTusL8VVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727901936; c=relaxed/simple;
-	bh=r5ua7STwZTPVMtH1PGVZOozH3aM5m0l2oOhzZM++RYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b6o89orol2iZirz2JJCuJs1AtDUzz2SPCVuQN/ILr2/NkEDoFRvkMO44H6/ZGImeDqnOPtPK4AP6nks4HWkdOpJQgMg8C2vnpG5L6IFWWQHNnx66stX/Iq7oXVhRDbFtW5ppaJXrPWPiqPhKmjc81NBAFm7xVM3ge7mCxMr5oSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkysyeIZ; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727904053; c=relaxed/simple;
+	bh=gdad1ArQs7dcU2GwlY0QGuq1t8qdJOUwHzuOZR5LOUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2PbNX6jMrLx6SNl9bXFSceZV2lnGoayjkhQjkmeV4Uc2MsABcCCxK8nPveK87ROFilGX/UBXe+Z78xXz2AEP4w6vbq5Q5ExcG2vBeMfNFBF+A+FadNLzJobMT4nGwytoFUSTa0dtxNDRFrwDBfrU4GX9h1XYX82K1TZ8npJudE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUdocXKe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkysyeIZ"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6cb2aaf4a73so1939756d6.2
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 13:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727901934; x=1728506734; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r5ua7STwZTPVMtH1PGVZOozH3aM5m0l2oOhzZM++RYA=;
-        b=dkysyeIZBhbCarkSM9vkKM2lNZ6kIaeP8j7K4tRbYhS2NX3E7ZKSsoQhOkjPR1qHVr
-         Hdk4QVGv/UiHFHKFb3T8uZRUk3teHYfFiZ9eo9OCMoP2zCb97CwUqOheFyDYX7xmNx/x
-         cEF66GmWQjiTjebs+wFiPlz23iOUxTgLScQOpH+dOi5ZtVklGeuH2YxkLewwJvxS3HAB
-         3QurdbuXlddH6nRyeNVvb2BbrLRkwiivvp4OZiHfvQOoFeN/ZqgwpM6HHmH22/z890UT
-         6EXtC/GuFklZj9EJC3qkQMZFf1i7B/jEfq44xYlEuoJp8YkheZgEE1lf0GGJDjLdoWUU
-         zSWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727901934; x=1728506734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r5ua7STwZTPVMtH1PGVZOozH3aM5m0l2oOhzZM++RYA=;
-        b=vQNj25xPVnPK4N8L7LVY1j5v9Nv4NlNa2Nq2CwNL5fyDERmu4AnRjPJDSPk9Fm4ki7
-         4X9KBms+yuTfByc75GFEkkmdbwMrTq3n5EtraeEsUuhwZqq0OufCRF0qWQwd3wA/cRVq
-         GvzGxeWrWxp8WaLJ/g1JDsWiu1sulviuy9JhY7AnQk6wSvWKtOrhyZt/9YluzxxnlGy3
-         Hs3u4/2IVE2Agkr0WJNGMTQjHuaQH+xcPNOzrMLOvcP4ow2XEd3CC1/nCr2bXXWgB25z
-         EPsHc4zX83FfmrpddKeUFcB5OvM0Pkfhk916vh0zpEFarOxVdyZZNljpHI4dJTzKkg36
-         IfeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFpqXJ6dNvIhmWT3BhFsE/eyggdcGxBkOMAuU3/5py/YI1X+EyREgsFpTLZ3CZOGpw2SC4hg7po/PUYQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx5ZWU01O+JayyI6voGQGlP2jaLhs0Byh6/MuEcZv2SEP5u0MCA
-	3/nkIL2oBCYH/by1XqxHavqbpDvAFPUFiSZE5GJmkW0wUg406V63qBH/xNpVxVxK7lkBE3GX/Qh
-	vJNHGjmq00EzIjyIbl6fqUghD+Rs=
-X-Google-Smtp-Source: AGHT+IFvRf0Pxcb3wJuPeJTsK8vYkAQv91LEsZobHX9BvFAeqsRLRIv43cHdKoLCTjXDYXArXPEueCLHvEMn7+L8RS8=
-X-Received: by 2002:a05:6214:53c9:b0:6c5:5384:96b3 with SMTP id
- 6a1803df08f44-6cb81cc379fmr56780016d6.52.1727901933943; Wed, 02 Oct 2024
- 13:45:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUdocXKe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419DCC4CEC5;
+	Wed,  2 Oct 2024 21:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727904053;
+	bh=gdad1ArQs7dcU2GwlY0QGuq1t8qdJOUwHzuOZR5LOUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hUdocXKe+hspz5NR87folnpHVz2Qlk9a6H5BrzEI0pkTRHvYbq5yXc3U4qxA7hbtJ
+	 V/raFaJhDHA6RwI+JrD+QvSczrtj9g5IIao+B6joszeMIoEoO7EjEIVgGY4HkM0g56
+	 ms6mxKzG8bkXh+f4kwCqzNA0KnfKWjUgfKLxVhBMRC7wbL1Tq1r+O0/uUSVF9iY3ZI
+	 8OBdce9FTXu6pqDqHjUIwgCJlNFcNxRQgDO0qy2L8rhAF7dt4e9fsf1yI8Cj3La4QZ
+	 Z3t0pMeS35ZA0Vkao0r6HNvbxv7KMVtGtz9gc2KuK7JTTGxrJadU6gdnsjQ3EEtC+x
+	 +GsantFdAbKTA==
+Date: Wed, 2 Oct 2024 23:20:49 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: W <linuxcdeveloper@gmail.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-ide@vger.kernel.org
+Subject: Re: libahci driver and power switching HDD on newer kernels
+Message-ID: <Zv25MQWh-1yYAcVC@ryzen.lan>
+References: <7882faa8-d5ec-4868-b158-0b942b669cc0@gmail.com>
+ <c4f1c690-6e97-44de-985f-dc9eadd18d23@leemhuis.info>
+ <c7880a6f-04d4-4572-9255-1575f6668b4e@kernel.org>
+ <a0c34406-3bb3-4880-9513-0876aacd4de6@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsOPwuoNOqSMmAvWO2Fz4TEmPnjFj-b7iF+XFRu1h7-+Dg@mail.gmail.com>
- <CABXGCsOw5_9o1rCweNd6i+P_R3TqaJbMLqEXqRO1NfZAVGyqOg@mail.gmail.com>
- <f6bd472e-43d9-4f66-8fc2-805905b1a8d9@lucifer.local> <302fd5b8-e4a4-4748-9a91-413575a54a9a@lucifer.local>
-In-Reply-To: <302fd5b8-e4a4-4748-9a91-413575a54a9a@lucifer.local>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Thu, 3 Oct 2024 01:45:23 +0500
-Message-ID: <CABXGCsOsZ5TyEjSWTk6e=FU30a27N4J0gqNCat65gweyKPtZ_A@mail.gmail.com>
-Subject: Re: 6.12/BUG: KASAN: slab-use-after-free in m_next at fs/proc/task_mmu.c:187
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
-	Liam.Howlett@oracle.com, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0c34406-3bb3-4880-9513-0876aacd4de6@gmail.com>
 
-On Wed, Oct 2, 2024 at 10:56=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> We can reliably repro it with CONFIG_DEBUG_VM_MAPLE_TREE, CONFIG_DEBUG_VM=
-, and
-> CONFIG_DEBUG_MAPLE_TREE set, if you set these you should see a report mor=
-e
-> quickly (let us know if you do).
+On Tue, Sep 24, 2024 at 12:42:10PM +0200, W wrote:
+> > 
+> > Given that you had 6.4.12 working OK, it is likely some commit that introduced a
+> > regression. If you can git bisect it, we will have a better idea how to remove
+> > the regression.
+> 
+> Please take a look at bugzilla report:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219296 - there are the details.
+> 
+> I'm wondering what is the better way for communication - here on mailing
+> list or put the comments in bugzilla ticket?
+> Probably here will be better idea...
+> 
+> W
+> 
 
-mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_VM_MAPLE_TREE'
-# CONFIG_DEBUG_VM_MAPLE_TREE is not set
-mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_VM'
-CONFIG_DEBUG_VM_IRQSOFF=3Dy
-CONFIG_DEBUG_VM=3Dy
-# CONFIG_DEBUG_VM_MAPLE_TREE is not set
-# CONFIG_DEBUG_VM_RB is not set
-CONFIG_DEBUG_VM_PGFLAGS=3Dy
-CONFIG_DEBUG_VM_PGTABLE=3Dy
-mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_MAPLE_TREE'
-# CONFIG_DEBUG_MAPLE_TREE is not set
+Hello W,
 
-Fedora's kernel build uses only CONFIG_DEBUG_VM and it's enough for
-reproducing this issue.
-Anyway I enabled all three options. I'll try to live for a day without
-steam launching. In a day I'll write whether it is reproducing without
-steam or not.
+Could you please try the following patch,
+and see if it helps:
 
-On Thu, Oct 3, 2024 at 1:32=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> Out of curiosity, what GPU are you using? :)
 
-The issue reproduces on all my machines.
-One has an AMD Radeon 6900 XT and a second AMD Radeon 7900 XTX.
+From dba01b7d68fffc26f3abf3252296082311a767a0 Mon Sep 17 00:00:00 2001
+From: Niklas Cassel <cassel@kernel.org>
+Date: Wed, 2 Oct 2024 21:40:41 +0200
+Subject: [PATCH] ata: libata: do not spin down disk on PM event freeze
 
---=20
-Best Regards,
-Mike Gavrilov.
+Currently, ata_eh_handle_port_suspend() will return early if
+ATA_PFLAG_PM_PENDING is not set, or if the PM event has flag
+PM_EVENT_RESUME set.
+
+This means that the following PM callbacks:
+.suspend = ata_port_pm_suspend,
+.freeze = ata_port_pm_freeze,
+.poweroff = ata_port_pm_poweroff,
+.runtime_suspend = ata_port_runtime_suspend,
+will actually make ata_eh_handle_port_suspend() perform some work.
+
+ata_eh_handle_port_suspend() will spin down the disks (by calling
+ata_dev_power_set_standby()), regardless of the PM event.
+
+Documentation/driver-api/pm/devices.rst, section "Entering Hibernation",
+explicitly mentions that .freeze() does not have to be put the device in
+a low-power state, and actually recommends not doing so. Thus, let's not
+spin down the disk for the .freeze() callback. (The disk will instead be
+spun down during the succeeding .poweroff() callback.)
+
+Fixes: aa3998dbeb3a ("ata: libata-scsi: Disable scsi device manage_system_start_stop")
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/ata/libata-eh.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 3f0144e7dc80..45a0d9af2d54 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -4099,10 +4099,20 @@ static void ata_eh_handle_port_suspend(struct ata_port *ap)
+ 
+        WARN_ON(ap->pflags & ATA_PFLAG_SUSPENDED);
+ 
+-       /* Set all devices attached to the port in standby mode */
+-       ata_for_each_link(link, ap, HOST_FIRST) {
+-               ata_for_each_dev(dev, link, ENABLED)
+-                       ata_dev_power_set_standby(dev);
++       /*
++        * We will reach this point for all of the PM events:
++        * PM_EVENT_SUSPEND (if runtime pm, PM_EVENT_AUTO will also be set)
++        * PM_EVENT_FREEZE, and PM_EVENT_HIBERNATE.
++        *
++        * We do not want to perform disk spin down for PM_EVENT_FREEZE.
++        * (Spin down will be performed by the succeeding PM_EVENT_HIBERNATE.)
++        */
++       if (!(ap->pm_mesg.event & PM_EVENT_FREEZE)) {
++               /* Set all devices attached to the port in standby mode */
++               ata_for_each_link(link, ap, HOST_FIRST) {
++                       ata_for_each_dev(dev, link, ENABLED)
++                               ata_dev_power_set_standby(dev);
++               }
+        }
+ 
+        /*
+-- 
+2.46.2
