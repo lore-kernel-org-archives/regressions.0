@@ -1,139 +1,110 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503281D1F44
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 18:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6AC433A9
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 19:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727895518; cv=none; b=oBHCsTGHhBbVwnRyHyQ0jlmFSoE28tDaZL8BUf6PyWzEWddsycg1Y48ZkERg3XeGiEPr9GTYYkWo/2Yz67a8bNsPPaI3FA2nHGWFr9t9lBaTkITT0Qhc6tgOYjEZL9cW8TKQr3aHIL1xqoyewvfj/ZS//AoDFpqXtdmKvHRmyWU=
+	t=1727896234; cv=none; b=c8pgvD0aSl0qpRWCshIUy84TUR/aPUUVZ8u0By5iM/19qL2ObMsmB5Mzk6C/PriIvmjpxkGaPexMHWDtRWntVDDnEUzLa55Bv+cqUqUB/6sX/3rQtb9sPEHSJLM2SCrRK9gl/bp6tzGb/pdUTR7EffRNrHkPhEdH+CjOs524FUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727895518; c=relaxed/simple;
-	bh=HdVxj2tTqKMeexd/LoAX7UMbVSiPUees+wGzRpjW6MM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kdt+j2Gvou8exqNbFX0zhuoSMi9Oxr7RG6Vw38VaAqwduQReBWyett2R0by2q/NkQdxSHb06gVMNKCWqMFN4CBa16r/PvyOGmJADoge57o11lATDWn2sbG+bOLRjrM83jzrkVGka7FgN431dspD15oE8Eh8Uo32/GV7DRhKA2xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9K3ipw6; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727896234; c=relaxed/simple;
+	bh=WzOfzK61w5NyvyPGXCkG1DjULa0zo8YN0MVy/vryZNs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CU3Se/5nwLTmEx7mLTxOhOD/ZNEQiW+EwQAq1xlTOxMeIo9xur210ACAa8UAImsEPBmElJ4NAuX5PJmyBsS5CnWF6fznr8jzqQSMtd7qA2CGrKb+JtKcd1g+uq0a/D2vrtL245xN5OPa6GXrpqbMRLJBeaunJYK88a8Ep3yod6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=TCPh4Wd6; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9K3ipw6"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fac3f20f1dso1405401fa.3
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 11:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727895515; x=1728500315; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pJihvFLY+/PB1Gfvqw4s7qDkzZW2UtDYa8qi2yTs9+c=;
-        b=W9K3ipw6XnnEcjZ3m/5gv85RGjW3oYNQyH8Hk7huE42dF89b3FHh6i9kNEZEaTcT7C
-         7//EXrTfRv6qht3LOYV1o085ICWOIBoe73HvbKvYHfzk3zl4VCJns8mtIEP8cSfAELBJ
-         KipXP5hq34fTglcJqIwj6/eUSc6ZBkFfH8Lv1VCDyFgbd5F1chpUHHv9NK+kvYALnbxC
-         ALPLtyqfeJaPGJYvS1eSb4ee0WF9W3LBc61d3IGrJmtHx4UMwcMfkqeoUByIB1zkT/5+
-         7cPlikySJEt67EbNOBNBOLy7+B6Ih5jyWY7JMgo0WJlvOI8tdU71AzPulP+YFF1FCTKj
-         zmPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727895515; x=1728500315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pJihvFLY+/PB1Gfvqw4s7qDkzZW2UtDYa8qi2yTs9+c=;
-        b=R2g+qTPfkD9/1QN9MISj8WHICj5hVlPRbQeg4whyF2y5bMRp1OjHpJzpa+00ckj0DJ
-         cC5Lsz212gzPuMd8vbfaU/X4RqxCXRo9prYhenoAJcrEjg/ZMzbrKh4P6mBXseYsLSW2
-         lX6EYdkUw+zzAsrOqVoyhD/tmg03lLKe/+0bdk5ntG43kRYiSGp2f6K3P2wRS4Vp8jUo
-         lLwa42H13XxoE7h8cLTDmPurht0g6rlrE3h5u4CyuwMoEKvssnXyyiunur4YSB6MtL6i
-         WJTdG5egaSuDCRitlyBEq4WEG4Jdef9AvIEYvT3XvYIWZSV88tKMxByuyE4gWRvSaYfu
-         4NjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXb21Gmx2cvFk1Lsl3BvpQxxqUy+/KZe0fnbopyxjnuJ2yWP2OskS6tiKueE/myuE3f+wzfFF3pAFPcrA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzRzJYhoDBG74tqHPse8NFuHW/9XSqwBGGuY0m82Q5RwDnoGze9
-	8ogVDJ7Q8SICHD/jw2zOqjkOlCVzfjuBSblvHHMK4PJLUG+OtnaS/qElFgfZGi2bUQZQSxPwL5T
-	sAgWweFcWH/6LsaExPbYl7K2rawM=
-X-Google-Smtp-Source: AGHT+IH8MpcRdjd9DhqsAwLkZKoQVw1e6Q6fMrgqRcM0MtqUumsbTF1Cw4qA/fQw5PWFfIakZctyS6QFiOvCg1HPfV8=
-X-Received: by 2002:a2e:e09:0:b0:2fa:ded3:f6aa with SMTP id
- 38308e7fff4ca-2fae1023cccmr21302301fa.20.1727895515241; Wed, 02 Oct 2024
- 11:58:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="TCPh4Wd6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1727896228; x=1728501028; i=christian@heusel.eu;
+	bh=WzOfzK61w5NyvyPGXCkG1DjULa0zo8YN0MVy/vryZNs=;
+	h=X-UI-Sender-Class:Date:From:To:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=TCPh4Wd6xEfhaeKWtannTTVSSMGxV955m6XTY7WVEd3uoZUneNm7RHVtr23mKG60
+	 zgJ1C4HgR1mBI4uV4PF7lsSljstZIKbVAmQZxD3HSeuc1As8Q6HEdejoSmJvv6QqX
+	 CjCj0epY31NAQgqlPbaaehtIigngeV+zkVLAEpQtA/d4HSzvDotad7gtcDSMEKqfO
+	 +VcHSA4MO0r+oKdgVf5eR244KzTFC1UjVYSO5patyVLfq3iy4YyBtf4b1VVt047A0
+	 QWktJzQfXGN+UE2CppNcT6dhvq2XnP/lz3cWXlqV3ccrrDEVsjwx2KZmPvXjsmtf/
+	 Ro6clJxYuNdJwXgbBQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([93.196.149.59]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N3bjH-1rwiIE2bMB-016KSU for <regressions@lists.linux.dev>; Wed, 02 Oct 2024
+ 20:57:29 +0200
+Date: Wed, 2 Oct 2024 20:57:28 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Message-ID: <808b3dae-27ec-4e45-bf29-50fce318411d@heusel.eu>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvo5npQ3o_vgiOX2guHtgafRoFPL__4O8Kcwg2=ssXmKg@mail.gmail.com>
- <e718bc99-e63b-4adb-9e40-2379f48301f5@stanley.mountain> <b22dbfe2-dd29-40de-a4a3-4a0d6b55cd65@stanley.mountain>
- <62a65418-2393-40ec-b462-151605a5efcf@stanley.mountain>
-In-Reply-To: <62a65418-2393-40ec-b462-151605a5efcf@stanley.mountain>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 3 Oct 2024 02:58:19 +0800
-Message-ID: <CAMgjq7CapiW2h2pzcKQBhwf_5rs5fgMGHw1E2YJYwEiY6zc=LQ@mail.gmail.com>
-Subject: Re: next-20241001: WARNING: at mm/list_lru.c:77 list_lru_del
- (mm/list_lru.c:212 mm/list_lru.c:200)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kmcgexion5w36hwj"
+Content-Disposition: inline
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+X-Provags-ID: V03:K1:N6+eBCD+pjj2SgQJpZQ0WriL/3QJSHtx0aWv0zP4Kb6kD6+K+e3
+ opFNyKz8G9boJGewvv7c5/UiGwcgLKuPmrTsPVdSsXIMv5W9tbUINPQC47j5LmmDUMt1oW0
+ JVQcLMJy/847Nx5tvZGCPWzK0JynBsjEwrvvyk1qVTj7bo9zfg+Pyr20hVnxumfusYPoScS
+ xH27bjkXahuLSfGybHw+Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pBFlsizlqJE=;90BXF+FrXGM8zYzynw0ZazgEZqK
+ bblgq4MXHdnJNHg0HqfxA26kCdYe1tcBVvK0/ce0aKTiUl2NBryaDCdiHvt1v2BZDMdaj1lN+
+ Gj5faW+GHp2itHJsOLYlrp9dnjYwUhP73bPMkMiyw4OfjYxetos6xWOiZTqhDm9G+nji9QJco
+ S8Wu2CRZkN3aLb+daSUoiYh5k6cDJaxHObmhnflmrfKXwX+rWYT/H2cbE+YMJujHgW7Nhjiu/
+ mSS7IZzBz8zMuGJ8imPaWZFMAcPbazWhie4JDAg9RGpHm1fK6lxvhsJOAG40pWfV1pq8regQv
+ 90kLUM1zlXy/+jA1/IdtjmRAqIkzkxsKNHXqmEv3p2pbi8FOmiXFroEjizhcyrPJBzEiXGUNz
+ 0fx14j8cPI+jSMv4cTPT4gmXF0AivqnArkwAmcPFWZApFO++TURWE6+ThYBMLvm+to/XhDsql
+ saXB9CeU1Bc0kWgI5LOt+xv4TxM+v4aP705uRq28zsiwNwlPGRQZUNetO5r6ReJCpzSn5UpFr
+ wPq5dzNuYSY1r8kjkbOMoFoZd55VWuyXwT7xbYuLicHyUsXNFrFANPCJtyzMOyEpZiWs3u0wm
+ IsEjEavG3YGtabWcK3PoDfoLIyHFBEiZXvpbvSWYvooj2CzCEh2xq8Q4YYseL9533WbiBLs/J
+ nrgbbnjLPxnkhIyD9tkDH4QFwrBaCGKzAZtLZG0d5Rs1P8p0CWdGnLg1NAfOrlmjbTuhbsZ7Z
+ dY9u26V+WMvBOKdnX3WcTJxr9xD5IIi4A==
 
-On Wed, Oct 2, 2024 at 7:28=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
-org> wrote:
->
-> On Wed, Oct 02, 2024 at 02:25:34PM +0300, Dan Carpenter wrote:
-> > On Wed, Oct 02, 2024 at 02:24:20PM +0300, Dan Carpenter wrote:
-> > > Let's add Kairui Song to the  CC list.
-> > >
-> > > One simple thing is that we should add a READ_ONCE() to the compariso=
-n.  Naresh,
-> > > could you test the attached diff?  I don't know that it will fix it b=
-ut it's
-> > > worth checking the easy stuff first.
-> > >
-> >
-> > Actually that's not right.  Let me write a different patch.
->
-> Try this one.
->
-> regards,
-> dan carpenter
->
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 79c2d21504a2..2c429578ed31 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -65,6 +65,7 @@ lock_list_lru_of_memcg(struct list_lru *lru, int nid, s=
-truct mem_cgroup *memcg,
->                        bool irq, bool skip_empty)
->  {
->         struct list_lru_one *l;
-> +       long nr_items;
->         rcu_read_lock();
->  again:
->         l =3D list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
-> @@ -73,8 +74,9 @@ lock_list_lru_of_memcg(struct list_lru *lru, int nid, s=
-truct mem_cgroup *memcg,
->                         spin_lock_irq(&l->lock);
->                 else
->                         spin_lock(&l->lock);
-> -               if (likely(READ_ONCE(l->nr_items) !=3D LONG_MIN)) {
-> -                       WARN_ON(l->nr_items < 0);
-> +               nr_items =3D READ_ONCE(l->nr_items);
-> +               if (likely(nr_items !=3D LONG_MIN)) {
-> +                       WARN_ON(nr_items < 0);
->                         rcu_read_unlock();
->                         return l;
->                 }
->
 
-Thanks. The warning is a new added sanity check, I'm not sure if this
-WARN_ON triggered by an existing list_lru leak or if it's a new issue.
+--kmcgexion5w36hwj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And unfortunately so far I can't reproduce it locally on my ARM
-machine, it should be easily reproducible according to the
-description. And if the WARN only triggered once, and only during
-boot, mayce some static data wasn't initialized correctly? Or the
-enablement of memcg caused some list_lru leak
-(mem_cgroup_from_slab_obj changed from returning NULL to returning
-actual memcg, so a item added to rootcg before will be attempt removed
-from actual memcg, seems a real race). If it's the latter case, then
-it's an existing issue caught by the new sanity check.
+On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The READ_ONCE patch may be worth trying, I'll also try to do more
-debugging on this and try to send a fix later.
+#regzbot report: https://lore.kernel.org/all/cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com
+#regzbot introduced: f1bfb4a6fed64de1771b43a76631942279851744
+#regzbot title: usb/acpi: boot hang on Thinkpad T14
+
+#regzbot report: https://lore.kernel.org/all/D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me
+#regzbot introduced: ee4cdf7ba857a894ad1650d6ab77669cbbfa329e
+
+--kmcgexion5w36hwj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmb9l5gACgkQwEfU8yi1
+JYXiQBAAufjCL8xk+Vzs2fR2qefH5KHdTRPB1c2TwlpZI6dD2f6RDUiggDttcGmK
+RuYgGHEF2YtKiYAPh44rdY2Dky+38srhNc51NvvNNRPG3/5kw/t7/Dj+UnMCOaAg
+HGTmMYsyNjxYZ6zbJgJmLPsp7juqXkaouBFYaoEX2EtvFbkQpucIuzVY58VJHKaQ
+wq6A/QtZxM2yyZyOcc8+NTFUDfPcG9zT23VNUWr4c7DduZMvwY+dvMBY3z5iQv3p
+S6yx/SQ855CAjkIgR14arfVoZ3GYYlS5jUIoX3c1hFfhNnaS6N42EgEX78S06bh8
+1WkRMALh5+RrSG5Z/62f0yZfNVvTwiyIlVaYBsl6LdgF4APeYk53tWYnukYXGohB
+H02SAg5DVFWSzu3ixbkHk1C7nBta5WKY5QYjfdSPcvopdRUAPrJ1G1GnpRKDfKNM
+OUV2Wqyu2y8c3rBc7+f0PGRMZOrmbnkoD1zBY8y10aigGkyjHysy1aWBtHmycd59
+Qh9Ql6Am3tyXbi3de4qMwUb0pUYEOfmts11i1Xfm7ZW+VhaoAAHb3sgxFCWVeFcP
+3HRURjon1kJzXHojW1FBDp+IA23tTGf6lxX6vpzjzq2Q54lt/wMEq3m6q9OUaUFV
+6pHmGvlyPHQsO4/zg6rhsPrpAsmhd5nkVFd31SZMth4ZchuNJqg=
+=zw7y
+-----END PGP SIGNATURE-----
+
+--kmcgexion5w36hwj--
