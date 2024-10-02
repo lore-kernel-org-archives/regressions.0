@@ -1,369 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C707819412A
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 21:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCA184A36
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 22:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727906085; cv=none; b=lpT3e13XpDUTqmNWvhnddGlZiIqd+KJ/hGFxVg8+hEf4qAcCsJutLY6IDWSwxyGETVezzEdfP4yvVE2ru4OGlMGy/GtkFNG+aGXEE9L/kUPeXsR9t0G7rE/NfQCjkmwfSRNkrvTVWDBWK+mtIK9WqxUdYgsTUoNDqjHFvUwXnmU=
+	t=1727908629; cv=none; b=qgMUIkv+AUCoqNfbJynexgrD8wrUM0JtlfBT00S6G7svYUHViIJFCzSDZJMP7xg3n1I612y+EyTmHIrwEHUElpojd3mnMctaCIq2VvxXBpeN0PujHBPZooB4au/AbRFYHwX0OPMzfHNHd7BIRLv1XkhL93Jc7mKN2lIbnwOs06I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727906085; c=relaxed/simple;
-	bh=MnnRePe+Fm2rFB/hQoffokLXOdZMU4MKH+96V/5PksU=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=FdQDF2qxnFGjpBcpXteQY1TxTGCuv6urBm5LEVD6f+hvVfeawzjvPCSRkPP7qSLng68n+nQOvQTlUgowQ7nzgW0WMxQsChrrBT+0+5ZICBbMMVFhXlCjwvJ0p5D/mXMXbeLlBeqjYlIl6x/MbVsIOUchraVTFOeSVC9EfubLRiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5Zms7oI; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1727908629; c=relaxed/simple;
+	bh=YG/WzHKAh+OGPuvTSKg0BMXn+1+sA+cJiGs3wG406yY=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:References:Subject:
+	 In-Reply-To:Content-Type; b=qF3KuL1VGNo8eA08Fij+zdl7EMLLF1ZYX4NJgltZOo5v6dVjKOPUnT8JKgphsFMWCIKIfEMcDAAFcnyqKZv9MWu7LNwqDrMpFZKuYG5NZWXYc2s678Y5wqFKtLuo8LyioVHhb94Nf+9eMvggTnxj4CqLAzzyObWcBfKMHc9UcO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFLQV1ID; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5Zms7oI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727906084; x=1759442084;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MnnRePe+Fm2rFB/hQoffokLXOdZMU4MKH+96V/5PksU=;
-  b=K5Zms7oInUAyh7/rueE05LlYjM8n8VLrEd/WaWi5J76jW9rBFA3IaqGO
-   mIDDO+WDIo2Q6YtihMnsrRh9FBOBUiAJ1ioKGll+MY3H4yDWzqJmCvgoe
-   gDf9n3SLbbqpaKHDuZPwygAlSmRa6QM6vrct3LByPo4zmUZ5QvcsRum0i
-   HJuajA2Egf38K5RChWRkqu0I1UpqRNw7WcjjoFVO+mZSEiEL9qFQX9Atq
-   nNvdKPnDmkQno7E+OXtxetQl7YRXr9CxsGpE+TUHyCJi8RiGddRPECcnZ
-   /XknSqIc8azBN7jvvVakSE4zGkoAmhx0WPI+N6yUjKlkfy3op7afPVZHX
-   Q==;
-X-CSE-ConnectionGUID: c6R5SlEQQpmLmzy3QRcBXQ==
-X-CSE-MsgGUID: 0x0YZE6WSQakMsBHRZJ7+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="37676910"
-X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="37676910"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 14:54:43 -0700
-X-CSE-ConnectionGUID: yzWXcxLtQYm0BScnEb5P6Q==
-X-CSE-MsgGUID: 47vgL0VLQl29/g6c7ZFXqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="78150837"
-Received: from kinlongk-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.101])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 14:54:42 -0700
-Subject: [PATCH v2] driver core: Fix userspace expectations of uevent_show()
- as a probe barrier
-From: Dan Williams <dan.j.williams@intel.com>
-To: gregkh@linuxfoundation.org
-Cc: rafael.j.wysocki@intel.com, tj@kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Date: Wed, 02 Oct 2024 14:54:40 -0700
-Message-ID: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFLQV1ID"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53988c54ec8so297332e87.0
+        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 15:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727908626; x=1728513426; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:subject:content-language
+         :references:cc:to:from:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ePHA9DQSUv2xWAl3S70jyFHw9nZzSBBRS5FM3MDw++M=;
+        b=KFLQV1IDIIPVYdUC/yhppGOYqRDXqb/AdY8AWG7DFSJXqXj3Xh5G2HYDapt25Qbrii
+         uxEpiC3yLXwHPUsJTLUhTWzmaMyzWdU7En3drKlZr99cAuaP0UTRV5MugD9gFeMAGU7U
+         77Rv9LBOSASVr8PmdG2jyrdMFFDTKHbng34XJuUgp23dQPfn20Mt45/vVOKKpvI9cJkE
+         WOt/wIlkfW7g8l7Uqq+ULwDTnPS8V7N2fm1HTsUXiXAjV5MyGWKHGZwwHJJ11Q5dSyxu
+         5JamjhbOflZ5Hoj3QfpnhRU0rN85HPYxOgHeW8g6nfl7yRSS1F5Chuj8r8FJ82hGVLxP
+         FovA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727908626; x=1728513426;
+        h=content-transfer-encoding:in-reply-to:subject:content-language
+         :references:cc:to:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ePHA9DQSUv2xWAl3S70jyFHw9nZzSBBRS5FM3MDw++M=;
+        b=ARCylzW39EcfQi7cpSxXmr/KUm0vjctMB0sw8znP37g93fOMzQCuSHfxEDWdn3G/x9
+         9Oq4zOdfxO9x1154ueZBrNgYJKv+L9NLbNBEj21CTVX/YCAh/SMA4Zcr+vaZm6ARCHsf
+         k0NQrOompDdxH+9my2qxkzIrnnn16QLxpbgDLjIZT+aRu1p5lIQXa4lIcgUAP8VID4kl
+         v1NR+U8q52J73c4TKHZYVM1Q9LFiM4yWXd3xmCkSHu9G+hn+e5Fprl+VaZ1pKkFcyC8w
+         EJOdJWVlHl945O97+DyrC/nLx3komdrGBf46wkTv92MkdbbGnTd5X7ooev6CNMeqkqvY
+         B0Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjpkQ60nY6nzmDPxj+kHZ+fEmfzvy2YyV/OPkcT3eCzhFym7Lp2l09QirLdsFOuzxGmB28MacOmGTmlQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxbkw3abe3Rs9kh8M2j2vNq/q53IsffDW+xzX4QGPeyFeZPmezq
+	HMLzcBaULvg6FA5jHI4MoYRLCpM89JtItXV7r8xP02NbuS1IPTz5
+X-Google-Smtp-Source: AGHT+IG30+krPqTeRIPJo2EP9YM4g29RWB25SsJKbD6FuU2IoZH7FY54xsfrSn8DWnblxC7D9juxSQ==
+X-Received: by 2002:a05:6512:ad2:b0:536:a4e1:5fa2 with SMTP id 2adb3069b0e04-539a067bbe5mr2466025e87.26.1727908625605;
+        Wed, 02 Oct 2024 15:37:05 -0700 (PDT)
+Received: from [10.130.138.83] ([178.255.149.133])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539a8256807sm5574e87.71.2024.10.02.15.37.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2024 15:37:05 -0700 (PDT)
+Message-ID: <adbc3511-7c52-4262-b8aa-121ee0b51ea3@gmail.com>
+Date: Wed, 2 Oct 2024 18:36:55 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+From: Jerry Luo <jerryluo225@gmail.com>
+To: Takashi Iwai <tiwai@suse.de>, Christoffer Sandberg <cs@tuxedo.de>
+Cc: christian@heusel.eu, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, perex@perex.cz, regressions@lists.linux.dev,
+ wse@tuxedocomputers.com
+References: <87jzfbh5tu.wl-tiwai@suse.de>
+ <ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
+ <87jzetk2l0.wl-tiwai@suse.de> <b38b5947482a5ca4b55e0ddb908c2f34@tuxedo.de>
+ <87seteli51.wl-tiwai@suse.de>
+ <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
+Content-Language: en-US
+Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
+In-Reply-To: <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Commit "driver core: Fix uevent_show() vs driver detach race" [1]
-attempted to fix a lockdep report in uevent_show() by making the lookup
-of driver information for a given device lockless. It turns out that
-userspace likely depends on the side-effect of uevent_show() flushing
-device probing, as evidenced by the removal of the lock causing a
-regression initializing USB devices [2].
-
-Introduce a new "locked" type for sysfs attributes that arranges for the
-attribute to be called under the device-lock, but without setting up a
-reverse locking order dependency with the kernfs_get_active() lock.
-
-This new facility holds a reference on a device while any locked-sysfs
-attribute of that device is open. It then takes the lock around sysfs
-read/write operations in the following order:
-
-    of->mutex
-    of->op_mutex <= device_lock()
-    kernfs_get_active()
-    <operation>
-
-Compare that to problematic locking order of:
-
-    of->mutex
-    kernfs_get_active()
-    <operation>
-        device_lock()
-
-...which causes potential deadlocks with kernfs_drain() that may be
-called while the device_lock() is held.
-
-Note that the synchronize_rcu() in module_remove_driver(), introduced in
-the precedubg fix, likely needs to remain since dev_uevent() is not
-always called with the device_lock held. Userspace can potentially
-trigger use after free by racing module removal against kernel
-invocations of kobject_uevent().
-
-Note2, this change effectively allows userspace to test for
-CONFIG_DEBUG_KOBJECT_RELEASE-style driver bugs as the lifetime of open
-file descriptors on the @uevent attribute keeps the device reference
-count elevated indefinitely.
-
-Reported-by: brmails+k
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219244 [2]
-Tested-by: brmails+k
-Fixes: 15fffc6a5624 ("driver core: Fix uevent_show() vs driver detach race") [1]
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v1 [1]:
-- Move the new "locked" infrastructure to private header files to make
-  it clear it is not approved for general usage (Greg)
-
-[1]: http://lore.kernel.org/172772671177.1003633.7355063154793624707.stgit@dwillia2-xfh.jf.intel.com
-
- drivers/base/base.h    |    9 +++++++++
- drivers/base/core.c    |    2 +-
- fs/kernfs/file.c       |   24 +++++++++++++++++++-----
- fs/sysfs/file.c        |   47 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/sysfs/group.c       |    4 ++--
- fs/sysfs/sysfs.h       |   18 ++++++++++++++++++
- include/linux/kernfs.h |    1 +
- include/linux/sysfs.h  |    1 +
- 8 files changed, 98 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 0b53593372d7..0405e7667184 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -246,3 +246,12 @@ static inline int devtmpfs_delete_node(struct device *dev) { return 0; }
- 
- void software_node_notify(struct device *dev);
- void software_node_notify_remove(struct device *dev);
-+
-+/*
-+ * "locked" device attributes are an internal exception for the @uevent
-+ * attribute.
-+ */
-+#include "../../fs/sysfs/sysfs.h"
-+
-+#define DEVICE_ATTR_LOCKED_RW(_name) \
-+	struct device_attribute dev_attr_##_name = __ATTR_LOCKED_RW(_name)
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 8c0733d3aad8..1fd5a18cbb62 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2772,7 +2772,7 @@ static ssize_t uevent_store(struct device *dev, struct device_attribute *attr,
- 
- 	return count;
- }
--static DEVICE_ATTR_RW(uevent);
-+static DEVICE_ATTR_LOCKED_RW(uevent);
- 
- static ssize_t online_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index 8502ef68459b..eb5c2167beb9 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -142,6 +142,20 @@ static void kernfs_seq_stop_active(struct seq_file *sf, void *v)
- 	kernfs_put_active(of->kn);
- }
- 
-+static void kernfs_open_file_lock(struct kernfs_open_file *of)
-+{
-+	mutex_lock(&of->mutex);
-+	if (of->op_mutex)
-+		mutex_lock(of->op_mutex);
-+}
-+
-+static void kernfs_open_file_unlock(struct kernfs_open_file *of)
-+{
-+	if (of->op_mutex)
-+		mutex_unlock(of->op_mutex);
-+	mutex_unlock(&of->mutex);
-+}
-+
- static void *kernfs_seq_start(struct seq_file *sf, loff_t *ppos)
- {
- 	struct kernfs_open_file *of = sf->private;
-@@ -151,7 +165,7 @@ static void *kernfs_seq_start(struct seq_file *sf, loff_t *ppos)
- 	 * @of->mutex nests outside active ref and is primarily to ensure that
- 	 * the ops aren't called concurrently for the same open file.
- 	 */
--	mutex_lock(&of->mutex);
-+	kernfs_open_file_lock(of);
- 	if (!kernfs_get_active(of->kn))
- 		return ERR_PTR(-ENODEV);
- 
-@@ -193,7 +207,7 @@ static void kernfs_seq_stop(struct seq_file *sf, void *v)
- 
- 	if (v != ERR_PTR(-ENODEV))
- 		kernfs_seq_stop_active(sf, v);
--	mutex_unlock(&of->mutex);
-+	kernfs_open_file_unlock(of);
- }
- 
- static int kernfs_seq_show(struct seq_file *sf, void *v)
-@@ -322,9 +336,9 @@ static ssize_t kernfs_fop_write_iter(struct kiocb *iocb, struct iov_iter *iter)
- 	 * @of->mutex nests outside active ref and is used both to ensure that
- 	 * the ops aren't called concurrently for the same open file.
- 	 */
--	mutex_lock(&of->mutex);
-+	kernfs_open_file_lock(of);
- 	if (!kernfs_get_active(of->kn)) {
--		mutex_unlock(&of->mutex);
-+		kernfs_open_file_unlock(of);
- 		len = -ENODEV;
- 		goto out_free;
- 	}
-@@ -336,7 +350,7 @@ static ssize_t kernfs_fop_write_iter(struct kiocb *iocb, struct iov_iter *iter)
- 		len = -EINVAL;
- 
- 	kernfs_put_active(of->kn);
--	mutex_unlock(&of->mutex);
-+	kernfs_open_file_unlock(of);
- 
- 	if (len > 0)
- 		iocb->ki_pos += len;
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index d1995e2d6c94..1bb878efcf00 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -15,6 +15,7 @@
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/seq_file.h>
-+#include <linux/device.h>
- #include <linux/mm.h>
- 
- #include "sysfs.h"
-@@ -189,6 +190,26 @@ static int sysfs_kf_bin_open(struct kernfs_open_file *of)
- 	return 0;
- }
- 
-+/* locked attributes are always device attributes */
-+static int sysfs_kf_setup_lock(struct kernfs_open_file *of)
-+{
-+	struct kobject *kobj = of->kn->parent->priv;
-+	struct device *dev = kobj_to_dev(kobj);
-+
-+	get_device(dev);
-+	of->op_mutex = &dev->mutex;
-+
-+	return 0;
-+}
-+
-+static void sysfs_kf_free_lock(struct kernfs_open_file *of)
-+{
-+	struct kobject *kobj = of->kn->parent->priv;
-+	struct device *dev = kobj_to_dev(kobj);
-+
-+	put_device(dev);
-+}
-+
- void sysfs_notify(struct kobject *kobj, const char *dir, const char *attr)
- {
- 	struct kernfs_node *kn = kobj->sd, *tmp;
-@@ -227,6 +248,25 @@ static const struct kernfs_ops sysfs_file_kfops_rw = {
- 	.write		= sysfs_kf_write,
- };
- 
-+static const struct kernfs_ops sysfs_locked_kfops_ro = {
-+	.seq_show	= sysfs_kf_seq_show,
-+	.open		= sysfs_kf_setup_lock,
-+	.release	= sysfs_kf_free_lock,
-+};
-+
-+static const struct kernfs_ops sysfs_locked_kfops_wo = {
-+	.write		= sysfs_kf_write,
-+	.open		= sysfs_kf_setup_lock,
-+	.release	= sysfs_kf_free_lock,
-+};
-+
-+static const struct kernfs_ops sysfs_locked_kfops_rw = {
-+	.seq_show	= sysfs_kf_seq_show,
-+	.write		= sysfs_kf_write,
-+	.open		= sysfs_kf_setup_lock,
-+	.release	= sysfs_kf_free_lock,
-+};
-+
- static const struct kernfs_ops sysfs_prealloc_kfops_ro = {
- 	.read		= sysfs_kf_read,
- 	.prealloc	= true,
-@@ -287,6 +327,13 @@ int sysfs_add_file_mode_ns(struct kernfs_node *parent,
- 			ops = &sysfs_prealloc_kfops_ro;
- 		else if (sysfs_ops->store)
- 			ops = &sysfs_prealloc_kfops_wo;
-+	} else if (mode & SYSFS_LOCKED) {
-+		if (sysfs_ops->show && sysfs_ops->store)
-+			ops = &sysfs_locked_kfops_rw;
-+		else if (sysfs_ops->show)
-+			ops = &sysfs_locked_kfops_ro;
-+		else if (sysfs_ops->store)
-+			ops = &sysfs_locked_kfops_wo;
- 	} else {
- 		if (sysfs_ops->show && sysfs_ops->store)
- 			ops = &sysfs_file_kfops_rw;
-diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-index d22ad67a0f32..0158367866be 100644
---- a/fs/sysfs/group.c
-+++ b/fs/sysfs/group.c
-@@ -68,11 +68,11 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
- 					continue;
- 			}
- 
--			WARN(mode & ~(SYSFS_PREALLOC | 0664),
-+			WARN(mode & ~(SYSFS_PREALLOC | SYSFS_LOCKED | 0664),
- 			     "Attribute %s: Invalid permissions 0%o\n",
- 			     (*attr)->name, mode);
- 
--			mode &= SYSFS_PREALLOC | 0664;
-+			mode &= SYSFS_PREALLOC | SYSFS_LOCKED | 0664;
- 			error = sysfs_add_file_mode_ns(parent, *attr, mode, uid,
- 						       gid, NULL);
- 			if (unlikely(error))
-diff --git a/fs/sysfs/sysfs.h b/fs/sysfs/sysfs.h
-index 3f28c9af5756..51d5b6af243f 100644
---- a/fs/sysfs/sysfs.h
-+++ b/fs/sysfs/sysfs.h
-@@ -40,4 +40,22 @@ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
- int sysfs_create_link_sd(struct kernfs_node *kn, struct kobject *target,
- 			 const char *name);
- 
-+#define SYSFS_LOCKED		040000
-+
-+/*
-+ * uevent_show() needs this due to userspace expectations of reading
-+ * that attribute flushing device probing, it is not intended to be a
-+ * general semantic for other device sysfs attributes. It is broken to
-+ * use this with non-device / pure-kobject sysfs attributes, see
-+ * sysfs_kf_setup_lock().
-+ */
-+#define __ATTR_LOCKED(_name, _mode, _show, _store) {			\
-+	.attr = {.name = __stringify(_name),				\
-+		 .mode = SYSFS_LOCKED | VERIFY_OCTAL_PERMISSIONS(_mode) },\
-+	.show	= _show,						\
-+	.store	= _store,						\
-+}
-+
-+#define __ATTR_LOCKED_RW(_name) __ATTR_LOCKED(_name, 0644, _name##_show, _name##_store)
-+
- #endif	/* __SYSFS_INTERNAL_H */
-diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-index 87c79d076d6d..df6828a7cd3e 100644
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -257,6 +257,7 @@ struct kernfs_open_file {
- 
- 	/* private fields, do not use outside kernfs proper */
- 	struct mutex		mutex;
-+	struct mutex		*op_mutex;
- 	struct mutex		prealloc_mutex;
- 	int			event;
- 	struct list_head	list;
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index c4e64dc11206..dd28c6238b64 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -103,6 +103,7 @@ struct attribute_group {
- 
- #define SYSFS_PREALLOC		010000
- #define SYSFS_GROUP_INVISIBLE	020000
-+/* see fs/sysfs/sysfs.h for private mode-flags */
- 
- /*
-  * DEFINE_SYSFS_GROUP_VISIBLE(name):
-
+On 10/2/24 5:28 PM, Jerry Luo wrote:
+> On 10/2/24 10:00 AM, Takashi Iwai wrote:
+>> On Wed, 02 Oct 2024 10:21:22 +0200,
+>> Christoffer Sandberg wrote:
+>>>
+>>>
+>>> On 30.9.2024 09:44, Takashi Iwai wrote:
+>>>> On Mon, 23 Sep 2024 21:37:42 +0200,
+>>>> Jerry Luo wrote:
+>>>>>
+>>>>> Hi Takashi,
+>>>>>
+>>>>> On Mon, 16 Sep 2024 19:22:05 +0200,
+>>>>>
+>>>>> Takashi Iwai wrote:
+>>>>>
+>>>>>      Could you give alsa-info.sh output from both working and
+>>>>> non-working
+>>>>>      cases?  Run the script with --no-upload option and attach the
+>>>>> outputs.
+>>>>>
+>>>>>      thanks,
+>>>>>
+>>>>>      Takashi
+>>>>>
+>>>>> Issue now reappear, output from alsa-info.sh are attached. If they
+>>>>> are still
+>>>>> needed.
+>>>> Thanks.  The obvious difference seems to be the assignment of two DACs
+>>>> 0x10 and 0x11 for headphone and speaker outputs.
+>>>>
+>>>> Christoffer, how are those on your machines?
+>>> I attached alsa-info from the Sirius Gen2 device.
+>>>
+>>> Comparing the working/nonworking of Jerry, yeah, the assignment of
+>>> 0x10 and 0x11 looks switched around. I don't see what difference this
+>>> would make. Also, node 0x22 has "bass speaker" controls in the
+>>> non-working version.
+>>>
+>>> Comparing the Sirius Gen2 alsa-info with Jerrys, to me it looks like
+>>> the non-working version corresponds to our working version.
+>>>
+>>> I would expect the non-working version to happen all the time though
+>>> with regards to the "bass speaker" controls. Why would this only
+>>> happen sometimes?
+>> Thanks!  The assignment of DACs depend on the pins and topology, so it
+>> can be a bit sensitive.
+>>
+>> Now looking more closely at both outputs, I wonder how the commit
+>> breaks pang14.  Maybe it has a PCI SSID 2782:12c5 (or 12c3) while the
+>> codec SSID is 2782:12b3?  If so, the patch below should fix.
+>>
+>> Could you guys try it and verify whether it fixes for Pangolin and
+>> doesn't break Sirius?
+>>
+>>
+>> Takashi
+>>
+> It does seems to fix the issue on Pangolin. It might worth mention 
+> that the headphone output will have the same issue when the speaker is 
+> not working. Now they are all good. Thanks!
+>
+>
+> Jerry
+>
+Okay, after some testing I can only conclude that the headphone is not 
+consistent in term of the issue. Now it works fine regardless of the patch.
