@@ -1,69 +1,111 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1F384A52
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 09:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60846197A6C
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 09:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727859781; cv=none; b=BJ/3r0Kj8zHUWe7mTJwpbGWBgMhWqROvR8lpdwXDG3PiJP3SAyhUa2RD8ZASNRgEueB7GYatrIP+leUfYJUGMk8y/cX6kHuDxK3Pkj5xM0Los8IWFuU+zebtZaGeSRGTvr8CegCvCVrH/3Az6jIgXMh9rr7yMXZBo0Tf/KiKCy8=
+	t=1727860752; cv=none; b=szL9dRLp0KcCg0HnJh6y1cpAN3XbbNEjJar/oJ1CF4WFqtJmPKcsPcHIZAGgjve0KFksKcqE4C+n16yLfUvRcMSmiMS/Pl7bTxbL+6xg1ucvCwMMzL68QJxKjwaufkUOTrpOKJYLGIcMRrxs3VJ09tWGSf5DhsP/7smSOpldUGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727859781; c=relaxed/simple;
-	bh=QP0UoHtw6E76bE5naVctDLDFMUhqtIZp+voUo/9tsbE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=G7aFngPpqKuKgyGooLOGKCy1qPXeQfT7IxfRmSoKnMv5mH46Pqep44CKw2KZPJ7WFUcriBfX7N4yDgtvGjgV2uPjuJL3Sxw5OPRzQPbDOoq+3Q7tOTbUlVXATEw1b1d5KNniiSjnTqey3kZ8eiqymkxvDjW1IQa5S7uZxJM1XXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=L2/wrJsR; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727860752; c=relaxed/simple;
+	bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=QbH/B8nWmzz+O8hzz++EwnRAEqyx/KE8n9fFbEzVYKqVsJRvqMAHvoE0+SsGSJBwvPZ32rJ3jJXQQOK0JW8Yvx4SeK5ZVH/8wUK5XgMYc+GwtDiaVL0nOX7vusbzNQpEDKjbZnlRqY5ACIai2ZELvSetCnU7eza0AlJC7XOa7sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=tT5sgvhO; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="L2/wrJsR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=QP0UoHtw6E76bE5naVctDLDFMUhqtIZp+voUo/9tsbE=; t=1727859779;
-	x=1728291779; b=L2/wrJsREJpg75AkB1E+coKtxGxtM3ezg/68KJVdDcFcnMAzjjclGMhEXCPTX
-	u+3Ck6wrGmpJkUobw+rvloSjjGqTeKtrDzgan5AWjl4cXHBFCYEpaL+gHzIjQAhfYuxkQcDWXiO0G
-	B2RnNUtH5NyEw2f0ATpPGnzAn6n5lILaz9u7TuxfQpmiP1/nnhyXcEv++LRR3BCEHNchbivFktT+V
-	eCMrX/7PiuhmTAyAiDElqfK2c55Ony0lPkyptbdHkvvxmA1nKU1svmpcnxu0wPUtKT7Dwo10xMUMN
-	CSoov8o1UJgZcol/LrBxfaPVPFJlyfG7Hak5eK81Hx3L/jxOAA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1svvG3-0003HW-4P; Wed, 02 Oct 2024 11:02:55 +0200
-Message-ID: <a4179b2c-9307-4c05-9347-c11c442b7334@leemhuis.info>
-Date: Wed, 2 Oct 2024 11:02:54 +0200
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="tT5sgvhO"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42e6dbc8778so9530345e9.2
+        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 02:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1727860750; x=1728465550; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
+        b=tT5sgvhOvrBZl2x6FaC1l3f20eIEdTMpxC4j2W25edjvu3JMCi0DfEg/w+e+DD3BUO
+         4GH5E2EUcutDs85ziy/9h+SHIpzpYNe/tQra/PFWgpnNjcY1tjRaZSXlzHeACmuYBfNf
+         WN7YKHhDGm/z+/lgOObDjKaRVcG8TCpSfncnk6AuEYpeOqIsDRxWNSWr7E+/IQ9QTssK
+         y0WMKnT+P/0UzmzWqbKaIrerHXWRD7YkwXa1TRrHEoJU7JU4OPf4u2sY9cBcSk4cwKYz
+         LsFvg0PMp483qPu3px+OpHeDbeSL/zgCtfnXjZ/ulO5WoVphP+U5gHUYvYzbK7mf+6VZ
+         sv1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727860750; x=1728465550;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
+        b=pCflEv4+0AK3TpBx0YATEU9IhNDpDA+7xquf5BHhlnNzLQjJoZnkXv05Fz9IKOBGbH
+         JAm/wakjVmTqjBUjdHmROwRmShB2HgMDcmaqpMoHSLkRwwg6O67002QYpXLQ3gvsqbdC
+         eB89QOPg/JtBH0hFjq2GGTASdiQalD/ej7PR43WgG7D478d9vPUuwLFfDCTNEpZyuht7
+         RWCSXhVGTDtNn07gVKV2KNC8+fWmws7fs69XpAr+g29wpJROsFtmX7qQJLuDc/w0uY9j
+         KeiUhfx83oBNTtj/CFX0WfeZFx5wtCGU+s1j6OZluNmFr69dIZ+66TUP71gII9/4kAiX
+         wkVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzK/O3a+7P7jhz8WwjBlQ7HKc+RUKe2MMUMdGRNmKrLvHdssE8GTP1Sd7Ne77YBEVCbktKUL/QqHe6QQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwgU1WddJqsUXhpkp1ATt18BDOPnOTVIHhCV3uLHGzH83Pg9Aw5
+	i3c5VKAEpkhZ+Acwfph2DjwvsF0xlafPA2RXav05zcC18+J4CCGTIx/M7xMUHXSWBZMA/iT8bqC
+	9
+X-Google-Smtp-Source: AGHT+IHWV7mV6w1yfuYNSbBDoDmOfkbxchm61Fu5e/nGx6AlXWl4Fno0/aWgzeJagffw9rTAISDAYw==
+X-Received: by 2002:a05:600c:5126:b0:42c:bfd6:9d2f with SMTP id 5b1f17b1804b1-42f777af1camr8361385e9.1.1727860749493;
+        Wed, 02 Oct 2024 02:19:09 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:a4f:301:4862:84b0:b69f:936b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f79d8d409sm13410225e9.1.2024.10.02.02.19.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2024 02:19:08 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727859779;019ffc93;
-X-HE-SMSGID: 1svvG3-0003HW-4P
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <202409281331.1F04259@keescook>
+Date: Wed, 2 Oct 2024 11:18:57 +0200
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>,
+ kent.overstreet@linux.dev,
+ regressions@lists.linux.dev,
+ linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ ardb@kernel.org,
+ morbo@google.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
+To: Kees Cook <kees@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
 
+On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
+> [...]
+>=20
+> Sorry, I've been out of commission with covid. Globally disabling this
+> macro for clang is not the right solution (way too big a hammer).
+>=20
+> Until Bill has a fix, we can revert commit
+> 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
+> certain situations where 'counted_by' is in use.
 
+I already encountered two other related __counted_by() issues [1][2]
+that are now being reverted. Would it be an option to disable it
+globally, but only for Clang < v19 (where it looks like it'll be fixed)?
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Otherwise adding __counted_by() might be a slippery slope for a long
+time and the edge cases don't seem to be that rare anymore.
 
-#regzbot report:
-https://lore.kernel.org/all/925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me/
-#regzbot dup https://gitlab.freedesktop.org/drm/amd/-/issues/3658
+Thanks,
+Thorsten
 
-#regzbot report:
-https://lore.kernel.org/lkml/1a3af354-bd15-4219-960e-089b6a6e673c@adamthiede.com/
-#regzbot introduced: bc46eb5d5d7780
-#regzbot summary: drm/mediatek: text console not working
+[1] =
+https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com=
+/
+[2] =
+https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.de=
+v/=
