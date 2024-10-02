@@ -1,348 +1,181 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.mail.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C591854
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 17:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727890486; cv=none; b=lg5E1IdeTgVe1gJniogHP3yUUS7wp2mC8hp1DfEkxoTP5rQyXL5y+kJBYxTns7DIWDIuinYASXRt54MBaqqzWROcjHXhR7n+eFJSFyCqiW9PMk+vjBxj6gFPVwY2EsRqdPF6B9vtczyuAIQFF+3PD+vKCcqf5ghGlpC8Q/+IX+o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727890486; c=relaxed/simple;
-	bh=UDF0Ot2Gn1pXG+DxULTeJYGNEZUw++55M4ayrj9HmDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=BvJIvwkg9cC3pngMVMImVj4TGB1lzLE7kipUYmst8IvFW7XEtMYZNkkHQGqvl8le5TE07VBm307zJ29uISFxr2D3KvmNygQAFILnX8NpGI57JvtvT7KbJrwVCxHzSE3T01iOeB0uq4K9a0R1lCgSpPLaRJXbD++aHl/1f+foqwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TSbfIxR6; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF7D1D1510
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 17:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727890959; cv=fail; b=j5LtiBEiOP8jg1IswWgFAy2g9goV5CLViJrTtFBbvUVlYCdvm+V1kVgH38j2qQTT3CRheaj/S0yuvzJ2dQxAgn0vRzmOMdDbDCm0irnqapHVNzYCpTToBgyIQ9Zlw15sIp3WnUnXUCmqH13Ucn6JmnA8tMRnQkMmSwWJbVsjKhc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727890959; c=relaxed/simple;
+	bh=BQLpEblP/DwhaEkRKjEat6HguhqwXBxu46IVQRVPVBA=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=BNfiwyaHc06HLWRJpbChe+NAnICYzqC4bChJv0jU3VEejUDBR0k4iXsqWOVAcIEijat8m+MDpTHyWMKcxvBfn+WdZIGGNl44Rqj9pqQUYxX0mlEvYktRvvUoPlKwl7mVVgT2Y+lEgwKKBgvHrJnpJuMbU787zKQrtiqOaZkTy4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CHxKblEe; arc=fail smtp.client-ip=40.107.243.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSbfIxR6"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4585e25f42bso68381691cf.2
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 10:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727890484; x=1728495284; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lce+O4QgD9HDkDtMS7iA2RN59W1hoY4ZGmk5prbPGD0=;
-        b=TSbfIxR6G+h+HT197/R4U7tt0TdcMDMWs3/9JBn5VZZteqO/kxb7xv77DsFsdPQbbM
-         a3rZRN+ixGuSFy59fAKNDH57YjZcMykEqISRF1M9af0q5CIVgXwFuA0ypDRfRxZb7dxq
-         NDb5NJ9j0NRf7wNGSnTTPmq4gS8Dq9h1Lh1NUvjr5bsjUvl+LPR+ey/4WH45gvQCnhhb
-         R3RzmpbDdkqc/DalcXILRfHjTYDUVyHYrZ7b+wTPMv9eZRSH7wA0GNUYP8FTRdDncgWA
-         2DCf04je5NowfvCVnzTqxXdmZzSpbpo9Rc3AWrfT4K2hAlZ49vPsJQOqZJLWaXvKo6Cq
-         SU5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727890484; x=1728495284;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lce+O4QgD9HDkDtMS7iA2RN59W1hoY4ZGmk5prbPGD0=;
-        b=sYJagUdBaAPp+B46AV0peZZBmsV3psNQdHlgVlD9rz6UpT1otj3JHONX0DC4bIQzSg
-         MaxnZfUZc00SJ3tadjt7k5oBj9lV/GIK911lS3P48iDy8OAgj7Ao1Y+9nv4HGJE2/WpP
-         1ht5RJkHdbsvMX3CMnYiuZz62QNmtwvmEtcEAfBqkjIpFyYWnUIt5GF8JgOnJXK0OdjO
-         SKin+o4zZ8FhDoYuZqUENMbmaqD4BarISK/pQpyP6sFGvaYsxPKZwvYlWxeblI3ypVfj
-         Ypk4yBXaZD0qDhB+FZuwHydncEIaI8qgvsEc8JQxQIQNFDPGsoAD/yXT1vLOMWtJRku0
-         jJ+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWpGlKpNuWWipYvYjcWcjfun5P6uGx8QUVA/AYMEZFKVRak88FhmxEXXgAq6RSjQHyI+qxHicpM3nppug==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyqPC9siQ484cuQPebeKfYtZD6IUJpx/swNG8PNVlkuuzFtgMqQ
-	6tTY8vU9T5jkPKbXYOWvUA1pf9xMUE6PR0zcVrxrSja9AK0AgH2fvh9kRhcD6dHItr6oDSGHme0
-	aa99Qd+om9C93AwFXsiDx9+eFLNM=
-X-Google-Smtp-Source: AGHT+IFM9A2s+pwE+IHbT52666EpyuP/sbkDeRnW7/cWZKgOQFzlWVlaKKSvXVqNP5mVUrTT0emIWNkqlrXO67LGB3Q=
-X-Received: by 2002:a05:6214:41a0:b0:6cb:3a7b:96b9 with SMTP id
- 6a1803df08f44-6cb81a05676mr47423046d6.15.1727890483575; Wed, 02 Oct 2024
- 10:34:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CHxKblEe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PXdUTf9tcjAopr2R4E4cNQ+y0UQoCMNrTV+/u1yV+HTWKz2/+O8sY9+V2TfHiHXwyO2/pp8kXlpyc83bzPeNfomVjtJFnDlnhzfTTXQBL/iqBc3q1t1o2r7qprn0iXO0fqWIHUtA5t+p04gKOgwWGIGxV/Yb+LcF+7S/MlsA9ndnj3RmvlGffSG9LUFEILFc6yzcumtb1fKoR4AL6zl5MFOeFNGv2BQjLjWYNSiL3gM9OnsZwNalpQvawDr+lGXQBM2YX6nPi69YQxU/chSG0IdiEQEwk7P3NNaJfLqO92hYzraDbyH6E/xcFGLUSE66eo8buIa1eOnA4AUY1tul1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xSYGsYySsaTN8osn4qJe3rNF3nypnyYnKz0TdxknT4Y=;
+ b=JsfgooVlQ9y5n7KUSoR82g0wYkQX+R98Ma4OIVj7h/l8uEQnRlAXhKeJAeKbGVhaJaDayyXYRgnbZ9IfWE1eCFQd5hTeysowULpJBivPqjGS3Sl6FDqgS3KquA7yu1ZNNWN8WrBB1QgO7UBgoELYwcZ1hRRJb2I/7rUJ9NX/LpTflRBUJVNJYedZ+Zu/FQmmDUpypaMShQtaDzttsaaFMeLjGrG+LAFZ5sZQwvnFGTbwVfQFLrTsylicm041BJGV0xMrdDq5sdzwG9MwIS7FPKWWKko+s0srx2DleBZv9wx4Zzx5cHfBw2LyTst3g5RruPuOSkpsjoOHv3dupctJvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xSYGsYySsaTN8osn4qJe3rNF3nypnyYnKz0TdxknT4Y=;
+ b=CHxKblEeDhtZRdSXUsUoasIFJ+XTxQQ0l1L8HFzTt8yTJdVLNGLEVtaersyC6zxlmL+pbo3PUNjNgcOzf78U0SnfjyNetkLw56AywDdqjtHq8AC4dWLiC+CnOBT0S9rMgb1D0bdl+NcpSl0YluL1tFscs4jK2UQ3go61Rfd2CaI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM8PR12MB5431.namprd12.prod.outlook.com (2603:10b6:8:34::8) by
+ DS7PR12MB6046.namprd12.prod.outlook.com (2603:10b6:8:85::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8005.27; Wed, 2 Oct 2024 17:42:34 +0000
+Received: from DM8PR12MB5431.namprd12.prod.outlook.com
+ ([fe80::6cd6:bbdf:298b:7d20]) by DM8PR12MB5431.namprd12.prod.outlook.com
+ ([fe80::6cd6:bbdf:298b:7d20%6]) with mapi id 15.20.8026.016; Wed, 2 Oct 2024
+ 17:42:31 +0000
+Message-ID: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
+Date: Wed, 2 Oct 2024 13:42:29 -0400
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Harry Wentland <harry.wentland@amd.com>
+Subject: [REGRESSION] usb: acpi: add device link between tunneled USB3 device
+ and USB4 Host Interface
+To: linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com
+Cc: regressions@lists.linux.dev,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+ mika.westerberg@linux.intel.com, Raju.Rangoju@amd.com, Sanath.S@amd.com,
+ Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0035.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:86::6) To DM8PR12MB5431.namprd12.prod.outlook.com
+ (2603:10b6:8:34::8)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsOPwuoNOqSMmAvWO2Fz4TEmPnjFj-b7iF+XFRu1h7-+Dg@mail.gmail.com>
-In-Reply-To: <CABXGCsOPwuoNOqSMmAvWO2Fz4TEmPnjFj-b7iF+XFRu1h7-+Dg@mail.gmail.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Wed, 2 Oct 2024 22:34:32 +0500
-Message-ID: <CABXGCsOw5_9o1rCweNd6i+P_R3TqaJbMLqEXqRO1NfZAVGyqOg@mail.gmail.com>
-Subject: Re: 6.12/BUG: KASAN: slab-use-after-free in m_next at fs/proc/task_mmu.c:187
-To: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR12MB5431:EE_|DS7PR12MB6046:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0c45ca4-b857-414f-00dd-08dce3099763
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N29nMis3ZGc2bWJha1YzeGtnZ3lvb1ZxU2FwU3FTR2tTNWd3OW5MSm5pZjNq?=
+ =?utf-8?B?Y2RrenY5MGUxQm55TEdiU1RyQlRRYVdCZkFjQ1hmQXZOTjcwc0dJa255K0Ix?=
+ =?utf-8?B?SDd0VFRiSE40SDdLNSthRk9Wd1VDTUtZcHdsTEFzMmFsVk9ZbVE1QkdncVI1?=
+ =?utf-8?B?NUhRU2NJdWRsT3BJSFpmNFpSYXVSWjZ6VU1OVWRLWE4yZFlsZU9GVldpKzFV?=
+ =?utf-8?B?cmdvTjBVTkRaNmJNWDhuZHkzTXBXOFVRWTZCbFE5UjNrQS9qTWVoVjlwTkNV?=
+ =?utf-8?B?NTl2Y1ZCdHdjcVZxanRnbE81bEVsQW9RTnB6YmdWNEJkcDVCbHVONlNzc2Zj?=
+ =?utf-8?B?V3kvZ25nQ3hPc2haVXRCaVh2OHlQSEpOUjJJVzdZaDZNc1pxTmVyMnlud1p4?=
+ =?utf-8?B?UkhncjlML0xCTTRQUThEbEFWNktvVlRTdzh4YkF0WU9uQW14a2FZRkhHOVgw?=
+ =?utf-8?B?YnZCUTR1cXp3dmMwcmJkTWw5VlU3b052YzZMUWdHdHJzMWhoK1hvTXV3eXkx?=
+ =?utf-8?B?QzkvSmpZNE0wT1BSZUJjVVhVdk9FN3JvMGlsZForRmtFSlB0aDkvUEk4MHVz?=
+ =?utf-8?B?dFlienVaWmhqaHkvdEVuZ1FJS1BaRUtNSmE3WURRQVRnZDlPT1pncVBLWFdD?=
+ =?utf-8?B?U0xTVUN1NTZpclc3WlpZSG5OdlM3bU5zZ0loSWwzdnNDMGsxb1JrVkxrN0xu?=
+ =?utf-8?B?TmtHTmZ5b3VudThhNk5VUkZBMngxQWh4bVRFSDllVmQzMUtDRG9ibWNnY0VE?=
+ =?utf-8?B?NFAvVnNJcXd6NVRST3crRHdEa0VqVEh1ZUVVVEFKdDVzZUZldG1zVnFUb1Ix?=
+ =?utf-8?B?Vi9VNjFWeDFhWWtRU2MvaGI3MzVlMVJKbGpJWEdPQ2JNRnZhdlRyZlB3eXdM?=
+ =?utf-8?B?VnRIU0JzTGt5R2YyOVdYUjJpNVZWd09yeDd3UDBiZnJoYVgzTVBHcXE5Nkx1?=
+ =?utf-8?B?dFpTMlNVT3JRcVNIbklkVDRGMnVLUkkyakhiSTlZM3FjR0QvUFQvVytWMEk3?=
+ =?utf-8?B?dGZVTzFBSjVjZmViR1RFZG9UelNoRGFSUDVXVWhPSVN0QVlHcVNQVmRqTDd5?=
+ =?utf-8?B?UFJWUHl1VnA1dDBmR1luNHZLcDZYK0lqVW5CL3hJak1nNVF1TVVJZE9KVXdu?=
+ =?utf-8?B?S1dVajh1RHYvckR3NFBWdVBZZXJjT2VwZ2k1a0MwTzBTVTJJdzZhQXVVTGFB?=
+ =?utf-8?B?MXkwR1o3V2IzWUJLMDhxR05SK3htS3B2cm5Wc2hMcnZVY3orcHpSNDk2WkdC?=
+ =?utf-8?B?SUw3ZU9wODkwS1U0bXB6cDhJcUFaWnpSMm1lSm9GVkpjdzVaYjJvTjZma0ND?=
+ =?utf-8?B?U0ZGMkRVL1ZmQjFPZGpnNUlzbDhFOC9XVmFIUVVqdHIzZVdQSTg5LzViVVp5?=
+ =?utf-8?B?SW0rRjB4NkNJalJnTVNGNnY4bGxBMmJxUkErNHBuOG1vb21mc1dWdTJmTlZF?=
+ =?utf-8?B?bTcyUk82R2tFSlZ1NHprZ1VnQnRSZ0t0MDEwYmpWMVNGcGNnbHo2NEhCRHVw?=
+ =?utf-8?B?SW5Sc21TTEs3THZBTWwxelFqZEYwRzhuT1BrYnZQWlJtSjlyL2ZLSTlFVEM3?=
+ =?utf-8?B?enZYamtzUmxITkxuOXhUbDM3blp0c2NvVUYwRmJkK0xyaUVtc1hWWmxLN1VR?=
+ =?utf-8?Q?RRhjOlVI+1XdXkaPnyBbKsmY1yL+Mr8CFO1gnlQEuoQs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5431.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZmEvcnAyTTNmTVU0NFo2clN6VmxUbkNqR055T2kzam5IZ09pcEdtcmtkbkVD?=
+ =?utf-8?B?RXB4TEZYSVZGVjRNNEg3b3NadFpremg0VjhCbllaT3pMZXVmcXpZSW5Ia0lu?=
+ =?utf-8?B?QVJsZlhFVEQ3T2xnbzZ4aUxJZWFzTGRiOENLdkdkUDR3RWplYytWaWEzVE9k?=
+ =?utf-8?B?YU5JVkJ1M3hCZzUxS2NBR2NaSC9MdzBYcWI2RG51T1p4Z2J1UStvRjN0L25w?=
+ =?utf-8?B?K3pPdGRKcHI4emNQbjZLVExxV1FSWndQMm9Uc1NYQTM5akJzNmZwRk5zeUh2?=
+ =?utf-8?B?aGdFaVBNSlZNUW9UZWRpQmJwVzBKNEdrMHlyUkhVSjRva2ZqOEx3eUE2UDZ6?=
+ =?utf-8?B?WkM4R3F5dk5JSmEvd2hCTC9Na2dCdW0ySTIwYnZSYUdPRUwrSm55OVFrZUZW?=
+ =?utf-8?B?aTY3alNWeHZmUHE3UWNieWJGb1IzOWF6eGZ3WU8zZ29iY1Y4eXJPTUp5eGxO?=
+ =?utf-8?B?R3FhRlozTDM2d2ZKMVJYckdzS2cvcFJUcXN1dlp6RnVpaFNpcHIrR2padWVL?=
+ =?utf-8?B?bXp2UUQrd1VNQWV2Rm5OYW1HbEtFMDhFOE5CS01zaloxUVIzTkZlVU85L0lG?=
+ =?utf-8?B?dm9vUkpRaUpkTHBhb2xUS2R1WDlYZklGdlhNUWxxc2RxWkw0Y3p3SzhKOUpt?=
+ =?utf-8?B?RUtWaTY0ZXhlUFMvY2pDMXpISFpoMk9Ka1hPa1h5c2hHS0dEMUc2ckZRclVB?=
+ =?utf-8?B?dVVHci9ENHpsUjZpUU1rdkh4akF2cG5sNEpTM1VtTXNkdml6ZE1xUWU2Njlo?=
+ =?utf-8?B?S1lxeFA2SDczdnJaQXVIU1RKS3YzSERSVlkzS3RqcGwwUzVXNzFjVVhwbEwr?=
+ =?utf-8?B?V0dhZzBsbjR1QmFjTVRBdUYxWERkOG9TbUdaV2pRUVVEL2UxY2FqNU1IWE1q?=
+ =?utf-8?B?Q2VXbGNrbVVLYk9IWDMyV01NWHFQaTJMRGp3Z0ZHc29zUnpHK2NPSXVRVzRv?=
+ =?utf-8?B?bytydnRYTTlNUm1xWUJ2NGZRUi9GaC8yRUJ4MnBsZkcrZk1ieU5qcVBFOFcw?=
+ =?utf-8?B?QUt6azgxdXpuWHlmRThVb3pVVkxNSExGYlhOYW1NWVRVd1lZbmV0YlEvYk9W?=
+ =?utf-8?B?WHZPMEw1WVdRRFpwTWxYS09HZHEySXlMdXRUM2J1QmFtYUlRVU9Ib3AxNXZZ?=
+ =?utf-8?B?RkNaQnBiRlFXbUoyQnBxa1dyejk4T3R2eXg0SjFhR2hpaXBtVXZncU84aVRR?=
+ =?utf-8?B?RC84MWJRN2tKTmVPeW1NRlZ2TWFWYmM3akV3UG9hdi9DTXV4eklwZEp0eUNX?=
+ =?utf-8?B?REhENzQ1dmpxcG5LU1YyVi9HYnFZdU54d1M5N0FNNnpnS0UwSmpIQ1dpVFZD?=
+ =?utf-8?B?aE00b2ozclVyODdjN0hKVStNeldtYWhxTk1SeXA0V0ljdTlJbm5UUUtvMnRj?=
+ =?utf-8?B?TnVDTGFxb3A0RHRkRC9nTDVKTEoxa0EwUHF5cUZzUjBPbWtMNTExVzZieEl3?=
+ =?utf-8?B?dFl4bUdnQjVweUdQUnJpbEJDNU5oclJJRXpVdnV5MVNVQklBL1I0dHM2UzRE?=
+ =?utf-8?B?Z0JoTlJtOWlNVm02WVJYNXN4bkRycktHQU9CMGk2Znk2RDNYWUxkQ1VuNXg0?=
+ =?utf-8?B?bEYzL0kvQ1RqUm40VlA2dmEyWjErazdUV3lsLzlUdmh6Q044VEtBbURCYkJi?=
+ =?utf-8?B?U1BEbHA1OHUrNzhrbFRhRlYwZW9sZUNvKzVxQnZVMGh6Wk1UMnVHVmJnMXlH?=
+ =?utf-8?B?UW5vOGZrZDNVa2xSaDQxL01LNlhQcUZoVEYwTFU3WUwvR0hlZllGeUtTQU5Q?=
+ =?utf-8?B?VDlLMDhFZkVjQ2lMQ1djdjJTQVNZb3lyQ2ordm03cHJ1SDdCRThwQzNvOXRa?=
+ =?utf-8?B?RVN1T2NNWnhtelFVcTZBbnJpL042ZlJFM2xSRkZIVXNuVzBqNDA3R00zNG5i?=
+ =?utf-8?B?eFMva3Q1VENoTjhMdnRGWVpzaFJsRVhuaDgyQTBmR3pFdUFpdGVIemhhQVdr?=
+ =?utf-8?B?OWtITHprQmU1S2JxRml3Wk1LRHVFajhOSXd2eEtvT05uWTJSNDIwWHlFaGtB?=
+ =?utf-8?B?RHh6cjNvTURSR3hLN0JQMm9MQitHUWJ4YW9TdnVuWkFVS3Jjdkl1Q0hjc0VJ?=
+ =?utf-8?B?V3hXeUhNa3NmQUJ2WGxyU08rMWZIa3VVd2tNTGFHYktrejVRZWx4dTRqbjFI?=
+ =?utf-8?Q?T+g3YaNTdTsqVSTIC1h/y2cf6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0c45ca4-b857-414f-00dd-08dce3099763
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5431.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 17:42:31.5446
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6ghJZiPBjlTZzEzUjnHBPnBWB3ZCthg7+E7ppmXeVgHMka7dXB5a/lsZgjs17BLa3+2BFXkyht1SMRu5IWoimA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6046
 
-On Wed, Sep 25, 2024 at 3:28=E2=80=AFAM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> Hi,
-> I am testing kernel snapshots on Fedora Rawhide and Today with build
-> on commit de5cb0dcb74c I saw for the first time "KASAN:
-> slab-use-after-free in m_next+0x13b".
-> Unfortunately it is not clear what triggered this problem because it
-> happened after 21 hour uptime.
->
-> Full trace looks like:
-> input: Noble FoKus Mystique (AVRCP) as /devices/virtual/input/input26
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KASAN: slab-use-after-free in m_next+0x13b/0x170
-> Read of size 8 at addr ffff8885609b40f0 by task htop/3847
->
-> CPU: 14 UID: 1000 PID: 3847 Comm: htop Tainted: G        W    L
-> -------  ---  6.12.0-0.rc0.20240923gitde5cb0dcb74c.9.fc42.x86_64+debug
-> #1
-> Tainted: [W]=3DWARN, [L]=3DSOFTLOCKUP
-> Hardware name: ASUS System Product Name/ROG STRIX B650E-I GAMING WIFI,
-> BIOS 3040 09/12/2024
-> Call Trace:
->  <TASK>
->  dump_stack_lvl+0x84/0xd0
->  ? m_next+0x13b/0x170
->  print_report+0x174/0x505
->  ? m_next+0x13b/0x170
->  ? __virt_addr_valid+0x231/0x420
->  ? m_next+0x13b/0x170
->  kasan_report+0xab/0x180
->  ? m_next+0x13b/0x170
->  m_next+0x13b/0x170
->  seq_read_iter+0x8e5/0x1130
->  seq_read+0x2b4/0x3c0
->  ? __pfx_seq_read+0x10/0x10
->  ? inode_security+0x54/0xf0
->  ? rw_verify_area+0x3b2/0x5e0
->  vfs_read+0x165/0xa20
->  ? __pfx_vfs_read+0x10/0x10
->  ? ktime_get_coarse_real_ts64+0x41/0xd0
->  ? local_clock_noinstr+0xd/0x100
->  ? __pfx_lock_release+0x10/0x10
->  ksys_read+0xfb/0x1d0
->  ? __pfx_ksys_read+0x10/0x10
->  ? ktime_get_coarse_real_ts64+0x41/0xd0
->  do_syscall_64+0x97/0x190
->  ? __lock_acquire+0xdcd/0x62c0
->  ? __pfx___lock_acquire+0x10/0x10
->  ? __pfx___lock_acquire+0x10/0x10
->  ? __pfx___lock_acquire+0x10/0x10
->  ? audit_filter_inodes.part.0+0x12d/0x220
->  ? local_clock_noinstr+0xd/0x100
->  ? __pfx_lock_release+0x10/0x10
->  ? rcu_is_watching+0x12/0xc0
->  ? kfree+0x27c/0x4d0
->  ? audit_reset_context+0x8c5/0xee0
->  ? lockdep_hardirqs_on_prepare+0x171/0x400
->  ? do_syscall_64+0xa3/0x190
->  ? lockdep_hardirqs_on+0x7c/0x100
->  ? do_syscall_64+0xa3/0x190
->  ? do_syscall_64+0xa3/0x190
->  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> RIP: 0033:0x7f4190dcac36
-> Code: 89 df e8 2d c1 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 15
-> 83 e2 39 83 fa 08 75 0d e8 32 ff ff ff 66 90 48 8b 45 10 0f 05 <48> 8b
-> 5d f8 c9 c3 0f 1f 40 00 f3 0f 1e fa 55 48 89 e5 48 83 ec 08
-> RSP: 002b:00007ffcde82b690 EFLAGS: 00000202 ORIG_RAX: 0000000000000000
-> RAX: ffffffffffffffda RBX: 00007f4190ce3740 RCX: 00007f4190dcac36
-> RDX: 0000000000000400 RSI: 000055bf5e823a20 RDI: 0000000000000005
-> RBP: 00007ffcde82b6a0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000202 R12: 00007f4190f44fd0
-> R13: 00007f4190f44e80 R14: 000055bf5e823e20 R15: 000055bf5ecc9160
->  </TASK>
->
-> Allocated by task 176289:
->  kasan_save_stack+0x30/0x50
->  kasan_save_track+0x14/0x30
->  __kasan_slab_alloc+0x6e/0x70
->  kmem_cache_alloc_noprof+0x15a/0x3d0
->  vm_area_dup+0x23/0x190
->  __split_vma+0x137/0xd40
->  vms_gather_munmap_vmas+0x29d/0xfc0
->  mmap_region+0x35a/0x1f50
->  do_mmap+0x8e7/0x1020
->  vm_mmap_pgoff+0x178/0x2f0
->  __do_fast_syscall_32+0x86/0x110
->  do_fast_syscall_32+0x32/0x80
->  sysret32_from_system_call+0x0/0x4a
->
-> Freed by task 0:
->  kasan_save_stack+0x30/0x50
->  kasan_save_track+0x14/0x30
->  kasan_save_free_info+0x3b/0x70
->  __kasan_slab_free+0x37/0x50
->  kmem_cache_free+0x1a7/0x5a0
->  rcu_do_batch+0x3fd/0x1120
->  rcu_core+0x636/0x9b0
->  handle_softirqs+0x1e9/0x8d0
->  __irq_exit_rcu+0xbb/0x1c0
->  irq_exit_rcu+0xe/0x30
->  sysvec_apic_timer_interrupt+0xa1/0xd0
->  asm_sysvec_apic_timer_interrupt+0x1a/0x20
->
-> Last potentially related work creation:
->  kasan_save_stack+0x30/0x50
->  __kasan_record_aux_stack+0x8e/0xa0
->  __call_rcu_common.constprop.0+0xf4/0x10d0
->  vma_complete+0x720/0x10b0
->  commit_merge+0x42a/0x1310
->  vma_expand+0x313/0xad0
->  vma_merge_new_range+0x2cd/0xec0
->  mmap_region+0x432/0x1f50
->  do_mmap+0x8e7/0x1020
->  vm_mmap_pgoff+0x178/0x2f0
->  __do_fast_syscall_32+0x86/0x110
->  do_fast_syscall_32+0x32/0x80
->  sysret32_from_system_call+0x0/0x4a
->
-> The buggy address belongs to the object at ffff8885609b40f0
->  which belongs to the cache vm_area_struct of size 176
-> The buggy address is located 0 bytes inside of
->  freed 176-byte region [ffff8885609b40f0, ffff8885609b41a0)
->
-> The buggy address belongs to the physical page:
-> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5609=
-b4
-> head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-> memcg:ffff88814d36d001
-> flags: 0x17ffffc0000040(head|node=3D0|zone=3D2|lastcpupid=3D0x1fffff)
-> page_type: f5(slab)
-> raw: 0017ffffc0000040 ffff888108113d40 dead000000000100 dead000000000122
-> raw: 0000000000000000 0000000000220022 00000001f5000000 ffff88814d36d001
-> head: 0017ffffc0000040 ffff888108113d40 dead000000000100 dead000000000122
-> head: 0000000000000000 0000000000220022 00000001f5000000 ffff88814d36d001
-> head: 0017ffffc0000001 ffffea0015826d01 ffffffffffffffff 0000000000000000
-> head: 0000000000000002 0000000000000000 00000000ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->  ffff8885609b3f80: 00 00 00 00 00 00 00 00 00 00 00 00task_mmu 00 00 00 0=
-0
->  ffff8885609b4000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >ffff8885609b4080: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fa fb
->                                                              ^
->  ffff8885609b4100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff8885609b4180: fb fb fb fb fc fc fc fc fc fc fc fc 00 00 00 00
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Disabling lock debugging due to kernel taint
->
-> > sh /usr/src/kernels/(uname -r)/scripts/faddr2line /lib/debug/lib/module=
-s/(uname -r)/vmlinux m_next+0x13b
-> m_next+0x13b/0x170:
-> proc_get_vma at fs/proc/task_mmu.c:136
-> (inlined by) m_next at fs/proc/task_mmu.c:187
->
-> > cat -n /usr/src/debug/kernel-6.11-8833-gde5cb0dcb74c/linux-6.12.0-0.rc0=
-.20240923gitde5cb0dcb74c.9.fc42.x86_64/fs/proc/task_mmu.c | sed -n '182,192=
- p'
->    182 {
->    183 if (*ppos =3D=3D -2UL) {
->    184 *ppos =3D -1UL;
->    185 return NULL;
->    186 }
->    187 return proc_get_vma(m->private, ppos);
->    188 }
->    189
->    190 static void m_stop(struct seq_file *m, void *v)
->    191 {
->    192 struct proc_maps_private *priv =3D m->private;
->
-> > git blame fs/proc/task_mmu.c -L 182,192
-> Blaming lines: 100% (11/11), done.
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 182) {
-> c4c84f06285e4 (Matthew Wilcox (Oracle) 2022-09-06 19:48:57 +0000 183)
->  if (*ppos =3D=3D -2UL) {
-> c4c84f06285e4 (Matthew Wilcox (Oracle) 2022-09-06 19:48:57 +0000 184)
->          *ppos =3D -1UL;
-> c4c84f06285e4 (Matthew Wilcox (Oracle) 2022-09-06 19:48:57 +0000 185)
->          return NULL;
-> c4c84f06285e4 (Matthew Wilcox (Oracle) 2022-09-06 19:48:57 +0000 186)   }
-> c4c84f06285e4 (Matthew Wilcox (Oracle) 2022-09-06 19:48:57 +0000 187)
->  return proc_get_vma(m->private, ppos);
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 188) }
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 189)
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 190)
-> static void m_stop(struct seq_file *m, void *v)
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 191) {
-> a6198797cc3fd (Matt Mackall            2008-02-04 22:29:03 -0800 192)
->  struct proc_maps_private *priv =3D m->private;
->
-> Hmm this line hasn't changed for two years.
->
-> Machine spec: https://linux-hardware.org/?probe=3D323b76ce48
-> I attached below full kernel log and build config.
->
-> Can anyone figure out what happened or should we wait for the second
-> manifestation of this issue?
->
+I was checking out the 6.12 rc1 (through drm-next) kernel and found
+my system hung at boot. No meaningful message showed on the kernel
+boot screen.
 
-Finally I spotted that this issue is caused by the Steam client.
-And usually happens after downloading game updates.
-Looks like Steam client runs some post update scripts which cause
-slab-use-after-free in m_next.
+A bisect revealed the culprit to be
 
-Git bisect found the first bad commit:
-commit f8d112a4e657c65c888e6b8a8435ef61a66e4ab8 (HEAD)
-Author: Liam R. Howlett <Liam.Howlett@Oracle.com>
-Date:   Fri Aug 30 00:00:54 2024 -0400
+commit f1bfb4a6fed64de1771b43a76631942279851744 (HEAD)
+Author: Mathias Nyman <mathias.nyman@linux.intel.com>
+Date:   Fri Aug 30 18:26:29 2024 +0300
 
-    mm/mmap: avoid zeroing vma tree in mmap_region()
+    usb: acpi: add device link between tunneled USB3 device and USB4 Host Interface
 
-    Instead of zeroing the vma tree and then overwriting the area, let the
-    area be overwritten and then clean up the gathered vmas using
-    vms_complete_munmap_vmas().
+A revert of this single patch "fixes" the issue and I can boot again.
+    
+The system in question is a Thinkpad T14 with a Ryzen 7 PRO 6850U CPU.
+It's running Arch Linux but I doubt that's of consequence.
 
-    To ensure locking is downgraded correctly, the mm is set regardless of
-    MAP_FIXED or not (NULL vma).
+lspci output:
+    https://gist.github.com/hwentland/59aef63d9b742b7b64d2604aae9792e0
+acpidump:
+    https://gist.github.com/hwentland/4824afc8d712c3d600be5c291f7f1089
 
-    If a driver is mapping over an existing vma, then clear the ptes before
-    the call_mmap() invocation.  This is done using the vms_clean_up_area()
-    helper.  If there is a close vm_ops, that must also be called to ensure
-    any cleanup is done before mapping over the area.  This also means that
-    calling open has been added to the abort of an unmap operation, for now=
-.
+Mario suggested I try modprobe.blacklist=xhci-hcd but that did nothing.
+Another suggestion to do usbcore.nousb lets me boot to the desktop
+on a kernel with the faulty patch, without USB functionality, obviously.
 
-    Since vm_ops->open() and vm_ops->close() are not always undo each other
-    (state cleanup may exist in ->close() that is lost forever), the code
-    cannot be left in this way, but that change has been isolated to anothe=
-r
-    commit to make this point very obvious for traceability.
+I'd be happy to try any patches, provide more data, or run experiments.
 
-    Temporarily keep track of the number of pages that will be removed and
-    reduce the charged amount.
-
-    This also drops the validate_mm() call in the vma_expand() function.  I=
-t
-    is necessary to drop the validate as it would fail since the mm map_cou=
-nt
-    would be incorrect during a vma expansion, prior to the cleanup from
-    vms_complete_munmap_vmas().
-
-    Clean up the error handing of the vms_gather_munmap_vmas() by calling t=
-he
-    verification within the function.
-
-    Link: https://lkml.kernel.org/r/20240830040101.822209-15-Liam.Howlett@o=
-racle.com
-    Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-    Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-    Cc: Bert Karwatzki <spasswolf@web.de>
-    Cc: Jeff Xu <jeffxu@chromium.org>
-    Cc: Jiri Olsa <olsajiri@gmail.com>
-    Cc: Kees Cook <kees@kernel.org>
-    Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-    Cc: Mark Brown <broonie@kernel.org>
-    Cc: Matthew Wilcox <willy@infradead.org>
-    Cc: "Paul E. McKenney" <paulmck@kernel.org>
-    Cc: Paul Moore <paul@paul-moore.com>
-    Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-    Cc: Suren Baghdasaryan <surenb@google.com>
-    Cc: Vlastimil Babka <vbabka@suse.cz>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-
- mm/mmap.c | 57 +++++++++++++++++++++++++++------------------------------
- mm/vma.c  | 54 ++++++++++++++++++++++++++++++++++++++++++------------
- mm/vma.h  | 22 ++++++++++++++++------
- 3 files changed, 85 insertions(+), 48 deletions(-)
-
---=20
-Best Regards,
-Mike Gavrilov.
+Thanks,
+Harry
