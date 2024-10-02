@@ -1,59 +1,33 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCA184A36
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 22:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DF9DDD2;
+	Wed,  2 Oct 2024 22:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727908629; cv=none; b=qgMUIkv+AUCoqNfbJynexgrD8wrUM0JtlfBT00S6G7svYUHViIJFCzSDZJMP7xg3n1I612y+EyTmHIrwEHUElpojd3mnMctaCIq2VvxXBpeN0PujHBPZooB4au/AbRFYHwX0OPMzfHNHd7BIRLv1XkhL93Jc7mKN2lIbnwOs06I=
+	t=1727909263; cv=none; b=Bma/MENQFSGWbew43boEf4xLj9LfVTrkqkX1CEcTY6ozXzGTip9AVROO8By+0WuMYx9hvzEJsxdW4ciSpaLVYiVJRF2KrmQBQqZwmesJ0O+ZP+wx4Ix+03RWS8QPwjqTIKtzGv8Ba69z5xSqCfyb9TkR+OMIau+YLX1t/pyO418=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727908629; c=relaxed/simple;
-	bh=YG/WzHKAh+OGPuvTSKg0BMXn+1+sA+cJiGs3wG406yY=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:References:Subject:
-	 In-Reply-To:Content-Type; b=qF3KuL1VGNo8eA08Fij+zdl7EMLLF1ZYX4NJgltZOo5v6dVjKOPUnT8JKgphsFMWCIKIfEMcDAAFcnyqKZv9MWu7LNwqDrMpFZKuYG5NZWXYc2s678Y5wqFKtLuo8LyioVHhb94Nf+9eMvggTnxj4CqLAzzyObWcBfKMHc9UcO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFLQV1ID; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727909263; c=relaxed/simple;
+	bh=M5M2hKrU2v2SP1cbiBEkklptQK8AknDAgduCYJQ/gyg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zx2fzdkVnoPVxq60kl6bD0CY9+wttASCZ/EdqEWM6uDAiTfJc2/5FUDqYm81ngLtzLAUk9OUZbYIQiDXrFt/2J7sO/jfGLEV2X+OJ0Tf8NV1GeegCD9aSFGxTzpbNeTn6qHAJHnlJcNNJ32BwG/h1dSY6vWQHVPP/ORVw05t8Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMl6vg6L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFLQV1ID"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53988c54ec8so297332e87.0
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 15:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727908626; x=1728513426; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:subject:content-language
-         :references:cc:to:from:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ePHA9DQSUv2xWAl3S70jyFHw9nZzSBBRS5FM3MDw++M=;
-        b=KFLQV1IDIIPVYdUC/yhppGOYqRDXqb/AdY8AWG7DFSJXqXj3Xh5G2HYDapt25Qbrii
-         uxEpiC3yLXwHPUsJTLUhTWzmaMyzWdU7En3drKlZr99cAuaP0UTRV5MugD9gFeMAGU7U
-         77Rv9LBOSASVr8PmdG2jyrdMFFDTKHbng34XJuUgp23dQPfn20Mt45/vVOKKpvI9cJkE
-         WOt/wIlkfW7g8l7Uqq+ULwDTnPS8V7N2fm1HTsUXiXAjV5MyGWKHGZwwHJJ11Q5dSyxu
-         5JamjhbOflZ5Hoj3QfpnhRU0rN85HPYxOgHeW8g6nfl7yRSS1F5Chuj8r8FJ82hGVLxP
-         FovA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727908626; x=1728513426;
-        h=content-transfer-encoding:in-reply-to:subject:content-language
-         :references:cc:to:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ePHA9DQSUv2xWAl3S70jyFHw9nZzSBBRS5FM3MDw++M=;
-        b=ARCylzW39EcfQi7cpSxXmr/KUm0vjctMB0sw8znP37g93fOMzQCuSHfxEDWdn3G/x9
-         9Oq4zOdfxO9x1154ueZBrNgYJKv+L9NLbNBEj21CTVX/YCAh/SMA4Zcr+vaZm6ARCHsf
-         k0NQrOompDdxH+9my2qxkzIrnnn16QLxpbgDLjIZT+aRu1p5lIQXa4lIcgUAP8VID4kl
-         v1NR+U8q52J73c4TKHZYVM1Q9LFiM4yWXd3xmCkSHu9G+hn+e5Fprl+VaZ1pKkFcyC8w
-         EJOdJWVlHl945O97+DyrC/nLx3komdrGBf46wkTv92MkdbbGnTd5X7ooev6CNMeqkqvY
-         B0Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjpkQ60nY6nzmDPxj+kHZ+fEmfzvy2YyV/OPkcT3eCzhFym7Lp2l09QirLdsFOuzxGmB28MacOmGTmlQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxbkw3abe3Rs9kh8M2j2vNq/q53IsffDW+xzX4QGPeyFeZPmezq
-	HMLzcBaULvg6FA5jHI4MoYRLCpM89JtItXV7r8xP02NbuS1IPTz5
-X-Google-Smtp-Source: AGHT+IG30+krPqTeRIPJo2EP9YM4g29RWB25SsJKbD6FuU2IoZH7FY54xsfrSn8DWnblxC7D9juxSQ==
-X-Received: by 2002:a05:6512:ad2:b0:536:a4e1:5fa2 with SMTP id 2adb3069b0e04-539a067bbe5mr2466025e87.26.1727908625605;
-        Wed, 02 Oct 2024 15:37:05 -0700 (PDT)
-Received: from [10.130.138.83] ([178.255.149.133])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539a8256807sm5574e87.71.2024.10.02.15.37.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2024 15:37:05 -0700 (PDT)
-Message-ID: <adbc3511-7c52-4262-b8aa-121ee0b51ea3@gmail.com>
-Date: Wed, 2 Oct 2024 18:36:55 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMl6vg6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BF5C4CEC2;
+	Wed,  2 Oct 2024 22:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727909263;
+	bh=M5M2hKrU2v2SP1cbiBEkklptQK8AknDAgduCYJQ/gyg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kMl6vg6LYHuT562uq16eluCGYFdOUu0Dsm7pGWksUa7rQsXoSaiFOrUNXEDa/cZCT
+	 DecelHODAQDNNgAMnTGPUfIpPDaAVBBWkI4FZBDPlNwdXEg2xVajsu0JoDTMNc00bW
+	 BtmuV0fj2tCyCdIfLBI7aEggv6e7fgO69eWtEfhVGdzl4RmCZoTJBOxZNe72fHa89x
+	 EdRT0fgrg+uFmTB9M7emAYPVxsuI+3N1w6n4egz2xb4B4U6W/Ia7pM+ILuJcdtHBM+
+	 ihzmK4xSATpFXCoqiBj2R7Tx3hK7Y6zUgIXqUD/ZIfE1Ldopwfc4VX0dw4fkIltV5I
+	 ttlrETlaiUsmw==
+Message-ID: <07f85f4a-71c7-465b-b38c-127a02721423@kernel.org>
+Date: Thu, 3 Oct 2024 07:47:41 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,86 +35,115 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Jerry Luo <jerryluo225@gmail.com>
-To: Takashi Iwai <tiwai@suse.de>, Christoffer Sandberg <cs@tuxedo.de>
-Cc: christian@heusel.eu, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, perex@perex.cz, regressions@lists.linux.dev,
- wse@tuxedocomputers.com
-References: <87jzfbh5tu.wl-tiwai@suse.de>
- <ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
- <87jzetk2l0.wl-tiwai@suse.de> <b38b5947482a5ca4b55e0ddb908c2f34@tuxedo.de>
- <87seteli51.wl-tiwai@suse.de>
- <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
+Subject: Re: libahci driver and power switching HDD on newer kernels
+To: Niklas Cassel <cassel@kernel.org>, W <linuxcdeveloper@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-ide@vger.kernel.org
+References: <7882faa8-d5ec-4868-b158-0b942b669cc0@gmail.com>
+ <c4f1c690-6e97-44de-985f-dc9eadd18d23@leemhuis.info>
+ <c7880a6f-04d4-4572-9255-1575f6668b4e@kernel.org>
+ <a0c34406-3bb3-4880-9513-0876aacd4de6@gmail.com> <Zv25MQWh-1yYAcVC@ryzen.lan>
+From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-In-Reply-To: <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Organization: Western Digital Research
+In-Reply-To: <Zv25MQWh-1yYAcVC@ryzen.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 10/2/24 5:28 PM, Jerry Luo wrote:
-> On 10/2/24 10:00 AM, Takashi Iwai wrote:
->> On Wed, 02 Oct 2024 10:21:22 +0200,
->> Christoffer Sandberg wrote:
+On 10/3/24 06:20, Niklas Cassel wrote:
+> On Tue, Sep 24, 2024 at 12:42:10PM +0200, W wrote:
 >>>
->>>
->>> On 30.9.2024 09:44, Takashi Iwai wrote:
->>>> On Mon, 23 Sep 2024 21:37:42 +0200,
->>>> Jerry Luo wrote:
->>>>>
->>>>> Hi Takashi,
->>>>>
->>>>> On Mon, 16 Sep 2024 19:22:05 +0200,
->>>>>
->>>>> Takashi Iwai wrote:
->>>>>
->>>>>      Could you give alsa-info.sh output from both working and
->>>>> non-working
->>>>>      cases?  Run the script with --no-upload option and attach the
->>>>> outputs.
->>>>>
->>>>>      thanks,
->>>>>
->>>>>      Takashi
->>>>>
->>>>> Issue now reappear, output from alsa-info.sh are attached. If they
->>>>> are still
->>>>> needed.
->>>> Thanks.  The obvious difference seems to be the assignment of two DACs
->>>> 0x10 and 0x11 for headphone and speaker outputs.
->>>>
->>>> Christoffer, how are those on your machines?
->>> I attached alsa-info from the Sirius Gen2 device.
->>>
->>> Comparing the working/nonworking of Jerry, yeah, the assignment of
->>> 0x10 and 0x11 looks switched around. I don't see what difference this
->>> would make. Also, node 0x22 has "bass speaker" controls in the
->>> non-working version.
->>>
->>> Comparing the Sirius Gen2 alsa-info with Jerrys, to me it looks like
->>> the non-working version corresponds to our working version.
->>>
->>> I would expect the non-working version to happen all the time though
->>> with regards to the "bass speaker" controls. Why would this only
->>> happen sometimes?
->> Thanks!  The assignment of DACs depend on the pins and topology, so it
->> can be a bit sensitive.
+>>> Given that you had 6.4.12 working OK, it is likely some commit that introduced a
+>>> regression. If you can git bisect it, we will have a better idea how to remove
+>>> the regression.
 >>
->> Now looking more closely at both outputs, I wonder how the commit
->> breaks pang14.  Maybe it has a PCI SSID 2782:12c5 (or 12c3) while the
->> codec SSID is 2782:12b3?  If so, the patch below should fix.
+>> Please take a look at bugzilla report:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=219296 - there are the details.
 >>
->> Could you guys try it and verify whether it fixes for Pangolin and
->> doesn't break Sirius?
+>> I'm wondering what is the better way for communication - here on mailing
+>> list or put the comments in bugzilla ticket?
+>> Probably here will be better idea...
 >>
+>> W
 >>
->> Takashi
->>
-> It does seems to fix the issue on Pangolin. It might worth mention 
-> that the headphone output will have the same issue when the speaker is 
-> not working. Now they are all good. Thanks!
->
->
-> Jerry
->
-Okay, after some testing I can only conclude that the headphone is not 
-consistent in term of the issue. Now it works fine regardless of the patch.
+> 
+> Hello W,
+> 
+> Could you please try the following patch,
+> and see if it helps:
+> 
+> 
+> From dba01b7d68fffc26f3abf3252296082311a767a0 Mon Sep 17 00:00:00 2001
+> From: Niklas Cassel <cassel@kernel.org>
+> Date: Wed, 2 Oct 2024 21:40:41 +0200
+> Subject: [PATCH] ata: libata: do not spin down disk on PM event freeze
+> 
+> Currently, ata_eh_handle_port_suspend() will return early if
+> ATA_PFLAG_PM_PENDING is not set, or if the PM event has flag
+> PM_EVENT_RESUME set.
+> 
+> This means that the following PM callbacks:
+> .suspend = ata_port_pm_suspend,
+> .freeze = ata_port_pm_freeze,
+> .poweroff = ata_port_pm_poweroff,
+> .runtime_suspend = ata_port_runtime_suspend,
+> will actually make ata_eh_handle_port_suspend() perform some work.
+> 
+> ata_eh_handle_port_suspend() will spin down the disks (by calling
+> ata_dev_power_set_standby()), regardless of the PM event.
+> 
+> Documentation/driver-api/pm/devices.rst, section "Entering Hibernation",
+> explicitly mentions that .freeze() does not have to be put the device in
+> a low-power state, and actually recommends not doing so. Thus, let's not
+> spin down the disk for the .freeze() callback. (The disk will instead be
+> spun down during the succeeding .poweroff() callback.)
+> 
+> Fixes: aa3998dbeb3a ("ata: libata-scsi: Disable scsi device manage_system_start_stop")
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/ata/libata-eh.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+> index 3f0144e7dc80..45a0d9af2d54 100644
+> --- a/drivers/ata/libata-eh.c
+> +++ b/drivers/ata/libata-eh.c
+> @@ -4099,10 +4099,20 @@ static void ata_eh_handle_port_suspend(struct ata_port *ap)
+>  
+>         WARN_ON(ap->pflags & ATA_PFLAG_SUSPENDED);
+>  
+> -       /* Set all devices attached to the port in standby mode */
+> -       ata_for_each_link(link, ap, HOST_FIRST) {
+> -               ata_for_each_dev(dev, link, ENABLED)
+> -                       ata_dev_power_set_standby(dev);
+> +       /*
+> +        * We will reach this point for all of the PM events:
+> +        * PM_EVENT_SUSPEND (if runtime pm, PM_EVENT_AUTO will also be set)
+> +        * PM_EVENT_FREEZE, and PM_EVENT_HIBERNATE.
+> +        *
+> +        * We do not want to perform disk spin down for PM_EVENT_FREEZE.
+> +        * (Spin down will be performed by the succeeding PM_EVENT_HIBERNATE.)
+> +        */
+> +       if (!(ap->pm_mesg.event & PM_EVENT_FREEZE)) {
+
+This feels odd: not doing anything to the drive for PM_EVENT_FREEZE will still
+endup freezing the port, which will later cause a reset. And we still endup
+calling the port suspend op and ata_acpi_set_state(), which seems to be doing
+nothing for freeze...
+
+So I wonder if a simpler approach would not be to simply remove the
+ata_port_pm_freeze() method entirely and do nothing for freeze events ?
+
+> +               /* Set all devices attached to the port in standby mode */
+> +               ata_for_each_link(link, ap, HOST_FIRST) {
+> +                       ata_for_each_dev(dev, link, ENABLED)
+> +                               ata_dev_power_set_standby(dev);
+> +               }
+>         }
+>  
+>         /*
+
+
+-- 
+Damien Le Moal
+Western Digital Research
