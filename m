@@ -1,142 +1,174 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188621791B
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 21:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567019580A
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 21:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727904494; cv=none; b=a3beKu7qU5HZwgWlhes6XI9Y9KcFPa0aegHrYqwRrSCpqeAuWg1EG/iiFM9HmjUqG+5swx+BdHFar4VeCqujOdqNUthtnLhE+91P1USfRBdLmECvdmghkEQwdXhW58h0vuESs4iezgj3ZExb4cPsymBvC4gM1hMoMgqYUCcD60A=
+	t=1727905185; cv=none; b=TOFZFwSYbdxzXNoOOXtgGNGeGWXVzD/AKEt5m0Z14O1CsKA4oK4UHOuIKgmhA8vDVr66nAf5KLzOLztND7i2xDSG5zo1Z5HNAVNmQdZl0/nOMFfDDL/ES5S5LZ97+m7j5rWjEAO2SREbqjvKV3B2+ysARJ2EjrCRxHR/iaEufI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727904494; c=relaxed/simple;
-	bh=Ek5xP7tDojZIjV5cpwXc270GU/QwGv4towDbDwIlbzk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=WH8h/zyRAzDOF7Q/wWB5IJ2MW8HintxEVD3tsbuhpRfdYlez4LrGdkEuW9kAoiAu7w/Dw13rkqXOvlGqvJTS7jOC8ZGl5fhuzeOrr0No9p50Pov9oinEnG/t8CxGruJUYZCXBeMhuo5ldh1IVPVAK2zx+O4yIkJ5/4672vjUWe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dsVO4cF2; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727905185; c=relaxed/simple;
+	bh=nh3EDzNFEQKMQ54bK8QeYQTFHlMFuPDMgqScS0vlh4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KcbAJiFNq6To96T5pMnD6e9ZllK1AMx1n9VCrwPysX8RRihuGM3KpFelOxqTJg9S97KZHafDOFGYdDVPZE/2i4B9OIUvdG9KDd1OzkR5+cpmT7d6xI2ztgisPxkU918OHMS/dnqd1TStdvlVmKRUnOAM+zLMl/aodYXkYn2DdIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=vicR9Yo8; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsVO4cF2"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a367da1f8cso1184395ab.2
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 14:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727904492; x=1728509292; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UZ7/ZmdrYH4n2tD9mSFZRsbwEz9ztlvm2F1fv4gyLGI=;
-        b=dsVO4cF2BwJn0uCkKkOP6ERnoW5tpyd3PK749HTZPSjsRiA7+/ukSv54bchV1QCNDA
-         9yJ/Kkh+wqaNtwB/LaxfiN3/wtajN4q3Xi89Nyks5CLJqi306dD6Bq/gF0L51rG3CQh7
-         f+tT0I3YKH4Y5f6sZs92GsBBCA29XbFNngJpNrLSGfw0tLI4Doy0A4G4BOxkFdsBU+7N
-         oZkhDQvicRNVVXdQlkStWNM976LdHmw8wq19PBUlUJQnJJUeQ43ox82iTEIs43mLYuNA
-         bsdi31c7Mm88NExmp9w9FVToSUOanSxXYtiWzOK52jJYo60WLkwExdxK5b7VCkNuFL9/
-         Iaqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727904492; x=1728509292;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UZ7/ZmdrYH4n2tD9mSFZRsbwEz9ztlvm2F1fv4gyLGI=;
-        b=ID35rteafmzq8hV959oXQa4Evk2HlzlsiyLK9fX2fdztB2tEHhmhPgjyIgUcL878WQ
-         PLMJ/HxMSRZ/CKiLXwVtB4GqWmR43e1DVKw6X/tPKTsj7sUefFmubvJBeqn1qBNGibyg
-         7JdbWBfEiVXRkF4RZiKDdKnjrt6n4TMisxIq25Al7o871iFTG6+Dq27bj7cYsfqdIne2
-         4w78JToi+5+Ru5wksfr+g8VRA951BBoObo6WGmD02v9AJBu+Cdl36AIVKLD4YFGrV0kT
-         biOdNawkTWoJMBlNklGsXsf04n6YCZFAxF+Us+Fo8++hV07o4NIRZ3kLcBlsOL25XGgB
-         EgVg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9dftKNn8i6flvOYYj34kAGEHdfckxNjTHTg24+FyoW5Y2U7PximxFxeD94YIpgkfeQBGyb+P2L6X5Mw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxEuxt2GbeCZa/LqvKmtJgRRjX+MjYIw3zijtcTBoyPq4RMGNN8
-	OaR9+JgX7gfuLpGsRJhVBjdVxHP9O+ujTnGKaiHmeUw5eFonz9k6
-X-Google-Smtp-Source: AGHT+IFtTdeOoDQGQrpybtl8PD/Lm2as5ATYsxj1tCZUA6ygEz2H8Aix3rjgqiyYIhj1dX+xWEn/+g==
-X-Received: by 2002:a05:6e02:154c:b0:3a0:a4dd:683b with SMTP id e9e14a558f8ab-3a3659194cemr41174355ab.8.1727904492099;
-        Wed, 02 Oct 2024 14:28:12 -0700 (PDT)
-Received: from [10.130.138.83] ([149.88.104.8])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e6db29427bsm10434846a12.15.2024.10.02.14.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2024 14:28:11 -0700 (PDT)
-Message-ID: <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
-Date: Wed, 2 Oct 2024 17:28:05 -0400
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="vicR9Yo8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1727905178; x=1728509978; i=christian@heusel.eu;
+	bh=/V6fiQgVoMCWMmxF32MZFQSs3bjrYimtBF0SDOOIe4E=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=vicR9Yo8cjlkPIs7Fh2hDNhqgcAfDxdj1Tpe73J3ZKTUc4KibGMI1D9BfGEcpIww
+	 gxYIU56WqsTyIATFLWZTY0/SdL2TiSY2p9C5Bgj9qETCtO36Z0KiKgTcZsiaABdIj
+	 9hHxwx+SZFnO9zcyqrjqry3E1w86VVCx4vyGdWIlteftxY7X4CimUZkxdVUE17tZy
+	 xBKSMarEZFoV2GjdHSuGqESkERnec6BbSMjLakpRw4FjLmg/zP8F6v9YpQO008N/l
+	 /CJcfOKC3s0gTKkQkUeudRrnUUFdWdaSM+vnCRWrsANPHNRMOsrbT2pcD1rGze3vY
+	 boJy2KIQYb9PDwCwfg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([93.196.149.59]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MJn8J-1sc6aA0Vuz-00LHlg; Wed, 02 Oct 2024 22:57:07 +0200
+Date: Wed, 2 Oct 2024 22:57:06 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Message-ID: <7ea8c528-6ee8-41f2-9dff-701579464fda@heusel.eu>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+ <808b3dae-27ec-4e45-bf29-50fce318411d@heusel.eu>
+ <57da0956-db6e-47c2-b489-404795c3c6bf@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Takashi Iwai <tiwai@suse.de>, Christoffer Sandberg <cs@tuxedo.de>
-Cc: christian@heusel.eu, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, perex@perex.cz, regressions@lists.linux.dev,
- wse@tuxedocomputers.com
-References: <87jzfbh5tu.wl-tiwai@suse.de>
- <ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
- <87jzetk2l0.wl-tiwai@suse.de> <b38b5947482a5ca4b55e0ddb908c2f34@tuxedo.de>
- <87seteli51.wl-tiwai@suse.de>
-Content-Language: en-US
-From: Jerry Luo <jerryluo225@gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-In-Reply-To: <87seteli51.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 10/2/24 10:00 AM, Takashi Iwai wrote:
-> On Wed, 02 Oct 2024 10:21:22 +0200,
-> Christoffer Sandberg wrote:
->>
->>
->> On 30.9.2024 09:44, Takashi Iwai wrote:
->>> On Mon, 23 Sep 2024 21:37:42 +0200,
->>> Jerry Luo wrote:
->>>>
->>>> Hi Takashi,
->>>>
->>>> On Mon, 16 Sep 2024 19:22:05 +0200,
->>>>
->>>> Takashi Iwai wrote:
->>>>
->>>>      Could you give alsa-info.sh output from both working and
->>>> non-working
->>>>      cases?  Run the script with --no-upload option and attach the
->>>> outputs.
->>>>
->>>>      thanks,
->>>>
->>>>      Takashi
->>>>
->>>> Issue now reappear, output from alsa-info.sh are attached. If they
->>>> are still
->>>> needed.
->>> Thanks.  The obvious difference seems to be the assignment of two DACs
->>> 0x10 and 0x11 for headphone and speaker outputs.
->>>
->>> Christoffer, how are those on your machines?
->> I attached alsa-info from the Sirius Gen2 device.
->>
->> Comparing the working/nonworking of Jerry, yeah, the assignment of
->> 0x10 and 0x11 looks switched around. I don't see what difference this
->> would make. Also, node 0x22 has "bass speaker" controls in the
->> non-working version.
->>
->> Comparing the Sirius Gen2 alsa-info with Jerrys, to me it looks like
->> the non-working version corresponds to our working version.
->>
->> I would expect the non-working version to happen all the time though
->> with regards to the "bass speaker" controls. Why would this only
->> happen sometimes?
-> Thanks!  The assignment of DACs depend on the pins and topology, so it
-> can be a bit sensitive.
->
-> Now looking more closely at both outputs, I wonder how the commit
-> breaks pang14.  Maybe it has a PCI SSID 2782:12c5 (or 12c3) while the
-> codec SSID is 2782:12b3?  If so, the patch below should fix.
->
-> Could you guys try it and verify whether it fixes for Pangolin and
-> doesn't break Sirius?
->
->
-> Takashi
->
-It does seems to fix the issue on Pangolin. It might worth mention that 
-the headphone output will have the same issue when the speaker is not 
-working. Now they are all good. Thanks!
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="d6xghz24qxuth6il"
+Content-Disposition: inline
+In-Reply-To: <57da0956-db6e-47c2-b489-404795c3c6bf@leemhuis.info>
+X-Provags-ID: V03:K1:MXu68YFBzvUYdvteB/L9nEK1NKKPyVCYxc4Mb4asPvmWEsro6om
+ aNV7z4qzGbqpujRFf/iRpzgpKGhphkqe2VzcbuAIlhDhbEH+QhufbVP6SKaRghGlsCZbH/r
+ cdxc/YA5W5qbC0skNP+KqgqUv8Kjxisdb/3l+/nPM18w1oNN0tDahUGk4tTCZAa9RvMeDny
+ klRQtLuwpQ9oLJhEPA8uA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZplibJyvMrY=;2HBMpjAywT1q7R6rDTzs9Fmq+5s
+ 5Ke9F8mAwpRTrRLZ3hCDynTmZ8DjQQp1FglatqyZv28b8g1ssTgfZt0YD6nkAB49YBqyn34Ph
+ mZT8utMXIWU7U06hjykgkVkotrFDIvVjojpvM7quSl/++zZDLQqv/Q9lODDh0fgcgi0ukxEc5
+ bTeoyfkgV+ysmRjKtXkCBgiPXxKKRfLxQjdLpW5zLbEx4dzBCA+bzLNN19Ry7L0DQNwr4wCIr
+ 5339g1U+xjJ0OqKrPfu9Fs3jAQedMk61DHQfTRuHi/JctMvqU72IAhtsdw8vHpuKtqFNFalEa
+ c4dv0Nu5z1khqZ/Kndvso0kAqVFXT+pbP2K2NgIdbM8S2/gQSBxMQqyw12hJJv/4q7an545Cx
+ fZvTD+/J0JoS/e2TU3halGL6hT1wvGtMyx80TJvj88eNANPGXiouVPkFpNO0oF+t2XY+9On63
+ SwrrT7h7nfPNKJJubS41VWyB7SDmXcmehZgfsDVS7POLIzwJXslutf3TrSqJMV7APJa93fFHG
+ P4cEpXPOw3i1CXEMTAN/cVN4rqqMeXEiDRGd2fsn4Zbwhdn4yoC5/aIzMw2Ry06XnQW5IO0tZ
+ ZqRFeuowASAHn+krm+bmgCebmAYGfQ9mri2bj1wJ1q7ZX1SvBBGb8pnvl8/fZeBDCpLsHG1ZJ
+ BpHEh5aRjA7y8BCwJe1n/eJhoipMRu2U3PjIEmzljjKSRMcmN2MhTXVHozVEPFfclleiCbjjp
+ QV7unHsQAtyiE45BUpICuQU6B8EwR6p/g==
 
 
-Jerry
+--d6xghz24qxuth6il
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hey Thorsten,
+
+On 24/10/02 10:13PM, Thorsten Leemhuis wrote:
+> On 02.10.24 20:57, Christian Heusel wrote:
+> > On 24/03/09 11:18AM, Thorsten Leemhuis wrote:
+> >> Hi! This is the start of a thread I'll use for updating minor properti=
+es
+> >> of regressions tracked by regzbot. Consider telling your mailer to
+> >> ignore this thread, the replies are unlikely to be of relevance for yo=
+u,
+> >> but done here to ensure a public paper trail.
+> >=20
+> > #regzbot report: https://lore.kernel.org/all/cf45e722-144f-4d06-8dd9-2f=
+7f54283fbc@amd.com
+> > #regzbot introduced: f1bfb4a6fed64de1771b43a76631942279851744
+> > #regzbot title: usb/acpi: boot hang on Thinkpad T14
+>=20
+> FWIW, it nice to get some help, but if you want to do me a favor,
+> please wait for at least 24 hours before adding reported issues to the
+> tracking.
+
+Will do for any future reports!
+
+> Often it will turn out that the regression is know already and a fix
+> already pending or maybe even mainlined already. And then somebody has
+> to tell regzbot about the fix as well -- which in the end likely will
+> fall to me, which right due to the lack of funding and available time
+> might means that the load gets so high that I might have to give up
+> with regression tracking completely.
+
+Oh no, that sounds like I'm putting quite a burden on you, which is
+definitely not what I want to do! I also try to stay on top of the
+things that I have added to regzbot, of course with varying success.
+
+If you're interested we could maybe synchronize on how to make this a
+collaborative effort (via mail or some conferencetool) so it instead
+makes your life a bit easier. This might especially make sense due to
+the lack of funding and time you noted above. If this is not something
+you're interested in this is also fine for me :)
+
+> > #regzbot report: https://lore.kernel.org/all/D4LHHUNLG79Y.12PI0X6BEHRHW=
+@mbosch.me
+> > #regzbot introduced: ee4cdf7ba857a894ad1650d6ab77669cbbfa329e
+>=20
+> This is likely such a case -- I even replied (which you might have seen)
+> and deliberately chose to not add the regression to the tracking,
+> because I suspect the fix is already pending. At some point in the not
+> to distant future it might make sense to add such issues to the tracking
+> nevertheless, but right now it makes things harder without any gain.
+
+Yes, this one is definitely on me, I missed that there already was a
+report added for this commit .. I tried to mark it as a duplicate in [a
+follow-up][0], so I hope this clears it for now. I'm also not too versed
+in the bit more advanced regzbot usage, so I still might make some
+mistakes that are quite obvious to you.
+
+> And don't worry, if this turns out to be a different issue after all,
+> then I would have added it to the tracking.
+
+I didn't fear it would go unnoticed, I just thought it would maybe take
+some time until you might get to it with the upcoming holiday in Germany
+and related work hours, but given your first paragraph regarding the
+funding situation I guess this also was built on wrong assumptions on my
+side.
+
+> Ciao, Thorsten
+
+Cheers, have a good one!
+
+    ~Chris
+
+[0]: https://lore.kernel.org/all/143da137-db62-4357-b342-594a86b9d156@heuse=
+l.eu
+
+--d6xghz24qxuth6il
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmb9s6IACgkQwEfU8yi1
+JYWg2hAAz3CURk+uirjkDFdsfucqBMg8tRl5LfkY1WQQeNjl86B/tYotTjrndgGh
+DyH8aCDeKMR3z14JZSCstPTZWg8VGKCTkWJVbw5aLLec/2PHL2zBCAB5o/cSFXbh
+qZXw4wbKf7bJDqxUDZ/kKZv2dWjGqMHmDfRLkzI1fObC2KZfSf1pLVe05LRh1VBu
+VHHhgEj+xxlEWwVIYMJ6JC17Mlr6QuQov7oJY4iGthcit4pQIajR8ajzAVVaAu8P
+EXi+eWOaPzIOidCKJOTqyFI+KCY/fNCa88lHw80KzykaYB2RNhvd9JO+kfdyCLMY
+PI6qs6Aqci5WDimc0FUoiGvL1z6fRlMy5K/66qcWGJYqG0VRp6TUg7tB+vCUYBZG
+5htN4J1FmFeXQz9Z2XmnXh9qIULP9ZbnRDTnM1/N3v4TlUHyZxEmPVjvXizsHsNV
+hTzOz07KghCvPwX+XSXwf5XT46kpqx2sNn61jILX6d7ZQW34zvPxoRD7BsiXNYMY
+O4btRqKDySnZ0zRsBCdnEGX6mh/x79XriSLnQKdAKAe3RlxvWMFdxJ8GoWpmhq9r
+srZ7CpxKgddmzPVSjkyVFu19wsCFobuWol66bejWuA0RpnMPpveRvK8uLMmQjCxM
+Zy/zitY/s0ZmpaFnkUehA9ZRDNLlb7jnUGdVmHKCdrXeadN2jMY=
+=ul6W
+-----END PGP SIGNATURE-----
+
+--d6xghz24qxuth6il--
