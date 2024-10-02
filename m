@@ -1,111 +1,124 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60846197A6C
-	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 09:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C05984D2C
+	for <regressions@lists.linux.dev>; Wed,  2 Oct 2024 10:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727860752; cv=none; b=szL9dRLp0KcCg0HnJh6y1cpAN3XbbNEjJar/oJ1CF4WFqtJmPKcsPcHIZAGgjve0KFksKcqE4C+n16yLfUvRcMSmiMS/Pl7bTxbL+6xg1ucvCwMMzL68QJxKjwaufkUOTrpOKJYLGIcMRrxs3VJ09tWGSf5DhsP/7smSOpldUGg=
+	t=1727866629; cv=none; b=rxZ5Zrw2WuhbFHNBdP0ix5RfwY2jEpTzpDEh57CYzTjSSdCMCxA8rd6QId3dfNs+fNuL3f67B/h9PbI+lfGpVuDuaVC9wBgC66LY114I+bYnIdaLPMjFu97QVmRAO27zVG9x2pcv3OYqvcnNkVsZARqqslw49OgdA7WywuvSMJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727860752; c=relaxed/simple;
-	bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QbH/B8nWmzz+O8hzz++EwnRAEqyx/KE8n9fFbEzVYKqVsJRvqMAHvoE0+SsGSJBwvPZ32rJ3jJXQQOK0JW8Yvx4SeK5ZVH/8wUK5XgMYc+GwtDiaVL0nOX7vusbzNQpEDKjbZnlRqY5ACIai2ZELvSetCnU7eza0AlJC7XOa7sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=tT5sgvhO; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1727866629; c=relaxed/simple;
+	bh=jFYP2U3afp97x/PWFZ/H2WQVejex0/N1NBYKjBA/0TI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=MwG3FXBAfRTkvt9KedhhZ7jfBtVSxf3pDFFsCe+fZOXct30P7HCSZik5PklLxfoxBkgnTGvDnyfhhPa/jsTdciYtcQlIxlUgeKC7MSWGZS7sO/ubEJnz0APqUA40z37aVCdVaI07YGTp7wUa8p1QN2Es6oWSq31KHGFMukF4TYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=tu8d8Yl2; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="tT5sgvhO"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42e6dbc8778so9530345e9.2
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 02:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1727860750; x=1728465550; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-        b=tT5sgvhOvrBZl2x6FaC1l3f20eIEdTMpxC4j2W25edjvu3JMCi0DfEg/w+e+DD3BUO
-         4GH5E2EUcutDs85ziy/9h+SHIpzpYNe/tQra/PFWgpnNjcY1tjRaZSXlzHeACmuYBfNf
-         WN7YKHhDGm/z+/lgOObDjKaRVcG8TCpSfncnk6AuEYpeOqIsDRxWNSWr7E+/IQ9QTssK
-         y0WMKnT+P/0UzmzWqbKaIrerHXWRD7YkwXa1TRrHEoJU7JU4OPf4u2sY9cBcSk4cwKYz
-         LsFvg0PMp483qPu3px+OpHeDbeSL/zgCtfnXjZ/ulO5WoVphP+U5gHUYvYzbK7mf+6VZ
-         sv1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727860750; x=1728465550;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jFPfAagBlJdQ9SyZKWMbHOeAJZ9ce6m+cLeMK6+fiFM=;
-        b=pCflEv4+0AK3TpBx0YATEU9IhNDpDA+7xquf5BHhlnNzLQjJoZnkXv05Fz9IKOBGbH
-         JAm/wakjVmTqjBUjdHmROwRmShB2HgMDcmaqpMoHSLkRwwg6O67002QYpXLQ3gvsqbdC
-         eB89QOPg/JtBH0hFjq2GGTASdiQalD/ej7PR43WgG7D478d9vPUuwLFfDCTNEpZyuht7
-         RWCSXhVGTDtNn07gVKV2KNC8+fWmws7fs69XpAr+g29wpJROsFtmX7qQJLuDc/w0uY9j
-         KeiUhfx83oBNTtj/CFX0WfeZFx5wtCGU+s1j6OZluNmFr69dIZ+66TUP71gII9/4kAiX
-         wkVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzK/O3a+7P7jhz8WwjBlQ7HKc+RUKe2MMUMdGRNmKrLvHdssE8GTP1Sd7Ne77YBEVCbktKUL/QqHe6QQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwgU1WddJqsUXhpkp1ATt18BDOPnOTVIHhCV3uLHGzH83Pg9Aw5
-	i3c5VKAEpkhZ+Acwfph2DjwvsF0xlafPA2RXav05zcC18+J4CCGTIx/M7xMUHXSWBZMA/iT8bqC
-	9
-X-Google-Smtp-Source: AGHT+IHWV7mV6w1yfuYNSbBDoDmOfkbxchm61Fu5e/nGx6AlXWl4Fno0/aWgzeJagffw9rTAISDAYw==
-X-Received: by 2002:a05:600c:5126:b0:42c:bfd6:9d2f with SMTP id 5b1f17b1804b1-42f777af1camr8361385e9.1.1727860749493;
-        Wed, 02 Oct 2024 02:19:09 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:a4f:301:4862:84b0:b69f:936b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f79d8d409sm13410225e9.1.2024.10.02.02.19.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2024 02:19:08 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="tu8d8Yl2"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <202409281331.1F04259@keescook>
-Date: Wed, 2 Oct 2024 11:18:57 +0200
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>,
- kent.overstreet@linux.dev,
- regressions@lists.linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- ardb@kernel.org,
- morbo@google.com
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; s=key1;
+	t=1727866623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jFYP2U3afp97x/PWFZ/H2WQVejex0/N1NBYKjBA/0TI=;
+	b=tu8d8Yl25Wq/4yoZQZc+zfXMOCkxc17oOOGd/397sm8iL4H/A0HyaiqfySlnOmNBIayS6R
+	753qM9vRYXGSJXizDXiVJxg2RKXmkLh5A3xs2shsR17VDOsT2ciN2yOjUuTf4lzuF2EGt0
+	EIiCeOelkA8501rhFHHbydkWVWQmEkd1mP24wiS0VjUO5BXevulJNlYS49jzxphmdVLge0
+	zvdkq6NyQhzR62eRKsdD+hvIXaaw3/Ky4tkX2Y9+3MjsOCWI8NF929+QhgLWG9LrsfUXNF
+	99MT/Wydk2XR2aEWDV4kz6oJ/mmNW5ydD8qMhSAOSpIEEE4cINQc8dnoJY1hMA==
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
-To: Kees Cook <kees@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 02 Oct 2024 03:56:55 -0700
+Message-Id: <D4L9LH0XT9OL.2RUPJNHCEX3O@kode54.net>
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Christopher Snowhill" <chris@kode54.net>
+To: "John Rowley" <lkml@johnrowley.me>, "Mario Limonciello"
+ <mario.limonciello@amd.com>, "Leo Li" <sunpeng.li@amd.com>, "Hamza Mahfooz"
+ <hamza.mahfooz@amd.com>
+Cc: "Harry Wentland" <harry.wentland@amd.com>, "Rodrigo Siqueira"
+ <Rodrigo.Siqueira@amd.com>, <amd-gfx@lists.freedesktop.org>,
+ <regressions@lists.linux.dev>
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+ <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+ <95c575a3-100c-4808-b451-b92f14598188@amd.com>
+ <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me>
+ <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
+ <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com>
+ <9c562132-64a0-41f5-80ad-8492d1039692@amd.com>
+ <3c0dfd3a-9549-4afa-94b6-80041f498436@johnrowley.me>
+ <25eed927-fe69-4005-8c0d-c5f3052e662e@amd.com>
+ <92af8678-2b45-409e-82d1-f273fe907a36@johnrowley.me>
+In-Reply-To: <92af8678-2b45-409e-82d1-f273fe907a36@johnrowley.me>
+X-Migadu-Flow: FLOW_OUT
 
-On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> [...]
->=20
-> Sorry, I've been out of commission with covid. Globally disabling this
-> macro for clang is not the right solution (way too big a hammer).
->=20
-> Until Bill has a fix, we can revert commit
-> 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
-> certain situations where 'counted_by' is in use.
+On Tue Oct 1, 2024 at 2:32 PM PDT, John Rowley wrote:
+> The attached patch seems to improve rendering performance a lot; animatio=
+ns and desktop performance are generally smoother again.
+>
+> But it doesn't seem 100%, e.g. if I let the laptop idle for 10 secs befor=
+e interacting with the touchpad, the desktop cursor seems to stick in-place=
+ for 100-200ms or so, before becoming responsive again.
+>
+> This 'sticking' problem doesn't seem to occur with PSR disabled.
+>
+> My testing isn't exactly scientifically sound I'm afraid, if there's a be=
+tter test or benchmark I can run, please let me know.
 
-I already encountered two other related __counted_by() issues [1][2]
-that are now being reverted. Would it be an option to disable it
-globally, but only for Clang < v19 (where it looks like it'll be fixed)?
+May want to also tell the list that you mis-applied the patch on the
+first go by misreading what it did and editing manually. I'm eager to
+hear whether the actual patch worked out better.
 
-Otherwise adding __counted_by() might be a slippery slope for a long
-time and the edge cases don't seem to be that rare anymore.
+>
+> On 01/10/2024 22:16, Mario Limonciello wrote:
+> > On 10/1/2024 16:14, John Rowley wrote:
+> >> Disabling PSR as per Leo's reply seems to have done the trick!
+> >>
+> >> Stock 6.12-rc1 (without revert): BROKEN
+> >>
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+state:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 6
+> >>
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+capability:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: yes
+> >>
+> >> With amdgpu.dcdebugmask=3D0x800: BROKEN
+> >>
+> >> With amdgpu.dcdebugmask=3D0x10: FIXED! Performance is as it was on 6.1=
+1.
+> >>
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+state:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 0
+> >>
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/psr_=
+capability:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+> >> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: no [0xffffffff]
+> >>
+> >> I have the older Framework 13 panel (BOE 0x0BCA, 2256x1504 @ 59.999 Hz=
+) so I assume PSR isn't supported according to Mario, yet psr_{state,capabi=
+lity} above seem to indicate otherwise?
+> >>
+> >
+> > PSR and Replay are two different things.=C2=A0 But from your above anal=
+ysis it does confirm it's a PSR issue.
+> >
+> > There's a patch that Hamza attached to https://gitlab.freedesktop.org/d=
+rm/amd/-/issues/3658.
+> >
+> > Can you try that?
+> >
+> > Thanks,
 
-Thanks,
-Thorsten
-
-[1] =
-https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com=
-/
-[2] =
-https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.de=
-v/=
