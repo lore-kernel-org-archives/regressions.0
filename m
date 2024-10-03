@@ -1,75 +1,182 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D78823C3
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 17:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727977169; cv=none; b=s8zbU/nwH+5HEiYA/NmktjjTfNg1rHy9a5959+HHvbES9YpUZYeMGc7+1nM1XUCx42X9fsnxEaVgyT0iNoh0njV8mbl3tEdJk/xA/Tft6qwQAdMk3MSz1DbrE+VBAR/B6+1FzkLOrPjpxTkB446AFmsAlCE5K3qZaTd+EZZH8WQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727977169; c=relaxed/simple;
-	bh=4gcWf4jFN6jrCh6nNeCwgD96JTVGXkEVYiys6wLLNlo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=CWMdys1Wk9spA9hEerc1q9KUoVsm6upC0S4C+Gq9u1a6rrB8yfxXR5sK9u9CG5fGDJOkuvDoOJC3M4ZG/uhod/6sojemgdaCBMItbu3p195gJXoxRDnu8b9dnH48B8vf9i2bu9KWYUAX/MiQdvRUPXsZBXvPAyB2TxkcfPceCvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qHCQDsCt; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC1238DD1
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 17:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727977789; cv=pass; b=cIqd0C6OVa31pN0dwP4sDHuhO12VcxrJ1a2dLCNqpgGWeLXnixBQTKOp+KL/yrkhIHZbd5pQyd5sEROnxSIER+UAbTAlRFF9s9lJtDGpHMMCG9salwH9W4loWJM1Y78oTh7HS9XjAuryG7MAM8COipurTZ46d5+bZjzpNqVdmgM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727977789; c=relaxed/simple;
+	bh=hR+e9OePYExvP7EAJ37urcVKISLWEHPPc8qnvYj/dC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YkUGVFQQPd8s6wJiUlkabL1mH3UWRAB955oayIR/cKbNDnkKQwvSsgDCPPHmIhNmba3L/b/3qaWVMW+fplSaXGA3kTKqr+k+YeyXFfQvuWq3VJQeN0fKfLVQWYbjwTk4ZtWbo3u14xlJkDG60pyTdX3wP44RjiSN4xFhabbPHkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hixontech.com; spf=pass smtp.mailfrom=hixontech.com; dkim=pass (1024-bit key) header.d=hixontech.com header.i=linux-kernel-bugs@hixontech.com header.b=DXKfSwHc; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hixontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hixontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qHCQDsCt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=4gcWf4jFN6jrCh6nNeCwgD96JTVGXkEVYiys6wLLNlo=; t=1727977168;
-	x=1728409168; b=qHCQDsCtqxGhVELHyvXUKDnfPgHPQAmrGVYd7Nwhh+kT7vllKC69+TpjBIQPw
-	+o4mn19kFT+drkwj8fgoICDNbbp7W3k7m0kP7txVD79epWE4DaWkFglr+4hFQxwif14FYF87+nsrW
-	jnA+aql5tkM/R1owqTG3Nt8lVV/ly7YCmong38gc5g9Oj9dN1r9iCPgBbPCGk++D+Sjtnfvn5sR9M
-	OqBN2jwL3XNXifbH7PLj4xhBtppaG/2a9CQXEWo+klC/oI8ji4VhHS+ahPYpwSHf4oaylgrxgWKbJ
-	KirqqB7vWjymduf28ccpB1OPdSVEcM8a+emYljZA3Ann4QHXAw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1swPnR-0005HO-O5; Thu, 03 Oct 2024 19:39:25 +0200
-Message-ID: <598eeba0-0656-4f98-a674-6121400111d4@leemhuis.info>
-Date: Thu, 3 Oct 2024 19:39:25 +0200
+	dkim=pass (1024-bit key) header.d=hixontech.com header.i=linux-kernel-bugs@hixontech.com header.b="DXKfSwHc"
+ARC-Seal: i=1; a=rsa-sha256; t=1727977769; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SM7zHObONjfOGxTVyBdB92QGHoZf8cIKyrR21kXVFsKgvLp8KZgdaJ204n9iKrRWcwnNLKH2PAhW4p6+TmaNVs7Kk1ajYHNpR6H0yZQrPMHlwcvUMR5LmdCjFXmC5oxHAXzPtfejLlfk7nZ5vElmWP2BhgMXNcudwRUrGb757a0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1727977769; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:Reply-To:References:Subject:Subject:To:To:Message-Id; 
+	bh=kkUScEqJNg9brIJOi0NUV5FRWLz61DIRBIQvF/UZTqQ=; 
+	b=U6MBgqV4UmI9ApNvWDdqkmPM5n0ZHoNSdvmB52icRBd7CrzOCM0PfWxIgYKZiwyt/D+coUrEWlLi2xGQMVxCK3EUPfyBCb00yB+dts4LOfeN0177b4QuV/qyDv03/qCmw4ROoNFh80/2X0oPZ98PQu/WVBF06HE74sZATYyuDjo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=hixontech.com;
+	spf=pass  smtp.mailfrom=linux-kernel-bugs@hixontech.com;
+	dmarc=pass header.from=<linux-kernel-bugs@hixontech.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1727977769;
+	s=zoho; d=hixontech.com; i=linux-kernel-bugs@hixontech.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:Reply-To:Reply-To:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id;
+	bh=kkUScEqJNg9brIJOi0NUV5FRWLz61DIRBIQvF/UZTqQ=;
+	b=DXKfSwHcOD7UIFp+KXqaKMtWuBC3eDoWY9R2L6t2Cdmomz8dNim8L9q7ca5b4Jtf
+	uoXUR6CImcZPS4EYNpV9Xv8GiA2kvyUJPXwqEN07MF6yn7vvnt15CH/N0fxLcV56G+F
+	uZdxuLvUHu1Oga/S8GqImd7IiMw5zTHTjQ8LPonQ=
+Received: by mx.zohomail.com with SMTPS id 1727977767705568.6452099080866;
+	Thu, 3 Oct 2024 10:49:27 -0700 (PDT)
+Message-ID: <58fac815-e630-4ece-9dba-18dc255a0d1b@hixontech.com>
+Date: Thu, 3 Oct 2024 11:49:25 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: [regression] AMD SFH Driver Causes Memory Errors / Page Faults /
+ btrfs on-disk corruption [Was: .../ btrfs going read-only]
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc: Jiri Kosina <jkosina@suse.com>, linux-input@vger.kernel.org,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ akshata.mukundshetty@amd.com, LKML <linux-kernel@vger.kernel.org>,
+ Skyler <skpu@pm.me>, Richard <hobbes1069@gmail.com>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>
+References: <90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info>
+ <3a9b2925-57fb-4139-8cf5-a761209c03cc@hixontech.com>
+ <056770ff-90e6-4140-b964-862a1503fa3b@leemhuis.info>
+From: Chris Hixon <linux-kernel-bugs@hixontech.com>
+Content-Language: en-US
+Reply-To: linux-kernel-bugs@hixontech.com
+In-Reply-To: <056770ff-90e6-4140-b964-862a1503fa3b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727977168;b043e459;
-X-HE-SMSGID: 1swPnR-0005HO-O5
 
 
+On 10/2/2024, 6:29:59 AM, "Linux regression tracking (Thorsten Leemhuis)" wrote:
+> [CCing Richard, who apparently faces the same problem according to a
+> recent comment in the bugzilla ticket mentioned earlier:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219331#c8
+> 
+> CCing Mario, who might be interested in this and is a good contact when
+> it comes to issues with AMD stuff like this.
+> 
+> CCing the Btrfs list as JFYI, as all three reporters afaics see Btrfs
+> misbehavior or corruptions due to this.
+> 
+> Considered to bring Linus in, but decided to wait a bit before doing so.]
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+This patch from Basavaraj Natikar seems to solve the issue for me:
 
-#regzbot report:
-https://lore.kernel.org/amd-gfx/925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me/
-#regzbot summary: drm: amdgpu: choppy GPU performance
+https://lore.kernel.org/linux-input/20241003160454.3017229-1-Basavaraj.Natikar@amd.com/
 
-#regzbot report:
-https://lore.kernel.org/lkml/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
-#regzbot summary: sched/fair: "Error: psi: inconsistent task state!" in log
+Tested-by: Chris Hixon <linux-kernel-bugs@hixontech.com>
 
-#regzbot report:
-https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/12160
-#regzbot fix: firmware/sysfb: Disable sysfb for firmware buffers with
-unknown parent
 
+My original report:
+
+https://lore.kernel.org/all/3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com/
+
+Reported-by: Chris Hixon <linux-kernel-bugs@hixontech.com>
+
+
+Thanks!
+
+> 
+> On 01.10.24 23:40, Chris Hixon wrote:
+>> On 10/1/2024, 12:56:49 PM, "Linux regression tracking (Thorsten Leemhuis)" wrote:
+> 
+>>> Basavaraj Natikar, I noticed a report about a regression in
+>>> bugzilla.kernel.org that appears to be caused by a change of yours:
+>>>
+>>> 2105e8e00da467 ("HID: amd_sfh: Improve boot time when SFH is available")
+>>> [v6.9-rc1]
+>>>
+>>> As many (most?) kernel developers don't keep an eye on the bug tracker,
+>>> I decided to write this mail. To quote from
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=219331 :
+>>>
+>>>> I am getting bad page map errors on kernel version 6.9 or newer.
+>>>> They always appear within a few minutes of the system being on, if
+>>>> not immediately upon booting. My system is a Dell Inspiron 7405.
+>> [...]
+>>>> [   23.234632] systemd-journald[611]: File /var/log/journal/a4e3170bc5be4f52a2080fb7b9f93cf0/user-1000.journal corrupted or uncleanly shut down, renaming and replacing.
+>>>> [   23.580724] rfkill: input handler enabled
+>>>> [   25.652067] rfkill: input handler disabled
+>>
+>>>> [   34.222362] pcie_mp2_amd 0000:03:00.7: Failed to discover, sensors not enabled is 0
+>>>> [   34.222379] pcie_mp2_amd 0000:03:00.7: amd_sfh_hid_client_init failed err -95
+>>
+>> No sensors detected - do we all have that in common?
+> 
+> Skyler, Richard?
+> 
+>>>> [...]
+>>> See the ticket for more details and the bisection result. Skyler, the
+>>> reporter (CCed), later also added:
+>>>
+>>>> Occasionally I will not get the usual bad page map error, but
+>>>> instead some BTRFS  errors followed by the file system going read-only.
+>>>
+>>> Note, we had and earlier regression caused by this change reported by
+>>> Chris Hixon that maybe was not solved completely:
+>>> https://lore.kernel.org/all/3b129b1f-8636-456a-80b4-0f6cce0eef63@hixontech.com/
+>>
+>> This looks like the same issue I reported.
+> 
+> And sounds a lot like what Richard sees, who also sees disk corruption
+> with Btrfs (see https://bugzilla.redhat.com/show_bug.cgi?id=2314331 ).
+> 
+>>> Chris Hixon: do you still encounter errors, or was your issue
+>>> resolved/vanished somehow?
+>>
+>> I still encounter errors with every kernel/patch I've tested. I've blacklisted 
+>> the amd_sfh module as a workaround, but when the module is inserted, a crash
+>> similar to those reported will happen soon after the (45 second?) 
+>> detection/initialization timeout. It seems to affect whatever part of the
+>> kernel next becomes active. I've had disk corruption as well, when BTRFS is
+>> affected by the memory corruption,
+> 
+> Skyler, did you see btrfs disk corruption as well, just like Chris and
+> Richard did?
+> 
+>> so I've ended up testing on a USB stick I
+>> can reformat if necessary. I haven't tested new patches/kernels in a while
+>> though. I'll get back to you after I've tried the latest mainline. Also note
+>> that I've tried Fedora Rawhide's debug kernel,
+> 
+> From what I see it seems all three of you are using Fedora. Wonder if
+> that is a coincidence.
+
+Note: I don't think it's a Fedora issue. I've had the problem on multiple
+distros, with any kernel >= 6.9 - anything with the "bad" commit.
+ 
+>> which has a ton of debugging
+>> options including KASAN, but nothing seems to point the finger at something
+>> originating in amd_sfh code. Is it possible the hardware itself (the mp2/sfh
+>> chip) is corrupting memory somehow after some misstep in
+>> initialization/de-initialization? Also if you look at my report, you'll see I
+>> have no devices/sensors detected by amd_sfh - I wonder if other reporters all
+>> have this in common? (noted in dmesg output above from another user)   
+> 
+> Given that Basavaraj Natikar never really addressed Chris earlier report
+> from months ago and the severeness of the problem I'd wonder if we
+> should revert the culprit to resolve this quickly, unless some proper
+> fix comes into sight soon. Sadly from a quick look that would require
+> multiple reverts afaics. :-/
+> 
+> Ciao, Thorsten
+> 
 
