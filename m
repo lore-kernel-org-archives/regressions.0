@@ -1,70 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA19F155330
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 11:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24E8174EFC
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 13:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727956045; cv=none; b=GadGjR1QnpB5XE2sBYwOyFmy6l4Wx+ejVu1NHaJ64ZsjQrS8QjeM5NiJKX4ky6HGnyV12Rx97cFpj/ycJljrfhPwwEOnSAIxGXFXWzn5McnTWAaqbZqjpbqLtYvG7tVMfrqbGkMjuEB0XwGRNthmSH3fHxrOH1RR5u7AP2ztT8s=
+	t=1727960887; cv=none; b=MHWHhRS0XBbv9rAeACcm7k1Hvo113XjX6Ne46Kw9khKi5EeBZEy+BTxv8Q/M+7qAm5zN9F8spQUlI9RByd1e9Rkp9FhfxTaFVeV3QaWuykuoxnMrgwxiV1zAqhIn5UcV0qzU8AA45/MxNKXFVnUZ7zzOkg9gJtggZRRjghPaelI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727956045; c=relaxed/simple;
-	bh=89kosPy/UOdAU7694xx7kgWt4LKl1ST3FmFSSuWRdJI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=ONw9PaCb5/KJsPcQSie136eF2JBVuMhnW56zTXfEz5mth3yyoFfXwY3ojz8LMzBIOWilkV2ioFDYh9UIWZpVyInsM5Yyi8pYW1YZPXDwhpjCvMlXeBtF2/agwJ5XwNmK91ZFrW6TLgCBQEMCob/+1YodMxmq8lpcXyAtrfrcxdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=S7/TdGwH; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1727960887; c=relaxed/simple;
+	bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=e7V/E9JLsKGgqewBIN3h1IDzw1k6qDIUQzy4LsQPMaamq3T1lLG4yShF+i5d+Tey9KcmUoq1p5fA9g4vK7tGQYfpLct9ZyWZA42uNIVV1RgPDY8r8eMseg6z20UVYnq0t7PVM+fBbNwcdmPhc3wILgn7lP4uPt2TVynxP2hUdLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=z4cIr2UF; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="S7/TdGwH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=89kosPy/UOdAU7694xx7kgWt4LKl1ST3FmFSSuWRdJI=; t=1727956043;
-	x=1728388043; b=S7/TdGwHsn2jLsp+KblkBLTlguzYgV1ZOvNzeolOtelRcyovdsKr2xJbNHrpL
-	q660nLCc0zWIJTqFcn+w6zvngLC8S/m3qnaMro2DWJtt6IJkhbpDOAkxlR9OqAMXu6/jRABRHPQF7
-	517U4EZxSxT3k+0Pbp3R1897GyIbdvOu5uSUV/xMojqmM0TATI5wfgYp41mRGyrm6gC9zyH88hBE0
-	L22S4w0ExM8n2B904Nk/HaQvwDkpVLLa+698BJi4iSs7bXZvotnAhlK3pqHFQX6EHPD12LMhm4gm0
-	OGi+BCl5XxDMhwJZFv2/DB47ymgGBw+ea1h6T4cBwWj02Bw0Ww==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1swKIi-0004Pe-8F; Thu, 03 Oct 2024 13:47:21 +0200
-Message-ID: <adb5c6fd-eb6f-4a93-8d86-dd29fd826c81@leemhuis.info>
-Date: Thu, 3 Oct 2024 13:47:19 +0200
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="z4cIr2UF"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37cc5ba03c6so67642f8f.1
+        for <regressions@lists.linux.dev>; Thu, 03 Oct 2024 06:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1727960884; x=1728565684; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
+        b=z4cIr2UFZLmfQ2ijIjWjrHDd6xQ0W2PmJOqHpHyRQjUve6NoTH/+dEyCq785qRdtDI
+         Q/yh+OlaAEc5wRoYY0s4LiQfmkUZ/q6yDEpJcumaP5ONaQ9IK8sU2EOBCHGczOzMKzrC
+         D4FfjceKnx5W8kPDAbThoXI9ucjTuH2a1BH5RbjYBtOptW8z0cWipfZkZr3prUwmUbAf
+         /zypPNXsI0QBB2/18L0A8WZS5kAVYKv3q0grewWcw77d3WztrbuJtrNy2bCbIAb0DBAw
+         Mq2qy/ePimmNCXPRuJ+Lg7958S0uWq9BQ9lzoMc8vL8tU3dlqCmvame8+P3W+CwFBw4x
+         SoVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727960884; x=1728565684;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
+        b=YvKvPKKII2v2Omie5T4BkZio91CShkxJXtkde7T31eUbyU7FxaM27Ls5aXdIKpCSvZ
+         Ead4uFMZBX5rNFKUBw7lnPqOPpIPFM1HMDCKpF1HLRQoN/I/R3Ittsk+W3gmk9xQg0Yj
+         S7Bu9QQHtsUH+UdQ9QckpAOz52FMvMfaS4RYYudu1cMT7I2ijcj0yJtX+ix0qfVL9ZOV
+         fOdKsRY7Uw227Ujg0H7oxV6FBV6pgnzMXpoTkLcs9gd7anIvoL6HGbFidZh529yB63fc
+         Khm41lEH1yHYdyqef8lfUcVdlVOwTdiajUFczAEZOp3F7gj8fYhrrdSXroyQ0kyXQ/hC
+         qixQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/v2ViyTqHW9Kp+B6cP9iwk5uB27GTkyZiqkgHxgpzZbYv7ODR7AzlP0ZmS1M/JUW4+CnpecZauWGT0Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwRe9GIKXVSSx9fhXnm74y2ES5J1s/ZrMBu8VVogvPULI+/z/O0
+	rJ3TbCgm0It6sLEc6e3zQ5Hq0tk73w2VWTBCjP7iToyTop+wWvB4Tg3UOHqgBa8=
+X-Google-Smtp-Source: AGHT+IGbzGlbswZSZv2eaP5enEwx9F4DDc2D16GFzfToew/HsmbM50cqjKCZ2M/OIQtHk7bhpgN5xg==
+X-Received: by 2002:a5d:5f82:0:b0:374:c92b:80a0 with SMTP id ffacd0b85a97d-37cfb8b6267mr2457441f8f.3.1727960884178;
+        Thu, 03 Oct 2024 06:08:04 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:a4f:301:1558:85f1:4dd0:3ea9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d082e6dfesm1235078f8f.117.2024.10.03.06.08.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2024 06:08:03 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1727956043;18e847fe;
-X-HE-SMSGID: 1swKIi-0004Pe-8F
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <Zv6BEO-1Y0oJ3krr@archlinux>
+Date: Thu, 3 Oct 2024 15:07:52 +0200
+Cc: Kees Cook <kees@kernel.org>,
+ kent.overstreet@linux.dev,
+ regressions@lists.linux.dev,
+ linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ ardb@kernel.org,
+ morbo@google.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux>
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+X-Mailer: Apple Mail (2.3776.700.51)
 
+On 3. Oct 2024, at 13:33, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+>> [...]
+>=20
+> This issue is now fixed on the llvm main branch:
+> =
+https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf76=
+9fc9a93e8a
 
+Thanks!
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Do you know if it also fixes the different sizes here:
+https://godbolt.org/z/vvK9PE1Yq
 
-#regzbot report:
-https://lore.kernel.org/all/20241001023402.3374-1-spasswolf@web.de/
-#regzbot introduced: f8d112a4e657c6
-#regzbot summary: mm/mmap: severe memory corruption
-error under these (rather rare) circumstances
+I ran out of disk space when compiling llvm :0
 
-#regzbot report:
-https://lore.kernel.org/linux-input/tbhy6xk4tjuza7rgsv55xss5woysyv4wlg46m6sxfq6y5nk7da@7hyl7cf5ehus/
-#regzbot fix: a3f9a74d210bf5
+> So presumably this will go into 19.1.2, not sure what this means for
+> distros that ship clang 18. Will they have to be notified to backport
+> this?
+>=20
+> Best Regards
+> Jan
