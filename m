@@ -1,130 +1,102 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974AF824BD
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 22:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3EB14F124
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 23:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727993106; cv=none; b=ot0DToBx6VWT4tdGSe4Su+t87X+/KGBNADkxBXr4SaSLRE3yfqjg0XLjVBlh7fGxj0ngPiYvISKjSjfGWGl5UbDNJ9zIgO+MC5vDMpPZpOv+WE0ZYLi+rBqBRX7ba5+dws7uMNOlUxCSkgQwosKVJjMI0292ZwqDavtUf7v/KBw=
+	t=1727997443; cv=none; b=aixOJ5I75xK3PxVU3RVOSzjGgEEpJM+yaLnbh+hwu6qlcMzVXrFNw+HtEdCpUziB951uSIy/ZUy7WPn578NqYo77qxucTcslMIFjsdPDwB1amZPoC1OUHuznHytIn4x/DUgknv5ZN6O9RfK21r216B8fceaOYj4SZIxqHDLbxR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727993106; c=relaxed/simple;
-	bh=pK+P7uUv2gxu176MHcUzT+ux1Z+gp+8DdZTEXzMIMuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s41hUIsijXJ3DtU9oeXVblxbIJR93wnpruEEdkpnmRuC5QQ7uDH4WP74S42OV8OPo5Cw43EEvihLYYBFy5FLkel+yXHlNFCXkcOGpRDp5vvrN2D3SbN0R2W8mA1axwiySAOW9ga+nqflp9784X346zAhTRGE/j+4IH1eJmLs1t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=xMRom+py; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hOunhY53; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="xMRom+py";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hOunhY53"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CFB1D11401CC;
-	Thu,  3 Oct 2024 18:05:03 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Thu, 03 Oct 2024 18:05:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1727993103; x=1728079503; bh=UnuZNkWou/
-	Fe/+Xh+DHrQ8uSAR/kXG8XzqV1zsuUh0U=; b=xMRom+pyQJYJ5OQ42Tt27QfPrZ
-	a243CCo1qfxHHBKjZyBmgY1wHry+L8IgrBbt1akcbQqIdpc0cTHyiR351pvnHERQ
-	Sg1h3emi9/7Zxt/wpbWo5b3KWPVKswg+heo9lfJjQR+UZ+S65y4Ee7IryBCbje/9
-	Yy5R/dPCK9KVldb27XpzFrvyDaY3/cBHZ+eKdJNRMTUbl4u+5SWrmOgPDuy8xq0L
-	zVwV8a8/j30NsA68YJmKBtqhnCUUXivEYIHDCFKfyBwEUHtTsClXj5dXmtcSoMRX
-	5VEkzd+P7mEgmU1fJ6Yw7nXllA7UoyiPiVdD09wY6ABU4Bddj80qfkupCfxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1727993103; x=1728079503; bh=UnuZNkWou/Fe/+Xh+DHrQ8uSAR/k
-	XG8XzqV1zsuUh0U=; b=hOunhY53vOcBuySkz+r76LaGzqpGSudwpcV+0Boxs5Gc
-	LmBL7MCEJojBG071VJ6FILpmT8+lWtCbS49eWSptYQOZ87Hkm/5AiduCNSlk3nF3
-	xO9t4x46fX44Kn4jNPyGNf0dx/1xGs0vSPnWi/fDAiAR/ILSTXEvn8v0RwjKtAh8
-	HE2VdRTZ7WIcie4bNPw6sBQP81FHJzUNxQ1f9V3jM2pRE4LWCLT4S1CO0i5/svUD
-	zU2xPVf73sH61J/7qq3Iwt9pCg5UCYSsRWgbRmLwxG1AclcCop+eiFTaWiS6j36R
-	ZqmRCOi8NWtT+1kiiURQusfoCFUBMCors3fYcqxsIw==
-X-ME-Sender: <xms:DxX_ZmjMh-JE9Xta0cmdVrIXLFCJqONLCNTEjvt_iti8DVu--zXNRA>
-    <xme:DxX_ZnCUTV00-Cb-ILQz0xQ_0iNxbT6MW647Isk5xWFRdWFl2VOvi5oNPjiE1bIm-
-    NZWJRw0a_zDD83lrdw>
-X-ME-Received: <xmr:DxX_ZuErBVzBiRmDZIkTCl0a_VvAQsYyYAeeRLE5Wp0zwnKh_RvLlHSh_r9Z9jGQbXwYaXCSa28DVDon3x8Zqs1xuaMY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvvddgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpefffeejffev
-    geejudeiveektdeiveefgefghfffveeujeefhfefffdvvdfgiedvheenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttgdpnhgspghrtghpthhtoheple
-    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprh
-    gtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghp
-    thhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtph
-    htthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hmohhrsghosehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:DxX_ZvRA76nD6vmSVJyVU8qm8NhQ-cdLKWcDptf5852LWZTR145CYg>
-    <xmx:DxX_ZjykbQQArczPU95il-J7GXJK9XPv2zjt1T20OKCmujBoKi1t1g>
-    <xmx:DxX_Zt5xc1Q6s90YDn62qo6hEuLZ06-ikT6CsgMQpzYq3HbpdSFGtw>
-    <xmx:DxX_ZgyBupyMN7ONZQlJsut4y9cWmvKSYIw9z96Z7bayNEFKwT3CyQ>
-    <xmx:DxX_ZreG5g95xLhenL0lGeIagubiZhQypBZhAVVmy03NNOtMleVjUsIF>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 3 Oct 2024 18:05:02 -0400 (EDT)
-Date: Fri, 4 Oct 2024 00:05:00 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Kees Cook <kees@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, morbo@google.com
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <Zv8VDKWN1GzLRT-_@archlinux>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <202410031422.72F54BE4@keescook>
+	s=arc-20240116; t=1727997443; c=relaxed/simple;
+	bh=P5UcpAipfbHxuw26N/La74wzuf3cWkCq92gj8uBLqhI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qY+BSudKw+NK/n+nQy/XwCeUaQU20tGJl3rxVE8brkxZ8cCf5ynMJhBadE7VWj6lSH7hJiOS1rD2MOMvuEYe8inTnhan1ySEFExN/Sv8pJ/k757IR3b8wr9XWR5bns+VVLu1TpIVtcklk4m5Vpz4IQiQ/RvdiWFrSQAbDiDlb5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.1.164] (77-32-42-93.dyn.eolo.it [77.32.42.93])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9600561E5FE05;
+	Fri,  4 Oct 2024 01:16:20 +0200 (CEST)
+Message-ID: <862f7737-c88b-4e19-a384-52a3ecb43111@molgen.mpg.de>
+Date: Fri, 4 Oct 2024 01:16:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202410031422.72F54BE4@keescook>
+User-Agent: Mozilla Thunderbird
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
+ on Sky and Kabe Lake
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Todd Brandt <todd.e.brandt@intel.com>,
+ Marek Maslanka <mmaslanka@google.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev,
+ linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20241003202614.17181-1-hdegoede@redhat.com>
+ <20241003202614.17181-2-hdegoede@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 03 14:23:20, Kees Cook wrote:
-> On Wed, Oct 02, 2024 at 11:18:57AM +0200, Thorsten Blum wrote:
-> > On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> > > [...]
-> > > 
-> > > Sorry, I've been out of commission with covid. Globally disabling this
-> > > macro for clang is not the right solution (way too big a hammer).
-> > > 
-> > > Until Bill has a fix, we can revert commit
-> > > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
-> > > certain situations where 'counted_by' is in use.
-> > 
-> > I already encountered two other related __counted_by() issues [1][2]
-> > that are now being reverted. Would it be an option to disable it
-> > globally, but only for Clang < v19 (where it looks like it'll be fixed)?
+Dear Hans,
+
+
+Thank you for the patch.
+
+Am 03.10.24 um 22:26 schrieb Hans de Goede:
+> There have been multiple reports that the ACPI PM Timer disabling is
+> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
+
+Kab*y* (also in the summary)
+
+> hibernate) methods.
 > 
-> Yeah, once we have a solid fix (so we have a known Clang version to
-> target), I'll want counted_by disabled in versions prior to that.
+> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings from
+> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake to
+
+Ditto.
+
+> fix the hang on suspend.
 > 
+> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0af2b5@molgen.mpg.de/
+> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219346
+> Cc: Marek Maslanka <mmaslanka@google.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   drivers/platform/x86/intel/pmc/spt.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index 2cd2b3c68e46..ab993a69e33e 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map = {
+>   	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+>   	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+>   	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
+> -	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> -	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>   	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+>   	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+>   };
 
-Just to clarify: There are two separate issues. One was __bdos returning
-0 (or sometimes other garbage). That one is fixed in main by [1] (so
-will presumably be fixed in 19.1.2). The second is __bdos sometimes being off
-by 4 bytes. That could be addressed by open PR [2].
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 13 
+9360/0596KF, BIOS 2.21.0 06/02/2022 (suspend/resume with deep and s2idle)
 
-[1] https://github.com/llvm/llvm-project/pull/110497
-[2] https://github.com/llvm/llvm-project/pull/111015
+
+Kind regards,
+
+Paul
