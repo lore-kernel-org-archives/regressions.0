@@ -1,124 +1,112 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409A2110E
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 05:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687CC8FE
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 05:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727933933; cv=none; b=G35yDbY71ofDOv4LTUL1BoKqENt/Fee1Dqz4OA62JCs/2S9oFqUZbYzvqWnfOCpvk+yb7BCitb5J4NxT4jurODaG7gJN5ZevSYSSgkCHN9v7HS38x0047ap72tpJ6EDU2ktir0OiEurPdqgkL2wulKzWvgJXTCulgt2q/PBLmPA=
+	t=1727934430; cv=none; b=NWs4GeT6j7SuNOCvxv/jjv4Vp3aEg3MUGP8PaeRL+hc7tXV3WWh7CiZl3GVfyaelnhtCQc4zXdiSq476A7E4bryI7+GovEJDQg8WelMzM0tUHHCa+C8GrPWDx2dC5ysHBvvSNMPl4/CoP42nDk18GQA6ZEICE5bb2gIzogFkzdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727933933; c=relaxed/simple;
-	bh=oe0+JV1VGmH2Oziz0rDxTc69NeKMoL9ldZaw4FEpcBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N6VG01vJY7cW4rpgZtAsry15wZjeEv/KU9OBxpgMHeia9Lk+R+ZZOiN40ymmdbNvO2iCuJdo99jOPM9pAkmDt1TOVtYL0UMs4BeVrzqhADYUIJOPA1qhCS5jc/xvX1C4tLNuYLRjZvoxiaRWdR9/VjpwgkK62TwK9GzP9GO99xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PSW7lTOw; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1727934430; c=relaxed/simple;
+	bh=1U4maC12kMzIFQqFpHkuvcqqRovo+/2oME69fl3a/ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p7VVDt3D53x/RhYKn3B+XAELhZybfAyyf7e5qCCdJWVQojXUGjOZNPcT/VRD5Adr6ltXblHZhWSXV78eeSM5bCucVmO10YCKrKgo9WiQlpdhloeUU+f0bsHlnqCbBhYgBKMbjFdj/RBQgoPmDnjbxCkxTB/IePgyUgeTrM6sh4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eP1810i6; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSW7lTOw"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-84e873a454fso150518241.0
-        for <regressions@lists.linux.dev>; Wed, 02 Oct 2024 22:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727933931; x=1728538731; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=f5vUbpgAuf4ukV4d+K3A2JqlzY0GqMqBxJh0u41jQac=;
-        b=PSW7lTOwcx+/7rrh8RMvGWW7BHCTXf6s/U4iCM42mhBHVYTemSz8KRWhz/pfLHqlQR
-         y04QK1ramFYr9Kpko9w+tRQCNY/rVcxoSafPi7GEE1wyu1EZkVd5Gg4ssmjYpCZOD95u
-         I7YzaBDBtvOS0jnzeJsRmTmUBNeOYMTICOFE+GDjJws4L4oxSb6MFGWnB/WQYKE2qvp8
-         FP8uLt64XQ8cXewTuqRF+nppMPjzbhczPeTg4B+r4cw+UxC8UVXVBm6yt8Yc8vhlyQAx
-         vaPbX5tyMYF6ctoa7nE9kbkbqQIwq2AzQ5IK6XQqlNxokPmh0U2dODDV6uahbuVsaKf/
-         aOWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727933931; x=1728538731;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f5vUbpgAuf4ukV4d+K3A2JqlzY0GqMqBxJh0u41jQac=;
-        b=ooF/9mNa3/20O4LCRYevjY8gPCqmr0xJuiMdip/thj79L/VQ5sMsNAyvYJhFpG2UZo
-         xWa5Z9/gV+q4yQUIzhESFrm9e5VT1vHZnE66gZnl8n+9O1IS8znf5c6mh28cH8twipVq
-         sMLGazakKSY5IPucT4mKqyC69mMnqDNWh8wjDW8SNSJDKq8LUMx3za1Ub3qObfFmv+2V
-         0Wb2w++f6+R+3RLQ+V/pHmlSR2fDaVe218spJueeg5OvnWr6ZFTLmtgjpB4UvNBoLHi+
-         2sffMh5Ce/zG7uavH8Tg2QGLrveIFTRiN+FDB8OYiuUHrkAlMpz+DNdgMESsAGqdgSjt
-         tYZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVW4As7CVY+kKm0XPb7mWZVj5ZlvtqLdN7LjnGz/IL9LNUUru7VbiwgXHGbpIewWbq20xrXsbGaAd5og==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxW7PasGLbqdgtTMLqxnMlvhKQyekswe3lvD467ceh9SS+d2mr7
-	OWK9aLq5LDmqlVq69nIsKBd6GJoxZ50siyGAXkoAGg4Rgp1QFGkMrssvYy0AyWGTflhPtS8L7SJ
-	IdZMCT8N7TETVGrg2D7wZfRpCJ+fmqJ2QIOb2g9N8XIzTReuV
-X-Google-Smtp-Source: AGHT+IE/udGm3ds/9p2RO6rOSEFkpb2M7UEn+Fb2vf0HPMu89AA8Y6YrRw6hQK0Vrjj2Jj6Mauzen3zuBjj6b49BXG0=
-X-Received: by 2002:a05:6102:c46:b0:4a3:cfa9:6c84 with SMTP id
- ada2fe7eead31-4a3e680c40dmr4484322137.3.1727933930644; Wed, 02 Oct 2024
- 22:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eP1810i6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727934428; x=1759470428;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1U4maC12kMzIFQqFpHkuvcqqRovo+/2oME69fl3a/ak=;
+  b=eP1810i6hgQhfEwn9aucptWbdAT1A29KUGizAuEnzrSWBtdarf0YGhlJ
+   y5vpBPPbw3KBnU5GKX/kX3k6lHFipSJNLBAbWbXf1bILSDqUtYU+dRUfn
+   2qtlc4cNr7xhvf17lmV0qD0cs8OZAuvz4oQc4qEf0qtm8TqtfygNIV/5f
+   CVhf+ojuWwPE1jxtk7/0Hz8GWfcWAzHX9WWFn4Ooju7XZ5A6wlPqZg4QT
+   E3Gx1c64rInllo41J1QU+KpapdQzn6b7fdX+NpffJLAlrd5q8xt2Myd2A
+   YFw3UWWwAlV4iM80s9eT5kXZ5TmZ5jq4zzb58qpP46eANWoQ9uB7NOPbq
+   Q==;
+X-CSE-ConnectionGUID: ljac6BUmTzmmCWRNhPWAxQ==
+X-CSE-MsgGUID: 9bt0FS/uTke2AYi30o7iuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="49643703"
+X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
+   d="scan'208";a="49643703"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 22:47:08 -0700
+X-CSE-ConnectionGUID: y3yNkVjARRSFaKTS8/hSPA==
+X-CSE-MsgGUID: 3apkzQj2RwW7UoZWOpwuCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
+   d="scan'208";a="74355760"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 02 Oct 2024 22:47:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 6C0A7144; Thu, 03 Oct 2024 08:47:04 +0300 (EEST)
+Date: Thu, 3 Oct 2024 08:47:04 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Harry Wentland <harry.wentland@amd.com>
+Cc: linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
+	regressions@lists.linux.dev,
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>,
+	Raju.Rangoju@amd.com, Sanath.S@amd.com,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
+ device and USB4 Host Interface
+Message-ID: <20241003054704.GM275077@black.fi.intel.com>
+References: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvo5npQ3o_vgiOX2guHtgafRoFPL__4O8Kcwg2=ssXmKg@mail.gmail.com>
- <e718bc99-e63b-4adb-9e40-2379f48301f5@stanley.mountain> <b22dbfe2-dd29-40de-a4a3-4a0d6b55cd65@stanley.mountain>
- <62a65418-2393-40ec-b462-151605a5efcf@stanley.mountain>
-In-Reply-To: <62a65418-2393-40ec-b462-151605a5efcf@stanley.mountain>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Oct 2024 11:08:39 +0530
-Message-ID: <CA+G9fYvdzY+vWhPKPmyPDJNDqvH7AaU4HfKTFtgUwU+KTrD9_Q@mail.gmail.com>
-Subject: Re: next-20241001: WARNING: at mm/list_lru.c:77 list_lru_del
- (mm/list_lru.c:212 mm/list_lru.c:200)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kairui Song <kasong@tencent.com>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
 
-On Wed, 2 Oct 2024 at 16:58, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Wed, Oct 02, 2024 at 02:25:34PM +0300, Dan Carpenter wrote:
-> > On Wed, Oct 02, 2024 at 02:24:20PM +0300, Dan Carpenter wrote:
-> > > Let's add Kairui Song to the  CC list.
-> > >
-> > > One simple thing is that we should add a READ_ONCE() to the comparison.  Naresh,
-> > > could you test the attached diff?  I don't know that it will fix it but it's
-> > > worth checking the easy stuff first.
-> > >
-> >
-> > Actually that's not right.  Let me write a different patch.
->
-> Try this one.
->
+Hi Harry,
 
-Thanks for the patch,
+On Wed, Oct 02, 2024 at 01:42:29PM -0400, Harry Wentland wrote:
+> I was checking out the 6.12 rc1 (through drm-next) kernel and found
+> my system hung at boot. No meaningful message showed on the kernel
+> boot screen.
+> 
+> A bisect revealed the culprit to be
+> 
+> commit f1bfb4a6fed64de1771b43a76631942279851744 (HEAD)
+> Author: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Date:   Fri Aug 30 18:26:29 2024 +0300
+> 
+>     usb: acpi: add device link between tunneled USB3 device and USB4 Host Interface
+> 
+> A revert of this single patch "fixes" the issue and I can boot again.
+>     
+> The system in question is a Thinkpad T14 with a Ryzen 7 PRO 6850U CPU.
+> It's running Arch Linux but I doubt that's of consequence.
+> 
+> lspci output:
+>     https://gist.github.com/hwentland/59aef63d9b742b7b64d2604aae9792e0
+> acpidump:
+>     https://gist.github.com/hwentland/4824afc8d712c3d600be5c291f7f1089
+> 
+> Mario suggested I try modprobe.blacklist=xhci-hcd but that did nothing.
+> Another suggestion to do usbcore.nousb lets me boot to the desktop
+> on a kernel with the faulty patch, without USB functionality, obviously.
+> 
+> I'd be happy to try any patches, provide more data, or run experiments.
 
-I have applied this patch and testing is in progress.
-From last night the tests running in a loop did not find the reported warning.
+Do you boot with any device connected?
 
+Second thing that I noticed, though I'm not familiar with AMD hardware,
+but from your lspci dump, I do not see the PCIe ports that are being
+used to tunnel PCIe. Does this system have PCIe tunneling disabled
+somehow?
 
-> regards,
-> dan carpenter
->
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 79c2d21504a2..2c429578ed31 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -65,6 +65,7 @@ lock_list_lru_of_memcg(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
->                        bool irq, bool skip_empty)
->  {
->         struct list_lru_one *l;
-> +       long nr_items;
->         rcu_read_lock();
->  again:
->         l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
-> @@ -73,8 +74,9 @@ lock_list_lru_of_memcg(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
->                         spin_lock_irq(&l->lock);
->                 else
->                         spin_lock(&l->lock);
-> -               if (likely(READ_ONCE(l->nr_items) != LONG_MIN)) {
-> -                       WARN_ON(l->nr_items < 0);
-> +               nr_items = READ_ONCE(l->nr_items);
-> +               if (likely(nr_items != LONG_MIN)) {
-> +                       WARN_ON(nr_items < 0);
->                         rcu_read_unlock();
->                         return l;
->                 }
+You don't see anything on the console? It's all blank or it just hangs
+after some messages?
 
-- Naresh
+Can you also provide full dmesg with that commit reverted with
+"thunderbolt.dyndbg=+p" in the kernel command line?
