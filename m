@@ -1,104 +1,192 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94B91C2323
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 21:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B899313F42F
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 21:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727991788; cv=none; b=nJzu0sPnh/KPRQ+hiwZSK1gJ3WUSg+iTHWbyvUWUGQrg5J3Fy/b9DUIMfoNR1UGfezZfX16buco0yxYByuGEdCYpQxJziFbMbxi1arqqaJ+73GB7F06w8tZlTLL+lDBLFmABjmfT7fTdlZcZvB45azwbRw6p9W5PLmxARiNlvKo=
+	t=1727992104; cv=none; b=o4t80hpDFlRTfHfn7IbMeDErYfpSp4yBCjiPtU+R7VWt8J09xqpUoU/YJa/QmcJnu6phreWI/5LR9aWCgLkyciUmpC9QeMGF/BcF8ZwDlDfM9SYd1Rnv3w5yGo/8wD7zQuh6Y0MsHvJaf5H7GI+U+dOas6OwQGL3fwCQIrjJCj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727991788; c=relaxed/simple;
-	bh=VDXJk6/dnSS8sn9qohZVdF+AvHEy5J4pjidawrVOoHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ktuoMulg+njm6/3aN3wvwzdpFcvEU1nLujTRgU/hSP00EJwlXkpGT29VFjiBMWPBqfh9ZI0PDAhWKM+erp+/EbCTrOgDuFPOsdSmb+p5Fh/g0I6JXwL7fa7oxRmUbng6p64MfJX1uMvYIwmuxjKhdFsYLJhc4zRS01HwvEhzHS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SpEkXkGS; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727992104; c=relaxed/simple;
+	bh=YJ50vYM/u/Wi3SemAhvs0Nspplu4fWX+h6JYN+mxIqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qx0BkO9K7TukB300RwzB6wgQ2RsmTqrrhrYuYgtHsBspEbzOcAhyzPieoYHq52JOdAlXE/F6ODb3HEeuvRqcbXucdPCK4fWW81wLTD+TUiwHUHr+vhBrHxZvoUP+wCZwWnH2hIH12wNEXUA0BNqNfoK8AGdYgkj5RlUFq54BSWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=YYmgoO5T; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JUoEtNX9; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpEkXkGS"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5398e4ae9efso1711415e87.1
-        for <regressions@lists.linux.dev>; Thu, 03 Oct 2024 14:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727991785; x=1728596585; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VDXJk6/dnSS8sn9qohZVdF+AvHEy5J4pjidawrVOoHk=;
-        b=SpEkXkGSrdUjfsc9ntaBAhEq3XV+OBe9S2umdjVz/TLmN3Nvhg2QXGehpCDwxTIOKv
-         DfnwvldFL18FsRlzFWfaDc8LJByE8oBanmPX18TCjI9TD2La2prbufAJwnzggP6H7dmi
-         +Jkjl++lB9lQI8EcATO5vK2Y5qaGIEuRTK9iq5nZrXA6smruGXSXnDYrERPpsfTobLVq
-         5ycqQToN1JlvHxn3ZRj4nIYoY92Pyrq/cnh6w8ku2uAbcWxn8vOPpYadFJDXBfnAoQjM
-         2cxY0LiXdQzQhHQamsDrf3vfgkK2k9qktaVdAAEG6SYfE3UVEqjjIB9lq/uQyfrQbGTJ
-         v1AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727991785; x=1728596585;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VDXJk6/dnSS8sn9qohZVdF+AvHEy5J4pjidawrVOoHk=;
-        b=cOqGnEJPc+eUPNCZ4T3Xwe6uGucKr5aH9WG2HEAu5bs6o10Zin+Mzei4Rix8aOUA8r
-         bcpZlFvb/7fqnpELzzUjRWfeoRvRWOdn6fqE9bpY+6wj/LTvuxJ3b9DilebzLT2OGFqt
-         rRIglXFKe2noRdZMrnzNhqUK/3UtnMA0LQ/Hp8AluZLeT+dJp9T2CqfZXIevRfZzTYkO
-         GJAM78FZowuEUPInwZkZUh8pntwU9cmIFYws8U2ANsNlLtymaOpLr6pv/DJY4SKWXJMh
-         zkYVhoRUvaOD7y8BZ7DqVt46TKePcQ0ymV2FvGCMQ0JblCw2JIFnoFqXqs9Rf7T1TQcB
-         giJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWf9P31kXQlhzW2wV/Ib2gYf/Uhnw5brJWhuhvWzEK8HIhteKauhLgsuH/MFQfB0rgUla2NWmCEpsYbXQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCIb6nXy/1PjVciAt5IQH8d09pK/1BKEHISpuXctFZebxdWndK
-	2pyvJMjuFoEQvi6evSbvEMQk2WHMBhofEbmBi/bDslqpi2pU0+xS
-X-Google-Smtp-Source: AGHT+IHgY/sKkr2jZT5s5Fvv9m89t/4drKmCvgrDFQwI2KFMP/IgkeOS8RulT8F0pGYHdHoA/l4nfQ==
-X-Received: by 2002:a05:6512:b94:b0:539:8f4d:a7c9 with SMTP id 2adb3069b0e04-539ab9de2fcmr474571e87.41.1727991784536;
-        Thu, 03 Oct 2024 14:43:04 -0700 (PDT)
-Received: from foxbook (bfk18.neoplus.adsl.tpnet.pl. [83.28.48.18])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539a82974dcsm264903e87.166.2024.10.03.14.43.00
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 03 Oct 2024 14:43:01 -0700 (PDT)
-Date: Thu, 3 Oct 2024 23:42:57 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Harry Wentland <harry.wentland@amd.com>
-Cc: Raju.Rangoju@amd.com, Sanath.S@amd.com, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, mario.limonciello@amd.com,
- mathias.nyman@linux.intel.com, mika.westerberg@linux.intel.com,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
- device and USB4 Host Interface
-Message-ID: <20241003234257.7e87b675@foxbook>
-In-Reply-To: <82aa97b6-4b3a-48d3-a022-04563eb01e45@amd.com>
-References: <20241003214827.4edb8731@foxbook>
-	<82aa97b6-4b3a-48d3-a022-04563eb01e45@amd.com>
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="YYmgoO5T";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JUoEtNX9"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E73A9114005B;
+	Thu,  3 Oct 2024 17:48:21 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-10.internal (MEProxy); Thu, 03 Oct 2024 17:48:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1727992101; x=1728078501; bh=sxhZZlorlZ
+	1zlcyfcdxkQm0SN1r5ERKj2wycvGmA2X0=; b=YYmgoO5T9U/OrryUAM563Oi3Mj
+	lxOSAlOkV43gW2bpa9UE2lj3HkwBv1pLBrQKw/XVhHIcee1IZ7lzLhaZ4yI9SeUr
+	94VQS6diOJmOIxrxoTvdMJiEHRBgFr63JCODLKvzWc/2qbHphdA9BC5olsOGPJJr
+	i6jJjIjP9h4g1qSJRt9Wns3xn7/aFyJrBShLSq42kW7B0zJff/k+MtkZoBy6RdQl
+	xyp8jiPDGG2CYxfJfKy29s9xL0QXzCB/a8LiZ9WQMTJioMtReaVXGhY3uRLXKYPU
+	BaT0Iit4ZEQbZkni7sL4snWE0yY3V/llaeCUWx0/G2+/WyibiepXGhGj3ydw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1727992101; x=1728078501; bh=sxhZZlorlZ1zlcyfcdxkQm0SN1r5
+	ERKj2wycvGmA2X0=; b=JUoEtNX9K8MgTE5BIi4+CIXq817aUI+vml58/5Ak12/Y
+	mZd/KyNAdlEos3OPZkmlLPCbABTF1RzCWQCHiBtfwZ9LKkESKp0ggAoqiY+StnNH
+	utuEDjwhRivqKxfKJ7uBoYYgAt2oIxqCAq5DmjGCpXLhVFbEZ9tRgCPUOTA2VDXq
+	UClnf1dkm7iv410uZdWFT6YE+7KZutm3gYHJ3yIJdUxPgIKg3YAr3u6KXzIsvKsb
+	N6t6pCy30X4j5tDGmgk9PD+vBkBicp6xMQpQ/AUk3uiVV3x4vGkUHSRO/q42r8dz
+	P2GYnD2gDdA62aJ1bqsWIfFBWDk3KXeEFw4uLc9kSw==
+X-ME-Sender: <xms:JRH_Znr0tVd09-NZMPMVrjBNSEVrt1DkVuuyM12udBaAA8N_J-RovA>
+    <xme:JRH_ZhrQjEY3b5v6aG_UHRVR94ulvqlkebaYT5CZELOvSK8dvNom-IaMHRjejjR5Z
+    D_AV8Xk7kqhCfDMwhM>
+X-ME-Received: <xmr:JRH_ZkNPROiDYXBZgPZZ8Wt8Px4hlfM1FEtTLgVGwcSKeCYBSo-mJ3TdT254R8csmouCOPpbMwiHVELT3VEJ7rObaUTS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvvddgtdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpefffeejffev
+    geejudeiveektdeiveefgefghfffveeujeefhfefffdvvdfgiedvheenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttgdpnhgspghrtghpthhtoheple
+    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprh
+    gtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghp
+    thhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtph
+    htthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hmohhrsghosehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:JRH_Zq5d87SozioJm15PIeCgIZR1wRDQTg03FCs41D1FjSoy4D4HyA>
+    <xmx:JRH_Zm77dC4FkELMj5XYc5Kg8xvw8uUViEsTZ6j483o16dm1pTazFw>
+    <xmx:JRH_Zih-ApDH5R5wSmvzPJIDpuI9jros20A_BAKylYGNZMlOyuEOTQ>
+    <xmx:JRH_Zo445f1p9dGwmUuBax6JmnGLGy8V25ScP_vII71JT27boBj4Dg>
+    <xmx:JRH_ZvFFc6iEKEI6_F3f4IK-xBi4wz9iAsZYGLtjp7Sg5jaGYV1wke7E>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Oct 2024 17:48:20 -0400 (EDT)
+Date: Thu, 3 Oct 2024 23:48:18 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Kees Cook <kees@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, morbo@google.com
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <Zv8RIs-htdc-PtXB@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux>
+ <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+ <Zv61dCaxScXuOjZg@archlinux>
+ <202410031424.45E5D19@keescook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202410031424.45E5D19@keescook>
 
-> No 'quiet' option and with loglevel at 4 I still don't seem to see
-> any prints.
-What's the loglevel of your printks? If they are INFO, NOTICE or DEBUG
-they will not appear on loglevel 4. In particular, the patch you are
-testing added a dev_info, which is INFO and will not show on level 4.
-I would simply change it to dev_err, then it should show.
+On 03 14:28:01, Kees Cook wrote:
+> On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
+> > gcc currently says that the __bdos of struct containing a flexible array
+> > member is:
+> > 
+> > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
+> > 
+> > clang however does the following:
+> > 
+> > max(sizeof(<whole struct>), offsetof(<flexible array member>) + sizeof(<flexible array element>) * <count>)
+> 
+> Clang's calculation seems very wrong. I would expect it to match GCC's.
+> 
 
-> Interestingly if I set loglevel to 6 my boot gets much farther but
-> then gets stuck at "A start job is running for Load Kernel Modules
-> with ever increasing timeout values".
-So the kernel isn't crashing, but probably some module gets stuck on
-initialization and 'modprobe' never completes.
+I was on the very same train of thought, but I have since changed my
+mind a bit. A struct containing a flexible array member can be allocated in
+two ways:
 
-Not sure if it really gets much further or simply prints more noise?
+(1):
 
-If Magic SysRq doesn't work, maybe systemd simply disabled it? It does
-so by default, unless overriden by custom config files. It looks like
-your root FS gets mounted, so those configs may work.
+struct posix_acl *acl = malloc(sizeof(struct posix_acl) + sizeof(struct posix_acl_entry) * 1);
+acl.a_count = 1;
 
-You could also try blacklisting xhci_pci. I don't know what sort of
-kernel config you are using, but on Arch Linux xhci_hcd is built-in so
-your blacklisting attempt failed, but xhci_pci is a loadable module.
+or (2):
 
-If this helps, then the next logical step is to 'modprobe xhci_pci'
-while running 'dmesg -w' and see what happens.
+struct posix_acl *acl = malloc(offsetof(struct posix_acl, a_entries) + sizeof(struct posix_acl_entry) * 1);
+acl.a_count = 1;
 
-Regards,
-Michal
+Both are valid ways to allocate it. __bdos does not know which of these
+methods was used to allocate the struct whose size it has to determine,
+so it's giving the lower bound that doesn't include the (potential)
+padding at the end.
+
+So it comes down to false positives vs false negatives...
+More details here:
+https://github.com/llvm/llvm-project/pull/111015
+
+Clangs current behavior would essentially force kernel code to always
+assume option (2) is used. So
+
+struct posix_acl *
+posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+{
+	struct posix_acl *clone = NULL;
+
+	if (acl) {
+		int size = sizeof(struct posix_acl) + acl->a_count *
+		           sizeof(struct posix_acl_entry);
+		clone = kmemdup(acl, size, flags);
+		if (clone)
+			refcount_set(&clone->a_refcount, 1);
+	}
+	return clone;
+}
+EXPORT_SYMBOL_GPL(posix_acl_clone);
+
+from linux/fs/posix_acl.c would have to turn into something like:
+
+struct posix_acl *
+posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+{
+	struct posix_acl *clone = NULL;
+
+	if (acl) {
+		int size = offsetof(struct posix_acl, a_entries) + acl->a_count *
+		           sizeof(struct posix_acl_entry);
+		clone = kmemdup(acl, size, flags);
+		if (clone)
+			refcount_set(&clone->a_refcount, 1);
+	}
+	return clone;
+}
+EXPORT_SYMBOL_GPL(posix_acl_clone);
+
+Which is actually safer, because can you actually be sure this posix_acl
+wasn't allocated using method (2)?
+
+
+After looking at the assembly produced by gcc more, it actually looks
+like it's using the allocation size if it's known in the current context
+(for example if the struct was just malloced in the same function)
+and otherwise returns INT_MAX for the __bdos of a struct containing a
+flexible array member. It's only returning the size based on the
+__counted_by attribute of you ask it for the __bdos of the flexible
+array member itself.
+
