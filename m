@@ -1,107 +1,226 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24E8174EFC
-	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 13:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727960887; cv=none; b=MHWHhRS0XBbv9rAeACcm7k1Hvo113XjX6Ne46Kw9khKi5EeBZEy+BTxv8Q/M+7qAm5zN9F8spQUlI9RByd1e9Rkp9FhfxTaFVeV3QaWuykuoxnMrgwxiV1zAqhIn5UcV0qzU8AA45/MxNKXFVnUZ7zzOkg9gJtggZRRjghPaelI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727960887; c=relaxed/simple;
-	bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=e7V/E9JLsKGgqewBIN3h1IDzw1k6qDIUQzy4LsQPMaamq3T1lLG4yShF+i5d+Tey9KcmUoq1p5fA9g4vK7tGQYfpLct9ZyWZA42uNIVV1RgPDY8r8eMseg6z20UVYnq0t7PVM+fBbNwcdmPhc3wILgn7lP4uPt2TVynxP2hUdLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=z4cIr2UF; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863AA1581F8
+	for <regressions@lists.linux.dev>; Thu,  3 Oct 2024 13:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727961019; cv=fail; b=rvSZqfEWP3x0zafACVg1G+tSnBj4p8O/ICfoPsS7EainLE5g8AtXpjMpFqT9OMQpfBNBYlLCEmFJ0dPoqCqGafzjdV+7+2LK70ZspmyHKotxkLjwk0zp/TrBgdCvyvWSYdPoG9JH7O5o3imnxpP8fNmE0MQcHe4XmXzOept08F8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727961019; c=relaxed/simple;
+	bh=d3OnQO3Q1ovLawuuReEeIbyf67TQxMmAod2e4OnnI90=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C0bby2pxxBpx2/mMVvfZbrPLJ4oouWBCCkFdc3xNDP4s4nKjFzjewYjAtvvPhhars02Dv3K7TWO/mnytRr8YJs/f2bBTNSr/hcqg1pHQVxxv8MfyZkRmX4vbgyYa1gHM9KrGsMf4El9Q5r01iT3LY82xihuhBCwHTHDLLAu8LCE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zPZJQvHs; arc=fail smtp.client-ip=40.107.220.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="z4cIr2UF"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37cc5ba03c6so67642f8f.1
-        for <regressions@lists.linux.dev>; Thu, 03 Oct 2024 06:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1727960884; x=1728565684; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
-        b=z4cIr2UFZLmfQ2ijIjWjrHDd6xQ0W2PmJOqHpHyRQjUve6NoTH/+dEyCq785qRdtDI
-         Q/yh+OlaAEc5wRoYY0s4LiQfmkUZ/q6yDEpJcumaP5ONaQ9IK8sU2EOBCHGczOzMKzrC
-         D4FfjceKnx5W8kPDAbThoXI9ucjTuH2a1BH5RbjYBtOptW8z0cWipfZkZr3prUwmUbAf
-         /zypPNXsI0QBB2/18L0A8WZS5kAVYKv3q0grewWcw77d3WztrbuJtrNy2bCbIAb0DBAw
-         Mq2qy/ePimmNCXPRuJ+Lg7958S0uWq9BQ9lzoMc8vL8tU3dlqCmvame8+P3W+CwFBw4x
-         SoVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727960884; x=1728565684;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YoGgqyZROlV9Lc6LUp+WIsr1dOtzf5CY++FV1FC/vBQ=;
-        b=YvKvPKKII2v2Omie5T4BkZio91CShkxJXtkde7T31eUbyU7FxaM27Ls5aXdIKpCSvZ
-         Ead4uFMZBX5rNFKUBw7lnPqOPpIPFM1HMDCKpF1HLRQoN/I/R3Ittsk+W3gmk9xQg0Yj
-         S7Bu9QQHtsUH+UdQ9QckpAOz52FMvMfaS4RYYudu1cMT7I2ijcj0yJtX+ix0qfVL9ZOV
-         fOdKsRY7Uw227Ujg0H7oxV6FBV6pgnzMXpoTkLcs9gd7anIvoL6HGbFidZh529yB63fc
-         Khm41lEH1yHYdyqef8lfUcVdlVOwTdiajUFczAEZOp3F7gj8fYhrrdSXroyQ0kyXQ/hC
-         qixQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/v2ViyTqHW9Kp+B6cP9iwk5uB27GTkyZiqkgHxgpzZbYv7ODR7AzlP0ZmS1M/JUW4+CnpecZauWGT0Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwRe9GIKXVSSx9fhXnm74y2ES5J1s/ZrMBu8VVogvPULI+/z/O0
-	rJ3TbCgm0It6sLEc6e3zQ5Hq0tk73w2VWTBCjP7iToyTop+wWvB4Tg3UOHqgBa8=
-X-Google-Smtp-Source: AGHT+IGbzGlbswZSZv2eaP5enEwx9F4DDc2D16GFzfToew/HsmbM50cqjKCZ2M/OIQtHk7bhpgN5xg==
-X-Received: by 2002:a5d:5f82:0:b0:374:c92b:80a0 with SMTP id ffacd0b85a97d-37cfb8b6267mr2457441f8f.3.1727960884178;
-        Thu, 03 Oct 2024 06:08:04 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:a4f:301:1558:85f1:4dd0:3ea9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d082e6dfesm1235078f8f.117.2024.10.03.06.08.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2024 06:08:03 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zPZJQvHs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=moYyy2HWKl9hsoeRVkcvvqAPH2P1icy5D0jlJB5PiYpFotD2f7f/intylXuoblVg7IHY8UZPi+vezrpEhqsYBqao7+NKmr0PSOlj4CPhhO0zPwdK8EuZ+OxmKxO6H+wjqx59xasbBsdj/FHNkWe5kCWMi6GQwo9u/P+1FKZLw7O9DCIy4Sr5axdPb6MifWX/12xt0OHYoeUWWVY1uf7kYD+6aNdNjSkldm3/fEsxlqUY4ERdKZ64Uw8dDzSE6NsdPZZwW/plZssa8nDhQDHLY1LX2PgH9c8UvVwzg4Nr4FYX32CVY2P+UeEN4oDs+23vUVuhsp4L4rhC7oOLXPRSlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H0IOKvIJIAhUDm2NiqC/w6YxMJTLrRBgyLL27ln3sEY=;
+ b=xxPZSTvcM+bZS72Fp8nNVFJ5LY2YBYRxyIbkA74jGCFeCuuAc6hUS2x7frKIf4yKvFmojr14iQfQQHwGwghvXHqxxEzCcxUisksx+hgNtFN/1xNjGF2QvxEMZgNTnsZrknut4qSlwf9+bgqhIc6SnkCvFrPWJiE11oVSnbf0NT06h2Z+vU31ow46zq9iw6Pi+ZbVVmuIJh7Y9kVAlRPvopgjNMw1bipg9tzf5ZDFgz4PoGWs0c8CGfwusFcr0KqyVjDjfjAiJJ/Mir1WNBJra1FktXxs+0DzMHiv5CjTOq51xeRS5LO+rcQOCvZiuVQ5sHgqYoytMfByxCUoBBYfkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H0IOKvIJIAhUDm2NiqC/w6YxMJTLrRBgyLL27ln3sEY=;
+ b=zPZJQvHsrTACSy3eyQ23/B8sIS5SWP/2PiOkYH7fwo+h7kb8dr/fHR2/JOesByskfzob7P4kVF6HGyDnP7WlIKelhzKO+oHdLanxio+bwe3dQnzgwTSywP8wP2pQuseGeiAbFM2gzYEOzPLUqtEotu5PxFmMOn2azeVbE4vrFIo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by IA1PR12MB6185.namprd12.prod.outlook.com (2603:10b6:208:3e7::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Thu, 3 Oct
+ 2024 13:10:14 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8026.017; Thu, 3 Oct 2024
+ 13:10:14 +0000
+Message-ID: <01bf9a3a-6277-4b57-83ed-82c4bfb62dd2@amd.com>
+Date: Thu, 3 Oct 2024 08:10:11 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
+ device and USB4 Host Interface
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Harry Wentland <harry.wentland@amd.com>
+Cc: linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
+ regressions@lists.linux.dev, Raju.Rangoju@amd.com, Sanath.S@amd.com,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
+ <20241003054704.GM275077@black.fi.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20241003054704.GM275077@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR02CA0010.namprd02.prod.outlook.com
+ (2603:10b6:806:2cf::16) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <Zv6BEO-1Y0oJ3krr@archlinux>
-Date: Thu, 3 Oct 2024 15:07:52 +0200
-Cc: Kees Cook <kees@kernel.org>,
- kent.overstreet@linux.dev,
- regressions@lists.linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- ardb@kernel.org,
- morbo@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux> <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB6185:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb959f25-f6fb-4a13-3a26-08dce3acb7f2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OVU0OUFySDljclNyb2FjeDE5MVo4eGJSdUdjNkwyNzhJODlsTG5CeWFOajJ0?=
+ =?utf-8?B?VkZSQ1FlQ2taSktTbEVMM1NFdG9YOWJZMVYvZ2UydlJrMk53T0J6bitCKzFv?=
+ =?utf-8?B?N1dHZjJGeEtHS3I3M3loUTErVnBKbGcydDJaOE1BUjE1OGpLOUhuR2ZQY210?=
+ =?utf-8?B?ditpemlwNWhyZlJrVnBJMVlOU3BMR0tnOUJmRFN1cmFOTGpjQkhLZUFFT2Rh?=
+ =?utf-8?B?Nkt4aDNrbkZQOE9XSzc2cklJZUhFeWgxZ2cxMGdwOG5xZHV3c25ENTcyYmJL?=
+ =?utf-8?B?V1Q4WXplQnZxeGhsQUxEZG1XRkEyQjJUVVpmS1ZPYWlEMzJZTitPRHVvRWV0?=
+ =?utf-8?B?Q3JNcksreElvekNUVlJRTXU3Mm44Wk5ySmd5TmRtd0dzVG5XODU1Wi9jalJ4?=
+ =?utf-8?B?VG5pMHVLRE9jMXJVVE9ncEVDakFqTHhzV210QmdTVWRXQXRhNnhienl2U3J5?=
+ =?utf-8?B?dSsxeGtvZ1NCZm15QUNNeEY1Mjg3TkFPUUcvQWFOYTNpQVJId29vVEZIamlL?=
+ =?utf-8?B?MC9rQ0VFM0pib1hhNzNFZGtabHo5Z2VHcEJUeU9oVEkrK3BHV0l4eWw5Z1h0?=
+ =?utf-8?B?ZzMxOXZhbzJKVG92aC93RDNNNEZHZnZ5TnJNUWJBNkl5ZitrTkRXb2JBWElp?=
+ =?utf-8?B?YW1OMUJKWklpVDVwOHBjdDdlRUtiN1RJT2dLOEptSG0wZTUrOTFVemdNTm40?=
+ =?utf-8?B?QjkvSzVCZTBaSVBmU004bnNmbWVhdUJkaG5VLzg4Q0NqTXBRajVtWFpnb2Fn?=
+ =?utf-8?B?ZmhGRmo2RUd6Ty9kWnZjZThHSFJGbEJPUE5ScFRPWkVZNmhQeG9Ga3I4UU9W?=
+ =?utf-8?B?dERvYzFGaWdqNkJnL2poRjFRQnZndFFVOUFGL3RQeVoyN3FKL0pXeGg4Qkhx?=
+ =?utf-8?B?b3VHdlJFZWlxK2NTemJMNmdRbURkWTU2bm9EQllXeXNTdVFqdDlKb295dVd0?=
+ =?utf-8?B?WTdzVVBMQU5yejBhQXRJbnozbU9VMlVib0NKV3MvRzBuSVJlK1RNazd5aDZu?=
+ =?utf-8?B?R3huZUZsUThOZEU5YVczbnVYeUdtQm9sV242YkRVWTJ5Nm53Z0FlWHJQQTVG?=
+ =?utf-8?B?R3l6NXlNbjRSS00vQVRFb09DZjQrMnh4OGVkQ1BESkRQeWZGYjE1S1lOdUw0?=
+ =?utf-8?B?NGdIVS81eGJIbGJYd2NJV2t2QnEzbXNqNFF1eUg3ZENsSHd3WGxSWnB5a1Zm?=
+ =?utf-8?B?YlNOT1pqQTZLOWxUMVFOK2gxd3dlbUorOXNRVWpRTXB0dHB2ek9SV1M2bFFT?=
+ =?utf-8?B?WTBabE9YZG1SMmhqK01QbVJGTXBLd2lrTWxGZDRQNHVnUzllcEpybVp3c2xz?=
+ =?utf-8?B?Wk9idjdMUm1mRDZZNUdFNmkrcS9GUk9QSFdMbU8vWm9YQ2E5anE3bzBEMmVX?=
+ =?utf-8?B?RmhsQWJCQzRYMXc2ZHFvMXcwM21LZmdYYjdYNm1MdDBRaXVkdjNjMjRSeTQv?=
+ =?utf-8?B?dG5rWENOQklsaEtmZ2NCQ0NFTzZCNGR0OUFhVWR1UEJpZ2dQeElaVFVFV1lm?=
+ =?utf-8?B?c3dKYUZ1aDZ3ZWFzOW02WmdhTGltUkx2SFNqWDZtTE9BSVVGZDByYUJrUnk0?=
+ =?utf-8?B?djhtRmR5SnI0dEdGV2NySTFyZGExeTNEdWd2KzMvYm9SUUxHWTZpc216MFdB?=
+ =?utf-8?Q?VgYIGcTN6DTBu6KVu4XMdVFSxjqvcNGwRH2wjEfv5qC4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YWZqd3N2Zlhhb0NQUXJhRUZoMnNZYzF0U0hvSUVQZWNIVEd1VHJPR2c5cUxC?=
+ =?utf-8?B?V2xwckZ6b2N1VEZlYXFzUXg1dVhWcTRKVkkvRVpjNjdLVDZPcmRHV01BNXE4?=
+ =?utf-8?B?QUZJLzRpb3RTNDBSVG04b3pPVVBmRzFtUGZFVTNETEhXanVDVUxTck1FS0pW?=
+ =?utf-8?B?RnYrNTE1NW5naHNaUzRXMjhMdTFxeTAzcTlhTHZPY0UvajBmNk9XTWM2WlUr?=
+ =?utf-8?B?aVBOektSL0hFc1VGaWpTSzJwemZOcWxDS2h1QlcvMHIvdjVSWHdTTC9pTkZG?=
+ =?utf-8?B?Y3ZJcDFoVlpHbHNRSHdxWnovOEhQNmNrMUMzOGpqTng2V2JyN3RTUm9kb25H?=
+ =?utf-8?B?K3FNTGtKWXJYYzlxQXRnN09zbjAwZzFZRC95d2xEUUtXOWJlcVZ3cWhPcGFI?=
+ =?utf-8?B?d2xiTDQ5RW9uVDMwSjg4cE00aUFSMml3NmppZGhlbHRhNmF3eU9EL1FYT09F?=
+ =?utf-8?B?bVdXUUJPTDhGMUVVeHF3bk5nOWkvc0drazFRUmF4R2REVElMbkVrSlNVcTQw?=
+ =?utf-8?B?MFoyZnRENDdRdFY4RVptK3ZEN0Z3N1B2S1ZuczNZZG5rQlZvT2xTb2lNc3Vq?=
+ =?utf-8?B?dWdKM3NHMXM4TVNoSGRyRFdiVnRjR0ZjaXVTbW5qeUM2bDlqUkMralBrd0R1?=
+ =?utf-8?B?NzY2Mkc1emRqN0NpSzRNZ1RRVFVXL2hadzVVdzJ0TVJpdythNlltd3YyaG5V?=
+ =?utf-8?B?aGlvK1BvY21Mczk2SlVuVkFHNm5mNGlCWjIwTm94Vm1UbDE5UEY3bi8xWGo1?=
+ =?utf-8?B?MVJnWFZTSnVvb3hkaXNGZ2dGZmFKa1QwMTFYOUx0aUhQbkxiaXN4NWROZFVN?=
+ =?utf-8?B?OVptNkJ5Z0xGK3RnamVtcExaSGVmZkdZaUtHL1JDTnhKT2txcGtZTHZwUXRp?=
+ =?utf-8?B?dlIweXhLb09EWEVPYmY5dW0rblQ0Yit6a25rVnY4Y0FMSjU5QlFEWGgzMEFV?=
+ =?utf-8?B?aXRzdVYwMCtGYUlRT1ZoQ3J3a1BUVmZzWExrNFc4SE9mRk9SZXJhY21LQ0l1?=
+ =?utf-8?B?UW5kMm9lNC9lemlXU0I2cnVia3pLcmhVNTZXSTVSNDE4eCsxUEVsZ29xVkFL?=
+ =?utf-8?B?cXlhTFZmR3BNcnpFQ1lKdGtWZ255Sko5amNMK1FmV1dqRVI4cGhsNFZJK2RM?=
+ =?utf-8?B?MnVvcCtHM0krS3AwVElsQ3lJaHNiZldBRTJZM1U4SkFNMGI0T25yblJsa3Fw?=
+ =?utf-8?B?NWcwbXplVHJ0Y3pXRlVDY1hkbXVDMUtPOGpIQjQxaUJHa2tSQ0cvUkpVRExo?=
+ =?utf-8?B?alZ4R01uM1g1dHhhRE5hSjhDU3hOU1VhM3JnUThKWERKSGtPbnBzRWRLd3BH?=
+ =?utf-8?B?MDlLbGpOVldwS0kzN29lRzVselhpRTRYam1Hekh3QWVUUVM3U0RlNWV4WXA1?=
+ =?utf-8?B?eTVkbnZnVU1qRy96QWZQekF2Y0RrbEVVb09QbkplZTIvc2ZsaVNBTElWeWFL?=
+ =?utf-8?B?REdoYmpDQlFrWXBlOWdDbWk1RXNBWXoxNVBSWm9EMkk4blBYRHh1VXJyd3Bv?=
+ =?utf-8?B?aCtLWmtHY2R3WVczS2YzcGZ0SmJaRzlMbThMNGI5TXlKUkRiU2dSUmtJcjRG?=
+ =?utf-8?B?WVh6aE5aa1ZPem9EMklxazhKM2FLSVdPSnY1UGRpY3A0cmhLSm1MeXZFZCtH?=
+ =?utf-8?B?KzM1c0pFRFB4SmR4RXErSktNK29HSHdOYktqZTRDZDV2MGpOVmRXdTBuTUdE?=
+ =?utf-8?B?cmxZQm9obUlMeFBoNlcvUWhTaEgyVnpham00YmpnWEw2aXoxZWRLai9GZ1ZP?=
+ =?utf-8?B?QUJEOEZPQlBzSE14MVRyZ3VqR0Y2V1JSRDU0cncvcjBSQnlKMFc3K1kzemxy?=
+ =?utf-8?B?QnU4N1RzYi9rUmRmSFNPNzhJd3VnNGtuODhsTjI0dVN5NkhPMHI0SS9JeVBu?=
+ =?utf-8?B?bGxnWTJIZVFBRVlJcThTMFM1U2FZc0t5QTBFSVFvWEtSNTJuRUtUYllleW1C?=
+ =?utf-8?B?a21mRDIvTDl2NnBXRk9JZjhvaDR2TTZDc3QxK2M5MWFhYnZYU0JqV3hpK1lQ?=
+ =?utf-8?B?UFNpQWkvdU91OUR2SzZVQVNDYVBZTlV3UHZXam1iaVV0bnVTZkQ1Z1hQNWhS?=
+ =?utf-8?B?aFNubjhya1lwcytRT2dlRW9UQTZTdURZSXMxc3o5aitJbURWTmd3bUNMM3hy?=
+ =?utf-8?Q?HIK8OasvphR9BF3h6IpzZYusv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb959f25-f6fb-4a13-3a26-08dce3acb7f2
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2024 13:10:14.1574
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XdCtIWjUoY0AUqWoLIXkmyDYpxZAGLekfkGiCfxJNXW05FaIzi8OVMoNeH5oyHXXQGvvWI5LUQ0o0W/rSgsNSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6185
 
-On 3. Oct 2024, at 13:33, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
->> [...]
->=20
-> This issue is now fixed on the llvm main branch:
-> =
-https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf76=
-9fc9a93e8a
+On 10/3/2024 00:47, Mika Westerberg wrote:
+> Hi Harry,
+> 
+> On Wed, Oct 02, 2024 at 01:42:29PM -0400, Harry Wentland wrote:
+>> I was checking out the 6.12 rc1 (through drm-next) kernel and found
+>> my system hung at boot. No meaningful message showed on the kernel
+>> boot screen.
+>>
+>> A bisect revealed the culprit to be
+>>
+>> commit f1bfb4a6fed64de1771b43a76631942279851744 (HEAD)
+>> Author: Mathias Nyman <mathias.nyman@linux.intel.com>
+>> Date:   Fri Aug 30 18:26:29 2024 +0300
+>>
+>>      usb: acpi: add device link between tunneled USB3 device and USB4 Host Interface
+>>
+>> A revert of this single patch "fixes" the issue and I can boot again.
+>>      
+>> The system in question is a Thinkpad T14 with a Ryzen 7 PRO 6850U CPU.
+>> It's running Arch Linux but I doubt that's of consequence.
+>>
+>> lspci output:
+>>      https://gist.github.com/hwentland/59aef63d9b742b7b64d2604aae9792e0
+>> acpidump:
+>>      https://gist.github.com/hwentland/4824afc8d712c3d600be5c291f7f1089
+>>
+>> Mario suggested I try modprobe.blacklist=xhci-hcd but that did nothing.
+>> Another suggestion to do usbcore.nousb lets me boot to the desktop
+>> on a kernel with the faulty patch, without USB functionality, obviously.
+>>
+>> I'd be happy to try any patches, provide more data, or run experiments.
+> 
+> Do you boot with any device connected?
+ > > Second thing that I noticed, though I'm not familiar with AMD hardware,
+> but from your lspci dump, I do not see the PCIe ports that are being
+> used to tunnel PCIe. Does this system have PCIe tunneling disabled
+> somehow?
 
-Thanks!
+On some OEM systems it's possible to lock down from BIOS to turn off 
+PCIe tunneling, and I agree that looks like the most common cause.
 
-Do you know if it also fixes the different sizes here:
-https://godbolt.org/z/vvK9PE1Yq
+This is what you would see on a system that has tunnels (I checked on my 
+side w/ Z series laptop w/ Rembrandt and a dock connected):
 
-I ran out of disk space when compiling llvm :0
+            +-03.0
+            +-03.1-[03-32]--
+            +-04.0
+            +-04.1-[33-62]----00.0-[34-62]--+-02.0-[35]----00.0
+            |                               \-04.0-[36-62]--
 
-> So presumably this will go into 19.1.2, not sure what this means for
-> distros that ship clang 18. Will they have to be notified to backport
-> this?
->=20
-> Best Regards
-> Jan
+00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 
+17h-19h PCIe Dummy Host Bridge [1022:14b7] (rev 01)
+00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h 
+USB4/Thunderbolt PCIe tunnel [1022:14cd]
+00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family 
+17h-19h PCIe Dummy Host Bridge [1022:14b7] (rev 01)
+00:04.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h 
+USB4/Thunderbolt PCIe tunnel [1022:14cd]
+
+> 
+> You don't see anything on the console? It's all blank or it just hangs
+> after some messages?
+
+I guess it is getting stuck on fwnode_find_reference() because it never 
+finds the given node?
+
+> 
+> Can you also provide full dmesg with that commit reverted with
+> "thunderbolt.dyndbg=+p" in the kernel command line?
+
