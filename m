@@ -1,162 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BFB17758;
-	Fri,  4 Oct 2024 09:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D052146A72
+	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 09:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728033164; cv=none; b=WYYB6BlhwiSyqPcu+mNJPAuvFiivLY0HQhJmorDZAoXMbCGG0K+ZOFZbXpZwb9+OPMxcdGgDdNOpbJ7emDKO95x5qXWL9l+iA918qt2MVg/ocGQZmYL+oRz6E69Uge7kTFKWKTtvxqOwjU0NhTTn13yzBCKijxHCwWzLckNB6sQ=
+	t=1728033939; cv=none; b=V/7DjQd46itL7Qnz3Q44zKXPOLcnlvmETd6jLDYTHJxDy4amxGNTG1AiyDvUKtkC9ixAi4IYhA11lOi6v/1/EcvECwh7RVKmzR03sP5azgWPtdMQMQDkSnFu/sfBHdI86NExnH4NTuPycYPjkTfYU9WwQ+zlWEaLGlt5z31RvZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728033164; c=relaxed/simple;
-	bh=PngHURkFuXiBephwfpYTKTw7blLUCwxL7c/mijJdMMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLsDU4vZR4UEo5DlNYmC6+JaiYS74IMhY1ou7NNw5R3dNwPx+/5Ce7HAwKU3XW0QQAsp3H6f4G9gtL2/RhV7DtQNh4mJsANQq3iZxG1DRkqNj9lODFGKz8oLZRk8ukkiHyLVZFDm7OmoXDRXNposTLcU/BJQ1HNOyawCQtdihOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdpYMfu1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728033939; c=relaxed/simple;
+	bh=645ko5croWnHBkUGstpACowgWBQjdeIjQ+SqtTQUsw8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=RSdZ5XuDya26PmJ9QPsWSM/7wcMWDw1Vfycl5JGZMiY+DBzL9Y7AWlaq1ycOYs+ogy+JZW7HSCV9pTYXckK+y73OKDyn7gM+CliweElkNBwUjDj7bay3J15QfbeCLSbSc8lJ48wIFAHZTBSKCFy7kGHIYPU6XLJyrEVMD+E1jAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuxedo.de; spf=pass smtp.mailfrom=tuxedo.de; dkim=pass (2048-bit key) header.d=tuxedo.de header.i=@tuxedo.de header.b=TRWObgKF; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuxedo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdpYMfu1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4D2C4CEC6;
-	Fri,  4 Oct 2024 09:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728033163;
-	bh=PngHURkFuXiBephwfpYTKTw7blLUCwxL7c/mijJdMMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jdpYMfu1ZNb3AjRTdiZ2QJw0Xnbjicx9Gz6ELRP4E4JrLmE/nPbNKByFDXOWJlnrb
-	 KWvMKAh5xOwioQ6NWUdwP3kUxhQ1uPijOWoKK9kXHBv4R5Tcjxkj4C/AkXs/9/54I+
-	 zyldPeYw7YSA1lamnAz7eClzf/uRYOdoAwDInzu1EE2xJksHXklsahEMPjbHxuG+JI
-	 AkdbYlX5TMIPXCjRbFvInTMvcnW7pwzn+zVbxh9f1+AcJDJqffnxpJrjMBobei2Y5l
-	 1GztfHwwT6E5fyFRQt0dg9YW8Q0mxcN5wkHvtd3gjNvxhCUgC5Bgkxi0iH+uwGUIFw
-	 aL6wET2oppxBw==
-Date: Fri, 4 Oct 2024 11:12:38 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org, 
-	linux-input@vger.kernel.org, Chris Hixon <linux-kernel-bugs@hixontech.com>, 
-	Skyler <skpu@pm.me>, Richard <hobbes1069@gmail.com>
-Subject: Re: [PATCH] HID: amd_sfh: Return immediately if no sensor is found
-Message-ID: <uupvw2jw6j5wkwtfwljipmpx4kynv6k3wqgy6sg3crw5r27rtm@mudhwifihmtw>
-References: <20241003160454.3017229-1-Basavaraj.Natikar@amd.com>
- <a3fb27a2-5167-4880-9102-eaf0f47df398@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=tuxedo.de header.i=@tuxedo.de header.b="TRWObgKF"
+Received: from mail.tuxedocomputers.com (localhost [IPv6:::1])
+	(Authenticated sender: cs@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id B3B282FC0064;
+	Fri,  4 Oct 2024 11:25:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedo.de; s=default;
+	t=1728033932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HHHUyfkGOAubihwR899hP5kwPoySVKzIJzeKuYqsakw=;
+	b=TRWObgKF6O1D+Av1P8K05+348lRJOF3M5TS4AanMWZV17D2h8ZTV4qdi3v6vx8sw8yy3NT
+	uFHXHB1JWV1ReyPfYSG0Z5awvfCnpg3qIVT6ocmKKluCiHjztlXx8nOkdFrWGiH65bEYai
+	Oam4zax1jV4pQNP7i7YeIjYiou9d0/gFY7lN7SNuJcB0DL5KqTrawwnI1Y2pESI8J8ieTM
+	QY4cDo8ttdphgQrdIzskFbxiuKOTFxDoD5n4Gy67k5U1i3lxRaiYZeuWOmCpYwdC49DBBB
+	onSsVkFQcJsKiN4aBevu2EK1cRZmxxQTS+NVrw+YGLZoMu5266h3q9FqPLMjqw==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3fb27a2-5167-4880-9102-eaf0f47df398@leemhuis.info>
+Date: Fri, 04 Oct 2024 11:25:32 +0200
+From: Christoffer Sandberg <cs@tuxedo.de>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Jerry Luo <jerryluo225@gmail.com>, christian@heusel.eu,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, perex@perex.cz,
+ regressions@lists.linux.dev, wse@tuxedocomputers.com
+Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
+In-Reply-To: <87iku8mfzh.wl-tiwai@suse.de>
+References: <87jzfbh5tu.wl-tiwai@suse.de>
+ <ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
+ <87jzetk2l0.wl-tiwai@suse.de> <b38b5947482a5ca4b55e0ddb908c2f34@tuxedo.de>
+ <87seteli51.wl-tiwai@suse.de>
+ <d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
+ <dbc783cc2608ac63ffd420b1dc3eeaa9@tuxedo.de> <87iku8mfzh.wl-tiwai@suse.de>
+User-Agent: Roundcube Webmail/1.4.15
+Message-ID: <8292a0dccbdcfcaebfb04bd84aa240e6@tuxedo.de>
+X-Sender: cs@tuxedo.de
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Oct 04 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [CCing the three reporters and the regressions list]
+
+
+On 4.10.2024 10:25, Takashi Iwai wrote:
+> On Fri, 04 Oct 2024 10:18:10 +0200,
+> Christoffer Sandberg wrote:
+>> 
+>> 
+>> 
+>> On 2.10.2024 23:28, Jerry Luo wrote:
+>> > On 10/2/24 10:00 AM, Takashi Iwai wrote:
+>> >> On Wed, 02 Oct 2024 10:21:22 +0200,
+>> >> Christoffer Sandberg wrote:
+>> >>>
+>> >>>
+>> >>> On 30.9.2024 09:44, Takashi Iwai wrote:
+>> >>>> On Mon, 23 Sep 2024 21:37:42 +0200,
+>> >>>> Jerry Luo wrote:
+>> >>>>>
+>> >>>>> Hi Takashi,
+>> >>>>>
+>> >>>>> On Mon, 16 Sep 2024 19:22:05 +0200,
+>> >>>>>
+>> >>>>> Takashi Iwai wrote:
+>> >>>>>
+>> >>>>>      Could you give alsa-info.sh output from both working and
+>> >>>>> non-working
+>> >>>>>      cases?  Run the script with --no-upload option and attach the
+>> >>>>> outputs.
+>> >>>>>
+>> >>>>>      thanks,
+>> >>>>>
+>> >>>>>      Takashi
+>> >>>>>
+>> >>>>> Issue now reappear, output from alsa-info.sh are attached. If they
+>> >>>>> are still
+>> >>>>> needed.
+>> >>>> Thanks.  The obvious difference seems to be the assignment of two
+>> >>>> DACs
+>> >>>> 0x10 and 0x11 for headphone and speaker outputs.
+>> >>>>
+>> >>>> Christoffer, how are those on your machines?
+>> >>> I attached alsa-info from the Sirius Gen2 device.
+>> >>>
+>> >>> Comparing the working/nonworking of Jerry, yeah, the assignment of
+>> >>> 0x10 and 0x11 looks switched around. I don't see what difference this
+>> >>> would make. Also, node 0x22 has "bass speaker" controls in the
+>> >>> non-working version.
+>> >>>
+>> >>> Comparing the Sirius Gen2 alsa-info with Jerrys, to me it looks like
+>> >>> the non-working version corresponds to our working version.
+>> >>>
+>> >>> I would expect the non-working version to happen all the time though
+>> >>> with regards to the "bass speaker" controls. Why would this only
+>> >>> happen sometimes?
+>> >> Thanks!  The assignment of DACs depend on the pins and topology, so it
+>> >> can be a bit sensitive.
+>> >>
+>> >> Now looking more closely at both outputs, I wonder how the commit
+>> >> breaks pang14.  Maybe it has a PCI SSID 2782:12c5 (or 12c3) while the
+>> >> codec SSID is 2782:12b3?  If so, the patch below should fix.
+>> 
+>> Interesting, you're right, PCI SSID c3/c5 and codec SSID c3/c5 for the
+>> Siriuses.
+>> 
+>> I had a look around. In patch_realtek there are some cases where codec
+>> SSID match is needed as well. Would it be better/safer to directly do
+>> this immediately or keep it as an exception where it breaks or for
+>> known sensitive models/brands?
 > 
-> On 03.10.24 18:04, Basavaraj Natikar wrote:
-> > There is no need for additional cleanup, as all resources are managed.
-> > Additionally, if no sensor is found, there will be no initialization of
-> > HID devices. Therefore, return immediately if no sensor is detected.
+> It needs a better handling, yes.  OTOH, the driver became gigantic and
+> it's very tough to change the basic matching stuff.  That is, we can't
+> flip from PCI SSID to codec SSID out of sudden, as it'll break
+> certainly many other systems.
 > 
-> I'm not a reviewer, so feel free to ignore the follow comment:
+> What I have in mind is to add an extra flag to the matching table to
+> indicate the codec SSID matching, something like:
 > 
-> I think the patch description should mentioned that this bug caused
-> Memory Errors / Page Faults / btrfs going read-only / btrfs disk
-> corruption, as that is a crucial detail for later and downstreams that
-> need to consider when deciding about backporting.
+> --- a/sound/pci/hda/hda_local.h
+> +++ b/sound/pci/hda/hda_local.h
+> @@ -282,6 +282,7 @@ struct hda_fixup {
+>  	int type;
+>  	bool chained:1;		/* call the chained fixup(s) after this */
+>  	bool chained_before:1;	/* call the chained fixup(s) before this */
+> +	bool match_codec_ssid:1; /* match with codec SSID instead of PCI SSID 
+> */
+>  	int chain_id;
+>  	union {
+>  		const struct hda_pintbl *pins;
 > 
-> > Fixes: 8031b001da70 ("HID: amd_sfh: Move sensor discovery before HID device initialization")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=219331
-> 
-> Some reported-by tags IMHO would be appropriate to give credit; all
-> three reporters already agreed to use their email address in public.
-> 
-> There meanwhile is also one comment in the bugzilla ticket that could be
-> read as a tested-by tag.
-> 
-> Maybe a Link: to
-> https://lore.kernel.org/all/90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info/
-> might be appropriate as well.
-> 
-> Ohh, and participation in stable is optional, but given the severeness
-> on the problem: would you maybe be willing to add a stable tag to the
-> commit to ensure this is backported to affected stable series quickly?
 
-Fully agree here. It would definitely help if the submitter of the patch
-keeps track of all of these instead of relying on the maintainers or
-Thorsten to do the tedious work.
+Sounds reasonable to me. It would mean either-or then though.
 
-I was about to apply the patch, but I still have one remark on the fix
-itself.
+> Although this will help in this case, many of existing code do check
+> codec ID in addition to PCI SSID, and this flag won't help for them as
+> is.
 
+For the fixups where codec SSID is already known for all cases it would 
+be possible to represent current logic with matching both SSIDs.
 
-> 
-> Ciao, Thorsten
-> 
-> > Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> > ---
-> >  drivers/hid/amd-sfh-hid/amd_sfh_client.c | 3 +--
-> >  drivers/hid/amd-sfh-hid/amd_sfh_pcie.c   | 4 +++-
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> > index 4b59687ff5d8..3fcb971d5fda 100644
-> > --- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> > +++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> > @@ -297,8 +297,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev *privdata)
-> >  	    (mp2_ops->discovery_status && mp2_ops->discovery_status(privdata) == 0)) {
-> >  		dev_warn(dev, "Failed to discover, sensors not enabled is %d\n",
-> >  			 cl_data->is_any_sensor_enabled);
-> > -		rc = -EOPNOTSUPP;
-> > -		goto cleanup;
-> > +		return -EOPNOTSUPP;
+Otherwise I can not judge whether matching both PCI SSID and codec SSID 
+at the same time would be needed.
 
-so cleanup is doing:
-cleanup:
-	amd_sfh_hid_client_deinit(privdata);
-	for (i = 0; i < cl_data->num_hid_devices; i++) {
-		devm_kfree(dev, cl_data->feature_report[i]);
-		devm_kfree(dev, in_data->input_report[i]);
-		devm_kfree(dev, cl_data->report_descr[i]);
-	}
-	return rc;
-
-Would that means that the memory corruption appears during
-amd_sfh_hid_client_deinit(), or...
-
-> >  	}
-> >  
-> >  	for (i = 0; i < cl_data->num_hid_devices; i++) {
-> > diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> > index 0c28ca349bcd..1300f122b524 100644
-> > --- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> > +++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> > @@ -351,7 +351,9 @@ static void sfh_init_work(struct work_struct *work)
-> >  
-> >  	rc = amd_sfh_hid_client_init(mp2);
-> >  	if (rc) {
-> > -		amd_sfh_clear_intr(mp2);
-> > +		if (rc != -EOPNOTSUPP)
-> > +			amd_sfh_clear_intr(mp2);
-
-... or during amd_sfh_clear_intr()?
-
-This very much looks like a band-aid (I know it is because you can not
-reproduce, not blaming anyone), but I'd like to know a little bit more
-if the bug is not appearing anywhere else in the normal processing of
-the driver itself.
-
-Also a comment explaining why this is the only case where
-amd_sfh_clear_intr() should not be called would be appreciated.
-
-So all in all, I have a feeling one of these 2 functions is not making a
-proper check and I would rather fix the root cause, not the symptoms.
-
-Cheers,
-Benjamin
-
-
-PS: sorry, I know this is a long standing issue, but I'd rather not
-paper over a bigger issue :/
-
-> > +
-> >  		dev_err(&pdev->dev, "amd_sfh_hid_client_init failed err %d\n", rc);
-> >  		return;
-> >  	}
-> 
+In any case, your approach would reduce code size if this is a recurring 
+thing.
