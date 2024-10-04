@@ -1,247 +1,145 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD2A6F305
-	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 08:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDEA14659F
+	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 09:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728030305; cv=none; b=u9SkjdD1r+T7Z5VXLh9YjXOC3aLvDQyCI5wJKGYQoKwPqZAz0eWzNUTPqNjajd6SU27YYmqcoWB4A4LtI2mKmm1EDGvCnFpyan3/qbak+21qNym80B1qPOxsyUEhDfgLrJPsfKtHClpuMMuPVnFJA1gfjCaDCTb/gCWDO0MTt1g=
+	t=1728032733; cv=none; b=k91/G+Lsr4yvtupIcTcmY9FDbqYTPxbYHl5nVlCVNQZGHQqRVr5DRgtNZDNDPyfyUEELyFdqLQyAuYxfKvxLi/dUVv8M0xx0NH2bEbUdx8DUE+pnlyn6CPH5vw/6NZ2gsZ3EH4EdeDSFSl0GhQ6G4WBfN00r7KH0Tptwp5mHwCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728030305; c=relaxed/simple;
-	bh=kEtZfjO1cFf2dqeUqn3yUw3hXQzDL0kwAhldAv5SE7A=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ev3CVfFgH/+4+cUfxcRobH/J2kpsnSY4IB3ZFl4P3lDyjVHQ5vRLa3flT+9wAgrrbpNEJTSsDEFvYcAzOsYQvmrOYZ66CIOU6zzt52+XF6ZX24jp+tl8k2gI/f3rKx/bBNYHDRJY0kOAGy92XyuKiM4elLHEKCFPhqQfdkVkhwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qAWulZVI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q1v8H98C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qAWulZVI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q1v8H98C; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1728032733; c=relaxed/simple;
+	bh=hQk5heY3/6uQrcezxrcJO5pvQCYXdWliMkdIpd6kCbQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=NkRwTDf8LIqkwaKYXwdO2V5C6x3hiMyAwgJmYj1hlG7UjzW25k5yS1VS4UNog+V0WK/JmkYgk5WguhVb0uRPkcqxuTMgK1CXym8nqPIlyrmWdu1QbBWJLk+xUnpjIfQDLDfjId3avG6nAMlruq4fW+eySPUwywN8bbPehozFqZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=jcgINCLp; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qAWulZVI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q1v8H98C";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qAWulZVI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q1v8H98C"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 144451FB91;
-	Fri,  4 Oct 2024 08:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728030301; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ac5BUvnjyZ2mQgkwpda1ad9P9Ze6M0e1i8mt340OuIM=;
-	b=qAWulZVIyr4Mso9RMUFbOBd34H4eX/7fcEm7RrKbn9HZCq+SkhS1XDTR1J9SqHJB15JW68
-	WgxuTU5StG0jk6OtB9UhrPC33Y3FlgAx/N5nqM1lfVaDPm0TB0isMOWB+Il6q+hBBG7h+R
-	4gk7u6DzgU6lMmd8CjQ7RerazzVTvSs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728030301;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ac5BUvnjyZ2mQgkwpda1ad9P9Ze6M0e1i8mt340OuIM=;
-	b=Q1v8H98CpxJ0RpPlgpjhUIvdeKNDg0e9vWE20Jq62HZO9jsJufYG6/hyv0m0aae1w71CZr
-	+Md8EzvWD042p7Dw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qAWulZVI;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Q1v8H98C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728030301; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ac5BUvnjyZ2mQgkwpda1ad9P9Ze6M0e1i8mt340OuIM=;
-	b=qAWulZVIyr4Mso9RMUFbOBd34H4eX/7fcEm7RrKbn9HZCq+SkhS1XDTR1J9SqHJB15JW68
-	WgxuTU5StG0jk6OtB9UhrPC33Y3FlgAx/N5nqM1lfVaDPm0TB0isMOWB+Il6q+hBBG7h+R
-	4gk7u6DzgU6lMmd8CjQ7RerazzVTvSs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728030301;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ac5BUvnjyZ2mQgkwpda1ad9P9Ze6M0e1i8mt340OuIM=;
-	b=Q1v8H98CpxJ0RpPlgpjhUIvdeKNDg0e9vWE20Jq62HZO9jsJufYG6/hyv0m0aae1w71CZr
-	+Md8EzvWD042p7Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B7C2113A6E;
-	Fri,  4 Oct 2024 08:25:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ODmUK1ym/2aUdQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 04 Oct 2024 08:25:00 +0000
-Date: Fri, 04 Oct 2024 10:25:54 +0200
-Message-ID: <87iku8mfzh.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christoffer Sandberg <cs@tuxedo.de>
-Cc: Jerry Luo <jerryluo225@gmail.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	christian@heusel.eu,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	perex@perex.cz,
-	regressions@lists.linux.dev,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Audio volume issues since 4178d78cd7a8
-In-Reply-To: <dbc783cc2608ac63ffd420b1dc3eeaa9@tuxedo.de>
-References: <87jzfbh5tu.wl-tiwai@suse.de>
-	<ea6e5168-238f-41f5-9600-36b75ed990a1@gmail.com>
-	<87jzetk2l0.wl-tiwai@suse.de>
-	<b38b5947482a5ca4b55e0ddb908c2f34@tuxedo.de>
-	<87seteli51.wl-tiwai@suse.de>
-	<d348ca06-38ca-474f-8673-dff2248331e5@gmail.com>
-	<dbc783cc2608ac63ffd420b1dc3eeaa9@tuxedo.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="jcgINCLp"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 144451FB91
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,suse.de,heusel.eu,vger.kernel.org,perex.cz,lists.linux.dev,tuxedocomputers.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.51
-X-Spam-Flag: NO
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; s=key1;
+	t=1728032727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hQk5heY3/6uQrcezxrcJO5pvQCYXdWliMkdIpd6kCbQ=;
+	b=jcgINCLpvvXVu6wtMsRrbohSX+uM+ZJMQXnb3RrlyFpjUjF3+E//kpkx/jchEQotwa0XK3
+	cEVl03LZtrDg3BM3W4DCxahHPz9h/kiAnKt7iTxC5i/F1cEAXJLksUFuDQHn5fhzCJqWDx
+	yqzJrFF5Z7rgTRi9c8u+XbijEx3kDWV8bR19QSJrOM2dB3QYdIOeoLpFf5kdrJqUoHrXjo
+	FZb/5ZUwAP3xoucwxZGMDncenvJpDvPj5od5QNVem3Yl8QeJTfCEvIuIcLM4m1zOqPLDVD
+	8vRn+E84SnLInSce/5HARoWdBMdPwyTituqLkVfIDvKK9K6bEx0uxnKe87qeuw==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Oct 2024 02:05:15 -0700
+Message-Id: <D4MWH2BQF7FJ.3PSKFP1W5VO7M@kode54.net>
+Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Christopher Snowhill" <chris@kode54.net>
+To: "John Rowley" <lkml@johnrowley.me>
+Cc: "Mario Limonciello" <mario.limonciello@amd.com>, "Leo Li"
+ <sunpeng.li@amd.com>, "Hamza Mahfooz" <hamza.mahfooz@amd.com>, "Harry
+ Wentland" <harry.wentland@amd.com>, "Rodrigo Siqueira"
+ <Rodrigo.Siqueira@amd.com>, <amd-gfx@lists.freedesktop.org>,
+ <regressions@lists.linux.dev>
+References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
+ <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
+ <95c575a3-100c-4808-b451-b92f14598188@amd.com>
+ <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me>
+ <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
+ <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com>
+ <9c562132-64a0-41f5-80ad-8492d1039692@amd.com>
+ <3c0dfd3a-9549-4afa-94b6-80041f498436@johnrowley.me>
+ <25eed927-fe69-4005-8c0d-c5f3052e662e@amd.com>
+ <92af8678-2b45-409e-82d1-f273fe907a36@johnrowley.me>
+ <D4L9LH0XT9OL.2RUPJNHCEX3O@kode54.net>
+ <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
+In-Reply-To: <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 04 Oct 2024 10:18:10 +0200,
-Christoffer Sandberg wrote:
-> 
-> 
-> 
-> On 2.10.2024 23:28, Jerry Luo wrote:
-> > On 10/2/24 10:00 AM, Takashi Iwai wrote:
-> >> On Wed, 02 Oct 2024 10:21:22 +0200,
-> >> Christoffer Sandberg wrote:
-> >>> 
-> >>> 
-> >>> On 30.9.2024 09:44, Takashi Iwai wrote:
-> >>>> On Mon, 23 Sep 2024 21:37:42 +0200,
-> >>>> Jerry Luo wrote:
-> >>>>> 
-> >>>>> Hi Takashi,
-> >>>>> 
-> >>>>> On Mon, 16 Sep 2024 19:22:05 +0200,
-> >>>>> 
-> >>>>> Takashi Iwai wrote:
-> >>>>> 
-> >>>>>      Could you give alsa-info.sh output from both working and
-> >>>>> non-working
-> >>>>>      cases?  Run the script with --no-upload option and attach the
-> >>>>> outputs.
-> >>>>> 
-> >>>>>      thanks,
-> >>>>> 
-> >>>>>      Takashi
-> >>>>> 
-> >>>>> Issue now reappear, output from alsa-info.sh are attached. If they
-> >>>>> are still
-> >>>>> needed.
-> >>>> Thanks.  The obvious difference seems to be the assignment of two
-> >>>> DACs
-> >>>> 0x10 and 0x11 for headphone and speaker outputs.
-> >>>> 
-> >>>> Christoffer, how are those on your machines?
-> >>> I attached alsa-info from the Sirius Gen2 device.
-> >>> 
-> >>> Comparing the working/nonworking of Jerry, yeah, the assignment of
-> >>> 0x10 and 0x11 looks switched around. I don't see what difference this
-> >>> would make. Also, node 0x22 has "bass speaker" controls in the
-> >>> non-working version.
-> >>> 
-> >>> Comparing the Sirius Gen2 alsa-info with Jerrys, to me it looks like
-> >>> the non-working version corresponds to our working version.
-> >>> 
-> >>> I would expect the non-working version to happen all the time though
-> >>> with regards to the "bass speaker" controls. Why would this only
-> >>> happen sometimes?
-> >> Thanks!  The assignment of DACs depend on the pins and topology, so it
-> >> can be a bit sensitive.
-> >> 
-> >> Now looking more closely at both outputs, I wonder how the commit
-> >> breaks pang14.  Maybe it has a PCI SSID 2782:12c5 (or 12c3) while the
-> >> codec SSID is 2782:12b3?  If so, the patch below should fix.
-> 
-> Interesting, you're right, PCI SSID c3/c5 and codec SSID c3/c5 for the
-> Siriuses.
-> 
-> I had a look around. In patch_realtek there are some cases where codec
-> SSID match is needed as well. Would it be better/safer to directly do
-> this immediately or keep it as an exception where it breaks or for
-> known sensitive models/brands?
+On Wed Oct 2, 2024 at 5:34 AM PDT, John Rowley wrote:
+> If you're referring to the Freedesktop DRM issue then sinatosk a separate=
+ poster. I'm not involved in that thread. =F0=9F=99=82
+> ----------------------------------------
 
-It needs a better handling, yes.  OTOH, the driver became gigantic and
-it's very tough to change the basic matching stuff.  That is, we can't
-flip from PCI SSID to codec SSID out of sudden, as it'll break
-certainly many other systems.
-
-What I have in mind is to add an extra flag to the matching table to
-indicate the codec SSID matching, something like:
-
---- a/sound/pci/hda/hda_local.h
-+++ b/sound/pci/hda/hda_local.h
-@@ -282,6 +282,7 @@ struct hda_fixup {
- 	int type;
- 	bool chained:1;		/* call the chained fixup(s) after this */
- 	bool chained_before:1;	/* call the chained fixup(s) before this */
-+	bool match_codec_ssid:1; /* match with codec SSID instead of PCI SSID */
- 	int chain_id;
- 	union {
- 		const struct hda_pintbl *pins;
-
-Although this will help in this case, many of existing code do check
-codec ID in addition to PCI SSID, and this flag won't help for them as
-is.
-
-> >> Could you guys try it and verify whether it fixes for Pangolin and
-> >> doesn't break Sirius?
-> >> 
-> >> 
-> >> Takashi
-> >> 
-> > It does seems to fix the issue on Pangolin. It might worth mention
-> > that the headphone output will have the same issue when the speaker is
-> > not working. Now they are all good. Thanks!
-> > 
-> > 
-> > Jerry
-> 
-> Tested on our devices, both speakers still active.
-> 
-> That's an ok from my side as well, thanks!
-
-OK, I'll submit it properly and merge for the next PR.
+Oh, sorry, my mistake. I thought you had popped over to the issue
+tracker as well. Wasn't paying attention as much to the name of the user
+reporting it there. Carry on.
 
 
-thanks,
+> From: Christopher Snowhill <chris@kode54.net>
+> To: John Rowley <lkml@johnrowley.me>; Mario Limonciello <mario.limonciell=
+o@amd.com>; Leo Li <sunpeng.li@amd.com>; Hamza Mahfooz <hamza.mahfooz@amd.c=
+om>
+> CC: Harry Wentland <harry.wentland@amd.com>; Rodrigo Siqueira <Rodrigo.Si=
+queira@amd.com>; amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev
+> Date: 2 Oct 2024 11:57:12
+> Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
+>
+> > On Tue Oct 1, 2024 at 2:32 PM PDT, John Rowley wrote:
+> >> The attached patch seems to improve rendering performance a lot; anima=
+tions and desktop performance are generally smoother again.
+> >>=20
+> >> But it doesn't seem 100%, e.g. if I let the laptop idle for 10 secs be=
+fore interacting with the touchpad, the desktop cursor seems to stick in-pl=
+ace for 100-200ms or so, before becoming responsive again.
+> >>=20
+> >> This 'sticking' problem doesn't seem to occur with PSR disabled.
+> >>=20
+> >> My testing isn't exactly scientifically sound I'm afraid, if there's a=
+ better test or benchmark I can run, please let me know.
+> >=20
+> > May want to also tell the list that you mis-applied the patch on the
+> > first go by misreading what it did and editing manually. I'm eager to
+> > hear whether the actual patch worked out better.
+> >=20
+> >>=20
+> >> On 01/10/2024 22:16, Mario Limonciello wrote:
+> >>> On 10/1/2024 16:14, John Rowley wrote:
+> >>>> Disabling PSR as per Leo's reply seems to have done the trick!
+> >>>>=20
+> >>>> Stock 6.12-rc1 (without revert): BROKEN
+> >>>>=20
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
+r_state:
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 6
+> >>>>=20
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
+r_capability:
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: yes
+> >>>>=20
+> >>>> With amdgpu.dcdebugmask=3D0x800: BROKEN
+> >>>>=20
+> >>>> With amdgpu.dcdebugmask=3D0x10: FIXED! Performance is as it was on 6=
+.11.
+> >>>>=20
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
+r_state:
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 0
+> >>>>=20
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
+r_capability:
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: no [0xffffffff]
+> >>>>=20
+> >>>> I have the older Framework 13 panel (BOE 0x0BCA, 2256x1504 @ 59.999 =
+Hz) so I assume PSR isn't supported according to Mario, yet psr_{state,capa=
+bility} above seem to indicate otherwise?
+> >>>>=20
+> >>>=20
+> >>> PSR and Replay are two different things.=C2=A0 But from your above an=
+alysis it does confirm it's a PSR issue.
+> >>>=20
+> >>> There's a patch that Hamza attached to https://gitlab.freedesktop.org=
+/drm/amd/-/issues/3658.
+> >>>=20
+> >>> Can you try that?
+> >>>=20
+> >>> Thanks,
 
-Takashi
