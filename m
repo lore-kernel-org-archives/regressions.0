@@ -1,212 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7356D1D2705;
-	Fri,  4 Oct 2024 12:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E7C210192
+	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728045321; cv=none; b=JRnjz/JTrE3UqZ3FUf2KPyZkDQxQC5AaAmnQJRAuy//aPAnf7FOUj2ciJBMuMtIOXNuFRgGSbu95EWjjeo+jm+55Vmd1kRm19KiQalytP1wgKeLh45PB7TEGBGx+XOLu42HmvHrqoVopB7aTcdfMiQDhx6MzzKChMbmn6uV0RRI=
+	t=1728047151; cv=none; b=YbBp7XPPcf9in8B7fCneV3sETvF0GB8LKvtZ8MJCWL2eOjB03GBvInsh/Xbs5mS/e1E3dTgzlm88Tyye2Vr3CEmSEKC+u6KZ+mydlhl+1wE2z1qOIzHjeW7POfGgDHSTYUaJYA66+njyKPnB6A+kLkqNtHrLmiX2AkgQLUHATik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728045321; c=relaxed/simple;
-	bh=83qhVAAiNn5E7slJ/gpJ29Nn8CyJePG9NrZ+lFOGaNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bHHRpwxh74S481/gfeRTvcIHJk5DqHnxFtm1EUTShg3ATWKyT9oarz+CLUnuUNMRzZRhEG8AzGFPITq8qwu+bxhy53AnCb28+JPncoBzj4Kb+3tyIZPuwTl/nIwLtGI1P1TOTpoy9lrbYm4J2RzvBBRWooUcILeloOfRVq1Dj34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oH9Qd+ec; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1728047151; c=relaxed/simple;
+	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oud6SuUrNPKWU+V4ACuS3YKlVjiqOixnNzK7Pf2VR9FeB5HwQjzMjmA6WnbVLdQZVgEyL5iItvjrUySpkfZ2qXedHvk04UISjtMWXK3INKXkgJcKxWCMzzoqQz5qVk6yQnzd81dvvdh74+mRQ/bgaPwL43TwEYBXDt3mZhZzMRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbMf8Q5X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oH9Qd+ec"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=NKo4edYmhguvqof8T9sOpMaPxlwKVxZ0R86uU/jJjAY=; b=oH9Qd+ecEbYiKIuAt83eYT1bnJ
-	McRJDpFRuthBImC5SmQhCicyffpIfO1G85yXHoVmHWfKaoX+wm3TAKyKplIN/Yij//DaWYAJFZJsh
-	k2kdZ84sOU4uE7pLGoU9/IeCD1Y2DrWXHqbqpxi2HnM/3UsqKMth6xPtRgvCV84jSDfrLGQ06dCbr
-	Y52HiZDFrJ0S4K0gWFK8ZRR+tg9JYT9ozoXc7iFgiwTF2dWlWfmB6eoW/X3D2X3MmynJnC2k6+SDi
-	MGFESNujKiFZ5ylKPqqPLP9Ms8r0Pixe3cg4lnNh9HVs8OmwN7EUwMC2WfG9s0l6oCgwH7UQxS1bL
-	x/Lju6ug==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1swhWT-0000000AOrA-4ANO;
-	Fri, 04 Oct 2024 12:35:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 361AD30083E; Fri,  4 Oct 2024 14:35:06 +0200 (CEST)
-Date: Fri, 4 Oct 2024 14:35:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>,
-	linux-kernel@vger.kernel.org, bsegall@google.com,
-	dietmar.eggemann@arm.com, efault@gmx.de, juri.lelli@redhat.com,
-	mgorman@suse.de, mingo@redhat.com, rostedt@goodmis.org,
-	tglx@linutronix.de, vincent.guittot@linaro.org, vschneid@redhat.com,
-	wuyun.abel@bytedance.com, youssefesmat@chromium.org,
-	spasswolf@web.de, regressions@lists.linux.dev,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>
-Subject: Re: [REGRESSION] Re: [PATCH 17/24] sched/fair: Implement delayed
- dequeue
-Message-ID: <20241004123506.GR18071@noisy.programming.kicks-ass.net>
-References: <20240830123458.3557-1-spasswolf@web.de>
- <ZvA7n9GNoD-ipjkj@debian.local>
- <1ee5f5828e2021bf1051dc1f9b6f01a8c061ffb1.camel@gmail.com>
- <2128d714-90f7-1598-b32b-559206fce5de@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbMf8Q5X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C78C4CECE
+	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 13:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728047151;
+	bh=EZEtQHswMoewld0YGGWf+H67wxGaKSpue9nbA4Dce4M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WbMf8Q5XTTJFPy0+xZyHsE4fii0rWKqZbJoBePK/FiRVc/Hbe/kuCVUwEdTWh8pYf
+	 ibTgSgCP1DgWQX6vJjj6KptIktOdQ1K+4M8wyuC/vore+X8UJDSUEZiAnvBut6CrgI
+	 V1oxMcYQ7pPejgcSGWd3e3NfJFWHA00zHp5CAbpcQMaPsfCXCiXzUYajwte0pw6jsH
+	 mG+tkjLJ29/z3ko+UM9o9RVAHdka62DONO0PCa4nurMsBbLzcPJJInMLDIi9g1xuAZ
+	 +HQvLBa4wC1fw8CMBQSmTm+ElUvy2Gs3gxgNLmNiZBVYkZOIoMsgiXNH3ITZPzJ5Zi
+	 BoAVp8Y6THsNA==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5e1b50fea4bso1010694eaf.2
+        for <regressions@lists.linux.dev>; Fri, 04 Oct 2024 06:05:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/LWQ5x1/+HZHjuBcHvIrnUGTEvc5nB1aHRPW7RdaAtzp81em7VOmAcBt/9Es5vf3DbrDc5FOhYWgwtw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzXp4a2BquuusgP95Xmfq5n8Puf2w6ql67hh0eHqUXMZQFf4MJM
+	76pCSFKDz4Cq+Khkhc7yZiQZFWXt1F2kVzStZfDwE9xui4pKTrgo4C0OWzQ5hsMKImsEKtsBubr
+	jwYw6f/a2y5h6L2aqFdvxkBk2edo=
+X-Google-Smtp-Source: AGHT+IF0FbTYTZOjT0OJHv+5ndCTq15dw56nW3BVMcSCsCYwBx3XIIshrxsMR+fZuSLG01Dr6Rjt0A4XJGTxTBJUUSc=
+X-Received: by 2002:a05:6820:270d:b0:5e1:e65d:5148 with SMTP id
+ 006d021491bc7-5e7cc0a432fmr1124750eaf.6.1728047150778; Fri, 04 Oct 2024
+ 06:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2128d714-90f7-1598-b32b-559206fce5de@amd.com>
+References: <20241003202614.17181-1-hdegoede@redhat.com> <20241003202614.17181-2-hdegoede@redhat.com>
+In-Reply-To: <20241003202614.17181-2-hdegoede@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 4 Oct 2024 15:05:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gfMc==C9xcU0-OOSjo8=L46CKAbjf4YV3EZ-6+00EVkQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Disable ACPI PM Timer disabling
+ on Sky and Kabe Lake
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Todd Brandt <todd.e.brandt@intel.com>, Marek Maslanka <mmaslanka@google.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, regressions@lists.linux.dev, 
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 04, 2024 at 04:40:08PM +0530, K Prateek Nayak wrote:
-> Hello folks,
-> 
-> On 10/3/2024 11:01 AM, Klaus Kudielka wrote:
-> > On Sun, 2024-09-22 at 16:45 +0100, Chris Bainbridge wrote:
-> > > On Fri, Aug 30, 2024 at 02:34:56PM +0200, Bert Karwatzki wrote:
-> > > > Since linux next-20240820 the following messages appears when booting:
-> > > > 
-> > > > [    T1] smp: Bringing up secondary CPUs ...
-> > > > [    T1] smpboot: x86: Booting SMP configuration:
-> > > > [    T1] .... node  #0, CPUs:        #2  #4  #6  #8 #10 #12 #14  #1
-> > > > This is the line I'm concerend about:
-> > > > [    T1] psi: inconsistent task state! task=61:cpuhp/3 cpu=0 psi_flags=4 clear=0 set=4
-> > > > [    T1]   #3  #5  #7  #9 #11 #13 #15
-> > > > [    T1] Spectre V2 : Update user space SMT mitigation: STIBP always-on
-> > > > [    T1] smp: Brought up 1 node, 16 CPUs
-> > > > [    T1] smpboot: Total of 16 processors activated (102216.16 BogoMIPS)
-> > > > 
-> > > > I bisected this to commit 152e11f6df29 ("sched/fair: Implement delayed dequeue").
-> > > > Is this normal or is this something I should worry about?
-> > > > 
-> > > > Bert Karwatzki
-> > > 
-> > > I am also getting a similar error on boot, and bisected it to the same commit:
-> > > 
-> > > [    0.342931] psi: inconsistent task state! task=15:rcu_tasks_trace cpu=0 psi_flags=4 clear=0 set=4
-> > > 
-> > > #regzbot introduced: 152e11f6df293e816a6a37c69757033cdc72667d
-> > 
-> > Just another data point, while booting 6.12-rc1 on a Turris Omnia:
-> > 
-> > [    0.000000] Linux version 6.12.0-rc1 (XXX) (arm-linux-gnueabihf-gcc (Debian 14.2.0-1) 14.2.0, GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP Thu Oct  3 06:59:25 CEST 2024
-> > [    0.000000] CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d
-> > [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> > [    0.000000] OF: fdt: Machine model: Turris Omnia
-> > ...
-> > [    0.000867] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-> > [    0.000876] psi: inconsistent task state! task=2:kthreadd cpu=0 psi_flags=4 clear=0 set=4
-> > 
-> 
-> Not sure if someone took a stab at this but I haven't seen the "psi:
+On Thu, Oct 3, 2024 at 10:26=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> There have been multiple reports that the ACPI PM Timer disabling is
+> causing Sky and Kabe Lake systems to hang on all suspend (s2idle, s3,
+> hibernate) methods.
 
-I'm aware of the issue, but since it's just statistics and not
-anything 'important', I've been spending my time on those crashing bugs.
+It's Kaby Lake as pointed out  by Paul.
 
-> inconsistent task state" warning with the below diff. I'm not sure if my
-> approach is right which if why I'm pasting the diff before sending out
-> an official series. Any comments or testing is greatly appreciated.
-> 
-> The diff is based on:
-> 
->     git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git sched/urgent
-> 
-> at commit d4ac164bde7a ("sched/eevdf: Fix wakeup-preempt by checking
-> cfs_rq->nr_running")
+Other than this
 
-Thanks, I just pushed all that out to tip/sched/urgent.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> My approach was as follows:
-> 
-> o psi_dequeue() relied on psi_sched_switch() to set the PSI flags
->   appropriately for a dequeued task. However, psi_sched_switch() used
->   "!task_on_rq_queued(prev)" to judge if the prev task is blocked which
->   is now untrue with DELAYED_DEQUEUE. Fix it by checking
->   "p->se.sched_delayed" as well. I also added a matching check for
->   ENQUEUE_DELAYED for psi_enqueue().
-
-We already determine the whole sleep state earlier, the whole having
-called block_task() is a clue, perhaps we should propagate that state
-instead of trying to divinate it again.
-
-> o With the above, the warning was put off for a few more seconds but it
->   still appeared. I dumped all PSI flag transition along with
->   "tsk->se.sched_delayed" to see what trips it and I saw the following
->   state changes for the task that finally tripped it:
-> 
->     psi: task state: task=18:rcu_preempt cpu=0 psi_flags=0 clear=0 set=0 delayed=1
->     psi: task state: task=18:rcu_preempt cpu=128 psi_flags=0 clear=0 set=4 delayed=1
->     psi: task state: task=18:rcu_preempt cpu=128 psi_flags=4 clear=0 set=4 delayed=0
->     psi: inconsistent task state! task=18:rcu_preempt cpu=128 psi_flags=4 clear=0 set=4 delayed=0
-> 
->   Note that cpu switched with "tsk->se.sched_delayed" still set which
->   got me looking at the task migration path. The warning added below
->   in "deactivate_task()" tripped without fail, just before the PSI
->   warning was logged.
-> 
->   To prevent migration of a delayed entity (XXX: Is it a good idea?)
-
-It is not. By migrating the entities they can get picked sooner and the
-delayed thing gets removed sooner. Less 'hidden' weight.
-
->   we do a "account_task_dequeue()" in the delayed dequeue case to
->   remove the task from the "rq->cfs_list", thus removing it from the
->   purview of the load balancer.
-
-Anyway, assuming PSI wants to preserve current semantics, does something
-like the below work?
-
----
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 43e453ab7e20..0d766fb9fbc4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2012,7 +2012,7 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
--	if (!(flags & ENQUEUE_RESTORE)) {
-+	if (!(flags & ENQUEUE_RESTORE) && !p->se.sched_delayed) {
- 		sched_info_enqueue(rq, p);
- 		psi_enqueue(p, (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED));
- 	}
-@@ -2039,7 +2039,7 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(flags & DEQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
--	if (!(flags & DEQUEUE_SAVE)) {
-+	if (!(flags & DEQUEUE_SAVE) && !p->se.sched_delayed) {
- 		sched_info_dequeue(rq, p);
- 		psi_dequeue(p, flags & DEQUEUE_SLEEP);
- 	}
-@@ -6537,6 +6537,7 @@ static void __sched notrace __schedule(int sched_mode)
- 	 * as a preemption by schedule_debug() and RCU.
- 	 */
- 	bool preempt = sched_mode > SM_NONE;
-+	bool block = false;
- 	unsigned long *switch_count;
- 	unsigned long prev_state;
- 	struct rq_flags rf;
-@@ -6622,6 +6623,7 @@ static void __sched notrace __schedule(int sched_mode)
- 			 * After this, schedule() must not care about p->state any more.
- 			 */
- 			block_task(rq, prev, flags);
-+			block = true;
- 		}
- 		switch_count = &prev->nvcsw;
- 	}
-@@ -6667,7 +6669,7 @@ static void __sched notrace __schedule(int sched_mode)
- 
- 		migrate_disable_switch(rq, prev);
- 		psi_account_irqtime(rq, prev, next);
--		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
-+		psi_sched_switch(prev, next, block);
- 
- 		trace_sched_switch(preempt, prev, next, prev_state);
- 
+> Remove the acpi_pm_tmr_ctl_offset and acpi_pm_tmr_disable_bit settings fr=
+om
+> spt_reg_map to disable the ACPI PM Timer disabling on Sky and Kabe Lake t=
+o
+> fix the hang on suspend.
+>
+> Fixes: e86c8186d03a ("platform/x86:intel/pmc: Enable the ACPI PM Timer to=
+ be turned off when suspended")
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/linux-pm/18784f62-91ff-4d88-9621-6c88eb0a=
+f2b5@molgen.mpg.de/
+> Reported-by: Todd Brandt <todd.e.brandt@intel.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219346
+> Cc: Marek Maslanka <mmaslanka@google.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel/pmc/spt.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/=
+intel/pmc/spt.c
+> index 2cd2b3c68e46..ab993a69e33e 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -130,8 +130,6 @@ const struct pmc_reg_map spt_reg_map =3D {
+>         .ppfear_buckets =3D SPT_PPFEAR_NUM_ENTRIES,
+>         .pm_cfg_offset =3D SPT_PMC_PM_CFG_OFFSET,
+>         .pm_read_disable_bit =3D SPT_PMC_READ_DISABLE_BIT,
+> -       .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> -       .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>         .ltr_ignore_max =3D SPT_NUM_IP_IGN_ALLOWED,
+>         .pm_vric1_offset =3D SPT_PMC_VRIC1_OFFSET,
+>  };
+> --
+> 2.46.2
+>
+>
