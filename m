@@ -1,145 +1,162 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDEA14659F
-	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 09:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BFB17758;
+	Fri,  4 Oct 2024 09:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728032733; cv=none; b=k91/G+Lsr4yvtupIcTcmY9FDbqYTPxbYHl5nVlCVNQZGHQqRVr5DRgtNZDNDPyfyUEELyFdqLQyAuYxfKvxLi/dUVv8M0xx0NH2bEbUdx8DUE+pnlyn6CPH5vw/6NZ2gsZ3EH4EdeDSFSl0GhQ6G4WBfN00r7KH0Tptwp5mHwCs=
+	t=1728033164; cv=none; b=WYYB6BlhwiSyqPcu+mNJPAuvFiivLY0HQhJmorDZAoXMbCGG0K+ZOFZbXpZwb9+OPMxcdGgDdNOpbJ7emDKO95x5qXWL9l+iA918qt2MVg/ocGQZmYL+oRz6E69Uge7kTFKWKTtvxqOwjU0NhTTn13yzBCKijxHCwWzLckNB6sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728032733; c=relaxed/simple;
-	bh=hQk5heY3/6uQrcezxrcJO5pvQCYXdWliMkdIpd6kCbQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=NkRwTDf8LIqkwaKYXwdO2V5C6x3hiMyAwgJmYj1hlG7UjzW25k5yS1VS4UNog+V0WK/JmkYgk5WguhVb0uRPkcqxuTMgK1CXym8nqPIlyrmWdu1QbBWJLk+xUnpjIfQDLDfjId3avG6nAMlruq4fW+eySPUwywN8bbPehozFqZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=jcgINCLp; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
+	s=arc-20240116; t=1728033164; c=relaxed/simple;
+	bh=PngHURkFuXiBephwfpYTKTw7blLUCwxL7c/mijJdMMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLsDU4vZR4UEo5DlNYmC6+JaiYS74IMhY1ou7NNw5R3dNwPx+/5Ce7HAwKU3XW0QQAsp3H6f4G9gtL2/RhV7DtQNh4mJsANQq3iZxG1DRkqNj9lODFGKz8oLZRk8ukkiHyLVZFDm7OmoXDRXNposTLcU/BJQ1HNOyawCQtdihOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdpYMfu1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="jcgINCLp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdpYMfu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4D2C4CEC6;
+	Fri,  4 Oct 2024 09:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728033163;
+	bh=PngHURkFuXiBephwfpYTKTw7blLUCwxL7c/mijJdMMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jdpYMfu1ZNb3AjRTdiZ2QJw0Xnbjicx9Gz6ELRP4E4JrLmE/nPbNKByFDXOWJlnrb
+	 KWvMKAh5xOwioQ6NWUdwP3kUxhQ1uPijOWoKK9kXHBv4R5Tcjxkj4C/AkXs/9/54I+
+	 zyldPeYw7YSA1lamnAz7eClzf/uRYOdoAwDInzu1EE2xJksHXklsahEMPjbHxuG+JI
+	 AkdbYlX5TMIPXCjRbFvInTMvcnW7pwzn+zVbxh9f1+AcJDJqffnxpJrjMBobei2Y5l
+	 1GztfHwwT6E5fyFRQt0dg9YW8Q0mxcN5wkHvtd3gjNvxhCUgC5Bgkxi0iH+uwGUIFw
+	 aL6wET2oppxBw==
+Date: Fri, 4 Oct 2024 11:12:38 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org, 
+	linux-input@vger.kernel.org, Chris Hixon <linux-kernel-bugs@hixontech.com>, 
+	Skyler <skpu@pm.me>, Richard <hobbes1069@gmail.com>
+Subject: Re: [PATCH] HID: amd_sfh: Return immediately if no sensor is found
+Message-ID: <uupvw2jw6j5wkwtfwljipmpx4kynv6k3wqgy6sg3crw5r27rtm@mudhwifihmtw>
+References: <20241003160454.3017229-1-Basavaraj.Natikar@amd.com>
+ <a3fb27a2-5167-4880-9102-eaf0f47df398@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; s=key1;
-	t=1728032727;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hQk5heY3/6uQrcezxrcJO5pvQCYXdWliMkdIpd6kCbQ=;
-	b=jcgINCLpvvXVu6wtMsRrbohSX+uM+ZJMQXnb3RrlyFpjUjF3+E//kpkx/jchEQotwa0XK3
-	cEVl03LZtrDg3BM3W4DCxahHPz9h/kiAnKt7iTxC5i/F1cEAXJLksUFuDQHn5fhzCJqWDx
-	yqzJrFF5Z7rgTRi9c8u+XbijEx3kDWV8bR19QSJrOM2dB3QYdIOeoLpFf5kdrJqUoHrXjo
-	FZb/5ZUwAP3xoucwxZGMDncenvJpDvPj5od5QNVem3Yl8QeJTfCEvIuIcLM4m1zOqPLDVD
-	8vRn+E84SnLInSce/5HARoWdBMdPwyTituqLkVfIDvKK9K6bEx0uxnKe87qeuw==
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Oct 2024 02:05:15 -0700
-Message-Id: <D4MWH2BQF7FJ.3PSKFP1W5VO7M@kode54.net>
-Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Christopher Snowhill" <chris@kode54.net>
-To: "John Rowley" <lkml@johnrowley.me>
-Cc: "Mario Limonciello" <mario.limonciello@amd.com>, "Leo Li"
- <sunpeng.li@amd.com>, "Hamza Mahfooz" <hamza.mahfooz@amd.com>, "Harry
- Wentland" <harry.wentland@amd.com>, "Rodrigo Siqueira"
- <Rodrigo.Siqueira@amd.com>, <amd-gfx@lists.freedesktop.org>,
- <regressions@lists.linux.dev>
-References: <9b80e957-f20a-4bd7-a40b-2b5f1decf5a4@johnrowley.me>
- <925cd47c-8f1e-4b74-aeff-6d13ae5f0753@johnrowley.me>
- <95c575a3-100c-4808-b451-b92f14598188@amd.com>
- <836c2c82-4dfe-40f4-8d50-5e7bff04c38c@johnrowley.me>
- <7ed81635-3872-463c-94e5-e4972da9d014@amd.com>
- <bcc97e4e-ffe0-47a7-bd29-c993e5404a33@amd.com>
- <9c562132-64a0-41f5-80ad-8492d1039692@amd.com>
- <3c0dfd3a-9549-4afa-94b6-80041f498436@johnrowley.me>
- <25eed927-fe69-4005-8c0d-c5f3052e662e@amd.com>
- <92af8678-2b45-409e-82d1-f273fe907a36@johnrowley.me>
- <D4L9LH0XT9OL.2RUPJNHCEX3O@kode54.net>
- <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
-In-Reply-To: <11202dc3-ac11-4043-9592-c50bc3f237b6@johnrowley.me>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3fb27a2-5167-4880-9102-eaf0f47df398@leemhuis.info>
 
-On Wed Oct 2, 2024 at 5:34 AM PDT, John Rowley wrote:
-> If you're referring to the Freedesktop DRM issue then sinatosk a separate=
- poster. I'm not involved in that thread. =F0=9F=99=82
-> ----------------------------------------
+On Oct 04 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing the three reporters and the regressions list]
+> 
+> On 03.10.24 18:04, Basavaraj Natikar wrote:
+> > There is no need for additional cleanup, as all resources are managed.
+> > Additionally, if no sensor is found, there will be no initialization of
+> > HID devices. Therefore, return immediately if no sensor is detected.
+> 
+> I'm not a reviewer, so feel free to ignore the follow comment:
+> 
+> I think the patch description should mentioned that this bug caused
+> Memory Errors / Page Faults / btrfs going read-only / btrfs disk
+> corruption, as that is a crucial detail for later and downstreams that
+> need to consider when deciding about backporting.
+> 
+> > Fixes: 8031b001da70 ("HID: amd_sfh: Move sensor discovery before HID device initialization")
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=219331
+> 
+> Some reported-by tags IMHO would be appropriate to give credit; all
+> three reporters already agreed to use their email address in public.
+> 
+> There meanwhile is also one comment in the bugzilla ticket that could be
+> read as a tested-by tag.
+> 
+> Maybe a Link: to
+> https://lore.kernel.org/all/90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info/
+> might be appropriate as well.
+> 
+> Ohh, and participation in stable is optional, but given the severeness
+> on the problem: would you maybe be willing to add a stable tag to the
+> commit to ensure this is backported to affected stable series quickly?
 
-Oh, sorry, my mistake. I thought you had popped over to the issue
-tracker as well. Wasn't paying attention as much to the name of the user
-reporting it there. Carry on.
+Fully agree here. It would definitely help if the submitter of the patch
+keeps track of all of these instead of relying on the maintainers or
+Thorsten to do the tedious work.
+
+I was about to apply the patch, but I still have one remark on the fix
+itself.
 
 
-> From: Christopher Snowhill <chris@kode54.net>
-> To: John Rowley <lkml@johnrowley.me>; Mario Limonciello <mario.limonciell=
-o@amd.com>; Leo Li <sunpeng.li@amd.com>; Hamza Mahfooz <hamza.mahfooz@amd.c=
-om>
-> CC: Harry Wentland <harry.wentland@amd.com>; Rodrigo Siqueira <Rodrigo.Si=
-queira@amd.com>; amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev
-> Date: 2 Oct 2024 11:57:12
-> Subject: Re: [REGRESSION][BISECTED] 58a261bfc967: choppy GPU performance
->
-> > On Tue Oct 1, 2024 at 2:32 PM PDT, John Rowley wrote:
-> >> The attached patch seems to improve rendering performance a lot; anima=
-tions and desktop performance are generally smoother again.
-> >>=20
-> >> But it doesn't seem 100%, e.g. if I let the laptop idle for 10 secs be=
-fore interacting with the touchpad, the desktop cursor seems to stick in-pl=
-ace for 100-200ms or so, before becoming responsive again.
-> >>=20
-> >> This 'sticking' problem doesn't seem to occur with PSR disabled.
-> >>=20
-> >> My testing isn't exactly scientifically sound I'm afraid, if there's a=
- better test or benchmark I can run, please let me know.
-> >=20
-> > May want to also tell the list that you mis-applied the patch on the
-> > first go by misreading what it did and editing manually. I'm eager to
-> > hear whether the actual patch worked out better.
-> >=20
-> >>=20
-> >> On 01/10/2024 22:16, Mario Limonciello wrote:
-> >>> On 10/1/2024 16:14, John Rowley wrote:
-> >>>> Disabling PSR as per Leo's reply seems to have done the trick!
-> >>>>=20
-> >>>> Stock 6.12-rc1 (without revert): BROKEN
-> >>>>=20
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
-r_state:
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 6
-> >>>>=20
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
-r_capability:
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: yes
-> >>>>=20
-> >>>> With amdgpu.dcdebugmask=3D0x800: BROKEN
-> >>>>=20
-> >>>> With amdgpu.dcdebugmask=3D0x10: FIXED! Performance is as it was on 6=
-.11.
-> >>>>=20
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
-r_state:
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 0
-> >>>>=20
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/dri/0000:c1:00.0/eDP-1/ps=
-r_capability:
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Sink support: yes [0x03]
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0 Driver support: no [0xffffffff]
-> >>>>=20
-> >>>> I have the older Framework 13 panel (BOE 0x0BCA, 2256x1504 @ 59.999 =
-Hz) so I assume PSR isn't supported according to Mario, yet psr_{state,capa=
-bility} above seem to indicate otherwise?
-> >>>>=20
-> >>>=20
-> >>> PSR and Replay are two different things.=C2=A0 But from your above an=
-alysis it does confirm it's a PSR issue.
-> >>>=20
-> >>> There's a patch that Hamza attached to https://gitlab.freedesktop.org=
-/drm/amd/-/issues/3658.
-> >>>=20
-> >>> Can you try that?
-> >>>=20
-> >>> Thanks,
+> 
+> Ciao, Thorsten
+> 
+> > Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> > ---
+> >  drivers/hid/amd-sfh-hid/amd_sfh_client.c | 3 +--
+> >  drivers/hid/amd-sfh-hid/amd_sfh_pcie.c   | 4 +++-
+> >  2 files changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+> > index 4b59687ff5d8..3fcb971d5fda 100644
+> > --- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+> > +++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
+> > @@ -297,8 +297,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev *privdata)
+> >  	    (mp2_ops->discovery_status && mp2_ops->discovery_status(privdata) == 0)) {
+> >  		dev_warn(dev, "Failed to discover, sensors not enabled is %d\n",
+> >  			 cl_data->is_any_sensor_enabled);
+> > -		rc = -EOPNOTSUPP;
+> > -		goto cleanup;
+> > +		return -EOPNOTSUPP;
 
+so cleanup is doing:
+cleanup:
+	amd_sfh_hid_client_deinit(privdata);
+	for (i = 0; i < cl_data->num_hid_devices; i++) {
+		devm_kfree(dev, cl_data->feature_report[i]);
+		devm_kfree(dev, in_data->input_report[i]);
+		devm_kfree(dev, cl_data->report_descr[i]);
+	}
+	return rc;
+
+Would that means that the memory corruption appears during
+amd_sfh_hid_client_deinit(), or...
+
+> >  	}
+> >  
+> >  	for (i = 0; i < cl_data->num_hid_devices; i++) {
+> > diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
+> > index 0c28ca349bcd..1300f122b524 100644
+> > --- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
+> > +++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
+> > @@ -351,7 +351,9 @@ static void sfh_init_work(struct work_struct *work)
+> >  
+> >  	rc = amd_sfh_hid_client_init(mp2);
+> >  	if (rc) {
+> > -		amd_sfh_clear_intr(mp2);
+> > +		if (rc != -EOPNOTSUPP)
+> > +			amd_sfh_clear_intr(mp2);
+
+... or during amd_sfh_clear_intr()?
+
+This very much looks like a band-aid (I know it is because you can not
+reproduce, not blaming anyone), but I'd like to know a little bit more
+if the bug is not appearing anywhere else in the normal processing of
+the driver itself.
+
+Also a comment explaining why this is the only case where
+amd_sfh_clear_intr() should not be called would be appreciated.
+
+So all in all, I have a feeling one of these 2 functions is not making a
+proper check and I would rather fix the root cause, not the symptoms.
+
+Cheers,
+Benjamin
+
+
+PS: sorry, I know this is a long standing issue, but I'd rather not
+paper over a bigger issue :/
+
+> > +
+> >  		dev_err(&pdev->dev, "amd_sfh_hid_client_init failed err %d\n", rc);
+> >  		return;
+> >  	}
+> 
