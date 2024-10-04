@@ -1,127 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4699475;
-	Fri,  4 Oct 2024 04:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7638C1A
+	for <regressions@lists.linux.dev>; Fri,  4 Oct 2024 06:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728017520; cv=none; b=UkqyAfWOqtCVcgBBrTS4j/HAKofvb3y9eAsInk0/aTn+1l15+BJELSPxI3xq9yAzsPRYQ7GHn5ZExxFPOlJkmm8PxVOWCjTf2WiWJCjm47pbq8dQp1WOJQp0ynwtGfIrEA5in9CKiZQw/UEMuASH+q5+COzPWpi8YYOWqHtuH7s=
+	t=1728022841; cv=none; b=M7B4fyCXess6I+1p/EkhSIVTUEoFy9HZX4EzQYEephGS//W65XdhDjKNXNYSTfKbyORYtA0rIG7ylfisp3J+u2q15ZuzmnevMUgk3sMcGlf+tPxju3WPhRMq1hj58zQ1N8ApozRogcSgJhSxMX07XSeed4xONhd37QcFdJVsntw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728017520; c=relaxed/simple;
-	bh=H3bcColyjMwsCKDiO+ZtAlYvnTL8WuE1r4e2/6liiPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cyKZOXKYSID3N9OQzXIYhMmUwEawybrDQdOG4X4uoE6pAyoMeCZQix5n4P302cjX8ZAj5KZC7TBWmDCBnxA+nnq7bMfa/g0ZYfmQ1ac1kcDUHT50qevqwSP/4RZv9Zx2GM1iE1ES/hLRc88UhYujpib0U5HmxhiYqkTaW82WZ80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NJxNx4jD; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1728022841; c=relaxed/simple;
+	bh=8amoBqfejbGevaWPcDe2PfpZyB3puEPrkrbpwGBgjVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsh1KopEDILvW1I6VifPGCwDpBGh5tlY0IlhtkPwwhgsN5JUW14zjM32L2+kiqM2EM6lKHx6by47tPfZ6lvl3+/L1S76OA5VKIml8kBDvjiLgQJFKraP2o1hD9FXi36YnrVTDNRZBBXCbtbv95LEkowT45LT11hOkll9AuIjcHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kh2QflIp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NJxNx4jD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:Reply-To:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=lkzFRaxiEWD9m5LIbq8rywqh1Z61f9CsIVIICeQwVGY=; t=1728017518;
-	x=1728449518; b=NJxNx4jDFYdUs9a+pML+X3AX0V4G2h7dqya6iHYdMkaq33+fKKWTYW3zQxY0g
-	tBccnPmwq06lqrdue3Hv2cSJQG/sKYJXS7ByV1vmi6FAL/gbBFqFMYoWleEHtxVknEE4I1ceHa8C3
-	0IZaTZLOV+RH3rRsO48g981qYh8PIg7w4aJhefAbkclRLw2uPhYnzYI7ANd9XrEoPlfVPbiJFXq+e
-	eSd9+0REcLDAjLNIqmB0PYi8NjntafbdZNIpSc2DoIPEXRGVkJDGGHm6l9V6KuWCOFFlfJ3U8o8Ui
-	WFq7GDncR5dhfA1rAnsI4Kbe8obIGFqLg1PxD2AB+BsWiuZi2A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1swaIF-00033C-Jc; Fri, 04 Oct 2024 06:51:55 +0200
-Message-ID: <a3fb27a2-5167-4880-9102-eaf0f47df398@leemhuis.info>
-Date: Fri, 4 Oct 2024 06:51:55 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kh2QflIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728022839; x=1759558839;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8amoBqfejbGevaWPcDe2PfpZyB3puEPrkrbpwGBgjVo=;
+  b=Kh2QflIpRCIA3nmESUwsIUHtcNJo86VaY/NFr5mGzyvRfJdYoXKMfi/L
+   1rV5/OaejyC+kfO9aedJK6LQwZHD5M0MTW18BPO4vVRgQN8b8Z62ikDQV
+   +bTwmQX+1t1ycz7ICaRxsQkKieu0abOszON10+gGRfKp+9eZQ2HTb9IjH
+   q4Q5epP0vz5iixqSMUc47TOefd07+NdBQFONeI+cfENxFvR/aMkCbJuoQ
+   LOcvpH3HpLfxpgM/Q/Z44bnnBj9gRFgnWOSss7EG6AosU9dYk1XGO3R97
+   Gw/p2iZ4dm2C1hVy6eOaw7KIEfKN6+p+szs7Cdl8rQmRiUuBS9is2Gbyu
+   w==;
+X-CSE-ConnectionGUID: H52MR8CsQKqJ3FWMl8yjfw==
+X-CSE-MsgGUID: ZhxLHSafQhu9JKoSa9xM5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="27407464"
+X-IronPort-AV: E=Sophos;i="6.11,176,1725346800"; 
+   d="scan'208";a="27407464"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 23:20:39 -0700
+X-CSE-ConnectionGUID: BGvtQjhmS9C982/KYM7eCg==
+X-CSE-MsgGUID: 299ICQgnQOmglYdjnjinVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,176,1725346800"; 
+   d="scan'208";a="105447292"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 03 Oct 2024 23:20:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 8E0651C2; Fri, 04 Oct 2024 09:20:35 +0300 (EEST)
+Date: Fri, 4 Oct 2024 09:20:35 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Harry Wentland <harry.wentland@amd.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
+	regressions@lists.linux.dev, Raju.Rangoju@amd.com, Sanath.S@amd.com,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
+ device and USB4 Host Interface
+Message-ID: <20241004062035.GQ275077@black.fi.intel.com>
+References: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
+ <20241003054704.GM275077@black.fi.intel.com>
+ <01bf9a3a-6277-4b57-83ed-82c4bfb62dd2@amd.com>
+ <20241003132726.GN275077@black.fi.intel.com>
+ <797f52fa-ab9d-45c5-828b-9dcaf75fcc83@amd.com>
+ <20241003134743.GO275077@black.fi.intel.com>
+ <afb91d66-55b2-466d-87c6-5de196b326d8@amd.com>
+ <467722db-188f-4487-a837-01e65e194d3b@amd.com>
+ <9edf23d2-d5f7-4646-bde0-4af1e01abfd2@amd.com>
+ <18a0c8ec-0200-4a89-8a7c-fa585801def8@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] HID: amd_sfh: Return immediately if no sensor is found
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org,
- bentiss@kernel.org, linux-input@vger.kernel.org,
- Chris Hixon <linux-kernel-bugs@hixontech.com>, Skyler <skpu@pm.me>,
- Richard <hobbes1069@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20241003160454.3017229-1-Basavaraj.Natikar@amd.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <20241003160454.3017229-1-Basavaraj.Natikar@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728017518;bd9a7455;
-X-HE-SMSGID: 1swaIF-00033C-Jc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <18a0c8ec-0200-4a89-8a7c-fa585801def8@amd.com>
 
-[CCing the three reporters and the regressions list]
+Hi Harry,
 
-On 03.10.24 18:04, Basavaraj Natikar wrote:
-> There is no need for additional cleanup, as all resources are managed.
-> Additionally, if no sensor is found, there will be no initialization of
-> HID devices. Therefore, return immediately if no sensor is detected.
+On Thu, Oct 03, 2024 at 03:41:42PM -0400, Harry Wentland wrote:
+> > You said it can work properly without the revert if you don't boot with the dock plugged in?
+> > 
+> It can work properly without the revert if I boot without the dock plugged in.
 
-I'm not a reviewer, so feel free to ignore the follow comment:
-
-I think the patch description should mentioned that this bug caused
-Memory Errors / Page Faults / btrfs going read-only / btrfs disk
-corruption, as that is a crucial detail for later and downstreams that
-need to consider when deciding about backporting.
-
-> Fixes: 8031b001da70 ("HID: amd_sfh: Move sensor discovery before HID device initialization")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219331
-
-Some reported-by tags IMHO would be appropriate to give credit; all
-three reporters already agreed to use their email address in public.
-
-There meanwhile is also one comment in the bugzilla ticket that could be
-read as a tested-by tag.
-
-Maybe a Link: to
-https://lore.kernel.org/all/90f6ee64-df5e-43b2-ad04-fa3a35efc1d5@leemhuis.info/
-might be appropriate as well.
-
-Ohh, and participation in stable is optional, but given the severeness
-on the problem: would you maybe be willing to add a stable tag to the
-commit to ensure this is backported to affected stable series quickly?
-
-Ciao, Thorsten
-
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> ---
->  drivers/hid/amd-sfh-hid/amd_sfh_client.c | 3 +--
->  drivers/hid/amd-sfh-hid/amd_sfh_pcie.c   | 4 +++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_client.c b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> index 4b59687ff5d8..3fcb971d5fda 100644
-> --- a/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_client.c
-> @@ -297,8 +297,7 @@ int amd_sfh_hid_client_init(struct amd_mp2_dev *privdata)
->  	    (mp2_ops->discovery_status && mp2_ops->discovery_status(privdata) == 0)) {
->  		dev_warn(dev, "Failed to discover, sensors not enabled is %d\n",
->  			 cl_data->is_any_sensor_enabled);
-> -		rc = -EOPNOTSUPP;
-> -		goto cleanup;
-> +		return -EOPNOTSUPP;
->  	}
->  
->  	for (i = 0; i < cl_data->num_hid_devices; i++) {
-> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> index 0c28ca349bcd..1300f122b524 100644
-> --- a/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c
-> @@ -351,7 +351,9 @@ static void sfh_init_work(struct work_struct *work)
->  
->  	rc = amd_sfh_hid_client_init(mp2);
->  	if (rc) {
-> -		amd_sfh_clear_intr(mp2);
-> +		if (rc != -EOPNOTSUPP)
-> +			amd_sfh_clear_intr(mp2);
-> +
->  		dev_err(&pdev->dev, "amd_sfh_hid_client_init failed err %d\n", rc);
->  		return;
->  	}
-
+Can you provide full dmesg of that with "thunderbolt.dyndbg=+p" in the
+command line?
