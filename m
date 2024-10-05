@@ -1,264 +1,200 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23182487BE;
-	Sat,  5 Oct 2024 06:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728110723; cv=fail; b=o9wccrqxZziPLOFdR37hv91uxaDz7lerU9zdHX7Ta84/VjAswPSJFa1MHA1wTJ4AG8s2t8Pxr245BsZ7vIJJpeUtF0C/F8BlXqG0X22mR7mnbny5+uGMbKfvLytbHT2MddfCw+0o4yBZCQyMcR5nvxUFmSJgN4YJ4DqhQVAWc94=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728110723; c=relaxed/simple;
-	bh=BcucF1AUuMSdm2iFdHU/f7vMUFhEeCxc0IKna/zFlhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rPLnk3d4U2DmluC9jgdxKT0qONkB4empOo/9lLKQhWML2dYRXjCsJz48Hy5ctigA3Q2J+AVNIRag9ZxpVngwRJFKT91JFexXYOH+HrecvUOIhe5Y/TJSQCh/CnAUjN+wmnscEdGwXN+ODj3jnPBQOBn299eAmvrpdJrYr+AmVUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kLR1S7OC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rWwknNv/; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A2136331
+	for <regressions@lists.linux.dev>; Sat,  5 Oct 2024 11:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728127316; cv=none; b=uaehd7seGfWEodT8MyI0McFzWLsT1I8c1gUCslJaAzFO6wq+13qXzuSdxBtqlBlCtNeQ7Hw/RrftsTlhYSdLsUDdV6EUhuZmYSw9q3NIKilndt7R/yoMxf8r2mClwEwAs5+jt1GT+Inw9+8re3/gaj/CCtcHcQmhSLEnkCucCVc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728127316; c=relaxed/simple;
+	bh=RwOppEs9pChEeqy3ECnE8LIpbPdL87Kk8otfqZ4bRz8=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=EBmb/jQL5giloLj2DKcLj/n2fDB31iZ0y9G0Qf3BnPZjvzoQzw3uaJ+Qq2IqU3GqQOysFbQJRT7zWLokTpU8NiHxDDsri4lIsfdwxSdYsGcqGNun87UQC19K4vhDf5R4vvLbbRlSh9b1QoY/Bty8GZ0Q1yB8Xyyz/0SYI/S9UvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTEWVBoW; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kLR1S7OC";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rWwknNv/"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4956ECJV012492;
-	Sat, 5 Oct 2024 06:45:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=BcucF1AUuMSdm2iFdHU/f7vMUFhEeCxc0IKna/zFlhE=; b=
-	kLR1S7OCUBlUHuVdM/8FsG/6jWbnLvvXOl7mbHWJzt02rL58C5FwkPKW3O75mMrD
-	wJOZUTdSswQvnB3JropL3y+UFc79rOnwjDKT32YMSFFdT4jxPctJZEVWUC7kfAOb
-	0oGMCLyPnJu46bF8EacA/T/K0DMJG1ECuoL8k4uzzdMJhM/CVFIMymAZRbnj1B0k
-	OORafupqVs4f5oimQsQI4kD101QGWDQEFJoAmldZ34xy9A74vFYzS50Gqv5r/5Fn
-	OwraIvOCjF9puCIIo6g4twBdw9E+zkxCWKiY68rDTKaau7vfyonMxffd+v3U91D8
-	UI96n1S4+M2b/MKI8wkRHg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42300dr0hd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 05 Oct 2024 06:45:12 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4956Y1ec011530;
-	Sat, 5 Oct 2024 06:45:11 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422uw44cnw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 05 Oct 2024 06:45:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MONn+vjVlXYEte8oGKWVoqVcVkc/+hwJwGcEBv/BoeNoWEMFFvAqY2c6ct0h2M6neYcxzgJJbtPFT1K78p0A5i56T4A8mcf+O81i8iZjkCqAaF4tfZYS7jhLWlK2zVAgm861LrrndDsfo42fs+Yz9miw5CwMxpVAawvqs/+2tOOEJBHNTfSenTa7dxwmzpQjt2kk0IPK6MrIRKN6oONcCuCjOnDCEf64CixHamp/A+KyRSLJNyvwTX+NVGnNYUead9YRtBxPIjQvRdBm7FH2TmtWSve8eoNpwN4pzJhFicbvbZRjYs1AGgiZjPMw7OcdeeO7MSzq6LUVxAl6Ozm4JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BcucF1AUuMSdm2iFdHU/f7vMUFhEeCxc0IKna/zFlhE=;
- b=FgNmKJgUUubszNUUlBx/wOu4TnKweORxrVK7pKXSDlCijQVhpdRwG1+Uyvb8nsHHwa4gTT2pBapl2w5GJKDJIp99IDiGOG9LoMXaVWiXm2wAJLC+suxjpvZ8kyGQjb0IGctZZ0wHRhQMtPZN1l2PBgxsGfRdlmwZidf3XUTsBPfVPQ/ugqBwVvVNNeFQWptEm07q2eBcIor15k7HLRXN8aIIKu5NxKCBO1XimFSFcv8NOiuH4Sl9Lcme1AcVVAR6rMC7BL2PKSfHV1BOu0Kk1SXGS7V3ThCiS1dgacXxRrwNWE23AU0zIXvo6FvyDGd0EdBxxX53klXx5yVe5YAUpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTEWVBoW"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-37cc810ce73so1687063f8f.1
+        for <regressions@lists.linux.dev>; Sat, 05 Oct 2024 04:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BcucF1AUuMSdm2iFdHU/f7vMUFhEeCxc0IKna/zFlhE=;
- b=rWwknNv/iP5dmODkbkXn5AyoQR97I2vyH6deyVrrTH4hOuLp6y797mc2Bd0Md6V5CGH8Cc/4ykaiiR8mVwifezZK3l/iNDi0xVBROxQHH1zWS8uvAIQNvssUnRq8YxAA57V0YJMLQhW4BMnpnvB7SEzcSmNf0m3sHEAEvj94KBg=
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com (2603:10b6:a03:3d0::5)
- by MN6PR10MB8192.namprd10.prod.outlook.com (2603:10b6:208:4fd::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.19; Sat, 5 Oct
- 2024 06:45:09 +0000
-Received: from SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e]) by SJ0PR10MB5613.namprd10.prod.outlook.com
- ([fe80::4239:cf6f:9caa:940e%5]) with mapi id 15.20.8026.019; Sat, 5 Oct 2024
- 06:45:09 +0000
-Date: Sat, 5 Oct 2024 07:45:06 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        linux-fsdevel@vger.kernel.org, Liam.Howlett@oracle.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: 6.12/BUG: KASAN: slab-use-after-free in m_next at
- fs/proc/task_mmu.c:187
-Message-ID: <47b6ee29-f4a1-45d4-bc32-72b4e2a9afb9@lucifer.local>
-References: <CABXGCsOPwuoNOqSMmAvWO2Fz4TEmPnjFj-b7iF+XFRu1h7-+Dg@mail.gmail.com>
- <CABXGCsOw5_9o1rCweNd6i+P_R3TqaJbMLqEXqRO1NfZAVGyqOg@mail.gmail.com>
- <f6bd472e-43d9-4f66-8fc2-805905b1a8d9@lucifer.local>
- <302fd5b8-e4a4-4748-9a91-413575a54a9a@lucifer.local>
- <CABXGCsOsZ5TyEjSWTk6e=FU30a27N4J0gqNCat65gweyKPtZ_A@mail.gmail.com>
- <CABXGCsPnsZALwJSLtJN2guTfN8b2LcdZ79Gq_VzpwTKUdfY3nw@mail.gmail.com>
- <7edcb18f-8877-4c95-83a2-1c5090ffd1a3@lucifer.local>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7edcb18f-8877-4c95-83a2-1c5090ffd1a3@lucifer.local>
-X-ClientProxiedBy: LO2P123CA0008.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::20) To SJ0PR10MB5613.namprd10.prod.outlook.com
- (2603:10b6:a03:3d0::5)
+        d=gmail.com; s=20230601; t=1728127313; x=1728732113; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sUxzih5dkiEWBkMrM77iQA4M8O9bWU3kN2b6VHPMjbM=;
+        b=NTEWVBoWZg9JHGCgFk2WrSEAEd9zMPqGKjOtrGj1Vw51aRRHM9qUAXrBrjygARSvmt
+         TFSB54oHF1GzTorE4Sm1qpFXy3O49NPc24RFBGpGoyuUjW/zYGSM6xNKNnQwrBach+HY
+         rPBQ0/r8l1eTdP0hZ+z6cztM29OgQ5ahs3Notkd2yOndAZKO7K9EDTD3MBSRnzZIzTk0
+         tsvt3MMG5EhJIy/8HcldCKb9eIczZEIQKsku4vylJaps51yQKXxBhqFhW0r38/P0UzsV
+         w69ipD0aZ1bEZH+/gEf9iS1fYbtrGpiF4to2ZwFfKVSToszuQvFqBVY1rLFjpMNThD3L
+         vq1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728127313; x=1728732113;
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sUxzih5dkiEWBkMrM77iQA4M8O9bWU3kN2b6VHPMjbM=;
+        b=YAMjllyJuWDISMIL+3Jo63GVvLwZhir54m5MsPcCqcdnR9z1EWyNUc9VHnopkAUoWe
+         fxVDmaz7olHMPks1b5l4xhvDslgcadJDt7eU99A1TjbG8HaXu1A4W7yfMB+Iomtko2eC
+         0i2O4uBX3cp2Q1DXvSPms02nKT+jzHaIS9UDW964t2PUouNUeYECPKt12LpqPh5Oklh7
+         CyhbLRgk4Y8lRu7++3UO/hpCe/C8kAUZs14qDGeg6HH+0W9wF6gtK4Odd08OYHFI3MBl
+         BAL7C9Q9bnLh3N0XybnNAvnbrDbotDNEmjOiNmCjntV/NYyOi7E++Aep0fRDJ1uMeWHd
+         pVRw==
+X-Gm-Message-State: AOJu0YxOPd26BfibWAVCnQPAxbIv/y3JrCTJP8s8RaLU6ms4NBB8BzkY
+	mcoRSF3RoRnfLC76G/ft6XMoWDwqddomsFAT7M6lbabO2x+FIkCt55TboQ==
+X-Google-Smtp-Source: AGHT+IGRnpzpSNu7HIIVf+veHOn8vKU3np0ZaOluSRP2iT5WLfY9kN4UeM2JJ7zxLTqMkCIlQQJ9KA==
+X-Received: by 2002:a5d:4d4e:0:b0:371:8f19:bff5 with SMTP id ffacd0b85a97d-37d0e6f2e3amr3396702f8f.3.1728127312787;
+        Sat, 05 Oct 2024 04:21:52 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:758d:3770:c0e8:c4b8? ([2a02:168:6806:0:758d:3770:c0e8:c4b8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1690f194sm1589735f8f.7.2024.10.05.04.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Oct 2024 04:21:52 -0700 (PDT)
+Message-ID: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
+Subject: [REGRESSION] alg: ahash: Several tests fail during boot on Turris
+ Omnia
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Date: Sat, 05 Oct 2024 13:21:51 +0200
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.0-1+b1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB5613:EE_|MN6PR10MB8192:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6fc7d68f-cd24-481c-cc81-08dce509410d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|10070799003|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S09ONVV1Wk5oa0hHenJOcUxMSmk1WDNlYmJla0lXNGhWUWNxK0x2N2x1T3Yv?=
- =?utf-8?B?QlhrN3Z5RHQveTcyZGpUVWVhUElQN1BoQm9EUjRweW5KSi9QdnVwVXJiaDh4?=
- =?utf-8?B?OUtlYmtPSllKb1VkMGNmUnoydmMvbEVoaENPdHNab1ZmTWhlOXdOeDFZVEdS?=
- =?utf-8?B?YTFkS0J1TENhejRJbVh1NUFnQ083ZVczamJIVENXT01jOXFYMHhGTnBvYWRH?=
- =?utf-8?B?RHNGdXJyZndpckFrMVM4QVl1ZHFueXlkZTdWYkw3SnFPZ1BUb0RSbEx0ckVQ?=
- =?utf-8?B?QmhOeUpMd3h1ZVhEMmZGMnN0YTlRWkx1cWdrdGU2YnNBelh4MmM0QkxudG5m?=
- =?utf-8?B?R0hQS3l6QW1lWnlwTkJoeGwxSkozdlQ4MGsycG95dTFYN2YzLzY1YlZJNk00?=
- =?utf-8?B?dFYxTGc1NHUzMnVPYlVVUXAzOTVqUTVRSWJRdjBRMmZmTkpaQkNQMXJPUGVh?=
- =?utf-8?B?U0NhUTAzdnFYYXJaMFExL3dSSDJKcWozOXBGOVZUSFlOTWtaLzI1RUVUamZ4?=
- =?utf-8?B?R2ZlZTUzQVFOenNVSVNvK0FxWlFEQTlxQ2VLMFBlUGNzQW1GU3c2WUwvM1ll?=
- =?utf-8?B?TlZtMUxoemVDdktUdWc1NGNPWm5BNEVmMlZpbW5kUkREZ29nWGJhUlhZNnEr?=
- =?utf-8?B?andQdjJFWXc5RjNaU3k1UTNtYzUvbGE1Yi8rcHFDZTFUNndueXp2RWk0WU1Z?=
- =?utf-8?B?alAvSjNIbFQ5QnY2OW9JbGh1SS9IYmJqNXl6Zm1qZ0hFa2VycmQ0aEtReHRY?=
- =?utf-8?B?VDdESUxFNDNpRUNGSEo2YnlkeEJqWVZudlhYZ1c0c2tvVnBOZ0JDVXdGR2tw?=
- =?utf-8?B?RE40VzltQTAydTJ5cTVVN2VNSjc4bzRXY2VzRlJzdHJsVnUrdVhjdThBOXNW?=
- =?utf-8?B?ek5hMFFnOVl0RGdkOXYyOFFBMFRCVC9md015TUpqNUFQaDJhSmxkTG5DTkdz?=
- =?utf-8?B?enYwb2FKbUxtbjZqcEFQV05IUWQ5NHBEVXJ6UW83VEFJSXRSUC9WdTFnbGg1?=
- =?utf-8?B?d3lSdVR6MVM1bkhUQUkzemhGUmNNK3YwZEE0REltaUVyYzRFVVo4UHpEbFRU?=
- =?utf-8?B?SmhtUG5CT0lBYWErTDc5Sjd0QzkxbUEvdkhhd1FXWkRkY0FOVEZ0ZlZ6R0Fn?=
- =?utf-8?B?MC9HdTJKa2gvNUxDa21BRVdtZkwvbGZkU1F5Qk1qLzdDTDd5THNVL1NJdVFU?=
- =?utf-8?B?RVJyUHVWRVJMNU0veDVuOWV4Slp1ZVo2cXNHQXdJWHdIZTJ1OGM3QW9WamFF?=
- =?utf-8?B?Wk1rMTBJRGxEZWRZakE1dUl5WG4wR3gxdFhaaHNpTnEzQWw5OWRuMlJ0RUZp?=
- =?utf-8?B?VmptQzdLNnpNREJQbGowbjI5MVZlYS9NRURJaXFnUHJHbk5ORkZjL0tXalU1?=
- =?utf-8?B?TzhRTFRLd1VTLy9SWEZVYW9BTzd3V2loVE51YkJGVG5TZ05xeVRlVWsvdVo3?=
- =?utf-8?B?ajhJbUZkZlJoczVwRW5pcnBLcU1PWVArRkFVcjhWL0R6Ym5CcDFxSXZjK2FL?=
- =?utf-8?B?TmxWU3llYURXcE1XNi81RWQ3eGdUQkMvaGNvL040YXA1SlYzUE9Pb3drZ0Vr?=
- =?utf-8?B?bXROcDBOSkhscC9jNXNLdUZUQ1F4ZEkvZlRCOU04TEt3U1BIZUJyYjNZdU1n?=
- =?utf-8?B?T1pOamQwZWQ4NTF3WGdhRGtubHdmN0ZheEluSDlxdjBDZ1JHSFRkMzNJaS96?=
- =?utf-8?B?M255V0piczJzcU91TDFxbnNzWHNOclZJK2NudWRRcms5RmFHUDFDUlFnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5613.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZzZuUTlDYUpLTFJpNXlEYnRIOHIrc2F1MUFsTkdRSG9QUHpseDJ0SnI2QS9X?=
- =?utf-8?B?UUNMMlBJQmtsN3Vycmd3MjB3YzFIVmw5eW1QUlNINXlQdzQrOEtidXczd2sw?=
- =?utf-8?B?MUpFbG5iWEMyVXpwZGxhNkgyMThUeHBaRGJxa3FtVWlnQkRJYUZCajBVMjUy?=
- =?utf-8?B?N1Q2dDg5UGFNU1RZRitWdVB3L2taVFM1b0Zqd0NDNFlFUFlQQlpkOFZtaGFp?=
- =?utf-8?B?RWZWYVVsR0VLVE00R2VtMHUzMU9iUmNvQWc2L3hqbUtjUXZFWE42ZzFDcGpH?=
- =?utf-8?B?MnoxMDU0amdZVTdEWUdkYmRobFVHSnlMWm9pU2g0WWVqNnp0VkgremtHSWdJ?=
- =?utf-8?B?VXhjNGhFMFdvSk5NUjh5QkI5TXpCZkp5Rm1SNFhsMXZuakRxNXhJRld5TzBG?=
- =?utf-8?B?Y3pVNjBnMVJqbTFHczVqT2hBUjE3Yko5TklZOHJCOE1EdzlIWXB4MEJ4U1pO?=
- =?utf-8?B?dit0M29JTHZJUlBmMWlUZDMzTDVzQklZb2RQODFOTTdsT1BGeEl0YzM4TU9v?=
- =?utf-8?B?WW1Sci90UnNMeE92ZU03RWY5UGt2c2d1VytHdC9aY0hJNFY2cDV0VzV4K3Va?=
- =?utf-8?B?MngzVnlDbnFWcWJ1WjdSQ3lZSDVrTWRlc3VONE0yUk55aTdkZjZWejF5bkJK?=
- =?utf-8?B?R3luVzJkWkRTakJWTXMva2xvUHRZazV3V2p4bGh1a0FtZ0d1UmpnOVI5UU9L?=
- =?utf-8?B?NkdMekZBNVhZYkRmQXZyNWQ1YVNQMW1SZ01HVkpIT3ArbDR3dE1iNGR4L2hU?=
- =?utf-8?B?YmhPSEd0VlVEd3BBbTUrdmZrSGlLU1NFT2RaUDg5TTU5MzF4TzIyengwNndq?=
- =?utf-8?B?MGYzSkJMSjZlK1U5bmxlRTNjREtsN1dEa2ZPSHlkOWgwOFpDR05vdFNKZUxT?=
- =?utf-8?B?OFk0dWYvS3RSbExsS2k2ZWNMRkNEcTFWbVhhdHdXZ2g1WHpxMGpkeUhhV0NZ?=
- =?utf-8?B?RU1Ec1RsWFI3TkhBRWdmTUJ0Y053YytXWkxXSVUrdzBkanMvSk52c0grZUIr?=
- =?utf-8?B?OVpyZ3J6S3p6ODh4N2JGREdWZ21ycUdCZEZSODRGalY3MXpOOUdoTTJlRDRn?=
- =?utf-8?B?UDBMdzcrV0twdXl3QnRkejVXN0dSY3Y2bVZqQXlCU2pSZktRV0o4WVNRUDVt?=
- =?utf-8?B?aGc5TjNuUmIrMXNZbkcvNHIxcnlFdmVRR0VPZzFWRlBUSE5UR1doUWwzUktT?=
- =?utf-8?B?alNXVWZvVlh5QmIwUEl0d3ZVOC9Jamc1MHNNd2xxQllGRERVZ2hqVXZMRDVh?=
- =?utf-8?B?WXIwVzArRG9adm5vSERCd2s2anlJbjRDUTFwK2xPVjdWVStGbXJ6bmF5S25H?=
- =?utf-8?B?QWNRN3RJRnNZSk4wU3FqMGc0ZXNQQkUvZnVtOEdlSmk4M2VoSFdueE91ek9P?=
- =?utf-8?B?bnN1WktaeExldUpCU2dEdHhCcnZDdVlBQ211L1J5a0NxWW0xRE9ZNCs2eU42?=
- =?utf-8?B?NW84alYyRE14QTVPK1F1eVVCdkJTT0JEUG84M0xsL2JZeDBYQ2R0TVk0YXcv?=
- =?utf-8?B?elE2OEZQSUo3Mzl1UXJxUG5abHlOK3UyNlMrQWJmZjhkM1I4dE1ENUpnKys3?=
- =?utf-8?B?R1JJcm9Sc1liWVBHTEd5TU5yc1pxN2M2TWNDbzlQUW9XbElPWi82aXpEdjVQ?=
- =?utf-8?B?dnlqUkpOY2xkZW04WENQTnlvYmxYb1pzanNHVGtaQzd3b25vSjl0MkxvY09s?=
- =?utf-8?B?SHQ0VEJpc1krOVU5Tnd5WEFqeHJkZGxveEhoNWpMaXFjWks3UkJaOVlrVTJO?=
- =?utf-8?B?N3M0UTRucjVzbDlVdXpHVWZpNlhwdndqMjAxM2w4dVhqZG4rRGY0MHg0YVFC?=
- =?utf-8?B?QUw5eXhUOWg3cjh5eTkvVVdkbm8rTDF0YjBhRVFxK2xXMTRvcGhzWGd0TENs?=
- =?utf-8?B?aHpnb0lYSlNRM0V4NlpKNDZ1bGxPYVdsVUozUTMrUVpBakZtRWFQck9oeVNB?=
- =?utf-8?B?aG1uMktJdk83UGtNaWRTdDZlaEt6YmluQkZQeXYvYSt5c09mR0RyY2RmV25z?=
- =?utf-8?B?L1JNczQ4cWJBZVI2dDBtOU91c3p1V3hXdVZzQkR3RzhTcEJOLzB0SnhYdlFS?=
- =?utf-8?B?bGRRU1UrUUxZaUZ4OXd5T3lVRVRybTFSUno0dld4REVIVk9XekgxN0tueU1t?=
- =?utf-8?B?WThvZUUyTGp1aWkrbnBWeTZRdFQ3ZHh0aUdxK3BDMVVuRVErM29PdEYvck9Z?=
- =?utf-8?B?S2lySUpld1FLanhad05OWnh0eGkrR0F6MWZoeGR2dU5rMTRXREdSUndXNWhV?=
- =?utf-8?B?THltOHJUY0JhL0FnbGtYUW8yc0J3PT0=?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	zxEZUD+iIKuf0wXp6F0ulG0C4hCBYvjGOYJE1EpY/k/p1mVwE9OqHo+OGROVFR5ToX+WIxg5gaIi+bH27ImLDuGQYA2QODnoLNULZ/1LAwBVupPTNPQvVICeFlvOENVD/yo/nnbxjXBOyNeFcmbdX9WgMSzQM0LF7C/MaluBvC5fwJP1H2tQ0VM3QTE1UdESYE0Eu4ciVbCdVj54pHf5L1TrIs8HZ71+SoAuvSYKUE1JBrV1cAzMBiOhbY0jWqWN62Xed1L/ZPL0PCvCt0jjkYGcKG91eR1Z2k2TRVinelzv4+pMSJUM9MBHB9og9rUd45jmVhDMQYO4ngCE4d5fBm0htGCayR9qd/omBmh8O1Dw5xAOS8EPNiFeAdstHd4uK5OndWeL27u9G93TlkJ1j+yji3FxXUQxkz4aNsD23cEwkr6c0EciKy8+6mgOj+0bfxTwja+DNgfxKrrpIhcT1RKbct/tJ36ccYNzZLYLRMNEwDUbk+USp16ofC9a+gGX+XJVBylDvh/O6JomwAnPOI+ln9M4Xo+CEiVkH1yR7bR0IXb3JYhQ3sqGk9MCeNvuAi5+q0GVfd4DrY4kjDDezgEiwdKfCyQa7bO65Co32Zw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fc7d68f-cd24-481c-cc81-08dce509410d
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5613.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2024 06:45:08.9694
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bmzRaC5Eq568c14H16le9WEYp8q+71NiHotrWdPKXkpwb3jWcRpQDmGwJwJ1DXKAZP5rIeJWfGHYcJc/uSo4fQZyRJbKA5eRf9rXxQkxzbA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB8192
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-05_06,2024-10-04_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 mlxscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2410050047
-X-Proofpoint-GUID: 3Na02Y4INTfB3l6_YVu_m5bUHaJqrtV6
-X-Proofpoint-ORIG-GUID: 3Na02Y4INTfB3l6_YVu_m5bUHaJqrtV6
 
-On Thu, Oct 03, 2024 at 10:52:03PM +0100, Lorenzo Stoakes wrote:
-> On Fri, Oct 04, 2024 at 02:25:07AM +0500, Mikhail Gavrilov wrote:
-> > On Thu, Oct 3, 2024 at 1:45 AM Mikhail Gavrilov
-> > <mikhail.v.gavrilov@gmail.com> wrote:
-> > >
-> > > On Wed, Oct 2, 2024 at 10:56 PM Lorenzo Stoakes
-> > > <lorenzo.stoakes@oracle.com> wrote:
-> > > > We can reliably repro it with CONFIG_DEBUG_VM_MAPLE_TREE, CONFIG_DEBUG_VM, and
-> > > > CONFIG_DEBUG_MAPLE_TREE set, if you set these you should see a report more
-> > > > quickly (let us know if you do).
-> > >
-> > > mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_VM_MAPLE_TREE'
-> > > # CONFIG_DEBUG_VM_MAPLE_TREE is not set
-> > > mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_VM'
-> > > CONFIG_DEBUG_VM_IRQSOFF=y
-> > > CONFIG_DEBUG_VM=y
-> > > # CONFIG_DEBUG_VM_MAPLE_TREE is not set
-> > > # CONFIG_DEBUG_VM_RB is not set
-> > > CONFIG_DEBUG_VM_PGFLAGS=y
-> > > CONFIG_DEBUG_VM_PGTABLE=y
-> > > mikhail@primary-ws ~/dmesg> cat .config | grep 'CONFIG_DEBUG_MAPLE_TREE'
-> > > # CONFIG_DEBUG_MAPLE_TREE is not set
-> > >
-> > > Fedora's kernel build uses only CONFIG_DEBUG_VM and it's enough for
-> > > reproducing this issue.
-> > > Anyway I enabled all three options. I'll try to live for a day without
-> > > steam launching. In a day I'll write whether it is reproducing without
-> > > steam or not.
-> >
-> > A day passed, and as expected, the problem did not occur until I launch Steam.
-> > But with suggested options the stacktrace looks different.
-> > Instead of "KASAN: slab-use-after-free in m_next+0x13b" I see this:
-> >
-> > [88841.586167] node00000000b4c54d84: data_end 9 != the last slot offset 8
->
-> Thanks, looking into the attached dmesg this looks to be identical to the
-> issue that Bert reported in the other thread.
->
-> The nature of it is that once the corruption happens 'weird stuff' will
-> happen after this, luckily this debug mode lets us pick up on the original
-> corruption.
->
-> Bert is somehow luckily is able to reproduce very repeatably, so we have
-> been able to get a lot more information, but it's taking time to truly
-> narrow it down.
->
-> Am working flat out to try to resolve the issue, we have before/after maple
-> trees and it seems like a certain operation is resulting in a corrupted
-> maple tree (duplicate 0x67ffffff entry).
->
-> It is proving very very stubborn to be able to reproduce locally even in a
-> controlled environment where the maple tree is manually set up, but am
-> continuing my efforts to try to do so as best I can! :)
->
-> Will respond here once we have a viable fix.
+Hello,
 
-I cc'd (and tagged) you over there, but I have a fix for this problem, do give
-it a try! [0]
+with mainline kernel v6.12-rc1 I noticed a regression on my Turris Omnia (M=
+arvell Armada 385), during my regular boot testing.
+Several crypto self-tests now report "test failed (wrong result)":
+	mv-hmac-sha256
+	mv-hmac-md5
+	mv-hmac-sh1
+For reference, v6.11.0 is completely ok.
 
-[0]: https://lore.kernel.org/linux-mm/20241005064114.42770-1-lorenzo.stoakes@oracle.com/
+To be a bit more precise: Not all selftests reliably fail during all boots,=
+ but during most boots I get at least a single failure.
 
-[snip]
+I was able to bisect this, and the culprit is:
 
-Cheers, Lorenzo
+	commit 37da5d0ffa ("crypto: api - Do not wait for tests during registratio=
+n")
+
+If I counted correctly, 3 of 4 boots reported self-test errors with that co=
+mmit, and
+0 of 3 boots reported self-test errors with its parent.
+
+Example boot log with self-test errors (relevant parts only):
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 6.11.0-rc1+ (...) (arm-linux-gnueabihf-gcc (De=
+bian 14.2.0-1) 14.2.0, GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP Sat =
+Oct  5 11:58:34 CEST 2024
+[    0.000000] CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=3D10c=
+5387d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instr=
+uction cache
+[    0.000000] OF: fdt: Machine model: Turris Omnia
+...
+[    0.274868] marvell-cesa f1090000.crypto: CESA device successfully regis=
+tered
+...
+[    0.330736] alg: ahash: mv-hmac-sha256 test failed (wrong result) on tes=
+t vector 1, cfg=3D"init+update+final aligned buffer"
+[    0.332541] alg: ahash: mv-hmac-md5 test failed (wrong result) on test v=
+ector 1, cfg=3D"init+update+final aligned buffer"
+[    0.341851] alg: self-tests for hmac(sha256) using mv-hmac-sha256 failed=
+ (rc=3D-22)
+[    0.352648] alg: self-tests for hmac(md5) using mv-hmac-md5 failed (rc=
+=3D-22)
+[    0.352653] ------------[ cut here ]------------
+[    0.352656] ------------[ cut here ]------------
+[    0.352656] WARNING: CPU: 0 PID: 73 at crypto/testmgr.c:5908 alg_test+0x=
+5e4/0x60c
+[    0.352659] WARNING: CPU: 1 PID: 71 at crypto/testmgr.c:5908 alg_test+0x=
+5e4/0x60c
+[    0.352669] alg: self-tests for hmac(sha256) using mv-hmac-sha256 failed=
+ (rc=3D-22)
+[    0.352670] alg: self-tests for hmac(md5) using mv-hmac-md5 failed (rc=
+=3D-22)
+[    0.352673] Modules linked in:
+[    0.352673] Modules linked in:
+[    0.352680] CPU: 1 UID: 0 PID: 71 Comm: cryptomgr_test Not tainted 6.11.=
+0-rc1+ #1
+[    0.352688] Hardware name: Marvell Armada 380/385 (Device Tree)
+[    0.352691] Call trace:=20
+[    0.352697]  unwind_backtrace from show_stack+0x10/0x14
+[    0.352717]  show_stack from dump_stack_lvl+0x50/0x64
+[    0.352731]  dump_stack_lvl from __warn+0x94/0xc0
+[    0.352742]  __warn from warn_slowpath_fmt+0x110/0x16c
+[    0.352757]  warn_slowpath_fmt from alg_test+0x5e4/0x60c
+[    0.352768]  alg_test from cryptomgr_test+0x18/0x38
+[    0.352777]  cryptomgr_test from kthread+0xdc/0xf8
+[    0.352788]  kthread from ret_from_fork+0x14/0x28
+[    0.352797] Exception stack(0xf0fb5fb0 to 0xf0fb5ff8)
+[    0.352803] 5fa0:                                     00000000 00000000 =
+00000000 00000000
+[    0.352809] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
+00000000 00000000
+[    0.352814] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    0.352818] ---[ end trace 0000000000000000 ]---
+[    0.352819] CPU: 0 UID: 0 PID: 73 Comm: cryptomgr_test Not tainted 6.11.=
+0-rc1+ #1
+[    0.352828] Tainted: [W]=3DWARN
+[    0.352831] Hardware name: Marvell Armada 380/385 (Device Tree)
+[    0.352834] Call trace:=20
+[    0.352837]  unwind_backtrace from show_stack+0x10/0x14
+[    0.352853]  show_stack from dump_stack_lvl+0x50/0x64
+[    0.352866]  dump_stack_lvl from __warn+0x94/0xc0
+[    0.352877]  __warn from warn_slowpath_fmt+0x110/0x16c
+[    0.352891]  warn_slowpath_fmt from alg_test+0x5e4/0x60c
+[    0.352902]  alg_test from cryptomgr_test+0x18/0x38
+[    0.352910]  cryptomgr_test from kthread+0xdc/0xf8
+[    0.352920]  kthread from ret_from_fork+0x14/0x28
+[    0.352929] Exception stack(0xf0f11fb0 to 0xf0f11ff8)
+[    0.352934] 1fa0:                                     00000000 00000000 =
+00000000 00000000
+[    0.352940] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
+00000000 00000000
+[    0.352946] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    0.352953] ---[ end trace 0000000000000000 ]---
+[    0.353088] alg: ahash: mv-hmac-sha1 test failed (wrong result) on test =
+vector 0, cfg=3D"init+update+final aligned buffer"
+[    0.354325] mv88e6085 f1072004.mdio-mii:10: switch 0x1760 detected: Marv=
+ell 88E6176, revision 1
+[    0.364023] alg: self-tests for hmac(sha1) using mv-hmac-sha1 failed (rc=
+=3D-22)
+[    0.364029] ------------[ cut here ]------------
+[    0.364032] WARNING: CPU: 1 PID: 72 at crypto/testmgr.c:5908 alg_test+0x=
+5e4/0x60c
+[    0.364043] alg: self-tests for hmac(sha1) using mv-hmac-sha1 failed (rc=
+=3D-22)
+[    0.364046] Modules linked in:
+[    0.364054] CPU: 1 UID: 0 PID: 72 Comm: cryptomgr_test Tainted: G       =
+ W          6.11.0-rc1+ #1
+[    0.364062] Tainted: [W]=3DWARN
+[    0.364065] Hardware name: Marvell Armada 380/385 (Device Tree)
+[    0.364068] Call trace:=20
+[    0.364072]  unwind_backtrace from show_stack+0x10/0x14
+[    0.364089]  show_stack from dump_stack_lvl+0x50/0x64
+[    0.364102]  dump_stack_lvl from __warn+0x94/0xc0
+[    0.364114]  __warn from warn_slowpath_fmt+0x110/0x16c
+[    0.364127]  warn_slowpath_fmt from alg_test+0x5e4/0x60c
+[    0.364139]  alg_test from cryptomgr_test+0x18/0x38
+[    0.364147]  cryptomgr_test from kthread+0xdc/0xf8
+[    0.364157]  kthread from ret_from_fork+0x14/0x28
+[    0.364166] Exception stack(0xf0ef9fb0 to 0xf0ef9ff8)
+[    0.364172] 9fa0:                                     00000000 00000000 =
+00000000 00000000
+[    0.364177] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
+00000000 00000000
+[    0.364183] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    0.364187] ---[ end trace 0000000000000000 ]---
+
+Best regards, Klaus
+
+#regzbot introduced: 37da5d0ffa7b61f79156fbbd3369f17b9a1638bd
