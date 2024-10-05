@@ -1,80 +1,77 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99E444C77
-	for <regressions@lists.linux.dev>; Sat,  5 Oct 2024 17:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A035515539A
+	for <regressions@lists.linux.dev>; Sat,  5 Oct 2024 23:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728149687; cv=none; b=pMT6WKyol/gRQD4LUwiib2Ft2gRrLkZq1Qwc54Z08rnT/NQ50MxdUpYaL76AWMLMUfV5NhCzp0WCwhRuJ3nXpJ8B4N4I3DbAGoS9cn6nqCmO8fch3U+nv8qaL19tkYh9lH5qcjj9cBrokbaPCINA5gRLbspQ0BE1wl46EZN6yu4=
+	t=1728169284; cv=none; b=kzdxt6Jeo0VMKVUQ5kXaBQhmqhRDnI3gyOzwhm4YKJXFWR/ym4gDqbKsn+AnY/fhnflrdluTPg0GIaXPS8nXEfCZ4PHWygEUoxhgDEOduLQLY7U+hBpSn4gGD6y1or3cjZRIdTlCHdEszbgzVLPfIUvjoi4rTl8ZL60vtgYyoMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728149687; c=relaxed/simple;
-	bh=NIHe2xMqWUFiQ/uXX3SWdPEPRuyarVFgejrCsW47wsc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=nxSuQ7oK7s62en6Jxg7O4PYSf2uAz1nUC4exB0HuGqsGbdm/2aMBfEB7mQBUeeQUxNxpa6iWHctJTQ7w34rq789b+syb/B0jP2LnAktgqodTAnnGq8SLzItT52wKH1wTc3UxTZOIa2/OP3P33ZSOwftMNY7PZcKOFqV46mma28Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MU/23TqJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1728169284; c=relaxed/simple;
+	bh=AHqtrUXLnRrR0Ri2ZrDjK/CplQXTk70tmu7zF21/EHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aq/k45iXV6wbpEghqdvn+T/T21zyqFIXhF1vSk6cdCWF3DIV2C2NnT5o58xDY+DDSKYQLZEOy+zi2sYWE8oN+lBusvTUmd4BCACeD99mbx7SkW7uDZZ32mMjTN9gqMZI26vQLcaa161ZlmAFQVO7tY642UaQMENuse4b3F28uTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DdLKz9Q3; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MU/23TqJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=NIHe2xMqWUFiQ/uXX3SWdPEPRuyarVFgejrCsW47wsc=; t=1728149685;
-	x=1728581685; b=MU/23TqJzNcOE/9jvixZMLbTt8pNvRQrctrhd85sxAIYRQbcDoQ6tZodMR1Ph
-	GEMLPDoly8jW2c910wrD5AKZK42Op0vV6hJ7iAnja7V957AAlmHofpsp6rZgTWWlSRW9WSttdvXqB
-	yP0MA9EL0Qfdw1UPh9EvPddHmQWc9NKj135+OqfBL22NKrTrjlPEZkrxVz2wbTN3+BxAhcVvEnRBV
-	Vw+f66LGyutTAh93NeXawwNXbilTKr3Ha8eZ4vXPOhUkylnWDVYlzf+7jh+FN4blTfrgd5jzMmOLE
-	+hn3X+/wHNlInPfnLouIYzUeXuq8upHwvrZJ7TnKtNYlrq0EHQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sx7z6-0000Rb-CR; Sat, 05 Oct 2024 18:50:24 +0200
-Message-ID: <edbae49b-9411-4962-9238-2b224d68d546@leemhuis.info>
-Date: Sat, 5 Oct 2024 18:50:22 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DdLKz9Q3"
+Date: Sat, 5 Oct 2024 17:01:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1728169276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=7X5Jq+AcA+jPDD+/febQkLpikiOOBc5DGkmdTZQg63Q=;
+	b=DdLKz9Q31ZbJBeGJ7xn6A8Fhzbjg91gGy7MDDqmRa9Vzzoa4/EoaHqW3mwILIURlbhL5Vt
+	bDjnF0JeLIbsUMDqsjNo5IdVwhMtdD/0EY4aX9eI3+RHwY0/uIb3/KSZUA4EHQDI3SCCla
+	96v3uMzoQMq0heS6eZsJf5r1NjcBW5c=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jose Fernandez <jose.fernandez@linux.dev>
+To: Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Kenny Levinsen <kl@kl.wtf>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	Nam Cao <namcao@linutronix.de>
+Cc: linux-input@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION] HID: i2c-hid: Touchpad not working on Thinkpad Z16 Gen 2
+Message-ID: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728149685;39f95872;
-X-HE-SMSGID: 1sx7z6-0000Rb-CR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
+I'm using Fedora 40 with the vanilla kernel built from the 6.12-RC1 [1]. There
+is a regression that causes the touchpad to stop working on my Thinkpad Z16 Gen
+2 (Sensil touchpad). dmesg shows this on 6.12-rc1 when filtering by `hid`:
 
+[    0.134369] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0, rdevid:160
+[    0.134370] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1, rdevid:160
+[    0.134371] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2, rdevid:160
+[    0.134372] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3, rdevid:160
+[    1.214845] hid: raw HID events driver (C) Jiri Kosina
+[    1.214881] usbcore: registered new interface driver usbhid
+[    1.214882] usbhid: USB HID core driver
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+and this in 6.10.12 (touchpad working):
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219346
-#regzbot introduced: e86c8186d03a6ba018e881ed45f0962ad553e861
-#regzbot summary: platform/x86:intel/pmc: hanging on freeze
-#regzbot monitor:
-https://lore.kernel.org/platform-driver-x86/20241003202614.17181-1-hdegoede@redhat.com/
+[    0.143812] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0, rdevid:160
+[    0.143814] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1, rdevid:160
+[    0.143815] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2, rdevid:160
+[    0.143815] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3, rdevid:160
+[    1.244550] hid: raw HID events driver (C) Jiri Kosina
+[    1.244588] usbcore: registered new interface driver usbhid
+[    1.244589] usbhid: USB HID core driver
+[    2.291822] hid-generic 0018:2C2F:0027.0001: input,hidraw0: I2C HID v1.00 Mouse [SNSL0027:00 2C2F:0027] on i2c-SNSL0027:00
+[    2.349966] hid-generic 0018:056A:5383.0002: input,hidraw0: I2C HID v1.00 Mouse [WACF2200:00 056A:5383] on i2c-WACF2200:00
+[    2.357724] hid-multitouch 0018:2C2F:0027.0001: input,hidraw1: I2C HID v1.00 Mouse [SNSL0027:00 2C2F:0027] on i2c-SNSL0027:00
+[    2.516529] wacom 0018:056A:5383.0002: hidraw0: I2C HID v1.00 Mouse [WACF2200:00 056A:5383] on i2c-WACF2200:00
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219348
-#regzbot introduced: v6.11.v6.12-rc1
-#regzbot summary: amd-pstate: disabling boost became impossible
+The regression doesn't seem to be race-related. I've restarted and re-logged
+multiple times, and the issue reproduces consistently.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219349
-#regzbot introduced: 9c02404b52f56..8c245fe7dde3
-#regzbot summary: pci_for_each_dma_alias: NULL pointer dereference
-#rebzbot dup: https://lore.kernel.org/all/20241003213932.GA324584@bhelgaas/
-
-#regzbot report:
-https://lore.kernel.org/all/20241003213932.GA324584@bhelgaas/
-#regzbot from: Marcin Mirosław <marcin@mejor.pl>
-
+[1] https://copr.fedorainfracloud.org/coprs/g/kernel-vanilla/mainline-wo-mergew/
