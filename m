@@ -1,105 +1,161 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E251C01;
-	Sun,  6 Oct 2024 03:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7C816130C
+	for <regressions@lists.linux.dev>; Sun,  6 Oct 2024 08:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728186432; cv=none; b=D9YILm4QGRnjU61pXV4X1/avlaRR9t9qMy9GXqC9c/J6ooBPnqQfFfiOcpGhUVuhkZfWax+5VYWWSJG4yDOZ4VLut8jhl3vZnmdEEhkEG46G/f0Y2pdkl3CaKxji38IoHlB1OeYK96FN9T2mXZkQ5stKAVThw09dVopbaPPvQPI=
+	t=1728204465; cv=none; b=YkwMXRMY4EpGvgXjHhswVn9WdWxPBPZriNL/O64yie3UdoHijoPiBQ3V3BzDRQt5d/PdEEwG5rdCNm8w8cabSWYwO4sjsV6kcgu7Yd/aWzqHRbyU82g5ELQxj2nro7cDmHC6SfSLQn53tD0LE3xxjgwgvBwPcGfEuo1yCHnrPPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728186432; c=relaxed/simple;
-	bh=FgUI5vIs7CPoln+/89pl/nBaWdv3Lqng894uL+niwD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FaMXn3BsswTxa2Oq7dwUMSOQPCS91x1fX2Ycp/q5m3xyYLqOVjpU5W+5kNbW9aHzxsbWB4Q4+2h6lrQzImBPkUH9sBex5zWu6CBTbBI6q1UXcZKXQIbDnYS85qRo+eQyrMtoGPmKqZHD4IDTb2pwWaJ/W/nqotDNA120+5hH0h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Vmu7Jt0W; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1728204465; c=relaxed/simple;
+	bh=VefKXn4256AekPAE/FKsD4k2x/jTt3+ChOBib9JanGk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ksz3deS0X4CrlhZTB5kXMV7FfDIqqtuIoSKeZulNFwNQ60VgH4hMXRVjAfHQFn9xR0oSPSp3yfPY05uLSti0HEs8uZ0jny7BrJ9ROgxk31hJrSPDkmRcTPedon94kmhRZqDEk3mq/wRkm2yE9Tx0CRAapRyBM4X+Rg7ZTGpbDTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dW+NMf/f; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Vmu7Jt0W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=p9cXIAoTIyIixdgGIeBS0WxofOTy2wq3A8SOEu93cYo=;
-	t=1728186426; x=1728618426; b=Vmu7Jt0Wn3LuZ5phSBACw3pinV8UmDjYl4IKQWbT4YYj/AE
-	1eoZkj8zF8movANRVutf1leQTAWIc5FMfB0FwLNJPuQ3qXFpoemwuet1rtBaOGDR7dGIgufT9I70x
-	YhejjZQFjTJT2YzbtxYxz3qLawKyAPIB8Ufb1cvrtbO6AjPR5N2mxlFRlT7FmSlnpedDWSSt9zb/A
-	qf6HGt8BqRRXkRT3vgOjRp9uqBwq649J8UrsOO4CtCIuqQFeFuyoHBBFvPvEKbTZ/Onn+kLw+4Kmn
-	8+REez3YHqWj1lulDcbWuTug8cY2z3DBOtmHq1gWhnvIzpZ0BcTwCvEVsz9g5+1A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sxIEV-0003ZD-Pc; Sun, 06 Oct 2024 05:46:59 +0200
-Message-ID: <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
-Date: Sun, 6 Oct 2024 05:46:59 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dW+NMf/f"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42cbbb1727eso34247425e9.2
+        for <regressions@lists.linux.dev>; Sun, 06 Oct 2024 01:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728204462; x=1728809262; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NJHEoXsWN5hyUxajNYzXjn5PZ0HeusIMUN5+ZB1UWo8=;
+        b=dW+NMf/fromSkwIMlQ9FBBPqoacrHbvpYP8FZwJWzsWwb8S8G9r2YDHb+mHx2xu6/N
+         Kjc/KGj9k0D6KWeDXtJaPxn6qCzUA23BqQUoG/NvHnFSMUWFzOB2PvCK4qSt4CaFCuEV
+         acfHyo+sc7g5cslJg/fILsfwD5WJfPDqkdHRQ1VP1m/NVn4yGAWiZoVxmW2keTbb65v7
+         cgxrYcNMTCWYHq0uDYYcXv9o6+rGqPXbRVbGKB6YeOI1w22nNfhyWT31HeIW/U2J3eQQ
+         MS66PT6H1xBZa8wku0kLrfSOxCbLcp5fPgo8BzkUqwb/QLoK7ietGlt2wSEmNpfA+sI2
+         M9zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728204462; x=1728809262;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NJHEoXsWN5hyUxajNYzXjn5PZ0HeusIMUN5+ZB1UWo8=;
+        b=IC+h45JWfhNRpus6t/SaYZ6+bSTJDzz2wFjCbaY2dUwBW6U10eGpUM9335c6qxE5Bf
+         mNgBxf0ysPcj0Kw7M80Y71qqWpXC3muqCDjsxceJG/1gR+Nu02JIVnUOIY30BoEanvgR
+         Aw5jQbX0huL30cSxItJPb1gYEE9cyGylyiN0R4NIkIvEHA0V3I+Bka20yPsjer/Gf6co
+         6u8lTRtzTjRTH0EEFTleXDF1c4vyGQ/1nCWU+R13GvydlxZGxMkfTZgfj7zK3/Ez0oJB
+         P1Io7+Br8UaQEQelay1mkgxNAimOzRgMFDsolgvKr7QzTlZkpKyWrzk3HLKE4ixKG14u
+         GR2A==
+X-Gm-Message-State: AOJu0Yx4BSVJOkyqswDeP5Vzn8ZDb9u+4+i1NqvEDO1yB0s9sto/t0bs
+	1K4nGwOGi/G15LIslTR8/gW4b6cWZhbOQ0MD5I6CQ8fhgLMtyXbFTvYGWw==
+X-Google-Smtp-Source: AGHT+IG1iyqcTvXYAHKq0HImvyLzS5elsP3aE7861jOtnTLfHBwZjkPtP5/uG1FQ/wAoq9QCzu96Rw==
+X-Received: by 2002:a05:600c:4e86:b0:42f:5ca3:d784 with SMTP id 5b1f17b1804b1-42f85aae76dmr69458895e9.14.1728204461792;
+        Sun, 06 Oct 2024 01:47:41 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:88c9:84c7:abb8:5637? ([2a02:168:6806:0:88c9:84c7:abb8:5637])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f86b4acddsm59245735e9.44.2024.10.06.01.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2024 01:47:41 -0700 (PDT)
+Message-ID: <900b7ee9e96e38b0d3cc088f3c6040be0915464b.camel@gmail.com>
+Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
+ Turris Omnia
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Date: Sun, 06 Oct 2024 10:47:40 +0200
+In-Reply-To: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
+References: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.0-1+b1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HID: i2c-hid: Touchpad not working on Thinkpad Z16
- Gen 2
-To: Jose Fernandez <jose.fernandez@linux.dev>, Jiri Kosina
- <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Douglas Anderson <dianders@chromium.org>, Hans de Goede
- <hdegoede@redhat.com>, Kenny Levinsen <kl@kl.wtf>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Johan Hovold <johan+linaro@kernel.org>, Nam Cao <namcao@linutronix.de>
-Cc: linux-input@vger.kernel.org, regressions@lists.linux.dev
-References: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728186426;d5262585;
-X-HE-SMSGID: 1sxIEV-0003ZD-Pc
 
-On 06.10.24 01:01, Jose Fernandez wrote:
-> I'm using Fedora 40 with the vanilla kernel built from the 6.12-RC1 [1]. There
-> is a regression that causes the touchpad to stop working on my Thinkpad Z16 Gen
-> 2 (Sensil touchpad). dmesg shows this on 6.12-rc1 when filtering by `hid`:
+Some more experimental evidence on this.
+I just evaluated the "selftest" status in /proc/crypto after boot.
 
-Could you try latest git instead of rc1 if you haven't yet? E.g. the
-latest packages from your "[1]". I wonder if this is
-https://bugzilla.redhat.com/show_bug.cgi?id=2314756
-which is fixed by a3f9a74d210bf5 ("Revert "Input: Add driver for PixArt
-PS/2 touchpad"") [v6.12-rc1-post]
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a3f9a74d210bf5b80046a840d3e9949b5fe0a67c
-).
+I looked at three versions, each with 5 boots.
+- v6.12-rc1
+- 37da5d0ffa7b (the culprit)
+- 96ad59552059 (the parent of the culprit)
 
-Ciao, Thorsten
 
-> [    0.134369] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0, rdevid:160
-> [    0.134370] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1, rdevid:160
-> [    0.134371] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2, rdevid:160
-> [    0.134372] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3, rdevid:160
-> [    1.214845] hid: raw HID events driver (C) Jiri Kosina
-> [    1.214881] usbcore: registered new interface driver usbhid
-> [    1.214882] usbhid: USB HID core driver
-> 
-> and this in 6.10.12 (touchpad working):
-> 
-> [    0.143812] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0, rdevid:160
-> [    0.143814] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1, rdevid:160
-> [    0.143815] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2, rdevid:160
-> [    0.143815] AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3, rdevid:160
-> [    1.244550] hid: raw HID events driver (C) Jiri Kosina
-> [    1.244588] usbcore: registered new interface driver usbhid
-> [    1.244589] usbhid: USB HID core driver
-> [    2.291822] hid-generic 0018:2C2F:0027.0001: input,hidraw0: I2C HID v1.00 Mouse [SNSL0027:00 2C2F:0027] on i2c-SNSL0027:00
-> [    2.349966] hid-generic 0018:056A:5383.0002: input,hidraw0: I2C HID v1.00 Mouse [WACF2200:00 056A:5383] on i2c-WACF2200:00
-> [    2.357724] hid-multitouch 0018:2C2F:0027.0001: input,hidraw1: I2C HID v1.00 Mouse [SNSL0027:00 2C2F:0027] on i2c-SNSL0027:00
-> [    2.516529] wacom 0018:056A:5383.0002: hidraw0: I2C HID v1.00 Mouse [WACF2200:00 056A:5383] on i2c-WACF2200:00
-> 
-> The regression doesn't seem to be race-related. I've restarted and re-logged
-> multiple times, and the issue reproduces consistently.
-> 
-> [1] https://copr.fedorainfracloud.org/coprs/g/kernel-vanilla/mainline-wo-mergew/
-> 
-> 
+v6.12-rc1
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
+Boot #		1	2	3	4	5
+--------------------------------------------------------
+mv-hmac-sha256	unknown	unknown	unknown	passed	unknown
+mv-hmac-sha1	passed	unknown	unknown	passed	unknown
+mv-hmac-md5	passed	passed	passed	passed	unknown
+mv-sha256	unknown	unknown	passed	passed	passed
+mv-sha1		passed	unknown	passed	passed	unknown
+mv-md5		passed	passed	passed	passed	unknown
+mv-cbc-aes	passed	passed	passed	passed	passed
+mv-ecb-aes	passed	passed	passed	passed	passed
+mv-cbc-des3-ede	passed	passed	passed	passed	passed
+mv-ecb-des3-ede	passed	passed	passed	passed	passed
+mv-cbc-des	passed	passed	passed	passed	passed
+mv-ecb-des	passed	passed	passed	passed	passed
+crc32c-generic	passed	passed	passed	passed	passed
+sha224-generic	passed	passed	passed	passed	passed
+sha256-generic	passed	passed	passed	passed	passed
+
+
+37da5d0ffa7b (=E2=80=9Ccrypto: api - Do not wait for tests during registrat=
+ion=E2=80=9D)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Boot #		1	2	3	4	5
+--------------------------------------------------------
+mv-hmac-sha256	unknown	unknown	unknown	unknown	unknown
+mv-hmac-sha1	unknown	unknown	unknown	passed	unknown
+mv-hmac-md5	unknown	unknown	unknown	passed	unknown
+mv-sha256	passed	passed	unknown	unknown	unknown
+mv-sha1		unknown	passed	unknown	passed	passed
+mv-md5		unknown	passed	passed	passed	unknown
+mv-cbc-aes	passed	passed	passed	passed	passed
+mv-ecb-aes	passed	passed	passed	passed	passed
+mv-cbc-des3-ede	passed	passed	passed	passed	passed
+mv-ecb-des3-ede	passed	passed	passed	passed	passed
+mv-cbc-des	passed	passed	passed	passed	passed
+mv-ecb-des	passed	passed	passed	passed	passed
+crc32c-generic	passed	passed	passed	passed	passed
+sha224-generic	passed	passed	passed	passed	passed
+sha256-generic	passed	passed	passed	passed	passed
+
+
+96ad59552059 (=E2=80=9Ccrypto: api - Remove instance larval fulfilment=E2=
+=80=9D)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Boot #		1	2	3	4	5
+--------------------------------------------------------
+mv-hmac-sha256	passed	passed	passed	passed	passed
+mv-hmac-sha1	passed	passed	passed	passed	passed
+mv-hmac-md5	passed	passed	passed	passed	passed
+mv-sha256	passed	passed	passed	passed	passed
+mv-sha1		passed	passed	passed	passed	passed
+mv-md5		passed	passed	passed	passed	passed
+mv-cbc-aes	passed	passed	passed	passed	passed
+mv-ecb-aes	passed	passed	passed	passed	passed
+mv-cbc-des3-ede	passed	passed	passed	passed	passed
+mv-ecb-des3-ede	passed	passed	passed	passed	passed
+mv-cbc-des	passed	passed	passed	passed	passed
+mv-ecb-des	passed	passed	passed	passed	passed
+crc32c-generic	passed	passed	passed	passed	passed
+sha224-generic	passed	passed	passed	passed	passed
+sha256-generic	passed	passed	passed	passed	passed
+
+
+If I interprett regzbot history correctly, there was already one fix applie=
+d on top of the culprit.
+But e7a4142b35ce is already part of v6.12-rc1, and obviously did not solve =
+my problem.
+
+
+
+Best regards, Klaus
