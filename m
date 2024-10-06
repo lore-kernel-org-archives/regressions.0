@@ -1,161 +1,68 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7C816130C
-	for <regressions@lists.linux.dev>; Sun,  6 Oct 2024 08:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EAA15444E;
+	Sun,  6 Oct 2024 09:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728204465; cv=none; b=YkwMXRMY4EpGvgXjHhswVn9WdWxPBPZriNL/O64yie3UdoHijoPiBQ3V3BzDRQt5d/PdEEwG5rdCNm8w8cabSWYwO4sjsV6kcgu7Yd/aWzqHRbyU82g5ELQxj2nro7cDmHC6SfSLQn53tD0LE3xxjgwgvBwPcGfEuo1yCHnrPPg=
+	t=1728205897; cv=none; b=Mr94HX7M5M97eDYQXumkqbun9Wg43dLi2Un8fVf+eATpA27Me7bW/yHQJhDg+P/LjrWcpgTokrtq4UDMGGmuW/ng34p4wwiJl+fItQi3Pdhqm3W1R/iNq8dfnpQraI/sLUe3H9HoiyTkyvqftCzt921g5fdqRi3y0kvxNcHrmxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728204465; c=relaxed/simple;
-	bh=VefKXn4256AekPAE/FKsD4k2x/jTt3+ChOBib9JanGk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ksz3deS0X4CrlhZTB5kXMV7FfDIqqtuIoSKeZulNFwNQ60VgH4hMXRVjAfHQFn9xR0oSPSp3yfPY05uLSti0HEs8uZ0jny7BrJ9ROgxk31hJrSPDkmRcTPedon94kmhRZqDEk3mq/wRkm2yE9Tx0CRAapRyBM4X+Rg7ZTGpbDTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dW+NMf/f; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728205897; c=relaxed/simple;
+	bh=xlKlKgRuc8qjN4G3/Tzxa0cyrZ3RlG9lR8hrI9QjqKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Wrh8QVmNczSZ9ojoamgqOZokeVQgcNLSLVTdbnGaWkNZHz4GryLW5S6MJuw+9BUZ7CqGGQrXSZDKAMowDjVa8/Egs1T15RT9TrRYu3TP+tiZMrfGiy+oBwKhMftd7uEyKEg62WBkqG6f8o8tgiiMsg/iuJPikzQP24F8CEk/+bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=bDCb6nn5; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dW+NMf/f"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42cbbb1727eso34247425e9.2
-        for <regressions@lists.linux.dev>; Sun, 06 Oct 2024 01:47:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728204462; x=1728809262; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NJHEoXsWN5hyUxajNYzXjn5PZ0HeusIMUN5+ZB1UWo8=;
-        b=dW+NMf/fromSkwIMlQ9FBBPqoacrHbvpYP8FZwJWzsWwb8S8G9r2YDHb+mHx2xu6/N
-         Kjc/KGj9k0D6KWeDXtJaPxn6qCzUA23BqQUoG/NvHnFSMUWFzOB2PvCK4qSt4CaFCuEV
-         acfHyo+sc7g5cslJg/fILsfwD5WJfPDqkdHRQ1VP1m/NVn4yGAWiZoVxmW2keTbb65v7
-         cgxrYcNMTCWYHq0uDYYcXv9o6+rGqPXbRVbGKB6YeOI1w22nNfhyWT31HeIW/U2J3eQQ
-         MS66PT6H1xBZa8wku0kLrfSOxCbLcp5fPgo8BzkUqwb/QLoK7ietGlt2wSEmNpfA+sI2
-         M9zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728204462; x=1728809262;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NJHEoXsWN5hyUxajNYzXjn5PZ0HeusIMUN5+ZB1UWo8=;
-        b=IC+h45JWfhNRpus6t/SaYZ6+bSTJDzz2wFjCbaY2dUwBW6U10eGpUM9335c6qxE5Bf
-         mNgBxf0ysPcj0Kw7M80Y71qqWpXC3muqCDjsxceJG/1gR+Nu02JIVnUOIY30BoEanvgR
-         Aw5jQbX0huL30cSxItJPb1gYEE9cyGylyiN0R4NIkIvEHA0V3I+Bka20yPsjer/Gf6co
-         6u8lTRtzTjRTH0EEFTleXDF1c4vyGQ/1nCWU+R13GvydlxZGxMkfTZgfj7zK3/Ez0oJB
-         P1Io7+Br8UaQEQelay1mkgxNAimOzRgMFDsolgvKr7QzTlZkpKyWrzk3HLKE4ixKG14u
-         GR2A==
-X-Gm-Message-State: AOJu0Yx4BSVJOkyqswDeP5Vzn8ZDb9u+4+i1NqvEDO1yB0s9sto/t0bs
-	1K4nGwOGi/G15LIslTR8/gW4b6cWZhbOQ0MD5I6CQ8fhgLMtyXbFTvYGWw==
-X-Google-Smtp-Source: AGHT+IG1iyqcTvXYAHKq0HImvyLzS5elsP3aE7861jOtnTLfHBwZjkPtP5/uG1FQ/wAoq9QCzu96Rw==
-X-Received: by 2002:a05:600c:4e86:b0:42f:5ca3:d784 with SMTP id 5b1f17b1804b1-42f85aae76dmr69458895e9.14.1728204461792;
-        Sun, 06 Oct 2024 01:47:41 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:88c9:84c7:abb8:5637? ([2a02:168:6806:0:88c9:84c7:abb8:5637])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f86b4acddsm59245735e9.44.2024.10.06.01.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2024 01:47:41 -0700 (PDT)
-Message-ID: <900b7ee9e96e38b0d3cc088f3c6040be0915464b.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="bDCb6nn5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WlRrQ+D7JLm1BG4Mvs34iW8Ec+6c18hoPBAnK0niUA4=; b=bDCb6nn5MNs28YJUHuNsYgkxEN
+	87XxNAP7hFsdBW7nA1JjPuXQymL8tmHTV3oUJyojyqZTQKMrWUg4myeF4Z261+j1DwPsCUdXD68Wl
+	PHSor409Wkqp8wAZiH+yrNVnf9ydjPLhU4m3yAXQetCfajCVSqF6RleExaROcfkLY1bFW7yaHk7dP
+	O9bANMGAIsD111KnpPv9jXCi+mvI4f0sXbymrVS/FD065WKPzBhjF9PxkosBEOfyKAdmm+vZ3omYr
+	TtWl9VSOeZ+UE2Ckbykbl0H9Qk3JLb+gUsOiJQ0OD9lkxDdxWV1vDeYhCZPKvoDsqSc+qZy1HtTzN
+	CPePNMKQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sxN8X-007Dj5-1k;
+	Sun, 06 Oct 2024 17:11:24 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 06 Oct 2024 17:11:23 +0800
+Date: Sun, 6 Oct 2024 17:11:23 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
  Turris Omnia
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Date: Sun, 06 Oct 2024 10:47:40 +0200
-In-Reply-To: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
-References: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1+b1 
+Message-ID: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel
 
-Some more experimental evidence on this.
-I just evaluated the "selftest" status in /proc/crypto after boot.
+Klaus Kudielka <klaus.kudielka@gmail.com> wrote:
+>
+> [    0.330736] alg: ahash: mv-hmac-sha256 test failed (wrong result) on test vector 1, cfg="init+update+final aligned buffer"
+> [    0.332541] alg: ahash: mv-hmac-md5 test failed (wrong result) on test vector 1, cfg="init+update+final aligned buffer"
+> [    0.341851] alg: self-tests for hmac(sha256) using mv-hmac-sha256 failed (rc=-22)
+> [    0.352648] alg: self-tests for hmac(md5) using mv-hmac-md5 failed (rc=-22)
 
-I looked at three versions, each with 5 boots.
-- v6.12-rc1
-- 37da5d0ffa7b (the culprit)
-- 96ad59552059 (the parent of the culprit)
+Please post your kernel config file.
 
-
-v6.12-rc1
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Boot #		1	2	3	4	5
---------------------------------------------------------
-mv-hmac-sha256	unknown	unknown	unknown	passed	unknown
-mv-hmac-sha1	passed	unknown	unknown	passed	unknown
-mv-hmac-md5	passed	passed	passed	passed	unknown
-mv-sha256	unknown	unknown	passed	passed	passed
-mv-sha1		passed	unknown	passed	passed	unknown
-mv-md5		passed	passed	passed	passed	unknown
-mv-cbc-aes	passed	passed	passed	passed	passed
-mv-ecb-aes	passed	passed	passed	passed	passed
-mv-cbc-des3-ede	passed	passed	passed	passed	passed
-mv-ecb-des3-ede	passed	passed	passed	passed	passed
-mv-cbc-des	passed	passed	passed	passed	passed
-mv-ecb-des	passed	passed	passed	passed	passed
-crc32c-generic	passed	passed	passed	passed	passed
-sha224-generic	passed	passed	passed	passed	passed
-sha256-generic	passed	passed	passed	passed	passed
-
-
-37da5d0ffa7b (=E2=80=9Ccrypto: api - Do not wait for tests during registrat=
-ion=E2=80=9D)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Boot #		1	2	3	4	5
---------------------------------------------------------
-mv-hmac-sha256	unknown	unknown	unknown	unknown	unknown
-mv-hmac-sha1	unknown	unknown	unknown	passed	unknown
-mv-hmac-md5	unknown	unknown	unknown	passed	unknown
-mv-sha256	passed	passed	unknown	unknown	unknown
-mv-sha1		unknown	passed	unknown	passed	passed
-mv-md5		unknown	passed	passed	passed	unknown
-mv-cbc-aes	passed	passed	passed	passed	passed
-mv-ecb-aes	passed	passed	passed	passed	passed
-mv-cbc-des3-ede	passed	passed	passed	passed	passed
-mv-ecb-des3-ede	passed	passed	passed	passed	passed
-mv-cbc-des	passed	passed	passed	passed	passed
-mv-ecb-des	passed	passed	passed	passed	passed
-crc32c-generic	passed	passed	passed	passed	passed
-sha224-generic	passed	passed	passed	passed	passed
-sha256-generic	passed	passed	passed	passed	passed
-
-
-96ad59552059 (=E2=80=9Ccrypto: api - Remove instance larval fulfilment=E2=
-=80=9D)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Boot #		1	2	3	4	5
---------------------------------------------------------
-mv-hmac-sha256	passed	passed	passed	passed	passed
-mv-hmac-sha1	passed	passed	passed	passed	passed
-mv-hmac-md5	passed	passed	passed	passed	passed
-mv-sha256	passed	passed	passed	passed	passed
-mv-sha1		passed	passed	passed	passed	passed
-mv-md5		passed	passed	passed	passed	passed
-mv-cbc-aes	passed	passed	passed	passed	passed
-mv-ecb-aes	passed	passed	passed	passed	passed
-mv-cbc-des3-ede	passed	passed	passed	passed	passed
-mv-ecb-des3-ede	passed	passed	passed	passed	passed
-mv-cbc-des	passed	passed	passed	passed	passed
-mv-ecb-des	passed	passed	passed	passed	passed
-crc32c-generic	passed	passed	passed	passed	passed
-sha224-generic	passed	passed	passed	passed	passed
-sha256-generic	passed	passed	passed	passed	passed
-
-
-If I interprett regzbot history correctly, there was already one fix applie=
-d on top of the culprit.
-But e7a4142b35ce is already part of v6.12-rc1, and obviously did not solve =
-my problem.
-
-
-
-Best regards, Klaus
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
