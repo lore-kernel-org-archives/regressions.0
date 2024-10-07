@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DAE14AD17;
-	Mon,  7 Oct 2024 13:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F0F1D417B;
+	Mon,  7 Oct 2024 14:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728308653; cv=none; b=tmGCgwHp7Tr1Z43IW5LYohUWYRIJAYpxQ5490+LXC7gL5BWQbYP+9kP5PRvJjrGxBIWEXvsekn2x/P1aadMQRrmYQbzYTskJ2ACIt30JNVI15J9qdL9yimzpHAI5ac14yv62KE757TJgQvv2viSSmhtT45j9RapcYByK5ff0buY=
+	t=1728309870; cv=none; b=F1j9gYIa/o5tiX4Sj7OUbYbgQVjWr/lmeYvrRWakwLCzNSQcvS5IBC0MUBLjDQzJXzLYOAgIY1uGgb1IOT7YQ4Z+9w/egfSRTR8Lt36AOQC3zGhwbIkzHbyNuli/rQoBXsCDLcdPKxqBwNPbYH616t01psr7H1ozibVHivZ1Qs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728308653; c=relaxed/simple;
-	bh=RuQzPJZnXPyP4yiBTX+Tbj3Y8weH8VEomWfrp1QHVwM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bxHntKp8H3SsuHhMItZbMLxyCQrDS3ajJ6YvJfvpRiej0/L2doRGokCTyaYyppE0aAlT5Nfm2QcR736xZMyxDFwU3RsmRAw9EolWX/kUIIsVtvqfH2z0DR5P+MpbO40XimNXHodrJJHrjjsINIGMMdYQGDXnM9bHO1qZpAgbXos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fYE2hkx1; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1728309870; c=relaxed/simple;
+	bh=rYFip1NklXra7HzTO1VszgtuzTsU+opowy+ALEYJL4c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lqEncr0jfU/B6Z0n6XfrsejBvcWduP+RxOSjf+9oq6lGerRDtiD5M1/XZg1TIYl6o0gRhdMQENaYWWX/nKeKGlEWQ9pxOgspyL1t1EY58aJo/6XimlyuaYHjcMrTUl05LSn9CV4Dh3rqkOR2sRiJ7Gp3zZ1dqhn6INZgFfQx/9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QexIW1ta; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fYE2hkx1"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QexIW1ta"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=D0RTQTBSUn8yYabKkL97a9GY5kzQPdueRyNABA+Z7ko=;
-	t=1728308651; x=1728740651; b=fYE2hkx1PPoB7A7mD55mlgyDoQLhlmPJ/Fj6w01qkSlIaC1
-	BC1+/19ZEeYV7JYSiIopuyn+wHLfOWbHVk4i20CdZxyYaW4NGVP1iX901htjzY76dnx+a2hPisCaL
-	zMVJuirpdGd8jkl7/KtulroqDXWL2TtcVauRO6dbXk2C/9CEMonJGuxKge7li7VjcTzuKGfOd2+cT
-	mifKjvmqesGQP4y49BRSrS95TnbpjAvbWmE/J7fmb3kFbPiKQJdWV1wcCYDZsQZcc5FL4T3bREUvJ
-	/JOjieRLi2nGr3txipmmj/3OIoJjiix1OR2W3pkIe2uZ6GNnVzU/fuVcKhjvdYxA==;
+	In-Reply-To:References; bh=5BN/qPr4UHro54JgcseHqfbV3VVI2TKoS2hEvYZX07s=;
+	t=1728309868; x=1728741868; b=QexIW1taqCqeM9s91UlHbuoMAukJ6TLBLJ/iQXrO6BykbXs
+	YRq2BCigAw/rGcJqfqdxHmUsH/MCg+TgQXtWiAhgaBthPzTx5BPlmyDCz9BZHMS/vxP9z8hdC+N7B
+	9b/rRABkQrmaXtxmHKGrsvLuLm8WDDH6kw387B9N+YUs2CIjwCsKmMQy76VIerngmj7oZV2lwb/mm
+	lNwWrZfaECe9P+8LnSNcAB5tLlMWzYG/vrUF6aDWOtfSZ9Wmj0XbiRMg3SH7HiK8kxcIi/ahZS9qY
+	Zgmf3t6yGCX3SriniSx1vgc2LfjhCGo4uZGZ8ZlcKq3IiRCUOn9DUmYl5XEsxnZw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sxo1v-0001Dn-6A; Mon, 07 Oct 2024 15:44:07 +0200
-Message-ID: <c5020404-2d48-47ad-a75b-f2d37897f57c@leemhuis.info>
-Date: Mon, 7 Oct 2024 15:44:06 +0200
+	id 1sxoLZ-0005v6-Qm; Mon, 07 Oct 2024 16:04:25 +0200
+Message-ID: <ba91a7cc-c647-4e33-82f3-0c4e52ce89ea@leemhuis.info>
+Date: Mon, 7 Oct 2024 16:04:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,43 +39,84 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HID: i2c-hid: Touchpad not working on Thinkpad Z16
- Gen 2
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Jose Fernandez <jose.fernandez@linux.dev>, Jiri Kosina
- <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Douglas Anderson <dianders@chromium.org>, Hans de Goede
- <hdegoede@redhat.com>, Kenny Levinsen <kl@kl.wtf>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Johan Hovold <johan+linaro@kernel.org>, Nam Cao <namcao@linutronix.de>
-Cc: linux-input@vger.kernel.org, regressions@lists.linux.dev
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
- <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
+Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that support
+ self-snoop
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kevin Tian <kevin.tian@intel.com>, Yan Zhao <yan.y.zhao@intel.com>,
+ Yiwei Zhang <zzyiwei@google.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Triplett <josh@joshtriplett.org>, Gerd Hoffmann <kraxel@redhat.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240309010929.1403984-1-seanjc@google.com>
+ <20240309010929.1403984-6-seanjc@google.com> <877cbyuzdn.fsf@redhat.com>
+ <df3c6560-dd37-4ec2-9b7e-1ad4c3ceba07@leemhuis.info>
+ <87iku4ghiw.fsf@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87iku4ghiw.fsf@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728308651;6444a47b;
-X-HE-SMSGID: 1sxo1v-0001Dn-6A
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728309868;6e9e8a64;
+X-HE-SMSGID: 1sxoLZ-0005v6-Qm
 
-On 06.10.24 05:46, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 06.10.24 01:01, Jose Fernandez wrote:
->> I'm using Fedora 40 with the vanilla kernel built from the 6.12-RC1 [1]. There
->> is a regression that causes the touchpad to stop working on my Thinkpad Z16 Gen
->> 2 (Sensil touchpad). dmesg shows this on 6.12-rc1 when filtering by `hid`:
+On 07.10.24 15:38, Vitaly Kuznetsov wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
 > 
-> Could you try latest git instead of rc1 if you haven't yet? E.g. the
-> latest packages from your "[1]". I wonder if this is
-> https://bugzilla.redhat.com/show_bug.cgi?id=2314756
-> which is fixed by a3f9a74d210bf5 ("Revert "Input: Add driver for PixArt
-> PS/2 touchpad"") [v6.12-rc1-post]
-> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a3f9a74d210bf5b80046a840d3e9949b5fe0a67c
-> ).
+>> On 30.08.24 11:35, Vitaly Kuznetsov wrote:
+>>> Sean Christopherson <seanjc@google.com> writes:
+>>>
+>>>> Unconditionally honor guest PAT on CPUs that support self-snoop, as
+>>>> Intel has confirmed that CPUs that support self-snoop always snoop caches
+>>>> and store buffers.  I.e. CPUs with self-snoop maintain cache coherency
+>>>> even in the presence of aliased memtypes, thus there is no need to trust
+>>>> the guest behaves and only honor PAT as a last resort, as KVM does today.
+>>>>
+>>>> Honoring guest PAT is desirable for use cases where the guest has access
+>>>> to non-coherent DMA _without_ bouncing through VFIO, e.g. when a virtual
+>>>> (mediated, for all intents and purposes) GPU is exposed to the guest, along
+>>>> with buffers that are consumed directly by the physical GPU, i.e. which
+>>>> can't be proxied by the host to ensure writes from the guest are performed
+>>>> with the correct memory type for the GPU.
+>>>
+>>> Necroposting!
+>>>
+>>> Turns out that this change broke "bochs-display" driver in QEMU even
+>>> when the guest is modern (don't ask me 'who the hell uses bochs for
+>>> modern guests', it was basically a configuration error :-). E.g:
+>>> [...]
+>>
+>> This regression made it to the list of tracked regressions. It seems
+>> this thread stalled a while ago. Was this ever fixed? Does not look like
+>> it, but I might have missed something. Or is this a regression I should
+>> just ignore for one reason or another?
+>>
+> 
+> The regression was addressed in by reverting 377b2f359d1f in 6.11
+> 
+> commit 9d70f3fec14421e793ffbc0ec2f739b24e534900
+> Author: Paolo Bonzini <pbonzini@redhat.com>
+> Date:   Sun Sep 15 02:49:33 2024 -0400
+> 
+>     Revert "KVM: VMX: Always honor guest PAT on CPUs that support self-snoop"
 
-Those two are apparently different problems, as from
-https://bugzilla.redhat.com/show_bug.cgi?id=2314756
-it seems that it might be not kernel regression after all, but a change
-in the Fedora's .config that causes your problems.
+Thx. Sorry, missed that, thx for pointing me towards it. I had looked
+for things like that, but seems I messed up my lore query. Apologies for
+the noise!
+
+> Also, there's a (pending) DRM patch fixing it from the guest's side:
+> https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/9388ccf69925223223c87355a417ba39b13a5e8e
+
+Great!
 
 Ciao, Thorsten
+
+P.S.:
+
+#regzbot fix: 9d70f3fec14421e793ffbc0ec2f739b24e534900
+
+
