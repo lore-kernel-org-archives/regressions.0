@@ -1,128 +1,143 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A741D2B35
-	for <regressions@lists.linux.dev>; Mon,  7 Oct 2024 13:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E04E14AD17;
+	Mon,  7 Oct 2024 13:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728307566; cv=none; b=Pi3cT6BkBBPkgOBxdPvOB/iI6h34tKjeiWZjkVLKT7jietHSXEj7jU+/AHL8rVOre4i9Gs9tsfpvclWjgwSIh5DKV3Q+aH/qmu7v2qqClhKhsSr8CCwteLjou/BdtGR3DTmpdBdkmdt+8LfttGMiuJvxitoqh2QI6pSaONAuwbM=
+	t=1728307730; cv=none; b=N0YG015a0T69QxxgXfugX9kWAjrX8GWcXs7IbvLoNkgRWnkLUtpctEGrbZT+XSgSVMrQmOd93jwRa1XeJxP2IJKGjHUDTLBZwHpCH4yDOxmlOaBgqVQGwXKPxUsq2YuyYJUpDmJaeXhTSrsgRm0ViRyjmYalB3LchN1XpUrKQpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728307566; c=relaxed/simple;
-	bh=SWGia2W6otTjRDYJY/4ZhIgn9kTOF13TuoNCyPr53Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uTlkrtESGjgvm74ej/1vIG7N67XaFRJdCheEY10BZydNSepFyDlR1euFJv5JtweITKMj87JS4SJitzPs8ypiKGeelZYbfhK7gliGLKgOi06cNch4hP/Q2IGY5qkzLJ/Re4ihAFDCSvcysAEg2bblRTjVlR4v0wKicXr8mXIxcRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=UvBTY361; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1728307730; c=relaxed/simple;
+	bh=2x9rsaa8iTmcG2twzW+CkXJmOpdY/1uUQPABbulSBBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sJ+NYzQ3vt2KL4fHbp+PctGo/slidGpZzrYP7doWb8frbw5AqJyw/qqZOzUAJDFy/8Aj6Si2yecOjlEA7UkRvRByCJdRAcl0bzCGui+JlXFsD6ayZON5ARc/ZvtsWiW+nzjLQ/fNSlj7fMdff5/4oouN4Gyct+R56nsGqCqO2tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cBvSzaX1; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="UvBTY361"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 1DDA321E5E;
-	Mon,  7 Oct 2024 15:26:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1728307560;
-	bh=yJxiIO6CxXoreOtLTDOkCzkK9VuyDNTnsMOel1WnYkw=; h=From:To:Subject;
-	b=UvBTY3618qIkW3NC6jNLnkqniX9pKnlNXIQNRfWdkLYJ05OsJndeGJK/hm6D2BRCf
-	 st2AQDMMK9u/4mDB4kwqI6iTrSdP6fsSAmbq9e0qrvMpjzk/n7WSJ4wknGs3mGEtvx
-	 jxKq5F8Q7qefoZB3XM4MhnVxIgQaLIm0Z+7SaW08Red1DZiAPSAuIAtm9hKSG+v8a/
-	 gWQ9hbj3TX0Yoz+KdG6Omx5sCKFNDIKUBwq4uqUiWNx9f0NgzUpf6+5DY3AiFKdDHd
-	 Sx3SCtJ2t4gh7bpO/DvC1F8ZrrlIeHFbY3FKHpdpoD6sm4D2014rZ1A9OBC5QdE/WI
-	 cl9n23mSXjMtQ==
-Date: Mon, 7 Oct 2024 15:25:55 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org,
-	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, shengjiu.wang@gmail.com,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, Adam Ford <aford173@gmail.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Mark Brown <broonie@kernel.org>, ulf.hansson@linaro.org
-Subject: clk_imx8mp_audiomix_runtime_resume Kernel panic regression on v6.12
-Message-ID: <20241007132555.GA53279@francesco-nb>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cBvSzaX1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Du4Jp3msWdr1YHLI++k/TEgkgoTmT+soplizTMXw94k=;
+	t=1728307728; x=1728739728; b=cBvSzaX1AFDuEXuK/c3pIGf4xDxMW96f1IOrSSDOouBT/uC
+	gyD5Zrd/B1BMqJHc3KvtkzZ0GkSaHgiNMfPzHtOPVhcNFaAKWcayyaL/29cI+acQte6VI88BZq+bt
+	aaVHg8vgjS7gcDP9WYel3BYq3L37PrykfyMBnZBKISL9eoO1Qn88mgXMORCfHg0BakwN8Z8x8jmic
+	FJ+Q2GC/rjx8v4nbPZht0JBOC86nPLFULOsad9/247yk9+/gIpUheU/TBp6LVqw3mUiMxPwkHfFAL
+	V1GeUmgovCfi0xOP7ajiYDzFaDgF4YQ3S+pfna9LoePih9KX5sDNH2rbjifqTgCg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sxnmx-0006XB-M1; Mon, 07 Oct 2024 15:28:39 +0200
+Message-ID: <df3c6560-dd37-4ec2-9b7e-1ad4c3ceba07@leemhuis.info>
+Date: Mon, 7 Oct 2024 15:28:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that support
+ self-snoop
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kevin Tian <kevin.tian@intel.com>, Yan Zhao <yan.y.zhao@intel.com>,
+ Yiwei Zhang <zzyiwei@google.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Triplett <josh@joshtriplett.org>, Gerd Hoffmann <kraxel@redhat.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240309010929.1403984-1-seanjc@google.com>
+ <20240309010929.1403984-6-seanjc@google.com> <877cbyuzdn.fsf@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <877cbyuzdn.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728307728;37d721fc;
+X-HE-SMSGID: 1sxnmx-0006XB-M1
 
-Hello,
-it seems that an old regression is back on v6.12, reproduced on -rc2
-(not sure about rc1).
+On 30.08.24 11:35, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+>> Unconditionally honor guest PAT on CPUs that support self-snoop, as
+>> Intel has confirmed that CPUs that support self-snoop always snoop caches
+>> and store buffers.  I.e. CPUs with self-snoop maintain cache coherency
+>> even in the presence of aliased memtypes, thus there is no need to trust
+>> the guest behaves and only honor PAT as a last resort, as KVM does today.
+>>
+>> Honoring guest PAT is desirable for use cases where the guest has access
+>> to non-coherent DMA _without_ bouncing through VFIO, e.g. when a virtual
+>> (mediated, for all intents and purposes) GPU is exposed to the guest, along
+>> with buffers that are consumed directly by the physical GPU, i.e. which
+>> can't be proxied by the host to ensure writes from the guest are performed
+>> with the correct memory type for the GPU.
+> 
+> Necroposting!
+> 
+> Turns out that this change broke "bochs-display" driver in QEMU even
+> when the guest is modern (don't ask me 'who the hell uses bochs for
+> modern guests', it was basically a configuration error :-). E.g:
+> [...]
 
-The original report is from https://lore.kernel.org/all/20240424164725.GA18760@francesco-nb/
-and it was fixed with https://lore.kernel.org/all/1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com/.
-
-Is it now back?
-
-[    4.012850] SError Interrupt on CPU2, code 0x00000000bf000002 -- SError
-[    4.012862] CPU: 2 UID: 0 PID: 186 Comm: (udev-worker) Not tainted 6.12.0-rc2-0.0.0-devel-00004-g8b1b79e88956 #1
-[    4.012869] Hardware name: Toradex Verdin iMX8M Plus WB on Dahlia Board (DT)
-[    4.012872] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    4.012877] pc : clk_imx8mp_audiomix_runtime_resume+0x38/0x48
-[    4.012891] lr : pm_generic_runtime_resume+0x2c/0x44
-[    4.012897] sp : ffff8000821cb740
-[    4.012899] x29: ffff8000821cb740 x28: ffff8000793c48d8 x27: ffff8000793c48c0
-[    4.012908] x26: ffff0000c0ec90f4 x25: 0000000000000000 x24: 0000000000000000
-[    4.012916] x23: 0000000000000000 x22: ffff0000c1bef180 x21: 0000000000000000
-[    4.012923] x20: ffff0000c0a73000 x19: ffff0000c0ecbc10 x18: ffffffffffffffff
-[    4.012930] x17: 3030303064623033 x16: 2f7375622e303030 x15: 756e285472656c6c
-[    4.012937] x14: ffff800081267458 x13: 6d692c6c73664361 x12: 0000000000000000
-[    4.012944] x11: 00353333333d4d55 x10: ffff8000818020ae x9 : 0000000000000008
-[    4.012951] x8 : 0000000000000008 x7 : 0000000000000000 x6 : ffff0000c5bf2080
-[    4.012958] x5 : ffff800081f10000 x4 : ffff800080c182e8 x3 : ffff0000c0ee7088
-[    4.012965] x2 : 0000000000000000 x1 : 0000000000000004 x0 : ffff800081f10300
-[    4.012973] Kernel panic - not syncing: Asynchronous SError Interrupt
-[    4.012976] CPU: 2 UID: 0 PID: 186 Comm: (udev-worker) Not tainted 6.12.0-rc2-0.0.0-devel-00004-g8b1b79e88956 #1
-[    4.012982] Hardware name: Toradex Verdin iMX8M Plus WB on Dahlia Board (DT)
-[    4.012985] Call trace:
-[    4.012988]  dump_backtrace+0xd0/0x120
-[    4.012998]  show_stack+0x18/0x24
-[    4.013005]  dump_stack_lvl+0x60/0x80
-[    4.013013]  dump_stack+0x18/0x24
-[    4.013019]  panic+0x168/0x350
-[    4.013025]  add_taint+0x0/0xbc
-[    4.013029]  arm64_serror_panic+0x64/0x70
-[    4.013034]  do_serror+0x3c/0x70
-[    4.013039]  el1h_64_error_handler+0x30/0x54
-[    4.013046]  el1h_64_error+0x64/0x68
-[    4.013050]  clk_imx8mp_audiomix_runtime_resume+0x38/0x48
-[    4.013059]  __genpd_runtime_resume+0x30/0x80
-[    4.013066]  genpd_runtime_resume+0x114/0x29c
-[    4.013073]  __rpm_callback+0x48/0x1e0
-[    4.013079]  rpm_callback+0x68/0x80
-[    4.013084]  rpm_resume+0x3bc/0x6a0
-[    4.013089]  __pm_runtime_resume+0x50/0x9c
-[    4.013095]  pm_runtime_get_suppliers+0x60/0x8c
-[    4.013101]  __driver_probe_device+0x4c/0x14c
-[    4.013108]  driver_probe_device+0x3c/0x120
-[    4.013114]  __driver_attach+0xc4/0x200
-[    4.013119]  bus_for_each_dev+0x7c/0xe0
-[    4.013125]  driver_attach+0x24/0x30
-[    4.013130]  bus_add_driver+0x110/0x240
-[    4.013135]  driver_register+0x68/0x124
-[    4.013142]  __platform_driver_register+0x24/0x30
-[    4.013149]  sdma_driver_init+0x20/0x1000 [imx_sdma]
-[    4.013163]  do_one_initcall+0x60/0x1e0
-[    4.013168]  do_init_module+0x5c/0x21c
-[    4.013175]  load_module+0x1a98/0x205c
-[    4.013181]  init_module_from_file+0x88/0xd4
-[    4.013187]  __arm64_sys_finit_module+0x258/0x350
-[    4.013194]  invoke_syscall.constprop.0+0x50/0xe0
-[    4.013202]  do_el0_svc+0xa8/0xe0
-[    4.013208]  el0_svc+0x3c/0x140
-[    4.013215]  el0t_64_sync_handler+0x120/0x12c
-[    4.013222]  el0t_64_sync+0x190/0x194
-[    4.013228] SMP: stopping secondary CPUs
-[    4.013237] Kernel Offset: disabled
-[    4.013239] CPU features: 0x00,00000000,00200000,4200420b
-[    4.013243] Memory Limit: none
-[    4.316721] ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
+This regression made it to the list of tracked regressions. It seems
+this thread stalled a while ago. Was this ever fixed? Does not look like
+it, but I might have missed something. Or is this a regression I should
+just ignore for one reason or another?
 
 
-Francesco
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
 
