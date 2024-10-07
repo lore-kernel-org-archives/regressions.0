@@ -1,204 +1,269 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A1A18BBB2;
-	Mon,  7 Oct 2024 17:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728321686; cv=none; b=SuMKk0N2yyYLLy/3Kd7k4elIgWnzEMgtzxKJxxaZPeKgzcxm6hhIY9RyEHOCOlyUcWzWBnY1m4h/GYSkM8i2FxgIK4gxEQhJuwx6NP4ZypsUoqYcN3WzXnmlJ45oGx1LVYlUBWnSjMzIrM8Fm5Q1yfuTdYKazpFxL49rinZmLRY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728321686; c=relaxed/simple;
-	bh=Ql7rfhjHQYE3CtDJKF+F06fcUr6BoEpGuLHyuRkpqBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWk5ZG/yN/QpCO6pAU3sBC9q/7xiGif8bX23hA56G7KC4bzGRcSE+35S195mNWYsJzl3ewN8IxrarY06d2wXEMBGcG3a/RqKadl6iD40x46Wl2lqhhh9U9P42dUY5vNFqlB40txL86X3mNoPLqO9bGrV9/U5Jy0xbui7/YlCqto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=aaUHNTWb; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733461C9B77
+	for <regressions@lists.linux.dev>; Mon,  7 Oct 2024 17:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728322441; cv=fail; b=M0lIhjP1BlfGVe3+ER7QkfU5q26sHF47nI1UyTXJ1kEhHZLIF638NuT0qd0Wx80k0axZ9lg/pzjL5tbDoKOlbf6VIUIlC7TpnZPl4Wzr1AScez3L12oWx1mvoTZwhOChYXEWJxZzfKNchCoQ4vohdoiiiyEuFPLp2mTBglHnewQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728322441; c=relaxed/simple;
+	bh=2L14+KNdA2y31DHtmS3OcwSg10+2nIOzpmDqQJaF59I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ugdik/wQraVBrTTp5lfktRGl8wNW5l+m5mzV20MohydwCY3irjHexXzcUK57obXF78toyOEyblcQupTV4W4IogroME+9+FjKUEs4CwESBUoM+z2lXOaIJ/UZnaO2ZXUA3SgmVeybSV97Verc2keoqr6aGHBBtyjlDjGAJqdUSOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q10MGRDT; arc=fail smtp.client-ip=40.107.92.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="aaUHNTWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1728321669; x=1728926469; i=christian@heusel.eu;
-	bh=FWaHKimhEwFDTZ2TU07T11/SON+VT88p4S+W/ovLTPk=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=aaUHNTWb2JaTjgy9c+fpD2jDdTnUE+KscPczrQHAXiATsGhUeL7swkpfNzFwxZBB
-	 Yog/yLLl4lWwPI4xGhIEbSENgJwhyF01gryNcNppZKNYBU/KNX3niZFtD1a3QwEI3
-	 OYsuxpCpDrnF0ARfEfDztDqgsABqtm8NC8FhUfdd5+f2BuYN2ApHEtG7Ve+LUohvw
-	 2ZG1E9FWe8EDe3QbondPS99Flc0e99UxsGlY0sQnxRlpo0WLaGptaljsNgjnl3oB0
-	 KohU873XoO4AKbeRpeG6Ndgxj/zjtb7S6G31NAr6bW5zKgBg0bG8X8+DQ4xx/X+aS
-	 3HukftMS4rz8NeoCvQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue011
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MXXdn-1tUfWs3Fp1-00Rjwd; Mon, 07
- Oct 2024 19:21:09 +0200
-Date: Mon, 7 Oct 2024 19:21:08 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Fabian =?utf-8?Q?St=C3=A4ber?= <fabian@fstab.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-usb@vger.kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Sanath S <Sanath.S@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q10MGRDT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EOM3VklfRICSf/qZ30u//iw6yc/Njf1X1Qb481/yQb9CxUdtJH/5HCauCtESv9UpVP+muvyanH0vLj0E+wAzetAqQi2mXHFhWnST9Tl87MVs7AqK7gQheAuP6NNPbTiQisOLdoVvM2jB45it1DOa+jzhlQ+E9pePQaDXyf9e0h/qtLcVeCK7KepGaEK4s9jZw+pIhMMs9WshTExbZJRUkEMbiafMJQWllMDIKAGpgDjoYr92pQz0Og8vI8q7Tv+n+LHWf2iI0d1yRe7ZVkfQFY0pWt07X2oIe0kIrrkX/udzr9E2K1WRLnRxb0g1bBCsnzrwMDKNmDbPQAQQzG7RxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NMsfpZ3tOj8riEHj+pCrpJbdaatlv/i7YCwrTf5L5+I=;
+ b=WMY1ozOXYYEsHhEV5RMGPGsyI87TWCsSPRV/wFWfIbJwOnr/pKmxM01+AeW0Lan1d+lX1DXXMQkcWFX0tylXaiRDlasVDKM5jFz24kF71YRYuvySyZsyOkv2BQCN2ZzVYrKmzOskeNH3paCw6DXkvb47B4idT94lQxkP0ABXaCjkjT4r5bT3n+t2pLXmMbvDleoJ0DboFrzTU3nEd3xKNF4JVQTK6wUM7Vh5J295jwAhrE1AdeUo2RMOsDCTzc2NeHTZao52vpOdZRlgBWyc9urd91qB/wBcizCzh/CPb0ZjEKAbKmDwnut1++VgmVAnNb6QmM42p41KCunfnk+u7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NMsfpZ3tOj8riEHj+pCrpJbdaatlv/i7YCwrTf5L5+I=;
+ b=Q10MGRDTsCioZvKC2uGFGK1LH1eXlObmA9bMFH2+Tc88Z78SOs8RugV8i4MQf8GPa20R/+Y6yNIVk6mykjbL4wM44MmCD+gMu1vqK+pxOkPVEHWXzXFVnhHyJP3d7uXDDn4rBdxxPfvW8oCX2KNRUjAgxoesCnUTdZf7TT4D63o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA3PR12MB9226.namprd12.prod.outlook.com (2603:10b6:806:396::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.23; Mon, 7 Oct
+ 2024 17:33:56 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8026.020; Mon, 7 Oct 2024
+ 17:33:56 +0000
+Message-ID: <5192a3c3-29dd-4249-9a69-fc4845ad419c@amd.com>
+Date: Mon, 7 Oct 2024 12:33:54 -0500
+User-Agent: Mozilla Thunderbird
 Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-Message-ID: <1c354887-c2a5-4df5-978c-94a410341554@heusel.eu>
+To: Christian Heusel <christian@heusel.eu>, =?UTF-8?Q?Fabian_St=C3=A4ber?=
+ <fabian@fstab.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ "S, Sanath" <Sanath.S@amd.com>
 References: <CAPX310gmJeYhE2C6-==rKSDh6wAmoR8R5-pjEOgYD3AP+Si+0w@mail.gmail.com>
  <2024092318-pregnancy-handwoven-3458@gregkh>
  <CAPX310hNn28m3gxmtus0=EAb3wXvDTgG2HXyR63CBW7HKxYkpg@mail.gmail.com>
  <CAPX310hCZqKJvEns9vjoQ27=JZzNNa+HK0o4knOMfBBK+JWNEg@mail.gmail.com>
+ <1c354887-c2a5-4df5-978c-94a410341554@heusel.eu>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <1c354887-c2a5-4df5-978c-94a410341554@heusel.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR16CA0055.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::32) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="r2g5hm2ymbewdnd7"
-Content-Disposition: inline
-In-Reply-To: <CAPX310hCZqKJvEns9vjoQ27=JZzNNa+HK0o4knOMfBBK+JWNEg@mail.gmail.com>
-X-Provags-ID: V03:K1:BjPWvExzBigPv2vqwI5gbQg2ztku8FsBxVkBPesQ+DjRjYGYudd
- jSBz7eJhclJO4C5lvz/Nbu8jNYMaNt8E8/KKvotSsQexSO+3e0D6LWSkV+gcDbtL+k6cEI1
- TsRsDIkRXM4uw7X6XCCU1Dx+kSBcEkANbJHTP+4bQEnRM0n7Xf4kOJoPQ90iiTtyzjSHPux
- wtI7C424MeQntInG0kIQw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0gjPRFdoEVo=;MjhYOUkZBTlxjunj4ajPFCMLqlM
- 50EmvNfDLXFJBbAYnxwidd3gf9GviSWVQo5fyC7pCyuhmv5sTKIUjWmq310y3bdVTbtWHF1FU
- 4rYXHrUWXdTvo76NAEZIbfNvKS/TiWlLPUFBl3NWdoJGm4IzlTTac8hX2qfqb5fpNChNmbAz4
- S/3GCnihuuidxo3YlRSnsL8TvD9FYAbvmqwDRbZOrGrDE4lyTddxkW7M3sGSN/rrqsbQxU2qU
- TgCvcj5BXwToxM2GtQ8vuZp5xqNKSmTSuj3wH08rVraF8IkyjLJzpn177Vn2Fkg5ohWP9uC/X
- CesMuQseuTpwmlO2hcVE6H4BVASXhXkT6CktzP9MMFbCsTiLKAiXQsPUSAWaxyrwvZRw64nYE
- I0EbP+D7VFp2Nsaf6mI3zIETXrzF24YwM8yTEVMQs/mBV3rSPK4ZzXH/kpXJ4XKmkcFQDg4E5
- zJo1Btk+OWLB5ZqYbRfnSUGaZK144E0N4JltCJnmIt6gNzV8qd9RriIFINmjmZYkETJVCYhE4
- hmgbvukODRtz3c5GZIOxek3I1kLMCEyQl2UfCNobeFauPm1C5E+8v8VW4xf6ctCSbqpVsHIt/
- 3+AsZMIEh7qaBvogtur6owANK+mxWueaz3aXORxWfhHBwqklCbm/3CoIK0WoGekcWb81N1JEK
- 0vq6HBKJ3VtuAHb6ynHOzKKvK9yuwGc0Ll8K78wonQrTtwMibM4Or9oKKWFWQ8vtERufE42eM
- bH6twKHFeaY1G9bFOuB0RA3onrprYuKcw==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB9226:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f099271-59e3-4a04-e1bf-08dce6f63897
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?alBhQVlPOFZ6VlYyUDBjcFRFYUdPbk9kUHRPRDV3TEpXTFZPZnRFSThFYzZM?=
+ =?utf-8?B?QnZ1NDBSMnRkM0pKelNrOUQ5VVgvdm5FVnpUaHhxMmpzcjRGZzJubC9uemIv?=
+ =?utf-8?B?NUR1d0VPTmhFMVB3ZndYUE5ndTJDM080T29WZ0tOWStHbW5qbEZ2Qjh0UEsy?=
+ =?utf-8?B?cHZiN3BBVnVoMkZ3c3BnUGVCMWtzSEVWK3Btc3g0YjJpUGd2b1VXcGdLckxX?=
+ =?utf-8?B?TzFrOUlNelp0Qm9rNmNobDhMSWpacjRuMWZycXl3YTA1U2pSZDRDZjFZcU5t?=
+ =?utf-8?B?WlFlSFl5RGF4Y21pZS93Z21jR2o3OGJZMkxycTQvNHVYUmNnZng4QWhxOGI5?=
+ =?utf-8?B?K091VUo0VDZTZ2htMjNLNVVCci9icEJhZUM0WkRHQ2EraGd5WUVycmZ2VEQr?=
+ =?utf-8?B?S2NNcmJQaVlCU0VUbURsRkN1UUlScEdUNlByVFRnZi93b2o3SlMvcy9MYktZ?=
+ =?utf-8?B?UHlKMWdDS2tpNndWSXhZZzBTL3dtRlBweXMvMm1rK2k5UVdkc1BadHhxYURJ?=
+ =?utf-8?B?cWpoYkRVNFJJQVlaK0tvOVBFVFNHT1JNZnF3enBzVzExL2EwbERWbWdvUjhM?=
+ =?utf-8?B?RnF2RHdBSGF4MTVrQ0xBcUNZQ01pTDBhelJxaGZrYzVPSXBQU1hMSGw0aE1i?=
+ =?utf-8?B?eXVXMWN2L2JyYlFzOUliM20rYlphK0VLTUZLN3JjNVNYTUhCREk4WXRYK0tP?=
+ =?utf-8?B?WjFNU3VCOWN2ZTJmcHNKNXJxZm8wZzZlZlc5WXVQaXpqRkQzbHY4LzBOSXhD?=
+ =?utf-8?B?YmU0bk5pUUlQL2JuVWI0MTY3anphV3BHZW52Wm5GcGoya0NVbmx5QnFMQnlW?=
+ =?utf-8?B?TVNQNVZ1YWR4anRIRmxQL08yWVc1YjhreFJUeHVxVm0yUk1JQi9XVnpqUjhT?=
+ =?utf-8?B?aERBNnlSM2czL2Q4Z2hpbjRUM0dTNW1pUGpTMGk0R3Nsc04zN0tlZXorNkVh?=
+ =?utf-8?B?M25sM2ZNcG52Y1ZVWkJZSWpuaTcyTitEdjlyM2pXNzBGdGJEUjk2a2J6VUtH?=
+ =?utf-8?B?ZEc5WnpXb1c4MkFHcUNpY0RtcWtGNFB1djJ0T1h1dldob1l1V3dqUFVFbjVq?=
+ =?utf-8?B?QklHaXZNdjAwZnpaQU8zTEhDTlpLVnV5MWxKUnJrSERnNU9HeE56enYwYXVw?=
+ =?utf-8?B?SW5xbi9xMVBRUmZZOWE1QmRhajA1WDZsSTFwdVc1VkFsUGE3NlE3THg2bGRl?=
+ =?utf-8?B?amZSaVVNb1g5MUVXclllS0cwOUloY3hWb3FPYTlzM3RDN1B0NDJpSWZsMTlT?=
+ =?utf-8?B?T043TTh2VzZtZFJrOGNpWHFQWFdZQ1EyRi91ODhOWTV6M1ljU2tkQ3JvMld0?=
+ =?utf-8?B?dlo5VmllK2JSbGhlcmg1MTBPbDVjejR5Yldkem9jS1A5STFrUUdXV1FDbmh1?=
+ =?utf-8?B?ZFh1OVNrMTVROCtwM2V5RndtRVVEVVVINVlzNkJiZFIwMUYxYWdlRm1FRnJ2?=
+ =?utf-8?B?R2E0dERiWVBqQ2lRVGpDV2paQzB2eTB0aFlpK3hFSjJZSkhIT09UeHh1L0Fn?=
+ =?utf-8?B?NFp1R0pjNVhIVEZaVGZyZWdTb2E1cVBPRTQ5ZEhrTk5wYUw4SVVmd2VIWGJC?=
+ =?utf-8?B?SjhBbEQ3MFM4WExRVDVkenhwa3liMHV1K3dWc3BCeTdZL20rSFFCUWI0dm1I?=
+ =?utf-8?B?TW9QeUQyUUJCREc2QjF1WWZOR244R2c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NDVnRjR4RlduL1VuT2M2MlA2Um5mbGx1RjNqbzFHNUZTTE1xYlk4MENsNmtm?=
+ =?utf-8?B?VkVwVGQwOHJsSmlWc0dqd2VoMnYxY09XdVBLRmk5T1lLNnlHYkFycStIcDhC?=
+ =?utf-8?B?RkhFRzNHMzFrOTdQVjM5NFJsNmhoRmF4ZHZiZ0lGK0ZxcjM0OGs5WlppU2NN?=
+ =?utf-8?B?ZWZjSTVsZEdUdlR0cXhoME1rbGcxcnB6YTBwRkF6RnFDdU1nY1lqakltWEVu?=
+ =?utf-8?B?eDQwMGFldDU3OWorRmhSRXhPZDFxK29JZlF1ZEVST281SlMwWDZTZDYwb2d0?=
+ =?utf-8?B?ci8xN1BBNmFWS0hLY2xqYnc2d2hOa1J1d0dBWnhnMkpncTZGZGVkU1d3WlZq?=
+ =?utf-8?B?QlEvMzBzc1lqSkdRUkJhZUJDbjRYRTZ6NGVPNUNhMy84Q1NteXhEZ29WeDh2?=
+ =?utf-8?B?UFdibWhlL2I0WUtRWTNvZ0V1RktDWHhIMTBaV1dmaUtXeVBiTUxJNWp4S0k1?=
+ =?utf-8?B?S1Y1K1FaTTFSc3QyVUpVYkRJS21DWkt2dVVhbXdZdWRadUlrWmM0MGpGWjc1?=
+ =?utf-8?B?R3NhcHRLeGovUCtxR1VEM3RxQmhhSzFmcHFZT2Y1VEpZWHhUMkpyUWNyVUlJ?=
+ =?utf-8?B?WEJZUzVHM29JM1FMR3lkNlFhWEZ5ekNMTWFHN3Vna3JwaktlU2FQQms1VUZY?=
+ =?utf-8?B?YjFRbDNOYmNzQityOEZXTkpFdXF1TGl1ZTdjV2tHa0VHN0xUaEtZV2RxS1lL?=
+ =?utf-8?B?MVI3Q0NlbmNCMVRBNnZoQncyeEpuM0VmdlF3cVpSaU9raXRVQ0ExWVl6MXVG?=
+ =?utf-8?B?TTdGcFJoZlJvMDJNRWwyY0pWQjdtM0pjT1haejM2TSs1dGJ4QlAxdUdNUlRU?=
+ =?utf-8?B?dGdMaVAwMlBLYWNjaElWYzJ4dUEweS9SLzFWMFplbGxpS2IyZDNLNENVcXpV?=
+ =?utf-8?B?bURCdW5iY0NWdlppYUZCdDBsVW1pcFpsQVNLeEdSVUpYb1ZGbE4ySitnWm9u?=
+ =?utf-8?B?am5Nc2Q0OUY1UXhQOHdPN1A4aExKUFlBSmQ5SEdRWkNWM3lLVVlEYXplanNz?=
+ =?utf-8?B?YnZoeGowaUUvTW1ZOGVGNlNYMlNEL0dPdm54cmVQYWJ2ZE5DWEhkdExSdUI1?=
+ =?utf-8?B?UVV1TVBIRWNUckZuSHRrbVNHdmNNeGx6RmhwdmJGMmlBZGZ3YXNuVUljZEhK?=
+ =?utf-8?B?VE9Cc25ScHd4QzR5UWZkQUEvQ3VVS1JYdEZTSGRNU1hqb3ZwWjd3L3ZPQ3Ir?=
+ =?utf-8?B?aDVYTGI1U3Z5T2QyNVp6c3drY1VSRU5BSUE3OURNeUNCK0pFZFVtV1FacXA0?=
+ =?utf-8?B?QnFOSGNvbHcxeHFieU9DTHFha0MxU3l6a2lpUThCc2hnbzQ3ZkYrdXVsVUhq?=
+ =?utf-8?B?aUhYWnNTdHhCQ0VIcW5zQUpYZFBTMUtvSXFIK2huK1IwQ1liL2l2NXEyVmF1?=
+ =?utf-8?B?cUZmRzMxQlpEMW5mN2p2TnJ1UUwzbzdhMmgrQ3dSSm1wWExXRWVOM3p5S3RN?=
+ =?utf-8?B?RG5BeDhDdG5NVjQwLzlvUWhLeWpMb0pIZXMwSmw0Tyt6akw3NHhONEdwMGY5?=
+ =?utf-8?B?Y3czRlVvVy9SNzY2VDZmc1QwQ3lCdy9DYXc3SmpMTXdUd1pVek1zejlSUmZ2?=
+ =?utf-8?B?NXBRUlVsSDY1cEVCZFhZRVJod2E0ODFGcml6ejhkSW9KL1RnbktYeE5DM2RB?=
+ =?utf-8?B?L3NiK1owZ0gxdEplRlhFcThnZ2VvdG5sSGpkbmMwbVZHWTEzcXMrcGhVRWx0?=
+ =?utf-8?B?d0tLUDVEQ3FXQld6RjYwU3BiZjlXclBybjR0RjRYV0o4K2toejhubDZnZVln?=
+ =?utf-8?B?RUtZbk1ZaVQ3VnYzbFZwYy9mb3hIVmw2YmNvSkpjSDFYcXhyY01mYmVBSTdo?=
+ =?utf-8?B?aU1OakVSeCtxMkFvcVlNVks4eU52V2F5cWpZQjBGbEFQbUwyUmt2d1dMZStN?=
+ =?utf-8?B?OGdQV1VjWlRFckZmNGsvc0g3TFM0dS9kd0kraXF3TEFsdlZjRDhWcmZpS2Ez?=
+ =?utf-8?B?MW5LUFpuaDFJK0YyU1JWWHJRUnM4SkNkQjlEMEJvak1VZW96ZUFNZmRpNjJO?=
+ =?utf-8?B?enhKd3lpZVoyNTdXYUs4U1EyekozYi9GVm5ueGhlK0VlSVlJUXlKa2RsVEZt?=
+ =?utf-8?B?RTQ5QVNPUEo3eDFxbU1lUG84UW9DRnU3aTdoaDlGWk5nNmhVdytaYTk4OFoz?=
+ =?utf-8?Q?rLY8R/PKaMjJi69MhaZTP7VQ8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f099271-59e3-4a04-e1bf-08dce6f63897
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2024 17:33:56.6806
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JJxrDQ4S6dYOMHAFLXl/sp5R8PSxf/yaQbEBTLmpV6sr3nn+YtiCCcLe1msJIi408U73MhvDodloEx9ZKVMm0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9226
 
+On 10/7/2024 12:21, Christian Heusel wrote:
+> On 24/10/07 06:49PM, Fabian Stäber wrote:
+>> Hi,
+> 
+> Hey Fabian,
+> 
+>> sorry for the delay, I ran git bisect, here's the output. If you need
+>> any additional info please let me know.
+>>
+>> 3c1d704d9266741fc5a9a0a287a5c6b72ddbea55 is the first bad commit
+>> commit 3c1d704d9266741fc5a9a0a287a5c6b72ddbea55 (HEAD)
+>> Author: Sanath S <Sanath.S@amd.com>
+>> Date:   Sat Jan 13 10:52:48 2024
+>>
+>>      thunderbolt: Reset topology created by the boot firmware
+>>
+>>      commit 59a54c5f3dbde00b8ad30aef27fe35b1fe07bf5c upstream.
+> 
+> So there is a commit c67f926ec870 ("thunderbolt: Reset only non-USB4
+> host routers in resume") that carries a fixes tag for the commit that
+> you have bisected to. The commits should both be in v6.6.29 and onwards,
+> so in the same release that's causing you problems. Maybe the fix is
+> incomplete or has a missing dependency 🤔
 
---r2g5hm2ymbewdnd7
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-MIME-Version: 1.0
+You mean mainline commit 8cf9926c537c ("thunderbolt: Reset only non-USB4 
+host routers in resume").
 
-On 24/10/07 06:49PM, Fabian St=C3=A4ber wrote:
-> Hi,
+> 
+>>      [...]
+>>      Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+>>      Signed-off-by: Sanath S <Sanath.S@amd.com>
+>>      Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> I have added Mika, Mario and Sanath to the recipients, maybe they have
+> inputs on what would be useful debugging output.
+> 
+> In the meantime maybe also test if the issue is present with the latest
+> stable kernel ("linux" in the Arch packages) and with the latest release
+> candidate (you can find a precompiled version [here][0].
 
-Hey Fabian,
+To double confirm, does thunderbolt.host_reset=0 on the kernel command 
+line help your issue?  Based on the bisect I would expect it should 
+help.  Yes; comments on both 6.6.y as well as 6.12-rc2 would be ideal.
 
-> sorry for the delay, I ran git bisect, here's the output. If you need
-> any additional info please let me know.
->=20
-> 3c1d704d9266741fc5a9a0a287a5c6b72ddbea55 is the first bad commit
-> commit 3c1d704d9266741fc5a9a0a287a5c6b72ddbea55 (HEAD)
-> Author: Sanath S <Sanath.S@amd.com>
-> Date:   Sat Jan 13 10:52:48 2024
->=20
->     thunderbolt: Reset topology created by the boot firmware
->=20
->     commit 59a54c5f3dbde00b8ad30aef27fe35b1fe07bf5c upstream.
+Also assuming it helps can you please post your dmesg from 6.12-rc2 both 
+with thunderbolt.host_reset=0 and without?  A github gist or a new 
+kernel bugzilla are good places to post it.
 
-So there is a commit c67f926ec870 ("thunderbolt: Reset only non-USB4
-host routers in resume") that carries a fixes tag for the commit that
-you have bisected to. The commits should both be in v6.6.29 and onwards,
-so in the same release that's causing you problems. Maybe the fix is
-incomplete or has a missing dependency =F0=9F=A4=94
+> 
+> Cheers,
+> Chris
+> 
+> [0]: https://pkgbuild.com/\~gromit/linux-bisection-kernels/linux-mainline-6.12rc2-1-x86_64.pkg.tar.zst
+> 
+>>
+>>   drivers/thunderbolt/domain.c |  5 +++--
+>>   drivers/thunderbolt/icm.c    |  2 +-
+>>   drivers/thunderbolt/nhi.c    | 19 +++++++++++++------
+>>   drivers/thunderbolt/tb.c     | 26 +++++++++++++++++++-------
+>>   drivers/thunderbolt/tb.h     |  4 ++--
+>>   5 files changed, 38 insertions(+), 18 deletions(-)
+>>
+>> On Tue, Sep 24, 2024 at 8:58 AM Fabian Stäber <fabian@fstab.de> wrote:
+>>>
+>>> Hi Greg,
+>>>
+>>> I can reproduce the issue with the upstream Linux kernel: I compiled
+>>> 6.6.28 and 6.6.29 from source: 6.6.28 works, 6.6.29 doesn't.
+>>>
+>>> I'll learn how to do 'git bisect' to narrow it down to the offending commit.
+>>>
+>>> The non-lts kernel is also broken.
+>>>
+>>> Fabian
+>>>
+>>> On Mon, Sep 23, 2024 at 8:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>> On Mon, Sep 23, 2024 at 08:34:23AM +0200, Fabian Stäber wrote:
+>>>>> Hi,
+>>>>
+>>>> Adding the linux-usb list.
+>>>>
+>>>>> I got a Dell WD19TBS Thunderbolt Dock, and it has been working with
+>>>>> Linux for years without issues. However, updating to
+>>>>> linux-lts-6.6.29-1 or newer breaks the USB ports on my Dock. Using the
+>>>>> latest non-LTS kernel doesn't help, it also breaks the USB ports.
+>>>>>
+>>>>> Downgrading the kernel to linux-lts-6.6.28-1 works. This is the last
+>>>>> working version.
+>>>>>
+>>>>> I opened a thread on the Arch Linux forum
+>>>>> https://bbs.archlinux.org/viewtopic.php?id=299604 with some dmesg
+>>>>> output. However, it sounds like this is a regression in the Linux
+>>>>> kernel, so I'm posting this here as well.
+>>>>>
+>>>>> Let me know if you need any more info.
+>>>>
+>>>> Is there any way you can use 'git bisect' to test inbetween kernel
+>>>> versions/commits to find the offending change?
+>>>>
+>>>> Does the non-lts arch kernel work properly?
+>>>>
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>
 
->     [...]
->     Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
->     Signed-off-by: Sanath S <Sanath.S@amd.com>
->     Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-I have added Mika, Mario and Sanath to the recipients, maybe they have
-inputs on what would be useful debugging output.
-
-In the meantime maybe also test if the issue is present with the latest
-stable kernel ("linux" in the Arch packages) and with the latest release
-candidate (you can find a precompiled version [here][0].
-
-Cheers,
-Chris
-
-[0]: https://pkgbuild.com/\~gromit/linux-bisection-kernels/linux-mainline-6=
-=2E12rc2-1-x86_64.pkg.tar.zst
-
->=20
->  drivers/thunderbolt/domain.c |  5 +++--
->  drivers/thunderbolt/icm.c    |  2 +-
->  drivers/thunderbolt/nhi.c    | 19 +++++++++++++------
->  drivers/thunderbolt/tb.c     | 26 +++++++++++++++++++-------
->  drivers/thunderbolt/tb.h     |  4 ++--
->  5 files changed, 38 insertions(+), 18 deletions(-)
->=20
-> On Tue, Sep 24, 2024 at 8:58=E2=80=AFAM Fabian St=C3=A4ber <fabian@fstab.=
-de> wrote:
-> >
-> > Hi Greg,
-> >
-> > I can reproduce the issue with the upstream Linux kernel: I compiled
-> > 6.6.28 and 6.6.29 from source: 6.6.28 works, 6.6.29 doesn't.
-> >
-> > I'll learn how to do 'git bisect' to narrow it down to the offending co=
-mmit.
-> >
-> > The non-lts kernel is also broken.
-> >
-> > Fabian
-> >
-> > On Mon, Sep 23, 2024 at 8:45=E2=80=AFAM Greg KH <gregkh@linuxfoundation=
-=2Eorg> wrote:
-> > >
-> > > On Mon, Sep 23, 2024 at 08:34:23AM +0200, Fabian St=C3=A4ber wrote:
-> > > > Hi,
-> > >
-> > > Adding the linux-usb list.
-> > >
-> > > > I got a Dell WD19TBS Thunderbolt Dock, and it has been working with
-> > > > Linux for years without issues. However, updating to
-> > > > linux-lts-6.6.29-1 or newer breaks the USB ports on my Dock. Using =
-the
-> > > > latest non-LTS kernel doesn't help, it also breaks the USB ports.
-> > > >
-> > > > Downgrading the kernel to linux-lts-6.6.28-1 works. This is the last
-> > > > working version.
-> > > >
-> > > > I opened a thread on the Arch Linux forum
-> > > > https://bbs.archlinux.org/viewtopic.php?id=3D299604 with some dmesg
-> > > > output. However, it sounds like this is a regression in the Linux
-> > > > kernel, so I'm posting this here as well.
-> > > >
-> > > > Let me know if you need any more info.
-> > >
-> > > Is there any way you can use 'git bisect' to test inbetween kernel
-> > > versions/commits to find the offending change?
-> > >
-> > > Does the non-lts arch kernel work properly?
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
->=20
-
---r2g5hm2ymbewdnd7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmcEGIQACgkQwEfU8yi1
-JYWu6hAArkE10LOzLErzMqMzPtC71J+/FVscIbL6mm0ayNG5cqkqMH0z5Po3g3FR
-K45RxDqRs+Sro7GvV5GEB/0B6qiW7STGtxiQTC53Oryfumu//8iWzURw8qU6+SH5
-Oi2Nag53QOnUk6SFZsqRLocNAPp3DTsgmpdtkradMdXIfQOC+bcB3QMB2b3nmj99
-w4QLZ4v7CZicHaoaK7uLUuC6skI8iG2Jb9pePB0llzkoXXV9oF5hQSUWsSL0kzKm
-dVJJMO4/hWSK1oOAcBBn6h5kimA9Vr1cYYHdCos0l1358up5mhJIVE7E3drI4gAx
-KKsAl5KTPnPQp6yJxh7M1/qidrRDuo7p0d8FON6QUQyjGQJP5/73BH+imxkKVPRe
-0cjpRAta9EiGs7IK4ojTrW3uz77z2d3xNU1shW/1FEksOLny56zeFL1jZUyYeht5
-+42w5DC0xyEcPRF1BdaExoQNUnS0/6Zug7bWaW6Cj9sPls3mXJqxm1473DfdDyfk
-/oqtQPnU0B9pMnububD57vxckmJPxnoKk0OBrEr+31LNGJsqNgqAZ6AAsrb9KeTr
-vADMlh23at9RqK5gGTNvkcMnHzOjPHo4QxrEs1x5FI2KyHLL0L9TPUAm00jinn8/
-nZMGfv1TLRus9QqD1Ua4NG5PjKrSZtmH56SpfRm5Bt1pbIXqicI=
-=4RDe
------END PGP SIGNATURE-----
-
---r2g5hm2ymbewdnd7--
