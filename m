@@ -1,378 +1,187 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A201A1D4166
-	for <regressions@lists.linux.dev>; Mon,  7 Oct 2024 15:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6F01DB342;
+	Mon,  7 Oct 2024 16:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728313859; cv=none; b=AS8iiRLWDxMUJvXCsgkyVIDkLVlYwLsrM0azzLOSVHsCG1YMUS7FprbX03N3Q1hHORgFGlSiUIbqrdCim2zHX0B08ECM8oms2jWpHrbZcLSy2k+6z3Z4KNyMtj9viQHCGEF2bSqKEaTfeajY02dpSMNX7uKpVrKmM9jLIr6eKGU=
+	t=1728318575; cv=none; b=G/D6YrcpD96UeFw5sL0ozNKXX1UI5JbV7JDYVHLOuRIQmjMjGdE9Few8drySB/Frnj9TPE/U/j2RnegjIPVoG5OfNepFJbSHsiy81OW9QzmAxVKYMGUqeCE5lxjIs7AhBp6SAv1AKwJEB1g3QcKsFOWl4rxKwiqmRiqlnItxqh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728313859; c=relaxed/simple;
-	bh=XEuAoDA28eZWrQB1KO+yEH2exwXORDf0aYHspiLbRE8=;
+	s=arc-20240116; t=1728318575; c=relaxed/simple;
+	bh=Hixdo/eIE/G41uhAs+nrzfVCP0R4a/h4UYdiGgdgJKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sp910be2kYGAgTC6qW8QGl68Avmhd6dOaWKCy6mtsVHVlkYwCRMeQdVzKlh0kDKjvSBkw3ZPnCe6Fkp4f/xntlNFq0l8AOhe6MEan/CZVldkhLv7RCeaCCChMcPbsU3rbLlK78jeSmLHEYg4hplBSugXW6m0ZUtaCesk7saoXM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=W9b+YG2H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TeYJdBHx; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z9MdBqTwzy459Bqz516ZMxkLbejyz+zwh4Z250AofZasnfIcDZ4bNCF/R7DpUv8cpUpaUZZJ1u/UP/sDDFCDMVvffHh05BYqasS9xKFqm1IP2tFGA34AwjxsXi9R3EcLqRk/u+AaDtKTtfixP2sn2oyJvdcUgTEPh12xIlccdG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnfWCSJ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="W9b+YG2H";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TeYJdBHx"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.phl.internal (Postfix) with ESMTP id D659A1380192;
-	Mon,  7 Oct 2024 11:10:56 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-07.internal (MEProxy); Mon, 07 Oct 2024 11:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1728313856; x=1728400256; bh=kuvSqriivn
-	NgK6AIiVZD/5xvniRb2qg4j0ZnsKQstIo=; b=W9b+YG2HN+qc2vwGoWLTNsrRYD
-	xAlJjUABoFeKiBPrpktw783bBlR9cOtNa6+d5Z2WoOyFLdV3mEUu/KbcWpMeak7z
-	CBznSraGYSUbVHa+R0MBOV/3j5v9VXCskH5OlpMiUN32NkoAXcmUw7x4pEI6m8xg
-	zZaYNecUs6tUlzgh7RFTEl6YVt7HA5lqLuqUBYw148MDqozwfD85qX1zGZes1CQt
-	++YEY73GpFaeAEQQuM4cV0jl6M8F3DTGlReX1yz1Y3RfVnYw0v4w10j/Ld5hs1y6
-	dD7SqiPFn27BtxsbsPpSjfHYB3AflRBsxzwUmrMlbDlFBXp6xc+Sps8oGaZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1728313856; x=1728400256; bh=kuvSqriivnNgK6AIiVZD/5xvniRb
-	2qg4j0ZnsKQstIo=; b=TeYJdBHxv8tRiZeqlg0bYOLvthED/UeWkBwMzQvwhqYu
-	zxM48DWAzxKDD12hVUx+8vWgsLBX+QQGQu6+YMeWFa5F9ODlVoFnu0KFtqFaAtsE
-	1JLrheHRcu2PQy6Ga5+x6E4vHAEv++s2sxDhFgfLdXgSzcfabr4sbtUMd0Y5uc2j
-	BJT+bz98+D4lh7EvdzaM0pkngHWdM3/Rp4fIBfIyHcU2i4FxlZmOt9hA6q+J4rU3
-	8QAq0zTVdOnTzy0jhj4+oi+mvMD8DjoIx+hMdg1WwE+QX9AFfOpMmGQ9Nz1A9Cz6
-	d+h5xkHv9BbcxlejPNnzCsZkqAkHXbeVs2N5FA8jbw==
-X-ME-Sender: <xms:APoDZ21KAHGHENcW6PylbixOVDrRjigf13lYPKlhQuOsKZHVYCHZHg>
-    <xme:APoDZ5G6b8pCr15-HAIsidVgODEAP8lxoiaUTtsEXRXRV_Zvq0vmSPdZy9iQSnBAw
-    EyAgnqPtE6m3-MAAxQ>
-X-ME-Received: <xmr:APoDZ-4NPUYemQOpeMaSN-sOBK2FflNnuEu-gKYsqNo6dkopg4oEjH8f8UhvALVwUqc5O30Lnr-Mr1O0RAyyDVDcxYKR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddvledgkeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeiheevudei
-    gffftdeghedvtedugeffjeduheeugeehgeeiveetkeevhfeivdefgeenucffohhmrghinh
-    epghhouggsohhlthdrohhrghdpohhpvghnqdhsthgurdhorhhgnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrd
-    gttgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
-    khgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluh
-    hmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvght
-    sehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtsh
-    drlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinh
-    hgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
-    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:APoDZ30uzkKobUTzsjuny2QK1rFznOOxDAxXQPvkzOEHck8-iy1sIw>
-    <xmx:APoDZ5HdDS2Mta8AeKgJSemIFtRhXH3V8UtwCpAPFtGeFvdvBxBXww>
-    <xmx:APoDZw85iiQY4hb8MPWfLpqNPknl6AXDxGe_6VOE-3qMvpUeQ1_4jA>
-    <xmx:APoDZ-lWj8xdFS3vcmq8MM1ZawWfkdzSBHFZ6dgW2zMT38tan13FCQ>
-    <xmx:APoDZ4Dob6B53znLo0vH3q7-o6NcTIrrRqj6QHAQnWFt1I6Dl09k6I7U>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 7 Oct 2024 11:10:55 -0400 (EDT)
-Date: Mon, 7 Oct 2024 17:10:53 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Kees Cook <kees@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, morbo@google.com
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZwP5_bY-AmN91_YB@archlinux>
-References: <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnfWCSJ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32713C4CEC6;
+	Mon,  7 Oct 2024 16:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728318575;
+	bh=Hixdo/eIE/G41uhAs+nrzfVCP0R4a/h4UYdiGgdgJKg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fnfWCSJ+i/Bf93IZdUcXYmQHNWOk0zjZbCq0PPTRlvQjFXh1QL+qPWF1r9jFq4hpv
+	 C+W43dJktA6nTvymzlqW4HW1NVYlTobYD5VoqYN8heTFtA7+iRe8KDNq6JgyxNDRJG
+	 62Tsa0KYC4c05z7alGJjrlQ36uwCigKb9Gxl5Fs1P9+s27Fy/Ap7QRyzn1KYrRdacd
+	 5SR9Yf5lBnQQO/r701JCcuAe9oML+Sv0AW6Ikqs+SynyHv+9cX6wyxn3qAKDr84nwJ
+	 yyB6j7cD1PZR83VHFgz6mRJmgnC3wdABUiizKx2NeBzMocxhBhiIm6zHPY4RjOZmE3
+	 HMOTC+66pF4LQ==
+Date: Mon, 7 Oct 2024 18:29:31 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: W <linuxcdeveloper@gmail.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-ide@vger.kernel.org
+Subject: Re: libahci driver and power switching HDD on newer kernels
+Message-ID: <ZwQMa4_jQokKU2mz@ryzen.lan>
+References: <7882faa8-d5ec-4868-b158-0b942b669cc0@gmail.com>
+ <c4f1c690-6e97-44de-985f-dc9eadd18d23@leemhuis.info>
+ <c7880a6f-04d4-4572-9255-1575f6668b4e@kernel.org>
+ <a0c34406-3bb3-4880-9513-0876aacd4de6@gmail.com>
+ <Zv25MQWh-1yYAcVC@ryzen.lan>
+ <07f85f4a-71c7-465b-b38c-127a02721423@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZwNb-_UPL9BPSg9N@archlinux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07f85f4a-71c7-465b-b38c-127a02721423@kernel.org>
 
-On 07 05:56:46, Jan Hendrik Farr wrote:
-> > I want to separate several easily confused issues. Instead of just
-> > saying __bdos, let's clearly refer to what calculation within bdos is
-> > being used. There are 3 choices currently:
-> > - alloc_size attribute
-> > - counted_by attribute
-> > - fallback to __bos (which is similar to sizeof(), except that FAMs are 0 sized)
+On Thu, Oct 03, 2024 at 07:47:41AM +0900, Damien Le Moal wrote:
+> On 10/3/24 06:20, Niklas Cassel wrote:
+> > On Tue, Sep 24, 2024 at 12:42:10PM +0200, W wrote:
+> >>>
+> >>> Given that you had 6.4.12 working OK, it is likely some commit that introduced a
+> >>> regression. If you can git bisect it, we will have a better idea how to remove
+> >>> the regression.
+> >>
+> >> Please take a look at bugzilla report:
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=219296 - there are the details.
+> >>
+> >> I'm wondering what is the better way for communication - here on mailing
+> >> list or put the comments in bugzilla ticket?
+> >> Probably here will be better idea...
+> >>
+> >> W
+> >>
 > > 
-> > Additionally there are (for all intents and purposes) 2 size
-> > determinations to be made by __bos and __bdos, via argument 2:
-> > - containing object size (type 0) ("maximum size")
-> > - specific object size (type 1) ("minimum size")
-> 
-> "maximum" vs "minimum" size would by type 0 vs type 2, but I think you
-> do mean type 0 and type 1 as those are the types currently used by
-> __struct_size and __member_size. Those are both "maximum" sizes.
-> 
+> > Hello W,
 > > 
-> > For example, consider:
+> > Could you please try the following patch,
+> > and see if it helps:
 > > 
-> > struct posix_acl *acl = malloc(1024);
-> > acl->a_count = 1;
 > > 
-> > what should these return:
+> > From dba01b7d68fffc26f3abf3252296082311a767a0 Mon Sep 17 00:00:00 2001
+> > From: Niklas Cassel <cassel@kernel.org>
+> > Date: Wed, 2 Oct 2024 21:40:41 +0200
+> > Subject: [PATCH] ata: libata: do not spin down disk on PM event freeze
 > > 
-> > 	__bos(acl, 0)
-> > 	__bos(acl, 1)
-> > 	__bdos(acl, 0)
-> > 	__bdos(acl, 1)
-> > 	__bos(acl->a_entries, 0)
-> > 	__bos(acl->a_entries, 1)
-> > 	__bdos(acl->a_entries, 0)
-> > 	__bdos(acl->a_entries, 1)
+> > Currently, ata_eh_handle_port_suspend() will return early if
+> > ATA_PFLAG_PM_PENDING is not set, or if the PM event has flag
+> > PM_EVENT_RESUME set.
 > > 
+> > This means that the following PM callbacks:
+> > .suspend = ata_port_pm_suspend,
+> > .freeze = ata_port_pm_freeze,
+> > .poweroff = ata_port_pm_poweroff,
+> > .runtime_suspend = ata_port_runtime_suspend,
+> > will actually make ata_eh_handle_port_suspend() perform some work.
+> > 
+> > ata_eh_handle_port_suspend() will spin down the disks (by calling
+> > ata_dev_power_set_standby()), regardless of the PM event.
+> > 
+> > Documentation/driver-api/pm/devices.rst, section "Entering Hibernation",
+> > explicitly mentions that .freeze() does not have to be put the device in
+> > a low-power state, and actually recommends not doing so. Thus, let's not
+> > spin down the disk for the .freeze() callback. (The disk will instead be
+> > spun down during the succeeding .poweroff() callback.)
+> > 
+> > Fixes: aa3998dbeb3a ("ata: libata-scsi: Disable scsi device manage_system_start_stop")
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > ---
+> >  drivers/ata/libata-eh.c | 18 ++++++++++++++----
+> >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+> > index 3f0144e7dc80..45a0d9af2d54 100644
+> > --- a/drivers/ata/libata-eh.c
+> > +++ b/drivers/ata/libata-eh.c
+> > @@ -4099,10 +4099,20 @@ static void ata_eh_handle_port_suspend(struct ata_port *ap)
+> >  
+> >         WARN_ON(ap->pflags & ATA_PFLAG_SUSPENDED);
+> >  
+> > -       /* Set all devices attached to the port in standby mode */
+> > -       ata_for_each_link(link, ap, HOST_FIRST) {
+> > -               ata_for_each_dev(dev, link, ENABLED)
+> > -                       ata_dev_power_set_standby(dev);
+> > +       /*
+> > +        * We will reach this point for all of the PM events:
+> > +        * PM_EVENT_SUSPEND (if runtime pm, PM_EVENT_AUTO will also be set)
+> > +        * PM_EVENT_FREEZE, and PM_EVENT_HIBERNATE.
+> > +        *
+> > +        * We do not want to perform disk spin down for PM_EVENT_FREEZE.
+> > +        * (Spin down will be performed by the succeeding PM_EVENT_HIBERNATE.)
+> > +        */
+> > +       if (!(ap->pm_mesg.event & PM_EVENT_FREEZE)) {
 > 
-> I gathered some data from clang and gcc on all for all these cases and
-> additionally varied whether the allocation size is a compile time known
-> constant, runtime known, or not known. I also varied whether
-> __counted_by was used.
-> 
-> Source code: [1]
-> 
-> 
-> Abbreviations:
-> 
-> FAM      = flexible array member
-> -1       = SIZE_MAX
-> p->a_ent = p->a_entries
-> comp.    = allocation size is compile time known
-> run.     = allocation size is compile time known
-> none     = allocation size is unknown
-> count    = __counted_by attribute in use
-> correct  = What I think the correct answers should be. In some places I
-> have two answers. In that case the second number is what the kernel
-> currently expects.
-> 
-> 
-> And here's the data:
-> 
-> function        |comp.|run.|none|count| gcc  |clang |correct
-> ----------------|-----|----|----|-----|------|------|-----
-> bos(p, 0)       |  x  |    |    |     | 1024 | 1024 | 1024
-> bos(p, 0)       |     | x  |    |     |  -1  |  -1  | -1
-> bos(p, 0)       |     |    | x  |     |  -1  |  -1  | -1
-> bos(p, 0)       |  x  |    |    |  x  | 1024 | 1024 | 1024
-> bos(p, 0)       |     | x  |    |  x  |  -1  |  -1  | -1
-> bos(p, 0)       |     |    | x  |  x  |  -1  |  -1  | -1
-> ----------------|-----|----|----|-----|------|------|-----
-> bos(p, 1)       |  x  |    |    |     | 1024 | 1024 | 1024
-> bos(p, 1)       |     | x  |    |     |  -1  |  -1  | -1
-> bos(p, 1)       |     |    | x  |     |  -1  |  -1  | -1
-> bos(p, 1)       |  x  |    |    |  x  | 1024 | 1024 | 1024
-> bos(p, 1)       |     | x  |    |  x  |  -1  |  -1  | -1
-> bos(p, 1)       |     |    | x  |  x  |  -1  |  -1  | -1
-> ----------------|-----|----|----|-----|------|------|-----
-> bdos(p, 0)      |  x  |    |    |     | 1024 | 1024 | 1024
-> bdos(p, 0)      |     | x  |    |     | 1024 | 1024 | 1024
-> bdos(p, 0)      |     |    | x  |     |  -1  |  -1  | -1
-> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
-> ----------------|-----|----|----|-----|------|------|-----
-> bdos(p, 1)      |  x  |    |    |     | 1024 | 1024 | 1024
-> bdos(p, 1)      |     | x  |    |     | 1024 | 1024 | 1024
-> bdos(p, 1)      |     |    | x  |     |  -1  |  -1  | -1
-> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
-> ----------------|-----|----|----|-----|------|------|-----
-> bos(p->a_ent, 0)|  x  |    |    |     |  996 | 996  | 996
-> bos(p->a_ent, 0)|     | x  |    |     |  -1  |  -1  | -1
-> bos(p->a_ent, 0)|     |    | x  |     |  -1  |  -1  | -1
-> bos(p->a_ent, 0)|  x  |    |    |  x  |  996 | 996  | 996
-> bos(p->a_ent, 0)|     | x  |    |  x  |  -1  |  -1  | -1
-> bos(p->a_ent, 0)|     |    | x  |  x  |  -1  |  -1  | -1
-> ----------------|-----|----|----|-----|------|------|-----
-> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
-> bos(p->a_ent, 1)|     | x  |    |     |  -1  |  -1  | -1
-> bos(p->a_ent, 1)|     |    | x  |     |  -1  |  -1  | -1
-> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
-> bos(p->a_ent, 1)|     | x  |    |  x  |  -1  |  -1  | -1
-> bos(p->a_ent, 1)|     |    | x  |  x  |  -1  |  -1  | -1
-> ----------------|-----|----|----|-----|------|------|-----
-> bdos(p->a_ent,0)|  x  |    |    |     |  996 | 996  | 996
-> bdos(p->a_ent,0)|     | x  |    |     |  996 | 996  | 996
-> bdos(p->a_ent,0)|     |    | x  |     |  -1  |  -1  | -1
-> bdos(p->a_ent,0)|  x  |    |    |  x  |   8  |  8   |  8
-> bdos(p->a_ent,0)|     | x  |    |  x  |   8  |  8   |  8
-> bdos(p->a_ent,0)|     |    | x  |  x  |   8  |  8   |  8
+> This feels odd: not doing anything to the drive for PM_EVENT_FREEZE will still
+> endup freezing the port, which will later cause a reset. And we still endup
+> calling the port suspend op and ata_acpi_set_state(), which seems to be doing
+> nothing for freeze...
 
+Hello Damien,
 
-These previous three should probably actually be like this:
-bdos(p->a_ent,0)|  x  |    |    |  x  |   8  |  8   |  15
-bdos(p->a_ent,0)|     | x  |    |  x  |   8  |  8   |  15
-bdos(p->a_ent,0)|     |    | x  |  x  |   8  |  8   |  15
+Hibernation is done by three consecutive PM events, in the following order:
+1) PM_EVENT_FREEZE
+2) PM_EVENT_THAW
+3) PM_EVENT_HIBERNATE
 
-They should include the allowed padding after the FAM, as this is a type
-0 bdos. Not really an issue here, as the kernel expects 8 here.
+Hibernate before commit aa3998dbeb3a ("ata: libata-scsi: Disable scsi
+device manage_system_start_stop"):
+-On event PM_EVENT_FREEZE:
+ ata_eh_handle_port_suspend() would call ata_eh_freeze_port() and then
+ call ap->ops->port_suspend().
+-On event PM_EVENT_THAW:
+ ata_port_resume() would trigger EH with ATA_EH_RESET, which triggers a
+ all to ata_eh_reset(), which will thaw the port, and then later
+ ata_eh_handle_port_resume() would call ap->ops->port_resume().
+-On event PM_EVENT_HIBERNATE:
+ same as PM_EVENT_FREEZE.
+
+After commit aa3998dbeb3a ("ata: libata-scsi: Disable scsi device
+manage_system_start_stop"), on event PM_EVENT_FREEZE, and on event
+PM_EVENT_HIBERNATE, ata_eh_handle_port_suspend() would call
+ata_eh_freeze_port() and then call ap->ops->port_suspend(),
+but it would also call ata_dev_power_set_standby() to spin down the disk.
+
+So what my propsed patch does is simply to restore
+ata_eh_handle_port_suspend() to the behavior before commit aa3998dbeb3a
+for event PM_EVENT_FREEZE, but for event PM_EVENT_HIBERNATE,
+ata_eh_handle_port_suspend() will continue to spin down the disk.
 
 
-> ----------------|-----|----|----|-----|------|------|-----
-> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
-> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
-> bdos(p->a_ent,1)|     |    | x  |     |  -1  |  -1  | -1
-> bdos(p->a_ent,1)|  x  |    |    |  x  |   8  |  8   |  8
-> bdos(p->a_ent,1)|     | x  |    |  x  |   8  |  8   |  8
-> bdos(p->a_ent,1)|     |    | x  |  x  |   8  |  8   |  8
-> ----------------|-----|----|----|-----|------|------|-----
 > 
-> bos only uses the allocation size to give it's answers. It only works if
-> it is a compile time known constant. bos also does not utilize the
-> __counted_by attribute.
-> 
-> bdos on the other hand allows the allocation size to be runtime known.
-> It also makes use of the __counted_by attribute if present, which always
-> takes precedence over the allocation size when the compiler supports it
-> for the particular case. So in those cases you can "lie" to the compiler
-> about the size of an object.
-> 
-> clang supports the __counted_by attribute for both cases (p and
-> p->a_entries). gcc only supports it for p->a_entries cases.
-> 
-> 
-> 
-> Issue A (clang)
-> =======
-> 
-> function        |comp.|run.|none|count| gcc  |clang |correct
-> ----------------|-----|----|----|-----|------|------|-----
-> bdos(p, 0)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 0)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 0)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
-> bdos(p, 1)      |  x  |    |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 1)      |     | x  |    |  x  | 1024 |  36  | 43 / 40
-> bdos(p, 1)      |     |    | x  |  x  |  -1  |  36  | 43 / 40
-> 
-> These cases also represent the "bdos off by 4" issue in clang. clang
-> will compute these results using:
-> 
-> max(sizeof(struct posix_acl), offsetof(struct posix_acl, a_entries) +
-> count * sizeof(struct posix_acl_entries)) = 36
-> 
-> The kernel on the other hand expects this behavior:
-> 
-> sizeof(struct posix_acl) + count * sizeof(struct posix_acl_entries) = 40
-> 
-> 
-> I think the correct calculation would actually be this:
-> 
-> offsetof(struct posix_acl, a_entries)
-> + (acl->a_count + 1) * sizeof(struct posix_acl_entry) - 1 = 43
-> 
-> The C11 standard says that when the . or -> operator is used on a struct
-> with an FAM it behaves like the FAM was replaced with the largest array
-> (with the same element type) that would not make the object any larger
-> (see page 113 and 114 of [2]).
-> So there are actually multiple sizes of the object that are consistent
-> with a count of 1.
-> 
-> malloc-max = maximum size of the object
-> malloc-min = minimum size of the object
-> FAME = flexible array member element
-> (FAME) = hypothetical 2nd FAME
-> 
-> <-----------------malloc-max-------------->
-> <-----------------malloc-min------->
-> <------sizeof(posix_acl)------->
->                             <-FAME-><(FAME)>
-> 
-> The clang documentation of type 0 (vs type 2) bdos says this:
-> 
-> If ``type & 2 == 0``, the least ``n`` is returned such that accesses to 
->    ``(const char*)ptr + n`` and beyond are known to be out of bounds.
-> 
-> We only _know_ that that access to the last byte of a 2nd hypothetical FAME
-> would be out of bounds. All the bytes before that are padding that is
-> allowed by the standard.
-> 
-> 
-> However, also this calculation doesn't get the kernel out
-> of trouble here. While this would fix the issue for this particular
-> struct it does not solve it for all structs:
-> 
-> What if the elements of the FAM were chars instead of
-> struct posix_acl_entries here? In that case the kernel is back to
-> overestimating the size of the struct / underreporting the count to the
-> compiler. So while I think this answer is more correct it doesn't
-> actually solve the issue.
-> 
-> Example:
-> Let's say the kernel allocates one of these posix_acl_char structs for a
-> single char in the array:
-> 
-> malloc(sizeof(posix_acl_char) + 1 * sizeof(char)) = 33
-> 
-> The C standard actually says that this object will behave like this when
-> the FAM is accessed:
-> 
-> struct posix_acl {
->     refcount_t a_refcount;
->     struct rcu_head a_rcu;
->     unsigned int a_count;
->     char a_entries[5];
-> };
-> 
-> a_count should be set to 5, not 1!
-> 
-> 
-> So we would really need an option to tell the compiler to use the same
-> size calculation as the kernel expects here, or maybe be able to specify
-> an offset in the __counted_by attribute. Alternatively clang could use
-> an option to disable the use of __counted_by for cases where the whole
-> struct is passed. This would make it behave like gcc.
-> 
-> 
-> 
-> Issue B (clang + gcc)
-> =======
-> 
-> A less serious issue happens with these cases:
-> 
-> function        |comp.|run.|none|count| gcc  |clang |correct
-> ----------------|-----|----|----|-----|------|------|-----
-> bos(p->a_ent, 1)|  x  |    |    |     |  996 | 996  | 992
-> bos(p->a_ent, 1)|  x  |    |    |  x  |  996 | 996  | 992
-> bdos(p->a_ent,1)|  x  |    |    |     |  996 | 996  | 992
-> bdos(p->a_ent,1)|     | x  |    |     |  996 | 996  | 992
-> 
-> In this case the size returned by bos/bdos is too large, so this won't
-> lead to false positives. Both clang and gcc simply compute the difference
-> between the pointer from the start of the FAM to the end of the whole
-> struct. I believe this is wrong. According to the C standard the object
-> should behave like the FAM was replaced with the largest array that does
-> not make the object any larger. The size of that array is 124 elements.
-> So the posix_acl becomes:
-> 
-> struct posix_acl {
->     refcount_t a_refcount;
->     struct rcu_head a_rcu;
->     unsigned int a_count;
->     struct posix_acl_entry a_entries[124];
-> };
-> 
-> Since this is a type 1 bos/bdos it should return the size of just the
-> array, which is 124 * 8 = 992, and not 124.5 * 8 = 996.
-> 
-> [1] https://godbolt.org/z/a5eM3z8PY
-> [2] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1548.pdf
-> 
-> Best Regards
-> Jan
-> 
+> So I wonder if a simpler approach would not be to simply remove the
+> ata_port_pm_freeze() method entirely and do nothing for freeze events ?
+
+I do not think that is a good option, as:
+https://docs.kernel.org/driver-api/pm/devices.html#entering-hibernation
+clearly states that:
+"The ->freeze methods should quiesce the device so that it doesn’t
+generate IRQs or DMA."
+
+That is what we do when calling ata_eh_freeze_port().
+
+I think my propsed patch is the simplest thing that we can do to
+restore the behavior of ata_eh_handle_port_suspend() for event
+PM_EVENT_FREEZE, as it was before commit aa3998dbeb3a.
+
+Thus, I will send out this proposed patch as a real patch shortly.
+
+
+Kind regards,
+Niklas
