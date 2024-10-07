@@ -1,133 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B543F1D356C
-	for <regressions@lists.linux.dev>; Mon,  7 Oct 2024 13:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DAE14AD17;
+	Mon,  7 Oct 2024 13:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728308302; cv=none; b=EikRbCqmqi3DDecJg4N9uIGY/nnVixo8KzIdN3h7bu54ddROuMFrs2y/ltDoQoKnwXRlWXjtIYKbswd5Tv03Jazo/rsX7DR7r8Aq+KhGOmfL8iqtA+ncEYC0nKZGZOuuRD8/r2+afDWMlj4LXRO6xQLiKK9ikm0c1aAyy73Gdog=
+	t=1728308653; cv=none; b=tmGCgwHp7Tr1Z43IW5LYohUWYRIJAYpxQ5490+LXC7gL5BWQbYP+9kP5PRvJjrGxBIWEXvsekn2x/P1aadMQRrmYQbzYTskJ2ACIt30JNVI15J9qdL9yimzpHAI5ac14yv62KE757TJgQvv2viSSmhtT45j9RapcYByK5ff0buY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728308302; c=relaxed/simple;
-	bh=yVdeGgNTfeFuIEVPc7u0AK0zINUin07XGVxlqUetaSQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DGLTGkPX9MOCPXwZCfOJTdUQenb8tmy9Wwl0TtY0GDUHouX5UVYmI+npf/XabzdDB2fcwuWNAmLQBVRVCoBXfdNtTuzdT5GYYZ+v1TGicQUzlP+n6428v/56JUSaz6oFYGCxdvjV7DSew3CoiZ8r+vB/bBk0LbCsDJEuv5MzJuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hdK03pHB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728308653; c=relaxed/simple;
+	bh=RuQzPJZnXPyP4yiBTX+Tbj3Y8weH8VEomWfrp1QHVwM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bxHntKp8H3SsuHhMItZbMLxyCQrDS3ajJ6YvJfvpRiej0/L2doRGokCTyaYyppE0aAlT5Nfm2QcR736xZMyxDFwU3RsmRAw9EolWX/kUIIsVtvqfH2z0DR5P+MpbO40XimNXHodrJJHrjjsINIGMMdYQGDXnM9bHO1qZpAgbXos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fYE2hkx1; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hdK03pHB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728308299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y5DPNZskkiUAq4LS5OFpU8MIweVBZO51RYIR24GV8o8=;
-	b=hdK03pHBgUv71YXK4AYHt02n1CH+DiY9M9HdpLFOzKlb+wZvnhhg6++u3cj9KC85sjAX3+
-	UfzDri+Vpc/zwnTB8fIVDicEhYBshtXViFgYqOoiSIXcLVunIOvbUDqHnnQKjzJQReyhj9
-	TIteoPvxBl0F9wJYNFMT3CecSaiQ9GY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-43-zYBGLqMZPKuSVVaxf3BE4Q-1; Mon, 07 Oct 2024 09:38:18 -0400
-X-MC-Unique: zYBGLqMZPKuSVVaxf3BE4Q-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42cb0b0514bso39841155e9.1
-        for <regressions@lists.linux.dev>; Mon, 07 Oct 2024 06:38:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728308297; x=1728913097;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y5DPNZskkiUAq4LS5OFpU8MIweVBZO51RYIR24GV8o8=;
-        b=k5bHzXvq+HTu8GcrlOvrtHwzcweqKOo4HQzqKl5Gs357O9E4L/F2FG7+JJjRIau1i3
-         iIYcLeStDhoWzLuxEUajRZrH7d+Nkeg0TDk7mB14ZoqjbdwRsNcUdCT7F3fi2QMSVP1I
-         T6a84xPGrV+65rt5zVtNR+AHB+xTTB26z7/YiZajJDol3xwxAFU7516vV5jAN5NmWCu+
-         OnV7jnFlMIXSPBdNiZKHu9YN7pis62bhmBhSP78iQaKuWk/yS6f4OMcVB1ifyr5YJidC
-         tXdv9iJRhdC6ZGOnI3R31dpY3S9uTKnhW2RQwIfSetzflwHQvwuPCfi39BGGAokee4PY
-         lnEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9glg6+hXTeGiYlM0NxmPtZ5HnKg0ORlvZWLIBg/3PStElO/XER2KHea6ysspGZyRzaRPD2ljYFNLrIg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4+lUWDopOh4PyYhojmZtHABTtiWjo+JhuQI/Xd+m6cL8hyCKQ
-	4So6rB6LfOnQVsDsWJpxLee87T4x9kj3cIyqad9jWHVsJUengcrh/oT4Zy4+bxhsCqz1zFZqCBR
-	TqyTxarmmxa5DN09puA4eTEAJxQf5zkfvOTtAlxtZjXwCwECLWjb0ccdcTSGUXeXDIR9K/j8Gl+
-	k34UxRMyJn4PB9yQP5nI3cvRcb2qjrnLcrVPOQlyTsJM0I
-X-Received: by 2002:adf:ea8c:0:b0:374:c287:929b with SMTP id ffacd0b85a97d-37d0e6bb291mr6937310f8f.4.1728308297005;
-        Mon, 07 Oct 2024 06:38:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0TwOIoXGhtncVqqSCdfhnggtMr8A9YmeYV2RL1PX3MgPcnG86Oq8dGEM8Qg3X1MoztO3Yqw==
-X-Received: by 2002:adf:ea8c:0:b0:374:c287:929b with SMTP id ffacd0b85a97d-37d0e6bb291mr6937277f8f.4.1728308296459;
-        Mon, 07 Oct 2024 06:38:16 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1690f75bsm5766858f8f.23.2024.10.07.06.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 06:38:16 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kevin Tian <kevin.tian@intel.com>, Yan Zhao <yan.y.zhao@intel.com>, Yiwei
- Zhang <zzyiwei@google.com>, Lai Jiangshan <jiangshanlai@gmail.com>, "Paul
- E. McKenney" <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>,
- Gerd Hoffmann <kraxel@redhat.com>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that
- support self-snoop
-In-Reply-To: <df3c6560-dd37-4ec2-9b7e-1ad4c3ceba07@leemhuis.info>
-References: <20240309010929.1403984-1-seanjc@google.com>
- <20240309010929.1403984-6-seanjc@google.com> <877cbyuzdn.fsf@redhat.com>
- <df3c6560-dd37-4ec2-9b7e-1ad4c3ceba07@leemhuis.info>
-Date: Mon, 07 Oct 2024 15:38:15 +0200
-Message-ID: <87iku4ghiw.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fYE2hkx1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=D0RTQTBSUn8yYabKkL97a9GY5kzQPdueRyNABA+Z7ko=;
+	t=1728308651; x=1728740651; b=fYE2hkx1PPoB7A7mD55mlgyDoQLhlmPJ/Fj6w01qkSlIaC1
+	BC1+/19ZEeYV7JYSiIopuyn+wHLfOWbHVk4i20CdZxyYaW4NGVP1iX901htjzY76dnx+a2hPisCaL
+	zMVJuirpdGd8jkl7/KtulroqDXWL2TtcVauRO6dbXk2C/9CEMonJGuxKge7li7VjcTzuKGfOd2+cT
+	mifKjvmqesGQP4y49BRSrS95TnbpjAvbWmE/J7fmb3kFbPiKQJdWV1wcCYDZsQZcc5FL4T3bREUvJ
+	/JOjieRLi2nGr3txipmmj/3OIoJjiix1OR2W3pkIe2uZ6GNnVzU/fuVcKhjvdYxA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sxo1v-0001Dn-6A; Mon, 07 Oct 2024 15:44:07 +0200
+Message-ID: <c5020404-2d48-47ad-a75b-f2d37897f57c@leemhuis.info>
+Date: Mon, 7 Oct 2024 15:44:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] HID: i2c-hid: Touchpad not working on Thinkpad Z16
+ Gen 2
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Jose Fernandez <jose.fernandez@linux.dev>, Jiri Kosina
+ <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>, Hans de Goede
+ <hdegoede@redhat.com>, Kenny Levinsen <kl@kl.wtf>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ Johan Hovold <johan+linaro@kernel.org>, Nam Cao <namcao@linutronix.de>
+Cc: linux-input@vger.kernel.org, regressions@lists.linux.dev
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
+ <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728308651;6444a47b;
+X-HE-SMSGID: 1sxo1v-0001Dn-6A
 
-"Linux regression tracking (Thorsten Leemhuis)"
-<regressions@leemhuis.info> writes:
+On 06.10.24 05:46, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 06.10.24 01:01, Jose Fernandez wrote:
+>> I'm using Fedora 40 with the vanilla kernel built from the 6.12-RC1 [1]. There
+>> is a regression that causes the touchpad to stop working on my Thinkpad Z16 Gen
+>> 2 (Sensil touchpad). dmesg shows this on 6.12-rc1 when filtering by `hid`:
+> 
+> Could you try latest git instead of rc1 if you haven't yet? E.g. the
+> latest packages from your "[1]". I wonder if this is
+> https://bugzilla.redhat.com/show_bug.cgi?id=2314756
+> which is fixed by a3f9a74d210bf5 ("Revert "Input: Add driver for PixArt
+> PS/2 touchpad"") [v6.12-rc1-post]
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a3f9a74d210bf5b80046a840d3e9949b5fe0a67c
+> ).
 
-> On 30.08.24 11:35, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> 
->>> Unconditionally honor guest PAT on CPUs that support self-snoop, as
->>> Intel has confirmed that CPUs that support self-snoop always snoop caches
->>> and store buffers.  I.e. CPUs with self-snoop maintain cache coherency
->>> even in the presence of aliased memtypes, thus there is no need to trust
->>> the guest behaves and only honor PAT as a last resort, as KVM does today.
->>>
->>> Honoring guest PAT is desirable for use cases where the guest has access
->>> to non-coherent DMA _without_ bouncing through VFIO, e.g. when a virtual
->>> (mediated, for all intents and purposes) GPU is exposed to the guest, along
->>> with buffers that are consumed directly by the physical GPU, i.e. which
->>> can't be proxied by the host to ensure writes from the guest are performed
->>> with the correct memory type for the GPU.
->> 
->> Necroposting!
->> 
->> Turns out that this change broke "bochs-display" driver in QEMU even
->> when the guest is modern (don't ask me 'who the hell uses bochs for
->> modern guests', it was basically a configuration error :-). E.g:
->> [...]
->
-> This regression made it to the list of tracked regressions. It seems
-> this thread stalled a while ago. Was this ever fixed? Does not look like
-> it, but I might have missed something. Or is this a regression I should
-> just ignore for one reason or another?
->
+Those two are apparently different problems, as from
+https://bugzilla.redhat.com/show_bug.cgi?id=2314756
+it seems that it might be not kernel regression after all, but a change
+in the Fedora's .config that causes your problems.
 
-The regression was addressed in by reverting 377b2f359d1f in 6.11
-
-commit 9d70f3fec14421e793ffbc0ec2f739b24e534900
-Author: Paolo Bonzini <pbonzini@redhat.com>
-Date:   Sun Sep 15 02:49:33 2024 -0400
-
-    Revert "KVM: VMX: Always honor guest PAT on CPUs that support self-snoop"
-
-Also, there's a (pending) DRM patch fixing it from the guest's side:
-https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/9388ccf69925223223c87355a417ba39b13a5e8e
-
--- 
-Vitaly
-
+Ciao, Thorsten
