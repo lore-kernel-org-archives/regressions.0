@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552071DE4DB
-	for <regressions@lists.linux.dev>; Tue,  8 Oct 2024 12:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3239726ADD;
+	Tue,  8 Oct 2024 13:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728392226; cv=none; b=VZFnlpDcnBE8Gk8ZLL54KWr1b6CBIBucszyjH5KdEEg/MtsaQGewA4LgcEILPVJr83Gfzp0IvJHjTlflmRhiAfaNbeSuTRSBsVRQv/clS27W7jqa3MWqECPwDmvC30SwWzDDT3OFrf3Xws9fkqGtX1tJdqyF7toT2kXTURYpVQA=
+	t=1728395559; cv=none; b=oTnBHSDgECgz3qFY/Mu6YXkC05uvQndcvGWqIIoK/aWzPd0XkOzmTpQyfI+KxCkTt6rN+aNrJyaQn+Z45R/lhBZC5VJiaswsk5opsZ0yrZCBK6dKtSk60b5/CJd5I17Gi7viuFl97+D7FKyOjCBsq/iaQw5mAw3vGxIJK65HHo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728392226; c=relaxed/simple;
-	bh=Mpe6AbE0qh1SF0ur1mBMAMz6bAS9+YOHuGkVjXBmayA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Abha5cVXRxdfXg2IWe7PBX6KjOTO7yefV06ZSIaUdIGpmoZoFMt5VtmNh83ESAUP73pv5inj2PmEMx7hAknWKA8kOu7lrgbPSXaKr/rnOGFwh8F1yrw1STd1stKR5zI9YnJhNXUUzwXRybb46V0TRszDy/85jnwo89dT6X6h2CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kH8zGKbI; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1728395559; c=relaxed/simple;
+	bh=ZMS+Rl5TsaGNB9WGoe+0owkn3i/R060CfQBCn5OKDWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oaxkqSmRqE3iBDcdBbru7xEnKjCgNjjYY/uqIxdOklI8JBLQE/fX+IXcjcdzGQ2r8W1TNMXiJzbCIJUYiGtk1wQEyR2051yE4NUcT6NRUzIMW/oJ1TqNBAceMXSuv2X5NK7PijcfNd7Y4OrWgKXAN10ReHbPpL0IQr1a90czbdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MZUiqWFi; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kH8zGKbI"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MZUiqWFi"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=r8WidV59tVn4RYuFOjZan97gTywToz7fjhxkHqv3H70=; t=1728392224;
-	x=1728824224; b=kH8zGKbILSpMBJExPX+DXuZv2qshgF7VneK6LWokRNTiPM4VRWs7yWTN++mJA
-	v7nYyCVFCZmtK3COj0iFdX7JKh8753uxwzPydeaLrR73TMhMp334E0K4+Bic/5BZt+ytL6W6RIav8
-	kGkcoi1dHaeTWRo3uVw0D+ZmkIhJCQ7Tl1w228W+6lNr9tu6VWk7Xe1bti4PqahordwLhkd+HGf03
-	MiUJ2gSOfcL/HHQRBiuTx4zrzkzr1iwU2JjEt9UMXDeAduTGUcs+JUM2iMxBjo/can2UTPWFJXkcx
-	0qAmzfvE1jXjJLll4TfXYMLnLGkpYYHCZpgaoN8wi1CF3VwmRg==;
+	References; bh=K3XwwW061KgN1orzCcgKcqHnOvhEmFckEUZYuHPC+9U=; t=1728395557;
+	x=1728827557; b=MZUiqWFicqC9auoJJbqmEDPwoTxIKyhzwAZ51CRo+wqNHYe1Wy9RUnPRFWHK4
+	fLN3kTLH3zpUpBad0LDFfHGMWy0TF3xJ8CNml7VYVUm0qB3/8kNhHRInYJY4ZBBFmtzh6rnXE8Qia
+	SOv3D1b5Zhl6lAnWCj1h5nNu68zXFLihuRdj3a6XEHJJhB3JG2EFrDrUNUpWdk7gHe7DqlWuIehsr
+	DZPJP6a57S9Voi6CbpFc6AOTL/SMlu6vNWyfWOSW7x8HEEI6iKvQ5KNW64BqIFS55bV3OOm4ZUEfJ
+	1liAxr2RKE+lJT2PEmkvRlMfPS6dhnrAbciYzdYoLL5PyQjHnQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sy9lu-0001Ff-Bp; Tue, 08 Oct 2024 14:57:02 +0200
-Message-ID: <6cc705c8-2e27-4cdb-b265-b21db79b51a6@leemhuis.info>
-Date: Tue, 8 Oct 2024 14:57:02 +0200
+	id 1syAdH-0005fT-74; Tue, 08 Oct 2024 15:52:11 +0200
+Message-ID: <bd933e11-7836-462f-9b6b-5172301f188b@leemhuis.info>
+Date: Tue, 8 Oct 2024 15:52:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,78 +39,107 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
+Subject: Re: [PATCH v7 0/3] Fix dosemu vm86() fault
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ Robert Gill <rtgill82@gmail.com>, Jari Ruusu <jariruusu@protonmail.com>,
+ Brian Gerst <brgerst@gmail.com>, antonio.gomez.iglesias@linux.intel.com,
+ daniel.sneddon@linux.intel.com, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240925-fix-dosemu-vm86-v7-0-1de0daca2d42@linux.intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: <20240925-fix-dosemu-vm86-v7-0-1de0daca2d42@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728392224;87263afa;
-X-HE-SMSGID: 1sy9lu-0001Ff-Bp
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728395557;fb0b07a4;
+X-HE-SMSGID: 1syAdH-0005fT-74
 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
+Is there hope that patches like these makes it to mainline any time
+soon? I fully understand that this it a hard problem, but in the end
+what triggered this were at least two regression reports afaics:
+https://bugzilla.kernel.org/show_bug.cgi?id=218707
+https://lore.kernel.org/lkml/IdYcxU6x6xuUqUg8cliJUnucfwfTO29TrKIlLGCCYbbIr1EQnP0ZAtTxdAM2hp5e5Gny_acIN3OFDS6v0sazocnZZ1UBaINEJ0HoDnbasSI=@protonmail.com/
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Sure, the older one was in April, so one week more or less now won't
+make much of a difference. But I think it still would be great to get
+this fixed rather sooner than later. Or where those issues meanwhile
+fixed through other patches without me noticing and I'm making a fool of
+myself here?
+
+This yet again makes me wonder if some "[regression fix]" in the subject
+or "CC: regressions@lists.linux.dev" in the patches would help to make
+the regression aspect obvious to everyone involved. But it would create
+yet another small bit of overhead... :-/
+
+Pawan Gupta, btw: many thx for working on this and sticking to it!
+
+Ciao, Thorsten
+
+On 26.09.24 00:25, Pawan Gupta wrote:
+> Changes in v7:
+> - Using %ss for verw fails kselftest ldt_gdt.c in 32-bit mode, use safer %cs instead (Dave).
 > 
-> Interacting with regzbot from arbitrary places is a recently added
-> feature of regzbot usable via the new '#regzbot report <url>' command.
-> The indented use of this feature is for updating minor aspect of
-> regressions already tracked, e.g. "change the title" or "tell regzbot
-> about a related discussion". Such things until now had to be done using
-> regzbot commands in a direct or indirect reply to report -- but there
-> they would mainly be noise for most others and just add to the huge
-> amount of mail people already get. It's also takes a more time to send a
-> lot of individual mails instead of preparing just one.
+> v6: https://lore.kernel.org/r/20240905-fix-dosemu-vm86-v6-0-7aff8e53cbbf@linux.intel.com
+> - Use %ss in 64-bit mode as well for all VERW calls. This avoids any having
+>   a separate macro for 32-bit (Dave).
+> - Split 32-bit mode fixes into separate patches.
 > 
-> The new command will be documented on
-> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
+> v5: https://lore.kernel.org/r/20240711-fix-dosemu-vm86-v5-1-e87dcd7368aa@linux.intel.com
+> - Simplify the use of ALTERNATIVE construct (Uros/Jiri/Peter).
 > 
-> Ciao, Thorsten
+> v4: https://lore.kernel.org/r/20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com
+> - Further simplify the patch by using %ss for all VERW calls in 32-bit mode (Brian).
+> - In NMI exit path move VERW after RESTORE_ALL_NMI that touches GPRs (Dave).
+> 
+> v3: https://lore.kernel.org/r/20240701-fix-dosemu-vm86-v3-1-b1969532c75a@linux.intel.com
+> - Simplify CLEAR_CPU_BUFFERS_SAFE by using %ss instead of %ds (Brian).
+> - Do verw before popf in SYSEXIT path (Jari).
+> 
+> v2: https://lore.kernel.org/r/20240627-fix-dosemu-vm86-v2-1-d5579f698e77@linux.intel.com
+> - Safe guard against any other system calls like vm86() that might change %ds (Dave).
+> 
+> v1: https://lore.kernel.org/r/20240426-fix-dosemu-vm86-v1-1-88c826a3f378@linux.intel.com
+> 
+> Hi,
+> 
+> This series fixes a #GP in 32-bit kernels when executing vm86() system call
+> in dosemu software. In 32-bit mode, their are cases when user can set an
+> arbitrary %ds that can cause a #GP when executing VERW instruction. The
+> fix is to use %ss for referencing the VERW operand.
+> 
+> Patch 1-2: Fixes the VERW callsites in 32-bit entry path.
+> Patch   3: Uses %ss for VERW in 32-bit and 64-bit mode.
+> 
+> The fix is tested with below kselftest on 32-bit kernel:
+> 
+> 	./tools/testing/selftests/x86/entry_from_vm86.c
+> 
+> 64-bit kernel was boot tested. On a Rocket Lake, measuring the CPU cycles
+> for VERW with and without the %ss shows no significant difference. This
+> indicates that the scrubbing behavior of VERW is intact.
+> 
+> Thanks,
+> Pawan
+> 
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> ---
+> Pawan Gupta (3):
+>       x86/entry_32: Do not clobber user EFLAGS.ZF
+>       x86/entry_32: Clear CPU buffers after register restore in NMI return
+>       x86/bugs: Use code segment selector for VERW operand
+> 
+>  arch/x86/entry/entry_32.S            | 6 ++++--
+>  arch/x86/include/asm/nospec-branch.h | 6 ++++--
+>  2 files changed, 8 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 431c1646e1f86b949fa3685efc50b660a364c2b6
+> change-id: 20240426-fix-dosemu-vm86-dd111a01737e
+> 
+> Best regards,
 
-#regzbot report:
-https://lore.kernel.org/all/e89107da-ac99-4d3a-9527-a4df9986e120@kernel.org/
-#regzbot introduced: 47c8846a
-#regzbot summary: pci: ACS broken on some platforms
-#regzbot link: https://bugzilla.suse.com/show_bug.cgi?id=1229019
-
-#regzbot report:
-https://lore.kernel.org/all/20241007204352.GA449721@bhelgaas/
-#regzbot dup:
-https://lore.kernel.org/all/e89107da-ac99-4d3a-9527-a4df9986e120@kernel.org/
-#regzbot summary: pci: ACS broken on some platforms
-#regzbot from: Jiri Slaby <jirislaby@kernel.org>
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219349
-#regzbot introduced: 2031c469f816
-#regzbot dup: https://lore.kernel.org/all/20241007204646.GA450114@bhelgaas/
-#regzbot dup: https://lore.kernel.org/all/20241003213932.GA324584@bhelgaas/
-#regzbot summary: pci_for_each_dma_alias: NULL pointer dereference
-
-#regzbot report:
-https://lore.kernel.org/all/20241007204646.GA450114@bhelgaas/
-#regzbot from: "Marcin Mirosław" <marcin@mejor.pl>
-
-#regzbot report:
-https://lore.kernel.org/all/20241003213932.GA324584@bhelgaas/
-#regzbot from: "Marcin Mirosław" <marcin@mejor.pl>
-
-
-#regzbot report:
-https://lore.kernel.org/all/353e41fe-6bb4-4ee9-9980-2da2a9c1c508@roeck-us.net/
-#regzbot introduced: d9335d0232d2da
-#regzbot dup:
-https://lore.kernel.org/all/3016e3d6-f916-4a6e-82a5-2bfcd1f2dc2d@roeck-us.net/
-#regzbot summary: net: fec: lockdep splat and ultimately crashes
-
-
-
-
-
-
+#regzbot poke
