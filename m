@@ -1,144 +1,79 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895C816EB76;
-	Tue,  8 Oct 2024 10:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC3D1C2DBA
+	for <regressions@lists.linux.dev>; Tue,  8 Oct 2024 10:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728382814; cv=none; b=rpH8L1ZFSpiV/WNngrH94qdTQJZHX2m/Va4/zCucLN4CXj775T7X8uAbVLcwkk7VKucXVBFl0ZVBLyBhLPXP/m6/vSNrC0+x9R+Z2ODRS4je5bVtfCAJ9LvgYoJVMqIv+JACFZYgVG8xBTtyJzIoavBnMFdNSNKNeLWFEpZGf7w=
+	t=1728384081; cv=none; b=lKImjTADKYsqKOzzkwYYOrjmqXT8RyVvjuVZY8513Dbgz8fJ/X0KpIdxG/qO7V2M9Qo/6w+irWAZMj/R2q+MKki/lF88JO4i/nb7tPH3ohhAIWDaCJeaOZO24ku2c7q0CXt6iO586K6OjE8NYz1nC3GBS+NVdNsy5ThwFqgyjjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728382814; c=relaxed/simple;
-	bh=6T/BQtvdoD0QZSehx69s8EwGl3evviJoWR/EADMMNdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RwAM0uwlLpf3hz09YtUYSTBvRYQOCzGPpdiZhlig+rho2RWZZaJVFGAz2wZqzwiou+ZYMie0lc5KnWM6Da0sGcT3iNOjYRYGYamSEda0PrCYyRBQsuNtNjRCYQ6u17IWaO/LlPKWCmNB10jvfAd65EzribtU5pajDt/jDy04A6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=2fYTKnU4; arc=none smtp.client-ip=212.227.17.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1728384081; c=relaxed/simple;
+	bh=0b8jrWYJNTN99fB5BfVX4UX1Q/ShsXNu1YsbCnr63T0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=s/9vk3hp6rCTE6mf9PndJNTkjkrQQbgCQBRIbRdiUwsSGvUZR4N03hMCVoyU/B+mmAhJfHRVzHQ8DoH6sROjX4A1ggVyA4CDqCy4K6BUfwI3TGsjNKmNJ+KiDUoKHxJBgLKklgE1dhEiZVf2BPmFavyyWowEEZ8VYDLWD5HQDqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qoPQwpyD; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="2fYTKnU4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1728382790; x=1728987590; i=christian@heusel.eu;
-	bh=E1nT/M9+SosslnD2/3K4r7sOqDzUYaV/IpDRu1a1zJ4=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=2fYTKnU4r0NW2QJoNPmb9CVMp4ia5coeIeGFCREwPqRfOQGWInb5avg8hf5mfir6
-	 UbAuusyGcKGVSi1LFZYEmuLDIRk9dJv2+aOXBM5UUv3HiifRQ2vcUZjdypwizX01H
-	 zgvSkfJHXr9tW2tqr3j2cehqPCzbDOES8YxSHI5qBxkbglXI3aJ2GW+hka4dhbPt+
-	 SWmcdeUjY7WGQ+oLX3nthRP7lEzhee64fjQ/VgzlcqgCRWKkadjIeSizmNA+yqLlz
-	 2vMQLVxkdKMBiZtp/U1xFkA1B8RPBay1KqCYvdMs5umICiSsSB4jlj3HQtn86e2UU
-	 U8JLb2xltXGSGJ8QsA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MWAay-1tVn8p3Iss-00WJmH; Tue, 08
- Oct 2024 12:19:49 +0200
-Date: Tue, 8 Oct 2024 12:19:48 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Tatsunosuke Tobita <tatsunosuke.tobita@wacom.com>, 
-	Ping Cheng <ping.cheng@wacom.com>, Benjamin Tissoires <bentiss@kernel.org>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Daniel Jutz <daniel@djutz.com>, Jason Gerecke <jason.gerecke@wacom.com>, 
-	linux-input@vger.kernel.org
-Subject: [REGRESSION][BISECTED] YOGA 7 pencil only show up as eraser since
- 9c2913b962da
-Message-ID: <3cd82004-c5b8-4f2a-9a3b-d88d855c65e4@heusel.eu>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qoPQwpyD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=0b8jrWYJNTN99fB5BfVX4UX1Q/ShsXNu1YsbCnr63T0=; t=1728384080;
+	x=1728816080; b=qoPQwpyDuLYeVN0LX+LesYNYWGTRJv6j1+zc4yPhIzcxqhzzbST3oZpwQcG5H
+	wtGz0LolBR6nI/LdVhbyzn8rYY7sFGYP/fB4jYWcsNqxXglAQ97sCb8qdTXlxpO0Z82+DKnARL1Xl
+	GNRg0OS5MGK8xkGczwbY9LRn9XgIOvv9vlkj40vIgzYtfp95SEhuqUmNIKNC/O6afzqjx2ouao5R4
+	LgqffZ1GgMQUDpyN7GpGaMQLH1a7EEJ7mu88Ey67tvNZezhhpR2qY6LO7aSYNZ9qIxOXbx99asM2w
+	vQ/M495ReBg/N9o+6Ov+6cUkU4faC7JmQVps1rDmlw0xIL7WYQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sy7eY-0008TF-1f; Tue, 08 Oct 2024 12:41:18 +0200
+Message-ID: <835ff611-f376-4ab6-8ba6-3aa925fe57d4@leemhuis.info>
+Date: Tue, 8 Oct 2024 12:41:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pezzs6s5iephxgn7"
-Content-Disposition: inline
-X-Provags-ID: V03:K1:b3hqhQRy5ZkTstJitpMmSfCYz+qxojOBwDkvRAWAnGXEvQ12kSw
- ijKzYyPhK46RiISiax/xPe/bIeCVRomXjMVRNr810E6mALHp6MEfgJk6NZcha9R4BU96XMl
- Y0pJu1hdgyTVsp3Co2uf/VxjoPvlFKwFepO0kjZ7Hmt7QU1B91mn6SQ5gEChKccEj6W9lTa
- DcbULbxtkvQhnYTnFdyJg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nQwMtyC6WDQ=;5J65yCmzj9clO7JyWBuyByhdRBw
- OAhP37FKpprc4Bvn2yZk8K5ORTsOhiF+g1ar2Z+FznC89KKtPbABZnjcH0a39SVNUgMTtvJ1d
- 5m3TG9dXs6EsTuXPxYFe+Zr2VSxPOHQ/ViXHrgk0WeYUQP4kwCvCrPyEKVDiKxgfN6n2iyCpR
- D1ibJ+wKUUFT9H89fmU2NlMvCTL5rR4XBJo0VKGq8gTEoTyKRN89JekgwjKEuCJCWebZ9awPz
- sEd0oDxSZzvzFHI85C8Nd3GgJuw2J4X3FTckgKM8uvZnZii7zS5+FX21czS+1FQ87s5Z6FGiU
- B0rLVlz38848g0Rp4U0W8QM32HuCib/UMfT0C8sR4f6OqxQJS661kLXymSLtH7ZuuXXMaGMFs
- Z3m4YPXgJVaWptznbS623YO+DVxv15JpzJr71NgiO1JMTScZRt1hrJun77Hzo9WLeDvFV8JV0
- J3PLN4vbcxdoz8+oNXXIylxzPo0+T344qsv9mg5WaNCj1IKBECy7l03b+lVaQEP2QHdPx6fg/
- ZnxhsfmBQcTEz/Igv5wKvSnJiAHGF8waB1/Rx1k9oHDiaxU//4BIDejPW9QToR4ZapeXDNV6h
- nxXbwWQWasZEYh99u/5hodAjk6LVBeQOCglbYZOwmGuaewYr1iyuPDK75FlTTDxBT4vFjAiGK
- rO19LUXCxlL3qQ/6IbGRAnRq3g/x1BkM7VJMHSTac8cYLF6uTyLbo4/XMD6vFbJRins3WJ6w/
- FmPnAUSy13QRbNNZhbhTit5mC/j+UW8qw==
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728384080;f2eb28a0;
+X-HE-SMSGID: 1sy7eY-0008TF-1f
 
 
---pezzs6s5iephxgn7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: [REGRESSION][BISECTED] YOGA 7 pencil only show up as eraser since
- 9c2913b962da
-MIME-Version: 1.0
 
-Hello everyone,
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Daniel (in CC) as well as the Arch forum user "ls" report a regression
-with the pen of their Yoga 7 2-in-1 14AHP9 Laptop that leads to it being
-always recognized as an eraser:
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219356
+#regzbot introduced: v6.10..v6.11
+#regzbot summary: btrfs: btrfs send is broken
 
-    $ libinput debug-tablet
-    Tool: eraser serial 0x80e51447, id 0x219
+#regzbot report:
+https://lore.kernel.org/all/20241003-savvy-efficient-locust-ae7bbc@leitao/
+#regzbot introduced: 52e11f6df293e816a
+#regzbot summary: net: lockdep splat
 
-    $ evtest /dev/input/event6
-    type 1 (EV_KEY), code 321 (BTN_TOOL_RUBBER), value 0
+#regzbot report:
+https://lore.kernel.org/all/D4OUJRP8YWRM.ATQ7KASTYX5H@mbosch.me/
+#regzbot introduced: v6.11.v6.12-rc1
+#regzbot summary: nfs: aarch64-linux build with CONFIG_NFS_LOCALIO=y fails
 
-While the expected output with a previous kernel version (6.10.y stable
-series) is the following:
-
-    $ libinput debug-tablet
-    Tool: pen serial 0x80e51447, id 0x219
-
-    $ evtest /dev/input/event6
-    type 1 (EV_KEY), code 320 (BTN_TOOL_PEN), value 0
-
-We have bisected the issue together in the mainline tree and found that
-the following commit has introduced this behaviour:
-
-    9c2913b962da ("HID: wacom: more appropriate tool type categorization")
-
-If any more debug information is needed or there are preliminary patches
-to test we're happy to help!
-If there is a fix found for this issue it would be nice if you could
-credit us as follows:
-
-Reported-by: Daniel Jutz <daniel@djutz.com>
-Bisected-by: Christian Heusel <christian@heusel.eu>
-
-Cheers,
-Chris
-
----
-
-#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=300005
-#regzbot introduced: 9c2913b962da
-#regzbot title: HID/wacom: Yoga 7 Pen always detected as eraser
-
---pezzs6s5iephxgn7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmcFB0QACgkQwEfU8yi1
-JYWICg//VvlKtK713rPJqCp8jV6R249+SgMjqXEhSGTyF9iIi+abrCpRTc10ATRs
-jb1EOgw9DUQKc+7pV2U1+2lXHd0Sx0p3DJnDH2izWcYSIci8MRvrm+OFofqkRAxC
-ZkLCfqIR4U4/df44c+LIys4J0LD6VhSbhhzkz1oLp3smkZFGZQh1Ojf/uoyhAmwR
-o5eFdLL2Q7B5IhRUy38bYyb8zep4KsgK1M4MfwftHG7kfMYCRKyIfH8OsFtdeDkg
-NP1r/OjJOY+n/0vKkEfoymKNWWINjEO+JJblEgjtn+RuOd39iYgutyg48kDBQ8ed
-e9FHIF90Yc+WIcFjKVJTTjpu/n7tlC9X8CokQOUSsCw1zERRqQM9blFwtRTJo5Va
-KmO3L+DzTkz0fogQcJR6AqNU79djE43b/Y6NaSzwZZU4NePpWYer9cnwkRr/P0Ze
-WuhQvaP1RxC/VO0JQgaB3oi3+5ZuJ6vpEPOcy62sefbjWCYlgG12prHM77v1z+LJ
-UUd8nbY2Y0/1H3EKoj/JTXz9P+wGOOmtc24tK7EQ7Z/BvdwBDn41RV+OpNrIF4nq
-12kXQjvjs4xCE4gKQXoIbvV3mt86x2qcXDREIGR3ShQn9Ma8VCwFF5a98xqntaAO
-r86Ewo//2HUdOn9QuX87zaQQFECam30QJ1SOI7oswnuvaG13HEg=
-=NQM7
------END PGP SIGNATURE-----
-
---pezzs6s5iephxgn7--
+#regzbot report:
+https://lore.kernel.org/all/40555604c3f4be43bf72e72d5409eaece4be9320.camel@coelho.fi/
+#regzbot introduced: e86c8186d03a
+#regzbot summary: platform/x86:intel/pmc: [ BUG: Invalid wait context ]
