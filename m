@@ -1,137 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8104E21C169
-	for <regressions@lists.linux.dev>; Tue,  8 Oct 2024 22:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EB23207
+	for <regressions@lists.linux.dev>; Wed,  9 Oct 2024 03:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728427717; cv=none; b=Fn8uYHJUuIrgzhW05KxxsrbgIYVC89YGcCHHUP13/WGjxVlsnEPaRrQ8Z6JwVQehZbcc3WHY8n5tpqOI0Yov5KPTAcCbq1OC+kMosz1XKLURNJ1nK56PkiywZPb8g76K6cp3TJJOJv3EJEBDPDtjo4ZgIWR/s76x+o7lj0r2tzk=
+	t=1728445081; cv=none; b=b8tnYjhGnQjjiSm30NIwe75Fp7WbmzUUmhTbcAqOQUZLAFaCGeTBR5HW079Vp8F5KTdssYRlAwzxNAPT1W+Q62vedV21lpwkOOLfaZn5kCt/gYetvy0Xx3H4trjExP0pjJcWg2Uu0qIiwg7RWpnppJ81p779p/e8jSwiglj+BK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728427717; c=relaxed/simple;
-	bh=3GKgYfyhdleRaHkSvkj4OIVlumHIbOCk6niGXkvjOcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V+VFIgsg82ygBn6EKhDozVzy6IoGz+ahb9NEHqcfEromULATrRjE9SE5Wu6ajK8WTp5zO0MYuDHUvUzXQW10V49QG+ucCRZ+w1G/5K5KJ+ec/tK1mXZUS8smQUwaPbTPjlvyE/WpVpkUm4y3SkSwydctL/aZe1N0NnEJRZaycs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OptAEzqt; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728445081; c=relaxed/simple;
+	bh=jyO5bJ4ANX7KDtLXjHmfHJJFbtq5+QmwG1gHtZgmBsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/SDQE3b/yizAa4ffCu8z3BNFM0caL/clr2s3lHW3XDq+wV1Hr90tuMSx+wLdZidCMlco/9aNPONMhKjiwgiEcAuSG7gvtd7kFqweJTu0UaxatkFVA1i9GFJEXZGSpmH42Ot5Y7Qt+BPwh0NaCmZg+tDjxNv95n/WQEjug4wFNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FuOdP+us; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OptAEzqt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728427716; x=1759963716;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3GKgYfyhdleRaHkSvkj4OIVlumHIbOCk6niGXkvjOcQ=;
-  b=OptAEzqtf9aB5HT7xDsWKLNA41Dvos2IXhxUl84RWP8RHnDva/tUok4O
-   8dqPkjTkXxU2JhIrgBQ3bmcegMb8s+VnVtt3nHrRFiUEm9ip2hoz43qRl
-   UYc5ciWiyVeCTT6ALRLzfcO3nqCa8ofwrYjMuxjm8ZVrOWmw3juqDYe7x
-   bwhIbAvWFg37r80Ssu+x22wDh8venAq8tuYm6/d+LKdSdnZeh2DTRYmwE
-   EHo3yJThYgEqNBVc5lEKIKjrRZXbEyvmQPVvmF/5L7Esl+LSMesb9q1w2
-   qfBbc7Z6DZSG2TlrqhJ4eVEwj7fycq3iXqsemTcvC8UYWsg2f4yTAh4zJ
-   Q==;
-X-CSE-ConnectionGUID: QlKnAJq8QluWE4+7ojlUEg==
-X-CSE-MsgGUID: NbhZeQijSIWea8gtLPT+iQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="27811146"
-X-IronPort-AV: E=Sophos;i="6.11,188,1725346800"; 
-   d="scan'208";a="27811146"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 15:48:35 -0700
-X-CSE-ConnectionGUID: NRbRLc7ARkqM42UBH55ZYA==
-X-CSE-MsgGUID: N96918yoSf6yCnryYzOsfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,188,1725346800"; 
-   d="scan'208";a="99369574"
-Received: from jdoman-desk1.amr.corp.intel.com (HELO [10.124.222.147]) ([10.124.222.147])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 15:48:34 -0700
-Message-ID: <212478a0-ab8a-4ed7-8dfb-600f9d81e7ba@intel.com>
-Date: Tue, 8 Oct 2024 15:48:33 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FuOdP+us"
+Date: Tue, 8 Oct 2024 21:37:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1728445076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qbFXlyNMc3xiprR3Z60KWrRnLtV9YfsEkIq4tFkSo0k=;
+	b=FuOdP+us6k7mhGuVP9aoNvMT3ofYMgLjRh7WJ4fUpKaX3udl1daFqINYulIq/iOPCJBVZX
+	jvUfHo91//l9qbQiNcZYFXTmiMCwcFoJxD/m0CvNuxm7VXN8mesmWV+RuqohCXDDSwHBIu
+	T1S+mNARDg4HfgQWMSkvuYSUByD4JMA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jose Fernandez <jose.fernandez@linux.dev>
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	Jiri Kosina <jikos@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Kenny Levinsen <kl@kl.wtf>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	Nam Cao <namcao@linutronix.de>, linux-input@vger.kernel.org
+Subject: Re: [REGRESSION] HID: i2c-hid: Touchpad not working on Thinkpad Z16
+ Gen 2
+Message-ID: <chxb4iha4mgurg5gaablt2g4r5lphntg5wmvbpei7x25vibsz3@sbxypsvs2wbr>
+References: <gbvkokf7rpsayfqv4l5mvk347lal72q54jgxfvwu7bmx7olngm@e3tcy6oyaas3>
+ <5c666a9c-e10b-4eea-b2e7-3f781e177c19@leemhuis.info>
+ <c5020404-2d48-47ad-a75b-f2d37897f57c@leemhuis.info>
+ <hffdmqx4binr6tpc7lqfzah3mwn75h2lifoqcy72gr2hvc3ath@lugoxeaf444z>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/3] Fix dosemu vm86() fault
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- Robert Gill <rtgill82@gmail.com>, Jari Ruusu <jariruusu@protonmail.com>,
- Brian Gerst <brgerst@gmail.com>, antonio.gomez.iglesias@linux.intel.com,
- daniel.sneddon@linux.intel.com, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240925-fix-dosemu-vm86-v7-0-1de0daca2d42@linux.intel.com>
- <bd933e11-7836-462f-9b6b-5172301f188b@leemhuis.info>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <bd933e11-7836-462f-9b6b-5172301f188b@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <hffdmqx4binr6tpc7lqfzah3mwn75h2lifoqcy72gr2hvc3ath@lugoxeaf444z>
+X-Migadu-Flow: FLOW_OUT
 
-On 10/8/24 06:52, Thorsten Leemhuis wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+On 24/10/08 08:47AM, Benjamin Tissoires wrote:
+> On Oct 07 2024, Thorsten Leemhuis wrote:
+> > On 06.10.24 05:46, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > > On 06.10.24 01:01, Jose Fernandez wrote:
+> > >> I'm using Fedora 40 with the vanilla kernel built from the 6.12-RC1 [1]. There
+> > >> is a regression that causes the touchpad to stop working on my Thinkpad Z16 Gen
+> > >> 2 (Sensil touchpad). dmesg shows this on 6.12-rc1 when filtering by `hid`:
+> > > 
+> > > Could you try latest git instead of rc1 if you haven't yet? E.g. the
+> > > latest packages from your "[1]". I wonder if this is
+> > > https://bugzilla.redhat.com/show_bug.cgi?id=2314756
+> > > which is fixed by a3f9a74d210bf5 ("Revert "Input: Add driver for PixArt
+> > > PS/2 touchpad"") [v6.12-rc1-post]
+> > > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a3f9a74d210bf5b80046a840d3e9949b5fe0a67c
+> > > ).
+> > 
+> > Those two are apparently different problems, as from
+> > https://bugzilla.redhat.com/show_bug.cgi?id=2314756
+> > it seems that it might be not kernel regression after all, but a change
+> > in the Fedora's .config that causes your problems.
+> > 
 > 
-> Is there hope that patches like these makes it to mainline any time
-> soon?
+> There were 2 problems happening at the same time.
+> 
+> There is a high chance the whole issue was because of this config change
+> in the Fedora kernel, because of automation. However, the PixArt driver
+> was still bogus and interfered in PS/2 capable touchpads: we couldn't
+> have a PS/2 fallback.
 
-Unless it breaks something again:
+I believe it was the Fedora config regression. The touchpad is now working with
+the latest mainline-wo-mergew kernel: 
+6.12.0-0.rc2.20241008gt87d6aab2.324.vanilla.fc40.x86_64
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=785bf1ab58aa1f89a5dfcb17b682b7089d69c34f
+> IIRC, in the PixArt thread, they mentioned that they had something like
+> "if that command fails, return a touchscreen, no matter what kind of
+> failure it was".
+> 
+> Anyway, we should be fine in the next Fedora builds, so I guess we can
+> close these regressions.
 
-;)
++1
 
-> This yet again makes me wonder if some "[regression fix]" in the subject
-> or "CC: regressions@lists.linux.dev" in the patches would help to make
-> the regression aspect obvious to everyone involved. But it would create
-> yet another small bit of overhead
-
-In this case, not really.  This was a typical email screwup where I
-didn't pick up that there was an updated patch that got appended to a
-reply among the normal email noise.
-
-We've been poking at this pretty regularly since getting back from Plumbers.
+> 
+> Cheers,
+> Benjamin
