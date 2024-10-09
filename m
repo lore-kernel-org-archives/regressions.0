@@ -1,128 +1,95 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D8718A6D2;
-	Wed,  9 Oct 2024 08:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF33218EFDC;
+	Wed,  9 Oct 2024 08:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728463135; cv=none; b=qUBplIhxQpvvrFz4dGfqRgarEUQGCmbQu5T9tOXLWjB1NyC+44W7Sb5Ma8h7W6KaSq8ltMH+/WkuraIfJ/VsDgBJKCDJkcNsC/ZLCvBq9fsjE4Wl/EqDfwa/qO/lAKfEqj+c7XJwwZD2e3MHFis0ZXUEI3BWMC1v46j1UwZHrRc=
+	t=1728463852; cv=none; b=EVswpFV1FBIoJ2CGTFCuQ+X0qAqqVVjNWLuQ8vFPL7ipT3GTv6BYqfyN1dLJsM0sMT/P3NSUlYSgmYTsxpdmxxFbwJnO6Br/UZY7zSRWT0LQvZw9dUCs7UqgvB7Q2TJI0I7fDOdsw4rOFYy/FtNsGyoJJHBUuyTX6BImqcsJOjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728463135; c=relaxed/simple;
-	bh=heE+rk8jj7XkbP7XKjDgyQ90lrlfZRske+NjiKTVYus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdUhcTS+yxTJIVEowt/8+j9slDYQhqHnqRArPZCVm/p9eEC4K7UU+I5eiOrNPbPwhXZnpCYA405Pq9OQvKBVpoqg9UKJgyyju1w64TtEfl3jtKjNtCYyJDH8l+t1v6IRhqHg4hlrEt1fzXuWqvq23NAWF1dFGvgSotgY8zsIE7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=eWenvMHg; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1728463852; c=relaxed/simple;
+	bh=FT2/Rf313385n2kDJ/fzhd3vYkbTbyyjBfPJKTF0mZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B3YBkipLMOleX4lJwoyFKs1RvPLm+KSIS7MYt7tmhNXHUDRC4XJuLz6INojSfBW/ZR0KxxNshmHBfzrFNw798Fi7mzkLagfzmlP+WKuJ6Htx+4WvlFZNwlAs5J3BgpFzUqVVN6Q6a12vEOCfgVSr7L4jQvenos+dc46gQBOaO0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RmoK8kmG; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="eWenvMHg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=917JxrPMGHqjjHSTpuJkH+wZkt5YK1ZoiG/7Gvwxp2g=; b=eWenvMHgUh4s+kG5mCmNeOY6aF
-	5fjRY+exA3GOMu7e872Yb0RlPZnQbWlKH3st9z+Wq1ouUssvmAFglAvJuHT0LfkTKMTiGMhcN4Z3P
-	jcwt9XJ4I92Nf+G5SubnRhZioWN1un4FH3012pT1ifgLQ9oGNhCvO2Mz9U/bzfxsRA7GChm5ev4Cv
-	vI3mVUsMyRUkaK+GMx3k1tNEqKR5IAoZ2ibYSBfRDbMXFXK44uhx+v66FMwx5AC2jFAEJW+4YnIky
-	UU8Pk5rZKUUAADLvZolL5z9VcWSioLbkvbOPZ9NUt/T3MeDZroJktaZrnAhP9Gk5DBrtAPM2KySHx
-	+utHpt9Q==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1syS3f-007yf5-0A;
-	Wed, 09 Oct 2024 16:38:49 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 09 Oct 2024 16:38:48 +0800
-Date: Wed, 9 Oct 2024 16:38:48 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCH] crypto: marvell/cesa - Disable hash algorithms
-Message-ID: <ZwZBGJ_H-rkoN-8N@gondor.apana.org.au>
-References: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
- <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
- <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RmoK8kmG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=zceBOdFm7KRw5bjLOwysbg1+K5HqCb/PBKPvRDULxow=;
+	t=1728463849; x=1728895849; b=RmoK8kmG3vZgDqaWQNm7Z/HPoZjwXkpdv34Uz/74yL4/yaD
+	u9FYGsICnkhUxwWlGIm7dKL8y4hgNyuRrIQHGlbh0bt9ZhQiqO4VsXIhualoKtFPINataofLyL4tc
+	9PVsFGsZ3ObEj5zLIOItNGTLST0mgP5EO7YrtSXpYdK+mVkVCjXGNH6Obm12VFNOUvYsQuSxQs8Mt
+	ipQ21f/F0QdRUQVYaRUf+gUwdUDQLtUcWS95aqebqFJ8xJ+M2eikblHFuWEKHMpatQ5EP791iC3SF
+	8TNFL701TKbO3OuYbDKZ3e1ayZ4gxxcLrr+3U0U+tHhJlIP3dfY/s+UmWSdmIDpw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sySP5-0000RH-RF; Wed, 09 Oct 2024 10:50:43 +0200
+Message-ID: <f4f697fb-35d8-48a0-8299-c7020c4a0900@leemhuis.info>
+Date: Wed, 9 Oct 2024 10:50:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZwZAExmK52txvHE8@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/3] Fix dosemu vm86() fault
+To: Dave Hansen <dave.hansen@intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ Robert Gill <rtgill82@gmail.com>, Jari Ruusu <jariruusu@protonmail.com>,
+ Brian Gerst <brgerst@gmail.com>, antonio.gomez.iglesias@linux.intel.com,
+ daniel.sneddon@linux.intel.com, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240925-fix-dosemu-vm86-v7-0-1de0daca2d42@linux.intel.com>
+ <bd933e11-7836-462f-9b6b-5172301f188b@leemhuis.info>
+ <212478a0-ab8a-4ed7-8dfb-600f9d81e7ba@intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <212478a0-ab8a-4ed7-8dfb-600f9d81e7ba@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728463849;5e2ecabb;
+X-HE-SMSGID: 1sySP5-0000RH-RF
 
-Disable cesa hash algorithms by lowering the priority because they
-appear to be broken when invoked in parallel.  This allows them to
-still be tested for debugging purposes.
+On 09.10.24 00:48, Dave Hansen wrote:
+> On 10/8/24 06:52, Thorsten Leemhuis wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Is there hope that patches like these makes it to mainline any time
+>> soon?
+> 
+> Unless it breaks something again:
+> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=785bf1ab58aa1f89a5dfcb17b682b7089d69c34f
+> 
+> ;)
 
-Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+:-D
 
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 8d84ad45571c..f150861ceaf6 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -947,7 +947,7 @@ struct ahash_alg mv_md5_alg = {
- 		.base = {
- 			.cra_name = "md5",
- 			.cra_driver_name = "mv-md5",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-@@ -1018,7 +1018,7 @@ struct ahash_alg mv_sha1_alg = {
- 		.base = {
- 			.cra_name = "sha1",
- 			.cra_driver_name = "mv-sha1",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-@@ -1092,7 +1092,7 @@ struct ahash_alg mv_sha256_alg = {
- 		.base = {
- 			.cra_name = "sha256",
- 			.cra_driver_name = "mv-sha256",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-@@ -1302,7 +1302,7 @@ struct ahash_alg mv_ahmac_md5_alg = {
- 		.base = {
- 			.cra_name = "hmac(md5)",
- 			.cra_driver_name = "mv-hmac-md5",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-@@ -1373,7 +1373,7 @@ struct ahash_alg mv_ahmac_sha1_alg = {
- 		.base = {
- 			.cra_name = "hmac(sha1)",
- 			.cra_driver_name = "mv-hmac-sha1",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-@@ -1444,7 +1444,7 @@ struct ahash_alg mv_ahmac_sha256_alg = {
- 		.base = {
- 			.cra_name = "hmac(sha256)",
- 			.cra_driver_name = "mv-hmac-sha256",
--			.cra_priority = 300,
-+			.cra_priority = 0,
- 			.cra_flags = CRYPTO_ALG_ASYNC |
- 				     CRYPTO_ALG_ALLOCATES_MEMORY |
- 				     CRYPTO_ALG_KERN_DRIVER_ONLY,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Great, thx!
+
+>> This yet again makes me wonder if some "[regression fix]" in the subject
+>> or "CC: regressions@lists.linux.dev" in the patches would help to make
+>> the regression aspect obvious to everyone involved. But it would create
+>> yet another small bit of overhead
+> 
+> In this case, not really.  This was a typical email screwup where I
+> didn't pick up that there was an updated patch that got appended to a
+> reply among the normal email noise.
+> 
+> We've been poking at this pretty regularly since getting back from Plumbers.
+
+Many thx!
+
+Ciao, Thorsten
