@@ -1,167 +1,131 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395B91957F8
-	for <regressions@lists.linux.dev>; Wed,  9 Oct 2024 18:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9BB1E633C
+	for <regressions@lists.linux.dev>; Wed,  9 Oct 2024 18:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728496994; cv=none; b=qWy70IhVT02ZWFKTzOG2QZHJPc1z3ZTOGTNbxbNfYPzj9wbn52f94GlvZWKfY4Hps6TNtOkZs7GoLB+KNcMTL+uMDrTnWoNrv0AAqcVddaStoo774Dbe5ufB3f0GLlWu915WmeYqpKqoOelydUkZZaVO26tD4ih3uKuS2FpoTSo=
+	t=1728497250; cv=none; b=KZSnL5PgOI9r58fW6DwatzgFyKpM8yUYZctDq43alUxlYtgOAfbfxOeySSqnUPfo+FqI8D7QrDaD1QmC22sWK18/F/qqMDTwh0nIGyLxuq82/2//5MzrSLj3WqN3dNhA9O92hDBq7VMP87q+ex1sMpAhLSPBlaVtoWqdrBATSR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728496994; c=relaxed/simple;
-	bh=fttGPIO4izyM9/DwZgQPiZHxDH+bedSP60NZuzpcYcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q6PncbT+jr2H9WmiFgj1YJtZ4Syv2DaITvjU5kpu6sQeog2hBfiMV90GHSFkFiWpit/e7vetSuhYtpry+AtfjMxS00V1vlFjlYCJimeXFgaBdj7MEQC8+jUo9dpVC+FJkxW/RRNq6u+571+4CH8QhyfNOK3rkN7XLVYPYvz8pa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNHMgW/T; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728497250; c=relaxed/simple;
+	bh=EEA9n8EKVuqwjoaU8xFSnE5n9WHqzdY3/Ze8q36DibQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MTNZBO0b5O9TawaQOvLyRvb2IAAwfqzC+UsDO0lnBtPSvU/APOrFPWnO1/1pmXX2CMgv9oJlxOuMMaW2EM3YLgzuGjyaeJY7TVxETjpTRGD/EiUQbB9q3SOavbe5mUEwg3UwRuCGFUmKwqoeou7A1HhGhEcq7wT5x1fzFNPvqpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=URqprv1k; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNHMgW/T"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fad8337aa4so756031fa.0
-        for <regressions@lists.linux.dev>; Wed, 09 Oct 2024 11:03:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="URqprv1k"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7afcd322cabso1307885a.1
+        for <regressions@lists.linux.dev>; Wed, 09 Oct 2024 11:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728496990; x=1729101790; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I/SkaWaNLkmwU2OCGNzHCKiXLzWnM9lpzvJyZhiMw04=;
-        b=mNHMgW/Tal0shNQgMM1YAwE3rhh4TfFnsKy54hdBSCy9+A9zRFLAHpb6i8E6zzVion
-         4N1K28YUmGneWHP6AgTlV5TPDoogZ3TAo/eYQdNlwn1grpE2RhlHIl75Vs9fxZMyjD1z
-         yVO6zCQdbE8SYYJtryXCwAP7CHxRsTU0d3fygqvpN6lYw/PSRjFGVry8aiaPiUG9Y+rU
-         hMJiL69hBbcNyWCsBqFSBdxHAbU2LmUk1WK5sfAmmVJ62NTC734EosSCVARyJIzOdiek
-         gkGU6LKen0JAR4SdAF0SBkBQXdaWxhZhy0IM6qSAizMJamBkWb1GzKhctGSXTirhDMyG
-         mKRg==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1728497245; x=1729102045; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VcKIKjFFXK/pS61017tWFdVnKhermK+qoG7rd4+wtqU=;
+        b=URqprv1k19S3r5wmPoOfRVDqSPaLlluI4QtDcPNrd8/VvfCRAKdADid8kLccYIo8vl
+         OF8oXN4hw31v57gz0HQcqHte111ViMjyi9R2RSD9i9IPi/E4VAWXj9rDCkyXUh6oI0he
+         ZXWCnVvQolCFqquAcEducx0cBe8f8gBCh23r3x3b4u5lB7xvVE0VCTTr+EiymeEtTJnp
+         ffeDETH2j0O5k1E06Z/fD7jIKSciqeZ/pD+JoYUdQsk2nJlE1R3yWHY9hWLtXFOCfDbV
+         WPYX+jPAKOnw+e0D58pJr7IPo/EuZFWdrkBCa3oJGVsbx1JP/qigYgpwzMVGFq1zUjoT
+         5uwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728496990; x=1729101790;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I/SkaWaNLkmwU2OCGNzHCKiXLzWnM9lpzvJyZhiMw04=;
-        b=XUQ2TTlWYIsvneXIqOrVdY7z63RUPg+ccXwM56/LH596NgBcvLZJXHL+YUqhtXfgwh
-         flvDem0AL0/ydbbUX+4y+49huM69x9V5AQZ5bC2fuJglpj7H73JFSGpaxX0FonduCimj
-         ejZjt/PcTzuXmQ7/dub5Ur0H18j45L2Y7jgvSAIciP5EEz9BjliB2hGc+H2e9WRB9v6z
-         4diiANDCGP8PcSnHZuO3qMV7oCpKkhFeR7TdwhX7A4D5o887H8/xHafK9H3mEvXsjtSO
-         FoZ3UuuthubtlC6Wmif56tjvYvwLu7CioDBi+MImra7oVMeDwju/L3+wLx156hXFdufs
-         Q42g==
-X-Forwarded-Encrypted: i=1; AJvYcCX1de8fOBEdqs2e7T9DzHyHuAzDT+N3pmMtnXXbWHR878fcBNf+6OB8hh2RD5S4Vld/5Vd6hujdMLm9OQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyCS4IOd3mIxpa+7Z79QyuPdfLtC0gCWUdJZh7ZhVlvSmpYQFBY
-	zKdWufJDyCyTW5xAwMjTQWgw978Zif6mc3P1jTHmhjaQ6Jbps//Lb41TuPumSbzsCvroJUOBb8C
-	Dc5ataWHQE8OycSDHVthWlWpW6sI=
-X-Google-Smtp-Source: AGHT+IHZyzh/Mxyi1Jxrdf5EN76MOMKzMvBl/ZzQtO/ZjtEYO/apO8MeyW8UYnHxqhIYzZDbVqSfUQmakpeRFyn35sU=
-X-Received: by 2002:a2e:d01:0:b0:2f3:ee5a:ab8b with SMTP id
- 38308e7fff4ca-2fb187ce9a2mr20127131fa.43.1728496989937; Wed, 09 Oct 2024
- 11:03:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728497245; x=1729102045;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VcKIKjFFXK/pS61017tWFdVnKhermK+qoG7rd4+wtqU=;
+        b=aUdCIgP0jhMzNe5efsrqInuZR5YLVPmO6zF1ENX+mGZUpil3YaZT/P9XQEJD2UEdVP
+         b6wPDUplCMSdHS0iw83SgNkoscc4sntVgUay/8yB+sYcGXaIhR37EgI8St7V1EVuOdBT
+         EGJhsS6MWAt/XhcncI0KtBGqyItiEYlzBcpzp12iVanBkkfdpaQDmOpEaKp52KlAEz7M
+         xIOeF71VJZtg9ZMgkGXblGln7L07wN04t4QPU40eN/XxvBKUZ30EH/SDWAckjlhkRI8c
+         I8wD49pLOawJcCAv/soBmOyyvKTx8Z3TPDEg6qe1Pe0x0QEOYZkFyyrF56TfrDjGj0tB
+         DBbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYD9/TrSUyVZFd/km99Y7sJGl2vFYC1I/BtYjiNGHV+2H1m5O2Mf5+NRzi9yZeJGti0VnUkRWHlrc8/A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy9Q0u0We3P5dNvmTKZWW5iLGQx/4r9IokfSGRwZft4Nt2nWb4e
+	TzXKVQ9UoEyPAoZewAWrJhAvjALIj1wvjIygVao2fjAO5OS55NFFbUDeOSFtkRQ=
+X-Google-Smtp-Source: AGHT+IGXngKYT3dFEA0sPgqcLJmf5vE14K+Prq/oZohyFklv4PBlQGh/cKRA9mAbjHHwCZUeGMk5GA==
+X-Received: by 2002:a05:620a:460b:b0:7ae:5c5b:a3e8 with SMTP id af79cd13be357-7b07954f02amr378290285a.34.1728497244587;
+        Wed, 09 Oct 2024 11:07:24 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7afceb513b4sm132146785a.19.2024.10.09.11.07.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2024 11:07:23 -0700 (PDT)
+Date: Wed, 9 Oct 2024 14:07:19 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>,
+	linux-kernel@vger.kernel.org, bsegall@google.com,
+	dietmar.eggemann@arm.com, efault@gmx.de, juri.lelli@redhat.com,
+	mgorman@suse.de, mingo@redhat.com, rostedt@goodmis.org,
+	tglx@linutronix.de, vincent.guittot@linaro.org, vschneid@redhat.com,
+	wuyun.abel@bytedance.com, youssefesmat@chromium.org,
+	spasswolf@web.de, regressions@lists.linux.dev,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Subject: Re: [REGRESSION] Re: [PATCH 17/24] sched/fair: Implement delayed
+ dequeue
+Message-ID: <20241009180719.GD6937@cmpxchg.org>
+References: <20240830123458.3557-1-spasswolf@web.de>
+ <ZvA7n9GNoD-ipjkj@debian.local>
+ <1ee5f5828e2021bf1051dc1f9b6f01a8c061ffb1.camel@gmail.com>
+ <2128d714-90f7-1598-b32b-559206fce5de@amd.com>
+ <20241004123506.GR18071@noisy.programming.kicks-ass.net>
+ <20241004135744.GB1658449@cmpxchg.org>
+ <fae14e09-cd35-5feb-c3b4-8318a76b26a3@amd.com>
+ <c97da254-9add-85bb-cd46-7c0d5ac77548@amd.com>
+ <f82def74-a64a-4a05-c8d4-4eeb3e03d0c0@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvo5npQ3o_vgiOX2guHtgafRoFPL__4O8Kcwg2=ssXmKg@mail.gmail.com>
- <e718bc99-e63b-4adb-9e40-2379f48301f5@stanley.mountain> <b22dbfe2-dd29-40de-a4a3-4a0d6b55cd65@stanley.mountain>
- <62a65418-2393-40ec-b462-151605a5efcf@stanley.mountain> <CAMgjq7CapiW2h2pzcKQBhwf_5rs5fgMGHw1E2YJYwEiY6zc=LQ@mail.gmail.com>
- <892332fa-e1d0-4581-9c42-045660d7dc80@stanley.mountain>
-In-Reply-To: <892332fa-e1d0-4581-9c42-045660d7dc80@stanley.mountain>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 10 Oct 2024 02:02:52 +0800
-Message-ID: <CAMgjq7B6cQ2HTPenH6BO66kLhGAPAOu0+ZKNPUhSxs8LGqAuDA@mail.gmail.com>
-Subject: Re: next-20241001: WARNING: at mm/list_lru.c:77 list_lru_del
- (mm/list_lru.c:212 mm/list_lru.c:200)
-To: Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f82def74-a64a-4a05-c8d4-4eeb3e03d0c0@amd.com>
 
-On Thu, Oct 10, 2024 at 12:51=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
->
-> On Thu, Oct 03, 2024 at 02:58:19AM +0800, Kairui Song wrote:
-> > On Wed, Oct 2, 2024 at 7:28=E2=80=AFPM Dan Carpenter <dan.carpenter@lin=
-aro.org> wrote:
-> > >
-> > > On Wed, Oct 02, 2024 at 02:25:34PM +0300, Dan Carpenter wrote:
-> > > > On Wed, Oct 02, 2024 at 02:24:20PM +0300, Dan Carpenter wrote:
-> > > > > Let's add Kairui Song to the  CC list.
-> > > > >
-> > > > > One simple thing is that we should add a READ_ONCE() to the compa=
-rison.  Naresh,
-> > > > > could you test the attached diff?  I don't know that it will fix =
-it but it's
-> > > > > worth checking the easy stuff first.
-> > > > >
-> > > >
-> > > > Actually that's not right.  Let me write a different patch.
-> > >
-> > > Try this one.
-> > >
-> > > regards,
-> > > dan carpenter
-> > >
-> > > diff --git a/mm/list_lru.c b/mm/list_lru.c
-> > > index 79c2d21504a2..2c429578ed31 100644
-> > > --- a/mm/list_lru.c
-> > > +++ b/mm/list_lru.c
-> > > @@ -65,6 +65,7 @@ lock_list_lru_of_memcg(struct list_lru *lru, int ni=
-d, struct mem_cgroup *memcg,
-> > >                        bool irq, bool skip_empty)
-> > >  {
-> > >         struct list_lru_one *l;
-> > > +       long nr_items;
-> > >         rcu_read_lock();
-> > >  again:
-> > >         l =3D list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg))=
-;
-> > > @@ -73,8 +74,9 @@ lock_list_lru_of_memcg(struct list_lru *lru, int ni=
-d, struct mem_cgroup *memcg,
-> > >                         spin_lock_irq(&l->lock);
-> > >                 else
-> > >                         spin_lock(&l->lock);
-> > > -               if (likely(READ_ONCE(l->nr_items) !=3D LONG_MIN)) {
-> > > -                       WARN_ON(l->nr_items < 0);
-> > > +               nr_items =3D READ_ONCE(l->nr_items);
-> > > +               if (likely(nr_items !=3D LONG_MIN)) {
-> > > +                       WARN_ON(nr_items < 0);
-> > >                         rcu_read_unlock();
-> > >                         return l;
-> > >                 }
-> > >
-> >
-> > Thanks. The warning is a new added sanity check, I'm not sure if this
-> > WARN_ON triggered by an existing list_lru leak or if it's a new issue.
-> >
-> > And unfortunately so far I can't reproduce it locally on my ARM
-> > machine, it should be easily reproducible according to the
-> > description. And if the WARN only triggered once, and only during
-> > boot, mayce some static data wasn't initialized correctly?
->
-> I have a config where it printed twice and the second time wasn't during =
-boot.
->
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241009/=
-testrun/25363339/suite/boot/test/gcc-13-lkftconfig-rcutorture/log
->
-> > Or the enablement of memcg caused some list_lru leak
-> > (mem_cgroup_from_slab_obj changed from returning NULL to returning
-> > actual memcg, so a item added to rootcg before will be attempt removed
-> > from actual memcg, seems a real race). If it's the latter case, then
-> > it's an existing issue caught by the new sanity check.
-> >
-> > The READ_ONCE patch may be worth trying, I'll also try to do more
-> > debugging on this and try to send a fix later.
->
-> The READ_ONCE() patch *seemed* to work, but the bug is intermittent so ma=
-ybe it
-> just changed the timing or something.  Still, I feel from a correctness
-> perspective the READ_ONCE() thing is probably correct, right?
->
+On Tue, Oct 08, 2024 at 09:54:52PM +0530, K Prateek Nayak wrote:
+> From 2e15180e18b51e9a2bc0d7050e915a70d2673a06 Mon Sep 17 00:00:00 2001
+> From: K Prateek Nayak <kprateek.nayak@amd.com>
+> Date: Fri, 4 Oct 2024 15:24:35 +0000
+> Subject: [RFC PATCH] sched/psi: Fixup PSI accounting with DELAY_DEQUEUE
+> 
+> After the merge of DELAY_DEQUEUE, "psi: inconsistent task state: warning
+> were seen early into the boot. The crux of the matter is the fact that
+> when a task is delayed, and the delayed task is then migrated, the
+> wakeup context may not have any idea that the task was moved from its
+> previous runqueue. This is the same reason psi_enqueue() considers
+> only ...
+> 
+>      (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED)
+> 
+> ... as a wakeup. In case of a wakeup with migration, PSI forgoes
+> clearing the TSK_IOWAIT flag which seems to be the issue I encountered
+> in my splat previously.
+> 
+> With that said, the below diff, based on Peter's original approach
+> currently seems to work for me in the sense that I have not seen the
+> inconsistent state warning for a while now with my stress test.
+> 
+> Two key points of the approach are:
+> 
+> o It uses "p->migration_flags" to indicate a delayed entity has
+>    migrated to another runqueue and convey the same during psi_enqueue().
+> 
+> o It adds ENQUEUE_WAKEUP flag alongside ENQUEUE_DELAYED for
+>    enqueue_task() in ttwu_runnable() since psi_enqueue() needs to know of
+>    a wakeup without migration to clear the TSK_IOWAIT flag it would have
+>    set during psi_task_switch() for blocking task and going down the
+>    stack for enqueue_task_fair(), there seem to be no other observer of
+>    the ENQUEUE_WAKEUP flag other than psi_enqueue() in the requeue path.
+> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-Yes, the READ_ONCE fix is absolutely correct.
+Tested-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Not sure if it's possible in theory, that the compiler or CPU will use
-the old value for the `WARN`, but use a new read value for the `if` above.
-This READ_ONCE will prevent that from happening, if possible.
-
-I think we should just merge the READ_ONCE fix, and see if any more
-tests expose this issue again.
+It fixes the warning and bogus pressure values after stressing it for
+an hour or so with tons of cpu contention and cgroup movements.
