@@ -1,37 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC21333CD2
-	for <regressions@lists.linux.dev>; Wed,  9 Oct 2024 10:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D326318C35C
+	for <regressions@lists.linux.dev>; Wed,  9 Oct 2024 11:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728469971; cv=none; b=QB26MnRfzapzRLT8ujznx8IyDI/OCSg8iy0yWPA4obA9dlCFEkHC5J+AsSGgkZBY+ciNzX4dDCA/IBh8Ysd7d8pQFyPSTVeeUma4DhCK19i1ExZiPOxrTMJiaVx7IAbkjAjhSpDYeDzpYKVNKdfuAA2NfZmDZ6CSQLkjaW/5AjE=
+	t=1728471867; cv=none; b=hqJ/YuH0IOVHgWNTCBuawTP0U+fFNtHJJysvbG9Q1mLWc5jKlLDoDbDB1sD3HIhvU+La463g3omu5JRF4gEDMkUtFQVBRBbhAMU00l7j+coFIdECmXuAiNh7CkpJEDEi57iJQ3QVsZC6Oj5Lj7ueZxRxLTfI01gNM1eah1F69HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728469971; c=relaxed/simple;
-	bh=00/H3CQqgYdCDtkqs80YGCL456r+PjV84Xa4blXq8P8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=OobT8rCoI6UtTl2fzcn9vn550reGPx9lE+bnGMfV5QFXBZzyoCI/PMLFfQ6cQ/pdu05bK44b3IxMRgyjCP+y4tj+eJppzggAhma8P6iv/ZWtmuN7POiqdc6d0WS43XfGBzWOZvq68+pTWtPz6gSpexItQBbOe0GPvT/cWeOFc9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QrmYy2iv; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1728471867; c=relaxed/simple;
+	bh=akw4z7RCBxzqygAyivLS/uFj6Zz7BOFnEaigEkTnitE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OO+YTouemOpKyxsGFhVjSRt/K/8TxJuhqyT4uEZr4Uu2EMsrxggr2dt8WHHB5+HNW2RA7oX61HzNfp4o1+RxnHyQ7hbIxnNa8xu5kmdjiZ23ZqEkq1eO6tu8jsczk2P93xUu1ShfNKEZQWPP6EpJ/VR9dbPW0FpRQ1p2kcphVBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=LWgLUDu/; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QrmYy2iv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=00/H3CQqgYdCDtkqs80YGCL456r+PjV84Xa4blXq8P8=; t=1728469970;
-	x=1728901970; b=QrmYy2ivyCZ9SB/l/uiPjVEL8fcK9WX+eLeHZdH90ceAi1fxsmH4ECTc4ZhTT
-	lBrNcSHAMYJJFwoZ0lfLTp5urbEgyNMz7TVjnmOTrki1NEo1zGMJJ+FWg9izZa79q2POIxC0osr3Z
-	5TVWEzJqoVu+m8xhld15xpTuS6VPyXwZ4TX+fBHbW7oJi7dbzt6Ze5BYgeTVLdZemK9mjz1JD193I
-	Pwo0lHqUVWmOsfSsv/IJINiIVnhJc5djIs7OQpyHd1tTrwJsANIla+SWcKOQOf0jcfEQ/7hKjDGWm
-	R5T6k4tJel9ZJTlfz784BqFFDBilhTG4fBclWwrJm6/njwsYHA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1syTzs-0006Ww-3n; Wed, 09 Oct 2024 12:32:48 +0200
-Message-ID: <7cbe80d4-0a17-4422-8eac-9cd5415da086@leemhuis.info>
-Date: Wed, 9 Oct 2024 12:32:47 +0200
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="LWgLUDu/"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e0c3e85c5so2150986b3a.2
+        for <regressions@lists.linux.dev>; Wed, 09 Oct 2024 04:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1728471865; x=1729076665; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BmXF2Q49luswGg/2y86q1ZQ3ULzUFXxuhYjCSrdRAvw=;
+        b=LWgLUDu/H/3Oj9iXiHsY1jbVWEQaQsCZ0RfDS6BSSY3+RXxuTetuf1D5f88WQhgMHx
+         Qiq4JxzGwxZMgmrUrd9+jbB4/DggUM3MF1285ke1RluRIhds39Ar7ICBEX4NcLo4EKFY
+         y2J1aykIJ7h3kjZMI2QMlPP8Nsr4RL7/VvrKOVXj3NBWVI3jHX7O/92YznGBxNvvkWbe
+         E7iVZaTw9gT65+jJmTID6P9B2DdMrH9uyBRqJSC3Zh7UAKzqBK8o0CnNrwibTxGMefVJ
+         13ebvW62XjsBSWph3Ko1AnLlaaEr+sh0JzP+tepEexDM1GA3LxEWYG+PxyVDq6SI25ZH
+         YTSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728471865; x=1729076665;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BmXF2Q49luswGg/2y86q1ZQ3ULzUFXxuhYjCSrdRAvw=;
+        b=DU7cgq4sRFXepTNYQQ88VWkxYAdfV2zQchmqht8jgHX6Cq+yt/QGqUzeNtx5EF/10K
+         K8WBqtYBNYuu8ujCGj7F/A5CtEvU538wglPtEDGc36DGgclcq0iqREMaNegIz+4VxMYo
+         LADPw2z5GtAcLY/8kQkJsEyb949SU5Vo8ZsTXl4j3sYHANayJa9g3K8wj/QNeCmhDaaZ
+         24WYBE/CfYVuqDtwKI4I5s4Q/7zsoq5NCjeti2XzH+JfCsAILlu6o6Sq0AkijWJsjn9F
+         K6Y/MPiD6AzRiQHdkTK7v97t7SUSX1un7EvWHOoLXEEbxGP0hQaEd4Pxdcrj624hljLo
+         UsAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvtNvrFizr4hykYAAWXIkKgz2FQWuzFVnk7EFPE1maoQZyHigiTijkvDpxwX2TSQgyDKIyuMDW7w8BPw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwnmGIGGDwSYyyRBWwkNzI5ppr7W4v/EN4gqwErWzW5SuWNtlo+
+	/2kF7v9fIeVZLPpAwZ14T7/OOIq3RHwLe3Znw1vYSUeUEN9w8wvtZZcvsPnqyUw=
+X-Google-Smtp-Source: AGHT+IEEMjmiRET2kOs0GeInwrz52Oue3vtvkRG73mTQZZRLoPcG6hCze0/6KFkEbxi8zZg9lyGnbg==
+X-Received: by 2002:a05:6a00:1312:b0:714:15ff:a2a4 with SMTP id d2e1a72fcca58-71e1db85861mr3024260b3a.13.1728471865013;
+        Wed, 09 Oct 2024 04:04:25 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0ccd156sm7550277b3a.57.2024.10.09.04.04.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Oct 2024 04:04:24 -0700 (PDT)
+Message-ID: <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
+Date: Wed, 9 Oct 2024 05:04:23 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,37 +61,41 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: AMD zen microcode updates breaks boot
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <91194406-3fdf-4e38-9838-d334af538f74@kernel.dk>
+ <20240928061038.GAZved3hMSU3XahWrJ@fat_crate.local>
+ <5fe1e264-c285-4988-b1e3-46771d07172b@kernel.dk>
+ <20240930044313.GAZvosYZF5mHi2OZbC@fat_crate.local>
+ <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
+ <CC418B80-5ED9-4F64-917F-BA6F94130F83@alien8.de>
+ <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
+ <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728469970;7a44ddf7;
-X-HE-SMSGID: 1syTzs-0006Ww-3n
 
+On 10/9/24 3:12 AM, Borislav Petkov wrote:
+> On Mon, Sep 30, 2024 at 10:25:21AM -0600, Jens Axboe wrote:
+>> Hmm, seems like a pretty standard cpu and updated microcode fw, no? But
+>> if it's just me, we can just defer until it gets fixed, at least for
+>> some more rcs. I just pruned the microcode for now to work around it, as
+>> it's pretty annoying to forget about doing the reverts and then booting
+>> a broken kernel. The box takes minutes to post+boot.
+> 
+> With the microcode blob removed so that no loading happens, what microcode
+> does this box have?
+> 
+> Still 0x0aa00215?
 
+Yep, 0xaa00215
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+-- 
+Jens Axboe
 
-#regzbot report:
-https://lore.kernel.org/all/20241007132555.GA53279@francesco-nb/
-#regzbot introduced: v6.11..v6.12-rc2
-#regzbot summary: Kernel panic in clk_imx8mp_audiomix_runtime_resume
-
-#regzbot report:
-https://lore.kernel.org/all/7ae0cd7774f4b3e30cc033a7e543546732dbced0.camel@ideasonboard.com/
-#regzbot introduced: 9480db72e17b5e
-#regzbot summary: drm: lcdif: display stopped working
-
-#regzbot report:
-https://lore.kernel.org/all/AS8P190MB1285D7871E746D824330F1C4EC7F2@AS8P190MB1285.EURP190.PROD.OUTLOOK.COM/
-#regzbot introduced: 6aa8700150f7d
-#regzbot summary: ALSA: usb-audio: kernel crash with Apple USB-C headphones
