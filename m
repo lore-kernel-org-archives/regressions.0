@@ -1,241 +1,118 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0242F19D089
-	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 17:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F11199FA2
+	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 19:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728581737; cv=none; b=PgaSp4ExnvQVx1FxyJtMmQTsUq5v8J9iHc+jWzKmslk96zfeHkL+8g5KHRM14SGxyqZT0Dlnn6Ag512e+Uf22JG1az+yTM96x3baSXPso/M2lzKLmY9K5RXEprtdWz8+rlVX4qJ5dpdONTpP5CAYcCFoCa6jvHoolzNWNHGGA6E=
+	t=1728588243; cv=none; b=psWn6JPsfVYwwJwwZAqti2C2My4TxlH0U0eW4O7YaTf5byB/heMzUpSgY6yWDMsbC5xMN9icNddj03gbqY/QZBeTXoEVJtzQ+a4Hy8N+2btpJkIk6faxevUNB11Vsz+7YfBM7MTmbcmaqIeCyeQzqDc8OcApZiAvWUaFCzpk/bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728581737; c=relaxed/simple;
-	bh=S+rMcJ8/jS3HFXQyKZXsNh4spiuJuM4uFw4BGF5HU88=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kcDa3+JY8w3NIziKnmV0rFh0jueWqrYQnnTHw+yBiwXnAFEjC5HHG+GLC/T1Azt5amuJYwk5Ebs/UNfeUD4lGTLhhM5rqr3mYtpTVAj66H5f6Znbv+oDKRP8d1I3nmF5xSTotYyjDn9VHbYyQsJtSBj6tUPeET1zEuFroP/Oga8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bvu3Jlq7; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728588243; c=relaxed/simple;
+	bh=66KBTKQ6NcMAQQUcCpPGAjzFBWkzOGqbuV6tYQl+gI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMVA2a4Pn6dSbLjKWy5bEJwSsQRMDNhUpALSKzptQDg3x2fC9tFxqSgclAOBYsErmqo54rr6bQxD6z4A5+ulMGCGnUCQO6vXAPXX/sDQAekeqDGXQRje8020taz0tnneFpdfCaKhO4/Dpjz1BKWni6b/0CKzMPPiIwRn0lH18xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=vmJky5b3; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bvu3Jlq7"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43117ed8adbso9887445e9.2
-        for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 10:35:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="vmJky5b3"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6c5acb785f2so7581796d6.0
+        for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 12:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728581734; x=1729186534; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VNsUYQQaFG56Dmegv4Djw6iUIXglHdRgGxtxIZcSNOk=;
-        b=Bvu3Jlq7TbFphYKxD7oxA8WpjhLz0wWvg/K1ii6tJR/0PALwUP/dVPFvikcsZIsAIt
-         /R7kkiqp0acbqT11vtW1/X46Bh4XxOLmjD3b8sK81GXApnxTcRRU2TVFlaM7VYGPlAxZ
-         EIDvQAGbMDKhKetAOcmI+JGtN1dxpODmogze/dDHQCaATimxJxGsJr1NfuabYV4HLNw4
-         T1c5q8sx4ZSL0rp5ILCN1RBHQUHeYr6LOIPfzDrBi61PXR0r5PLrgfaslnw63GRH9h1f
-         QvhKYL711/FC2oXbYDwpM+Dl7+9NUyRWS17DMmaOsnjOy+z45LNXeyaR/h6jlpjMr3OC
-         QD+Q==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1728588239; x=1729193039; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vrQEWn5/w+Y6IS85vKSKnwu6LL413ydIBaXoz3HnS8E=;
+        b=vmJky5b3XBG5wRqgmWKL3LaOOsb+A4miuSLVQg3WjXYSildppB6NSSY6fgCuo9LPgW
+         FtiGMMJGbGD9285O03j3UyAaXrorB33b59dhHod1wJKiXQX/x9gfhhHbw605EHSwh2H4
+         ILCE0J5ybYPbe5u0OZWP+P42/Mm72Jbg7mbSqBnYn1/nFbH6adGrpgJ1y7gKDGaGIGSf
+         ka236x6j8LPFXcnKyOROP7zyNSAH3X9vui90haGnPcKI5ctFrVWXNJqlgECOJIRW6LqU
+         V5MEEE/DkqRN+xR94z4N62vCGls+RhlpVmcvnxvAgqOhk+UEnPslIQuyqDrn8Fa0h/e3
+         /hHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728581734; x=1729186534;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VNsUYQQaFG56Dmegv4Djw6iUIXglHdRgGxtxIZcSNOk=;
-        b=P9ZwA4rTYcfBMR9LuRgp8/DWEDaU4CQDiW+eHsmajg1WQ6K0befrnKWiorKJL8ma1C
-         9aOv902ZWAchisUrVrT095MKwW8o3TzZJbd1RdEvnFQhnfHJTZc7CRbZHunwqpGpdWA2
-         Nv5QmWmeoMggv1cGkqvgm+06c0tatuI239ocLx1BAgsr4nWAvs4i5c9N+kMMpvZich1b
-         BV6oUXt+0+g3xr+9UCAlk+66U73+s5lAk1EGT6wrK8PS5ZWFZGBmiE0jEgdTSk+l5d8P
-         wYK1KdCXrmhQhnEC/QTHnJXyxe1e7SWUkNnSKfP9CXVrftJk943qIo8g9NqW12slaePw
-         wRzw==
-X-Gm-Message-State: AOJu0YwECC7M4iIrln9j9vcQnz5XbSR2F0n+RJDVEx2I33ejHehmUYGs
-	MpVVeNsP6V0Exw5TJkl8TGLiojWu/H86mgvLze4WxlyXthUukgJ9+TMVsehm
-X-Google-Smtp-Source: AGHT+IEbovSVPx7/3so4TpJhAALxqsgBJoh2Pa5F7DoDnnY+ormteMpIWujQQ0ypOiNF6zRd95uEqA==
-X-Received: by 2002:a05:600c:4f14:b0:430:9fde:3b92 with SMTP id 5b1f17b1804b1-430ccf312c9mr84472395e9.14.1728581734201;
-        Thu, 10 Oct 2024 10:35:34 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:e7da:5d3c:892a:5009? ([2a02:168:6806:0:e7da:5d3c:892a:5009])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431183065e2sm22042075e9.28.2024.10.10.10.35.33
+        d=1e100.net; s=20230601; t=1728588239; x=1729193039;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vrQEWn5/w+Y6IS85vKSKnwu6LL413ydIBaXoz3HnS8E=;
+        b=s4wf3UCeUB5kBVfgl8dMp5S0I+mHmLI025mAsL6WxuZJfdTh12k+kFSN+kIzW0vLuV
+         CGtJvCcdicQWtipHpUcBzTDB3nQZB8pQ7SRs6JTyiI0tRbocfZxtJP3SBBAftJLkLXB9
+         vw6Mb4poeOdROru9Z0Ps4z6p4BVSFciTYkhJ5r+4YxSf5+/WbQNA3acJxuRtlYaErBT2
+         XqiCZsa+mxh2kvmcfpzd7oqfB5i6WBE0AxGSSu4fyds55FUo7Fjrtv22lXwWw1O9GfEn
+         dUgr3prjSg/8a5zD79lVcxp2WQSR6TDQ6rSiAPX8B16+O4j0Y9/2VOp/QsP2HkKtKFvw
+         jApA==
+X-Forwarded-Encrypted: i=1; AJvYcCXH9djDoDOm6B/XwHLp1XynquhQTcuhWfz/8s0CBF0g3w7+ilIs3raUm8mFHdPczW42rGRkJA8Qqli4MQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjELcc0MRE+aRb9LbcIScgf5wVlfzCoKJBHzUhLl/FHpXnxpDK
+	gN27lgsRTmVguGBIoGorlf21SrYoZiDwL7Ui96EaknViQyPDvIfFJZhh92ESD1M=
+X-Google-Smtp-Source: AGHT+IEStr6X+z6bYcPqki2wni4vVBvRUMWaf8Uozji0MAOTu9qBmNfU3369uwtWQ7P+wnKjZ8trgg==
+X-Received: by 2002:a05:6214:5b06:b0:6cb:e4d3:91c5 with SMTP id 6a1803df08f44-6cbf0098734mr1878596d6.36.1728588239347;
+        Thu, 10 Oct 2024 12:23:59 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe8608d68sm8152416d6.94.2024.10.10.12.23.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 10:35:33 -0700 (PDT)
-Message-ID: <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, Linux Crypto
- Mailing List <linux-crypto@vger.kernel.org>, Boris Brezillon
- <bbrezillon@kernel.org>, Arnaud Ebalard	 <arno@natisbad.org>, Romain Perier
- <romain.perier@free-electrons.com>
-Date: Thu, 10 Oct 2024 19:35:33 +0200
-In-Reply-To: <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
-References: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
-	 <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
-	 <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
-	 <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
-	 <ZwZAExmK52txvHE8@gondor.apana.org.au>
-	 <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
-	 <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
-	 <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.0-1+b1 
+        Thu, 10 Oct 2024 12:23:58 -0700 (PDT)
+Date: Thu, 10 Oct 2024 15:23:53 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Peter Ziljstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Youssef Esmat <youssefesmat@google.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bert Karwatzki <spasswolf@web.de>, regressions@lists.linux.dev
+Subject: Re: [PATCH 1/3] sched/core: Dequeue PSI signals for blocked tasks
+ that are delayed
+Message-ID: <20241010192353.GB181795@cmpxchg.org>
+References: <20241010082838.2474-1-kprateek.nayak@amd.com>
+ <20241010082838.2474-2-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241010082838.2474-2-kprateek.nayak@amd.com>
 
-On Thu, 2024-10-10 at 16:24 +0800, Herbert Xu wrote:
-> On Thu, Oct 10, 2024 at 02:05:56PM +0800, Herbert Xu wrote:
-> >=20
-> > Is it really OK to add new entries to the chain after it has been
-> > given over to the hardware?
->=20
-> Please give this patch a try to see if it improves the hashing.
->=20
->=20
+On Thu, Oct 10, 2024 at 08:28:36AM +0000, K Prateek Nayak wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> psi_dequeue() in for blocked task expects psi_sched_switch() to clear
+> the TSK_.*RUNNING PSI flags and set the TSK_IOWAIT flags however
+> psi_sched_switch() uses "!task_on_rq_queued(prev)" to detect if the task
+> is blocked or still runnable which is no longer true with DELAY_DEQUEUE
+> since a blocking task can be left queued on the runqueue.
+> 
+> This can lead to PSI splats similar to:
+> 
+>     psi: inconsistent task state! task=... cpu=... psi_flags=4 clear=0 set=4
+> 
+> when the task is requeued since the TSK_RUNNING flag was not cleared
+> when the task was blocked.
+> 
+> Explicitly communicate that the task was blocked to psi_sched_switch()
+> even if it was delayed and is still on the runqueue.
+> 
+>   [ prateek: Broke off the relevant part from [1], commit message ]
+> 
+> Link: https://lore.kernel.org/lkml/20241004123506.GR18071@noisy.programming.kicks-ass.net/ [1]
+> Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
+> Closes: https://lore.kernel.org/lkml/20240830123458.3557-1-spasswolf@web.de/
+> Closes: https://lore.kernel.org/all/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
+> Tested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-Hmmm, not really (patch applied on top of 6.12-rc2). 5 algorithms failed se=
-lf-test.
-
-[    0.385833] alg: ahash: mv-md5 test failed (wrong result) on test vector=
- 3, cfg=3D"init+update+update+final two even splits"
-[    0.390576] alg: ahash: mv-hmac-sha256 test failed (wrong result) on tes=
-t vector 1, cfg=3D"init+update+final misaligned buffer"
-[    0.396982] alg: self-tests for md5 using mv-md5 failed (rc=3D-22)
-[    0.408306] alg: self-tests for hmac(sha256) using mv-hmac-sha256 failed=
- (rc=3D-22)
-[    0.408311] ------------[ cut here ]------------
-[    0.408316] ------------[ cut here ]------------
-[    0.408313] WARNING: CPU: 0 PID: 72 at crypto/testmgr.c:5929 alg_test+0x=
-618/0x640
-[    0.408319] WARNING: CPU: 1 PID: 83 at crypto/testmgr.c:5929 alg_test+0x=
-618/0x640
-[    0.408330] alg: self-tests for md5 using mv-md5 failed (rc=3D-22)
-[    0.408330] alg: self-tests for hmac(sha256) using mv-hmac-sha256 failed=
- (rc=3D-22)
-[    0.408334] Modules linked in:
-[    0.408336] Modules linked in:
-[    0.408341] CPU: 1 UID: 0 PID: 83 Comm: cryptomgr_test Not tainted 6.12.=
-0-rc2+ #1
-[    0.408349] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.408353] Call trace:=20
-[    0.408359]  unwind_backtrace from show_stack+0x10/0x14
-[    0.408377]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.408388]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.408400]  __warn from warn_slowpath_fmt+0x110/0x16c
-[    0.408413]  warn_slowpath_fmt from alg_test+0x618/0x640
-[    0.408426]  alg_test from cryptomgr_test+0x18/0x38
-[    0.408436]  cryptomgr_test from kthread+0xdc/0xf8
-[    0.408449]  kthread from ret_from_fork+0x14/0x28
-[    0.408458] Exception stack(0xf0fe9fb0 to 0xf0fe9ff8)
-[    0.408464] 9fa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.408470] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.408475] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.408479] ---[ end trace 0000000000000000 ]---
-[    0.408480] CPU: 0 UID: 0 PID: 72 Comm: cryptomgr_test Not tainted 6.12.=
-0-rc2+ #1
-[    0.408489] Tainted: [W]=3DWARN
-[    0.408492] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.408495] Call trace:=20
-[    0.408498]  unwind_backtrace from show_stack+0x10/0x14
-[    0.408513]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.408524]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.408534]  __warn from warn_slowpath_fmt+0x110/0x16c
-[    0.408547]  warn_slowpath_fmt from alg_test+0x618/0x640
-[    0.408559]  alg_test from cryptomgr_test+0x18/0x38
-[    0.408569]  cryptomgr_test from kthread+0xdc/0xf8
-[    0.408581]  kthread from ret_from_fork+0x14/0x28
-[    0.408590] Exception stack(0xf0fc5fb0 to 0xf0fc5ff8)
-[    0.408595] 5fa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.408602] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.408607] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.408615] ---[ end trace 0000000000000000 ]---
-[    0.408749] alg: ahash: mv-hmac-md5 setkey failed on test vector 0; expe=
-cted_error=3D0, actual_error=3D-80, flags=3D0x1
-[    0.419090] alg: self-tests for hmac(md5) using mv-hmac-md5 failed (rc=
-=3D-80)
-[    0.419099] ------------[ cut here ]------------
-[    0.419104] WARNING: CPU: 1 PID: 75 at crypto/testmgr.c:5929 alg_test+0x=
-618/0x640
-[    0.419119] alg: self-tests for hmac(md5) using mv-hmac-md5 failed (rc=
-=3D-80)
-[    0.419123] Modules linked in:
-[    0.419131] CPU: 1 UID: 0 PID: 75 Comm: cryptomgr_test Tainted: G       =
- W          6.12.0-rc2+ #1
-[    0.419140] Tainted: [W]=3DWARN
-[    0.419143] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.419146] Call trace:=20
-[    0.419151]  unwind_backtrace from show_stack+0x10/0x14
-[    0.419168]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.419179]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.419191]  __warn from warn_slowpath_fmt+0x110/0x16c
-[    0.419204]  warn_slowpath_fmt from alg_test+0x618/0x640
-[    0.419217]  alg_test from cryptomgr_test+0x18/0x38
-[    0.419227]  cryptomgr_test from kthread+0xdc/0xf8
-[    0.419240]  kthread from ret_from_fork+0x14/0x28
-[    0.419249] Exception stack(0xf0fcdfb0 to 0xf0fcdff8)
-[    0.419255] dfa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.419261] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.419266] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.419270] ---[ end trace 0000000000000000 ]---
-[    0.419541] alg: ahash: mv-sha1 test failed (wrong result) on test vecto=
-r 1, cfg=3D"init+update+final aligned buffer"
-[    0.430056] alg: self-tests for sha1 using mv-sha1 failed (rc=3D-22)
-[    0.430063] ------------[ cut here ]------------
-[    0.430068] WARNING: CPU: 0 PID: 82 at crypto/testmgr.c:5929 alg_test+0x=
-618/0x640
-[    0.430082] alg: self-tests for sha1 using mv-sha1 failed (rc=3D-22)
-[    0.430086] Modules linked in:
-[    0.430094] CPU: 0 UID: 0 PID: 82 Comm: cryptomgr_test Tainted: G       =
- W          6.12.0-rc2+ #1
-[    0.430103] Tainted: [W]=3DWARN
-[    0.430106] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.430110] Call trace:=20
-[    0.430114]  unwind_backtrace from show_stack+0x10/0x14
-[    0.430132]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.430144]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.430155]  __warn from warn_slowpath_fmt+0x110/0x16c
-[    0.430169]  warn_slowpath_fmt from alg_test+0x618/0x640
-[    0.430182]  alg_test from cryptomgr_test+0x18/0x38
-[    0.430192]  cryptomgr_test from kthread+0xdc/0xf8
-[    0.430205]  kthread from ret_from_fork+0x14/0x28
-[    0.430214] Exception stack(0xf0fe5fb0 to 0xf0fe5ff8)
-[    0.430220] 5fa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.430226] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.430231] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.430235] ---[ end trace 0000000000000000 ]---
-[    0.430326] alg: ahash: mv-hmac-sha1 setkey failed on test vector 0; exp=
-ected_error=3D0, actual_error=3D-80, flags=3D0x1
-[    0.440728] alg: self-tests for hmac(sha1) using mv-hmac-sha1 failed (rc=
-=3D-80)
-[    0.440733] ------------[ cut here ]------------
-[    0.440736] WARNING: CPU: 0 PID: 73 at crypto/testmgr.c:5929 alg_test+0x=
-618/0x640
-[    0.440747] alg: self-tests for hmac(sha1) using mv-hmac-sha1 failed (rc=
-=3D-80)
-[    0.440750] Modules linked in:
-[    0.440757] CPU: 0 UID: 0 PID: 73 Comm: cryptomgr_test Tainted: G       =
- W          6.12.0-rc2+ #1
-[    0.440764] Tainted: [W]=3DWARN
-[    0.440767] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.440771] Call trace:=20
-[    0.440773]  unwind_backtrace from show_stack+0x10/0x14
-[    0.440788]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.440798]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.440808]  __warn from warn_slowpath_fmt+0x110/0x16c
-[    0.440821]  warn_slowpath_fmt from alg_test+0x618/0x640
-[    0.440834]  alg_test from cryptomgr_test+0x18/0x38
-[    0.440844]  cryptomgr_test from kthread+0xdc/0xf8
-[    0.440855]  kthread from ret_from_fork+0x14/0x28
-[    0.440864] Exception stack(0xf0fc9fb0 to 0xf0fc9ff8)
-[    0.440869] 9fa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.440875] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.440880] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.440884] ---[ end trace 0000000000000000 ]---
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
