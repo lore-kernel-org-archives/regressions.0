@@ -1,106 +1,109 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8F463D;
-	Thu, 10 Oct 2024 06:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A7F19DF9A
+	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 06:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728540367; cv=none; b=qHBepl9TiNeTxdqiQz51GGiYTn4VmgeRgvOips+C2ciawPOMj08UTUiYE0bg6D2skLN4NHeMsu1IyaMFbTv0wF6imaDlbD9WEOndsA3XOxaSoYHZOnGGWAcw0ns2IbWivG9kcq0eoci1jFMrlbkGnhzwVl7HbfnBCHKlR0O9uV0=
+	t=1728542386; cv=none; b=hL0XG0X/Y/Xdv29kmB8e19z+nSNfE5yHZhFJJk2xbmxscmraKhPtEF/v8eku/+JihAcv+zbXc+dI76p+89Fq+plYfV1uP6D90SiXhS3LdFk4Ppz2zr9M9P7nF/01IcjqDJq7WvwFkz21ATEEevLErWm6phgNhXQJUX+Epl/5vMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728540367; c=relaxed/simple;
-	bh=B2NxE/VURy/vjBy0GHUs/N24pfT7iFiiBWoSUrtvJ0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BMKY3dbQ0HGhl1Z4o/IA4qvFceQcXGf11ITbOUfk9f5Rxl20UCMt3otEiy7euEXoo6pfqac6s9ttdCTWpeI8TqehvFuO5aHL9k8Uz9b7QfwrbS6wvY0Y6ZoN81FmEZ+DyELVGotESYljwZxjOjRAkT840Aw1pK5d8eP94yeG++I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=fnuRMqLZ; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1728542386; c=relaxed/simple;
+	bh=A9aoV4pLUkmqg5hExqZjkeGcYEq4lkw5kEjIYiFUbCI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=n8X7xhj4EJD6k8K/VdEGAOSltnaIO/y1/eUlBhdWH/44TJx1na2FnheJN01rYfYTVwWoAGG39k5WDSC8qvsTymBXix1Q5NqlVBIviUiclUo7K6tplb67nq1ZDiOWYL0Nd3elN/a3xLJ8LHaelEUeusD9tKtVXmC8C8AmmNb2Jao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=GKMXlb1b; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="fnuRMqLZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=6XUnNZxdV444hVjpvvyIdb/pQ4HNS1/DPVIt1z8Oi3M=; b=fnuRMqLZ0sBmx/sXo7vulvdPVn
-	4WaRmpEVAMy6omDESvcQewfyn05mcKwfqQlD5gu+Q1QIQLOohxJP7xd8604d7eAKcptfJpvppdfrB
-	6rXtGtsjIzX+vDwIn7LHCalKJMh6+ZA+J0qxH3eGEw9q+/8i+o+rYW6eIxH2a9JXMdYwzdY92img3
-	ykR16cWAo9tucP4dSADxxZCUklzaWqidcQH5VkmQz2Ra2XgRN5sUBQR30tAXqKFfSpBYAjTcQi6kp
-	lPbF/O5Xz6xhtbH7CAlliq/AlrFm7eofUscBu6zhmhYOtp2xfRLRvOTPuscxhmQtO+6c8Hi0bIbww
-	wFCbN7FA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sym9H-008FZ1-01;
-	Thu, 10 Oct 2024 14:05:57 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2024 14:05:56 +0800
-Date: Thu, 10 Oct 2024 14:05:56 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Arnaud Ebalard <arno@natisbad.org>,
-	Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-Message-ID: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
-References: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
- <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
- <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="GKMXlb1b"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1728541781;
+	bh=vOuCUK01oxy5k7JbXkIGuKuHjfVwEEjE3/abMmPSBdE=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=GKMXlb1b3NZjYTYbzmtz//XxClHYQHHhFh2EOhA8sM7KjLDSs/PVVrRoPZlK8PkVP
+	 g4WI2ufab656vcuQZ+2RXKLZKLs6T9PhaIlZ8SUVz5f27XBfim2UtKqvfgTaM4fApr
+	 mAIY80OovTFfuWA+9SYacshCY8KUljhCIdESO5Fc=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+Date: Thu, 10 Oct 2024 08:29:14 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+ <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
+ <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+To: Chris Mason <clm@meta.com>
 
-On Wed, Oct 09, 2024 at 06:48:21PM +0200, Klaus Kudielka wrote:
->
-> Oh, I had to increase log_buf_len, to catch everything. Booting is really slow now ;)
-> Full dmesg output is attached.
 
-Thanks! This is very helpful.
+> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
+>=20
+> Not disagreeing with Linus at all, but given that you've got IO
+> throttling too, we might really just be waiting.  It's hard to tell
+> because the hung task timeouts only give you information about one =
+process.
+>=20
+> I've attached a minimal version of a script we use here to show all =
+the
+> D state processes, it might help explain things.  The only problem is
+> you have to actually ssh to the box and run it when you're stuck.
+>=20
+> The idea is to print the stack trace of every D state process, and =
+then
+> also print out how often each unique stack trace shows up.  When we're
+> deadlocked on something, there are normally a bunch of the same stack
+> (say waiting on writeback) and then one jerk sitting around in a
+> different stack who is causing all the trouble.
 
-> [    4.118765] mv_cesa_ahash_queue_req: 0 (ptrval)
-> [    4.121966] mv_cesa_ahash_queue_req: 0 (ptrval)
-> [    4.126678] mv_cesa_int: 0 0x4ea1 0x80
-> [    4.131394] mv_cesa_ahash_queue_req: 0 (ptrval)
-> [    4.135927] mv_cesa_ahash_complete: 0 (ptrval)
-> [    4.153221] mv_cesa_ahash_req_cleanup: 0 (ptrval)
-> [    4.157942] mv_cesa_int: 0 0x4ea1 0x80
-> [    4.157949] alg: ahash: mv-sha256 test failed (wrong result) on test vector 3, cfg="import/export"
-> [    4.161699] mv_cesa_ahash_complete: 0 (ptrval)
-> [    4.170686] alg: self-tests for sha256 using mv-sha256 failed (rc=-22)
-> [    4.175132] mv_cesa_ahash_complete: 0 (ptrval)
-> [    4.175136] mv_cesa_ahash_req_cleanup: 0 (ptrval)
-> [    4.179589] ------------[ cut here ]------------
-> [    4.184304] mv_cesa_ahash_req_cleanup: 0 (ptrval)
+I think I should be able to trigger this. I=E2=80=99ve seen around a 100 =
+of those issues over the last week and the chance of it happening =
+correlates with a certain workload that should be easy to trigger. Also, =
+the condition remains for at around 5 minutes, so I should be able to =
+trace it when I see the alert in an interactive session.
 
-As I suspected, the first multi-request op on a single engine
-triggers a failure.  This looks like a bug in the TDMA chaining
-code.
+I=E2=80=99ve verified I can run your script and I=E2=80=99ll get back to =
+you in the next days.
 
-It is chaining what appears to be a live request.  In other words
-after we have already passed a chain to the hardware, we appear
-to be adding new entries to the end of the chain in
-mv_cesa_tdma_chain by assigning last->next_dma.
+Christian
 
-Unfortunately I don't have documentation for this hardware so I can't
-say whether this is definitely illegal but it certainly smells bad :)
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
-Boris, what are the rules of engagement for TDMA chaining?
-
-Is it really OK to add new entries to the chain after it has been
-given over to the hardware?
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
