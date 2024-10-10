@@ -1,61 +1,50 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35CA1C2DA3
-	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 11:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27471A0737
+	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 11:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728560813; cv=none; b=pvD1f2z5tZoFoDuRu1nHASfBtlA+7iyZ3mDK98X7jV7ohdQtYp2g8/bmDjFeJwyCDFs7Q3cFCjejjekJplXEQF0Ax7oQb4No0VZDqYrcfrG2G3Sg3/2GAcpdnmomBjxrGq793q7DwG1YqD4NV+22qapktDGq5l2QZUtS7N88WNY=
+	t=1728561542; cv=none; b=ULaSrnOfA8YWDoHCr12yjb6b+Psyz3jh0piMw4zO1hfRSPaGYYoTovQMeeYvYB+HLm4T3E/4moYJ2eCtAaeDajvFzcl/NQVtbiP5djMjD7rqr1T8qnfo+yhKu+fHhWnrU89kMcEqwF5TF/MF7iWqfm+ImLveUz6SmdnU/0FcVFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728560813; c=relaxed/simple;
-	bh=8RulCbDWGVtRgGZnMLOgBnNo1CGaUuL572tGJIdYd6Y=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ek5mr43dqZ0xuZ6JbUw3VlzMR5/kYS0U70vmHLz4Gi2O2BQPIydGY0AA/4rA/+MitsyzfzbxR9zeAoPH52crYmnWKk54buqGey7qUx+JdsQlVUuneMfalpizQ4zMr2H9Up1I4ePaR6GBcx7L0g8LJNpWuFTpA7FkXyyekb4ojo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PidURqzw; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1728561542; c=relaxed/simple;
+	bh=ViFJuGullRXnJd99xvAwH21cg4kp+y222TYPWpK4HeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pGa1JrutNtVT/cZ/DdGrrQMxtaad3Hn8dhF4Z4sKfHQa4t3N6POKVRChMCemZaLFjLp0EtAsTANliAUMWdg79WdK3l/2MKq9Am15A5zLLV6q+un5gzufdY/2HmH2twHNt9pNTivguJjlYC+7W0zpHtIbKtya5IwMYu3tEUp39uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B9weEEAx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PidURqzw"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43057f4a16eso7069845e9.1
-        for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 04:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728560810; x=1729165610; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=51heMfImEr3nRBBulIoSOl7yW3U4cglSvjX85ti6WiA=;
-        b=PidURqzw+MsIQl+CJWTuxbRkjGAPq4m53WQXrrDTLXrKiFkXMnkdca9YbN91UJCdRE
-         RCyBoLUQi6/YfhsrGGufXDZ6l1qYIDoOeKp4ri0bJCRhR6NRewKFxCx9O9c5PVODlqL1
-         Bd8YeLmxngrk7J8qwyq+vsBeLeoCEhY3hsxCWn2v7wa97bMF3KfjuOhvO8yCC/bplBZ0
-         p+ZeardgjJDSQWK2+A1cHl4hnVN53KoRpFZ4XJjjyDkRjb6h1ETibop8is5EflIXkqL3
-         VBzR2sRLWpAbK5uBV9m2t7RzgfrjpLczkrxuyTSXnCNHPO+BPigkADRB3NXjLPFADqRO
-         i7jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728560810; x=1729165610;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=51heMfImEr3nRBBulIoSOl7yW3U4cglSvjX85ti6WiA=;
-        b=w5IttnhZS+qjcGpgDU8jJQHQ6nfBcdeoBKM5fPQEZPwd5qgUPk+x8bvPnQoi169qe0
-         Zk3m4B3nf16CFSLdBQby43BXl9XEBwF4hDjQmClbNbaFqcyfUC6Z0AnmmxKUNvbEPx8T
-         BNO9I8PwG+keXMJfpedHeBMkvmlcEmoOBARoY8iNP4pX1CyIc0x6Ecn3UcXPiaNJdj3B
-         J4fwnDjDbgTUYj6ltdYJpwvp0TlroIRIZnl+qGiOGjedWdyuw47zi6ztV/421mruKBBt
-         0iYORcv1N8m5EgRiiWZ8+ffYC3KWCwrGYcgzz52gYDMR6dVFEuGkJ5RKC13JWZ6FJJ9q
-         fC2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUVL2Wc2/Ab79/f6C+r+VEwPThPv9ky6zTBPdBW/u2OHtXGzt3vk9Tkj1b9wO7hsEqNx+M/3sfpGLCYvQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzdX7OcqeUwDFEmBT66JmIORhOcTZ4HTxOIWKx/U0YUYQ0+8T2x
-	mtTpIlvsnlHBXjzqqiodAqY+qeXFnq4PH2QjSojOMedqeXEBgyy9MCxI0qodapc=
-X-Google-Smtp-Source: AGHT+IFa75cF+jj4ZG6STuUH/lBb3jUgnt96M7yzoYZ5b+EpsWNGz0c2CtxoTU0fMOvpLbUv8bZc3A==
-X-Received: by 2002:a05:600c:474d:b0:42c:cd7c:a196 with SMTP id 5b1f17b1804b1-431157b4638mr34318945e9.17.1728560810088;
-        Thu, 10 Oct 2024 04:46:50 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:64e2:34a0:1d01:60a2? ([2a01:e0a:982:cbb0:64e2:34a0:1d01:60a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b79f9a9sm1340063f8f.74.2024.10.10.04.46.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 04:46:49 -0700 (PDT)
-Message-ID: <c84dd670-d417-4df7-b95f-c0fbc1703c2d@linaro.org>
-Date: Thu, 10 Oct 2024 13:46:48 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B9weEEAx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728561541; x=1760097541;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ViFJuGullRXnJd99xvAwH21cg4kp+y222TYPWpK4HeQ=;
+  b=B9weEEAxQXlpEaZRRXHNtEvMQitXYABzf0eXhEYuneRBHf20YAnpgD+w
+   6cVHKSJtu2WYpBo7satvSK0oUmE/M5hki/zj86Ag9PjRoYPfKu2CBJy3R
+   RpCkMMt6At0ZaXPwUjTf00/sASljed/s7JXQClqtAIXMNrbUgI8FelQp8
+   POhxhEUEiHhVQBC1AMeURUSoWhjr0DKIrHSqD7md0Nr4zqLL2HH75aNzB
+   CsXI7O47a9SuAM3FMzXLBLL6lvDAtwED9kV8tMYri6nRqDYjFrNJArrhK
+   eLROI0w2+7IaR6nNR2T44HpjsnslF7etg8TuQ57YxkN1FkiJmXECUvG3q
+   g==;
+X-CSE-ConnectionGUID: kV5raEeLSKaH1wzj2LH0QA==
+X-CSE-MsgGUID: tzVVgnKaSFGXTSMdyfm3ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="45428378"
+X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
+   d="scan'208";a="45428378"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 04:59:00 -0700
+X-CSE-ConnectionGUID: vvGr67LuTy2mWozDpijmhw==
+X-CSE-MsgGUID: Jm33z81TREO/fnxMndlnzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
+   d="scan'208";a="76479003"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa009.jf.intel.com with ESMTP; 10 Oct 2024 04:58:57 -0700
+Message-ID: <dc9bcfa6-885f-4ae2-a6be-832a985bc80e@linux.intel.com>
+Date: Thu, 10 Oct 2024 15:01:07 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,85 +52,151 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-To: Johan Hovold <johan@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Chris Lew <quic_clew@quicinc.com>,
- Stephan Gerhold <stephan.gerhold@linaro.org>,
- Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
- <CAA8EJpoiu2hwKWGMTeA=Kr+ZaPL=JJFq1qQOJhUnYz6-uTmHWw@mail.gmail.com>
- <ZweoZwz73GaVlnLB@hovoldconsulting.com>
- <CAA8EJprg0ip=ejFOzBe3iisKHX14w0BnAQUDPqzuPRX6d8fvRA@mail.gmail.com>
- <Zwe-DYZKQpLJgUtp@hovoldconsulting.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <Zwe-DYZKQpLJgUtp@hovoldconsulting.com>
+Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
+ device and USB4 Host Interface
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ "<Harry Wentland" <harry.wentland@amd.com>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ Raju.Rangoju@amd.com, Sanath.S@amd.com, Greg KH <gregkh@linuxfoundation.org>
+References: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
+ <20241003054704.GM275077@black.fi.intel.com>
+ <01bf9a3a-6277-4b57-83ed-82c4bfb62dd2@amd.com>
+ <20241003132726.GN275077@black.fi.intel.com>
+ <797f52fa-ab9d-45c5-828b-9dcaf75fcc83@amd.com>
+ <20241003134743.GO275077@black.fi.intel.com>
+ <cee28cb3-a157-4d26-a68a-7b5a99161d1a@linux.intel.com>
+ <c5209c31-9263-4fe7-b387-319bbaac866d@amd.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <c5209c31-9263-4fe7-b387-319bbaac866d@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/10/2024 13:44, Johan Hovold wrote:
-> On Thu, Oct 10, 2024 at 01:55:11PM +0300, Dmitry Baryshkov wrote:
->> On Thu, 10 Oct 2024 at 13:11, Johan Hovold <johan@kernel.org> wrote:
->>> On Thu, Oct 10, 2024 at 12:55:48PM +0300, Dmitry Baryshkov wrote:
-> 
->>>> Please don't break what is working. pd_mapper is working on all
->>>> previous platforms. I suggest reverting commit bd6db1f1486e ("soc:
->>>> qcom: pd_mapper: Add X1E80100") instead.
+On 10.10.2024 5.23, Mario Limonciello wrote:
+> On 10/9/2024 16:52, Mathias Nyman wrote:
+>> On 3.10.2024 16.47, Mika Westerberg wrote:
+>>> On Thu, Oct 03, 2024 at 08:42:21AM -0500, Mario Limonciello wrote:
+>>>> On 10/3/2024 08:27, Mika Westerberg wrote:
+>>>>> On Thu, Oct 03, 2024 at 08:10:11AM -0500, Mario Limonciello wrote:
+>>>>>> On 10/3/2024 00:47, Mika Westerberg wrote:
+>>>>>>> Hi Harry,
+>>>>>>>
+>>>>>>> On Wed, Oct 02, 2024 at 01:42:29PM -0400, Harry Wentland wrote:
+>>>>>>>> I was checking out the 6.12 rc1 (through drm-next) kernel and found
+>>>>>>>> my system hung at boot. No meaningful message showed on the kernel
+>>>>>>>> boot screen.
+>>>>>>>>
+>>>>>>>> A bisect revealed the culprit to be
+>>>>>>>>
+>>>>>>>> commit f1bfb4a6fed64de1771b43a76631942279851744 (HEAD)
+>>>>>>>> Author: Mathias Nyman <mathias.nyman@linux.intel.com>
+>>>>>>>> Date:   Fri Aug 30 18:26:29 2024 +0300
+>>>>>>>>
+>>>>>>>>        usb: acpi: add device link between tunneled USB3 device and USB4 Host Interface
+>>>>>>>>
+>>>>>>>> A revert of this single patch "fixes" the issue and I can boot again.
+>>>>>>>> The system in question is a Thinkpad T14 with a Ryzen 7 PRO 6850U CPU.
+>>>>>>>> It's running Arch Linux but I doubt that's of consequence.
+>>>>>>>>
+>>>>>>>> lspci output:
+>>>>>>>>        https://gist.github.com/ hwentland/59aef63d9b742b7b64d2604aae9792e0
+>>>>>>>> acpidump:
+>>>>>>>>        https://gist.github.com/ hwentland/4824afc8d712c3d600be5c291f7f1089
+>>>>>>>>
+>>>>>>>> Mario suggested I try modprobe.blacklist=xhci-hcd but that did nothing.
+>>>>>>>> Another suggestion to do usbcore.nousb lets me boot to the desktop
+>>>>>>>> on a kernel with the faulty patch, without USB functionality, obviously.
+>>>>>>>>
+>>>>>>>> I'd be happy to try any patches, provide more data, or run experiments.
+>>>>>>>
+>>>>>>> Do you boot with any device connected?
+>>>>>>>> Second thing that I noticed, though I'm not familiar with AMD hardware,
+>>>>>>> but from your lspci dump, I do not see the PCIe ports that are being
+>>>>>>> used to tunnel PCIe. Does this system have PCIe tunneling disabled
+>>>>>>> somehow?
+>>>>>>
+>>>>>> On some OEM systems it's possible to lock down from BIOS to turn off PCIe
+>>>>>> tunneling, and I agree that looks like the most common cause.
+>>>>>>
+>>>>>> This is what you would see on a system that has tunnels (I checked on my
+>>>>>> side w/ Z series laptop w/ Rembrandt and a dock connected):
+>>>>>>
+>>>>>>              +-03.0
+>>>>>>              +-03.1-[03-32]--
+>>>>>>              +-04.0
+>>>>>>              +-04.1-[33-62]----00.0-[34-62]--+-02.0-[35]----00.0
+>>>>>>              |                               \-04.0-[36-62]--
+>>>>>>
+>>>>>> 00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family
+>>>>>> 17h-19h PCIe Dummy Host Bridge [1022:14b7] (rev 01)
+>>>>>> 00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h
+>>>>>> USB4/Thunderbolt PCIe tunnel [1022:14cd]
+>>>>>> 00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Family
+>>>>>> 17h-19h PCIe Dummy Host Bridge [1022:14b7] (rev 01)
+>>>>>> 00:04.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h
+>>>>>> USB4/Thunderbolt PCIe tunnel [1022:14cd]
+>>>>>
+>>>>> Okay this is more like what I expected, although probably not the
+>>>>> reason here.
+>>>>>
+>>>>> Are you able to replicate the issue if you disable PCIe tunneling from
+>>>>> the BIOS on your reference system? (Probably not but just in case).
+>>>>
+>>>> I checked on the Lenovo Z13 laptop I have and turned off "USB port" in BIOS
+>>>> setup and this caused the endpoints 3.1 and 4.1 I listed above to disappear
+>>>> but the system still boots up just fine for me on 6.12-rc1.
 >>>
->>> As I tried to explain in the commit message, there is currently nothing
->>> indicating that these issues are specific to x1e80100 (even if you may
->>> not hit them in your setup depending on things like probe order).
+>>> Okay thanks for checking!
+>>>
+>>>>>>> You don't see anything on the console? It's all blank or it just hangs
+>>>>>>> after some messages?
+>>>>>>
+>>>>>> I guess it is getting stuck on fwnode_find_reference() because it never
+>>>>>> finds the given node?
+>>>>>
+>>>>> Looking at the code, I don't see where it could get stuck. If for some
+>>>>> reason there is no such reference (there is based on the ACPI dump) then
+>>>>> it should not affect the boot. It only matters when power management is
+>>>>> involved.
+>>>>
+>>>> Nothing jumps out to me either.  Maybe this is a situation that Harry can
+>>>> sprinkle a bunch of printk's all over usb_acpi_add_usb4_devlink() to
+>>>> enlighten what's going on (assuming the console output is "working" when
+>>>> this happened).
+>>>
+>>> There are couple of places there that may cause it to crash, I think.
 >>
->> I have the understanding that the issues are related to the ADSP
->> switching the firmware on the fly, which is only used on X1E8.
+>> Its possible we end up trying to create a device link during usb3 device
+>> "consumer" enumeration before the "supplier" NHI device is properly bound to a driver.
+>>
+>> This is something driver-api/device_link.rst states can cause issues.
+>>
+>> This could happen if xhci isn't capable of detecting tunneled devices,
+>> but ACPI tables contain all info needed to assume device might be tunneled.
+>> i.e. udev->tunnel_mode == USB_LINK_UNKNOWN.
+>>
+>> Harry, could you test if the code below helps?
+>>
+>> diff --git a/drivers/usb/core/usb-acpi.c b/drivers/usb/core/usb-acpi.c
+>> index 21585ed89ef8..94c335a7b933 100644
+>> --- a/drivers/usb/core/usb-acpi.c
+>> +++ b/drivers/usb/core/usb-acpi.c
+>> @@ -173,6 +173,13 @@ static int usb_acpi_add_usb4_devlink(struct usb_device *udev)
+>>          if (IS_ERR(nhi_fwnode))
+>>                  return 0;
+>>
+>> +       if (!nhi_fwnode->dev || !device_is_bound(nhi_fwnode->dev)) {
+>> +               dev_info(&port_dev->dev, "%s not tunneled as it probed before USB4 Host Interface\n",
 > 
-> Is this speculation on your part or something that has recently been
-> confirmed to be the case? AFAIK, there is nothing SoC specific about the
-> ECANCELED issue, and we also still do not know what is causing the audio
-> regression.
+> I'm aware this message is mostly to prove whether this is the actual issue but I do want to say if this patch indeed helps Harry's problem and you keep a message in what goes upstream I don't think this is accurate for all cases.
 > 
-> The thing is, we have a working and well-tested solution in the
-> user-space service so there is no rush to switch to the in-kernel one
-> (and risk distros removing the user-space service) before this has been
-> fixed.
+> If you have a Pre-OS CM, it might build tunnels and those could be active until the USB4 CM loads and resets them (by the default behavior).
+> 
+> So I think a more accurate message would just be "%s probed before USB4 host interface".
 
-The in-kernel pd-mapper works fine on SM8550 and SM8650, please just revert
-the X1E8 patch as suggested by Dmitry.
+Makes sense, I'll tune the message in the final patch if this works
 
-Neil
-
-> 
-> Johan
-> 
+Thanks
+Mathias
 
