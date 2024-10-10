@@ -1,63 +1,55 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3148E29AF;
-	Thu, 10 Oct 2024 13:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6A61C1ABE;
+	Thu, 10 Oct 2024 13:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728565590; cv=none; b=adRcCW744AJ3C2g2YhC8SHd6MX8dHJtBy2NZnrsfLWHA4dfxvIyhjtTYJbZNJcIJkPyscDJ0mog+gh6REx76CsmAbw8/HXiQWo72LEfi+5TI9p7iHmJtpeqxOi5f1zsLAF++vZmOhTHW13BjcOX95WOUji4mDFA4CBY/vzOxlHQ=
+	t=1728566655; cv=none; b=Ic9uJj0vURnPmT7ZeUbHU0Boypa5oCoQmLsENWnCssuE0wdsyrr89FA3AcxaCfVnSTwdWqBoX4dRINmPVl90e6JUFk9v9X+PuhdEYtemOAujlyt5+5ioeZVLSqqypoMFcR36CGZhzDlcUGoLfDqOQ42BLDB4157H4jR37D9I//Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728565590; c=relaxed/simple;
-	bh=XEFVZrXZm4Cl3vtMXbMGdyvNFsHHTtmtGuLNaacUr9E=;
+	s=arc-20240116; t=1728566655; c=relaxed/simple;
+	bh=yP11aur8Rt+Rw0tYaqkcFxSY5kmdndx3o4KpjKCWejM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SfeaMMOwsyCYWVo4hZnVdt+0P8dPU6CbYqNtZi15IqhyHAt8KewwnROI0G6s1aDT+i/8rw4YGvvGGy3uUeWZe4Oa+/0lBd+/Shru4xF7KfWnsVAaV6+riCtn2xyOXweivqf1KcXihlBAJVPGA5povR92NIV89vIK60PVPHdOL5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YzVPMAE/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MkhfVOZutHWTrY1Dip7MPz7OhzI/BQXWD0UKWzrFlFem1a0MN8xgtHRnecR+rE/zxZT8yiLJykWY9lQNvCFSgpn7bYARumrDd1OX1k54nKN9jyVWhGMZyJNGVvvwfHwn8r1rI+aymBelUyJKGAISYP64j+9iStjB/6+XzYaUkDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPruOcVf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YzVPMAE/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XEFVZrXZm4Cl3vtMXbMGdyvNFsHHTtmtGuLNaacUr9E=; b=YzVPMAE/ILcI1X9gQr7XAN3JTm
-	FedNI+yqpwcmk/+hEELGzSBsz4bM9NW4/cPVVHMpQnAI1qQxvVWU2GwYI1XEW6QXr40KaIe6p0rYb
-	utqWiOhiF9D971HKSoec6TYbiH58+vQYaUVmVsGkpUu7ylO8Ozn2stQpYwznK9JKeNZbW8iqOMAxv
-	zkc0i2robIMwbRcXKz7ztb+ji/qsYHlFddDJcahxAqiIPITwxTy+2sUrf0OWpDPJBRD8qG0kondtD
-	TxwuniRTPs5biqJZslz7MaSN2+dOLxcbqKSAagGC46+Ki0uApPa48ZtIHp+DwnYfLVvLqx7zzrmQE
-	jdQ+eKGw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1syss0-00000007dcS-3lYy;
-	Thu, 10 Oct 2024 13:06:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2748B30088D; Thu, 10 Oct 2024 15:06:21 +0200 (CEST)
-Date: Thu, 10 Oct 2024 15:06:21 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Youssef Esmat <youssefesmat@google.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Bert Karwatzki <spasswolf@web.de>, regressions@lists.linux.dev
-Subject: Re: [PATCH 3/3] sched/core: Indicate a sched_delayed task was
- migrated before wakeup
-Message-ID: <20241010130621.GH17263@noisy.programming.kicks-ass.net>
-References: <20241010082838.2474-1-kprateek.nayak@amd.com>
- <20241010082838.2474-4-kprateek.nayak@amd.com>
- <20241010130316.GA181795@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPruOcVf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98CBC4CEC5;
+	Thu, 10 Oct 2024 13:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728566654;
+	bh=yP11aur8Rt+Rw0tYaqkcFxSY5kmdndx3o4KpjKCWejM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aPruOcVf9a7yImnkIMPT5Qi2hcOUQZgNyvBh1PkUztPUB6D+bgsdPKFetO4b24n3/
+	 2GBXgw5FqXTsxRZZDl4djnjRK/Hz75LV8u8TCJI+kbsMKXPjlV9X3/uBExi2RtlVtM
+	 HfQyCPrnkgtROHFUgb/F4+QNv9rqlOPVis3SRokPq2diRhSc1ArlGek0Ek9+elIw5U
+	 32X6QPgP/+R/1atQg0l1DHelVFZnYsD7OaGV0mvTjpOyPVzPQVzV4gwefrMEl8JJ3y
+	 ycUvfRWeusiuUhZXDaynlDcUGsqrz9SN0YFpCMFYFUlO2BXwIjGcDIRl+ESTc6TvAn
+	 537M2tGZe3A5w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1syt9P-000000004nT-2lyW;
+	Thu, 10 Oct 2024 15:24:19 +0200
+Date: Thu, 10 Oct 2024 15:24:19 +0200
+From: Johan Hovold <johan@kernel.org>
+To: neil.armstrong@linaro.org
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Chris Lew <quic_clew@quicinc.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
+Message-ID: <ZwfVg89DAIE74KGB@hovoldconsulting.com>
+References: <20241010074246.15725-1-johan+linaro@kernel.org>
+ <CAA8EJpoiu2hwKWGMTeA=Kr+ZaPL=JJFq1qQOJhUnYz6-uTmHWw@mail.gmail.com>
+ <ZweoZwz73GaVlnLB@hovoldconsulting.com>
+ <CAA8EJprg0ip=ejFOzBe3iisKHX14w0BnAQUDPqzuPRX6d8fvRA@mail.gmail.com>
+ <Zwe-DYZKQpLJgUtp@hovoldconsulting.com>
+ <c84dd670-d417-4df7-b95f-c0fbc1703c2d@linaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -66,11 +58,23 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241010130316.GA181795@cmpxchg.org>
+In-Reply-To: <c84dd670-d417-4df7-b95f-c0fbc1703c2d@linaro.org>
 
-On Thu, Oct 10, 2024 at 09:03:16AM -0400, Johannes Weiner wrote:
+On Thu, Oct 10, 2024 at 01:46:48PM +0200, neil.armstrong@linaro.org wrote:
+> >> On Thu, 10 Oct 2024 at 13:11, Johan Hovold <johan@kernel.org> wrote:
 
-> I'll try to come up with a suitable solution as well, please don't
-> apply this one for now.
+> >>> As I tried to explain in the commit message, there is currently nothing
+> >>> indicating that these issues are specific to x1e80100 (even if you may
+> >>> not hit them in your setup depending on things like probe order).
 
-I'll make sure it doesn't end up in tip as-is.
+> The in-kernel pd-mapper works fine on SM8550 and SM8650, please just revert
+> the X1E8 patch as suggested by Dmitry.
+
+Again, you may just be lucky, we have x1e users that also don't hit
+these issues due to how things are timed during boot in their setups.
+
+If there's some actual evidence that suggests that this is limited to
+x1e, then that would of course be a different matter, but I'm not aware
+of anything like that currently.
+
+Johan
