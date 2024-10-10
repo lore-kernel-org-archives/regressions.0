@@ -1,119 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07D91C5796;
-	Thu, 10 Oct 2024 07:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C39F1BD4F8;
+	Thu, 10 Oct 2024 08:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728546292; cv=none; b=mOmI4nSEsgZynwVi2+8nGZh7y5cOyUrkonKDAyiztk1Cg7alk5OYfh1+O54ANF+T26iSqdJFBc1C5wAlFYAGekMoJkBthY0HZpx/52n/h3FYWLdh5ZH1UGj/kOrIRlMgv7wyxyo2/DTMOaF27KFkbfNSrY8t53qZMk/NLZJjKVA=
+	t=1728548687; cv=none; b=pH2hA+K+b0pyoWpspmoG7O1sBzd5mrxF5NAOVLYIkk8NXM/D4L8zFokF7Cf8RimNExG9kTfTQluH1vHmYDXwrHHMR9Qq3fBqAn/hy/oe3XiU/uLsRzys8kafDHzDLjWpqo5m/JRh+uGwQi7y9zR3CkzcW4Da4ykVPX7vrFhN3Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728546292; c=relaxed/simple;
-	bh=A20Cxip7h9+hwVZDDL8T9b50iOLKZr6WhzudD6Hbq8E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ORC6tS/HsJQS7bLmdieex06A4qw8f4QQdytxOUVHUa/MwR33Nl7gFE31sup8fYDl2YvabHckX5KNya5gukFnPTvNmvY6+CZpxsxGkXw2+es8X7CZZfYaVcuc60bsaojQuWBBoxthmOcv8Z5xBlTDRSIavVK1XkntxJCIVxnvqr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVtLcd07; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728548687; c=relaxed/simple;
+	bh=FBagXwmoXvU7XXwjhgrbodhvH71mmVSljW1zLtYlQbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uOcWYml2ps/B6rQ5NaX25gRwSLIRPrjmwXKh9bOsF9LMuSiso3ikjPQzomSEZJGybD0KoKwv/df3ppkjRBjjneGwNdhUZq16GWN7il2UNcn+5h4uNBK03jpYP7Diwjpx6f9zG3LyOv0kuwJ0Sf1TmRLPBL8G+cdES6pJkA4nA9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HNsPJU2Y; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVtLcd07"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74114C4CEC5;
-	Thu, 10 Oct 2024 07:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728546291;
-	bh=A20Cxip7h9+hwVZDDL8T9b50iOLKZr6WhzudD6Hbq8E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MVtLcd07As1FA0eLjjXzFN7+2Swv38YSrDFoGa3CM0hUn3GteVeYvK/K6GbutNxyJ
-	 vjlDlXQvGS/VBAbX3ZZCEvXsot4rB4RsSwfJcg3/iUfmensZhh6sozHLAzkLClf1wm
-	 ERA7MFbVmLEXnYzNuRRpWiPJ3f+MyRAq53vDlKkrYE4p/pZjISE9wB4EpaS6m/X0n2
-	 lyAeW5//o1dMahL7tk0EE59nISwuCH8/hgJUFfyHylNX3a9y6bhImaE+tzIoYUaVlT
-	 ZhdZRoz06h/FdeFVOC3Y7k+DKJwAcoVi+wn03Fm2l858YxGRv4nFuINL4nrhCY4zpg
-	 iyls+R2aC7o9w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1synqw-0000000047M-3YFJ;
-	Thu, 10 Oct 2024 09:44:55 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Chris Lew <quic_clew@quicinc.com>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] soc: qcom: mark pd-mapper as broken
-Date: Thu, 10 Oct 2024 09:42:46 +0200
-Message-ID: <20241010074246.15725-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HNsPJU2Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=SIflBkcXF4BQ+o90EDUrROcjCvAZBUvwNPAzj7vSA/k=; b=HNsPJU2YSok6X8YnM21QTmqkeB
+	pAEGCV/6cK+VGDq6aLJVh1C44gOmInPGKGMm3iFeN8QvE+MFRNUQ4U3e6BgU+DLtfE93tNoIeVwnA
+	MiWQzjGjntwLV1Etk7DmOmHB0lwAT5jvMi7kn8R2lf/LTbwX7fA5YCEAG3daGGkRrDAcg6Ps3mILU
+	K9TZaIJeXBNqb9NYfzVSuakgU6UZpUpmf6nnBDOjeUsOiAT6DO6TwhSes53FlQaDgDzALBaNMJ5nb
+	P8kZaPRwGTxypFtVko7YqnwywoZ9ORlsetcUCc/DmNDKHu/qvzJpBXmpFUOkRD+wHn5RlubSuyomr
+	rc6oXwQQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1syoJW-008H4W-1g;
+	Thu, 10 Oct 2024 16:24:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2024 16:24:40 +0800
+Date: Thu, 10 Oct 2024 16:24:40 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Arnaud Ebalard <arno@natisbad.org>,
+	Romain Perier <romain.perier@free-electrons.com>
+Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
+ Turris Omnia
+Message-ID: <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+References: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
+ <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
+ <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
+ <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
+ <ZwZAExmK52txvHE8@gondor.apana.org.au>
+ <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+ <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
 
-When using the in-kernel pd-mapper on x1e80100, client drivers often
-fail to communicate with the firmware during boot, which specifically
-breaks battery and USB-C altmode notifications. This has been observed
-to happen on almost every second boot (41%) but likely depends on probe
-order:
+On Thu, Oct 10, 2024 at 02:05:56PM +0800, Herbert Xu wrote:
+>
+> Is it really OK to add new entries to the chain after it has been
+> given over to the hardware?
 
-    pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to send altmode request: 0x10 (-125)
-    pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to request altmode notifications: -125
+Please give this patch a try to see if it improves the hashing.
 
-    ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: failed to send UCSI read request: -125
-
-    qcom_battmgr.pmic_glink_power_supply pmic_glink.power-supply.0: failed to request power notifications
-
-In the same setup audio also fails to probe albeit much more rarely:
-
-    PDR: avs/audio get domain list txn wait failed: -110
-    PDR: service lookup for avs/audio failed: -110
-
-Chris Lew has provided an analysis and is working on a fix for the
-ECANCELED (125) errors, but it is not yet clear whether this will also
-address the audio regression.
-
-Even if this was first observed on x1e80100 there is currently no reason
-to believe that these issues are specific to that platform.
-
-Disable the in-kernel pd-mapper for now, and make sure to backport this
-to stable to prevent users and distros from migrating away from the
-user-space service.
-
-Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
-Cc: stable@vger.kernel.org	# 6.11
-Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
-
-It's now been over two months since I reported this regression, and even
-if we seem to be making some progress on at least some of these issues I
-think we need disable the pd-mapper temporarily until the fixes are in
-place (e.g. to prevent distros from dropping the user-space service).
-
-Johan
-
-
-#regzbot introduced: 1ebcde047c54
-
-
- drivers/soc/qcom/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 74b9121240f8..35ddab9338d4 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -78,6 +78,7 @@ config QCOM_PD_MAPPER
- 	select QCOM_PDR_MSG
- 	select AUXILIARY_BUS
- 	depends on NET && QRTR && (ARCH_QCOM || COMPILE_TEST)
-+	depends on BROKEN
- 	default QCOM_RPROC_COMMON
- 	help
- 	  The Protection Domain Mapper maps registered services to the domains
+Thanks,
 -- 
-2.45.2
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
+index 388a06e180d6..0de99fa6c1f5 100644
+--- a/drivers/crypto/marvell/cesa/tdma.c
++++ b/drivers/crypto/marvell/cesa/tdma.c
+@@ -113,6 +113,7 @@ void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
+ 		 * the request.
+ 		 */
+ 		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
++		    0 &&
+ 		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
+ 			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
+ 	}
