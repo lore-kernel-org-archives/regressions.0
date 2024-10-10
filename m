@@ -1,59 +1,73 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828A21CC165
-	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 13:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D121C9ED3
+	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 13:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728567994; cv=none; b=ZDqe8q+ARITD9Dsix2PYhAZzSRZd2cnEunTDN/kOY0TAMH09lAp/WAp6jF1g3FkN1gfIBhMnxxFQeBALyOi1dYouMiI/fLR9b0NvJekxbWICRfqDltWHFCGXBlyXDj3XpcNFt3H3JtU2MzvrTSszKHZRTVF664dddQpmxid9riI=
+	t=1728568213; cv=none; b=FExbgeL7449dNQKde/2FyodiDW4krZVHd1gBxZhWMGYGjI1lc7sdoWDwfWuDLWRo+Bb+uHiSJR9Mc1JCvh+mZXtpULbuNVfnYStR5c3xTcTD9PxWc4fYpLCoGrkSiqy1HOyeHkfKqOr3vqTCjQA3jtgWHgNI0At7GSbcKFOMVyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728567994; c=relaxed/simple;
-	bh=kxwnuoRgznzMWKR1GUcu3Eeo6EmHiTHQfQGeaHhFH2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NMaEZi9pFP9CWMOcb4ydGi0HSlYIk0n6GntlimQxRlx64yy5zh1TnS8NeK+dgy8TWLQxeO22ziC1qhSp91O49bHNNz5mVNYzS9PQ8UCc4vPkv+pKddXNyNo2I9I5GvWMk12YZYZM8F2wrSOHypUIx3yvDFVdpVmRLYQIRfmkcV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C9nWdS5K; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1728568213; c=relaxed/simple;
+	bh=vXSpa8/ztwFdblYzjZfPeAy65gA/yhbEbIjjTnCiBrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CO9hE4NvXmHUVgJnxfRg8QF55JnyPfKk6rF2/WPyrKLtb2DBby3u7T+/BVhS9o2zUpsinffx677gUvle5ggcNfW8OGRu/kbc9RGPUlaHTUHIC9tsU2STO0WtYWhUllUYgbS3X4d2pRRmG9vpZHkMm9JMIphwmyRaaLVwO2w3fqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ff511lwT; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C9nWdS5K"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D951240E021E;
-	Thu, 10 Oct 2024 13:46:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id yLkKMBmRAwUH; Thu, 10 Oct 2024 13:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1728567984; bh=7hjuHc4jpSAMiGb3DODnY0ZTD80hGS4JorsPjBzexME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C9nWdS5Kf877iBM2QC7vcodXj9HVpF9awID6I+luFtR+J09aXPYvmuzwYUytOv4jf
-	 oIf8ynERYeFE3GsAFwEdIW4xlsw7aD2EfI3Tbx/zuzLOjIkg2oRl21SQIebM3TmxIg
-	 rbOaL4PKuas5m7xh1OctJ/pTUiVRzeFok5cY3iC56mhoUrPpS5t3ppjVPmJZEZZR0l
-	 8ECYtWJgr7O199rMiB8D7cM4WrgXSeKZ3fRhoQ3etdEkH27frQVXwe5r2jwpTTyPPU
-	 yHXG8BOlbz15t23x9icUbWhHxE21TujUWUXuDx6Nixi/9xWo/Zx4dAWtDQCrBT9YI0
-	 uJqkaTK0QH1qRySCpZ6HrLX60B/pSyur2kvoWrjDv1zfuZMNFXXCIKs8L2nJjtt7zO
-	 n6Lw7W9rK4tOT6nHnCN57GpRuLlUzHp0f7WjpimRcUaDciVQVmBusXnZOMkU3trj7N
-	 zrTl4TatYFFh4rkgjyTfRulPqfAZc03BDhUVMcUP7jYWDQfBakWQKINxdY0H0YqA6T
-	 EzdmxSQDDXUR5UNhvYsFaSchS5zLYzWe4M2yrJY+qimLKCMMuFXgaQDKGlZuUjF+HP
-	 VcVMK2GMytnIB43MfGYTiB+T3scjuj/z+mqTx0It2fafPgcuMIm3Th90Los5ANqdw5
-	 rXeWK1eQ+dTNKdh5VvJJztB0=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 859A240E0191;
-	Thu, 10 Oct 2024 13:46:19 +0000 (UTC)
-Date: Thu, 10 Oct 2024 15:46:13 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ff511lwT"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-8354406f92cso50227239f.0
+        for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 06:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1728568211; x=1729173011; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lExNIi51K2j3D8nATL62y18ayPUOjQ1BwEMnlcOF0zo=;
+        b=ff511lwTuFWf4oyvHS9thLTBWJsf1ozKEJo5GNPzcwURdYfUWYWdgDnm4cwYuw55cX
+         5IVqW1NV/E+1Ng00Wkse8e8k0BXyGHGxzvmswv7emvSMpS7iKlbBn5484uACiY4uNizz
+         +kMveSPya7MR9bK4l4tZD0P/soOFEssKHq4kgAl/arsf0KHWkmrx2z8qPLi7zmT/lOhI
+         sZodZ7AaAr+cwFIybqe0GgXjqrUaLxLlTm7pB13XvpoTZ+2rN5jp0KxDlWLaL1Smh/YT
+         5CL7DmnfFYG2fbOBYz3nlfC5QzeSnWvBtusckn9uUBeHLFGuEBO4YUkGhUsia3C2/Zha
+         Y/3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728568211; x=1729173011;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lExNIi51K2j3D8nATL62y18ayPUOjQ1BwEMnlcOF0zo=;
+        b=UjznkZaikc60TrEsYZcprM6bJRF3xKhPdv6f9VOIklj69IKTjAHebHu0FILVrX2bO7
+         vyhVa9IScBDw49JlaCUcQJ67GfzI9caIDLUGLXXaAW+l5zI8/4h4kuHulc5ylOjqeb/w
+         Be2+rhWlkODuL5cXKmwC6wXGpx9yyEam2ngPDRLH6dyHLJej5ygNi4ySXzHtsn+g51eQ
+         L9auLPEg3VxQJBEb+cvMQLZv6Ia1UP8Vt66oTjEPzEX55GLmI0eoewIwRYxK117meIMg
+         2zu9T/e0MXqxXKn8yvAuJr6Q6dos31yoXOl8boQyNoUnBVwdZwq9K2pz+scDqUE/s+z/
+         WLVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ00XyXoFKlu1/qrpr9xK3/nVMb4U4JNgJfpaMOvaUMlODO/ye8mT7MXSbW+AIrMRomcNK7iAhucRtgg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTyKMEKreEEaJCGP7I4Bm9oeg+4O/wHqJAGWp8kj0i4bQTkDKO
+	lDJeecYAKdG14gIyX2RaE4zp6Ja0cPbdYAOGBjMkIsCrZbOdSgJQRxNikRjCbtAX+vnKX2PkmF1
+	WRCg=
+X-Google-Smtp-Source: AGHT+IEeR69NBR8oq0nQoLaOvleeI8vQnB6Q/r7lACE3lrve2GJIB5H29drPuLqYyHSLZ0XLqozqOQ==
+X-Received: by 2002:a05:6e02:3dc2:b0:39d:3c87:1435 with SMTP id e9e14a558f8ab-3a3a709de06mr24168715ab.1.1728568210945;
+        Thu, 10 Oct 2024 06:50:10 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbad9b0e90sm246561173.15.2024.10.10.06.50.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2024 06:50:10 -0700 (PDT)
+Message-ID: <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
+Date: Thu, 10 Oct 2024 07:50:09 -0600
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <91194406-3fdf-4e38-9838-d334af538f74@kernel.dk>
  <20240928061038.GAZved3hMSU3XahWrJ@fat_crate.local>
  <5fe1e264-c285-4988-b1e3-46771d07172b@kernel.dk>
@@ -63,142 +77,24 @@ References: <91194406-3fdf-4e38-9838-d334af538f74@kernel.dk>
  <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
  <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
  <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
+ <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 09, 2024 at 05:04:23AM -0600, Jens Axboe wrote:
-> Yep, 0xaa00215
+On 10/10/24 7:46 AM, Borislav Petkov wrote:
+> On Wed, Oct 09, 2024 at 05:04:23AM -0600, Jens Axboe wrote:
+>> Yep, 0xaa00215
+> 
+> Found something: I'm not handling the stepping properly, below is a big diff
+> along with debug printks. Can you pls run it and send me dmesg. I'm assuming
+> the box will boot with it.
 
-Found something: I'm not handling the stepping properly, below is a big diff
-along with debug printks. Can you pls run it and send me dmesg. I'm assuming
-the box will boot with it.
-
-Thx.
-
----
-
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index f63b051f25a0..a86fd2684913 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -158,6 +158,9 @@ static union cpuid_1_eax ucode_rev_to_cpuid(unsigned int val)
- 	c.family    = 0xf;
- 	c.ext_fam   = p.ext_fam;
- 
-+	pr_info("%s: val: 0x%x, p.stepping: 0x%x, c.stepping: 0x%x\n",
-+		__func__, val, p.stepping, c.stepping);
-+
- 	return c;
- }
- 
-@@ -613,16 +616,22 @@ static int __init save_microcode_in_initrd(void)
- }
- early_initcall(save_microcode_in_initrd);
- 
--static inline bool patch_cpus_equivalent(struct ucode_patch *p, struct ucode_patch *n)
-+static inline bool patch_cpus_equivalent(struct ucode_patch *p,
-+					 struct ucode_patch *n,
-+					 bool ignore_stepping)
- {
- 	/* Zen and newer hardcode the f/m/s in the patch ID */
-         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
- 		union cpuid_1_eax p_cid = ucode_rev_to_cpuid(p->patch_id);
- 		union cpuid_1_eax n_cid = ucode_rev_to_cpuid(n->patch_id);
- 
--		/* Zap stepping */
--		p_cid.stepping = 0;
--		n_cid.stepping = 0;
-+		if (ignore_stepping) {
-+			p_cid.stepping = 0;
-+			n_cid.stepping = 0;
-+		}
-+
-+		pr_info("%s: p_cid.full: 0x%x, n_cid.full: 0x%x\n",
-+			__func__, p_cid.full, n_cid.full);
- 
- 		return p_cid.full == n_cid.full;
- 	} else {
-@@ -641,16 +650,22 @@ static struct ucode_patch *cache_find_patch(struct ucode_cpu_info *uci, u16 equi
- 	n.equiv_cpu = equiv_cpu;
- 	n.patch_id  = uci->cpu_sig.rev;
- 
-+	pr_info("%s: equiv_cpu: 0x%x, patch_id: 0x%x\n",
-+		__func__, equiv_cpu, uci->cpu_sig.rev);
-+
- 	WARN_ON_ONCE(!n.patch_id);
- 
--	list_for_each_entry(p, &microcode_cache, plist)
--		if (patch_cpus_equivalent(p, &n))
-+	list_for_each_entry(p, &microcode_cache, plist) {
-+		if (patch_cpus_equivalent(p, &n, false)) {
-+			pr_info("%s: using 0x%x\n", __func__, p->patch_id);
- 			return p;
-+		}
-+	}
- 
- 	return NULL;
- }
- 
--static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
-+static inline int patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- {
- 	/* Zen and newer hardcode the f/m/s in the patch ID */
-         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
-@@ -659,6 +674,9 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- 		zp.ucode_rev = p->patch_id;
- 		zn.ucode_rev = n->patch_id;
- 
-+		if (zn.stepping != zp.stepping)
-+			return -1;
-+
- 		return zn.rev > zp.rev;
- 	} else {
- 		return n->patch_id > p->patch_id;
-@@ -668,22 +686,32 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- static void update_cache(struct ucode_patch *new_patch)
- {
- 	struct ucode_patch *p;
-+	int ret;
- 
- 	list_for_each_entry(p, &microcode_cache, plist) {
--		if (patch_cpus_equivalent(p, new_patch)) {
--			if (!patch_newer(p, new_patch)) {
-+		if (patch_cpus_equivalent(p, new_patch, true)) {
-+			ret = patch_newer(p, new_patch);
-+			if (ret < 0)
-+				continue;
-+			else if (!ret) {
- 				/* we already have the latest patch */
- 				kfree(new_patch->data);
- 				kfree(new_patch);
- 				return;
- 			}
- 
-+			pr_info("%s: replace 0x%x with 0x%x\n",
-+				__func__, p->patch_id, new_patch->patch_id);
-+
- 			list_replace(&p->plist, &new_patch->plist);
- 			kfree(p->data);
- 			kfree(p);
- 			return;
- 		}
- 	}
-+
-+	pr_info("%s: add patch: 0x%x\n", __func__, new_patch->patch_id);
-+
- 	/* no patch found, add it */
- 	list_add_tail(&new_patch->plist, &microcode_cache);
- }
+Sure will give it a spin. The box is tied up with testing for now, but
+I should be able to run this later today and send you the output.
 
 -- 
-Regards/Gruss,
-    Boris.
+Jens Axboe
 
-https://people.kernel.org/tglx/notes-about-netiquette
