@@ -1,172 +1,112 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9F47A60;
-	Thu, 10 Oct 2024 10:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4F1A00F0;
+	Thu, 10 Oct 2024 10:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728557187; cv=none; b=WeNhWbdjWV6aD2uNfR9YUtqWcnrOYCNyfHiOPvMgq0F/xaF9YUrmoz5NZ5hzAili8tqCzHVFDB29QpErSiw5xf6rvGhM4Mnhsc8WL/pvs9khp1zaBvDuJMUlAic9teLNzBLmcSCkH6jigq+XX2901U692uKnsvdRwXvyT0GGodI=
+	t=1728557256; cv=none; b=Zd1xgIa+Hr+z4ikcWDjj3SZErKaR70GL7AJbvbYa6J8mnN+oiAj9LjvXDJSOEf9y/Q1ti+PCv8Yx5eYdy9RPsliTBOQMjJcaIOaH//KdCufNPOCcCyGGz0JHsXMnd7VGihe5vEI+NvPJUj6YNl5droWVrQDObKf02uo5vnflQRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728557187; c=relaxed/simple;
-	bh=r9y3AqCg5WMZvS7kWJh0iyuPBPu5wb70lYX5C3oBdtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AF+8hVE52a9KnGti9N0kLf9+OVG6SOYZ3zxvwA6r1qCsLSCXCkjfm5/sFG4jwGnZgSwYSs+5ktoKo3Q4OqvCCFntENNFBdPsfrwEWtCkHTS1Wavxlj9e9l7lTPDKl9gZRzXxdm0sBrnOuddarpQqC6HuuTmcG/mqZo7fXGACgmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WDQYRcpf; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1728557256; c=relaxed/simple;
+	bh=v1m6sKjUWaKH5tcwIPZPQRzsAK8mfmTeuH6SEbXZQJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyeGb3kQ0ir3+6MH0AiRqR/dyiIAZyJ+hwDZIIUDR+gC0poDkbUuwiEMff5gKYO9i9uBKmWCmIjS/klSQZH73Ur51TZmvW8mLTXSsEcNWA0FL8lEZhM5ZWS/YA31nYFnsyLbhQxCbifpdVjP7J6OX+AoxWhjkmmBbtjNsrpiESM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DcnNL9FJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WDQYRcpf"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DcnNL9FJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=J0wXjIsNrPQGXiXr2dT9uUkENmIQgLlLeLiX7T9LCz0=; t=1728557185;
-	x=1728989185; b=WDQYRcpfH+gvI+cMdnCmpusv2Pn7yiC6Jo8bCK05SSXPZPVn632HcbH6W2EbF
-	saJFUxhQSJJc1CFWqkBblkOZ2UKzh8/NyNRf8Sq/Arb4kUyafuCEmAbSPZl2OGq5Gjql+4c3tRO3o
-	7zZtkr4ypVCVoHptw5vSR5iivFH0lKh92Dxsrlt9bn+gFsXuqQCKGekoG2k6siddwfUlDzbEKaw4d
-	GmM/n9hrDJ6YGPVuk4GN1E30Z/m0VNNdo8IfLXbgHLtBHgZiSLb9bbUZPHeVI6EjemaOTTFLR7YVe
-	UYn56OnEr2Q00TTt5bSlbGhUejkRdDvW3rvhMdpqFCXq4MZbpw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1syqgY-0006SI-IZ; Thu, 10 Oct 2024 12:46:22 +0200
-Message-ID: <01a91d65-9984-416f-b8ae-81627eb7994d@leemhuis.info>
-Date: Thu, 10 Oct 2024 12:46:19 +0200
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=b0md/58JspE7aFSFNfnKWagcGNvByj1vnQKOUmwdHEw=; b=DcnNL9FJHzB7UIU0Q3YEGQLBhv
+	yAd7Rqhpm2GWXdmU+LEJAP6KhN9sNVezFfP+X8y07JKbwLtx2Nl7dXj3fL/t115ocOsDmPfEEDIZn
+	FOsDnPnExT93oBErJq4mPZPuW/lTMPLproEMScJrftmp86eccLgDCJFyXjKUQ1+i/JLtNz2si/y/F
+	B0GrX1SNaeutFnLxvK849Fu1/Kh/Q6BibXoZiiri2/R/3JicuNFFj04wtJgVzM/5FPmb+kmX7ZLOR
+	iGLLa4p0MfvGRqZA7U1PxwimyGLSiftU0SHi2nE3aP1QOhh1akqJ3oCeTbav+OgqmplLewxzTU64z
+	4L0rtLCQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1syqhY-00000007QLt-2DDQ;
+	Thu, 10 Oct 2024 10:47:25 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9AFCA30088D; Thu, 10 Oct 2024 12:47:24 +0200 (CEST)
+Date: Thu, 10 Oct 2024 12:47:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Youssef Esmat <youssefesmat@google.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bert Karwatzki <spasswolf@web.de>, regressions@lists.linux.dev
+Subject: Re: [PATCH 0/3] sched/core: Fix PSI inconsistent task state splats
+ with DELAY_DEQUEUE
+Message-ID: <20241010104724.GK14587@noisy.programming.kicks-ass.net>
+References: <20241010082838.2474-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Build failure with CONFIG_NFS_LOCALIO=y on Linux
- 6.12-rc1
-To: Weston Andros Adamson <dros@primarydata.com>,
- Anna Schumaker <anna.schumaker@oracle.com>, NeilBrown <neilb@suse.de>
-Cc: regressions@lists.linux.dev, Maximilian Bosch <maximilian@mbosch.me>,
- linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Trond Myklebust <trond.myklebust@hammerspace.com>,
- Mike Snitzer <snitzer@kernel.org>
-References: <D4OUJRP8YWRM.ATQ7KASTYX5H@mbosch.me>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <D4OUJRP8YWRM.ATQ7KASTYX5H@mbosch.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1728557185;1e3385a6;
-X-HE-SMSGID: 1syqgY-0006SI-IZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241010082838.2474-1-kprateek.nayak@amd.com>
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-On 06.10.24 18:00, Maximilian Bosch wrote:
+On Thu, Oct 10, 2024 at 08:28:35AM +0000, K Prateek Nayak wrote:
+> After the introduction of DELAY_DEQUEUE, PSI consistently started
+> warning about inconsistent task state early into the boot. This could be
+> root-caused to three issues that the three patches respectively solve:
 > 
-> I haven't found an existing report for this problem, but I observed
-> that Linux 6.12-rc1 fails to build like this on aarch64-linux with
-> CONFIG_NFS_LOCALIO=y:
-
-Thx for the report. FWIW, there is another report with similar symptoms
-that looks to be the same issue:
-https://bugzilla.kernel.org/show_bug.cgi?id=219370
-
-That reporter bisected the problem to fa4983862e506d ("nfsd: add LOCALIO
-support") [v6.12-rc1]. CCing the involved developers.
-
-Ciao, Thorsten
-
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: warning: -z relro ignored
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: Unexpected GOT/PLT entries detected!
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: Unexpected run-time procedure linkages detected!
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_iocb_alloc':
->     /build/source/build/../fs/nfs/localio.c:290:(.text+0x324): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `nfs_to' which may bind externally can not be used when making a shared object; recompile with -fPIC
->     /build/source/build/../fs/nfs/localio.c:290:(.text+0x324): dangerous relocation: unsupported relocation
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:290:(.text+0x330): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_pgio_release':
->     /build/source/build/../fs/nfs/localio.c:344:(.text+0x47c): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `nfs_to' which may bind externally can not be used when making a shared object; recompile with -fPIC
->     /build/source/build/../fs/nfs/localio.c:344:(.text+0x47c): dangerous relocation: unsupported relocation
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:344:(.text+0x488): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_fsync_work':
->     /build/source/build/../fs/nfs/localio.c:725:(.text+0x838): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `nfs_to' which may bind externally can not be used when making a shared object; recompile with -fPIC
->     /build/source/build/../fs/nfs/localio.c:725:(.text+0x838): dangerous relocation: unsupported relocation
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o:/build/source/build/../fs/nfs/localio.c:725: more undefined references to `nfs_to' follow
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_disable':
->     /build/source/build/../fs/nfs/localio.c:140:(.text+0xeb4): undefined reference to `nfs_uuid_invalidate_one_client'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_probe':
->     /build/source/build/../fs/nfs/localio.c:209:(.text+0xfac): undefined reference to `nfs_uuid_begin'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:212:(.text+0x1074): undefined reference to `nfs_uuid_end'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_open_fh':
->     /build/source/build/../fs/nfs/localio.c:233:(.text+0x12cc): undefined reference to `nfs_open_local_fh'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_doio':
->     /build/source/build/../fs/nfs/localio.c:600:(.text+0x13c8): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `nfs_to' which may bind externally can not be used when making a shared object; recompile with -fPIC
->     /build/source/build/../fs/nfs/localio.c:600:(.text+0x13c8): dangerous relocation: unsupported relocation
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:600:(.text+0x13d8): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:625:(.text+0x150c): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: in function `nfs_local_release_commit_data':
->     /build/source/build/../fs/nfs/localio.c:676:(.text+0x18dc): undefined reference to `nfs_to'
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: fs/nfs/localio.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `nfs_to' which may bind externally can not be used when making a shared object; recompile with -fPIC
->     /build/source/build/../fs/nfs/localio.c:676:(.text+0x18dc): dangerous relocation: unsupported relocation
->     /nix/store/f3k0rdhcd2cx57phx755c2xixgifw5m5-binutils-2.42/bin/ld: /build/source/build/../fs/nfs/localio.c:676:(.text+0x18ec): undefined reference to `nfs_to'
->     make[2]: *** [../scripts/Makefile.vmlinux:34: vmlinux] Error 1
->     make[1]: *** [/build/source/Makefile:1166: vmlinux] Error 2
->     make: *** [../Makefile:224: __sub-make] Error 2
+> o PSI signals not being dequeued when the task is blocked, but also
+>   delayed since psi_sched_switch() considered "!task_on_rq_queued()" as
+>   the task being blocked but a delayed task will remain queued on the
+>   runqueue until it is picked again and goes through a full dequeue.
 > 
-> On x86_64-linux the problem doesn't exist.
+> o enqueue_task() not using the ENQUEUE_WAKEUP alongside ENQUEUE_DELAYED
+>   in ttwu_runnable(). Since psi_enqueue() only considers (in terms of
+>   enqueue flags):
 > 
-> For the build are binutils 2.42 & GCC 13.3 used.
+>     (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED)
 > 
-> The workaround was to turn off CONFIG_NFS_LOCALIO.
+>   ... as a wakeup, the lack of ENQUEUE_WAKEUP can misguide psi_enqueue()
+>   which only clears TSK_IOWAIT flag on wakeups.
 > 
-> With best regards
+> o When a delayed task is migrated by the load balancer, the requeue or
+>   the wakeup context may be aware that the task has migrated between it
+>   blocking and it waking up. This is necessary to be communicated to PSI
+>   which forgoes clearing TSK_IOWAIT since it expects the psi_.*dequeue()
+>   to have cleared it during migration.
 > 
-> Ma27
+> The series correctly communicates the blocked status of a delayed task
+> to psi_dequeue(), adds the ENQUEUE_WAKEUP flag during a requeue in
+> ttwu_runnable(), re-arranges the psi_enqueue() to be called after a
+> "p->sched_class->enqueue_task()", and notify psi_enqueue() of a
+> migration in delayed state using "p->migration_flags" to maintain the
+> task state consistently.
+> 
+> This series was previously posted as one large diff at
+> https://lore.kernel.org/lkml/f82def74-a64a-4a05-c8d4-4eeb3e03d0c0@amd.com/
+> and was tested by Johannes. The tags on the diff have been carried
+> to this series.
 
+Thanks!
 
-#regzbot ^introduced: fa4983862e506d
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219370
+I've renamed DELAYED_MIGRATED to MF_DELAYED, and made a note to go
+rename the MDF_PUSH thing to something consistent.
 
+I've stuck then in queue.git sched/urgent along with a few other fixes
+and I will hopefully push the lot into tip soon.
