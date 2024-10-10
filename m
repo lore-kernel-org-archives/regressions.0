@@ -1,109 +1,119 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A7F19DF9A
-	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 06:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07D91C5796;
+	Thu, 10 Oct 2024 07:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728542386; cv=none; b=hL0XG0X/Y/Xdv29kmB8e19z+nSNfE5yHZhFJJk2xbmxscmraKhPtEF/v8eku/+JihAcv+zbXc+dI76p+89Fq+plYfV1uP6D90SiXhS3LdFk4Ppz2zr9M9P7nF/01IcjqDJq7WvwFkz21ATEEevLErWm6phgNhXQJUX+Epl/5vMs=
+	t=1728546292; cv=none; b=mOmI4nSEsgZynwVi2+8nGZh7y5cOyUrkonKDAyiztk1Cg7alk5OYfh1+O54ANF+T26iSqdJFBc1C5wAlFYAGekMoJkBthY0HZpx/52n/h3FYWLdh5ZH1UGj/kOrIRlMgv7wyxyo2/DTMOaF27KFkbfNSrY8t53qZMk/NLZJjKVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728542386; c=relaxed/simple;
-	bh=A9aoV4pLUkmqg5hExqZjkeGcYEq4lkw5kEjIYiFUbCI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=n8X7xhj4EJD6k8K/VdEGAOSltnaIO/y1/eUlBhdWH/44TJx1na2FnheJN01rYfYTVwWoAGG39k5WDSC8qvsTymBXix1Q5NqlVBIviUiclUo7K6tplb67nq1ZDiOWYL0Nd3elN/a3xLJ8LHaelEUeusD9tKtVXmC8C8AmmNb2Jao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=GKMXlb1b; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1728546292; c=relaxed/simple;
+	bh=A20Cxip7h9+hwVZDDL8T9b50iOLKZr6WhzudD6Hbq8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ORC6tS/HsJQS7bLmdieex06A4qw8f4QQdytxOUVHUa/MwR33Nl7gFE31sup8fYDl2YvabHckX5KNya5gukFnPTvNmvY6+CZpxsxGkXw2+es8X7CZZfYaVcuc60bsaojQuWBBoxthmOcv8Z5xBlTDRSIavVK1XkntxJCIVxnvqr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVtLcd07; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="GKMXlb1b"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1728541781;
-	bh=vOuCUK01oxy5k7JbXkIGuKuHjfVwEEjE3/abMmPSBdE=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=GKMXlb1b3NZjYTYbzmtz//XxClHYQHHhFh2EOhA8sM7KjLDSs/PVVrRoPZlK8PkVP
-	 g4WI2ufab656vcuQZ+2RXKLZKLs6T9PhaIlZ8SUVz5f27XBfim2UtKqvfgTaM4fApr
-	 mAIY80OovTFfuWA+9SYacshCY8KUljhCIdESO5Fc=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVtLcd07"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74114C4CEC5;
+	Thu, 10 Oct 2024 07:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728546291;
+	bh=A20Cxip7h9+hwVZDDL8T9b50iOLKZr6WhzudD6Hbq8E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MVtLcd07As1FA0eLjjXzFN7+2Swv38YSrDFoGa3CM0hUn3GteVeYvK/K6GbutNxyJ
+	 vjlDlXQvGS/VBAbX3ZZCEvXsot4rB4RsSwfJcg3/iUfmensZhh6sozHLAzkLClf1wm
+	 ERA7MFbVmLEXnYzNuRRpWiPJ3f+MyRAq53vDlKkrYE4p/pZjISE9wB4EpaS6m/X0n2
+	 lyAeW5//o1dMahL7tk0EE59nISwuCH8/hgJUFfyHylNX3a9y6bhImaE+tzIoYUaVlT
+	 ZhdZRoz06h/FdeFVOC3Y7k+DKJwAcoVi+wn03Fm2l858YxGRv4nFuINL4nrhCY4zpg
+	 iyls+R2aC7o9w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1synqw-0000000047M-3YFJ;
+	Thu, 10 Oct 2024 09:44:55 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Chris Lew <quic_clew@quicinc.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] soc: qcom: mark pd-mapper as broken
+Date: Thu, 10 Oct 2024 09:42:46 +0200
+Message-ID: <20241010074246.15725-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
-Date: Thu, 10 Oct 2024 08:29:14 +0200
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Dave Chinner <david@fromorbit.com>,
- Matthew Wilcox <willy@infradead.org>,
- Jens Axboe <axboe@kernel.dk>,
- linux-mm@kvack.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Daniel Dao <dqminh@cloudflare.com>,
- regressions@lists.linux.dev,
- regressions@leemhuis.info
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
-References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <Zud1EhTnoWIRFPa/@dread.disaster.area>
- <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
- <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
- <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
- <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
- <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
- <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
- <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
-To: Chris Mason <clm@meta.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+When using the in-kernel pd-mapper on x1e80100, client drivers often
+fail to communicate with the firmware during boot, which specifically
+breaks battery and USB-C altmode notifications. This has been observed
+to happen on almost every second boot (41%) but likely depends on probe
+order:
+
+    pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to send altmode request: 0x10 (-125)
+    pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to request altmode notifications: -125
+
+    ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: failed to send UCSI read request: -125
+
+    qcom_battmgr.pmic_glink_power_supply pmic_glink.power-supply.0: failed to request power notifications
+
+In the same setup audio also fails to probe albeit much more rarely:
+
+    PDR: avs/audio get domain list txn wait failed: -110
+    PDR: service lookup for avs/audio failed: -110
+
+Chris Lew has provided an analysis and is working on a fix for the
+ECANCELED (125) errors, but it is not yet clear whether this will also
+address the audio regression.
+
+Even if this was first observed on x1e80100 there is currently no reason
+to believe that these issues are specific to that platform.
+
+Disable the in-kernel pd-mapper for now, and make sure to backport this
+to stable to prevent users and distros from migrating away from the
+user-space service.
+
+Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+Cc: stable@vger.kernel.org	# 6.11
+Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+
+It's now been over two months since I reported this regression, and even
+if we seem to be making some progress on at least some of these issues I
+think we need disable the pd-mapper temporarily until the fixes are in
+place (e.g. to prevent distros from dropping the user-space service).
+
+Johan
 
 
-> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
->=20
-> Not disagreeing with Linus at all, but given that you've got IO
-> throttling too, we might really just be waiting.  It's hard to tell
-> because the hung task timeouts only give you information about one =
-process.
->=20
-> I've attached a minimal version of a script we use here to show all =
-the
-> D state processes, it might help explain things.  The only problem is
-> you have to actually ssh to the box and run it when you're stuck.
->=20
-> The idea is to print the stack trace of every D state process, and =
-then
-> also print out how often each unique stack trace shows up.  When we're
-> deadlocked on something, there are normally a bunch of the same stack
-> (say waiting on writeback) and then one jerk sitting around in a
-> different stack who is causing all the trouble.
+#regzbot introduced: 1ebcde047c54
 
-I think I should be able to trigger this. I=E2=80=99ve seen around a 100 =
-of those issues over the last week and the chance of it happening =
-correlates with a certain workload that should be easy to trigger. Also, =
-the condition remains for at around 5 minutes, so I should be able to =
-trace it when I see the alert in an interactive session.
 
-I=E2=80=99ve verified I can run your script and I=E2=80=99ll get back to =
-you in the next days.
+ drivers/soc/qcom/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Christian
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 74b9121240f8..35ddab9338d4 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -78,6 +78,7 @@ config QCOM_PD_MAPPER
+ 	select QCOM_PDR_MSG
+ 	select AUXILIARY_BUS
+ 	depends on NET && QRTR && (ARCH_QCOM || COMPILE_TEST)
++	depends on BROKEN
+ 	default QCOM_RPROC_COMMON
+ 	help
+ 	  The Protection Domain Mapper maps registered services to the domains
+-- 
+2.45.2
 
