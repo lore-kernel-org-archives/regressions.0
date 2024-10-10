@@ -1,88 +1,191 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2061.outbound.protection.outlook.com [40.107.223.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C39F1BD4F8;
-	Thu, 10 Oct 2024 08:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728548687; cv=none; b=pH2hA+K+b0pyoWpspmoG7O1sBzd5mrxF5NAOVLYIkk8NXM/D4L8zFokF7Cf8RimNExG9kTfTQluH1vHmYDXwrHHMR9Qq3fBqAn/hy/oe3XiU/uLsRzys8kafDHzDLjWpqo5m/JRh+uGwQi7y9zR3CkzcW4Da4ykVPX7vrFhN3Nw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728548687; c=relaxed/simple;
-	bh=FBagXwmoXvU7XXwjhgrbodhvH71mmVSljW1zLtYlQbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOcWYml2ps/B6rQ5NaX25gRwSLIRPrjmwXKh9bOsF9LMuSiso3ikjPQzomSEZJGybD0KoKwv/df3ppkjRBjjneGwNdhUZq16GWN7il2UNcn+5h4uNBK03jpYP7Diwjpx6f9zG3LyOv0kuwJ0Sf1TmRLPBL8G+cdES6pJkA4nA9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HNsPJU2Y; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757701E231B
+	for <regressions@lists.linux.dev>; Thu, 10 Oct 2024 08:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728548963; cv=fail; b=MDRjqHevDAO7Ysyzf5SQcboZe5VYJUMro5EQL7bLaXUVsEN5UURPjnjzyiug/gdol12YZSv5xbETR7ALqJpTGhUc1T4/przzIYjm8laCC52YUmP7uaONVNFBWLpVy7MdLY7tB+mFpvqA2brBKO9TIvSqz6m3wRvVi+8qqKZcv4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728548963; c=relaxed/simple;
+	bh=jEAEs5vk5V9UDRMUySx2zhIeAGbks41VzLTTGSPfK7E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C/INw8+Yr06Bg2DlD44jVIk9Y3dWaWYqMR+hMKqx1/zHK3SBB5PrdxjcZaBM5/6ZHCc9PrDlpqW177JJ4m3LaLVY9GwPJVykSj/XOJKmDItTp6WXFBD7///URkWt2KqCXGk12cz4utSaJY1rXOD4viB84XuVDbL5qxPbmClGNFM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dkflphEW; arc=fail smtp.client-ip=40.107.223.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HNsPJU2Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=SIflBkcXF4BQ+o90EDUrROcjCvAZBUvwNPAzj7vSA/k=; b=HNsPJU2YSok6X8YnM21QTmqkeB
-	pAEGCV/6cK+VGDq6aLJVh1C44gOmInPGKGMm3iFeN8QvE+MFRNUQ4U3e6BgU+DLtfE93tNoIeVwnA
-	MiWQzjGjntwLV1Etk7DmOmHB0lwAT5jvMi7kn8R2lf/LTbwX7fA5YCEAG3daGGkRrDAcg6Ps3mILU
-	K9TZaIJeXBNqb9NYfzVSuakgU6UZpUpmf6nnBDOjeUsOiAT6DO6TwhSes53FlQaDgDzALBaNMJ5nb
-	P8kZaPRwGTxypFtVko7YqnwywoZ9ORlsetcUCc/DmNDKHu/qvzJpBXmpFUOkRD+wHn5RlubSuyomr
-	rc6oXwQQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1syoJW-008H4W-1g;
-	Thu, 10 Oct 2024 16:24:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2024 16:24:40 +0800
-Date: Thu, 10 Oct 2024 16:24:40 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Arnaud Ebalard <arno@natisbad.org>,
-	Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-Message-ID: <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
-References: <ZwJUO5Nz3S7EeqO6@gondor.apana.org.au>
- <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
- <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dkflphEW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sm+jYbCkKtROog4Xu+A1NM8q6cP0Qm17iTkvscYcn3s0yhI1B8z+iiZtBXwDUl6fOuEjb/qILPzj5b/MwIyqCG2KltpYRKC3okpDOKBT7aB/5M8rF7b6cPrmAcap8YcyJzIHPMm6UsKwNyAXxEqQ45bQrLzHvyaLAIAT+NNnJtTlhr12N6Iovv/TLDZmU//vCucZWbeTkD1dRxv5fAeaITNYxxTpoYk3gwoNTzZBLFPvTvFJ5ytRXeObdF7fUM0vqnZr5fGtB7E9wEWDuHYSzDGOoIpJcpQY4xaS3GL9aTE2snp4LcGZtHSfnRVNlqSNf9zDBZ0mxDIHApeMpGXscA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b5UrynU+V8V5w0JzMuuOJ3jjg8Jvl7/yaLglePxwQ+I=;
+ b=Zu54HoydCnwjCCJUXm5dsGoBAPPwncaFNv8P1j7itKfxjOQVhGAg+1+ZANzqCMvEtms4Is0HLNfWp49AumSzIrjZD4TtNgEpB0YRHVHuYx1HeoDNdr1hG58yrjY4i8yUlI2izqRB3St6IKSUX/fhRAlgY29WO1pZsEeZwfG3HX2sqw7JxqpYH8nc+g/tQnLUAflYejuKQn321sQ+CBQRblQmpWoRx3WNn6X+gSV+gmwoWLyPP36VrSeYrtBmh/03f74v4iXHQfOEkx7A6yfp5n16758mqWqXhk8q0eF72+BT6PXUJ3XFTd1zC1N0ulhuKrg/MKr39OSv+kpoMelupw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b5UrynU+V8V5w0JzMuuOJ3jjg8Jvl7/yaLglePxwQ+I=;
+ b=dkflphEWWJg3ChHeq5lY3+KOGFz5bVRoluXgyZAU2iRdvaBBlhuR+mW34ZL9kGCdlIyCiud0OA7wXIdvVVOpqbA3pOGXv/m37T625XJAVQ3izUZ1piZ837hydVbPC6C/tUyIg3wNpWPGXNolV7mWmnwd/srCWkUFgeTnpee1Ts0=
+Received: from MN2PR05CA0005.namprd05.prod.outlook.com (2603:10b6:208:c0::18)
+ by SA1PR12MB7126.namprd12.prod.outlook.com (2603:10b6:806:2b0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.23; Thu, 10 Oct
+ 2024 08:29:16 +0000
+Received: from BL6PEPF0002256E.namprd02.prod.outlook.com
+ (2603:10b6:208:c0:cafe::40) by MN2PR05CA0005.outlook.office365.com
+ (2603:10b6:208:c0::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.7 via Frontend
+ Transport; Thu, 10 Oct 2024 08:29:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0002256E.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8048.13 via Frontend Transport; Thu, 10 Oct 2024 08:29:15 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Oct
+ 2024 03:29:09 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: Peter Ziljstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Johannes Weiner <hannes@cmpxchg.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, <linux-kernel@vger.kernel.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Klaus Kudielka <klaus.kudielka@gmail.com>, "Chris
+ Bainbridge" <chris.bainbridge@gmail.com>, "Linux regression tracking
+ (Thorsten Leemhuis)" <regressions@leemhuis.info>, "Gautham R. Shenoy"
+	<gautham.shenoy@amd.com>, Youssef Esmat <youssefesmat@google.com>, "Paul
+ Menzel" <pmenzel@molgen.mpg.de>, Bert Karwatzki <spasswolf@web.de>,
+	<regressions@lists.linux.dev>, K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: [PATCH 0/3] sched/core: Fix PSI inconsistent task state splats with DELAY_DEQUEUE
+Date: Thu, 10 Oct 2024 08:28:35 +0000
+Message-ID: <20241010082838.2474-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0002256E:EE_|SA1PR12MB7126:EE_
+X-MS-Office365-Filtering-Correlation-Id: 901c0810-0699-4819-197d-08dce905a063
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?x1z5TdsCrSYOmbcDAMckgNa/z8sC+6ovLtSy4UD0AjFKl6CFcy6kLVUA0FZj?=
+ =?us-ascii?Q?S29Kgbd/RdF/8Nio/vH3HGPAu9eje+/U0uGMv+sWiRhK5quoS7nETWVWw4BR?=
+ =?us-ascii?Q?bc2w0WSL7x4gGanbBeGy5q7Tb4wOumuqvWm77bUG/vGejNKxWeBOqJ9C90ne?=
+ =?us-ascii?Q?8Mqkp7UQLfBc7qJ5f4fKWr0zsjqSz88/Ly+im40rVlGZQdb6UmUSyNxqXtDd?=
+ =?us-ascii?Q?rNe4+LukGC72XN7uC5uIn8SxOuUHya5JdU0LF0GfPeHvQcD2hYBRye6kyhEP?=
+ =?us-ascii?Q?VklRLH/hAAHRofBQ1lDmaAZs5dCqU1bkPGk4JA9E658eX0TW1jp7tD5XRAuo?=
+ =?us-ascii?Q?RD+fBkENaXf7Fuqb/DoMfTLHH8LCmmytgE7Heprn2qR4VhxtL+F9F+iUX/Me?=
+ =?us-ascii?Q?vMVXJlI7HfAIJP/TdX5aKAimhNQwBknC8ADBkVBLNnMV1DFpHPALo3Gzhyzv?=
+ =?us-ascii?Q?aKOnj/m0FGzPLe1uWWxvCi2wHrQ0rBrE59yVqWGLvjlmiAbi7kohXBU0j0Da?=
+ =?us-ascii?Q?o7qRi2N8MZXb5ur5VwViThB/mQNtw+7XSr5BDayQthW0Cpi3mKkmZjnm5+Ry?=
+ =?us-ascii?Q?IG+q6rtHAdXTD8NKynqY0qTslSzIYDG60wAqfqK7eeZUh7SwzZb6ZsDvN0js?=
+ =?us-ascii?Q?eb61WKM8mDL2OEQNZwMzebnMdewAChRtRa7eds6CkkBOIJGAGQFxUbM61du/?=
+ =?us-ascii?Q?PZHHBUh/zUH6EWU7pOL2UGTDLBnMJ/K7RgoiapudeHo5pq9zsvSOlri8eq/b?=
+ =?us-ascii?Q?WKomi1Zv9etrWswctb75tiiXmMVcm2H10TPAQWz/tUOVTSH0BYz32DvEZIKW?=
+ =?us-ascii?Q?Hd76L9aTk9yezVXr7v5iu9oxZw48M0gvP7+zECdgFfnFPR0kiNT2awnIgt4h?=
+ =?us-ascii?Q?gUxtKiDabz8K0u9KxigZyojveasEp8xWvTIRyBFL/WJ3mVVPvPT6mesrlnnb?=
+ =?us-ascii?Q?KQeEblopWGyQKbaYn3Sai6HRbu55N017sTh6z3su71SvL71F5wHI2rBektsN?=
+ =?us-ascii?Q?jXGIeQS8WzKEfwjRTEMHTby4IEnd5K7oCeWvdjUvqfDyxVcgcWsbqHqTTzgq?=
+ =?us-ascii?Q?UnI0Zn0hMxivywMUP05WjxEHCiqkUlioGe/tgOJlHFteRUg+cyyE58UUj/QQ?=
+ =?us-ascii?Q?UzWRpyQCFLUwmiBDcaAnXO0cU03d+Sqgzn5Rz1S5og24Nm9Ofup8vYyXdpuq?=
+ =?us-ascii?Q?evd96Oqk5gcESichClrkZsHvOfUqCrV9nba1zODFIAC6bHcXwdBYabQxsA35?=
+ =?us-ascii?Q?0V5mL0cifDe7H9J6MPAUTAFsXMQItGIh+g993NOtt/rsV+zpwKwF4igB+lyM?=
+ =?us-ascii?Q?YQ8tWVOtViYdw971hYF6AU9VqFxWvD08TNeXD9489fNMOg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2024 08:29:15.4100
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 901c0810-0699-4819-197d-08dce905a063
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0002256E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7126
 
-On Thu, Oct 10, 2024 at 02:05:56PM +0800, Herbert Xu wrote:
->
-> Is it really OK to add new entries to the chain after it has been
-> given over to the hardware?
+After the introduction of DELAY_DEQUEUE, PSI consistently started
+warning about inconsistent task state early into the boot. This could be
+root-caused to three issues that the three patches respectively solve:
 
-Please give this patch a try to see if it improves the hashing.
+o PSI signals not being dequeued when the task is blocked, but also
+  delayed since psi_sched_switch() considered "!task_on_rq_queued()" as
+  the task being blocked but a delayed task will remain queued on the
+  runqueue until it is picked again and goes through a full dequeue.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+o enqueue_task() not using the ENQUEUE_WAKEUP alongside ENQUEUE_DELAYED
+  in ttwu_runnable(). Since psi_enqueue() only considers (in terms of
+  enqueue flags):
+
+    (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED)
+
+  ... as a wakeup, the lack of ENQUEUE_WAKEUP can misguide psi_enqueue()
+  which only clears TSK_IOWAIT flag on wakeups.
+
+o When a delayed task is migrated by the load balancer, the requeue or
+  the wakeup context may be aware that the task has migrated between it
+  blocking and it waking up. This is necessary to be communicated to PSI
+  which forgoes clearing TSK_IOWAIT since it expects the psi_.*dequeue()
+  to have cleared it during migration.
+
+The series correctly communicates the blocked status of a delayed task
+to psi_dequeue(), adds the ENQUEUE_WAKEUP flag during a requeue in
+ttwu_runnable(), re-arranges the psi_enqueue() to be called after a
+"p->sched_class->enqueue_task()", and notify psi_enqueue() of a
+migration in delayed state using "p->migration_flags" to maintain the
+task state consistently.
+
+This series was previously posted as one large diff at
+https://lore.kernel.org/lkml/f82def74-a64a-4a05-c8d4-4eeb3e03d0c0@amd.com/
+and was tested by Johannes. The tags on the diff have been carried
+to this series.
+
+This series is based on:
+
+    git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+
+at commit 7266f0a6d3bb ("fs/bcachefs: Fix
+__wait_on_freeing_inode() definition of waitqueue entry")
+
+Any and all feedback is greatly appreciated.
+
 --
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 388a06e180d6..0de99fa6c1f5 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -113,6 +113,7 @@ void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
- 		 * the request.
- 		 */
- 		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
-+		    0 &&
- 		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
- 			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
- 	}
+K Prateek Nayak (2):
+  sched/core: Add ENQUEUE_WAKEUP flag alongside ENQUEUE_DELAYED
+  sched/core: Indicate a sched_delayed task was migrated before wakeup
+
+Peter Zijlstra (1):
+  sched/core: Dequeue PSI signals for blocked tasks that are delayed
+
+ kernel/sched/core.c  | 25 ++++++++++++++++++++++---
+ kernel/sched/sched.h |  1 +
+ kernel/sched/stats.h | 10 ++++++++++
+ 3 files changed, 33 insertions(+), 3 deletions(-)
+
+-- 
+2.34.1
+
