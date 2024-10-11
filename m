@@ -1,215 +1,219 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED9E28689
-	for <regressions@lists.linux.dev>; Fri, 11 Oct 2024 03:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728617496; cv=fail; b=eaQa1t5vo/ZHWm1SAyjMhbG8//QxJqHJOojxl+mwpIC2gr10P5SSHYYkF4TYW89WFzwAYNBwgFSp8aK9l4HPSB1+TtLTBwu0hmyi3gt+FOqtbVSEEr+X91emKI0CxdsEUfIld7h3mZhNoY9ITOfP6C8mugnoRXp6rXXYxsn2mIo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728617496; c=relaxed/simple;
-	bh=PjhHHEpOitlXy6X7Vm7zZ+U9JTF/Eg/Jb4gdlmwoB6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NMZg7PH5L/LGnDfThcPy0hH1gMkkxN2gyewACgJJ95lOtaSJZv6BVFUmIpUiUKSot2t0PEPnH2GRUdkLoCySApfFFXp0cGII/KMlnlBEHtK9nIqW3WQRNW5J8NKQad/zkobo1//UZlCaKANaMurP7PFGfpILZ8sqQMLBJjxy/0c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u1spARxz; arc=fail smtp.client-ip=40.107.92.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750BA209F54
+	for <regressions@lists.linux.dev>; Fri, 11 Oct 2024 07:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728631663; cv=none; b=lqrI/NFkRgUbBGdArNomnn8KvSzcPIPaa+pPuVB+/9N+S5xJKVmXzVM8qMU1rDF7N1vNlDfQqm1jJPC6QCqVj1Pcx/ng90bdAL8LvALmHNwgsVS//CUYYXwjekn3u7XHyywu71gbPRI1PEvt9qnMpxd875Yln1tW2IjJHipdaPI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728631663; c=relaxed/simple;
+	bh=F3jIVOQPpn/582C4DLIXwkG+iiEGngr+yBorpOxKTnA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ttZTelJgOKXE4Y/be6hoYMYXGN2226ZsDfE54fiUzHK/OEGfagnIqZpw6QoNTdAM54U8AWFtbaH3j2lk9dwcsdzjOahssAM/56yf+nIiTrJcuomyRWZ5q1GiT9dgurJNk2q1ATXYmTiIJhnjLdss5vYJyoiX3UzA6pWZ4jgzCj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=mO4khwbU; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u1spARxz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wtWBGYs79Iz7NCOIV4L2tIu06MfRKKUN9vy+iTGyqSZeL5Ssusf9DMU/q3205btxHDE0JFAYRimS15jWt9S6pRxx8D1xe9J9pNecFiGmTBGfBlqZ80f9pMG84uv1tvdS4rvzZmLTYq+d9ZWGs+lKNNVHDblpqCceJwchda+jj2zvBvQl2psEW92hQXxEz1EVlHQlMlS7D5Le5+gyQjPb9Bsq4p/UOgYatkOPkeUfpFpa8oM40lT3ReTP2Ty16SWrvLjaTxL+O5YXGp9bwtyWkJ00CG5LyYLjpaB/Xn6FdE8ZAJEfu68REd6uz3d1eFfmtO1Y3hiMU6x38b1UWIZa9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f1zjzPtrbcukDfcm6fCLlKr5Irv+O4E/2SdC+Ydhwc4=;
- b=qlO6nSkrvj10F3hp0rub1bGZyZxYoZJwUk+62UY1tAzexM4ZZNc46yIXUHoXkSqZYNekwUbE4KTUGIegrvxQMbBCMBFcU1f6wDIXEf430yzmHhGOcrTJaZDx5TqgvJcKYps0L8tyv2XVl2yc8AmWgRBKLxRfyxSd+JaSjpUCB8uf4QslmgdWW/vcaPahGboYD7AtpHbZ4MufPjW2eRJTD+Q8EU6ITeKW8BJ5lKL4M00n3x9Jlafr2b9Cl2MsflifTNUV7Xt3tWyz5lp49ZRv+drjO97/782ez4ms7Kxun8O89zZzK40fVw4eS8U/pe5EsASbSw76uLs3RdRXoiKt7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=cmpxchg.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f1zjzPtrbcukDfcm6fCLlKr5Irv+O4E/2SdC+Ydhwc4=;
- b=u1spARxzknXpX79lAGnBQG/E1xPLzhc2HzgkoSEjXKqH0Vun6aqieXyMSN0zhbjOXOyf6OymJVzkPGrJCLaqF/GtK8pqeTmhKGSf8DKRAhHah2lFFASBlq230oq0MC7nt7Wh1YdLukCvUHhEmeBPlyq3VcI7MF7s0bhJrjqrGQk=
-Received: from BN9P220CA0016.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:13e::21)
- by DS7PR12MB5791.namprd12.prod.outlook.com (2603:10b6:8:76::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Fri, 11 Oct
- 2024 03:31:27 +0000
-Received: from BN2PEPF00004FC1.namprd04.prod.outlook.com
- (2603:10b6:408:13e:cafe::39) by BN9P220CA0016.outlook.office365.com
- (2603:10b6:408:13e::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.20 via Frontend
- Transport; Fri, 11 Oct 2024 03:31:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FC1.mail.protection.outlook.com (10.167.243.187) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8048.13 via Frontend Transport; Fri, 11 Oct 2024 03:31:27 +0000
-Received: from [10.252.216.179] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Oct
- 2024 22:31:07 -0500
-Message-ID: <ae7bd73b-63d8-941b-ba7c-5c857a013346@amd.com>
-Date: Fri, 11 Oct 2024 09:01:03 +0530
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="mO4khwbU"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1728631651;
+	bh=ht6MJDY3Fy1CYRDV0JIK9gBKG7L45D1Bq8tOJWehI3s=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=mO4khwbUxEnu4l2dyNWJXue8da8L8Yn/aSjtiP2qwAm8zB34elmAzZx7DsyisDY6O
+	 KXA6p4A5My7kw+7+hfnDGO5qaVi+ZoZe2k45KtnF9mvzRhNwpuiBCFC5iIvQ7ghj7o
+	 a8yoEMynJU15/73u0XbsH3a8wt0as9J41bfh+7uM=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH 3/3] sched/core: Indicate a sched_delayed task was
- migrated before wakeup
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>, Suren Baghdasaryan
-	<surenb@google.com>, <linux-kernel@vger.kernel.org>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
-	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
-	<vschneid@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Klaus Kudielka
-	<klaus.kudielka@gmail.com>, Chris Bainbridge <chris.bainbridge@gmail.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Youssef Esmat
-	<youssefesmat@google.com>, Paul Menzel <pmenzel@molgen.mpg.de>, "Bert
- Karwatzki" <spasswolf@web.de>, <regressions@lists.linux.dev>
-References: <20241010082838.2474-1-kprateek.nayak@amd.com>
- <20241010082838.2474-4-kprateek.nayak@amd.com>
- <20241010130316.GA181795@cmpxchg.org>
- <20241010130621.GH17263@noisy.programming.kicks-ass.net>
- <20241010193712.GC181795@cmpxchg.org>
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20241010193712.GC181795@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC1:EE_|DS7PR12MB5791:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b554e24-f4b4-4ee2-5ac6-08dce9a53068
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ODNkemdBcEJvNDI4eVhQZmR5OWhkdlBTekhLaEs5UkFsSFJkRUFIMHZqcTdQ?=
- =?utf-8?B?L2poVXIzNGg4dHdJNkhvbE9HLzBTdW9pVTRoZWlaOFhSVGVKSHl5Z0g3TlpZ?=
- =?utf-8?B?TTF3M3lhTE1maEg3QkJaNXlWWkxRNzd3QmQ3cFpVY25pbFJ4akhRb095N1VJ?=
- =?utf-8?B?SVVUa0NFQVhYbUVXbTd1QWtQQlI0SUI4QlBmRFgrcW0rL0xCU2tQNXNIT2tW?=
- =?utf-8?B?aE85S3UxazAxWGxmSkFoeFVaWUZDaFNkSEs4QkVDS1M1VHVCWXBNTjNDM09a?=
- =?utf-8?B?NUthSVo5cHZQY1NjV0hLRGFsWkFBYkhDZytxb2VYTVJPZmFtTmtkbGtIbnF3?=
- =?utf-8?B?V1ltMkNEaXBPSHZaekYwS2NJcEFNRDdKV2RPSWdKTVRMWGZXZXBoRUVOeTdI?=
- =?utf-8?B?M0g5c08vWnVZNnVXWTY3S21VZUgxL2dIQWRvR0ZOUzBpaDJMc2RZNDk3cDZV?=
- =?utf-8?B?SEdFbmR2aTBlSU80dDYyU0JoY1I1eTRKUWQ0eEZxc015bVJZZjh6WW9mejJL?=
- =?utf-8?B?UEczNkYrNTZOZ3hLbk5Sbzd2WkdGcTNoK0VLTTExSGtSM25wYTZFSHdtOXpv?=
- =?utf-8?B?WHk2azdmNjVFcThsMzNrZWZIZzNhZUNZS0xndWhHMDZBRlhaandhVUhGbGhM?=
- =?utf-8?B?UjUyeU5kc01TVG5rOGpHVWlBVEliMGtwZVBRdjlPS2ZhazA5Y0JmTVQ0cFFS?=
- =?utf-8?B?NDhxN043UE1VU284eEt0ZXpXY1c2K0lLOHlMa2psckJXZTZEdEtPdzFpTjc3?=
- =?utf-8?B?TEJ3ditsSnFHeFRzRjhBKzk3RzYzYlR1RTE5NllBekdpQ3pNelBBeHRUSzVs?=
- =?utf-8?B?WG9UWVZLOUhKK3cyOGs1bWZqczl3UUJYRUx2OVdVSldYcGE2ZFU4WUplbVEw?=
- =?utf-8?B?U0Y4WERiZ2F0aFpMTG1TNjBmZzN4TFNSQUw0TzF5a0xsQ0tRS0k4eTlGN24r?=
- =?utf-8?B?dVY0bm9RTE8rTHRxMXJrZG1Fam5zckpMM1lHR1Q4MEVrMTdWWVNiSERhYndX?=
- =?utf-8?B?aU15UE1JRmlML2tTWlNDZGVEdS8wYjFEdVYza25XcUpDMEViSTh2U3FhRlcz?=
- =?utf-8?B?TnNRNTBQTjl5UnJVU1NQWXBvVThRYkNCbWlOcUV2cnBadm1VRzVGK1A4alZ6?=
- =?utf-8?B?OGRBV3lPZWJ4aTd6bWZscEVXcGpDNjB6eDJBSjVVdzhxUE9TMW92QjUzUDVv?=
- =?utf-8?B?bFA4SnpBbFY2V25SdnljQklTWkNDYXFBSzlqSWgzN1ZkSWZoZlB1VWYvbnAx?=
- =?utf-8?B?Tjl5Z3VaOEdKaFN5SEthMFJxY0N4OGhCVTNqTlp4WWRqK3VxUVVDcjNSQXZN?=
- =?utf-8?B?V0Qyd0ZwMHp1SFdibEFNbVN6WndlUGUrYkFUK3NiQzZOSExBQW1OazA4cmFo?=
- =?utf-8?B?RDRnNXgyWWZZNDd4WVdUeE9MaFNoNDZ6Uzlrc1VuRnI5T3VTVUJkb1RqUnVR?=
- =?utf-8?B?M1kxVDZYSG1IUkgyNUVIbmpGRmFZaFVFZmVicUNJc1NOb3E2bDJ5WENzeVUy?=
- =?utf-8?B?Z2VCSXVkMEhtSkxFMW1vclFiWDc5STZxcU51cWwra29lS1cvUEgzelFaQnFu?=
- =?utf-8?B?ckoxSFJjMURxR1JldGVYMythdlUzejdXdlA0ay82VHo3SFFmOS9wZlRCZzdN?=
- =?utf-8?B?Q1R2bEdCbXBleVk1WGtpMHJobGlaRCs0emxYNk4rSjlwNlRrd29hVllSd0JD?=
- =?utf-8?B?Rkp1cWRwNG4xZkVoZkx1UWU1clF4TElwbnJSMWlDbFpNbEhBV0FJamhIZUJ4?=
- =?utf-8?B?VmpNUFhzd2JQLzRudTB2VnF4RktFQ3E4K1hQYnQzbzNJZUhaMW1QVGlzQWJk?=
- =?utf-8?B?dWpBUUF5YTFBVHl4ek9ja1k0VjFXbWhwbVg5Um1uRWYwNUtWUHJ2NlZtYUVp?=
- =?utf-8?Q?DyttPkp9gO+qp?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 03:31:27.0007
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b554e24-f4b4-4ee2-5ac6-08dce9a53068
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FC1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5791
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
+Date: Fri, 11 Oct 2024 09:27:08 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <381863DE-17A7-4D4E-8F28-0F18A4CEFC31@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+ <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
+ <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+ <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
+To: Chris Mason <clm@meta.com>
 
-Hello Johannes,
+Hi,
 
-On 10/11/2024 1:07 AM, Johannes Weiner wrote:
-> On Thu, Oct 10, 2024 at 03:06:21PM +0200, Peter Zijlstra wrote:
->> On Thu, Oct 10, 2024 at 09:03:16AM -0400, Johannes Weiner wrote:
->>
->>> I'll try to come up with a suitable solution as well, please don't
->>> apply this one for now.
->>
->> I'll make sure it doesn't end up in tip as-is.
-> 
-> Thanks.
-> 
-> This would be a replacement patch for #2 and #3 that handles migration
-> of delayed tasks. It's slightly more invasive on the psi callback
-> side, but I think it keeps the sched core bits simpler. Thoughts?
-> 
-> ---
-> 
->  From d72a665d7c7c7d9c806424f473d13452754471d3 Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Thu, 10 Oct 2024 14:37:43 -0400
-> Subject: [PATCH] sched: psi: handle delayed-dequeue task migration
-> 
-> Since sched_delayed tasks remain queued even after blocking, the load
-> balancer can migrate them between runqueues while PSI considers them
-> to be asleep. As a result, it misreads the migration requeue followed
-> by a wakeup as a double queue:
-> 
->    psi: inconsistent task state! task=... cpu=... psi_flags=4 clear=. set=4
-> 
-> First, call psi_enqueue() after p->sched_class->enqueue_task(). A
-> wakeup will clear p->se.sched_delayed while a migration will not, so
-> psi can use that flag to tell them apart.
-> 
-> Then teach psi to migrate any "sleep" state when delayed-dequeue tasks
-> are being migrated.
-> 
-> Delayed-dequeue tasks can be revived by ttwu_runnable(), which will
-> call down with a new ENQUEUE_DELAYED. Instead of further complicating
-> the wakeup conditional in enqueue_task(), identify migration contexts
-> instead and default to wakeup handling for all other cases.
-> 
-> Debugged-by-and-original-fix-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
-> Closes: https://lore.kernel.org/lkml/20240830123458.3557-1-spasswolf@web.de/
-> Closes: https://lore.kernel.org/all/cd67fbcd-d659-4822-bb90-7e8fbb40a856@molgen.mpg.de/
-> Link: https://lore.kernel.org/lkml/f82def74-a64a-4a05-c8d4-4eeb3e03d0c0@amd.com/
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> On 10. Oct 2024, at 08:29, Christian Theune <ct@flyingcircus.io> =
+wrote:
+>=20
+>=20
+>> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
+>>=20
+>> Not disagreeing with Linus at all, but given that you've got IO
+>> throttling too, we might really just be waiting.  It's hard to tell
+>> because the hung task timeouts only give you information about one =
+process.
+>>=20
+>> I've attached a minimal version of a script we use here to show all =
+the
+>> D state processes, it might help explain things.  The only problem is
+>> you have to actually ssh to the box and run it when you're stuck.
+>>=20
+>> The idea is to print the stack trace of every D state process, and =
+then
+>> also print out how often each unique stack trace shows up.  When =
+we're
+>> deadlocked on something, there are normally a bunch of the same stack
+>> (say waiting on writeback) and then one jerk sitting around in a
+>> different stack who is causing all the trouble.
+>=20
+> I think I should be able to trigger this. I=E2=80=99ve seen around a =
+100 of those issues over the last week and the chance of it happening =
+correlates with a certain workload that should be easy to trigger. Also, =
+the condition remains for at around 5 minutes, so I should be able to =
+trace it when I see the alert in an interactive session.
+>=20
+> I=E2=80=99ve verified I can run your script and I=E2=80=99ll get back =
+to you in the next days.
 
-This approach looks good to me as well! Thank you. I added this on top
-of Patch 1 and I haven't seen any PSI splats after my stress test. Feel
-free to add:
+I wasn=E2=80=99t able to create a reproducer after all so I=E2=80=99ve =
+set up alerting.
 
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+I just caught one right away, but it unblocked quickly after I logged =
+in:
 
--- 
-Thanks and Regards,
-Prateek
+The original message that triggered the alert was:
 
-> ---
->   kernel/sched/core.c  | 12 +++++------
->   kernel/sched/stats.h | 48 ++++++++++++++++++++++++++++++--------------
->   2 files changed, 39 insertions(+), 21 deletions(-)
-> 
-> [..snip..]
+[Oct11 09:18] INFO: task nix-build:157920 blocked for more than 122 =
+seconds.
+[  +0.000937]       Not tainted 6.11.0 #1-NixOS
+[  +0.000540] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+[  +0.000902] task:nix-build       state:D stack:0     pid:157920 =
+tgid:157920 ppid:157919 flags:0x00000002
+[  +0.001098] Call Trace:
+[  +0.000306]  <TASK>
+[  +0.000279]  __schedule+0x3a3/0x1300
+[  +0.000478]  schedule+0x27/0xf0
+[  +0.000392]  io_schedule+0x46/0x70
+[  +0.000436]  folio_wait_bit_common+0x13f/0x340
+[  +0.000572]  ? __pfx_wake_page_function+0x10/0x10
+[  +0.000592]  folio_wait_writeback+0x2b/0x80
+[  +0.000466]  truncate_inode_partial_folio+0x5e/0x1b0
+[  +0.000586]  truncate_inode_pages_range+0x1de/0x400
+[  +0.000595]  evict+0x29f/0x2c0
+[  +0.000396]  ? iput+0x6e/0x230
+[  +0.000408]  ? _atomic_dec_and_lock+0x39/0x50
+[  +0.000542]  do_unlinkat+0x2de/0x330
+[  +0.000402]  __x64_sys_unlink+0x3f/0x70
+[  +0.000419]  do_syscall_64+0xb7/0x200
+[  +0.000407]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  +0.000556] RIP: 0033:0x7f2bb5d1056b
+[  +0.000473] RSP: 002b:00007ffc013c8588 EFLAGS: 00000206 ORIG_RAX: =
+0000000000000057
+[  +0.000942] RAX: ffffffffffffffda RBX: 000055963c267500 RCX: =
+00007f2bb5d1056b
+[  +0.000859] RDX: 0000000000000000 RSI: 0000000000000000 RDI: =
+000055963c268c80
+[  +0.000800] RBP: 000055963c267690 R08: 0000000000016020 R09: =
+0000000000000000
+[  +0.000977] R10: 00000000000000f0 R11: 0000000000000206 R12: =
+00007ffc013c85c8
+[  +0.000826] R13: 00007ffc013c85ac R14: 00007ffc013c8ed0 R15: =
+00005596441e42b0
+[  +0.000833]  </TASK>
+
+Then after logging in I caught it once with walker.py - this was about a =
+minute after the alert triggered I think. I=E2=80=99ll add timestamps to =
+walker.py in the next instances:
+
+157920 nix-build D
+[<0>] folio_wait_bit_common+0x13f/0x340
+[<0>] folio_wait_writeback+0x2b/0x80
+[<0>] truncate_inode_partial_folio+0x5e/0x1b0
+[<0>] truncate_inode_pages_range+0x1de/0x400
+[<0>] evict+0x29f/0x2c0
+[<0>] do_unlinkat+0x2de/0x330
+[<0>] __x64_sys_unlink+0x3f/0x70
+[<0>] do_syscall_64+0xb7/0x200
+[<0>] entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-----
+stack summary
+
+1 hit:
+[<0>] folio_wait_bit_common+0x13f/0x340
+[<0>] folio_wait_writeback+0x2b/0x80
+[<0>] truncate_inode_partial_folio+0x5e/0x1b0
+[<0>] truncate_inode_pages_range+0x1de/0x400
+[<0>] evict+0x29f/0x2c0
+[<0>] do_unlinkat+0x2de/0x330
+[<0>] __x64_sys_unlink+0x3f/0x70
+[<0>] do_syscall_64+0xb7/0x200
+[<0>] entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+I tried once again after 1-2 seconds and got this:
+
+157920 nix-build D
+[<0>] xlog_wait_on_iclog+0x167/0x180 [xfs]
+[<0>] xfs_log_force_seq+0x8d/0x150 [xfs]
+[<0>] xfs_file_fsync+0x195/0x2a0 [xfs]
+[<0>] __x64_sys_fdatasync+0x52/0x90
+[<0>] do_syscall_64+0xb7/0x200
+[<0>] entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-----
+stack summary
+
+1 hit:
+[<0>] xlog_wait_on_iclog+0x167/0x180 [xfs]
+[<0>] xfs_log_force_seq+0x8d/0x150 [xfs]
+[<0>] xfs_file_fsync+0x195/0x2a0 [xfs]
+[<0>] __x64_sys_fdatasync+0x52/0x90
+[<0>] do_syscall_64+0xb7/0x200
+[<0>] entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+and after that the process was done and exited. The last traceback looks =
+unlocked already.
+
+I=E2=80=99m going to gather a few more instances during the day and will =
+post them as a batch later.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
