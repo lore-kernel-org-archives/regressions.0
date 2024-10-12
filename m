@@ -1,188 +1,266 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613D01EEE6
-	for <regressions@lists.linux.dev>; Fri, 11 Oct 2024 13:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39396C133
+	for <regressions@lists.linux.dev>; Sat, 12 Oct 2024 17:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728654640; cv=none; b=aAavM454i9ht3rl64nmo4YuXCUMx/A1Mlj7pX6I7W88IAoPKcHHh6T16LO/w1LMUG+CZgLbGTEV71/q9jtT4IEJabcY0vY3QQKAEUBhRfyolZijRr/BuXblV55GZk+lXzThoVhq+/QBVkoFxMZ7a09U+CjdZUoo7HG7RlaPUCZk=
+	t=1728752491; cv=none; b=sy7C2MSTZBQm2lm7N3igfcmNLdjUjIwZp/87+xOdWir1n+wV89Qgt8p0fzwDd9uukPQD8ab08kNz6nuZL4Qlij92xKy7zEhIzyiA0ziULtT8XiyK5p4dxCNPrRJI2S3ACg/aK/iSBUe1IB4EWwyUMHOX53R3OeAkKktfwaLM0j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728654640; c=relaxed/simple;
-	bh=rkoN1t9+WGwqDDBopn4udo62u+w8ZOwNYcBJAvq9Nx0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=IECZFPGgw1P2ctMAilnYlSvxhZY+BmKGSgqzF9wFAaXZxBGUDMfKVSgl0f8IuXdbU2FcrwCgXFcTAB30vvKTQaicIxDsZ6lz/RRKluB6P3NsDxMa/A+8y62I/uH8dmQ5h48crpcwtEv48wNWi41KW3M0G6PCTMxmSACHmHAfUmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=DRMwYd+b; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1728752491; c=relaxed/simple;
+	bh=OrFTEk4OJ5/oC7f++K7QTVGGih9HPx9szWtkAxs8OI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BpmG2aGjvBqfaEogxRUH+ICfKug9ey6sNk5+tmAIMy7VEOGFcLBJumAFLibq5r/+TU1oxh+5oBnJZt6yfMs29oUZznvV0GKUBkMa8rZZKk8Dolo7AGy4CNra4bi1vhl53U+XR+8IIJtABo9Wtf+mnpxh1g3TwAaS7w1sXDA1YiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IkP7Lj4Y; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="DRMwYd+b"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1728654635;
-	bh=KvNGlemhaNExRrqlaQX0CrDFggZF6YQd0fZVnjowWsM=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=DRMwYd+bbgVy+htDpLRrpNmovu27Zg0dxG7AOb97R+c4AJMEVG7JtuUnp+AolUgjv
-	 ONa2do625TUZFB7b7qLtIESnLirPx0g4oqwY6gNqwRAmMLaIiDZK4iz6TFZ2X8WAZX
-	 zEZePLfyx26unk2qsQTvoyHz51ToIUE8oIpKUzxQ=
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IkP7Lj4Y"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a99e3b3a411so133974266b.0
+        for <regressions@lists.linux.dev>; Sat, 12 Oct 2024 10:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1728752487; x=1729357287; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eLK0SWU0DV/lYestXMEbl8Q5Iv6txd4W8a4XPICpv8U=;
+        b=IkP7Lj4YuvA19Bv2bGd0bhnfP1kqWolF7E1wENk7saky8jzRLAPOLG5CKVqSm5lDea
+         LfM5mUNgl2Y6a7uP4lYPGXwUmjl21panEbqtbBN7rPah4bewGqJZxe+5U8kq6lxjVRIv
+         GpV9da80grtmsOszfKXkSuavWJViTs8UnNEt8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728752487; x=1729357287;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eLK0SWU0DV/lYestXMEbl8Q5Iv6txd4W8a4XPICpv8U=;
+        b=X78LY53HTcIn/iIoH0Ve0PNBuSeQO4hyjEilDEBQw9C7UjFgs6Q878tNr2dTiRKf/Z
+         fFFLaFUI1kQBdgSIRp8SNx3LNE/X8ussPXrff+kZ6Y5nMtj1CCwr9HwuYSIugC92BdDB
+         Tt4sggyQxLe5vMacy84ydFSWfwZ3YbvCVX2UHJWgniWvooUS7rUUJqoDjeCaxAlYJ7RF
+         AiW1/e6S8W8jfsGKmcZausMC2TB+eFRxW3bieAXox0yzJV2CVdgStk8HPPPZhsTt8+Hs
+         2oWSX0+Yn+BEdjW8g+FU7nIwMqE1EYEsUtkrSQ6gsJU5tkpBhnqKLJMxgQWbQNmv+ibk
+         vV3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUDw91xsBvnh7b+jHjQN9AOYCtKMdDc3akEJNbICV1hasm+d28bhA4wNuC4QEpXRhHsZYMIfzm8MMIpgg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxmO+VnNQRe2dI+V6BpzGEsoTLneEIuVW4klm5iJ3Mc2cWidOYQ
+	HkHt/2IA1V9Kmh1Df0fAVy89avc95jVccx2spZcxMgoCtuEY6XiV6jPLGkBNSeF1s7M3x/+4UHu
+	W9Tw=
+X-Google-Smtp-Source: AGHT+IFlNyTXzPa+NpK8mzV1urfNjZUPoxGs09hZMlS35OD35gPZjSyP6wsj/crzX3DlX8woUixuog==
+X-Received: by 2002:a17:907:a0c9:b0:a99:ee23:dfb8 with SMTP id a640c23a62f3a-a99ee23e019mr178560666b.20.1728752486900;
+        Sat, 12 Oct 2024 10:01:26 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99f148b224sm74092766b.50.2024.10.12.10.01.25
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Oct 2024 10:01:26 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a99b1f43aceso369657466b.0
+        for <regressions@lists.linux.dev>; Sat, 12 Oct 2024 10:01:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXWrPiCyqsfFa4usrlZ5KT3kxVOBh738Cu4ixt7VpcfxRIfvADz0AMNMPwG6BTOj7cR8JNLzBgIoJgRAw==@lists.linux.dev
+X-Received: by 2002:a17:907:720f:b0:a98:f44d:a198 with SMTP id
+ a640c23a62f3a-a99b8775a40mr639248066b.1.1728752485597; Sat, 12 Oct 2024
+ 10:01:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+MIME-Version: 1.0
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org> <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org> <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com> <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area> <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io> <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io> <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com> <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
+ <381863DE-17A7-4D4E-8F28-0F18A4CEFC31@flyingcircus.io> <0A480EBE-9B4D-49CC-9A32-3526F32426E6@flyingcircus.io>
+ <c6d723ca-457a-4f97-9813-a75349225e85@meta.com>
+In-Reply-To: <c6d723ca-457a-4f97-9813-a75349225e85@meta.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 12 Oct 2024 10:01:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjty_0NfiZn2HVzT0Ye-RR09+Rqbd1azwJLOTJrX+V5MQ@mail.gmail.com>
+Message-ID: <CAHk-=wjty_0NfiZn2HVzT0Ye-RR09+Rqbd1azwJLOTJrX+V5MQ@mail.gmail.com>
 Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
  folios since Dec 2021 (any kernel from 6.1 upwards)
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <c6d723ca-457a-4f97-9813-a75349225e85@meta.com>
-Date: Fri, 11 Oct 2024 15:50:12 +0200
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Dave Chinner <david@fromorbit.com>,
- Matthew Wilcox <willy@infradead.org>,
- Jens Axboe <axboe@kernel.dk>,
- linux-mm@kvack.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Daniel Dao <dqminh@cloudflare.com>,
- regressions@lists.linux.dev,
- regressions@leemhuis.info
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CCFA457F-E115-47F0-87F1-F64A51BDE96C@flyingcircus.io>
-References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
- <ZulMlPFKiiRe3iFd@casper.infradead.org>
- <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
- <ZumDPU7RDg5wV0Re@casper.infradead.org>
- <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
- <459beb1c-defd-4836-952c-589203b7005c@meta.com>
- <ZurXAco1BKqf8I2E@casper.infradead.org>
- <ZuuBs762OrOk58zQ@dread.disaster.area>
- <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
- <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
- <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
- <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
- <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
- <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
- <381863DE-17A7-4D4E-8F28-0F18A4CEFC31@flyingcircus.io>
- <0A480EBE-9B4D-49CC-9A32-3526F32426E6@flyingcircus.io>
- <c6d723ca-457a-4f97-9813-a75349225e85@meta.com>
 To: Chris Mason <clm@meta.com>
+Cc: Christian Theune <ct@flyingcircus.io>, Dave Chinner <david@fromorbit.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Content-Type: multipart/mixed; boundary="000000000000cf77a306244a8d90"
 
-Hi,
+--000000000000cf77a306244a8d90
+Content-Type: text/plain; charset="UTF-8"
 
-> On 11. Oct 2024, at 15:06, Chris Mason <clm@meta.com> wrote:
->=20
-> - It's actually taking the IO a long time to finish.  We can poke at =
-the
-> pending requests, how does the device look in the VM?  (virtio, scsi =
-etc).
+On Fri, 11 Oct 2024 at 06:06, Chris Mason <clm@meta.com> wrote:
+>
+> - Linus's starvation observation.  It doesn't feel like there's enough
+> load to cause this, especially given us sitting in truncate, where it
+> should be pretty unlikely to have multiple procs banging on the page in
+> question.
 
-I _think_ that=E2=80=99s not it. This is a Qemu w/ virtio-block + Ceph =
-stack with 2x10G and fully SSD backed. The last 24 hours show operation =
-latency at less than 0.016ms. Ceph=E2=80=99s slow request warning (30s =
-limit) has not triggered in the last 24 hours.
+Yeah, I think the starvation can only possibly happen in
+fdatasync-like paths where it's waiting for existing writeback without
+holding the page lock. And while Christian has had those backtraces
+too, the truncate path is not one of them.
 
-Also, aside from a VM that was exhausting its Qemu io throttling for a =
-minute (and stuck in completely different tracebacks) the only blocked =
-task reports from the last 48 hours was this specific process.
+That said, just because I wanted to see how nasty it is, I looked into
+changing the rules for folio_wake_bit().
 
-I=E2=80=99d expect that we=E2=80=99d see a lot more reports about IO =
-issues from multiple VMs and multiple loads at the same time when the =
-storage misbehaves (we did experience those in the long long past in =
-older Ceph versions and with spinning rust, so I=E2=80=99m pretty =
-confident (at the moment) this isn=E2=80=99t a storage issue per se).
+Christian, just to clarify, this is not for  you to test - this is
+very experimental - but maybe Willy has comments on it.
 
-Incidentally this now reminds me of a different (maybe not?) issue that =
-I=E2=80=99ve been trying to track down with mdraid/xfs:
-https://marc.info/?l=3Dlinux-raid&m=3D172295385102939&w=3D2
+Because it *might* be possible to do something like the attached,
+where we do the page flags changes atomically but without any locks if
+there are no waiters, but if there is a waiter on the page, we always
+clear the page flag bit atomically under the waitqueue lock as we wake
+up the waiter.
 
-This is only tested on an older kernel so far (5.15.138) and we ended up =
-seeing IOPS stuck in the md device but not below it. However, MD isn=E2=80=
-=99t involved here. I made the connection because the original traceback =
-also shows it stuck in =E2=80=9Cwait_on_page_writeback=E2=80=9D, but =
-maybe that=E2=80=99s a red herring:
+I changed the name (and the return value) of the
+folio_xor_flags_has_waiters() function to just not have any
+possibility of semantic mixup, but basically instead of doing the xor
+atomically and unconditionally (and returning whether we had waiters),
+it now does it conditionally only if we do *not* have waiters, and
+returns true if successful.
 
-[Aug 6 09:35] INFO: task .backy-wrapped:2615 blocked for more than 122 =
-seconds.
-[ +0.008130] Not tainted 5.15.138 #1-NixOS
-[ +0.005194] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables =
-this message.
-[ +0.008895] task:.backy-wrapped state:D stack: 0 pid: 2615 ppid: 1 =
-flags:0x00000002
-[ +0.000005] Call Trace:
-[ +0.000002] <TASK>
-[ +0.000004] __schedule+0x373/0x1580
-[ +0.000009] ? xlog_cil_commit+0x559/0x880 [xfs]
-[ +0.000041] schedule+0x5b/0xe0
-[ +0.000001] io_schedule+0x42/0x70
-[ +0.000001] wait_on_page_bit_common+0x119/0x380
-[ +0.000005] ? __page_cache_alloc+0x80/0x80
-[ +0.000002] wait_on_page_writeback+0x22/0x70
-[ +0.000001] truncate_inode_pages_range+0x26f/0x6d0
-[ +0.000006] evict+0x15f/0x180
-[ +0.000003] __dentry_kill+0xde/0x170
-[ +0.000001] dput+0x15b/0x330
-[ +0.000002] do_renameat2+0x34e/0x5b0
-[ +0.000003] __x64_sys_rename+0x3f/0x50
-[ +0.000002] do_syscall_64+0x3a/0x90
-[ +0.000002] entry_SYSCALL_64_after_hwframe+0x62/0xcc
-[ +0.000003] RIP: 0033:0x7fdd1885275b
-[ +0.000002] RSP: 002b:00007ffde643ad18 EFLAGS: 00000246 ORIG_RAX: =
-0000000000000052
-[ +0.000002] RAX: ffffffffffffffda RBX: 00007ffde643adb0 RCX: =
-00007fdd1885275b
-[ +0.000001] RDX: 0000000000000000 RSI: 00007fdd09a3d3d0 RDI: =
-00007fdd098549d0
-[ +0.000001] RBP: 00007ffde643ad60 R08: 00000000ffffffff R09: =
-0000000000000000
-[ +0.000001] R10: 00007ffde643af90 R11: 0000000000000246 R12: =
-00000000ffffff9c
-[ +0.000000] R13: 00000000ffffff9c R14: 000000000183cab0 R15: =
-00007fdd0b128810
-[ +0.000001] </TASK>
-[ +0.000011] INFO: task kworker/u64:0:2380262 blocked for more than 122 =
-seconds.
-[ +0.008309] Not tainted 5.15.138 #1-NixOS
-[ +0.005190] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables =
-this message.
-[ +0.008895] task:kworker/u64:0 state:D stack: 0 pid:2380262 ppid: 2 =
-flags:0x00004000
-[ +0.000004] Workqueue: kcryptd/253:4 kcryptd_crypt [dm_crypt]
-[ +0.000006] Call Trace:
-[ +0.000001] <TASK>
-[ +0.000001] __schedule+0x373/0x1580
-[ +0.000003] schedule+0x5b/0xe0
-[ +0.000001] md_bitmap_startwrite+0x177/0x1e0
-[ +0.000004] ? finish_wait+0x90/0x90
-[ +0.000004] add_stripe_bio+0x449/0x770 [raid456]
-[ +0.000005] raid5_make_request+0x1cf/0xbd0 [raid456]
-[ +0.000003] ? kmem_cache_alloc_node_trace+0x391/0x3e0
-[ +0.000004] ? linear_map+0x44/0x90 [dm_mod]
-[ +0.000005] ? finish_wait+0x90/0x90
-[ +0.000001] ? __blk_queue_split+0x516/0x580
-[ +0.000003] md_handle_request+0x122/0x1b0
-[ +0.000003] md_submit_bio+0x6e/0xb0
-[ +0.000001] __submit_bio+0x18f/0x220
-[ +0.000002] ? crypt_page_alloc+0x46/0x60 [dm_crypt]
-[ +0.000002] submit_bio_noacct+0xbe/0x2d0
-[ +0.000001] kcryptd_crypt+0x392/0x550 [dm_crypt]
-[ +0.000002] process_one_work+0x1d6/0x360
-[ +0.000003] worker_thread+0x4d/0x3b0
-[ +0.000002] ? process_one_work+0x360/0x360
-[ +0.000001] kthread+0x118/0x140
-[ +0.000001] ? set_kthread_struct+0x50/0x50
-[ +0.000001] ret_from_fork+0x22/0x30
-[ +0.000004] </TASK>
-=E2=80=A6(more md kworker tasks pile up here)
+And if there were waiters, it moves the flag clearing into the wakeup function.
 
-Christian
+That in turn means that the "while whiteback" loop can go back to be
+just a non-looping "if writeback", and folio_wait_writeback() can't
+get into any starvation with new writebacks always showing up.
 
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
+The reason I say it *might* be possible to do something like this is
+that it changes __folio_end_writeback() to no longer necessarily clear
+the writeback bit under the XA lock. If there are waiters, we'll clear
+it later (after releasing the lock) in the caller.
 
+Willy? What do you think? Clearly this now makes PG_writeback not
+synchronized with the PAGECACHE_TAG_WRITEBACK tag, but the reason I
+think it might be ok is that the code that *sets* the PG_writeback bit
+in __folio_start_writeback() only ever starts with a page that isn't
+under writeback, and has a
+
+        VM_BUG_ON_FOLIO(folio_test_writeback(folio), folio);
+
+at the top of the function even outside the XA lock. So I don't think
+these *need* to be synchronized under the XA lock, and I think the
+folio flag wakeup atomicity might be more important than the XA
+writeback tag vs folio writeback bit.
+
+But I'm not going to really argue for this patch at all - I wanted to
+look at how bad it was, I wrote it, I'm actually running it on my
+machine now and it didn't *immediately* blow up in my face, so it
+*may* work just fine.
+
+The patch is fairly simple, and apart from the XA tagging issue is
+seems very straightforward. I'm just not sure it's worth synchronizing
+one part just to at the same time de-synchronize another..
+
+                   Linus
+
+--000000000000cf77a306244a8d90
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-Test-atomic-folio-bit-waiting.patch"
+Content-Disposition: attachment; 
+	filename="0001-Test-atomic-folio-bit-waiting.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m26e2grp0>
+X-Attachment-Id: f_m26e2grp0
+
+RnJvbSA5ZDRmMGQ2MGFiYzRkY2U1YjdjZmJhZDQ1NzZhMjgyOTgzMmJiODM4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
+dGlvbi5vcmc+CkRhdGU6IFNhdCwgMTIgT2N0IDIwMjQgMDk6MzQ6MjQgLTA3MDAKU3ViamVjdDog
+W1BBVENIXSBUZXN0IGF0b21pYyBmb2xpbyBiaXQgd2FpdGluZwoKLS0tCiBpbmNsdWRlL2xpbnV4
+L3BhZ2UtZmxhZ3MuaCB8IDI2ICsrKysrKysrKysrKysrKystLS0tLS0tLS0tCiBtbS9maWxlbWFw
+LmMgICAgICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrLS0KIG1tL3Bh
+Z2Utd3JpdGViYWNrLmMgICAgICAgIHwgIDYgKysrLS0tCiAzIGZpbGVzIGNoYW5nZWQsIDQ1IGlu
+c2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+cGFnZS1mbGFncy5oIGIvaW5jbHVkZS9saW51eC9wYWdlLWZsYWdzLmgKaW5kZXggMWIzYTc2NzEw
+NDg3Li5iMzBhNzNlMWMyYzcgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvcGFnZS1mbGFncy5o
+CisrKyBiL2luY2x1ZGUvbGludXgvcGFnZS1mbGFncy5oCkBAIC03MzAsMjIgKzczMCwyOCBAQCBU
+RVNUUEFHRUZMQUdfRkFMU0UoS3NtLCBrc20pCiB1NjQgc3RhYmxlX3BhZ2VfZmxhZ3MoY29uc3Qg
+c3RydWN0IHBhZ2UgKnBhZ2UpOwogCiAvKioKLSAqIGZvbGlvX3hvcl9mbGFnc19oYXNfd2FpdGVy
+cyAtIENoYW5nZSBzb21lIGZvbGlvIGZsYWdzLgorICogZm9saW9feG9yX2ZsYWdzX25vX3dhaXRl
+cnMgLSBDaGFuZ2UgZm9saW8gZmxhZ3MgaWYgbm8gd2FpdGVycwogICogQGZvbGlvOiBUaGUgZm9s
+aW8uCi0gKiBAbWFzazogQml0cyBzZXQgaW4gdGhpcyB3b3JkIHdpbGwgYmUgY2hhbmdlZC4KKyAq
+IEBtYXNrOiBXaGljaCBmbGFncyB0byBjaGFuZ2UuCiAgKgotICogVGhpcyBtdXN0IG9ubHkgYmUg
+dXNlZCBmb3IgZmxhZ3Mgd2hpY2ggYXJlIGNoYW5nZWQgd2l0aCB0aGUgZm9saW8KLSAqIGxvY2sg
+aGVsZC4gIEZvciBleGFtcGxlLCBpdCBpcyB1bnNhZmUgdG8gdXNlIGZvciBQR19kaXJ0eSBhcyB0
+aGF0Ci0gKiBjYW4gYmUgc2V0IHdpdGhvdXQgdGhlIGZvbGlvIGxvY2sgaGVsZC4gIEl0IGNhbiBh
+bHNvIG9ubHkgYmUgdXNlZAotICogb24gZmxhZ3Mgd2hpY2ggYXJlIGluIHRoZSByYW5nZSAwLTYg
+YXMgc29tZSBvZiB0aGUgaW1wbGVtZW50YXRpb25zCi0gKiBvbmx5IGFmZmVjdCB0aG9zZSBiaXRz
+LgorICogVGhpcyBkb2VzIHRoZSBvcHRpbWlzdGljIGZhc3QtY2FzZSBvZiBjaGFuZ2luZyBwYWdl
+IGZsYWcgYml0cworICogdGhhdCBoYXMgbm8gd2FpdGVycy4gT25seSBmbGFncyBpbiB0aGUgZmly
+c3Qgd29yZCBjYW4gYmUgbW9kaWZpZWQsCisgKiBhbmQgdGhlIG9sZCB2YWx1ZSBtdXN0IGJlIHN0
+YWJsZSAodHlwaWNhbGx5IHRoaXMgY2xlYXJzIHRoZQorICogbG9ja2VkIG9yIHdyaXRlYmFjayBi
+aXQgb3Igc2ltaWxhcikuCiAgKgotICogUmV0dXJuOiBXaGV0aGVyIHRoZXJlIGFyZSB0YXNrcyB3
+YWl0aW5nIG9uIHRoZSBmb2xpby4KKyAqIFJldHVybjogdHJ1ZSBpZiBpdCBzdWNjZWVkZWQKICAq
+Lwotc3RhdGljIGlubGluZSBib29sIGZvbGlvX3hvcl9mbGFnc19oYXNfd2FpdGVycyhzdHJ1Y3Qg
+Zm9saW8gKmZvbGlvLAorc3RhdGljIGlubGluZSBib29sIGZvbGlvX3hvcl9mbGFnc19ub193YWl0
+ZXJzKHN0cnVjdCBmb2xpbyAqZm9saW8sCiAJCXVuc2lnbmVkIGxvbmcgbWFzaykKIHsKLQlyZXR1
+cm4geG9yX3VubG9ja19pc19uZWdhdGl2ZV9ieXRlKG1hc2ssIGZvbGlvX2ZsYWdzKGZvbGlvLCAw
+KSk7CisJY29uc3QgdW5zaWduZWQgbG9uZyB3YWl0ZXJfbWFzayA9IDF1bCA8PCBQR193YWl0ZXJz
+OworCXVuc2lnbmVkIGxvbmcgKmZsYWdzID0gZm9saW9fZmxhZ3MoZm9saW8sIDApOworCXVuc2ln
+bmVkIGxvbmcgdmFsID0gUkVBRF9PTkNFKCpmbGFncyk7CisJZG8geworCQlpZiAodmFsICYgd2Fp
+dGVyX21hc2spCisJCQlyZXR1cm4gZmFsc2U7CisJfSB3aGlsZSAoIXRyeV9jbXB4Y2hnX3JlbGVh
+c2UoZmxhZ3MsICZ2YWwsIHZhbCBeIG1hc2spKTsKKwlyZXR1cm4gdHJ1ZTsKIH0KIAogLyoqCmRp
+ZmYgLS1naXQgYS9tbS9maWxlbWFwLmMgYi9tbS9maWxlbWFwLmMKaW5kZXggNjY0ZTYwN2E3MWVh
+Li41ZmJhZjZjZWE5NjQgMTAwNjQ0Ci0tLSBhL21tL2ZpbGVtYXAuYworKysgYi9tbS9maWxlbWFw
+LmMKQEAgLTExNjQsNiArMTE2NCwxNCBAQCBzdGF0aWMgaW50IHdha2VfcGFnZV9mdW5jdGlvbih3
+YWl0X3F1ZXVlX2VudHJ5X3QgKndhaXQsIHVuc2lnbmVkIG1vZGUsIGludCBzeW5jLAogCXJldHVy
+biAoZmxhZ3MgJiBXUV9GTEFHX0VYQ0xVU0lWRSkgIT0gMDsKIH0KIAorLyoKKyAqIENsZWFyIHRo
+ZSBmb2xpbyBiaXQgYW5kIHdha2Ugd2FpdGVycyBhdG9taWNhbGx5IHVuZGVyCisgKiB0aGUgZm9s
+aW8gd2FpdHF1ZXVlIGxvY2suCisgKgorICogTm90ZSB0aGF0IHRoZSBmYXN0LXBhdGggYWx0ZXJu
+YXRpdmUgdG8gY2FsbGluZyB0aGlzIGlzCisgKiB0byBhdG9taWNhbGx5IGNsZWFyIHRoZSBiaXQg
+YW5kIGNoZWNrIHRoYXQgdGhlIFBHX3dhaXRlcnMKKyAqIGJpdCB3YXMgbm90IHNldC4KKyAqLwog
+c3RhdGljIHZvaWQgZm9saW9fd2FrZV9iaXQoc3RydWN0IGZvbGlvICpmb2xpbywgaW50IGJpdF9u
+cikKIHsKIAl3YWl0X3F1ZXVlX2hlYWRfdCAqcSA9IGZvbGlvX3dhaXRxdWV1ZShmb2xpbyk7CkBA
+IC0xMTc1LDYgKzExODMsNyBAQCBzdGF0aWMgdm9pZCBmb2xpb193YWtlX2JpdChzdHJ1Y3QgZm9s
+aW8gKmZvbGlvLCBpbnQgYml0X25yKQogCWtleS5wYWdlX21hdGNoID0gMDsKIAogCXNwaW5fbG9j
+a19pcnFzYXZlKCZxLT5sb2NrLCBmbGFncyk7CisJY2xlYXJfYml0X3VubG9jayhiaXRfbnIsIGZv
+bGlvX2ZsYWdzKGZvbGlvLCAwKSk7CiAJX193YWtlX3VwX2xvY2tlZF9rZXkocSwgVEFTS19OT1JN
+QUwsICZrZXkpOwogCiAJLyoKQEAgLTE1MDcsNyArMTUxNiw3IEBAIHZvaWQgZm9saW9fdW5sb2Nr
+KHN0cnVjdCBmb2xpbyAqZm9saW8pCiAJQlVJTERfQlVHX09OKFBHX3dhaXRlcnMgIT0gNyk7CiAJ
+QlVJTERfQlVHX09OKFBHX2xvY2tlZCA+IDcpOwogCVZNX0JVR19PTl9GT0xJTyghZm9saW9fdGVz
+dF9sb2NrZWQoZm9saW8pLCBmb2xpbyk7Ci0JaWYgKGZvbGlvX3hvcl9mbGFnc19oYXNfd2FpdGVy
+cyhmb2xpbywgMSA8PCBQR19sb2NrZWQpKQorCWlmICghZm9saW9feG9yX2ZsYWdzX25vX3dhaXRl
+cnMoZm9saW8sIDEgPDwgUEdfbG9ja2VkKSkKIAkJZm9saW9fd2FrZV9iaXQoZm9saW8sIFBHX2xv
+Y2tlZCk7CiB9CiBFWFBPUlRfU1lNQk9MKGZvbGlvX3VubG9jayk7CkBAIC0xNTM1LDEwICsxNTQ0
+LDI1IEBAIHZvaWQgZm9saW9fZW5kX3JlYWQoc3RydWN0IGZvbGlvICpmb2xpbywgYm9vbCBzdWNj
+ZXNzKQogCVZNX0JVR19PTl9GT0xJTyghZm9saW9fdGVzdF9sb2NrZWQoZm9saW8pLCBmb2xpbyk7
+CiAJVk1fQlVHX09OX0ZPTElPKGZvbGlvX3Rlc3RfdXB0b2RhdGUoZm9saW8pLCBmb2xpbyk7CiAK
+KwkvKgorCSAqIFRyeSB0byBjbGVhciAnbG9ja2VkJyBhdCB0aGUgc2FtZSB0aW1lIGFzIHNldHRp
+bmcgJ3VwdG9kYXRlJworCSAqCisJICogTm90ZSB0aGF0IGlmIHdlIGhhdmUgbG9jayBiaXQgd2Fp
+dGVycyBhbmQgdGhpcyBmYXN0LWNhc2UgZmFpbHMsCisJICogd2UnbGwgaGF2ZSB0byBjbGVhciB0
+aGUgbG9jayBiaXQgYXRvbWljYWxseSB1bmRlciB0aGUgZm9saW8gd2FpdAorCSAqIHF1ZXVlIGxv
+Y2ssIHNvIHRoZW4gd2UnbGwgc2V0ICd1cGRhdGUnIHNlcGFyYXRlbHkuCisJICoKKwkgKiBOb3Rl
+IHRoYXQgdGhpcyBpcyBwdXJlbHkgYSAiYXZvaWQgbXVsdGlwbGUgYXRvbWljcyBpbiB0aGUKKwkg
+KiBjb21tb24gY2FzZSIgLSB3aGlsZSB0aGUgbG9ja2VkIGJpdCBuZWVkcyB0byBiZSBjbGVhcmVk
+CisJICogc3luY2hyb25vdXNseSB3cnQgd2FpdGVycywgdGhlIHVwdG9kYXRlIGJpdCBoYXMgbm8g
+c3VjaAorCSAqIHJlcXVpcmVtZW50cy4KKwkgKi8KIAlpZiAobGlrZWx5KHN1Y2Nlc3MpKQogCQlt
+YXNrIHw9IDEgPDwgUEdfdXB0b2RhdGU7Ci0JaWYgKGZvbGlvX3hvcl9mbGFnc19oYXNfd2FpdGVy
+cyhmb2xpbywgbWFzaykpCisJaWYgKCFmb2xpb194b3JfZmxhZ3Nfbm9fd2FpdGVycyhmb2xpbywg
+bWFzaykpIHsKKwkJaWYgKHN1Y2Nlc3MpCisJCQlzZXRfYml0KFBHX3VwdG9kYXRlLCBmb2xpb19m
+bGFncyhmb2xpbywgMCkpOwogCQlmb2xpb193YWtlX2JpdChmb2xpbywgUEdfbG9ja2VkKTsKKwl9
+CiB9CiBFWFBPUlRfU1lNQk9MKGZvbGlvX2VuZF9yZWFkKTsKIApkaWZmIC0tZ2l0IGEvbW0vcGFn
+ZS13cml0ZWJhY2suYyBiL21tL3BhZ2Utd3JpdGViYWNrLmMKaW5kZXggZmNkNGMxNDM5Y2I5Li4z
+Mjc3YmMzY2VmZjkgMTAwNjQ0Ci0tLSBhL21tL3BhZ2Utd3JpdGViYWNrLmMKKysrIGIvbW0vcGFn
+ZS13cml0ZWJhY2suYwpAQCAtMzA4MSw3ICszMDgxLDcgQEAgYm9vbCBfX2ZvbGlvX2VuZF93cml0
+ZWJhY2soc3RydWN0IGZvbGlvICpmb2xpbykKIAkJdW5zaWduZWQgbG9uZyBmbGFnczsKIAogCQl4
+YV9sb2NrX2lycXNhdmUoJm1hcHBpbmctPmlfcGFnZXMsIGZsYWdzKTsKLQkJcmV0ID0gZm9saW9f
+eG9yX2ZsYWdzX2hhc193YWl0ZXJzKGZvbGlvLCAxIDw8IFBHX3dyaXRlYmFjayk7CisJCXJldCA9
+ICFmb2xpb194b3JfZmxhZ3Nfbm9fd2FpdGVycyhmb2xpbywgMSA8PCBQR193cml0ZWJhY2spOwog
+CQlfX3hhX2NsZWFyX21hcmsoJm1hcHBpbmctPmlfcGFnZXMsIGZvbGlvX2luZGV4KGZvbGlvKSwK
+IAkJCQkJUEFHRUNBQ0hFX1RBR19XUklURUJBQ0spOwogCQlpZiAoYmRpLT5jYXBhYmlsaXRpZXMg
+JiBCRElfQ0FQX1dSSVRFQkFDS19BQ0NUKSB7CkBAIC0zMDk5LDcgKzMwOTksNyBAQCBib29sIF9f
+Zm9saW9fZW5kX3dyaXRlYmFjayhzdHJ1Y3QgZm9saW8gKmZvbGlvKQogCiAJCXhhX3VubG9ja19p
+cnFyZXN0b3JlKCZtYXBwaW5nLT5pX3BhZ2VzLCBmbGFncyk7CiAJfSBlbHNlIHsKLQkJcmV0ID0g
+Zm9saW9feG9yX2ZsYWdzX2hhc193YWl0ZXJzKGZvbGlvLCAxIDw8IFBHX3dyaXRlYmFjayk7CisJ
+CXJldCA9ICFmb2xpb194b3JfZmxhZ3Nfbm9fd2FpdGVycyhmb2xpbywgMSA8PCBQR193cml0ZWJh
+Y2spOwogCX0KIAogCWxydXZlY19zdGF0X21vZF9mb2xpbyhmb2xpbywgTlJfV1JJVEVCQUNLLCAt
+bnIpOwpAQCAtMzE4NCw3ICszMTg0LDcgQEAgRVhQT1JUX1NZTUJPTChfX2ZvbGlvX3N0YXJ0X3dy
+aXRlYmFjayk7CiAgKi8KIHZvaWQgZm9saW9fd2FpdF93cml0ZWJhY2soc3RydWN0IGZvbGlvICpm
+b2xpbykKIHsKLQl3aGlsZSAoZm9saW9fdGVzdF93cml0ZWJhY2soZm9saW8pKSB7CisJaWYgKGZv
+bGlvX3Rlc3Rfd3JpdGViYWNrKGZvbGlvKSkgewogCQl0cmFjZV9mb2xpb193YWl0X3dyaXRlYmFj
+ayhmb2xpbywgZm9saW9fbWFwcGluZyhmb2xpbykpOwogCQlmb2xpb193YWl0X2JpdChmb2xpbywg
+UEdfd3JpdGViYWNrKTsKIAl9Ci0tIAoyLjQ2LjEuNjA4LmdjNTZmMmMxMWM4Cgo=
+--000000000000cf77a306244a8d90--
