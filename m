@@ -1,179 +1,310 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A481A7249
-	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 12:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461014595B
+	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 14:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728909834; cv=none; b=D/uMZhlIpn0Um/ZonZvt1bxGNdPKHmPWfOAwqh8V8Q2TblxChzEroC53amN0lbA3O9XbMDVrumPeAPBKIowT7L8L2y9KujBl145nSUpoHT2tEfqLQ1Yt2165WhK1sctZHvTBHk/YlnU7h/WhxHenbdPamEV1N2bIvLNW2FrOT18=
+	t=1728917048; cv=none; b=lentriYVa+e/WDFaOHOCDU7nKwLEQdnXwGRRdYAwzBAUA3MkxwfkumO1VJ77rEitFE9T/ddmWnGGQ0Jbrxo4+FSW0VVAII7PbAag7NuzGw8+0f1+ynXkJLyBltlTg7ayci5cycdy7yN5gm2dacGUK3j0E6pz3H1Y2V3AwkUaU/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728909834; c=relaxed/simple;
-	bh=Nrm6CobH2PcPQoFxlIHXCOXyowwDYXzhDflpLcLtC3s=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=oFw7kuu5XJ/XMUp2H+YRiqdcCIrt9IQTmZu8VGr4nSeOkDu0qEI11Nu0X190tsgBqv+RuXr6e5n+1wm1813L5Ni2PG31PIKviKcsBjGweuw+3r3evFMLsiSf901n2WFapqiJPJIDt1NRLofkHDPuxPQFYzVieRG46vWB6V9tkfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPV6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	(Exim 4.92)
-	(envelope-from <s.kerkmann@pengutronix.de>)
-	id 1t0KQH-0005bm-OI; Mon, 14 Oct 2024 14:43:41 +0200
-Message-ID: <c2cdfba1-afcc-4a77-8890-7da49c4b73c2@pengutronix.de>
-Date: Mon, 14 Oct 2024 14:43:39 +0200
+	s=arc-20240116; t=1728917048; c=relaxed/simple;
+	bh=rNSLofclVVlDLziVzmKGEyFarWS274DEUsUY33rg0rQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEulflDCDipXw55xrY8fVrIXxPKmC7EhfoT7nkhoQVyKtX6wSQ9/qeQRzTRaWFQVJySqzQAWoAbD82P5CcxIrmSIfPVdmuiA2Np0kX3b//00IXWsXsNCtjPc++RBAq1bSg5owBz9WprIE37Tn62WTgn1ZCBpCznhyD3s6XOK5Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=nTkFOnXm; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="nTkFOnXm"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7afcf9f3c96so530307885a.1
+        for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 07:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1728917044; x=1729521844; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P8+Eaka4yodQw63ewN28IGOimAmsphprlynPxP29NWY=;
+        b=nTkFOnXmRQA3OcuRuQHZfeAGv12v2RcMHINhOOQK9UfZDOG+mMQDw+wh+1aAJlsif5
+         6bDdIO+NsjyxSeZ6OU3zK9I/aGRqNWSG3Mlb4UqSXm9O53rVNhHAHTI1iLpEsCdW0ogy
+         QEPA51AZY5yS/kmah96VTAY1ixCy7lB1agleGEJEsBsGDQvMrrRYIlftlqsS6ygWzwsz
+         OWM0DtwOlcSUt+noyUQVql/k1hwjc4x4BzMzpKeTukJCRSMnm4hcKCbxow96wWIoJdgA
+         BZQPfT3cyYYBHjDInnPgIr8+F21u1iZLypqXb3gmKBp61ol7h48TrgDnhsfUkCCrO4sq
+         9CNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728917044; x=1729521844;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P8+Eaka4yodQw63ewN28IGOimAmsphprlynPxP29NWY=;
+        b=ofT4g8ovQR6LpEbPMW3tKkV88wGnWd71pehNZQENhwwzmOsUBY+YoSNLerWfpXe2MC
+         MP8yVhYeKNr1tmyEXC/iMVyR7qRmdZZ/wCX/c3FBwTYy/rRdLb5yhYXNYLw8HhOPg9LI
+         QHqlg0d4FghUGm4Jxp8HjMGpFzRnmXIhb09260e5ddPnT6PzqEJrT2SsmbsPSWA/OAvh
+         STO5YAi94JukcWfyHfmRGQJWF3pumRF+HleVNWXinRPXFXkTfJE4GuV8536KUh4s1GQY
+         gL12g570NKBATGifrh0fWuXlQZNeyH7orHh/6rhDmlAVO5hIsxVVj0/ydNa0SGcYRtf5
+         bEIA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4YUtNkj+Bs3JYEu3SwRc+0sGbQIRDyZOWqhFciP6AgX2GSNYNLnerAfXNY1DkYE6qgn+gt3sFU333jA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YygNtRsuduo8VGXdOtHgUuuzHe3FjbEYgOGKaWHl20YXsQWlNn0
+	1+OicMLIyZYI48o7bH1VHkXb8ENA4rMJE8+2P7XG/QHPBU4rz5+I5i3NUR3UtOk=
+X-Google-Smtp-Source: AGHT+IG4z09y/IVx11c7WF6iK+anW7AiOx1+YCGeKGYvBPx9DjLa18/G88jda//QeiNpJPf29EABdw==
+X-Received: by 2002:a05:620a:45a1:b0:7b1:1916:b77 with SMTP id af79cd13be357-7b121005d8fmr1282738085a.51.1728917043951;
+        Mon, 14 Oct 2024 07:44:03 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b1148f07f4sm426250785a.65.2024.10.14.07.44.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 07:44:03 -0700 (PDT)
+Date: Mon, 14 Oct 2024 10:43:58 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Youssef Esmat <youssefesmat@google.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bert Karwatzki <spasswolf@web.de>, regressions@lists.linux.dev
+Subject: Re: [PATCH 3/3] sched/core: Indicate a sched_delayed task was
+ migrated before wakeup
+Message-ID: <20241014144358.GB1021@cmpxchg.org>
+References: <20241010082838.2474-1-kprateek.nayak@amd.com>
+ <20241010082838.2474-4-kprateek.nayak@amd.com>
+ <20241010130316.GA181795@cmpxchg.org>
+ <20241010130621.GH17263@noisy.programming.kicks-ass.net>
+ <20241010193712.GC181795@cmpxchg.org>
+ <20241011083323.GL17263@noisy.programming.kicks-ass.net>
+ <20241011100803.GA331616@cmpxchg.org>
+ <20241011103958.GO17263@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: Stefan Kerkmann <s.kerkmann@pengutronix.de>
-To: regressions@lists.linux.dev
-Cc: Dhruva Gole <d-gole@ti.com>, Yoshitaka Ikeda <ikeda@nskint.co.jp>,
- Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@pengutronix.de
-Subject: [REGRESSION] spi: cadence-quadspi: STIG mode results in timeouts for
- Micron MT25QL01 flash
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: s.kerkmann@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241011103958.GO17263@noisy.programming.kicks-ass.net>
 
-Hello,
+On Fri, Oct 11, 2024 at 12:39:58PM +0200, Peter Zijlstra wrote:
+> On Fri, Oct 11, 2024 at 06:08:03AM -0400, Johannes Weiner wrote:
+> > Completely untested. But if it looks good, I'll send a proper patch.
+> 
+> Sure. Thanks for doing this.
 
-I have run into the same regression when probing a Micron MT25QL01 SPI-NOR flash
-on a Intel CycloneV platform (socfpga) as Yoshitaka Ikeda[1]. The regression
-manifests in read timeouts. Bisecting the issue tracked it down to commit
-"d403fb6e76bf8 spi: cadence-quadspi: use STIG mode for small reads". Reverting
-the commit resolves the issue on v6.12-rc3. There are no custom patches applied,
-except for the debugging output mentioned in the linked thread.
+Ok here goes. Built, booted and runtime-tested.
 
-The good case is as follows:
+---
 
-```
-[    1.063171] **********spi_mem_op dump**************
-[    1.063183] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    1.068093] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
-[    1.073837] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.079823] ***************************************
-[    1.086068] **********spi_mem_op dump**************
-[    1.090931] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
-[    1.095815] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.101543] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.107547] ***************************************
-[    1.113835] **********spi_mem_op dump**************
-[    1.118695] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
-[    1.123573] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.129395] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.135392] ***************************************
-[    1.141592] **********spi_mem_op dump**************
-[    1.146471] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
-[    1.151335] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.157072] data: nbytes:0x88 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.163058] ***************************************
-[    1.169341] **********spi_mem_op dump**************
-[    1.174219] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x30
-[    1.179082] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.184904] data: nbytes:0x40 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.190890] ***************************************
-[    1.197183] **********spi_mem_op dump**************
-[    1.202045] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x80
-[    1.206925] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.212740] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.218736] ***************************************
-[    1.224916] **********spi_mem_op dump**************
-[    1.229776] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    1.234649] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
-[    1.240376] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
-[    1.246283] ***************************************
-[    1.252443] **********spi_mem_op dump**************
-[    1.257314] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    1.262176] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0xB7
-[    1.267917] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
-[    1.273914] ***************************************
-[    1.280074] **********spi_mem_op dump**************
-[    1.284946] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    1.289809] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x4
-[    1.295544] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
-[    1.301444] ***************************************
-[    1.307694] 5 fixed-partitions partitions found on MTD device ff705000.spi.0
-[    1.319593] Creating 5 MTD partitions on "ff705000.spi.0":
-[    1.325080] 0x000000000000-0x000000040000 : "preloader"
-[    1.331825] 0x000000040000-0x0000000c0000 : "bootloader"
-[    1.338645] 0x0000000c0000-0x0000000e0000 : "barebox-environment"
-[    1.346299] 0x0000000e0000-0x000000110000 : "state-storage"
-[    1.353319] 0x000000110000-0x000008000000 : "ubi"
-```
+From 91f230caa0119877cb861047e1af1371bf00d908 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Fri, 11 Oct 2024 06:18:07 -0400
+Subject: [PATCH] sched: psi: pass enqueue/dequeue flags to psi callbacks
+ directly
 
-With the STIG short read optimization enabled, the read timeouts occur:
+What psi needs to do on each enqueue and dequeue has gotten more
+subtle, and the generic sched code trying to distill this into a bool
+for the callbacks is awkward.
 
-```
-[    0.931469] **********spi_mem_op dump**************
-[    0.931482] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    0.936398] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
-[    0.942129] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    0.948132] ***************************************
-[    0.954369] **********spi_mem_op dump**************
-[    0.959233] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
-[    0.964117] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    0.969845] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    0.975844] ***************************************
-[    1.482104] cadence-qspi ff705000.spi: Flash command execution timed out.
-[    1.493754] **********spi_mem_op dump**************
-[    1.493759] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
-[    1.498623] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
-[    1.504451] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
-[    1.510438] ***************************************
-[    1.516611] spi-nor spi0.0: operation failed with -110
-[    2.026639] cadence-qspi ff705000.spi: Flash command execution timed out.
-[    2.033430] **********spi_mem_op dump**************
-[    2.033437] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
-[    2.038300] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
-[    2.044041] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
-[    2.049942] ***************************************
-[    2.056112] spi-nor spi0.0: operation failed with -110
-[    2.066110] spi-nor spi0.0: probe with driver spi-nor failed with error -110
-```
+Pass the flags directly and let psi parse them. For that to work, the
+#include "stats.h" (which has the psi callback implementations) needs
+to be below the flag definitions in "sched.h". Move that section
+further down, next to some of the other accounting stuff.
 
-The DT node for the flash is as follows:
+This also puts the ENQUEUE_SAVE/RESTORE branch behind the psi jump
+label, slightly reducing overhead when PSI=y but runtime disabled.
 
-```
-&qspi {
-	status = "okay";
+Link: https://lore.kernel.org/lkml/20241011083323.GL17263@noisy.programming.kicks-ass.net/
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ kernel/sched/core.c  | 12 +++++-----
+ kernel/sched/sched.h | 56 ++++++++++++++++++++++----------------------
+ kernel/sched/stats.h | 29 +++++++++++++++--------
+ 3 files changed, 53 insertions(+), 44 deletions(-)
 
-	flash0: flash@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		/* Micron MT25QL01 */
-		compatible = "n25q00", "jedec,spi-nor";
-		reg = <0>;	/* chip select */
-		spi-max-frequency = <100000000>;
-		m25p,fast-read;
-		cdns,page-size = <256>;
-		cdns,block-size = <16>;   /* 2^16, 64KB */
-		cdns,read-delay = <4>;    /* delay value in read data capture register */
-		cdns,tshsl-ns = <50>;
-		cdns,tsd2d-ns = <50>;
-		cdns,tchsh-ns = <4>;
-		cdns,tslch-ns = <4>;
-	};
-};
-```
-
-Regards,
-Stefan Kerkmann
-
-[1]:
-https://lore.kernel.org/lkml/OSZPR01MB70048CE259A3D63C4179199A8B659@OSZPR01MB7004.jpnprd01.prod.outlook.com/#t
-
-#regzbot introduced: d403fb6e76bf854ef0f7d84e797e51b9494788e0
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 527502a86ff9..42cf181bf3ab 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2019,10 +2019,10 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+ 	 */
+ 	uclamp_rq_inc(rq, p);
+ 
+-	if (!(flags & ENQUEUE_RESTORE)) {
++	psi_enqueue(p, flags);
++
++	if (!(flags & ENQUEUE_RESTORE))
+ 		sched_info_enqueue(rq, p);
+-		psi_enqueue(p, flags & ENQUEUE_MIGRATED);
+-	}
+ 
+ 	if (sched_core_enabled(rq))
+ 		sched_core_enqueue(rq, p);
+@@ -2039,10 +2039,10 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ 	if (!(flags & DEQUEUE_NOCLOCK))
+ 		update_rq_clock(rq);
+ 
+-	if (!(flags & DEQUEUE_SAVE)) {
++	if (!(flags & DEQUEUE_SAVE))
+ 		sched_info_dequeue(rq, p);
+-		psi_dequeue(p, !(flags & DEQUEUE_SLEEP));
+-	}
++
++	psi_dequeue(p, flags);
+ 
+ 	/*
+ 	 * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b1c3588a8f00..bbda03f17126 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2085,34 +2085,6 @@ static inline const struct cpumask *task_user_cpus(struct task_struct *p)
+ 
+ #endif /* CONFIG_SMP */
+ 
+-#include "stats.h"
+-
+-#if defined(CONFIG_SCHED_CORE) && defined(CONFIG_SCHEDSTATS)
+-
+-extern void __sched_core_account_forceidle(struct rq *rq);
+-
+-static inline void sched_core_account_forceidle(struct rq *rq)
+-{
+-	if (schedstat_enabled())
+-		__sched_core_account_forceidle(rq);
+-}
+-
+-extern void __sched_core_tick(struct rq *rq);
+-
+-static inline void sched_core_tick(struct rq *rq)
+-{
+-	if (sched_core_enabled(rq) && schedstat_enabled())
+-		__sched_core_tick(rq);
+-}
+-
+-#else /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS): */
+-
+-static inline void sched_core_account_forceidle(struct rq *rq) { }
+-
+-static inline void sched_core_tick(struct rq *rq) { }
+-
+-#endif /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS) */
+-
+ #ifdef CONFIG_CGROUP_SCHED
+ 
+ /*
+@@ -3166,6 +3138,34 @@ extern void nohz_run_idle_balance(int cpu);
+ static inline void nohz_run_idle_balance(int cpu) { }
+ #endif
+ 
++#include "stats.h"
++
++#if defined(CONFIG_SCHED_CORE) && defined(CONFIG_SCHEDSTATS)
++
++extern void __sched_core_account_forceidle(struct rq *rq);
++
++static inline void sched_core_account_forceidle(struct rq *rq)
++{
++	if (schedstat_enabled())
++		__sched_core_account_forceidle(rq);
++}
++
++extern void __sched_core_tick(struct rq *rq);
++
++static inline void sched_core_tick(struct rq *rq)
++{
++	if (sched_core_enabled(rq) && schedstat_enabled())
++		__sched_core_tick(rq);
++}
++
++#else /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS): */
++
++static inline void sched_core_account_forceidle(struct rq *rq) { }
++
++static inline void sched_core_tick(struct rq *rq) { }
++
++#endif /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS) */
++
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+ 
+ struct irqtime {
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index 767e098a3bd1..8ee0add5a48a 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -127,21 +127,25 @@ static inline void psi_account_irqtime(struct rq *rq, struct task_struct *curr,
+  * go through migration requeues. In this case, *sleeping* states need
+  * to be transferred.
+  */
+-static inline void psi_enqueue(struct task_struct *p, bool migrate)
++static inline void psi_enqueue(struct task_struct *p, int flags)
+ {
+ 	int clear = 0, set = 0;
+ 
+ 	if (static_branch_likely(&psi_disabled))
+ 		return;
+ 
++	/* Same runqueue, nothing changed for psi */
++	if (flags & ENQUEUE_RESTORE)
++		return;
++
+ 	if (p->se.sched_delayed) {
+ 		/* CPU migration of "sleeping" task */
+-		SCHED_WARN_ON(!migrate);
++		SCHED_WARN_ON(!(flags & ENQUEUE_MIGRATED));
+ 		if (p->in_memstall)
+ 			set |= TSK_MEMSTALL;
+ 		if (p->in_iowait)
+ 			set |= TSK_IOWAIT;
+-	} else if (migrate) {
++	} else if (flags & ENQUEUE_MIGRATED) {
+ 		/* CPU migration of runnable task */
+ 		set = TSK_RUNNING;
+ 		if (p->in_memstall)
+@@ -158,17 +162,14 @@ static inline void psi_enqueue(struct task_struct *p, bool migrate)
+ 	psi_task_change(p, clear, set);
+ }
+ 
+-static inline void psi_dequeue(struct task_struct *p, bool migrate)
++static inline void psi_dequeue(struct task_struct *p, int flags)
+ {
+ 	if (static_branch_likely(&psi_disabled))
+ 		return;
+ 
+-	/*
+-	 * When migrating a task to another CPU, clear all psi
+-	 * state. The enqueue callback above will work it out.
+-	 */
+-	if (migrate)
+-		psi_task_change(p, p->psi_flags, 0);
++	/* Same runqueue, nothing changed for psi */
++	if (flags & DEQUEUE_SAVE)
++		return;
+ 
+ 	/*
+ 	 * A voluntary sleep is a dequeue followed by a task switch. To
+@@ -176,6 +177,14 @@ static inline void psi_dequeue(struct task_struct *p, bool migrate)
+ 	 * TSK_RUNNING and TSK_IOWAIT for us when it moves TSK_ONCPU.
+ 	 * Do nothing here.
+ 	 */
++	if (flags & DEQUEUE_SLEEP)
++		return;
++
++	/*
++	 * When migrating a task to another CPU, clear all psi
++	 * state. The enqueue callback above will work it out.
++	 */
++	psi_task_change(p, p->psi_flags, 0);
+ }
+ 
+ static inline void psi_ttwu_dequeue(struct task_struct *p)
 -- 
-Pengutronix e.K.                       | Stefan Kerkmann             |
-Steuerwalder Str. 21                   | https://www.pengutronix.de/ |
-31137 Hildesheim, Germany              | Phone: +49-5121-206917-128  |
-Amtsgericht Hildesheim, HRA 2686       | Fax:   +49-5121-206917-9    |
+2.47.0
 
