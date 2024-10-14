@@ -1,310 +1,249 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461014595B
-	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 14:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BAF1D1728
+	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 21:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728917048; cv=none; b=lentriYVa+e/WDFaOHOCDU7nKwLEQdnXwGRRdYAwzBAUA3MkxwfkumO1VJ77rEitFE9T/ddmWnGGQ0Jbrxo4+FSW0VVAII7PbAag7NuzGw8+0f1+ynXkJLyBltlTg7ayci5cycdy7yN5gm2dacGUK3j0E6pz3H1Y2V3AwkUaU/E=
+	t=1728941987; cv=none; b=Y41YzMMN7v2imkiTSFjMYZ/t0RDKxqjXcovWI5eH7+HLzX1yuZR/2h2C2wPtmAbg0nrQRh0NlaUgiho6KYzBAmd4isLTOHigi6tHfIK0aO4ixby9CB59FJDzwGByDru/ujjcgjJ3kxdqjpS5xBIsyEI+BlXqvs7FDz5EpPMp8OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728917048; c=relaxed/simple;
-	bh=rNSLofclVVlDLziVzmKGEyFarWS274DEUsUY33rg0rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pEulflDCDipXw55xrY8fVrIXxPKmC7EhfoT7nkhoQVyKtX6wSQ9/qeQRzTRaWFQVJySqzQAWoAbD82P5CcxIrmSIfPVdmuiA2Np0kX3b//00IXWsXsNCtjPc++RBAq1bSg5owBz9WprIE37Tn62WTgn1ZCBpCznhyD3s6XOK5Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=nTkFOnXm; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1728941987; c=relaxed/simple;
+	bh=N4ubeMxtZYY3hoTRTFgbOjAyVC5gCI706GptvR2plVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bBGhU/u27NZRdH9WtHLiFlW971QTghfjzOYpWEjYSx78AxsbPFCvOhBcUeNiINmaSjBHneZKorHHe4FISBOviVTzOo6RsXF+phfAUiDkdbrijix1whB5cSGJL8WP5nPDwemIops+9XhhaDcjwhseg8SknTDvNWC/O9ZZjwJPqFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2g3bXXLY; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="nTkFOnXm"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7afcf9f3c96so530307885a.1
-        for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 07:44:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2g3bXXLY"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a99b1f43aceso667063866b.0
+        for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 14:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1728917044; x=1729521844; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P8+Eaka4yodQw63ewN28IGOimAmsphprlynPxP29NWY=;
-        b=nTkFOnXmRQA3OcuRuQHZfeAGv12v2RcMHINhOOQK9UfZDOG+mMQDw+wh+1aAJlsif5
-         6bDdIO+NsjyxSeZ6OU3zK9I/aGRqNWSG3Mlb4UqSXm9O53rVNhHAHTI1iLpEsCdW0ogy
-         QEPA51AZY5yS/kmah96VTAY1ixCy7lB1agleGEJEsBsGDQvMrrRYIlftlqsS6ygWzwsz
-         OWM0DtwOlcSUt+noyUQVql/k1hwjc4x4BzMzpKeTukJCRSMnm4hcKCbxow96wWIoJdgA
-         BZQPfT3cyYYBHjDInnPgIr8+F21u1iZLypqXb3gmKBp61ol7h48TrgDnhsfUkCCrO4sq
-         9CNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728917044; x=1729521844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1728941984; x=1729546784; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P8+Eaka4yodQw63ewN28IGOimAmsphprlynPxP29NWY=;
-        b=ofT4g8ovQR6LpEbPMW3tKkV88wGnWd71pehNZQENhwwzmOsUBY+YoSNLerWfpXe2MC
-         MP8yVhYeKNr1tmyEXC/iMVyR7qRmdZZ/wCX/c3FBwTYy/rRdLb5yhYXNYLw8HhOPg9LI
-         QHqlg0d4FghUGm4Jxp8HjMGpFzRnmXIhb09260e5ddPnT6PzqEJrT2SsmbsPSWA/OAvh
-         STO5YAi94JukcWfyHfmRGQJWF3pumRF+HleVNWXinRPXFXkTfJE4GuV8536KUh4s1GQY
-         gL12g570NKBATGifrh0fWuXlQZNeyH7orHh/6rhDmlAVO5hIsxVVj0/ydNa0SGcYRtf5
-         bEIA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4YUtNkj+Bs3JYEu3SwRc+0sGbQIRDyZOWqhFciP6AgX2GSNYNLnerAfXNY1DkYE6qgn+gt3sFU333jA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YygNtRsuduo8VGXdOtHgUuuzHe3FjbEYgOGKaWHl20YXsQWlNn0
-	1+OicMLIyZYI48o7bH1VHkXb8ENA4rMJE8+2P7XG/QHPBU4rz5+I5i3NUR3UtOk=
-X-Google-Smtp-Source: AGHT+IG4z09y/IVx11c7WF6iK+anW7AiOx1+YCGeKGYvBPx9DjLa18/G88jda//QeiNpJPf29EABdw==
-X-Received: by 2002:a05:620a:45a1:b0:7b1:1916:b77 with SMTP id af79cd13be357-7b121005d8fmr1282738085a.51.1728917043951;
-        Mon, 14 Oct 2024 07:44:03 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b1148f07f4sm426250785a.65.2024.10.14.07.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 07:44:03 -0700 (PDT)
-Date: Mon, 14 Oct 2024 10:43:58 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Youssef Esmat <youssefesmat@google.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Bert Karwatzki <spasswolf@web.de>, regressions@lists.linux.dev
-Subject: Re: [PATCH 3/3] sched/core: Indicate a sched_delayed task was
- migrated before wakeup
-Message-ID: <20241014144358.GB1021@cmpxchg.org>
-References: <20241010082838.2474-1-kprateek.nayak@amd.com>
- <20241010082838.2474-4-kprateek.nayak@amd.com>
- <20241010130316.GA181795@cmpxchg.org>
- <20241010130621.GH17263@noisy.programming.kicks-ass.net>
- <20241010193712.GC181795@cmpxchg.org>
- <20241011083323.GL17263@noisy.programming.kicks-ass.net>
- <20241011100803.GA331616@cmpxchg.org>
- <20241011103958.GO17263@noisy.programming.kicks-ass.net>
+        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
+        b=2g3bXXLYkSbSXA3vbms/q21c1URbZYDQuZs2aqJoi4xMKz+3ldC6a8yXxzcEg2zw5a
+         NBHCoSmbCl34EvjrUy/KuLC8EcCq3XnkA1jeyPGOydfaHp2MBJdJ71WlT7HSumdQfi59
+         kXMgPcvn4vWfG/Xzz002bOVUcGY3oT37XdjfuBm3G8whwhTmhc9xvXuJSGnNdmRwcP25
+         Q+a28l0NDrQ6SL3cF5126KlitopeH/JXb4tvA9ygsjgmUVfZ/tQl0vsWjXNr4Ty3d1nt
+         yLN4mzqQJqZ4poMvz38a47PwmcJcuGeUfBnbh4BOzU4LG8CpL9Vru/7ANZUhgJCFC8jy
+         6ejg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728941984; x=1729546784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
+        b=WDaB6IqIyC/TZqHopypmIK/WhQKwNTHt3iR6MU8z87zZ/JwouFr2ifc+og5dcZBFZD
+         OZSG4Y/pJekBytryc3rmHfaP3UXXxvyCY+V226XvJ8nyNoSwICzwVZz1eqAJO6lVFZ4n
+         283smBbXh43H9hP2M6s+tJq1OeyTlNy4z4f2KULJb3u6jlDqaEPj7wMkzYzEy3ASq/Rm
+         wijP4ogf0JQeEz9GXlYjSyyMdS826sUE816jTfBLSKYIAXCIOecOOj6UQx/G62nGcIMn
+         zPC53TtEEzUhG1+RwL7nEcqyi0l4TCM0jWh42bPNoRDXdXKmiZJqxfqEvVPOTQKrOqnf
+         hb2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVzgN5jluTKI/s9tsO2hMVN+f4K0MlWg+Q4Wi4//uECn1wfJ1IMAxtKR6K6fW5o5C9KoerYI6zpnK1qWA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxlF5vEfbn91HeoUeoM1RK+xDcEgRfXrN3Qb5+02yIkNzdIbt3F
+	JS2gTQ2lNxwjQ5B1xTFINarfL8HJcAfa46cG9zcHEWaK0uTavt4a+RsYtVLMwxg525OXgbKQN2V
+	Xp2n3p30J7lJYAVmMdKI103cCYrqEl/SFU+o=
+X-Google-Smtp-Source: AGHT+IFezu5CuG2wy6vTwMe51sB4ras/WO24nsNQmzs/ECPU2E5UBEHIWzUwNkN76hqWAt+exwA5Vo+oEQmkGwO5hUQ=
+X-Received: by 2002:a17:907:7ba9:b0:a99:4566:cd42 with SMTP id
+ a640c23a62f3a-a99a0d092efmr1482503866b.0.1728941984105; Mon, 14 Oct 2024
+ 14:39:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241011103958.GO17263@noisy.programming.kicks-ass.net>
+References: <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux> <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
+ <Zv61dCaxScXuOjZg@archlinux> <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
+In-Reply-To: <202410040958.C19D3B9E48@keescook>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 14 Oct 2024 14:39:26 -0700
+Message-ID: <CAGG=3QWw40ARPp9nPT5QEgkKMZ0i_Un_BBT7Th0nruizCRORtw@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
+To: Kees Cook <kees@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ardb@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 12:39:58PM +0200, Peter Zijlstra wrote:
-> On Fri, Oct 11, 2024 at 06:08:03AM -0400, Johannes Weiner wrote:
-> > Completely untested. But if it looks good, I'll send a proper patch.
-> 
-> Sure. Thanks for doing this.
+On Fri, Oct 4, 2024 at 10:13=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Thu, Oct 03, 2024 at 11:48:18PM +0200, Jan Hendrik Farr wrote:
+> > On 03 14:28:01, Kees Cook wrote:
+> > > On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
+> > > > gcc currently says that the __bdos of struct containing a flexible =
+array
+> > > > member is:
+> > > >
+> > > > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
+> > > >
+> > > > clang however does the following:
+> > > >
+> > > > max(sizeof(<whole struct>), offsetof(<flexible array member>) + siz=
+eof(<flexible array element>) * <count>)
+> > >
+> > > Clang's calculation seems very wrong. I would expect it to match GCC'=
+s.
+> > >
+> >
+> > I was on the very same train of thought, but I have since changed my
+> > mind a bit. A struct containing a flexible array member can be allocate=
+d in
+> > two ways:
+> >
+> > (1):
+> >
+> > struct posix_acl *acl =3D malloc(sizeof(struct posix_acl) + sizeof(stru=
+ct posix_acl_entry) * 1);
+> > acl.a_count =3D 1;
+> >
+> > or (2):
+> >
+> > struct posix_acl *acl =3D malloc(offsetof(struct posix_acl, a_entries) =
++ sizeof(struct posix_acl_entry) * 1);
+> > acl.a_count =3D 1;
+> >
+> > Both are valid ways to allocate it. __bdos does not know which of these
+> > methods was used to allocate the struct whose size it has to determine,
+> > so it's giving the lower bound that doesn't include the (potential)
+> > padding at the end.
+>
+Slightly off topic: while I was looking at the definition for
+struct_size, I noticed this:
 
-Ok here goes. Built, booted and runtime-tested.
+#define flex_array_size(p, member, count)                               \
+        __builtin_choose_expr(__is_constexpr(count),                    \
+                (count) * sizeof(*(p)->member) +
+__must_be_array((p)->member),  \
+                size_mul(count, sizeof(*(p)->member) +
+__must_be_array((p)->member)))
 
----
+In particular the 'size_mul' line. I realize that '__must_be_array'
+will return a '0' or static compiler error, but it seems inconsistent
+that it's included as part of 'size_mul'. Maybe something like this
+instead (notice the parens on the last line)?
 
-From 91f230caa0119877cb861047e1af1371bf00d908 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Fri, 11 Oct 2024 06:18:07 -0400
-Subject: [PATCH] sched: psi: pass enqueue/dequeue flags to psi callbacks
- directly
+#define flex_array_size(p, member, count)                               \
+        __builtin_choose_expr(__is_constexpr(count),                    \
+                (count) * sizeof(*(p)->member) +
+__must_be_array((p)->member),  \
+                size_mul(count, sizeof(*(p)->member)) +
+__must_be_array((p)->member))
 
-What psi needs to do on each enqueue and dequeue has gotten more
-subtle, and the generic sched code trying to distill this into a bool
-for the callbacks is awkward.
 
-Pass the flags directly and let psi parse them. For that to work, the
-#include "stats.h" (which has the psi callback implementations) needs
-to be below the flag definitions in "sched.h". Move that section
-further down, next to some of the other accounting stuff.
-
-This also puts the ENQUEUE_SAVE/RESTORE branch behind the psi jump
-label, slightly reducing overhead when PSI=y but runtime disabled.
-
-Link: https://lore.kernel.org/lkml/20241011083323.GL17263@noisy.programming.kicks-ass.net/
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- kernel/sched/core.c  | 12 +++++-----
- kernel/sched/sched.h | 56 ++++++++++++++++++++++----------------------
- kernel/sched/stats.h | 29 +++++++++++++++--------
- 3 files changed, 53 insertions(+), 44 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 527502a86ff9..42cf181bf3ab 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2019,10 +2019,10 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 	 */
- 	uclamp_rq_inc(rq, p);
- 
--	if (!(flags & ENQUEUE_RESTORE)) {
-+	psi_enqueue(p, flags);
-+
-+	if (!(flags & ENQUEUE_RESTORE))
- 		sched_info_enqueue(rq, p);
--		psi_enqueue(p, flags & ENQUEUE_MIGRATED);
--	}
- 
- 	if (sched_core_enabled(rq))
- 		sched_core_enqueue(rq, p);
-@@ -2039,10 +2039,10 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(flags & DEQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
--	if (!(flags & DEQUEUE_SAVE)) {
-+	if (!(flags & DEQUEUE_SAVE))
- 		sched_info_dequeue(rq, p);
--		psi_dequeue(p, !(flags & DEQUEUE_SLEEP));
--	}
-+
-+	psi_dequeue(p, flags);
- 
- 	/*
- 	 * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b1c3588a8f00..bbda03f17126 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2085,34 +2085,6 @@ static inline const struct cpumask *task_user_cpus(struct task_struct *p)
- 
- #endif /* CONFIG_SMP */
- 
--#include "stats.h"
--
--#if defined(CONFIG_SCHED_CORE) && defined(CONFIG_SCHEDSTATS)
--
--extern void __sched_core_account_forceidle(struct rq *rq);
--
--static inline void sched_core_account_forceidle(struct rq *rq)
--{
--	if (schedstat_enabled())
--		__sched_core_account_forceidle(rq);
--}
--
--extern void __sched_core_tick(struct rq *rq);
--
--static inline void sched_core_tick(struct rq *rq)
--{
--	if (sched_core_enabled(rq) && schedstat_enabled())
--		__sched_core_tick(rq);
--}
--
--#else /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS): */
--
--static inline void sched_core_account_forceidle(struct rq *rq) { }
--
--static inline void sched_core_tick(struct rq *rq) { }
--
--#endif /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS) */
--
- #ifdef CONFIG_CGROUP_SCHED
- 
- /*
-@@ -3166,6 +3138,34 @@ extern void nohz_run_idle_balance(int cpu);
- static inline void nohz_run_idle_balance(int cpu) { }
- #endif
- 
-+#include "stats.h"
-+
-+#if defined(CONFIG_SCHED_CORE) && defined(CONFIG_SCHEDSTATS)
-+
-+extern void __sched_core_account_forceidle(struct rq *rq);
-+
-+static inline void sched_core_account_forceidle(struct rq *rq)
-+{
-+	if (schedstat_enabled())
-+		__sched_core_account_forceidle(rq);
-+}
-+
-+extern void __sched_core_tick(struct rq *rq);
-+
-+static inline void sched_core_tick(struct rq *rq)
-+{
-+	if (sched_core_enabled(rq) && schedstat_enabled())
-+		__sched_core_tick(rq);
-+}
-+
-+#else /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS): */
-+
-+static inline void sched_core_account_forceidle(struct rq *rq) { }
-+
-+static inline void sched_core_tick(struct rq *rq) { }
-+
-+#endif /* !(CONFIG_SCHED_CORE && CONFIG_SCHEDSTATS) */
-+
- #ifdef CONFIG_IRQ_TIME_ACCOUNTING
- 
- struct irqtime {
-diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-index 767e098a3bd1..8ee0add5a48a 100644
---- a/kernel/sched/stats.h
-+++ b/kernel/sched/stats.h
-@@ -127,21 +127,25 @@ static inline void psi_account_irqtime(struct rq *rq, struct task_struct *curr,
-  * go through migration requeues. In this case, *sleeping* states need
-  * to be transferred.
-  */
--static inline void psi_enqueue(struct task_struct *p, bool migrate)
-+static inline void psi_enqueue(struct task_struct *p, int flags)
- {
- 	int clear = 0, set = 0;
- 
- 	if (static_branch_likely(&psi_disabled))
- 		return;
- 
-+	/* Same runqueue, nothing changed for psi */
-+	if (flags & ENQUEUE_RESTORE)
-+		return;
-+
- 	if (p->se.sched_delayed) {
- 		/* CPU migration of "sleeping" task */
--		SCHED_WARN_ON(!migrate);
-+		SCHED_WARN_ON(!(flags & ENQUEUE_MIGRATED));
- 		if (p->in_memstall)
- 			set |= TSK_MEMSTALL;
- 		if (p->in_iowait)
- 			set |= TSK_IOWAIT;
--	} else if (migrate) {
-+	} else if (flags & ENQUEUE_MIGRATED) {
- 		/* CPU migration of runnable task */
- 		set = TSK_RUNNING;
- 		if (p->in_memstall)
-@@ -158,17 +162,14 @@ static inline void psi_enqueue(struct task_struct *p, bool migrate)
- 	psi_task_change(p, clear, set);
- }
- 
--static inline void psi_dequeue(struct task_struct *p, bool migrate)
-+static inline void psi_dequeue(struct task_struct *p, int flags)
- {
- 	if (static_branch_likely(&psi_disabled))
- 		return;
- 
--	/*
--	 * When migrating a task to another CPU, clear all psi
--	 * state. The enqueue callback above will work it out.
--	 */
--	if (migrate)
--		psi_task_change(p, p->psi_flags, 0);
-+	/* Same runqueue, nothing changed for psi */
-+	if (flags & DEQUEUE_SAVE)
-+		return;
- 
- 	/*
- 	 * A voluntary sleep is a dequeue followed by a task switch. To
-@@ -176,6 +177,14 @@ static inline void psi_dequeue(struct task_struct *p, bool migrate)
- 	 * TSK_RUNNING and TSK_IOWAIT for us when it moves TSK_ONCPU.
- 	 * Do nothing here.
- 	 */
-+	if (flags & DEQUEUE_SLEEP)
-+		return;
-+
-+	/*
-+	 * When migrating a task to another CPU, clear all psi
-+	 * state. The enqueue callback above will work it out.
-+	 */
-+	psi_task_change(p, p->psi_flags, 0);
- }
- 
- static inline void psi_ttwu_dequeue(struct task_struct *p)
--- 
-2.47.0
-
+> I want to separate several easily confused issues. Instead of just
+> saying __bdos, let's clearly refer to what calculation within bdos is
+> being used. There are 3 choices currently:
+> - alloc_size attribute
+> - counted_by attribute
+> - fallback to __bos (which is similar to sizeof(), except that FAMs are 0=
+ sized)
+>
+> Additionally there are (for all intents and purposes) 2 size
+> determinations to be made by __bos and __bdos, via argument 2:
+> - containing object size (type 0) ("maximum size")
+> - specific object size (type 1) ("minimum size")
+>
+> For example, consider:
+>
+> struct posix_acl *acl =3D malloc(1024);
+> acl->a_count =3D 1;
+>
+> what should these return:
+>
+>         __bos(acl, 0)
+>         __bos(acl, 1)
+>         __bdos(acl, 0)
+>         __bdos(acl, 1)
+>         __bos(acl->a_entries, 0)
+>         __bos(acl->a_entries, 1)
+>         __bdos(acl->a_entries, 0)
+>         __bdos(acl->a_entries, 1)
+>
+> > So it comes down to false positives vs false negatives...
+> > More details here:
+> > https://github.com/llvm/llvm-project/pull/111015
+> >
+> > Clangs current behavior would essentially force kernel code to always
+> > assume option (2) is used. So
+> >
+> > struct posix_acl *
+> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+> > {
+> >       struct posix_acl *clone =3D NULL;
+> >
+> >       if (acl) {
+> >               int size =3D sizeof(struct posix_acl) + acl->a_count *
+> >                          sizeof(struct posix_acl_entry);
+> >               clone =3D kmemdup(acl, size, flags);
+> >               if (clone)
+> >                       refcount_set(&clone->a_refcount, 1);
+> >       }
+> >       return clone;
+> > }
+> > EXPORT_SYMBOL_GPL(posix_acl_clone);
+> >
+> > from linux/fs/posix_acl.c would have to turn into something like:
+> >
+> > struct posix_acl *
+> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+> > {
+> >       struct posix_acl *clone =3D NULL;
+> >
+> >       if (acl) {
+> >               int size =3D offsetof(struct posix_acl, a_entries) + acl-=
+>a_count *
+> >                          sizeof(struct posix_acl_entry);
+> >               clone =3D kmemdup(acl, size, flags);
+> >               if (clone)
+> >                       refcount_set(&clone->a_refcount, 1);
+> >       }
+> >       return clone;
+> > }
+> > EXPORT_SYMBOL_GPL(posix_acl_clone);
+> >
+> > Which is actually safer, because can you actually be sure this posix_ac=
+l
+> > wasn't allocated using method (2)?
+>
+> First, this should not be using an open coded calculation at all; it
+> should use the struct_size() macro.
+>
+> Secondly, if we want to change struct_size(), then we must (via
+> allmodconfig builds) determine all the places in the kernel
+> where the calculated size changes, and audit those for safety.
+>
+> Right now, struct_size() over-estimates in the face of padding.
+>
+> We're already moving the kernel toward not even calling struct_size()
+> externally from the allocation, and instead using the it within the
+> allocation macros themselves:
+> https://lore.kernel.org/lkml/20240822231324.make.666-kees@kernel.org/
+>
+> > After looking at the assembly produced by gcc more, it actually looks
+> > like it's using the allocation size if it's known in the current contex=
+t
+> > (for example if the struct was just malloced in the same function)
+> > and otherwise returns INT_MAX for the __bdos of a struct containing a
+> > flexible array member. It's only returning the size based on the
+> > __counted_by attribute of you ask it for the __bdos of the flexible
+> > array member itself.
+>
+> Here is my test case for all the corner cases we've found so far:
+> https://github.com/kees/kernel-tools/blob/trunk/fortify/array-bounds.c
+>
+> I'd prefer we add cases there so we can all be talking about the same
+> things. :)
+>
+> -Kees
+>
+> --
+> Kees Cook
