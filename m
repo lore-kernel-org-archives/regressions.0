@@ -1,224 +1,101 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F35112B71
-	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 01:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B8536B;
+	Mon, 14 Oct 2024 06:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728869834; cv=none; b=RYs8eDC/Vbq7YhskAnLJOC1RZ96Ylh67xLGxaR3VbkXVcZ83qfYj+VFUA995eHssGdkfp5l1chqU1pRcIFpXVvaPR9QU6pZc5oO+k4nR2RV5HQnS4PNtS2Kdkd+dg4pfUuF13r05tf1uJOU1aEuAdpgRuxgcfiV6qlQLJj61qcM=
+	t=1728888345; cv=none; b=duNsipHlHlK7uGusfETpU+i6BfLL8vIAW1JIx+OkM9tB/OSDnOm9Zx7p3jD8+Szob7BUpxNQXfQdI8njwPyyTqaJYd3p+e5sdX4r6L6Z+g8GEfrh38hhghfWiiHiGbCRqECEaDuDtCT7e37gygpn7/LmsUoOJ2rFytVcCSa5MK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728869834; c=relaxed/simple;
-	bh=uaYVtxQFcA1m+X3UEVbIcKzVIIUzx0cpCm0w65H4N/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j/onWfaoup29yca5tUB7m65MaqOwjowHVx3zlUUolJehB9rBHEg0WlwqNG8q+TIAA/FNmosfgT6RcmMrxeVgou8ky2i3VRnYh9gXJHvi6QbYu2TorEiUPIrzsN14eIDjBH3DIdA2oFhUsL8r4gYjpmd0KGqQ6fZWJuYXCo0Gxrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DIw/uMNg; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728888345; c=relaxed/simple;
+	bh=5+7U5NsPCJJ1SeC7sthTmtpMjLOa80ghowv7qWW2nio=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=A/ZIxf8snGIdlT/bMVHXHhaXxMK95Hsls5nfeFC22NBEfnjVJ+NblYoakPDmg+ZYeA+gLfg7Y1IcotcA8RDAc5344mZih0oZgVM4TG8aWuAfL//1jC5BpeL3ZnScnJVIJvX6BB+eEz2EkKOEdm1ul1WXYXr4exGrLDaeTcU+KzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=z51YFBRP; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIw/uMNg"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7ea8c4ce232so257951a12.0
-        for <regressions@lists.linux.dev>; Sun, 13 Oct 2024 18:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728869832; x=1729474632; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2OddeQUriMs/pngcQmPeii+lJ9EjgT3djJMTGA3J41c=;
-        b=DIw/uMNgZyei3HjQ20FfIML5dERPJKlGfTfZvf7U8e+tTu6Pzqw819H+iinJTkHWOk
-         S0tDroF10bWC88YYxD5Dv/DltbxSLqrF+ok2FYvEsB1wdrjiI8dnYQiJSiIeeXUKUVj3
-         sqBLYAMuLzA9PNjaoILTRuuQ3q/qA+nERkExqYEM2f7BU6RV6k8Io7UusQ4qfa1eE/bF
-         r8ABe1hUjsabnqHbpVlCqPo7TTRts4Aq9YK7jDpfswzd9Lite/B9mG/rp+ju4jiqFTr2
-         vJqycByxCM8VWdFEYKR98f95XMGeA+7HEpCWDHl4Dw7KJaBeviNmko9QdNAC0GNwXVxK
-         njPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728869832; x=1729474632;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2OddeQUriMs/pngcQmPeii+lJ9EjgT3djJMTGA3J41c=;
-        b=CkX/c6jb8gUXNVIp76ri5oVXT69lmw3To6qye3G92c7oD4KezzGg14G6wP0PgkdL5i
-         nsFbMipYhdTaypa8ra4ZRuSo76HjP51/BMQa/6E1FM88Wxt1ilNR3sEegUsQdHsqXYpk
-         wCJRcPPORQAlUx3vihr58Ft/NPUUjJDzYZ2++drm2QgOGDvVbKFvrtDowliinxIJoBvI
-         m/JiPecpA/wQxnWP2Z7489oOSfFY1nqkkMXIq8qQQNNEjfpv6zAYYHgrcR1SurQh1c0S
-         8p2VNeAc0DI0/rauFbTY5bi7vDNpSJcmCL/FryYcZ10REmLQIdVAOFoeofj0jGhypHq7
-         kj0w==
-X-Forwarded-Encrypted: i=1; AJvYcCV03UV0wnelAPBBUCUHX6Vy3mWFGb4mOADttV0vuA369wODvWpSQfTWV4oqnNUn38WPl1CCNhVNd8aifg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwLAF6PMfqESF3PZajsMWzS201cTRh4kl/B7hr5oTo0jwOlVsY6
-	RK1XZp79yzG1KXjwzYI37D1mRXVjIA9xcB4HTiAy+TwiZWUeEQ0Hw+hByrpEvFj8/jA1j8td+p+
-	anS0SWSgEVc+0j9e7nQ9zFyFcM94=
-X-Google-Smtp-Source: AGHT+IEb+pfq2b2/iZWj2STWjPYUga1d5731DPFAc0MU2ISKAqOp/IWmSZuTUIxd4Gg/U4/YujfXxouayoZftRN3CIk=
-X-Received: by 2002:a05:6a20:d501:b0:1d2:ea38:39bc with SMTP id
- adf61e73a8af0-1d8c9594e7dmr10212139637.11.1728869832160; Sun, 13 Oct 2024
- 18:37:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="z51YFBRP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=zfAhj9c9aib/1i6GUjRiuU0PI8OaiFSyn9NGekauN9U=; t=1728888344;
+	x=1729320344; b=z51YFBRPPSV94xmfSo3YYSTUZXPMBj7XiTLKwkuRv3VTRWqmBxL+FkPlnpPU1
+	CTonKWpOAoamBjrOWNDM8JSF6uwqJCzQNpKfagb1dSoRMgsqjkafKPaHPcFm8L4QTRBgoSmUf3Amt
+	juoBmTKV4Z7Mg8IQWUmbEqqYvs/JNPEZ3YI99UW5b/f3DqNX9zV+DMO+yMjwnmEi+fEXYJOOVRN3v
+	JAC80aXMBTheZQved93S1CLKvwKfEck3k+MpHrpJU8X1A4AVa5Avb5WkxDMncwz4Xxp64Y0C2hryy
+	hHILJ7jWS3rRqbXTrDYtu9FhQdSqXCw2AI8x2Zqdt/lKyyWOWA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t0Epj-0000HP-9Q; Mon, 14 Oct 2024 08:45:35 +0200
+Message-ID: <06bab5c5-e9fd-4741-bab7-6b199cfac18a@leemhuis.info>
+Date: Mon, 14 Oct 2024 08:45:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241007132555.GA53279@francesco-nb> <PAXPR04MB84596824B2DFDF20E005F173887E2@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <PAXPR04MB845980EE67F1B99C9AC9D0DF887E2@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <CAHCN7xLzYVBB=+EkD14xYqGJDR6BRUO7hxBZGOtvzCFLp_kXdg@mail.gmail.com> <84371A37-9C3D-44AF-8796-7427B39DC3D4@dolcini.it>
-In-Reply-To: <84371A37-9C3D-44AF-8796-7427B39DC3D4@dolcini.it>
-From: Adam Ford <aford173@gmail.com>
-Date: Sun, 13 Oct 2024 20:37:00 -0500
-Message-ID: <CAHCN7xKmrAYad2Mc29cUvDovbP7Hhv0sOFaNtjpdVWZeET-egQ@mail.gmail.com>
-Subject: Re: clk_imx8mp_audiomix_runtime_resume Kernel panic regression on v6.12
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Peng Fan <peng.fan@nxp.com>, "S.J. Wang" <shengjiu.wang@nxp.com>, 
-	"abelvesa@kernel.org" <abelvesa@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, 
-	"sboyd@kernel.org" <sboyd@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, 
-	"shengjiu.wang@gmail.com" <shengjiu.wang@gmail.com>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, Mark Brown <broonie@kernel.org>, 
-	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bad commit backported on the v5.15.y branch ?
+To: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
+References: <AM9P192MB1316ABE1A8E1D41C4243F596D7792@AM9P192MB1316.EURP192.PROD.OUTLOOK.COM>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Sasha Levin <sashal@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+ Joel GUITTET <jguittet.opensource@witekio.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+In-Reply-To: <AM9P192MB1316ABE1A8E1D41C4243F596D7792@AM9P192MB1316.EURP192.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728888344;2a23363c;
+X-HE-SMSGID: 1t0Epj-0000HP-9Q
 
-On Tue, Oct 8, 2024 at 7:24=E2=80=AFAM Francesco Dolcini <francesco@dolcini=
-.it> wrote:
->
-> Il 8 ottobre 2024 14:19:15 CEST, Adam Ford <aford173@gmail.com> ha scritt=
-o:
-> >On Tue, Oct 8, 2024 at 3:51=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote=
-:
-> >>
-> >> > Subject: RE: clk_imx8mp_audiomix_runtime_resume Kernel panic
-> >> > regression on v6.12
-> >> >
-> >> > > Subject: clk_imx8mp_audiomix_runtime_resume Kernel panic
-> >> > regression on
-> >> > > v6.12
-> >> > >
-> >> > >
-> >> > > Is it now back?
-> >> >
-> >> > With tag: next-20240930, I need see this issue on i.MX8MP-EVK board.
-> >>
-> >> Sorry, typo. I not see issue on my board.
-> >
-> >I tested RC1 on the Beacon board and didn't see any issues, but I can
-> >try testing linux-next when I have some time.
-> >
->
-> I forgot to mention that the issue is not systematic as it was in the ori=
-ginal report.
->
-> And it was reproduced on v6.12-rc2, not with -next.
+On 11.10.24 10:48, Joel GUITTET wrote:
+> 
+> I faced some issue related to scaling frequency on ZynqMP device
+> using v5.15.167 kernel. As an exemple setting the scaling frequency
+> below show it's not properly set:
+> 
+> cat /sys/devices/system/cpu/cpufreq/policy0/
+> scaling_available_frequencies 299999 399999 599999 1199999
+> 
+> echo 399999 > /sys/devices/system/cpu/cpufreq/policy0/
+> scaling_setspeed
+> 
+> cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 399999
+> 
+> cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 299999
+> ====> Should be 399999
+> 
+> After analysis of this issue with the help of Xilinx, it appears
+> that a commit was backported on the 5.15.y branch, but probably it
+> should not, or not as is. The commit is
+> 9117fc44fd3a9538261e530ba5a022dfc9519620 modifying drivers/clk/
+> zynqmp/divider.c.
 
-I tested RC3, and I cannot replicate it.  Are you still having issues?
+FWIW, that is 1fe15be1fb6135 ("drivers: clk: zynqmp: update divider
+round rate logic") [v6.8-rc1].
 
+> Is anybody reading this message able to answer why it was
+> backported ?
 
-adam
->
-> Francesco
->
->
-> >adam
-> >>
-> >> Regards,
-> >> Peng.
-> >>
-> >> >
-> >> > Regards,
-> >> > Peng.
-> >> >
-> >> > >
-> >> > > [    4.012850] SError Interrupt on CPU2, code 0x00000000bf000002 -
-> >> > -
-> >> > > SError
-> >> > > [    4.012862] CPU: 2 UID: 0 PID: 186 Comm: (udev-worker) Not
-> >> > tainted
-> >> > > 6.12.0-rc2-0.0.0-devel-00004-g8b1b79e88956 #1
-> >> > > [    4.012869] Hardware name: Toradex Verdin iMX8M Plus WB on
-> >> > > Dahlia Board (DT)
-> >> > > [    4.012872] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -
-> >> > SSBS
-> >> > > BTYPE=3D--)
-> >> > > [    4.012877] pc :
-> >> > clk_imx8mp_audiomix_runtime_resume+0x38/0x48
-> >> > > [    4.012891] lr : pm_generic_runtime_resume+0x2c/0x44
-> >> > > [    4.012897] sp : ffff8000821cb740
-> >> > > [    4.012899] x29: ffff8000821cb740 x28: ffff8000793c48d8 x27:
-> >> > > ffff8000793c48c0
-> >> > > [    4.012908] x26: ffff0000c0ec90f4 x25: 0000000000000000 x24:
-> >> > > 0000000000000000
-> >> > > [    4.012916] x23: 0000000000000000 x22: ffff0000c1bef180 x21:
-> >> > > 0000000000000000
-> >> > > [    4.012923] x20: ffff0000c0a73000 x19: ffff0000c0ecbc10 x18:
-> >> > > ffffffffffffffff
-> >> > > [    4.012930] x17: 3030303064623033 x16: 2f7375622e303030 x15:
-> >> > > 756e285472656c6c
-> >> > > [    4.012937] x14: ffff800081267458 x13: 6d692c6c73664361 x12:
-> >> > > 0000000000000000
-> >> > > [    4.012944] x11: 00353333333d4d55 x10: ffff8000818020ae x9 :
-> >> > > 0000000000000008
-> >> > > [    4.012951] x8 : 0000000000000008 x7 : 0000000000000000 x6 :
-> >> > > ffff0000c5bf2080
-> >> > > [    4.012958] x5 : ffff800081f10000 x4 : ffff800080c182e8 x3 :
-> >> > > ffff0000c0ee7088
-> >> > > [    4.012965] x2 : 0000000000000000 x1 : 0000000000000004 x0 :
-> >> > > ffff800081f10300
-> >> > > [    4.012973] Kernel panic - not syncing: Asynchronous SError
-> >> > Interrupt
-> >> > > [    4.012976] CPU: 2 UID: 0 PID: 186 Comm: (udev-worker) Not
-> >> > tainted
-> >> > > 6.12.0-rc2-0.0.0-devel-00004-g8b1b79e88956 #1
-> >> > > [    4.012982] Hardware name: Toradex Verdin iMX8M Plus WB on
-> >> > > Dahlia Board (DT)
-> >> > > [    4.012985] Call trace:
-> >> > > [    4.012988]  dump_backtrace+0xd0/0x120
-> >> > > [    4.012998]  show_stack+0x18/0x24
-> >> > > [    4.013005]  dump_stack_lvl+0x60/0x80
-> >> > > [    4.013013]  dump_stack+0x18/0x24
-> >> > > [    4.013019]  panic+0x168/0x350
-> >> > > [    4.013025]  add_taint+0x0/0xbc
-> >> > > [    4.013029]  arm64_serror_panic+0x64/0x70
-> >> > > [    4.013034]  do_serror+0x3c/0x70
-> >> > > [    4.013039]  el1h_64_error_handler+0x30/0x54
-> >> > > [    4.013046]  el1h_64_error+0x64/0x68
-> >> > > [    4.013050]  clk_imx8mp_audiomix_runtime_resume+0x38/0x48
-> >> > > [    4.013059]  __genpd_runtime_resume+0x30/0x80
-> >> > > [    4.013066]  genpd_runtime_resume+0x114/0x29c
-> >> > > [    4.013073]  __rpm_callback+0x48/0x1e0
-> >> > > [    4.013079]  rpm_callback+0x68/0x80
-> >> > > [    4.013084]  rpm_resume+0x3bc/0x6a0
-> >> > > [    4.013089]  __pm_runtime_resume+0x50/0x9c
-> >> > > [    4.013095]  pm_runtime_get_suppliers+0x60/0x8c
-> >> > > [    4.013101]  __driver_probe_device+0x4c/0x14c
-> >> > > [    4.013108]  driver_probe_device+0x3c/0x120
-> >> > > [    4.013114]  __driver_attach+0xc4/0x200
-> >> > > [    4.013119]  bus_for_each_dev+0x7c/0xe0
-> >> > > [    4.013125]  driver_attach+0x24/0x30
-> >> > > [    4.013130]  bus_add_driver+0x110/0x240
-> >> > > [    4.013135]  driver_register+0x68/0x124
-> >> > > [    4.013142]  __platform_driver_register+0x24/0x30
-> >> > > [    4.013149]  sdma_driver_init+0x20/0x1000 [imx_sdma]
-> >> > > [    4.013163]  do_one_initcall+0x60/0x1e0
-> >> > > [    4.013168]  do_init_module+0x5c/0x21c
-> >> > > [    4.013175]  load_module+0x1a98/0x205c
-> >> > > [    4.013181]  init_module_from_file+0x88/0xd4
-> >> > > [    4.013187]  __arm64_sys_finit_module+0x258/0x350
-> >> > > [    4.013194]  invoke_syscall.constprop.0+0x50/0xe0
-> >> > > [    4.013202]  do_el0_svc+0xa8/0xe0
-> >> > > [    4.013208]  el0_svc+0x3c/0x140
-> >> > > [    4.013215]  el0t_64_sync_handler+0x120/0x12c
-> >> > > [    4.013222]  el0t_64_sync+0x190/0x194
-> >> > > [    4.013228] SMP: stopping secondary CPUs
-> >> > > [    4.013237] Kernel Offset: disabled
-> >> > > [    4.013239] CPU features: 0x00,00000000,00200000,4200420b
-> >> > > [    4.013243] Memory Limit: none
-> >> > > [    4.316721] ---[ end Kernel panic - not syncing: Asynchronous S=
-Error
-> >> > > Interrupt ]---
-> >> > >
-> >> > >
-> >> > > Francesco
-> >>
->
-> Hello,
+Looks like because it fixes a bug. I CCed the original author and those
+that handled the patch, maybe they can help us out and tell us what's
+the best strategy forward here.
+
+> The information I have until now is that it is intended
+> recent kernel version. Dependencies for this modification is
+> currently under clarification with Xilinx (maybe another commit to
+> backport).
+> 
+> By the way, reverting this commit fix the issue shown above.
+Does 6.12-rc work fine for you? Because if not, we should fix the
+problem there.
+
+Ciao, Thorsten
