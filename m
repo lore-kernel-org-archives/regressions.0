@@ -1,37 +1,25 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE7213DDAA
-	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 09:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A481A7249
+	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 12:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728898497; cv=none; b=skPf+16RFDoAQ3TSCYGSI8A4WBVUm9KPWFxtSnTMS0XEKV2ZTHfPDk5KkphqirtRqhtgjIh3ty6+MqL7m/tNmVGVIEJOXD5pc9tOg24rr3/311tifpau0OpPBn3afXIy26BgW4qtWj1vpIWfTrfodmngvV0RUYKiohi4vFnKXU0=
+	t=1728909834; cv=none; b=D/uMZhlIpn0Um/ZonZvt1bxGNdPKHmPWfOAwqh8V8Q2TblxChzEroC53amN0lbA3O9XbMDVrumPeAPBKIowT7L8L2y9KujBl145nSUpoHT2tEfqLQ1Yt2165WhK1sctZHvTBHk/YlnU7h/WhxHenbdPamEV1N2bIvLNW2FrOT18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728898497; c=relaxed/simple;
-	bh=L3DBgQ5phEFYuateI1fBdQJApYJ6razJjWWR+mQrn4A=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=TmMk5Kl/hFWzmZQELQDcKNc4x2CxgK5xRI/tffoZyKybE81DpF6iECz7cJ9u2Ge9Zi+Pf5q6YBOxetD3l4UaKINm7PgSRO2+MEzx1s+g/uWoHEXTUT77SmmqFYkeK2T5ZGavf/rN75tGMOV3CP5e48JepPk34lzE2QphoXKcrmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A05ZOxYv; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A05ZOxYv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=L3DBgQ5phEFYuateI1fBdQJApYJ6razJjWWR+mQrn4A=; t=1728898495;
-	x=1729330495; b=A05ZOxYvuNNhDd1VNfx5eOZ5VDLkLxYmxpSRPkJPd4sOCWJg0YQr0RuJGXDm7
-	TolqtyKkfBaq80PKQku6JJIp7fOdOSJqoSn9PWokgJuNEwi+npY3WmLKtx7ZLCfks84O3Q5I8mdOH
-	vVukYkuiRdTTeanWB4jHUhfDKDwOb4ZgPtrUsuQsl0L9wOUNMvXe5xAklcrB9xw4nPebVB1L2WwBC
-	ZLFef6vlkvcaYokEfeLV+2WsRQuKftb7zMSzmHnS1F5Fi2wwFAca0kGzEWClbaU3M7MtTWxDo6ya5
-	ftxJjS5BajoPrlxjgSnWew6O1lrOjSm7ibT7/2pOhtz7tScu+g==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t0HTZ-0002iB-Rq; Mon, 14 Oct 2024 11:34:53 +0200
-Message-ID: <aa41410d-d6e4-426d-bc3b-bf09a1337ec7@leemhuis.info>
-Date: Mon, 14 Oct 2024 11:34:51 +0200
+	s=arc-20240116; t=1728909834; c=relaxed/simple;
+	bh=Nrm6CobH2PcPQoFxlIHXCOXyowwDYXzhDflpLcLtC3s=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=oFw7kuu5XJ/XMUp2H+YRiqdcCIrt9IQTmZu8VGr4nSeOkDu0qEI11Nu0X190tsgBqv+RuXr6e5n+1wm1813L5Ni2PG31PIKviKcsBjGweuw+3r3evFMLsiSf901n2WFapqiJPJIDt1NRLofkHDPuxPQFYzVieRG46vWB6V9tkfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPV6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.92)
+	(envelope-from <s.kerkmann@pengutronix.de>)
+	id 1t0KQH-0005bm-OI; Mon, 14 Oct 2024 14:43:41 +0200
+Message-ID: <c2cdfba1-afcc-4a77-8890-7da49c4b73c2@pengutronix.de>
+Date: Mon, 14 Oct 2024 14:43:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,57 +27,153 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+From: Stefan Kerkmann <s.kerkmann@pengutronix.de>
+To: regressions@lists.linux.dev
+Cc: Dhruva Gole <d-gole@ti.com>, Yoshitaka Ikeda <ikeda@nskint.co.jp>,
+ Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@pengutronix.de
+Subject: [REGRESSION] spi: cadence-quadspi: STIG mode results in timeouts for
+ Micron MT25QL01 flash
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728898495;94ce871d;
-X-HE-SMSGID: 1t0HTZ-0002iB-Rq
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: s.kerkmann@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
+Hello,
 
+I have run into the same regression when probing a Micron MT25QL01 SPI-NOR flash
+on a Intel CycloneV platform (socfpga) as Yoshitaka Ikeda[1]. The regression
+manifests in read timeouts. Bisecting the issue tracked it down to commit
+"d403fb6e76bf8 spi: cadence-quadspi: use STIG mode for small reads". Reverting
+the commit resolves the issue on v6.12-rc3. There are no custom patches applied,
+except for the debugging output mentioned in the linked thread.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+The good case is as follows:
 
-#regzbot report:
-https://lore.kernel.org/stable/AS8P190MB1285D7871E746D824330F1C4EC7F2@AS8P190MB1285.EURP190.PROD.OUTLOOK.COM/
-#regzbot fix: 57c14b983f3b0293f
+```
+[    1.063171] **********spi_mem_op dump**************
+[    1.063183] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    1.068093] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
+[    1.073837] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.079823] ***************************************
+[    1.086068] **********spi_mem_op dump**************
+[    1.090931] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+[    1.095815] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.101543] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.107547] ***************************************
+[    1.113835] **********spi_mem_op dump**************
+[    1.118695] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
+[    1.123573] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.129395] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.135392] ***************************************
+[    1.141592] **********spi_mem_op dump**************
+[    1.146471] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+[    1.151335] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.157072] data: nbytes:0x88 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.163058] ***************************************
+[    1.169341] **********spi_mem_op dump**************
+[    1.174219] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x30
+[    1.179082] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.184904] data: nbytes:0x40 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.190890] ***************************************
+[    1.197183] **********spi_mem_op dump**************
+[    1.202045] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x80
+[    1.206925] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.212740] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.218736] ***************************************
+[    1.224916] **********spi_mem_op dump**************
+[    1.229776] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    1.234649] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
+[    1.240376] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+[    1.246283] ***************************************
+[    1.252443] **********spi_mem_op dump**************
+[    1.257314] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    1.262176] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0xB7
+[    1.267917] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+[    1.273914] ***************************************
+[    1.280074] **********spi_mem_op dump**************
+[    1.284946] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    1.289809] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x4
+[    1.295544] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+[    1.301444] ***************************************
+[    1.307694] 5 fixed-partitions partitions found on MTD device ff705000.spi.0
+[    1.319593] Creating 5 MTD partitions on "ff705000.spi.0":
+[    1.325080] 0x000000000000-0x000000040000 : "preloader"
+[    1.331825] 0x000000040000-0x0000000c0000 : "bootloader"
+[    1.338645] 0x0000000c0000-0x0000000e0000 : "barebox-environment"
+[    1.346299] 0x0000000e0000-0x000000110000 : "state-storage"
+[    1.353319] 0x000000110000-0x000008000000 : "ubi"
+```
 
-#regzbot report: https://lore.kernel.org/netdev/ZtsTGp9FounnxZaN@arm.com/
-#regzbot fix: 6513eb3d3191574b58859ef2d6dc26c0277c6
+With the STIG short read optimization enabled, the read timeouts occur:
 
-#regzbot report:
-https://lore.kernel.org/linux-bluetooth/a34d2761-dad4-4ae7-8787-6bbf05538318@panix.com/T/#t
-#regzbot introduced: 610712298b11b2914be00b35abe9326b5dbb62c8
-#regzbot summary: btusb: resume broken or mouse not found
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219385
-#regzbot dup:
-https://lore.kernel.org/linux-bluetooth/595efd8b-e0fe-4a87-90b1-4b579f3cc876@gmail.com/
+```
+[    0.931469] **********spi_mem_op dump**************
+[    0.931482] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    0.936398] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
+[    0.942129] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    0.948132] ***************************************
+[    0.954369] **********spi_mem_op dump**************
+[    0.959233] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+[    0.964117] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    0.969845] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    0.975844] ***************************************
+[    1.482104] cadence-qspi ff705000.spi: Flash command execution timed out.
+[    1.493754] **********spi_mem_op dump**************
+[    1.493759] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
+[    1.498623] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+[    1.504451] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+[    1.510438] ***************************************
+[    1.516611] spi-nor spi0.0: operation failed with -110
+[    2.026639] cadence-qspi ff705000.spi: Flash command execution timed out.
+[    2.033430] **********spi_mem_op dump**************
+[    2.033437] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+[    2.038300] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
+[    2.044041] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+[    2.049942] ***************************************
+[    2.056112] spi-nor spi0.0: operation failed with -110
+[    2.066110] spi-nor spi0.0: probe with driver spi-nor failed with error -110
+```
 
-#regzbot report:
-https://lore.kernel.org/linux-wireless/CAP-bSRbMbZe9LCE15SCbYNTGZjE_xiAm29qzO_WNVjHsJ6oyyg@mail.gmail.com/
-#regzbot fix: 094513f8a2fbddee51b055d8035f995551f98fce
+The DT node for the flash is as follows:
 
-#regzbot report:
-https://lore.kernel.org/lkml/CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com/
-#regzbot fix: 0c8c5bdd7eaf291b6
+```
+&qspi {
+	status = "okay";
 
-#regzbot report:
-https://lore.kernel.org/linux-btrfs/c9373aab-24b5-4cc1-bc3e-3cdb4b28f067@prnet.org/
-#regzbot fix: 96c6ca71572a
+	flash0: flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		/* Micron MT25QL01 */
+		compatible = "n25q00", "jedec,spi-nor";
+		reg = <0>;	/* chip select */
+		spi-max-frequency = <100000000>;
+		m25p,fast-read;
+		cdns,page-size = <256>;
+		cdns,block-size = <16>;   /* 2^16, 64KB */
+		cdns,read-delay = <4>;    /* delay value in read data capture register */
+		cdns,tshsl-ns = <50>;
+		cdns,tsd2d-ns = <50>;
+		cdns,tchsh-ns = <4>;
+		cdns,tslch-ns = <4>;
+	};
+};
+```
 
-#regzbot report:
-https://lore.kernel.org/lkml/c930b6a6-64e5-498f-b65a-1cd5e0a1d733@heusel.eu/
-#regzbot fix: b3ebb007060f
+Regards,
+Stefan Kerkmann
 
-#regzbot report:
-https://lore.kernel.org/lkml/20240914081523.798940-1-andreas@kemnade.info/
-#regzbot fix: 78f281e5bdeb
+[1]:
+https://lore.kernel.org/lkml/OSZPR01MB70048CE259A3D63C4179199A8B659@OSZPR01MB7004.jpnprd01.prod.outlook.com/#t
+
+#regzbot introduced: d403fb6e76bf854ef0f7d84e797e51b9494788e0
+
+-- 
+Pengutronix e.K.                       | Stefan Kerkmann             |
+Steuerwalder Str. 21                   | https://www.pengutronix.de/ |
+31137 Hildesheim, Germany              | Phone: +49-5121-206917-128  |
+Amtsgericht Hildesheim, HRA 2686       | Fax:   +49-5121-206917-9    |
+
