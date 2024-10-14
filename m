@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B8536B;
-	Mon, 14 Oct 2024 06:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B824A14BFA2
+	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 07:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728888345; cv=none; b=duNsipHlHlK7uGusfETpU+i6BfLL8vIAW1JIx+OkM9tB/OSDnOm9Zx7p3jD8+Szob7BUpxNQXfQdI8njwPyyTqaJYd3p+e5sdX4r6L6Z+g8GEfrh38hhghfWiiHiGbCRqECEaDuDtCT7e37gygpn7/LmsUoOJ2rFytVcCSa5MK0=
+	t=1728891557; cv=none; b=ENnxPpqVXOCPJC6Z5Gn9u7NCf1WpSaV864dcrpU1l8Izn4Lwx1jCkp9pNYgROh337/ubb8uD7tU10PY98Zmx7qVfoZ7uk5ecjdlx6YQ79xkSF+R++sryGsOqdqEMrUMJOCqU5yDxOpv52afuEQTQLV8UF0sQRRneHXmTrJAJ87E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728888345; c=relaxed/simple;
-	bh=5+7U5NsPCJJ1SeC7sthTmtpMjLOa80ghowv7qWW2nio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=A/ZIxf8snGIdlT/bMVHXHhaXxMK95Hsls5nfeFC22NBEfnjVJ+NblYoakPDmg+ZYeA+gLfg7Y1IcotcA8RDAc5344mZih0oZgVM4TG8aWuAfL//1jC5BpeL3ZnScnJVIJvX6BB+eEz2EkKOEdm1ul1WXYXr4exGrLDaeTcU+KzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=z51YFBRP; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1728891557; c=relaxed/simple;
+	bh=FTf2hm5fl8T7PBkHSFLUPwAVTH8x0iAwh+Z5UqwgkS0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ssfEs++nvFG77PuuTp9uaTlp53UuuZLAPSTEkMD2h0RmfagFo1+pIDwaTjYzlB6CbkJ49ATZ6u8rokUpkqFiNGxPU4hqvIMQgvk2kdztLjl8tGizeh0MSIy660Pkf86zvpfwQNr7fpRCSKB+ieGQ+JLhEzczJ8N6DRwMHdk5lro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XfDyax8z; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="z51YFBRP"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XfDyax8z"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=zfAhj9c9aib/1i6GUjRiuU0PI8OaiFSyn9NGekauN9U=; t=1728888344;
-	x=1729320344; b=z51YFBRPPSV94xmfSo3YYSTUZXPMBj7XiTLKwkuRv3VTRWqmBxL+FkPlnpPU1
-	CTonKWpOAoamBjrOWNDM8JSF6uwqJCzQNpKfagb1dSoRMgsqjkafKPaHPcFm8L4QTRBgoSmUf3Amt
-	juoBmTKV4Z7Mg8IQWUmbEqqYvs/JNPEZ3YI99UW5b/f3DqNX9zV+DMO+yMjwnmEi+fEXYJOOVRN3v
-	JAC80aXMBTheZQved93S1CLKvwKfEck3k+MpHrpJU8X1A4AVa5Avb5WkxDMncwz4Xxp64Y0C2hryy
-	hHILJ7jWS3rRqbXTrDYtu9FhQdSqXCw2AI8x2Zqdt/lKyyWOWA==;
+	References; bh=FTf2hm5fl8T7PBkHSFLUPwAVTH8x0iAwh+Z5UqwgkS0=; t=1728891555;
+	x=1729323555; b=XfDyax8zYa+JAIG08h1ZyP/PRa/o3Odo/SWuobBK/3xUXzut7k+CaP0LgVC3h
+	Z0bSf8VqLry9PQogUTNP5xVbe2QtHX3l6G8PS1uXVosPfot4QkvqBuUv+X9UvP4O+bSbekIxUt/S+
+	r/YzijuU3SSgmCKNlB0LOPGGJBlPzfNQ/3FKpWwRnA9a3lE2sge49hU4mqiLQ4tTI/Ip/v1xijhBd
+	p+wZEcVylh+CvNz4CumDaEWEunIl6Zea+gOK0vB51ssythJY16WsFbAQLoMlxPdA8JL4baN7tosAy
+	ALa35IA8M8VHM8nh2j6siJT1ZY7B/GiaJ01dtCZT7H6J9uzKSw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t0Epj-0000HP-9Q; Mon, 14 Oct 2024 08:45:35 +0200
-Message-ID: <06bab5c5-e9fd-4741-bab7-6b199cfac18a@leemhuis.info>
-Date: Mon, 14 Oct 2024 08:45:34 +0200
+	id 1t0Ffd-0001Or-24; Mon, 14 Oct 2024 09:39:13 +0200
+Message-ID: <3ec1ef6a-0882-4c8d-beea-0d919ba9d027@leemhuis.info>
+Date: Mon, 14 Oct 2024 09:39:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,63 +39,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bad commit backported on the v5.15.y branch ?
-To: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-References: <AM9P192MB1316ABE1A8E1D41C4243F596D7792@AM9P192MB1316.EURP192.PROD.OUTLOOK.COM>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-Cc: Greg KH <gregkh@linuxfoundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Sasha Levin <sashal@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
- Joel GUITTET <jguittet.opensource@witekio.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-In-Reply-To: <AM9P192MB1316ABE1A8E1D41C4243F596D7792@AM9P192MB1316.EURP192.PROD.OUTLOOK.COM>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728888344;2a23363c;
-X-HE-SMSGID: 1t0Epj-0000HP-9Q
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1728891555;2768ade3;
+X-HE-SMSGID: 1t0Ffd-0001Or-24
 
-On 11.10.24 10:48, Joel GUITTET wrote:
-> 
-> I faced some issue related to scaling frequency on ZynqMP device
-> using v5.15.167 kernel. As an exemple setting the scaling frequency
-> below show it's not properly set:
-> 
-> cat /sys/devices/system/cpu/cpufreq/policy0/
-> scaling_available_frequencies 299999 399999 599999 1199999
-> 
-> echo 399999 > /sys/devices/system/cpu/cpufreq/policy0/
-> scaling_setspeed
-> 
-> cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq 399999
-> 
-> cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq 299999
-> ====> Should be 399999
-> 
-> After analysis of this issue with the help of Xilinx, it appears
-> that a commit was backported on the 5.15.y branch, but probably it
-> should not, or not as is. The commit is
-> 9117fc44fd3a9538261e530ba5a022dfc9519620 modifying drivers/clk/
-> zynqmp/divider.c.
 
-FWIW, that is 1fe15be1fb6135 ("drivers: clk: zynqmp: update divider
-round rate logic") [v6.8-rc1].
 
-> Is anybody reading this message able to answer why it was
-> backported ?
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Looks like because it fixes a bug. I CCed the original author and those
-that handled the patch, maybe they can help us out and tell us what's
-the best strategy forward here.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219363
+#regzbot introduced: 2031c469f8161abe74189cb74f50da224f340b7
+#regzbot summary: iommu/vt-d: hang on boot on 3 machines
+#regzbot monitor:
+https://lore.kernel.org/linux-iommu/20241012030720.90218-1-baolu.lu@linux.intel.com/
+#regzbot fix: iommu/vt-d: Fix incorrect pci_for_each_dma_alias() for
+non-PCI devices
 
-> The information I have until now is that it is intended
-> recent kernel version. Dependencies for this modification is
-> currently under clarification with Xilinx (maybe another commit to
-> backport).
-> 
-> By the way, reverting this commit fix the issue shown above.
-Does 6.12-rc work fine for you? Because if not, we should fix the
-problem there.
+#regzbot report:
+https://lore.kernel.org/all/20241009220118.70bfedd0@kf-ir16/
+#regzbot introduced: a75e0684efe567
+#regzbot summary: thunderbolt: USB-C DisplayPort display failing to stay
+active
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/bc8ba1b7-e4ad-40b5-b69d-9ea1e7a18a40@tk154.de/
+#regzbot introduced: fb035aa9a3f8fd327ab83b15a94929d2b90459
+#regzbot summary: net/mlx5: missing sysfs hwmon entry for ConnectX-4 cards
+
+#regzbot report:
+https://lore.kernel.org/all/AM9P192MB1316ABE1A8E1D41C4243F596D7792@AM9P192MB1316.EURP192.PROD.OUTLOOK.COM/
+#regzbot introduced: 9117fc44fd3a9538261e530ba5a022dfc9519620
+#regzbot summary: drivers: clk: zynqmp: scaling frequency not properly set
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219363
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=219349
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219349
+#regzbot fix: iommu/vt-d: Fix incorrect pci_for_each_dma_alias() for
+non-PCI devices
+
+
+
+
