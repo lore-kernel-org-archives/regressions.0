@@ -1,71 +1,61 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317A91FC7D7
-	for <regressions@lists.linux.dev>; Tue, 15 Oct 2024 18:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAD11B6CF6;
+	Tue, 15 Oct 2024 19:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729016497; cv=none; b=eUjIp9IiApD9oTNjBK79tnIf5KBqYc6Crz25dPDdLv/WFPwDNmLeVCrtPNagS+aqNLpMFvYr7Hwc4Q+Jyzr6QG+LM/zbwyK8QAVcg3oXy5cUR4tghBHxq19z5LVswe0ieRNg9xiZUa4wVkie2u/1/lvHeXCCDcCF/OsDwZLY9Ng=
+	t=1729022155; cv=none; b=PuGbEjDCxi7iXTEhx/DBDIUNGExvV/oi7khYqb6FedoaSCSv7nTDi/l/6tY5kgdd5jES9WZXggKLfkLv/GezJf987wROzqJ5sNIicZO0z2QONQKQ4Y+rs7U25QCXV5dhUIu2+co68BOflsLo4Oq6byQh4Gg1JZU8tUVzwzDqiB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729016497; c=relaxed/simple;
-	bh=jlQbG9c6lVctQ3Wt+eMNOh3qwQnwKxnXI8rqG9YGmgI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=SXztRbVlD1abiI2DWQoB53jCmxNqByFZJfVeGC1wmtJ+fdeC3vNVy9DgfDFtIMfyceonBr9AQX5Lbw1EQsCs58rov3SZDAoHpUKucKiIHDvChXpPoFAXM80+Ei6X2IR0cTu0XD7i788rDl6WfLxlEZJQ1/79XJx42bQ7s+/Xy9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=nsj9D52u; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1729022155; c=relaxed/simple;
+	bh=M3wZr81kfgygW0+8Dr7VM/EyrOjZLzoHA7tE8P/1jxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Et/xV2v36B9Vze2G3qbpC4+G3kYUSB6aSD76U25hxH3Um/h21XJObzg70o3rbJZvzk1pHbOwSoDL4xnzyZPKDVgfDrRApHhwg+g7TNZu7VkARJjXdCdb/hdmIDBxwiWU1fv2SX/oEeuhP6trjLifhLh8TTcSi99NqilWVRRs0TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iVPQOfRT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="nsj9D52u"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iVPQOfRT"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=jlQbG9c6lVctQ3Wt+eMNOh3qwQnwKxnXI8rqG9YGmgI=; t=1729016496;
-	x=1729448496; b=nsj9D52uWyHBqOk7Tp6awZLImm2xrEdgrgybFiO+nIrjUiOJAzLLJVKoXVFSo
-	izS0d6RFL73EtzOjKFyAafJvAZu3AdPQHZUar172Zo05j55mYvw9qYX2mj3JwBmIMYBAPyJGilU+y
-	V0Rs0r49lMsyD06/iZwOVHeF40HC9IoT9ow2wyxBZlSN1NGf+2DWpLiBe3+f8Y7r1otFgaLr0f8ro
-	cGSMHNwp+DVDgrh5ZbdyCiM5WUTShONB3if6WnUzkx3Plvn/QIdTA71UjAPrtDseMAAWDXCHx0aia
-	4vkAhlQ5pd6G8UimG7TmddX05d+u6veniJnzvREDhbHFixaPLA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t0mAo-0006Lu-Dk; Tue, 15 Oct 2024 20:21:34 +0200
-Message-ID: <57a8a156-3ec9-4388-9c58-719302c350a6@leemhuis.info>
-Date: Tue, 15 Oct 2024 20:21:21 +0200
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M3wZr81kfgygW0+8Dr7VM/EyrOjZLzoHA7tE8P/1jxk=; b=iVPQOfRTF4WSqC/YFCzMaWBkCg
+	mi5WkQIAzbl73SzniLdSYrJzVJP86bIBPxkvENfkYntaXsKSkWtD/aTmPKlOBYKXRF872fXxTDyEj
+	bQmzE2J94et2yRWSiPq+MNDYxeW0TWNsl1QDtz4mMKbFL38Cl+b5wvyitJvcgCgHl0FcXma7sxjbj
+	B2vdZbQAinM8pHviOlrc7K7pl4kPwAla/m94VaeU822ni4CfxAv85NPGhpK6iNwV3vH8Cl7IRnMQv
+	eJ9BKPVgIhcgXtA51e6WHi76axrd5Hf070TXwmWX6NBuDaqwLc8BQa7dfLF19LhdPqIB2oxJw4wKw
+	ZEEHo2ow==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0ne1-00000006eVY-3hEo;
+	Tue, 15 Oct 2024 19:55:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 08F40300777; Tue, 15 Oct 2024 21:55:49 +0200 (CEST)
+Date: Tue, 15 Oct 2024 21:55:48 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	vschneid@redhat.com
+Subject: Re: 6.12;bisected;regression - psi: inconsistent task state warning
+ appeared in kernel log between 2e0199df252 and 54a58a787791 commits
+Message-ID: <20241015195548.GV17263@noisy.programming.kicks-ass.net>
+References: <CABXGCsPprMWjj=u_kJkLcQOQcR3M3iF797zsmSqQin8UUkkppg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729016496;53682705;
-X-HE-SMSGID: 1t0mAo-0006Lu-Dk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXGCsPprMWjj=u_kJkLcQOQcR3M3iF797zsmSqQin8UUkkppg@mail.gmail.com>
 
+On Tue, Oct 15, 2024 at 04:50:00PM +0500, Mikhail Gavrilov wrote:
+> Hi,
+> I spotted a new warning message when kernel
+> 6.12.0-0.rc0.20240920gitbaeb9a7d8b60.7.fc42.x86_64+debug manded on my
+> machine.
 
-
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/linux-bluetooth/595efd8b-e0fe-4a87-90b1-4b579f3cc876@gmail.com/
-#regzbot dup:
-https://lore.kernel.org/all/CAMb39_%3DebMmeCuZQAQS--CnM4PDaBEfJ4pbiG9gtJZkmikohWQ@mail.gmail.com/
-#regzbot dup:
-https://lore.kernel.org/all/CAJZ5v0iUaszpE%3DJ3_wLhdmBrrDdTSL1Rs-mgjL8koC1kk4apOA@mail.gmail.com/
-#regzbot fix: Bluetooth: btusb: Fix not being able to reconnect after
-suspend
-#regbzot monitor:
-https://lore.kernel.org/all/20241014202326.381559-1-luiz.dentz@gmail.com/
+Should be fixed in tip/sched/urgent -- also in next.
