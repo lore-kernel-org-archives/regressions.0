@@ -1,249 +1,207 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2083.outbound.protection.outlook.com [40.107.220.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BAF1D1728
-	for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 21:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728941987; cv=none; b=Y41YzMMN7v2imkiTSFjMYZ/t0RDKxqjXcovWI5eH7+HLzX1yuZR/2h2C2wPtmAbg0nrQRh0NlaUgiho6KYzBAmd4isLTOHigi6tHfIK0aO4ixby9CB59FJDzwGByDru/ujjcgjJ3kxdqjpS5xBIsyEI+BlXqvs7FDz5EpPMp8OM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728941987; c=relaxed/simple;
-	bh=N4ubeMxtZYY3hoTRTFgbOjAyVC5gCI706GptvR2plVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bBGhU/u27NZRdH9WtHLiFlW971QTghfjzOYpWEjYSx78AxsbPFCvOhBcUeNiINmaSjBHneZKorHHe4FISBOviVTzOo6RsXF+phfAUiDkdbrijix1whB5cSGJL8WP5nPDwemIops+9XhhaDcjwhseg8SknTDvNWC/O9ZZjwJPqFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2g3bXXLY; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA26620EB
+	for <regressions@lists.linux.dev>; Tue, 15 Oct 2024 03:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728961914; cv=fail; b=KXNL8ncHq1NLKwEqhzBh+/+G6Bl0q9dfQJsRs5wLpxd/W2akMO6EyZEJu1Zg4pD+OzUkGgD3OQ0A4ciBm4JWhINME8g08hsbnWnl7rvWfnyPRW3IJxzYuFzMTtnD8yIPS0ZpAzayVgQiOmcEAf6fg6Rb4VOz2h8Md19UlOooD9o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728961914; c=relaxed/simple;
+	bh=tVTLWzubpqS97ll49bE/7IMSvGK76UNRWMaBQSBfce8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GoibpQS8HJvnOP1OGNT8C2d2Bpzi6L2G9UP2pRavD7e/3harUbWlYw9ckuWd1S18MxrFXD7jB+uF5PCczx1miwyuPRkrce8WDbY4QVvspUEvkFPci/XToDvlvV1IhH/FxSy0AkWzi4ki97nZWcVTnhMZsHPeLUsE9vCi645caxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aN4FeQeF; arc=fail smtp.client-ip=40.107.220.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2g3bXXLY"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a99b1f43aceso667063866b.0
-        for <regressions@lists.linux.dev>; Mon, 14 Oct 2024 14:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728941984; x=1729546784; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
-        b=2g3bXXLYkSbSXA3vbms/q21c1URbZYDQuZs2aqJoi4xMKz+3ldC6a8yXxzcEg2zw5a
-         NBHCoSmbCl34EvjrUy/KuLC8EcCq3XnkA1jeyPGOydfaHp2MBJdJ71WlT7HSumdQfi59
-         kXMgPcvn4vWfG/Xzz002bOVUcGY3oT37XdjfuBm3G8whwhTmhc9xvXuJSGnNdmRwcP25
-         Q+a28l0NDrQ6SL3cF5126KlitopeH/JXb4tvA9ygsjgmUVfZ/tQl0vsWjXNr4Ty3d1nt
-         yLN4mzqQJqZ4poMvz38a47PwmcJcuGeUfBnbh4BOzU4LG8CpL9Vru/7ANZUhgJCFC8jy
-         6ejg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728941984; x=1729546784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9csY8Ut29tVJGEmLpxfSFZpuKt+NBF5m2ROuPwTQCh4=;
-        b=WDaB6IqIyC/TZqHopypmIK/WhQKwNTHt3iR6MU8z87zZ/JwouFr2ifc+og5dcZBFZD
-         OZSG4Y/pJekBytryc3rmHfaP3UXXxvyCY+V226XvJ8nyNoSwICzwVZz1eqAJO6lVFZ4n
-         283smBbXh43H9hP2M6s+tJq1OeyTlNy4z4f2KULJb3u6jlDqaEPj7wMkzYzEy3ASq/Rm
-         wijP4ogf0JQeEz9GXlYjSyyMdS826sUE816jTfBLSKYIAXCIOecOOj6UQx/G62nGcIMn
-         zPC53TtEEzUhG1+RwL7nEcqyi0l4TCM0jWh42bPNoRDXdXKmiZJqxfqEvVPOTQKrOqnf
-         hb2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVzgN5jluTKI/s9tsO2hMVN+f4K0MlWg+Q4Wi4//uECn1wfJ1IMAxtKR6K6fW5o5C9KoerYI6zpnK1qWA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxlF5vEfbn91HeoUeoM1RK+xDcEgRfXrN3Qb5+02yIkNzdIbt3F
-	JS2gTQ2lNxwjQ5B1xTFINarfL8HJcAfa46cG9zcHEWaK0uTavt4a+RsYtVLMwxg525OXgbKQN2V
-	Xp2n3p30J7lJYAVmMdKI103cCYrqEl/SFU+o=
-X-Google-Smtp-Source: AGHT+IFezu5CuG2wy6vTwMe51sB4ras/WO24nsNQmzs/ECPU2E5UBEHIWzUwNkN76hqWAt+exwA5Vo+oEQmkGwO5hUQ=
-X-Received: by 2002:a17:907:7ba9:b0:a99:4566:cd42 with SMTP id
- a640c23a62f3a-a99a0d092efmr1482503866b.0.1728941984105; Mon, 14 Oct 2024
- 14:39:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aN4FeQeF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jF2vMquQnbdVfMUXT5MHY9ZVf6yE4ETcMftvM3GfFUE5yMPrYDLtr8eLIyBZNxGik+iJV9gu5e0b9x4TTWbnaqcw5gr9LkQEgIeo9D+NhnfhlVUodGRokPkmwiw1OuVTC8T1YOajHBQ0M3IiM9ZwtDOOu+OkJEniS86l/wp+nyx7rndyh+jg7g82f6q9N9uhIgGMdu9XvZmZNXh8I1G676sb3UKndewBfrmxwaOKaj2dLsxzgxnH4JQJS0A7kdooo8RRlBGrE4aBSfmXnHUwthIOpy1OZmdtBmONe511jXLUVybN73Dtqbg3Z2Wpim7PTS+V5GgYzyjulFfrCAMO8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P7Ruk5P45/oJwnlgqwBxa7KHVFPS68nl+9FOdXZ8vbc=;
+ b=gIgNaT94lnYRl241jlxwtuW4D+2V40xMJUCLz025Jcyr1ZceMA4mjBnN71pigTVC1OiRdZ6L0YfZZPLqHH0K7kP4wKezmqvLaA9KmrUWc1mElgZJYscaxwclwHJ817A7wGJUe/A3vRhxlX1dcS62FTOGztFAE7fzRN28vGMqQwVnfbTonQLAfh6Q47vnc2VMYrHpY5Xs4Rj/guL5EmxwMbySdfFHZNIndP14mTCwzGYO5SkQSRpa9BAfxITckuKQl72HNYU+U8DFzXIQznjlTXIk3B0cQjRddOJj4+d3D41VGGkhQRCkP30msl6iM0qLXsdndv76189hmmR0BsKGUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=cmpxchg.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7Ruk5P45/oJwnlgqwBxa7KHVFPS68nl+9FOdXZ8vbc=;
+ b=aN4FeQeFvZbRknG/cfmvtOmVkTYxcP+Ad3LjDAsPZ0YCYceL5XZWymtjcEdwkHdTDIcaS8ZVqFFHOz4DupOnrKMPEGasPWXRglpxwBP+z4iWRxNi4Yk9/HL0CEgGosmHTi+EC34+q3nIocI3r4b7BMP9Qcxpfi1MG/c+a3aN8bk=
+Received: from BN0PR07CA0009.namprd07.prod.outlook.com (2603:10b6:408:141::8)
+ by IA1PR12MB6531.namprd12.prod.outlook.com (2603:10b6:208:3a4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26; Tue, 15 Oct
+ 2024 03:11:42 +0000
+Received: from BL02EPF00021F6F.namprd02.prod.outlook.com
+ (2603:10b6:408:141:cafe::ea) by BN0PR07CA0009.outlook.office365.com
+ (2603:10b6:408:141::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.27 via Frontend
+ Transport; Tue, 15 Oct 2024 03:11:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F6F.mail.protection.outlook.com (10.167.249.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8069.17 via Frontend Transport; Tue, 15 Oct 2024 03:11:42 +0000
+Received: from [10.136.43.96] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Oct
+ 2024 22:11:34 -0500
+Message-ID: <2b211cf7-4800-564d-d39c-8013081afee0@amd.com>
+Date: Tue, 15 Oct 2024 08:41:32 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux> <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux> <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
-In-Reply-To: <202410040958.C19D3B9E48@keescook>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 14 Oct 2024 14:39:26 -0700
-Message-ID: <CAGG=3QWw40ARPp9nPT5QEgkKMZ0i_Un_BBT7Th0nruizCRORtw@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Kees Cook <kees@kernel.org>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH 3/3] sched/core: Indicate a sched_delayed task was
+ migrated before wakeup
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra
+	<peterz@infradead.org>
+CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Suren Baghdasaryan
+	<surenb@google.com>, <linux-kernel@vger.kernel.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
+	<vschneid@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Klaus Kudielka
+	<klaus.kudielka@gmail.com>, Chris Bainbridge <chris.bainbridge@gmail.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Youssef Esmat
+	<youssefesmat@google.com>, Paul Menzel <pmenzel@molgen.mpg.de>, "Bert
+ Karwatzki" <spasswolf@web.de>, <regressions@lists.linux.dev>
+References: <20241010082838.2474-1-kprateek.nayak@amd.com>
+ <20241010082838.2474-4-kprateek.nayak@amd.com>
+ <20241010130316.GA181795@cmpxchg.org>
+ <20241010130621.GH17263@noisy.programming.kicks-ass.net>
+ <20241010193712.GC181795@cmpxchg.org>
+ <20241011083323.GL17263@noisy.programming.kicks-ass.net>
+ <20241011100803.GA331616@cmpxchg.org>
+ <20241011103958.GO17263@noisy.programming.kicks-ass.net>
+ <20241014144358.GB1021@cmpxchg.org>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20241014144358.GB1021@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6F:EE_|IA1PR12MB6531:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7eee668-4948-429b-c887-08dcecc7181d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|376014|30052699003|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QXVNeGRvQThkajdVdlFBT1cvd2xGdGRKYkc3SXpoSTRiRk14NHVkVnM1VzIr?=
+ =?utf-8?B?Z3FpbmNOdkhXZnFMU3Z0N3FLMHF6cjZNLzQrSGFoMWVNQ1ZkalhMU1BwQjRO?=
+ =?utf-8?B?MFNHYlFNOVcyUjFsYXJNc3F1WVArUHU1Z2x4LzJkVVhGaG54T0t4OWZKdkw3?=
+ =?utf-8?B?aDh4SkxTNU1JM0YvQVdPM0xRUmRTWkdvT21EVXhRVU8xTUZ5VXcrK2RGSWhY?=
+ =?utf-8?B?VmNKRlZaSlVqMHBKWWtNajJxNFU1aUc0S0FIdGxKcFR6bWpBVHk1S054TE1y?=
+ =?utf-8?B?Y0RoUE95dGhodG5mTHNUdE9YaThPOE9iWmJBdUx2NzV2MUZmWlc4NmJTeHBS?=
+ =?utf-8?B?ZkJ3TWZNL0JaQTF1OFJ6SUpvcWJYMzVRZW1WZ3UvcTNNUURUdHBxUlJoWUda?=
+ =?utf-8?B?Q0Q5LzhWQ0VhRDhWRU1QODQ2WEV0Vzkwd3JQMXB5M2ZnZWZJeHBMdlQrRDBW?=
+ =?utf-8?B?UW0yWFQ0OEp4UEpiUm4zZmNNYmlkL2w3b3BHMkIzTlFCNE5UTUp0TTRHTk45?=
+ =?utf-8?B?blM0OCs0T0pXczFweENRM0VueDFIQlJ3SkVkUC9XQjBlazMrLzdYaGlhRGdj?=
+ =?utf-8?B?UGJxVVdQRE1WWWIvTEJBMVZsY1NPSnoxZDZLVkxDTEZ4YTJVSG9HbFVZdkFm?=
+ =?utf-8?B?Rkloa2VqNWdmTU9pekJYeXl6cUF4ejFMTkl3YlQzaG1qK1BzRlFRNGY2Y1Zr?=
+ =?utf-8?B?Y0hPa2ZBMkJ3MkxOZlZMNkFZdEZYV2VHaVRzMDFkQmV3VWhyYlVEaE1YRVd2?=
+ =?utf-8?B?Smo2TmU4WjdhOGpwZmJHRExoL084WVVZK0NCT2x2SXVNVlVoaHBELzE4YWVh?=
+ =?utf-8?B?RlpRSUdFR1dtdFRVbklvRVQrOHNSZjMxOFRyMGZUa1RlQXl5eEVvOGZqL0NQ?=
+ =?utf-8?B?bFNVdlJQd3J6UHlBL042VzJQTXVUTVRBM2gzTUxMOCt2dHRodmhnWkRxQkpV?=
+ =?utf-8?B?YmdQbzBrc04xa0xhUVhIcnNZeFIxMlB4eFQvZVdOV25EcytseHNpQXBUR0d6?=
+ =?utf-8?B?NGM3SUpjTU5OSTJteHBGWTdHcmdWUk14K3IwZ0VzZFdYaVRPb3Fad2JJdnJX?=
+ =?utf-8?B?WFgxVmQ2RHo1QnA5bTVmUG5XOFl4bkhUT2ZEbTFQNnFORUxGMHpIOEoxdXYr?=
+ =?utf-8?B?WCtTL1BOYnlkeHp3eDhiOGxXUUYwVDdNRklVV3Fsd0NCRDNqVVl3aDAzRHBB?=
+ =?utf-8?B?SXRKakM2VWQrSEJLbFN4dHRsWHRQZHBXV2x4RDNyem5EUyt0NFdYRnFyZVNC?=
+ =?utf-8?B?S3cydS9jWVZWZW5reE9tT0grY1k1eUNsSXE3QzI1NjhVRjNUYXU2Nms2Y084?=
+ =?utf-8?B?clozU0VUR0M4OFU2d1BwWUNDR3cvSUNFVnBsR1RQY1NzZ3B5U3JxWERuSTJv?=
+ =?utf-8?B?b01vNVVHamd1VmFzUit3WUtRclNDd3duWVNRL1ViWW1sZlB1aWovc3NGTXJZ?=
+ =?utf-8?B?VmMvM0NVODdwNktqcUxtdG5QdTNHT2svZFBoRVV4TThRUU5KYjE3elEvRitI?=
+ =?utf-8?B?K3ROSE9sMFhBVitCMENJV0Y1d1FkS3hzRlh0eGxqYllESG1wclE3bWN6NUd6?=
+ =?utf-8?B?eHlyR1BKVTNpOStwN0hHbXZFbTR2SWc0RytvTmtuYjQvQVFhY2lwZ295MmxW?=
+ =?utf-8?B?OVJ5VDByeTNBSTI4TlBQM0dOYXRYUHBEMnl3RC9uTElpMnA5bGQyeXk2MmVq?=
+ =?utf-8?B?d0c3MXNtWWRFa3RzcS9ubUtaZ1dKQzkyYUFmbFhTVnA2VDdGd3lsS20xUm9B?=
+ =?utf-8?B?VVNoeS9nSm0wdXI4c21RaUx1dk51ekNHRTc2UDlnUGMvcjdKbmJkZ09SblEr?=
+ =?utf-8?B?OGF0VnhTRG1KanZwcFVBNG9yYWdlUWQrVUZCZW96MWcvOG5oZVlRVzc5MVlY?=
+ =?utf-8?Q?L8N3c+jW/7/C6?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(376014)(30052699003)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2024 03:11:42.6394
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7eee668-4948-429b-c887-08dcecc7181d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F6F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6531
 
-On Fri, Oct 4, 2024 at 10:13=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
-> On Thu, Oct 03, 2024 at 11:48:18PM +0200, Jan Hendrik Farr wrote:
-> > On 03 14:28:01, Kees Cook wrote:
-> > > On Thu, Oct 03, 2024 at 05:17:08PM +0200, Jan Hendrik Farr wrote:
-> > > > gcc currently says that the __bdos of struct containing a flexible =
-array
-> > > > member is:
-> > > >
-> > > > sizeof(<whole struct>) + sizeof(<flexible array element>) * <count>
-> > > >
-> > > > clang however does the following:
-> > > >
-> > > > max(sizeof(<whole struct>), offsetof(<flexible array member>) + siz=
-eof(<flexible array element>) * <count>)
-> > >
-> > > Clang's calculation seems very wrong. I would expect it to match GCC'=
-s.
-> > >
-> >
-> > I was on the very same train of thought, but I have since changed my
-> > mind a bit. A struct containing a flexible array member can be allocate=
-d in
-> > two ways:
-> >
-> > (1):
-> >
-> > struct posix_acl *acl =3D malloc(sizeof(struct posix_acl) + sizeof(stru=
-ct posix_acl_entry) * 1);
-> > acl.a_count =3D 1;
-> >
-> > or (2):
-> >
-> > struct posix_acl *acl =3D malloc(offsetof(struct posix_acl, a_entries) =
-+ sizeof(struct posix_acl_entry) * 1);
-> > acl.a_count =3D 1;
-> >
-> > Both are valid ways to allocate it. __bdos does not know which of these
-> > methods was used to allocate the struct whose size it has to determine,
-> > so it's giving the lower bound that doesn't include the (potential)
-> > padding at the end.
->
-Slightly off topic: while I was looking at the definition for
-struct_size, I noticed this:
+Hello Johannes,
 
-#define flex_array_size(p, member, count)                               \
-        __builtin_choose_expr(__is_constexpr(count),                    \
-                (count) * sizeof(*(p)->member) +
-__must_be_array((p)->member),  \
-                size_mul(count, sizeof(*(p)->member) +
-__must_be_array((p)->member)))
+On 10/14/2024 8:13 PM, Johannes Weiner wrote:
+> On Fri, Oct 11, 2024 at 12:39:58PM +0200, Peter Zijlstra wrote:
+>> On Fri, Oct 11, 2024 at 06:08:03AM -0400, Johannes Weiner wrote:
+>>> Completely untested. But if it looks good, I'll send a proper patch.
+>>
+>> Sure. Thanks for doing this.
+> 
+> Ok here goes. Built, booted and runtime-tested.
+> 
+> ---
+> 
+>  From 91f230caa0119877cb861047e1af1371bf00d908 Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Fri, 11 Oct 2024 06:18:07 -0400
+> Subject: [PATCH] sched: psi: pass enqueue/dequeue flags to psi callbacks
+>   directly
+> 
+> What psi needs to do on each enqueue and dequeue has gotten more
+> subtle, and the generic sched code trying to distill this into a bool
+> for the callbacks is awkward.
+> 
+> Pass the flags directly and let psi parse them. For that to work, the
+> #include "stats.h" (which has the psi callback implementations) needs
+> to be below the flag definitions in "sched.h". Move that section
+> further down, next to some of the other accounting stuff.
+> 
+> This also puts the ENQUEUE_SAVE/RESTORE branch behind the psi jump
+> label, slightly reducing overhead when PSI=y but runtime disabled.
+> 
+> Link: https://lore.kernel.org/lkml/20241011083323.GL17263@noisy.programming.kicks-ass.net/
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-In particular the 'size_mul' line. I realize that '__must_be_array'
-will return a '0' or static compiler error, but it seems inconsistent
-that it's included as part of 'size_mul'. Maybe something like this
-instead (notice the parens on the last line)?
+I tested this series on top of tip:sched/urgent at commit cd9626e9ebc7
+("sched/fair: Fix external p->on_rq users") and did not observe any
+splats related to PSI or otherwise. Please feel free to add:
 
-#define flex_array_size(p, member, count)                               \
-        __builtin_choose_expr(__is_constexpr(count),                    \
-                (count) * sizeof(*(p)->member) +
-__must_be_array((p)->member),  \
-                size_mul(count, sizeof(*(p)->member)) +
-__must_be_array((p)->member))
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+-- 
+Thanks and Regards,
+Prateek
+
+> ---
+>   kernel/sched/core.c  | 12 +++++-----
+>   kernel/sched/sched.h | 56 ++++++++++++++++++++++----------------------
+>   kernel/sched/stats.h | 29 +++++++++++++++--------
+>   3 files changed, 53 insertions(+), 44 deletions(-)
+> 
+> [..snip..]
 
 
-> I want to separate several easily confused issues. Instead of just
-> saying __bdos, let's clearly refer to what calculation within bdos is
-> being used. There are 3 choices currently:
-> - alloc_size attribute
-> - counted_by attribute
-> - fallback to __bos (which is similar to sizeof(), except that FAMs are 0=
- sized)
->
-> Additionally there are (for all intents and purposes) 2 size
-> determinations to be made by __bos and __bdos, via argument 2:
-> - containing object size (type 0) ("maximum size")
-> - specific object size (type 1) ("minimum size")
->
-> For example, consider:
->
-> struct posix_acl *acl =3D malloc(1024);
-> acl->a_count =3D 1;
->
-> what should these return:
->
->         __bos(acl, 0)
->         __bos(acl, 1)
->         __bdos(acl, 0)
->         __bdos(acl, 1)
->         __bos(acl->a_entries, 0)
->         __bos(acl->a_entries, 1)
->         __bdos(acl->a_entries, 0)
->         __bdos(acl->a_entries, 1)
->
-> > So it comes down to false positives vs false negatives...
-> > More details here:
-> > https://github.com/llvm/llvm-project/pull/111015
-> >
-> > Clangs current behavior would essentially force kernel code to always
-> > assume option (2) is used. So
-> >
-> > struct posix_acl *
-> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> > {
-> >       struct posix_acl *clone =3D NULL;
-> >
-> >       if (acl) {
-> >               int size =3D sizeof(struct posix_acl) + acl->a_count *
-> >                          sizeof(struct posix_acl_entry);
-> >               clone =3D kmemdup(acl, size, flags);
-> >               if (clone)
-> >                       refcount_set(&clone->a_refcount, 1);
-> >       }
-> >       return clone;
-> > }
-> > EXPORT_SYMBOL_GPL(posix_acl_clone);
-> >
-> > from linux/fs/posix_acl.c would have to turn into something like:
-> >
-> > struct posix_acl *
-> > posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
-> > {
-> >       struct posix_acl *clone =3D NULL;
-> >
-> >       if (acl) {
-> >               int size =3D offsetof(struct posix_acl, a_entries) + acl-=
->a_count *
-> >                          sizeof(struct posix_acl_entry);
-> >               clone =3D kmemdup(acl, size, flags);
-> >               if (clone)
-> >                       refcount_set(&clone->a_refcount, 1);
-> >       }
-> >       return clone;
-> > }
-> > EXPORT_SYMBOL_GPL(posix_acl_clone);
-> >
-> > Which is actually safer, because can you actually be sure this posix_ac=
-l
-> > wasn't allocated using method (2)?
->
-> First, this should not be using an open coded calculation at all; it
-> should use the struct_size() macro.
->
-> Secondly, if we want to change struct_size(), then we must (via
-> allmodconfig builds) determine all the places in the kernel
-> where the calculated size changes, and audit those for safety.
->
-> Right now, struct_size() over-estimates in the face of padding.
->
-> We're already moving the kernel toward not even calling struct_size()
-> externally from the allocation, and instead using the it within the
-> allocation macros themselves:
-> https://lore.kernel.org/lkml/20240822231324.make.666-kees@kernel.org/
->
-> > After looking at the assembly produced by gcc more, it actually looks
-> > like it's using the allocation size if it's known in the current contex=
-t
-> > (for example if the struct was just malloced in the same function)
-> > and otherwise returns INT_MAX for the __bdos of a struct containing a
-> > flexible array member. It's only returning the size based on the
-> > __counted_by attribute of you ask it for the __bdos of the flexible
-> > array member itself.
->
-> Here is my test case for all the corner cases we've found so far:
-> https://github.com/kees/kernel-tools/blob/trunk/fortify/array-bounds.c
->
-> I'd prefer we add cases there so we can all be talking about the same
-> things. :)
->
-> -Kees
->
-> --
-> Kees Cook
