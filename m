@@ -1,117 +1,160 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F6976036
-	for <regressions@lists.linux.dev>; Wed, 16 Oct 2024 01:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B0913635E
+	for <regressions@lists.linux.dev>; Wed, 16 Oct 2024 02:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729041792; cv=none; b=R2GPmSu1sg9eEgABZS/CYMAIKHRyjNO/o1TwOpRMBxe9S7IGf1I3++rrMObWPD1qYryH4g79+tqS44K1okPbV6jCqJ1ALWCOU+7fQ8DI8KzHXHTbaYPrke3EwHClsNOpdcdv64Mgc26Ps4OOgnvYdk0jFzIYtbmQl/jFlCPFoP4=
+	t=1729045106; cv=none; b=gqzc/+56TDruuGGfbOMG1H41PiF9G7KJgMXiJdl2iLVyvgYuKyrqkz2JNBeEWvaYxdZ03AuaVdrXTuNMthiOhXcnon0vQY29myt0GaeVqwn6DyVGAYaLXAKV3r6JsF2Ry3E95RmhYKDKnK4O8RnE2Xce1OeoHcc8BHi/LyGg27k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729041792; c=relaxed/simple;
-	bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Txuxy3JXTv8qEI6f2/2VcELHqX/Q9yAUsLdCErN3YQ+FU48Pw7hFuox9uh0vXFGf+HoDd2mU/ArURUHY3vkTToUt4xl6xiRfBkSOEqXDgYyFSiLlmueeskkTr4wqi5shbcQHT7G6nWRZbO4S2gdhroxDr4vrc/rxBNenApLQ4SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BMX/PGns; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1729045106; c=relaxed/simple;
+	bh=5LE6tYu+X0uch1HLayLKo3gSu2cuTkosIXol167hqB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pm1BFJaeyXGYmk3p+Co6JuCYeppMMMmBJ7Iv34wr3BEFw8h7yLZdqhhz2+ktOHnpzwXPCd7uX+GFcGyNF+PfcrEIlzu0WhwP8reDRArAlc2isS/NDs+RAiwYKG+963qXbTLsKipXnGSWe9rZlRz8AohtIEcAeU7dVIrhDl61Syk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=fCiLcc8z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cgMiPPYM; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BMX/PGns"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a86e9db75b9so865839166b.1
-        for <regressions@lists.linux.dev>; Tue, 15 Oct 2024 18:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729041788; x=1729646588; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-        b=BMX/PGns8R70tscu/Y7bcsY4pXtjsiDR/ERw1E0hEjMyQinPX1DEi8BBACxKviOzYY
-         Rtn7HKpkpiqZ8B8XbZygYUAbZtudRsJGC+WlzvdMLMH1oLSzcIcqjuG/7bUlPylHJqti
-         4yQxbFhUgtLcwGlnhg0qvyuzlee8XT00j/bLvQxxQEMuWNrDbBWllAb2A+Obtl776Wgw
-         WzETtXl/iaLW5bAmrxVhiY5SM43UL2Rh8HxJwd2fBNuzzSWqwfqrpxJ+z4e6yGKrgLyZ
-         BjlF0XDUYPN/4oRdxfaRpoKmxJR/mFf5016o0WbwE+4BU/RW8jagpg5V1nVonT4LvPma
-         Dl9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729041788; x=1729646588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aKMOa2lsMcZ+PzeFhDC9/s5MDDTvDylmgOWrFIZX/mc=;
-        b=uhnX997xyMf7rGoX710muCRckniqYmVumspg10d2Lm4vvn3+zkFsxOoTqNa9W5Ecjs
-         jipqKOAG+tIyZ5E8sHSQuToCH/TbzmYyiGZzhOHlweElhbHTGzwjLuO8fJGyRbNbcDGi
-         egpoiNtJ9Z7BlYSyEgZ59EEs7TyQoWcp0g8tGPnIZvOjGIDQ/6UXUpyVqIKHuKppT5V/
-         hNCY7kA4RItXbjyuhJat57XDITooJNKpcA072zUkOEzhbdQZRQaIrHD2HVdMGwUrUUEN
-         K29GlFB9wZtowRXKh/kAj7oMGPD85OnafIou+8uMQq1upzunFzFJGHyJIvGUMHBtZEgV
-         zWhw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9/2t+309S64QOueBMydNPX5ObfGlwd2Yqjz2Bl09WP41SxWzCdBO10s6FJa2Vl6xb233NVoyk3e3yxg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwjbuESG/CtoOl5LNXecFRmHzPhRKHjzXOXQ8LIKvdLUl8RbHpI
-	GkBh0cBPT/33TdqKgfMAoBMJG3+7b5Y/GnsozmqiI9SWMLcg4nvrf6WJ1Jqcb+DxPeWUNu0yfFy
-	0YsNFxi0iKEFnOLX29pL+R9Fidj2ylnhP8qo=
-X-Google-Smtp-Source: AGHT+IHdkfklJ4F1OwuM1/1DqBmbkhdk3WE3vsIugWlT33b5VzThcJq7LfO9xnbbLXiMKZS361OAmCHXw1jqbZb5Hjo=
-X-Received: by 2002:a17:907:9709:b0:a9a:4d1:460 with SMTP id
- a640c23a62f3a-a9a04d10662mr910288566b.63.1729041788043; Tue, 15 Oct 2024
- 18:23:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="fCiLcc8z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cgMiPPYM"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 6CCDF114011F;
+	Tue, 15 Oct 2024 22:18:22 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Tue, 15 Oct 2024 22:18:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1729045102;
+	 x=1729131502; bh=Swj7Lbo7ejzQtiVKGVdpJ37CtLEPIJTGJDsXZZH7qAM=; b=
+	fCiLcc8zGKgFcHJu2nHi9P/4MvEC6iSQRyOg1zWRHxlmBlb/PEUd69Ab8RvIzNLU
+	qk/k5JpPP8lhdbGFbCmPwqltHbLcfhV2fLSY7gbukO3895g2ZeoZy7taOak1WYTp
+	XcbpXU0JmAA3oUSOY5lYJokEK04rwChni5aAcAnIQgkobDV0wTa1bnvvs80YcFRw
+	FpVWLpZX7xJKay7LKbRI2mxK4FFMapBc44KJYGysnwStjelKJxvzUrYHewgUujbE
+	95be9f4VL95xbyamWSIOCq0dpm6fdBxoKhdr/sPzJmTGGcMF+vq8wd8vaCg2mhIA
+	7Ds5BYqbz3LCBbZtQxwyqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1729045102; x=
+	1729131502; bh=Swj7Lbo7ejzQtiVKGVdpJ37CtLEPIJTGJDsXZZH7qAM=; b=c
+	gMiPPYMv0RLdRoOUNfHkKWyHCbbG07EQteWLMXjwTfNHqktzDiqoCo/6zAQ5oLLe
+	MV7UwXMgCPS/CTDC/WZ+sElfRClY6UT6w5o6AymFtwD5+N1Z7F4lk/XiQtWDs9pN
+	H2/orPowjHUrmgRAHDLvY0153E4wxgHHwpt94pKcBJC+IryFtCS2UJNUbECuyIoc
+	tSVwjolcIf7OTTMzK3hEqB1SX8Dyn0EMusbDxPwB8YCwQXeAkDKrWV6/BukZK48r
+	iI/B+3hVXtUH5GHXzND7gGe/nWWVOZ/B5uM4qXl2wPc8Zd1OOf0b+8bA22je7oDD
+	NnGBUfm8QcNaC1X+Mlnkw==
+X-ME-Sender: <xms:biIPZ1K5mGn6iSrkQOmv7Bht6iwnRXQlREiPC7JeEWsSy1rC3LBweA>
+    <xme:biIPZxKwFGiPNTzsmB-nSCgrblf9HAdeqrcawZP_-piQlI54vq8htizgp7cr4rIeV
+    US7Q78E5OBwKbFDvIA>
+X-ME-Received: <xmr:biIPZ9t798r88r_Q5RBLbm2IPAN7zsqV0wyeSajgTjEVT2Iu1RZnzHf3bkuCG0E6zhMaFxOwV9ZiKyaVEZYbEAhEpjvT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdegkedgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
+    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepfeejieet
+    gfegiedtkeeigffgkeelvddtfedttddtleelffdtudevjedvleelvdelnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttg
+    dpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhho
+    rhgsohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumh
+    esthhosghluhigrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtg
+    hpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgt
+    phhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:biIPZ2bqbSG_ZKiiniCLN2xTw2tQM9Jebh1v_uTj3u1ANSdSOIeocw>
+    <xmx:biIPZ8Y1sML6Y9Np6n6-rukq6jmAtHQ8Sw-Or2HkEsYe8VgNkJjiUg>
+    <xmx:biIPZ6BlxfwAF5tUSY_zFv98wV1dT9sAcNsTZHHininsI5oiFsdt0g>
+    <xmx:biIPZ6aWd9v7SCb9LJS30-Pw-8wDn_Q9iBupsJdyVBGFbA8AT9kYtA>
+    <xmx:biIPZ6lwCux1FjsC7-KX_rLYlF0oHU4qRn9e9rmJXe64zadIMvuzB0K4>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Oct 2024 22:18:20 -0400 (EDT)
+Date: Wed, 16 Oct 2024 04:18:19 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Bill Wendling <morbo@google.com>
+Cc: Thorsten Blum <thorsten.blum@toblux.com>, Kees Cook <kees@kernel.org>,
+	kent.overstreet@linux.dev, regressions@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ardb@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <Zw8iawAF5W2uzGuh@archlinux>
+References: <ZvV6X5FPBBW7CO1f@archlinux>
+ <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
+ <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
+ <Zvg-mDsvvOueGpzs@archlinux>
+ <202409281331.1F04259@keescook>
+ <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
+ <Zv6BEO-1Y0oJ3krr@archlinux>
+ <CAGG=3QVecaZfoRrjToToq8=Azh8M0vQ5Q=V8dfhdBnDR8GWy5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZvV6X5FPBBW7CO1f@archlinux> <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com> <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook> <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
-In-Reply-To: <Zv6BEO-1Y0oJ3krr@archlinux>
-From: Bill Wendling <morbo@google.com>
-Date: Tue, 15 Oct 2024 18:22:50 -0700
-Message-ID: <CAGG=3QVecaZfoRrjToToq8=Azh8M0vQ5Q=V8dfhdBnDR8GWy5A@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, Kees Cook <kees@kernel.org>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGG=3QVecaZfoRrjToToq8=Azh8M0vQ5Q=V8dfhdBnDR8GWy5A@mail.gmail.com>
 
-On Thu, Oct 3, 2024 at 4:33=E2=80=AFAM Jan Hendrik Farr <kernel@jfarr.cc> w=
-rote:
-> On 02 11:18:57, Thorsten Blum wrote:
-> > On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> > > [...]
+On 15 18:22:50, Bill Wendling wrote:
+> On Thu, Oct 3, 2024 at 4:33 AM Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> > On 02 11:18:57, Thorsten Blum wrote:
+> > > On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
+> > > > [...]
+> > > >
+> > > > Sorry, I've been out of commission with covid. Globally disabling this
+> > > > macro for clang is not the right solution (way too big a hammer).
+> > > >
+> > > > Until Bill has a fix, we can revert commit
+> > > > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
+> > > > certain situations where 'counted_by' is in use.
 > > >
-> > > Sorry, I've been out of commission with covid. Globally disabling thi=
-s
-> > > macro for clang is not the right solution (way too big a hammer).
+> > > I already encountered two other related __counted_by() issues [1][2]
+> > > that are now being reverted. Would it be an option to disable it
+> > > globally, but only for Clang < v19 (where it looks like it'll be fixed)?
 > > >
-> > > Until Bill has a fix, we can revert commit
-> > > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited t=
-o
-> > > certain situations where 'counted_by' is in use.
+> > > Otherwise adding __counted_by() might be a slippery slope for a long
+> > > time and the edge cases don't seem to be that rare anymore.
+> > >
+> > > Thanks,
+> > > Thorsten
+> > >
+> > > [1] https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com/
+> > > [2] https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.dev/
 > >
-> > I already encountered two other related __counted_by() issues [1][2]
-> > that are now being reverted. Would it be an option to disable it
-> > globally, but only for Clang < v19 (where it looks like it'll be fixed)=
-?
+> > This issue is now fixed on the llvm main branch:
+> > https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf769fc9a93e8a
 > >
-> > Otherwise adding __counted_by() might be a slippery slope for a long
-> > time and the edge cases don't seem to be that rare anymore.
+> > So presumably this will go into 19.1.2, not sure what this means for
+> > distros that ship clang 18. Will they have to be notified to backport
+> > this?
 > >
-> > Thanks,
-> > Thorsten
-> >
-> > [1] https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@tob=
-lux.com/
-> > [2] https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@l=
-inux.dev/
->
-> This issue is now fixed on the llvm main branch:
-> https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf7=
-69fc9a93e8a
->
-> So presumably this will go into 19.1.2, not sure what this means for
-> distros that ship clang 18. Will they have to be notified to backport
-> this?
->
-FYI, Clang 19.1.2 shipped with your fix in it.
+> FYI, Clang 19.1.2 shipped with your fix in it.
+> 
 
--bw
+Thx for the info.
+
+How should we continue with the "off by 4" issue? The way I see it either
+the kernel has to change struct_size (lots of work) or clang has to get
+an option to follow the kernels behavior. I'm in favor of adding an
+option to clang.
+
+Ideally I think it shouldn't be a global option but one that you can
+make per __bdos invocation. So either inlcude it in type or create a
+separate builtin for it.
+
+What are your thoughts on this?
+
+
+Best Regards
+Jan
+
