@@ -1,111 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2A32170D5;
-	Wed, 16 Oct 2024 20:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B8918D634
+	for <regressions@lists.linux.dev>; Wed, 16 Oct 2024 20:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729111404; cv=none; b=KLDM1dTdDrX2GbkU2y8SF7W6Z2PeG0nWMLB1WqqnuKgRZbEpH/cEXvmSgLp1Lre/V68Y0o3jOXkpmmQ1fLnNn4gFKRShcqSnXpEJwCoU8X92qDNR96Zshhnq9QAQ8LM5GzX7g14v/9rbx5iqc/4OZczCTOlkPVI5V3UqEASKHFE=
+	t=1729111793; cv=none; b=lggeVWDT3hqt5ABnptYL9SPpbHlysmFFXw1r9vMNQRulDtUdX6TfkeDxKeNpFxmkGHUQ13om73e9yQCS5kwK23wbBpjqUCGYgFArPMdGL1ZNrUoIt+TGFRf9Gs8aSOMJXjUO+Psc4kswmJWfvApfK9FKIYJG3OIcDwQY8DFJWIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729111404; c=relaxed/simple;
-	bh=qo/iVoYCKv6clO7FRi1PwRL1hqwG01g25YyRsbCYQ00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YG17SS4uBsDB/OGfy7+k48BKcUa4rqpwk56+5PPu1JgAvcgMQAB+Ls5YB6becCB928Voxgk9kqHdXkcuybcg+ONhThR8GWBfDh5f6WRra3oXL6KJ4KEWW4t6kfSp5bV7jfFIrGEqjOGQ340jXpOiY0zRdikL2GZ4fAdYGy+Lb5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJZq1F2d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729111793; c=relaxed/simple;
+	bh=wyviNS/O87hNqvd7UTSnAIcEJ6WvYGkBX9tYawnrCik=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHib+lMJrYpRslec0UaNOsOqfoGOgW1u5tsoDcpQMvN/4P3j9Z5NaNfuAHI/mPgkNyQZKw6vdHC8HT95hhHgA2n84pl5Y2T2UZwaGjCe1os+KW0Jf6h/8GBYUeFnmKOKIQl9Q+2yVb59eIqrR6FE4bzyhBtsBQcutDaLVrmJaPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Rx59RFas; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJZq1F2d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E29C4CECD;
-	Wed, 16 Oct 2024 20:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729111404;
-	bh=qo/iVoYCKv6clO7FRi1PwRL1hqwG01g25YyRsbCYQ00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AJZq1F2dulcRjkSp/MnZnzLjHNPn3ZptXhO7JV7B3NrGDtMWpHuPHDzKBFv2U9Owq
-	 6zDdDSEn2+ZcGf3f8ciCWjuUgHtgy3lwetxKCoauF6g00b220IlNk2dIcod9jxWLrh
-	 7VhZQnFmSmfeWrAh5IYhhuOe3IyU3zIclimupa0sRSH9zRQ6vNWno4qkoxPIPz5wZ6
-	 NCV7qT1DCHVesCR/hEnE/SZ3Yixt3z9Knw2JuTM+bY2itrLyNrNqskP5UHKhmAC5s0
-	 nsk5UI4oR4DRmtXNImEDJOXplbCeiCkexpL5qUnDWJjYzSxuLrYl64ErstZVcIBlZl
-	 dIfIyjuNJqs8w==
-Date: Wed, 16 Oct 2024 13:43:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Bill Wendling <morbo@google.com>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <202410161342.53075D369C@keescook>
-References: <ZvV6X5FPBBW7CO1f@archlinux>
- <3E304FB2-799D-478F-889A-CDFC1A52DCD8@toblux.com>
- <A499F119-5F0C-43FC-9058-7AB92057F9B3@toblux.com>
- <Zvg-mDsvvOueGpzs@archlinux>
- <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <CAGG=3QVecaZfoRrjToToq8=Azh8M0vQ5Q=V8dfhdBnDR8GWy5A@mail.gmail.com>
- <Zw8iawAF5W2uzGuh@archlinux>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Rx59RFas"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1729111791; x=1760647791;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ICjUl4q8K/hAIxqwCsJkPss/Rcd78MNXDfdL8em+YUo=;
+  b=Rx59RFasKWcQqo32Z0mfvcYR9EV98I2fLUnF9IzU6/3jQRPBIL/CQEkA
+   eloqXErL6JZFOVBURF2unQGXMh9BcyNAMEJZfx7Y7MG15LAQljcaxGaHV
+   yrffBj63k/UUL2zuT/Mj4QJRxUfxbk5Y19fls9KdlIHHN4zRafQ/qCey+
+   c=;
+X-IronPort-AV: E=Sophos;i="6.11,209,1725321600"; 
+   d="scan'208";a="432058913"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 20:49:47 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:44050]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.17.150:2525] with esmtp (Farcaster)
+ id 91a88051-116e-4f95-a9e3-50e85f98db01; Wed, 16 Oct 2024 20:49:46 +0000 (UTC)
+X-Farcaster-Flow-ID: 91a88051-116e-4f95-a9e3-50e85f98db01
+Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 16 Oct 2024 20:49:46 +0000
+Received: from 3c06303d853a.ant.amazon.com (10.187.171.15) by
+ EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 16 Oct 2024 20:49:43 +0000
+Date: Wed, 16 Oct 2024 13:49:38 -0700
+From: Andrew Paniakin <apanyaki@amazon.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+CC: Christian Heusel <christian@heusel.eu>, <pc@cjr.nz>,
+	<stfrench@microsoft.com>, <sashal@kernel.org>, <pc@manguebit.com>,
+	<stable@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+	<abuehaze@amazon.com>, <simbarb@amazon.com>, <benh@amazon.com>,
+	<gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
+ stable/linux-6.1.y breaks cifs client failover to another server in DFS
+ namespace
+Message-ID: <ZxAm4rvmWp2MMt4b@3c06303d853a.ant.amazon.com>
+References: <ZnMkNzmitQdP9OIC@3c06303d853a.ant.amazon.com>
+ <Znmz-Pzi4UrZxlR0@3c06303d853a.ant.amazon.com>
+ <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
+ <ZnyRlEUqgZ_m_pu-@3c06303d853a>
+ <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
+ <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
+ <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
+ <Zp7-gl5mMFCb4UWa@3c06303d853a.ant.amazon.com>
+ <fb4c481d-91ba-46b8-b11a-534597a2b467@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zw8iawAF5W2uzGuh@archlinux>
+In-Reply-To: <fb4c481d-91ba-46b8-b11a-534597a2b467@leemhuis.info>
+X-ClientProxiedBy: EX19D044UWB003.ant.amazon.com (10.13.139.168) To
+ EX19D026EUB004.ant.amazon.com (10.252.61.64)
 
-On Wed, Oct 16, 2024 at 04:18:19AM +0200, Jan Hendrik Farr wrote:
-> On 15 18:22:50, Bill Wendling wrote:
-> > On Thu, Oct 3, 2024 at 4:33 AM Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > On 02 11:18:57, Thorsten Blum wrote:
-> > > > On 28. Sep 2024, at 22:34, Kees Cook <kees@kernel.org> wrote:
-> > > > > [...]
-> > > > >
-> > > > > Sorry, I've been out of commission with covid. Globally disabling this
-> > > > > macro for clang is not the right solution (way too big a hammer).
-> > > > >
-> > > > > Until Bill has a fix, we can revert commit
-> > > > > 86e92eeeb23741a072fe7532db663250ff2e726a, as the problem is limited to
-> > > > > certain situations where 'counted_by' is in use.
-> > > >
-> > > > I already encountered two other related __counted_by() issues [1][2]
-> > > > that are now being reverted. Would it be an option to disable it
-> > > > globally, but only for Clang < v19 (where it looks like it'll be fixed)?
-> > > >
-> > > > Otherwise adding __counted_by() might be a slippery slope for a long
-> > > > time and the edge cases don't seem to be that rare anymore.
-> > > >
-> > > > Thanks,
-> > > > Thorsten
-> > > >
-> > > > [1] https://lore.kernel.org/all/20240909162725.1805-2-thorsten.blum@toblux.com/
-> > > > [2] https://lore.kernel.org/all/20240923213809.235128-2-thorsten.blum@linux.dev/
-> > >
-> > > This issue is now fixed on the llvm main branch:
-> > > https://github.com/llvm/llvm-project/commit/882457a2eedbe6d53161b2f78fcf769fc9a93e8a
-> > >
-> > > So presumably this will go into 19.1.2, not sure what this means for
-> > > distros that ship clang 18. Will they have to be notified to backport
-> > > this?
-> > >
-> > FYI, Clang 19.1.2 shipped with your fix in it.
-> > 
+On 27/09/2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 23.07.24 02:51, Andrew Paniakin wrote:
+> > On 12/07/2024, Andrew Paniakin wrote:
+> >> On 11/07/2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>> On 27.06.24 22:16, Christian Heusel wrote:
+> >>>> On 24/06/26 03:09PM, Andrew Paniakin wrote:
+> >>>>> On 25/06/2024, Christian Heusel wrote:
+> >>>>>> On 24/06/24 10:59AM, Andrew Paniakin wrote:
+> >>>>>>> On 19/06/2024, Andrew Paniakin wrote:
+> >>>>>>>> Commit 60e3318e3e900 ("cifs: use fs_context for automounts") was
+> >>
+> >>> Hmmm, unless I'm missing something it seems nobody did so. Andrew, could
+> >>> you take care of that to get this properly fixed to prevent others from
+> >>> running into the same problem?
+> >>
+> >> We got the confirmation from requesters that the kernel with this patch
+> >> works properly, our regression tests also passed, so I submitted
+> >> backport request:
+> >> https://lore.kernel.org/stable/20240713031147.20332-1-apanyaki@amazon.com/
+> >
+> > There was an issue with backporting the follow-up fix for this patch:
+> > https://lore.kernel.org/all/20240716152749.667492414@linuxfoundation.org/
+> > I'll work on fixing this issue and send new patches again for the next cycle.
 > 
-> Thx for the info.
+> Andrew, was there any progress? From here it looks like this fell
+> through the cracks, but I might be missing something.
 > 
-> How should we continue with the "off by 4" issue? The way I see it either
-> the kernel has to change struct_size (lots of work) or clang has to get
-> an option to follow the kernels behavior. I'm in favor of adding an
-> option to clang.
+> Ciao, Thorsten
 
-I'm planning on checking how much impact there is on the kernel to fix
-struct_size() to be precise. It really does need to match __bdos for
-Clang and GCC.
+Hi Thorsten, sorry for delay in reply.
+I had to do one step back and update my development setup, in order to
+prevent rebase process breaking: created script to use crosstool [1] to
+test my future backports on all platforms and make sure to search
+follow-up fixes for the patch I'm porting, found kernel.dance [2] for
+it. Now I'm trying to reproduce issue mentioned in follow-up fix [3] to
+have clear red/green test results. I think I should be able to send
+tested fixes in next 2 weeks.
 
--Kees
-
--- 
-Kees Cook
+[1] https://cdn.kernel.org/pub/tools/crosstool/
+[2] https://kernel.dance/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d5a863a153e90996ab2aef6b9e08d509f4d5662b
