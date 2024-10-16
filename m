@@ -1,59 +1,35 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645681885A0;
-	Wed, 16 Oct 2024 04:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0984218BC2C;
+	Wed, 16 Oct 2024 05:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729052859; cv=none; b=DnYvBWnjC2txetsHARXQ3HcXxvPFAYd9BaFc7O8mCN1pLn6BXQGHOi8gf8D9zXS7ciz+viedMGbgKnW3bmJWR0LmSl6IoK1Qb7v95Ta9j579zKsX+z4gRnif+jyj9aQE9a91yGPMWRZz5BO+XPOvPCU49+jyjLtUHJjckD/w7TA=
+	t=1729057356; cv=none; b=UslZ6uY//hw0fgOMcxWeQiL7Y4AmsBaG65FMeBWbSGE2a1Qb94G2XIfvOIWFIqM4V9YmX/1jmllYTK3w+rhzYaWRmJDEnyPrttOcyILfI6n7JhoJ11rRkTWVwaX3DCo2l/0VX354mlThTLoiTJkwO/QoU0hfGt1TLoOrtBHCrm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729052859; c=relaxed/simple;
-	bh=hVLTmQoIR4NnPP/Mi71p3DtZcSEuUiBYU5Kz9KmXAhM=;
+	s=arc-20240116; t=1729057356; c=relaxed/simple;
+	bh=VBS7EJ50GUS6vnNz48rkACqmxiiN4X8WRWJRKPX8I9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pzld0DGWNb3/GfaSgPz4uZ6t4sHxZVDgPLGxpU9hNruMbfaOwpJRoLJo+pHvCyUqkR1Ncb6mwArclPE7ShStcmieB1kcbTMEXAm18C5kCSQkmZegmYVwkd2vhHINJQX0dwFpzU2D22ifvxO43BIwXvxKdW8Db8R/BeoIrKYJQjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=W2RmBfMV; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vp/NPGEOygI1xP4aAKT48Jh8VjMlUsqMN7PJjI8riE8P7eoL72OaMYCxyiFx7EqEw4BKb1GVmdvAlvFHmEMEXCL4Tr92okr/PBniglP58rjfoVgbC42KvIj84TzJtKHF1IzxxKQxheUnITCZN6hY8GvEmvAqIKAVTeydlYdrFzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rFhinqrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="W2RmBfMV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=NW9YDCtZFYicQcANZrspiKTFqONICzgJfERuIxJwwNk=; b=W2RmBfMVuKF8/X6cU1pFP4vbbb
-	m5RHycH82wjxokH01lOZgqBFHEhKONi0FdfoEJK+01FFvXf//SUdl92CaDJPeCoWtj3PhcoaypIXV
-	LyF73HIlP6Q/dyECLqlm043QnjiOeC0DmpewYgvQ3mRZQm8/n4k+vJi9An9kHyPMGe9ADvgJsRvAt
-	qcHMWZmUshTbNOloHXs7ek80fDS9ZCxPwsU+buExbS4NJ7uPG3Kf5geu7/+27yr7iqe5K6njSqrpq
-	0ypVFFtu/u21DI9SQWnss/ETObnxzOI1s4pmeKEctoNJ5ovnm5uDUGFUuOkcr5iHssc1RpEYT0Gev
-	Y68j3kvA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1t0vTI-009jQQ-2p;
-	Wed, 16 Oct 2024 12:27:31 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Oct 2024 12:27:30 +0800
-Date: Wed, 16 Oct 2024 12:27:30 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Arnaud Ebalard <arno@natisbad.org>,
-	Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-Message-ID: <Zw9AsgqKHJfySScx@gondor.apana.org.au>
-References: <1fc4db6269245de4c626f029a46efef246ee7232.camel@gmail.com>
- <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rFhinqrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C89DC4CEC5;
+	Wed, 16 Oct 2024 05:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1729057355;
+	bh=VBS7EJ50GUS6vnNz48rkACqmxiiN4X8WRWJRKPX8I9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rFhinqrKcBi86kjQ0Q7EtGxTEeOu111m8JhCtVnECxqUQfN0B8p/y1aFIYWY2pA7K
+	 4g1IHS4cXIm0JipSz0Dyb/MuNbtYiqywPF92dHtVS58pWIIxeSz3CZbf8LY8NY72Kx
+	 EndrusNn23V7cp95TXNtoUXE+1aDU0lQYhv9U+ss=
+Date: Wed, 16 Oct 2024 07:42:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dean Matthew Menezes <dean.menezes@utexas.edu>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: No sound on speakers X1 Carbon Gen 12
+Message-ID: <2024101613-giggling-ceremony-aae7@gregkh>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,24 +38,14 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+In-Reply-To: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
 
-On Tue, Oct 15, 2024 at 07:38:27PM +0200, Klaus Kudielka wrote:
->
-> So, I applied the TDMA-disable patch, and I saw the same errors.
-> Then, I applied the printk patch on top of that, and here is the result.
-> 
-> Not sure, whether this makes any sense...
+On Tue, Oct 15, 2024 at 07:47:22PM -0500, Dean Matthew Menezes wrote:
+> I am not getting sound on the speakers on my Thinkpad X1 Carbon Gen 12
+> with kernel 6.11.2  The sound is working in kernel 6.8
 
-Interesting, I think this shows that the non-TDMA path doesn't
-work at all :)
+Can you use 'git bisect' to track down the offending change?
 
-Can you apply the TDMA-disable patch, and revert the asynchronous
-self-test patch? If it still fails, then we'll know for sure that
-the non-TDMA path is simply broken.
+thanks,
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+greg k-h
