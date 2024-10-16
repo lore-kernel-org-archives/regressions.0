@@ -1,77 +1,144 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBC85221;
-	Wed, 16 Oct 2024 05:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A02A1DE3C8
+	for <regressions@lists.linux.dev>; Wed, 16 Oct 2024 09:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729058175; cv=none; b=hNaEQaDhaz22ONolobV2aUYNTtiqbZPdCp859osqvbikImES47UtlCW9y1+2L2yg65/2m6A1bZqeOK3pK8qCc4I9bt2m6VLqqFraQzZBWf7Y/EFO3P5KA8ncRwi8LzUPwb2QhFcEIUSsto3SZ5KOGB/1W6ilEtk0ODtjUJxjfCE=
+	t=1729070437; cv=none; b=imDaVpQpEXdPCwvwBqJI+noG9b98HHQS93SxSwCYwOe6cx13FzB0lQZjG+GCN2qopi6J8a5o259K1pSUel5/6RYyjCH1UfK2n8udnckNqQrhHN6M52P6wrypQVew0NucRbyPEKSTpIce9uowcVNAkF6x1jyYoZRfezX7UuB5Kd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729058175; c=relaxed/simple;
-	bh=EVsQY8fPxvadPhWsnGUGb2WaQ0g3ANREtDe2FCLO9I8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UrwWTR5XpZQVqbtBMWqvl9y4AkekUax2LjspE4/JbgNs9KdTBn7j4qvruVSX95AhB5MxxgufaixuvQChoU7/O1yK7lUtD/dkWiZJGtcZNGaGLV/OOWAL7grXC8Ttn/R7fsz1kWbyCQm5DAuWyIExhT/2sRYDlgNdixHhgnIWlgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fH1rs0sR; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1729070437; c=relaxed/simple;
+	bh=DLHheLDaRR6+KcGD2A30ZcDjvKbLR7m5Bt+gppFTC5I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kiRpWnLiy2dMPZBz5u3bLAK+phpuQJHF2EI3P4TpV8aFwCp7JjWTvynfiVu3adGqZifdbycHakjA+O7pvQwKVIPQvbdov90WJINr29Iip4IJHpYqr3JIa5CwXuLmTZ+8AmDt5V5+9ET9UnkkbTCKqlj0+5xYKV3VyyFV9tZyxWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ItfSHzFB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ors147bg; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ItfSHzFB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ors147bg; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fH1rs0sR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=OfDEy5CvavV94PaefN8qX3Rl0Kvh6OaxMiKj2+nKExg=;
-	t=1729058173; x=1729490173; b=fH1rs0sRN0zjeP5Oln5pZ0TgLmeW/MOqlhhu1Z0GqFzLHZh
-	qlMaabGc7B/F8ai4rClQv/ACtxepuZvDJF21GAPUl3pSkasB5VafPglfdJxrgeLguviFvPHjVS3W7
-	LmQ7c2WZizEaEOQONSwL6g0HI8248P+cv9BAUzzf+bFnhJSbX1k+Z8ngnZjSBDAsMfi9eI62gn5lu
-	qg2OErdrn1bgczRmutS67HlR2WHK7cBsKl/lf8jqS+VbXApx4rOrM3u5p8i+YSGuW/Fyh9/nLn7/R
-	De9xuwPhOQXyEObBH2AifA1yHanFOU8UAjWJz495ouVIYxZWme1rasznNvIbFdfQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t0x10-0000xh-EW; Wed, 16 Oct 2024 07:56:10 +0200
-Message-ID: <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-Date: Wed, 16 Oct 2024 07:56:09 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ItfSHzFB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ors147bg";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ItfSHzFB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ors147bg"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3488F1FBF0;
+	Wed, 16 Oct 2024 09:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729070434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvhLUoXtiT4wtzJvaHxpfK3ExOTawW+kyThvNf02t1Y=;
+	b=ItfSHzFB3cL9fMVeibD798GljRMeAlMVFswRxSiPS9pcY9qI3tuqJ04qcqAf9mB8p4jijM
+	vXdkspFJHyoqyBQt+cbFRT+fSYNpuyRzw+jCDc2xx1rx6zYSgamHgHZJVdQlLqtbIu8LEH
+	t9I/t9MtEjdxBd010ts8BUEAUSExMGs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729070434;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvhLUoXtiT4wtzJvaHxpfK3ExOTawW+kyThvNf02t1Y=;
+	b=ors147bgk2fUWL3RCDQ6/ZuiKcxA7UsaMhtD8l4x05CZ7aoVsC3I7wCPu1b1flTibnOyZN
+	btSIvhKlUrDlCnBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729070434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvhLUoXtiT4wtzJvaHxpfK3ExOTawW+kyThvNf02t1Y=;
+	b=ItfSHzFB3cL9fMVeibD798GljRMeAlMVFswRxSiPS9pcY9qI3tuqJ04qcqAf9mB8p4jijM
+	vXdkspFJHyoqyBQt+cbFRT+fSYNpuyRzw+jCDc2xx1rx6zYSgamHgHZJVdQlLqtbIu8LEH
+	t9I/t9MtEjdxBd010ts8BUEAUSExMGs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729070434;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvhLUoXtiT4wtzJvaHxpfK3ExOTawW+kyThvNf02t1Y=;
+	b=ors147bgk2fUWL3RCDQ6/ZuiKcxA7UsaMhtD8l4x05CZ7aoVsC3I7wCPu1b1flTibnOyZN
+	btSIvhKlUrDlCnBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1A7611376C;
+	Wed, 16 Oct 2024 09:20:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id B+LdBWKFD2faNwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 16 Oct 2024 09:20:34 +0000
+Date: Wed, 16 Oct 2024 11:21:24 +0200
+Message-ID: <87bjzktncb.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Dean Matthew Menezes <dean.menezes@utexas.edu>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, Jaroslav
+ Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linux Sound
+ System <linux-sound@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: No sound on speakers X1 Carbon Gen 12
+In-Reply-To: <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
+	<2024101613-giggling-ceremony-aae7@gregkh>
+	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-To: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linux Sound System <linux-sound@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
- <2024101613-giggling-ceremony-aae7@gregkh>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2024101613-giggling-ceremony-aae7@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729058173;7a816f2a;
-X-HE-SMSGID: 1t0x10-0000xh-EW
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 16.10.24 07:42, Greg KH wrote:
-> On Tue, Oct 15, 2024 at 07:47:22PM -0500, Dean Matthew Menezes wrote:
->> I am not getting sound on the speakers on my Thinkpad X1 Carbon Gen 12
->> with kernel 6.11.2  The sound is working in kernel 6.8
+On Wed, 16 Oct 2024 07:56:09 +0200,
+Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
-> Can you use 'git bisect' to track down the offending change?
+> On 16.10.24 07:42, Greg KH wrote:
+> > On Tue, Oct 15, 2024 at 07:47:22PM -0500, Dean Matthew Menezes wrote:
+> >> I am not getting sound on the speakers on my Thinkpad X1 Carbon Gen 12
+> >> with kernel 6.11.2  The sound is working in kernel 6.8
+> > 
+> > Can you use 'git bisect' to track down the offending change?
+> 
+> Yeah, that would help a lot.
+> 
+> But FWIW, I CCed the audio maintainers and the sound mailing list, with
+> a bit of luck they might have an idea.
+> 
+> You might also want to publish your dmesg files from the latest working
+> and the first broken kernel, that gives people a chance to spot obvious
+> problems. Ohh, and runing alsa-info.sh and publishing the output could
+> help, too.
 
-Yeah, that would help a lot.
+Yes, alsa-info.sh outputs are really needed for debugging, especially
+because Lenovo has (literally) hundreds of different models.
 
-But FWIW, I CCed the audio maintainers and the sound mailing list, with
-a bit of luck they might have an idea.
+Please run the script with --no-upload option and attach the outputs
+from both working and non-working cases.
 
-You might also want to publish your dmesg files from the latest working
-and the first broken kernel, that gives people a chance to spot obvious
-problems. Ohh, and runing alsa-info.sh and publishing the output could
-help, too.
 
-Ciao, Thorsten
+thanks,
+
+Takashi
