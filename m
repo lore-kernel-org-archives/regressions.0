@@ -1,135 +1,103 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE453C30
-	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 00:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF3B101F2
+	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 02:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729125712; cv=none; b=fSEGvHI2RgtHrT5BTxIpp+r/En64k2gnEsH7pJOE2tx/xoie5VMO+XMw2l5qn/JSCwW4RKnRJqZrKN6OnhGHjPKjyf0O+UF4C3w7iruGsBLxjpa8OFkr0W4FSdV2i2O52uif2N/CaYtwctx+EJYDAIbv/boPQu11FmICs27iZEA=
+	t=1729132454; cv=none; b=VYci4Xd3giPpgLNugUnjaHblCps30LI9kLrHRCQ0HoGlclOWyu4zFFA8TXloOsAVjq/IIlDuchm/HtGOOGSw9bM9jd2EUrUmtqbaWEQAZph+jrpxP3uOr3vdw5jwVrkmMcdu7AhII1qOrS4w0Kc/exu0ZQmDxgtXcN7sAgQru5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729125712; c=relaxed/simple;
-	bh=7QkoQYQX3zTw7nHF+GB459hVBusGgSOd7/jSBdPBJD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sth8Y06TGPqL4c6iSbfTTPThZR1e61QsFW6M1gn5FgV/yzHhlV6BpEUFKybOraVp4nB0P1XzgjawM2G2c2nraVg8JmYZykxTNzNqHjDzx4rqWxAmiZOkvvO5dvhmNVwRxImQ9+eVQDWJNTHka4TKqlCgHJufWfWJhx4gHIbuSRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=BH+Qo8Cw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GZaU02+l; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1729132454; c=relaxed/simple;
+	bh=GJhaVtiZLy15AyD3VfoJlUPHEaJahKRPUFuJ0X1aEWY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sX7FgaI5siIOaL1HPM9VuXPw96Iy1CZfJdGbVhG+Vc3s92IP27DSj4uzl4g5SqvkO9w2fLiXh4RwaU7I9HT6TJTXcyo3JzsSbNtSFqdAtZfloQD9NeqMpPr09H4+E6+p+dvmQfwQMK3gJlPwwXtFOqe9vHmDuywYQ41EOdiWKnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=RdQ3GHFB; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="BH+Qo8Cw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GZaU02+l"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 66ED913800F6;
-	Wed, 16 Oct 2024 20:41:48 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Wed, 16 Oct 2024 20:41:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1729125708; x=1729212108; bh=7QkoQYQX3z
-	Tw7nHF+GB459hVBusGgSOd7/jSBdPBJD8=; b=BH+Qo8CwQbiGXvse6CHyuR0zbi
-	mHg7VF39duGWH9HnpYPS1dDFhxVs66wXBVSfDRQzUiMWO61PHxTjKDlBQakQy7XP
-	4MEDxwsKHzDtTBm67KqFEheWcZMoEEqzUzZE7XUaRfGQjBNVI/fEkJXfNDwsDlxM
-	e+6mRcqjXyZcLCOw3I/juNErPbo98bWs8uD0Mwm53Jwch11bJlcNXw+48pJGgvrp
-	7LnnQFfk7o5ffAzv/IOQkGb54zjSjYyj44wOUx5ujwVszVjZZtgWRZkeo2s0Kn7x
-	u846ZigQPBuKNpeJVTRcpM5AKBUSeWYn11Nsch7IIBw2CpwXJyQNpxDoH7Hw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1729125708; x=1729212108; bh=7QkoQYQX3zTw7nHF+GB459hVBusG
-	gSOd7/jSBdPBJD8=; b=GZaU02+lMQGSBhjhgsOnTQlWffn6SlfIOffOqHbT/NjO
-	2L3vg0TSJW9drvrpeRRbeCwuU+8Yfm1om/mtJiQ8ArK35b/6xNRTCb4sS7rv6C69
-	CaH/C4IqxIE7yUhVBStKaaXcVoFCRSUAVS5XAkbr1G/xYbN/aL/OcJA34j14Y9+8
-	MBTlCRlRvbZLRT5F6HYWHLOwK2bgm7gqTzZINefYdpqkNNr/JUq1P5mZpY7PXprS
-	yK6Qd1hXDXkB8nVOLRLpM7Oh23P0hVo4DdmyCHd6pafesN7FbQ7XVAIglJH9SgKx
-	IaB8c12GvyXD0mX1QlCydYwqVqABYvTtsQrZrTj9eQ==
-X-ME-Sender: <xms:S10QZzvo8wLPjxy06WB9SaJh8H3bsW2iMuGo7avw0eY5EM9R5Ep4XA>
-    <xme:S10QZ0f_2OyRtD45auHV1dhhNNMY31CuzEu0eH5iVuGd1wXww7A19-BLRg5-0Kx3T
-    bniHuKPezik7yNeGy8>
-X-ME-Received: <xmr:S10QZ2zTkqy1gnSC7xB9Qd5V0iUzjiBR3-zZcVKyey-66hGmqPv24cPAgNBWpzSXoWO4SkQi5-IFbUYy5Ve6IEuXUl4y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehtddgfeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpefffeejffev
-    geejudeiveektdeiveefgefghfffveeujeefhfefffdvvdfgiedvheenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttgdpnhgspghrtghpthhtoheple
-    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgt
-    ohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthh
-    horhhsthgvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdr
-    ohhvvghrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghssh
-    hiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgs
-    tggrtghhvghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
-    igqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eprghruggssehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:S10QZyN56jgDuy0MUeD44oE83BxlpO46fFS4j8MFpaOMSIRLQIk-9w>
-    <xmx:S10QZz_KMie2o9TWgU-MjdMIFHYE4KvYTAjYMx3_4Tl6BEe8NmXi1w>
-    <xmx:S10QZyVTT-fc4lkbLBKDevoRaIDx3guDWGfYVcQ42p5IzUuNFS9FFg>
-    <xmx:S10QZ0c2M_BetIcQrf4dBFaDgM-_NBrde7Ok9Hg7khFTsOTYBD1_HQ>
-    <xmx:TF0QZ6YobGkUYnu5XwrXbeM5DZwK5zkw2LwiacGgpvHLfj8miwqEVHQq>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Oct 2024 20:41:46 -0400 (EDT)
-Date: Thu, 17 Oct 2024 02:41:44 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, Thorsten Blum <thorsten.blum@toblux.com>,
-	kent.overstreet@linux.dev, regressions@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ardb@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZxBdSKuDWh6w_w-z@archlinux>
-References: <202409281331.1F04259@keescook>
- <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="RdQ3GHFB"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-71e953f4e7cso90730b3a.3
+        for <regressions@lists.linux.dev>; Wed, 16 Oct 2024 19:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729132452; x=1729737252; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CzEWcgkyEN2xCGQzQYd58oYQmuoVm6jkLMq2U4NyvJQ=;
+        b=RdQ3GHFB2NRwbPJYHxk+lJjiJfsWl10OZpETb3JambvvUE/YFFyFBhm0SqL5c3bguH
+         OFD1tDBoqNLj/N2vbtBR8vNyE4pZ0/lEfE3BZEZsJefnS489pvW/OcLmF2+9Y6dUGQ/f
+         O8WDHZz5sLw6lw3uq9NJwU38Rer3cYlVaKEG1D89mj89NUKDuSN2TegKKWypFEXiUFet
+         6BUCtPlXNQr+UbmjGSfiobBgpsxuNgMP71psPdbqqWE5NtUeYPr+2wdVHZU3wMA7hjeT
+         HJtllLdH/o1UUk+xcitFrEQYNASaks3gsU3au5nO8AWFpzEYcuJGH5UeQuwLSJ2dbyTa
+         iJqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729132452; x=1729737252;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CzEWcgkyEN2xCGQzQYd58oYQmuoVm6jkLMq2U4NyvJQ=;
+        b=WIz1uPS9eifr6AnevUOpt0OdyjaM79oDD6uP10R+7y6kPmINvgMfwP6Mima5/zxxTK
+         Z3Zbnnbq0FPBw41z4N6cUAq4ZTGxGPobHHLD2o+ArykAk/22IhKC3zKd2+oQ0lEpG33H
+         c6TNnUp6XWpUpfzcAaKyvea3BDmOx/pppJ3L3eeryp3N3ZWE4PtjHBwem+IMuHz5VWfR
+         fYpOMqe8Q9mmscxBR6qFjWm6y+Hrf77rgW0jHwcBYlcZ2AvjhE5gYFme3oq5YE5RtPIz
+         oV+yK5XFQ+BTUj8kcoOZsGlj6qKuPLZdM6FPHhNw1Qh+KK8YuDdZf+SOl05LOAN4Y7B9
+         nPfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU70lAsoE/93eHM0l1YxkABqqe9oobPcfwLs0EqlIIeVaY3Xrssnjh1sgb5PuGZJU/vnsEPydqrqWY8fQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwME+hRex6vCfj2uM/LXDJpUuDvX+eCZqY09dMVzkk68AHimgTw
+	Kc0wccvJ/WS/0F90vp9g4g0Z1kw+4d7hxT0+HGMJjD8RqBXBL1irbV0Q6/ViT60=
+X-Google-Smtp-Source: AGHT+IEPlYb+DxeCpUtrmzvV4jpB/7wPYMRwmw1C+8y9sir94HhOaj5Up0Hc08t4bY8iVVhiJFRp+w==
+X-Received: by 2002:a05:6a00:2e11:b0:71e:6ed:9108 with SMTP id d2e1a72fcca58-71e4c13db67mr26050685b3a.2.1729132451589;
+        Wed, 16 Oct 2024 19:34:11 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e774cbcf1sm3750124b3a.157.2024.10.16.19.34.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2024 19:34:10 -0700 (PDT)
+Message-ID: <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
+Date: Wed, 16 Oct 2024 20:34:09 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: AMD zen microcode updates breaks boot
+From: Jens Axboe <axboe@kernel.dk>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <91194406-3fdf-4e38-9838-d334af538f74@kernel.dk>
+ <20240928061038.GAZved3hMSU3XahWrJ@fat_crate.local>
+ <5fe1e264-c285-4988-b1e3-46771d07172b@kernel.dk>
+ <20240930044313.GAZvosYZF5mHi2OZbC@fat_crate.local>
+ <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
+ <CC418B80-5ED9-4F64-917F-BA6F94130F83@alien8.de>
+ <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
+ <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
+ <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
+ <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
+ <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> I would be in favor of disabling __bdos on a whole struct pointer if
-> it will match the functionality between the compilers. I don't think
-> Qing has that on her plate at the moment, but when / if she revisits
-> that we can discuss exactly how to perform the calculations then.
+On 10/10/24 7:50 AM, Jens Axboe wrote:
+> On 10/10/24 7:46 AM, Borislav Petkov wrote:
+>> On Wed, Oct 09, 2024 at 05:04:23AM -0600, Jens Axboe wrote:
+>>> Yep, 0xaa00215
+>>
+>> Found something: I'm not handling the stepping properly, below is a big diff
+>> along with debug printks. Can you pls run it and send me dmesg. I'm assuming
+>> the box will boot with it.
+> 
+> Sure will give it a spin. The box is tied up with testing for now, but
+> I should be able to run this later today and send you the output.
 
-That's a good approach from my perspective.
+And then I totally forgot... Got it done now, but it still just hangs
+after loading the kernel. No output.
 
-To get this done we would:
-
-Now:
-1. Disable the __counted_by attribute calculation in clang for whole
-struct __bdos cases like in [1] and get this into the next clang point
-release (19.1.3)
-
-2. In the kernel, disable __counted_by for clang versions < 19.1.3. Also
-backport that into the stable kernels
-
-In the future:
-3. Try and figure out what the correct counted_by calculation for whole
-structs should be in conjunction with gcc and clang. Either provide an
-option in clang and gcc to follow the kernels expectations or change
-struct_size in the kernel to match gcc's and clang's future behavior.
-
-
-[1] https://github.com/llvm/llvm-project/pull/112636
-
-Best Regards
-Jan
-
+-- 
+Jens Axboe
