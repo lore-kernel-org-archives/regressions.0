@@ -1,69 +1,43 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E061A1D95AB
-	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 10:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED95259C
+	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 11:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729159405; cv=none; b=FnREV6NQkvqZ4zuIk9k6UVjBhlz78WMcCkPmYhe/MPQSNMurljZv/rzA1bnbcKZvxfY1yJ4n2weyQxpE/KZXRaQoV7vNfwc4TMggLwZJ9Su6NY1KSfnnlMmo/P/Z/BbHQqzpX6lQil7QQJGuyplcClxexxZH3Nv1hSBekb2pZ/I=
+	t=1729162991; cv=none; b=t3ngJ3t6xAqds9gXn06dq6v48EtVjnzqEhpqafdK7XoSeQ0lTzxh9eoRcpotil3N8fubFehzrehRo1lPv3a9GB0gZdH8hBx2TybX0j8INmqqutx4jxZFkZhN0zj0PXZcLw4dSljlSrIFb9L9dYw4dXQPmkbkxrGo52u9RiF6/AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729159405; c=relaxed/simple;
-	bh=ygrGK82PCX2dAMosS7CWMo19c3iWobo+UGLhf9gtn2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XL/nhhXCO+nz3WdWgOa8cKUMPQCPBAsXg76x9B1LD41bQ25sCdIZGxgyDOUMN5v0puYb7zgIg0m4FVOqSuo4VcdjyMJX2zIzX9S6NSbsNBmEW73qk0e7iwbQJnGB1L/6H1poWT8rysrQ1dsDCs51BCfPOtVshdp3FNCOPtzJbyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UxttWpvi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1729162991; c=relaxed/simple;
+	bh=FBxEpMv95jAUtqrJmvMlDJmw8hCzAm/5/M7nERRARGA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nvNF6OVBNVGyIJv4SC16/B6/sH3u4jwCUOOQi9+zgcH6LrYKfjlX2y+SvvfCPvSUCwJDASlMXm+6B6VgXpMlRwyn7fYSwVj/mJMmBJVap9mW8anqsGTjVXvqA8SQ2J751QpSuX/b5fwyrCnKXWYw7vnafXd9QS5+kvfi+CdJDVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=dsc2CUd2; arc=none smtp.client-ip=185.70.43.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UxttWpvi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C73E40E0219;
-	Thu, 17 Oct 2024 10:03:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id EsCnHj8DMX-4; Thu, 17 Oct 2024 10:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729159388; bh=V0GRidANyNTNe0dqShfeUwN5d4P9zDXZ9fBjbBPScR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UxttWpvi6M8q3qkc+waz/DaSIbDTDZfvy6odxhRE5F6QfF4X9oA0e144gO9iZXjR/
-	 jHO9mqQqLy6VxqZTBshlxPHBJqQ2GosPSawg0CiYCjMcoZVC+4Zpd/Yj+tZLjSsuzL
-	 Kq/TnXjsZpN4xptTc43w+LW2DJb8J/V1wTC5duK+VUXkQjg+idUK38o+ljTr/fA4hA
-	 BLXU7/j4ghzx55bxqXUMO6kklOZ1JOp+8zP2iawWd+xLnn9F0ULl9sRweN4WwOQv3w
-	 lNvPg5nFkE+l+3+dQp1eIqjQFt7w0ptnqEGxaZXzKpnf0DthGNcWAIabPjfFT3/KpG
-	 bzQBLYhWWadAe8UKDJHb/F84wtnLe3mh+SmJ6YiXfUeIi12Dg2o2+pQmPwNLYsnJqY
-	 DC66wbbGkVaKISXFrr/l5C/Q840aQCCCcYkV3soB5FdAoZFgH7Uf/DpTJG2SSlCSEc
-	 ZTPk1Klo0Ylnl35D1HBesL/Whv7e0hDZQwIn44dYkoV7qH7jEhUOi7wNC6glZEzRAX
-	 79dzUWgaSuwkOspYCw6crdF5NeguIB0wUsjmDMMEhAWB/uhdbgltkF+JeGeCpbQ6mp
-	 UwHB24nIwSdNlEr9lteYUaP8cyLp66Z831jAsXmaCYn5CVvJS3m/B30PzRreExjNQf
-	 tJebBFg7toT9P8Mb7kFai06s=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0841A40E0169;
-	Thu, 17 Oct 2024 10:03:02 +0000 (UTC)
-Date: Thu, 17 Oct 2024 12:02:57 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241017100257.GAZxDg0VqDAesee00m@fat_crate.local>
-References: <5fe1e264-c285-4988-b1e3-46771d07172b@kernel.dk>
- <20240930044313.GAZvosYZF5mHi2OZbC@fat_crate.local>
- <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
- <CC418B80-5ED9-4F64-917F-BA6F94130F83@alien8.de>
- <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
- <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
- <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
- <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
- <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
- <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="dsc2CUd2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1729162980; x=1729422180;
+	bh=FBxEpMv95jAUtqrJmvMlDJmw8hCzAm/5/M7nERRARGA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=dsc2CUd2huQnURbHT2YcVLGZjRF5b0SJfwHJ6cPdoO1yUO15aamqhBa5oAaOs8YR5
+	 y5At4xHRHzrqaLlUZ6zq+cHxAP7H0kr9HCLoh4OpCwB9uXANkkAJA4aSvTgh0x6tqi
+	 MYA8Bjk4xu7iAsY7w5CDcrTNSAtdUM4juEFrgYhGVdxnaAfI73tPNWMG24HHL+ZqLW
+	 F8TWaz0Rqj8omB53EbOMPF0q6Go6PWzCBflhyECDhqowgQqMqEjX6i8wSUDsbAcC+4
+	 cLPzKdauY6I0lJDpYPbt6AfCO3yHi4PO2gVHzXpAono0nFcejLWuxgbiN7l1w4bHgi
+	 NSCS8k8hVUsJQ==
+Date: Thu, 17 Oct 2024 11:02:55 +0000
+To: Shawn Lin <shawn.lin@rock-chips.com>
+From: sydarn <sydarn@proton.me>
+Cc: Adam Green <greena88@gmail.com>, regressions@lists.linux.dev, linux-kernel@vger.kernel.org, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Subject: Re: Unable to handle kernel paging request at virtual address ffffffc08058e000
+Message-ID: <ziwdBCnXuueftpsLEbuPLnsq81mkIIY8aMRd07gGqPHrJ7ivO0PYUJ3Ik5dcguC1YgM_So6u4OwgYXIChhUvXlZ2GuG5pTlfOsFFd7gQe18=@proton.me>
+In-Reply-To: <3748add3-18e5-42ef-9d48-93650cfc0682@rock-chips.com>
+References: <CAC8uq=Ppnmv98mpa1CrWLawWoPnu5abtU69v-=G-P7ysATQ2Pw@mail.gmail.com> <3748add3-18e5-42ef-9d48-93650cfc0682@rock-chips.com>
+Feedback-ID: 92491476:user:proton
+X-Pm-Message-ID: 790c47bfe94c8121b7c0ddd8365812c7fcfa5afc
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -71,155 +45,126 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 08:34:09PM -0600, Jens Axboe wrote:
-> And then I totally forgot... Got it done now, but it still just hangs
-> after loading the kernel. No output.
+> =E5=9C=A8 2024/10/16 17:55, Adam Green =E5=86=99=E9=81=93:
+>=20
+> > Good morning,
+> >=20
+> > I would like to report a regression that appears to have been
+> > introduced into the linux kernel since v6.9.
+>=20
+>=20
+> I didn't see many patches for dw_mmc since 6.9. So I guess the fastest
+> way is to do a bisect. Or maybe you could try reverting this commit
+> first to see what will happen.
+>=20
+> commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890
+> Author: Sam Protsenko semen.protsenko@linaro.org
+>=20
+> Date: Wed Mar 6 17:20:52 2024 -0600
+>=20
+> mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K
 
-Hmm...
+We have reverted this commit and done some testing on 6.10.13. We have not =
+had a panic so far. It was specifically prone to happen during our initiali=
+zation process, I tested that 7 times successfully yesterday. It used to ha=
+ppen more than 50% of time during that process.
 
-Let's verify it still actually selects the correct patch. Diff below, it
-should boot with it as it won't apply the microcode and you should be able to
-gather dmesg.
-
-Thx.
-
----
-
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index f63b051f25a0..ed5474cf683f 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -158,6 +158,9 @@ static union cpuid_1_eax ucode_rev_to_cpuid(unsigned int val)
- 	c.family    = 0xf;
- 	c.ext_fam   = p.ext_fam;
- 
-+	pr_info("%s: val: 0x%x, p.stepping: 0x%x, c.stepping: 0x%x\n",
-+		__func__, val, p.stepping, c.stepping);
-+
- 	return c;
- }
- 
-@@ -487,11 +490,13 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
- {
- 	u32 rev, dummy;
- 
--	native_wrmsrl(MSR_AMD64_PATCH_LOADER, (u64)(long)&mc->hdr.data_code);
-+//	native_wrmsrl(MSR_AMD64_PATCH_LOADER, (u64)(long)&mc->hdr.data_code);
- 
- 	/* verify patch application was successful */
- 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
- 
-+	pr_info("%s: applying 0x%x, rev: 0x%x\n", __func__, mc->hdr.patch_id, rev);
-+
- 	if (rev != mc->hdr.patch_id)
- 		return -1;
- 
-@@ -613,16 +618,22 @@ static int __init save_microcode_in_initrd(void)
- }
- early_initcall(save_microcode_in_initrd);
- 
--static inline bool patch_cpus_equivalent(struct ucode_patch *p, struct ucode_patch *n)
-+static inline bool patch_cpus_equivalent(struct ucode_patch *p,
-+					 struct ucode_patch *n,
-+					 bool ignore_stepping)
- {
- 	/* Zen and newer hardcode the f/m/s in the patch ID */
-         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
- 		union cpuid_1_eax p_cid = ucode_rev_to_cpuid(p->patch_id);
- 		union cpuid_1_eax n_cid = ucode_rev_to_cpuid(n->patch_id);
- 
--		/* Zap stepping */
--		p_cid.stepping = 0;
--		n_cid.stepping = 0;
-+		if (ignore_stepping) {
-+			p_cid.stepping = 0;
-+			n_cid.stepping = 0;
-+		}
-+
-+		pr_info("%s: p_cid.full: 0x%x, n_cid.full: 0x%x\n",
-+			__func__, p_cid.full, n_cid.full);
- 
- 		return p_cid.full == n_cid.full;
- 	} else {
-@@ -641,16 +652,22 @@ static struct ucode_patch *cache_find_patch(struct ucode_cpu_info *uci, u16 equi
- 	n.equiv_cpu = equiv_cpu;
- 	n.patch_id  = uci->cpu_sig.rev;
- 
-+	pr_info("%s: equiv_cpu: 0x%x, patch_id: 0x%x\n",
-+		__func__, equiv_cpu, uci->cpu_sig.rev);
-+
- 	WARN_ON_ONCE(!n.patch_id);
- 
--	list_for_each_entry(p, &microcode_cache, plist)
--		if (patch_cpus_equivalent(p, &n))
-+	list_for_each_entry(p, &microcode_cache, plist) {
-+		if (patch_cpus_equivalent(p, &n, false)) {
-+			pr_info("%s: using 0x%x\n", __func__, p->patch_id);
- 			return p;
-+		}
-+	}
- 
- 	return NULL;
- }
- 
--static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
-+static inline int patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- {
- 	/* Zen and newer hardcode the f/m/s in the patch ID */
-         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
-@@ -659,6 +676,9 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- 		zp.ucode_rev = p->patch_id;
- 		zn.ucode_rev = n->patch_id;
- 
-+		if (zn.stepping != zp.stepping)
-+			return -1;
-+
- 		return zn.rev > zp.rev;
- 	} else {
- 		return n->patch_id > p->patch_id;
-@@ -668,22 +688,32 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
- static void update_cache(struct ucode_patch *new_patch)
- {
- 	struct ucode_patch *p;
-+	int ret;
- 
- 	list_for_each_entry(p, &microcode_cache, plist) {
--		if (patch_cpus_equivalent(p, new_patch)) {
--			if (!patch_newer(p, new_patch)) {
-+		if (patch_cpus_equivalent(p, new_patch, true)) {
-+			ret = patch_newer(p, new_patch);
-+			if (ret < 0)
-+				continue;
-+			else if (!ret) {
- 				/* we already have the latest patch */
- 				kfree(new_patch->data);
- 				kfree(new_patch);
- 				return;
- 			}
- 
-+			pr_info("%s: replace 0x%x with 0x%x\n",
-+				__func__, p->patch_id, new_patch->patch_id);
-+
- 			list_replace(&p->plist, &new_patch->plist);
- 			kfree(p->data);
- 			kfree(p);
- 			return;
- 		}
- 	}
-+
-+	pr_info("%s: add patch: 0x%x\n", __func__, new_patch->patch_id);
-+
- 	/* no patch found, add it */
- 	list_add_tail(&new_patch->plist, &microcode_cache);
- }
-
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> > My device is currently experiencing a panic booting the kernel/rootfs
+> > from an SD card.
+> >=20
+> > The device is a Powkiddy RGB30 which is a portable handheld gaming
+> > console with a Rockchip RK3566 SoC (arm64).
+> >=20
+> > I have tested a variety of devices from a couple of manufacturers with
+> > the same SoC and they all have the same issue,
+> > I have also tested, 6.12-rc3 and linux-next and the same issue appears =
+present.
+> >=20
+> > A full UART dump can be found here: https://clbin.com/zLZAW
+> >=20
+> > [ 41.547983] Unable to handle kernel paging request at virtual
+> > address ffffffc08058e000
+> > [ 41.553426] Mem abort info:
+> > [ 41.558231] ESR =3D 0x0000000096000007
+> > [ 41.563115] EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > [ 41.568135] SET =3D 0, FnV =3D 0
+> > [ 41.572882] EA =3D 0, S1PTW =3D 0
+> > [ 41.577575] FSC =3D 0x07: level 3 translation fault
+> > [ 41.582404] Data abort info:
+> > [ 41.586995] ISV =3D 0, ISS =3D 0x00000007, ISS2 =3D 0x00000000
+> > [ 41.591848] CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+> > [ 41.596664] GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> > [ 41.601457] swapper pgtable: 4k pages, 39-bit VAs, pgdp=3D000000000363=
+e000
+> > [ 41.606359] [ffffffc08058e000] pgd=3D1000000000225003,
+> > p4d=3D1000000000225003, pud=3D1000000000225003, pmd=3D1000000000c8c003,
+> > pte=3D0000000000000000
+> > [ 41.616442] Internal error: Oops: 0000000096000007 [#1] PREEMPT SMP
+> > [ 41.621544] Modules linked in: hci_uart btrtl bluetooth rfkill
+> > [ 41.626678] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc=
+2 #1
+> > [ 41.631922] Hardware name: Powkiddy RGB30 (DT)
+> > [ 41.636951] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> > [ 41.642330] pc : dw_mci_idmac_start_dma+0xa0/0x358
+> > [ 41.647585] lr : __dw_mci_start_request+0x21c/0x6a0
+> > [ 41.652827] sp : ffffffc080003da0
+> > [ 41.657882] x29: ffffffc080003da0 x28: ffffff8001f06d80 x27: ffffffc08=
+058d000
+> > [ 41.663399] x26: ffffffc08058e000 x25: 0000000000002711 x24: 000000000=
+0002000
+> > [ 41.668864] x23: ffffff800167dc80 x22: 0000000080000012 x21: 000000000=
+0001000
+> > [ 41.674257] x20: 000000003b5d1000 x19: 0000000000001000 x18: 000000097=
+2073a81
+> > [ 41.679654] x17: ffffff9c39b47000 x16: ffffffc080000000 x15: 000000000=
+0000001
+> > [ 41.685074] x14: 0000000000000004 x13: 000001ba5087c8e8 x12: 000000000=
+00001a8
+> > [ 41.690506] x11: 0000000000000040 x10: ffffffe40628d890 x9 : 000000000=
+0000000
+> > [ 41.695972] x8 : ffffff803fd44080 x7 : 0000000008f0d180 x6 : 000000003=
+b9ac9ff
+> > [ 41.701495] x5 : 0000000000fffffe x4 : ffffffc08058de80 x3 : 00000000b=
+2d05e00
+> > [ 41.707073] x2 : ffffffe40546ab08 x1 : ffffffc08058e000 x0 : 000000000=
+0001000
+> > [ 41.712686] Call trace:
+> > [ 41.717857] dw_mci_idmac_start_dma+0xa0/0x358
+> > [ 41.723266] __dw_mci_start_request+0x21c/0x6a0
+> > [ 41.728719] dw_mci_work_func+0x4c8/0x4d8
+> > [ 41.734144] process_one_work+0x148/0x284
+> > [ 41.739587] bh_worker+0x224/0x278
+> > [ 41.744985] workqueue_softirq_action+0x78/0x88
+> > [ 41.750545] tasklet_action+0x14/0x3c
+> > [ 41.756023] handle_softirqs+0x100/0x23c
+> > [ 41.761506] __do_softirq+0x14/0x20
+> > [ 41.766917] ____do_softirq+0x10/0x20
+> > [ 41.772301] call_on_irq_stack+0x24/0x54
+> > [ 41.777689] do_softirq_own_stack+0x1c/0x40
+> > [ 41.783106] irq_exit_rcu+0x94/0xd0
+> > [ 41.788455] el1_interrupt+0x38/0x68
+> > [ 41.793799] el1h_64_irq_handler+0x18/0x24
+> > [ 41.799200] el1h_64_irq+0x68/0x6c
+> > [ 41.804532] default_idle_call+0x28/0x58
+> > [ 41.809931] do_idle+0x1fc/0x260
+> > [ 41.815152] cpu_startup_entry+0x34/0x40
+> > [ 41.820346] kernel_init+0x0/0x140
+> > [ 41.825437] console_on_rootfs+0x0/0x6c
+> > [ 41.830477] __primary_switched+0x80/0x88
+> > [ 41.835501] Code: 54000280 d294f8c0 940e1f8c d503203f (b9400340)
+> > [ 41.840748] ---[ end trace 0000000000000000 ]---
+> > [ 41.845896] Kernel panic - not syncing: Oops: Fatal exception in inter=
+rupt
+> > [ 41.851321] SMP: stopping secondary CPUs
+> > [ 41.856502] Kernel Offset: 0x2384800000 from 0xffffffc080000000
+> > [ 41.861840] PHYS_OFFSET: 0x0
+> > [ 41.866814] CPU features: 0x0c,00000014,00280928,4201720b
+> > [ 41.872087] Memory Limit: none
+> > [ 41.877119] Rebooting in 1 seconds..
+> >=20
+> > Best regards,
+> >=20
+> > Adam Green
