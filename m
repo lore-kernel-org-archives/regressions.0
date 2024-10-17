@@ -1,202 +1,225 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE2E3398B
-	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 08:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E061A1D95AB
+	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 10:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729154043; cv=none; b=dDQX2EuosWJj0z0uwL2ZoAjohGokV9sXSAXfJDbKahgMiHwxib2qqmnstyyawo5smsXR+8HKn6uZZ5bJZ7P2B6w4DiUojzPck2UriwOqvFNy+rl6kWEwrl4h4iNGuCaLExLvD74befi3Jv0Kz72eWpRqiMz3qYh5qIjp4JRtVcQ=
+	t=1729159405; cv=none; b=FnREV6NQkvqZ4zuIk9k6UVjBhlz78WMcCkPmYhe/MPQSNMurljZv/rzA1bnbcKZvxfY1yJ4n2weyQxpE/KZXRaQoV7vNfwc4TMggLwZJ9Su6NY1KSfnnlMmo/P/Z/BbHQqzpX6lQil7QQJGuyplcClxexxZH3Nv1hSBekb2pZ/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729154043; c=relaxed/simple;
-	bh=9im4KKOH2I/A7fscfYrIcT0vHCvwSTgO70ai7oEomwo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DrjM1e7ShtsByoXCF4u/17z8ZrG320oiFd2ZS9FOjuz/o6BjxCrBbOaPrQ1ybGPjXkq1x2TNQuMAlH5cQNQQe4M2oeIzlcHFjrF3TjBYBdXfTYcx6EEo91jQezTVAe95deVwJJ2RGEyytrLq59wxLfKGOi+SJV3E2PsFOgi4V/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=o+4U0cDW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gzaTTXie; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=o+4U0cDW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gzaTTXie; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1729159405; c=relaxed/simple;
+	bh=ygrGK82PCX2dAMosS7CWMo19c3iWobo+UGLhf9gtn2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XL/nhhXCO+nz3WdWgOa8cKUMPQCPBAsXg76x9B1LD41bQ25sCdIZGxgyDOUMN5v0puYb7zgIg0m4FVOqSuo4VcdjyMJX2zIzX9S6NSbsNBmEW73qk0e7iwbQJnGB1L/6H1poWT8rysrQ1dsDCs51BCfPOtVshdp3FNCOPtzJbyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UxttWpvi; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="o+4U0cDW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gzaTTXie";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="o+4U0cDW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gzaTTXie"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UxttWpvi"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C73E40E0219;
+	Thu, 17 Oct 2024 10:03:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id EsCnHj8DMX-4; Thu, 17 Oct 2024 10:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1729159388; bh=V0GRidANyNTNe0dqShfeUwN5d4P9zDXZ9fBjbBPScR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UxttWpvi6M8q3qkc+waz/DaSIbDTDZfvy6odxhRE5F6QfF4X9oA0e144gO9iZXjR/
+	 jHO9mqQqLy6VxqZTBshlxPHBJqQ2GosPSawg0CiYCjMcoZVC+4Zpd/Yj+tZLjSsuzL
+	 Kq/TnXjsZpN4xptTc43w+LW2DJb8J/V1wTC5duK+VUXkQjg+idUK38o+ljTr/fA4hA
+	 BLXU7/j4ghzx55bxqXUMO6kklOZ1JOp+8zP2iawWd+xLnn9F0ULl9sRweN4WwOQv3w
+	 lNvPg5nFkE+l+3+dQp1eIqjQFt7w0ptnqEGxaZXzKpnf0DthGNcWAIabPjfFT3/KpG
+	 bzQBLYhWWadAe8UKDJHb/F84wtnLe3mh+SmJ6YiXfUeIi12Dg2o2+pQmPwNLYsnJqY
+	 DC66wbbGkVaKISXFrr/l5C/Q840aQCCCcYkV3soB5FdAoZFgH7Uf/DpTJG2SSlCSEc
+	 ZTPk1Klo0Ylnl35D1HBesL/Whv7e0hDZQwIn44dYkoV7qH7jEhUOi7wNC6glZEzRAX
+	 79dzUWgaSuwkOspYCw6crdF5NeguIB0wUsjmDMMEhAWB/uhdbgltkF+JeGeCpbQ6mp
+	 UwHB24nIwSdNlEr9lteYUaP8cyLp66Z831jAsXmaCYn5CVvJS3m/B30PzRreExjNQf
+	 tJebBFg7toT9P8Mb7kFai06s=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1214E1FEF3;
-	Thu, 17 Oct 2024 08:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729154033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
-	b=o+4U0cDWpLWJljWlEANwuKWGu6O8EO/Tp23kn7tly7VZIEHcGGIapsWaQwQSnDZhdcn9Xs
-	fL/3zX6F3HhiF1Sh6ImJ5BY9Oy/cUMxQYAGJrs1w2ccIcgBRajNNzOK/T9CBbekLxplvEU
-	JLYPE8/70d+54ljfDv/ZoRAbKnkCqy8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729154033;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
-	b=gzaTTXielSf9yomSdOw7WnWYmrrIazs/7+GN4AwgZvwZhm1Nls57q/0HRN4+YWi944BuCz
-	fGPvA/WWKRRN2gCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729154033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
-	b=o+4U0cDWpLWJljWlEANwuKWGu6O8EO/Tp23kn7tly7VZIEHcGGIapsWaQwQSnDZhdcn9Xs
-	fL/3zX6F3HhiF1Sh6ImJ5BY9Oy/cUMxQYAGJrs1w2ccIcgBRajNNzOK/T9CBbekLxplvEU
-	JLYPE8/70d+54ljfDv/ZoRAbKnkCqy8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729154033;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
-	b=gzaTTXielSf9yomSdOw7WnWYmrrIazs/7+GN4AwgZvwZhm1Nls57q/0HRN4+YWi944BuCz
-	fGPvA/WWKRRN2gCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCDC513A42;
-	Thu, 17 Oct 2024 08:33:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YdyZMPDLEGe/OQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 17 Oct 2024 08:33:52 +0000
-Date: Thu, 17 Oct 2024 10:34:51 +0200
-Message-ID: <87cyjzrutw.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Linux Sound System <linux-sound@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-In-Reply-To: <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
-	<2024101613-giggling-ceremony-aae7@gregkh>
-	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-	<87bjzktncb.wl-tiwai@suse.de>
-	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0841A40E0169;
+	Thu, 17 Oct 2024 10:03:02 +0000 (UTC)
+Date: Thu, 17 Oct 2024 12:02:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	the arch/x86 maintainers <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: AMD zen microcode updates breaks boot
+Message-ID: <20241017100257.GAZxDg0VqDAesee00m@fat_crate.local>
+References: <5fe1e264-c285-4988-b1e3-46771d07172b@kernel.dk>
+ <20240930044313.GAZvosYZF5mHi2OZbC@fat_crate.local>
+ <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
+ <CC418B80-5ED9-4F64-917F-BA6F94130F83@alien8.de>
+ <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
+ <20241009091247.GCZwZJDwFETmN5pEGe@fat_crate.local>
+ <77f16324-47e1-41e6-a9e9-2cb7cbc8d14d@kernel.dk>
+ <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
+ <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
+ <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
 
-On Wed, 16 Oct 2024 23:18:02 +0200,
-Dean Matthew Menezes wrote:
-> 
-> OK I have run the script and have attached the outputs.
+On Wed, Oct 16, 2024 at 08:34:09PM -0600, Jens Axboe wrote:
+> And then I totally forgot... Got it done now, but it still just hangs
+> after loading the kernel. No output.
 
-Please avoid top-posting.
+Hmm...
 
-> On Wed, 16 Oct 2024 at 04:20, Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > On Wed, 16 Oct 2024 07:56:09 +0200,
-> > Linux regression tracking (Thorsten Leemhuis) wrote:
-> > >
-> > > On 16.10.24 07:42, Greg KH wrote:
-> > > > On Tue, Oct 15, 2024 at 07:47:22PM -0500, Dean Matthew Menezes wrote:
-> > > >> I am not getting sound on the speakers on my Thinkpad X1 Carbon Gen 12
-> > > >> with kernel 6.11.2  The sound is working in kernel 6.8
-> > > >
-> > > > Can you use 'git bisect' to track down the offending change?
-> > >
-> > > Yeah, that would help a lot.
-> > >
-> > > But FWIW, I CCed the audio maintainers and the sound mailing list, with
-> > > a bit of luck they might have an idea.
-> > >
-> > > You might also want to publish your dmesg files from the latest working
-> > > and the first broken kernel, that gives people a chance to spot obvious
-> > > problems. Ohh, and runing alsa-info.sh and publishing the output could
-> > > help, too.
-> >
-> > Yes, alsa-info.sh outputs are really needed for debugging, especially
-> > because Lenovo has (literally) hundreds of different models.
-> >
-> > Please run the script with --no-upload option and attach the outputs
-> > from both working and non-working cases.
+Let's verify it still actually selects the correct patch. Diff below, it
+should boot with it as it won't apply the microcode and you should be able to
+gather dmesg.
 
-So the problem seems to be the newly added quirk for fixing S4 issue
-forgot the existing quirk for the speaker.  The patch below should
-address the problem.  Please give it a try.
+Thx.
 
-
-thanks,
-
-Takashi
-
--- 8< --
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] ALSA: hda/realtek: Fix speaker output on Thinkpad X1 Carbon Gen 12
-
-The fix for S4 issue on some Thinkpad models in commit 1e707769df07
-("ALSA: hda/realtek - Set GPIO3 to default at S4 state for Thinkpad
-with ALC1318") caused a regression of the missing speaker output, as
-the newly added quirk entry forgot that there was an implicitly
-applied quirk matching with the pincfg, which determines the speaker
-DAC connection and the I2S setup.
-
-Correct the chained quirk entry to point to the right one,
-ALC287_FIXUP_THINKPAD_I2S_SPK, to address the regression.
-
-Fixes: 1e707769df07 ("ALSA: hda/realtek - Set GPIO3 to default at S4 state for Thinkpad with ALC1318")
-Reported-by: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Closes: https://lore.kernel.org/all/CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com/
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- sound/pci/hda/patch_realtek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 3bbf5fab2881..cc77b4967400 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10097,7 +10097,7 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc287_fixup_lenovo_thinkpad_with_alc1318,
- 		.chained = true,
--		.chain_id = ALC269_FIXUP_THINKPAD_ACPI
-+		.chain_id = ALC287_FIXUP_THINKPAD_I2S_SPK
- 	},
- 	[ALC256_FIXUP_CHROME_BOOK] = {
- 		.type = HDA_FIXUP_FUNC,
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index f63b051f25a0..ed5474cf683f 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -158,6 +158,9 @@ static union cpuid_1_eax ucode_rev_to_cpuid(unsigned int val)
+ 	c.family    = 0xf;
+ 	c.ext_fam   = p.ext_fam;
+ 
++	pr_info("%s: val: 0x%x, p.stepping: 0x%x, c.stepping: 0x%x\n",
++		__func__, val, p.stepping, c.stepping);
++
+ 	return c;
+ }
+ 
+@@ -487,11 +490,13 @@ static int __apply_microcode_amd(struct microcode_amd *mc)
+ {
+ 	u32 rev, dummy;
+ 
+-	native_wrmsrl(MSR_AMD64_PATCH_LOADER, (u64)(long)&mc->hdr.data_code);
++//	native_wrmsrl(MSR_AMD64_PATCH_LOADER, (u64)(long)&mc->hdr.data_code);
+ 
+ 	/* verify patch application was successful */
+ 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
+ 
++	pr_info("%s: applying 0x%x, rev: 0x%x\n", __func__, mc->hdr.patch_id, rev);
++
+ 	if (rev != mc->hdr.patch_id)
+ 		return -1;
+ 
+@@ -613,16 +618,22 @@ static int __init save_microcode_in_initrd(void)
+ }
+ early_initcall(save_microcode_in_initrd);
+ 
+-static inline bool patch_cpus_equivalent(struct ucode_patch *p, struct ucode_patch *n)
++static inline bool patch_cpus_equivalent(struct ucode_patch *p,
++					 struct ucode_patch *n,
++					 bool ignore_stepping)
+ {
+ 	/* Zen and newer hardcode the f/m/s in the patch ID */
+         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
+ 		union cpuid_1_eax p_cid = ucode_rev_to_cpuid(p->patch_id);
+ 		union cpuid_1_eax n_cid = ucode_rev_to_cpuid(n->patch_id);
+ 
+-		/* Zap stepping */
+-		p_cid.stepping = 0;
+-		n_cid.stepping = 0;
++		if (ignore_stepping) {
++			p_cid.stepping = 0;
++			n_cid.stepping = 0;
++		}
++
++		pr_info("%s: p_cid.full: 0x%x, n_cid.full: 0x%x\n",
++			__func__, p_cid.full, n_cid.full);
+ 
+ 		return p_cid.full == n_cid.full;
+ 	} else {
+@@ -641,16 +652,22 @@ static struct ucode_patch *cache_find_patch(struct ucode_cpu_info *uci, u16 equi
+ 	n.equiv_cpu = equiv_cpu;
+ 	n.patch_id  = uci->cpu_sig.rev;
+ 
++	pr_info("%s: equiv_cpu: 0x%x, patch_id: 0x%x\n",
++		__func__, equiv_cpu, uci->cpu_sig.rev);
++
+ 	WARN_ON_ONCE(!n.patch_id);
+ 
+-	list_for_each_entry(p, &microcode_cache, plist)
+-		if (patch_cpus_equivalent(p, &n))
++	list_for_each_entry(p, &microcode_cache, plist) {
++		if (patch_cpus_equivalent(p, &n, false)) {
++			pr_info("%s: using 0x%x\n", __func__, p->patch_id);
+ 			return p;
++		}
++	}
+ 
+ 	return NULL;
+ }
+ 
+-static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
++static inline int patch_newer(struct ucode_patch *p, struct ucode_patch *n)
+ {
+ 	/* Zen and newer hardcode the f/m/s in the patch ID */
+         if (x86_family(bsp_cpuid_1_eax) >= 0x17) {
+@@ -659,6 +676,9 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
+ 		zp.ucode_rev = p->patch_id;
+ 		zn.ucode_rev = n->patch_id;
+ 
++		if (zn.stepping != zp.stepping)
++			return -1;
++
+ 		return zn.rev > zp.rev;
+ 	} else {
+ 		return n->patch_id > p->patch_id;
+@@ -668,22 +688,32 @@ static inline bool patch_newer(struct ucode_patch *p, struct ucode_patch *n)
+ static void update_cache(struct ucode_patch *new_patch)
+ {
+ 	struct ucode_patch *p;
++	int ret;
+ 
+ 	list_for_each_entry(p, &microcode_cache, plist) {
+-		if (patch_cpus_equivalent(p, new_patch)) {
+-			if (!patch_newer(p, new_patch)) {
++		if (patch_cpus_equivalent(p, new_patch, true)) {
++			ret = patch_newer(p, new_patch);
++			if (ret < 0)
++				continue;
++			else if (!ret) {
+ 				/* we already have the latest patch */
+ 				kfree(new_patch->data);
+ 				kfree(new_patch);
+ 				return;
+ 			}
+ 
++			pr_info("%s: replace 0x%x with 0x%x\n",
++				__func__, p->patch_id, new_patch->patch_id);
++
+ 			list_replace(&p->plist, &new_patch->plist);
+ 			kfree(p->data);
+ 			kfree(p);
+ 			return;
+ 		}
+ 	}
++
++	pr_info("%s: add patch: 0x%x\n", __func__, new_patch->patch_id);
++
+ 	/* no patch found, add it */
+ 	list_add_tail(&new_patch->plist, &microcode_cache);
+ }
+
+
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
