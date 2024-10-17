@@ -1,59 +1,73 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F501DE3CB
-	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 14:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF57B199944
+	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 14:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729174419; cv=none; b=gClfbb8EOgNm32dgc7QB6ZzVur1auFYkujiYETwYHZfx+O8ccb3SXo19YeTdqQU0kGlB8heL4x5lqMCVd5emFSrow4faU57ceaix118jXPds71iUceTsuB/5MaovJWMF7yG0kl6HptiFL0emqRtsrWdyf3gL9PMY2+EjEEoAN+I=
+	t=1729174994; cv=none; b=qyd6Mgww60O3QxXVXVTEso19NDcrXaExY6hmPsHpgK7GIzAUn3xCaMHEKLoQXcVM1ozGh/1vok5iYt5oWn68fz5l1a1g/rwPDhZfsSEXVhhnrLT0RQiV5INnVH6zMgshGMaoaD28rzgiaIPtxKzVpHSe2c1rYi80qtuUGUAxxlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729174419; c=relaxed/simple;
-	bh=wTedkcain79uf5yCEiAI61bbtWuqvd7xHHdRawQ81Mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMuOtEsw8dEjrDFJoEzHNjOXJXYdCgk9ghl0AooApoPQ/LkitLlAn6zrhKFydtkLjX0140Xx1/QgWDRNwy/zFJZchJsot1pEi8zMqh2TisOW6JfbV8b37D6frDScxuDBZf4DyPK3OoP1J/VtP8L795Omxx1FEVx1UcCLvfiDYvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=A09o1Gx5; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1729174994; c=relaxed/simple;
+	bh=/oKzF01zLyly/tbLX0q/TExjLUJBosYRk2Ziq2D9EZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MiTSIN1NUadvWm9j2mJ4pV8w2+ag4E0DzMpc1hGM6ftyXGCpkZOXO23gPxU6SprlPGh3yeUh2HDROh4zg9vLxxmVijU+H+GeoRiyxZ17OHExL3o6xBDDIIYHiL5P4Te1ogYh/V6774h8gMC2fhh4f/hyODSmW4f+cFjX+IPsUr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=v/+Pkl0p; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="A09o1Gx5"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D74F40E0263;
-	Thu, 17 Oct 2024 14:13:35 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wtZMAw_AZJIi; Thu, 17 Oct 2024 14:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729174405; bh=rRozP/jnE2EjDN291Qoajz3TZOUHKQVyxd94o1u7j28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A09o1Gx5eR0MYOQO4m72Ne94sHjAeQhwE4FXwPGfAZFMkdWjHlFY2LiLytYwKmIXt
-	 mIWsaniy2pdV3EyewDSVQzShqLu/ufjgv8J8ayPkYxXHtsviTx/gtTfxmlxAO66fVO
-	 7YGttJodp0lqAWwoPU5FYcqPOBA/gj52CRpN1CCud/Up2V+rPkKWRcKVvUTsZrVczI
-	 eR2Il1GK0/tWyiLc+eSbGUijKSOLcYXy540zeZ9kdri4Xi7Aj3bWUupaZbmW9ewymb
-	 0RL4K7OociqYqeSETlAnqzmTuZfwhFYvzZS5deYyLESWyaM4sFdPSs4OxlPF5CKBRc
-	 9mPUtFHP9W1+oR/eaVTS3CxH0EvaBbZkP1JO5CmLB6+huY8dH5CP9TTnJE4yK2aVAF
-	 M4B5jPPenYHtmfijE5GEdqcLnd2n+Mefm2XAGDcSxnYD3ApiCbH8dhH9OOUdmuRB5+
-	 BMg6hQ5V0Kp2nx/JeWNTk5zTdE8f0xIakUy0TqWnmzG+dEpmhyCQa4nuUzOQuJz6CY
-	 6A2VDq+kH+AUTlz8zw++4RgfVPgtDDaTXdX1g2BmNYpwwz+ZlxrYYn20YlG5ghaq8m
-	 /lIATZ9h/pxCJcODgeMbHWS1dJbNynon69ZWH0nWqqxNi9t1Zlr/2v5v9phkKAhKjp
-	 W/AgZCqv6M2ANLqMlxgdsncE=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C60D40E0219;
-	Thu, 17 Oct 2024 14:13:20 +0000 (UTC)
-Date: Thu, 17 Oct 2024 16:13:14 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="v/+Pkl0p"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7ea12e0dc7aso651961a12.3
+        for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 07:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729174992; x=1729779792; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9fTERrQKqMnvmgvP0SOzXoTwAvCNChxoWuC9cArNN4Q=;
+        b=v/+Pkl0pdIDTtpSQxot4cH9z4O4yl7EJk+WFy+oIbMLGsDSdPGRcyTHWSxLZwhyCTr
+         pf8NqTT6/mZ/isP3p4YDCTwEh3g1BT8VnBSRSr+NtPdqO7h1CKbtSme+DupBA3J5Q6Ee
+         jBsSd8d4nHQNtC0y2zZeuTKXTFnqOyuiH+kuSWzCEPaIUYDHKHxTQf2Vzvf7nZujc2Oj
+         DEtkhz3KcvV2MhDe0KOkjNaqsFD0d9rb7xPurbGzmADpZMw/Xe/QNmW80XpWlCn7avr0
+         eD9zR4in+rpqNCpC4crwwyzLpeiedx8KC0E3Utif0CY1R45gf6uMGgexvSMmll/kJZTM
+         b0qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729174992; x=1729779792;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9fTERrQKqMnvmgvP0SOzXoTwAvCNChxoWuC9cArNN4Q=;
+        b=cBtz7fHlZOFDM2Cn92V1ATRikNXX+jXWMmnYB1eDlm7g30sHA97fDCq4e0OhWKmP8o
+         3t4jHSHs77JfDszHjQNY7Lf8JS7e/MFnCwEt+pNMXXCf1Lhsr4RJoRmcOzjpAvZuT3S0
+         5tpHk8uu4H5RxFqwmPix0NM1IxV8ousbH3c1WH06cRkhbawv4L1L28Zl1oC/XlP6r54m
+         ITnyUdmruFPq/UleJbA8z905Q/BsgxA3zsjYVwMw+JWxifmLMHRIS/uNDkz21yoVaO2x
+         lsTZ7/9DR2A1ShEdKJNm+nYB/E/jxpPQsVbo50GKMbaf8P0sz4AuRvbBego6+kHzAXvC
+         MTIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtpM9JGorx0NvoFdgUzAqiONjwgmZUfCoSM8+vaHzrpoJ3AX3lu2f/mJDb2SV7KCagZJRvHVQWlRKFkQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzuMfFfQSMmtiiEVf+uJjnDYzgBF5BD+xrDYB1tmlF3CB/8nocD
+	4oDQe/xc3nSM45mEyXwP7X6tNi7l0nRwale0IeJQyfzmj5vzERlSXjJc4BjKcUZF9i2hCBoqUKY
+	j
+X-Google-Smtp-Source: AGHT+IFeylxJB+BrRDiwJcZ2ACKQfqwRzp6C9c9ZmanBqyrah5yhHpghkWrJLJsQuqCUJP7Ete/9bA==
+X-Received: by 2002:a05:6a20:e605:b0:1d9:1907:aa2b with SMTP id adf61e73a8af0-1d91907af95mr5986334637.1.1729174992039;
+        Thu, 17 Oct 2024 07:23:12 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c6ba2a8sm5066138a12.6.2024.10.17.07.23.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Oct 2024 07:23:11 -0700 (PDT)
+Message-ID: <4d4bf52a-dd91-48ad-8949-198b2ffbc9da@kernel.dk>
+Date: Thu, 17 Oct 2024 08:23:10 -0600
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
  <CC418B80-5ED9-4F64-917F-BA6F94130F83@alien8.de>
  <ad9638b4-0a4a-4cd0-9fcb-2690693da157@kernel.dk>
@@ -64,27 +78,24 @@ References: <d7aff674-ad92-4a36-9ebf-8d3c42774723@kernel.dk>
  <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
  <20241017100257.GAZxDg0VqDAesee00m@fat_crate.local>
  <3400cf0b-85ca-4ec2-a8a0-c9d75889d573@kernel.dk>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3400cf0b-85ca-4ec2-a8a0-c9d75889d573@kernel.dk>
+ <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 17, 2024 at 08:05:09AM -0600, Jens Axboe wrote:
-> Same thing, doesn't boot, just hangs after loading the kernel.
+On 10/17/24 8:13 AM, Borislav Petkov wrote:
+> On Thu, Oct 17, 2024 at 08:05:09AM -0600, Jens Axboe wrote:
+>> Same thing, doesn't boot, just hangs after loading the kernel.
+> 
+> Ohh, so it is not the patch application but something else in the code.
+> 
+> I presume "dis_ucode_ldr" on the kernel cmdline makes it boot?
 
-Ohh, so it is not the patch application but something else in the code.
-
-I presume "dis_ucode_ldr" on the kernel cmdline makes it boot?
-
-Thx.
+Yep, it boots with that added on current -git WITH the microcode
+package installed.
 
 -- 
-Regards/Gruss,
-    Boris.
+Jens Axboe
 
-https://people.kernel.org/tglx/notes-about-netiquette
