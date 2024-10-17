@@ -1,213 +1,202 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EDF381B1
-	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 03:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE2E3398B
+	for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 08:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729134274; cv=none; b=Zss+EmuKrySFXrGZfuOr5buLtf/Bnwk+ksdFGKQzptfq3VovSr3IKuhFkSMFI2n7ZA68hCuw3FUkGf4A2/tESpCmDkskXj4VHkLFGdBj82D7Cp++JM6jYj155dxG80FHpi92/KcQ8MdiPtcDW/6u2/VHDh+pGv/QLcBRghv7IGM=
+	t=1729154043; cv=none; b=dDQX2EuosWJj0z0uwL2ZoAjohGokV9sXSAXfJDbKahgMiHwxib2qqmnstyyawo5smsXR+8HKn6uZZ5bJZ7P2B6w4DiUojzPck2UriwOqvFNy+rl6kWEwrl4h4iNGuCaLExLvD74befi3Jv0Kz72eWpRqiMz3qYh5qIjp4JRtVcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729134274; c=relaxed/simple;
-	bh=f4PJRLR/2fRgB4+Uq05RONoLYT4kehQXApRxwEsEiHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u7isiSIhKyOfliLn2Y1pjb9AYuHDuzAbtAJnEM/mVhanxl0jHDMLCze2tYgotR1f4WiJ9nUa2wcCyLxhKrB+GofumfubLtVIqc0chqT/N0BLFBwe4felCvvcPqs9Rak3cOfpN5NcSk110WJF2xAf5GNRgyRdjoyf29hS86cQ8vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=iXIvJ4Jy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L9Cg9s/D; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1729154043; c=relaxed/simple;
+	bh=9im4KKOH2I/A7fscfYrIcT0vHCvwSTgO70ai7oEomwo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DrjM1e7ShtsByoXCF4u/17z8ZrG320oiFd2ZS9FOjuz/o6BjxCrBbOaPrQ1ybGPjXkq1x2TNQuMAlH5cQNQQe4M2oeIzlcHFjrF3TjBYBdXfTYcx6EEo91jQezTVAe95deVwJJ2RGEyytrLq59wxLfKGOi+SJV3E2PsFOgi4V/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=o+4U0cDW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gzaTTXie; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=o+4U0cDW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gzaTTXie; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="iXIvJ4Jy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L9Cg9s/D"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 207B2114017E;
-	Wed, 16 Oct 2024 23:04:30 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 16 Oct 2024 23:04:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1729134270;
-	 x=1729220670; bh=EFckjBgGmy34eVKuGSlvBNUk1hLb5Yr8WVXfUlVn8BU=; b=
-	iXIvJ4JyZVFzxcRvmifpF1tP0Wmy0LOzjlLJlaQaQAnDwqpzHVukzH82ijDt36lf
-	zZygntsKq4H0Jp3kVzxTW2UXwCBliRjrcYFq9hS1xgSMP1ra3w1Ha6mUPnx5nsT4
-	bksuZhnzEdG2KwriQfuGG1uFvS5bBA1LgdpVJ/l+wGrvhcl6BzbK/+F18TG1tkpq
-	MMO3D0dHliS9fliXQnOUdLI+xpnPC83QdYzOWDUSFE3GaNox1jIR7LCOmR9fQ+1O
-	soYOQVUsTOTJEF1uj2GlPpUNbqgrbIbdAhiAj2q3i0PpfSDUxxaS4B+JkHWIpWyw
-	53i3tOUe3L1d4bvOhiOFNQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1729134270; x=
-	1729220670; bh=EFckjBgGmy34eVKuGSlvBNUk1hLb5Yr8WVXfUlVn8BU=; b=L
-	9Cg9s/DIcofGUVDtGjYlDVNAsecduxsOxQPFNVHW7wg2niw0LV1xux7Ui1GXIJqe
-	0jgAKY5c/KEcAOoMi9gh1ByrWbqPVPndkFFmmfBaUle3wwz3zc5oSRBQih2WaDP4
-	FphR1KGxSsDvh8l502r44R9dmpP+4vrGI4y+/Vbe97fSKi4IuENssIywO7o/2lYT
-	GT3fFuhNrSM76IhUw2riw4NF2ypQBqrX0RfGr99Bse9QtkBBr3CwU2sujFJRsVvq
-	MGeNjaxs/dwjQ5HnUwLpunW+GhkDwpCHpbHxuMPdwItvL3+SumV6MJEqrukvFf6W
-	fa2zOj0Y0L2L255HTh67g==
-X-ME-Sender: <xms:vX4QZ6rThT3hdFcDly4nSvNzqlQEcRZHLDHkAk23JT15WaWk6i6g3A>
-    <xme:vX4QZ4r300K0AtljHgxtqnQ-l7raqbGv6YyyJxp5pUmo0QW6HyZuDKpxr10J5e3aD
-    SOcc8vYZNBhq7ciGak>
-X-ME-Received: <xmr:vX4QZ_O5Pruv93vTqy-da-nRK7dycO0_m6xQpSDkpc_nhTdz-w6gaUoKi8UV-tcxdke3LLO-Xip6Oj-cVoIVtAezZUk2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehtddgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
-    gggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
-    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepheeigeet
-    tdegvddvieejjeegiefgtddugfeiieekieegjedvtdehteevffelhedtnecuffhomhgrih
-    hnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdhgnhhurdhorhhgnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlse
-    hjfhgrrhhrrdgttgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhgvvghsse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhorhhsthgvnhdrsghluhhmsehtohgs
-    lhhugidrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvghtsehlihhnuh
-    igrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhu
-    gidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghhvghfshesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:vX4QZ57qrH_-8Js7q1bAfXkb5wm_jbFCBogrMVGpx7cHEddAfoyu1A>
-    <xmx:vX4QZ56dVUFy39TsqzQfGKKAtawlGg2T43JfRyKH7ohmXAt-priStw>
-    <xmx:vX4QZ5isno_GRzq_tyPWDwXxtup9agGHJD5eL-Hnl3pLAdWYKs_F2w>
-    <xmx:vX4QZz6eXRSFWOMEPD2cYbhl7TMo8ACo4yUkarKX3CybGE2O7GNsog>
-    <xmx:vn4QZ-HuaXHMa5Rit1UycTRV9V8nvCvNVLcpjLc1i8ii5G4K7hRxXSp7>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Oct 2024 23:04:28 -0400 (EDT)
-Date: Thu, 17 Oct 2024 05:04:26 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, Thorsten Blum <thorsten.blum@toblux.com>,
-	kent.overstreet@linux.dev, regressions@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ardb@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZxB-uh1KzfD4ww2a@archlinux>
-References: <21D2A2BB-F442-480D-8B66-229E8C4A63D3@toblux.com>
- <Zv6BEO-1Y0oJ3krr@archlinux>
- <E8E64A72-3C1C-40D2-9F07-415F6B8F476E@toblux.com>
- <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="o+4U0cDW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gzaTTXie";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="o+4U0cDW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gzaTTXie"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1214E1FEF3;
+	Thu, 17 Oct 2024 08:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729154033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
+	b=o+4U0cDWpLWJljWlEANwuKWGu6O8EO/Tp23kn7tly7VZIEHcGGIapsWaQwQSnDZhdcn9Xs
+	fL/3zX6F3HhiF1Sh6ImJ5BY9Oy/cUMxQYAGJrs1w2ccIcgBRajNNzOK/T9CBbekLxplvEU
+	JLYPE8/70d+54ljfDv/ZoRAbKnkCqy8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729154033;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
+	b=gzaTTXielSf9yomSdOw7WnWYmrrIazs/7+GN4AwgZvwZhm1Nls57q/0HRN4+YWi944BuCz
+	fGPvA/WWKRRN2gCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729154033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
+	b=o+4U0cDWpLWJljWlEANwuKWGu6O8EO/Tp23kn7tly7VZIEHcGGIapsWaQwQSnDZhdcn9Xs
+	fL/3zX6F3HhiF1Sh6ImJ5BY9Oy/cUMxQYAGJrs1w2ccIcgBRajNNzOK/T9CBbekLxplvEU
+	JLYPE8/70d+54ljfDv/ZoRAbKnkCqy8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729154033;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U0LftmHZiRJcAXQvf+1qR7uws7MN71VNpVxTbpbdR48=;
+	b=gzaTTXielSf9yomSdOw7WnWYmrrIazs/7+GN4AwgZvwZhm1Nls57q/0HRN4+YWi944BuCz
+	fGPvA/WWKRRN2gCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCDC513A42;
+	Thu, 17 Oct 2024 08:33:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YdyZMPDLEGe/OQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 17 Oct 2024 08:33:52 +0000
+Date: Thu, 17 Oct 2024 10:34:51 +0200
+Message-ID: <87cyjzrutw.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Dean Matthew Menezes <dean.menezes@utexas.edu>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Linux Sound System <linux-sound@vger.kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: No sound on speakers X1 Carbon Gen 12
+In-Reply-To: <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
+	<2024101613-giggling-ceremony-aae7@gregkh>
+	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+	<87bjzktncb.wl-tiwai@suse.de>
+	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-On 16 17:09:42, Bill Wendling wrote:
-> On Wed, Oct 16, 2024 at 4:41 PM Bill Wendling <morbo@google.com> wrote:
-> >
-> > On Sun, Oct 6, 2024 at 8:56 PM Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> > > > I want to separate several easily confused issues. Instead of just
-> > > > saying __bdos, let's clearly refer to what calculation within bdos is
-> > > > being used. There are 3 choices currently:
-> > > > - alloc_size attribute
-> > > > - counted_by attribute
-> > > > - fallback to __bos (which is similar to sizeof(), except that FAMs are 0 sized)
-> > > >
-> > > > Additionally there are (for all intents and purposes) 2 size
-> > > > determinations to be made by __bos and __bdos, via argument 2:
-> > > > - containing object size (type 0) ("maximum size")
-> > > > - specific object size (type 1) ("minimum size")
-> > >
-> > > "maximum" vs "minimum" size would by type 0 vs type 2, but I think you
-> > > do mean type 0 and type 1 as those are the types currently used by
-> > > __struct_size and __member_size. Those are both "maximum" sizes.
-> > >
-> > > >
-> > > > For example, consider:
-> > > >
-> > > > struct posix_acl *acl = malloc(1024);
-> > > > acl->a_count = 1;
-> > > >
-> > > > what should these return:
-> > > >
-> > > >       __bos(acl, 0)
-> > > >       __bos(acl, 1)
-> > > >       __bdos(acl, 0)
-> > > >       __bdos(acl, 1)
-> > > >       __bos(acl->a_entries, 0)
-> > > >       __bos(acl->a_entries, 1)
-> > > >       __bdos(acl->a_entries, 0)
-> > > >       __bdos(acl->a_entries, 1)
-> > > >
-> > >
-> > Thank you for this detailed write-up! I'm sorry for my late response.
-> >
-> [snip]
-> >
-> > So in conclusion, if turning off the calculation for a pointer to the
-> > whole struct works, then I'm okay with it.
-> >
-> Here's a potential fix:
+On Wed, 16 Oct 2024 23:18:02 +0200,
+Dean Matthew Menezes wrote:
 > 
->   https://github.com/llvm/llvm-project/pull/112636
+> OK I have run the script and have attached the outputs.
 
-Here's the patch to disable __counted_by for clang < 19.1.3. I'll submit
-it properly when your PR is merged. I hope I got all the correct tags in
-there as there were multiple reports of these issues. Let me know if
-anything should be added, I'm new to the process.
+Please avoid top-posting.
 
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-Date: Thu, 17 Oct 2024 04:39:40 +0200
-Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
+> On Wed, 16 Oct 2024 at 04:20, Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Wed, 16 Oct 2024 07:56:09 +0200,
+> > Linux regression tracking (Thorsten Leemhuis) wrote:
+> > >
+> > > On 16.10.24 07:42, Greg KH wrote:
+> > > > On Tue, Oct 15, 2024 at 07:47:22PM -0500, Dean Matthew Menezes wrote:
+> > > >> I am not getting sound on the speakers on my Thinkpad X1 Carbon Gen 12
+> > > >> with kernel 6.11.2  The sound is working in kernel 6.8
+> > > >
+> > > > Can you use 'git bisect' to track down the offending change?
+> > >
+> > > Yeah, that would help a lot.
+> > >
+> > > But FWIW, I CCed the audio maintainers and the sound mailing list, with
+> > > a bit of luck they might have an idea.
+> > >
+> > > You might also want to publish your dmesg files from the latest working
+> > > and the first broken kernel, that gives people a chance to spot obvious
+> > > problems. Ohh, and runing alsa-info.sh and publishing the output could
+> > > help, too.
+> >
+> > Yes, alsa-info.sh outputs are really needed for debugging, especially
+> > because Lenovo has (literally) hundreds of different models.
+> >
+> > Please run the script with --no-upload option and attach the outputs
+> > from both working and non-working cases.
 
-This patch disables __counted_by for clang versions < 19.1.3 because of
-two issues.
+So the problem seems to be the newly added quirk for fixing S4 issue
+forgot the existing quirk for the speaker.  The patch below should
+address the problem.  Please give it a try.
 
-1. clang versions < 19.1.2 have a bug that can lead to __bdos returning 0:
-https://github.com/llvm/llvm-project/pull/110497
 
-2. clang versions < 19.1.3 have a bug that can lead to __bdos being off by 4:
-https://github.com/llvm/llvm-project/pull/112636
+thanks,
 
-Cc: stable@vger.kernel.org
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
-Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
-Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] ALSA: hda/realtek: Fix speaker output on Thinkpad X1 Carbon Gen 12
+
+The fix for S4 issue on some Thinkpad models in commit 1e707769df07
+("ALSA: hda/realtek - Set GPIO3 to default at S4 state for Thinkpad
+with ALC1318") caused a regression of the missing speaker output, as
+the newly added quirk entry forgot that there was an implicitly
+applied quirk matching with the pincfg, which determines the speaker
+DAC connection and the I2S setup.
+
+Correct the chained quirk entry to point to the right one,
+ALC287_FIXUP_THINKPAD_I2S_SPK, to address the regression.
+
+Fixes: 1e707769df07 ("ALSA: hda/realtek - Set GPIO3 to default at S4 state for Thinkpad with ALC1318")
+Reported-by: Dean Matthew Menezes <dean.menezes@utexas.edu>
+Closes: https://lore.kernel.org/all/CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com/
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- include/linux/compiler_attributes.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 32284cd26d52..7966a533aaec 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -100,8 +100,17 @@
-  *
-  *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-  * clang: https://github.com/llvm/llvm-project/pull/76348
-+ *
-+ * clang versions < 19.1.2 have a bug that can lead to __bdos returning 0:
-+ * https://github.com/llvm/llvm-project/pull/110497
-+ *
-+ * clang versions < 19.1.3 have a bug that can lead to __bdos being off by 4:
-+ * https://github.com/llvm/llvm-project/pull/112636
-  */
--#if __has_attribute(__counted_by__)
-+#if __has_attribute(__counted_by__) && \
-+	(!defined(__clang__) || (__clang_major__ > 19) || \
-+	(__clang_major__ == 19 && (__clang_minor__ > 1 || \
-+	(__clang_minor__ == 1 && __clang_patchlevel__ >= 3))))
- # define __counted_by(member)		__attribute__((__counted_by__(member)))
- #else
- # define __counted_by(member)
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 3bbf5fab2881..cc77b4967400 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10097,7 +10097,7 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc287_fixup_lenovo_thinkpad_with_alc1318,
+ 		.chained = true,
+-		.chain_id = ALC269_FIXUP_THINKPAD_ACPI
++		.chain_id = ALC287_FIXUP_THINKPAD_I2S_SPK
+ 	},
+ 	[ALC256_FIXUP_CHROME_BOOK] = {
+ 		.type = HDA_FIXUP_FUNC,
 -- 
-2.47.0
+2.43.0
 
