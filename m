@@ -1,143 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EA9219CA7;
-	Thu, 17 Oct 2024 18:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EA3370
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 00:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729191355; cv=none; b=sxNwb2F0bb2C16y3aeIA6muS1MpH2ZqS5jdrEIBIl1q8raP/N+i2jJG4Omc95BRElwJOevqD4H0TgjcdHyf4K1MeE5q67vfPb6WTjBKeje16Vd5O15waO6/hIElVcdwSIiO4uyoPnCMjcTb2hekAuH7C0R12dOm7NBjyZzlrcvg=
+	t=1729209996; cv=none; b=aG0G7DKgS88am7cn6BOoxTbRyO+h9RcPIQrs+SqtJd0uHfCfElTvwWuMrvsq8Jykra9lGEwCGXgU+xQVVWsP2cyyYG2RMzRJGap1ZIniZ3ZOBAkTOY/MRbXGI9qB/AFPJXXx7pRSE0VCyFBhaUN4oRk3+viR4rZaSmkH0S/A3/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729191355; c=relaxed/simple;
-	bh=X7HCFoaUk82oqckdGpNK/01aR61kZ+YTuBrRRtP5v14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqPdVtwU6dbIQldSq66S1N0D9W6/wxD/P3q0BdWTUUPHhQGwOfGr0xaLuDtqxXZzb/kaEM7t+KT9VOYIMM5bc9A4EHJZUQffttwQuQUlCxPv0vj+nVj5qnZpqS2nIe+u1nQSr3q/alczkrQqlodXfjbIYfcoyxWnXMezNTVTHIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3x5x+Ap; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729209996; c=relaxed/simple;
+	bh=H6xshl3cAlvW6/QQ9FxnJ+S3Q72o1WYPBibQ9mwMkKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GzYpU/VhICk5UKAtCJJUoFEgH1b0WnkCc8Ra5+N28HR8wiY2qMPVEGlBNZO++vzRy1LFlAzs5bL2s+Apb0KacFxg5SUw1R2i5N+tNEedzACwwxbQMbvAML+ThSZzcz/vetMP6UDGEFH92oBweDNDjQui7HrV5a2xSnRkWS4UkHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jBDnbvOr; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3x5x+Ap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EBC9C4CEC3;
-	Thu, 17 Oct 2024 18:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729191355;
-	bh=X7HCFoaUk82oqckdGpNK/01aR61kZ+YTuBrRRtP5v14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h3x5x+Apad7J+kdq6cENxZgJPqTl3MDck0PCFp28aU7XIzU00m6PjEq6goo6rlJlL
-	 +6X8P0WD2yvcKbw3oQfdjv+EyzEJhQ0UnjpwFERy4DSWqe8n49pIZoM5CKxAhu3uyy
-	 vXxK04LGjo9sckN9h34nVWVZdPWUrCrCOBAm2LrCJG1Hul/jM+DRu0BZ77m4H/YdqR
-	 8+K1CH//dpJRFqXrvFdDhZ17Oe+RfobYjFPBkMdgIoit7denq9ppBb57cYTs9Zm8o5
-	 pqk4M+im90JInBnpRHlMs6nrSM8poLnRavbxBXVJkkKz4/m5MCDUy4LzGh3TUQakz0
-	 9je/c+/3DqTlg==
-Date: Thu, 17 Oct 2024 11:55:52 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Bill Wendling <morbo@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, ojeda@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <20241017185552.GA2263054@thelio-3990X>
-References: <Zv61dCaxScXuOjZg@archlinux>
- <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux>
- <20241017165522.GA370674@thelio-3990X>
- <CANiq72=cUS4GRzuU0WAWn9owttU-L4UpV1Dip6QjUdudCoT8VA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBDnbvOr"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a99ebb390a5so498366766b.1
+        for <regressions@lists.linux.dev>; Thu, 17 Oct 2024 17:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729209993; x=1729814793; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LNw7sAgdWlGtM5VTjhVdQ8AXHr/R2EoJLtajoD5H0k8=;
+        b=jBDnbvOrinHmxnGR5KbCamX/u5bUGTZvzyfHkz8t7A+1oCyInRCEpLhpD7I6Q67EKQ
+         toP0xsqD724/T5epNbLF1+klO1JdLIvmuppYEjtNm9lX/jsZoWE9dyZOFMqMA0Tt/I0F
+         Q2sZkYuybpSqe3n1oXHs906tRBp23cers993FCoOLs8rOzgbJBlSxvKpEQHg/KQvUDPm
+         tFNUtFw2SxUMn+0ta2PVNgIOlv3jz7H4D7xpPuyPnQU/Th3LIWCnJZXdIKBmLu1UFUyL
+         o9dxw/nKq/HJXxDtxItEhsYVhB3GbMG/4WPg9Bse2qkXtU4AlHrZJqX/HazLB1lr56Jf
+         3ttg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729209993; x=1729814793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LNw7sAgdWlGtM5VTjhVdQ8AXHr/R2EoJLtajoD5H0k8=;
+        b=gMEAeeuG7BTYhdQ4wJIe/4TNsaSRQdnY0BJ1comFb5+F0tUWYTKdh5o55lvdLVFthA
+         Kc8te5OU/r8qcGvreywL9SLQUEdiK+LSfPfovRVvBJgYc5kQ5vxelAgfOrhjHaUAbyCp
+         4cB2btTFXFaTZBxTxyFmtrpD2wVWrdFckS8IsW9HUoNW1m1acDW3ecmcXrNabITLfBKb
+         ECExSmF2zJDTG8WLY5TLgqgMq7xQliqApy3WAzYYqkaBBFdIbZo4ju8mXbAp6bhPnoxf
+         PaVugSHXtbtS1bCZZS7KGzdIgVH1QQ06XEq1CN4uI/nI+UmfUMF1dvAgOawDHfreyJIb
+         2jaQ==
+X-Gm-Message-State: AOJu0Yxpw/Dh1pamYFgWR6kpp1Ugqxi3mL3aaLQkzgkP9kTU3610s30K
+	s44n7lwo+Ff1WTQh56H4NSBpy/cWyU7zxY4IjwXSF4uXicrOgtFOLZhx+SyPSZCfDNwJsIsoLcs
+	r24xt6Lt/PaAJRuzfN3edK4wapbs=
+X-Google-Smtp-Source: AGHT+IE3G+wfjPawkXm5j8jTbobX3vxxYNhvVPeuJ1d809QQ3xGto8AGRUgX7zlbPptAc1TL+z8AVr5AFCvddAbtYpE=
+X-Received: by 2002:a17:907:7213:b0:a99:4112:5e6e with SMTP id
+ a640c23a62f3a-a9a4c2c5301mr549660466b.3.1729209992785; Thu, 17 Oct 2024
+ 17:06:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72=cUS4GRzuU0WAWn9owttU-L4UpV1Dip6QjUdudCoT8VA@mail.gmail.com>
+References: <CAC8uq=Ppnmv98mpa1CrWLawWoPnu5abtU69v-=G-P7ysATQ2Pw@mail.gmail.com>
+ <3748add3-18e5-42ef-9d48-93650cfc0682@rock-chips.com>
+In-Reply-To: <3748add3-18e5-42ef-9d48-93650cfc0682@rock-chips.com>
+From: Adam Green <greena88@gmail.com>
+Date: Fri, 18 Oct 2024 01:06:21 +0100
+Message-ID: <CAC8uq=O=519iRpcs7p+jZaKngkCDuawLz8NVZYORY6qfGPifZg@mail.gmail.com>
+Subject: Re: Unable to handle kernel paging request at virtual address ffffffc08058e000
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, sydarn@proton.me, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Miguel,
+Hi Shawn,
 
-On Thu, Oct 17, 2024 at 07:39:43PM +0200, Miguel Ojeda wrote:
-> On Thu, Oct 17, 2024 at 6:55 PM Nathan Chancellor <nathan@kernel.org> wrote:
+I can confirm that after reverting
+
+commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890
+Author: Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Wed Mar 6 17:20:52 2024 -0600
+
+    mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K
+
+that the problem does appear to have resolved itself, I tested this on
+a variety of devices.
+
+Best regards,
+
+Adam
+
+On Wed, 16 Oct 2024 at 11:13, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>
+> =E5=9C=A8 2024/10/16 17:55, Adam Green =E5=86=99=E9=81=93:
+> > Good morning,
 > >
-> > Should this include a Fixes tag to give the stable folks a hint about
-> > how far back this should go? Maybe
+> > I would like to report a regression that appears to have been
+> > introduced into the linux kernel since v6.9.
 > >
-> > Fixes: c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and identifier expansion")
-> 
-> Yeah, I am not sure -- it does not really fix that commit, but if it
-> helps the stable team...
-
-The most "correct" Fixes tag would appear to be the one that first
-introduced __counted_by itself (dd06e72e68bc) but __counted_by can never
-be used at that original change because the test used __element_count__
-as the attribute name, which never shipped in any compiler. So I would
-argue that this change really does fix c8248faf3ca2 because that is the
-point in time that needs this fix.
-
-> > compiler_attributes.h is intended to be free from compiler and version
-> > checks, so adding a version check means that __counted_by() needs to be
-> 
-> Yeah, ideally we should avoid that since the goal was to have a file
-> with the straightforward ones.
-> 
-> Though if we do go for `CC_HAS_*`, I guess it would be simple enough
-> too, i.e. similar to `has_attribute` (but on our side), but it also
-> loses the simplicity of knowing those do not have arbitrarily complex
-> conditions which `CC_HAS_*` could hide.
-
-Yeah, I think the way compiler_attributes.h has operated so far with
-regards to tests and such is working fine so far, no real need to switch
-things up yet.
-
-> > moved into compiler_types.h. This might be a good opportunity to
-> > introduce something like CC_HAS_COUNTED_BY in Kconfig, so that we can
-> > keep the checks unified (since there are already multiple places that
-> > want to know about __counted_by support for the sake of testing) and
-> > adjust versions like this easily in the future if something else comes
-> > up, especially since __counted_by() is not available in a released GCC
-> > version yet.
-> 
-> Sounds good to me (even if we did the unification somewhere else).
-> Using `CLANG_VERSION` looks better too.
-> 
-> > +config CC_HAS_COUNTED_BY
-> > +       def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
-> 
-> I am probably missing some context, but what is the reason for the
-> build test? i.e. is there a reason we cannot test the GCC version too?
-
-The only reason I generally do build tests plus compiler version checks
-is due to certain vendor versions of clang, such as Android, which may
-hijack the patch version and appear newer than they actually are.
-However, now that I think about it, LLVM moving to GCC's minor
-versioning scheme of 0 for the development / main branch and 1+ for
-released versions should avoid that issue, so it isn't strictly
-necessary for that reason. However...
-
-> If the reason it is that it is not released, should we change it
-> later?
-
-This is a good point, as technically to allow use of __counted_by with
-GCC with a version check, it would need to be 150000, which would
-potentially break GCC versions between the 15 version bump and landing
-__counted_by support without the feature check. We could also just do
-150100 to be simple about it but I am not sure that is worth doing,
-since I believe it is important that we support using __counted_by with
-prerelease GCC. We want to make sure that this attribute gets decent
-testing coverage while in development.
-
-We could ship this with a comment to simplify the check when GCC 15.1.0
-is released, since this is a feature very unlikely to be backported to
-earlier GCC releases?
-
-Cheers,
-Nathan
-
-
-I guess since we have a hard version check for clang, we might as well
-have one for GCC as well.
+>
+> I didn't see many patches for dw_mmc since 6.9. So I guess the fastest
+> way is to do a bisect. Or maybe you could try reverting this commit
+> first to see what will happen.
+>
+> commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890
+> Author: Sam Protsenko <semen.protsenko@linaro.org>
+> Date:   Wed Mar 6 17:20:52 2024 -0600
+>
+>      mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K
+>
+>
+> > My device is currently experiencing a panic booting the kernel/rootfs
+> > from an SD card.
+> >
+> > The device is a Powkiddy RGB30 which is a portable handheld gaming
+> > console with a Rockchip RK3566 SoC (arm64).
+> >
+> > I have tested a variety of devices from a couple of manufacturers with
+> > the same SoC and they all have the same issue,
+> > I have also tested, 6.12-rc3 and linux-next and the same issue appears =
+present.
+> >
+> > A full UART dump can be found here: https://clbin.com/zLZAW
+> >
+> > [   41.547983] Unable to handle kernel paging request at virtual
+> > address ffffffc08058e000
+> > [   41.553426] Mem abort info:
+> > [   41.558231]   ESR =3D 0x0000000096000007
+> > [   41.563115]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > [   41.568135]   SET =3D 0, FnV =3D 0
+> > [   41.572882]   EA =3D 0, S1PTW =3D 0
+> > [   41.577575]   FSC =3D 0x07: level 3 translation fault
+> > [   41.582404] Data abort info:
+> > [   41.586995]   ISV =3D 0, ISS =3D 0x00000007, ISS2 =3D 0x00000000
+> > [   41.591848]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+> > [   41.596664]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> > [   41.601457] swapper pgtable: 4k pages, 39-bit VAs, pgdp=3D0000000003=
+63e000
+> > [   41.606359] [ffffffc08058e000] pgd=3D1000000000225003,
+> > p4d=3D1000000000225003, pud=3D1000000000225003, pmd=3D1000000000c8c003,
+> > pte=3D0000000000000000
+> > [   41.616442] Internal error: Oops: 0000000096000007 [#1] PREEMPT SMP
+> > [   41.621544] Modules linked in: hci_uart btrtl bluetooth rfkill
+> > [   41.626678] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-=
+rc2 #1
+> > [   41.631922] Hardware name: Powkiddy RGB30 (DT)
+> > [   41.636951] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BT=
+YPE=3D--)
+> > [   41.642330] pc : dw_mci_idmac_start_dma+0xa0/0x358
+> > [   41.647585] lr : __dw_mci_start_request+0x21c/0x6a0
+> > [   41.652827] sp : ffffffc080003da0
+> > [   41.657882] x29: ffffffc080003da0 x28: ffffff8001f06d80 x27: ffffffc=
+08058d000
+> > [   41.663399] x26: ffffffc08058e000 x25: 0000000000002711 x24: 0000000=
+000002000
+> > [   41.668864] x23: ffffff800167dc80 x22: 0000000080000012 x21: 0000000=
+000001000
+> > [   41.674257] x20: 000000003b5d1000 x19: 0000000000001000 x18: 0000000=
+972073a81
+> > [   41.679654] x17: ffffff9c39b47000 x16: ffffffc080000000 x15: 0000000=
+000000001
+> > [   41.685074] x14: 0000000000000004 x13: 000001ba5087c8e8 x12: 0000000=
+0000001a8
+> > [   41.690506] x11: 0000000000000040 x10: ffffffe40628d890 x9 : 0000000=
+000000000
+> > [   41.695972] x8 : ffffff803fd44080 x7 : 0000000008f0d180 x6 : 0000000=
+03b9ac9ff
+> > [   41.701495] x5 : 0000000000fffffe x4 : ffffffc08058de80 x3 : 0000000=
+0b2d05e00
+> > [   41.707073] x2 : ffffffe40546ab08 x1 : ffffffc08058e000 x0 : 0000000=
+000001000
+> > [   41.712686] Call trace:
+> > [   41.717857]  dw_mci_idmac_start_dma+0xa0/0x358
+> > [   41.723266]  __dw_mci_start_request+0x21c/0x6a0
+> > [   41.728719]  dw_mci_work_func+0x4c8/0x4d8
+> > [   41.734144]  process_one_work+0x148/0x284
+> > [   41.739587]  bh_worker+0x224/0x278
+> > [   41.744985]  workqueue_softirq_action+0x78/0x88
+> > [   41.750545]  tasklet_action+0x14/0x3c
+> > [   41.756023]  handle_softirqs+0x100/0x23c
+> > [   41.761506]  __do_softirq+0x14/0x20
+> > [   41.766917]  ____do_softirq+0x10/0x20
+> > [   41.772301]  call_on_irq_stack+0x24/0x54
+> > [   41.777689]  do_softirq_own_stack+0x1c/0x40
+> > [   41.783106]  irq_exit_rcu+0x94/0xd0
+> > [   41.788455]  el1_interrupt+0x38/0x68
+> > [   41.793799]  el1h_64_irq_handler+0x18/0x24
+> > [   41.799200]  el1h_64_irq+0x68/0x6c
+> > [   41.804532]  default_idle_call+0x28/0x58
+> > [   41.809931]  do_idle+0x1fc/0x260
+> > [   41.815152]  cpu_startup_entry+0x34/0x40
+> > [   41.820346]  kernel_init+0x0/0x140
+> > [   41.825437]  console_on_rootfs+0x0/0x6c
+> > [   41.830477]  __primary_switched+0x80/0x88
+> > [   41.835501] Code: 54000280 d294f8c0 940e1f8c d503203f (b9400340)
+> > [   41.840748] ---[ end trace 0000000000000000 ]---
+> > [   41.845896] Kernel panic - not syncing: Oops: Fatal exception in int=
+errupt
+> > [   41.851321] SMP: stopping secondary CPUs
+> > [   41.856502] Kernel Offset: 0x2384800000 from 0xffffffc080000000
+> > [   41.861840] PHYS_OFFSET: 0x0
+> > [   41.866814] CPU features: 0x0c,00000014,00280928,4201720b
+> > [   41.872087] Memory Limit: none
+> > [   41.877119] Rebooting in 1 seconds..
+> >
+> > Best regards,
+> >
+> > Adam Green
+>
