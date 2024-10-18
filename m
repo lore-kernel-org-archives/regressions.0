@@ -1,118 +1,132 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6564D18872A
-	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 09:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A9F17D378
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 10:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729244896; cv=none; b=OTMIPgrGqbhwFMM3eK1f2rgy9RBq8iq9Dg8KKWOhRFWNPIc8CSIcGkFR9XUAKiimFfckZrKZLfplE06fYW47XeB9VCT0AZ06g4KCJQxCLD16/3Kk9HRYHjuhKn1AASh5POOjAR4Zrc0Dg6RPA4Fae4ZD/n0+ZurNZQ6faOmzcXg=
+	t=1729245694; cv=none; b=XgMTHIOlJFARqMClt52D0CioIYzMXaJds2KzXvKfc+dMCbk7FXGL7YUqR6GWVw1InJM3SLOE59oFbV8XSwmkePT+pvpr32HoEePFsqYWgi/iU4nksGLYDBrruUWyzJJD1NBsLI5y5NWlb7XhNiMEh1p0JaTE/vZeFlNoIf3Ll+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729244896; c=relaxed/simple;
-	bh=BmVeZmCmcwklSJUf1iPn7T5UqzICg/V+X8zVLiMXQTI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F3VpR3fRG1bN9/oczMJ6at7NX+VAOtiRsVwOZQycZUCGgpvEveY3f4lhPpwX5gllqvU/lE9X3+Dgn/30kSzhA7Wa/YVhtpiZbNtqU3+xqPgeDPnWBM4PxMozj2dx4FhxQ9Ppbs+2uXLJvWVmuR76mgKRMZWKT/6r0Gx/mzA7U14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HqJB6PPF; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1729245694; c=relaxed/simple;
+	bh=ByQvZv98BC+L8p1DTuZl2zlqdFxenNAcm24+PlvMt0s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WN99qauHypbdrOILNpwlmrbZ/ywewNGvxk74dY/2yJHUbafqs12uIWcHWruF1nb/ZxWpCnPBGSR885q61L6tWHOlWgFSGT6VQHSGOol4uh+XSEi6PUBbB6W3wmpFNtuIYsgqPdnSk4DWKRMcIIdo5P8bAAqIuSuFM4Rj7Ev62bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s6WP35YM; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HqJB6PPF"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5c960af31daso2184487a12.3
-        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 02:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s6WP35YM"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a0c40849cso282639366b.3
+        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 03:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729244893; x=1729849693; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1729245691; x=1729850491; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Soh6jH0z+eTQKtZFMIbLZG9/1ikoWd+mxwUaxhi1Ds4=;
-        b=HqJB6PPFCA8dXiuPpIctlCG2tJFPq97dUuP1x9xiU9XC4uC5JhzAW5u6f7S16T184v
-         mqgPdS5GkkLpw1LtH9VLVrh79bSdXW4Q6fvGXJOaSSpp6g3bwAr/ulhP5QsmFtgEVLcB
-         c2xXwLCxJuzUB3GiaceELgHJlROVRoKTdFc0w+iBk7deaUA8XyksyXgorFboF+YNbo1L
-         LJ680UD+G4xFeEZqKzukO62f6Ne5j5dZIyshlBr/ijAJv86JMN40xQc1BqO6r6k9QPMH
-         pKcLuuXpCRybs6CzAT7XNRXeOx50lVV/F4V4MaMlaIQ1kNMXzCQ4yKzeSeyj7nNXPgUz
-         r6ow==
+        bh=EceJMD5TFFW28sEBYAnTnnk355nDba/Ev8Vf3NXQHxQ=;
+        b=s6WP35YMuYI8FRJrKnkjqgiIwkOyC4SP1pE6qLgIaJcN2Tq7QoMfXL+3B18N+St33B
+         k/CXjIyuXfim/9IYcNDbVxp6eYxqgM60MD7Lc3vXun7kC5SeWBtKfmTvz7p5TRaAjuxV
+         rlm+r+3BFeYkZ2LvMtlMgNUYja7Rxz1VMBEYQdsLwfr0H++O2DAOP0RLQMbAVQebKrDN
+         NvcmgMzexRbnAXW/rIbVjLt2JajzqTHhgWxdfp7bs5Xp/CsXxyVWB+LYp/mqAKTT/n9I
+         v70wyaHXSt7yU2+dZvArjmFzAbsKYPUxva3lzoLOmGGB0+/n/jOC7e69oeBiZnU7m4I+
+         WRVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729244893; x=1729849693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Soh6jH0z+eTQKtZFMIbLZG9/1ikoWd+mxwUaxhi1Ds4=;
-        b=fsCh4WJQvMsOrw6lFE2MRjdHKeUz9ROtktCynzsfiJHwlaLPJUpy+48LpOoZGgqSSO
-         XVi4OES/OQ1yFNdmOPYfSufHaJD0cMKY+o+ZS320J6n4j8dXM9hH9j1I+ftnBahm8fzp
-         CTc2yoGzFEwCIHz/Yw2p5fRnUeICl7wAVqkHx9YXlGM+mfscZ+CLSqTBX+uUh9TFlyNN
-         LjK+Cfn8VGn1WesQ72E1NE89OC7ZO0b9PYrGKf0nVRgF97fcTCdzTWIrluTBfJ4vntIn
-         gyomEjFWygpa7TW1lU4wOCkK8miJOOqDVn8P0NEGS8B1LBjgSdYLwLyP+NomRzNOQ2Bh
-         SApg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhYahHwjRwWN04VgwyoicCi57pP+ys2hyEqKau1whtZ4YUDRYuXL/qc4n+YYHXItwXAj5ZpP4Qv8yxhw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZkwhft8sfBhTV1nEUY/SLbO4slLgKmhet7umh2z8+m/bx84x+
-	t7EF6/N0KW/W8m9KvYgRw2Aq3p3w9IyrlPjCXfk6eCYMFqZHqeyT5QQ/t1s10QcT1Y8yjQbFwlo
-	SW13L7reJ63/r7Ca4UYHKaVnlsyk7iOfJ28NLFg==
-X-Google-Smtp-Source: AGHT+IGwkBnt8S54HV5wpTluVRczh/eHb/pg8v+8S1HtQBQwTQ9hgVMWZh3zivyvuxuChXefK071wuCB0YFmrafJ2jY=
-X-Received: by 2002:a05:6402:40d4:b0:5c9:3389:bdc3 with SMTP id
- 4fb4d7f45d1cf-5ca0abe8729mr1177178a12.0.1729244892751; Fri, 18 Oct 2024
- 02:48:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729245691; x=1729850491;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EceJMD5TFFW28sEBYAnTnnk355nDba/Ev8Vf3NXQHxQ=;
+        b=ryHq2FVa5w5wWCLN6eqU8CSGiirgHzR9yTKgYuixB1ODORkoSldKg6Lv2ZoXlZ4ixc
+         P4oX2Nzs/8PI0pNV3kURLQT90rPlWckVtrIi6bZKqMxYqShnARnd68lrNHrCEenHWne6
+         ig0o6j75rYFBb+N8v9I0GVQxZtaeX7kLn6bu12rEtPDi4BFo2f8Jq/iwFwrpFBuxrFFH
+         2LuI2dxVbYDBLckxdTfQo3NGf+ScTCaDgkVv5dA3vryrK4wut9Ks3sZmaczsWq7vOe/M
+         +mKdKUCbHGy3U4zt6qx9FDFtPB12/sY7ANib7lLWMrIHNl153ethK0Z5j958pZM0hPGz
+         npbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPYod7LzugkrrcGs3xVmWX0ponRW5Vd8VnB0Rtq+1D4bo7UVhwu2ei4IWk69EpFUo+A8XU9MlINZveNA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwaGCcA3I46AWRLnRlCINrRJqcW6lpMrrmM3d1L4JPkrhJ0uhBm
+	yHZeWMFaKZQ6SOyclGs1Hl184RpIbRXGe2pfyAPDTvDHImvMYL64qjmeJLpzWLo=
+X-Google-Smtp-Source: AGHT+IEDSxbCrlx25fjyK8bHdzmrM1cAxNXPz/tyNwGjzf/ZGH+OdLM0Jm8+kkTlgW5Frk6BCtFLAw==
+X-Received: by 2002:a17:907:7da1:b0:a9a:2d04:b577 with SMTP id a640c23a62f3a-a9a69ba71d2mr175520566b.32.1729245691269;
+        Fri, 18 Oct 2024 03:01:31 -0700 (PDT)
+Received: from draig.lan ([85.9.250.243])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a68a8d9e4sm73106566b.9.2024.10.18.03.01.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2024 03:01:30 -0700 (PDT)
+Received: from draig (localhost [IPv6:::1])
+	by draig.lan (Postfix) with ESMTP id 413755F863;
+	Fri, 18 Oct 2024 11:01:29 +0100 (BST)
+From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,  Linux ARM
+ <linux-arm-kernel@lists.infradead.org>,  lkft-triage@lists.linaro.org,
+  Linux Regressions <regressions@lists.linux.dev>,  qemu-devel@nongnu.org,
+  Arnd Bergmann <arnd@arndb.de>,  Mark Brown <broonie@kernel.org>,  Catalin
+ Marinas <catalin.marinas@arm.com>,  Aishwarya TCV <Aishwarya.TCV@arm.com>,
+  Peter Maydell <peter.maydell@linaro.org>,  Anders Roxell
+ <anders.roxell@linaro.org>
+Subject: Re: Qemu v9.0.2: Boot failed qemu-arm with Linux next-20241017 tag.
+In-Reply-To: <CA+G9fYt86bUAu_v5dXPWnDUwQNVipj+Wq3Djir1KUSKdr9QLNg@mail.gmail.com>
+	(Naresh Kamboju's message of "Fri, 18 Oct 2024 12:35:13 +0530")
+References: <CA+G9fYt86bUAu_v5dXPWnDUwQNVipj+Wq3Djir1KUSKdr9QLNg@mail.gmail.com>
+User-Agent: mu4e 1.12.6; emacs 29.4
+Date: Fri, 18 Oct 2024 11:01:29 +0100
+Message-ID: <87v7xp91c6.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvx05D7TfRjvdPtKM9iWS6i7b-EHuBAbHEQghvMEg221g@mail.gmail.com>
- <871q0daglh.fsf@draig.linaro.org>
-In-Reply-To: <871q0daglh.fsf@draig.linaro.org>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Fri, 18 Oct 2024 10:48:02 +0100
-Message-ID: <CAFEAcA-39GRpvy5LOZSJL3=9FMspAq9c8GUtHv9CP4jU2uFi1w@mail.gmail.com>
-Subject: Re: Qemu v9.0.2: Boot failed qemu-arm64 with Linux next-20241017 tag
-To: =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, qemu-devel@nongnu.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Aishwarya TCV <aishwarya.tcv@arm.com>, 
-	Richard Henderson <richard.henderson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 18 Oct 2024 at 10:46, Alex Benn=C3=A9e <alex.bennee@linaro.org> wro=
-te:
->
-> Naresh Kamboju <naresh.kamboju@linaro.org> writes:
->
-> > The QEMU-arm64 boot has failed with the Linux next-20241017 tag.
-> > The boot log is incomplete, and no kernel crash was detected.
-> > However, the system did not proceed far enough to reach the login promp=
-t.
-> >
-> > Please find the incomplete boot log links below for your reference.
-> > The Qemu version is 9.0.2.
-> > The arm64 devices boot pass.
->
-> Can confirm it also fails on the current master of QEMU:
->
->   #0  __pthread_kill_implementation (threadid=3D<optimized out>, signo=3D=
-signo@entry=3D6, no_tid=3Dno_tid@entry=3D0) at ./nptl/pthread_kill.c:44
->   #1  0x00007ffff4a3ae9f in __pthread_kill_internal (signo=3D6, threadid=
-=3D<optimized out>) at ./nptl/pthread_kill.c:78
->   #2  0x00007ffff49ebfb2 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdep=
-s/posix/raise.c:26
->   #3  0x00007ffff49d6472 in __GI_abort () at ./stdlib/abort.c:79
->   #4  0x00007ffff6e47ec8 in  () at /lib/x86_64-linux-gnu/libglib-2.0.so.0
->   #5  0x00007ffff6ea7e1a in g_assertion_message_expr () at /lib/x86_64-li=
-nux-gnu/libglib-2.0.so.0
->   #6  0x0000555555f45732 in regime_is_user (env=3D0x555557f805f0, mmu_idx=
-=3DARMMMUIdx_E10_0) at ../../target/arm/internals.h:978
->   #7  0x0000555555f5b0f1 in aa64_va_parameters (env=3D0x555557f805f0, va=
-=3D18446744073709551615, mmu_idx=3DARMMMUIdx_E10_0, data=3Dtrue, el1_is_aa3=
-2=3Dfalse)
->       at ../../target/arm/helper.c:12048
->   #8  0x0000555555f4e3e5 in tlbi_aa64_get_range (env=3D0x555557f805f0, mm=
-uidx=3DARMMMUIdx_E10_0, value=3D107271103184929) at ../../target/arm/helper=
-.c:5214
+Naresh Kamboju <naresh.kamboju@linaro.org> writes:
 
-I investigated this yesterday when Catalin reported it
-and sent a patch:
-https://patchew.org/QEMU/20241017172331.822587-1-peter.maydell@linaro.org/
+> The QEMU-ARMv7 boot has failed with the Linux next-20241017 tag.
+> The boot log is incomplete, and no kernel crash was detected.
+> However, the system did not proceed far enough to reach the login prompt.
+>
+> Please find the incomplete boot log links below for your reference.
+> The Qemu version is 9.0.2.
+> The arm devices TI beaglebone x15 boot pass.
+>
+> This is always reproducible.
+> First seen on Linux next-20241017 tag.
+>   Good: next-20241016
+>   Bad: next-20241017
+>
+> qemu-armv7:
+>   boot:
+>     * clang-19-lkftconfig
+>     * gcc-13-lkftconfig
+>     * clang-nightly-lkftconfig
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Boot log:
+> -------
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 6.12.0-rc3-next-20241017
+> (tuxmake@tuxmake) (arm-linux-gnueabihf-gcc (Debian 13.3.0-5) 13.3.0,
+> GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP @1729156545
+> [    0.000000] CPU: ARMv7 Processor [414fc0f0] revision 0 (ARMv7), cr=3D1=
+0c5387d
+> [    0.000000] CPU: div instructions available: patching division code
+> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction =
+cache
+> [    0.000000] OF: fdt: Machine model: linux,dummy-virt
+> [    0.000000] random: crng init done
+> [    0.000000] earlycon: pl11 at MMIO 0x09000000 (options '')
+> [    0.000000] printk: legacy bootconsole [pl11] enabled
+> [    0.000000] Memory policy: Data cache writealloc
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] cma: Size (0x04000000) of region at 0x00000000 exceeds
+> limit (0x00000000)
+> [    0.000000] cma: Failed to reserve 64 MiB on node -1
 
-thanks
--- PMM
+Is this a highmem related thing. Passing -m 2G allows it to get further
+and 4G is obviously at the limit of 32 bit?
+
+--=20
+Alex Benn=C3=A9e
+Virtualisation Tech Lead @ Linaro
