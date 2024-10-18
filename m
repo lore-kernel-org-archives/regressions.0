@@ -1,81 +1,59 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ADC18C332;
-	Fri, 18 Oct 2024 21:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D051917E7
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 23:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729287315; cv=none; b=d3gJ1OOhaqDLc4EWedXeZnJGtBRz3qlAVMtZmq2/myuWsgvxgq4XiqGnzVOG4wBy53YhpLTGGvnx3LmO9l+0d1kwE9qICfui44hrllrZYk/V6yZFYYIW5/aKJfh2KnoRW6ALuqktr6CGLhyZP81IJ3aSaWsSdXDkrhIraJZ8PaA=
+	t=1729292484; cv=none; b=qjQFkG8EWiaCaIaPAkP9yOlBEKmAKF33243srZn4QVIAAunQnTHm0CDaKTsS7OFeA5YouPl/R7PgZH/yqHl76T2VjgXZ4eOxjWAxb9vHV2vjgfWzEO9RKwJdrNkLlo+iwaU38DcgUlnLfl4oT44XTjIKFtLMd52B97aE5+S8rkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729287315; c=relaxed/simple;
-	bh=0JJG7ZWIdGOJlptv0dy+ApYKEGxXb53eUSStdfKAWHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r4N9jOEpKYv7xFFik520ArKTXn7LRb3omQ0xxjn7FjN5aFz6siRMJcMLnnIUto15/qUnRVdrbUv8w/I5RLyc9EOUlmZbk3WwawYm/4a5g2ctZNV5ApRB0jEEjcb9oQqEZi14dmnChVXIbfmXU0RoOJvsYCosziR/YzMJBXpCRPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1dAeNhwe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jNCclp1D; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1dAeNhwe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jNCclp1D; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1729292484; c=relaxed/simple;
+	bh=4FJ0G8bpNRFSMNEyYp9cI09SUVX3zQdubCpvJC7qong=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WP5xFU3gZS6ly+rNy+VG2ysNF3wVy1pTjgAUQMDlCEyu0hrU2LHnvEWHlgyGzl05P7PUcZ5SGN08k2Ei9sVxbYMdsVrZEZcCqWOoWb7/z3sw5xg/JgSjXyXELmGvw9idSxyRLHGoZt7Lnu8ny4XNaoTWQcLuNzHaMiRWY9SdR9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vPIblotD; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1dAeNhwe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jNCclp1D";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1dAeNhwe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jNCclp1D"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AF34621D2E;
-	Fri, 18 Oct 2024 21:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729287311; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=axzGyzmJ+hGoR2JC/TBJ5+Ys6eofFYtEOxdTC16nNKI=;
-	b=1dAeNhwefhyIAmDvhaM1XDyaQ+G3e8GqK/Wi3ivSWbKvZJGJMdV5urjf0cX9FL4OOtTEyT
-	OhNOD3EUG9rvSSA7xD/rzSYM02/+7IMm41zXtGcvn0xjt5JbAtIwKUPJyXgUq+3lJNzEJv
-	XTvCxR0eJ+gCgATEMaEG/MF+8EKMMx0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729287311;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=axzGyzmJ+hGoR2JC/TBJ5+Ys6eofFYtEOxdTC16nNKI=;
-	b=jNCclp1D4L/f/TBwr8Qn7LEtXpgEs4zLkahaqkMcvqn1Lmeel1ZGcRegqxQMZwx+nmn4MD
-	wYfG+qWwsAfxxvAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1dAeNhwe;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=jNCclp1D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729287311; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=axzGyzmJ+hGoR2JC/TBJ5+Ys6eofFYtEOxdTC16nNKI=;
-	b=1dAeNhwefhyIAmDvhaM1XDyaQ+G3e8GqK/Wi3ivSWbKvZJGJMdV5urjf0cX9FL4OOtTEyT
-	OhNOD3EUG9rvSSA7xD/rzSYM02/+7IMm41zXtGcvn0xjt5JbAtIwKUPJyXgUq+3lJNzEJv
-	XTvCxR0eJ+gCgATEMaEG/MF+8EKMMx0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729287311;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=axzGyzmJ+hGoR2JC/TBJ5+Ys6eofFYtEOxdTC16nNKI=;
-	b=jNCclp1D4L/f/TBwr8Qn7LEtXpgEs4zLkahaqkMcvqn1Lmeel1ZGcRegqxQMZwx+nmn4MD
-	wYfG+qWwsAfxxvAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8EDEE13680;
-	Fri, 18 Oct 2024 21:35:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TkYaIo/UEmdDJAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 18 Oct 2024 21:35:11 +0000
-Message-ID: <b6852c2d-3371-47a4-bfeb-049f4048e88a@suse.cz>
-Date: Fri, 18 Oct 2024 23:38:04 +0200
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vPIblotD"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-83ab21c26f1so92377239f.2
+        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 16:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729292480; x=1729897280; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uLjNzHb2QRcqWVsEUW+j8xr26gbx65KWLWqRdmYKeaA=;
+        b=vPIblotDqxUDW+P/y1CWdNO4bCscPqix6NNYP/iReQyaGeCpoBMT1jcPWZ3lMDXFEv
+         MHs0UD/GqPLlWAD7jIEH+oKURnt41o13zJvgiOi5UyXdsy8AhBin5Xxyt7KB6FLD37o+
+         SD1cIBFU9s+FqMQT4FIKkjJj9TipOgeGV9KYJNoF4V4CjCvMMLRGUq35+SIWuYw963/k
+         lBBGOZcSaBeHJr1BcjpEOxOllnD++aDCZIcKuBiM36mMpa+lfOL0s/5KoO+4ey5TRyQr
+         z4dTruSythb7jv5SQVmyeLg87rpZTlPbrGmPRzf6cXiHtezssV1baQ6qYw81KkoFVntC
+         zRRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729292480; x=1729897280;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uLjNzHb2QRcqWVsEUW+j8xr26gbx65KWLWqRdmYKeaA=;
+        b=B6cXDO4czKlQ6NHmjl7DHTLKlfwtAzijjgVdb2+Rn+Hgp3vfdrec6xDxLHBHFPrUi3
+         73kf9UJlspZOpy3wbLXISVTQhVBylHUQ8w3ZSC24OwgnwovUfTXEjffUPj22Pdrjvz2k
+         8VPpAKFlQRl8PzYpBiwDrlGlem25WAxzrnOzwwdTQBY8HeRhcpm2xV6qKNKNc92StTtC
+         ZQjET4SzIViUEyxDoeSCKwQ545Xp93XsmdFHEP2lwM9O7McNjeeru+hgQc0HsA5pG5du
+         CxxGUpxhtubQZzGGoDjQcsSx+JDeUt3W6HerMO3mOWbQ65m+PQj8scQrvdEvRWznM/2f
+         0dAw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5/EOUAVCPPRoqBnqoAvUn7ZQLi+NpmBQQMYJ4DSPki25U3as+iTe/A8mJe78BQliAxll/C9SMQViOaA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzHJCKSxwshjvQKLPC0T5fO7jFckQxyuxXqri9kUOMfnLDjI/wF
+	ytx+W3sHtdYKKIrePJhdaqs0g3+jkl49Z8hRhNMa1f1EZyOII+OwJ/wJ+Ekbomc=
+X-Google-Smtp-Source: AGHT+IHHM5J7P9ZVJ6BdSu0wHN8+pXSWKNVXJIBku1nPP4WbmJXlHwVX5B5msCPJRXtCnuVIC+M/PA==
+X-Received: by 2002:a05:6602:158f:b0:83a:9a59:f382 with SMTP id ca18e2360f4ac-83aba67f44amr450293939f.16.1729292480263;
+        Fri, 18 Oct 2024 16:01:20 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-83ab9da6ff5sm61636539f.26.2024.10.18.16.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2024 16:01:19 -0700 (PDT)
+Message-ID: <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
+Date: Fri, 18 Oct 2024 17:01:18 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -83,110 +61,157 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] 9p: Avoid creating multiple slab caches with the same
- name
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Dominique Martinet <asmadeus@codewreck.org>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>, v9fs@lists.linux.dev,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- Jason Gunthorpe <jgg@nvidia.com>, Pedro Falcato <pedro.falcato@gmail.com>
-References: <20240807094725.2193423-1-pedro.falcato@gmail.com>
- <20241018172804.GA2151929@nvidia.com>
- <CAKbZUD0Z_Kyumx3ourywUYhfksGNgJWrCpjAdnxtsbwS4vMRkA@mail.gmail.com>
- <1cb07628-269c-4d6c-9936-f3a2b233165f@leemhuis.info>
-From: Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: AMD zen microcode updates breaks boot
+From: Jens Axboe <axboe@kernel.dk>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <3400cf0b-85ca-4ec2-a8a0-c9d75889d573@kernel.dk>
+ <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
+ <4d4bf52a-dd91-48ad-8949-198b2ffbc9da@kernel.dk>
+ <20241017142707.GEZxEeu3YHvnEMmd32@fat_crate.local>
+ <a395a18b-3478-45dd-aabd-ccc9d0851318@kernel.dk>
+ <20241018115857.GBZxJNgZY-NedtPrxX@fat_crate.local>
+ <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
+ <79296353-1fa3-458a-b055-88bc6a772180@kernel.dk>
+ <20241018155143.GIZxKED9YcF0Jg1CWZ@fat_crate.local>
+ <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
+ <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
+ <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
 Content-Language: en-US
-In-Reply-To: <1cb07628-269c-4d6c-9936-f3a2b233165f@leemhuis.info>
+In-Reply-To: <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AF34621D2E
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,crudebyte.com,lists.linux.dev,vger.kernel.org,nvidia.com,gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 7bit
 
-On 10/18/24 8:54 PM, Thorsten Leemhuis wrote:
-> [reinserting a bit of quotation below for Linus]
+On 10/18/24 12:03 PM, Jens Axboe wrote:
+> On 10/18/24 11:56 AM, Borislav Petkov wrote:
+>> On Fri, Oct 18, 2024 at 10:48:19AM -0600, Jens Axboe wrote:
+>>> Funky... Not sure I'll have time to get a serial console on this
+>>> thing before next week.
+>>
+>> That would be much appreciated.
 > 
-> TLDR: Linus, I wonder if it would be best if you could merge the patch
-> at the start of this thread
-> (https://lore.kernel.org/all/20240807094725.2193423-1-pedro.falcato@gmail.com/
-> ), which can also be found as 79efebae4afc22 in -next if you prefer to
-> cherry-pick it from there. Either now or after 24 to 36 hours, which
-> would give Eric a chance to ACK/NACK this if he sees this mail.
-> 
-> For details see below.
-> 
-> On 18.10.24 20:36, Pedro Falcato wrote:
->> On Fri, Oct 18, 2024 at 6:28 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
->>>
->>> On Wed, Aug 07, 2024 at 10:47:25AM +0100, Pedro Falcato wrote:
->>>> In the spirit of [1], avoid creating multiple slab caches with the same
->>>> name. Instead, add the dev_name into the mix.
->>>>
->>>> [1]: https://lore.kernel.org/all/20240807090746.2146479-1-pedro.falcato@gmail.com/
->>>>
->>>> Signed-off-by: Pedro Falcato <pedro.falcato@gmail.com>
->>>> ---
->>>>  net/9p/client.c | 10 +++++++++-
->>>>  1 file changed, 9 insertions(+), 1 deletion(-)
->>>
->>> Can this get picked up to rc4 please?
-> 
-> Eric apparently has not much time or upstream work currently (but
-> recently showed up in a discussion about another regression:
-> https://lore.kernel.org/all/Zw-J0DdrCFLYpT5y@codewreck.org/ ).
-> 
->>> It is causing regressions in my environment
->>> #regzbot introduced: 4c39529663b9
-> 
-> If anyone wonders, that is 4c39529663b931 ("slab: Warn on duplicate
-> cache names when DEBUG_VM=y") [v6.12-rc1]. That's also why I'm CCing
-> Vlastimil, so he knows about this.
-> 
->> FWIW, seems to have been picked up into 9pfs-next
->> (https://github.com/martinetd/linux/commit/79efebae4afc2221fa814c3cae001bede66ab259).
->> Seems like we're just missing a PR to Linus?
+> I will probably have some time to get that going on Monday. Just to set
+> expectations in terms of timing, the above should've read "before the end
+> of next week".
 
-If was Dominique, not Eric, see:
-https://lore.kernel.org/all/ZvBIl8b9RRK9jgtJ@codewreck.org/
+I took time out of "would otherwise have had a beer" time on a Friday
+afternoon and got a serial console on it. Here's the crash at boot:
 
-Can you send it as mentioned in the email? :)
+BUG: unable to handle page fault for address: 00000001000141ab
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0 
+Oops: Oops: 0000 [#1] SMP
+CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-rc2+ #143
+Hardware name: Dell Inc. PowerEdge R7625/06444F, BIOS 1.8.3 04/02/2024
+RIP: 0010:load_microcode_amd.isra.0+0x334/0x450
+Code: e7 06 48 81 c7 c0 97 7e 96 e8 f8 bb 4e 00 89 c7 89 c0 4c 8b 2c c5 40 20 e2 95 49 01 ed e8 44 f9 ff ff 48 85 c0 74 12 8b 40 1c <41> 39 85 28 01 00 00 0f 92 c0 0f b6 c0 09 c3 41 8d 4c 24 01 41 83
+RSP: 0018:ffffa41ac00e7e08 EFLAGS: 00010282
+RAX: 000000000aa00116 RBX: 0000000000000000 RCX: 0000000000a00000
+RDX: 0000000000aa0f00 RSI: 0000000000000200 RDI: 000000000000000a
+RBP: 0000000000014080 R08: 000000000000aa01 R09: ffff93ebc1106000
+R10: ffffa41ac00e7df0 R11: 0000000000002000 R12: 0000000000000001
+R13: 0000000100014083 R14: ffff93ebc103b400 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff93f127e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000001000141ab CR3: 000000ba2de28001 CR4: 0000000000370ef0
+Call Trace:
+ <TASK>
+ ? __die_body.cold+0x19/0x2b
+ ? page_fault_oops+0x90/0x210
+ ? load_microcode_amd.isra.0+0x185/0x450
+ ? exc_page_fault+0x6c/0x130
+ ? asm_exc_page_fault+0x22/0x30
+ ? load_microcode_amd.isra.0+0x334/0x450
+ ? load_microcode_amd.isra.0+0x32c/0x450
+ save_microcode_in_initrd+0x90/0xb0
+ ? find_blobs_in_containers+0xb0/0xb0
+ do_one_initcall+0x2e/0x190
+ ? try_to_wake_up+0x1c0/0x4b0
+ kernel_init_freeable+0xdd/0x210
+ ? rest_init+0xc0/0xc0
+ kernel_init+0x16/0x120
+ ret_from_fork+0x2d/0x50
+ ? rest_init+0xc0/0xc0
+ ret_from_fork_asm+0x11/0x20
+ </TASK>
+Modules linked in:
+CR2: 00000001000141ab
+---[ end trace 0000000000000000 ]---
+RIP: 0010:load_microcode_amd.isra.0+0x334/0x450
+Code: e7 06 48 81 c7 c0 97 7e 96 e8 f8 bb 4e 00 89 c7 89 c0 4c 8b 2c c5 40 20 e2 95 49 01 ed e8 44 f9 ff ff 48 85 c0 74 12 8b 40 1c <41> 39 85 28 01 00 00 0f 92 c0 0f b6 c0 09 c3 41 8d 4c 24 01 41 83
+RSP: 0018:ffffa41ac00e7e08 EFLAGS: 00010282
+RAX: 000000000aa00116 RBX: 0000000000000000 RCX: 0000000000a00000
+RDX: 0000000000aa0f00 RSI: 0000000000000200 RDI: 000000000000000a
+RBP: 0000000000014080 R08: 000000000000aa01 R09: ffff93ebc1106000
+R10: ffffa41ac00e7df0 R11: 0000000000002000 R12: 0000000000000001
+R13: 0000000100014083 R14: ffff93ebc103b400 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff93f127e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000001000141ab CR3: 000000ba2de28001 CR4: 0000000000370ef0
+note: swapper/0[1] exited with irqs disabled
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
 
-> In that case: Linus, given the circumstances I wonder if it would be
-> best if you could merge the patch at the start of this thread
-> (https://lore.kernel.org/all/20240807094725.2193423-1-pedro.falcato@gmail.com/
-> ) directly, which can also be found as 79efebae4afc22 in -next if you
-> prefer to cherry-pick it from there  Either now or after 24 to 36 hours,
-> which would give Eric a chance to ACK/NACK this if he sees this mail.
-> 
-> Ciao, Thorsten
+which appears to be here:
+
+(gdb) l *load_microcode_amd+0x334
+0xffffffff810914a4 is in load_microcode_amd (arch/x86/kernel/cpu/microcode/amd.c:971).
+966	
+967			p = find_patch(cpu);
+968			if (!p)
+969				continue;
+970	
+971			if (c->microcode >= p->patch_id)
+972				continue;
+973	
+974			ret = UCODE_NEW;
+975		}
+
+heading home, so didn't poke. As you know, there are 32 nodes in this
+sytem, looks like:
+
+axboe@r7625 /s/d/s/node> grep . node*/cpulist
+node0/cpulist:0-7,256-263
+node1/cpulist:8-15,264-271
+node2/cpulist:16-23,272-279
+node3/cpulist:24-31,280-287
+node4/cpulist:32-39,288-295
+node5/cpulist:40-47,296-303
+node6/cpulist:48-55,304-311
+node7/cpulist:56-63,312-319
+node8/cpulist:64-71,320-327
+node9/cpulist:72-79,328-335
+node10/cpulist:80-87,336-343
+node11/cpulist:88-95,344-351
+node12/cpulist:96-103,352-359
+node13/cpulist:104-111,360-367
+node14/cpulist:112-119,368-375
+node15/cpulist:120-127,376-383
+node16/cpulist:128-135,384-391
+node17/cpulist:136-143,392-399
+node18/cpulist:144-151,400-407
+node19/cpulist:152-159,408-415
+node20/cpulist:160-167,416-423
+node21/cpulist:168-175,424-431
+node22/cpulist:176-183,432-439
+node23/cpulist:184-191,440-447
+node24/cpulist:192-199,448-455
+node25/cpulist:200-207,456-463
+node26/cpulist:208-215,464-471
+node27/cpulist:216-223,472-479
+node28/cpulist:224-231,480-487
+node29/cpulist:232-239,488-495
+node30/cpulist:240-247,496-503
+node31/cpulist:248-255,504-511
+
+and .config has:
+
+CONFIG_NODES_SHIFT=5
+CONFIG_USE_PERCPU_NUMA_NODE_ID=y
+
+-- 
+Jens Axboe
