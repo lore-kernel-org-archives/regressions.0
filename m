@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745C617BB38;
-	Fri, 18 Oct 2024 05:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B998620E30E
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 06:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729229413; cv=none; b=R7w1p/lJ6pGtEYP3ziICF81LMoWqec1BnJ6U+7nobOv+vq4PW3Yiu46MZxCfAuf5lD9bPet73gjWymV8qpmagWEW4VrArPiAWgqIlpbV3NYn5df4UncYjSEDCceo5mEiUbLqwaCmm/loriA7iRDHktWcpv9jTml+bNj7Ulz6c3s=
+	t=1729233567; cv=none; b=dUUWIOs6fw5tYsk3f1EVPtO2BStNzyH+/44IyP1JID+k6juIptFuzBDQGQQnCjWFs0M2+7tS00NAfo4wne4BkF6r3TcGw9pFR1lx3+dnPKMftRuI0mIf5HKE5ObnZIXUI2exEDvvsXDHXB8QXQJ42/Vdn8Plmlnehf/IlOeTMkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729229413; c=relaxed/simple;
-	bh=i2JG6iOdU+US1puDHuYMpfrUUGgcgbRBM306Va9Y76A=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tRI9ATxY/bc9Y+CLepag+rTps7RBjB8mGci7HjjZ3id8KiYLP++1lJbChzf45aXl8vEsmSTddFUg6hVZQ7eaUrcydyfLBPluB+i6334p4DYP6Okn+rQJjUPDbb9H6YYOAfDTZT1o9zBKLaCAPyhx2ytNvKmjOP7Pg70uy4Cp68A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Go7vf/Zo; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1729233567; c=relaxed/simple;
+	bh=aP23ogiHml/v+ftvDGFVaBZkl6aDgBzHlomPPmAo9bg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=PKghb8GDg8Xytn/FKJ0X3QY6ugoRATTN+Db6XSmPJwnv+A3KFJOZwp69Oyd/TVz8qEOayM6D+Ap76WTqtnGVWv4S7c6mXyFAzvxyTYtFtr8MTh8xYLbSGvjeGDUrmBO09XkJPnQD7gOq51iyJQZuZxJte+PGbG+ydM2cQ1h8W9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UrA6vJZl; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Go7vf/Zo"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UrA6vJZl"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=y7QDHEBPVPCiqGkJs8dtBm5r21yBywH+t7cYhsoCvTc=; t=1729229411;
-	x=1729661411; b=Go7vf/ZoACQ2D4OGogUk2lGCL7MUw4tcTsRHKhoPjJqtoGMP74bfX3SE92lCO
-	wue6ldw9cw5j5J2sV4Outk/24k8ECm7GhlgDjYdHEB/8/k5+xC7rMqvZBjWRdz6mTynYF+4WpWQF7
-	n6pLBj3KKGGUeFI5lcoKS2XxNjog4KG+Yen3F0NICexoiUlFiiccEHcrwNuBF2+EzMGgVbWA9I6dx
-	G9CUxxEcbJmQ9VFwamaTaCA1RIhsrgTXzNqHz229XVwomMtsS9OxL5k4Ii2rpQ+pCI/dbOqDfZNEG
-	r1vfpxLcEw72USdIWpN40KiiEeQZOMCOjCE95YIfCZAbEea0MQ==;
+	References; bh=cB1e+BtV53zNsFevdKpY7IkESTDAY4oP5iednFgkli8=; t=1729233564;
+	x=1729665564; b=UrA6vJZl1lmwVEjLH3uU3I9K5vRtond43RixjkpCNxU1BpP/MXS8Kmo6pNkmd
+	UPK9UAsrJtglY/6CcXE6inbScwcoTrUBhvkz0ALmt1eqcnkUJHi11jR/Sv7DJsuVq+JhmjNqndnXD
+	qtfDFdR/xdHT8p5TU71hlWc9NNnwE+ZJT2EU8EmAmkAgYrtcRu8COMTpGdgiLH1Zcs4aBAk03jSmg
+	JG3JupxoSJmMGmYazBYd3BrOHqe2o2LSEdgryBJ5KDhpXANQGYSgVM+Q6jnG90PaveorLaR3LbRmw
+	mu3Dr5jac3lgEnH+c+kEkcVdhUffCFSDtrTdKa79aUt/VJv1EQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t1fYu-0001dY-K2; Fri, 18 Oct 2024 07:30:08 +0200
-Message-ID: <4e1977ca-6166-4891-965e-34a6f319035f@leemhuis.info>
-Date: Fri, 18 Oct 2024 07:30:07 +0200
+	id 1t1gdp-0006dD-BQ; Fri, 18 Oct 2024 08:39:17 +0200
+Message-ID: <d78d356e-75b7-49d3-afd6-6a107d7c7fed@leemhuis.info>
+Date: Fri, 18 Oct 2024 08:39:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,90 +40,41 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: pull request: bluetooth 2024-10-16
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, davem@davemloft.net,
- kuba@kernel.org
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-References: <20241016204258.821965-1-luiz.dentz@gmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <20241016204258.821965-1-luiz.dentz@gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729229411;c42839ea;
-X-HE-SMSGID: 1t1fYu-0001dY-K2
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729233564;3effe9dc;
+X-HE-SMSGID: 1t1gdp-0006dD-BQ
 
-[CCing Linus, the two other -net maintainers, and the regressions lists]
 
-On 16.10.24 22:42, Luiz Augusto von Dentz wrote:
-> The following changes since commit 11d06f0aaef89f4cad68b92510bd9decff2d7b87:
-> 
->   net: dsa: vsc73xx: fix reception from VLAN-unaware bridges (2024-10-15 18:41:52 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2024-10-16
 
-FWIW, from my point of view it would be nice if these changes could make
-it to mainline this week. I know, they missed the weekly -net merge,
-despite the quoted PR being sent on Wednesday (I assume it was too late
-in the day). But the set contains a fix for a regression ("Bluetooth:
-btusb: Fix not being able to reconnect after suspend") that to my
-knowledge was reported and bisected at least *five* times already since
--rc1 (and the culprit recently hit 6.11.4 as well, so more people are
-likely now affected by this :-/ ). Having "Bluetooth: btusb: Fix
-regression with fake CSR controllers 0a12:0001" -mainlined rather sooner
-that later would be nice, too, as it due to recent backports affects
-afaics all stable series and iirc was reported at least two times
-already (and who knows how many people are affected by those bugs that
-never sat down to report them...).
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Side note: I recently learned from one of Linus public mails (I can't
-find right now on lore, sorry) why the -net subsystem is usually merging
-mid-week. TBH from a regression point of view I have to say I don't like
-it much, as bad timing with sub-subsystem PRs leads to situation like
-the one described above. It is not the first time I notice one, but most
-of the time I did not consider to write a mail about it.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219388
+#regzbot introduced: 0e4851502f84
+#regzbot summary: r8169:  PCI error after resuming from suspend
+#regzbot monitor:
+https://lore.kernel.org/all/b8e7df14-d95e-4aab-b0e3-3b90ae0d3c21@gmail.com/
 
-Sure, telling sub-subsystems to send their PR earlier to the -net
-maintainers could help, but even then we loose at least one or two days
-(e.g. Wed and Thu) every week to get regression fixes mainlined before
-the next -rc.
+#regzbot report:
+https://lore.kernel.org/all/CAC8uq=Ppnmv98mpa1CrWLawWoPnu5abtU69v-=G-P7ysATQ2Pw@mail.gmail.com/
+#regzbot introduced: 8396c793ffdf28bb8aee7cfe0891080f8cab7890
+#regzbot summary: mmc: dw_mmc: Unable to handle kernel paging request
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/ZxFEi1Tod43pD6JC@moon.secunet.de/
+#regzbot introduced: ee4cdf7ba857
+#regzbot summary: netfs: booting fails due to a list_del corruption
 
-> for you to fetch changes up to 2c1dda2acc4192d826e84008d963b528e24d12bc:
-> 
->   Bluetooth: btusb: Fix regression with fake CSR controllers 0a12:0001 (2024-10-16 16:10:25 -0400)
-> 
-> ----------------------------------------------------------------
-> bluetooth pull request for net:
-> 
->  - ISO: Fix multiple init when debugfs is disabled
->  - Call iso_exit() on module unload
->  - Remove debugfs directory on module init failure
->  - btusb: Fix not being able to reconnect after suspend
->  - btusb: Fix regression with fake CSR controllers 0a12:0001
->  - bnep: fix wild-memory-access in proto_unregister
-> 
-> ----------------------------------------------------------------
-> Aaron Thompson (3):
->       Bluetooth: ISO: Fix multiple init when debugfs is disabled
->       Bluetooth: Call iso_exit() on module unload
->       Bluetooth: Remove debugfs directory on module init failure
-> 
-> Luiz Augusto von Dentz (2):
->       Bluetooth: btusb: Fix not being able to reconnect after suspend
->       Bluetooth: btusb: Fix regression with fake CSR controllers 0a12:0001
-> 
-> Ye Bin (1):
->       Bluetooth: bnep: fix wild-memory-access in proto_unregister
-> 
->  drivers/bluetooth/btusb.c    | 27 +++++++++------------------
->  net/bluetooth/af_bluetooth.c |  3 +++
->  net/bluetooth/bnep/core.c    |  3 +--
->  net/bluetooth/iso.c          |  6 +-----
->  4 files changed, 14 insertions(+), 25 deletions(-)
-
+#regzbot report:
+https://lore.kernel.org/all/ea1eeb13-c568-4381-812a-dec4246a440e@candelatech.com/
+#regzbot resolved: downstream problem in a forked kernel
