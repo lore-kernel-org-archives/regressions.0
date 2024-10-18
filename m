@@ -1,59 +1,72 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D141CCB33
-	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 12:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B922AE99
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 13:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729255797; cv=none; b=hhcYNG53NhN1SchyA7vXZaTIZ3ulpBjrUKGnuRR8amEC1aF9qzOAnBJgsAWWU+iMpPT2v/rwH5W1f1GRJ7kzStdpZvD7LFHPsKfceKeXvH9HFobIqiDOw9KHu8rdkEkBQvo5HX2JqJY3GlXET1s1F9P5TS9wviTGmMxfeE4ucDM=
+	t=1729258221; cv=none; b=faBNp78vUJIUHPPHiZlEV4BMJtcFyruuGxiSPNnvbMBfZSqBLJ6qBJPCfazE+OQsjk05OJPBKsiVWz1VKVDjum5CmRJNhBOvxm6HWTir0GENrHvX2YgCRxjvp24wstLRJFdcMKvccDId+peiJFY8MNDGOYSatINEPzFwGOgL7MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729255797; c=relaxed/simple;
-	bh=x8Jx1PJsd1fk6/RgEx6LeCS+xcpZp2A5jYTRP0faV4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hfuvOYE908JD84yQ1jzl/b8Fre+Whr9ZMReVWk5TlFXlYmz5cYHYSS/X9zLcDLDGqfEPLEYeTbVYRI6uaH1bXkeJrtiSs8kgbt6+v17EW7laVr9WfhTAiu1IJd+RQtKIULHBNtWYrsbQJkvUujFemF2HORDx0gGOvgpDz6A1Px4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LmAIkk9M; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1729258221; c=relaxed/simple;
+	bh=KPSDXFRajCiADW3kOGC7o+H5Jjxj8YqYn65iwwChS6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y9bdyzgUJkPrexRaMAgIfF7ih6BYgW/8PuEbdVN97Apt+g2DXeSWsjpN5HMpN1qgNY3M+ECnmywQqaveAYvlHuLdxGlWX+IkyuIb9ALzZn+6aPE3K+8hEBQ25mQi6uhAqPimpRZYPwYb3Gbz8XCcNUz/6acK8VBUyJxlCCrycAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=dsZ++gTa; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LmAIkk9M"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EBB7D40E0169;
-	Fri, 18 Oct 2024 12:49:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ITSQRhb-uJed; Fri, 18 Oct 2024 12:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729255789; bh=GDNu1/78QwFrBbhAg+/okEcKgChAgn+ja2+bT034AL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LmAIkk9MkaUQ5N5snzfDqqGGDMEIelMl3go/9ErxHvW9+bV6THUlDNB95W6zBkhkN
-	 UmJtg5ASgkp1/rcITmvPXS2WXdCqlVnRwFGLsAUAFWMFxJk/exIJvcqGMxDmDwXH7o
-	 HiiiuwJz3+/WGTi99n6LUvty6Qig5Fy7nP140jR37cshgMIXiaPsLPqeLHCa0jK1bp
-	 cgyu98w0INq+kdefOtnJp5nUu/ZoZqitoq8cGqTXCAIqjA9A2Aekql7Z053Iri8f/n
-	 OlFhX9fbN1v1z8K5AYuAqfkymu7LfRk/3AMVFNvnbDRmRFnRAHT0/35/0Rci4X1VDN
-	 EEctpil6UOXGXv978pAiDQBVMW6V1OZS3tmNTTW0L2RKdMs1y7bn0Iwls9mAd6rQzv
-	 hAXXaMsy0ZWR7WxB5qm9WUdvaNV2UlhXHnaio+DO9+Juff9FDVZ9HZYMi9HzUPQ62V
-	 TilI5jQGF13PLGY/d4RYQgSP0YqIi9Gp1KBZ+tbYKASofL3nCJ8hngowdINWc1h5wO
-	 yiS52Ziysu+1SWwTQqoLPK3eOLTe0fBYto3EAbgHK3Ef8YcVSNaIX/WUoXRqTT+zaM
-	 7dtPFxecOdaxMgBAVPzrqhqVP+dU4ihF9mvNRFwy2qp/HJR/jiz06Wmw0lnFad4ySQ
-	 PEXJkRPC2eiaxR3uSPnFhqUA=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF10E40E015F;
-	Fri, 18 Oct 2024 12:49:43 +0000 (UTC)
-Date: Fri, 18 Oct 2024 14:49:43 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dsZ++gTa"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20c805a0753so18149945ad.0
+        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 06:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729258217; x=1729863017; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RoQjeOuXX3AlCfEBISUxX7T/BVrV6UabUw4LIP4IFB4=;
+        b=dsZ++gTaB/a5rsfeRKZH2M6A+xJfdkRIjapjdyrI6J8NIWt7QJ/fmFg0uNkLWNtzYb
+         4cjJ1eA9b0+gPEZasF8X8eyjR2zDzjuhBExMsYweQ3tvuvQE0GqKdG4dTdzH94bI84Lq
+         qBJeo+SEn3VmxKTuT+10B3NVuvIYgpT54BnxDOLPWtcPe/VBf9ccmM167b5JPofy/VX0
+         YzPDSHyV7Qi9oLTSoWtfolXivjWRehJSAFPNkV0S1ddf/37btkg/eqJ81d66LGvRj5i6
+         R2i/LdZ8pWDAKu9lQk1cJw1sZRtRChL40cHUlbv865/iD9I12hR5ycJDVjGSRLbD3SZY
+         tE0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729258217; x=1729863017;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RoQjeOuXX3AlCfEBISUxX7T/BVrV6UabUw4LIP4IFB4=;
+        b=QzxlAqE/b77eWoXoZ2c/uzJheT6iBlM9H55nRXHow4Am2AAaEtsitPe5LAGuECacKO
+         PvF+2mIqaZHeQeLifuSVur3r6nBj9s0yiQjxsziPdRrFhrsuKQNfvVg7jpMUf485eAtA
+         BGSPEhvDvOrbTgy/wBhoKZJOf50K0mD9wNNzLWjOeogLGeAWZpqQKW51CAvMkWV6B4GY
+         n3IWEpukfHDsbCi6QS04tMbQIFsLifkXAITUFo8kiXHM1uj6Dskxk6enopKwunYpRwU3
+         BoeFjXDJz4/LaiMPWMZgC0aXdzcxjBt8myetPp2Yk6Y3MZMymrADOL5s1yKUE7w56PIK
+         2tWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR0M01oHOpXztgVQO6bikcEGystJxp3tZz4gZbmPvM8bP7up447FYU0VJP8mRHp78LoqpWVd8NJrs4IQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxUUw6oNF8KM/xCu/ncQTMYLjBO4J6KF87U2/dlXiKHfbi7PrVz
+	MsCkbnmc3HiN2VhhPE7McNA3YyyYd+zuhs+Fk2fe3kx3/y2MBjVIiN7DYyXjDzQ=
+X-Google-Smtp-Source: AGHT+IGk0asjwlSemWFvowI7NtGy4UmJu78/1/m70oxQTRdp4QpvFvbGEmRsvoG/eVeLt+N1ihdayw==
+X-Received: by 2002:a17:902:e848:b0:20c:da66:3875 with SMTP id d9443c01a7336-20e5a78ae60mr31288335ad.24.1729258217464;
+        Fri, 18 Oct 2024 06:30:17 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e5a8fe68asm12410915ad.237.2024.10.18.06.30.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2024 06:30:16 -0700 (PDT)
+Message-ID: <79296353-1fa3-458a-b055-88bc6a772180@kernel.dk>
+Date: Fri, 18 Oct 2024 07:30:15 -0600
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
  <842a76fe-3d6a-4846-83da-bb113634b8bc@kernel.dk>
  <13fe104b-d83b-4d6d-a348-1103d402540d@kernel.dk>
@@ -64,33 +77,33 @@ References: <20241010134613.GDZwfapaZ8AKp0n72C@fat_crate.local>
  <20241017142707.GEZxEeu3YHvnEMmd32@fat_crate.local>
  <a395a18b-3478-45dd-aabd-ccc9d0851318@kernel.dk>
  <20241018115857.GBZxJNgZY-NedtPrxX@fat_crate.local>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241018115857.GBZxJNgZY-NedtPrxX@fat_crate.local>
+ <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 18, 2024 at 01:58:57PM +0200, Borislav Petkov wrote:
-> The next thing that is catching my eye is your simulated NUMA config:
+On 10/18/24 6:49 AM, Borislav Petkov wrote:
+> On Fri, Oct 18, 2024 at 01:58:57PM +0200, Borislav Petkov wrote:
+>> The next thing that is catching my eye is your simulated NUMA config:
+>>
+>> [    1.668943] smp: Brought up 32 nodes, 512 CPUs
+>>
+>> Lemme see if I can repro that here.
 > 
-> [    1.668943] smp: Brought up 32 nodes, 512 CPUs
+> I can do only 4 nodes here:
 > 
-> Lemme see if I can repro that here.
+> [   23.137188] smp: Brought up 4 nodes, 255 CPUs
+> 
+> But that thing boots fine too.
+> 
+> I guess the next thing to try is a two-socket box like yours.
 
-I can do only 4 nodes here:
-
-[   23.137188] smp: Brought up 4 nodes, 255 CPUs
-
-But that thing boots fine too.
-
-I guess the next thing to try is a two-socket box like yours.
+At least on mine, the BIOS has an option that says something like "L3
+cache as numa domain", which is on and why there's 32 nodes on that box.
+It's pretty handy for testing since there's a crap ton of CPUs, as it
+makes affinity handling easier.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jens Axboe
