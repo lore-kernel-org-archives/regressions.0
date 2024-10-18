@@ -1,193 +1,118 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CBF1E260A
-	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 09:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6564D18872A
+	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 09:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729244801; cv=none; b=SNV033L+ar225JFxMaT1hgcPD3pCvxqasZQZKoO66ahjw+zuR64M+fGRxdn0W9m0LDYbiuZN9Vtp5gnrDH0BxrmWkZl0lcdwWawkaXIfAXJU8wz0NcjM5Ax7rcFEXEFTb4Hm6W7pIJqXhG+PpiVyRwGbJN+oBKMG52n3kqL0F40=
+	t=1729244896; cv=none; b=OTMIPgrGqbhwFMM3eK1f2rgy9RBq8iq9Dg8KKWOhRFWNPIc8CSIcGkFR9XUAKiimFfckZrKZLfplE06fYW47XeB9VCT0AZ06g4KCJQxCLD16/3Kk9HRYHjuhKn1AASh5POOjAR4Zrc0Dg6RPA4Fae4ZD/n0+ZurNZQ6faOmzcXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729244801; c=relaxed/simple;
-	bh=6m2GTDhzm2Jxijh2SapGxBueAIsEuqNfj38xyBWeDoQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KP0coQjcOzepIRvepSER0Y4ptwIZ5J+dg+2u8et5EMzPMSbYznduiwJQUg9MLdBiv8oFKTR+aBoHiUhlw+/0CbxnNEL+s2/PgNasFTHn2ua4kc47s03EpgpUf5bTvrtsxgXgutOyT0rh4Wa1PMXQdV2V/Oj4VW8u+gQ8NqTbuTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sEM9Dni0; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1729244896; c=relaxed/simple;
+	bh=BmVeZmCmcwklSJUf1iPn7T5UqzICg/V+X8zVLiMXQTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F3VpR3fRG1bN9/oczMJ6at7NX+VAOtiRsVwOZQycZUCGgpvEveY3f4lhPpwX5gllqvU/lE9X3+Dgn/30kSzhA7Wa/YVhtpiZbNtqU3+xqPgeDPnWBM4PxMozj2dx4FhxQ9Ppbs+2uXLJvWVmuR76mgKRMZWKT/6r0Gx/mzA7U14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HqJB6PPF; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sEM9Dni0"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c937b5169cso2952583a12.1
-        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 02:46:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HqJB6PPF"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5c960af31daso2184487a12.3
+        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 02:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729244798; x=1729849598; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1729244893; x=1729849693; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6qAhYOjYwYnTUgJvVsGGd3RC/MiaDZR+oKlZB5tHMco=;
-        b=sEM9Dni0UGcoxEM6hA9XX9b4Uncf42qh5cFm13LUN1KZaaYD1pBJAQwmKA3nYwn9dZ
-         qDA2H3Pks4doFKi25rdmNJmNgrHsiY4Nq2ZeXLEFu6zClfG5qKEFT2fQzixC6JuK6Omu
-         MTJdN9J9rIlEb/cFQFw94RfjH+mVp+8Vx55nG4Lx9rNKWoX1rIUiZY7OfrTUWHxDd8St
-         dZCy6WtAalWNE8YWaSkPcBr1LIXbwo6OqTNzncJS8spQAk5cWj0t7kL3cKViTwOWYxdm
-         W8pScb3YSDZN6Ozr8UiZnpLdIeSbHFDlWT8+GXPboTkpGct/hz7edXZYX8VsUJCudI0x
-         U0lQ==
+        bh=Soh6jH0z+eTQKtZFMIbLZG9/1ikoWd+mxwUaxhi1Ds4=;
+        b=HqJB6PPFCA8dXiuPpIctlCG2tJFPq97dUuP1x9xiU9XC4uC5JhzAW5u6f7S16T184v
+         mqgPdS5GkkLpw1LtH9VLVrh79bSdXW4Q6fvGXJOaSSpp6g3bwAr/ulhP5QsmFtgEVLcB
+         c2xXwLCxJuzUB3GiaceELgHJlROVRoKTdFc0w+iBk7deaUA8XyksyXgorFboF+YNbo1L
+         LJ680UD+G4xFeEZqKzukO62f6Ne5j5dZIyshlBr/ijAJv86JMN40xQc1BqO6r6k9QPMH
+         pKcLuuXpCRybs6CzAT7XNRXeOx50lVV/F4V4MaMlaIQ1kNMXzCQ4yKzeSeyj7nNXPgUz
+         r6ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729244798; x=1729849598;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6qAhYOjYwYnTUgJvVsGGd3RC/MiaDZR+oKlZB5tHMco=;
-        b=o7VcMIf7aZv8G9ks+PD1L7vKvhctIAnate7WKBkV2kB5ItOvukIJ/JGyof8NUvixWs
-         hwHdSQJhnEONWSB7PDdSM6QC29934r1YTMPfiS4dGekDDqGK0bzY92G5FQz/aWWqQ4Ha
-         BgO2u4B/kBwEZ8PQSg18dB+1aBC3f2RFucsk384gvrNeSI0pW02NtxqvmpefiBDjdJ/m
-         NogSvO2SxbXvIgF413lDDYsdFwmUQHj/O6iTdX+m1sgYP3L5oRcYwqgvPXL8sVkdS1Qz
-         BYX7Ooi9WoENVm/PUGIjluu67o+mgh9y8Iz0+cHO2M55fxl9utWoCbxu7aciYWlXtj7G
-         3oCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQJXfx1hAo09UAK8Z63Jin9PHvoeLj+EbbUwtyIkcSQAvrEDII1Pfg6LTAKXFMp4Bpn1Cm5Kc3zNuE+Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwXa3yBo6C4U/qcBzT7W/3ElCaeErQbainFUt9mqBwLXsKln6hR
-	zXzra5Bp7WgYaiqxwhwKElyHT+kDCkWF8AlZXp4rqtoNktm6f1DYcBw0ifGWYDk=
-X-Google-Smtp-Source: AGHT+IFGBhEqaGJcgl5GIoQ9Q6A2WuElJLkh9++CZInNLyHznA6vWlThz5m+uvCvt8AmZx05e2VKzA==
-X-Received: by 2002:a05:6402:28ca:b0:5c9:46a7:527 with SMTP id 4fb4d7f45d1cf-5ca0b117cacmr1725253a12.17.1729244797647;
-        Fri, 18 Oct 2024 02:46:37 -0700 (PDT)
-Received: from draig.lan ([85.9.250.243])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ca0b0ff6c1sm496118a12.93.2024.10.18.02.46.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 02:46:37 -0700 (PDT)
-Received: from draig (localhost [IPv6:::1])
-	by draig.lan (Postfix) with ESMTP id 063C25F863;
-	Fri, 18 Oct 2024 10:46:35 +0100 (BST)
-From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,  Linux ARM
- <linux-arm-kernel@lists.infradead.org>,  qemu-devel@nongnu.org,
-  lkft-triage@lists.linaro.org,  Linux Regressions
- <regressions@lists.linux.dev>,  Catalin Marinas <catalin.marinas@arm.com>,
-  Mark Brown <broonie@kernel.org>,  Peter Maydell
- <peter.maydell@linaro.org>,  Anders Roxell <anders.roxell@linaro.org>,
-  Arnd Bergmann <arnd@arndb.de>,  Dan Carpenter <dan.carpenter@linaro.org>,
-  Aishwarya TCV <aishwarya.tcv@arm.com>, Richard Henderson
- <richard.henderson@linaro.org>
-Subject: Re: Qemu v9.0.2: Boot failed qemu-arm64 with Linux next-20241017 tag
-In-Reply-To: <CA+G9fYvx05D7TfRjvdPtKM9iWS6i7b-EHuBAbHEQghvMEg221g@mail.gmail.com>
-	(Naresh Kamboju's message of "Fri, 18 Oct 2024 12:56:01 +0530")
-References: <CA+G9fYvx05D7TfRjvdPtKM9iWS6i7b-EHuBAbHEQghvMEg221g@mail.gmail.com>
-User-Agent: mu4e 1.12.6; emacs 29.4
-Date: Fri, 18 Oct 2024 10:46:34 +0100
-Message-ID: <871q0daglh.fsf@draig.linaro.org>
+        d=1e100.net; s=20230601; t=1729244893; x=1729849693;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Soh6jH0z+eTQKtZFMIbLZG9/1ikoWd+mxwUaxhi1Ds4=;
+        b=fsCh4WJQvMsOrw6lFE2MRjdHKeUz9ROtktCynzsfiJHwlaLPJUpy+48LpOoZGgqSSO
+         XVi4OES/OQ1yFNdmOPYfSufHaJD0cMKY+o+ZS320J6n4j8dXM9hH9j1I+ftnBahm8fzp
+         CTc2yoGzFEwCIHz/Yw2p5fRnUeICl7wAVqkHx9YXlGM+mfscZ+CLSqTBX+uUh9TFlyNN
+         LjK+Cfn8VGn1WesQ72E1NE89OC7ZO0b9PYrGKf0nVRgF97fcTCdzTWIrluTBfJ4vntIn
+         gyomEjFWygpa7TW1lU4wOCkK8miJOOqDVn8P0NEGS8B1LBjgSdYLwLyP+NomRzNOQ2Bh
+         SApg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhYahHwjRwWN04VgwyoicCi57pP+ys2hyEqKau1whtZ4YUDRYuXL/qc4n+YYHXItwXAj5ZpP4Qv8yxhw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZkwhft8sfBhTV1nEUY/SLbO4slLgKmhet7umh2z8+m/bx84x+
+	t7EF6/N0KW/W8m9KvYgRw2Aq3p3w9IyrlPjCXfk6eCYMFqZHqeyT5QQ/t1s10QcT1Y8yjQbFwlo
+	SW13L7reJ63/r7Ca4UYHKaVnlsyk7iOfJ28NLFg==
+X-Google-Smtp-Source: AGHT+IGwkBnt8S54HV5wpTluVRczh/eHb/pg8v+8S1HtQBQwTQ9hgVMWZh3zivyvuxuChXefK071wuCB0YFmrafJ2jY=
+X-Received: by 2002:a05:6402:40d4:b0:5c9:3389:bdc3 with SMTP id
+ 4fb4d7f45d1cf-5ca0abe8729mr1177178a12.0.1729244892751; Fri, 18 Oct 2024
+ 02:48:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CA+G9fYvx05D7TfRjvdPtKM9iWS6i7b-EHuBAbHEQghvMEg221g@mail.gmail.com>
+ <871q0daglh.fsf@draig.linaro.org>
+In-Reply-To: <871q0daglh.fsf@draig.linaro.org>
+From: Peter Maydell <peter.maydell@linaro.org>
+Date: Fri, 18 Oct 2024 10:48:02 +0100
+Message-ID: <CAFEAcA-39GRpvy5LOZSJL3=9FMspAq9c8GUtHv9CP4jU2uFi1w@mail.gmail.com>
+Subject: Re: Qemu v9.0.2: Boot failed qemu-arm64 with Linux next-20241017 tag
+To: =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, qemu-devel@nongnu.org, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Aishwarya TCV <aishwarya.tcv@arm.com>, 
+	Richard Henderson <richard.henderson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Naresh Kamboju <naresh.kamboju@linaro.org> writes:
-
-> The QEMU-arm64 boot has failed with the Linux next-20241017 tag.
-> The boot log is incomplete, and no kernel crash was detected.
-> However, the system did not proceed far enough to reach the login prompt.
+On Fri, 18 Oct 2024 at 10:46, Alex Benn=C3=A9e <alex.bennee@linaro.org> wro=
+te:
 >
-> Please find the incomplete boot log links below for your reference.
-> The Qemu version is 9.0.2.
-> The arm64 devices boot pass.
-
-Can confirm it also fails on the current master of QEMU:
-
-  #0  __pthread_kill_implementation (threadid=3D<optimized out>, signo=3Dsi=
-gno@entry=3D6, no_tid=3Dno_tid@entry=3D0) at ./nptl/pthread_kill.c:44
-  #1  0x00007ffff4a3ae9f in __pthread_kill_internal (signo=3D6, threadid=3D=
-<optimized out>) at ./nptl/pthread_kill.c:78
-  #2  0x00007ffff49ebfb2 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdeps/=
-posix/raise.c:26
-  #3  0x00007ffff49d6472 in __GI_abort () at ./stdlib/abort.c:79
-  #4  0x00007ffff6e47ec8 in  () at /lib/x86_64-linux-gnu/libglib-2.0.so.0
-  #5  0x00007ffff6ea7e1a in g_assertion_message_expr () at /lib/x86_64-linu=
-x-gnu/libglib-2.0.so.0
-  #6  0x0000555555f45732 in regime_is_user (env=3D0x555557f805f0, mmu_idx=
+> Naresh Kamboju <naresh.kamboju@linaro.org> writes:
+>
+> > The QEMU-arm64 boot has failed with the Linux next-20241017 tag.
+> > The boot log is incomplete, and no kernel crash was detected.
+> > However, the system did not proceed far enough to reach the login promp=
+t.
+> >
+> > Please find the incomplete boot log links below for your reference.
+> > The Qemu version is 9.0.2.
+> > The arm64 devices boot pass.
+>
+> Can confirm it also fails on the current master of QEMU:
+>
+>   #0  __pthread_kill_implementation (threadid=3D<optimized out>, signo=3D=
+signo@entry=3D6, no_tid=3Dno_tid@entry=3D0) at ./nptl/pthread_kill.c:44
+>   #1  0x00007ffff4a3ae9f in __pthread_kill_internal (signo=3D6, threadid=
+=3D<optimized out>) at ./nptl/pthread_kill.c:78
+>   #2  0x00007ffff49ebfb2 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdep=
+s/posix/raise.c:26
+>   #3  0x00007ffff49d6472 in __GI_abort () at ./stdlib/abort.c:79
+>   #4  0x00007ffff6e47ec8 in  () at /lib/x86_64-linux-gnu/libglib-2.0.so.0
+>   #5  0x00007ffff6ea7e1a in g_assertion_message_expr () at /lib/x86_64-li=
+nux-gnu/libglib-2.0.so.0
+>   #6  0x0000555555f45732 in regime_is_user (env=3D0x555557f805f0, mmu_idx=
 =3DARMMMUIdx_E10_0) at ../../target/arm/internals.h:978
-  #7  0x0000555555f5b0f1 in aa64_va_parameters (env=3D0x555557f805f0, va=3D=
-18446744073709551615, mmu_idx=3DARMMMUIdx_E10_0, data=3Dtrue, el1_is_aa32=
-=3Dfalse)
-      at ../../target/arm/helper.c:12048
-  #8  0x0000555555f4e3e5 in tlbi_aa64_get_range (env=3D0x555557f805f0, mmui=
-dx=3DARMMMUIdx_E10_0, value=3D107271103184929) at ../../target/arm/helper.c=
-:5214
-  #9  0x0000555555f4e5a4 in do_rvae_write (env=3D0x555557f805f0, value=3D10=
-7271103184929, idxmap=3D21, synced=3Dtrue) at ../../target/arm/helper.c:5260
-  #10 0x0000555555f4e6d9 in tlbi_aa64_rvae1is_write (env=3D0x555557f805f0, =
-ri=3D0x555557ffda90, value=3D107271103184929) at ../../target/arm/helper.c:=
-5302
-  #11 0x00005555560553c8 in helper_set_cp_reg64 (env=3D0x555557f805f0, rip=
-=3D0x555557ffda90, value=3D107271103184929) at ../../target/arm/tcg/op_help=
-er.c:965
-  #12 0x00007fff60fc3939 in code_gen_buffer ()
+>   #7  0x0000555555f5b0f1 in aa64_va_parameters (env=3D0x555557f805f0, va=
+=3D18446744073709551615, mmu_idx=3DARMMMUIdx_E10_0, data=3Dtrue, el1_is_aa3=
+2=3Dfalse)
+>       at ../../target/arm/helper.c:12048
+>   #8  0x0000555555f4e3e5 in tlbi_aa64_get_range (env=3D0x555557f805f0, mm=
+uidx=3DARMMMUIdx_E10_0, value=3D107271103184929) at ../../target/arm/helper=
+.c:5214
 
-while with:
+I investigated this yesterday when Catalin reported it
+and sent a patch:
+https://patchew.org/QEMU/20241017172331.822587-1-peter.maydell@linaro.org/
 
-./qemu-system-aarch64 \
-                  -machine type=3Dvirt,virtualization=3Don,gic-version=3D3,=
-mte=3Don \
-                  -cpu max,pauth-impdef=3Don \
-                  -smp 4 \
-                  -accel tcg \
-                  -serial mon:stdio \
-                  -m 8192 \
-                  -kernel /home/alex/lsrc/qemu.git/builds/all/Image -append=
- "root=3D/dev/sda2 console=3DttyAMA0  kvm-arm.mode=3Dprotected earlycon" \
-                  -display none
-
-Specifically kvm-arm.mode=3Dprotected has to be on.
-
-With more detail I can see:
-
-(gdb) p/x value
-$1 =3D 0x619000000021
-(gdb) p *ri
-$2 =3D {name =3D 0x555557ffdb28 "TLBI_RVAALE1IS", cp =3D 19 '\023', crn =3D=
- 8 '\b', crm =3D 2 '\002', opc0 =3D 1 '\001', opc1 =3D 0 '\000', opc2 =3D 7=
- '\a',=20
-  state =3D ARM_CP_STATE_AA64, type =3D 1024, access =3D PL1_W, secure =3D =
-ARM_CP_SECSTATE_NS, fgt =3D FGT_TLBIRVAALE1IS, nv2_redirect_offset =3D 0, o=
-paque =3D 0x0,=20
-  resetvalue =3D 0, fieldoffset =3D 0, bank_fieldoffsets =3D {0, 0}, access=
-fn =3D 0x555555f46703 <access_ttlbis>, readfn =3D 0x0,=20
-  writefn =3D 0x555555f4e6a2 <tlbi_aa64_rvae1is_write>, raw_readfn =3D 0x0,=
- raw_writefn =3D 0x0, resetfn =3D 0x0, orig_readfn =3D 0x0, orig_writefn =
-=3D 0x0,=20
-  orig_accessfn =3D 0x0}
-
-It seems the asset fires because:
-
-    case ARMMMUIdx_E10_0:
-    case ARMMMUIdx_E10_1:
-    case ARMMMUIdx_E10_1_PAN:
-        g_assert_not_reached();
-
-But the function:
-
-static int vae1_tlbmask(CPUARMState *env)
-{
-    uint64_t hcr =3D arm_hcr_el2_eff(env);
-    uint16_t mask;
-
-    if ((hcr & (HCR_E2H | HCR_TGE)) =3D=3D (HCR_E2H | HCR_TGE)) {
-        mask =3D ARMMMUIdxBit_E20_2 |
-               ARMMMUIdxBit_E20_2_PAN |
-               ARMMMUIdxBit_E20_0;
-    } else {
-        mask =3D ARMMMUIdxBit_E10_1 |
-               ARMMMUIdxBit_E10_1_PAN |
-               ARMMMUIdxBit_E10_0;
-    }
-    return mask;
-}
-
-returns that while handling tlbi_aa64_rvae1is_write(). I don't have an
-Arm ARM handy with me in the airport. Peter/Richard can you check what
-the logic should be and if this is a QEMU bug or the kernel doing
-something it shouldn't?
-
---=20
-Alex Benn=C3=A9e
-Virtualisation Tech Lead @ Linaro
+thanks
+-- PMM
