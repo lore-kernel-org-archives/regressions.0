@@ -1,61 +1,43 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89EC2036F0
-	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 17:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300042022D5;
+	Fri, 18 Oct 2024 17:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729274187; cv=none; b=JLCOATwvhEsmrhBopw+oW7FzEHUwAIWW281xNNNZupLTY6vJDw9zN9I6FcA/lHXrMjYFSyJX+uyJiVTjUpkef2lqhQC2qUgy8pwZflqRQ4rjclnUL4wFgfpO53DuraxY+V+NCbONTf+P/VT/2Lxg7U9n2Gl1muiuF747HjjKpn8=
+	t=1729274375; cv=none; b=hhRug5zqIOSfdSzno1jmWXbVcqsP4l22WsuWzmX4JOcG4a0/YMYbUiyY8M03bmafF2muMElh7IT0DCL+ih+k39m1x4XCnV+zLVL7Ca6lrM4o6rXF5eMPfcPjbVg0YpzVO6Sg2ZfJfsZktAt1ZfzDB7Cl+mEGAUZfRLv+rTkoXW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729274187; c=relaxed/simple;
-	bh=QhD/7r8l7iwvMbHe2wjuvHhxh2VgGg4YYE0L+/lVSx4=;
+	s=arc-20240116; t=1729274375; c=relaxed/simple;
+	bh=r9j7j25oHOBzRT6hWz/hG0iwhrLF5+gF3nWX+EiB48U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dyF7Fsw4Jry1bltiHH6PhjeWb1N1Cr/YGbfIKYylNpFmyvnIWksUlLV4P/YmQYksxtxmNdXHaK438oVKYhOYvRyRWpBbiw94pIUt/wivoUc/xUYLB0xXFJz/CGp1g9aJ6bneBTJsUEoZyowdElR4QH5dRaFAiK25/5+27U8iOeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eiztQ5sz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=JsyIfsM7f5RwRva7ZDowt5AUuIi0HqyHQXh5Tjpmbi4pX45alT8eW4GGGCzR2ELwdQeD6AWqOlKq6+0jHEeCVrNAYyPXS3VrQxTAGgT5S4VNw95btJq7GZ/G5elskvYCm8YJ9Bd/E6y4319ebSZhMGBx3X8lXdEOdnwjBmdqJXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=WYT6y7qJ; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eiztQ5sz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id ACE3D40E0263;
-	Fri, 18 Oct 2024 17:56:22 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kFqjZou3_eXn; Fri, 18 Oct 2024 17:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729274178; bh=6ZV6gi9VAspZmL8nzAKN7l1ondmW9GIJD0Llxbs1Ork=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eiztQ5szKU/1YZAg1sFwSL/Xgfi8E3Tqs3k3GaFZFY0wjB1HiMo7UfDAoEWw0vZOA
-	 JD9458T1Jl+DceRwdKDrMvr+dhLfcd1pYmaLQOAx0GtTlmlSTnnojNPx/s7wdY6uoD
-	 XLoWNid8pExgO8NdCJJGdg6toy4EavlHirkg9CM3eEKwxPPqNW2uwpUYGAVYdmtpke
-	 8zEIuYJFuOuL25EK/PQxXnYxdDHDMPjTIZVVMRJGbIWmXPv43gkYa+SAorztDgF5m3
-	 P38g4Ef1Atq4xp52StLWL6CBkHeKcu62eGPGM+upsnFJRd8/Si3Sh1bmBcTFjLxW1W
-	 iMlbj0smlBra/tO4vsem3PMaQbuFq7l4EySqKffSaFteMqpzfw9x7FCUUWXar9N24W
-	 xyKG+bKlhCvVNTFBRyPzdcdC1ngCCediQj3cFeVGdS6WYwiP8dh+fvcoubNhqPspa5
-	 bNuWR06GhaqerVIAKtmz1tO05dn9V6Y8IePzvQ6zKy+eBv1GmqNkOX1xFBNQ25GXne
-	 6clb6MloxkCeMUjjedje1EldosWo7EinWKHQoXjWb6MgMyfhd3e+H3QPejMHqNqx3R
-	 JtKJTXv/XjThQBLPGX6dCIku0vV4DPIQctonEjXD1LbTS5jJ8NPGVTJaOg+376fyaY
-	 zLqW+hyIgO1DX78JRLe6I+pw=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6063840E0163;
-	Fri, 18 Oct 2024 17:56:13 +0000 (UTC)
-Date: Fri, 18 Oct 2024 19:56:06 +0200
-From: Borislav Petkov <bp@alien8.de>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="WYT6y7qJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=7Oqc+vBn3lxQjaQqKVwQ/VCImNzHkqEeRjsxwIHFjLI=; b=WYT6y7qJGSHlTmNy
+	AytG0Gr8oiYLp9cR9LyclAGUyiVVMu5dGTTXG4tLqqMRMwQdYu5rzhT6hsQppzWcWZJfBpsc8FcUo
+	bfHTWPQEa/21Pe3+iig6n0ospcZTpbYmVlbzEHMF7nrldCGXNTXu6DL3cq8ARRpHpDnXOgAhMWYkk
+	1IJc4GWelZL/fLc9p5TCBwshfZT/Lb5SOJy+sgQA1rIaX2FtP1dJvTWoHwjbcYB7/bd0Jj0AEriTh
+	mhqN1Egy7LOVb4KIVi4IsYRHUd5ENld3wUgdRE7k/DG78/JVV3ZeNGx59/kEZYMhF6AjQF6j03hn9
+	/H9A68vclspJcqAnxg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1t1rG0-00CBue-1B;
+	Fri, 18 Oct 2024 17:59:24 +0000
+Date: Fri, 18 Oct 2024 17:59:24 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
 	the arch/x86 maintainers <x86@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
-References: <3400cf0b-85ca-4ec2-a8a0-c9d75889d573@kernel.dk>
- <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
+Message-ID: <ZxKh_AWoRLgafKyC@gallifrey>
+References: <20241017141314.GDZxEbenNT6XF4jIaA@fat_crate.local>
  <4d4bf52a-dd91-48ad-8949-198b2ffbc9da@kernel.dk>
  <20241017142707.GEZxEeu3YHvnEMmd32@fat_crate.local>
  <a395a18b-3478-45dd-aabd-ccc9d0851318@kernel.dk>
@@ -63,30 +45,57 @@ References: <3400cf0b-85ca-4ec2-a8a0-c9d75889d573@kernel.dk>
  <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
  <79296353-1fa3-458a-b055-88bc6a772180@kernel.dk>
  <20241018155143.GIZxKED9YcF0Jg1CWZ@fat_crate.local>
- <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
+ <ZxKQux4I8We0Ax3-@gallifrey>
+ <aaf25389-e0c3-408a-ae05-a166c1720bf8@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
+In-Reply-To: <aaf25389-e0c3-408a-ae05-a166c1720bf8@kernel.dk>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 17:59:10 up 163 days,  5:13,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Fri, Oct 18, 2024 at 10:48:19AM -0600, Jens Axboe wrote:
-> Funky... Not sure I'll have time to get a serial console on this
-> thing before next week.
+* Jens Axboe (axboe@kernel.dk) wrote:
+> On 10/18/24 10:45 AM, Dr. David Alan Gilbert wrote:
+> > * Borislav Petkov (bp@alien8.de) wrote:
+> >> On Fri, Oct 18, 2024 at 07:30:15AM -0600, Jens Axboe wrote:
+> >>> At least on mine, the BIOS has an option that says something like "L3
+> >>> cache as numa domain", which is on and why there's 32 nodes on that box.
+> >>> It's pretty handy for testing since there's a crap ton of CPUs, as it
+> >>> makes affinity handling easier.
+> >>
+> >> Right, so two boxes I tested with this:
+> >>
+> >> * 2 socket, a bit different microcode:
+> >>
+> >> [   22.947525] smp: Brought up 32 nodes, 512 CPUs
+> >>
+> >> * your CPU, one socket:
+> >>
+> >> [   26.830137] smp: Brought up 16 nodes, 255 CPUs
+> > 
+> > (Probably unrelated but...)
+> > What happened to number 256 ?
+> 
+> Quick guess, maybe iommu was off, will cap it to 255. IIRC...
 
-That would be much appreciated.
+Ah OK.
 
-> Like I mentioned before -rc1, maybe we revert this change and I'll be happy
-> to test patches as time permits?
+Dave
 
-That's my plan if we can't resolve it until -rc6-ish or so.
-
+> -- 
+> Jens Axboe
+> 
+> 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
