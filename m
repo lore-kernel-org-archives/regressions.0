@@ -1,74 +1,93 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956FB18CC1C
-	for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 23:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5291910E3;
+	Sat, 19 Oct 2024 00:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729293330; cv=none; b=d9b5oOw6b6QJIl2yyC3mMeW4QP/8HCnZQMwzBLsZNjq24eRaDv+PSLbsjsUkNwnbLKLAdzdCiUKj0AcUussuMUYppoHPCC9S4vnHh0h6nohMnG4IoBOXbERFAtmsgKnmz04JdfWwMdWrYGIZWiAh/kGRZtjkzWuQJQ9fn6aAeII=
+	t=1729296172; cv=none; b=blY6SHvss+ztp7VOuiqVePISF0Fhod5fb5borVL38/QBYuuzSxDS8fxv4vsVlqsnnLZr01Py+DzSbQGUDCHq+V6jWJ+LG9yKCJHojcvySDVpbJTe+unUamOp0N+/8BZLbE2qJxeORczCUG9tcpozX4XRG77mEaRkYYN3ZYlAl0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729293330; c=relaxed/simple;
-	bh=WmM4mn1uG+W/QaiKQsfsqfIu6rhTJ+JkhO0oc8Vsrjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nx6FYa+7eARzlG7Dpvi5TdqUyRL9YwYyaOm49MsjRfLJOTeldIK67aBe7sIITygCSSnU2JCkDyIT3H/S/HEX+XGuF6eoG+dVPrPXXpTOSfPKKo0hb+DObyna2mgdARepxmlGlVMoY0HBT6qbzheZAXAulbdf3IVxLr/TNvzitbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu; spf=pass smtp.mailfrom=utexas.edu; dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b=c2YWeDPD; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=utexas.edu
+	s=arc-20240116; t=1729296172; c=relaxed/simple;
+	bh=zQ+4NLTXiWKgZ/nDVrxLyHaxZSjKfudr9cZDkowAlks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNFAjhgHvViIyfxobD9QftM18V5TpOHdc6jEWV6c5u3ag6hbdemFOwBZO0HEGg4yXnVTEFEnMv16DHknEPlvTCbIQX9mFuc6iPyOBGFssXrPt/Xu60iVqvavnRNGwZyycSt7AihAAT6SYDk2CrfFh6D56WK4C9L1RKnfuXDpVS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=BFPlCMV3; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b="c2YWeDPD"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e93d551a3so1787814b3a.1
-        for <regressions@lists.linux.dev>; Fri, 18 Oct 2024 16:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=utexas.edu; s=google; t=1729293328; x=1729898128; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WmM4mn1uG+W/QaiKQsfsqfIu6rhTJ+JkhO0oc8Vsrjg=;
-        b=c2YWeDPDjD+tCWdVWQ4DV8xXNl5lxxqlNAS+qdYnLw6b27UNext+70+ikLkzY76Y22
-         Ww8v8LgXgD03Sxb5sCvbqgU4B+9buG8Hp8BgCEsMHli+yjrY+JflYaFCFS8MUz3LGLZK
-         raLY1BhL8ylwXSm2XE7eoknbSHFjiii2EBvU+6qYvyeIRTC+3nww8A7iTF6qYBsxoVD1
-         jMlpjTuZZP7SjyJrvDFxZ047ICE4+Onl/n76zW+StaFIj1Zw8xggTuLp/XPqJxYOrcHC
-         ZnOcAWpai6Tc0BB/5XNatN591vabbakfqXfe1pUHhqRUmjw4wURm88lQNkmEsL+NWXsp
-         VJIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729293328; x=1729898128;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WmM4mn1uG+W/QaiKQsfsqfIu6rhTJ+JkhO0oc8Vsrjg=;
-        b=BKbHnEj+rasXnsSag5E9WoD03/mzWMnd+DL5QQQb5Rf1yCuMreDSvUiPWUY5HAo+8K
-         /Do1NJkfOkBVc/D9HuGmQaPifwE2VbulQmFiZS0z6SMD66GYUDcVYqLzrcUn7yF3KsLM
-         4vhQLYWHOQa0ddA3MOJmy0aQQTO4R+pnQ71LvHyPk0YWCv8ZAWAbJFwy0uUr6SkpPP2Z
-         fOxFaSO4Dp0PDs7l+OVU0ZxzhbGA8ny7uHq65XqnTo6fUmYPD1hT1SNTJ34tMkJsL3WU
-         w+7n/NDLNRgfmyrbU0cumbjPuSm1x1tyz5nNqLLbONbKrVU1HAfStZikb1W7sJJOg2/s
-         HF8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW3kOA5RN9hCozkvM9jvQEZdFAuPPLk/BXhtPp2GGaetLArkS1R4he0RDi3y3Tr9xkjPJarjD9KnmZxkQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyMXhCBduulWLRCsL0M7p3Qv3EaZSALUV/vEA6gzScaeGf5jCyF
-	FttHiRqyWmpS9zFt8G3m6qSvK4koMfB6uM7ov2cpGHpIzX4j/jAnq/xdN5upqXyO/Rc5D0fK6KO
-	1dB1JwNB55JjEhPClReobO5J2rcy4XjP6nd5vbg==
-X-Google-Smtp-Source: AGHT+IHy0LHp2WpuZYGexp0T+Ju3IBaRu7XGQRgALvxfryYO/CTNmMzVsBhM8KF5jWh1WNbD0P1cW0f5eHkYYwt+r6U=
-X-Received: by 2002:a05:6a00:3c8d:b0:71e:e3:608 with SMTP id
- d2e1a72fcca58-71ea3224f36mr5582634b3a.26.1729293327633; Fri, 18 Oct 2024
- 16:15:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="BFPlCMV3"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id 2256214C1E1;
+	Sat, 19 Oct 2024 02:02:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1729296170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vjRz2hW4KWqMX7pE51x2ikoQlF/URcxYPhc+lRqtmkk=;
+	b=BFPlCMV3WlBta+YU4UrvafuzpLBzOnwmnvDmL0SUz5VrxUzNzyvZm8sRiIAn8LreNHT2NX
+	wXREzhFcFsvQ+gX49xsDHwylyjTkchy76l2iVmqbxQMmqMxx5aAfch+koDJvJatcKM/bta
+	U32bK8z+n0Px+5u7QfWRfWB7NBe26Kclhqa+xP9dagKeaV1v3F32J4YlYh4/g5funViVa3
+	tFmTU6X35o1R8ca2Agg70dvSV00mbS0HtdpB2v/yCBae9GyguAcoOuLuLfjms5OgH08MM2
+	GT3Y38oHmNUkk/bC3qBsbNAospKDKmBx1tnWL/yA2vcM9QO49XgWqyjEMNJLoA==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id cc7b0353;
+	Sat, 19 Oct 2024 00:02:45 +0000 (UTC)
+Date: Sat, 19 Oct 2024 09:02:30 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, Jason Gunthorpe <jgg@nvidia.com>,
+	Pedro Falcato <pedro.falcato@gmail.com>
+Subject: Re: [PATCH] 9p: Avoid creating multiple slab caches with the same
+ name
+Message-ID: <ZxL3FsmjGrTT_EV9@codewreck.org>
+References: <20240807094725.2193423-1-pedro.falcato@gmail.com>
+ <20241018172804.GA2151929@nvidia.com>
+ <CAKbZUD0Z_Kyumx3ourywUYhfksGNgJWrCpjAdnxtsbwS4vMRkA@mail.gmail.com>
+ <1cb07628-269c-4d6c-9936-f3a2b233165f@leemhuis.info>
+ <b6852c2d-3371-47a4-bfeb-049f4048e88a@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
- <2024101613-giggling-ceremony-aae7@gregkh> <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
- <87bjzktncb.wl-tiwai@suse.de> <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
- <87cyjzrutw.wl-tiwai@suse.de>
-In-Reply-To: <87cyjzrutw.wl-tiwai@suse.de>
-From: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Date: Fri, 18 Oct 2024 18:14:51 -0500
-Message-ID: <CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-To: Takashi Iwai <tiwai@suse.de>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Linux Sound System <linux-sound@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b6852c2d-3371-47a4-bfeb-049f4048e88a@suse.cz>
 
-I tried the patch on the Thinkpad X1 Carbon Gen 12 but it didn't work.
-There is still no sound from the speakers.
+Vlastimil Babka wrote on Fri, Oct 18, 2024 at 11:38:04PM +0200:
+> > In that case: Linus, given the circumstances I wonder if it would be
+> > best if you could merge the patch at the start of this thread
+> > (https://lore.kernel.org/all/20240807094725.2193423-1-pedro.falcato@gmail.com/
+> > ) directly, which can also be found as 79efebae4afc22 in -next if you
+> > prefer to cherry-pick it from there  Either now or after 24 to 36 hours,
+> > which would give Eric a chance to ACK/NACK this if he sees this mail.
+
+Sorry to everyone involved, I've just sent the merge request - I wasn't
+much at computer in the past few weeks so wanted to wait until I got
+back home to send it just in case, as I didn't realize this was a recent
+regression that caused actual harm (it sounded like an old warning that
+someone just recently happened to hit, and sounded easy enough to work
+around locally if there is only one specific setup involved); I should
+have sent the fix separately or at least corrected myself about the
+schedule.
+
+> >>> It is causing regressions in my environment
+> >>> #regzbot introduced: 4c39529663b9
+> > 
+> > If anyone wonders, that is 4c39529663b931 ("slab: Warn on duplicate
+> > cache names when DEBUG_VM=y") [v6.12-rc1]. That's also why I'm CCing
+> > Vlastimil, so he knows about this.
+
+(that might have been nice to have as a Fixes tag for eventual backport,
+but at least that commit doesn't appear to have been picked up by stable
+so it's probably fine as is)
+
+
+Thanks,
+-- 
+Dominique Martinet | Asmadeus
