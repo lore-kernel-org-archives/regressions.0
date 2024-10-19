@@ -1,132 +1,103 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988CC1D7E50
-	for <regressions@lists.linux.dev>; Sat, 19 Oct 2024 08:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE9F18D64B
+	for <regressions@lists.linux.dev>; Sat, 19 Oct 2024 09:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729325484; cv=none; b=ZaIoZn0fG/9ADkE73hXbsO+W7w+SL8Hh8V1fObwkhiVd92CD7Xa6FOjq/X4GEE8hA8BY61X4TFss+CAGS6g9tD17zWJ/t792iAYIhqrA+XZsFEPudyEIIfQZyVzC64JMWmSyxfUgla5QIlkwqCz8YUq7KZm1IdWI92J/MIC0VI8=
+	t=1729330689; cv=none; b=ryZke6t+FpYesrNxlF44sr/A4zhEZfqgkQi30MH0nnXkFn+ea0HMOQsdo7YC3XtOnoD/3jj7Fc8FVKXBo0IhB8l4P+0PcIJw+IQv29Jgd/Ln2U4mH3LCVWUsR6gpzWRJ/X3tmwIrrKszTB+Y0KbgubhOD7ackKMv6tiDDm9FQZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729325484; c=relaxed/simple;
-	bh=8UaTpEhJ/rCVYu4A0emweyKxs/iGBdOE6nwoE22Y9jE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DrkD2S5vAWctiN034kTJk8Sw/iQHS9TLc20srBuS8ysBEeFJn+LC0IwCkLWUvnKOhqTdgyu4BYRo4Kydey+oCbKlGdMTBU1RcJeH5rjPXcTha4tWFUD8goho1Pl9p4Uo2NlKGPIIa97+uHS2vyYn2WGmv1vGljYje7kzpOOTU/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z6CJ9pt7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Bfd8sMUK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z6CJ9pt7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Bfd8sMUK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1729330689; c=relaxed/simple;
+	bh=btOIK6BW4ZSD7aZbDWOXl+acqUZcsUrPSQbX3xN77no=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nypjE5+92C1YiGitZ9XLyXaA0b5qgw+5aAF+QGNg5oLNpa4mqNg2sfUo/+/ix5Rph+HsC3pFpyGC0zRQIncd1uotbd49Pw4PvpSTuuiP2m19rAoOCQttDO1xhNKhzhHlJqjDxJCaAj21ievSit0fRmzxaK8z7sv66dA+AVch/08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=he4Z4e66; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z6CJ9pt7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Bfd8sMUK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z6CJ9pt7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Bfd8sMUK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="he4Z4e66"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A662340E0184;
+	Sat, 19 Oct 2024 09:38:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0taFJ5S5lekY; Sat, 19 Oct 2024 09:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1729330680; bh=zj5x/ZdpUa5xEw0W8A3OpnrWRP+ZZI9YL8gGOweZabk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=he4Z4e66cghDbFdurahh4t6usDZ1jxdc+BF1PlklB36TGyufJrK863Scusx7bAb9I
+	 Pv9ZSYxNdyONEp5+qfB1xUnxyzezNUh2S/+QGpPPcTh6XPh5JNL2BxB95fH0tvCdLD
+	 3mC34bqjUTZqDZxjTQ88VyGxafh321dXGbFXNi9j+bm84H+WtM1hJJemz+R9KXtoDy
+	 VTctDJiSfPL4VQ0UDkfs4Zeh+X9mzkrQHlfIRWCNcrlczHAkiql5oIedCWLkpTpm78
+	 IYVXh+RbqHfzFNRhnvo7cK5TyMW5Z6N75rdCfFz4EY1VAYGjAppI2zv8C79Eg4YScl
+	 Mxy2Rm63jRliYRB4M98vjomx0xhDSAoq+4/4uDMOJ0/EZw95EYz1yV3qJHfznTqvaW
+	 HHa8JKL9iBtyk8qoETY7a6XFe8LU4iwKMlEw+qH5Tw1NgC1zQoH2aJTaF4ZhxZDmeY
+	 irufepTZIzuXBOTvqQ66ZqjLFV8LpfWZyiXBBUygerdYuRJz5c9TWH88vO3GHDdAYE
+	 EAqNof/f2yWYMNRYmmd0YKPyq4B2taQO6Ha+nY4ZiYfB1CPAOAxeWt2e/i+xbOwr1P
+	 N/iSXf5Wv4xtH/CppWKEM4uNcBokgswn3mnk2JbynHDcIEFxQAlkOpsew/4+k7GnxJ
+	 sSv9MJHBPLPgamY+piMzDQp4=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AB7DF21188;
-	Sat, 19 Oct 2024 08:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729325480; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OcoP3O0dBDHJmfObICRJD4oUzvL81XtohfbJf8cTKhY=;
-	b=z6CJ9pt7SQFpl9DHfgSZ2CbLJf+n6HrwVZCL+cGGEA8dSkIunn5A1omgOhGvsvbEeOALTr
-	AcPWf96S1yy8Xats5qO2tz/e3XYj3dNsuzn9/pnRtp7RsyAAPEblDUauUTbNevr8PIOu0l
-	RdsZK9525HczFLmzsCaFdkRUme1D2c0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729325480;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OcoP3O0dBDHJmfObICRJD4oUzvL81XtohfbJf8cTKhY=;
-	b=Bfd8sMUKYtsArRbW87YeL4DPJIAbPI6eIdkds/WkXdFVt5TCw3aBh2LoWZaBODyd69z4Au
-	ku7mgCjOmTzq5+Aw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729325480; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OcoP3O0dBDHJmfObICRJD4oUzvL81XtohfbJf8cTKhY=;
-	b=z6CJ9pt7SQFpl9DHfgSZ2CbLJf+n6HrwVZCL+cGGEA8dSkIunn5A1omgOhGvsvbEeOALTr
-	AcPWf96S1yy8Xats5qO2tz/e3XYj3dNsuzn9/pnRtp7RsyAAPEblDUauUTbNevr8PIOu0l
-	RdsZK9525HczFLmzsCaFdkRUme1D2c0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729325480;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OcoP3O0dBDHJmfObICRJD4oUzvL81XtohfbJf8cTKhY=;
-	b=Bfd8sMUKYtsArRbW87YeL4DPJIAbPI6eIdkds/WkXdFVt5TCw3aBh2LoWZaBODyd69z4Au
-	ku7mgCjOmTzq5+Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 73F7913736;
-	Sat, 19 Oct 2024 08:11:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id m3MXG6hpE2d/OwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sat, 19 Oct 2024 08:11:20 +0000
-Date: Sat, 19 Oct 2024 10:12:20 +0200
-Message-ID: <87ttd8jyu3.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Linux Sound System <linux-sound@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-In-Reply-To: <CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
-	<2024101613-giggling-ceremony-aae7@gregkh>
-	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-	<87bjzktncb.wl-tiwai@suse.de>
-	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-	<87cyjzrutw.wl-tiwai@suse.de>
-	<CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7A84C40E0169;
+	Sat, 19 Oct 2024 09:37:55 +0000 (UTC)
+Date: Sat, 19 Oct 2024 11:37:48 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	the arch/x86 maintainers <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: AMD zen microcode updates breaks boot
+Message-ID: <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
+References: <20241017142707.GEZxEeu3YHvnEMmd32@fat_crate.local>
+ <a395a18b-3478-45dd-aabd-ccc9d0851318@kernel.dk>
+ <20241018115857.GBZxJNgZY-NedtPrxX@fat_crate.local>
+ <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
+ <79296353-1fa3-458a-b055-88bc6a772180@kernel.dk>
+ <20241018155143.GIZxKED9YcF0Jg1CWZ@fat_crate.local>
+ <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
+ <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
+ <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
+ <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.988];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
 
-On Sat, 19 Oct 2024 01:14:51 +0200,
-Dean Matthew Menezes wrote:
+On Fri, Oct 18, 2024 at 05:01:18PM -0600, Jens Axboe wrote:
+> I took time out of "would otherwise have had a beer" time on a Friday
+
+No worries, next time we meet at a conference, I'm buying! :-)
+
+> which appears to be here:
 > 
-> I tried the patch on the Thinkpad X1 Carbon Gen 12 but it didn't work.
-> There is still no sound from the speakers.
+> (gdb) l *load_microcode_amd+0x334
+> 0xffffffff810914a4 is in load_microcode_amd (arch/x86/kernel/cpu/microcode/amd.c:971).
 
-Please give again alsa-info.sh output with the patch.
+Ok, first things first, this line 971 points to the code *without* my big
+debugging patch. Is that correct?
 
+With my patch that line should be 999 because of the debugging output and
+other changes.
 
-Takashi
+Because if so, please run with it because it has a fix for the patch matching
+steppings too. And then send me the whole serial log because it'll have debug
+info for me to stare at.
+
+Thanks a lot!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
