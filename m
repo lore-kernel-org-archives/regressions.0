@@ -1,173 +1,158 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08077173;
-	Sun, 20 Oct 2024 15:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E38183CA5
+	for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 15:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729438225; cv=none; b=Kijk5yJsEeSF7ez8t0nCDc+IN3GzJBGoeYnhQtzblw9FQ+VZFSfAhYmyja+vySeR04N41llyVnaBiWlGnyj0Ve5E7k/aMZUbaY80ntCQOpwmJtOTVeEEC2u3A2NlMm40liHpBmqcsYP9jNp76VA8UkaLzrTWU4L5CsTcyWXLjAY=
+	t=1729438369; cv=none; b=XC1SUp5kgJ2tBiy0ew67dId0w9FXJoUiwKX/E2PtJxsKX8KqKMzLfhZ5XlmR2lHBcA+M7+PRR0Wz5d4PxhxUpi4nko3cXauFjyGLhOPivx4T0bhCtLFDIjgrs0EHWvBexhGZchzD+0HiSriXpuFLKs3KFiUhCnxNee0Y1AJaEXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729438225; c=relaxed/simple;
-	bh=bM9ZZqz4WmWzq5QNnJvBx1l/8Iz8F0sW6q7v8+wAL3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A0VXr7SHIi+xcYhGWrIZ8bbj895f/7UFR4NUJ874Z3wdp+cYKCYh8IJcLTctCAR2CENJAm8m4xrI3KOU3VBS/OU2sRcaLI8bVVIS6Sj/KZQL3LzIY22RiukE1CCE95k/r2Bx3T0kKtN2y2jbD7AdMVE2S03bgTn4hzulYWhRyKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hc7JnvBs; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1729438369; c=relaxed/simple;
+	bh=mZ0SEbjclymcuyoUxxPvktQzU4T7RIiqTRoKTa4Vneo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aBYbRVnLtsdRJWFZIOQx8mf7GkFIB4XPr2wyobUCTvbtGxq/F43MDV6gu+2tal65+awMhSVhe4qP4Zi0X8pm0hZqNtpFXfDlo+FksIIvQ6TwpOZilKm1qYGYiFkt0jAtqP7hm5BKej//9H+aEYyZVRpgRhNWSqxhCuk196cg2jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m+vjrLDt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nEdIkwnq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m+vjrLDt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nEdIkwnq; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hc7JnvBs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=FK43PhWV9jtGZYMkQYTxfBpmSUy+tu0x6sxNrI5L80Y=;
-	t=1729438223; x=1729870223; b=hc7JnvBs5bfB9WVF4YXj/mMVxdFrecFFa2ucGy7P1fUfRmf
-	E9XI45dQfBm8qmIFXrLizr/r7iAi6TrtXjVFxwynywBOWY+PUGlzZRUx4Sj/EKUyXXzngNrjRpBKy
-	c4lDCcJo9RcxGbT6XH2BjSBtQ0yYdigJAxtuBwviuRTTrTyI3vCQrZOgP/ZYwDZLfj2Dv5ZvsuhB3
-	XdWd/50yI18PsezHPDBfMfaTA27e9L//oWtZsDqNzjUbTdOJiGL5zpqbb9xMo8lvwRSu8XJuwYdXX
-	DrqntcWka9TnOK8xeysoYleVOWVMyRpTJn8+AEMDFrAgnImZ3MrH/ql4fj3QW+Lw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t2Xsp-0008HD-TC; Sun, 20 Oct 2024 17:30:19 +0200
-Message-ID: <1b59f661-4cdf-4951-9a44-cb4ef0cce2a2@leemhuis.info>
-Date: Sun, 20 Oct 2024 17:30:19 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m+vjrLDt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nEdIkwnq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m+vjrLDt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nEdIkwnq"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AA37B1FE26;
+	Sun, 20 Oct 2024 15:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729438365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G0ET3vRqvsSgrub7IdjGmo7dZeLudMFhQCHvOZGes+4=;
+	b=m+vjrLDt88NVQr/o7K2mShq7mqizZ3yJPmSHnz98XCKaQRcqTyiyVrHOBKpcts4Yuvihcf
+	rnJ5DMUIuM+Ql2PfVA2sICo/A2FWU5BHfrMDwqmVWXWYxG1ini5I275jm37CWSVygwjP9H
+	Nwmt9oqFQXMeBF8qD2ZjQU0yZZH6M6s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729438365;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G0ET3vRqvsSgrub7IdjGmo7dZeLudMFhQCHvOZGes+4=;
+	b=nEdIkwnqa8avc8tS9yZlpozBcjrFgjfxrgRTiE3oh1odbs3FC3Ow0F/mNfBxlKaqCBx0EQ
+	L6jJqY7AkH37nqAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729438365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G0ET3vRqvsSgrub7IdjGmo7dZeLudMFhQCHvOZGes+4=;
+	b=m+vjrLDt88NVQr/o7K2mShq7mqizZ3yJPmSHnz98XCKaQRcqTyiyVrHOBKpcts4Yuvihcf
+	rnJ5DMUIuM+Ql2PfVA2sICo/A2FWU5BHfrMDwqmVWXWYxG1ini5I275jm37CWSVygwjP9H
+	Nwmt9oqFQXMeBF8qD2ZjQU0yZZH6M6s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729438365;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G0ET3vRqvsSgrub7IdjGmo7dZeLudMFhQCHvOZGes+4=;
+	b=nEdIkwnqa8avc8tS9yZlpozBcjrFgjfxrgRTiE3oh1odbs3FC3Ow0F/mNfBxlKaqCBx0EQ
+	L6jJqY7AkH37nqAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6BEAB13894;
+	Sun, 20 Oct 2024 15:32:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EzfDGJ0iFWeVawAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 20 Oct 2024 15:32:45 +0000
+Date: Sun, 20 Oct 2024 17:33:45 +0200
+Message-ID: <87bjzekcva.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang Yang <kailang@realtek.com>
+Cc: Dean Matthew Menezes <dean.menezes@utexas.edu>,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Linux Sound System <linux-sound@vger.kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: No sound on speakers X1 Carbon Gen 12
+In-Reply-To: <87ed4akd2a.wl-tiwai@suse.de>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
+	<2024101613-giggling-ceremony-aae7@gregkh>
+	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+	<87bjzktncb.wl-tiwai@suse.de>
+	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
+	<87cyjzrutw.wl-tiwai@suse.de>
+	<CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
+	<87ttd8jyu3.wl-tiwai@suse.de>
+	<CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
+	<87h697jl6c.wl-tiwai@suse.de>
+	<CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
+	<87ed4akd2a.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: pull request: bluetooth 2024-10-16
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: davem@davemloft.net, kuba@kernel.org, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-References: <20241016204258.821965-1-luiz.dentz@gmail.com>
- <4e1977ca-6166-4891-965e-34a6f319035f@leemhuis.info>
- <CABBYNZL0_j4EDWzDS=kXc1Vy0D6ToU+oYnP_uBWTKoXbEagHhw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Language: en-US, de-DE
-In-Reply-To: <CABBYNZL0_j4EDWzDS=kXc1Vy0D6ToU+oYnP_uBWTKoXbEagHhw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729438223;23b3d384;
-X-HE-SMSGID: 1t2Xsp-0008HD-TC
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-On 18.10.24 18:45, Luiz Augusto von Dentz wrote:
-> On Fri, Oct 18, 2024 at 1:30 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 16.10.24 22:42, Luiz Augusto von Dentz wrote:
->>> The following changes since commit 11d06f0aaef89f4cad68b92510bd9decff2d7b87:
->>>
->>>   net: dsa: vsc73xx: fix reception from VLAN-unaware bridges (2024-10-15 18:41:52 -0700)
->>>
->>> are available in the Git repository at:
->>>
->>>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2024-10-16
->>
->> FWIW, from my point of view it would be nice if these changes could make
->> it to mainline this week. I know, they missed the weekly -net merge,
->> despite the quoted PR being sent on Wednesday (I assume it was too late
->> in the day). But the set contains a fix for a regression ("Bluetooth:
->> btusb: Fix not being able to reconnect after suspend") that to my
->> knowledge was reported and bisected at least *five* times already since
->> -rc1 (and the culprit recently hit 6.11.4 as well, so more people are
->> likely now affected by this :-/ ).
-
-Meanwhile two more reports came it for this issue. And I became aware of
-two more for the other Luiz mentioned. I noticed my chance that Fedora
-became impatient and picked up both fixes.
-
->> Having "Bluetooth: btusb: Fix
->> regression with fake CSR controllers 0a12:0001" -mainlined rather sooner
->> that later would be nice, too, as it due to recent backports affects
->> afaics all stable series and iirc was reported at least two times
->> already (and who knows how many people are affected by those bugs that
->> never sat down to report them...).
+On Sun, 20 Oct 2024 17:29:33 +0200,
+Takashi Iwai wrote:
 > 
-> +1
+> On Sun, 20 Oct 2024 17:12:14 +0200,
+> Dean Matthew Menezes wrote:
+> > 
+> > The first change worked to fix the sound from the speaker.
 > 
-> I really would like to send the PR sooner but being on the path of
-> hurricane milton made things more complicated, anyway I think the most
-> important ones are the regression fixes:
-
-Linus, FWIW, in case you just those:
-
->       Bluetooth: btusb: Fix not being able to reconnect after suspend
-
-That one is a2ce7481010a32 ("Bluetooth: btusb: Fix not being able to
-reconnect after suspend") in -next and 4084286151fc91 in the PR above.
-It was posted as
-https://lore.kernel.org/all/20241014202326.381559-1-luiz.dentz@gmail.com/,
-but Luiz at least fixed the Fixes: tag before committing the fix.
-
->       Bluetooth: btusb: Fix regression with fake CSR controllers 0a12:0001
-
-That one is b29d4ac729754f ("Bluetooth: btusb: Fix regression with fake
-CSR controllers 0a12:0001") in -next and 2c1dda2acc4192 in the PR above.
-It was posted here:
-https://lore.kernel.org/all/20241016154700.682621-1-luiz.dentz@gmail.com/
-(not sure if there were any modifications afterwards).
-
-Ciao, Thorsten
-
->> Side note: I recently learned from one of Linus public mails (I can't
->> find right now on lore, sorry) why the -net subsystem is usually merging
->> mid-week. TBH from a regression point of view I have to say I don't like
->> it much, as bad timing with sub-subsystem PRs leads to situation like
->> the one described above. It is not the first time I notice one, but most
->> of the time I did not consider to write a mail about it.
->>
->> Sure, telling sub-subsystems to send their PR earlier to the -net
->> maintainers could help, but even then we loose at least one or two days
->> (e.g. Wed and Thu) every week to get regression fixes mainlined before
->> the next -rc.
+> Then please double-check whether my original fix in
+>   https://lore.kernel.org/87cyjzrutw.wl-tiwai@suse.de
+> really doesn't bring back the speaker output.
 > 
-> Yeah, that said I'm planning to switch to submit fixes more regularly
-> (e.g weekly), which appears to be the cadence of the net tree, that
-> way we narrow the window for landing fixes into linus tree.
+> If it's confirmed to be broken, run as root:
+>   echo 1 > /sys/module/snd_hda_codec/parameters/dump_coef
 > 
->> Ciao, Thorsten
->>
->>> for you to fetch changes up to 2c1dda2acc4192d826e84008d963b528e24d12bc:
->>>
->>>   Bluetooth: btusb: Fix regression with fake CSR controllers 0a12:0001 (2024-10-16 16:10:25 -0400)
->>>
->>> ----------------------------------------------------------------
->>> bluetooth pull request for net:
->>>
->>>  - ISO: Fix multiple init when debugfs is disabled
->>>  - Call iso_exit() on module unload
->>>  - Remove debugfs directory on module init failure
->>>  - btusb: Fix not being able to reconnect after suspend
->>>  - btusb: Fix regression with fake CSR controllers 0a12:0001
->>>  - bnep: fix wild-memory-access in proto_unregister
->>>
->>> ----------------------------------------------------------------
->>> Aaron Thompson (3):
->>>       Bluetooth: ISO: Fix multiple init when debugfs is disabled
->>>       Bluetooth: Call iso_exit() on module unload
->>>       Bluetooth: Remove debugfs directory on module init failure
->>>
->>> Luiz Augusto von Dentz (2):
->>>       Bluetooth: btusb: Fix not being able to reconnect after suspend
->>>       Bluetooth: btusb: Fix regression with fake CSR controllers 0a12:0001
->>>
->>> Ye Bin (1):
->>>       Bluetooth: bnep: fix wild-memory-access in proto_unregister
->>>
->>>  drivers/bluetooth/btusb.c    | 27 +++++++++------------------
->>>  net/bluetooth/af_bluetooth.c |  3 +++
->>>  net/bluetooth/bnep/core.c    |  3 +--
->>>  net/bluetooth/iso.c          |  6 +-----
->>>  4 files changed, 14 insertions(+), 25 deletions(-)
->>
+> and get alsa-info.sh outputs from both working and
+> patched-but-not-working cases again, but at this time, during the
+> playback.
 > 
-> 
+> (Also, please keep Cc.)
 
+... and let's put Kailang to Cc, as the commit 1e707769df07
+("ALSA: hda/realtek - Set GPIO3 to default at S4 state for Thinkpad
+with ALC1318") is the likely culprit.
+
+Kailang, it seems that your fix with GPIO3 workaround causes the lack
+of the speaker output on Lenovo X1 Carbon Gen 12 with 17aa:231e where
+ALC287_FIXUP_THINKPAD_I2S_SPK was applied beforehand.
+
+
+Takashi
