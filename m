@@ -1,206 +1,126 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D54194A75
-	for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 18:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191A4137E
+	for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 18:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729447474; cv=none; b=ABier1Fzk9EUL6LgydfFYhptkjBd/fsq/FOM0qhlc0DLT0wcqmcOvk30s5Pecw2OVbjq9UMsHOGgQoW9hk1UWyvsh7bvWEUoabxT/1TYBuXk9pFH5GI6rS6QpnWPJyuw0E/sz+aQzwV1uj3uNnf6tT4lT/QAnG9hH4qg0uKTepw=
+	t=1729450029; cv=none; b=Hmcle/aEx4fTrLS95xtIY6H48aivBG2q92hy9h51giMTGSsz50t4YLprUWR+eoBH/g2iNjRe4dtjBxsVUTw3I5RUkFYET7y0/wxHb2uiLH0EUCJEFriUi9ouHA/YOw6sSSo4rLaNgJU64SMYgGyuJurQY9o05tTvcatppvQ7zsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729447474; c=relaxed/simple;
-	bh=mbQ4BpyILPvtLntc/7PKsDcdxjxEwxvdohHGYqWNPso=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=a3pgOlCHbUoQZIrUY+RWQD5XMR8PNBVCIJwvxAND/MTQ/q1aOUaSp8dNapsN7TSgDm7wE88V76CpIGsj6Vry94Ii2lw1i1G+Lb8eviIIwW8c19jxkZqCz0FU67oWhQL6orTQXdyBEW4TRNQLbHJpNG+43S7pT022xpHqqCtMyXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rothemail.net; spf=none smtp.mailfrom=rothemail.net; dkim=pass (2048-bit key) header.d=rothemail-net.20230601.gappssmtp.com header.i=@rothemail-net.20230601.gappssmtp.com header.b=r5jw+zX3; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rothemail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rothemail.net
+	s=arc-20240116; t=1729450029; c=relaxed/simple;
+	bh=yDVmUcOPsK+6r2MNKdv1fLvgP/RzdstYd7n1r8wYqEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PyRQYwpN1pauMzRMu+MSBPV0AazCzgRYuBNmiFhjqia8AM178g2EBuJ0ADX0CLm49Z7Xq+KdQaGFIQKZIkCmLbz5mwl73Harbi2as/9vuIQE3X9dw9vpGd+/Gr9rzVRf//d+fDkq1Ufizd9Qi5tQh0Z5hOnnkLSJj9YxLu8jAo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ID3/eTIu; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rothemail-net.20230601.gappssmtp.com header.i=@rothemail-net.20230601.gappssmtp.com header.b="r5jw+zX3"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e2e41bd08bso41305287b3.2
-        for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 11:04:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ID3/eTIu"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-71ec1216156so541664b3a.2
+        for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 11:47:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rothemail-net.20230601.gappssmtp.com; s=20230601; t=1729447471; x=1730052271; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7OOwWusk6gEaG/8hbzuWvjxkguVQUEpUcpHpEOGOhQA=;
-        b=r5jw+zX3yUU4i8t4CUSrJ9AECit1WWC+U143NDqkZ4I3UKhjZSNH0hkMCn3cJfs/sr
-         Qf3fylcYJWP6zRtbE4Et4Mu9u+n+NoNV4oFtttD+X61APYDgB/WL+yT5nGG5FoClxzL4
-         rnD73KSQOFDtEpFTasFAacHVBVPHF2YzyKc+QFko4zoKoA1cffL0d0wJs/BGav17kcug
-         cl+eG4MTJ48la/+Z2OjZ59spbFMbpRTp9R4bfM2x21bZSQNUNwCRg2a57UvtY3/pK/gp
-         rigRmfher/9jScTd2MlsAN0oK/4XdwLC/L/mG84/nw9+S/WkC/awWWm0CYPaa2tGkMH6
-         0iAw==
+        d=linaro.org; s=google; t=1729450027; x=1730054827; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K0rgne+RllSD4dCojokc08O6fyLjqxPDouNOsGVSJrE=;
+        b=ID3/eTIuL5bEcbLJaTgyINILnDc/AZYxYRvEikqzFKzj7546SekBEdl8qi6ay1LfID
+         rwZZuBvVoBZVj7mz60E2XXa6XIA/i+AInT2bLZ/D+ulv1PPApym3XfsSdGrv8NX6VZGn
+         9NZeXu5/6negJfzL5p8YLZciPljxhp+XKorEamfENzwOsan8NvUgybbIifibIdB7Pkkc
+         41S76hqkiiMGrHBNKFnCdAiIDHmnEh54CHaXidZwDT4FZ/2xWzd9y/1YJnlY9lOsvhwb
+         ZfrvBbaZFc0isLKnna6PnTzvedYuPkarC/pQCiSugJlx49xH83wMbgj6rMeDxha8Q0Gd
+         7lrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729447471; x=1730052271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7OOwWusk6gEaG/8hbzuWvjxkguVQUEpUcpHpEOGOhQA=;
-        b=EWh4x5XonzA8wnbUeTjWALKH/FrvqAuXhmQnzS7ocol5RDEwjMVJEguj9uCuX5L+up
-         zCeS1WTYBwtlwB8knb/m63Jq36jP5q/tQr7SmUaaZz8hRvtcubHn11frxc35b9lYlrEa
-         QPRhbbR4u1YzO1Eh+Ijpo8tQgIHhVmIPWro6JHiVK9FWZTOUQFo77DH3l/FLwjsr8l6C
-         HQju7IUuADQfD1z2qq3JxluSVTn3ai0lB1oAEw+anlFR5HFTmNHMCl1cwdVH/MFnOm54
-         gogPuCuYfX2vVbwcv5qco/8hNOAuKjASg5m2wSr/DcVgVdzATVwdI1LpVUCf4O+4Lt6k
-         w2Rg==
-X-Gm-Message-State: AOJu0Ywg1C3NSrD+jalbSLwYMvl+TzS1kzbiPVxBlGIdLU2o2HWnaOgY
-	2QJBkEYA2PRFptcQZxOFtJYN6Ksa/VE1s7CAS9S500m3t86uSQBHk0ockZLgZC4w5aagd6Fm3zv
-	BsvOucLdIkvPU4jQbKmqwhCqM7Iqe2oJDKooyCg==
-X-Google-Smtp-Source: AGHT+IF8tda2rePv5A+duyzJqGM5e/U7BomZq6sQw+zaQZl7zuF0j93HaSioMcmaiDUo0U6AiZmyGyOi0SdPfStiUpQ=
-X-Received: by 2002:a05:690c:3747:b0:6e3:34b9:961d with SMTP id
- 00721157ae682-6e5bfc8ce70mr82212367b3.38.1729447470821; Sun, 20 Oct 2024
- 11:04:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729450027; x=1730054827;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0rgne+RllSD4dCojokc08O6fyLjqxPDouNOsGVSJrE=;
+        b=rF3GXNtqrGQeXcdIupvrVOKIU2xwat8qNTyt9eW32WPgAmeEJv3HFNG7aAHXJ3TEz1
+         Gf1L6Xry4N2PFxKKCW9rSb6EQgFbKp0yYNIg0/kNNC7lWhgrb4dE+n0cZ25YCfJ3we53
+         U9+4+uXlNUrud8j8527vVNnNXSTicvyErpZ3ZMnpVMCF6mTI3c+C8tQpjjbbfWBDVssi
+         7owJVs18nOPbm6NLk+jXtuQyb/8xgSg4ccPFVHxYf8NA3I1zU7kh5MRgsggV/Ts8nE94
+         Ar3qAS6gDJ+GC/JnkX6S1R4kYKKez3r++1oLPUho8jnmYBwxq38uRDGQMFOxHEGWlxOO
+         TD/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYz5hUIayuNrPI28/xP0iY8jeQtlIBHGex9gzZRaHvKyaaVT75qK+rGTaGzdJ0+HHzyJIH+WTgFa+BHw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw8kGKyJz57mqxqP77sT0LC4wUgdAuY0KyrChdQ0SDQfF7b08fd
+	1hva0Diw7RZn5A51aIAjCToZs8TUL69qslgARGWIZ/H0gn9cotUADRBLH+LCcas=
+X-Google-Smtp-Source: AGHT+IEKJ2tZYebKlsmIfal4MlXfWP2VdJ72brsGz4X8tn78fB0n6xx0/1+LKeIcGrc9RV2fJRuazQ==
+X-Received: by 2002:a05:6a00:140c:b0:71e:cd0:cc99 with SMTP id d2e1a72fcca58-71ea31a57famr13485118b3a.4.1729450027298;
+        Sun, 20 Oct 2024 11:47:07 -0700 (PDT)
+Received: from [192.168.0.4] (174-21-81-121.tukw.qwest.net. [174.21.81.121])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec1407da1sm1443694b3a.191.2024.10.20.11.47.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Oct 2024 11:47:06 -0700 (PDT)
+Message-ID: <9aa82e51-8330-4be1-89ea-bcfadcecea29@linaro.org>
+Date: Sun, 20 Oct 2024 11:47:05 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Nicholas Roth <nicholas@rothemail.net>
-Date: Sun, 20 Oct 2024 14:04:22 -0400
-Message-ID: <CAD2rFCq7VAr=xVxppToAePQtNBUY2j3FNk+dXgMXDv32LHyRng@mail.gmail.com>
-Subject: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And Hibernate
-To: Sean Wang <sean.wang@mediatek.com>, linux-bluetooth@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Qemu v9.0.2: Boot failed qemu-arm with Linux next-20241017 tag.
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, qemu-devel@nongnu.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Aishwarya TCV <Aishwarya.TCV@arm.com>,
+ Peter Maydell <peter.maydell@linaro.org>,
+ =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+References: <CA+G9fYt86bUAu_v5dXPWnDUwQNVipj+Wq3Djir1KUSKdr9QLNg@mail.gmail.com>
+ <CA+G9fYsMg0fA-jraEvC==0a-22J97o-uBmbLJt16_ZKBpOT8EQ@mail.gmail.com>
+Content-Language: en-US
+From: Richard Henderson <richard.henderson@linaro.org>
+In-Reply-To: <CA+G9fYsMg0fA-jraEvC==0a-22J97o-uBmbLJt16_ZKBpOT8EQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-#regzbot introduced: v6.10..v6.11
+On 10/20/24 10:39, Naresh Kamboju wrote:
+> On Fri, 18 Oct 2024 at 12:35, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>
+>> The QEMU-ARMv7 boot has failed with the Linux next-20241017 tag.
+>> The boot log is incomplete, and no kernel crash was detected.
+>> However, the system did not proceed far enough to reach the login prompt.
+>>
+>> Please find the incomplete boot log links below for your reference.
+>> The Qemu version is 9.0.2.
+>> The arm devices TI beaglebone x15 boot pass.
+>>
+>> This is always reproducible.
+>> First seen on Linux next-20241017 tag.
+>>    Good: next-20241016
+>>    Bad: next-20241017
+>>
+>> qemu-armv7:
+>>    boot:
+>>      * clang-19-lkftconfig
+>>      * gcc-13-lkftconfig
+>>      * clang-nightly-lkftconfig
+> 
+> Anders bisected this boot regressions and found,
+> # first bad commit:
+>    [efe8419ae78d65e83edc31aad74b605c12e7d60c]
+>      vdso: Introduce vdso/page.h
+> 
+> We are investigating the reason for boot failure due to this commit.
 
-My Framework 16 laptop (Ryzen=E2=84=A2 7 7840HS + AMD Radeon=E2=84=A2 RX 77=
-00S)
-recently started hanging when I open the lid after resuming from
-hibernation on the very-lightly-patched 6.11.4 kernel that Arch ships
-as `linux`. From the error message, this appears to be a crash.
+Probably fixed on qemu master with
 
-I'm compiling torvalds/linux locally and will be able to use that to
-help answer follow-up questions, but I may be slow to respond as I
-have a day job. The kernel I've tested so far is _very_ close to
-mainline-- at https://github.com/archlinux/linux I only see ARM/fixes,
-dmaengine: cirrus:, and btrfs: send:). I posted the issue at
-https://community.frame.work/t/framework-16-fails-to-resume-from-hibernate/=
-59297
-and it appears others see this too. Note that the 6.10-6.11 range
-comes from @callahad on the forums-- I can only say for sure on the
-close-to-mainline kernel that this definitely affects 6.11.4.
+commit 67d762e716a7127ecc114e9708254316dd521911
+Author: Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri Sep 27 09:10:51 2024 +0200
 
-I was not able to collect complete logs since they don't get saved to
-the journal and I don't have a serial adapter on me suitable for a
-kernel TTY, but with `no_console_suspend` I was able to enhance and
-OCR an image (see the forums for the original), which I'm posting in
-full at the end of this mail under "Partial Panic (OCR)". Highlights
-include:
-[ 146.054908] RIP: 0010:hci_unregister_dev+0x45/8x1f@ [bluetooth]
-...
-[ 146.855890) Call Trace:
-[ 146.055187] ? __die_body.cold+0x19/0=C3=9727
-[ 146.055122] ? die_addr+0x3c/0x60
-[ 146.055134] ? exc_general_protection+0x17d/0x400
-...
-[ 146.855238] ? hci_unregister_dev+0x3e/0x1f0 [bluetooth
-1400000003000000474e5500314a936b2959fa34)
-[ 146.055288] btusb_disconnect+0x67/0x170 [btusb
-1400000003000000474e55007dd0b46154bf4bec]
-...
-[ 148.449222] mt7921e 8000:04:00.0: Message 00020007 (seq 4) timeout
-[ 148.451497] mt7921e 0000:04:00.0: PM: dpm_run_callback();
-pci_pm_restore returns -110
-[ 148.454598] mt7921e 8000:04:00.0: PM: failed to restore async: error -110
-[ 148.534371] mt7921e 0000:04:00.0: HW/SW Version; 8x8a188a10, Build
-Time: 20240716163242a
-[ 148.534371]
-[ 148.912088] mt7921e 0000:04:00.0: WM Firmware Version: ____000000,
-Build Time: 20240716163327
+     target/arm: Avoid target_ulong for physical address lookups
 
-The kernel appears to be tainted with an unrelated warning.
 
-chktaint:
-$ ./kernel-chktaint.sh
-Kernel is "tainted" for the following reasons:
- * kernel issued warning (#9)
-For a more detailed explanation of the various taint flags see
- Documentation/admin-guide/tainted-kernels.rst in the Linux kernel sources
- or https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
-Raw taint value as int/string: 512/'G        W         '
 
-Warnings:
-# dmesg | grep -i warn
-[    2.333170] WARNING: CPU: 10 PID: 229 at
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_panel_cntl.c:186
-dcn31_panel_cntl_construct.cold+0x1e/0x2e [amdgpu]
-[    2.333967]  ? __warn.cold+0x8e/0xe8
-[ 2814.691588] warning: `ThreadPoolForeg' uses wireless extensions
-which will stop working for Wi-Fi 7 hardware; use nl80211
-
-Partial Panic (OCR):
-[ 146.0548891] Workqueue: async async_run_entry_fn
-[ 146.054908] RIP: 0010:hci_unregister_dev+0x45/8x1f@ [bluetooth]
-[ 146.054962] Code: 89 ef e8 ae 03 8b d2 f0 80 8b e9 De 00 00 08 48 89
-ef e8 0e f1 8a d2 48 c7 c7 68 20 c4 c1 e8 22 52 8b d2 48 8b 43 08 48
-8b 13 <48> 3b 18 0f 85 b5 c7 06 00 48 3b 5a 08 Of 85 ab c7 06 00 48 89
-42
-[ 146.054984] RSP: 0018: ffffbba241defcc8 EFLAGS: 00010246
-[ 146.054996] RAX: dead000000000122 RBX: ffffa86a81276000 RCX: 000000000000=
-0000
-[ 146.055007] RDX: dead000000000100 RSI: ffffa06a81a47910 RDI: ffffffffc1c4=
-2068
-[ 146.055018] RBP: ffffa06a812764d0 R08: 0000000000000000 R89: ffffa06a801d=
-9610
-[ 146.055028] R10: ffffbba241defcd0 R11: ffffbba241defcd8 R12: ffffa06a8127=
-6000
-[ 146.055038] R13: ffffffffc2323278 R14: ffffffffc2323278 R15:
-ffffa06a8f9f0850 146.055050] FS:
-[ 146.055050] FS: 0000000000000000(0000) GS:ffffa07960000000(0000)
-kn1GS:0000000000000000
-[ 146.055062] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 146.055072] CR2: 0000000000000000 CR3: 000000070ba22000 CR4: 0000000000f5=
-0ef0
-[ 146.055083] PKRU: 55555554
-[ 146.855890) Call Trace:
-[ 146.055099]
-[ 146.055187] ? __die_body.cold+0x19/0=C3=9727
-[ 146.055122] ? die_addr+0x3c/0x60
-[ 146.055134] ? exc_general_protection+0x17d/0x400
-[ 146.055147] ? ep_poll_callback+0x24d/0x2a0
-[ 146.055164] ? asm_exc_general_protection+0x26/0x30
-[ 146.055184] ? hci_unregister_dev+0x45/0x1f@ [bluetooth
-1400000003000888474e5500314a936b2959fa34]
-[ 146.855238] ? hci_unregister_dev+0x3e/0x1f0 [bluetooth
-1400000003000000474e5500314a936b2959fa34)
-[ 146.055288] btusb_disconnect+0x67/0x170 [btusb
-1400000003000000474e55007dd0b46154bf4bec]
-[ 146.055307] usb_unbind_interface+0x90/0x290
-[ 146.055325] device_release_driver_internal+0x19c/0x200
-[ 146.055341] usb_forced_unbind_intf+0x75/0xb0
-[ 146.055354] unbind_marked_interfaces.isra.0+0x59/0=C3=9780
-[ 146.055368] ? __pfx_usb_dev_restore+0x10/0x10
-[ 146.055381] usb_resume+0x5a/0x60
-[ 146.055392] _dp_run_callback+0x47/0x150
-[ 146.055407] device_resume+0xb0/0=C3=97280
-[ 146.055419] async_resume+0x1d/8x30
-[ 146.055431] async_run_entry_fn+0x31/0=C3=97140
-[ 146.055444] process_one_work+0x17b/0x330
-[ 147.894397] [drm] ring gfx_32772.1.1 was addedmes_kiq_3.1.0 uses VM
-inv eng 13 on hub 0vailable 68 20 c4 c1 e8 22 52 Bb d2 48 8b 43 08 48
-8b 13 <48> 3b 18 0f
-[ 147.896995] [drm] ring compute_32772.2.2 was added
-[ 147.098944] [drm] ring sdma_32772.3.3 was added
-[ 147.102569] [dro] ring gfx_32772.1.1 ib test pass
-[ 147.186131] [drm] ring compute_32772.2.2 ib test pass
-[ 147.188302] [drm] ring sdma_32772.3.3 ib test pass
-[ 147.136203] usb 1-4.3: reset full-speed USB device number 8 using xhci_hc=
-d
-[ 147.238067] usb 1-4.3: unable to get BOS descriptor set
-[ 148.449222] mt7921e 8000:04:00.0: Message 00020007 (seq 4) timeout
-[ 148.451497] mt7921e 0000:04:00.0: PM: dpm_run_callback();
-pci_pm_restore returns -110
-[ 148.454598] mt7921e 8000:04:00.0: PM: failed to restore async: error -110
-[ 148.534371] mt7921e 0000:04:00.0: HW/SW Version; 8x8a188a10, Build
-Time: 20240716163242a
-[ 148.534371]
-[ 148.912088] mt7921e 0000:04:00.0: WM Firmware Version: ____000000,
-Build Time: 20240716163327
-
-Please let me know if I am missing anything or should do something
-differently. I am new to these lists.
-
-Thanks, all!
--Nicholas
+r~
