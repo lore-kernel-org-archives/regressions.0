@@ -1,59 +1,37 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96883209
-	for <regressions@lists.linux.dev>; Sun, 20 Oct 2024 03:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEA717543;
+	Sun, 20 Oct 2024 06:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729394670; cv=none; b=lW/hQcRRE26kNLax6yosVwVyhZ3efBLIsWmMILSOAzmwEcc4i3+uX+EEMwhlDakQ0hYVh5G0J3z3KIorXJEmUEbxadYJI9p13W3Kw8fkJzuZgP4XjhX0y9VXkxt+rhXoCXnAY4XVFwD7wfGruMeszGJm4Hrj/lW2lW9Yn7ozdhM=
+	t=1729404608; cv=none; b=RJ/mdQDwa/KJfb1QaA53EuGlhOqLfGaI8YJnWE8hWTEzGj7TYMtsH7p8cjH3inDsySp1IEgKFO8QfS4rdwz1Nfehjqt3rdl7rgt1yOLAHQhHBOwbUOogeF5oQ2P9TAw3TieoCwJsXw0B0C5nTkzpqeGSW1xLAgc1h64QDNxE5Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729394670; c=relaxed/simple;
-	bh=UmHXvjGsQJfT6nKZ2eAFDDs4DgbACPJ2CxbdthknAPA=;
+	s=arc-20240116; t=1729404608; c=relaxed/simple;
+	bh=F3grSouN+TZpsaEREplq00cTbboxFvzZ7+5mcLi7Qws=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fruM8tuxqu7l0P9arFwqbAwceGKsXTrg1j4tLRBqP9ku9iEmOzn8m7rEAp3MDPwRMlWNtlseN5T+rvXlqzUBol88OiFxcQVIdsli+9uqG3Itqzm+jpX49O8TFfMc2t33FT+FqObM7qm/3uIkbK01vcAt7c2M3mQDxBvUy7easTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rQ9PIjj3; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=sRhyOePANfx1+V5vXZKsaioXvBwXNlrkhVOXArAYStLK4DeEgqXHIsWaoBY9qvnrwTOKpAM6SEUAmBQ/bxfWcdlr4Cq4HHJRVBP3SIuyKxvDs/p4qBlJld+iXnBb10RUm4eFMDP5pW+V5afsmAIdYhNGFw8ROZ/GyxgSJssdg+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aB/jlrpL; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rQ9PIjj3"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71e57d89ffaso2653110b3a.1
-        for <regressions@lists.linux.dev>; Sat, 19 Oct 2024 20:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729394666; x=1729999466; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rbc1A1lbWoXEL3ZrMG1PbnMccM33RUZTMomnfxj4fAM=;
-        b=rQ9PIjj3WRAlxuDOOTv5ZYWPC1nddoQpyIDj5Wiw+jN73Z3K92ppQFizyQJzdm8t7t
-         gJSQL1fonX0cESX3nWZneu2tTNoOUocEEkoZqZ1yvCM84tduhT5h807vQjeRKOnGvBpI
-         a1C2EQy654yxzuDv5gRiQSoSJrDw5exQnQPMCOcrDA3mVsFIV5u6mCCKkBzH8ifDoL/h
-         OKtlbNobJp0aov3N69ePL+sfUqYQG833JnNOz0lM+7nBc3mgwPonOPpZvjdeecDOTeaL
-         cisphzd1PWoae25ULQS5bU6sWdvoRtSY06mW55PJ2a2kFYEO+E0jP94+nY4Cdidt7xEC
-         pT2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729394666; x=1729999466;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbc1A1lbWoXEL3ZrMG1PbnMccM33RUZTMomnfxj4fAM=;
-        b=lpaw6j2ZcGti3g8GLtbFWnlFsmiaTCLLXc0iXXsj/phQ7IL0+hVztJjBopwRd0Sr+B
-         i7t4PEqA9rpTYm160UIpJVAZ6LKfimAs9Tn7kqQkteo+d6r8u+k5ijkQllFhhKBmL/S7
-         PUVmzfYAN/8zKxSAJRrOiWDpKi3A0KcSXFHhXJu/u/UXhEGgsb1JFTeVXRj7OuIekyfk
-         3BVWxcKomxgOwaTbEAiq6zJ12r3b/lMKHqQUeKFCRZf4k3aY/52EA2yuxj6lZYrpGVRB
-         YDd1kDPmoOzPzNZkDf8rJaalq7CKHnSmshjNINiyjBBVfOHZMsTiYAF2uawD545Rc0At
-         5ITA==
-X-Forwarded-Encrypted: i=1; AJvYcCUk5nWyyjKuyNSgNbDRUJdlFr+g87YtzqL7h25GoAUddUIetVp1zG1Afla7Ekn/kUvEa/9y1sL68s77VA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx67aUDXCpL/iRANWMUWhbdJrjIL/3ur14KpLTangGOqfliMKQd
-	zV2gnsXEbgkSOOpo/QItMXayVgIGrElA/T1510HO9S63JdE1tIh4UV0ekSTjzLY=
-X-Google-Smtp-Source: AGHT+IH6J721g2QJQocqVUUwYxVeHLZEcBex4rYv7sCLJ8t2EBzEOwn8xTF8xIrJgSX+YMiGvolILA==
-X-Received: by 2002:a05:6a21:a4c1:b0:1d9:16db:902e with SMTP id adf61e73a8af0-1d92c4babebmr10547404637.9.1729394665853;
-        Sat, 19 Oct 2024 20:24:25 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ec1335591sm449076b3a.66.2024.10.19.20.24.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Oct 2024 20:24:25 -0700 (PDT)
-Message-ID: <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
-Date: Sat, 19 Oct 2024 21:24:24 -0600
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aB/jlrpL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=cx6s8aoEP6mh4BZD5a9PwPy6TZKM720Amha8z1oJXV4=;
+	t=1729404606; x=1729836606; b=aB/jlrpLXo+Put0ibDiMj/RLx1PJQSbR6dRVjDXSxG3c3CD
+	aUqmczPkynz74ntVVT4YyeFiaxkk5sd9x6wjWF/UMtd8ghojm6uP8Il5cx5BWyEWdZsNUfoPLPjmb
+	qHaptiB2e5AgFdl03sJ8ZR3EEixWdWMAQsm4DPZy4U+RUIBc4xL4wL3paesM6U7GWDUyvyEY02oZS
+	FX8lAVD7/g+XOH5mk6JTPZkWV9EXvGDjRyx8P709aiLIzsJ4AoQYh+PzmtEcnTMqsqr3oND1wV/Vi
+	CeUUX/vU79cdqjuMIU/uS5IIusFaoYN9P8a5hDAY+Nro/ZwL9npG0qHBh8Ebz1qw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t2P8W-0005yr-TA; Sun, 20 Oct 2024 08:09:56 +0200
+Message-ID: <64702a91-e8c8-4d9e-92a0-e53c58e5ff77@leemhuis.info>
+Date: Sun, 20 Oct 2024 08:09:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,447 +39,84 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: AMD zen microcode updates breaks boot
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- the arch/x86 maintainers <x86@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20241018115857.GBZxJNgZY-NedtPrxX@fat_crate.local>
- <20241018124943.GDZxJZZxtwA9O9eqiU@fat_crate.local>
- <79296353-1fa3-458a-b055-88bc6a772180@kernel.dk>
- <20241018155143.GIZxKED9YcF0Jg1CWZ@fat_crate.local>
- <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
- <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
- <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
- <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
- <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
- <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
- <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
+Subject: Re: 6.6.57-stable regression: "netfilter: xtables: avoid
+ NFPROTO_UNSPEC where needed" broke NFLOG on IPv6
+To: =?UTF-8?Q?Krzysztof_Ol=C4=99dzki?= <ole@ans.pl>,
+ Florian Westphal <fw@strlen.de>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ilya Katsnelson <me@0upti.me>
+Cc: stable@vger.kernel.org, netfilter-devel
+ <netfilter-devel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <8eb81c74-4311-4d87-9c13-be6a99c94e2f@ans.pl>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <8eb81c74-4311-4d87-9c13-be6a99c94e2f@ans.pl>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729404606;71981361;
+X-HE-SMSGID: 1t2P8W-0005yr-TA
 
-On 10/19/24 5:21 PM, Borislav Petkov wrote:
-> On Sat, Oct 19, 2024 at 07:54:07AM -0600, Jens Axboe wrote:
->> Added that, and here's the full boot output until it crashes. Sent you
->> the full thing as there's some microcode debug prints initially, and
->> then some later on. Didn't want to miss any.
+[CCing Ilya and the regression list, as it should be in the loop for
+regressions: https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+> Hi,
 > 
-> Thanks, I think I see it. It is that weird node-per-L3 setting which
-> apparently doesn't set up the ACPI tables properly or the loader runs too
-> early but load_microcode_amd() sees a very funky node maps. Node 0's first CPU
-> in the map is CPU 0, which is correct but then cpu_data(0) is a funky pointer
-> which causes the splat.
-
-This was my initial thought when I saw where it crashed, is this being
-run before node masks are initialized?
-
-> All the other "nodes" up to 31 have the first CPU in the mask as 512 which is
-> WTF?!
+> After upgrading to 6.6.57 I noticed that my IPv6 firewall config failed to load.
 > 
-> So the below is the same conglomerate patch but with code to dump those node
-> ids in load_microcode_amd() so that I can see what your system says.
+> Quick investigation flagged NFLOG to be the issue:
 > 
-> It should boot ok now - fingers crossed - but let's see what it really does on
-> your machine. Just replace it with the previous one, pls, and send me full
-> dmesg again.
+> # ip6tables -I INPUT -j NFLOG
+> Warning: Extension NFLOG revision 0 not supported, missing kernel module?
+> ip6tables: No chain/target/match by that name.
+> 
+> The regression is caused by the following commit:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.6.y&id=997f67d813ce0cf5eb3cdb8f124da68141e91b6c
 
-That's a lot of output... Took about 1 minute on the serial console just
-for that. Here's some of it, let me know if you need all, because it's a
-LOT. Looks like it takes long enough that it actually fails to bring up
-some CPUs.
+Not my area of expertise, but from a quick look is seems to be a known
+problem due to some typos and people are working on a fix here:
 
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #487
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
+https://lore.kernel.org/all/20241019-xtables-typos-v3-1-66dd2eaacf2f@0upti.me/
 
-.... node  #29, CPUs:   #488
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #489
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #490
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #491
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #492
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #493
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #494
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #495
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
+Ciao, Thorsten
 
-.... node  #30, CPUs:   #496
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #497
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #498
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #499
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #500
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #501
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #502
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #503
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
+> More precisely, the bug is in the change below:
+> 
+> +#if IS_ENABLED(CONFIG_IP6_NF_IPTABLES)
+> +	{
+> +		.name       = "NFLOG",
+> +		.revision   = 0,
+> +		.family     = NFPROTO_IPV4,
+> +		.checkentry = nflog_tg_check,
+> +		.destroy    = nflog_tg_destroy,
+> +		.target     = nflog_tg,
+> +		.targetsize = sizeof(struct xt_nflog_info),
+> +		.me         = THIS_MODULE,
+> +	},
+> +#endif
+> 
+> Replacing NFPROTO_IPV4 with NFPROTO_IPV6 fixed the issue.
+> 
+> Looking at the commit, it seems that at least one more target (MARK) may be also impacted:
+> 
+> +#if IS_ENABLED(CONFIG_IP6_NF_IPTABLES)
+> +	{
+> +		.name           = "MARK",
+> +		.revision       = 2,
+> +		.family         = NFPROTO_IPV4,
+> +		.target         = mark_tg,
+> +		.targetsize     = sizeof(struct xt_mark_tginfo2),
+> +		.me             = THIS_MODULE,
+> +	},
+> +#endif
+> 
+> The same errors seem to be present in the main tree:
+>  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0bfcb7b71e735560077a42847f69597ec7dcc326
+> 
+> I also suspect other -stable trees may be impacted by the same issue.
+> 
+> Best regards,
+>  Krzysztof Olędzki
 
-.... node  #31, CPUs:   #504
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #505
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #506
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #507
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #508
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #509
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #510
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
- #511
-microcode: cache_find_patch: equiv_cpu: 0x0, patch_id: 0xaa00215
-microcode: ucode_rev_to_cpuid: val: 0xa00107a, p.stepping: 0x0, c.stepping: 0x0
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
-microcode: patch_cpus_equivalent: p_cid.full: 0xa00f10, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xa101248, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xa10f12, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: ucode_rev_to_cpuid: val: 0xaa00215, p.stepping: 0x2, c.stepping: 0x2
-microcode: cache_find_patch: using 0xaa00215
-microcode: patch_cpus_equivalent: p_cid.full: 0xaa0f02, n_cid.full: 0xaa0f02
-microcode: cache_find_patch: using 0xaa00215
-CPU257 failed to report alive state
-call_irq_handler: 498.55 No irq handler for vector
-smp: Brought up 32 nodes, 510 CPUs
-
-then a bunch of the usual kernel messages, then it ends with:
-
-microcode: Current revision: 0x0aa00215
-microcode: Updated early from: 0x0aa00215
-BUG: unable to handle page fault for address: 000000000aa0021d
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0
-Oops: Oops: 0000 [#1] SMP
-CPU: 225 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-rc2+ #145
-Hardware name: Dell Inc. PowerEdge R7625/06444F, BIOS 1.8.3 04/02/2024
-RIP: 0010:internal_create_group+0x1d0/0x430
-Code: 8b 0c 24 81 e2 b4 11 00 00 4c 89 ef e8 39 f2 ff ff 85 c0 0f 85 55 01 00 00 49 8b 47 08 49 83 c7 08 41 83 c6 01 48 85 c0 74 22 <0f> b7 48 08 85 ed 74 96 48 8b 30 31 d2 4c 89 ef 89 4c 24 08 e8 07
-RSP: 0018:ffffb4a3000e7de8 EFLAGS: 00010246
-RAX: 000000000aa00215 RBX: ffffffffbaa1a0c0 RCX: ffff9c6da7a374d0
-RDX: 0000000080000001 RSI: ffff9c3da7a36598 RDI: ffff9c7fcc4e5188
-RBP: 0000000000000000 R08: 0000000000000228 R09: ffff9bd8403a4f10
-R10: ffff9c91c2381dd0 R11: 0000000000000000 R12: ffff9be3a7a3cc00
-R13: ffff9c7fcc4e5188 R14: 0000000000000000 R15: ffffffffbb7e3928
-FS:  0000000000000000(0000) GS:ffff9c85a7a40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000aa0021d CR3: 000000bd9bc28001 CR4: 0000000000370ef0
-Call Trace:
- <TASK>
- ? __die_body.cold+0x19/0x2b
- ? page_fault_oops+0x90/0x210
- ? idr_alloc_cyclic+0x49/0x90
- ? exc_page_fault+0x6c/0x130
- ? asm_exc_page_fault+0x22/0x30
- ? internal_create_group+0x1d0/0x430
- ? internal_create_group+0x141/0x430
- microcode_init+0x121/0x190
- ? mtrr_trim_uncached_memory+0x2d0/0x2d0
- do_one_initcall+0x2e/0x190
- ? __kmalloc_noprof+0x1d0/0x2c0
- kernel_init_freeable+0x1d0/0x210
- ? rest_init+0xc0/0xc0
- kernel_init+0x16/0x120
- ret_from_fork+0x2d/0x50
- ? rest_init+0xc0/0xc0
- ret_from_fork_asm+0x11/0x20
- </TASK>
-Modules linked in:
-CR2: 000000000aa0021d
----[ end trace 0000000000000000 ]---
-RIP: 0010:internal_create_group+0x1d0/0x430
-Code: 8b 0c 24 81 e2 b4 11 00 00 4c 89 ef e8 39 f2 ff ff 85 c0 0f 85 55 01 00 00 49 8b 47 08 49 83 c7 08 41 83 c6 01 48 85 c0 74 22 <0f> b7 48 08 85 ed 74 96 48 8b 30 31 d2 4c 89 ef 89 4c 24 08 e8 07
-RSP: 0018:ffffb4a3000e7de8 EFLAGS: 00010246
-RAX: 000000000aa00215 RBX: ffffffffbaa1a0c0 RCX: ffff9c6da7a374d0
-RDX: 0000000080000001 RSI: ffff9c3da7a36598 RDI: ffff9c7fcc4e5188
-RBP: 0000000000000000 R08: 0000000000000228 R09: ffff9bd8403a4f10
-R10: ffff9c91c2381dd0 R11: 0000000000000000 R12: ffff9be3a7a3cc00
-R13: ffff9c7fcc4e5188 R14: 0000000000000000 R15: ffffffffbb7e3928
-FS:  0000000000000000(0000) GS:ffff9c85a7a40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000aa0021d CR3: 000000bd9bc28001 CR4: 0000000000370ef0
-note: swapper/0[1] exited with irqs disabled
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-Kernel Offset: 0x38e00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
----[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
-
--- 
-Jens Axboe
