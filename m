@@ -1,220 +1,201 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F361E1C18;
-	Mon, 21 Oct 2024 09:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053E11E5701;
+	Mon, 21 Oct 2024 09:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729503077; cv=none; b=jVucJHyZGYaVFN0srHqA+Ev99LNwNXPNmGKut22jK+drYf0FgANI0U/zkIepFmh63rjo0soEtJVO/yorMjjr/3hSg9ZJnfjxavyVwVMQQSjEH7iPqjzn93GjqXb7+zyZOvUSrSaadbfyPuRl1Pq4WiijAFQRqy7Nc+vGRVWbTdU=
+	t=1729504696; cv=none; b=H29uN3098o3UbcD0GT43zMbxfm7GdripgJW24E000JOYJjj5EtKkclRUW9XmimjSezvxFlhAXi+sl92YPRmAfF743WImbHC9FvmrTbvnCcOCZk1jPkVGbiEE0NScFYu1imPloE6Q+1pw02EcAlRU6oZtYE6nBIfpPTNzr6YvXU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729503077; c=relaxed/simple;
-	bh=GQSpJJI5IGjcyXynsa8pJEnZ5S6eiP4WGTSuAiP3oHI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CyPvwPNaUPnh3O3DuzbERe37EijOGlNeNbzwWKytdKfMRtL5MEXHatjVlk+RnJkPBGRKq/CvCf9Kgl2g0b6jJ+xegLer/lIsLteHxTjlKcolbOfE6clZ/uz5izcccemxfOlwSihIBKc1tQuEikO1YQKvc1/Cuqzocs1BmX2hD/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=GRljuWkQ; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1729504696; c=relaxed/simple;
+	bh=uCULIxbcJywiOKYZjq43UhyRV8sFKz967+OUgHE/Iu4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GE+MmO3cnkzdinbrRmb5ACXmKnvsLoTWuXpvc0J7WwkEioNqT4dgQlLCQZRNoAmHSwA00rm64dgRDSu1VxfanxuA3NacIHz/e9zS41pPAIC6R3aWXeBp56gcvihjHNcyKXurZlNAi0flRRqmGV5deSKllVIBB/bvFC/5OuFl1MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qyKy2Wwd; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="GRljuWkQ"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 49L9V7RX02196782, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1729503067; bh=GQSpJJI5IGjcyXynsa8pJEnZ5S6eiP4WGTSuAiP3oHI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=GRljuWkQAX6gChy37FYHi8IZKpbRRseyGLXv8+N0MCz3IxLl4L2INuKi7v/pfoEUX
-	 HgHKNOx9X4eFfI2OxJocZRb8AcJYApZMZAa+j5Z1YR5OQuc/to8fTnGH5Nzsktt++z
-	 eYgDvAWTCiTimvztraLSCdaxOXAgCqifkTeV63BbUooJkq37wIaRQUfeeDoaJuWI8n
-	 /WwbK6qLfFFBli7oGGxaz1T8C9qnRN9TeF35vf9u3dZtD/wDyb0wP7sPn4gPWlyArP
-	 X+i3r5Ie+8SEw+OAP5LIzIPTHFoXC0WSTp8XkBfQ7sMaCrzkIIcfv6x7DNh2yNF54n
-	 k/Ep1vVpHYAZw==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 49L9V7RX02196782
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Oct 2024 17:31:07 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 21 Oct 2024 17:31:08 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 21 Oct 2024 17:31:07 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2]) by
- RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2%7]) with mapi id
- 15.01.2507.035; Mon, 21 Oct 2024 17:31:07 +0800
-From: Kailang <kailang@realtek.com>
-To: Takashi Iwai <tiwai@suse.de>
-CC: Dean Matthew Menezes <dean.menezes@utexas.edu>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-        "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>,
-        Linux Sound System <linux-sound@vger.kernel.org>,
-        Greg KH
-	<gregkh@linuxfoundation.org>
-Subject: RE: No sound on speakers X1 Carbon Gen 12
-Thread-Topic: No sound on speakers X1 Carbon Gen 12
-Thread-Index: AQHbIwVT/23eeZo4dEmkKtnQN51H6bKP5WWAgABb9wCAAJxEgP//e3+AgACHy9D//4FDgIAAjaEg
-Date: Mon, 21 Oct 2024 09:31:07 +0000
-Message-ID: <556c2d97b9054562a96e070efc9f817c@realtek.com>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
-	<2024101613-giggling-ceremony-aae7@gregkh>
-	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-	<87bjzktncb.wl-tiwai@suse.de>
-	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-	<87cyjzrutw.wl-tiwai@suse.de>
-	<CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-	<87ttd8jyu3.wl-tiwai@suse.de>
-	<CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
-	<87h697jl6c.wl-tiwai@suse.de>
-	<CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
-	<87ed4akd2a.wl-tiwai@suse.de>	<87bjzekcva.wl-tiwai@suse.de>
-	<CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
-	<877ca2j60l.wl-tiwai@suse.de>	<43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
-	<87ldyh6eyu.wl-tiwai@suse.de>	<18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
- <87h6956dgu.wl-tiwai@suse.de>
-In-Reply-To: <87h6956dgu.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qyKy2Wwd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:Reply-To:Subject:From:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=mDveBoDYf4fN13vKMrP/EXZV3Nj+OeRfq74BWOg3v4w=;
+	t=1729504694; x=1729936694; b=qyKy2Wwd9aQhqHsXwIu2FxrycJ+LCB7e/ouozBUWN5rs/CJ
+	Lc+EYLSVqrYpih74WumIgkeLY5hP2Ji7iDyy0A5BtmuG9JcnzBES5pXPIqZJ4gFi8R/59R2UFyQLT
+	kr+1AZg5zgRsXaIU16UF6x5Mxjqsq9YbCvz41I5RKTI6hu9KwqPlbu0Go2pnYccIpQAIJbd0yih2F
+	MuZjezR/cPRzqDuobGTW5FdAQbCDUjWY7K1dMNFjvqAJkU80WT+qNbuxCG+LJ8rO8eXflfQHoh0bn
+	HqkAwaj4fPTnmzZjT4jxtyImfjqHkbf9a3eUeE1QESKIM9/PkLR/2qr6aiBVWt9w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t2pAx-0001lx-3g; Mon, 21 Oct 2024 11:58:11 +0200
+Message-ID: <43b6b750-3f7d-437f-a62e-ab2dba06827a@leemhuis.info>
+Date: Mon, 21 Oct 2024 11:58:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Subject: Re: [REGRESSION] spi: cadence-quadspi: STIG mode results in timeouts
+ for Micron MT25QL01 flash
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Dhruva Gole <d-gole@ti.com>
+Cc: Yoshitaka Ikeda <ikeda@nskint.co.jp>, Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@pengutronix.de, Stefan Kerkmann <s.kerkmann@pengutronix.de>,
+ regressions@lists.linux.dev, Mark Brown <broonie@kernel.org>
+References: <c2cdfba1-afcc-4a77-8890-7da49c4b73c2@pengutronix.de>
+Content-Language: en-US, de-DE
+In-Reply-To: <c2cdfba1-afcc-4a77-8890-7da49c4b73c2@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729504694;9b2e926e;
+X-HE-SMSGID: 1t2pAx-0001lx-3g
 
+On 14.10.24 14:43, Stefan Kerkmann wrote:
+> 
+> I have run into the same regression when probing a Micron MT25QL01 SPI-NOR flash
+> on a Intel CycloneV platform (socfpga) as Yoshitaka Ikeda[1]. The regression
+> manifests in read timeouts. Bisecting the issue tracked it down to commit
+> "d403fb6e76bf8 spi: cadence-quadspi: use STIG mode for small reads".
 
+Adding Dhruva Gole (author) and Mark Brown (committer) to the list of
+recipients.
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Monday, October 21, 2024 4:57 PM
-> To: Kailang <kailang@realtek.com>
-> Cc: Takashi Iwai <tiwai@suse.de>; Dean Matthew Menezes
-> <dean.menezes@utexas.edu>; stable@vger.kernel.org;
-> regressions@lists.linux.dev; Jaroslav Kysela <perex@perex.cz>; Takashi Iw=
-ai
-> <tiwai@suse.com>; Linux Sound System <linux-sound@vger.kernel.org>; Greg
-> KH <gregkh@linuxfoundation.org>
-> Subject: Re: No sound on speakers X1 Carbon Gen 12
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Mon, 21 Oct 2024 10:38:48 +0200,
-> Kailang wrote:
-> >
-> > But this platform need to assign model
-> ALC287_FIXUP_LENOVO_THKPAD_WH_ALC1318.
-> > It has a chance to broken amp IC.
->=20
-> Yes, if X1 Carbon Gen 12 is indeed the targeted model of the fix, it must=
- be
-> applied.  But we seem still missing some small piece...
->=20
-> > But I don't know why it doesn't have output from speaker.
->=20
-> The diff of COEF dump showed at NID 0x20:
-> (working)    Coeff 0x10: 0x8006
-> (broken)     Coeff 0x10: 0x8806
-> (working)    Coeff 0x46: 0x0004
-> (broken)     Coeff 0x46: 0x0404
-> It shouldn't be a problem to leave the bit 0x800 to COEF 0x10, I suppose?
+> Reverting
+> the commit resolves the issue on v6.12-rc3. There are no custom patches applied,
+> except for the debugging output mentioned in the linked thread.
 
-This just change pin function from MLK to GIPO.
-Our AE guess says, it maybe GPIO3 can't pull high.
+The culprit afaics was merged for v6.3-rc1. Makes me wonder: would
+reverting this now even an option to fix this in mainline, or would this
+just lead to a regression for someone else?
 
->=20
-> > Maybe could run hda_verb to get COEF value. To get NID 0x5A index 0 val=
-ue.
->=20
-> Dean, please run hda-verb program (as root) like:
->   hda-verb /dev/snd/hwC0D0 0x5a SET_COEF_INDEX 0x00
->   hda-verb /dev/snd/hwC0D0 0x5a GET_PROC_COEF 0
->=20
-> and give the outputs on both working and non-working cases.
->=20
-> hda-verb should be included in alsa-utils.
->=20
->=20
-> Takashi
->=20
-> >
-> > > -----Original Message-----
-> > > From: Takashi Iwai <tiwai@suse.de>
-> > > Sent: Monday, October 21, 2024 4:24 PM
-> > > To: Kailang <kailang@realtek.com>
-> > > Cc: Takashi Iwai <tiwai@suse.de>; Dean Matthew Menezes
-> > > <dean.menezes@utexas.edu>; stable@vger.kernel.org;
-> > > regressions@lists.linux.dev; Jaroslav Kysela <perex@perex.cz>;
-> > > Takashi Iwai <tiwai@suse.com>; Linux Sound System
-> > > <linux-sound@vger.kernel.org>; Greg KH <gregkh@linuxfoundation.org>
-> > > Subject: Re: No sound on speakers X1 Carbon Gen 12
-> > >
-> > >
-> > > External mail.
-> > >
-> > >
-> > >
-> > > On Mon, 21 Oct 2024 10:19:53 +0200,
-> > > Kailang wrote:
-> > > >
-> > > > Change to below model.
-> > > > +     SND_PCI_QUIRK(0x17aa, 0x231e, "Thinkpad",
-> > > ALC287_FIXUP_THINKPAD_I2S_SPK),
-> > > > +     SND_PCI_QUIRK(0x17aa, 0x231f, "Thinkpad",
-> > > > + ALC287_FIXUP_THINKPAD_I2S_SPK),
-> > > >
-> > > > The speaker will have output. Right?
-> > >
-> > > FWIW, that was what I asked in
-> > >   https://lore.kernel.org/87h697jl6c.wl-tiwai@suse.de
-> > > and Dean replied that the speaker worked with it.
-> > > (His reply missed Cc, so it didn't appear in the thread, unfortunatel=
-y).
-> > >
-> > >
-> > > Takashi
-> > >
-> > > > > -----Original Message-----
-> > > > > From: Takashi Iwai <tiwai@suse.de>
-> > > > > Sent: Monday, October 21, 2024 2:59 PM
-> > > > > To: Dean Matthew Menezes <dean.menezes@utexas.edu>
-> > > > > Cc: Takashi Iwai <tiwai@suse.de>; Kailang <kailang@realtek.com>;
-> > > > > stable@vger.kernel.org; regressions@lists.linux.dev; Jaroslav
-> > > > > Kysela <perex@perex.cz>; Takashi Iwai <tiwai@suse.com>; Linux
-> > > > > Sound System <linux-sound@vger.kernel.org>; Greg KH
-> > > > > <gregkh@linuxfoundation.org>
-> > > > > Subject: Re: No sound on speakers X1 Carbon Gen 12
-> > > > >
-> > > > >
-> > > > > External mail.
-> > > > >
-> > > > >
-> > > > >
-> > > > > On Mon, 21 Oct 2024 03:30:13 +0200, Dean Matthew Menezes wrote:
-> > > > > >
-> > > > > > I can confirm that the original fix does not bring back the
-> > > > > > speaker output.  I have attached both outputs for alsa-info.sh
-> > > > >
-> > > > > Thanks!  This confirms that the only significant difference is
-> > > > > the COEF data between working and patched-non-working cases.
-> > > > >
-> > > > > Kailang, I guess this model (X1 Carbon Gen 12) isn't with
-> > > > > ALC1318, hence your quirk rather influences badly.  Or may the
-> > > > > GPIO3 workaround have the similar effect?
-> > > > >
-> > > > > As of now, the possible fix is to simply remove the quirk
-> > > > > entries for
-> > > ALC1318.
-> > > > > But I'd need to know which model was targeted for your original
-> > > > > fix in commit
-> > > > > 1e707769df07 and whether the regressed model is with ALC1318.
-> > > > >
-> > > > >
-> > > > > Takashi
+Ciao, Thorsten
+
+> The good case is as follows:
+> 
+> ```
+> [    1.063171] **********spi_mem_op dump**************
+> [    1.063183] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    1.068093] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
+> [    1.073837] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.079823] ***************************************
+> [    1.086068] **********spi_mem_op dump**************
+> [    1.090931] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+> [    1.095815] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.101543] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.107547] ***************************************
+> [    1.113835] **********spi_mem_op dump**************
+> [    1.118695] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
+> [    1.123573] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.129395] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.135392] ***************************************
+> [    1.141592] **********spi_mem_op dump**************
+> [    1.146471] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+> [    1.151335] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.157072] data: nbytes:0x88 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.163058] ***************************************
+> [    1.169341] **********spi_mem_op dump**************
+> [    1.174219] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x30
+> [    1.179082] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.184904] data: nbytes:0x40 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.190890] ***************************************
+> [    1.197183] **********spi_mem_op dump**************
+> [    1.202045] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x80
+> [    1.206925] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.212740] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.218736] ***************************************
+> [    1.224916] **********spi_mem_op dump**************
+> [    1.229776] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    1.234649] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
+> [    1.240376] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+> [    1.246283] ***************************************
+> [    1.252443] **********spi_mem_op dump**************
+> [    1.257314] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    1.262176] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0xB7
+> [    1.267917] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+> [    1.273914] ***************************************
+> [    1.280074] **********spi_mem_op dump**************
+> [    1.284946] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    1.289809] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x4
+> [    1.295544] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+> [    1.301444] ***************************************
+> [    1.307694] 5 fixed-partitions partitions found on MTD device ff705000.spi.0
+> [    1.319593] Creating 5 MTD partitions on "ff705000.spi.0":
+> [    1.325080] 0x000000000000-0x000000040000 : "preloader"
+> [    1.331825] 0x000000040000-0x0000000c0000 : "bootloader"
+> [    1.338645] 0x0000000c0000-0x0000000e0000 : "barebox-environment"
+> [    1.346299] 0x0000000e0000-0x000000110000 : "state-storage"
+> [    1.353319] 0x000000110000-0x000008000000 : "ubi"
+> ```
+> 
+> With the STIG short read optimization enabled, the read timeouts occur:
+> 
+> ```
+> [    0.931469] **********spi_mem_op dump**************
+> [    0.931482] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    0.936398] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x9F
+> [    0.942129] data: nbytes:0x6 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    0.948132] ***************************************
+> [    0.954369] **********spi_mem_op dump**************
+> [    0.959233] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x0
+> [    0.964117] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    0.969845] data: nbytes:0x10 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    0.975844] ***************************************
+> [    1.482104] cadence-qspi ff705000.spi: Flash command execution timed out.
+> [    1.493754] **********spi_mem_op dump**************
+> [    1.493759] addr: nbytes:0x3 , buswidth 0x1, dtr 0x0, val 0x10
+> [    1.498623] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x5A
+> [    1.504451] data: nbytes:0x8 , buswidth 0x1, dtr 0x0, data dir 0x1
+> [    1.510438] ***************************************
+> [    1.516611] spi-nor spi0.0: operation failed with -110
+> [    2.026639] cadence-qspi ff705000.spi: Flash command execution timed out.
+> [    2.033430] **********spi_mem_op dump**************
+> [    2.033437] addr: nbytes:0x0 , buswidth 0x0, dtr 0x0, val 0x0
+> [    2.038300] cmd: nbytes:0x1 , buswidth 0x1, dtr 0x0, opcode 0x6
+> [    2.044041] data: nbytes:0x0 , buswidth 0x0, dtr 0x0, data dir 0x0
+> [    2.049942] ***************************************
+> [    2.056112] spi-nor spi0.0: operation failed with -110
+> [    2.066110] spi-nor spi0.0: probe with driver spi-nor failed with error -110
+> ```
+> 
+> The DT node for the flash is as follows:
+> 
+> ```
+> &qspi {
+> 	status = "okay";
+> 
+> 	flash0: flash@0 {
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		/* Micron MT25QL01 */
+> 		compatible = "n25q00", "jedec,spi-nor";
+> 		reg = <0>;	/* chip select */
+> 		spi-max-frequency = <100000000>;
+> 		m25p,fast-read;
+> 		cdns,page-size = <256>;
+> 		cdns,block-size = <16>;   /* 2^16, 64KB */
+> 		cdns,read-delay = <4>;    /* delay value in read data capture register */
+> 		cdns,tshsl-ns = <50>;
+> 		cdns,tsd2d-ns = <50>;
+> 		cdns,tchsh-ns = <4>;
+> 		cdns,tslch-ns = <4>;
+> 	};
+> };
+> ```
+> 
+> Regards,
+> Stefan Kerkmann
+> 
+> [1]:
+> https://lore.kernel.org/lkml/OSZPR01MB70048CE259A3D63C4179199A8B659@OSZPR01MB7004.jpnprd01.prod.outlook.com/#t
+> 
+> #regzbot introduced: d403fb6e76bf854ef0f7d84e797e51b9494788e0
+> 
+
+#regzbot poke
