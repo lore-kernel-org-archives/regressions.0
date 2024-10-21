@@ -1,252 +1,156 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0031CF5E1
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 19:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF3E1CB335
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 19:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729539175; cv=none; b=PnK9rGetPKEawSOM5d55+jTGiE5pu9ZSPPMY/cS+2wsIsYouUiVKA3+OtK4L/EBmPeNDXAvHrULAsVnR9TSWCA/CpSEq50+iV7me4O65SPiFRgVJ+ujBMoKu+GMZHSfmBJXy0Kw6dv2n/VLFkTC9WoVC/3tUPnrUGRzRsvNTTHA=
+	t=1729540117; cv=none; b=fywmrD9DTMh7M8WqrdiinxvwYaNTinl8QgNU8Diw7YOmJniGgKFz9LLU26VYS2frthpdFyYErPVDL+2+RpsWiyFLllDMpVMg+LAnoRqAPBxiov2/6DChlK1LpPcafgEEld44Rd/6pCGPH9xgM6mVI8eFwGMKCQw0VP65tqTqVnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729539175; c=relaxed/simple;
-	bh=4V0XjPga2xSDbOxPLy28D8hsComjHbPPkvsqyU7inZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ICosUMD1Srix4ZNbpc2tyf7K1gteM8BpW4SWQnrJ/9t66eFytPY+i2JmBQRwAYuhkwnAoFaET1e0VomZcfFrnUleHmGHcJId8kMtJ9pvwmKRVRPwSBnsh8uYGidnc2oqcglEyuGzRqnhGhx/BX/jw4M9UuedNa53unK/D3K3fjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqINKtRb; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729540117; c=relaxed/simple;
+	bh=1mhtp26nldbkYkNL9WgdwxCUmet/2hIoEzLsfujmG6E=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=HqSexXxv40jNYJl/YGdsjUSuxM1sJbMSRzwkZ4xlPRWQI4wmkBhdPsxXz++FPD7t8Dpec4DQKcr1H9EU2tjc2e1+aA8UFJZVBwhITeJ+wqCMHh4bOq4q/MhXQdiLnVUpvqrR1bAFiwNVBMNF6STV/SvNktANfraw2XV4Xuy7w6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I5w2X0DM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqINKtRb"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a9a850270e2so401347866b.0
-        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 12:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729539171; x=1730143971; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1mEFsjrwg2muYYcaLlxcwnMxP+84IdSFbixovGhqXIY=;
-        b=YqINKtRb1ntLdGtUDhJBY2X8Bnyb0aoUzgvNSQHNggjWSfoJ5/FfZi2zsLt6EYza7d
-         Z/ujZunQzV2M+7C8QbLHmHM8RBckKbKtQ6lAQDgljqgMptK0WMbTS22mcaqCGfS6dpDv
-         wCuf/6D77nDcFla+VjlWzBmvhJXCYMGlEb1iWeyihjX/5Xz9GXKVEF60kmWUan0hss6Q
-         gTDmKquBhWi9viX0EbgaGJt9BkURWfHx7SvZSefN7eIelkW0R5v6IS7yJN7M/Sa51NG+
-         zq3brMEytXNqrZ3bkLU8CUUAHYYdDHd6HbTVqVQFrFFXyNTqlbTlZhYk7OZ1ZOvSCCTh
-         51xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729539171; x=1730143971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1mEFsjrwg2muYYcaLlxcwnMxP+84IdSFbixovGhqXIY=;
-        b=atAyeRLlqPXO+5GImtSdcohUnFrDENFDpFgNruUWmQEdgSBAVVS/TFy2t8T1t7Ycc+
-         V6Zbj6KzImghcLVjNu15/+sArEKrXAi5l1GG/XTXIxg69umwiW3b0watHGHYhY3ddN8N
-         RgpdJ0KTn/aTNkXpt7zXekwi0JFQXaj8RPvEyMY/rDPUxttRxPopHScbYI1nx1kKGZfD
-         5LuhMKiXtlTViZ0MAfAV4Hvly0e6Ke56fZV351hLD8k1mJInwahd4HPtjsKi2ZHxtuEM
-         EmLHOqgOHhYYGZhsYgVPQWG18DaTGT70GQGAnBqOT9X7UDvYK9sRsD5HQFNA4rTUZHeG
-         Q3Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVad3AbByDhjT8s5xV2D3IrYbz5u0VKO+QpzTg/OfioF2J39AWPnfC37Eyam6/qRkSt4Q2S2L5np7Ciug==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxO7uc87c0my0IIZnlych05Rcv6/MGyP2R3YdJj/fuPv6QPKMnt
-	aqdyEgGmsqdPpGu/n78FEHBax1Hae5gZ0z3Wa3m/kCJBc3UGdM1FOkgME6K9Fbgq6La/kcC4j9U
-	NJc7ewQOX3s5EZaxZz3q683VnbDw=
-X-Google-Smtp-Source: AGHT+IFAMNL98PLu/k+jvmf7Yek3FMK4f/dR36xw0cjFwF39PNW5JD+YHqfnsaaGB0pBSLcqlkcepqOlVX6xXZKXLOo=
-X-Received: by 2002:a17:907:3f1c:b0:a9a:161:7863 with SMTP id
- a640c23a62f3a-a9a69de760fmr1151459366b.58.1729539171233; Mon, 21 Oct 2024
- 12:32:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I5w2X0DM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729540114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvLTrAc+n+1CPaIy+KG+kXWufej77bt1knPj7ZYg6H4=;
+	b=I5w2X0DM2Uqij1m2MDrKuwjxuFSp9bwp/QSNufAd8qxF+/0NGYRbFi+LjWIVEfqJE1dmmc
+	YuYJ2BjGw2gJ8xsoslQmrOJ6vdd7gyJQeprDilXGwHuGQOMCUx2qiWKJEa6bkHkgmSPxVw
+	Ej6vUdYzEY7O/SzsZHODT9bO1civxaw=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-FN0_IHLiPoaEXLCJMnkWUA-1; Mon,
+ 21 Oct 2024 15:48:29 -0400
+X-MC-Unique: FN0_IHLiPoaEXLCJMnkWUA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 052521955F3C;
+	Mon, 21 Oct 2024 19:48:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CCA030001A3;
+	Mon, 21 Oct 2024 19:48:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZxZ4-9guCQdAQLpu@Antony2201.local>
+References: <ZxZ4-9guCQdAQLpu@Antony2201.local> <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com> <2171405.1729521950@warthog.procyon.org.uk>
+To: Antony Antony <antony@phenome.org>
+Cc: dhowells@redhat.com, Sedat Dilek <sedat.dilek@gmail.com>,
+    Maximilian Bosch <maximilian@mbosch.me>,
+    Linux regressions mailing list <regressions@lists.linux.dev>,
+    LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+    Christian Brauner <brauner@kernel.org>
+Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAC8uq=Ppnmv98mpa1CrWLawWoPnu5abtU69v-=G-P7ysATQ2Pw@mail.gmail.com>
- <3748add3-18e5-42ef-9d48-93650cfc0682@rock-chips.com> <CAC8uq=O=519iRpcs7p+jZaKngkCDuawLz8NVZYORY6qfGPifZg@mail.gmail.com>
- <eb1d15dd-8e85-4a9b-9b8b-ee005c446bf6@rock-chips.com> <CAPDyKFr6oDxdc2UhMvAh885dofF1EeT17Ch_Fp-9f2Yvf-654A@mail.gmail.com>
-In-Reply-To: <CAPDyKFr6oDxdc2UhMvAh885dofF1EeT17Ch_Fp-9f2Yvf-654A@mail.gmail.com>
-From: Adam Green <greena88@gmail.com>
-Date: Mon, 21 Oct 2024 20:32:40 +0100
-Message-ID: <CAC8uq=NNBCmtNamvcSHbdv7U99iE6L=teRz9eZ-nJDKx4PMuFw@mail.gmail.com>
-Subject: Re: Unable to handle kernel paging request at virtual address ffffffc08058e000
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, sydarn@proton.me, 
-	linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2196249.1729540103.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date: Mon, 21 Oct 2024 20:48:23 +0100
+Message-ID: <2196250.1729540103@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi Uffe,
+I may have reproduced the bug (see attached), though the symptoms are slig=
+htly
+different.  Hopefully, it's just the one bug.
 
-I have tried the linked patch on both 6.11.4 and next-20241021 and can
-confirm that the problem is still present,
+David
+---
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x5626ca804 pfn=
+:0x7948
+flags: 0x2000000000000000(zone=3D1)
+raw: 2000000000000000 ffffea000024d3c8 ffffea00001e5248 0000000000000000
+raw: 00000005626ca804 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: VM_BUG_ON_FOLIO(((unsigned int) folio_ref_count(folio=
+) + 127u <=3D 127u))
+------------[ cut here ]------------
+kernel BUG at include/linux/mm.h:1444!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 3 UID: 0 PID: 303 Comm: md5sum Not tainted 6.12.0-rc2-ktest-00012-g57=
+e4ac5316ef-dirty #8
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/=
+01/2014
+RIP: 0010:__iov_iter_get_pages_alloc+0x701/0x7e0
+Code: 0f 0b 4d 85 f6 0f 85 f8 fc ff ff e9 21 fe ff ff 48 c7 c6 38 6b 40 82=
+ e8 cd f4 aa ff 0f 0b 48 c7 c6 38 6b 40 82 e8 bf f4 aa ff <0f> 0b 4d 89 6a=
+ 18 49 89 52 08 4d 89 42 10 45 88 4a 20 e9 26 fb ff
+RSP: 0018:ffff88800804f5c0 EFLAGS: 00010286
+RAX: 000000000000005c RBX: 0000000000001000 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 0000000000000027 RDI: 00000000ffffffff
+RBP: ffff88800804f648 R08: ffff88807f1d8fa8 R09: 00000000fffc0000
+R10: ffff88807dbd9000 R11: 0000000000000002 R12: 0000000000000001
+R13: 0000000000001000 R14: 0000000000000000 R15: 0000000000001000
+FS:  00007f0c42c29580(0000) GS:ffff88807d8c0000(0000) knlGS:00000000000000=
+00
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000560cff5bb000 CR3: 00000000046a0002 CR4: 0000000000370eb0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ? __die_body.cold+0x19/0x2b
+ ? __die+0x2a/0x40
+ ? die+0x2f/0x50
+ ? do_trap+0xb8/0x100
+ ? do_error_trap+0x6c/0x90
+ ? __iov_iter_get_pages_alloc+0x701/0x7e0
+ ? exc_invalid_op+0x52/0x70
+ ? __iov_iter_get_pages_alloc+0x701/0x7e0
+ ? asm_exc_invalid_op+0x1b/0x20
+ ? __iov_iter_get_pages_alloc+0x701/0x7e0
+ ? radix_tree_node_alloc.constprop.0+0xab/0xf0
+ iov_iter_get_pages_alloc2+0x20/0x50
+ p9_get_mapped_pages.part.0+0x77/0x260
+ ? find_held_lock+0x31/0x90
+ ? p9_tag_alloc+0x1c8/0x2f0
+ p9_virtio_zc_request+0x339/0x6f0
+ ? debug_smp_processor_id+0x17/0x20
+ ? debug_smp_processor_id+0x17/0x20
+ ? rcu_is_watching+0x11/0x50
+ ? p9_client_prepare_req+0x15f/0x190
+ p9_client_zc_rpc.constprop.0+0xe6/0x330
+ p9_client_read_once+0x145/0x2b0
+ p9_client_read+0x59/0x80
+ v9fs_issue_read+0x3d/0xa0
+ netfs_read_to_pagecache+0x27b/0x580
+ netfs_readahead+0x197/0x2f0
+ read_pages+0x4a/0x300
+ page_cache_ra_unbounded+0x197/0x250
+ page_cache_ra_order+0x2f7/0x400
+ ? __this_cpu_preempt_check+0x13/0x20
+ ? lock_release+0x168/0x290
+ page_cache_async_ra+0x1be/0x220
+ filemap_get_pages+0x2f3/0x870
+ filemap_read+0xdc/0x470
+ ? __this_cpu_preempt_check+0x13/0x20
+ ? lock_acquire+0xcc/0x1c0
+ ? preempt_count_add+0x4e/0xc0
+ ? down_read_interruptible+0xb3/0x1b0
+ netfs_buffered_read_iter+0x5c/0x90
+ netfs_file_read_iter+0x29/0x40
+ v9fs_file_read_iter+0x1b/0x30
+ vfs_read+0x22b/0x330
+ ksys_read+0x62/0xe0
+ __x64_sys_read+0x19/0x20
+ x64_sys_call+0x1b70/0x1d20
+ do_syscall_64+0x47/0x110
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Best regards,
-
-Adam
-
-On Mon, 21 Oct 2024 at 14:30, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Fri, 18 Oct 2024 at 05:43, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> >
-> > + Sam
-> >
-> > =E5=9C=A8 2024/10/18 8:06, Adam Green =E5=86=99=E9=81=93:
-> > > Hi Shawn,
-> > >
-> > > I can confirm that after reverting
-> > >
-> > > commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890
-> > > Author: Sam Protsenko <semen.protsenko@linaro.org>
-> > > Date:   Wed Mar 6 17:20:52 2024 -0600
-> > >
-> > >      mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K
-> > >
-> > > that the problem does appear to have resolved itself, I tested this o=
-n
-> > > a variety of devices.
-> > >
-> >
-> > I'm confused about the patch. Doesn't max_seg_size stand for max bytes
-> > per IDMA descriptor can handle?  How can it be equal to max_req_size
-> > which should be max_seq_size * max_segs=EF=BC=88max_segs is IDMAC descr=
-iptors
-> > number can be used=EF=BC=89 ?
-> >
-> >   /* Each descriptor can transfer up to 4KB of data in chained mode */
-> >   #define DW_MCI_DESC_DATA_LENGTH 0x1000
-> >
->
-> Does the below patch fix the problem too?
->
-> https://lore.kernel.org/lkml/20241020142931.138277-1-aurelien@aurel32.net=
-/T/
->
-> Kind regards
-> Uffe
->
-> >
-> > > Best regards,
-> > >
-> > > Adam
-> > >
-> > > On Wed, 16 Oct 2024 at 11:13, Shawn Lin <shawn.lin@rock-chips.com> wr=
-ote:
-> > >>
-> > >> =E5=9C=A8 2024/10/16 17:55, Adam Green =E5=86=99=E9=81=93:
-> > >>> Good morning,
-> > >>>
-> > >>> I would like to report a regression that appears to have been
-> > >>> introduced into the linux kernel since v6.9.
-> > >>>
-> > >>
-> > >> I didn't see many patches for dw_mmc since 6.9. So I guess the faste=
-st
-> > >> way is to do a bisect. Or maybe you could try reverting this commit
-> > >> first to see what will happen.
-> > >>
-> > >> commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890
-> > >> Author: Sam Protsenko <semen.protsenko@linaro.org>
-> > >> Date:   Wed Mar 6 17:20:52 2024 -0600
-> > >>
-> > >>       mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K
-> > >>
-> > >>
-> > >>> My device is currently experiencing a panic booting the kernel/root=
-fs
-> > >>> from an SD card.
-> > >>>
-> > >>> The device is a Powkiddy RGB30 which is a portable handheld gaming
-> > >>> console with a Rockchip RK3566 SoC (arm64).
-> > >>>
-> > >>> I have tested a variety of devices from a couple of manufacturers w=
-ith
-> > >>> the same SoC and they all have the same issue,
-> > >>> I have also tested, 6.12-rc3 and linux-next and the same issue appe=
-ars present.
-> > >>>
-> > >>> A full UART dump can be found here: https://clbin.com/zLZAW
-> > >>>
-> > >>> [   41.547983] Unable to handle kernel paging request at virtual
-> > >>> address ffffffc08058e000
-> > >>> [   41.553426] Mem abort info:
-> > >>> [   41.558231]   ESR =3D 0x0000000096000007
-> > >>> [   41.563115]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-> > >>> [   41.568135]   SET =3D 0, FnV =3D 0
-> > >>> [   41.572882]   EA =3D 0, S1PTW =3D 0
-> > >>> [   41.577575]   FSC =3D 0x07: level 3 translation fault
-> > >>> [   41.582404] Data abort info:
-> > >>> [   41.586995]   ISV =3D 0, ISS =3D 0x00000007, ISS2 =3D 0x00000000
-> > >>> [   41.591848]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-> > >>> [   41.596664]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
-> > >>> [   41.601457] swapper pgtable: 4k pages, 39-bit VAs, pgdp=3D000000=
-000363e000
-> > >>> [   41.606359] [ffffffc08058e000] pgd=3D1000000000225003,
-> > >>> p4d=3D1000000000225003, pud=3D1000000000225003, pmd=3D1000000000c8c=
-003,
-> > >>> pte=3D0000000000000000
-> > >>> [   41.616442] Internal error: Oops: 0000000096000007 [#1] PREEMPT =
-SMP
-> > >>> [   41.621544] Modules linked in: hci_uart btrtl bluetooth rfkill
-> > >>> [   41.626678] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.1=
-2.0-rc2 #1
-> > >>> [   41.631922] Hardware name: Powkiddy RGB30 (DT)
-> > >>> [   41.636951] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSB=
-S BTYPE=3D--)
-> > >>> [   41.642330] pc : dw_mci_idmac_start_dma+0xa0/0x358
-> > >>> [   41.647585] lr : __dw_mci_start_request+0x21c/0x6a0
-> > >>> [   41.652827] sp : ffffffc080003da0
-> > >>> [   41.657882] x29: ffffffc080003da0 x28: ffffff8001f06d80 x27: fff=
-fffc08058d000
-> > >>> [   41.663399] x26: ffffffc08058e000 x25: 0000000000002711 x24: 000=
-0000000002000
-> > >>> [   41.668864] x23: ffffff800167dc80 x22: 0000000080000012 x21: 000=
-0000000001000
-> > >>> [   41.674257] x20: 000000003b5d1000 x19: 0000000000001000 x18: 000=
-0000972073a81
-> > >>> [   41.679654] x17: ffffff9c39b47000 x16: ffffffc080000000 x15: 000=
-0000000000001
-> > >>> [   41.685074] x14: 0000000000000004 x13: 000001ba5087c8e8 x12: 000=
-00000000001a8
-> > >>> [   41.690506] x11: 0000000000000040 x10: ffffffe40628d890 x9 : 000=
-0000000000000
-> > >>> [   41.695972] x8 : ffffff803fd44080 x7 : 0000000008f0d180 x6 : 000=
-000003b9ac9ff
-> > >>> [   41.701495] x5 : 0000000000fffffe x4 : ffffffc08058de80 x3 : 000=
-00000b2d05e00
-> > >>> [   41.707073] x2 : ffffffe40546ab08 x1 : ffffffc08058e000 x0 : 000=
-0000000001000
-> > >>> [   41.712686] Call trace:
-> > >>> [   41.717857]  dw_mci_idmac_start_dma+0xa0/0x358
-> > >>> [   41.723266]  __dw_mci_start_request+0x21c/0x6a0
-> > >>> [   41.728719]  dw_mci_work_func+0x4c8/0x4d8
-> > >>> [   41.734144]  process_one_work+0x148/0x284
-> > >>> [   41.739587]  bh_worker+0x224/0x278
-> > >>> [   41.744985]  workqueue_softirq_action+0x78/0x88
-> > >>> [   41.750545]  tasklet_action+0x14/0x3c
-> > >>> [   41.756023]  handle_softirqs+0x100/0x23c
-> > >>> [   41.761506]  __do_softirq+0x14/0x20
-> > >>> [   41.766917]  ____do_softirq+0x10/0x20
-> > >>> [   41.772301]  call_on_irq_stack+0x24/0x54
-> > >>> [   41.777689]  do_softirq_own_stack+0x1c/0x40
-> > >>> [   41.783106]  irq_exit_rcu+0x94/0xd0
-> > >>> [   41.788455]  el1_interrupt+0x38/0x68
-> > >>> [   41.793799]  el1h_64_irq_handler+0x18/0x24
-> > >>> [   41.799200]  el1h_64_irq+0x68/0x6c
-> > >>> [   41.804532]  default_idle_call+0x28/0x58
-> > >>> [   41.809931]  do_idle+0x1fc/0x260
-> > >>> [   41.815152]  cpu_startup_entry+0x34/0x40
-> > >>> [   41.820346]  kernel_init+0x0/0x140
-> > >>> [   41.825437]  console_on_rootfs+0x0/0x6c
-> > >>> [   41.830477]  __primary_switched+0x80/0x88
-> > >>> [   41.835501] Code: 54000280 d294f8c0 940e1f8c d503203f (b9400340)
-> > >>> [   41.840748] ---[ end trace 0000000000000000 ]---
-> > >>> [   41.845896] Kernel panic - not syncing: Oops: Fatal exception in=
- interrupt
-> > >>> [   41.851321] SMP: stopping secondary CPUs
-> > >>> [   41.856502] Kernel Offset: 0x2384800000 from 0xffffffc080000000
-> > >>> [   41.861840] PHYS_OFFSET: 0x0
-> > >>> [   41.866814] CPU features: 0x0c,00000014,00280928,4201720b
-> > >>> [   41.872087] Memory Limit: none
-> > >>> [   41.877119] Rebooting in 1 seconds..
-> > >>>
-> > >>> Best regards,
-> > >>>
-> > >>> Adam Green
-> > >>
-> >
