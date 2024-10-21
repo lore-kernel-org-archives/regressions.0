@@ -1,151 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3472C1FDF85
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 20:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587CF1E3766
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 23:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729543116; cv=none; b=O1BDQka4EoInuYfTLIFkvBjjkMRdas4TZdNwPw4tFuY2hcLL54OUW+EwzROVMT23Bdr7+dRPO3JXTmB8BOSJLYutDBKAdOSZlbc60EeOpSUJf85ctV5HCNtX4c6Ufsm9XSQqRoO6wGcvQXOAAY6ra+3+ptDXcAFi6/ZpGDZq76U=
+	t=1729551635; cv=none; b=gzeEshsfNElr7A8CHw3qNkdFXyEtk4jbF4xMSKx+QKMZIIWtLB/a2+jLpaJov2xAkqxqm+8x+1UwMCZ5YbTrtyyyV0sikP4rS6N05hIj3jaLRhr2q8WPyYENG6ihVNc0LIaTGK5sJ+nh7wCkju/yVxA8xtt1UvE7dw4oPxbcGBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729543116; c=relaxed/simple;
-	bh=Cos8ohnYr0F4jqaXj+BTslQpRTXcBuFfx3VTxeLwQTk=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=eYozxPrVXb2YGp2ofVFnDvo0A+zESlsdvYQyhqXjXnngEgQYwereUIgoFJ3dv85lLPYP8o6ngblBzccwmBEQslC3d8l8ONEZC3SjY/W0Sl8IjKk4GM2e5p4hWOkczp6cirmLh6ll2eAfXKjG1YIyA2YGyOofcb6BvOx8Rui0y10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wo+h687T; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1729551635; c=relaxed/simple;
+	bh=3LeeyEafeXaGnkqTR7YkYuS9ctyqOUkRKIdPORL0JMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kz59u6T+sL+ilJ+8KMutM6+Np2/EsRC26wG72yr7KWXsNTfXnU6rcZDzeiJqvbHA/iIf+LhBRrKH77c+RxP29pFiEx3hWTlWXSOpvu6XodmhY9wneRrJdSmB4HAbDpzNsFHQIVtnh8GmM4AUZXmYh8swW/nhlxXJ8vaVZKQ5eW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eGKMZY5S; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wo+h687T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729543113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hFqUYZDvnqQ0+7pFuY+npHBOiAQbpvlJjd9i7zKW2g=;
-	b=Wo+h687Tch78PoS+au1mvc3Ozfzc6x31e7KHDaFOe7lxqrArPhIWdS4PVX0Gz+VWjRkZQk
-	YfFgfuTGsvpCkJBRIDmcdximQxPk0/wGa+p/bvo8RsBAz+ewk+Gu6IKq/l6wJ8pYPACsYK
-	XVfAFaHTMrQL4dvQW5r5hA/hxTzsbE4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-MlI_3gj7OBqbeg-NnrihHA-1; Mon,
- 21 Oct 2024 16:38:29 -0400
-X-MC-Unique: MlI_3gj7OBqbeg-NnrihHA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 30B681955D55;
-	Mon, 21 Oct 2024 20:38:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 99AC119560A2;
-	Mon, 21 Oct 2024 20:38:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZxFQw4OI9rrc7UYc@Antony2201.local>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
-To: Antony Antony <antony@phenome.org>
-Cc: dhowells@redhat.com, Sedat Dilek <sedat.dilek@gmail.com>,
-    Maximilian Bosch <maximilian@mbosch.me>,
-    Linux regressions mailing list <regressions@lists.linux.dev>,
-    LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-    Christian Brauner <brauner@kernel.org>
-Subject: [PATCH] 9p: Don't revert the I/O iterator after reading
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eGKMZY5S"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a2cdc6f0cso684697366b.2
+        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 16:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1729551631; x=1730156431; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rZmK1iIL6psL/Ic0R5BQSUU9uDtSN6VQwETroA+PQ+k=;
+        b=eGKMZY5SAoa6WTIh8mY1EMq9jA6od/qa4VEBmjq08qBTQP8cuhGEq4jjV7Nja36g4d
+         BHFVLC+xGHSmTxSbmwdSWr9WLSShZDnbst84ak8c/++3BbKUR44fHAPCKL4zbUsmbOGO
+         YyvPCnXLYzo5ZD3IR7hXFl433k3YGWue9zbmM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729551631; x=1730156431;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rZmK1iIL6psL/Ic0R5BQSUU9uDtSN6VQwETroA+PQ+k=;
+        b=xDp8W1JgdUGUlQI7ORTDCdNUxu5pvOid6A9F3f9Z6sguHhzUd7VY277hlqTGgZL7mH
+         htmogwa2UNP2aWxzmDffHkkQSVug9zoiPeBb2KTBFd/78dSk88kAZEaKwVCIYYe0tHDy
+         KuZS6bMomPWN5QQp/+JNHD6tOdvObQvyXlWpcJIovd5C23yFrSJkcb5BvZ//OTGVnvGf
+         eyUHQMJRK7RA6wdeweKARQoX3YNpF1heLbHPei64Ux3blu9nSBDLxaKp+gQqeYEH3KtJ
+         kXgt7HIqZG1hzP0J36v47jWCHDvLkiq6ylpwu5g4pdR299VS275KEbzaLQSutKQiYrFG
+         NXIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGG8AYr6rp71YdNeluWamBTmOEuDtD5lIqz+PNijel8tpsyDnwjG3UtuvUPE5ivF3qTSqyvSOT9s47cA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzLBktSVixzBnrKCx60Tsd3+aEpylh32B2Wi753TXRCEiF2kebB
+	/lFYa/NjZXELiywK02xGi/vpjvh3i/M3327vqmVmrDg62veuwSZABDIgC4Kc0pEkk9jov4/8bxg
+	hOhgBSA==
+X-Google-Smtp-Source: AGHT+IEQw7LKDywGALzAs3XoAAQChzUespHd+oynOcHp7QrLcvSkwySel13LACMf0VH/wyJq5/ElVQ==
+X-Received: by 2002:a17:906:7312:b0:a9a:123d:3f1a with SMTP id a640c23a62f3a-a9aace39941mr43030266b.17.1729551631448;
+        Mon, 21 Oct 2024 16:00:31 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a9137074fsm262694666b.135.2024.10.21.16.00.29
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2024 16:00:30 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9a6b4ca29bso389406966b.3
+        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 16:00:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV5cluXNowEcDVso4OMLBccdi+rBru/dmtItDEXg4iuqLAC5EPPLeOVXlzWB+e7LwmGSdDLwA93om2T9A==@lists.linux.dev
+X-Received: by 2002:a17:907:97c3:b0:a9a:4e77:92f with SMTP id
+ a640c23a62f3a-a9aad3d659bmr42656766b.56.1729551629565; Mon, 21 Oct 2024
+ 16:00:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2299158.1729543103.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Oct 2024 21:38:23 +0100
-Message-ID: <2299159.1729543103@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20240807094725.2193423-1-pedro.falcato@gmail.com>
+ <20241018172804.GA2151929@nvidia.com> <CAKbZUD0Z_Kyumx3ourywUYhfksGNgJWrCpjAdnxtsbwS4vMRkA@mail.gmail.com>
+ <1cb07628-269c-4d6c-9936-f3a2b233165f@leemhuis.info> <b6852c2d-3371-47a4-bfeb-049f4048e88a@suse.cz>
+ <ZxL3FsmjGrTT_EV9@codewreck.org> <d937fd92-249e-4660-a59a-ee85b6ec4691@suse.cz>
+ <ZxafcO8KWMlXaeWE@telecaster.dhcp.thefacebook.com> <CAHk-=wjpxeTifM1LFPQFR5_RjD2uvDAHbZ-ATCqox+RuFwkbDQ@mail.gmail.com>
+ <Zxa0K-4mhSI91S-w@telecaster.dhcp.thefacebook.com>
+In-Reply-To: <Zxa0K-4mhSI91S-w@telecaster.dhcp.thefacebook.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 21 Oct 2024 16:00:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiBSEzzC2CTtTgnJ-ou+1ye7CVw45ogeH_eFR_fDF=Z8A@mail.gmail.com>
+Message-ID: <CAHk-=wiBSEzzC2CTtTgnJ-ou+1ye7CVw45ogeH_eFR_fDF=Z8A@mail.gmail.com>
+Subject: Re: [PATCH] 9p: Avoid creating multiple slab caches with the same name
+To: Omar Sandoval <osandov@osandov.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, v9fs@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Jason Gunthorpe <jgg@nvidia.com>, Pedro Falcato <pedro.falcato@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Antony,
+On Mon, 21 Oct 2024 at 13:06, Omar Sandoval <osandov@osandov.com> wrote:
+>
+> Yup, that works here.
+>
+> Tested-by: Omar Sandoval <osandov@fb.com>
 
-I think I may have a fix already lurking on my netfs-writeback branch for =
-the
-next merge window.  Can you try the attached?
+Ok, I changed the '%d' to a '%u' (because go big or go home), and applied it.
 
-David
----
-Don't revert the I/O iterator before returning from p9_client_read_once().
-netfslib doesn't require the reversion and nor doed 9P directory reading.
+Hopefully I didn't screw anything up in the process.
 
-Make p9_client_read() use a temporary iterator to call down into
-p9_client_read_once(), and advance that by the amount read.
-
-Reported-by: Antony Antony <antony@phenome.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- net/9p/client.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 5cd94721d974..be59b0a94eaf 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1519,13 +1519,15 @@ p9_client_read(struct p9_fid *fid, u64 offset, str=
-uct iov_iter *to, int *err)
- 	*err =3D 0;
- =
-
- 	while (iov_iter_count(to)) {
-+		struct iov_iter tmp =3D *to;
- 		int count;
- =
-
--		count =3D p9_client_read_once(fid, offset, to, err);
-+		count =3D p9_client_read_once(fid, offset, &tmp, err);
- 		if (!count || *err)
- 			break;
- 		offset +=3D count;
- 		total +=3D count;
-+		iov_iter_advance(to, count);
- 	}
- 	return total;
- }
-@@ -1567,16 +1569,12 @@ p9_client_read_once(struct p9_fid *fid, u64 offset=
-, struct iov_iter *to,
- 	}
- 	if (IS_ERR(req)) {
- 		*err =3D PTR_ERR(req);
--		if (!non_zc)
--			iov_iter_revert(to, count - iov_iter_count(to));
- 		return 0;
- 	}
- =
-
- 	*err =3D p9pdu_readf(&req->rc, clnt->proto_version,
- 			   "D", &received, &dataptr);
- 	if (*err) {
--		if (!non_zc)
--			iov_iter_revert(to, count - iov_iter_count(to));
- 		trace_9p_protocol_dump(clnt, &req->rc);
- 		p9_req_put(clnt, req);
- 		return 0;
-@@ -1596,8 +1594,6 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, =
-struct iov_iter *to,
- 			p9_req_put(clnt, req);
- 			return n;
- 		}
--	} else {
--		iov_iter_revert(to, count - received - iov_iter_count(to));
- 	}
- 	p9_req_put(clnt, req);
- 	return received;
-
+              Linus
