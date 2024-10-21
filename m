@@ -1,95 +1,170 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189DD10A3E
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 23:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.96.220.36
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729554820; cv=none; b=SYnGB5IE+cIJaSIJTl/NqqzjpQQAF/otb/ZFUO9juBXcW1GsjE36SrqyLWim9Z91MuvXcIqnvX+qvJuFwhG15X83IGPAXz1IXAwyaMGExjwb2iPZUQVhPgSb/pdHLtHZWKEpfSYyBW+g8Pja3n5nZzNrv8s3qPVpS61Z8MIN84E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729554820; c=relaxed/simple;
+	bh=tFRu6EMylPp3LvWlxOVcpIx8tqErVAbtF+BDXGrKeFs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pe9Ky0jIqA/sBs7XT4iB0n0nYrd4oIcz4y8irr0tKToV7dfWgt5tAEdW01U9G2tHjSiz9DTsn5Ucr9CVF9vwicOmvImgR+u1PEgBWEkNvFTBoOQ83XN+eX2WgGN1X9xgc7yUqd02sdzzeuGG6GISqEwduXUwn/aWyhcboGlZzkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com; spf=pass smtp.mailfrom=secunet.com; dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b=GXpKyRlG; arc=none smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secunet.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b="GXpKyRlG"
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id EEE1F20820;
+	Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id H3eHxTkhD1Aq; Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (rl1.secunet.de [10.53.40.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587CF1E3766
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 23:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729551635; cv=none; b=gzeEshsfNElr7A8CHw3qNkdFXyEtk4jbF4xMSKx+QKMZIIWtLB/a2+jLpaJov2xAkqxqm+8x+1UwMCZ5YbTrtyyyV0sikP4rS6N05hIj3jaLRhr2q8WPyYENG6ihVNc0LIaTGK5sJ+nh7wCkju/yVxA8xtt1UvE7dw4oPxbcGBA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729551635; c=relaxed/simple;
-	bh=3LeeyEafeXaGnkqTR7YkYuS9ctyqOUkRKIdPORL0JMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kz59u6T+sL+ilJ+8KMutM6+Np2/EsRC26wG72yr7KWXsNTfXnU6rcZDzeiJqvbHA/iIf+LhBRrKH77c+RxP29pFiEx3hWTlWXSOpvu6XodmhY9wneRrJdSmB4HAbDpzNsFHQIVtnh8GmM4AUZXmYh8swW/nhlxXJ8vaVZKQ5eW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eGKMZY5S; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eGKMZY5S"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a2cdc6f0cso684697366b.2
-        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 16:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1729551631; x=1730156431; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rZmK1iIL6psL/Ic0R5BQSUU9uDtSN6VQwETroA+PQ+k=;
-        b=eGKMZY5SAoa6WTIh8mY1EMq9jA6od/qa4VEBmjq08qBTQP8cuhGEq4jjV7Nja36g4d
-         BHFVLC+xGHSmTxSbmwdSWr9WLSShZDnbst84ak8c/++3BbKUR44fHAPCKL4zbUsmbOGO
-         YyvPCnXLYzo5ZD3IR7hXFl433k3YGWue9zbmM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729551631; x=1730156431;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rZmK1iIL6psL/Ic0R5BQSUU9uDtSN6VQwETroA+PQ+k=;
-        b=xDp8W1JgdUGUlQI7ORTDCdNUxu5pvOid6A9F3f9Z6sguHhzUd7VY277hlqTGgZL7mH
-         htmogwa2UNP2aWxzmDffHkkQSVug9zoiPeBb2KTBFd/78dSk88kAZEaKwVCIYYe0tHDy
-         KuZS6bMomPWN5QQp/+JNHD6tOdvObQvyXlWpcJIovd5C23yFrSJkcb5BvZ//OTGVnvGf
-         eyUHQMJRK7RA6wdeweKARQoX3YNpF1heLbHPei64Ux3blu9nSBDLxaKp+gQqeYEH3KtJ
-         kXgt7HIqZG1hzP0J36v47jWCHDvLkiq6ylpwu5g4pdR299VS275KEbzaLQSutKQiYrFG
-         NXIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGG8AYr6rp71YdNeluWamBTmOEuDtD5lIqz+PNijel8tpsyDnwjG3UtuvUPE5ivF3qTSqyvSOT9s47cA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzLBktSVixzBnrKCx60Tsd3+aEpylh32B2Wi753TXRCEiF2kebB
-	/lFYa/NjZXELiywK02xGi/vpjvh3i/M3327vqmVmrDg62veuwSZABDIgC4Kc0pEkk9jov4/8bxg
-	hOhgBSA==
-X-Google-Smtp-Source: AGHT+IEQw7LKDywGALzAs3XoAAQChzUespHd+oynOcHp7QrLcvSkwySel13LACMf0VH/wyJq5/ElVQ==
-X-Received: by 2002:a17:906:7312:b0:a9a:123d:3f1a with SMTP id a640c23a62f3a-a9aace39941mr43030266b.17.1729551631448;
-        Mon, 21 Oct 2024 16:00:31 -0700 (PDT)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a9137074fsm262694666b.135.2024.10.21.16.00.29
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2024 16:00:30 -0700 (PDT)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9a6b4ca29bso389406966b.3
-        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 16:00:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV5cluXNowEcDVso4OMLBccdi+rBru/dmtItDEXg4iuqLAC5EPPLeOVXlzWB+e7LwmGSdDLwA93om2T9A==@lists.linux.dev
-X-Received: by 2002:a17:907:97c3:b0:a9a:4e77:92f with SMTP id
- a640c23a62f3a-a9aad3d659bmr42656766b.56.1729551629565; Mon, 21 Oct 2024
- 16:00:29 -0700 (PDT)
+	by a.mx.secunet.com (Postfix) with ESMTPS id 4B269206B0;
+	Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 4B269206B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secunet.com;
+	s=202301; t=1729554814;
+	bh=4oO/CO1S7FHDO6oDhvZ6wAucF3SqIDF1wHi005tQZjg=;
+	h=Date:From:To:CC:Subject:Reply-To:References:In-Reply-To:From;
+	b=GXpKyRlGqvFxZDeYVNHJVNH7HsQ9/2IvOMe3Fv7yFvWz5glP/+7n53h9L07zwt7H0
+	 Cl0NDxEcUI1rQj6FZa2upn5ARPUqQ2Tb68tVcnNIvkjP73kQjBOMBCNe3aOy0R3RKk
+	 aaXIpi1iDw9fMTtbEv0fDTNTwfbAKpLG3StHPKQz3ftbPW8s6THy3FfVHdGwRQecXc
+	 0l/ONEwHW7su2fZCftYGMaCcZHWcLg39TVsJMT6VYNyxsfQu7+DjmPurmWExOyX1sn
+	 hOacj5DWZaUp12WzQf9Ty1TPjVc9PBsUeLSZceqwbkT0vxQaq9eZ8mC+6CGOSEq7ua
+	 KOFwewkYkb2ig==
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 22 Oct 2024 01:53:34 +0200
+Received: from moon.secunet.de (172.18.149.1) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Oct
+ 2024 01:53:33 +0200
+Date: Tue, 22 Oct 2024 01:53:26 +0200
+From: Antony Antony <antony.antony@secunet.com>
+To: David Howells <dhowells@redhat.com>
+CC: Antony Antony <antony@phenome.org>, Sedat Dilek <sedat.dilek@gmail.com>,
+	Maximilian Bosch <maximilian@mbosch.me>, Linux regressions mailing list
+	<regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] 9p: Don't revert the I/O iterator after reading
+Message-ID: <ZxbpdnA4jR7IYhRH@moon.secunet.de>
+Reply-To: <antony.antony@secunet.com>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+ <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
+ <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
+ <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
+ <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
+ <2299159.1729543103@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240807094725.2193423-1-pedro.falcato@gmail.com>
- <20241018172804.GA2151929@nvidia.com> <CAKbZUD0Z_Kyumx3ourywUYhfksGNgJWrCpjAdnxtsbwS4vMRkA@mail.gmail.com>
- <1cb07628-269c-4d6c-9936-f3a2b233165f@leemhuis.info> <b6852c2d-3371-47a4-bfeb-049f4048e88a@suse.cz>
- <ZxL3FsmjGrTT_EV9@codewreck.org> <d937fd92-249e-4660-a59a-ee85b6ec4691@suse.cz>
- <ZxafcO8KWMlXaeWE@telecaster.dhcp.thefacebook.com> <CAHk-=wjpxeTifM1LFPQFR5_RjD2uvDAHbZ-ATCqox+RuFwkbDQ@mail.gmail.com>
- <Zxa0K-4mhSI91S-w@telecaster.dhcp.thefacebook.com>
-In-Reply-To: <Zxa0K-4mhSI91S-w@telecaster.dhcp.thefacebook.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 21 Oct 2024 16:00:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiBSEzzC2CTtTgnJ-ou+1ye7CVw45ogeH_eFR_fDF=Z8A@mail.gmail.com>
-Message-ID: <CAHk-=wiBSEzzC2CTtTgnJ-ou+1ye7CVw45ogeH_eFR_fDF=Z8A@mail.gmail.com>
-Subject: Re: [PATCH] 9p: Avoid creating multiple slab caches with the same name
-To: Omar Sandoval <osandov@osandov.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, v9fs@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Jason Gunthorpe <jgg@nvidia.com>, Pedro Falcato <pedro.falcato@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2299159.1729543103@warthog.procyon.org.uk>
+Precedence: first-class
+Priority: normal
+Organization: secunet
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 
-On Mon, 21 Oct 2024 at 13:06, Omar Sandoval <osandov@osandov.com> wrote:
->
-> Yup, that works here.
->
-> Tested-by: Omar Sandoval <osandov@fb.com>
+Hi David,
 
-Ok, I changed the '%d' to a '%u' (because go big or go home), and applied it.
+On Mon, Oct 21, 2024 at 21:38:23 +0100, David Howells wrote:
+> Hi Antony,
+> 
+> I think I may have a fix already lurking on my netfs-writeback branch for the
+> next merge window.  Can you try the attached?
 
-Hopefully I didn't screw anything up in the process.
+yes. The fix works. I rebooted a few times and no crash.
 
-              Linus
+Tested-by: Antony Antony <antony.antony@secunet.com>
+
+I am running test script in a loop over night. 
+
+thanks,
+-antony
+
+> 
+> David
+> ---
+> Don't revert the I/O iterator before returning from p9_client_read_once().
+> netfslib doesn't require the reversion and nor doed 9P directory reading.
+> 
+> Make p9_client_read() use a temporary iterator to call down into
+> p9_client_read_once(), and advance that by the amount read.
+> 
+> Reported-by: Antony Antony <antony@phenome.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Eric Van Hensbergen <ericvh@kernel.org>
+> cc: Latchesar Ionkov <lucho@ionkov.net>
+> cc: Dominique Martinet <asmadeus@codewreck.org>
+> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+> cc: v9fs@lists.linux.dev
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+
+
+> ---
+>  net/9p/client.c |   10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/net/9p/client.c b/net/9p/client.c
+> index 5cd94721d974..be59b0a94eaf 100644
+> --- a/net/9p/client.c
+> +++ b/net/9p/client.c
+> @@ -1519,13 +1519,15 @@ p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err)
+>  	*err = 0;
+>  
+>  	while (iov_iter_count(to)) {
+> +		struct iov_iter tmp = *to;
+>  		int count;
+>  
+> -		count = p9_client_read_once(fid, offset, to, err);
+> +		count = p9_client_read_once(fid, offset, &tmp, err);
+>  		if (!count || *err)
+>  			break;
+>  		offset += count;
+>  		total += count;
+> +		iov_iter_advance(to, count);
+>  	}
+>  	return total;
+>  }
+> @@ -1567,16 +1569,12 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
+>  	}
+>  	if (IS_ERR(req)) {
+>  		*err = PTR_ERR(req);
+> -		if (!non_zc)
+> -			iov_iter_revert(to, count - iov_iter_count(to));
+>  		return 0;
+>  	}
+>  
+>  	*err = p9pdu_readf(&req->rc, clnt->proto_version,
+>  			   "D", &received, &dataptr);
+>  	if (*err) {
+> -		if (!non_zc)
+> -			iov_iter_revert(to, count - iov_iter_count(to));
+>  		trace_9p_protocol_dump(clnt, &req->rc);
+>  		p9_req_put(clnt, req);
+>  		return 0;
+> @@ -1596,8 +1594,6 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
+>  			p9_req_put(clnt, req);
+>  			return n;
+>  		}
+> -	} else {
+> -		iov_iter_revert(to, count - received - iov_iter_count(to));
+>  	}
+>  	p9_req_put(clnt, req);
+>  	return received;
+> 
