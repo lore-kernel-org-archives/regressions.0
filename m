@@ -1,107 +1,67 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A291D5AA6
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 07:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B721E0DD4;
+	Mon, 21 Oct 2024 07:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729495928; cv=none; b=A+Chh1WEFXj2z0ykX4Z5EGTjCZJ/BS4g+/YdiTvbimcP2+O636wVNoYSBVEEmzEZbgEg3rqFMG8T4mipPaMR3CM2ud97X9vBUmOJyV2oWg4zM6b3NiVpu/U/vc8u8PV8XgaPR8Gzkh6zwxkJO4jL+Y8sDauGqnOsWxoBiviRFn4=
+	t=1729496654; cv=none; b=XSSqYGhWhMg+1622uLc0411jvDUscAhfMVQU2kCny+QsFB49emuyEU5cY8CjFMYz7lEmEPI0wYZqGivFZQpSaKpe8ert+bM6aPLZRk1UJXeZsAef/rL2Fq7SELKUiovCIAWyj+FJlagj8+j927DY7k6EmQvS9DZZLAqKaVzAzDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729495928; c=relaxed/simple;
-	bh=jsFFDqK9j4osMzG9Hf/Jl4FKrfH26gMir5LU2zRCC2c=;
+	s=arc-20240116; t=1729496654; c=relaxed/simple;
+	bh=dmEkpj1SX2e3mHQUhOKtpvrPvJet0vNsLVPj9d+IIGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTl8PAuNS0dwa4fPLKD2O9mkWTT/wsLVsqsw7dAG7DUHQkWystNy8PI5TWMjEO1lgqEEwtZkdOnsS8rj1Y346OiFNkFWIPH7HK0+6bOLxTOhq1DyQUrKZov58AoyEVZO4428nymul84UfpXt7jMmKuS2+yi5qSG+wObDoUdGMM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bnbvAs6U; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=NoD5JOQduKijBnH8WerH/3x1RkcAGxMrI6T6RybSLUwRx+SrQfS3ULNFLRR4bQ3h76zSk9FiKcSnNJRMhqbsZDQg/gr4qonHu+aji17a6JO2WdDPZwdj6QT7CGW8i3iSGNPJWICvo9GW/i80xfOXk3Y1biLHR/iN5K0J/ap0+vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cdUIg4em; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bnbvAs6U"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1298940E0184;
-	Mon, 21 Oct 2024 07:31:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DqzfQdhGwoHO; Mon, 21 Oct 2024 07:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729495913; bh=8SmcL6UZK8KZbZ3fnpWgyhFG2IJfwd0RD8+4bVI03e8=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cdUIg4em"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C041BC4CEC3;
+	Mon, 21 Oct 2024 07:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1729496654;
+	bh=dmEkpj1SX2e3mHQUhOKtpvrPvJet0vNsLVPj9d+IIGQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bnbvAs6Uc/1eJRySZ+Zs/AgbsdS+/d5tVc/4fl/Aai2a2Mx7tFzpQlrZnxQJPZnHT
-	 5XpN9KRgVhmBk0mTJWIW3H82wUD3V54QlwzbakzpSCsC0gEDWYWYCNIXssA11kVMBb
-	 lmwBgRmioAzDdCZ40rzSLfXKRAK+vbFVXbrGz0W/uW20TBAt8RC9mdleIp0x2hIuz0
-	 IeXqkM6gpkg8A/6xUro8YpDiO2Qj6nIeVdP6mImBw9nFoveKUBr8TJws7u1lpgO1PV
-	 kSCKhgEG4WZw6ShP8hfCc0QRu7cs3WVv2OqRxkV0o+VZ1X8bMJCKkMKAqxi/OH/Va4
-	 TBAckZQrz4MXoyEJU1SwCBQFtzB73tkKDlYCw9DCOnzHciMt2U3knea72XXHj/7Fnm
-	 9W3lVVjY/a5wlz6gDuDthuFnrr8+vEipu32sQ/JYs1V/+3Grl4S57MPjBHACKURf+C
-	 YYeto8n5m7B4NVBLqLyfnDNP4Od7jbI8r5hLpQe8LjYDz8sDm0Lhw5LZbO1PCGGN/k
-	 ZpKoSZFNLxVESQd5UFsWdz10PUYtay1QXiWOn0hRB6b0NgIau37/JnYQYY8bIj9jIF
-	 bLzisDTfYiPPkxrADK6gYK9fx9vPQ/EiPz5uuB+X9SJHBg41S+doCic6OeHiKlOAcD
-	 XrpfDWN53H3xAl34yqqVKMik=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BF9140E0194;
-	Mon, 21 Oct 2024 07:31:48 +0000 (UTC)
-Date: Mon, 21 Oct 2024 09:31:40 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
+	b=cdUIg4emr5YXIh+f3xr5HDRub4+1C+zEb6YP7bg9qG9t/RYh6BfGLFtrnnw8s18/l
+	 CQ/e5Ex/ebMSaMtO6xFM/5fv9w4D9uSVuYQ8UDXTKAyPqPmpkKbavrQKR2xeLlc8ak
+	 S86PAlvWrebXu7QbPEe8z9HVlkYnk0JaoN/tSOf8=
+Date: Mon, 21 Oct 2024 09:44:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
 	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: AMD zen microcode updates breaks boot
-Message-ID: <20241021073140.GAZxYDXCk02lSrG3-T@fat_crate.local>
-References: <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
- <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
- <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
- <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
- <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
- <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
- <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
- <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
- <20241020121819.GAZxT1CyR_5vLLZ5e6@fat_crate.local>
- <df217737-6e2c-41fe-b558-3e2ab6dc0d9e@kernel.dk>
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: Pls pick up two bluetooth fixes
+Message-ID: <2024102100-spongy-etching-0695@gregkh>
+References: <2fad9d09-c328-4353-be0b-cfcfef33ed01@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df217737-6e2c-41fe-b558-3e2ab6dc0d9e@kernel.dk>
+In-Reply-To: <2fad9d09-c328-4353-be0b-cfcfef33ed01@leemhuis.info>
 
-On Sun, Oct 20, 2024 at 06:47:25PM -0600, Jens Axboe wrote:
-> Works, outside of waiting 3 min for the serial console spewage from the
-> patch! But it boots and it's happy after that. Attached here gzip'ed as
-> it's 1.3M otherwise.
-
-Thanks for testing.
-
-Lemme write proper patches, run them everywhere here and give them to you for
-one final testing.
-
-> I get:
+On Mon, Oct 21, 2024 at 05:28:25AM +0200, Thorsten Leemhuis wrote:
+> Hi Greg! Please consider picking up the following two bluetooth fixes
+> for the next round of stable updates, they fix problems quite a few
+> users hit in various stable series due to backports:
 > 
-> root@r7625 ~# echo 1 > /sys/devices/system/cpu/microcode/reload
-> warning: An error occurred while redirecting file '/sys/devices/system/cpu/microcode/reload'
-> open: Permission denied
+> 4084286151fc91 ("Bluetooth: btusb: Fix not being able to reconnect after
+> suspend") [v6.12-rc4] for 6.11.y
 > 
-> and no output in dmesg.
+> and
+> 
+> 2c1dda2acc4192 ("Bluetooth: btusb: Fix regression with fake CSR
+> controllers 0a12:0001") [v6.12-rc4] for 5.10.y and later
+> 
+> For details see also:
+> https://lore.kernel.org/all/CABBYNZL0_j4EDWzDS=kXc1Vy0D6ToU+oYnP_uBWTKoXbEagHhw@mail.gmail.com/
 
-Right, you need
+Now picked up, thanks!  Hopefully this fixes the bluetooth regression on
+my new laptop, I haven't had the time to bisect it yet...
 
-CONFIG_MICROCODE_LATE_LOADING=y
-
-for that.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
