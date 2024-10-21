@@ -1,90 +1,119 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF981E7C34
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 14:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140EF1B59A
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 15:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729521962; cv=none; b=egPC5pl+5lWFy0dDrdGmJYj7O/sJaHvwS+HTdhnsjRrVKa2EbN7nFg/szypL1Hx+qXtndDtlOD8EX0xfmuyB60zwVpTegPqti3xRo8GO5HPOVqdlHIgMEI31foye4A4KkzOWhCPOA1hP7nON2NJDv3thYkemSpK/i4PoaHDv6cE=
+	t=1729524574; cv=none; b=Eoqp2FoXJcFrq59fdfdTjM4TBUsHwhoP7LepEnkIqgcweNxkWIKNCKZBHKsBrA4kzboJtoI8eTfY6+gN0Zbn5JDyMjkevig/7fiYvwldQNByOwDCN4UFTzyGTKstJR0Kduk1WmvHH/GFGH3VvO2n3MVTIHprBd7nINb1tsJq9Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729521962; c=relaxed/simple;
-	bh=MlfWX4tqpaCWzQbuTo9owf+BHcmgyI86ZvsjuJjKESw=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=i2nwYmpx0RmIySBEnWrjirZaqe2Dm82onX5X1alXEjypjBzyAP9sAaRdbWH7ppnD5qgRwdgfENSauKsWhA4O2yVG/c4m5RaLl8YFY/MQ3IgvEvu8SVzXRTl+zn9HLAJ4KBKC1O946/uLPnw4lNtrly5wQwAQeB/z/XnhadjywOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ehTK5qga; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1729524574; c=relaxed/simple;
+	bh=iWtNGW5Lv+npAxLvYrzDrlBlld7h6q5Bl55LXxDdRso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PJASahEfz86KAL7f3PNqRHkYo/hFZ3iKRWCEGtK+wqdfaJ9+rDjTB0FqQSwbzW0cc2nwPbC8yheO5rkg/ZayT4jB3kooni+RflZHrEJXPsEZ52dT9swfDleDRBHlRnIaNusElfAiQRmDYMcTMNQWPe8ZfT2IVTA6nrn49OmatqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GQMI2T9z; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ehTK5qga"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GQMI2T9z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729521959;
+	s=mimecast20190719; t=1729524570;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZF/W6huHYmJAWgOtJhZ3UzfsAIEzi9eYFD/euXGD1Qk=;
-	b=ehTK5qgarTCzHjXvLUou/F18ZqfLZ0r545SWe2PlvP2wx4Ga17HFQ0Vvc7SfNhUeByQ/l3
-	0DjfzLs1JYvkFqFepWsBxW6bibIj+y2JkL2AvcrcdjWd+tJVYZdaGvzs19LTZZ1iFVITGm
-	9uXnzD7bBORJtdPbHgHmLYcMMl4IQ9k=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-369-G7bERathNQCOvlq-b9um2Q-1; Mon,
- 21 Oct 2024 10:45:56 -0400
-X-MC-Unique: G7bERathNQCOvlq-b9um2Q-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7093A1955F41;
-	Mon, 21 Oct 2024 14:45:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E959B1955E83;
-	Mon, 21 Oct 2024 14:45:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZxFQw4OI9rrc7UYc@Antony2201.local>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
-To: Antony Antony <antony@phenome.org>
-Cc: dhowells@redhat.com, Sedat Dilek <sedat.dilek@gmail.com>,
-    Maximilian Bosch <maximilian@mbosch.me>,
-    Linux regressions mailing list <regressions@lists.linux.dev>,
-    LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-    Christian Brauner <brauner@kernel.org>
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
+	bh=O6AOTgcFjOO6pusSxpBSQAWFHjn8ww3tmBzZVY0f3ik=;
+	b=GQMI2T9z88wVEpf7TmVROTnMC0s47mT9B6qGaBlD5GWBVZI+w9zvlNhYgOd5yHSjJkU/Dp
+	uG0HQrDmZVeZzixf/0ZKEK0K+IkLCZHauN74vZZ023I48Lq7Ju60NHlTPbhkqOAs79dEyl
+	Dnaoj1cInnljHzbf/bwF8516tpSW5+o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-675-jkZpCOWXOT-enh5EHfsgGA-1; Mon, 21 Oct 2024 11:29:29 -0400
+X-MC-Unique: jkZpCOWXOT-enh5EHfsgGA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4316138aff6so27544885e9.1
+        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 08:29:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729524568; x=1730129368;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6AOTgcFjOO6pusSxpBSQAWFHjn8ww3tmBzZVY0f3ik=;
+        b=VY9yFD2Ilk9Vz1Jv3IMfw2gM4ZmsOiZvliCl+O3NlbZpW6wwb9nh8d7VJ6h4M4z6h+
+         eJTc74VoPoQgHOEdkID+KfyCg+Ffef1LccFNndQ6MvOlpzQze8zvOEes28U6mkReVKBV
+         tQDI4zyiBWYbGYWPNaGJ2aavleAAszdWDH63gVwwUKElY4kq/Ye8IHZDOie2OI7jVnxJ
+         +xMbIL2FlpR7KEwCKWiEoGhd9/2ceiKzhVbK7q09qGJNv8GkABqblI2gtCmz8Fgi/pVf
+         cECpza0sQVqCVy6NOKa8goHxDSY5/pos6WgrOfC2VeRkL/33SulJS5PDYBIpa/oc5zJK
+         rV8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUjuxgJdu7mQP+ky8Lf3U+FwvGrd432UGAr8pj4X52pbmggPTIkuG7+vXhq6DeY0F66WW+Op7u86370LQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwW9h1HzbnVTTeFevWqIpBU+pR+kTKz6w1mDWTJIeKTq4SxXZWu
+	5WHVXJSnTpYVC3XJL4lHCAbaNEWruURHsEOh/LP3dbS7UdCYaPKG0NHdcnKfHzfOeKEY+zwFJB6
+	fY4rNDsVzExEGbfAhBh/4t+40Xjyh7qwehsvjKOq9aCJhkO9G3iubpvlrRM+oOtXf15fpq38=
+X-Received: by 2002:a05:600c:34cc:b0:426:627e:37af with SMTP id 5b1f17b1804b1-4316163330bmr91910265e9.3.1729524568389;
+        Mon, 21 Oct 2024 08:29:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IET+SVD6cbZPCbhAIxGjhJyIGRpEiTOiTUfwm0zjdZFXEhVQsAXQnRDfXRtvoOHzmodD7KyJA==
+X-Received: by 2002:a05:600c:34cc:b0:426:627e:37af with SMTP id 5b1f17b1804b1-4316163330bmr91910075e9.3.1729524568028;
+        Mon, 21 Oct 2024 08:29:28 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:1b73:a910::f71? ([2a0d:3344:1b73:a910::f71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f570d49sm61532135e9.7.2024.10.21.08.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Oct 2024 08:29:27 -0700 (PDT)
+Message-ID: <be9ead27-bd67-49a8-a311-a7ce5e82d4fa@redhat.com>
+Date: Mon, 21 Oct 2024 17:29:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2171404.1729521950.1@warthog.procyon.org.uk>
-Date: Mon, 21 Oct 2024 15:45:50 +0100
-Message-ID: <2171405.1729521950@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: pull request: bluetooth 2024-10-16
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, davem@davemloft.net,
+ kuba@kernel.org
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Eric Dumazet <edumazet@google.com>
+References: <20241016204258.821965-1-luiz.dentz@gmail.com>
+ <4e1977ca-6166-4891-965e-34a6f319035f@leemhuis.info>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <4e1977ca-6166-4891-965e-34a6f319035f@leemhuis.info>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Can you tell me what parameters you're mounting 9p with?  Looking at the
-backtrace:
+On 10/18/24 07:30, Thorsten Leemhuis wrote:
+> [CCing Linus, the two other -net maintainers, and the regressions lists]
+> 
+> On 16.10.24 22:42, Luiz Augusto von Dentz wrote:
+>> The following changes since commit 11d06f0aaef89f4cad68b92510bd9decff2d7b87:
+>>
+>>   net: dsa: vsc73xx: fix reception from VLAN-unaware bridges (2024-10-15 18:41:52 -0700)
+>>
+>> are available in the Git repository at:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2024-10-16
+> 
+> FWIW, from my point of view it would be nice if these changes could make
+> it to mainline this week. I know, they missed the weekly -net merge,
+> despite the quoted PR being sent on Wednesday (I assume it was too late
+> in the day). 
 
-[   32.390878]  bad_page+0x70/0x110
-[   32.391056]  free_unref_page+0x363/0x4f0
-[   32.391257]  p9_release_pages+0x41/0x90 [9pnet]
-[   32.391627]  p9_virtio_zc_request+0x3d4/0x720 [9pnet_virtio]
-[   32.391896]  ? p9pdu_finalize+0x32/0xa0 [9pnet]
-[   32.392153]  p9_client_zc_rpc.constprop.0+0x102/0x310 [9pnet]
-[   32.392447]  ? kmem_cache_free+0x36/0x370
-[   32.392703]  p9_client_read_once+0x1a6/0x310 [9pnet]
-[   32.392992]  p9_client_read+0x56/0x80 [9pnet]
-[   32.393238]  v9fs_issue_read+0x50/0xd0 [9p]
-[   32.393467]  netfs_read_to_pagecache+0x20c/0x480 [netfs]
-[   32.393832]  netfs_readahead+0x225/0x330 [netfs]
-[   32.394154]  read_pages+0x6a/0x250
+The net PR is prepared and sent on Thursday morning - either European
+Time or West Cost, depending on who actually is cooking it.
 
-it's using buffered I/O, but when I try and use 9p from qemu, it wants to use
-unbuffered/direct I/O.
+Wednesday is usually/nearly always a good time for PR to be send on
+netdev to land into the next 'net' PR, but due to some unfortunate
+scheduling, we are lagging behind the netdev ML traffic - to the point
+that I'm processing this email only now.
 
-David
+The limited capacity will last for all the current week, but we should
+come back to speed from the next one.
+
+Cheers,
+
+Paolo
 
