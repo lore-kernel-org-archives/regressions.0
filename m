@@ -1,85 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557E81991AE;
-	Mon, 21 Oct 2024 20:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3472C1FDF85
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 20:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729541995; cv=none; b=gVyEJ/WpiZ0qcKxKxfo9Z5mHRPj309VVAeXM/4hMGAcHFsor6sdRLhmtH6MHxRsqtCDWlYq94lFp4AY+qIUtsNVWL2ZxZQO8biPVg2HZSheLF42uHFrHaKk2GYUNa2k7yQjXEyDVkZRi/QZBZb8yMb8BHfLoeyJq/YT74rJzfGw=
+	t=1729543116; cv=none; b=O1BDQka4EoInuYfTLIFkvBjjkMRdas4TZdNwPw4tFuY2hcLL54OUW+EwzROVMT23Bdr7+dRPO3JXTmB8BOSJLYutDBKAdOSZlbc60EeOpSUJf85ctV5HCNtX4c6Ufsm9XSQqRoO6wGcvQXOAAY6ra+3+ptDXcAFi6/ZpGDZq76U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729541995; c=relaxed/simple;
-	bh=4RoLzcglFgkIf2Mh0l88MUQzG+gTX5O5Hqxe5YMG/iI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTgSmSkhWxq2uPEbnH4K4LEPEzJL5oJAqZwbXyCISu5eawBtw2XZWd89H0AGTNqyRdKDtlKX1VRcoZdCaMM7SQ8U3AKL4RFSvBVsDlS33zLlIIQhQtkOZdpeOGdIRdoUU3nTvkynb8hFIS+hFYzje84JjRZt2whV8CxLfR/4KuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hq3vKwUn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729543116; c=relaxed/simple;
+	bh=Cos8ohnYr0F4jqaXj+BTslQpRTXcBuFfx3VTxeLwQTk=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=eYozxPrVXb2YGp2ofVFnDvo0A+zESlsdvYQyhqXjXnngEgQYwereUIgoFJ3dv85lLPYP8o6ngblBzccwmBEQslC3d8l8ONEZC3SjY/W0Sl8IjKk4GM2e5p4hWOkczp6cirmLh6ll2eAfXKjG1YIyA2YGyOofcb6BvOx8Rui0y10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wo+h687T; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hq3vKwUn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EDB7C4CEC3;
-	Mon, 21 Oct 2024 20:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729541994;
-	bh=4RoLzcglFgkIf2Mh0l88MUQzG+gTX5O5Hqxe5YMG/iI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hq3vKwUncJA/Cp71vu0dPT3Xg1z0TF0zzFIIoFajb45vGA+hoGxva18alxHsiTXUW
-	 1V/P/Zthll3pxk8WULQ2qZBeCOPwT26P5by9i7ALrpCGALwWKin6MB/Elfot/ZE2K6
-	 3OEh1CfhovZT96STMsAsK3+0/qwXvPXo+NwnqNos=
-Date: Mon, 21 Oct 2024 22:19:45 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mahmoud Adam <mngyadam@amazon.com>
-Cc: jack@suse.cz, hch@lst.de, sashal@kernel.org, tytso@mit.edu,
-	linux-ext4@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [5.10.y] Regression in EXT3/4 with v5.10.227, LTP preadv03 is
- failing
-Message-ID: <2024102122-sustained-camcorder-32fa@gregkh>
-References: <lrkyqy12hpikl.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
- <2024102130-thieving-parchment-7885@gregkh>
- <lrkyqldyhpeb5.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wo+h687T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729543113;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1hFqUYZDvnqQ0+7pFuY+npHBOiAQbpvlJjd9i7zKW2g=;
+	b=Wo+h687Tch78PoS+au1mvc3Ozfzc6x31e7KHDaFOe7lxqrArPhIWdS4PVX0Gz+VWjRkZQk
+	YfFgfuTGsvpCkJBRIDmcdximQxPk0/wGa+p/bvo8RsBAz+ewk+Gu6IKq/l6wJ8pYPACsYK
+	XVfAFaHTMrQL4dvQW5r5hA/hxTzsbE4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-MlI_3gj7OBqbeg-NnrihHA-1; Mon,
+ 21 Oct 2024 16:38:29 -0400
+X-MC-Unique: MlI_3gj7OBqbeg-NnrihHA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 30B681955D55;
+	Mon, 21 Oct 2024 20:38:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.218])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 99AC119560A2;
+	Mon, 21 Oct 2024 20:38:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
+To: Antony Antony <antony@phenome.org>
+Cc: dhowells@redhat.com, Sedat Dilek <sedat.dilek@gmail.com>,
+    Maximilian Bosch <maximilian@mbosch.me>,
+    Linux regressions mailing list <regressions@lists.linux.dev>,
+    LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+    Christian Brauner <brauner@kernel.org>
+Subject: [PATCH] 9p: Don't revert the I/O iterator after reading
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lrkyqldyhpeb5.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2299158.1729543103.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 21 Oct 2024 21:38:23 +0100
+Message-ID: <2299159.1729543103@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Oct 21, 2024 at 07:15:58PM +0200, Mahmoud Adam wrote:
-> Greg KH <gregkh@linuxfoundation.org> writes:
-> 
-> > On Mon, Oct 21, 2024 at 05:43:54PM +0200, Mahmoud Adam wrote:
-> >> 
-> >> Hello,
-> >> 
-> >>   In the latest 5.10.227 we see LTP preadv03 failing on EXT3/4, when
-> >> bisected it was found that the commit dde4c1e1663b6 ("ext4: properly
-> >> sync file size update after O_SYNC direct IO") is causing it
-> >> 
-> >> This seems similar to what occurred before[1] and if I understand
-> >> correctly it was because of missing dependency backport 936e114a245b6
-> >> ("iomap: update ki_pos a little later in iomap_dio_complete") which was
-> >> then backported to 5.15 & 6.1 but not to 5.10.
-> >> 
-> >> *This is not failing on 5.15 nor 6.1, and it does fail consistently in x86-64 & ARM
-> >> 
-> >> [1]: https://lore.kernel.org/all/20231205122122.dfhhoaswsfscuhc3@quack3/
-> >> 
-> >
-> >
-> > What do you suggest be done?
-> >
-> 
-> I think as an urgent fix I would suggest reverting the mentioned commit
-> and commits that depend on it from 5.10.y..
-> 
-> 4911610c7a1fe ("ext4: fix warning in ext4_dio_write_end_io()")
-> f8a7c342326f6 ("ext4: dax: fix overflowing extents beyond inode size when partially writing")
-> dde4c1e1663b6 ("ext4: properly sync file size update after O_SYNC direct
-> IO")
+Hi Antony,
 
-Great, can you submit a series of these reverted that you have tested to
-fix the issue?
+I think I may have a fix already lurking on my netfs-writeback branch for =
+the
+next merge window.  Can you try the attached?
 
-thanks,
+David
+---
+Don't revert the I/O iterator before returning from p9_client_read_once().
+netfslib doesn't require the reversion and nor doed 9P directory reading.
 
-greg k-h
+Make p9_client_read() use a temporary iterator to call down into
+p9_client_read_once(), and advance that by the amount read.
+
+Reported-by: Antony Antony <antony@phenome.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Eric Van Hensbergen <ericvh@kernel.org>
+cc: Latchesar Ionkov <lucho@ionkov.net>
+cc: Dominique Martinet <asmadeus@codewreck.org>
+cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+cc: v9fs@lists.linux.dev
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ net/9p/client.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 5cd94721d974..be59b0a94eaf 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1519,13 +1519,15 @@ p9_client_read(struct p9_fid *fid, u64 offset, str=
+uct iov_iter *to, int *err)
+ 	*err =3D 0;
+ =
+
+ 	while (iov_iter_count(to)) {
++		struct iov_iter tmp =3D *to;
+ 		int count;
+ =
+
+-		count =3D p9_client_read_once(fid, offset, to, err);
++		count =3D p9_client_read_once(fid, offset, &tmp, err);
+ 		if (!count || *err)
+ 			break;
+ 		offset +=3D count;
+ 		total +=3D count;
++		iov_iter_advance(to, count);
+ 	}
+ 	return total;
+ }
+@@ -1567,16 +1569,12 @@ p9_client_read_once(struct p9_fid *fid, u64 offset=
+, struct iov_iter *to,
+ 	}
+ 	if (IS_ERR(req)) {
+ 		*err =3D PTR_ERR(req);
+-		if (!non_zc)
+-			iov_iter_revert(to, count - iov_iter_count(to));
+ 		return 0;
+ 	}
+ =
+
+ 	*err =3D p9pdu_readf(&req->rc, clnt->proto_version,
+ 			   "D", &received, &dataptr);
+ 	if (*err) {
+-		if (!non_zc)
+-			iov_iter_revert(to, count - iov_iter_count(to));
+ 		trace_9p_protocol_dump(clnt, &req->rc);
+ 		p9_req_put(clnt, req);
+ 		return 0;
+@@ -1596,8 +1594,6 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, =
+struct iov_iter *to,
+ 			p9_req_put(clnt, req);
+ 			return n;
+ 		}
+-	} else {
+-		iov_iter_revert(to, count - received - iov_iter_count(to));
+ 	}
+ 	p9_req_put(clnt, req);
+ 	return received;
+
