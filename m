@@ -1,116 +1,129 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71302126BE1
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 17:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63B81CBE89
+	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 17:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729530031; cv=none; b=qIkvjSZuGr9D5XKVmY/s2tozYX50siwRomL66qiFImV2b1DwMW82JnbncWUzhrxGPVfxtVP1Skj9s2+8s+p1C7FF+qrS1yUJCVpgzTmaOkrKpUrT+jp9VyKdBMjGfbk6sqkHOYxMn2rnML01GMg94sITJuzxxDBIZH72FCfBq44=
+	t=1729530100; cv=none; b=umxL/qsppxN59ayZd0akUNRkCTjTW69Whaw/n3OOJ65zf/o25llR5J2FCAY3LnuVfJv6o/6dHIq5XEjel7LbujY19dZcJgSImZFufkws0tkYTebtp8thMZ4miBsUBClX/ziw7iGjhYKITTtY/kHjFHpEorsiApS2SwlULeynCws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729530031; c=relaxed/simple;
-	bh=mnRFS/mj+G35ASMRqM8Sj6IPy8kOKX4bsXtvWDlciDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZBGBwr3VQ56lmBWx36QWs6t0lQglYj2TckVnE4Y1MxokBTrrpFYZoeYh77YMIxCjRzWwowRwkSBJaQqasdapVJwxUk5alL1Skpr891iULUfQ6aZzq75PlpbYWPAuB0rzqnF+4W6nmhl6oJVZU8fEYeMePTBlW1b3fDQNpNnnYPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=pcZvfwyD; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1729530100; c=relaxed/simple;
+	bh=EdrW4QyQlhTewuPVfOLFcxOIGlObb6XfUuBmUv9yjPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spNbk9bKoraGFDyH3wf48fAyl6xtulL/5kZZ0eicXraU74FTkzxTjOyY/THK2d4jUwYYNZSjlDobUn/NKJ2+1/J9PnAwpywnw2vzTWXwT/O15+e3HORcj5soLGClfV/LEuFE5kKO8jDaWoqnwYnk424l4kH7BqAIubOA89RbKGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=kA3gMl4h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MTLizXYG; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="pcZvfwyD"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-83abdaf8a26so115094739f.1
-        for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 10:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729530028; x=1730134828; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ynAME6NN09JzWzcI2kzNPurKWJPhVAQ6z8aud0/0Fpg=;
-        b=pcZvfwyDS6SNOD+9L4NX4g1U9bhJwF4pvg8YcJsSR0ibjZGMm7D7ZywAPOHh/yIATP
-         0hK1JkJYAPYIiT5OrdqpMAbfClF4cBgQaYZRgQvKoEUWrvQLfw7Wyx+DLIkYaE/KCQs0
-         4XM+/+wVFh3XMMdtf+Gxcu6zXYVhY2WtKsIfO56VED7QOXu3eNY9Ug6K4AWEPCFFVzzG
-         up46DIEm/+tA7r4H8gU0xwL4BKhNSb4encGaNw+wHCI23Flw8Yam8jUJLbrG3PdKnVpw
-         pLbSiUWDDY+PYS4BjD6W0qhe5HUZuVho/QBVFocEWhUUFxzfvvwUjvn79XvtxBYCjE0W
-         yYBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729530028; x=1730134828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ynAME6NN09JzWzcI2kzNPurKWJPhVAQ6z8aud0/0Fpg=;
-        b=sPXTV5NP2pOmvUDa0zHMDxi3ytdYSjFujgjznZNAcouG5yxgmRJ27JsF7qQEwAeaWY
-         yobdRcNiaZ+HC57TIDPmuahLtXGMYbVsKOJgtJodRFaLWACJQWnnjQX6SHYeEo0OwEeT
-         7UAaSsgwAJhRMoIDC9Oon3r0ee3uHwpsNbxDvT+oNsRk1Fi0pQGt+9sKyv9JVWL1SHGj
-         viWvUpGNYruckR6/sOF7PtrdIKKEa/WYBZktyoKp2N8koFPKCVa1D4inSrOkS99RENK5
-         ECDAkdNW5E+qrhbqHkA3zxwqAYpWHUoUH5HhTaKGhg+CNo//Sa+HpjKblwhtYA+XIlrg
-         KSLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUkxCyViEiCppc/OwVQTkqacFaXwbOXJWt250p61vAvVlFUCsPm9hRkk5U440C1aU8QN03x32fMZHs1w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzV6McR97knv4Ldqr4eDQgUriOAoHvgg/3grULtJbfHFNNLKytT
-	iD1SRpVT+VhW8cFg/qLu/PnGy/Sy3nmnBxDggfLLMOTFRy1ZgCneM6+zM7xTWUE=
-X-Google-Smtp-Source: AGHT+IGVp9T6pGjNOnVfMsOCjRFetBtb2uqMCM0VJgtnNP4wYNtnbYheNWRYc351ZZ93jN9AJRwdTw==
-X-Received: by 2002:a05:6602:1584:b0:83a:b43b:da89 with SMTP id ca18e2360f4ac-83aba63ff0cmr1327422939f.10.1729530028275;
-        Mon, 21 Oct 2024 10:00:28 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dc2a609491sm1098928173.113.2024.10.21.10.00.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Oct 2024 10:00:27 -0700 (PDT)
-Message-ID: <daa98312-cc66-4c2f-8e64-01358ee99305@kernel.dk>
-Date: Mon, 21 Oct 2024 11:00:26 -0600
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="kA3gMl4h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MTLizXYG"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 92B6E25400DF;
+	Mon, 21 Oct 2024 13:01:37 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Mon, 21 Oct 2024 13:01:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1729530097; x=1729616497; bh=0Cp/HfzuQ/
+	MdndVSy8g4lWxf16i11f2fUzT7z2EWKY0=; b=kA3gMl4hNlwQUJBN0El7vPwZmb
+	tHNQEyh8XFScbu4/dKOAZKsJ/znUd5g9YaXVDJ08hZVXzUGeOEVhSgvVvPculIvZ
+	9Hob6qPNMq2H50lkS6IukZQ/Yp7kOZGJKkQKl8d0b+yhfFeFkS/zXfVZst/jftLW
+	aAwlJd0LaXSA4xAYv3KZiMmo4SM+8FZ7/cfEiawfR4Yn//PWYki31yGhF2LvxNmQ
+	JwFCImqTX5sXW7MOQnggjH6fKf6v0A+R83Qt38yFyUwI7ai2StkrpZjOiFixDih2
+	fFfFt5k7OJKx9D3L+zDMIfiJcFhTQwWzX8d6hgPZzqj0cDZNKAOx4KfbPmdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1729530097; x=1729616497; bh=0Cp/HfzuQ/MdndVSy8g4lWxf16i1
+	1f2fUzT7z2EWKY0=; b=MTLizXYGUWuhuuU/jMFO7jL8+HFW3oNzCoLcTiFeeQIu
+	0PszXAa2/JI8o+npKACIgFtw2ErBC8xFGVO4qpBouQGZdXZv8aFfPpDqlcqza0kp
+	0NZPm4ey035NyASqfy6irrhn10R25ABcd94JGPdIlSMHsuGU8IKRR0ow6Id7ZCoJ
+	D/Zm4L6SfLPwVsMABITYKYXGQazU4z6dEK+SAG/wHpDPI8m7sttTLM6M9ZPp/nkt
+	T59c7TaZus8kwn61EUQpVVSmC2h2E99vYH40+i8C4wBZTYJERvnk2+eVtZ/Ey28A
+	GhdYGNKX3AdEkGHOweFCZPnCHHqULOCRar6pujWLRA==
+X-ME-Sender: <xms:8YgWZxi6EBu8QHK7JK8e0L8DEENnALhA4lYvrOOEtAxn8oJCtP7I7A>
+    <xme:8YgWZ2DoZjNXWfX-BTZklWzria2DPobpI8PeIVYVQeRpVoYXFgQybjb6AKmrAd5AF
+    T-rZlpgmx3q0biNagY>
+X-ME-Received: <xmr:8YgWZxGJd8d48xSgawyFbcjW6UykXpduMiaYrwmwyn1loG0s6sNV8godW5BTmwsCcGTRP0C5U3NEEmgsIlN7NJYc0Hwz>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehledguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdeftddmnecujfgurhepfffhvfevuffk
+    fhggtggujgesthdtredttddtvdenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
+    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepudekgeff
+    tdefiefhheetvedvieeuteetlefgfedvhfelueefgeeiudeiudfhkeeinecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgr
+    rhhrrdgttgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmoh
+    hrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpd
+    hrtghpthhtohepkhgvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgt
+    phhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtg
+    hpthhtoheplhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:8YgWZ2QOmrGfUKvIGQOhXPzkCkUkA5WQZWwAtqxnP5vfdWY7Ua79Ug>
+    <xmx:8YgWZ-y8-T8y4LGPB-fX5aS-l_a45_qUu7cG23eHMVk9M5z33qQRiA>
+    <xmx:8YgWZ84UiO9Dmon_rS2AhGrMK7fkPNOQma_aXQ05akDKqwyof0drEg>
+    <xmx:8YgWZzyBJ4Te7--8i8aHmuovxDme4klsNLJsQFiXndKRPAkZG_Nm_A>
+    <xmx:8YgWZ5pI5pLNLilpi0V_sU7_PJFarjt7RUm_rtTKX8VicfY4LkxckR7T>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 21 Oct 2024 13:01:35 -0400 (EDT)
+Date: Mon, 21 Oct 2024 19:01:32 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZxaI7EcpK3HIm0by@archlinux>
+References: <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
+ <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux>
+ <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <CANiq72=yYDcG=ef9TxCCECwjSgW-5zFoTJqcjrWGOALCvaW0SA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: AMD zen microcode updates breaks boot
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- the arch/x86 maintainers <x86@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <320024ab-63af-45eb-a3ae-5486cb2015c0@kernel.dk>
- <20241018175606.GJZxKhNmW9nCLwNS6Z@fat_crate.local>
- <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
- <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
- <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
- <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
- <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
- <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
- <20241020121819.GAZxT1CyR_5vLLZ5e6@fat_crate.local>
- <df217737-6e2c-41fe-b558-3e2ab6dc0d9e@kernel.dk>
- <20241021073140.GAZxYDXCk02lSrG3-T@fat_crate.local>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20241021073140.GAZxYDXCk02lSrG3-T@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=yYDcG=ef9TxCCECwjSgW-5zFoTJqcjrWGOALCvaW0SA@mail.gmail.com>
 
-On 10/21/24 1:31 AM, Borislav Petkov wrote:
-> On Sun, Oct 20, 2024 at 06:47:25PM -0600, Jens Axboe wrote:
->> Works, outside of waiting 3 min for the serial console spewage from the
->> patch! But it boots and it's happy after that. Attached here gzip'ed as
->> it's 1.3M otherwise.
+On 21 08:04:03, Miguel Ojeda wrote:
+> > Also after gcc 15 is released I don't think a version check for gcc
+> > should be necessary. I only see an explicit version check as required
+> > when we know a certain version is broken. Otherwise I would prefer using
+> > the build test.
 > 
-> Thanks for testing.
+> Yeah, build tests are nice, although they require spawning a process
+> and so on, which (as far as I understand) we try to minimize. Version
+> checks also have the advantage that it is easy to remember/check when
+> we can remove the checks themselves when we upgrade the minimum
+> versions.
 > 
-> Lemme write proper patches, run them everywhere here and give them to you for
-> one final testing.
 
-Sounds good, I'll give them a spin once posted.
+If the goal is to minimize the need for build tests, I think we should
+go with Nathan's suggestion of keeping the build test for now (to
+support pre-release gcc versions) and remove it and just go with
+versions checks for both gcc and clang once gcc 15 is released.
 
->> root@r7625 ~# echo 1 > /sys/devices/system/cpu/microcode/reload
->> warning: An error occurred while redirecting file '/sys/devices/system/cpu/microcode/reload'
->> open: Permission denied
->>
->> and no output in dmesg.
-> 
-> Right, you need
-> 
-> CONFIG_MICROCODE_LATE_LOADING=y
-> 
-> for that.
-
-Ah gotcha, makes sense.
-
--- 
-Jens Axboe
+Best Regards
+Jan
 
