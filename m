@@ -1,112 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5A85C5E;
-	Tue, 22 Oct 2024 15:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B4B1A01DD
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 15:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729609317; cv=none; b=u/UBIFXya22IdZzj6njAHShxJ78wZNgaoyBG9caUPkWCy8tqMJjbXdBtj4MBw7qYoQXjbnkeFFYnk1rOdtzYUuWJk+fv7ckajfbYvlMdpCFblttgvBnoYSqf10w9FmTJbLvumFbivdQ1I/Ahcx2WrpL66q3zfIU7WOVy5dZgh50=
+	t=1729611862; cv=none; b=c3avekvrTStD7drukQ1Qjpigd0WHmDIN3M768EDqCbrDkYwI+cXBjC78ZQ6TCtq5KdcnLrKLOwaDwBFOMl+Z2Zp0tleOwpCr5Ri0ueYhRMlXIXd+4659rqOHwqvlfg4YZKpvEh0nXFqgJfDgJrN7ntRRJXoD3IXI/QogZcBr128=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729609317; c=relaxed/simple;
-	bh=wLqL5G1fJBdDKZdoYSyYQ6Gn8QO4wi41ipLs3UAmGBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQ4slrSe9t7y/2NOyUbq9DeSW1iMKGMHp0ZFp61AWHR3BvzfOMQCC7fDnMaA5h731ftEOOyv/hK8EWC5SrhgBpSaXwHYWA6YLi+/8WjmqtuPahNKopx7XeEg+Ra2pjrQF9ulYvzPeTjgmAUFrRQanhaos5RUH+JiuwHEYuneaOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRgoLqoL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729611862; c=relaxed/simple;
+	bh=YtDLOlpLRRBvDmLW/cArjrA+sbMExZ1uTkluU2L1WL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EPCskraasCO8zo0Bf94bmYKpnj+sgztWc7WsghxeA2kQgh1fxL7VblBT/nEzZpfGh/id887Y/EQbnVKj3pVKCQAU2/klzLsSG+s0WXMaJ8BHGiCnAjxEyNLa54mjq5tc051OCoXd4mwwRnQFW6TnCBvG0sHaHXWm/2jRdfGE198=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=XzSmL3Bg; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRgoLqoL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6F5C4CEC3;
-	Tue, 22 Oct 2024 15:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729609316;
-	bh=wLqL5G1fJBdDKZdoYSyYQ6Gn8QO4wi41ipLs3UAmGBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jRgoLqoLkCtpHyliTt/1PQ8RP5Q4lwET601tPX3cyOlCHlt0t9C3GrTfTgA2dcD5G
-	 8xOzMum+13B0yZpnqyFF9CJ7rNQJAsvtXTIIt0iwkKq5CSNtIvDWZPW+accC06iup+
-	 KWlI05rk/rZuz0G+1vDBOhttOWhEK9BVlu6aiLQTZryFZzxMicjdCr3/cqhvSka/0d
-	 Fnvj0A/lWw1vyHH6zcCP3oY/UWOk3fmp+H48env2qqZvirSWV0PA+d29HGD6Pjc77T
-	 4xm2L6lTb9sAvDA4Ru70TtmB4QQDPuZP9dfEVU8kAX+NFkzLLPPJi4Ip/tLGZyD2g/
-	 Rn9GBJZrzjXbQ==
-Date: Tue, 22 Oct 2024 16:01:49 +0100
-From: Will Deacon <will@kernel.org>
-To: asmadeus@codewreck.org
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, ericvh@kernel.org,
-	lucho@ionkov.net, Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com,
-	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com,
-	keirf@google.com, regressions@lists.linux.dev
-Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
-Message-ID: <20241022150149.GA27397@willie-the-truck>
-References: <20240923100508.GA32066@willie-the-truck>
- <20241009153448.GA12532@willie-the-truck>
- <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
- <Zw-J0DdrCFLYpT5y@codewreck.org>
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="XzSmL3Bg"
+Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
+	by mail.581238.xyz (Postfix) with ESMTPSA id 5123D43088FB;
+	Tue, 22 Oct 2024 17:44:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1729611858; bh=YtDLOlpLRRBvDmLW/cArjrA+sbMExZ1uTkluU2L1WL8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=XzSmL3Bg4KaaWhmNZkNMIOG0iNeTva2qOyq6Hjl1YyrOyBaRP8dodAnv6zE0Qql1W
+	 02bOEPjsCQR7Rm96NRtD/NsOZtoLJ4jWnrl8zR6AdW/mmXTg26v0wyTEuxRgiybFPG
+	 mYk3kZAIlsdtr7kt4hdOXBp79oaxD7oKB3b8lLnY=
+Message-ID: <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
+Date: Tue, 22 Oct 2024 17:44:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zw-J0DdrCFLYpT5y@codewreck.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ mika.westerberg@linux.intel.com
+Cc: Sanath.S@amd.com, christian@heusel.eu, fabian@fstab.de,
+ gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
+ <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
+Content-Language: en-US
+From: Rick <rick@581238.xyz>
+In-Reply-To: <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Dominique,
+Hi Mario,
 
-On Wed, Oct 16, 2024 at 06:39:28PM +0900, asmadeus@codewreck.org wrote:
-> Thorsten Leemhuis wrote on Tue, Oct 15, 2024 at 08:07:10PM +0200:
-> > Thx for bringing this to my attention. I had hoped that Eric might reply
-> > and waited a bit, but that did not happen. I kind of expected that, as
-> > he seems to be  somewhat afk, as the last mail from him on lore is from
-> > mid-September; and in the weeks before that he did not post much either.
-> > Hmmm. :-/
-> 
-> Right, I had hoped he'd find time to look further into this and kept my
-> head in the ground, but it looks like we'll have to handle this somehow...
-> 
-> One note though he did sent a patch that seems related and wasn't sent
-> for merge:
-> https://lore.kernel.org/all/CAFkjPTn7JAbmKYASaeBNVpumOncPaReiPbc4Ph6ik3nNf8UTNg@mail.gmail.com/T/#u
+I apologize. I think I mixed up the versions between linux-lts and linux 
+kernel.
+
+linux-6.6.28-1-lts works: 
+https://gist.github.com/ricklahaye/610d137b4816370cd6c4062d391e9df5
+linux-6.6.57-1-lts works: 
+https://gist.github.com/ricklahaye/48d5a44467fc29abe2b4fd04050309d7
+
+linux-6.11.4-arch2-1 doesn't work: 
+https://gist.github.com/ricklahaye/3b13a093e707acd0882203a56e184d3f
+linux-6.11.4-arch2-1 with host_reset on 0 also doesn't work: 
+https://gist.github.com/ricklahaye/ea2f4a04f7b9bedcbcce885df09a0388
+
+Kind regards,
+
+Rick
+
+
+On 22-10-2024 14:55, Mario Limonciello wrote:
+> On 10/22/2024 07:13, rick@581238.xyz wrote:
+>> Hi all,
+>>
+>> I am having the exact same issue.
+>>
+>> linux-lts-6.6.28-1 works, anything above doesn't.
+>>
+>> When kernel above linux-lts-6.6.28-1:
+>> - Boltctl does not show anything
+>> - thunderbolt.host_reset=0 had no impact
+>> - triggers following errors:
+>>    [   50.627948] ucsi_acpi USBC000:00: unknown error 0
+>>    [   50.627957] ucsi_acpi USBC000:00: UCSI_GET_PDOS failed (-5)
+>>
+>> Gists:
+>> - https://gist.github.com/ricklahaye/83695df8c8273c30d2403da97a353e15 
+>> dmesg
+>> with "Linux system 6.11.4-arch1-1 #1 SMP PREEMPT_DYNAMIC Thu, 17 Oct 
+>> 2024
+>> 20:53:41 +0000 x86_64 GNU/Linux" where thunderbolt dock does not work
+>> - https://gist.github.com/ricklahaye/79e4040abcd368524633e86addec1833 
+>> dmesg
+>> with "Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 17 Apr 2024
+>> 10:11:09 +0000 x86_64 GNU/Linux" where thunderbolt does work
+>> - https://gist.github.com/ricklahaye/c9a7b4a7eeba5e7900194eecf9fce454
+>> boltctl with "Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 
+>> 17 Apr
+>> 2024 10:11:09 +0000 x86_64 GNU/Linux" where thunderbolt does work
+>>
+>>
+>> Kind regards,
+>> Rick
+>>
+>> Ps: sorry for resend; this time with plain text format
+>>
+>>
 >
-> Will, perhaps you can try it? I'm pretty sure the setup to reproduce
-> this is easy enough that I'll be able to reproduce in less than an hour
-> (export two tmpfs [sequential inode number fs] wthin the same 9p mount
-> in qemu without 'multidevs=remap'), but I don't even have that time
-> right now.
-> 
-> (I didn't even read the patch properly and it might not help at all,
-> sorry in this case)
-
-I think this patch landed upsteam as d05dcfdf5e16 (" fs/9p: mitigate
-inode collisions") and so I can confirm that it doesn't help with the
-issue.
-
-> > CCed Christian and Al, maybe they might be able to help directly or
-> > indirectly somehow. If not, we likely need to get Linus involved to
-> > decide if we want to at least temporarily revert the changes you mentioned.
-> 
-> I'm not sure this really needs to get Linus involved - it's breaking a
-> server that used to work even if qemu has been printing a warning about
-> these duplicate qid.path for a while, and the server really is the
-> better place to remap these inodes as we have no idea of the underlying
-> device id as far as I know...
-
-FWIW, I'm not using QEMU at all. This is with kvmtool which, for better
-or worse, prints no such diagnostic and used to be reliable enough with
-whatever magic the kernel had prior to v6.9.
-
-> So the question really just is do we have or can we build a workable, so
-> the question is can we resonable do any better, or do we just want to
-> live wth the old behaviour.
-> (Note that as far as I understand the old code isn't 100% "loop" proof
-> either anyway, a open(O_CREAT)/mkdir/mknod could happen to get identical
-> inode numbers as well, it's just less likely so folks haven't been
-> hitting it)
-
-I'm happy to test patches if there's anything available, but otherwise
-the reverts at least get us back to the old behaviour if nobody has time
-to come up with something better.
-
-Cheers,
-
-Will
+> Can you please share a log with 'thunderbolt.host_reset=0 
+> thunderbolt.dyndbg' on the kernel command line in a kernel that it 
+> doesn't work?  This should make the behavior match 6.6.28 and we can 
+> compare.
+>
+> Maybe the best thing would be:
+> * 6.6.28 w/ thunderbolt.dyndbg
+> * 6.6.29 w/ thunderbolt.dyndbg thunderbolt.host_reset=0
+>
