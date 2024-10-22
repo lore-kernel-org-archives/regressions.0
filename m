@@ -1,81 +1,79 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA0F154BE9;
-	Tue, 22 Oct 2024 07:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC2E18D640;
+	Tue, 22 Oct 2024 08:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729583877; cv=none; b=XZ7zDOBm1fjnE6zbn7RXAGZMTcsW0NU1Nio+rccSnQmP/x7W1svPcJRwoBO9U9H6REq9DbtmjVYHSxZ4kxdwMlYo00kTj6hYt2AIqX/+eIPtnQzIa7blzAANQOPvbR0uomucnWO1UkT+RYSPzRu5Pgk37iLaENntQGXNyyr+Mgk=
+	t=1729587394; cv=none; b=OH3oNOvubtiOzlJkfTtFA/CnvaKLl0vvholyZblWZGH6vU2eRgdVMVRU4ZNSzQiHEsDnD1Zi2MmkKOJ4YrvVuHaaoYXFrTpUT3hPowtDoF68jTOx2dNxJKNzW6kYPcdIqHQKzkBGm96kqEYt0N2JjsTdD+Vwb2BHpXz0wvkImLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729583877; c=relaxed/simple;
-	bh=Iqo4lzOBXmrv03GoOvT9l2S0oqCHH2VPeft4eUtSyx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CLRP9VHIsa/j8kQ79daO+9Y16VDAR4ZARLcHGyHmXcJo1J/UK/ax9dTnGPntZs/bh9wTCHVS+hR9vkuTJrjbbrsZr1DE2y2lDoksK5591TiHt85V2ktYHK5FOSQNPZVW5VN6SBxJ8/kiup0L+nMRY57f26g0c4rPwd7ppa5+oKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from [78.30.37.63] (port=51358 helo=gnumonks.org)
-	by ganesha.gnumonks.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <pablo@gnumonks.org>)
-	id 1t39m0-00D1hv-0e; Tue, 22 Oct 2024 09:57:50 +0200
-Date: Tue, 22 Oct 2024 09:57:47 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	netfilter-devel@vger.kernel.org, davem@davemloft.net,
-	netdev@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
-	edumazet@google.com, fw@strlen.de,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH net 2/2] netfilter: xtables: fix typo causing some
- targets not to load on IPv6
-Message-ID: <Zxda-7wzYe6WypX5@calendula>
-References: <20241021094536.81487-1-pablo@netfilter.org>
- <20241021094536.81487-3-pablo@netfilter.org>
- <8cd31ad2-7351-4275-ab11-bca6494f408a@leemhuis.info>
- <2024102259-armadillo-riveter-0e7d@gregkh>
+	s=arc-20240116; t=1729587394; c=relaxed/simple;
+	bh=ZLw6gFMY4Cb5+zhRGaODfl7DZxpfc0P3QjxHnCkbGog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PiU9RXojRmIp0VzOrhq2/s6ll2YBN4FuPMQ/RMOsTfrhZmZWT+Q89iqbRJ+coR+3UfTLnZtOwMIYctOpmkuF64nLXMfiff/ci2PUFDJ+gx8JbYIFPL/d+IUqan2Zoc7wu/JVZkPA6zV09ybRtqtpuoOSrPrTunHHFHhguqOxnNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJx1qx8q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJx1qx8q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2AA5C4CEC3;
+	Tue, 22 Oct 2024 08:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729587393;
+	bh=ZLw6gFMY4Cb5+zhRGaODfl7DZxpfc0P3QjxHnCkbGog=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hJx1qx8q9qbI2wT3QhNsJuy7pnqYbqI2l6G6BZ5o96XW4mUKeLEr0hbN36HdLrQUi
+	 EVja1gB531feRBK88y49PG3ayOYRLh1PlEd7lQGha2bHcWlvVJY5h3ZX75wH1eUfeJ
+	 tXPy3oi3/TQgIoBd291lB5pp0MaXpo2NqLYNaqp/xQ+eP5gkAOu8DC3pkNWWg1xyeu
+	 VItFX5qHeSr/egEjP+qlBdFq23xgwQAf01CnO1ITrYPYgiSe5ZK0gFzrnRtNGU3Xfh
+	 WsVP/FR9TlZV/CdBn3bxizeQdfM7AwszXsnq7pRzP66PdqVzCydOCAEHC1byxkidn6
+	 vOQrRP9yvh91w==
+From: Christian Brauner <brauner@kernel.org>
+To: Antony Antony <antony@phenome.org>,
+	David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Sedat Dilek <sedat.dilek@gmail.com>,
+	Maximilian Bosch <maximilian@mbosch.me>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] 9p: Don't revert the I/O iterator after reading
+Date: Tue, 22 Oct 2024 10:56:24 +0200
+Message-ID: <20241022-weinreben-womit-68c97935ae32@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <2299159.1729543103@warthog.procyon.org.uk>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com> <2299159.1729543103@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2024102259-armadillo-riveter-0e7d@gregkh>
-X-Spam-Score: -1.7 (-)
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=971; i=brauner@kernel.org; h=from:subject:message-id; bh=ZLw6gFMY4Cb5+zhRGaODfl7DZxpfc0P3QjxHnCkbGog=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSLZ+y6HXLwh/UDjeR73X5rNvXclNxg23fi+gwfk/22j 9w+fJv2rKOUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiHzgZ/go4CfPZuk9+d6jt qu6MN/1JAWfXlz6epa/8rG7tcdGTfo2MDJ8lWzYvupin8usF9w2PI4enml7++KL3+iv1vytfOng Vz+YEAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
-
-On Tue, Oct 22, 2024 at 09:44:19AM +0200, Greg KH wrote:
-> On Tue, Oct 22, 2024 at 09:39:38AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > [CCing Greg and the stable list, to ensure he is aware of this, as well
-> > as the regressions list]
-> > 
-> > On 21.10.24 11:45, Pablo Neira Ayuso wrote:
-> > > - There is no NFPROTO_IPV6 family for mark and NFLOG.
-> > > - TRACE is also missing module autoload with NFPROTO_IPV6.
-> > > 
-> > > This results in ip6tables failing to restore a ruleset. This issue has been
-> > > reported by several users providing incomplete patches.
-> > > 
-> > > Very similar to Ilya Katsnelson's patch including a missing chunk in the
-> > > TRACE extension.
-> > > 
-> > > Fixes: 0bfcb7b71e73 ("netfilter: xtables: avoid NFPROTO_UNSPEC where needed")
-> > > [...]
-> > 
-> > Just FYI as the culprit recently hit various stable series (v6.11.4,
-> > v6.6.57, v6.1.113, v5.15.168) quite a few reports came in that look like
-> > issues that might be fixed by this to my untrained eyes. I suppose they
-> > won't tell you anything new and maybe you even have seen them, but on
-> > the off-chance that this might not be the case you can find them here:
-> > 
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219397
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219402
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219409
+On Mon, 21 Oct 2024 21:38:23 +0100, David Howells wrote:
+> I think I may have a fix already lurking on my netfs-writeback branch for the
+> next merge window.  Can you try the attached?
 > 
-> Is this commit in linux-next yet?  I looked yesterday but couldn't find
-> it anywhere...
+> David
+> 
+> 
 
-Not yet, there is a pending PR to reach netdev.git at this moment.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] 9p: Don't revert the I/O iterator after reading
+      https://git.kernel.org/vfs/vfs/c/09c729da3283
