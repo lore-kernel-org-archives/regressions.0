@@ -1,76 +1,60 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB2919ABD5
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 13:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59D219E97F
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 14:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729602912; cv=none; b=tY6+iLgKZ3PMbsV0cJ4AAfqrp934I1/X7p62yZRBQZ9jswyS+Csd1uNjKX3GGY3jhTUebx8PvRUSjusKVnbV0lNpRcCdDXbRZpM6oIq/r91hng6spi0+rj3X7yVHAapdh8WZKDZEjxfmCZJb/vHhhkG2IbQk4VYAoAhILe7iht8=
+	t=1729607656; cv=none; b=AEDYjQsYWTcRW5UmZWySh3LAao/yHW6t7wrDUFNoGAuqpC1pJXPVZNO7wyiaWiLvminWDjuUOSysDHxPFoqnY7X4SJVDEbwkH1sNmvPrH2DN1PW3v94BDQMaDShtebtBLcoeDqjwVswk7r1+TB3YU+vL0tEvQJAcfhApvrlHkjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729602912; c=relaxed/simple;
-	bh=UoQaQnrqQ1WBGYkIx4J+4jJE/uP24fHs+WeP81kBxno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dE2GN5UYzz3+sMzVaF1vJ6UIYvCcrfl+cNaiLYn0nYLI/ZrRCy+xiacm9nYpJTWgxGugEM2L+PdyKJKGqXuHsHkxhdEkym7U7yEgN3Nd9+w6mdviydEA8vwh8W+rpY/NjJxV/3lvV/XjdJovAvOrie8FiAZKIm+X8Qo6LwqG/Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rT0KJ8YJ; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1729607656; c=relaxed/simple;
+	bh=yIhbm/YDdUnq8Q7RsfO9NPQQUTaApFDK+ECy7QckynM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tzh7iz2CyPHLk99KHdXKS2qole0NJ4bfBDIJVqy4dgy61T/NNvTsdINDj1Q2cS813q4x5r61Ph0OcTJA9lVsPTFyKewV8eS1MjCECsOKHUwTpryd7tbtxJJU8SXi94RQgoM0a5ayUyfk4TyVYA9oY6H58hI5b3gLZQJdhSt87ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EdQpBc19; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rT0KJ8YJ"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-82cd93a6617so211660939f.3
-        for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 06:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1729602909; x=1730207709; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7HhRXZP19mzBOGCReuq+qXXrPGxMcaiU0fTOUSrQSuQ=;
-        b=rT0KJ8YJunta7Hlxuj0JoGhBS+EAHk3Erj/P/XP/hndXeydZ8DbjCpm3W79W4Y377k
-         IESstfeTaCZR7ACURyy6PTHntLh0nWwoCyvCwxAEtW3Dyiw6g512AhxPxzNp4OYfIiCw
-         kfObHAEYb835fCDw76/qrnNQjHlRHWd8waI8/+3aq7CVBWeY+cdSKagXz9mwmIeoYHlh
-         zXYQKJ4f0CALVmAHXCkdSEeXhpw/i5GRQJ//HM+rOHSSjaEPyyCumCReDoAEpLYSKGoP
-         k1ICqwLmysAJm3t6McQymJX8Sip+8izbRCCLJNmrk7qzpbQ9SUouzrqlwkNkVaBuDhni
-         6VIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729602909; x=1730207709;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7HhRXZP19mzBOGCReuq+qXXrPGxMcaiU0fTOUSrQSuQ=;
-        b=dmAe8Q0MXI8CU3kwshLuTBizFkpFll/6fp80pu0zijcnWxHY3WpwZYXkB6qzuCORVe
-         pyV730os6U0sxtrg5UhB8YynMmBnJW+ushM9kQnCxqQLuIC/PE7rf822rDEQGR/Lg5Xj
-         Z/LQw3Nka5rtxsgPs6LW0ErI5TXcICDhsbqvFYmbcSl3y1o1zPpozk8/WiUmal7UdEzw
-         UOv6YY2a37/PFZ57Uv7LqaCXfYDN5A51Mw0cgA1FAhTTIvjP3W6fRNDvmQQFMe1tyzVP
-         tvHar9sLEf2+Pms4+PcuCp6atqC0EOohxhvBpSZh0hJB76r11e0r135dtfuvpZyh9FDZ
-         ZOPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNwPLbZwpjlPIiL3L2elh9sBe1qKUiAEmavuZz4NVoCQs9l891w8twAsqpKFbCSsCZhw0gnXCjqO2dHw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzqt1kQVNjFpynZpkaPdwT/Mtn2tw7Lh8cJxAfQh5Irpdzro7GG
-	zG+JYu+8bohI3ZVAr9hymakAunbUHZ0UkViR8mm5R8sf8tb441l9fSgROTITM2tPscyVBuUdV4z
-	m
-X-Google-Smtp-Source: AGHT+IF6HTNE7SYoGoUTu6vg8Db2lhbasz38Avrn8hve9ZgM0WVlqHzOHZNeC9p/uHiiHNfqbn63zQ==
-X-Received: by 2002:a05:6602:3c7:b0:82d:581:8860 with SMTP id ca18e2360f4ac-83aba64a748mr1550641339f.12.1729602909220;
-        Tue, 22 Oct 2024 06:15:09 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dc2a65c92bsm1561414173.158.2024.10.22.06.15.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2024 06:15:08 -0700 (PDT)
-Message-ID: <eb6d8837-84cc-4b0b-8025-c846e24e8240@kernel.dk>
-Date: Tue, 22 Oct 2024 07:15:07 -0600
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] x86/microcode/AMD: Split load_microcode_amd()
-To: Borislav Petkov <bp@alien8.de>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EdQpBc19"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A9DD240E0284;
+	Tue, 22 Oct 2024 14:34:11 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id gonby0v5Fga2; Tue, 22 Oct 2024 14:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1729607645; bh=NRd/tgfwMRQSiXfwVIVoUwc97JvH2R8kAYW/8qtrVgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EdQpBc19qFegbO9WuyO+O3Ip7xtILrgBRGhYA4qDLiBn0eYHT3LEJE0lX1gLo5RW3
+	 hWuVzKA9nr/8bRvTHgs+ViMoJgpNZRrr4sC2uf6aKCzMgUfvWVcn8cC1mxJVEJ8eDi
+	 luC04K9M2wdvEter9zS4dY+pCOn8YS3uiZ/oGXHyPaLFcf+u5rbQpUPtAb+4iVV6qR
+	 c098z7giu+FMLy5TuXBjgpPomQFzNGqk2zY59in/mT2DUYE2ofXoQ1X3iXr9VtmIoU
+	 2eglkm5NF9pyC5qfvOENoXCsNnEa+cCU2kDq00u24HosVPyFsuOdvHXn8hdrz6Vi43
+	 knTnFZjlNS+HEqF15GZextzfDjq0qym//B5lSkHZID7ex79uy13ZaOtNH1htb7RRGI
+	 6ZX9MbakzPT3y/Qc5V8o0cpC67i1g+lHgl8WwW1a4tdswqVQstEjnp11VBwlUilO6K
+	 XSBIFKQPaW8Oji9rY++Fz2oeu/zheU8k5z9QxNSDWMg90VJ/kRE7NlyutLeB7pG2Ab
+	 gEIu1hibmtwHsZOKMe7q7EClmktg533GjhrYI8CsaZssqaM0j7KB90gUblApTOMwp8
+	 468P8bcGD56HNG3NZrt0Z7nZIBRkQst1rn7e08fowYR9cReW4+tcg+kmY0mAaLUPvs
+	 u3OSdvS4qR/xB9iqFrw2wwkE=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 819E740E0184;
+	Tue, 22 Oct 2024 14:34:00 +0000 (UTC)
+Date: Tue, 22 Oct 2024 16:33:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jens Axboe <axboe@kernel.dk>
 Cc: Thomas Gleixner <tglx@linutronix.de>,
- the arch/x86 maintainers <x86@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
- <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
- <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
+	the arch/x86 maintainers <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 2/2] x86/microcode/AMD: Split load_microcode_amd()
+Message-ID: <20241022143355.GIZxe30_6eAbLXByOt@fat_crate.local>
+References: <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
  <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
  <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
  <20241020121819.GAZxT1CyR_5vLLZ5e6@fat_crate.local>
@@ -79,17 +63,30 @@ References: <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
  <daa98312-cc66-4c2f-8e64-01358ee99305@kernel.dk>
  <20241022120531.GDZxeVC0WeUPhInkYh@fat_crate.local>
  <20241022120836.GFZxeVxGQ6vWIScFWo@fat_crate.local>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20241022120836.GFZxeVxGQ6vWIScFWo@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <eb6d8837-84cc-4b0b-8025-c846e24e8240@kernel.dk>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <eb6d8837-84cc-4b0b-8025-c846e24e8240@kernel.dk>
 
-Tested 1+2 together only, but for those two:
+On Tue, Oct 22, 2024 at 07:15:07AM -0600, Jens Axboe wrote:
+> Tested 1+2 together only, but for those two:
+> 
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> 
+> Thanks Boris!
 
-Tested-by: Jens Axboe <axboe@kernel.dk>
+Thanks too, Jens, for the serious testing effort - very much appreciated!
 
-Thanks Boris!
+Lemme queue them.
 
 -- 
-Jens Axboe
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
