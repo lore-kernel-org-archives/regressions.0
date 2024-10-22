@@ -1,121 +1,88 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581819ADA3
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 11:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2C919AD71
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 12:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729594813; cv=none; b=ep+o5dwbAqd8D34Mqo3zrqPlQNnx8jNN7j8+qgrORdATBLUtIWp1isbROOxcy4+GafPPuILK+7u7j5yMwZw4G0ppo63kY0gVN1u8+j/zEo4fXR8wsbHvz1Nh89mEIm5z8RnjnL1AdrtYoZNchR4qVh7E0pa1REqiZv9O5sEdRxY=
+	t=1729598744; cv=none; b=BbkWsHo1w/jyJracGadm2gaa9eQqdVgziABX5gc26Z3V3gp6M7YeShMgxJ1vyaOoPar8tynQGyTv7edcVNd7EsqRfL3x/DFgEKx+WA5cBpfUgrtApL3cYzWUrHoCRhReJa9y45NyPBiODeFqsNWEC0gnANynbgbj4Y2byv3ugds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729594813; c=relaxed/simple;
-	bh=KdF3QOAhlOp9YeqxF52QtNhKIFKPYRdOdKsTCBx2ARI=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NfhgXXq5y5iJ2tAWCTx6pUEwo4oS0z3x9zcpojOhLOyq73g3EieX45biwx9EAZ6vF31zVppAjdKH6Q7HhSTLcwoJKqjcHkTDMMRbAHqOvvwVy2ZkGBOe9G4DxHCu3ODfrna9AM3VA1rGuYk1ezjaJ1PbpkLH8QKb95Fvc9QEyd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=tNh0SD57; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1729598744; c=relaxed/simple;
+	bh=zQ8xCol0b2IXw3GbbRNG9lcP4g/Bl1vyDfYyIBQ4hoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rorw2XuZHm+sqzaRiVq8GC1PVn7e7BBA42XCCh5J+PVVK4NqoQiov1VFghWduRw3PENXDyyWrGSBb8F+q86/VljE5bnsbzZ3S5qzq7JOc7N3ROuLL/e/tijpkiJz90i8y5GS9muffXNXFsPR+xcgCLwtfGLu3XI9FYqVSSWCaNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kT7DRTwH; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tNh0SD57"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1729594812; x=1761130812;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=gCz2WOAC0TtMxRpla9tG4gw5erEv5fdp4bqGetpKGek=;
-  b=tNh0SD572Jsr072Lz9SFD+bjeu5Mk94getzYGfM6lgsHwxPc32/YOQIo
-   cwskHWDh9qko6X5SgrC4FY05C5jW40YuAh1cmyFTJtktYJdYugszHwwmn
-   FXttwnW8SrZMB+Az8gnYyLrUfS4AH3HVdLjyG+jVwmy3R9dyX06TNVi+Z
-   s=;
-X-IronPort-AV: E=Sophos;i="6.11,223,1725321600"; 
-   d="scan'208";a="769230069"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 11:00:02 +0000
-Received: from EX19MTAUEA002.ant.amazon.com [10.0.44.209:31827]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.95.25:2525] with esmtp (Farcaster)
- id d90f7e57-24b6-4e19-a859-6dd59d65c91f; Tue, 22 Oct 2024 11:00:01 +0000 (UTC)
-X-Farcaster-Flow-ID: d90f7e57-24b6-4e19-a859-6dd59d65c91f
-Received: from EX19EXOUEA001.ant.amazon.com (10.252.134.47) by
- EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 22 Oct 2024 11:00:00 +0000
-Received: from EX19MTAUEB001.ant.amazon.com (10.252.135.35) by
- EX19EXOUEA001.ant.amazon.com (10.252.134.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 22 Oct 2024 11:00:00 +0000
-Received: from email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com
- (10.43.8.2) by mail-relay.amazon.com (10.252.135.35) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.34 via Frontend Transport; Tue, 22 Oct 2024 11:00:00 +0000
-Received: from dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com [10.15.1.225])
-	by email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com (Postfix) with ESMTP id B0D5E44EA6;
-	Tue, 22 Oct 2024 10:59:59 +0000 (UTC)
-Received: by dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (Postfix, from userid 23907357)
-	id 44FCA9C23; Tue, 22 Oct 2024 12:59:59 +0200 (CEST)
-From: Mahmoud Adam <mngyadam@amazon.com>
-To: Jan Kara <jack@suse.cz>
-CC: Greg KH <gregkh@linuxfoundation.org>, <hch@lst.de>, <sashal@kernel.org>,
-	<tytso@mit.edu>, <linux-ext4@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: [5.10.y] Regression in EXT3/4 with v5.10.227, LTP preadv03 is
- failing
-In-Reply-To: <20241022094032.h5fnoqcudkxjp3vu@quack3> (Jan Kara's message of
-	"Tue, 22 Oct 2024 11:40:32 +0200")
-References: <lrkyqy12hpikl.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
-	<2024102130-thieving-parchment-7885@gregkh>
-	<lrkyqldyhpeb5.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
-	<20241022094032.h5fnoqcudkxjp3vu@quack3>
-Date: Tue, 22 Oct 2024 12:59:59 +0200
-Message-ID: <lrkyqfroopfm8.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kT7DRTwH"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6C56040E0198;
+	Tue, 22 Oct 2024 12:05:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aX4vhu4VESL5; Tue, 22 Oct 2024 12:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1729598737; bh=7F9OrfklmLQw/JAMPlpkXiPsZiBMIQSI/Oh6TvZHq3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kT7DRTwHPDj3hWkoypqgqX+Iuyk/Hu0CLUK+Vtimk41mjJnQ1bFVfY76wPTi8C/gK
+	 irGXTI0j0weT2+bjwbjx9D3k3jkk9nS6Yn6/FiCcGXyUGIwH6LzmKqyO9XLqY3/dvD
+	 xVDXz+kFtZ7n2Yb9GDc/akKYl6VtDFjIK9uaCIVIxtxYxwoLGyN9eWvWU034xSYHAw
+	 JCZFuBP6gbWA8bgeCh6MumtrY12vuBdgyONry3tgC8rHlzlry+TJp9cLGSU9Ihbcbx
+	 gZc1D/gOrt5JgsGdrMOCJhskeZqKHHZIyG5Uc099ezTWhd4bHj9mrXRjG7DHLi5RAT
+	 emPzaS07GrUUXNxwS18F3OALIjQbA7CmjL8pKSIaSt/w8K9Z2SVKCL4peW2RlDte/K
+	 IziS0ZamemFdKhSfbdfnW0whxngM3j1imSxu7eUZpQOg8XoE+3qmNVJ2AXc8EjOiPD
+	 N98b4+rZWff8te9n3pu2Ll/yhuRcGVT47gfFSUJXlvBQIgLAj1//oP4PJs/y2QZdFn
+	 RXMI2RsBBGe9W77GYvAHxjOfCJ98kA5DyfjbwC7jS8YVADgLpt5amkU29oAgFNwl4G
+	 JTWZurltdR0M/3tjf3YNvmFZrDsai5b2AP6pGqFoU8y4XRSWTf9/QmnnStFAfDYkpL
+	 bLIiB1rvnXaZI1a2oljdOsVo=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 64ED440E015F;
+	Tue, 22 Oct 2024 12:05:32 +0000 (UTC)
+Date: Tue, 22 Oct 2024 14:05:31 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	the arch/x86 maintainers <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: AMD zen microcode updates breaks boot
+Message-ID: <20241022120531.GDZxeVC0WeUPhInkYh@fat_crate.local>
+References: <016ecb00-2331-472c-88e4-66b1dbecfc99@kernel.dk>
+ <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
+ <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
+ <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
+ <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
+ <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
+ <20241020121819.GAZxT1CyR_5vLLZ5e6@fat_crate.local>
+ <df217737-6e2c-41fe-b558-3e2ab6dc0d9e@kernel.dk>
+ <20241021073140.GAZxYDXCk02lSrG3-T@fat_crate.local>
+ <daa98312-cc66-4c2f-8e64-01358ee99305@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <daa98312-cc66-4c2f-8e64-01358ee99305@kernel.dk>
 
-Jan Kara <jack@suse.cz> writes:
+On Mon, Oct 21, 2024 at 11:00:26AM -0600, Jens Axboe wrote:
+> Sounds good, I'll give them a spin once posted.
 
-> On Mon 21-10-24 19:15:58, Mahmoud Adam wrote:
->> Greg KH <gregkh@linuxfoundation.org> writes:
->> 
->> > On Mon, Oct 21, 2024 at 05:43:54PM +0200, Mahmoud Adam wrote:
->> >> 
->> >> Hello,
->> >> 
->> >>   In the latest 5.10.227 we see LTP preadv03 failing on EXT3/4, when
->> >> bisected it was found that the commit dde4c1e1663b6 ("ext4: properly
->> >> sync file size update after O_SYNC direct IO") is causing it
->> >> 
->> >> This seems similar to what occurred before[1] and if I understand
->> >> correctly it was because of missing dependency backport 936e114a245b6
->> >> ("iomap: update ki_pos a little later in iomap_dio_complete") which was
->> >> then backported to 5.15 & 6.1 but not to 5.10.
->> >> 
->> >> *This is not failing on 5.15 nor 6.1, and it does fail consistently in x86-64 & ARM
->> >> 
->> >> [1]: https://lore.kernel.org/all/20231205122122.dfhhoaswsfscuhc3@quack3/
->> >> 
->> >
->> >
->> > What do you suggest be done?
->> >
->> 
->> I think as an urgent fix I would suggest reverting the mentioned commit
->> and commits that depend on it from 5.10.y..
->> 
->> 4911610c7a1fe ("ext4: fix warning in ext4_dio_write_end_io()")
->> f8a7c342326f6 ("ext4: dax: fix overflowing extents beyond inode size when partially writing")
->> dde4c1e1663b6 ("ext4: properly sync file size update after O_SYNC direct
->> IO")
->
-> Looks sensible to me. Another possibility would be to backport commit
-> 936e114a245b6e3 ("iomap: update ki_pos a little later in
-> iomap_dio_complete") to 5.10-stable. We've done this for other stable
-> branches which had this issue and so far I didn't hear about any fallout
-> from that.
+Coming up as replies to this message.
 
-Sure, I can backport that today, if any blockers will send the reverts
-instead.
+Thx.
 
-- MNAdam
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
