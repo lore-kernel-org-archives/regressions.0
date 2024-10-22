@@ -1,147 +1,307 @@
-Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27761BC061
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 17:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DA513D886;
+	Tue, 22 Oct 2024 18:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616814; cv=none; b=AUgjL24bpNijYVetj04L7sNKixwVZPilRjoBXX5Y7HemLMqjv3lIFO27Nteq2/oOJS3kHvPzFj69ncwBeyGnFnhzOKE925ruip0ZF6phdyHMRgBnhCv4pgQXUz/qjKuc1NpLt6Z004OYwa+uHsnLvLb3sDcWw+Adk8nA0TRtvik=
+	t=1729623119; cv=none; b=kK7tl22bb63g/wrzRB70obRt2sVwoAWU5dccbPl8tcglbhgELIPiKVJwXM3ybXxn+KC6Nt/LHVeRbZbB7LTmG6acdktBGvbQ3RKhoc/koNVifJRtq+ONXS1VVAthUr+0+aJ3eISERJLiO7SVuuplp964//xDrJQqXL7f9HiA4+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616814; c=relaxed/simple;
-	bh=SI8N43c2x+9ISVR4Odu10/QCQoH2n3zlzwCJ1A5+Cpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z8/O2BfRh1pZi0QgStsM33oluXTA3ckDepRQGTTdEOG4Hox1STPrsOs1/xgyyrAc4YYUbjaTYnpPNpCKbPcES54E+hezFjRxJkvzvxWcrAqgDTjyJokovZ9PmOE3wqukkf2hu8cFpyr/JQi18aMKcmt4B1ebeQtyeX+7dSE0UUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=GrA9hzVk; arc=none smtp.client-ip=86.95.37.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
+	s=arc-20240116; t=1729623119; c=relaxed/simple;
+	bh=os3KAFpTxvGOVUNI7xbBJ3xadtAp1xQMFxEkOzneQYE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=q5vrSEm7tY2vL0X5ilik/0CwadCd0kdG4IDETiccbLcsDTR0yXSk73T3S+PDZZOpgRhPDnvi/CeWqHE2BcU3JrHyy2pTFzkyqKMVNNXALUPSH9hyEUJiYYJ+8xLgrliWUrHm4n7UMADx5KEgdFBSFBjm63cZs3byG0gwBv9WmKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kZ080zjc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="GrA9hzVk"
-Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
-	by mail.581238.xyz (Postfix) with ESMTPSA id 0CC3843088FB;
-	Tue, 22 Oct 2024 19:06:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
-	t=1729616811; bh=SI8N43c2x+9ISVR4Odu10/QCQoH2n3zlzwCJ1A5+Cpk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GrA9hzVkUD7Mjr36CBmkyyTjnj+wUxMse7ZMpxBK8xKAuiO67loYAaHJZRWCELMzH
-	 Qxrfu/14PvU2SM8jc22D/hG6/C1iS8ESxYPdxdwTlK2W+Dc1PBLUcCrsQuRar5XGlS
-	 jQFa9xTBV8TRAw80KjsjekF/cwCxNanIoZZsu9Dc=
-Message-ID: <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
-Date: Tue, 22 Oct 2024 19:06:50 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kZ080zjc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vNr3Ud2/qsqEpXARv0gcBAhIMEpUzZSh5WHpDSFYWek=; b=kZ080zjcnQZYECzz+1sBkDlXDF
+	Fakr8Q0gIr9T17j0gOUbDY148kYuWMzdYMyeo55Yg15aiC6qoQtTnnVTQYugG2Gv1p/IkTF4l9EwR
+	R51hcjCgNF3TRXIJ4EjW62sDgVsufVRBADl6/gbK2pDT0aqdJlZWOyoN3cwAN0ppQt1EcVKOwCxZR
+	0QRdAQgrIvWIMKtLVo3KvpU0FPwR8Uy8Bjbm2z3JcNfmuYws54wxxr1TwocaBA56k+VmA2PI7tNer
+	GzTtOdKIHLzOHwB2Zq1l69V++qwMYATgkUp5UYFeDarN5tiNGOCEMtCg6u69gS5HkHcLGr1hwVD2X
+	ipL1JIZA==;
+Received: from [2001:8b0:10b:5:51f6:cefc:4e76:679f] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t3Jyk-00000001uqX-1JRS;
+	Tue, 22 Oct 2024 18:51:39 +0000
+Message-ID: <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+From: David Woodhouse <dwmw2@infradead.org>
+To: Dave Young <dyoung@redhat.com>, Steve Wahl <steve.wahl@hpe.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Pavin Joseph
+ <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>, 
+ kexec@lists.infradead.org, Eric Hagberg <ehagberg@gmail.com>, 
+ dave.hansen@linux.intel.com, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Date: Tue, 22 Oct 2024 19:51:38 +0100
+In-Reply-To: <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
+References: 
+	<CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+	 <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+	 <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
+	 <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+	 <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+	 <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
+	 <87cyryxr6w.fsf@email.froward.int.ebiederm.org>
+	 <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
+	 <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-MQP9TFkoyyafU0ovUhhL"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
- christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
- <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
- <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
- <20241022161055.GE275077@black.fi.intel.com>
-Content-Language: en-US
-From: Rick <rick@581238.xyz>
-Autocrypt: addr=rick@581238.xyz; keydata=
- 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
-In-Reply-To: <20241022161055.GE275077@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Hi Mika,
-
-I have removed pcie_asm=force as kernel parameter but still not working 
-on latest non LTS kernel.
-
-In regards to the disconnect; sorry I think I might have turned of the 
-docking station myself during that test. I have taken another dmesg 
-without me disconnecting the docking station: 
-https://gist.github.com/ricklahaye/9798b7de573d0f29b3ada6a5d99b69f1
-
-The cable is the original Thunderbolt 4 cable that came with the docking 
-station. I have used it on this laptop using Windows (dualboot) without 
-any issues. Also on another Windows laptop also without issues. It was 
-used in 40Gbit mode.
-
-So right now all linux-lts versions work with the dock, but linux non 
-LTS does not.
-
-Kind regards,
-Rick
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
-On 22-10-2024 18:10, Mika Westerberg wrote:
-> Hi,
->
-> On Tue, Oct 22, 2024 at 05:44:18PM +0200, Rick wrote:
->> Hi Mario,
->>
->> I apologize. I think I mixed up the versions between linux-lts and linux
->> kernel.
->>
->> linux-6.6.28-1-lts works:
->> https://gist.github.com/ricklahaye/610d137b4816370cd6c4062d391e9df5
->> linux-6.6.57-1-lts works:
->> https://gist.github.com/ricklahaye/48d5a44467fc29abe2b4fd04050309d7
->>
->> linux-6.11.4-arch2-1 doesn't work:
->> https://gist.github.com/ricklahaye/3b13a093e707acd0882203a56e184d3f
->> linux-6.11.4-arch2-1 with host_reset on 0 also doesn't work:
->> https://gist.github.com/ricklahaye/ea2f4a04f7b9bedcbcce885df09a0388
-> Looks like some sort of connectivity issue to me.
->
-> However, can you first drop the "pcie_aspm=force" from the command line
-> and see if that has any affect. Probably does not but I suggest not to
-> keep it unless you really know that you want force ASPM on all PCIe
-> links (this may cause issues with some devices).
->
-> Anyways, even the working -lts ones you see the link goes down and up
-> which is not expected (unless you unplugged and plugged it back). Some
-> devices that are not Thunderbolt certified have this kinds of issues.
-> The cable could make difference too. Is it Thunderbolt 4 cable or
-> regular one?
+--=-MQP9TFkoyyafU0ovUhhL
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2024-03-14 at 17:25 +0800, Dave Young wrote:
+> On Thu, 14 Mar 2024 at 00:18, Steve Wahl <steve.wahl@hpe.com> wrote:
+> >=20
+> > On Wed, Mar 13, 2024 at 07:16:23AM -0500, Eric W. Biederman wrote:
+> > >=20
+> > > Kexec happens on identity mapped page tables.
+> > >=20
+> > > The files of interest are machine_kexec_64.c and relocate_kernel_64.S
+> > >=20
+> > > I suspect either the building of the identity mappged page table in
+> > > machine_kexec_prepare, or the switching to the page table in
+> > > identity_mapped in relocate_kernel_64.S is where something goes wrong=
+.
+> > >=20
+> > > Probably in kernel_ident_mapping_init as that code is directly used
+> > > to build the identity mapped page tables.
+> > >=20
+> > > Hmm.
+> > >=20
+> > > Your change is commit d794734c9bbf ("x86/mm/ident_map: Use gbpages on=
+ly
+> > > where full GB page should be mapped.")
+> >=20
+> > Yeah, sorry, I accidentally used the stable cherry-pick commit id that
+> > Pavin Joseph found with his bisect results.
+> >=20
+> > > Given the simplicity of that change itself my guess is that somewhere=
+ in
+> > > the first 1Gb there are pages that needed to be mapped like the idt a=
+t 0
+> > > that are not getting mapped.
+> >=20
+> > ...
+> >=20
+> > > It might be worth setting up early printk on some of these systems
+> > > and seeing if the failure is in early boot up of the new kernel (that=
+ is
+> > > using kexec supplied identity mapped pages) rather than in kexec per-=
+se.
+> > >=20
+> > > But that is just my guess at the moment.
+> >=20
+> > Thanks for the input.=C2=A0 I was thinking in terms of running out of
+> > memory somewhere because we're using more page table entries than we
+> > used to.=C2=A0 But you've got me thinking that maybe some necessary reg=
+ion
+> > is not explicitly requested to be placed in the identity map, but is
+> > by luck included in the rounding errors when we use gbpages.
+>=20
+> Yes, it is possible. Here is an example case:
+> http://lists.infradead.org/pipermail/kexec/2023-June/027301.html
+> Final change was to avoid doing AMD things on Intel platform, but the
+> mapping code is still not fixed in a good way.
+
+I spent all of Monday setting up a full GDT, IDT and exception handler
+for the relocate_kernel() environment=C2=B9, and I think these reports may
+have been the same as what I've been debugging.
+
+We end up taking a #PF, usually on one of the 'rep mov's, one time on
+the 'pushq %r8' right before using it to 'ret' to identity_mapped. In
+each case it happens on the first *write* to a page.
+
+Now I can print %cr2 when it happens (instead of just going straight to
+triple-fault), I spot an interesting fact about the address. It's
+always *adjacent* to a region reserved by BIOS in the e820 data, and
+within the same 2MiB page.
+
+[    0.000000] BIOS-e820: [mem 0x000000bfbe000000-0x000000c1420fffff] reser=
+ved
+[    0.000000] BIOS-e820: [mem 0x000000c142100000-0x000000fc7fffffff] usabl=
+e
+
+
+2024-10-22 17:09:14.291000 kern NOTICE [   58.996257] kexec: Control page a=
+t c149431000
+2024-10-22 17:09:14.291000 Y
+2024-10-22 17:09:14.291000 rip:000000c1494312f8
+2024-10-22 17:09:14.291000 rsp:000000c149431f90
+2024-10-22 17:09:14.291000 Exc:000000000000000e
+2024-10-22 17:09:14.291000 Err:0000000080000003
+2024-10-22 17:09:14.291000 rax:000000c142130000
+2024-10-22 17:09:14.291000 rbx:000000010d4b8020
+2024-10-22 17:09:14.291000 rcx:0000000000000200
+2024-10-22 17:09:14.291000 rdx:000000000009c000
+2024-10-22 17:09:14.291000 rsi:000000000009c000
+2024-10-22 17:09:14.291000 rdi:000000c142130000
+2024-10-22 17:09:14.291000 r8 :000000c149431000
+2024-10-22 17:09:14.291000 r9 :000000c149430000
+2024-10-22 17:09:14.291000 r10:000000010d4bc000
+2024-10-22 17:09:14.291000 r11:0000000000000000
+2024-10-22 17:09:14.291000 r12:0000000000000000
+2024-10-22 17:09:14.291000 r13:0000000000770ef0
+2024-10-22 17:09:14.291000 r14:ffff8c82c0000000
+2024-10-22 17:09:14.291000 r15:0000000000000000
+2024-10-22 17:09:14.291000 cr2:000000c142130000
+>=20
+
+And bit 31 in the error code is set, which means it's an RMP
+violation.=C2=A0
+
+Looks like we set up a 2MiB page covering the whole range from
+0xc142000000 to 0xc142200000, but we aren't allowed to touch the first
+half of that.
+
+For me it happens either with or without Steve's last patch, *but*
+clearing direct_gbpages did seem to make it go away (or at least
+reduced the incident rate far below the 1-crash-in-1000-kexecs which I
+was seeing before).
+
+I think Steve's original patch was just moving things around a little
+and because it allocate more pages for page tables, just happened to
+leave pages in the offending range to be allocated for writing to, for
+the unlucky victims.
+
+I think the patch was actually along the right lines though, although
+it needs to go all the way down to 4KiB PTEs in some cases. And it
+could probably map anything that the e820 calls 'usable RAM', rather
+than really restricting itself to precisely the ranges which it's
+requested to map.=20
+
+
+
+=C2=B9 I'll post that exception handler at some point once I've tidied it
+up.
+
+--=-MQP9TFkoyyafU0ovUhhL
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQxMDIyMTg1MTM4WjAvBgkqhkiG9w0BCQQxIgQgS4oUV+4t
+Yg3VsFy1+tz9nGx3ChGfHpqQIn7JkZOVzNwwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgBteJhktw+zEt20nehKTyhC3mp4iSMrylFp
+LN+H4Q6aQoiEBqcoRVj479kdvnCpOeMtokfgCU9kZTw/wyn9fF084rwQ9i59YEvxAHsUT4m33lj+
+ZOA8O6SRJTgOmg3Pe5AY/doUEMTajBs+0OVDZKCXFwvIEwIg0cnj/Qd83XRUwGIlnJAGZBAPGzND
+ipwpbj4mtU1B1DuUvQuiiqlC1yc5iMnVNE0N2D8+DMKWirULFoZRCtCoNivH3B4JM1t/s5xmNFNS
+H9V6r8RN+xEAIkz4knFux+vCM29pUOeN2CtAVHgALf3oqxj02qnwI3vYEcwx5JcJ46hnwtQzhjbo
+113meKX93HAoiiNhBeiLUpUkSCuNunCXVXHN5Zbztftch2iYKzHZJIXnTT8FUBkmh0U13HVxqx3K
+6Fv2B7NyxkyxYPQHmvFGxk7g3hQ3MTQ5/lh42I4KqifjAa2n6JL4cMYcvs7msP9wE1QolBT12CV1
++Y+kwQWNZ7l85nCYDhaU1keABkqRcM+N09NH8i8R70jVGxQuPQs4DafiyIcsYmFqRIsNAdSIBngD
+kwZjP7hfAICnMlW3c+Ft0sAjvzEmVvDWDKEyby5gsoGUldPbZK0St5M7swMJYIyR34TCnljT41Ib
+HiTLZ/k0D/htKxroVXWWLihBI1/4kMuueh97GN5XPgAAAAAAAA==
+
+
+--=-MQP9TFkoyyafU0ovUhhL--
