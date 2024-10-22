@@ -1,272 +1,178 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83FE1CCEC6
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 22:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F3E19993B;
+	Tue, 22 Oct 2024 23:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729634836; cv=none; b=XlD2DomaJeh2JLxw9Q6P67A4i6kQQ+gROIF6J+GGsPf0AZUs3FZJNMiq57LH+BILz2HPNqVEi+ick/wcOCgmempgKy8qRV2PQokhHrfaReGQ6oNPy6UBIWGyDQsmgOK6Jct61EHBwapudBqkYaTesyoNq82SqQGRNCsk526DiAg=
+	t=1729638034; cv=none; b=kPj/OWtVYrq8ULJoSvQpdPwS6d4YXhpzMPwe+0mPiQTbLk6R/ITSRE48wO5OmLP3QjdN6LmH5taKl3rleZCNO6DHUXZS8dIaR6UzWfSHEi+iUMALNbnu5WwO6gmjLyjCGJJIUC+FGH4gakAckND6gjS1RLg0HbzkbbSdOw7m2KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729634836; c=relaxed/simple;
-	bh=KlEYC8vAlPqo3Q2DM2d4e/RuF3L2MWDXz8f07S6OqEI=;
+	s=arc-20240116; t=1729638034; c=relaxed/simple;
+	bh=JYYT6NWVKVJy521RVnpBOsTsaJ9xWTminJzbGkzYAz4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRJEMG0TZuSu1CMm82Bk5ErkFW+9QPkeEB17zhkKczAA2flcKeJHd/koZcrx44e2XpCLHpDvl7I6qXuoU50iWCvIQn/iiGO1bHOzbRqhq8s9DUDHmZaPw/i0KvcNM3EFr/aBsCCONiXuLgzgtX+Rhkkvf0iCyxnO86SD0FmG9NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=BYsfOf8E; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvUZU2qYTKJPGHX2cvu9UEaJ2LkjOkfVkbor8IidTmbKz4pX6FlgjQvGvTAA6NG1XxeJo0FvKSNgiOloFawZtmKqp28Nm95+d2RGD11gAUkgjxZjOHTnUZlfIISIt8PvnPGn0vcWuFqAqnqenR6OvQA+YUSWN3/JfHhU8tPdFEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=zP0hOuJ/; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="BYsfOf8E"
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49MLYwGI028426;
-	Tue, 22 Oct 2024 22:06:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps0720; bh=Vy
-	wH1BfnN3mlhSINt8ZDDsQDI1v+YV8gCm/U1F3m7HU=; b=BYsfOf8EjwQt+7OoKq
-	v7PrdyhpUv+ebj0ZgKYH5lzCTuhebJIIEha0vKXG2+27I8ZiDaXfYYDYQd2eb5d5
-	ZMcIDXsV2mTdx7SXHGSgJKlfjC5RUM4562XiCwTPjwZBqlE7mmieqYtQ7Hn9YsRd
-	uxA80U/GETZiQsacQ+R0LMInc1sYvD4dsv8QWzNwRVE19ElyFlxshmOs3n2ZCyWR
-	VV29ZBYPUbzfrnwpCe2pwAmlD88ltySC/G/Vg7VhGRPqfMSLuDwk2lcrxhmEvGU9
-	jdCg1Zgz16GQujuduYZt17t0Ii95eEhI+y3HTqyTgXT0uhWlHvrjcIADnbTlQDie
-	7Iww==
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 42em36rax3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Oct 2024 22:06:56 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 2C2EFD2A4;
-	Tue, 22 Oct 2024 22:06:55 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id B799C8014F6;
-	Tue, 22 Oct 2024 22:06:52 +0000 (UTC)
-Date: Tue, 22 Oct 2024 17:06:50 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Dave Young <dyoung@redhat.com>, Steve Wahl <steve.wahl@hpe.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavin Joseph <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>,
-        kexec@lists.infradead.org, Eric Hagberg <ehagberg@gmail.com>,
-        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <Zxgh-hBK2FfhHJ9R@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
- <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
- <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
- <87cyryxr6w.fsf@email.froward.int.ebiederm.org>
- <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
- <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
- <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="zP0hOuJ/"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id D9E7C14C1E1;
+	Wed, 23 Oct 2024 01:00:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1729638024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+PhWiLsE/ON3mjmkRzMiGc9kBu8+BamSMdruYQygqY=;
+	b=zP0hOuJ/+I+kvxnPXTKILVZTmq9uW8IIrcrjnp80IaKnWS5i0IhCUKrro+bqGxoZqsEcwj
+	KBt499xq3KuVUaW78haSqWdXWgAs4BQ2Hz8QHw+MuPUGoxdkfSvGtZ5ItmtAfrVCbkdX84
+	kjroIim/F30dRDmisbgE866fgYzQKxxY9A6oah6jXXAXXu2THwEaIDuoAGWcnHAJb/p5ba
+	Vzo3niNheJlOyIxE5Mp90DGhMRSWbnqX/vkytJrOsYa7tGHoGMV+QHfigYuK6X6ySSEGCB
+	otqfiC7i7PH76WHSgVW1jbaQA3aNwNPXM2GaOc2gpRbnFNLEwxQl10mWibMFtg==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 1226a4ff;
+	Tue, 22 Oct 2024 23:00:19 +0000 (UTC)
+Date: Wed, 23 Oct 2024 08:00:04 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Will Deacon <will@kernel.org>, ericvh@kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, lucho@ionkov.net,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com,
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com,
+	keirf@google.com, regressions@lists.linux.dev
+Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
+Message-ID: <ZxgudMCSgbDOEjpD@codewreck.org>
+References: <20240923100508.GA32066@willie-the-truck>
+ <20241009153448.GA12532@willie-the-truck>
+ <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
+ <Zw-J0DdrCFLYpT5y@codewreck.org>
+ <20241022150149.GA27397@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <af634055643bd814e2204f61132610778d5ef5e5.camel@infradead.org>
-X-Proofpoint-GUID: aJQdN_SsE1yVeQ3REZJbsQ1HIEdaLQtb
-X-Proofpoint-ORIG-GUID: aJQdN_SsE1yVeQ3REZJbsQ1HIEdaLQtb
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410220143
+In-Reply-To: <20241022150149.GA27397@willie-the-truck>
 
-On Tue, Oct 22, 2024 at 07:51:38PM +0100, David Woodhouse wrote:
-> On Thu, 2024-03-14 at 17:25 +0800, Dave Young wrote:
-> > On Thu, 14 Mar 2024 at 00:18, Steve Wahl <steve.wahl@hpe.com> wrote:
-> > > 
-> > > On Wed, Mar 13, 2024 at 07:16:23AM -0500, Eric W. Biederman wrote:
-> > > > 
-> > > > Kexec happens on identity mapped page tables.
-> > > > 
-> > > > The files of interest are machine_kexec_64.c and relocate_kernel_64.S
-> > > > 
-> > > > I suspect either the building of the identity mappged page table in
-> > > > machine_kexec_prepare, or the switching to the page table in
-> > > > identity_mapped in relocate_kernel_64.S is where something goes wrong.
-> > > > 
-> > > > Probably in kernel_ident_mapping_init as that code is directly used
-> > > > to build the identity mapped page tables.
-> > > > 
-> > > > Hmm.
-> > > > 
-> > > > Your change is commit d794734c9bbf ("x86/mm/ident_map: Use gbpages only
-> > > > where full GB page should be mapped.")
-> > > 
-> > > Yeah, sorry, I accidentally used the stable cherry-pick commit id that
-> > > Pavin Joseph found with his bisect results.
-> > > 
-> > > > Given the simplicity of that change itself my guess is that somewhere in
-> > > > the first 1Gb there are pages that needed to be mapped like the idt at 0
-> > > > that are not getting mapped.
-> > > 
-> > > ...
-> > > 
-> > > > It might be worth setting up early printk on some of these systems
-> > > > and seeing if the failure is in early boot up of the new kernel (that is
-> > > > using kexec supplied identity mapped pages) rather than in kexec per-se.
-> > > > 
-> > > > But that is just my guess at the moment.
-> > > 
-> > > Thanks for the input.  I was thinking in terms of running out of
-> > > memory somewhere because we're using more page table entries than we
-> > > used to.  But you've got me thinking that maybe some necessary region
-> > > is not explicitly requested to be placed in the identity map, but is
-> > > by luck included in the rounding errors when we use gbpages.
+Will Deacon wrote on Tue, Oct 22, 2024 at 04:01:49PM +0100:
+> > One note though he did sent a patch that seems related and wasn't sent
+> > for merge:
+> > https://lore.kernel.org/all/CAFkjPTn7JAbmKYASaeBNVpumOncPaReiPbc4Ph6ik3nNf8UTNg@mail.gmail.com/T/#u
+> >
+> > Will, perhaps you can try it? I'm pretty sure the setup to reproduce
+> > this is easy enough that I'll be able to reproduce in less than an hour
+> > (export two tmpfs [sequential inode number fs] wthin the same 9p mount
+> > in qemu without 'multidevs=remap'), but I don't even have that time
+> > right now.
 > > 
-> > Yes, it is possible. Here is an example case:
-> > http://lists.infradead.org/pipermail/kexec/2023-June/027301.html
-> > Final change was to avoid doing AMD things on Intel platform, but the
-> > mapping code is still not fixed in a good way.
+> > (I didn't even read the patch properly and it might not help at all,
+> > sorry in this case)
 > 
-> I spent all of Monday setting up a full GDT, IDT and exception handler
-> for the relocate_kernel() environment¹, and I think these reports may
-> have been the same as what I've been debugging.
+> I think this patch landed upsteam as d05dcfdf5e16 (" fs/9p: mitigate
+> inode collisions") and so I can confirm that it doesn't help with the
+> issue.
 
-David,
+Ugh, yes, sorry I'm blind it's there alright (you even listed it in your
+first post in the list of commits to revert)
 
-My original problem involved UV platform hardware catching a
-speculative access into the reserved areas, that caused a BIOS HALT.
-Reducing the use of gbpages in the page table kept the speculation
-from hitting those areas.  I would believe this sort of thing might be
-uniqe to the UV platform.
-
-The regression reports I got from Pavin and others were due to my
-original patch trimming down the page tables to the point where they
-didn't include some memory that was actually referenced, not processor
-speculation, because the regions were not explicitly included in the
-creation of the kexec page map.  This was fixed by explicitly
-including those regions when creating the map.
-
-Can you dump the page tables to see if the address you're referencing
-is included in those tables (or maybe you already did)?  Can you give
-symbols and code around the RIP when you hit the #PF?  It looks like
-this is in the region metioned as the "Control page", so it's probably
-trampoline code that has been copied from somewhere else.  I'm using
-my copy of perhaps different kernel source than you have, given your
-exception handler modification.
-
-Wait, I can't make sense of the dump. See more below.
-
-What platform are you running on?  And under what conditions (is this
-bare metal)? Is it really speculation that's causing your #PF?  If so,
-you could cause it deterministically by, say, doing a quick checksum
-on that area you're not supposed to touch (0xc142000000 -
-0xC1420fffff) and see if it faults every time.  (As I said, I was
-thinking faults from speculation might be unique to the UV platform.)
-
-> We end up taking a #PF, usually on one of the 'rep mov's, one time on
-> the 'pushq %r8' right before using it to 'ret' to identity_mapped. In
-> each case it happens on the first *write* to a page.
+> > I'm not sure this really needs to get Linus involved - it's breaking a
+> > server that used to work even if qemu has been printing a warning about
+> > these duplicate qid.path for a while, and the server really is the
+> > better place to remap these inodes as we have no idea of the underlying
+> > device id as far as I know...
 > 
-> Now I can print %cr2 when it happens (instead of just going straight to
-> triple-fault), I spot an interesting fact about the address. It's
-> always *adjacent* to a region reserved by BIOS in the e820 data, and
-> within the same 2MiB page.
+> FWIW, I'm not using QEMU at all. This is with kvmtool which, for better
+> or worse, prints no such diagnostic and used to be reliable enough with
+> whatever magic the kernel had prior to v6.9.
 
-I'm not at all certain, but this feels like a red herring.  Be cautious.
+Yes, that problem isn't specific to qemu, anything that re-exports
+multiple filesystems using underlying inode numbers directly has this
+risk (e.g. even diod/nfs-ganesha tcp mounts ought to reproduce if they
+don't mangle inodes); I agree we need to handle servers throwing junk at
+us.
 
-> [    0.000000] BIOS-e820: [mem 0x000000bfbe000000-0x000000c1420fffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x000000c142100000-0x000000fc7fffffff] usable
-> 
-> 
-> 2024-10-22 17:09:14.291000 kern NOTICE [   58.996257] kexec: Control page at c149431000
-> 2024-10-22 17:09:14.291000 Y
-> 2024-10-22 17:09:14.291000 rip:000000c1494312f8
-> 2024-10-22 17:09:14.291000 rsp:000000c149431f90
-> 2024-10-22 17:09:14.291000 Exc:000000000000000e
-> 2024-10-22 17:09:14.291000 Err:0000000080000003
-> 2024-10-22 17:09:14.291000 rax:000000c142130000
-> 2024-10-22 17:09:14.291000 rbx:000000010d4b8020
-> 2024-10-22 17:09:14.291000 rcx:0000000000000200
-> 2024-10-22 17:09:14.291000 rdx:000000000009c000
-> 2024-10-22 17:09:14.291000 rsi:000000000009c000
-> 2024-10-22 17:09:14.291000 rdi:000000c142130000
-> 2024-10-22 17:09:14.291000 r8 :000000c149431000
-> 2024-10-22 17:09:14.291000 r9 :000000c149430000
-> 2024-10-22 17:09:14.291000 r10:000000010d4bc000
-> 2024-10-22 17:09:14.291000 r11:0000000000000000
-> 2024-10-22 17:09:14.291000 r12:0000000000000000
-> 2024-10-22 17:09:14.291000 r13:0000000000770ef0
-> 2024-10-22 17:09:14.291000 r14:ffff8c82c0000000
-> 2024-10-22 17:09:14.291000 r15:0000000000000000
-> 2024-10-22 17:09:14.291000 cr2:000000c142130000
-> > 
-> 
-> And bit 31 in the error code is set, which means it's an RMP
-> violation. 
+It's easy enough to reproduce with qemu if remapping is disabled as
+expected (I don't hit the VFS warning in d_splice_alias() but the
+behaviour is definitely wrong):
+----
+# host side
+cd /tmp/linux-test
+mkdir m1 m2
+mount -t tmpfs tmpfs m1
+mount -t tmpfs tmpfs m2
+mkdir m1/dir m2/dir
+echo foo > m1/dir/foo
+echo bar > m2/dir/bar
 
-RMP is AMD SEV related, right?  I'm not familiar with SEV operation,
-but I have an itchy feeling it's involved in this problem.
+# guest side
+# started with -virtfs local,path=/tmp/linux-test,mount_tag=tmp,security_model=mapped-file
+mount -t 9p -o trans=virtio,debug=1 tmp /mnt/t
 
-I am having a hard time with the RIP listed above.  Maybe your
-exception handler has affected it?  My disassembly seems to show this
-address should be in a sea of 0xCC / int3 bytes past the end of swap
-pages.
+ls /mnt/t/m1/dir
+# foo
+ls /mnt/t/m2/dir
+# bar (works ok if directry isn't open)
 
-> Looks like we set up a 2MiB page covering the whole range from
-> 0xc142000000 to 0xc142200000, but we aren't allowed to touch the first
-> half of that.
+# cd to keep first dir's inode alive
+cd /mnt/t/m1/dir
+ls /mnt/t/m2/dir
+# foo (should be bar)
+----
 
-Is it possible that, instead, some SEV tag is hanging around (TLB not
-completely cleared?) and a page that was otherwise free is causing the
-problem.  Are you using SEV/SME in your system, and if you stop using
-it does it go away?  (Although I have a feeling the answer is no and
-I'm barking up the wrong tree.)
+This can also be observed with files if mounting with cache=fscache or
+similar (but interestingly even keeping the file open will properly
+disociate both files in default cache=none mode); either way we won't be
+able to properly work with hard links if we assume the server isn't
+reliable; I guess that if someone wants that we'd really need to
+implement some capability negotiation at mount time so the server can
+tell us what is supported and unless that is done assume the server
+cannot reliably assign inodes...
 
-The target of the pages above is c1421300000.  Have you checked to
-make sure that's a valid address in the page map?
+And if we go that way then we just shouldn't ever look at the inode
+number?... Which seems to pretty much be what the old code was doing in
+the "new" path of v9fs_qid_iget(); the compare function would just
+always say the inodes are different and get a new one...
+The mitigation Eric implemented is similar enough (re-added a 'new'
+parameter, and fail if I_NEW isn't set when new was requested), but it
+looks like v9fs_fid_iget_dotl() isn't called at all when accessing the
+other overlapping directory, so that wasn't effective here as some
+higher level of caching caught the inode first.
 
-> For me it happens either with or without Steve's last patch, *but*
-> clearing direct_gbpages did seem to make it go away (or at least
-> reduced the incident rate far below the 1-crash-in-1000-kexecs which I
-> was seeing before).
 
-I assume you're referring to the "nogbpages" kernel option?  My patch
-and the nogbpages option should have the exact same pages mapped in
-the page table.  The difference being my patch would still use gbpages
-in places where a whole gbpage region is included in the map,
-nogbpages would use 2M pages to fill out the region.  This *would*
-allocate more pages to the page table, which might be shifting things
-around on you.
+I've also confirmed reverting the 4 commits listed by Will do fix both
+behaviors (along with a fscache warning when hitting the duplicate inode
+file, but that's expected):
+        724a08450f74 "fs/9p: simplify iget to remove unnecessary paths"
+        11763a8598f8 "fs/9p: fix uaf in in v9fs_stat2inode_dotl"
+        10211b4a23cf "fs/9p: remove redundant pointer v9ses"
+        d05dcfdf5e16 " fs/9p: mitigate inode collisions"
 
-> I think Steve's original patch was just moving things around a little
-> and because it allocate more pages for page tables, just happened to
-> leave pages in the offending range to be allocated for writing to, for
-> the unlucky victims.
-> 
-> I think the patch was actually along the right lines though, although
-> it needs to go all the way down to 4KiB PTEs in some cases. And it
-> could probably map anything that the e820 calls 'usable RAM', rather
-> than really restricting itself to precisely the ranges which it's
-> requested to map. 
-> 
-> 
-> 
-> ¹ I'll post that exception handler at some point once I've tidied it
-> up.
 
-I hope this might be of some help.  Good luck, I'll pitch in any way I
-can.
+> I'm happy to test patches if there's anything available, but otherwise
+> the reverts at least get us back to the old behaviour if nobody has time
+> to come up with something better.
 
---> Steve
+I think that's the sane thing to do, let's first go back to something
+that works and we can try again if/when someone has time - I've
+certainly just spent more time here than I have, and starting over is just
+a matter of reapplying the patches in a local branch so it's not like
+there's anything to lose (afaiu this was intended as code cleanup to
+make the code more maintainable rather than fixing something specific)
 
+
+
+Thorsten, is there a preferred way reverts should be done?
+In this case it'd probably make sense to squash the 4 reverts in a
+single megarevert? At the very least getting anywhere in the middle with
+the uaf isn't something one would want... And they all made it in 6.9
+together so there's no benefit in splitting them for backport either.
+
+Once that's decided I'll prepare something to send Linus in a few days,
+I don't think there's much point in sitting on this either...
+
+
+Thanks,
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+Dominique Martinet | Asmadeus
