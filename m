@@ -1,170 +1,88 @@
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189DD10A3E
-	for <regressions@lists.linux.dev>; Mon, 21 Oct 2024 23:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.96.220.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585C8153828;
+	Tue, 22 Oct 2024 07:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729554820; cv=none; b=SYnGB5IE+cIJaSIJTl/NqqzjpQQAF/otb/ZFUO9juBXcW1GsjE36SrqyLWim9Z91MuvXcIqnvX+qvJuFwhG15X83IGPAXz1IXAwyaMGExjwb2iPZUQVhPgSb/pdHLtHZWKEpfSYyBW+g8Pja3n5nZzNrv8s3qPVpS61Z8MIN84E=
+	t=1729582787; cv=none; b=Va7RaGo4cZg0CQroMmHjv8b2z7yh+P8g51VenD9vAlSKzNz5TkNLiCi8iB807kz1QtJPBCbD23ugFnhDtyhsRXIgwxxCgC8Cgvgkq6fg3JqvAlz+UnuvKB44HXyqs3GtO2hxuS8ceJsOgqbV8sxhN1rqHIcbh/y9sdX9PGhZ47w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729554820; c=relaxed/simple;
-	bh=tFRu6EMylPp3LvWlxOVcpIx8tqErVAbtF+BDXGrKeFs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pe9Ky0jIqA/sBs7XT4iB0n0nYrd4oIcz4y8irr0tKToV7dfWgt5tAEdW01U9G2tHjSiz9DTsn5Ucr9CVF9vwicOmvImgR+u1PEgBWEkNvFTBoOQ83XN+eX2WgGN1X9xgc7yUqd02sdzzeuGG6GISqEwduXUwn/aWyhcboGlZzkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com; spf=pass smtp.mailfrom=secunet.com; dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b=GXpKyRlG; arc=none smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secunet.com
+	s=arc-20240116; t=1729582787; c=relaxed/simple;
+	bh=Eano7e7ZbmoFzyy0lr6CS59PmcuzUR+xyyhAGeM82Pc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KUlAjNme4oLTg+vnVVJjCio84JTsVQcHLmLfBrCDAihIjTwitSnruVnXofol48yhTiaTw71biBv6VqXXdRGW11BX8zAkoJ+XRTlVvPxOHon/EPakZsHzzRln1HXUK+7wVpj6Q+GkTvkNj8cxoyfbBRUuYTYJMlILpZuMnM4WYrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lnxpR4kt; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b="GXpKyRlG"
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id EEE1F20820;
-	Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id H3eHxTkhD1Aq; Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
-Received: from cas-essen-01.secunet.de (rl1.secunet.de [10.53.40.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 4B269206B0;
-	Tue, 22 Oct 2024 01:53:34 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 4B269206B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secunet.com;
-	s=202301; t=1729554814;
-	bh=4oO/CO1S7FHDO6oDhvZ6wAucF3SqIDF1wHi005tQZjg=;
-	h=Date:From:To:CC:Subject:Reply-To:References:In-Reply-To:From;
-	b=GXpKyRlGqvFxZDeYVNHJVNH7HsQ9/2IvOMe3Fv7yFvWz5glP/+7n53h9L07zwt7H0
-	 Cl0NDxEcUI1rQj6FZa2upn5ARPUqQ2Tb68tVcnNIvkjP73kQjBOMBCNe3aOy0R3RKk
-	 aaXIpi1iDw9fMTtbEv0fDTNTwfbAKpLG3StHPKQz3ftbPW8s6THy3FfVHdGwRQecXc
-	 0l/ONEwHW7su2fZCftYGMaCcZHWcLg39TVsJMT6VYNyxsfQu7+DjmPurmWExOyX1sn
-	 hOacj5DWZaUp12WzQf9Ty1TPjVc9PBsUeLSZceqwbkT0vxQaq9eZ8mC+6CGOSEq7ua
-	 KOFwewkYkb2ig==
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 22 Oct 2024 01:53:34 +0200
-Received: from moon.secunet.de (172.18.149.1) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Oct
- 2024 01:53:33 +0200
-Date: Tue, 22 Oct 2024 01:53:26 +0200
-From: Antony Antony <antony.antony@secunet.com>
-To: David Howells <dhowells@redhat.com>
-CC: Antony Antony <antony@phenome.org>, Sedat Dilek <sedat.dilek@gmail.com>,
-	Maximilian Bosch <maximilian@mbosch.me>, Linux regressions mailing list
-	<regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH] 9p: Don't revert the I/O iterator after reading
-Message-ID: <ZxbpdnA4jR7IYhRH@moon.secunet.de>
-Reply-To: <antony.antony@secunet.com>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
- <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <2299159.1729543103@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lnxpR4kt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=mvPEUn3wk8MI/IHfQskE7Vd0iKR0polAny/1Lu808DE=;
+	t=1729582785; x=1730014785; b=lnxpR4ktmQC7GQQhYnIkpd6CA9m4rHJCyBVOI4EILeIdxFy
+	rKtRf7tH4+Ur6wneLxz9hJlTtf+Y+Ifo9UGgQa0an8R7/U2b+rM7NehSR85nEVIGBEDhOtdfv3MC0
+	vOgrNBVt0/u++ykfpBhXtefqdnsh7Y8Kulnh3DI3Zjj8vjg8Ih/bCYmSEwJk7n2lb7OkWCglV0oFV
+	brFTPEfLjviZVaxSpfH7j3CV5VAwTFNufhh59QOggcoLwNgaJiQMSbukcEKVQtGzPyiHmVpGFCKle
+	T/slmeSP9zEXhuXhEtzh7ditijmWsWYOPgkqFUvQyejD5wfkrHAqwiiu7LxcBxpA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t39UT-00009u-M6; Tue, 22 Oct 2024 09:39:41 +0200
+Message-ID: <8cd31ad2-7351-4275-ab11-bca6494f408a@leemhuis.info>
+Date: Tue, 22 Oct 2024 09:39:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2299159.1729543103@warthog.procyon.org.uk>
-Precedence: first-class
-Priority: normal
-Organization: secunet
-X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH net 2/2] netfilter: xtables: fix typo causing some targets
+ not to load on IPv6
+To: Pablo Neira Ayuso <pablo@netfilter.org>, netfilter-devel@vger.kernel.org
+Cc: davem@davemloft.net, netdev@vger.kernel.org, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, fw@strlen.de,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <20241021094536.81487-1-pablo@netfilter.org>
+ <20241021094536.81487-3-pablo@netfilter.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20241021094536.81487-3-pablo@netfilter.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729582785;8bbdb3f4;
+X-HE-SMSGID: 1t39UT-00009u-M6
 
-Hi David,
+[CCing Greg and the stable list, to ensure he is aware of this, as well
+as the regressions list]
 
-On Mon, Oct 21, 2024 at 21:38:23 +0100, David Howells wrote:
-> Hi Antony,
+On 21.10.24 11:45, Pablo Neira Ayuso wrote:
+> - There is no NFPROTO_IPV6 family for mark and NFLOG.
+> - TRACE is also missing module autoload with NFPROTO_IPV6.
 > 
-> I think I may have a fix already lurking on my netfs-writeback branch for the
-> next merge window.  Can you try the attached?
-
-yes. The fix works. I rebooted a few times and no crash.
-
-Tested-by: Antony Antony <antony.antony@secunet.com>
-
-I am running test script in a loop over night. 
-
-thanks,
--antony
-
+> This results in ip6tables failing to restore a ruleset. This issue has been
+> reported by several users providing incomplete patches.
 > 
-> David
-> ---
-> Don't revert the I/O iterator before returning from p9_client_read_once().
-> netfslib doesn't require the reversion and nor doed 9P directory reading.
+> Very similar to Ilya Katsnelson's patch including a missing chunk in the
+> TRACE extension.
 > 
-> Make p9_client_read() use a temporary iterator to call down into
-> p9_client_read_once(), and advance that by the amount read.
-> 
-> Reported-by: Antony Antony <antony@phenome.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Eric Van Hensbergen <ericvh@kernel.org>
-> cc: Latchesar Ionkov <lucho@ionkov.net>
-> cc: Dominique Martinet <asmadeus@codewreck.org>
-> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-> cc: v9fs@lists.linux.dev
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
+> Fixes: 0bfcb7b71e73 ("netfilter: xtables: avoid NFPROTO_UNSPEC where needed")
+> [...]
 
+Just FYI as the culprit recently hit various stable series (v6.11.4,
+v6.6.57, v6.1.113, v5.15.168) quite a few reports came in that look like
+issues that might be fixed by this to my untrained eyes. I suppose they
+won't tell you anything new and maybe you even have seen them, but on
+the off-chance that this might not be the case you can find them here:
 
-> ---
->  net/9p/client.c |   10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/net/9p/client.c b/net/9p/client.c
-> index 5cd94721d974..be59b0a94eaf 100644
-> --- a/net/9p/client.c
-> +++ b/net/9p/client.c
-> @@ -1519,13 +1519,15 @@ p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err)
->  	*err = 0;
->  
->  	while (iov_iter_count(to)) {
-> +		struct iov_iter tmp = *to;
->  		int count;
->  
-> -		count = p9_client_read_once(fid, offset, to, err);
-> +		count = p9_client_read_once(fid, offset, &tmp, err);
->  		if (!count || *err)
->  			break;
->  		offset += count;
->  		total += count;
-> +		iov_iter_advance(to, count);
->  	}
->  	return total;
->  }
-> @@ -1567,16 +1569,12 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
->  	}
->  	if (IS_ERR(req)) {
->  		*err = PTR_ERR(req);
-> -		if (!non_zc)
-> -			iov_iter_revert(to, count - iov_iter_count(to));
->  		return 0;
->  	}
->  
->  	*err = p9pdu_readf(&req->rc, clnt->proto_version,
->  			   "D", &received, &dataptr);
->  	if (*err) {
-> -		if (!non_zc)
-> -			iov_iter_revert(to, count - iov_iter_count(to));
->  		trace_9p_protocol_dump(clnt, &req->rc);
->  		p9_req_put(clnt, req);
->  		return 0;
-> @@ -1596,8 +1594,6 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
->  			p9_req_put(clnt, req);
->  			return n;
->  		}
-> -	} else {
-> -		iov_iter_revert(to, count - received - iov_iter_count(to));
->  	}
->  	p9_req_put(clnt, req);
->  	return received;
-> 
+https://bugzilla.kernel.org/show_bug.cgi?id=219397
+https://bugzilla.kernel.org/show_bug.cgi?id=219402
+https://bugzilla.kernel.org/show_bug.cgi?id=219409
+
+Ciao, Thorsten
