@@ -1,178 +1,91 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6D614EC46
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 12:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E7199938
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 12:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729598930; cv=none; b=cPeSPEn0IUsGu4mf9pehak3KRrY/lOxQQco4rz80Ls+OsZHqTK8ldrkqhyWU6ZinzlU9fpnSypHArjDcK+QPuoa04RRQxcU9ijmPnjd90TwVMrXZYjfHH+u035xCeDP1eKNZxguj7wPja5lh7dQbNxwPCxKH6okQbHQjHJJ+dmQ=
+	t=1729599220; cv=none; b=sX3RibwgVu62k6/YV0yYBht576J0IQQKTpql5r557MlD7mSDHrO9C6N5yYoN8npWr2yLVdOBdXH/RAKWLqhgOI6a+fHbkdQMRbahvuzaoQG6udaXH1fmkhMwC+mqCa9uPy2mumW0OqWV9aVplH0EqU/KvpbqrpGycNpP8iQwQ8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729598930; c=relaxed/simple;
-	bh=qDQYLCYCnlwR0cMaWiw9SY4i5X875oM10wDDqXIxHW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8hH9/ntvO+hdB1cNazAmceHZcZCD2FHBGjH/638iW5uq+2EaknroNWJBtxSJqoNp3ekWYjyJPnPecrLrHcQduHGCDQl04UalF1fBxitEcHbqeJ0t+w4Wr2q0Kk/Z3vmP5j8II0l+KGJJ8kofJZlXAIyePiq2LddDBQADIFbVMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kJ/c0Gc/; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1729599220; c=relaxed/simple;
+	bh=lCky3Di3m4lYMAlpEuMx18kgHzOCT36dhjVGA5GWJ/Y=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GNtQxSAtK3IaFTvQGPySziEgUR9KO6a8mShGFDzpJdRb/tvgbARt5cNr4NPPrJaTrqwkuPBr9SyOfJxMD+iCYbY1WJ+1bjZxtNNjsyWLThYmSOu92J1+Z9ddvOZEVGy/b/u6q/estVntBmcFFmNaqi0HABuU0kXu8HNQDza63bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=bJb+vR+c; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kJ/c0Gc/"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B141340E0198;
-	Tue, 22 Oct 2024 12:08:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0wBELmNqvvwG; Tue, 22 Oct 2024 12:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729598922; bh=k+1OpO7hF6cIPSlbVyJiwsaLvziUmK4yVdE3fj4n//A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJ/c0Gc/PDz0tuOKXc7gSRHgf9e9/4VVXafkiG6UNq9SlMBoj6k+ir7Ewn4DevPoe
-	 +Tai3sBeXAKvO5cgA2Fk6Jyco5oe9xZo/THQwU/KOm/YhWr+GaFm/k9eAf58GV2oea
-	 Bun5ZL85duzVdNyoiTorUqJTRMSDEwZFXUVRG5eXE41JZYrWmZv8lIcwRbQUdeD3q7
-	 w+XFBVP9QuVDFT8xm/t7q/FuqPJgRk4XQyACGYpdH1ZR6FZEVbj21ehvA8p0GUcVXA
-	 aTCQNb9o92Asw9jJeK7sN3QREKKDiIIp6bvJWPzq0AiNjSb4jptvoowjc9Dc6m44hZ
-	 D/fM7bhvTDN3Cd+ciuTPNkSwsgxccUtZ/Rj654slCzL3Uh8kNQUY4lGHcwOguSMry9
-	 RNLx1rgFw3xJaWZDtGmqje9jiAZjbIwBY5bDRYcSCWLluZu/pM9Wgw/zSycPiZB7Ht
-	 a5/H1uIOQnGoPS4W2Tmxze+AwNag5ZkS14TaPGLAde7xmSBOfZ8B4VXzvlQkzsd+IP
-	 MYYYn01KwgA4HK8VNeX0o4fiOclc2KRf+a1XjBmMQP6ehLf94fs1BN1Nugc9n6p3Vx
-	 SCaPBbtMNXv+Ey+krVw9DRZTbytnPUmd5ZgB0cvJkKt86R9qXMHYXueBuHSZDppeSX
-	 8Nh46AYXPUuuHmHYLd9QtxWE=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8223840E0184;
-	Tue, 22 Oct 2024 12:08:37 +0000 (UTC)
-Date: Tue, 22 Oct 2024 14:08:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [PATCH 2/2] x86/microcode/AMD: Split load_microcode_amd()
-Message-ID: <20241022120836.GFZxeVxGQ6vWIScFWo@fat_crate.local>
-References: <1bb5dd7f-15b5-4d9d-97ef-75ebdc24e7d9@kernel.dk>
- <20241019093748.GAZxN97LS_dJ3DNrpd@fat_crate.local>
- <436b4fc7-6369-40d9-8e88-556cbf5a5687@kernel.dk>
- <20241019232138.GDZxQ_AtkqA9iAR2td@fat_crate.local>
- <b2fd70bb-9414-49e0-bdb8-5c538f247dea@kernel.dk>
- <20241020121819.GAZxT1CyR_5vLLZ5e6@fat_crate.local>
- <df217737-6e2c-41fe-b558-3e2ab6dc0d9e@kernel.dk>
- <20241021073140.GAZxYDXCk02lSrG3-T@fat_crate.local>
- <daa98312-cc66-4c2f-8e64-01358ee99305@kernel.dk>
- <20241022120531.GDZxeVC0WeUPhInkYh@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="bJb+vR+c"
+Received: from PC (pc.internal [192.168.1.10])
+	by mail.581238.xyz (Postfix) with ESMTPSA id 89A5543088FB;
+	Tue, 22 Oct 2024 14:13:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1729599214; bh=lCky3Di3m4lYMAlpEuMx18kgHzOCT36dhjVGA5GWJ/Y=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date;
+	b=bJb+vR+cquFV4dAEemyokErGy4PwyUI1t+YXwzxAz0ZMO9qf12qPIDnCs0UvgFojR
+	 1HPucDlGNLCGntytURaFXucAy8g4wB8EVsYkTBFWthH8+BdDASuZNVQsDlJjfVGmbG
+	 3aqiS4up8z2PNHwh0N1qFsMrAeYPu4LZReXSwPZM=
+From: <rick@581238.xyz>
+To: <mika.westerberg@linux.intel.com>
+Cc: <Sanath.S@amd.com>,
+	<christian@heusel.eu>,
+	<fabian@fstab.de>,
+	<gregkh@linuxfoundation.org>,
+	<linux-usb@vger.kernel.org>,
+	<mario.limonciello@amd.com>,
+	<regressions@lists.linux.dev>,
+	<stable@vger.kernel.org>
+References: 
+In-Reply-To: 
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+Date: Tue, 22 Oct 2024 14:13:34 +0200
+Message-ID: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241022120531.GDZxeVC0WeUPhInkYh@fat_crate.local>
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: Adske5XwB29EbUf4QzmLPMDmlYiH4Q==
+Content-Language: en-gb
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
-Date: Mon, 21 Oct 2024 10:38:21 +0200
+Hi all,
 
-This function should've been split a long time ago because it is used in
-two paths:
+I am having the exact same issue.=20
 
-1) On the late loading path, when the microcode is loaded through the
-   request_firmware interface
+linux-lts-6.6.28-1 works, anything above doesn=92t.
 
-2) In the save_microcode_in_initrd() path which collects all the
-   microcode patches which are relevant for the current system before
-   the initrd with the microcode container has been jettisoned.
+When kernel above linux-lts-6.6.28-1:
+- Boltctl does not show anything
+- thunderbolt.host_reset=3D0 had no impact
+- triggers following errors:
+  [=A0=A0 50.627948] ucsi_acpi USBC000:00: unknown error 0
+  [=A0=A0 50.627957] ucsi_acpi USBC000:00: UCSI_GET_PDOS failed (-5)
 
-   In that path, it is not really necessary to iterate over the nodes on
-   a system and match a patch however it didn't cause any trouble so it
-   was left for a later cleanup
+Gists:
+- https://gist.github.com/ricklahaye/83695df8c8273c30d2403da97a353e15 =
+dmesg
+with =93Linux system 6.11.4-arch1-1 #1 SMP PREEMPT_DYNAMIC Thu, 17 Oct =
+2024
+20:53:41 +0000 x86_64 GNU/Linux=94 where thunderbolt dock does not work
+- https://gist.github.com/ricklahaye/79e4040abcd368524633e86addec1833 =
+dmesg
+with =93Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 17 Apr =
+2024
+10:11:09 +0000 x86_64 GNU/Linux=94 where thunderbolt does work
+- https://gist.github.com/ricklahaye/c9a7b4a7eeba5e7900194eecf9fce454
+boltctl with =93Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 17 =
+Apr
+2024 10:11:09 +0000 x86_64 GNU/Linux=94 where thunderbolt does work
 
-However, that later cleanup was expedited by the fact that Jens was
-enabling "Use L3 as a NUMA node" in the BIOS setting in his machine and
-so this causes the NUMA CPU masks used in cpumask_of_node() to be
-generated *after* 2) above happened on the first node. Which means, all
-those masks were funky, wrong, uninitialized and whatnot, leading to
-explosions when dereffing c->microcode in load_microcode_amd().
 
-So split that function and do only the necessary work needed at each
-stage.
+Kind regards,
+Rick
 
-Fixes: 94838d230a6c ("x86/microcode/AMD: Use the family,model,stepping encoded in the patch ID")
-Reported-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/91194406-3fdf-4e38-9838-d334af538f74@kernel.dk
----
- arch/x86/kernel/cpu/microcode/amd.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+Ps: sorry for resend; this time with plain text format
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 1ae36ab37fe8..31a73715d755 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -584,7 +584,7 @@ void __init load_ucode_amd_bsp(struct early_load_data *ed, unsigned int cpuid_1_
- 		native_rdmsr(MSR_AMD64_PATCH_LEVEL, ed->new_rev, dummy);
- }
- 
--static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t size);
-+static enum ucode_state _load_microcode_amd(u8 family, const u8 *data, size_t size);
- 
- static int __init save_microcode_in_initrd(void)
- {
-@@ -605,7 +605,7 @@ static int __init save_microcode_in_initrd(void)
- 	if (!desc.mc)
- 		return -EINVAL;
- 
--	ret = load_microcode_amd(x86_family(cpuid_1_eax), desc.data, desc.size);
-+	ret = _load_microcode_amd(x86_family(cpuid_1_eax), desc.data, desc.size);
- 	if (ret > UCODE_UPDATED)
- 		return -EINVAL;
- 
-@@ -954,21 +954,30 @@ static enum ucode_state __load_microcode_amd(u8 family, const u8 *data,
- 	return UCODE_OK;
- }
- 
--static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t size)
-+static enum ucode_state _load_microcode_amd(u8 family, const u8 *data, size_t size)
- {
--	struct cpuinfo_x86 *c;
--	unsigned int nid, cpu;
--	struct ucode_patch *p;
- 	enum ucode_state ret;
- 
- 	/* free old equiv table */
- 	free_equiv_cpu_table();
- 
- 	ret = __load_microcode_amd(family, data, size);
--	if (ret != UCODE_OK) {
-+	if (ret != UCODE_OK)
- 		cleanup();
-+
-+	return ret;
-+}
-+
-+static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t size)
-+{
-+	struct cpuinfo_x86 *c;
-+	unsigned int nid, cpu;
-+	struct ucode_patch *p;
-+	enum ucode_state ret;
-+
-+	ret = _load_microcode_amd(family, data, size);
-+	if (ret != UCODE_OK)
- 		return ret;
--	}
- 
- 	for_each_node(nid) {
- 		cpu = cpumask_first(cpumask_of_node(nid));
--- 
-2.43.0
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
