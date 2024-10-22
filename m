@@ -1,183 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E94D199254
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 10:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581819ADA3
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 11:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729594525; cv=none; b=aFjowi9bk1O0296RKL/h4/OPF9ck+g9ubl4Zd3U7nO3Pwcr/NQObNS2+uQoAp8DWqer+MZeqhSWFPA/BvLp3HU5z9v5z+eOqegkGEUvWNNsE3/hAbz7F+JjyiZOL1lNFN2Kq2uFOOW01LLmKeOvDmwtB9cSgqM/P27MCCzmjuYY=
+	t=1729594813; cv=none; b=ep+o5dwbAqd8D34Mqo3zrqPlQNnx8jNN7j8+qgrORdATBLUtIWp1isbROOxcy4+GafPPuILK+7u7j5yMwZw4G0ppo63kY0gVN1u8+j/zEo4fXR8wsbHvz1Nh89mEIm5z8RnjnL1AdrtYoZNchR4qVh7E0pa1REqiZv9O5sEdRxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729594525; c=relaxed/simple;
-	bh=ZutgxfYWu007tyr81o9qTOUfRHXWns04G0vwIgAPdD4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iDI5g+yU9R8Rw/MJpi7G7QoqH0qTqc5bimX913xNYhM1J2E9ShetG4+3TSS/y+WLs66gs1lAC1ZbqFNi8mDtXnSHEzG1AAHjYEjvRRU7x66EExbowLYny9nK52u7TlDFz4TqqxASEsA8StP0n7Nx9fXNgNdw21cOBWbCu5GYXes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qN5VJWqU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kKINBKKU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qN5VJWqU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kKINBKKU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1729594813; c=relaxed/simple;
+	bh=KdF3QOAhlOp9YeqxF52QtNhKIFKPYRdOdKsTCBx2ARI=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NfhgXXq5y5iJ2tAWCTx6pUEwo4oS0z3x9zcpojOhLOyq73g3EieX45biwx9EAZ6vF31zVppAjdKH6Q7HhSTLcwoJKqjcHkTDMMRbAHqOvvwVy2ZkGBOe9G4DxHCu3ODfrna9AM3VA1rGuYk1ezjaJ1PbpkLH8QKb95Fvc9QEyd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=tNh0SD57; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qN5VJWqU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kKINBKKU";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qN5VJWqU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kKINBKKU"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5176621ED2;
-	Tue, 22 Oct 2024 10:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729594522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iIVthrBRayCR9P3OzqnXu2rlaXyTF5KOjNEVPFTU07o=;
-	b=qN5VJWqUEJsDLYzBoAbtorm9JDXhQuHw3KD8+gAwVY7bz2O5dst/QOkwUlZcLXOFXB6Ut+
-	5NpT5FcoeC0pBe3u1hzMME58fl5bXMbpo5h8fcHIb1RAe82DPl4mz8YiMciO/IEpjmkBvU
-	dvmvhQTrVHhcLUTp4goKeL7ekUZ/0cQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729594522;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iIVthrBRayCR9P3OzqnXu2rlaXyTF5KOjNEVPFTU07o=;
-	b=kKINBKKUFp5/X+oOBmO5GK/Bw281blSB7U0xpcNBfP9A7DYYG3+iJAT1f3EADt+WQ88MzH
-	0bTdcgAwteMM3iBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729594522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iIVthrBRayCR9P3OzqnXu2rlaXyTF5KOjNEVPFTU07o=;
-	b=qN5VJWqUEJsDLYzBoAbtorm9JDXhQuHw3KD8+gAwVY7bz2O5dst/QOkwUlZcLXOFXB6Ut+
-	5NpT5FcoeC0pBe3u1hzMME58fl5bXMbpo5h8fcHIb1RAe82DPl4mz8YiMciO/IEpjmkBvU
-	dvmvhQTrVHhcLUTp4goKeL7ekUZ/0cQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729594522;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iIVthrBRayCR9P3OzqnXu2rlaXyTF5KOjNEVPFTU07o=;
-	b=kKINBKKUFp5/X+oOBmO5GK/Bw281blSB7U0xpcNBfP9A7DYYG3+iJAT1f3EADt+WQ88MzH
-	0bTdcgAwteMM3iBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 15F3813894;
-	Tue, 22 Oct 2024 10:55:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QaNABJqEF2coLAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 22 Oct 2024 10:55:22 +0000
-Date: Tue, 22 Oct 2024 12:56:22 +0200
-Message-ID: <87iktk4d9l.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	"Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: =?ISO-2022-JP?B?IkNocmlzIEx1ICgbJEJOJkNVXXcbKEIpIg==?=
- <Chris.Lu@mediatek.com>,	"luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-	"marc.payne@mdpsys.co.uk" <marc.payne@mdpsys.co.uk>,	"marcel@holtmann.org"
- <marcel@holtmann.org>,	"linux-mediatek@lists.infradead.org"
- <linux-mediatek@lists.infradead.org>,	"linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,	"linux-bluetooth@vger.kernel.org"
- <linux-bluetooth@vger.kernel.org>,	=?EUC-KR?B?IkRlcmVuIFd1ICjZ69Ps7NIp?=
- =?EUC-KR?B?Ig==?= <Deren.Wu@mediatek.com>,	"johan.hedberg@gmail.com"
- <johan.hedberg@gmail.com>,	=?ISO-2022-JP?B?IlN0ZXZlIExlZSAoGyRCTXsbKEI=?=
- =?ISO-2022-JP?B?GyRCO2tAPxsoQiki?= <steve.lee@mediatek.com>,	Sean Wang
- <Sean.Wang@mediatek.com>,	=?ISO-2022-JP?B?IkFhcm9uIEhvdSAoGyRCOHQbKEI=?=
- =?ISO-2022-JP?B?GyRCPVM2RBsoQiki?= <Aaron.Hou@mediatek.com>,
-	=?ISO-2022-JP?B?IkhhbyBRaW4gKBskQj9BOUAbKEIpIg==?= <Hao.Qin@mediatek.com>
-Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before downloading the fw
-In-Reply-To: <ff502f63-2d87-4dee-a893-cce53353df8b@leemhuis.info>
-References: <20240822052310.25220-1-hao.qin@mediatek.com>
-	<ZuB3omUkdUHLggYu@mdpsys.co.uk>
-	<790e542aa9d08c7efeee6ef298fce2a87d8035e4.camel@mediatek.com>
-	<ZuneSM4SvyUFX86j@mdpsys.co.uk>
-	<9bfbbf24ac2480d94d3455f7e33e4b5502b38ced.camel@mediatek.com>
-	<CABBYNZKYsL9jcF2n9TsA1BjU-CjXOdXu7MDLP9Sz_Ly8hBAf1w@mail.gmail.com>
-	<c01e6dfa730dd10a7d4dba60fe31e82b9c296b37.camel@mediatek.com>
-	<Zuyk1c6Gkxx3G0PB@mdpsys.co.uk>
-	<f9e8688ebe559e10c019d0cbab4e8b1f5a7d2339.camel@mediatek.com>
-	<ff502f63-2d87-4dee-a893-cce53353df8b@leemhuis.info>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tNh0SD57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1729594812; x=1761130812;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=gCz2WOAC0TtMxRpla9tG4gw5erEv5fdp4bqGetpKGek=;
+  b=tNh0SD572Jsr072Lz9SFD+bjeu5Mk94getzYGfM6lgsHwxPc32/YOQIo
+   cwskHWDh9qko6X5SgrC4FY05C5jW40YuAh1cmyFTJtktYJdYugszHwwmn
+   FXttwnW8SrZMB+Az8gnYyLrUfS4AH3HVdLjyG+jVwmy3R9dyX06TNVi+Z
+   s=;
+X-IronPort-AV: E=Sophos;i="6.11,223,1725321600"; 
+   d="scan'208";a="769230069"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 11:00:02 +0000
+Received: from EX19MTAUEA002.ant.amazon.com [10.0.44.209:31827]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.95.25:2525] with esmtp (Farcaster)
+ id d90f7e57-24b6-4e19-a859-6dd59d65c91f; Tue, 22 Oct 2024 11:00:01 +0000 (UTC)
+X-Farcaster-Flow-ID: d90f7e57-24b6-4e19-a859-6dd59d65c91f
+Received: from EX19EXOUEA001.ant.amazon.com (10.252.134.47) by
+ EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 22 Oct 2024 11:00:00 +0000
+Received: from EX19MTAUEB001.ant.amazon.com (10.252.135.35) by
+ EX19EXOUEA001.ant.amazon.com (10.252.134.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 22 Oct 2024 11:00:00 +0000
+Received: from email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com
+ (10.43.8.2) by mail-relay.amazon.com (10.252.135.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1258.34 via Frontend Transport; Tue, 22 Oct 2024 11:00:00 +0000
+Received: from dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com [10.15.1.225])
+	by email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com (Postfix) with ESMTP id B0D5E44EA6;
+	Tue, 22 Oct 2024 10:59:59 +0000 (UTC)
+Received: by dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (Postfix, from userid 23907357)
+	id 44FCA9C23; Tue, 22 Oct 2024 12:59:59 +0200 (CEST)
+From: Mahmoud Adam <mngyadam@amazon.com>
+To: Jan Kara <jack@suse.cz>
+CC: Greg KH <gregkh@linuxfoundation.org>, <hch@lst.de>, <sashal@kernel.org>,
+	<tytso@mit.edu>, <linux-ext4@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: [5.10.y] Regression in EXT3/4 with v5.10.227, LTP preadv03 is
+ failing
+In-Reply-To: <20241022094032.h5fnoqcudkxjp3vu@quack3> (Jan Kara's message of
+	"Tue, 22 Oct 2024 11:40:32 +0200")
+References: <lrkyqy12hpikl.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	<2024102130-thieving-parchment-7885@gregkh>
+	<lrkyqldyhpeb5.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	<20241022094032.h5fnoqcudkxjp3vu@quack3>
+Date: Tue, 22 Oct 2024 12:59:59 +0200
+Message-ID: <lrkyqfroopfm8.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-2022-JP
-X-Spam-Score: -1.80
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[mediatek.com,gmail.com,mdpsys.co.uk,holtmann.org,lists.infradead.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Mon, 14 Oct 2024 11:29:40 +0200,
-Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
-> On 20.09.24 08:27, Chris Lu (陸稚泓) wrote:
-> > On Thu, 2024-09-19 at 23:25 +0100, marc.payne@mdpsys.co.uk wrote:
-> >>  	 
-> >> External email : Please do not click links or open attachments until
-> >> you have verified the sender or the content.
-> >>  Hi Chris and Luiz,
-> >>
-> >> What were your thoughts on the findings in my email dated 18th
-> >> September?
-> > 
-> > Thanks for your suggestion.
-> > 
-> > I've prepared the same environment (Kernel v6.11 + MT7921AUN dongle) to
-> > reproduce the issue, collected necessary logs locally and also
-> > initiated an internal discussion to clarify the root cause of this
-> > symptom. We'll review the changes between two firmware
-> > (20230526/20231109) if it's a bug or not.
-> > 
-> > It may take some time to investigate. I'll let you know if there is any
-> > progress.
-> 
-> Just wondering: Chris Lu, and Marc, what's the status here? From here it
-> looks like there was no progress to fix this regression for a while, but
-> it's easy to miss something, that's why I ask.
-> 
-> Ciao, Thorsten
+Jan Kara <jack@suse.cz> writes:
 
-FWIW, the similar bug was reported for the recent 6.11.x kernel on
-openSUSE Tumbleweed, and this patch was confirmed to work around the
-crash at boot:
-  https://bugzilla.suse.com/show_bug.cgi?id=1231599
+> On Mon 21-10-24 19:15:58, Mahmoud Adam wrote:
+>> Greg KH <gregkh@linuxfoundation.org> writes:
+>> 
+>> > On Mon, Oct 21, 2024 at 05:43:54PM +0200, Mahmoud Adam wrote:
+>> >> 
+>> >> Hello,
+>> >> 
+>> >>   In the latest 5.10.227 we see LTP preadv03 failing on EXT3/4, when
+>> >> bisected it was found that the commit dde4c1e1663b6 ("ext4: properly
+>> >> sync file size update after O_SYNC direct IO") is causing it
+>> >> 
+>> >> This seems similar to what occurred before[1] and if I understand
+>> >> correctly it was because of missing dependency backport 936e114a245b6
+>> >> ("iomap: update ki_pos a little later in iomap_dio_complete") which was
+>> >> then backported to 5.15 & 6.1 but not to 5.10.
+>> >> 
+>> >> *This is not failing on 5.15 nor 6.1, and it does fail consistently in x86-64 & ARM
+>> >> 
+>> >> [1]: https://lore.kernel.org/all/20231205122122.dfhhoaswsfscuhc3@quack3/
+>> >> 
+>> >
+>> >
+>> > What do you suggest be done?
+>> >
+>> 
+>> I think as an urgent fix I would suggest reverting the mentioned commit
+>> and commits that depend on it from 5.10.y..
+>> 
+>> 4911610c7a1fe ("ext4: fix warning in ext4_dio_write_end_io()")
+>> f8a7c342326f6 ("ext4: dax: fix overflowing extents beyond inode size when partially writing")
+>> dde4c1e1663b6 ("ext4: properly sync file size update after O_SYNC direct
+>> IO")
+>
+> Looks sensible to me. Another possibility would be to backport commit
+> 936e114a245b6e3 ("iomap: update ki_pos a little later in
+> iomap_dio_complete") to 5.10-stable. We've done this for other stable
+> branches which had this issue and so far I didn't hear about any fallout
+> from that.
 
-It'd be great if you can go ahead and merge the proper fix to the
-upstream.
+Sure, I can backport that today, if any blockers will send the reverts
+instead.
 
-Let me know if you have another patch to test.  Then I can create a
-test kernel package and ask the bug reporter for testing.
-
-
-thanks,
-
-Takashi
+- MNAdam
