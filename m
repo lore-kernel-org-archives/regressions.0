@@ -1,91 +1,101 @@
-Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E7199938
-	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 12:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7E219CC21
+	for <regressions@lists.linux.dev>; Tue, 22 Oct 2024 12:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729599220; cv=none; b=sX3RibwgVu62k6/YV0yYBht576J0IQQKTpql5r557MlD7mSDHrO9C6N5yYoN8npWr2yLVdOBdXH/RAKWLqhgOI6a+fHbkdQMRbahvuzaoQG6udaXH1fmkhMwC+mqCa9uPy2mumW0OqWV9aVplH0EqU/KvpbqrpGycNpP8iQwQ8o=
+	t=1729600273; cv=none; b=BvP0JlKEPRYmE/YiP6fFmarIJCNmGleD/Xni0krcJBL4eEgwBv3/VG5+A/HFMvKVmayoYIAP8mKbn3UBZZrqCITzWh+5pRXQt09DmL8OKLFLmJqoZygAwpx2NRoICm3Km8CR3tgzYW+uDyadYcpOdhY+q41zt2FnY9qzD2Z1knM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729599220; c=relaxed/simple;
-	bh=lCky3Di3m4lYMAlpEuMx18kgHzOCT36dhjVGA5GWJ/Y=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GNtQxSAtK3IaFTvQGPySziEgUR9KO6a8mShGFDzpJdRb/tvgbARt5cNr4NPPrJaTrqwkuPBr9SyOfJxMD+iCYbY1WJ+1bjZxtNNjsyWLThYmSOu92J1+Z9ddvOZEVGy/b/u6q/estVntBmcFFmNaqi0HABuU0kXu8HNQDza63bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=bJb+vR+c; arc=none smtp.client-ip=86.95.37.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
+	s=arc-20240116; t=1729600273; c=relaxed/simple;
+	bh=jWer99MQygYEMpyTVt3Xu+09nA1gM6Fo73vcOXAYeJs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=A5hVwWSg7P83FlU7UHbqhkaSOoJ2HXLWAOpPMFVODqtbN1mQJpAZVprknlw8MaU5tMxb80wAzSJMMGgcGFinZTNCdt3nzzXxo42EeI8VT1rw69MN392BfRhm8LfvI8om6omlY4wpi6r/vgUsFGNJjYWKiFNul9v7+VKyDj6t/0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HYzRYFye; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="bJb+vR+c"
-Received: from PC (pc.internal [192.168.1.10])
-	by mail.581238.xyz (Postfix) with ESMTPSA id 89A5543088FB;
-	Tue, 22 Oct 2024 14:13:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
-	t=1729599214; bh=lCky3Di3m4lYMAlpEuMx18kgHzOCT36dhjVGA5GWJ/Y=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date;
-	b=bJb+vR+cquFV4dAEemyokErGy4PwyUI1t+YXwzxAz0ZMO9qf12qPIDnCs0UvgFojR
-	 1HPucDlGNLCGntytURaFXucAy8g4wB8EVsYkTBFWthH8+BdDASuZNVQsDlJjfVGmbG
-	 3aqiS4up8z2PNHwh0N1qFsMrAeYPu4LZReXSwPZM=
-From: <rick@581238.xyz>
-To: <mika.westerberg@linux.intel.com>
-Cc: <Sanath.S@amd.com>,
-	<christian@heusel.eu>,
-	<fabian@fstab.de>,
-	<gregkh@linuxfoundation.org>,
-	<linux-usb@vger.kernel.org>,
-	<mario.limonciello@amd.com>,
-	<regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>
-References: 
-In-Reply-To: 
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-Date: Tue, 22 Oct 2024 14:13:34 +0200
-Message-ID: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HYzRYFye"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729600272; x=1761136272;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=jWer99MQygYEMpyTVt3Xu+09nA1gM6Fo73vcOXAYeJs=;
+  b=HYzRYFye4AI4Q6c25cEkc/nxZPCDBLmPc9z/mKFk1WKq17X2M+fBLhfO
+   x57eOGMxkayyWXY5qf2BPYdp4XKAC2qWiKvRSH4KYwGbqJO5zgnDibTBM
+   kQvOXMpJpGC7PMrr3TtH5/7P97yAIUoU9gDJytQrPsSePW6+qy8AWdiaS
+   nwqw4VHXQ82j+w4xUlFHMKvCc1SAdzVAmFSPgQIqIRiu6vHaNOO4ozuGy
+   DIH/JzqoN3ZoPXjst7F+jLfmaa/2MoDmdwTXggcoKMr0HUVjOkk3N/w/N
+   gcEIuP56BBSnqSTtuUmCAO982QEW8YKSItV5U9Py3Va5bVMDWmvkCkhaj
+   g==;
+X-CSE-ConnectionGUID: QriHh1lTRCykiTi9xDxzXA==
+X-CSE-MsgGUID: 9NeLeUeyQQqafmBF8lZl1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="32941532"
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="32941532"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 05:31:11 -0700
+X-CSE-ConnectionGUID: bapnpvBIQQSsLkUVAs3CPw==
+X-CSE-MsgGUID: g/TcrndfRsalRDXZmnHVvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="117289842"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa001.jf.intel.com with ESMTP; 22 Oct 2024 05:31:09 -0700
+Message-ID: <e365ef35-1f98-4823-8a81-47259c4914fe@linux.intel.com>
+Date: Tue, 22 Oct 2024 15:33:21 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: Adske5XwB29EbUf4QzmLPMDmlYiH4Q==
-Content-Language: en-gb
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: acpi: add device link between tunneled USB3
+ device and USB4 Host Interface
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+To: Harry Wentland <harry.wentland@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ Raju.Rangoju@amd.com, Sanath.S@amd.com, Greg KH <gregkh@linuxfoundation.org>
+References: <cf45e722-144f-4d06-8dd9-2f7f54283fbc@amd.com>
+ <20241003054704.GM275077@black.fi.intel.com>
+ <01bf9a3a-6277-4b57-83ed-82c4bfb62dd2@amd.com>
+ <20241003132726.GN275077@black.fi.intel.com>
+ <797f52fa-ab9d-45c5-828b-9dcaf75fcc83@amd.com>
+ <20241003134743.GO275077@black.fi.intel.com>
+ <cee28cb3-a157-4d26-a68a-7b5a99161d1a@linux.intel.com>
+ <c5209c31-9263-4fe7-b387-319bbaac866d@amd.com>
+ <dc9bcfa6-885f-4ae2-a6be-832a985bc80e@linux.intel.com>
+ <eecb9408-1c20-47ef-a8b9-56fcee1dc610@amd.com>
+ <2e9c8787-7fe8-46d5-b78b-05794abca9b2@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <2e9c8787-7fe8-46d5-b78b-05794abca9b2@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On 21.10.2024 13.56, Mathias Nyman wrote:
+> On 16.10.2024 22.48, Harry Wentland wrote:
 
-I am having the exact same issue.=20
+>> This patch does the trick, i.e., no more hangs on boot when
+>> connected to the Lenovo USB dock.
+>>
+>> Harry
+>>
+> 
+> Thanks for testing,
+> 
+> I'm myself seeing some issues now with this fix.
+> It's not creating the device link when it should due to the !device_is_bound(nhi_fwnode->dev) check.
+> 
+> I need to look into this a bit more
+> 
 
-linux-lts-6.6.28-1 works, anything above doesn=92t.
+It was an unrelated issue in my setup,
+It works for me now, I'll post the patch
 
-When kernel above linux-lts-6.6.28-1:
-- Boltctl does not show anything
-- thunderbolt.host_reset=3D0 had no impact
-- triggers following errors:
-  [=A0=A0 50.627948] ucsi_acpi USBC000:00: unknown error 0
-  [=A0=A0 50.627957] ucsi_acpi USBC000:00: UCSI_GET_PDOS failed (-5)
-
-Gists:
-- https://gist.github.com/ricklahaye/83695df8c8273c30d2403da97a353e15 =
-dmesg
-with =93Linux system 6.11.4-arch1-1 #1 SMP PREEMPT_DYNAMIC Thu, 17 Oct =
-2024
-20:53:41 +0000 x86_64 GNU/Linux=94 where thunderbolt dock does not work
-- https://gist.github.com/ricklahaye/79e4040abcd368524633e86addec1833 =
-dmesg
-with =93Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 17 Apr =
-2024
-10:11:09 +0000 x86_64 GNU/Linux=94 where thunderbolt does work
-- https://gist.github.com/ricklahaye/c9a7b4a7eeba5e7900194eecf9fce454
-boltctl with =93Linux system 6.6.28-1-lts #1 SMP PREEMPT_DYNAMIC Wed, 17 =
-Apr
-2024 10:11:09 +0000 x86_64 GNU/Linux=94 where thunderbolt does work
-
-
-Kind regards,
-Rick
-
-Ps: sorry for resend; this time with plain text format
-
+Thanks
+Mathias
 
