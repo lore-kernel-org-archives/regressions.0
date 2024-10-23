@@ -1,116 +1,183 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE81CBE8B
-	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 14:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D1562171;
+	Wed, 23 Oct 2024 15:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729694365; cv=none; b=ZCKoT1pck0wRB3U+mkO7Yaqh2mrBDpfPEapnLBFu69oIZ7zMEU9EtfcBQ+KuTMQAsg1pOFWjYCxl5/NKHLB+93vQv/xwUX1IvSYGq+mLByungYYRQXjNkjP7goH0HZ03jpkiU0DfwwqAC78wFrDqeoaSVkdnMXQmkyWhfLzTf4E=
+	t=1729696446; cv=none; b=fQ9ms1FHyib9/xIpgVvdbvJxme7Og6vRszIXUeDNdE4xoRs5iBz5Xqk7pdWJsQoBXGCSB89ttAm8hSgtgXKq1PAMjIN5jpFafR/pYHX1YUtwqQLkmLFBngj6SBultm/ZZNMhlMiXDUbJq5YzWGxUaTL0/SRU43OTTFfE/ExnLvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729694365; c=relaxed/simple;
-	bh=odby0jjqoFFOhNqsHsqZcbKiEYm2n7Gl+WYrvBNHbTA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AZ+1tPIoFk5mLpR2o8LmnmodiFZHh5DYe1tlHcn9RjxwPPvL2ZerXr9k4VhJBsZCfWIk3OayFlpGf0OymaOwM9Zpl63h5ieHvt+TUqoAmR1Wgz4XMZAd0oqCsSoi8umkpDdCoUk87XbtQlKh/xqDyUp35N1698xAwoS7fBuj45Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b957GsyF; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1729696446; c=relaxed/simple;
+	bh=taE8zoZsuDjUP07UaX3+OcRzpCvHXDeBn3RxXkE2UpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VjfcwLdJXyA8gly9Z0CKuaJug299zCMguMIsMuj62ZrrAi51mYQD67t1sGcgCt6jrPktpAxLnBOO50dZL+5e2RC4aMVhiiejz322FPpSofjtLkCtkKKoVL4cNamx6agwYqB1gWMZGeR0wb0s5WAu3cGgBntaXGpc4tZLnTHdErY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfJCbfBL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b957GsyF"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-84fd01c9defso2111588241.0
-        for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 07:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729694363; x=1730299163; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WhPKDbFTUZYFFVIAP/OH1JPHMZdUigC397OHZv1u/EA=;
-        b=b957GsyF9hE0GStjQ9v3i2fvjzaElkf7GGovkjMq04AFTsfVu5aLEjjr+VEbMEhr1b
-         vYbUian0VrZcoaJMCEQ6e5oRzyOY3wTCx7qICU1RoC0tlsmIidC9i6zQ798llJzDnBzA
-         PjBvJP086Vc5ugA5gR4Guhqm/JhElSRmQDdEpqk+8Ib+aWCAvjz2KyheI/IsowckPZV8
-         73dh6S/Y+iS3v1W21p4HAy/Dc64IdAZsjb+IdMrCQcwjdW5ex34SUb3zZBHF+KwYiYwx
-         eFkcbyI8vrYaiXdaHwUtWHPzvmqAY3nlit6f1g4wNqK+UjZOexvlu3sUHlcq83TSwnOX
-         h5CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729694363; x=1730299163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WhPKDbFTUZYFFVIAP/OH1JPHMZdUigC397OHZv1u/EA=;
-        b=BhXKt0g3Md7CijUNcgmk5g8m8QA+U1JwABX6KVxJvQ27Vxd1lyQyW20DkvE/G3ohtM
-         HrW1a2qG0mfInDyTHCK0VbvQpds2d2BejhcXYLOhcV4ViFJT+mwoRsbdaTU56+mgL+Bg
-         CuZHie38c0JZdxkaM/oU/7g2RMEdOWP00d7H4WTBq4wugpVS9tgfB/DrjzgqUWfUZkce
-         EGUwM7ceNnGJheLQE2Rq9cG5iNWiB+XsRmdd5FlBOWsJh+MAfWG4rK3POSL9ur/DzriH
-         ysEJ35c+AxheuzKyD9DDZf9yZrKBj6H9LONF+AG19OmUkJ/z7FOLixHN22kJkaPW5L0M
-         IX1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWletpy53euR365yKXh8TyQGYlC++DGjTTJlG754fOv6cQkOwcI0ejAaw/5uIGsKJXCDf/p/bYtaZdyUw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyqQIESSrSwsGUJCQoWoEWBdjbHsV6hKPXvXWmCvCAnVMBUlUTJ
-	aV/eKIdP4OqLx+FoAPKJ0aKkK3zVHh4kKDRMRU1btLXC41VtWEkeQUnDbdXswYGgWoPcpgeU+uO
-	PXxRNmS/qRkc8FovXpKgGcqmfgcF/Y5HMM9ej7w==
-X-Google-Smtp-Source: AGHT+IEGxTvgFJQKGjPndiT4g1UmrIbaruLgKpKg20RzOuGPbLbHepYglwQf3SmW4/COXfCydu/3Ww6v3WefxwQ10jU=
-X-Received: by 2002:a05:6122:2a53:b0:50d:60fa:183e with SMTP id
- 71dfb90a1353d-50fd037aecemr2859533e0c.11.1729694363103; Wed, 23 Oct 2024
- 07:39:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfJCbfBL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795A0C4CEC6;
+	Wed, 23 Oct 2024 15:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729696445;
+	bh=taE8zoZsuDjUP07UaX3+OcRzpCvHXDeBn3RxXkE2UpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GfJCbfBLL0yBJA2GLMFVvqDg7PBoIIJ3qhwikNb1aWwaszYTVxOW3Kr2JqNy5F4Ml
+	 mCpsu6x0GCH3cmcGvzWTU5TGr3GpCHCa7dTXN4aZMTqka0RRVbl5JdSRZxXNMjCJsj
+	 NCbt23CYWiHWWwo1qcFQaYJfAynI4vd1THLHROkbC/jaDzxyxHrWI2LpmrPMF4G99L
+	 QEnog9LT22+Kuefr6hudLAjio29XTM9Detyqdoit0VltL/ec/PR2FAvrYPMuvAZ8vg
+	 PyRiCOpWv/XYMcGlaGoPFe2Y+X7/c2xV9AdQ5/WZaB0C+2NkTtLIUHZnyZli+jPquX
+	 3QmxDULChjgrA==
+Date: Wed, 23 Oct 2024 16:14:00 +0100
+From: Will Deacon <will@kernel.org>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: ericvh@kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>,
+	lucho@ionkov.net, Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com,
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com,
+	keirf@google.com, regressions@lists.linux.dev
+Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
+Message-ID: <20241023151358.GB28800@willie-the-truck>
+References: <20240923100508.GA32066@willie-the-truck>
+ <20241009153448.GA12532@willie-the-truck>
+ <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
+ <Zw-J0DdrCFLYpT5y@codewreck.org>
+ <20241022150149.GA27397@willie-the-truck>
+ <ZxgudMCSgbDOEjpD@codewreck.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 23 Oct 2024 20:09:11 +0530
-Message-ID: <CA+G9fYt19NZ=8wY9aQRdYjtsPgiaywUQ2ff+TGkX-6zLBUGsNA@mail.gmail.com>
-Subject: axm55xx_defconfig: ld.lld: error: undefined symbol: lockdown_reasons
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-security-module@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Paul Moore <paul@paul-moore.com>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, James Morris <jmorris@namei.org>, 
-	Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZxgudMCSgbDOEjpD@codewreck.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following build regressions are noticed on arm due to following
-Warnings and errors with gcc-13, clang-19 and clang-nightly with
-axm55xx_defconfig.
+On Wed, Oct 23, 2024 at 08:00:04AM +0900, Dominique Martinet wrote:
+> Will Deacon wrote on Tue, Oct 22, 2024 at 04:01:49PM +0100:
+> > > One note though he did sent a patch that seems related and wasn't sent
+> > > for merge:
+> > > https://lore.kernel.org/all/CAFkjPTn7JAbmKYASaeBNVpumOncPaReiPbc4Ph6ik3nNf8UTNg@mail.gmail.com/T/#u
+> > >
+> > > Will, perhaps you can try it? I'm pretty sure the setup to reproduce
+> > > this is easy enough that I'll be able to reproduce in less than an hour
+> > > (export two tmpfs [sequential inode number fs] wthin the same 9p mount
+> > > in qemu without 'multidevs=remap'), but I don't even have that time
+> > > right now.
+> > > 
+> > > (I didn't even read the patch properly and it might not help at all,
+> > > sorry in this case)
+> > 
+> > I think this patch landed upsteam as d05dcfdf5e16 (" fs/9p: mitigate
+> > inode collisions") and so I can confirm that it doesn't help with the
+> > issue.
+> 
+> Ugh, yes, sorry I'm blind it's there alright (you even listed it in your
+> first post in the list of commits to revert)
 
-Started happening on next-20241023.
-Good:  next-20241022
-Bad:   next-20241023
+Heh, no worries. It has a funny leading space at the start which is
+weirdly jarring when you read it!
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > I'm not sure this really needs to get Linus involved - it's breaking a
+> > > server that used to work even if qemu has been printing a warning about
+> > > these duplicate qid.path for a while, and the server really is the
+> > > better place to remap these inodes as we have no idea of the underlying
+> > > device id as far as I know...
+> > 
+> > FWIW, I'm not using QEMU at all. This is with kvmtool which, for better
+> > or worse, prints no such diagnostic and used to be reliable enough with
+> > whatever magic the kernel had prior to v6.9.
+> 
+> Yes, that problem isn't specific to qemu, anything that re-exports
+> multiple filesystems using underlying inode numbers directly has this
+> risk (e.g. even diod/nfs-ganesha tcp mounts ought to reproduce if they
+> don't mangle inodes); I agree we need to handle servers throwing junk at
+> us.
+> 
+> It's easy enough to reproduce with qemu if remapping is disabled as
+> expected (I don't hit the VFS warning in d_splice_alias() but the
+> behaviour is definitely wrong):
+> ----
+> # host side
+> cd /tmp/linux-test
+> mkdir m1 m2
+> mount -t tmpfs tmpfs m1
+> mount -t tmpfs tmpfs m2
+> mkdir m1/dir m2/dir
+> echo foo > m1/dir/foo
+> echo bar > m2/dir/bar
+> 
+> # guest side
+> # started with -virtfs local,path=/tmp/linux-test,mount_tag=tmp,security_model=mapped-file
+> mount -t 9p -o trans=virtio,debug=1 tmp /mnt/t
+> 
+> ls /mnt/t/m1/dir
+> # foo
+> ls /mnt/t/m2/dir
+> # bar (works ok if directry isn't open)
+> 
+> # cd to keep first dir's inode alive
+> cd /mnt/t/m1/dir
+> ls /mnt/t/m2/dir
+> # foo (should be bar)
+> ----
+> 
+> This can also be observed with files if mounting with cache=fscache or
+> similar (but interestingly even keeping the file open will properly
+> disociate both files in default cache=none mode); either way we won't be
+> able to properly work with hard links if we assume the server isn't
+> reliable; I guess that if someone wants that we'd really need to
+> implement some capability negotiation at mount time so the server can
+> tell us what is supported and unless that is done assume the server
+> cannot reliably assign inodes...
+> 
+> And if we go that way then we just shouldn't ever look at the inode
+> number?... Which seems to pretty much be what the old code was doing in
+> the "new" path of v9fs_qid_iget(); the compare function would just
+> always say the inodes are different and get a new one...
+> The mitigation Eric implemented is similar enough (re-added a 'new'
+> parameter, and fail if I_NEW isn't set when new was requested), but it
+> looks like v9fs_fid_iget_dotl() isn't called at all when accessing the
+> other overlapping directory, so that wasn't effective here as some
+> higher level of caching caught the inode first.
 
-Build log:
-=E2=80=94-------
-ld.lld: error: undefined symbol: lockdown_reasons
->>> referenced by lsm_audit.c:417 (security/lsm_audit.c:417)
->>>               security/lsm_audit.o:(audit_log_lsm_data) in archive vmli=
-nux.a
->>> referenced by lsm_audit.c:417 (security/lsm_audit.c:417)
->>>               security/lsm_audit.o:(audit_log_lsm_data) in archive vmli=
-nux.a
+Nice, thanks for digging into this. I'm now pretty grateful I ran into
+the vfs error rather than whacky filesystem behaviours.
 
-Links:
-=E2=80=94---
-Download_url:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uYFA7CZM7n=
-R9jHBBO/
+> I've also confirmed reverting the 4 commits listed by Will do fix both
+> behaviors (along with a fscache warning when hitting the duplicate inode
+> file, but that's expected):
+>         724a08450f74 "fs/9p: simplify iget to remove unnecessary paths"
+>         11763a8598f8 "fs/9p: fix uaf in in v9fs_stat2inode_dotl"
+>         10211b4a23cf "fs/9p: remove redundant pointer v9ses"
+>         d05dcfdf5e16 " fs/9p: mitigate inode collisions"
+> 
+> 
+> > I'm happy to test patches if there's anything available, but otherwise
+> > the reverts at least get us back to the old behaviour if nobody has time
+> > to come up with something better.
+> 
+> I think that's the sane thing to do, let's first go back to something
+> that works and we can try again if/when someone has time - I've
+> certainly just spent more time here than I have, and starting over is just
+> a matter of reapplying the patches in a local branch so it's not like
+> there's anything to lose (afaiu this was intended as code cleanup to
+> make the code more maintainable rather than fixing something specific)
 
-Metadata:
-=E2=80=94----
-Git_describe: next-20241023
-Git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
-Git_sha: ceab669fdf7b7510b4e4997b33d6f66e433a96db
-Build_name: clang-19
-Compiler: clang-19 and gcc-13
-Config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uY=
-FA7CZM7nR9jHBBO/config
-Download_url:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uYFA7CZM7n=
-R9jHBBO/
-arch: arm
-config: axm55xx_defconfig
+Agreed, and I'm happy to test any subsequent patches now that I've got
+my Android environment up and running again.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+> Thorsten, is there a preferred way reverts should be done?
+> In this case it'd probably make sense to squash the 4 reverts in a
+> single megarevert? At the very least getting anywhere in the middle with
+> the uaf isn't something one would want... And they all made it in 6.9
+> together so there's no benefit in splitting them for backport either.
+> 
+> Once that's decided I'll prepare something to send Linus in a few days,
+> I don't think there's much point in sitting on this either...
+
+I'll leave it up to you, but I'd personally do four separate reverts
+because it makes the whole process entirely mechanical. I can't recall
+seeing a megarevert before.
+
+Will
