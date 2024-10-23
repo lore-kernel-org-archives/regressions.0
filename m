@@ -1,53 +1,53 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D39146018
-	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 14:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE81CBE8B
+	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 14:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729692568; cv=none; b=PAa84STIwOs7MguZFolqDfWere5aBhhJGjr26DHqJ1WDPasjetQ+akT25lX9hHpnhqynAJcS989TGcVWci4MRn4Ai9CAeWzm5JYnMlmNnxURWEBLOglF9vUM1CwtBqB8mpvSW3Aou/jKCTPbMidB31RY4l01OY/novDcg3lsVpI=
+	t=1729694365; cv=none; b=ZCKoT1pck0wRB3U+mkO7Yaqh2mrBDpfPEapnLBFu69oIZ7zMEU9EtfcBQ+KuTMQAsg1pOFWjYCxl5/NKHLB+93vQv/xwUX1IvSYGq+mLByungYYRQXjNkjP7goH0HZ03jpkiU0DfwwqAC78wFrDqeoaSVkdnMXQmkyWhfLzTf4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729692568; c=relaxed/simple;
-	bh=6AOKjYCCdpV7w43HWjOXv1p+7JwFslskOOtol4WHSk8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bJgE/wlimYdziE7/XBiwDfRHqgoYJc3KjWg4MjmQaIvUAGr/QEUtyclPEDydEN36DAzJbbKNUPTUCbIgqgJbEts3eVH2XpgwmpzYbPzbD83KL7HzB/b4La82rxMvs8itJvcaHJw+Y5AflUzc8ESv7yZSAQK05wwtLrLsSWKN2Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=juvKi2re; arc=none smtp.client-ip=209.85.217.41
+	s=arc-20240116; t=1729694365; c=relaxed/simple;
+	bh=odby0jjqoFFOhNqsHsqZcbKiEYm2n7Gl+WYrvBNHbTA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AZ+1tPIoFk5mLpR2o8LmnmodiFZHh5DYe1tlHcn9RjxwPPvL2ZerXr9k4VhJBsZCfWIk3OayFlpGf0OymaOwM9Zpl63h5ieHvt+TUqoAmR1Wgz4XMZAd0oqCsSoi8umkpDdCoUk87XbtQlKh/xqDyUp35N1698xAwoS7fBuj45Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b957GsyF; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="juvKi2re"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4a742ea907fso610348137.0
-        for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 07:09:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b957GsyF"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-84fd01c9defso2111588241.0
+        for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 07:39:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729692565; x=1730297365; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1729694363; x=1730299163; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rXlFApdQ/yxNEtQHJ/FByPIiwHHbdQVp4Wj+r/wBYws=;
-        b=juvKi2reEjpm/PsFEIOOgG1L0flQrc59ttfFsG+0/VzosanOXihoaHVzltLjxpl68B
-         wU7b167U/z4Vjd53TsCNGgaYqJQvqZ7UToiOQ4SydJigpqldYX2cHcKjPJy22r1AQpvT
-         e96RnCxuHKVpt+Qa9V1omJRjHQXqizOWovVWqnYLjkeDkhSkSmRi3SuNBuIgdKnMD9JL
-         KdfO2MF3XhUQ6DpVqV63Z3X/+AeXM7GUQ/zJIqz0yrWAv7YD6ZfUDylRsKwh/ddAjr0t
-         wxCyVc/xUfTyUY+H7MCQucdse51hAq/o2x0cCOYKqVeBm23UCWssbLlPmgk0QmweuG1N
-         cB0Q==
+        bh=WhPKDbFTUZYFFVIAP/OH1JPHMZdUigC397OHZv1u/EA=;
+        b=b957GsyF9hE0GStjQ9v3i2fvjzaElkf7GGovkjMq04AFTsfVu5aLEjjr+VEbMEhr1b
+         vYbUian0VrZcoaJMCEQ6e5oRzyOY3wTCx7qICU1RoC0tlsmIidC9i6zQ798llJzDnBzA
+         PjBvJP086Vc5ugA5gR4Guhqm/JhElSRmQDdEpqk+8Ib+aWCAvjz2KyheI/IsowckPZV8
+         73dh6S/Y+iS3v1W21p4HAy/Dc64IdAZsjb+IdMrCQcwjdW5ex34SUb3zZBHF+KwYiYwx
+         eFkcbyI8vrYaiXdaHwUtWHPzvmqAY3nlit6f1g4wNqK+UjZOexvlu3sUHlcq83TSwnOX
+         h5CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729692565; x=1730297365;
+        d=1e100.net; s=20230601; t=1729694363; x=1730299163;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rXlFApdQ/yxNEtQHJ/FByPIiwHHbdQVp4Wj+r/wBYws=;
-        b=OiW+h7WT6MXFHW/pkygueENaIRgOZ/3PchhvmEw65nNmrGSGFBoyPbM8lY3XGSkX3B
-         jddDuRTmEzL/3zV2UBmhlOpRa1vA1hiA0BroMUJToXktDzNIBYP2BqQecm/9PShzDbDZ
-         vLm/pA9U79u4NLv5wmRGrYnCYxt/5kZe1zHTrGfLV1d6K7/IuzBEGd4Wi2JkJma5vBcN
-         lnBzq4gHp1GkDgO8O8gAhqbHKBJn3f1cRJsNaFjGTStQXTqI4cCyrYw6kHMnaOEY/y8u
-         5xezgMokR3HYrrpah5/N2MvlPJs0hntmLEEYe02iwxOy92hQUMWCVm93t272nxkBvV6S
-         sBFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFlmkv5JsYqah9gW2/x13MnEjU8Lc2WOOzItoICDG1AxnQ0YO2P66/mAEEsFVJgr9M9ZkI3w3/hOzLMA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHSsAnTV9/yP3RldGQ9xpztmcBam8hAJ04IBSdvredEcFEKrG/
-	gE/7HSJ9WcEb/jo0mjpE0ENyCv2UDiM4CMwE5bHurQpaTyO0rqOgaCAFonPW7iS0N+70/up2EmD
-	axGo1GOwQ++W5GimpfzZ2Ibd46ytyhWiuBvRTsw==
-X-Google-Smtp-Source: AGHT+IFmh33RgaiUOP+HVY4VUrT5C3eUPjEyz6YTWVUUNNttulktEFsUofYMpaZ2+7uhkX9mpbDW6JcWTu41epLTQ/k=
-X-Received: by 2002:a05:6122:32cc:b0:50d:5e21:ef39 with SMTP id
- 71dfb90a1353d-50fd01be5bamr3352330e0c.1.1729692565154; Wed, 23 Oct 2024
- 07:09:25 -0700 (PDT)
+        bh=WhPKDbFTUZYFFVIAP/OH1JPHMZdUigC397OHZv1u/EA=;
+        b=BhXKt0g3Md7CijUNcgmk5g8m8QA+U1JwABX6KVxJvQ27Vxd1lyQyW20DkvE/G3ohtM
+         HrW1a2qG0mfInDyTHCK0VbvQpds2d2BejhcXYLOhcV4ViFJT+mwoRsbdaTU56+mgL+Bg
+         CuZHie38c0JZdxkaM/oU/7g2RMEdOWP00d7H4WTBq4wugpVS9tgfB/DrjzgqUWfUZkce
+         EGUwM7ceNnGJheLQE2Rq9cG5iNWiB+XsRmdd5FlBOWsJh+MAfWG4rK3POSL9ur/DzriH
+         ysEJ35c+AxheuzKyD9DDZf9yZrKBj6H9LONF+AG19OmUkJ/z7FOLixHN22kJkaPW5L0M
+         IX1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWletpy53euR365yKXh8TyQGYlC++DGjTTJlG754fOv6cQkOwcI0ejAaw/5uIGsKJXCDf/p/bYtaZdyUw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqQIESSrSwsGUJCQoWoEWBdjbHsV6hKPXvXWmCvCAnVMBUlUTJ
+	aV/eKIdP4OqLx+FoAPKJ0aKkK3zVHh4kKDRMRU1btLXC41VtWEkeQUnDbdXswYGgWoPcpgeU+uO
+	PXxRNmS/qRkc8FovXpKgGcqmfgcF/Y5HMM9ej7w==
+X-Google-Smtp-Source: AGHT+IEGxTvgFJQKGjPndiT4g1UmrIbaruLgKpKg20RzOuGPbLbHepYglwQf3SmW4/COXfCydu/3Ww6v3WefxwQ10jU=
+X-Received: by 2002:a05:6122:2a53:b0:50d:60fa:183e with SMTP id
+ 71dfb90a1353d-50fd037aecemr2859533e0c.11.1729694363103; Wed, 23 Oct 2024
+ 07:39:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -55,61 +55,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 23 Oct 2024 19:39:13 +0530
-Message-ID: <CA+G9fYuVefYJx9JsVx1Wz5pV1jKCp9eCPtwZD+FVhdk841q1Zw@mail.gmail.com>
-Subject: drivers/acpi/prmt.c:156:29: error: passing 1-byte aligned argument to
- 4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in an unaligned
- pointer access [-Werror,-Walign-mismatch]
-To: clang-built-linux <llvm@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Anders Roxell <anders.roxell@linaro.org>, kobak@nvidia.com, 
-	"rafael.j.wysocki" <rafael.j.wysocki@intel.com>, Ard Biesheuvel <ardb@kernel.org>, rui.zhang@intel.com, 
-	mochs@nvidia.com, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 23 Oct 2024 20:09:11 +0530
+Message-ID: <CA+G9fYt19NZ=8wY9aQRdYjtsPgiaywUQ2ff+TGkX-6zLBUGsNA@mail.gmail.com>
+Subject: axm55xx_defconfig: ld.lld: error: undefined symbol: lockdown_reasons
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-security-module@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Paul Moore <paul@paul-moore.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, James Morris <jmorris@namei.org>, 
+	Casey Schaufler <casey@schaufler-ca.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The following build regressions are noticed on x86 due to following
-Warnings and errors with clang-19 and clang-nightly,
-The builds with gcc-13 do PASS.
+The following build regressions are noticed on arm due to following
+Warnings and errors with gcc-13, clang-19 and clang-nightly with
+axm55xx_defconfig.
 
 Started happening on next-20241023.
 Good:  next-20241022
-Bad:    next-20241023
+Bad:   next-20241023
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
 Build log:
 =E2=80=94-------
-drivers/acpi/prmt.c:156:29: error: passing 1-byte aligned argument to
-4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in an
-unaligned pointer access [-Werror,-Walign-mismatch]
-  156 |                         (void *)efi_pa_va_lookup(&th->guid,
-handler_info->handler_address);
-      |                                                  ^
-drivers/acpi/prmt.c:159:21: error: passing 1-byte aligned argument to
-4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in an
-unaligned pointer access [-Werror,-Walign-mismatch]
-  159 |                         efi_pa_va_lookup(&th->guid,
-handler_info->static_data_buffer_address);
-      |                                          ^
-drivers/acpi/prmt.c:162:21: error: passing 1-byte aligned argument to
-4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in an
-unaligned pointer access [-Werror,-Walign-mismatch]
-  162 |                         efi_pa_va_lookup(&th->guid,
-handler_info->acpi_param_buffer_address);
-      |                                          ^
-3 errors generated.
+ld.lld: error: undefined symbol: lockdown_reasons
+>>> referenced by lsm_audit.c:417 (security/lsm_audit.c:417)
+>>>               security/lsm_audit.o:(audit_log_lsm_data) in archive vmli=
+nux.a
+>>> referenced by lsm_audit.c:417 (security/lsm_audit.c:417)
+>>>               security/lsm_audit.o:(audit_log_lsm_data) in archive vmli=
+nux.a
 
-Suspecting commit:
-  ACPI: PRM: Find EFI_MEMORY_RUNTIME block for PRM handler and context
-    Commit id: 088984c8d54c0053fc4ae606981291d741c5924b
-
-Build Links:
+Links:
 =E2=80=94---
-build error link:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIm4ZOkWenPJ71UOZG=
-57R0jXE/
+Download_url:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uYFA7CZM7n=
+R9jHBBO/
 
 Metadata:
 =E2=80=94----
@@ -117,13 +101,15 @@ Git_describe: next-20241023
 Git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
 it
 Git_sha: ceab669fdf7b7510b4e4997b33d6f66e433a96db
-Build_name: clang-nightly-lkftconfig
-Compiler: clang-nightly
-Config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIm4ZOkWen=
-PJ71UOZG57R0jXE/config
+Build_name: clang-19
+Compiler: clang-19 and gcc-13
+Config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uY=
+FA7CZM7nR9jHBBO/config
 Download_url:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIm4ZOkWenPJ71UOZG=
-57R0jXE/
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIko0KV1uYFA7CZM7n=
+R9jHBBO/
+arch: arm
+config: axm55xx_defconfig
 
 --
 Linaro LKFT
