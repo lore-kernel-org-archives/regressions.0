@@ -1,618 +1,203 @@
-Received: from mail.mbosch.me (mail.mbosch.me [65.21.144.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F2E1D9684
-	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 18:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.144.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DE51D04A0
+	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 19:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729708973; cv=none; b=sxpboK4dxL58229LZnpdCpBvgoKCOkQjYUG2ygkzjcgu1D2p3UluY5NGHGh/z1ZzG2chEMq3Xx6CtFMq64ZZW1VRZ3447a0nduiPNje9RwnOgZeFulouHrUoBZThcJyKLjPIa1m6CWlQokUybh694OMcocYVWi8OjpgA4JL1naw=
+	t=1729710396; cv=none; b=tkRNXatbtvk8Fbdlwimh8DrFToWz3CG2p/HtXWQ38tH1F8GN4kOd3BpsOKTyOV3ScEamxDIQY+VRAJ11b2ShKDU/+QakW9VFi/jFZOQ4fhdNBJHMqq3XmACsrXqfb1aC1ne+OHgfXsYiNzT+OWSqDhiyLsyDBX4HYI336hwswXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729708973; c=relaxed/simple;
-	bh=kqgwWldhCZipijXDibFQ50KUbIFia7FlWeLTejA+2cE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=fQfznc4xicoMxiFmJ5qw1SXgo6YoIsanKIDaaCDzuyDUTGJ9N80RE2XdZvWfWNwMdEk38pqXz9EIka3H1tx7+KAbrYZ/aztvAf2a6XDs8Q6NAPomyxCE+F1/0uWee5wLV2K6hojFZE5iOEA9qYIROwaRv1uFTth2pt1JC1Zf3Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mbosch.me; spf=pass smtp.mailfrom=mbosch.me; dkim=pass (1024-bit key) header.d=mbosch.me header.i=@mbosch.me header.b=rRgPtrZF; arc=none smtp.client-ip=65.21.144.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mbosch.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mbosch.me
+	s=arc-20240116; t=1729710396; c=relaxed/simple;
+	bh=MUjXJs+/5j6AIxCnrN43MvtaAdREM3hXFF1DGIeP6cA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqinV40XnTVKXe+cFymPU+XnakD0BiiIo/DWctCCgy2b+JpEXRSsdj98TuqoaxKKYhRTWm+RMfJ+pIoszQnP+TlZwJhsvLGxxcoTyaiJpX2cNTx+Pw3sMnSxQBHs9cUyBF9nBceTikmqRS7sC5pM5cn6ThUqn+1W3uiSfvNTA1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3g2TClp; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mbosch.me header.i=@mbosch.me header.b="rRgPtrZF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3g2TClp"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4316e9f4a40so1023165e9.2
+        for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 12:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729710393; x=1730315193; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mt+CJGtCAkp6eiODYA4npmvHo9sCXwiECz3QwJrccDE=;
+        b=x3g2TClpzJCF1XcFtydCBUvZTaHts3jR3OSK/QBqNRn2z5c+hw4J5ds/BJm7XFPQyw
+         c4HrMkysIDi9cUOE1ZBo2yvcVWZuQpIIRzOQkDkfakPdBF8lVRmpWf3vsI9TkaTsfYkv
+         dEHsc/88BACgA0SNDyNSra2WeHYw3mT8c9IF7EFywNj/jckekdmx/jiC4B0OOvFH547A
+         ISW8eM5rJigjTRNiu1o6JzUwLAmsWsCERj4/UwL1eaz8ftGc/BgJCqCbgeZc637OCEoM
+         9r5iAr6bJSzl29rM43Qvh/pPegqLCLSq8UHltYsSQKYIeRDIgnJJK6Nmivxko6WsAKVH
+         fMMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729710393; x=1730315193;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mt+CJGtCAkp6eiODYA4npmvHo9sCXwiECz3QwJrccDE=;
+        b=F9MuP2xKWSSRwBRYp+RDP2FalsTh7RV6rTeTjaX9+oiL7iYv0AmmheV2XuguXaXjpg
+         o2K8XPN49VpbpzvOcpZgWQiWJS12WmOpjnJAkVJMkRb+RnkK5DpWghHo3q1kNhWWDynl
+         NKWW/qahvP7sMrmvAes79du7/CAvFu81Ok0vKBD4JEFMDVmNXaJxUPkvED25MXQu82gr
+         Ru52fP3baC7Yta3VtrzR3nGlNZwmOK2jzxM0sf1nQ4eXNBnWj10uBO3IXY2AxI/PYTKv
+         70xbR4lfAyChjCGh7WdvKXm3koQcW9WkjWjA6Bpu+yVAjgV9xDESqntGxfR2X+2hFvaf
+         D3JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHa1woLKayPH1RLpObZw/JHeU6QtWmXdbENjA2+pacJ0GkkgddfMYpf5Hmr43RxqofODa1svfcV4On6Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwlAJotBcHD/gATt2gKZTO2NPCuqLL6CILcNVC3ywuHe13DYonl
+	5FW1zngKP1Cr7R2VUIiCCsLdhoOD0I9UpBMEzdRLFhZaR5OZdYbKC2r9wmsVxKw=
+X-Google-Smtp-Source: AGHT+IEUCTGcY6J3w6fT0tVNF8+m5oQ1FaqoLsRpuLl6MbRK2QUp+EiaZCG+R5ish3CkrJyAlYf6uw==
+X-Received: by 2002:a05:600c:3489:b0:42c:af2a:dcf4 with SMTP id 5b1f17b1804b1-43184198c60mr25755445e9.27.1729710393151;
+        Wed, 23 Oct 2024 12:06:33 -0700 (PDT)
+Received: from localhost ([41.210.146.127])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c508ddsm23952995e9.40.2024.10.23.12.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2024 12:06:32 -0700 (PDT)
+Date: Wed, 23 Oct 2024 22:06:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: clang-built-linux <llvm@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>, kobak@nvidia.com,
+	"rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, rui.zhang@intel.com,
+	mochs@nvidia.com, Nathan Chancellor <nathan@kernel.org>
+Subject: Re: drivers/acpi/prmt.c:156:29: error: passing 1-byte aligned
+ argument to 4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in
+ an unaligned pointer access [-Werror,-Walign-mismatch]
+Message-ID: <b153383c-797c-42f6-801d-a6dcc7bfc4f7@stanley.mountain>
+References: <CA+G9fYuVefYJx9JsVx1Wz5pV1jKCp9eCPtwZD+FVhdk841q1Zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mbosch.me; s=mail;
-	t=1729708531; bh=VVTgpGkEpdLFWv/wANMhkp8T/b0+0OCZrlNw6GKkeaI=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To;
-	b=rRgPtrZFhXsVcyNhkgdCfO3lx+DjEILI2tB2BaaLvdVsPN9tVCUgY7E1EUMkUCwFH
-	 18R//TURG3T34nx0kX9J2PgY9zUZWCVtirn15TxFtvkz3XZ+4QWmwVUvN4dSd+mnuV
-	 gg+jeiFn1ejiCaZ2o9FqGeXqB+0wfnGNSpgYYO5Y=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Oct 2024 20:35:30 +0200
-Message-Id: <D53EI12TC2BA.3RPYMJ2IMAOE0@mbosch.me>
-To: "Antony Antony" <antony@phenome.org>, "Sedat Dilek"
- <sedat.dilek@gmail.com>
-Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>, "David
- Howells" <dhowells@redhat.com>, "LKML" <linux-kernel@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, "Christian Brauner" <brauner@kernel.org>
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-From: "Maximilian Bosch" <maximilian@mbosch.me>
-References: <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <ZxFQw4OI9rrc7UYc@Antony2201.local>
-In-Reply-To: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYuVefYJx9JsVx1Wz5pV1jKCp9eCPtwZD+FVhdk841q1Zw@mail.gmail.com>
 
-Hi,
+> Config: https://storage.tuxsuite.com/public/linaro/lkft/builds/2npIm4ZOkWenPJ71UOZG57R0jXE/config
 
-On Thu Oct 17, 2024 at 8:00 PM CEST, Antony Antony wrote:
-> Hi,
->
-> On Thu, Oct 03, 2024 at 03:12:15AM +0200, Sedat Dilek wrote:
-> > On Wed, Oct 2, 2024 at 11:58=E2=80=AFPM Maximilian Bosch <maximilian@mb=
-osch.me> wrote:
-> > >
-> > > Good evening,
-> > >
-> > > thanks a lot for the quick reply!
-> > >
-> > > > A fix for it is already pending in the vfs.fixes branch and -next:
-> > > > https://lore.kernel.org/all/cbaf141ba6c0e2e209717d02746584072844841=
-a.1727722269.git.osandov@fb.com/
-> > >
-> > > I applied the patch on top of Linux 6.12-rc1 locally and I can confir=
-m
-> > > that this resolves the issue, thanks!
->
-> Maximilian, would you like to re-run the test a few times? I wonder if th=
-ere=20
-> is another intermittend bug related to the same commit.
+> drivers/acpi/prmt.c:156:29: error: passing 1-byte aligned argument to
+> 4-byte aligned parameter 1 of 'efi_pa_va_lookup' may result in an
+> unaligned pointer access [-Werror,-Walign-mismatch]
+>   156 |                         (void *)efi_pa_va_lookup(&th->guid,
+> handler_info->handler_address);
+>       |                                                  ^
 
-Apologies for getting back to you that late, have had a few busy days,
-but it seems you figured out how to test it anyways?
+The problem is that efi_guid_t is alighned but guid_t is not.  I would have
+thought that Clang would say that even though the alignment in for &th->guid
+isn't spelled out explicitly, it would still end up being aligned at 8 bytes.
 
-For completeness sake, I ran the `linux_testing` test-case from
-`kernel-generic.nix` in a loop 40 times each on Linux 6.12-rc4 and every
-single run booted and succeeded on two different machines.
+typedef guid_t efi_guid_t __aligned(__alignof__(u32));
 
-So I'm not sure if the test-case is sufficient to trigger it.
+The relevant code looks like this:
 
-Let me know if there's anything else I can do to help.
+include/linux/uuid.h
+    13  #define UUID_SIZE 16
+    14  
+    15  typedef struct {
+    16          __u8 b[UUID_SIZE];
+    17  } guid_t;
 
-> result=3D$(readlink -f ./result); rm ./result && nix-store --delete $resu=
-lt
+drivers/acpi/prmt.c
+    54  struct prm_handler_info {
+    55          guid_t guid;
+    56          efi_status_t (__efiapi *handler_addr)(u64, void *);
+    57          u64 static_data_buffer_addr;
+    58          u64 acpi_param_buffer_addr;
+    59  
+    60          struct list_head handler_list;
+    61  };
+    62  
+    63  struct prm_module_info {
+    64          guid_t guid;
+    65          u16 major_rev;
+    66          u16 minor_rev;
+    67          u16 handler_count;
+    68          struct prm_mmio_info *mmio_info;
+    69          bool updatable;
+    70  
+    71          struct list_head module_list;
+    72          struct prm_handler_info handlers[] __counted_by(handler_count);
+                                        ^^^^^^^^^^
+This is a 64bit config so it's 8 byte aligned, right?
 
-Just as a well-meant hint, it's possible to rebuild existing
-things with `nix-build --check` (which also gives feedback
-on if the new build result has changed).
+    73  };
 
->
-> > >
-> > > With best regards
-> > >
-> > > Maximilian
-> > >
-> >=20
-> > Thanks for testing.
-> >=20
-> > For the records:
-> >=20
-> > iov_iter: fix advancing slot in iter_folioq_get_pages()
-> > https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=
-=3Dvfs.fixes&id=3D0d24852bd71ec85ca0016b6d6fc997e6a3381552
-> >=20
-> > https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=3Dvf=
-s.fixes
->
-> I=E2=80=99m still seeing a kernel oops after the fix in 6.12-rc3, but I=
-=E2=80=99ve noticed=20
-> that the issue is no longer 100% reproducible. Most of the time, the syst=
-em=20
-> crashes. Before this fix it was 100% reproducible.
->
-> When using the nix testing, I have to force the test to re-run.
->
-> result=3D$(readlink -f ./result); rm ./result && nix-store --delete $resu=
-lt
->
-> nix-build -v nixos/tests/kernel-generic.nix -A linux_testing
->
-> So may be there is a new bug showing up after the fix. I have reported it=
-.
->
-> https://lore.kernel.org/regressions/ZxFEi1Tod43pD6JC@moon.secunet.de/T/#u
->
-> -antony
->
-> >=20
-> > >
-> > > On Wed Oct 2, 2024 at 7:31 PM CEST, Linux regression tracking (Thorst=
-en Leemhuis) wrote:
-> > > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-posti=
-ng
-> > > > for once, to make this easily accessible to everyone.
-> > > >
-> > > > Thx for the report. Not my area of expertise (so everyone: corrent =
-me if
-> > > > I'm wrong), but I suspect your problem might be a duplicate of the
-> > > > following report, which was bisected to the same commit from dhowel=
-ls
-> > > > (ee4cdf7ba857a8 ("netfs: Speed up buffered reading") [v6.12-rc1]):
-> > > > https://lore.kernel.org/all/20240923183432.1876750-1-chantr4@gmail.=
-com/
-> > > >
-> > > > A fix for it is already pending in the vfs.fixes branch and -next:
-> > > > https://lore.kernel.org/all/cbaf141ba6c0e2e209717d02746584072844841=
-a.1727722269.git.osandov@fb.com/
-> > > >
-> > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'=
- hat)
-> > > > --
-> > > > Everything you wanna know about Linux kernel regression tracking:
-> > > > https://linux-regtracking.leemhuis.info/about/#tldr
-> > > > If I did something stupid, please tell me, as explained on that pag=
-e.
-> > > >
-> > > > On 02.10.24 19:08, Maximilian Bosch wrote:
-> > > > >
-> > > > > Starting with Linux 6.12-rc1 the automatic VM tests of NixOS don'=
-t boot
-> > > > > anymore and fail like this:
-> > > > > >     mounting nix-store on /nix/.ro-store...
-> > > > >     [    1.604781] 9p: Installing v9fs 9p2000 file system support
-> > > > >     mounting tmpfs on /nix/.rw-store...
-> > > > >     mounting overlay on /nix/store...
-> > > > >     mounting shared on /tmp/shared...
-> > > > >     mounting xchg on /tmp/xchg...
-> > > > >     switch_root: can't execute '/nix/store/zv87gw0yxfsslq0mcc35a9=
-9k54da9a4z-nixos-system-machine-test/init': Exec format error
-> > > > >     [    1.734997] Kernel panic - not syncing: Attempted to kill =
-init! exitcode=3D0x00000100
-> > > > >     [    1.736002] CPU: 0 UID: 0 PID: 1 Comm: switch_root Not tai=
-nted 6.12.0-rc1 #1-NixOS
-> > > > >     [    1.736965] Hardware name: QEMU Standard PC (i440FX + PIIX=
-, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> > > > >     [    1.738309] Call Trace:
-> > > > >     [    1.738698]  <TASK>
-> > > > >     [    1.739034]  panic+0x324/0x340
-> > > > >     [    1.739458]  do_exit+0x92e/0xa90
-> > > > >     [    1.739919]  ? count_memcg_events.constprop.0+0x1a/0x40
-> > > > >     [    1.740568]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.741095]  ? handle_mm_fault+0xb0/0x2e0
-> > > > >     [    1.741709]  do_group_exit+0x30/0x80
-> > > > >     [    1.742229]  __x64_sys_exit_group+0x18/0x20
-> > > > >     [    1.742800]  x64_sys_call+0x17f3/0x1800
-> > > > >     [    1.743326]  do_syscall_64+0xb7/0x210
-> > > > >     [    1.743895]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > > >     [    1.744530] RIP: 0033:0x7f8e1a7b9d1d
-> > > > >     [    1.745061] Code: 45 31 c0 45 31 d2 45 31 db c3 0f 1f 00 f=
-3 0f 1e fa 48 8b 35 e5 e0 10 00 ba e7 00 00 00 eb 07 66 0f 1f 44 00 00 f4 8=
-9 d0 0f 05 <48> 3d 00 f0 ff ff 76 f3 f7 d8 64 89 06 eb ec 0f 1f 40 00 f3 0f=
- 1e
-> > > > >     [    1.747263] RSP: 002b:00007ffcb56d63b8 EFLAGS: 00000246 OR=
-IG_RAX: 00000000000000e7
-> > > > >     [    1.748250] RAX: ffffffffffffffda RBX: 00007f8e1a8c9fa8 RC=
-X: 00007f8e1a7b9d1d
-> > > > >     [    1.749187] RDX: 00000000000000e7 RSI: ffffffffffffff88 RD=
-I: 0000000000000001
-> > > > >     [    1.750050] RBP: 0000000000000001 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.750891] R10: 0000000000000000 R11: 0000000000000246 R1=
-2: 0000000000000000
-> > > > >     [    1.751706] R13: 0000000000000001 R14: 00007f8e1a8c8680 R1=
-5: 00007f8e1a8c9fc0
-> > > > >     [    1.752583]  </TASK>
-> > > > >     [    1.753010] Kernel Offset: 0xb800000 from 0xffffffff810000=
-00 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> > > > >
-> > > > > The failing script here is the initrd's /init when it tries to pe=
-rform a
-> > > > > switch_root to `/sysroot`:
-> > > > >
-> > > > >     exec env -i $(type -P switch_root) "$targetRoot" "$stage2Init=
-"
-> > > > >
-> > > > > Said "$stage2Init" file consistently gets a different hash when d=
-oing
-> > > > > `sha256sum` on it in the initrd script, but looks & behaves corre=
-ct
-> > > > > on the host. I reproduced the test failures on 4 different build
-> > > > > machines and two architectures (x86_64-linux, aarch64-linux) now.
-> > > > >
-> > > > > The "$stage2Init" script is a shell-script itself. When trying to
-> > > > > start the interpreter from its shebang inside the initrd (via
-> > > > > `$targetRoot/nix/store/...-bash-5.2p32/bin/bash`) and do the
-> > > > > switch_root I get a different error:
-> > > > >
-> > > > >     + exec env -i /nix/store/akm69s5sngxyvqrzys326dss9rsrvbpy-ext=
-ra-utils/bin/switch_root /mnt-root /nix/store/k3pm4iv44y7x7p74kky6cwxiswmr6=
-kpi-nixos-system-machine-test/init
-> > > > >     [    1.912859] list_del corruption. prev->next should be ffff=
-c5cf80be0248, but was ffffc5cf80bd9208. (prev=3Dffffc5cf80bb4d48)
-> > > > >     [    1.914237] ------------[ cut here ]------------
-> > > > >     [    1.915059] kernel BUG at lib/list_debug.c:62!
-> > > > >     [    1.915854] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NO=
-PTI
-> > > > >     [    1.916739] CPU: 0 UID: 0 PID: 17 Comm: ksoftirqd/0 Not ta=
-inted 6.12.0-rc1 #1-NixOS
-> > > > >     [    1.917837] Hardware name: QEMU Standard PC (i440FX + PIIX=
-, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> > > > >     [    1.919354] RIP: 0010:__list_del_entry_valid_or_report+0xb=
-4/0xd0
-> > > > >     [    1.920180] Code: 0f 0b 48 89 fe 48 89 ca 48 c7 c7 38 52 4=
-1 9f e8 42 91 ac ff 90 0f 0b 48 89 fe 48 89 c2 48 c7 c7 70 52 41 9f e8 2d 9=
-1 ac ff 90 <0f> 0b 48 89 d1 48 c7 c7 c0 52 41 9f 48 89 f2 48 89 c6 e8 15 91=
- ac
-> > > > >     [    1.922636] RSP: 0018:ffff96f800093c00 EFLAGS: 00010046
-> > > > >     [    1.923563] RAX: 000000000000006d RBX: 0000000000000001 RC=
-X: 0000000000000000
-> > > > >     [    1.924692] RDX: 0000000000000000 RSI: 0000000000000000 RD=
-I: 0000000000000000
-> > > > >     [    1.925664] RBP: 0000000000000341 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.926646] R10: 0000000000000000 R11: 0000000000000000 R1=
-2: ffff8fbebd83dc90
-> > > > >     [    1.927584] R13: ffffc5cf80be0240 R14: ffff8fbebd83dc80 R1=
-5: 000000000002f809
-> > > > >     [    1.928533] FS:  0000000000000000(0000) GS:ffff8fbebd80000=
-0(0000) knlGS:0000000000000000
-> > > > >     [    1.929647] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
-033
-> > > > >     [    1.930431] CR2: 00007fed6f09b000 CR3: 0000000001e02000 CR=
-4: 0000000000350ef0
-> > > > >     [    1.931333] Call Trace:
-> > > > >     [    1.931727]  <TASK>
-> > > > >     [    1.932088]  ? die+0x36/0x90
-> > > > >     [    1.932595]  ? do_trap+0xed/0x110
-> > > > >     [    1.933047]  ? __list_del_entry_valid_or_report+0xb4/0xd0
-> > > > >     [    1.933757]  ? do_error_trap+0x6a/0xa0
-> > > > >     [    1.934390]  ? __list_del_entry_valid_or_report+0xb4/0xd0
-> > > > >     [    1.935073]  ? exc_invalid_op+0x51/0x80
-> > > > >     [    1.935627]  ? __list_del_entry_valid_or_report+0xb4/0xd0
-> > > > >     [    1.936326]  ? asm_exc_invalid_op+0x1a/0x20
-> > > > >     [    1.936904]  ? __list_del_entry_valid_or_report+0xb4/0xd0
-> > > > >     [    1.937622]  free_pcppages_bulk+0x130/0x280
-> > > > >     [    1.938151]  free_unref_page_commit+0x21c/0x380
-> > > > >     [    1.938753]  free_unref_page+0x472/0x4f0
-> > > > >     [    1.939343]  __put_partials+0xee/0x130
-> > > > >     [    1.939921]  ? rcu_do_batch+0x1f2/0x800
-> > > > >     [    1.940471]  kmem_cache_free+0x2c3/0x370
-> > > > >     [    1.940990]  rcu_do_batch+0x1f2/0x800
-> > > > >     [    1.941508]  ? rcu_do_batch+0x180/0x800
-> > > > >     [    1.942031]  rcu_core+0x182/0x340
-> > > > >     [    1.942500]  handle_softirqs+0xe4/0x2f0
-> > > > >     [    1.943034]  run_ksoftirqd+0x33/0x40
-> > > > >     [    1.943522]  smpboot_thread_fn+0xdd/0x1d0
-> > > > >     [    1.944056]  ? __pfx_smpboot_thread_fn+0x10/0x10
-> > > > >     [    1.944679]  kthread+0xd0/0x100
-> > > > >     [    1.945126]  ? __pfx_kthread+0x10/0x10
-> > > > >     [    1.945656]  ret_from_fork+0x34/0x50
-> > > > >     [    1.946151]  ? __pfx_kthread+0x10/0x10
-> > > > >     [    1.946680]  ret_from_fork_asm+0x1a/0x30
-> > > > >     [    1.947269]  </TASK>
-> > > > >     [    1.947622] Modules linked in: overlay 9p ext4 crc32c_gene=
-ric crc16 mbcache jbd2 hid_generic usbhid hid 9pnet_virtio 9pnet netfs sr_m=
-od virtio_net cdrom virtio_blk net_failover atkbd failover libps2 vivaldi_f=
-map crc32c_intel ata_piix libata uhci_hcd scsi_mod ehci_hcd virtio_pci virt=
-io_pci_legacy_dev virtio_pci_modern_dev scsi_common i8042 serio rtc_cmos dm=
-_mod dax virtio_gpu virtio_dma_buf virtio_rng rng_core virtio_console virti=
-o_balloon virtio virtio_ring
-> > > > >     [    1.952291] ---[ end trace 0000000000000000 ]---
-> > > > >     [    1.952893] RIP: 0010:__list_del_entry_valid_or_report+0xb=
-4/0xd0
-> > > > >     [    1.953678] Code: 0f 0b 48 89 fe 48 89 ca 48 c7 c7 38 52 4=
-1 9f e8 42 91 ac ff 90 0f 0b 48 89 fe 48 89 c2 48 c7 c7 70 52 41 9f e8 2d 9=
-1 ac ff 90 <0f> 0b 48 89 d1 48 c7 c7 c0 52 41 9f 48 89 f2 48 89 c6 e8 15 91=
- ac
-> > > > >     [    1.955888] RSP: 0018:ffff96f800093c00 EFLAGS: 00010046
-> > > > >     [    1.956548] RAX: 000000000000006d RBX: 0000000000000001 RC=
-X: 0000000000000000
-> > > > >     [    1.957436] RDX: 0000000000000000 RSI: 0000000000000000 RD=
-I: 0000000000000000
-> > > > >     [    1.958328] RBP: 0000000000000341 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.959166] R10: 0000000000000000 R11: 0000000000000000 R1=
-2: ffff8fbebd83dc90
-> > > > >     [    1.960044] R13: ffffc5cf80be0240 R14: ffff8fbebd83dc80 R1=
-5: 000000000002f809
-> > > > >     [    1.960905] FS:  0000000000000000(0000) GS:ffff8fbebd80000=
-0(0000) knlGS:0000000000000000
-> > > > >     [    1.961926] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
-033
-> > > > >     [    1.962693] CR2: 00007fed6f09b000 CR3: 0000000001e02000 CR=
-4: 0000000000350ef0
-> > > > >     [    1.963548] Kernel panic - not syncing: Fatal exception in=
- interrupt
-> > > > >     [    1.964417] Kernel Offset: 0x1ce00000 from 0xffffffff81000=
-000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> > > > >
-> > > > > On a subsequent run to verify this, it failed earlier while readi=
-ng
-> > > > > $targetRoot/.../bash like this:
-> > > > >
-> > > > >
-> > > > >     [    1.871810] BUG: Bad page state in process cat  pfn:2e74a
-> > > > >     [    1.872481] page: refcount:1 mapcount:0 mapping:0000000000=
-000000 index:0x1e5 pfn:0x2e74a
-> > > > >     [    1.873499] flags: 0xffffc000000000(node=3D0|zone=3D1|last=
-cpupid=3D0x1ffff)
-> > > > >     [    1.874260] raw: 00ffffc000000000 dead000000000100 dead000=
-000000122 0000000000000000
-> > > > >     [    1.875250] raw: 00000000000001e5 0000000000000000 0000000=
-1ffffffff 0000000000000000
-> > > > >     [    1.876295] page dumped because: nonzero _refcount
-> > > > >     [    1.876910] Modules linked in: overlay 9p ext4 crc32c_gene=
-ric crc16 mbcache jbd2 hid_generic usbhid hid 9pnet_virtio 9pnet netfs sr_m=
-od virtio_net cdrom virtio_blk net_failover atkbd failover libps2 vivaldi_f=
-map crc32c_intel ata_piix libata scsi_mod uhci_hcd ehci_hcd virtio_pci virt=
-io_pci_legacy_dev virtio_pci_modern_dev scsi_common i8042 serio rtc_cmos dm=
-_mod dax virtio_gpu virtio_dma_buf virtio_rng rng_core virtio_console virti=
-o_balloon virtio virtio_ring
-> > > > >     [    1.881465] CPU: 0 UID: 0 PID: 315 Comm: cat Not tainted 6=
-.12.0-rc1 #1-NixOS
-> > > > >     [    1.882326] Hardware name: QEMU Standard PC (i440FX + PIIX=
-, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> > > > >     [    1.883684] Call Trace:
-> > > > >     [    1.884103]  <TASK>
-> > > > >     [    1.884440]  dump_stack_lvl+0x64/0x90
-> > > > >     [    1.884954]  bad_page+0x70/0x110
-> > > > >     [    1.885468]  __rmqueue_pcplist+0x209/0xd00
-> > > > >     [    1.886029]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.886572]  ? pdu_read+0x36/0x50 [9pnet]
-> > > > >     [    1.887177]  get_page_from_freelist+0x2df/0x1910
-> > > > >     [    1.887788]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.888324]  ? enqueue_entity+0xce/0x510
-> > > > >     [    1.888881]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.889415]  ? pick_eevdf+0x76/0x1a0
-> > > > >     [    1.889970]  ? update_curr+0x35/0x270
-> > > > >     [    1.890476]  __alloc_pages_noprof+0x1a3/0x1150
-> > > > >     [    1.891158]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.891712]  ? __mod_memcg_lruvec_state+0xa9/0x160
-> > > > >     [    1.892346]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.892919]  ? __lruvec_stat_mod_folio+0x83/0xd0
-> > > > >     [    1.893521]  alloc_pages_mpol_noprof+0x8f/0x1f0
-> > > > >     [    1.894148]  folio_alloc_noprof+0x5b/0xb0
-> > > > >     [    1.894671]  page_cache_ra_unbounded+0x11f/0x200
-> > > > >     [    1.895270]  filemap_get_pages+0x538/0x6d0
-> > > > >     [    1.895813]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.896361]  filemap_splice_read+0x136/0x320
-> > > > >     [    1.896948]  backing_file_splice_read+0x52/0xa0
-> > > > >     [    1.897522]  ovl_splice_read+0xd2/0xf0 [overlay]
-> > > > >     [    1.898160]  ? __pfx_ovl_file_accessed+0x10/0x10 [overlay]
-> > > > >     [    1.898817]  splice_direct_to_actor+0xb4/0x270
-> > > > >     [    1.899404]  ? __pfx_direct_splice_actor+0x10/0x10
-> > > > >     [    1.900103]  do_splice_direct+0x77/0xd0
-> > > > >     [    1.900627]  ? __pfx_direct_file_splice_eof+0x10/0x10
-> > > > >     [    1.901308]  do_sendfile+0x359/0x410
-> > > > >     [    1.901788]  __x64_sys_sendfile64+0xb9/0xd0
-> > > > >     [    1.902370]  do_syscall_64+0xb7/0x210
-> > > > >     [    1.902904]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > > >     [    1.903604] RIP: 0033:0x7fa9f3a7289e
-> > > > >     [    1.904214] Code: 75 0e 00 f7 d8 64 89 02 b8 ff ff ff ff 3=
-1 d2 31 c9 31 ff 45 31 db c3 0f 1f 44 00 00 f3 0f 1e fa 49 89 ca b8 28 00 0=
-0 00 0f 05 <48> 3d 00 f0 ff ff 77 12 31 d2 31 c9 31 f6 31 ff 45 31 d2 45 31=
- db
-> > > > >     [    1.906436] RSP: 002b:00007ffe6a82bde8 EFLAGS: 00000246 OR=
-IG_RAX: 0000000000000028
-> > > > >     [    1.907400] RAX: ffffffffffffffda RBX: 0000000000000000 RC=
-X: 00007fa9f3a7289e
-> > > > >     [    1.908241] RDX: 0000000000000000 RSI: 0000000000000003 RD=
-I: 0000000000000001
-> > > > >     [    1.909184] RBP: 00007ffe6a82be50 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.910212] R10: 0000000001000000 R11: 0000000000000246 R1=
-2: 0000000000000001
-> > > > >     [    1.911117] R13: 0000000001000000 R14: 0000000000000001 R1=
-5: 0000000000000000
-> > > > >     [    1.911998]  </TASK>
-> > > > >     [    1.912376] Disabling lock debugging due to kernel taint
-> > > > >     [    1.913479] list_del corruption. next->prev should be ffff=
-c80e40b9d948, but was ffffc80e40b9d0c8. (next=3Dffffc80e40b9c7c8)
-> > > > >     [    1.914823] ------------[ cut here ]------------
-> > > > >     [    1.915408] kernel BUG at lib/list_debug.c:65!
-> > > > >     [    1.916050] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NO=
-PTI
-> > > > >     [    1.916785] CPU: 0 UID: 0 PID: 315 Comm: cat Tainted: G   =
- B              6.12.0-rc1 #1-NixOS
-> > > > >     [    1.917877] Tainted: [B]=3DBAD_PAGE
-> > > > >     [    1.918350] Hardware name: QEMU Standard PC (i440FX + PIIX=
-, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> > > > >     [    1.919996] RIP: 0010:__list_del_entry_valid_or_report+0xc=
-c/0xd0
-> > > > >     [    1.920903] Code: 89 fe 48 89 c2 48 c7 c7 70 52 41 ba e8 2=
-d 91 ac ff 90 0f 0b 48 89 d1 48 c7 c7 c0 52 41 ba 48 89 f2 48 89 c6 e8 15 9=
-1 ac ff 90 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3=
- 0f
-> > > > >     [    1.923423] RSP: 0018:ffff9ed880187748 EFLAGS: 00010246
-> > > > >     [    1.924210] RAX: 000000000000006d RBX: ffff94db3d83dc80 RC=
-X: 0000000000000000
-> > > > >     [    1.925147] RDX: 0000000000000000 RSI: 0000000000000000 RD=
-I: 0000000000000000
-> > > > >     [    1.926051] RBP: ffffc80e40b9d940 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.926940] R10: 0000000000000000 R11: 0000000000000000 R1=
-2: 0000000000000001
-> > > > >     [    1.927809] R13: ffff94db3d83dc80 R14: ffffc80e40b9d948 R1=
-5: ffff94db3ffd6180
-> > > > >     [    1.928695] FS:  00007fa9f396eb80(0000) GS:ffff94db3d80000=
-0(0000) knlGS:0000000000000000
-> > > > >     [    1.929728] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
-033
-> > > > >     [    1.930540] CR2: 00000000004d1829 CR3: 0000000001dd2000 CR=
-4: 0000000000350ef0
-> > > > >     [    1.931444] Call Trace:
-> > > > >     [    1.931916]  <TASK>
-> > > > >     [    1.932357]  ? die+0x36/0x90
-> > > > >     [    1.932831]  ? do_trap+0xed/0x110
-> > > > >     [    1.933385]  ? __list_del_entry_valid_or_report+0xcc/0xd0
-> > > > >     [    1.934073]  ? do_error_trap+0x6a/0xa0
-> > > > >     [    1.934583]  ? __list_del_entry_valid_or_report+0xcc/0xd0
-> > > > >     [    1.935242]  ? exc_invalid_op+0x51/0x80
-> > > > >     [    1.935781]  ? __list_del_entry_valid_or_report+0xcc/0xd0
-> > > > >     [    1.936484]  ? asm_exc_invalid_op+0x1a/0x20
-> > > > >     [    1.937174]  ? __list_del_entry_valid_or_report+0xcc/0xd0
-> > > > >     [    1.937926]  ? __list_del_entry_valid_or_report+0xcb/0xd0
-> > > > >     [    1.938685]  __rmqueue_pcplist+0xa5/0xd00
-> > > > >     [    1.939292]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.940004]  ? __mod_memcg_lruvec_state+0xa9/0x160
-> > > > >     [    1.940758]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.941417]  ? update_load_avg+0x7e/0x7f0
-> > > > >     [    1.942133]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.942838]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.943508]  get_page_from_freelist+0x2df/0x1910
-> > > > >     [    1.944143]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.944696]  ? check_preempt_wakeup_fair+0x1ee/0x240
-> > > > >     [    1.945335]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.945905]  __alloc_pages_noprof+0x1a3/0x1150
-> > > > >     [    1.946489]  ? __blk_flush_plug+0xf5/0x150
-> > > > >     [    1.947105]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.947629]  ? __dquot_alloc_space+0x2a8/0x3a0
-> > > > >     [    1.948404]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.949116]  ? __mod_memcg_lruvec_state+0xa9/0x160
-> > > > >     [    1.949888]  alloc_pages_mpol_noprof+0x8f/0x1f0
-> > > > >     [    1.950514]  folio_alloc_mpol_noprof+0x14/0x40
-> > > > >     [    1.951153]  shmem_alloc_folio+0xa7/0xd0
-> > > > >     [    1.951692]  ? shmem_recalc_inode+0x20/0x90
-> > > > >     [    1.952272]  shmem_alloc_and_add_folio+0x109/0x490
-> > > > >     [    1.952940]  ? filemap_get_entry+0x10f/0x1a0
-> > > > >     [    1.953570]  ? srso_return_thunk+0x5/0x5f
-> > > > >     [    1.954185]  shmem_get_folio_gfp+0x248/0x610
-> > > > >     [    1.954791]  shmem_write_begin+0x64/0x110
-> > > > >     [    1.955484]  generic_perform_write+0xdf/0x2a0
-> > > > >     [    1.956239]  shmem_file_write_iter+0x8a/0x90
-> > > > >     [    1.956882]  iter_file_splice_write+0x33f/0x580
-> > > > >     [    1.957577]  direct_splice_actor+0x54/0x140
-> > > > >     [    1.958178]  splice_direct_to_actor+0xec/0x270
-> > > > >     [    1.958813]  ? __pfx_direct_splice_actor+0x10/0x10
-> > > > >     [    1.959442]  do_splice_direct+0x77/0xd0
-> > > > >     [    1.960018]  ? __pfx_direct_file_splice_eof+0x10/0x10
-> > > > >     [    1.960726]  do_sendfile+0x359/0x410
-> > > > >     [    1.961248]  __x64_sys_sendfile64+0xb9/0xd0
-> > > > >     [    1.961905]  do_syscall_64+0xb7/0x210
-> > > > >     [    1.962467]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > > >     [    1.963211] RIP: 0033:0x7fa9f3a7289e
-> > > > >     [    1.963711] Code: 75 0e 00 f7 d8 64 89 02 b8 ff ff ff ff 3=
-1 d2 31 c9 31 ff 45 31 db c3 0f 1f 44 00 00 f3 0f 1e fa 49 89 ca b8 28 00 0=
-0 00 0f 05 <48> 3d 00 f0 ff ff 77 12 31 d2 31 c9 31 f6 31 ff 45 31 d2 45 31=
- db
-> > > > >     [    1.965846] RSP: 002b:00007ffe6a82bde8 EFLAGS: 00000246 OR=
-IG_RAX: 0000000000000028
-> > > > >     [    1.966788] RAX: ffffffffffffffda RBX: 0000000000000000 RC=
-X: 00007fa9f3a7289e
-> > > > >     [    1.967644] RDX: 0000000000000000 RSI: 0000000000000003 RD=
-I: 0000000000000001
-> > > > >     [    1.968480] RBP: 00007ffe6a82be50 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.969396] R10: 0000000001000000 R11: 0000000000000246 R1=
-2: 0000000000000001
-> > > > >     [    1.970315] R13: 0000000001000000 R14: 0000000000000001 R1=
-5: 0000000000000000
-> > > > >     [    1.971214]  </TASK>
-> > > > >     [    1.971572] Modules linked in: overlay 9p ext4 crc32c_gene=
-ric crc16 mbcache jbd2 hid_generic usbhid hid 9pnet_virtio 9pnet netfs sr_m=
-od virtio_net cdrom virtio_blk net_failover atkbd failover libps2 vivaldi_f=
-map crc32c_intel ata_piix libata scsi_mod uhci_hcd ehci_hcd virtio_pci virt=
-io_pci_legacy_dev virtio_pci_modern_dev scsi_common i8042 serio rtc_cmos dm=
-_mod dax virtio_gpu virtio_dma_buf virtio_rng rng_core virtio_console virti=
-o_balloon virtio virtio_ring
-> > > > >     [    1.976558] ---[ end trace 0000000000000000 ]---
-> > > > >     [    1.977219] RIP: 0010:__list_del_entry_valid_or_report+0xc=
-c/0xd0
-> > > > >     [    1.978033] Code: 89 fe 48 89 c2 48 c7 c7 70 52 41 ba e8 2=
-d 91 ac ff 90 0f 0b 48 89 d1 48 c7 c7 c0 52 41 ba 48 89 f2 48 89 c6 e8 15 9=
-1 ac ff 90 <0f> 0b 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3=
- 0f
-> > > > >     [    1.980179] RSP: 0018:ffff9ed880187748 EFLAGS: 00010246
-> > > > >     [    1.980847] RAX: 000000000000006d RBX: ffff94db3d83dc80 RC=
-X: 0000000000000000
-> > > > >     [    1.981705] RDX: 0000000000000000 RSI: 0000000000000000 RD=
-I: 0000000000000000
-> > > > >     [    1.982584] RBP: ffffc80e40b9d940 R08: 0000000000000000 R0=
-9: 0000000000000000
-> > > > >     [    1.983464] R10: 0000000000000000 R11: 0000000000000000 R1=
-2: 0000000000000001
-> > > > >     [    1.984358] R13: ffff94db3d83dc80 R14: ffffc80e40b9d948 R1=
-5: ffff94db3ffd6180
-> > > > >     [    1.987765] FS:  00007fa9f396eb80(0000) GS:ffff94db3d80000=
-0(0000) knlGS:0000000000000000
-> > > > >     [    1.988805] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
-033
-> > > > >     [    1.989497] CR2: 00000000004d1829 CR3: 0000000001dd2000 CR=
-4: 0000000000350ef0
-> > > > >     [    1.990418] note: cat[315] exited with preempt_count 2
-> > > > >
-> > > > > I bisected it back to ee4cdf7ba857a894ad1650d6ab77669cbbfa329e wh=
-ich
-> > > > > also seems to touch part of the 9p VFS code.
-> > > > >
-> > > > > Unfortunately the revert didn't apply cleanly on 6.12-rc1, so I c=
-ouldn't
-> > > > > meaningfully test whether a simple revert solves the problem.
-> > > > >
-> > > > > The VMs get the Nix store mounted via 9p. In the store are basica=
-lly all
-> > > > > build artifacts including the stage-2 init script of the system t=
-hat is
-> > > > > booted into in the VM test.
-> > > > >
-> > > > > The invocation basically looks like this:
-> > > > >
-> > > > >     qemu-system-x86_64 -cpu max \
-> > > > >         -name machine \
-> > > > >         -m 1024 \
-> > > > >         -smp 1 \
-> > > > >         -device virtio-rng-pci \
-> > > > >         -net nic,netdev=3Duser.0,model=3Dvirtio -netdev user,id=
-=3Duser.0,"$QEMU_NET_OPTS" \
-> > > > >         -virtfs local,path=3D/nix/store,security_model=3Dnone,mou=
-nt_tag=3Dnix-store \
-> > > > >         -virtfs local,path=3D"${SHARED_DIR:-$TMPDIR/xchg}",securi=
-ty_model=3Dnone,mount_tag=3Dshared \
-> > > > >         -virtfs local,path=3D"$TMPDIR"/xchg,security_model=3Dnone=
-,mount_tag=3Dxchg \
-> > > > >         -drive cache=3Dwriteback,file=3D"$NIX_DISK_IMAGE",id=3Ddr=
-ive1,if=3Dnone,index=3D1,werror=3Dreport -device virtio-blk-pci,bootindex=
-=3D1,drive=3Ddrive1,serial=3Droot \
-> > > > >         -device virtio-net-pci,netdev=3Dvlan1,mac=3D52:54:00:12:0=
-1:01 \
-> > > > >         -netdev vde,id=3Dvlan1,sock=3D"$QEMU_VDE_SOCKET_1" \
-> > > > >         -device virtio-keyboard \
-> > > > >         -usb \
-> > > > >         -device usb-tablet,bus=3Dusb-bus.0 \
-> > > > >         -kernel ${NIXPKGS_QEMU_KERNEL_machine:-/nix/store/zv87gw0=
-yxfsslq0mcc35a99k54da9a4z-nixos-system-machine-test/kernel} \
-> > > > >         -initrd /nix/store/qqalw1iq1wbgq3ndx0cvqn3bfypn56w2-initr=
-d-linux-6.12-rc1/initrd \
-> > > > >         -append "$(cat /nix/store/zv87gw0yxfsslq0mcc35a99k54da9a4=
-z-nixos-system-machine-test/kernel-params) init=3D/nix/store/zv87gw0yxfsslq=
-0mcc35a99k54da9a4z-nixos-system-machine-test/init regInfo=3D/nix/store/5izv=
-fal6xm2rk51v0r1h2cxcng33paby-closure-info/registration console=3DttyS0 $QEM=
-U_KERNEL_PARAMS" \
-> > > > >         $QEMU_OPTS
-> > > > >
-> > > > > If you're using Nix, you can also reproduce this by running
-> > > > >
-> > > > >     nix-build nixos/tests/kernel-generic.nix -A linux_testing
-> > > > >
-> > > > > on 5c19646b81db43dd7f4b6954f17d71a523009706 from https://github.c=
-om/nixos/nixpkgs.
-> > > > >
-> > > > > To me, this seems like a regression in rc1.
-> > > > >
-> > > > > Is there anything else I can do to help troubleshooting this?
-> > > > >
-> > > > > With best regards
-> > > > >
-> > > > > Maximilian
-> > > > >
-> > > > >
-> > >
-> > >
+[ snip ]
 
+drivers/acpi/prmt.c
+    96  static int __init
+    97  acpi_parse_prmt(union acpi_subtable_headers *header, const unsigned long end)
+    98  {
+    99          struct acpi_prmt_module_info *module_info;
+   100          struct acpi_prmt_handler_info *handler_info;
+   101          struct prm_handler_info *th;
+   102          struct prm_module_info *tm;
+   103          u64 *mmio_count;
+   104          u64 cur_handler = 0;
+   105          u32 module_info_size = 0;
+   106          u64 mmio_range_size = 0;
+   107          void *temp_mmio;
+   108  
+   109          module_info = (struct acpi_prmt_module_info *) header;
+   110          module_info_size = struct_size(tm, handlers, module_info->handler_info_count);
+   111          tm = kmalloc(module_info_size, GFP_KERNEL);
+   112          if (!tm)
+   113                  goto parse_prmt_out1;
+   114  
+   115          guid_copy(&tm->guid, (guid_t *) module_info->module_guid);
+   116          tm->major_rev = module_info->major_rev;
+   117          tm->minor_rev = module_info->minor_rev;
+   118          tm->handler_count = module_info->handler_info_count;
+   119          tm->updatable = true;
+   120  
+   121          if (module_info->mmio_list_pointer) {
+   122                  /*
+   123                   * Each module is associated with a list of addr
+   124                   * ranges that it can use during the service
+   125                   */
+   126                  mmio_count = (u64 *) memremap(module_info->mmio_list_pointer, 8, MEMREMAP_WB);
+   127                  if (!mmio_count)
+   128                          goto parse_prmt_out2;
+   129  
+   130                  mmio_range_size = struct_size(tm->mmio_info, addr_ranges, *mmio_count);
+   131                  tm->mmio_info = kmalloc(mmio_range_size, GFP_KERNEL);
+   132                  if (!tm->mmio_info)
+   133                          goto parse_prmt_out3;
+   134  
+   135                  temp_mmio = memremap(module_info->mmio_list_pointer, mmio_range_size, MEMREMAP_WB);
+   136                  if (!temp_mmio)
+   137                          goto parse_prmt_out4;
+   138                  memmove(tm->mmio_info, temp_mmio, mmio_range_size);
+   139          } else {
+   140                  tm->mmio_info = kmalloc(sizeof(*tm->mmio_info), GFP_KERNEL);
+   141                  if (!tm->mmio_info)
+   142                          goto parse_prmt_out2;
+   143  
+   144                  tm->mmio_info->mmio_count = 0;
+   145          }
+   146  
+   147          INIT_LIST_HEAD(&tm->module_list);
+   148          list_add(&tm->module_list, &prm_module_list);
+   149  
+   150          handler_info = get_first_handler(module_info);
+   151          do {
+   152                  th = &tm->handlers[cur_handler];
+   153  
+   154                  guid_copy(&th->guid, (guid_t *)handler_info->handler_guid);
+   155                  th->handler_addr =
+   156                          (void *)efi_pa_va_lookup(&th->guid, handler_info->handler_address);
+                                                         ^^^^^^^^^
+Here is the warning/build error.
 
-With best regards
+   157  
+   158                  th->static_data_buffer_addr =
+   159                          efi_pa_va_lookup(&th->guid, handler_info->static_data_buffer_address);
+   160  
 
-Maximilian
+regards,
+dan carpenter
+
