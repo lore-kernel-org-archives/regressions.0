@@ -1,195 +1,187 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20415F330;
-	Wed, 23 Oct 2024 09:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ED119F114
+	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 10:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729674691; cv=none; b=DLds3miTRxq+Z4aOcNj5quDGxfhnyDRFKy1xuJAY5K0aK/Dc+INFzJ5FwSDEaFwnXRIcu6epFc88t2zjnl1UrZKQaFhumFbLT3GM9RuBoiSfwnvCbhKIcHj2xzHm+XBpHxaA302QD+7VeumUDQTFGfwduSTkLp2BgGICpphBsSQ=
+	t=1729678040; cv=none; b=WcGlJ8+2VgEi9rw0P5gSXu0n7vmFlhaIewZi9QCvokAFtmoSFITHWPyhjTSHNgTmOVVSPkdPxR4BOeqswwMPhqe7Oeoj4XSBuPv6GDhY+z/tpxVJciuPRopKLW0YGYGPcPpmWKKbwoKSUWjkir6DotorACd4sb0AWmEQpyTfle0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729674691; c=relaxed/simple;
-	bh=WGx7Tarp0BmupSMXd5gBDlD6bEjKjOIYqL5ojiHhZoY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dyYVr5227y0S3OMx4kFq3MY26yMEy+tHwFTkPVP0HPd8uSUeyxas3IARySSq58hDDbqU2hHir+DrHtSGqkr2MESeCrsNLtOCRNJwTLLYrmj7xei0n6nVfcjfkfa2DFKsEgnfK9JoMBYf/oWUMrqCk0Z3D5/l3OVbp0S6RrNhfnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=0VZg0Fvt; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1729678040; c=relaxed/simple;
+	bh=dIqW7VR7PmEya3kIt5lSd5sawvrvBRm6Jrdnx5D+U1A=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=CLdS8ST8I74tCCKumHcbWO2IP9IcqrTI6iqrLS3/cwJgCK/IOhyHeF76zKSlu18g5O4vas26W+EvLYoQTLPwEFtv+W0AcZs+GExVO6ND9myvkAH6B/3t1uzXNjlBJgWCEZcKIQUgL9tHJWDMpbMi1FeCTvt+gzSCF8DBtn2JqNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ctM1Qwb6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="0VZg0Fvt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=yrOFcq3pQeSmFJGAhQX43gag3cRloi4K5j2bHRXHL3Q=;
-	t=1729674689; x=1730106689; b=0VZg0FvtunHC4HYXTtrm2Wpo5OOIfM3hPz4F+jFZOKIZewh
-	tLfLSFR7NoBvRWW53ZUK6Lzfd2zJzmzzKP9ZEEBGBYnzaoxopnxGyAJi4bR4vGh75qY9TR+1tlC6n
-	kzYa90yUxsp5JZzbvZ460n+OO5HCSNE5uLgOoxwRIE/MFtzJP/fjkvPKJHcW5tGExbD4d8KljjyAp
-	N4IRco+yaITAqlMbjS2zK2Ej0mvRotYX5JpfPJ2n4AmOedQ1F9RvebjVHNEv3lMLVJkAgrmVYzKpw
-	OFxrDUyFsSZ10sFpd27Nn2ORXEA+S0PxaTdF+OrekBBBT8U0JKUW4HqHpzzNC6vQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t3XOk-0003yd-0l; Wed, 23 Oct 2024 11:11:22 +0200
-Message-ID: <8de3cde0-2f20-4ca5-a70c-deb954f28fce@leemhuis.info>
-Date: Wed, 23 Oct 2024 11:11:21 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctM1Qwb6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729678037;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/WtSaKWH3FTu6tLjpEhrwPjxJr0g/mj3hklyiYjcAM=;
+	b=ctM1Qwb6EqMUpyJ4n3baFIytZvmtyZc5nr2mmg/1WpW6/i2Dx/STG6kcHhBDEyHy/KmPr4
+	23JZRyy+FBttbUAqhN7w0RL9r8mm//yJNzxaqn5Y/RAfXADuMTecyPQz4+daGn1QZZucCU
+	SmskPODEKAE99D333YOZ7/jnRUXk6G0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-384-vp2PjErsNRCKjXgydoBt0Q-1; Wed,
+ 23 Oct 2024 06:07:14 -0400
+X-MC-Unique: vp2PjErsNRCKjXgydoBt0Q-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AEF31955F42;
+	Wed, 23 Oct 2024 10:07:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.231])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D179A1956056;
+	Wed, 23 Oct 2024 10:07:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local> <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me> <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info> <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me> <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
+To: Antony Antony <antony@phenome.org>
+Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Latchesar Ionkov <lucho@ionkov.net>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>,
+    Sedat Dilek <sedat.dilek@gmail.com>,
+    Maximilian Bosch <maximilian@mbosch.me>, regressions@lists.linux.dev,
+    v9fs@lists.linux.dev, netfs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] wifi problems since tg3 started throwing rcu stall
- warnings
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Mingcong Bai <jeffbai@aosc.io>,
- "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
- Pavan Chebbi <pavan.chebbi@broadcom.com>, Michael Chan <mchan@broadcom.com>,
- netdev <netdev@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <b8da4aec-4cca-4eb0-ba87-5f8641aa2ca9@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <b8da4aec-4cca-4eb0-ba87-5f8641aa2ca9@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729674689;383787ce;
-X-HE-SMSGID: 1t3XOk-0003yd-0l
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3327437.1729678025.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Oct 2024 11:07:05 +0100
+Message-ID: <3327438.1729678025@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-[reply to self to CC the tg3 maintainers, netdev, and linux-wireless;
-sorry, forgot them earlier, but they should be involved, as I guess this
-is a problem in tg3 interfering with wifi drivers that the rcu change
-just exposed]
+Hi Antony,
 
-On 23.10.24 10:27, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> Frederic, I noticed a report about a regression in bugzilla.kernel.org
-> that appears to be caused by the following change of yours:
-> 
-> 55d4669ef1b768 ("rcu: Fix rcu_barrier() VS post CPUHP_TEARDOWN_CPU
-> invocation")
-> 
-> As many (most?) kernel developers don't keep an eye on the bug tracker,
-> I decided to write this mail. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=219390:
-> 
->>  Mingcong Bai 2024-10-15 13:32:35 UTC
->>
->> Since aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 between v6.10.4 and
->> v6.10.5, the Broadcom Tigon3 Ethernet interface (tg3) found on Apple
->> MacBook Pro (15'', Mid 2010) would throw many rcu stall errors during
->> boot up, causing peripherals such as the wireless card to misbehave:
->>
->> [   24.153855] rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { 2-.... } 21 jiffies s: 973 root: 0x4/.
->> [   24.166938] rcu: blocking rcu_node structures (internal RCU debug):
->> [   24.177800] Sending NMI from CPU 3 to CPUs 2:
->> [   24.183113] NMI backtrace for cpu 2
->> [   24.183119] CPU: 2 PID: 1049 Comm: NetworkManager Not tainted 6.10.5-aosc-main #1
->> [   24.183123] Hardware name: Apple Inc. MacBookPro6,2/Mac-F22586C8, BIOS    MBP61.88Z.005D.B00.1804100943 04/10/18
->> [   24.183125] RIP: 0010:__this_module+0x2d3d1/0x4f310 [tg3]
->> [   24.183135] Code: c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 89 f6 48 03 77 30 8b 06 <31> f6 31 ff c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90
->> [   24.183138] RSP: 0018:ffffbf1a011d75e8 EFLAGS: 00000082
->> [   24.183141] RAX: 0000000000000000 RBX: ffffa04ec78f8a00 RCX: 0000000000000000
->> [   24.183143] RDX: 0000000000000000 RSI: ffffbf1a00fb007c RDI: ffffa04ec78f8a00
->> [   24.183145] RBP: 0000000000000b50 R08: 0000000000000000 R09: 0000000000000000
->> [   24.183147] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000216
->> [   24.183148] R13: ffffbf1a011d7624 R14: ffffa04ec78f8a08 R15: ffffa04ec78f8b40
->> [   24.183151] FS:  00007f4c524b2140(0000) GS:ffffa05007d00000(0000) knlGS:0000000000000000
->> [   24.183153] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   24.183155] CR2: 00007f7025eae3e8 CR3: 00000001040f8000 CR4: 00000000000006f0
->> [   24.183157] Call Trace:
->> [   24.183162]  <NMI>
->> [   24.183167]  ? nmi_cpu_backtrace+0xbf/0x140
->> [   24.183175]  ? nmi_cpu_backtrace_handler+0x11/0x20
->> [   24.183181]  ? nmi_handle+0x61/0x160
->> [   24.183186]  ? default_do_nmi+0x42/0x110
->> [   24.183191]  ? exc_nmi+0x1bd/0x290
->> [   24.183194]  ? end_repeat_nmi+0xf/0x53
->> [   24.183203]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->> [   24.183207]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->> [   24.183210]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->> [   24.183213]  </NMI>
->> [   24.183214]  <TASK>
->> [   24.183215]  __this_module+0x31828/0x4f310 [tg3]
->> [   24.183218]  ? __this_module+0x2d390/0x4f310 [tg3]
->> [   24.183221]  __this_module+0x398e6/0x4f310 [tg3]
->> [   24.183225]  __this_module+0x3baf8/0x4f310 [tg3]
->> [   24.183229]  __this_module+0x4733f/0x4f310 [tg3]
->> [   24.183233]  ? _raw_spin_unlock_irqrestore+0x25/0x70
->> [   24.183237]  ? __this_module+0x398e6/0x4f310 [tg3]
->> [   24.183241]  __this_module+0x4b943/0x4f310 [tg3]
->> [   24.183244]  ? delay_tsc+0x89/0xf0
->> [   24.183249]  ? preempt_count_sub+0x51/0x60
->> [   24.183254]  __this_module+0x4be4b/0x4f310 [tg3]
->> [   24.183258]  __dev_open+0x103/0x1c0
->> [   24.183265]  __dev_change_flags+0x1bd/0x230
->> [   24.183269]  ? rtnl_getlink+0x362/0x400
->> [   24.183276]  dev_change_flags+0x26/0x70
->> [   24.183280]  do_setlink+0xe16/0x11f0
->> [   24.183286]  ? __nla_validate_parse+0x61/0xd40
->> [   24.183295]  __rtnl_newlink+0x63d/0x9f0
->> [   24.183301]  ? kmem_cache_alloc_node_noprof+0x12b/0x360
->> [   24.183308]  ? kmalloc_trace_noprof+0x11e/0x350
->> [   24.183312]  ? rtnl_newlink+0x2e/0x70
->> [   24.183316]  rtnl_newlink+0x47/0x70
->> [   24.183320]  rtnetlink_rcv_msg+0x152/0x400
->> [   24.183324]  ? __netlink_sendskb+0x68/0x90
->> [   24.183329]  ? netlink_unicast+0x237/0x290
->> [   24.183333]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
->> [   24.183336]  netlink_rcv_skb+0x5b/0x110
->> [   24.183343]  netlink_unicast+0x1a4/0x290
->> [   24.183347]  netlink_sendmsg+0x222/0x4a0
->> [   24.183350]  ? proc_get_long.constprop.0+0x116/0x210
->> [   24.183358]  ____sys_sendmsg+0x379/0x3b0
->> [   24.183363]  ? copy_msghdr_from_user+0x6d/0xb0
->> [   24.183368]  ___sys_sendmsg+0x86/0xe0
->> [   24.183372]  ? addrconf_sysctl_forward+0xf3/0x270
->> [   24.183378]  ? _copy_from_iter+0x8b/0x570
->> [   24.183384]  ? __pfx_addrconf_sysctl_forward+0x10/0x10
->> [   24.183388]  ? _raw_spin_unlock+0x19/0x50
->> [   24.183392]  ? proc_sys_call_handler+0xf3/0x2f0
->> [   24.183397]  ? trace_hardirqs_on+0x29/0x90
->> [   24.183401]  ? __fdget+0xc2/0xf0
->> [   24.183405]  __sys_sendmsg+0x5b/0xc0
->> [   24.183410]  ? syscall_trace_enter+0x110/0x1b0
->> [   24.183416]  do_syscall_64+0x64/0x150
->> [   24.183423]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> I have bisected the error to this commit. Reverting it caused no new or
->> perceivable issues on both the MacBook and a Zen4-based laptop.
-> 
-> [...]
-> 
->>> Ohh, and when you say "causing peripherals such as the wireless card to
->>> misbehave" what exactly do you mean?
->>
->> When the kernel throws rcu stall messages, the wireless card on the
->> MacBook may fail to discover and/or connect to wireless networks - not a
->> consistent behaviour but I suppose that something in the kernel got stuck.
-> 
-> See the ticket for more details and dmesg logs; the problem still
-> happens with 6.12-rc. The reporter is CCed.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> P.S.: let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: 55d4669ef1b76823083caecfab12a8bd2ccdcf64
-> #regzbot from: Mingcong Bai <jeffbai@aosc.io>
-> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219390
-> #regzbot title: rcu: wifi problems since tg3 started throwing rcu stall
-> warnings
-> #regzbot ignore-activity
-> 
-> 
+I think the attached should fix it properly rather than working around it =
+as
+the previous patch did.  If you could give it a whirl?
+
+Thanks,
+David
+---
+commit 68dddbfdf45e8f176cc8556a3db69af24dfb8519
+Author: David Howells <dhowells@redhat.com>
+Date:   Wed Oct 23 10:24:12 2024 +0100
+
+    iov_iter: Fix iov_iter_get_pages*() for folio_queue
+    =
+
+    p9_get_mapped_pages() uses iov_iter_get_pages_alloc2() to extract page=
+s
+    from an iterator when performing a zero-copy request and under some
+    circumstances, this crashes with odd page errors[1], for example, I se=
+e:
+    =
+
+        page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn=
+:0xbcf0
+        flags: 0x2000000000000000(zone=3D1)
+        ...
+        page dumped because: VM_BUG_ON_FOLIO(((unsigned int) folio_ref_cou=
+nt(folio) + 127u <=3D 127u))
+        ------------[ cut here ]------------
+        kernel BUG at include/linux/mm.h:1444!
+    =
+
+    This is because, unlike in iov_iter_extract_folioq_pages(), the
+    iter_folioq_get_pages() helper function doesn't skip the current folio=
+ when
+    iov_offset points to the end of it, but rather extracts the next page
+    beyond the end of the folio and adds it to the list.  Reading will the=
+n
+    clobber the contents of this page, leading to system corruption, and i=
+f the
+    page is not in use, put_page() may try to clean up the unused page.
+    =
+
+    This can be worked around by copying the iterator before each extracti=
+on[2]
+    and using iov_iter_advance() on the original as the advance function s=
+teps
+    over the page we're at the end of.
+    =
+
+    Fix this by skipping the page extraction if we're at the end of the fo=
+lio.
+    =
+
+    This was reproduced in the ktest environment[3] by forcing 9p to use t=
+he
+    fscache caching mode and then reading a file through 9p.
+    =
+
+    Fixes: db0aa2e9566f ("mm: Define struct folio_queue and ITER_FOLIOQ to=
+ handle a sequence of folios")
+    Reported-by: Antony Antony <antony@phenome.org>
+    Closes: https://lore.kernel.org/r/ZxFQw4OI9rrc7UYc@Antony2201.local/
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: Eric Van Hensbergen <ericvh@kernel.org>
+    cc: Latchesar Ionkov <lucho@ionkov.net>
+    cc: Dominique Martinet <asmadeus@codewreck.org>
+    cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+    cc: v9fs@lists.linux.dev
+    cc: netfs@lists.linux.dev
+    cc: linux-fsdevel@vger.kernel.org
+    Link: https://lore.kernel.org/r/ZxFEi1Tod43pD6JC@moon.secunet.de/ [1]
+    Link: https://lore.kernel.org/r/2299159.1729543103@warthog.procyon.org=
+.uk/ [2]
+    Link: https://github.com/koverstreet/ktest.git [3]
+
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 1abb32c0da50..cc4b5541eef8 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1021,15 +1021,18 @@ static ssize_t iter_folioq_get_pages(struct iov_it=
+er *iter,
+ 		size_t offset =3D iov_offset, fsize =3D folioq_folio_size(folioq, slot)=
+;
+ 		size_t part =3D PAGE_SIZE - offset % PAGE_SIZE;
+ =
+
+-		part =3D umin(part, umin(maxsize - extracted, fsize - offset));
+-		count -=3D part;
+-		iov_offset +=3D part;
+-		extracted +=3D part;
+-
+-		*pages =3D folio_page(folio, offset / PAGE_SIZE);
+-		get_page(*pages);
+-		pages++;
+-		maxpages--;
++		if (offset < fsize) {
++			part =3D umin(part, umin(maxsize - extracted, fsize - offset));
++			count -=3D part;
++			iov_offset +=3D part;
++			extracted +=3D part;
++
++			*pages =3D folio_page(folio, offset / PAGE_SIZE);
++			get_page(*pages);
++			pages++;
++			maxpages--;
++		}
++
+ 		if (maxpages =3D=3D 0 || extracted >=3D maxsize)
+ 			break;
+ =
 
