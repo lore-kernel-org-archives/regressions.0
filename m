@@ -1,37 +1,36 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A432114B953
-	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 08:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750E7157E78;
+	Wed, 23 Oct 2024 08:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729671425; cv=none; b=kYE9ULVuuHzsThrcjMQtvKGBJuDaqF/jT7afOJglSYmUEI6AQYLG98ISSClToV6+x4m4rd1LthU1eYF8K8QAH6WzL5tJlx32QB9IDGNMQBaotqTM+EOyHgMNFB2HuAMc0z/Jhxi2z0ynGEboD5Bg6EJZF31tU6R6iwykrypIbCU=
+	t=1729672043; cv=none; b=ofGT2p8810Qr/4aCXeJIUSthESULbXqfX73IPKQvnLgJT/tGJ8ir8fsLFkHfjK4Egi3LRgZe1HytWwvqqtqYkmCG3qTPxfVdgc9yv6YJZ3TsLaCwMI+YjSxsvekdI9Rc5jvg5J8Mw9knPK5uI8BUL7I9v/0Qh2cVX1uwwxn1bx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729671425; c=relaxed/simple;
-	bh=h6YZYpVvyf+YP9wIq2hXemR3jo9/l8RuA2fcwKrQNzg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=brjrq75JlSYAR/w+3MXONKWPzcQPoSlsksBd1d6lT2gdGuWcuoPj6IBJhLdLB5XyoDZ872DEnM5VvOm2KeFLdHJx5Y3Vzf9tnhu7r4za87edyDl7G3hYFBL8Frp1ApgBw25YcG73kT0wTlFw8PNNDBvDioFRbo2+AtN6t2+LJKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aEs/DifG; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1729672043; c=relaxed/simple;
+	bh=U0tsJHZrqqryplTs05WdKWRIsA7U8scP65D3OIdBCqk=;
+	h=Message-ID:Date:MIME-Version:From:Cc:To:Subject:Content-Type; b=aATVyicoU4OLzuCFV9iBkRY5N2ZYcdSTFIn4LLRbww5xw0cttmMPxzH1U2EiyWD2fWTygGfvpocuWQzIKn711KUWbgt2QX66qDoOhRcoZg1YdxqVQJ/RAkGBXaq5EnrzYlKZirY0sWTtoTMTDW72erM7qVZgs/fs39BIyKun8iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ScDPTQnJ; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aEs/DifG"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ScDPTQnJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Reply-To:Subject:To:Cc:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=h6YZYpVvyf+YP9wIq2hXemR3jo9/l8RuA2fcwKrQNzg=; t=1729671423;
-	x=1730103423; b=aEs/DifGDR4scGPSf0xqJsxOg6vnDfVEcR3qhxhmRegb2CdQFca9ljcM9v91Z
-	h4XPE93tYOAmp3Hu4WEJ8/AsSs5LTHI1+aADOv4MHmtcU08kHisOJNjckaOg0x0I3i45Yh3PTstue
-	p1t4xF8r1iWb9Ek/AbztYLdsk6BqjIIZFewSzeddzfZmxXZhAiX/ftQpFqJTqnC/b76edD1eXfJzJ
-	l5VRdUomZu2mgO5s41KORDQiHtgBVvhvsExLyzEFtuuArHSvK/CdQtFyxgTDZTx3uItD2wTEUGueW
-	7HssQdh6hiGe3h2QMNq3rCeA9XvaZeBiHStUrpO2I/a4RF6qqQ==;
+	References; bh=Elp8TP5PUL4Th380KlSPCaH+/ahfGnDbjbC9HeP1pJs=; t=1729672041;
+	x=1730104041; b=ScDPTQnJ+1TvYwC7++DhfC+kN1zhEtZgOpf5oLj2rPRbItcJvvgcPzpszCMSE
+	E+AXONe9CBFcfHdtbyZenA1vqc1le8qKGVIeuWEfP2KBBXPYUPQQX3tNhr6FCkjCiT22vPZPU1OiJ
+	jOQ/+ve9FH5TcvpUkKzKjzV1RgRTzG1SHwl+D9VEIAI+uiJLtsCqD3WBzDMfyOsbWszpy7P9hMchF
+	dzV0FYqLrU0hQOycyFv5hCaxzE1Nq7A/y3VCS6eErfgH0b5FPZ9kLOs33Eclegfv9TeyPY7cKFti7
+	UcXi89Od9k5G7EPcjhfUqnDBqV5YD1Yb9MDCYBalobWnHYyDvw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t3WY9-0007Cp-Sa; Wed, 23 Oct 2024 10:17:01 +0200
-Message-ID: <45f6f873-3e8e-45a0-ae28-f68530dd1e15@leemhuis.info>
-Date: Wed, 23 Oct 2024 10:17:00 +0200
+	id 1t3Wi7-0001Hb-Gu; Wed, 23 Oct 2024 10:27:19 +0200
+Message-ID: <b8da4aec-4cca-4eb0-ba87-5f8641aa2ca9@leemhuis.info>
+Date: Wed, 23 Oct 2024 10:27:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,38 +38,142 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Mingcong Bai <jeffbai@aosc.io>,
+ "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Subject: [Regression] wifi problems since tg3 started throwing rcu stall
+ warnings
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729671423;8d6f8861;
-X-HE-SMSGID: 1t3WY9-0007Cp-Sa
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729672041;c9578c6c;
+X-HE-SMSGID: 1t3Wi7-0001Hb-Gu
 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
+Frederic, I noticed a report about a regression in bugzilla.kernel.org
+that appears to be caused by the following change of yours:
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+55d4669ef1b768 ("rcu: Fix rcu_barrier() VS post CPUHP_TEARDOWN_CPU
+invocation")
 
-#regzbot report:
-https://lore.kernel.org/all/CAEXMXLR55DziAMbv_%2B2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com/
-#regzbot introduced: 5ab91447aa13b8b98bc11f5326f33500b0ee2c48
-#regzbot summary: drm/tiny/ili9225: NULL pointer dereference and paging
-request problems
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219390:
 
-#regzbot report:
-https://lore.kernel.org/all/000f01db247b%24d10e1520%24732a3f60%24@581238.xyz/
-#regzbot introduced: v6.6.28..v6.6.29
-#regzbot summary: thunderbolt: USB ports on Dock broken
+>  Mingcong Bai 2024-10-15 13:32:35 UTC
+> 
+> Since aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 between v6.10.4 and
+> v6.10.5, the Broadcom Tigon3 Ethernet interface (tg3) found on Apple
+> MacBook Pro (15'', Mid 2010) would throw many rcu stall errors during
+> boot up, causing peripherals such as the wireless card to misbehave:
+> 
+> [   24.153855] rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { 2-.... } 21 jiffies s: 973 root: 0x4/.
+> [   24.166938] rcu: blocking rcu_node structures (internal RCU debug):
+> [   24.177800] Sending NMI from CPU 3 to CPUs 2:
+> [   24.183113] NMI backtrace for cpu 2
+> [   24.183119] CPU: 2 PID: 1049 Comm: NetworkManager Not tainted 6.10.5-aosc-main #1
+> [   24.183123] Hardware name: Apple Inc. MacBookPro6,2/Mac-F22586C8, BIOS    MBP61.88Z.005D.B00.1804100943 04/10/18
+> [   24.183125] RIP: 0010:__this_module+0x2d3d1/0x4f310 [tg3]
+> [   24.183135] Code: c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 89 f6 48 03 77 30 8b 06 <31> f6 31 ff c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90
+> [   24.183138] RSP: 0018:ffffbf1a011d75e8 EFLAGS: 00000082
+> [   24.183141] RAX: 0000000000000000 RBX: ffffa04ec78f8a00 RCX: 0000000000000000
+> [   24.183143] RDX: 0000000000000000 RSI: ffffbf1a00fb007c RDI: ffffa04ec78f8a00
+> [   24.183145] RBP: 0000000000000b50 R08: 0000000000000000 R09: 0000000000000000
+> [   24.183147] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000216
+> [   24.183148] R13: ffffbf1a011d7624 R14: ffffa04ec78f8a08 R15: ffffa04ec78f8b40
+> [   24.183151] FS:  00007f4c524b2140(0000) GS:ffffa05007d00000(0000) knlGS:0000000000000000
+> [   24.183153] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   24.183155] CR2: 00007f7025eae3e8 CR3: 00000001040f8000 CR4: 00000000000006f0
+> [   24.183157] Call Trace:
+> [   24.183162]  <NMI>
+> [   24.183167]  ? nmi_cpu_backtrace+0xbf/0x140
+> [   24.183175]  ? nmi_cpu_backtrace_handler+0x11/0x20
+> [   24.183181]  ? nmi_handle+0x61/0x160
+> [   24.183186]  ? default_do_nmi+0x42/0x110
+> [   24.183191]  ? exc_nmi+0x1bd/0x290
+> [   24.183194]  ? end_repeat_nmi+0xf/0x53
+> [   24.183203]  ? __this_module+0x2d3d1/0x4f310 [tg3]
+> [   24.183207]  ? __this_module+0x2d3d1/0x4f310 [tg3]
+> [   24.183210]  ? __this_module+0x2d3d1/0x4f310 [tg3]
+> [   24.183213]  </NMI>
+> [   24.183214]  <TASK>
+> [   24.183215]  __this_module+0x31828/0x4f310 [tg3]
+> [   24.183218]  ? __this_module+0x2d390/0x4f310 [tg3]
+> [   24.183221]  __this_module+0x398e6/0x4f310 [tg3]
+> [   24.183225]  __this_module+0x3baf8/0x4f310 [tg3]
+> [   24.183229]  __this_module+0x4733f/0x4f310 [tg3]
+> [   24.183233]  ? _raw_spin_unlock_irqrestore+0x25/0x70
+> [   24.183237]  ? __this_module+0x398e6/0x4f310 [tg3]
+> [   24.183241]  __this_module+0x4b943/0x4f310 [tg3]
+> [   24.183244]  ? delay_tsc+0x89/0xf0
+> [   24.183249]  ? preempt_count_sub+0x51/0x60
+> [   24.183254]  __this_module+0x4be4b/0x4f310 [tg3]
+> [   24.183258]  __dev_open+0x103/0x1c0
+> [   24.183265]  __dev_change_flags+0x1bd/0x230
+> [   24.183269]  ? rtnl_getlink+0x362/0x400
+> [   24.183276]  dev_change_flags+0x26/0x70
+> [   24.183280]  do_setlink+0xe16/0x11f0
+> [   24.183286]  ? __nla_validate_parse+0x61/0xd40
+> [   24.183295]  __rtnl_newlink+0x63d/0x9f0
+> [   24.183301]  ? kmem_cache_alloc_node_noprof+0x12b/0x360
+> [   24.183308]  ? kmalloc_trace_noprof+0x11e/0x350
+> [   24.183312]  ? rtnl_newlink+0x2e/0x70
+> [   24.183316]  rtnl_newlink+0x47/0x70
+> [   24.183320]  rtnetlink_rcv_msg+0x152/0x400
+> [   24.183324]  ? __netlink_sendskb+0x68/0x90
+> [   24.183329]  ? netlink_unicast+0x237/0x290
+> [   24.183333]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
+> [   24.183336]  netlink_rcv_skb+0x5b/0x110
+> [   24.183343]  netlink_unicast+0x1a4/0x290
+> [   24.183347]  netlink_sendmsg+0x222/0x4a0
+> [   24.183350]  ? proc_get_long.constprop.0+0x116/0x210
+> [   24.183358]  ____sys_sendmsg+0x379/0x3b0
+> [   24.183363]  ? copy_msghdr_from_user+0x6d/0xb0
+> [   24.183368]  ___sys_sendmsg+0x86/0xe0
+> [   24.183372]  ? addrconf_sysctl_forward+0xf3/0x270
+> [   24.183378]  ? _copy_from_iter+0x8b/0x570
+> [   24.183384]  ? __pfx_addrconf_sysctl_forward+0x10/0x10
+> [   24.183388]  ? _raw_spin_unlock+0x19/0x50
+> [   24.183392]  ? proc_sys_call_handler+0xf3/0x2f0
+> [   24.183397]  ? trace_hardirqs_on+0x29/0x90
+> [   24.183401]  ? __fdget+0xc2/0xf0
+> [   24.183405]  __sys_sendmsg+0x5b/0xc0
+> [   24.183410]  ? syscall_trace_enter+0x110/0x1b0
+> [   24.183416]  do_syscall_64+0x64/0x150
+> [   24.183423]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> I have bisected the error to this commit. Reverting it caused no new or
+> perceivable issues on both the MacBook and a Zen4-based laptop.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219370
-#regzbot fix: 009b15b57485
+[...]
 
+>> Ohh, and when you say "causing peripherals such as the wireless card to
+>> misbehave" what exactly do you mean?
+> 
+> When the kernel throws rcu stall messages, the wireless card on the
+> MacBook may fail to discover and/or connect to wireless networks - not a
+> consistent behaviour but I suppose that something in the kernel got stuck.
 
+See the ticket for more details and dmesg logs; the problem still
+happens with 6.12-rc. The reporter is CCed.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 55d4669ef1b76823083caecfab12a8bd2ccdcf64
+#regzbot from: Mingcong Bai <jeffbai@aosc.io>
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=219390
+#regzbot title: rcu: wifi problems since tg3 started throwing rcu stall
+warnings
+#regzbot ignore-activity
