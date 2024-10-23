@@ -1,112 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FA1146D6F
-	for <regressions@lists.linux.dev>; Wed, 23 Oct 2024 06:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FA515278E;
+	Wed, 23 Oct 2024 07:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729663808; cv=none; b=ULiPgpz+7whNUVZBV0JHpt3obmSfIb5XLfNw4iZEtBriWr31zQtossCUObjPutN1J97kJwwWUKgcZSxMQgUz6/MPfMDJsF8qcnZW/4StvjqUXzz9w6wvldIR7kLyKtXr1ME7WbEVMg6LfQVweQXKWAQYZ189GhJZW6ACnm15bps=
+	t=1729668154; cv=none; b=GpiaVdOdV0yIrJ13DMopwzHGNOlOYXAyZa+yQaTFpc0xFJ2fupIj4cRs0kamChq6cMyxsJnnztSQfDII5CtAL1wiKEFTrrkzkWly0/YcTmOj4XwIZWMKQpPRsJaM0reKFvD61YObAgNgufzIRPJxuF2ZGi1jc+8OpfPdtlV6oSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729663808; c=relaxed/simple;
-	bh=d6pW4xi0LQC9Mf1CBRcA8IVQ88uK0iTTORzaAqW6ieE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YttYzS2wpE6h1cDCEpz1VUs/y9/fz8Ty2lH4zJyX0y78mvpLKAEYU/mPtD84oBsh3DZy1F2sXzFL1hYeeRyPf+hLdb5k37/0BleZlzSslTxLh4mLhaEJyPLSVwVp1T9e+WJTUogmYlB2QkRLIgHjl0f667yZmz1haBvh6kQyuA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hHqx+J9F; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1729668154; c=relaxed/simple;
+	bh=sFv3EiwOOEVRpu7p1CenvFdCSUOODoW6zxjJVHYD3t4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zp8UAt87Q4bh2ZFWIbIqjXy9sTPUnePH1MP0yyg0JwI1plqkY//rTf8/Ufq8DvLj4PYh1XeX+DuspGTxhTfb+FKJKy6zw/4fN5g67GtRu1UtMKON2KZ+0RaK5bgqEyiJkmk00Nz84AUA8RX8FDCO3nLRkdUNHna3tRFa+Lr+fCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qiHyLiv0; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hHqx+J9F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729663807; x=1761199807;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=d6pW4xi0LQC9Mf1CBRcA8IVQ88uK0iTTORzaAqW6ieE=;
-  b=hHqx+J9FlnJ2GMCyHCz3a2B+3t7t/M5Wm+Jw2avt7RBFHItzDvjhWPMy
-   yrMJl3qU/EWD9MVYubLFT813zcsbRa6JaGNQKoy6CKQtGQGE48sYRo3zM
-   HxF/Wkh+jw9D0hj3CndILAqnmwKjzEdxIs6tJhHJ4xKMd6VX+aELLB2Ob
-   uUmQRbnj2FyPokfCjxCUSg3tvHh1D15NRi14gVYEWEO7RLWhMU1pKlBvW
-   024q5aVcD7R9utLAexG9HwMTUuz6/ENf/Css1RV8iH+eEXt6OeP2/Ywwq
-   xCvvJjwF6GWddTMhxFGhUrGvwQ4jS7/9b/fqR1Vci9cjOvn3lSZWTxJs+
-   w==;
-X-CSE-ConnectionGUID: XBibPdfNTXCN3wzouMkR9Q==
-X-CSE-MsgGUID: 99ERq8TUQaapVGT/e717Cg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="54632074"
-X-IronPort-AV: E=Sophos;i="6.11,225,1725346800"; 
-   d="scan'208";a="54632074"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 23:10:06 -0700
-X-CSE-ConnectionGUID: T+YlXsULSgWe4jrst28lJw==
-X-CSE-MsgGUID: 4ZW84SJkQT2oRkMuOjcsPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,225,1725346800"; 
-   d="scan'208";a="80899370"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 22 Oct 2024 23:10:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 1E164301; Wed, 23 Oct 2024 09:10:01 +0300 (EEST)
-Date: Wed, 23 Oct 2024 09:10:01 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Rick <rick@581238.xyz>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
-	christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-Message-ID: <20241023061001.GF275077@black.fi.intel.com>
-References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
- <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
- <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
- <20241022161055.GE275077@black.fi.intel.com>
- <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qiHyLiv0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=mN8Y2550Y23LuHYG423su/I1RnywXe35ewFMA0Rljj0=;
+	t=1729668152; x=1730100152; b=qiHyLiv0uGXMioBQEQSNnCuwfaQQ2XpP4YHmebul9EIlMUh
+	AZs6gG6Sba29TUtqwhJarBc75/WStJWl3cR5hG3JBG1jnb3K3k3HZqd0yZWnmsVIN670+CSNmSTmY
+	7cnaqYr8URZokvIIngIpksO+JWswbcM95ByQ4hfVH1wHzDi6X2+aYqhu0/Hbcyh9a9SYkLcXLMmGq
+	GhVD5137cbqlxce23Ur6y0YwEzAuqOqo/E27oKCUigO9RseEcIXROWddxPlfGtRfrUzTSKGdq1nY3
+	e4Lk3vNKxVrDami6C83MZw9VR/zAARy/VJFhlUkrvn+K2eRb3iGYR0Eq2iHiOokA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t3VhL-00013X-Ml; Wed, 23 Oct 2024 09:22:27 +0200
+Message-ID: <26f5505f-185a-43a9-8eda-4fb36c0f07c4@leemhuis.info>
+Date: Wed, 23 Oct 2024 09:22:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
+To: Dominique Martinet <asmadeus@codewreck.org>, Will Deacon
+ <will@kernel.org>, ericvh@kernel.org
+Cc: lucho@ionkov.net, Christian Brauner <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com,
+ v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com,
+ keirf@google.com, regressions@lists.linux.dev
+References: <20240923100508.GA32066@willie-the-truck>
+ <20241009153448.GA12532@willie-the-truck>
+ <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
+ <Zw-J0DdrCFLYpT5y@codewreck.org> <20241022150149.GA27397@willie-the-truck>
+ <ZxgudMCSgbDOEjpD@codewreck.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZxgudMCSgbDOEjpD@codewreck.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729668152;d70de52b;
+X-HE-SMSGID: 1t3VhL-00013X-Ml
 
-Hi,
+On 23.10.24 01:00, Dominique Martinet wrote:
+> Will Deacon wrote on Tue, Oct 22, 2024 at 04:01:49PM +0100:
+>
+> [...]
 
-On Tue, Oct 22, 2024 at 07:06:50PM +0200, Rick wrote:
-> Hi Mika,
+Dominique, thx for taking the time to take care of this.
+
+> I've also confirmed reverting the 4 commits listed by Will do fix both
+> behaviors (along with a fscache warning when hitting the duplicate inode
+> file, but that's expected):
+>         724a08450f74 "fs/9p: simplify iget to remove unnecessary paths"
+>         11763a8598f8 "fs/9p: fix uaf in in v9fs_stat2inode_dotl"
+>         10211b4a23cf "fs/9p: remove redundant pointer v9ses"
+>         d05dcfdf5e16 " fs/9p: mitigate inode collisions"
+> [...]
+> I think that's the sane thing to do, let's first go back to something
+> that works and we can try again if/when someone has time - [...]
 > 
-> I have removed pcie_asm=force as kernel parameter but still not working on
-> latest non LTS kernel.
+> Thorsten, is there a preferred way reverts should be done?
+> In this case it'd probably make sense to squash the 4 reverts in a
+> single megarevert? At the very least getting anywhere in the middle with
+> the uaf isn't something one would want... And they all made it in 6.9
+> together so there's no benefit in splitting them for backport either.
 
-Okay, I still suggest not having that unless you absolutely know that
-you need it.
+Will might be the better person to ask, but since you asked me: I think
+I've see a "megarevert" recently from the corner of my eye, but that
+made me go "huh, that is unusual". My perception might wrong and in some
+situations they might be a good idea. Not sure if this is one to to the
+UAF. But that would only be relevant during a bisection or for everyone
+stupid enough to backport only some of the reverts (if I understood you
+right). I guess a proper patch description and a common Fixes: tag for
+all four should prevent that.
 
-> In regards to the disconnect; sorry I think I might have turned of the
-> docking station myself during that test. I have taken another dmesg without
-> me disconnecting the docking station:
-> https://gist.github.com/ricklahaye/9798b7de573d0f29b3ada6a5d99b69f1
-> 
-> The cable is the original Thunderbolt 4 cable that came with the docking
-> station. I have used it on this laptop using Windows (dualboot) without any
-> issues. Also on another Windows laptop also without issues. It was used in
-> 40Gbit mode.
-
-In the dmesg you shared above, there are still unplug and USB tunnel
-creation fails so you only get USB 2.x connection with all the USB
-devices on the dock.
-
-How do you determine if it "works"? I guess keyboard and mouse (both
-USB 2.x devices) and display (tunneled over USB4 link) all are working
-right? However, if you plug in USB 3.x device to the dock it enumerates
-as FullSpeed instead of SuperSpeed. There is definitely something wrong
-here. I asked from our TB validation folks if they have any experience
-with this dock but did not receive any reply yet.
-
-What you mean by 40Gbit mode? The dock exposes two lanes both at 20G so
-it should always be 40G since we bind the lanes, also in Windows.
-
-Also In Windows, do you see if the all USB devices on the dock are
-enumerated as FullSpeed or SuperSpeed? I suspect it's the former there
-too but can you check? Keyboard and mouse should be FullSpeed but there
-is some audio device that may be USB 3.x (SuperSpeed), or alternatively
-if you have USB 3.x memory stick (or any other device) you can plug that
-to the dock and see how it enumerates.
+Ciao, THorsten
