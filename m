@@ -1,168 +1,264 @@
-Received: from nx121.node01.secure-mailgate.com (nx121.node01.secure-mailgate.com [89.22.108.121])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94161CCED2;
-	Thu, 24 Oct 2024 11:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.22.108.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3701E105A
+	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 13:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729768868; cv=none; b=V0XWKkv/pUWlRYIeXkLRJfKg3JXTXj6dU7ioYSUMeMwGNi2pKhyJWCXYSllr8ldVlBXolIxVf/go0BIBKOjZeX2YXds+z89IrDr0isLygH8DMVeAiDhDdQ+d3Mt/lzXaBJDdXarE1lA+WGv+hCKPVLItQf94GxF4a3AJA99qd9k=
+	t=1729775817; cv=none; b=gAJfmM/ubeZoRhokGxdvEljfw/YvTXnjyIyTnlR8cuGC+b3RhsHG0UKsHNNhTvQbWGzeBb94ZVRgmnKe1vZNE3ciyBXrnnilmwcQol3ktfDeiFYlL03C5l9IOzcURYj/NFABFkrwLSZfS2i1pAhw6PX/JzJoHxBURHruiHMPkZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729768868; c=relaxed/simple;
-	bh=j0C/pykth4QzWKBHNtXedAHf6zFx4Jk2buB39tGU3Yg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UEHE9rxFfseGQ6EboaWyvRoPy0i2YNf8KjnQ1ds/7tUV4aqS4Cd9lWhsOW7Y+Fg1iO86LZzWo7lIzd0kTNlnfXYtShpoV5MXZtYoQzgS+Xn2WGtPsL4TIBNIEpwpVhAFAAU2jUdaMJBEwHd5+tCOTGF0lg5I/qSt2QkXZqwJDUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bodenbinder.de; spf=pass smtp.mailfrom=bodenbinder.de; dkim=pass (1024-bit key) header.d=bodenbinder.de header.i=@bodenbinder.de header.b=YM7foC2H; arc=none smtp.client-ip=89.22.108.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bodenbinder.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bodenbinder.de
+	s=arc-20240116; t=1729775817; c=relaxed/simple;
+	bh=oku5NNRsExLUlwbdff53zTinMYUInsOzU9jIg/cWHO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKAtV1hyBU8y5Q0XC7B/zRTcvaYrEipj0wtU4N9boyvOsetkFfCe7YfBQOYElLg8R8Pqz6wQjw12hf1gKIdszmqpdQz6ljQvibKQdPKdg5GyRz70UIMO/WIAMnr8ImqZglYxl4o1jV0OcKsC1dY7Lb7Ts6/IRlKQGXR2vbIP9ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=btxR6pRd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=alXNkauI; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bodenbinder.de header.i=@bodenbinder.de header.b="YM7foC2H"
-Received: from web263.dogado.net ([31.47.255.43])
-	by node01.secure-mailgate.com with esmtps (TLSv1.2:AES128-GCM-SHA256:128)
-	(Exim 4.92)
-	(envelope-from <matthias@bodenbinder.de>)
-	id 1t3vtb-008vL6-Rm; Thu, 24 Oct 2024 13:20:55 +0200
-X-SecureMailgate-Identity: bodenbinder_de;web263.dogado.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bodenbinder.de;
-	s=cloudpit; t=1729768848;
-	bh=XWkfa5fEX5V4GuUQI0dMU/2kxx2O9C5ZTvyOv87JHak=;
-	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
-	b=YM7foC2HNgQY8mlrhpzLQDHfJ6YAL2L93gpMghtvOA/C3KoxuCmXA/kD+uuVDTkld
-	 0IPlnxIWX5A5LLlhn65C6Ca5CQKi2h9DcQ3M8Rn5EmOFyufDWLv0Bj+I+c7mlZZmhS
-	 /GH7sSwoEFkckf9RTSYRm+NRhH9P/ONEuY5yleNA=
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by rakete.bodenbinder.de (Postfix) with ESMTP id C69692B0C863;
-	Thu, 24 Oct 2024 13:20:47 +0200 (CEST)
-X-SecureMailgate-Identity: bodenbinder_de;web263.dogado.net
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by rakete.bodenbinder.de (Postfix) with ESMTP id C69692B0C863;
-	Thu, 24 Oct 2024 13:20:47 +0200 (CEST)
-Message-ID: <8f1e0a5a10df71a8b4e8856feefd256bb150c38a.camel@bodenbinder.de>
-Subject: Re: darktable performance regression on AMD systems caused by "mm:
- align larger anonymous mappings on THP boundaries"
-From: Matthias Bodenbinder <matthias@bodenbinder.de>
-Reply-To: matthias@bodenbinder.de
-To: Vlastimil Babka <vbabka@suse.cz>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Rik van Riel <riel@surriel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linux kernel regressions list
-	 <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- Linux-MM	 <linux-mm@kvack.org>, Yang Shi <yang@os.amperecomputing.com>,
- Petr Tesarik	 <ptesarik@suse.com>
-Date: Thu, 24 Oct 2024 13:20:47 +0200
-In-Reply-To: <ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
-References: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
-	 <f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
-	 <ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="btxR6pRd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="alXNkauI"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A860911400EC;
+	Thu, 24 Oct 2024 09:16:53 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Thu, 24 Oct 2024 09:16:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1729775813; x=1729862213; bh=06FwsQ0dYC
+	4jSFygPf1ghqE3s2gNvHhwTL8NDrtl2Sw=; b=btxR6pRdMVUoXoOszDx4kcZBeI
+	sSHXMkN4eecOoqfZrRnFR0jXHmrP61wFs9VC65b1NDRKofl8vQsKyDn2qoeroh8a
+	lmgu7RUA4wPlOFfo2gbhDp6lSjLnIbP/OIVMD4UBTd1RS9EHWNi/AnQch2RH367A
+	kGYCjx3cUaQrBrM6h2+HwP6bGXSZrMI/p2NLndN+2402HTtnTOPtos8NkRzbI3I6
+	wvpMa0hkB4Lxjc3qWZuHjND2LP0doHypbFg+UsL130arfwRXXaUzw3+WYZ9aRiyX
+	LDUoIJEe4v1Lb2hE2nOjYrCdio6HnUq1T0VK0H2D0AFOWAjnsv+3OcAE6F0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1729775813; x=1729862213; bh=06FwsQ0dYC4jSFygPf1ghqE3s2gN
+	vHhwTL8NDrtl2Sw=; b=alXNkauI5/q4nxx5yHUoNM2fPn1aVBbj9aWX0C3n1gR8
+	yg4pgMYyC+FVEeTRLLbMaoCtvDnIrl0FH7G0fRZ3pMLd4GwNE8OiC24yCbASLk4J
+	H3Gi3n/4fUTGTQWgfqceGt38rlyEZgeGlfzd4oaqTfrDbz9VeKAzKFnNg+S+IJWh
+	Qldwz7NBLyJW0hcrGNu8jgCSLlHwmBKyDFayqY3vdmXuIWH/ucMOLiqNTxQR/YIT
+	GGl4yWp2/1TMqYCLjiotHvC4uuH3+WzyUk4qjy6lDd7c67pkYt4Vk+g2dJBdty1I
+	SJFQXWlgJnNC9Pn6n1soqen+pwvLc4m0pOi7IHJkxw==
+X-ME-Sender: <xms:xUgaZ0cvIjLs8Q0kgCClr3vlQqKqWyoTwfVf9mqR1t9q6psQUN26jA>
+    <xme:xUgaZ2MHcn4YuwBwHSqJymwznoPSPqC-WPMSp26CAb6D6OZ7-XC9gxjFB6rkLJSDk
+    Ch5-OG8zZcSG_Z84Bs>
+X-ME-Received: <xmr:xUgaZ1hv1Omo70J-lbNpl5wqmxaijKirv4PcxGdxKTykcx-JZza0fU3gWsuc_ZwmkD46JkpS2m1RIdCur5DKYNaAs6hH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejtddgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
+    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeffffgleev
+    keduffevffffueelueevheduiedukeetuedvfeegfeelheekteejieenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpghhnuhdrohhrghenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjh
+    hfrghrrhdrtggtpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhr
+    tghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmohhrsg
+    hosehgohhoghhlvgdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpdhrtg
+    hpthhtohepkhgvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphht
+    thhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpth
+    htoheplhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrgh
+X-ME-Proxy: <xmx:xUgaZ5_kf6WBzbsJ6N6hNjYIpwx9YPcRiUO-6smCJ-Cluc5y3n6ORQ>
+    <xmx:xUgaZwv2sj841txQoivKillwDjHlzO34fMuR4gOsIzV6UcKAPGh_3g>
+    <xmx:xUgaZwFBS8Vv2dVoz0ogtzpfInrVgkvAHlkcCddS5UuWouvtGxY5nQ>
+    <xmx:xUgaZ_Mk-9oJkkc2rCP7px519UnbCTh6G3dvmCuuwUBeVauKyU1U1w>
+    <xmx:xUgaZwGWp8E_sZPRu_Ceg5VlrdD0sv9c__ipW8dBT0uNI2MssZDp7waT>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Oct 2024 09:16:51 -0400 (EDT)
+Date: Thu, 24 Oct 2024 15:16:50 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <ZxpIwkfg9_mHO3lq@archlinux>
+References: <202410031424.45E5D19@keescook>
+ <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
+ <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux>
+ <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <20241021192557.GA2041610@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SecureMailgate-Domain: web263.dogado.net
-X-SecureMailgate-Username: 31.47.255.43
-Authentication-Results: secure-mailgate.com; auth=pass smtp.auth=31.47.255.43@web263.dogado.net
-X-SecureMailgate-Outgoing-Class: ham
-X-SecureMailgate-Outgoing-Evidence: Combined (0.01)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+Di/w7YEBINGW0nwvCkZUyPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5yWDQ52YYvt9IisBTB4Q1BTDELDtmPLfdT2Vjpgvg+rlDS7
- ZzDoczvwl69Kp+t4ZfNPMFkC7dju0wVi9xVi6etz6t4nFv6HbQROxrKHBWdVz0bCVIVYbbDzsdz7
- jC0gj9bsucSeir9YkXOhPyRNXzDt2sHfcJwOEA9jKCSl094oPEA8vZNIz+4a7F8dfU2Fqbk2yWsN
- Z8gyqKw33bw2+EiXjgEQn6pw4NBZ8mDUNUFs7J2IA5RYNsQ2FJ5vBgmf1IHrXWU6cgGy8Nw/36CI
- Z8AWNlDo60GNfZ2F/yvXF5fp0ZC7J/Kxq6Wlezg2CfSW1DENoYkVbhZSPkZJaDp+CfVLudCSOzNy
- 9PUk3qu+PQAnn/V7TUmIicDOOWMzcOyJSvmS9X7umXUE4oWoGV4TyQjTv0kyaSBiWCAhy4JMoK+Q
- fW5+fLO9VVhpK4T4aCzoygxALto4Brt2dyUUhL+IPYnjcMOfNZZ7+Vw90V7OmzZlr23m0/SFC0zn
- ggTAyrq6gEQM2HNV91gBZQ/1Pbs8eo64jl36TXkSKbxR+NrMuhHwDU+tT6G6A1eH4vLMfHwjJ7+g
- ei65y0Nk9SLcHStypSM5+CyAq35eV5Znh58ZuD0Sly5wxy0DV+mfZOyx7yN0vJPMqA9uSzHf/EOh
- slWB0B8sZaOjZ/HsdGn4fWC/8/Uc4odvMYH3HM2nOIg1Q8cK42gKNzj+12gTeiYOwewVmnsVsQL4
- NXHrQIQdbY00d7mOmyRu9qsmwsU/3Onabsct4Toal0h743VOpKNY+4MjijihJW/2S6VsWr8v8wYU
- 22Gz7taKCC+ZDU9vfHgXkJXgxBoG4yf4TuzSUn4Eqv2AnTV4aIfVaCHpEB6cFH6WJxE4ZoQmEszT
- mvj5plaKBwW8kAExvt39Pt9gUdZK44J+sQGUc+HLqmn/pLC2GklQLRsGsoX0fOQPR5LGYRx/IHNE
- wGOtC2+FKqdOMATtOe3+6YoEw/O+Anfr832S2bh0h3+LfdufaG44omTNnk2+H8rLwHveYa7+ehlS
- W35MGtD26+UkLrogMSVlrPEWO9GJc1lxPlJx1/MWs0nunOY0mMo2j57SrYfhlozbi+DDGJdOZmGm
- maNdVZCPNCR8FQT9g6A3PUsRyHdQM1T4ZnIJmHmedG43iN+78rrGceX2Us+1iu/dlWkx9G5WKnjQ
- eRgRsesUUlf9uZG5Xlf2yOMcW110oNec2/lxh3SFN2BqdKJL9fPSszlVwj1n2JAvHUSGQgae9xme
- Szqs5sL/ee+qsUXMYe2z/zdoQyyytN1h7S0B/89UrnroWE66jLebXsBVS+Akcg==
-X-Report-Abuse-To: spam@node04.secure-mailgate.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021192557.GA2041610@thelio-3990X>
 
-Am Donnerstag, dem 24.10.2024 um 12:23 +0200 schrieb Vlastimil Babka:
-> On 10/24/24 11:58, Vlastimil Babka wrote:
-> > On 10/24/24 09:45, Thorsten Leemhuis wrote:
-> > > Hi, Thorsten here, the Linux kernel's regression tracker.
-> > >=20
-> > > Rik, I noticed a report about a regression in bugzilla.kernel.org tha=
-t
-> > > appears to be caused by the following change of yours:
-> > >=20
-> > > efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundarie=
-s")
-> > > [v6.7]
-> > >=20
-> > > It might be one of those "some things got faster, a few things became
-> > > slower" situations. Not sure. Felt odd that the reporter was able to
-> > > reproduce it on two AMD systems, but not on a Intel system. Maybe the=
-re
-> > > is a bug somewhere else that was exposed by this.
-> >=20
-> > It seems very similar to what we've seen with spec benchmarks such as c=
-actus
-> > and bisected to the same commit:
-> >=20
-> > https://bugzilla.suse.com/show_bug.cgi?id=3D1229012
-> >=20
-> > The exact regression varies per system. Intel regresses too but relativ=
-ely
-> > less. The theory is that there are many large-ish allocations that don'=
-t
-> > have individual sizes aligned to 2MB and would have been merged, commit
-> > efa7df3e3bb5da causes them to become separate areas where each aligns i=
-ts
-> > start at 2MB boundary and there are gaps between. This (gaps and vma
-> > fragmentation) itself is not great, but most of the problem seemed to b=
-e
-> > from the start alignment, which togethter with the access pattern cause=
-s
-> > more TLB or cache missess due to limited associtativity.
-> >=20
-> > So maybe darktable has a similar problem. A simple candidate fix could
-> > change commit efa7df3e3bb5da so that the mapping size has to be a multi=
-ple
-> > of THP size (2MB) in order to become aligned, right now it's enough if =
-it's
-> > THP sized or larger.
->=20
-> Maybe this could be enough to fix the issue? (on 6.12-rc4)
->=20
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 9c0fb43064b5..a5297cfb1dfc 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -900,7 +900,8 @@ __get_unmapped_area(struct file *file, unsigned long =
-addr, unsigned
-> long len,
-> =C2=A0
-> =C2=A0	if (get_area) {
-> =C2=A0		addr =3D get_area(file, addr, len, pgoff, flags);
-> -	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-> +	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)
-> +		=C2=A0=C2=A0 && IS_ALIGNED(len, PMD_SIZE)) {
-> =C2=A0		/* Ensures that larger anonymous mappings are THP aligned. */
-> =C2=A0		addr =3D thp_get_unmapped_area_vmflags(file, addr, len,
-> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0 pgoff, flags, vm_flags);
->=20
+Hi Nathan,
+
+Do you want me to add a Co-Developed-by tag for you? I feel bad just
+taking it.
+
+For reference here is the current state of the patch, still waiting on
+the merge into clang 19.1.x:
+
+It needs three prerequisite commits on top of 6.6.x, but unfortunately
+still requires a small amount of manual conflict resolution, but it's
+easy enough
+
+1. include/linux/compiler_types.h:
+	use the incoming change until before (but not including) the
+	"Apply __counted_by() when the Endianness matches to increase test coverage."
+	comment)
+
+2. lib/overflow_kunit.c: 
+	HEAD is correct
 
 
-Hi,=20
-here is Matthias, the reporter of the darktable issue
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219366
+From 6c667a43af0c57cd3f260fd75d5c4a198ba94220 Mon Sep 17 00:00:00 2001
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+Date: Thu, 17 Oct 2024 04:39:40 +0200
+Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
 
-I applied your patch to kernel 6.11.5 and it works. darktable pixel pipelin=
-e goes down to
-3.8 s with this patch.=C2=A0Same performance as with kernel 6.6.x. It was 4=
-.7 s without that
-patch.
+This patch disables __counted_by for clang versions < 19.1.3 because
+of the two issues listed below. It does this by introducing
+CONFIG_CC_HAS_COUNTED_BY.
 
+1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
+https://github.com/llvm/llvm-project/pull/110497
 
+2. clang < 19.1.3 has a bug that can lead to __bdos being off by 4:
+https://github.com/llvm/llvm-project/pull/112636
+
+Fixes: c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and identifier expansion")
+Cc: stable@vger.kernel.org # 6.6.x: 16c31dd7fdf6: Compiler Attributes: counted_by: bump min gcc version
+Cc: stable@vger.kernel.org # 6.6.x: 2993eb7a8d34: Compiler Attributes: counted_by: fixup clang URL
+Cc: stable@vger.kernel.org # 6.6.x: 231dc3f0c936: lkdtm/bugs: Improve warning message for compilers without counted_by support
+Cc: stable@vger.kernel.org # 6.6.x
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
+Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
+Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
+---
+ drivers/misc/lkdtm/bugs.c           |  2 +-
+ include/linux/compiler_attributes.h | 13 -------------
+ include/linux/compiler_types.h      | 19 +++++++++++++++++++
+ init/Kconfig                        |  8 ++++++++
+ lib/overflow_kunit.c                |  2 +-
+ 5 files changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 62ba01525479..376047beea3d 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -445,7 +445,7 @@ static void lkdtm_FAM_BOUNDS(void)
+ 
+ 	pr_err("FAIL: survived access of invalid flexible array member index!\n");
+ 
+-	if (!__has_attribute(__counted_by__))
++	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
+ 		pr_warn("This is expected since this %s was built with a compiler that does not support __counted_by\n",
+ 			lkdtm_kernel_info);
+ 	else if (IS_ENABLED(CONFIG_UBSAN_BOUNDS))
+diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+index 32284cd26d52..c16d4199bf92 100644
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -94,19 +94,6 @@
+ # define __copy(symbol)
+ #endif
+ 
+-/*
+- * Optional: only supported since gcc >= 15
+- * Optional: only supported since clang >= 18
+- *
+- *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+- * clang: https://github.com/llvm/llvm-project/pull/76348
+- */
+-#if __has_attribute(__counted_by__)
+-# define __counted_by(member)		__attribute__((__counted_by__(member)))
+-#else
+-# define __counted_by(member)
+-#endif
+-
+ /*
+  * Optional: not supported by gcc
+  * Optional: only supported since clang >= 14.0
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 1a957ea2f4fe..639be0f30b45 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -323,6 +323,25 @@ struct ftrace_likely_data {
+ #define __no_sanitize_or_inline __always_inline
+ #endif
+ 
++/*
++ * Optional: only supported since gcc >= 15
++ * Optional: only supported since clang >= 18
++ *
++ *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
++ * clang: https://github.com/llvm/llvm-project/pull/76348
++ *
++ * __bdos on clang < 19.1.2 can erroneously return 0:
++ * https://github.com/llvm/llvm-project/pull/110497
++ *
++ * __bdos on clang < 19.1.3 can be off by 4:
++ * https://github.com/llvm/llvm-project/pull/112636
++ */
++#ifdef CONFIG_CC_HAS_COUNTED_BY
++# define __counted_by(member)		__attribute__((__counted_by__(member)))
++#else
++# define __counted_by(member)
++#endif
++
+ /*
+  * Apply __counted_by() when the Endianness matches to increase test coverage.
+  */
+diff --git a/init/Kconfig b/init/Kconfig
+index 530a382ee0fe..5f1fe3583f20 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -116,6 +116,14 @@ config CC_HAS_ASM_INLINE
+ config CC_HAS_NO_PROFILE_FN_ATTR
+ 	def_bool $(success,echo '__attribute__((no_profile_instrument_function)) int x();' | $(CC) -x c - -c -o /dev/null -Werror)
+ 
++# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
++# https://github.com/llvm/llvm-project/pull/110497
++# https://github.com/llvm/llvm-project/pull/112636
++# TODO: when gcc 15 is released remove the build test and add gcc version check
++config CC_HAS_COUNTED_BY
++	def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
++	depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
++
+ config PAHOLE_VERSION
+ 	int
+ 	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+index 2abc78367dd1..5222c6393f11 100644
+--- a/lib/overflow_kunit.c
++++ b/lib/overflow_kunit.c
+@@ -1187,7 +1187,7 @@ static void DEFINE_FLEX_test(struct kunit *test)
+ {
+ 	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
+ 	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
+-#if __has_attribute(__counted_by__)
++#ifdef CONFIG_CC_HAS_COUNTED_BY
+ 	int expected_raw_size = sizeof(struct foo);
+ #else
+ 	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
+-- 
+2.47.0
