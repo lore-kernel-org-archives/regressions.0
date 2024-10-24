@@ -1,204 +1,185 @@
-Received: from mail-40141.protonmail.ch (mail-40141.protonmail.ch [185.70.40.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196C51714B0
-	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 13:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE381EABBD
+	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 14:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729778206; cv=none; b=iz0yBpMT7DKHKVdQJSj7RvYR1ncVVYxe8G8AnvUtYOqvPE1glx2JvZ4enCvQV/jHaN1qfE7IRhNccgHffyXqGUO77eh+QOntZUYUdm1pDRs/ZmxKS/Ug4PL7cnKZ4iXnWMpBcu/hpME2nahSxVO576DlI0qY0IFVNIE2+MjmQpc=
+	t=1729779283; cv=none; b=tE9Rs3sNnHqzTL61yPBtLOKOH8B5MtgNiK3ruI0tTbRV+KCp9eLwR2Vzq04XTjd8szeT424jDLjzD4QNfnhS9SM8iIw5isi+7hfWlXCCZlNFc4kAk9Hol8MtkUC4RYxmJDepwaV1vwwrVsv/I3UKkVwi0NE3JO1MCMLJKsbHA0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729778206; c=relaxed/simple;
-	bh=Bs1FG4XrGDFa6s8KshhYgWiyysPmb6ofq4bjBazVjRs=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jhTeeM0Y4ko7l+arinwtZ/vM8T2cfDWrPVjgOW/+VKHTEV2zN6yLbRF+6EMO2qPc6n5D8E3mhvestOp8AW65c0C7Ke92N6/ME2Y2C8HrpeKHXIJLmCQt+9+Mk0g761ioi7GviXm62/920OPZE3tlMrmYG4uKRZ/400cYiEzkAvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=kh5H7HBS; arc=none smtp.client-ip=185.70.40.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1729779283; c=relaxed/simple;
+	bh=7hZ731pVv4vAUrv+Xfq3c+tDnlWXTRLGwAiqz0jpnCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jxc07mw3eUZkaoE0DcqOZ8lek8uJ/nAXKLk5UFxtc+pK7QxsVcg3Co/0NVT4BhM0Znl2Shw7fyeEmbHJV5WsMlsHkSya7S+VAUwNbla+XU2mI+zwbSq9N+imsO+NxbfOaYCMdyaCSkB/q2HEaSavbY062vO4cz9BlyZMIHIF9Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dyrYqxuJ; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="kh5H7HBS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1729778195; x=1730037395;
-	bh=bcCezxVOZvxotA+T2aF5TjMOpW0NiuzhBzPhhwLDyho=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=kh5H7HBS4HKqdRXJZUC9VTgEhF5vz+6FoXvSnYsFySWiRTY/YmW2EGBizydEwsNyf
-	 G14mekT+Iq1SBQHn78AV9jXu2zlR1lxZKWb89JBuTXyaD6t/IfP5/Z9TRQXoi//aPD
-	 S2Z4HTav6dQE/sKkd3jbPGUL0WgiDoXANOApY24DCPEvSWmevQFVUfGY03qjxqlNnX
-	 XLpOpyyeLtDuvz+96l3Od1Lb/T/SpDqTfBes4jALt7PmgfmadmDr4UXB2msNTPV+hd
-	 jYJO9ykx0AJgRMtpldHO15Jjr5jhLrrrtev2U2rQxVBIf6hMl3j1oLaCgE0IPFB2qM
-	 RtrAbE/8sTELQ==
-Date: Thu, 24 Oct 2024 13:56:31 +0000
-To: o-takashi@sakamocchi.jp, edmund.raile@proton.me
-From: Edmund Raile <edmund.raile@proton.me>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: firewire-ohci: device rediscovery hardlock regression
-Message-ID: <8a9902a4ece9329af1e1e42f5fea76861f0bf0e8.camel@proton.me>
-Feedback-ID: 45198251:user:proton
-X-Pm-Message-ID: 26ae4aaa2b97bae0006e07cda1a119322468ea29
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dyrYqxuJ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4314e64eba4so1085955e9.2
+        for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 07:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1729779279; x=1730384079; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OQFzOo5CVCoEL91pQtXFsiJ0Cpv2r/dDWbECjn6yy18=;
+        b=dyrYqxuJfDcDWScACymnHblvlV32MaToEDxqo6LvP3B3xkl4C527vfVlQ8uWslbAcr
+         0IwL+H4KxHhAwsNjmeGbxfyxvFzd6gLszEvB4SOZpeCCrPEm+NimPw72RN2qLsMgVDv9
+         V02LGDl9Xlncs480H0/jkp1HYgsVsX7JJ/aalBNyZwy107I/qFjhS3DV0nO/12aJc2hK
+         ONLn0P+4VkKCLStkE5P6SY/2NJ4EpviejaH7TWC3uA4DmNCyROgVBdXg3/J1WyyRlQ3C
+         t3nBbLriCoSQTnxmxV4kiIjHSPW4eAMMfDGKA4g6Ur28XowoHg0MQp33+Qj8hv1/+Zoo
+         7nuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729779279; x=1730384079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OQFzOo5CVCoEL91pQtXFsiJ0Cpv2r/dDWbECjn6yy18=;
+        b=LPmAylFpoZsTTJy9lFdLJjItTnncKHjiW3uStUV5ijcnXaRWHYKouKCBO2JHzFuzCd
+         +e3qUo2yNc2HRr7E9i4ra/ysypVBaBZO7pTNJ5JRSOQbDwT1HpBrC/4gHMz52BpTCiuX
+         d8lf9nSSadsxnPae65/5TUzh+vcPWN/pePB6y5/v1mzjw+xArKfDXy3PV3ubZ/cTsCrl
+         b0bkMuas3QNdsPowN5H6pnvuwXo9rDymslkmenyw2CtjDRNbKOuto53sRh/+NpcaKwJV
+         T25/o/SpxxKsRTmpV3WZ6mThuf2ygmvv54tLJyH4BnKXx1rT5YKJ5lylsvIiK1omjQmE
+         aH6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVnSlByU1r4RM7L5ocRg9NcPUhK8CoIxks5c5f9QUzgMeReEaQY95iSCoubauQl4+6oboIBsOipMdbFIA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzWnlY1tAcAxSX2IKT9FRl6qlb8ZqUhfS9d46SJieiWQwRtwFym
+	t8bsmPZMu525JytLHbfaXEJCS603AWUotosKBpd5klzmAWHmZ9RjMje+P9XRzZA=
+X-Google-Smtp-Source: AGHT+IFxtSZQXQIWvRKt7WWnElnMVbb/MwJke6BBx6dlXxrWvHPkhdiGUWHAnC7FM+E6yAuMmQHS5w==
+X-Received: by 2002:a05:600c:4588:b0:42c:aeee:80b with SMTP id 5b1f17b1804b1-431841c9cd1mr22288515e9.8.1729779279027;
+        Thu, 24 Oct 2024 07:14:39 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186c1ef8dsm46649345e9.47.2024.10.24.07.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 07:14:38 -0700 (PDT)
+Date: Thu, 24 Oct 2024 16:14:36 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Rik van Riel
+ <riel@surriel.com>, Matthias <matthias@bodenbinder.de>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ Linux-MM <linux-mm@kvack.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Matthew Wilcox <willy@infradead.org>
+Subject: Re: darktable performance regression on AMD systems caused by "mm:
+ align larger anonymous mappings on THP boundaries"
+Message-ID: <20241024161436.625579e3@mordecai.tesarici.cz>
+In-Reply-To: <9d7c73f6-1e1a-458b-93c6-3b44959022e0@suse.cz>
+References: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
+	<f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
+	<ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
+	<20241024124953.5d77c0b3@mordecai.tesarici.cz>
+	<a7585f3e-d6c7-4982-8214-63a7ec6258ad@suse.cz>
+	<20241024131331.6ee16603@mordecai.tesarici.cz>
+	<9d7c73f6-1e1a-458b-93c6-3b44959022e0@suse.cz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Thu, 24 Oct 2024 15:29:35 +0200
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-I'd like to report a regression in firewire-ohci that results
-in the kernel hardlocking when re-discovering a FireWire device.
+> On 10/24/24 13:13, Petr Tesarik wrote:
+> > On Thu, 24 Oct 2024 12:56:27 +0200
+> > Vlastimil Babka <vbabka@suse.cz> wrote:
+> >   
+> >> On 10/24/24 12:49, Petr Tesarik wrote:  
+> >> > On Thu, 24 Oct 2024 12:23:48 +0200
+> >> > Vlastimil Babka <vbabka@suse.cz> wrote:
+> >> >     
+> >> >> On 10/24/24 11:58, Vlastimil Babka wrote:    
+> >> >> > On 10/24/24 09:45, Thorsten Leemhuis wrote:      
+> >> >> >> Hi, Thorsten here, the Linux kernel's regression tracker.
+> >> >> >> 
+> >> >> >> Rik, I noticed a report about a regression in bugzilla.kernel.org that
+> >> >> >> appears to be caused by the following change of yours:
+> >> >> >> 
+> >> >> >> efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundaries")
+> >> >> >> [v6.7]
+> >> >> >> 
+> >> >> >> It might be one of those "some things got faster, a few things became
+> >> >> >> slower" situations. Not sure. Felt odd that the reporter was able to
+> >> >> >> reproduce it on two AMD systems, but not on a Intel system. Maybe there
+> >> >> >> is a bug somewhere else that was exposed by this.      
+> >> >> > 
+> >> >> > It seems very similar to what we've seen with spec benchmarks such as cactus
+> >> >> > and bisected to the same commit:
+> >> >> > 
+> >> >> > https://bugzilla.suse.com/show_bug.cgi?id=1229012
+> >> >> > 
+> >> >> > The exact regression varies per system. Intel regresses too but relatively
+> >> >> > less. The theory is that there are many large-ish allocations that don't
+> >> >> > have individual sizes aligned to 2MB and would have been merged, commit
+> >> >> > efa7df3e3bb5da causes them to become separate areas where each aligns its
+> >> >> > start at 2MB boundary and there are gaps between. This (gaps and vma
+> >> >> > fragmentation) itself is not great, but most of the problem seemed to be
+> >> >> > from the start alignment, which togethter with the access pattern causes
+> >> >> > more TLB or cache missess due to limited associtativity.
+> >> >> > 
+> >> >> > So maybe darktable has a similar problem. A simple candidate fix could
+> >> >> > change commit efa7df3e3bb5da so that the mapping size has to be a multiple
+> >> >> > of THP size (2MB) in order to become aligned, right now it's enough if it's
+> >> >> > THP sized or larger.      
+> >> >> 
+> >> >> Maybe this could be enough to fix the issue? (on 6.12-rc4)    
+> >> > 
+> >> > 
+> >> > Yes, this should work. I was unsure if thp_get_unmapped_area_vmflags()
+> >> > differs in other ways from mm_get_unmapped_area_vmflags(), which might
+> >> > still be relevant. I mean, does mm_get_unmapped_area_vmflags() also
+> >> > prefer to allocate THPs if the virtual memory block is large enough?    
+> >> 
+> >> Well any sufficiently large area spanning a PMD aligned/sized block (either
+> >> a result of a single allocation or merging of several allocations) can
+> >> become populated by THPs (at least in those aligned blocks), and the
+> >> preference depends on system-wide THP settings and madvise(MADV_HUGEPAGE) or
+> >> prctl.
+> >> 
+> >> But mm_get_unmapped_area_vmflags() will AFAIK not try to align the area to
+> >> PMD size like the thp_ version would, even if the request is large enough.  
+> > 
+> > Then it sounds like exactly what we want. But I prefer to move the
+> > check down to __thp_get_unmapped_area() like this:  
+> 
+> I wanted to limit the fix to the place commit efa7df3e3bb5da changes, i.e.
+> anonymous mappings, because there are other callers of
+> __thp_get_unmapped_area(), namely the filesystems via
+> thp_get_unmapped_area() and I wasn't sure if that wouldn't regress them. But
+> since you suggested I had a brief look now...
+> 
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 2fb328880b50..8d80f3af5525 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -1082,6 +1082,9 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+> >  	if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+> >  		return 0;
+> >  
+> > +	if (!IS_ALIGNED(len, size))
+> > +		return 0;  
+> 
+> I think the filesystem might be asked to create a mapping for e.g. a
+> [1MB, 4MB] range from a file, thus the offset would be 1MB (with anonymous
+> pages an off=0 is passed) and the current implementation would try to do the
+> right thing for that (align the [2MB, 4MB] range to THP) but after your
+> patch it would see len is 3MB and give up, no?
 
-TI XIO2213B
-RME FireFace 800
+I'm probably showing my ignorance, but I didn't know it is somehow
+beneficial to align THP boundaries with corresponding file offsets. In
+that case you're right, and the check should be limited to anonymous
+mappings.
 
-It will occur under three conditions:
- * power-cycling the FireWire device
- * un- and re-plugging the FireWire device
- * suspending and then waking the PC
+Petr T
 
-Often it would also occur directly on boot in QEMU but I have not
-yet observed this specific behavior on bare metal.
-
-Here is an excerpt from the stack trace (don't know whether it is
-acceptable to send in full):
-
-kernel: ------------[ cut here ]------------
-kernel: refcount_t: addition on 0; use-after-free.
-kernel: WARNING: CPU: 3 PID: 116 at lib/refcount.c:25
-refcount_warn_saturate (/build/linux/lib/refcount.c:25 (discriminator
-1))=20
-kernel: Workqueue: firewire_ohci bus_reset_work
-kernel: RIP: 0010:refcount_warn_saturate
-(/build/linux/lib/refcount.c:25 (discriminator 1))=20
-kernel: Call Trace:
-kernel:  <TASK>
-kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
-(discriminator 1))=20
-kernel: ? __warn.cold (/build/linux/kernel/panic.c:693)=20
-kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
-(discriminator 1))=20
-kernel: ? report_bug (/build/linux/lib/bug.c:180
-/build/linux/lib/bug.c:219)=20
-kernel: ? handle_bug (/build/linux/arch/x86/kernel/traps.c:218)=20
-kernel: ? exc_invalid_op (/build/linux/arch/x86/kernel/traps.c:260
-(discriminator 1))=20
-kernel: ? asm_exc_invalid_op
-(/build/linux/./arch/x86/include/asm/idtentry.h:621)=20
-kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
-(discriminator 1))=20
-kernel: for_each_fw_node (/build/linux/./include/linux/refcount.h:190
-/build/linux/./include/linux/refcount.h:241
-/build/linux/./include/linux/refcount.h:258
-/build/linux/drivers/firewire/core.h:199
-/build/linux/drivers/firewire/core-topology.c:275)=20
-kernel: ? __pfx_report_found_node (/build/linux/drivers/firewire/core-
-topology.c:312)=20
-kernel: fw_core_handle_bus_reset (/build/linux/drivers/firewire/core-
-topology.c:399 (discriminator 1) /build/linux/drivers/firewire/core-
-topology.c:504 (discriminator 1))=20
-kernel: bus_reset_work (/build/linux/drivers/firewire/ohci.c:2121)=20
-kernel: process_one_work
-(/build/linux/./arch/x86/include/asm/jump_label.h:27
-/build/linux/./include/linux/jump_label.h:207
-/build/linux/./include/trace/events/workqueue.h:110
-/build/linux/kernel/workqueue.c:3236)=20
-kernel: worker_thread (/build/linux/kernel/workqueue.c:3306
-(discriminator 2) /build/linux/kernel/workqueue.c:3393 (discriminator
-2))=20
-kernel: ? __pfx_worker_thread (/build/linux/kernel/workqueue.c:3339)=20
-kernel: kthread (/build/linux/kernel/kthread.c:389)=20
-kernel: ? __pfx_kthread (/build/linux/kernel/kthread.c:342)=20
-kernel: ret_from_fork (/build/linux/arch/x86/kernel/process.c:153)=20
-kernel: ? __pfx_kthread (/build/linux/kernel/kthread.c:342)=20
-kernel: ret_from_fork_asm (/build/linux/arch/x86/entry/entry_64.S:254)=20
-kernel:  </TASK>
-
-I have identified the commit via bisection:
-24b7f8e5cd656196a13077e160aec45ad89b58d9
-firewire: core: use helper functions for self ID sequence
-
-It was part of the following patch series:
-firewire: add tracepoints events for self ID sequence
-https://lore.kernel.org/all/20240605235155.116468-6-o-takashi@sakamocchi.jp=
-/
-
-#regzbot introduced: 24b7f8e5cd65
-
-Since this was before v6.10-rc5 and stable 6.10.14 is EOL,
-stable v6.11.5 and mainline are affected.
-
-Reversion appears to be non-trivial as it is part of a patch
-series, other files have been altered as well and other commits
-build on top of it.
-
-Call chain:
-core-topology.c fw_core_handle_bus_reset()
--> core-topology.c   for_each_fw_node(card, local_node,
-report_found_node)
--> core.h            fw_node_get(root)
--> refcount.h        __refcount_inc(&node)
--> refcount.h        __refcount_add(1, r, oldp);
--> refcount.h        refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
--> refcount.h        REFCOUNT_WARN("addition on 0; use-after-free")
-
-Since local_node of fw_core_handle_bus_reset() is retrieved by
-=09local_node =3D build_tree(card, self_ids, self_id_count);
-build_tree() needs to be looked at, it was indeed altered by
-24b7f8e5cd65.
-
-After a hard 3 hour look traversing all used functions and comparing
-against the original function (as of e404cacfc5ed), this caught my eye:
-       for (port_index =3D 0; port_index < total_port_count;
-++port_index) {
-               switch (port_status) {
-               case PHY_PACKET_SELF_ID_PORT_STATUS_PARENT:
-                       node->color =3D i;
-
-In both for loops, "port_index" was replaced by "i"
-"i" remains in use above:
-       for (i =3D 0, h =3D &stack; i < child_port_count; i++)
-               h =3D h->prev;
-
-While the original also used the less descriptive i in the loop
-       for (i =3D 0; i < port_count; i++) {
-               switch (get_port_type(sid, i)) {
-               case SELFID_PORT_PARENT:
-                        node->color =3D i;
-but reset it to 0 at the beginning of the loop.
-
-So the stray "i" in the for loop should be replaced with the loop
-iterator "port_index" as it is meant to be synchronous with the
-loop iterator (i.e. the port_index), no?
-
-diff --git a/drivers/firewire/core-topology.c b/drivers/firewire/core-
-topology.c
-index 8c10f47cc8fc..7fd91ba9c9c4 100644
---- a/drivers/firewire/core-topology.c
-+++ b/drivers/firewire/core-topology.c
-@@ -207,7 +207,7 @@ static struct fw_node *build_tree(struct fw_card
-*card, const u32 *sid, int self
-                                // the node->ports array where the
-parent node should be.  Later,
-                                // when we handle the parent node, we
-fix up the reference.
-                                ++parent_count;
--                               node->color =3D i;
-+                               node->color =3D port_index;
-                                break;
-
-What threw me off was discaridng node->color as it would be replaced
-later anyways (can't be important!), or so I thought.
-
-Please tell me, is this line of reasoning correct or am I missing
-something?
-
-Compiling 24b7f8e5cd65 and later mainline with the patch above
-resulted in a kernel that didn't crash!
-
-In case my solution should turn out to be correct, I will gladly
-submit the patch.
-
-Kind regards,
-Edmund Raile.
-
+> > +
+> >  	if (off_end <= off_align || (off_end - off_align) < size)
+> >  		return 0;
+> >    
+> 
 
