@@ -1,221 +1,143 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FF41C07DF
-	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 10:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68AE15A843
+	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 10:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729765432; cv=none; b=gp7jBhixWM3D9Gg4p3bH8lN4PO47F5WtRx13SMuWo5QXWYn7sh1Dp6sGe9vwXKL9k+K7V4ayFzZAh6gPYHRiZ7nBmw4y6vmyntHGygXt0fuAJFMzy5QQh+oOH0bpiI+Xi1mCthjYfpYKg7woa6oOGFYR4BXEeLjUPeyt8vUl8JM=
+	t=1729767000; cv=none; b=IdOSlYp5P0aaiQOQLoaFFJXy6hcqYK0/vS2uIZMUcpHJbTuZlcy0y10UrPPf8RXtfXoWTW2wh9bwJFU/vHJWVFksriVj6L/0t5A+5f2AXOTJ+hXJiTPXP9HPIIM8BdPnhBK2KvL3zqCZSeK4ikmlci1kaEdtP/TUsYsqLOUmIeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729765432; c=relaxed/simple;
-	bh=K9+PVgJ4QLzQTNJ7284HGN6FKpDzsZiLxAx03A0sbMg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RDXaueaAQxDyvEqRYNIa7D23pkHvbtRrnM4HnK1dwtCZNiEqWrAOdkWhwxziSscqjQskf8J8QGD37b0snyEIZRE/ekoa1O0iEDiyhbafTwvtZXnwpCFRduHix7bnKLLvlDAycMuQ+jGEsaziZY8eNzp7RC5PYhqHU0qfIJCWHZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1sHTJhXr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g+FX7HKc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1sHTJhXr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g+FX7HKc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1729767000; c=relaxed/simple;
+	bh=Q9Mh9moQAsXNRpY4Xh7F9/cES2XHhBn6sfRp7Nr7g4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NKMD9UrUuvOc7B7BNjptV1G5sRyThWcAyneT3a/0HykYd4UeWpOKXtzelkKt/WbSTfcjrFLw0e2E4OmVSe8NBIfQV9RIaKEgQfCTld8wsyBTHlCoElx//aHgh35txpWtH+e/wYXgn1KsFAg9FtRo105M0gYNdzp19sJJ/Z14aQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GqjoxTQe; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1sHTJhXr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g+FX7HKc";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1sHTJhXr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g+FX7HKc"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 605B11FB40;
-	Thu, 24 Oct 2024 10:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729765428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6FLhILfbPiEBCiN9SHFKWQURQTQMt2eKXUD1yQfLPFE=;
-	b=1sHTJhXrIPDG+Q1OIDpDAY5cw7NThmx2HKTb+6NefKUpz46N0Fm0mYz0g6N4wk3aF/mXLe
-	p/WfJ+WvbBJx3GQ6SYzBi2rBNoHHzxd9jcpx8h0siDBBIViWKOJOIO2zFj8vk/orn7xHCO
-	ueN7yYfM4bE3sjAscvJT/Y9Oum8ixTU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729765428;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6FLhILfbPiEBCiN9SHFKWQURQTQMt2eKXUD1yQfLPFE=;
-	b=g+FX7HKc4q8AVWs9Ab5wSVx8jUs/LfhRNu1WQL/ICf0qFHx0FYmFPbNdeHP3qBNuzBxoLe
-	asOoHvssO3lnlTBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1sHTJhXr;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=g+FX7HKc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1729765428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6FLhILfbPiEBCiN9SHFKWQURQTQMt2eKXUD1yQfLPFE=;
-	b=1sHTJhXrIPDG+Q1OIDpDAY5cw7NThmx2HKTb+6NefKUpz46N0Fm0mYz0g6N4wk3aF/mXLe
-	p/WfJ+WvbBJx3GQ6SYzBi2rBNoHHzxd9jcpx8h0siDBBIViWKOJOIO2zFj8vk/orn7xHCO
-	ueN7yYfM4bE3sjAscvJT/Y9Oum8ixTU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1729765428;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6FLhILfbPiEBCiN9SHFKWQURQTQMt2eKXUD1yQfLPFE=;
-	b=g+FX7HKc4q8AVWs9Ab5wSVx8jUs/LfhRNu1WQL/ICf0qFHx0FYmFPbNdeHP3qBNuzBxoLe
-	asOoHvssO3lnlTBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 466B6136F5;
-	Thu, 24 Oct 2024 10:23:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yK50EDQgGmdhXAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 24 Oct 2024 10:23:48 +0000
-Message-ID: <ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
-Date: Thu, 24 Oct 2024 12:23:48 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GqjoxTQe"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43158124a54so1130135e9.3
+        for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 03:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1729766996; x=1730371796; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=loWmohrD0u9En+NaaMGpd3qTcGdZJB6GKDjj4u9HyTo=;
+        b=GqjoxTQew66CAaznfclCYOeXhLBl84bQZjvqD7o1tKyARvhAwC6pfXuHM0rN9IpX0Y
+         VpLy/NEwOogPj2DwpoLFmdZO850qpJ+4hc4w55jiU9U27SupXu4vYvyRBuGEqsaamf4v
+         oWZ4KHuah19h/Cvf2/QZqgsh+6Hww47gCMNccZZrKn6hrdQbhNyGLsCIp7v3v1ymNiFD
+         fC7lZFvb0rzL1Fpk8uBwMUqbKNwkHx4kxAf+UF76nzO63PVnHvBEuWvw2WaIGiBujR+I
+         HXM8Qlcr65h8/YjoAD0jqUv+99baHFJomGO6pNyZC9hFiiJG8DGhWaBszemsZVDhuv7/
+         P4KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729766996; x=1730371796;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=loWmohrD0u9En+NaaMGpd3qTcGdZJB6GKDjj4u9HyTo=;
+        b=NICHgGQC86/SYBU3KR71ncsW44LFWAMdAXSQoI/yAfkkteHFMrxU3vdoWIqMOMY3wZ
+         9n0ePaxlJO0zzuQXJqVuxxic6Cs8GbIaw7msV4KdM2jG5EZ4sYoXCw0Zb4X9R01Jm5Jk
+         TS2d2Ta1mwwmbKuAtg/lxPOoZuqohBpSGuLNifQUMa4moPuGThItNrw7Xaj2ao+mLvRJ
+         gjAYfcYcGiWn7XwNT6IQXbjqg+8HDZir+kE9xY02zDnumt0vWi2tycqjAOYhsku48vpd
+         xp5lRLGy958bE93V458/YOUBGzZ9Nv86eSuH5esFrfl364RP8fcULvXeObFKFzwDZgAU
+         L8FA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbPNBVLeD1LF8CCaOK9XTnS7liC7wnl8N9qX5Q8TK8dUGgjIze+9siZQR6gl3xPqKUfs+ka0r21HzgNw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNYPiK+djqywRTYJesrvH3/w08TsVKNCYQ3R4iEeSsGlKXGqYC
+	NQuq3xJiitlWpUE2TgbnE79w3ERJ03sp6OT7ALbbB42xNxCGGhhR4fe7nW1MmxA=
+X-Google-Smtp-Source: AGHT+IH/mWHsBy1Th/KpM7QX0bH6dEt5y+/WtHFyadVPtQC3xZUeuSoB1grvDqXfiwwsRXGlOAapNA==
+X-Received: by 2002:a05:600c:1d06:b0:42c:bfd6:9d2f with SMTP id 5b1f17b1804b1-43184133ef0mr22694795e9.1.1729766996094;
+        Thu, 24 Oct 2024 03:49:56 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0a37d25sm10990154f8f.23.2024.10.24.03.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 03:49:55 -0700 (PDT)
+Date: Thu, 24 Oct 2024 12:49:53 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Rik van Riel
+ <riel@surriel.com>, Matthias <matthias@bodenbinder.de>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ Linux-MM <linux-mm@kvack.org>, Yang Shi <yang@os.amperecomputing.com>
+Subject: Re: darktable performance regression on AMD systems caused by "mm:
+ align larger anonymous mappings on THP boundaries"
+Message-ID: <20241024124953.5d77c0b3@mordecai.tesarici.cz>
+In-Reply-To: <ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
+References: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
+	<f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
+	<ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: darktable performance regression on AMD systems caused by "mm:
- align larger anonymous mappings on THP boundaries"
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Rik van Riel <riel@surriel.com>
-Cc: Matthias <matthias@bodenbinder.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
- Yang Shi <yang@os.amperecomputing.com>, Petr Tesarik <ptesarik@suse.com>
-References: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
- <f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 605B11FB40
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.com:url]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
 
-On 10/24/24 11:58, Vlastimil Babka wrote:
-> On 10/24/24 09:45, Thorsten Leemhuis wrote:
->> Hi, Thorsten here, the Linux kernel's regression tracker.
->> 
->> Rik, I noticed a report about a regression in bugzilla.kernel.org that
->> appears to be caused by the following change of yours:
->> 
->> efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundaries")
->> [v6.7]
->> 
->> It might be one of those "some things got faster, a few things became
->> slower" situations. Not sure. Felt odd that the reporter was able to
->> reproduce it on two AMD systems, but not on a Intel system. Maybe there
->> is a bug somewhere else that was exposed by this.
-> 
-> It seems very similar to what we've seen with spec benchmarks such as cactus
-> and bisected to the same commit:
-> 
-> https://bugzilla.suse.com/show_bug.cgi?id=1229012
-> 
-> The exact regression varies per system. Intel regresses too but relatively
-> less. The theory is that there are many large-ish allocations that don't
-> have individual sizes aligned to 2MB and would have been merged, commit
-> efa7df3e3bb5da causes them to become separate areas where each aligns its
-> start at 2MB boundary and there are gaps between. This (gaps and vma
-> fragmentation) itself is not great, but most of the problem seemed to be
-> from the start alignment, which togethter with the access pattern causes
-> more TLB or cache missess due to limited associtativity.
-> 
-> So maybe darktable has a similar problem. A simple candidate fix could
-> change commit efa7df3e3bb5da so that the mapping size has to be a multiple
-> of THP size (2MB) in order to become aligned, right now it's enough if it's
-> THP sized or larger.
+On Thu, 24 Oct 2024 12:23:48 +0200
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-Maybe this could be enough to fix the issue? (on 6.12-rc4)
+> On 10/24/24 11:58, Vlastimil Babka wrote:
+> > On 10/24/24 09:45, Thorsten Leemhuis wrote:  
+> >> Hi, Thorsten here, the Linux kernel's regression tracker.
+> >> 
+> >> Rik, I noticed a report about a regression in bugzilla.kernel.org that
+> >> appears to be caused by the following change of yours:
+> >> 
+> >> efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundaries")
+> >> [v6.7]
+> >> 
+> >> It might be one of those "some things got faster, a few things became
+> >> slower" situations. Not sure. Felt odd that the reporter was able to
+> >> reproduce it on two AMD systems, but not on a Intel system. Maybe there
+> >> is a bug somewhere else that was exposed by this.  
+> > 
+> > It seems very similar to what we've seen with spec benchmarks such as cactus
+> > and bisected to the same commit:
+> > 
+> > https://bugzilla.suse.com/show_bug.cgi?id=1229012
+> > 
+> > The exact regression varies per system. Intel regresses too but relatively
+> > less. The theory is that there are many large-ish allocations that don't
+> > have individual sizes aligned to 2MB and would have been merged, commit
+> > efa7df3e3bb5da causes them to become separate areas where each aligns its
+> > start at 2MB boundary and there are gaps between. This (gaps and vma
+> > fragmentation) itself is not great, but most of the problem seemed to be
+> > from the start alignment, which togethter with the access pattern causes
+> > more TLB or cache missess due to limited associtativity.
+> > 
+> > So maybe darktable has a similar problem. A simple candidate fix could
+> > change commit efa7df3e3bb5da so that the mapping size has to be a multiple
+> > of THP size (2MB) in order to become aligned, right now it's enough if it's
+> > THP sized or larger.  
+> 
+> Maybe this could be enough to fix the issue? (on 6.12-rc4)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 9c0fb43064b5..a5297cfb1dfc 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -900,7 +900,8 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
- 
- 	if (get_area) {
- 		addr = get_area(file, addr, len, pgoff, flags);
--	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-+	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)
-+		   && IS_ALIGNED(len, PMD_SIZE)) {
- 		/* Ensures that larger anonymous mappings are THP aligned. */
- 		addr = thp_get_unmapped_area_vmflags(file, addr, len,
- 						     pgoff, flags, vm_flags);
+
+Yes, this should work. I was unsure if thp_get_unmapped_area_vmflags()
+differs in other ways from mm_get_unmapped_area_vmflags(), which might
+still be relevant. I mean, does mm_get_unmapped_area_vmflags() also
+prefer to allocate THPs if the virtual memory block is large enough?
+
+Petr T
+
+> 
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 9c0fb43064b5..a5297cfb1dfc 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -900,7 +900,8 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
+>  
+>  	if (get_area) {
+>  		addr = get_area(file, addr, len, pgoff, flags);
+> -	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> +	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)
+> +		   && IS_ALIGNED(len, PMD_SIZE)) {
+>  		/* Ensures that larger anonymous mappings are THP aligned. */
+>  		addr = thp_get_unmapped_area_vmflags(file, addr, len,
+>  						     pgoff, flags, vm_flags);
+> 
 
