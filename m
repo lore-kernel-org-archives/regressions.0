@@ -1,148 +1,150 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2BF15573D;
-	Thu, 24 Oct 2024 07:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBE11AC445
+	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 08:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729755914; cv=none; b=rIN107A7T81L2QRac4RScfXCqKuStDxPqeUL8dAC6FHnjIYnzVFgoUiPG6nRHpm29NAz05RuQC/AEPodRd2fJcuEmJK4KO5xygbXU2HBbqWTUFK0aW69KRKw2gfx8iXWIMxhpGT+aVLR5lmfJp7DJ8V0ixICOyQ4xDlXOCQ9YVM=
+	t=1729757364; cv=none; b=C2ZlV/q3e2tDAkaBxZ2TBK9V0jpP4EgKLQnC9flZ8QxooHDp6t5mlI7g8Y/i8xP0RETG9ix6ocvgo6abO9hwz14jxMM8EZRnER0iNdSMjaiLuNvylSaVkUb2LOQx8fGJhlRMRGp96VL0DT0nfmVT4+o3gzGvNwbrJRpy9MHagoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729755914; c=relaxed/simple;
-	bh=QqjRQ9Z7EFjHhrZxhpnQHdFmOfdAcs3Qn3WVkNTGs7g=;
-	h=Message-ID:Date:MIME-Version:From:Subject:Cc:To:Content-Type; b=HmvE05nNoQYPCN8zJ2t9Zaj4C2By86LUm4zwm9PVtamREbl4prgl6xsnL9qPuE4lOlr3xxpPyI/U7DdES8qP9WHl49Va+2gc0hWRLkioIDq/4Dy27ACbbEILx63Am/eUyBSiTIuY2KhiQfjNEpWGYEhRJF2AqsML4+W9QFh0qh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XW+zhzq5; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1729757364; c=relaxed/simple;
+	bh=WOqw0Djbc9Hh1hvZsJrtM4woJlLdorFI6wJMRtv0hfg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ZNAvyYh8MimhqQqG4Cp416mH3K2ay/FuvPSSY3hTZh/YS2pNNoK74zouq9RaokH/zvhVnLrmh/5H9nERCUd+uVfpvO88QaCzmNjMb89pTVYTPe16nHF+aHZ5jw4nivOD9aOXXKWGMNXpXPvMzhEnFKFrgMWgucQRitNiF56Y5HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Y6zDDair; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cxKxF3cN; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XW+zhzq5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:To:Cc:
-	Subject:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=x7zQv6WLWCBckv+xucBTETL7MnDWTDn514ggvPhcUaw=; t=1729755911; x=1730187911;
-	 b=XW+zhzq5DkmeCt+mO1c+f1F0ZrsC+VUdDjZ0+dsr6sDAx3LnZQmiuMLd8Z5oFHbVHbIuiy+vWJ
-	fgkeeZlcFFyJsYbFkeeeixOdVg3gwRVhT0RxcnnEV3XGXFvcInCFSqkgiNteVMmqnfcx4hUFW48FU
-	EQFYRnH7Sf3wCtsnjHmLs2bGVzRRd0+9jIadD1VnDP9Sfrh0gtXnBy583mI25x5TaKxUMzZdaoZ8p
-	fB40uvf1Ijtq0VL7YA3u6cL94QZYS8uaNoM87wCf36t6mrEzxUxJJ5ItLggL989B2ABVm8VV73cBc
-	DTRTOluKq4ymwmRzRKUatk2ax4a/QRFcCNYWg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t3sWq-00086o-F3; Thu, 24 Oct 2024 09:45:08 +0200
-Message-ID: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
-Date: Thu, 24 Oct 2024 09:45:07 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Y6zDDair";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cxKxF3cN"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 9641313806C7;
+	Thu, 24 Oct 2024 04:09:17 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Thu, 24 Oct 2024 04:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1729757357;
+	 x=1729843757; bh=gQaF+79cQZijj/qtQUTCeQHllpXrfS9t+GtV65dW5Oc=; b=
+	Y6zDDair2auGgJ9yJm7Xao/KZ5t61AUvksK8EAMlltt3bkedIhgVWL+c954aObHN
+	FmcnLvlXPzy1lJZeO0ACOpk0TwpOXv3XB3v9bLwbP8OGY85vk5bnKqASCLqW/Lbq
+	oYxLtq5XvquwNfcdHc4AyZSrUIDvGcLRruy9rwkpR3Gsab1YhHu1VewkwA+isKzO
+	dgq7TcsZn2E5b2Rp8quz2IVmqK4H+dV88Dn9ONLgBmbwrQJoxRWcMRvWofL7N5fd
+	QLF6W7ZB+MJVRjnIs32MEvi5iEP82jhtknw2pWJKPIP1tjxelafRoB4UiFsBTcfX
+	yviDVOIc+G/XFZutPeBmiA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729757357; x=
+	1729843757; bh=gQaF+79cQZijj/qtQUTCeQHllpXrfS9t+GtV65dW5Oc=; b=c
+	xKxF3cNKAaNnqqX6Rc3YFMnYG4hFQo9LHPNz5xRKI83FuWoMtOxYYrOcPFcWKfZu
+	tBnA6PJ2qDM7Jzz1Yrhct2XZqZ2hywxRB3hh9aqG3ODefpAc6OvGc/lvjVleq1zz
+	GLNxUgmJ6hWIlqCqVV1u2hNVlZxysfJL9e2CsPtK4tcRpuyXIr80T1c1mEUGCdl2
+	8sLT+k/kACPvbM9vVOFZ4VLC0SYOoe7/zFEJQ4gOnpym1bTDDh05XnT0/8waOKjD
+	GQDtI4/5WRXwvDFxhhTkdaUp+IzF6edAd1ek8ROW4BmaWKlf4Ao46Jdg7ZbbbH6F
+	jT65P+QdebciGlZt54TyQ==
+X-ME-Sender: <xms:rAAaZ0Bhc7XczeK7eJeFtem9jzEH9pHq_cPfYCwlqXKnBxNyVOcZgA>
+    <xme:rAAaZ2gEdlovl0LfbO7md2A-DpV9UeMaaCFB2TdxgGzGRnwWxNimid-hoezmtqEBl
+    XwMC7dENMj9YANpv7Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeikedguddvkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    hedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghishhhfigrrhihrgdrthgtvh
+    esrghrmhdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhm
+    rdgtohhmpdhrtghpthhtohepvhhinhgtvghniihordhfrhgrshgtihhnohesrghrmhdrtg
+    homhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegrlhgvgidrsggvnhhnvggvsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhguvg
+    hrshdrrhhogigvlhhlsehlihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdr
+    khgrmhgsohhjuheslhhinhgrrhhordhorhhgpdhrtghpthhtohepphgvthgvrhdrmhgrhi
+    guvghllheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhho
+    nhhigidruggv
+X-ME-Proxy: <xmx:rAAaZ3modcPYmbhmjeiCKDtq1LQcqMDT6wTUWXA8ugMbAeSZpb2lQA>
+    <xmx:rAAaZ6zd5HCKTVOV2laCRu2xpkuq87wrPKzjkDwENLJlDjPpax8Xww>
+    <xmx:rAAaZ5Subm_pW2L-7btFlIz6r-p7ZlGl2Z15yV-KvOzhsZkWLCtOmg>
+    <xmx:rAAaZ1bpT6zSiigOeFaPihqe_9PBzNZSqHFZUqkJ6s7ILjQ1XQgQEg>
+    <xmx:rQAaZ1ptADW4yRrMP2pxR7aC5TT7GSVjggQF4VNbW3S-BOAgiM4BeCha>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 988442220071; Thu, 24 Oct 2024 04:09:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: darktable performance regression on AMD systems caused by "mm: align
- larger anonymous mappings on THP boundaries"
-Content-Language: en-US, de-DE
-Cc: Matthias <matthias@bodenbinder.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
- Yang Shi <yang@os.amperecomputing.com>
-To: Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1729755911;b8aa0f46;
-X-HE-SMSGID: 1t3sWq-00086o-F3
+Date: Thu, 24 Oct 2024 08:08:53 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>, qemu-devel@nongnu.org,
+ "Mark Brown" <broonie@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Aishwarya TCV" <Aishwarya.TCV@arm.com>,
+ "Peter Maydell" <peter.maydell@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>
+Message-Id: <16c7546e-ab87-4da7-bc36-14723675dba3@app.fastmail.com>
+In-Reply-To: <87bjzalhzc.fsf@draig.linaro.org>
+References: 
+ <CA+G9fYt86bUAu_v5dXPWnDUwQNVipj+Wq3Djir1KUSKdr9QLNg@mail.gmail.com>
+ <CA+G9fYsMg0fA-jraEvC==0a-22J97o-uBmbLJt16_ZKBpOT8EQ@mail.gmail.com>
+ <4730e562-7d14-4f12-897a-e23783d094af@app.fastmail.com>
+ <87bjzalhzc.fsf@draig.linaro.org>
+Subject: Re: Qemu v9.0.2: Boot failed qemu-arm with Linux next-20241017 tag.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On Wed, Oct 23, 2024, at 19:47, Alex Benn=C3=A9e wrote:
+>> On Sun, Oct 20, 2024, at 17:39, Naresh Kamboju wrote:
+>> On non-LPAE arm32, this broke the existing behavior for
+>> large 32-bit memory sizes. The obvious fix is to change
+>> back the PAGE_MASK definition for 32-bit arm to a signed
+>> number.
+>
+> Agreed. However I think we were masking a calling issue that:
+>
+>     /* Actual RAM size depends on initial RAM and device memory settin=
+gs */
+>     [VIRT_MEM] =3D                { GiB, LEGACY_RAMLIMIT_BYTES },
+>
+> And:
+>
+>   -m 4G
+>
+> make no sense with no ARM_LPAE (which the kernel didn't have) but if y=
+ou
+> pass -machine virt,gic-version=3D3,highmem=3Doff (the default changed =
+awhile
+> back) you will get a warning:
+>
+>   qemu-system-arm: Addressing limited to 32 bits, but memory exceeds i=
+t=20
+> by 1073741824 bytes
+>
+> but I guess that didn't trigger for some reason before this patch?
 
-Rik, I noticed a report about a regression in bugzilla.kernel.org that
-appears to be caused by the following change of yours:
+I did not look at the full log, but I don't think there is a
+problem between kernel and qemu, this is just a kernel regression
+that can happen on any real or virtual platform with a lot of
+memory.
 
-efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundaries")
-[v6.7]
+I would guess that "highmem=3Doff" was not even set here, so
+there was probably no warning, and you would still see the
+same kernel bug with qemu-system-aarch64 and its larger
+limit for highmem=3Doff.
 
-It might be one of those "some things got faster, a few things became
-slower" situations. Not sure. Felt odd that the reporter was able to
-reproduce it on two AMD systems, but not on a Intel system. Maybe there
-is a bug somewhere else that was exposed by this.
-
-So in the end it felt worth forwarding by mail to me. Not tracking this
-yet, first waiting for feedback.
-
-To quote from https://bugzilla.kernel.org/show_bug.cgi?id=219366 :
-
-> Matthias 2024-10-09 05:37:51 UTC
-> 
-> I am using a darktable benchmark and I am finding that RAW-to-JPG
-> conversion is about 15-25 % slower with kernels 6.7-6.10. The last
-> fast kernel series is 6.6. I also tested kernel series 6.5 and it is
-> as fast as 6.6
-> 
-> I know this sounds weird. What has darktable to do with the kernel?
-> But the numbers are true. And the darktable devs tell me that this
-> is a kernel regression. The darktable github issue is: https://
-> github.com/darktable-org/darktable/issues/17397  You can find more
-> details there.
-> 
-> What do I do to measure the performance?
-> 
-> I am executing darktable on the command line. opencl is disabled so
-> that all activities are only on the CPU:
-> 
-> darktable-cli bench.SRW /tmp/test.jpg --core --disable-opencl -d
-> perf -d opencl --configdir /tmp
-> 
-> ( bench.SRW and the sidecar file can be found here: https://
-> drive.google.com/drive/folders/1cfV2b893JuobVwGiZXcaNv5-yszH6j-N )
-> 
-> This will show some debug output. The line to look for is
-> 
-> 4,2765 [dev_process_export] pixel pipeline processing took 3,811
-> secs (81,883 CPU)
-> 
-> This gives an exact number how much time darktable needed to convert
-> the image. The time darktable needs has a clear dependency on the
-> kernel version. It is fast with kernel 6.6. and older and slow with
-> kernel 6.7 and newer. Something must have happened from 6.6 to 6.7
-> which slows down darktable.
-> 
-> The darktable debug output shows that basically only one module is
-> responsible for the slow down: 'atrous'
-> 
-> with kernel 6.6.47:
-> 
-> 4,0548 [dev_pixelpipe] took 0,635 secs (14,597 CPU) [export]
-> processed 'atrous' on CPU, blended on CPU ... 4,2765
-> [dev_process_export] pixel pipeline processing took 3,811 secs
-> (81,883 CPU)
-> 
-> with kernel 6.10.6:
-> 
-> 4,9645 [dev_pixelpipe] took 1,489 secs (33,736 CPU) [export]
-> processed 'atrous' on CPU, blended on CPU ... 5,2151
-> [dev_process_export] pixel pipeline processing took 4,773 secs
-> (102,452 CPU)
-> 
-> 
-> This is also being discussed here: https://discuss.pixls.us/t/
-> darktable-performance-regression-with-kernel-6-7-and-newer/45945/1 
-> And other users confirm the performance degradation.
-
-[...]
-
-> This seems to affect AMD only. I reproduced this performance
-> degradation on two different Ryzen Desktop PCs (Ryzen 5 and Ryzen
-> 9). But I can not reproduce it on my Intel PC (Lenovo X1 Carbon,
-> core i5).
-
-[...]
-
-> By the way, there is also a thread in the darktable forum on this topic:
-> https://discuss.pixls.us/t/darktable-performance-regression-with-kernel-6-7-and-newer/45945
->  
-> Some users reproduced it there as well.
-
-See the ticket for more details. The reporter is CCed. openZFS is in
-use, but the problem was reproduced on vanilla kernels.
-
-Ciao, Thorsten
+      Arnd
