@@ -1,264 +1,256 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3701E105A
-	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 13:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987CC1EF08D
+	for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 13:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729775817; cv=none; b=gAJfmM/ubeZoRhokGxdvEljfw/YvTXnjyIyTnlR8cuGC+b3RhsHG0UKsHNNhTvQbWGzeBb94ZVRgmnKe1vZNE3ciyBXrnnilmwcQol3ktfDeiFYlL03C5l9IOzcURYj/NFABFkrwLSZfS2i1pAhw6PX/JzJoHxBURHruiHMPkZk=
+	t=1729776580; cv=none; b=Uau1kTSXCRaJG8Vf4NoaRTJseXcd7WHh5XoPDMbwbM7542/pjuZ5sJSAJmXZwfxb6o0eJ1Gxh8jdHGHtddCmnDnXLcsfKhU8/Uri0VgqidMMTSY3dWnKQXUnMLzAu4Yugoo2WA25YZBPwVAnDU39oVLc0vWMxkCt/3Mf+e661ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729775817; c=relaxed/simple;
-	bh=oku5NNRsExLUlwbdff53zTinMYUInsOzU9jIg/cWHO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OKAtV1hyBU8y5Q0XC7B/zRTcvaYrEipj0wtU4N9boyvOsetkFfCe7YfBQOYElLg8R8Pqz6wQjw12hf1gKIdszmqpdQz6ljQvibKQdPKdg5GyRz70UIMO/WIAMnr8ImqZglYxl4o1jV0OcKsC1dY7Lb7Ts6/IRlKQGXR2vbIP9ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=btxR6pRd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=alXNkauI; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	s=arc-20240116; t=1729776580; c=relaxed/simple;
+	bh=n41ey9KluEnpW0Bv+vYh+mf9iynj/6m4igRfoKcafk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ur/fxTm8mZQo+hS9GpbsyI/YD4EZvYLoc71Ig8zEIYzZF3uBD0GEo/92jGjHjrP3eaS2YuWixCP5PGvimh/U0iZRou5pjks65fN02LAVJJehlsWqug8+p0aVQo22x+N/qYPJkg4J0XqegK1rYWPfNrhfyH+FaxcrOqp/GeBEq+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hYJ2wGrN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=piNrZ/LE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hYJ2wGrN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=piNrZ/LE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="btxR6pRd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="alXNkauI"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A860911400EC;
-	Thu, 24 Oct 2024 09:16:53 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 24 Oct 2024 09:16:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1729775813; x=1729862213; bh=06FwsQ0dYC
-	4jSFygPf1ghqE3s2gNvHhwTL8NDrtl2Sw=; b=btxR6pRdMVUoXoOszDx4kcZBeI
-	sSHXMkN4eecOoqfZrRnFR0jXHmrP61wFs9VC65b1NDRKofl8vQsKyDn2qoeroh8a
-	lmgu7RUA4wPlOFfo2gbhDp6lSjLnIbP/OIVMD4UBTd1RS9EHWNi/AnQch2RH367A
-	kGYCjx3cUaQrBrM6h2+HwP6bGXSZrMI/p2NLndN+2402HTtnTOPtos8NkRzbI3I6
-	wvpMa0hkB4Lxjc3qWZuHjND2LP0doHypbFg+UsL130arfwRXXaUzw3+WYZ9aRiyX
-	LDUoIJEe4v1Lb2hE2nOjYrCdio6HnUq1T0VK0H2D0AFOWAjnsv+3OcAE6F0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1729775813; x=1729862213; bh=06FwsQ0dYC4jSFygPf1ghqE3s2gN
-	vHhwTL8NDrtl2Sw=; b=alXNkauI5/q4nxx5yHUoNM2fPn1aVBbj9aWX0C3n1gR8
-	yg4pgMYyC+FVEeTRLLbMaoCtvDnIrl0FH7G0fRZ3pMLd4GwNE8OiC24yCbASLk4J
-	H3Gi3n/4fUTGTQWgfqceGt38rlyEZgeGlfzd4oaqTfrDbz9VeKAzKFnNg+S+IJWh
-	Qldwz7NBLyJW0hcrGNu8jgCSLlHwmBKyDFayqY3vdmXuIWH/ucMOLiqNTxQR/YIT
-	GGl4yWp2/1TMqYCLjiotHvC4uuH3+WzyUk4qjy6lDd7c67pkYt4Vk+g2dJBdty1I
-	SJFQXWlgJnNC9Pn6n1soqen+pwvLc4m0pOi7IHJkxw==
-X-ME-Sender: <xms:xUgaZ0cvIjLs8Q0kgCClr3vlQqKqWyoTwfVf9mqR1t9q6psQUN26jA>
-    <xme:xUgaZ2MHcn4YuwBwHSqJymwznoPSPqC-WPMSp26CAb6D6OZ7-XC9gxjFB6rkLJSDk
-    Ch5-OG8zZcSG_Z84Bs>
-X-ME-Received: <xmr:xUgaZ1hv1Omo70J-lbNpl5wqmxaijKirv4PcxGdxKTykcx-JZza0fU3gWsuc_ZwmkD46JkpS2m1RIdCur5DKYNaAs6hH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejtddgfeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrghrrh
-    cuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeffffgleev
-    keduffevffffueelueevheduiedukeetuedvfeegfeelheekteejieenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpghhnuhdrohhrghenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjh
-    hfrghrrhdrtggtpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmohhrsg
-    hosehgohhoghhlvgdrtghomhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumhesthhosghluhigrdgtohhmpdhrtg
-    hpthhtohepkhgvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphht
-    thhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpth
-    htoheplhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrgh
-X-ME-Proxy: <xmx:xUgaZ5_kf6WBzbsJ6N6hNjYIpwx9YPcRiUO-6smCJ-Cluc5y3n6ORQ>
-    <xmx:xUgaZwv2sj841txQoivKillwDjHlzO34fMuR4gOsIzV6UcKAPGh_3g>
-    <xmx:xUgaZwFBS8Vv2dVoz0ogtzpfInrVgkvAHlkcCddS5UuWouvtGxY5nQ>
-    <xmx:xUgaZ_Mk-9oJkkc2rCP7px519UnbCTh6G3dvmCuuwUBeVauKyU1U1w>
-    <xmx:xUgaZwGWp8E_sZPRu_Ceg5VlrdD0sv9c__ipW8dBT0uNI2MssZDp7waT>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Oct 2024 09:16:51 -0400 (EDT)
-Date: Thu, 24 Oct 2024 15:16:50 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, ojeda@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <ZxpIwkfg9_mHO3lq@archlinux>
-References: <202410031424.45E5D19@keescook>
- <Zv8RIs-htdc-PtXB@archlinux>
- <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux>
- <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux>
- <20241021192557.GA2041610@thelio-3990X>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hYJ2wGrN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="piNrZ/LE";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hYJ2wGrN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="piNrZ/LE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E13FB21B0C;
+	Thu, 24 Oct 2024 13:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729776575; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DNZY010Klt7+SZxZEDHH79zA/OC0BeAqYRKohPe/UMw=;
+	b=hYJ2wGrNca3iV/epxx0FD5VzFHfqPBPqJHfu6+InPuE+9+ay7EgUCIoiLFEiqMaTkbIPCT
+	KXB//T7g/X1hY0liuMJ4pXWzpRhMJKHzVTKEfLJPVn2z5N8s7R1uaGsez17lFJmNnSC7vl
+	G5IV7l5/G41WHPgfIEjWeanbq5mV6XU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729776575;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DNZY010Klt7+SZxZEDHH79zA/OC0BeAqYRKohPe/UMw=;
+	b=piNrZ/LEiqDqFtKjY6vGWqfdFqDWwntKWlKidaS8zodwXLCZyHSFdMEV16jEAJQqgLnjdD
+	1la8AY5uwz3EUpCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1729776575; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DNZY010Klt7+SZxZEDHH79zA/OC0BeAqYRKohPe/UMw=;
+	b=hYJ2wGrNca3iV/epxx0FD5VzFHfqPBPqJHfu6+InPuE+9+ay7EgUCIoiLFEiqMaTkbIPCT
+	KXB//T7g/X1hY0liuMJ4pXWzpRhMJKHzVTKEfLJPVn2z5N8s7R1uaGsez17lFJmNnSC7vl
+	G5IV7l5/G41WHPgfIEjWeanbq5mV6XU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1729776575;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DNZY010Klt7+SZxZEDHH79zA/OC0BeAqYRKohPe/UMw=;
+	b=piNrZ/LEiqDqFtKjY6vGWqfdFqDWwntKWlKidaS8zodwXLCZyHSFdMEV16jEAJQqgLnjdD
+	1la8AY5uwz3EUpCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8D3F1368E;
+	Thu, 24 Oct 2024 13:29:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iRqeML9LGmeBGwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 24 Oct 2024 13:29:35 +0000
+Message-ID: <9d7c73f6-1e1a-458b-93c6-3b44959022e0@suse.cz>
+Date: Thu, 24 Oct 2024 15:29:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241021192557.GA2041610@thelio-3990X>
+User-Agent: Mozilla Thunderbird
+Subject: Re: darktable performance regression on AMD systems caused by "mm:
+ align larger anonymous mappings on THP boundaries"
+Content-Language: en-US
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Rik van Riel <riel@surriel.com>, Matthias <matthias@bodenbinder.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+ Yang Shi <yang@os.amperecomputing.com>, Matthew Wilcox <willy@infradead.org>
+References: <2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info>
+ <f81ef5bd-e930-4982-a5a8-cd4aca272912@suse.cz>
+ <ce35b58e-f18c-4701-8494-fa8d1f6e5148@suse.cz>
+ <20241024124953.5d77c0b3@mordecai.tesarici.cz>
+ <a7585f3e-d6c7-4982-8214-63a7ec6258ad@suse.cz>
+ <20241024131331.6ee16603@mordecai.tesarici.cz>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20241024131331.6ee16603@mordecai.tesarici.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Hi Nathan,
+On 10/24/24 13:13, Petr Tesarik wrote:
+> On Thu, 24 Oct 2024 12:56:27 +0200
+> Vlastimil Babka <vbabka@suse.cz> wrote:
+> 
+>> On 10/24/24 12:49, Petr Tesarik wrote:
+>> > On Thu, 24 Oct 2024 12:23:48 +0200
+>> > Vlastimil Babka <vbabka@suse.cz> wrote:
+>> >   
+>> >> On 10/24/24 11:58, Vlastimil Babka wrote:  
+>> >> > On 10/24/24 09:45, Thorsten Leemhuis wrote:    
+>> >> >> Hi, Thorsten here, the Linux kernel's regression tracker.
+>> >> >> 
+>> >> >> Rik, I noticed a report about a regression in bugzilla.kernel.org that
+>> >> >> appears to be caused by the following change of yours:
+>> >> >> 
+>> >> >> efa7df3e3bb5da ("mm: align larger anonymous mappings on THP boundaries")
+>> >> >> [v6.7]
+>> >> >> 
+>> >> >> It might be one of those "some things got faster, a few things became
+>> >> >> slower" situations. Not sure. Felt odd that the reporter was able to
+>> >> >> reproduce it on two AMD systems, but not on a Intel system. Maybe there
+>> >> >> is a bug somewhere else that was exposed by this.    
+>> >> > 
+>> >> > It seems very similar to what we've seen with spec benchmarks such as cactus
+>> >> > and bisected to the same commit:
+>> >> > 
+>> >> > https://bugzilla.suse.com/show_bug.cgi?id=1229012
+>> >> > 
+>> >> > The exact regression varies per system. Intel regresses too but relatively
+>> >> > less. The theory is that there are many large-ish allocations that don't
+>> >> > have individual sizes aligned to 2MB and would have been merged, commit
+>> >> > efa7df3e3bb5da causes them to become separate areas where each aligns its
+>> >> > start at 2MB boundary and there are gaps between. This (gaps and vma
+>> >> > fragmentation) itself is not great, but most of the problem seemed to be
+>> >> > from the start alignment, which togethter with the access pattern causes
+>> >> > more TLB or cache missess due to limited associtativity.
+>> >> > 
+>> >> > So maybe darktable has a similar problem. A simple candidate fix could
+>> >> > change commit efa7df3e3bb5da so that the mapping size has to be a multiple
+>> >> > of THP size (2MB) in order to become aligned, right now it's enough if it's
+>> >> > THP sized or larger.    
+>> >> 
+>> >> Maybe this could be enough to fix the issue? (on 6.12-rc4)  
+>> > 
+>> > 
+>> > Yes, this should work. I was unsure if thp_get_unmapped_area_vmflags()
+>> > differs in other ways from mm_get_unmapped_area_vmflags(), which might
+>> > still be relevant. I mean, does mm_get_unmapped_area_vmflags() also
+>> > prefer to allocate THPs if the virtual memory block is large enough?  
+>> 
+>> Well any sufficiently large area spanning a PMD aligned/sized block (either
+>> a result of a single allocation or merging of several allocations) can
+>> become populated by THPs (at least in those aligned blocks), and the
+>> preference depends on system-wide THP settings and madvise(MADV_HUGEPAGE) or
+>> prctl.
+>> 
+>> But mm_get_unmapped_area_vmflags() will AFAIK not try to align the area to
+>> PMD size like the thp_ version would, even if the request is large enough.
+> 
+> Then it sounds like exactly what we want. But I prefer to move the
+> check down to __thp_get_unmapped_area() like this:
 
-Do you want me to add a Co-Developed-by tag for you? I feel bad just
-taking it.
+I wanted to limit the fix to the place commit efa7df3e3bb5da changes, i.e.
+anonymous mappings, because there are other callers of
+__thp_get_unmapped_area(), namely the filesystems via
+thp_get_unmapped_area() and I wasn't sure if that wouldn't regress them. But
+since you suggested I had a brief look now...
 
-For reference here is the current state of the patch, still waiting on
-the merge into clang 19.1.x:
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2fb328880b50..8d80f3af5525 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1082,6 +1082,9 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+>  	if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+>  		return 0;
+>  
+> +	if (!IS_ALIGNED(len, size))
+> +		return 0;
 
-It needs three prerequisite commits on top of 6.6.x, but unfortunately
-still requires a small amount of manual conflict resolution, but it's
-easy enough
+I think the filesystem might be asked to create a mapping for e.g. a
+[1MB, 4MB] range from a file, thus the offset would be 1MB (with anonymous
+pages an off=0 is passed) and the current implementation would try to do the
+right thing for that (align the [2MB, 4MB] range to THP) but after your
+patch it would see len is 3MB and give up, no?
 
-1. include/linux/compiler_types.h:
-	use the incoming change until before (but not including) the
-	"Apply __counted_by() when the Endianness matches to increase test coverage."
-	comment)
+> +
+>  	if (off_end <= off_align || (off_end - off_align) < size)
+>  		return 0;
+>  
 
-2. lib/overflow_kunit.c: 
-	HEAD is correct
-
-
-From 6c667a43af0c57cd3f260fd75d5c4a198ba94220 Mon Sep 17 00:00:00 2001
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-Date: Thu, 17 Oct 2024 04:39:40 +0200
-Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
-
-This patch disables __counted_by for clang versions < 19.1.3 because
-of the two issues listed below. It does this by introducing
-CONFIG_CC_HAS_COUNTED_BY.
-
-1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
-https://github.com/llvm/llvm-project/pull/110497
-
-2. clang < 19.1.3 has a bug that can lead to __bdos being off by 4:
-https://github.com/llvm/llvm-project/pull/112636
-
-Fixes: c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and identifier expansion")
-Cc: stable@vger.kernel.org # 6.6.x: 16c31dd7fdf6: Compiler Attributes: counted_by: bump min gcc version
-Cc: stable@vger.kernel.org # 6.6.x: 2993eb7a8d34: Compiler Attributes: counted_by: fixup clang URL
-Cc: stable@vger.kernel.org # 6.6.x: 231dc3f0c936: lkdtm/bugs: Improve warning message for compilers without counted_by support
-Cc: stable@vger.kernel.org # 6.6.x
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
-Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
-Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
----
- drivers/misc/lkdtm/bugs.c           |  2 +-
- include/linux/compiler_attributes.h | 13 -------------
- include/linux/compiler_types.h      | 19 +++++++++++++++++++
- init/Kconfig                        |  8 ++++++++
- lib/overflow_kunit.c                |  2 +-
- 5 files changed, 29 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 62ba01525479..376047beea3d 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -445,7 +445,7 @@ static void lkdtm_FAM_BOUNDS(void)
- 
- 	pr_err("FAIL: survived access of invalid flexible array member index!\n");
- 
--	if (!__has_attribute(__counted_by__))
-+	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
- 		pr_warn("This is expected since this %s was built with a compiler that does not support __counted_by\n",
- 			lkdtm_kernel_info);
- 	else if (IS_ENABLED(CONFIG_UBSAN_BOUNDS))
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 32284cd26d52..c16d4199bf92 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -94,19 +94,6 @@
- # define __copy(symbol)
- #endif
- 
--/*
-- * Optional: only supported since gcc >= 15
-- * Optional: only supported since clang >= 18
-- *
-- *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-- * clang: https://github.com/llvm/llvm-project/pull/76348
-- */
--#if __has_attribute(__counted_by__)
--# define __counted_by(member)		__attribute__((__counted_by__(member)))
--#else
--# define __counted_by(member)
--#endif
--
- /*
-  * Optional: not supported by gcc
-  * Optional: only supported since clang >= 14.0
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 1a957ea2f4fe..639be0f30b45 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -323,6 +323,25 @@ struct ftrace_likely_data {
- #define __no_sanitize_or_inline __always_inline
- #endif
- 
-+/*
-+ * Optional: only supported since gcc >= 15
-+ * Optional: only supported since clang >= 18
-+ *
-+ *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-+ * clang: https://github.com/llvm/llvm-project/pull/76348
-+ *
-+ * __bdos on clang < 19.1.2 can erroneously return 0:
-+ * https://github.com/llvm/llvm-project/pull/110497
-+ *
-+ * __bdos on clang < 19.1.3 can be off by 4:
-+ * https://github.com/llvm/llvm-project/pull/112636
-+ */
-+#ifdef CONFIG_CC_HAS_COUNTED_BY
-+# define __counted_by(member)		__attribute__((__counted_by__(member)))
-+#else
-+# define __counted_by(member)
-+#endif
-+
- /*
-  * Apply __counted_by() when the Endianness matches to increase test coverage.
-  */
-diff --git a/init/Kconfig b/init/Kconfig
-index 530a382ee0fe..5f1fe3583f20 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -116,6 +116,14 @@ config CC_HAS_ASM_INLINE
- config CC_HAS_NO_PROFILE_FN_ATTR
- 	def_bool $(success,echo '__attribute__((no_profile_instrument_function)) int x();' | $(CC) -x c - -c -o /dev/null -Werror)
- 
-+# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
-+# https://github.com/llvm/llvm-project/pull/110497
-+# https://github.com/llvm/llvm-project/pull/112636
-+# TODO: when gcc 15 is released remove the build test and add gcc version check
-+config CC_HAS_COUNTED_BY
-+	def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
-+	depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
-+
- config PAHOLE_VERSION
- 	int
- 	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
-diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-index 2abc78367dd1..5222c6393f11 100644
---- a/lib/overflow_kunit.c
-+++ b/lib/overflow_kunit.c
-@@ -1187,7 +1187,7 @@ static void DEFINE_FLEX_test(struct kunit *test)
- {
- 	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
- 	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
--#if __has_attribute(__counted_by__)
-+#ifdef CONFIG_CC_HAS_COUNTED_BY
- 	int expected_raw_size = sizeof(struct foo);
- #else
- 	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
--- 
-2.47.0
