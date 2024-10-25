@@ -1,118 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E41670809;
-	Fri, 25 Oct 2024 14:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB78315D5CA;
+	Fri, 25 Oct 2024 15:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729867662; cv=none; b=mi20ZbDP0Kn49DKu+9NjGDAhZFJ4iX2DlLALkmI5+ibpkmoKkmrm4wvmknENzsGYxk9bVN3HiijqSdoKlYFx7rJEFTbEcfdlWaPlt3xn4BsgybRT2i7Pc/LYp6ztnQwMhHWT3BShMIfnLQDeiX+gWgGXXi7qDVdQPAa7tvK4zts=
+	t=1729869952; cv=none; b=OOa7FrjLUeJQ8h1r+Rt7Rhv3aGaFxMqvtBhIz+9pbuCcOhB5K6YISVLlXPiN826Z/wmSKsojzuPnfRDuSSFJSy7LYCPXIAg0+1s+eQ7SkWATJv4FQXYBIbg9OIJQ0CjGkihHvSaFj3ojx/c6FcQb09fbvk9iAwEXDrQ9RsO2nO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729867662; c=relaxed/simple;
-	bh=oShrWHWcljZokYmT9YyRMqv4UbAa7cq5MJNVTYh8YYU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=BFCNpbWTbUHR3manROa2UWNLdsmkNTYW7WP/2Z+Fon43GhkOboJ+SBRjCEV/EwB+8xIo8ZYev60liZeJZhhYZmUkObzI7OtXMiiLyNZdjfLzn0J6y7o9z/6OoIAOJB9PtiG879KeyLgLhP0oOodpd5+qQW45zV3CDGT5PU1ScSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4uAq5RO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729869952; c=relaxed/simple;
+	bh=MiwcC2uykYAEEHt7MzLsCsQ78r/dJlY3KdNH0P1orNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVPBQolvZq/+nuzBbsJP9/FVO1v6bXidYfz0r+sjx0uXDwVAKUssTdtae5CAQlAXtU8S6vuBbHaxmogbSCYf/C4cMLDQS5pp0BSsr4o6SnjpqIKwaps349m2POlD/XiLjsg4bbkaXUQm9qmCoEv6FiAYeEbll+xe6vRqf68hXw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftZ2d9jD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4uAq5RO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091C0C4CEE3;
-	Fri, 25 Oct 2024 14:47:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftZ2d9jD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B41C4CEC3;
+	Fri, 25 Oct 2024 15:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729867660;
-	bh=oShrWHWcljZokYmT9YyRMqv4UbAa7cq5MJNVTYh8YYU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=S4uAq5ROqjZfgSGA+6gxv2i2D9X83o7nW+2mYJXFMjktVHNtByrIGEPH1YkGX2lVV
-	 rKJP7XdgSCL2D/JFm38qb1qK99hVQyD5ewTP6UoP/YznBBHK+62z9faP2NrHOyfScZ
-	 5BoDwzD6OmpNEvYKZv4jF7g2nF5jeoha+MQ7lYo93NMH9i5EnTpLqhiR6JkO7YKIkp
-	 IvU/NqHLq7Q8NBX5lfdEDZNj5GlFFaNGFbcJSsjRx6vJ6EIX3C6PiE1gx0HSw8LOwM
-	 YxtrOKrcdEI/rTKBygGI6HERDM+AdOaWwQfTNQmBphMD8n/K1JzqNwM4f42qA7alQ6
-	 +8NLRQbKyy/IQ==
+	s=k20201202; t=1729869952;
+	bh=MiwcC2uykYAEEHt7MzLsCsQ78r/dJlY3KdNH0P1orNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ftZ2d9jDn8xkP7JxhAdi21rljLTyp35KM5NYjLMq4WWCCDiHfXpLYgaK7D7bZ4BEK
+	 rv2KVe1cQq3ZjK10ceQd8F2x28IHEfyDESIsnstzJCrZt9YgeQXgK5UQvIa2EdWWPt
+	 ABHI9CBHKUeDPdfOabA1SP5c5i68maQoEsBfpVUMoywjtVXvM3UXgAVm6r78cRqYTB
+	 cmiwG0kEZojWY8sqyGbJXU9BDCtzgaaOd9Q0vsPLQtbvSbTr6BhTTEsH8UDE7eWwJG
+	 t/K2yc34Y/HdBhT3Dsol6but6K0rsX9JAtwoCBswKz/A/81tbdxQ3ijGKePD4ufxPR
+	 LdhAuTuf81NZw==
+Date: Fri, 25 Oct 2024 17:25:47 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Will Deacon <will@kernel.org>, ericvh@kernel.org, lucho@ionkov.net, 
+	asmadeus@codewreck.org, Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com, 
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com, keirf@google.com, 
+	regressions@lists.linux.dev
+Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
+Message-ID: <20241025-ungewiss-zersplittern-c124bc48be5c@brauner>
+References: <20240923100508.GA32066@willie-the-truck>
+ <20241009153448.GA12532@willie-the-truck>
+ <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 25 Oct 2024 17:47:36 +0300
-Message-Id: <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Christian Heusel" <christian@heusel.eu>, "Peter Huewe"
- <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James Bottomley"
- <James.Bottomley@hansenpartnership.com>
-Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <regressions@lists.linux.dev>
-X-Mailer: aerc 0.18.2
-References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
-In-Reply-To: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
 
-Yeah, this is on the list.
+On Tue, Oct 15, 2024 at 08:07:10PM +0200, Thorsten Leemhuis wrote:
+> Hi Will! Top-posting for once, to make this easily accessible to everyone.
+> 
+> Thx for bringing this to my attention. I had hoped that Eric might reply
+> and waited a bit, but that did not happen. I kind of expected that, as
+> he seems to be  somewhat afk, as the last mail from him on lore is from
+> mid-September; and in the weeks before that he did not post much either.
+> Hmmm. :-/
+> 
+> CCed Christian and Al, maybe they might be able to help directly or
+> indirectly somehow. If not, we likely need to get Linus involved to
+> decide if we want to at least temporarily revert the changes you mentioned.
 
-See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
+Sorry, I'm just getting to this thread now as I'm still out with a
+fscking case of the flu.
+/me reads...
 
-I had a fix for the AMD boot-time issue already over a month ago
-but unfortunately took time to get enough feedback.
-
-BR, Jarkko
-
-On Fri Oct 25, 2024 at 3:11 AM EEST, Christian Heusel wrote:
-> Hello everyone,
->
-> Adam reports that since switching to the 6.10 kernel they have a popping
-> sound from time to time (roughly every 10 minues) on their headphones
-> which are connected via a [UGREEN's 5-in-1 USB-C Hub][0].
->
-> We have then done a [lengthy bisection][1] on the mainline kernel which
-> came to the conclusion that the following commit is the culprit of the
-> issue:
->
->     1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_ran=
-dom()")
->
-> Since I thought that these results are likely not correct Adam has
-> verified our results again by re-testing the bisection steps and again
-> came to the same conclusion. Additionally I have shot the same question
-> [at Jarkko on Mastodon] to find out if it's possible that changes in the
-> TPM subsystem can have such an effect.. Without knowing the exact commit
-> we had bisected to he pointed to the same functionality:
->
-> > Jarkko Sakkinen (@jarkko@social.kernel.org):
-> >
-> > @gromit i might actually might have hunch for this but have been
-> > unmotivated to move forward before these patches are merged. One thing
-> > at a time IMHO, especially with performance fixes.
-> > NOTE: this is a hyphothesis.
-> >
-> > tpm2_get_random() needs to be reconsidered with encryption as hwrng
-> > calls it often enough and there's now more overhead.
-> >
-> > It pulls entropy in small chunks subtracting the length in the look
-> > like you would use read() syscall from user space. This is not right.
-> > This leads to small and variable size exchanges and yeah generally
-> > that equates to an inefficient implemenation with bad latency
-> > properties.
->
-> If there are any patches to test or if further input is needed from the
-> initial reporter on our Bugtracker we can do that!
->
-> Thank you all for your hard work on the kernel!
->
-> Cheers,
-> Chris
->
->
-> [0]: https://uk.ugreen.com/collections/hubs-1/products/ugreen-5-in-1-4k-h=
-dmi-usb-c-hub
-> [1]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/is=
-sues/79#note_210599
-> [2]: https://chaos.social/@gromit/113345582873908273
->
-> ---
-> #regzbot introduced: 1b6d7f9eb150=20
-> #regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/=
-linux/-/issues/79
-> #regzbot link: https://chaos.social/@gromit/113345582873908273
-> #regzbot title: tpm: popping sound in headphones connected via USB-C
-
+> 
+> Ciao, Thorsten
+> 
+> On 09.10.24 17:34, Will Deacon wrote:
+> > On Mon, Sep 23, 2024 at 11:05:08AM +0100, Will Deacon wrote:
+> >>
+> >> I'm trying to use kvmtool to run a simple guest under an Android host
+> >> but, for v6.9+ guest kernels, 'init' reliably fails to run from a 9pfs
+> >> mount because VFS emits this error:
+> >>
+> >>   | VFS: Lookup of 'com.android.runtime' in 9p 9p would have caused loop
+> >>
+> >> The host directory being shared is a little odd, as it has symlinks out
+> >> to other mount points. In the guest, /apex is a symlink to /host/apex.
+> >> On the host, /apex/com.android.runtime is a mounted loopback device:
+> >>
+> >> /dev/block/loop13 on /apex/com.android.runtime type ext4 (ro,dirsync,seclabel,nodev,noatime)
+> >>
+> >> This used to work prior to 724a08450f74 ("fs/9p: simplify iget to remove
+> >> unnecessary paths") and it looks like Oleg ran into something similar
+> >> before:
+> >>
+> >>   https://lore.kernel.org/all/20240408141436.GA17022@redhat.com/
+> >>
+> >> although he worked around it by driving QEMU with different options.
+> >>
+> >> I can confirm that reverting the following commits gets mainline guests
+> >> working again for me:
+> >>
+> >> 	724a08450f74 "fs/9p: simplify iget to remove unnecessary paths"
+> >> 	11763a8598f8 "fs/9p: fix uaf in in v9fs_stat2inode_dotl"
+> >> 	10211b4a23cf "fs/9p: remove redundant pointer v9ses"
+> >> 	d05dcfdf5e16 " fs/9p: mitigate inode collisions"
+> >>
+> >> Do you have any better ideas? I'm happy to test anything you might have,
+> >> since this is 100% reproducible on my setup.
+> > 
+> > Adding the regression tracker as I've not heard anything back on this :(
+> > #regzbot introduced: 724a08450f74
