@@ -1,102 +1,166 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B739D1B4F1A
-	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 08:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867FB18D655
+	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 10:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729843853; cv=none; b=Xr3KEOJhEDBGOHVLMTq5b9eD1PmdUylZQDgeKX+Uw0NYEPyZV8TQqJDKN/ZoX6Tt6vnv2oKNUQ7pBIjZ3ocLcjON7izLEhqH1xclde3thmoPlrFfljOnXOl2NNVYXNHrC6cmY5q05MnXs1eqAn0VavGYwA85rPggX4bBo+gJWg4=
+	t=1729851665; cv=none; b=F+dmTHC26orwaFfzx89DyQilHYI5BaIQ7YWJrRoaeHJswo4XZP2UK97YhKbEo0oqI7wHDqQzmzvhlba3E7O1ATPWPndNPSy1nmqu1lAht7gTZf4YT5poUw+KyPMg2B1I/AOZBaPl9cgeEwe1KLSa3RqVqBkruUZGeUHvsSnHYIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729843853; c=relaxed/simple;
-	bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b71J9Au9shHQa8o03W0E84LY9cpKzGkyW4o2G1AvxHpDhUbqjzkp0n7mXKjW2TN+tZ2d8YYDqZnacNW8yCzRnRw+z5OiIzVRUPUeG5uOys3KxnqO4Z1WU0Lt5DqRad04WsOkGo1drDSDUSf9StZQ4WDC76snCQm2fOyEYxVM8DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ETl6Ol5N; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729851665; c=relaxed/simple;
+	bh=JiqbygXWnN6LUJ8mzt5DMXjqBRj4lTk3dTMkJ4vdPBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SzyJZbHzijnstWE1sgkcpiYrdnP1Xok1xnKcf6PzhaWxTbpP0zfPTwEbUwoHTG9wptLodJVezBNCmjMUJhHfdeSNHjcwvHEyBoMzxW1b9YEJkuZyTXNIPFQaeZyoI5tmXHmgBYBlpF13rrj/0WHUMbKtmNUQkzPHA7cSAghowio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=YRJB3jHr; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETl6Ol5N"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e2c2a17aa4so341377a91.0
-        for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 01:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729843851; x=1730448651; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
-        b=ETl6Ol5NW+MlnKeNXt6SH47kYGN2KmiqGJQylmQpv/5MjoIlqvJuK/LWB2WWK6Q9H0
-         VmszZoqscYFptTpLoDLhRPbOxnc+YnCvdj+0Ulxn/o+4/86zSoe1ecaaPuIkfFL8wYid
-         7EwZmT7kqsD9w+RTloFvJJnzUk60snugbo9rJavo0FzhRiXdRUG8JmJMzQz43nroUpJU
-         OnDQnsyEJpcL/wIVpTjK8LJ31SyNEvdFxbv8JydNUyOR8JVrKpFscDi2E+a1SBkfMksQ
-         tAqGftqmMky0qxbKq/oL+DE7DCaVmQr0qTQoKeahJ9L41Zv1xTwWfo1hBxxe37OVDv+x
-         zfqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729843851; x=1730448651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
-        b=qYiVJlQZ6KnQQuYoma+ws22TyWQQJ5Xo2lPDfc+iXYY6GlgdINI+j0oOgIwMFVsrKj
-         tagdd3njqI8Bs4BVW0GIZXTWqAgkPsT6InITzP2sFd93PMIkReCMeONwI6+FXdzf6f2K
-         3U/fXIJJCmoqokxrtIK22LBBffxJI9kc9rw4BB90fcY04EPE4h64SxeQzZhuWwKl8R+C
-         v9Sa8GpQokkxgpNKJ3ou7Ca7V2P6LsALkQzIb768pT1bYAMRnb+xPQOF8rtsXDJHxNk7
-         NhEll/Yi2Rj4CAh0JV1kBjLGomQLYq3ljwCpyzI5ZmU1Jlx0S+1IcGeRxItagtZNMsz1
-         E7vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOzOdq/1Yoj+ykHq+4vZ+x8PNdaDT2R0VK2G9IuoI51ku/G4wLCTTg0vg3RO8kznmlzhlAvgEUFZO/BA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx8Xop7CpFxhg4HgVuoN2QSpnUdA99WTjsKqWUTqtoGU1ldW6VC
-	oYcmCHy/ez+u4t7dqtzXCLuRWN1SlLJJb3oC5ci730efi58w80B4WcnuDUZhBYjneTNZqSKDnL6
-	O5B5PtJKJJV1OiJLLFx5645givTg=
-X-Google-Smtp-Source: AGHT+IGPvqhUDFBkOrQZPHHnvPcIrx/rb8ZygTWHg/zDEP3AqX5dEQ8DbwE6syU+VnzrC/rKZmINXToaxuTbKVRq2qs=
-X-Received: by 2002:a17:90b:4f47:b0:2e2:de92:2d52 with SMTP id
- 98e67ed59e1d1-2e8e8239caamr324426a91.9.1729843851009; Fri, 25 Oct 2024
- 01:10:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="YRJB3jHr"
+Received: from [192.168.1.244] (system.internal [192.168.1.244])
+	by mail.581238.xyz (Postfix) with ESMTPSA id 744CE43088FB;
+	Fri, 25 Oct 2024 12:20:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1729851655; bh=JiqbygXWnN6LUJ8mzt5DMXjqBRj4lTk3dTMkJ4vdPBY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=YRJB3jHrGvElpCRkBtdBpJZCQFqiANHCRHSU2xySSqlzQjVX+V2E+/5Cwx9XIYjQ4
+	 KiSDiL1NWw1EgWNBRqAiDME/zHBx4CHUtzakhQJ+oqsA0CI2ovpx2dXPgIdsT8B3qt
+	 o245xGyz0pbFkFczKrepFdUuCvWKiIuAD5PtPFDg=
+Message-ID: <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+Date: Fri, 25 Oct 2024 12:20:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
- <ZwNb-_UPL9BPSg9N@archlinux> <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux> <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux> <20241021192557.GA2041610@thelio-3990X>
- <ZxpIwkfg9_mHO3lq@archlinux> <20241025011527.GA740745@thelio-3990X>
-In-Reply-To: <20241025011527.GA740745@thelio-3990X>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 25 Oct 2024 10:10:38 +0200
-Message-ID: <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ardb@kernel.org, ojeda@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
+ christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
+ <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
+ <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
+ <20241022161055.GE275077@black.fi.intel.com>
+ <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+ <20241023061001.GF275077@black.fi.intel.com>
+Content-Language: en-US
+From: Rick <rick@581238.xyz>
+Autocrypt: addr=rick@581238.xyz; keydata=
+ xsFNBGbzzagBEADAVlnHnytfGBgp2MMuWh2qIQZCiBD9Ah7xsqbhbZYc/g0Guj6LqHTwqnko
+ ac/Fm6hPKQj7GJzLS9BiZlZ/NeEnQL5tDZYz3+b7VEA++ZRedl3eTVZKWI+lEhVchH0jglCK
+ OQk01kpyX/WFDWPEBLgykfJu34voKFhJt9twz5qI6jq8ovd8EvY6TciU9KO6NZW/n5LkGQr9
+ aN+InaJ4Cf5w2xiumN0IIxw4hBINw+mtxdCckU5HE/2pSR1OTiuN8nEdUima36VRZCM026Na
+ nlTaCVPUME5z/2/Pqh3f7l6/ThEECe5T41defsIiz2bH5FXJKhtTfBq6yRLxaAur2kAe5sIP
+ EQ1PY1h7WRfzVYaIplK5wLPpPIvbdgZuWjJyVhRN0JKvcaTa/YG8uGLmo1bEcJ43EorWqeG9
+ zGFdmoPUQTVxMkJM1BfEY9ojSOxseSSYzE8PMT9zLI55ZBYCK0W4JXfkoghpbVTJn6y9ICSf
+ FWE3AMuX80cFDsxiH6Mx4OB6efH9dXSeX1tmhrp4SKt7o5EaQRSnG4MFIOFMYk5GjJqozi9H
+ lZwnIE6EutFGzlvVysEfSq+i5I5WeJw9A50wCiinAPfKRpZfbhi5N/3FZtBpBaWb/jHvCO5o
+ pY5XAcD5MxkF5gg7A5MMtDPrZkLaH5xvmIYasTt0e9L7VwuJ0wARAQABzRZSaWNrIDxyaWNr
+ QDU4MTIzOC54eXo+wsGXBBMBCABBFiEEdGGAjkKU8i5E2tV4INfk6GvKAnwFAmbzzagCGwMF
+ CRLMAwAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQINfk6GvKAnx6eQ/9GyTUqMmo
+ Xgb0VwLIhxwG/UoaQYhCOEWWVOtV1m0lZp44odqBflfMUO4/UdBG3Ba4p46Fs6wUudp3mIDV
+ v4mfcmtqqAWdnRDV+uVfILm084Mlk+psLX73RLzF8D+OZ9+UmBzYvtwJ3cINea11j9LTMEYx
+ O5yaEn6E+ZsWGsVtx4pKlVqxSGW97ecuvAvwchTiMCjIURs/YkjGk+ajKs31A/3ZVZv+OJ+N
+ IBCzQeVTdKSrMPPb7pXmNHHqvSI+Nj/Xv0IrT7vkLlMXn5ilp44hCjRiY/aTmLkY/npOUost
+ Z0rENDE0uwKfp88qJ5sQyf5uU8jSWxXnmrs+lv8RiyRcUc3p8k5hoPZE6BOqPmzlbtcTw7RI
+ L2slJ58VFbfXUpnC1j9KKYG+8K5ThiHYwgF4GVNkwcA0HTtn9ZGHWTAR1RzOacsKDh0YmNU4
+ hEyfhk71CA/jy0ld8BwfmP5G2J3O198ZNsrpovHiAMKbhr0GY3iSylyzMxmr5HFzD3OF/AtI
+ /omQrQXc3SJq6V59tTuCz/7VHoQEvC2joc2So0PFLM950kh0LoxzSVbZbZgeavYsHz8jo1YZ
+ 3TmmqIEIBjWgLa3CPdmTPLhDZT0ST4bKRZHfzr7dlfY53JEd74p6TfEONtrc6WeGXcReioDj
+ bs2/ijHRJh/GFjvDtiCOnm/yjRzOwU0EZvPNqAEQAMQhjm4rlwf0FCdli+Q6jjKbXEvIAKiE
+ D2bHppKjmMYXRDaWa2sQESOC4uV31n4PSju8pZvDk4H/EInxGI4vqln4Ap8yNGUwWuU3UgLJ
+ ZDHIAEBOEzIdg0nb5moHeYlLNyFk0l5aeJZnZ9Bq6gu1HjlyDEPGBhmpdd0Z39ugvnVgyxc6
+ wwQdXFoD7piuOPDRKP2RM6L6ZSjWrJDmxeh4FG6KXwC7leHEsBf/OgG+gtJ7MDAAjnLQdPVz
+ 1Cydad3jbqD50lkA/XwMESrl7pVFytUoCcCilw05VrcPlvgGAdb+eDgvtgh+8njHN10+7LOK
+ TQrI9UHvr4v3IejVQyt/6Tr4pYDE81Xhx6pmWjWq2qzrfjXXTZqb6VEd0MCWNcVB/wvdo89s
+ LIlrwiZHyrRf/rcdJUb+mdP4RcQNKnh2cdKnZSH9gV7bDs1UF766lZAfaWiFOqciVNjDpFff
+ 05/fn5+fCfGmcfNxRidmxg3DgCYzCT/24r0iQta20Ir2lS5TLEHvZdvNKS+u+xGbIbQjlrwo
+ u3ODs6VdhI34YCrjmQO9TOwfWpA9Fr8nNYajW9W8f3+kBORryzxlWGzKgZxjTjAd6JXzYrY9
+ WhOlTiEbSvY3DTyLZNZuG5jlub0Zf0wWZrU6+xKPqrbs7L9EUSMaBMd/bwOsuKwXvjs4y0eG
+ AVIrABEBAAHCwXwEGAEIACYWIQR0YYCOQpTyLkTa1Xgg1+Toa8oCfAUCZvPNqAIbDAUJEswD
+ AAAKCRAg1+Toa8oCfC8CD/9Eb/P5FwH0fTXxIkdsONdQwOkdJTQI5avh3+h3ood3pd6e9S5T
+ 1PB7Rab9e3szQDDwk3ZYoE9jzSuanwHtR6UNqVaBv8SijoOAmSefJGadwa9XCTkllqSRJfan
+ TPvP7T7o+wK0OlEKwlkgnYFDHtNhSopirfhNkUwREphhTl0Zz5c8PwCFkYI53ROlEqVnqgVm
+ zokZJ1ykovVDtUY3x3eBDQ/AAIx7EHkEXwcJb48LkQCJtslS2+Ph+mgADLCqxQvbC9pkxJTr
+ yJqBcUqz3OLXNY7M6AnPMPEdXVhH7tIGidVnUQ/SQytV72WeNfxMdtIy0LaW2aPAWD1tvPoU
+ RUT5W8DJ2tRwqF4F+N1OlhxxbMLHbaYSmS+/WcVhhmZ8RsXyY7qDmoTRhrT4pFhKT9lq7t9O
+ edLVR5lQlL/SB/A/neRE+BwJQTGL7dH0ArOnlA1h2XdnGKpp5KY5aJTUdfrXfSu5f0p7UTib
+ AQFZNQGa1Ny19QkDU1veAgHwbOoT5Hvw/L2SKpJUCcZhqRY6ZAjZ2Yj1K87J2yAuLE5+vvSO
+ nO573fNWYQL+2hz5AIqjTZozLRKN+exjc/OpqI8HMVvITWFBJNOxkJxZ7BOPSm6LNfgc1qmr
+ EDg6lcDrdTZZYnyKBdRFcRhvOOiNJ2aKCVBYPDL6gC06GGV1hKOa7PR9Vg==
+In-Reply-To: <20241023061001.GF275077@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 25, 2024 at 3:15=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> on the official submission.
+Hi Mika
 
-Same -- please feel free to add:
+On 23-10-2024 08:10, Mika Westerberg wrote:
+> Hi,
+> 
+> On Tue, Oct 22, 2024 at 07:06:50PM +0200, Rick wrote:
+>> Hi Mika,
+>>
+>> I have removed pcie_asm=force as kernel parameter but still not working on
+>> latest non LTS kernel.
+> 
+> Okay, I still suggest not having that unless you absolutely know that
+> you need it.
+> 
 
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+Noted thank you!
 
-One nit below that is fine either way:
+>> In regards to the disconnect; sorry I think I might have turned of the
+>> docking station myself during that test. I have taken another dmesg without
+>> me disconnecting the docking station:
+>> https://gist.github.com/ricklahaye/9798b7de573d0f29b3ada6a5d99b69f1
+>>
+>> The cable is the original Thunderbolt 4 cable that came with the docking
+>> station. I have used it on this laptop using Windows (dualboot) without any
+>> issues. Also on another Windows laptop also without issues. It was used in
+>> 40Gbit mode.
+> 
+> In the dmesg you shared above, there are still unplug and USB tunnel
+> creation fails so you only get USB 2.x connection with all the USB
+> devices on the dock.
+> 
 
-> > +# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
-> > +# https://github.com/llvm/llvm-project/pull/110497
-> > +# https://github.com/llvm/llvm-project/pull/112636
-> > +# TODO: when gcc 15 is released remove the build test and add gcc vers=
-ion check
+Yes you are right. I removed all attached USB devices from the dock, but 
+still see "3:3: USB3 tunnel activation failed, aborting"
 
-I would perhaps move these closer to the respective lines they are
-comment on (i.e. `depends on` and `def_bool`).
+> How do you determine if it "works"? I guess keyboard and mouse (both
+> USB 2.x devices) and display (tunneled over USB4 link) all are working
+> right? However, if you plug in USB 3.x device to the dock it enumerates
+> as FullSpeed instead of SuperSpeed. There is definitely something wrong
+> here. I asked from our TB validation folks if they have any experience
+> with this dock but did not receive any reply yet.
+> 
+> What you mean by 40Gbit mode? The dock exposes two lanes both at 20G so
+> it should always be 40G since we bind the lanes, also in Windows.
 
-Thanks!
+2 lanes of 20G indeed.
 
-Cheers,
-Miguel
+> 
+> Also In Windows, do you see if the all USB devices on the dock are
+> enumerated as FullSpeed or SuperSpeed? I suspect it's the former there
+> too but can you check? Keyboard and mouse should be FullSpeed but there
+> is some audio device that may be USB 3.x (SuperSpeed), or alternatively
+> if you have USB 3.x memory stick (or any other device) you can plug that
+> to the dock and see how it enumerates.
+
+I checked on Windows with some 3.1 USB devices, and they were properly 
+seen as 3.1 Superspeed+/10Gbps when attached to dock (using USBView from 
+Windows SDK).
+
+I also tried some Linux kernels, and it seems that 6.9 works, and 6.10 
+doesn't.
+
+6.9: https://gist.github.com/ricklahaye/da8c63edb0c27dc55bef351f9f4dd035
+6.10: https://gist.github.com/ricklahaye/c2f314f74ecadcc4a2bd358d5d07e97b
+
+Thank you for the help you have provided.
+
+Kind regards,
+Rick Lahaye
