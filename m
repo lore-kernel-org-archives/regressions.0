@@ -1,103 +1,44 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7128721A4A7
-	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 15:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D85621A4C8;
+	Fri, 25 Oct 2024 15:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729870033; cv=none; b=qWauQRAy9U03UPb9zYqDSBpMGZMOqq0ifL4ctbehpAv7GaKmnPfVMjqP/1tkHO787EZQipeGO3DS1OjaDb8mztTaWPAPOAqoY1Oy1VZoEw8XsZFsK7k6CTt4QMlAG7bxz741Qm9PPyawbzo+Moj7iZAn8IRiHGYo1OCQmKCKUE0=
+	t=1729870161; cv=none; b=s+FnoUGBBUkdCsCa4veSmKg2M9n2s+Lk/aBGvF4T9KkkxMNqH2gIhfZlsTuEUqi9gKZpKydYdraBHk3hLh+IN55KaJxnLODzCWW9xg92GTXbvbLWKjQwWc9DN5KJHaxkas7bRMijMih3VR4jQKzeK4Dd3ebpB2XUZCc/QeGQNw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729870033; c=relaxed/simple;
-	bh=RGW2QulLFv51uPgzrDVtdV/AJ/X8QIUglHvZM+LYZ7g=;
+	s=arc-20240116; t=1729870161; c=relaxed/simple;
+	bh=+VVkpxPz1PkOKJ1Ggp+aWO/GdSOi60d28ezThI4PUsw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDrhApCf5+DM+/AlIKn9qw3mAeT0FW1v8/tOJ5zhVo0Uxq/VhspoyeYgV67H22To387F2gf74QYehUGqNlMCsrjMcdrcYBLfqGFowpjDtRGlsaKjmZO7rhsRCAQTGB8ukVe/8DNajaBCLbYmShQ/8BpsbxDri3+6VdfQHlXzMe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=SYi+crlH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OEKGY1VR; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	 Content-Type:Content-Disposition:In-Reply-To; b=BDnvigSt9NNADu4nARwlie+xl2+oQ4Lhcxj1UZTRz5KulPFKKatCxH4Hfvr2HwCZPR/cZRdDam0qd24aBMdAHCHlPaVAJaaLTeeTkRCVgonpoK4oBtYtFLE9x+vQaxRYZCOshO2JuQpqnfvJyi9nX5fLYbKnhOO99C7WfmHWAmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KG204BnO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="SYi+crlH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OEKGY1VR"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id A39D513801B5;
-	Fri, 25 Oct 2024 11:27:10 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Fri, 25 Oct 2024 11:27:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1729870030;
-	 x=1729956430; bh=RLih69XQUoMnH4TqrYPUlmUCQn82s+sfVe9uNsKWg9Y=; b=
-	SYi+crlHq0VgyliAZsXMXZqdZI6hm99RwMlwTh11LZdATlBxGsdd7hFgqIsMo6/x
-	aChs69wZWPS15Dw7qGVPi/mbnRX/l218Zlvaj5pwfILR/g4UvfwZfDQWlSStzZTa
-	hoOkxxWygPBQgJK9J5cmFg0G4SOnXrSwx/H5LC5dKE385+KsuMqTRJWHWdT+1mpN
-	Jfzq7CBV1m0J3YJcbO034Pd510rw5Qpzk7Tz++SdOkbxcxv1RE4aCyK8oUxlxTJt
-	hydZckspYI4BYR8ziQIo5mWwQcAwlsy12gdvBIed6zj33XM59G4GkCeK1JQeFLmi
-	8E7K85v+sVxhJ+LF0xsHgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729870030; x=
-	1729956430; bh=RLih69XQUoMnH4TqrYPUlmUCQn82s+sfVe9uNsKWg9Y=; b=O
-	EKGY1VR8gNtmI+H7gZdnvrgQwf6nMMIledDZqlTcaxu+s3Ty0wPpfwMbQCz8Aqju
-	vIzPHmuo2GCdvpsr9g0NQDJfqMZCaQldl7xcoSL26HSS0nSax2UUCX+zrkhWyyg6
-	ueeaQBJwQG0phhaQ8bKC3yzW5hZDxK603V2iyUEXcDwzp5Kkd+UN2HHXqBUb9ODj
-	2DNVNYbNTZaUPMyMnrU0Cvux/2IcqqX5W0otmVbXMaJR6gEhmsP+IaTpZGXxnfl9
-	QBIOqPv3vf2yR2OBFGwTCkeHI4rdB+RTuci6AGWEAbQEmg0oEf6sTbjrQkYPI7zH
-	QlIhDbkg72XVQm3no932w==
-X-ME-Sender: <xms:zrgbZ-DHmg_6lLxypIE-pvNCjon6-33m49pNt969bqxKcumCTvZe3Q>
-    <xme:zrgbZ4h28H5FVX78YnNbdTKidBoFiCoaPYElP1OGlITyi738vHUDx4b7S4TadPojU
-    pH1SwHxGS_OYWSYiUY>
-X-ME-Received: <xmr:zrgbZxkAoUOwTebHgL8R8JvFjC_hBALkVTPR_-EOWnb8d6XOTP9EAWQQSOK-yEniOc2CvSBxmCmOCNOaNvsWe6i6ApD3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejvddgkeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefukfhf
-    gggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhfgrrh
-    hruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepudegheef
-    leeitdejheeludevtdfhgeeuiefgveffvedvjeevieeihfegteehkeeknecuffhomhgrih
-    hnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggtpdhnsggprhgtphhtthhope
-    duvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggr
-    rdhsrghnughonhhishesghhmrghilhdrtghomhdprhgtphhtthhopehnrghthhgrnheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhr
-    tghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhorhhsth
-    gvnhdrsghluhhmsehtohgslhhugidrtghomhdprhgtphhtthhopehkvghnthdrohhvvghr
-    shhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtoheprhgvghhrvghsshhiohhnsh
-    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgstggrtghh
-    vghfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhrg
-    hruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:zrgbZ8zsknsztT8-uJX3OBuZRHbrD2c22d9643eLMRH66WoVe33Zdw>
-    <xmx:zrgbZzTfoQ76r9SNC_yno9ijZaPG6ZU1Lkzz-_AHqm8AMbDDv04BeQ>
-    <xmx:zrgbZ3ZdSwYXbD6vef1jFWAcqBURkrxD8UhZOUg5i1zk8J6Hry3pDQ>
-    <xmx:zrgbZ8RgdFNdsJa9FL3T2YKA9aSFwVWixCY2QV3NboOOGfF9sK4AJg>
-    <xmx:zrgbZyIayhj-rGy8tJYhnj4sdHb_s9os3AP-mHsdaCID68usDt2qxJFn>
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Oct 2024 11:27:08 -0400 (EDT)
-Date: Fri, 25 Oct 2024 17:27:06 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ardb@kernel.org, ojeda@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <Zxu4yhmxohKEJVSg@archlinux>
-References: <ZwNb-_UPL9BPSg9N@archlinux>
- <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
- <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux>
- <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux>
- <20241021192557.GA2041610@thelio-3990X>
- <ZxpIwkfg9_mHO3lq@archlinux>
- <20241025011527.GA740745@thelio-3990X>
- <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KG204BnO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D04C4CEC3;
+	Fri, 25 Oct 2024 15:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729870160;
+	bh=+VVkpxPz1PkOKJ1Ggp+aWO/GdSOi60d28ezThI4PUsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KG204BnOCzTaCP8BF7zEcCk+c9Xx9Xx5RqUDtfAJDNJY3u//4oFcGfl8bxanZWvYj
+	 c5U8XkDx5rjAQwcJQSmr2rVI/DzltYVAZu0AuFrliq2PW3/68tBP+1ErryUs00+d0x
+	 wCFnyjIXQIh9ERtzvcjYGHlTa9EogYgtDG3FDOkZFXJU6UhsQZu16pr0xXvlJhw5dH
+	 oRRZrIh+uA8fbbk9xDp4GqYxsQpNXQO8bene+LxTSeGdfp97DbelytuXPncwn/Ee9R
+	 lHFhEy5ZKxk4rWn+jBCzh0jGGaSuuaT5/gyu3YltaomScbSsuif5B1ZaD9RoqzJyYp
+	 pSQGBpae7c15A==
+Date: Fri, 25 Oct 2024 17:29:14 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Will Deacon <will@kernel.org>, ericvh@kernel.org, lucho@ionkov.net, 
+	asmadeus@codewreck.org, Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com, 
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com, keirf@google.com, 
+	regressions@lists.linux.dev
+Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
+Message-ID: <20241025-aberglaube-gerissen-5e1a9da4fffc@brauner>
+References: <20240923100508.GA32066@willie-the-truck>
+ <20241009153448.GA12532@willie-the-truck>
+ <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
+ <20241025-ungewiss-zersplittern-c124bc48be5c@brauner>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -106,38 +47,24 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
+In-Reply-To: <20241025-ungewiss-zersplittern-c124bc48be5c@brauner>
 
-On 25 10:10:38, Miguel Ojeda wrote:
-> On Fri, Oct 25, 2024 at 3:15 AM Nathan Chancellor <nathan@kernel.org> wrote:
-> >
-> > on the official submission.
+On Fri, Oct 25, 2024 at 05:25:47PM +0200, Christian Brauner wrote:
+> On Tue, Oct 15, 2024 at 08:07:10PM +0200, Thorsten Leemhuis wrote:
+> > Hi Will! Top-posting for once, to make this easily accessible to everyone.
+> > 
+> > Thx for bringing this to my attention. I had hoped that Eric might reply
+> > and waited a bit, but that did not happen. I kind of expected that, as
+> > he seems to be  somewhat afk, as the last mail from him on lore is from
+> > mid-September; and in the weeks before that he did not post much either.
+> > Hmmm. :-/
+> > 
+> > CCed Christian and Al, maybe they might be able to help directly or
+> > indirectly somehow. If not, we likely need to get Linus involved to
+> > decide if we want to at least temporarily revert the changes you mentioned.
 > 
-> Same -- please feel free to add:
-> 
-> Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-> 
-> One nit below that is fine either way:
-> 
-> > > +# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
-> > > +# https://github.com/llvm/llvm-project/pull/110497
-> > > +# https://github.com/llvm/llvm-project/pull/112636
-> > > +# TODO: when gcc 15 is released remove the build test and add gcc version check
-> 
-> I would perhaps move these closer to the respective lines they are
-> comment on (i.e. `depends on` and `def_bool`).
-> 
+> Sorry, I'm just getting to this thread now as I'm still out with a
+> fscking case of the flu.
+> /me reads...
 
-Done, thanks!
-
-config CC_HAS_COUNTED_BY
-	# TODO: when gcc 15 is released remove the build test and add
-	# a gcc version check
-	def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
-	# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
-	# https://github.com/llvm/llvm-project/pull/110497
-	# https://github.com/llvm/llvm-project/pull/112636
-	depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
-
-
+Ok, so this seems handled already. Great.
