@@ -1,159 +1,234 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92481859;
-	Fri, 25 Oct 2024 00:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF84DBA3D;
+	Fri, 25 Oct 2024 01:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729815080; cv=none; b=bgYbBOo3zTziAB7/dkpG2sM/GlZJ3jX0HhALhKaHDpBH1RCeuSkI59C0HGBHofumS8doWbeSVzG8rKnhHUcOolWyCoJvKTjTNt19xc/MSRp6EWwadOH/y/aC2DQTRKeGaEGhGk4W27XsWtVWcp2CUr3MSFYG96vmoq2PLyH6WfE=
+	t=1729818930; cv=none; b=aeimM8m9G62jBVkVY3jCjmGNEHDo7CZ7bWknSgEUhAnaTwbl6g0gvOyZmh825Rn7T2q7jVhjZx0CofzYNxTIiWmCGKQ57oIoLfrSFMbTRObBmhoDM934T/XWFxRi6IxpVG0Ardsg0fXbnFGIGliHeOsUG7BrAOuuQDmcglc0stM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729815080; c=relaxed/simple;
-	bh=8KusYx+RHJMTU21LdOIcRKa3lfznJXVCXXS7fB80TKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i+Tgtw0Nt0qwAmoA9I12pB+GgPRGb2Z8hg5HL4pKdgyGKQGM95FGro6dTlzOeXDmH175YwyTrnW3vgY6VA/qW8UX6gGmUUTzoF0B0h1FOUUEv86cTIG/mUg5aachSfNbLjvfxb5tdmAmn+xiBONVN7vJPLX3bMq8JrKA1ckbQew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=Z9JGRhwZ; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1729818930; c=relaxed/simple;
+	bh=vCt26z8Q/nN2hXXXf/3s0lEZ6H6OLpIZ1+pICKG3AHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTxcopAMNTBFXqa3QW+xXFfTqODuUQEGykoxr2Zkwp2YBF5T4Gb9qj8H/CstMj7VxstMllg+khvOHf7qV53TZ0KWlFjr0YJJbBBScbv7G7c/32xbtPFj2T/4tTpxIVaL91NamllRq4H0KoCP3R/rBxaFq6B6NpYEcqpz1/FwMeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSn2yBtu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="Z9JGRhwZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1729815065; x=1730419865; i=christian@heusel.eu;
-	bh=0YLl7MfTCMROivBkVhz/S8UqG5gQEiGAZl8EPHKXjA8=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Z9JGRhwZBssFRPS1GeM17+bdihGoFAg05XOselLvmQQpNn7dFtXml/rQXpppjg4R
-	 7Oa1VCtVuqfCG6uz2EEtkAEGX0yktEZPI6uVYlQY2JRZ5MOhUBOPGhTy5ZJnZUx90
-	 9TM8PjjPtup6K9GnNqoFX6dHNvhuE6R4OkxU0j9ABqhnioXjKvrylmcTNf2HDbT7O
-	 RQcptABS+WrcLeCe+/rb0YkbwE5T3r9o3EGs7xlnWp2LVGHm6vS1wXgE7M2bBGl1+
-	 MvH7UFKud3phpSDLYN+1vxPSFIFN/EI5aO7/ZHsBPmCejfK/Igzdd8NfBXraE8HqV
-	 /aYH58c9yd7fXvJyLA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MStKq-1tSmcJ0u2I-00XOI6; Fri, 25
- Oct 2024 02:11:05 +0200
-Date: Fri, 25 Oct 2024 02:11:04 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones since
- 1b6d7f9eb150 
-Message-ID: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSn2yBtu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94518C4CEC7;
+	Fri, 25 Oct 2024 01:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729818930;
+	bh=vCt26z8Q/nN2hXXXf/3s0lEZ6H6OLpIZ1+pICKG3AHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSn2yBtugOSxaX05toB/b8OAh5VrwUNycHLUvvEz4qHqRZSCVYPypEiGTCLbH7qG/
+	 SXV3F0mCS6nuSk8hu3sF83c8oY/ze7ni1Khxz2sUffeCpyQtKjUrY5JK/u43wisVPl
+	 V90aRtm3YOCtWsTdxqWxXdYUcL5lB3YLYCdS0zBtVafo2j8KH2WM5t7EHfg3HZqaTa
+	 KItDCGuIldaKDsQLEhJbsOE2c55ZO4cygP7H3izitHqEO7W2zG5g2rEVCmTRs8KK6q
+	 jwwx3qa3lofx5rV7fwehxwD5r9UFvfxElbg9xpdTjGiLMKEiGtGZkCmwKBoVjBO+ky
+	 njjjYOyCkKhpg==
+Date: Thu, 24 Oct 2024 18:15:27 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ardb@kernel.org, ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <20241025011527.GA740745@thelio-3990X>
+References: <Zv8RIs-htdc-PtXB@archlinux>
+ <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux>
+ <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux>
+ <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <20241021192557.GA2041610@thelio-3990X>
+ <ZxpIwkfg9_mHO3lq@archlinux>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hyqovalspjnbywsu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Provags-ID: V03:K1:XHGnoMCjI2jsjpR4Yyc+j23yPeYMuncudwjVOVMogyqc4Iu4J+E
- l9bh1wnuyfcIkOZti8S1YXqH8TVeqrfJThJa81iDhietfAYtfmyG7iwDRpkDZm+R88wg0If
- xSFj4odHA7CTtI/7H6jC05kSjb3X+9CCLDomK18kL/wqfONzzlEf7r+oQDxfqDF3OOOWwke
- Cg/k3gVTDOMKgT61t2a7g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:X61aV1cTQzU=;evD4zKSkyCM1UpKtmKpPSp0fR2F
- kLr5JbNCP7aD8IgsPpequ0jaxmK1dyTsiaQPOaZGSz/l2/hRct6ptu/4RX3fi5MOI91xjWZMc
- SBkPFiGyCTemteOz3xZFWAs6lChnxxg+LjiAWMx9dLNZyHzlFo5RnqlSVCfhhyQh3hgTWfYD2
- hZHb3fMu3QC278K0Oc58HIFusWmA1Wi7xPnwGAMAjmjl4+51MsZhZgWRKOko0KfVVDHjuF+/T
- 9jzKBrEC0NdOcVW16pV8P5oqP0TXixCU35UdszDIqc4o5IxmRZbRoB5Z7JxcRM8rPf0uAxaph
- 66+0TgUo0zmJsMcSn0PJbZGlh3gu8V3CBhYQDUhuGHK1i1tmRI9x4fmAaKukURogKBVIQQ8JL
- J9ohx9EaljilFltoLTEL4v95aTdsaaqJrd6FNT07+U+lBZc0HChucZUgar9CpoyRP553SEfOk
- LvwkFCveE4fbJLhm3p1ZsTjPESnz/NcKOmstMDOg3ghTwWe/fk7l29BGuPvRMApkVqaYA4Vmw
- lt0h/D+gLnS7v9orj8BTRUEV1KWeSAxO3IKtPpztk7l3tiymViruVgqci91U71xzgYt9pXNjF
- XZr82gyeOp3gRT4ZNCZYnpCRfS4s1oWwiRGRuKnrL89Nb8oa5ecbXUT8nPZ55pTl9MV6wLO4+
- johqxPJZClafRzkP1n6olEY3NTergZ5ndv0l7q6xXYBMtPQjqmuk3KXnMO2G9MA9VrporAnu2
- ihvOrx+WdlaFLRUUcCwD57Wf495LoVJ9Q==
+In-Reply-To: <ZxpIwkfg9_mHO3lq@archlinux>
 
+Hi Jan,
 
---hyqovalspjnbywsu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones since
- 1b6d7f9eb150 
-MIME-Version: 1.0
+On Thu, Oct 24, 2024 at 03:16:50PM +0200, Jan Hendrik Farr wrote:
+> Do you want me to add a Co-Developed-by tag for you? I feel bad just
+> taking it.
 
-Hello everyone,
+I would not be opposed to a Co-developed-by tag since it reflects the
+collaborative nature of the change but I do not need it just for the
+sake of credit because you have done a good amount of work analyzing and
+driving getting this problem resolved. I would argue I just
+"Kconfig-ified" your proposed change :) So you have my permission to add
+one but I will not be offended with just the Suggested-by!
 
-Adam reports that since switching to the 6.10 kernel they have a popping
-sound from time to time (roughly every 10 minues) on their headphones
-which are connected via a [UGREEN's 5-in-1 USB-C Hub][0].
+> For reference here is the current state of the patch, still waiting on
+> the merge into clang 19.1.x:
+> 
+> It needs three prerequisite commits on top of 6.6.x, but unfortunately
+> still requires a small amount of manual conflict resolution, but it's
+> easy enough
+> 
+> 1. include/linux/compiler_types.h:
+> 	use the incoming change until before (but not including) the
+> 	"Apply __counted_by() when the Endianness matches to increase test coverage."
+> 	comment)
+> 
+> 2. lib/overflow_kunit.c: 
+> 	HEAD is correct
 
-We have then done a [lengthy bisection][1] on the mainline kernel which
-came to the conclusion that the following commit is the culprit of the
-issue:
+Good to know. If they cannot resolve the conflicts, we'll get notified
+that it has failed to apply so you (or one of us) can send a massaged
+backport as a reply.
 
-    1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_rando=
-m()")
+> From 6c667a43af0c57cd3f260fd75d5c4a198ba94220 Mon Sep 17 00:00:00 2001
+> From: Jan Hendrik Farr <kernel@jfarr.cc>
+> Date: Thu, 17 Oct 2024 04:39:40 +0200
+> Subject: [PATCH] Compiler Attributes: disable __counted_by for clang < 19.1.3
+> 
+> This patch disables __counted_by for clang versions < 19.1.3 because
+> of the two issues listed below. It does this by introducing
+> CONFIG_CC_HAS_COUNTED_BY.
+> 
+> 1. clang < 19.1.2 has a bug that can lead to __bdos returning 0:
+> https://github.com/llvm/llvm-project/pull/110497
+> 
+> 2. clang < 19.1.3 has a bug that can lead to __bdos being off by 4:
+> https://github.com/llvm/llvm-project/pull/112636
+> 
+> Fixes: c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and identifier expansion")
+> Cc: stable@vger.kernel.org # 6.6.x: 16c31dd7fdf6: Compiler Attributes: counted_by: bump min gcc version
+> Cc: stable@vger.kernel.org # 6.6.x: 2993eb7a8d34: Compiler Attributes: counted_by: fixup clang URL
+> Cc: stable@vger.kernel.org # 6.6.x: 231dc3f0c936: lkdtm/bugs: Improve warning message for compilers without counted_by support
+> Cc: stable@vger.kernel.org # 6.6.x
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/all/20240913164630.GA4091534@thelio-3990X/
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202409260949.a1254989-oliver.sang@intel.com
+> Link: https://lore.kernel.org/all/Zw8iawAF5W2uzGuh@archlinux/T/#m204c09f63c076586a02d194b87dffc7e81b8de7b
+> Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
 
-Since I thought that these results are likely not correct Adam has
-verified our results again by re-testing the bisection steps and again
-came to the same conclusion. Additionally I have shot the same question
-[at Jarkko on Mastodon] to find out if it's possible that changes in the
-TPM subsystem can have such an effect.. Without knowing the exact commit
-we had bisected to he pointed to the same functionality:
+If you do not add the Co-developed-by, feel free to carry forward
 
-> Jarkko Sakkinen (@jarkko@social.kernel.org):
->
-> @gromit i might actually might have hunch for this but have been
-> unmotivated to move forward before these patches are merged. One thing
-> at a time IMHO, especially with performance fixes.
-> NOTE: this is a hyphothesis.
->
-> tpm2_get_random() needs to be reconsidered with encryption as hwrng
-> calls it often enough and there's now more overhead.
->
-> It pulls entropy in small chunks subtracting the length in the look
-> like you would use read() syscall from user space. This is not right.
-> This leads to small and variable size exchanges and yeah generally
-> that equates to an inefficient implemenation with bad latency
-> properties.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-If there are any patches to test or if further input is needed from the
-initial reporter on our Bugtracker we can do that!
+on the official submission.
 
-Thank you all for your hard work on the kernel!
-
-Cheers,
-Chris
-
-
-[0]: https://uk.ugreen.com/collections/hubs-1/products/ugreen-5-in-1-4k-hdm=
-i-usb-c-hub
-[1]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issu=
-es/79#note_210599
-[2]: https://chaos.social/@gromit/113345582873908273
-
----
-#regzbot introduced: 1b6d7f9eb150=20
-#regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/li=
-nux/-/issues/79
-#regzbot link: https://chaos.social/@gromit/113345582873908273
-#regzbot title: tpm: popping sound in headphones connected via USB-C
-
---hyqovalspjnbywsu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmca4hgACgkQwEfU8yi1
-JYV65g/8D7BbnNUC1vdgjd2YHrXu4QakYdAq/BX5W+CR80lJ2+gKH3Zc5uK8uyMv
-eEAt63W8TXJicV+gch6xiVgB/7rg3FBXBfOcV7HbNqLvrIy9ijkWzWRnw922kC6P
-QZkyc30/7k8B1UkiPTho4rfvsChhUHOf/B3IhpdPT5vSDMU++psQpFS+Wcb7DrxI
-acBATpgRdh/hb7ZOyQVZ8rQAVtaLw7GFrlDzSOof2OKLAnCfqXL88p21LfD4/twl
-dhti8J5SlE4S6Xo8z7UK5F/lSO+Mxd9CZy3Xr41YWrCFz2T2DyQGUptCVp7ke8Bd
-9Hf+VDYLTmAVV3aEfQdygErBIahwi7rOML24LRseFeJkWBDerNcwE7dyVrFcOSXP
-95PkG3TMTCOnxhhvw6oVgAKYmYa9f0hkuinXbN8EfY4LAqd+xnMfP1lhoRgVSHpk
-2KETCWfHOwNU6Bgsjbtn+Qeohrl0f9QPxJvCfkgrlD/t1PDuVtwCxCD+/AnVijJc
-bGMO5OpMuKUPN0R3sueHTlwUBmhgIIQnuL7epgyRSdOoRSSMa9MBPhHfWDDLfRi2
-+rVmfLWwH38nZFoIv9ZwWmCdURH2CvZ3J5QIiOmWBS1AY9zfvw71Z1FJX4gXfyFv
-iAOYad+ph9LFyZNG0SjG41MooCy6j85A8+iayWqA2kHhOx3TcN0=
-=pkob
------END PGP SIGNATURE-----
-
---hyqovalspjnbywsu--
+> ---
+>  drivers/misc/lkdtm/bugs.c           |  2 +-
+>  include/linux/compiler_attributes.h | 13 -------------
+>  include/linux/compiler_types.h      | 19 +++++++++++++++++++
+>  init/Kconfig                        |  8 ++++++++
+>  lib/overflow_kunit.c                |  2 +-
+>  5 files changed, 29 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> index 62ba01525479..376047beea3d 100644
+> --- a/drivers/misc/lkdtm/bugs.c
+> +++ b/drivers/misc/lkdtm/bugs.c
+> @@ -445,7 +445,7 @@ static void lkdtm_FAM_BOUNDS(void)
+>  
+>  	pr_err("FAIL: survived access of invalid flexible array member index!\n");
+>  
+> -	if (!__has_attribute(__counted_by__))
+> +	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
+>  		pr_warn("This is expected since this %s was built with a compiler that does not support __counted_by\n",
+>  			lkdtm_kernel_info);
+>  	else if (IS_ENABLED(CONFIG_UBSAN_BOUNDS))
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 32284cd26d52..c16d4199bf92 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -94,19 +94,6 @@
+>  # define __copy(symbol)
+>  #endif
+>  
+> -/*
+> - * Optional: only supported since gcc >= 15
+> - * Optional: only supported since clang >= 18
+> - *
+> - *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> - * clang: https://github.com/llvm/llvm-project/pull/76348
+> - */
+> -#if __has_attribute(__counted_by__)
+> -# define __counted_by(member)		__attribute__((__counted_by__(member)))
+> -#else
+> -# define __counted_by(member)
+> -#endif
+> -
+>  /*
+>   * Optional: not supported by gcc
+>   * Optional: only supported since clang >= 14.0
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 1a957ea2f4fe..639be0f30b45 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -323,6 +323,25 @@ struct ftrace_likely_data {
+>  #define __no_sanitize_or_inline __always_inline
+>  #endif
+>  
+> +/*
+> + * Optional: only supported since gcc >= 15
+> + * Optional: only supported since clang >= 18
+> + *
+> + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> + * clang: https://github.com/llvm/llvm-project/pull/76348
+> + *
+> + * __bdos on clang < 19.1.2 can erroneously return 0:
+> + * https://github.com/llvm/llvm-project/pull/110497
+> + *
+> + * __bdos on clang < 19.1.3 can be off by 4:
+> + * https://github.com/llvm/llvm-project/pull/112636
+> + */
+> +#ifdef CONFIG_CC_HAS_COUNTED_BY
+> +# define __counted_by(member)		__attribute__((__counted_by__(member)))
+> +#else
+> +# define __counted_by(member)
+> +#endif
+> +
+>  /*
+>   * Apply __counted_by() when the Endianness matches to increase test coverage.
+>   */
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 530a382ee0fe..5f1fe3583f20 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -116,6 +116,14 @@ config CC_HAS_ASM_INLINE
+>  config CC_HAS_NO_PROFILE_FN_ATTR
+>  	def_bool $(success,echo '__attribute__((no_profile_instrument_function)) int x();' | $(CC) -x c - -c -o /dev/null -Werror)
+>  
+> +# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
+> +# https://github.com/llvm/llvm-project/pull/110497
+> +# https://github.com/llvm/llvm-project/pull/112636
+> +# TODO: when gcc 15 is released remove the build test and add gcc version check
+> +config CC_HAS_COUNTED_BY
+> +	def_bool $(success,echo 'struct flex { int count; int array[] __attribute__((__counted_by__(count))); };' | $(CC) $(CLANG_FLAGS) -x c - -c -o /dev/null -Werror)
+> +	depends on !(CC_IS_CLANG && CLANG_VERSION < 190103)
+> +
+>  config PAHOLE_VERSION
+>  	int
+>  	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> index 2abc78367dd1..5222c6393f11 100644
+> --- a/lib/overflow_kunit.c
+> +++ b/lib/overflow_kunit.c
+> @@ -1187,7 +1187,7 @@ static void DEFINE_FLEX_test(struct kunit *test)
+>  {
+>  	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
+>  	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
+> -#if __has_attribute(__counted_by__)
+> +#ifdef CONFIG_CC_HAS_COUNTED_BY
+>  	int expected_raw_size = sizeof(struct foo);
+>  #else
+>  	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
+> -- 
+> 2.47.0
