@@ -1,97 +1,275 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7744204D
-	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 01:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB3418A6D8
+	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 03:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729819397; cv=none; b=rCQ/y+HqbOnBcCU3czTxzK4LX1ijAvPdREyf9CQcpKJch/6wnqmNBZoV3Q045/tYEeE9oSge7LEP/Ngl+oxahpqHH5jz/qg4BHjn8sbhVZLgMGm6AkXAZrKRLqMclORAzXELYZ5xpOavlqIjUZU/t68LfKVKGaPhF6bAyTrsMEU=
+	t=1729828182; cv=none; b=W2G48+3XY6AsvkLBak8TSy2hSX+CSQ6oInCXR241O0cgwFj8QKRiJE4AuIrBJWX9eLlF9L2O+otSWoCdO7l4DmBK/BB95VTZjoxauNrrKRZl2YWoIQmB+/XLkrEXFIJm7u/Lclzct1q5fVx6jd4O3XpL6uaNg7b/Q/ZY0hNVBjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729819397; c=relaxed/simple;
-	bh=pIz4D5iSfqKhs9u4Ccrwg9Su/Utf2wLMgSechXdBxec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=erqHLRpa32mrnusliwQ2c1z5G0P58IU1RXf8u4k0boinpgRzlbkyk3ywebxO+lz9UfYhJK5vy/qTdMhIv3N2Q+NvmZuQ3XI5cmK4XNjVwzr9eK/xPcCwNSqZFUy2cr83xBGQNdHrSBqmmAvND9ecRgjCII2+ubuIknGMs6iOMqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu; spf=pass smtp.mailfrom=utexas.edu; dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b=DkhJb4m3; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=utexas.edu
+	s=arc-20240116; t=1729828182; c=relaxed/simple;
+	bh=biyN6BFINDLG9M70e01SzJIMheNqG2jq1GnZO+ddetg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjqWZZ763824F9lbrs2fRDRNQWFFKb+b508gwX3+iMVrnm1kb3tglVGSF6+X7BMQlLLBS3qpqHaPURycC7IB9RlwhJPOSSaxBQ0CawpRsRrBeFDmUyUvcxTrubUSOUJqHHiIwDy2eMoPpPit7UTbnSr/UtvinIqtc2yRv/R8prQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=nad+USn6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mtmn86KY; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b="DkhJb4m3"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-71e70c32cd7so1220251b3a.1
-        for <regressions@lists.linux.dev>; Thu, 24 Oct 2024 18:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=utexas.edu; s=google; t=1729819394; x=1730424194; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pIz4D5iSfqKhs9u4Ccrwg9Su/Utf2wLMgSechXdBxec=;
-        b=DkhJb4m36s1lMS1crqXEnywdipfofg9S6pl7sCLDsBMK2DNOJsgM7XS4WT48LESZhj
-         SCRMVViFxWYxc67Ugu0g5iok/EDMMfwylGfDjkneVh2rn1cY09PIKPrS2No1nxkCc7Vx
-         m5L05DwgHiW/4KOnSogp7N39DUXDGtj3nV6ZeQo9EI9Rwb23PonKvmh3bIwriRzs74hJ
-         VvEsuMzaB3Wp6KUR1fdnGbpRYlGlEOHP8u9PMP70AqTfEMhMHTATBJ4uGLcu5At/LE99
-         AZ+ejlnCaCVQ5rHj3teSdFua9c3H8gtcppS8luwFgyin2Fx04wLUH0xQ5KmdQW1RDmD/
-         AB3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729819394; x=1730424194;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pIz4D5iSfqKhs9u4Ccrwg9Su/Utf2wLMgSechXdBxec=;
-        b=qaGuw9PUBbpifoork6EHxiL8UmYZ5ZS51lOC6S8dN/cFYyrTBsV+2KZr6eKf/i5CY5
-         MozCSU1anUoEcb2DSem1Uo1EAyh916MydlmAMja3Vbo3geeH7mP8LC6UHEgsLqUn9Wgk
-         6gYebjOhZD1lyB4EPgj51wyN214Va1kVjtUKJoSSfTtnB7Sjzqguz6sO4IdxBZ/t4dP6
-         0PIxTseG/G+ELj3QRip2mBTbDqFRIWxPm3za3QqyWg7hRgszd1JCMrYbYznreP3M9FVd
-         0zXKgIFmqfwVO1XOmvmHBJdv/fcJg5+UOlyRjgScG0khXlP9Ck0UHGTl3htYlXET6emV
-         5L/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXZRBHyYGvxPAjtH1ywC653IPHscrToXbdTDT+08UXt7/D57EXX0VPStF/gKjnkBihbyDWFwskQqIXm0A==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx2eZx6zLIEzHqFGftaOURGnee8yzEH9hA61t/C8wMfx4VAXoFr
-	NkG4jaYMuMoj4+eeAOKXg+tW7qG328yxAIqOzGrHsrWVZx2KVoSynFGJgNliD8x8CH7i3mfnINZ
-	1M5umQe28cQZgHyfwNt8J/HMqDPHbbdkepVPSWg==
-X-Google-Smtp-Source: AGHT+IHfXyziaUAl/+tK39Ykk3K6biro+i36WzXpNeEaPUEW0LrmKuZryiGvNWdoR4dgyxHgV0gJYhyFSUG2HhmvTZI=
-X-Received: by 2002:a05:6a21:70c8:b0:1d3:2923:e37 with SMTP id
- adf61e73a8af0-1d989b4ee3amr4495019637.30.1729819394136; Thu, 24 Oct 2024
- 18:23:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="nad+USn6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mtmn86KY"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 37C1E114017A;
+	Thu, 24 Oct 2024 23:49:38 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 24 Oct 2024 23:49:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1729828178; x=
+	1729914578; bh=WgS6yhK7Z1D4ST/hhcqeRn9rI9T894JvSD6lnkO9Iy4=; b=n
+	ad+USn6oL36B3vvBbXK3HNJ3K1+oFehHGDpVnpnN9Bup8hAnBvflA2x92/MMkhnZ
+	DhVu+dZUlvr/Scuol7rLXmHqaqHphQ3ZdOfmE3l0OjUW5oLEW/OGj23IkXcrebn9
+	UlrwluUhpGRilpEIOkOgWXzqNOCIK+adbZ8u8IN584B6LB9UmyhgpFb9CXwI74xZ
+	rXh9/nuYAibemxgHlAz5hfIvuj1j4TP7JXPVxcRRWBwfxcoaBRpe2VUeodKx6ucM
+	BGA5SzgxepDMscFVDIE7oAcQFKejHd+6RnF8yKVq0cbKae2FQuobSdenHHBBUk72
+	J1R2ZZxnRJof1n1Zwys1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1729828178; x=1729914578; bh=WgS6yhK7Z1D4ST/hhcqeRn9rI9T8
+	94JvSD6lnkO9Iy4=; b=mtmn86KYzMkBgKjm/XzfBAMvaaIfK62AG2JqMOcFlBjc
+	avCcLDIzgvpfscevO1wQYkxmpdqQ/cJ3nd3aCAiTqD80tKoHyC878AJWCrwAOu2U
+	1AeBpB6wV+1vSWLNFJNvLc6qwmJ/LPliwQ+lo/Bj+ac1WBFZDzVTaDsEUd/+U1nu
+	H67vF9cHEkFMfwrbjfD4PgQ/TreuMWNompbXIBQzN+A0UJRvD7JLwxyCh6MFHYI2
+	+1bR3LUki1qgkBxyGZBqMHLAjH61Ghf0/FJHBLxok7rJ8A0OE2BbUwPMQz3B4uu5
+	Ib0iAyJTtEy5FE2lu0qPKGmoWJ5Jvrq6qTFzXoKydQ==
+X-ME-Sender: <xms:URUbZ3XU3sljmavQL1E0brgNdxFN4ViJevjVqZt7palS7FqrUOM0Hg>
+    <xme:URUbZ_mvk8CUT6ppK0gAS3ULEhMPJ8-RFvpigA-qfIfyTpeyFzS64xiSJTwcSIUaO
+    8u8fkYUG6EgbIKOaCM>
+X-ME-Received: <xmr:URUbZzb7580JRctQCXlPNiwyT-ALm82TojAMT0bOloW0ubo8_xg54MSbrymF2rDpnHDRsGSMO-QNhHaeWbRRxkOkHNnEU6Jbm50>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejuddgjeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
+    ucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihessh
+    grkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeff
+    udduvedvfeduleelfeegieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnh
+    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhppdhnsggprhgtphhtth
+    hopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegvughmuhhnugdrrhgrihhl
+    vgesphhrohhtohhnrdhmvgdprhgtphhtthhopehlihhnuhigudefleegqdguvghvvghlse
+    hlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgvghhrvg
+    hsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehsthgrsghl
+    vgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:URUbZyXmI8YdVWkCnmjP5hcuhlH0mmavj5vkZD-TO-GhVtXig6zGIw>
+    <xmx:URUbZxkAbhpeTGaVOVbEvFZSgWS6ABe-d6Og9VDvbqF9tTJD5Uxw-w>
+    <xmx:URUbZ_cc31pZbPBLRgXHeuw24B_6_FJiWp2My0UlelTqDPxMUwwwfQ>
+    <xmx:URUbZ7HQVn2PfJEMlvpAaamk20HRRb_sLVVjjgaRrUO5hnkHVOBYsA>
+    <xmx:UhUbZ0uOjIHDpDSCv9ffevWSR9tOIfChPe4W8n4Z_NN-UBFAeEUZL7QP>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Oct 2024 23:49:36 -0400 (EDT)
+Date: Fri, 25 Oct 2024 12:49:34 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Edmund Raile <edmund.raile@proton.me>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: firewire-ohci: device rediscovery hardlock regression
+Message-ID: <20241025034934.GA95457@workstation.local>
+Mail-Followup-To: Edmund Raile <edmund.raile@proton.me>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, stable@vger.kernel.org
+References: <8a9902a4ece9329af1e1e42f5fea76861f0bf0e8.camel@proton.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
- <2024101613-giggling-ceremony-aae7@gregkh> <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
- <87bjzktncb.wl-tiwai@suse.de> <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
- <87cyjzrutw.wl-tiwai@suse.de> <CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
- <87ttd8jyu3.wl-tiwai@suse.de> <CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
- <87h697jl6c.wl-tiwai@suse.de> <CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
- <87ed4akd2a.wl-tiwai@suse.de> <87bjzekcva.wl-tiwai@suse.de>
- <CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
- <877ca2j60l.wl-tiwai@suse.de> <43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
- <87ldyh6eyu.wl-tiwai@suse.de> <18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
- <87h6956dgu.wl-tiwai@suse.de> <c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
-In-Reply-To: <c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
-From: Dean Matthew Menezes <dean.menezes@utexas.edu>
-Date: Thu, 24 Oct 2024 20:22:38 -0500
-Message-ID: <CAEkK70SojedmjbXB+a+g+Bys=VWCOpxzV5GkuMSkAgA-jR2FpA@mail.gmail.com>
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-To: Kailang <kailang@realtek.com>
-Cc: Takashi Iwai <tiwai@suse.de>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Linux Sound System <linux-sound@vger.kernel.org>, 
-	Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a9902a4ece9329af1e1e42f5fea76861f0bf0e8.camel@proton.me>
 
-I get the same values for both
+Hi,
 
-axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
-0x5a SET_COEF_INDEX 0x00
-nid = 0x5a, verb = 0x500, param = 0x0
-value = 0x0
-axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
-0x5a SET_PROC_COEF 0x00
-nid = 0x5a, verb = 0x400, param = 0x0
-value = 0x0
+Thanks for the bug report.
 
-axiom /home/dean # hda-verb /dev/snd/hwC0D0 0x5a SET_COEF_INDEX 0x00
-nid = 0x5a, verb = 0x500, param = 0x0
-value = 0x0
-axiom /home/dean # hda-verb /dev/snd/hwC0D0 0x5a SET_PROC_COEF 0x00
-nid = 0x5a, verb = 0x400, param = 0x0
-value = 0x0
+Coincidentally, I face the same problem with my TC Electronic Desktop
+Konnekt 6, which reports one available port and two invalidated ports, and
+investigate its cause. I think the problem occurs just for the devices
+which have three or more ports.
+
+I sent a fix[1] just now by referring to your suggestions. Would you please
+evaluate the fix with your device?
+
+I'm sorry for your inconvenience.
+
+
+[1] [PATCH] firewire: core: fix invalid port index for parent device
+https://lore.kernel.org/lkml/20241025034137.99317-1-o-takashi@sakamocchi.jp/
+
+
+Thanks
+
+Takashi Sakamoto
+
+On Thu, Oct 24, 2024 at 01:56:31PM +0000, Edmund Raile wrote:
+> Hello,
+> 
+> I'd like to report a regression in firewire-ohci that results
+> in the kernel hardlocking when re-discovering a FireWire device.
+> 
+> TI XIO2213B
+> RME FireFace 800
+> 
+> It will occur under three conditions:
+>  * power-cycling the FireWire device
+>  * un- and re-plugging the FireWire device
+>  * suspending and then waking the PC
+> 
+> Often it would also occur directly on boot in QEMU but I have not
+> yet observed this specific behavior on bare metal.
+> 
+> Here is an excerpt from the stack trace (don't know whether it is
+> acceptable to send in full):
+> 
+> kernel: ------------[ cut here ]------------
+> kernel: refcount_t: addition on 0; use-after-free.
+> kernel: WARNING: CPU: 3 PID: 116 at lib/refcount.c:25
+> refcount_warn_saturate (/build/linux/lib/refcount.c:25 (discriminator
+> 1)) 
+> kernel: Workqueue: firewire_ohci bus_reset_work
+> kernel: RIP: 0010:refcount_warn_saturate
+> (/build/linux/lib/refcount.c:25 (discriminator 1)) 
+> kernel: Call Trace:
+> kernel:  <TASK>
+> kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
+> (discriminator 1)) 
+> kernel: ? __warn.cold (/build/linux/kernel/panic.c:693) 
+> kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
+> (discriminator 1)) 
+> kernel: ? report_bug (/build/linux/lib/bug.c:180
+> /build/linux/lib/bug.c:219) 
+> kernel: ? handle_bug (/build/linux/arch/x86/kernel/traps.c:218) 
+> kernel: ? exc_invalid_op (/build/linux/arch/x86/kernel/traps.c:260
+> (discriminator 1)) 
+> kernel: ? asm_exc_invalid_op
+> (/build/linux/./arch/x86/include/asm/idtentry.h:621) 
+> kernel: ? refcount_warn_saturate (/build/linux/lib/refcount.c:25
+> (discriminator 1)) 
+> kernel: for_each_fw_node (/build/linux/./include/linux/refcount.h:190
+> /build/linux/./include/linux/refcount.h:241
+> /build/linux/./include/linux/refcount.h:258
+> /build/linux/drivers/firewire/core.h:199
+> /build/linux/drivers/firewire/core-topology.c:275) 
+> kernel: ? __pfx_report_found_node (/build/linux/drivers/firewire/core-
+> topology.c:312) 
+> kernel: fw_core_handle_bus_reset (/build/linux/drivers/firewire/core-
+> topology.c:399 (discriminator 1) /build/linux/drivers/firewire/core-
+> topology.c:504 (discriminator 1)) 
+> kernel: bus_reset_work (/build/linux/drivers/firewire/ohci.c:2121) 
+> kernel: process_one_work
+> (/build/linux/./arch/x86/include/asm/jump_label.h:27
+> /build/linux/./include/linux/jump_label.h:207
+> /build/linux/./include/trace/events/workqueue.h:110
+> /build/linux/kernel/workqueue.c:3236) 
+> kernel: worker_thread (/build/linux/kernel/workqueue.c:3306
+> (discriminator 2) /build/linux/kernel/workqueue.c:3393 (discriminator
+> 2)) 
+> kernel: ? __pfx_worker_thread (/build/linux/kernel/workqueue.c:3339) 
+> kernel: kthread (/build/linux/kernel/kthread.c:389) 
+> kernel: ? __pfx_kthread (/build/linux/kernel/kthread.c:342) 
+> kernel: ret_from_fork (/build/linux/arch/x86/kernel/process.c:153) 
+> kernel: ? __pfx_kthread (/build/linux/kernel/kthread.c:342) 
+> kernel: ret_from_fork_asm (/build/linux/arch/x86/entry/entry_64.S:254) 
+> kernel:  </TASK>
+> 
+> I have identified the commit via bisection:
+> 24b7f8e5cd656196a13077e160aec45ad89b58d9
+> firewire: core: use helper functions for self ID sequence
+> 
+> It was part of the following patch series:
+> firewire: add tracepoints events for self ID sequence
+> https://lore.kernel.org/all/20240605235155.116468-6-o-takashi@sakamocchi.jp/
+> 
+> #regzbot introduced: 24b7f8e5cd65
+> 
+> Since this was before v6.10-rc5 and stable 6.10.14 is EOL,
+> stable v6.11.5 and mainline are affected.
+> 
+> Reversion appears to be non-trivial as it is part of a patch
+> series, other files have been altered as well and other commits
+> build on top of it.
+> 
+> Call chain:
+> core-topology.c fw_core_handle_bus_reset()
+> -> core-topology.c   for_each_fw_node(card, local_node,
+> report_found_node)
+> -> core.h            fw_node_get(root)
+> -> refcount.h        __refcount_inc(&node)
+> -> refcount.h        __refcount_add(1, r, oldp);
+> -> refcount.h        refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
+> -> refcount.h        REFCOUNT_WARN("addition on 0; use-after-free")
+> 
+> Since local_node of fw_core_handle_bus_reset() is retrieved by
+> 	local_node = build_tree(card, self_ids, self_id_count);
+> build_tree() needs to be looked at, it was indeed altered by
+> 24b7f8e5cd65.
+> 
+> After a hard 3 hour look traversing all used functions and comparing
+> against the original function (as of e404cacfc5ed), this caught my eye:
+>        for (port_index = 0; port_index < total_port_count;
+> ++port_index) {
+>                switch (port_status) {
+>                case PHY_PACKET_SELF_ID_PORT_STATUS_PARENT:
+>                        node->color = i;
+> 
+> In both for loops, "port_index" was replaced by "i"
+> "i" remains in use above:
+>        for (i = 0, h = &stack; i < child_port_count; i++)
+>                h = h->prev;
+> 
+> While the original also used the less descriptive i in the loop
+>        for (i = 0; i < port_count; i++) {
+>                switch (get_port_type(sid, i)) {
+>                case SELFID_PORT_PARENT:
+>                         node->color = i;
+> but reset it to 0 at the beginning of the loop.
+> 
+> So the stray "i" in the for loop should be replaced with the loop
+> iterator "port_index" as it is meant to be synchronous with the
+> loop iterator (i.e. the port_index), no?
+> 
+> diff --git a/drivers/firewire/core-topology.c b/drivers/firewire/core-
+> topology.c
+> index 8c10f47cc8fc..7fd91ba9c9c4 100644
+> --- a/drivers/firewire/core-topology.c
+> +++ b/drivers/firewire/core-topology.c
+> @@ -207,7 +207,7 @@ static struct fw_node *build_tree(struct fw_card
+> *card, const u32 *sid, int self
+>                                 // the node->ports array where the
+> parent node should be.  Later,
+>                                 // when we handle the parent node, we
+> fix up the reference.
+>                                 ++parent_count;
+> -                               node->color = i;
+> +                               node->color = port_index;
+>                                 break;
+> 
+> What threw me off was discaridng node->color as it would be replaced
+> later anyways (can't be important!), or so I thought.
+> 
+> Please tell me, is this line of reasoning correct or am I missing
+> something?
+> 
+> Compiling 24b7f8e5cd65 and later mainline with the patch above
+> resulted in a kernel that didn't crash!
+> 
+> In case my solution should turn out to be correct, I will gladly
+> submit the patch.
+> 
+> Kind regards,
+> Edmund Raile.
