@@ -1,45 +1,31 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52C11B6D1E
-	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 11:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E41670809;
+	Fri, 25 Oct 2024 14:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729857169; cv=none; b=HeReipw1Nm4xKLWVXZd8l8nEDVn8t3dnLIlysrCyZ5x439FUrnwf6Tm4NNpLIa5C8lXBku8sgTDywib4ClfwfGJKRPsHNfkHemV4NlKa8LeYudCiBXWUNh0ep6yAqKJTK/LGmmS/V8S0nFtHrvhCasfr8zuqXHU1QpAh3Uvrqy4=
+	t=1729867662; cv=none; b=mi20ZbDP0Kn49DKu+9NjGDAhZFJ4iX2DlLALkmI5+ibpkmoKkmrm4wvmknENzsGYxk9bVN3HiijqSdoKlYFx7rJEFTbEcfdlWaPlt3xn4BsgybRT2i7Pc/LYp6ztnQwMhHWT3BShMIfnLQDeiX+gWgGXXi7qDVdQPAa7tvK4zts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729857169; c=relaxed/simple;
-	bh=J0w0CRKvFjbgPcKdTa0ghGahWPu5fZXRVHkiS+qSlJ8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:From:
-	 References:In-Reply-To; b=aTmrguXabk+/ctU7JXzvYYEZkt9zyLqqjahXavXzO51k26hrs88gSO4MvqDfPiB7gYzpdZ9zdGBIxOhePZ1p56PbDXEOkuAAC3N85kyM58CZExhSqE/MzJOU+JvEenjs8+FE3VqYOoZAVS8n6l+ii6g7q5snVI219r7Y0D/X+Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=WE4xFSG0; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1729867662; c=relaxed/simple;
+	bh=oShrWHWcljZokYmT9YyRMqv4UbAa7cq5MJNVTYh8YYU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=BFCNpbWTbUHR3manROa2UWNLdsmkNTYW7WP/2Z+Fon43GhkOboJ+SBRjCEV/EwB+8xIo8ZYev60liZeJZhhYZmUkObzI7OtXMiiLyNZdjfLzn0J6y7o9z/6OoIAOJB9PtiG879KeyLgLhP0oOodpd5+qQW45zV3CDGT5PU1ScSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4uAq5RO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="WE4xFSG0"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 4F6CE6002C23;
-	Fri, 25 Oct 2024 12:52:38 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id ujDn4Jn9IZZN; Fri, 25 Oct 2024 12:52:35 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 8D16F600298B;
-	Fri, 25 Oct 2024 12:52:35 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1729857155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J0w0CRKvFjbgPcKdTa0ghGahWPu5fZXRVHkiS+qSlJ8=;
-	b=WE4xFSG0TOaq5bC+Qk1pRTITv4L/vPKznQe74YzTeYc3Q5P4SbDbp2qYa9P9dZOUgwIuJ/
-	PP/JHfrllj3Lq2PYLgusi5/mfnbeX5lxxxEVQ9IzZ6PGIoZeFNGPU3fe4aHuLprrGmIMpM
-	U4gvormObxE6giQdv6WIVSdrhDj+Hic=
-Received: from localhost (unknown [IPv6:2001:8a0:6a67:5600:aca0:c311:d240:b169])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id C81A83601AD;
-	Fri, 25 Oct 2024 12:52:34 +0100 (WEST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4uAq5RO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091C0C4CEE3;
+	Fri, 25 Oct 2024 14:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729867660;
+	bh=oShrWHWcljZokYmT9YyRMqv4UbAa7cq5MJNVTYh8YYU=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=S4uAq5ROqjZfgSGA+6gxv2i2D9X83o7nW+2mYJXFMjktVHNtByrIGEPH1YkGX2lVV
+	 rKJP7XdgSCL2D/JFm38qb1qK99hVQyD5ewTP6UoP/YznBBHK+62z9faP2NrHOyfScZ
+	 5BoDwzD6OmpNEvYKZv4jF7g2nF5jeoha+MQ7lYo93NMH9i5EnTpLqhiR6JkO7YKIkp
+	 IvU/NqHLq7Q8NBX5lfdEDZNj5GlFFaNGFbcJSsjRx6vJ6EIX3C6PiE1gx0HSw8LOwM
+	 YxtrOKrcdEI/rTKBygGI6HERDM+AdOaWwQfTNQmBphMD8n/K1JzqNwM4f42qA7alQ6
+	 +8NLRQbKyy/IQ==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,55 +34,85 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 25 Oct 2024 12:52:33 +0100
-Message-Id: <D54V6LMBOVIW.2XKY3HBGCDYPR@tecnico.ulisboa.pt>
-To: "Linux regressions mailing list" <regressions@lists.linux.dev>,
- <kherbst@redhat.com>, <lyude@redhat.com>, <dakr@redhat.com>,
- <airlied@gmail.com>, <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
- <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] GM20B pmu timeout
-From: "Diogo Ivo" <diogo.ivo@tecnico.ulisboa.pt>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20241010133253.30311-1-diogo.ivo@tecnico.ulisboa.pt>
- <041511ee-4556-422a-8604-30b5e0dfd21c@leemhuis.info>
-In-Reply-To: <041511ee-4556-422a-8604-30b5e0dfd21c@leemhuis.info>
+Date: Fri, 25 Oct 2024 17:47:36 +0300
+Message-Id: <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
+Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
+ since 1b6d7f9eb150
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Christian Heusel" <christian@heusel.eu>, "Peter Huewe"
+ <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>, "James Bottomley"
+ <James.Bottomley@hansenpartnership.com>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <regressions@lists.linux.dev>
+X-Mailer: aerc 0.18.2
+References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+In-Reply-To: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
 
-Hi Thorsten,
+Yeah, this is on the list.
 
-On Tue Oct 15, 2024 at 7:13 PM WEST, Linux regression tracking (Thorsten Le=
-emhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
+See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
+
+I had a fix for the AMD boot-time issue already over a month ago
+but unfortunately took time to get enough feedback.
+
+BR, Jarkko
+
+On Fri Oct 25, 2024 at 3:11 AM EEST, Christian Heusel wrote:
+> Hello everyone,
 >
-> On 10.10.24 15:32, Diogo Ivo wrote:
-> >=20
-> > Somewhere between 6.11-rc4 and 6.11-rc5 the following error message is =
-displayed
-> > when trying to initialize a nvc0_screen on the Tegra X1's GM20B:
-> >=20
-> > [ 34.431210] nouveau 57000000.gpu: pmu:hpq: timeout waiting for queue r=
-eady
-> > [ 34.438145] nouveau 57000000.gpu: gr: init failed, -110
-> > nvc0_screen_create:1075 - Error allocating PGRAPH context for M2MF: -11=
-0
-> > failed to create GPU screen
+> Adam reports that since switching to the 6.10 kernel they have a popping
+> sound from time to time (roughly every 10 minues) on their headphones
+> which are connected via a [UGREEN's 5-in-1 USB-C Hub][0].
 >
-> Thx for the report. Hmmm. No reply so far. :-/
+> We have then done a [lengthy bisection][1] on the mainline kernel which
+> came to the conclusion that the following commit is the culprit of the
+> issue:
 >
-> Diogo, maybe report this here as well:
-> https://gitlab.freedesktop.org/drm/nouveau/-/issues/
+>     1b6d7f9eb150 ("tpm: add session encryption protection to tpm2_get_ran=
+dom()")
 >
-> Afterwards drop a link to the ticket here. Reporting nouveau issues via
-> email should work, but maybe you have more luck there.
+> Since I thought that these results are likely not correct Adam has
+> verified our results again by re-testing the bisection steps and again
+> came to the same conclusion. Additionally I have shot the same question
+> [at Jarkko on Mastodon] to find out if it's possible that changes in the
+> TPM subsystem can have such an effect.. Without knowing the exact commit
+> we had bisected to he pointed to the same functionality:
 >
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > Jarkko Sakkinen (@jarkko@social.kernel.org):
+> >
+> > @gromit i might actually might have hunch for this but have been
+> > unmotivated to move forward before these patches are merged. One thing
+> > at a time IMHO, especially with performance fixes.
+> > NOTE: this is a hyphothesis.
+> >
+> > tpm2_get_random() needs to be reconsidered with encryption as hwrng
+> > calls it often enough and there's now more overhead.
+> >
+> > It pulls entropy in small chunks subtracting the length in the look
+> > like you would use read() syscall from user space. This is not right.
+> > This leads to small and variable size exchanges and yeah generally
+> > that equates to an inefficient implemenation with bad latency
+> > properties.
+>
+> If there are any patches to test or if further input is needed from the
+> initial reporter on our Bugtracker we can do that!
+>
+> Thank you all for your hard work on the kernel!
+>
+> Cheers,
+> Chris
+>
+>
+> [0]: https://uk.ugreen.com/collections/hubs-1/products/ugreen-5-in-1-4k-h=
+dmi-usb-c-hub
+> [1]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/is=
+sues/79#note_210599
+> [2]: https://chaos.social/@gromit/113345582873908273
+>
+> ---
+> #regzbot introduced: 1b6d7f9eb150=20
+> #regzbot link: https://gitlab.archlinux.org/archlinux/packaging/packages/=
+linux/-/issues/79
+> #regzbot link: https://chaos.social/@gromit/113345582873908273
+> #regzbot title: tpm: popping sound in headphones connected via USB-C
 
-I opened the ticket as you mentioned but completely forgot to drop the
-link here, so here goes:
-
-https://gitlab.freedesktop.org/drm/nouveau/-/issues/391
-
-I cannot seem to get it properly formatted there, hopefully it's still
-useful.
-
-Thanks,
-Diogo
