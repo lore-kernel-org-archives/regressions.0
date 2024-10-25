@@ -1,134 +1,102 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE581BC5C;
-	Fri, 25 Oct 2024 07:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B739D1B4F1A
+	for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 08:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729841585; cv=none; b=VW8UFeVg5olKQyilSqI2x+vp/sVJ+VRzC/ztAci0T2v+P3TLcwOqv4QC+k7y0lKNAkrf9IPxCleSYsy5qaLiKsL1ldLdSW3AZy5lpf645sthQotMqIS2o0kcss7nQ5VdovUUVUlZAbsrdLYltRWqO+9K16Db/k6slQFcQF3RDbI=
+	t=1729843853; cv=none; b=Xr3KEOJhEDBGOHVLMTq5b9eD1PmdUylZQDgeKX+Uw0NYEPyZV8TQqJDKN/ZoX6Tt6vnv2oKNUQ7pBIjZ3ocLcjON7izLEhqH1xclde3thmoPlrFfljOnXOl2NNVYXNHrC6cmY5q05MnXs1eqAn0VavGYwA85rPggX4bBo+gJWg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729841585; c=relaxed/simple;
-	bh=rQzYkXul6Rw+pJQnum4RN5R3vzG9twby/wiCPRhKPHQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fAXhtMVUYAQQKBt7vh/q0tjHJvNcFPbRTCV8K5ucVG2jbUBpFs4RgNCzx7IhBMH1SUgNK4bbf0BN5LIZKZv+U8McqeaN4EBDd/3q91QBcGlK5ysm4JnxvnZXVqw1vhsWn9ZlRxTXMzoSzbcK6mAsvPG9EQ7XWwvnR6vIR8iHQnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=pNgK1Bw2; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1729843853; c=relaxed/simple;
+	bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b71J9Au9shHQa8o03W0E84LY9cpKzGkyW4o2G1AvxHpDhUbqjzkp0n7mXKjW2TN+tZ2d8YYDqZnacNW8yCzRnRw+z5OiIzVRUPUeG5uOys3KxnqO4Z1WU0Lt5DqRad04WsOkGo1drDSDUSf9StZQ4WDC76snCQm2fOyEYxVM8DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ETl6Ol5N; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="pNgK1Bw2"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 49P7WqX22255012, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1729841572; bh=rQzYkXul6Rw+pJQnum4RN5R3vzG9twby/wiCPRhKPHQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=pNgK1Bw2tTTECiBFspXvtWclZJNJte6AB6QwXNhJpt8I+28LeoK4Vu9Y26HwB3SI5
-	 +gxq7TYZNRSHp9iZOWyfARXNOYx8DycVz8KLhWANKOZDARgIG2WuZu/42wx7xDXWq+
-	 qG1W/wbnG2EMtbmx5cLPeENec7AgNPGMLBlyd6CL3x0K8fdE/O3dgLuAGFsfdSHcWe
-	 LlvrGpEIp2BJOlg9y+PvIPEc5S7++O5YnnShDCmW7Y3MG7BGZW5w40auZePYxOBiOT
-	 KRAWN4KXsSoiOmoErEt1SDUpbV74MQr6r9ZFlrdv3x2I3py7eVWD2ezwMfNwoLCZEa
-	 SSzWLbPvvGePA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 49P7WqX22255012
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Oct 2024 15:32:52 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 25 Oct 2024 15:32:52 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 25 Oct 2024 15:32:51 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2]) by
- RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2%7]) with mapi id
- 15.01.2507.035; Fri, 25 Oct 2024 15:32:51 +0800
-From: Kailang <kailang@realtek.com>
-To: Takashi Iwai <tiwai@suse.de>,
-        Dean Matthew Menezes
-	<dean.menezes@utexas.edu>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Jaroslav Kysela
-	<perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Linux Sound System
-	<linux-sound@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: RE: No sound on speakers X1 Carbon Gen 12
-Thread-Topic: No sound on speakers X1 Carbon Gen 12
-Thread-Index: AQHbIwVT/23eeZo4dEmkKtnQN51H6bKP5WWAgABb9wCAAJxEgP//e3+AgACHy9D//4FDgIAAhkBggAVELQCAAGMKAIAAiivw
-Date: Fri, 25 Oct 2024 07:32:51 +0000
-Message-ID: <7450fb7c26d64049a92ba4b5df022b41@realtek.com>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
-	<2024101613-giggling-ceremony-aae7@gregkh>
-	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-	<87bjzktncb.wl-tiwai@suse.de>
-	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-	<87cyjzrutw.wl-tiwai@suse.de>
-	<CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-	<87ttd8jyu3.wl-tiwai@suse.de>
-	<CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
-	<87h697jl6c.wl-tiwai@suse.de>
-	<CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
-	<87ed4akd2a.wl-tiwai@suse.de>	<87bjzekcva.wl-tiwai@suse.de>
-	<CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
-	<877ca2j60l.wl-tiwai@suse.de>	<43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
-	<87ldyh6eyu.wl-tiwai@suse.de>	<18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
-	<87h6956dgu.wl-tiwai@suse.de>	<c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
-	<CAEkK70SojedmjbXB+a+g+Bys=VWCOpxzV5GkuMSkAgA-jR2FpA@mail.gmail.com>
- <87ldyctzwt.wl-tiwai@suse.de>
-In-Reply-To: <87ldyctzwt.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETl6Ol5N"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e2c2a17aa4so341377a91.0
+        for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 01:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729843851; x=1730448651; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
+        b=ETl6Ol5NW+MlnKeNXt6SH47kYGN2KmiqGJQylmQpv/5MjoIlqvJuK/LWB2WWK6Q9H0
+         VmszZoqscYFptTpLoDLhRPbOxnc+YnCvdj+0Ulxn/o+4/86zSoe1ecaaPuIkfFL8wYid
+         7EwZmT7kqsD9w+RTloFvJJnzUk60snugbo9rJavo0FzhRiXdRUG8JmJMzQz43nroUpJU
+         OnDQnsyEJpcL/wIVpTjK8LJ31SyNEvdFxbv8JydNUyOR8JVrKpFscDi2E+a1SBkfMksQ
+         tAqGftqmMky0qxbKq/oL+DE7DCaVmQr0qTQoKeahJ9L41Zv1xTwWfo1hBxxe37OVDv+x
+         zfqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729843851; x=1730448651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QxIPJtYLaqp7GcRN9wXG0w03pUAqJ2kV07BZzgdMuRs=;
+        b=qYiVJlQZ6KnQQuYoma+ws22TyWQQJ5Xo2lPDfc+iXYY6GlgdINI+j0oOgIwMFVsrKj
+         tagdd3njqI8Bs4BVW0GIZXTWqAgkPsT6InITzP2sFd93PMIkReCMeONwI6+FXdzf6f2K
+         3U/fXIJJCmoqokxrtIK22LBBffxJI9kc9rw4BB90fcY04EPE4h64SxeQzZhuWwKl8R+C
+         v9Sa8GpQokkxgpNKJ3ou7Ca7V2P6LsALkQzIb768pT1bYAMRnb+xPQOF8rtsXDJHxNk7
+         NhEll/Yi2Rj4CAh0JV1kBjLGomQLYq3ljwCpyzI5ZmU1Jlx0S+1IcGeRxItagtZNMsz1
+         E7vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOzOdq/1Yoj+ykHq+4vZ+x8PNdaDT2R0VK2G9IuoI51ku/G4wLCTTg0vg3RO8kznmlzhlAvgEUFZO/BA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx8Xop7CpFxhg4HgVuoN2QSpnUdA99WTjsKqWUTqtoGU1ldW6VC
+	oYcmCHy/ez+u4t7dqtzXCLuRWN1SlLJJb3oC5ci730efi58w80B4WcnuDUZhBYjneTNZqSKDnL6
+	O5B5PtJKJJV1OiJLLFx5645givTg=
+X-Google-Smtp-Source: AGHT+IGPvqhUDFBkOrQZPHHnvPcIrx/rb8ZygTWHg/zDEP3AqX5dEQ8DbwE6syU+VnzrC/rKZmINXToaxuTbKVRq2qs=
+X-Received: by 2002:a17:90b:4f47:b0:2e2:de92:2d52 with SMTP id
+ 98e67ed59e1d1-2e8e8239caamr324426a91.9.1729843851009; Fri, 25 Oct 2024
+ 01:10:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+References: <Zv8RIs-htdc-PtXB@archlinux> <202410040958.C19D3B9E48@keescook>
+ <ZwNb-_UPL9BPSg9N@archlinux> <CAGG=3QUatjhoDHdkDtZ+ftz7JvMhvaQ9XkFyyZSt_95V_nSN8A@mail.gmail.com>
+ <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux> <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux> <20241021192557.GA2041610@thelio-3990X>
+ <ZxpIwkfg9_mHO3lq@archlinux> <20241025011527.GA740745@thelio-3990X>
+In-Reply-To: <20241025011527.GA740745@thelio-3990X>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 25 Oct 2024 10:10:38 +0200
+Message-ID: <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in bch2_xattr_validate
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
+	Thorsten Blum <thorsten.blum@toblux.com>, kent.overstreet@linux.dev, 
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ardb@kernel.org, ojeda@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Oct 25, 2024 at 3:15=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> on the official submission.
 
+Same -- please feel free to add:
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Friday, October 25, 2024 3:17 PM
-> To: Dean Matthew Menezes <dean.menezes@utexas.edu>
-> Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>;
-> stable@vger.kernel.org; regressions@lists.linux.dev; Jaroslav Kysela
-> <perex@perex.cz>; Takashi Iwai <tiwai@suse.com>; Linux Sound System
-> <linux-sound@vger.kernel.org>; Greg KH <gregkh@linuxfoundation.org>
-> Subject: Re: No sound on speakers X1 Carbon Gen 12
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Fri, 25 Oct 2024 03:22:38 +0200,
-> Dean Matthew Menezes wrote:
-> >
-> > I get the same values for both
-> >
-> > axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
-> > 0x5a SET_COEF_INDEX 0x00 nid =3D 0x5a, verb =3D 0x500, param =3D 0x0 va=
-lue =3D
-> > 0x0
->=20
-> Here OK, but...
->=20
-> > axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
-> > 0x5a SET_PROC_COEF 0x00
->=20
-> ... here run GET_PROC_COEF instead, i.e. to read the value.
->=20
-But SOF mode can't read from this usage. I forgot.
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
 
->=20
-> thanks,
->=20
-> Takashi
+One nit below that is fine either way:
+
+> > +# clang needs to be at least 19.1.3 to avoid __bdos miscalculations
+> > +# https://github.com/llvm/llvm-project/pull/110497
+> > +# https://github.com/llvm/llvm-project/pull/112636
+> > +# TODO: when gcc 15 is released remove the build test and add gcc vers=
+ion check
+
+I would perhaps move these closer to the respective lines they are
+comment on (i.e. `depends on` and `def_bool`).
+
+Thanks!
+
+Cheers,
+Miguel
