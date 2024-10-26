@@ -1,70 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D85621A4C8;
-	Fri, 25 Oct 2024 15:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F2EB665
+	for <regressions@lists.linux.dev>; Sat, 26 Oct 2024 00:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729870161; cv=none; b=s+FnoUGBBUkdCsCa4veSmKg2M9n2s+Lk/aBGvF4T9KkkxMNqH2gIhfZlsTuEUqi9gKZpKydYdraBHk3hLh+IN55KaJxnLODzCWW9xg92GTXbvbLWKjQwWc9DN5KJHaxkas7bRMijMih3VR4jQKzeK4Dd3ebpB2XUZCc/QeGQNw8=
+	t=1729902208; cv=none; b=XPNCIT/bG93K8eTRI6TeFuWBI62BYJnuLd4ravoE3X6i3H0jvJ1upGyr6ooyG6PwIVKWd0bYjUGIZcdOzDX2EvSrr5smIWch1aeaBjEMPwmA66BSmUEddG3y1H9zzMKQ0FPMoXyGra0jLmb1tsIFqyi0EkcJeOOQGqmAC4CRThA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729870161; c=relaxed/simple;
-	bh=+VVkpxPz1PkOKJ1Ggp+aWO/GdSOi60d28ezThI4PUsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BDnvigSt9NNADu4nARwlie+xl2+oQ4Lhcxj1UZTRz5KulPFKKatCxH4Hfvr2HwCZPR/cZRdDam0qd24aBMdAHCHlPaVAJaaLTeeTkRCVgonpoK4oBtYtFLE9x+vQaxRYZCOshO2JuQpqnfvJyi9nX5fLYbKnhOO99C7WfmHWAmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KG204BnO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729902208; c=relaxed/simple;
+	bh=kHhUUsS7acJboSqyOaR4b0wxr2z4CQuptpcP3cOxPOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a1MhVMZcrIzYMi/YsF4YQiB8a3u+7VOPz4tY++oaLNLdo+eHjOPSZnGmzO3m/jSmgh07NNoTMpIxqX0qwHBQnKrQnJS8dADvS40DaCQF1dIU52zejRy9Pu7F4H9eSFfEg5AeKqJOUdcFxMhSzRmyhNJAbuipW64xVWlmfGtHSdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu; spf=pass smtp.mailfrom=utexas.edu; dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b=Y9bESGcW; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=utexas.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=utexas.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KG204BnO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D04C4CEC3;
-	Fri, 25 Oct 2024 15:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729870160;
-	bh=+VVkpxPz1PkOKJ1Ggp+aWO/GdSOi60d28ezThI4PUsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KG204BnOCzTaCP8BF7zEcCk+c9Xx9Xx5RqUDtfAJDNJY3u//4oFcGfl8bxanZWvYj
-	 c5U8XkDx5rjAQwcJQSmr2rVI/DzltYVAZu0AuFrliq2PW3/68tBP+1ErryUs00+d0x
-	 wCFnyjIXQIh9ERtzvcjYGHlTa9EogYgtDG3FDOkZFXJU6UhsQZu16pr0xXvlJhw5dH
-	 oRRZrIh+uA8fbbk9xDp4GqYxsQpNXQO8bene+LxTSeGdfp97DbelytuXPncwn/Ee9R
-	 lHFhEy5ZKxk4rWn+jBCzh0jGGaSuuaT5/gyu3YltaomScbSsuif5B1ZaD9RoqzJyYp
-	 pSQGBpae7c15A==
-Date: Fri, 25 Oct 2024 17:29:14 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Will Deacon <will@kernel.org>, ericvh@kernel.org, lucho@ionkov.net, 
-	asmadeus@codewreck.org, Alexander Viro <viro@zeniv.linux.org.uk>, oss@crudebyte.com, 
-	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, oleg@redhat.com, keirf@google.com, 
-	regressions@lists.linux.dev
-Subject: Re: VFS regression with 9pfs ("Lookup would have caused loop")
-Message-ID: <20241025-aberglaube-gerissen-5e1a9da4fffc@brauner>
-References: <20240923100508.GA32066@willie-the-truck>
- <20241009153448.GA12532@willie-the-truck>
- <4966de3e-6900-481c-8f6b-00e37cebab7e@leemhuis.info>
- <20241025-ungewiss-zersplittern-c124bc48be5c@brauner>
+	dkim=pass (2048-bit key) header.d=utexas.edu header.i=@utexas.edu header.b="Y9bESGcW"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e3686088c3so1899802a91.0
+        for <regressions@lists.linux.dev>; Fri, 25 Oct 2024 17:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=utexas.edu; s=google; t=1729902205; x=1730507005; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kHhUUsS7acJboSqyOaR4b0wxr2z4CQuptpcP3cOxPOA=;
+        b=Y9bESGcWeZ5ZgBPDtWztWdrh5iThKjZBEeGEwOL0iWtDbRDpsu8e0DZOFMO7ZAXA65
+         8oRCZKsCPuuU8JHLQqtqriIFDUr0FlS+4ha3IY2IUMtlQaPqIs/257isWQ6mH7qWTTsM
+         Pwt+AmcwxGgi7m73zvLYVPfwKmnSM5FyklzGesz3a7B7f/15QTAIzlZKOw7NuTxwrFeg
+         XjsStSbkGbiJ9t4WC/Vy9SVTv+uI4dPd1sjcVW9GJo9b1AieEjLlqctungE36pT1KKGv
+         Nqo66hXRZidZrNe43ymLrTTEbdTu1RnE5EPr1GUFtf2DT+J+6q5GjZ+XRQKUpvUgmaht
+         HEOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729902205; x=1730507005;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kHhUUsS7acJboSqyOaR4b0wxr2z4CQuptpcP3cOxPOA=;
+        b=l2vsdgVjjtW36Uajxg25kaXIgMiv7KLAg10riBwdXSkZ8ig/7LxIOeOPeMYH6JzTNp
+         /m/8PpxlttPnQq/wLDCVOyZPgUDHCAeJLg3vVxxNiMmQhNVeF5OfoTiJJ/HU9H/ZoG2n
+         SV8WXdzUkEYSdB3K+kUS1jiJ8gvCxBHk81ne9/ZKgVdEUXzmuViU3J9W1NU/JDmNyY2S
+         09z+Vs4ayKg4W/GyQvMQZDoVGAD2xzyzM24tc8dx6aJYQWqWvqXBFGze4P7yHHPJ4BrL
+         XE+YtLkTpEqljlwWHOzOk4/8ubqL+6Wb7sK2O+lz39yWCKh0aUKGwGpxbFa1e6C1+gaz
+         NBNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUe5VIkkAp77UlD/Vx+NSqHSfcUW/6M3SsMQhVtCW0TslaC1fOhk12y3wMIkVpobd4YT9aKIVIK/LYFLA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxVcc7FVmGk98ehNM8GNM6oROerNGQD1zRAz7uRKS4bPqKyKW8h
+	no3BhcZRv/IHyPvMregm8j7CSWYAe9036gGmFS4MPls3tu88mFiDLrpVqDBf40C/825fjigm9lx
+	f5gnPbxPAU/AH74HA3GtjWre0qXuGG3Uf0Oo2zg==
+X-Google-Smtp-Source: AGHT+IF+e3IRvBmjVpfJ/vxYU8vFlrWmYswc5pBL+hm7q7VnV/9ycdn4zyZKiMu8ons8xjFulaoKdAI1FVJ/t9ECa/c=
+X-Received: by 2002:a17:90b:3849:b0:2e0:ab57:51ec with SMTP id
+ 98e67ed59e1d1-2e8f11a82c9mr1465674a91.30.1729902205319; Fri, 25 Oct 2024
+ 17:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241025-ungewiss-zersplittern-c124bc48be5c@brauner>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
+ <2024101613-giggling-ceremony-aae7@gregkh> <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+ <87bjzktncb.wl-tiwai@suse.de> <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
+ <87cyjzrutw.wl-tiwai@suse.de> <CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
+ <87ttd8jyu3.wl-tiwai@suse.de> <CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
+ <87h697jl6c.wl-tiwai@suse.de> <CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
+ <87ed4akd2a.wl-tiwai@suse.de> <87bjzekcva.wl-tiwai@suse.de>
+ <CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
+ <877ca2j60l.wl-tiwai@suse.de> <43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
+ <87ldyh6eyu.wl-tiwai@suse.de> <18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
+ <87h6956dgu.wl-tiwai@suse.de> <c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
+ <CAEkK70SojedmjbXB+a+g+Bys=VWCOpxzV5GkuMSkAgA-jR2FpA@mail.gmail.com> <87ldyctzwt.wl-tiwai@suse.de>
+In-Reply-To: <87ldyctzwt.wl-tiwai@suse.de>
+From: Dean Matthew Menezes <dean.menezes@utexas.edu>
+Date: Fri, 25 Oct 2024 19:22:48 -0500
+Message-ID: <CAEkK70RAek2Y-syVt3S+3Q-kiriO24e8qQGDTrqC-Xt4kHzbCA@mail.gmail.com>
+Subject: Re: No sound on speakers X1 Carbon Gen 12
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Kailang <kailang@realtek.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Linux Sound System <linux-sound@vger.kernel.org>, 
+	Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Oct 25, 2024 at 05:25:47PM +0200, Christian Brauner wrote:
-> On Tue, Oct 15, 2024 at 08:07:10PM +0200, Thorsten Leemhuis wrote:
-> > Hi Will! Top-posting for once, to make this easily accessible to everyone.
-> > 
-> > Thx for bringing this to my attention. I had hoped that Eric might reply
-> > and waited a bit, but that did not happen. I kind of expected that, as
-> > he seems to be  somewhat afk, as the last mail from him on lore is from
-> > mid-September; and in the weeks before that he did not post much either.
-> > Hmmm. :-/
-> > 
-> > CCed Christian and Al, maybe they might be able to help directly or
-> > indirectly somehow. If not, we likely need to get Linus involved to
-> > decide if we want to at least temporarily revert the changes you mentioned.
-> 
-> Sorry, I'm just getting to this thread now as I'm still out with a
-> fscking case of the flu.
-> /me reads...
+I get the same output: axiom /home/dean # hda-verb /dev/snd/hwC0D0
+0x5a SET_COEF_INDEX 0x00
+nid = 0x5a, verb = 0x500, param = 0x0
+value = 0x0
+axiom /home/dean # hda-verb /dev/snd/hwC0D0 0x5a GET_PROC_COEF 0x00
+nid = 0x5a, verb = 0xc00, param = 0x0
+value = 0x0
 
-Ok, so this seems handled already. Great.
+On Fri, 25 Oct 2024 at 02:16, Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Fri, 25 Oct 2024 03:22:38 +0200,
+> Dean Matthew Menezes wrote:
+> >
+> > I get the same values for both
+> >
+> > axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
+> > 0x5a SET_COEF_INDEX 0x00
+> > nid = 0x5a, verb = 0x500, param = 0x0
+> > value = 0x0
+>
+> Here OK, but...
+>
+> > axiom /home/dean/linux-6.11.3/sound/pci/hda # hda-verb /dev/snd/hwC0D0
+> > 0x5a SET_PROC_COEF 0x00
+>
+> ... here run GET_PROC_COEF instead, i.e. to read the value.
+>
+>
+> thanks,
+>
+> Takashi
