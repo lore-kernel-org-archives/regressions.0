@@ -1,72 +1,141 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796DF7DA93
-	for <regressions@lists.linux.dev>; Sun, 27 Oct 2024 09:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992CF16F8EF;
+	Sun, 27 Oct 2024 14:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730020898; cv=none; b=teF9H9iWC/LI3Nmg7bnVKscMMiPcOepyDww+0HOhRq7X+cnq3hz+DuXzVGli/fMtvwTeBqBg39jz7ftb1oU3z3PbegNZ32APoElTqun5BlZPMlNBiaVTscezJSJLguWpeiadUc7vYec6HFyjFEm8SRdpTcYb9dKDuC93mUsdMJg=
+	t=1730037995; cv=none; b=oJziin6/c7utTW+d4aQqn7zlxmGx+/z29NoSiyox6MrFfw1GZIvyaXpUVyLcR2CtqtdBa4gwUAl35nxn0ib58wmJZaMV/HMU9mN21B0T6h7YzpDK3bgrEmHVZBpmtTtrI7o5jlanGOAAFq+MWA5tm1Eq/lZFq261eNwR1XXaFjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730020898; c=relaxed/simple;
-	bh=3slS6FARsrxzu/cgOnZl4ke33pcTpw6jtosWPiLkacw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=ZW+89OPI9tYGPLoF4quKJEx4TifUpeDKhzzjNp0l4Jov8kqFmWt/u6kP9cLsX5lD1FzaEi2oa7gefR6lgMH+gFDaRf/4GCZeTo1Ns3oDhATV3ctOwTXwbhYCd8K+3JVZY6OaxGo0TvPOCqWSzvgGLB+6VyfHe71aEMjrb82SdyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qSt3YwkC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1730037995; c=relaxed/simple;
+	bh=shzMhA1ShIAzT/nl39/7faxKV6dT0AWJD5xF0gYTwuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+pTFRjcuZ0K6iPulQnF2KmVr4Nu15Oktg1SiAhkq6AEnI87duYVOtZ9XlLz1E2tpre3bhg7gYuoTENRZwRC5uHnzNlCioApvK2LoGfSibP+nqR6o5o9xqJC6sQuh652BZMTYHN8Rw1bLT7hFyi+RDm7IInW2cP5cEGltU4yJ+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=AsyQpyZw; arc=none smtp.client-ip=212.227.17.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qSt3YwkC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=3slS6FARsrxzu/cgOnZl4ke33pcTpw6jtosWPiLkacw=; t=1730020896;
-	x=1730452896; b=qSt3YwkCbRBLYTr9LxuMBDjeAnCB2TyiiGhkzxWh+1meKKxQ/uK05eoUATsjy
-	PCtfjFMT1Rp/A91PmRjD+yL7FgowrBxNizWmESpMyRXZYEpFiZyc4u+kzsOzH6rW0J/hfCnK8iad9
-	kYg5HMJ3i3eSSPW/5sl2UoPfGQIbgS0hzfGDMwTB6wzhqaFW/wah2jO0LqdeMSbEtabTZpcFrFp+u
-	DPaligeYAlGih+vIRAnZEHKXIOvN3jO0pCgCFNIeb3jyfznemxKTLqrC0be6jlU3qxwKtCVyyFuZ+
-	LyKtRfDtu0rsbjfcsf3MTt8o74nAf7bDNIesouIfHjj4xJA+8Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t4zSi-0000Ob-T6; Sun, 27 Oct 2024 10:21:28 +0100
-Message-ID: <d642dfc8-7aa7-4e3a-9886-9213adfe5032@leemhuis.info>
-Date: Sun, 27 Oct 2024 10:21:28 +0100
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="AsyQpyZw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1730037971; x=1730642771; i=christian@heusel.eu;
+	bh=jClmXAlUGXYrZ7D0GspMoXRQShIjacF/nvZ/v7Jg9oA=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=AsyQpyZwUbrIy+LY5pWQZH7Qyzc48geigQrSR2a0ZbvnnvcEME2RxK4VP/+lW2SH
+	 gkQTwBqitfK4pjUlXwFikk3hgBY9+pHMwzsxBiP97Ks0hjZ8kdzK9QYusO+pK3Ki2
+	 SlnXedkDhBVjW+Rq/CPC2pGhbg9XEfzPfAlLzHdzslxhqoK/7GrQSMuuxaskE1VPM
+	 oemlH4iASedrrX7YH8DKgHqphRrY01Sqq70IPuBbFrmH3mS+OCNjOlNHshmEb0Lj1
+	 BqAiVUh2e2IY3gmccJq4R22bGdkOj0GMsAFaDLHgG5xXSxdvkVdUVGjRnkwzF/+KC
+	 HVtzAgbSdb5cslSk9A==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1MKc0o-1tJHuI3ZWO-00NhJl; Sun, 27
+ Oct 2024 15:06:10 +0100
+Date: Sun, 27 Oct 2024 15:06:09 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: "Ned T. Crigler" <crigler@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Jeff LaBundy <jeff@labundy.com>, Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
+ kernel 6.11
+Message-ID: <69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
+References: <Zx2iQp6csn42PJA7@xavtug>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1730020896;8528d7f6;
-X-HE-SMSGID: 1t4zSi-0000Ob-T6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6ltj3y347njtiyc7"
+Content-Disposition: inline
+In-Reply-To: <Zx2iQp6csn42PJA7@xavtug>
+X-Provags-ID: V03:K1:bcEW9OKSDcBN6iBJVT1IxSn0dhS4niUXkbBATWCvAS/NBbUxjJY
+ Z3U3r2AUtpIW8o+uKSENCloX8B1NS9WxK0ftmtonYDROog7N386GJWdcnEl7nGCf+9u1deT
+ ffHvWqhKOxr3tqN76jso3hbaAF3JWWTn87il7JwSjd6fxVQ+l4/TPNbgwHR7bLj/QMTqQ36
+ 2fT8BkhgXis4YLwPCe+iA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:caUVJ2Omcak=;WNv1/VZRLTlqtc4h3php6RNqUdS
+ r8poFdSan4gIt2JasRh72OQEoN9MmrvV6wJIDseSAWDPEMgGPDk9cVSeCzgefNxRz5laGerXY
+ Rp29Q0XCrE0m48Lt1+O+kDC4K7/AAQd4BDB60l4HnoF88uVVfBPylIDzuHzTm42nYW2D9WcYa
+ yfAU/zhfiM45rMrV7vU2U3GnfMlVXvtkq3f+pHk+iiCwyd4R7ptOizEn5ZPnulbGC0LGZdo8X
+ 6HFWfXf4EKOO6bdAkwVwL/rGCqY8uGyhhVFp0YzA33lahwWHIiFG9zahdpfTOEZzDFExCrd0T
+ SX4PtH72kCG2d31w0VB3+AKO3iVhCumaTJ4nGLZ9B8Jv5i+GFudJDOlS1b8bkT8UC8vRfYtTc
+ iuwizEccItXSBSqtwuWZN1oNzmhpsyRb7BWInCPct2NHE46Bw3VnU1kZ9cvI0z15uw/1wrAOD
+ MN4z+vBWQPe74Im8vnevUDl9KONWWVr0c9R0vLCh/kzu/31vpgZ+lqrLRpmnZqrelk0Y2F6j2
+ O04oCD5YZxcdxPnc1UcAL3e9DOoJSQdkOewlXbRLERVi3Qe+kmkLThXRxdMi96JnUl8IIpBsj
+ cwG/AHu95n9p1/BZtPwNQFE2ic0QZFw1jKg7TMLd/5x1OuFkKJOCZY9olGB6s9UvDDWkzTxTY
+ 0P702eTc2wgTGkQQS9IQNcu+AGoFQoTFIHfGOyEEEOHgSdDY0aIHu1vnRvTnXJwogmf3cqagr
+ Pp+kw/fZ9f6+ZxueYRvtfmY0EaLqIpjnA==
 
 
+--6ltj3y347njtiyc7
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
+ kernel 6.11
+MIME-Version: 1.0
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+On 24/10/26 07:15PM, Ned T. Crigler wrote:
+> Hi,
 
-#regzbot report:
-https://lore.kernel.org/lkml/20241018172804.GA2151929@nvidia.com/
-#regzbot fix: 79efebae4afc22
+Hey Ned,
 
-#regzbot report: https://bugzilla.suse.com/show_bug.cgi?id=1229012
-#regzbot introduced: efa7df3e3bb5
-#regzbot summary: mm, mmap: performance regression in darktable
-#regzbot monitor:
-https://lore.kernel.org/all/2050f0d4-57b0-481d-bab8-05e8d48fed0c@leemhuis.info/
+> It looks like starting with kernel 6.11, disabling and re-enabling
+> magic
+> sysrq fails with these errors in dmesg:
+>=20
+> kernel: input: input_handler_check_methods: only one event processing
+> method can be defined (sysrq)
+> kernel: sysrq: Failed to register input handler, error -22
+>=20
+> after doing:
+>=20
+> # echo 0 > /proc/sys/kernel/sysrq
+> # echo 438 > /proc/sys/kernel/sysrq
+> # echo 0 > /proc/sys/kernel/sysrq
+> # echo 438 > /proc/sys/kernel/sysrq
+> # echo 0 > /proc/sys/kernel/sysrq
+> # echo 438 > /proc/sys/kernel/sysrq
 
+I have found that this issue is also present in the latest mainline
+release and bisected it to the following commit:
 
+    d469647bafd9 ("Input: simplify event handling logic")
+
+The additional authors / maintainers have been added to the recipients
+lists.
+
+I hope I didn't overlook any pending fixes.
+
+> --=20
+> Ned T. Crigler
+
+Cheers,
+Chris
+
+--6ltj3y347njtiyc7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmceSNEACgkQwEfU8yi1
+JYXzXA/9GvWBON+9+wLDs4ZyBFbK2Vj514B0nAODEVNVS4+DlS9eg8/IKst/iybB
+YfEy/8NF6uRcyk74E36HOWQVe2BkG6bDK0ZzudNkLJy6ej3r1Z6ivAyJs8tLRGrV
+IoUBY0W4HzVo3cUb/tMoRkVTo/8XAroaB2iE/Znkq2VKe2ma6NEvnjuJgFbIE6aq
+NP8LXOH1XYnzrJLB/O2n5ejs+4vOO+AdKiQ/pptf9F1uWA3QLscLGY+BhLpyVPG8
+CxttSjehC/oyV0PcCXfDLvRaNPlbY3LyLmCYMqfFDVWK7kUVqZ5cnlOW78kmIOro
+gyi9EdP7jqu1HGsSU9xc6YXUe3ZEcrT2M3TRrbNn6C5rGOoIK1KXQy0+h8ru0cEq
+TgxixZDfuljKoGkDeMUZP+htIw3mLbkQK2CcHOoFxBZx49UaC3wR5cF7NPR4FeM/
+fSQNwmcsGnXBdENcjTWOcZIoujKA/AK1j4mPYAgseJC4CheUfQqFViApE1m2tehC
+/LN3c3VYxq4HcQYCIHOCyCPreQQgPCZ5P0n+xNTikklaJiR2m+zFddVTPBcyx86q
+MaRC6cWxDUnipA/T5qzVkpSIwlzuBQ7mAYa5F7Xo7wnRfV3RAcBV10M6zY3wjsiG
+UNy/Lo68/HiwHoa9JeJ2clU+DzB8IPgD0D4WkcyRVx9r02TvS/4=
+=+itq
+-----END PGP SIGNATURE-----
+
+--6ltj3y347njtiyc7--
