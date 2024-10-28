@@ -1,98 +1,79 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1651D54C5
-	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 11:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CB01DAC9F
+	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 12:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730114123; cv=none; b=m87KmVNRDrMNmbeBf4CNOCYjq/5CHPwfAnjbKCdyagdBi+ELeystH9X/TcZbGaHWCX+fS+uRkYpiV6iZ0zoPzrHGoBpjX91vhZy6z7f0tbJLcY0QNR1skadW+tlv9YXzZ/zeE5nh/EiU3NGCi4EBfO8XFvRCiN6JaaIPgYb6+rg=
+	t=1730117362; cv=none; b=Ka6U3jcRknMPP9q9kvrYIgrVteMm7pUwdpQGrOtH9kV0ZJ1Xd5mQMSsNLFOxU8lI8ySas/I+k7feX32RuOI8bdKH1ZdMntA/CiKCY0B0qHSbfHuErhwY0GMFeRNIwdXjwAYCH5mkXDHNs9Wx69R4bgnBs677wdyyOP/syJZf+ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730114123; c=relaxed/simple;
-	bh=o40vLJF3BhZaPEsLLLDudzK2h1sDZMe+2JjzMNY6nBU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=CymPYh/ObjBtO+PyXX3TJJuCH9O1DWuB5M64HNFX3EfJpI9H1/yZR7d0S34/tve36BGxVvJIj23d6mp8uEss7z6mzF47bq/i1iI4wE3imcWZaf6o5fuc0Sw0iVEs5wpXJ0C6GUKeV6CRE5Z+iysDG+Od+UWrmHQaWjXfGEl/bTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kd37F/n4; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730117362; c=relaxed/simple;
+	bh=FrBuF1J1GzsMWoM33Lhm4KpGE6R8zmMwmDZJPez6VoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=KUainYKyTNQ7WTyu3hKEnSPR4ZBHWyOla8kfu2l0Kk4HmHf5vmpjjesQLXLd4nZezvSuHp8ySyRAZNvbRF0XXxQ1nbRQJrLRZ6o6Kx8NDMlLT5DknI1rRTjazPlgbOZIIFsPwLzk8kas6SzH7aClHG0gUONrbM+Y1oZyrCq2IgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CyZJcPN0; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kd37F/n4"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-83aba237c03so138310339f.3
-        for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 04:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730114121; x=1730718921; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o40vLJF3BhZaPEsLLLDudzK2h1sDZMe+2JjzMNY6nBU=;
-        b=kd37F/n48lXUWqK3DkQ8JPQHtBp9qf2oMatAaacdkDReG+QCuqZZQaIp45rQ2BoVVB
-         Qe19ti47V3mGn44AXD+6Ij0yfT2OU56s78eYShMeCMu1oDZVIHp6jpwVgRB8x1trUPes
-         +BzNh5hYEgQCtsQjTZUE7zlrpsXfDQCaswqFF124TfTHXLReG+zmNkeVH1Ejlk7HZyuO
-         FXT6NrtoYGmY3Wyvlbv+5alQMg4D95T0qgDWPSE1Tx0jLUWOEVToO5tnAVDdEWmSfLLq
-         6xEnJWHcWdirXJSj9IKvUFnahcfxI7GCqA7f+/EbIDOBqPW+Am4frQ1R3g2ACpgU3QE1
-         dWCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730114121; x=1730718921;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o40vLJF3BhZaPEsLLLDudzK2h1sDZMe+2JjzMNY6nBU=;
-        b=HkK4E24BitZzPRbpc856BqmteF2gJqcDsNFUQkm1TJfETSWc9lrh9I0ZxVgGkQx8yx
-         t3RRfdaHE2+WqjKdhtg11ZlGcOjTfZGhP/E9G97UxTk5T1bwO1D+zwvzpJUzyymgvU0E
-         qpR1qNo6c90M3PD7kC2rIFGU6pV0uSvaNvkkTOrdXpwgOXE0I61RW2OdytO81MDObUhd
-         KJNtFslf89hi5RlNxMAdmaEdN86FATlYu/oeRleVZoeHBILWP8VgzPyvjtU8wXaqmu2y
-         1t3sVZ5zttj1yOS5HQ+8pDo6uZWmG0Lv7D6oMkd4zx4IltbiMxj7TM+Dq6qpKLyrqizB
-         87qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQeGZeHVJccwPZPlVxVj+Ora8gy1FA/CTK95fSPGpZPLGsi3R0dRvQ5ODvh1mTDxDraixSyzMJ1cJbFg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwpS1ooPzGhtDecsZqse85PI91LdBP0jxnsigZNfg0cwmct3LIB
-	jZblm8jiBRYiTiv8M+lU+elfU3alB8OlfAbgSVA+YIMdSYc9memJZcloNNHwb/yi0lDdBNzQtEQ
-	SGruLdpYr5Q1unCqU7FxsDuKng/54FzAP
-X-Google-Smtp-Source: AGHT+IGLdmWh31jtT64TtCjVtFG4zpYJXxVdqe86MxZJhnLUBdxBzPK009ielBNty80zQFy5wKN4MMegA9wKklLCdrA=
-X-Received: by 2002:a05:6602:641c:b0:83a:a8c6:21ad with SMTP id
- ca18e2360f4ac-83b1c41a25amr618176139f.7.1730114121119; Mon, 28 Oct 2024
- 04:15:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CyZJcPN0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=FrBuF1J1GzsMWoM33Lhm4KpGE6R8zmMwmDZJPez6VoQ=; t=1730117360;
+	x=1730549360; b=CyZJcPN0jiwpzxd8zxeJrBy5gkCuhRrPnDJTJa8cmhapxA1hrM/stzS1EwL6V
+	MQomMCbY/8KctPLi3UH/zl7yKxSHTRz1YOnffeazGqkfhAMn5yb2UdS/ettQkN4wjNl8v2Z6PRd5U
+	px8dzDzwYbq18/qas/e1QX0QqGtlcQbkVCEXvt49WTy0dEi/jb+ki9rWRplERyOtchcWQ68255Y/7
+	R4rDIVXUJecBeJw3FVo3kbyfyVerUCBW9HPDubvKlj6kIuVysC2XdCdVlwo2ogPp6lIEkNjfINuJ9
+	EeKQps8hN23DAyXAwhfYIgAuF7t+OQqCiI5XVjIWUjKInUZOXQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1t5OYf-000671-8H; Mon, 28 Oct 2024 13:09:17 +0100
+Message-ID: <45cabebb-6c39-4f9f-8ef4-8561ebaaf783@leemhuis.info>
+Date: Mon, 28 Oct 2024 13:09:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Rui Ueyama <rui314@gmail.com>
-Date: Mon, 28 Oct 2024 20:15:09 +0900
-Message-ID: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
-Subject: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no longer
- returns it
-To: stable@vger.kernel.org
-Cc: brauner@kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1730117360;183ebd4c;
+X-HE-SMSGID: 1t5OYf-000671-8H
 
-I'm the creator and the maintainer of the mold linker
-(https://github.com/rui314/mold). Recently, we discovered that mold
-started causing process crashes in certain situations due to a change
-in the Linux kernel. Here are the details:
 
-- In general, overwriting an existing file is much faster than
-creating an empty file and writing to it on Linux, so mold attempts to
-reuse an existing executable file if it exists.
 
-- If a program is running, opening the executable file for writing
-previously failed with ETXTBSY. If that happens, mold falls back to
-creating a new file.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-- However, the Linux kernel recently changed the behavior so that
-writing to an executable file is now always permitted
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
-?id=3D2a010c412853).
-That caused mold to write to an executable file even if there's a
-process running that file. Since changes to mmap'ed files are
-immediately visible to other processes, any processes running that
-file would almost certainly crash in a very mysterious way.
-Identifying the cause of these random crashes took us a few days.
+#regzbot report: https://lore.kernel.org/all/Zx2iQp6csn42PJA7@xavtug/
+#regzbot introduced: d469647bafd9
+#regzbot summary: Input: disabling and re-enabling magic sysrq fails
 
-Rejecting writes to an executable file that is currently running is a
-well-known behavior, and Linux had operated that way for a very long
-time. So, I don=E2=80=99t believe relying on this behavior was our mistake;
-rather, I see this as a regression in the Linux kernel.
+#regzbot report:
+https://lore.kernel.org/all/CANPzkXkRKf1a6ZvOJU=m3NwW4B0gQnQSRggw=ZnK6kBYmqLtBw@mail.gmail.com/
+#regzbot fix: 306ed1728e84
 
-Here is a bug report to the mold linker:
-https://github.com/rui314/mold/issues/1361
+#regzbot report:
+https://lore.kernel.org/lkml/20241007132555.GA53279@francesco-nb/
+#regzbot resolve: inconclusive: report MIA, but likely fixed
 
-#regzbot introduced: 2a010c41285345da60cece35575b4e0af7e7bf44
+#regzbot report:
+https://lore.kernel.org/dri-devel/f163bcec-e5b1-4aef-91dd-431736fd6d11@xenosoft.de/
+#regzbot introduced: 90985660ba48
+#regzbot fix: 8e82d1199564ea
+
+
