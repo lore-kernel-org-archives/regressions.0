@@ -1,70 +1,71 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD58A1CD2C
-	for <regressions@lists.linux.dev>; Sun, 27 Oct 2024 17:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A16018E37F
+	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 05:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730048555; cv=none; b=az7fH7PpU2D1IqLC9ErmXKLr0kmSg/0CHnV1hJjIh5TqnlY0Fr0kxWLXTovfyIRBHImABdO9MK3yG4tmKEmN4wxqk8uNm1rdqFG3jO+46nMyAFEr2+pn5NyXLCXrg1HOWLBAOwA9fsoe79sObULal3FIaxiZsVZ4Gd3eGV/L1PM=
+	t=1730093443; cv=none; b=uNmoZIHSwisZ/i0lGdK3vAEq6sM3jCHwuMaC4iberapoX/H8ugBRZQX8trUsUP+YPhQtVu7sdxprmpx+sIVKiMGmB7x687Kk1Vktywq+m2omnEjbkfKm/3VJy2VgcC/pZZdpHxv2j+WcDiFC8UVTb0oWR279EYURGdYU2YyeFQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730048555; c=relaxed/simple;
-	bh=ezaYr65rJZJ51k+pNPhphDmxWAXK/bpIsOIydLxH4zA=;
+	s=arc-20240116; t=1730093443; c=relaxed/simple;
+	bh=KMuC/PM7GZ5U7HQpS8WEbL/aHcDUCQW7cGwcES+XeiQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TFCvluJErOxz3w9Z/EwQVlyj1zpiO0MqzcZnL5U7eDEAIL80Yw5YSP3kZXstWu80KQ42urMkCADHg/LG2DsMPk6pjEHD5kTDoyVbcOQZxvxi2Wmz6e2cWiY0nxPKNoyulzVAz3N1AhOumOgwinmtY5HppGTvtcW1BV4P8KvZZQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KHTRfk/s; arc=none smtp.client-ip=209.85.214.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=qX3MLPN8lW34a20cpextSZC9LhNXIDxmCCNSa7B+8aXyEino1t1UighlRoDqNwoZ1ayd/QpQ4QbSc2W36Afkub2/DF+wA8O5k6jInVfoXnd1nF+XVp37e8JFcQYwmbP/heiTrh8ZQRkgS8PkL02SYHrytr0FYGgIj6wAMlW6TIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyb6Xzmq; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHTRfk/s"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20b5affde14so24622325ad.3
-        for <regressions@lists.linux.dev>; Sun, 27 Oct 2024 10:02:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyb6Xzmq"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20cdda5cfb6so36025475ad.3
+        for <regressions@lists.linux.dev>; Sun, 27 Oct 2024 22:30:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730048553; x=1730653353; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1730093440; x=1730698240; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKnhGmzZl2AIuxdBwoQ/4eMB1r9ZfA4SkjcpsUkyFQg=;
-        b=KHTRfk/sdRNjtk1Ud0OAuxXBP1eRElYpsRVTD95kpqa/Hk4fom6fXoyqf3O+FiZfXE
-         9ayjvapDhUXCYzM+u7nM+Q4w2yEEsz9GjRLXpAY1HWivwOBFPWPaEUkzC0dxBdwntO50
-         EscQztF17pPt71AJ1uoer9QHhu+klayiJl45cwTi5W6XtOSZrfXyw5qSNBniKoCEHEwM
-         tWl8wbMmxfju9K9eVdKD0Hcpnymtozorc5VzsNAXWDhxNBVWEzjTYJ97ewoRwiP6zYwI
-         FCQ8Ou7YWAxfShL/uZTDIUGUPU4UC2zgnXdZeq8U56h4No2Sr9Xi0r2q/uxcbRSNN20z
-         9Plw==
+        bh=nB0i+YKzuQxeeV9gVTy/O89BBtG/8v8kIWRpdQ/XRsY=;
+        b=gyb6XzmqdfYuyKsPc9KgmFSFyRATIy2dAjceMWHJzOsH5XGw9s9vm4tnGbuoWBLSl1
+         DigadSf/AO4xQvI5f/HjJ+SriJN+E0ZnArYJcCs6ZoVYf6uQpJ4SAtEleVfnt/b+5f0G
+         Uqu3wU7tHvKDtOlaBkbBtFf7eme/p/FHql/kTeiwBNpuoCQdMzM3PEACm8cpMS23eLCX
+         e/OyVkolDZ426fEP9xaxcTZ+/1j4pDuX11vDUGZ+LaOGlFcj5e34ixZ8h85Tirr/1YTE
+         lDr9zEKnQ/0uc0RWsrXDgnoY1i+vvr8nlonWQ7ii7UE6XL/edCNAx3X98aFw1LVY/5xl
+         0uZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730048553; x=1730653353;
+        d=1e100.net; s=20230601; t=1730093440; x=1730698240;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HKnhGmzZl2AIuxdBwoQ/4eMB1r9ZfA4SkjcpsUkyFQg=;
-        b=U361y9aiF39vAPxyn189ocUrT28EKR5UDhjFhpcLpXqYUDT6Y9JuhQ+c6kiof2+KOa
-         7a/BezC2Vat7e9jp9VZrKSZ7lmq0AqCppSJ/gLDGYlYHp1xQh3knaTRQnG3U1M/KdUsj
-         c/frLMSLU7fDHOf3AzQjSKIh+VFmeM1blw2rE5mXdO2bm1DDjWNAVu5uhJeioYPQxWGB
-         PRKEHrD5CXQ2hfJWWW/TJiuIIShIahhX+jqHbuNxOWZyTqQBoV2eIMELT4nsjFcMXsi8
-         6D8DuEiWq6ypvzA8utiZ2iTihY/92vFxyz65R1rA08LlFCHc+dqGl7BpDDxXcAe5iD55
-         QMgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaa3odacgRS/Ja+O/qD/a2CdOhCfIzCcppiW7F/Ooc4VkHBfCQtO3n31quINojDAUIQwWvEavSdnZV+g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzT/ezQ6Fb6Kf6j2HhieBf0itVT3uYiOpL497aJPRs1qtaer5dG
-	EnUNOgy0uKCcf1QUSjBft3Ct6I07+xvofxnwx5UKe0JsJEF8VnAY
-X-Google-Smtp-Source: AGHT+IGK1mBEd5LH4WnjEs7ICQ//qew36B2aQOB433vS46GN0DgBj2PBePzkM5DJu/RdkyREmU6/8w==
-X-Received: by 2002:a17:903:2a90:b0:20c:e8df:2516 with SMTP id d9443c01a7336-210c6c344admr74242425ad.42.1730048552998;
-        Sun, 27 Oct 2024 10:02:32 -0700 (PDT)
-Received: from xavtug (2603-9008-1600-2265-a236-bcff-feba-a919.inf6.spectrum.com. [2603:9008:1600:2265:a236:bcff:feba:a919])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc0179e6sm37235595ad.168.2024.10.27.10.02.31
+        bh=nB0i+YKzuQxeeV9gVTy/O89BBtG/8v8kIWRpdQ/XRsY=;
+        b=ZstrpZUOmjMbydISaQn3hjrQlKbRecdJ0FCX2vukq+0OaeHPgHmb/7+DR/t6SLRt+i
+         mzGgTN6xKdmbAB/bvhCZeKyRmVzFr9bw8SJa9hx6GjvTG3fTq3KDpA2wcV/cHRqkWATZ
+         Bm3cgPZuZTYDkl3iVYC5lOVGhCHhR6OBqMeDxEue9S6133HgFQU25oauamx035yHf1Jy
+         l3buBSyFE0nqOaiw2aby44jeKeMH45REi4acy+m+E7rKf0c315cWvTBOhht/kks6vu8r
+         tsgDj/8UzWe1eMZNt9iVLS31C/cWaiXI7mGKUGjrgAEW9j6tI1UYeRh1RimkZ1ODtdwZ
+         meeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbhqD2Yb2yfy//Rz0BLhWiN778WHCD1dAnClOqWr5nehI8ASTpHPX+Nf7sHZDaGpYLkyj2pdDr/TZI7g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxYVdMGUl/yNQS7xPMhqFYQg9IQwiNDAg4cX3HMHEynlsGUNP2M
+	lnrBSlg2Mji/bxnWi4DoXpWP1SDbrTXInsKiA9WTrklWjPrMnJpY
+X-Google-Smtp-Source: AGHT+IGBW3BFYByMPk10lCkVSBOmAUmXJI+7N948hP/vO4DBn4eojPrKLVYAPst2jxpjSGxhH6aWrQ==
+X-Received: by 2002:a17:903:2302:b0:207:1675:6709 with SMTP id d9443c01a7336-210c6731076mr99531365ad.0.1730093439641;
+        Sun, 27 Oct 2024 22:30:39 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:e9cd:720b:a97f:8af8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc02eb81sm43120815ad.207.2024.10.27.22.30.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2024 10:02:32 -0700 (PDT)
-Date: Sun, 27 Oct 2024 10:02:24 -0700
-From: "Ned T. Crigler" <crigler@gmail.com>
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: Christian Heusel <christian@heusel.eu>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, Jeff LaBundy <jeff@labundy.com>,
+        Sun, 27 Oct 2024 22:30:39 -0700 (PDT)
+Date: Sun, 27 Oct 2024 22:30:36 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: "Ned T. Crigler" <crigler@gmail.com>
+Cc: Peter Seiderer <ps.report@gmx.net>,
+	Christian Heusel <christian@heusel.eu>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Jeff LaBundy <jeff@labundy.com>,
 	Benjamin Tissoires <bentiss@kernel.org>
 Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
  kernel 6.11
-Message-ID: <Zx5yIEZwT5SxzCTx@xavtug>
+Message-ID: <Zx8hfE2_3zXSTi05@google.com>
 References: <Zx2iQp6csn42PJA7@xavtug>
  <69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
  <20241027163744.2d396c61@gmx.net>
+ <Zx5yIEZwT5SxzCTx@xavtug>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -73,126 +74,336 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241027163744.2d396c61@gmx.net>
+In-Reply-To: <Zx5yIEZwT5SxzCTx@xavtug>
 
-Hi Peter, Christian,
+Hi everyone,
 
-On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
-> Hello Ned, Christian, *,
+On Sun, Oct 27, 2024 at 10:02:24AM -0700, Ned T. Crigler wrote:
+> Hi Peter, Christian,
 > 
-> On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heusel.eu> wrote:
-> 
-> > On 24/10/26 07:15PM, Ned T. Crigler wrote:
-> > > Hi,
-> >
-> > Hey Ned,
-> >
-> > > It looks like starting with kernel 6.11, disabling and re-enabling
-> > > magic
-> > > sysrq fails with these errors in dmesg:
+> On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
+> > Hello Ned, Christian, *,
+> > 
+> > On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heusel.eu> wrote:
+> > 
+> > > On 24/10/26 07:15PM, Ned T. Crigler wrote:
+> > > > Hi,
 > > >
-> > > kernel: input: input_handler_check_methods: only one event processing
-> > > method can be defined (sysrq)
-> > > kernel: sysrq: Failed to register input handler, error -22
+> > > Hey Ned,
 > > >
-> > > after doing:
+> > > > It looks like starting with kernel 6.11, disabling and re-enabling
+> > > > magic
+> > > > sysrq fails with these errors in dmesg:
+> > > >
+> > > > kernel: input: input_handler_check_methods: only one event processing
+> > > > method can be defined (sysrq)
+> > > > kernel: sysrq: Failed to register input handler, error -22
+> > > >
+> > > > after doing:
+> > > >
+> > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > # echo 438 > /proc/sys/kernel/sysrq
+> > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > # echo 438 > /proc/sys/kernel/sysrq
+> > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > # echo 438 > /proc/sys/kernel/sysrq
 > > >
-> > > # echo 0 > /proc/sys/kernel/sysrq
-> > > # echo 438 > /proc/sys/kernel/sysrq
-> > > # echo 0 > /proc/sys/kernel/sysrq
-> > > # echo 438 > /proc/sys/kernel/sysrq
-> > > # echo 0 > /proc/sys/kernel/sysrq
-> > > # echo 438 > /proc/sys/kernel/sysrq
-> >
-> > I have found that this issue is also present in the latest mainline
-> > release and bisected it to the following commit:
-> >
-> >     d469647bafd9 ("Input: simplify event handling logic")
-> >
-> 
-> After the mentioned commit a call sysrq_register_handler() -->
-> input_register_handler(&sysrq_handler) with sysrq_handler.filter set
-> will result in sysrq_handler.events set to input_handler_events_filter,
-> see drivers/input/input.c (line 2607 to 2608):
-> 
-> 2596 int input_register_handler(struct input_handler *handler)
-> 2597 {
-> 2598         struct input_dev *dev;
-> 2599         int error;
-> 2600
-> 2601         error = input_handler_check_methods(handler);
-> 2602         if (error)
-> 2603                 return error;
-> 2604
-> 2605         INIT_LIST_HEAD(&handler->h_list);
-> 2606
-> 2607         if (handler->filter)
-> 2608                 handler->events = input_handler_events_filter;
-> 2609         else if (handler->event)
-> 2610                 handler->events = input_handler_events_default;
-> 2611         else if (!handler->events)
-> 2612                 handler->events = input_handler_events_null;
-> 
-> So the second call will fail at the check 'input_handler_check_methods(handler)'
-> which only allows one method to be set, see drivers/input/input.c:
-> 
-> 2517 static int input_handler_check_methods(const struct input_handler *handler)
-> 2518 {
-> 2519         int count = 0;
-> 2520
-> 2521         if (handler->filter)
-> 2522                 count++;
-> 2523         if (handler->events)
-> 2524                 count++;
-> 2525         if (handler->event)
-> 2526                 count++;
-> 2527
-> 2528         if (count > 1) {
-> 2529                 pr_err("%s: only one event processing method can be defined      (%s)\n",
-> 2530                        __func__, handler->name);
-> 2531                 return -EINVAL;
-> 2532         }
-> 2533
-> 2534         return 0;
-> 2535 }
-> 
-> 
-> A quick fix/hack for the sysrq case:
-> 
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void)
->         int error;
-> 
->         sysrq_of_get_keyreset_config();
-> -
-> +       sysrq_handler.events = NULL;
->         error = input_register_handler(&sysrq_handler);
->         if (error)
->                 pr_err("Failed to register input handler, error %d", error);
-> lines 1-13/13 (END)
-> 
-> Regards,
-> Peter
-> 
+> > > I have found that this issue is also present in the latest mainline
+> > > release and bisected it to the following commit:
+> > >
+> > >     d469647bafd9 ("Input: simplify event handling logic")
+> > >
+> > 
+> > After the mentioned commit a call sysrq_register_handler() -->
+> > input_register_handler(&sysrq_handler) with sysrq_handler.filter set
+> > will result in sysrq_handler.events set to input_handler_events_filter,
+> > see drivers/input/input.c (line 2607 to 2608):
+> > 
+> > 2596 int input_register_handler(struct input_handler *handler)
+> > 2597 {
+> > 2598         struct input_dev *dev;
+> > 2599         int error;
+> > 2600
+> > 2601         error = input_handler_check_methods(handler);
+> > 2602         if (error)
+> > 2603                 return error;
+> > 2604
+> > 2605         INIT_LIST_HEAD(&handler->h_list);
+> > 2606
+> > 2607         if (handler->filter)
+> > 2608                 handler->events = input_handler_events_filter;
+> > 2609         else if (handler->event)
+> > 2610                 handler->events = input_handler_events_default;
+> > 2611         else if (!handler->events)
+> > 2612                 handler->events = input_handler_events_null;
+> > 
+> > So the second call will fail at the check 'input_handler_check_methods(handler)'
+> > which only allows one method to be set, see drivers/input/input.c:
+> > 
+> > 2517 static int input_handler_check_methods(const struct input_handler *handler)
+> > 2518 {
+> > 2519         int count = 0;
+> > 2520
+> > 2521         if (handler->filter)
+> > 2522                 count++;
+> > 2523         if (handler->events)
+> > 2524                 count++;
+> > 2525         if (handler->event)
+> > 2526                 count++;
+> > 2527
+> > 2528         if (count > 1) {
+> > 2529                 pr_err("%s: only one event processing method can be defined      (%s)\n",
+> > 2530                        __func__, handler->name);
+> > 2531                 return -EINVAL;
+> > 2532         }
+> > 2533
+> > 2534         return 0;
+> > 2535 }
 
-Thanks for tracking this down. It seems messy that the mentioned commit
-changes input_register_handler to overwrite ->events for an internal purpose,
-and callers may expect it to be unchanged, as sysrq does here by reusing
-sysrq_handler.
+Yes, I did not consider that we might want to re-register the same input
+handler, thank you for alerting me about the regression.
+
+> > 
+> > 
+> > A quick fix/hack for the sysrq case:
+> > 
+> > --- a/drivers/tty/sysrq.c
+> > +++ b/drivers/tty/sysrq.c
+> > @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void)
+> >         int error;
+> > 
+> >         sysrq_of_get_keyreset_config();
+> > -
+> > +       sysrq_handler.events = NULL;
+> >         error = input_register_handler(&sysrq_handler);
+> >         if (error)
+> >                 pr_err("Failed to register input handler, error %d", error);
+> > lines 1-13/13 (END)
+> > 
+> > Regards,
+> > Peter
+> > 
+> 
+> Thanks for tracking this down. It seems messy that the mentioned commit
+> changes input_register_handler to overwrite ->events for an internal purpose,
+> and callers may expect it to be unchanged, as sysrq does here by reusing
+> sysrq_handler.
+
+Yes, indeed. I wonder if we can solve this by moving the derived event
+handler method into input_handle structure, like the patch below. 
+
+Thanks.
 
 -- 
-Ned T. Crigler
+Dmitry
 
-> 
-> > The additional authors / maintainers have been added to the recipients
-> > lists.
-> >
-> > I hope I didn't overlook any pending fixes.
-> >
-> > > --
-> > > Ned T. Crigler
-> >
-> > Cheers,
-> > Chris
-> 
+
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index 3c321671793f..3d2cc13e1f32 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -119,12 +119,12 @@ static void input_pass_values(struct input_dev *dev,
+ 
+ 	handle = rcu_dereference(dev->grab);
+ 	if (handle) {
+-		count = handle->handler->events(handle, vals, count);
++		count = handle->handle_events(handle, vals, count);
+ 	} else {
+ 		list_for_each_entry_rcu(handle, &dev->h_list, d_node)
+ 			if (handle->open) {
+-				count = handle->handler->events(handle, vals,
+-								count);
++				count = handle->handle_events(handle, vals,
++							      count);
+ 				if (!count)
+ 					break;
+ 			}
+@@ -2537,57 +2537,6 @@ static int input_handler_check_methods(const struct input_handler *handler)
+ 	return 0;
+ }
+ 
+-/*
+- * An implementation of input_handler's events() method that simply
+- * invokes handler->event() method for each event one by one.
+- */
+-static unsigned int input_handler_events_default(struct input_handle *handle,
+-						 struct input_value *vals,
+-						 unsigned int count)
+-{
+-	struct input_handler *handler = handle->handler;
+-	struct input_value *v;
+-
+-	for (v = vals; v != vals + count; v++)
+-		handler->event(handle, v->type, v->code, v->value);
+-
+-	return count;
+-}
+-
+-/*
+- * An implementation of input_handler's events() method that invokes
+- * handler->filter() method for each event one by one and removes events
+- * that were filtered out from the "vals" array.
+- */
+-static unsigned int input_handler_events_filter(struct input_handle *handle,
+-						struct input_value *vals,
+-						unsigned int count)
+-{
+-	struct input_handler *handler = handle->handler;
+-	struct input_value *end = vals;
+-	struct input_value *v;
+-
+-	for (v = vals; v != vals + count; v++) {
+-		if (handler->filter(handle, v->type, v->code, v->value))
+-			continue;
+-		if (end != v)
+-			*end = *v;
+-		end++;
+-	}
+-
+-	return end - vals;
+-}
+-
+-/*
+- * An implementation of input_handler's events() method that does nothing.
+- */
+-static unsigned int input_handler_events_null(struct input_handle *handle,
+-					      struct input_value *vals,
+-					      unsigned int count)
+-{
+-	return count;
+-}
+-
+ /**
+  * input_register_handler - register a new input handler
+  * @handler: handler to be registered
+@@ -2607,13 +2556,6 @@ int input_register_handler(struct input_handler *handler)
+ 
+ 	INIT_LIST_HEAD(&handler->h_list);
+ 
+-	if (handler->filter)
+-		handler->events = input_handler_events_filter;
+-	else if (handler->event)
+-		handler->events = input_handler_events_default;
+-	else if (!handler->events)
+-		handler->events = input_handler_events_null;
+-
+ 	error = mutex_lock_interruptible(&input_mutex);
+ 	if (error)
+ 		return error;
+@@ -2687,6 +2629,75 @@ int input_handler_for_each_handle(struct input_handler *handler, void *data,
+ }
+ EXPORT_SYMBOL(input_handler_for_each_handle);
+ 
++/*
++ * An implementation of input_handle's handle_events() method that simply
++ * invokes handler->event() method for each event one by one.
++ */
++static unsigned int input_handle_events_default(struct input_handle *handle,
++						struct input_value *vals,
++						unsigned int count)
++{
++	struct input_handler *handler = handle->handler;
++	struct input_value *v;
++
++	for (v = vals; v != vals + count; v++)
++		handler->event(handle, v->type, v->code, v->value);
++
++	return count;
++}
++
++/*
++ * An implementation of input_handle's handle_events() method that invokes
++ * handler->filter() method for each event one by one and removes events
++ * that were filtered out from the "vals" array.
++ */
++static unsigned int input_handle_events_filter(struct input_handle *handle,
++					       struct input_value *vals,
++					       unsigned int count)
++{
++	struct input_handler *handler = handle->handler;
++	struct input_value *end = vals;
++	struct input_value *v;
++
++	for (v = vals; v != vals + count; v++) {
++		if (handler->filter(handle, v->type, v->code, v->value))
++			continue;
++		if (end != v)
++			*end = *v;
++		end++;
++	}
++
++	return end - vals;
++}
++
++/*
++ * An implementation of input_handle's handle_events() method that does nothing.
++ */
++static unsigned int input_handle_events_null(struct input_handle *handle,
++					     struct input_value *vals,
++					     unsigned int count)
++{
++	return count;
++}
++
++/*
++ * Sets up appropriate handle->event_handler based on the input_handler
++ * associated with the handle.
++ */
++static void input_handle_setup_event_handler(struct input_handle *handle)
++{
++	struct input_handler *handler = handle->handler;
++
++	if (handler->filter)
++		handle->handle_events = input_handle_events_filter;
++	else if (handler->event)
++		handle->handle_events = input_handle_events_default;
++	else if (handler->events)
++		handle->handle_events = handler->events;
++	else
++		handle->handle_events = input_handle_events_null;
++}
++
+ /**
+  * input_register_handle - register a new input handle
+  * @handle: handle to register
+@@ -2704,6 +2715,7 @@ int input_register_handle(struct input_handle *handle)
+ 	struct input_dev *dev = handle->dev;
+ 	int error;
+ 
++	input_handle_setup_event_handler(handle);
+ 	/*
+ 	 * We take dev->mutex here to prevent race with
+ 	 * input_release_device().
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 89a0be6ee0e2..cd866b020a01 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -339,12 +339,16 @@ struct input_handler {
+  * @name: name given to the handle by handler that created it
+  * @dev: input device the handle is attached to
+  * @handler: handler that works with the device through this handle
++ * @handle_events: event sequence handler. It is set up by the input core
++ *	according to event handling method specified in the @handler. See
++ *	input_handle_setup_event_handler().
++ *	This method is being called by the input core with interrupts disabled
++ *	and dev->event_lock spinlock held and so it may not sleep.
+  * @d_node: used to put the handle on device's list of attached handles
+  * @h_node: used to put the handle on handler's list of handles from which
+  *	it gets events
+  */
+ struct input_handle {
+-
+ 	void *private;
+ 
+ 	int open;
+@@ -353,6 +357,10 @@ struct input_handle {
+ 	struct input_dev *dev;
+ 	struct input_handler *handler;
+ 
++	unsigned int (*handle_events)(struct input_handle *handle,
++				      struct input_value *vals,
++				      unsigned int count);
++
+ 	struct list_head	d_node;
+ 	struct list_head	h_node;
+ };
