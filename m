@@ -1,409 +1,157 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A16018E37F
-	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 05:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720B18871E
+	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 08:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730093443; cv=none; b=uNmoZIHSwisZ/i0lGdK3vAEq6sM3jCHwuMaC4iberapoX/H8ugBRZQX8trUsUP+YPhQtVu7sdxprmpx+sIVKiMGmB7x687Kk1Vktywq+m2omnEjbkfKm/3VJy2VgcC/pZZdpHxv2j+WcDiFC8UVTb0oWR279EYURGdYU2YyeFQc=
+	t=1730103499; cv=none; b=fFTDGTDpFDgBhjk7brKO+8chMZnEiPHz/GBib1+S7q9ynGnYd4klLVB/Pt9kQn+i3wiDzlQYb4I+ihseosqfEpu7UtD6KJqrt6O8br4l6868ZpEv7bwiNGAAQqdKKWdwQuXexRw1Uyc5k7Pb8pq+pA78iACp+gIIWSC1TriFSxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730093443; c=relaxed/simple;
-	bh=KMuC/PM7GZ5U7HQpS8WEbL/aHcDUCQW7cGwcES+XeiQ=;
+	s=arc-20240116; t=1730103499; c=relaxed/simple;
+	bh=R1mMvZvpqkvIqo9TFaQ8duYANFkF6LqvMFLJb4X0uzQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qX3MLPN8lW34a20cpextSZC9LhNXIDxmCCNSa7B+8aXyEino1t1UighlRoDqNwoZ1ayd/QpQ4QbSc2W36Afkub2/DF+wA8O5k6jInVfoXnd1nF+XVp37e8JFcQYwmbP/heiTrh8ZQRkgS8PkL02SYHrytr0FYGgIj6wAMlW6TIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyb6Xzmq; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWFeutGr0Bo4yl7Q118GgEtYXCYgw8XGQBXVZr/6KMFL7eMkR2+43NgrM6c1+XYlUVf7KxYdcFghrS2blYD9jClge0NzujlLe9WVtRF+X2Gn4ivs6PP1EAvYrmrRMNB9uepuSC1qfuhmgRc3w+HhekXpTttxMn16IwWiPRPUWEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z9rjCMLU; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyb6Xzmq"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20cdda5cfb6so36025475ad.3
-        for <regressions@lists.linux.dev>; Sun, 27 Oct 2024 22:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730093440; x=1730698240; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nB0i+YKzuQxeeV9gVTy/O89BBtG/8v8kIWRpdQ/XRsY=;
-        b=gyb6XzmqdfYuyKsPc9KgmFSFyRATIy2dAjceMWHJzOsH5XGw9s9vm4tnGbuoWBLSl1
-         DigadSf/AO4xQvI5f/HjJ+SriJN+E0ZnArYJcCs6ZoVYf6uQpJ4SAtEleVfnt/b+5f0G
-         Uqu3wU7tHvKDtOlaBkbBtFf7eme/p/FHql/kTeiwBNpuoCQdMzM3PEACm8cpMS23eLCX
-         e/OyVkolDZ426fEP9xaxcTZ+/1j4pDuX11vDUGZ+LaOGlFcj5e34ixZ8h85Tirr/1YTE
-         lDr9zEKnQ/0uc0RWsrXDgnoY1i+vvr8nlonWQ7ii7UE6XL/edCNAx3X98aFw1LVY/5xl
-         0uZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730093440; x=1730698240;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nB0i+YKzuQxeeV9gVTy/O89BBtG/8v8kIWRpdQ/XRsY=;
-        b=ZstrpZUOmjMbydISaQn3hjrQlKbRecdJ0FCX2vukq+0OaeHPgHmb/7+DR/t6SLRt+i
-         mzGgTN6xKdmbAB/bvhCZeKyRmVzFr9bw8SJa9hx6GjvTG3fTq3KDpA2wcV/cHRqkWATZ
-         Bm3cgPZuZTYDkl3iVYC5lOVGhCHhR6OBqMeDxEue9S6133HgFQU25oauamx035yHf1Jy
-         l3buBSyFE0nqOaiw2aby44jeKeMH45REi4acy+m+E7rKf0c315cWvTBOhht/kks6vu8r
-         tsgDj/8UzWe1eMZNt9iVLS31C/cWaiXI7mGKUGjrgAEW9j6tI1UYeRh1RimkZ1ODtdwZ
-         meeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbhqD2Yb2yfy//Rz0BLhWiN778WHCD1dAnClOqWr5nehI8ASTpHPX+Nf7sHZDaGpYLkyj2pdDr/TZI7g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxYVdMGUl/yNQS7xPMhqFYQg9IQwiNDAg4cX3HMHEynlsGUNP2M
-	lnrBSlg2Mji/bxnWi4DoXpWP1SDbrTXInsKiA9WTrklWjPrMnJpY
-X-Google-Smtp-Source: AGHT+IGBW3BFYByMPk10lCkVSBOmAUmXJI+7N948hP/vO4DBn4eojPrKLVYAPst2jxpjSGxhH6aWrQ==
-X-Received: by 2002:a17:903:2302:b0:207:1675:6709 with SMTP id d9443c01a7336-210c6731076mr99531365ad.0.1730093439641;
-        Sun, 27 Oct 2024 22:30:39 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:e9cd:720b:a97f:8af8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc02eb81sm43120815ad.207.2024.10.27.22.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2024 22:30:39 -0700 (PDT)
-Date: Sun, 27 Oct 2024 22:30:36 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: "Ned T. Crigler" <crigler@gmail.com>
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Christian Heusel <christian@heusel.eu>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Jeff LaBundy <jeff@labundy.com>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
- kernel 6.11
-Message-ID: <Zx8hfE2_3zXSTi05@google.com>
-References: <Zx2iQp6csn42PJA7@xavtug>
- <69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
- <20241027163744.2d396c61@gmx.net>
- <Zx5yIEZwT5SxzCTx@xavtug>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z9rjCMLU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730103497; x=1761639497;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=R1mMvZvpqkvIqo9TFaQ8duYANFkF6LqvMFLJb4X0uzQ=;
+  b=Z9rjCMLU0NFcb366/mtMTMY/r8aooqAqO+8920cHTlDyvJe2D+Rc/WJR
+   qKkk/pHKu5f3rUDzKjG4ZhBabzha2g9c0wXzQaD95VAktARYN32iTJNdW
+   2JD9jFKalyUJ4jrrBTpMPU7qM1genYhO99NYEy0GxuLKj1PZAEzj/odVo
+   z+V83d52e+hDOJ0VVHsoSP/5Y4Ptom0DhELs3moymRe2r2BcEQk8YKNc7
+   XsUF/yYwtv/Bzo23jDTDIfbzgl0Fdo0NUClML86+8/XG0vQ0t8FYsIgQ4
+   Ye8CXe3pjdHTXWEV08I/wFCRYXxkPbzdyd3SEgmZsWkJt3N8S2GUJ4GJv
+   w==;
+X-CSE-ConnectionGUID: zSe/5G2SSaOgYQ9mXBKczw==
+X-CSE-MsgGUID: Mb31LRxtQb+fENC6hsh7ug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11238"; a="29795109"
+X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
+   d="scan'208";a="29795109"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 01:18:17 -0700
+X-CSE-ConnectionGUID: xT+zj1ClTyORr5MwusohNA==
+X-CSE-MsgGUID: i+Od4F4tSMGsZVVv0AvbBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
+   d="scan'208";a="112383129"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Oct 2024 01:18:14 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 63D4813E; Mon, 28 Oct 2024 10:18:13 +0200 (EET)
+Date: Mon, 28 Oct 2024 10:18:13 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Rick <rick@581238.xyz>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
+	christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+Message-ID: <20241028081813.GN275077@black.fi.intel.com>
+References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
+ <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
+ <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
+ <20241022161055.GE275077@black.fi.intel.com>
+ <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+ <20241023061001.GF275077@black.fi.intel.com>
+ <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zx5yIEZwT5SxzCTx@xavtug>
+In-Reply-To: <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
 
-Hi everyone,
+Hi,
 
-On Sun, Oct 27, 2024 at 10:02:24AM -0700, Ned T. Crigler wrote:
-> Hi Peter, Christian,
+On Fri, Oct 25, 2024 at 12:20:55PM +0200, Rick wrote:
+> Hi Mika
 > 
-> On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
-> > Hello Ned, Christian, *,
+> On 23-10-2024 08:10, Mika Westerberg wrote:
+> > Hi,
 > > 
-> > On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heusel.eu> wrote:
+> > On Tue, Oct 22, 2024 at 07:06:50PM +0200, Rick wrote:
+> > > Hi Mika,
+> > > 
+> > > I have removed pcie_asm=force as kernel parameter but still not working on
+> > > latest non LTS kernel.
 > > 
-> > > On 24/10/26 07:15PM, Ned T. Crigler wrote:
-> > > > Hi,
-> > >
-> > > Hey Ned,
-> > >
-> > > > It looks like starting with kernel 6.11, disabling and re-enabling
-> > > > magic
-> > > > sysrq fails with these errors in dmesg:
-> > > >
-> > > > kernel: input: input_handler_check_methods: only one event processing
-> > > > method can be defined (sysrq)
-> > > > kernel: sysrq: Failed to register input handler, error -22
-> > > >
-> > > > after doing:
-> > > >
-> > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > # echo 438 > /proc/sys/kernel/sysrq
-> > >
-> > > I have found that this issue is also present in the latest mainline
-> > > release and bisected it to the following commit:
-> > >
-> > >     d469647bafd9 ("Input: simplify event handling logic")
-> > >
-> > 
-> > After the mentioned commit a call sysrq_register_handler() -->
-> > input_register_handler(&sysrq_handler) with sysrq_handler.filter set
-> > will result in sysrq_handler.events set to input_handler_events_filter,
-> > see drivers/input/input.c (line 2607 to 2608):
-> > 
-> > 2596 int input_register_handler(struct input_handler *handler)
-> > 2597 {
-> > 2598         struct input_dev *dev;
-> > 2599         int error;
-> > 2600
-> > 2601         error = input_handler_check_methods(handler);
-> > 2602         if (error)
-> > 2603                 return error;
-> > 2604
-> > 2605         INIT_LIST_HEAD(&handler->h_list);
-> > 2606
-> > 2607         if (handler->filter)
-> > 2608                 handler->events = input_handler_events_filter;
-> > 2609         else if (handler->event)
-> > 2610                 handler->events = input_handler_events_default;
-> > 2611         else if (!handler->events)
-> > 2612                 handler->events = input_handler_events_null;
-> > 
-> > So the second call will fail at the check 'input_handler_check_methods(handler)'
-> > which only allows one method to be set, see drivers/input/input.c:
-> > 
-> > 2517 static int input_handler_check_methods(const struct input_handler *handler)
-> > 2518 {
-> > 2519         int count = 0;
-> > 2520
-> > 2521         if (handler->filter)
-> > 2522                 count++;
-> > 2523         if (handler->events)
-> > 2524                 count++;
-> > 2525         if (handler->event)
-> > 2526                 count++;
-> > 2527
-> > 2528         if (count > 1) {
-> > 2529                 pr_err("%s: only one event processing method can be defined      (%s)\n",
-> > 2530                        __func__, handler->name);
-> > 2531                 return -EINVAL;
-> > 2532         }
-> > 2533
-> > 2534         return 0;
-> > 2535 }
-
-Yes, I did not consider that we might want to re-register the same input
-handler, thank you for alerting me about the regression.
-
-> > 
-> > 
-> > A quick fix/hack for the sysrq case:
-> > 
-> > --- a/drivers/tty/sysrq.c
-> > +++ b/drivers/tty/sysrq.c
-> > @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void)
-> >         int error;
-> > 
-> >         sysrq_of_get_keyreset_config();
-> > -
-> > +       sysrq_handler.events = NULL;
-> >         error = input_register_handler(&sysrq_handler);
-> >         if (error)
-> >                 pr_err("Failed to register input handler, error %d", error);
-> > lines 1-13/13 (END)
-> > 
-> > Regards,
-> > Peter
+> > Okay, I still suggest not having that unless you absolutely know that
+> > you need it.
 > > 
 > 
-> Thanks for tracking this down. It seems messy that the mentioned commit
-> changes input_register_handler to overwrite ->events for an internal purpose,
-> and callers may expect it to be unchanged, as sysrq does here by reusing
-> sysrq_handler.
+> Noted thank you!
+> 
+> > > In regards to the disconnect; sorry I think I might have turned of the
+> > > docking station myself during that test. I have taken another dmesg without
+> > > me disconnecting the docking station:
+> > > https://gist.github.com/ricklahaye/9798b7de573d0f29b3ada6a5d99b69f1
+> > > 
+> > > The cable is the original Thunderbolt 4 cable that came with the docking
+> > > station. I have used it on this laptop using Windows (dualboot) without any
+> > > issues. Also on another Windows laptop also without issues. It was used in
+> > > 40Gbit mode.
+> > 
+> > In the dmesg you shared above, there are still unplug and USB tunnel
+> > creation fails so you only get USB 2.x connection with all the USB
+> > devices on the dock.
+> > 
+> 
+> Yes you are right. I removed all attached USB devices from the dock, but
+> still see "3:3: USB3 tunnel activation failed, aborting"
+> 
+> > How do you determine if it "works"? I guess keyboard and mouse (both
+> > USB 2.x devices) and display (tunneled over USB4 link) all are working
+> > right? However, if you plug in USB 3.x device to the dock it enumerates
+> > as FullSpeed instead of SuperSpeed. There is definitely something wrong
+> > here. I asked from our TB validation folks if they have any experience
+> > with this dock but did not receive any reply yet.
+> > 
+> > What you mean by 40Gbit mode? The dock exposes two lanes both at 20G so
+> > it should always be 40G since we bind the lanes, also in Windows.
+> 
+> 2 lanes of 20G indeed.
+> 
+> > 
+> > Also In Windows, do you see if the all USB devices on the dock are
+> > enumerated as FullSpeed or SuperSpeed? I suspect it's the former there
+> > too but can you check? Keyboard and mouse should be FullSpeed but there
+> > is some audio device that may be USB 3.x (SuperSpeed), or alternatively
+> > if you have USB 3.x memory stick (or any other device) you can plug that
+> > to the dock and see how it enumerates.
+> 
+> I checked on Windows with some 3.1 USB devices, and they were properly seen
+> as 3.1 Superspeed+/10Gbps when attached to dock (using USBView from Windows
+> SDK).
+> 
+> I also tried some Linux kernels, and it seems that 6.9 works, and 6.10
+> doesn't.
+> 
+> 6.9: https://gist.github.com/ricklahaye/da8c63edb0c27dc55bef351f9f4dd035
 
-Yes, indeed. I wonder if we can solve this by moving the derived event
-handler method into input_handle structure, like the patch below. 
+I still see similar issue even with the v6.9 kernel. The link goes up an
+down unexpectly.
 
-Thanks.
+I wonder if you could try to take traces of the control channel traffic?
+I suggest to use v6.11 kernel because it should have all the tracing
+bits added then install tbtools [1] and follow the steps here:
 
--- 
-Dmitry
+  https://github.com/intel/tbtools?tab=readme-ov-file#tracing
 
+Then provide both full dmesg and the trace output. That hopefully shows
+if some of the access we are doing in the Linux side is causing the link
+to to drop. Let me know if you need more detailed instructions.
 
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 3c321671793f..3d2cc13e1f32 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -119,12 +119,12 @@ static void input_pass_values(struct input_dev *dev,
- 
- 	handle = rcu_dereference(dev->grab);
- 	if (handle) {
--		count = handle->handler->events(handle, vals, count);
-+		count = handle->handle_events(handle, vals, count);
- 	} else {
- 		list_for_each_entry_rcu(handle, &dev->h_list, d_node)
- 			if (handle->open) {
--				count = handle->handler->events(handle, vals,
--								count);
-+				count = handle->handle_events(handle, vals,
-+							      count);
- 				if (!count)
- 					break;
- 			}
-@@ -2537,57 +2537,6 @@ static int input_handler_check_methods(const struct input_handler *handler)
- 	return 0;
- }
- 
--/*
-- * An implementation of input_handler's events() method that simply
-- * invokes handler->event() method for each event one by one.
-- */
--static unsigned int input_handler_events_default(struct input_handle *handle,
--						 struct input_value *vals,
--						 unsigned int count)
--{
--	struct input_handler *handler = handle->handler;
--	struct input_value *v;
--
--	for (v = vals; v != vals + count; v++)
--		handler->event(handle, v->type, v->code, v->value);
--
--	return count;
--}
--
--/*
-- * An implementation of input_handler's events() method that invokes
-- * handler->filter() method for each event one by one and removes events
-- * that were filtered out from the "vals" array.
-- */
--static unsigned int input_handler_events_filter(struct input_handle *handle,
--						struct input_value *vals,
--						unsigned int count)
--{
--	struct input_handler *handler = handle->handler;
--	struct input_value *end = vals;
--	struct input_value *v;
--
--	for (v = vals; v != vals + count; v++) {
--		if (handler->filter(handle, v->type, v->code, v->value))
--			continue;
--		if (end != v)
--			*end = *v;
--		end++;
--	}
--
--	return end - vals;
--}
--
--/*
-- * An implementation of input_handler's events() method that does nothing.
-- */
--static unsigned int input_handler_events_null(struct input_handle *handle,
--					      struct input_value *vals,
--					      unsigned int count)
--{
--	return count;
--}
--
- /**
-  * input_register_handler - register a new input handler
-  * @handler: handler to be registered
-@@ -2607,13 +2556,6 @@ int input_register_handler(struct input_handler *handler)
- 
- 	INIT_LIST_HEAD(&handler->h_list);
- 
--	if (handler->filter)
--		handler->events = input_handler_events_filter;
--	else if (handler->event)
--		handler->events = input_handler_events_default;
--	else if (!handler->events)
--		handler->events = input_handler_events_null;
--
- 	error = mutex_lock_interruptible(&input_mutex);
- 	if (error)
- 		return error;
-@@ -2687,6 +2629,75 @@ int input_handler_for_each_handle(struct input_handler *handler, void *data,
- }
- EXPORT_SYMBOL(input_handler_for_each_handle);
- 
-+/*
-+ * An implementation of input_handle's handle_events() method that simply
-+ * invokes handler->event() method for each event one by one.
-+ */
-+static unsigned int input_handle_events_default(struct input_handle *handle,
-+						struct input_value *vals,
-+						unsigned int count)
-+{
-+	struct input_handler *handler = handle->handler;
-+	struct input_value *v;
-+
-+	for (v = vals; v != vals + count; v++)
-+		handler->event(handle, v->type, v->code, v->value);
-+
-+	return count;
-+}
-+
-+/*
-+ * An implementation of input_handle's handle_events() method that invokes
-+ * handler->filter() method for each event one by one and removes events
-+ * that were filtered out from the "vals" array.
-+ */
-+static unsigned int input_handle_events_filter(struct input_handle *handle,
-+					       struct input_value *vals,
-+					       unsigned int count)
-+{
-+	struct input_handler *handler = handle->handler;
-+	struct input_value *end = vals;
-+	struct input_value *v;
-+
-+	for (v = vals; v != vals + count; v++) {
-+		if (handler->filter(handle, v->type, v->code, v->value))
-+			continue;
-+		if (end != v)
-+			*end = *v;
-+		end++;
-+	}
-+
-+	return end - vals;
-+}
-+
-+/*
-+ * An implementation of input_handle's handle_events() method that does nothing.
-+ */
-+static unsigned int input_handle_events_null(struct input_handle *handle,
-+					     struct input_value *vals,
-+					     unsigned int count)
-+{
-+	return count;
-+}
-+
-+/*
-+ * Sets up appropriate handle->event_handler based on the input_handler
-+ * associated with the handle.
-+ */
-+static void input_handle_setup_event_handler(struct input_handle *handle)
-+{
-+	struct input_handler *handler = handle->handler;
-+
-+	if (handler->filter)
-+		handle->handle_events = input_handle_events_filter;
-+	else if (handler->event)
-+		handle->handle_events = input_handle_events_default;
-+	else if (handler->events)
-+		handle->handle_events = handler->events;
-+	else
-+		handle->handle_events = input_handle_events_null;
-+}
-+
- /**
-  * input_register_handle - register a new input handle
-  * @handle: handle to register
-@@ -2704,6 +2715,7 @@ int input_register_handle(struct input_handle *handle)
- 	struct input_dev *dev = handle->dev;
- 	int error;
- 
-+	input_handle_setup_event_handler(handle);
- 	/*
- 	 * We take dev->mutex here to prevent race with
- 	 * input_release_device().
-diff --git a/include/linux/input.h b/include/linux/input.h
-index 89a0be6ee0e2..cd866b020a01 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -339,12 +339,16 @@ struct input_handler {
-  * @name: name given to the handle by handler that created it
-  * @dev: input device the handle is attached to
-  * @handler: handler that works with the device through this handle
-+ * @handle_events: event sequence handler. It is set up by the input core
-+ *	according to event handling method specified in the @handler. See
-+ *	input_handle_setup_event_handler().
-+ *	This method is being called by the input core with interrupts disabled
-+ *	and dev->event_lock spinlock held and so it may not sleep.
-  * @d_node: used to put the handle on device's list of attached handles
-  * @h_node: used to put the handle on handler's list of handles from which
-  *	it gets events
-  */
- struct input_handle {
--
- 	void *private;
- 
- 	int open;
-@@ -353,6 +357,10 @@ struct input_handle {
- 	struct input_dev *dev;
- 	struct input_handler *handler;
- 
-+	unsigned int (*handle_events)(struct input_handle *handle,
-+				      struct input_value *vals,
-+				      unsigned int count);
-+
- 	struct list_head	d_node;
- 	struct list_head	h_node;
- };
+Also please drop the "thunderbolt.host_reset=0" from the command line as
+that did not help, so it is not needed.
+
+[1] https://github.com/intel/tbtools
