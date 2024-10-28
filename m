@@ -1,157 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720B18871E
-	for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 08:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6952817CA1B;
+	Mon, 28 Oct 2024 08:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730103499; cv=none; b=fFTDGTDpFDgBhjk7brKO+8chMZnEiPHz/GBib1+S7q9ynGnYd4klLVB/Pt9kQn+i3wiDzlQYb4I+ihseosqfEpu7UtD6KJqrt6O8br4l6868ZpEv7bwiNGAAQqdKKWdwQuXexRw1Uyc5k7Pb8pq+pA78iACp+gIIWSC1TriFSxw=
+	t=1730104741; cv=none; b=rntg7xBGpIZw5E48Wf1tPjzdDfS+M2pAwhYddMKmbcSdiPh2BU1IyfCSx7rpBjc3TTU8Uengo1GPk+aSxk6cZSA3y4+qIERYzdCpqIIedApNVFHB6pj4/k81r9CCumTwEyuUk8WafcZmtHcPDdzI9miCTSkrxfof2AvBbDSsOR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730103499; c=relaxed/simple;
-	bh=R1mMvZvpqkvIqo9TFaQ8duYANFkF6LqvMFLJb4X0uzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWFeutGr0Bo4yl7Q118GgEtYXCYgw8XGQBXVZr/6KMFL7eMkR2+43NgrM6c1+XYlUVf7KxYdcFghrS2blYD9jClge0NzujlLe9WVtRF+X2Gn4ivs6PP1EAvYrmrRMNB9uepuSC1qfuhmgRc3w+HhekXpTttxMn16IwWiPRPUWEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z9rjCMLU; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1730104741; c=relaxed/simple;
+	bh=9AjvpxVUqoKPGzdpD5w5K3VORlSd1bXXaRzQsp+TyMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WqbXpOez9flDo3PErkl5rVlrmG+Qgz1AeCSdPhTgsoIDFr5n1Gb4QtlYDj8zIL+2hbXknEG+OqW5S5J4A97Pi36jIU0/JJaXFbUyd3Kp1pSVEe44U7SHGHMBuK/rih6sYWJaVucUU1GURn5osc+wP8WDsb3joqlmmfEgj5fRUS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=hNqVQeI2; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z9rjCMLU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730103497; x=1761639497;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R1mMvZvpqkvIqo9TFaQ8duYANFkF6LqvMFLJb4X0uzQ=;
-  b=Z9rjCMLU0NFcb366/mtMTMY/r8aooqAqO+8920cHTlDyvJe2D+Rc/WJR
-   qKkk/pHKu5f3rUDzKjG4ZhBabzha2g9c0wXzQaD95VAktARYN32iTJNdW
-   2JD9jFKalyUJ4jrrBTpMPU7qM1genYhO99NYEy0GxuLKj1PZAEzj/odVo
-   z+V83d52e+hDOJ0VVHsoSP/5Y4Ptom0DhELs3moymRe2r2BcEQk8YKNc7
-   XsUF/yYwtv/Bzo23jDTDIfbzgl0Fdo0NUClML86+8/XG0vQ0t8FYsIgQ4
-   Ye8CXe3pjdHTXWEV08I/wFCRYXxkPbzdyd3SEgmZsWkJt3N8S2GUJ4GJv
-   w==;
-X-CSE-ConnectionGUID: zSe/5G2SSaOgYQ9mXBKczw==
-X-CSE-MsgGUID: Mb31LRxtQb+fENC6hsh7ug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11238"; a="29795109"
-X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
-   d="scan'208";a="29795109"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 01:18:17 -0700
-X-CSE-ConnectionGUID: xT+zj1ClTyORr5MwusohNA==
-X-CSE-MsgGUID: i+Od4F4tSMGsZVVv0AvbBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,238,1725346800"; 
-   d="scan'208";a="112383129"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Oct 2024 01:18:14 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 63D4813E; Mon, 28 Oct 2024 10:18:13 +0200 (EET)
-Date: Mon, 28 Oct 2024 10:18:13 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Rick <rick@581238.xyz>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
-	christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-Message-ID: <20241028081813.GN275077@black.fi.intel.com>
-References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
- <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
- <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
- <20241022161055.GE275077@black.fi.intel.com>
- <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
- <20241023061001.GF275077@black.fi.intel.com>
- <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="hNqVQeI2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1730104728; x=1730709528; i=ps.report@gmx.net;
+	bh=ELBR/F2lmmwhwdf6SuGkJ02dHQcy/EFN/VfQu/VEGhs=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=hNqVQeI2q4F8H1hjrkbxYEDZ3AEkB9obtt4lbDIwQAln21zZ7SQ5q8N2eh0qm9zB
+	 nIdKMU0RQhuXCKK17cj+vtw3VhwLapDYM01WQLUsHsxL+d6qyg6UKoNP9cG3zfqdp
+	 ziQWftZpMOK7/NbRbAJLxFCGSHjdX31xQsKaoSGbYnvRoVCjrxgx9O90pxfMk1R+q
+	 vZ7nzHJa+jxayACwag9znrD6LVzSOCSuOb96NHFLv7K0qUpCtJso02zEFLRMFKi7H
+	 YcabnXBujLaBEG2U9D6jwfgjeyOIofQ04fg/9ntUa4yfehH64hFbu8URsWe1VbjI4
+	 zDagzS9dpfjBEGb0Yw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([82.135.81.127]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBlxM-1tArae3KSi-0049e5; Mon, 28
+ Oct 2024 09:38:48 +0100
+Date: Mon, 28 Oct 2024 09:38:47 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Ned T. Crigler" <crigler@gmail.com>, Christian Heusel
+ <christian@heusel.eu>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Jeff LaBundy
+ <jeff@labundy.com>, Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
+ kernel 6.11
+Message-ID: <20241028093847.29b36b8a@gmx.net>
+In-Reply-To: <Zx8hfE2_3zXSTi05@google.com>
+References: <Zx2iQp6csn42PJA7@xavtug>
+	<69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
+	<20241027163744.2d396c61@gmx.net>
+	<Zx5yIEZwT5SxzCTx@xavtug>
+	<Zx8hfE2_3zXSTi05@google.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9ULFM/WDUWY49nKPMH5ZAmZ7uf+5mVmgXhWwVLK4toYytLzgQJI
+ c83ELE11mGJgRFyIs5ddFhqv9IwZFq1GRx3lvaeuBFy+kxWpxtJqEyCI1NZ5ku9vdqigweh
+ 5yYjzVFOcczmhSkq+yHT+OfBHRBjSu70cRuMvpRHINLViU1YA7mISyZ9w35kUkZWxU4Vl8g
+ +YwoLwr3c0pAKiIJ9+l1w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aHpps45i21U=;PTtJBNXj5K0N3xLy4z/LfPhGfhh
+ gnEYw8UXjGxXrIRoQYBKGtr5hH8EMEslLG0Lk4bVhinb/JLVUq9pFGdRd3R9KTIvpCZjbJYih
+ Hy65l7r0gjW15Uc9RF6wDUsnvASX2u6Wih2VdEheApsEYxoigbzEk0M/hO4YlwvLNJeDO1pP5
+ C+oOb4Fbf9fmTNVOpDuInTiizBrYJJfm/42oDGNVVgTqajB3TTBXVsctfMGLS2NCuzdV3UdNN
+ YIeErVMfUt/BQiNG1e2yAbR8Z5d0yKvZ0/f7pUXc831yYyCZFDu18G9wIl+GPD3KFLMBiO/bi
+ zKtXlRmD82IHRe7rfhCFuzlkxmaB7ByY0ODP9isx1BS8XnqxzgAA6lH44nYmXlXInNGcOg4PR
+ 7Ny8tlxwTJEVY9z+n6MJCnzhPoWB0ZO931LNyJfr2p6EKxaKGkz7r3Q2QIytFgnP0aMqdnokU
+ 44DhGaNxC5jDgyZY7mUAVw5t156jYDyafvNZkamejeyw1FpOEw0kLZIoki8wyhlzTuJs/nyrT
+ TSxzZimITz4rUv6eJdhzX9qv8CWBW6OURzSmBP0bj2T1/gAQPeASB3XA/ur9rOKm1LUV7IbPS
+ YAvIJGLj83jzspr4FIJYTuftX3TBr3pR2YuplCXwzUUuf9KxKjK2cnnzbBRPMUcxS3m0ikz3O
+ 3T8ksZn1oz8hV/lc16f0XsAvr5DKkCQE5x8NGiSbAsLcUl/DOEAQO1Bi/FigRFV8zzWBjS4AS
+ zSgoaMOjWz4fKvdRnedWpZ3hN7JnKe/SNcU2rBr+IofuD37sHjDKNy9epklr/BVrYSMRndccu
+ pjwg5QsMu8moOLwqqhpgGF+u8tUDmlmXzpa4LeomelwJQ=
 
-Hi,
+Hello Dmitry, Ned, *,
 
-On Fri, Oct 25, 2024 at 12:20:55PM +0200, Rick wrote:
-> Hi Mika
-> 
-> On 23-10-2024 08:10, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Tue, Oct 22, 2024 at 07:06:50PM +0200, Rick wrote:
-> > > Hi Mika,
-> > > 
-> > > I have removed pcie_asm=force as kernel parameter but still not working on
-> > > latest non LTS kernel.
-> > 
-> > Okay, I still suggest not having that unless you absolutely know that
-> > you need it.
-> > 
-> 
-> Noted thank you!
-> 
-> > > In regards to the disconnect; sorry I think I might have turned of the
-> > > docking station myself during that test. I have taken another dmesg without
-> > > me disconnecting the docking station:
-> > > https://gist.github.com/ricklahaye/9798b7de573d0f29b3ada6a5d99b69f1
-> > > 
-> > > The cable is the original Thunderbolt 4 cable that came with the docking
-> > > station. I have used it on this laptop using Windows (dualboot) without any
-> > > issues. Also on another Windows laptop also without issues. It was used in
-> > > 40Gbit mode.
-> > 
-> > In the dmesg you shared above, there are still unplug and USB tunnel
-> > creation fails so you only get USB 2.x connection with all the USB
-> > devices on the dock.
-> > 
-> 
-> Yes you are right. I removed all attached USB devices from the dock, but
-> still see "3:3: USB3 tunnel activation failed, aborting"
-> 
-> > How do you determine if it "works"? I guess keyboard and mouse (both
-> > USB 2.x devices) and display (tunneled over USB4 link) all are working
-> > right? However, if you plug in USB 3.x device to the dock it enumerates
-> > as FullSpeed instead of SuperSpeed. There is definitely something wrong
-> > here. I asked from our TB validation folks if they have any experience
-> > with this dock but did not receive any reply yet.
-> > 
-> > What you mean by 40Gbit mode? The dock exposes two lanes both at 20G so
-> > it should always be 40G since we bind the lanes, also in Windows.
-> 
-> 2 lanes of 20G indeed.
-> 
-> > 
-> > Also In Windows, do you see if the all USB devices on the dock are
-> > enumerated as FullSpeed or SuperSpeed? I suspect it's the former there
-> > too but can you check? Keyboard and mouse should be FullSpeed but there
-> > is some audio device that may be USB 3.x (SuperSpeed), or alternatively
-> > if you have USB 3.x memory stick (or any other device) you can plug that
-> > to the dock and see how it enumerates.
-> 
-> I checked on Windows with some 3.1 USB devices, and they were properly seen
-> as 3.1 Superspeed+/10Gbps when attached to dock (using USBView from Windows
-> SDK).
-> 
-> I also tried some Linux kernels, and it seems that 6.9 works, and 6.10
-> doesn't.
-> 
-> 6.9: https://gist.github.com/ricklahaye/da8c63edb0c27dc55bef351f9f4dd035
+On Sun, 27 Oct 2024 22:30:36 -0700, Dmitry Torokhov <dmitry.torokhov@gmail=
+.com> wrote:
 
-I still see similar issue even with the v6.9 kernel. The link goes up an
-down unexpectly.
+> Hi everyone,
+>
+> On Sun, Oct 27, 2024 at 10:02:24AM -0700, Ned T. Crigler wrote:
+> > Hi Peter, Christian,
+> >
+> > On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
+> > > Hello Ned, Christian, *,
+> > >
+> > > On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heus=
+el.eu> wrote:
+> > >
+> > > > On 24/10/26 07:15PM, Ned T. Crigler wrote:
+> > > > > Hi,
+> > > >
+> > > > Hey Ned,
+> > > >
+> > > > > It looks like starting with kernel 6.11, disabling and re-enabli=
+ng
+> > > > > magic
+> > > > > sysrq fails with these errors in dmesg:
+> > > > >
+> > > > > kernel: input: input_handler_check_methods: only one event proce=
+ssing
+> > > > > method can be defined (sysrq)
+> > > > > kernel: sysrq: Failed to register input handler, error -22
+> > > > >
+> > > > > after doing:
+> > > > >
+> > > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > > # echo 438 > /proc/sys/kernel/sysrq
+> > > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > > # echo 438 > /proc/sys/kernel/sysrq
+> > > > > # echo 0 > /proc/sys/kernel/sysrq
+> > > > > # echo 438 > /proc/sys/kernel/sysrq
+> > > >
+> > > > I have found that this issue is also present in the latest mainlin=
+e
+> > > > release and bisected it to the following commit:
+> > > >
+> > > >     d469647bafd9 ("Input: simplify event handling logic")
+> > > >
+> > >
+> > > After the mentioned commit a call sysrq_register_handler() -->
+> > > input_register_handler(&sysrq_handler) with sysrq_handler.filter set
+> > > will result in sysrq_handler.events set to input_handler_events_filt=
+er,
+> > > see drivers/input/input.c (line 2607 to 2608):
+> > >
+> > > 2596 int input_register_handler(struct input_handler *handler)
+> > > 2597 {
+> > > 2598         struct input_dev *dev;
+> > > 2599         int error;
+> > > 2600
+> > > 2601         error =3D input_handler_check_methods(handler);
+> > > 2602         if (error)
+> > > 2603                 return error;
+> > > 2604
+> > > 2605         INIT_LIST_HEAD(&handler->h_list);
+> > > 2606
+> > > 2607         if (handler->filter)
+> > > 2608                 handler->events =3D input_handler_events_filter=
+;
+> > > 2609         else if (handler->event)
+> > > 2610                 handler->events =3D input_handler_events_defaul=
+t;
+> > > 2611         else if (!handler->events)
+> > > 2612                 handler->events =3D input_handler_events_null;
+> > >
+> > > So the second call will fail at the check 'input_handler_check_metho=
+ds(handler)'
+> > > which only allows one method to be set, see drivers/input/input.c:
+> > >
+> > > 2517 static int input_handler_check_methods(const struct input_handl=
+er *handler)
+> > > 2518 {
+> > > 2519         int count =3D 0;
+> > > 2520
+> > > 2521         if (handler->filter)
+> > > 2522                 count++;
+> > > 2523         if (handler->events)
+> > > 2524                 count++;
+> > > 2525         if (handler->event)
+> > > 2526                 count++;
+> > > 2527
+> > > 2528         if (count > 1) {
+> > > 2529                 pr_err("%s: only one event processing method ca=
+n be defined      (%s)\n",
+> > > 2530                        __func__, handler->name);
+> > > 2531                 return -EINVAL;
+> > > 2532         }
+> > > 2533
+> > > 2534         return 0;
+> > > 2535 }
+>
+> Yes, I did not consider that we might want to re-register the same input
+> handler, thank you for alerting me about the regression.
+>
+> > >
+> > >
+> > > A quick fix/hack for the sysrq case:
+> > >
+> > > --- a/drivers/tty/sysrq.c
+> > > +++ b/drivers/tty/sysrq.c
+> > > @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void=
+)
+> > >         int error;
+> > >
+> > >         sysrq_of_get_keyreset_config();
+> > > -
+> > > +       sysrq_handler.events =3D NULL;
+> > >         error =3D input_register_handler(&sysrq_handler);
+> > >         if (error)
+> > >                 pr_err("Failed to register input handler, error %d",=
+ error);
+> > > lines 1-13/13 (END)
+> > >
+> > > Regards,
+> > > Peter
+> > >
+> >
+> > Thanks for tracking this down. It seems messy that the mentioned commi=
+t
+> > changes input_register_handler to overwrite ->events for an internal p=
+urpose,
+> > and callers may expect it to be unchanged, as sysrq does here by reusi=
+ng
+> > sysrq_handler.
+>
+> Yes, indeed. I wonder if we can solve this by moving the derived event
+> handler method into input_handle structure, like the patch below.
 
-I wonder if you could try to take traces of the control channel traffic?
-I suggest to use v6.11 kernel because it should have all the tracing
-bits added then install tbtools [1] and follow the steps here:
+Yes, seems reasonable (and works for the sysrq case), you can add my
 
-  https://github.com/intel/tbtools?tab=readme-ov-file#tracing
+	Tested-by: Peter Seiderer <ps.report@gmx.net>
 
-Then provide both full dmesg and the trace output. That hopefully shows
-if some of the access we are doing in the Linux side is causing the link
-to to drop. Let me know if you need more detailed instructions.
+Regards,
+Peter
 
-Also please drop the "thunderbolt.host_reset=0" from the command line as
-that did not help, so it is not needed.
 
-[1] https://github.com/intel/tbtools
+>
+> Thanks.
+>
+
