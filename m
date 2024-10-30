@@ -1,45 +1,59 @@
-Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE67D1E1C06
-	for <regressions@lists.linux.dev>; Wed, 30 Oct 2024 07:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B361E1C17
+	for <regressions@lists.linux.dev>; Wed, 30 Oct 2024 09:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730272301; cv=none; b=VQ32PjZHv46WV7ZpOJwgKiGnGDnVyvVO2S3Z0iDuhGoC6IDLYxcNdwHcS+5+qYYdpJgBuqDRwsqRf/vjwXXSUx6GCQO5aRuKf9WdfwqveLioyUtAR2aJ5j6XgwE/Xka3nWMGkIAH+yQUXyhm2D0jtODqhJyNSrJKexGt6DdUfWY=
+	t=1730279191; cv=none; b=L1atPmcMcymWlpLoPlEyZRYobY3MY+spQHSdlkUq7f3iqIY4iONB4En0hCM4dw1zuzUCniQ4UsYoy/DBsOsn+9XQghzwSo5yTQ4zvPuKudyZiv/Bi0G8tGh7izSiYekcCv6AC8Xw8zofjben+X4OUU+9V0Kbb7uJIt+b3N4WjLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730272301; c=relaxed/simple;
-	bh=0/ZQSm4pOX/FeH3rMGUhDWei/PzX8qt0l+CRHbzaIZw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dl7W4iim3/eT3ivgMeMvW1ev34ZXZ/9Ja+aaEFmMOkk5u47RfLuMZrq2I9szMY/wm1LcXi5ED7IaGftES+mrsiTlVfnYaVi6WYF0wQvAjhVlutqPhKbQN2XhQoqKQelna9Cl/yONejFbkvPJz8wnwRk+Mw63BP2v2lEt2ZS8ssM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=F7X0cPhO; arc=none smtp.client-ip=86.95.37.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
+	s=arc-20240116; t=1730279191; c=relaxed/simple;
+	bh=UHAvCgWVJbo/IoGy4cfK+JVAwccuRu6Xu7KbTRA9d2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sV3NnXFZX71BOwTjPddOqqouzJnTo4aZlgGno3jfzOzg2gE4mHJEgpoAChsB/U+4wIjA/N14ejD10GTRM64BJ5/qCniUdOqSLgtEjlrU6gV2fwx4jspbfm04tKmaSyjCR5+kF+1w+4Yln9qXeWsT0j5/A8Pmoj8DRf3IpKo26gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ELrbBiJw; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="F7X0cPhO"
-Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
-	by mail.581238.xyz (Postfix) with ESMTPSA id 6C1F843088F3;
-	Wed, 30 Oct 2024 08:11:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
-	t=1730272290; bh=0/ZQSm4pOX/FeH3rMGUhDWei/PzX8qt0l+CRHbzaIZw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=F7X0cPhOnHx/LkiWUlg5xGKCt0OeXBjWDnIyp0mMRS+G6cF1N3QRYXl8xEuAq4Ey3
-	 s9gUyhwfXozVp/yJKsmrDIatJnB7BjFAuH4tzf3Kim6Wb/SgW9tYilYBD8mz+TJlTT
-	 rtcYtFeTvbd7/YDXkegD4TblEWDCDVvwBBRebJu4=
-Message-ID: <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
-Date: Wed, 30 Oct 2024 08:11:30 +0100
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ELrbBiJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730279190; x=1761815190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UHAvCgWVJbo/IoGy4cfK+JVAwccuRu6Xu7KbTRA9d2I=;
+  b=ELrbBiJwOgKriQ+KgjaLtJc+h7uC8qZOlbWr0bMG8FntFOmoVOuQtm2v
+   57GbJ4Hd+eGcW+jXbhCOHMdinB+lsWcL8AufnAW2lm7Fv2Jdlva+scziK
+   dr1LVvfwXe4OAokwPlQnAh8mB4gW+dedHybODAipNqG6pY9q+cUUzITAB
+   NQAdolyfbw/bjVwC4fYicmLKZw+qoZqpBLVPbm/rXKrRK5jE5aRBN+nah
+   C6r3o+KVl57ww0dnd/ct0LMF05iJy7p3J8yFTia3ePIB1xCBmHWKaBOuM
+   gRTHcP2rtI5Piq1Wmt1PVH0hFxfSxXXaQ30TWPMny6zUJj4PwPrJ0+V6J
+   Q==;
+X-CSE-ConnectionGUID: 5BN4oGcERruDh4reEB3EVw==
+X-CSE-MsgGUID: jUAsS5adR3WKLWg4xONFMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30115592"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30115592"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 02:06:29 -0700
+X-CSE-ConnectionGUID: aL85xrH/RWGgAivk+/lliA==
+X-CSE-MsgGUID: jFHHloDnTvmvKXlW9ep40g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,244,1725346800"; 
+   d="scan'208";a="86192087"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 30 Oct 2024 02:06:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 46F682C1; Wed, 30 Oct 2024 11:06:25 +0200 (EET)
+Date: Wed, 30 Oct 2024 11:06:25 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Rick <rick@581238.xyz>
 Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
- christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
+	christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+Message-ID: <20241030090625.GS275077@black.fi.intel.com>
 References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
  <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
  <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
@@ -48,87 +62,102 @@ References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
  <20241023061001.GF275077@black.fi.intel.com>
  <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
  <20241028081813.GN275077@black.fi.intel.com>
-Content-Language: en-US
-From: Rick <rick@581238.xyz>
-Autocrypt: addr=rick@581238.xyz; keydata=
- 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
-In-Reply-To: <20241028081813.GN275077@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
 
-Hi Mika,
+Hi Rick,
 
-Thank you for your email.
-
-On 28-10-2024 09:18, Mika Westerberg wrote:
+On Wed, Oct 30, 2024 at 08:11:30AM +0100, Rick wrote:
+> Hi Mika,
 > 
-> I still see similar issue even with the v6.9 kernel. The link goes up an
-> down unexpectly.
+> Thank you for your email.
 > 
-> I wonder if you could try to take traces of the control channel traffic?
-> I suggest to use v6.11 kernel because it should have all the tracing
-> bits added then install tbtools [1] and follow the steps here:
+> On 28-10-2024 09:18, Mika Westerberg wrote:
+> > 
+> > I still see similar issue even with the v6.9 kernel. The link goes up an
+> > down unexpectly.
+> > 
+> > I wonder if you could try to take traces of the control channel traffic?
+> > I suggest to use v6.11 kernel because it should have all the tracing
+> > bits added then install tbtools [1] and follow the steps here:
+> > 
+> >    https://github.com/intel/tbtools?tab=readme-ov-file#tracing
+> > 
+> > Then provide both full dmesg and the trace output. That hopefully shows
+> > if some of the access we are doing in the Linux side is causing the link
+> > to to drop. Let me know if you need more detailed instructions.
+> > 
+> > Also please drop the "thunderbolt.host_reset=0" from the command line as
+> > that did not help, so it is not needed.
 > 
->    https://github.com/intel/tbtools?tab=readme-ov-file#tracing
+> Dropped thank you.
 > 
-> Then provide both full dmesg and the trace output. That hopefully shows
-> if some of the access we are doing in the Linux side is causing the link
-> to to drop. Let me know if you need more detailed instructions.
+> > 
+> > [1] https://github.com/intel/tbtools
 > 
-> Also please drop the "thunderbolt.host_reset=0" from the command line as
-> that did not help, so it is not needed.
+> tbtrace on 6.11.5:
+> https://gist.github.com/ricklahaye/69776e9c39fd30a80e2adb6156bdb42d
+> dmesg on 6.11.5:
+> https://gist.github.com/ricklahaye/8588450725695a0bd45799d3d66c7aff
 
-Dropped thank you.
+Thanks! I suspect there is something we do when we read the sideband
+that makes the device router to "timeout" and retry the link
+establishment. There is also the failure when USB 3.x tunnel is created
+but we can look that after we figure out the connection issue.
 
-> 
-> [1] https://github.com/intel/tbtools
+Looking at the trace we are still polling for retimers when we see the
+unplug:
 
-tbtrace on 6.11.5: 
-https://gist.github.com/ricklahaye/69776e9c39fd30a80e2adb6156bdb42d
-dmesg on 6.11.5: 
-https://gist.github.com/ricklahaye/8588450725695a0bd45799d3d66c7aff
+[   48.684078] tb_tx Read Request Domain 0 Route 0 Adapter 3 / Lane
+               0x00/---- 0x00000000 0b00000000 00000000 00000000 00000000 .... Route String High
+               0x01/---- 0x00000000 0b00000000 00000000 00000000 00000000 .... Route String Low
+               0x02/---- 0x02182091 0b00000010 00011000 00100000 10010001 .... 
+                 [00:12]       0x91 Address
+                 [13:18]        0x1 Read Size
+                 [19:24]        0x3 Adapter Num
+                 [25:26]        0x1 Configuration Space (CS) → Adapter Configuration Space
+                 [27:28]        0x0 Sequence Number (SN)
+[   48.684339] tb_rx Read Response Domain 0 Route 0 Adapter 3 / Lane
+               0x00/---- 0x80000000 0b10000000 00000000 00000000 00000000 .... Route String High
+               0x01/---- 0x00000000 0b00000000 00000000 00000000 00000000 .... Route String Low
+               0x02/---- 0x02182091 0b00000010 00011000 00100000 10010001 .... 
+                 [00:12]       0x91 Address
+                 [13:18]        0x1 Read Size
+                 [19:24]        0x3 Adapter Num
+                 [25:26]        0x1 Configuration Space (CS) → Adapter Configuration Space
+                 [27:28]        0x0 Sequence Number (SN)
+               0x03/0091 0x81320408 0b10000001 00110010 00000100 00001000 .2.. PORT_CS_1
+                 [00:07]        0x8 Address
+                 [08:15]        0x4 Length
+                 [16:18]        0x2 Target
+                 [20:23]        0x3 Re-timer Index
+                 [24:24]        0x1 WnR
+                 [25:25]        0x0 No Response (NR)
+                 [26:26]        0x0 Result Code (RC)
+                 [31:31]        0x1 Pending (PND)
+[   48.691410] tb_event Hot Plug Event Packet Domain 0 Route 0 Adapter 3 / Lane
+               0x00/---- 0x80000000 0b10000000 00000000 00000000 00000000 .... Route String High
+               0x01/---- 0x00000000 0b00000000 00000000 00000000 00000000 .... Route String Low
+               0x02/---- 0x80000003 0b10000000 00000000 00000000 00000011 .... 
+                 [00:05]        0x3 Adapter Num
+                 [31:31]        0x1 UPG
+[   48.691414] thunderbolt 0000:00:0d.2: acking hot unplug event on 0:3
 
-Kind regards,
-Rick Lahaye
+Taking this into account and also the fact that your previous email you
+say that v6.9 works and v6.10 does not, I wonder if you could first try
+just to revert:
 
+  c6ca1ac9f472 ("thunderbolt: Increase sideband access polling delay")
+
+and see if that helps with the connection issue? If it does then can you
+take full dmesg and the trace again and with me so I can look at the USB
+tunnel issue too?
