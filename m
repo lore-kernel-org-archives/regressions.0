@@ -1,204 +1,134 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED32179A3
-	for <regressions@lists.linux.dev>; Tue, 29 Oct 2024 00:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE67D1E1C06
+	for <regressions@lists.linux.dev>; Wed, 30 Oct 2024 07:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730163501; cv=none; b=X7dcwSve9QbJGtUx3wM77WfzbSTAY5WXRM8GgfXDjgxiZue0MM1KsimfyI53k3AmVVPU0lJoMIpabRDGXGYJR1OB9T9ev29YvyNi7/RZ+wsfDqBoMDeW59a8u7e2FOaFDqjpZxdOinGgOWwiEZIQo16On0clfWsvzt59nWg8DFk=
+	t=1730272301; cv=none; b=VQ32PjZHv46WV7ZpOJwgKiGnGDnVyvVO2S3Z0iDuhGoC6IDLYxcNdwHcS+5+qYYdpJgBuqDRwsqRf/vjwXXSUx6GCQO5aRuKf9WdfwqveLioyUtAR2aJ5j6XgwE/Xka3nWMGkIAH+yQUXyhm2D0jtODqhJyNSrJKexGt6DdUfWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730163501; c=relaxed/simple;
-	bh=1kyf7Fk9chzenw5yQ1YXLu23G0X0466vF2K0pmQaCrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QYkxiiT/zGW/pWoi3KOJ31uhIRjsAsLu8JpJmejsiNtCJBwNOLAG822QnMpRNnfEiyip4a7SJhqJQLqgwgN7u1zs6O+fVeZzmO2vDfA3AER+/jm+i1VdToqD6xhBrxg5wsqVnNDLnSrIzP4LQlZmWi52AHmR78yOdDvpD2EwVOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lqi3g8bp; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730272301; c=relaxed/simple;
+	bh=0/ZQSm4pOX/FeH3rMGUhDWei/PzX8qt0l+CRHbzaIZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dl7W4iim3/eT3ivgMeMvW1ev34ZXZ/9Ja+aaEFmMOkk5u47RfLuMZrq2I9szMY/wm1LcXi5ED7IaGftES+mrsiTlVfnYaVi6WYF0wQvAjhVlutqPhKbQN2XhQoqKQelna9Cl/yONejFbkvPJz8wnwRk+Mw63BP2v2lEt2ZS8ssM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=F7X0cPhO; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lqi3g8bp"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20ce65c8e13so43042855ad.1
-        for <regressions@lists.linux.dev>; Mon, 28 Oct 2024 17:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730163499; x=1730768299; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eQH5NybP0JM5m01znf6CZiXSil2XuOMHch3kZGTw3pY=;
-        b=Lqi3g8bpZa1aV1drsuI50U0WhAMEOjeUIWB2xCKl0NwhYlzLYWDohG8FDGgwtMvq9X
-         qVKx7K3JptAM+octtiWhEC773Pns0KJGNB4T4EKCf5Ix/nxps5pw9eAPaPX80R5jUyFM
-         /gGELaFroeZBDPy8ZONmYaF718Hf2pmlnrAuEW5+UibzlsVbAv+DMymldWtzDAeCsBPS
-         DRsKPas7PZV70oulBmUs9O9dMseXRh3KwfiC6NgitJAjC8C/QUQ9zEzljhVjc9ZyS7tl
-         zqmB280YhxIHesdyUvTs5Bt3MPoqjG9VXy9RfBxx2PW+WnCyUzueCzkxCTTtjeiXO61v
-         vAnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730163499; x=1730768299;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eQH5NybP0JM5m01znf6CZiXSil2XuOMHch3kZGTw3pY=;
-        b=BI2Z+2DjEnCYaL0IPPpxwHklyacYzXWEe30+WIjIL9Tr7qvNqzyYKiDvU0nN3dVflc
-         YLzII3zzGLJLWFjeKJwU9msuVdSIPA42nYzXZnJnkkxGNtKaZgVIjJrTlvhFFJKgfZP6
-         Y2zFW7ozGShA1XmYpzGCokq5eoUPWw7UIBzVMOkI7t5WmxwcEAZtLVA4Z1OcOZKPIEfr
-         ritcqaS0s11EeN/xBwYEQocUWr+pdrjDCHI7z5IactK3RObJ+gUGNf2xtNbpV6OROdOC
-         P2Kwv2eL4Zadnws+Bhp5QfNiyeJti+EcJeuQR1jcFD87p+L+m5MHRKMDs26OZmNCXkcH
-         hKbw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2jXDe9bJILlHW7YeF9L4g7ymPL4tDb3yUCQd+J+iUMuZ6Tw94Z5OLwSPQMiXBlpciCBuj2lwvA8GjJQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzEKZrWfpWqm66a7jIbTNJUru+4BFb00m1yKMQjqkZjBXRhQ8xK
-	a6GklNdKQ6cHGzpGKusmSppsO7vn4Rh5s34H/ENSyAfsNqzIOcEj
-X-Google-Smtp-Source: AGHT+IHgPKhnUY9L1D/NAirFt2IqxS/2mDkQcu5b2mshk4XeMetiUFxhxCuBjseSiazIxfP2rMpxAA==
-X-Received: by 2002:a17:902:f546:b0:20b:9547:9b36 with SMTP id d9443c01a7336-210c6ceaca9mr129309245ad.46.1730163498881;
-        Mon, 28 Oct 2024 17:58:18 -0700 (PDT)
-Received: from xavtug (2603-9008-1600-2265-a236-bcff-feba-a919.inf6.spectrum.com. [2603:9008:1600:2265:a236:bcff:feba:a919])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bbf84597sm55907715ad.111.2024.10.28.17.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 17:58:18 -0700 (PDT)
-Date: Mon, 28 Oct 2024 17:58:09 -0700
-From: "Ned T. Crigler" <crigler@gmail.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Christian Heusel <christian@heusel.eu>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Jeff LaBundy <jeff@labundy.com>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
- kernel 6.11
-Message-ID: <ZyAzIddVgmyBa2ub@xavtug>
-References: <Zx2iQp6csn42PJA7@xavtug>
- <69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
- <20241027163744.2d396c61@gmx.net>
- <Zx5yIEZwT5SxzCTx@xavtug>
- <Zx8hfE2_3zXSTi05@google.com>
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="F7X0cPhO"
+Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
+	by mail.581238.xyz (Postfix) with ESMTPSA id 6C1F843088F3;
+	Wed, 30 Oct 2024 08:11:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1730272290; bh=0/ZQSm4pOX/FeH3rMGUhDWei/PzX8qt0l+CRHbzaIZw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=F7X0cPhOnHx/LkiWUlg5xGKCt0OeXBjWDnIyp0mMRS+G6cF1N3QRYXl8xEuAq4Ey3
+	 s9gUyhwfXozVp/yJKsmrDIatJnB7BjFAuH4tzf3Kim6Wb/SgW9tYilYBD8mz+TJlTT
+	 rtcYtFeTvbd7/YDXkegD4TblEWDCDVvwBBRebJu4=
+Message-ID: <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
+Date: Wed, 30 Oct 2024 08:11:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zx8hfE2_3zXSTi05@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
+ christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <000f01db247b$d10e1520$732a3f60$@581238.xyz>
+ <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
+ <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
+ <20241022161055.GE275077@black.fi.intel.com>
+ <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+ <20241023061001.GF275077@black.fi.intel.com>
+ <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+ <20241028081813.GN275077@black.fi.intel.com>
+Content-Language: en-US
+From: Rick <rick@581238.xyz>
+Autocrypt: addr=rick@581238.xyz; keydata=
+ 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
+In-Reply-To: <20241028081813.GN275077@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Dmitry,
+Hi Mika,
 
-On Sun, Oct 27, 2024 at 10:30:36PM -0700, Dmitry Torokhov wrote:
-> Hi everyone,
+Thank you for your email.
+
+On 28-10-2024 09:18, Mika Westerberg wrote:
 > 
-> On Sun, Oct 27, 2024 at 10:02:24AM -0700, Ned T. Crigler wrote:
-> > Hi Peter, Christian,
-> > 
-> > On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
-> > > Hello Ned, Christian, *,
-> > > 
-> > > On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heusel.eu> wrote:
-> > > 
-> > > > On 24/10/26 07:15PM, Ned T. Crigler wrote:
-> > > > > Hi,
-> > > >
-> > > > Hey Ned,
-> > > >
-> > > > > It looks like starting with kernel 6.11, disabling and re-enabling
-> > > > > magic
-> > > > > sysrq fails with these errors in dmesg:
-> > > > >
-> > > > > kernel: input: input_handler_check_methods: only one event processing
-> > > > > method can be defined (sysrq)
-> > > > > kernel: sysrq: Failed to register input handler, error -22
-> > > > >
-> > > > > after doing:
-> > > > >
-> > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > >
-> > > > I have found that this issue is also present in the latest mainline
-> > > > release and bisected it to the following commit:
-> > > >
-> > > >     d469647bafd9 ("Input: simplify event handling logic")
-> > > >
-> > > 
-> > > After the mentioned commit a call sysrq_register_handler() -->
-> > > input_register_handler(&sysrq_handler) with sysrq_handler.filter set
-> > > will result in sysrq_handler.events set to input_handler_events_filter,
-> > > see drivers/input/input.c (line 2607 to 2608):
-> > > 
-> > > 2596 int input_register_handler(struct input_handler *handler)
-> > > 2597 {
-> > > 2598         struct input_dev *dev;
-> > > 2599         int error;
-> > > 2600
-> > > 2601         error = input_handler_check_methods(handler);
-> > > 2602         if (error)
-> > > 2603                 return error;
-> > > 2604
-> > > 2605         INIT_LIST_HEAD(&handler->h_list);
-> > > 2606
-> > > 2607         if (handler->filter)
-> > > 2608                 handler->events = input_handler_events_filter;
-> > > 2609         else if (handler->event)
-> > > 2610                 handler->events = input_handler_events_default;
-> > > 2611         else if (!handler->events)
-> > > 2612                 handler->events = input_handler_events_null;
-> > > 
-> > > So the second call will fail at the check 'input_handler_check_methods(handler)'
-> > > which only allows one method to be set, see drivers/input/input.c:
-> > > 
-> > > 2517 static int input_handler_check_methods(const struct input_handler *handler)
-> > > 2518 {
-> > > 2519         int count = 0;
-> > > 2520
-> > > 2521         if (handler->filter)
-> > > 2522                 count++;
-> > > 2523         if (handler->events)
-> > > 2524                 count++;
-> > > 2525         if (handler->event)
-> > > 2526                 count++;
-> > > 2527
-> > > 2528         if (count > 1) {
-> > > 2529                 pr_err("%s: only one event processing method can be defined      (%s)\n",
-> > > 2530                        __func__, handler->name);
-> > > 2531                 return -EINVAL;
-> > > 2532         }
-> > > 2533
-> > > 2534         return 0;
-> > > 2535 }
+> I still see similar issue even with the v6.9 kernel. The link goes up an
+> down unexpectly.
 > 
-> Yes, I did not consider that we might want to re-register the same input
-> handler, thank you for alerting me about the regression.
+> I wonder if you could try to take traces of the control channel traffic?
+> I suggest to use v6.11 kernel because it should have all the tracing
+> bits added then install tbtools [1] and follow the steps here:
 > 
-> > > 
-> > > 
-> > > A quick fix/hack for the sysrq case:
-> > > 
-> > > --- a/drivers/tty/sysrq.c
-> > > +++ b/drivers/tty/sysrq.c
-> > > @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void)
-> > >         int error;
-> > > 
-> > >         sysrq_of_get_keyreset_config();
-> > > -
-> > > +       sysrq_handler.events = NULL;
-> > >         error = input_register_handler(&sysrq_handler);
-> > >         if (error)
-> > >                 pr_err("Failed to register input handler, error %d", error);
-> > > lines 1-13/13 (END)
-> > > 
-> > > Regards,
-> > > Peter
-> > > 
-> > 
-> > Thanks for tracking this down. It seems messy that the mentioned commit
-> > changes input_register_handler to overwrite ->events for an internal purpose,
-> > and callers may expect it to be unchanged, as sysrq does here by reusing
-> > sysrq_handler.
+>    https://github.com/intel/tbtools?tab=readme-ov-file#tracing
 > 
-> Yes, indeed. I wonder if we can solve this by moving the derived event
-> handler method into input_handle structure, like the patch below. 
+> Then provide both full dmesg and the trace output. That hopefully shows
+> if some of the access we are doing in the Linux side is causing the link
+> to to drop. Let me know if you need more detailed instructions.
+> 
+> Also please drop the "thunderbolt.host_reset=0" from the command line as
+> that did not help, so it is not needed.
 
-Your patch fixes the sysrq regression, thanks for the fix!
+Dropped thank you.
 
-Tested-by: Ned T. Crigler <crigler@gmail.com>
+> 
+> [1] https://github.com/intel/tbtools
 
--- 
-Ned T. Crigler
+tbtrace on 6.11.5: 
+https://gist.github.com/ricklahaye/69776e9c39fd30a80e2adb6156bdb42d
+dmesg on 6.11.5: 
+https://gist.github.com/ricklahaye/8588450725695a0bd45799d3d66c7aff
+
+Kind regards,
+Rick Lahaye
+
