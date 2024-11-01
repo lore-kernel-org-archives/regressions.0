@@ -1,147 +1,208 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEEF156676
-	for <regressions@lists.linux.dev>; Fri,  1 Nov 2024 09:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF88315D5B6
+	for <regressions@lists.linux.dev>; Fri,  1 Nov 2024 09:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730452982; cv=none; b=gjL6eLpX8hop94RmXq4ztkubfGkJMDDWPIlm/TkkYc2OJ2Ee9KxoORfC0a5hObQMnfJR8QaGCdx0q5lX8GeXWS1BNnNKV0YVN2so10QZ7cCKWoQTgw6IFrbT8sTkkFexcsoXmmoonXC8VKRy/aA5a5PaVxojfzR0AjW860RuQDk=
+	t=1730454988; cv=none; b=BTyuhkOY22GFQJNZXFEqWf3k7WWi45iBHCxsauCVDIfOre6lvauIqYamI51X5UBSDHCiyUd1NuvotdjhFsmDXKjbVJj3Yktdq61bKZjA6rU1/RijcuJW+5AipQZ2h4pNEn1y1K4tQw0JmJO0kTbGNTIrVIbHXSprlIfDENZiadM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730452982; c=relaxed/simple;
-	bh=MUiDuyJ+MlELg7lT9hPPazjnUfTgX6bjLE6DVpJ+qF4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=dfUjhsMByHzs8E2rzNVwxRxfcnAqicXpQQOgoqG0gl2kV6SMiw2XbGVGv+iu144YB4dvFWS5bzNr5ZdfDSeirTpJ4VQELKbr+WbIYqaLBLnWYurMQsSzfO5hlzlYV7pciwxGSVUm4lfy0A3YptVcOBwfQ4YTkOWpZhNMmTHlA+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=sqx/TmKk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RwalSVN0; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1730454988; c=relaxed/simple;
+	bh=GOQxGFD0ZytTWG4OwqVfXTYJinyLhPSthymBTy2Eb8E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=faEyHDC2KCjBuloaU342zmJzfTu+y4PeZEFUx1t2A46btbHXeMMpw8a3VxlrV85+uBJjXNRyfpxBUu9ukkKLzwaQODwAHFExFb/tDHMUDuwPGVHBvw4qgcbQ1ncYJfpywt6MZdOPifwQddA6UfUxPMRDiBeZS+k4h+jF5pJyHIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JrZ+nq2g; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="sqx/TmKk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RwalSVN0"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id E0FA611400C7;
-	Fri,  1 Nov 2024 05:22:57 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 01 Nov 2024 05:22:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1730452977;
-	 x=1730539377; bh=/f+ob6/0cs0oAQjTndC8UAIk7DAav3CEmLAxLiR/ZgA=; b=
-	sqx/TmKkrbFlbpIh2Er3egpdCCyhzsQAoBY21kEt9b/TWCscIH0VzLujadP6g7Lq
-	81SUkJ8DCPAtAK4muYBOYg1sUgigAWR2oR8fxq7kw3qiS9C6t4UnRU187E103oSR
-	BgRRP4gxrSyJwxAfs2VVG1z++vlBfkA6zbSPHifvbX8am6dQe91TeBQwA9GjDzhe
-	4HHNyLC/f2u6nxlEhcwWLe8q2AH6PD4Ibyv1sfFydp5WvZbzKUlKSoyOCmcoDhkq
-	tD4XdUwphm4Dytsz3vme812b0BIBifnELQPbxpsih30YChZgEyXmC1C4aB4eBAG0
-	t+lcuQ6JqRtsHjvAFsKKtQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730452977; x=
-	1730539377; bh=/f+ob6/0cs0oAQjTndC8UAIk7DAav3CEmLAxLiR/ZgA=; b=R
-	walSVN0B0tyKKv6K4DPnkzJmD0wHebmbjswUDltqAxO1jiNVsUhPnBEXnw1K9dTp
-	4CjHMhtjyDmw7BVi/Kl9EuRpq+CL8KcDL5lbVGDtZfXSQ+3cba5UakEtSzaSsQBL
-	+M78jRqvrv+90ycXWtzgFL7cm/EN0XqGgxNOjnRpAn8EIMUoREaVYgyN8RyQagvF
-	QP0wT5cpESJX8BYzSlEIYS/iSvZ3T4WoVlX3awG9jHTgzBqMkzXBk8mABczuSAzO
-	1qzuxrbk62IuQzeBP4r3JEtlghltfORUSqnclsBdHKiWBg7CqVteHI80DbYOSNQ6
-	tSBNNZryIpBnKfwrcIMtg==
-X-ME-Sender: <xms:8Z0kZ32hrZ15aXsK9-0uULTHRaEQJDONV7ovxYe2SBCH4x_hNuskhQ>
-    <xme:8Z0kZ2EsNq9mC9QTLkE0fz4fi3FiLxNm8n-TJOeRjn7mR3YdWLwEgpl8hZKlnVdNp
-    XP3GNbGtEpVfilCHAc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekledgtdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheprghnuggvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhg
-    pdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhinhgrrhhordhorhhgpdhrtg
-    hpthhtohepnhgrrhgvshhhrdhkrghmsghojhhusehlihhnrghrohdrohhrghdprhgtphht
-    thhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopehlkhhfthdqthhrihgrghgvsehlihhsthhsrdhlihhnrghr
-    ohdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuh
-    igrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:8Z0kZ35jvESavaTssiskGB6M21sPWi1QP_P6WX_TceMbd_X1m9yTpQ>
-    <xmx:8Z0kZ838pMaEln6ii3f8okK2xXZbe6PbfsKIAgjCpKW2RAuwnnW36w>
-    <xmx:8Z0kZ6GVn97Jf1N9k5rVxKCaY0WV5xXorVLoHVUyB5AYWlQTtrtUXw>
-    <xmx:8Z0kZ9_3sznYY6gBTjpOCzlhYqcbDJCmzBoDA6wEg_8PvNSrM6r5-Q>
-    <xmx:8Z0kZ4YnY3lvL39ec8boZoYcKxEdDyUS05Q1FCSiHJTSzMO3SHcMk-4T>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6DB8E2220071; Fri,  1 Nov 2024 05:22:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JrZ+nq2g"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea527764c3so40050767b3.0
+        for <regressions@lists.linux.dev>; Fri, 01 Nov 2024 02:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730454985; x=1731059785; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hmoflKYnQ7aKNSDRrJZTeq26rnTAdjCp4mlK4HuQWvs=;
+        b=JrZ+nq2gbDajtF7VS3foeF05HqUZSYDwCQXTcB/HjjMMAd1WIhtlrJYMnOQRcEmmeT
+         Si0R+5tqSt0Q4ZG57ZWCUi54QLvGCYdp3ACI4kSE2Pw3oXllIDGSNameFkOKpJzb8L+n
+         qDiJFG3LDwo40HfbmxD55tP4nqiYxwETL80wVHz5vBjam/fwGvFjw72mJDpWbQHw2274
+         wZCuilo6b4YyxFgnR/gS3kyobZ/TI2WFBIMt/dsDm91kvDkP0tbzNxB8Fb01Sw2P0qgN
+         rEQlXWtQWqsuT8oMQ/1kucKN8L6U+rXnyC/y4JMwMNGJrvB7K5eVMuKzSE9L1oPg6wy7
+         LNsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730454985; x=1731059785;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hmoflKYnQ7aKNSDRrJZTeq26rnTAdjCp4mlK4HuQWvs=;
+        b=rgtdCriYUN2TBYkW/lYZeEfKJWwc9T/bC1o45KXISzIz6mXsMKFZYoWQdhO+we4/m5
+         y0vSKMfvBzGFy3I0OVGXsyymJ4Mn9St4rtmHHflpfqmKbkdWpa/KK2/cXnBZYpm/pnvU
+         1mPTUY37K7AA1/cuuGh0MiH52T6+XYdEFxVhyewtshmeGdn65vwQNLpWDBRWJiBVKJeC
+         YKbFFbxKZjHNQiA/nWno8FxBCheCxEQcAJpL3e0192DxZ6wcvYrCnH5hlmwOrZA3jkCq
+         wFewMXyFDEUjAZ8uVxDfKqhwqzMzE60WcbNKC2DAH/RD9/8e4mNkoZFGS7T+UFKeLck9
+         DFJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzpO3psBef2JJboy+EPEQxV6CfYsTqXJW+UEClF24XSOcyMnZFjVH3uri50QW20EBjp63ziGdvBxxitw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy1MbF3Zl9x4Pc6fWoPzkgmXqMolmASMvpa3mc+EsscGEflqaGK
+	M1RCFRg9OJ1jaSttvZsxJOyghHEiiL2UabitBCno99i2DkMhpKxHBiJgadcQYy9BIVLhQz5x+jW
+	Rfl5dkSapJkc3YA==
+X-Google-Smtp-Source: AGHT+IG2fVavzKlnr4QzZpcUQDvvH6D6+f+Mk98GHmIS792VM/YBglqgRG49x2iPQiQQgs27XavEgVyKXXEFay4=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
+ (user=aliceryhl job=sendgmr) by 2002:a05:690c:4c09:b0:6e7:e493:2db6 with SMTP
+ id 00721157ae682-6ea3b951361mr2169417b3.3.1730454984742; Fri, 01 Nov 2024
+ 02:56:24 -0700 (PDT)
+Date: Fri,  1 Nov 2024 09:56:20 +0000
+In-Reply-To: <CA+G9fYv_Y2tzs+uYhMGtfUK9dSYV2mFr6WyKEzJazDsdk9o5zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Fri, 01 Nov 2024 10:22:30 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>
-Cc: "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "Linux Regressions" <regressions@lists.linux.dev>,
- lkft-triage@lists.linaro.org, "Anders Roxell" <anders.roxell@linaro.org>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- "Linux Media Mailing List" <linux-media@vger.kernel.org>
-Message-Id: <e9971f03-e542-43ed-a8b5-8d79127f4693@app.fastmail.com>
-In-Reply-To: <d3903c31-21ae-4ffe-9969-6faa7e430cb5@stanley.mountain>
-References: 
- <CA+G9fYvvNm-aYodLaAwwTjEGtX0YxR-1R14FOA5aHKt0sSVsYg@mail.gmail.com>
- <456c79d2-5041-47c4-bed2-44d257524ddd@stanley.mountain>
- <d3903c31-21ae-4ffe-9969-6faa7e430cb5@stanley.mountain>
-Subject: Re: next-20241028: gcc-8-defconfig : ERROR: modpost: "__aeabi_uldivmod"
- [drivers/media/dvb-frontends/cxd2841er.ko] undefined!
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <CA+G9fYv_Y2tzs+uYhMGtfUK9dSYV2mFr6WyKEzJazDsdk9o5zw@mail.gmail.com>
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5092; i=aliceryhl@google.com;
+ h=from:subject; bh=GOQxGFD0ZytTWG4OwqVfXTYJinyLhPSthymBTy2Eb8E=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnJKKPl6aPrGB8YTXJhfCzaL9Oh695k3ASS1Fqb
+ y3dRMfFgamJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZySijwAKCRAEWL7uWMY5
+ Rn1pD/0TgLwq1yTZG8MK2EimNMvaP+KRF5HOpUY+kINtMwhlA+cfPHB3cZUHdMnckrRzKixRoop
+ ONTExWRb5Mm2vGHke0i/y8kJwwnb4aiQxj+uG0qKdveVgldDwmA/0NgCkHuoUEyWQoJhpNvYHE1
+ n+2GHxop9oTk8Nn904nRVvbTiDfVo8zXdiJi1M9nOnWeN6WdxdhZkZEbb8P7PmMFTweOItGI3HP
+ AYkH2Si70HDANTT6r36zWbvAp+lVeWaQ8Zj6P0aiJkBCPvLn6NKooSYiOzov/CTUQBmwmBEJWT2
+ mB47CVWjNG9SiBZhLgZdN7KeQaGDJQq2FG5SmyamwIwaGCXJgXdKj/qV60n/6cuxouPzEqwXDgM
+ BA0GE/fOcKieVMJHZdmokhL7fLFu6wMOeirSXVK/Pbkd9Mtvjyp8MhsJAgTZqB14KYKEwneiPPn
+ sF6gnFmJNFkYgzAIOVmjG9RaSI5FPj/f+Yl5+oa8aN+YgHmwaH+ZJ6efAvvXEEcTkNp3x7nr96S
+ +Cy6VIqBcsN3y3cTHvqYDXBlMolGUUh4Ef4XLv3sx4P8b1Damfp3OQ9evnZRNn1tMs4jMkqtbZ8
+ kz/QFbkyBb4Aym2/tyQhp9QZwM6OEZyH4xVlQgz5UGcOGSG0mbS83pAkwKV9soL1jGZtYPG7yL3 7OJLPCoeETzQkYg==
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Message-ID: <20241101095620.2526421-1-aliceryhl@google.com>
+Subject: [PATCH] rust: lsm: replace context+len with lsm_context
+From: Alice Ryhl <aliceryhl@google.com>
+To: naresh.kamboju@linaro.org, casey@schaufler-ca.com, paul@paul-moore.com
+Cc: anders.roxell@linaro.org, arnd@arndb.de, brauner@kernel.org, 
+	dan.carpenter@linaro.org, kees@kernel.org, linux-kernel@vger.kernel.org, 
+	lkft-triage@lists.linaro.org, ojeda@kernel.org, regressions@lists.linux.dev, 
+	rust-for-linux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	lkft@linaro.org, aliceryhl@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Oct 31, 2024, at 12:27, Dan Carpenter wrote:
-> Arnd, can you take a look at this?
->
-> diff --git a/drivers/media/dvb-frontends/cxd2841er.c 
-> b/drivers/media/dvb-frontends/cxd2841er.c
-> index d925ca24183b..e3131f5c6708 100644
-> --- a/drivers/media/dvb-frontends/cxd2841er.c
-> +++ b/drivers/media/dvb-frontends/cxd2841er.c
-> @@ -314,7 +314,7 @@ static u32 cxd2841er_calc_iffreq_xtal(enum 
-> cxd2841er_xtal xtal, u32 ifhz)
->  	u64 tmp;
-> 
->  	tmp = (u64) ifhz * 16777216;
-> -	do_div(tmp, ((xtal == SONY_XTAL_24000) ? 48000000 : 41000000));
-> +//	do_div(tmp, ((xtal == SONY_XTAL_24000) ? 48000000 : 41000000));
-> 
->  	return (u32) tmp;
->  }
+This brings the Rust SecurityCtx abstraction [1] up to date with the new
+API where context+len is replaced with an lsm_context [2] struct.
 
-Not sure what is happening exactly, probably something where
-__builtin_constant_p() is inconclusive. The patch below seems
-to address it without impairing readability.
+Link: https://lore.kernel.org/r/20240915-alice-file-v10-5-88484f7a3dcf@google.com [1]
+Link: https://lore.kernel.org/r/20241023212158.18718-3-casey@schaufler-ca.com [2]
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/r/CA+G9fYv_Y2tzs+uYhMGtfUK9dSYV2mFr6WyKEzJazDsdk9o5zw@mail.gmail.com
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/helpers/security.c |  8 ++++----
+ rust/kernel/security.rs | 38 +++++++++++++++++---------------------
+ 2 files changed, 21 insertions(+), 25 deletions(-)
 
-      Arnd
-
---- a/drivers/media/dvb-frontends/cxd2841er.c
-+++ b/drivers/media/dvb-frontends/cxd2841er.c
-@@ -311,12 +311,8 @@ static int cxd2841er_set_reg_bits(struct cxd2841er_priv *priv,
- 
- static u32 cxd2841er_calc_iffreq_xtal(enum cxd2841er_xtal xtal, u32 ifhz)
- {
--       u64 tmp;
--
--       tmp = (u64) ifhz * 16777216;
--       do_div(tmp, ((xtal == SONY_XTAL_24000) ? 48000000 : 41000000));
--
--       return (u32) tmp;
-+       return div_u64(ifhz * 16777216ull,
-+                       (xtal == SONY_XTAL_24000) ? 48000000 : 41000000);
+diff --git a/rust/helpers/security.c b/rust/helpers/security.c
+index 239e5b4745fe..0c4c2065df28 100644
+--- a/rust/helpers/security.c
++++ b/rust/helpers/security.c
+@@ -8,13 +8,13 @@ void rust_helper_security_cred_getsecid(const struct cred *c, u32 *secid)
+ 	security_cred_getsecid(c, secid);
  }
  
- static u32 cxd2841er_calc_iffreq(u32 ifhz)
+-int rust_helper_security_secid_to_secctx(u32 secid, char **secdata, u32 *seclen)
++int rust_helper_security_secid_to_secctx(u32 secid, struct lsm_context *cp)
+ {
+-	return security_secid_to_secctx(secid, secdata, seclen);
++	return security_secid_to_secctx(secid, cp);
+ }
+ 
+-void rust_helper_security_release_secctx(char *secdata, u32 seclen)
++void rust_helper_security_release_secctx(struct lsm_context *cp)
+ {
+-	security_release_secctx(secdata, seclen);
++	security_release_secctx(cp);
+ }
+ #endif
+diff --git a/rust/kernel/security.rs b/rust/kernel/security.rs
+index 2522868862a1..25d2b1ac3833 100644
+--- a/rust/kernel/security.rs
++++ b/rust/kernel/security.rs
+@@ -15,60 +15,56 @@
+ ///
+ /// # Invariants
+ ///
+-/// The `secdata` and `seclen` fields correspond to a valid security context as returned by a
+-/// successful call to `security_secid_to_secctx`, that has not yet been destroyed by calling
+-/// `security_release_secctx`.
++/// The `ctx` field corresponds to a valid security context as returned by a successful call to
++/// `security_secid_to_secctx`, that has not yet been destroyed by `security_release_secctx`.
+ pub struct SecurityCtx {
+-    secdata: *mut core::ffi::c_char,
+-    seclen: usize,
++    ctx: bindings::lsm_context,
+ }
+ 
+ impl SecurityCtx {
+     /// Get the security context given its id.
+     pub fn from_secid(secid: u32) -> Result<Self> {
+-        let mut secdata = core::ptr::null_mut();
+-        let mut seclen = 0u32;
+-        // SAFETY: Just a C FFI call. The pointers are valid for writes.
+-        to_result(unsafe { bindings::security_secid_to_secctx(secid, &mut secdata, &mut seclen) })?;
++        // SAFETY: `struct lsm_context` can be initialized to all zeros.
++        let mut ctx: bindings::lsm_context = unsafe { core::mem::zeroed() };
++
++        // SAFETY: Just a C FFI call. The pointer is valid for writes.
++        to_result(unsafe { bindings::security_secid_to_secctx(secid, &mut ctx) })?;
+ 
+         // INVARIANT: If the above call did not fail, then we have a valid security context.
+-        Ok(Self {
+-            secdata,
+-            seclen: seclen as usize,
+-        })
++        Ok(Self { ctx })
+     }
+ 
+     /// Returns whether the security context is empty.
+     pub fn is_empty(&self) -> bool {
+-        self.seclen == 0
++        self.ctx.len == 0
+     }
+ 
+     /// Returns the length of this security context.
+     pub fn len(&self) -> usize {
+-        self.seclen
++        self.ctx.len as usize
+     }
+ 
+     /// Returns the bytes for this security context.
+     pub fn as_bytes(&self) -> &[u8] {
+-        let ptr = self.secdata;
++        let ptr = self.ctx.context;
+         if ptr.is_null() {
+-            debug_assert_eq!(self.seclen, 0);
++            debug_assert_eq!(self.len(), 0);
+             // We can't pass a null pointer to `slice::from_raw_parts` even if the length is zero.
+             return &[];
+         }
+ 
+         // SAFETY: The call to `security_secid_to_secctx` guarantees that the pointer is valid for
+-        // `seclen` bytes. Furthermore, if the length is zero, then we have ensured that the
++        // `self.len()` bytes. Furthermore, if the length is zero, then we have ensured that the
+         // pointer is not null.
+-        unsafe { core::slice::from_raw_parts(ptr.cast(), self.seclen) }
++        unsafe { core::slice::from_raw_parts(ptr.cast(), self.len()) }
+     }
+ }
+ 
+ impl Drop for SecurityCtx {
+     fn drop(&mut self) {
+-        // SAFETY: By the invariant of `Self`, this frees a pointer that came from a successful
++        // SAFETY: By the invariant of `Self`, this frees a context that came from a successful
+         // call to `security_secid_to_secctx` and has not yet been destroyed by
+         // `security_release_secctx`.
+-        unsafe { bindings::security_release_secctx(self.secdata, self.seclen as u32) };
++        unsafe { bindings::security_release_secctx(&mut self.ctx) };
+     }
+ }
+
+base-commit: c88416ba074a8913cf6d61b789dd834bbca6681c
+-- 
+2.47.0.199.ga7371fff76-goog
+
