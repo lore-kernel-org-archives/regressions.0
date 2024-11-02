@@ -1,436 +1,172 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD48156C72
-	for <regressions@lists.linux.dev>; Sat,  2 Nov 2024 10:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380F17741;
+	Sat,  2 Nov 2024 13:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730541828; cv=none; b=Mz6reBXf7qKViuV2dd97B+GHiCPEEhR9ffWLjyj/O/pVVHKLluHfBuu+5Z6TPadgbydNeoZzNHgzPyko4tOPSaGoQ/lzEilh3CHRX/noyYexBezgbW1n+zwdUN8la/p2/IZ0faqnqODezNq4qq9syfjgtsF54PFBn7tDSNFvIsU=
+	t=1730555146; cv=none; b=r+b63Of6YKo82FW2JuP7+N0c9FIDWjDdeP5UxY3qWnW5U2hkk4+cROTsOYKRPnuvNj1WkKP2We1VhviHN0EztXijr5IfXgEf4R0aHQZu3p/oNbjOYKOg85ucNYxzyEoENiqcKVEyKhUHsneNe6Bb1QVYgJTcsxNqPDr1xGMU6WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730541828; c=relaxed/simple;
-	bh=WmFFnHOct1TeZ88vTW4FtRL9RIxbjE5sxscFW0PrKEg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uqe2S7lqIKTfQOVEM2BDLlueZaaiTOHrzN28zjtB1mzsZBMjWTOTvD+V6brCzhf9k0FLooGn5q1AL/94GkDYFVI27aP7cuK7qu3Vgkm1E93qC9x1nihHvHaGZkrx8YuLWauG48uWQga+/GHPjjsa6NRWq0wRtCeneyPsOjoZrNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sc0I4KFn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zlo3DVH5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Sc0I4KFn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Zlo3DVH5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1730555146; c=relaxed/simple;
+	bh=e03yKnN3xWXXNqLp+H7ewAvYxlWFLHNk6mNt6rYdGRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TV/2poyWOWj4fxCrZnEETmEBFwf1SKkuOlaWj9nnwTBJaMn09j8Et3cm4oiU1hvvEEitUWZEvnXjDoW/2hKAM4jZjk9KyxNeF+DczIw7LF9d7xmj1VNUz6dw5Kn695ClgvpMTo5RrolislGB6UCVfWfCCD1RF78HGi8cMlCUNL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tEYyNh5C; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sc0I4KFn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zlo3DVH5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Sc0I4KFn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Zlo3DVH5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C0E51FD6E;
-	Sat,  2 Nov 2024 10:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730541818; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZlrrDKSmrt84Ub04+c8ECDKmobuqTwGP3c5wB+QEuek=;
-	b=Sc0I4KFnkfq2son4OlEK51N1FvGprCvyqT40p+dgXi4XiZqpVQ009TgHWF7lQIpH6iJYGh
-	xKYRCfb4O42ZET87nXxgnwBmUKZi3WujYOfkwszcyF955AlmqDqfChlimOEzP15VVxXz96
-	akaZnJsVpi6pyulOJjwNpyKT50zxMyc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730541818;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZlrrDKSmrt84Ub04+c8ECDKmobuqTwGP3c5wB+QEuek=;
-	b=Zlo3DVH5vkZ+2W/2od1HmLvgLnrVDitE8sNDOUO/W4qYQAr/4Fb7nflm7g2i+l4AEeAClT
-	1UKn7mSOgPWj23DA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Sc0I4KFn;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Zlo3DVH5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730541818; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZlrrDKSmrt84Ub04+c8ECDKmobuqTwGP3c5wB+QEuek=;
-	b=Sc0I4KFnkfq2son4OlEK51N1FvGprCvyqT40p+dgXi4XiZqpVQ009TgHWF7lQIpH6iJYGh
-	xKYRCfb4O42ZET87nXxgnwBmUKZi3WujYOfkwszcyF955AlmqDqfChlimOEzP15VVxXz96
-	akaZnJsVpi6pyulOJjwNpyKT50zxMyc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730541818;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZlrrDKSmrt84Ub04+c8ECDKmobuqTwGP3c5wB+QEuek=;
-	b=Zlo3DVH5vkZ+2W/2od1HmLvgLnrVDitE8sNDOUO/W4qYQAr/4Fb7nflm7g2i+l4AEeAClT
-	1UKn7mSOgPWj23DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EBC3D13736;
-	Sat,  2 Nov 2024 10:03:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yoFJOPn4JWflDQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sat, 02 Nov 2024 10:03:37 +0000
-Date: Sat, 02 Nov 2024 11:04:42 +0100
-Message-ID: <87ttcqt0hx.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,	"tiwai@suse.de"
- <tiwai@suse.de>,	"marcel@holtmann.org" <marcel@holtmann.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	=?EUC-KR?B?IkRlcmVuIFd1ICjZ69Ps7NIpIg==?= <Deren.Wu@mediatek.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,	=?ISO-2022-JP?B?IlN0?=
- =?ISO-2022-JP?B?ZXZlIExlZSAoGyRCTXs7a0A/GyhCKSI=?=
- <steve.lee@mediatek.com>,	"marc.payne@mdpsys.co.uk"
- <marc.payne@mdpsys.co.uk>,	Sean Wang <Sean.Wang@mediatek.com>,
-	=?ISO-2022-JP?B?IkFhcm9uIEhvdSAoGyRCOHQ9UzZEGyhCKSI=?=
- <Aaron.Hou@mediatek.com>,	=?ISO-2022-JP?B?IkNocmlzIEx1ICgbJEJOJkNVGyhC?=
- =?ISO-2022-JP?B?GyRCXXcbKEIpIg==?= <Chris.Lu@mediatek.com>,
-	=?ISO-2022-JP?B?IkhhbyBRaW4gKBskQj9BOUAbKEIpIg==?= <Hao.Qin@mediatek.com>
-Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before downloading the fw
-In-Reply-To: <643d8055-5a9f-4f5b-865b-830d33651dfe@leemhuis.info>
-References: <20240822052310.25220-1-hao.qin@mediatek.com>
-	<ZuB3omUkdUHLggYu@mdpsys.co.uk>
-	<790e542aa9d08c7efeee6ef298fce2a87d8035e4.camel@mediatek.com>
-	<ZuneSM4SvyUFX86j@mdpsys.co.uk>
-	<9bfbbf24ac2480d94d3455f7e33e4b5502b38ced.camel@mediatek.com>
-	<CABBYNZKYsL9jcF2n9TsA1BjU-CjXOdXu7MDLP9Sz_Ly8hBAf1w@mail.gmail.com>
-	<c01e6dfa730dd10a7d4dba60fe31e82b9c296b37.camel@mediatek.com>
-	<Zuyk1c6Gkxx3G0PB@mdpsys.co.uk>
-	<f9e8688ebe559e10c019d0cbab4e8b1f5a7d2339.camel@mediatek.com>
-	<ff502f63-2d87-4dee-a893-cce53353df8b@leemhuis.info>
-	<87iktk4d9l.wl-tiwai@suse.de>
-	<75f671b6-ce2a-4404-b662-2c9c7d28a598@leemhuis.info>
-	<d0f70e662f5e9329cff43f92a5c191601cc599f1.camel@mediatek.com>
-	<0a988691-8c18-4dca-ac78-94e36a9b8b37@leemhuis.info>
-	<f3c6f6f857d19c867941c86c644042fa195621ac.camel@mediatek.com>
-	<643d8055-5a9f-4f5b-865b-830d33651dfe@leemhuis.info>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tEYyNh5C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1730555125; x=1731159925; i=wahrenst@gmx.net;
+	bh=wh8jWE/SuHQZpH1OicaEibZkdDUs8oXsmEh1paiPtHU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tEYyNh5C432n6QJ3/ReOh2iXRHf55sXiK2LY0BnUIYoVg4puSzL3VBcGUBYKNDZ+
+	 mZyu8GUlLosI7z9Mt9wLbOeBUdfEt852Jl3vYp8mf77GIgvVBnGDpDjT7x9/A+/WY
+	 ZDr426afeaHkiBiCz7+XdhJsFNbpjpflGXgOCLC+VSnQWnUCtJNM6ETgbGP949MkM
+	 cXE1jMJurUylazlV3qogkEGACC+dnUQYlQlQamBNcV9Kb2xLrHhMFOUFUbxZdQ6Ux
+	 U3m25wyupM0lTY30ejlkxJ5WZGHf4ePp15zOQJLdO1UrIeNCz0zLNddsTecCowRDV
+	 oR3No6AZeKYfuBErQg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNsw4-1tVVWP2fFY-00Xw0G; Sat, 02
+ Nov 2024 14:45:25 +0100
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH RFC] mmc: pwrseq_simple: Handle !RESET_CONTROLLER properly
+Date: Sat,  2 Nov 2024 14:45:22 +0100
+Message-Id: <20241102134522.333047-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-2022-JP
-X-Rspamd-Queue-Id: 6C0E51FD6E
-X-Spam-Score: -2.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,suse.de,holtmann.org,lists.infradead.org,vger.kernel.org,mediatek.com,lists.linux.dev,mdpsys.co.uk];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REDIRECTOR_URL(0.00)[urldefense.com];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gR28kxpGv/paCHFYL+WOtD2omK8W76H6OxEFca2yYlzpt/S7qPc
+ /02bKimVT4RMVrEYArMy4wu4g8NeZ2V/+caEDXvOpV9bkMQ6rIGVa4GSwcVTPoYteUOG1jB
+ QNtiYQEllcjjBk4xs8tysy/1gw3IKr6WpZd1+a5UTJ93K5cOYrX67bgiiGJysPS0+lMlVqA
+ B6iBdr4iiHwoZAiAv42ew==
 X-Spam-Flag: NO
-X-Spam-Level: 
+UI-OutboundReport: notjunk:1;M01:P0:1HQhTF2m7cY=;vO7nMt2DEIbIhGRCHChaoucxQme
+ UfAywgwv5ofAeu82VeQq2WMWl39EncgG4flGt4kuXwaAnCHJ9hFjJxEWBwl0sDbLl0pCfz+Ox
+ iRZxRwl28uewevqRjIqZUYy0JBXJaMYrNQEs/kyUkp33Of8hZss46x3/t8HBeQljij1T3plLU
+ pau0V5/s6AijvxPDLADhXYQ4B2/Ro6ND2YUcKxLf7lnqZm+gga6PvvZ7pek61pIZ+P6fLCr4X
+ YmuC8TY3Q+/pX7WijVMwB1JfGIg6o4l19YtueVR0Y6K3wkGbzDrtxKPML752W6XmpairEuOfK
+ NOruHozFz/xVnqG0J4mirtiP8KDXtZEMBW+aNyBx/3qvge3gSl2bkqnJwtYEjNnrABvYWhhXB
+ 9Lcp/xDsA1VmOy8Jj7LRp58JqMGQms0IcweMGgNb0IaR3Oos6h+Yv26hWAia+fax7Cm7muAaS
+ s4XFWyz8lX/RNd8LUf1+nL9RhMrMiVIhhhQrYqI6GgGqsORzSDJQVMnIJRQnkFxhT/d/Pv6Gs
+ t+Z+bMBNFFCHJIUACRJQmOTRO5OTnliwIEut72+xIbv3J8Z5Bk6+2od6egFQCXZO7mPX/DA5n
+ /5DDSXQdaENQdzTxSMtXJWznc6MmG2d+kFCr4eyYETjLnA31rXdzIo8JWIoaO5DzovnGup0uy
+ 8BXIgkcSu7YLlP0EW9iVG43BVjClP4mSeA11VdIf/qZeCYgzXI7CLh5F5mrCXN+m11Oj7BrDk
+ /1cVAb1/HPGyI3BgGe2yvEJ0zrrafdvWfna7iNyZuJbNlEXX9EEu50zc3gp4yjdRbLsCKq0jg
+ CKqD7OXfURtqFKqQHXCt2CBQ==
 
-On Fri, 01 Nov 2024 15:22:13 +0100,
-Thorsten Leemhuis wrote:
-> 
-> Hi. Top-posting for once, to make this easily accessible to everyone.
-> 
-> Thx for the insights, but it feels like this is not the complete story.
-> From Takashi's mail earlier in the thread it appears to me that there is
-> a regression that the patch at the start of the thread fixes:
-> https://lore.kernel.org/all/87iktk4d9l.wl-tiwai@suse.de/
-> 
-> So it appears to me (please correct me if I'm wrong, which I might be)
-> there is some regression that must be fixed independently of any
-> firmware changes; not sure, maybe it's a different regression that the
-> one Marc saw.
+The recent introduction of reset control in pwrseq_simple introduced
+a regression for platforms without RESET_CONTROLLER support, because
+devm_reset_control_get_optional_shared() would return NULL and make all
+resets no-ops. Instead of enforcing this dependency rely on this behavior
+to determine reset support. As a benefit we can get the rid of the
+use_reset flag.
 
-That's hard to judge, unfortunately.  The only fact is that 6.11 and
-6.12-rc are still buggy and fail to boot due to the kernel Oops from
-Mediatek BT stuff.  The patch
-  https://lore.kernel.org/all/20240822052310.25220-1-hao.qin@mediatek.com/
-seems working around it, but it doesn't mean that this is the right
-fix, either.
+Fixes: 73bf4b7381f7 ("mmc: pwrseq_simple: add support for one reset contro=
+l")
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/mmc/core/pwrseq_simple.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-My wild guess is that there are substantial problems at btmtk stuff
-about the firmware management.  It blocks unbinding if something goes
-wrong, and this bug surfaced casually due to another change.
+Hi,
+will trying to reproduce the Rpi 4 regression from here [1], I found
+the issue above. I'm pretty sure the Rpi 4 regression is caused by the sam=
+e
+commit. Unfortunately I wasn't able to reproduce it.
 
-> I just don't know what's the best way forward to resolve the regresson.
-> A revert of the culprit? The patch at the start of this thread?
-> Something else?
+[1] - https://lore.kernel.org/linux-next/6724d7d5.170a0220.1281e9.910a@mx.=
+google.com/T/#u
 
-Either a revert of the firmware or the patch that triggered the issue
-would be helpful as a temporary workaround, yes.  We need a quick
-duct-tape coverage, then fix the fundamental failure.
+diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_si=
+mple.c
+index 24e4e63a5dc8..b8782727750e 100644
+=2D-- a/drivers/mmc/core/pwrseq_simple.c
++++ b/drivers/mmc/core/pwrseq_simple.c
+@@ -32,7 +32,6 @@ struct mmc_pwrseq_simple {
+ 	struct clk *ext_clk;
+ 	struct gpio_descs *reset_gpios;
+ 	struct reset_control *reset_ctrl;
+-	bool use_reset;
+ };
 
-> Takashi, Luiz, can you help me out here? I guess I otherwise soon will
-> have to involve higher level maintainers to sort this out (e.g. the -net
-> maintainers and/or Linus).
+ #define to_pwrseq_simple(p) container_of(p, struct mmc_pwrseq_simple, pwr=
+seq)
+@@ -71,7 +70,7 @@ static void mmc_pwrseq_simple_pre_power_on(struct mmc_ho=
+st *host)
+ 		pwrseq->clk_enabled =3D true;
+ 	}
 
-I can build a test kernel and ask the reporter for testing if once
-something is provided, of course.  Just ping me.
+-	if (pwrseq->use_reset) {
++	if (pwrseq->reset_ctrl) {
+ 		reset_control_deassert(pwrseq->reset_ctrl);
+ 		reset_control_assert(pwrseq->reset_ctrl);
+ 	} else
+@@ -82,7 +81,7 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_h=
+ost *host)
+ {
+ 	struct mmc_pwrseq_simple *pwrseq =3D to_pwrseq_simple(host->pwrseq);
 
+-	if (pwrseq->use_reset)
++	if (pwrseq->reset_ctrl)
+ 		reset_control_deassert(pwrseq->reset_ctrl);
+ 	else
+ 		mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
+@@ -95,7 +94,7 @@ static void mmc_pwrseq_simple_power_off(struct mmc_host =
+*host)
+ {
+ 	struct mmc_pwrseq_simple *pwrseq =3D to_pwrseq_simple(host->pwrseq);
 
-thanks,
+-	if (pwrseq->use_reset)
++	if (pwrseq->reset_ctrl)
+ 		reset_control_assert(pwrseq->reset_ctrl);
+ 	else
+ 		mmc_pwrseq_simple_set_gpios_value(pwrseq, 1);
+@@ -137,15 +136,14 @@ static int mmc_pwrseq_simple_probe(struct platform_d=
+evice *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(pwrseq->ext_clk), "external clock not=
+ ready\n");
 
-Takashi
+ 	ngpio =3D of_count_phandle_with_args(dev->of_node, "reset-gpios", "#gpio=
+-cells");
+-	if (ngpio =3D=3D 1)
+-		pwrseq->use_reset =3D true;
+-
+-	if (pwrseq->use_reset) {
++	if (ngpio =3D=3D 1) {
+ 		pwrseq->reset_ctrl =3D devm_reset_control_get_optional_shared(dev, NULL=
+);
+ 		if (IS_ERR(pwrseq->reset_ctrl))
+ 			return dev_err_probe(dev, PTR_ERR(pwrseq->reset_ctrl),
+ 					     "reset control not ready\n");
+-	} else {
++	}
++
++	if (!pwrseq->reset_ctrl) {
+ 		pwrseq->reset_gpios =3D devm_gpiod_get_array(dev, "reset", GPIOD_OUT_HI=
+GH);
+ 		if (IS_ERR(pwrseq->reset_gpios) &&
+ 		    PTR_ERR(pwrseq->reset_gpios) !=3D -ENOENT &&
+=2D-
+2.34.1
 
-> 
-> Ciao, Thorsten
-> 
-> On 01.11.24 08:11, Chris Lu (陸稚泓) wrote:
-> > Hi Thorsten,
-> > 
-> > On Wed, 2024-10-30 at 12:29 +0100, Thorsten Leemhuis wrote:
-> >> External email : Please do not click links or open attachments until
-> >> you have verified the sender or the content.
-> >> 
-> >> 
-> >> On 30.10.24 12:03, Chris Lu (陸稚泓) wrote:
-> >> > 
-> >> > Let me recap and update the status of this problem.
-> >> 
-> >> Many thx!
-> >> 
-> >> > Marc feedback that he has some problem with MT7921AUN usb module.
-> >> > Originally, we thought it was caused by the change "Fixes:
-> >> > ccfc8948d7e4d9 ("Bluetooth: btusb: mediatek: reset the controller
-> >> > before downloading the fw")". The change is mainly for MT7922, we
-> >> > found some problem with MT7921 on specific platform internally. As
-> >> > a result, Hao sent another patch to remove MT7921 from that
-> >> > rule(Bluetooth: btmtk: Remove resetting mt7921 before downloading
-> >> > the fw).
-> >> > 
-> >> > However, Marc also mentioned that BT is able to work if changing
-> >> > back
-> >> > to an old firmware bin. Based on the clue, we found it was caused
-> >> > by a
-> >> > firmware change that specific MT7921 model will not able to setup
-> >> > successfully. (In fact, we didn't expect that MT7921AUN can be get
-> >> > by
-> >> > normal user.)
-> >> > 
-> >> > Since we can't predict which model user use and Luiz also suggests
-> >> > MediaTek to fix it if that model can work before, we have prepared
-> >> > a
-> >> > solution. I've verified the solution locally that MT7921AUN model
-> >> > can
-> >> > work normally on Ubuntu PC. It will be a firmware modification. We
-> >> > plan
-> >> > to submit new firmware with this modification in 2024 Nov.
-> >> 
-> >> Great, but due to the kernel's "no regressions" rule this is mostly
-> >> irrelevant, as the regression must be fixed in a way that does not
-> >> require users to change their firmware.
-> >> 
-> > 
-> > Marc's module(MT7921AUN) is not working is due to a change in specific
-> > firmware uploaded last year and we plan to revert that in the next
-> > firmware release. Since it's related to controller's behavior, it's
-> > quite hard to cover in software side.
-> > Additionally, MT7921AUN is an external usb dongle. MediaTek official PC
-> > project doesn't use this type of MT7921 model. We uses another type for
-> > PC projects that it can be guaranteed bluetooth works normally with any
-> > firmware we upload to Kernel. As a result, we believe the impact is
-> > minimal to general user.
-> > 
-> >> So is any such solution in sight? Or should we just revert
-> >> ccfc8948d7e4d9 and any related follow up patches for now? Or would
-> >> that
-> >> just cause regressions for other users?
-> >> 
-> > 
-> > Actually, it's not related to ccfc8948d7e4d9 which make bluetooth can't
-> > setup normally if using MT7921AUN model + mismatched firmware. We
-> > thought it was the same issue in the beginning, but it's not eventually
-> > after getting more and more clue/logs.
-> > I think we can keep the change because it's necessary to the change
-> > submitter-Hao's project.
-> > 
-> > Chris Lu
-> > 
-> >> Ciao, Thorsten
-> >> 
-> >> > On Wed, 2024-10-30 at 10:21 +0100, Thorsten Leemhuis wrote:
-> >> > > External email : Please do not click links or open attachments
-> >> > > until
-> >> > > you have verified the sender or the content.
-> >> > > 
-> >> > > 
-> >> > > Hi, Thorsten here, the Linux kernel's regression tracker. Top-
-> >> > > posting
-> >> > > for once, to make this easily accessible to everyone.
-> >> > > 
-> >> > > I'm a bit lost here, but maybe I'm missing something.
-> >> > > 
-> >> > > Luiz, can you help out here? Is there a reason why this patch is
-> >> > > not
-> >> > > making any process?
-> >> > > 
-> >> > > Chris Lu and/or Hao Qin: Can you maybe help out as well as well
-> >> > > and
-> >> > > help
-> >> > > with resolving some open questions that might or might not be
-> >> > > relevant
-> >> > > (see below).
-> >> > > 
-> >> > > From Takashi reply, the bugzilla ticket he linked to, and the
-> >> > > mail
-> >> > > from
-> >> > > the MediaTek folks
-> >> > > (
-> >> > > 
-> > https://lore.kernel.org/lkml/12a344e25b31ec00fe8b57814d43fcb166e71be5.camel@mediatek.com/
-> >> > > ) it from the outside looks like this patch should really be
-> >> > > merged
-> >> > > rather sooner that later as it fixes regressions for some people.
-> >> > > Afaics it should get a "Fixes: ccfc8948d7e4d9 ("Bluetooth: btusb:
-> >> > > mediatek: reset the controller before downloading the fw")" tag,
-> >> > > as
-> >> > > it's
-> >> > > afaics that commit that causes the regression that is known since
-> >> > > more
-> >> > > than three months now
-> >> > > (https://lore.kernel.org/all/ZsTh7Jyug7MbZsLE@mdpsys.co.uk/ ).
-> >> > > 
-> >> > > But note, it seems it does not fix the regression completely
-> >> > > according
-> >> > > to Marc's testing.
-> >> > > https://lore.kernel.org/all/ZuCB98DSdtKCgxaL@mdpsys.co.uk/
-> >> > > 
-> >> > > Marc: Is that still how things are with current mainline?
-> >> > > 
-> >> > > Ciao, Thorsten
-> >> > > 
-> >> > > 
-> >> > > On 22.10.24 12:56, Takashi Iwai wrote:
-> >> > > > On Mon, 14 Oct 2024 11:29:40 +0200,
-> >> > > > Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> > > > > 
-> >> > > > > On 20.09.24 08:27, Chris Lu (陸稚泓) wrote:
-> >> > > > > > On Thu, 2024-09-19 at 23:25 +0100, marc.payne@mdpsys.co.uk
-> >> > > > > > wrote:
-> >> > > > > > > 
-> >> > > > > > > External email : Please do not click links or open
-> >> > > > > > > attachments until
-> >> > > > > > > you have verified the sender or the content.
-> >> > > > > > >  Hi Chris and Luiz,
-> >> > > > > > > 
-> >> > > > > > > What were your thoughts on the findings in my email dated
-> >> > > > > > > 18th
-> >> > > > > > > September?
-> >> > > > > > 
-> >> > > > > > Thanks for your suggestion.
-> >> > > > > > 
-> >> > > > > > I've prepared the same environment (Kernel v6.11 +
-> >> > > > > > MT7921AUN
-> >> > > > > > dongle) to
-> >> > > > > > reproduce the issue, collected necessary logs locally and
-> >> > > > > > also
-> >> > > > > > initiated an internal discussion to clarify the root cause
-> >> > > > > > of
-> >> > > > > > this
-> >> > > > > > symptom. We'll review the changes between two firmware
-> >> > > > > > (20230526/20231109) if it's a bug or not.
-> >> > > > > > 
-> >> > > > > > It may take some time to investigate. I'll let you know if
-> >> > > > > > there is any
-> >> > > > > > progress.
-> >> > > > > 
-> >> > > > > Just wondering: Chris Lu, and Marc, what's the status here?
-> >> > > > > From
-> >> > > > > here it
-> >> > > > > looks like there was no progress to fix this regression for a
-> >> > > > > while, but
-> >> > > > > it's easy to miss something, that's why I ask.
-> >> > > > > 
-> >> > > > > Ciao, Thorsten
-> >> > > > 
-> >> > > > FWIW, the similar bug was reported for the recent 6.11.x kernel
-> >> > > > on
-> >> > > > openSUSE Tumbleweed, and this patch was confirmed to work
-> >> > > > around
-> >> > > > the
-> >> > > > crash at boot:
-> >> > > > 
-> >> > > > 
-> > https://urldefense.com/v3/__https://bugzilla.suse.com/show_bug.cgi?id=1231599__;!!CTRNKA9wMg0ARbw!jYyH2oubBEtIKXmKl9cI2rrmK-7kSdaiIJQ8xH4NZa5i5YCTQDHaoOxCBhMgdAAY6ROIPAoPwbOV-LNeMRJBlR6u-As$
-> >> > > > 
-> >> > > > It'd be great if you can go ahead and merge the proper fix to
-> >> > > > the
-> >> > > > upstream.
-> >> > > > 
-> >> > > > Let me know if you have another patch to test.  Then I can
-> >> > > > create a
-> >> > > > test kernel package and ask the bug reporter for testing.
-> >> > > > 
-> >> > > > 
-> >> > > > thanks,
-> >> > > > 
-> >> > > > Takashi
-> >> > > > 
-> >> > > 
-> >> > > 
-> >> > 
-> >> > ************* MEDIATEK Confidentiality Notice ********************
-> >> > The information contained in this e-mail message (including any
-> >> > attachments) may be confidential, proprietary, privileged, or
-> >> > otherwise
-> >> > exempt from disclosure under applicable laws. It is intended to be
-> >> > conveyed only to the designated recipient(s). Any use,
-> >> > dissemination,
-> >> > distribution, printing, retaining or copying of this e-mail
-> >> > (including its
-> >> > attachments) by unintended recipient(s) is strictly prohibited and
-> >> > may
-> >> > be unlawful. If you are not an intended recipient of this e-mail,
-> >> > or believe
-> >> > that you have received this e-mail in error, please notify the
-> >> > sender
-> >> > immediately (by replying to this e-mail), delete any and all copies
-> >> > of
-> >> > this e-mail (including any attachments) from your system, and do
-> >> > not
-> >> > disclose the content of this e-mail to any other person. Thank you!
-> >> > 
-> >> 
-> >> 
-> > 
-> > ************* MEDIATEK Confidentiality Notice
-> >  ********************
-> > The information contained in this e-mail message (including any 
-> > attachments) may be confidential, proprietary, privileged, or otherwise
-> > exempt from disclosure under applicable laws. It is intended to be 
-> > conveyed only to the designated recipient(s). Any use, dissemination, 
-> > distribution, printing, retaining or copying of this e-mail (including its 
-> > attachments) by unintended recipient(s) is strictly prohibited and may 
-> > be unlawful. If you are not an intended recipient of this e-mail, or believe
-> >  
-> > that you have received this e-mail in error, please notify the sender 
-> > immediately (by replying to this e-mail), delete any and all copies of 
-> > this e-mail (including any attachments) from your system, and do not
-> > disclose the content of this e-mail to any other person. Thank you!
-> > 
-> 
