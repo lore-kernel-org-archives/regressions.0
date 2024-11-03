@@ -1,172 +1,49 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380F17741;
-	Sat,  2 Nov 2024 13:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277F3A926
+	for <regressions@lists.linux.dev>; Sun,  3 Nov 2024 08:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730555146; cv=none; b=r+b63Of6YKo82FW2JuP7+N0c9FIDWjDdeP5UxY3qWnW5U2hkk4+cROTsOYKRPnuvNj1WkKP2We1VhviHN0EztXijr5IfXgEf4R0aHQZu3p/oNbjOYKOg85ucNYxzyEoENiqcKVEyKhUHsneNe6Bb1QVYgJTcsxNqPDr1xGMU6WA=
+	t=1730622306; cv=none; b=I06RlXLn8jOJN3hE7kWi/W3AX8/e+CIAQPHzVD1Th0Hu+FzRe+nso8XVDd68YPgW1Cr1R8F8E5a9Kg30D0ro8bRLL54GzDJI+1MzvR9g5b/n7H/dgRbc/J/iZbUDqND9MGxrNJlWgo4JVtXGjj8vatai31DHMlmbGo88YboZhaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730555146; c=relaxed/simple;
-	bh=e03yKnN3xWXXNqLp+H7ewAvYxlWFLHNk6mNt6rYdGRM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TV/2poyWOWj4fxCrZnEETmEBFwf1SKkuOlaWj9nnwTBJaMn09j8Et3cm4oiU1hvvEEitUWZEvnXjDoW/2hKAM4jZjk9KyxNeF+DczIw7LF9d7xmj1VNUz6dw5Kn695ClgvpMTo5RrolislGB6UCVfWfCCD1RF78HGi8cMlCUNL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tEYyNh5C; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tEYyNh5C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1730555125; x=1731159925; i=wahrenst@gmx.net;
-	bh=wh8jWE/SuHQZpH1OicaEibZkdDUs8oXsmEh1paiPtHU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tEYyNh5C432n6QJ3/ReOh2iXRHf55sXiK2LY0BnUIYoVg4puSzL3VBcGUBYKNDZ+
-	 mZyu8GUlLosI7z9Mt9wLbOeBUdfEt852Jl3vYp8mf77GIgvVBnGDpDjT7x9/A+/WY
-	 ZDr426afeaHkiBiCz7+XdhJsFNbpjpflGXgOCLC+VSnQWnUCtJNM6ETgbGP949MkM
-	 cXE1jMJurUylazlV3qogkEGACC+dnUQYlQlQamBNcV9Kb2xLrHhMFOUFUbxZdQ6Ux
-	 U3m25wyupM0lTY30ejlkxJ5WZGHf4ePp15zOQJLdO1UrIeNCz0zLNddsTecCowRDV
-	 oR3No6AZeKYfuBErQg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNsw4-1tVVWP2fFY-00Xw0G; Sat, 02
- Nov 2024 14:45:25 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Catalin Popescu <catalin.popescu@leica-geosystems.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH RFC] mmc: pwrseq_simple: Handle !RESET_CONTROLLER properly
-Date: Sat,  2 Nov 2024 14:45:22 +0100
-Message-Id: <20241102134522.333047-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1730622306; c=relaxed/simple;
+	bh=kBEdzyy6Q7aqllTjcx6qJiQ7xsMfUerf2KTOEieR02I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Hnu4bdrk/Cf+1gDlyOyXtCK/ge35ifK4wVcXp32Jf7kH501djGktlvh/rU+BQUIL7mQr4YvyvYLVv8ev7kbx2rNheDzvb6Rw/fLwlyNcu+AHBOaBQCkKDOgfVHcttcF/RYkLT1uSjtTnHsW+15SVT9/TeIW70VFBfl93lvrcx5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: =?utf-8?Q?Ulrich_M=C3=BCller?= <ulm@gentoo.org>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+    He Lugang <helugang@uniontech.com>,
+    Jiri Kosina <jkosina@suse.com>
+Subject: [REGRESSION] ThinkPad L15 Gen 4 touchpad no longer works
+Date: Sun, 03 Nov 2024 09:24:59 +0100
+Message-ID: <uikt4wwpw@gentoo.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gR28kxpGv/paCHFYL+WOtD2omK8W76H6OxEFca2yYlzpt/S7qPc
- /02bKimVT4RMVrEYArMy4wu4g8NeZ2V/+caEDXvOpV9bkMQ6rIGVa4GSwcVTPoYteUOG1jB
- QNtiYQEllcjjBk4xs8tysy/1gw3IKr6WpZd1+a5UTJ93K5cOYrX67bgiiGJysPS0+lMlVqA
- B6iBdr4iiHwoZAiAv42ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1HQhTF2m7cY=;vO7nMt2DEIbIhGRCHChaoucxQme
- UfAywgwv5ofAeu82VeQq2WMWl39EncgG4flGt4kuXwaAnCHJ9hFjJxEWBwl0sDbLl0pCfz+Ox
- iRZxRwl28uewevqRjIqZUYy0JBXJaMYrNQEs/kyUkp33Of8hZss46x3/t8HBeQljij1T3plLU
- pau0V5/s6AijvxPDLADhXYQ4B2/Ro6ND2YUcKxLf7lnqZm+gga6PvvZ7pek61pIZ+P6fLCr4X
- YmuC8TY3Q+/pX7WijVMwB1JfGIg6o4l19YtueVR0Y6K3wkGbzDrtxKPML752W6XmpairEuOfK
- NOruHozFz/xVnqG0J4mirtiP8KDXtZEMBW+aNyBx/3qvge3gSl2bkqnJwtYEjNnrABvYWhhXB
- 9Lcp/xDsA1VmOy8Jj7LRp58JqMGQms0IcweMGgNb0IaR3Oos6h+Yv26hWAia+fax7Cm7muAaS
- s4XFWyz8lX/RNd8LUf1+nL9RhMrMiVIhhhQrYqI6GgGqsORzSDJQVMnIJRQnkFxhT/d/Pv6Gs
- t+Z+bMBNFFCHJIUACRJQmOTRO5OTnliwIEut72+xIbv3J8Z5Bk6+2od6egFQCXZO7mPX/DA5n
- /5DDSXQdaENQdzTxSMtXJWznc6MmG2d+kFCr4eyYETjLnA31rXdzIo8JWIoaO5DzovnGup0uy
- 8BXIgkcSu7YLlP0EW9iVG43BVjClP4mSeA11VdIf/qZeCYgzXI7CLh5F5mrCXN+m11Oj7BrDk
- /1cVAb1/HPGyI3BgGe2yvEJ0zrrafdvWfna7iNyZuJbNlEXX9EEu50zc3gp4yjdRbLsCKq0jg
- CKqD7OXfURtqFKqQHXCt2CBQ==
+Content-Type: text/plain
 
-The recent introduction of reset control in pwrseq_simple introduced
-a regression for platforms without RESET_CONTROLLER support, because
-devm_reset_control_get_optional_shared() would return NULL and make all
-resets no-ops. Instead of enforcing this dependency rely on this behavior
-to determine reset support. As a benefit we can get the rid of the
-use_reset flag.
+After upgrading from 6.6.52 to 6.6.58, tapping on the touchpad stopped
+working. The problem is still present in 6.6.59.
 
-Fixes: 73bf4b7381f7 ("mmc: pwrseq_simple: add support for one reset contro=
-l")
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/mmc/core/pwrseq_simple.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+I see the following in dmesg output; the first line was not there
+previously:
 
-Hi,
-will trying to reproduce the Rpi 4 regression from here [1], I found
-the issue above. I'm pretty sure the Rpi 4 regression is caused by the sam=
-e
-commit. Unfortunately I wasn't able to reproduce it.
+[    2.129282] hid-multitouch 0018:27C6:01E0.0001: The byte is not expected for fixing the report descriptor. It's possible that the touchpad firmware is not suitable for applying the fix. got: 9
+[    2.137479] input: GXTP5140:00 27C6:01E0 as /devices/platform/AMDI0010:00/i2c-0/i2c-GXTP5140:00/0018:27C6:01E0.0001/input/input10
+[    2.137680] input: GXTP5140:00 27C6:01E0 as /devices/platform/AMDI0010:00/i2c-0/i2c-GXTP5140:00/0018:27C6:01E0.0001/input/input11
+[    2.137921] hid-multitouch 0018:27C6:01E0.0001: input,hidraw0: I2C HID v1.00 Mouse [GXTP5140:00 27C6:01E0] on i2c-GXTP5140:00
 
-[1] - https://lore.kernel.org/linux-next/6724d7d5.170a0220.1281e9.910a@mx.=
-google.com/T/#u
+Hardware is a Lenovo ThinkPad L15 Gen 4.
 
-diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_si=
-mple.c
-index 24e4e63a5dc8..b8782727750e 100644
-=2D-- a/drivers/mmc/core/pwrseq_simple.c
-+++ b/drivers/mmc/core/pwrseq_simple.c
-@@ -32,7 +32,6 @@ struct mmc_pwrseq_simple {
- 	struct clk *ext_clk;
- 	struct gpio_descs *reset_gpios;
- 	struct reset_control *reset_ctrl;
--	bool use_reset;
- };
+The problem goes away when reverting this commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/hid/hid-multitouch.c?id=251efae73bd46b097deec4f9986d926813aed744
 
- #define to_pwrseq_simple(p) container_of(p, struct mmc_pwrseq_simple, pwr=
-seq)
-@@ -71,7 +70,7 @@ static void mmc_pwrseq_simple_pre_power_on(struct mmc_ho=
-st *host)
- 		pwrseq->clk_enabled =3D true;
- 	}
-
--	if (pwrseq->use_reset) {
-+	if (pwrseq->reset_ctrl) {
- 		reset_control_deassert(pwrseq->reset_ctrl);
- 		reset_control_assert(pwrseq->reset_ctrl);
- 	} else
-@@ -82,7 +81,7 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_h=
-ost *host)
- {
- 	struct mmc_pwrseq_simple *pwrseq =3D to_pwrseq_simple(host->pwrseq);
-
--	if (pwrseq->use_reset)
-+	if (pwrseq->reset_ctrl)
- 		reset_control_deassert(pwrseq->reset_ctrl);
- 	else
- 		mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
-@@ -95,7 +94,7 @@ static void mmc_pwrseq_simple_power_off(struct mmc_host =
-*host)
- {
- 	struct mmc_pwrseq_simple *pwrseq =3D to_pwrseq_simple(host->pwrseq);
-
--	if (pwrseq->use_reset)
-+	if (pwrseq->reset_ctrl)
- 		reset_control_assert(pwrseq->reset_ctrl);
- 	else
- 		mmc_pwrseq_simple_set_gpios_value(pwrseq, 1);
-@@ -137,15 +136,14 @@ static int mmc_pwrseq_simple_probe(struct platform_d=
-evice *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pwrseq->ext_clk), "external clock not=
- ready\n");
-
- 	ngpio =3D of_count_phandle_with_args(dev->of_node, "reset-gpios", "#gpio=
--cells");
--	if (ngpio =3D=3D 1)
--		pwrseq->use_reset =3D true;
--
--	if (pwrseq->use_reset) {
-+	if (ngpio =3D=3D 1) {
- 		pwrseq->reset_ctrl =3D devm_reset_control_get_optional_shared(dev, NULL=
-);
- 		if (IS_ERR(pwrseq->reset_ctrl))
- 			return dev_err_probe(dev, PTR_ERR(pwrseq->reset_ctrl),
- 					     "reset control not ready\n");
--	} else {
-+	}
-+
-+	if (!pwrseq->reset_ctrl) {
- 		pwrseq->reset_gpios =3D devm_gpiod_get_array(dev, "reset", GPIOD_OUT_HI=
-GH);
- 		if (IS_ERR(pwrseq->reset_gpios) &&
- 		    PTR_ERR(pwrseq->reset_gpios) !=3D -ENOENT &&
-=2D-
-2.34.1
-
+See also Gentoo bug report: https://bugs.gentoo.org/942797
