@@ -1,32 +1,41 @@
-Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3AF13AA4E
-	for <regressions@lists.linux.dev>; Mon,  4 Nov 2024 18:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFFA1C876D;
+	Mon,  4 Nov 2024 19:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730743457; cv=none; b=PaaTLPHzfCIgR2UxLBkPNgO5hqnXJOvHUWcLVY+EK711DmnO+dU1FOFmrvJTVyj2wYN+GVxXRYtr2/JsTFoJh/yPm66uTArZsw9VkAoiusWbVT7+bQdgMX94DxV6UakZd+VPiIBvjWkoIALLv3C8VHw7CvvQclEDpadpW5EUqNg=
+	t=1730749063; cv=none; b=RHhg9kJB8LKsfMZLP9PyDWvcxw6G1sky2zb1x0dLT0CCIxJjm5OXYu/7WYaDr7OaO9qYImy+2uI4VyytgI7YIDxoI95ZCpKdx0XtV7vttF7/iwzH6//FRm6FY91T3LgdGSj04X5lGc9mziVdAp499++7LGI0LmJnZk/3cYPyZrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730743457; c=relaxed/simple;
-	bh=xRTNzfFTI3aprmS1lYPw3G8pOeLW/95DsCDLNygQfsU=;
+	s=arc-20240116; t=1730749063; c=relaxed/simple;
+	bh=/JXW2R0LchTZmcQ88Qn1IKszBGN9/UOK3xrZwi1QnxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EtEfi8HvCczsoKWykbwdRkn7zDT281AozHT+9dluo/eARj+QuCRN6bPIqg1Hn2x0EaHjgNbw7xyRnYtSKT05evJPk6LDy0OYiCcKSbG47ZuXcHIJLVfbSoOBi0pJiemK/i/qynJVkwHy8mByx+Mn9+2L4fSbpX1EymzhU2Bxm18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=E34K4cFY; arc=none smtp.client-ip=86.95.37.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
+	 In-Reply-To:Content-Type; b=CQ2zZ0PUYDL2WZkH50WO8cwyVhIyc77XXk4aE4uGo4qXk/6a6x+s5kpjSstNwYBfqNrKbIwE0deM1TUDISwtzfsUjfAC6kVwU6yDx0hF/SEptgm7uXpjCcvfmnRfe+Rrmr3Gum8qkUwLSODFfMmoeWGynWyZGQuK1PEvQ2LFbBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Hq94fEEw; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="E34K4cFY"
-Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
-	by mail.581238.xyz (Postfix) with ESMTPSA id 3FE9A43088F3;
-	Mon, 04 Nov 2024 19:04:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
-	t=1730743448; bh=xRTNzfFTI3aprmS1lYPw3G8pOeLW/95DsCDLNygQfsU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=E34K4cFYy0+unzM4WEGwLRxS3TAkBuHcsVqiuLL8WXwmX1O7Kq+Tsvnm8D3gmM32V
-	 bmdEoMXjj5EmnlF9F87fAUV0spik7PrOnbHu4q+eyWTw9mtoq34ys4t/rvSBgWJgbj
-	 YAcVSexb1OGeLqDJ9qKUapBj//H69imHCJsDFLWo=
-Message-ID: <effdfd51-66dd-44a4-968c-0f762ab8f93b@581238.xyz>
-Date: Mon, 4 Nov 2024 19:04:08 +0100
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Hq94fEEw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1730749047; x=1731353847; i=wahrenst@gmx.net;
+	bh=HHRJUUe4qBU3jMnR/014D6ykMod61nDwsGapWt+8eV8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Hq94fEEwOp2b+g18twxwSd1BXAVnk0g5Kf/7PLMX325lojcA1FKhQsPudl5O2FYU
+	 56WSopfFIfL613fT/mEi1Wk5krRJY7R5WJ4/QqQCv/Oy6dC+mEhaalDzJF973ebq4
+	 MzTmywK1o+z6Y2vL80jasoQWQX15xoBwdtzYfobOibtNObVhG+7GoH65oy8ZhbNZD
+	 XJCmh73xFlPM9gacD3xzKNpt0JeLfPFzUrF5c0laQo26+YTUWY4yYU09C/eEFABds
+	 Z5azlSqyiQ/i6cgY1cg+x0+nLApWYPm1Kyr3x7id4KXx4pjITtuCV4z20VQC3hFBf
+	 0dyuntjDb2/CxgsAvw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.105] ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1tAXrJ3vYJ-002Bap; Mon, 04
+ Nov 2024 20:37:27 +0100
+Message-ID: <e42a6573-fc0d-4a12-9895-09c1889fc759@gmx.net>
+Date: Mon, 4 Nov 2024 20:37:25 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,121 +43,78 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
- christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <96560f8e-ab9f-4036-9b4d-6ff327de5382@amd.com>
- <22415e85-9397-42db-9030-43fc5f1c7b35@581238.xyz>
- <20241022161055.GE275077@black.fi.intel.com>
- <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
- <20241023061001.GF275077@black.fi.intel.com>
- <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
- <20241028081813.GN275077@black.fi.intel.com>
- <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
- <20241030090625.GS275077@black.fi.intel.com>
- <70d8b6b2-04b4-48a6-964d-a957b2766617@581238.xyz>
- <20241104063656.GZ275077@black.fi.intel.com>
+Subject: Re: [PATCH RFC] mmc: pwrseq_simple: Handle !RESET_CONTROLLER properly
+To: Mark Brown <broonie@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Marco Felsch <m.felsch@pengutronix.de>,
+ linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20241102134522.333047-1-wahrenst@gmx.net>
+ <20241104093901.rb5ozxt7qkdgoatc@pengutronix.de>
 Content-Language: en-US
-From: Rick <rick@581238.xyz>
-Autocrypt: addr=rick@581238.xyz; keydata=
- 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
-In-Reply-To: <20241104063656.GZ275077@black.fi.intel.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <20241104093901.rb5ozxt7qkdgoatc@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3QUeJFnW8IfUDzUNR3gHgR1GLzSJwBr2VWJeYALXvvQo2Dx3pKc
+ R/3ZgYDtC+toB/++6G0GvS/CXbk0ckOVkqertfY4jQYMXzN69VurWjmsBcPrfvcE6OVphnM
+ gpHlZ0zTROZGsN0flINwOO6bdY7NAA8P1RGBwO52pds9HQ5WwQSFp1P9Y8R/JjPMl5QX4z6
+ +2IIj9CzENqrj9jnJiSWQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:h5KB0udMUDs=;AI4WhMe78Bj/ADR/ZjjqpSQXFYu
+ TVpk8jdDCDyDs2eavH9OmRT9BOMyWmtKz5+fu4jGuNfVg1O8vvj3O1nn99I0d5wj+plKAfHTW
+ ulONPu1XpBkrgeRdtlUvOKx8cR1R+EFggHUouFfdcIJrRSxgs3btp5vsWTYoQouir+BkyCujN
+ zwtSD+Cv1MqitaOXJ+XsJN1LgCUvlSXO3Xw39PE4tSgdpd2gtxa2AY+Q7Mp6RA1TzDD7HFDcR
+ Z00L9Cw3mL/uxBezrMAyAjx/f3DrhmovYZK8gnw3dVgdAv6auRut3gCilZq7YNue12Bw8zwCb
+ MOZYhCo2RA0MKy/0KRFm3I78OM8SCfIw7v+3fFfsXWTIAhY9gJ4p6wQs2T262ohRjnPwD1tjJ
+ RuP5o+RzsQcP13csIbkQPDzXaInyrqIDPsLjcXiojinbrIUEdEM8vim+x7ZRrBg22YXeKSxNl
+ WN927O8oR5QIwQXzEDRIsJ5S5aaXnegykPwBR270z+z15aFtKy2H6qWHf7CvYXFSFYUpVIlCK
+ wFNW9H3+R5Emwo2e5Lb4PZgGhx+qhkkd4crxdWsQ5/Ys9iXOHrgn/aKG0xn0xi/QaZb7hvdU5
+ nYE4XCgMY34NL8F3+jOWg6fVPRoaNuJN6cvkbkbhxl/8FvpS+H9YSdTUmq+DPveyOXzZr5fws
+ LNPTG4rvBLjz90dqufEqHAglEbLWplhOcxek0sDuGmHMbmuC5V0hXFgI0JdLNAmARDsb76czm
+ ytXa7vs5bYMcRSS9K1SKn6sgGzS+yRa1Ro2dy0vd/fJeWCcc4BMEldW2R3g1q+ZyHzXePwwMo
+ sibno5DLHfnVfd/b7mm3W42A==
 
-Hi Mika
+Hi Mark,
 
-On 04-11-2024 07:36, Mika Westerberg wrote:
-> Hi Rick,
-> 
-> On Fri, Nov 01, 2024 at 01:57:50PM +0100, Rick wrote:
->> I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty resulting in docking station
->> not working.
+Am 04.11.24 um 10:39 schrieb Marco Felsch:
+> Hi Stefan,
+>
+> On 24-11-02, Stefan Wahren wrote:
+>> The recent introduction of reset control in pwrseq_simple introduced
+>> a regression for platforms without RESET_CONTROLLER support, because
+> This is what I was afraid of :/
+>
+>> devm_reset_control_get_optional_shared() would return NULL and make all
+>> resets no-ops. Instead of enforcing this dependency rely on this behavi=
+or
+>> to determine reset support. As a benefit we can get the rid of the
+>> use_reset flag.
 >>
->> Then I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty without commit
->> c6ca1ac9f472 (reverted), and now the docking station works correctly (as in
->> screen output + USBs + Ethernet)
+>> Fixes: 73bf4b7381f7 ("mmc: pwrseq_simple: add support for one reset con=
+trol")
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> ---
+>>   drivers/mmc/core/pwrseq_simple.c | 16 +++++++---------
+>>   1 file changed, 7 insertions(+), 9 deletions(-)
 >>
->> So it seems c6ca1ac9f472 is causing issues for my setup.
-> 
-> Okay, thanks for testing!
-> 
-> It indeed looks like there is no any kind of link issues anymore with
-> that one reverted. So my suspect is that we are taking too long before
-> we enumerate the device router which makes it to reset the link.
-> 
-> Can you try the below patch too on top of v6.12-rcX (without the revert)
-> and see if that still keeps it working? This one cuts down the delay to
-> 1ms which I'm hoping is sufficient for the device. Can you share
-> dmesg+trace from that test as well?
-> 
-> diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
-> index c6dcc23e8c16..1b740d7fc7da 100644
-> --- a/drivers/thunderbolt/usb4.c
-> +++ b/drivers/thunderbolt/usb4.c
-> @@ -48,7 +48,7 @@ enum usb4_ba_index {
->   
->   /* Delays in us used with usb4_port_wait_for_bit() */
->   #define USB4_PORT_DELAY			50
-> -#define USB4_PORT_SB_DELAY		5000
-> +#define USB4_PORT_SB_DELAY		1000
->   
->   static int usb4_native_switch_op(struct tb_switch *sw, u16 opcode,
->   				 u32 *metadata, u8 *status,
+>> Hi,
+>> will trying to reproduce the Rpi 4 regression from here [1], I found
+>> the issue above. I'm pretty sure the Rpi 4 regression is caused by the =
+same
+>> commit. Unfortunately I wasn't able to reproduce it.
+>>
+>> [1] - https://lore.kernel.org/linux-next/6724d7d5.170a0220.1281e9.910a@=
+mx.google.com/T/#u
+I think i've a better unterstanding of the regression in your case. I
+noticed on my Raspberry Pi 3 B+ that this change in combination with
+arm64/defconfig causes a huge delay until wifi is probed (~ 32 seconds).
+Maybe this is caused by the fact that RESET_GPIO is build as a module,
+while PWRSEQ_SIMPLE is builtin. But this doesn't explain why the driver
+seem to never probe in your case.
 
-See below pasts without the revert, and with the above provided patch.
-
-dmesg with patch (and without the revert): 
-https://gist.github.com/ricklahaye/8412af228063546dd8375ca796fffeef
-tbtrace with patch (and without the revert): 
-https://gist.github.com/ricklahaye/4b9cbeeb36b546c6686ce79a044a2d61
-
-Seems to be working correctly with the provided patch.
-Thank you!
-
-Kind regards,
-Rick
+Regards
