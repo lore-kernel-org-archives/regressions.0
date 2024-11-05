@@ -1,275 +1,173 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A467F18A6BA
-	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 07:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD79134AC
+	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 08:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730791093; cv=none; b=PJaXi7+cZoreV4gubDdU0Py9OrS6YCcGM2jEBQUj8zwhjGMYWbTNTCbVR8FpFwSXqGFapDhsPMRZO9QFbMA3YtbHj2nPFZ3Z6ziiiQibCv+UZRENrK8zNCh7IXAKrQhSlVVs3LTAmsANlCHXSvEEThhe4dGlQmS62AfD21++13Q=
+	t=1730794364; cv=none; b=Rys8pRBzIJUZR5aKXHJUF3mmnDe2Qlk805y99iLmytRywF/B+fYGmHaW0hltLaeaxdr4S7HLO8od1M8fKQFN/tS4/xOd3R1QLaDNUKYeXdDvXLaMvaAKucD/Wi3d53y1vo5mvMKV4VfOf/aBGnXZBjwojstg/rDw7KO8dsMMIUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730791093; c=relaxed/simple;
-	bh=fCJ7CykDKBbjOXpIrgOK3W3ImVZ/wA7cKkl6PGJwMqQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=WCEyfcYYV9lmgsaORodZcF9gMZF1pbO2lf/4gZBDuhjWTd3K1sLgWQlrH1yLKotaOblGmo3OxyGAsHainPif6OVtHtDAtYEfYoHkkKmkCDceTmmfv/lljAF2EM+c5YowdS6GkEn5hc4rcNX+Zah+Fm4q/cegbUnlz7GDegP3xSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=v0tX5G4K; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1730794364; c=relaxed/simple;
+	bh=momWbHO8zRdOL+ZKeK5UsTPM2TKLdIMkw7qRC5iqU6I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PW/7PFe2vnpZNaq4hO55QtWojqp+7IQzYfNASxQGQb4nITDAeloAVcLB5Kw7uAYS8mk85n5ietCizjbb78qKDZARtKHcQYp2bStFIQhp8yxg4kM94mF6IEQSiKtXALxCYbSwuvdvWYFD/aIFlpGm2x3fGTuRyOESYxcaQr76dn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=ztDDHNYi; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="v0tX5G4K"
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 382F226760
-	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 07:18:04 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id E05BE3E964;
-	Tue,  5 Nov 2024 08:17:55 +0100 (CET)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 7FD5740092;
-	Tue,  5 Nov 2024 07:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1730791075; bh=fCJ7CykDKBbjOXpIrgOK3W3ImVZ/wA7cKkl6PGJwMqQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=v0tX5G4KR2g1anJXNFUvLaVd5Zw4gtf1TcsQhLhFGfmEGJUPRg9dIsU9nbFgWJ+06
-	 DysbxuEx9WhOby75VKnwaSQskuVaV9Nr/EHlxPJBzn8BeBqO8MTXWiJLmBZK+VDHDm
-	 AEvhG3BDNPXdMHdss8PdicfObCDz+1LDtIeYQ1fo=
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id A967541293;
-	Tue,  5 Nov 2024 07:17:54 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="ztDDHNYi"
+Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
+	by mail.581238.xyz (Postfix) with ESMTPSA id DA3E943088F3;
+	Tue, 05 Nov 2024 09:12:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1730794359; bh=momWbHO8zRdOL+ZKeK5UsTPM2TKLdIMkw7qRC5iqU6I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ztDDHNYi8gSO8lGW7S8lQjFeKEKS9X6Ko2yoXxRG/yruDlWoi2WghyQop75nDbwcJ
+	 ofg9eUzlCISxzNq3LQUua561B7kprdzYdccvtXknKK7L7gY3WKpBqGb3PUQZ0leerV
+	 tYDYlOr7+m7lzhDTcvTCBaEytb+vIDxtesy+WFi4=
+Message-ID: <a2f403bb-7b4b-4a49-bb9b-0330738ba766@581238.xyz>
+Date: Tue, 5 Nov 2024 09:12:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 05 Nov 2024 15:17:54 +0800
-From: Mingcong Bai <jeffbai@aosc.io>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, rcu
- <rcu@vger.kernel.org>, sakiiily@aosc.io
-Subject: Re: [Regression] wifi problems since tg3 started throwing rcu stall
- warnings
-In-Reply-To: <2b25a988-6965-48e4-a788-58dd8a776e06@leemhuis.info>
-References: <b8da4aec-4cca-4eb0-ba87-5f8641aa2ca9@leemhuis.info>
- <ZxjLQzHKuR-w16hF@pavilion.home>
- <2b25a988-6965-48e4-a788-58dd8a776e06@leemhuis.info>
-Message-ID: <e2ffd3d06fad236ea900d4fb439b2240@aosc.io>
-X-Sender: jeffbai@aosc.io
-Organization: Anthon Open Source Community
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 7FD5740092
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Rspamd-Action: no action
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
+ christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <20241022161055.GE275077@black.fi.intel.com>
+ <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+ <20241023061001.GF275077@black.fi.intel.com>
+ <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+ <20241028081813.GN275077@black.fi.intel.com>
+ <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
+ <20241030090625.GS275077@black.fi.intel.com>
+ <70d8b6b2-04b4-48a6-964d-a957b2766617@581238.xyz>
+ <20241104063656.GZ275077@black.fi.intel.com>
+ <effdfd51-66dd-44a4-968c-0f762ab8f93b@581238.xyz>
+ <20241105063118.GE275077@black.fi.intel.com>
+Content-Language: en-US
+From: Rick <rick@581238.xyz>
+Autocrypt: addr=rick@581238.xyz; keydata=
+ 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
+In-Reply-To: <20241105063118.GE275077@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Frederic and Thorston,
+Hi Mika
 
-(CC-ing the laptop's owner so that she might help with further 
-testing...)
+On 05-11-2024 07:31, Mika Westerberg wrote:
+> Hi Rick,
+> 
+> On Mon, Nov 04, 2024 at 07:04:08PM +0100, Rick wrote:
+>> Hi Mika
+>>
+>> On 04-11-2024 07:36, Mika Westerberg wrote:
+>>> Hi Rick,
+>>>
+>>> On Fri, Nov 01, 2024 at 01:57:50PM +0100, Rick wrote:
+>>>> I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty resulting in docking station
+>>>> not working.
+>>>>
+>>>> Then I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty without commit
+>>>> c6ca1ac9f472 (reverted), and now the docking station works correctly (as in
+>>>> screen output + USBs + Ethernet)
+>>>>
+>>>> So it seems c6ca1ac9f472 is causing issues for my setup.
+>>>
+>>> Okay, thanks for testing!
+>>>
+>>> It indeed looks like there is no any kind of link issues anymore with
+>>> that one reverted. So my suspect is that we are taking too long before
+>>> we enumerate the device router which makes it to reset the link.
+>>>
+>>> Can you try the below patch too on top of v6.12-rcX (without the revert)
+>>> and see if that still keeps it working? This one cuts down the delay to
+>>> 1ms which I'm hoping is sufficient for the device. Can you share
+>>> dmesg+trace from that test as well?
+>>>
+>>> diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
+>>> index c6dcc23e8c16..1b740d7fc7da 100644
+>>> --- a/drivers/thunderbolt/usb4.c
+>>> +++ b/drivers/thunderbolt/usb4.c
+>>> @@ -48,7 +48,7 @@ enum usb4_ba_index {
+>>>    /* Delays in us used with usb4_port_wait_for_bit() */
+>>>    #define USB4_PORT_DELAY			50
+>>> -#define USB4_PORT_SB_DELAY		5000
+>>> +#define USB4_PORT_SB_DELAY		1000
+>>>    static int usb4_native_switch_op(struct tb_switch *sw, u16 opcode,
+>>>    				 u32 *metadata, u8 *status,
+>>
+>> See below pasts without the revert, and with the above provided patch.
+>>
+>> dmesg with patch (and without the revert):
+>> https://gist.github.com/ricklahaye/8412af228063546dd8375ca796fffeef
+>> tbtrace with patch (and without the revert):
+>> https://gist.github.com/ricklahaye/4b9cbeeb36b546c6686ce79a044a2d61
+>>
+>> Seems to be working correctly with the provided patch.
+>> Thank you!
+> 
+> Thanks for testing! Yes, logs look good now.
+> 
+> I will submit this fix upstream today then. Do you mind providing me your
+> full name and email so that I can add tag like
+> 
+> Reported-by: Rick ...
+> 
+> in the commit message?
 
-在 2024-10-23 18:22，Linux regression tracking (Thorsten Leemhuis) 写道：
-> On 23.10.24 12:09, Frederic Weisbecker wrote:
->> Le Wed, Oct 23, 2024 at 10:27:18AM +0200, Linux regression tracking 
->> (Thorsten Leemhuis) a écrit :
->>> Hi, Thorsten here, the Linux kernel's regression tracker.
->>> 
->>> Frederic, I noticed a report about a regression in 
->>> bugzilla.kernel.org
->>> that appears to be caused by the following change of yours:
->>> 
->>> 55d4669ef1b768 ("rcu: Fix rcu_barrier() VS post CPUHP_TEARDOWN_CPU
->>> invocation")
-> 
->> Are you sure about the commit? Below it says:
-> 
-> Not totally, but...
-> 
->>> As many (most?) kernel developers don't keep an eye on the bug 
->>> tracker,
->>> I decided to write this mail. To quote from
->>> https://bugzilla.kernel.org/show_bug.cgi?id=219390:
->>> 
->>>>  Mingcong Bai 2024-10-15 13:32:35 UTC
->>>> 
->>>> Since aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 between v6.10.4 and
->> 
->> Now that's aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 which I can't find 
->> in vanilla
->> tree.
-> 
-> ...quite, as that is the commit-id of the backport to v6.10.5; and the
-> reporter reverted it there. Ideally of course that would have happened
-> on recent mainline. If you doubt, ask Mingcong Bai to check if a revert
-> there helps, too.
+Thank you that's nice.
+You can note Rick Lahaye - rick@581238.xyz
 
-Do we need any further information/testing on this issue? Please let me 
-know if there's anything we can do as the issue still persists in 6.12.
+Thank you for the help.
 
-Best Regards,
-Mingcong Bai
+Kind regards,
+Rick Lahaye
 
-> 
-> HTH, Ciao, Thorsten
-> 
->> Also I'm failing to see an immediate issue between the below 
->> stacktrace
->> and the above commit. So are we sure about that reference?
->> 
->> Thanks.
->> 
->> 
->>>> v6.10.5, the Broadcom Tigon3 Ethernet interface (tg3) found on Apple
->>>> MacBook Pro (15'', Mid 2010) would throw many rcu stall errors 
->>>> during
->>>> boot up, causing peripherals such as the wireless card to misbehave:
->>>> 
->>>> [   24.153855] rcu: INFO: rcu_preempt detected expedited stalls on 
->>>> CPUs/tasks: { 2-.... } 21 jiffies s: 973 root: 0x4/.
->>>> [   24.166938] rcu: blocking rcu_node structures (internal RCU 
->>>> debug):
->>>> [   24.177800] Sending NMI from CPU 3 to CPUs 2:
->>>> [   24.183113] NMI backtrace for cpu 2
->>>> [   24.183119] CPU: 2 PID: 1049 Comm: NetworkManager Not tainted 
->>>> 6.10.5-aosc-main #1
->>>> [   24.183123] Hardware name: Apple Inc. MacBookPro6,2/Mac-F22586C8, 
->>>> BIOS    MBP61.88Z.005D.B00.1804100943 04/10/18
->>>> [   24.183125] RIP: 0010:__this_module+0x2d3d1/0x4f310 [tg3]
->>>> [   24.183135] Code: c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 
->>>> 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 89 f6 48 03 77 
->>>> 30 8b 06 <31> f6 31 ff c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 
->>>> 90 90 90
->>>> [   24.183138] RSP: 0018:ffffbf1a011d75e8 EFLAGS: 00000082
->>>> [   24.183141] RAX: 0000000000000000 RBX: ffffa04ec78f8a00 RCX: 
->>>> 0000000000000000
->>>> [   24.183143] RDX: 0000000000000000 RSI: ffffbf1a00fb007c RDI: 
->>>> ffffa04ec78f8a00
->>>> [   24.183145] RBP: 0000000000000b50 R08: 0000000000000000 R09: 
->>>> 0000000000000000
->>>> [   24.183147] R10: 0000000000000000 R11: 0000000000000000 R12: 
->>>> 0000000000000216
->>>> [   24.183148] R13: ffffbf1a011d7624 R14: ffffa04ec78f8a08 R15: 
->>>> ffffa04ec78f8b40
->>>> [   24.183151] FS:  00007f4c524b2140(0000) GS:ffffa05007d00000(0000) 
->>>> knlGS:0000000000000000
->>>> [   24.183153] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [   24.183155] CR2: 00007f7025eae3e8 CR3: 00000001040f8000 CR4: 
->>>> 00000000000006f0
->>>> [   24.183157] Call Trace:
->>>> [   24.183162]  <NMI>
->>>> [   24.183167]  ? nmi_cpu_backtrace+0xbf/0x140
->>>> [   24.183175]  ? nmi_cpu_backtrace_handler+0x11/0x20
->>>> [   24.183181]  ? nmi_handle+0x61/0x160
->>>> [   24.183186]  ? default_do_nmi+0x42/0x110
->>>> [   24.183191]  ? exc_nmi+0x1bd/0x290
->>>> [   24.183194]  ? end_repeat_nmi+0xf/0x53
->>>> [   24.183203]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->>>> [   24.183207]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->>>> [   24.183210]  ? __this_module+0x2d3d1/0x4f310 [tg3]
->>>> [   24.183213]  </NMI>
->>>> [   24.183214]  <TASK>
->>>> [   24.183215]  __this_module+0x31828/0x4f310 [tg3]
->>>> [   24.183218]  ? __this_module+0x2d390/0x4f310 [tg3]
->>>> [   24.183221]  __this_module+0x398e6/0x4f310 [tg3]
->>>> [   24.183225]  __this_module+0x3baf8/0x4f310 [tg3]
->>>> [   24.183229]  __this_module+0x4733f/0x4f310 [tg3]
->>>> [   24.183233]  ? _raw_spin_unlock_irqrestore+0x25/0x70
->>>> [   24.183237]  ? __this_module+0x398e6/0x4f310 [tg3]
->>>> [   24.183241]  __this_module+0x4b943/0x4f310 [tg3]
->>>> [   24.183244]  ? delay_tsc+0x89/0xf0
->>>> [   24.183249]  ? preempt_count_sub+0x51/0x60
->>>> [   24.183254]  __this_module+0x4be4b/0x4f310 [tg3]
->>>> [   24.183258]  __dev_open+0x103/0x1c0
->>>> [   24.183265]  __dev_change_flags+0x1bd/0x230
->>>> [   24.183269]  ? rtnl_getlink+0x362/0x400
->>>> [   24.183276]  dev_change_flags+0x26/0x70
->>>> [   24.183280]  do_setlink+0xe16/0x11f0
->>>> [   24.183286]  ? __nla_validate_parse+0x61/0xd40
->>>> [   24.183295]  __rtnl_newlink+0x63d/0x9f0
->>>> [   24.183301]  ? kmem_cache_alloc_node_noprof+0x12b/0x360
->>>> [   24.183308]  ? kmalloc_trace_noprof+0x11e/0x350
->>>> [   24.183312]  ? rtnl_newlink+0x2e/0x70
->>>> [   24.183316]  rtnl_newlink+0x47/0x70
->>>> [   24.183320]  rtnetlink_rcv_msg+0x152/0x400
->>>> [   24.183324]  ? __netlink_sendskb+0x68/0x90
->>>> [   24.183329]  ? netlink_unicast+0x237/0x290
->>>> [   24.183333]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
->>>> [   24.183336]  netlink_rcv_skb+0x5b/0x110
->>>> [   24.183343]  netlink_unicast+0x1a4/0x290
->>>> [   24.183347]  netlink_sendmsg+0x222/0x4a0
->>>> [   24.183350]  ? proc_get_long.constprop.0+0x116/0x210
->>>> [   24.183358]  ____sys_sendmsg+0x379/0x3b0
->>>> [   24.183363]  ? copy_msghdr_from_user+0x6d/0xb0
->>>> [   24.183368]  ___sys_sendmsg+0x86/0xe0
->>>> [   24.183372]  ? addrconf_sysctl_forward+0xf3/0x270
->>>> [   24.183378]  ? _copy_from_iter+0x8b/0x570
->>>> [   24.183384]  ? __pfx_addrconf_sysctl_forward+0x10/0x10
->>>> [   24.183388]  ? _raw_spin_unlock+0x19/0x50
->>>> [   24.183392]  ? proc_sys_call_handler+0xf3/0x2f0
->>>> [   24.183397]  ? trace_hardirqs_on+0x29/0x90
->>>> [   24.183401]  ? __fdget+0xc2/0xf0
->>>> [   24.183405]  __sys_sendmsg+0x5b/0xc0
->>>> [   24.183410]  ? syscall_trace_enter+0x110/0x1b0
->>>> [   24.183416]  do_syscall_64+0x64/0x150
->>>> [   24.183423]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>>> 
->>>> I have bisected the error to this commit. Reverting it caused no new 
->>>> or
->>>> perceivable issues on both the MacBook and a Zen4-based laptop.
->>> 
->>> [...]
->>> 
->>>>> Ohh, and when you say "causing peripherals such as the wireless 
->>>>> card to
->>>>> misbehave" what exactly do you mean?
->>>> 
->>>> When the kernel throws rcu stall messages, the wireless card on the
->>>> MacBook may fail to discover and/or connect to wireless networks - 
->>>> not a
->>>> consistent behaviour but I suppose that something in the kernel got 
->>>> stuck.
->>> 
->>> See the ticket for more details and dmesg logs; the problem still
->>> happens with 6.12-rc. The reporter is CCed.
->>> 
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' 
->>> hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>> 
->>> P.S.: let me use this mail to also add the report to the list of 
->>> tracked
->>> regressions to ensure it's doesn't fall through the cracks:
->>> 
->>> #regzbot introduced: 55d4669ef1b76823083caecfab12a8bd2ccdcf64
->>> #regzbot from: Mingcong Bai <jeffbai@aosc.io>
->>> #regzbot duplicate: 
->>> https://bugzilla.kernel.org/show_bug.cgi?id=219390
->>> #regzbot title: rcu: wifi problems since tg3 started throwing rcu 
->>> stall
->>> warnings
->>> #regzbot ignore-activity
->>> 
->> 
->> 
