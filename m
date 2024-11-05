@@ -1,206 +1,160 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
+Received: from mail.581238.xyz (86-95-37-93.fixed.kpn.net [86.95.37.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113821D95A2
-	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 14:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730816517; cv=fail; b=SBtK0bsIjk60i6sKSMHac00PUMkeH896i/jagNlkPzTBvPiIV086t/HbUufaETKBGSVn5b39smcFiuHwjrJY4QFCbDbR5ZBoLBT8Tu0G7uswaoKBtVEWiVWKAIukoQWpfB4je1L6QxzNfgbSm3vL4Csx7EfN7Ctx2Uda/0ur6pQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730816517; c=relaxed/simple;
-	bh=celZunICM/C/zSyprYBCPe82ENZgR6ITsC3ihWBEk5U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TvqzYrtRFWw5JE3NmSr/GO3Dfb6Nmhjamt9UpX2HFfTHHfIDK/obtF/pdDGoOnCITuyIGZs+g1Ke+TVsfuAR7pbeMNwbarLKRd6993QmDI0pxMk/Qja9OHWpfd0VCRKEHGPZOm2xe/0Ku0AvwaRbC+jZd8N833kuF6ACWIwcUkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bPT1ZRwc; arc=fail smtp.client-ip=40.107.237.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7DE1D6DB9
+	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 14:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.95.37.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730816708; cv=none; b=bvE+muxeXIqoJkQd/g46v4+RRc47hQM3YPiMEAkI0EinW/HY5YaHge2NkedSZ1+p+VGsgT+dilq8rLcJCiwMlM61Q4Rrp1KKx+AVv0pKzY14SjLkfMXLCypnL0wCd366+HqlAU7B7azQmTWMEOpFE7ZNLne25NfFVNa1hUtjyt8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730816708; c=relaxed/simple;
+	bh=y52QCj/lL5Gssp6Ud2UwA87WV5sqqS9ScP3EA1YZL+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LpCDzyrGc/MozI9OHHARIlTVZvHl4N3t2LdBok0bkv2eTiKUbNPyCdnYi6daR1XLYEBJExlw3YBO0Ue49FueiOsr1J5BUdimBaMOWAFy/EVTtM5E9otVRSywVfmJFLTkTf1f0zNbx0ZSsGL4InZuEeaMSj5TaN7/etlIUDET6W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz; spf=pass smtp.mailfrom=581238.xyz; dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b=xpcefahK; arc=none smtp.client-ip=86.95.37.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=581238.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=581238.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bPT1ZRwc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H2vOaPKF1QOhX3sBkBqD9R06WoW4LoVGN1kywsQnR5Hu+iEHhEqx12ZVmqEK1qWlwcHOHcRyBsTh3Uy//jEUiqNxNQ/lm5SO29DCjOXp6+eqa7ImZHZejx52m8az6ZVGQ8439UezRsfLKF0ZHbadz7iIg+OcVs/XwGsMI83WsUnpp/ru8WNx3b4IoACMdfxAFNTSvZMvNSwTxzpQBBZQf67pMTS9W/eopiwXp7RDka9YquA9FXK919vJ+i20Bhgan3eHDO0uLvol+bli294JPlEmd4j+DQh0vPgiHPYs8j2mt/5Y31n9XxNBqqqtXE2Ls7OyLz2PCiZq0Foyxt8Nig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e6LxsIsHrYO6MlBdYPTgvTRQdBldx3xKoYuwnNDfy/0=;
- b=BJ0Ypd6ujUWSV3eColDS7gL7QNIeitRfjeProfCcmJYiGuCHuEWzf4/hFdNLJGOgKvUovpifr8+Pe0MNFUSyo9Ngj+L625nOmF6UepkqvNcp731VLMjTKI5seij6qaSdkkwhqL6PUS9ihYv7ei34UcjQn1IkcFkhz3IWwKc9G0XBxRI5+nIWlTesOHYWfYMyqN+ESDbG8z/U8c+A9A8G46DrEZcRp5uqanqoM22kn/v08sYSLyciykmXmaLc5L+PDjW57nwkuY901iBUIOlr3jAOn0QHiQ4H1Ifr8aEfjFGvB8xko+Umpamuv9QAcX9xiE80jwtRK3buJ8MEOVC9JA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e6LxsIsHrYO6MlBdYPTgvTRQdBldx3xKoYuwnNDfy/0=;
- b=bPT1ZRwcle+0wD3lUPbcrQAgcJEdPmUB22IZo6VD5cHxnye5a7M38Xb69zCwL0x20VDs4peS8S778nZnDgCh7kGgXwoaETyw9PoJafD4t9n5SzQE2kxpCPw0BWI9n533DHRPB7iwTksXqojh3Gsy6NHySLbb6R0VD7Mwwf/Xi1k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB8660.namprd12.prod.outlook.com (2603:10b6:610:177::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Tue, 5 Nov
- 2024 14:21:52 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
- 14:21:52 +0000
-Message-ID: <c0fcb97d-d849-4dec-b76a-7346b1619554@amd.com>
-Date: Tue, 5 Nov 2024 08:21:50 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] thunderbolt: Fix connection issue with Pluggable
- UD-4VPD dock
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, Yehezkel Bernat <YehezkelShB@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
- Andreas Noever <andreas.noever@gmail.com>, Rick Lahaye <rick@581238.xyz>,
- Sanath.S@amd.com, christian@heusel.eu, fabian@fstab.de,
- regressions@lists.linux.dev
-References: <20241105103157.526823-1-mika.westerberg@linux.intel.com>
- <2024110542-moaning-zap-7ac2@gregkh>
- <20241105140231.GH275077@black.fi.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20241105140231.GH275077@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR18CA0019.namprd18.prod.outlook.com
- (2603:10b6:806:f3::30) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=581238.xyz header.i=@581238.xyz header.b="xpcefahK"
+Received: from [192.168.1.14] (Laptop.internal [192.168.1.14])
+	by mail.581238.xyz (Postfix) with ESMTPSA id 98D3343088F3;
+	Tue, 05 Nov 2024 15:25:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=581238.xyz; s=dkim;
+	t=1730816704; bh=y52QCj/lL5Gssp6Ud2UwA87WV5sqqS9ScP3EA1YZL+g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=xpcefahKjznDoD3fifBiwm7ZNcw7SXDlZLjvYeshlG01S5J9S+9io3wmpqjtci+B9
+	 SxGnf5Oh+t6o+0EJa43jHYovQE+q5VZjbEF0GO0cfKA3lvRwVKfELxilURBrwRCKpK
+	 3sR7FO2CEY0fnLKDKvT/v7+8P+DAkMV64uvbbprI=
+Message-ID: <da14058b-3f40-4725-827b-0e5e1e8135a8@581238.xyz>
+Date: Tue, 5 Nov 2024 15:25:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB8660:EE_
-X-MS-Office365-Filtering-Correlation-Id: 834c3bf8-8e7f-42b2-e41c-08dcfda5316f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MlJNM25JK0ZoLzVYaWpYcnc0eTR5ejRkZnp6K09wZHNxcFZOUU8vcGVUQnlI?=
- =?utf-8?B?UiszZjhHMThocjZwRjVmQWVkNkRHQzNtQlNGem9iRnZvOXhOa2pzQ2RxMU5q?=
- =?utf-8?B?NUN5TU9UdzVFWFVYOG1vUzVWd1VKdVBzUk41K0NoanR2ZDVOOWJwM1hvMGFs?=
- =?utf-8?B?YXlUM1B0eS9vY2oxZEswZkVlM2llY1IrbU1OekI2d2R2MVRkN0RiQi9wRWlN?=
- =?utf-8?B?NlBNYm5SWEpUbGRXN2ZXWmh0VDk3OXpXWVNSTEgxZEhSTnpmNUFUNzFHaDZP?=
- =?utf-8?B?NC9DYWVYK0pqeHd3cnBQUUdmdEJtT2dMWlZKbHZQV1oybTRwNllZUnA2L2dX?=
- =?utf-8?B?MjcxT0VJOVFGVnVSRGlTa2QrWjNtY0tlTDk5SlVaemR0eGZUdUZNaFJMUE1T?=
- =?utf-8?B?dmFiMFhkSHJZZHJLMllnbit0eW1YSDkzSE9laS9HcEJOYWptc1A1a0hTdVFH?=
- =?utf-8?B?YkZaS2xqZXh1UElJbk81ZFVhVjh4cGpGZzhsbTdtbjZsclcyYjdPWHRIYUdN?=
- =?utf-8?B?Ym55KzdMWnoxam5scEZnV3RrZ01qN3RnYUJiMGY2Z2ZDSitNNkQrNmt1WHVC?=
- =?utf-8?B?L0FYdVpEK2t2WXQ1S1E4dDMxalRmaGZNb3JLMks3QlZ6UFMwT1NuemF5MU12?=
- =?utf-8?B?YzdzcVF3TmlNWDd2eGdEMEdmem5Ublh3cEpEcDgxWWdXdi90UisrVFJGK0Iy?=
- =?utf-8?B?bWlEWXhidXlHanlzZ3hSdEt2NG04OTB3a3BIeHR2WEprRzNyU1lWRHJNU2VM?=
- =?utf-8?B?eHZvN1Vyckx4ODArWmd3eTB2YjJSRlpEd1RLMCt2ODQya25zV2JEUjZaNHJt?=
- =?utf-8?B?aFM2NlFjanpzL3BkbHJkSERrVGZiZ1I5K2NiVHFNR2E2Y0VQSFdsb0E3RkVw?=
- =?utf-8?B?QzRMRlREY3I3N3lLeUtNYXhnWTk5S2R4a2E3Z0ltZmdLK0JRME5RUVBRRlZ3?=
- =?utf-8?B?bGUveVpUZjdRVW5mTi8xb1U1V1pYQlVESWEvaHA2a1EzR3QraTh6Rk11VVAx?=
- =?utf-8?B?WWRQdW00eStjNE9rSlRCYlJvM0FaUzJvV0V2REpNT3R3YUZBVVBYeUZLUEpa?=
- =?utf-8?B?by9oTDM1c2ZTb0l2bWpDTFp5OVYzc0Zkd0w4YlpZcGxXQjY2ODlxcjRnYVBL?=
- =?utf-8?B?SkJvNWFEVEUyR0xvSVhBNi9oWDRtQnhiVElCYlFrMjJsR25LdDZoTEZLZ2pB?=
- =?utf-8?B?VGU2TGxwbU5wQXZHRHh5VFRXempCUGw2S1R1eDU4Q0ZqL1lxSG1hdXZucGlH?=
- =?utf-8?B?M0x4SWd0bmVXWGgrNTgzOHl3SzIxTGtOWjFvUzd4MXNWNGFJK1hnbVRKWTNL?=
- =?utf-8?B?em9WRGhMcE92MlA2YlNLUjJGZW1FSFgrWm1qWDVtbE5vbXNMSmc5SVRTUVhD?=
- =?utf-8?B?NmxlZDVJdDVjQUxpTFZPWDZxUWRvaFp4NVk5WjJIbnhZbUU2R0tMdHdxWERK?=
- =?utf-8?B?WUNFajBHaG1SMzhGdUtvczBHRWxEY2IyWjhaY2tFVEFQVHMrdHVBeHNweWRB?=
- =?utf-8?B?Q1dNa2xwN21BUksvTVBOUHpBbnFaUjFlOFpLdk5nUjBzdzQyaTc5WGZWV0o4?=
- =?utf-8?B?dFdEZ3A0eTZDL29XTDlHcUZiV0o5QmV6Y2ZIQTNMOVd6MDNmdjNDT0h2bXRX?=
- =?utf-8?B?TDZrK1NrYndYR0krc1BzaXJ4UGl6a3g3WDlCUm1MeE03cWIvV0RHVEF2aXJY?=
- =?utf-8?Q?mcTy6URsLBOZYTUs1wGd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RjdpcitxZWxON0NqcmdtYTVHVU1Wc0twemN1OVlZaEd0bHZTend0MUxVbXVh?=
- =?utf-8?B?eG5oajZDWFlTbXEwSm9sMmFxT1dWNDJHUW5ydGhmdHhBUDY0OWE4eUlubEhw?=
- =?utf-8?B?b2hzNWEvMXdHYzM5bVI4QzhaL0lCbzBCTWtUZ1ZOKzRGVXVSUWRSdnN3dHEy?=
- =?utf-8?B?ZGpWZVFGaVNKUEY4SkhXaXJFdTFNSTN6bTNzSVhKMjJaZytnNFBVVS91bE1N?=
- =?utf-8?B?OS8zek1TNVdEVGE2MllUUjlsZlV5YlNFTHY0RjBSNHpIcEZhU25pZERaSFpI?=
- =?utf-8?B?eWVuR2ZkaCtqWVhhWEY4R1kydmRmQ3k0U0dqait1T1diQnlQMmY3RmZEdWFM?=
- =?utf-8?B?SitnVWx4UmNoVEtMSkNGNjJjMjVjTXRwTmlEeE5RK2NGWFdoMzFnNGZTWmZJ?=
- =?utf-8?B?Z2Rhc0xGNVN0TjdWWVlqTWFMQ0JHczRzK3Z5N3dmRDkvS0pNcnN1R1BFekpr?=
- =?utf-8?B?T2JEOEcvSzhYUkJ0MkxybWk4ZG1ZME5BUzBFVkthZVBLWlF2RjdrTGxBT21p?=
- =?utf-8?B?UkRuNU5wYzdNYkhGb1ZySW13Z2ZjV2txN2tlTUhqc1QxQ3kvQXpQUEdEanU5?=
- =?utf-8?B?dWx2YVhLbGlkNUN0YUxnaklLNm5vQzkyZ24zMDRaUFVGdXNuQVUyUktpVEQ4?=
- =?utf-8?B?N09BSENPcldqbU1RMHU1MlFSS29RRzZCSXdBR3hQT2NZcmIwSVRodDYwMFg0?=
- =?utf-8?B?d1lCOFI0bTVGQXRzdVZPcWR2cHNVSFB5TmwwZld3VlAwUFVNN3FudHdNQU5V?=
- =?utf-8?B?TzB3Z3BOS0ttTHdXT09DblppZDI5M1dtZjl1M1NDMUVtODI0OWlNcTczcC91?=
- =?utf-8?B?ZXZDZ285VGtac3RBTDlMWlFGMkRCbjVCdGx6THQ3NGtHTDdmZnpIMDJ4VEhu?=
- =?utf-8?B?WUkxSkJoQU1nV29jUGFWNE1jdDFjNWg0TE5hNFlnMmFHREhGNFFpWlhwTS9r?=
- =?utf-8?B?cUxNN21QZFh3aDY0ME9jL1ZvMHQ1SmFCVWZiWjhyS1hDOE44Q3UrZXlnQVZI?=
- =?utf-8?B?ZlcrSW9JdXVrOHNCUS83czR4WTlwRm5nRFEvU2IvUGdEQk9KSHE2WFB0aVN4?=
- =?utf-8?B?NjZUb2k4dUpBM3pXSDJaSEZuT09VamJ1Vm12amlMYXc2QVN2MldabS9CTXRh?=
- =?utf-8?B?dFc4WXBhQUxjRjQxWDRBbTVkVFl4Z0ZFTnBHT3NuSERkUm96S25lMlpoRlJF?=
- =?utf-8?B?ZDdBZVd4K1BpVTh2VlVHaHBsU0xWdHRYRG9ndXpmMVRtSWlFQTNBbDJOazUx?=
- =?utf-8?B?bEtoNFM5NHdLSHh6SnhPcFhWT3ZFVUQ0YktlTW42RWY1Z2xLQmRYN0FjRy82?=
- =?utf-8?B?SGVqZW5aUWFxd0Z4NFZEN0xMaUlvZEh2bGJoc3lwdW9FTVpuSGZhSktvWkJ0?=
- =?utf-8?B?b29qeUZTaGZOdkVFV0dTRVZnYTlUd0dtSW96dE95WGdSdzUxbEtycUVYMU53?=
- =?utf-8?B?RjRqQUN0QnlnaDFOdTZUUytFaW5MNUNBbG93elM4VkxkNzV4OHJoUUZaZ3dI?=
- =?utf-8?B?angzZm9kMkV1SjloejgydlM0emJTbU9WWWxoaDFrNERmZWtQTWhITHNkUUxJ?=
- =?utf-8?B?SVZnRDFudGxUQlNJSVB3MVIrUzBrZUFTVlc3SUhGRXVwamhoRlZEVmUzdC9U?=
- =?utf-8?B?bGpkYkc5NWxESFhIbEdCc0xmUlE2dDBOU2ZpL0FmSnkwVDJXeHFBbXhxMEFB?=
- =?utf-8?B?M2gvWjV5elhwSVVoK0tUR0xQNXlLTFFoRlJKOUp0NVNQSW1SaXJtS3FWOW40?=
- =?utf-8?B?dnJWR1ZHb3kyM0k3dkRraTh1SjRPODZxNFdUNFYyV1hmUFI2TC9GYVJkblpD?=
- =?utf-8?B?SjIzWVBYdEtQL1pqczRNWjIvWUdmL3Q3OU5XZDF2S0dydWNIRERQeXJDWGFx?=
- =?utf-8?B?SWtpUkI3RVJIc0s0QWUxb2VkZXBGalgycWRjRnhRSWlTeVF1VVh5cHVwUVBp?=
- =?utf-8?B?ZkoxY0pFYmFFSEo1SGJHTi90dWFCclNOMVpnZTg0THdwQWVIOTg3YWVVRkFx?=
- =?utf-8?B?TmxMOURFQUFkOHM5K2lNeFZyNGQxZGdxU0FqQys0QXoxb1FTdEJpY0RUWnMr?=
- =?utf-8?B?UUFzeUF0N1JPczE0VldOSkJBZVRKblh2UlE3eEhURXFzQ3dSakl2b3p5SEpI?=
- =?utf-8?Q?4QcYSmqBF9D6Myv6QAPqaLot0?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 834c3bf8-8e7f-42b2-e41c-08dcfda5316f
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 14:21:52.2386
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uDOUY3jGuTxJ65fzkuLywDeCLV2+dGXs6ETK/ps3EOX5t5kfdSedrz0fUADX4QOxKTwVlmtehFEzc1TdpkmKZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8660
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] thunderbolt: Fix connection issue with Pluggable
+ UD-4VPD dock
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, Yehezkel Bernat <YehezkelShB@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
+ Andreas Noever <andreas.noever@gmail.com>, Sanath.S@amd.com,
+ christian@heusel.eu, fabian@fstab.de, regressions@lists.linux.dev
+References: <20241105103157.526823-1-mika.westerberg@linux.intel.com>
+ <2024110542-moaning-zap-7ac2@gregkh>
+ <20241105140231.GH275077@black.fi.intel.com>
+ <c0fcb97d-d849-4dec-b76a-7346b1619554@amd.com>
+Content-Language: en-US
+From: Rick <rick@581238.xyz>
+Autocrypt: addr=rick@581238.xyz; keydata=
+ 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
+In-Reply-To: <c0fcb97d-d849-4dec-b76a-7346b1619554@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 11/5/2024 08:02, Mika Westerberg wrote:
-> On Tue, Nov 05, 2024 at 11:54:55AM +0100, Greg KH wrote:
->> On Tue, Nov 05, 2024 at 12:31:57PM +0200, Mika Westerberg wrote:
->>> Rick reported that his Pluggable USB4 dock does not work anymore after
->>> upgrading to v6.10 kernel.
+Hi Mario,
 
-If I'm not mistaken Rick was talking about a Dell WD19TB dock which is 
-TBT3, not a Pluggable USB4 dock.
+On 05-11-2024 15:21, Mario Limonciello wrote:
+> On 11/5/2024 08:02, Mika Westerberg wrote:
+>> On Tue, Nov 05, 2024 at 11:54:55AM +0100, Greg KH wrote:
+>>> On Tue, Nov 05, 2024 at 12:31:57PM +0200, Mika Westerberg wrote:
+>>>> Rick reported that his Pluggable USB4 dock does not work anymore after
+>>>> upgrading to v6.10 kernel.
+> 
+> If I'm not mistaken Rick was talking about a Dell WD19TB dock which is 
+> TBT3, not a Pluggable USB4 dock.
+> 
 
-Nonetheless I wouldn't be surprised if other docks and devices have 
-problems.
+To prevent any confusion; I don't own any Dell WD19TB dock. I had these 
+issues with the UD-4VPD dock.
 
-We have an internal report at AMD of something similar happening with 
-TBT3 storage devices.  After this lands I'll ask that team that reported 
-it to see if it helped them too.
-
+> Nonetheless I wouldn't be surprised if other docks and devices have 
+> problems.
+> 
+> We have an internal report at AMD of something similar happening with 
+> TBT3 storage devices.  After this lands I'll ask that team that reported 
+> it to see if it helped them too.
+> 
+>>>>
+>>>> It looks like commit c6ca1ac9f472 ("thunderbolt: Increase sideband
+>>>> access polling delay") makes the device router enumeration happen later
+>>>> than what might be expected by the dock (although there is no such 
+>>>> limit
+>>>> in the USB4 spec) which probably makes it assume there is something
+>>>> wrong with the high-speed link and reset it. After the link is reset 
+>>>> the
+>>>> same issue happens again and again.
+>>>>
+>>>> For this reason lower the sideband access delay from 5ms to 1ms. This
+>>>> seems to work fine according to Rick's testing.
+>>>>
+>>>> Reported-by: Rick Lahaye <rick@581238.xyz>
+>>>> Closes: https://lore.kernel.org/linux- 
+>>>> usb/000f01db247b$d10e1520$732a3f60$@581238.xyz/
+>>>> Tested-by: Rick Lahaye <rick@581238.xyz>
+>>>> Fixes: c6ca1ac9f472 ("thunderbolt: Increase sideband access polling 
+>>>> delay")
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 >>>
->>> It looks like commit c6ca1ac9f472 ("thunderbolt: Increase sideband
->>> access polling delay") makes the device router enumeration happen later
->>> than what might be expected by the dock (although there is no such limit
->>> in the USB4 spec) which probably makes it assume there is something
->>> wrong with the high-speed link and reset it. After the link is reset the
->>> same issue happens again and again.
->>>
->>> For this reason lower the sideband access delay from 5ms to 1ms. This
->>> seems to work fine according to Rick's testing.
->>>
->>> Reported-by: Rick Lahaye <rick@581238.xyz>
->>> Closes: https://lore.kernel.org/linux-usb/000f01db247b$d10e1520$732a3f60$@581238.xyz/
->>> Tested-by: Rick Lahaye <rick@581238.xyz>
->>> Fixes: c6ca1ac9f472 ("thunderbolt: Increase sideband access polling delay")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 >>
->> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+>> Thanks!
+>>
+>> Applied to thunderbolt.git/fixes.
+> 
+> I'm a few hours late to the party, but if you update the commit message 
+> for my above comment feel free to add my tag too.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 > 
 
-> Thanks!
-> 
-> Applied to thunderbolt.git/fixes.
+Kind regards,
+Rick Lahaye
 
-I'm a few hours late to the party, but if you update the commit message 
-for my above comment feel free to add my tag too.
-
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
