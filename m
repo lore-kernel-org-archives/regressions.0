@@ -1,147 +1,135 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DE61B78F3
-	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 05:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACE31C2324
+	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 06:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730785409; cv=none; b=irodYPIEt8PtAuePsSqtrczbN2EWlP88c3sMfWhaNdUIfu37oOUquEWFBuj3sF2wZQJU96wSVVqCnqAn6tUo8NJ7T3WQD5/75Ih/3Kd/lPngNBHTZIU3pp+641vW/bK12cpfdOzDcjNq9tCcKX7QpsDnqBuV/z28v9px0vQc7XQ=
+	t=1730788283; cv=none; b=TaxpzF8Ap/eVzvWnZga8r9c1uGvjOhf/oS9sZpj9OhnkueqG+9t80zP0dlnjhxGz9uHUuloTBs0xxuSHhEeAhAJ0yOG3vq8olFro+f4/jnZH7mP43kbR/RTXIDidYCZ2VkopM0+4CkHiceKXf+dXoH+efz9Aj2Nv2F5/KHgcSGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730785409; c=relaxed/simple;
-	bh=zEsosQpSkGcM+e7ca3+3Gr83gvYgqEhfCgrvk4E6etg=;
+	s=arc-20240116; t=1730788283; c=relaxed/simple;
+	bh=lZHQ6oeCo+3J52PhOs3n6tSzunx3c7YQEzTKcxRQXS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BnDH82YjZFULCoegiEPeTbCXqBGCOYwEMvXZAxHOMLjMj8TkKYIszGY/f+hVVWQtpDf6zx4ARK8njaw2VjiPzE+CmMuPDNIIropqRfrk1J5gLlxGMjHwepUWN2ton2kEvBoWdfYUamhyPfuG4gcZ+xdlZdQhG3XHEiKEq8Xn0mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyWYo9Ln; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BlY/vfqJp+0BXwqnYBuu/rpTgQev0Y82vtff3mkm5u37Y/RuN3XfXb/AyN2lk9XdNP/jx6vEONupo0vSEQ7oYxUVV/laXqBFsoX1+6kwojkLoZo0oXiVbeqkty3xC+1myTvyBcjl93b/D+E7zlwwkCy9N8emSMeDAticDXwe5Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y/PN8GDK; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyWYo9Ln"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-72097a5ca74so4790900b3a.3
-        for <regressions@lists.linux.dev>; Mon, 04 Nov 2024 21:43:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730785408; x=1731390208; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OsVcFqJz4wRBhqSzGcHNCJBnHHITsWxKcJAa/+X/a2w=;
-        b=NyWYo9Lnu0a0G0oSg55bhVpdSAxWj70khydm65Yb/ygucqcT+yBWliWUHfPqU2ggzW
-         2VlsU/uImK62DwZyqFBYvKpdhUGEqZKCY6MkzO8UAWYCqf85kDJpPoFTEhLvqB0Tp/ns
-         XnRBH2bWMY0nWV3juy5NM91OTIpf9UePni7OmGGVb97EUo2R7oItliKIi+Sw3UjL+D05
-         nJBHuy9rInU2hsCY/f9oG1R/hq/Zmlv2WjRGoYqn3wOk92JHGYQMweXSdpwvvyaBmZkE
-         lHHGNtJWj5Ik9/lV69gBagvoGSjiK4Gm3FyP3iuA6d5Tycouf7e2m/8AZkxx0nMS8YSH
-         I+WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730785408; x=1731390208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsVcFqJz4wRBhqSzGcHNCJBnHHITsWxKcJAa/+X/a2w=;
-        b=JC6dIliYtFzO78uDs+GjinXYYTxsG03ZZY2dJ3+jmSD2VxXlhQKTvuKu9ZUJ34DWzW
-         cXUuCK0an9ElztaQEuf6j0UqRuzYf9brYRMAdxZzYzz3CQDT96YItmtfW0sfQViw7V71
-         3FOpkGqPnEQEFn9AqBDqtVlNRNINM/X8X5OpyFfqa5mQBGwFm0miTI367VNWyh1GpxGU
-         BzQyOfWsgV7Ahhpb3KbCtBMOFSAZurQkMkAVM7OChb+NTHTECuJJ48DjOyxFDYiMef0r
-         tYocqjdB9KQPhmeSkUkBaYQT2SOrFHSi4+YrU8yGWmmvGrPkJPb6U570tKQeL11e6FDz
-         f9xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkROoMGPBtH9dU0PZUsExeICfhkQNswkvPMlkntpUGpTRQKkqj3Drk7YZvaQMHxNz/yC7708sIrkcuuA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzF0joqRMl9pnZnXpNUOopLRktbXCJpdcq5lzGTkW04QIqIH4mb
-	GQ6Jp+/lmsxYspJ89XBOk7HKlDRqS7cTqwlbIkz/HHHy7fJxKRzc
-X-Google-Smtp-Source: AGHT+IGeBtCd6V8qNq9ebEcfSFdm2ZdE6OmAmnNFRCe0XWRrYZYZju7BqrxrMQB6Gh2X/XT2amzusw==
-X-Received: by 2002:a05:6a21:6da6:b0:1db:ee97:56f with SMTP id adf61e73a8af0-1dbee9705c1mr2956519637.25.1730785407531;
-        Mon, 04 Nov 2024 21:43:27 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:1bb4:1f23:1031:ac0e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1b8cdcsm8677026b3a.39.2024.11.04.21.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 21:43:27 -0800 (PST)
-Date: Mon, 4 Nov 2024 21:43:24 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Christian Heusel <christian@heusel.eu>
-Cc: "Ned T. Crigler" <crigler@gmail.com>,
-	Peter Seiderer <ps.report@gmx.net>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Jeff LaBundy <jeff@labundy.com>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [REGRESSION] disabling and re-enabling magic sysrq fails after
- kernel 6.11
-Message-ID: <ZymwfKiniofjIAQY@google.com>
-References: <Zx2iQp6csn42PJA7@xavtug>
- <69b6119c-3c3a-406f-9375-3e55fba9b732@heusel.eu>
- <20241027163744.2d396c61@gmx.net>
- <Zx5yIEZwT5SxzCTx@xavtug>
- <Zx8hfE2_3zXSTi05@google.com>
- <dcde5b37-2ea7-472e-abe3-2cadc9d1e651@heusel.eu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y/PN8GDK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730788282; x=1762324282;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lZHQ6oeCo+3J52PhOs3n6tSzunx3c7YQEzTKcxRQXS8=;
+  b=Y/PN8GDKyZbn0mSk1ioOL5o90F817hl6mFBYc8sQp3WWSroxqehH+Z3M
+   6QU+HmyL1DYE+pZdBqebo+7Fb4CZMBkD0avjXnYgnXMS1FD65mQB+6VlV
+   wHY7oc65T9OBcxOnrkGFevRD+B1jygwrlKHfkgF9SnCSQom31d5sN3awC
+   RnPNlF2q/6EEl+XuUjFN0ZoVLjZQiBC1B/v45957PfskE0gWtsiurCUJH
+   0OHa0Lbps49fGW/E8FdsAQyTcpzQx74YoZfa2oLU258qMY1m9FkEo5Mum
+   6+kux6I1UGIXVv70WhfbA8OSMo4ZrVwn0zLeFsRm8ru2DAfgNckpQw+hO
+   w==;
+X-CSE-ConnectionGUID: PMVMCM3LTR27tYWgLQdIuQ==
+X-CSE-MsgGUID: k2R4eqLeTXOZIqI1B/Qxow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11246"; a="34299446"
+X-IronPort-AV: E=Sophos;i="6.11,259,1725346800"; 
+   d="scan'208";a="34299446"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 22:31:22 -0800
+X-CSE-ConnectionGUID: aYmojHcwTECNv1lRRqwsOQ==
+X-CSE-MsgGUID: myFw6ZjFQImLl09u5VEoGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,259,1725346800"; 
+   d="scan'208";a="83414035"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 04 Nov 2024 22:31:19 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 473CB1E0; Tue, 05 Nov 2024 08:31:18 +0200 (EET)
+Date: Tue, 5 Nov 2024 08:31:18 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Rick <rick@581238.xyz>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Sanath.S@amd.com,
+	christian@heusel.eu, fabian@fstab.de, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: Dell WD19TB Thunderbolt Dock not working with kernel > 6.6.28-1
+Message-ID: <20241105063118.GE275077@black.fi.intel.com>
+References: <20241022161055.GE275077@black.fi.intel.com>
+ <7f14476b-8084-4c43-81ec-e31ae3f7a3c6@581238.xyz>
+ <20241023061001.GF275077@black.fi.intel.com>
+ <4848c9fe-877f-4d73-84d6-e2249bb49840@581238.xyz>
+ <20241028081813.GN275077@black.fi.intel.com>
+ <2c27683e-aca8-48d0-9c63-f0771c6a7107@581238.xyz>
+ <20241030090625.GS275077@black.fi.intel.com>
+ <70d8b6b2-04b4-48a6-964d-a957b2766617@581238.xyz>
+ <20241104063656.GZ275077@black.fi.intel.com>
+ <effdfd51-66dd-44a4-968c-0f762ab8f93b@581238.xyz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dcde5b37-2ea7-472e-abe3-2cadc9d1e651@heusel.eu>
+In-Reply-To: <effdfd51-66dd-44a4-968c-0f762ab8f93b@581238.xyz>
 
-Hi Christian,
+Hi Rick,
 
-On Mon, Nov 04, 2024 at 01:06:40PM +0100, Christian Heusel wrote:
-> On 24/10/27 10:30PM, Dmitry Torokhov wrote:
-> > Hi everyone,
-> > 
-> > On Sun, Oct 27, 2024 at 10:02:24AM -0700, Ned T. Crigler wrote:
-> > > Hi Peter, Christian,
-> > > 
-> > > On Sun, Oct 27, 2024 at 04:37:44PM +0100, Peter Seiderer wrote:
-> > > > Hello Ned, Christian, *,
-> > > > 
-> > > > On Sun, 27 Oct 2024 15:06:09 +0100, Christian Heusel <christian@heusel.eu> wrote:
-> > > > 
-> > > > > On 24/10/26 07:15PM, Ned T. Crigler wrote:
-> > > > > > Hi,
-> > > > >
-> > > > > Hey Ned,
-> > > > >
-> > > > > > It looks like starting with kernel 6.11, disabling and re-enabling
-> > > > > > magic
-> > > > > > sysrq fails with these errors in dmesg:
-> > > > > >
-> > > > > > kernel: input: input_handler_check_methods: only one event processing
-> > > > > > method can be defined (sysrq)
-> > > > > > kernel: sysrq: Failed to register input handler, error -22
-> > > > > >
-> > > > > > after doing:
-> > > > > >
-> > > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > > > # echo 0 > /proc/sys/kernel/sysrq
-> > > > > > # echo 438 > /proc/sys/kernel/sysrq
-> > > > >
-> > > > > I have found that this issue is also present in the latest mainline
-> > > > > release and bisected it to the following commit:
-> > > > >
-> > > > >     d469647bafd9 ("Input: simplify event handling logic")
-> > > > >
-> > > > 
-> > 
-> > Yes, I did not consider that we might want to re-register the same input
-> > handler, thank you for alerting me about the regression.
-> > 
-> > > > 
-> > > > 
-> > > > A quick fix/hack for the sysrq case:
-> > > > 
-> > > > --- a/drivers/tty/sysrq.c
-> > > > +++ b/drivers/tty/sysrq.c
-> > > > @@ -1045,7 +1045,7 @@ static inline void sysrq_register_handler(void)
-> > > > <snip>
+On Mon, Nov 04, 2024 at 07:04:08PM +0100, Rick wrote:
+> Hi Mika
 > 
-> Thanks for the patch, are you looking to fix this in a more general way
-> or do you plan on just sending in the above patch? (or did this already
-> happen and I just missed it? :p)
+> On 04-11-2024 07:36, Mika Westerberg wrote:
+> > Hi Rick,
+> > 
+> > On Fri, Nov 01, 2024 at 01:57:50PM +0100, Rick wrote:
+> > > I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty resulting in docking station
+> > > not working.
+> > > 
+> > > Then I compiled 6.12.0-rc5-00181-g6c52d4da1c74-dirty without commit
+> > > c6ca1ac9f472 (reverted), and now the docking station works correctly (as in
+> > > screen output + USBs + Ethernet)
+> > > 
+> > > So it seems c6ca1ac9f472 is causing issues for my setup.
+> > 
+> > Okay, thanks for testing!
+> > 
+> > It indeed looks like there is no any kind of link issues anymore with
+> > that one reverted. So my suspect is that we are taking too long before
+> > we enumerate the device router which makes it to reset the link.
+> > 
+> > Can you try the below patch too on top of v6.12-rcX (without the revert)
+> > and see if that still keeps it working? This one cuts down the delay to
+> > 1ms which I'm hoping is sufficient for the device. Can you share
+> > dmesg+trace from that test as well?
+> > 
+> > diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
+> > index c6dcc23e8c16..1b740d7fc7da 100644
+> > --- a/drivers/thunderbolt/usb4.c
+> > +++ b/drivers/thunderbolt/usb4.c
+> > @@ -48,7 +48,7 @@ enum usb4_ba_index {
+> >   /* Delays in us used with usb4_port_wait_for_bit() */
+> >   #define USB4_PORT_DELAY			50
+> > -#define USB4_PORT_SB_DELAY		5000
+> > +#define USB4_PORT_SB_DELAY		1000
+> >   static int usb4_native_switch_op(struct tb_switch *sw, u16 opcode,
+> >   				 u32 *metadata, u8 *status,
+> 
+> See below pasts without the revert, and with the above provided patch.
+> 
+> dmesg with patch (and without the revert):
+> https://gist.github.com/ricklahaye/8412af228063546dd8375ca796fffeef
+> tbtrace with patch (and without the revert):
+> https://gist.github.com/ricklahaye/4b9cbeeb36b546c6686ce79a044a2d61
+> 
+> Seems to be working correctly with the provided patch.
+> Thank you!
 
-I applied the patch that I proposed and Peter and Ned tested. I am not
-sure about what you mean by fixing this in a more general way, could you
-please elaborate?
+Thanks for testing! Yes, logs look good now.
 
-Thanks.
+I will submit this fix upstream today then. Do you mind providing me your
+full name and email so that I can add tag like
 
--- 
-Dmitry
+Reported-by: Rick ...
+
+in the commit message?
