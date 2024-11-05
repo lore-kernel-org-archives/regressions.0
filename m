@@ -1,165 +1,121 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E501DD0D0
-	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 19:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFF12161EA
+	for <regressions@lists.linux.dev>; Tue,  5 Nov 2024 22:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730834645; cv=none; b=Be3yB4HYczn5cvzaOtWqXcbgs6gwizbDgRjiu9LuX99FWo/y9v7QZLTGa+28A/9gfkhgiHMJ4hBtQEbiDT7q/y73uLrh+j+1RYr3zMFI74yJAVP7oLfj9Ps0PtzPcepX0Qrt6IUEOvyaSZ7ICKERpMLq+ssYVYpJNOQsgMsW9uY=
+	t=1730846895; cv=none; b=kvMwKwPNxxiO40jdCbLeqGYYBC7a1yDTaNd9nbhDU1I3IpQI+v0aYRCYG0FJPmRZVmXSSub7XWrwA8KHbFR1SMnt/3SsC76LKuG9QXaysTlx1SQYsKAdXr8tVbinkZHcFmvUFv7cjs7LWOZYzdZP+KiPaXNqg22kgEv3Hl9ouC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730834645; c=relaxed/simple;
-	bh=g+2efGR3dbdcPr1Nw5UNBnPimF0qmnyHzg9hIT10bfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DdIpw6oHG6HTVEn8H8ZV6xoQzYBTwAfzSO1ytlQgSe6COIqQwMrfBhO/DNzsLUjZ/VX3qaOZnNHcVc8pMmM+xnU94I2oMfl/DSFAuAOzhu/Ihx4g7CZUgZphlImCf09HCDzX998XMB4qM3NFzRFWSupkBUIKmOSDlZVq/knjWlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EczUwkDs; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730846895; c=relaxed/simple;
+	bh=iW1tNc9O7uEvjUQwmdt1RUFW81Id0+IQ9wZ8Pyt34VM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=c7cXahG1ckq59YO+RY7i9mtlCHLM9Z6PR1/TL90aDa9xIQmD1D8Kt27xhc00DBsnPE5yWt36xEYnQuEs7t5vQ6btRARHDEWtT6btnHcLYlBrJAYfTaBfcqHX6fduobO9z+aTMRMgNCrn0hzd5qryk9hwP86bvqYhED96faR+G5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net; spf=pass smtp.mailfrom=alfmarius.net; dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b=waeDF8k5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g9e3CEbU; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alfmarius.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EczUwkDs"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9e8522c10bso20324166b.1
-        for <regressions@lists.linux.dev>; Tue, 05 Nov 2024 11:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730834642; x=1731439442; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CSZJcZhNNgaAJYyZ3UhxJyhh0uxdQZk+eTwkMHAe5g8=;
-        b=EczUwkDsEEy/C3HKrgTUZrowHf5UuhK3c1DdVofJPGqR7p4L/jqcURQ1P3R9AZDBf6
-         YXM+rtP7LbWiE1S23scxlzH6KwDSilmPKllLfgkJGjCWRWbiBV6n6/wdqN3ZYsxSRw9n
-         lZHJ+y6j++cUsuXt92oNwQIzrA9z4oNJWA2ML7K9LGgVF7355ArA8GtEGqgIVhAvgMNi
-         nEbRqBjzqE/goXBdqUkwSrLjyIn2+QHzoS0KAap65scVDi6tustxqa/w6hqPLVSguVn2
-         ICAUMbRkz0tzb2Ss+b62PmqlglQxfHzvjT61Oz22ECWrF5Q0DOPzVkFX8IhGSxXuUlGr
-         jZrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730834642; x=1731439442;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CSZJcZhNNgaAJYyZ3UhxJyhh0uxdQZk+eTwkMHAe5g8=;
-        b=P1ON6AFNG6t3580Cb41eXodEVvEYw6pvu5abPRTjLZAvYxZsbfARyoH3VHwZr6euHR
-         jk21aKtwzKylS4B8yn+d/6XoAhwJJFvNeiPNcp8Lz2G99ecJKiE7gB8KR55GFArHfVWi
-         C5Mqf81TQgPzVWytTvt48fO4NFM/SMCje6qXl6b40DBWbmQiCVFSMG6nXLI5OvDaim2y
-         ZjMJAQzioj7MNN3CX9RuwSUL030ukP60KOtiQaURiUwFDW7jV4WNW8KDUqFKl7ugmtzY
-         6TWX1eYKz46buD7lZNUVgfJNd42S+j7uel4lPHu/esDdm2zcQXHSxgYBZn1wPApqDfBY
-         4xBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGep+S5brzk1va37QlPk3THQsJo3eluMbSN5oXbYwU1wTnLpS/1RJSQXHtGOYcHkJU3yya5UNJnqFT+g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5pOE0swdKSs8sBrz90vUgQZJ3RuM5PJ9xgCEKRddJ93dsC00/
-	C0+mEBKL4N4otz9YDH0At+xZvIz9fZZo9XjBq2+ycD9bXc9A/+cFM54Ubc0i
-X-Google-Smtp-Source: AGHT+IFqmxGKbX+wPZMvD7DNqJ/lCN4Fe1cK8sPG0leKEKeUroKvuDOSZ/LS2QoVoCTnXi7430au1g==
-X-Received: by 2002:a17:907:9446:b0:a99:f209:cea3 with SMTP id a640c23a62f3a-a9e55a4f2b9mr1920250966b.11.1730834642033;
-        Tue, 05 Nov 2024 11:24:02 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb16aecbasm173841666b.32.2024.11.05.11.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 11:24:00 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id D0506BE2DE0; Tue, 05 Nov 2024 20:23:59 +0100 (CET)
-Date: Tue, 5 Nov 2024 20:23:59 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Mike <user.service2016@gmail.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Sasha Levin <sashal@kernel.org>,
-	Jeremy =?iso-8859-1?Q?Lain=E9?= <jeremy.laine@m4x.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-Message-ID: <Zypwz65wRM-FMXte@eldamar.lan>
-References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
- <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
- <2024061258-boxy-plaster-7219@gregkh>
- <d5aa11c9-6326-4096-9c29-d9f0d11f83b4@leemhuis.info>
- <ZyMkvAkZXuoTHFtd@eldamar.lan>
- <ab5e25d8-3381-452e-ad13-5d65c0e12306@leemhuis.info>
- <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b="waeDF8k5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g9e3CEbU"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 39AFC2540160;
+	Tue,  5 Nov 2024 17:48:12 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Tue, 05 Nov 2024 17:48:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alfmarius.net;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm3; t=1730846892; x=
+	1730933292; bh=RoPwgRrou0yJo6bFtd+HRP8JHVcoD8XHfthAs6rLsJg=; b=w
+	aeDF8k5qY+ondh/tCB92iLXE8d4ozutzyovOrR16PVtwfQd/4OnKeTidTxExdgYv
+	o718JYqiBPZaWDqV4j0venioR2D52g4KBBzVWQj6otGVLsLAq4UaRLNDJ+QfcMwS
+	MOlpDVTpwJwYkilmbwoW1JsyBPkjCEDqggow1BvBVvV4nIX9knvZDzM4PXJ2ELk9
+	oA5koaegs1BJl6GG+L5v7CWcBwpQ/QGZta0XaTr4RVPRN+HsYDoczY1zhe5bpvrZ
+	PJ6SPbuEQk38Ddt256K+1IwDkEyw/kl4dmIyOUiVBh/PcTbf+rUn5CdrD/pwMCA+
+	fq3e8KE8SGXmu1HsnMHqQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1730846892; x=1730933292; bh=RoPwgRrou0yJo6bFtd+HRP8JHVco
+	D8XHfthAs6rLsJg=; b=g9e3CEbUK9HPPvfU/KNzDlWFi/StOsLVs4+FRo674fC6
+	N1jA6y1oitkt/U2jOPzIJJww7nBhe2+OUA18mDRdXzlL/S54wwWMXkZ7GPKqvYa2
+	kclbte++zPuEwESEba/BgIIrGWbG0aaJ/WbCe8IwPub18sKP/KB/MFC1U7h+ZrRu
+	W0bKy/Sc6nW2YBjZnHa3t5AsNeE8i2R6O9Y98ykVeIwxVHWQ7L4D5Df3X5T5RIlZ
+	gmmjNcd+8lvx4eQWI1tuPUtSruzKFmg0FFbpShKpK7qOYGr/ZjRbUumA3h5jFTLk
+	BWbGj7sgWdNDwq/99Vv5OmU/7lBjMGifgNCcFKSMUw==
+X-ME-Sender: <xms:q6AqZ9VCkq_DLNM-6rpPlXe8dRajsl63jdwfvxt4HMn2LOFghgJs7g>
+    <xme:q6AqZ9nuo8OQr7-zLznfKwv4MgOx565qxsh2RVAmgCegwcbXFj9zWLn13xbu1dExg
+    V5lGXPUfAobZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddugddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkufgtgfesthejredtredttdenucfh
+    rhhomhepfdetlhhfucforghrihhushdfuceophhoshhtsegrlhhfmhgrrhhiuhhsrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeegtdekvdejffffuddvgeektddtfeekheeigeegffei
+    udfgteeghfejudelgfduvdenucffohhmrghinheprghrtghhlhhinhhugidrohhrghdpgh
+    hithhhuhgsrdgtohhmpdhpkhhgsghuihhlugdrtghomhenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpohhsthesrghlfhhmrghrihhushdrnh
+    gvthdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
+    sggrthihihgvvhesghhmrghilhdrtghomhdprhgtphhtthhopehkvhgrlhhosehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhn
+    uhigrdguvghvpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:q6AqZ5YA0OrE8FoTdKh5wJ0juiptQhQcNg5VKbJtM5raIYfpfyjEWg>
+    <xmx:q6AqZwVwQr49VjsJmxTSdaecstGBTDJrNOswkF9pKT6Y3-Yfyf5hig>
+    <xmx:q6AqZ3n0zYliajz3ocPusEPqKE5vbXCU7Qys34LD1SYebkZcQPNP1Q>
+    <xmx:q6AqZ9dpyISGk_ymKrx0ARh0k1T6IR5Ca9nuHPCO3gIZkUEIJzwRBg>
+    <xmx:rKAqZ1iTTVLOb-k3zGqFvY4iid7X5d0wbTFLzvt9teFTJbobjQbbr8Fn>
+Feedback-ID: ib5844192:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9D75418A0068; Tue,  5 Nov 2024 17:48:11 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
+Date: Tue, 05 Nov 2024 23:47:08 +0100
+From: "Alf Marius" <post@alfmarius.net>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, "Andrii Batyiev" <batyiev@gmail.com>,
+ "Kalle Valo" <kvalo@kernel.org>
+Message-Id: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
+Subject: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10 and 6.11.5
+ (probably 6.11rc)
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Luiz,
+Hi,
+I recently installed Arch Linux on an old laptop (Fujitsu-Siemens AMILO Xi 2550) and noticed that:
 
-On Tue, Nov 05, 2024 at 12:53:50PM -0500, Luiz Augusto von Dentz wrote:
-> Hi,
-> 
-> On Tue, Nov 5, 2024 at 12:29 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > On 31.10.24 07:33, Salvatore Bonaccorso wrote:
-> > > On Tue, Jun 18, 2024 at 12:30:18PM +0200, Thorsten Leemhuis wrote:
-> > >> On 12.06.24 14:04, Greg KH wrote:
-> > >>> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
-> > >>>> On 03.06.24 22:03, Mike wrote:
-> > >>>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
-> > >>>>> [...]
-> > >>>>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
-> > >>>>> time to be
-> > >>>>> included in Debian stable, so having a patch for 6.1.x will be much
-> > >>>>> appreciated.
-> > >>>>> I do not have the time to follow the vanilla (latest) release as is
-> > >>>>> likely the case for
-> > >>>>> many other Linux users.
-> > >>>>>
-> > >>>> Still no reaction from the bluetooth developers. Guess they are busy
-> > >>>> and/or do not care about 6.1.y. In that case:
-> > >>>>
-> > >>>> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
-> > >>>> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
-> > >>>> cause this or if it's missing some per-requisite? If not I wonder if
-> > >>>> reverting that patch from 6.1.y might be the best move to resolve this
-> > >>>> regression. Mike earlier in
-> > >>>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
-> > >>>> confirmed that this fixed the problem in tests. Jeremy (who started the
-> > >>>> thread and afaics has the same problem) did not reply.
-> > >>>
-> > >>> How was this reverted?  I get a bunch of conflicts as this commit was
-> > >>> added as a dependency of a patch later in the series.
-> > >>>
-> > >>> So if this wants to be reverted from 6.1.y, can someone send me the
-> > >>> revert that has been tested to work?
-> > >>
-> > >> Mike, can you help out here, as you apparently managed a revert earlier?
-> > >> Without you or someone else submitting a revert I fear this won't be
-> > >> resolved...
-> > >
-> > > Trying to reboostrap this, as people running 6.1.112 based kernel
-> > > seems still hitting the issue, but have not asked yet if it happens as
-> > > well for 6.114.
-> > >
-> > > https://bugs.debian.org/1086447
-> > >
-> > > Mike, since I guess you are still as well affected as well, does the
-> > > issue trigger on 6.1.114 for you and does reverting changes from
-> > > a13f316e90fdb1 still fix the issue? Can you send your
-> > > backport/changes?
-> >
-> > Hmmm, no reply. Is there maybe someone in that bug that could create and
-> > test a new revert to finally get this resolved upstream? Seem we
-> > otherwise are kinda stuck here.
-> 
-> Looks like we didn't tag things like 5af1f84ed13a ("Bluetooth:
-> hci_sync: Fix UAF on hci_abort_conn_sync") and a239110ee8e0
-> ("Bluetooth: hci_sync: always check if connection is alive before
-> deleting") that are actually fixes to a13f316e90fdb1.
+- when booting Linux from the Arch ISO (kernel version 6.10.10) WIFI is working fine
+- after installing Arch Linux from the ISO and booting (kernel version 6.11.5) WIFI was not working properly
 
-Ah good I see :). None of those were yet applied to the 6.1.y series
-were the issue is still presend. Would you be up to provide the needed
-changes to the stable team?  That would be very much appreciated for
-those affected running the 6.1.y series. 
+By "not working properly" I mean: 
+downloading small files or installing a few small packages was working ok, but when downloading larger files or installing larger packages with lots of dependencies, the connection would gradually slow down and eventually die.
 
-Thanks a lot for pointing out the fixes!
+I reported this on the Arch Linux forum (https://bbs.archlinux.org/viewtopic.php?pid=2206757)
+and some helpful memeber suggested that this might be the commit that broke things:
+https://github.com/torvalds/linux/commit/02b682d54598f61cbb7dbb14d98ec1801112b878
 
-Regards,
-Salvatore
+An Arch Linux packet manager (gromit) helped me debug this issue by building a couple of kernels that I tested.
+
+- https://pkgbuild.com/\~gromit/linux-bisection-kernels/linux-mainline-6.12rc5-1-x86_64.pkg.tar.zst
+- https://pkgbuild.com/\~gromit/linux-bisection-kernels/linux-mainline-6.12rc5-1.1-x86_64.pkg.tar.zst
+
+The first one didn't work, but the second (in which he reverted the commit linked above) did fix my problem.
+So, I guess this commit should be investigated by those in the know.
+Thats why I also added Andrii and Kalle to CC as they are listed in the commit message.
+
+My network controller: Intel corporation PRO/Wireless 4965 AG or AGN [Kedron] Network Connection (rev 61)
+Kernel driver in use: iwl4965
+
+This is my first kernel bug report, hope I did everything right :)
+I'm ofc willing to help provide more info and debug locally here to help solve this issue.
+
+Thanks and good night
+Alf :)
+-- 
+"The generation of random numbers is too important to be left to chance."
