@@ -1,197 +1,136 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113D518FDA9
-	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 15:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6172038BF
+	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 15:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730905376; cv=none; b=BmKQQGa5AMgJgkQXshedpn7pFwfjvJSPcFKgEIYCOMDVU0dw5/OHhrXViKmYOvc0SlcfaEQcjxvmyb0BWFnw1wiHd8ssd6XVZ+hSWqxcUx1PR5qSo9k7+iPD3lJdwCD0aL3V2Y88Lp/xXI4xRDixkGChnCBIhL8xt69pGYG8Mek=
+	t=1730906241; cv=none; b=WG4j+7VO3sVkUugmn2zpIHMtaMK7Z7cz9vVqOOUzAhHaLUR/9CWKvbQPgXVRl3H+6cqxDjg2NNnxm/15mlY32l4rmtTm7iNzBssm3knQbBwwSHzoQ/dYOziUKirpvFF9YrGElmsxKCriN3XxYgcadwj5wNnfGfZ2w+0d/kLLMKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730905376; c=relaxed/simple;
-	bh=xt8xrg9Nw7zYftpN2TsUBqt+zTEi4h4vrGilPKIcQ6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uqx7kNjOS69KEiBXnay5JOlkXkOKnNGxkyJswPsxAcD9D5od43pC+tyZkyk8+XYRH7cVXW2ZuQe6bKhdiwfb/m9TWLHF0Bgj2wSkeUJUEj3XdlceetaBva5jrHYdipDi2/TNflPQ4EMiBW3gVk3klL/LOU0K5MUg7GfBitjmhDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhEDbU6S; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730906241; c=relaxed/simple;
+	bh=ic8cVOX8Eb6eg3pSMbWKLDgRehM3KQGs7TIkjwW/x88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qyR6wR7zMgsh0dQfQDK750lGo86eIiZfeI+rXYCqFXwFSJ3uS6/d6qdfhjKMj3vrQUifIl1LVQMsEYi/N2PmYWrugMLUNFABJzKAlxatTGMEBG0iqtDXQdQL4E3XUWG6grNuPVcYTOW7z6Z1xnsN9zJhLOHB2md7OBKaLMIml5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N3TLJPCV; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhEDbU6S"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fb3ce15172so9943391fa.0
-        for <regressions@lists.linux.dev>; Wed, 06 Nov 2024 07:02:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N3TLJPCV"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f6e1f756so7253952e87.0
+        for <regressions@lists.linux.dev>; Wed, 06 Nov 2024 07:17:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730905373; x=1731510173; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9cTAkvAt1GTT5JhiHrne6cf0l+gqjvi/U391LxCXcj8=;
-        b=dhEDbU6SVNxNc4s1KSl/BdoioE4ZrqulQFlGkr1VkwOpcRmdiZzvmD0SI4KIxgt/4d
-         xbJhfDVqrHoS6K5oJTWVwN4mSt8zyJPzwWprvd/Kzbys/Hcy1vqlE6M/59b3epBvBiA/
-         JSXVBZh7yfYGAPzCRP/hvFlVVddWBCCmbZo56yx9zkpfcBHuem90B+VwgQarI9hNICsz
-         Uk4v/FfLA2UNOqwOvUROurWrGOyOuzCEtIiwOXc2o/1gCmq+tHye9QJLOo7kZECND3HT
-         k48Fo/ZY7OxF7MHO4a3VqzvM0a3sFUOzOKDtiiCS+5wEGoTKzHxA7/vdH+45ZPGyUOpN
-         l3CQ==
+        d=linaro.org; s=google; t=1730906238; x=1731511038; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fIEbwD5dLW8FMUuswU9FQws7jt6ecUWe6Cmn0F+XQJU=;
+        b=N3TLJPCVb1uydJBnip9P4fb1bxOpB4ROp9FdjcZ2ks6+erZH/XGLRstOok87YZHyPB
+         211xRMP3lAbR8I9EQNh3lb+6CVYHDvfaFTHqciUORa10yf+SG+VPZf3vxPH9ZZZ4UHwF
+         2IRyAASmLcW6E9UWUd/qzID28B9hiza9dRTS69jltvBGJGchXnAtJJ41e8qAhueE/ao+
+         +utDFLizsgwKkpLF4drmiBqU8Ijp2uz30Ktg/x8FTqfzW73yGU44kZS1L2fL8NPsjP6D
+         oAIrXk2xjtQCfzAk7pUp99Nx1MZdJhJKD/rcKCdS+wJ6Q8dvr0Pe39oBeGhsc0ctGeY3
+         p2iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730905373; x=1731510173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9cTAkvAt1GTT5JhiHrne6cf0l+gqjvi/U391LxCXcj8=;
-        b=CMGsfHkbue/ym17OYOzPdmlDyl6ofAgyFk3DFd2k4S7aGlklNjL4VRlJ4H2FbYlFSD
-         DqSOnrIhUfrxn5TDY9gniXBNExBHffhG+skyoM+/P0aifkGoSU0BLeZ1jF3P9MRQjwMq
-         AJduMTpGg1wG8zryOyheQzcMEqjuEn2ZInEZRgL0ga25ds0XPVnzj/56Oe69uBiEicqi
-         GZ/+5jfSYjGIs0QDZ8Ha81Sv+69GBqMkHFzkA8HZropwRGX3c4WsF2p8d3PomflpExze
-         NISA8FmqYlZP6vFT05i+yAILQnOJqJClTKOmmS+ny/ROKo+5dh4yM/qUli9stY2UjXDR
-         SPrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAF1Ra2cX7T4IVWGzlgNxOYYy1vevBRtTI0LntIIhd2KsezfcjsBGBYFr4vBkB+PBZAqSCp0srP67WBw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw+0QFQWjObA/b/7vBrFvqMlqVXbdTZW5x87mxenJGBYYJMTv4E
-	Mfx6DrEGCbNBT31519FXtnY3P4sdAuRlzF5cXezbMzfIjLZlOOIpoDU73Rfn25jcIm0XtXsGaKR
-	k5wqP1c/WrjEXt09EOxN6bludCU0=
-X-Google-Smtp-Source: AGHT+IEpuEOm8iNLXsM5Gsl5m7y2iA3iKf6cj5kdBBIB3ggcJKBIi+dCCD3Lik87gcUJqjzCJ9xP6B4uwW/IS3T+Re8=
-X-Received: by 2002:a05:651c:1590:b0:2f7:6371:6c5a with SMTP id
- 38308e7fff4ca-2ff0cce821bmr9288271fa.16.1730905372761; Wed, 06 Nov 2024
- 07:02:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730906238; x=1731511038;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fIEbwD5dLW8FMUuswU9FQws7jt6ecUWe6Cmn0F+XQJU=;
+        b=jn3q/gDk1W3N4Z/zf3vWZHidn8apdayrtBrrv23FGPbzkvYC+GV40uW7TM6wMTCpuh
+         kt55BEgyuk8nMd59kGlBQtcREZHHVPyduHHZZGWUsjuwVwkeoAHA1PY/1tgUEWqzLK3+
+         BMTtbC0lhQdRgXxhNJw0wMlAJn3m9kaomsizPIaRRHiQaTaxm/hDWnygEO+6Xs2Hs8kM
+         1LlB+i1z6oR7wNgGu29Z0dtOXXftujwYI4hM0qutxTDajRLk5AD697Hc2sGNpM3wGwyu
+         CVW0CLKfeMXbeCQy/bqZzUJRWT42EWfGHImcsE4lqoXuyEUrozIT/41ZQRw65k7oNUyw
+         k9YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1x78aRg3/fYM0pDumA3NqJTjiTy8ga4rbrnA/1vFah7uUc2S0fD5XCs9GesIHjS4ldHkZzcYvi9xSMA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzp42K4n+733zYVpTrcBV0u+K2omH0iT6ekGKZTLu6VdhTJGJhf
+	l+C7eyXMuYXBjSW4faqYKooAhuZzsu334izJ+N5w+ElSFa/7nVGTMCOrQdt/5Uk=
+X-Google-Smtp-Source: AGHT+IG7dwaa2yN3o8y7YIOO0cvRLcrkbQ+DzFVy+RFiOkuyFesN3/6MQCXs3ZxexqpX8BK5K41+LQ==
+X-Received: by 2002:a05:6512:3b1e:b0:539:f37f:bed9 with SMTP id 2adb3069b0e04-53b348c38d4mr21239539e87.8.1730906237946;
+        Wed, 06 Nov 2024 07:17:17 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53c7bdcc305sm2520122e87.227.2024.11.06.07.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 07:17:17 -0800 (PST)
+Date: Wed, 6 Nov 2024 17:17:15 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Jonathan Marek <jonathan@marek.ca>, regressions@lists.linux.dev
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] arm64: dts: qcom: x1e80100: enable OTG on USB-C
+ controllers
+Message-ID: <5mfq3xf2qkqyrtaybtfutx73rny737rqdd6exdbhljcebg7brs@fxaz6zhsy4pd>
+References: <20241011231624.30628-1-jonathan@marek.ca>
+ <hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
- <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info> <2024061258-boxy-plaster-7219@gregkh>
- <d5aa11c9-6326-4096-9c29-d9f0d11f83b4@leemhuis.info> <ZyMkvAkZXuoTHFtd@eldamar.lan>
- <ab5e25d8-3381-452e-ad13-5d65c0e12306@leemhuis.info> <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
- <Zypwz65wRM-FMXte@eldamar.lan> <2024110652-blooming-deck-f0d9@gregkh> <Zysdc3wJy0jAYHzA@eldamar.lan>
-In-Reply-To: <Zysdc3wJy0jAYHzA@eldamar.lan>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 6 Nov 2024 10:02:40 -0500
-Message-ID: <CABBYNZKz_5bnBxrBC3SoaGc1MTXXYsgdOXB42B0x+2dcPRkJyw@mail.gmail.com>
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Mike <user.service2016@gmail.com>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Sasha Levin <sashal@kernel.org>, 
-	=?UTF-8?Q?Jeremy_Lain=C3=A9?= <jeremy.laine@m4x.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef>
 
-Hi Salvatore,
+On Wed, Nov 06, 2024 at 02:37:43PM +0200, Dmitry Baryshkov wrote:
+> On Fri, Oct 11, 2024 at 07:16:21PM -0400, Jonathan Marek wrote:
+> > These 3 controllers support OTG and the driver requires the usb-role-switch
+> > property to enable OTG. Add the property to enable OTG by default.
+> > 
+> > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> > ---
+> >  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> 
+> For some reason commit f042bc234c2e ("arm64: dts: qcom: x1e80100: enable
+> OTG on USB-C controllers") seems to break UCSI on X1E80100 CRD:
+> 
+> [   34.479352] ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
 
-On Wed, Nov 6, 2024 at 2:40=E2=80=AFAM Salvatore Bonaccorso <carnil@debian.=
-org> wrote:
->
-> Hi Greg,
->
-> On Wed, Nov 06, 2024 at 08:26:05AM +0100, Greg KH wrote:
-> > On Tue, Nov 05, 2024 at 08:23:59PM +0100, Salvatore Bonaccorso wrote:
-> > > Hi Luiz,
-> > >
-> > > On Tue, Nov 05, 2024 at 12:53:50PM -0500, Luiz Augusto von Dentz wrot=
-e:
-> > > > Hi,
-> > > >
-> > > > On Tue, Nov 5, 2024 at 12:29=E2=80=AFPM Thorsten Leemhuis
-> > > > <regressions@leemhuis.info> wrote:
-> > > > >
-> > > > > On 31.10.24 07:33, Salvatore Bonaccorso wrote:
-> > > > > > On Tue, Jun 18, 2024 at 12:30:18PM +0200, Thorsten Leemhuis wro=
-te:
-> > > > > >> On 12.06.24 14:04, Greg KH wrote:
-> > > > > >>> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis w=
-rote:
-> > > > > >>>> On 03.06.24 22:03, Mike wrote:
-> > > > > >>>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
-> > > > > >>>>> [...]
-> > > > > >>>>> I understand that 6.9-rc5[1] worked fine, but I guess it wi=
-ll take some
-> > > > > >>>>> time to be
-> > > > > >>>>> included in Debian stable, so having a patch for 6.1.x will=
- be much
-> > > > > >>>>> appreciated.
-> > > > > >>>>> I do not have the time to follow the vanilla (latest) relea=
-se as is
-> > > > > >>>>> likely the case for
-> > > > > >>>>> many other Linux users.
-> > > > > >>>>>
-> > > > > >>>> Still no reaction from the bluetooth developers. Guess they =
-are busy
-> > > > > >>>> and/or do not care about 6.1.y. In that case:
-> > > > > >>>>
-> > > > > >>>> @Greg: do you might have an idea how the 6.1.y commit a13f31=
-6e90fdb1
-> > > > > >>>> ("Bluetooth: hci_conn: Consolidate code for aborting connect=
-ions") might
-> > > > > >>>> cause this or if it's missing some per-requisite? If not I w=
-onder if
-> > > > > >>>> reverting that patch from 6.1.y might be the best move to re=
-solve this
-> > > > > >>>> regression. Mike earlier in
-> > > > > >>>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206b=
-ef5e@gmail.com/
-> > > > > >>>> confirmed that this fixed the problem in tests. Jeremy (who =
-started the
-> > > > > >>>> thread and afaics has the same problem) did not reply.
-> > > > > >>>
-> > > > > >>> How was this reverted?  I get a bunch of conflicts as this co=
-mmit was
-> > > > > >>> added as a dependency of a patch later in the series.
-> > > > > >>>
-> > > > > >>> So if this wants to be reverted from 6.1.y, can someone send =
-me the
-> > > > > >>> revert that has been tested to work?
-> > > > > >>
-> > > > > >> Mike, can you help out here, as you apparently managed a rever=
-t earlier?
-> > > > > >> Without you or someone else submitting a revert I fear this wo=
-n't be
-> > > > > >> resolved...
-> > > > > >
-> > > > > > Trying to reboostrap this, as people running 6.1.112 based kern=
-el
-> > > > > > seems still hitting the issue, but have not asked yet if it hap=
-pens as
-> > > > > > well for 6.114.
-> > > > > >
-> > > > > > https://bugs.debian.org/1086447
-> > > > > >
-> > > > > > Mike, since I guess you are still as well affected as well, doe=
-s the
-> > > > > > issue trigger on 6.1.114 for you and does reverting changes fro=
-m
-> > > > > > a13f316e90fdb1 still fix the issue? Can you send your
-> > > > > > backport/changes?
-> > > > >
-> > > > > Hmmm, no reply. Is there maybe someone in that bug that could cre=
-ate and
-> > > > > test a new revert to finally get this resolved upstream? Seem we
-> > > > > otherwise are kinda stuck here.
-> > > >
-> > > > Looks like we didn't tag things like 5af1f84ed13a ("Bluetooth:
-> > > > hci_sync: Fix UAF on hci_abort_conn_sync") and a239110ee8e0
-> > > > ("Bluetooth: hci_sync: always check if connection is alive before
-> > > > deleting") that are actually fixes to a13f316e90fdb1.
-> > >
-> > > Ah good I see :). None of those were yet applied to the 6.1.y series
-> > > were the issue is still presend. Would you be up to provide the neede=
-d
-> > > changes to the stable team?  That would be very much appreciated for
-> > > those affected running the 6.1.y series.
-> >
-> > We would need backports for these as they do not apply cleanly :(
->
-> Looks our mails overlapped, yes came to the same conclusion as I tried
-> to apply them on top of 6.1.y. I hope Luiz can help here.
->
-> We have defintively users in Debian affected by this, and two
-> confirmed that using a newer kernel which contains naturally those
-> fixes do not expose the problem. If we have backports I might be able
-> to convice those affected users to test our 6.1.115-1 + patches to
-> verify the issue is gone.
+#regzbot ^introduced: f042bc234c2e
 
-Then perhaps it is easier to just revert that change?
+> 
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > index 7778e17fb2610..fb16047d803c9 100644
+> > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > @@ -4199,6 +4199,8 @@ usb_1_ss2_dwc3: usb@a000000 {
+> >  
+> >  				dma-coherent;
+> >  
+> > +				usb-role-switch;
+> > +
+> >  				ports {
+> >  					#address-cells = <1>;
+> >  					#size-cells = <0>;
+> > @@ -4452,6 +4454,8 @@ usb_1_ss0_dwc3: usb@a600000 {
+> >  
+> >  				dma-coherent;
+> >  
+> > +				usb-role-switch;
+> > +
+> >  				ports {
+> >  					#address-cells = <1>;
+> >  					#size-cells = <0>;
+> > @@ -4550,6 +4554,8 @@ usb_1_ss1_dwc3: usb@a800000 {
+> >  
+> >  				dma-coherent;
+> >  
+> > +				usb-role-switch;
+> > +
+> >  				ports {
+> >  					#address-cells = <1>;
+> >  					#size-cells = <0>;
+> > -- 
+> > 2.45.1
+> > 
+> 
+> -- 
+> With best wishes
+> Dmitry
 
-
---=20
-Luiz Augusto von Dentz
+-- 
+With best wishes
+Dmitry
