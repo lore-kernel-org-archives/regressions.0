@@ -1,180 +1,273 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92D41CC8A3
-	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 07:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353111D7999
+	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 09:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730878840; cv=none; b=CvGTvpt6uWak6qTI2gi66+X8eIeb2D62hB0HJ1yKTR1eZObEiHl0Pbn9VzavxiEza3pWlkDaTVNDfAwl1vNQqiN9Mfpn+e8H4yfnjWT1r+3zv8vfp8Q6X7PJbCysN+auErlsh5oxUjfDnIrAB2df8pIJUSH6ydM8HQ5l/KYZwQI=
+	t=1730883713; cv=none; b=YHEboLazyzDz9oh6PKFGgkqTVJlzYZjUxIXgGazstVl+FAEeIK/nZbA8P1xmAy/sz7eryJYHQzYAh4aO1Hxmsfl7/joyS/bMw6F4eUpiRbqTY6xfArGS6SH+jS6WeKb93LqMZ/vZ13uru2BRNJEy0VOWkZfUMj0ZC00ZF5Ztoe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730878840; c=relaxed/simple;
-	bh=fb5fzNhwc+lWe3wvvd/q1qYAFFf+KRzbKKz70tt04BQ=;
+	s=arc-20240116; t=1730883713; c=relaxed/simple;
+	bh=mXow7ZUn6GIXKkRKAIUjDZd48HC7w3sRknCZpKpz6ss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6rUgTRAAha3757ZEsm4KYhWbH0iEaVJUbCyXeLZLyAZpaPzBwSLdBsVKX7Nyib8rIs16WC3oJ66c/kBcrFJ+XuMkDXiK8Agz7A2tFEuc0fwt37zH/y84TMHls3/OiNlb0HI0dBL/j9iGftrDIEhYTRWbFDFqIn28tIKOh+8u9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRoVJiJP; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type:Content-Disposition; b=qWq2aNXl/kI+qVsyPL5OLHJDywmPFJTUWL0sBsglygQS27ifYkRYQ4kKrCG2nCJ7cPLeMaV5UkfBW76peMtgmDN851BGpe0l5V/3lMk7yNDP2tb3Tnx0Q/y9MpM1ivSwMGmNMdm0CbUeCbuIghoUMvVropbM4DvobtXDb4kFsp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=An3E+jjx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRoVJiJP"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5c9c28c1ecbso7739118a12.0
-        for <regressions@lists.linux.dev>; Tue, 05 Nov 2024 23:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730878837; x=1731483637; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gLQaE2WA4hvrT0CDz4HKos+x3d+Wlb0YolEd04HVFZA=;
-        b=bRoVJiJPYIQEInUgWaZr9mjcP/f/oUwlUZwfNjVUmn6S3GaQQwZ90oMsOGJ0DRLfP3
-         PudfkXIPuMFmtyUInhx7Sv07bSELvn8eQg40eRoJFQPxrCc5sREIJu3BzNA48qMRX/Bv
-         v6wPpAFrWQyNq43aN9n/Buhp7dnOkqNNCi3GmaFxcgn2I+NJNE/oGr0gM/6k8Ch+4cTt
-         FjX/dtuKWDyNEXnyLw+RDfO0KEUZ+nrDNSVdLThH3Tb8WGSenzGoHM3MSokqGwHdbHeE
-         LfJYk73kAKI3w/J7LmycXc3Y3PhITxaD8i6OdsSDDFQ7vdbZYnWnWdgBwr+Os2yqrqZK
-         Whbw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="An3E+jjx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730883710;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U184uUEmEVHxLy3eiJH4rpaH/Y8K05dLJL0E29t9XM8=;
+	b=An3E+jjxy4iblNunNbnEFmL660tmYzQY5L+DQxd+QzDpixquw5Dw0MGZzRukrQX89vwb9u
+	iCCO6cCDKRhdp5PhaC+RY1sm8AP0rvv2l/KDbNrySLDpyH1ws4fy9stebGzGqCvYsZj0Ne
+	e0xj9XTyXwU1vI/ujQghtCipgr2dghk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-9KCSY1hhMHaduOx_-EHxvg-1; Wed, 06 Nov 2024 04:01:49 -0500
+X-MC-Unique: 9KCSY1hhMHaduOx_-EHxvg-1
+X-Mimecast-MFC-AGG-ID: 9KCSY1hhMHaduOx_-EHxvg
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37d59ad50f3so2889638f8f.0
+        for <regressions@lists.linux.dev>; Wed, 06 Nov 2024 01:01:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730878837; x=1731483637;
+        d=1e100.net; s=20230601; t=1730883708; x=1731488508;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gLQaE2WA4hvrT0CDz4HKos+x3d+Wlb0YolEd04HVFZA=;
-        b=IAtLsJzl3BSHBltBOVy3oIaiNBGYx5AhjIwRDj9A1Ytpt6fjgGpgeZrDYSSbmV3MhC
-         Benbp4AFC1KS1ZZbo+16g8bSYHdiFKSrpuVD9JX3h2TmiYl9KOGcnceLI6xIUXOq6ha7
-         LFOZl1SOUWbrxB5cL5Rd63D6iz3Q+Q4oK+g1//0+jAPxiKQDgC6myzgfnXhySNh1HVC1
-         N6BcTqwIhHl9sNB/ol7/NdneepqvSSbk8yQfaOYcuRL0fkt2DIhiq4ZlLXj4Qo0VgAoo
-         A7Srw9NVohDkgR0mDaaAdALEzkVTXEUzUNmUhURC3yADZ+thY5yspHK3ea2ME+aiaoL6
-         FnLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxTcT33KbijF1o6UPargLDgzCzhE80ayCJ1H0XWqqYDn8j0GZV1jCtrzlHY7A0LgjbPAt+21sfUmXpeg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw+6he/mFYtUulU5Pppg1Qq/BFbuLdQsI2juMr3ScBpum4TK2PI
-	wBDZZYiadqEEvB4bDE6bSMiwtgVYOIGJy0uzHDZ8As1daNXkDK/R
-X-Google-Smtp-Source: AGHT+IElJg9+yI8f7RqpCIg3pJN1HZV7VkMRbxvF2+K20uhiJiHmX/9sobMGqNWvcKr8NnwzsguvaA==
-X-Received: by 2002:a05:6402:3595:b0:5cb:def2:be0a with SMTP id 4fb4d7f45d1cf-5cbdef2bf78mr24296390a12.21.1730878836861;
-        Tue, 05 Nov 2024 23:40:36 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cee6afe0a2sm2336646a12.60.2024.11.05.23.40.35
+        bh=U184uUEmEVHxLy3eiJH4rpaH/Y8K05dLJL0E29t9XM8=;
+        b=PmbxKwVYUsOVre+tiZ1mLxI4A01+KIIMH5kBKHTlnxh5y05LLjAMiAnuc0vHxEWiGz
+         TunFMDiL1B3sowSIina+fR2Mrib52n4D+Y9nL4ahBdqMNeqfe9p3yYrEzkw6WRCnNmEp
+         DW5iUAvj/mWmXFK7GSrtwKw/3PSvt3EJ8dX78QSGQoJ99n437WRiwoY2uk//at1Lt8q3
+         4bZxPKI7ZkYkWeVBp9qsm0x9TElR05m2RcZooVaFB91HpOzcT+eWX0Pq78Lxobm9EAYO
+         rwGVi+WmiEZVtg2hO/tWqWkC+7usJ0Trye/pXDKpsBamatK4AxQfCGmSge5c8TzwemXZ
+         5nIQ==
+X-Gm-Message-State: AOJu0Yz33kBdhf9r4cpMKYsQbbzec7Adfzz4nNuOlLg3MX/LqHVg/V6D
+	KXDObSYmRW2sjjw5mHxjWfLjvNvOM0RyfqWUgBw9J3XZRhBk16jc+8FFZ2NAXMu2Oaf9sTN5vKV
+	xi1lQoGTevJws2yqdZo96QIxkvs7JrHxnFFANRG+mCg+9YjWqcaLme+u2EBEZ
+X-Received: by 2002:a5d:4bc4:0:b0:37d:528d:b8ad with SMTP id ffacd0b85a97d-380610f830cmr28410328f8f.6.1730883707681;
+        Wed, 06 Nov 2024 01:01:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFZ49tZC1wOVkgSBRcHyhmQ7YoVFZAt/blahmf5oOLYTHAFC7N8ftBAMx8qI7qnTxGICWfrIg==
+X-Received: by 2002:a5d:4bc4:0:b0:37d:528d:b8ad with SMTP id ffacd0b85a97d-380610f830cmr28410298f8f.6.1730883707127;
+        Wed, 06 Nov 2024 01:01:47 -0800 (PST)
+Received: from redhat.com ([2a02:14f:178:e74:5fcf:8a69:659d:f2b2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c116ac7dsm18481730f8f.105.2024.11.06.01.01.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 23:40:36 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 129FEBE2DE0; Wed, 06 Nov 2024 08:40:35 +0100 (CET)
-Date: Wed, 6 Nov 2024 08:40:35 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Mike <user.service2016@gmail.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Sasha Levin <sashal@kernel.org>,
-	Jeremy =?iso-8859-1?Q?Lain=E9?= <jeremy.laine@m4x.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
-Message-ID: <Zysdc3wJy0jAYHzA@eldamar.lan>
-References: <30f4b18f-4b96-403c-a0ab-d81809d9888a@gmail.com>
- <c09d4f5b-0c4b-4f57-8955-28a963cc7e16@leemhuis.info>
- <2024061258-boxy-plaster-7219@gregkh>
- <d5aa11c9-6326-4096-9c29-d9f0d11f83b4@leemhuis.info>
- <ZyMkvAkZXuoTHFtd@eldamar.lan>
- <ab5e25d8-3381-452e-ad13-5d65c0e12306@leemhuis.info>
- <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
- <Zypwz65wRM-FMXte@eldamar.lan>
- <2024110652-blooming-deck-f0d9@gregkh>
+        Wed, 06 Nov 2024 01:01:46 -0800 (PST)
+Date: Wed, 6 Nov 2024 04:01:43 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	virtualization@lists.linux.dev
+Subject: Re: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net] with 6.10.7 and
+ packed virtqueues
+Message-ID: <20241106035955-mutt-send-email-mst@kernel.org>
+References: <CAK8fFZ6qVutPWxquHg7NEvFqYqDP5BwEdO81hqW8iMFxJFuLSQ@mail.gmail.com>
+ <CAK8fFZ5N7EbU=uLbfyeSkQ273NSm+GELWUu1O1OBCpaSwjv6FA@mail.gmail.com>
+ <422f35b3-7834-4df7-bcea-e3be12707aef@leemhuis.info>
+ <1726216954.7439098-1-xuanzhuo@linux.alibaba.com>
+ <565a9204-362d-458d-8b8e-11c5aada7b98@leemhuis.info>
+ <CAK8fFZ6W2ZfwTa4nYz8ORTgb0mOTysg89LEEz7cHGtdqwpsvmA@mail.gmail.com>
+ <20240913103753-mutt-send-email-mst@kernel.org>
+ <CAK8fFZ4ONa_LYsyPN1E6QvUz4uUbzm35yfh6_dHUMDSxzySm3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAK8fFZ4ONa_LYsyPN1E6QvUz4uUbzm35yfh6_dHUMDSxzySm3A@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: t1ftjcmi4cf-1sLFKJg2EP8lbSMOMn3-jPDIhgOxnxo_1730883708
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024110652-blooming-deck-f0d9@gregkh>
 
-Hi Greg,
-
-On Wed, Nov 06, 2024 at 08:26:05AM +0100, Greg KH wrote:
-> On Tue, Nov 05, 2024 at 08:23:59PM +0100, Salvatore Bonaccorso wrote:
-> > Hi Luiz,
-> > 
-> > On Tue, Nov 05, 2024 at 12:53:50PM -0500, Luiz Augusto von Dentz wrote:
-> > > Hi,
-> > > 
-> > > On Tue, Nov 5, 2024 at 12:29â€¯PM Thorsten Leemhuis
-> > > <regressions@leemhuis.info> wrote:
-> > > >
-> > > > On 31.10.24 07:33, Salvatore Bonaccorso wrote:
-> > > > > On Tue, Jun 18, 2024 at 12:30:18PM +0200, Thorsten Leemhuis wrote:
-> > > > >> On 12.06.24 14:04, Greg KH wrote:
-> > > > >>> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
-> > > > >>>> On 03.06.24 22:03, Mike wrote:
-> > > > >>>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
-> > > > >>>>> [...]
-> > > > >>>>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
-> > > > >>>>> time to be
-> > > > >>>>> included in Debian stable, so having a patch for 6.1.x will be much
-> > > > >>>>> appreciated.
-> > > > >>>>> I do not have the time to follow the vanilla (latest) release as is
-> > > > >>>>> likely the case for
-> > > > >>>>> many other Linux users.
-> > > > >>>>>
-> > > > >>>> Still no reaction from the bluetooth developers. Guess they are busy
-> > > > >>>> and/or do not care about 6.1.y. In that case:
-> > > > >>>>
-> > > > >>>> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
-> > > > >>>> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
-> > > > >>>> cause this or if it's missing some per-requisite? If not I wonder if
-> > > > >>>> reverting that patch from 6.1.y might be the best move to resolve this
-> > > > >>>> regression. Mike earlier in
-> > > > >>>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
-> > > > >>>> confirmed that this fixed the problem in tests. Jeremy (who started the
-> > > > >>>> thread and afaics has the same problem) did not reply.
-> > > > >>>
-> > > > >>> How was this reverted?  I get a bunch of conflicts as this commit was
-> > > > >>> added as a dependency of a patch later in the series.
-> > > > >>>
-> > > > >>> So if this wants to be reverted from 6.1.y, can someone send me the
-> > > > >>> revert that has been tested to work?
-> > > > >>
-> > > > >> Mike, can you help out here, as you apparently managed a revert earlier?
-> > > > >> Without you or someone else submitting a revert I fear this won't be
-> > > > >> resolved...
-> > > > >
-> > > > > Trying to reboostrap this, as people running 6.1.112 based kernel
-> > > > > seems still hitting the issue, but have not asked yet if it happens as
-> > > > > well for 6.114.
-> > > > >
-> > > > > https://bugs.debian.org/1086447
-> > > > >
-> > > > > Mike, since I guess you are still as well affected as well, does the
-> > > > > issue trigger on 6.1.114 for you and does reverting changes from
-> > > > > a13f316e90fdb1 still fix the issue? Can you send your
-> > > > > backport/changes?
-> > > >
-> > > > Hmmm, no reply. Is there maybe someone in that bug that could create and
-> > > > test a new revert to finally get this resolved upstream? Seem we
-> > > > otherwise are kinda stuck here.
-> > > 
-> > > Looks like we didn't tag things like 5af1f84ed13a ("Bluetooth:
-> > > hci_sync: Fix UAF on hci_abort_conn_sync") and a239110ee8e0
-> > > ("Bluetooth: hci_sync: always check if connection is alive before
-> > > deleting") that are actually fixes to a13f316e90fdb1.
-> > 
-> > Ah good I see :). None of those were yet applied to the 6.1.y series
-> > were the issue is still presend. Would you be up to provide the needed
-> > changes to the stable team?  That would be very much appreciated for
-> > those affected running the 6.1.y series. 
+On Mon, Sep 16, 2024 at 09:32:38AM +0200, Jaroslav Pulchart wrote:
+> >
+> > On Fri, Sep 13, 2024 at 11:21:11AM +0200, Jaroslav Pulchart wrote:
+> > > So far:
+> > >
+> > > 1/ I was able to "do a reproducer" and hit the "random memory
+> > > corruption" issue with vanila 6.10.10 in our setup in ~28m of uptime
+> > > see attached 6.10.10-1.gdc.el9.x86_64.log.
+> > > 2/ I reverted these commits
+> > > "virtio_net: rx remove premapped failover code":
+> > > defd28aa5acb0fd7c15adc6bc40a8ac277d04dea
+> > > "virtio_net: big mode skip the unmap check":
+> > > a377ae542d8d0a20a3173da3bbba72e045bea7a9
+> > > "virtio_ring: enable premapped mode whatever use_dma_api":
+> > > f9dac92ba9081062a6477ee015bd3b8c5914efc4
+> > > in our next build and so far the environment is stable and not
+> > > crashing under same conditions like the previous crash.
+> >
+> >
+> > Automated backport failed:
+> >
+> > http://lore.kernel.org/all/2024091336-family-daffodil-541d@gregkh
+> >
+> > Since you have done the revert, and actually tested it, feel free
+> > to post, I will ack.
+> >
+> >
 > 
-> We would need backports for these as they do not apply cleanly :(
+> What I did is:
+> git checkout linux-6.10.y
+> git revert defd28aa5acb0fd7c15adc6bc40a8ac277d04dea
+> git revert a377ae542d8d0a20a3173da3bbba72e045bea7a9
+> git revert f9dac92ba9081062a6477ee015bd3b8c5914efc4
+> (no changes nor fixing conflicts was needed)
+> 
+> I'm newbie in posting the changes to upstream, Can you help me with
+> some simple steps on how to do it?
 
-Looks our mails overlapped, yes came to the same conclusion as I tried
-to apply them on top of 6.1.y. I hope Luiz can help here.
+Basically in this case, I think it is enough
+to reply to the revert patches and CC stable.
 
-We have defintively users in Debian affected by this, and two
-confirmed that using a newer kernel which contains naturally those
-fixes do not expose the problem. If we have backports I might be able
-to convice those affected users to test our 6.1.115-1 + patches to
-verify the issue is gone.
 
-Regards,
-Salvatore
+
+> >
+> >
+> > >
+> > > pá 13. 9. 2024 v 10:51 odesílatel Linux regression tracking (Thorsten
+> > > Leemhuis) <regressions@leemhuis.info> napsal:
+> > > >
+> > > > On 13.09.24 10:42, Xuan Zhuo wrote:
+> > > > > On Fri, 13 Sep 2024 10:26:57 +0200, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+> > > > >> [CCing a few people that know more about this stuff than I do]
+> > > > >>
+> > > > >> On 13.09.24 09:50, Jaroslav Pulchart wrote:
+> > > > >>>
+> > > > >>> actually I'm getting random memory corruption related crashes after
+> > > > >>> updating to 6.10.y. My expectation is that it relates to this issue:
+> > > > >>> https://bugzilla.kernel.org/show_bug.cgi?id=219154
+> > > > >>> It looks like it is almost 1 month ago
+> > > > >>
+> > > > >> A lot of developer ignore bugzilla.
+> > > > >>
+> > > > >>> already from the last comment
+> > > > >>> there, However the patches fixing the regression are not reverted from
+> > > > >>> the 6.10.y tree which surprises me.
+> > > > >>>
+> > > > >>> I will try to revert them from our builds and see if it helps to avoid
+> > > > >>> random daily happening crashes.
+> > > > >>
+> > > > >> Not my area of expertise, but to me it sounds like the problem will be
+> > > > >> resolved my "Revert "virtio_net: rx enable premapped mode by default"":
+> > > > >> https://lore.kernel.org/all/20240820071913.68004-1-xuanzhuo@linux.alibaba.com/
+> > > > >
+> > > > > YES. That is merged into net.
+> > > >
+> > > > Well, yes, but TWIMC to avoid confusion, it's already one step further,
+> > > > as mentioned:
+> > > >
+> > > > >> That set just landed in mainline.
+> > > >
+> > > > See
+> > > > https://git.kernel.org/torvalds/c/48aa361c5db0b380c2b75c24984c0d3e7c1e8c09
+> > > > or
+> > > > https://git.kernel.org/torvalds/c/111fc9f517cb293c4213673733b980123c3b0209
+> > > >
+> > > > Ciao, Thorsten
+> > >
+> > >
+> > >
+> > > --
+> > > Jaroslav Pulchart
+> > > Sr. Principal SW Engineer
+> > > GoodData
+> >
+> > > [ 2224.743780] Oops: stack segment: 0000 [#1] PREEMPT SMP NOPTI
+> > > [ 2224.744605] CPU: 1 PID: 52 Comm: kswapd0 Tainted: G            E      6.10.10-1.gdc.el9.x86_64 #1
+> > > [ 2224.745375] Hardware name: RDO OpenStack Compute/RHEL, BIOS edk2-20240524-1.el9 05/24/2024
+> > > [ 2224.746094] RIP: 0010:refill_obj_stock+0x40/0x170
+> > > [ 2224.746629] Code: 5c fa 65 48 8b 05 c8 c4 bd 77 4c 8d b8 60 12 03 00 49 8b 47 10 48 39 f8 74 5d 4c 89 ff e8 78 ed ff ff 49 89 c6 e8 f0 34 d7 ff <48> 8b 45 00 a8 03 0f 85 ca 00 00 00 65 48 ff 00 e8 ab 74 d7 ff 49
+> > > [ 2224.748241] RSP: 0018:ffffa5024010ce10 EFLAGS: 00010002
+> > > [ 2224.748803] RAX: 0000000000000002 RBX: 00000000000000c8 RCX: 00002d82d4038240
+> > > [ 2224.749449] RDX: ffff977b00aa9a00 RSI: 0000000000000001 RDI: ffff977b00aa9a00
+> > > [ 2224.750082] RBP: a91ef76620614d85 R08: 0000000000000001 R09: ffffffff881b9077
+> > > [ 2224.750720] R10: 0000000000040000 R11: 0000000000000000 R12: 0000000000000282
+> > > [ 2224.751359] R13: ffff977b00235c00 R14: ffff977baa14e280 R15: ffff977f6bd31260
+> > > [ 2224.752183] FS:  0000000000000000(0000) GS:ffff977f6bd00000(0000) knlGS:0000000000000000
+> > > [ 2224.752952] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [ 2224.753593] CR2: 00007f2d7e5dc000 CR3: 0000000222340005 CR4: 0000000000770ef0
+> > > [ 2224.754271] PKRU: 55555554
+> > > [ 2224.754697] Call Trace:
+> > > [ 2224.755112]  <IRQ>
+> > > [ 2224.755509]  ? die+0x33/0x90
+> > > [ 2224.755949]  ? do_trap+0xd9/0x100
+> > > [ 2224.756418]  ? do_error_trap+0x65/0x80
+> > > [ 2224.756903]  ? exc_stack_segment+0x35/0x50
+> > > [ 2224.757417]  ? asm_exc_stack_segment+0x22/0x30
+> > > [ 2224.757999]  ? rcu_do_batch+0x1a7/0x530
+> > > [ 2224.758549]  ? refill_obj_stock+0x40/0x170
+> > > [ 2224.759125]  __memcg_slab_free_hook+0xb0/0x140
+> > > [ 2224.759723]  kmem_cache_free+0x3b2/0x3e0
+> > > [ 2224.760292]  ? rcu_do_batch+0x1a7/0x530
+> > > [ 2224.760845]  rcu_do_batch+0x1a7/0x530
+> > > [ 2224.761399]  ? rcu_do_batch+0x13b/0x530
+> > > [ 2224.761950]  rcu_core+0x256/0x420
+> > > [ 2224.762475]  ? ktime_get+0x34/0xc0
+> > > [ 2224.763010]  handle_softirqs+0xd3/0x2b0
+> > > [ 2224.763573]  __irq_exit_rcu+0x9b/0xc0
+> > > [ 2224.764118]  sysvec_apic_timer_interrupt+0x71/0x90
+> > > [ 2224.764738]  </IRQ>
+> > > [ 2224.765159]  <TASK>
+> > > [ 2224.765594]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> > > [ 2224.766163] RIP: 0010:mem_cgroup_from_slab_obj+0x51/0x130
+> > > [ 2224.766750] Code: 01 c8 48 8b 35 58 9d 28 01 48 c1 e8 0c 48 c1 e0 06 48 01 f0 48 8b 78 08 48 89 c1 40 f6 c7 01 0f 85 cd 00 00 00 66 90 8b 41 30 <25> 00 10 00 f0 3d 00 00 00 f0 74 45 48 8b 51 38 f6 c2 01 75 15 48
+> > > [ 2224.768355] RSP: 0018:ffffa502403cfa70 EFLAGS: 00000202
+> > > [ 2224.768994] RAX: 00000000ffffefff RBX: ffff977b9fbb7000 RCX: ffffc69214c0b500
+> > > [ 2224.769747] RDX: ffff977f302d6a40 RSI: ffffc69200000000 RDI: ffffc69214c0b501
+> > > [ 2224.770504] RBP: ffff977f302d6a40 R08: ffff977f300e58c8 R09: ffff977f300e58c8
+> > > [ 2224.771246] R10: 0000000000000000 R11: ffffa502403cf900 R12: ffff977b9fbb7498
+> > > [ 2224.771974] R13: 0000000000000000 R14: ffff977b9fbb7070 R15: 0000000000000000
+> > > [ 2224.772678]  list_lru_add_obj+0x6b/0xa0
+> > > [ 2224.773158]  iput+0x1f1/0x210
+> > > [ 2224.773596]  __dentry_kill+0x71/0x170
+> > > [ 2224.774055]  shrink_dentry_list+0x67/0xe0
+> > > [ 2224.774542]  prune_dcache_sb+0x54/0x80
+> > > [ 2224.774996]  super_cache_scan+0x120/0x1c0
+> > > [ 2224.775470]  do_shrink_slab+0x134/0x350
+> > > [ 2224.775916]  shrink_slab_memcg+0x199/0x2c0
+> > > [ 2224.776387]  shrink_one+0x118/0x1b0
+> > > [ 2224.776845]  shrink_many+0x127/0x2a0
+> > > [ 2224.777314]  shrink_node+0x3d7/0x430
+> > > [ 2224.777765]  ? pick_next_task+0x5a/0xae0
+> > > [ 2224.778250]  balance_pgdat+0x29c/0x730
+> > > [ 2224.778704]  ? __try_to_del_timer_sync+0x62/0xa0
+> > > [ 2224.779227]  ? __pfx_kswapd+0x10/0x10
+> > > [ 2224.779674]  kswapd+0xf7/0x180
+> > > [ 2224.780082]  kthread+0xcc/0x100
+> > > [ 2224.780483]  ? __pfx_kthread+0x10/0x10
+> > > [ 2224.780887]  ret_from_fork+0x2d/0x50
+> > > [ 2224.781297]  ? __pfx_kthread+0x10/0x10
+> > > [ 2224.781703]  ret_from_fork_asm+0x1a/0x30
+> > > [ 2224.782118]  </TASK>
+> > > [ 2224.782451] Modules linked in: udp_diag(E) tcp_diag(E) inet_diag(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) binfmt_misc(E) zram(E) tls(E) isofs(E) intel_rapl_msr(E) intel_rapl_common(E) kvm_amd(E) ccp(E) kvm(E) virtio_gpu(E) virtio_net(E) i2c_i801(E) i2c_smbus(E) net_failover(E) failover(E) dimlib(E) virtio_dma_buf(E) virtio_balloon(E) vfat(E) fat(E) fuse(E) ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sg(E) ahci(E) libahci(E) libata(E) crct10dif_pclmul(E) crc32_pclmul(E) polyval_clmulni(E) polyval_generic(E) ghash_clmulni_intel(E) sha512_ssse3(E) virtio_blk(E) serio_raw(E) btrfs(E) xor(E) zstd_compress(E) raid6_pq(E) libcrc32c(E) crc32c_intel(E) dm_mirror(E) dm_region_hash(E) dm_log(E) dm_mod(E)
+> > > [ 2224.782487] Unloaded tainted modules: amd_atl(E):2 edac_mce_amd(E):1 padlock_aes(E):3
+> > > [ 2224.787698] ---[ end trace 0000000000000000 ]---
+> > > [ 2224.788286] RIP: 0010:refill_obj_stock+0x40/0x170
+> > > [ 2224.788860] Code: 5c fa 65 48 8b 05 c8 c4 bd 77 4c 8d b8 60 12 03 00 49 8b 47 10 48 39 f8 74 5d 4c 89 ff e8 78 ed ff ff 49 89 c6 e8 f0 34 d7 ff <48> 8b 45 00 a8 03 0f 85 ca 00 00 00 65 48 ff 00 e8 ab 74 d7 ff 49
+> > > [ 2224.790600] RSP: 0018:ffffa5024010ce10 EFLAGS: 00010002
+> > > [ 2224.791230] RAX: 0000000000000002 RBX: 00000000000000c8 RCX: 00002d82d4038240
+> > > [ 2224.791924] RDX: ffff977b00aa9a00 RSI: 0000000000000001 RDI: ffff977b00aa9a00
+> > > [ 2224.792610] RBP: a91ef76620614d85 R08: 0000000000000001 R09: ffffffff881b9077
+> > > [ 2224.793303] R10: 0000000000040000 R11: 0000000000000000 R12: 0000000000000282
+> > > [ 2224.793985] R13: ffff977b00235c00 R14: ffff977baa14e280 R15: ffff977f6bd31260
+> > > [ 2224.794681] FS:  0000000000000000(0000) GS:ffff977f6bd00000(0000) knlGS:0000000000000000
+> > > [ 2224.795439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [ 2224.796117] CR2: 00007f2d7e5dc000 CR3: 0000000222340005 CR4: 0000000000770ef0
+> > > [ 2224.796887] PKRU: 55555554
+> > > [ 2224.797384] Kernel panic - not syncing: Fatal exception in interrupt
+> > > [ 2224.798304] Kernel Offset: 0x7000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> > > [ 2224.799190] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+> > >
+> >
+
