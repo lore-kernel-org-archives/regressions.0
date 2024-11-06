@@ -1,75 +1,118 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE3E1DE4EF
-	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 17:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A120966A
+	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 19:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730913205; cv=none; b=kZ3qt71xiYt/18KneOR+LtNt9mLd22ZNO0URrzW879ZAnuTR5lROEzT8V5D3PEE8BFNXPPoTUS1sbKwqpsCKDBoq0yROpzw1uVmUZLR7cH0sRn0usEsLv4G97WoGJsjWXcTFuKmyKG5aJMjw4+uO4YmiIn7kmQKE3stmfSijrCE=
+	t=1730921284; cv=none; b=ut6XXJNY4tyipfS3Z3lP8jLgrv3RXDppPFpIAbR9ZZOAnxYk9fRD4VgLtKnCMt+bZGRTbabqkIz2Mibcr5VNUiLXY23AgLWu77KzGPBbj8yMxpZLYVbPxTEiwLWRSKgbUG52/BGbHKrm55oi1EZqAeF8pI6Zzi+S0BqSJOchAQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730913205; c=relaxed/simple;
-	bh=GeT/ouLOVoC2s9nj/5tQta0zJnVlEmaEpYa8KKsfByQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GekF/8rZBEz7+tq3+d7KRvH/JDjYl3Bvug3JJeSzYWNwkQb5Pb7eN+zVLy8VNaXfpCSaUDZe2R6YbPMrxSmnG4/m3c9LmejsfqgblUqwy0IdaozmOrdb8tBWvY2MBz0me91atHOiaQtwwb9LF6UBPONjgojLUyWP2DVjUowtaJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuY8kTu3; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730921284; c=relaxed/simple;
+	bh=tlM/sZHStcrCKHsoFfOWzATgeMBo+hmNY87ZzsaLpJk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=JI5Imp2ulHhwJsefhUpLMYfZp7XvPQJp1jnZCwfEp70ToJKCwmTvkegj6/zLXdpWBRGrDCI9zfKsFWBDsCozYLqS1390AmJ7PJdFENqGjhx4a7Ti7M+a6XrnZ0B3EbSUJ5Bj6kCL8JLZbXU1wohWOYO09NDhnYaVZ52b641SUs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net; spf=pass smtp.mailfrom=alfmarius.net; dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b=I8jIXwmS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H/d9Bv8s; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alfmarius.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuY8kTu3"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9ed49ec0f1so2654566b.1
-        for <regressions@lists.linux.dev>; Wed, 06 Nov 2024 09:13:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730913202; x=1731518002; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+0NV766Seivxun/LuESlqO5hEIVKRYjpFjWMZJ1o3U=;
-        b=LuY8kTu3L/X52bggb+sutj1yw1a1Z16eMidAHw6fm5aeXqKUZ6VQ9KDGry2K0x8OL4
-         v8FejiPV++c/66dUTGBYQYzmRChP34y0FTMue22466GCP/77gDpxrThlWOmHVI/7Dg5L
-         Pr3bj3JOMQGD0huvcn/lbjlhphoSdiBXg2vtf/FCpmwyWGcbTMUs3Chx9k08oFHaPflN
-         oCXnD252mXURoM8v2zLFcw7KjGzi9m2N+wksBhAxNBqreT3HkG37I6ZGi5A3yEh7CDNf
-         5xPJRxVS+Ch37sZMzI64e3rKVf+J5j+8MX7Zj/ApJW8fnx0+XRuhFMfRmhz8KvH8J4yn
-         8wAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730913202; x=1731518002;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0+0NV766Seivxun/LuESlqO5hEIVKRYjpFjWMZJ1o3U=;
-        b=E2IUlH3W3pJdNvIsg13sIOJxQryjPJLMdW1PKi29P8y8AiFcTYmQbupaU58ZP2MXVG
-         QUedMiEi46D0NNyxQc4HgNTa/WWbIeWECoxwUsJq7BhscEO0UlxeCzDcSYVU/XajkQkB
-         Sne6qu7dhIY7WNg5h5ysf6HqrkHVfLkf/EQzQLX7BmTkt6DkBPi52ujcBaNQ+WnFwB0K
-         GS7GrafBid4fUM2FgSKioGIYuJNPWZOafJHDwi7o6+tNiIDu/cNBYrM8o9HIeljbiRU8
-         pt+2I40NQyfy/b8p/YNA8bSoli11MByqVTX1JCvUOXVn6ZbQa4NqScphPe+IDXKeCSUt
-         EFfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUqos/dViXPSM6RMgZNeMCoJJQ2/9Ziyt0l6Yu86N4m4c9pO/9pNyeUEDq/RS4ukIGG9d8wzTvrVvUkQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YztW6pZIS9zn/mfjfxCHGF2M9+FXCkYwMqxDADNVUCF2A0WeP6L
-	K/jEJTWONIG5uVzzlMgjfnpqfXf9Y7TdFh67JRejhvJMSo71mssUTeE1Bhg+/1Dzjb5rcgNgUO3
-	MYY7TVnzDs7Cg0VVbFMpm54oO410=
-X-Google-Smtp-Source: AGHT+IFKdlzQTW4jQ3GFsSu1Zw5ZOVnsPZS7hjhlQmQw63nhSPZ9mGpqdPOZSixgrowSISMuOt+RSwI65pvIrNu8j9g=
-X-Received: by 2002:a17:907:94cb:b0:a99:e59a:1931 with SMTP id
- a640c23a62f3a-a9e3a7f0618mr2972355066b.53.1730913201695; Wed, 06 Nov 2024
- 09:13:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b="I8jIXwmS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H/d9Bv8s"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 8B4BE254019A;
+	Wed,  6 Nov 2024 14:28:01 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Wed, 06 Nov 2024 14:28:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alfmarius.net;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
+	 t=1730921281; x=1731007681; bh=BaEaFKaTnG703b9BvW3lVoDkejMPTTOS
+	KfcihRJehvY=; b=I8jIXwmST4yh5uc1VzhfbX5ScuZooT75pgazQ2nZ1CQ01lng
+	7FIoqt9aHJN9A9ym9CTHJhhEK5lchSFC7IAn23R7RzV3ZHBIhL6WYmM9CowVyBhv
+	OsyAOquSydHrZGrAIj09MzYzcOrGOTnUGMWCRhr7J3115TJuZ7e/EeQJnWf4FcK0
+	UKl9YTYkK03WHyvr401Fs3cmTf6l1zQY5jpXuBuoJiyVG6JbTsZAuxyA5GgjWFB6
+	9ugmhoV21mBepDd2uMDf13ZBW961aTuCbgUzJatckLtlEU9vJz7RPYM9SDzoBxgM
+	VR1Hsirmsir9+cuQx6Vrg5iMNTbsX0zfER5Q2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730921281; x=
+	1731007681; bh=BaEaFKaTnG703b9BvW3lVoDkejMPTTOSKfcihRJehvY=; b=H
+	/d9Bv8skKtcyi4DpqIUTzDqJ1A3HnFxid6My2EDjBoBQAc32oLwsGgXwQ1cqN7NA
+	7erHq+JVLfa99xrdeNtrsHKnAQBqbND4ZUdA9KHOWzrKaM48PDNBJtkeE76acntE
+	hCOuBPqf/+OJh8fqGrsjczklCqD4jwPqaDKt9nWw42AX4yf/PLGsxGuhkigVmDEk
+	bMwHa6k+wEBoTU31YUA2HCvNCYP/rganO+74R5ZUX8cB3FYZ/NT7pyS4Ieg+AqsQ
+	HfcGEzPd2ryKadgBmOTsgIFHo/Tx7ucRQGkwZhMnzGG7KjrOtCPJk8mT1wGpoPXc
+	Ie4xihFt6LwMmGBbN/9Vg==
+X-ME-Sender: <xms:QcMrZxgOleHOuu3Df8xUa9fL6gsiRM1i5UunMsmSDRnNKVmWsoLKrw>
+    <xme:QcMrZ2CsNg3LMooFydswJQCgBTuEKTx4RV9hc_uxk-LGEQPMEOXZdI5SK-9vU8h-B
+    p9bqwHXS3pJfg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddvgdduvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehlfhcuofgrrhhiuhhsfdcuoehpohhsthesrghlfhhmrghrihhush
+    drnhgvtheqnecuggftrfgrthhtvghrnhepudehhfetgeejkeejhfehvdfftdehgfduteeg
+    hefgffehteeggfetffelvdejfffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepphhoshhtsegrlhhfmhgrrhhiuhhsrdhnvghtpdhnsggprhgt
+    phhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrghthihivghvse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhvrghloheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprh
+    gtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhkvghrnhgvlhdrohhr
+    gh
+X-ME-Proxy: <xmx:QcMrZxH9Bd8QWgy4QEHsZuoSTPjcnG0vczHLzs2QR7ztlV1c_j7_LQ>
+    <xmx:QcMrZ2RyeaWoJ-Rqz23OJLWC1Sco_hBUQ2AieJxac4ZQSzGhmqYNVQ>
+    <xmx:QcMrZ-xQ7_mby2zfYe63c5HVMyQoQ8VlLq1ye3618Vv6cfxrWPNWuw>
+    <xmx:QcMrZ84YEDAuQdWkHm90yDFTJJbG40FiAkh1I_27iRdHSP_3W6s8aA>
+    <xmx:QcMrZy-K6Z6gaPnmU8yJc_OBWPKYTRGZELaPfMSf9tQjX0n9eEGOB0Bc>
+Feedback-ID: ib5844192:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 25D4C18A0068; Wed,  6 Nov 2024 14:28:01 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com> <87wmhg61yp.fsf@kernel.org>
-In-Reply-To: <87wmhg61yp.fsf@kernel.org>
-From: Andrey Batyiev <batyiev@gmail.com>
-Date: Wed, 6 Nov 2024 19:13:17 +0200
-Message-ID: <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
-Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
- and 6.11.5 (probably 6.11rc)
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Alf Marius <post@alfmarius.net>, regressions@lists.linux.dev, 
-	linux-wireless@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 06 Nov 2024 20:27:40 +0100
+From: "Alf Marius" <post@alfmarius.net>
+To: "Andrey Batyiev" <batyiev@gmail.com>, "Kalle Valo" <kvalo@kernel.org>
+Cc: regressions@lists.linux.dev, linux-wireless@vger.kernel.org
+Message-Id: <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
+In-Reply-To: 
+ <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
+References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
+ <87wmhg61yp.fsf@kernel.org>
+ <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
+Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10 and 6.11.5
+ (probably 6.11rc)
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hello everyone,
+Good evening folks :)
 
-I've only tested it on my 3945. I have no equipment to test it on 4965, sorry.
+[Andrey Batyiev]
+> Hello everyone,
+> I've only tested it on my 3945. I have no equipment to test it on 4965, sorry.
 
-Regards,
-   Andrii
+Yes the commit message says "Tested on iwl3945 only."
+..which I did find a bit strange. Is it normal to deploy code to the mainline
+that is untested? Why was this also applied to 4965?
+
+I'm just asking questions here, as I have no direct knownledge of C or
+kernel driver programming. I've 20 yrs of web-dev experience though
+and know from experience that shipping untested code is a bad idea.
+
+Anyway, not trying to point fingers here! Just curious to find those who
+wrote the actual code, maybe get some info on why this was added
+and if it is really important. If not, maybe a revert is in order
+
+Regarding testing, I obviously have a laptop with the 4965 card and
+I'm more than willing to test stuff out if needed.
+
+-Alf
+-- 
+"The generation of random numbers is too important to be left to chance."
