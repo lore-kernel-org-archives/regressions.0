@@ -1,125 +1,75 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D479204F6A;
-	Wed,  6 Nov 2024 16:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730909287; cv=pass; b=inTTNKksjfo0R+izgczVnRILTwI8UEtE6pKSq3dKIqx5EcgezbCUjtPsVManzNCEMcKqEBWAQ1td1c2iMwaPk8z4v3rwd0pB50XOnmC2sSusQ9P48XApVImFEEU3VhMHmGLl18GlVques7JRPvx88DySBXUfk7LcmJrLh/UEJqY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730909287; c=relaxed/simple;
-	bh=e8ncEEuW7cFbLsRNpBTLTILlUQ0m+ULp/aJ3ntDFyTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sc4aZ4AWp6bKyGxXnwTAN3uZc4jSAvwlSS08VBnJfNR1wHSvkj81YX3R2COxizhBnci4BMFKYOwY8cguDDmoygLRKcHV4wXXYOIke9eoSk4A3FWfTfv8tuemvgWHMsNkxN2NSERqkmDl8OZqHnkwgus/Cpjx8sp/5yOeRyxDf20=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=fkPvdCYb; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE3E1DE4EF
+	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 17:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730913205; cv=none; b=kZ3qt71xiYt/18KneOR+LtNt9mLd22ZNO0URrzW879ZAnuTR5lROEzT8V5D3PEE8BFNXPPoTUS1sbKwqpsCKDBoq0yROpzw1uVmUZLR7cH0sRn0usEsLv4G97WoGJsjWXcTFuKmyKG5aJMjw4+uO4YmiIn7kmQKE3stmfSijrCE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730913205; c=relaxed/simple;
+	bh=GeT/ouLOVoC2s9nj/5tQta0zJnVlEmaEpYa8KKsfByQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GekF/8rZBEz7+tq3+d7KRvH/JDjYl3Bvug3JJeSzYWNwkQb5Pb7eN+zVLy8VNaXfpCSaUDZe2R6YbPMrxSmnG4/m3c9LmejsfqgblUqwy0IdaozmOrdb8tBWvY2MBz0me91atHOiaQtwwb9LF6UBPONjgojLUyWP2DVjUowtaJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuY8kTu3; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="fkPvdCYb"
-ARC-Seal: i=1; a=rsa-sha256; t=1730909280; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EYaNphjKrf1ONSpkisQ1saF8xG7z3ivaqKEAKMptWBeUcRtlQ9mT1sK9JRT3ssrjlSkzhtfVuSprQ/gGY0VzoZ8udlpIqUPnu9lo6SL64EqVRyTWM1Cio3cZp86t8Ub/rtL8AzCalELmLpnOIJnaP4ky2veMcoa5luMx269AL8c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1730909280; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ej7PlNROi5y6rJY01LVfYSZ2mQDOu9Gm4uuZ4iC9/7k=; 
-	b=PX9JtJNoFt5/Eol3PKh1/rQ6j5dwhOM/HusW2krj8VUWDxnC0AJ1C6mBZ9GEewrF5MWTtCVojriHCcslUC1K/hPO9HijxxxX+H2VSv+4IjlF54dOF7Zk6Txj5SUqMmWnaiMnzNLbF/1Zc2ETXsF0TW8+ej2qua3tYvJo0Rmk/UE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
-	dmarc=pass header.from=<laura.nao@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1730909280;
-	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=ej7PlNROi5y6rJY01LVfYSZ2mQDOu9Gm4uuZ4iC9/7k=;
-	b=fkPvdCYbLBXCOuPAgBTdLokBGQLdjpPaqRWnAJjGlDi5ymo4UKDWfkyO+VpNGLdm
-	bB4P8Lm8i51f38GHTB4pPd1cE3+Pc0uSTJOVvwNsmO33uugS3Zei+5EI/kXq//Gl+aT
-	gw58eG9n7uewHWoF7tmMy0pedislf4Hik5RmfK9c=
-Received: by mx.zohomail.com with SMTPS id 1730909259613680.21413674386;
-	Wed, 6 Nov 2024 08:07:39 -0800 (PST)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com,
-	bpf@vger.kernel.org,
-	chrome-platform@lists.linux.dev
-Subject: [REGRESSION] module BTF validation failure (Error -22) on next
-Date: Wed,  6 Nov 2024 17:08:20 +0100
-Message-Id: <20241106160820.259829-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuY8kTu3"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9ed49ec0f1so2654566b.1
+        for <regressions@lists.linux.dev>; Wed, 06 Nov 2024 09:13:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730913202; x=1731518002; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0+0NV766Seivxun/LuESlqO5hEIVKRYjpFjWMZJ1o3U=;
+        b=LuY8kTu3L/X52bggb+sutj1yw1a1Z16eMidAHw6fm5aeXqKUZ6VQ9KDGry2K0x8OL4
+         v8FejiPV++c/66dUTGBYQYzmRChP34y0FTMue22466GCP/77gDpxrThlWOmHVI/7Dg5L
+         Pr3bj3JOMQGD0huvcn/lbjlhphoSdiBXg2vtf/FCpmwyWGcbTMUs3Chx9k08oFHaPflN
+         oCXnD252mXURoM8v2zLFcw7KjGzi9m2N+wksBhAxNBqreT3HkG37I6ZGi5A3yEh7CDNf
+         5xPJRxVS+Ch37sZMzI64e3rKVf+J5j+8MX7Zj/ApJW8fnx0+XRuhFMfRmhz8KvH8J4yn
+         8wAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730913202; x=1731518002;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0+0NV766Seivxun/LuESlqO5hEIVKRYjpFjWMZJ1o3U=;
+        b=E2IUlH3W3pJdNvIsg13sIOJxQryjPJLMdW1PKi29P8y8AiFcTYmQbupaU58ZP2MXVG
+         QUedMiEi46D0NNyxQc4HgNTa/WWbIeWECoxwUsJq7BhscEO0UlxeCzDcSYVU/XajkQkB
+         Sne6qu7dhIY7WNg5h5ysf6HqrkHVfLkf/EQzQLX7BmTkt6DkBPi52ujcBaNQ+WnFwB0K
+         GS7GrafBid4fUM2FgSKioGIYuJNPWZOafJHDwi7o6+tNiIDu/cNBYrM8o9HIeljbiRU8
+         pt+2I40NQyfy/b8p/YNA8bSoli11MByqVTX1JCvUOXVn6ZbQa4NqScphPe+IDXKeCSUt
+         EFfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUqos/dViXPSM6RMgZNeMCoJJQ2/9Ziyt0l6Yu86N4m4c9pO/9pNyeUEDq/RS4ukIGG9d8wzTvrVvUkQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YztW6pZIS9zn/mfjfxCHGF2M9+FXCkYwMqxDADNVUCF2A0WeP6L
+	K/jEJTWONIG5uVzzlMgjfnpqfXf9Y7TdFh67JRejhvJMSo71mssUTeE1Bhg+/1Dzjb5rcgNgUO3
+	MYY7TVnzDs7Cg0VVbFMpm54oO410=
+X-Google-Smtp-Source: AGHT+IFKdlzQTW4jQ3GFsSu1Zw5ZOVnsPZS7hjhlQmQw63nhSPZ9mGpqdPOZSixgrowSISMuOt+RSwI65pvIrNu8j9g=
+X-Received: by 2002:a17:907:94cb:b0:a99:e59a:1931 with SMTP id
+ a640c23a62f3a-a9e3a7f0618mr2972355066b.53.1730913201695; Wed, 06 Nov 2024
+ 09:13:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com> <87wmhg61yp.fsf@kernel.org>
+In-Reply-To: <87wmhg61yp.fsf@kernel.org>
+From: Andrey Batyiev <batyiev@gmail.com>
+Date: Wed, 6 Nov 2024 19:13:17 +0200
+Message-ID: <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
+Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
+ and 6.11.5 (probably 6.11rc)
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Alf Marius <post@alfmarius.net>, regressions@lists.linux.dev, 
+	linux-wireless@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hello everyone,
 
-KernelCI has detected a module loading regression affecting all AMD and 
-Intel Chromebooks in the Collabora LAVA lab, occurring between 
-next-20241024 and next-20241025.
+I've only tested it on my 3945. I have no equipment to test it on 4965, sorry.
 
-The logs indicate a failure in BTF module validation, preventing all 
-modules from loading correctly (with CONFIG_MODULE_ALLOW_BTF_MISMATCH 
-unset). The example below is from an AMD Chromebook (HP 14b na0052xx), 
-with similar errors observed on other AMD and Intel devices:
-
-[    5.284373] failed to validate module [cros_kbd_led_backlight] BTF: -22
-[    5.291392] failed to validate module [i2c_hid] BTF: -22
-[    5.293958] failed to validate module [chromeos_pstore] BTF: -22
-[    5.302832] failed to validate module [coreboot_table] BTF: -22
-[    5.309175] failed to validate module [raydium_i2c_ts] BTF: -22
-[    5.309264] failed to validate module [i2c_cros_ec_tunnel] BTF: -22
-[    5.322158] failed to validate module [typec] BTF: -22
-[    5.327554] failed to validate module [snd_timer] BTF: -22
-[    5.327573] failed to validate module [cros_usbpd_notify] BTF: -22
-[    5.339272] failed to validate module [elan_i2c] BTF: -22
-[    5.345821] failed to validate module [industrialio] BTF: -22
-[    5.423113] failed to validate module [cfg80211] BTF: -22
-[    5.443074] failed to validate module [cros_ec_dev] BTF: -22
-[    5.448857] failed to validate module [snd_pci_acp3x] BTF: -22
-[    5.454736] failed to validate module [cros_kbd_led_backlight] BTF: -22
-[    5.461458] failed to validate module [regmap_i2c] BTF: -22
-[    5.470228] failed to validate module [i2c_piix4] BTF: -22
-[    5.491123] failed to validate module [i2c_hid] BTF: -22
-[    5.491226] failed to validate module [chromeos_pstore] BTF: -22
-[    5.496519] failed to validate module [coreboot_table] BTF: -22
-[    5.502632] failed to validate module [snd_timer] BTF: -22
-[    5.538916] failed to validate module [gsmi] BTF: -22
-[    5.604971] failed to validate module [mii] BTF: -22
-[    5.604971] failed to validate module [videobuf2_common] BTF: -22
-[    5.604972] failed to validate module [sp5100_tco] BTF: -22
-[    5.616068] failed to validate module [snd_soc_acpi] BTF: -22
-[    5.680553] failed to validate module [bluetooth] BTF: -22
-[    5.749320] failed to validate module [chromeos_pstore] BTF: -22
-[    5.755440] failed to validate module [mii] BTF: -22
-[    5.760522] failed to validate module [snd_timer] BTF: -22
-[    5.783549] failed to validate module [bluetooth] BTF: -22
-[    5.841561] failed to validate module [mii] BTF: -22
-[    5.846699] failed to validate module [snd_timer] BTF: -22
-[    5.892444] failed to validate module [mii] BTF: -22
-[    5.897708] failed to validate module [snd_timer] BTF: -22
-[    5.945507] failed to validate module [snd_timer] BTF: -22
-
-The full kernel log is available on [1]. The config used is available on
-[2] and the kernel/modules have been built using gcc-12.
-
-The issue is still present on next-20241105.
-
-I'm sending this report to track the regression while a fix is
-identified. The culprit commit hasn't been pinpointed yet, I'll report
-back once it's identified.
-
-Any feedback or suggestion for additional debugging steps would be greatly 
-appreciated.
-
-Best,
-
-Laura
-
-[1] https://pastebin.com/raw/dtvzBkxh
-[2] https://pastebin.com/raw/a1MGi3wH
-
-#regzbot introduced: next-20241024..next-20241025
-
+Regards,
+   Andrii
