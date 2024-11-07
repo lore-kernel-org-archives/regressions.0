@@ -1,73 +1,99 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE077126C01
-	for <regressions@lists.linux.dev>; Thu,  7 Nov 2024 09:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57501E25ED;
+	Thu,  7 Nov 2024 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730971188; cv=none; b=ZD6FSaHIyt+AjpT8FYCbXvuYHPCyc76DUF45RdypksS8VdiHo8cX7NLgyrU2fvIs0vwWlHadQisb3N50RJzwpdCeWiPWmOz7yAEWDmiPOd1K/1UI6N2wU5hxNf/c2KaoMyulla7Zc/TpDKfAbz7Y3U2mm1FtWO/1kJMedV1U0sw=
+	t=1730973884; cv=none; b=lUa/nu0sGcvBFG0SyDPkGyZ9hewNMEvv3NSJdQQniJsRBD37bQNiMK2wMHrMVd5V4q6RwxrRom5QW1QsGIjM+DGWDD3tzSUAwvfXovOZCCDYam0sA4y47jj4L5rpuHqD1DAU4FP6pBqhnmZo92lm81T+HbTcr7HtVMvWh/pjCN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730971188; c=relaxed/simple;
-	bh=awhM6A3tduh3ZVIgvE+I5uR151yUQOKwJ8otDO9ieFc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=jjbcjbjsWLH5NVjFRRMOhwk1lC+vhg146MGmYOSUBqiaZwMcHJr74o1ppWn2SJ3Xk+mjYYbfXRVVcZHxv/yxl9veCXrPy3TohJa9L2QLO5RDsr9BiSSADyT1z97GT1HuTl57DQb80BeykCmbb4gEkD8VI1eGa+VGuCq823zhu/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SeIUiBH8; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1730973884; c=relaxed/simple;
+	bh=Rom/ildpqgeytyPHNoc4quEJo8BKKLGv+Rp6ums0tbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kv+Yp5RAgrTsEHLSM3n3CNQYmJL9tSPcqgyO8qw12z3/y17qdQ0EvsfxtMHU7K/tbofx7aQDMWvwngEdZko/AMUMIudCHC4bYDFZVlsHvXUWeYEp1oue4IMOXAPOmYlG0fW9tSiFikmqbQ6rzaos94vYYER1amNqLZkt/j2P7L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEKIQ+yq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SeIUiBH8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=awhM6A3tduh3ZVIgvE+I5uR151yUQOKwJ8otDO9ieFc=; t=1730971186;
-	x=1731403186; b=SeIUiBH8NgSFJ8F2lm4I/ZnGYs7cYjK8PQK60Zn1jxuL/b01/VzWRYv5Sv7/C
-	wP3KykRUB2AS4RQ4JbNXEmDnsHtpj4nE1ovvNvLy7NE3QoFAWlwK5eXk+rcEB7FeLLtoEBH4gbz9Y
-	mQDYr0+ZozTMTOgGDEdffyzKsvfu11bygvD1DB/0ZssK2yWj2Px4XffiT/J1rc+pGE5cEpXiuBnh1
-	utI5+yPQVo0tTlRPdsQ+bg7ajqboiiOKWi9O+3F+JIfjOqeMyXOSpH5t7PClJPnrMs9WkhlBwrv1c
-	V+SF2uuAmM1kxqDHc8+WphSqZ89Ht3V6onQwdYZtHvCDa2W1Gg==;
-Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1t8yg5-0006nt-17; Thu, 07 Nov 2024 10:19:45 +0100
-Message-ID: <fd6cf3d1-01b0-4338-ae96-289ef0ad967d@leemhuis.info>
-Date: Thu, 7 Nov 2024 10:19:44 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEKIQ+yq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 297C0C4CECC;
+	Thu,  7 Nov 2024 10:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730973884;
+	bh=Rom/ildpqgeytyPHNoc4quEJo8BKKLGv+Rp6ums0tbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HEKIQ+yqI9QMuv4yqVU66dgAJphJNk9zLN2lNSA9fHcssHOr55Km0WlJ+C/HIhxrA
+	 s0yFaKWieaaeafLFD1Hd1hzNyiOa7xL9MWJDWmx0HoeJCyUT7TIydTb7IQWNmmIRpu
+	 9ztub1bBcNXe28qUCI24yr52GNb8Sna+j0ry+7br66+b6EUkca0229wIfoioLw9Ngo
+	 Uhv/isv2vUSsvDfLwOyGymDNhtCbRXak/UXWDLCDaOdpI/FFgrK8CGwOmpT85B7PHt
+	 hnCOEYLKR+qXOP+bAl9aJvUW6FJBM/1cRvu6GqwxxO20EaDQKb4xYp2LT9DOYYfWyQ
+	 BS0AvIACfKiyg==
+Date: Thu, 7 Nov 2024 11:04:41 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Mingcong Bai <jeffbai@aosc.io>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+	sakiiily@aosc.io
+Subject: Re: [Regression] wifi problems since tg3 started throwing rcu stall
+ warnings
+Message-ID: <ZyyQuTfMMSLwStf_@pavilion.home>
+References: <b8da4aec-4cca-4eb0-ba87-5f8641aa2ca9@leemhuis.info>
+ <ZxjLQzHKuR-w16hF@pavilion.home>
+ <2b25a988-6965-48e4-a788-58dd8a776e06@leemhuis.info>
+ <e2ffd3d06fad236ea900d4fb439b2240@aosc.io>
+ <937c258b-f34c-4f63-949d-a5e7c8db714d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-MW
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1730971186;5333e5df;
-X-HE-SMSGID: 1t8yg5-0006nt-17
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <937c258b-f34c-4f63-949d-a5e7c8db714d@leemhuis.info>
 
+Le Thu, Nov 07, 2024 at 10:10:37AM +0100, Thorsten Leemhuis a écrit :
+> On 05.11.24 08:17, Mingcong Bai wrote:
+> > (CC-ing the laptop's owner so that she might help with further testing...)
+> > 在 2024-10-23 18:22，Linux regression tracking (Thorsten Leemhuis) 写道：
+> >> On 23.10.24 12:09, Frederic Weisbecker wrote:
+> >>> Le Wed, Oct 23, 2024 at 10:27:18AM +0200, Linux regression tracking
+> >>> (Thorsten Leemhuis) a écrit :
+> >>>>
+> >>>> Frederic, I noticed a report about a regression in bugzilla.kernel.org
+> >>>> that appears to be caused by the following change of yours:
+> >>>> 55d4669ef1b768 ("rcu: Fix rcu_barrier() VS post CPUHP_TEARDOWN_CPU
+> >>>> invocation")
+> >>> Are you sure about the commit? Below it says:
+> >> Not totally, but...
+> >>
+> >>>> As many (most?) kernel developers don't keep an eye on the bug tracker,
+> >>>> I decided to write this mail. To quote from
+> >>>> https://bugzilla.kernel.org/show_bug.cgi?id=219390:
+> >>>>
+> >>>>>  Mingcong Bai 2024-10-15 13:32:35 UTC
+> >>>>> Since aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 between v6.10.4 and
+> >>> Now that's aa162aa4aa383a0a714b1c36e8fcc77612ddd1a2 which I can't
+> >>> find in vanilla
+> >>> tree.
+> >> ...quite, as that is the commit-id of the backport to v6.10.5; and the
+> >> reporter reverted it there. Ideally of course that would have happened
+> >> on recent mainline. If you doubt, ask Mingcong Bai to check if a revert
+> >> there helps, too.
+> > Do we need any further information/testing on this issue? Please let me
+> > know if there's anything we can do as the issue still persists in 6.12.
+> 
+> Hmm, no reply from Frederic. Not sure why, maybe he is just away from
+> the keyboard for a few days. But if the reporter has a minute, it might
+> be wise to check if reverting that commit on top of 6.12-rc6 or newer
+> also fixes the problem, to rule out any interference from changes
+> specific to the stable series.
+> 
+> Ciao, Thorsten
 
+Sorry for the lag, I still don't understand how this specific commit
+can produce this issue. Can you please retry with and without this commit
+reverted?
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219440
-#regzbot introduced: 7d6f065de37c
-
-#regzbot report:
-https://lore.kernel.org/all/60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com/
-#regzbot summary: wifi: iwlegacy: connection gradually slows down and
-eventually dies
-
-#regzbot report:
-https://lore.kernel.org/all/CAGETcx97SEHP5MspzBHsMkmSExnY870DQ-F5L077vzOGnPx0UA@mail.gmail.com/
-#regzbot introduced: f25b7b32b0db6d..aef6987d89544d
-#regzbot summary: sched/eevdf: pretty serious power regression on Android
+Thanks.
