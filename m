@@ -1,118 +1,124 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A120966A
-	for <regressions@lists.linux.dev>; Wed,  6 Nov 2024 19:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2132D268;
+	Thu,  7 Nov 2024 02:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730921284; cv=none; b=ut6XXJNY4tyipfS3Z3lP8jLgrv3RXDppPFpIAbR9ZZOAnxYk9fRD4VgLtKnCMt+bZGRTbabqkIz2Mibcr5VNUiLXY23AgLWu77KzGPBbj8yMxpZLYVbPxTEiwLWRSKgbUG52/BGbHKrm55oi1EZqAeF8pI6Zzi+S0BqSJOchAQs=
+	t=1730946425; cv=none; b=ReRH9fbi6FQ8xulrMWMmuNrDbcb/lnno4U5scuJvT2QlRvGwJfOhsgZWyOjiisBDJNnTbD4Dm5NoZpGIK1vM+2WydEjo/vZkzG7yioaxws+ffwkLe5qyt5zr4lM0ZkKP3eiy5ADiiDr5y9y8ALTK93nzb4W+kja4qg17hP14nQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730921284; c=relaxed/simple;
-	bh=tlM/sZHStcrCKHsoFfOWzATgeMBo+hmNY87ZzsaLpJk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JI5Imp2ulHhwJsefhUpLMYfZp7XvPQJp1jnZCwfEp70ToJKCwmTvkegj6/zLXdpWBRGrDCI9zfKsFWBDsCozYLqS1390AmJ7PJdFENqGjhx4a7Ti7M+a6XrnZ0B3EbSUJ5Bj6kCL8JLZbXU1wohWOYO09NDhnYaVZ52b641SUs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net; spf=pass smtp.mailfrom=alfmarius.net; dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b=I8jIXwmS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H/d9Bv8s; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alfmarius.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alfmarius.net
+	s=arc-20240116; t=1730946425; c=relaxed/simple;
+	bh=b5NLqH4D6TJxOOfKQVO3eHJieaGxINQW1ZIF+j+Coyc=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=bZXVZ00Nja8Z3sg6Ol2g8acoNK71AgxLfXxtONxRBLn3HgUK82BAyuyPizbYMw2oI1LsGvDafSZXCFG3LGRZAbFzGl+bWqlfS9bi4wICwL78I9ZoUO7JO0q62pLhhPpKXyUqKAF0tapQiU8PnilW47R1O9jTJk9a7ew/kLHSWEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NjKz4aad; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alfmarius.net header.i=@alfmarius.net header.b="I8jIXwmS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H/d9Bv8s"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 8B4BE254019A;
-	Wed,  6 Nov 2024 14:28:01 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-03.internal (MEProxy); Wed, 06 Nov 2024 14:28:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alfmarius.net;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
-	 t=1730921281; x=1731007681; bh=BaEaFKaTnG703b9BvW3lVoDkejMPTTOS
-	KfcihRJehvY=; b=I8jIXwmST4yh5uc1VzhfbX5ScuZooT75pgazQ2nZ1CQ01lng
-	7FIoqt9aHJN9A9ym9CTHJhhEK5lchSFC7IAn23R7RzV3ZHBIhL6WYmM9CowVyBhv
-	OsyAOquSydHrZGrAIj09MzYzcOrGOTnUGMWCRhr7J3115TJuZ7e/EeQJnWf4FcK0
-	UKl9YTYkK03WHyvr401Fs3cmTf6l1zQY5jpXuBuoJiyVG6JbTsZAuxyA5GgjWFB6
-	9ugmhoV21mBepDd2uMDf13ZBW961aTuCbgUzJatckLtlEU9vJz7RPYM9SDzoBxgM
-	VR1Hsirmsir9+cuQx6Vrg5iMNTbsX0zfER5Q2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1730921281; x=
-	1731007681; bh=BaEaFKaTnG703b9BvW3lVoDkejMPTTOSKfcihRJehvY=; b=H
-	/d9Bv8skKtcyi4DpqIUTzDqJ1A3HnFxid6My2EDjBoBQAc32oLwsGgXwQ1cqN7NA
-	7erHq+JVLfa99xrdeNtrsHKnAQBqbND4ZUdA9KHOWzrKaM48PDNBJtkeE76acntE
-	hCOuBPqf/+OJh8fqGrsjczklCqD4jwPqaDKt9nWw42AX4yf/PLGsxGuhkigVmDEk
-	bMwHa6k+wEBoTU31YUA2HCvNCYP/rganO+74R5ZUX8cB3FYZ/NT7pyS4Ieg+AqsQ
-	HfcGEzPd2ryKadgBmOTsgIFHo/Tx7ucRQGkwZhMnzGG7KjrOtCPJk8mT1wGpoPXc
-	Ie4xihFt6LwMmGBbN/9Vg==
-X-ME-Sender: <xms:QcMrZxgOleHOuu3Df8xUa9fL6gsiRM1i5UunMsmSDRnNKVmWsoLKrw>
-    <xme:QcMrZ2CsNg3LMooFydswJQCgBTuEKTx4RV9hc_uxk-LGEQPMEOXZdI5SK-9vU8h-B
-    p9bqwHXS3pJfg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrtddvgdduvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehlfhcuofgrrhhiuhhsfdcuoehpohhsthesrghlfhhmrghrihhush
-    drnhgvtheqnecuggftrfgrthhtvghrnhepudehhfetgeejkeejhfehvdfftdehgfduteeg
-    hefgffehteeggfetffelvdejfffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepphhoshhtsegrlhhfmhgrrhhiuhhsrdhnvghtpdhnsggprhgt
-    phhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrghthihivghvse
-    hgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhvrghloheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprh
-    gtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:QcMrZxH9Bd8QWgy4QEHsZuoSTPjcnG0vczHLzs2QR7ztlV1c_j7_LQ>
-    <xmx:QcMrZ2RyeaWoJ-Rqz23OJLWC1Sco_hBUQ2AieJxac4ZQSzGhmqYNVQ>
-    <xmx:QcMrZ-xQ7_mby2zfYe63c5HVMyQoQ8VlLq1ye3618Vv6cfxrWPNWuw>
-    <xmx:QcMrZ84YEDAuQdWkHm90yDFTJJbG40FiAkh1I_27iRdHSP_3W6s8aA>
-    <xmx:QcMrZy-K6Z6gaPnmU8yJc_OBWPKYTRGZELaPfMSf9tQjX0n9eEGOB0Bc>
-Feedback-ID: ib5844192:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 25D4C18A0068; Wed,  6 Nov 2024 14:28:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NjKz4aad"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1730946420; h=Message-ID:Subject:Date:From:To;
+	bh=b5NLqH4D6TJxOOfKQVO3eHJieaGxINQW1ZIF+j+Coyc=;
+	b=NjKz4aadSM1YDDLvYOHAGj12YSOfiJgbdmnKwVq/GYmkwkiC0C5fgMdjPjos4MvQwn1XY6eth2Gkt2UKJ/49+A+lXFywovz4XCbATUcWaXHsjW6oTLH0y2EsVIA540uHIo44KoIBqzdD9+Nrug1KUxYfPXXUSyjfSxRc9cgrdB0=
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WItv5jJ_1730946418 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 07 Nov 2024 10:26:59 +0800
+Message-ID: <1730946100.0197623-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: 0010:virtnet_rq_alloc+0x8f/0x1b0 [virtio_net] with 6.10.7 and packed virtqueues
+Date: Thu, 7 Nov 2024 10:21:40 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ virtualization@lists.linux.dev,
+ Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>
+References: <CAK8fFZ6qVutPWxquHg7NEvFqYqDP5BwEdO81hqW8iMFxJFuLSQ@mail.gmail.com>
+ <CAK8fFZ5N7EbU=uLbfyeSkQ273NSm+GELWUu1O1OBCpaSwjv6FA@mail.gmail.com>
+ <422f35b3-7834-4df7-bcea-e3be12707aef@leemhuis.info>
+ <1726216954.7439098-1-xuanzhuo@linux.alibaba.com>
+ <565a9204-362d-458d-8b8e-11c5aada7b98@leemhuis.info>
+ <CAK8fFZ6W2ZfwTa4nYz8ORTgb0mOTysg89LEEz7cHGtdqwpsvmA@mail.gmail.com>
+ <20240913103753-mutt-send-email-mst@kernel.org>
+ <CAK8fFZ4ONa_LYsyPN1E6QvUz4uUbzm35yfh6_dHUMDSxzySm3A@mail.gmail.com>
+ <20241106035955-mutt-send-email-mst@kernel.org>
+ <1730883874.818401-4-xuanzhuo@linux.alibaba.com>
+ <20241106044241-mutt-send-email-mst@kernel.org>
+ <35b03c6d-a083-407e-a0db-85d5dedcd335@leemhuis.info>
+In-Reply-To: <35b03c6d-a083-407e-a0db-85d5dedcd335@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Wed, 06 Nov 2024 20:27:40 +0100
-From: "Alf Marius" <post@alfmarius.net>
-To: "Andrey Batyiev" <batyiev@gmail.com>, "Kalle Valo" <kvalo@kernel.org>
-Cc: regressions@lists.linux.dev, linux-wireless@vger.kernel.org
-Message-Id: <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
-In-Reply-To: 
- <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
-References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
- <87wmhg61yp.fsf@kernel.org>
- <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
-Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10 and 6.11.5
- (probably 6.11rc)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-Good evening folks :)
+On Wed, 6 Nov 2024 11:09:17 +0100, "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+> On 06.11.24 10:43, Michael S. Tsirkin wrote:
+> > On Wed, Nov 06, 2024 at 05:04:34PM +0800, Xuan Zhuo wrote:
+> >> On Wed, 6 Nov 2024 04:01:43 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> >>> On Mon, Sep 16, 2024 at 09:32:38AM +0200, Jaroslav Pulchart wrote:
+> >>>>> On Fri, Sep 13, 2024 at 11:21:11AM +0200, Jaroslav Pulchart wrote:
+> >>>>>>
+> >>>>>> 1/ I was able to "do a reproducer" and hit the "random memory
+> >>>>>> corruption" issue with vanila 6.10.10 in our setup in ~28m of uptime
+> >>>>>> see attached 6.10.10-1.gdc.el9.x86_64.log.
+> >>>>>> 2/ I reverted these commits
+> >>>>>> "virtio_net: rx remove premapped failover code":
+> >>>>>> defd28aa5acb0fd7c15adc6bc40a8ac277d04dea
+> >>>>>> "virtio_net: big mode skip the unmap check":
+> >>>>>> a377ae542d8d0a20a3173da3bbba72e045bea7a9
+> >>>>>> "virtio_ring: enable premapped mode whatever use_dma_api":
+> >>>>>> f9dac92ba9081062a6477ee015bd3b8c5914efc4
+> >>>>>> in our next build and so far the environment is stable and not
+> >>>>>> crashing under same conditions like the previous crash.
+> >>>>>
+> >>>>> Automated backport failed:
+> >>>>>
+> >>>>> http://lore.kernel.org/all/2024091336-family-daffodil-541d@gregkh
+> >>>>>
+> >>>>> Since you have done the revert, and actually tested it, feel free
+> >>>>> to post, I will ack.
+> >>>>
+> >>>> What I did is:
+> >>>> git checkout linux-6.10.y
+> >>>> git revert defd28aa5acb0fd7c15adc6bc40a8ac277d04dea
+> >>>> git revert a377ae542d8d0a20a3173da3bbba72e045bea7a9
+> >>>> git revert f9dac92ba9081062a6477ee015bd3b8c5914efc4
+> >>>> (no changes nor fixing conflicts was needed)
+> >>>>
+> >>>> I'm newbie in posting the changes to upstream, Can you help me with
+> >>>> some simple steps on how to do it?
+> >>>
+> >>> Basically in this case, I think it is enough
+> >>> to reply to the revert patches and CC stable.
+> >>
+> >> Oh, I am ok.
+> >>
+> >> If need me to do something, please let me know.
+> >>
+> >> Thanks.
+> >
+> > yes, pls reply and CC stable ;)
+>
+> I see that ";)", but it seems I'm missing something here:
+>
+> Why did this thread resurface? 6.10.y is EOL since a while now, so that
+> reverting ship has sailed. And the commit in question is in 6.11 afaics.
+>
 
-[Andrey Batyiev]
-> Hello everyone,
-> I've only tested it on my 3945. I have no equipment to test it on 4965, sorry.
 
-Yes the commit message says "Tested on iwl3945 only."
-..which I did find a bit strange. Is it normal to deploy code to the mainline
-that is untested? Why was this also applied to 4965?
+I did a simple research that the only version was affected is 6.10.y.
 
-I'm just asking questions here, as I have no direct knownledge of C or
-kernel driver programming. I've 20 yrs of web-dev experience though
-and know from experience that shipping untested code is a bad idea.
+6.9 does not include the problem commits.
+6.11 is fixed by reverting the problem commits.
 
-Anyway, not trying to point fingers here! Just curious to find those who
-wrote the actual code, maybe get some info on why this was added
-and if it is really important. If not, maybe a revert is in order
+6.10.y failed on the backport.
 
-Regarding testing, I obviously have a laptop with the 4965 card and
-I'm more than willing to test stuff out if needed.
+But the 6.10.y is EOL, so the fix commit to 6.10.y is still needed?
 
--Alf
--- 
-"The generation of random numbers is too important to be left to chance."
+If yes, I can post a fix commit.
+
+
+Thanks.
+
+
+> Ciao, Thorsten
