@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B210417C91;
-	Mon, 11 Nov 2024 12:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FB319C569
+	for <regressions@lists.linux.dev>; Mon, 11 Nov 2024 12:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731326567; cv=none; b=ejiiBVg9CzryUpy8Z0gwS2Wb3Yfys8mnOacdb0iOTiDEXZZyy5JEb95VGtzrMX6SjqLnrG3P3Fmw9la3DqSySdvLorcbOuBMlQNGME+pgu+cNNaxbCoptRqvU7/Zw5C1bSKgalYUpFuzgJ420+7i/6q4DFzOiuXIpo0B01KbLYM=
+	t=1731328086; cv=none; b=SfWMAIcUaDhRwaMruh1jYZ/TaYHE7+iVCzrwvWgtN+yR4QymtnqdXIKe8NEm1X18B4djoYBak5VY200iXtJzR7Bi88lyDahzZaMEun17vPsa8NTOTEnF9uhKPt3yoNMq9C/D/rCGFUiWrWXxBSj9Jd8L+WE9jY/V8vvc29mQKd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731326567; c=relaxed/simple;
-	bh=08sS6cwXMoWfNauUkFLNf/k9pKsznTrXfxG4nKKTWpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrWFR9EOhIqgnyb7VMZLTXmmV/T3DV7iVY6QB13A/ke3RrFI0gvUWeY0KNa6JJjsGHn66LnMuP4NiYT5AoAa8C89tIOTJYDD7203lR9QNxv3FEy2VUqKYRM18sURLXsJtQsh2XXY1ddsG9C1/Jj3CUrHb4xMYm8Li0efxnr7rRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uTRR0vka; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1731328086; c=relaxed/simple;
+	bh=qutuyKkbulqjG0/Unxh2RQ5wJ7+DKM4GSbPCKDW6R9E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=pT3XtwsCJnRPKGjfFrT3CV7iLohgndhMGgDuWrbz6+0349lbWuoeF22LRoKUJ3n7yP6Q/zFSYAHpcD47aR4UBE2RDAy9E7SWY9KxKHxPUyaXnohYjmxw4hsTUyGZshpcyFTXqx5Qwr+OK7VxUxuHAFNGrFDw625qj3Sli2uQ0Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XBHNKncg; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uTRR0vka"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XBHNKncg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=9YaQLcqFNWYZJzwagmClaaK35HaKd6sDjy4+a++ePW4=; t=1731326565;
-	x=1731758565; b=uTRR0vkaRnO/zcz+CDvNAqOzT3IRSdlzlddi8uCXgkGVpzfvRi+upMb0+z71x
-	N8lk2faQH8iYLaemC27nMj8D2MzcWBk8lH7IMDJymTnLWdIfNQ7P96mPdRAa76J4E4wyG5GLwPj9l
-	S2gIrEsLjXe3dPO5qHa23d1N5lMfZcMuf7vNzWfacdy+uLJsvi1J3xnto451g+oBGK/cKk8Csjmyu
-	cPMC5wOoOw7xGvw/dOZmKwA+XCgYgCoPCeerefWcn2wN4CG5MrSD5bkC0Pi95aUQqg/giWO2evznO
-	rrIjEeXZAmVh28ftFLvGALJcWcJXXe2ZtTK3ncBOVOdLkmn2qg==;
+	References; bh=qutuyKkbulqjG0/Unxh2RQ5wJ7+DKM4GSbPCKDW6R9E=; t=1731328084;
+	x=1731760084; b=XBHNKncgvigngGNE5GAMyqg2hBc/df6rUldX0EuOiYtqtXEgKqJbour/l1a3n
+	8q7j8FSwt+0HC5pv5DK7zOXpGYrewaKHs/vP7deJguNo246Hz/9p3m5mYhZSAj8AEBXeE0qI9qgsK
+	3HTO/B4wbfonOlT4u/Le2yepAr87afMVf+c7KC0ryfMWrGFoJnyI8EGAasdRs7qXapkZQ8tPLDB/d
+	GwyJ/KHVGKxNYDX3qoXU1VVcxUG8yiOmsEUXtOram+DDW2NJ1hXTqh5TVvFB4coso8x4swaik/+mo
+	cf6Hs1YsUyyeMbzipq0a8+uGmYBK4uHP24XHi7Rg+m+6HF0Skw==;
 Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1tAT7z-0000M7-Gn; Mon, 11 Nov 2024 13:02:43 +0100
-Message-ID: <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info>
-Date: Mon, 11 Nov 2024 13:02:43 +0100
+	id 1tATWU-0006EQ-Bo; Mon, 11 Nov 2024 13:28:02 +0100
+Message-ID: <64725ec1-4c56-4d2a-9c30-3aeaa4817347@leemhuis.info>
+Date: Mon, 11 Nov 2024 13:28:02 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,67 +39,52 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no
- longer returns it
-To: brauner@kernel.org, Rui Ueyama <rui314@gmail.com>
-Cc: regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-References: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-MW
-In-Reply-To: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1731326565;223670ee;
-X-HE-SMSGID: 1tAT7z-0000M7-Gn
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1731328084;192b7509;
+X-HE-SMSGID: 1tATWU-0006EQ-Bo
 
-[adding a few CCs, dropping stable]
 
-On 28.10.24 12:15, Rui Ueyama wrote:
-> I'm the creator and the maintainer of the mold linker
-> (https://github.com/rui314/mold). Recently, we discovered that mold
-> started causing process crashes in certain situations due to a change
-> in the Linux kernel. Here are the details:
-> 
-> - In general, overwriting an existing file is much faster than
-> creating an empty file and writing to it on Linux, so mold attempts to
-> reuse an existing executable file if it exists.
-> 
-> - If a program is running, opening the executable file for writing
-> previously failed with ETXTBSY. If that happens, mold falls back to
-> creating a new file.
-> 
-> - However, the Linux kernel recently changed the behavior so that
-> writing to an executable file is now always permitted
-> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2a010c412853).
 
-FWIW, that is 2a010c41285345 ("fs: don't block i_writecount during
-exec") [v6.11-rc1] from Christian Brauner.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> That caused mold to write to an executable file even if there's a
-> process running that file. Since changes to mmap'ed files are
-> immediately visible to other processes, any processes running that
-> file would almost certainly crash in a very mysterious way.
-> Identifying the cause of these random crashes took us a few days.
-> 
-> Rejecting writes to an executable file that is currently running is a
-> well-known behavior, and Linux had operated that way for a very long
-> time. So, I don’t believe relying on this behavior was our mistake;
-> rather, I see this as a regression in the Linux kernel.
-> 
-> Here is a bug report to the mold linker:
-> https://github.com/rui314/mold/issues/1361
+#regzbot report: https://lore.kernel.org/all/uikt4wwpw@gentoo.org/
+#regzbot introduced: 251efae73bd46b
+#regzbot summary: HID: multitouch: tapping on the touchpad broke
 
-Thx for the report. I might be missing something, but from here it looks
-like nothing happened. So please allow me to ask:
+#regzbot report:
+https://lore.kernel.org/lkml/ef7c7a96a73161e0f5061503242a8d3eddef121f.camel@gmail.com/
+#regzbot resolve: inconclusive: might be fixed and likely not worth
+tracking anyway
 
-What's the status? Did anyone look into this? Is this sill happening?
+#regzbot report:
+https://lore.kernel.org/linux-pm/20240908144414.82887-1-hdegoede@redhat.com/
+#regzbot fix: 78f281e5bdeb
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+#regzbot report:
+https://lore.kernel.org/lkml/1a3af354-bd15-4219-960e-089b6a6e673c@adamthiede.com/
+#regzbot fix: 995d4d558eea
 
-#regzbot poke
+#regzbot report:
+https://lore.kernel.org/stable/20240917055730.Horde.pVyI-XF1MRA_zUQ5BDJZ4lC@ignaz.org/
+#regzbot fix: aa70ff0945fea2ed1
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219394
+#regzbot resolve: inconclusive: can be solved by a config change, likely
+not worth making noise, unless more reports come in
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=219390
+#regzbot monitor:
+https://lore.kernel.org/lkml/ZxjLQzHKuR-w16hF@pavilion.home/
+
