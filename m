@@ -1,81 +1,125 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D1270832
-	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 12:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1531214424
+	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 19:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731416385; cv=none; b=TjM9PnuHhaAATaSecuDYcQW0PJelamJbpL8RmRs0nsr9EPdXPB70/eVgQZOnZ+p0xh9mXaVVka6b6CU/8spnD1+cLqvU2Eb2tOqRnsz0f1w0U4kaY19TxdvaDf24GfTGNw4c9ku6xg+MF3CKsbu05eSO3GCXZAAjxjOUnYQ13ck=
+	t=1731440015; cv=none; b=tvbHVu0oImOr44HGtUSkEa+YRAHphTjt2dsLu80LPG8HFEieBP7QDSFiIH8dqgaaLH6baxMvey0cG05w1yCfm8crjqaU5X5xmf9QTDXP+S9pL5DHGqHceJbH4XSzG7Se8ZbrAatEEAQTo9lgeJG19HwHQHlGot5Fb66WABOmtfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731416385; c=relaxed/simple;
-	bh=FS9743yTb08QPx7OYTrpJp942turPyAuxKTsJuWfz9A=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=dV9FjdMEffVluDx5leFQ0UWTzejoSQ4tC03Mew6b37HQfpyb0IrfTrs2ePQb1Z0ECxX/W7xL+eaDvJ4MxrRmuF1t99IYXJKSTzCOd9WO+TEHGzWgLw/4QHXOHxL+ggqm7VrSAUPBBRnd/mYOhhYt04WuEH9/9KkGWehU0puwGOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gZsBCe+n; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1731440015; c=relaxed/simple;
+	bh=w3qyNX2H2QrqWPTFq2goSgvfzakUeX76kymsrd5YQ+8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Y2FyxS5dZPAQu+YBvelCAbivWht67RcbyNeIIAoDEV82FdBDhk64pzb3kxaFGYeBwmTWEWdG2zdKTFeR14pTpwAcoNDpfeD50wJ7t9wh1ayYWo4HO2Mfsw4Ey2Sy/O8YNw+c1PO/zFDQE4gAydwN10RUDTCuPbVBBWL9Wf7tLcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVrzYjd9; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gZsBCe+n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=FS9743yTb08QPx7OYTrpJp942turPyAuxKTsJuWfz9A=; t=1731416383;
-	x=1731848383; b=gZsBCe+nHQ7dz3PRSUfzfldxfk2+vGqtHD73gjH5S3HNqgLAvcfmhGkr7CtHv
-	4InnCigNg3+x2VqQWkcefE8B17pRKo6GUARHg51iO2csMYgvs1WLHX5IdAYOyPJ8Xdd9r0XLqqKMz
-	CjCuNkZdesPHs6qO2vxI89cT0u8AhYhcTvA6ui+1YBgGhQU7KlrJbLmdf52gnJOPqXrSrqvrV9JfL
-	XdEUzpzBgyNVG0eTCXnN2pOJ+qlI96BO3Yq46Xst8/i/rp3alM5k3Z0mHTXnTIhhMhMzs34+s9Urk
-	wLnGsmUEZcrLnpo8v7YOnrXnQoDdh/Ib2eijL7Oktjyho6imOw==;
-Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1tAqUf-0001Dv-I4; Tue, 12 Nov 2024 13:59:41 +0100
-Message-ID: <697b421a-5b9c-41ff-98a2-c0f47998615c@leemhuis.info>
-Date: Tue, 12 Nov 2024 13:59:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVrzYjd9"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4316cce103dso76272575e9.3
+        for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 11:33:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731440012; x=1732044812; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MkG1N8cbWQJiTBQoEK9Xgl0+1bD42d7g9R0q75SLLTI=;
+        b=GVrzYjd9ulW0lNUQZpzMo7t318XSar5KbIWJ15MCACV6gISSAKgibiNsbnmEH/Ae9h
+         BGxp1v+05KkV8QpQRiIfC/OSk0igq6URMHQioyocLPh70IDpi4L683LfPKn32ABcg5bv
+         vFdDQ0arYVW7ZfAZXG+VuRYguug3UlwVQkEg1Zi3zvza3lp+Wt/0tz9mjCbj/cZy+GqE
+         +rQdBGOKiW6G9w6daTbb83d6dRJjWZtThXc1An7gSrwKLw7SX/3hgOBXAy2wUGEJZVdL
+         XNWK2voNK5LgW/SQYCnh9sQEMHmE65SJJdBJCmgONixe9Tn8tpJtRGc2vAQdb7V4FjDW
+         RWMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731440012; x=1732044812;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MkG1N8cbWQJiTBQoEK9Xgl0+1bD42d7g9R0q75SLLTI=;
+        b=LAiGtLhBiRMyv6PWZh1gpQf1NtE7otWNxBTTtz7JkiAtCyAHUdFsn3IzrKw8fDkUEd
+         Lsfj0quOZpukKdL24miNk9Z8CPXf0aOG4JZCyg2tvuk99gV73lFRyorc2UH8/YU6QqIJ
+         EV7sN0QjEZyg63SYZ9zroBUSAlCuOAUQA+4cUHTc3okEJOm3JnOOtdOTrDvE4hAH96AN
+         pM6spQ6Cf7/ix/hq6Aean6y8ni46+bbSp6BegugMbCg9AjUd9ONzmgqaC7T4ZVBFtOnp
+         RDmktGg5Lnw8bJm+qC2o63Bp1rV1xiaf5SY0L2uSo0QSS1iX//g12EhmdTECX3VA4vc7
+         jdvg==
+X-Gm-Message-State: AOJu0Yz6p1nTDmAc++j0SaDDQOpcDf+CmASqdylXUG8X2iNwwgn0GiNL
+	OvD1eSyylZI4fGqngINI6trJfzyPAgxGR63DyumtTgRkeQWl6ITJa+d41l7d
+X-Google-Smtp-Source: AGHT+IFgwJTM/IhHEee60zDBS47L7kN9Q+Blkkfv/LqE5sDW9xPQbyIZlnwpmejRlJMCXXh5lsQYKA==
+X-Received: by 2002:a5d:6d05:0:b0:37d:4c40:699 with SMTP id ffacd0b85a97d-381f1866b54mr19287446f8f.5.1731440011720;
+        Tue, 12 Nov 2024 11:33:31 -0800 (PST)
+Received: from ?IPv6:2a02:168:6806:0:b26f:1170:8ac9:f3c9? ([2a02:168:6806:0:b26f:1170:8ac9:f3c9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b05e6042sm219502705e9.44.2024.11.12.11.33.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2024 11:33:31 -0800 (PST)
+Message-ID: <3f14a6d189b65182ed502d534a49ae289e12dcb8.camel@gmail.com>
+Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
+ Turris Omnia
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, Linux Crypto
+ Mailing List <linux-crypto@vger.kernel.org>, Boris Brezillon
+ <bbrezillon@kernel.org>, Arnaud Ebalard	 <arno@natisbad.org>, Romain Perier
+ <romain.perier@free-electrons.com>
+Date: Tue, 12 Nov 2024 20:33:30 +0100
+In-Reply-To: <Zw-NJwLXXQ0DwR8b@gondor.apana.org.au>
+References: <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
+	 <ZwZAExmK52txvHE8@gondor.apana.org.au>
+	 <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+	 <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
+	 <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+	 <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+	 <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+	 <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+	 <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+	 <2ae8006f3cfc40ae66b34659365596ac8507d1da.camel@gmail.com>
+	 <Zw-NJwLXXQ0DwR8b@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.1-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-MW
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1731416383;aea33223;
-X-HE-SMSGID: 1tAqUf-0001Dv-I4
 
+On Wed, 2024-10-16 at 17:53 +0800, Herbert Xu wrote:
+> Alright, so next I'm going to try to make TDMA entirely single-
+> threaded and see if that fixes it.
+>=20
+> Thanks,
 
+Hi, since this was marked as "not worth tracking*, here a summary of my und=
+erstanding
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+- hardware: Turris Omnia, Marvell Armada 385 (same behaviour on 2 devices)
+- the crypto self-tests on the hash algorithms provided by the  Marvell CES=
+A
+  driver fail randomly (1-5 failures in 90% of the boots, rarely without fa=
+ilure)
+- this is likely a bug in the driver, which had been hidden for a long time
+- it is now exposed by parallel invocation of self-tests, introduced in v6.=
+12-rc1,
+  commit 37da5d0ffa ("crypto: api - Do not wait for tests during registrati=
+on")
+- to be safe, the algorithms in question (6 in total) have been set to prio=
+rity 0 in
+  commit e845d2399a ("crypto: marvell/cesa - Disable hash algorithms")
+- so, there should be no immediate harm by wrong hashes (at least in 6.12)
+- there were backport patches floating around, but as of today they have no=
+t
+  been picked up
+- no fix to the Marvell CESA driver has been found so far
 
-#regzbot report:
-https://lore.kernel.org/all/Xw3BDSu6nGp8D43shw707_3JcIzRhictWhTjZpThlOWIyF69jtxhq11eV2ExaObroqAhGypRaS86DmN2f2e2IgmGSC4U1AFRW95qOLometo=@meirisoda.online/
-#regzbot introduced: v6.10..v6.11
-#regzbot summary: ability to switch power modes gone
+Consequences
 
-#regzbot report:
-https://lore.kernel.org/all/CAJpMwyjmHQLvm6zg1cmQErttNNQPDAAXPKM3xgTjMhbfts986Q@mail.gmail.com/
-#regzbot introduced: v6.10..v6.11
-#regzbot summary: mdraid5 hang and CPU lockups
+- I have decided to stop using the Marvell CESA driver on my production dev=
+ice
+- I can easily run test patches on my spare Omnia, if that helps finding a =
+fix
+- I imagine more users will run into the failing self-tests, as soon as 6.1=
+2
+  hits OpenWRT's mvebu target
 
-#regzbot report:
-https://lore.kernel.org/lkml/20241010133253.30311-1-diogo.ivo@tecnico.ulisboa.pt/
-#regzbot introduced: 9b340aeb26d5
-#regzbot dup: https://gitlab.freedesktop.org/drm/nouveau/-/issues/391
-
-#regzbot report: https://gitlab.freedesktop.org/drm/nouveau/-/issues/388
-#regzbot introduced: 9b340aeb26d50e
-#regzbot summary: nouveau: boot hang after grub selection
-
+Best regards, Klaus
 
