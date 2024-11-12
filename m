@@ -1,70 +1,69 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B0A20A5F0
-	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 09:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399F51A256C
+	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 10:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731404823; cv=none; b=mT/xUJTJd7BvYXvpAsEdvib67i83kt/GPvv83ZQW4Log+XMBC6xteJ5wsqGU9i8CckGuqi/6pkYiJ13tEFTYVBnF/pao99LcmBdEVEOEqg3oLviW9k4engtPNe3Pv3J3qZdGVjQYjUn+RqiCQggmKaPpZRQeV1NEzmB60Ov8XqY=
+	t=1731406598; cv=none; b=WXej+O2SE9EWd6Qv/jCAWozdk+lE3iKELGLQ8fQRDKtt4HqJJ8kpZRun/hv07ZK+Lu4WDwSeHqKnjqqY7ji21H8ghHO8OBjnsSzBXNFgofuUOJiSA2k1YnYQXae1Uv/CwHWeXFclZJ6e6OaTdU+xjmByE1T7kNNS6lBUBk81bBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731404823; c=relaxed/simple;
-	bh=XYiQLfyZ4xkJqt5907YaTI5zra5ibcQREQSBOSTNAn8=;
+	s=arc-20240116; t=1731406598; c=relaxed/simple;
+	bh=LzisKRHviYF0vvp/c8zppug4b2SgFPILXsFSlHn/F5k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ngGqK31ESydHzLFi+/J0WABRqnFO6nP7e+HS1mpG2QzYlcHCF1NSFAuJrEPQ50KdDAxZ5ydpUGK6I9YNF5WeDkj1cxP3Ros/mKzpUkoaCkExVXCjc/EaQvuz6nAimZhIK6KzszmB8vyxoVkCM61HSGJlADcIzjAKP7HEudhlZEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCAfhB7O; arc=none smtp.client-ip=209.85.208.182
+	 MIME-Version:Content-Type; b=Gim6oyTl8hGMCwmz9lsEBg83Jyj5kSPIb966jscGCMz9HThr/nDP228oXSZerE/rFTutpwUNQdM6BjYEwUul4TqB2UH9Sgpyw+F+tVBF0hYJuyEwgJ0wHB/MbYjlRdWxUvuedlLLN8REeyQn7BhBc0QxwzJJYsizbxo0XJaJliA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N11GmqGM; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCAfhB7O"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb59652cb9so44235241fa.3
-        for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 01:47:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N11GmqGM"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539f72c8fc1so9102205e87.1
+        for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 02:16:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731404819; x=1732009619; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1731406595; x=1732011395; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cxrUQLUGDquIvwNL+3vOZkd1Knzam6KbtGh2rdlC0zA=;
-        b=DCAfhB7O1a2YdiMvzxZE+Ey5s2t4kD+mZcCAghacCFVlHXr19HLOISww2g+danScgh
-         Q452zC1fWsxoQnDvY+tQ6++5T6V4s1UUQj8os52Xd3r/L1zCFC+Bwh16bU8FfOGRm7AE
-         oCb5gz4QkrLJHrxOtp/8ow6uQt8EWEmeLhnHz2pyFf1AJtCpxFOZFM3Hlak3VRfmJi4h
-         fKVGWdmKn8CXTKiCSBs7XkGzpTz9o4j4gkjI//tgiBvQt7McY/tMSm91LosKMd05vTp4
-         VeaGC9lgFG7TKxsY05qK5lUCKqB7HZEKqeO8tsV2Eows55BnxPM6DXUln56LrM/OoN40
-         izNw==
+        bh=U1NpDWCmtCJKjjDe9qtdXdh1o50OglVlJ0jdBgteH/g=;
+        b=N11GmqGMvWiGljYwLdZr/9ZoS2giO7p4y/F0F65wkkVMfESbwMbACRdTnQ4vQWPOBY
+         sZfKzFhHQCuDFCleA/Dccsl1qK5LKcs4omEX6JeZ5T+cFBRgJ4XB8f6w29uVvcJltq27
+         iuCD3aNF/CP0AGE6WHhtjQQXb166JnX8XQHRo1nKmvGjnNe0bRWiBt0w4N6yYtFb9JAI
+         l+rw6txAP+7KzNLb1PXzrA64/sHgQ5XJRIEsMpdIZfrYeZeyo+cZ6N3uL35m1bldnyO/
+         ACGlMxh2h1rRHI/5JIH4F+6FEwOtU2bl8K7HwTyYwihpHd09Qp4zGwGA+uchPtZcfPTA
+         +t4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731404819; x=1732009619;
+        d=1e100.net; s=20230601; t=1731406595; x=1732011395;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cxrUQLUGDquIvwNL+3vOZkd1Knzam6KbtGh2rdlC0zA=;
-        b=hgFXsXvX0+NByOyh/nLyjjVdPG1+OdG0xmcPFIqv3KynNUhDZtrlcmglhV/nc387ao
-         3s0vQNegX+hPbOipl8eSwdseTbVldEplHGtS9QxheFoNBqaUgkoTtUFvXEd3T2PrB+yz
-         JFiAtZXVtIcsr7o4IhMOU9jO/CsviUA1g05jgQoF3BqwgwfeDq+N1Y556H6HCP2Kp8mX
-         d8o2TIHfnXkW6wx6dVN2E1BhfM+LTxcfXJFYSF7tSOpIfjRki/9mnyoqEkySi6/Ch5WF
-         WPG1B4hCJUFiCppqLVPSRZHFZ7W+Hv3JhJ7kmKQCRWN7EnKAVB4lZuL7RBr1EVKFMQmG
-         MZEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUfVyqU7Efnd4SKu9WxQz8j7DhSdFEmWuAc10u/LEkJ4Ax8kGz7rh9a+7dd4Sf99FtAnxg4dXuvgcuTg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwW07Ethj4viWPZvCUv0slQs2QCL7Tb4DYg1X9ynWA7pmAyD6O8
-	z7ouuDJJeUt1a8vL1iyGrFelKexAcfakWrIHjovWuUUvIdf8b8xP
-X-Google-Smtp-Source: AGHT+IE3pBqKFb6Yk8oEomko/aK/XSjtZ84xqvYa+rvcJru0YumfUY5+WY9OLJopre3IfMt0ghRnSQ==
-X-Received: by 2002:a05:651c:248:b0:2fb:57b7:5cd with SMTP id 38308e7fff4ca-2ff201e6cc1mr71712251fa.7.1731404819101;
-        Tue, 12 Nov 2024 01:46:59 -0800 (PST)
+        bh=U1NpDWCmtCJKjjDe9qtdXdh1o50OglVlJ0jdBgteH/g=;
+        b=RU3M5iW2tORK4u885bG/2RQXsmha700rLAQcfmisXeCbzlUzttDwmu+9h/3pugUDEk
+         WxYK1jlkHaZFUCEIFvxYTbnWM1rlOzQcVEEl6/pykKq7Ng91hinIzCByY1XLx9uYldzi
+         h80yvkIMiBmbrkeLQYntWjmzQeXsxXBPQxJF2p7kmywXIRb2fpiWicXhwPVEUtztP1Xv
+         erFWDwM6SlLdW/vQMSwsR1OzuPWL1HEeXu6tp5yLo20IFxI0yOTYZ1eJX5Qnk4j6EyVG
+         IP/hV9vpIwYhQzH53OFuEmfKd1MLHbgZ34QQclBvb96LLjmsi4vrJGurHaH9YgpDc3At
+         kSPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz88Ug07V6cv94wXFixov8twDKCv4KrtaJXDA30j48ZXyRFutM+GEqpdfxjsZu6htL1mWU+pEKUI+DqA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzc86nkIIucv57CD4n+ovbSWRGS8PKAk5zAkBG2e1xAQjmtogET
+	02KzV6FVutprwmQw7X7DTBar0fD06vPxkHqUfmYCFE47VgvFvLhj
+X-Google-Smtp-Source: AGHT+IFCRJw0z+cYNAZlQo0jd5oeC+GiBzCBWTfW2oMPVVvpXsQQqy70GxhwP1K9tFJQ5hPnnK6b6A==
+X-Received: by 2002:a05:6512:1195:b0:531:4c6d:b8ef with SMTP id 2adb3069b0e04-53d9a406fcbmr1101865e87.6.1731406594938;
+        Tue, 12 Nov 2024 02:16:34 -0800 (PST)
 Received: from foxbook (bff246.neoplus.adsl.tpnet.pl. [83.28.43.246])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ff179d85e3sm19798631fa.116.2024.11.12.01.46.58
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53d826a9da8sm1808565e87.206.2024.11.12.02.16.32
         (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 12 Nov 2024 01:46:58 -0800 (PST)
-Date: Tue, 12 Nov 2024 10:46:55 +0100
+        Tue, 12 Nov 2024 02:16:34 -0800 (PST)
+Date: Tue, 12 Nov 2024 11:16:29 +0100
 From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- linux-arm-kernel@lists.infradead.org, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Linux kernel regressions list"
- <regressions@lists.linux.dev>, "Kees Cook" <kees@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, Kees Cook <kees@kernel.org>
 Subject: Re: cacheflush completely broken, suspecting PAN+LPAE
-Message-ID: <20241112104655.777b0578@foxbook>
-In-Reply-To: <014edf04-a5ac-4a02-af76-ca2616c3c4ab@app.fastmail.com>
+Message-ID: <20241112111629.18a6e464@foxbook>
+In-Reply-To: <20241112103229.566b1ff3@foxbook>
 References: <20241111233817.2f824c19@foxbook>
 	<CACRpkdYsgnBFsyF9upr=xoLdMJ25DCXMEJ-co7rJTnRanJncug@mail.gmail.com>
-	<014edf04-a5ac-4a02-af76-ca2616c3c4ab@app.fastmail.com>
+	<20241112103229.566b1ff3@foxbook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -74,63 +73,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Regarding test programs, I also wrote and tried this one yesterday.
+It's based on a similar demo released by ARM, but much simplified.
 
-On Tue, 12 Nov 2024 07:41:12 +0100, Arnd Bergmann wrote:
-> I would guess that the problem is not the access_ok() but
-> the actual access in v7_coherent_user_range() that does
-> not appear to call uaccess_save_and_enable() or its assembler
-> equivalent around the lines
-> 
->       USER(  mcr     p15, 0, r12, c7, c11, 1 )
-> ...
->       USER(  mcr     p15, 0, r12, c7, c5, 1  )
->
+It both triggers the bug and confirms the necessity of cacheflush in
+JIT compilers on my CPU when it works normally (prints: 1, 1, 2).
 
-Yes, this is what fails and where I got stuck tracing this code because
-I'm not exactly an ARM MMU wizard.
+On the buggy kernel, it usually segfaults on the first attempt to call
+*code, but sometimes both __clear_cache() appear to take effect despite
+the syscall returning EFAULT (according to strace), not sure why.
 
-What I could tell is that this code hasn't changed much since the 3.10
-vendor kernel which works fine with LPAE on the same CPU and userspace,
-so I started looking for recent changes in arch/arm and found PAN.
 
-According to comments, this routine is meant to return an error when it
-catches a pagefault, so that's what I suppose happens here and that's
-why PAN immediately caught my attention.
+#include <stdio.h>
+#include <string.h>
+#include <sys/mman.h>
 
-Disabling PAN fixes cacheflush for me.
+int f1() {
+	return 1;
+}
 
-> It's unclear to me if this problem is specific to the TTBR0
-> PAN variant, or if it can also happen on any variant of the
-> CPU_SW_DOMAIN_PAN. It seems unlikely that CPU_SW_DOMAIN_PAN
-> has been broken for this long without anyone noticing, but
-> I also don't see why it doesn't trap in the cache flush
-> when the TTBR0 version does.
+int f2() {
+	return 2;
+}
 
-I don't know, but I booted the first kernel image I made for this
-machine, which lacks LPAE and a few other things and barely works,
-but it runs gdb without issues (and cacheflush returns 0).
+int main() {
+	puts("start");
+	char *code = mmap(NULL, 0x1000, PROT_READ | PROT_WRITE | PROT_EXEC,
+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	int x;
 
---- config.good 2024-11-11 20:22:16.604586266 +0100
-+++ config.bad  2024-11-11 20:22:10.641511948 +0100
-+CONFIG_ARCH_DMA_ADDR_T_64BIT=y
-+CONFIG_ARCH_HAS_PTE_SPECIAL=y
-+CONFIG_ARCH_SUPPORTS_HUGETLBFS=y
-+CONFIG_ARM_LPAE=y
-+CONFIG_CFG80211_WEXT=y
--CONFIG_CPU_SW_DOMAIN_PAN=y
-+CONFIG_CPU_TTBR0_PAN=y
-+CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE=y
-+CONFIG_HAVE_GUP_FAST=y
-+CONFIG_MMU_GATHER_RCU_TABLE_FREE=y
-+CONFIG_MMU_GATHER_TABLE_FREE=y
--CONFIG_PGTABLE_LEVELS=2
-+CONFIG_PGTABLE_LEVELS=3
-+CONFIG_PHYS_ADDR_T_64BIT=y
-+CONFIG_SWIOTLB=y
-+CONFIG_WEXT_CORE=y
-+CONFIG_WEXT_PROC=y
-+CONFIG_ZONE_DMA=y
+	memcpy(code, f1, 0x100);
+	__builtin___clear_cache(code, code + 0x100);
+	x = ((int(*)())code)();
+	printf("%x\n", x);
 
-Regards,
-Michal
+	memcpy(code, f2, 0x100);
+	x = ((int(*)())code)();
+	printf("%x\n", x);
+
+	__builtin___clear_cache(code, code + 0x100);
+	x = ((int(*)())code)();
+	printf("%x\n", x);
+}
