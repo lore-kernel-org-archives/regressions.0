@@ -1,185 +1,202 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486BE15A84E
-	for <regressions@lists.linux.dev>; Mon, 11 Nov 2024 14:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B612572
+	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 01:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731335870; cv=none; b=b7q5n9Hi3KC14KjysXQu5cFKihXLJgZRYHT/ZBtRut1Be9KLjJSvlfNMMS2jwsZZxYTcdmw6OJYvzJ5+Js2a1u47funsUtiituDSCZAkvJljvgQekPG5jzS79uSmGjJxlMK8WYHjHq6e63BV35oxwP5Wv0NqujRpjF+8GniFolc=
+	t=1731374134; cv=none; b=mxHYel7hv6FPptX87r52asGmhQdsirymuAN5p4AQ20u+yrmrEae23peOL5wWYvEOlcan/vosaeRLfAVR4Uw1PQxKwRdZv1rw6YC7qUcJ03cPM08NqVrWsMz9SS2OjzzGaqf3O4ZDTkQJhvOFe9/Ng8P7mX7zuyeMb0leRRUEQM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731335870; c=relaxed/simple;
-	bh=js1Mx0+w7qeSONvwXwVRMfOWmyso2LQD8in5si9rVy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2EzB7fzrL1tVspT8oKhH6P2pjg5khazl/w9GRHTTOemD0EtPCrjno4lb6h5SO67V1ntFkiuKspz+V0lDUJAfnEVfg2QU7awk3XFU9o+677rrQDA3uhW+fgVBQBeJl/5bEJJBX9RF/jBgbZ7NErGfNlU4RLXI3TImai4xmFvEKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f4KHCEGw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hb0ApwpS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f4KHCEGw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hb0ApwpS; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1731374134; c=relaxed/simple;
+	bh=pJYatHg/6w82pS0t+o84nekeeckPDPHTBU7Vdyht5kY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zqnd/7Ix2j7QW+/1KqdnmXUu7h5oYwsgrdFcrj3dyidG4imuDh79clnJmubT/f2w2CfnGhDbAWxBx9XEEBznV8zV3uFM7W+P6pArTsqdlXto97CdouM5gFwrKLVUoTpewEJPtOsBoaUyvohJy+hdCdmCDR7mBTBjv+mIb4CJLb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jYq7Iy4W; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f4KHCEGw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hb0ApwpS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f4KHCEGw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hb0ApwpS"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 90C1B1F457;
-	Mon, 11 Nov 2024 14:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731335867; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lbXJV6dKa/cP+r3NqRKk40e4xpT4rjXarIUDrlg10y4=;
-	b=f4KHCEGw8EY4XraWqsBROqj2v+4+ZJ6HYqDeIWXRaA/Nfo+eh7Zzy6klNlf1vR5gJA5ewO
-	3+N9rdekQaLMcZ5hLCn9P8GOuRQCyiiOLORkrRuKOX/WAxfRrgQ5KWxG3eXGfy+Clny2Ed
-	mWBSp2IslsYuFbvCbkBbfvutfAgjmpc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731335867;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lbXJV6dKa/cP+r3NqRKk40e4xpT4rjXarIUDrlg10y4=;
-	b=hb0ApwpSL1tKpH/v+gprwazEiKyHuqklSxkQQb5bPpekEWgARZBblamlhEOIMk6DjiOgA+
-	/mb1mkDZTz0IsZAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731335867; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lbXJV6dKa/cP+r3NqRKk40e4xpT4rjXarIUDrlg10y4=;
-	b=f4KHCEGw8EY4XraWqsBROqj2v+4+ZJ6HYqDeIWXRaA/Nfo+eh7Zzy6klNlf1vR5gJA5ewO
-	3+N9rdekQaLMcZ5hLCn9P8GOuRQCyiiOLORkrRuKOX/WAxfRrgQ5KWxG3eXGfy+Clny2Ed
-	mWBSp2IslsYuFbvCbkBbfvutfAgjmpc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731335867;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lbXJV6dKa/cP+r3NqRKk40e4xpT4rjXarIUDrlg10y4=;
-	b=hb0ApwpSL1tKpH/v+gprwazEiKyHuqklSxkQQb5bPpekEWgARZBblamlhEOIMk6DjiOgA+
-	/mb1mkDZTz0IsZAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 659A513301;
-	Mon, 11 Nov 2024 14:37:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id z5N2F7sWMmfmagAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 11 Nov 2024 14:37:47 +0000
-Message-ID: <c392b606-e2a4-4644-9ce6-217fdcabfdeb@suse.de>
-Date: Mon, 11 Nov 2024 15:37:47 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYq7Iy4W"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fb57f97d75so47426311fa.2
+        for <regressions@lists.linux.dev>; Mon, 11 Nov 2024 17:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731374130; x=1731978930; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=spUKRV7OxoGH84s6UjjK27+hvVkNjTU0eC0jz2ca18g=;
+        b=jYq7Iy4WufP0yZ7H5q2oHMsM/vZP+Xo239axtgJb7LwgSW8DZaME2to0wCgyZifOGh
+         cT3u11VxWHFNhj/cFkpIB6AwObMXq8JJLMALXLxetZc0HyLBuvQcOQYNMSQ3JTJLanEC
+         laEAAq4/76UNpj8xXi4G5OiA3jbISL5lVhmmomlzSOyowthVtajaY5GbvYvX2kBV4Sc2
+         zh8g180wgc9lkc6J9nkHsnHGH7nD0/Uc/z1Ac0dhPL1iwyRnkOcs9prvjZBOMGONWXcq
+         Q/otVxQfTwr2ZPSOnhSfGi3v2jj9uKmbAXXh2UIba3o7bzfJ8wfR1y3RFVxLTKJ9tyrL
+         R3QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731374130; x=1731978930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=spUKRV7OxoGH84s6UjjK27+hvVkNjTU0eC0jz2ca18g=;
+        b=N8CYFx+SDUlHfQWJpEhxMaG4oHJZ7Wv5GJNg7XwqHzzWZrAmjsmobxvxyJNMaVzuS3
+         9yFQk63oXK2I6HduczL0tua8RIRt51InJbJyzyLKwjidGixsniyREwTh/k+LAJC6LyDg
+         QcVWvMCNDaWm4krCN28Q4ItIWZ32vxkhZluIkEvaZOPPa8ODvjaSMMLQga+FDZOKFHDQ
+         cL7B4YNdRYp3w80kGFHF+Gn38ZQru1jcRzFkWr+lz1A8qL80ISipAKhiEhivVx+NbKvn
+         n/JWQU4dFFDjss0RbvFDW4hq3xhOJPx4A7KMWJbFq9sNUS3evGh4I7J3lMD3QKjgevvt
+         ZdsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUk4YPdbkuaWUJX3vexY8xc6dWHZiZK+O+3dA0LDbZd22T3MQ6BUTCpDu5HJLR0N7yB21Yv0vJE+BQaw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxcfviUo9U2V8T7hjDmYrF6OLjwO0qjkhb0czuOZ6TNh5e/2UDy
+	ZTVhqiG7lAxyd3c4GMEKC1zcoP74zguw2ZqAL4kmozveN8t4epJrjhrUIHgc7qWaxTwDX4G4+V6
+	WWA9wuTkd26B6SNIC184FukX+EJ0LXdhere7EKQ==
+X-Google-Smtp-Source: AGHT+IFhKWTwwBPu5jX7u89u+dUKj0C5//5o/QMl+RXh0GIkjzOyjBHHfqpvI+xl/jvzNzXbfa5GdbcAObQdme0kFAs=
+X-Received: by 2002:a2e:a813:0:b0:2fe:fec7:8adf with SMTP id
+ 38308e7fff4ca-2ff2029fed5mr65047841fa.38.1731374130317; Mon, 11 Nov 2024
+ 17:15:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: drm/fbdev-dma: regression
-To: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
- Linux Framebuffer <linux-fbdev@vger.kernel.org>
-References: <20220621104617.8817-1-tzimmermann@suse.de>
- <CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com>
- <d2562174-eebe-4462-9a9a-03936b3bcf89@leemhuis.info>
- <b4d28b98-a85c-4095-9c1b-8ebdfa13861c@suse.de>
- <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20241111233817.2f824c19@foxbook>
+In-Reply-To: <20241111233817.2f824c19@foxbook>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 12 Nov 2024 02:15:19 +0100
+Message-ID: <CACRpkdYsgnBFsyF9upr=xoLdMJ25DCXMEJ-co7rJTnRanJncug@mail.gmail.com>
+Subject: Re: cacheflush completely broken, suspecting PAN+LPAE
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+Hi Michal,
 
+On Mon, Nov 11, 2024 at 11:38=E2=80=AFPM Micha=C5=82 Pecio <michal.pecio@gm=
+ail.com> wrote:
 
-Am 11.11.24 um 14:42 schrieb Nuno Gonçalves:
-> On Mon, Nov 11, 2024 at 1:22 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
->> The patch in question changes the whole memory management of the
->> affected code. It's also noteworthy that most of it has been reworked
->> for the upcoming v6.12. Maybe this already fixed the problem. Kernel
->> v6.11-rc7 added commit 5a498d4d06d6 ("drm/fbdev-dma: Only install
->> deferred I/O if necessary"), which possibly fixes the problem as well.
->>
->> But there's no explicit fix for this problem and I have not seen any
->> other related reports. Any further information is welcome.
-> Issue was present since 5ab91447aa13b8b98bc11f5326f33500b0ee2c48 and
-> tested until 6.12-rc3.
-> Is there any suggestion on how to dig down?
-
-Do you have a stack trace of this problem?
-
-Which hardware platform is affected?
-
-Best regards
-Thomas
-
+> I installed v6.11.5 on Tegra K1 (Cortex-A15) with tegra_defconfing +
+> CONFIG_ARM_LPAE + a few drivers + minor patches for driver issues.
 >
-> Thanks
+> gdb segfaults on startup, strace shows this:
+>
+> openat(AT_FDCWD, "/usr/lib/guile/3.0/ccache/ice-9/psyntax-pp.go", O_RDONL=
+Y|O_LARGEFILE|O_CLOEXEC) =3D 11
+> _llseek(11, 0, [477309], SEEK_END)      =3D 0
+> mmap2(NULL, 477309, PROT_READ, MAP_PRIVATE, 11, 0) =3D 0xb378a000
+> close(11)                               =3D 0
+> mprotect(0xb37da000, 43512, PROT_READ|PROT_WRITE) =3D 0
+> mmap2(NULL, 262144, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONY=
+MOUS, -1, 0) =3D 0xb374a000
+> cacheflush(0xb374a000, 0xb374b000, 0)   =3D -1 EFAULT (Bad address)
+> cacheflush(0xb374a000, 0xb374b000, 0)   =3D -1 EFAULT (Bad address)
+> cacheflush(0xb374a000, 0xb374b000, 0)   =3D -1 EFAULT (Bad address)
+> futex(0xb6f0bb14, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+> cacheflush(0xb374a000, 0xb374b000, 0)   =3D -1 EFAULT (Bad address)
+> cacheflush(0xb374a000, 0xb374b000, 0)   =3D -1 EFAULT (Bad address)
+> --- SIGSEGV {si_signo=3DSIGSEGV, si_code=3DSEGV_MAPERR, si_addr=3D0x4} --=
+-
+>
+> guile is apparently a scripting language with JIT compiler, disabling
+> JIT resolves the crash, so cacheflush is a big suspect at this point.
+>
+> No apparent valid reason for those failures and no recent changes to
+> cacheflush handling that I see, so I searched for commits touching LPAE
+> (perhaps the most uncommon part of my system) and I quickly found the
+> ARM_PAN feature, which claims to monkey with page tables. Hmm...
+>
+> Disabled ARM_PAN, cacheflush returns 0 now and gdb crashes no more.
+>
+> So I guess it looks like there is a problem with this feature, perhaps
+> a missing "permit user accesss" somewhere?
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+We are trying to locate the issue, which I think is the same as this
+but not sure:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219247
 
+I have been trying to replicate it on a Chromebook but didn't get so far
+yet because the installation is pretty idiomatic :/ also there is only appe=
+ars
+in a single Qt program and not as predictable as here.
+
+But. It appears the code is issuing cacheflush() which I guess ends
+up in arm_syscall() here:
+
+        case NR(cacheflush):
+                return do_cache_op(regs->ARM_r0, regs->ARM_r1, regs->ARM_r2=
+);
+
+To here:
+
+static inline int
+do_cache_op(unsigned long start, unsigned long end, int flags)
+{
+        if (end < start || flags)
+                return -EINVAL;
+
+        if (!access_ok((void __user *)start, end - start))
+                return -EFAULT;
+
+        return __do_cache_op(start, end);
+}
+
+Here userspace access should be fine because we have entered a
+syscall from userspace. I tried to emulate the situation with this
+program:
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
+#define NR_cacheflush 0xf0002
+
+/* libgcc */
+extern void __clear_cache(void *, void *);
+
+int main (int argc, char **argv) {
+  void *addr;
+  int ret;
+
+  printf("Test()\n");
+  addr =3D mmap(NULL, 0x1000, PROT_READ|PROT_WRITE|PROT_EXEC,
+              MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (addr =3D=3D MAP_FAILED) {
+    printf("mmap() failed\n");
+    exit(1);
+  }
+
+The libgcc version is what guile uses.
+But it all just works fine for me.
+
+I added prints in the cacheflush trap:
+
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 480e307501bb..400650519bd1 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -592,11 +592,14 @@ __do_cache_op(unsigned long start, unsigned long end)
+ static inline int
+ do_cache_op(unsigned long start, unsigned long end, int flags)
+ {
++       pr_info("%s(%08lx-%08lx)\n", __func__, start, end);
+        if (end < start || flags)
+                return -EINVAL;
+
+-       if (!access_ok((void __user *)start, end - start))
++       if (!access_ok((void __user *)start, end - start)) {
++               pr_err("ACCESS NOT OK\n");
+                return -EFAULT;
++       }
+
+        return __do_cache_op(start, end);
+ }
+
+And they all work fine with the test program.
+This is on v6.12-rc1.
+
+Does this test program work also on your set-up?
+
+Yours,
+Linus Walleij
