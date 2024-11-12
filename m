@@ -1,139 +1,223 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4C4154456
-	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 08:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189191A08CB
+	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 08:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731398822; cv=none; b=Yf4K29NqrpYUUc5dt/CInIWdFgg2ULMxJQ9GoapWTsvYWSpy0twtU1lSX1Ds8+nsPu3OyZinfzKO0aiUr+W3EVYqTuCG6x01//CvLDVDxd5NObeq1lVnPv8Judc7XNg9L0ToxeVR+tF7mEH4ma2Jjk6gQZ3lQhDKXkBsN7YiT6o=
+	t=1731399095; cv=none; b=XkXvmjUQ9VbKTogu+iBQ2ykj30q6sTIBNiXSlv2Kf4q05DeGHB6x8GjIDYlrOQLh5EIAgBnacvXimwjQD7bnxN/Nk4mrI9PSv4+WzL2DKgH0dz88wH1/BQD2t3rSxV20vhIhBcFE8FMlhaEKE0gsL+X30Mp72st+dnBB0vOjeBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731398822; c=relaxed/simple;
-	bh=HMpBG0EWkER/d5wAElJA7CpBW4T/KzQkjen8t8ghJ0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gfs45FMVFzyQVrBaOuG2j9IyuXzPbnBDs/yqnw2T9/WwrluPvSsEmYO/m8WqUnwmx5lCBDXE7bepZLflFMQvqStHrOlC1NKiIu720lNXvBvkgji1CJQ/VZ6ZcjNAcwPxBK/YC4OjsNLWS2T3Ys00Jf6zKKaNSjMj4EzgNemHRMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Ikf7y/m9; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1731399095; c=relaxed/simple;
+	bh=OWvnyr0ioE4YWIB27E9Mqc4qTOqTNZ0hUmgZF0RdJTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pHeqpNfi8QUhT6bilCWzCf3tBnxRPTrl9TOlhitsvg7BslbUvmoy1qFw9zYmtLXYcpIeDs4rpfedVs0TFUzGbKd4ERyoNILIEyHXyC9Er+U2yRHLLeIzpw5SmVZboAK/4ru0JHCAIR1cuKgwKg/wRhLqKU30WxRhSbrYTIAzfjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yRpysj0F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Js1GNAuR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yRpysj0F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Js1GNAuR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Ikf7y/m9"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 62FB51F938;
-	Tue, 12 Nov 2024 09:00:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1731398403;
-	bh=t5k/krFv3SJskBWxwcoai7yAAgARXgJ1EMbSOEQ6Gtw=; h=From:To:Subject;
-	b=Ikf7y/m91kOTnf4LmPXRRgzvIDRlybe/D1cXKnQO6tnTLD5NR7XsIuJpcAGId4Q+m
-	 dnOCdUbg9YtL1ScBIE+CjMrtfh4dN67NoNwxHmaFwHF8XlY+259s6wkKyV0K20yfAb
-	 L+dQoNGP2a+vToO+BDBXYnpDsLq11fKc6RgtiAvEBNxY9GtJK5s7vjxvogUmgyhJMh
-	 4Bk8c89SYaG/2QKAvJKfRa/nT5GOU6pQpooVVvMF6eh+31iJUgNj06CilEY1et26Ac
-	 38c5SQlemJ9gRLcNH9ck0HbGp97TdheEpEhw4X4E1VZwlF10W1hSdfaFIPtlrM/l5h
-	 bZxozBSzXZwRg==
-Date: Tue, 12 Nov 2024 08:59:58 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org,
-	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, shengjiu.wang@gmail.com,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev, Adam Ford <aford173@gmail.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Mark Brown <broonie@kernel.org>, ulf.hansson@linaro.org
-Subject: Re: clk_imx8mp_audiomix_runtime_resume Kernel panic regression on
- v6.12
-Message-ID: <20241112075958.GA8092@francesco-nb>
-References: <20241007132555.GA53279@francesco-nb>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yRpysj0F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Js1GNAuR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yRpysj0F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Js1GNAuR"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4CE782174B;
+	Tue, 12 Nov 2024 08:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731399092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qr5OChPFncC56wHPH9cbmD5GS1I+pLfMZgzb0/4DL24=;
+	b=yRpysj0F8P8dtV9fVwKhx0VRam6njoHsDBHToVO5D7zVTns5frOLhLhWx9VZe6MQxnfuSX
+	z9Wom3NYBhfD8VmY4+wYChySBW0UGuON1w2850C+yYFE1SrCdKgSrvupzQ6d/dvD9bBmc1
+	AV8PD5rDJV2EA3Yk/APLYtO5bz5BKK4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731399092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qr5OChPFncC56wHPH9cbmD5GS1I+pLfMZgzb0/4DL24=;
+	b=Js1GNAuREBPIZsseJTRHfPUY0TQdMj/Tsr6SlRHN/yWRL8OFZunGJXfdHfHJ30YjGv0GpI
+	6vB18EFS9huz3pCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731399092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qr5OChPFncC56wHPH9cbmD5GS1I+pLfMZgzb0/4DL24=;
+	b=yRpysj0F8P8dtV9fVwKhx0VRam6njoHsDBHToVO5D7zVTns5frOLhLhWx9VZe6MQxnfuSX
+	z9Wom3NYBhfD8VmY4+wYChySBW0UGuON1w2850C+yYFE1SrCdKgSrvupzQ6d/dvD9bBmc1
+	AV8PD5rDJV2EA3Yk/APLYtO5bz5BKK4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731399092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qr5OChPFncC56wHPH9cbmD5GS1I+pLfMZgzb0/4DL24=;
+	b=Js1GNAuREBPIZsseJTRHfPUY0TQdMj/Tsr6SlRHN/yWRL8OFZunGJXfdHfHJ30YjGv0GpI
+	6vB18EFS9huz3pCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1E41B13721;
+	Tue, 12 Nov 2024 08:11:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4tMcBrQNM2cEBAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 12 Nov 2024 08:11:32 +0000
+Message-ID: <832483d5-db64-4195-a86c-028eff033fbe@suse.de>
+Date: Tue, 12 Nov 2024 09:11:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241007132555.GA53279@francesco-nb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/fbdev-dma: regression
+To: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux Framebuffer <linux-fbdev@vger.kernel.org>
+References: <20220621104617.8817-1-tzimmermann@suse.de>
+ <CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com>
+ <d2562174-eebe-4462-9a9a-03936b3bcf89@leemhuis.info>
+ <b4d28b98-a85c-4095-9c1b-8ebdfa13861c@suse.de>
+ <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
+ <c392b606-e2a4-4644-9ce6-217fdcabfdeb@suse.de>
+ <CAEXMXLRDDC+PB7S9VtqyMr1MUPPb7NYngwu4gcn9-K2kyHm3rQ@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAEXMXLRDDC+PB7S9VtqyMr1MUPPb7NYngwu4gcn9-K2kyHm3rQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.981];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+Hi
 
-On Mon, Oct 07, 2024 at 03:25:55PM +0200, Francesco Dolcini wrote:
-> Hello,
-> it seems that an old regression is back on v6.12, reproduced on -rc2
-> (not sure about rc1).
-> 
-> The original report is from https://lore.kernel.org/all/20240424164725.GA18760@francesco-nb/
-> and it was fixed with https://lore.kernel.org/all/1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com/.
-> 
-> Is it now back?
 
-I was able to reproduce this issue once more, this time with 6.11.7.
-As I wrote in another email the issue is not systematic as it used to
-be.
+Am 11.11.24 um 20:06 schrieb Nuno Gonçalves:
+>
+>
+> On Mon, Nov 11, 2024, 14:37 Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+>     Hi
+>
+>
+>     Am 11.11.24 um 14:42 schrieb Nuno Gonçalves:
+>     > On Mon, Nov 11, 2024 at 1:22 PM Thomas Zimmermann
+>     <tzimmermann@suse.de> wrote:
+>     >> The patch in question changes the whole memory management of the
+>     >> affected code. It's also noteworthy that most of it has been
+>     reworked
+>     >> for the upcoming v6.12. Maybe this already fixed the problem.
+>     Kernel
+>     >> v6.11-rc7 added commit 5a498d4d06d6 ("drm/fbdev-dma: Only install
+>     >> deferred I/O if necessary"), which possibly fixes the problem
+>     as well.
+>     >>
+>     >> But there's no explicit fix for this problem and I have not
+>     seen any
+>     >> other related reports. Any further information is welcome.
+>     > Issue was present since 5ab91447aa13b8b98bc11f5326f33500b0ee2c48 and
+>     > tested until 6.12-rc3.
+>     > Is there any suggestion on how to dig down?
+>
+>     Do you have a stack trace of this problem?
+>
+>
+> No. I need to build kernel with debug?
 
-Any idea?
+Isn't there an error message in the output of dmesg?
 
-[    4.287586] SError Interrupt on CPU1, code 0x00000000bf000002 -- SError
-[    4.287594] CPU: 1 UID: 0 PID: 195 Comm: (udev-worker) Not tainted 6.11.7-7.1.0-devel-00010-g5374bda92db5 #1
-[    4.287601] Hardware name: Toradex Verdin iMX8M Plus WB on Dahlia Board (DT)
-[    4.287604] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    4.287609] pc : clk_imx8mp_audiomix_runtime_resume+0x18/0x40
-[    4.287623] lr : pm_generic_runtime_resume+0x2c/0x44
-[    4.287631] sp : ffff80008216b740
-[    4.287633] x29: ffff80008216b740 x28: ffff800080e85010 x27: ffff8000794758d8
-[    4.287642] x26: ffff0000c0a664f4 x25: 0000000000000000 x24: 0000000000000000
-[    4.287649] x23: 0000000000000000 x22: ffff0000c0d01120 x21: 0000000000000000
-[    4.287655] x20: ffff0000c1308800 x19: ffff0000c0a68c10 x18: 0000000000047820
-[    4.287662] x17: 0000000000000000 x16: ffff0000faf87820 x15: 0000000000000002
-[    4.287668] x14: 0000000000001400 x13: 00000000000003a0 x12: 0000000054a32c00
-[    4.287675] x11: 0000000000000000 x10: ffff8000817b9d36 x9 : 0000000000000008
-[    4.287682] x8 : 0000000000000008 x7 : 0000000000000000 x6 : 0000000000000000
-[    4.287688] x5 : ffff800081ec0000 x4 : ffff0000c1a0b488 x3 : ffff800080bd23f0
-[    4.287694] x2 : 0000000000000000 x1 : 0000000000000004 x0 : ffff800081ec0300
-[    4.287703] Kernel panic - not syncing: Asynchronous SError Interrupt
-[    4.287705] CPU: 1 UID: 0 PID: 195 Comm: (udev-worker) Not tainted 6.11.7-7.1.0-devel-00010-g5374bda92db5 #1
-[    4.287711] Hardware name: Toradex Verdin iMX8M Plus WB on Dahlia Board (DT)
-[    4.287714] Call trace:
-[    4.287716]  dump_backtrace+0x94/0x114
-[    4.287725]  show_stack+0x18/0x24
-[    4.287732]  dump_stack_lvl+0x34/0x8c
-[    4.287740]  dump_stack+0x18/0x24
-[    4.287747]  panic+0x390/0x3a4
-[    4.287751]  nmi_panic+0x40/0x8c
-[    4.287755]  arm64_serror_panic+0x64/0x70
-[    4.287759]  do_serror+0x3c/0x70
-[    4.287763]  el1h_64_error_handler+0x30/0x48
-[    4.287771]  el1h_64_error+0x64/0x68
-[    4.287776]  clk_imx8mp_audiomix_runtime_resume+0x18/0x40
-[    4.287784]  __genpd_runtime_resume+0x30/0x80
-[    4.287791]  genpd_runtime_resume+0x114/0x29c
-[    4.287799]  __rpm_callback+0x48/0x1d8
-[    4.287806]  rpm_callback+0x68/0x74
-[    4.287813]  rpm_resume+0x46c/0x6bc
-[    4.287819]  __pm_runtime_resume+0x50/0x94
-[    4.287825]  pm_runtime_get_suppliers+0x60/0x8c
-[    4.287831]  __driver_probe_device+0x4c/0x15c
-[    4.287838]  driver_probe_device+0x3c/0x110
-[    4.287844]  __driver_attach+0xf0/0x1f8
-[    4.287850]  bus_for_each_dev+0x7c/0xdc
-[    4.287856]  driver_attach+0x24/0x30
-[    4.287862]  bus_add_driver+0x110/0x234
-[    4.287868]  driver_register+0x5c/0x124
-[    4.287874]  __platform_driver_register+0x28/0x34
-[    4.287882]  sdma_driver_init+0x20/0x1000 [imx_sdma]
-[    4.287895]  do_one_initcall+0x80/0x1c8
-[    4.287900]  do_init_module+0x60/0x218
-[    4.287907]  load_module+0x1fcc/0x2040
-[    4.287912]  init_module_from_file+0x88/0xcc
-[    4.287918]  __arm64_sys_finit_module+0x254/0x34c
-[    4.287924]  invoke_syscall.constprop.0+0x50/0xe4
-[    4.287932]  do_el0_svc+0xa8/0xc8
-[    4.287938]  el0_svc+0x3c/0x13c
-[    4.287945]  el0t_64_sync_handler+0x120/0x12c
-[    4.287952]  el0t_64_sync+0x190/0x194
-[    4.287958] SMP: stopping secondary CPUs
-[    4.287965] Kernel Offset: disabled
-[    4.287966] CPU features: 0x00,00000000,00100000,4200420b
-[    4.287970] Memory Limit: none
-[    4.590829] ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
+Or maybe can you save the whole output of dmesg after a crash and attach 
+the file to an email?
 
-Francesco
+In the original bug report, you mentioned that you often get an error. 
+But not 'always'?
+
+Do you have a reproducer for the problem? Such as a very simple program 
+that triggers the bug.
+
+>
+>
+>
+>     Which hardware platform is affected?
+>
+>
+> ARM64 with ili9225 and display size 220, 176. It also
+> happens in another board with a different tinydrm driver and size 320,
+> 240.
+
+I meant, which board or CPU. ARM64/Aarch64 is really just a very broad 
+term describing the system.
+
+Best regards
+Thomas
+
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
