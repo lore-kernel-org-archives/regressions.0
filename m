@@ -1,159 +1,113 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688E62594
-	for <regressions@lists.linux.dev>; Wed, 13 Nov 2024 06:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731480219; cv=none; b=n7LFW9SKNEeQbStVg9kuCe5mDDx+vpgfHfSbPqWe62AJ7B9vVKOwUPdlio9fNa/n3tJ306695G//sqehGreufSmVXQ05JPmBineaJuE6Jg11Zp9qPl1cC3fSzW6drmh9XKjZ7elmHneID836b+XCJDdw4Kqj/DehE/zo6dglw5E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731480219; c=relaxed/simple;
-	bh=fWr0Txakby/3WRoIzOUJcb1yqugsWJyH7uPit0HQezQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qERvPhgMA67asBZr0rR7OPaZ2+s0ltHwqEKBNZTyZPhX7GjT8pYblScv6ZbTsvAt1PO5cu0/4aawZkshM4hVpyF3hFs8F9hgXcOAn7QPyYh8G6kXdKQ1B6b4I+aAdmlcBd5dxgaejvOi+tJRWblQzTMOD5LPy7HPFLD/vLZbfJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BK7grWs2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5zbPinwz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BK7grWs2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5zbPinwz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894FA16D9AA;
+	Wed, 13 Nov 2024 09:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731490591; cv=pass; b=piqtXAY1lIHEJkVcVGf03lxoyscFgrM8sYMXt+a8LiCnykX6wtxG8M+IvvutlgqNhJUsJ1wiToVJqjHfnICgzHC7DfO1BRCCp2ZllY4F94Qv97xpx7xkQ0AZNW7Reah2qW7wt68NiPB2wbs5CTJgd17Q9ltH1ZrSCyNfISAT/og=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731490591; c=relaxed/simple;
+	bh=G/PPIWUKDquwuz1Fp1afut8we4tEfYfyAYTMs+8Hc9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E9AxaaC4FkeGES/pTTKLlb7UPAHQckCXzJwDaLzq8ARa2Ett69dJKtihXoM4flv6r6qwCxYflIm1T2ju6a9bZUseJANeNKcgNxBEQfCMfg/Rmzc9t7viqkeNYDw7TpXRZ97iJVz+9AASucNPDJJBou5YZH/Ozi2LTZu7NlqPV6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=al5Jqn40; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BK7grWs2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5zbPinwz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BK7grWs2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5zbPinwz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B445A211D0;
-	Wed, 13 Nov 2024 06:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731480215; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+EwV+jJYGsF0wWvCVejmO7qmdOyG5aTuIZV6/Wuwi3Y=;
-	b=BK7grWs2qbPABTMpjuR9roHjLpAKGhAOdmxcuUY4/lME+7EuKiym8tkbomG+HFpNAZJhb4
-	aVLRlB1T2Z0iPlM9iZaX5YauMiQwbdH46TrVzo06tQAM0LnRH6X0VJH/WSswUGuCY4QlRb
-	8QkNwh3X7rZWvjMwJvdoKfyb3fOldlY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731480215;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+EwV+jJYGsF0wWvCVejmO7qmdOyG5aTuIZV6/Wuwi3Y=;
-	b=5zbPinwzC/qtQh7KwRQmj+JhaHpOz9F9jlhIzueZLeB/ilvADlUI4+YiIm9lmdvp7JmaEd
-	wl3Bzsv0EbxY92Bw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731480215; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+EwV+jJYGsF0wWvCVejmO7qmdOyG5aTuIZV6/Wuwi3Y=;
-	b=BK7grWs2qbPABTMpjuR9roHjLpAKGhAOdmxcuUY4/lME+7EuKiym8tkbomG+HFpNAZJhb4
-	aVLRlB1T2Z0iPlM9iZaX5YauMiQwbdH46TrVzo06tQAM0LnRH6X0VJH/WSswUGuCY4QlRb
-	8QkNwh3X7rZWvjMwJvdoKfyb3fOldlY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731480215;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+EwV+jJYGsF0wWvCVejmO7qmdOyG5aTuIZV6/Wuwi3Y=;
-	b=5zbPinwzC/qtQh7KwRQmj+JhaHpOz9F9jlhIzueZLeB/ilvADlUI4+YiIm9lmdvp7JmaEd
-	wl3Bzsv0EbxY92Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6E43113301;
-	Wed, 13 Nov 2024 06:43:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rURXGZdKNGc1DAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 13 Nov 2024 06:43:35 +0000
-Date: Wed, 13 Nov 2024 07:43:35 +0100
-Message-ID: <87ttcbskfc.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: Dean Matthew Menezes <dean.menezes@utexas.edu>,
-	Takashi Iwai <tiwai@suse.de>,
-	"stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-	"regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai
-	<tiwai@suse.com>,
-	Linux Sound System <linux-sound@vger.kernel.org>,
-	Greg KH
-	<gregkh@linuxfoundation.org>
-Subject: Re: No sound on speakers X1 Carbon Gen 12
-In-Reply-To: <ced4ebe356ad4e5796f059df8cdef3dd@realtek.com>
-References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
-	<2024101613-giggling-ceremony-aae7@gregkh>
-	<433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
-	<87bjzktncb.wl-tiwai@suse.de>
-	<CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
-	<87cyjzrutw.wl-tiwai@suse.de>
-	<CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
-	<87ttd8jyu3.wl-tiwai@suse.de>
-	<CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
-	<87h697jl6c.wl-tiwai@suse.de>
-	<CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
-	<87ed4akd2a.wl-tiwai@suse.de>
-	<87bjzekcva.wl-tiwai@suse.de>
-	<CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
-	<877ca2j60l.wl-tiwai@suse.de>
-	<43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
-	<87ldyh6eyu.wl-tiwai@suse.de>
-	<18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
-	<87h6956dgu.wl-tiwai@suse.de>
-	<c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
-	<CAEkK70SojedmjbXB+a+g+Bys=VWCOpxzV5GkuMSkAgA-jR2FpA@mail.gmail.com>
-	<87ldyctzwt.wl-tiwai@suse.de>
-	<CAEkK70RAek2Y-syVt3S+3Q-kiriO24e8qQGDTrqC-Xt4kHzbCA@mail.gmail.com>
-	<b97c52ec20594eecb074d333095a4560@realtek.com>
-	<CAEkK70QottpLxq-prAEPe8TtPR=QBdQWuUrjf6ZT6PipcfS9xw@mail.gmail.com>
-	<ced4ebe356ad4e5796f059df8cdef3dd@realtek.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="al5Jqn40"
+ARC-Seal: i=1; a=rsa-sha256; t=1731490582; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=fIE6aOUOUMd0Ve6/RTlxdS6G7iMFSSethcOwWHFbOYgDDVnZXQgciiynV2l7Nct877vmC70zsgejx/r33gY4lztYHIBHErQFeI/HTkybQmyfBJrL1vhFrI9zQWURPc7rmPI86L0aFlLc8ZIMyLWNJpnwADrPbVhJun2sneOTg+s=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1731490582; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=TJfEmYEhbGQhswwb5+U7HA/wWFpu51ttU5Sd0h5wvgo=; 
+	b=E31xkO2iwCSmt2Kl00mK+Wqdx/dR8sWuCZVks6n/k2glsT38Tt7sYP0Cvii5SN8pclfewj6/HSV92aea8uYksT8xPIfTkQeLdwWPkUroAuYeB5K8GPQxIRa/DmKoNOwC2IHpzUjUNMcAe3c2jikFdUhToO4EywgTO9T8lm43V7A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
+	dmarc=pass header.from=<laura.nao@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1731490582;
+	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
+	bh=TJfEmYEhbGQhswwb5+U7HA/wWFpu51ttU5Sd0h5wvgo=;
+	b=al5Jqn40DBMKnXdJtWz+DGp78qDMJAKI4tkP7qL/LnBG9Hi/h7btkoDQ5iYfpPk9
+	7w698vPtPvF18DEkfiNvN8jSgqi4+lHF1Uai4tqA3+J46N5y04PujFnsn3rFUxXDZPu
+	Okv3/OWraAQgZS4koiU06L9m7L6olB88Pt8NAoEA=
+Received: by mx.zohomail.com with SMTPS id 1731490581620674.1613596696902;
+	Wed, 13 Nov 2024 01:36:21 -0800 (PST)
+From: Laura Nao <laura.nao@collabora.com>
+To: alan.maguire@oracle.com
+Cc: bpf@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
+Date: Wed, 13 Nov 2024 10:37:03 +0100
+Message-Id: <20241113093703.9936-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <90b3b613-8665-425b-8132-5b9ac86ab616@oracle.com>
+References: <90b3b613-8665-425b-8132-5b9ac86ab616@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Wed, 13 Nov 2024 07:22:48 +0100,
-Kailang wrote:
+Hi Alan,
+
+On 11/7/24 16:05, Alan Maguire wrote:
+> Thanks for the report! Judging from the config, you're seeing this with
+> pahole v1.24. I have seen issues like this in the past where during a
+> kernel build, module BTF has been built against vmlinux BTF, and then
+> something later re-triggers vmlinux BTF generation. If that re-triggered
+> vmlinux BTF does not use the same type ids for types, this can result in
+> mismatch errors as above since modules are referring to out-of-date type
+> ids in vmlinux. That's just a preliminary guess though, we'll
+> need more info to help get to the bottom of this.
 > 
-> Hi Takashi,
+> A few suggestions to help debug this:
 > 
-> Attach patch will solve issue.
+> - if you have build logs, check BTF generation of vmlinux. Did it in
+> fact happen twice perhaps? Even better if, if kernel CI saves logs, feel
+> free to send a pointer and I'll take a look.
 
-Applied now (with small corrections of white spaces).
+Thanks for the pointers!
 
+From what I can tell in the logs, the BTF generation of vmlinux only 
+occurred once. The automated build process in KernelCI generally involves 
+building the kernel first, followed by the modules and other artifacts 
+(such as the kselftest archive). 
+The full build log can be downloaded by selecting 'build_log' from 
+the dropdown menu at the top of this page:
 
-thanks,
+https://kernelci-api.westus3.cloudapp.azure.com/viewer?node_id=6732f41d58937056c61734ab
 
-Takashi
+I do see some warnings reported in the logs though:
+
+WARN: resolve_btfids: unresolved symbol bpf_lsm_task_getsecid_obj
+WARN: resolve_btfids: unresolved symbol bpf_lsm_current_getsecid_subj
+
+> - can you post the vmlinux (stripped of DWARF data if possible to limit
+> size) and one of the failing modules somewhere so we can analyze?
+> - Failing that,
+> bpftool btf dump file /path/2/vmlinux_from_build > vmlinux.raw
+> and upload of the vmlinux.raw and one of the failing module .kos would help.
+> 
+
+Currently, KernelCI only retains the bzImage, not the vmlinux binary. The 
+bzImage can be downloaded from the same link mentioned above by selecting 
+'kernel' from the dropdown menu (modules can also be downloaded the same
+way). I’ll try to replicate the build on my end and share the vmlinux 
+with DWARF data stripped for convenience.
+
+Thanks,
+
+Laura
+
